@@ -9,8 +9,6 @@ import de.amr.pacmanfx.lib.RectArea;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
 public interface GameSpriteSheet extends SpriteSheet {
-    RectArea[] pacDyingSprites();
-
     RectArea[] ghostEyesSprites(Direction dir);
     RectArea[] ghostFlashingSprites();
     RectArea[] ghostFrightenedSprites();

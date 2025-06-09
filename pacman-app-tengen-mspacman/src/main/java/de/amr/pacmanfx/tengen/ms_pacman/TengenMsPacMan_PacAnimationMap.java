@@ -4,16 +4,16 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman;
 
-import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.RectArea;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
+import java.util.Arrays;
+
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.*;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.SpriteID.MS_PAC_MUNCHING;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createAnimation;
 
 public class TengenMsPacMan_PacAnimationMap extends SpriteAnimationMap<RectArea> {
@@ -29,7 +29,7 @@ public class TengenMsPacMan_PacAnimationMap extends SpriteAnimationMap<RectArea>
 
     public TengenMsPacMan_PacAnimationMap(TengenMsPacMan_SpriteSheet ss) {
         super(ss);
-        set(ANIM_PAC_DYING,               createAnimation().sprites(ss.pacDyingSprites()).frameTicks(8).end());
+        set(ANIM_PAC_DYING,               createAnimation().sprites(pacDyingSprites()).frameTicks(8).end());
         set(ANIM_PAC_MUNCHING,            createAnimation().sprites(getSprites(SpriteID.MS_PAC_MUNCHING)).endless());
 
         set(ANIM_MS_PAC_MAN_BOOSTER,      createAnimation().sprites(getSprites(SpriteID.MS_PAC_MUNCHING_BOOSTER)).endless());
@@ -63,4 +63,15 @@ public class TengenMsPacMan_PacAnimationMap extends SpriteAnimationMap<RectArea>
             }
         }
     }
+
+    private RectArea[] pacDyingSprites() {
+        // TODO this is nuts
+        // renderer rotates single sprite to create animation effect
+        var sprites = new RectArea[11];
+        RectArea munchingOpen = getSprites(SpriteID.MS_PAC_MUNCHING)[0];
+        Arrays.fill(sprites, munchingOpen);
+        return sprites;
+    }
+
+
 }

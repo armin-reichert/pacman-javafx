@@ -142,9 +142,4 @@ public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
             case Direction.DOWN  -> GHOST_EYES_DOWN;
         });
     }
-
-    @Override
-    public RectArea[] pacDyingSprites() {
-        return getSprites(MS_PACMAN_DYING);
-    }
 }

@@ -156,9 +156,6 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements GameSpriteS
     public RectArea livesCounterSprite() { return getSprite(LIVES_COUNTER_SYMBOL); }
 
     @Override
-    public RectArea[] pacDyingSprites() { return getSprites(PACMAN_DYING); }
-
-    @Override
     public RectArea[] ghostFrightenedSprites() { return getSprites(GHOST_FRIGHTENED); }
 
     @Override
