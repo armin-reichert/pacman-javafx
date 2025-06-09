@@ -19,7 +19,7 @@ import static java.util.Objects.requireNonNull;
  * Collection of bindings between actions and key combinations. Implemented by the "views" (game view,
  * editor view, start pages view) and the game scenes.
  */
-public interface ActionBindingsSupport {
+public interface ActionBindingSupport {
 
     static Map.Entry<GameAction, Set<KeyCombination>> createBinding(GameAction action, KeyCombination... combinations) {
         return entry(action, Set.of(combinations));

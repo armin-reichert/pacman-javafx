@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.uilib.ActionBindingsSupport;
+import de.amr.pacmanfx.uilib.ActionBindingSupport;
 import de.amr.pacmanfx.uilib.GameAction;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
@@ -14,11 +14,11 @@ import java.util.Map;
 import java.util.Set;
 
 import static de.amr.pacmanfx.ui.PacManGames_Actions.*;
-import static de.amr.pacmanfx.uilib.ActionBindingsSupport.createBinding;
+import static de.amr.pacmanfx.uilib.ActionBindingSupport.createBinding;
 import static de.amr.pacmanfx.uilib.input.Keyboard.*;
 import static java.util.Objects.requireNonNull;
 
-public interface PacManGames_ActionBindings extends ActionBindingsSupport {
+public interface PacManGames_ActionBindings extends ActionBindingSupport {
 
     Map<GameAction, Set<KeyCombination>> COMMON_ACTION_BINDINGS = Map.ofEntries(
         createBinding(ACTION_ARCADE_INSERT_COIN,      nude(KeyCode.DIGIT5), nude(KeyCode.NUMPAD5)),

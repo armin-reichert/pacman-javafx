@@ -5,11 +5,11 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.event.GameEventListener;
-import de.amr.pacmanfx.uilib.ActionBindingsSupport;
+import de.amr.pacmanfx.uilib.ActionBindingSupport;
 import javafx.beans.binding.StringExpression;
 import javafx.scene.layout.Region;
 
-public interface PacManGames_View extends ActionBindingsSupport, GameEventListener {
+public interface PacManGames_View extends ActionBindingSupport, GameEventListener {
     Region container();
     StringExpression titleBinding();
 }

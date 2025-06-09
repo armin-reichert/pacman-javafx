@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib.input;
 
 import de.amr.pacmanfx.lib.nes.JoypadButton;
-import de.amr.pacmanfx.uilib.ActionBindingsSupport;
+import de.amr.pacmanfx.uilib.ActionBindingSupport;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import org.tinylog.Logger;
@@ -67,23 +67,23 @@ public class Joypad {
         return currentKeyBinding().key(buttonID);
     }
 
-    public void registerCurrentBinding(ActionBindingsSupport actionBindingsSupport) {
-        currentKeys().forEach(combination -> keyboard.setBinding(combination, actionBindingsSupport));
+    public void registerCurrentBinding(ActionBindingSupport actionBindingSupport) {
+        currentKeys().forEach(combination -> keyboard.setBinding(combination, actionBindingSupport));
     }
 
-    public void unregisterCurrentBinding(ActionBindingsSupport actionBindingsSupport) {
-        currentKeys().forEach(combination -> keyboard.removeBinding(combination, actionBindingsSupport));
+    public void unregisterCurrentBinding(ActionBindingSupport actionBindingSupport) {
+        currentKeys().forEach(combination -> keyboard.removeBinding(combination, actionBindingSupport));
     }
 
-    public void selectNextKeyBinding(ActionBindingsSupport actionBindingsSupport) {
+    public void selectNextKeyBinding(ActionBindingSupport actionBindingSupport) {
         selectedIndex = (selectedIndex + 1) % bindings.length;
-        setBinding(selectedIndex, actionBindingsSupport);
+        setBinding(selectedIndex, actionBindingSupport);
         Logger.info("Joypad keys: {}", currentKeyBinding());
     }
 
-    private void setBinding(int index, ActionBindingsSupport actionBindingsSupport) {
-        unregisterCurrentBinding(actionBindingsSupport);
+    private void setBinding(int index, ActionBindingSupport actionBindingSupport) {
+        unregisterCurrentBinding(actionBindingSupport);
         selectedIndex = index;
-        registerCurrentBinding(actionBindingsSupport);
+        registerCurrentBinding(actionBindingSupport);
     }
 }
