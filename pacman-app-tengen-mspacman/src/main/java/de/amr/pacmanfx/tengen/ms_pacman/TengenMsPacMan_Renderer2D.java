@@ -106,7 +106,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
                          ANIM_PAC_MAN_MUNCHING,
                          ANIM_MS_PAC_MAN_BOOSTER,
                          ANIM_PAC_MAN_BOOSTER,
-                         ANIM_JUNIOR -> drawMovingActor(pac, pac.moveDir(), animation.currentSprite());
+                         ANIM_JUNIOR -> drawMovingActor(pac, pac.moveDir(), (RectArea) animation.currentSprite());
                     case ANIM_PAC_DYING -> {
                         Direction dir = Direction.UP;
                         if (animation.frameIndex() < 11) {
@@ -117,7 +117,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
                                 case 3 -> Direction.RIGHT;
                             };
                         }
-                        drawMovingActor(pac, dir, animation.currentSprite());
+                        drawMovingActor(pac, dir, (RectArea) animation.currentSprite());
                     }
                     default -> GameRenderer.super.drawActor(pac);
                 }
@@ -407,7 +407,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
             return;
         }
         ctx().setImageSmoothing(false);
-        drawSpriteScaled(storkAnimation.currentSprite(), stork.x(), stork.y());
+        drawSpriteScaled((RectArea) storkAnimation.currentSprite(), stork.x(), stork.y());
         if (hideBag) { // over-paint bag under beak
             ctx().setFill(PY_CANVAS_BG_COLOR.get());
             ctx().fillRect(scaled(stork.x() - 1), scaled(stork.y() + 7), scaled(9), scaled(9));

@@ -149,10 +149,10 @@ public interface GameRenderer {
         }
         if (actor instanceof AnimatedActor animatedActor) {
             animatedActor.animations().ifPresent(animations -> {
-                if (animations instanceof SpriteAnimationMap spriteAnimations) {
+                if (animations instanceof SpriteAnimationMap<?> spriteAnimations) {
                     SpriteAnimation currentAnimation = spriteAnimations.currentAnimation();
                     if (currentAnimation != null) {
-                        drawActorSprite(actor, spriteAnimations.currentSprite(actor));
+                        drawActorSprite(actor, (RectArea) spriteAnimations.currentSprite(actor));
                     } else {
                         Logger.error("No current animation for actor {}", actor);
                     }

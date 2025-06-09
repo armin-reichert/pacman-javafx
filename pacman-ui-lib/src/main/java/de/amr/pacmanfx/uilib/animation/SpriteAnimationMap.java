@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.animation;
 
-import de.amr.pacmanfx.lib.RectArea;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.ActorAnimationMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -15,7 +14,10 @@ import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
-public abstract class SpriteAnimationMap implements ActorAnimationMap {
+/**
+ * @param <R> type used for describing area inside sprite sheet
+ */
+public abstract class SpriteAnimationMap<R> implements ActorAnimationMap {
 
     private final SpriteSheet spriteSheet;
     private final Map<String, SpriteAnimation> animationsByID = new HashMap<>();
@@ -45,13 +47,14 @@ public abstract class SpriteAnimationMap implements ActorAnimationMap {
         return id.equals(currentAnimationID);
     }
 
-    public final RectArea currentSprite(Actor actor) {
+    @SuppressWarnings("unchecked")
+    public final R currentSprite(Actor actor) {
         var currentAnimation = currentAnimation();
         if (currentAnimation == null) {
             return null;
         }
         updateActorSprites(actor);
-        return currentAnimation.currentSprite();
+        return (R) currentAnimation.currentSprite();
     }
 
     public SpriteAnimation currentAnimation() {

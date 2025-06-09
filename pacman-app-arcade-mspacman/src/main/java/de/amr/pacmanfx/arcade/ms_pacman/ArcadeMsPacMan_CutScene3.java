@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.lib.RectArea;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Actor;
@@ -99,7 +100,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         }
         gr().drawActor(msPacMan);
         gr().drawActor(pacMan);
-        gr().drawActorSprite(stork, storkAnimation.currentSprite());
+        gr().drawActorSprite(stork, (RectArea) storkAnimation.currentSprite());
         gr().drawActorSprite(bag, bagOpen ? ArcadeMsPacMan_SpriteSheet.JUNIOR_PAC_SPRITE : ArcadeMsPacMan_SpriteSheet.BLUE_BAG_SPRITE);
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }

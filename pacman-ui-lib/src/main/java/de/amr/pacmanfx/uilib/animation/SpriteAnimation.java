@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.animation;
 
-import de.amr.pacmanfx.lib.RectArea;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
@@ -36,8 +35,13 @@ public class SpriteAnimation extends Transition {
             return this;
         }
 
-        public Builder sprites(RectArea... sprites) {
+        public Builder sprites(Object[] sprites) {
             anim.sprites = sprites;
+            return this;
+        }
+
+        public Builder sprites(Object sprite) {
+            anim.sprites = new Object[] {sprite};
             return this;
         }
 
@@ -62,7 +66,7 @@ public class SpriteAnimation extends Transition {
         return new Builder();
     }
 
-    private RectArea[] sprites = new RectArea[0];
+    private Object[] sprites = new Object[0];
     private int fps = 60;
     private int frameTicks = 1;
     private int frameIndex;
@@ -82,7 +86,7 @@ public class SpriteAnimation extends Transition {
         frameIndex = 0;
     }
 
-    public void setSprites(RectArea[] sprites) {
+    public void setSprites(Object[] sprites) {
         this.sprites = requireNonNull(sprites);
     }
 
@@ -110,7 +114,7 @@ public class SpriteAnimation extends Transition {
 
     public int frameIndex() { return frameIndex; }
 
-    public RectArea currentSprite() { return sprites[frameIndex]; }
+    public Object currentSprite() { return sprites[frameIndex]; }
 
     public void nextFrame() {
         frameIndex++;
