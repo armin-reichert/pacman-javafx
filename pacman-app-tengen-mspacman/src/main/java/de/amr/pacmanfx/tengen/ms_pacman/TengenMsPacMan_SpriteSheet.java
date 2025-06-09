@@ -6,7 +6,6 @@ package de.amr.pacmanfx.tengen.ms_pacman;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.RectArea;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import javafx.scene.image.Image;
 
 import java.util.Arrays;
@@ -15,7 +14,6 @@ import java.util.EnumMap;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.RectArea.rect;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.SpriteID.*;
-import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createAnimation;
 
 public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements GameSpriteSheet {
 
@@ -293,10 +291,6 @@ public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
             default -> symbol;
         };
         return getSprites(SpriteID.BONUS_VALUES)[index];
-    }
-
-    public static SpriteAnimation createStorkFlyingAnimation() {
-        return createAnimation().sprites(getSprites(STORK)).frameTicks(8).endless();
     }
 
     // Tengen-specific

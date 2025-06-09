@@ -18,10 +18,13 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.createMsPacMan;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.createPacMan;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.SpriteID.STORK;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.getSprite;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.getSprites;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
+import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createAnimation;
 
 /**
  * Intermission scene 3: "Junior".
@@ -107,7 +110,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
             stork.setPosition(RIGHT_BORDER, STORK_Y);
             stork.setVelocity(-0.8f, 0);
             stork.show();
-            storkAnimation = TengenMsPacMan_SpriteSheet.createStorkFlyingAnimation();
+            storkAnimation = createAnimation().sprites(getSprites(STORK)).frameTicks(8).endless();
             storkAnimation.play();
             bagReleased = false;
         }
