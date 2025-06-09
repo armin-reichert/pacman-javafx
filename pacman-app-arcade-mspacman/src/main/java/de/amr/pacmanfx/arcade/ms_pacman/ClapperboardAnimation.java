@@ -4,11 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman;
 
+import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.SpriteID;
 import de.amr.pacmanfx.lib.RectArea;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.CLAPPERBOARD_SPRITES;
+import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.getSprites;
 
 /**
  * Animated move clapperboard.
@@ -59,6 +60,8 @@ public class ClapperboardAnimation {
     }
 
     public Optional<RectArea> currentSprite() {
-        return state == HIDDEN ? Optional.empty() : Optional.of(CLAPPERBOARD_SPRITES[state]);
+        if (state == HIDDEN) return Optional.empty();
+        RectArea sprite = getSprites(SpriteID.CLAPPERBOARD)[state];
+        return Optional.of(sprite);
     }
 }

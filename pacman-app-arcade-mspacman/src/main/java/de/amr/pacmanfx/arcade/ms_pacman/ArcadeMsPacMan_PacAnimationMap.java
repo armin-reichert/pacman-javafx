@@ -50,5 +50,4 @@ public class ArcadeMsPacMan_PacAnimationMap extends SpriteAnimationMap<RectArea>
             case DOWN -> MR_PACMAN_MUNCHING_DOWN;
         });
     }
-
 }

@@ -7,12 +7,9 @@ package de.amr.pacmanfx.arcade.ms_pacman;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.RectArea;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.image.Image;
 
 import java.util.EnumMap;
-import java.util.List;
 import java.util.stream.IntStream;
 
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.SpriteID.*;
@@ -22,7 +19,6 @@ public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
 
     private static final byte R16 = 16;
     private static final int OFF_X = 456;
-    private static final List<Direction> ORDER = List.of(Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
     // third "column" contains the sprites (first two columns the maze images)
     private static RectArea tile(int tileX, int tileY) {
@@ -50,7 +46,11 @@ public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
         BONUS_SYMBOLS,
         BONUS_VALUES,
         LIVES_COUNTER_SYMBOL,
-        STORK
+        CLAPPERBOARD,
+        STORK,
+        HEART,
+        BLUE_BAG,
+        JUNIOR_PAC
     }
 
     private static final EnumMap<SpriteID, Object> SPRITE_MAP = new EnumMap<>(SpriteID.class);
@@ -99,6 +99,14 @@ public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
         );
         SPRITE_MAP.put(LIVES_COUNTER_SYMBOL, tile(1, 0));
         SPRITE_MAP.put(STORK, new RectArea[] {rect(489, 176, 32, 16), rect(521, 176, 32, 16)});
+        SPRITE_MAP.put(CLAPPERBOARD, new RectArea[] {
+                rect(456, 208, 32, 32),  // open
+                rect(488, 208, 32, 32),  // middle
+                rect(520, 208, 32, 32)   // closed
+        });
+        SPRITE_MAP.put(HEART, tile(2, 10));
+        SPRITE_MAP.put(BLUE_BAG, rect(488, 199, 8, 8));
+        SPRITE_MAP.put(JUNIOR_PAC, rect(509, 200, 8, 8));
     }
 
     public static RectArea getSprite(SpriteID spriteID) { return (RectArea) SPRITE_MAP.get(spriteID); }
@@ -114,15 +122,6 @@ public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
         // TODO: this is not yet 100% correct
         return new RectArea[] {down, left, up, right, down, left, up, right, down, left, up};
     }
-
-    static final RectArea HEART_SPRITE = tile(2, 10);
-    static final RectArea BLUE_BAG_SPRITE = rect(488, 199, 8, 8);
-    static final RectArea JUNIOR_PAC_SPRITE = rect(509, 200, 8, 8);
-
-    static final RectArea[] CLAPPERBOARD_SPRITES = SpriteSheet.rectAreaArray(
-            rect(456, 208, 32, 32),  // open
-            rect(488, 208, 32, 32),  // middle
-            rect(520, 208, 32, 32)); // closed
 
     @Override
     public RectArea[] ghostNumberSprites() { return getSprites(GHOST_NUMBERS); }
