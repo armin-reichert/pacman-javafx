@@ -11,6 +11,8 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
+import static de.amr.pacmanfx.arcade.ArcadePacMan_SpriteSheet.SpriteID.PACMAN_BIG;
+import static de.amr.pacmanfx.arcade.ArcadePacMan_SpriteSheet.getSprites;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ANIM_BIG_PAC_MAN;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
@@ -22,7 +24,7 @@ public class ArcadePacMan_PacAnimationMap extends SpriteAnimationMap<RectArea> {
         super(ss);
         set(ANIM_PAC_MUNCHING, createAnimation().sprites(ss.pacMunchingSprites(Direction.LEFT)).endless());
         set(ANIM_PAC_DYING,    createAnimation().sprites(ss.pacDyingSprites()).frameTicks(8).end());
-        set(ANIM_BIG_PAC_MAN,      createAnimation().sprites(ss.bigPacManSprites()).frameTicks(3).endless());
+        set(ANIM_BIG_PAC_MAN,  createAnimation().sprites(getSprites(PACMAN_BIG)).frameTicks(3).endless());
     }
 
     @Override

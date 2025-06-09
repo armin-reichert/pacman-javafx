@@ -23,6 +23,8 @@ import java.util.List;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_GameModel.*;
+import static de.amr.pacmanfx.arcade.ArcadePacMan_SpriteSheet.SpriteID.GALLERY_GHOSTS;
+import static de.amr.pacmanfx.arcade.ArcadePacMan_SpriteSheet.getSprites;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.arcade.ArcadePalette.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
@@ -143,7 +145,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         }
         for (byte personality = RED_GHOST_SHADOW; personality <= ORANGE_GHOST_POKEY; ++personality) {
             if (ghostImageVisible[personality]) {
-                gr().drawSpriteScaledWithCenter(spriteSheet.ghostFacingRight(personality),
+                gr().drawSpriteScaledWithCenter(getSprites(GALLERY_GHOSTS)[personality],
                     tiles_to_px(LEFT_TILE_X) + TS, tiles_to_px(7 + 3 * personality) + HTS);
             }
             if (ghostCharacterVisible[personality]) {

@@ -223,26 +223,4 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements GameSpriteS
             case Direction.DOWN  -> GHOST_EYES_DOWN;
         });
     }
-
-    public RectArea ghostFacingRight(byte personality) {
-        return getSprites(GALLERY_GHOSTS)[personality];
-    }
-
-    public RectArea[] bigPacManSprites() { return getSprites(PACMAN_BIG); }
-
-    public RectArea[] blinkyStretchedSprites() {
-        return getSprites(RED_GHOST_STRETCHED);
-    }
-
-    public RectArea[] blinkyDamagedSprites() {
-        return getSprites(RED_GHOST_DAMAGED);
-    }
-
-    public RectArea[] blinkyPatchedSprites() {
-        return getSprites(RED_GHOST_PATCHED);
-    }
-
-    public RectArea[] blinkyNakedSprites() {
-        return getSprites(RED_GHOST_NAKED);
-    }
 }
