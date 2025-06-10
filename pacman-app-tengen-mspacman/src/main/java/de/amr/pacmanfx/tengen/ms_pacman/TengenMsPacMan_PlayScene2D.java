@@ -203,14 +203,15 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         return displayModePy;
     }
 
-    private void setJoypadKeyBindings(GameLevel level) {
-        if (level.isDemoLevel()) {
+    private void bindActionsToKeys() {
+        if (theGameLevel().isDemoLevel()) {
             bindAction(ACTION_QUIT_DEMO_LEVEL, TENGEN_DEFAULT_ACTION_BINDINGS);
         } else {
             bindAction(ACTION_PLAYER_UP, TENGEN_DEFAULT_ACTION_BINDINGS);
             bindAction(ACTION_PLAYER_DOWN, TENGEN_DEFAULT_ACTION_BINDINGS);
             bindAction(ACTION_PLAYER_LEFT, TENGEN_DEFAULT_ACTION_BINDINGS);
             bindAction(ACTION_PLAYER_RIGHT, TENGEN_DEFAULT_ACTION_BINDINGS);
+            bindAction(ACTION_TOGGLE_DISPLAY_MODE, TENGEN_DEFAULT_ACTION_BINDINGS);
             bindAction(ACTION_TOGGLE_PAC_BOOSTER, TENGEN_DEFAULT_ACTION_BINDINGS);
             bindAction(ACTION_CHEAT_EAT_ALL_PELLETS);
             bindAction(ACTION_CHEAT_ADD_LIVES);
@@ -223,7 +224,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     public void doInit() {
         theGame().setScoreVisible(true);
-        bindAction(ACTION_TOGGLE_DISPLAY_MODE, TENGEN_DEFAULT_ACTION_BINDINGS);
         setGameRenderer(theUI().configuration().createRenderer(canvas()));
         movingCamera.focusTopOfScene();
         messageMovement = new MessageMovement();
@@ -291,7 +291,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        setJoypadKeyBindings(theGameLevel());
+        bindActionsToKeys();
         gr().applyRenderingHints(theGameLevel());
     }
 
@@ -304,7 +304,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void onSwitch_3D_2D(GameScene scene3D) {
-        setJoypadKeyBindings(theGameLevel());
+        bindActionsToKeys();
         gr().applyRenderingHints(theGameLevel());
     }
 

@@ -162,8 +162,8 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
         gr().applyRenderingHints(theGameLevel());
 
         //TODO: check this
-        if (gr() instanceof VectorGraphicsGameRenderer vectorGraphicsGameRenderer) {
-            vectorGraphicsGameRenderer.setBackgroundColor(PY_CANVAS_BG_COLOR.get());
+        if (gr() instanceof VectorGraphicsGameRenderer vr) {
+            vr.setBackgroundColor(PY_CANVAS_BG_COLOR.get());
         }
 
         boolean highlighted = levelFinishedAnimation != null

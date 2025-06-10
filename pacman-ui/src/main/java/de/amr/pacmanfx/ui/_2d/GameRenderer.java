@@ -315,7 +315,6 @@ public interface GameRenderer {
         }
     }
 
-
     default void drawScores(ScoreManager scoreManager, Color color, Font font) {
         if (scoreManager.isScoreVisible()) {
             drawScore(scoreManager.score(), "SCORE", tiles_to_px(1), tiles_to_px(1), font, color);
