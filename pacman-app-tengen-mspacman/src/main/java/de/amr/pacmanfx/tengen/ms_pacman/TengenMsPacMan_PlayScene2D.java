@@ -44,6 +44,7 @@ import static de.amr.pacmanfx.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_ActionBindings.TENGEN_DEFAULT_ACTION_BINDINGS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.*;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.sprite;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.PacManGames_Actions.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
@@ -462,7 +463,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         // As long as Pac-Man is still invisible on game start, one live more is shown in the counter
         int numLivesDisplayed = theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible()
             ? game.lifeCount() : game.lifeCount() - 1;
-        r.drawLivesCounter(numLivesDisplayed, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - TS);
+        r.drawLivesCounter(numLivesDisplayed, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - TS, sprite(SpriteID.LIVES_COUNTER_SYMBOL));
 
         if (theGameLevel().isDemoLevel() || game.mapCategory() == MapCategory.ARCADE) {
             r.drawLevelCounter(game.levelCounter(), sizeInPx());

@@ -125,8 +125,4 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements GameSpriteS
 
     @Override
     public RectArea bonusValueSprite(byte symbol) { return sprites(BONUS_VALUES)[symbol]; }
-
-    @Override
-    public RectArea livesCounterSprite() { return sprite(LIVES_COUNTER_SYMBOL); }
-
 }

@@ -128,6 +128,10 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfiguration, Res
         scenesByID.put("CutScene1",   new ArcadeMsPacMan_CutScene1());
         scenesByID.put("CutScene2",   new ArcadeMsPacMan_CutScene2());
         scenesByID.put("CutScene3",   new ArcadeMsPacMan_CutScene3());
+
+        // Well, you know...
+        var playScene2D = (ArcadeCommon_PlayScene2D) scenesByID.get("PlayScene2D");
+        playScene2D.setLivesCounterSprite(ArcadeMsPacMan_SpriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL));
     }
 
     @Override
