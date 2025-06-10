@@ -17,7 +17,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.arcade.ArcadePacMan_SpriteSheet.getSprite;
+import static de.amr.pacmanfx.arcade.ArcadePacMan_SpriteSheet.sprite;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theAssets;
 import static java.util.Objects.requireNonNull;
 
@@ -58,9 +58,9 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
             ctx.drawImage(theAssets().image("pacman.flashing_maze"), x, y);
         }
         else if (level.uneatenFoodCount() == 0) {
-            drawSprite(getSprite(SpriteID.MAP_EMPTY), x, y);
+            drawSprite(sprite(SpriteID.MAP_EMPTY), x, y);
         } else {
-            drawSprite(getSprite(SpriteID.MAP_FULL), x, y);
+            drawSprite(sprite(SpriteID.MAP_FULL), x, y);
             overPaintEatenPelletTiles(level, backgroundColor);
             overPaintEnergizerTiles(level, tile -> !energizerHighlighted || level.tileContainsEatenFood(tile), backgroundColor);
         }

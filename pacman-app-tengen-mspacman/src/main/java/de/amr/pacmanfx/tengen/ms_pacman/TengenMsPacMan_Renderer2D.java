@@ -37,7 +37,7 @@ import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_MapRepository.strangeMap15Sprite;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_PacAnimationMap.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.SpriteID;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.getSprite;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.sprite;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.PY_CANVAS_BG_COLOR;
@@ -297,23 +297,23 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
     public void drawGameOptions(MapCategory mapCategory, Difficulty difficulty, PacBooster pacBooster, double centerX, double y) {
         RectArea categorySprite = switch (mapCategory) {
-            case BIG     -> getSprite(SpriteID.INFO_CATEGORY_BIG);
-            case MINI    -> getSprite(SpriteID.INFO_CATEGORY_MINI);
-            case STRANGE -> getSprite(SpriteID.INFO_CATEGORY_STRANGE);
+            case BIG     -> sprite(SpriteID.INFO_CATEGORY_BIG);
+            case MINI    -> sprite(SpriteID.INFO_CATEGORY_MINI);
+            case STRANGE -> sprite(SpriteID.INFO_CATEGORY_STRANGE);
             case ARCADE  -> RectArea.PIXEL;
         };
         RectArea difficultySprite = switch (difficulty) {
-            case EASY   -> getSprite(SpriteID.INFO_DIFFICULTY_EASY);
-            case HARD   -> getSprite(SpriteID.INFO_DIFFICULTY_HARD);
-            case CRAZY  -> getSprite(SpriteID.INFO_DIFFICULTY_CRAZY);
+            case EASY   -> sprite(SpriteID.INFO_DIFFICULTY_EASY);
+            case HARD   -> sprite(SpriteID.INFO_DIFFICULTY_HARD);
+            case CRAZY  -> sprite(SpriteID.INFO_DIFFICULTY_CRAZY);
             case NORMAL -> RectArea.PIXEL;
         };
         if (pacBooster != PacBooster.OFF) {
-            drawSpriteScaledCenteredAt(getSprite(SpriteID.INFO_BOOSTER), centerX - tiles_to_px(6), y);
+            drawSpriteScaledCenteredAt(sprite(SpriteID.INFO_BOOSTER), centerX - tiles_to_px(6), y);
         }
         drawSpriteScaledCenteredAt(difficultySprite, centerX, y);
         drawSpriteScaledCenteredAt(categorySprite, centerX + tiles_to_px(4.5), y);
-        drawSpriteScaledCenteredAt(getSprite(SpriteID.INFO_FRAME), centerX, y);
+        drawSpriteScaledCenteredAt(sprite(SpriteID.INFO_FRAME), centerX, y);
     }
 
     @Override
@@ -351,7 +351,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     public void drawLevelNumberBox(int levelNumber, double x, double y) {
-        drawSpriteScaled(getSprite(SpriteID.LEVEL_NUMBER_BOX), x, y);
+        drawSpriteScaled(sprite(SpriteID.LEVEL_NUMBER_BOX), x, y);
         int tens = levelNumber / 10, ones = levelNumber % 10;
         if (tens > 0) {
             drawSpriteScaled(digitSprite(tens), x + 2, y + 2);
@@ -360,7 +360,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     private RectArea digitSprite(int digit) {
-        return getSprite(switch (digit) {
+        return sprite(switch (digit) {
             case 1 -> SpriteID.DIGIT_1;
             case 2 -> SpriteID.DIGIT_2;
             case 3 -> SpriteID.DIGIT_3;

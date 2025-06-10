@@ -18,7 +18,7 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_ActionBindings.TENGEN_DEFAULT_ACTION_BINDINGS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.ACTION_START_PLAYING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.ACTION_TOGGLE_JOYPAD_KEYS_SHOWN;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.getSprite;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.sprite;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.PacManGames_Actions.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theJoypad;
@@ -286,10 +286,10 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         r.fillText(String.valueOf(tengenGame.startLevelNumber()), NES_WHITE, normalArcadeFont(), COL_VALUE, 168);
         if (tengenGame.numContinues() < 4) {
             RectArea sprite = switch (tengenGame.numContinues()) {
-                case 0 -> getSprite(SpriteID.CONTINUES_0);
-                case 1 -> getSprite(SpriteID.CONTINUES_1);
-                case 2 -> getSprite(SpriteID.CONTINUES_2);
-                case 3 -> getSprite(SpriteID.CONTINUES_3);
+                case 0 -> sprite(SpriteID.CONTINUES_0);
+                case 1 -> sprite(SpriteID.CONTINUES_1);
+                case 2 -> sprite(SpriteID.CONTINUES_2);
+                case 3 -> sprite(SpriteID.CONTINUES_3);
                 default -> throw new IllegalArgumentException("Illegal number of continues " + tengenGame.numContinues());
             };
             r.drawSpriteScaled(sprite, COL_VALUE + 3 * TS, 160);

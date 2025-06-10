@@ -165,17 +165,17 @@ public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
         SPRITE_MAP.put(STORK, new RectArea[] {ra(157, 355, 33, 16), ra(198, 355, 33, 16)});
     }
 
-    public static RectArea getSprite(SpriteID spriteID) { return (RectArea) SPRITE_MAP.get(spriteID); }
-    public static RectArea[] getSprites(SpriteID spriteID) { return (RectArea[]) SPRITE_MAP.get(spriteID); }
+    public static RectArea   sprite(SpriteID spriteID)  { return (RectArea) SPRITE_MAP.get(spriteID); }
+    public static RectArea[] sprites(SpriteID spriteID) { return (RectArea[]) SPRITE_MAP.get(spriteID); }
 
     @Override
-    public RectArea[] ghostNumberSprites() { return getSprites(SpriteID.GHOST_NUMBERS); }
+    public RectArea[] ghostNumberSprites() { return sprites(SpriteID.GHOST_NUMBERS); }
 
     @Override
-    public RectArea livesCounterSprite() { return getSprite(SpriteID.LIVES_COUNTER_SYMBOL); }
+    public RectArea livesCounterSprite() { return sprite(SpriteID.LIVES_COUNTER_SYMBOL); }
 
     @Override
-    public RectArea bonusSymbolSprite(byte symbol) { return getSprites(SpriteID.BONUS_SYMBOLS)[symbol]; }
+    public RectArea bonusSymbolSprite(byte symbol) { return sprites(SpriteID.BONUS_SYMBOLS)[symbol]; }
 
     @Override
     public RectArea bonusValueSprite(byte symbol) {
@@ -187,6 +187,6 @@ public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
             case TengenMsPacMan_GameModel.BONUS_ICE_CREAM -> 7; // 4000!
             default -> symbol;
         };
-        return getSprites(SpriteID.BONUS_VALUES)[index];
+        return sprites(SpriteID.BONUS_VALUES)[index];
     }
 }

@@ -119,8 +119,8 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements GameSpriteS
         });
     }
 
-    public static RectArea getSprite(SpriteID spriteID) { return (RectArea) SPRITE_MAP.get(spriteID); }
-    public static RectArea[] getSprites(SpriteID spriteID) { return (RectArea[]) SPRITE_MAP.get(spriteID); }
+    public static RectArea   sprite(SpriteID spriteID)  { return (RectArea) SPRITE_MAP.get(spriteID); }
+    public static RectArea[] sprites(SpriteID spriteID) { return (RectArea[]) SPRITE_MAP.get(spriteID); }
 
     private static RectArea[] crappyPacManMunchingSpritesExtraction(int dir) {
         byte margin = 1;
@@ -142,15 +142,15 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements GameSpriteS
     }
 
     @Override
-    public RectArea[] ghostNumberSprites() { return getSprites(GHOST_NUMBERS); }
+    public RectArea[] ghostNumberSprites() { return sprites(GHOST_NUMBERS); }
 
     @Override
-    public RectArea bonusSymbolSprite(byte symbol) { return getSprites(BONUS_SYMBOLS)[symbol]; }
+    public RectArea bonusSymbolSprite(byte symbol) { return sprites(BONUS_SYMBOLS)[symbol]; }
 
     @Override
-    public RectArea bonusValueSprite(byte symbol) { return getSprites(BONUS_VALUES)[symbol]; }
+    public RectArea bonusValueSprite(byte symbol) { return sprites(BONUS_VALUES)[symbol]; }
 
     @Override
-    public RectArea livesCounterSprite() { return getSprite(LIVES_COUNTER_SYMBOL); }
+    public RectArea livesCounterSprite() { return sprite(LIVES_COUNTER_SYMBOL); }
 
 }

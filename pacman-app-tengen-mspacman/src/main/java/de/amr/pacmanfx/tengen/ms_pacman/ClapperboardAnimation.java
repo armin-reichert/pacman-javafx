@@ -9,7 +9,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.SpriteID;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.getSprites;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.sprites;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -30,7 +30,7 @@ public class ClapperboardAnimation {
 
     public Optional<RectArea> sprite() {
         if (state == HIDDEN) return Optional.empty();
-        RectArea[] clapperboardSprites = requireNonNull(getSprites(SpriteID.CLAPPERBOARD));
+        RectArea[] clapperboardSprites = requireNonNull(sprites(SpriteID.CLAPPERBOARD));
         return Optional.of(clapperboardSprites[state]);
     }
 

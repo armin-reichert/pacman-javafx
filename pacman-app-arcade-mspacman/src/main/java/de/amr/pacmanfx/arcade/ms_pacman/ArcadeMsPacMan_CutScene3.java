@@ -20,8 +20,8 @@ import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createMs
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createPacMan;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_PacAnimationMap.PAC_MAN_MUNCHING;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.SpriteID.*;
-import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.getSprite;
-import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.getSprites;
+import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.sprite;
+import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.sprites;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theSound;
@@ -65,7 +65,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         msPacMan.setAnimations(new ArcadeMsPacMan_PacAnimationMap(spriteSheet));
         pacMan.setAnimations(new ArcadeMsPacMan_PacAnimationMap(spriteSheet));
 
-        storkAnimation =  SpriteAnimation.createAnimation().sprites(getSprites(STORK)).frameTicks(8).endless();
+        storkAnimation =  SpriteAnimation.createAnimation().sprites(sprites(STORK)).frameTicks(8).endless();
         storkAnimation.play();
 
         clapperboardAnimation = new ClapperboardAnimation("3", "JUNIOR");
@@ -104,7 +104,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         gr().drawActor(msPacMan);
         gr().drawActor(pacMan);
         gr().drawActorSprite(stork, (RectArea) storkAnimation.currentSprite());
-        gr().drawActorSprite(bag, bagOpen ? getSprite(JUNIOR_PAC) : getSprite(BLUE_BAG));
+        gr().drawActorSprite(bag, bagOpen ? sprite(JUNIOR_PAC) : sprite(BLUE_BAG));
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 

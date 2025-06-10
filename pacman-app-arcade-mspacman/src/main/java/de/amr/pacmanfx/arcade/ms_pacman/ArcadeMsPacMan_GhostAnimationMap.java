@@ -13,7 +13,7 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.SpriteID.*;
-import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.getSprites;
+import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.sprites;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createAnimation;
 
@@ -23,8 +23,8 @@ public class ArcadeMsPacMan_GhostAnimationMap extends SpriteAnimationMap<RectAre
         super(ss);
         requireValidGhostPersonality(personality);
         set(ANIM_GHOST_NORMAL,     createAnimation().sprites(ghostNormalSprites(personality, Direction.LEFT)).frameTicks(8).endless());
-        set(ANIM_GHOST_FRIGHTENED, createAnimation().sprites(getSprites(SpriteID.GHOST_FRIGHTENED)).frameTicks(8).endless());
-        set(ANIM_GHOST_FLASHING,   createAnimation().sprites(getSprites(GHOST_FLASHING)).frameTicks(7).endless());
+        set(ANIM_GHOST_FRIGHTENED, createAnimation().sprites(sprites(SpriteID.GHOST_FRIGHTENED)).frameTicks(8).endless());
+        set(ANIM_GHOST_FLASHING,   createAnimation().sprites(sprites(GHOST_FLASHING)).frameTicks(7).endless());
         set(ANIM_GHOST_EYES,       createAnimation().sprites(ghostEyesSprites(Direction.LEFT)).end());
         set(ANIM_GHOST_NUMBER,     createAnimation().sprites(ss.ghostNumberSprites()).end());
     }
@@ -53,7 +53,7 @@ public class ArcadeMsPacMan_GhostAnimationMap extends SpriteAnimationMap<RectAre
     }
 
     private RectArea[] ghostNormalSprites(byte id, Direction dir) {
-        return getSprites(switch (id) {
+        return sprites(switch (id) {
             case 0 -> switch (dir) {
                 case RIGHT -> RED_GHOST_RIGHT;
                 case LEFT -> RED_GHOST_LEFT;
@@ -83,7 +83,7 @@ public class ArcadeMsPacMan_GhostAnimationMap extends SpriteAnimationMap<RectAre
     }
 
     private RectArea[] ghostEyesSprites(Direction dir) {
-        return getSprites(switch (dir) {
+        return sprites(switch (dir) {
             case Direction.RIGHT -> GHOST_EYES_RIGHT;
             case Direction.LEFT  -> GHOST_EYES_LEFT;
             case Direction.UP    -> GHOST_EYES_UP;

@@ -11,7 +11,7 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
-import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.getSprites;
+import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.sprites;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createAnimation;
@@ -23,7 +23,7 @@ public class ArcadeMsPacMan_PacAnimationMap extends SpriteAnimationMap<RectArea>
     public ArcadeMsPacMan_PacAnimationMap(ArcadeMsPacMan_SpriteSheet ss) {
         super(ss);
         set(ANIM_PAC_MUNCHING, createAnimation().sprites(msPacManMunchingSprites(Direction.LEFT)).endless());
-        set(ANIM_PAC_DYING,    createAnimation().sprites(getSprites(SpriteID.MS_PACMAN_DYING)).frameTicks(8).end());
+        set(ANIM_PAC_DYING,    createAnimation().sprites(sprites(SpriteID.MS_PACMAN_DYING)).frameTicks(8).end());
         set(PAC_MAN_MUNCHING,  createAnimation().sprites(mrPacManMunchingSprites(Direction.LEFT)).frameTicks(2).endless());
     }
 
@@ -43,7 +43,7 @@ public class ArcadeMsPacMan_PacAnimationMap extends SpriteAnimationMap<RectArea>
     }
 
     private RectArea[] msPacManMunchingSprites(Direction dir) {
-        return getSprites(switch (dir) {
+        return sprites(switch (dir) {
             case RIGHT -> SpriteID.MS_PACMAN_MUNCHING_RIGHT;
             case LEFT -> SpriteID.MS_PACMAN_MUNCHING_LEFT;
             case UP -> SpriteID.MS_PACMAN_MUNCHING_UP;
@@ -52,7 +52,7 @@ public class ArcadeMsPacMan_PacAnimationMap extends SpriteAnimationMap<RectArea>
     }
 
     private RectArea[] mrPacManMunchingSprites(Direction dir) {
-        return getSprites(switch (dir) {
+        return sprites(switch (dir) {
             case RIGHT -> SpriteID.MR_PACMAN_MUNCHING_RIGHT;
             case LEFT -> SpriteID.MR_PACMAN_MUNCHING_LEFT;
             case UP -> SpriteID.MR_PACMAN_MUNCHING_UP;

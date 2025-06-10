@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.RectArea;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.getSprites;
+import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.sprites;
 
 /**
  * Animated move clapperboard.
@@ -61,7 +61,7 @@ public class ClapperboardAnimation {
 
     public Optional<RectArea> currentSprite() {
         if (state == HIDDEN) return Optional.empty();
-        RectArea sprite = getSprites(SpriteID.CLAPPERBOARD)[state];
+        RectArea sprite = sprites(SpriteID.CLAPPERBOARD)[state];
         return Optional.of(sprite);
     }
 }

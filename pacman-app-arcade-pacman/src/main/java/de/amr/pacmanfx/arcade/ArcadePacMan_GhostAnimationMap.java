@@ -12,7 +12,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.arcade.ArcadePacMan_SpriteSheet.SpriteID.*;
-import static de.amr.pacmanfx.arcade.ArcadePacMan_SpriteSheet.getSprites;
+import static de.amr.pacmanfx.arcade.ArcadePacMan_SpriteSheet.sprites;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createAnimation;
@@ -22,14 +22,14 @@ public class ArcadePacMan_GhostAnimationMap extends SpriteAnimationMap<RectArea>
     public ArcadePacMan_GhostAnimationMap(ArcadePacMan_SpriteSheet ss, byte personality) {
         super(ss);
         set(ANIM_GHOST_NORMAL,              createAnimation().sprites(ghostNormalSprites(personality, Direction.LEFT)).frameTicks(8).endless());
-        set(ANIM_GHOST_FRIGHTENED,          createAnimation().sprites(getSprites(SpriteID.GHOST_FRIGHTENED)).frameTicks(8).endless());
-        set(ANIM_GHOST_FLASHING,            createAnimation().sprites(getSprites(SpriteID.GHOST_FLASHING)).frameTicks(7).endless());
+        set(ANIM_GHOST_FRIGHTENED,          createAnimation().sprites(sprites(SpriteID.GHOST_FRIGHTENED)).frameTicks(8).endless());
+        set(ANIM_GHOST_FLASHING,            createAnimation().sprites(sprites(SpriteID.GHOST_FLASHING)).frameTicks(7).endless());
         set(ANIM_GHOST_EYES,                createAnimation().sprites(ghostEyesSprites(Direction.LEFT)).end());
         set(ANIM_GHOST_NUMBER,              createAnimation().sprites(ss.ghostNumberSprites()).end());
-        set(ANIM_BLINKY_DAMAGED,            createAnimation().sprites(getSprites(SpriteID.RED_GHOST_DAMAGED)).end());
-        set(ANIM_BLINKY_NAIL_DRESS_RAPTURE, createAnimation().sprites(getSprites(SpriteID.RED_GHOST_STRETCHED)).end());
-        set(ANIM_BLINKY_PATCHED,            createAnimation().sprites(getSprites(SpriteID.RED_GHOST_PATCHED)).frameTicks(4).endless());
-        set(ANIM_BLINKY_NAKED,              createAnimation().sprites(getSprites(SpriteID.RED_GHOST_NAKED)).frameTicks(4).endless());
+        set(ANIM_BLINKY_DAMAGED,            createAnimation().sprites(sprites(SpriteID.RED_GHOST_DAMAGED)).end());
+        set(ANIM_BLINKY_NAIL_DRESS_RAPTURE, createAnimation().sprites(sprites(SpriteID.RED_GHOST_STRETCHED)).end());
+        set(ANIM_BLINKY_PATCHED,            createAnimation().sprites(sprites(SpriteID.RED_GHOST_PATCHED)).frameTicks(4).endless());
+        set(ANIM_BLINKY_NAKED,              createAnimation().sprites(sprites(SpriteID.RED_GHOST_NAKED)).frameTicks(4).endless());
     }
 
     @Override
@@ -58,7 +58,7 @@ public class ArcadePacMan_GhostAnimationMap extends SpriteAnimationMap<RectArea>
     }
 
     private RectArea[] ghostNormalSprites(byte id, Direction dir) {
-        return getSprites(switch (id) {
+        return sprites(switch (id) {
             case 0 -> switch (dir) {
                 case RIGHT -> SpriteID.RED_GHOST_RIGHT;
                 case LEFT ->  SpriteID.RED_GHOST_LEFT;
@@ -88,7 +88,7 @@ public class ArcadePacMan_GhostAnimationMap extends SpriteAnimationMap<RectArea>
     }
 
     private RectArea[] ghostEyesSprites(Direction dir) {
-        return getSprites(switch (dir) {
+        return sprites(switch (dir) {
             case Direction.RIGHT -> GHOST_EYES_RIGHT;
             case Direction.LEFT  -> GHOST_EYES_LEFT;
             case Direction.UP    -> GHOST_EYES_UP;

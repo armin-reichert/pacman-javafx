@@ -12,7 +12,7 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.arcade.ArcadePacMan_SpriteSheet.SpriteID.*;
-import static de.amr.pacmanfx.arcade.ArcadePacMan_SpriteSheet.getSprites;
+import static de.amr.pacmanfx.arcade.ArcadePacMan_SpriteSheet.sprites;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ANIM_BIG_PAC_MAN;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
@@ -23,8 +23,8 @@ public class ArcadePacMan_PacAnimationMap extends SpriteAnimationMap<RectArea> {
     public ArcadePacMan_PacAnimationMap(ArcadePacMan_SpriteSheet ss) {
         super(ss);
         set(ANIM_PAC_MUNCHING, createAnimation().sprites(pacMunchingSprites(Direction.LEFT)).endless());
-        set(ANIM_PAC_DYING,    createAnimation().sprites(getSprites(PACMAN_DYING)).frameTicks(8).end());
-        set(ANIM_BIG_PAC_MAN,  createAnimation().sprites(getSprites(PACMAN_BIG)).frameTicks(3).endless());
+        set(ANIM_PAC_DYING,    createAnimation().sprites(sprites(PACMAN_DYING)).frameTicks(8).end());
+        set(ANIM_BIG_PAC_MAN,  createAnimation().sprites(sprites(PACMAN_BIG)).frameTicks(3).endless());
     }
 
     @Override
@@ -46,10 +46,10 @@ public class ArcadePacMan_PacAnimationMap extends SpriteAnimationMap<RectArea> {
 
     private RectArea[] pacMunchingSprites(Direction dir) {
         return switch (dir) {
-            case RIGHT -> getSprites(PACMAN_MUNCHING_RIGHT);
-            case LEFT -> getSprites(PACMAN_MUNCHING_LEFT);
-            case UP -> getSprites(PACMAN_MUNCHING_UP);
-            case DOWN -> getSprites(PACMAN_MUNCHING_DOWN);
+            case RIGHT -> sprites(PACMAN_MUNCHING_RIGHT);
+            case LEFT -> sprites(PACMAN_MUNCHING_LEFT);
+            case UP -> sprites(PACMAN_MUNCHING_UP);
+            case DOWN -> sprites(PACMAN_MUNCHING_DOWN);
         };
     }
 }

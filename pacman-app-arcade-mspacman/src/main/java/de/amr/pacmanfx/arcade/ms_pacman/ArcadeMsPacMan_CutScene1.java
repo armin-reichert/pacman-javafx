@@ -18,7 +18,7 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.*;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_PacAnimationMap.PAC_MAN_MUNCHING;
-import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.getSprite;
+import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.sprite;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
@@ -107,7 +107,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         gr().drawActor(pacMan);
         gr().drawActor(inky);
         gr().drawActor(pinky);
-        gr().drawActorSprite(heart, getSprite(SpriteID.HEART));
+        gr().drawActorSprite(heart, sprite(SpriteID.HEART));
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 
