@@ -354,15 +354,19 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         if (optGameLevel().isEmpty()) {
             return;
         }
-        if (displayModeProperty().get() == SceneDisplayMode.SCROLLING) {
-            setScaling(fxSubScene.getHeight() / NES_SIZE.y());
-        } else {
-            //TODO this code smells
-            int tilesY = theGameLevel().worldMap().numRows() + 3;
-            setScaling(fxSubScene.getHeight() / (tilesY * TS));
-            double camY = scaled((tilesY - 43) * HTS);
-            fixedCamera.setTranslateY(camY);
+        switch (displayModePy.get()) {
+            case SCALED_TO_FIT -> {
+                //TODO this code smells
+                int tilesY = theGameLevel().worldMap().numRows() + 3;
+                setScaling(fxSubScene.getHeight() / (tilesY * TS));
+                double camY = scaled((tilesY - 46) * HTS);
+                fixedCamera.setTranslateY(camY);
+            }
+            case SCROLLING -> {
+                setScaling(fxSubScene.getHeight() / NES_SIZE.y());
+            }
         }
+
         gr().setScaling(scaling());
         if (theGame().isScoreVisible()) {
             gr().drawScores(theGame(), scoreColor(), normalArcadeFont());
