@@ -10,6 +10,9 @@ import javafx.animation.Transition;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -35,13 +38,16 @@ public class SpriteAnimation extends Transition {
             return this;
         }
 
-        public Builder sprites(Object[] sprites) {
-            anim.sprites = sprites;
+        public Builder ofSprites(Object[] sprites) {
+            anim.sprites = requireNonNull(sprites);
+            if (Arrays.stream(sprites).anyMatch(Objects::isNull)) {
+                throw new IllegalArgumentException("Found null sprite in sprite array");
+            }
             return this;
         }
 
-        public Builder sprites(Object sprite) {
-            anim.sprites = new Object[] {sprite};
+        public Builder ofSprite(Object sprite) {
+            anim.sprites = new Object[] {requireNonNull(sprite)};
             return this;
         }
 

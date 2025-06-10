@@ -29,19 +29,19 @@ public class TengenMsPacMan_PacAnimationMap extends SpriteAnimationMap<RectArea>
 
     public TengenMsPacMan_PacAnimationMap(TengenMsPacMan_SpriteSheet ss) {
         super(ss);
-        set(ANIM_PAC_DYING,               createAnimation().sprites(pacDyingSprites()).frameTicks(8).end());
-        set(ANIM_PAC_MUNCHING,            createAnimation().sprites(sprites(SpriteID.MS_PAC_MUNCHING)).endless());
+        set(ANIM_PAC_DYING,               createAnimation().ofSprites(pacDyingSprites()).frameTicks(8).end());
+        set(ANIM_PAC_MUNCHING,            createAnimation().ofSprites(sprites(SpriteID.MS_PAC_MUNCHING)).endless());
 
-        set(ANIM_MS_PAC_MAN_BOOSTER,      createAnimation().sprites(sprites(SpriteID.MS_PAC_MUNCHING_BOOSTER)).endless());
-        set(ANIM_MS_PAC_MAN_WAVING_HAND,  createAnimation().sprites(sprites(SpriteID.MS_PAC_WAVING_HAND)).frameTicks(8).endless());
-        set(ANIM_MS_PAC_MAN_TURNING_AWAY, createAnimation().sprites(sprites(SpriteID.MS_PAC_TURNING_AWAY)).frameTicks(15).end());
+        set(ANIM_MS_PAC_MAN_BOOSTER,      createAnimation().ofSprites(sprites(SpriteID.MS_PAC_MUNCHING_BOOSTER)).endless());
+        set(ANIM_MS_PAC_MAN_WAVING_HAND,  createAnimation().ofSprites(sprites(SpriteID.MS_PAC_WAVING_HAND)).frameTicks(8).endless());
+        set(ANIM_MS_PAC_MAN_TURNING_AWAY, createAnimation().ofSprites(sprites(SpriteID.MS_PAC_TURNING_AWAY)).frameTicks(15).end());
 
-        set(ANIM_PAC_MAN_MUNCHING,        createAnimation().sprites(sprites(SpriteID.MR_PAC_MUNCHING)).frameTicks(2).endless());
-        set(ANIM_PAC_MAN_BOOSTER,         createAnimation().sprites(sprites(SpriteID.MR_PAC_MUNCHING_BOOSTER)).frameTicks(2).endless());
-        set(ANIM_PAC_MAN_WAVING_HAND,     createAnimation().sprites(sprites(SpriteID.MR_PAC_WAVING_HAND)).frameTicks(8).endless());
-        set(ANIM_PAC_MAN_TURNING_AWAY,    createAnimation().sprites(sprites(SpriteID.MR_PAC_TURNING_AWAY)).frameTicks(15).end());
+        set(ANIM_PAC_MAN_MUNCHING,        createAnimation().ofSprites(sprites(SpriteID.MR_PAC_MUNCHING)).frameTicks(2).endless());
+        set(ANIM_PAC_MAN_BOOSTER,         createAnimation().ofSprites(sprites(SpriteID.MR_PAC_MUNCHING_BOOSTER)).frameTicks(2).endless());
+        set(ANIM_PAC_MAN_WAVING_HAND,     createAnimation().ofSprites(sprites(SpriteID.MR_PAC_WAVING_HAND)).frameTicks(8).endless());
+        set(ANIM_PAC_MAN_TURNING_AWAY,    createAnimation().ofSprites(sprites(SpriteID.MR_PAC_TURNING_AWAY)).frameTicks(15).end());
 
-        set(ANIM_JUNIOR,                  createAnimation().sprites(sprite(SpriteID.JUNIOR_PAC)).end());
+        set(ANIM_JUNIOR,                  createAnimation().ofSprite(sprite(SpriteID.JUNIOR_PAC)).end());
     }
 
     @Override

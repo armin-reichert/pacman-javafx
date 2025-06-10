@@ -22,11 +22,11 @@ public class ArcadeMsPacMan_GhostAnimationMap extends SpriteAnimationMap<RectAre
     public ArcadeMsPacMan_GhostAnimationMap(ArcadeMsPacMan_SpriteSheet ss, byte personality) {
         super(ss);
         requireValidGhostPersonality(personality);
-        set(ANIM_GHOST_NORMAL,     createAnimation().sprites(ghostNormalSprites(personality, Direction.LEFT)).frameTicks(8).endless());
-        set(ANIM_GHOST_FRIGHTENED, createAnimation().sprites(sprites(SpriteID.GHOST_FRIGHTENED)).frameTicks(8).endless());
-        set(ANIM_GHOST_FLASHING,   createAnimation().sprites(sprites(GHOST_FLASHING)).frameTicks(7).endless());
-        set(ANIM_GHOST_EYES,       createAnimation().sprites(ghostEyesSprites(Direction.LEFT)).end());
-        set(ANIM_GHOST_NUMBER,     createAnimation().sprites(ss.ghostNumberSprites()).end());
+        set(ANIM_GHOST_NORMAL,     createAnimation().ofSprites(ghostNormalSprites(personality, Direction.LEFT)).frameTicks(8).endless());
+        set(ANIM_GHOST_FRIGHTENED, createAnimation().ofSprites(sprites(SpriteID.GHOST_FRIGHTENED)).frameTicks(8).endless());
+        set(ANIM_GHOST_FLASHING,   createAnimation().ofSprites(sprites(GHOST_FLASHING)).frameTicks(7).endless());
+        set(ANIM_GHOST_EYES,       createAnimation().ofSprites(ghostEyesSprites(Direction.LEFT)).end());
+        set(ANIM_GHOST_NUMBER,     createAnimation().ofSprites(ss.ghostNumberSprites()).end());
     }
 
     @Override

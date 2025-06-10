@@ -21,6 +21,7 @@ import de.amr.pacmanfx.ui.dashboard.InfoBoxCustomMaps;
 import javafx.application.Application;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import org.tinylog.Logger;
 
 import java.util.Map;
 
@@ -49,39 +50,43 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void start(Stage stage) {
-        initUI(Map.of(
-            GameVariant.PACMAN,           ArcadePacMan_UIConfig.class,
-            GameVariant.MS_PACMAN,        ArcadeMsPacMan_UIConfig.class,
-            GameVariant.MS_PACMAN_TENGEN, TengenMsPacMan_UIConfig.class,
-            GameVariant.PACMAN_XXL,       PacManXXL_PacMan_UIConfig.class,
-            GameVariant.MS_PACMAN_XXL,    PacManXXL_MsPacMan_UIConfig.class
-        ));
+        try {
+            initUI(Map.of(
+                GameVariant.PACMAN, ArcadePacMan_UIConfig.class,
+                GameVariant.MS_PACMAN, ArcadeMsPacMan_UIConfig.class,
+                GameVariant.MS_PACMAN_TENGEN, TengenMsPacMan_UIConfig.class,
+                GameVariant.PACMAN_XXL, PacManXXL_PacMan_UIConfig.class,
+                GameVariant.MS_PACMAN_XXL, PacManXXL_MsPacMan_UIConfig.class
+            ));
 
-        // UI size: 80% of available screen height, aspect 16:10
-        double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
-        theUI().buildUI(stage, 1.6 * height, height,
-            DashboardID.README,
-            DashboardID.GENERAL,
-            DashboardID.GAME_CONTROL,
-            DashboardID.SETTINGS_3D,
-            DashboardID.GAME_INFO,
-            DashboardID.ACTOR_INFO,
-            DashboardID.CUSTOM_MAPS,
-            DashboardID.KEYBOARD,
-            DashboardID.ABOUT);
+            // UI size: 80% of available screen height, aspect 16:10
+            double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
+            theUI().buildUI(stage, 1.6 * height, height,
+                DashboardID.README,
+                DashboardID.GENERAL,
+                DashboardID.GAME_CONTROL,
+                DashboardID.SETTINGS_3D,
+                DashboardID.GAME_INFO,
+                DashboardID.ACTOR_INFO,
+                DashboardID.CUSTOM_MAPS,
+                DashboardID.KEYBOARD,
+                DashboardID.ABOUT);
 
-        InfoBoxCustomMaps infoBoxCustomMaps = theUI().gameView().dashboard().getInfoBox(DashboardID.CUSTOM_MAPS);
-        var mapSelector = (PacManXXL_Common_MapSelector) theGameController().game(GameVariant.PACMAN_XXL).mapSelector();
-        infoBoxCustomMaps.setTableItems(mapSelector.customMaps());
-        mapSelector.startWatchingCustomMaps();
+            InfoBoxCustomMaps infoBoxCustomMaps = theUI().gameView().dashboard().getInfoBox(DashboardID.CUSTOM_MAPS);
+            var mapSelector = (PacManXXL_Common_MapSelector) theGameController().game(GameVariant.PACMAN_XXL).mapSelector();
+            infoBoxCustomMaps.setTableItems(mapSelector.customMaps());
+            mapSelector.startWatchingCustomMaps();
 
-        theUI().startPagesView().addStartPage(new ArcadePacMan_StartPage(GameVariant.PACMAN));
-        theUI().startPagesView().addStartPage(new ArcadeMsPacMan_StartPage(GameVariant.MS_PACMAN));
-        theUI().startPagesView().addStartPage(new TengenMsPacMan_StartPage(GameVariant.MS_PACMAN_TENGEN));
-        theUI().startPagesView().addStartPage(new PacManXXL_Common_StartPage());
-        theUI().startPagesView().selectStartPage(0);
+            theUI().startPagesView().addStartPage(new ArcadePacMan_StartPage(GameVariant.PACMAN));
+            theUI().startPagesView().addStartPage(new ArcadeMsPacMan_StartPage(GameVariant.MS_PACMAN));
+            theUI().startPagesView().addStartPage(new TengenMsPacMan_StartPage(GameVariant.MS_PACMAN_TENGEN));
+            theUI().startPagesView().addStartPage(new PacManXXL_Common_StartPage());
+            theUI().startPagesView().selectStartPage(0);
 
-        theUI().show();
+            theUI().show();
+        } catch (Throwable x) {
+            Logger.error(x);
+        }
     }
 
     @Override

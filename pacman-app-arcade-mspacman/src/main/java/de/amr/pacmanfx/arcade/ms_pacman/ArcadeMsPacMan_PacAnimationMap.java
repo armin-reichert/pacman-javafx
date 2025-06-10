@@ -22,9 +22,9 @@ public class ArcadeMsPacMan_PacAnimationMap extends SpriteAnimationMap<RectArea>
 
     public ArcadeMsPacMan_PacAnimationMap(ArcadeMsPacMan_SpriteSheet ss) {
         super(ss);
-        set(ANIM_PAC_MUNCHING, createAnimation().sprites(msPacManMunchingSprites(Direction.LEFT)).endless());
-        set(ANIM_PAC_DYING,    createAnimation().sprites(sprites(SpriteID.MS_PACMAN_DYING)).frameTicks(8).end());
-        set(PAC_MAN_MUNCHING,  createAnimation().sprites(mrPacManMunchingSprites(Direction.LEFT)).frameTicks(2).endless());
+        set(ANIM_PAC_MUNCHING, createAnimation().ofSprites(msPacManMunchingSprites(Direction.LEFT)).endless());
+        set(ANIM_PAC_DYING,    createAnimation().ofSprites(sprites(SpriteID.MS_PACMAN_DYING)).frameTicks(8).end());
+        set(PAC_MAN_MUNCHING,  createAnimation().ofSprites(mrPacManMunchingSprites(Direction.LEFT)).frameTicks(2).endless());
     }
 
     @Override
