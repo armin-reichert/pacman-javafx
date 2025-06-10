@@ -18,6 +18,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
@@ -107,6 +108,22 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
         for (byte symbol : levelCounter.symbols()) {
             drawSpriteScaled(spriteSheet.bonusSymbolSprite(symbol), x, y);
             x -= TS * 2;
+        }
+    }
+
+    @Override
+    public void drawLivesCounter(int numLives, int maxLives, double x, double y) {
+        if (numLives == 0) {
+            return;
+        }
+        for (int i = 0; i < Math.min(numLives, maxLives); ++i) {
+            drawSpriteScaled(spriteSheet().livesCounterSprite(), x + TS * (2 * i), y);
+        }
+        // show text indicating that more lives are available than symbols displayed (can happen when lives are added via cheat)
+        int moreLivesThanSymbols = numLives - maxLives;
+        if (moreLivesThanSymbols > 0) {
+            Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
+            fillText("+" + moreLivesThanSymbols, Color.YELLOW, font, x + TS * 10, y + TS);
         }
     }
 

@@ -300,20 +300,7 @@ public interface GameRenderer {
         ctx().restore();
     }
 
-    default void drawLivesCounter(int numLives, int maxLives, double x, double y) {
-        if (numLives == 0) {
-            return;
-        }
-        for (int i = 0; i < Math.min(numLives, maxLives); ++i) {
-            drawSpriteScaled(spriteSheet().livesCounterSprite(), x + TS * (2 * i), y);
-        }
-        // show text indicating that more lives are available than symbols displayed (can happen when lives are added via cheat)
-        int moreLivesThanSymbols = numLives - maxLives;
-        if (moreLivesThanSymbols > 0) {
-            Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
-            fillText("+" + moreLivesThanSymbols, Color.YELLOW, font, x + TS * 10, y + TS);
-        }
-    }
+    void drawLivesCounter(int numLives, int maxLives, double x, double y);
 
     default void drawScores(ScoreManager scoreManager, Color color, Font font) {
         if (scoreManager.isScoreVisible()) {

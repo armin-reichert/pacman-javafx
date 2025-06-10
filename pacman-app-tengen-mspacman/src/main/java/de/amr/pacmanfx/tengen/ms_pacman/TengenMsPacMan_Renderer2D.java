@@ -26,6 +26,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -36,7 +37,6 @@ import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_MapRepository.strangeMap15Sprite;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_PacAnimationMap.*;
-
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.sprite;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
@@ -347,6 +347,22 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         for (byte symbol : levelCounter.symbols()) {
             drawSpriteScaled(spriteSheet.bonusSymbolSprite(symbol), x, y);
             x -= TS * 2;
+        }
+    }
+
+    @Override
+    public void drawLivesCounter(int numLives, int maxLives, double x, double y) {
+        if (numLives == 0) {
+            return;
+        }
+        for (int i = 0; i < Math.min(numLives, maxLives); ++i) {
+            drawSpriteScaled(spriteSheet().livesCounterSprite(), x + TS * (2 * i), y);
+        }
+        // show text indicating that more lives are available than symbols displayed (can happen when lives are added via cheat)
+        int moreLivesThanSymbols = numLives - maxLives;
+        if (moreLivesThanSymbols > 0) {
+            Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
+            fillText("+" + moreLivesThanSymbols, Color.YELLOW, font, x + TS * 10, y + TS);
         }
     }
 
