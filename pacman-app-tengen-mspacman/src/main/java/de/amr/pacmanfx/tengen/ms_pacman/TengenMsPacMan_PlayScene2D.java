@@ -18,9 +18,7 @@ import de.amr.pacmanfx.ui._2d.LevelFinishedAnimation;
 import de.amr.pacmanfx.uilib.CameraControlledView;
 import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.uilib.Ufx;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.scene.Camera;
 import javafx.scene.Node;
 import javafx.scene.ParallelCamera;
@@ -52,8 +50,6 @@ import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 
 /**
  * Tengen play scene, uses vertical scrolling.
- *
- * @author Armin Reichert
  */
 public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraControlledView {
 
@@ -62,53 +58,56 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     private static final float CAM_SPEED = 0.03f;
     private static final int MOVING_MESSAGE_DELAY = 120;
 
-    private class MovingCamera extends ParallelCamera {
+    private static class DynamicCamera extends ParallelCamera {
+
+        private FloatProperty scalingPy = new SimpleFloatProperty(1);
+
         private int idleTicks;
-        private int verticalRangeTiles;
+        private int verticalRangeInTiles;
         private double targetY;
-        private boolean focusPlayer;
+        private boolean focussingPac;
 
         public void setIdleTicks(int ticks) {
             idleTicks = ticks;
         }
 
-        public void setVerticalRangeTiles(int numTiles) {
-            verticalRangeTiles = numTiles;
+        public void setVerticalRangeInTiles(int numTiles) {
+            verticalRangeInTiles = numTiles;
+        }
+
+        public void setFocussingPac(boolean focus) {
+            focussingPac = focus;
         }
 
         public void setCameraToTopOfScene() {
             setTranslateY(camMinY());
         }
 
-        public void focusTopOfScene() {
+        public void moveTop() {
+            focussingPac = false;
             targetY = camMinY();
-            focusPlayer = false;
         }
 
-        public void focusBottomOfScene() {
+        public void moveBottom() {
+            focussingPac = false;
             targetY = camMaxY();
-            focusPlayer = false;
         }
 
         public double camMinY() {
-            return scaled(-9 * TS);
+            return scalingProperty().get() * (-9 * TS);
         }
 
-        public double camMaxY() {
-            return scaled(verticalRangeTiles - 35) * TS;
-        }
+        public double camMaxY() { return scalingProperty().get() * (verticalRangeInTiles - 35) * TS; }
 
-        public void focusPlayer(boolean focus) {
-            focusPlayer = focus;
-        }
+        public FloatProperty scalingProperty() { return scalingPy; }
 
         public void update(Pac pac) {
             if (idleTicks > 0) {
                 --idleTicks;
                 return;
             }
-            if (focusPlayer) {
-                double frac = (double) pac.tile().y() / verticalRangeTiles;
+            if (focussingPac) {
+                double frac = (double) pac.tile().y() / verticalRangeInTiles;
                 if (frac < 0.4) { frac = 0; } else if (frac > 0.6) { frac = 1.0; }
                 targetY = lerp(camMinY(), camMaxY(), frac);
             }
@@ -119,16 +118,15 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     }
 
     private final SubScene fxSubScene;
-    private final MovingCamera movingCamera;
-    private final ParallelCamera fixedCamera;
+    private final DynamicCamera dynamicCamera = new DynamicCamera();
+    private final ParallelCamera fixedCamera  = new ParallelCamera();
     private final ObjectProperty<SceneDisplayMode> displayModePy = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING);
 
     private MessageMovement messageMovement;
     private LevelFinishedAnimation levelFinishedAnimation;
 
     public TengenMsPacMan_PlayScene2D() {
-        movingCamera = new MovingCamera();
-        fixedCamera = new ParallelCamera();
+        dynamicCamera.scalingProperty().bind(scalingProperty());
 
         setCanvas(new Canvas());
         canvas().widthProperty().bind(scalingProperty().multiply(UNSCALED_CANVAS_SIZE.x()));
@@ -152,7 +150,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         fxSubScene.setFill(PY_CANVAS_BG_COLOR.get());
 
         fxSubScene.cameraProperty().bind(displayModeProperty()
-          .map(displayMode -> displayMode == SceneDisplayMode.SCROLLING ? movingCamera : fixedCamera));
+          .map(displayMode -> displayMode == SceneDisplayMode.SCROLLING ? dynamicCamera : fixedCamera));
     }
 
     @Override
@@ -228,7 +226,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     public void doInit() {
         theGame().setScoreVisible(true);
         setGameRenderer(theUI().configuration().createRenderer(canvas()));
-        movingCamera.focusTopOfScene();
+        dynamicCamera.moveTop();
         messageMovement = new MessageMovement();
     }
 
@@ -244,12 +242,12 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
                 messageMovement.update();
                 updateSound(level);
             }
-            if (fxSubScene.getCamera() == movingCamera) {
+            if (fxSubScene.getCamera() == dynamicCamera) {
                 if (theGameState() == GameState.HUNTING) {
-                    movingCamera.focusPlayer(true);
+                    dynamicCamera.setFocussingPac(true);
                 }
-                movingCamera.setVerticalRangeTiles(level.worldMap().numRows());
-                movingCamera.update(level.pac());
+                dynamicCamera.setVerticalRangeInTiles(level.worldMap().numRows());
+                dynamicCamera.update(level.pac());
             }
         });
     }
@@ -300,9 +298,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void onLevelStarted(GameEvent e) {
-        movingCamera.setCameraToTopOfScene();
-        movingCamera.focusBottomOfScene();
-        movingCamera.setIdleTicks(90);
+        dynamicCamera.setCameraToTopOfScene();
+        dynamicCamera.moveBottom();
+        dynamicCamera.setIdleTicks(90);
     }
 
     @Override
@@ -314,7 +312,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     public void onEnterGameState(GameState state) {
         switch (state) {
-            case HUNTING -> movingCamera.focusPlayer(true);
+            case HUNTING -> dynamicCamera.setFocussingPac(true);
             case LEVEL_COMPLETE -> {
                 theSound().stopAll();
                 levelFinishedAnimation = new LevelFinishedAnimation(theGameLevel(), 333);
@@ -327,7 +325,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
                     float belowHouse = centerPosBelowHouse().x();
                     messageMovement.start(MOVING_MESSAGE_DELAY, belowHouse, sizeInPx().x());
                 }
-                movingCamera.focusTopOfScene();
+                dynamicCamera.moveTop();
             }
             default -> {}
         }
@@ -368,7 +366,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void onPacDead(GameEvent e) {
-        movingCamera.focusTopOfScene();
+        dynamicCamera.moveTop();
         theGameController().letCurrentGameStateExpire();
     }
 
