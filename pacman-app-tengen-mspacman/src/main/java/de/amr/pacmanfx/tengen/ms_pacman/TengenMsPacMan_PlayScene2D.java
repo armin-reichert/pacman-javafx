@@ -75,13 +75,13 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         // The maps are 28 tiles but the canvas is as wide as the NES screen (32 tiles).
         // To avoid drawing Pac-Man outside the map when going through portals, 2 tiles wide vertical stripes
         // are clipped at the left and right map border.
-        var clippingShape = new Rectangle();
+        var mapClippingArea = new Rectangle();
         int stripeWidth = 2 * TS;
-        clippingShape.xProperty().bind(canvas().translateXProperty().add(scalingProperty().multiply(stripeWidth)));
-        clippingShape.yProperty().bind(canvas().translateYProperty());
-        clippingShape.widthProperty().bind(canvas().widthProperty().subtract(scalingProperty().multiply(2 * stripeWidth)));
-        clippingShape.heightProperty().bind(canvas().heightProperty());
-        canvas().setClip(clippingShape);
+        mapClippingArea.xProperty().bind(canvas().translateXProperty().add(scalingProperty().multiply(stripeWidth)));
+        mapClippingArea.yProperty().bind(canvas().translateYProperty());
+        mapClippingArea.widthProperty().bind(canvas().widthProperty().subtract(scalingProperty().multiply(2 * stripeWidth)));
+        mapClippingArea.heightProperty().bind(canvas().heightProperty());
+        canvas().setClip(mapClippingArea);
 
         var root = new StackPane(canvas());
         root.setBackground(Background.EMPTY);
