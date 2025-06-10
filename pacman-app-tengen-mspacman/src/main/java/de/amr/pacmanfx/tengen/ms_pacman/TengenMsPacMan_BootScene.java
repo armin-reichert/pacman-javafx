@@ -101,7 +101,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     @Override
     protected void drawSceneContent() {
         var r = (TengenMsPacMan_Renderer2D) gr();
-        r.drawSceneBorderLines();
+        r.drawVerticalSceneBorders();
         if (grayScreen) {
             r.fillCanvas(nesPaletteColor(0x10));
         } else {

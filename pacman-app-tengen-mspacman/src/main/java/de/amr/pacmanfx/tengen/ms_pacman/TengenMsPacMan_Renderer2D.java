@@ -98,10 +98,10 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         if (!pac.isVisible()) {
             return;
         }
-        pac.animations().map(SpriteAnimationMap.class::cast).ifPresent(spriteAnimations -> {
-            SpriteAnimation animation = spriteAnimations.currentAnimation();
+        pac.animations().map(SpriteAnimationMap.class::cast).ifPresent(spriteAnimationMap -> {
+            SpriteAnimation animation = spriteAnimationMap.currentAnimation();
             if (animation != null) {
-                switch (spriteAnimations.selectedAnimationID()) {
+                switch (spriteAnimationMap.selectedAnimationID()) {
                     case ANIM_PAC_MUNCHING,
                          ANIM_PAC_MAN_MUNCHING,
                          ANIM_MS_PAC_MAN_BOOSTER,
@@ -122,7 +122,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
                     default -> GameRenderer.super.drawActor(pac);
                 }
             } else {
-                Logger.error("No current animation for character {}", pac);
+                Logger.error("No animation found for {}", pac);
             }
         });
     }
@@ -137,11 +137,11 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
             case RIGHT -> ctx().scale(-1, 1);
             case DOWN  -> { ctx().scale(-1, 1); ctx().rotate(-90); }
         }
-        drawSpriteScaledWithCenter(spriteLookingLeft, 0, 0);
+        drawSpriteScaledCenteredAt(spriteLookingLeft, 0, 0);
         ctx().restore();
     }
 
-    public void drawSceneBorderLines() {
+    public void drawVerticalSceneBorders() {
         double width = ctx.getCanvas().getWidth(), height = ctx.getCanvas().getHeight();
         ctx().setLineWidth(0.5);
         ctx().setStroke(Color.grayRgb(50));
@@ -258,22 +258,23 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     public void drawLevelMessage(GameLevel level, Vector2f position, Font font) {
-        if (level.message() != GameLevel.MESSAGE_NONE) {
-            String ans = theUI().configuration().assetNamespace();
-            float x = position.x(), y = position.y();
-            switch (level.message()) {
-                case GameLevel.MESSAGE_READY -> drawTextCenteredOver("READY!", x, y, theAssets().color(ans + ".color.ready_message"), font);
-                case GameLevel.MESSAGE_GAME_OVER -> {
-                    Color color = theAssets().color(ans + ".color.game_over_message");
-                    if (level.isDemoLevel()) {
-                        NES_ColorScheme nesColorScheme = level.worldMap().getConfigValue("nesColorScheme");
-                        color = Color.web(nesColorScheme.strokeColor());
-                    }
-                    drawTextCenteredOver("GAME OVER", x, y, color, font);
+        if (level.message() == GameLevel.MESSAGE_NONE) return;
+
+        float x = position.x(), y = position.y();
+        String ans = theUI().configuration().assetNamespace();
+        switch (level.message()) {
+            case GameLevel.MESSAGE_READY
+                -> drawTextCenteredAt("READY!", x, y, theAssets().color(ans + ".color.ready_message"), font);
+            case GameLevel.MESSAGE_GAME_OVER -> {
+                Color color = theAssets().color(ans + ".color.game_over_message");
+                if (level.isDemoLevel()) {
+                    NES_ColorScheme nesColorScheme = level.worldMap().getConfigValue("nesColorScheme");
+                    color = Color.web(nesColorScheme.strokeColor());
                 }
-                case GameLevel.MESSAGE_TEST -> drawTextCenteredOver("TEST L%02d".formatted(level.number()), x, y,
-                    nesPaletteColor(0x28), font);
+                drawTextCenteredAt("GAME OVER", x, y, color, font);
             }
+            case GameLevel.MESSAGE_TEST
+                -> drawTextCenteredAt("TEST L%02d".formatted(level.number()), x, y, nesPaletteColor(0x28), font);
         }
     }
 
@@ -295,24 +296,24 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     public void drawGameOptions(MapCategory mapCategory, Difficulty difficulty, PacBooster pacBooster, double centerX, double y) {
-        RectArea infoCategory = switch (mapCategory) {
+        RectArea categorySprite = switch (mapCategory) {
             case BIG     -> getSprite(SpriteID.INFO_CATEGORY_BIG);
             case MINI    -> getSprite(SpriteID.INFO_CATEGORY_MINI);
             case STRANGE -> getSprite(SpriteID.INFO_CATEGORY_STRANGE);
             case ARCADE  -> RectArea.PIXEL;
         };
-        RectArea infoDifficulty = switch (difficulty) {
+        RectArea difficultySprite = switch (difficulty) {
             case EASY   -> getSprite(SpriteID.INFO_DIFFICULTY_EASY);
             case HARD   -> getSprite(SpriteID.INFO_DIFFICULTY_HARD);
             case CRAZY  -> getSprite(SpriteID.INFO_DIFFICULTY_CRAZY);
             case NORMAL -> RectArea.PIXEL;
         };
         if (pacBooster != PacBooster.OFF) {
-            drawSpriteScaledWithCenter(getSprite(SpriteID.INFO_BOOSTER), centerX - tiles_to_px(6), y);
+            drawSpriteScaledCenteredAt(getSprite(SpriteID.INFO_BOOSTER), centerX - tiles_to_px(6), y);
         }
-        drawSpriteScaledWithCenter(infoDifficulty, centerX, y);
-        drawSpriteScaledWithCenter(infoCategory, centerX + tiles_to_px(4.5), y);
-        drawSpriteScaledWithCenter(getSprite(SpriteID.INFO_FRAME), centerX, y);
+        drawSpriteScaledCenteredAt(difficultySprite, centerX, y);
+        drawSpriteScaledCenteredAt(categorySprite, centerX + tiles_to_px(4.5), y);
+        drawSpriteScaledCenteredAt(getSprite(SpriteID.INFO_FRAME), centerX, y);
     }
 
     @Override
@@ -351,12 +352,11 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
     public void drawLevelNumberBox(int levelNumber, double x, double y) {
         drawSpriteScaled(getSprite(SpriteID.LEVEL_NUMBER_BOX), x, y);
-        double digitY = y + 2;
         int tens = levelNumber / 10, ones = levelNumber % 10;
         if (tens > 0) {
-            drawSpriteScaled(digitSprite(tens), x + 2, digitY);
+            drawSpriteScaled(digitSprite(tens), x + 2, y + 2);
         }
-        drawSpriteScaled(digitSprite(ones), x + 10, digitY);
+        drawSpriteScaled(digitSprite(ones), x + 10, y + 2);
     }
 
     private RectArea digitSprite(int digit) {
@@ -393,13 +393,12 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         ctx().restore();
     }
 
-    public void drawClapperBoard(ClapperboardAnimation animation, String text, int number, double x, double y, Font font) {
-        animation.sprite().ifPresent(clapperBoard -> {
+    public void drawClapperBoard(ClapperboardAnimation clapperboardAnimation, String text, int number,
+                                 double x, double y, Font font) {
+        clapperboardAnimation.sprite().ifPresent(clapperBoard -> {
+            double numberX = x + 8, numberY = y + 18; // baseline
             ctx().setImageSmoothing(false);
-            drawSpriteScaledWithCenter(clapperBoard, x + HTS, y + HTS);
-            var numberX = x + 8;
-            var numberY = y + 18; // baseline
-
+            drawSpriteScaledCenteredAt(clapperBoard, x + HTS, y + HTS);
             // over-paint number from sprite sheet
             ctx().save();
             ctx().scale(scaling(), scaling());
@@ -410,9 +409,8 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
             ctx().setFont(font);
             ctx().setFill(nesPaletteColor(0x20));
             ctx().fillText(String.valueOf(number), scaled(numberX), scaled(numberY));
-            if (animation.isTextVisible()) {
-                double textX = x + clapperBoard.width();
-                double textY = y + 2;
+            if (clapperboardAnimation.isTextVisible()) {
+                double textX = x + clapperBoard.width(), textY = y + 2;
                 ctx().fillText(text, scaled(textX), scaled(textY));
             }
         });
@@ -450,7 +448,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
     }
 
-    private void drawTextCenteredOver(String text, double cx, double y, Color color, Font font) {
+    private void drawTextCenteredAt(String text, double cx, double y, Color color, Font font) {
         double x = (cx - text.length() * 0.5 * TS);
         fillText(text, color, font, x, y);
     }

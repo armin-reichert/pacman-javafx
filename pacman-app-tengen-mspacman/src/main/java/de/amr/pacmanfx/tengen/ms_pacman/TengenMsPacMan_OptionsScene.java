@@ -241,7 +241,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
             return;
         }
 
-        r.drawSceneBorderLines();
+        r.drawVerticalSceneBorders();
         if (PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED.get()) {
             r.drawJoypadKeyBinding(theJoypad().currentKeyBinding());
         }

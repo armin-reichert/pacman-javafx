@@ -127,7 +127,7 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
             float numberX = scaled(x + sprite.width() - 25);
             float numberY = scaled(y + 18);
             float textX = scaled(x + sprite.width());
-            drawSpriteScaledWithCenter(sprite, x + HTS, y + HTS);
+            drawSpriteScaledCenteredAt(sprite, x + HTS, y + HTS);
             ctx.setFont(font);
             ctx.setFill(ARCADE_WHITE);
             ctx.fillText(clapperboardAnimation.number(), numberX, numberY);

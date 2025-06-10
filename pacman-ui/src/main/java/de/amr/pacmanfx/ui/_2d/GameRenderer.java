@@ -120,7 +120,7 @@ public interface GameRenderer {
      * @param cx  x-coordinate of the center position
      * @param cy  y-coordinate of the center position
      */
-    default void drawSpriteScaledWithCenter(RectArea sprite, double cx, double cy) {
+    default void drawSpriteScaledCenteredAt(RectArea sprite, double cx, double cy) {
         drawSpriteScaled(sprite, cx - 0.5 * sprite.width(), cy - 0.5 * sprite.height());
     }
 
@@ -133,7 +133,7 @@ public interface GameRenderer {
     default void drawActorSprite(Actor actor, RectArea sprite) {
         requireNonNull(actor);
         if (actor.isVisible() && sprite != null) {
-            drawSpriteScaledWithCenter(sprite, actor.x() + HTS, actor.y() + HTS);
+            drawSpriteScaledCenteredAt(sprite, actor.x() + HTS, actor.y() + HTS);
         }
     }
 
