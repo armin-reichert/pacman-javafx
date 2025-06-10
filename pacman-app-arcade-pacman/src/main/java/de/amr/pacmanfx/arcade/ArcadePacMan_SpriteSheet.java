@@ -57,7 +57,6 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements GameSpriteS
         SPRITE_MAP.put(MAP_FULL, ra(0, 0, 224, 248));
         SPRITE_MAP.put(MAP_EMPTY, ra(228, 0, 224, 248));
         SPRITE_MAP.put(GHOST_NUMBERS, new RectArea[] {
-            null,
             ra(456, 133, 15, 7),  // 200
             ra(472, 133, 15, 7),  // 400
             ra(488, 133, 15, 7),  // 800
