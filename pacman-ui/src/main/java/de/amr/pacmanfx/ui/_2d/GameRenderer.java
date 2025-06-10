@@ -220,7 +220,7 @@ public interface GameRenderer {
     }
 
     default void drawAnimatedActorInfo(MovingActor movingActor) {
-        if (movingActor instanceof AnimatedActor animatedActor) {
+        if (movingActor instanceof AnimatedActor animatedActor && movingActor.isVisible()) {
             animatedActor.animations()
                 .filter(SpriteAnimationMap.class::isInstance)
                 .map(SpriteAnimationMap.class::cast)
