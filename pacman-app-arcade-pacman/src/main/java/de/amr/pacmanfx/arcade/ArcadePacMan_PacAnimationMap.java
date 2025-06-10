@@ -11,7 +11,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
-import static de.amr.pacmanfx.arcade.ArcadePacMan_SpriteSheet.SpriteID.*;
+import static de.amr.pacmanfx.arcade.SpriteID.*;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_SpriteSheet.sprites;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ANIM_BIG_PAC_MAN;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;

@@ -11,7 +11,7 @@ import javafx.scene.image.Image;
 import java.util.EnumMap;
 import java.util.stream.IntStream;
 
-import static de.amr.pacmanfx.arcade.ArcadePacMan_SpriteSheet.SpriteID.*;
+import static de.amr.pacmanfx.arcade.SpriteID.*;
 import static de.amr.pacmanfx.lib.RectArea.ra;
 import static java.util.Objects.requireNonNull;
 
@@ -27,30 +27,6 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements GameSpriteS
 
     private static final int R16 = 16; // 16x16 squares in sprite sheet
     private static final int OFF_X = 456;
-
-    public enum SpriteID {
-        MAP_FULL,
-        MAP_EMPTY,
-        RED_GHOST_RIGHT, RED_GHOST_LEFT, RED_GHOST_UP, RED_GHOST_DOWN,
-        PINK_GHOST_RIGHT, PINK_GHOST_LEFT, PINK_GHOST_UP, PINK_GHOST_DOWN,
-        CYAN_GHOST_RIGHT, CYAN_GHOST_LEFT, CYAN_GHOST_UP, CYAN_GHOST_DOWN,
-        ORANGE_GHOST_RIGHT, ORANGE_GHOST_LEFT, ORANGE_GHOST_UP, ORANGE_GHOST_DOWN,
-        GHOST_FRIGHTENED,
-        GHOST_FLASHING,
-        GHOST_EYES_RIGHT, GHOST_EYES_LEFT, GHOST_EYES_UP, GHOST_EYES_DOWN,
-        GHOST_NUMBERS,
-        BONUS_SYMBOLS,
-        BONUS_VALUES,
-        GALLERY_GHOSTS,
-        LIVES_COUNTER_SYMBOL,
-        PACMAN_MUNCHING_RIGHT, PACMAN_MUNCHING_LEFT, PACMAN_MUNCHING_UP, PACMAN_MUNCHING_DOWN,
-        PACMAN_DYING,
-        PACMAN_BIG,
-        RED_GHOST_STRETCHED,
-        RED_GHOST_DAMAGED,
-        RED_GHOST_PATCHED,
-        RED_GHOST_NAKED
-    }
 
     private static final EnumMap<SpriteID, Object> SPRITE_MAP = new EnumMap<>(SpriteID.class);
     static {
