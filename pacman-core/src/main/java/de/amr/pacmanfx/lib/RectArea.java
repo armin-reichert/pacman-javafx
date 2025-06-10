@@ -17,7 +17,7 @@ public record RectArea(short x, short y, short width, short height) {
 
     public static final RectArea PIXEL = new RectArea(0, 0, 1, 1);
 
-    public static RectArea rect(int x, int y, int width, int height) {
+    public static RectArea ra(int x, int y, int width, int height) {
         return new RectArea(x, y, width, height);
     }
 

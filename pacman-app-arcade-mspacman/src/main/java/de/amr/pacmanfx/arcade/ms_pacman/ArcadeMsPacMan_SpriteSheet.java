@@ -12,7 +12,7 @@ import java.util.EnumMap;
 import java.util.stream.IntStream;
 
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.SpriteID.*;
-import static de.amr.pacmanfx.lib.RectArea.rect;
+import static de.amr.pacmanfx.lib.RectArea.ra;
 
 public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements GameSpriteSheet {
 
@@ -21,12 +21,12 @@ public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
 
     // third "column" contains the sprites (first two columns the maze images)
     private static RectArea tile(int tileX, int tileY) {
-        return rect(OFF_X + R16 * tileX, R16 * tileY, R16, R16);
+        return ra(OFF_X + R16 * tileX, R16 * tileY, R16, R16);
     }
 
     private static RectArea[] tilesRightOf(int tileX, int tileY, int numTiles) {
         return IntStream.range(tileX, tileX + numTiles)
-                .mapToObj(x -> rect(OFF_X + R16 * x, R16 * tileY, R16, R16))
+                .mapToObj(x -> ra(OFF_X + R16 * x, R16 * tileY, R16, R16))
                 .toArray(RectArea[]::new);
     }
 
@@ -89,15 +89,15 @@ public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
         SPRITE_MAP.put(BONUS_SYMBOLS,            IntStream.range(0, 8).mapToObj(symbol -> tile(3 + symbol, 0)).toArray(RectArea[]::new));
         SPRITE_MAP.put(BONUS_VALUES,             IntStream.range(0, 8).mapToObj(symbol -> tile(3 + symbol, 1)).toArray(RectArea[]::new));
         SPRITE_MAP.put(LIVES_COUNTER_SYMBOL,     tile(1, 0));
-        SPRITE_MAP.put(STORK,                    new RectArea[] {rect(489, 176, 32, 16), rect(521, 176, 32, 16)});
+        SPRITE_MAP.put(STORK,                    new RectArea[] {ra(489, 176, 32, 16), ra(521, 176, 32, 16)});
         SPRITE_MAP.put(CLAPPERBOARD,             new RectArea[] {
-                                                    rect(456, 208, 32, 32),  // open
-                                                    rect(488, 208, 32, 32),  // middle
-                                                    rect(520, 208, 32, 32)   // closed
+                                                    ra(456, 208, 32, 32),  // open
+                                                    ra(488, 208, 32, 32),  // middle
+                                                    ra(520, 208, 32, 32)   // closed
         });
         SPRITE_MAP.put(HEART,                    tile(2, 10));
-        SPRITE_MAP.put(BLUE_BAG,                 rect(488, 199, 8, 8));
-        SPRITE_MAP.put(JUNIOR_PAC,               rect(509, 200, 8, 8));
+        SPRITE_MAP.put(BLUE_BAG,                 ra(488, 199, 8, 8));
+        SPRITE_MAP.put(JUNIOR_PAC,               ra(509, 200, 8, 8));
     }
 
     public static RectArea getSprite(SpriteID spriteID) { return (RectArea) SPRITE_MAP.get(spriteID); }

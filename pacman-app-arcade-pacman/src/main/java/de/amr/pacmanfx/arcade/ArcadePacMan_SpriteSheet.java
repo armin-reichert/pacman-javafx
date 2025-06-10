@@ -12,18 +12,18 @@ import java.util.EnumMap;
 import java.util.stream.IntStream;
 
 import static de.amr.pacmanfx.arcade.ArcadePacMan_SpriteSheet.SpriteID.*;
-import static de.amr.pacmanfx.lib.RectArea.rect;
+import static de.amr.pacmanfx.lib.RectArea.ra;
 import static java.util.Objects.requireNonNull;
 
 public record ArcadePacMan_SpriteSheet(Image sourceImage) implements GameSpriteSheet {
 
     private static RectArea[] tilesRightOf(int tileX, int tileY, int numTiles) {
         return IntStream.range(tileX, tileX + numTiles)
-                .mapToObj(x -> rect(OFF_X + R16 * x, R16 * tileY, R16, R16))
+                .mapToObj(x -> ra(OFF_X + R16 * x, R16 * tileY, R16, R16))
                 .toArray(RectArea[]::new);
     }
 
-    private static RectArea tile(int tileX, int tileY) { return rect(OFF_X + R16 * tileX, R16 * tileY, R16, R16); }
+    private static RectArea tile(int tileX, int tileY) { return ra(OFF_X + R16 * tileX, R16 * tileY, R16, R16); }
 
     private static final int R16 = 16; // 16x16 squares in sprite sheet
     private static final int OFF_X = 456;
@@ -54,28 +54,28 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements GameSpriteS
 
     private static final EnumMap<SpriteID, Object> SPRITE_MAP = new EnumMap<>(SpriteID.class);
     static {
-        SPRITE_MAP.put(MAP_FULL, rect(0, 0, 224, 248));
-        SPRITE_MAP.put(MAP_EMPTY, rect(228, 0, 224, 248));
+        SPRITE_MAP.put(MAP_FULL, ra(0, 0, 224, 248));
+        SPRITE_MAP.put(MAP_EMPTY, ra(228, 0, 224, 248));
         SPRITE_MAP.put(GHOST_NUMBERS, new RectArea[] {
-            rect(456, 133, 15, 7),  // 200
-            rect(472, 133, 15, 7),  // 400
-            rect(488, 133, 15, 7),  // 800
-            rect(504, 133, 16, 7)   // 1600
+            ra(456, 133, 15, 7),  // 200
+            ra(472, 133, 15, 7),  // 400
+            ra(488, 133, 15, 7),  // 800
+            ra(504, 133, 16, 7)   // 1600
         });
         SPRITE_MAP.put(BONUS_SYMBOLS, IntStream.range(0, 8)
-            .mapToObj(i -> rect(OFF_X + R16 * (2 + i), 49, 14, 14))
+            .mapToObj(i -> ra(OFF_X + R16 * (2 + i), 49, 14, 14))
             .toArray(RectArea[]::new));
         SPRITE_MAP.put(BONUS_VALUES, new RectArea[] {
-            rect(457, 148, 14, 7), //  100
-            rect(472, 148, 15, 7), //  300
-            rect(488, 148, 15, 7), //  500
-            rect(504, 148, 15, 7), //  700
-            rect(520, 148, 18, 7), // 1000
-            rect(518, 164, 20, 7), // 2000
-            rect(518, 180, 20, 7), // 3000
-            rect(518, 196, 20, 7), // 5000
+            ra(457, 148, 14, 7), //  100
+            ra(472, 148, 15, 7), //  300
+            ra(488, 148, 15, 7), //  500
+            ra(504, 148, 15, 7), //  700
+            ra(520, 148, 18, 7), // 1000
+            ra(518, 164, 20, 7), // 2000
+            ra(518, 180, 20, 7), // 3000
+            ra(518, 196, 20, 7), // 5000
         });
-        SPRITE_MAP.put(LIVES_COUNTER_SYMBOL, rect(OFF_X + 129, 15, 16, 16));
+        SPRITE_MAP.put(LIVES_COUNTER_SYMBOL, ra(OFF_X + 129, 15, 16, 16));
         SPRITE_MAP.put(PACMAN_MUNCHING_RIGHT, crappyPacManMunchingSpritesExtraction(0));
         SPRITE_MAP.put(PACMAN_MUNCHING_LEFT,  crappyPacManMunchingSpritesExtraction(1));
         SPRITE_MAP.put(PACMAN_MUNCHING_UP,    crappyPacManMunchingSpritesExtraction(2));
@@ -105,17 +105,17 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements GameSpriteS
         SPRITE_MAP.put(GHOST_EYES_UP,         tilesRightOf(10, 5, 1));
         SPRITE_MAP.put(GHOST_EYES_DOWN,       tilesRightOf(11, 5, 1));
         SPRITE_MAP.put(PACMAN_BIG,            new RectArea[] {
-                rect(OFF_X + 32, 16, 32, 32), rect(OFF_X + 64, 16, 32, 32), rect(OFF_X + 96, 16, 32, 32)
+                ra(OFF_X + 32, 16, 32, 32), ra(OFF_X + 64, 16, 32, 32), ra(OFF_X + 96, 16, 32, 32)
         });
         SPRITE_MAP.put(RED_GHOST_STRETCHED,   IntStream.range(0,5).mapToObj(i -> tile(8 + i, 6)).toArray(RectArea[]::new));
         SPRITE_MAP.put(RED_GHOST_DAMAGED,     new RectArea[] {
-                rect(OFF_X + R16 * 8 + 1, R16 * 7 + 1, 14, 14),
-                rect(OFF_X + R16 * 9 + 1, R16 * 7 + 1, 14, 14)
+                ra(OFF_X + R16 * 8 + 1, R16 * 7 + 1, 14, 14),
+                ra(OFF_X + R16 * 9 + 1, R16 * 7 + 1, 14, 14)
         });
         SPRITE_MAP.put(RED_GHOST_PATCHED, new RectArea[] { tile(10, 7), tile(11, 7) });
         SPRITE_MAP.put(RED_GHOST_NAKED, new RectArea[] {
-                rect(OFF_X + R16 * 8, R16 * 8, 2 * R16, R16),
-                rect(OFF_X + R16 * 10, R16 * 8, 2 * R16, R16)
+                ra(OFF_X + R16 * 8, R16 * 8, 2 * R16, R16),
+                ra(OFF_X + R16 * 10, R16 * 8, 2 * R16, R16)
         });
     }
 
@@ -125,15 +125,15 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements GameSpriteS
     private static RectArea[] crappyPacManMunchingSpritesExtraction(int dir) {
         byte margin = 1;
         int size = R16 - 2 * margin;
-        RectArea wide = rect(OFF_X + margin, dir * 16 + margin, size, size);
-        RectArea middle = rect(OFF_X + 16 + margin, dir * 16 + margin, size, size);
-        RectArea closed = rect(OFF_X + 32 + margin, margin, size, size);
+        RectArea wide = ra(OFF_X + margin, dir * 16 + margin, size, size);
+        RectArea middle = ra(OFF_X + 16 + margin, dir * 16 + margin, size, size);
+        RectArea closed = ra(OFF_X + 32 + margin, margin, size, size);
         return new RectArea[] {closed, closed, middle, middle, wide, wide, middle, middle};
     }
 
     private static RectArea[] crappyPacManDyingSpriteExtraction() {
         return IntStream.range(0, 12)
-                .mapToObj(i -> rect(504 + i * R16, 0, R16 - 1, i == 11 ? R16 : R16 - 1))
+                .mapToObj(i -> ra(504 + i * R16, 0, R16 - 1, i == 11 ? R16 : R16 - 1))
                 .toArray(RectArea[]::new);
     }
 

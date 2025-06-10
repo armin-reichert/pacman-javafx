@@ -22,7 +22,7 @@ import javafx.scene.text.Font;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.arcade.ArcadePalette.ARCADE_WHITE;
-import static de.amr.pacmanfx.lib.RectArea.rect;
+import static de.amr.pacmanfx.lib.RectArea.ra;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theAssets;
 import static java.util.Objects.requireNonNull;
@@ -30,30 +30,30 @@ import static java.util.Objects.requireNonNull;
 public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
 
     private static final RectArea[] FULL_MAZES = {
-        rect(0,     0, 224, 248),
-        rect(0,   248, 224, 248),
-        rect(0, 2*248, 224, 248),
-        rect(0, 3*248, 224, 248),
-        rect(0, 4*248, 224, 248),
-        rect(0, 5*248, 224, 248),
+        ra(0,     0, 224, 248),
+        ra(0,   248, 224, 248),
+        ra(0, 2*248, 224, 248),
+        ra(0, 3*248, 224, 248),
+        ra(0, 4*248, 224, 248),
+        ra(0, 5*248, 224, 248),
     };
 
     private static final RectArea[] EMPTY_MAZES = {
-        rect(228,     0, 224, 248),
-        rect(228,   248, 224, 248),
-        rect(228, 2*248, 224, 248),
-        rect(228, 3*248, 224, 248),
-        rect(228, 4*248, 224, 248),
-        rect(228, 5*258, 224, 248),
+        ra(228,     0, 224, 248),
+        ra(228,   248, 224, 248),
+        ra(228, 2*248, 224, 248),
+        ra(228, 3*248, 224, 248),
+        ra(228, 4*248, 224, 248),
+        ra(228, 5*258, 224, 248),
     };
 
     private static final RectArea[] HIGHLIGHTED_MAZES = {
-        rect(0,     0, 224, 248),
-        rect(0,   248, 224, 248),
-        rect(0, 2*248, 224, 248),
-        rect(0, 3*248, 224, 248),
-        rect(0, 4*248, 224, 248),
-        rect(0, 5*248, 224, 248),
+        ra(0,     0, 224, 248),
+        ra(0,   248, 224, 248),
+        ra(0, 2*248, 224, 248),
+        ra(0, 3*248, 224, 248),
+        ra(0, 4*248, 224, 248),
+        ra(0, 5*248, 224, 248),
     };
 
     private final ArcadeMsPacMan_SpriteSheet spriteSheet;

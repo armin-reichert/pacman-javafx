@@ -14,7 +14,7 @@ import org.tinylog.Logger;
 import java.util.*;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.RectArea.rect;
+import static de.amr.pacmanfx.lib.RectArea.ra;
 import static de.amr.pacmanfx.uilib.Ufx.replaceColors;
 import static java.util.Objects.requireNonNull;
 
@@ -47,7 +47,7 @@ public class TengenMsPacMan_MapRepository {
 
     // Strange map #15 (level 32) has 3 different images to create an animation effect
     private static final RectArea[] STRANGE_MAP_15_SPRITES = {
-        rect(1568, 840, 224, 248), rect(1568, 1088, 224, 248), rect(1568, 1336, 224, 248)
+        ra(1568, 840, 224, 248), ra(1568, 1088, 224, 248), ra(1568, 1336, 224, 248)
     };
 
     // Frame pattern: (00000000111111112222222211111111)+, numFrames = 4, frameDuration = 8
