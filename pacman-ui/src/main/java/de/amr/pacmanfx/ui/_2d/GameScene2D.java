@@ -31,14 +31,14 @@ public abstract class GameScene2D implements GameScene, PacManGames_ActionBindin
 
     protected final Map<KeyCombination, GameAction> actionBindings = new HashMap<>();
 
-    private final ObjectProperty<Font>  normalArcadeFontPy = new SimpleObjectProperty<>();
-    private final ObjectProperty<Font>  smallArcadeFontPy = new SimpleObjectProperty<>();
-    private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
-    private final BooleanProperty       debugInfoVisiblePy = new SimpleBooleanProperty(false);
-    private final FloatProperty         scalingPy = new SimpleFloatProperty(1.0f);
+    protected final ObjectProperty<Font>  normalArcadeFontPy = new SimpleObjectProperty<>();
+    protected final ObjectProperty<Font>  smallArcadeFontPy = new SimpleObjectProperty<>();
+    protected final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
+    protected final BooleanProperty       debugInfoVisiblePy = new SimpleBooleanProperty(false);
+    protected final FloatProperty         scalingPy = new SimpleFloatProperty(1.0f);
 
-    private GameRenderer gameRenderer;
-    private Canvas canvas;
+    protected GameRenderer gameRenderer;
+    protected Canvas canvas;
 
     protected GameScene2D() {
         normalArcadeFontPy.bind(scalingPy.map(s -> theAssets().arcadeFontAtSize(s.floatValue() * TS)));

@@ -134,22 +134,25 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         canvas().widthProperty().bind(scalingProperty().multiply(UNSCALED_CANVAS_SIZE.x()));
         canvas().heightProperty().bind(scalingProperty().multiply(UNSCALED_CANVAS_SIZE.y()));
 
-        // maze is drawn centered inside canvas: clip left and right vertical stripes (2 tiles wide each)
-        var clip = new Rectangle();
+        // The mazes are smaller than the canvas which is as wide as the NES screen.
+        // When Pac-Man runs through a portal, it gets drawn outside the maze bounds.
+        // To avoid that, clip 2 tiles wide vertical stripes at the left and right maze border.
+        var mazeClip = new Rectangle();
         int stripeWidth = 2 * TS;
-        clip.xProperty().bind(canvas().translateXProperty().add(scalingProperty().multiply(stripeWidth)));
-        clip.yProperty().bind(canvas().translateYProperty());
-        clip.widthProperty().bind(canvas().widthProperty().subtract(scalingProperty().multiply(2 * stripeWidth)));
-        clip.heightProperty().bind(canvas().heightProperty());
-        canvas().setClip(clip);
+        mazeClip.xProperty().bind(canvas().translateXProperty().add(scalingProperty().multiply(stripeWidth)));
+        mazeClip.yProperty().bind(canvas().translateYProperty());
+        mazeClip.widthProperty().bind(canvas().widthProperty().subtract(scalingProperty().multiply(2 * stripeWidth)));
+        mazeClip.heightProperty().bind(canvas().heightProperty());
+        canvas().setClip(mazeClip);
 
         var root = new StackPane(canvas());
         root.setBackground(Background.EMPTY);
 
-        fxSubScene = new SubScene(root, 42, 42);
+        fxSubScene = new SubScene(root, 0, 0); // size is bound to parent scene size when embedded in game view
         fxSubScene.setFill(PY_CANVAS_BG_COLOR.get());
+
         fxSubScene.cameraProperty().bind(displayModeProperty()
-            .map(mode -> mode == SceneDisplayMode.SCROLLING ? movingCamera : fixedCamera));
+          .map(displayMode -> displayMode == SceneDisplayMode.SCROLLING ? movingCamera : fixedCamera));
     }
 
     @Override
@@ -409,11 +412,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     // drawing
 
-    private void updateScaling() {
-        double unscaledHeight = displayModePy.get() == SceneDisplayMode.SCROLLING ? NES_SIZE.y() : sizeInPx().y() + 3 * TS;
-        setScaling(viewPortHeightProperty().get() / unscaledHeight);
-    }
-
     private void updateFixedCameraPosition() {
         int worldTilesY = optGameLevel().map(level -> level.worldMap().numRows()).orElse(NES_TILES.y());
         double dy = scaled((worldTilesY - 43) * HTS);
@@ -421,16 +419,32 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     }
 
     @Override
-    protected void drawSceneContent() {
+    public void draw() {
         if (optGameLevel().isEmpty()) {
             // Scene is drawn already 2 ticks before level has been created
             Logger.warn("Tick {}: Game level not yet available, scene content not drawn", theClock().tickCount());
             return;
         }
+        double viewPortHeight = viewPortHeightProperty().get();
+        if (displayModeProperty().get() == SceneDisplayMode.SCROLLING) {
+            setScaling(viewPortHeight / NES_SIZE.y());
+        } else {
+            setScaling(viewPortHeight / (sizeInPx().y() + 3 * TS));
+            updateFixedCameraPosition();
+        }
+        gr().setScaling(scaling());
+        gr().fillCanvas(backgroundColor());
+        if (theGame().isScoreVisible()) {
+            gr().drawScores(theGame(), scoreColor(), normalArcadeFont());
+        }
+        drawSceneContent();
+        if (debugInfoVisiblePy.get()) {
+            drawDebugInfo();
+        }
+    }
 
-        updateScaling();
-        updateFixedCameraPosition();
-
+    @Override
+    protected void drawSceneContent() {
         final var game = (TengenMsPacMan_GameModel) theGame();
         final var r = (TengenMsPacMan_Renderer2D) gr();
         r.ensureMapSettingsApplied(theGameLevel()); //TODO check this workaround
