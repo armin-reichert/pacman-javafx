@@ -195,16 +195,16 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         ctx().restore();
     }
 
-    public void drawHighlightedWorld(GameLevel level, double mapX, double mapY, int flashingIndex) {
+    public void drawHighlightedLevel(GameLevel level, double mapX, double mapY, int flashingIndex) {
         requireNonNull(level);
-        final var tengenGame = (TengenMsPacMan_GameModel) theGame();
-        ctx().setImageSmoothing(false);
-        if (!tengenGame.optionsAreInitial()) {
-            drawGameOptions(tengenGame.mapCategory(), tengenGame.difficulty(), tengenGame.pacBooster(),
-                level.worldMap().numCols() * HTS, tiles_to_px(2) + HTS);
+        final var game = (TengenMsPacMan_GameModel) theGame();
+        final ColoredImageRegion mapImage = coloredMapSet.flashingMapRegions().get(flashingIndex);
+        final RectArea region = mapImage.region();
+        if (!game.optionsAreInitial()) {
+            drawGameOptions(game.mapCategory(), game.difficulty(), game.pacBooster(),
+                    level.worldMap().numCols() * HTS, tiles_to_px(2) + HTS);
         }
-        ColoredImageRegion mapImage = coloredMapSet.flashingMapRegions().get(flashingIndex);
-        RectArea region = mapImage.region();
+        ctx().setImageSmoothing(false);
         ctx().drawImage(mapImage.image(),
             region.x(), region.y(), region.width(), region.height(),
             scaled(mapX), scaled(mapY), scaled(region.width()), scaled(region.height())
@@ -336,11 +336,11 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         requireNonNull(font);
         if (scoreManager.isScoreVisible()) {
             if (theClock().tickCount() % 60 < 30) {
-                fillText("1UP", color, font, tiles_to_px(2), tiles_to_px(1));
+                fillText("1UP", color, font, tiles_to_px(4), tiles_to_px(1));
             }
-            fillText("HIGH SCORE", color, font, tiles_to_px(9), tiles_to_px(1));
-            fillText("%6d".formatted(scoreManager.score().points()), color, font, 0, tiles_to_px(2));
-            fillText("%6d".formatted(scoreManager.highScore().points()), color, font, tiles_to_px(11), tiles_to_px(2));
+            fillText("HIGH SCORE", color, font, tiles_to_px(11), tiles_to_px(1));
+            fillText("%6d".formatted(scoreManager.score().points()), color, font, tiles_to_px(2), tiles_to_px(2));
+            fillText("%6d".formatted(scoreManager.highScore().points()), color, font, tiles_to_px(13), tiles_to_px(2));
         }
     }
 

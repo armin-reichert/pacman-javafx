@@ -54,7 +54,8 @@ import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraControlledView {
 
     // NES screen width (32 tiles), BIG map height (42 tiles) + 2 extra tile rows
-    private static final Vector2i UNSCALED_CANVAS_SIZE = Vector2i.of(NES_SIZE.x(), 44 * TS);
+    private static final Vector2i UNSCALED_CANVAS_SIZE = Vector2i.of(32 * TS, 44 * TS);
+
     private static final int MOVING_MESSAGE_DELAY = 120;
 
     private final SubScene fxSubScene;
@@ -75,13 +76,14 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         // The maps are 28 tiles but the canvas is as wide as the NES screen (32 tiles).
         // To avoid drawing Pac-Man outside the map when going through portals, 2 tiles wide vertical stripes
         // are clipped at the left and right map border.
-        var mapClippingArea = new Rectangle();
-        int stripeWidth = 2 * TS;
-        mapClippingArea.xProperty().bind(canvas().translateXProperty().add(scalingProperty().multiply(stripeWidth)));
-        mapClippingArea.yProperty().bind(canvas().translateYProperty());
-        mapClippingArea.widthProperty().bind(canvas().widthProperty().subtract(scalingProperty().multiply(2 * stripeWidth)));
-        mapClippingArea.heightProperty().bind(canvas().heightProperty());
-        canvas().setClip(mapClippingArea);
+        var clipRect = new Rectangle();
+        // clipRect.x = canvas.x + scaled(2 * TS)
+        clipRect.xProperty().bind(canvas().translateXProperty().add(scalingProperty().multiply(2 * TS)));
+        clipRect.yProperty().bind(canvas().translateYProperty());
+        // clipRect.width = canvas.width + scaled(4 * TS)
+        clipRect.widthProperty().bind(canvas().widthProperty().subtract(scalingProperty().multiply(4 * TS)));
+        clipRect.heightProperty().bind(canvas().heightProperty());
+        canvas().setClip(clipRect);
 
         var root = new StackPane(canvas());
         root.setBackground(Background.EMPTY);
@@ -383,25 +385,24 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     protected void drawSceneContent() {
         final var game = (TengenMsPacMan_GameModel) theGame();
         final var r = (TengenMsPacMan_Renderer2D) gr();
-        r.ensureMapSettingsApplied(theGameLevel()); //TODO check this workaround
-
-        r.ctx().save();
-        // NES screen width is 32 tiles but mazes are only 28 tiles wide
-        double margin = scaled((NES_TILES.x() - theGameLevel().worldMap().numCols()) * HTS);
-        r.ctx().translate(margin, 0);
-
-        final int mazeTopY = 3 * TS;
+        // NES screen is 32 tiles wide but mazes are only 28 tiles wide
+        final double indent = scaled(2 * TS);
+        final int mazeTop = 3 * TS;
         final boolean flashing = levelFinishedAnimation != null && levelFinishedAnimation.isRunning();
+
+        r.ensureMapSettingsApplied(theGameLevel()); //TODO check this
+        r.ctx().save();
+        r.ctx().translate(indent, 0);
         if (flashing) {
             if (levelFinishedAnimation.isHighlighted()) {
-                r.drawHighlightedWorld(theGameLevel(), 0, mazeTopY, levelFinishedAnimation.getFlashingIndex());
+                r.drawHighlightedLevel(theGameLevel(), 0, mazeTop, levelFinishedAnimation.getFlashingIndex());
             } else {
-                r.drawLevel(theGameLevel(), 0, mazeTopY, null, false, false);
+                r.drawLevel(theGameLevel(), 0, mazeTop, null, false, false);
                 r.drawFood(theGameLevel()); // this also hides the eaten food!
             }
         }
         else {
-            r.drawLevel(theGameLevel(), 0, mazeTopY, null, false, false);
+            r.drawLevel(theGameLevel(), 0, mazeTop, null, false, false);
             r.drawFood(theGameLevel());
             theGameLevel().bonus().ifPresent(r::drawBonus);
             //TODO in the original game, the message is drawn under the maze image but *over* the pellets!
