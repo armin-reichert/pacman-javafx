@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman;
 
+import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.SpriteID;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.ui.PacManGames_Actions;
@@ -14,6 +15,7 @@ import static de.amr.pacmanfx.Globals.theGame;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.arcade.ArcadePalette.ARCADE_ORANGE;
 import static de.amr.pacmanfx.arcade.ArcadePalette.ARCADE_RED;
+import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.sprite;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theSound;
 
@@ -44,7 +46,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
         gr().fillTextAtTile("PUSH START BUTTON", ARCADE_ORANGE, normalArcadeFont(), 6, 16);
         gr().fillTextAtTile("1 PLAYER ONLY", ARCADE_ORANGE, normalArcadeFont(), 8, 18);
         gr().fillTextAtTile("ADDITIONAL    AT 10000", ARCADE_ORANGE, normalArcadeFont(), 2, 25);
-        gr().drawSpriteScaled(gr().spriteSheet().livesCounterSprite(), tiles_to_px(13), tiles_to_px(23) + 1); //TODO check this
+        gr().drawSpriteScaled(sprite(SpriteID.LIVES_COUNTER_SYMBOL), tiles_to_px(13), tiles_to_px(23) + 1);
         gr().fillTextAtTile("PTS", ARCADE_ORANGE, smallArcadeFont(), 25, 25);
         if (gr() instanceof ArcadeMsPacMan_GameRenderer r) {
             r.drawMsPacManCopyrightAtTile(ARCADE_RED, normalArcadeFont(), 6, 28);
