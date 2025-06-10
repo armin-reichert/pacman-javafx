@@ -263,17 +263,17 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         String ans = theUI().configuration().assetNamespace();
         switch (level.message()) {
             case GameLevel.MESSAGE_READY
-                -> drawTextCenteredAt("READY!", x, y, theAssets().color(ans + ".color.ready_message"), font);
+                -> fillTextAtCenter("READY!", theAssets().color(ans + ".color.ready_message"), font, x, y);
             case GameLevel.MESSAGE_GAME_OVER -> {
                 Color color = theAssets().color(ans + ".color.game_over_message");
                 if (level.isDemoLevel()) {
                     NES_ColorScheme nesColorScheme = level.worldMap().getConfigValue("nesColorScheme");
                     color = Color.web(nesColorScheme.strokeColor());
                 }
-                drawTextCenteredAt("GAME OVER", x, y, color, font);
+                fillTextAtCenter("GAME OVER", color, font, x, y);
             }
             case GameLevel.MESSAGE_TEST
-                -> drawTextCenteredAt("TEST L%02d".formatted(level.number()), x, y, nesPaletteColor(0x28), font);
+                -> fillTextAtCenter("TEST L%02d".formatted(level.number()), nesPaletteColor(0x28), font, x, y);
         }
     }
 
@@ -445,10 +445,5 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
                 joypad.key(JoypadButton.RIGHT)
         ), 0, scaled(2*TS));
 
-    }
-
-    private void drawTextCenteredAt(String text, double cx, double y, Color color, Font font) {
-        double x = (cx - text.length() * 0.5 * TS);
-        fillText(text, color, font, x, y);
     }
 }
