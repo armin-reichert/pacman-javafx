@@ -62,6 +62,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     public ObjectProperty<Color> backgroundColorProperty() { return  backgroundColorPy; }
 
     public void ensureMapSettingsApplied(GameLevel level) {
+        requireNonNull(level);
         if (coloredMapSet == null) {
             applyRenderingHints(level);
         }
@@ -69,6 +70,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
     @Override
     public void applyRenderingHints(GameLevel level) {
+        requireNonNull(level);
         int flashCount = level.data().numFlashes();
         coloredMapSet = mapRepository.createMapSequence(level.worldMap(), flashCount);
         Logger.info("Created maze set with {} flash colors {}", flashCount, coloredMapSet);
@@ -85,6 +87,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
     @Override
     public void drawActor(Actor actor) {
+        requireNonNull(actor);
         ctx().setImageSmoothing(false);
         if (actor instanceof Pac pac) {
             drawAnyPac(pac);
@@ -149,7 +152,9 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     @Override
-    public void drawLevel(GameLevel level, double x, double y, Color unusedBackgroundColor, boolean mazeHighlighted, boolean energizerHighlighted) {
+    public void drawLevel(GameLevel level, double x, double y, Color optionalBackgroundColor,
+                          boolean mazeHighlighted, boolean energizerHighlighted) {
+        requireNonNull(level);
         if (coloredMapSet == null) {
             Logger.warn("Tick {}: Maze cannot be drawn, no map set found", theClock().tickCount());
             return;
@@ -177,6 +182,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     public void drawFood(GameLevel level) {
+        requireNonNull(level);
         if (coloredMapSet == null) {
             Logger.error("Draw food: no map set found");
             return;
@@ -190,6 +196,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     public void drawHighlightedWorld(GameLevel level, double mapX, double mapY, int flashingIndex) {
+        requireNonNull(level);
         final var tengenGame = (TengenMsPacMan_GameModel) theGame();
         ctx().setImageSmoothing(false);
         if (!tengenGame.optionsAreInitial()) {
@@ -244,6 +251,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
     @Override
     public void drawBonus(Bonus bonus) {
+        requireNonNull(bonus);
         MovingBonus movingBonus = (MovingBonus) bonus;
         ctx().save();
         ctx().setImageSmoothing(false);
@@ -257,6 +265,9 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     public void drawLevelMessage(GameLevel level, Vector2f position, Font font) {
+        requireNonNull(level);
+        requireNonNull(position);
+        requireNonNull(font);
         if (level.message() == GameLevel.MESSAGE_NONE) return;
 
         float x = position.x(), y = position.y();
@@ -295,6 +306,9 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     public void drawGameOptions(MapCategory mapCategory, Difficulty difficulty, PacBooster pacBooster, double centerX, double y) {
+        requireNonNull(mapCategory);
+        requireNonNull(difficulty);
+        requireNonNull(pacBooster);
         RectArea categorySprite = switch (mapCategory) {
             case BIG     -> sprite(SpriteID.INFO_CATEGORY_BIG);
             case MINI    -> sprite(SpriteID.INFO_CATEGORY_MINI);
@@ -317,6 +331,9 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
     @Override
     public void drawScores(ScoreManager scoreManager, Color color, Font font) {
+        requireNonNull(scoreManager);
+        requireNonNull(color);
+        requireNonNull(font);
         if (scoreManager.isScoreVisible()) {
             if (theClock().tickCount() % 60 < 30) {
                 fillText("1UP", color, font, tiles_to_px(2), tiles_to_px(1));
@@ -328,6 +345,8 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     public void drawLevelCounterWithLevelNumbers(int levelNumber, LevelCounter levelCounter, Vector2f sizeInPx) {
+        requireNonNull(levelCounter);
+        requireNonNull(sizeInPx);
         ctx().setImageSmoothing(false);
         float x = sizeInPx.x() - 2 * TS, y = sizeInPx.y() - TS;
         drawLevelNumberBox(levelNumber, 0, y); // left box
@@ -341,6 +360,8 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
     @Override
     public void drawLevelCounter(LevelCounter levelCounter, Vector2f sceneSizeInPixels) {
+        requireNonNull(levelCounter);
+        requireNonNull(sceneSizeInPixels);
         ctx().setImageSmoothing(false);
         float x = sceneSizeInPixels.x() - 4 * TS, y = sceneSizeInPixels.y() - TS;
         for (byte symbol : levelCounter.symbols()) {
@@ -382,9 +403,10 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
     }
 
     public void drawBar(Color outlineColor, Color barColor, double width, double y) {
-        double scaling = scaling();
+        requireNonNull(outlineColor);
+        requireNonNull(barColor);
         ctx().save();
-        ctx().scale(scaling, scaling);
+        ctx().scale(scaling(), scaling());
         ctx().setFill(outlineColor);
         ctx().fillRect(0, y, width, TS);
         ctx().setFill(barColor);
@@ -394,10 +416,13 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
     public void drawClapperBoard(ClapperboardAnimation clapperboardAnimation, String text, int number,
                                  double x, double y, Font font) {
-        clapperboardAnimation.sprite().ifPresent(clapperBoard -> {
+        requireNonNull(clapperboardAnimation);
+        requireNonNull(text);
+        requireNonNull(font);
+        clapperboardAnimation.sprite().ifPresent(clapperBoardSprite -> {
             double numberX = x + 8, numberY = y + 18; // baseline
             ctx().setImageSmoothing(false);
-            drawSpriteScaledCenteredAt(clapperBoard, x + HTS, y + HTS);
+            drawSpriteScaledCenteredAt(clapperBoardSprite, x + HTS, y + HTS);
             // over-paint number from sprite sheet
             ctx().save();
             ctx().scale(scaling(), scaling());
@@ -409,14 +434,16 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
             ctx().setFill(nesPaletteColor(0x20));
             ctx().fillText(String.valueOf(number), scaled(numberX), scaled(numberY));
             if (clapperboardAnimation.isTextVisible()) {
-                double textX = x + clapperBoard.width(), textY = y + 2;
+                double textX = x + clapperBoardSprite.width(), textY = y + 2;
                 ctx().fillText(text, scaled(textX), scaled(textY));
             }
         });
     }
 
     public void drawStork(SpriteAnimation storkAnimation, Actor stork, boolean hideBag) {
-        if (!stork.isVisible()) {
+        requireNonNull(storkAnimation);
+        requireNonNull(stork);
+        if (!stork.isVisible() || storkAnimation.currentSprite() == null) {
             return;
         }
         ctx().setImageSmoothing(false);
@@ -427,23 +454,21 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         }
     }
 
-    public void drawJoypadKeyBinding(JoypadKeyBinding joypad) {
-        String line1 = " [SELECT]=%s   [START]=%s   [BUTTON B]=%s   [BUTTON A]=%s";
-        String line2 = " [UP]=%s   [DOWN]=%s   [LEFT]=%s   [RIGHT]=%s";
+    public void drawJoypadKeyBinding(JoypadKeyBinding binding) {
+        requireNonNull(binding);
         ctx().setFont(Font.font("Sans", scaled(TS)));
         ctx().setStroke(Color.WHITE);
-        ctx().strokeText(line1.formatted(
-                joypad.key(JoypadButton.SELECT),
-                joypad.key(JoypadButton.START),
-                joypad.key(JoypadButton.B),
-                joypad.key(JoypadButton.A)
+        ctx().strokeText(" [SELECT]=%s   [START]=%s   [BUTTON B]=%s   [BUTTON A]=%s".formatted(
+                binding.key(JoypadButton.SELECT),
+                binding.key(JoypadButton.START),
+                binding.key(JoypadButton.B),
+                binding.key(JoypadButton.A)
         ), 0, scaled(TS));
-        ctx().strokeText(line2.formatted(
-                joypad.key(JoypadButton.UP),
-                joypad.key(JoypadButton.DOWN),
-                joypad.key(JoypadButton.LEFT),
-                joypad.key(JoypadButton.RIGHT)
+        ctx().strokeText(" [UP]=%s   [DOWN]=%s   [LEFT]=%s   [RIGHT]=%s".formatted(
+                binding.key(JoypadButton.UP),
+                binding.key(JoypadButton.DOWN),
+                binding.key(JoypadButton.LEFT),
+                binding.key(JoypadButton.RIGHT)
         ), 0, scaled(2*TS));
-
     }
 }
