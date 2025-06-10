@@ -11,40 +11,9 @@ import java.util.EnumMap;
 import java.util.stream.IntStream;
 
 import static de.amr.pacmanfx.lib.RectArea.ra;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.SpriteID.*;
+import static de.amr.pacmanfx.tengen.ms_pacman.SpriteID.*;
 
 public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements GameSpriteSheet {
-
-    public enum SpriteID {
-        TITLE_TEXT,
-        INFO_FRAME,
-        INFO_BOOSTER,
-        INFO_CATEGORY_BIG, INFO_CATEGORY_MINI, INFO_CATEGORY_STRANGE,
-        INFO_DIFFICULTY_CRAZY, INFO_DIFFICULTY_EASY, INFO_DIFFICULTY_HARD,
-        HEART, BLUE_BAG, JUNIOR_PAC,
-        MS_PAC_MUNCHING, MS_PAC_MUNCHING_BOOSTER,
-        MS_PAC_WAVING_HAND,
-        MS_PAC_TURNING_AWAY,
-        MR_PAC_MUNCHING, MR_PAC_MUNCHING_BOOSTER,
-        MR_PAC_WAVING_HAND,
-        MR_PAC_TURNING_AWAY,
-        RED_GHOST_RIGHT, RED_GHOST_LEFT, RED_GHOST_UP, RED_GHOST_DOWN,
-        PINK_GHOST_RIGHT, PINK_GHOST_LEFT, PINK_GHOST_UP, PINK_GHOST_DOWN,
-        CYAN_GHOST_RIGHT, CYAN_GHOST_LEFT, CYAN_GHOST_UP, CYAN_GHOST_DOWN,
-        ORANGE_GHOST_RIGHT, ORANGE_GHOST_LEFT, ORANGE_GHOST_UP, ORANGE_GHOST_DOWN,
-        GHOST_FRIGHTENED,
-        GHOST_FLASHING,
-        GHOST_EYES_RIGHT, GHOST_EYES_LEFT, GHOST_EYES_UP, GHOST_EYES_DOWN,
-        GHOST_NUMBERS,
-        BONUS_SYMBOLS,
-        BONUS_VALUES,
-        CONTINUES_0, CONTINUES_1, CONTINUES_2, CONTINUES_3,
-        LEVEL_NUMBER_BOX,
-        CLAPPERBOARD,
-        STORK,
-        LIVES_COUNTER_SYMBOL,
-        DIGIT_1, DIGIT_2, DIGIT_3, DIGIT_4, DIGIT_5, DIGIT_6, DIGIT_7, DIGIT_8, DIGIT_9, DIGIT_0,
-    }
 
     // Bonus symbols/values: x-position, width, y-delta
     private static final int[] BONUS_X  = {8, 24, 40, 56, 76, 96, 118, 140, 162, 182, 204, 230, 250, 272};
