@@ -17,7 +17,9 @@ import de.amr.pacmanfx.ui._2d.LevelFinishedAnimation;
 import de.amr.pacmanfx.uilib.CameraControlledView;
 import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.uilib.Ufx;
-import javafx.beans.property.*;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Camera;
 import javafx.scene.Node;
 import javafx.scene.ParallelCamera;
@@ -70,16 +72,16 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         canvas().widthProperty().bind(scalingProperty().multiply(UNSCALED_CANVAS_SIZE.x()));
         canvas().heightProperty().bind(scalingProperty().multiply(UNSCALED_CANVAS_SIZE.y()));
 
-        // The mazes are smaller than the canvas which is as wide as the NES screen.
-        // When Pac-Man runs through a portal, it gets drawn outside the maze bounds.
-        // To avoid that, clip 2 tiles wide vertical stripes at the left and right maze border.
-        var mazeClip = new Rectangle();
+        // The maps are 28 tiles but the canvas is as wide as the NES screen (32 tiles).
+        // To avoid drawing Pac-Man outside the map when going through portals, 2 tiles wide vertical stripes
+        // are clipped at the left and right map border.
+        var clippingShape = new Rectangle();
         int stripeWidth = 2 * TS;
-        mazeClip.xProperty().bind(canvas().translateXProperty().add(scalingProperty().multiply(stripeWidth)));
-        mazeClip.yProperty().bind(canvas().translateYProperty());
-        mazeClip.widthProperty().bind(canvas().widthProperty().subtract(scalingProperty().multiply(2 * stripeWidth)));
-        mazeClip.heightProperty().bind(canvas().heightProperty());
-        canvas().setClip(mazeClip);
+        clippingShape.xProperty().bind(canvas().translateXProperty().add(scalingProperty().multiply(stripeWidth)));
+        clippingShape.yProperty().bind(canvas().translateYProperty());
+        clippingShape.widthProperty().bind(canvas().widthProperty().subtract(scalingProperty().multiply(2 * stripeWidth)));
+        clippingShape.heightProperty().bind(canvas().heightProperty());
+        canvas().setClip(clippingShape);
 
         var root = new StackPane(canvas());
         root.setBackground(Background.EMPTY);
