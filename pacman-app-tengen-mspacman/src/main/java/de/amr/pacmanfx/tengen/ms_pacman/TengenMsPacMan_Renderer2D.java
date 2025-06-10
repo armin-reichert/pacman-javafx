@@ -299,13 +299,13 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
             case BIG     -> sprite(SpriteID.INFO_CATEGORY_BIG);
             case MINI    -> sprite(SpriteID.INFO_CATEGORY_MINI);
             case STRANGE -> sprite(SpriteID.INFO_CATEGORY_STRANGE);
-            case ARCADE  -> RectArea.PIXEL;
+            case ARCADE  -> null; // drawSprite() accepts null sprites!
         };
         RectArea difficultySprite = switch (difficulty) {
             case EASY   -> sprite(SpriteID.INFO_DIFFICULTY_EASY);
             case HARD   -> sprite(SpriteID.INFO_DIFFICULTY_HARD);
             case CRAZY  -> sprite(SpriteID.INFO_DIFFICULTY_CRAZY);
-            case NORMAL -> RectArea.PIXEL;
+            case NORMAL -> null; // drawSprite() accepts null sprites!
         };
         if (pacBooster != PacBooster.OFF) {
             drawSpriteScaledCenteredAt(sprite(SpriteID.INFO_BOOSTER), centerX - tiles_to_px(6), y);
