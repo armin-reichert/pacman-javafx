@@ -412,28 +412,22 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     // drawing
 
-    private void updateFixedCameraPosition() {
-        int worldTilesY = optGameLevel().map(level -> level.worldMap().numRows()).orElse(NES_TILES.y());
-        double dy = scaled((worldTilesY - 43) * HTS);
-        fixedCamera.setTranslateY(dy);
-    }
-
     @Override
     public void draw() {
+        gr().fillCanvas(backgroundColor());
         if (optGameLevel().isEmpty()) {
-            // Scene is drawn already 2 ticks before level has been created
-            Logger.warn("Tick {}: Game level not yet available, scene content not drawn", theClock().tickCount());
             return;
         }
-        double viewPortHeight = viewPortHeightProperty().get();
         if (displayModeProperty().get() == SceneDisplayMode.SCROLLING) {
-            setScaling(viewPortHeight / NES_SIZE.y());
+            setScaling(fxSubScene.getHeight() / NES_SIZE.y());
         } else {
-            setScaling(viewPortHeight / (sizeInPx().y() + 3 * TS));
-            updateFixedCameraPosition();
+            //TODO this code smells
+            int tilesY = theGameLevel().worldMap().numRows() + 3;
+            setScaling(fxSubScene.getHeight() / (tilesY * TS));
+            double camY = scaled((tilesY - 43) * HTS);
+            fixedCamera.setTranslateY(camY);
         }
         gr().setScaling(scaling());
-        gr().fillCanvas(backgroundColor());
         if (theGame().isScoreVisible()) {
             gr().drawScores(theGame(), scoreColor(), normalArcadeFont());
         }
