@@ -121,7 +121,9 @@ public interface GameRenderer {
      * @param cy  y-coordinate of the center position
      */
     default void drawSpriteScaledCenteredAt(RectArea sprite, double cx, double cy) {
-        drawSpriteScaled(sprite, cx - 0.5 * sprite.width(), cy - 0.5 * sprite.height());
+        if (sprite != null) {
+            drawSpriteScaled(sprite, cx - 0.5 * sprite.width(), cy - 0.5 * sprite.height());
+        }
     }
 
     /**
