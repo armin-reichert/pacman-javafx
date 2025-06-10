@@ -9,7 +9,6 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.ui.PacManGames_Actions;
@@ -39,7 +38,6 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVEL_TEASERS;
-import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_ActionBindings.TENGEN_DEFAULT_ACTION_BINDINGS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.sprite;
@@ -55,62 +53,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     // NES screen width (32 tiles), BIG map height (42 tiles) + 2 extra tile rows
     private static final Vector2i UNSCALED_CANVAS_SIZE = Vector2i.of(NES_SIZE.x(), 44 * TS);
-    private static final float CAM_SPEED = 0.03f;
     private static final int MOVING_MESSAGE_DELAY = 120;
-
-    private static class DynamicCamera extends ParallelCamera {
-        private final FloatProperty scalingPy = new SimpleFloatProperty(1);
-        private int idleTicks;
-        private int verticalRangeInTiles;
-        private double targetY;
-        private boolean focussingActor;
-
-        public FloatProperty scalingProperty() { return scalingPy; }
-
-        public void setIdleTime(int ticks) {
-            idleTicks = ticks;
-        }
-        public void setVerticalRangeInTiles(int numTiles) {
-            verticalRangeInTiles = numTiles;
-        }
-        public void setFocussingActor(boolean focus) {
-            focussingActor = focus;
-        }
-        public void setCameraToTopOfScene() {
-            setTranslateY(camMinY());
-        }
-
-        public void moveTop() {
-            focussingActor = false;
-            targetY = camMinY();
-        }
-
-        public void moveBottom() {
-            focussingActor = false;
-            targetY = camMaxY();
-        }
-
-        public double camMinY() {
-            return scalingProperty().get() * (-9 * TS);
-        }
-        public double camMaxY() { return scalingProperty().get() * (verticalRangeInTiles - 35) * TS; }
-
-        public void update(Actor actor) {
-            if (idleTicks > 0) {
-                --idleTicks;
-                return;
-            }
-            if (focussingActor) {
-                float frac = (float) actor.tile().y() / verticalRangeInTiles;
-                if (frac < 0.4) { frac = 0; } else if (frac > 0.6) { frac = 1f; }
-                targetY = lerp(camMinY(), camMaxY(), frac);
-            }
-            double camY = lerp(getTranslateY(), targetY, CAM_SPEED);
-            camY = Math.clamp(camY, camMinY(), camMaxY());
-            setTranslateY(camY);
-            Logger.debug("Camera: y={0.00} target={} top={} bottom={}", getTranslateY(), targetY, camMinY(), camMaxY());
-        }
-    }
 
     private final SubScene fxSubScene;
     private final DynamicCamera dynamicCamera = new DynamicCamera();
