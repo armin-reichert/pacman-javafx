@@ -8,12 +8,11 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.RectArea;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
-import static de.amr.pacmanfx.arcade.SpriteID.*;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_SpriteSheet.sprites;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ANIM_BIG_PAC_MAN;
+import static de.amr.pacmanfx.arcade.SpriteID.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createAnimation;
@@ -30,11 +29,6 @@ public class ArcadePacMan_PacAnimationMap extends SpriteAnimationMap<RectArea> {
     @Override
     public ArcadePacMan_SpriteSheet spriteSheet() {
         return (ArcadePacMan_SpriteSheet) super.spriteSheet();
-    }
-
-    @Override
-    public SpriteAnimation animation(String id) {
-        return super.animation(id);
     }
 
     @Override
