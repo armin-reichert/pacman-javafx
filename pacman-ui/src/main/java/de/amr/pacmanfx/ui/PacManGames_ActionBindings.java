@@ -11,6 +11,7 @@ import javafx.scene.input.KeyCombination;
 import org.tinylog.Logger;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import static de.amr.pacmanfx.ui.PacManGames_Actions.*;
@@ -57,11 +58,14 @@ public interface PacManGames_ActionBindings extends ActionBindingSupport {
         bindAction(gameAction, COMMON_ACTION_BINDINGS);
     }
 
-    default void bindAction(GameAction gameAction, Map<GameAction, Set<KeyCombination>> bindingMap) {
+    default void bindAction(GameAction gameAction, Map<GameAction, Set<KeyCombination>> bindings) {
         requireNonNull(gameAction);
-        requireNonNull(bindingMap);
-        if (bindingMap.containsKey(gameAction)) {
-            for (KeyCombination combination : bindingMap.get(gameAction)) {
+        requireNonNull(bindings);
+        if (bindings.values().stream().anyMatch(Objects::isNull)) {
+            throw new IllegalArgumentException("Found null value in key bindings map");
+        }
+        if (bindings.containsKey(gameAction)) {
+            for (KeyCombination combination : bindings.get(gameAction)) {
                 actionBindings().put(combination, gameAction);
             }
         } else {

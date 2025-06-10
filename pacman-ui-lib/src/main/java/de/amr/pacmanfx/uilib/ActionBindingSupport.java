@@ -9,6 +9,7 @@ import javafx.scene.input.KeyCombination;
 import org.tinylog.Logger;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -22,7 +23,17 @@ import static java.util.Objects.requireNonNull;
 public interface ActionBindingSupport {
 
     static Map.Entry<GameAction, Set<KeyCombination>> createBinding(GameAction action, KeyCombination... combinations) {
-        return entry(action, Set.of(combinations));
+        requireNonNull(combinations);
+        if (combinations.length == 0) {
+            throw new IllegalArgumentException("No key combinations specified for action " + action);
+        }
+        for (KeyCombination combination: combinations) {
+            if (combination == null) {
+                throw new IllegalArgumentException("Found null value in key combinations for action " + action);
+            }
+        }
+        var combinationSet = Set.of(combinations);
+        return entry(action, combinationSet);
     }
 
     /**
