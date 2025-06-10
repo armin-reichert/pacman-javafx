@@ -11,7 +11,7 @@ import javafx.scene.image.Image;
 import java.util.EnumMap;
 import java.util.stream.IntStream;
 
-import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.SpriteID.*;
+import static de.amr.pacmanfx.arcade.ms_pacman.SpriteID.*;
 import static de.amr.pacmanfx.lib.RectArea.ra;
 
 public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements GameSpriteSheet {
@@ -28,28 +28,6 @@ public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
         return IntStream.range(tileX, tileX + numTiles)
                 .mapToObj(x -> ra(OFF_X + R16 * x, R16 * tileY, R16, R16))
                 .toArray(RectArea[]::new);
-    }
-
-    public enum SpriteID {
-        MS_PACMAN_MUNCHING_RIGHT, MS_PACMAN_MUNCHING_LEFT, MS_PACMAN_MUNCHING_UP, MS_PACMAN_MUNCHING_DOWN,
-        MS_PACMAN_DYING,
-        MR_PACMAN_MUNCHING_RIGHT, MR_PACMAN_MUNCHING_LEFT, MR_PACMAN_MUNCHING_UP, MR_PACMAN_MUNCHING_DOWN,
-        RED_GHOST_RIGHT, RED_GHOST_LEFT, RED_GHOST_UP, RED_GHOST_DOWN,
-        PINK_GHOST_RIGHT, PINK_GHOST_LEFT, PINK_GHOST_UP, PINK_GHOST_DOWN,
-        CYAN_GHOST_RIGHT, CYAN_GHOST_LEFT, CYAN_GHOST_UP, CYAN_GHOST_DOWN,
-        ORANGE_GHOST_RIGHT, ORANGE_GHOST_LEFT, ORANGE_GHOST_UP, ORANGE_GHOST_DOWN,
-        GHOST_FRIGHTENED,
-        GHOST_FLASHING,
-        GHOST_EYES_RIGHT, GHOST_EYES_LEFT, GHOST_EYES_UP, GHOST_EYES_DOWN,
-        GHOST_NUMBERS,
-        BONUS_SYMBOLS,
-        BONUS_VALUES,
-        LIVES_COUNTER_SYMBOL,
-        CLAPPERBOARD,
-        STORK,
-        HEART,
-        BLUE_BAG,
-        JUNIOR_PAC
     }
 
     private static final EnumMap<SpriteID, Object> SPRITE_MAP = new EnumMap<>(SpriteID.class);
