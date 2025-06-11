@@ -168,19 +168,19 @@ public class ArcadePacMan_IntroScene extends GameScene2D implements PacManGames_
         } else {
             gr().drawActor(ghosts.get(RED_GHOST_SHADOW));
             gr().drawActor(ghosts.get(ORANGE_GHOST_POKEY));
-            gr().ctx().save();
-            gr().ctx().translate(shakingAmount, 0);
+            ctx().save();
+            ctx().translate(shakingAmount, 0);
             gr().drawActor(ghosts.get(PINK_GHOST_SPEEDY));
             gr().drawActor(ghosts.get(CYAN_GHOST_BASHFUL));
-            gr().ctx().restore();
+            ctx().restore();
         }
         gr().drawActor(pacMan);
     }
 
     private void drawPoints() {
-        gr().ctx().setFill(ARCADE_ROSE);
+        ctx().setFill(ARCADE_ROSE);
         // normal pellet
-        gr().ctx().fillRect(scaled(tiles_to_px(LEFT_TILE_X + 6) + 4), scaled(tiles_to_px(24) + 4), scaled(2), scaled(2));
+        ctx().fillRect(scaled(tiles_to_px(LEFT_TILE_X + 6) + 4), scaled(tiles_to_px(24) + 4), scaled(2), scaled(2));
         gr().fillTextAtTile("10",  ARCADE_WHITE, arcadeFont8(), LEFT_TILE_X + 8, 25);
         gr().fillTextAtTile("PTS", ARCADE_WHITE, arcadeFont6(), LEFT_TILE_X + 11, 25);
         // energizer
@@ -191,21 +191,21 @@ public class ArcadePacMan_IntroScene extends GameScene2D implements PacManGames_
 
     private void drawBlinkingEnergizer(double x, double y) {
         if (blinking.isOn()) {
-            gr().ctx().save();
-            gr().ctx().scale(scaling(), scaling());
-            gr().ctx().setFill(ARCADE_ROSE);
+            ctx().save();
+            ctx().scale(scaling(), scaling());
+            ctx().setFill(ARCADE_ROSE);
             // draw pixelated "circle"
-            gr().ctx().fillRect(x + 2, y, 4, 8);
-            gr().ctx().fillRect(x, y + 2, 8, 4);
-            gr().ctx().fillRect(x + 1, y + 1, 6, 6);
-            gr().ctx().restore();
+            ctx().fillRect(x + 2, y, 4, 8);
+            ctx().fillRect(x, y + 2, 8, 4);
+            ctx().fillRect(x + 1, y + 1, 6, 6);
+            ctx().restore();
         }
     }
 
     @Override
     protected void drawDebugInfo() {
         super.drawDebugInfo();
-        gr().ctx().fillText("Scene timer %d".formatted(sceneController.state().timer().tickCount()), 0, scaled(5 * TS));
+        ctx().fillText("Scene timer %d".formatted(sceneController.state().timer().tickCount()), 0, scaled(5 * TS));
     }
 
     private enum SceneState implements FsmState<ArcadePacMan_IntroScene> {

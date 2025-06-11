@@ -157,7 +157,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D implements PacManGame
     private void drawMarquee() {
         double xMin = MARQUEE_X, xMax = xMin + 132, yMin = MARQUEE_Y, yMax = yMin + 60;
         for (int i = 0; i < NUM_BULBS; ++i) {
-            gr().ctx().setFill(marqueeState.get(i) ? nesPaletteColor(0x20) : nesPaletteColor(0x15));
+            ctx().setFill(marqueeState.get(i) ? nesPaletteColor(0x20) : nesPaletteColor(0x15));
             if (i <= 33) { // lower border left-to-right
                 drawBulb(xMin + 4 * i, yMax);
             } else if (i <= 48) { // right border bottom-to-top
@@ -171,7 +171,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D implements PacManGame
     }
 
     private void drawBulb(double x, double y) {
-        gr().ctx().fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
+        ctx().fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
     }
 
     private enum SceneState implements FsmState<TengenMsPacMan_IntroScene> {

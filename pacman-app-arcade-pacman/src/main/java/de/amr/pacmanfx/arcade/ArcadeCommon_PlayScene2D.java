@@ -214,34 +214,33 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements PacManGames
 
     @Override
     protected void drawDebugInfo() {
-        final GraphicsContext g = gr().ctx();
         gr().drawTileGrid(sizeInPx().x(), sizeInPx().y(), Color.LIGHTGRAY);
         optGameLevel().ifPresent(level -> {
             // assume all ghosts have the same special tiles
             level.ghost(RED_GHOST_SHADOW).specialTerrainTiles().forEach(tile -> {
                 double x = scaled(tile.x() * TS), y = scaled(tile.y() * TS + HTS), size = scaled(TS);
-                g.setFill(Color.RED);
-                g.fillRect(x, y, size, 2);
+                ctx().setFill(Color.RED);
+                ctx().fillRect(x, y, size, 2);
             });
             level.worldMap().tiles().filter(level::isIntersection).forEach(tile -> {
-                g.setStroke(Color.gray(0.8));
-                g.setLineWidth(0.5);
-                g.save();
+                ctx().setStroke(Color.gray(0.8));
+                ctx().setLineWidth(0.5);
+                ctx().save();
                 double cx = scaled(tile.x() * TS + HTS), cy = scaled(tile.y() * TS + HTS), size = scaled(HTS);
-                g.translate(cx, cy);
-                g.rotate(45);
-                g.strokeRect(-0.5*size, -0.5*size, size, size);
-                g.restore();
+                ctx().translate(cx, cy);
+                ctx().rotate(45);
+                ctx().strokeRect(-0.5*size, -0.5*size, size, size);
+                ctx().restore();
             });
-            g.setFill(Color.YELLOW);
-            g.setFont(DEBUG_TEXT_FONT);
+            ctx().setFill(Color.YELLOW);
+            ctx().setFont(DEBUG_TEXT_FONT);
             String gameStateText = theGameState().name() + " (Tick %d)".formatted(theGameState().timer().tickCount());
             String huntingPhaseText = "";
             if (theGameState() == GameState.HUNTING) {
                 HuntingTimer huntingTimer = theGame().huntingTimer();
                 huntingPhaseText = " %s (Tick %d)".formatted(huntingTimer.phase(), huntingTimer.tickCount());
             }
-            g.fillText("%s%s".formatted(gameStateText, huntingPhaseText), 0, 64);
+            ctx().fillText("%s%s".formatted(gameStateText, huntingPhaseText), 0, 64);
         });
     }
 

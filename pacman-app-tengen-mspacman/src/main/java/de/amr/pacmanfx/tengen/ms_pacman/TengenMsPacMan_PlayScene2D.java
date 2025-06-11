@@ -394,8 +394,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D
         final boolean flashing = levelFinishedAnimation != null && levelFinishedAnimation.isRunning();
 
         gr().ensureMapSettingsApplied(theGameLevel()); //TODO check this
-        gr().ctx().save();
-        gr().ctx().translate(indent, 0);
+        ctx().save();
+        ctx().translate(indent, 0);
         if (flashing) {
             if (levelFinishedAnimation.isHighlighted()) {
                 gr().drawHighlightedLevel(theGameLevel(), 0, mazeTop, levelFinishedAnimation.flashingIndex());
@@ -425,24 +425,24 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D
             gr().drawLevelCounterWithLevelNumbers(theGameLevel().number(), game.levelCounter(), sizeInPx());
         }
 
-        gr().ctx().restore();
+        ctx().restore();
     }
 
     @Override
     protected void drawDebugInfo() {
-        gr().ctx().save();
+        ctx().save();
         if (optGameLevel().isPresent()) {
             // NES screen width is 32 tiles but mazes are only 28 tiles wide
             double margin = scaled((NES_TILES.x() - theGameLevel().worldMap().numCols()) * HTS);
-            gr().ctx().translate(margin, 0);
+            ctx().translate(margin, 0);
             gr().drawTileGrid(UNSCALED_CANVAS_SIZE.x(), UNSCALED_CANVAS_SIZE.y(), Color.LIGHTGRAY);
-            gr().ctx().setFill(Color.YELLOW);
-            gr().ctx().setFont(DEBUG_TEXT_FONT);
-            gr().ctx().fillText("%s %d".formatted(theGameState(), theGameState().timer().tickCount()), 0, scaled(3 * TS));
+            ctx().setFill(Color.YELLOW);
+            ctx().setFont(DEBUG_TEXT_FONT);
+            ctx().fillText("%s %d".formatted(theGameState(), theGameState().timer().tickCount()), 0, scaled(3 * TS));
             gr().drawAnimatedActorInfo(theGameLevel().pac());
             ghostsInZOrder().forEach(gr()::drawAnimatedActorInfo);
         }
-        gr().ctx().restore();
+        ctx().restore();
     }
 
     private Stream<Ghost> ghostsInZOrder() {

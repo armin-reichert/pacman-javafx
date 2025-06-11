@@ -11,6 +11,7 @@ import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.uilib.input.Keyboard;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -94,6 +95,7 @@ public abstract class GameScene2D implements GameScene {
 
     public GameRenderer gr() { return gameRenderer; }
     public void setGameRenderer(GameRenderer renderer) { gameRenderer = requireNonNull(renderer); }
+    public GraphicsContext ctx() { return gameRenderer.ctx(); }
 
     public Canvas canvas() { return canvas; }
     public void setCanvas(Canvas canvas) { this.canvas = canvas; }

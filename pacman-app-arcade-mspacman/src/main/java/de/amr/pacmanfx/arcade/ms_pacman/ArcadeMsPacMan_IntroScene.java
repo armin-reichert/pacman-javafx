@@ -168,8 +168,8 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements PacManGame
         else if (i <= 48) { x = MARQUEE.xMax();      y = 4 * (70 - i); }   // right edge bottom-to-top
         else if (i <= 81) { x = 4 * (96 - i);        y = MARQUEE.y(); }    // upper edge right-to-left
         else              { x = MARQUEE.x();         y = 4 * (i - 59); }   // left edge top-to-bottom
-        gr().ctx().setFill(on ? COLOR_BULB_ON : COLOR_BULB_OFF);
-        gr().ctx().fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
+        ctx().setFill(on ? COLOR_BULB_ON : COLOR_BULB_OFF);
+        ctx().fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
     }
 
     // Scene controller FSM

@@ -80,12 +80,12 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
         final Vector2f sceneSize = sizeInPx();
         final Font font = arcadeFont8();
         final int numRows = (int) (sceneSize.y() / TS), numCols = (int) (sceneSize.x() / TS);
-        gr().ctx().setFill(ARCADE_WHITE);
-        gr().ctx().setFont(font);
+        ctx().setFill(ARCADE_WHITE);
+        ctx().setFont(font);
         for (int row = 0; row < numRows; ++row) {
             for (int col = 0; col < numCols; ++col) {
                 var hexCode = Integer.toHexString(theRNG().nextInt(16));
-                gr().ctx().fillText(hexCode, scaled(tiles_to_px(col)), scaled(tiles_to_px(row + 1)));
+                ctx().fillText(hexCode, scaled(tiles_to_px(col)), scaled(tiles_to_px(row + 1)));
             }
         }
     }
@@ -115,15 +115,15 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
         Vector2f sceneSize = sizeInPx();
         Vector2i sizeInTiles = ARCADE_MAP_SIZE_IN_TILES;
         int numRows = sizeInTiles.y() / 2, numCols = sizeInTiles.y() / 2;
-        gr().ctx().setStroke(ARCADE_WHITE);
-        gr().ctx().setLineWidth(scaled(2.0));
+        ctx().setStroke(ARCADE_WHITE);
+        ctx().setLineWidth(scaled(2.0));
         for (int row = 0; row <= numRows; ++row) {
-            gr().ctx().setLineWidth(row == 0 || row == numRows ? scaled(4.0) : scaled(2.0));
-            gr().ctx().strokeLine(0, scaled(row * 16), scaled(sceneSize.x()), scaled(row * 16));
+            ctx().setLineWidth(row == 0 || row == numRows ? scaled(4.0) : scaled(2.0));
+            ctx().strokeLine(0, scaled(row * 16), scaled(sceneSize.x()), scaled(row * 16));
         }
         for (int col = 0; col <= numCols; ++col) {
-            gr().ctx().setLineWidth(col == 0 || col == numCols ? scaled(4.0) : scaled(2.0));
-            gr().ctx().strokeLine(scaled(col * 16), 0, scaled(col * 16), scaled(sceneSize.y()));
+            ctx().setLineWidth(col == 0 || col == numCols ? scaled(4.0) : scaled(2.0));
+            ctx().strokeLine(scaled(col * 16), 0, scaled(col * 16), scaled(sceneSize.y()));
         }
     }
 }
