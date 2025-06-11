@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.dashboard;
 
 import de.amr.pacmanfx.controller.CoinMechanism;
 import de.amr.pacmanfx.controller.GameState;
-import de.amr.pacmanfx.ui.PacManGames_Actions;
+import de.amr.pacmanfx.ui.PacManGames_Action;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -48,11 +48,11 @@ public class InfoBoxGameControl extends InfoBox {
         cbAutopilot              = addCheckBox("Autopilot", PY_USING_AUTOPILOT);
         cbImmunity               = addCheckBox("Pac-Man Immune", PY_IMMUNITY);
 
-        setAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_START], PacManGames_Actions.ACTION_TEST_CUT_SCENES);
-        setAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT], PacManGames_Actions.ACTION_RESTART_INTRO);
-        setAction(buttonGroupLevelActions[GAME_LEVEL_START], PacManGames_Actions.ACTION_ARCADE_START_GAME); //TODO Tengen?
-        setAction(buttonGroupLevelActions[GAME_LEVEL_QUIT], PacManGames_Actions.ACTION_RESTART_INTRO);
-        setAction(buttonGroupLevelActions[GAME_LEVEL_NEXT], PacManGames_Actions.ACTION_CHEAT_ENTER_NEXT_LEVEL);
+        setAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_START], PacManGames_Action.ACTION_TEST_CUT_SCENES);
+        setAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT], PacManGames_Action.ACTION_RESTART_INTRO);
+        setAction(buttonGroupLevelActions[GAME_LEVEL_START], PacManGames_Action.ACTION_ARCADE_START_GAME); //TODO Tengen?
+        setAction(buttonGroupLevelActions[GAME_LEVEL_QUIT], PacManGames_Action.ACTION_RESTART_INTRO);
+        setAction(buttonGroupLevelActions[GAME_LEVEL_NEXT], PacManGames_Action.ACTION_CHEAT_ENTER_NEXT_LEVEL);
         setAction(choiceBoxInitialLives, () -> theGame().setInitialLifeCount(choiceBoxInitialLives.getValue()));
     }
 

@@ -14,7 +14,7 @@ import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.ui.PacManGames_ActionBinding;
-import de.amr.pacmanfx.ui.PacManGames_Actions;
+import de.amr.pacmanfx.ui.PacManGames_Action;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelFinishedAnimation;
 import de.amr.pacmanfx.ui._2d.VectorGraphicsGameRenderer;
@@ -37,7 +37,7 @@ import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_TI
 import static de.amr.pacmanfx.arcade.ArcadePalette.*;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVEL_TEASERS;
-import static de.amr.pacmanfx.ui.PacManGames_Actions.*;
+import static de.amr.pacmanfx.ui.PacManGames_Action.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 
@@ -62,16 +62,16 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements PacManGames
     public void onLevelCreated(GameEvent e) {
         gr().applyRenderingHints(theGameLevel());
         if (theGameLevel().isDemoLevel()) {
-            bindAction(PacManGames_Actions.ACTION_ARCADE_INSERT_COIN, COMMON_ACTION_BINDINGS);
+            bindAction(PacManGames_Action.ACTION_ARCADE_INSERT_COIN, COMMON_ACTION_BINDINGS);
         } else {
-            bindAction(PacManGames_Actions.ACTION_PLAYER_UP, COMMON_ACTION_BINDINGS);
-            bindAction(PacManGames_Actions.ACTION_PLAYER_DOWN, COMMON_ACTION_BINDINGS);
-            bindAction(PacManGames_Actions.ACTION_PLAYER_LEFT, COMMON_ACTION_BINDINGS);
+            bindAction(PacManGames_Action.ACTION_PLAYER_UP, COMMON_ACTION_BINDINGS);
+            bindAction(PacManGames_Action.ACTION_PLAYER_DOWN, COMMON_ACTION_BINDINGS);
+            bindAction(PacManGames_Action.ACTION_PLAYER_LEFT, COMMON_ACTION_BINDINGS);
             bindAction(ACTION_PLAYER_RIGHT, COMMON_ACTION_BINDINGS);
             bindAction(ACTION_CHEAT_EAT_ALL_PELLETS, COMMON_ACTION_BINDINGS);
             bindAction(ACTION_CHEAT_ADD_LIVES, COMMON_ACTION_BINDINGS);
-            bindAction(PacManGames_Actions.ACTION_CHEAT_ENTER_NEXT_LEVEL, COMMON_ACTION_BINDINGS);
-            bindAction(PacManGames_Actions.ACTION_CHEAT_KILL_GHOSTS, COMMON_ACTION_BINDINGS);
+            bindAction(PacManGames_Action.ACTION_CHEAT_ENTER_NEXT_LEVEL, COMMON_ACTION_BINDINGS);
+            bindAction(PacManGames_Action.ACTION_CHEAT_KILL_GHOSTS, COMMON_ACTION_BINDINGS);
         }
         updateActionBindings();
     }
@@ -121,7 +121,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements PacManGames
         items.add(miMuted);
 
         var miQuit = new MenuItem(theAssets().text("quit"));
-        miQuit.setOnAction(ae -> PacManGames_Actions.ACTION_QUIT_GAME_SCENE.execute());
+        miQuit.setOnAction(ae -> PacManGames_Action.ACTION_QUIT_GAME_SCENE.execute());
         items.add(miQuit);
 
         return items;

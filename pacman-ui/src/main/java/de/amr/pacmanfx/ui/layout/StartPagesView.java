@@ -32,8 +32,8 @@ import org.tinylog.Logger;
 
 import java.util.*;
 
-import static de.amr.pacmanfx.ui.PacManGames_Actions.ACTION_BOOT_SHOW_GAME_VIEW;
-import static de.amr.pacmanfx.ui.PacManGames_Actions.ACTION_TOGGLE_PAUSED;
+import static de.amr.pacmanfx.ui.PacManGames_Action.ACTION_BOOT_SHOW_GAME_VIEW;
+import static de.amr.pacmanfx.ui.PacManGames_Action.ACTION_TOGGLE_PAUSED;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 import static de.amr.pacmanfx.uilib.input.Keyboard.nude;
 import static java.util.Objects.requireNonNull;

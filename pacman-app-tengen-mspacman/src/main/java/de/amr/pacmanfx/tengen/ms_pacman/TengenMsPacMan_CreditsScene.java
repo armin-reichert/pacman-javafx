@@ -14,14 +14,14 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_ActionBindings.TEN
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
 
-public class TengenMsPacMan_CreditsScene extends GameScene2D implements PacManGames_ActionBinding, TengenMsPacMan_ActionBinding {
+public class TengenMsPacMan_CreditsScene extends GameScene2D implements PacManGames_ActionBinding {
 
     static final float DISPLAY_SECONDS = 12;
 
     @Override
     protected void doInit() {
         theGame().setScoreVisible(false);
-        bindAction(ACTION_START_GAME, TENGEN_ACTION_BINDINGS);
+        bindAction(TengenMsPacMan_Action.ACTION_START_GAME, TENGEN_ACTION_BINDINGS);
     }
 
     @Override

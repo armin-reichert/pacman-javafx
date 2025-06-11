@@ -30,7 +30,7 @@ import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 import static de.amr.pacmanfx.uilib.Ufx.toggle;
 
 @SuppressWarnings("ALL")
-public interface PacManGames_Actions {
+public interface PacManGames_Action {
 
     int SIMULATION_SPEED_DELTA = 2;
     int SIMULATION_SPEED_MIN   = 10;

@@ -12,7 +12,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.ui.PacManGames_ActionBinding;
-import de.amr.pacmanfx.ui.PacManGames_Actions;
+import de.amr.pacmanfx.ui.PacManGames_Action;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelFinishedAnimation;
 import de.amr.pacmanfx.uilib.CameraControlledView;
@@ -44,7 +44,7 @@ import static de.amr.pacmanfx.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_ActionBindings.TENGEN_ACTION_BINDINGS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.sprite;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
-import static de.amr.pacmanfx.ui.PacManGames_Actions.*;
+import static de.amr.pacmanfx.ui.PacManGames_Action.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 
@@ -52,7 +52,7 @@ import static de.amr.pacmanfx.ui.PacManGames_UI.*;
  * Tengen play scene, uses vertical scrolling.
  */
 public class TengenMsPacMan_PlayScene2D extends GameScene2D
-    implements PacManGames_ActionBinding, TengenMsPacMan_ActionBinding, CameraControlledView {
+    implements PacManGames_ActionBinding, CameraControlledView {
 
     // NES screen width (32 tiles), BIG map height (42 tiles) + 2 extra tile rows
     private static final Vector2i UNSCALED_CANVAS_SIZE = Vector2i.of(32 * TS, 44 * TS);
@@ -137,7 +137,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D
         items.add(miMuted);
 
         var miQuit = new MenuItem(theAssets().text("quit"));
-        miQuit.setOnAction(ae -> PacManGames_Actions.ACTION_QUIT_GAME_SCENE.execute());
+        miQuit.setOnAction(ae -> PacManGames_Action.ACTION_QUIT_GAME_SCENE.execute());
         items.add(miQuit);
 
         return items;
@@ -149,14 +149,14 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D
 
     private void bindActionsToKeys() {
         if (theGameLevel().isDemoLevel()) {
-            bindAction(ACTION_QUIT_DEMO_LEVEL, TENGEN_ACTION_BINDINGS);
+            bindAction(TengenMsPacMan_Action.ACTION_QUIT_DEMO_LEVEL, TENGEN_ACTION_BINDINGS);
         } else {
             bindAction(ACTION_PLAYER_UP, TENGEN_ACTION_BINDINGS);
             bindAction(ACTION_PLAYER_DOWN, TENGEN_ACTION_BINDINGS);
             bindAction(ACTION_PLAYER_LEFT, TENGEN_ACTION_BINDINGS);
             bindAction(ACTION_PLAYER_RIGHT, TENGEN_ACTION_BINDINGS);
-            bindAction(ACTION_TOGGLE_DISPLAY_MODE, TENGEN_ACTION_BINDINGS);
-            bindAction(ACTION_TOGGLE_PAC_BOOSTER, TENGEN_ACTION_BINDINGS);
+            bindAction(TengenMsPacMan_Action.ACTION_TOGGLE_DISPLAY_MODE, TENGEN_ACTION_BINDINGS);
+            bindAction(TengenMsPacMan_Action.ACTION_TOGGLE_PAC_BOOSTER, TENGEN_ACTION_BINDINGS);
             bindAction(ACTION_CHEAT_EAT_ALL_PELLETS, COMMON_ACTION_BINDINGS);
             bindAction(ACTION_CHEAT_ADD_LIVES, COMMON_ACTION_BINDINGS);
             bindAction(ACTION_CHEAT_ENTER_NEXT_LEVEL, COMMON_ACTION_BINDINGS);

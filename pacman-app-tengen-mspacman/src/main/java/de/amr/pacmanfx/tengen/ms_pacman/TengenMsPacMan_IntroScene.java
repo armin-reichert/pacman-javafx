@@ -32,7 +32,7 @@ import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 /**
  * @author Armin Reichert
  */
-public class TengenMsPacMan_IntroScene extends GameScene2D implements PacManGames_ActionBinding, TengenMsPacMan_ActionBinding {
+public class TengenMsPacMan_IntroScene extends GameScene2D implements PacManGames_ActionBinding {
 
     // Anchor point for everything
     private static final int MARQUEE_X = 60, MARQUEE_Y = 64;
@@ -64,8 +64,8 @@ public class TengenMsPacMan_IntroScene extends GameScene2D implements PacManGame
     @Override
     public void doInit() {
         theGame().setScoreVisible(false);
-        bindAction(ACTION_START_GAME, TENGEN_ACTION_BINDINGS);
-        bindAction(ACTION_TOGGLE_JOYPAD_KEYS_SHOWN, TENGEN_ACTION_BINDINGS);
+        bindAction(TengenMsPacMan_Action.ACTION_START_GAME, TENGEN_ACTION_BINDINGS);
+        bindAction(TengenMsPacMan_Action.ACTION_TOGGLE_JOYPAD_KEYS_SHOWN, TENGEN_ACTION_BINDINGS);
         sceneController.restart(SceneState.WAITING_FOR_START);
     }
 

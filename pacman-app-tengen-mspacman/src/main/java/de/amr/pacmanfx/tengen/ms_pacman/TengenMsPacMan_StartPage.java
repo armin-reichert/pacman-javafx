@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman;
 
 import de.amr.pacmanfx.model.GameVariant;
-import de.amr.pacmanfx.ui.PacManGames_Actions;
+import de.amr.pacmanfx.ui.PacManGames_Action;
 import de.amr.pacmanfx.ui.layout.StartPage;
 import de.amr.pacmanfx.ui.layout.StartPagesView;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
@@ -36,7 +36,7 @@ public class TengenMsPacMan_StartPage extends StackPane implements StartPage, Re
         });
         var startButton = StartPagesView.createStartButton(Pos.BOTTOM_CENTER);
         startButton.setTranslateY(-50);
-        startButton.setAction(PacManGames_Actions.ACTION_BOOT_SHOW_GAME_VIEW);
+        startButton.setAction(PacManGames_Action.ACTION_BOOT_SHOW_GAME_VIEW);
         getChildren().addAll(flyer, startButton);
     }
 

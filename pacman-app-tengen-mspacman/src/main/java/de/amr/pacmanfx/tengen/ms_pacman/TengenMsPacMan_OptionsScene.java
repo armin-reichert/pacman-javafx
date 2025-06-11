@@ -18,7 +18,7 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_ActionBindings.TENGEN_ACTION_BINDINGS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.sprite;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
-import static de.amr.pacmanfx.ui.PacManGames_Actions.*;
+import static de.amr.pacmanfx.ui.PacManGames_Action.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theJoypad;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theSound;
 import static de.amr.pacmanfx.uilib.input.Keyboard.alt;
@@ -31,7 +31,7 @@ import static de.amr.pacmanfx.uilib.input.Keyboard.alt;
  *
  * @author Armin Reichert
  */
-public class TengenMsPacMan_OptionsScene extends GameScene2D implements PacManGames_ActionBinding, TengenMsPacMan_ActionBinding {
+public class TengenMsPacMan_OptionsScene extends GameScene2D implements PacManGames_ActionBinding {
 
     static final int COL_ARROW = 2 * TS;
     static final int COL_LABEL = 4 * TS;
@@ -64,8 +64,8 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D implements PacManGa
     public void doInit() {
         theGame().setScoreVisible(false);
 
-        bindAction(ACTION_START_PLAYING, TENGEN_ACTION_BINDINGS);
-        bindAction(ACTION_TOGGLE_JOYPAD_KEYS_SHOWN, TENGEN_ACTION_BINDINGS);
+        bindAction(TengenMsPacMan_Action.ACTION_START_PLAYING, TENGEN_ACTION_BINDINGS);
+        bindAction(TengenMsPacMan_Action.ACTION_TOGGLE_JOYPAD_KEYS_SHOWN, TENGEN_ACTION_BINDINGS);
         bindAction(ACTION_TEST_CUT_SCENES, COMMON_ACTION_BINDINGS);
         bindAction(ACTION_TEST_LEVELS_BONI, COMMON_ACTION_BINDINGS);
         bindAction(ACTION_TEST_LEVELS_TEASERS, COMMON_ACTION_BINDINGS);

@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import static de.amr.pacmanfx.ui.PacManGames_Actions.*;
+import static de.amr.pacmanfx.ui.PacManGames_Action.*;
 import static de.amr.pacmanfx.uilib.ActionBindingSupport.createBinding;
 import static de.amr.pacmanfx.uilib.input.Keyboard.*;
 import static java.util.Objects.requireNonNull;

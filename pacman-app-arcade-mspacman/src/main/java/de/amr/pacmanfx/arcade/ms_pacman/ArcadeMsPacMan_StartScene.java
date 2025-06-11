@@ -16,8 +16,8 @@ import static de.amr.pacmanfx.arcade.ArcadePalette.ARCADE_ORANGE;
 import static de.amr.pacmanfx.arcade.ArcadePalette.ARCADE_RED;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.sprite;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
-import static de.amr.pacmanfx.ui.PacManGames_Actions.ACTION_ARCADE_INSERT_COIN;
-import static de.amr.pacmanfx.ui.PacManGames_Actions.ACTION_ARCADE_START_GAME;
+import static de.amr.pacmanfx.ui.PacManGames_Action.ACTION_ARCADE_INSERT_COIN;
+import static de.amr.pacmanfx.ui.PacManGames_Action.ACTION_ARCADE_START_GAME;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theSound;
 
 public class ArcadeMsPacMan_StartScene extends GameScene2D implements PacManGames_ActionBinding {
