@@ -10,8 +10,6 @@ import de.amr.pacmanfx.uilib.assets.Picker;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.scene.text.Font;
 
-import java.util.ResourceBundle;
-
 /**
  * Common assets used in the Pac-Man games UI.
  */
@@ -24,8 +22,7 @@ public class PacManGames_Assets extends AssetStorage implements ResourceManager 
     public Class<?> resourceRootClass() { return PacManGames_Assets.class; }
 
     public PacManGames_Assets() {
-        ResourceBundle localizedTexts = getModuleBundle("de.amr.pacmanfx.ui.localized_texts");
-        setLocalizedTexts(localizedTexts);
+        localizedTexts = getModuleBundle("de.amr.pacmanfx.ui.localized_texts");
 
         pickerForGameOverTexts = Picker.fromBundle(localizedTexts, "game.over");
         pickerForLevelCompleteTexts = Picker.fromBundle(localizedTexts, "level.complete");

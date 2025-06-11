@@ -23,14 +23,12 @@ import static java.util.Objects.requireNonNull;
  */
 public class AssetStorage {
 
-    private ResourceBundle localizedTexts;
     private final Map<String, Object> assets = new HashMap<>();
-
-    public void setLocalizedTexts(ResourceBundle bundle) {
-        localizedTexts = requireNonNull(bundle);
-    }
+    protected ResourceBundle localizedTexts;
 
     public void store(String key, Object value) {
+        requireNonNull(key);
+        requireNonNull(value);
         assets.put(key, value);
     }
 
@@ -39,7 +37,7 @@ public class AssetStorage {
         requireNonNull(args);
         if (localizedTexts == null) {
             Logger.error("No localized text resources available");
-            return ":-(";
+            return "???";
         }
         if (localizedTexts.containsKey(keyOrPattern)) {
             return MessageFormat.format(localizedTexts.getString(keyOrPattern), args);
