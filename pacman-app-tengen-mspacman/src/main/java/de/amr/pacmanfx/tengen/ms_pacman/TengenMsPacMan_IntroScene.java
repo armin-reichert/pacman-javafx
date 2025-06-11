@@ -25,6 +25,7 @@ import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_ActionBindings.TENGEN_ACTION_BINDINGS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.*;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Renderer2D.blueShadedColor;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.sprite;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
@@ -98,7 +99,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D implements PacManGame
         switch (sceneController.state()) {
             case WAITING_FOR_START -> {
                 if (!dark) {
-                    r.drawBlueShadedTextActor(tick, presentsText, normalArcadeFont());
+                    r.fillText(presentsText.text(), blueShadedColor(tick), normalArcadeFont(), presentsText.x(), presentsText.y());
                     r.drawSpriteScaled(sprite(SpriteID.TITLE_TEXT), 6 * TS, MARQUEE_Y);
                     if (tick % 60 < 30) {
                         r.fillText("PRESS START", nesPaletteColor(0x20),

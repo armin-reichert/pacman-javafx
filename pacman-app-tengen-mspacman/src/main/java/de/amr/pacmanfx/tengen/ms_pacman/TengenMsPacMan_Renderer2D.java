@@ -45,6 +45,13 @@ import static java.util.function.Predicate.not;
 
 public class TengenMsPacMan_Renderer2D implements GameRenderer {
 
+    public static Color blueShadedColor(long tick) {
+        // Blue color, changing from dark blue to brighter blue.
+        // Cycles through palette indices 0x01, 0x11, 0x21, 0x31, each 16 ticks.
+        int i = (int) (tick % 64) / 16;
+        return nesPaletteColor(0x01 + i * 0x10);
+    }
+
     private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
     private final FloatProperty scalingPy = new SimpleFloatProperty(1);
     private final TengenMsPacMan_SpriteSheet spriteSheet;
@@ -393,13 +400,6 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
             case 0 -> SpriteID.DIGIT_0;
             default -> throw new IllegalArgumentException("Illegal digit value " + digit);
         });
-    }
-
-    public void drawBlueShadedTextActor(long tick, TextActor textActor, Font font) {
-        // Blue color, changing from dark blue to brighter blue.
-        // Cycles through palette indices 0x01, 0x11, 0x21, 0x31, each 16 ticks.
-        int i = (int) (tick % 64) / 16;
-        fillText(textActor.text(), nesPaletteColor(0x01 + i * 0x10), font, textActor.x(), textActor.y());
     }
 
     public void drawBar(Color outlineColor, Color barColor, double width, double y) {
