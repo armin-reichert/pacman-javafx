@@ -19,6 +19,9 @@ import static de.amr.pacmanfx.uilib.ActionBindingSupport.createBinding;
 import static de.amr.pacmanfx.uilib.input.Keyboard.*;
 import static java.util.Objects.requireNonNull;
 
+/**
+ * Actions bindings available to all Pac-Man game scenes.
+ */
 public interface PacManGames_ActionBinding extends ActionBindingSupport {
 
     Map<GameAction, Set<KeyCombination>> COMMON_ACTION_BINDINGS = Map.ofEntries(
@@ -53,10 +56,6 @@ public interface PacManGames_ActionBinding extends ActionBindingSupport {
         createBinding(ACTION_TOGGLE_PLAY_SCENE_2D_3D, alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3)),
         createBinding(ACTION_TOGGLE_DRAW_MODE,        alt(KeyCode.W))
     );
-
-    default void bindAction(GameAction gameAction) {
-        bindAction(gameAction, COMMON_ACTION_BINDINGS);
-    }
 
     default void bindAction(GameAction gameAction, Map<GameAction, Set<KeyCombination>> bindings) {
         requireNonNull(gameAction);

@@ -55,7 +55,6 @@ public class ArcadePacMan_IntroScene extends GameScene2D implements PacManGames_
         @Override public ArcadePacMan_IntroScene context() { return ArcadePacMan_IntroScene.this; }
     };
 
-    private ArcadePacMan_SpriteSheet spriteSheet;
     private Pulse blinking;
     private Pac pacMan;
     private List<Ghost> ghosts;
@@ -71,13 +70,13 @@ public class ArcadePacMan_IntroScene extends GameScene2D implements PacManGames_
     public void doInit() {
         theGame().setScoreVisible(true);
 
-        bindAction(ACTION_ARCADE_INSERT_COIN);
-        bindAction(ACTION_ARCADE_START_GAME);
-        bindAction(ACTION_TEST_CUT_SCENES);
-        bindAction(ACTION_TEST_LEVELS_BONI);
-        bindAction(ACTION_TEST_LEVELS_TEASERS);
+        bindAction(ACTION_ARCADE_INSERT_COIN, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_ARCADE_START_GAME, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_TEST_CUT_SCENES, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_TEST_LEVELS_BONI, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_TEST_LEVELS_TEASERS, COMMON_ACTION_BINDINGS);
 
-        spriteSheet = theUI().configuration().spriteSheet();
+        ArcadePacMan_SpriteSheet spriteSheet = theUI().configuration().spriteSheet();
         blinking = new Pulse(10, true);
         pacMan = createPac();
         pacMan.setAnimations(new ArcadePacMan_PacAnimationMap(spriteSheet));

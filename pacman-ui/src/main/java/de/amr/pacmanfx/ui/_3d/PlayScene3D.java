@@ -14,7 +14,6 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.MovingBonus;
 import de.amr.pacmanfx.ui.PacManGames_ActionBinding;
-import de.amr.pacmanfx.ui.PacManGames_Actions;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.uilib.CameraControlledView;
 import de.amr.pacmanfx.uilib.GameAction;
@@ -40,6 +39,7 @@ import static de.amr.pacmanfx.Validations.isOneOf;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
+import static de.amr.pacmanfx.ui.PacManGames_Actions.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 import static de.amr.pacmanfx.uilib.Ufx.*;
@@ -107,7 +107,7 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBinding, Camera
         items.add(contextMenuTitleItem(theAssets().text("scene_display")));
 
         var item = new MenuItem(theAssets().text("use_2D_scene"));
-        item.setOnAction(ae -> PacManGames_Actions.ACTION_TOGGLE_PLAY_SCENE_2D_3D.execute());
+        item.setOnAction(ae -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.execute());
         items.add(item);
 
         // Toggle picture-in-picture display
@@ -160,7 +160,7 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBinding, Camera
         items.add(miMuted);
 
         var miQuit = new MenuItem(theAssets().text("quit"));
-        miQuit.setOnAction(ae -> PacManGames_Actions.ACTION_QUIT_GAME_SCENE.execute());
+        miQuit.setOnAction(ae -> ACTION_QUIT_GAME_SCENE.execute());
         items.add(miQuit);
 
         return items;
@@ -168,28 +168,28 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBinding, Camera
 
     protected void bindActions() {
         deleteActionBindings();
-        bindAction(PacManGames_Actions.ACTION_PERSPECTIVE_PREVIOUS);
-        bindAction(PacManGames_Actions.ACTION_PERSPECTIVE_NEXT);
-        bindAction(PacManGames_Actions.ACTION_TOGGLE_DRAW_MODE);
+        bindAction(ACTION_PERSPECTIVE_PREVIOUS, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_PERSPECTIVE_NEXT, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_TOGGLE_DRAW_MODE, COMMON_ACTION_BINDINGS);
         if (optGameLevel().isPresent()) {
             if (theGameLevel().isDemoLevel()) {
-                bindAction(PacManGames_Actions.ACTION_ARCADE_INSERT_COIN);
+                bindAction(ACTION_ARCADE_INSERT_COIN, COMMON_ACTION_BINDINGS);
             } else {
                 bindPlayerSteeringActions();
-                bindAction(PacManGames_Actions.ACTION_CHEAT_EAT_ALL_PELLETS);
-                bindAction(PacManGames_Actions.ACTION_CHEAT_ADD_LIVES);
-                bindAction(PacManGames_Actions.ACTION_CHEAT_ENTER_NEXT_LEVEL);
-                bindAction(PacManGames_Actions.ACTION_CHEAT_KILL_GHOSTS);
+                bindAction(ACTION_CHEAT_EAT_ALL_PELLETS, COMMON_ACTION_BINDINGS);
+                bindAction(ACTION_CHEAT_ADD_LIVES, COMMON_ACTION_BINDINGS);
+                bindAction(ACTION_CHEAT_ENTER_NEXT_LEVEL, COMMON_ACTION_BINDINGS);
+                bindAction(ACTION_CHEAT_KILL_GHOSTS, COMMON_ACTION_BINDINGS);
             }
         }
         updateActionBindings();
     }
 
     protected void bindPlayerSteeringActions() {
-        bindAction(PacManGames_Actions.ACTION_PLAYER_UP);
-        bindAction(PacManGames_Actions.ACTION_PLAYER_DOWN);
-        bindAction(PacManGames_Actions.ACTION_PLAYER_LEFT);
-        bindAction(PacManGames_Actions.ACTION_PLAYER_RIGHT);
+        bindAction(ACTION_PLAYER_UP, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_PLAYER_DOWN, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_PLAYER_LEFT, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_PLAYER_RIGHT, COMMON_ACTION_BINDINGS);
     }
 
     @Override

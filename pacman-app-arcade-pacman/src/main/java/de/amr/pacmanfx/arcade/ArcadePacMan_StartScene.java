@@ -7,12 +7,13 @@ package de.amr.pacmanfx.arcade;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.ui.PacManGames_ActionBinding;
-import de.amr.pacmanfx.ui.PacManGames_Actions;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.arcade.ArcadePalette.*;
+import static de.amr.pacmanfx.ui.PacManGames_Actions.ACTION_ARCADE_INSERT_COIN;
+import static de.amr.pacmanfx.ui.PacManGames_Actions.ACTION_ARCADE_START_GAME;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theSound;
 
 /**
@@ -23,8 +24,8 @@ public class ArcadePacMan_StartScene extends GameScene2D implements PacManGames_
     @Override
     public void doInit() {
         theGame().setScoreVisible(true);
-        bindAction(PacManGames_Actions.ACTION_ARCADE_INSERT_COIN);
-        bindAction(PacManGames_Actions.ACTION_ARCADE_START_GAME);
+        bindAction(ACTION_ARCADE_INSERT_COIN, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_ARCADE_START_GAME, COMMON_ACTION_BINDINGS);
     }
 
     @Override

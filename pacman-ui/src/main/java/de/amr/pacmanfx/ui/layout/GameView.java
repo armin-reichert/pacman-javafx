@@ -8,7 +8,6 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui.PacManGames_ActionBinding;
-import de.amr.pacmanfx.ui.PacManGames_Actions;
 import de.amr.pacmanfx.ui.PacManGames_UIConfiguration;
 import de.amr.pacmanfx.ui._2d.*;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
@@ -42,6 +41,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.ui.PacManGames_Actions.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 import static de.amr.pacmanfx.uilib.Ufx.*;
@@ -99,20 +99,20 @@ public class GameView implements PacManGames_View, PacManGames_ActionBinding {
     }
 
     private void bindActions() {
-        bindAction(PacManGames_Actions.ACTION_BOOT_SHOW_GAME_VIEW);
-        bindAction(PacManGames_Actions.ACTION_QUIT_GAME_SCENE);
-        bindAction(PacManGames_Actions.ACTION_SIMULATION_SLOWER);
-        bindAction(PacManGames_Actions.ACTION_SIMULATION_FASTER);
-        bindAction(PacManGames_Actions.ACTION_SIMULATION_RESET);
-        bindAction(PacManGames_Actions.ACTION_SIMULATION_ONE_STEP);
-        bindAction(PacManGames_Actions.ACTION_SIMULATION_TEN_STEPS);
-        bindAction(PacManGames_Actions.ACTION_TOGGLE_AUTOPILOT);
-        bindAction(PacManGames_Actions.ACTION_TOGGLE_DEBUG_INFO);
-        bindAction(PacManGames_Actions.ACTION_TOGGLE_PAUSED);
-        bindAction(PacManGames_Actions.ACTION_TOGGLE_DASHBOARD);
-        bindAction(PacManGames_Actions.ACTION_TOGGLE_IMMUNITY);
-        bindAction(PacManGames_Actions.ACTION_TOGGLE_PIP_VISIBILITY);
-        bindAction(PacManGames_Actions.ACTION_TOGGLE_PLAY_SCENE_2D_3D);
+        bindAction(ACTION_BOOT_SHOW_GAME_VIEW, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_QUIT_GAME_SCENE, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_SIMULATION_SLOWER, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_SIMULATION_FASTER, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_SIMULATION_RESET, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_SIMULATION_ONE_STEP, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_SIMULATION_TEN_STEPS, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_TOGGLE_AUTOPILOT, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_TOGGLE_DEBUG_INFO, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_TOGGLE_PAUSED, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_TOGGLE_DASHBOARD, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_TOGGLE_IMMUNITY, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_TOGGLE_PIP_VISIBILITY, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_TOGGLE_PLAY_SCENE_2D_3D, COMMON_ACTION_BINDINGS);
         bindActionToKeyCombination(this::showGameSceneHelp, nude(KeyCode.H));
     }
 
@@ -389,7 +389,7 @@ public class GameView implements PacManGames_View, PacManGames_ActionBinding {
         var menuItems = new ArrayList<>(gameScenePy.get().supplyContextMenuItems(e));
         if (theUI().currentGameSceneIsPlayScene2D()) {
             var item = new MenuItem(theAssets().text("use_3D_scene"));
-            item.setOnAction(ae -> PacManGames_Actions.ACTION_TOGGLE_PLAY_SCENE_2D_3D.execute());
+            item.setOnAction(ae -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.execute());
             menuItems.addFirst(item);
             menuItems.addFirst(contextMenuTitleItem(theAssets().text("scene_display")));
         }

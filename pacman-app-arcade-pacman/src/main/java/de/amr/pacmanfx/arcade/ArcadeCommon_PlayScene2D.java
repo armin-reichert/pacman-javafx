@@ -37,6 +37,7 @@ import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_TI
 import static de.amr.pacmanfx.arcade.ArcadePalette.*;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVEL_TEASERS;
+import static de.amr.pacmanfx.ui.PacManGames_Actions.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 
@@ -61,16 +62,16 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements PacManGames
     public void onLevelCreated(GameEvent e) {
         gr().applyRenderingHints(theGameLevel());
         if (theGameLevel().isDemoLevel()) {
-            bindAction(PacManGames_Actions.ACTION_ARCADE_INSERT_COIN);
+            bindAction(PacManGames_Actions.ACTION_ARCADE_INSERT_COIN, COMMON_ACTION_BINDINGS);
         } else {
-            bindAction(PacManGames_Actions.ACTION_PLAYER_UP);
-            bindAction(PacManGames_Actions.ACTION_PLAYER_DOWN);
-            bindAction(PacManGames_Actions.ACTION_PLAYER_LEFT);
-            bindAction(PacManGames_Actions.ACTION_PLAYER_RIGHT);
-            bindAction(PacManGames_Actions.ACTION_CHEAT_EAT_ALL_PELLETS);
-            bindAction(PacManGames_Actions.ACTION_CHEAT_ADD_LIVES);
-            bindAction(PacManGames_Actions.ACTION_CHEAT_ENTER_NEXT_LEVEL);
-            bindAction(PacManGames_Actions.ACTION_CHEAT_KILL_GHOSTS);
+            bindAction(PacManGames_Actions.ACTION_PLAYER_UP, COMMON_ACTION_BINDINGS);
+            bindAction(PacManGames_Actions.ACTION_PLAYER_DOWN, COMMON_ACTION_BINDINGS);
+            bindAction(PacManGames_Actions.ACTION_PLAYER_LEFT, COMMON_ACTION_BINDINGS);
+            bindAction(ACTION_PLAYER_RIGHT, COMMON_ACTION_BINDINGS);
+            bindAction(ACTION_CHEAT_EAT_ALL_PELLETS, COMMON_ACTION_BINDINGS);
+            bindAction(ACTION_CHEAT_ADD_LIVES, COMMON_ACTION_BINDINGS);
+            bindAction(PacManGames_Actions.ACTION_CHEAT_ENTER_NEXT_LEVEL, COMMON_ACTION_BINDINGS);
+            bindAction(PacManGames_Actions.ACTION_CHEAT_KILL_GHOSTS, COMMON_ACTION_BINDINGS);
         }
         updateActionBindings();
     }
@@ -247,14 +248,14 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements PacManGames
     @Override
     public void onSwitch_3D_2D(GameScene scene3D) {
         Logger.info("2D scene {} entered from 3D scene {}", this, scene3D);
-        bindAction(PacManGames_Actions.ACTION_PLAYER_UP);
-        bindAction(PacManGames_Actions.ACTION_PLAYER_DOWN);
-        bindAction(PacManGames_Actions.ACTION_PLAYER_LEFT);
-        bindAction(PacManGames_Actions.ACTION_PLAYER_RIGHT);
-        bindAction(PacManGames_Actions.ACTION_CHEAT_EAT_ALL_PELLETS);
-        bindAction(PacManGames_Actions.ACTION_CHEAT_ADD_LIVES);
-        bindAction(PacManGames_Actions.ACTION_CHEAT_ENTER_NEXT_LEVEL);
-        bindAction(PacManGames_Actions.ACTION_CHEAT_KILL_GHOSTS);
+        bindAction(ACTION_PLAYER_UP, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_PLAYER_DOWN, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_PLAYER_LEFT, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_PLAYER_RIGHT, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_CHEAT_EAT_ALL_PELLETS, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_CHEAT_ADD_LIVES, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_CHEAT_ENTER_NEXT_LEVEL, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_CHEAT_KILL_GHOSTS, COMMON_ACTION_BINDINGS);
         updateActionBindings();
         if (gr() == null) { //TODO check if this can happen
             Logger.warn("No game renderer was existing when switching to 2D scene");

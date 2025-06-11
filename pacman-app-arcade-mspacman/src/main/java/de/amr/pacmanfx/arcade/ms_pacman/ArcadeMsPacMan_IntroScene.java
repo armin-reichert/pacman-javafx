@@ -16,7 +16,6 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.PacManGames_ActionBinding;
-import de.amr.pacmanfx.ui.PacManGames_Actions;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.paint.Color;
 
@@ -27,6 +26,7 @@ import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
+import static de.amr.pacmanfx.ui.PacManGames_Actions.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theSound;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
 
@@ -78,11 +78,11 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements PacManGame
     public void doInit() {
         theGame().setScoreVisible(true);
 
-        bindAction(PacManGames_Actions.ACTION_ARCADE_INSERT_COIN);
-        bindAction(PacManGames_Actions.ACTION_ARCADE_START_GAME);
-        bindAction(PacManGames_Actions.ACTION_TEST_CUT_SCENES);
-        bindAction(PacManGames_Actions.ACTION_TEST_LEVELS_BONI);
-        bindAction(PacManGames_Actions.ACTION_TEST_LEVELS_TEASERS);
+        bindAction(ACTION_ARCADE_INSERT_COIN, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_ARCADE_START_GAME, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_TEST_CUT_SCENES, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_TEST_LEVELS_BONI, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_TEST_LEVELS_TEASERS, COMMON_ACTION_BINDINGS);
 
         msPacMan = createMsPacMan();
         ghosts = new Ghost[] { createRedGhost(), createPinkGhost(), createCyanGhost(), createOrangeGhost() };

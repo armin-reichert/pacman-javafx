@@ -15,7 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_ActionBindings.TENGEN_DEFAULT_ACTION_BINDINGS;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_ActionBindings.TENGEN_ACTION_BINDINGS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.sprite;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.PacManGames_Actions.*;
@@ -64,11 +64,11 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D implements PacManGa
     public void doInit() {
         theGame().setScoreVisible(false);
 
-        bindAction(ACTION_START_PLAYING, TENGEN_DEFAULT_ACTION_BINDINGS);
-        bindAction(ACTION_TOGGLE_JOYPAD_KEYS_SHOWN, TENGEN_DEFAULT_ACTION_BINDINGS);
-        bindAction(ACTION_TEST_CUT_SCENES);
-        bindAction(ACTION_TEST_LEVELS_BONI);
-        bindAction(ACTION_TEST_LEVELS_TEASERS);
+        bindAction(ACTION_START_PLAYING, TENGEN_ACTION_BINDINGS);
+        bindAction(ACTION_TOGGLE_JOYPAD_KEYS_SHOWN, TENGEN_ACTION_BINDINGS);
+        bindAction(ACTION_TEST_CUT_SCENES, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_TEST_LEVELS_BONI, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_TEST_LEVELS_TEASERS, COMMON_ACTION_BINDINGS);
         bindActionToKeyCombination(() -> theJoypad().selectNextKeyBinding(this), alt(KeyCode.J));
 
         selectedOption = OPTION_PAC_BOOSTER;
