@@ -237,7 +237,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
 
         var style = new OptionMenuStyle(
             theAssets().font("font.pacfontgood", 32),
-            theAssets().arcadeFontAtSize(8),
+            theAssets().arcadeFont(8),
             DEFAULT_OPTION_MENU_STYLE.backgroundFill(),
             DEFAULT_OPTION_MENU_STYLE.borderStroke(),
             ArcadePalette.ARCADE_RED,

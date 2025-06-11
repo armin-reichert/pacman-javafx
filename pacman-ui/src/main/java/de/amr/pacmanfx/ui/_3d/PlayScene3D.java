@@ -194,7 +194,7 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBinding, Camera
 
     @Override
     public void init() {
-        scores3D.setFont(theAssets().arcadeFontAtSize(TS));
+        scores3D.setFont(theAssets().arcadeFont(TS));
         theGame().setScoreVisible(true);
         perspectiveIDPy.bind(PY_3D_PERSPECTIVE);
     }

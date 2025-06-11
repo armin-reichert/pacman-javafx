@@ -303,7 +303,7 @@ public class GameLevel3D {
         }
         messageView = MessageView.builder()
             .text(text)
-            .font(theAssets().arcadeFontAtSize(6))
+            .font(theAssets().arcadeFont(6))
             .borderColor(Color.WHITE)
             .textColor(Color.YELLOW)
             .build();

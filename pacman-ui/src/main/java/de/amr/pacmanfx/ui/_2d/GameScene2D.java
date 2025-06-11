@@ -40,8 +40,8 @@ public abstract class GameScene2D implements GameScene {
     protected Canvas canvas;
 
     protected GameScene2D() {
-        normalArcadeFontPy.bind(scalingPy.map(s -> theAssets().arcadeFontAtSize(s.floatValue() * TS)));
-        smallArcadeFontPy.bind(scalingPy.map(s -> theAssets().arcadeFontAtSize(s.floatValue() * 6)));
+        normalArcadeFontPy.bind(scalingPy.map(s -> theAssets().arcadeFont(s.floatValue() * TS)));
+        smallArcadeFontPy.bind(scalingPy.map(s -> theAssets().arcadeFont(s.floatValue() * 6)));
     }
 
     @Override
