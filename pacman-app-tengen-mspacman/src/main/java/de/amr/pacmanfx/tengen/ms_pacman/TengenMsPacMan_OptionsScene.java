@@ -300,7 +300,8 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D implements PacManGa
 
     private void drawArrowIfSelected(int option, double y, Font font) {
         if (selectedOption == option) {
-            gr().fillText("-", NES_YELLOW, font, COL_ARROW, y);
+            gr().ctx().setFill(NES_YELLOW);
+            gr().ctx().fillRect(scaled(COL_ARROW + 2.25), scaled(y - 4.5), scaled(7.5), scaled(1.75));
             gr().fillText(">", NES_YELLOW, font, COL_ARROW + 3, y);
         }
     }
