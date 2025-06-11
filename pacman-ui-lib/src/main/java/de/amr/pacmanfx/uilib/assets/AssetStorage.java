@@ -19,7 +19,7 @@ import java.util.ResourceBundle;
 import static java.util.Objects.requireNonNull;
 
 /**
- * @author Armin Reichert
+ * Data structure for storing all kinds of game assets.
  */
 public class AssetStorage {
 
