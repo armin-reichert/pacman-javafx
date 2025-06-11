@@ -73,7 +73,7 @@ public interface TengenMsPacMan_Action {
         }
     };
 
-    GameAction ACTION_TOGGLE_JOYPAD_KEYS_SHOWN = new GameAction() {
+    GameAction ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED = new GameAction() {
         @Override
         public void execute() {
             toggle(PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED);

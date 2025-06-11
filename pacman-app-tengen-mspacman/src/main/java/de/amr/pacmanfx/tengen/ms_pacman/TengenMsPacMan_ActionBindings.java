@@ -25,7 +25,7 @@ public interface TengenMsPacMan_ActionBindings {
         createBinding(ACTION_START_GAME,               theJoypad().key(JoypadButton.START)),
         createBinding(ACTION_START_PLAYING,            theJoypad().key(JoypadButton.START)),
         createBinding(ACTION_TOGGLE_DISPLAY_MODE,      alt(KeyCode.C)),
-        createBinding(ACTION_TOGGLE_JOYPAD_KEYS_SHOWN, nude(KeyCode.SPACE)),
+        createBinding(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, nude(KeyCode.SPACE)),
         createBinding(ACTION_TOGGLE_PAC_BOOSTER,       theJoypad().key(JoypadButton.A), theJoypad().key(JoypadButton.B))
     );
 }

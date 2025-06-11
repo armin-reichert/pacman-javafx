@@ -65,7 +65,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D implements PacManGa
         theGame().setScoreVisible(false);
 
         bindAction(TengenMsPacMan_Action.ACTION_START_PLAYING, TENGEN_ACTION_BINDINGS);
-        bindAction(TengenMsPacMan_Action.ACTION_TOGGLE_JOYPAD_KEYS_SHOWN, TENGEN_ACTION_BINDINGS);
+        bindAction(TengenMsPacMan_Action.ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, TENGEN_ACTION_BINDINGS);
         bindAction(ACTION_TEST_CUT_SCENES, COMMON_ACTION_BINDINGS);
         bindAction(ACTION_TEST_LEVELS_BONI, COMMON_ACTION_BINDINGS);
         bindAction(ACTION_TEST_LEVELS_TEASERS, COMMON_ACTION_BINDINGS);
