@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui._2d;
 
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.actors.Actor;
+import de.amr.pacmanfx.model.actors.Ghost;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.SequentialTransition;
@@ -36,22 +36,22 @@ public class LevelFinishedAnimation {
     public LevelFinishedAnimation(GameLevel level, int singleFlashMillis) {
         int numFlashes = level.data().numFlashes();
         animation = new SequentialTransition(
-            doAfterSec(1.5, () -> level.ghosts().forEach(Actor::hide)),
-            doAfterSec(0.5, numFlashes > 0 ? flashes(numFlashes, singleFlashMillis) : pauseSec(0)),
+            doAfterSec(1.5, () -> level.ghosts().forEach(Ghost::hide)),
+            doAfterSec(0.5, numFlashes > 0 ? flashingAnimation(numFlashes, singleFlashMillis) : pauseSec(0)),
             pauseSec(1)
         );
     }
 
-    private Animation flashes(int numFlashes, int singleFlashMillis) {
-        var flashes = new Timeline(
+    private Animation flashingAnimation(int numFlashes, int singleFlashMillis) {
+        var flashingAnimation = new Timeline(
             new KeyFrame(Duration.millis(singleFlashMillis * 0.25), e -> highlighted = true),
             new KeyFrame(Duration.millis(singleFlashMillis * 0.75), e -> highlighted = false),
             new KeyFrame(Duration.millis(singleFlashMillis), e -> {
                 if (flashingIndex + 1 < numFlashes) flashingIndex++;
             })
         );
-        flashes.setCycleCount(numFlashes);
-        return flashes;
+        flashingAnimation.setCycleCount(numFlashes);
+        return flashingAnimation;
     }
 
     public void play() {
@@ -64,11 +64,11 @@ public class LevelFinishedAnimation {
         return animation.getStatus() == Animation.Status.RUNNING;
     }
 
-    public void whenFinished(Runnable action) {
+    public void setOnFinished(Runnable action) {
         animation.setOnFinished(e -> action.run());
     }
 
-    public int getFlashingIndex() {
+    public int flashingIndex() {
         return flashingIndex;
     }
 

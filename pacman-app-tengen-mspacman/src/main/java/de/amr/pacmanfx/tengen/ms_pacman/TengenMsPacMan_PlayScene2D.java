@@ -259,7 +259,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D
             case LEVEL_COMPLETE -> {
                 theSound().stopAll();
                 levelFinishedAnimation = new LevelFinishedAnimation(theGameLevel(), 333);
-                levelFinishedAnimation.whenFinished(theGameController()::letCurrentGameStateExpire);
+                levelFinishedAnimation.setOnFinished(theGameController()::letCurrentGameStateExpire);
                 levelFinishedAnimation.play();
             }
             case GAME_OVER -> {
@@ -394,7 +394,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D
         r.ctx().translate(indent, 0);
         if (flashing) {
             if (levelFinishedAnimation.isHighlighted()) {
-                r.drawHighlightedLevel(theGameLevel(), 0, mazeTop, levelFinishedAnimation.getFlashingIndex());
+                r.drawHighlightedLevel(theGameLevel(), 0, mazeTop, levelFinishedAnimation.flashingIndex());
             } else {
                 r.drawLevel(theGameLevel(), 0, mazeTop, null, false, false);
                 r.drawFood(theGameLevel()); // this also hides the eaten food!

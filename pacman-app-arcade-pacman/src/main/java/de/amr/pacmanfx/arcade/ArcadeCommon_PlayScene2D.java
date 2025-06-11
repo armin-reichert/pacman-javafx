@@ -272,7 +272,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements PacManGames
         else if (state == GameState.LEVEL_COMPLETE) {
             theSound().stopAll();
             levelFinishedAnimation = new LevelFinishedAnimation(theGameLevel(), 333);
-            levelFinishedAnimation.whenFinished(theGameController()::letCurrentGameStateExpire);
+            levelFinishedAnimation.setOnFinished(theGameController()::letCurrentGameStateExpire);
             levelFinishedAnimation.play();
         }
     }
