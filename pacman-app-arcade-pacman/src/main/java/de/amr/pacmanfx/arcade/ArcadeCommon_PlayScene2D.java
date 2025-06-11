@@ -13,14 +13,13 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
-import de.amr.pacmanfx.ui.PacManGames_ActionBinding;
 import de.amr.pacmanfx.ui.PacManGames_Action;
+import de.amr.pacmanfx.ui.PacManGames_ActionBinding;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelFinishedAnimation;
 import de.amr.pacmanfx.ui._2d.VectorGraphicsGameRenderer;
 import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.uilib.Ufx;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
@@ -62,16 +61,16 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements PacManGames
     public void onLevelCreated(GameEvent e) {
         gr().applyRenderingHints(theGameLevel());
         if (theGameLevel().isDemoLevel()) {
-            bindAction(PacManGames_Action.ACTION_ARCADE_INSERT_COIN, COMMON_ACTION_BINDINGS);
+            bindAction(ACTION_ARCADE_INSERT_COIN, COMMON_ACTION_BINDINGS);
         } else {
-            bindAction(PacManGames_Action.ACTION_PLAYER_UP, COMMON_ACTION_BINDINGS);
-            bindAction(PacManGames_Action.ACTION_PLAYER_DOWN, COMMON_ACTION_BINDINGS);
-            bindAction(PacManGames_Action.ACTION_PLAYER_LEFT, COMMON_ACTION_BINDINGS);
+            bindAction(ACTION_PLAYER_UP, COMMON_ACTION_BINDINGS);
+            bindAction(ACTION_PLAYER_DOWN, COMMON_ACTION_BINDINGS);
+            bindAction(ACTION_PLAYER_LEFT, COMMON_ACTION_BINDINGS);
             bindAction(ACTION_PLAYER_RIGHT, COMMON_ACTION_BINDINGS);
             bindAction(ACTION_CHEAT_EAT_ALL_PELLETS, COMMON_ACTION_BINDINGS);
             bindAction(ACTION_CHEAT_ADD_LIVES, COMMON_ACTION_BINDINGS);
-            bindAction(PacManGames_Action.ACTION_CHEAT_ENTER_NEXT_LEVEL, COMMON_ACTION_BINDINGS);
-            bindAction(PacManGames_Action.ACTION_CHEAT_KILL_GHOSTS, COMMON_ACTION_BINDINGS);
+            bindAction(ACTION_CHEAT_ENTER_NEXT_LEVEL, COMMON_ACTION_BINDINGS);
+            bindAction(ACTION_CHEAT_KILL_GHOSTS, COMMON_ACTION_BINDINGS);
         }
         updateActionBindings();
     }
