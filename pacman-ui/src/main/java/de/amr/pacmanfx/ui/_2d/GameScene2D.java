@@ -30,8 +30,8 @@ public abstract class GameScene2D implements GameScene {
 
     protected final Map<KeyCombination, GameAction> actionBindings = new HashMap<>();
 
-    protected final ObjectProperty<Font>  normalArcadeFontPy = new SimpleObjectProperty<>();
-    protected final ObjectProperty<Font>  smallArcadeFontPy = new SimpleObjectProperty<>();
+    protected final ObjectProperty<Font> arcadeFont8Py = new SimpleObjectProperty<>();
+    protected final ObjectProperty<Font> arcadeFont6Py = new SimpleObjectProperty<>();
     protected final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
     protected final BooleanProperty       debugInfoVisiblePy = new SimpleBooleanProperty(false);
     protected final FloatProperty         scalingPy = new SimpleFloatProperty(1.0f);
@@ -40,8 +40,8 @@ public abstract class GameScene2D implements GameScene {
     protected Canvas canvas;
 
     protected GameScene2D() {
-        normalArcadeFontPy.bind(scalingPy.map(s -> theAssets().arcadeFont(s.floatValue() * TS)));
-        smallArcadeFontPy.bind(scalingPy.map(s -> theAssets().arcadeFont(s.floatValue() * 6)));
+        arcadeFont8Py.bind(scalingPy.map(s -> theAssets().arcadeFont(s.floatValue() * 8)));
+        arcadeFont6Py.bind(scalingPy.map(s -> theAssets().arcadeFont(s.floatValue() * 6)));
     }
 
     @Override
@@ -81,8 +81,8 @@ public abstract class GameScene2D implements GameScene {
     public float scaling() { return scalingPy.get(); }
     public float scaled(double value) { return (float) value * scaling(); }
 
-    public Font normalArcadeFont() { return normalArcadeFontPy.get(); }
-    public Font smallArcadeFont() { return smallArcadeFontPy.get(); }
+    public Font arcadeFont8() { return arcadeFont8Py.get(); }
+    public Font arcadeFont6() { return arcadeFont6Py.get(); }
 
     public Color backgroundColor() { return backgroundColorPy.get(); }
     public void setBackgroundColor(Color color) { backgroundColorPy.set(color); }
@@ -115,7 +115,7 @@ public abstract class GameScene2D implements GameScene {
         gameRenderer.fillCanvas(backgroundColor());
         gameRenderer.setScaling(scaling());
         if (theGame().isScoreVisible()) {
-            gameRenderer.drawScores(theGame(), scoreColor(), normalArcadeFont());
+            gameRenderer.drawScores(theGame(), scoreColor(), arcadeFont8());
         }
         drawSceneContent();
         if (debugInfoVisiblePy.get()) {

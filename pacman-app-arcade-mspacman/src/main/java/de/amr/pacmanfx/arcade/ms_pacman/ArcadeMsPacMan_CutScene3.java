@@ -99,7 +99,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     @Override
     public void drawSceneContent() {
         if (gr() instanceof ArcadeMsPacMan_GameRenderer r) { // could also be VectorGraphicsGameRenderer!
-            r.drawClapperBoard(clapperboardAnimation, tiles_to_px(3), tiles_to_px(10), normalArcadeFont());
+            r.drawClapperBoard(clapperboardAnimation, tiles_to_px(3), tiles_to_px(10), arcadeFont8());
         }
         gr().drawActor(msPacMan);
         gr().drawActor(pacMan);

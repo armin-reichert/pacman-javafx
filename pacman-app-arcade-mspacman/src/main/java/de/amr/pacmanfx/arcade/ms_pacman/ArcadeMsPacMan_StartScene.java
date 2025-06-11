@@ -44,16 +44,16 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D implements PacManGame
 
     @Override
     public void drawSceneContent() {
-        gr().fillTextAtTile("PUSH START BUTTON", ARCADE_ORANGE, normalArcadeFont(), 6, 16);
-        gr().fillTextAtTile("1 PLAYER ONLY", ARCADE_ORANGE, normalArcadeFont(), 8, 18);
-        gr().fillTextAtTile("ADDITIONAL    AT 10000", ARCADE_ORANGE, normalArcadeFont(), 2, 25);
+        gr().fillTextAtTile("PUSH START BUTTON", ARCADE_ORANGE, arcadeFont8(), 6, 16);
+        gr().fillTextAtTile("1 PLAYER ONLY", ARCADE_ORANGE, arcadeFont8(), 8, 18);
+        gr().fillTextAtTile("ADDITIONAL    AT 10000", ARCADE_ORANGE, arcadeFont8(), 2, 25);
         gr().drawSpriteScaled(sprite(SpriteID.LIVES_COUNTER_SYMBOL), tiles_to_px(13), tiles_to_px(23) + 1);
-        gr().fillTextAtTile("PTS", ARCADE_ORANGE, smallArcadeFont(), 25, 25);
+        gr().fillTextAtTile("PTS", ARCADE_ORANGE, arcadeFont6(), 25, 25);
         if (gr() instanceof ArcadeMsPacMan_GameRenderer r) {
-            r.drawMsPacManCopyrightAtTile(ARCADE_RED, normalArcadeFont(), 6, 28);
+            r.drawMsPacManCopyrightAtTile(ARCADE_RED, arcadeFont8(), 6, 28);
         }
         gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
-                scoreColor(), normalArcadeFont(), tiles_to_px(2), sizeInPx().y() - 2);
+                scoreColor(), arcadeFont8(), tiles_to_px(2), sizeInPx().y() - 2);
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 }

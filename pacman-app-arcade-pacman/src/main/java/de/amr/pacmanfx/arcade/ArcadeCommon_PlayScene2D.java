@@ -195,7 +195,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements PacManGames
             gr().drawLivesCounter(numLivesDisplayed, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - 2 * TS, livesCounterSprite);
         } else {
             gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
-                scoreColor(), normalArcadeFont(), 2 * TS, sizeInPx().y() - 2);
+                scoreColor(), arcadeFont8(), 2 * TS, sizeInPx().y() - 2);
         }
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
@@ -205,10 +205,10 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements PacManGames
         float cx = TS * (houseMinTile.x() + houseSize.x() * 0.5f);
         float cy = TS * (houseMinTile.y() + houseSize.y() + 1);
         switch (theGameLevel().message()) {
-            case GameLevel.MESSAGE_GAME_OVER -> gr().fillTextAtCenter("GAME  OVER", ARCADE_RED, normalArcadeFont(), cx, cy);
-            case GameLevel.MESSAGE_READY -> gr().fillTextAtCenter("READY!", ARCADE_YELLOW, normalArcadeFont(), cx, cy);
+            case GameLevel.MESSAGE_GAME_OVER -> gr().fillTextAtCenter("GAME  OVER", ARCADE_RED, arcadeFont8(), cx, cy);
+            case GameLevel.MESSAGE_READY -> gr().fillTextAtCenter("READY!", ARCADE_YELLOW, arcadeFont8(), cx, cy);
             case GameLevel.MESSAGE_TEST -> gr().fillTextAtCenter("TEST    L%02d".formatted(theGameLevel().number()),
-                    ARCADE_WHITE, normalArcadeFont(), cx, cy);
+                    ARCADE_WHITE, arcadeFont8(), cx, cy);
         }
     }
 

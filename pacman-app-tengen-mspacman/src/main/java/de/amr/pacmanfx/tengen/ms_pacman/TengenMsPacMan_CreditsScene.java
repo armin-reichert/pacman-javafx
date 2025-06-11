@@ -43,9 +43,9 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D implements PacManGa
         r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x13), barWidth, 20);
         r.drawBar(nesPaletteColor(0x20), nesPaletteColor(0x13), barWidth, 212);
         if (theGameState().timer().betweenSeconds(0.5 * DISPLAY_SECONDS, DISPLAY_SECONDS)) {
-            drawJavaFXVersionAuthors(r, normalArcadeFont());
+            drawJavaFXVersionAuthors(r, arcadeFont8());
         } else {
-            drawOriginalGameAuthors(r, normalArcadeFont());
+            drawOriginalGameAuthors(r, arcadeFont8());
         }
     }
 

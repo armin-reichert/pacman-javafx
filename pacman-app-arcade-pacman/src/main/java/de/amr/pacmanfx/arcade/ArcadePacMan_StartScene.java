@@ -43,13 +43,13 @@ public class ArcadePacMan_StartScene extends GameScene2D implements PacManGames_
 
     @Override
     public void drawSceneContent() {
-        gr().fillTextAtTile("PUSH START BUTTON", ARCADE_ORANGE, normalArcadeFont(), 6, 17);
-        gr().fillTextAtTile("1 PLAYER ONLY", ARCADE_CYAN, normalArcadeFont(), 8, 21);
-        gr().fillTextAtTile("BONUS PAC-MAN FOR 10000", ARCADE_ROSE, normalArcadeFont(), 1, 25);
-        gr().fillTextAtTile("PTS", ARCADE_ROSE, smallArcadeFont(), 25, 25);
-        gr().fillTextAtTile("© 1980 MIDWAY MFG.CO.", ARCADE_PINK, normalArcadeFont(), 4, 29);
+        gr().fillTextAtTile("PUSH START BUTTON", ARCADE_ORANGE, arcadeFont8(), 6, 17);
+        gr().fillTextAtTile("1 PLAYER ONLY", ARCADE_CYAN, arcadeFont8(), 8, 21);
+        gr().fillTextAtTile("BONUS PAC-MAN FOR 10000", ARCADE_ROSE, arcadeFont8(), 1, 25);
+        gr().fillTextAtTile("PTS", ARCADE_ROSE, arcadeFont6(), 25, 25);
+        gr().fillTextAtTile("© 1980 MIDWAY MFG.CO.", ARCADE_PINK, arcadeFont8(), 4, 29);
         gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
-                scoreColor(), normalArcadeFont(), 2 * TS, sizeInPx().y() - 2);
+                scoreColor(), arcadeFont8(), 2 * TS, sizeInPx().y() - 2);
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 }

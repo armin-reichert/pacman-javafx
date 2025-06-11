@@ -372,7 +372,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D
 
         gr().setScaling(scaling());
         if (theGame().isScoreVisible()) {
-            gr().drawScores(theGame(), scoreColor(), normalArcadeFont());
+            gr().drawScores(theGame(), scoreColor(), arcadeFont8());
         }
         drawSceneContent();
         if (debugInfoVisiblePy.get()) {
@@ -405,7 +405,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D
             r.drawFood(theGameLevel());
             theGameLevel().bonus().ifPresent(r::drawBonus);
             //TODO in the original game, the message is drawn under the maze image but *over* the pellets!
-            r.drawLevelMessage(theGameLevel(), currentMessagePosition(), normalArcadeFont());
+            r.drawLevelMessage(theGameLevel(), currentMessagePosition(), arcadeFont8());
         }
         r.drawActor(theGameLevel().pac());
         ghostsInZOrder().forEach(r::drawActor);

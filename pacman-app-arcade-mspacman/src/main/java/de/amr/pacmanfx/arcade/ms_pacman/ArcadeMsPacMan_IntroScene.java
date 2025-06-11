@@ -123,28 +123,28 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements PacManGame
     @Override
     public void drawSceneContent() {
         drawMarquee();
-        gr().fillText("\"MS PAC-MAN\"", ARCADE_ORANGE, normalArcadeFont(), TITLE_X, TITLE_Y);
+        gr().fillText("\"MS PAC-MAN\"", ARCADE_ORANGE, arcadeFont8(), TITLE_X, TITLE_Y);
         switch (sceneController.state()) {
             case GHOSTS_MARCHING_IN -> {
                 String ghostName = GHOST_NAMES[presented];
                 if (presented == RED_GHOST_SHADOW) {
-                    gr().fillText("WITH", ARCADE_WHITE, normalArcadeFont(), TITLE_X, TOP_Y + tiles_to_px(3));
+                    gr().fillText("WITH", ARCADE_WHITE, arcadeFont8(), TITLE_X, TOP_Y + tiles_to_px(3));
                 }
                 double x = TITLE_X + tiles_to_px(3);
                 if (ghostName.length() < 4) x += TS;
-                gr().fillText(ghostName, GHOST_COLORS[presented], normalArcadeFont(), x, TOP_Y + tiles_to_px(6));
+                gr().fillText(ghostName, GHOST_COLORS[presented], arcadeFont8(), x, TOP_Y + tiles_to_px(6));
             }
             case MS_PACMAN_MARCHING_IN, READY_TO_PLAY -> {
-                gr().fillText("STARRING", ARCADE_WHITE, normalArcadeFont(), TITLE_X, TOP_Y + tiles_to_px(3));
-                gr().fillText("MS PAC-MAN", ARCADE_YELLOW, normalArcadeFont(), TITLE_X, TOP_Y + tiles_to_px(6));
+                gr().fillText("STARRING", ARCADE_WHITE, arcadeFont8(), TITLE_X, TOP_Y + tiles_to_px(3));
+                gr().fillText("MS PAC-MAN", ARCADE_YELLOW, arcadeFont8(), TITLE_X, TOP_Y + tiles_to_px(6));
             }
         }
         for (Ghost ghost : ghosts) { gr().drawActor(ghost); }
         gr().drawActor(msPacMan);
         if (gr() instanceof ArcadeMsPacMan_GameRenderer r) { // might also be vector renderer!
-            r.drawMsPacManCopyrightAtTile(ARCADE_RED, normalArcadeFont(), 6, 28);
+            r.drawMsPacManCopyrightAtTile(ARCADE_RED, arcadeFont8(), 6, 28);
         }
-        gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()), scoreColor(), normalArcadeFont(), 2 * TS, sizeInPx().y() - 2);
+        gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()), scoreColor(), arcadeFont8(), 2 * TS, sizeInPx().y() - 2);
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 
