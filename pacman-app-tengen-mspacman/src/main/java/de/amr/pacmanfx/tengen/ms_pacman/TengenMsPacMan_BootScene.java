@@ -7,7 +7,6 @@ package de.amr.pacmanfx.tengen.ms_pacman;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.paint.Color;
@@ -30,12 +29,13 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     private long tick;
     private Ghost ghost;
     private boolean grayScreen;
-    private final Actor presentsText = new Actor();
+    private TextActor presentsText;
 
     @Override
     public void doInit() {
         theGame().setScoreVisible(false);
         grayScreen = false;
+        presentsText = new TextActor("TENGEN PRESENTS");
         presentsText.setPosition(9 * TS, sizeInPx().y() + TS); // just below visible area
         presentsText.setVelocity(Vector2f.ZERO);
         ghost = createRedGhost();
@@ -97,7 +97,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
         if (grayScreen) {
             r.fillCanvas(nesPaletteColor(0x10));
         } else {
-            r.drawTengenPresentsText(tick, presentsText, normalArcadeFont());
+            r.drawBlueShadedTextActor(tick, presentsText, normalArcadeFont());
             r.drawActor(ghost);
         }
     }
