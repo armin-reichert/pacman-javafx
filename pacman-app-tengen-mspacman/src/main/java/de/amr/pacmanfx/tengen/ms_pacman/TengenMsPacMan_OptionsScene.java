@@ -8,6 +8,7 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.RectArea;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
+import de.amr.pacmanfx.ui.PacManGames_ActionBinding;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -15,8 +16,6 @@ import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_ActionBindings.TENGEN_DEFAULT_ACTION_BINDINGS;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.ACTION_START_PLAYING;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.ACTION_TOGGLE_JOYPAD_KEYS_SHOWN;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.sprite;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.PacManGames_Actions.*;
@@ -32,7 +31,7 @@ import static de.amr.pacmanfx.uilib.input.Keyboard.alt;
  *
  * @author Armin Reichert
  */
-public class TengenMsPacMan_OptionsScene extends GameScene2D {
+public class TengenMsPacMan_OptionsScene extends GameScene2D implements PacManGames_ActionBinding, TengenMsPacMan_ActionBinding {
 
     static final int COL_ARROW = 2 * TS;
     static final int COL_LABEL = 4 * TS;

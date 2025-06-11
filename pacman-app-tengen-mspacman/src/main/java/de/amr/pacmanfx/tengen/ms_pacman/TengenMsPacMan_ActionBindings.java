@@ -8,7 +8,7 @@ import javafx.scene.input.KeyCombination;
 import java.util.Map;
 import java.util.Set;
 
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.*;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_ActionBinding.*;
 import static de.amr.pacmanfx.ui.PacManGames_Actions.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theJoypad;
 import static de.amr.pacmanfx.uilib.ActionBindingSupport.createBinding;

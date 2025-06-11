@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui._2d;
 
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.ui.PacManGames_ActionBindings;
 import de.amr.pacmanfx.uilib.GameAction;
 import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.uilib.input.Keyboard;
@@ -27,7 +26,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Base class of all 2D scenes.
  */
-public abstract class GameScene2D implements GameScene, PacManGames_ActionBindings {
+public abstract class GameScene2D implements GameScene {
 
     protected final Map<KeyCombination, GameAction> actionBindings = new HashMap<>();
 

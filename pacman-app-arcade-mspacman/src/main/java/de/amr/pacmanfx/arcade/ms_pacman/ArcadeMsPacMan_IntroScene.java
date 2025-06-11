@@ -15,6 +15,7 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.ui.PacManGames_ActionBinding;
 import de.amr.pacmanfx.ui.PacManGames_Actions;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.paint.Color;
@@ -36,7 +37,7 @@ import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
  *
  * @author Armin Reichert
  */
-public class ArcadeMsPacMan_IntroScene extends GameScene2D {
+public class ArcadeMsPacMan_IntroScene extends GameScene2D implements PacManGames_ActionBinding {
 
     private static final float SPEED = 1.11f;
 

@@ -11,6 +11,7 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
+import de.amr.pacmanfx.ui.PacManGames_ActionBinding;
 import de.amr.pacmanfx.ui.PacManGames_Actions;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelFinishedAnimation;
@@ -41,7 +42,6 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_ActionBindings.TENGEN_DEFAULT_ACTION_BINDINGS;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.sprite;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.PacManGames_Actions.*;
@@ -51,7 +51,8 @@ import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 /**
  * Tengen play scene, uses vertical scrolling.
  */
-public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraControlledView {
+public class TengenMsPacMan_PlayScene2D extends GameScene2D
+    implements PacManGames_ActionBinding, TengenMsPacMan_ActionBinding, CameraControlledView {
 
     // NES screen width (32 tiles), BIG map height (42 tiles) + 2 extra tile rows
     private static final Vector2i UNSCALED_CANVAS_SIZE = Vector2i.of(32 * TS, 44 * TS);
@@ -366,9 +367,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
                 double camY = scaled((tilesY - 46) * HTS);
                 fixedCamera.setTranslateY(camY);
             }
-            case SCROLLING -> {
-                setScaling(fxSubScene.getHeight() / NES_SIZE.y());
-            }
+            case SCROLLING -> setScaling(fxSubScene.getHeight() / NES_SIZE.y());
         }
 
         gr().setScaling(scaling());

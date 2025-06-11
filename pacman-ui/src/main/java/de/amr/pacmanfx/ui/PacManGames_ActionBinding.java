@@ -19,7 +19,7 @@ import static de.amr.pacmanfx.uilib.ActionBindingSupport.createBinding;
 import static de.amr.pacmanfx.uilib.input.Keyboard.*;
 import static java.util.Objects.requireNonNull;
 
-public interface PacManGames_ActionBindings extends ActionBindingSupport {
+public interface PacManGames_ActionBinding extends ActionBindingSupport {
 
     Map<GameAction, Set<KeyCombination>> COMMON_ACTION_BINDINGS = Map.ofEntries(
         createBinding(ACTION_ARCADE_INSERT_COIN,      nude(KeyCode.DIGIT5), nude(KeyCode.NUMPAD5)),

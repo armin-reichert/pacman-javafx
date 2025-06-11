@@ -5,16 +5,16 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman;
 
 import de.amr.pacmanfx.lib.Vector2f;
+import de.amr.pacmanfx.ui.PacManGames_ActionBinding;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_ActionBindings.TENGEN_DEFAULT_ACTION_BINDINGS;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.ACTION_START_GAME;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
 
-public class TengenMsPacMan_CreditsScene extends GameScene2D {
+public class TengenMsPacMan_CreditsScene extends GameScene2D implements PacManGames_ActionBinding, TengenMsPacMan_ActionBinding {
 
     static final float DISPLAY_SECONDS = 12;
 

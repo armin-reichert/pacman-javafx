@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade;
 
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
+import de.amr.pacmanfx.ui.PacManGames_ActionBinding;
 import de.amr.pacmanfx.ui.PacManGames_Actions;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 
@@ -17,7 +18,7 @@ import static de.amr.pacmanfx.ui.PacManGames_Env.theSound;
 /**
  * Scene shown after credit has been added and where game can be started.
  */
-public class ArcadePacMan_StartScene extends GameScene2D {
+public class ArcadePacMan_StartScene extends GameScene2D implements PacManGames_ActionBinding {
 
     @Override
     public void doInit() {

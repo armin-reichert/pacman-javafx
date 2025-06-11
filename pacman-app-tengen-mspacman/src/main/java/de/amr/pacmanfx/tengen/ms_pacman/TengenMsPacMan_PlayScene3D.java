@@ -16,8 +16,8 @@ import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_ActionBindings.TENGEN_DEFAULT_ACTION_BINDINGS;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.ACTION_QUIT_DEMO_LEVEL;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.ACTION_TOGGLE_PAC_BOOSTER;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_ActionBinding.ACTION_QUIT_DEMO_LEVEL;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_ActionBinding.ACTION_TOGGLE_PAC_BOOSTER;
 import static de.amr.pacmanfx.ui.PacManGames_Actions.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 

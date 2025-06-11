@@ -14,7 +14,7 @@ import static de.amr.pacmanfx.ui.PacManGames_Env.theSound;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
 import static de.amr.pacmanfx.uilib.Ufx.toggle;
 
-public interface TengenMsPacMan_GameActions {
+public interface TengenMsPacMan_ActionBinding {
 
     GameAction ACTION_QUIT_DEMO_LEVEL = new GameAction() {
         @Override

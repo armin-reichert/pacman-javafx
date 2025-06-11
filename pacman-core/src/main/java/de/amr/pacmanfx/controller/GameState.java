@@ -519,6 +519,5 @@ public enum GameState implements FsmState<GameModel> {
         return timer;
     }
 
-    final TickTimer timer = new TickTimer("GameState-Timer-" + name());
-
+    final TickTimer timer = new TickTimer("Timer_" + name());
 }

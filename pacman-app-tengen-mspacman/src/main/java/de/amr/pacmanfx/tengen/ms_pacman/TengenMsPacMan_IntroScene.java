@@ -13,6 +13,7 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.ui.PacManGames_ActionBinding;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
@@ -23,8 +24,6 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_ActionBindings.TENGEN_DEFAULT_ACTION_BINDINGS;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.ACTION_START_GAME;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameActions.ACTION_TOGGLE_JOYPAD_KEYS_SHOWN;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.sprite;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
@@ -33,7 +32,7 @@ import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 /**
  * @author Armin Reichert
  */
-public class TengenMsPacMan_IntroScene extends GameScene2D {
+public class TengenMsPacMan_IntroScene extends GameScene2D implements PacManGames_ActionBinding, TengenMsPacMan_ActionBinding {
 
     // Anchor point for everything
     private static final int MARQUEE_X = 60, MARQUEE_Y = 64;

@@ -13,6 +13,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
+import de.amr.pacmanfx.ui.PacManGames_ActionBinding;
 import de.amr.pacmanfx.ui.PacManGames_Actions;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelFinishedAnimation;
@@ -42,7 +43,7 @@ import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 /**
  * 2D play scene for Arcade game variants.
  */
-public class ArcadeCommon_PlayScene2D extends GameScene2D {
+public class ArcadeCommon_PlayScene2D extends GameScene2D implements PacManGames_ActionBinding {
 
     private RectArea livesCounterSprite;
     private LevelFinishedAnimation levelFinishedAnimation;
