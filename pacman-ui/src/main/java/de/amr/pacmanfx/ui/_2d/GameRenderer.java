@@ -140,7 +140,7 @@ public interface GameRenderer {
     }
 
     /**
-     * Draws (animated) actor (Pac-Man, ghost, moving bonus) if entity is visible.
+     * Draws (animated) actor (Pac-Man, ghost, moving bonus) if visible.
      *
      * @param actor the actor to draw
      */
