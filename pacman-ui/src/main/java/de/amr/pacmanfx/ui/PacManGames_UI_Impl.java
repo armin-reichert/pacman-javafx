@@ -46,6 +46,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class PacManGames_UI_Impl implements PacManGames_UI {
 
+    private final Map<GameVariant, PacManGames_UIConfiguration> configMap = new EnumMap<>(GameVariant.class);
+
     private final ObjectProperty<PacManGames_View> viewPy = new SimpleObjectProperty<>();
     private final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>();
 
@@ -326,8 +328,6 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     }
 
     // UI configuration
-
-    protected final Map<GameVariant, PacManGames_UIConfiguration> configMap = new EnumMap<>(GameVariant.class);
 
     /**
      * Stores the UI configuration for a game variant and initializes the game scenes (assigns the game context).
