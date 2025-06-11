@@ -11,11 +11,10 @@ import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
 
 import static de.amr.pacmanfx.Validations.requireNonNegative;
+import static java.util.Objects.requireNonNull;
 
 /**
  * 3D energizer pellet.
- *
- * @author Armin Reichert
  */
 public class Energizer3D implements Eatable3D {
 
@@ -55,7 +54,7 @@ public class Energizer3D implements Eatable3D {
     }
 
     public void setEatenAnimation(Animation animation) {
-        this.eatenAnimation = animation;
+        this.eatenAnimation = requireNonNull(animation);
     }
 
     @Override
@@ -70,8 +69,8 @@ public class Energizer3D implements Eatable3D {
 
     @Override
     public String toString() {
-        var pumping = pumpingAnimation.getStatus() == Status.RUNNING ? " (pumping)" : "";
-        return String.format("[Energizer%s, tile: %s]", pumping, tile());
+        String pumpingText = pumpingAnimation.getStatus() == Status.RUNNING ? " (pumping)" : "";
+        return String.format("[Energizer%s, tile: %s]", pumpingText, tile());
     }
 
     @Override
