@@ -15,9 +15,9 @@ import javafx.scene.media.MediaPlayer;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
+import static de.amr.pacmanfx.tengen.ms_pacman.SpriteID.STORK;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.createMsPacMan;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.createPacMan;
-import static de.amr.pacmanfx.tengen.ms_pacman.SpriteID.STORK;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.sprite;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.sprites;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
@@ -54,7 +54,6 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
     private boolean bagOpen;
     private boolean darkness;
 
-    private TengenMsPacMan_SpriteSheet spriteSheet;
     private ClapperboardAnimation clapAnimation;
     private SpriteAnimation storkAnimation;
 
@@ -72,7 +71,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         bagWithJunior = new Actor();
         bagWithJunior.hide();
 
-        spriteSheet = theUI().configuration().spriteSheet();
+        TengenMsPacMan_SpriteSheet spriteSheet = theUI().configuration().spriteSheet();
         pacMan.setAnimations(new TengenMsPacMan_PacAnimationMap(spriteSheet));
         msPacMan.setAnimations(new TengenMsPacMan_PacAnimationMap(spriteSheet));
 
@@ -158,23 +157,27 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
     }
 
     @Override
+    public TengenMsPacMan_Renderer2D gr() {
+        return (TengenMsPacMan_Renderer2D) gameRenderer;
+    }
+
+    @Override
     public void drawSceneContent() {
         if (darkness) {
             return;
         }
-        var r = (TengenMsPacMan_Renderer2D) gr();
-        r.drawVerticalSceneBorders();
-        r.drawClapperBoard(clapAnimation, "JUNIOR", 3, CLAP_TILE_X, CLAP_TILE_Y, arcadeFont8());
-        r.drawStork(storkAnimation, stork, bagReleased);
-        r.drawActor(msPacMan);
-        r.drawActor(pacMan);
+        gr().drawVerticalSceneBorders();
+        gr().drawClapperBoard(clapAnimation, "JUNIOR", 3, CLAP_TILE_X, CLAP_TILE_Y, arcadeFont8());
+        gr().drawStork(storkAnimation, stork, bagReleased);
+        gr().drawActor(msPacMan);
+        gr().drawActor(pacMan);
         if (bagWithJunior.isVisible()) {
             if (bagOpen) {
-                r.drawActorSprite(bagWithJunior, sprite(SpriteID.JUNIOR_PAC));
+                gr().drawActorSprite(bagWithJunior, sprite(SpriteID.JUNIOR_PAC));
             } else {
-                r.drawActorSprite(bagWithJunior, sprite(SpriteID.BLUE_BAG));
+                gr().drawActorSprite(bagWithJunior, sprite(SpriteID.BLUE_BAG));
             }
         }
-        r.drawLevelCounter(theGame().levelCounter(), sizeInPx().minus(0, 3*TS));
+        gr().drawLevelCounter(theGame().levelCounter(), sizeInPx().minus(0, 3*TS));
     }
 }

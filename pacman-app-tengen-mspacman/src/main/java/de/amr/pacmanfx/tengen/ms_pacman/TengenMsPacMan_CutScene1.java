@@ -204,15 +204,19 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     }
 
     @Override
+    public TengenMsPacMan_Renderer2D gr() {
+        return (TengenMsPacMan_Renderer2D) gameRenderer;
+    }
+
+    @Override
     public void drawSceneContent() {
-        var r = (TengenMsPacMan_Renderer2D) gr();
-        r.drawVerticalSceneBorders();
-        r.drawClapperBoard(clapAnimation, "THEY MEET", 1, CLAP_TILE_X, CLAP_TILE_Y, arcadeFont8());
-        r.drawActor(msPacMan);
-        r.drawActor(pacMan);
-        r.drawActor(inky);
-        r.drawActor(pinky);
-        r.drawActorSprite(heart, sprite(SpriteID.HEART));
-        r.drawLevelCounter(theGame().levelCounter(), sizeInPx().minus(0, 3*TS));
+        gr().drawVerticalSceneBorders();
+        gr().drawClapperBoard(clapAnimation, "THEY MEET", 1, CLAP_TILE_X, CLAP_TILE_Y, arcadeFont8());
+        gr().drawActor(msPacMan);
+        gr().drawActor(pacMan);
+        gr().drawActor(inky);
+        gr().drawActor(pinky);
+        gr().drawActorSprite(heart, sprite(SpriteID.HEART));
+        gr().drawLevelCounter(theGame().levelCounter(), sizeInPx().minus(0, 3*TS));
     }
 }

@@ -11,8 +11,8 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
-import de.amr.pacmanfx.ui.PacManGames_ActionBinding;
 import de.amr.pacmanfx.ui.PacManGames_Action;
+import de.amr.pacmanfx.ui.PacManGames_ActionBinding;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelFinishedAnimation;
 import de.amr.pacmanfx.uilib.CameraControlledView;
@@ -354,6 +354,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D
     // drawing
 
     @Override
+    public TengenMsPacMan_Renderer2D gr() {
+        return (TengenMsPacMan_Renderer2D) gameRenderer;
+    }
+
+    @Override
     public void draw() {
         gr().fillCanvas(backgroundColor());
         if (optGameLevel().isEmpty()) {
@@ -383,45 +388,44 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D
     @Override
     protected void drawSceneContent() {
         final var game = (TengenMsPacMan_GameModel) theGame();
-        final var r = (TengenMsPacMan_Renderer2D) gr();
         // NES screen is 32 tiles wide but mazes are only 28 tiles wide
         final double indent = scaled(2 * TS);
         final int mazeTop = 3 * TS;
         final boolean flashing = levelFinishedAnimation != null && levelFinishedAnimation.isRunning();
 
-        r.ensureMapSettingsApplied(theGameLevel()); //TODO check this
-        r.ctx().save();
-        r.ctx().translate(indent, 0);
+        gr().ensureMapSettingsApplied(theGameLevel()); //TODO check this
+        gr().ctx().save();
+        gr().ctx().translate(indent, 0);
         if (flashing) {
             if (levelFinishedAnimation.isHighlighted()) {
-                r.drawHighlightedLevel(theGameLevel(), 0, mazeTop, levelFinishedAnimation.flashingIndex());
+                gr().drawHighlightedLevel(theGameLevel(), 0, mazeTop, levelFinishedAnimation.flashingIndex());
             } else {
-                r.drawLevel(theGameLevel(), 0, mazeTop, null, false, false);
-                r.drawFood(theGameLevel()); // this also hides the eaten food!
+                gr().drawLevel(theGameLevel(), 0, mazeTop, null, false, false);
+                gr().drawFood(theGameLevel()); // this also hides the eaten food!
             }
         }
         else {
-            r.drawLevel(theGameLevel(), 0, mazeTop, null, false, false);
-            r.drawFood(theGameLevel());
-            theGameLevel().bonus().ifPresent(r::drawBonus);
+            gr().drawLevel(theGameLevel(), 0, mazeTop, null, false, false);
+            gr().drawFood(theGameLevel());
+            theGameLevel().bonus().ifPresent(gr()::drawBonus);
             //TODO in the original game, the message is drawn under the maze image but *over* the pellets!
-            r.drawLevelMessage(theGameLevel(), currentMessagePosition(), arcadeFont8());
+            gr().drawLevelMessage(theGameLevel(), currentMessagePosition(), arcadeFont8());
         }
-        r.drawActor(theGameLevel().pac());
-        ghostsInZOrder().forEach(r::drawActor);
+        gr().drawActor(theGameLevel().pac());
+        ghostsInZOrder().forEach(gr()::drawActor);
 
         // As long as Pac-Man is still invisible on game start, one live more is shown in the counter
         int numLivesDisplayed = theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible()
             ? game.lifeCount() : game.lifeCount() - 1;
-        r.drawLivesCounter(numLivesDisplayed, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - TS, sprite(SpriteID.LIVES_COUNTER_SYMBOL));
+        gr().drawLivesCounter(numLivesDisplayed, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - TS, sprite(SpriteID.LIVES_COUNTER_SYMBOL));
 
         if (theGameLevel().isDemoLevel() || game.mapCategory() == MapCategory.ARCADE) {
-            r.drawLevelCounter(game.levelCounter(), sizeInPx());
+            gr().drawLevelCounter(game.levelCounter(), sizeInPx());
         } else {
-            r.drawLevelCounterWithLevelNumbers(theGameLevel().number(), game.levelCounter(), sizeInPx());
+            gr().drawLevelCounterWithLevelNumbers(theGameLevel().number(), game.levelCounter(), sizeInPx());
         }
 
-        r.ctx().restore();
+        gr().ctx().restore();
     }
 
     @Override
