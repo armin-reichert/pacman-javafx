@@ -95,6 +95,7 @@ public class Maze3D extends Group {
             houseLightOnPy);
 
         getChildren().add(house3D.root()); //TODO check this
+        house3D.door3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
 
         PY_3D_WALL_HEIGHT.addListener((py, ov, nv) -> obstacleBaseHeightPy.set(nv.doubleValue()));
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);

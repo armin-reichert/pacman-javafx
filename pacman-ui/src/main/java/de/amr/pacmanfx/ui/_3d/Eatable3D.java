@@ -9,7 +9,7 @@ import javafx.geometry.Point3D;
 import javafx.scene.Node;
 
 /**
- * @author Armin Reichert
+ * Implemented by eatable 3D shapes.
  */
 public interface Eatable3D {
     Node shape3D();

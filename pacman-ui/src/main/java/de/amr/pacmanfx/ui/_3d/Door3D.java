@@ -24,11 +24,11 @@ import javafx.util.Duration;
 import static de.amr.pacmanfx.Globals.TS;
 
 /**
- * @author Armin Reichert
+ * 3D ghost house door.
  */
 public class Door3D extends Group {
 
-    public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
+    private final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(DrawMode.FILL);
     private final DoubleProperty barThicknessPy = new SimpleDoubleProperty(0.75);
     private final PhongMaterial barMaterial;
 
@@ -36,6 +36,8 @@ public class Door3D extends Group {
         barMaterial = Ufx.coloredPhongMaterial(color);
         getChildren().addAll(createDoorWing(leftWingTile, height), createDoorWing(rightWingTile, height));
     }
+
+    public ObjectProperty<DrawMode> drawModeProperty() { return drawModePy; }
 
     public void playOpenCloseAnimation() {
         new Timeline(
