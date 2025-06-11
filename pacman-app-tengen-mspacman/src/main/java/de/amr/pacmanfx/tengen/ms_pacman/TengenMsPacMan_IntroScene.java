@@ -10,6 +10,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.timer.TickTimer;
+import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -46,6 +47,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D implements PacManGame
 
     private long marqueeTick;
     private final BitSet marqueeState = new BitSet(NUM_BULBS);
+    private final Actor presentsText = new Actor();
     private Pac msPacMan;
     private Ghost[] ghosts;
     private int ghostIndex;
@@ -59,6 +61,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D implements PacManGame
                 return TengenMsPacMan_IntroScene.this;
             }
         };
+        presentsText.setPosition(9 * TS, MARQUEE_Y - TS);
     }
 
     @Override
@@ -91,14 +94,13 @@ public class TengenMsPacMan_IntroScene extends GameScene2D implements PacManGame
         var r = (TengenMsPacMan_Renderer2D) gr();
         r.drawVerticalSceneBorders();
         TickTimer timer = sceneController.state().timer;
-        long t = timer.tickCount();
+        long tick = timer.tickCount();
         switch (sceneController.state()) {
             case WAITING_FOR_START -> {
                 if (!dark) {
-                    r.fillText("TENGEN PRESENTS", r.shadeOfBlue(t),
-                        normalArcadeFont(), 9 * TS, MARQUEE_Y - TS);
+                    r.drawTengenPresentsText(tick, presentsText, normalArcadeFont());
                     r.drawSpriteScaled(sprite(SpriteID.TITLE_TEXT), 6 * TS, MARQUEE_Y);
-                    if (t % 60 < 30) {
+                    if (tick % 60 < 30) {
                         r.fillText("PRESS START", nesPaletteColor(0x20),
                             normalArcadeFont(), 11 * TS, MARQUEE_Y + 9 * TS);
                     }

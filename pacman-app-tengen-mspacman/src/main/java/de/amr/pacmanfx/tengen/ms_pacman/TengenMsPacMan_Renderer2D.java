@@ -395,11 +395,11 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         });
     }
 
-    // Blue colors used in intro, dark to brighter blue shade.
-    // Cycles through palette indices 0x01, 0x11, 0x21, 0x31, each frame takes 16 ticks.
-    public Color shadeOfBlue(long tick) {
+    public void drawTengenPresentsText(long tick, Actor presentsText, Font font) {
+        // Blue color, changing from dark blue to brighter blue.
+        // Cycles through palette indices 0x01, 0x11, 0x21, 0x31, each 16 ticks.
         int i = (int) (tick % 64) / 16;
-        return nesPaletteColor(0x01 + 0x10 * i);
+        fillText("TENGEN PRESENTS", nesPaletteColor(0x01 + i * 0x10), font, presentsText.x(), presentsText.y());
     }
 
     public void drawBar(Color outlineColor, Color barColor, double width, double y) {
