@@ -37,11 +37,8 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
         theGame().setScoreVisible(false);
         grayScreen = false;
         presentsText = new TextActor("TENGEN PRESENTS");
-        presentsText.setPosition(9 * TS, sizeInPx().y() + TS); // just below visible area
-        presentsText.setVelocity(Vector2f.ZERO);
         ghost = createRedGhost();
         ghost.setSpeed(0);
-        ghost.hide();
         ghost.setAnimations(new TengenMsPacMan_GhostAnimationMap(theUI().configuration().spriteSheet(), ghost.personality()));
         ghost.selectAnimation(ANIM_GHOST_NORMAL);
         tick = 0;
@@ -61,6 +58,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
         else if (tick == 21) {
             presentsText.setPosition(9 * TS, sizeInPx().y()); // lower border of screen
             presentsText.setVelocity(0, -HTS);
+            presentsText.show();
         }
         else if (tick == 55) {
             presentsText.setPosition(9 * TS, 13 * TS);
@@ -70,7 +68,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
             ghost.setPosition(sizeInPx().x() - TS, GHOST_Y);
             ghost.setMoveAndWishDir(Direction.LEFT);
             ghost.setSpeed(TS);
-            ghost.setVisible(true);
+            ghost.show();
         }
         else if (tick == 181) {
             presentsText.setVelocity(0, TS);
