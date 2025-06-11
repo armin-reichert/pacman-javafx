@@ -24,8 +24,6 @@ import static de.amr.pacmanfx.Globals.TS;
 
 /**
  * Displays a Pac-Man shape for each live remaining.
- *
- * @author Armin Reichert
  */
 public class LivesCounter3D extends Group {
 

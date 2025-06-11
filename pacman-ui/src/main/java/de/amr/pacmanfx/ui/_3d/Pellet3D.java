@@ -16,8 +16,6 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * 3D pellet.
- *
- * @author Armin Reichert
  */
 public class Pellet3D implements Eatable3D {
 

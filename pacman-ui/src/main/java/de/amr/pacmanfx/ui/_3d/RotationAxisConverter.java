@@ -10,9 +10,6 @@ import javafx.util.StringConverter;
 
 import java.util.Objects;
 
-/**
- * @author Armin Reichert
- */
 public class RotationAxisConverter extends StringConverter<Point3D> {
 
     private final String txtX;

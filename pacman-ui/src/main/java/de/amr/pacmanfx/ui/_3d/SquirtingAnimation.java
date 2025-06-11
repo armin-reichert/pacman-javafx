@@ -38,7 +38,7 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.randomFloat;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 
 /**
- * @author Armin Reichert
+ * Animation played when energizer has been eaten.
  */
 public class SquirtingAnimation extends Transition {
 

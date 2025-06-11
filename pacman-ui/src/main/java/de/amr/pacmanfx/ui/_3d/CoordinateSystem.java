@@ -13,8 +13,6 @@ import javafx.scene.transform.Rotate;
 
 /**
  * Shows coordinates axes (x-axis=red, y-axis=green, z-axis=blue).
- *
- * @author Armin Reichert
  */
 public class CoordinateSystem extends Group {
 

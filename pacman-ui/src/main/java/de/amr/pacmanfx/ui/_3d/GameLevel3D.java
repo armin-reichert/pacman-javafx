@@ -48,7 +48,7 @@ import static de.amr.pacmanfx.uilib.Ufx.*;
 import static java.util.Objects.requireNonNull;
 
 /**
- * 3D representation of current game level.
+ * 3D representation of game level.
  */
 public class GameLevel3D {
 
@@ -78,7 +78,7 @@ public class GameLevel3D {
     private LivesCounter3D livesCounter3D;
     private XMan3D pac3D;
     private List<Ghost3D_Appearance> ghosts3D;
-    private Message3D message3D;
+    private MessageView messageView;
     private Bonus3D bonus3D;
 
     private Animation levelCompleteAnimation;
@@ -298,34 +298,34 @@ public class GameLevel3D {
     public Group root() { return root; }
 
     public void showAnimatedMessage(String text, double displaySeconds, double centerX, double y) {
-        if (message3D != null) {
-            root.getChildren().remove(message3D);
+        if (messageView != null) {
+            root.getChildren().remove(messageView);
         }
-        message3D = Message3D.builder()
+        messageView = MessageView.builder()
             .text(text)
             .font(theAssets().arcadeFontAtSize(6))
             .borderColor(Color.WHITE)
             .textColor(Color.YELLOW)
             .build();
-        root.getChildren().add(message3D);
+        root.getChildren().add(messageView);
 
-        double halfHeight = 0.5 * message3D.getBoundsInLocal().getHeight();
-        message3D.setTranslateX(centerX - 0.5 * message3D.getFitWidth());
-        message3D.setTranslateY(y);
-        message3D.setTranslateZ(halfHeight); // just under floor
+        double halfHeight = 0.5 * messageView.getBoundsInLocal().getHeight();
+        messageView.setTranslateX(centerX - 0.5 * messageView.getFitWidth());
+        messageView.setTranslateY(y);
+        messageView.setTranslateZ(halfHeight); // just under floor
 
-        var moveUpAnimation = new TranslateTransition(Duration.seconds(1), message3D);
+        var moveUpAnimation = new TranslateTransition(Duration.seconds(1), messageView);
         moveUpAnimation.setToZ(-(halfHeight + 0.5 * OBSTACLE_3D_BASE_HEIGHT));
-        moveUpAnimation.setOnFinished(e -> Logger.info("Moving message3D up finished: {}", message3D));
+        moveUpAnimation.setOnFinished(e -> Logger.info("Moving message3D up finished: {}", messageView));
 
-        var moveDownAnimation = new TranslateTransition(Duration.seconds(1), message3D);
+        var moveDownAnimation = new TranslateTransition(Duration.seconds(1), messageView);
         moveDownAnimation.setToZ(halfHeight);
         moveDownAnimation.setOnFinished(e -> {
-            message3D.setVisible(false);
-            Logger.info("Moving message3D down finished: {}", message3D);
+            messageView.setVisible(false);
+            Logger.info("Moving message3D down finished: {}", messageView);
         });
 
-        Logger.info("Message3D before move: {}", message3D);
+        Logger.info("Message3D before move: {}", messageView);
         new SequentialTransition(
             moveUpAnimation,
             new PauseTransition(Duration.seconds(displaySeconds)),

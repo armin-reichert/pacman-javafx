@@ -28,8 +28,6 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * 3D bonus symbol.
- *
- * @author Armin Reichert
  */
 public class Bonus3D extends Box {
     private final Bonus bonus;

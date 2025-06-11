@@ -15,8 +15,6 @@ import static de.amr.pacmanfx.Globals.TS;
 
 /**
  * Displays score and high score in 3D play scene.
- *
- * @author Armin Reichert
  */
 public class Scores3D extends GridPane {
 

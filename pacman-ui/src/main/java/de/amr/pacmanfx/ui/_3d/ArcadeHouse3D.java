@@ -18,6 +18,9 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 import static de.amr.pacmanfx.uilib.Ufx.opaqueColor;
 
+/**
+ * 3D Arcade style house.
+ */
 public class ArcadeHouse3D {
     private final Group root = new Group();
     private final Door3D door3D;

@@ -14,9 +14,7 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
 
 /**
- * Play scene perspectives.
- *
- * @author Armin Reichert
+ * Play scene camera perspectives.
  */
 public interface Perspective {
 

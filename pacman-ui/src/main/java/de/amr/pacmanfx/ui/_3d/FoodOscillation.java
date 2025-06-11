@@ -33,7 +33,7 @@ import javafx.util.Duration;
 import static de.amr.pacmanfx.Globals.HTS;
 
 /**
- * @author Armin Reichert
+ * Oszillation animation for pellets (unused).
  */
 public class FoodOscillation extends Transition {
 

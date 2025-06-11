@@ -22,9 +22,7 @@ import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 
 /**
- * 3D related settings.
- *
- * @author Armin Reichert
+ * Infobox with 3D related settings.
  */
 public class InfoBox3D extends InfoBox {
 

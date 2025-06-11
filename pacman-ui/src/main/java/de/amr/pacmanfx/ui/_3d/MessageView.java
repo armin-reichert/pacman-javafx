@@ -14,9 +14,9 @@ import javafx.scene.transform.Rotate;
 import static java.util.Objects.requireNonNull;
 
 /**
- * @author Armin Reichert
+ * Message view.
  */
-public class Message3D extends ImageView {
+public class MessageView extends ImageView {
 
     public static class Builder {
         private Font font;
@@ -27,8 +27,8 @@ public class Message3D extends ImageView {
         public Builder borderColor(Color color) { this.borderColor = requireNonNull(color); return this; }
         public Builder textColor(Color color) { this.textColor = requireNonNull(color); return this; }
         public Builder text(String text) { this.text = requireNonNull(text); return this; }
-        public Message3D build() {
-            Message3D message = new Message3D();
+        public MessageView build() {
+            MessageView message = new MessageView();
             double width = text.length() * font.getSize() + MARGIN;
             double height = font.getSize() + MARGIN;
             message.setImage(createImage(width, height, text, font, textColor, borderColor));
