@@ -10,8 +10,10 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.media.MediaPlayer;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -48,6 +50,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     private boolean bagOpen;
     private int numBagBounces;
 
+    private SpriteSheet spriteSheet;
     private MediaPlayer music;
     private ClapperboardAnimation clapperboardAnimation;
     private SpriteAnimation storkAnimation;
@@ -61,8 +64,10 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         stork = new Actor();
         bag = new Actor();
 
-        msPacMan.setAnimations(theUI().configuration().createPacAnimations(msPacMan));
-        pacMan.setAnimations(theUI().configuration().createPacAnimations(pacMan));
+        PacManGames_UIConfig config = theUI().configuration();
+        spriteSheet = config.spriteSheet();
+        msPacMan.setAnimations(config.createPacAnimations(msPacMan));
+        pacMan.setAnimations(config.createPacAnimations(pacMan));
 
         storkAnimation =  SpriteAnimation.createAnimation().ofSprites(sprites(STORK)).frameTicks(8).endless();
         storkAnimation.play();
@@ -100,10 +105,10 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         if (gr() instanceof ArcadeMsPacMan_GameRenderer r) { // could also be VectorGraphicsGameRenderer!
             r.drawClapperBoard(clapperboardAnimation, tiles_to_px(3), tiles_to_px(10), arcadeFont8());
         }
-        gr().drawActor(msPacMan);
-        gr().drawActor(pacMan);
-        gr().drawActorSprite(stork, (RectArea) storkAnimation.currentSprite());
-        gr().drawActorSprite(bag, bagOpen ? sprite(JUNIOR_PAC) : sprite(BLUE_BAG));
+        gr().drawActor(msPacMan, spriteSheet);
+        gr().drawActor(pacMan, spriteSheet);
+        gr().drawActorSprite(stork, spriteSheet, (RectArea) storkAnimation.currentSprite());
+        gr().drawActorSprite(bag, spriteSheet, bagOpen ? sprite(JUNIOR_PAC) : sprite(BLUE_BAG));
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 

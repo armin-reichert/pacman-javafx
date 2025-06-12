@@ -11,6 +11,7 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.media.MediaPlayer;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -44,6 +45,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
     static final int GROUND_Y = TS * 24;
     static final int RIGHT_BORDER = TS * (NES_TILES.x() - 2);
 
+    private SpriteSheet spriteSheet;
     private MediaPlayer music;
     private Pac pacMan;
     private Pac msPacMan;
@@ -61,6 +63,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void doInit() {
+        spriteSheet = theUI().configuration().spriteSheet();
         t = -1;
         theGame().setScoreVisible(false);
         bindActionToKeyCombination(theGameController()::letCurrentGameStateExpire, theJoypad().key(JoypadButton.START));
@@ -166,13 +169,13 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         gr().drawVerticalSceneBorders();
         gr().drawClapperBoard(clapAnimation, "JUNIOR", 3, CLAP_TILE_X, CLAP_TILE_Y, arcadeFont8());
         gr().drawStork(storkAnimation, stork, bagReleased);
-        gr().drawActor(msPacMan);
-        gr().drawActor(pacMan);
+        gr().drawActor(msPacMan, spriteSheet);
+        gr().drawActor(pacMan, spriteSheet);
         if (bagWithJunior.isVisible()) {
             if (bagOpen) {
-                gr().drawActorSprite(bagWithJunior, sprite(SpriteID.JUNIOR_PAC));
+                gr().drawActorSprite(bagWithJunior, spriteSheet, sprite(SpriteID.JUNIOR_PAC));
             } else {
-                gr().drawActorSprite(bagWithJunior, sprite(SpriteID.BLUE_BAG));
+                gr().drawActorSprite(bagWithJunior, spriteSheet, sprite(SpriteID.BLUE_BAG));
             }
         }
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx().minus(0, 3*TS));

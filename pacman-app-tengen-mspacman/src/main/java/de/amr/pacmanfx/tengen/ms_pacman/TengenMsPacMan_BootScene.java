@@ -9,6 +9,7 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -27,6 +28,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
 
     private static final float GHOST_Y = 21.5f * TS;
 
+    private SpriteSheet spriteSheet;
     private long tick;
     private Ghost ghost;
     private boolean grayScreen;
@@ -34,6 +36,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
 
     @Override
     public void doInit() {
+        spriteSheet = theUI().configuration().spriteSheet();
         theGame().setScoreVisible(false);
         grayScreen = false;
         presentsText = new TextActor("TENGEN PRESENTS");
@@ -97,7 +100,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
             r.fillCanvas(nesPaletteColor(0x10));
         } else {
             r.fillText(presentsText.text(), blueShadedColor(tick), arcadeFont8(), presentsText.x(), presentsText.y());
-            r.drawActor(ghost);
+            r.drawActor(ghost, spriteSheet);
         }
     }
 

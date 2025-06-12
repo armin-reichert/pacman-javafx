@@ -10,7 +10,6 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
@@ -38,11 +37,6 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
     public void applyRenderingHints(GameLevel level) {}
 
     @Override
-    public SpriteSheet spriteSheet() {
-        return spriteSheet;
-    }
-
-    @Override
     public GraphicsContext ctx() {
         return ctx;
     }
@@ -60,9 +54,9 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
             ctx.drawImage(theAssets().image("pacman.flashing_maze"), x, y);
         }
         else if (level.uneatenFoodCount() == 0) {
-            drawSprite(sprite(SpriteID.MAP_EMPTY), x, y);
+            drawSprite(spriteSheet, sprite(SpriteID.MAP_EMPTY), x, y);
         } else {
-            drawSprite(sprite(SpriteID.MAP_FULL), x, y);
+            drawSprite(spriteSheet, sprite(SpriteID.MAP_FULL), x, y);
             overPaintEatenPelletTiles(level, backgroundColor);
             overPaintEnergizerTiles(level, tile -> !energizerHighlighted || level.tileContainsEatenFood(tile), backgroundColor);
         }
@@ -74,7 +68,7 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
         float x = sceneSizeInPixels.x() - 4 * TS, y = sceneSizeInPixels.y() - 2 * TS;
         for (byte symbol : levelCounter.symbols()) {
             RectArea sprite = theUI().configuration().createBonusSymbolSprite(symbol);
-            drawSpriteScaled(sprite, x, y);
+            drawSpriteScaled(spriteSheet, sprite, x, y);
             x -= TS * 2;
         }
     }
@@ -82,10 +76,10 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
     public void drawBonus(Bonus bonus) {
         if (bonus.state() == Bonus.STATE_EDIBLE) {
             RectArea sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
-            drawActorSprite(bonus.actor(), sprite);
+            drawActorSprite(bonus.actor(), spriteSheet, sprite);
         } else if (bonus.state() == Bonus.STATE_EATEN) {
             RectArea sprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
-            drawActorSprite(bonus.actor(), sprite);
+            drawActorSprite(bonus.actor(), spriteSheet, sprite);
         }
     }
 }

@@ -17,6 +17,7 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.PacManGames_ActionBinding;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -59,6 +60,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements PacManGame
 
     private final StateMachine<SceneState, ArcadeMsPacMan_IntroScene> sceneController;
 
+    private SpriteSheet spriteSheet;
     private Pac msPacMan;
     private Ghost[] ghosts;
     private TickTimer marqueeTimer;
@@ -84,6 +86,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements PacManGame
         bindAction(ACTION_TEST_LEVELS_BONI, COMMON_ACTION_BINDINGS);
         bindAction(ACTION_TEST_LEVELS_TEASERS, COMMON_ACTION_BINDINGS);
 
+        spriteSheet = theUI().configuration().spriteSheet();
         msPacMan = createMsPacMan();
         ghosts = new Ghost[] { createRedGhost(), createPinkGhost(), createCyanGhost(), createOrangeGhost() };
         marqueeTimer = new TickTimer("marquee-timer");
@@ -133,8 +136,8 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements PacManGame
                 gr().fillText("MS PAC-MAN", ARCADE_YELLOW, arcadeFont8(), TITLE_X, TOP_Y + tiles_to_px(6));
             }
         }
-        for (Ghost ghost : ghosts) { gr().drawActor(ghost); }
-        gr().drawActor(msPacMan);
+        for (Ghost ghost : ghosts) { gr().drawActor(ghost, spriteSheet); }
+        gr().drawActor(msPacMan, spriteSheet);
         if (gr() instanceof ArcadeMsPacMan_GameRenderer r) { // might also be vector renderer!
             r.drawMsPacManCopyrightAtTile(ARCADE_RED, arcadeFont8(), 6, 28);
         }

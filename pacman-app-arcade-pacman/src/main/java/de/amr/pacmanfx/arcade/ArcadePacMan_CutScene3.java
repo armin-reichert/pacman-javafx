@@ -9,6 +9,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 
@@ -32,6 +33,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
 
     static final short ANIMATION_START = 120;
 
+    private SpriteSheet spriteSheet;
     private int frame;
     private Pac pac;
     private Ghost blinky;
@@ -44,6 +46,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
         blinky = createRedGhost();
         music = theSound().createSound("intermission", 2);
 
+        spriteSheet = theUI().configuration().spriteSheet();
         pac.setAnimations(theUI().configuration().createPacAnimations(pac));
         blinky.setAnimations(theUI().configuration().createGhostAnimations(blinky));
 
@@ -93,8 +96,8 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        gr().drawActor(pac);
-        gr().drawActor(blinky);
+        gr().drawActor(pac, spriteSheet);
+        gr().drawActor(blinky, spriteSheet);
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 

@@ -17,6 +17,7 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.PacManGames_ActionBinding;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -55,6 +56,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D implements PacManGames_
         @Override public ArcadePacMan_IntroScene context() { return ArcadePacMan_IntroScene.this; }
     };
 
+    private SpriteSheet spriteSheet;
     private Pulse blinking;
     private Pac pacMan;
     private List<Ghost> ghosts;
@@ -76,6 +78,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D implements PacManGames_
         bindAction(ACTION_TEST_LEVELS_BONI, COMMON_ACTION_BINDINGS);
         bindAction(ACTION_TEST_LEVELS_TEASERS, COMMON_ACTION_BINDINGS);
 
+        spriteSheet = theUI().configuration().spriteSheet();
         blinking = new Pulse(10, true);
         pacMan = createPac();
         pacMan.setAnimations(theUI().configuration().createPacAnimations(pacMan));
@@ -137,7 +140,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D implements PacManGames_
         }
         for (byte personality = RED_GHOST_SHADOW; personality <= ORANGE_GHOST_POKEY; ++personality) {
             if (ghostImageVisible[personality]) {
-                gr().drawSpriteScaledCenteredAt(sprites(GALLERY_GHOSTS)[personality],
+                gr().drawSpriteScaledCenteredAt(spriteSheet, sprites(GALLERY_GHOSTS)[personality],
                     tiles_to_px(LEFT_TILE_X) + TS, tiles_to_px(7 + 3 * personality) + HTS);
             }
             if (ghostCharacterVisible[personality]) {
@@ -156,17 +159,17 @@ public class ArcadePacMan_IntroScene extends GameScene2D implements PacManGames_
         long tick = sceneController.state().timer().tickCount();
         int shakingAmount = shaking ? (tick % 5 < 2 ? 0 : -1) : 0;
         if (shakingAmount == 0) {
-            ghosts.forEach(gr()::drawActor);
+            ghosts.forEach(ghost -> gr().drawActor(ghost, spriteSheet));
         } else {
-            gr().drawActor(ghosts.get(RED_GHOST_SHADOW));
-            gr().drawActor(ghosts.get(ORANGE_GHOST_POKEY));
+            gr().drawActor(ghosts.get(RED_GHOST_SHADOW), spriteSheet);
+            gr().drawActor(ghosts.get(ORANGE_GHOST_POKEY), spriteSheet);
             ctx().save();
             ctx().translate(shakingAmount, 0);
-            gr().drawActor(ghosts.get(PINK_GHOST_SPEEDY));
-            gr().drawActor(ghosts.get(CYAN_GHOST_BASHFUL));
+            gr().drawActor(ghosts.get(PINK_GHOST_SPEEDY), spriteSheet);
+            gr().drawActor(ghosts.get(CYAN_GHOST_BASHFUL), spriteSheet);
             ctx().restore();
         }
-        gr().drawActor(pacMan);
+        gr().drawActor(pacMan, spriteSheet);
     }
 
     private void drawPoints() {

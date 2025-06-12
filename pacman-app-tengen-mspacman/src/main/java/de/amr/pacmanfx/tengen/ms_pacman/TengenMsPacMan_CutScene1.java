@@ -11,6 +11,7 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.media.MediaPlayer;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -48,6 +49,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     static final float SPEED_PAC_RISING = 1f;
     static final float SPEED_GHOST_AFTER_COLLISION = 0.5f;
 
+    private SpriteSheet spriteSheet;
     private MediaPlayer music;
     private Pac pacMan;
     private Pac msPacMan;
@@ -61,6 +63,8 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void doInit() {
+        spriteSheet = theUI().configuration().spriteSheet();
+
         t = -1;
         theGame().setScoreVisible(false);
         bindActionToKeyCombination(theGameController()::letCurrentGameStateExpire, theJoypad().key(JoypadButton.START));
@@ -211,11 +215,11 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     public void drawSceneContent() {
         gr().drawVerticalSceneBorders();
         gr().drawClapperBoard(clapAnimation, "THEY MEET", 1, CLAP_TILE_X, CLAP_TILE_Y, arcadeFont8());
-        gr().drawActor(msPacMan);
-        gr().drawActor(pacMan);
-        gr().drawActor(inky);
-        gr().drawActor(pinky);
-        gr().drawActorSprite(heart, sprite(SpriteID.HEART));
+        gr().drawActor(msPacMan, spriteSheet);
+        gr().drawActor(pacMan, spriteSheet);
+        gr().drawActor(inky, spriteSheet);
+        gr().drawActor(pinky, spriteSheet);
+        gr().drawActorSprite(heart, spriteSheet, sprite(SpriteID.HEART));
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx().minus(0, 3*TS));
     }
 }

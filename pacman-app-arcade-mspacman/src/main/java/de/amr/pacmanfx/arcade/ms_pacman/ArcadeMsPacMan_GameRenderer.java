@@ -69,11 +69,6 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     }
 
     @Override
-    public ArcadeMsPacMan_SpriteSheet spriteSheet() {
-        return spriteSheet;
-    }
-
-    @Override
     public GraphicsContext ctx() { return ctx; }
 
     @Override
@@ -91,9 +86,9 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
         if (mazeHighlighted) {
             drawImageRegionScaled(theAssets().get("ms_pacman.flashing_mazes"), HIGHLIGHTED_MAZES[colorMapIndex], x, y);
         } else if (level.uneatenFoodCount() == 0) {
-            drawSpriteScaled(EMPTY_MAZES[colorMapIndex], x, y);
+            drawSpriteScaled(spriteSheet, EMPTY_MAZES[colorMapIndex], x, y);
         } else {
-            drawSpriteScaled(FULL_MAZES[colorMapIndex], x, y);
+            drawSpriteScaled(spriteSheet, FULL_MAZES[colorMapIndex], x, y);
             ctx.save();
             ctx.scale(scaling(), scaling());
             overPaintEatenPelletTiles(level, backgroundColor);
@@ -107,7 +102,7 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
         float x = sceneSizeInPixels.x() - 4 * TS, y = sceneSizeInPixels.y() - 2 * TS;
         for (byte symbol : levelCounter.symbols()) {
             RectArea sprite = theUI().configuration().createBonusSymbolSprite(symbol);
-            drawSpriteScaled(sprite, x, y);
+            drawSpriteScaled(spriteSheet, sprite, x, y);
             x -= TS * 2;
         }
     }
@@ -120,11 +115,11 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
         switch (bonus.state()) {
             case Bonus.STATE_EDIBLE -> {
                 RectArea sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
-                drawActorSprite(bonus.actor(), sprite);
+                drawActorSprite(bonus.actor(), spriteSheet, sprite);
             }
             case Bonus.STATE_EATEN  -> {
                 RectArea sprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
-                drawActorSprite(bonus.actor(), sprite);
+                drawActorSprite(bonus.actor(), spriteSheet, sprite);
             }
         }
         ctx.restore();
@@ -135,7 +130,7 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
             float numberX = scaled(x + sprite.width() - 25);
             float numberY = scaled(y + 18);
             float textX = scaled(x + sprite.width());
-            drawSpriteScaledCenteredAt(sprite, x + HTS, y + HTS);
+            drawSpriteScaledCenteredAt(spriteSheet, sprite, x + HTS, y + HTS);
             ctx.setFont(font);
             ctx.setFill(ARCADE_WHITE);
             ctx.fillText(clapperboardAnimation.number(), numberX, numberY);

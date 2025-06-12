@@ -46,8 +46,6 @@ public interface GameRenderer {
         ctx().fillRect(0, 0, ctx().getCanvas().getWidth(), ctx().getCanvas().getHeight());
     }
 
-    SpriteSheet spriteSheet();
-
     FloatProperty scalingProperty();
 
     default void setScaling(float value) {
@@ -71,13 +69,14 @@ public interface GameRenderer {
     /**
      * Draws a sprite (region inside sprite sheet) unscaled at the given position.
      *
-     * @param sprite        the sprite to draw (may be null)
-     * @param x             x-coordinate of left-upper corner
-     * @param y             y-coordinate of left-upper corner
+     * @param spriteSheet sprite sheet
+     * @param sprite      the sprite to draw (may be null)
+     * @param x           x-coordinate of left-upper corner
+     * @param y           y-coordinate of left-upper corner
      */
-    default void drawSprite(RectArea sprite, double x, double y) {
+    default void drawSprite(SpriteSheet spriteSheet, RectArea sprite, double x, double y) {
         if (sprite != null) {
-            ctx().drawImage(spriteSheet().sourceImage(),
+            ctx().drawImage(spriteSheet.sourceImage(),
                 sprite.x(), sprite.y(), sprite.width(), sprite.height(),
                 x, y, sprite.width(), sprite.height());
         }
@@ -87,13 +86,14 @@ public interface GameRenderer {
      * Draws a sprite (region inside sprite sheet) the given position. The sprite size and the position are scaled using
      * the current scale factor.
      *
+     * @param spriteSheet sprite sheet
      * @param sprite        the sprite to draw (may be null)
      * @param x             x-coordinate of left-upper corner (unscaled)
      * @param y             y-coordinate of left-upper corner (unscaled)
      */
-    default void drawSpriteScaled(RectArea sprite, double x, double y) {
+    default void drawSpriteScaled(SpriteSheet spriteSheet, RectArea sprite, double x, double y) {
         if (sprite != null) {
-            drawImageRegionScaled(spriteSheet().sourceImage(), sprite, x, y);
+            drawImageRegionScaled(spriteSheet.sourceImage(), sprite, x, y);
         }
     }
 
@@ -117,13 +117,14 @@ public interface GameRenderer {
     /**
      * Draws a sprite centered over a position.
      *
+     * @param spriteSheet sprite sheet
      * @param sprite sprite (region in sprite sheet, may be null)
      * @param cx  x-coordinate of the center position
      * @param cy  y-coordinate of the center position
      */
-    default void drawSpriteScaledCenteredAt(RectArea sprite, double cx, double cy) {
+    default void drawSpriteScaledCenteredAt(SpriteSheet spriteSheet, RectArea sprite, double cx, double cy) {
         if (sprite != null) {
-            drawSpriteScaled(sprite, cx - 0.5 * sprite.width(), cy - 0.5 * sprite.height());
+            drawSpriteScaled(spriteSheet, sprite, cx - 0.5 * sprite.width(), cy - 0.5 * sprite.height());
         }
     }
 
@@ -131,12 +132,13 @@ public interface GameRenderer {
      * Draws the sprite over the "collision box" (one-tile square) of the given actor (if visible).
      *
      * @param actor an actor
+     * @param spriteSheet sprite sheet
      * @param sprite sprite sheet region (can be null)
      */
-    default void drawActorSprite(Actor actor, RectArea sprite) {
+    default void drawActorSprite(Actor actor, SpriteSheet spriteSheet, RectArea sprite) {
         requireNonNull(actor);
         if (actor.isVisible() && sprite != null) {
-            drawSpriteScaledCenteredAt(sprite, actor.x() + HTS, actor.y() + HTS);
+            drawSpriteScaledCenteredAt(spriteSheet, sprite, actor.x() + HTS, actor.y() + HTS);
         }
     }
 
@@ -144,8 +146,9 @@ public interface GameRenderer {
      * Draws (animated) actor (Pac-Man, ghost, moving bonus) if visible.
      *
      * @param actor the actor to draw
+     * @param spriteSheet the sprite sheet
      */
-    default void drawActor(Actor actor) {
+    default void drawActor(Actor actor, SpriteSheet spriteSheet) {
         requireNonNull(actor);
         if (!actor.isVisible()) {
             return;
@@ -155,7 +158,7 @@ public interface GameRenderer {
                 if (animations instanceof SpriteAnimationMap<?> spriteAnimations) {
                     SpriteAnimation currentAnimation = spriteAnimations.currentAnimation();
                     if (currentAnimation != null) {
-                        drawActorSprite(actor, (RectArea) spriteAnimations.currentSprite(actor));
+                        drawActorSprite(actor, spriteSheet, (RectArea) spriteAnimations.currentSprite(actor));
                     } else {
                         Logger.error("No current animation for actor {}", actor);
                     }
@@ -297,12 +300,12 @@ public interface GameRenderer {
         ctx().restore();
     }
 
-    default void drawLivesCounter(int numLives, int maxLives, double x, double y, RectArea livesCounterSprite) {
+    default void drawLivesCounter(int numLives, int maxLives, double x, double y, SpriteSheet spriteSheet, RectArea livesCounterSprite) {
         if (numLives == 0) {
             return;
         }
         for (int i = 0; i < Math.min(numLives, maxLives); ++i) {
-            drawSpriteScaled(livesCounterSprite, x + TS * (2 * i), y);
+            drawSpriteScaled(spriteSheet, livesCounterSprite, x + TS * (2 * i), y);
         }
         // show text indicating that more lives are available than symbols displayed (can happen when lives are added via cheat)
         int moreLivesThanSymbols = numLives - maxLives;

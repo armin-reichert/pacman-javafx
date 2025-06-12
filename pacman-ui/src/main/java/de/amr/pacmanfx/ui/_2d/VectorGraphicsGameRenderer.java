@@ -55,11 +55,6 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
     public void applyRenderingHints(GameLevel level) {}
 
     @Override
-    public SpriteSheet spriteSheet() {
-        return spriteSheet;
-    }
-
-    @Override
     public GraphicsContext ctx() {
         return ctx;
     }
@@ -110,7 +105,7 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
         float x = sceneSizeInPixels.x() - 4 * TS, y = sceneSizeInPixels.y() - 2 * TS;
         for (byte symbol : levelCounter.symbols()) {
             RectArea sprite = theUI().configuration().createBonusSymbolSprite(symbol);
-            drawSpriteScaled(sprite, x, y);
+            drawSpriteScaled(spriteSheet, sprite, x, y);
             x -= TS * 2;
         }
     }
@@ -118,10 +113,10 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
     public void drawBonus(Bonus bonus) {
         if (bonus.state() == Bonus.STATE_EDIBLE) {
             RectArea sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
-            drawActorSprite(bonus.actor(), sprite);
+            drawActorSprite(bonus.actor(), spriteSheet, sprite);
         } else if (bonus.state() == Bonus.STATE_EATEN) {
             RectArea sprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
-            drawActorSprite(bonus.actor(), sprite);
+            drawActorSprite(bonus.actor(), spriteSheet, sprite);
         }
     }
 }

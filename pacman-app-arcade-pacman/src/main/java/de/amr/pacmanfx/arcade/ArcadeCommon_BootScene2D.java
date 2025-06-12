@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import javafx.scene.image.Image;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -26,16 +26,17 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
     private static final int FRAGMENT_SIZE = 16;
 
     private double minX, maxX, minY, maxY;
+    private SpriteSheet spriteSheet;
 
     @Override
     public void doInit() {
+        spriteSheet = theUI().configuration().spriteSheet();
         theGame().setScoreVisible(false);
-        Image spriteImage = theUI().configuration().spriteSheet().sourceImage();
         // ignore left half of sprite sheet image
-        minX = spriteImage.getWidth() / 2;
-        maxX = spriteImage.getWidth() - FRAGMENT_SIZE;
+        minX = spriteSheet.sourceImage().getWidth() / 2;
+        maxX = spriteSheet.sourceImage().getWidth() - FRAGMENT_SIZE;
         minY = 0;
-        maxY = spriteImage.getHeight() - FRAGMENT_SIZE;
+        maxY = spriteSheet.sourceImage().getHeight() - FRAGMENT_SIZE;
         theSound().playVoice("voice.explain", 0);
     }
 
@@ -99,7 +100,7 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
             RectArea fragment1 = randomFragment(), fragment2 = randomFragment();
             int split = numFragmentsX / 8 + theRNG().nextInt(numFragmentsX / 4);
             for (int col = 0; col < numFragmentsX; ++col) {
-                gr().drawSpriteScaled(col < split ? fragment1 : fragment2, FRAGMENT_SIZE * col, FRAGMENT_SIZE * row);
+                gr().drawSpriteScaled(spriteSheet, col < split ? fragment1 : fragment2, FRAGMENT_SIZE * col, FRAGMENT_SIZE * row);
             }
         }
     }

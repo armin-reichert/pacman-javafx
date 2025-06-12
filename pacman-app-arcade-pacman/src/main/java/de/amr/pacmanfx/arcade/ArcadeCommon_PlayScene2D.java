@@ -20,6 +20,7 @@ import de.amr.pacmanfx.ui._2d.LevelFinishedAnimation;
 import de.amr.pacmanfx.ui._2d.VectorGraphicsGameRenderer;
 import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.uilib.Ufx;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
@@ -160,6 +161,8 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements PacManGames
         if (optGameLevel().isEmpty())
             return; // Scene is drawn already 2 ticks before level has been created
 
+        final SpriteSheet spriteSheet = theUI().configuration().spriteSheet();
+
         gr().applyRenderingHints(theGameLevel());
 
         //TODO: check this
@@ -177,9 +180,9 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements PacManGames
 
         // Use correct z-order: bonus, Pac-Man, ghosts in order
         theGameLevel().bonus().ifPresent(gr()::drawBonus);
-        gr().drawActor(theGameLevel().pac());
+        gr().drawActor(theGameLevel().pac(), spriteSheet);
         Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)
-                .map(theGameLevel()::ghost).forEach(gr()::drawActor);
+                .map(theGameLevel()::ghost).forEach(ghost -> gr().drawActor(ghost, spriteSheet));
 
         if (debugInfoVisibleProperty().get()) {
             gr().drawAnimatedActorInfo(theGameLevel().pac());
@@ -191,7 +194,8 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements PacManGames
             // As long as Pac-Man is still invisible on game start, one live more is shown in the counter
             int numLivesDisplayed = theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible()
                 ? theGame().lifeCount() : theGame().lifeCount() - 1;
-            gr().drawLivesCounter(numLivesDisplayed, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - 2 * TS, livesCounterSprite);
+            gr().drawLivesCounter(numLivesDisplayed, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - 2 * TS,
+                    spriteSheet, livesCounterSprite);
         } else {
             gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
                 scoreColor(), arcadeFont8(), 2 * TS, sizeInPx().y() - 2);

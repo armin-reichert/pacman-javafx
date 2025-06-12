@@ -18,6 +18,7 @@ import de.amr.pacmanfx.ui._2d.LevelFinishedAnimation;
 import de.amr.pacmanfx.uilib.CameraControlledView;
 import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.uilib.Ufx;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -66,6 +67,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D
 
     private MessageMovement messageMovement;
     private LevelFinishedAnimation levelFinishedAnimation;
+
+    private SpriteSheet spriteSheet;
 
     public TengenMsPacMan_PlayScene2D() {
         dynamicCamera.scalingProperty().bind(scalingProperty());
@@ -167,6 +170,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D
 
     @Override
     public void doInit() {
+        spriteSheet = theUI().configuration().spriteSheet();
         theGame().setScoreVisible(true);
         setGameRenderer(theUI().configuration().createRenderer(canvas()));
         dynamicCamera.moveTop();
@@ -387,7 +391,13 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D
         final int mazeTop = 3 * TS;
         final boolean flashing = levelFinishedAnimation != null && levelFinishedAnimation.isRunning();
 
-        gr().ensureMapSettingsApplied(theGameLevel()); //TODO check this
+        //TODO check this:
+        if (spriteSheet == null) {
+            spriteSheet = theUI().configuration().spriteSheet();
+        }
+        gr().ensureMapSettingsApplied(theGameLevel());
+
+
         ctx().save();
         ctx().translate(indent, 0);
         if (flashing) {
@@ -405,13 +415,14 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D
             //TODO in the original game, the message is drawn under the maze image but *over* the pellets!
             gr().drawLevelMessage(theGameLevel(), currentMessagePosition(), arcadeFont8());
         }
-        gr().drawActor(theGameLevel().pac());
-        ghostsInZOrder().forEach(gr()::drawActor);
+        gr().drawActor(theGameLevel().pac(), spriteSheet);
+        ghostsInZOrder().forEach(ghost -> gr().drawActor(ghost, spriteSheet));
 
         // As long as Pac-Man is still invisible on game start, one live more is shown in the counter
         int numLivesDisplayed = theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible()
             ? theGame().lifeCount() : theGame().lifeCount() - 1;
-        gr().drawLivesCounter(numLivesDisplayed, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - TS, sprite(SpriteID.LIVES_COUNTER_SYMBOL));
+        gr().drawLivesCounter(numLivesDisplayed, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - TS,
+                spriteSheet, sprite(SpriteID.LIVES_COUNTER_SYMBOL));
 
         TengenMsPacMan_GameModel tengenGame = (TengenMsPacMan_GameModel) theGame();
         if (theGameLevel().isDemoLevel() || tengenGame.mapCategory() == MapCategory.ARCADE) {
