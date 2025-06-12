@@ -9,7 +9,6 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.media.MediaPlayer;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -46,12 +45,10 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     private Pac msPacMan;
     private MediaPlayer music;
     private ClapperboardAnimation clapAnimation;
-    private SpriteSheet spriteSheet;
 
     @Override
     public void doInit() {
         t = -1;
-        spriteSheet = theUI().configuration().spriteSheet();
         theGame().setScoreVisible(false);
         bindActionToKeyCombination(theGameController()::letCurrentGameStateExpire, theJoypad().key(JoypadButton.START));
 
@@ -153,8 +150,8 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     public void drawSceneContent() {
         gr().drawVerticalSceneBorders();
         gr().drawClapperBoard(clapAnimation, "THE CHASE", 2, CLAP_TILE_X, CLAP_TILE_Y, arcadeFont8());
-        gr().drawActor(msPacMan, spriteSheet);
-        gr().drawActor(pacMan, spriteSheet);
+        gr().drawActor(msPacMan);
+        gr().drawActor(pacMan);
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx().minus(0, 3*TS));
     }
 }

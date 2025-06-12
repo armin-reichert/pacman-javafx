@@ -15,7 +15,6 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.PacManGames_ActionBinding;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
@@ -46,7 +45,6 @@ public class TengenMsPacMan_IntroScene extends GameScene2D implements PacManGame
 
     private final StateMachine<SceneState, TengenMsPacMan_IntroScene> sceneController;
 
-    private SpriteSheet spriteSheet;
     private long marqueeTick;
     private final BitSet marqueeState = new BitSet(NUM_BULBS);
     private TextActor presentsText;
@@ -67,7 +65,6 @@ public class TengenMsPacMan_IntroScene extends GameScene2D implements PacManGame
 
     @Override
     public void doInit() {
-        spriteSheet = theUI().configuration().spriteSheet();
         theGame().setScoreVisible(false);
         bindAction(TengenMsPacMan_Action.ACTION_START_GAME, TENGEN_ACTION_BINDINGS);
         bindAction(TengenMsPacMan_Action.ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, TENGEN_ACTION_BINDINGS);
@@ -102,7 +99,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D implements PacManGame
             case WAITING_FOR_START -> {
                 if (!dark) {
                     gr().fillText(presentsText.text(), blueShadedColor(tick), arcadeFont8(), presentsText.x(), presentsText.y());
-                    gr().drawSpriteScaled(spriteSheet, sprite(SpriteID.TITLE_TEXT), 6 * TS, MARQUEE_Y);
+                    gr().drawSpriteScaled(sprite(SpriteID.TITLE_TEXT), 6 * TS, MARQUEE_Y);
                     if (tick % 60 < 30) {
                         gr().fillText("PRESS START", nesPaletteColor(0x20), arcadeFont8(), 11 * TS, MARQUEE_Y + 9 * TS);
                     }
@@ -124,15 +121,15 @@ public class TengenMsPacMan_IntroScene extends GameScene2D implements PacManGame
                 Ghost currentGhost = ghosts[ghostIndex];
                 Color ghostColor = theAssets().color("tengen.ghost.%d.color.normal.dress".formatted(currentGhost.personality()));
                 gr().fillText(currentGhost.name().toUpperCase(), ghostColor, arcadeFont8(), MARQUEE_X + 44, MARQUEE_Y + 41);
-                for (Ghost ghost : ghosts) { gr().drawActor(ghost, spriteSheet); }
+                for (Ghost ghost : ghosts) { gr().drawActor(ghost); }
             }
             case MS_PACMAN_MARCHING_IN -> {
                 drawMarquee();
                 gr().fillText("\"MS PAC-MAN\"", nesPaletteColor(0x28), arcadeFont8(), MARQUEE_X + 20, MARQUEE_Y - 18);
                 gr().fillText("STARRING", nesPaletteColor(0x20), arcadeFont8(), MARQUEE_X + 12, MARQUEE_Y + 22);
                 gr().fillText("MS PAC-MAN", nesPaletteColor(0x28), arcadeFont8(), MARQUEE_X + 28, MARQUEE_Y + 38);
-                for (Ghost ghost : ghosts) { gr().drawActor(ghost, spriteSheet); }
-                gr().drawActor(msPacMan, spriteSheet);
+                for (Ghost ghost : ghosts) { gr().drawActor(ghost); }
+                gr().drawActor(msPacMan);
             }
         }
 

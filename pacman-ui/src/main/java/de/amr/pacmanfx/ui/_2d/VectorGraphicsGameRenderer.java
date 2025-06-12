@@ -110,7 +110,7 @@ public class VectorGraphicsGameRenderer extends SpriteGameRenderer {
         float x = sceneSizeInPixels.x() - 4 * TS, y = sceneSizeInPixels.y() - 2 * TS;
         for (byte symbol : levelCounter.symbols()) {
             RectArea sprite = theUI().configuration().createBonusSymbolSprite(symbol);
-            drawSpriteScaled(spriteSheet, sprite, x, y);
+            drawSpriteScaled(sprite, x, y);
             x -= TS * 2;
         }
     }
@@ -118,10 +118,10 @@ public class VectorGraphicsGameRenderer extends SpriteGameRenderer {
     public void drawBonus(Bonus bonus) {
         if (bonus.state() == Bonus.STATE_EDIBLE) {
             RectArea sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
-            drawActorSprite(bonus.actor(), spriteSheet, sprite);
+            drawActorSprite(bonus.actor(), sprite);
         } else if (bonus.state() == Bonus.STATE_EATEN) {
             RectArea sprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
-            drawActorSprite(bonus.actor(), spriteSheet, sprite);
+            drawActorSprite(bonus.actor(), sprite);
         }
     }
 }

@@ -5,7 +5,6 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.MediaPlayer;
 import org.tinylog.Logger;
@@ -38,7 +37,6 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     private List<Pac> juniors;
     private List<Integer> juniorCreationTime;
 
-    private SpriteSheet spriteSheet;
     private MediaPlayer music;
     private ClapperboardAnimation clapAnimation;
 
@@ -46,7 +44,6 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
     @Override
     protected void doInit() {
-        spriteSheet = theUI().configuration().spriteSheet();
         t = -1;
         theGame().setScoreVisible(false);
         msPacMan = createMsPacMan();
@@ -209,9 +206,9 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     protected void drawSceneContent() {
         gr().drawVerticalSceneBorders();
         gr().drawClapperBoard(clapAnimation, "THE END", 4, CLAP_TILE_X, CLAP_TILE_Y, arcadeFont8());
-        gr().drawActor(msPacMan, spriteSheet);
-        gr().drawActor(pacMan, spriteSheet);
-        juniors.forEach(junior -> gr().drawActor(junior, spriteSheet));
+        gr().drawActor(msPacMan);
+        gr().drawActor(pacMan);
+        juniors.forEach(junior -> gr().drawActor(junior));
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx().minus(0, 3*TS));
     }
 }

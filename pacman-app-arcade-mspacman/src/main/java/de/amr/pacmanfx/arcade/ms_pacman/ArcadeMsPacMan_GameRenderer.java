@@ -10,9 +10,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.MovingBonus;
-import de.amr.pacmanfx.ui._2d.GameRenderer;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
@@ -93,9 +91,9 @@ public class ArcadeMsPacMan_GameRenderer extends SpriteGameRenderer {
         if (mazeHighlighted) {
             drawImageRegionScaled(theAssets().get("ms_pacman.flashing_mazes"), HIGHLIGHTED_MAZES[colorMapIndex], x, y);
         } else if (level.uneatenFoodCount() == 0) {
-            drawSpriteScaled(spriteSheet, EMPTY_MAZES[colorMapIndex], x, y);
+            drawSpriteScaled(EMPTY_MAZES[colorMapIndex], x, y);
         } else {
-            drawSpriteScaled(spriteSheet, FULL_MAZES[colorMapIndex], x, y);
+            drawSpriteScaled(FULL_MAZES[colorMapIndex], x, y);
             ctx.save();
             ctx.scale(scaling(), scaling());
             overPaintEatenPelletTiles(level, backgroundColor);
@@ -109,7 +107,7 @@ public class ArcadeMsPacMan_GameRenderer extends SpriteGameRenderer {
         float x = sceneSizeInPixels.x() - 4 * TS, y = sceneSizeInPixels.y() - 2 * TS;
         for (byte symbol : levelCounter.symbols()) {
             RectArea sprite = theUI().configuration().createBonusSymbolSprite(symbol);
-            drawSpriteScaled(spriteSheet, sprite, x, y);
+            drawSpriteScaled(sprite, x, y);
             x -= TS * 2;
         }
     }
@@ -122,11 +120,11 @@ public class ArcadeMsPacMan_GameRenderer extends SpriteGameRenderer {
         switch (bonus.state()) {
             case Bonus.STATE_EDIBLE -> {
                 RectArea sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
-                drawActorSprite(bonus.actor(), spriteSheet, sprite);
+                drawActorSprite(bonus.actor(), sprite);
             }
             case Bonus.STATE_EATEN  -> {
                 RectArea sprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
-                drawActorSprite(bonus.actor(), spriteSheet, sprite);
+                drawActorSprite(bonus.actor(), sprite);
             }
         }
         ctx.restore();
@@ -137,7 +135,7 @@ public class ArcadeMsPacMan_GameRenderer extends SpriteGameRenderer {
             float numberX = scaled(x + sprite.width() - 25);
             float numberY = scaled(y + 18);
             float textX = scaled(x + sprite.width());
-            drawSpriteScaledCenteredAt(spriteSheet, sprite, x + HTS, y + HTS);
+            drawSpriteScaledCenteredAt(sprite, x + HTS, y + HTS);
             ctx.setFont(font);
             ctx.setFill(ARCADE_WHITE);
             ctx.fillText(clapperboardAnimation.number(), numberX, numberY);

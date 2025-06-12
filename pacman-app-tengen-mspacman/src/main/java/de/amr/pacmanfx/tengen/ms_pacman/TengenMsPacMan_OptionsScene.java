@@ -10,7 +10,6 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.ui.PacManGames_ActionBinding;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -20,7 +19,8 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_ActionBindings.TEN
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.sprite;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.PacManGames_Action.*;
-import static de.amr.pacmanfx.ui.PacManGames_Env.*;
+import static de.amr.pacmanfx.ui.PacManGames_Env.theJoypad;
+import static de.amr.pacmanfx.ui.PacManGames_Env.theSound;
 import static de.amr.pacmanfx.uilib.input.Keyboard.alt;
 
 /**
@@ -59,11 +59,8 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D implements PacManGa
     private long idleTicks;
     private int initialDelay;
 
-    private SpriteSheet spriteSheet;
-
     @Override
     public void doInit() {
-        spriteSheet = theUI().configuration().spriteSheet();
         theGame().setScoreVisible(false);
 
         bindAction(TengenMsPacMan_Action.ACTION_START_PLAYING, TENGEN_ACTION_BINDINGS);
@@ -297,7 +294,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D implements PacManGa
                 case 3 -> SpriteID.CONTINUES_3;
                 default -> throw new IllegalArgumentException("Illegal number of continues: " + tengenGame().numContinues());
             });
-            gr().drawSpriteScaled(spriteSheet, continuesSprite, COL_VALUE + 3 * TS, 160);
+            gr().drawSpriteScaled(continuesSprite, COL_VALUE + 3 * TS, 160);
         }
 
         gr().fillText("MOVE ARROW WITH JOYPAD", NES_YELLOW, arcadeFont8(), 4 * TS,  192);

@@ -21,7 +21,6 @@ import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.ui._2d.VectorGraphicsGameRenderer;
 import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.uilib.Ufx;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
@@ -162,8 +161,6 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements PacManGames
         if (optGameLevel().isEmpty())
             return; // Scene is drawn already 2 ticks before level has been created
 
-        final SpriteSheet spriteSheet = theUI().configuration().spriteSheet();
-
         gr().applyRenderingHints(theGameLevel());
 
         //TODO: check this
@@ -181,9 +178,9 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements PacManGames
 
         // Use correct z-order: bonus, Pac-Man, ghosts in order
         theGameLevel().bonus().ifPresent(gr()::drawBonus);
-        gr().drawActor(theGameLevel().pac(), spriteSheet);
+        gr().drawActor(theGameLevel().pac());
         Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)
-                .map(theGameLevel()::ghost).forEach(ghost -> gr().drawActor(ghost, spriteSheet));
+                .map(theGameLevel()::ghost).forEach(ghost -> gr().drawActor(ghost));
 
         if (debugInfoVisibleProperty().get()) {
             gr().drawAnimatedActorInfo(theGameLevel().pac());
@@ -196,7 +193,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements PacManGames
             int numLivesDisplayed = theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible()
                 ? theGame().lifeCount() : theGame().lifeCount() - 1;
             gr().drawLivesCounter(numLivesDisplayed, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - 2 * TS,
-                    spriteSheet, livesCounterSprite);
+                    livesCounterSprite);
         } else {
             gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
                 scoreColor(), arcadeFont8(), 2 * TS, sizeInPx().y() - 2);

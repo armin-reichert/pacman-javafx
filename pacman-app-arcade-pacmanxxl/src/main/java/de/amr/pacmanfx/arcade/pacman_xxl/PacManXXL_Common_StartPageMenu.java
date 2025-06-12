@@ -12,7 +12,6 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.widgets.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuEntry;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuStyle;
@@ -46,7 +45,6 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         private final Pac pac;
         private final Ghost[] ghosts;
         private SpriteGameRenderer renderer;
-        private SpriteSheet spriteSheet;
         private boolean chasingGhosts;
 
         ChaseAnimation(Canvas canvas) {
@@ -117,14 +115,13 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
             ctx.translate(0, 23.5 * TS * scaling);
             ctx.setImageSmoothing(false);
             renderer.setScaling(scaling);
-            for (Ghost ghost : ghosts) { renderer.drawActor(ghost, spriteSheet); }
-            renderer.drawActor(pac, spriteSheet);
+            for (Ghost ghost : ghosts) { renderer.drawActor(ghost); }
+            renderer.drawActor(pac);
             ctx.restore();
         }
 
         void setGameVariant(String gameVariant) {
             final PacManGames_UIConfig config = theUI().configuration(gameVariant);
-            spriteSheet = config.spriteSheet();
             renderer = (SpriteGameRenderer) config.createRenderer(ctx.getCanvas());
             pac.setAnimations(config.createPacAnimations(pac));
             pac.playAnimation(ANIM_PAC_MUNCHING);

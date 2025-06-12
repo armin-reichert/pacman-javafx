@@ -9,7 +9,6 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.media.MediaPlayer;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -39,7 +38,6 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     private Pac pacMan;
     private Pac msPacMan;
 
-    private SpriteSheet spriteSheet;
     private MediaPlayer music;
     private ClapperboardAnimation clapperboardAnimation;
 
@@ -50,7 +48,6 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
         pacMan = createPacMan();
         msPacMan = createMsPacMan();
 
-        spriteSheet = theUI().configuration().spriteSheet();
         msPacMan.setAnimations(theUI().configuration().createPacAnimations(msPacMan));
         pacMan.setAnimations(theUI().configuration().createPacAnimations(pacMan));
 
@@ -87,8 +84,8 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
         if (gr() instanceof ArcadeMsPacMan_GameRenderer r) {
             r.drawClapperBoard(clapperboardAnimation, tiles_to_px(3), tiles_to_px(10), arcadeFont8());
         }
-        gr().drawActor(msPacMan, spriteSheet);
-        gr().drawActor(pacMan, spriteSheet);
+        gr().drawActor(msPacMan);
+        gr().drawActor(pacMan);
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 

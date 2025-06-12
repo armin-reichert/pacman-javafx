@@ -416,14 +416,14 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D
             //TODO in the original game, the message is drawn under the maze image but *over* the pellets!
             gr().drawLevelMessage(theGameLevel(), currentMessagePosition(), arcadeFont8());
         }
-        gr().drawActor(theGameLevel().pac(), spriteSheet);
-        ghostsInZOrder().forEach(ghost -> gr().drawActor(ghost, spriteSheet));
+        gr().drawActor(theGameLevel().pac());
+        ghostsInZOrder().forEach(ghost -> gr().drawActor(ghost));
 
         // As long as Pac-Man is still invisible on game start, one live more is shown in the counter
         int numLivesDisplayed = theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible()
             ? theGame().lifeCount() : theGame().lifeCount() - 1;
         gr().drawLivesCounter(numLivesDisplayed, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - TS,
-                spriteSheet, sprite(SpriteID.LIVES_COUNTER_SYMBOL));
+                sprite(SpriteID.LIVES_COUNTER_SYMBOL));
 
         TengenMsPacMan_GameModel tengenGame = (TengenMsPacMan_GameModel) theGame();
         if (theGameLevel().isDemoLevel() || tengenGame.mapCategory() == MapCategory.ARCADE) {

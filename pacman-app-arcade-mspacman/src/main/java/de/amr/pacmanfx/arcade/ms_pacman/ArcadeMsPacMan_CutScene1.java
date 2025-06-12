@@ -12,7 +12,6 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.media.MediaPlayer;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -46,7 +45,6 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     private static final float SPEED_GHOST_AFTER_COLLISION = 0.3f;
     private static final float SPEED_GHOST_CHASING = 1.25f;
 
-    private SpriteSheet spriteSheet;
     private Pac pacMan;
     private Pac msPacMan;
     private Ghost inky;
@@ -66,7 +64,6 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         heart = new Actor();
 
         final PacManGames_UIConfig config = theUI().configuration();
-        spriteSheet = config.spriteSheet();
         msPacMan.setAnimations(config.createPacAnimations(msPacMan));
         pacMan.setAnimations(config.createPacAnimations(pacMan));
         inky.setAnimations(config.createGhostAnimations(inky));
@@ -106,11 +103,11 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         if (gr() instanceof ArcadeMsPacMan_GameRenderer r) { // could also be VectorGraphicsRenderer!
             r.drawClapperBoard(clapperboardAnimation, tiles_to_px(3), tiles_to_px(10), arcadeFont8());
         }
-        gr().drawActor(msPacMan, spriteSheet);
-        gr().drawActor(pacMan, spriteSheet);
-        gr().drawActor(inky, spriteSheet);
-        gr().drawActor(pinky, spriteSheet);
-        gr().drawActorSprite(heart, spriteSheet, sprite(SpriteID.HEART));
+        gr().drawActor(msPacMan);
+        gr().drawActor(pacMan);
+        gr().drawActor(inky);
+        gr().drawActor(pinky);
+        gr().drawActorSprite(heart, sprite(SpriteID.HEART));
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 

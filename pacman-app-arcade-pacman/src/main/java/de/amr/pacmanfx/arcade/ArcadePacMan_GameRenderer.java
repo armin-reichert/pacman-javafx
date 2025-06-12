@@ -59,9 +59,9 @@ public class ArcadePacMan_GameRenderer extends SpriteGameRenderer {
             ctx.drawImage(theAssets().image("pacman.flashing_maze"), x, y);
         }
         else if (level.uneatenFoodCount() == 0) {
-            drawSprite(spriteSheet, sprite(SpriteID.MAP_EMPTY), x, y);
+            drawSprite(sprite(SpriteID.MAP_EMPTY), x, y);
         } else {
-            drawSprite(spriteSheet, sprite(SpriteID.MAP_FULL), x, y);
+            drawSprite(sprite(SpriteID.MAP_FULL), x, y);
             overPaintEatenPelletTiles(level, backgroundColor);
             overPaintEnergizerTiles(level, tile -> !energizerHighlighted || level.tileContainsEatenFood(tile), backgroundColor);
         }
@@ -73,7 +73,7 @@ public class ArcadePacMan_GameRenderer extends SpriteGameRenderer {
         float x = sceneSizeInPixels.x() - 4 * TS, y = sceneSizeInPixels.y() - 2 * TS;
         for (byte symbol : levelCounter.symbols()) {
             RectArea sprite = theUI().configuration().createBonusSymbolSprite(symbol);
-            drawSpriteScaled(spriteSheet, sprite, x, y);
+            drawSpriteScaled(sprite, x, y);
             x -= TS * 2;
         }
     }
@@ -81,10 +81,10 @@ public class ArcadePacMan_GameRenderer extends SpriteGameRenderer {
     public void drawBonus(Bonus bonus) {
         if (bonus.state() == Bonus.STATE_EDIBLE) {
             RectArea sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
-            drawActorSprite(bonus.actor(), spriteSheet, sprite);
+            drawActorSprite(bonus.actor(), sprite);
         } else if (bonus.state() == Bonus.STATE_EATEN) {
             RectArea sprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
-            drawActorSprite(bonus.actor(), spriteSheet, sprite);
+            drawActorSprite(bonus.actor(), sprite);
         }
     }
 }

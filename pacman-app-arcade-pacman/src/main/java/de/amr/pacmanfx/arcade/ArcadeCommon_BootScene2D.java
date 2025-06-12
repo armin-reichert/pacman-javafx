@@ -26,11 +26,10 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
     private static final int FRAGMENT_SIZE = 16;
 
     private double minX, maxX, minY, maxY;
-    private SpriteSheet spriteSheet;
 
     @Override
     public void doInit() {
-        spriteSheet = theUI().configuration().spriteSheet();
+        SpriteSheet spriteSheet = theUI().configuration().spriteSheet();
         theGame().setScoreVisible(false);
         // ignore left half of sprite sheet image
         minX = spriteSheet.sourceImage().getWidth() / 2;
@@ -100,7 +99,7 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
             RectArea fragment1 = randomFragment(), fragment2 = randomFragment();
             int split = numFragmentsX / 8 + theRNG().nextInt(numFragmentsX / 4);
             for (int col = 0; col < numFragmentsX; ++col) {
-                gr().drawSpriteScaled(spriteSheet, col < split ? fragment1 : fragment2, FRAGMENT_SIZE * col, FRAGMENT_SIZE * row);
+                gr().drawSpriteScaled(col < split ? fragment1 : fragment2, FRAGMENT_SIZE * col, FRAGMENT_SIZE * row);
             }
         }
     }

@@ -8,7 +8,6 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.ui.PacManGames_ActionBinding;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
 import static de.amr.pacmanfx.Globals.theCoinMechanism;
 import static de.amr.pacmanfx.Globals.theGame;
@@ -20,15 +19,11 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.ui.PacManGames_Action.ACTION_ARCADE_INSERT_COIN;
 import static de.amr.pacmanfx.ui.PacManGames_Action.ACTION_ARCADE_START_GAME;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theSound;
-import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
 
 public class ArcadeMsPacMan_StartScene extends GameScene2D implements PacManGames_ActionBinding {
 
-    private SpriteSheet spriteSheet;
-
     @Override
     public void doInit() {
-        spriteSheet = theUI().configuration().spriteSheet();
         theGame().setScoreVisible(true);
         bindAction(ACTION_ARCADE_INSERT_COIN, COMMON_ACTION_BINDINGS);
         bindAction(ACTION_ARCADE_START_GAME, COMMON_ACTION_BINDINGS);
@@ -52,7 +47,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D implements PacManGame
         gr().fillTextAtTile("PUSH START BUTTON", ARCADE_ORANGE, arcadeFont8(), 6, 16);
         gr().fillTextAtTile("1 PLAYER ONLY", ARCADE_ORANGE, arcadeFont8(), 8, 18);
         gr().fillTextAtTile("ADDITIONAL    AT 10000", ARCADE_ORANGE, arcadeFont8(), 2, 25);
-        gr().drawSpriteScaled(spriteSheet, sprite(SpriteID.LIVES_COUNTER_SYMBOL), tiles_to_px(13), tiles_to_px(23) + 1);
+        gr().drawSpriteScaled(sprite(SpriteID.LIVES_COUNTER_SYMBOL), tiles_to_px(13), tiles_to_px(23) + 1);
         gr().fillTextAtTile("PTS", ARCADE_ORANGE, arcadeFont6(), 25, 25);
         if (gr() instanceof ArcadeMsPacMan_GameRenderer r) {
             r.drawMsPacManCopyrightAtTile(ARCADE_RED, arcadeFont8(), 6, 28);

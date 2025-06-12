@@ -12,7 +12,6 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 
@@ -42,7 +41,6 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     private int frame;
     private Pac pac;
     private Ghost blinky;
-    private SpriteSheet spriteSheet;
     private SpriteAnimation blinkyNormal;
     private SpriteAnimation blinkyDamaged;
     private SpriteAnimation nailDressRaptureAnimation;
@@ -57,7 +55,6 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         blinky.hide();
         music = theSound().createSound("intermission");
 
-        spriteSheet = theUI().configuration().spriteSheet();
         pac.setAnimations(theUI().configuration().createPacAnimations(pac));
 
         ActorAnimationMap blinkyAnimations = theUI().configuration().createGhostAnimations(blinky);
@@ -131,10 +128,10 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        gr().drawSpriteScaled(spriteSheet, (RectArea) nailDressRaptureAnimation.currentSprite(),
+        gr().drawSpriteScaled((RectArea) nailDressRaptureAnimation.currentSprite(),
                 tiles_to_px(14), tiles_to_px(19) + 3);
-        gr().drawActor(blinky, spriteSheet);
-        gr().drawActor(pac, spriteSheet);
+        gr().drawActor(blinky);
+        gr().drawActor(pac);
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 

@@ -14,11 +14,9 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.model.actors.*;
-import de.amr.pacmanfx.ui._2d.GameRenderer;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.input.JoypadKeyBinding;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.ObjectProperty;
@@ -97,13 +95,13 @@ public class TengenMsPacMan_Renderer2D extends SpriteGameRenderer {
     public FloatProperty scalingProperty() { return scalingPy; }
 
     @Override
-    public void drawActor(Actor actor, SpriteSheet spriteSheet) {
+    public void drawActor(Actor actor) {
         requireNonNull(actor);
         ctx().setImageSmoothing(false);
         if (actor instanceof Pac pac) {
             drawAnyPac(pac);
         } else {
-            super.drawActor(actor, spriteSheet);
+            super.drawActor(actor);
         }
     }
 
@@ -132,7 +130,7 @@ public class TengenMsPacMan_Renderer2D extends SpriteGameRenderer {
                         }
                         drawMovingActor(pac, dir, (RectArea) animation.currentSprite());
                     }
-                    default -> super.drawActor(pac, spriteSheet);
+                    default -> super.drawActor(pac);
                 }
             } else {
                 Logger.error("No animation found for {}", pac);
@@ -150,7 +148,7 @@ public class TengenMsPacMan_Renderer2D extends SpriteGameRenderer {
             case RIGHT -> ctx().scale(-1, 1);
             case DOWN  -> { ctx().scale(-1, 1); ctx().rotate(-90); }
         }
-        drawSpriteScaledCenteredAt(spriteSheet, spriteLookingLeft, 0, 0);
+        drawSpriteScaledCenteredAt(spriteLookingLeft, 0, 0);
         ctx().restore();
     }
 
@@ -270,11 +268,11 @@ public class TengenMsPacMan_Renderer2D extends SpriteGameRenderer {
         switch (bonus.state()) {
             case STATE_EDIBLE -> {
                 RectArea sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
-                drawActorSprite(bonus.actor(), spriteSheet, sprite);
+                drawActorSprite(bonus.actor(), sprite);
             }
             case STATE_EATEN  -> {
                 RectArea sprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
-                drawActorSprite(bonus.actor(), spriteSheet, sprite);
+                drawActorSprite(bonus.actor(), sprite);
             }
             default -> {}
         }
@@ -339,11 +337,11 @@ public class TengenMsPacMan_Renderer2D extends SpriteGameRenderer {
             case NORMAL -> null; // drawSprite() accepts null sprites!
         };
         if (pacBooster != PacBooster.OFF) {
-            drawSpriteScaledCenteredAt(spriteSheet, sprite(SpriteID.INFO_BOOSTER), centerX - tiles_to_px(6), y);
+            drawSpriteScaledCenteredAt(sprite(SpriteID.INFO_BOOSTER), centerX - tiles_to_px(6), y);
         }
-        drawSpriteScaledCenteredAt(spriteSheet, difficultySprite, centerX, y);
-        drawSpriteScaledCenteredAt(spriteSheet, categorySprite, centerX + tiles_to_px(4.5), y);
-        drawSpriteScaledCenteredAt(spriteSheet, sprite(SpriteID.INFO_FRAME), centerX, y);
+        drawSpriteScaledCenteredAt(difficultySprite, centerX, y);
+        drawSpriteScaledCenteredAt(categorySprite, centerX + tiles_to_px(4.5), y);
+        drawSpriteScaledCenteredAt(sprite(SpriteID.INFO_FRAME), centerX, y);
     }
 
     @Override
@@ -371,7 +369,7 @@ public class TengenMsPacMan_Renderer2D extends SpriteGameRenderer {
         x -= 2 * TS;
         for (byte symbol : levelCounter.symbols()) {
             RectArea sprite = theUI().configuration().createBonusSymbolSprite(symbol);
-            drawSpriteScaled(spriteSheet, sprite, x, y);
+            drawSpriteScaled(sprite, x, y);
             x -= TS * 2;
         }
     }
@@ -384,18 +382,18 @@ public class TengenMsPacMan_Renderer2D extends SpriteGameRenderer {
         float x = sceneSizeInPixels.x() - 4 * TS, y = sceneSizeInPixels.y() - TS;
         for (byte symbol : levelCounter.symbols()) {
             RectArea sprite = theUI().configuration().createBonusSymbolSprite(symbol);
-            drawSpriteScaled(spriteSheet, sprite, x, y);
+            drawSpriteScaled(sprite, x, y);
             x -= TS * 2;
         }
     }
 
     public void drawLevelNumberBox(int levelNumber, double x, double y) {
-        drawSpriteScaled(spriteSheet, sprite(SpriteID.LEVEL_NUMBER_BOX), x, y);
+        drawSpriteScaled(sprite(SpriteID.LEVEL_NUMBER_BOX), x, y);
         int tens = levelNumber / 10, ones = levelNumber % 10;
         if (tens > 0) {
-            drawSpriteScaled(spriteSheet, digitSprite(tens), x + 2, y + 2);
+            drawSpriteScaled(digitSprite(tens), x + 2, y + 2);
         }
-        drawSpriteScaled(spriteSheet, digitSprite(ones), x + 10, y + 2);
+        drawSpriteScaled(digitSprite(ones), x + 10, y + 2);
     }
 
     private RectArea digitSprite(int digit) {
@@ -434,7 +432,7 @@ public class TengenMsPacMan_Renderer2D extends SpriteGameRenderer {
         clapperboardAnimation.sprite().ifPresent(clapperBoardSprite -> {
             double numberX = x + 8, numberY = y + 18; // baseline
             ctx().setImageSmoothing(false);
-            drawSpriteScaledCenteredAt(spriteSheet, clapperBoardSprite, x + HTS, y + HTS);
+            drawSpriteScaledCenteredAt(clapperBoardSprite, x + HTS, y + HTS);
             // over-paint number from sprite sheet
             ctx().save();
             ctx().scale(scaling(), scaling());
@@ -459,7 +457,7 @@ public class TengenMsPacMan_Renderer2D extends SpriteGameRenderer {
             return;
         }
         ctx().setImageSmoothing(false);
-        drawSpriteScaled(spriteSheet, (RectArea) storkAnimation.currentSprite(), stork.x(), stork.y());
+        drawSpriteScaled((RectArea) storkAnimation.currentSprite(), stork.x(), stork.y());
         if (hideBag) { // over-paint bag under beak
             ctx().setFill(PY_CANVAS_BG_COLOR.get());
             ctx().fillRect(scaled(stork.x() - 1), scaled(stork.y() + 7), scaled(9), scaled(9));

@@ -11,19 +11,18 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.ScoreManager;
-import de.amr.pacmanfx.model.actors.*;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
+import de.amr.pacmanfx.model.actors.AnimatedActor;
+import de.amr.pacmanfx.model.actors.Bonus;
+import de.amr.pacmanfx.model.actors.MovingActor;
+import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.beans.property.FloatProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
-import org.tinylog.Logger;
 
 import java.util.function.Predicate;
 
