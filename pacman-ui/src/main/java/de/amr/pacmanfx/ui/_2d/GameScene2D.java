@@ -37,7 +37,7 @@ public abstract class GameScene2D implements GameScene {
     protected final BooleanProperty       debugInfoVisiblePy = new SimpleBooleanProperty(false);
     protected final FloatProperty         scalingPy = new SimpleFloatProperty(1.0f);
 
-    protected GameRenderer gameRenderer;
+    protected SpriteGameRenderer gameRenderer;
     protected Canvas canvas;
 
     protected GameScene2D() {
@@ -93,8 +93,8 @@ public abstract class GameScene2D implements GameScene {
      */
     public Color scoreColor() { return theAssets().color(theUI().configuration().assetNamespace() + ".color.score"); }
 
-    public GameRenderer gr() { return gameRenderer; }
-    public void setGameRenderer(GameRenderer renderer) { gameRenderer = requireNonNull(renderer); }
+    public SpriteGameRenderer gr() { return gameRenderer; }
+    public void setGameRenderer(SpriteGameRenderer renderer) { gameRenderer = requireNonNull(renderer); }
     public GraphicsContext ctx() { return gameRenderer.ctx(); }
 
     public Canvas canvas() { return canvas; }

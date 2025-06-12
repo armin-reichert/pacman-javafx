@@ -17,6 +17,7 @@ import de.amr.pacmanfx.ui.PacManGames_Action;
 import de.amr.pacmanfx.ui.PacManGames_ActionBinding;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelFinishedAnimation;
+import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.ui._2d.VectorGraphicsGameRenderer;
 import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -261,7 +262,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements PacManGames
         updateActionBindings();
         if (gr() == null) { //TODO check if this can happen
             Logger.warn("No game renderer was existing when switching to 2D scene");
-            setGameRenderer(theUI().configuration().createRenderer(canvas()));
+            setGameRenderer((SpriteGameRenderer) theUI().configuration().createRenderer(canvas()));
         }
         optGameLevel().ifPresent(gr()::applyRenderingHints);
     }

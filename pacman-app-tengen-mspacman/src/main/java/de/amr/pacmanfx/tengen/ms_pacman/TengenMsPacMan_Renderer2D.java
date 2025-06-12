@@ -15,6 +15,7 @@ import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
+import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -44,7 +45,7 @@ import static de.amr.pacmanfx.ui.PacManGames_UI.PY_CANVAS_BG_COLOR;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
-public class TengenMsPacMan_Renderer2D implements GameRenderer {
+public class TengenMsPacMan_Renderer2D extends SpriteGameRenderer {
 
     public static Color blueShadedColor(long tick) {
         // Blue color, changing from dark blue to brighter blue.
@@ -65,6 +66,11 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         this.spriteSheet = requireNonNull(spriteSheet);
         this.mapRepository = requireNonNull(mapRepository);
         ctx = requireNonNull(canvas).getGraphicsContext2D();
+    }
+
+    @Override
+    public TengenMsPacMan_SpriteSheet spriteSheet() {
+        return spriteSheet;
     }
 
     public ObjectProperty<Color> backgroundColorProperty() { return  backgroundColorPy; }
@@ -97,7 +103,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         if (actor instanceof Pac pac) {
             drawAnyPac(pac);
         } else {
-            GameRenderer.super.drawActor(actor, spriteSheet);
+            super.drawActor(actor, spriteSheet);
         }
     }
 
@@ -126,7 +132,7 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
                         }
                         drawMovingActor(pac, dir, (RectArea) animation.currentSprite());
                     }
-                    default -> GameRenderer.super.drawActor(pac, spriteSheet);
+                    default -> super.drawActor(pac, spriteSheet);
                 }
             } else {
                 Logger.error("No animation found for {}", pac);

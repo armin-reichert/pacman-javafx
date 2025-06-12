@@ -15,6 +15,7 @@ import de.amr.pacmanfx.ui.PacManGames_Action;
 import de.amr.pacmanfx.ui.PacManGames_ActionBinding;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelFinishedAnimation;
+import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.uilib.CameraControlledView;
 import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -172,7 +173,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D
     public void doInit() {
         spriteSheet = theUI().configuration().spriteSheet();
         theGame().setScoreVisible(true);
-        setGameRenderer(theUI().configuration().createRenderer(canvas()));
+        setGameRenderer((SpriteGameRenderer) theUI().configuration().createRenderer(canvas()));
         dynamicCamera.moveTop();
         messageMovement = new MessageMovement();
     }

@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.actors.Bonus;
-import de.amr.pacmanfx.ui._2d.GameRenderer;
+import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
@@ -22,7 +22,7 @@ import static de.amr.pacmanfx.ui.PacManGames_Env.theAssets;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
 import static java.util.Objects.requireNonNull;
 
-public class ArcadePacMan_GameRenderer implements GameRenderer {
+public class ArcadePacMan_GameRenderer extends SpriteGameRenderer {
 
     private final ArcadePacMan_SpriteSheet spriteSheet;
     private final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
@@ -31,6 +31,11 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
     public ArcadePacMan_GameRenderer(ArcadePacMan_SpriteSheet spriteSheet, Canvas canvas) {
         this.spriteSheet = requireNonNull(spriteSheet);
         ctx = requireNonNull(canvas).getGraphicsContext2D();
+    }
+
+    @Override
+    public ArcadePacMan_SpriteSheet spriteSheet() {
+        return spriteSheet;
     }
 
     @Override

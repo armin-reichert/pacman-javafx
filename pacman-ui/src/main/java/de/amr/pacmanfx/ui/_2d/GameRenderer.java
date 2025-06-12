@@ -67,37 +67,6 @@ public interface GameRenderer {
     void applyRenderingHints(GameLevel level);
 
     /**
-     * Draws a sprite (region inside sprite sheet) unscaled at the given position.
-     *
-     * @param spriteSheet sprite sheet
-     * @param sprite      the sprite to draw (may be null)
-     * @param x           x-coordinate of left-upper corner
-     * @param y           y-coordinate of left-upper corner
-     */
-    default void drawSprite(SpriteSheet spriteSheet, RectArea sprite, double x, double y) {
-        if (sprite != null) {
-            ctx().drawImage(spriteSheet.sourceImage(),
-                sprite.x(), sprite.y(), sprite.width(), sprite.height(),
-                x, y, sprite.width(), sprite.height());
-        }
-    }
-
-    /**
-     * Draws a sprite (region inside sprite sheet) the given position. The sprite size and the position are scaled using
-     * the current scale factor.
-     *
-     * @param spriteSheet sprite sheet
-     * @param sprite        the sprite to draw (may be null)
-     * @param x             x-coordinate of left-upper corner (unscaled)
-     * @param y             y-coordinate of left-upper corner (unscaled)
-     */
-    default void drawSpriteScaled(SpriteSheet spriteSheet, RectArea sprite, double x, double y) {
-        if (sprite != null) {
-            drawImageRegionScaled(spriteSheet.sourceImage(), sprite, x, y);
-        }
-    }
-
-    /**
      * Draws the given region from the given image to the given position (left-upper corner). The position and
      * the region size are scaled by the current scaling factor.
      *
@@ -112,59 +81,6 @@ public interface GameRenderer {
         ctx().drawImage(image,
             region.x(), region.y(), region.width(), region.height(),
             scaled(x), scaled(y), scaled(region.width()), scaled(region.height()));
-    }
-
-    /**
-     * Draws a sprite centered over a position.
-     *
-     * @param spriteSheet sprite sheet
-     * @param sprite sprite (region in sprite sheet, may be null)
-     * @param cx  x-coordinate of the center position
-     * @param cy  y-coordinate of the center position
-     */
-    default void drawSpriteScaledCenteredAt(SpriteSheet spriteSheet, RectArea sprite, double cx, double cy) {
-        if (sprite != null) {
-            drawSpriteScaled(spriteSheet, sprite, cx - 0.5 * sprite.width(), cy - 0.5 * sprite.height());
-        }
-    }
-
-    /**
-     * Draws the sprite over the "collision box" (one-tile square) of the given actor (if visible).
-     *
-     * @param actor an actor
-     * @param spriteSheet sprite sheet
-     * @param sprite sprite sheet region (can be null)
-     */
-    default void drawActorSprite(Actor actor, SpriteSheet spriteSheet, RectArea sprite) {
-        requireNonNull(actor);
-        if (actor.isVisible() && sprite != null) {
-            drawSpriteScaledCenteredAt(spriteSheet, sprite, actor.x() + HTS, actor.y() + HTS);
-        }
-    }
-
-    /**
-     * Draws (animated) actor (Pac-Man, ghost, moving bonus) if visible.
-     *
-     * @param actor the actor to draw
-     * @param spriteSheet the sprite sheet
-     */
-    default void drawActor(Actor actor, SpriteSheet spriteSheet) {
-        requireNonNull(actor);
-        if (!actor.isVisible()) {
-            return;
-        }
-        if (actor instanceof AnimatedActor animatedActor) {
-            animatedActor.animations().ifPresent(animations -> {
-                if (animations instanceof SpriteAnimationMap<?> spriteAnimations) {
-                    SpriteAnimation currentAnimation = spriteAnimations.currentAnimation();
-                    if (currentAnimation != null) {
-                        drawActorSprite(actor, spriteSheet, (RectArea) spriteAnimations.currentSprite(actor));
-                    } else {
-                        Logger.error("No current animation for actor {}", actor);
-                    }
-                }
-            });
-        }
     }
 
     void drawBonus(Bonus bonus);
@@ -298,21 +214,6 @@ public interface GameRenderer {
         ctx().setTextAlign(TextAlignment.CENTER);
         fillText(text, color, font, x, y);
         ctx().restore();
-    }
-
-    default void drawLivesCounter(int numLives, int maxLives, double x, double y, SpriteSheet spriteSheet, RectArea livesCounterSprite) {
-        if (numLives == 0) {
-            return;
-        }
-        for (int i = 0; i < Math.min(numLives, maxLives); ++i) {
-            drawSpriteScaled(spriteSheet, livesCounterSprite, x + TS * (2 * i), y);
-        }
-        // show text indicating that more lives are available than symbols displayed (can happen when lives are added via cheat)
-        int moreLivesThanSymbols = numLives - maxLives;
-        if (moreLivesThanSymbols > 0) {
-            Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
-            fillText("+" + moreLivesThanSymbols, Color.YELLOW, font, x + TS * 10, y + TS);
-        }
     }
 
     default void drawScores(ScoreManager scoreManager, Color color, Font font) {

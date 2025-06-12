@@ -11,6 +11,8 @@ import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.MovingBonus;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
+import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
@@ -28,7 +30,7 @@ import static de.amr.pacmanfx.ui.PacManGames_Env.theAssets;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
 import static java.util.Objects.requireNonNull;
 
-public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
+public class ArcadeMsPacMan_GameRenderer extends SpriteGameRenderer {
 
     private static final RectArea[] FULL_MAZES = {
         ra(0,     0, 224, 248),
@@ -66,6 +68,11 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
         this.spriteSheet = requireNonNull(spriteSheet);
         ctx = requireNonNull(canvas).getGraphicsContext2D();
         colorMapIndex = -1; // undefined
+    }
+
+    @Override
+    public ArcadeMsPacMan_SpriteSheet spriteSheet() {
+        return spriteSheet;
     }
 
     @Override

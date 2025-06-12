@@ -32,7 +32,7 @@ import static java.util.function.Predicate.not;
  *
  * @author Armin Reichert
  */
-public class VectorGraphicsGameRenderer implements GameRenderer {
+public class VectorGraphicsGameRenderer extends SpriteGameRenderer {
 
     private final SpriteSheet spriteSheet;
     private final GraphicsContext ctx;
@@ -49,6 +49,11 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
         terrainRenderer.scalingProperty().bind(scalingPy);
         foodRenderer.scalingProperty().bind(scalingPy);
         setBackgroundColor(Color.BLACK);
+    }
+
+    @Override
+    public SpriteSheet spriteSheet() {
+        return spriteSheet;
     }
 
     @Override
