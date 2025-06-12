@@ -17,10 +17,10 @@ import static de.amr.pacmanfx.uilib.input.Keyboard.*;
 public interface TengenMsPacMan_ActionBindings {
 
     Map<GameAction, Set<KeyCombination>> TENGEN_ACTION_BINDINGS = Map.ofEntries(
-        createBinding(ACTION_PLAYER_UP,                theJoypad().key(JoypadButton.UP),    control(KeyCode.UP)),
-        createBinding(ACTION_PLAYER_DOWN,              theJoypad().key(JoypadButton.DOWN),  control(KeyCode.DOWN)),
-        createBinding(ACTION_PLAYER_LEFT,              theJoypad().key(JoypadButton.LEFT),  control(KeyCode.LEFT)),
-        createBinding(ACTION_PLAYER_RIGHT,             theJoypad().key(JoypadButton.RIGHT), control(KeyCode.RIGHT)),
+        createBinding(ACTION_STEER_UP,                theJoypad().key(JoypadButton.UP),    control(KeyCode.UP)),
+        createBinding(ACTION_STEER_DOWN,              theJoypad().key(JoypadButton.DOWN),  control(KeyCode.DOWN)),
+        createBinding(ACTION_STEER_LEFT,              theJoypad().key(JoypadButton.LEFT),  control(KeyCode.LEFT)),
+        createBinding(ACTION_STEER_RIGHT,             theJoypad().key(JoypadButton.RIGHT), control(KeyCode.RIGHT)),
         createBinding(ACTION_QUIT_DEMO_LEVEL,          theJoypad().key(JoypadButton.START)),
         createBinding(ACTION_START_GAME,               theJoypad().key(JoypadButton.START)),
         createBinding(ACTION_START_PLAYING,            theJoypad().key(JoypadButton.START)),

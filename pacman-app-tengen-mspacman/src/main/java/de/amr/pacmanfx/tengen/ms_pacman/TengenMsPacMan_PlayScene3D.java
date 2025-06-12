@@ -49,10 +49,10 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     protected void bindPlayerSteeringActions() {
-        bindAction(ACTION_PLAYER_UP, TENGEN_ACTION_BINDINGS);
-        bindAction(ACTION_PLAYER_DOWN, TENGEN_ACTION_BINDINGS);
-        bindAction(ACTION_PLAYER_LEFT, TENGEN_ACTION_BINDINGS);
-        bindAction(ACTION_PLAYER_RIGHT, TENGEN_ACTION_BINDINGS);
+        bindAction(ACTION_STEER_UP, TENGEN_ACTION_BINDINGS);
+        bindAction(ACTION_STEER_DOWN, TENGEN_ACTION_BINDINGS);
+        bindAction(ACTION_STEER_LEFT, TENGEN_ACTION_BINDINGS);
+        bindAction(ACTION_STEER_RIGHT, TENGEN_ACTION_BINDINGS);
     }
 
     @Override

@@ -186,10 +186,10 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBinding, Camera
     }
 
     protected void bindPlayerSteeringActions() {
-        bindAction(ACTION_PLAYER_UP, COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_PLAYER_DOWN, COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_PLAYER_LEFT, COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_PLAYER_RIGHT, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_STEER_UP, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_STEER_DOWN, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_STEER_LEFT, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_STEER_RIGHT, COMMON_ACTION_BINDINGS);
     }
 
     @Override

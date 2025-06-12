@@ -151,10 +151,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D
         if (theGameLevel().isDemoLevel()) {
             bindAction(TengenMsPacMan_Action.ACTION_QUIT_DEMO_LEVEL, TENGEN_ACTION_BINDINGS);
         } else {
-            bindAction(ACTION_PLAYER_UP, TENGEN_ACTION_BINDINGS);
-            bindAction(ACTION_PLAYER_DOWN, TENGEN_ACTION_BINDINGS);
-            bindAction(ACTION_PLAYER_LEFT, TENGEN_ACTION_BINDINGS);
-            bindAction(ACTION_PLAYER_RIGHT, TENGEN_ACTION_BINDINGS);
+            bindAction(ACTION_STEER_UP, TENGEN_ACTION_BINDINGS);
+            bindAction(ACTION_STEER_DOWN, TENGEN_ACTION_BINDINGS);
+            bindAction(ACTION_STEER_LEFT, TENGEN_ACTION_BINDINGS);
+            bindAction(ACTION_STEER_RIGHT, TENGEN_ACTION_BINDINGS);
             bindAction(TengenMsPacMan_Action.ACTION_TOGGLE_DISPLAY_MODE, TENGEN_ACTION_BINDINGS);
             bindAction(TengenMsPacMan_Action.ACTION_TOGGLE_PAC_BOOSTER, TENGEN_ACTION_BINDINGS);
             bindAction(ACTION_CHEAT_EAT_ALL_PELLETS, COMMON_ACTION_BINDINGS);

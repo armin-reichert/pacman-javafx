@@ -28,14 +28,13 @@ import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 import static de.amr.pacmanfx.uilib.Ufx.toggle;
 
-@SuppressWarnings("ALL")
 public interface PacManGames_Action {
 
     int SIMULATION_SPEED_DELTA = 2;
     int SIMULATION_SPEED_MIN   = 10;
     int SIMULATION_SPEED_MAX   = 240;
 
-    record PlayerSteeringAction(Direction dir) implements GameAction {
+    record SteeringAction(Direction dir) implements GameAction {
         @Override
         public void execute() { theGameLevel().pac().setWishDir(dir); }
 
@@ -89,9 +88,7 @@ public interface PacManGames_Action {
 
         @Override
         public boolean isEnabled() {
-            return theGameState() == GameState.HUNTING
-                    && optGameLevel().isPresent()
-                    && !theGameLevel().isDemoLevel();
+            return theGameState() == GameState.HUNTING && optGameLevel().isPresent() && !theGameLevel().isDemoLevel();
         }
     };
 
@@ -136,13 +133,13 @@ public interface PacManGames_Action {
         }
     };
 
-    GameAction ACTION_PLAYER_UP = new PlayerSteeringAction(Direction.UP);
+    GameAction ACTION_STEER_UP = new SteeringAction(Direction.UP);
 
-    GameAction ACTION_PLAYER_DOWN = new PlayerSteeringAction(Direction.DOWN);
+    GameAction ACTION_STEER_DOWN = new SteeringAction(Direction.DOWN);
 
-    GameAction ACTION_PLAYER_LEFT = new PlayerSteeringAction(Direction.LEFT);
+    GameAction ACTION_STEER_LEFT = new SteeringAction(Direction.LEFT);
 
-    GameAction ACTION_PLAYER_RIGHT = new PlayerSteeringAction(Direction.RIGHT);
+    GameAction ACTION_STEER_RIGHT = new SteeringAction(Direction.RIGHT);
 
     GameAction ACTION_QUIT_GAME_SCENE = new GameAction() {
         @Override
