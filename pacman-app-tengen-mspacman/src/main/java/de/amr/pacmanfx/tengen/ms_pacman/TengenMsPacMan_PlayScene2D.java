@@ -174,11 +174,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D
     }
 
     @Override
-    protected void doEnd() {
-        theSound().stopAll();
-    }
-
-    @Override
     public void update() {
         optGameLevel().ifPresent(level -> {
             if (!level.isDemoLevel()) {

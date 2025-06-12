@@ -74,11 +74,6 @@ public class TengenMsPacMan_IntroScene extends GameScene2D implements PacManGame
     }
 
     @Override
-    protected void doEnd() {
-        theSound().stopVoice();
-    }
-
-    @Override
     public void update() {
         if (!theClock().isPaused()) {
             sceneController.update();
