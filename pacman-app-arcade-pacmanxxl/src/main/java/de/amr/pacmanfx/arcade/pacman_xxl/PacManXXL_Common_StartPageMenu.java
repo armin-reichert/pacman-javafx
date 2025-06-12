@@ -14,7 +14,7 @@ import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.MapSelectionMode;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui.PacManGames_UIConfiguration;
+import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
 import de.amr.pacmanfx.uilib.widgets.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuEntry;
@@ -125,7 +125,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         }
 
         void setGameVariant(String gameVariant) {
-            PacManGames_UIConfiguration config = theUI().configuration(gameVariant);
+            PacManGames_UIConfig config = theUI().configuration(gameVariant);
             renderer = config.createRenderer(ctx.getCanvas());
 
             switch (gameVariant) {

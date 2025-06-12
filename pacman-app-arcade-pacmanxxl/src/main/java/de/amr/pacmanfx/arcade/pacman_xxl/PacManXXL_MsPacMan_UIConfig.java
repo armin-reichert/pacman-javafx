@@ -12,7 +12,7 @@ import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.PacManGames_Assets;
-import de.amr.pacmanfx.ui.PacManGames_UIConfiguration;
+import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
@@ -40,7 +40,7 @@ import static de.amr.pacmanfx.ui.PacManGames_UI.LIVES_COUNTER_3D_SIZE;
 import static de.amr.pacmanfx.ui.PacManGames_UI.PY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
 
-public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfiguration {
+public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
 
     private final Image appIcon;
     private final ArcadeMsPacMan_SpriteSheet spriteSheet;

@@ -79,9 +79,9 @@ public interface PacManGames_UI {
     void show();
 
     // Configuration
-    PacManGames_UIConfiguration configuration(String gameVariant);
-    PacManGames_UIConfiguration configuration();
-    void setConfiguration(String variant, PacManGames_UIConfiguration configuration);
+    PacManGames_UIConfig configuration(String gameVariant);
+    PacManGames_UIConfig configuration();
+    void setConfiguration(String variant, PacManGames_UIConfig configuration);
 
     // Game scenes
     ObjectProperty<GameScene> gameSceneProperty();

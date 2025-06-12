@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.layout;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.ui.PacManGames_ActionBinding;
-import de.amr.pacmanfx.ui.PacManGames_UIConfiguration;
+import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.*;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
@@ -191,7 +191,7 @@ public class GameView implements PacManGames_View, PacManGames_ActionBinding {
     public void onLevelCreated(GameEvent event) {
         //TODO find another point in time to do this
         optGameLevel().ifPresent(level -> {
-            PacManGames_UIConfiguration config = theUI().configuration();
+            PacManGames_UIConfig config = theUI().configuration();
             config.createActorAnimations(level);
             theSound().setEnabled(!level.isDemoLevel());
             // size of game scene might have changed, so re-embed
@@ -247,7 +247,7 @@ public class GameView implements PacManGames_View, PacManGames_ActionBinding {
     }
 
     public void updateGameScene(boolean reloadCurrent) {
-        PacManGames_UIConfiguration uiConfig = theUI().configuration();
+        PacManGames_UIConfig uiConfig = theUI().configuration();
         final GameScene nextGameScene = uiConfig.selectGameScene(theGame(), theGameState());
         if (nextGameScene == null) {
             throw new IllegalStateException("Could not determine next game scene");
@@ -295,7 +295,7 @@ public class GameView implements PacManGames_View, PacManGames_ActionBinding {
         };
     }
 
-    public void embedGameScene(PacManGames_UIConfiguration gameUIConfig, GameScene gameScene) {
+    public void embedGameScene(PacManGames_UIConfig gameUIConfig, GameScene gameScene) {
         requireNonNull(gameScene);
         switch (gameScene) {
             case CameraControlledView gameSceneUsingCamera -> {

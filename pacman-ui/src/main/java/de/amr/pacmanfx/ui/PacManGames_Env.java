@@ -60,11 +60,11 @@ public class PacManGames_Env {
      *
      * @param configClassesMap a map specifying the UI configuration for each supported game variant
      */
-    public static void initUI(Map<String, Class<? extends PacManGames_UIConfiguration>> configClassesMap) {
+    public static void initUI(Map<String, Class<? extends PacManGames_UIConfig>> configClassesMap) {
         theUI = new PacManGames_UI_Impl();
         configClassesMap.forEach((gameVariant, configClass) -> {
             try {
-                PacManGames_UIConfiguration config = configClass.getDeclaredConstructor(PacManGames_Assets.class).newInstance(theAssets);
+                PacManGames_UIConfig config = configClass.getDeclaredConstructor(PacManGames_Assets.class).newInstance(theAssets);
                 theUI.setConfiguration(gameVariant, config);
                 Logger.info("Game variant {} uses UI configuration: {}", gameVariant, config);
             } catch (Exception x) {

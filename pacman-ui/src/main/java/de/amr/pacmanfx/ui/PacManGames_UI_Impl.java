@@ -42,7 +42,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class PacManGames_UI_Impl implements PacManGames_UI {
 
-    private final Map<String, PacManGames_UIConfiguration> configMap = new HashMap<>();
+    private final Map<String, PacManGames_UIConfig> configMap = new HashMap<>();
 
     private final ObjectProperty<PacManGames_View> viewPy = new SimpleObjectProperty<>();
     private final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>();
@@ -266,7 +266,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
             Logger.error("Cannot select game variant (NULL)");
             return;
         }
-        PacManGames_UIConfiguration uiConfig = configuration(gameVariant);
+        PacManGames_UIConfig uiConfig = configuration(gameVariant);
         theSound().selectGameVariant(gameVariant, uiConfig.assetNamespace());
         stage.getIcons().setAll(uiConfig.appIcon());
         gameView.canvasContainer().decorationEnabledPy.set(uiConfig.isGameCanvasDecorated());
@@ -332,7 +332,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
      * @param configuration the UI configuration for this variant
      */
     @Override
-    public void setConfiguration(String variant, PacManGames_UIConfiguration configuration) {
+    public void setConfiguration(String variant, PacManGames_UIConfig configuration) {
         requireNonNull(variant);
         requireNonNull(configuration);
         configuration.gameScenes().forEach(scene -> {
@@ -344,12 +344,12 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     }
 
     @Override
-    public PacManGames_UIConfiguration configuration(String gameVariant) {
+    public PacManGames_UIConfig configuration(String gameVariant) {
         return configMap.get(gameVariant);
     }
 
     @Override
-    public PacManGames_UIConfiguration configuration() {
+    public PacManGames_UIConfig configuration() {
         return configMap.get(theGameController().selectedGameVariant());
     }
 
