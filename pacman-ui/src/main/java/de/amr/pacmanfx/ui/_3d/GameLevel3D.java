@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.controller.GameState;
+import de.amr.pacmanfx.lib.RectArea;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
@@ -14,6 +15,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.uilib.Ufx;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.Model3D;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
@@ -261,15 +263,16 @@ public class GameLevel3D {
     }
 
     private Node createLevelCounter3D(LevelCounter levelCounter, double x, double y) {
-        GameSpriteSheet spriteSheet = theUI().configuration().spriteSheet();
         var levelCounter3D = new Group();
         levelCounter3D.setTranslateX(x);
         levelCounter3D.setTranslateY(y);
         levelCounter3D.setTranslateZ(-6);
         int n = 0;
+        SpriteSheet spriteSheet = theUI().configuration().spriteSheet();
         for (byte symbol : levelCounter.symbols()) {
             var material = new PhongMaterial(Color.WHITE);
-            material.setDiffuseMap(crop(spriteSheet.sourceImage(), spriteSheet.bonusSymbolSprite(symbol)));
+            RectArea sprite = theUI().configuration().createBonusSymbolSprite(symbol);
+            material.setDiffuseMap(subImage(spriteSheet.sourceImage(), sprite));
 
             var cube = new Box(TS, TS, TS);
             cube.setMaterial(material);
@@ -333,9 +336,10 @@ public class GameLevel3D {
         if (bonus3D != null) {
             mazeGroup.getChildren().remove(bonus3D);
         }
+        RectArea bonusSymbolSprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
         bonus3D = new Bonus3D(bonus,
-            crop(spriteSheet.sourceImage(), spriteSheet.bonusSymbolSprite(bonus.symbol())),
-            crop(spriteSheet.sourceImage(), spriteSheet.bonusValueSprite(bonus.symbol())));
+            subImage(spriteSheet.sourceImage(), bonusSymbolSprite),
+            subImage(spriteSheet.sourceImage(), spriteSheet.bonusValueSprite(bonus.symbol())));
         bonus3D.showEdible();
         mazeGroup.getChildren().add(bonus3D);
     }

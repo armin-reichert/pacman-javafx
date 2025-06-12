@@ -163,13 +163,7 @@ public interface GameRenderer {
         }
     }
 
-    default void drawBonus(Bonus bonus) {
-        if (bonus.state() == Bonus.STATE_EDIBLE) {
-            drawActorSprite(bonus.actor(), spriteSheet().bonusSymbolSprite(bonus.symbol()));
-        } else if (bonus.state() == Bonus.STATE_EATEN) {
-            drawActorSprite(bonus.actor(), spriteSheet().bonusValueSprite(bonus.symbol()));
-        }
-    }
+    void drawBonus(Bonus bonus);
 
     void drawLevelCounter(LevelCounter levelCounter, Vector2f sceneSizeInPixels);
 

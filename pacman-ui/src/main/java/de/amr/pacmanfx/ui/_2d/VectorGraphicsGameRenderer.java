@@ -4,10 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._2d;
 
+import de.amr.pacmanfx.lib.RectArea;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.LevelCounter;
+import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer;
@@ -20,6 +22,7 @@ import javafx.scene.paint.Color;
 import java.util.Map;
 
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
@@ -105,8 +108,18 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
     public void drawLevelCounter(LevelCounter levelCounter, Vector2f sceneSizeInPixels) {
         float x = sceneSizeInPixels.x() - 4 * TS, y = sceneSizeInPixels.y() - 2 * TS;
         for (byte symbol : levelCounter.symbols()) {
-            drawSpriteScaled(spriteSheet().bonusSymbolSprite(symbol), x, y);
+            RectArea sprite = theUI().configuration().createBonusSymbolSprite(symbol);
+            drawSpriteScaled(sprite, x, y);
             x -= TS * 2;
+        }
+    }
+
+    public void drawBonus(Bonus bonus) {
+        if (bonus.state() == Bonus.STATE_EDIBLE) {
+            RectArea sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
+            drawActorSprite(bonus.actor(), sprite);
+        } else if (bonus.state() == Bonus.STATE_EATEN) {
+            drawActorSprite(bonus.actor(), spriteSheet().bonusValueSprite(bonus.symbol()));
         }
     }
 }

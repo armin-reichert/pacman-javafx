@@ -25,6 +25,7 @@ import static de.amr.pacmanfx.arcade.ArcadePalette.ARCADE_WHITE;
 import static de.amr.pacmanfx.lib.RectArea.ra;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theAssets;
+import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
@@ -105,7 +106,8 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     public void drawLevelCounter(LevelCounter levelCounter, Vector2f sceneSizeInPixels) {
         float x = sceneSizeInPixels.x() - 4 * TS, y = sceneSizeInPixels.y() - 2 * TS;
         for (byte symbol : levelCounter.symbols()) {
-            drawSpriteScaled(spriteSheet.bonusSymbolSprite(symbol), x, y);
+            RectArea sprite = theUI().configuration().createBonusSymbolSprite(symbol);
+            drawSpriteScaled(sprite, x, y);
             x -= TS * 2;
         }
     }
@@ -116,7 +118,10 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
         ctx.setImageSmoothing(false);
         ctx.translate(0, movingBonus.elongationY());
         switch (bonus.state()) {
-            case Bonus.STATE_EDIBLE -> drawActorSprite(bonus.actor(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
+            case Bonus.STATE_EDIBLE -> {
+                RectArea sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
+                drawActorSprite(bonus.actor(), sprite);
+            }
             case Bonus.STATE_EATEN  -> drawActorSprite(bonus.actor(), spriteSheet.bonusValueSprite(bonus.symbol()));
         }
         ctx.restore();

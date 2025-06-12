@@ -18,6 +18,7 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.uilib.GameScene;
+import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
@@ -40,7 +41,6 @@ import static de.amr.pacmanfx.Globals.theGameLevel;
 import static de.amr.pacmanfx.arcade.ArcadePalette.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theAssets;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
-import static de.amr.pacmanfx.uilib.Ufx.crop;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceManager {
@@ -181,7 +181,12 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     @Override
     public Image createGhostNumberImage(int ghostIndex) {
         RectArea[] sprites = ArcadeMsPacMan_SpriteSheet.sprites(SpriteID.GHOST_NUMBERS);
-        return crop(spriteSheet.sourceImage(), sprites[ghostIndex]);
+        return Ufx.subImage(spriteSheet.sourceImage(), sprites[ghostIndex]);
+    }
+
+    @Override
+    public RectArea createBonusSymbolSprite(byte symbol) {
+        return ArcadeMsPacMan_SpriteSheet.sprites(SpriteID.BONUS_SYMBOLS)[symbol];
     }
 
     @Override

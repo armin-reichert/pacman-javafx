@@ -232,8 +232,8 @@ public interface Ufx {
      * @param r rectangular region
      * @return image copy of region
      */
-    static Image crop(Image sourceImage, RectArea r) {
-        return crop(sourceImage, r.x(), r.y(), r.width(), r.height());
+    static Image subImage(Image sourceImage, RectArea r) {
+        return subImage(sourceImage, r.x(), r.y(), r.width(), r.height());
     }
 
     /**
@@ -244,7 +244,7 @@ public interface Ufx {
      * @param height region height
      * @return image copy of region
      */
-    static Image crop(Image sourceImage, int x, int y, int width, int height) {
+    static Image subImage(Image sourceImage, int x, int y, int width, int height) {
         var section = new WritableImage(width, height);
         section.getPixelWriter().setPixels(0, 0, width, height, sourceImage.getPixelReader(), x, y);
         return section;

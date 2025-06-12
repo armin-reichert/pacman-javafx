@@ -264,7 +264,10 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         ctx().setImageSmoothing(false);
         ctx().translate(0, movingBonus.elongationY());
         switch (bonus.state()) {
-            case STATE_EDIBLE -> drawActorSprite(bonus.actor(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
+            case STATE_EDIBLE -> {
+                RectArea sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
+                drawActorSprite(bonus.actor(), sprite);
+            }
             case STATE_EATEN  -> drawActorSprite(bonus.actor(), spriteSheet.bonusValueSprite(bonus.symbol()));
             default -> {}
         }
@@ -360,7 +363,8 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         drawLevelNumberBox(levelNumber, x, y); // right box
         x -= 2 * TS;
         for (byte symbol : levelCounter.symbols()) {
-            drawSpriteScaled(spriteSheet.bonusSymbolSprite(symbol), x, y);
+            RectArea sprite = theUI().configuration().createBonusSymbolSprite(symbol);
+            drawSpriteScaled(sprite, x, y);
             x -= TS * 2;
         }
     }
@@ -372,7 +376,8 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
         ctx().setImageSmoothing(false);
         float x = sceneSizeInPixels.x() - 4 * TS, y = sceneSizeInPixels.y() - TS;
         for (byte symbol : levelCounter.symbols()) {
-            drawSpriteScaled(spriteSheet.bonusSymbolSprite(symbol), x, y);
+            RectArea sprite = theUI().configuration().createBonusSymbolSprite(symbol);
+            drawSpriteScaled(sprite, x, y);
             x -= TS * 2;
         }
     }
