@@ -106,6 +106,6 @@ public class GameController  {
     }
 
     public boolean isSelected(String gameVariant) {
-        return requireNonNull(gameVariant) == gameVariantPy.get();
+        return requireNonNull(gameVariant).equals(gameVariantPy.get());
     }
 }

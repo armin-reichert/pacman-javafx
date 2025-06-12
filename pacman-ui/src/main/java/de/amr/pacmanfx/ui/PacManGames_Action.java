@@ -240,7 +240,7 @@ public interface PacManGames_Action {
 
         @Override
         public boolean isEnabled() {
-            return theGameController().selectedGameVariant() != "MS_PACMAN_TENGEN"
+            return !theGameController().selectedGameVariant().equals("MS_PACMAN_TENGEN")
                 && !theCoinMechanism().isEmpty()
                 && (theGameState() == GameState.INTRO || theGameState() == GameState.SETTING_OPTIONS)
                 && theGame().canStartNewGame();
