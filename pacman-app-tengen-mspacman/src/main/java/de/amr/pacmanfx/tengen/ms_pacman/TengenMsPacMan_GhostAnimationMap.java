@@ -28,7 +28,7 @@ public class TengenMsPacMan_GhostAnimationMap extends SpriteAnimationMap<RectAre
         set(ANIM_GHOST_FRIGHTENED, createAnimation().ofSprites(sprites(SpriteID.GHOST_FRIGHTENED)).frameTicks(FRIGHTENED_TICKS).endless());
         set(ANIM_GHOST_FLASHING,   createAnimation().ofSprites(sprites(SpriteID.GHOST_FLASHING)).frameTicks(FLASH_TICKS).endless());
         set(ANIM_GHOST_EYES,       createAnimation().ofSprites(ghostEyesSprites(Direction.LEFT)).end());
-        set(ANIM_GHOST_NUMBER,     createAnimation().ofSprites(ss.ghostNumberSprites()).end());
+        set(ANIM_GHOST_NUMBER,     createAnimation().ofSprites(sprites(SpriteID.GHOST_NUMBERS)).end());
     }
 
     @Override

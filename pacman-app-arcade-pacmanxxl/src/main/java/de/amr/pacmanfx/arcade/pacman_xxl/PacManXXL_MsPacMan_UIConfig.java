@@ -8,9 +8,10 @@ import de.amr.pacmanfx.arcade.ArcadeCommon_BootScene2D;
 import de.amr.pacmanfx.arcade.ArcadeCommon_PlayScene2D;
 import de.amr.pacmanfx.arcade.ms_pacman.*;
 import de.amr.pacmanfx.controller.GameState;
+import de.amr.pacmanfx.lib.RectArea;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
-import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.PacManGames_Assets;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
@@ -20,6 +21,7 @@ import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.ui._2d.VectorGraphicsGameRenderer;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.uilib.GameScene;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
@@ -40,6 +42,7 @@ import static de.amr.pacmanfx.Globals.theGameLevel;
 import static de.amr.pacmanfx.arcade.ArcadePalette.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theAssets;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
+import static de.amr.pacmanfx.uilib.Ufx.crop;
 import static java.util.Objects.requireNonNull;
 
 public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
@@ -170,6 +173,12 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
     }
 
     @Override
+    public Image createGhostNumberImage(int ghostIndex) {
+        RectArea[] sprites = ArcadeMsPacMan_SpriteSheet.sprites(SpriteID.GHOST_NUMBERS);
+        return crop(spriteSheet.sourceImage(), sprites[ghostIndex]);
+    }
+
+    @Override
     public Node createLivesCounter3D() {
         String namespace = assetNamespace();
         return new Group(
@@ -223,8 +232,13 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
     }
 
     @Override
-    public void createActorAnimations(GameLevel level) {
-        level.pac().setAnimations(new ArcadeMsPacMan_PacAnimationMap(spriteSheet));
-        level.ghosts().forEach(ghost -> ghost.setAnimations(new ArcadeMsPacMan_GhostAnimationMap(spriteSheet, ghost.personality())));
+    public SpriteAnimationMap<?> createGhostAnimations(Ghost ghost) {
+        return new ArcadeMsPacMan_GhostAnimationMap(spriteSheet, ghost.personality());
     }
+
+    @Override
+    public SpriteAnimationMap<?> createPacAnimations(Pac pac) {
+        return new ArcadeMsPacMan_PacAnimationMap(spriteSheet);
+    }
+
 }

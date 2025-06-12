@@ -138,9 +138,6 @@ public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
     public static RectArea[] sprites(SpriteID spriteID) { return (RectArea[]) SPRITE_MAP.get(spriteID); }
 
     @Override
-    public RectArea[] ghostNumberSprites() { return sprites(SpriteID.GHOST_NUMBERS); }
-
-    @Override
     public RectArea bonusSymbolSprite(byte symbol) { return sprites(SpriteID.BONUS_SYMBOLS)[symbol]; }
 
     @Override

@@ -8,7 +8,6 @@ import de.amr.pacmanfx.lib.RectArea;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
 public interface GameSpriteSheet extends SpriteSheet {
-    RectArea[] ghostNumberSprites();
     RectArea bonusSymbolSprite(byte symbol);
     RectArea bonusValueSprite(byte symbol);
 }

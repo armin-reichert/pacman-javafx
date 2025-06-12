@@ -24,7 +24,7 @@ public class ArcadePacMan_GhostAnimationMap extends SpriteAnimationMap<RectArea>
         set(ANIM_GHOST_FRIGHTENED,          createAnimation().ofSprites(sprites(SpriteID.GHOST_FRIGHTENED)).frameTicks(8).endless());
         set(ANIM_GHOST_FLASHING,            createAnimation().ofSprites(sprites(SpriteID.GHOST_FLASHING)).frameTicks(7).endless());
         set(ANIM_GHOST_EYES,                createAnimation().ofSprites(ghostEyesSprites(Direction.LEFT)).end());
-        set(ANIM_GHOST_NUMBER,              createAnimation().ofSprites(ss.ghostNumberSprites()).end());
+        set(ANIM_GHOST_NUMBER,              createAnimation().ofSprites(sprites(SpriteID.GHOST_NUMBERS)).end());
         set(ANIM_BLINKY_DAMAGED,            createAnimation().ofSprites(sprites(SpriteID.RED_GHOST_DAMAGED)).end());
         set(ANIM_BLINKY_NAIL_DRESS_RAPTURE, createAnimation().ofSprites(sprites(SpriteID.RED_GHOST_STRETCHED)).end());
         set(ANIM_BLINKY_PATCHED,            createAnimation().ofSprites(sprites(SpriteID.RED_GHOST_PATCHED)).frameTicks(4).endless());

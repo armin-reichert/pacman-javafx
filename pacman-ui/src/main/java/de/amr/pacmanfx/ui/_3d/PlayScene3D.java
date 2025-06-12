@@ -26,6 +26,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.*;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.paint.Color;
@@ -373,10 +374,10 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBinding, Camera
                 }
                 case GHOST_DYING -> {
                     GameSpriteSheet spriteSheet = theUI().configuration().spriteSheet();
-                    RectArea[] numberSprites = spriteSheet.ghostNumberSprites();
+                    RectArea[] numberSprites = null;//createGhostNumberSprites();
                     theSimulationStep().killedGhosts.forEach(ghost -> {
                         int victimIndex = theGameLevel().victims().indexOf(ghost);
-                        var numberImage = crop(spriteSheet.sourceImage(), numberSprites[victimIndex]);
+                        Image numberImage = theUI().configuration().createGhostNumberImage(victimIndex);
                         level3D.ghost3D(ghost.personality()).setNumberTexture(numberImage);
                     });
                 }

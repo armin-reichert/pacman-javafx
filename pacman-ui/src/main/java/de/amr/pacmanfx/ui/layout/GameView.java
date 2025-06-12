@@ -189,10 +189,10 @@ public class GameView implements PacManGames_View, PacManGames_ActionBinding {
 
     @Override
     public void onLevelCreated(GameEvent event) {
-        //TODO find another point in time to do this
         optGameLevel().ifPresent(level -> {
             PacManGames_UIConfig config = theUI().configuration();
-            config.createActorAnimations(level);
+            level.pac().setAnimations(config.createPacAnimations(level.pac()));
+            level.ghosts().forEach(ghost -> ghost.setAnimations(config.createGhostAnimations(ghost)));
             theSound().setEnabled(!level.isDemoLevel());
             // size of game scene might have changed, so re-embed
             currentGameScene().ifPresent(gameScene -> embedGameScene(config, gameScene));

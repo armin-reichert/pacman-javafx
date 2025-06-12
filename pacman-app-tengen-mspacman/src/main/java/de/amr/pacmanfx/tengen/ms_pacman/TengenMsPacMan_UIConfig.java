@@ -5,18 +5,20 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman;
 
 import de.amr.pacmanfx.controller.GameState;
+import de.amr.pacmanfx.lib.RectArea;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.lib.nes.NES_Palette;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
-import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.PacManGames_Assets;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.uilib.GameScene;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
@@ -39,6 +41,7 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theAssets;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
+import static de.amr.pacmanfx.uilib.Ufx.crop;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceManager {
@@ -225,6 +228,13 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     }
 
     @Override
+    public Image createGhostNumberImage(int ghostIndex) {
+        RectArea[] sprites = TengenMsPacMan_SpriteSheet.sprites(SpriteID.GHOST_NUMBERS);
+        return crop(spriteSheet.sourceImage(), sprites[ghostIndex]);
+    }
+
+
+    @Override
     public WorldMapColorScheme worldMapColorScheme(WorldMap worldMap) {
         NES_ColorScheme colorScheme = worldMap.getConfigValue("nesColorScheme");
         return new WorldMapColorScheme(
@@ -232,10 +242,15 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     }
 
     @Override
-    public void createActorAnimations(GameLevel level) {
-        level.pac().setAnimations(new TengenMsPacMan_PacAnimationMap(spriteSheet));
-        level.ghosts().forEach(ghost -> ghost.setAnimations(new TengenMsPacMan_GhostAnimationMap(spriteSheet, ghost.personality())));
+    public SpriteAnimationMap<?> createGhostAnimations(Ghost ghost) {
+        return new TengenMsPacMan_GhostAnimationMap(spriteSheet, ghost.personality());
     }
+
+    @Override
+    public SpriteAnimationMap<?> createPacAnimations(Pac pac) {
+        return new TengenMsPacMan_PacAnimationMap(spriteSheet);
+    }
+
 
     @Override
     public Node createLivesCounter3D() {
