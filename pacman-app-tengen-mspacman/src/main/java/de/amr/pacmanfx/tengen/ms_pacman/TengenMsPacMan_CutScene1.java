@@ -71,11 +71,10 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         pinky = createPinkGhost();
         heart = new Actor();
 
-        var spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
-        msPacMan.setAnimations(new TengenMsPacMan_PacAnimationMap(spriteSheet));
-        pacMan.setAnimations(new TengenMsPacMan_PacAnimationMap(spriteSheet));
-        inky.setAnimations(new TengenMsPacMan_GhostAnimationMap(spriteSheet, inky.personality()));
-        pinky.setAnimations(new TengenMsPacMan_GhostAnimationMap(spriteSheet, pinky.personality()));
+        msPacMan.setAnimations(theUI().configuration().createPacAnimations(msPacMan));
+        pacMan  .setAnimations(theUI().configuration().createPacAnimations(pacMan));
+        inky    .setAnimations(theUI().configuration().createGhostAnimations(inky));
+        pinky   .setAnimations(theUI().configuration().createGhostAnimations(pinky));
 
         music = theSound().createSound("intermission.1");
     }

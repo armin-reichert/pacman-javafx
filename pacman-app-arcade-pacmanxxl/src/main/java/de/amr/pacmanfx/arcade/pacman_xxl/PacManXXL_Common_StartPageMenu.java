@@ -4,11 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
-import de.amr.pacmanfx.arcade.ArcadePacMan_GhostAnimationMap;
-import de.amr.pacmanfx.arcade.ArcadePacMan_PacAnimationMap;
 import de.amr.pacmanfx.arcade.ArcadePalette;
-import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GhostAnimationMap;
-import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_PacAnimationMap;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.MapSelectionMode;
@@ -125,23 +121,13 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         }
 
         void setGameVariant(String gameVariant) {
-            PacManGames_UIConfig config = theUI().configuration(gameVariant);
+            final PacManGames_UIConfig config = theUI().configuration(gameVariant);
             renderer = config.createRenderer(ctx.getCanvas());
-
-            switch (gameVariant) {
-                case "PACMAN_XXL" -> pac.setAnimations(new ArcadePacMan_PacAnimationMap(config.spriteSheet()));
-                case "MS_PACMAN_XXL" -> pac.setAnimations(new ArcadeMsPacMan_PacAnimationMap(config.spriteSheet()));
-            }
+            pac.setAnimations(config.createPacAnimations(pac));
             pac.playAnimation(ANIM_PAC_MUNCHING);
-
             for (Ghost ghost : ghosts) {
                 if (ghost.animations().isEmpty()) {
-                    switch (gameVariant) {
-                        case "PACMAN_XXL" ->
-                            ghost.setAnimations(new ArcadePacMan_GhostAnimationMap(config.spriteSheet(), ghost.personality()));
-                        case "MS_PACMAN_XXL" ->
-                            ghost.setAnimations(new ArcadeMsPacMan_GhostAnimationMap(config.spriteSheet(), ghost.personality()));
-                    }
+                    ghost.setAnimations(config.createGhostAnimations(ghost));
                     ghost.playAnimation(ANIM_GHOST_NORMAL);
                 }
             }

@@ -39,25 +39,19 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
     private MediaPlayer music;
     private ClapperboardAnimation clapAnimation;
-    private TengenMsPacMan_SpriteSheet spriteSheet;
 
     private int t;
 
     @Override
     protected void doInit() {
         t = -1;
-
         theGame().setScoreVisible(false);
-
         msPacMan = createMsPacMan();
         pacMan = createPacMan();
+        msPacMan.setAnimations(theUI().configuration().createPacAnimations(msPacMan));
+        pacMan  .setAnimations(theUI().configuration().createPacAnimations(pacMan));
         juniors = new ArrayList<>();
         juniorCreationTime = new ArrayList<>();
-
-        spriteSheet = theUI().configuration().spriteSheet();
-        pacMan.setAnimations(new TengenMsPacMan_PacAnimationMap(spriteSheet));
-        msPacMan.setAnimations(new TengenMsPacMan_PacAnimationMap(spriteSheet));
-
         music = theSound().createSound("intermission.4");
     }
 
@@ -154,7 +148,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         junior.setPosition((float) randomX, sizeInPx().y() - 4 * TS);
         junior.setMoveDir(Direction.UP);
         junior.setSpeed(2);
-        junior.setAnimations(new TengenMsPacMan_PacAnimationMap(spriteSheet));
+        junior.setAnimations(theUI().configuration().createPacAnimations(junior));
         junior.selectAnimation(TengenMsPacMan_PacAnimationMap.ANIM_JUNIOR);
         junior.show();
         juniors.add(junior);

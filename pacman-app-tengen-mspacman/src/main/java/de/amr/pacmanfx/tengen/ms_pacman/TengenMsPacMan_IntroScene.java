@@ -215,13 +215,10 @@ public class TengenMsPacMan_IntroScene extends GameScene2D implements PacManGame
                     ghost.setVisible(true);
                 }
                 scene.ghostIndex = 0;
-
-                var spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
-                scene.msPacMan.setAnimations(new TengenMsPacMan_PacAnimationMap(spriteSheet));
+                scene.msPacMan.setAnimations(theUI().configuration().createPacAnimations(scene.msPacMan));
                 scene.msPacMan.playAnimation(ANIM_PAC_MUNCHING);
-
                 for (Ghost ghost : scene.ghosts) {
-                    ghost.setAnimations(new TengenMsPacMan_GhostAnimationMap(spriteSheet, ghost.personality()));
+                    ghost.setAnimations(theUI().configuration().createGhostAnimations(ghost));
                     ghost.playAnimation(ANIM_GHOST_NORMAL);
                 }
             }

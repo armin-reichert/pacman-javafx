@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.model.actors;
 
 public interface ActorAnimationMap {
+    Object animation(String id);
     String selectedAnimationID();
     void selectAnimationAtFrame(String id, int frameIndex);
     default void selectAnimation(String id) { selectAnimationAtFrame(id, 0); }

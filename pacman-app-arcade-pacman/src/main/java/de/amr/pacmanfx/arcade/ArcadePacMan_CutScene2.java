@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.RectArea;
 import de.amr.pacmanfx.lib.Vector2f;
+import de.amr.pacmanfx.model.actors.ActorAnimationMap;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
@@ -53,13 +54,15 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         blinky.setSpeed(0);
         blinky.hide();
         music = theSound().createSound("intermission");
-        ArcadePacMan_SpriteSheet spriteSheet = theUI().configuration().spriteSheet();
-        pac.setAnimations(new ArcadePacMan_PacAnimationMap(spriteSheet));
-        var blinkyAnimations = new ArcadePacMan_GhostAnimationMap(spriteSheet, blinky.personality());
-        blinkyNormal = blinkyAnimations.animation(ANIM_GHOST_NORMAL);
-        nailDressRaptureAnimation = blinkyAnimations.animation(ANIM_BLINKY_NAIL_DRESS_RAPTURE);
-        blinkyDamaged = blinkyAnimations.animation(ANIM_BLINKY_DAMAGED);
+
+        pac.setAnimations(theUI().configuration().createPacAnimations(pac));
+
+        ActorAnimationMap blinkyAnimations = theUI().configuration().createGhostAnimations(blinky);
         blinky.setAnimations(blinkyAnimations);
+        blinkyNormal = (SpriteAnimation) blinkyAnimations.animation(ANIM_GHOST_NORMAL);
+        nailDressRaptureAnimation = (SpriteAnimation) blinkyAnimations.animation(ANIM_BLINKY_NAIL_DRESS_RAPTURE);
+        blinkyDamaged = (SpriteAnimation) blinkyAnimations.animation(ANIM_BLINKY_DAMAGED);
+
         frame = -1;
     }
 

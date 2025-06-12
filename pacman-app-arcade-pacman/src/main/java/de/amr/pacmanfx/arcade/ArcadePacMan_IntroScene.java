@@ -76,14 +76,11 @@ public class ArcadePacMan_IntroScene extends GameScene2D implements PacManGames_
         bindAction(ACTION_TEST_LEVELS_BONI, COMMON_ACTION_BINDINGS);
         bindAction(ACTION_TEST_LEVELS_TEASERS, COMMON_ACTION_BINDINGS);
 
-        ArcadePacMan_SpriteSheet spriteSheet = theUI().configuration().spriteSheet();
         blinking = new Pulse(10, true);
         pacMan = createPac();
-        pacMan.setAnimations(new ArcadePacMan_PacAnimationMap(spriteSheet));
+        pacMan.setAnimations(theUI().configuration().createPacAnimations(pacMan));
         ghosts = List.of(createRedGhost(), createPinkGhost(), createCyanGhost(), createOrangeGhost());
-        for (Ghost ghost : ghosts) {
-            ghost.setAnimations(new ArcadePacMan_GhostAnimationMap(spriteSheet, ghost.personality()));
-        }
+        ghosts.forEach(ghost -> ghost.setAnimations(theUI().configuration().createGhostAnimations(ghost)));
         ghostImageVisible     = new boolean[4];
         ghostNicknameVisible  = new boolean[4];
         ghostCharacterVisible = new boolean[4];

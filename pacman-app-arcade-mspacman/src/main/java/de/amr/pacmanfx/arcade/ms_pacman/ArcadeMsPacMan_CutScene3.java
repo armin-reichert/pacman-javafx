@@ -61,9 +61,8 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         stork = new Actor();
         bag = new Actor();
 
-        ArcadeMsPacMan_SpriteSheet spriteSheet = theUI().configuration().spriteSheet();
-        msPacMan.setAnimations(new ArcadeMsPacMan_PacAnimationMap(spriteSheet));
-        pacMan.setAnimations(new ArcadeMsPacMan_PacAnimationMap(spriteSheet));
+        msPacMan.setAnimations(theUI().configuration().createPacAnimations(msPacMan));
+        pacMan.setAnimations(theUI().configuration().createPacAnimations(pacMan));
 
         storkAnimation =  SpriteAnimation.createAnimation().ofSprites(sprites(STORK)).frameTicks(8).endless();
         storkAnimation.play();

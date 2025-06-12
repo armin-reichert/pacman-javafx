@@ -62,11 +62,10 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         pinky = createPinkGhost();
         heart = new Actor();
 
-        ArcadeMsPacMan_SpriteSheet spriteSheet = theUI().configuration().spriteSheet();
-        msPacMan.setAnimations(new ArcadeMsPacMan_PacAnimationMap(spriteSheet));
-        pacMan.setAnimations(new ArcadeMsPacMan_PacAnimationMap(spriteSheet));
-        inky.setAnimations(new ArcadeMsPacMan_GhostAnimationMap(spriteSheet, inky.personality()));
-        pinky.setAnimations(new ArcadeMsPacMan_GhostAnimationMap(spriteSheet, pinky.personality()));
+        msPacMan.setAnimations(theUI().configuration().createPacAnimations(msPacMan));
+        pacMan.setAnimations(theUI().configuration().createPacAnimations(pacMan));
+        inky.setAnimations(theUI().configuration().createGhostAnimations(inky));
+        pinky.setAnimations(theUI().configuration().createGhostAnimations(pinky));
 
         clapperboardAnimation = new ClapperboardAnimation("1", "THEY MEET");
         clapperboardAnimation.start();

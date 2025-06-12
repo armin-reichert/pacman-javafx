@@ -90,11 +90,10 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements PacManGame
         presented = RED_GHOST_SHADOW;
         numTicksBeforeRising = 0;
 
-        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
-        msPacMan.setAnimations(new ArcadeMsPacMan_PacAnimationMap(spriteSheet));
+        msPacMan.setAnimations(theUI().configuration().createPacAnimations(msPacMan));
         msPacMan.selectAnimation(ANIM_PAC_MUNCHING);
         for (Ghost ghost : ghosts) {
-            ghost.setAnimations(new ArcadeMsPacMan_GhostAnimationMap(spriteSheet, ghost.personality()));
+            ghost.setAnimations(theUI().configuration().createGhostAnimations(ghost));
             ghost.selectAnimation(ANIM_GHOST_NORMAL);
         }
         sceneController.restart(SceneState.STARTING);

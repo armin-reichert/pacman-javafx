@@ -36,10 +36,6 @@ public abstract class SpriteAnimationMap<R> implements ActorAnimationMap {
         animationsByID.put(key, animation);
     }
 
-    public SpriteAnimation animation(String id) {
-        return animationsByID.get(id);
-    }
-
     public String currentAnimationID() { return currentAnimationID; }
 
     public boolean isCurrentAnimationID(String id) {
@@ -55,6 +51,11 @@ public abstract class SpriteAnimationMap<R> implements ActorAnimationMap {
         }
         updateActorSprites(actor);
         return (R) currentAnimation.currentSprite();
+    }
+
+    @Override
+    public SpriteAnimation animation(String id) {
+        return animationsByID.get(id);
     }
 
     public SpriteAnimation currentAnimation() {

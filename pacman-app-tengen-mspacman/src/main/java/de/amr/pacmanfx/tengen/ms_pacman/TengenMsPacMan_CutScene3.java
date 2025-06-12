@@ -70,11 +70,8 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         stork = new Actor();
         bagWithJunior = new Actor();
         bagWithJunior.hide();
-
-        TengenMsPacMan_SpriteSheet spriteSheet = theUI().configuration().spriteSheet();
-        pacMan.setAnimations(new TengenMsPacMan_PacAnimationMap(spriteSheet));
-        msPacMan.setAnimations(new TengenMsPacMan_PacAnimationMap(spriteSheet));
-
+        pacMan  .setAnimations(theUI().configuration().createPacAnimations(pacMan));
+        msPacMan.setAnimations(theUI().configuration().createPacAnimations(msPacMan));
         music = theSound().createSound("intermission.3");
     }
 
