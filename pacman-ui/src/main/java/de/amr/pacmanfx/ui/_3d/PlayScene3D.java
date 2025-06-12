@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.lib.RectArea;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.Score;
@@ -14,7 +13,6 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.MovingBonus;
 import de.amr.pacmanfx.ui.PacManGames_ActionBinding;
-import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.uilib.CameraControlledView;
 import de.amr.pacmanfx.uilib.GameAction;
 import de.amr.pacmanfx.uilib.GameScene;
@@ -373,8 +371,6 @@ public class PlayScene3D implements GameScene, PacManGames_ActionBinding, Camera
                     animation.play();
                 }
                 case GHOST_DYING -> {
-                    GameSpriteSheet spriteSheet = theUI().configuration().spriteSheet();
-                    RectArea[] numberSprites = null;//createGhostNumberSprites();
                     theSimulationStep().killedGhosts.forEach(ghost -> {
                         int victimIndex = theGameLevel().victims().indexOf(ghost);
                         Image numberImage = theUI().configuration().createGhostNumberImage(victimIndex);

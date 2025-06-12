@@ -9,7 +9,6 @@ import javafx.scene.input.KeyCombination;
 import org.tinylog.Logger;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 

@@ -13,7 +13,8 @@ import java.util.Arrays;
 
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.*;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.sprite;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.sprites;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createAnimation;
 
 public class TengenMsPacMan_PacAnimationMap extends SpriteAnimationMap<RectArea> {

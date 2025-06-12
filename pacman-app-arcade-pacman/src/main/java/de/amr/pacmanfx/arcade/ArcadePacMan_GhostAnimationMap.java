@@ -10,9 +10,9 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
-import static de.amr.pacmanfx.arcade.SpriteID.*;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_SpriteSheet.sprites;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.*;
+import static de.amr.pacmanfx.arcade.SpriteID.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createAnimation;
 
