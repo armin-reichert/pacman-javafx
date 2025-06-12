@@ -23,7 +23,10 @@ import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
-public abstract class XMan3D {
+/**
+ * Common base class for Pac-Man and Ms. Pac-Man 3D representations.
+ */
+public abstract class PacBase3D {
 
     public static Animation createChewingAnimation(Node jaw) {
         var closed = new KeyValue[] {
@@ -62,7 +65,7 @@ public abstract class XMan3D {
     protected abstract void stopMovementAnimation();
     protected abstract void updateMovementAnimation();
 
-    protected XMan3D(Pac pac, double size, AssetStorage assets, String ans) {
+    protected PacBase3D(Pac pac, double size, AssetStorage assets, String ans) {
         this.pac = requireNonNull(pac);
         this.size = size;
 

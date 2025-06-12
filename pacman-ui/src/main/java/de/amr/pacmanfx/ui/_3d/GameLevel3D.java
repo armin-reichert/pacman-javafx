@@ -17,7 +17,7 @@ import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.Model3D;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
-import de.amr.pacmanfx.uilib.model3D.XMan3D;
+import de.amr.pacmanfx.uilib.model3D.PacBase3D;
 import javafx.animation.*;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
@@ -78,7 +78,7 @@ public class GameLevel3D {
     private Box floor3D;
     private Maze3D maze3D;
     private LivesCounter3D livesCounter3D;
-    private XMan3D pac3D;
+    private PacBase3D pac3D;
     private List<Ghost3D_Appearance> ghosts3D;
     private MessageView messageView;
     private Bonus3D bonus3D;
@@ -403,7 +403,7 @@ public class GameLevel3D {
     }
 
     public Maze3D maze3D() { return maze3D; }
-    public XMan3D pac3D() { return pac3D; }
+    public PacBase3D pac3D() { return pac3D; }
     public Stream<Ghost3D_Appearance> ghosts3D() { return ghosts3D.stream(); }
     public Ghost3D_Appearance ghost3D(byte id) { return ghosts3D.get(id); }
     public Optional<Bonus3D> bonus3D() { return Optional.ofNullable(bonus3D); }

@@ -14,7 +14,7 @@ import javafx.util.Duration;
 import static de.amr.pacmanfx.uilib.Ufx.doAfterSec;
 import static de.amr.pacmanfx.uilib.Ufx.now;
 
-public class PacMan3D extends XMan3D {
+public class PacMan3D extends PacBase3D {
 
     public PacMan3D(Pac pac, double size, AssetStorage assets, String ans) {
         super(pac, size, assets, ans);

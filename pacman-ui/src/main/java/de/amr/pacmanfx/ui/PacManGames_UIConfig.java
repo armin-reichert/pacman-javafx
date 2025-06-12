@@ -14,7 +14,7 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
-import de.amr.pacmanfx.uilib.model3D.XMan3D;
+import de.amr.pacmanfx.uilib.model3D.PacBase3D;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -26,7 +26,7 @@ public interface PacManGames_UIConfig {
     String assetNamespace();
     void createActorAnimations(GameLevel level);
     Node createLivesCounter3D();
-    XMan3D createPac3D(Pac pac);
+    PacBase3D createPac3D(Pac pac);
     GameScene2D createPiPScene(Canvas canvas);
     GameRenderer createRenderer(Canvas canvas);
     Stream<GameScene> gameScenes();

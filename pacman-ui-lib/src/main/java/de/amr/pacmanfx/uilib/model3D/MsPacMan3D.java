@@ -13,7 +13,7 @@ import javafx.scene.Group;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-public class MsPacMan3D extends XMan3D {
+public class MsPacMan3D extends PacBase3D {
 
     public MsPacMan3D(Pac pac, double size, AssetStorage assets, String ans) {
         super(pac, size, assets, ans);
