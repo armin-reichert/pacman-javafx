@@ -78,7 +78,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
             case ANIMATION_START -> music.play();
             case ANIMATION_START + 1 -> nailDressRaptureAnimation.setFrameIndex(NAIL);
             case ANIMATION_START + 25 -> {
-                pac.placeAtTile(28, 20, 0, 0);
+                pac.placeAtTile(28, 20);
                 pac.setMoveDir(Direction.LEFT);
                 pac.setSpeed(1.15f);
                 pac.playAnimation(ANIM_PAC_MUNCHING);

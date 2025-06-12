@@ -126,9 +126,7 @@ public abstract class MovingActor extends Actor {
      * @param tx tile x-coordinate (grid column)
      * @param ty tile y-coordinate (grid row)
      */
-    public void placeAtTile(int tx, int ty) {
-        placeAtTile(tx, ty, 0, 0);
-    }
+    public void placeAtTile(int tx, int ty) { placeAtTile(tx, ty, 0, 0); }
 
     /**
      * Places this actor centered over the given tile.
@@ -136,7 +134,7 @@ public abstract class MovingActor extends Actor {
      * @param tile tile where actor is placed
      */
     public void placeAtTile(Vector2i tile) {
-        placeAtTile(tile.x(), tile.y(), 0, 0);
+        placeAtTile(tile.x(), tile.y());
     }
 
     /**

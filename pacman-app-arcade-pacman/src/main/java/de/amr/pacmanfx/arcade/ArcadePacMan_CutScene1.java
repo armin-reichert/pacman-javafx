@@ -61,13 +61,13 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
         if (frame == ANIMATION_START) {
             music.play();
 
-            pac.placeAtTile(29, 20, 0, 0);
+            pac.placeAtTile(29, 20);
             pac.setMoveDir(Direction.LEFT);
             pac.setSpeed(1.25f);
             pac.playAnimation(ANIM_PAC_MUNCHING);
             pac.show();
 
-            blinky.placeAtTile(32, 20, 0, 0);
+            blinky.placeAtTile(32, 20);
             blinky.setMoveAndWishDir(Direction.LEFT);
             blinky.setSpeed(1.3f);
             blinky.playAnimation(ANIM_GHOST_NORMAL);
