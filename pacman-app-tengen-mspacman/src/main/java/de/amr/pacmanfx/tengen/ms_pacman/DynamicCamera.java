@@ -22,7 +22,7 @@ public class DynamicCamera extends ParallelCamera {
     private int verticalRangeInTiles;
     private double targetY;
     private boolean focussingActor;
-    private float speed = 0.03f;
+    private float speed = 0.02f;
 
     public FloatProperty scalingProperty() {
         return scalingPy;
