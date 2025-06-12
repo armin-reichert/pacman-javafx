@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
-import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui.layout.StartPage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
@@ -52,7 +51,7 @@ public class PacManXXL_Common_StartPage implements StartPage {
     }
 
     @Override
-    public GameVariant currentGameVariant() {
+    public String currentGameVariant() {
         return menu.state().gameVariant;
     }
 

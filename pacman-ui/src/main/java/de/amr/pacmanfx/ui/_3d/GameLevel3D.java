@@ -42,6 +42,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
+import static de.amr.pacmanfx.model.GameVariant.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 import static de.amr.pacmanfx.uilib.Ufx.*;
@@ -147,6 +148,7 @@ public class GameLevel3D {
                 -> new MsPacMan3D(gameLevel.pac(), PAC_3D_SIZE, theAssets(), ans);
             case PACMAN, PACMAN_XXL
                 -> new PacMan3D(gameLevel.pac(), PAC_3D_SIZE, theAssets(), ans);
+            default -> throw new IllegalArgumentException();
         };
         pac3D.light().setColor(theAssets().color(ans + ".pac.color.head").desaturate());
         Model3D.bindDrawMode(pac3D.root(), PY_3D_DRAW_MODE);

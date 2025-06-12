@@ -39,7 +39,7 @@ import static de.amr.pacmanfx.uilib.widgets.OptionMenuStyle.DEFAULT_OPTION_MENU_
 public class PacManXXL_Common_StartPageMenu extends OptionMenu {
 
     public static class MenuState {
-        GameVariant gameVariant;
+        String gameVariant;
         boolean play3D;
         boolean cutScenesEnabled;
         MapSelectionMode mapOrder;
@@ -125,22 +125,22 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
             ctx.restore();
         }
 
-        void setGameVariant(GameVariant gameVariant) {
+        void setGameVariant(String gameVariant) {
             PacManGames_UIConfiguration config = theUI().configuration(gameVariant);
             renderer = config.createRenderer(ctx.getCanvas());
 
             switch (gameVariant) {
-                case PACMAN_XXL -> pac.setAnimations(new ArcadePacMan_PacAnimationMap(config.spriteSheet()));
-                case MS_PACMAN_XXL -> pac.setAnimations(new ArcadeMsPacMan_PacAnimationMap(config.spriteSheet()));
+                case GameVariant.PACMAN_XXL -> pac.setAnimations(new ArcadePacMan_PacAnimationMap(config.spriteSheet()));
+                case GameVariant.MS_PACMAN_XXL -> pac.setAnimations(new ArcadeMsPacMan_PacAnimationMap(config.spriteSheet()));
             }
             pac.playAnimation(ANIM_PAC_MUNCHING);
 
             for (Ghost ghost : ghosts) {
                 if (ghost.animations().isEmpty()) {
                     switch (gameVariant) {
-                        case PACMAN_XXL ->
+                        case GameVariant.PACMAN_XXL ->
                             ghost.setAnimations(new ArcadePacMan_GhostAnimationMap(config.spriteSheet(), ghost.personality()));
-                        case MS_PACMAN_XXL ->
+                        case GameVariant.MS_PACMAN_XXL ->
                             ghost.setAnimations(new ArcadeMsPacMan_GhostAnimationMap(config.spriteSheet(), ghost.personality()));
                     }
                     ghost.playAnimation(ANIM_GHOST_NORMAL);
@@ -151,7 +151,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
 
     // Entries
 
-    private final OptionMenuEntry<GameVariant> entryGameVariant = new OptionMenuEntry<>("GAME VARIANT",
+    private final OptionMenuEntry<String> entryGameVariant = new OptionMenuEntry<>("GAME VARIANT",
         GameVariant.PACMAN_XXL, GameVariant.MS_PACMAN_XXL) {
 
         @Override
@@ -164,8 +164,8 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         @Override
         public String selectedValueText() {
             return switch (state.gameVariant) {
-                case PACMAN_XXL -> "PAC-MAN";
-                case MS_PACMAN_XXL -> "MS.PAC-MAN";
+                case GameVariant.PACMAN_XXL -> "PAC-MAN";
+                case GameVariant.MS_PACMAN_XXL -> "MS.PAC-MAN";
                 default -> "";
             };
         }

@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman;
 
-import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui.PacManGames_Action;
 import de.amr.pacmanfx.ui.layout.StartPage;
 import de.amr.pacmanfx.ui.layout.StartPagesView;
@@ -24,7 +23,7 @@ public class TengenMsPacMan_StartPage extends StackPane implements StartPage, Re
         return TengenMsPacMan_StartPage.class;
     }
 
-    public TengenMsPacMan_StartPage(GameVariant gameVariant) {
+    public TengenMsPacMan_StartPage(String gameVariant) {
         setUserData(requireNonNull(gameVariant));
         var flyer = new Flyer(loadImage("graphics/f1.png"), loadImage("graphics/f2.png"));
         flyer.selectPage(0);
@@ -41,8 +40,8 @@ public class TengenMsPacMan_StartPage extends StackPane implements StartPage, Re
     }
 
     @Override
-    public GameVariant currentGameVariant() {
-        return (GameVariant) getUserData();
+    public String currentGameVariant() {
+        return (String) getUserData();
     }
 
     @Override

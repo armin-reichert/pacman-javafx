@@ -387,7 +387,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D
 
     @Override
     protected void drawSceneContent() {
-        final var game = (TengenMsPacMan_GameModel) theGame();
         // NES screen is 32 tiles wide but mazes are only 28 tiles wide
         final double indent = scaled(2 * TS);
         final int mazeTop = 3 * TS;
@@ -416,13 +415,14 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D
 
         // As long as Pac-Man is still invisible on game start, one live more is shown in the counter
         int numLivesDisplayed = theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible()
-            ? game.lifeCount() : game.lifeCount() - 1;
+            ? theGame().lifeCount() : theGame().lifeCount() - 1;
         gr().drawLivesCounter(numLivesDisplayed, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - TS, sprite(SpriteID.LIVES_COUNTER_SYMBOL));
 
-        if (theGameLevel().isDemoLevel() || game.mapCategory() == MapCategory.ARCADE) {
-            gr().drawLevelCounter(game.levelCounter(), sizeInPx());
+        TengenMsPacMan_GameModel tengenGame = (TengenMsPacMan_GameModel) theGame();
+        if (theGameLevel().isDemoLevel() || tengenGame.mapCategory() == MapCategory.ARCADE) {
+            gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
         } else {
-            gr().drawLevelCounterWithLevelNumbers(theGameLevel().number(), game.levelCounter(), sizeInPx());
+            gr().drawLevelCounterWithLevelNumbers(theGameLevel().number(), theGame().levelCounter(), sizeInPx());
         }
 
         ctx().restore();

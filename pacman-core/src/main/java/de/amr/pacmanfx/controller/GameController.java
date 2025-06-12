@@ -8,12 +8,11 @@ import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.event.GameStateChangeEvent;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.GameVariant;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
 
-import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 
 import static de.amr.pacmanfx.Globals.theGameEventManager;
@@ -22,7 +21,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Controller (in the sense of MVC) for all game variants.
  * <br>Contains a finite-state machine ({@link StateMachine}) with states defined in {@link GameState}.
- * Each game variant ({@link GameVariant}) is represented by an instance of a game model ({@link GameModel}).
+ * Each game variant is represented by an instance of a game model ({@link GameModel}).
  * Scene selection is not controlled by this class but left to the specific user interface implementations.
  *
  * @see <a href="https://github.com/armin-reichert">GitHub</a>
@@ -33,8 +32,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameController  {
 
-    private final Map<GameVariant, GameModel> knownGames = new EnumMap<>(GameVariant.class);
-    private final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>();
+    private final Map<String, GameModel> knownGames = new HashMap<>();
+    private final ObjectProperty<String> gameVariantPy = new SimpleObjectProperty<>();
     private final StateMachine<GameState, GameModel> stateMachine;
 
     public GameController() {
@@ -75,7 +74,7 @@ public class GameController  {
     public GameState gameState() { return stateMachine.state(); }
 
     @SuppressWarnings("unchecked")
-    public <T extends GameModel> T game(GameVariant variant) {
+    public <T extends GameModel> T game(String variant) {
         requireNonNull(variant);
         if (knownGames.containsKey(variant)) {
             return (T) knownGames.get(variant);
@@ -83,7 +82,7 @@ public class GameController  {
         throw new IllegalArgumentException("Game variant '%s' is not supported".formatted(variant));
     }
 
-    public void registerGame(GameVariant variant, GameModel gameModel) {
+    public void registerGame(String variant, GameModel gameModel) {
         requireNonNull(variant);
         requireNonNull(gameModel);
         if (knownGames.containsKey(variant)) {
@@ -99,14 +98,14 @@ public class GameController  {
         return game(gameVariantPy.get());
     }
 
-    public GameVariant selectedGameVariant() { return gameVariantPy.get(); }
+    public String selectedGameVariant() { return gameVariantPy.get(); }
 
-    public void selectGameVariant(GameVariant gameVariant) {
+    public void selectGameVariant(String gameVariant) {
         requireNonNull(gameVariant);
         gameVariantPy.set(gameVariant);
     }
 
-    public boolean isSelected(GameVariant gameVariant) {
+    public boolean isSelected(String gameVariant) {
         return requireNonNull(gameVariant) == gameVariantPy.get();
     }
 }

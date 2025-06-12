@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.layout.GameView;
@@ -76,13 +75,13 @@ public interface PacManGames_UI {
 
     void buildUI(Stage stage, double width, double height, DashboardID... dashboardIDs);
     void restart();
-    void selectGameVariant(GameVariant variant);
+    void selectGameVariant(String variant);
     void show();
 
     // Configuration
-    PacManGames_UIConfiguration configuration(GameVariant gameVariant);
+    PacManGames_UIConfiguration configuration(String gameVariant);
     PacManGames_UIConfiguration configuration();
-    void setConfiguration(GameVariant variant, PacManGames_UIConfiguration configuration);
+    void setConfiguration(String variant, PacManGames_UIConfiguration configuration);
 
     // Game scenes
     ObjectProperty<GameScene> gameSceneProperty();

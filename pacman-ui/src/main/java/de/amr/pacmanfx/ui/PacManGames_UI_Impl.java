@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.controller.GameState;
-import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
@@ -32,10 +31,7 @@ import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.tinylog.Logger;
 
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
@@ -46,7 +42,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class PacManGames_UI_Impl implements PacManGames_UI {
 
-    private final Map<GameVariant, PacManGames_UIConfiguration> configMap = new EnumMap<>(GameVariant.class);
+    private final Map<String, PacManGames_UIConfiguration> configMap = new HashMap<>();
 
     private final ObjectProperty<PacManGames_View> viewPy = new SimpleObjectProperty<>();
     private final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>();
@@ -265,7 +261,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     }
 
     @Override
-    public void selectGameVariant(GameVariant gameVariant) {
+    public void selectGameVariant(String gameVariant) {
         if (gameVariant == null) {
             Logger.error("Cannot select game variant (NULL)");
             return;
@@ -336,7 +332,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
      * @param configuration the UI configuration for this variant
      */
     @Override
-    public void setConfiguration(GameVariant variant, PacManGames_UIConfiguration configuration) {
+    public void setConfiguration(String variant, PacManGames_UIConfiguration configuration) {
         requireNonNull(variant);
         requireNonNull(configuration);
         configuration.gameScenes().forEach(scene -> {
@@ -348,7 +344,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     }
 
     @Override
-    public PacManGames_UIConfiguration configuration(GameVariant gameVariant) {
+    public PacManGames_UIConfiguration configuration(String gameVariant) {
         return configMap.get(gameVariant);
     }
 

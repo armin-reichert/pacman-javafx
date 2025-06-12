@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade;
 
-import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui.PacManGames_Action;
 import de.amr.pacmanfx.ui.layout.StartPage;
 import de.amr.pacmanfx.ui.layout.StartPagesView;
@@ -24,7 +23,7 @@ public class ArcadePacMan_StartPage extends StackPane implements StartPage, Reso
         return ArcadePacMan_StartPage.class;
     }
 
-    public ArcadePacMan_StartPage(GameVariant gameVariant) {
+    public ArcadePacMan_StartPage(String gameVariant) {
         setUserData(requireNonNull(gameVariant));
         var flyer = new Flyer(loadImage("graphics/f1.jpg"), loadImage("graphics/f2.jpg"), loadImage("graphics/f3.jpg"));
         flyer.selectPage(0);
@@ -41,8 +40,8 @@ public class ArcadePacMan_StartPage extends StackPane implements StartPage, Reso
     }
 
     @Override
-    public GameVariant currentGameVariant() {
-        return (GameVariant) getUserData();
+    public String currentGameVariant() {
+        return (String) getUserData();
     }
 
     @Override

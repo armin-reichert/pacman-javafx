@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman;
 
-import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui.PacManGames_Env;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.application.Application;
@@ -21,13 +20,13 @@ public class ArcadeMsPacMan_App extends Application {
     @Override
     public void init() {
         PacManGames_Env.init();
-        theGameController().registerGame(GameVariant.MS_PACMAN, new ArcadeMsPacMan_GameModel());
-        theGameController().selectGameVariant(GameVariant.MS_PACMAN);
+        theGameController().registerGame("MS_PACMAN", new ArcadeMsPacMan_GameModel());
+        theGameController().selectGameVariant("MS_PACMAN");
     }
 
     @Override
     public void start(Stage stage) {
-        initUI(Map.of(GameVariant.MS_PACMAN, ArcadeMsPacMan_UIConfig.class));
+        initUI(Map.of("MS_PACMAN", ArcadeMsPacMan_UIConfig.class));
 
         // UI size: 80% of available screen height, aspect 12:10
         double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
@@ -40,7 +39,7 @@ public class ArcadeMsPacMan_App extends Application {
             DashboardID.KEYBOARD,
             DashboardID.ABOUT);
 
-        theUI().startPagesView().addStartPage(new ArcadeMsPacMan_StartPage(GameVariant.MS_PACMAN));
+        theUI().startPagesView().addStartPage(new ArcadeMsPacMan_StartPage("MS_PACMAN"));
         theUI().startPagesView().selectStartPage(0);
 
         theUI().show();

@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.layout;
 
-import de.amr.pacmanfx.model.GameVariant;
 import javafx.scene.layout.Region;
 import org.tinylog.Logger;
 
@@ -15,5 +14,5 @@ public interface StartPage {
     default void onExit() {
         Logger.trace("{} onExit", getClass().getSimpleName());
     }
-    GameVariant currentGameVariant();
+    String currentGameVariant();
 }

@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.Globals;
-import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui.sound.PacManGames_SoundManager;
 import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.input.Joypad;
@@ -61,7 +60,7 @@ public class PacManGames_Env {
      *
      * @param configClassesMap a map specifying the UI configuration for each supported game variant
      */
-    public static void initUI(Map<GameVariant, Class<? extends PacManGames_UIConfiguration>> configClassesMap) {
+    public static void initUI(Map<String, Class<? extends PacManGames_UIConfiguration>> configClassesMap) {
         theUI = new PacManGames_UI_Impl();
         configClassesMap.forEach((gameVariant, configClass) -> {
             try {

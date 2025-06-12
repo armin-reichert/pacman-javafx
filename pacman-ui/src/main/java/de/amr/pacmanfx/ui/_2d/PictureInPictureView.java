@@ -10,6 +10,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.VBox;
 import org.tinylog.Logger;
 
+import static de.amr.pacmanfx.Globals.optGameLevel;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
 import static de.amr.pacmanfx.ui.PacManGames_UI.PY_CANVAS_BG_COLOR;
 import static de.amr.pacmanfx.ui.PacManGames_UI.PY_PIP_HEIGHT;
@@ -41,7 +42,7 @@ public class PictureInPictureView extends VBox {
     }
 
     public void draw() {
-        if (scene2D != null && isVisible()) {
+        if (scene2D != null && isVisible() && optGameLevel().isPresent()) {
             scene2D.draw();
         }
     }

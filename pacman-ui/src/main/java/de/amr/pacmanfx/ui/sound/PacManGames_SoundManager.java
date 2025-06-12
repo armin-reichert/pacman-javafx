@@ -14,7 +14,6 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.net.URL;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,16 +34,10 @@ public class PacManGames_SoundManager {
 
     private final BooleanProperty mutedPy = new SimpleBooleanProperty(false);
 
-    private GameVariant gameVariant;
+    private String gameVariant;
     private String assetNamespace;
 
-    private final Map<GameVariant, Map<String, MediaPlayer>> soundsByGameVariant = new EnumMap<>(GameVariant.class);
-    {
-        for (GameVariant variant : GameVariant.values()) {
-            soundsByGameVariant.put(variant, new HashMap<>());
-        }
-    }
-
+    private final Map<String, Map<String, MediaPlayer>> soundsByGameVariant = new HashMap<>();
     private Siren siren;
     private MediaPlayer voice;
 
@@ -73,10 +66,18 @@ public class PacManGames_SoundManager {
         return player;
     }
 
-    public void selectGameVariant(GameVariant gameVariant, String assetNamespace) {
+    private Map<String, MediaPlayer> soundsByGameVariant(String gameVariant) {
+        if (!soundsByGameVariant.containsKey(gameVariant)) {
+            soundsByGameVariant.put(gameVariant, new HashMap<>());
+        }
+        return soundsByGameVariant.get(gameVariant);
+    }
+
+
+    public void selectGameVariant(String gameVariant, String assetNamespace) {
         this.gameVariant = requireNonNull(gameVariant);
         this.assetNamespace = requireNonNull(assetNamespace);
-        if (soundsByGameVariant.get(gameVariant).isEmpty()) {
+        if (soundsByGameVariant(gameVariant).isEmpty()) {
             var soundMap = new HashMap<String, MediaPlayer>();
             soundMap.put("game_over",      createSound("game_over"));
             soundMap.put("game_ready",     createSound("game_ready"));
@@ -89,7 +90,7 @@ public class PacManGames_SoundManager {
 
             //TODO check this
             MediaPlayer bounceSound = soundMap.get("bonus_bouncing");
-            if (bounceSound != null && gameVariant == GameVariant.MS_PACMAN_TENGEN) {
+            if (bounceSound != null && gameVariant.equals(GameVariant.MS_PACMAN_TENGEN)) {
                 bounceSound.setRate(0.25);
             }
 
@@ -115,7 +116,7 @@ public class PacManGames_SoundManager {
         }
     }
 
-    private Map<String, MediaPlayer> players(GameVariant gameVariant) {
+    private Map<String, MediaPlayer> players(String gameVariant) {
         return soundsByGameVariant.get(gameVariant);
     }
 
