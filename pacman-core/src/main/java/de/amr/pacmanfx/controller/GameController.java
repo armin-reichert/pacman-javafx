@@ -8,8 +8,8 @@ import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.event.GameStateChangeEvent;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.model.GameModel;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
@@ -33,7 +33,7 @@ import static java.util.Objects.requireNonNull;
 public class GameController  {
 
     private final Map<String, GameModel> knownGames = new HashMap<>();
-    private final ObjectProperty<String> gameVariantPy = new SimpleObjectProperty<>();
+    private final StringProperty gameVariantPy = new SimpleStringProperty();
     private final StateMachine<GameState, GameModel> stateMachine;
 
     public GameController() {
