@@ -11,7 +11,6 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
-import de.amr.pacmanfx.ui.PacManGames_Action;
 import de.amr.pacmanfx.ui.PacManGames_ActionBinding;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelFinishedAnimation;
@@ -46,7 +45,6 @@ import static de.amr.pacmanfx.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_ActionBindings.TENGEN_ACTION_BINDINGS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.sprite;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
-import static de.amr.pacmanfx.ui.PacManGames_Action.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 
@@ -141,7 +139,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D
         items.add(miMuted);
 
         var miQuit = new MenuItem(theAssets().text("quit"));
-        miQuit.setOnAction(ae -> PacManGames_Action.ACTION_QUIT_GAME_SCENE.execute());
+        miQuit.setOnAction(ae -> ACTION_QUIT_GAME_SCENE.execute());
         items.add(miQuit);
 
         return items;
