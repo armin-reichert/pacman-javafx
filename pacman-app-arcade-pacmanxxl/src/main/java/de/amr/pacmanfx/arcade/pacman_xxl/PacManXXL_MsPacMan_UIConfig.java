@@ -11,6 +11,7 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.PacManGames_Assets;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
@@ -22,6 +23,8 @@ import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
+import de.amr.pacmanfx.uilib.model3D.MsPacMan3D;
+import de.amr.pacmanfx.uilib.model3D.XMan3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
@@ -36,8 +39,7 @@ import static de.amr.pacmanfx.Globals.optGameLevel;
 import static de.amr.pacmanfx.Globals.theGameLevel;
 import static de.amr.pacmanfx.arcade.ArcadePalette.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theAssets;
-import static de.amr.pacmanfx.ui.PacManGames_UI.LIVES_COUNTER_3D_SIZE;
-import static de.amr.pacmanfx.ui.PacManGames_UI.PY_3D_ENABLED;
+import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 import static java.util.Objects.requireNonNull;
 
 public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
@@ -168,7 +170,7 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
     }
 
     @Override
-    public Node createLivesCounterShape() {
+    public Node createLivesCounter3D() {
         String namespace = assetNamespace();
         return new Group(
             Model3DRepository.get().createPacShape(
@@ -183,6 +185,13 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
                     theAssets().color(namespace + ".pac.color.boobs")
             )
         );
+    }
+
+    @Override
+    public XMan3D createPac3D(Pac pac) {
+        var pac3D = new MsPacMan3D(pac, PAC_3D_SIZE, theAssets(), assetNamespace());
+        pac3D.light().setColor(theAssets().color(assetNamespace() + ".pac.color.head").desaturate());
+        return pac3D;
     }
 
     @Override

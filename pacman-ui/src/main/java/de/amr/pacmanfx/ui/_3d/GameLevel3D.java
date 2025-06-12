@@ -15,7 +15,9 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
-import de.amr.pacmanfx.uilib.model3D.*;
+import de.amr.pacmanfx.uilib.model3D.Model3D;
+import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
+import de.amr.pacmanfx.uilib.model3D.XMan3D;
 import javafx.animation.*;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
@@ -141,15 +143,7 @@ public class GameLevel3D {
     }
 
     private void createPac3D() {
-        final String ans = theUI().configuration().assetNamespace();
-        pac3D = switch (theGameController().selectedGameVariant()) {
-            case "MS_PACMAN", "MS_PACMAN_TENGEN", "MS_PACMAN_XXL"
-                -> new MsPacMan3D(gameLevel.pac(), PAC_3D_SIZE, theAssets(), ans);
-            case "PACMAN", "PACMAN_XXL"
-                -> new PacMan3D(gameLevel.pac(), PAC_3D_SIZE, theAssets(), ans);
-            default -> throw new IllegalArgumentException();
-        };
-        pac3D.light().setColor(theAssets().color(ans + ".pac.color.head").desaturate());
+        pac3D = theUI().configuration().createPac3D(gameLevel.pac());
         Model3D.bindDrawMode(pac3D.root(), PY_3D_DRAW_MODE);
     }
 
@@ -244,7 +238,7 @@ public class GameLevel3D {
     private void createLivesCounter3D() {
         Node[] counterShapes = new Node[LIVES_COUNTER_MAX];
         for (int i = 0; i < counterShapes.length; ++i) {
-            counterShapes[i] = theUI().configuration().createLivesCounterShape();
+            counterShapes[i] = theUI().configuration().createLivesCounter3D();
         }
         livesCounter3D = new LivesCounter3D(counterShapes);
         livesCounter3D.setTranslateX(2 * TS);

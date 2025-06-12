@@ -11,6 +11,7 @@ import de.amr.pacmanfx.lib.nes.NES_Palette;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.PacManGames_Assets;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
@@ -19,6 +20,8 @@ import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
+import de.amr.pacmanfx.uilib.model3D.MsPacMan3D;
+import de.amr.pacmanfx.uilib.model3D.XMan3D;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -235,7 +238,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     }
 
     @Override
-    public Node createLivesCounterShape() {
+    public Node createLivesCounter3D() {
         String namespace = assetNamespace();
         return new Group(
             Model3DRepository.get().createPacShape(
@@ -250,5 +253,12 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
                     theAssets().color(namespace + ".pac.color.boobs")
             )
         );
+    }
+
+    @Override
+    public XMan3D createPac3D(Pac pac) {
+        var pac3D = new MsPacMan3D(pac, PAC_3D_SIZE, theAssets(), assetNamespace());
+        pac3D.light().setColor(theAssets().color(assetNamespace() + ".pac.color.head").desaturate());
+        return pac3D;
     }
 }
