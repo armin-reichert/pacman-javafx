@@ -8,8 +8,8 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.RectArea;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
-import de.amr.pacmanfx.ui.PacManGames_ActionBinding;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.uilib.ActionBindingSupport;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -31,7 +31,7 @@ import static de.amr.pacmanfx.uilib.input.Keyboard.alt;
  *
  * @author Armin Reichert
  */
-public class TengenMsPacMan_OptionsScene extends GameScene2D implements PacManGames_ActionBinding {
+public class TengenMsPacMan_OptionsScene extends GameScene2D implements ActionBindingSupport {
 
     private static final int COL_ARROW = 2 * TS;
     private static final int COL_LABEL = 4 * TS;

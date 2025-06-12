@@ -11,10 +11,10 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
-import de.amr.pacmanfx.ui.PacManGames_ActionBinding;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelFinishedAnimation;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
+import de.amr.pacmanfx.uilib.ActionBindingSupport;
 import de.amr.pacmanfx.uilib.CameraControlledView;
 import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -52,7 +52,7 @@ import static de.amr.pacmanfx.ui.PacManGames_UI.*;
  * Tengen play scene, uses vertical scrolling.
  */
 public class TengenMsPacMan_PlayScene2D extends GameScene2D
-    implements PacManGames_ActionBinding, CameraControlledView {
+    implements ActionBindingSupport, CameraControlledView {
 
     // NES screen width (32 tiles), BIG map height (42 tiles) + 2 extra tile rows
     private static final Vector2i UNSCALED_CANVAS_SIZE = Vector2i.of(32 * TS, 44 * TS);

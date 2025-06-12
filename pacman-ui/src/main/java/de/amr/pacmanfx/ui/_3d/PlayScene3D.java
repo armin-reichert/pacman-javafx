@@ -12,7 +12,7 @@ import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.MovingBonus;
-import de.amr.pacmanfx.ui.PacManGames_ActionBinding;
+import de.amr.pacmanfx.uilib.ActionBindingSupport;
 import de.amr.pacmanfx.uilib.CameraControlledView;
 import de.amr.pacmanfx.uilib.GameAction;
 import de.amr.pacmanfx.uilib.GameScene;
@@ -47,7 +47,7 @@ import static java.util.Objects.requireNonNull;
  * 3D play scene. Provides different camera perspectives that can be stepped
  * through using keys <code>Alt+LEFT</code> and <code>Alt+RIGHT</code>.
  */
-public class PlayScene3D implements GameScene, PacManGames_ActionBinding, CameraControlledView {
+public class PlayScene3D implements GameScene, ActionBindingSupport, CameraControlledView {
 
     protected final SubScene subScene3D;
     protected final Group root = new Group();

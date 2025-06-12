@@ -15,8 +15,8 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui.PacManGames_ActionBinding;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.uilib.ActionBindingSupport;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 /**
  * The ghosts are presented one by one, Pac-Man is chased by the ghosts, turns the cards and hunts the ghosts himself.
  */
-public class ArcadePacMan_IntroScene extends GameScene2D implements PacManGames_ActionBinding {
+public class ArcadePacMan_IntroScene extends GameScene2D implements ActionBindingSupport {
 
     private static final String MIDWAY_MFG_CO = "© 1980 MIDWAY MFG.CO.";
 

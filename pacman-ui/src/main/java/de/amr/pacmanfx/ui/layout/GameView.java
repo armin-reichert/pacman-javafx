@@ -6,17 +6,13 @@ package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.ui.PacManGames_ActionBinding;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.*;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.InfoBox;
 import de.amr.pacmanfx.ui.dashboard.InfoBoxReadmeFirst;
-import de.amr.pacmanfx.uilib.CameraControlledView;
-import de.amr.pacmanfx.uilib.GameAction;
-import de.amr.pacmanfx.uilib.GameScene;
-import de.amr.pacmanfx.uilib.Ufx;
+import de.amr.pacmanfx.uilib.*;
 import de.amr.pacmanfx.uilib.input.Keyboard;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
 import javafx.beans.binding.Bindings;
@@ -49,7 +45,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * This view shows the game play and the overlays like dashboard and picture-in-picture view of the running play scene.
  */
-public class GameView implements PacManGames_View, PacManGames_ActionBinding {
+public class GameView implements PacManGames_View, ActionBindingSupport {
 
     private final Map<KeyCombination, GameAction> actionBindings = new HashMap<>();
 

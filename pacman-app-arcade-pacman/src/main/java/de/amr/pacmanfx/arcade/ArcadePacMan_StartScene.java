@@ -6,20 +6,19 @@ package de.amr.pacmanfx.arcade;
 
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.ui.PacManGames_ActionBinding;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.uilib.ActionBindingSupport;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.arcade.ArcadePalette.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theSound;
-import static de.amr.pacmanfx.ui.PacManGames_UI.ACTION_ARCADE_INSERT_COIN;
-import static de.amr.pacmanfx.ui.PacManGames_UI.ACTION_ARCADE_START_GAME;
+import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 
 /**
  * Scene shown after credit has been added and where game can be started.
  */
-public class ArcadePacMan_StartScene extends GameScene2D implements PacManGames_ActionBinding {
+public class ArcadePacMan_StartScene extends GameScene2D implements ActionBindingSupport {
 
     @Override
     public void doInit() {

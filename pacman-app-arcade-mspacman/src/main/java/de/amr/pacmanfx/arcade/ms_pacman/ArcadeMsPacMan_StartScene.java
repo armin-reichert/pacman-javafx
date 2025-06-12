@@ -6,8 +6,8 @@ package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.ui.PacManGames_ActionBinding;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.uilib.ActionBindingSupport;
 
 import static de.amr.pacmanfx.Globals.theCoinMechanism;
 import static de.amr.pacmanfx.Globals.theGame;
@@ -16,11 +16,10 @@ import static de.amr.pacmanfx.arcade.ArcadePalette.ARCADE_ORANGE;
 import static de.amr.pacmanfx.arcade.ArcadePalette.ARCADE_RED;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.sprite;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
-import static de.amr.pacmanfx.ui.PacManGames_UI.ACTION_ARCADE_INSERT_COIN;
-import static de.amr.pacmanfx.ui.PacManGames_UI.ACTION_ARCADE_START_GAME;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theSound;
+import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 
-public class ArcadeMsPacMan_StartScene extends GameScene2D implements PacManGames_ActionBinding {
+public class ArcadeMsPacMan_StartScene extends GameScene2D implements ActionBindingSupport {
 
     @Override
     public void doInit() {

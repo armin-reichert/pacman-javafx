@@ -13,11 +13,11 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
-import de.amr.pacmanfx.ui.PacManGames_ActionBinding;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelFinishedAnimation;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.ui._2d.VectorGraphicsGameRenderer;
+import de.amr.pacmanfx.uilib.ActionBindingSupport;
 import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.scene.control.CheckMenuItem;
@@ -42,7 +42,7 @@ import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 /**
  * 2D play scene for Arcade game variants.
  */
-public class ArcadeCommon_PlayScene2D extends GameScene2D implements PacManGames_ActionBinding {
+public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindingSupport {
 
     private RectArea livesCounterSprite;
     private LevelFinishedAnimation levelFinishedAnimation;

@@ -9,6 +9,7 @@ import javafx.scene.input.KeyCombination;
 import org.tinylog.Logger;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -63,6 +64,21 @@ public interface ActionBindingSupport {
         requireNonNull(action);
         requireNonNull(combination);
         actionBindings().put(combination, action);
+    }
+
+    default void bindAction(GameAction gameAction, Map<GameAction, Set<KeyCombination>> bindings) {
+        requireNonNull(gameAction);
+        requireNonNull(bindings);
+        if (bindings.values().stream().anyMatch(Objects::isNull)) {
+            throw new IllegalArgumentException("Found null value in key bindings map");
+        }
+        if (bindings.containsKey(gameAction)) {
+            for (KeyCombination combination : bindings.get(gameAction)) {
+                actionBindings().put(combination, gameAction);
+            }
+        } else {
+            Logger.error("No keyboard binding found for game action {}", gameAction);
+        }
     }
 
     default Optional<GameAction> matchingAction() {

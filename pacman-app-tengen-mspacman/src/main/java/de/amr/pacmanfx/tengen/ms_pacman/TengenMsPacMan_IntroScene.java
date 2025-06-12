@@ -13,8 +13,8 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui.PacManGames_ActionBinding;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.uilib.ActionBindingSupport;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
@@ -33,7 +33,7 @@ import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 /**
  * @author Armin Reichert
  */
-public class TengenMsPacMan_IntroScene extends GameScene2D implements PacManGames_ActionBinding {
+public class TengenMsPacMan_IntroScene extends GameScene2D implements ActionBindingSupport {
 
     // Anchor point for everything
     private static final int MARQUEE_X = 60, MARQUEE_Y = 64;

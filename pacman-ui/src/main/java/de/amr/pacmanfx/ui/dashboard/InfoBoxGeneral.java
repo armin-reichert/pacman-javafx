@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.dashboard;
 
-import de.amr.pacmanfx.ui.PacManGames_UI;
 import de.amr.pacmanfx.ui.PacManGames_UI_Impl;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.scene.control.Button;

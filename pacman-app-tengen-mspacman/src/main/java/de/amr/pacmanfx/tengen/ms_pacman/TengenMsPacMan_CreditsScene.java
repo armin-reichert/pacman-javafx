@@ -5,8 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman;
 
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.ui.PacManGames_ActionBinding;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.uilib.ActionBindingSupport;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -14,7 +14,7 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_ActionBindings.TEN
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
 
-public class TengenMsPacMan_CreditsScene extends GameScene2D implements PacManGames_ActionBinding {
+public class TengenMsPacMan_CreditsScene extends GameScene2D implements ActionBindingSupport {
 
     static final float DISPLAY_SECONDS = 12;
 
