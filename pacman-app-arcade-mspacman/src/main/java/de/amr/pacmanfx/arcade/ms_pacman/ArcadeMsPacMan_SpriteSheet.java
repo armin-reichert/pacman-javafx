@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.lib.RectArea;
-import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.image.Image;
 
 import java.util.EnumMap;
@@ -14,7 +14,7 @@ import java.util.stream.IntStream;
 import static de.amr.pacmanfx.arcade.ms_pacman.SpriteID.*;
 import static de.amr.pacmanfx.lib.RectArea.ra;
 
-public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements GameSpriteSheet {
+public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements SpriteSheet {
 
     private static final byte R16 = 16;
     private static final int OFF_X = 456;
@@ -91,7 +91,4 @@ public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
         // TODO: this is not yet 100% correct
         return new RectArea[] {down, left, up, right, down, left, up, right, down, left, up};
     }
-
-    @Override
-    public RectArea bonusValueSprite(byte symbol) { return sprites(BONUS_VALUES)[symbol]; }
 }

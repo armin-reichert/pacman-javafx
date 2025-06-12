@@ -16,11 +16,11 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.PacManGames_Assets;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.model3D.MsPacMan3D;
@@ -42,7 +42,6 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theAssets;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
-import static de.amr.pacmanfx.uilib.Ufx.subImage;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceManager {
@@ -217,7 +216,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends GameSpriteSheet> T spriteSheet() {
+    public <T extends SpriteSheet> T spriteSheet() {
         return (T) spriteSheet;
     }
 
@@ -237,6 +236,19 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     @Override
     public RectArea createBonusSymbolSprite(byte symbol) {
         return TengenMsPacMan_SpriteSheet.sprites(SpriteID.BONUS_SYMBOLS)[symbol];
+    }
+
+    @Override
+    public RectArea createBonusValueSprite(byte symbol) {
+        //TODO should this logic be implemented here?
+        // 0=100,1=200,2=500,3=700,4=1000,5=2000,6=3000,7=4000,8=5000,9=6000,10=7000,11=8000,12=9000, 13=10_000
+        int index = switch (symbol) {
+            case TengenMsPacMan_GameModel.BONUS_BANANA -> 8;    // 5000!
+            case TengenMsPacMan_GameModel.BONUS_MILK -> 6;      // 3000!
+            case TengenMsPacMan_GameModel.BONUS_ICE_CREAM -> 7; // 4000!
+            default -> symbol;
+        };
+        return TengenMsPacMan_SpriteSheet.sprites(SpriteID.BONUS_VALUES)[index];
     }
 
     @Override

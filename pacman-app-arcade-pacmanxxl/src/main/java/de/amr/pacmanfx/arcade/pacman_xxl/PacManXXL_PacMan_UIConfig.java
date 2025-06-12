@@ -14,13 +14,13 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.PacManGames_Assets;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.ui._2d.VectorGraphicsGameRenderer;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.model3D.PacBase3D;
@@ -165,6 +165,11 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
     }
 
     @Override
+    public RectArea createBonusValueSprite(byte symbol) {
+        return ArcadePacMan_SpriteSheet.sprites(SpriteID.BONUS_VALUES)[symbol];
+    }
+
+    @Override
     public WorldMapColorScheme worldMapColorScheme(WorldMap worldMap) {
         Map<String, String> colorMap = worldMap.getConfigValue("colorMap");
         return new WorldMapColorScheme(
@@ -173,7 +178,7 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends GameSpriteSheet> T spriteSheet() {
+    public <T extends SpriteSheet> T spriteSheet() {
         return (T) spriteSheet;
     }
 

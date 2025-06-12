@@ -122,7 +122,10 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
                 RectArea sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
                 drawActorSprite(bonus.actor(), sprite);
             }
-            case Bonus.STATE_EATEN  -> drawActorSprite(bonus.actor(), spriteSheet.bonusValueSprite(bonus.symbol()));
+            case Bonus.STATE_EATEN  -> {
+                RectArea sprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
+                drawActorSprite(bonus.actor(), sprite);
+            }
         }
         ctx.restore();
     }

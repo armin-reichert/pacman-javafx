@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.tengen.ms_pacman;
 
 import de.amr.pacmanfx.lib.RectArea;
-import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.image.Image;
 
 import java.util.EnumMap;
@@ -13,7 +13,7 @@ import java.util.stream.IntStream;
 import static de.amr.pacmanfx.lib.RectArea.ra;
 import static de.amr.pacmanfx.tengen.ms_pacman.SpriteID.*;
 
-public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements GameSpriteSheet {
+public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements SpriteSheet {
 
     // Bonus symbols/values: x-position, width, y-delta
     private static final int[] BONUS_X  = {8, 24, 40, 56, 76, 96, 118, 140, 162, 182, 204, 230, 250, 272};
@@ -136,17 +136,4 @@ public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements GameSprit
 
     public static RectArea   sprite(SpriteID spriteID)  { return (RectArea) SPRITE_MAP.get(spriteID); }
     public static RectArea[] sprites(SpriteID spriteID) { return (RectArea[]) SPRITE_MAP.get(spriteID); }
-
-    @Override
-    public RectArea bonusValueSprite(byte symbol) {
-        //TODO should this logic be implemented here?
-        // 0=100,1=200,2=500,3=700,4=1000,5=2000,6=3000,7=4000,8=5000,9=6000,10=7000,11=8000,12=9000, 13=10_000
-        int index = switch (symbol) {
-            case TengenMsPacMan_GameModel.BONUS_BANANA -> 8;    // 5000!
-            case TengenMsPacMan_GameModel.BONUS_MILK -> 6;      // 3000!
-            case TengenMsPacMan_GameModel.BONUS_ICE_CREAM -> 7; // 4000!
-            default -> symbol;
-        };
-        return sprites(SpriteID.BONUS_VALUES)[index];
-    }
 }

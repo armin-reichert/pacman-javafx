@@ -10,7 +10,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
-import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
@@ -38,7 +38,7 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
     public void applyRenderingHints(GameLevel level) {}
 
     @Override
-    public GameSpriteSheet spriteSheet() {
+    public SpriteSheet spriteSheet() {
         return spriteSheet;
     }
 
@@ -84,7 +84,8 @@ public class ArcadePacMan_GameRenderer implements GameRenderer {
             RectArea sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
             drawActorSprite(bonus.actor(), sprite);
         } else if (bonus.state() == Bonus.STATE_EATEN) {
-            drawActorSprite(bonus.actor(), spriteSheet().bonusValueSprite(bonus.symbol()));
+            RectArea sprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
+            drawActorSprite(bonus.actor(), sprite);
         }
     }
 }

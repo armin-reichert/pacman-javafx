@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade;
 
 import de.amr.pacmanfx.lib.RectArea;
-import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.image.Image;
 
 import java.util.EnumMap;
@@ -15,7 +15,7 @@ import static de.amr.pacmanfx.arcade.SpriteID.*;
 import static de.amr.pacmanfx.lib.RectArea.ra;
 import static java.util.Objects.requireNonNull;
 
-public record ArcadePacMan_SpriteSheet(Image sourceImage) implements GameSpriteSheet {
+public record ArcadePacMan_SpriteSheet(Image sourceImage) implements SpriteSheet {
 
     private static RectArea[] tilesRightOf(int tileX, int tileY, int numTiles) {
         return IntStream.range(tileX, tileX + numTiles)
@@ -116,7 +116,4 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements GameSpriteS
     public ArcadePacMan_SpriteSheet(Image sourceImage) {
         this.sourceImage = requireNonNull(sourceImage);
     }
-
-    @Override
-    public RectArea bonusValueSprite(byte symbol) { return sprites(BONUS_VALUES)[symbol]; }
 }

@@ -10,6 +10,7 @@ import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.actors.Bonus;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer;
@@ -33,7 +34,7 @@ import static java.util.function.Predicate.not;
  */
 public class VectorGraphicsGameRenderer implements GameRenderer {
 
-    private final GameSpriteSheet spriteSheet;
+    private final SpriteSheet spriteSheet;
     private final GraphicsContext ctx;
     private final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
@@ -42,7 +43,7 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
     private TerrainMapColorScheme blinkingOnColors;
     private TerrainMapColorScheme blinkingOffColors;
 
-    public VectorGraphicsGameRenderer(GameSpriteSheet spriteSheet, Canvas canvas) {
+    public VectorGraphicsGameRenderer(SpriteSheet spriteSheet, Canvas canvas) {
         this.spriteSheet = requireNonNull(spriteSheet);
         ctx = requireNonNull(canvas).getGraphicsContext2D();
         terrainRenderer.scalingProperty().bind(scalingPy);
@@ -54,7 +55,7 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
     public void applyRenderingHints(GameLevel level) {}
 
     @Override
-    public GameSpriteSheet spriteSheet() {
+    public SpriteSheet spriteSheet() {
         return spriteSheet;
     }
 
@@ -119,7 +120,8 @@ public class VectorGraphicsGameRenderer implements GameRenderer {
             RectArea sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
             drawActorSprite(bonus.actor(), sprite);
         } else if (bonus.state() == Bonus.STATE_EATEN) {
-            drawActorSprite(bonus.actor(), spriteSheet().bonusValueSprite(bonus.symbol()));
+            RectArea sprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
+            drawActorSprite(bonus.actor(), sprite);
         }
     }
 }

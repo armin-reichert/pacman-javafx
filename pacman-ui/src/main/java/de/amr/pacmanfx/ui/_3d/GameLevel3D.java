@@ -13,7 +13,6 @@ import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
-import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
@@ -331,15 +330,16 @@ public class GameLevel3D {
         ).play();
     }
 
-    public void updateBonus3D(Bonus bonus, GameSpriteSheet spriteSheet) {
+    public void updateBonus3D(Bonus bonus, SpriteSheet spriteSheet) {
         requireNonNull(bonus);
         if (bonus3D != null) {
             mazeGroup.getChildren().remove(bonus3D);
         }
         RectArea bonusSymbolSprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
+        RectArea bonusValueSprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
         bonus3D = new Bonus3D(bonus,
             subImage(spriteSheet.sourceImage(), bonusSymbolSprite),
-            subImage(spriteSheet.sourceImage(), spriteSheet.bonusValueSprite(bonus.symbol())));
+            subImage(spriteSheet.sourceImage(), bonusValueSprite));
         bonus3D.showEdible();
         mazeGroup.getChildren().add(bonus3D);
     }

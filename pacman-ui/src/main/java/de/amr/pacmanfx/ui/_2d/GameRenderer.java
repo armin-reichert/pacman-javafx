@@ -14,6 +14,7 @@ import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.beans.property.FloatProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -45,7 +46,7 @@ public interface GameRenderer {
         ctx().fillRect(0, 0, ctx().getCanvas().getWidth(), ctx().getCanvas().getHeight());
     }
 
-    GameSpriteSheet spriteSheet();
+    SpriteSheet spriteSheet();
 
     FloatProperty scalingProperty();
 

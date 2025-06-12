@@ -268,7 +268,10 @@ public class TengenMsPacMan_Renderer2D implements GameRenderer {
                 RectArea sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
                 drawActorSprite(bonus.actor(), sprite);
             }
-            case STATE_EATEN  -> drawActorSprite(bonus.actor(), spriteSheet.bonusValueSprite(bonus.symbol()));
+            case STATE_EATEN  -> {
+                RectArea sprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
+                drawActorSprite(bonus.actor(), sprite);
+            }
             default -> {}
         }
         ctx().restore();

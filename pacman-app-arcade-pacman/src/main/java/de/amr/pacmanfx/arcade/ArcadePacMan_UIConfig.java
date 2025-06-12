@@ -15,12 +15,12 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.PacManGames_Assets;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.GameSpriteSheet;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.uilib.GameScene;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.model3D.PacBase3D;
@@ -39,7 +39,6 @@ import static de.amr.pacmanfx.Globals.theGameLevel;
 import static de.amr.pacmanfx.arcade.ArcadePalette.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theAssets;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
-import static de.amr.pacmanfx.uilib.Ufx.subImage;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceManager {
@@ -198,7 +197,7 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends GameSpriteSheet> T spriteSheet() {
+    public <T extends SpriteSheet> T spriteSheet() {
         return (T) spriteSheet;
     }
 
@@ -222,6 +221,12 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
     public RectArea createBonusSymbolSprite(byte symbol) {
         RectArea[] symbolSprites = ArcadePacMan_SpriteSheet.sprites(SpriteID.BONUS_SYMBOLS);
         return symbolSprites[symbol];
+    }
+
+    @Override
+    public RectArea createBonusValueSprite(byte symbol) {
+        RectArea[] valueSprites = ArcadePacMan_SpriteSheet.sprites(SpriteID.BONUS_VALUES);
+        return valueSprites[symbol];
     }
 
     @Override
