@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman.app;
 
-import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
@@ -25,13 +24,13 @@ public class TengenMsPacMan_App extends Application {
     @Override
     public void init() {
         PacManGames_Env.init();
-        theGameController().registerGame(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel());
-        theGameController().selectGameVariant(GameVariant.MS_PACMAN_TENGEN);
+        theGameController().registerGame("MS_PACMAN_TENGEN", new TengenMsPacMan_GameModel());
+        theGameController().selectGameVariant("MS_PACMAN_TENGEN");
     }
 
     @Override
     public void start(Stage stage) {
-        initUI(Map.of(GameVariant.MS_PACMAN_TENGEN, TengenMsPacMan_UIConfig.class));
+        initUI(Map.of("MS_PACMAN_TENGEN", TengenMsPacMan_UIConfig.class));
 
         // UI size: 80% of available screen height, aspect 32:30
         double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
@@ -45,7 +44,7 @@ public class TengenMsPacMan_App extends Application {
             DashboardID.KEYBOARD,
             DashboardID.ABOUT);
 
-        theUI().startPagesView().addStartPage(new TengenMsPacMan_StartPage(GameVariant.MS_PACMAN_TENGEN));
+        theUI().startPagesView().addStartPage(new TengenMsPacMan_StartPage("MS_PACMAN_TENGEN"));
         theUI().startPagesView().selectStartPage(0);
 
         theUI().show();

@@ -11,7 +11,6 @@ import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GhostAnimationMap;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_PacAnimationMap;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.MapSelectionMode;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -130,17 +129,17 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
             renderer = config.createRenderer(ctx.getCanvas());
 
             switch (gameVariant) {
-                case GameVariant.PACMAN_XXL -> pac.setAnimations(new ArcadePacMan_PacAnimationMap(config.spriteSheet()));
-                case GameVariant.MS_PACMAN_XXL -> pac.setAnimations(new ArcadeMsPacMan_PacAnimationMap(config.spriteSheet()));
+                case "PACMAN_XXL" -> pac.setAnimations(new ArcadePacMan_PacAnimationMap(config.spriteSheet()));
+                case "MS_PACMAN_XXL" -> pac.setAnimations(new ArcadeMsPacMan_PacAnimationMap(config.spriteSheet()));
             }
             pac.playAnimation(ANIM_PAC_MUNCHING);
 
             for (Ghost ghost : ghosts) {
                 if (ghost.animations().isEmpty()) {
                     switch (gameVariant) {
-                        case GameVariant.PACMAN_XXL ->
+                        case "PACMAN_XXL" ->
                             ghost.setAnimations(new ArcadePacMan_GhostAnimationMap(config.spriteSheet(), ghost.personality()));
-                        case GameVariant.MS_PACMAN_XXL ->
+                        case "MS_PACMAN_XXL" ->
                             ghost.setAnimations(new ArcadeMsPacMan_GhostAnimationMap(config.spriteSheet(), ghost.personality()));
                     }
                     ghost.playAnimation(ANIM_GHOST_NORMAL);
@@ -152,7 +151,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
     // Entries
 
     private final OptionMenuEntry<String> entryGameVariant = new OptionMenuEntry<>("GAME VARIANT",
-        GameVariant.PACMAN_XXL, GameVariant.MS_PACMAN_XXL) {
+        "PACMAN_XXL", "MS_PACMAN_XXL") {
 
         @Override
         protected void onValueChanged(int index) {
@@ -164,8 +163,8 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         @Override
         public String selectedValueText() {
             return switch (state.gameVariant) {
-                case GameVariant.PACMAN_XXL -> "PAC-MAN";
-                case GameVariant.MS_PACMAN_XXL -> "MS.PAC-MAN";
+                case "PACMAN_XXL" -> "PAC-MAN";
+                case "MS_PACMAN_XXL" -> "MS.PAC-MAN";
                 default -> "";
             };
         }
@@ -230,7 +229,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
     public PacManXXL_Common_StartPageMenu() {
         super(42, 36, 6, 20);
 
-        state.gameVariant = GameVariant.PACMAN_XXL;
+        state.gameVariant = "PACMAN_XXL";
         state.play3D = false;
         state.cutScenesEnabled = true;
         state.mapOrder = MapSelectionMode.CUSTOM_MAPS_FIRST;
@@ -262,7 +261,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         );
         chaseAnimation = new ChaseAnimation(canvas);
         chaseAnimation.reset();
-        chaseAnimation.setGameVariant(GameVariant.PACMAN_XXL);
+        chaseAnimation.setGameVariant("PACMAN_XXL");
     }
 
     public void syncMenuState() {

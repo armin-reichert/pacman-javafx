@@ -42,7 +42,6 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
-import static de.amr.pacmanfx.model.GameVariant.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 import static de.amr.pacmanfx.uilib.Ufx.*;
@@ -144,9 +143,9 @@ public class GameLevel3D {
     private void createPac3D() {
         final String ans = theUI().configuration().assetNamespace();
         pac3D = switch (theGameController().selectedGameVariant()) {
-            case MS_PACMAN, MS_PACMAN_TENGEN, MS_PACMAN_XXL
+            case "MS_PACMAN", "MS_PACMAN_TENGEN", "MS_PACMAN_XXL"
                 -> new MsPacMan3D(gameLevel.pac(), PAC_3D_SIZE, theAssets(), ans);
-            case PACMAN, PACMAN_XXL
+            case "PACMAN", "PACMAN_XXL"
                 -> new PacMan3D(gameLevel.pac(), PAC_3D_SIZE, theAssets(), ans);
             default -> throw new IllegalArgumentException();
         };

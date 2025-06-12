@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.sound;
 
-import de.amr.pacmanfx.model.GameVariant;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.media.AudioClip;
@@ -90,7 +89,7 @@ public class PacManGames_SoundManager {
 
             //TODO check this
             MediaPlayer bounceSound = soundMap.get("bonus_bouncing");
-            if (bounceSound != null && gameVariant.equals(GameVariant.MS_PACMAN_TENGEN)) {
+            if (bounceSound != null && gameVariant.equals("MS_PACMAN_TENGEN")) {
                 bounceSound.setRate(0.25);
             }
 

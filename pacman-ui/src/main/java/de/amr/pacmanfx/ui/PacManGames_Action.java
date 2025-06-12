@@ -10,7 +10,6 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.uilib.GameAction;
@@ -241,7 +240,7 @@ public interface PacManGames_Action {
 
         @Override
         public boolean isEnabled() {
-            return theGameController().selectedGameVariant() != GameVariant.MS_PACMAN_TENGEN
+            return theGameController().selectedGameVariant() != "MS_PACMAN_TENGEN"
                 && !theCoinMechanism().isEmpty()
                 && (theGameState() == GameState.INTRO || theGameState() == GameState.SETTING_OPTIONS)
                 && theGame().canStartNewGame();

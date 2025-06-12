@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.ui.PacManGames_ActionBinding;
 import de.amr.pacmanfx.ui.PacManGames_UIConfiguration;
 import de.amr.pacmanfx.ui._2d.*;
@@ -399,7 +398,7 @@ public class GameView implements PacManGames_View, PacManGames_ActionBinding {
     }
 
     private void showGameSceneHelp() {
-        if (!theGameController().isSelected(GameVariant.MS_PACMAN_TENGEN)
+        if (!theGameController().isSelected("MS_PACMAN_TENGEN")
             && theUI().currentGameSceneIs2D()) {
             popupLayer.showHelp(canvasContainer.scaling());
         }

@@ -11,7 +11,6 @@ import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman_xxl.*;
-import de.amr.pacmanfx.model.GameVariant;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
@@ -40,23 +39,23 @@ public class PacManGames3dApp extends Application {
     public void init() {
         PacManGames_Env.init();
         var xxlMapSelector = new PacManXXL_Common_MapSelector(CUSTOM_MAP_DIR);
-        theGameController().registerGame(GameVariant.MS_PACMAN, new ArcadeMsPacMan_GameModel());
-        theGameController().registerGame(GameVariant.MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel());
-        theGameController().registerGame(GameVariant.PACMAN, new ArcadePacMan_GameModel());
-        theGameController().registerGame(GameVariant.PACMAN_XXL, new PacManXXL_PacMan_GameModel(xxlMapSelector));
-        theGameController().registerGame(GameVariant.MS_PACMAN_XXL, new PacManXXL_MsPacMan_GameModel(xxlMapSelector));
-        theGameController().selectGameVariant(GameVariant.PACMAN);
+        theGameController().registerGame("MS_PACMAN", new ArcadeMsPacMan_GameModel());
+        theGameController().registerGame("MS_PACMAN_TENGEN", new TengenMsPacMan_GameModel());
+        theGameController().registerGame("PACMAN", new ArcadePacMan_GameModel());
+        theGameController().registerGame("PACMAN_XXL", new PacManXXL_PacMan_GameModel(xxlMapSelector));
+        theGameController().registerGame("MS_PACMAN_XXL", new PacManXXL_MsPacMan_GameModel(xxlMapSelector));
+        theGameController().selectGameVariant("PACMAN");
     }
 
     @Override
     public void start(Stage stage) {
         try {
             initUI(Map.of(
-                GameVariant.PACMAN, ArcadePacMan_UIConfig.class,
-                GameVariant.MS_PACMAN, ArcadeMsPacMan_UIConfig.class,
-                GameVariant.MS_PACMAN_TENGEN, TengenMsPacMan_UIConfig.class,
-                GameVariant.PACMAN_XXL, PacManXXL_PacMan_UIConfig.class,
-                GameVariant.MS_PACMAN_XXL, PacManXXL_MsPacMan_UIConfig.class
+                "PACMAN", ArcadePacMan_UIConfig.class,
+                "MS_PACMAN", ArcadeMsPacMan_UIConfig.class,
+                "MS_PACMAN_TENGEN", TengenMsPacMan_UIConfig.class,
+                "PACMAN_XXL", PacManXXL_PacMan_UIConfig.class,
+                "MS_PACMAN_XXL", PacManXXL_MsPacMan_UIConfig.class
             ));
 
             // UI size: 80% of available screen height, aspect 16:10
@@ -73,13 +72,13 @@ public class PacManGames3dApp extends Application {
                 DashboardID.ABOUT);
 
             InfoBoxCustomMaps infoBoxCustomMaps = theUI().gameView().dashboard().getInfoBox(DashboardID.CUSTOM_MAPS);
-            var mapSelector = (PacManXXL_Common_MapSelector) theGameController().game(GameVariant.PACMAN_XXL).mapSelector();
+            var mapSelector = (PacManXXL_Common_MapSelector) theGameController().game("PACMAN_XXL").mapSelector();
             infoBoxCustomMaps.setTableItems(mapSelector.customMaps());
             mapSelector.startWatchingCustomMaps();
 
-            theUI().startPagesView().addStartPage(new ArcadePacMan_StartPage(GameVariant.PACMAN));
-            theUI().startPagesView().addStartPage(new ArcadeMsPacMan_StartPage(GameVariant.MS_PACMAN));
-            theUI().startPagesView().addStartPage(new TengenMsPacMan_StartPage(GameVariant.MS_PACMAN_TENGEN));
+            theUI().startPagesView().addStartPage(new ArcadePacMan_StartPage("PACMAN"));
+            theUI().startPagesView().addStartPage(new ArcadeMsPacMan_StartPage("MS_PACMAN"));
+            theUI().startPagesView().addStartPage(new TengenMsPacMan_StartPage("MS_PACMAN_TENGEN"));
             theUI().startPagesView().addStartPage(new PacManXXL_Common_StartPage());
             theUI().startPagesView().selectStartPage(0);
 

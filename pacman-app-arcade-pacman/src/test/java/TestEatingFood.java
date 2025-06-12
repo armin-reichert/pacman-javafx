@@ -1,5 +1,4 @@
 import de.amr.pacmanfx.arcade.ArcadePacMan_GameModel;
-import de.amr.pacmanfx.model.GameVariant;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,8 +12,8 @@ public class TestEatingFood {
 
     @BeforeAll
     static void setup() {
-        theGameController().registerGame(GameVariant.PACMAN, new ArcadePacMan_GameModel());
-        theGameController().selectGameVariant(GameVariant.PACMAN);
+        theGameController().registerGame("PACMAN", new ArcadePacMan_GameModel());
+        theGameController().selectGameVariant("PACMAN");
     }
 
     @BeforeEach
