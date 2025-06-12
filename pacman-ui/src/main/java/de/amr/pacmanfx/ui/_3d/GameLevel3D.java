@@ -88,11 +88,11 @@ public class GameLevel3D {
 
     public GameLevel3D(GameLevel gameLevel) {
         this.gameLevel = requireNonNull(gameLevel);
+        createAmbientLight();
         createPac3D();
         createGhosts3D();
         createMaze3D();
         createLivesCounter3D();
-        createLights();
         compose();
         bindShape3DDrawingMode();
         root.setMouseTransparent(true); // this increases performance, they say...
@@ -140,6 +140,11 @@ public class GameLevel3D {
         boolean visible = theGame().canStartNewGame();
         livesCounter3D.setVisible(visible);
         livesCounter3D.light().setLightOn(visible);
+    }
+
+    private void createAmbientLight() {
+        ambientLight = new AmbientLight();
+        ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
     }
 
     private void createPac3D() {
@@ -283,11 +288,6 @@ public class GameLevel3D {
             n += 1;
         }
         return levelCounter3D;
-    }
-
-    private void createLights() {
-        ambientLight = new AmbientLight();
-        ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
     }
 
     public Group root() { return root; }
