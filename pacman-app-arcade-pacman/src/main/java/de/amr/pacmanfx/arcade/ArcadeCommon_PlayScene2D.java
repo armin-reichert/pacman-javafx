@@ -44,12 +44,7 @@ import static de.amr.pacmanfx.ui.PacManGames_UI.*;
  */
 public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindingSupport {
 
-    private RectArea livesCounterSprite;
     private LevelFinishedAnimation levelFinishedAnimation;
-
-    public void setLivesCounterSprite(RectArea livesCounterSprite) {
-        this.livesCounterSprite = livesCounterSprite;
-    }
 
     @Override
     protected void doInit() {
@@ -190,8 +185,8 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
             // As long as Pac-Man is still invisible on game start, one live more is shown in the counter
             int numLivesDisplayed = theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible()
                 ? theGame().lifeCount() : theGame().lifeCount() - 1;
-            gr().drawLivesCounter(numLivesDisplayed, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - 2 * TS,
-                    livesCounterSprite);
+            RectArea sprite = theUI().configuration().createLivesCounterSprite();
+            gr().drawLivesCounter(numLivesDisplayed, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - 2 * TS, sprite);
         } else {
             gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
                 scoreColor(), arcadeFont8(), 2 * TS, sizeInPx().y() - 2);

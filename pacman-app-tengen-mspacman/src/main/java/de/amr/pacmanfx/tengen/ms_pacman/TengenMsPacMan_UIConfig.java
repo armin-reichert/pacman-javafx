@@ -288,6 +288,11 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     }
 
     @Override
+    public RectArea createLivesCounterSprite() {
+        return TengenMsPacMan_SpriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
+    }
+
+    @Override
     public PacBase3D createPac3D(Pac pac) {
         var pac3D = new MsPacMan3D(pac, PAC_3D_SIZE, theAssets(), assetNamespace());
         pac3D.light().setColor(theAssets().color(assetNamespace() + ".pac.color.head").desaturate());

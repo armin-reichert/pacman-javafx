@@ -128,10 +128,6 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
         scenesByID.put("CutScene1",   new ArcadePacMan_CutScene1());
         scenesByID.put("CutScene2",   new ArcadePacMan_CutScene2());
         scenesByID.put("CutScene3",   new ArcadePacMan_CutScene3());
-
-        // Well, you know...
-        var playScene2D = (ArcadeCommon_PlayScene2D) scenesByID.get("PlayScene2D");
-        playScene2D.setLivesCounterSprite(ArcadePacMan_SpriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL));
     }
 
     @Override
@@ -238,6 +234,11 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
                 theAssets().color(namespace + ".pac.color.eyes"),
                 theAssets().color(namespace + ".pac.color.palate")
         );
+    }
+
+    @Override
+    public RectArea createLivesCounterSprite() {
+        return ArcadePacMan_SpriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
     }
 
     @Override

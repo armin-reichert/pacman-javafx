@@ -132,10 +132,11 @@ public abstract class GameModel implements ScoreManager {
     // Actors
 
     /**
-     * Checks actor collision based on same tile position.
+     * Checks actor collision. Default implementation uses tile equality.
+     *
      * @param either an actor
      * @param other another actor
-     * @return if both actors have the same tile position
+     * @return if both actors collide
      */
     public boolean actorsCollide(Actor either, Actor other) {
         return either.sameTile(other);
