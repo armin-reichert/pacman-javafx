@@ -66,20 +66,20 @@ public interface GameRenderer {
     void applyRenderingHints(GameLevel level);
 
     /**
-     * Draws the given region from the given image to the given position (left-upper corner). The position and
-     * the region size are scaled by the current scaling factor.
+     * Draws the given sprite from the given sprite sheet image at the given position (left-upper corner).
+     * The position and the sprite size are scaled by the current scaling of the renderer.
      *
-     * @param image an image
-     * @param region a region inside the image
+     * @param spriteSheetImage the sprite sheet image
+     * @param sprite a sprite
      * @param x unscaled x-coordinate of left-upper corner
      * @param y unscaled y-coordinate of left-upper corner
      */
-    default void drawImageRegionScaled(Image image, Sprite region, double x, double y) {
-        requireNonNull(image);
-        requireNonNull(region);
-        ctx().drawImage(image,
-            region.x(), region.y(), region.width(), region.height(),
-            scaled(x), scaled(y), scaled(region.width()), scaled(region.height()));
+    default void drawSpriteScaled(Image spriteSheetImage, Sprite sprite, double x, double y) {
+        requireNonNull(spriteSheetImage);
+        requireNonNull(sprite);
+        ctx().drawImage(spriteSheetImage,
+            sprite.x(), sprite.y(), sprite.width(), sprite.height(),
+            scaled(x), scaled(y), scaled(sprite.width()), scaled(sprite.height()));
     }
 
     void drawBonus(Bonus bonus);

@@ -174,7 +174,7 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
     @Override
     public Image createGhostNumberImage(int ghostIndex) {
         Sprite[] sprites = ArcadeMsPacMan_SpriteSheet.sprites(SpriteID.GHOST_NUMBERS);
-        return Ufx.subImage(spriteSheet.sourceImage(), sprites[ghostIndex]);
+        return spriteSheet.subImage(sprites[ghostIndex]);
     }
 
     @Override

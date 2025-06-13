@@ -44,7 +44,7 @@ public abstract class SpriteGameRenderer implements GameRenderer {
      */
     public void drawSpriteScaled(Sprite sprite, double x, double y) {
         if (sprite != null) {
-            drawImageRegionScaled(spriteSheet().sourceImage(), sprite, x, y);
+            drawSpriteScaled(spriteSheet().sourceImage(), sprite, x, y);
         }
     }
 

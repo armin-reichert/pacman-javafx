@@ -250,7 +250,6 @@ public interface Ufx {
         return section;
     }
 
-
     static Image exchangeColors(Map<String, ColorChange> changes, Image source) {
         WritableImage target = new WritableImage((int) source.getWidth(), (int) source.getHeight());
         PixelReader sourceReader = source.getPixelReader();

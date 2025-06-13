@@ -30,7 +30,7 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_GameRenderer extends SpriteGameRenderer {
 
-    private static final Sprite[] FULL_MAZES = {
+    private static final Sprite[] FULL_MAZE_SPRITES = {
         sprite(0,     0, 224, 248),
         sprite(0,   248, 224, 248),
         sprite(0, 2*248, 224, 248),
@@ -39,7 +39,7 @@ public class ArcadeMsPacMan_GameRenderer extends SpriteGameRenderer {
         sprite(0, 5*248, 224, 248),
     };
 
-    private static final Sprite[] EMPTY_MAZES = {
+    private static final Sprite[] EMPTY_MAZE_SPRITES = {
         sprite(228,     0, 224, 248),
         sprite(228,   248, 224, 248),
         sprite(228, 2*248, 224, 248),
@@ -48,7 +48,7 @@ public class ArcadeMsPacMan_GameRenderer extends SpriteGameRenderer {
         sprite(228, 5*258, 224, 248),
     };
 
-    private static final Sprite[] HIGHLIGHTED_MAZES = {
+    private static final Sprite[] HIGHLIGHTED_MAZE_SPRITES = {
         sprite(0,     0, 224, 248),
         sprite(0,   248, 224, 248),
         sprite(0, 2*248, 224, 248),
@@ -89,11 +89,11 @@ public class ArcadeMsPacMan_GameRenderer extends SpriteGameRenderer {
     @Override
     public void drawLevel(GameLevel level, double x, double y, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted) {
         if (mazeHighlighted) {
-            drawImageRegionScaled(theAssets().get("ms_pacman.flashing_mazes"), HIGHLIGHTED_MAZES[colorMapIndex], x, y);
+            drawSpriteScaled(theAssets().get("ms_pacman.flashing_mazes"), HIGHLIGHTED_MAZE_SPRITES[colorMapIndex], x, y);
         } else if (level.uneatenFoodCount() == 0) {
-            drawSpriteScaled(EMPTY_MAZES[colorMapIndex], x, y);
+            drawSpriteScaled(EMPTY_MAZE_SPRITES[colorMapIndex], x, y);
         } else {
-            drawSpriteScaled(FULL_MAZES[colorMapIndex], x, y);
+            drawSpriteScaled(FULL_MAZE_SPRITES[colorMapIndex], x, y);
             ctx.save();
             ctx.scale(scaling(), scaling());
             overPaintEatenPelletTiles(level, backgroundColor);
