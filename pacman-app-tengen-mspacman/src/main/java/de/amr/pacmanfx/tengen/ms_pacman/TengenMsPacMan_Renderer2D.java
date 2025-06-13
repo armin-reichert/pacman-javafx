@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman;
 
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.RectArea;
+import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
@@ -117,7 +117,7 @@ public class TengenMsPacMan_Renderer2D extends SpriteGameRenderer {
                          ANIM_PAC_MAN_MUNCHING,
                          ANIM_MS_PAC_MAN_BOOSTER,
                          ANIM_PAC_MAN_BOOSTER,
-                         ANIM_JUNIOR -> drawMovingActor(pac, pac.moveDir(), (RectArea) animation.currentSprite());
+                         ANIM_JUNIOR -> drawMovingActor(pac, pac.moveDir(), (Sprite) animation.currentSprite());
                     case ANIM_PAC_DYING -> {
                         Direction dir = Direction.UP;
                         if (animation.frameIndex() < 11) {
@@ -128,7 +128,7 @@ public class TengenMsPacMan_Renderer2D extends SpriteGameRenderer {
                                 case 3 -> Direction.RIGHT;
                             };
                         }
-                        drawMovingActor(pac, dir, (RectArea) animation.currentSprite());
+                        drawMovingActor(pac, dir, (Sprite) animation.currentSprite());
                     }
                     default -> super.drawActor(pac);
                 }
@@ -138,7 +138,7 @@ public class TengenMsPacMan_Renderer2D extends SpriteGameRenderer {
         });
     }
 
-    private void drawMovingActor(MovingActor movingActor, Direction dir, RectArea spriteLookingLeft) {
+    private void drawMovingActor(MovingActor movingActor, Direction dir, Sprite spriteLookingLeft) {
         Vector2f center = movingActor.center().scaled(scaling());
         ctx().save();
         ctx().translate(center.x(), center.y());
@@ -179,7 +179,7 @@ public class TengenMsPacMan_Renderer2D extends SpriteGameRenderer {
                 level.worldMap().numCols() * HTS, tiles_to_px(2) + HTS);
         }
 
-        RectArea area = tengenGame.mapCategory() == MapCategory.STRANGE && mapNumber == 15
+        Sprite area = tengenGame.mapCategory() == MapCategory.STRANGE && mapNumber == 15
             ? strangeMap15Sprite(theClock().tickCount()) // Strange map #15: psychedelic animation
             : coloredMapSet.mapRegion().region();
         ctx().drawImage(coloredMapSet.mapRegion().image(),
@@ -208,7 +208,7 @@ public class TengenMsPacMan_Renderer2D extends SpriteGameRenderer {
         requireNonNull(level);
         final var game = (TengenMsPacMan_GameModel) theGame();
         final ColoredImageRegion mapImage = coloredMapSet.flashingMapRegions().get(flashingIndex);
-        final RectArea region = mapImage.region();
+        final Sprite region = mapImage.region();
         if (!game.optionsAreInitial()) {
             drawGameOptions(game.mapCategory(), game.difficulty(), game.pacBooster(),
                     level.worldMap().numCols() * HTS, tiles_to_px(2) + HTS);
@@ -267,11 +267,11 @@ public class TengenMsPacMan_Renderer2D extends SpriteGameRenderer {
         ctx().translate(0, movingBonus.elongationY());
         switch (bonus.state()) {
             case STATE_EDIBLE -> {
-                RectArea sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
+                Sprite sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
                 drawActorSprite(bonus.actor(), sprite);
             }
             case STATE_EATEN  -> {
-                RectArea sprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
+                Sprite sprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
                 drawActorSprite(bonus.actor(), sprite);
             }
             default -> {}
@@ -324,13 +324,13 @@ public class TengenMsPacMan_Renderer2D extends SpriteGameRenderer {
         requireNonNull(mapCategory);
         requireNonNull(difficulty);
         requireNonNull(pacBooster);
-        RectArea categorySprite = switch (mapCategory) {
+        Sprite categorySprite = switch (mapCategory) {
             case BIG     -> sprite(SpriteID.INFO_CATEGORY_BIG);
             case MINI    -> sprite(SpriteID.INFO_CATEGORY_MINI);
             case STRANGE -> sprite(SpriteID.INFO_CATEGORY_STRANGE);
             case ARCADE  -> null; // drawSprite() accepts null sprites!
         };
-        RectArea difficultySprite = switch (difficulty) {
+        Sprite difficultySprite = switch (difficulty) {
             case EASY   -> sprite(SpriteID.INFO_DIFFICULTY_EASY);
             case HARD   -> sprite(SpriteID.INFO_DIFFICULTY_HARD);
             case CRAZY  -> sprite(SpriteID.INFO_DIFFICULTY_CRAZY);
@@ -368,7 +368,7 @@ public class TengenMsPacMan_Renderer2D extends SpriteGameRenderer {
         drawLevelNumberBox(levelNumber, x, y); // right box
         x -= 2 * TS;
         for (byte symbol : levelCounter.symbols()) {
-            RectArea sprite = theUI().configuration().createBonusSymbolSprite(symbol);
+            Sprite sprite = theUI().configuration().createBonusSymbolSprite(symbol);
             drawSpriteScaled(sprite, x, y);
             x -= TS * 2;
         }
@@ -381,7 +381,7 @@ public class TengenMsPacMan_Renderer2D extends SpriteGameRenderer {
         ctx().setImageSmoothing(false);
         float x = sceneSizeInPixels.x() - 4 * TS, y = sceneSizeInPixels.y() - TS;
         for (byte symbol : levelCounter.symbols()) {
-            RectArea sprite = theUI().configuration().createBonusSymbolSprite(symbol);
+            Sprite sprite = theUI().configuration().createBonusSymbolSprite(symbol);
             drawSpriteScaled(sprite, x, y);
             x -= TS * 2;
         }
@@ -396,7 +396,7 @@ public class TengenMsPacMan_Renderer2D extends SpriteGameRenderer {
         drawSpriteScaled(digitSprite(ones), x + 10, y + 2);
     }
 
-    private RectArea digitSprite(int digit) {
+    private Sprite digitSprite(int digit) {
         return sprite(switch (digit) {
             case 1 -> SpriteID.DIGIT_1;
             case 2 -> SpriteID.DIGIT_2;
@@ -457,7 +457,7 @@ public class TengenMsPacMan_Renderer2D extends SpriteGameRenderer {
             return;
         }
         ctx().setImageSmoothing(false);
-        drawSpriteScaled((RectArea) storkAnimation.currentSprite(), stork.x(), stork.y());
+        drawSpriteScaled((Sprite) storkAnimation.currentSprite(), stork.x(), stork.y());
         if (hideBag) { // over-paint bag under beak
             ctx().setFill(PY_CANVAS_BG_COLOR.get());
             ctx().fillRect(scaled(stork.x() - 1), scaled(stork.y() + 7), scaled(9), scaled(9));

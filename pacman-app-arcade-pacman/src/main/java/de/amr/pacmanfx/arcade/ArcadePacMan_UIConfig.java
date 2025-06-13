@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade;
 
 import de.amr.pacmanfx.controller.GameState;
-import de.amr.pacmanfx.lib.RectArea;
+import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
@@ -206,19 +206,19 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
 
     @Override
     public Image createGhostNumberImage(int ghostIndex) {
-        RectArea[] sprites = ArcadePacMan_SpriteSheet.sprites(SpriteID.GHOST_NUMBERS);
+        Sprite[] sprites = ArcadePacMan_SpriteSheet.sprites(SpriteID.GHOST_NUMBERS);
         return Ufx.subImage(spriteSheet.sourceImage(), sprites[ghostIndex]);
     }
 
     @Override
-    public RectArea createBonusSymbolSprite(byte symbol) {
-        RectArea[] symbolSprites = ArcadePacMan_SpriteSheet.sprites(SpriteID.BONUS_SYMBOLS);
+    public Sprite createBonusSymbolSprite(byte symbol) {
+        Sprite[] symbolSprites = ArcadePacMan_SpriteSheet.sprites(SpriteID.BONUS_SYMBOLS);
         return symbolSprites[symbol];
     }
 
     @Override
-    public RectArea createBonusValueSprite(byte symbol) {
-        RectArea[] valueSprites = ArcadePacMan_SpriteSheet.sprites(SpriteID.BONUS_VALUES);
+    public Sprite createBonusValueSprite(byte symbol) {
+        Sprite[] valueSprites = ArcadePacMan_SpriteSheet.sprites(SpriteID.BONUS_VALUES);
         return valueSprites[symbol];
     }
 
@@ -234,7 +234,7 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
     }
 
     @Override
-    public RectArea createLivesCounterSprite() {
+    public Sprite createLivesCounterSprite() {
         return ArcadePacMan_SpriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
     }
 

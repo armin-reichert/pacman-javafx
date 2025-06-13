@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.RectArea;
+import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
@@ -15,7 +15,7 @@ import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createAnimation;
 
-public class ArcadeMsPacMan_PacAnimationMap extends SpriteAnimationMap<RectArea> {
+public class ArcadeMsPacMan_PacAnimationMap extends SpriteAnimationMap<Sprite> {
 
     public static final String PAC_MAN_MUNCHING = "pac_man_munching";
 
@@ -41,7 +41,7 @@ public class ArcadeMsPacMan_PacAnimationMap extends SpriteAnimationMap<RectArea>
         }
     }
 
-    private RectArea[] msPacManMunchingSprites(Direction dir) {
+    private Sprite[] msPacManMunchingSprites(Direction dir) {
         return sprites(switch (dir) {
             case RIGHT -> SpriteID.MS_PACMAN_MUNCHING_RIGHT;
             case LEFT -> SpriteID.MS_PACMAN_MUNCHING_LEFT;
@@ -50,7 +50,7 @@ public class ArcadeMsPacMan_PacAnimationMap extends SpriteAnimationMap<RectArea>
         });
     }
 
-    private RectArea[] mrPacManMunchingSprites(Direction dir) {
+    private Sprite[] mrPacManMunchingSprites(Direction dir) {
         return sprites(switch (dir) {
             case RIGHT -> SpriteID.MR_PACMAN_MUNCHING_RIGHT;
             case LEFT -> SpriteID.MR_PACMAN_MUNCHING_LEFT;

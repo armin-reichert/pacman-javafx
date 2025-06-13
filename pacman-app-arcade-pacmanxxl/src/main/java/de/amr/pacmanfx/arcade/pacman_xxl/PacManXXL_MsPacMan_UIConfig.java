@@ -8,7 +8,7 @@ import de.amr.pacmanfx.arcade.ArcadeCommon_BootScene2D;
 import de.amr.pacmanfx.arcade.ArcadeCommon_PlayScene2D;
 import de.amr.pacmanfx.arcade.ms_pacman.*;
 import de.amr.pacmanfx.controller.GameState;
-import de.amr.pacmanfx.lib.RectArea;
+import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -173,17 +173,17 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
 
     @Override
     public Image createGhostNumberImage(int ghostIndex) {
-        RectArea[] sprites = ArcadeMsPacMan_SpriteSheet.sprites(SpriteID.GHOST_NUMBERS);
+        Sprite[] sprites = ArcadeMsPacMan_SpriteSheet.sprites(SpriteID.GHOST_NUMBERS);
         return Ufx.subImage(spriteSheet.sourceImage(), sprites[ghostIndex]);
     }
 
     @Override
-    public RectArea createBonusSymbolSprite(byte symbol) {
+    public Sprite createBonusSymbolSprite(byte symbol) {
         return ArcadeMsPacMan_SpriteSheet.sprites(SpriteID.BONUS_SYMBOLS)[symbol];
     }
 
     @Override
-    public RectArea createBonusValueSprite(byte symbol) {
+    public Sprite createBonusValueSprite(byte symbol) {
         return ArcadeMsPacMan_SpriteSheet.sprites(SpriteID.BONUS_VALUES)[symbol];
     }
 
@@ -206,7 +206,7 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
     }
 
     @Override
-    public RectArea createLivesCounterSprite() {
+    public Sprite createLivesCounterSprite() {
         return ArcadeMsPacMan_SpriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
     }
 

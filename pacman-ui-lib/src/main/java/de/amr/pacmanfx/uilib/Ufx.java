@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib;
 
-import de.amr.pacmanfx.lib.RectArea;
+import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.lib.nes.NES_Palette;
 import javafx.animation.Animation;
@@ -232,7 +232,7 @@ public interface Ufx {
      * @param r rectangular region
      * @return image copy of region
      */
-    static Image subImage(Image sourceImage, RectArea r) {
+    static Image subImage(Image sourceImage, Sprite r) {
         return subImage(sourceImage, r.x(), r.y(), r.width(), r.height());
     }
 

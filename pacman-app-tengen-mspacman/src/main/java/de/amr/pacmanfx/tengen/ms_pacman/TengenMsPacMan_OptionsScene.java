@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman;
 
 import de.amr.pacmanfx.controller.GameState;
-import de.amr.pacmanfx.lib.RectArea;
+import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
@@ -287,7 +287,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D implements ActionBi
         gr().fillText(":", NES_YELLOW, arcadeFont8(), COL_COLON, 168);
         gr().fillText(String.valueOf(tengenGame().startLevelNumber()), NES_WHITE, arcadeFont8(), COL_VALUE, 168);
         if (tengenGame().numContinues() < 4) {
-            RectArea continuesSprite = sprite(switch (tengenGame().numContinues()) {
+            Sprite continuesSprite = sprite(switch (tengenGame().numContinues()) {
                 case 0 -> SpriteID.CONTINUES_0;
                 case 1 -> SpriteID.CONTINUES_1;
                 case 2 -> SpriteID.CONTINUES_2;

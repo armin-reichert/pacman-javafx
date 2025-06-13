@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._2d;
 
-import de.amr.pacmanfx.lib.RectArea;
+import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
@@ -74,7 +74,7 @@ public interface GameRenderer {
      * @param x unscaled x-coordinate of left-upper corner
      * @param y unscaled y-coordinate of left-upper corner
      */
-    default void drawImageRegionScaled(Image image, RectArea region, double x, double y) {
+    default void drawImageRegionScaled(Image image, Sprite region, double x, double y) {
         requireNonNull(image);
         requireNonNull(region);
         ctx().drawImage(image,

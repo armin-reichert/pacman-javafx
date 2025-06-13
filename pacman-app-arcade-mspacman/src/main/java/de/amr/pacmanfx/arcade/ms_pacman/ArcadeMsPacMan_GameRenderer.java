@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman;
 
-import de.amr.pacmanfx.lib.RectArea;
+import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.LevelCounter;
@@ -22,7 +22,7 @@ import javafx.scene.text.Font;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.arcade.ArcadePalette.ARCADE_WHITE;
-import static de.amr.pacmanfx.lib.RectArea.ra;
+import static de.amr.pacmanfx.lib.Sprite.sprite;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theAssets;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
@@ -30,31 +30,31 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_GameRenderer extends SpriteGameRenderer {
 
-    private static final RectArea[] FULL_MAZES = {
-        ra(0,     0, 224, 248),
-        ra(0,   248, 224, 248),
-        ra(0, 2*248, 224, 248),
-        ra(0, 3*248, 224, 248),
-        ra(0, 4*248, 224, 248),
-        ra(0, 5*248, 224, 248),
+    private static final Sprite[] FULL_MAZES = {
+        sprite(0,     0, 224, 248),
+        sprite(0,   248, 224, 248),
+        sprite(0, 2*248, 224, 248),
+        sprite(0, 3*248, 224, 248),
+        sprite(0, 4*248, 224, 248),
+        sprite(0, 5*248, 224, 248),
     };
 
-    private static final RectArea[] EMPTY_MAZES = {
-        ra(228,     0, 224, 248),
-        ra(228,   248, 224, 248),
-        ra(228, 2*248, 224, 248),
-        ra(228, 3*248, 224, 248),
-        ra(228, 4*248, 224, 248),
-        ra(228, 5*258, 224, 248),
+    private static final Sprite[] EMPTY_MAZES = {
+        sprite(228,     0, 224, 248),
+        sprite(228,   248, 224, 248),
+        sprite(228, 2*248, 224, 248),
+        sprite(228, 3*248, 224, 248),
+        sprite(228, 4*248, 224, 248),
+        sprite(228, 5*258, 224, 248),
     };
 
-    private static final RectArea[] HIGHLIGHTED_MAZES = {
-        ra(0,     0, 224, 248),
-        ra(0,   248, 224, 248),
-        ra(0, 2*248, 224, 248),
-        ra(0, 3*248, 224, 248),
-        ra(0, 4*248, 224, 248),
-        ra(0, 5*248, 224, 248),
+    private static final Sprite[] HIGHLIGHTED_MAZES = {
+        sprite(0,     0, 224, 248),
+        sprite(0,   248, 224, 248),
+        sprite(0, 2*248, 224, 248),
+        sprite(0, 3*248, 224, 248),
+        sprite(0, 4*248, 224, 248),
+        sprite(0, 5*248, 224, 248),
     };
 
     private final ArcadeMsPacMan_SpriteSheet spriteSheet;
@@ -106,7 +106,7 @@ public class ArcadeMsPacMan_GameRenderer extends SpriteGameRenderer {
     public void drawLevelCounter(LevelCounter levelCounter, Vector2f sceneSizeInPixels) {
         float x = sceneSizeInPixels.x() - 4 * TS, y = sceneSizeInPixels.y() - 2 * TS;
         for (byte symbol : levelCounter.symbols()) {
-            RectArea sprite = theUI().configuration().createBonusSymbolSprite(symbol);
+            Sprite sprite = theUI().configuration().createBonusSymbolSprite(symbol);
             drawSpriteScaled(sprite, x, y);
             x -= TS * 2;
         }
@@ -119,11 +119,11 @@ public class ArcadeMsPacMan_GameRenderer extends SpriteGameRenderer {
         ctx.translate(0, movingBonus.elongationY());
         switch (bonus.state()) {
             case Bonus.STATE_EDIBLE -> {
-                RectArea sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
+                Sprite sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
                 drawActorSprite(bonus.actor(), sprite);
             }
             case Bonus.STATE_EATEN  -> {
-                RectArea sprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
+                Sprite sprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
                 drawActorSprite(bonus.actor(), sprite);
             }
         }

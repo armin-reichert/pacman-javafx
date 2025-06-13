@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade;
 
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.lib.RectArea;
+import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
@@ -185,7 +185,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
             // As long as Pac-Man is still invisible on game start, one live more is shown in the counter
             int numLivesDisplayed = theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible()
                 ? theGame().lifeCount() : theGame().lifeCount() - 1;
-            RectArea sprite = theUI().configuration().createLivesCounterSprite();
+            Sprite sprite = theUI().configuration().createLivesCounterSprite();
             gr().drawLivesCounter(numLivesDisplayed, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - 2 * TS, sprite);
         } else {
             gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()),

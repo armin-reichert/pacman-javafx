@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade;
 
-import de.amr.pacmanfx.lib.RectArea;
+import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.LevelCounter;
@@ -54,11 +54,11 @@ public class ArcadePacMan_GameRenderer extends SpriteGameRenderer {
     @Override
     public void drawBonus(Bonus bonus) {
         if (bonus.state() == Bonus.STATE_EDIBLE) {
-            RectArea sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
+            Sprite sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
             drawActorSprite(bonus.actor(), sprite);
         }
         else if (bonus.state() == Bonus.STATE_EATEN) {
-            RectArea sprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
+            Sprite sprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
             drawActorSprite(bonus.actor(), sprite);
         }
     }
@@ -85,7 +85,7 @@ public class ArcadePacMan_GameRenderer extends SpriteGameRenderer {
     public void drawLevelCounter(LevelCounter levelCounter, Vector2f sceneSize) {
         float x = sceneSize.x() - 4 * TS, y = sceneSize.y() - 2 * TS;
         for (byte symbol : levelCounter.symbols()) {
-            RectArea sprite = theUI().configuration().createBonusSymbolSprite(symbol);
+            Sprite sprite = theUI().configuration().createBonusSymbolSprite(symbol);
             drawSpriteScaled(sprite, x, y);
             x -= TS * 2;
         }

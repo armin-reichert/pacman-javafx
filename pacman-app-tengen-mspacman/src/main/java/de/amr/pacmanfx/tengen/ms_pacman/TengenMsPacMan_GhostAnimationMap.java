@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman;
 
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.RectArea;
+import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
@@ -16,7 +16,7 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.sprite
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.sprites;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createAnimation;
 
-public class TengenMsPacMan_GhostAnimationMap extends SpriteAnimationMap<RectArea> {
+public class TengenMsPacMan_GhostAnimationMap extends SpriteAnimationMap<Sprite> {
 
     public static final int NORMAL_TICKS = 8;  // TODO check this in emulator
     public static final int FRIGHTENED_TICKS = 8;  // TODO check this in emulator
@@ -56,7 +56,7 @@ public class TengenMsPacMan_GhostAnimationMap extends SpriteAnimationMap<RectAre
         }
     }
 
-    private RectArea[] ghostNormalSprites(byte id, Direction dir) {
+    private Sprite[] ghostNormalSprites(byte id, Direction dir) {
         return switch (id) {
             case RED_GHOST_SHADOW -> switch (dir) {
                 case Direction.RIGHT -> sprites(SpriteID.RED_GHOST_RIGHT);
@@ -86,8 +86,8 @@ public class TengenMsPacMan_GhostAnimationMap extends SpriteAnimationMap<RectAre
         };
     }
 
-    private RectArea[] ghostEyesSprites(Direction dir) {
-        return new RectArea[] {
+    private Sprite[] ghostEyesSprites(Direction dir) {
+        return new Sprite[] {
             switch (dir) {
                 case RIGHT -> sprite(SpriteID.GHOST_EYES_RIGHT);
                 case LEFT -> sprite(SpriteID.GHOST_EYES_LEFT);

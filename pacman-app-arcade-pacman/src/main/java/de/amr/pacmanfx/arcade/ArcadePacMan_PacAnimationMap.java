@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade;
 
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.RectArea;
+import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
@@ -17,7 +17,7 @@ import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createAnimation;
 
-public class ArcadePacMan_PacAnimationMap extends SpriteAnimationMap<RectArea> {
+public class ArcadePacMan_PacAnimationMap extends SpriteAnimationMap<Sprite> {
 
     public ArcadePacMan_PacAnimationMap(ArcadePacMan_SpriteSheet ss) {
         super(ss);
@@ -38,7 +38,7 @@ public class ArcadePacMan_PacAnimationMap extends SpriteAnimationMap<RectArea> {
         }
     }
 
-    private RectArea[] pacMunchingSprites(Direction dir) {
+    private Sprite[] pacMunchingSprites(Direction dir) {
         return switch (dir) {
             case RIGHT -> sprites(PACMAN_MUNCHING_RIGHT);
             case LEFT -> sprites(PACMAN_MUNCHING_LEFT);

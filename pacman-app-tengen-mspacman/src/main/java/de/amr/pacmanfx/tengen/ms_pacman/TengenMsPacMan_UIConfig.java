@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman;
 
 import de.amr.pacmanfx.controller.GameState;
-import de.amr.pacmanfx.lib.RectArea;
+import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.lib.nes.NES_Palette;
@@ -226,17 +226,17 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
 
     @Override
     public Image createGhostNumberImage(int ghostIndex) {
-        RectArea[] sprites = TengenMsPacMan_SpriteSheet.sprites(SpriteID.GHOST_NUMBERS);
+        Sprite[] sprites = TengenMsPacMan_SpriteSheet.sprites(SpriteID.GHOST_NUMBERS);
         return Ufx.subImage(spriteSheet.sourceImage(), sprites[ghostIndex]);
     }
 
     @Override
-    public RectArea createBonusSymbolSprite(byte symbol) {
+    public Sprite createBonusSymbolSprite(byte symbol) {
         return TengenMsPacMan_SpriteSheet.sprites(SpriteID.BONUS_SYMBOLS)[symbol];
     }
 
     @Override
-    public RectArea createBonusValueSprite(byte symbol) {
+    public Sprite createBonusValueSprite(byte symbol) {
         //TODO should this logic be implemented here?
         // 0=100,1=200,2=500,3=700,4=1000,5=2000,6=3000,7=4000,8=5000,9=6000,10=7000,11=8000,12=9000, 13=10_000
         int index = switch (symbol) {
@@ -285,7 +285,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     }
 
     @Override
-    public RectArea createLivesCounterSprite() {
+    public Sprite createLivesCounterSprite() {
         return TengenMsPacMan_SpriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
     }
 

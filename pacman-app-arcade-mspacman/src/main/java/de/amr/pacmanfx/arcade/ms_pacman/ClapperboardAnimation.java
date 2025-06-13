@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman;
 
-import de.amr.pacmanfx.lib.RectArea;
+import de.amr.pacmanfx.lib.Sprite;
 
 import java.util.Optional;
 
@@ -58,9 +58,9 @@ public class ClapperboardAnimation {
         }
     }
 
-    public Optional<RectArea> currentSprite() {
+    public Optional<Sprite> currentSprite() {
         if (state == HIDDEN) return Optional.empty();
-        RectArea sprite = sprites(SpriteID.CLAPPERBOARD)[state];
+        Sprite sprite = sprites(SpriteID.CLAPPERBOARD)[state];
         return Optional.of(sprite);
     }
 }

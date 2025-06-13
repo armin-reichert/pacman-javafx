@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.controller.GameState;
-import de.amr.pacmanfx.lib.RectArea;
+import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
@@ -270,7 +270,7 @@ public class GameLevel3D {
         SpriteSheet spriteSheet = theUI().configuration().spriteSheet();
         for (byte symbol : levelCounter.symbols()) {
             var material = new PhongMaterial(Color.WHITE);
-            RectArea sprite = theUI().configuration().createBonusSymbolSprite(symbol);
+            Sprite sprite = theUI().configuration().createBonusSymbolSprite(symbol);
             material.setDiffuseMap(subImage(spriteSheet.sourceImage(), sprite));
 
             var cube = new Box(TS, TS, TS);
@@ -335,8 +335,8 @@ public class GameLevel3D {
         if (bonus3D != null) {
             mazeGroup.getChildren().remove(bonus3D);
         }
-        RectArea bonusSymbolSprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
-        RectArea bonusValueSprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
+        Sprite bonusSymbolSprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
+        Sprite bonusValueSprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
         bonus3D = new Bonus3D(bonus,
             subImage(spriteSheet.sourceImage(), bonusSymbolSprite),
             subImage(spriteSheet.sourceImage(), bonusValueSprite));

@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman;
 
-import de.amr.pacmanfx.lib.RectArea;
+import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
@@ -17,7 +17,7 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.sprite
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.sprites;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createAnimation;
 
-public class TengenMsPacMan_PacAnimationMap extends SpriteAnimationMap<RectArea> {
+public class TengenMsPacMan_PacAnimationMap extends SpriteAnimationMap<Sprite> {
 
     public static final String ANIM_MS_PAC_MAN_BOOSTER = "ms_pac_man_booster";
     public static final String ANIM_MS_PAC_MAN_WAVING_HAND = "ms_pac_man_waving_hand";
@@ -65,11 +65,11 @@ public class TengenMsPacMan_PacAnimationMap extends SpriteAnimationMap<RectArea>
         }
     }
 
-    private RectArea[] pacDyingSprites() {
+    private Sprite[] pacDyingSprites() {
         // TODO this is nuts
         // renderer rotates single sprite to create animation effect
-        var sprites = new RectArea[11];
-        RectArea munchingOpen = sprites(SpriteID.MS_PAC_MUNCHING)[0];
+        var sprites = new Sprite[11];
+        Sprite munchingOpen = sprites(SpriteID.MS_PAC_MUNCHING)[0];
         Arrays.fill(sprites, munchingOpen);
         return sprites;
     }

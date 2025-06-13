@@ -1,6 +1,6 @@
 package de.amr.pacmanfx.ui._2d;
 
-import de.amr.pacmanfx.lib.RectArea;
+import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.AnimatedActor;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
@@ -26,7 +26,7 @@ public abstract class SpriteGameRenderer implements GameRenderer {
      * @param x           x-coordinate of left-upper corner
      * @param y           y-coordinate of left-upper corner
      */
-    public void drawSprite(RectArea sprite, double x, double y) {
+    public void drawSprite(Sprite sprite, double x, double y) {
         if (sprite != null) {
             ctx().drawImage(spriteSheet().sourceImage(),
                     sprite.x(), sprite.y(), sprite.width(), sprite.height(),
@@ -42,7 +42,7 @@ public abstract class SpriteGameRenderer implements GameRenderer {
      * @param x             x-coordinate of left-upper corner (unscaled)
      * @param y             y-coordinate of left-upper corner (unscaled)
      */
-    public void drawSpriteScaled(RectArea sprite, double x, double y) {
+    public void drawSpriteScaled(Sprite sprite, double x, double y) {
         if (sprite != null) {
             drawImageRegionScaled(spriteSheet().sourceImage(), sprite, x, y);
         }
@@ -55,7 +55,7 @@ public abstract class SpriteGameRenderer implements GameRenderer {
      * @param cx  x-coordinate of the center position
      * @param cy  y-coordinate of the center position
      */
-    public void drawSpriteScaledCenteredAt(RectArea sprite, double cx, double cy) {
+    public void drawSpriteScaledCenteredAt(Sprite sprite, double cx, double cy) {
         if (sprite != null) {
             drawSpriteScaled(sprite, cx - 0.5 * sprite.width(), cy - 0.5 * sprite.height());
         }
@@ -67,7 +67,7 @@ public abstract class SpriteGameRenderer implements GameRenderer {
      * @param actor an actor
      * @param sprite sprite sheet region (can be null)
      */
-    public void drawActorSprite(Actor actor, RectArea sprite) {
+    public void drawActorSprite(Actor actor, Sprite sprite) {
         requireNonNull(actor);
         if (actor.isVisible() && sprite != null) {
             drawSpriteScaledCenteredAt(sprite, actor.x() + HTS, actor.y() + HTS);
@@ -89,7 +89,7 @@ public abstract class SpriteGameRenderer implements GameRenderer {
                 if (animations instanceof SpriteAnimationMap<?> spriteAnimations) {
                     SpriteAnimation currentAnimation = spriteAnimations.currentAnimation();
                     if (currentAnimation != null) {
-                        drawActorSprite(actor, (RectArea) spriteAnimations.currentSprite(actor));
+                        drawActorSprite(actor, (Sprite) spriteAnimations.currentSprite(actor));
                     } else {
                         Logger.error("No current animation for actor {}", actor);
                     }
@@ -98,7 +98,7 @@ public abstract class SpriteGameRenderer implements GameRenderer {
         }
     }
 
-    public void drawLivesCounter(int numLives, int maxLives, double x, double y, RectArea livesCounterSprite) {
+    public void drawLivesCounter(int numLives, int maxLives, double x, double y, Sprite livesCounterSprite) {
         if (numLives == 0) {
             return;
         }

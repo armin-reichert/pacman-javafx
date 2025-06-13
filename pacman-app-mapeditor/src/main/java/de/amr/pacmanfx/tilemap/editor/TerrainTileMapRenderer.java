@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tilemap.editor;
 
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.RectArea;
+import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.*;
@@ -90,9 +90,9 @@ public class TerrainTileMapRenderer extends TerrainMapRenderer {
                     .filter(Obstacle::isClosed)
                     .filter(obstacle -> !startsAtBorder(obstacle, worldMap)).forEach(obstacle -> {
                 Vector2i prev = null;
-                List<RectArea> rectangles = obstacle.innerAreaRectangles().toList();
+                List<Sprite> rectangles = obstacle.innerAreaRectangles().toList();
                 for (int i = 0; i < rectangles.size(); ++i) {
-                    RectArea rect = rectangles.get(i);
+                    Sprite rect = rectangles.get(i);
                     g.setFill(RANDOM_COLORS[i % RANDOM_COLORS.length]);
                     g.fillRect(rect.x(), rect.y(), rect.width(), rect.height());
                 }
@@ -107,7 +107,7 @@ public class TerrainTileMapRenderer extends TerrainMapRenderer {
                     prev = p;
                 }
                 for (int i = 0; i < rectangles.size(); ++i) {
-                    RectArea rect = rectangles.get(i);
+                    Sprite rect = rectangles.get(i);
                     g.setFill(Color.WHITE);
                     g.setFont(Font.font("Sans", FontWeight.BOLD, 3.5));
                     g.fillText("R" + (i+1), rect.x() + rect.width() * 0.5 - 3, rect.y() + rect.height() * 0.5 + 1);
@@ -287,7 +287,7 @@ public class TerrainTileMapRenderer extends TerrainMapRenderer {
         }
     }
 
-    public void drawSpriteBetweenTiles(GraphicsContext g, Vector2i leftTile, RectArea sprite, double gridSize) {
+    public void drawSpriteBetweenTiles(GraphicsContext g, Vector2i leftTile, Sprite sprite, double gridSize) {
         if (leftTile != null) {
             double spriteSize = 1.75 * gridSize;
             drawSpriteImage(g, sprite, gridSize,
@@ -297,7 +297,7 @@ public class TerrainTileMapRenderer extends TerrainMapRenderer {
         }
     }
 
-    private void drawSpriteImage(GraphicsContext g, RectArea sprite, double gridSize, double x, double y, double w, double h) {
+    private void drawSpriteImage(GraphicsContext g, Sprite sprite, double gridSize, double x, double y, double w, double h) {
         double ox = 0.5 * (w - gridSize), oy = 0.5 * (h - gridSize);
         g.drawImage(SPRITE_SHEET, sprite.x(), sprite.y(), sprite.width(), sprite.height(), x - ox, y - oy, w, h);
     }

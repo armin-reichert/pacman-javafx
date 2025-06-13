@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade;
 
-import de.amr.pacmanfx.lib.RectArea;
+import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
@@ -95,7 +95,7 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
         int numCols = (int) (ARCADE_MAP_SIZE_IN_PIXELS.x() / FRAGMENT_SIZE);
         for (int row = 0; row < numRows; ++row) {
             if (theRNG().nextInt(100) < 20) continue;
-            RectArea fragment1 = randomSpriteFragment(), fragment2 = randomSpriteFragment();
+            Sprite fragment1 = randomSpriteFragment(), fragment2 = randomSpriteFragment();
             int split = numCols / 8 + theRNG().nextInt(numCols / 4);
             for (int col = 0; col < numCols; ++col) {
                 gr().drawSpriteScaled(col < split ? fragment1 : fragment2, FRAGMENT_SIZE * col, FRAGMENT_SIZE * row);
@@ -103,8 +103,8 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
         }
     }
 
-    private RectArea randomSpriteFragment() {
-        return new RectArea(
+    private Sprite randomSpriteFragment() {
+        return new Sprite(
             (int) lerp(minPoint.x(), maxPoint.x(), theRNG().nextDouble()),
             (int) lerp(minPoint.y(), maxPoint.y(), theRNG().nextDouble()),
             FRAGMENT_SIZE, FRAGMENT_SIZE);

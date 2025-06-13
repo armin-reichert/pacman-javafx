@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.lib.tilemap;
 
-import de.amr.pacmanfx.lib.RectArea;
+import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.Vector2i;
 import org.tinylog.Logger;
 
@@ -22,7 +22,7 @@ public class Obstacle {
 
     private final Vector2i startPoint;
     private final List<ObstacleSegment> segments = new ArrayList<>();
-    private List<RectArea> innerAreaRectangles = List.of();
+    private List<Sprite> innerAreaRectangles = List.of();
 
     public Obstacle(Vector2i startPoint) {
         this.startPoint = Objects.requireNonNull(startPoint);
@@ -34,7 +34,7 @@ public class Obstacle {
         if (isClosed()) {
             try {
                 Collection<Vector2i> innerPolygon = computeInnerPolygon();
-                PolygonToRectangleConverter<RectArea> converter = RectArea::new;
+                PolygonToRectangleConverter<Sprite> converter = Sprite::new;
                 innerAreaRectangles = converter.convertPolygonToRectangles(innerPolygon);
             } catch (Exception x) {
                 Logger.warn("Inner area rectangle partition could not be computed");
@@ -43,7 +43,7 @@ public class Obstacle {
         }
     }
 
-    public Stream<RectArea> innerAreaRectangles() {
+    public Stream<Sprite> innerAreaRectangles() {
         return innerAreaRectangles.stream();
     }
 

@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade;
 
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.RectArea;
+import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
@@ -16,7 +16,7 @@ import static de.amr.pacmanfx.arcade.SpriteID.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createAnimation;
 
-public class ArcadePacMan_GhostAnimationMap extends SpriteAnimationMap<RectArea> {
+public class ArcadePacMan_GhostAnimationMap extends SpriteAnimationMap<Sprite> {
 
     public ArcadePacMan_GhostAnimationMap(ArcadePacMan_SpriteSheet ss, byte personality) {
         super(ss);
@@ -56,7 +56,7 @@ public class ArcadePacMan_GhostAnimationMap extends SpriteAnimationMap<RectArea>
         }
     }
 
-    private RectArea[] ghostNormalSprites(byte id, Direction dir) {
+    private Sprite[] ghostNormalSprites(byte id, Direction dir) {
         return sprites(switch (id) {
             case 0 -> switch (dir) {
                 case RIGHT -> SpriteID.RED_GHOST_RIGHT;
@@ -86,7 +86,7 @@ public class ArcadePacMan_GhostAnimationMap extends SpriteAnimationMap<RectArea>
         });
     }
 
-    private RectArea[] ghostEyesSprites(Direction dir) {
+    private Sprite[] ghostEyesSprites(Direction dir) {
         return sprites(switch (dir) {
             case Direction.RIGHT -> GHOST_EYES_RIGHT;
             case Direction.LEFT  -> GHOST_EYES_LEFT;

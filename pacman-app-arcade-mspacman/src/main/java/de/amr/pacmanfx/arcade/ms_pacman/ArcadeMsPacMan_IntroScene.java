@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.ms_pacman;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.RectArea;
+import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
@@ -49,7 +49,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
 
     private static final int BULB_COUNT = 96;
     private static final int ACTIVE_BULBS_DIST = 16;
-    private static final RectArea MARQUEE = new RectArea(60, 88, 132, 60);
+    private static final Sprite MARQUEE = new Sprite(60, 88, 132, 60);
 
     private static final String[] GHOST_NAMES = { "BLINKY", "PINKY", "INKY", "SUE" };
     private static final Color[] GHOST_COLORS = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
