@@ -178,14 +178,10 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
 
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
-    public ArcadeMsPacMan_GameModel() {
-        this(new ArcadeMsPacMan_MapSelector());
-    }
-
     /**
      * @param mapSelector map selector e.g. selector that selects custom maps before standard maps
      */
-    protected ArcadeMsPacMan_GameModel(MapSelector mapSelector) {
+    public ArcadeMsPacMan_GameModel(MapSelector mapSelector) {
         this.mapSelector = requireNonNull(mapSelector);
         setHighScoreFile(new File(HOME_DIR, "highscore-ms_pacman.xml"));
         setExtraLifeScores(EXTRA_LIFE_SCORE);

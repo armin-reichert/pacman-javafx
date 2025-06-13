@@ -162,14 +162,10 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
     // bonus points = multiplier * 100
     private static final byte[] BONUS_VALUE_MULTIPLIERS = { 1, 3, 5, 7, 10, 20, 30, 50 };
 
-    public ArcadePacMan_GameModel() {
-        this(new ArcadePacMan_MapSelector());
-    }
-
     /**
      * @param mapSelector e.g. selector that selects custom maps before standard maps
      */
-    protected ArcadePacMan_GameModel(MapSelector mapSelector) {
+    public ArcadePacMan_GameModel(MapSelector mapSelector) {
         this.mapSelector = requireNonNull(mapSelector);
         setHighScoreFile(new File(HOME_DIR, "highscore-pacman.xml"));
         setExtraLifeScores(EXTRA_LIFE_SCORE);

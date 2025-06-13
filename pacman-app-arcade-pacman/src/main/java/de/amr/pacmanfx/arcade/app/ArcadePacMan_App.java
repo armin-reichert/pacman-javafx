@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.app;
 
 import de.amr.pacmanfx.arcade.ArcadePacMan_GameModel;
+import de.amr.pacmanfx.arcade.ArcadePacMan_MapSelector;
 import de.amr.pacmanfx.arcade.ArcadePacMan_StartPage;
 import de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.ui.PacManGames_Env;
@@ -23,7 +24,7 @@ public class ArcadePacMan_App extends Application {
     @Override
     public void init() {
         PacManGames_Env.init();
-        theGameController().registerGame("PACMAN", new ArcadePacMan_GameModel());
+        theGameController().registerGame("PACMAN", new ArcadePacMan_GameModel(new ArcadePacMan_MapSelector()));
         theGameController().selectGameVariant("PACMAN");
     }
 

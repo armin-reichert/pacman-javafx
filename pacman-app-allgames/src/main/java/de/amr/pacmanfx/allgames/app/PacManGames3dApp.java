@@ -5,9 +5,11 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.allgames.app;
 
 import de.amr.pacmanfx.arcade.ArcadePacMan_GameModel;
+import de.amr.pacmanfx.arcade.ArcadePacMan_MapSelector;
 import de.amr.pacmanfx.arcade.ArcadePacMan_StartPage;
 import de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel;
+import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_MapSelector;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman_xxl.*;
@@ -39,11 +41,11 @@ public class PacManGames3dApp extends Application {
     public void init() {
         PacManGames_Env.init();
         var xxlMapSelector = new PacManXXL_Common_MapSelector(CUSTOM_MAP_DIR);
-        theGameController().registerGame("MS_PACMAN", new ArcadeMsPacMan_GameModel());
+        theGameController().registerGame("MS_PACMAN",        new ArcadeMsPacMan_GameModel(new ArcadeMsPacMan_MapSelector()));
         theGameController().registerGame("MS_PACMAN_TENGEN", new TengenMsPacMan_GameModel());
-        theGameController().registerGame("PACMAN", new ArcadePacMan_GameModel());
-        theGameController().registerGame("PACMAN_XXL", new PacManXXL_PacMan_GameModel(xxlMapSelector));
-        theGameController().registerGame("MS_PACMAN_XXL", new PacManXXL_MsPacMan_GameModel(xxlMapSelector));
+        theGameController().registerGame("PACMAN",           new ArcadePacMan_GameModel(new ArcadePacMan_MapSelector()));
+        theGameController().registerGame("PACMAN_XXL",       new PacManXXL_PacMan_GameModel(xxlMapSelector));
+        theGameController().registerGame("MS_PACMAN_XXL",    new PacManXXL_MsPacMan_GameModel(xxlMapSelector));
         theGameController().selectGameVariant("PACMAN");
     }
 
