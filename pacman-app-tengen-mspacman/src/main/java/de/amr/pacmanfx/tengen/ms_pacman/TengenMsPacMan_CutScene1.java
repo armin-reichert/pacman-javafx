@@ -18,7 +18,6 @@ import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_PacAnimationMap.ANIM_PAC_MAN_MUNCHING;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.sprite;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
@@ -48,6 +47,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     static final float SPEED_PAC_RISING = 1f;
     static final float SPEED_GHOST_AFTER_COLLISION = 0.5f;
 
+    private TengenMsPacMan_SpriteSheet spriteSheet;
     private MediaPlayer music;
     private Pac pacMan;
     private Pac msPacMan;
@@ -61,6 +61,8 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void doInit() {
+        spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
+
         t = -1;
         theGame().setScoreVisible(false);
         bindActionToKeyCombination(theGameController()::letCurrentGameStateExpire, theJoypad().key(JoypadButton.START));
@@ -88,7 +90,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     public void update() {
         t += 1;
         if (t == 0) {
-            clapAnimation = new ClapperboardAnimation();
+            clapAnimation = new ClapperboardAnimation(spriteSheet);
             clapAnimation.start();
             music.play();
         }
@@ -215,7 +217,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         gr().drawActor(pacMan);
         gr().drawActor(inky);
         gr().drawActor(pinky);
-        gr().drawActorSprite(heart, sprite(SpriteID.HEART));
+        gr().drawActorSprite(heart, spriteSheet.sprite(SpriteID.HEART));
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx().minus(0, 3*TS));
     }
 }

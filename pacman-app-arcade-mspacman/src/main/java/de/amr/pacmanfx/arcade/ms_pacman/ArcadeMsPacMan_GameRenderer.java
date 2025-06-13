@@ -22,7 +22,7 @@ import javafx.scene.text.Font;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.arcade.ArcadePalette.ARCADE_WHITE;
-import static de.amr.pacmanfx.lib.Sprite.sprite;
+import static de.amr.pacmanfx.lib.Sprite.makeSprite;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theAssets;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
@@ -31,30 +31,30 @@ import static java.util.Objects.requireNonNull;
 public class ArcadeMsPacMan_GameRenderer extends SpriteGameRenderer {
 
     private static final Sprite[] FULL_MAZE_SPRITES = {
-        sprite(0,     0, 224, 248),
-        sprite(0,   248, 224, 248),
-        sprite(0, 2*248, 224, 248),
-        sprite(0, 3*248, 224, 248),
-        sprite(0, 4*248, 224, 248),
-        sprite(0, 5*248, 224, 248),
+        makeSprite(0,     0, 224, 248),
+        makeSprite(0,   248, 224, 248),
+        makeSprite(0, 2*248, 224, 248),
+        makeSprite(0, 3*248, 224, 248),
+        makeSprite(0, 4*248, 224, 248),
+        makeSprite(0, 5*248, 224, 248),
     };
 
     private static final Sprite[] EMPTY_MAZE_SPRITES = {
-        sprite(228,     0, 224, 248),
-        sprite(228,   248, 224, 248),
-        sprite(228, 2*248, 224, 248),
-        sprite(228, 3*248, 224, 248),
-        sprite(228, 4*248, 224, 248),
-        sprite(228, 5*258, 224, 248),
+        makeSprite(228,     0, 224, 248),
+        makeSprite(228,   248, 224, 248),
+        makeSprite(228, 2*248, 224, 248),
+        makeSprite(228, 3*248, 224, 248),
+        makeSprite(228, 4*248, 224, 248),
+        makeSprite(228, 5*258, 224, 248),
     };
 
     private static final Sprite[] HIGHLIGHTED_MAZE_SPRITES = {
-        sprite(0,     0, 224, 248),
-        sprite(0,   248, 224, 248),
-        sprite(0, 2*248, 224, 248),
-        sprite(0, 3*248, 224, 248),
-        sprite(0, 4*248, 224, 248),
-        sprite(0, 5*248, 224, 248),
+        makeSprite(0,     0, 224, 248),
+        makeSprite(0,   248, 224, 248),
+        makeSprite(0, 2*248, 224, 248),
+        makeSprite(0, 3*248, 224, 248),
+        makeSprite(0, 4*248, 224, 248),
+        makeSprite(0, 5*248, 224, 248),
     };
 
     private final ArcadeMsPacMan_SpriteSheet spriteSheet;

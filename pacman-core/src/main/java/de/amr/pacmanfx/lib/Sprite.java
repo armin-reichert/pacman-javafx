@@ -14,7 +14,7 @@ package de.amr.pacmanfx.lib;
  */
 public record Sprite(short x, short y, short width, short height) {
 
-    public static Sprite sprite(int x, int y, int width, int height) {
+    public static Sprite makeSprite(int x, int y, int width, int height) {
         return new Sprite(x, y, width, height);
     }
 

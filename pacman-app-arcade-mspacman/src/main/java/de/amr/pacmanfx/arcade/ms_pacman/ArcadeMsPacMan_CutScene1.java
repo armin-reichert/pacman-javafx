@@ -12,13 +12,13 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.media.MediaPlayer;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.*;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_PacAnimationMap.PAC_MAN_MUNCHING;
-import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.sprite;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
@@ -55,6 +55,8 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void doInit() {
+        @SuppressWarnings("unchecked") SpriteSheet<SpriteID> spriteSheet = (SpriteSheet<SpriteID>) theUI().configuration().spriteSheet();
+
         theGame().setScoreVisible(true);
 
         pacMan = createPacMan();
@@ -69,7 +71,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         inky.setAnimations(config.createGhostAnimations(inky));
         pinky.setAnimations(config.createGhostAnimations(pinky));
 
-        clapperboardAnimation = new ClapperboardAnimation("1", "THEY MEET");
+        clapperboardAnimation = new ClapperboardAnimation(spriteSheet, "1", "THEY MEET");
         clapperboardAnimation.start();
         music = theSound().createSound("intermission.1");
 
@@ -100,6 +102,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
+        @SuppressWarnings("unchecked") SpriteSheet<SpriteID> spriteSheet = (SpriteSheet<SpriteID>) theUI().configuration().spriteSheet();
         if (gr() instanceof ArcadeMsPacMan_GameRenderer r) { // could also be VectorGraphicsRenderer!
             r.drawClapperBoard(clapperboardAnimation, tiles_to_px(3), tiles_to_px(10), arcadeFont8());
         }
@@ -107,7 +110,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         gr().drawActor(pacMan);
         gr().drawActor(inky);
         gr().drawActor(pinky);
-        gr().drawActorSprite(heart, sprite(SpriteID.HEART));
+        gr().drawActorSprite(heart, spriteSheet.sprite(SpriteID.HEART));
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 

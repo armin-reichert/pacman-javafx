@@ -11,7 +11,7 @@ import javafx.scene.image.WritableImage;
 /**
  * Sprite sheet interface.
  */
-public interface SpriteSheet {
+public interface SpriteSheet<ID> {
     Image sourceImage();
 
     /**
@@ -30,4 +30,7 @@ public interface SpriteSheet {
     default Image subImage(Sprite sprite) {
         return subImage(sprite.x(), sprite.y(), sprite.width(), sprite.height());
     }
+
+    Sprite sprite(ID id);
+    Sprite[] sprites(ID id);
 }

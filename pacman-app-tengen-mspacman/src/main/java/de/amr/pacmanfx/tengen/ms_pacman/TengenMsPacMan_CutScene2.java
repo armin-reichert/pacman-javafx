@@ -44,10 +44,13 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     private Pac pacMan;
     private Pac msPacMan;
     private MediaPlayer music;
+    private TengenMsPacMan_SpriteSheet spriteSheet;
     private ClapperboardAnimation clapAnimation;
 
     @Override
     public void doInit() {
+        spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
+
         t = -1;
         theGame().setScoreVisible(false);
         bindActionToKeyCombination(theGameController()::letCurrentGameStateExpire, theJoypad().key(JoypadButton.START));
@@ -68,7 +71,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     public void update() {
         t += 1;
         if (t == 0) {
-            clapAnimation = new ClapperboardAnimation();
+            clapAnimation = new ClapperboardAnimation(spriteSheet);
             clapAnimation.start();
             music.play();
         }

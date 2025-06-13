@@ -17,6 +17,7 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.ActionBindingSupport;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -24,7 +25,6 @@ import java.util.List;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_GameModel.*;
-import static de.amr.pacmanfx.arcade.ArcadePacMan_SpriteSheet.sprites;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.arcade.ArcadePalette.*;
 import static de.amr.pacmanfx.arcade.SpriteID.GALLERY_GHOSTS;
@@ -131,13 +131,14 @@ public class ArcadePacMan_IntroScene extends GameScene2D implements ActionBindin
     }
 
     private void drawGallery() {
+        @SuppressWarnings("unchecked") SpriteSheet<SpriteID> spriteSheet = (SpriteSheet<SpriteID>) theUI().configuration().spriteSheet();
         if (titleVisible) {
             gr().fillText("CHARACTER / NICKNAME", ARCADE_WHITE, arcadeFont8(),
                 tiles_to_px(LEFT_TILE_X + 3), tiles_to_px(6));
         }
         for (byte personality = RED_GHOST_SHADOW; personality <= ORANGE_GHOST_POKEY; ++personality) {
             if (ghostImageVisible[personality]) {
-                gr().drawSpriteScaledCenteredAt(sprites(GALLERY_GHOSTS)[personality],
+                gr().drawSpriteScaledCenteredAt(spriteSheet.sprites(GALLERY_GHOSTS)[personality],
                     tiles_to_px(LEFT_TILE_X) + TS, tiles_to_px(7 + 3 * personality) + HTS);
             }
             if (ghostCharacterVisible[personality]) {

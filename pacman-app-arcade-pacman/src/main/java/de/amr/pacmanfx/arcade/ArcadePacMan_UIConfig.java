@@ -17,7 +17,6 @@ import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.uilib.GameScene;
-import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -192,7 +191,7 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
     }
 
     @Override
-    public SpriteSheet spriteSheet() {return spriteSheet;}
+    public SpriteSheet<SpriteID> spriteSheet() {return spriteSheet;}
 
     @Override
     public SpriteAnimationMap<?> createGhostAnimations(Ghost ghost) {
@@ -206,19 +205,19 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
 
     @Override
     public Image createGhostNumberImage(int ghostIndex) {
-        Sprite[] sprites = ArcadePacMan_SpriteSheet.sprites(SpriteID.GHOST_NUMBERS);
+        Sprite[] sprites = spriteSheet.sprites(SpriteID.GHOST_NUMBERS);
         return spriteSheet.subImage(sprites[ghostIndex]);
     }
 
     @Override
     public Sprite createBonusSymbolSprite(byte symbol) {
-        Sprite[] symbolSprites = ArcadePacMan_SpriteSheet.sprites(SpriteID.BONUS_SYMBOLS);
+        Sprite[] symbolSprites = spriteSheet.sprites(SpriteID.BONUS_SYMBOLS);
         return symbolSprites[symbol];
     }
 
     @Override
     public Sprite createBonusValueSprite(byte symbol) {
-        Sprite[] valueSprites = ArcadePacMan_SpriteSheet.sprites(SpriteID.BONUS_VALUES);
+        Sprite[] valueSprites = spriteSheet.sprites(SpriteID.BONUS_VALUES);
         return valueSprites[symbol];
     }
 
@@ -235,7 +234,7 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
 
     @Override
     public Sprite createLivesCounterSprite() {
-        return ArcadePacMan_SpriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
+        return spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
     }
 
     @Override

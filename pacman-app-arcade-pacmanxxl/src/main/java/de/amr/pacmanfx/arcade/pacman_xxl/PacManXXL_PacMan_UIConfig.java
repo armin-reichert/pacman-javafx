@@ -17,10 +17,8 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.VectorGraphicsGameRenderer;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.uilib.GameScene;
-import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.model3D.PacBase3D;
@@ -155,18 +153,18 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
     @Override
 
     public Image createGhostNumberImage(int ghostIndex) {
-        Sprite[] sprites = ArcadePacMan_SpriteSheet.sprites(SpriteID.GHOST_NUMBERS);
+        Sprite[] sprites = spriteSheet.sprites(SpriteID.GHOST_NUMBERS);
         return spriteSheet.subImage(sprites[ghostIndex]);
     }
 
     @Override
     public Sprite createBonusSymbolSprite(byte symbol) {
-        return ArcadePacMan_SpriteSheet.sprites(SpriteID.BONUS_SYMBOLS)[symbol];
+        return spriteSheet.sprites(SpriteID.BONUS_SYMBOLS)[symbol];
     }
 
     @Override
     public Sprite createBonusValueSprite(byte symbol) {
-        return ArcadePacMan_SpriteSheet.sprites(SpriteID.BONUS_VALUES)[symbol];
+        return spriteSheet.sprites(SpriteID.BONUS_VALUES)[symbol];
     }
 
     @Override
@@ -177,7 +175,7 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
     }
 
     @Override
-    public SpriteSheet spriteSheet() {return spriteSheet;}
+    public ArcadePacMan_SpriteSheet spriteSheet() {return spriteSheet;}
 
     @Override
     public GameScene selectGameScene(GameModel game, GameState gameState) {
@@ -225,7 +223,7 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
 
     @Override
     public Sprite createLivesCounterSprite() {
-        return ArcadePacMan_SpriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
+        return spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
     }
 
     @Override

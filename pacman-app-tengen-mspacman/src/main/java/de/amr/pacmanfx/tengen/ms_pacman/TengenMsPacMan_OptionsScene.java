@@ -16,10 +16,8 @@ import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_ActionBindings.TENGEN_ACTION_BINDINGS;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.sprite;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
-import static de.amr.pacmanfx.ui.PacManGames_Env.theJoypad;
-import static de.amr.pacmanfx.ui.PacManGames_Env.theSound;
+import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 import static de.amr.pacmanfx.uilib.input.Keyboard.alt;
 
@@ -55,12 +53,15 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D implements ActionBi
     private static final int INITIAL_DELAY = 20; //TODO verify
     private static final int IDLE_TIMEOUT = 1530; // 25,5 sec TODO verify
 
+    private TengenMsPacMan_SpriteSheet spriteSheet;
     private int selectedOption;
     private long idleTicks;
     private int initialDelay;
 
     @Override
     public void doInit() {
+        spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
+
         theGame().setScoreVisible(false);
 
         bindAction(TengenMsPacMan_Action.ACTION_START_PLAYING, TENGEN_ACTION_BINDINGS);
@@ -287,7 +288,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D implements ActionBi
         gr().fillText(":", NES_YELLOW, arcadeFont8(), COL_COLON, 168);
         gr().fillText(String.valueOf(tengenGame().startLevelNumber()), NES_WHITE, arcadeFont8(), COL_VALUE, 168);
         if (tengenGame().numContinues() < 4) {
-            Sprite continuesSprite = sprite(switch (tengenGame().numContinues()) {
+            Sprite continuesSprite = spriteSheet.sprite(switch (tengenGame().numContinues()) {
                 case 0 -> SpriteID.CONTINUES_0;
                 case 1 -> SpriteID.CONTINUES_1;
                 case 2 -> SpriteID.CONTINUES_2;

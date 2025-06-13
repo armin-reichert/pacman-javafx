@@ -11,7 +11,6 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
-import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.sprites;
 import static de.amr.pacmanfx.arcade.ms_pacman.SpriteID.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createAnimation;
@@ -22,10 +21,10 @@ public class ArcadeMsPacMan_GhostAnimationMap extends SpriteAnimationMap<Sprite>
         super(ss);
         requireValidGhostPersonality(personality);
         set(ANIM_GHOST_NORMAL,     createAnimation().ofSprites(ghostNormalSprites(personality, Direction.LEFT)).frameTicks(8).endless());
-        set(ANIM_GHOST_FRIGHTENED, createAnimation().ofSprites(sprites(SpriteID.GHOST_FRIGHTENED)).frameTicks(8).endless());
-        set(ANIM_GHOST_FLASHING,   createAnimation().ofSprites(sprites(GHOST_FLASHING)).frameTicks(7).endless());
+        set(ANIM_GHOST_FRIGHTENED, createAnimation().ofSprites(ss.sprites(SpriteID.GHOST_FRIGHTENED)).frameTicks(8).endless());
+        set(ANIM_GHOST_FLASHING,   createAnimation().ofSprites(ss.sprites(GHOST_FLASHING)).frameTicks(7).endless());
         set(ANIM_GHOST_EYES,       createAnimation().ofSprites(ghostEyesSprites(Direction.LEFT)).end());
-        set(ANIM_GHOST_NUMBER,     createAnimation().ofSprites(sprites(GHOST_NUMBERS)).end());
+        set(ANIM_GHOST_NUMBER,     createAnimation().ofSprites(ss.sprites(GHOST_NUMBERS)).end());
     }
 
     @Override
@@ -52,7 +51,7 @@ public class ArcadeMsPacMan_GhostAnimationMap extends SpriteAnimationMap<Sprite>
     }
 
     private Sprite[] ghostNormalSprites(byte id, Direction dir) {
-        return sprites(switch (id) {
+        return spriteSheet().sprites(switch (id) {
             case 0 -> switch (dir) {
                 case RIGHT -> RED_GHOST_RIGHT;
                 case LEFT -> RED_GHOST_LEFT;
@@ -82,7 +81,7 @@ public class ArcadeMsPacMan_GhostAnimationMap extends SpriteAnimationMap<Sprite>
     }
 
     private Sprite[] ghostEyesSprites(Direction dir) {
-        return sprites(switch (dir) {
+        return spriteSheet().sprites(switch (dir) {
             case Direction.RIGHT -> GHOST_EYES_RIGHT;
             case Direction.LEFT  -> GHOST_EYES_LEFT;
             case Direction.UP    -> GHOST_EYES_UP;

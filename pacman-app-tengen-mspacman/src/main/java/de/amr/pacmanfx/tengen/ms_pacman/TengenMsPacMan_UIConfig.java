@@ -17,10 +17,8 @@ import de.amr.pacmanfx.ui.PacManGames_Assets;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.GameScene;
-import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.model3D.MsPacMan3D;
@@ -215,7 +213,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     public boolean isGameCanvasDecorated() { return false; }
 
     @Override
-    public SpriteSheet spriteSheet() {return spriteSheet;}
+    public TengenMsPacMan_SpriteSheet spriteSheet() {return spriteSheet;}
 
     @Override
     public TengenMsPacMan_Renderer2D createRenderer(Canvas canvas) {
@@ -226,13 +224,13 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
 
     @Override
     public Image createGhostNumberImage(int ghostIndex) {
-        Sprite[] sprites = TengenMsPacMan_SpriteSheet.sprites(SpriteID.GHOST_NUMBERS);
+        Sprite[] sprites = spriteSheet.sprites(SpriteID.GHOST_NUMBERS);
         return spriteSheet.subImage(sprites[ghostIndex]);
     }
 
     @Override
     public Sprite createBonusSymbolSprite(byte symbol) {
-        return TengenMsPacMan_SpriteSheet.sprites(SpriteID.BONUS_SYMBOLS)[symbol];
+        return spriteSheet.sprites(SpriteID.BONUS_SYMBOLS)[symbol];
     }
 
     @Override
@@ -245,7 +243,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
             case TengenMsPacMan_GameModel.BONUS_ICE_CREAM -> 7; // 4000!
             default -> symbol;
         };
-        return TengenMsPacMan_SpriteSheet.sprites(SpriteID.BONUS_VALUES)[index];
+        return spriteSheet.sprites(SpriteID.BONUS_VALUES)[index];
     }
 
     @Override
@@ -286,7 +284,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
 
     @Override
     public Sprite createLivesCounterSprite() {
-        return TengenMsPacMan_SpriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
+        return spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
     }
 
     @Override

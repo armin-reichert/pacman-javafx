@@ -13,6 +13,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.media.MediaPlayer;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -20,8 +21,6 @@ import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PI
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createMsPacMan;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createPacMan;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_PacAnimationMap.PAC_MAN_MUNCHING;
-import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.sprite;
-import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.sprites;
 import static de.amr.pacmanfx.arcade.ms_pacman.SpriteID.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
@@ -55,6 +54,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void doInit() {
+        @SuppressWarnings("unchecked") SpriteSheet<SpriteID> spriteSheet = (SpriteSheet<SpriteID>) theUI().configuration().spriteSheet();
         theGame().setScoreVisible(true);
 
         pacMan = createPacMan();
@@ -66,10 +66,10 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         msPacMan.setAnimations(config.createPacAnimations(msPacMan));
         pacMan.setAnimations(config.createPacAnimations(pacMan));
 
-        storkAnimation =  SpriteAnimation.createAnimation().ofSprites(sprites(STORK)).frameTicks(8).endless();
+        storkAnimation =  SpriteAnimation.createAnimation().ofSprites(spriteSheet.sprites(STORK)).frameTicks(8).endless();
         storkAnimation.play();
 
-        clapperboardAnimation = new ClapperboardAnimation("3", "JUNIOR");
+        clapperboardAnimation = new ClapperboardAnimation(spriteSheet, "3", "JUNIOR");
         clapperboardAnimation.start();
 
         music = theSound().createSound("intermission.3");
@@ -99,13 +99,14 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
+        @SuppressWarnings("unchecked") SpriteSheet<SpriteID> spriteSheet = (SpriteSheet<SpriteID>) theUI().configuration().spriteSheet();
         if (gr() instanceof ArcadeMsPacMan_GameRenderer r) { // could also be VectorGraphicsGameRenderer!
             r.drawClapperBoard(clapperboardAnimation, tiles_to_px(3), tiles_to_px(10), arcadeFont8());
         }
         gr().drawActor(msPacMan);
         gr().drawActor(pacMan);
         gr().drawActorSprite(stork, (Sprite) storkAnimation.currentSprite());
-        gr().drawActorSprite(bag, bagOpen ? sprite(JUNIOR_PAC) : sprite(BLUE_BAG));
+        gr().drawActorSprite(bag, bagOpen ? spriteSheet.sprite(JUNIOR_PAC) : spriteSheet.sprite(BLUE_BAG));
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 

@@ -14,7 +14,7 @@ import org.tinylog.Logger;
 import java.util.*;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.Sprite.sprite;
+import static de.amr.pacmanfx.lib.Sprite.makeSprite;
 import static de.amr.pacmanfx.uilib.Ufx.replaceColors;
 import static java.util.Objects.requireNonNull;
 
@@ -47,7 +47,7 @@ public class TengenMsPacMan_MapRepository {
 
     // Strange map #15 (level 32) has 3 different images to create an animation effect
     private static final Sprite[] STRANGE_MAP_15_SPRITES = {
-        sprite(1568, 840, 224, 248), sprite(1568, 1088, 224, 248), sprite(1568, 1336, 224, 248)
+        makeSprite(1568, 840, 224, 248), makeSprite(1568, 1088, 224, 248), makeSprite(1568, 1336, 224, 248)
     };
 
     // Frame pattern: (00000000111111112222222211111111)+, numFrames = 4, frameDuration = 8

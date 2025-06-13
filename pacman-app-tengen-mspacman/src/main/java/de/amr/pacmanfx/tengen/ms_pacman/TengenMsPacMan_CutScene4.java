@@ -32,6 +32,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
     static final int LOWER_LANE = TS * 21; // TODO not sure
 
+    private TengenMsPacMan_SpriteSheet spriteSheet;
     private Pac pacMan;
     private Pac msPacMan;
     private List<Pac> juniors;
@@ -44,6 +45,8 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
     @Override
     protected void doInit() {
+        spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
+
         t = -1;
         theGame().setScoreVisible(false);
         msPacMan = createMsPacMan();
@@ -64,7 +67,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     public void update() {
         t += 1;
         if (t == 0) {
-            clapAnimation = new ClapperboardAnimation();
+            clapAnimation = new ClapperboardAnimation(spriteSheet);
             clapAnimation.start();
             music.play();
         }

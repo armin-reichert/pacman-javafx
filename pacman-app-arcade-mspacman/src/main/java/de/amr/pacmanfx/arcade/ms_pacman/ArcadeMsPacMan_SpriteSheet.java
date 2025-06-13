@@ -12,20 +12,21 @@ import java.util.EnumMap;
 import java.util.stream.IntStream;
 
 import static de.amr.pacmanfx.arcade.ms_pacman.SpriteID.*;
+import static de.amr.pacmanfx.lib.Sprite.makeSprite;
 
-public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements SpriteSheet {
+public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements SpriteSheet<SpriteID> {
 
     private static final byte R16 = 16;
     private static final int OFF_X = 456;
 
     // third "column" contains the sprites (first two columns the maze images)
     private static Sprite tile(int tileX, int tileY) {
-        return Sprite.sprite(OFF_X + R16 * tileX, R16 * tileY, R16, R16);
+        return makeSprite(OFF_X + R16 * tileX, R16 * tileY, R16, R16);
     }
 
     private static Sprite[] tilesRightOf(int tileX, int tileY, int numTiles) {
         return IntStream.range(tileX, tileX + numTiles)
-                .mapToObj(x -> Sprite.sprite(OFF_X + R16 * x, R16 * tileY, R16, R16))
+                .mapToObj(x -> makeSprite(OFF_X + R16 * x, R16 * tileY, R16, R16))
                 .toArray(Sprite[]::new);
     }
 
@@ -66,19 +67,16 @@ public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements SpriteShe
         SPRITE_MAP.put(BONUS_SYMBOLS,            IntStream.range(0, 8).mapToObj(symbol -> tile(3 + symbol, 0)).toArray(Sprite[]::new));
         SPRITE_MAP.put(BONUS_VALUES,             IntStream.range(0, 8).mapToObj(symbol -> tile(3 + symbol, 1)).toArray(Sprite[]::new));
         SPRITE_MAP.put(LIVES_COUNTER_SYMBOL,     tile(1, 0));
-        SPRITE_MAP.put(STORK,                    new Sprite[] {Sprite.sprite(489, 176, 32, 16), Sprite.sprite(521, 176, 32, 16)});
+        SPRITE_MAP.put(STORK,                    new Sprite[] {makeSprite(489, 176, 32, 16), makeSprite(521, 176, 32, 16)});
         SPRITE_MAP.put(CLAPPERBOARD,             new Sprite[] {
-                                                    Sprite.sprite(456, 208, 32, 32),  // open
-                                                    Sprite.sprite(488, 208, 32, 32),  // middle
-                                                    Sprite.sprite(520, 208, 32, 32)   // closed
+                                                    makeSprite(456, 208, 32, 32),  // open
+                                                    makeSprite(488, 208, 32, 32),  // middle
+                                                    makeSprite(520, 208, 32, 32)   // closed
         });
         SPRITE_MAP.put(HEART,                    tile(2, 10));
-        SPRITE_MAP.put(BLUE_BAG,                 Sprite.sprite(488, 199, 8, 8));
-        SPRITE_MAP.put(JUNIOR_PAC,               Sprite.sprite(509, 200, 8, 8));
+        SPRITE_MAP.put(BLUE_BAG,                 makeSprite(488, 199, 8, 8));
+        SPRITE_MAP.put(JUNIOR_PAC,               makeSprite(509, 200, 8, 8));
     }
-
-    public static Sprite sprite(SpriteID spriteID)    { return (Sprite) SPRITE_MAP.get(spriteID); }
-    public static Sprite[] sprites(SpriteID spriteID) { return (Sprite[]) SPRITE_MAP.get(spriteID); }
 
     private static Sprite[] crappyPacManMunchingSpritesExtraction(int dir) {
         Sprite wide = tile(0, dir), open = tile(1, dir), closed = tile(2, dir);
@@ -90,4 +88,8 @@ public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements SpriteShe
         // TODO: this is not yet 100% correct
         return new Sprite[] {down, left, up, right, down, left, up, right, down, left, up};
     }
+
+    public Sprite sprite(SpriteID spriteID)    { return (Sprite) SPRITE_MAP.get(spriteID); }
+
+    public Sprite[] sprites(SpriteID spriteID) { return (Sprite[]) SPRITE_MAP.get(spriteID); }
 }

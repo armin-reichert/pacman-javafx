@@ -5,10 +5,11 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.lib.Sprite;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.sprites;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Animated move clapperboard.
@@ -17,6 +18,7 @@ public class ClapperboardAnimation {
 
     private static final byte HIDDEN = -1, WIDE_OPEN = 0, OPEN = 1, CLOSED = 2;
 
+    private final SpriteSheet<SpriteID> spriteSheet;
     private final String number;
     private final String text;
 
@@ -24,7 +26,8 @@ public class ClapperboardAnimation {
     private boolean running;
     private byte state;
 
-    public ClapperboardAnimation(String number, String text) {
+    public ClapperboardAnimation(SpriteSheet<SpriteID> spriteSheet, String number, String text) {
+        this.spriteSheet = requireNonNull(spriteSheet);
         this.number = number;
         this.text = text;
     }
@@ -60,7 +63,7 @@ public class ClapperboardAnimation {
 
     public Optional<Sprite> currentSprite() {
         if (state == HIDDEN) return Optional.empty();
-        Sprite sprite = sprites(SpriteID.CLAPPERBOARD)[state];
+        Sprite sprite = spriteSheet.sprites(SpriteID.CLAPPERBOARD)[state];
         return Optional.of(sprite);
     }
 }

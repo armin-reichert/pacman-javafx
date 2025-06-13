@@ -26,7 +26,6 @@ import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_ActionBindings.TENGEN_ACTION_BINDINGS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Renderer2D.blueShadedColor;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.sprite;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 
@@ -45,6 +44,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D implements ActionBind
 
     private final StateMachine<SceneState, TengenMsPacMan_IntroScene> sceneController;
 
+    private TengenMsPacMan_SpriteSheet spriteSheet;
     private long marqueeTick;
     private final BitSet marqueeState = new BitSet(NUM_BULBS);
     private TextActor presentsText;
@@ -65,6 +65,8 @@ public class TengenMsPacMan_IntroScene extends GameScene2D implements ActionBind
 
     @Override
     public void doInit() {
+        spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
+
         theGame().setScoreVisible(false);
         bindAction(TengenMsPacMan_Action.ACTION_START_GAME, TENGEN_ACTION_BINDINGS);
         bindAction(TengenMsPacMan_Action.ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, TENGEN_ACTION_BINDINGS);
@@ -99,7 +101,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D implements ActionBind
             case WAITING_FOR_START -> {
                 if (!dark) {
                     gr().fillText(presentsText.text(), blueShadedColor(tick), arcadeFont8(), presentsText.x(), presentsText.y());
-                    gr().drawSpriteScaled(sprite(SpriteID.TITLE_TEXT), 6 * TS, MARQUEE_Y);
+                    gr().drawSpriteScaled(spriteSheet.sprite(SpriteID.TITLE_TEXT), 6 * TS, MARQUEE_Y);
                     if (tick % 60 < 30) {
                         gr().fillText("PRESS START", nesPaletteColor(0x20), arcadeFont8(), 11 * TS, MARQUEE_Y + 9 * TS);
                     }

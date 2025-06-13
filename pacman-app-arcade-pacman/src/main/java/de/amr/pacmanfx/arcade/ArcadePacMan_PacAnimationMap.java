@@ -10,7 +10,6 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
-import static de.amr.pacmanfx.arcade.ArcadePacMan_SpriteSheet.sprites;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ANIM_BIG_PAC_MAN;
 import static de.amr.pacmanfx.arcade.SpriteID.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
@@ -22,8 +21,8 @@ public class ArcadePacMan_PacAnimationMap extends SpriteAnimationMap<Sprite> {
     public ArcadePacMan_PacAnimationMap(ArcadePacMan_SpriteSheet ss) {
         super(ss);
         set(ANIM_PAC_MUNCHING, createAnimation().ofSprites(pacMunchingSprites(Direction.LEFT)).endless());
-        set(ANIM_PAC_DYING,    createAnimation().ofSprites(sprites(PACMAN_DYING)).frameTicks(8).end());
-        set(ANIM_BIG_PAC_MAN,  createAnimation().ofSprites(sprites(PACMAN_BIG)).frameTicks(3).endless());
+        set(ANIM_PAC_DYING,    createAnimation().ofSprites(ss.sprites(PACMAN_DYING)).frameTicks(8).end());
+        set(ANIM_BIG_PAC_MAN,  createAnimation().ofSprites(ss.sprites(PACMAN_BIG)).frameTicks(3).endless());
     }
 
     @Override
@@ -40,10 +39,10 @@ public class ArcadePacMan_PacAnimationMap extends SpriteAnimationMap<Sprite> {
 
     private Sprite[] pacMunchingSprites(Direction dir) {
         return switch (dir) {
-            case RIGHT -> sprites(PACMAN_MUNCHING_RIGHT);
-            case LEFT -> sprites(PACMAN_MUNCHING_LEFT);
-            case UP -> sprites(PACMAN_MUNCHING_UP);
-            case DOWN -> sprites(PACMAN_MUNCHING_DOWN);
+            case RIGHT -> spriteSheet().sprites(PACMAN_MUNCHING_RIGHT);
+            case LEFT  -> spriteSheet().sprites(PACMAN_MUNCHING_LEFT);
+            case UP    -> spriteSheet().sprites(PACMAN_MUNCHING_UP);
+            case DOWN  -> spriteSheet().sprites(PACMAN_MUNCHING_DOWN);
         };
     }
 }

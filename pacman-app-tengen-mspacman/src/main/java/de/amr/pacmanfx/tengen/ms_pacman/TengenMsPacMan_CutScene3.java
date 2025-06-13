@@ -18,8 +18,6 @@ import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.SpriteID.STORK;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.createMsPacMan;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.createPacMan;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.sprite;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.sprites;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
@@ -54,6 +52,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
     private boolean bagOpen;
     private boolean darkness;
 
+    private TengenMsPacMan_SpriteSheet spriteSheet;
     private ClapperboardAnimation clapAnimation;
     private SpriteAnimation storkAnimation;
 
@@ -61,6 +60,8 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void doInit() {
+        spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
+
         t = -1;
         theGame().setScoreVisible(false);
         bindActionToKeyCombination(theGameController()::letCurrentGameStateExpire, theJoypad().key(JoypadButton.START));
@@ -85,7 +86,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         t += 1;
         if (t == 0) {
             darkness = false;
-            clapAnimation = new ClapperboardAnimation();
+            clapAnimation = new ClapperboardAnimation(spriteSheet);
             clapAnimation.start();
             music.play();
         }
@@ -105,7 +106,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
             stork.setPosition(RIGHT_BORDER, STORK_Y);
             stork.setVelocity(-0.8f, 0);
             stork.show();
-            storkAnimation = createAnimation().ofSprites(sprites(STORK)).frameTicks(8).endless();
+            storkAnimation = createAnimation().ofSprites(spriteSheet.sprites(STORK)).frameTicks(8).endless();
             storkAnimation.play();
             bagReleased = false;
         }
@@ -170,9 +171,9 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         gr().drawActor(pacMan);
         if (bagWithJunior.isVisible()) {
             if (bagOpen) {
-                gr().drawActorSprite(bagWithJunior, sprite(SpriteID.JUNIOR_PAC));
+                gr().drawActorSprite(bagWithJunior, spriteSheet.sprite(SpriteID.JUNIOR_PAC));
             } else {
-                gr().drawActorSprite(bagWithJunior, sprite(SpriteID.BLUE_BAG));
+                gr().drawActorSprite(bagWithJunior, spriteSheet.sprite(SpriteID.BLUE_BAG));
             }
         }
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx().minus(0, 3*TS));

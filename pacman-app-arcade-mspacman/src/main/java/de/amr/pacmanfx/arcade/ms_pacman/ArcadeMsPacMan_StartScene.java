@@ -8,15 +8,16 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.ActionBindingSupport;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
 import static de.amr.pacmanfx.Globals.theCoinMechanism;
 import static de.amr.pacmanfx.Globals.theGame;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.arcade.ArcadePalette.ARCADE_ORANGE;
 import static de.amr.pacmanfx.arcade.ArcadePalette.ARCADE_RED;
-import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.sprite;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theSound;
+import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 
 public class ArcadeMsPacMan_StartScene extends GameScene2D implements ActionBindingSupport {
@@ -43,10 +44,12 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D implements ActionBind
 
     @Override
     public void drawSceneContent() {
+        @SuppressWarnings("unchecked") SpriteSheet<SpriteID> spriteSheet = (SpriteSheet<SpriteID>) theUI().configuration().spriteSheet();
+
         gr().fillTextAtTile("PUSH START BUTTON", ARCADE_ORANGE, arcadeFont8(), 6, 16);
         gr().fillTextAtTile("1 PLAYER ONLY", ARCADE_ORANGE, arcadeFont8(), 8, 18);
         gr().fillTextAtTile("ADDITIONAL    AT 10000", ARCADE_ORANGE, arcadeFont8(), 2, 25);
-        gr().drawSpriteScaled(sprite(SpriteID.LIVES_COUNTER_SYMBOL), tiles_to_px(13), tiles_to_px(23) + 1);
+        gr().drawSpriteScaled(spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL), tiles_to_px(13), tiles_to_px(23) + 1);
         gr().fillTextAtTile("PTS", ARCADE_ORANGE, arcadeFont6(), 25, 25);
         if (gr() instanceof ArcadeMsPacMan_GameRenderer r) {
             r.drawMsPacManCopyrightAtTile(ARCADE_RED, arcadeFont8(), 6, 28);
