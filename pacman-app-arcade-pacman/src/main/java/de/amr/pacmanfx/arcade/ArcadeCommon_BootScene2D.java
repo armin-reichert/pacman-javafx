@@ -9,7 +9,6 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
-import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
@@ -67,7 +66,7 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
         TickTimer timer = theGameState().timer();
         if (timer.betweenSeconds(1, 2) && timer.tickCount() % 4 == 0) {
             gr().fillCanvas(backgroundColor());
-            drawRandomHexCodes();
+            drawRandomHexDigits();
         } else if (timer.betweenSeconds(2, 3.5) && timer.tickCount() % 4 == 0) {
             gr().fillCanvas(backgroundColor());
             drawRandomSpriteFragments();
@@ -77,16 +76,16 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
         }
     }
 
-    private void drawRandomHexCodes() {
-        final Vector2f sceneSize = sizeInPx();
-        final Font font = arcadeFont8();
-        final int numRows = (int) (sceneSize.y() / TS), numCols = (int) (sceneSize.x() / TS);
+    private void drawRandomHexDigits() {
+        int numRows = (int) (ARCADE_MAP_SIZE_IN_PIXELS.y() / TS);
+        int numCols = (int) (ARCADE_MAP_SIZE_IN_PIXELS.x() / TS);
         ctx().setFill(ARCADE_WHITE);
-        ctx().setFont(font);
+        ctx().setFont(arcadeFont8());
         for (int row = 0; row < numRows; ++row) {
+            double y = scaled(tiles_to_px(row + 1));
             for (int col = 0; col < numCols; ++col) {
-                var hexCode = Integer.toHexString(theRNG().nextInt(16));
-                ctx().fillText(hexCode, scaled(tiles_to_px(col)), scaled(tiles_to_px(row + 1)));
+                int hexDigit = theRNG().nextInt(16);
+                ctx().fillText(Integer.toHexString(hexDigit), scaled(tiles_to_px(col)), y);
             }
         }
     }
