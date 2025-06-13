@@ -359,33 +359,40 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
         if (optGameLevel().isEmpty()) {
             return;
         }
+
+        // game level exists from here
+        gr().ensureMapSettingsApplied(theGameLevel());
+        //TODO check why sprite sheet may be null here
+        if (spriteSheet == null) {
+            spriteSheet = theUI().configuration().spriteSheet();
+        }
+
+        // compute current scene scaling
         switch (displayModePy.get()) {
-            case SCALED_TO_FIT -> {
-                //TODO this code smells
+            case SCALED_TO_FIT -> { //TODO this code smells
                 int tilesY = theGameLevel().worldMap().numRows() + 3;
-                setScaling(fxSubScene.getHeight() / (tilesY * TS));
                 double camY = scaled((tilesY - 46) * HTS);
                 fixedCamera.setTranslateY(camY);
+                setScaling(fxSubScene.getHeight() / (tilesY * TS));
             }
             case SCROLLING -> setScaling(fxSubScene.getHeight() / NES_SIZE.y());
         }
-
         gr().setScaling(scaling());
+
         if (theGame().isScoreVisible()) {
             gr().drawScores(theGame(), scoreColor(), arcadeFont8());
         }
+
+        ctx().save();
         if (debugInfoVisiblePy.get()) {
-            ctx().save();
             canvas.setClip(null);
             drawSceneContent();
             drawDebugInfo();
-            ctx().restore();
         } else {
-            ctx().save();
             canvas.setClip(canvasClipRect);
             drawSceneContent();
-            ctx().restore();
         }
+        ctx().restore();
     }
 
     @Override
@@ -395,11 +402,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
         final int mazeTop = 3 * TS;
         final boolean flashing = levelFinishedAnimation != null && levelFinishedAnimation.isRunning();
 
-        //TODO check this:
-        if (spriteSheet == null) {
-            spriteSheet = theUI().configuration().spriteSheet();
-        }
-        gr().ensureMapSettingsApplied(theGameLevel());
 
         ctx().save();
         ctx().translate(indent, 0);
