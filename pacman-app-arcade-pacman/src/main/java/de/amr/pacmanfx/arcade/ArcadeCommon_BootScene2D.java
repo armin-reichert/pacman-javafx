@@ -72,7 +72,7 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
             drawRandomSpriteFragments();
         } else if (timer.atSecond(3.5)) {
             gr().fillCanvas(backgroundColor());
-            drawGridLines(16);
+            drawGridLines();
         }
     }
 
@@ -95,7 +95,7 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
         int numCols = (int) (ARCADE_MAP_SIZE_IN_PIXELS.x() / FRAGMENT_SIZE);
         for (int row = 0; row < numRows; ++row) {
             if (theRNG().nextInt(100) < 20) continue;
-            RectArea fragment1 = randomFragment(), fragment2 = randomFragment();
+            RectArea fragment1 = randomSpriteFragment(), fragment2 = randomSpriteFragment();
             int split = numCols / 8 + theRNG().nextInt(numCols / 4);
             for (int col = 0; col < numCols; ++col) {
                 gr().drawSpriteScaled(col < split ? fragment1 : fragment2, FRAGMENT_SIZE * col, FRAGMENT_SIZE * row);
@@ -103,28 +103,28 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
         }
     }
 
-    private RectArea randomFragment() {
+    private RectArea randomSpriteFragment() {
         return new RectArea(
             (int) lerp(minPoint.x(), maxPoint.x(), theRNG().nextDouble()),
             (int) lerp(minPoint.y(), maxPoint.y(), theRNG().nextDouble()),
             FRAGMENT_SIZE, FRAGMENT_SIZE);
     }
 
-    private void drawGridLines(int cellSize) {
+    private void drawGridLines() {
         double gridWidth = scaled(ARCADE_MAP_SIZE_IN_PIXELS.x());
         double gridHeight = scaled(ARCADE_MAP_SIZE_IN_PIXELS.y());
-        int numRows = (int) (ARCADE_MAP_SIZE_IN_PIXELS.y() / cellSize);
-        int numCols = (int) (ARCADE_MAP_SIZE_IN_PIXELS.x() / cellSize);
+        int numRows = (int) (ARCADE_MAP_SIZE_IN_PIXELS.y() / 16);
+        int numCols = (int) (ARCADE_MAP_SIZE_IN_PIXELS.x() / 16);
         double thin = scaled(2), thick = scaled(4);
         ctx().setStroke(ARCADE_WHITE);
         for (int row = 0; row <= numRows; ++row) {
             ctx().setLineWidth(row == 0 || row == numRows ? thick : thin);
-            double y = scaled(row * cellSize);
+            double y = scaled(row * 16);
             ctx().strokeLine(0, y, gridWidth, y);
         }
         for (int col = 0; col <= numCols; ++col) {
             ctx().setLineWidth(col == 0 || col == numCols ? thick : thin);
-            double x = scaled(col * cellSize);
+            double x = scaled(col * 16);
             ctx().strokeLine(x, 0, x, gridHeight);
         }
     }
