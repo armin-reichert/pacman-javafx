@@ -218,10 +218,7 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <T extends SpriteSheet> T spriteSheet() {
-        return (T) spriteSheet;
-    }
+    public SpriteSheet spriteSheet() {return spriteSheet;}
 
     @Override
     public GameScene selectGameScene(GameModel game, GameState gameState) {

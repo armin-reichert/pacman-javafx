@@ -215,10 +215,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     public boolean isGameCanvasDecorated() { return false; }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <T extends SpriteSheet> T spriteSheet() {
-        return (T) spriteSheet;
-    }
+    public SpriteSheet spriteSheet() {return spriteSheet;}
 
     @Override
     public TengenMsPacMan_Renderer2D createRenderer(Canvas canvas) {

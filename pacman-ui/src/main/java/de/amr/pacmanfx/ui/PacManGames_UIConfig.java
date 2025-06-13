@@ -40,6 +40,6 @@ public interface PacManGames_UIConfig {
     boolean gameSceneHasID(GameScene gameScene, String sceneID);
     default boolean isGameCanvasDecorated() { return true; }
     GameScene selectGameScene(GameModel game, GameState gameState);
-    <T extends SpriteSheet> T spriteSheet();
+    SpriteSheet spriteSheet();
     WorldMapColorScheme worldMapColorScheme(WorldMap worldMap);
 }
