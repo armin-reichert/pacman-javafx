@@ -52,6 +52,18 @@ public class ArcadePacMan_GameRenderer extends SpriteGameRenderer {
     }
 
     @Override
+    public void drawBonus(Bonus bonus) {
+        if (bonus.state() == Bonus.STATE_EDIBLE) {
+            RectArea sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
+            drawActorSprite(bonus.actor(), sprite);
+        }
+        else if (bonus.state() == Bonus.STATE_EATEN) {
+            RectArea sprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
+            drawActorSprite(bonus.actor(), sprite);
+        }
+    }
+
+    @Override
     public void drawLevel(GameLevel level, double x, double y, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted) {
         ctx.save();
         ctx.scale(scaling(), scaling());
@@ -60,7 +72,8 @@ public class ArcadePacMan_GameRenderer extends SpriteGameRenderer {
         }
         else if (level.uneatenFoodCount() == 0) {
             drawSprite(sprite(SpriteID.MAP_EMPTY), x, y);
-        } else {
+        }
+        else {
             drawSprite(sprite(SpriteID.MAP_FULL), x, y);
             overPaintEatenPelletTiles(level, backgroundColor);
             overPaintEnergizerTiles(level, tile -> !energizerHighlighted || level.tileContainsEatenFood(tile), backgroundColor);
@@ -69,22 +82,12 @@ public class ArcadePacMan_GameRenderer extends SpriteGameRenderer {
     }
 
     @Override
-    public void drawLevelCounter(LevelCounter levelCounter, Vector2f sceneSizeInPixels) {
-        float x = sceneSizeInPixels.x() - 4 * TS, y = sceneSizeInPixels.y() - 2 * TS;
+    public void drawLevelCounter(LevelCounter levelCounter, Vector2f sceneSize) {
+        float x = sceneSize.x() - 4 * TS, y = sceneSize.y() - 2 * TS;
         for (byte symbol : levelCounter.symbols()) {
             RectArea sprite = theUI().configuration().createBonusSymbolSprite(symbol);
             drawSpriteScaled(sprite, x, y);
             x -= TS * 2;
-        }
-    }
-
-    public void drawBonus(Bonus bonus) {
-        if (bonus.state() == Bonus.STATE_EDIBLE) {
-            RectArea sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
-            drawActorSprite(bonus.actor(), sprite);
-        } else if (bonus.state() == Bonus.STATE_EATEN) {
-            RectArea sprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
-            drawActorSprite(bonus.actor(), sprite);
         }
     }
 }
