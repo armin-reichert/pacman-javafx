@@ -28,6 +28,6 @@ public interface SpriteSheet {
     }
 
     default Image subImage(Sprite sprite) {
-        return subImage(sprite.x(), sprite.y(), sprite.width(), sprite.height();
+        return subImage(sprite.x(), sprite.y(), sprite.width(), sprite.height());
     }
 }
