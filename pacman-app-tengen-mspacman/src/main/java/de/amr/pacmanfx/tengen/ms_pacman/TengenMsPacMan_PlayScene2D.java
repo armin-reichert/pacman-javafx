@@ -7,7 +7,6 @@ package de.amr.pacmanfx.tengen.ms_pacman;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
@@ -42,6 +41,7 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVEL_TEASERS;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Action.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_ActionBindings.TENGEN_ACTION_BINDINGS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_SpriteSheet.sprite;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
@@ -51,11 +51,11 @@ import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 /**
  * Tengen play scene, uses vertical scrolling.
  */
-public class TengenMsPacMan_PlayScene2D extends GameScene2D
-    implements ActionBindingSupport, CameraControlledView {
+public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBindingSupport, CameraControlledView {
 
-    // NES screen width (32 tiles), BIG map height (42 tiles) + 2 extra tile rows
-    private static final Vector2i UNSCALED_CANVAS_SIZE = Vector2i.of(32 * TS, 44 * TS);
+    // Width: 32 tiles (NES screen width), height: 42 tiles (BIG maps height) + 2 extra rows
+    private static final int UNSCALED_CANVAS_WIDTH  = 32 * TS;
+    private static final int UNSCALED_CANVAS_HEIGHT = 44 * TS;
 
     private static final int MOVING_MESSAGE_DELAY = 120;
 
@@ -72,30 +72,28 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D
     public TengenMsPacMan_PlayScene2D() {
         dynamicCamera.scalingProperty().bind(scalingProperty());
 
-        setCanvas(new Canvas());
-        canvas().widthProperty().bind(scalingProperty().multiply(UNSCALED_CANVAS_SIZE.x()));
-        canvas().heightProperty().bind(scalingProperty().multiply(UNSCALED_CANVAS_SIZE.y()));
+        Canvas canvas = new Canvas();
+        setCanvas(canvas);
 
-        // The maps are 28 tiles but the canvas is as wide as the NES screen (32 tiles).
-        // To avoid drawing Pac-Man outside the map when going through portals, 2 tiles wide vertical stripes
-        // are clipped at the left and right map border.
-        var clipRect = new Rectangle();
-        // clipRect.x = canvas.x + scaled(2 * TS)
-        clipRect.xProperty().bind(canvas().translateXProperty().add(scalingProperty().multiply(2 * TS)));
-        clipRect.yProperty().bind(canvas().translateYProperty());
-        // clipRect.width = canvas.width + scaled(4 * TS)
-        clipRect.widthProperty().bind(canvas().widthProperty().subtract(scalingProperty().multiply(4 * TS)));
-        clipRect.heightProperty().bind(canvas().heightProperty());
-        canvas().setClip(clipRect);
+        canvas.widthProperty() .bind(scalingProperty().multiply(UNSCALED_CANVAS_WIDTH));
+        canvas.heightProperty().bind(scalingProperty().multiply(UNSCALED_CANVAS_HEIGHT));
 
-        var root = new StackPane(canvas());
+        // The maps are only 28 tiles wide. To avoid drawing the actors outside the map when going through portals,
+        // 2 tiles wide vertical stripes are clipped at the left and right map border.
+        var rect = new Rectangle();
+        rect.xProperty().bind(canvas.translateXProperty().add(scalingProperty().multiply(2 * TS)));
+        rect.yProperty().bind(canvas.translateYProperty());
+        rect.widthProperty().bind(canvas.widthProperty().subtract(scalingProperty().multiply(4 * TS)));
+        rect.heightProperty().bind(canvas.heightProperty());
+        canvas.setClip(rect);
+
+        var root = new StackPane(canvas);
         root.setBackground(Background.EMPTY);
 
         fxSubScene = new SubScene(root, 0, 0); // size is bound to parent scene size when embedded in game view
-        fxSubScene.setFill(PY_CANVAS_BG_COLOR.get());
-
         fxSubScene.cameraProperty().bind(displayModeProperty()
-          .map(displayMode -> displayMode == SceneDisplayMode.SCROLLING ? dynamicCamera : fixedCamera));
+            .map(displayMode -> displayMode == SceneDisplayMode.SCROLLING ? dynamicCamera : fixedCamera));
+        fxSubScene.setFill(PY_CANVAS_BG_COLOR.get());
     }
 
     @Override
@@ -151,18 +149,18 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D
 
     private void bindActionsToKeys() {
         if (theGameLevel().isDemoLevel()) {
-            bindAction(TengenMsPacMan_Action.ACTION_QUIT_DEMO_LEVEL, TENGEN_ACTION_BINDINGS);
+            bindAction(ACTION_QUIT_DEMO_LEVEL, TENGEN_ACTION_BINDINGS);
         } else {
-            bindAction(ACTION_STEER_UP, TENGEN_ACTION_BINDINGS);
-            bindAction(ACTION_STEER_DOWN, TENGEN_ACTION_BINDINGS);
-            bindAction(ACTION_STEER_LEFT, TENGEN_ACTION_BINDINGS);
-            bindAction(ACTION_STEER_RIGHT, TENGEN_ACTION_BINDINGS);
-            bindAction(TengenMsPacMan_Action.ACTION_TOGGLE_DISPLAY_MODE, TENGEN_ACTION_BINDINGS);
-            bindAction(TengenMsPacMan_Action.ACTION_TOGGLE_PAC_BOOSTER, TENGEN_ACTION_BINDINGS);
-            bindAction(ACTION_CHEAT_EAT_ALL_PELLETS, COMMON_ACTION_BINDINGS);
-            bindAction(ACTION_CHEAT_ADD_LIVES, COMMON_ACTION_BINDINGS);
+            bindAction(ACTION_STEER_UP,               TENGEN_ACTION_BINDINGS);
+            bindAction(ACTION_STEER_DOWN,             TENGEN_ACTION_BINDINGS);
+            bindAction(ACTION_STEER_LEFT,             TENGEN_ACTION_BINDINGS);
+            bindAction(ACTION_STEER_RIGHT,            TENGEN_ACTION_BINDINGS);
+            bindAction(ACTION_TOGGLE_DISPLAY_MODE,    TENGEN_ACTION_BINDINGS);
+            bindAction(ACTION_TOGGLE_PAC_BOOSTER,     TENGEN_ACTION_BINDINGS);
+            bindAction(ACTION_CHEAT_EAT_ALL_PELLETS,  COMMON_ACTION_BINDINGS);
+            bindAction(ACTION_CHEAT_ADD_LIVES,        COMMON_ACTION_BINDINGS);
             bindAction(ACTION_CHEAT_ENTER_NEXT_LEVEL, COMMON_ACTION_BINDINGS);
-            bindAction(ACTION_CHEAT_KILL_GHOSTS, COMMON_ACTION_BINDINGS);
+            bindAction(ACTION_CHEAT_KILL_GHOSTS,      COMMON_ACTION_BINDINGS);
         }
         updateActionBindings();
     }
@@ -440,7 +438,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D
             // NES screen width is 32 tiles but mazes are only 28 tiles wide
             double margin = scaled((NES_TILES.x() - theGameLevel().worldMap().numCols()) * HTS);
             ctx().translate(margin, 0);
-            gr().drawTileGrid(UNSCALED_CANVAS_SIZE.x(), UNSCALED_CANVAS_SIZE.y(), Color.LIGHTGRAY);
+            gr().drawTileGrid(UNSCALED_CANVAS_WIDTH, UNSCALED_CANVAS_HEIGHT, Color.LIGHTGRAY);
             ctx().setFill(Color.YELLOW);
             ctx().setFont(DEBUG_TEXT_FONT);
             ctx().fillText("%s %d".formatted(theGameState(), theGameState().timer().tickCount()), 0, scaled(3 * TS));
