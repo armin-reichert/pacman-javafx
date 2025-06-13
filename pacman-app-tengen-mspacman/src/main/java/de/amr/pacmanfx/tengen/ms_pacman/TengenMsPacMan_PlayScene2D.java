@@ -63,6 +63,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
     private final DynamicCamera dynamicCamera = new DynamicCamera();
     private final ParallelCamera fixedCamera  = new ParallelCamera();
     private final ObjectProperty<SceneDisplayMode> displayModePy = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING);
+    private final Rectangle canvasClipRect = new Rectangle();
 
     private MessageMovement messageMovement;
     private LevelFinishedAnimation levelFinishedAnimation;
@@ -72,7 +73,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
     public TengenMsPacMan_PlayScene2D() {
         dynamicCamera.scalingProperty().bind(scalingProperty());
 
-        Canvas canvas = new Canvas();
+        canvas = new Canvas();
         setCanvas(canvas);
 
         canvas.widthProperty() .bind(scalingProperty().multiply(UNSCALED_CANVAS_WIDTH));
@@ -80,12 +81,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
 
         // The maps are only 28 tiles wide. To avoid drawing the actors outside the map when going through portals,
         // 2 tiles wide vertical stripes are clipped at the left and right map border.
-        var rect = new Rectangle();
-        rect.xProperty().bind(canvas.translateXProperty().add(scalingProperty().multiply(2 * TS)));
-        rect.yProperty().bind(canvas.translateYProperty());
-        rect.widthProperty().bind(canvas.widthProperty().subtract(scalingProperty().multiply(4 * TS)));
-        rect.heightProperty().bind(canvas.heightProperty());
-        canvas.setClip(rect);
+        canvasClipRect.xProperty().bind(canvas.translateXProperty().add(scalingProperty().multiply(2 * TS)));
+        canvasClipRect.yProperty().bind(canvas.translateYProperty());
+        canvasClipRect.widthProperty().bind(canvas.widthProperty().subtract(scalingProperty().multiply(4 * TS)));
+        canvasClipRect.heightProperty().bind(canvas.heightProperty());
 
         var root = new StackPane(canvas);
         root.setBackground(Background.EMPTY);
@@ -375,9 +374,17 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
         if (theGame().isScoreVisible()) {
             gr().drawScores(theGame(), scoreColor(), arcadeFont8());
         }
-        drawSceneContent();
         if (debugInfoVisiblePy.get()) {
+            ctx().save();
+            canvas.setClip(null);
+            drawSceneContent();
             drawDebugInfo();
+            ctx().restore();
+        } else {
+            ctx().save();
+            canvas.setClip(canvasClipRect);
+            drawSceneContent();
+            ctx().restore();
         }
     }
 
@@ -394,7 +401,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
         }
         gr().ensureMapSettingsApplied(theGameLevel());
 
-
         ctx().save();
         ctx().translate(indent, 0);
         if (flashing) {
@@ -406,14 +412,15 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
             }
         }
         else {
-            gr().drawLevel(theGameLevel(), 0, mazeTop, null, false, false);
-            gr().drawFood(theGameLevel());
-            theGameLevel().bonus().ifPresent(gr()::drawBonus);
             //TODO in the original game, the message is drawn under the maze image but *over* the pellets!
             gr().drawLevelMessage(theGameLevel(), currentMessagePosition(), arcadeFont8());
+            gr().drawLevel(theGameLevel(), 0, mazeTop, null, false, false);
+            gr().drawFood(theGameLevel());
         }
+
         gr().drawActor(theGameLevel().pac());
         ghostsInZOrder().forEach(ghost -> gr().drawActor(ghost));
+        theGameLevel().bonus().ifPresent(gr()::drawBonus);
 
         // As long as Pac-Man is still invisible on game start, one live more is shown in the counter
         int numLivesDisplayed = theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible()
@@ -434,11 +441,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
     @Override
     protected void drawDebugInfo() {
         ctx().save();
+        gr().drawTileGrid(UNSCALED_CANVAS_WIDTH, UNSCALED_CANVAS_HEIGHT, Color.LIGHTGRAY);
         if (optGameLevel().isPresent()) {
             // NES screen width is 32 tiles but mazes are only 28 tiles wide
             double margin = scaled((NES_TILES.x() - theGameLevel().worldMap().numCols()) * HTS);
             ctx().translate(margin, 0);
-            gr().drawTileGrid(UNSCALED_CANVAS_WIDTH, UNSCALED_CANVAS_HEIGHT, Color.LIGHTGRAY);
             ctx().setFill(Color.YELLOW);
             ctx().setFont(DEBUG_TEXT_FONT);
             ctx().fillText("%s %d".formatted(theGameState(), theGameState().timer().tickCount()), 0, scaled(3 * TS));
