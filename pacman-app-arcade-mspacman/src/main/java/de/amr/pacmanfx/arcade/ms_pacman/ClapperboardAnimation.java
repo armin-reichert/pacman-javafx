@@ -63,7 +63,7 @@ public class ClapperboardAnimation {
 
     public Optional<Sprite> currentSprite() {
         if (state == HIDDEN) return Optional.empty();
-        Sprite sprite = spriteSheet.sprites(SpriteID.CLAPPERBOARD)[state];
+        Sprite sprite = spriteSheet.spriteSeq(SpriteID.CLAPPERBOARD)[state];
         return Optional.of(sprite);
     }
 }

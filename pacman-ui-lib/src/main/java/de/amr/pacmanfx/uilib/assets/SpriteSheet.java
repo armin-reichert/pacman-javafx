@@ -10,8 +10,10 @@ import javafx.scene.image.WritableImage;
 
 /**
  * Sprite sheet interface.
+ *
+ * @param <SID> sprite ID type
  */
-public interface SpriteSheet<ID> {
+public interface SpriteSheet<SID> {
     Image sourceImage();
 
     /**
@@ -31,6 +33,6 @@ public interface SpriteSheet<ID> {
         return subImage(sprite.x(), sprite.y(), sprite.width(), sprite.height());
     }
 
-    Sprite sprite(ID id);
-    Sprite[] sprites(ID id);
+    Sprite   sprite(SID id);
+    Sprite[] spriteSeq(SID id);
 }

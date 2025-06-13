@@ -171,18 +171,18 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
 
     @Override
     public Image createGhostNumberImage(int ghostIndex) {
-        Sprite[] sprites = spriteSheet.sprites(SpriteID.GHOST_NUMBERS);
+        Sprite[] sprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
         return spriteSheet.subImage(sprites[ghostIndex]);
     }
 
     @Override
     public Sprite createBonusSymbolSprite(byte symbol) {
-        return spriteSheet.sprites(SpriteID.BONUS_SYMBOLS)[symbol];
+        return spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS)[symbol];
     }
 
     @Override
     public Sprite createBonusValueSprite(byte symbol) {
-        return spriteSheet.sprites(SpriteID.BONUS_VALUES)[symbol];
+        return spriteSheet.spriteSeq(SpriteID.BONUS_VALUES)[symbol];
     }
 
     @Override

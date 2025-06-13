@@ -138,7 +138,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D implements ActionBindin
         }
         for (byte personality = RED_GHOST_SHADOW; personality <= ORANGE_GHOST_POKEY; ++personality) {
             if (ghostImageVisible[personality]) {
-                gr().drawSpriteScaledCenteredAt(spriteSheet.sprites(GALLERY_GHOSTS)[personality],
+                gr().drawSpriteScaledCenteredAt(spriteSheet.spriteSeq(GALLERY_GHOSTS)[personality],
                     tiles_to_px(LEFT_TILE_X) + TS, tiles_to_px(7 + 3 * personality) + HTS);
             }
             if (ghostCharacterVisible[personality]) {

@@ -91,5 +91,5 @@ public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements SpriteShe
 
     public Sprite sprite(SpriteID spriteID)    { return (Sprite) SPRITE_MAP.get(spriteID); }
 
-    public Sprite[] sprites(SpriteID spriteID) { return (Sprite[]) SPRITE_MAP.get(spriteID); }
+    public Sprite[] spriteSeq(SpriteID spriteID) { return (Sprite[]) SPRITE_MAP.get(spriteID); }
 }

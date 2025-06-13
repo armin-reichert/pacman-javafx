@@ -29,16 +29,16 @@ public class TengenMsPacMan_PacAnimationMap extends SpriteAnimationMap<Sprite> {
     public TengenMsPacMan_PacAnimationMap(TengenMsPacMan_SpriteSheet ss) {
         super(ss);
         set(ANIM_PAC_DYING,               createAnimation().ofSprites(pacDyingSprites()).frameTicks(8).end());
-        set(ANIM_PAC_MUNCHING,            createAnimation().ofSprites(ss.sprites(SpriteID.MS_PAC_MUNCHING)).endless());
+        set(ANIM_PAC_MUNCHING,            createAnimation().ofSprites(ss.spriteSeq(SpriteID.MS_PAC_MUNCHING)).endless());
 
-        set(ANIM_MS_PAC_MAN_BOOSTER,      createAnimation().ofSprites(ss.sprites(SpriteID.MS_PAC_MUNCHING_BOOSTER)).endless());
-        set(ANIM_MS_PAC_MAN_WAVING_HAND,  createAnimation().ofSprites(ss.sprites(SpriteID.MS_PAC_WAVING_HAND)).frameTicks(8).endless());
-        set(ANIM_MS_PAC_MAN_TURNING_AWAY, createAnimation().ofSprites(ss.sprites(SpriteID.MS_PAC_TURNING_AWAY)).frameTicks(15).end());
+        set(ANIM_MS_PAC_MAN_BOOSTER,      createAnimation().ofSprites(ss.spriteSeq(SpriteID.MS_PAC_MUNCHING_BOOSTER)).endless());
+        set(ANIM_MS_PAC_MAN_WAVING_HAND,  createAnimation().ofSprites(ss.spriteSeq(SpriteID.MS_PAC_WAVING_HAND)).frameTicks(8).endless());
+        set(ANIM_MS_PAC_MAN_TURNING_AWAY, createAnimation().ofSprites(ss.spriteSeq(SpriteID.MS_PAC_TURNING_AWAY)).frameTicks(15).end());
 
-        set(ANIM_PAC_MAN_MUNCHING,        createAnimation().ofSprites(ss.sprites(SpriteID.MR_PAC_MUNCHING)).frameTicks(2).endless());
-        set(ANIM_PAC_MAN_BOOSTER,         createAnimation().ofSprites(ss.sprites(SpriteID.MR_PAC_MUNCHING_BOOSTER)).frameTicks(2).endless());
-        set(ANIM_PAC_MAN_WAVING_HAND,     createAnimation().ofSprites(ss.sprites(SpriteID.MR_PAC_WAVING_HAND)).frameTicks(8).endless());
-        set(ANIM_PAC_MAN_TURNING_AWAY,    createAnimation().ofSprites(ss.sprites(SpriteID.MR_PAC_TURNING_AWAY)).frameTicks(15).end());
+        set(ANIM_PAC_MAN_MUNCHING,        createAnimation().ofSprites(ss.spriteSeq(SpriteID.MR_PAC_MUNCHING)).frameTicks(2).endless());
+        set(ANIM_PAC_MAN_BOOSTER,         createAnimation().ofSprites(ss.spriteSeq(SpriteID.MR_PAC_MUNCHING_BOOSTER)).frameTicks(2).endless());
+        set(ANIM_PAC_MAN_WAVING_HAND,     createAnimation().ofSprites(ss.spriteSeq(SpriteID.MR_PAC_WAVING_HAND)).frameTicks(8).endless());
+        set(ANIM_PAC_MAN_TURNING_AWAY,    createAnimation().ofSprites(ss.spriteSeq(SpriteID.MR_PAC_TURNING_AWAY)).frameTicks(15).end());
 
         set(ANIM_JUNIOR,                  createAnimation().ofSprite(ss.sprite(SpriteID.JUNIOR_PAC)).end());
     }
@@ -52,13 +52,13 @@ public class TengenMsPacMan_PacAnimationMap extends SpriteAnimationMap<Sprite> {
     protected void updateActorSprites(Actor actor) {
         if (actor instanceof Pac) {
             if (isCurrentAnimationID(ANIM_PAC_MUNCHING)) {
-                currentAnimation().setSprites(spriteSheet().sprites(SpriteID.MS_PAC_MUNCHING));
+                currentAnimation().setSprites(spriteSheet().spriteSeq(SpriteID.MS_PAC_MUNCHING));
             }
             if (isCurrentAnimationID(ANIM_MS_PAC_MAN_BOOSTER)) {
-                currentAnimation().setSprites(spriteSheet().sprites(SpriteID.MS_PAC_MUNCHING_BOOSTER));
+                currentAnimation().setSprites(spriteSheet().spriteSeq(SpriteID.MS_PAC_MUNCHING_BOOSTER));
             }
             if (isCurrentAnimationID(ANIM_PAC_MAN_MUNCHING)) {
-                currentAnimation().setSprites(spriteSheet().sprites(SpriteID.MR_PAC_MUNCHING));
+                currentAnimation().setSprites(spriteSheet().spriteSeq(SpriteID.MR_PAC_MUNCHING));
             }
         }
     }
@@ -67,7 +67,7 @@ public class TengenMsPacMan_PacAnimationMap extends SpriteAnimationMap<Sprite> {
         // TODO this is nuts
         // renderer rotates single sprite to create animation effect
         var sprites = new Sprite[11];
-        Sprite munchingOpen = spriteSheet().sprites(SpriteID.MS_PAC_MUNCHING)[0];
+        Sprite munchingOpen = spriteSheet().spriteSeq(SpriteID.MS_PAC_MUNCHING)[0];
         Arrays.fill(sprites, munchingOpen);
         return sprites;
     }

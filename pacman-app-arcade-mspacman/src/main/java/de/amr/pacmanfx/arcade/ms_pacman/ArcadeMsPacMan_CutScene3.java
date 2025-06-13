@@ -66,7 +66,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         msPacMan.setAnimations(config.createPacAnimations(msPacMan));
         pacMan.setAnimations(config.createPacAnimations(pacMan));
 
-        storkAnimation =  SpriteAnimation.createAnimation().ofSprites(spriteSheet.sprites(STORK)).frameTicks(8).endless();
+        storkAnimation =  SpriteAnimation.createAnimation().ofSprites(spriteSheet.spriteSeq(STORK)).frameTicks(8).endless();
         storkAnimation.play();
 
         clapperboardAnimation = new ClapperboardAnimation(spriteSheet, "3", "JUNIOR");

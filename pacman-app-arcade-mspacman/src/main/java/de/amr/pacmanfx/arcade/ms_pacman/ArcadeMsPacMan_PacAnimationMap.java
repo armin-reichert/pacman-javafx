@@ -21,7 +21,7 @@ public class ArcadeMsPacMan_PacAnimationMap extends SpriteAnimationMap<Sprite> {
     public ArcadeMsPacMan_PacAnimationMap(ArcadeMsPacMan_SpriteSheet ss) {
         super(ss);
         set(ANIM_PAC_MUNCHING, createAnimation().ofSprites(msPacManMunchingSprites(Direction.LEFT)).endless());
-        set(ANIM_PAC_DYING,    createAnimation().ofSprites(ss.sprites(SpriteID.MS_PACMAN_DYING)).frameTicks(8).end());
+        set(ANIM_PAC_DYING,    createAnimation().ofSprites(ss.spriteSeq(SpriteID.MS_PACMAN_DYING)).frameTicks(8).end());
         set(PAC_MAN_MUNCHING,  createAnimation().ofSprites(mrPacManMunchingSprites(Direction.LEFT)).frameTicks(2).endless());
     }
 
@@ -41,7 +41,7 @@ public class ArcadeMsPacMan_PacAnimationMap extends SpriteAnimationMap<Sprite> {
     }
 
     private Sprite[] msPacManMunchingSprites(Direction dir) {
-        return spriteSheet().sprites(switch (dir) {
+        return spriteSheet().spriteSeq(switch (dir) {
             case RIGHT -> SpriteID.MS_PACMAN_MUNCHING_RIGHT;
             case LEFT -> SpriteID.MS_PACMAN_MUNCHING_LEFT;
             case UP -> SpriteID.MS_PACMAN_MUNCHING_UP;
@@ -50,7 +50,7 @@ public class ArcadeMsPacMan_PacAnimationMap extends SpriteAnimationMap<Sprite> {
     }
 
     private Sprite[] mrPacManMunchingSprites(Direction dir) {
-        return spriteSheet().sprites(switch (dir) {
+        return spriteSheet().spriteSeq(switch (dir) {
             case RIGHT -> SpriteID.MR_PACMAN_MUNCHING_RIGHT;
             case LEFT -> SpriteID.MR_PACMAN_MUNCHING_LEFT;
             case UP -> SpriteID.MR_PACMAN_MUNCHING_UP;

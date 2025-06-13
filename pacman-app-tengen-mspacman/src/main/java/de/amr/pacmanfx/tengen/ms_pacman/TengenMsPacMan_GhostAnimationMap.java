@@ -23,10 +23,10 @@ public class TengenMsPacMan_GhostAnimationMap extends SpriteAnimationMap<Sprite>
     public TengenMsPacMan_GhostAnimationMap(TengenMsPacMan_SpriteSheet ss, byte personality) {
         super(ss);
         set(ANIM_GHOST_NORMAL,     createAnimation().ofSprites(ghostNormalSprites(personality, Direction.LEFT)).frameTicks(NORMAL_TICKS).endless());
-        set(ANIM_GHOST_FRIGHTENED, createAnimation().ofSprites(ss.sprites(SpriteID.GHOST_FRIGHTENED)).frameTicks(FRIGHTENED_TICKS).endless());
-        set(ANIM_GHOST_FLASHING,   createAnimation().ofSprites(ss.sprites(SpriteID.GHOST_FLASHING)).frameTicks(FLASH_TICKS).endless());
+        set(ANIM_GHOST_FRIGHTENED, createAnimation().ofSprites(ss.spriteSeq(SpriteID.GHOST_FRIGHTENED)).frameTicks(FRIGHTENED_TICKS).endless());
+        set(ANIM_GHOST_FLASHING,   createAnimation().ofSprites(ss.spriteSeq(SpriteID.GHOST_FLASHING)).frameTicks(FLASH_TICKS).endless());
         set(ANIM_GHOST_EYES,       createAnimation().ofSprites(ghostEyesSprites(Direction.LEFT)).end());
-        set(ANIM_GHOST_NUMBER,     createAnimation().ofSprites(ss.sprites(SpriteID.GHOST_NUMBERS)).end());
+        set(ANIM_GHOST_NUMBER,     createAnimation().ofSprites(ss.spriteSeq(SpriteID.GHOST_NUMBERS)).end());
     }
 
     @Override
@@ -57,28 +57,28 @@ public class TengenMsPacMan_GhostAnimationMap extends SpriteAnimationMap<Sprite>
     private Sprite[] ghostNormalSprites(byte id, Direction dir) {
         return switch (id) {
             case RED_GHOST_SHADOW -> switch (dir) {
-                case Direction.RIGHT -> spriteSheet().sprites(SpriteID.RED_GHOST_RIGHT);
-                case Direction.LEFT  -> spriteSheet().sprites(SpriteID.RED_GHOST_LEFT);
-                case Direction.UP    -> spriteSheet().sprites(SpriteID.RED_GHOST_UP);
-                case Direction.DOWN  -> spriteSheet().sprites(SpriteID.RED_GHOST_DOWN);
+                case Direction.RIGHT -> spriteSheet().spriteSeq(SpriteID.RED_GHOST_RIGHT);
+                case Direction.LEFT  -> spriteSheet().spriteSeq(SpriteID.RED_GHOST_LEFT);
+                case Direction.UP    -> spriteSheet().spriteSeq(SpriteID.RED_GHOST_UP);
+                case Direction.DOWN  -> spriteSheet().spriteSeq(SpriteID.RED_GHOST_DOWN);
             };
             case PINK_GHOST_SPEEDY   -> switch (dir) {
-                case Direction.RIGHT -> spriteSheet().sprites(SpriteID.PINK_GHOST_RIGHT);
-                case Direction.LEFT  -> spriteSheet().sprites(SpriteID.PINK_GHOST_LEFT);
-                case Direction.UP    -> spriteSheet().sprites(SpriteID.PINK_GHOST_UP);
-                case Direction.DOWN  -> spriteSheet().sprites(SpriteID.PINK_GHOST_DOWN);
+                case Direction.RIGHT -> spriteSheet().spriteSeq(SpriteID.PINK_GHOST_RIGHT);
+                case Direction.LEFT  -> spriteSheet().spriteSeq(SpriteID.PINK_GHOST_LEFT);
+                case Direction.UP    -> spriteSheet().spriteSeq(SpriteID.PINK_GHOST_UP);
+                case Direction.DOWN  -> spriteSheet().spriteSeq(SpriteID.PINK_GHOST_DOWN);
             };
             case CYAN_GHOST_BASHFUL  -> switch (dir) {
-                case Direction.RIGHT -> spriteSheet().sprites(SpriteID.CYAN_GHOST_RIGHT);
-                case Direction.LEFT  -> spriteSheet().sprites(SpriteID.CYAN_GHOST_LEFT);
-                case Direction.UP    -> spriteSheet().sprites(SpriteID.CYAN_GHOST_UP);
-                case Direction.DOWN  -> spriteSheet().sprites(SpriteID.CYAN_GHOST_DOWN);
+                case Direction.RIGHT -> spriteSheet().spriteSeq(SpriteID.CYAN_GHOST_RIGHT);
+                case Direction.LEFT  -> spriteSheet().spriteSeq(SpriteID.CYAN_GHOST_LEFT);
+                case Direction.UP    -> spriteSheet().spriteSeq(SpriteID.CYAN_GHOST_UP);
+                case Direction.DOWN  -> spriteSheet().spriteSeq(SpriteID.CYAN_GHOST_DOWN);
             };
             case ORANGE_GHOST_POKEY  -> switch (dir) {
-                case Direction.RIGHT -> spriteSheet().sprites(SpriteID.ORANGE_GHOST_RIGHT);
-                case Direction.LEFT  -> spriteSheet().sprites(SpriteID.ORANGE_GHOST_LEFT);
-                case Direction.UP    -> spriteSheet().sprites(SpriteID.ORANGE_GHOST_UP);
-                case Direction.DOWN  -> spriteSheet().sprites(SpriteID.ORANGE_GHOST_DOWN);
+                case Direction.RIGHT -> spriteSheet().spriteSeq(SpriteID.ORANGE_GHOST_RIGHT);
+                case Direction.LEFT  -> spriteSheet().spriteSeq(SpriteID.ORANGE_GHOST_LEFT);
+                case Direction.UP    -> spriteSheet().spriteSeq(SpriteID.ORANGE_GHOST_UP);
+                case Direction.DOWN  -> spriteSheet().spriteSeq(SpriteID.ORANGE_GHOST_DOWN);
             };
             default -> throw new IllegalArgumentException();
         };

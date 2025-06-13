@@ -224,13 +224,13 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
 
     @Override
     public Image createGhostNumberImage(int ghostIndex) {
-        Sprite[] sprites = spriteSheet.sprites(SpriteID.GHOST_NUMBERS);
+        Sprite[] sprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
         return spriteSheet.subImage(sprites[ghostIndex]);
     }
 
     @Override
     public Sprite createBonusSymbolSprite(byte symbol) {
-        return spriteSheet.sprites(SpriteID.BONUS_SYMBOLS)[symbol];
+        return spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS)[symbol];
     }
 
     @Override
@@ -243,7 +243,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
             case TengenMsPacMan_GameModel.BONUS_ICE_CREAM -> 7; // 4000!
             default -> symbol;
         };
-        return spriteSheet.sprites(SpriteID.BONUS_VALUES)[index];
+        return spriteSheet.spriteSeq(SpriteID.BONUS_VALUES)[index];
     }
 
     @Override
