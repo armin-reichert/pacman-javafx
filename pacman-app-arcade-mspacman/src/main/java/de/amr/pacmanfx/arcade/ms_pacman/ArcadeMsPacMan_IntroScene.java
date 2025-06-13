@@ -51,9 +51,6 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
     private static final int ACTIVE_BULBS_DIST = 16;
     private static final RectArea MARQUEE = new RectArea(60, 88, 132, 60);
 
-    private static final Color COLOR_BULB_ON  = ARCADE_WHITE;
-    private static final Color COLOR_BULB_OFF = ARCADE_RED;
-
     private static final String[] GHOST_NAMES = { "BLINKY", "PINKY", "INKY", "SUE" };
     private static final Color[] GHOST_COLORS = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
 
@@ -151,18 +148,21 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
      */
     private void drawMarquee() {
         int t = (int) (marqueeTimer.tickCount() % BULB_COUNT);
-        for (int i = 0; i < BULB_COUNT; ++i) { drawBulb(i, false); }
-        for (int b = 0; b < 6; ++b) { drawBulb((t + b * ACTIVE_BULBS_DIST) % BULB_COUNT, true); }
-        for (int i = 81; i < BULB_COUNT; i += 2) { drawBulb(i, false); } // simulates bug
+        for (int i = 0; i < BULB_COUNT; ++i) { drawBulb(i, ARCADE_RED); }
+        for (int b = 0; b < 6; ++b) {
+            drawBulb((t + b * ACTIVE_BULBS_DIST) % BULB_COUNT, ARCADE_WHITE);
+        }
+        // simulate bug from original Arcade game
+        for (int i = 81; i < BULB_COUNT; i += 2) { drawBulb(i, ARCADE_RED); }
     }
 
-    private void drawBulb(int i, boolean on) {
+    private void drawBulb(int i, Color color) {
         int x, y;
-        if (i <= 33)      { x = MARQUEE.x() + 4 * i; y = MARQUEE.yMax(); } // lower edge left-to-right
-        else if (i <= 48) { x = MARQUEE.xMax();      y = 4 * (70 - i); }   // right edge bottom-to-top
-        else if (i <= 81) { x = 4 * (96 - i);        y = MARQUEE.y(); }    // upper edge right-to-left
-        else              { x = MARQUEE.x();         y = 4 * (i - 59); }   // left edge top-to-bottom
-        ctx().setFill(on ? COLOR_BULB_ON : COLOR_BULB_OFF);
+        if (i <= 33)      { x = MARQUEE.x() + 4 * i;   y = MARQUEE.yMax(); } // lower edge left-to-right
+        else if (i <= 48) { x = MARQUEE.xMax();        y = 4 * (70 - i); }   // right edge bottom-to-top
+        else if (i <= 81) { x = 4 * (BULB_COUNT - i);  y = MARQUEE.y(); }    // upper edge right-to-left
+        else              { x = MARQUEE.x();           y = 4 * (i - 59); }   // left edge top-to-bottom
+        ctx().setFill(color);
         ctx().fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
     }
 
