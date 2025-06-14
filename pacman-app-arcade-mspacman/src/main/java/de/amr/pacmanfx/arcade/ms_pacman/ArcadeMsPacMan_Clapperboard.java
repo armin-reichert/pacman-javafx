@@ -1,10 +1,7 @@
-/*
-Copyright (c) 2021-2025 Armin Reichert (MIT License)
-See file LICENSE in repository root directory for details.
-*/
 package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.lib.Sprite;
+import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
 import java.util.Optional;
@@ -12,9 +9,9 @@ import java.util.Optional;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Animated move clapperboard.
+ * Animated clapperboard.
  */
-public class ClapperboardAnimation {
+public class ArcadeMsPacMan_Clapperboard extends Actor {
 
     private static final byte HIDDEN = -1, WIDE_OPEN = 0, OPEN = 1, CLOSED = 2;
 
@@ -26,12 +23,12 @@ public class ClapperboardAnimation {
     private boolean running;
     private byte state;
 
-    public ClapperboardAnimation(SpriteSheet<SpriteID> spriteSheet, String number, String text) {
+    public ArcadeMsPacMan_Clapperboard(SpriteSheet<SpriteID> spriteSheet, String number, String text) {
         this.spriteSheet = requireNonNull(spriteSheet);
         this.number = number;
         this.text = text;
-    }
 
+    }
     public String number() {
         return number;
     }
@@ -40,7 +37,7 @@ public class ClapperboardAnimation {
         return text;
     }
 
-    public void start() {
+    public void startAnimation() {
         tick = 0;
         state = WIDE_OPEN;
         running = true;
@@ -66,4 +63,5 @@ public class ClapperboardAnimation {
         Sprite sprite = spriteSheet.spriteSeq(SpriteID.CLAPPERBOARD)[state];
         return Optional.of(sprite);
     }
+
 }

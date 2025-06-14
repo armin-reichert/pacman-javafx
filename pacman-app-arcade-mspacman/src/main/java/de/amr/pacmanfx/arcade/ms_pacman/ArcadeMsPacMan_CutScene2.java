@@ -40,7 +40,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     private Pac msPacMan;
 
     private MediaPlayer music;
-    private ClapperboardAnimation clapperboardAnimation;
+    private ArcadeMsPacMan_Clapperboard clapperboard;
 
     @Override
     public void doInit() {
@@ -54,8 +54,9 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
         msPacMan.setAnimations(theUI().configuration().createPacAnimations(msPacMan));
         pacMan.setAnimations(theUI().configuration().createPacAnimations(pacMan));
 
-        clapperboardAnimation = new ClapperboardAnimation(spriteSheet, "2", "THE CHASE");
-        clapperboardAnimation.start();
+        clapperboard = new ArcadeMsPacMan_Clapperboard(spriteSheet, "2", "THE CHASE");
+        clapperboard.setPosition(tiles_to_px(3), tiles_to_px(10));
+        clapperboard.startAnimation();
 
         music = theSound().createSound("intermission.2");
 
@@ -85,7 +86,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     @Override
     public void drawSceneContent() {
         if (gr() instanceof ArcadeMsPacMan_GameRenderer r) {
-            r.drawClapperBoard(clapperboardAnimation, tiles_to_px(3), tiles_to_px(10), arcadeFont8());
+            r.drawClapperBoard(clapperboard, arcadeFont8());
         }
         gr().drawActor(msPacMan);
         gr().drawActor(pacMan);
@@ -107,7 +108,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     }
 
     private void updateStateClapperboard() {
-        clapperboardAnimation.tick();
+        clapperboard.tick();
         if (sceneTimer.hasExpired()) {
             music.play();
             enterStateChasing();

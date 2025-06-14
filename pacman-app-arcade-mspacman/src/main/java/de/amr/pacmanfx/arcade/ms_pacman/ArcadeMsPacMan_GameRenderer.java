@@ -130,16 +130,16 @@ public class ArcadeMsPacMan_GameRenderer extends SpriteGameRenderer {
         ctx.restore();
     }
 
-    public void drawClapperBoard(ClapperboardAnimation clapperboardAnimation, double x, double y, Font font) {
-        clapperboardAnimation.currentSprite().ifPresent(sprite -> {
-            float numberX = scaled(x + sprite.width() - 25);
-            float numberY = scaled(y + 18);
-            float textX = scaled(x + sprite.width());
-            drawSpriteScaledCenteredAt(sprite, x + HTS, y + HTS);
+    public void drawClapperBoard(ArcadeMsPacMan_Clapperboard clapperboard, Font font) {
+        clapperboard.currentSprite().ifPresent(sprite -> {
+            float numberX = scaled(clapperboard.x() + sprite.width() - 25);
+            float numberY = scaled(clapperboard.y() + 18);
+            float textX = scaled(clapperboard.x() + sprite.width());
+            drawSpriteScaledCenteredAt(sprite, clapperboard.x() + HTS, clapperboard.y() + HTS);
             ctx.setFont(font);
             ctx.setFill(ARCADE_WHITE);
-            ctx.fillText(clapperboardAnimation.number(), numberX, numberY);
-            ctx.fillText(clapperboardAnimation.text(), textX, numberY);
+            ctx.fillText(clapperboard.number(), numberX, numberY);
+            ctx.fillText(clapperboard.text(), textX, numberY);
         });
     }
 

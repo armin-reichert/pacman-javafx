@@ -51,7 +51,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     private Ghost pinky;
     private Actor heart;
     private MediaPlayer music;
-    private ClapperboardAnimation clapperboardAnimation;
+    private ArcadeMsPacMan_Clapperboard clapperboard;
 
     @Override
     public void doInit() {
@@ -71,8 +71,9 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         inky.setAnimations(config.createGhostAnimations(inky));
         pinky.setAnimations(config.createGhostAnimations(pinky));
 
-        clapperboardAnimation = new ClapperboardAnimation(spriteSheet, "1", "THEY MEET");
-        clapperboardAnimation.start();
+        clapperboard = new ArcadeMsPacMan_Clapperboard(spriteSheet, "1", "THEY MEET");
+        clapperboard.setPosition(tiles_to_px(3), tiles_to_px(10));
+        clapperboard.startAnimation();
         music = theSound().createSound("intermission.1");
 
         setState(STATE_CLAPPERBOARD, 120);
@@ -104,7 +105,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     public void drawSceneContent() {
         @SuppressWarnings("unchecked") SpriteSheet<SpriteID> spriteSheet = (SpriteSheet<SpriteID>) theUI().configuration().spriteSheet();
         if (gr() instanceof ArcadeMsPacMan_GameRenderer r) { // could also be VectorGraphicsRenderer!
-            r.drawClapperBoard(clapperboardAnimation, tiles_to_px(3), tiles_to_px(10), arcadeFont8());
+            r.drawClapperBoard(clapperboard, arcadeFont8());
         }
         gr().drawActor(msPacMan);
         gr().drawActor(pacMan);
@@ -131,7 +132,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     }
 
     private void updateStateClapperboard() {
-        clapperboardAnimation.tick();
+        clapperboard.tick();
         if (sceneTimer.atSecond(1)) {
             music.play();
         } else if (sceneTimer.hasExpired()) {
