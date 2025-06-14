@@ -49,6 +49,7 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
 
     private final Map<KeyCombination, GameAction> actionBindings = new HashMap<>();
 
+/*
     private final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>() {
         @Override
         protected void invalidated() {
@@ -57,6 +58,7 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
             contextMenu.hide();
         }
     };
+*/
 
     private final StackPane root = new StackPane();
     private final Scene parentScene;
@@ -81,6 +83,12 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
         configurePiPView();
         createLayers();
         configurePropertyBindings();
+
+        theUI().gameSceneProperty().addListener((py,ov,gameScene) -> {
+            if (gameScene != null) embedGameScene(theUI().configuration(), gameScene);
+            contextMenu.hide();
+        });
+
         root.setOnContextMenuRequested(this::handleContextMenuRequest);
         //TODO is this the recommended way to close a context-menu?
         parentScene.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
@@ -94,7 +102,7 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
             PY_DEBUG_INFO_VISIBLE,
             theClock().pausedProperty(),
             parentScene.heightProperty(),
-            gameSceneProperty()
+            theUI().gameSceneProperty()
         );
 
         bindAction(ACTION_BOOT_SHOW_GAME_VIEW,     COMMON_ACTION_BINDINGS);
@@ -120,7 +128,7 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
         String paused = theClock().isPaused() ? ".paused" : "";
         String key = "app.title." + ans + paused;
         String modeText = theAssets().text(threeDModeEnabled ? "threeD" : "twoD");
-        GameScene currentGameScene = currentGameScene().orElse(null);
+        GameScene currentGameScene = theUI().currentGameScene().orElse(null);
         if (currentGameScene == null || !modeDebug) {
             return theAssets().text(key, modeText);
         }
@@ -137,7 +145,7 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
         theSimulationStep().start(theClock().tickCount());
         theGameController().updateGameState();
         theSimulationStep().log();
-        currentGameScene().ifPresent(GameScene::update);
+        theUI().currentGameScene().ifPresent(GameScene::update);
     }
 
     @Override
@@ -160,7 +168,7 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
     }
 
     public void draw() {
-        currentGameScene().ifPresent(gameScene -> {
+        theUI().currentGameScene().ifPresent(gameScene -> {
             if (gameScene instanceof GameScene2D gameScene2D) {
                 gameScene2D.draw();
             }
@@ -184,7 +192,7 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
 
     @Override
     public void handleKeyboardInput() {
-        runMatchingActionOrElse(() -> currentGameScene().ifPresent(GameScene::handleKeyboardInput));
+        runMatchingActionOrElse(() -> theUI().currentGameScene().ifPresent(GameScene::handleKeyboardInput));
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -197,7 +205,7 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
         // dispatch event to event specific method:
         PacManGames_View.super.onGameEvent(event);
         // dispatch to current game scene
-        currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(event));
+        theUI().currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(event));
         updateGameScene(false);
     }
 
@@ -209,16 +217,12 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
             level.ghosts().forEach(ghost -> ghost.setAnimations(config.createGhostAnimations(ghost)));
             theSound().setEnabled(!level.isDemoLevel());
             // size of game scene might have changed, so re-embed
-            currentGameScene().ifPresent(gameScene -> embedGameScene(config, gameScene));
+            theUI().currentGameScene().ifPresent(gameScene -> embedGameScene(config, gameScene));
             pipView.setScene2D(config.createPiPScene(canvas));
         });
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-
-    public ObjectProperty<GameScene> gameSceneProperty() { return gameScenePy; }
-
-    public Optional<GameScene> currentGameScene() { return Optional.ofNullable(gameScenePy.get()); }
 
     public FlashMessageView flashMessageLayer() {
         return flashMessageLayer;
@@ -266,7 +270,7 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
         if (nextGameScene == null) {
             throw new IllegalStateException("Could not determine next game scene");
         }
-        final GameScene currentGameScene = gameScenePy.get();
+        final GameScene currentGameScene = theUI().currentGameScene().orElse(null);
         final boolean changing = nextGameScene != currentGameScene;
         if (!changing && !reloadCurrent) {
             return;
@@ -288,7 +292,7 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
         }
 
         if (changing) {
-            gameScenePy.set(nextGameScene);
+            theUI().setCurrentGameScene(nextGameScene);
         }
     }
 
@@ -350,7 +354,7 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
         canvasContainer.setBorderColor(Color.rgb(222, 222, 255));
         //TODO check this:
         canvasContainer.decorationEnabledPy.addListener((py, ov, nv) ->
-            currentGameScene().ifPresent(gameScene -> embedGameScene(theUI().configuration(), gameScene)));
+            theUI().currentGameScene().ifPresent(gameScene -> embedGameScene(theUI().configuration(), gameScene)));
     }
 
     private void configurePiPView() {
@@ -358,7 +362,7 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
         pipView.opacityProperty().bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
         pipView.visibleProperty().bind(Bindings.createObjectBinding(
             () -> PY_PIP_ON.get() && theUI().currentGameSceneIsPlayScene3D(),
-            PY_PIP_ON, gameScenePy
+            PY_PIP_ON, theUI().gameSceneProperty()
         ));
     }
 
@@ -399,13 +403,16 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
     }
 
     private void handleContextMenuRequest(ContextMenuEvent e) {
-        var menuItems = new ArrayList<>(gameScenePy.get().supplyContextMenuItems(e));
-        if (theUI().currentGameSceneIsPlayScene2D()) {
-            var item = new MenuItem(theAssets().text("use_3D_scene"));
-            item.setOnAction(ae -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.execute());
-            menuItems.addFirst(item);
-            menuItems.addFirst(contextMenuTitleItem(theAssets().text("scene_display")));
-        }
+        var menuItems = new ArrayList<MenuItem>();
+        theUI().currentGameScene().ifPresent(gameScene -> {
+            gameScene.supplyContextMenuItems(e);
+            if (theUI().currentGameSceneIsPlayScene2D()) {
+                var item = new MenuItem(theAssets().text("use_3D_scene"));
+                item.setOnAction(ae -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.execute());
+                menuItems.addFirst(item);
+                menuItems.addFirst(contextMenuTitleItem(theAssets().text("scene_display")));
+            }
+        });
         contextMenu.getItems().setAll(menuItems);
         contextMenu.show(root, e.getScreenX(), e.getScreenY());
         contextMenu.requestFocus();

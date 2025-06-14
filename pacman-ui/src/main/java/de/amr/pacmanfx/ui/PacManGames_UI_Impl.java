@@ -178,7 +178,6 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         // Game view and dashboard
         {
             gameView = new GameView(mainScene);
-            gameScenePy.bind(gameView.gameSceneProperty());
             if (dashboardIDs.length > 0) {
                 gameView.dashboard().addInfoBox(DashboardID.README);
                 for (DashboardID id : dashboardIDs) {
@@ -209,6 +208,11 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
                 ? theAssets().get("background.play_scene3d")
                 : theAssets().get("background.scene"))
         );
+    }
+
+    @Override
+    public void setCurrentGameScene(GameScene gameScene) {
+        gameScenePy.set(gameScene);
     }
 
     @Override
