@@ -319,9 +319,4 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         GameScene currentGameScene = currentGameScene().orElse(null);
         return currentGameScene != null && configuration().gameSceneHasID(currentGameScene, "PlayScene3D");
     }
-
-    @Override
-    public boolean currentGameSceneIs2D() {
-        return currentGameScene().map(GameScene2D.class::isInstance).orElse(false);
-    }
 }

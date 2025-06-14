@@ -11,6 +11,7 @@ import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.layout.GameView;
@@ -113,7 +114,6 @@ public interface PacManGames_UI {
     void setCurrentGameScene(GameScene gameScene);
     boolean currentGameSceneIsPlayScene2D();
     boolean currentGameSceneIsPlayScene3D();
-    boolean currentGameSceneIs2D();
     void updateGameScene(boolean reload);
 
     // Views
@@ -426,6 +426,27 @@ public interface PacManGames_UI {
         }
     };
 
+    GameAction ACTION_SHOW_HELP = new GameAction() {
+        @Override
+        public void execute() {
+            if (theUI().currentGameScene().isPresent()) {
+                GameScene gameScene = theUI().currentGameScene().get();
+                if (gameScene instanceof GameScene2D) {
+                    theUI().gameView().showHelp();
+                }
+            }
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return theGameController().isSelected("PACMAN")
+                || theGameController().isSelected("PACMAN_XXL")
+                || theGameController().isSelected("MS_PACMAN")
+                || theGameController().isSelected("MS_PACMAN_XXL")
+                && theUI().currentView() == theUI().gameView();
+        }
+    };
+
     GameAction ACTION_TOGGLE_DASHBOARD = new GameAction() {
         @Override
         public void execute() {
@@ -492,6 +513,7 @@ public interface PacManGames_UI {
         createBinding(ACTION_CHEAT_KILL_GHOSTS,       alt(KeyCode.X)),
         createBinding(ACTION_PERSPECTIVE_PREVIOUS,    alt(KeyCode.LEFT)),
         createBinding(ACTION_PERSPECTIVE_NEXT,        alt(KeyCode.RIGHT)),
+        createBinding(ACTION_SHOW_HELP,               nude(KeyCode.H)),
         createBinding(ACTION_STEER_UP,                nude(KeyCode.UP), control(KeyCode.UP)),
         createBinding(ACTION_STEER_DOWN,              nude(KeyCode.DOWN), control(KeyCode.DOWN)),
         createBinding(ACTION_STEER_LEFT,              nude(KeyCode.LEFT), control(KeyCode.LEFT)),

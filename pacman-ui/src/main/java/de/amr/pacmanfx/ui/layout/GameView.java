@@ -23,7 +23,10 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.input.*;
+import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.FontSmoothingType;
@@ -37,7 +40,6 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 import static de.amr.pacmanfx.uilib.Ufx.*;
-import static de.amr.pacmanfx.uilib.input.Keyboard.nude;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -95,6 +97,7 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
 
         bindAction(ACTION_BOOT_SHOW_GAME_VIEW,     COMMON_ACTION_BINDINGS);
         bindAction(ACTION_QUIT_GAME_SCENE,         COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_SHOW_HELP,               COMMON_ACTION_BINDINGS);
         bindAction(ACTION_SIMULATION_SLOWER,       COMMON_ACTION_BINDINGS);
         bindAction(ACTION_SIMULATION_FASTER,       COMMON_ACTION_BINDINGS);
         bindAction(ACTION_SIMULATION_RESET,        COMMON_ACTION_BINDINGS);
@@ -107,7 +110,10 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
         bindAction(ACTION_TOGGLE_IMMUNITY,         COMMON_ACTION_BINDINGS);
         bindAction(ACTION_TOGGLE_PIP_VISIBILITY,   COMMON_ACTION_BINDINGS);
         bindAction(ACTION_TOGGLE_PLAY_SCENE_2D_3D, COMMON_ACTION_BINDINGS);
-        bindActionToKeyCombination(this::showGameSceneHelp, nude(KeyCode.H));
+    }
+
+    public void showHelp() {
+        popupLayer.showHelp(canvasContainer.scaling());
     }
 
     // Asset key regex: app.title.(ms_pacman|ms_pacman_xxl|pacman,pacman_xxl|tengen)(.paused)?
@@ -408,12 +414,5 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
         contextMenu.getItems().setAll(menuItems);
         contextMenu.show(root, e.getScreenX(), e.getScreenY());
         contextMenu.requestFocus();
-    }
-
-    private void showGameSceneHelp() {
-        if (!theGameController().isSelected("MS_PACMAN_TENGEN")
-            && theUI().currentGameSceneIs2D()) {
-            popupLayer.showHelp(canvasContainer.scaling());
-        }
     }
 }
