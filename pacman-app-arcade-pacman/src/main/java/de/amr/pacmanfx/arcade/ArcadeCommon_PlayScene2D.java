@@ -58,14 +58,14 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
         if (theGameLevel().isDemoLevel()) {
             bindAction(ACTION_ARCADE_INSERT_COIN, COMMON_ACTION_BINDINGS);
         } else {
-            bindAction(ACTION_STEER_UP, COMMON_ACTION_BINDINGS);
-            bindAction(ACTION_STEER_DOWN, COMMON_ACTION_BINDINGS);
-            bindAction(ACTION_STEER_LEFT, COMMON_ACTION_BINDINGS);
-            bindAction(ACTION_STEER_RIGHT, COMMON_ACTION_BINDINGS);
-            bindAction(ACTION_CHEAT_EAT_ALL_PELLETS, COMMON_ACTION_BINDINGS);
-            bindAction(ACTION_CHEAT_ADD_LIVES, COMMON_ACTION_BINDINGS);
+            bindAction(ACTION_STEER_UP,               COMMON_ACTION_BINDINGS);
+            bindAction(ACTION_STEER_DOWN,             COMMON_ACTION_BINDINGS);
+            bindAction(ACTION_STEER_LEFT,             COMMON_ACTION_BINDINGS);
+            bindAction(ACTION_STEER_RIGHT,            COMMON_ACTION_BINDINGS);
+            bindAction(ACTION_CHEAT_EAT_ALL_PELLETS,  COMMON_ACTION_BINDINGS);
+            bindAction(ACTION_CHEAT_ADD_LIVES,        COMMON_ACTION_BINDINGS);
             bindAction(ACTION_CHEAT_ENTER_NEXT_LEVEL, COMMON_ACTION_BINDINGS);
-            bindAction(ACTION_CHEAT_KILL_GHOSTS, COMMON_ACTION_BINDINGS);
+            bindAction(ACTION_CHEAT_KILL_GHOSTS,      COMMON_ACTION_BINDINGS);
         }
         updateActionBindings();
     }
@@ -242,16 +242,16 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
     @Override
     public void onSwitch_3D_2D(GameScene scene3D) {
         Logger.info("2D scene {} entered from 3D scene {}", this, scene3D);
-        bindAction(ACTION_STEER_UP, COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_STEER_DOWN, COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_STEER_LEFT, COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_STEER_RIGHT, COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_CHEAT_EAT_ALL_PELLETS, COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_CHEAT_ADD_LIVES, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_STEER_UP,               COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_STEER_DOWN,             COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_STEER_LEFT,             COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_STEER_RIGHT,            COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_CHEAT_EAT_ALL_PELLETS,  COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_CHEAT_ADD_LIVES,        COMMON_ACTION_BINDINGS);
         bindAction(ACTION_CHEAT_ENTER_NEXT_LEVEL, COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_CHEAT_KILL_GHOSTS, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_CHEAT_KILL_GHOSTS,      COMMON_ACTION_BINDINGS);
         updateActionBindings();
-        if (gr() == null) { //TODO check if this can happen
+        if (gameRenderer == null) { //TODO check if this can happen
             Logger.warn("No game renderer was existing when switching to 2D scene");
             setGameRenderer((SpriteGameRenderer) theUI().configuration().createRenderer(canvas()));
         }
