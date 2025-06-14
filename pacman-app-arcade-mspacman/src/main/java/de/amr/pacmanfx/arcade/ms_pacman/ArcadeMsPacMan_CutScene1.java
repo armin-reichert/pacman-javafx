@@ -49,8 +49,8 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     private Ghost inky;
     private Ghost pinky;
     private SingleSpriteActor heart;
-    private MediaPlayer music;
     private Clapperboard clapperboard;
+    private MediaPlayer music;
 
     @Override
     public void doInit() {

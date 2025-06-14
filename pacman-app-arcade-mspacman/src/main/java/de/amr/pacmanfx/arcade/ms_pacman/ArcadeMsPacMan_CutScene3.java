@@ -5,16 +5,20 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Actor;
+import de.amr.pacmanfx.model.actors.ActorAnimationMap;
+import de.amr.pacmanfx.model.actors.AnimatedActor;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.media.MediaPlayer;
+
+import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
@@ -39,18 +43,31 @@ import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
  */
 public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
+    private static class Stork extends Actor implements AnimatedActor {
+        private final SpriteAnimationMap animations;
+
+        public Stork(ArcadeMsPacMan_SpriteSheet spriteSheet) {
+            animations = new SpriteAnimationMap(spriteSheet);
+            animations.set("flying",
+                SpriteAnimation.createAnimation()
+                    .ofSprites(spriteSheet.spriteSeq(STORK)).frameTicks(8).endless());
+        }
+
+        @Override
+        public Optional<ActorAnimationMap> animations() { return Optional.of(animations); }
+    }
+
     private static final int LANE_Y = TS * 24;
 
     private Pac pacMan;
     private Pac msPacMan;
-    private Actor stork;
+    private Stork stork;
     private Actor bag;
     private boolean bagOpen;
     private int numBagBounces;
 
     private MediaPlayer music;
     private Clapperboard clapperboard;
-    private SpriteAnimation storkAnimation;
 
     @Override
     public void doInit() {
@@ -59,15 +76,12 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
         pacMan = createPacMan();
         msPacMan = createMsPacMan();
-        stork = new Actor();
+        stork = new Stork(spriteSheet);
         bag = new Actor();
 
         PacManGames_UIConfig config = theUI().configuration();
         msPacMan.setAnimations(config.createPacAnimations(msPacMan));
         pacMan.setAnimations(config.createPacAnimations(pacMan));
-
-        storkAnimation =  SpriteAnimation.createAnimation().ofSprites(spriteSheet.spriteSeq(STORK)).frameTicks(8).endless();
-        storkAnimation.play();
 
         clapperboard = new Clapperboard(spriteSheet, "3", "JUNIOR");
         clapperboard.setPosition(tiles_to_px(3), tiles_to_px(10));
@@ -105,7 +119,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         gr().drawActor(clapperboard);
         gr().drawActor(msPacMan);
         gr().drawActor(pacMan);
-        gr().drawActorSprite(stork, (Sprite) storkAnimation.currentSprite());
+        gr().drawActor(stork);
         gr().drawActorSprite(bag, bagOpen ? spriteSheet.sprite(JUNIOR_PAC) : spriteSheet.sprite(BLUE_BAG));
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
@@ -148,6 +162,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         stork.setPosition(TS * 30, TS * 12);
         stork.setVelocity(-0.8f, 0);
         stork.show();
+        stork.playAnimation("flying");
 
         bag.setPosition(stork.x() - 14, stork.y() + 3);
         bag.setVelocity(stork.velocity());
