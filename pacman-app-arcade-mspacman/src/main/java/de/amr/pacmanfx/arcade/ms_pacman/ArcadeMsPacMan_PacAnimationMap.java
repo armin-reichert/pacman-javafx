@@ -18,10 +18,10 @@ public class ArcadeMsPacMan_PacAnimationMap extends SpriteAnimationMap {
 
     public static final String PAC_MAN_MUNCHING = "pac_man_munching";
 
-    public ArcadeMsPacMan_PacAnimationMap(ArcadeMsPacMan_SpriteSheet ss) {
-        super(ss);
+    public ArcadeMsPacMan_PacAnimationMap(ArcadeMsPacMan_SpriteSheet spriteSheet) {
+        super(spriteSheet);
         set(ANIM_PAC_MUNCHING, createAnimation().ofSprites(msPacManMunchingSprites(Direction.LEFT)).endless());
-        set(ANIM_PAC_DYING,    createAnimation().ofSprites(ss.spriteSeq(SpriteID.MS_PACMAN_DYING)).frameTicks(8).end());
+        set(ANIM_PAC_DYING,    createAnimation().ofSprites(spriteSheet.spriteSeq(SpriteID.MS_PACMAN_DYING)).frameTicks(8).end());
         set(PAC_MAN_MUNCHING,  createAnimation().ofSprites(mrPacManMunchingSprites(Direction.LEFT)).frameTicks(2).endless());
     }
 

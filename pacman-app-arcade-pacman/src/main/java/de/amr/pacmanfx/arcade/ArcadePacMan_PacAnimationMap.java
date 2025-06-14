@@ -18,11 +18,11 @@ import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createAnimation;
 
 public class ArcadePacMan_PacAnimationMap extends SpriteAnimationMap {
 
-    public ArcadePacMan_PacAnimationMap(ArcadePacMan_SpriteSheet ss) {
-        super(ss);
+    public ArcadePacMan_PacAnimationMap(ArcadePacMan_SpriteSheet spriteSheet) {
+        super(spriteSheet);
         set(ANIM_PAC_MUNCHING, createAnimation().ofSprites(pacMunchingSprites(Direction.LEFT)).endless());
-        set(ANIM_PAC_DYING,    createAnimation().ofSprites(ss.spriteSeq(PACMAN_DYING)).frameTicks(8).end());
-        set(ANIM_BIG_PAC_MAN,  createAnimation().ofSprites(ss.spriteSeq(PACMAN_BIG)).frameTicks(3).endless());
+        set(ANIM_PAC_DYING,    createAnimation().ofSprites(spriteSheet.spriteSeq(PACMAN_DYING)).frameTicks(8).end());
+        set(ANIM_BIG_PAC_MAN,  createAnimation().ofSprites(spriteSheet.spriteSeq(PACMAN_BIG)).frameTicks(3).endless());
     }
 
     @Override

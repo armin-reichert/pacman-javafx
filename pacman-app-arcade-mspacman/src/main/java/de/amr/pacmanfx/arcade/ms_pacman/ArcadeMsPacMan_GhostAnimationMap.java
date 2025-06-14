@@ -17,14 +17,14 @@ import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createAnimation;
 
 public class ArcadeMsPacMan_GhostAnimationMap extends SpriteAnimationMap {
 
-    public ArcadeMsPacMan_GhostAnimationMap(ArcadeMsPacMan_SpriteSheet ss, byte personality) {
-        super(ss);
+    public ArcadeMsPacMan_GhostAnimationMap(ArcadeMsPacMan_SpriteSheet spriteSheet, byte personality) {
+        super(spriteSheet);
         requireValidGhostPersonality(personality);
         set(ANIM_GHOST_NORMAL,     createAnimation().ofSprites(ghostNormalSprites(personality, Direction.LEFT)).frameTicks(8).endless());
-        set(ANIM_GHOST_FRIGHTENED, createAnimation().ofSprites(ss.spriteSeq(SpriteID.GHOST_FRIGHTENED)).frameTicks(8).endless());
-        set(ANIM_GHOST_FLASHING,   createAnimation().ofSprites(ss.spriteSeq(SpriteID.GHOST_FLASHING)).frameTicks(7).endless());
+        set(ANIM_GHOST_FRIGHTENED, createAnimation().ofSprites(spriteSheet.spriteSeq(SpriteID.GHOST_FRIGHTENED)).frameTicks(8).endless());
+        set(ANIM_GHOST_FLASHING,   createAnimation().ofSprites(spriteSheet.spriteSeq(SpriteID.GHOST_FLASHING)).frameTicks(7).endless());
         set(ANIM_GHOST_EYES,       createAnimation().ofSprites(ghostEyesSprites(Direction.LEFT)).end());
-        set(ANIM_GHOST_NUMBER,     createAnimation().ofSprites(ss.spriteSeq(SpriteID.GHOST_NUMBERS)).end());
+        set(ANIM_GHOST_NUMBER,     createAnimation().ofSprites(spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS)).end());
     }
 
     @Override

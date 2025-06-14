@@ -17,17 +17,17 @@ import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createAnimation;
 
 public class ArcadePacMan_GhostAnimationMap extends SpriteAnimationMap {
 
-    public ArcadePacMan_GhostAnimationMap(ArcadePacMan_SpriteSheet ss, byte personality) {
-        super(ss);
+    public ArcadePacMan_GhostAnimationMap(ArcadePacMan_SpriteSheet spriteSheet, byte personality) {
+        super(spriteSheet);
         set(ANIM_GHOST_NORMAL,              createAnimation().ofSprites(ghostNormalSprites(personality, Direction.LEFT)).frameTicks(8).endless());
-        set(ANIM_GHOST_FRIGHTENED,          createAnimation().ofSprites(ss.spriteSeq(SpriteID.GHOST_FRIGHTENED)).frameTicks(8).endless());
-        set(ANIM_GHOST_FLASHING,            createAnimation().ofSprites(ss.spriteSeq(SpriteID.GHOST_FLASHING)).frameTicks(7).endless());
+        set(ANIM_GHOST_FRIGHTENED,          createAnimation().ofSprites(spriteSheet.spriteSeq(SpriteID.GHOST_FRIGHTENED)).frameTicks(8).endless());
+        set(ANIM_GHOST_FLASHING,            createAnimation().ofSprites(spriteSheet.spriteSeq(SpriteID.GHOST_FLASHING)).frameTicks(7).endless());
         set(ANIM_GHOST_EYES,                createAnimation().ofSprites(ghostEyesSprites(Direction.LEFT)).end());
-        set(ANIM_GHOST_NUMBER,              createAnimation().ofSprites(ss.spriteSeq(SpriteID.GHOST_NUMBERS)).end());
-        set(ANIM_BLINKY_DAMAGED,            createAnimation().ofSprites(ss.spriteSeq(SpriteID.RED_GHOST_DAMAGED)).end());
-        set(ANIM_BLINKY_NAIL_DRESS_RAPTURE, createAnimation().ofSprites(ss.spriteSeq(SpriteID.RED_GHOST_STRETCHED)).end());
-        set(ANIM_BLINKY_PATCHED,            createAnimation().ofSprites(ss.spriteSeq(SpriteID.RED_GHOST_PATCHED)).frameTicks(4).endless());
-        set(ANIM_BLINKY_NAKED,              createAnimation().ofSprites(ss.spriteSeq(SpriteID.RED_GHOST_NAKED)).frameTicks(4).endless());
+        set(ANIM_GHOST_NUMBER,              createAnimation().ofSprites(spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS)).end());
+        set(ANIM_BLINKY_DAMAGED,            createAnimation().ofSprites(spriteSheet.spriteSeq(SpriteID.RED_GHOST_DAMAGED)).end());
+        set(ANIM_BLINKY_NAIL_DRESS_RAPTURE, createAnimation().ofSprites(spriteSheet.spriteSeq(SpriteID.RED_GHOST_STRETCHED)).end());
+        set(ANIM_BLINKY_PATCHED,            createAnimation().ofSprites(spriteSheet.spriteSeq(SpriteID.RED_GHOST_PATCHED)).frameTicks(4).endless());
+        set(ANIM_BLINKY_NAKED,              createAnimation().ofSprites(spriteSheet.spriteSeq(SpriteID.RED_GHOST_NAKED)).frameTicks(4).endless());
     }
 
     @Override
