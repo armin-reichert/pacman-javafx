@@ -15,7 +15,7 @@ import static de.amr.pacmanfx.arcade.SpriteID.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createAnimation;
 
-public class ArcadePacMan_GhostAnimationMap extends SpriteAnimationMap<Sprite> {
+public class ArcadePacMan_GhostAnimationMap extends SpriteAnimationMap {
 
     public ArcadePacMan_GhostAnimationMap(ArcadePacMan_SpriteSheet ss, byte personality) {
         super(ss);

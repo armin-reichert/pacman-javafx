@@ -16,7 +16,7 @@ import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createAnimation;
 
-public class ArcadePacMan_PacAnimationMap extends SpriteAnimationMap<Sprite> {
+public class ArcadePacMan_PacAnimationMap extends SpriteAnimationMap {
 
     public ArcadePacMan_PacAnimationMap(ArcadePacMan_SpriteSheet ss) {
         super(ss);

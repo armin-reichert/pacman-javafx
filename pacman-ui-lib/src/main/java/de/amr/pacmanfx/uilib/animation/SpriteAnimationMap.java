@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.animation;
 
+import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.ActorAnimationMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -14,23 +15,20 @@ import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
-/**
- * @param <R> type used for describing area inside sprite sheet
- */
-public abstract class SpriteAnimationMap<R> implements ActorAnimationMap {
+public class SpriteAnimationMap implements ActorAnimationMap {
 
-    private final SpriteSheet spriteSheet;
+    private final SpriteSheet<?> spriteSheet;
     private final Map<String, SpriteAnimation> animationsByID = new HashMap<>();
     protected String currentAnimationID;
 
-    protected SpriteAnimationMap(SpriteSheet spriteSheet) {
+    public SpriteAnimationMap(SpriteSheet<?> spriteSheet) {
         this.spriteSheet = requireNonNull(spriteSheet);
     }
 
-    public SpriteSheet spriteSheet() { return spriteSheet; }
+    public SpriteSheet<?> spriteSheet() { return spriteSheet; }
 
-    //TODO this is somewhat crude but currently the way to keep e.g. the sprites up-to-date with an actors' direction etc.
-    protected abstract void updateActorSprites(Actor actor);
+    // TODO: this is somewhat crude but currently the way to keep the sprites up-to-date with actor direction etc.
+    protected void updateActorSprites(Actor actor) {}
 
     public void set(String key, SpriteAnimation animation) {
         animationsByID.put(key, animation);
@@ -43,14 +41,13 @@ public abstract class SpriteAnimationMap<R> implements ActorAnimationMap {
         return id.equals(currentAnimationID);
     }
 
-    @SuppressWarnings("unchecked")
-    public final R currentSprite(Actor actor) {
+    public Sprite currentSprite(Actor actor) {
         var currentAnimation = currentAnimation();
         if (currentAnimation == null) {
             return null;
         }
         updateActorSprites(actor);
-        return (R) currentAnimation.currentSprite();
+        return (Sprite) currentAnimation.currentSprite();
     }
 
     @Override

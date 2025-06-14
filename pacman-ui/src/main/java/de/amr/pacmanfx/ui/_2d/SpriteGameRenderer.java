@@ -17,12 +17,12 @@ import static java.util.Objects.requireNonNull;
 
 public abstract class SpriteGameRenderer implements GameRenderer {
 
-    public abstract SpriteSheet spriteSheet();
+    public abstract SpriteSheet<?> spriteSheet();
 
     /**
      * Draws a sprite (region inside sprite sheet) unscaled at the given position.
      *
-     * @param sprite      the sprite to draw (may be null)
+     * @param sprite      the sprite to draw (can be null)
      * @param x           x-coordinate of left-upper corner
      * @param y           y-coordinate of left-upper corner
      */
@@ -86,10 +86,10 @@ public abstract class SpriteGameRenderer implements GameRenderer {
         }
         if (actor instanceof AnimatedActor animatedActor) {
             animatedActor.animations().ifPresent(animations -> {
-                if (animations instanceof SpriteAnimationMap<?> spriteAnimations) {
-                    SpriteAnimation currentAnimation = spriteAnimations.currentAnimation();
+                if (animations instanceof SpriteAnimationMap spriteAnimationMap) {
+                    SpriteAnimation currentAnimation = spriteAnimationMap.currentAnimation();
                     if (currentAnimation != null) {
-                        drawActorSprite(actor, (Sprite) spriteAnimations.currentSprite(actor));
+                        drawActorSprite(actor, spriteAnimationMap.currentSprite(actor));
                     } else {
                         Logger.error("No current animation for actor {}", actor);
                     }

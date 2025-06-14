@@ -14,7 +14,7 @@ import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createAnimation;
 
-public class ArcadeMsPacMan_PacAnimationMap extends SpriteAnimationMap<Sprite> {
+public class ArcadeMsPacMan_PacAnimationMap extends SpriteAnimationMap {
 
     public static final String PAC_MAN_MUNCHING = "pac_man_munching";
 

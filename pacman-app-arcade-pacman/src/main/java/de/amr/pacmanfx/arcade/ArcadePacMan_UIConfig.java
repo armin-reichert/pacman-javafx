@@ -194,12 +194,12 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
     public SpriteSheet<SpriteID> spriteSheet() {return spriteSheet;}
 
     @Override
-    public SpriteAnimationMap<?> createGhostAnimations(Ghost ghost) {
+    public SpriteAnimationMap createGhostAnimations(Ghost ghost) {
         return new ArcadePacMan_GhostAnimationMap(spriteSheet, ghost.personality());
     }
 
     @Override
-    public SpriteAnimationMap<?> createPacAnimations(Pac pac) {
+    public SpriteAnimationMap createPacAnimations(Pac pac) {
         return new ArcadePacMan_PacAnimationMap(spriteSheet);
     }
 

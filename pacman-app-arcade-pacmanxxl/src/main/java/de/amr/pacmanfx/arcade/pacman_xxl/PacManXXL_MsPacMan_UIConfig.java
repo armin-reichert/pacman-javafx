@@ -241,12 +241,12 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
     }
 
     @Override
-    public SpriteAnimationMap<?> createGhostAnimations(Ghost ghost) {
+    public SpriteAnimationMap createGhostAnimations(Ghost ghost) {
         return new ArcadeMsPacMan_GhostAnimationMap(spriteSheet, ghost.personality());
     }
 
     @Override
-    public SpriteAnimationMap<?> createPacAnimations(Pac pac) {
+    public SpriteAnimationMap createPacAnimations(Pac pac) {
         return new ArcadeMsPacMan_PacAnimationMap(spriteSheet);
     }
 

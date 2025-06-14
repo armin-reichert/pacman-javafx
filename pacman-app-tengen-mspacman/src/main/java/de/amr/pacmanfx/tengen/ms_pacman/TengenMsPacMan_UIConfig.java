@@ -254,12 +254,12 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     }
 
     @Override
-    public SpriteAnimationMap<?> createGhostAnimations(Ghost ghost) {
+    public SpriteAnimationMap createGhostAnimations(Ghost ghost) {
         return new TengenMsPacMan_GhostAnimationMap(spriteSheet, ghost.personality());
     }
 
     @Override
-    public SpriteAnimationMap<?> createPacAnimations(Pac pac) {
+    public SpriteAnimationMap createPacAnimations(Pac pac) {
         return new TengenMsPacMan_PacAnimationMap(spriteSheet);
     }
 

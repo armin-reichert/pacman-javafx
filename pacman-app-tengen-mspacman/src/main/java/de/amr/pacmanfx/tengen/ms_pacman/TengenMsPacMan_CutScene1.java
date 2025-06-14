@@ -7,7 +7,6 @@ package de.amr.pacmanfx.tengen.ms_pacman;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
-import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
@@ -50,7 +49,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     private Pac msPacMan;
     private Ghost inky;
     private Ghost pinky;
-    private Actor heart;
+    private Heart heart;
     private Clapperboard clapperboard;
     private boolean collided;
 
@@ -71,7 +70,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         pacMan = createPacMan();
         inky = createCyanGhost();
         pinky = createPinkGhost();
-        heart = new Actor();
+        heart = new Heart(spriteSheet);
 
         msPacMan.setAnimations(theUI().configuration().createPacAnimations(msPacMan));
         pacMan  .setAnimations(theUI().configuration().createPacAnimations(pacMan));
@@ -217,7 +216,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         gr().drawActor(pacMan);
         gr().drawActor(inky);
         gr().drawActor(pinky);
-        gr().drawActorSprite(heart, spriteSheet.sprite(SpriteID.HEART));
+        gr().drawActor(heart);
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx().minus(0, 3*TS));
     }
 }
