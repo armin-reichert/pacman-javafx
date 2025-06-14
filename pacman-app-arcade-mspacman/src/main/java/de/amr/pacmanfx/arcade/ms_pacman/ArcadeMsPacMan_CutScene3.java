@@ -71,6 +71,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
         clapperboard = new Clapperboard(spriteSheet, "3", "JUNIOR");
         clapperboard.setPosition(tiles_to_px(3), tiles_to_px(10));
+        clapperboard.setFont(arcadeFont8());
         clapperboard.startAnimation();
 
         music = theSound().createSound("intermission.3");
@@ -101,8 +102,8 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     @Override
     public void drawSceneContent() {
         @SuppressWarnings("unchecked") SpriteSheet<SpriteID> spriteSheet = (SpriteSheet<SpriteID>) theUI().configuration().spriteSheet();
-        if (gr() instanceof ArcadeMsPacMan_GameRenderer r) { // could also be VectorGraphicsGameRenderer!
-            r.drawClapperBoard(clapperboard, arcadeFont8());
+        if (gr() instanceof ArcadeMsPacMan_GameRenderer r) { // TODO handle case of VectorGraphicsGameRenderer!
+            r.drawClapperBoard(clapperboard);
         }
         gr().drawActor(msPacMan);
         gr().drawActor(pacMan);

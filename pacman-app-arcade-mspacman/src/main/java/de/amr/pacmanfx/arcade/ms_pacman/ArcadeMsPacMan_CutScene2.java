@@ -55,6 +55,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
         clapperboard = new Clapperboard(spriteSheet, "2", "THE CHASE");
         clapperboard.setPosition(tiles_to_px(3), tiles_to_px(10));
+        clapperboard.setFont(arcadeFont8());
         clapperboard.startAnimation();
 
         music = theSound().createSound("intermission.2");
@@ -85,7 +86,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     @Override
     public void drawSceneContent() {
         if (gr() instanceof ArcadeMsPacMan_GameRenderer r) {
-            r.drawClapperBoard(clapperboard, arcadeFont8());
+            r.drawClapperBoard(clapperboard);
         }
         gr().drawActor(msPacMan);
         gr().drawActor(pacMan);

@@ -2,6 +2,7 @@ package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.model.actors.Actor;
+import javafx.scene.text.Font;
 
 import java.util.Optional;
 
@@ -17,6 +18,7 @@ public class Clapperboard extends Actor {
     private final ArcadeMsPacMan_SpriteSheet spriteSheet;
     private final String number;
     private final String text;
+    private Font font = Font.font(8);
 
     private int tick;
     private boolean running;
@@ -26,8 +28,8 @@ public class Clapperboard extends Actor {
         this.spriteSheet = requireNonNull(spriteSheet);
         this.number = number;
         this.text = text;
-
     }
+
     public String number() {
         return number;
     }
@@ -35,6 +37,10 @@ public class Clapperboard extends Actor {
     public String text() {
         return text;
     }
+
+    public Font font() { return font; }
+
+    public void setFont(Font font) { this.font = requireNonNull(font); }
 
     public void startAnimation() {
         tick = 0;
