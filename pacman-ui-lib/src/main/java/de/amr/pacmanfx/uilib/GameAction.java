@@ -12,4 +12,6 @@ public interface GameAction {
     void execute();
 
     default boolean isEnabled() { return true; }
+
+    default String name() { return toString(); }
 }

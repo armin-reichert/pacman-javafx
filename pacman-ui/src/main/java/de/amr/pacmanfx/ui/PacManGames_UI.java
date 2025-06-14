@@ -429,21 +429,23 @@ public interface PacManGames_UI {
     GameAction ACTION_SHOW_HELP = new GameAction() {
         @Override
         public void execute() {
-            if (theUI().currentGameScene().isPresent()) {
-                GameScene gameScene = theUI().currentGameScene().get();
-                if (gameScene instanceof GameScene2D) {
-                    theUI().gameView().showHelp();
-                }
-            }
+            theUI().gameView().showHelp();
         }
 
         @Override
         public boolean isEnabled() {
-            return theGameController().isSelected("PACMAN")
+            return (theGameController().isSelected("PACMAN")
                 || theGameController().isSelected("PACMAN_XXL")
                 || theGameController().isSelected("MS_PACMAN")
-                || theGameController().isSelected("MS_PACMAN_XXL")
-                && theUI().currentView() == theUI().gameView();
+                || theGameController().isSelected("MS_PACMAN_XXL"))
+                && theUI().currentView() == theUI().gameView()
+                && theUI().currentGameScene().isPresent()
+                && theUI().currentGameScene().get() instanceof GameScene2D;
+        }
+
+        @Override
+        public String name() {
+            return "SHOW_HELP";
         }
     };
 

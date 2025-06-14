@@ -93,7 +93,7 @@ public interface ActionBindingSupport {
             if (action.isEnabled()) {
                 action.execute();
             } else {
-                Logger.info("Disabled action '{}' not executed", action);
+                Logger.info("Disabled action '{}' not executed", action.name());
             }
         });
     }
@@ -103,7 +103,7 @@ public interface ActionBindingSupport {
             if (action.isEnabled()) {
                 action.execute();
             } else {
-                Logger.info("Disabled action '{}' not executed", action);
+                Logger.info("Disabled action '{}' not executed", action.name());
             }
         }, defaultAction);
     }
