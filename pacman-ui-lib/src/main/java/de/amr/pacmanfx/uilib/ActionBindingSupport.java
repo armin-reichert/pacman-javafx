@@ -51,6 +51,7 @@ public interface ActionBindingSupport {
             keyboard().setBinding(combination, this);
         }
         Logger.info("Key bindings updated for {}", getClass().getSimpleName());
+        actionBindings().forEach((key, value) -> Logger.info("%-20s: %s".formatted(key, value.name())));
     }
 
     default void deleteActionBindings() {

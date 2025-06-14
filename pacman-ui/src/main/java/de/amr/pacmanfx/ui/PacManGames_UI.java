@@ -145,7 +145,7 @@ public interface PacManGames_UI {
 
         @Override
         public String name() {
-            return "SteerPlayer_" + dir;
+            return "STEER_PAC_" + dir;
         }
     }
 

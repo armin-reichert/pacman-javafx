@@ -124,10 +124,32 @@ public class StartPagesView implements PacManGames_View {
         });
         setTitleBinding(Bindings.createStringBinding(() -> "JavaFX Pac-Man Games"));
 
-        bindActionToKeyCombination(carousel::showPreviousSlide,     nude(KeyCode.LEFT));
-        bindActionToKeyCombination(carousel::showNextSlide,         nude(KeyCode.RIGHT));
-        bindActionToKeyCombination(ACTION_BOOT_SHOW_GAME_VIEW,      nude(KeyCode.ENTER));
-        bindActionToKeyCombination(ACTION_TOGGLE_PAUSED,            nude(KeyCode.P));
+        GameAction actionPrevSlide = new GameAction() {
+            @Override
+            public void execute() {
+                carousel.showPreviousSlide();
+            }
+
+            @Override
+            public String name() {
+                return "SHOW_PREV_SLIDE";
+            }
+        };
+        GameAction actionNextSlide = new GameAction() {
+            @Override
+            public void execute() {
+                carousel.showNextSlide();
+            }
+
+            @Override
+            public String name() {
+                return "SHOW_NEXT_SLIDE";
+            }
+        };
+        bindActionToKeyCombination(actionPrevSlide,            nude(KeyCode.LEFT));
+        bindActionToKeyCombination(actionNextSlide,            nude(KeyCode.RIGHT));
+        bindActionToKeyCombination(ACTION_BOOT_SHOW_GAME_VIEW, nude(KeyCode.ENTER));
+        bindActionToKeyCombination(ACTION_TOGGLE_PAUSED,       nude(KeyCode.P));
     }
 
     @Override
