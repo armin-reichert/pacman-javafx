@@ -404,7 +404,7 @@ public interface PacManGames_UI {
 
         @Override
         public boolean isEnabled() {
-            return !theGameController().selectedGameVariant().equals("MS_PACMAN_TENGEN")
+            return  Set.of("PACMAN", "MS_PACMAN", "PACMAN_XXL", "MS_PACMAN_XXL").contains(theGameController().selectedGameVariant())
                     && !theCoinMechanism().isEmpty()
                     && (theGameState() == GameState.INTRO || theGameState() == GameState.SETTING_OPTIONS)
                     && theGame().canStartNewGame();
