@@ -15,7 +15,6 @@ import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.media.MediaPlayer;
 
 import java.util.Optional;
@@ -57,13 +56,35 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         public Optional<ActorAnimationMap> animations() { return Optional.of(animations); }
     }
 
+    private static class Bag extends Actor implements AnimatedActor {
+        private final SpriteAnimationMap animations;
+        private boolean open;
+
+        public Bag(ArcadeMsPacMan_SpriteSheet spriteSheet) {
+            animations = new SpriteAnimationMap(spriteSheet);
+            animations.set("junior", SpriteAnimation.createAnimation().ofSprite(spriteSheet.sprite(JUNIOR_PAC)).end());
+            animations.set("bag",    SpriteAnimation.createAnimation().ofSprite(spriteSheet.sprite(BLUE_BAG)).end());
+        }
+
+        @Override
+        public Optional<ActorAnimationMap> animations() { return Optional.of(animations); }
+
+        public void setOpen(boolean open) {
+            this.open = open;
+            animations.selectAnimation(open ? "junior" : "bag");
+        }
+
+        public boolean isOpen() {
+            return open;
+        }
+    }
+
     private static final int LANE_Y = TS * 24;
 
     private Pac pacMan;
     private Pac msPacMan;
     private Stork stork;
-    private Actor bag;
-    private boolean bagOpen;
+    private Bag bag;
     private int numBagBounces;
 
     private MediaPlayer music;
@@ -77,7 +98,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         pacMan = createPacMan();
         msPacMan = createMsPacMan();
         stork = new Stork(spriteSheet);
-        bag = new Actor();
+        bag = new Bag(spriteSheet);
 
         PacManGames_UIConfig config = theUI().configuration();
         msPacMan.setAnimations(config.createPacAnimations(msPacMan));
@@ -87,8 +108,10 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         clapperboard.setPosition(tiles_to_px(3), tiles_to_px(10));
         clapperboard.setFont(arcadeFont8());
         clapperboard.startAnimation();
+        bag.setOpen(false);
 
         music = theSound().createSound("intermission.3");
+
         setSceneState(STATE_CLAPPERBOARD, TickTimer.INDEFINITE);
     }
 
@@ -115,12 +138,11 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        @SuppressWarnings("unchecked") SpriteSheet<SpriteID> spriteSheet = (SpriteSheet<SpriteID>) theUI().configuration().spriteSheet();
         gr().drawActor(clapperboard);
         gr().drawActor(msPacMan);
         gr().drawActor(pacMan);
         gr().drawActor(stork);
-        gr().drawActorSprite(bag, bagOpen ? spriteSheet.sprite(JUNIOR_PAC) : spriteSheet.sprite(BLUE_BAG));
+        gr().drawActor(bag);
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 
@@ -168,7 +190,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         bag.setVelocity(stork.velocity());
         bag.setAcceleration(Vector2f.ZERO);
         bag.show();
-        bagOpen = false;
+        bag.setOpen(false);
         numBagBounces = 0;
 
         setSceneState(STATE_DELIVER_JUNIOR, TickTimer.INDEFINITE);
@@ -185,13 +207,13 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         }
 
         // (closed) bag reaches ground for first time?
-        if (!bagOpen && bag.y() > LANE_Y) {
+        if (!bag.isOpen() && bag.y() > LANE_Y) {
             ++numBagBounces;
             if (numBagBounces < 3) {
                 bag.setVelocity(-0.2f, -1f / numBagBounces);
                 bag.setY(LANE_Y);
             } else {
-                bagOpen = true;
+                bag.setOpen(true);
                 bag.setVelocity(Vector2f.ZERO);
                 setSceneState(STATE_STORK_LEAVES_SCENE, 3 * 60);
             }
