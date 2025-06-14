@@ -10,6 +10,7 @@ import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.uilib.animation.SingleSpriteActor;
 import javafx.scene.media.MediaPlayer;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -43,13 +44,12 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     static final float SPEED_PAC_RISING = 1f;
     static final float SPEED_GHOST_AFTER_COLLISION = 0.5f;
 
-    private TengenMsPacMan_SpriteSheet spriteSheet;
     private MediaPlayer music;
     private Pac pacMan;
     private Pac msPacMan;
     private Ghost inky;
     private Ghost pinky;
-    private Heart heart;
+    private SingleSpriteActor heart;
     private Clapperboard clapperboard;
     private boolean collided;
 
@@ -57,7 +57,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void doInit() {
-        spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
+        var spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
 
         t = -1;
         theGame().setScoreVisible(false);
@@ -70,7 +70,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         pacMan = createPacMan();
         inky = createCyanGhost();
         pinky = createPinkGhost();
-        heart = new Heart(spriteSheet);
+        heart = new SingleSpriteActor(spriteSheet.sprite(SpriteID.HEART));
 
         msPacMan.setAnimations(theUI().configuration().createPacAnimations(msPacMan));
         pacMan  .setAnimations(theUI().configuration().createPacAnimations(pacMan));
