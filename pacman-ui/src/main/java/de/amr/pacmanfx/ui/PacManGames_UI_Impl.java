@@ -179,11 +179,6 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         {
             gameView = new GameView(mainScene);
             gameScenePy.bind(gameView.gameSceneProperty());
-            gameView.setTitleBinding(Bindings.createStringBinding(
-                () -> computeTitleText(currentGameScene().orElse(null), PY_3D_ENABLED.get(), PY_DEBUG_INFO_VISIBLE.get()),
-                theClock().pausedProperty(), mainScene.heightProperty(), gameSceneProperty(),
-                PY_3D_ENABLED, PY_DEBUG_INFO_VISIBLE));
-
             if (dashboardIDs.length > 0) {
                 gameView.dashboard().addInfoBox(DashboardID.README);
                 for (DashboardID id : dashboardIDs) {
@@ -214,24 +209,6 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
                 ? theAssets().get("background.play_scene3d")
                 : theAssets().get("background.scene"))
         );
-    }
-
-    // Asset key regex: app.title.(ms_pacman|ms_pacman_xxl|pacman,pacman_xxl|tengen)(.paused)?
-    private String computeTitleText(GameScene currentGameScene, boolean threeDModeEnabled, boolean modeDebug) {
-        String ans = configuration().assetNamespace();
-        String paused = theClock().isPaused() ? ".paused" : "";
-        String key = "app.title." + ans + paused;
-        String modeText = theAssets().text(threeDModeEnabled ? "threeD" : "twoD");
-        if (currentGameScene == null || !modeDebug) {
-            return theAssets().text(key, modeText);
-        }
-        String sceneClassName = currentGameScene.getClass().getSimpleName();
-        if (currentGameScene instanceof GameScene2D gameScene2D) {
-            return theAssets().text(key, modeText)
-                + " [%s]".formatted(sceneClassName)
-                + " (%.2fx)".formatted(gameScene2D.scaling());
-        }
-        return theAssets().text(key, modeText) + " [%s]".formatted(sceneClassName);
     }
 
     @Override

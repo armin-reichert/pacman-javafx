@@ -49,7 +49,7 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
 
     private final Map<KeyCombination, GameAction> actionBindings = new HashMap<>();
 
-    private final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene") {
+    private final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>() {
         @Override
         protected void invalidated() {
             GameScene gameScene = get();
@@ -73,8 +73,7 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
     private final PictureInPictureView pipView = new PictureInPictureView();
     private final VBox pipContainer = new VBox(pipView, new HBox());
     private final ContextMenu contextMenu = new ContextMenu();
-
-    private StringBinding titleBinding;
+    private final StringBinding titleBinding;
 
     public GameView(Scene parentScene) {
         this.parentScene = parentScene;
@@ -89,29 +88,49 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
                 contextMenu.hide();
             }
         });
-        bindActions();
-    }
+        titleBinding = Bindings.createStringBinding(
+            () -> computeTitleText(PY_3D_ENABLED.get(), PY_DEBUG_INFO_VISIBLE.get()),
+            PY_3D_ENABLED,
+            PY_DEBUG_INFO_VISIBLE,
+            theClock().pausedProperty(),
+            parentScene.heightProperty(),
+            gameSceneProperty()
+        );
 
-    private void bindActions() {
-        bindAction(ACTION_BOOT_SHOW_GAME_VIEW, COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_QUIT_GAME_SCENE, COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_SIMULATION_SLOWER, COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_SIMULATION_FASTER, COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_SIMULATION_RESET, COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_SIMULATION_ONE_STEP, COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_SIMULATION_TEN_STEPS, COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_TOGGLE_AUTOPILOT, COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_TOGGLE_DEBUG_INFO, COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_TOGGLE_PAUSED, COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_TOGGLE_DASHBOARD, COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_TOGGLE_IMMUNITY, COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_TOGGLE_PIP_VISIBILITY, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_BOOT_SHOW_GAME_VIEW,     COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_QUIT_GAME_SCENE,         COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_SIMULATION_SLOWER,       COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_SIMULATION_FASTER,       COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_SIMULATION_RESET,        COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_SIMULATION_ONE_STEP,     COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_SIMULATION_TEN_STEPS,    COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_TOGGLE_AUTOPILOT,        COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_TOGGLE_DEBUG_INFO,       COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_TOGGLE_PAUSED,           COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_TOGGLE_DASHBOARD,        COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_TOGGLE_IMMUNITY,         COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_TOGGLE_PIP_VISIBILITY,   COMMON_ACTION_BINDINGS);
         bindAction(ACTION_TOGGLE_PLAY_SCENE_2D_3D, COMMON_ACTION_BINDINGS);
         bindActionToKeyCombination(this::showGameSceneHelp, nude(KeyCode.H));
     }
 
-    public void setTitleBinding(StringBinding binding) {
-        titleBinding = requireNonNull(binding);
+    // Asset key regex: app.title.(ms_pacman|ms_pacman_xxl|pacman,pacman_xxl|tengen)(.paused)?
+    private String computeTitleText(boolean threeDModeEnabled, boolean modeDebug) {
+        String ans = theUI().configuration().assetNamespace();
+        String paused = theClock().isPaused() ? ".paused" : "";
+        String key = "app.title." + ans + paused;
+        String modeText = theAssets().text(threeDModeEnabled ? "threeD" : "twoD");
+        GameScene currentGameScene = currentGameScene().orElse(null);
+        if (currentGameScene == null || !modeDebug) {
+            return theAssets().text(key, modeText);
+        }
+        String sceneClassName = currentGameScene.getClass().getSimpleName();
+        if (currentGameScene instanceof GameScene2D gameScene2D) {
+            return theAssets().text(key, modeText)
+                + " [%s]".formatted(sceneClassName)
+                + " (%.2fx)".formatted(gameScene2D.scaling());
+        }
+        return theAssets().text(key, modeText) + " [%s]".formatted(sceneClassName);
     }
 
     public void doSimulationStepAndUpdateGameScene() {
