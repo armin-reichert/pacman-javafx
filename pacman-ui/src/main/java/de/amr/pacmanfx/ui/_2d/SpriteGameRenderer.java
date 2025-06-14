@@ -3,6 +3,7 @@ package de.amr.pacmanfx.ui._2d;
 import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.AnimatedActor;
+import de.amr.pacmanfx.uilib.animation.SingleSpriteAnimationMap;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -93,6 +94,9 @@ public abstract class SpriteGameRenderer implements GameRenderer {
                     } else {
                         Logger.error("No current animation for actor {}", actor);
                     }
+                }
+                else if (animations instanceof SingleSpriteAnimationMap single) {
+                    drawActorSprite(actor, single.currentSprite());
                 }
             });
         }
