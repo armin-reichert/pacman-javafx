@@ -17,16 +17,18 @@ import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 
 public class ArcadeMsPacMan_App extends Application {
 
+    private static final String MS_PACMAN = "MS_PACMAN";
+
     @Override
     public void init() {
         PacManGames_Env.init();
-        theGameController().registerGame("MS_PACMAN", new ArcadeMsPacMan_GameModel(new ArcadeMsPacMan_MapSelector()));
-        theGameController().selectGameVariant("MS_PACMAN");
+        theGameController().registerGame(MS_PACMAN, new ArcadeMsPacMan_GameModel(new ArcadeMsPacMan_MapSelector()));
+        theGameController().selectGameVariant(MS_PACMAN);
     }
 
     @Override
     public void start(Stage stage) {
-        initUI(Map.of("MS_PACMAN", ArcadeMsPacMan_UIConfig.class));
+        initUI(Map.of(MS_PACMAN, ArcadeMsPacMan_UIConfig.class));
 
         // UI size: 80% of available screen height, aspect 12:10
         double height = 0.8 * Screen.getPrimary().getBounds().getHeight();

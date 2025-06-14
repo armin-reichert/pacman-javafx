@@ -82,6 +82,10 @@ public class GameController  {
         throw new IllegalArgumentException("Game variant '%s' is not supported".formatted(variant));
     }
 
+    /**
+     * @param variant game variant (e.g. "PACMAN", "MS_PACMAN", "MS_PACMAN_TENGEN", "PACMAN_XXL", "MS_PACMAN_XXL"
+     * @param gameModel the game model implementing the game variant
+     */
     public void registerGame(String variant, GameModel gameModel) {
         requireNonNull(variant);
         requireNonNull(gameModel);
