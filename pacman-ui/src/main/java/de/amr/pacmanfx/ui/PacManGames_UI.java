@@ -45,8 +45,9 @@ import static de.amr.pacmanfx.uilib.Ufx.toggle;
 import static de.amr.pacmanfx.uilib.input.Keyboard.*;
 
 public interface PacManGames_UI {
+    Color DEBUG_TEXT_FILL          = Color.YELLOW;
     Font DEBUG_TEXT_FONT           = Font.font("Sans", FontWeight.BOLD, 18);
-    int LIVES_COUNTER_MAX          = 5;
+
     double MAX_SCENE_2D_SCALING    = 5;
 
     Color STATUS_ICON_COLOR = Color.LIGHTGRAY;

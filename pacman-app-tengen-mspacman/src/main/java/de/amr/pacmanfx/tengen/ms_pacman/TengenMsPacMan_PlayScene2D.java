@@ -425,7 +425,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
         // As long as Pac-Man is still invisible on game start, one live more is shown in the counter
         int numLivesDisplayed = theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible()
             ? theGame().lifeCount() : theGame().lifeCount() - 1;
-        gr().drawLivesCounter(numLivesDisplayed, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - TS,
+        gr().drawLivesCounter(numLivesDisplayed, 5, 2 * TS, sizeInPx().y() - TS,
                 spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL));
 
         TengenMsPacMan_GameModel tengenGame = (TengenMsPacMan_GameModel) theGame();
@@ -446,7 +446,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
             // NES screen width is 32 tiles but mazes are only 28 tiles wide
             double margin = scaled((NES_TILES.x() - theGameLevel().worldMap().numCols()) * HTS);
             ctx().translate(margin, 0);
-            ctx().setFill(Color.YELLOW);
+            ctx().setFill(DEBUG_TEXT_FILL);
             ctx().setFont(DEBUG_TEXT_FONT);
             ctx().fillText("%s %d".formatted(theGameState(), theGameState().timer().tickCount()), 0, scaled(3 * TS));
             gr().drawAnimatedActorInfo(theGameLevel().pac());

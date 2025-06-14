@@ -186,7 +186,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
             int numLivesDisplayed = theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible()
                 ? theGame().lifeCount() : theGame().lifeCount() - 1;
             Sprite sprite = theUI().configuration().createLivesCounterSprite();
-            gr().drawLivesCounter(numLivesDisplayed, LIVES_COUNTER_MAX, 2 * TS, sizeInPx().y() - 2 * TS, sprite);
+            gr().drawLivesCounter(numLivesDisplayed, 5, 2 * TS, sizeInPx().y() - 2 * TS, sprite);
         } else {
             gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
                 scoreColor(), arcadeFont8(), 2 * TS, sizeInPx().y() - 2);
@@ -226,7 +226,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
                 ctx().strokeRect(-0.5*size, -0.5*size, size, size);
                 ctx().restore();
             });
-            ctx().setFill(Color.YELLOW);
+            ctx().setFill(DEBUG_TEXT_FILL);
             ctx().setFont(DEBUG_TEXT_FONT);
             String gameStateText = theGameState().name() + " (Tick %d)".formatted(theGameState().timer().tickCount());
             String huntingPhaseText = "";

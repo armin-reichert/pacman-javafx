@@ -21,6 +21,7 @@ import java.util.Map;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
+import static de.amr.pacmanfx.ui.PacManGames_UI.DEBUG_TEXT_FILL;
 import static de.amr.pacmanfx.ui.PacManGames_UI.DEBUG_TEXT_FONT;
 import static java.util.Objects.requireNonNull;
 
@@ -135,7 +136,7 @@ public abstract class GameScene2D implements GameScene {
      */
     protected void drawDebugInfo() {
         gameRenderer.drawTileGrid(sizeInPx().x(), sizeInPx().y(), Color.LIGHTGRAY);
-        gameRenderer.ctx().setFill(Color.YELLOW);
+        gameRenderer.ctx().setFill(DEBUG_TEXT_FILL);
         gameRenderer.ctx().setFont(DEBUG_TEXT_FONT);
         gameRenderer.ctx().fillText("%s %d".formatted(theGameState(), theGameState().timer().tickCount()), 0, scaled(3 * TS));
     }
