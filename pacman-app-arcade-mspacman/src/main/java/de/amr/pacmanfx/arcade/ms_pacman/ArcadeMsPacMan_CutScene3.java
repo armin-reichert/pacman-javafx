@@ -99,6 +99,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         msPacMan = createMsPacMan();
         stork = new Stork(spriteSheet);
         bag = new Bag(spriteSheet);
+        bag.setOpen(false);
 
         PacManGames_UIConfig config = theUI().configuration();
         msPacMan.setAnimations(config.createPacAnimations(msPacMan));
@@ -108,7 +109,6 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         clapperboard.setPosition(tiles_to_px(3), tiles_to_px(10));
         clapperboard.setFont(arcadeFont8());
         clapperboard.startAnimation();
-        bag.setOpen(false);
 
         music = theSound().createSound("intermission.3");
 

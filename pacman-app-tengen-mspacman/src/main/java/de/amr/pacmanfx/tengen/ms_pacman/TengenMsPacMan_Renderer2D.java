@@ -99,7 +99,19 @@ public class TengenMsPacMan_Renderer2D extends SpriteGameRenderer {
         ctx().setImageSmoothing(false);
         if (actor instanceof Pac pac) {
             drawAnyPac(pac);
-        } else {
+        }
+        else if (actor instanceof TengenMsPacMan_CutScene3.Stork stork) {
+            super.drawActor(stork);
+            if (stork.isBagReleasedFromBeak()) { // over-paint bag still hanging at beak
+                ctx().setFill(PY_CANVAS_BG_COLOR.get());
+                //ctx().setFill(Color.RED);
+                //TODO: clarify
+                float spriteX = stork.x() - 13;
+                float spriteY = stork.y() - 6;
+                ctx().fillRect(scaled(spriteX), scaled(spriteY + 9), scaled(8), scaled(8));
+            }
+        }
+        else {
             super.drawActor(actor);
         }
     }
@@ -445,20 +457,6 @@ public class TengenMsPacMan_Renderer2D extends SpriteGameRenderer {
                 ctx().fillText(clapperboard.text(), scaled(textX), scaled(textY));
             }
         });
-    }
-
-    public void drawStork(SpriteAnimation storkAnimation, Actor stork, boolean hideBag) {
-        requireNonNull(storkAnimation);
-        requireNonNull(stork);
-        if (!stork.isVisible() || storkAnimation.currentSprite() == null) {
-            return;
-        }
-        ctx().setImageSmoothing(false);
-        drawSpriteScaled((Sprite) storkAnimation.currentSprite(), stork.x(), stork.y());
-        if (hideBag) { // over-paint bag under beak
-            ctx().setFill(PY_CANVAS_BG_COLOR.get());
-            ctx().fillRect(scaled(stork.x() - 1), scaled(stork.y() + 7), scaled(9), scaled(9));
-        }
     }
 
     public void drawJoypadKeyBinding(JoypadKeyBinding binding) {
