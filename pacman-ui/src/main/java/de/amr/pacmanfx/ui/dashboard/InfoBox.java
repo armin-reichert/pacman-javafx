@@ -218,7 +218,7 @@ public abstract class InfoBox extends TitledPane {
     }
 
     protected void setAction(Button button, GameAction gameAction) {
-        button.setOnAction(e -> gameAction.execute());
+        button.setOnAction(e -> GameAction.executeIfEnabled(gameAction));
         //TODO add boolean property for enabled-state to game action and bind against it
     }
 

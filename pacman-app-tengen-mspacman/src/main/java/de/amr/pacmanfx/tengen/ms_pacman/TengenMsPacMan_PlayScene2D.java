@@ -13,10 +13,7 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelFinishedAnimation;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
-import de.amr.pacmanfx.uilib.ActionBindingSupport;
-import de.amr.pacmanfx.uilib.CameraControlledView;
-import de.amr.pacmanfx.uilib.GameScene;
-import de.amr.pacmanfx.uilib.Ufx;
+import de.amr.pacmanfx.uilib.*;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -134,7 +131,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
         items.add(miMuted);
 
         var miQuit = new MenuItem(theAssets().text("quit"));
-        miQuit.setOnAction(ae -> ACTION_QUIT_GAME_SCENE.execute());
+        miQuit.setOnAction(ae -> GameAction.executeIfEnabled(ACTION_QUIT_GAME_SCENE));
         items.add(miQuit);
 
         return items;

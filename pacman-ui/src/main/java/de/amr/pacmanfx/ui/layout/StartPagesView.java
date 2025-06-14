@@ -64,7 +64,7 @@ public class StartPagesView implements PacManGames_View {
             setPadding(new Insets(5, 5, 5, 5));
             setBackground(Ufx.coloredRoundedBackground(bgColor, 20));
             addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-                if (action != null && action.isEnabled()) action.execute();
+                if (action != null) GameAction.executeIfEnabled(action);
                 e.consume();
             });
         }

@@ -89,22 +89,10 @@ public interface ActionBindingSupport {
     }
 
     default void runMatchingAction() {
-        matchingAction().ifPresent(action -> {
-            if (action.isEnabled()) {
-                action.execute();
-            } else {
-                Logger.info("Disabled action '{}' not executed", action.name());
-            }
-        });
+        matchingAction().ifPresent(GameAction::executeIfEnabled);
     }
 
     default void runMatchingActionOrElse(Runnable defaultAction) {
-        matchingAction().ifPresentOrElse(action -> {
-            if (action.isEnabled()) {
-                action.execute();
-            } else {
-                Logger.info("Disabled action '{}' not executed", action.name());
-            }
-        }, defaultAction);
+        matchingAction().ifPresentOrElse(GameAction::executeIfEnabled, defaultAction);
     }
 }

@@ -105,7 +105,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
         items.add(contextMenuTitleItem(theAssets().text("scene_display")));
 
         var item = new MenuItem(theAssets().text("use_2D_scene"));
-        item.setOnAction(ae -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.execute());
+        item.setOnAction(ae -> GameAction.executeIfEnabled(ACTION_TOGGLE_PLAY_SCENE_2D_3D));
         items.add(item);
 
         // Toggle picture-in-picture display
@@ -158,7 +158,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
         items.add(miMuted);
 
         var miQuit = new MenuItem(theAssets().text("quit"));
-        miQuit.setOnAction(ae -> ACTION_QUIT_GAME_SCENE.execute());
+        miQuit.setOnAction(ae -> GameAction.executeIfEnabled(ACTION_QUIT_GAME_SCENE));
         items.add(miQuit);
 
         return items;
@@ -369,13 +369,12 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
                     animation.setOnFinished(e -> theGameController().letCurrentGameStateExpire());
                     animation.play();
                 }
-                case GHOST_DYING -> {
+                case GHOST_DYING ->
                     theSimulationStep().killedGhosts.forEach(ghost -> {
                         int victimIndex = theGameLevel().victims().indexOf(ghost);
                         Image numberImage = theUI().configuration().createGhostNumberImage(victimIndex);
                         level3D.ghost3D(ghost.personality()).setNumberTexture(numberImage);
                     });
-                }
                 case LEVEL_COMPLETE -> {
                     theSound().stopAll();
                     level3D.pellets3D().forEach(Pellet3D::onEaten);

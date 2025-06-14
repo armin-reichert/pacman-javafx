@@ -406,7 +406,7 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
             gameScene.supplyContextMenuItems(e);
             if (theUI().currentGameSceneIsPlayScene2D()) {
                 var item = new MenuItem(theAssets().text("use_3D_scene"));
-                item.setOnAction(ae -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.execute());
+                item.setOnAction(ae -> GameAction.executeIfEnabled(ACTION_TOGGLE_PLAY_SCENE_2D_3D));
                 menuItems.addFirst(item);
                 menuItems.addFirst(contextMenuTitleItem(theAssets().text("scene_display")));
             }
