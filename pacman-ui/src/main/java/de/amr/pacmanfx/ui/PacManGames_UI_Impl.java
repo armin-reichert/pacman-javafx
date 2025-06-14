@@ -39,10 +39,10 @@ import static java.util.Objects.requireNonNull;
  */
 public class PacManGames_UI_Impl implements PacManGames_UI {
 
-    private final Map<String, PacManGames_UIConfig> configMap = new HashMap<>();
+    private final Map<String, PacManGames_UIConfig> configByGameVariant = new HashMap<>();
 
-    private final ObjectProperty<PacManGames_View> currentViewPy = new SimpleObjectProperty<>();
-    private final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>();
+    private final ObjectProperty<PacManGames_View> currentViewPy      = new SimpleObjectProperty<>();
+    private final ObjectProperty<GameScene>        currentGameScenePy = new SimpleObjectProperty<>();
 
     private Stage stage;
     private Scene mainScene;
@@ -51,7 +51,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     private EditorView editorView; // created on first access
 
     /**
-     * @param x cause of catastrophy
+     * @param x cause of catastrophe
      *
      * @see <a href="https://de.wikipedia.org/wiki/Steel_Buddies_%E2%80%93_Stahlharte_Gesch%C3%A4fte">Here.</a>
      */
@@ -120,7 +120,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
         var root = new StackPane(new Pane()); // placeholder for root of current view
 
-        // Status icons and "paused" icon
+        // Status and "paused" icon
         {
             var iconBox = new StatusIconBox();
             StackPane.setAlignment(iconBox, Pos.BOTTOM_LEFT);
@@ -178,12 +178,12 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
     @Override
     public void setCurrentGameScene(GameScene gameScene) {
-        gameScenePy.set(gameScene);
+        currentGameScenePy.set(gameScene);
     }
 
     @Override
     public Optional<GameScene> currentGameScene() {
-        return Optional.ofNullable(gameScenePy.get());
+        return Optional.ofNullable(currentGameScenePy.get());
     }
 
     @Override
@@ -198,7 +198,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
     @Override
     public ObjectProperty<GameScene> gameSceneProperty() {
-        return gameScenePy;
+        return currentGameScenePy;
     }
 
     @Override
@@ -295,17 +295,17 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
                 gameScene2D.debugInfoVisibleProperty().bind(PY_DEBUG_INFO_VISIBLE);
             }
         });
-        configMap.put(variant, configuration);
+        configByGameVariant.put(variant, configuration);
     }
 
     @Override
     public PacManGames_UIConfig configuration(String gameVariant) {
-        return configMap.get(gameVariant);
+        return configByGameVariant.get(gameVariant);
     }
 
     @Override
     public PacManGames_UIConfig configuration() {
-        return configMap.get(theGameController().selectedGameVariant());
+        return configByGameVariant.get(theGameController().selectedGameVariant());
     }
 
     @Override
