@@ -16,17 +16,18 @@ import static de.amr.pacmanfx.lib.Sprite.makeSprite;
 import static java.util.Objects.requireNonNull;
 
 public record ArcadePacMan_SpriteSheet(Image sourceImage) implements SpriteSheet<SpriteID> {
+    private static final int R16 = 16; // 16x16 squares in sprite sheet
+    private static final int OFF_X = 456; // right from here the sprites are located
 
-    private static Sprite[] spriteSeq(int tileX, int tileY, int numTiles) {
-        return IntStream.range(tileX, tileX + numTiles)
-                .mapToObj(x -> makeSprite(OFF_X + R16 * x, R16 * tileY, R16, R16))
+    private static Sprite[] collectSprites(int tileX, int tileY, int spriteCount) {
+        return IntStream.range(tileX, tileX + spriteCount)
+                .mapToObj(tx -> makeSpriteAt(tx, tileY))
                 .toArray(Sprite[]::new);
     }
 
-    private static Sprite makeSpriteAt(int tileX, int tileY) { return makeSprite(OFF_X + R16 * tileX, R16 * tileY, R16, R16); }
-
-    private static final int R16 = 16; // 16x16 squares in sprite sheet
-    private static final int OFF_X = 456;
+    private static Sprite makeSpriteAt(int tileX, int tileY) {
+        return makeSprite(OFF_X + R16 * tileX, R16 * tileY, R16, R16);
+    }
 
     private static final EnumMap<SpriteID, Object> SPRITE_MAP = new EnumMap<>(SpriteID.class);
     static {
@@ -57,42 +58,42 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements SpriteSheet
         SPRITE_MAP.put(PACMAN_MUNCHING_UP,    makePacManMunchingSpriteSeq(2));
         SPRITE_MAP.put(PACMAN_MUNCHING_DOWN,  makePacManMunchingSpriteSeq(3));
         SPRITE_MAP.put(PACMAN_DYING,          makePacManDyingSpriteSeq());
-        SPRITE_MAP.put(RED_GHOST_RIGHT,       spriteSeq(0, 4, 2));
-        SPRITE_MAP.put(RED_GHOST_LEFT,        spriteSeq(2, 4, 2));
-        SPRITE_MAP.put(RED_GHOST_UP,          spriteSeq(4, 4, 2));
-        SPRITE_MAP.put(RED_GHOST_DOWN,        spriteSeq(6, 4, 2));
-        SPRITE_MAP.put(PINK_GHOST_RIGHT,      spriteSeq(0, 5, 2));
-        SPRITE_MAP.put(PINK_GHOST_LEFT,       spriteSeq(2, 5, 2));
-        SPRITE_MAP.put(PINK_GHOST_UP,         spriteSeq(4, 5, 2));
-        SPRITE_MAP.put(PINK_GHOST_DOWN,       spriteSeq(6, 5, 2));
-        SPRITE_MAP.put(CYAN_GHOST_RIGHT,      spriteSeq(0, 6, 2));
-        SPRITE_MAP.put(CYAN_GHOST_LEFT,       spriteSeq(2, 6, 2));
-        SPRITE_MAP.put(CYAN_GHOST_UP,         spriteSeq(4, 6, 2));
-        SPRITE_MAP.put(CYAN_GHOST_DOWN,       spriteSeq(6, 6, 2));
-        SPRITE_MAP.put(ORANGE_GHOST_RIGHT,    spriteSeq(0, 7, 2));
-        SPRITE_MAP.put(ORANGE_GHOST_LEFT,     spriteSeq(2, 7, 2));
-        SPRITE_MAP.put(ORANGE_GHOST_UP,       spriteSeq(4, 7, 2));
-        SPRITE_MAP.put(ORANGE_GHOST_DOWN,     spriteSeq(6, 7, 2));
+        SPRITE_MAP.put(RED_GHOST_RIGHT,       collectSprites(0, 4, 2));
+        SPRITE_MAP.put(RED_GHOST_LEFT,        collectSprites(2, 4, 2));
+        SPRITE_MAP.put(RED_GHOST_UP,          collectSprites(4, 4, 2));
+        SPRITE_MAP.put(RED_GHOST_DOWN,        collectSprites(6, 4, 2));
+        SPRITE_MAP.put(PINK_GHOST_RIGHT,      collectSprites(0, 5, 2));
+        SPRITE_MAP.put(PINK_GHOST_LEFT,       collectSprites(2, 5, 2));
+        SPRITE_MAP.put(PINK_GHOST_UP,         collectSprites(4, 5, 2));
+        SPRITE_MAP.put(PINK_GHOST_DOWN,       collectSprites(6, 5, 2));
+        SPRITE_MAP.put(CYAN_GHOST_RIGHT,      collectSprites(0, 6, 2));
+        SPRITE_MAP.put(CYAN_GHOST_LEFT,       collectSprites(2, 6, 2));
+        SPRITE_MAP.put(CYAN_GHOST_UP,         collectSprites(4, 6, 2));
+        SPRITE_MAP.put(CYAN_GHOST_DOWN,       collectSprites(6, 6, 2));
+        SPRITE_MAP.put(ORANGE_GHOST_RIGHT,    collectSprites(0, 7, 2));
+        SPRITE_MAP.put(ORANGE_GHOST_LEFT,     collectSprites(2, 7, 2));
+        SPRITE_MAP.put(ORANGE_GHOST_UP,       collectSprites(4, 7, 2));
+        SPRITE_MAP.put(ORANGE_GHOST_DOWN,     collectSprites(6, 7, 2));
         SPRITE_MAP.put(GALLERY_GHOSTS,        new Sprite[] {
                 makeSpriteAt(0, 4),
                 makeSpriteAt(0, 5),
                 makeSpriteAt(0, 6),
                 makeSpriteAt(0, 7) });
-        SPRITE_MAP.put(GHOST_FRIGHTENED,      spriteSeq(8, 4, 2));
-        SPRITE_MAP.put(GHOST_FLASHING,        spriteSeq(8, 4, 4));
-        SPRITE_MAP.put(GHOST_EYES_RIGHT,      spriteSeq(8, 5, 1));
-        SPRITE_MAP.put(GHOST_EYES_LEFT,       spriteSeq(9, 5, 1));
-        SPRITE_MAP.put(GHOST_EYES_UP,         spriteSeq(10, 5, 1));
-        SPRITE_MAP.put(GHOST_EYES_DOWN,       spriteSeq(11, 5, 1));
+        SPRITE_MAP.put(GHOST_FRIGHTENED,      collectSprites(8, 4, 2));
+        SPRITE_MAP.put(GHOST_FLASHING,        collectSprites(8, 4, 4));
+        SPRITE_MAP.put(GHOST_EYES_RIGHT,      collectSprites(8, 5, 1));
+        SPRITE_MAP.put(GHOST_EYES_LEFT,       collectSprites(9, 5, 1));
+        SPRITE_MAP.put(GHOST_EYES_UP,         collectSprites(10, 5, 1));
+        SPRITE_MAP.put(GHOST_EYES_DOWN,       collectSprites(11, 5, 1));
         SPRITE_MAP.put(PACMAN_BIG,            new Sprite[] {
                 makeSprite(OFF_X + 32, 16, 32, 32), makeSprite(OFF_X + 64, 16, 32, 32), makeSprite(OFF_X + 96, 16, 32, 32)
         });
-        SPRITE_MAP.put(RED_GHOST_STRETCHED,   IntStream.range(0,5).mapToObj(i -> makeSpriteAt(8 + i, 6)).toArray(Sprite[]::new));
+        SPRITE_MAP.put(RED_GHOST_STRETCHED,   IntStream.range(0, 5).mapToObj(i -> makeSpriteAt(8 + i, 6)).toArray(Sprite[]::new));
         SPRITE_MAP.put(RED_GHOST_DAMAGED,     new Sprite[] {
                 makeSprite(OFF_X + R16 * 8 + 1, R16 * 7 + 1, 14, 14),
                 makeSprite(OFF_X + R16 * 9 + 1, R16 * 7 + 1, 14, 14)
         });
-        SPRITE_MAP.put(RED_GHOST_PATCHED, spriteSeq(10, 7, 2));
+        SPRITE_MAP.put(RED_GHOST_PATCHED, collectSprites(10, 7, 2));
         SPRITE_MAP.put(RED_GHOST_NAKED, new Sprite[] {
                 makeSprite(OFF_X + R16 * 8, R16 * 8, 2 * R16, R16),
                 makeSprite(OFF_X + R16 * 10, R16 * 8, 2 * R16, R16)
