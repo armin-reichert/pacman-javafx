@@ -4,7 +4,6 @@ import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.AnimatedActor;
 import de.amr.pacmanfx.uilib.animation.SingleSpriteAnimationMap;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.paint.Color;
@@ -86,17 +85,16 @@ public abstract class SpriteGameRenderer implements GameRenderer {
             return;
         }
         if (actor instanceof AnimatedActor animatedActor) {
-            animatedActor.animations().ifPresent(animations -> {
-                if (animations instanceof SpriteAnimationMap spriteAnimationMap) {
-                    SpriteAnimation currentAnimation = spriteAnimationMap.currentAnimation();
-                    if (currentAnimation != null) {
+            animatedActor.animations().ifPresent(animationMap -> {
+                if (animationMap instanceof SpriteAnimationMap spriteAnimationMap) {
+                    if (spriteAnimationMap.currentAnimation() != null) {
                         drawActorSprite(actor, spriteAnimationMap.currentSprite(actor));
                     } else {
                         Logger.error("No current animation for actor {}", actor);
                     }
                 }
-                else if (animations instanceof SingleSpriteAnimationMap single) {
-                    drawActorSprite(actor, single.currentSprite());
+                else if (animationMap instanceof SingleSpriteAnimationMap spriteAnimationMap) {
+                    drawActorSprite(actor, spriteAnimationMap.singleSprite());
                 }
             });
         }

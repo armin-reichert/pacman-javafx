@@ -17,9 +17,7 @@ public class SingleSpriteAnimationMap implements ActorAnimationMap {
         this.sprite = requireNonNull(sprite);
     }
 
-    public Sprite currentSprite() {
-        return sprite;
-    }
+    public Sprite singleSprite() { return sprite; }
 
     @Override
     public Object animation(String id) {
