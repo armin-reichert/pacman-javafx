@@ -154,6 +154,6 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         gr().drawClapperBoard(clapperboard);
         gr().drawActor(msPacMan);
         gr().drawActor(pacMan);
-        gr().drawLevelCounter(theGame().levelCounter(), sizeInPx().minus(0, 3*TS));
+        gr().drawLevelCounter(theGame().levelCounter(), sizeInPx().minus(0, 3 * TS));
     }
 }

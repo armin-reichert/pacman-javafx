@@ -427,7 +427,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
 
         TengenMsPacMan_GameModel tengenGame = (TengenMsPacMan_GameModel) theGame();
         if (theGameLevel().isDemoLevel() || tengenGame.mapCategory() == MapCategory.ARCADE) {
-            gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
+            drawLevelCounter();
         } else {
             gr().drawLevelCounterWithLevelNumbers(theGameLevel().number(), theGame().levelCounter(), sizeInPx());
         }

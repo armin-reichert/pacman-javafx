@@ -127,7 +127,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D implements ActionBindin
         }
         String coinsText = "CREDIT %2d".formatted(theCoinMechanism().numCoins());
         gr().fillText(coinsText, scoreColor(), arcadeFont8(), 2 * TS, sizeInPx().y() - 2);
-        gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
+        drawLevelCounter();
     }
 
     private void drawGallery() {

@@ -192,7 +192,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
             gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
                 scoreColor(), arcadeFont8(), 2 * TS, sizeInPx().y() - 2);
         }
-        gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
+        drawLevelCounter();
     }
 
     private void drawLevelMessage() {

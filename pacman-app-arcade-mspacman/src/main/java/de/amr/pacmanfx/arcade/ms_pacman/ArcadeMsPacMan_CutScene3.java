@@ -143,7 +143,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         gr().drawActor(pacMan);
         gr().drawActor(stork);
         gr().drawActor(bag);
-        gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
+        drawLevelCounter();
     }
 
     // Scene controller state machine

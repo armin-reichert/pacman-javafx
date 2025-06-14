@@ -136,7 +136,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
             r.drawMsPacManCopyrightAtTile(ARCADE_RED, arcadeFont8(), 6, 28);
         }
         gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()), scoreColor(), arcadeFont8(), 2 * TS, sizeInPx().y() - 2);
-        gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
+        drawLevelCounter();
     }
 
     /**
