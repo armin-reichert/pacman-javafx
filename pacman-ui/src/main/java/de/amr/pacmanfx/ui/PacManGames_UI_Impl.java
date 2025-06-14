@@ -50,6 +50,19 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     private GameView gameView;
     private EditorView editorView; // created on first access
 
+    public PacManGames_UI_Impl(Map<String, Class<? extends PacManGames_UIConfig>> configClassesMap) {
+        configClassesMap.forEach((gameVariant, configClass) -> {
+            try {
+                PacManGames_UIConfig config = configClass.getDeclaredConstructor(PacManGames_Assets.class).newInstance(theAssets());
+                setConfiguration(gameVariant, config);
+                Logger.info("Game variant {} uses UI configuration: {}", gameVariant, config);
+            } catch (Exception x) {
+                Logger.error("Could not create UI configuration of class {}", configClass);
+                throw new IllegalStateException(x);
+            }
+        });
+    }
+
     /**
      * @param x cause of catastrophe
      *

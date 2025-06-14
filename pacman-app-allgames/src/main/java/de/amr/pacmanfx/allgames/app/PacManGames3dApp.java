@@ -52,7 +52,7 @@ public class PacManGames3dApp extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            initUI(Map.of(
+            createUI(Map.of(
                 "PACMAN", ArcadePacMan_UIConfig.class,
                 "MS_PACMAN", ArcadeMsPacMan_UIConfig.class,
                 "MS_PACMAN_TENGEN", TengenMsPacMan_UIConfig.class,

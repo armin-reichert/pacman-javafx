@@ -28,7 +28,14 @@ public class PacManGames_Env {
     private static Keyboard theKeyboard;
     private static Joypad theJoypad;
     private static PacManGames_SoundManager theSound;
-    private static PacManGames_UI_Impl theUI;
+    private static PacManGames_UI theUI;
+
+    public static PacManGames_Assets theAssets() { return theAssets; }
+    public static GameClock theClock() { return theClock; }
+    public static Keyboard theKeyboard() { return theKeyboard; }
+    public static Joypad theJoypad() { return theJoypad; }
+    public static PacManGames_SoundManager theSound() { return theSound; }
+    public static PacManGames_UI theUI() { return theUI; }
 
     /**
      * Initializes the global game objects like game assets, clock, keyboard input etc.
@@ -45,13 +52,6 @@ public class PacManGames_Env {
         Logger.info("Game environment initialized.");
     }
 
-    public static PacManGames_Assets theAssets() { return theAssets; }
-    public static GameClock theClock() { return theClock; }
-    public static Keyboard theKeyboard() { return theKeyboard; }
-    public static Joypad theJoypad() { return theJoypad; }
-    public static PacManGames_SoundManager theSound() { return theSound; }
-    public static PacManGames_UI theUI() { return theUI; }
-
     /**
      * Creates the global UI instance and stores the configurations of the supported game variants.
      * <p>
@@ -60,18 +60,8 @@ public class PacManGames_Env {
      *
      * @param configClassesMap a map specifying the UI configuration for each supported game variant
      */
-    public static void initUI(Map<String, Class<? extends PacManGames_UIConfig>> configClassesMap) {
-        theUI = new PacManGames_UI_Impl();
-        configClassesMap.forEach((gameVariant, configClass) -> {
-            try {
-                PacManGames_UIConfig config = configClass.getDeclaredConstructor(PacManGames_Assets.class).newInstance(theAssets);
-                theUI.setConfiguration(gameVariant, config);
-                Logger.info("Game variant {} uses UI configuration: {}", gameVariant, config);
-            } catch (Exception x) {
-                Logger.error("Could not create UI configuration of class {}", configClass);
-                throw new IllegalStateException(x);
-            }
-        });
+    public static void createUI(Map<String, Class<? extends PacManGames_UIConfig>> configClassesMap) {
+        theUI = new PacManGames_UI_Impl(configClassesMap);
     }
 
     private static void checkUserDirsExistingAndWritable() {

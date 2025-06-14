@@ -30,7 +30,7 @@ public class TengenMsPacMan_App extends Application {
 
     @Override
     public void start(Stage stage) {
-        initUI(Map.of("MS_PACMAN_TENGEN", TengenMsPacMan_UIConfig.class));
+        createUI(Map.of("MS_PACMAN_TENGEN", TengenMsPacMan_UIConfig.class));
 
         // UI size: 80% of available screen height, aspect 32:30
         double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
