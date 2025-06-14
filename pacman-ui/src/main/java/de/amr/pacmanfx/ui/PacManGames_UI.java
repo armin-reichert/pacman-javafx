@@ -48,6 +48,11 @@ public interface PacManGames_UI {
     int LIVES_COUNTER_MAX          = 5;
     double MAX_SCENE_2D_SCALING    = 5;
 
+    Color STATUS_ICON_COLOR = Color.LIGHTGRAY;
+    byte STATUS_ICON_SIZE = 24;
+    byte STATUS_ICON_SPACING = 5;
+    byte STATUS_ICON_PADDING = 10;
+
     double BONUS_3D_SYMBOL_WIDTH  = TS;
     double BONUS_3D_POINTS_WIDTH  = 1.8 * TS;
 
@@ -112,6 +117,7 @@ public interface PacManGames_UI {
     void updateGameScene(boolean reload);
 
     // Views
+    ObjectProperty<PacManGames_View> currentViewProperty();
     PacManGames_View currentView();
     GameView gameView();
     StartPagesView startPagesView();

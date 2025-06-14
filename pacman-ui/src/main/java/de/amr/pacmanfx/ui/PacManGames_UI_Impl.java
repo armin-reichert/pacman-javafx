@@ -14,25 +14,19 @@ import de.amr.pacmanfx.uilib.GameScene;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -47,7 +41,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
     private final Map<String, PacManGames_UIConfig> configMap = new HashMap<>();
 
-    private final ObjectProperty<PacManGames_View> viewPy = new SimpleObjectProperty<>();
+    private final ObjectProperty<PacManGames_View> currentViewPy = new SimpleObjectProperty<>();
     private final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>();
 
     private Stage stage;
@@ -56,10 +50,34 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     private GameView gameView;
     private EditorView editorView; // created on first access
 
+    /**
+     * @param x cause of catastrophy
+     *
+     * @see <a href="https://de.wikipedia.org/wiki/Steel_Buddies_%E2%80%93_Stahlharte_Gesch%C3%A4fte">Here.</a>
+     */
     private void ka_tas_trooo_phe(Throwable x) {
         Logger.error(x);
         Logger.error("SOMETHING VERY BAD HAPPENED DURING SIMULATION STEP!");
         showFlashMessageSec(10, "KA-TA-STROOO-PHE!\nSOMEONE CALL AN AMBULANCE!");
+    }
+
+    private void doSimulationStepAndUpdateGameScene() {
+        try {
+            theSimulationStep().start(theClock().tickCount());
+            theGameController().updateGameState();
+            theSimulationStep().log();
+            theUI().currentGameScene().ifPresent(GameScene::update);
+        } catch (Throwable x) {
+            ka_tas_trooo_phe(x);
+        }
+    }
+
+    private void drawGameView() {
+        try {
+            gameView.draw();
+        } catch (Throwable x) {
+            ka_tas_trooo_phe(x);
+        }
     }
 
     private void handleViewChange(PacManGames_View oldView, PacManGames_View newView) {
@@ -102,47 +120,18 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
         var root = new StackPane(new Pane()); // placeholder for root of current view
 
-        // Status icons
+        // Status icons and "paused" icon
         {
-            final Color STATUS_ICON_COLOR = Color.LIGHTGRAY;
-            final byte STATUS_ICON_SIZE = 24;
-            final byte STATUS_ICON_SPACING = 5;
-            final byte STATUS_ICON_PADDING = 10;
-
-            var iconMuted = FontIcon.of(FontAwesomeSolid.DEAF, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
-            iconMuted.visibleProperty().bind(theSound().mutedProperty());
-
-            var icon3D = FontIcon.of(FontAwesomeSolid.CUBES, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
-            icon3D.visibleProperty().bind(PY_3D_ENABLED);
-
-            var iconAutopilot = FontIcon.of(FontAwesomeSolid.TAXI, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
-            iconAutopilot.visibleProperty().bind(PY_USING_AUTOPILOT);
-
-            var iconImmune = FontIcon.of(FontAwesomeSolid.USER_SECRET, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
-            iconImmune.visibleProperty().bind(PY_IMMUNITY);
+            var iconBox = new StatusIconBox();
+            StackPane.setAlignment(iconBox, Pos.BOTTOM_LEFT);
 
             var iconPaused = FontIcon.of(FontAwesomeSolid.PAUSE, 80, STATUS_ICON_COLOR);
             iconPaused.visibleProperty().bind(Bindings.createBooleanBinding(
-                () -> (viewPy.get() == gameView) && theClock().isPaused(),
-                viewPy, theClock().pausedProperty()));
-
-            final List<FontIcon> icons = List.of(iconMuted, icon3D, iconAutopilot, iconImmune);
-            final HBox iconBox = new HBox();
-            iconBox.getChildren().addAll(icons);
-            iconBox.setMaxHeight(STATUS_ICON_SIZE);
-            iconBox.setMaxWidth(STATUS_ICON_SIZE * 4);
-            iconBox.setPadding(new Insets(STATUS_ICON_PADDING));
-            iconBox.setSpacing(STATUS_ICON_SPACING);
-            iconBox.visibleProperty().bind(Bindings.createBooleanBinding
-                (() -> (viewPy.get() == startPagesView || viewPy.get() == gameView), viewPy));
-            // keep box compact, show visible items only
-            ChangeListener<? super Boolean> iconVisibilityChangeHandler = (py,ov,nv) ->
-                iconBox.getChildren().setAll(icons.stream().filter(Node::isVisible).toList());
-            icons.forEach(icon -> icon.visibleProperty().addListener(iconVisibilityChangeHandler));
+                () ->  currentView() == gameView() && theClock().isPaused(),
+                currentViewProperty(), theClock().pausedProperty()));
+            StackPane.setAlignment(iconPaused, Pos.CENTER);
 
             root.getChildren().addAll(iconPaused, iconBox);
-            StackPane.setAlignment(iconPaused, Pos.CENTER);
-            StackPane.setAlignment(iconBox, Pos.BOTTOM_LEFT);
         }
 
         // Main scene
@@ -170,39 +159,16 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         stage.setScene(mainScene);
 
         // Start pages view
-        {
-            startPagesView = new StartPagesView();
-            startPagesView.setBackground(theAssets().background("background.scene"));
-        }
+        startPagesView = new StartPagesView();
+        startPagesView.setBackground(theAssets().background("background.scene"));
 
-        // Game view and dashboard
-        {
-            gameView = new GameView(mainScene);
-            if (dashboardIDs.length > 0) {
-                gameView.dashboard().addInfoBox(DashboardID.README);
-                for (DashboardID id : dashboardIDs) {
-                    if (id != DashboardID.README) {
-                        gameView.dashboard().addInfoBox(id);
-                    }
-                }
-            }
-            theClock().setPausableAction(() -> {
-                try {
-                    gameView.doSimulationStepAndUpdateGameScene();
-                } catch (Throwable x) {
-                    ka_tas_trooo_phe(x);
-                }
-            });
-            theClock().setPermanentAction(() -> {
-                try {
-                    gameView.draw();
-                } catch (Throwable x) {
-                    ka_tas_trooo_phe(x);
-                }
-            });
-        }
+        // Game view (includes dashboard)
+        gameView = new GameView(mainScene, dashboardIDs);
 
-        viewPy.addListener((py, oldView, newView) -> handleViewChange(oldView, newView));
+        theClock().setPausableAction(this::doSimulationStepAndUpdateGameScene);
+        theClock().setPermanentAction(this::drawGameView);
+
+        currentViewPy.addListener((py, oldView, newView) -> handleViewChange(oldView, newView));
         root.backgroundProperty().bind(gameSceneProperty().map(
             gameScene -> currentGameSceneIsPlayScene3D()
                 ? theAssets().get("background.play_scene3d")
@@ -221,8 +187,13 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     }
 
     @Override
+    public ObjectProperty<PacManGames_View> currentViewProperty() {
+        return currentViewPy;
+    }
+
+    @Override
     public PacManGames_View currentView() {
-        return viewPy.get();
+        return currentViewPy.get();
     }
 
     @Override
@@ -260,7 +231,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
     @Override
     public void show() {
-        viewPy.set(startPagesView);
+        currentViewPy.set(startPagesView);
         startPagesView.currentStartPage().ifPresent(StartPage::requestFocus);
         stage.centerOnScreen();
         stage.show();
@@ -273,7 +244,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
             theSound().stopAll();
             theClock().stop();
             lazyGetEditorView().editor().start(stage);
-            viewPy.set(lazyGetEditorView());
+            currentViewPy.set(lazyGetEditorView());
         } else {
             Logger.info("Editor view cannot be opened, game is playing");
         }
@@ -286,7 +257,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
     @Override
     public void showGameView() {
-        viewPy.set(gameView);
+        currentViewPy.set(gameView);
     }
 
     @Override
@@ -295,7 +266,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         theClock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
         theSound().stopAll();
         gameView.setDashboardVisible(false);
-        viewPy.set(startPagesView);
+        currentViewPy.set(startPagesView);
         startPagesView.currentStartPage().ifPresent(StartPage::requestFocus);
     }
 

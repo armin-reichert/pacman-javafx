@@ -10,6 +10,7 @@ import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.*;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
+import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.dashboard.InfoBox;
 import de.amr.pacmanfx.ui.dashboard.InfoBoxReadmeFirst;
 import de.amr.pacmanfx.uilib.*;
@@ -17,8 +18,6 @@ import de.amr.pacmanfx.uilib.input.Keyboard;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -33,7 +32,6 @@ import org.tinylog.Logger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
@@ -48,17 +46,6 @@ import static java.util.Objects.requireNonNull;
 public class GameView implements PacManGames_View, ActionBindingSupport {
 
     private final Map<KeyCombination, GameAction> actionBindings = new HashMap<>();
-
-/*
-    private final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>() {
-        @Override
-        protected void invalidated() {
-            GameScene gameScene = get();
-            if (gameScene != null) embedGameScene(theUI().configuration(), gameScene);
-            contextMenu.hide();
-        }
-    };
-*/
 
     private final StackPane root = new StackPane();
     private final Scene parentScene;
@@ -77,11 +64,12 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
     private final ContextMenu contextMenu = new ContextMenu();
     private final StringBinding titleBinding;
 
-    public GameView(Scene parentScene) {
+    public GameView(Scene parentScene, DashboardID... dashboardIDs) {
         this.parentScene = parentScene;
         configureCanvasContainer();
         configurePiPView();
         createLayers();
+        createDashboard(dashboardIDs);
         configurePropertyBindings();
 
         theUI().gameSceneProperty().addListener((py,ov,gameScene) -> {
@@ -139,13 +127,6 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
                 + " (%.2fx)".formatted(gameScene2D.scaling());
         }
         return theAssets().text(key, modeText) + " [%s]".formatted(sceneClassName);
-    }
-
-    public void doSimulationStepAndUpdateGameScene() {
-        theSimulationStep().start(theClock().tickCount());
-        theGameController().updateGameState();
-        theSimulationStep().log();
-        theUI().currentGameScene().ifPresent(GameScene::update);
     }
 
     @Override
@@ -238,6 +219,17 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
             updateDashboard();
         } else {
             dashboardContainer.setVisible(false);
+        }
+    }
+
+    private void createDashboard(DashboardID... ids) {
+        if (ids.length > 0) {
+            dashboard.addInfoBox(DashboardID.README);
+            for (DashboardID id : ids) {
+                if (id != DashboardID.README) {
+                    dashboard.addInfoBox(id);
+                }
+            }
         }
     }
 
