@@ -113,8 +113,8 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements SpriteSheet
     }
 
     private static Sprite[] makePacManDyingSpriteSeq() {
-        return IntStream.range(0, 12)
-                .mapToObj(i -> makeSprite(504 + i * R16, 0, R16 - 1, i == 11 ? R16 : R16 - 1))
+        return IntStream.range(0, 11)
+                .mapToObj(i -> makeSprite(504 + i * 16, 0, 16, i <= 9 ? 15 : 16))
                 .toArray(Sprite[]::new);
     }
 
