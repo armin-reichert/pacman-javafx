@@ -7,12 +7,11 @@ package de.amr.pacmanfx.arcade.ms_pacman;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
+import de.amr.pacmanfx.uilib.animation.SingleSpriteActor;
 import javafx.scene.media.MediaPlayer;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -49,7 +48,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     private Pac msPacMan;
     private Ghost inky;
     private Ghost pinky;
-    private Actor heart;
+    private SingleSpriteActor heart;
     private MediaPlayer music;
     private Clapperboard clapperboard;
 
@@ -63,7 +62,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         msPacMan = createMsPacMan();
         inky = createCyanGhost();
         pinky = createPinkGhost();
-        heart = new Actor();
+        heart = new SingleSpriteActor(spriteSheet.sprite(SpriteID.HEART));
 
         final PacManGames_UIConfig config = theUI().configuration();
         msPacMan.setAnimations(config.createPacAnimations(msPacMan));
@@ -103,7 +102,6 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        @SuppressWarnings("unchecked") SpriteSheet<SpriteID> spriteSheet = (SpriteSheet<SpriteID>) theUI().configuration().spriteSheet();
         if (gr() instanceof ArcadeMsPacMan_GameRenderer r) { // could also be VectorGraphicsRenderer!
             r.drawClapperBoard(clapperboard, arcadeFont8());
         }
@@ -111,7 +109,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         gr().drawActor(pacMan);
         gr().drawActor(inky);
         gr().drawActor(pinky);
-        gr().drawActorSprite(heart, spriteSheet.sprite(SpriteID.HEART));
+        gr().drawActor(heart);
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
     }
 
