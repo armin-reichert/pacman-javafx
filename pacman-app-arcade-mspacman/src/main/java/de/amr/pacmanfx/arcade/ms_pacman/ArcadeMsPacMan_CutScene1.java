@@ -51,11 +51,11 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     private Ghost pinky;
     private Actor heart;
     private MediaPlayer music;
-    private ArcadeMsPacMan_Clapperboard clapperboard;
+    private Clapperboard clapperboard;
 
     @Override
     public void doInit() {
-        @SuppressWarnings("unchecked") SpriteSheet<SpriteID> spriteSheet = (SpriteSheet<SpriteID>) theUI().configuration().spriteSheet();
+        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
 
         theGame().setScoreVisible(true);
 
@@ -71,7 +71,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         inky.setAnimations(config.createGhostAnimations(inky));
         pinky.setAnimations(config.createGhostAnimations(pinky));
 
-        clapperboard = new ArcadeMsPacMan_Clapperboard(spriteSheet, "1", "THEY MEET");
+        clapperboard = new Clapperboard(spriteSheet, "1", "THEY MEET");
         clapperboard.setPosition(tiles_to_px(3), tiles_to_px(10));
         clapperboard.startAnimation();
         music = theSound().createSound("intermission.1");

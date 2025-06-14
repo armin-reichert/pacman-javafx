@@ -423,15 +423,13 @@ public class TengenMsPacMan_Renderer2D extends SpriteGameRenderer {
         ctx().restore();
     }
 
-    public void drawClapperBoard(ClapperboardAnimation clapperboardAnimation, String text, int number,
-                                 double x, double y, Font font) {
-        requireNonNull(clapperboardAnimation);
-        requireNonNull(text);
-        requireNonNull(font);
-        clapperboardAnimation.sprite().ifPresent(clapperBoardSprite -> {
-            double numberX = x + 8, numberY = y + 18; // baseline
+    public void drawClapperBoard(Clapperboard clapperboard) {
+        requireNonNull(clapperboard);
+        if (!clapperboard.isVisible()) return;
+        clapperboard.sprite().ifPresent(sprite -> {
+            double numberX = clapperboard.x() + 8, numberY = clapperboard.y() + 18; // baseline
             ctx().setImageSmoothing(false);
-            drawSpriteScaledCenteredAt(clapperBoardSprite, x + HTS, y + HTS);
+            drawSpriteScaledCenteredAt(sprite, clapperboard.x() + HTS, clapperboard.y() + HTS);
             // over-paint number from sprite sheet
             ctx().save();
             ctx().scale(scaling(), scaling());
@@ -439,12 +437,12 @@ public class TengenMsPacMan_Renderer2D extends SpriteGameRenderer {
             ctx().fillRect(numberX - 1, numberY - 8, 12, 8);
             ctx().restore();
 
-            ctx().setFont(font);
+            ctx().setFont(clapperboard.font());
             ctx().setFill(nesPaletteColor(0x20));
-            ctx().fillText(String.valueOf(number), scaled(numberX), scaled(numberY));
-            if (clapperboardAnimation.isTextVisible()) {
-                double textX = x + clapperBoardSprite.width(), textY = y + 2;
-                ctx().fillText(text, scaled(textX), scaled(textY));
+            ctx().fillText(String.valueOf(clapperboard.number()), scaled(numberX), scaled(numberY));
+            if (clapperboard.isTextVisible()) {
+                double textX = clapperboard.x() + sprite.width(), textY = clapperboard.y() + 2;
+                ctx().fillText(clapperboard.text(), scaled(textX), scaled(textY));
             }
         });
     }

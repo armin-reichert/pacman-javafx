@@ -130,7 +130,7 @@ public class ArcadeMsPacMan_GameRenderer extends SpriteGameRenderer {
         ctx.restore();
     }
 
-    public void drawClapperBoard(ArcadeMsPacMan_Clapperboard clapperboard, Font font) {
+    public void drawClapperBoard(Clapperboard clapperboard, Font font) {
         clapperboard.currentSprite().ifPresent(sprite -> {
             float numberX = scaled(clapperboard.x() + sprite.width() - 25);
             float numberY = scaled(clapperboard.y() + 18);

@@ -2,7 +2,6 @@ package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
 import java.util.Optional;
 
@@ -11,11 +10,11 @@ import static java.util.Objects.requireNonNull;
 /**
  * Animated clapperboard.
  */
-public class ArcadeMsPacMan_Clapperboard extends Actor {
+public class Clapperboard extends Actor {
 
     private static final byte HIDDEN = -1, WIDE_OPEN = 0, OPEN = 1, CLOSED = 2;
 
-    private final SpriteSheet<SpriteID> spriteSheet;
+    private final ArcadeMsPacMan_SpriteSheet spriteSheet;
     private final String number;
     private final String text;
 
@@ -23,7 +22,7 @@ public class ArcadeMsPacMan_Clapperboard extends Actor {
     private boolean running;
     private byte state;
 
-    public ArcadeMsPacMan_Clapperboard(SpriteSheet<SpriteID> spriteSheet, String number, String text) {
+    public Clapperboard(ArcadeMsPacMan_SpriteSheet spriteSheet, String number, String text) {
         this.spriteSheet = requireNonNull(spriteSheet);
         this.number = number;
         this.text = text;

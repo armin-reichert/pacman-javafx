@@ -30,9 +30,6 @@ import static de.amr.pacmanfx.ui.PacManGames_Env.*;
  */
 public class TengenMsPacMan_CutScene2 extends GameScene2D {
 
-    static final int CLAP_TILE_X = TS * 3;
-    static final int CLAP_TILE_Y = TS * 10;
-
     static final int UPPER_LANE = TS * 8;
     static final int LOWER_LANE = TS * 22;
     static final int MIDDLE_LANE = TS * 10;
@@ -44,17 +41,19 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     private Pac pacMan;
     private Pac msPacMan;
     private MediaPlayer music;
-    private TengenMsPacMan_SpriteSheet spriteSheet;
-    private ClapperboardAnimation clapAnimation;
+    private Clapperboard clapperboard;
 
     @Override
     public void doInit() {
-        spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
+        var spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
 
         t = -1;
         theGame().setScoreVisible(false);
         bindActionToKeyCombination(theGameController()::letCurrentGameStateExpire, theJoypad().key(JoypadButton.START));
 
+        clapperboard = new Clapperboard(spriteSheet, 2, "THE CHASE");
+        clapperboard.setPosition(3*TS, 10*TS);
+        clapperboard.setFont(arcadeFont8());
         msPacMan = createMsPacMan();
         pacMan = createPacMan();
         msPacMan.setAnimations(theUI().configuration().createPacAnimations(msPacMan));
@@ -71,8 +70,8 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     public void update() {
         t += 1;
         if (t == 0) {
-            clapAnimation = new ClapperboardAnimation(spriteSheet);
-            clapAnimation.start();
+            clapperboard.setVisible(true);
+            clapperboard.startAnimation();
             music.play();
         }
         else if (t == 270) {
@@ -136,7 +135,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         }
         pacMan.move();
         msPacMan.move();
-        clapAnimation.tick();
+        clapperboard.tick();
     }
 
     @Override
@@ -152,7 +151,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     @Override
     public void drawSceneContent() {
         gr().drawVerticalSceneBorders();
-        gr().drawClapperBoard(clapAnimation, "THE CHASE", 2, CLAP_TILE_X, CLAP_TILE_Y, arcadeFont8());
+        gr().drawClapperBoard(clapperboard);
         gr().drawActor(msPacMan);
         gr().drawActor(pacMan);
         gr().drawLevelCounter(theGame().levelCounter(), sizeInPx().minus(0, 3*TS));

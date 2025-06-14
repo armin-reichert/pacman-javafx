@@ -35,9 +35,6 @@ import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createAnimation;
  */
 public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
-    static final int CLAP_TILE_X = TS * 3;
-    static final int CLAP_TILE_Y = TS * 10;
-
     static final int STORK_Y = TS * 7;
     static final int GROUND_Y = TS * 24;
     static final int RIGHT_BORDER = TS * (NES_TILES.x() - 2);
@@ -53,7 +50,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
     private boolean darkness;
 
     private TengenMsPacMan_SpriteSheet spriteSheet;
-    private ClapperboardAnimation clapAnimation;
+    private Clapperboard clapperboard;
     private SpriteAnimation storkAnimation;
 
     private int t;
@@ -66,6 +63,9 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         theGame().setScoreVisible(false);
         bindActionToKeyCombination(theGameController()::letCurrentGameStateExpire, theJoypad().key(JoypadButton.START));
 
+        clapperboard = new Clapperboard(spriteSheet, 3, "JUNIOR");
+        clapperboard.setPosition(3*TS, 10*TS);
+        clapperboard.setFont(arcadeFont8());
         msPacMan = createMsPacMan();
         pacMan = createPacMan();
         stork = new Actor();
@@ -86,8 +86,8 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         t += 1;
         if (t == 0) {
             darkness = false;
-            clapAnimation = new ClapperboardAnimation(spriteSheet);
-            clapAnimation.start();
+            clapperboard.setVisible(true);
+            clapperboard.startAnimation();
             music.play();
         }
         else if (t == 130) {
@@ -146,7 +146,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
             }
         }
 
-        clapAnimation.tick();
+        clapperboard.tick();
     }
 
     @Override
@@ -165,7 +165,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
             return;
         }
         gr().drawVerticalSceneBorders();
-        gr().drawClapperBoard(clapAnimation, "JUNIOR", 3, CLAP_TILE_X, CLAP_TILE_Y, arcadeFont8());
+        gr().drawClapperBoard(clapperboard);
         gr().drawStork(storkAnimation, stork, bagReleased);
         gr().drawActor(msPacMan);
         gr().drawActor(pacMan);

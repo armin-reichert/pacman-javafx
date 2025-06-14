@@ -33,9 +33,6 @@ import static de.amr.pacmanfx.ui.PacManGames_Env.*;
  */
 public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
-    static final int CLAP_TILE_X = TS * 3;
-    static final int CLAP_TILE_Y = TS * 10;
-
     static final int UPPER_LANE  = TS * 8;
     static final int LOWER_LANE  = TS * 24;
     static final int MIDDLE_LANE = TS * 16;
@@ -54,7 +51,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     private Ghost inky;
     private Ghost pinky;
     private Actor heart;
-    private ClapperboardAnimation clapAnimation;
+    private Clapperboard clapperboard;
     private boolean collided;
 
     private int t;
@@ -67,6 +64,9 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         theGame().setScoreVisible(false);
         bindActionToKeyCombination(theGameController()::letCurrentGameStateExpire, theJoypad().key(JoypadButton.START));
 
+        clapperboard = new Clapperboard(spriteSheet, 1, "THEY MEET");
+        clapperboard.setPosition(3*TS, 10*TS);
+        clapperboard.setFont(arcadeFont8());
         msPacMan = createMsPacMan();
         pacMan = createPacMan();
         inky = createCyanGhost();
@@ -90,8 +90,8 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     public void update() {
         t += 1;
         if (t == 0) {
-            clapAnimation = new ClapperboardAnimation(spriteSheet);
-            clapAnimation.start();
+            clapperboard.setVisible(true);
+            clapperboard.startAnimation();
             music.play();
         }
         else if (t == 130) {
@@ -196,7 +196,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
             }
         }
 
-        clapAnimation.tick();
+        clapperboard.tick();
     }
 
     @Override
@@ -212,7 +212,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     @Override
     public void drawSceneContent() {
         gr().drawVerticalSceneBorders();
-        gr().drawClapperBoard(clapAnimation, "THEY MEET", 1, CLAP_TILE_X, CLAP_TILE_Y, arcadeFont8());
+        gr().drawClapperBoard(clapperboard);
         gr().drawActor(msPacMan);
         gr().drawActor(pacMan);
         gr().drawActor(inky);

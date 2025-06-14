@@ -5,6 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman;
 
 import de.amr.pacmanfx.lib.Sprite;
+import de.amr.pacmanfx.model.actors.Actor;
+import javafx.scene.text.Font;
 
 import java.util.Optional;
 
@@ -13,7 +15,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Animated movie clapperboard.
  */
-public class ClapperboardAnimation {
+public class Clapperboard extends Actor {
 
     private static final byte HIDDEN = -1, WIDE_OPEN = 0, OPEN = 1, CLOSED = 2;
 
@@ -22,9 +24,30 @@ public class ClapperboardAnimation {
     private byte state;
     private boolean textVisible;
     private boolean running;
+    private final byte number;
+    private final String text;
+    private Font font = Font.font(8);
 
-    public ClapperboardAnimation(TengenMsPacMan_SpriteSheet spriteSheet) {
+    public Clapperboard(TengenMsPacMan_SpriteSheet spriteSheet, int number, String text) {
         this.spriteSheet = requireNonNull(spriteSheet);
+        this.number = (byte) number;
+        this.text = requireNonNull(text);
+    }
+
+    public byte number() {
+        return number;
+    }
+
+    public String text() {
+        return text;
+    }
+
+    public Font font() {
+        return font;
+    }
+
+    public void setFont(Font font) {
+        this.font = font;
     }
 
     public boolean isTextVisible() {
@@ -37,7 +60,7 @@ public class ClapperboardAnimation {
         return Optional.of(clapperboardSprites[state]);
     }
 
-    public void start() {
+    public void startAnimation() {
         tick = 0;
         textVisible = true;
         state = CLOSED;

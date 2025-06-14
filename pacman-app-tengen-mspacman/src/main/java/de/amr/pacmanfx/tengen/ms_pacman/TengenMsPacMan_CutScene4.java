@@ -27,28 +27,27 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     static final int LEFT_BORDER = TS;
     static final int RIGHT_BORDER = TS * (NES_TILES.x() - 2);
 
-    static final int CLAP_TILE_X = TS * 3; // TODO not sure
-    static final int CLAP_TILE_Y = TS * 10; // TODO not sure
-
     static final int LOWER_LANE = TS * 21; // TODO not sure
 
-    private TengenMsPacMan_SpriteSheet spriteSheet;
     private Pac pacMan;
     private Pac msPacMan;
     private List<Pac> juniors;
     private List<Integer> juniorCreationTime;
 
     private MediaPlayer music;
-    private ClapperboardAnimation clapAnimation;
+    private Clapperboard clapperboard;
 
     private int t;
 
     @Override
     protected void doInit() {
-        spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
+        var spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
 
         t = -1;
         theGame().setScoreVisible(false);
+        clapperboard = new Clapperboard(spriteSheet, 4, "THE END");
+        clapperboard.setPosition(3*TS, 10*TS);
+        clapperboard.setFont(arcadeFont8());
         msPacMan = createMsPacMan();
         pacMan = createPacMan();
         msPacMan.setAnimations(theUI().configuration().createPacAnimations(msPacMan));
@@ -67,8 +66,8 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     public void update() {
         t += 1;
         if (t == 0) {
-            clapAnimation = new ClapperboardAnimation(spriteSheet);
-            clapAnimation.start();
+            clapperboard.setVisible(true);
+            clapperboard.startAnimation();
             music.play();
         }
         else if (t == 130) {
@@ -130,7 +129,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         for (int i = 0; i < juniors.size(); ++i) {
             updateJunior(i);
         }
-        clapAnimation.tick();
+        clapperboard.tick();
     }
 
     private boolean isJuniorSpawnTime() {
@@ -208,7 +207,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     @Override
     protected void drawSceneContent() {
         gr().drawVerticalSceneBorders();
-        gr().drawClapperBoard(clapAnimation, "THE END", 4, CLAP_TILE_X, CLAP_TILE_Y, arcadeFont8());
+        gr().drawClapperBoard(clapperboard);
         gr().drawActor(msPacMan);
         gr().drawActor(pacMan);
         juniors.forEach(junior -> gr().drawActor(junior));

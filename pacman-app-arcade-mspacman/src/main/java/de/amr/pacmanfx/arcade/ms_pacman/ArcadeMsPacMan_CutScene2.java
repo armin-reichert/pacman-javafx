@@ -9,7 +9,6 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.media.MediaPlayer;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -40,11 +39,11 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     private Pac msPacMan;
 
     private MediaPlayer music;
-    private ArcadeMsPacMan_Clapperboard clapperboard;
+    private Clapperboard clapperboard;
 
     @Override
     public void doInit() {
-        @SuppressWarnings("unchecked") SpriteSheet<SpriteID> spriteSheet = (SpriteSheet<SpriteID>) theUI().configuration().spriteSheet();
+        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
 
         theGame().setScoreVisible(true);
 
@@ -54,7 +53,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
         msPacMan.setAnimations(theUI().configuration().createPacAnimations(msPacMan));
         pacMan.setAnimations(theUI().configuration().createPacAnimations(pacMan));
 
-        clapperboard = new ArcadeMsPacMan_Clapperboard(spriteSheet, "2", "THE CHASE");
+        clapperboard = new Clapperboard(spriteSheet, "2", "THE CHASE");
         clapperboard.setPosition(tiles_to_px(3), tiles_to_px(10));
         clapperboard.startAnimation();
 

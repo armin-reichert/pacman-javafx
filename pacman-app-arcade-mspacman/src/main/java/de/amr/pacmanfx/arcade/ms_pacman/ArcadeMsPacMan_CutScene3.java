@@ -49,12 +49,12 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     private int numBagBounces;
 
     private MediaPlayer music;
-    private ArcadeMsPacMan_Clapperboard clapperboard;
+    private Clapperboard clapperboard;
     private SpriteAnimation storkAnimation;
 
     @Override
     public void doInit() {
-        @SuppressWarnings("unchecked") SpriteSheet<SpriteID> spriteSheet = (SpriteSheet<SpriteID>) theUI().configuration().spriteSheet();
+        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
         theGame().setScoreVisible(true);
 
         pacMan = createPacMan();
@@ -69,7 +69,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         storkAnimation =  SpriteAnimation.createAnimation().ofSprites(spriteSheet.spriteSeq(STORK)).frameTicks(8).endless();
         storkAnimation.play();
 
-        clapperboard = new ArcadeMsPacMan_Clapperboard(spriteSheet, "3", "JUNIOR");
+        clapperboard = new Clapperboard(spriteSheet, "3", "JUNIOR");
         clapperboard.setPosition(tiles_to_px(3), tiles_to_px(10));
         clapperboard.startAnimation();
 
