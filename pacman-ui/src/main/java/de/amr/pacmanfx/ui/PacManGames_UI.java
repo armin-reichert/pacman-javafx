@@ -50,14 +50,13 @@ public interface PacManGames_UI {
 
     double MAX_SCENE_2D_SCALING    = 5;
 
-    Color STATUS_ICON_COLOR = Color.LIGHTGRAY;
-    byte STATUS_ICON_SIZE = 24;
-    byte STATUS_ICON_SPACING = 5;
-    byte STATUS_ICON_PADDING = 10;
+    Color STATUS_ICON_COLOR        = Color.LIGHTGRAY;
+    byte STATUS_ICON_PADDING       = 10;
+    byte STATUS_ICON_SIZE          = 24;
+    byte STATUS_ICON_SPACING       = 5;
 
-    double BONUS_3D_SYMBOL_WIDTH  = TS;
-    double BONUS_3D_POINTS_WIDTH  = 1.8 * TS;
-
+    float BONUS_3D_SYMBOL_WIDTH    = TS;
+    float BONUS_3D_POINTS_WIDTH    = 1.8f * TS;
     float ENERGIZER_3D_RADIUS      = 3.5f;
     float FLOOR_3D_THICKNESS       = 0.5f;
     float GHOST_3D_SIZE            = 16.0f;
@@ -78,6 +77,7 @@ public interface PacManGames_UI {
     KeyCombination KEY_MUTE        = alt(KeyCode.M);
     KeyCombination KEY_OPEN_EDITOR = alt_shift(KeyCode.E);
 
+    // Global properties
     ObjectProperty<Color>         PY_CANVAS_BG_COLOR        = new SimpleObjectProperty<>(Color.BLACK);
     BooleanProperty               PY_CANVAS_FONT_SMOOTHING  = new SimpleBooleanProperty(false);
     BooleanProperty               PY_CANVAS_IMAGE_SMOOTHING = new SimpleBooleanProperty(false);
@@ -104,7 +104,7 @@ public interface PacManGames_UI {
     void selectGameVariant(String variant);
     void show();
 
-    // Configuration
+    // UI configuration
     PacManGames_UIConfig configuration(String gameVariant);
     PacManGames_UIConfig configuration();
     void setConfiguration(String variant, PacManGames_UIConfig configuration);
@@ -144,7 +144,7 @@ public interface PacManGames_UI {
         public boolean isEnabled() { return optGameLevel().isPresent() && !theGameLevel().pac().isUsingAutopilot(); }
 
         @Override
-        public String toString() {
+        public String name() {
             return "SteerPlayer_" + dir;
         }
     }
@@ -158,6 +158,11 @@ public interface PacManGames_UI {
 
         @Override
         public boolean isEnabled() { return optGameLevel().isPresent(); }
+
+        @Override
+        public String name() {
+            return "CHEAT_ADD_LIVES";
+        }
     };
 
     GameAction ACTION_CHEAT_EAT_ALL_PELLETS = new GameAction() {
@@ -173,6 +178,11 @@ public interface PacManGames_UI {
             return optGameLevel().isPresent()
                     && !theGameLevel().isDemoLevel()
                     && theGameState() == GameState.HUNTING;
+        }
+
+        @Override
+        public String name() {
+            return "CHEAT_EAT_ALL_PELLETS";
         }
     };
 
@@ -192,6 +202,11 @@ public interface PacManGames_UI {
         public boolean isEnabled() {
             return theGameState() == GameState.HUNTING && optGameLevel().isPresent() && !theGameLevel().isDemoLevel();
         }
+
+        @Override
+        public String name() {
+            return "CHEAT_KILL_GHOSTS";
+        }
     };
 
     GameAction ACTION_CHEAT_ENTER_NEXT_LEVEL = new GameAction() {
@@ -206,6 +221,11 @@ public interface PacManGames_UI {
                     && theGameState() == GameState.HUNTING
                     && optGameLevel().isPresent()
                     && theGameLevel().number() < theGame().lastLevelNumber();
+        }
+
+        @Override
+        public String name() {
+            return "CHEAT_ENTER_NEXT_LEVEL";
         }
     };
 
@@ -233,6 +253,11 @@ public interface PacManGames_UI {
                     || optGameLevel().isPresent() && optGameLevel().get().isDemoLevel()
                     || theCoinMechanism().isEmpty();
         }
+
+        @Override
+        public String name() {
+            return "INSERT_COIN";
+        }
     };
 
     GameAction ACTION_STEER_UP = new SteeringAction(Direction.UP);
@@ -251,6 +276,11 @@ public interface PacManGames_UI {
             if (!theCoinMechanism().isEmpty()) theCoinMechanism().consumeCoin();
             theUI().showStartView();
         }
+
+        @Override
+        public String name() {
+            return "QUIT_GAME_SCENE";
+        }
     };
 
     GameAction ACTION_RESTART_INTRO = new GameAction() {
@@ -264,6 +294,11 @@ public interface PacManGames_UI {
             theClock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
             theGameController().restart(INTRO);
         }
+
+        @Override
+        public String name() {
+            return "RESTART_INTRO";
+        }
     };
 
     GameAction ACTION_BOOT_SHOW_GAME_VIEW = new GameAction() {
@@ -271,6 +306,11 @@ public interface PacManGames_UI {
         public void execute() {
             theUI().showGameView();
             theUI().restart();
+        }
+
+        @Override
+        public String name() {
+            return "BOOT_SHOW_GAME_VIEW";
         }
     };
 
@@ -283,6 +323,11 @@ public interface PacManGames_UI {
             String prefix = newRate == SIMULATION_SPEED_MIN ? "At minimum speed: " : "";
             theUI().showFlashMessageSec(0.75, prefix + newRate + "Hz");
         }
+
+        @Override
+        public String name() {
+            return "SIMULATION_SLOWER";
+        }
     };
 
     GameAction ACTION_SIMULATION_FASTER = new GameAction() {
@@ -293,6 +338,11 @@ public interface PacManGames_UI {
             theClock().setTargetFrameRate(newRate);
             String prefix = newRate == SIMULATION_SPEED_MAX ? "At maximum speed: " : "";
             theUI().showFlashMessageSec(0.75, prefix + newRate + "Hz");
+        }
+
+        @Override
+        public String name() {
+            return "SIMULATION_FASTER";
         }
     };
 
@@ -307,6 +357,11 @@ public interface PacManGames_UI {
 
         @Override
         public boolean isEnabled() { return theClock().isPaused(); }
+
+        @Override
+        public String name() {
+            return "SIMULATION_ONE_STEP";
+        }
     };
 
     GameAction ACTION_SIMULATION_TEN_STEPS = new GameAction() {
@@ -320,6 +375,11 @@ public interface PacManGames_UI {
 
         @Override
         public boolean isEnabled() { return theClock().isPaused(); }
+
+        @Override
+        public String name() {
+            return "SIMULATION_TEN_STEPS";
+        }
     };
 
     GameAction ACTION_SIMULATION_RESET = new GameAction() {
@@ -327,6 +387,11 @@ public interface PacManGames_UI {
         public void execute() {
             theClock().setTargetFrameRate(NUM_TICKS_PER_SEC);
             theUI().showFlashMessageSec(0.75, theClock().targetFrameRate() + "Hz");
+        }
+
+        @Override
+        public String name() {
+            return "SIMULATION_RESET";
         }
     };
 
@@ -344,6 +409,11 @@ public interface PacManGames_UI {
                     && (theGameState() == GameState.INTRO || theGameState() == GameState.SETTING_OPTIONS)
                     && theGame().canStartNewGame();
         }
+
+        @Override
+        public String name() {
+            return "START_GAME";
+        }
     };
 
     GameAction ACTION_TEST_CUT_SCENES = new GameAction() {
@@ -351,6 +421,11 @@ public interface PacManGames_UI {
         public void execute() {
             theGameController().changeGameState(GameState.TESTING_CUT_SCENES);
             theUI().showFlashMessage("Cut scenes test"); //TODO localize
+        }
+
+        @Override
+        public String name() {
+            return "TEST_CUT_SCENES";
         }
     };
 
@@ -360,6 +435,11 @@ public interface PacManGames_UI {
             theGameController().restart(GameState.TESTING_LEVELS);
             theUI().showFlashMessageSec(3, "Level TEST MODE");
         }
+
+        @Override
+        public String name() {
+            return "TEST_LEVELS_BONI";
+        }
     };
 
     GameAction ACTION_TEST_LEVELS_TEASERS = new GameAction() {
@@ -367,6 +447,11 @@ public interface PacManGames_UI {
         public void execute() {
             theGameController().restart(GameState.TESTING_LEVEL_TEASERS);
             theUI().showFlashMessageSec(3, "Level TEST MODE");
+        }
+
+        @Override
+        public String name() {
+            return "TEST_LEVELS_TEASERS";
         }
     };
 
@@ -378,12 +463,22 @@ public interface PacManGames_UI {
             theUI().showFlashMessage(theAssets().text(auto ? "autopilot_on" : "autopilot_off"));
             theSound().playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off", 0);
         }
+
+        @Override
+        public String name() {
+            return "TOGGLE_AUTOPILOT";
+        }
     };
 
     GameAction ACTION_TOGGLE_DEBUG_INFO = new GameAction() {
         @Override
         public void execute() {
             toggle(PY_DEBUG_INFO_VISIBLE);
+        }
+
+        @Override
+        public String name() {
+            return "TOGGLE_DEBUG_INFO";
         }
     };
 
@@ -393,6 +488,11 @@ public interface PacManGames_UI {
             toggle(PY_IMMUNITY);
             theUI().showFlashMessage(theAssets().text(PY_IMMUNITY.get() ? "player_immunity_on" : "player_immunity_off"));
             theSound().playVoice(PY_IMMUNITY.get() ? "voice.immunity.on" : "voice.immunity.off", 0);
+        }
+
+        @Override
+        public String name() {
+            return "TOGGLE_IMMUNITY";
         }
     };
 
@@ -405,6 +505,11 @@ public interface PacManGames_UI {
             }
             Logger.info("Game ({}) {}", theGameController().selectedGameVariant(), theClock().isPaused() ? "paused" : "resumed");
         }
+
+        @Override
+        public String name() {
+            return "TOGGLE_PAUSED";
+        }
     };
 
     GameAction ACTION_PERSPECTIVE_NEXT = new GameAction() {
@@ -415,6 +520,11 @@ public interface PacManGames_UI {
             String msgKey = theAssets().text("camera_perspective", theAssets().text("perspective_id_" + id.name()));
             theUI().showFlashMessage(msgKey);
         }
+
+        @Override
+        public String name() {
+            return "PERSPECTIVE_NEXT";
+        }
     };
 
     GameAction ACTION_PERSPECTIVE_PREVIOUS = new GameAction() {
@@ -424,6 +534,11 @@ public interface PacManGames_UI {
             PY_3D_PERSPECTIVE.set(id);
             String msgKey = theAssets().text("camera_perspective", theAssets().text("perspective_id_" + id.name()));
             theUI().showFlashMessage(msgKey);
+        }
+
+        @Override
+        public String name() {
+            return "PERSPECTIVE_PREVIOUS";
         }
     };
 
@@ -460,12 +575,22 @@ public interface PacManGames_UI {
         public boolean isEnabled() {
             return theUI().currentView().equals(theUI().gameView());
         }
+
+        @Override
+        public String name() {
+            return "TOGGLE_DASHBOARD";
+        }
     };
 
     GameAction ACTION_TOGGLE_DRAW_MODE = new GameAction() {
         @Override
         public void execute() {
             PY_3D_DRAW_MODE.set(PY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+        }
+
+        @Override
+        public String name() {
+            return "TOGGLE_DRAW_MODE";
         }
     };
 
@@ -492,6 +617,11 @@ public interface PacManGames_UI {
                     GameState.TESTING_LEVEL_TEASERS, GameState.TESTING_LEVELS
             );
         }
+
+        @Override
+        public String name() {
+            return "TOGGLE_PLAY_SCENE_2D_3D";
+        }
     };
 
     GameAction ACTION_TOGGLE_PIP_VISIBILITY = new GameAction() {
@@ -501,6 +631,11 @@ public interface PacManGames_UI {
             if (!theUI().currentGameSceneIsPlayScene3D()) {
                 theUI().showFlashMessage(theAssets().text(PY_PIP_ON.get() ? "pip_on" : "pip_off"));
             }
+        }
+
+        @Override
+        public String name() {
+            return "TOGGLE_PIP_VISIBILITY";
         }
     };
 
