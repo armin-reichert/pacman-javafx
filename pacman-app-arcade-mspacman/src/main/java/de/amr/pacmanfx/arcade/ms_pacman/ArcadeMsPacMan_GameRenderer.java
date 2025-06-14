@@ -8,6 +8,7 @@ import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.LevelCounter;
+import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.MovingBonus;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
@@ -112,6 +113,16 @@ public class ArcadeMsPacMan_GameRenderer extends SpriteGameRenderer {
         }
     }
 
+    @Override
+    public void drawActor(Actor actor) {
+        if (actor instanceof Clapperboard clapperboard) {
+            drawClapperBoard(clapperboard);
+        }
+        else {
+            super.drawActor(actor);
+        }
+    }
+
     public void drawBonus(Bonus bonus) {
         var movingBonus = (MovingBonus) bonus;
         ctx.save();
@@ -130,7 +141,7 @@ public class ArcadeMsPacMan_GameRenderer extends SpriteGameRenderer {
         ctx.restore();
     }
 
-    public void drawClapperBoard(Clapperboard clapperboard) {
+    private void drawClapperBoard(Clapperboard clapperboard) {
         clapperboard.currentSprite().ifPresent(sprite -> {
             float numberX = scaled(clapperboard.x() + sprite.width() - 25);
             float numberY = scaled(clapperboard.y() + 18);

@@ -102,9 +102,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     @Override
     public void drawSceneContent() {
         @SuppressWarnings("unchecked") SpriteSheet<SpriteID> spriteSheet = (SpriteSheet<SpriteID>) theUI().configuration().spriteSheet();
-        if (gr() instanceof ArcadeMsPacMan_GameRenderer r) { // TODO handle case of VectorGraphicsGameRenderer!
-            r.drawClapperBoard(clapperboard);
-        }
+        gr().drawActor(clapperboard);
         gr().drawActor(msPacMan);
         gr().drawActor(pacMan);
         gr().drawActorSprite(stork, (Sprite) storkAnimation.currentSprite());

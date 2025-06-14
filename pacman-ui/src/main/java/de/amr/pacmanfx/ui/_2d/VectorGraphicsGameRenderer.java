@@ -34,7 +34,7 @@ import static java.util.function.Predicate.not;
  */
 public class VectorGraphicsGameRenderer extends SpriteGameRenderer {
 
-    private final SpriteSheet spriteSheet;
+    private final SpriteSheet<?> spriteSheet;
     private final GraphicsContext ctx;
     private final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
@@ -43,7 +43,7 @@ public class VectorGraphicsGameRenderer extends SpriteGameRenderer {
     private TerrainMapColorScheme blinkingOnColors;
     private TerrainMapColorScheme blinkingOffColors;
 
-    public VectorGraphicsGameRenderer(SpriteSheet spriteSheet, Canvas canvas) {
+    public VectorGraphicsGameRenderer(SpriteSheet<?> spriteSheet, Canvas canvas) {
         this.spriteSheet = requireNonNull(spriteSheet);
         ctx = requireNonNull(canvas).getGraphicsContext2D();
         terrainRenderer.scalingProperty().bind(scalingPy);
@@ -52,7 +52,7 @@ public class VectorGraphicsGameRenderer extends SpriteGameRenderer {
     }
 
     @Override
-    public SpriteSheet spriteSheet() {
+    public SpriteSheet<?> spriteSheet() {
         return spriteSheet;
     }
 

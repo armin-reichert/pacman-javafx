@@ -103,9 +103,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        if (gr() instanceof ArcadeMsPacMan_GameRenderer r) { // TODO: handle case of VectorGraphicsRenderer!
-            r.drawClapperBoard(clapperboard);
-        }
+        gr().drawActor(clapperboard);
         gr().drawActor(msPacMan);
         gr().drawActor(pacMan);
         gr().drawActor(inky);
