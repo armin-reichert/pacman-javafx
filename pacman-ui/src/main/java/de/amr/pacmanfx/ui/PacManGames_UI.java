@@ -108,7 +108,7 @@ public interface PacManGames_UI {
     void setConfiguration(String variant, PacManGames_UIConfig configuration);
 
     // Game scenes
-    ObjectProperty<GameScene> gameSceneProperty();
+    ObjectProperty<GameScene> currentGameSceneProperty();
     Optional<GameScene> currentGameScene();
     void setCurrentGameScene(GameScene gameScene);
     boolean currentGameSceneIsPlayScene2D();

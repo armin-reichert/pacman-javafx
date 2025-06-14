@@ -72,7 +72,7 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
         createDashboard(dashboardIDs);
         configurePropertyBindings();
 
-        theUI().gameSceneProperty().addListener((py,ov,gameScene) -> {
+        theUI().currentGameSceneProperty().addListener((py, ov, gameScene) -> {
             if (gameScene != null) embedGameScene(theUI().configuration(), gameScene);
             contextMenu.hide();
         });
@@ -90,7 +90,7 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
             PY_DEBUG_INFO_VISIBLE,
             theClock().pausedProperty(),
             parentScene.heightProperty(),
-            theUI().gameSceneProperty()
+            theUI().currentGameSceneProperty()
         );
 
         bindAction(ACTION_BOOT_SHOW_GAME_VIEW,     COMMON_ACTION_BINDINGS);
@@ -354,7 +354,7 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
         pipView.opacityProperty().bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
         pipView.visibleProperty().bind(Bindings.createObjectBinding(
             () -> PY_PIP_ON.get() && theUI().currentGameSceneIsPlayScene3D(),
-            PY_PIP_ON, theUI().gameSceneProperty()
+            PY_PIP_ON, theUI().currentGameSceneProperty()
         ));
     }
 

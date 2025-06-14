@@ -127,7 +127,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
             var iconPaused = FontIcon.of(FontAwesomeSolid.PAUSE, 80, STATUS_ICON_COLOR);
             iconPaused.visibleProperty().bind(Bindings.createBooleanBinding(
-                () ->  currentView() == gameView() && theClock().isPaused(),
+                () -> currentView() == gameView() && theClock().isPaused(),
                 currentViewProperty(), theClock().pausedProperty()));
             StackPane.setAlignment(iconPaused, Pos.CENTER);
 
@@ -169,11 +169,16 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         theClock().setPermanentAction(this::drawGameView);
 
         currentViewPy.addListener((py, oldView, newView) -> handleViewChange(oldView, newView));
-        root.backgroundProperty().bind(gameSceneProperty().map(
+        root.backgroundProperty().bind(currentGameSceneProperty().map(
             gameScene -> currentGameSceneIsPlayScene3D()
                 ? theAssets().get("background.play_scene3d")
                 : theAssets().get("background.scene"))
         );
+    }
+
+    @Override
+    public ObjectProperty<GameScene> currentGameSceneProperty() {
+        return currentGameScenePy;
     }
 
     @Override
@@ -194,11 +199,6 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     @Override
     public PacManGames_View currentView() {
         return currentViewPy.get();
-    }
-
-    @Override
-    public ObjectProperty<GameScene> gameSceneProperty() {
-        return currentGameScenePy;
     }
 
     @Override
