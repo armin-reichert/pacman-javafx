@@ -12,6 +12,7 @@ import javafx.application.Application;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_ASPECT;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theClock;
 import static de.amr.pacmanfx.ui.PacManGames_UIBuilder.buildUI;
 
@@ -21,9 +22,9 @@ public class TengenMsPacMan_App extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        // UI size: 80% of available screen height, aspect 16:10
+        // UI size: 80% of available screen height, aspect NES screen aspect 32:30
         final int height = (int) (0.8 * Screen.getPrimary().getBounds().getHeight());
-        final int width  = (int) (32.0 / 30.0 * height);
+        final int width  = (int) (NES_ASPECT * height);
         buildUI()
             .startPages(new TengenMsPacMan_StartPage(MS_PACMAN_TENGEN))
             .game(MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel(), TengenMsPacMan_UIConfig.class)

@@ -25,6 +25,7 @@ public class ArcadePacMan_App extends Application {
         final int height = (int) (0.8 * Screen.getPrimary().getBounds().getHeight());
         final int width  = (int) (1.2 * height);
         buildUI()
+            .stage(primaryStage, width, height)
             .game(PACMAN, ArcadePacMan_GameModel.arcadeVersion(), ArcadePacMan_UIConfig.class)
             .startPages(new ArcadePacMan_StartPage(PACMAN))
             .dashboardEntries(
@@ -35,7 +36,6 @@ public class ArcadePacMan_App extends Application {
                 DashboardID.ACTOR_INFO,
                 DashboardID.KEYBOARD,
                 DashboardID.ABOUT)
-            .stage(primaryStage, width, height)
             .selectGame(PACMAN)
             .show();
     }

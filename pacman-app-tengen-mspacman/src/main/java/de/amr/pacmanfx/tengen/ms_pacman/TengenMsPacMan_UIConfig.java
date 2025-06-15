@@ -13,10 +13,10 @@ import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.PacManGames_Assets;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
@@ -53,6 +53,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
 
     public static final Vector2i NES_TILES = new Vector2i(32, 30);
     public static final Vector2i NES_SIZE = NES_TILES.scaled(TS);
+    public static final float NES_ASPECT = (float) NES_SIZE.x() / NES_SIZE.y();
 
     private final Image appIcon;
     private final TengenMsPacMan_SpriteSheet spriteSheet;
