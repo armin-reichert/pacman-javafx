@@ -19,6 +19,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
@@ -118,16 +119,22 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
         if (actor instanceof Clapperboard clapperboard) {
             drawClapperBoard(clapperboard);
         }
+        else if (actor instanceof Bonus bonus) {
+            if (actor instanceof MovingBonus movingBonus) {
+                drawMovingBonus(movingBonus);
+            } else {
+                Logger.warn("Cannot draw bonus of type {}", bonus.getClass().getSimpleName());
+            }
+        }
         else {
             SpriteGameRenderer.super.drawActor(actor);
         }
     }
 
-    public void drawBonus(Bonus bonus) {
-        var movingBonus = (MovingBonus) bonus;
+    private void drawMovingBonus(MovingBonus bonus) {
         ctx.save();
         ctx.setImageSmoothing(false);
-        ctx.translate(0, movingBonus.elongationY());
+        ctx.translate(0, bonus.elongationY());
         switch (bonus.state()) {
             case Bonus.STATE_EDIBLE -> {
                 Sprite sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());

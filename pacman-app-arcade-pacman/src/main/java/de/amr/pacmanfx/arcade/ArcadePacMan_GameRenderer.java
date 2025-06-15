@@ -8,7 +8,9 @@ import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.LevelCounter;
+import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
+import de.amr.pacmanfx.model.actors.StaticBonus;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
@@ -51,18 +53,6 @@ public class ArcadePacMan_GameRenderer implements SpriteGameRenderer {
     }
 
     @Override
-    public void drawBonus(Bonus bonus) {
-        if (bonus.state() == Bonus.STATE_EDIBLE) {
-            Sprite sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
-            drawActorSprite(bonus.actor(), sprite);
-        }
-        else if (bonus.state() == Bonus.STATE_EATEN) {
-            Sprite sprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
-            drawActorSprite(bonus.actor(), sprite);
-        }
-    }
-
-    @Override
     public void drawLevel(GameLevel level, double x, double y, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted) {
         ctx.save();
         ctx.scale(scaling(), scaling());
@@ -87,6 +77,27 @@ public class ArcadePacMan_GameRenderer implements SpriteGameRenderer {
             Sprite sprite = theUI().configuration().createBonusSymbolSprite(symbol);
             drawSpriteScaled(sprite, x, y);
             x -= TS * 2;
+        }
+    }
+
+    @Override
+    public void drawActor(Actor actor) {
+        if (actor instanceof StaticBonus bonus) {
+            drawStaticBonus(bonus);
+        }
+        else {
+            SpriteGameRenderer.super.drawActor(actor);
+        }
+    }
+
+    private void drawStaticBonus(Bonus bonus) {
+        if (bonus.state() == Bonus.STATE_EDIBLE) {
+            Sprite sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
+            drawActorSprite(bonus.actor(), sprite);
+        }
+        else if (bonus.state() == Bonus.STATE_EATEN) {
+            Sprite sprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
+            drawActorSprite(bonus.actor(), sprite);
         }
     }
 }

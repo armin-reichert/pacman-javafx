@@ -171,7 +171,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
         }
 
         // Use correct z-order: bonus, Pac-Man, ghosts in order
-        theGameLevel().bonus().ifPresent(gr()::drawBonus);
+        theGameLevel().bonus().ifPresent(bonus -> gameRenderer.drawActor(bonus.actor()));
         gr().drawActor(theGameLevel().pac());
         Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)
                 .map(theGameLevel()::ghost).forEach(ghost -> gr().drawActor(ghost));

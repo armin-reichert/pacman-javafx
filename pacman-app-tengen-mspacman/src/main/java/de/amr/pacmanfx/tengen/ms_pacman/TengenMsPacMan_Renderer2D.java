@@ -13,7 +13,10 @@ import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.ScoreManager;
-import de.amr.pacmanfx.model.actors.*;
+import de.amr.pacmanfx.model.actors.Actor;
+import de.amr.pacmanfx.model.actors.MovingActor;
+import de.amr.pacmanfx.model.actors.MovingBonus;
+import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
@@ -97,22 +100,21 @@ public class TengenMsPacMan_Renderer2D implements SpriteGameRenderer {
     public void drawActor(Actor actor) {
         requireNonNull(actor);
         ctx().setImageSmoothing(false);
-        if (actor instanceof Pac pac) {
-            drawAnyKindOfPac(pac);
+        switch (actor) {
+            case Pac pac -> drawAnyKindOfPac(pac);
+            case MovingBonus movingBonus -> drawMovingBonus(movingBonus);
+            case TengenMsPacMan_CutScene3.Stork stork -> drawStork(stork);
+            default -> SpriteGameRenderer.super.drawActor(actor);
         }
-        else if (actor instanceof TengenMsPacMan_CutScene3.Stork stork) {
-            SpriteGameRenderer.super.drawActor(stork);
-            if (stork.isBagReleasedFromBeak()) { // over-paint bag still hanging at beak
-                ctx().setFill(PY_CANVAS_BG_COLOR.get());
-                //ctx().setFill(Color.RED);
-                //TODO: clarify
-                float spriteX = stork.x() - 13;
-                float spriteY = stork.y() - 6;
-                ctx().fillRect(scaled(spriteX), scaled(spriteY + 9), scaled(8), scaled(10));
-            }
-        }
-        else {
-            SpriteGameRenderer.super.drawActor(actor);
+    }
+
+    //TODO maybe just extend sprite sheet to include stork without bag?
+    private void drawStork(TengenMsPacMan_CutScene3.Stork stork) {
+        SpriteGameRenderer.super.drawActor(stork);
+        if (stork.isBagReleasedFromBeak()) { // over-paint bag still hanging at beak
+            ctx().setFill(PY_CANVAS_BG_COLOR.get());
+            //TODO: clarify
+            ctx().fillRect(scaled(stork.x() - 13), scaled(stork.y() + 3), scaled(8), scaled(10));
         }
     }
 
@@ -162,6 +164,25 @@ public class TengenMsPacMan_Renderer2D implements SpriteGameRenderer {
             case DOWN  -> { ctx().scale(-1, 1); ctx().rotate(-90); }
         }
         drawSpriteScaledCenteredAt(spriteLookingLeft, 0, 0);
+        ctx().restore();
+    }
+
+    private void drawMovingBonus(MovingBonus bonus) {
+        requireNonNull(bonus);
+        ctx().save();
+        ctx().setImageSmoothing(false);
+        ctx().translate(0, bonus.elongationY());
+        switch (bonus.state()) {
+            case STATE_EDIBLE -> {
+                Sprite sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
+                drawActorSprite(bonus.actor(), sprite);
+            }
+            case STATE_EATEN  -> {
+                Sprite sprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
+                drawActorSprite(bonus.actor(), sprite);
+            }
+            default -> {}
+        }
         ctx().restore();
     }
 
@@ -269,27 +290,6 @@ public class TengenMsPacMan_Renderer2D implements SpriteGameRenderer {
                 ctx().fillRect(x + 1, y + 1, size - 2, size - 2);
             }
         });
-    }
-
-    @Override
-    public void drawBonus(Bonus bonus) {
-        requireNonNull(bonus);
-        MovingBonus movingBonus = (MovingBonus) bonus;
-        ctx().save();
-        ctx().setImageSmoothing(false);
-        ctx().translate(0, movingBonus.elongationY());
-        switch (bonus.state()) {
-            case STATE_EDIBLE -> {
-                Sprite sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
-                drawActorSprite(bonus.actor(), sprite);
-            }
-            case STATE_EATEN  -> {
-                Sprite sprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
-                drawActorSprite(bonus.actor(), sprite);
-            }
-            default -> {}
-        }
-        ctx().restore();
     }
 
     public void drawLevelMessage(GameLevel level, Vector2f position, Font font) {

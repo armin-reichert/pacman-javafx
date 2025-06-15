@@ -12,7 +12,6 @@ import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.model.actors.AnimatedActor;
-import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
@@ -81,8 +80,6 @@ public interface GameRenderer {
             sprite.x(), sprite.y(), sprite.width(), sprite.height(),
             scaled(x), scaled(y), scaled(sprite.width()), scaled(sprite.height()));
     }
-
-    void drawBonus(Bonus bonus);
 
     void drawLevelCounter(LevelCounter levelCounter, Vector2f sceneSizeInPixels);
 
