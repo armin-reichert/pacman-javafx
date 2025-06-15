@@ -28,7 +28,7 @@ import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theAssets;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
 import static de.amr.pacmanfx.ui.PacManGames_UI.PY_3D_ENABLED;
-import static de.amr.pacmanfx.uilib.input.Keyboard.nude;
+import static de.amr.pacmanfx.ui.input.Keyboard.nude;
 import static de.amr.pacmanfx.uilib.widgets.OptionMenuStyle.DEFAULT_OPTION_MENU_STYLE;
 
 public class PacManXXL_Common_StartPageMenu extends OptionMenu {
@@ -247,7 +247,8 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         );
         chaseAnimation = new ChaseAnimation(canvas);
         chaseAnimation.reset();
-        chaseAnimation.setGameVariant("PACMAN_XXL");
+        //TODO check this
+        //chaseAnimation.setGameVariant("PACMAN_XXL");
     }
 
     public void syncMenuState() {

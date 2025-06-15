@@ -9,8 +9,8 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.dashboard.InfoBox;
 import de.amr.pacmanfx.ui.dashboard.InfoText;
 import de.amr.pacmanfx.uilib.CameraControlledView;
-import de.amr.pacmanfx.uilib.GameAction;
-import de.amr.pacmanfx.uilib.GameScene;
+import de.amr.pacmanfx.ui.GameAction;
+import de.amr.pacmanfx.ui.GameScene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
@@ -73,8 +73,8 @@ public class InfoBox3D extends InfoBox {
         setEditor(comboPerspectives, PY_3D_PERSPECTIVE);
 
         //TODO check these
-        cbUsePlayScene3D.setOnAction(e -> GameAction.executeIfEnabled(ACTION_TOGGLE_PLAY_SCENE_2D_3D));
-        cbWireframeMode.setOnAction(e -> GameAction.executeIfEnabled(ACTION_TOGGLE_DRAW_MODE));
+        cbUsePlayScene3D.setOnAction(e -> GameAction.executeIfEnabled(theUI(), ACTION_TOGGLE_PLAY_SCENE_2D_3D));
+        cbWireframeMode.setOnAction(e -> GameAction.executeIfEnabled(theUI(), ACTION_TOGGLE_DRAW_MODE));
     }
 
     private void updateControlsFromProperties() {

@@ -35,6 +35,7 @@ public class GameController  {
     private final Map<String, GameModel> knownGames = new HashMap<>();
     private final StringProperty gameVariantPy = new SimpleStringProperty();
     private final StateMachine<GameState, GameModel> stateMachine;
+    private boolean eventsEnabled;
 
     public GameController() {
         stateMachine = new StateMachine<>(GameState.values()) {
@@ -44,10 +45,16 @@ public class GameController  {
             theGameEventManager().publishEvent(new GameStateChangeEvent(currentGame(), oldState, newState)));
 
         gameVariantPy.addListener((py, ov, newGameVariant) -> {
-            GameModel newGame = game(newGameVariant);
-            newGame.init();
-            theGameEventManager().publishEvent(newGame, GameEventType.GAME_VARIANT_CHANGED);
+            if (eventsEnabled) {
+                GameModel newGame = game(newGameVariant);
+                newGame.init();
+                theGameEventManager().publishEvent(newGame, GameEventType.GAME_VARIANT_CHANGED);
+            }
         });
+    }
+
+    public void setEventsEnabled(boolean enabled) {
+        eventsEnabled = enabled;
     }
 
     public void changeGameState(GameState state) {

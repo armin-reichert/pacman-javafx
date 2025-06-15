@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.ms_pacman;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.uilib.ActionBindingSupport;
+import de.amr.pacmanfx.ui.ActionBindingSupport;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
 import static de.amr.pacmanfx.Globals.theCoinMechanism;

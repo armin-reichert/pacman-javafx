@@ -12,11 +12,11 @@ import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.MovingBonus;
-import de.amr.pacmanfx.uilib.ActionBindingSupport;
+import de.amr.pacmanfx.ui.ActionBindingSupport;
+import de.amr.pacmanfx.ui.GameAction;
+import de.amr.pacmanfx.ui.GameScene;
+import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.uilib.CameraControlledView;
-import de.amr.pacmanfx.uilib.GameAction;
-import de.amr.pacmanfx.uilib.GameScene;
-import de.amr.pacmanfx.uilib.input.Keyboard;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.beans.property.DoubleProperty;
@@ -105,7 +105,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
         items.add(contextMenuTitleItem(theAssets().text("scene_display")));
 
         var item = new MenuItem(theAssets().text("use_2D_scene"));
-        item.setOnAction(ae -> GameAction.executeIfEnabled(ACTION_TOGGLE_PLAY_SCENE_2D_3D));
+        item.setOnAction(ae -> GameAction.executeIfEnabled(theUI(), ACTION_TOGGLE_PLAY_SCENE_2D_3D));
         items.add(item);
 
         // Toggle picture-in-picture display
@@ -158,7 +158,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
         items.add(miMuted);
 
         var miQuit = new MenuItem(theAssets().text("quit"));
-        miQuit.setOnAction(ae -> GameAction.executeIfEnabled(ACTION_QUIT_GAME_SCENE));
+        miQuit.setOnAction(ae -> GameAction.executeIfEnabled(theUI(), ACTION_QUIT_GAME_SCENE));
         items.add(miQuit);
 
         return items;

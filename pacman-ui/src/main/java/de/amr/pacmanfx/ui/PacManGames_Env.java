@@ -7,8 +7,8 @@ package de.amr.pacmanfx.ui;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.ui.sound.PacManGames_SoundManager;
 import de.amr.pacmanfx.uilib.GameClock;
-import de.amr.pacmanfx.uilib.input.Joypad;
-import de.amr.pacmanfx.uilib.input.Keyboard;
+import de.amr.pacmanfx.ui.input.Joypad;
+import de.amr.pacmanfx.ui.input.Keyboard;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
@@ -28,7 +28,7 @@ public class PacManGames_Env {
     private static Keyboard theKeyboard;
     private static Joypad theJoypad;
     private static PacManGames_SoundManager theSound;
-    private static PacManGames_UI theUI;
+            static PacManGames_UI theUI;
 
     public static PacManGames_Assets theAssets() { return theAssets; }
     public static GameClock theClock() { return theClock; }

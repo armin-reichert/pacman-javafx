@@ -2,7 +2,7 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.uilib;
+package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.event.GameEventListener;
 import javafx.scene.control.MenuItem;
@@ -11,6 +11,7 @@ import javafx.scene.input.ContextMenuEvent;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.theGameController;
+import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
 
 /**
  * Common interface of all game scenes (2D and 3D).
@@ -22,7 +23,7 @@ public interface GameScene extends GameEventListener, ActionBindingSupport {
     /**
      * By default, the first matching game action is executed.
      */
-    default void handleKeyboardInput() { runMatchingAction(); }
+    default void handleKeyboardInput() { runMatchingAction(theUI()); }
 
     /**
      * Called when the scene becomes the current one.

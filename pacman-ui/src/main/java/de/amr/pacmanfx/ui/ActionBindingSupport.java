@@ -2,9 +2,9 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.uilib;
+package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.uilib.input.Keyboard;
+import de.amr.pacmanfx.ui.input.Keyboard;
 import javafx.scene.input.KeyCombination;
 import org.tinylog.Logger;
 
@@ -89,11 +89,11 @@ public interface ActionBindingSupport {
             .findFirst();
     }
 
-    default void runMatchingAction() {
-        matchingAction().ifPresent(GameAction::executeIfEnabled);
+    default void runMatchingAction(PacManGames_UI ui) {
+        matchingAction().ifPresent(action -> GameAction.executeIfEnabled(ui, action));
     }
 
-    default void runMatchingActionOrElse(Runnable defaultAction) {
-        matchingAction().ifPresentOrElse(GameAction::executeIfEnabled, defaultAction);
+    default void runMatchingActionOrElse(PacManGames_UI ui, Runnable defaultAction) {
+        matchingAction().ifPresentOrElse(action -> GameAction.executeIfEnabled(ui, action), defaultAction);
     }
 }

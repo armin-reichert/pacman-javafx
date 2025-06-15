@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.uilib.ActionBindingSupport;
+import de.amr.pacmanfx.ui.ActionBindingSupport;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
@@ -24,7 +24,7 @@ public class ArcadePacMan_StartScene extends GameScene2D implements ActionBindin
     public void doInit() {
         theGame().setScoreVisible(true);
         bindAction(ACTION_ARCADE_INSERT_COIN, COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_ARCADE_START_GAME, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_ARCADE_START_GAME,  COMMON_ACTION_BINDINGS);
     }
 
     @Override

@@ -19,6 +19,7 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.createPa
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_PacAnimationMap.ANIM_PAC_MAN_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
+import static de.amr.pacmanfx.ui.PacManGames_UI.ACTION_LET_GAME_STATE_EXPIRE;
 
 /**
  * Intermission scene 2: "The chase".
@@ -47,7 +48,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     public void doInit() {
         t = -1;
         theGame().setScoreVisible(false);
-        bindActionToKeyCombination(theGameController()::letCurrentGameStateExpire, theJoypad().key(JoypadButton.START));
+        bindActionToKeyCombination(ACTION_LET_GAME_STATE_EXPIRE, theJoypad().key(JoypadButton.START));
         music = theSound().createSound("intermission.2");
 
         PacManGames_UIConfig config = theUI().configuration();

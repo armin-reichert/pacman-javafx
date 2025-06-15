@@ -5,9 +5,10 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.uilib.GameAction;
+import de.amr.pacmanfx.ui.GameAction;
+import de.amr.pacmanfx.ui.PacManGames_UI;
+import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.uilib.Ufx;
-import de.amr.pacmanfx.uilib.input.Keyboard;
 import de.amr.pacmanfx.uilib.widgets.Carousel;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
@@ -32,10 +33,11 @@ import org.tinylog.Logger;
 
 import java.util.*;
 
-import static de.amr.pacmanfx.ui.PacManGames_Env.*;
+import static de.amr.pacmanfx.ui.PacManGames_Env.theAssets;
+import static de.amr.pacmanfx.ui.PacManGames_Env.theKeyboard;
 import static de.amr.pacmanfx.ui.PacManGames_UI.ACTION_BOOT_SHOW_GAME_VIEW;
 import static de.amr.pacmanfx.ui.PacManGames_UI.ACTION_TOGGLE_PAUSED;
-import static de.amr.pacmanfx.uilib.input.Keyboard.nude;
+import static de.amr.pacmanfx.ui.input.Keyboard.nude;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -45,7 +47,7 @@ public class StartPagesView implements PacManGames_View {
 
     public static class FancyButton extends BorderPane {
 
-        private GameAction action;
+        private Runnable action;
 
         public FancyButton(String buttonText, Font font, Color bgColor, Color fillColor) {
             var shadow = new DropShadow();
@@ -64,19 +66,22 @@ public class StartPagesView implements PacManGames_View {
             setPadding(new Insets(5, 5, 5, 5));
             setBackground(Ufx.coloredRoundedBackground(bgColor, 20));
             addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-                if (action != null) GameAction.executeIfEnabled(action);
+                if (action != null) action.run();
                 e.consume();
             });
         }
 
-        public void setAction(GameAction action) {
+        public void setAction(Runnable action) {
             this.action = action;
         }
     }
 
     public static FancyButton createStartButton(Pos alignment) {
-        var button = new FancyButton(theAssets().text("play_button"), theAssets().arcadeFont(30),
-            Color.rgb(0, 155, 252, 0.7), Color.WHITE);
+        var button = new FancyButton(
+            theAssets().text("play_button"),
+            theAssets().arcadeFont(30),
+            Color.rgb(0, 155, 252, 0.7),
+            Color.WHITE);
         StackPane.setAlignment(button, alignment);
         return button;
     }
@@ -102,12 +107,14 @@ public class StartPagesView implements PacManGames_View {
         }
     }
 
+    private final PacManGames_UI ui;
     private final List<StartPage> startPageList = new ArrayList<>();
     private final Map<KeyCombination, GameAction> actionBindings = new HashMap<>();
     private final Carousel carousel;
     private StringBinding titleBinding;
 
-    public StartPagesView() {
+    public StartPagesView(PacManGames_UI ui) {
+        this.ui = requireNonNull(ui);
         carousel = new StartPagesCarousel();
         carousel.selectedIndexProperty().addListener((py,ov,nv) -> {
             int oldIndex = ov.intValue(), newIndex = nv.intValue();
@@ -117,7 +124,7 @@ public class StartPagesView implements PacManGames_View {
             }
             if (newIndex != -1) {
                 StartPage startPage = startPageList.get(newIndex);
-                theUI().selectGameVariant(startPage.currentGameVariant());
+                ui.selectGameVariant(startPage.currentGameVariant());
                 startPage.requestFocus();
                 startPage.onEnter();
             }
@@ -126,7 +133,7 @@ public class StartPagesView implements PacManGames_View {
 
         GameAction actionPrevSlide = new GameAction() {
             @Override
-            public void execute() {
+            public void execute(PacManGames_UI ui) {
                 carousel.showPreviousSlide();
             }
 
@@ -137,7 +144,7 @@ public class StartPagesView implements PacManGames_View {
         };
         GameAction actionNextSlide = new GameAction() {
             @Override
-            public void execute() {
+            public void execute(PacManGames_UI ui) {
                 carousel.showNextSlide();
             }
 

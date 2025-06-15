@@ -19,7 +19,7 @@ import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 
 public class StatusIconBox extends HBox {
 
-    public StatusIconBox() {
+    public StatusIconBox(PacManGames_UI ui) {
         var iconMuted = FontIcon.of(FontAwesomeSolid.DEAF, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
         iconMuted.visibleProperty().bind(theSound().mutedProperty());
 
@@ -39,8 +39,8 @@ public class StatusIconBox extends HBox {
         setPadding(new Insets(STATUS_ICON_PADDING));
         setSpacing(STATUS_ICON_SPACING);
         visibleProperty().bind(Bindings.createBooleanBinding
-            (() -> (theUI().currentView() == theUI().startPagesView() || theUI().currentView() == theUI().gameView()),
-                theUI().currentViewProperty()));
+            (() -> (ui.currentView() == ui.startPagesView() || ui.currentView() == ui.gameView()),
+                ui.currentViewProperty()));
         // keep box compact, show visible items only
         ChangeListener<? super Boolean> iconVisibilityChangeHandler = (py, ov, nv) ->
             getChildren().setAll(icons.stream().filter(Node::isVisible).toList());

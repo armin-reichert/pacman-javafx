@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman;
 
+import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.layout.StartPage;
 import de.amr.pacmanfx.ui.layout.StartPagesView;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
@@ -13,6 +14,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 
+import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
 import static de.amr.pacmanfx.ui.PacManGames_UI.ACTION_BOOT_SHOW_GAME_VIEW;
 import static java.util.Objects.requireNonNull;
 
@@ -34,8 +36,8 @@ public class TengenMsPacMan_StartPage extends StackPane implements StartPage, Re
             }
         });
         var startButton = StartPagesView.createStartButton(Pos.BOTTOM_CENTER);
+        startButton.setAction(() -> GameAction.executeIfEnabled(theUI(), ACTION_BOOT_SHOW_GAME_VIEW));
         startButton.setTranslateY(-50);
-        startButton.setAction(ACTION_BOOT_SHOW_GAME_VIEW);
         getChildren().addAll(flyer, startButton);
     }
 

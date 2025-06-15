@@ -10,6 +10,9 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
+import de.amr.pacmanfx.ui.ActionBindingSupport;
+import de.amr.pacmanfx.ui.GameAction;
+import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelFinishedAnimation;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
@@ -131,7 +134,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
         items.add(miMuted);
 
         var miQuit = new MenuItem(theAssets().text("quit"));
-        miQuit.setOnAction(ae -> GameAction.executeIfEnabled(ACTION_QUIT_GAME_SCENE));
+        miQuit.setOnAction(ae -> GameAction.executeIfEnabled(theUI(), ACTION_QUIT_GAME_SCENE));
         items.add(miQuit);
 
         return items;

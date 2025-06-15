@@ -27,7 +27,7 @@ public class TengenMsPacMan_PiPScene extends TengenMsPacMan_PlayScene2D {
         gr().fillCanvas(backgroundColor());
         ctx().save();
         ctx().translate(-scaled(TS), 0);
-        drawSceneContent();
+        super.draw();
         ctx().restore();
     }
 }

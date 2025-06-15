@@ -8,18 +8,22 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
+import de.amr.pacmanfx.ui.ActionBindingSupport;
+import de.amr.pacmanfx.ui.GameAction;
+import de.amr.pacmanfx.ui.PacManGames_UI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.uilib.ActionBindingSupport;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Action.ACTION_START_PLAYING;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Action.ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_ActionBindings.TENGEN_ACTION_BINDINGS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
-import static de.amr.pacmanfx.uilib.input.Keyboard.alt;
+import static de.amr.pacmanfx.ui.input.Keyboard.alt;
 
 /**
  * Options scene for Ms. Pac-Man Tengen.
@@ -58,18 +62,25 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D implements ActionBi
     private long idleTicks;
     private int initialDelay;
 
+    private final GameAction actionSelectNextJoypadBinding = new GameAction() {
+        @Override
+        public void execute(PacManGames_UI ui) {
+            theJoypad().selectNextKeyBinding(TengenMsPacMan_OptionsScene.this);
+        }
+    };
+
     @Override
     public void doInit() {
         spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
 
         theGame().setScoreVisible(false);
 
-        bindAction(TengenMsPacMan_Action.ACTION_START_PLAYING, TENGEN_ACTION_BINDINGS);
-        bindAction(TengenMsPacMan_Action.ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, TENGEN_ACTION_BINDINGS);
+        bindAction(ACTION_START_PLAYING, TENGEN_ACTION_BINDINGS);
+        bindAction(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, TENGEN_ACTION_BINDINGS);
         bindAction(ACTION_TEST_CUT_SCENES, COMMON_ACTION_BINDINGS);
         bindAction(ACTION_TEST_LEVELS_BONI, COMMON_ACTION_BINDINGS);
         bindAction(ACTION_TEST_LEVELS_TEASERS, COMMON_ACTION_BINDINGS);
-        bindActionToKeyCombination(() -> theJoypad().selectNextKeyBinding(this), alt(KeyCode.J));
+        bindActionToKeyCombination(actionSelectNextJoypadBinding, alt(KeyCode.J));
 
         selectedOption = OPTION_PAC_BOOSTER;
         tengenGame().setCanStartNewGame(true);

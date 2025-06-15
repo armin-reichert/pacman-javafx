@@ -5,8 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
-import de.amr.pacmanfx.uilib.GameAction;
-import de.amr.pacmanfx.uilib.input.Keyboard;
+import de.amr.pacmanfx.ui.GameAction;
+import de.amr.pacmanfx.ui.input.Keyboard;
 import javafx.beans.property.StringProperty;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;

@@ -6,9 +6,9 @@ package de.amr.pacmanfx.ui._2d;
 
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.uilib.GameAction;
-import de.amr.pacmanfx.uilib.GameScene;
-import de.amr.pacmanfx.uilib.input.Keyboard;
+import de.amr.pacmanfx.ui.GameAction;
+import de.amr.pacmanfx.ui.GameScene;
+import de.amr.pacmanfx.ui.input.Keyboard;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;

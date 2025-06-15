@@ -10,7 +10,6 @@ import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.layout.*;
-import de.amr.pacmanfx.uilib.GameScene;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -26,9 +25,7 @@ import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.tinylog.Logger;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
@@ -79,7 +76,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
             theSimulationStep().start(theClock().tickCount());
             theGameController().updateGameState();
             theSimulationStep().log();
-            theUI().currentGameScene().ifPresent(GameScene::update);
+            currentGameScene().ifPresent(GameScene::update);
         } catch (Throwable x) {
             ka_tas_trooo_phe(x);
         }
@@ -135,7 +132,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
         // Status and "paused" icon
         {
-            var iconBox = new StatusIconBox();
+            var iconBox = new StatusIconBox(this);
             StackPane.setAlignment(iconBox, Pos.BOTTOM_LEFT);
 
             var iconPaused = FontIcon.of(FontAwesomeSolid.PAUSE, 80, STATUS_ICON_COLOR);
@@ -172,11 +169,11 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         stage.setScene(mainScene);
 
         // Start pages view
-        startPagesView = new StartPagesView();
+        startPagesView = new StartPagesView(this);
         startPagesView.setBackground(theAssets().background("background.scene"));
 
         // Game view (includes dashboard)
-        gameView = new GameView(mainScene, dashboardIDs);
+        gameView = new GameView(this, mainScene, dashboardIDs);
 
         theClock().setPausableAction(this::doSimulationStepAndUpdateGameScene);
         theClock().setPermanentAction(this::drawGameView);
@@ -332,4 +329,6 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         GameScene currentGameScene = currentGameScene().orElse(null);
         return currentGameScene != null && configuration().gameSceneHasID(currentGameScene, "PlayScene3D");
     }
+
+
 }

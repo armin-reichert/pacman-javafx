@@ -1,7 +1,7 @@
 package de.amr.pacmanfx.tengen.ms_pacman;
 
 import de.amr.pacmanfx.lib.nes.JoypadButton;
-import de.amr.pacmanfx.uilib.GameAction;
+import de.amr.pacmanfx.ui.GameAction;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 
@@ -10,9 +10,9 @@ import java.util.Set;
 
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Action.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theJoypad;
+import static de.amr.pacmanfx.ui.ActionBindingSupport.createBinding;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
-import static de.amr.pacmanfx.uilib.ActionBindingSupport.createBinding;
-import static de.amr.pacmanfx.uilib.input.Keyboard.*;
+import static de.amr.pacmanfx.ui.input.Keyboard.*;
 
 public interface TengenMsPacMan_ActionBindings {
 

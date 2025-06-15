@@ -17,9 +17,9 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelFinishedAnimation;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.ui._2d.VectorGraphicsGameRenderer;
-import de.amr.pacmanfx.uilib.ActionBindingSupport;
-import de.amr.pacmanfx.uilib.GameAction;
-import de.amr.pacmanfx.uilib.GameScene;
+import de.amr.pacmanfx.ui.ActionBindingSupport;
+import de.amr.pacmanfx.ui.GameAction;
+import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
@@ -115,7 +115,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
         items.add(miMuted);
 
         var miQuit = new MenuItem(theAssets().text("quit"));
-        miQuit.setOnAction(ae -> GameAction.executeIfEnabled(ACTION_QUIT_GAME_SCENE));
+        miQuit.setOnAction(ae -> GameAction.executeIfEnabled(theUI(), ACTION_QUIT_GAME_SCENE));
         items.add(miQuit);
 
         return items;

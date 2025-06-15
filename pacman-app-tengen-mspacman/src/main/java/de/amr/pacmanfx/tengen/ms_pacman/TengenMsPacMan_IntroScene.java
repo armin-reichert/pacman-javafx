@@ -14,7 +14,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.uilib.ActionBindingSupport;
+import de.amr.pacmanfx.ui.ActionBindingSupport;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 

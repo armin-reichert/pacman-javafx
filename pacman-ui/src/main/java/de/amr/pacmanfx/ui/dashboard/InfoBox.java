@@ -5,8 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.dashboard;
 
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.uilib.GameAction;
-import de.amr.pacmanfx.uilib.GameScene;
+import de.amr.pacmanfx.ui.GameAction;
+import de.amr.pacmanfx.ui.GameScene;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -217,8 +217,12 @@ public abstract class InfoBox extends TitledPane {
         return spinner;
     }
 
+    protected void setAction(Button button, Runnable action) {
+        button.setOnAction(e -> action.run());
+    }
+
     protected void setAction(Button button, GameAction gameAction) {
-        button.setOnAction(e -> GameAction.executeIfEnabled(gameAction));
+        button.setOnAction(e -> GameAction.executeIfEnabled(theUI(), gameAction));
         //TODO add boolean property for enabled-state to game action and bind against it
     }
 
