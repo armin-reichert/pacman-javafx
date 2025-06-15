@@ -9,6 +9,7 @@ import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.image.Image;
 
 import java.util.EnumMap;
+import java.util.Map;
 import java.util.stream.IntStream;
 
 import static de.amr.pacmanfx.arcade.SpriteID.*;
@@ -118,12 +119,12 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements SpriteSheet
                 .toArray(Sprite[]::new);
     }
 
-    public ArcadePacMan_SpriteSheet(Image sourceImage) {
-        this.sourceImage = requireNonNull(sourceImage);
+    public ArcadePacMan_SpriteSheet {
+        requireNonNull(sourceImage);
     }
 
-    public Sprite sprite(SpriteID spriteID)  { return (Sprite) SPRITE_MAP.get(spriteID); }
-
-    public Sprite[] spriteSeq(SpriteID spriteID) { return (Sprite[]) SPRITE_MAP.get(spriteID); }
-
+    @Override
+    public Map<SpriteID, Object> spriteMap() {
+        return SPRITE_MAP;
+    }
 }
