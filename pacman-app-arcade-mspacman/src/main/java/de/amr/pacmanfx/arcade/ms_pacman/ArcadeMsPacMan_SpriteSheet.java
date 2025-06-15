@@ -34,11 +34,11 @@ public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements SpriteShe
 
     private static final EnumMap<SpriteID, Object> SPRITE_MAP = new EnumMap<>(SpriteID.class);
     static {
-        SPRITE_MAP.put(MS_PACMAN_MUNCHING_RIGHT, crappyPacManMunchingSpritesExtraction(0));
-        SPRITE_MAP.put(MS_PACMAN_MUNCHING_LEFT,  crappyPacManMunchingSpritesExtraction(1));
-        SPRITE_MAP.put(MS_PACMAN_MUNCHING_UP,    crappyPacManMunchingSpritesExtraction(2));
-        SPRITE_MAP.put(MS_PACMAN_MUNCHING_DOWN,  crappyPacManMunchingSpritesExtraction(3));
-        SPRITE_MAP.put(MS_PACMAN_DYING,          crappyPacManDyingSpriteExtraction());
+        SPRITE_MAP.put(MS_PACMAN_MUNCHING_RIGHT, makeMsPacManMunchingSpriteSeq(0));
+        SPRITE_MAP.put(MS_PACMAN_MUNCHING_LEFT,  makeMsPacManMunchingSpriteSeq(1));
+        SPRITE_MAP.put(MS_PACMAN_MUNCHING_UP,    makeMsPacManMunchingSpriteSeq(2));
+        SPRITE_MAP.put(MS_PACMAN_MUNCHING_DOWN,  makeMsPacManMunchingSpriteSeq(3));
+        SPRITE_MAP.put(MS_PACMAN_DYING,          makeMsPacManDyingSpriteSeq());
         SPRITE_MAP.put(MR_PACMAN_MUNCHING_RIGHT, new Sprite[] {tile(0, 9),  tile(1, 9),  tile(2, 9)});
         SPRITE_MAP.put(MR_PACMAN_MUNCHING_LEFT,  new Sprite[] {tile(0, 10), tile(1, 10), tile(2, 9)});
         SPRITE_MAP.put(MR_PACMAN_MUNCHING_UP,    new Sprite[] {tile(0, 11), tile(1, 11), tile(2, 9)});
@@ -71,21 +71,21 @@ public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements SpriteShe
         SPRITE_MAP.put(LIVES_COUNTER_SYMBOL,     tile(1, 0));
         SPRITE_MAP.put(STORK,                    new Sprite[] {makeSprite(489, 176, 32, 16), makeSprite(521, 176, 32, 16)});
         SPRITE_MAP.put(CLAPPERBOARD,             new Sprite[] {
-                                                    makeSprite(456, 208, 32, 32),  // open
-                                                    makeSprite(488, 208, 32, 32),  // middle
-                                                    makeSprite(520, 208, 32, 32)   // closed
+            makeSprite(456, 208, 32, 32),  // open
+            makeSprite(488, 208, 32, 32),  // middle
+            makeSprite(520, 208, 32, 32)   // closed
         });
         SPRITE_MAP.put(HEART,                    tile(2, 10));
         SPRITE_MAP.put(BLUE_BAG,                 makeSprite(488, 199, 8, 8));
         SPRITE_MAP.put(JUNIOR_PAC,               makeSprite(509, 200, 8, 8));
     }
 
-    private static Sprite[] crappyPacManMunchingSpritesExtraction(int dir) {
+    private static Sprite[] makeMsPacManMunchingSpriteSeq(int dir) {
         Sprite wide = tile(0, dir), open = tile(1, dir), closed = tile(2, dir);
         return new Sprite[] {open, open, wide, wide, open, open, open, closed, closed};
     }
 
-    private static Sprite[] crappyPacManDyingSpriteExtraction() {
+    private static Sprite[] makeMsPacManDyingSpriteSeq() {
         Sprite right = tile(1, 0), left = tile(1, 1), up = tile(1, 2), down = tile(1, 3);
         // TODO: this is not yet 100% correct
         return new Sprite[] {down, left, up, right, down, left, up, right, down, left, up};
