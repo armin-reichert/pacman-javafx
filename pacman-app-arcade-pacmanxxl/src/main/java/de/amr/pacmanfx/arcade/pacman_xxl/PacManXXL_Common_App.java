@@ -4,62 +4,53 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
-import de.amr.pacmanfx.ui.PacManGames_Env;
+import de.amr.pacmanfx.ui.PacManGames_UIBuilder;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
-import de.amr.pacmanfx.ui.dashboard.InfoBoxCustomMaps;
 import javafx.application.Application;
-import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-
-import java.util.Map;
+import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.CUSTOM_MAP_DIR;
-import static de.amr.pacmanfx.Globals.theGameController;
-import static de.amr.pacmanfx.ui.PacManGames_Env.createUI;
-import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
+import static de.amr.pacmanfx.ui.PacManGames_Env.theClock;
 
 public class PacManXXL_Common_App extends Application {
 
-    private PacManXXL_Common_MapSelector xxlMapSelector;
+    private static final String MS_PACMAN_XXL = "MS_PACMAN_XXL";
+    private static final String PACMAN_XXL = "PACMAN_XXL";
 
     @Override
-    public void init() {
-        PacManGames_Env.init();
-        xxlMapSelector = new PacManXXL_Common_MapSelector(CUSTOM_MAP_DIR);
-        theGameController().registerGame("PACMAN_XXL", new PacManXXL_PacMan_GameModel(xxlMapSelector));
-        theGameController().registerGame("MS_PACMAN_XXL", new PacManXXL_MsPacMan_GameModel(xxlMapSelector));
-        theGameController().selectGameVariant("MS_PACMAN_XXL");
+    public void start(Stage primaryStage) {
+        try {
+            // UI size: 80% of available screen height, aspect 16:10
+            int height = (int) (0.8 * Screen.getPrimary().getBounds().getHeight());
+            int width  = (int) (1.6 * height);
+            var xxlMapSelector = new PacManXXL_Common_MapSelector(CUSTOM_MAP_DIR);
+            PacManGames_UIBuilder.buildUI()
+                    .game(PACMAN_XXL,           new PacManXXL_PacMan_GameModel(xxlMapSelector))
+                    .uiConfig(PACMAN_XXL,       PacManXXL_PacMan_UIConfig.class)
+                    .uiConfig(MS_PACMAN_XXL,    PacManXXL_MsPacMan_UIConfig.class)
+                    .game(MS_PACMAN_XXL,        new PacManXXL_MsPacMan_GameModel(xxlMapSelector))
+                    .startPage(                 new PacManXXL_Common_StartPage())
+                    .dashboardEntries(          DashboardID.README,
+                            DashboardID.GENERAL,
+                            DashboardID.GAME_CONTROL,
+                            DashboardID.SETTINGS_3D,
+                            DashboardID.GAME_INFO,
+                            DashboardID.ACTOR_INFO,
+                            DashboardID.CUSTOM_MAPS,
+                            DashboardID.KEYBOARD,
+                            DashboardID.ABOUT)
+                    .stage(primaryStage, width, height)
+                    .selectGame(PACMAN_XXL)
+                    .show();
+        } catch (Exception x) {
+            Logger.error(x);
+        }
     }
 
     @Override
-    public void start(Stage stage) {
-        createUI(Map.of(
-            "PACMAN_XXL",    PacManXXL_PacMan_UIConfig.class,
-            "MS_PACMAN_XXL", PacManXXL_MsPacMan_UIConfig.class)
-        );
-
-        // UI size: 80% of available screen height, aspect as screen
-        Rectangle2D screenSize = Screen.getPrimary().getBounds();
-        double aspect = screenSize.getWidth() / screenSize.getHeight();
-        double height = 0.8 * screenSize.getHeight();
-        theUI().buildUI(stage, aspect * height, height,
-            DashboardID.GENERAL,
-            DashboardID.GAME_CONTROL,
-            DashboardID.SETTINGS_3D,
-            DashboardID.GAME_INFO,
-            DashboardID.ACTOR_INFO,
-            DashboardID.CUSTOM_MAPS,
-            DashboardID.KEYBOARD,
-            DashboardID.ABOUT);
-
-        InfoBoxCustomMaps infoBoxCustomMaps = theUI().gameView().dashboard().getInfoBox(DashboardID.CUSTOM_MAPS);
-        infoBoxCustomMaps.setTableItems(xxlMapSelector.customMaps());
-        xxlMapSelector.startWatchingCustomMaps();
-
-        theUI().startPagesView().addStartPage(new PacManXXL_Common_StartPage());
-        theUI().startPagesView().selectStartPage(0);
-
-        theUI().show();
+    public void stop() {
+        theClock().stop();
     }
 }

@@ -71,7 +71,7 @@ public class PacManGames3dApp extends Application {
                                                 DashboardID.KEYBOARD,
                                                 DashboardID.ABOUT)
                     .stage(primaryStage, width, height)
-                    .selectGame(PACMAN_XXL)
+                    .selectGame(PACMAN)
                     .show();
         } catch (Exception x) {
             Logger.error(x);
