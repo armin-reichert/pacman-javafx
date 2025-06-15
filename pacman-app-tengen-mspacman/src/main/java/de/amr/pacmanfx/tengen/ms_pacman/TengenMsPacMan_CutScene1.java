@@ -9,6 +9,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.animation.SingleSpriteActor;
 import javafx.scene.media.MediaPlayer;
@@ -19,7 +20,6 @@ import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_PacAnimationMap.ANIM_PAC_MAN_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 
 /**
@@ -33,51 +33,49 @@ import static de.amr.pacmanfx.ui.PacManGames_Env.*;
  */
 public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
-    static final int UPPER_LANE  = TS * 8;
-    static final int LOWER_LANE  = TS * 24;
-    static final int MIDDLE_LANE = TS * 16;
+    private static final int UPPER_LANE   = TS * 8;
+    private static final int LOWER_LANE   = TS * 24;
+    private static final int MIDDLE_LANE  = TS * 16;
+    private static final int LEFT_BORDER  = TS;
+    private static final int RIGHT_BORDER = TS * 30;
 
-    static final int LEFT_BORDER = TS;
-    static final int RIGHT_BORDER = TS * (NES_TILES.x() - 2);
-
-    static final float SPEED_CHASING = 2f;
-    static final float SPEED_PAC_RISING = 1f;
-    static final float SPEED_GHOST_AFTER_COLLISION = 0.5f;
+    private static final float SPEED_CHASING = 2.0f;
+    private static final float SPEED_RISING = 1.0f;
+    private static final float SPEED_GHOST_AFTER_COLLISION = 0.5f;
 
     private MediaPlayer music;
+    private Clapperboard clapperboard;
     private Pac pacMan;
     private Pac msPacMan;
     private Ghost inky;
     private Ghost pinky;
     private SingleSpriteActor heart;
-    private Clapperboard clapperboard;
-    private boolean collided;
 
+    private boolean collided;
     private int t;
 
     @Override
     public void doInit() {
-        var spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
-
         t = -1;
         theGame().setScoreVisible(false);
         bindActionToKeyCombination(theGameController()::letCurrentGameStateExpire, theJoypad().key(JoypadButton.START));
+        music = theSound().createSound("intermission.1");
+
+        PacManGames_UIConfig config = theUI().configuration();
+        var spriteSheet = (TengenMsPacMan_SpriteSheet) config.spriteSheet();
 
         clapperboard = new Clapperboard(spriteSheet, 1, "THEY MEET");
-        clapperboard.setPosition(3*TS, 10*TS);
+        clapperboard.setPosition(3 * TS, 10 * TS);
         clapperboard.setFont(arcadeFont8());
         msPacMan = createMsPacMan();
+        msPacMan.setAnimations(config.createPacAnimations(msPacMan));
         pacMan = createPacMan();
+        pacMan.setAnimations(config.createPacAnimations(pacMan));
         inky = createCyanGhost();
+        inky.setAnimations(config.createGhostAnimations(inky));
         pinky = createPinkGhost();
+        pinky.setAnimations(config.createGhostAnimations(pinky));
         heart = new SingleSpriteActor(spriteSheet.sprite(SpriteID.HEART));
-
-        msPacMan.setAnimations(theUI().configuration().createPacAnimations(msPacMan));
-        pacMan  .setAnimations(theUI().configuration().createPacAnimations(pacMan));
-        inky    .setAnimations(theUI().configuration().createGhostAnimations(inky));
-        pinky   .setAnimations(theUI().configuration().createGhostAnimations(pinky));
-
-        music = theSound().createSound("intermission.1");
     }
 
     @Override
@@ -89,7 +87,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     public void update() {
         t += 1;
         if (t == 0) {
-            clapperboard.setVisible(true);
+            clapperboard.show();
             clapperboard.startAnimation();
             music.play();
         }
@@ -136,9 +134,9 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         }
         else if (t == 454) {
             pacMan.setMoveDir(Direction.UP);
-            pacMan.setSpeed(SPEED_PAC_RISING);
+            pacMan.setSpeed(SPEED_RISING);
             msPacMan.setMoveDir(Direction.UP);
-            msPacMan.setSpeed(SPEED_PAC_RISING);
+            msPacMan.setSpeed(SPEED_RISING);
         }
         else if (t == 498) {
             collided = true;
@@ -183,9 +181,9 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
         pacMan.move();
         msPacMan.move();
-
         inky.move();
         pinky.move();
+
         if (collided) {
             if (inky.y() > MIDDLE_LANE) {
                 inky.setPosition(inky.x(), MIDDLE_LANE);

@@ -8,6 +8,7 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 
@@ -17,7 +18,6 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.createMs
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.createPacMan;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_PacAnimationMap.ANIM_PAC_MAN_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 
 /**
@@ -30,35 +30,36 @@ import static de.amr.pacmanfx.ui.PacManGames_Env.*;
  */
 public class TengenMsPacMan_CutScene2 extends GameScene2D {
 
-    static final int UPPER_LANE = TS * 8;
-    static final int LOWER_LANE = TS * 22;
-    static final int MIDDLE_LANE = TS * 10;
+    private static final int UPPER_LANE = TS * 8;
+    private static final int LOWER_LANE = TS * 22;
+    private static final int MIDDLE_LANE = TS * 10;
+    private static final int LEFT_BORDER = TS;
+    private static final int RIGHT_BORDER = TS * 30;
 
-    static final int LEFT_BORDER = TS;
-    static final int RIGHT_BORDER = TS * (NES_TILES.x() - 2);
-
-    private int t;
-    private Pac pacMan;
-    private Pac msPacMan;
     private MediaPlayer music;
     private Clapperboard clapperboard;
+    private Pac pacMan;
+    private Pac msPacMan;
+
+    private int t;
 
     @Override
     public void doInit() {
-        var spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
-
         t = -1;
         theGame().setScoreVisible(false);
         bindActionToKeyCombination(theGameController()::letCurrentGameStateExpire, theJoypad().key(JoypadButton.START));
+        music = theSound().createSound("intermission.2");
+
+        PacManGames_UIConfig config = theUI().configuration();
+        var spriteSheet = (TengenMsPacMan_SpriteSheet) config.spriteSheet();
 
         clapperboard = new Clapperboard(spriteSheet, 2, "THE CHASE");
-        clapperboard.setPosition(3*TS, 10*TS);
+        clapperboard.setPosition(3 * TS, 10 * TS);
         clapperboard.setFont(arcadeFont8());
         msPacMan = createMsPacMan();
+        msPacMan.setAnimations(config.createPacAnimations(msPacMan));
         pacMan = createPacMan();
-        msPacMan.setAnimations(theUI().configuration().createPacAnimations(msPacMan));
-        pacMan.setAnimations(theUI().configuration().createPacAnimations(pacMan));
-        music = theSound().createSound("intermission.2");
+        pacMan.setAnimations(config.createPacAnimations(pacMan));
     }
 
     @Override
@@ -70,7 +71,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     public void update() {
         t += 1;
         if (t == 0) {
-            clapperboard.setVisible(true);
+            clapperboard.show();
             clapperboard.startAnimation();
             music.play();
         }

@@ -24,8 +24,8 @@ import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.SpriteID.STORK;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.createMsPacMan;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.createPacMan;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_PacAnimationMap.ANIM_PAC_MAN_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
 
 /**
@@ -71,6 +71,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
             animations = new SpriteAnimationMap(spriteSheet);
             animations.set("junior", SpriteAnimation.createAnimation().ofSprite(spriteSheet.sprite(SpriteID.JUNIOR_PAC)).end());
             animations.set("bag",    SpriteAnimation.createAnimation().ofSprite(spriteSheet.sprite(SpriteID.BLUE_BAG)).end());
+            setOpen(false);
         }
 
         @Override
@@ -84,48 +85,41 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         public boolean isOpen() {
             return open;
         }
-
     }
 
-    static final int STORK_Y = TS * 7;
-    static final int GROUND_Y = TS * 24;
-    static final int RIGHT_BORDER = TS * (NES_TILES.x() - 2);
+    private static final int GROUND_Y = TS * 24;
+    private static final int RIGHT_BORDER = TS * 30;
 
     private MediaPlayer music;
+    private Clapperboard clapperboard;
     private Pac pacMan;
     private Pac msPacMan;
     private Stork stork;
     private Bag flyingBag;
 
     private boolean darkness;
-
-    private Clapperboard clapperboard;
-
     private int t;
 
     @Override
     public void doInit() {
-        TengenMsPacMan_SpriteSheet spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
         t = -1;
+        darkness = false;
         theGame().setScoreVisible(false);
-
-        msPacMan = createMsPacMan();
-        pacMan = createPacMan();
-        stork = new Stork(spriteSheet);
-        flyingBag = new Bag(spriteSheet);
-        flyingBag.setOpen(false);
-
-        PacManGames_UIConfig config = theUI().configuration();
-        pacMan  .setAnimations(config.createPacAnimations(pacMan));
-        msPacMan.setAnimations(config.createPacAnimations(msPacMan));
-
-        clapperboard = new Clapperboard(spriteSheet, 3, "JUNIOR");
-        clapperboard.setPosition(3*TS, 10*TS);
-        clapperboard.setFont(arcadeFont8());
-
+        bindActionToKeyCombination(theGameController()::letCurrentGameStateExpire, theJoypad().key(JoypadButton.START));
         music = theSound().createSound("intermission.3");
 
-        bindActionToKeyCombination(theGameController()::letCurrentGameStateExpire, theJoypad().key(JoypadButton.START));
+        PacManGames_UIConfig config = theUI().configuration();
+        var spriteSheet = (TengenMsPacMan_SpriteSheet) config.spriteSheet();
+
+        clapperboard = new Clapperboard(spriteSheet, 3, "JUNIOR");
+        clapperboard.setPosition(3 * TS, 10 * TS);
+        clapperboard.setFont(arcadeFont8());
+        msPacMan = createMsPacMan();
+        msPacMan.setAnimations(config.createPacAnimations(msPacMan));
+        pacMan = createPacMan();
+        pacMan.setAnimations(config.createPacAnimations(pacMan));
+        stork = new Stork(spriteSheet);
+        flyingBag = new Bag(spriteSheet);
     }
 
     @Override
@@ -137,7 +131,6 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
     public void update() {
         t += 1;
         if (t == 0) {
-            darkness = false;
             clapperboard.show();
             clapperboard.startAnimation();
             music.play();
@@ -145,25 +138,25 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         else if (t == 130) {
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.setPosition(TS * 3, GROUND_Y - 4);
-            pacMan.selectAnimation(TengenMsPacMan_PacAnimationMap.ANIM_PAC_MAN_MUNCHING);
+            pacMan.setSpeed(0);
+            pacMan.selectAnimation(ANIM_PAC_MAN_MUNCHING);
             pacMan.show();
 
             msPacMan.setMoveDir(Direction.RIGHT);
             msPacMan.setPosition(TS * 5, GROUND_Y - 4);
+            msPacMan.setSpeed(0);
             msPacMan.selectAnimation(ANIM_PAC_MUNCHING);
             msPacMan.show();
 
-            flyingBag.setOpen(false);
-
-            stork.setPosition(RIGHT_BORDER, STORK_Y);
+            stork.setPosition(RIGHT_BORDER, TS * 7);
             stork.setVelocity(-0.8f, 0);
             stork.setBagReleasedFromBeak(false);
-            stork.show();
             stork.playAnimation("flying");
+            stork.show();
         }
         else if (t == 270) {
             // stork releases bag, bag starts falling
-            stork.setVelocity(-1f, 0);
+            stork.setVelocity(-1f, 0); // faster, no bag to carry!
             stork.setBagReleasedFromBeak(true);
             flyingBag.setPosition(stork.x(), stork.y() + 8);
             flyingBag.setVelocity(-0.25f, 0);
@@ -188,12 +181,13 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         }
 
         stork.move();
+
         if (!flyingBag.isOpen()) {
             flyingBag.move();
-            Vector2f bv = flyingBag.velocity();
+            Vector2f velocity = flyingBag.velocity();
             if (flyingBag.y() > GROUND_Y) {
                 flyingBag.setY(GROUND_Y);
-                flyingBag.setVelocity(0.9f * bv.x(), -0.3f * bv.y());
+                flyingBag.setVelocity(0.9f * velocity.x(), -0.3f * velocity.y());
             }
         }
 
@@ -212,15 +206,14 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        if (darkness) {
-            return;
+        if (!darkness) {
+            gr().drawVerticalSceneBorders();
+            gr().drawClapperBoard(clapperboard);
+            gr().drawActor(stork);
+            gr().drawActor(flyingBag);
+            gr().drawActor(msPacMan);
+            gr().drawActor(pacMan);
+            gr().drawLevelCounter(theGame().levelCounter(), sizeInPx().minus(0, 3*TS));
         }
-        gr().drawVerticalSceneBorders();
-        gr().drawClapperBoard(clapperboard);
-        gr().drawActor(stork);
-        gr().drawActor(flyingBag);
-        gr().drawActor(msPacMan);
-        gr().drawActor(pacMan);
-        gr().drawLevelCounter(theGame().levelCounter(), sizeInPx().minus(0, 3*TS));
     }
 }
