@@ -154,18 +154,18 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
             stork.playAnimation("flying");
             stork.show();
         }
-        else if (t == 270) {
+        else if (t == 240) {
             // stork releases bag, bag starts falling
             stork.setVelocity(-1f, 0); // faster, no bag to carry!
             stork.setBagReleasedFromBeak(true);
-            flyingBag.setPosition(stork.x(), stork.y() + 8);
-            flyingBag.setVelocity(-0.25f, 0);
+            flyingBag.setPosition(stork.x() - 15, stork.y() + 8);
+            flyingBag.setVelocity(-0.5f, 0);
             flyingBag.setAcceleration(0, 0.1f);
             flyingBag.show();
         }
         else if (t == 320) {
             // reaches ground, starts bouncing
-            flyingBag.setVelocity(-1.0f, flyingBag.velocity().y());
+            flyingBag.setVelocity(-0.5f, flyingBag.velocity().y());
         }
         else if (t == 380) {
             flyingBag.setOpen(true);

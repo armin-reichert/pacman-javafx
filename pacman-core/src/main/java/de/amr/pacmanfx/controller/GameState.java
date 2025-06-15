@@ -493,7 +493,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onEnter(GameModel game) {
             timer.restartIndefinitely();
-            game.setProperty("intermissionTestNumber", 1);
+            game.setProperty("intermissionTestNumber", 3);
         }
 
         @Override

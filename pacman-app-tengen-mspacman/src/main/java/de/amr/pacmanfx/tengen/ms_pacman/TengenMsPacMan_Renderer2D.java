@@ -108,7 +108,7 @@ public class TengenMsPacMan_Renderer2D extends SpriteGameRenderer {
                 //TODO: clarify
                 float spriteX = stork.x() - 13;
                 float spriteY = stork.y() - 6;
-                ctx().fillRect(scaled(spriteX), scaled(spriteY + 9), scaled(8), scaled(8));
+                ctx().fillRect(scaled(spriteX), scaled(spriteY + 9), scaled(8), scaled(10));
             }
         }
         else {
