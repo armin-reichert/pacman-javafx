@@ -5,16 +5,14 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.Globals;
-import de.amr.pacmanfx.ui.sound.PacManGames_SoundManager;
-import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.Keyboard;
+import de.amr.pacmanfx.ui.sound.PacManGames_SoundManager;
+import de.amr.pacmanfx.uilib.GameClock;
 import javafx.application.Application;
-import javafx.stage.Stage;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
@@ -50,18 +48,6 @@ public class PacManGames_Env {
         theJoypad = new Joypad(theKeyboard);
         theSound = new PacManGames_SoundManager();
         Logger.info("Game environment initialized.");
-    }
-
-    /**
-     * Creates the global UI instance and stores the configurations of the supported game variants.
-     * <p>
-     * Call this method in {@link javafx.application.Application#start(Stage)}!
-     * </p>
-     *
-     * @param configClassesMap a map specifying the UI configuration for each supported game variant
-     */
-    public static void createUI(Map<String, Class<? extends PacManGames_UIConfig>> configClassesMap) {
-        theUI = new PacManGames_UI_Impl(configClassesMap);
     }
 
     private static void checkUserDirsExistingAndWritable() {
