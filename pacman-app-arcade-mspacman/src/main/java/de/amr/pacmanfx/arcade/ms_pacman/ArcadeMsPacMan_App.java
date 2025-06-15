@@ -9,7 +9,6 @@ import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.application.Application;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.ui.PacManGames_Env.theClock;
 
@@ -23,7 +22,7 @@ public class ArcadeMsPacMan_App extends Application {
         final int height = (int) (0.8 * Screen.getPrimary().getBounds().getHeight());
         final int width  = (int) (1.2 * height);
         PacManGames_UIBuilder.buildUI()
-            .game(MS_PACMAN, new ArcadeMsPacMan_GameModel(new ArcadeMsPacMan_MapSelector()), ArcadeMsPacMan_UIConfig.class)
+            .game(MS_PACMAN, ArcadeMsPacMan_GameModel.arcadeVersion(), ArcadeMsPacMan_UIConfig.class)
             .startPage(new ArcadeMsPacMan_StartPage(MS_PACMAN))
             .dashboardEntries(
                     DashboardID.GENERAL,

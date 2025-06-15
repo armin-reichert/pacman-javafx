@@ -64,11 +64,7 @@ public class PacManGames_UIBuilder {
         PacManGames_Env.theUI = new PacManGames_UI_Impl(configs);
         PacManGames_Env.theUI.buildUI(stage, width, height, dashboardIDs);
         startPageList.forEach(PacManGames_Env.theUI.startPagesView()::addStartPage);
-        models.forEach((variant, model) -> {
-            theGameController().registerGame(variant, model);
-            model.init();
-
-        });
+        models.forEach((variant, model) -> theGameController().registerGame(variant, model));
         theGameController().setEventsEnabled(true);
         theGameController().selectGameVariant(initialVariant);
         PacManGames_Env.theUI.startPagesView().selectStartPage(0);

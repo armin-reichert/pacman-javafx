@@ -5,15 +5,12 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.app;
 
 import de.amr.pacmanfx.arcade.ArcadePacMan_GameModel;
-import de.amr.pacmanfx.arcade.ArcadePacMan_MapSelector;
 import de.amr.pacmanfx.arcade.ArcadePacMan_StartPage;
 import de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig;
-import de.amr.pacmanfx.ui.PacManGames_UIBuilder;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.application.Application;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.ui.PacManGames_Env.theClock;
 import static de.amr.pacmanfx.ui.PacManGames_UIBuilder.buildUI;
@@ -28,7 +25,7 @@ public class ArcadePacMan_App extends Application {
         final int height = (int) (0.8 * Screen.getPrimary().getBounds().getHeight());
         final int width  = (int) (1.2 * height);
         buildUI()
-            .game(PACMAN, new ArcadePacMan_GameModel(new ArcadePacMan_MapSelector()), ArcadePacMan_UIConfig.class)
+            .game(PACMAN, ArcadePacMan_GameModel.arcadeVersion(), ArcadePacMan_UIConfig.class)
             .startPage(new ArcadePacMan_StartPage(PACMAN))
             .dashboardEntries(
                 DashboardID.GENERAL,

@@ -5,23 +5,19 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.allgames.app;
 
 import de.amr.pacmanfx.arcade.ArcadePacMan_GameModel;
-import de.amr.pacmanfx.arcade.ArcadePacMan_MapSelector;
 import de.amr.pacmanfx.arcade.ArcadePacMan_StartPage;
 import de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel;
-import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_MapSelector;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman_xxl.*;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
-import de.amr.pacmanfx.ui.PacManGames_UIBuilder;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.application.Application;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.CUSTOM_MAP_DIR;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theClock;
@@ -49,9 +45,9 @@ public class PacManGames3dApp extends Application {
         buildUI()
             .stage(primaryStage, width, height)
             .startPage(             new ArcadePacMan_StartPage(PACMAN))
-            .game(PACMAN,           new ArcadePacMan_GameModel(new ArcadePacMan_MapSelector()), ArcadePacMan_UIConfig.class)
+            .game(PACMAN,           ArcadePacMan_GameModel.arcadeVersion(), ArcadePacMan_UIConfig.class)
             .startPage(             new ArcadeMsPacMan_StartPage(MS_PACMAN))
-            .game(MS_PACMAN,        new ArcadeMsPacMan_GameModel(new ArcadeMsPacMan_MapSelector()), ArcadeMsPacMan_UIConfig.class)
+            .game(MS_PACMAN,        ArcadeMsPacMan_GameModel.arcadeVersion(), ArcadeMsPacMan_UIConfig.class)
             .startPage(             new TengenMsPacMan_StartPage(MS_PACMAN_TENGEN))
             .game(MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel(), TengenMsPacMan_UIConfig.class)
             .startPage(             new PacManXXL_Common_StartPage())

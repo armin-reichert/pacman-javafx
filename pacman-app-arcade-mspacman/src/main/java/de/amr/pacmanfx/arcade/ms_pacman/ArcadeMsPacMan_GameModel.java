@@ -178,6 +178,10 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
 
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
+    public static ArcadeMsPacMan_GameModel arcadeVersion() {
+        return new ArcadeMsPacMan_GameModel(new ArcadeMsPacMan_MapSelector());
+    }
+
     /**
      * @param mapSelector map selector e.g. selector that selects custom maps before standard maps
      */

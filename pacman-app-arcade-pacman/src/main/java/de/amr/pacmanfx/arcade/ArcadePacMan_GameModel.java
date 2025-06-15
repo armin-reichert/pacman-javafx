@@ -162,6 +162,10 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
     // bonus points = multiplier * 100
     private static final byte[] BONUS_VALUE_MULTIPLIERS = { 1, 3, 5, 7, 10, 20, 30, 50 };
 
+    public static ArcadePacMan_GameModel arcadeVersion() {
+        return new ArcadePacMan_GameModel(new ArcadePacMan_MapSelector());
+    }
+
     /**
      * @param mapSelector e.g. selector that selects custom maps before standard maps
      */
