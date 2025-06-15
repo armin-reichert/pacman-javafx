@@ -20,27 +20,22 @@ public class ArcadeMsPacMan_App extends Application {
     @Override
     public void start(Stage primaryStage) {
         // UI size: 80% of available screen height, aspect 12:10
-        int height = (int) (0.8 * Screen.getPrimary().getBounds().getHeight());
-        int width  = (int) (1.2 * height);
-        try {
-            PacManGames_UIBuilder.buildUI()
-                    .game(MS_PACMAN, new ArcadeMsPacMan_GameModel(new ArcadeMsPacMan_MapSelector()))
-                    .uiConfig(MS_PACMAN, ArcadeMsPacMan_UIConfig.class)
-                    .startPage(new ArcadeMsPacMan_StartPage(MS_PACMAN))
-                    .dashboardEntries(
-                            DashboardID.GENERAL,
-                            DashboardID.GAME_CONTROL,
-                            DashboardID.SETTINGS_3D,
-                            DashboardID.GAME_INFO,
-                            DashboardID.ACTOR_INFO,
-                            DashboardID.KEYBOARD,
-                            DashboardID.ABOUT)
-                    .stage(primaryStage, width, height)
-                    .selectGame(MS_PACMAN)
-                    .show();
-        } catch (Exception x) {
-            Logger.error(x);
-        }
+        final int height = (int) (0.8 * Screen.getPrimary().getBounds().getHeight());
+        final int width  = (int) (1.2 * height);
+        PacManGames_UIBuilder.buildUI()
+            .game(MS_PACMAN, new ArcadeMsPacMan_GameModel(new ArcadeMsPacMan_MapSelector()), ArcadeMsPacMan_UIConfig.class)
+            .startPage(new ArcadeMsPacMan_StartPage(MS_PACMAN))
+            .dashboardEntries(
+                    DashboardID.GENERAL,
+                    DashboardID.GAME_CONTROL,
+                    DashboardID.SETTINGS_3D,
+                    DashboardID.GAME_INFO,
+                    DashboardID.ACTOR_INFO,
+                    DashboardID.KEYBOARD,
+                    DashboardID.ABOUT)
+            .stage(primaryStage, width, height)
+            .selectGame(MS_PACMAN)
+            .show();
     }
 
     @Override

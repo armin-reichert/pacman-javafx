@@ -28,12 +28,8 @@ public class PacManGames_UIBuilder {
         return new PacManGames_UIBuilder();
     }
 
-    public PacManGames_UIBuilder game(String variant, GameModel model) {
+    public PacManGames_UIBuilder game(String variant, GameModel model, Class<? extends PacManGames_UIConfig> config) {
         models.put(variant, model);
-        return this;
-    }
-
-    public PacManGames_UIBuilder uiConfig(String variant, Class<? extends PacManGames_UIConfig> config) {
         configs.put(variant, config);
         return this;
     }
@@ -64,7 +60,6 @@ public class PacManGames_UIBuilder {
         PacManGames_Env.theUI = new PacManGames_UI_Impl(configs);
         PacManGames_Env.theUI.buildUI(stage, width, height, dashboardIDs);
         startPageList.forEach(PacManGames_Env.theUI.startPagesView()::addStartPage);
-        PacManGames_Env.theUI.startPagesView().selectStartPage(0);
         models.forEach((variant, model) -> {
             theGameController().registerGame(variant, model);
             model.init();
@@ -72,6 +67,7 @@ public class PacManGames_UIBuilder {
         });
         theGameController().setEventsEnabled(true);
         theGameController().selectGameVariant(initialVariant);
+        PacManGames_Env.theUI.startPagesView().selectStartPage(0);
         PacManGames_Env.theUI.show();
     }
 }

@@ -25,6 +25,7 @@ import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.CUSTOM_MAP_DIR;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theClock;
+import static de.amr.pacmanfx.ui.PacManGames_UIBuilder.buildUI;
 
 /**
  * Application containing all game variants and including 3D play scene.
@@ -41,46 +42,33 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        try {
-            // UI size: 80% of available screen height, aspect 16:10
-            int height = (int) (0.8 * Screen.getPrimary().getBounds().getHeight());
-            int width  = (int) (1.6 * height);
-            var xxlMapSelector = new PacManXXL_Common_MapSelector(CUSTOM_MAP_DIR);
-            PacManGames_UIBuilder.buildUI()
-                    .stage(primaryStage, width, height)
-
-                    .startPage(                 new ArcadePacMan_StartPage(PACMAN))
-                    .game(PACMAN,               new ArcadePacMan_GameModel(new ArcadePacMan_MapSelector()))
-                    .uiConfig(PACMAN,           ArcadePacMan_UIConfig.class)
-
-                    .startPage(                 new ArcadeMsPacMan_StartPage(MS_PACMAN))
-                    .game(MS_PACMAN,            new ArcadeMsPacMan_GameModel(new ArcadeMsPacMan_MapSelector()))
-                    .uiConfig(MS_PACMAN,        ArcadeMsPacMan_UIConfig.class)
-
-                    .startPage(                 new TengenMsPacMan_StartPage(MS_PACMAN_TENGEN))
-                    .game(MS_PACMAN_TENGEN,     new TengenMsPacMan_GameModel())
-                    .uiConfig(MS_PACMAN_TENGEN, TengenMsPacMan_UIConfig.class)
-
-                    .startPage(                 new PacManXXL_Common_StartPage())
-                    .game(PACMAN_XXL,           new PacManXXL_PacMan_GameModel(xxlMapSelector))
-                    .uiConfig(PACMAN_XXL,       PacManXXL_PacMan_UIConfig.class)
-                    .game(MS_PACMAN_XXL,        new PacManXXL_MsPacMan_GameModel(xxlMapSelector))
-                    .uiConfig(MS_PACMAN_XXL,    PacManXXL_MsPacMan_UIConfig.class)
-
-                    .dashboardEntries(          DashboardID.README,
-                                                DashboardID.GENERAL,
-                                                DashboardID.GAME_CONTROL,
-                                                DashboardID.SETTINGS_3D,
-                                                DashboardID.GAME_INFO,
-                                                DashboardID.ACTOR_INFO,
-                                                DashboardID.CUSTOM_MAPS,
-                                                DashboardID.KEYBOARD,
-                                                DashboardID.ABOUT)
-                    .selectGame(PACMAN)
-                    .show();
-        } catch (Exception x) {
-            Logger.error(x);
-        }
+        // UI size: 80% of available screen height, aspect 16:10
+        final int height = (int) (0.8 * Screen.getPrimary().getBounds().getHeight());
+        final int width  = (int) (1.6 * height);
+        final var xxlMapSelector = new PacManXXL_Common_MapSelector(CUSTOM_MAP_DIR);
+        buildUI()
+            .stage(primaryStage, width, height)
+            .startPage(             new ArcadePacMan_StartPage(PACMAN))
+            .game(PACMAN,           new ArcadePacMan_GameModel(new ArcadePacMan_MapSelector()), ArcadePacMan_UIConfig.class)
+            .startPage(             new ArcadeMsPacMan_StartPage(MS_PACMAN))
+            .game(MS_PACMAN,        new ArcadeMsPacMan_GameModel(new ArcadeMsPacMan_MapSelector()), ArcadeMsPacMan_UIConfig.class)
+            .startPage(             new TengenMsPacMan_StartPage(MS_PACMAN_TENGEN))
+            .game(MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel(), TengenMsPacMan_UIConfig.class)
+            .startPage(             new PacManXXL_Common_StartPage())
+            .game(PACMAN_XXL,       new PacManXXL_PacMan_GameModel(xxlMapSelector),   PacManXXL_PacMan_UIConfig.class)
+            .game(MS_PACMAN_XXL,    new PacManXXL_MsPacMan_GameModel(xxlMapSelector), PacManXXL_MsPacMan_UIConfig.class)
+            .dashboardEntries(
+                    DashboardID.README,
+                    DashboardID.GENERAL,
+                    DashboardID.GAME_CONTROL,
+                    DashboardID.SETTINGS_3D,
+                    DashboardID.GAME_INFO,
+                    DashboardID.ACTOR_INFO,
+                    DashboardID.CUSTOM_MAPS,
+                    DashboardID.KEYBOARD,
+                    DashboardID.ABOUT)
+            .selectGame(PACMAN)
+            .show();
     }
 
     @Override

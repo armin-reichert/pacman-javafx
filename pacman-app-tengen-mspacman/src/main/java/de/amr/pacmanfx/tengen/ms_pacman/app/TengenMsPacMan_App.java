@@ -7,20 +7,13 @@ package de.amr.pacmanfx.tengen.ms_pacman.app;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
-import de.amr.pacmanfx.ui.PacManGames_Env;
-import de.amr.pacmanfx.ui.PacManGames_UIBuilder;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.application.Application;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import org.tinylog.Logger;
 
-import java.util.Map;
-
-import static de.amr.pacmanfx.Globals.CUSTOM_MAP_DIR;
-import static de.amr.pacmanfx.Globals.theGameController;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;
-import static de.amr.pacmanfx.ui.PacManGames_Env.*;
+import static de.amr.pacmanfx.ui.PacManGames_Env.theClock;
+import static de.amr.pacmanfx.ui.PacManGames_UIBuilder.buildUI;
 
 public class TengenMsPacMan_App extends Application {
 
@@ -28,28 +21,24 @@ public class TengenMsPacMan_App extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        try {
-            // UI size: 80% of available screen height, aspect 16:10
-            int height = (int) (0.8 * Screen.getPrimary().getBounds().getHeight());
-            int width  = (int) (32.0 / 30.0 * height);
-            PacManGames_UIBuilder.buildUI()
-                    .game(MS_PACMAN_TENGEN,     new TengenMsPacMan_GameModel())
-                    .uiConfig(MS_PACMAN_TENGEN, TengenMsPacMan_UIConfig.class)
-                    .startPage(                 new TengenMsPacMan_StartPage(MS_PACMAN_TENGEN))
-                    .dashboardEntries(          DashboardID.README,
-                                                DashboardID.GENERAL,
-                                                DashboardID.GAME_CONTROL,
-                                                DashboardID.SETTINGS_3D,
-                                                DashboardID.GAME_INFO,
-                                                DashboardID.ACTOR_INFO,
-                                                DashboardID.KEYBOARD,
-                                                DashboardID.ABOUT)
-                    .stage(primaryStage, width, height)
-                    .selectGame(MS_PACMAN_TENGEN)
-                    .show();
-        } catch (Exception x) {
-            Logger.error(x);
-        }
+        // UI size: 80% of available screen height, aspect 16:10
+        final int height = (int) (0.8 * Screen.getPrimary().getBounds().getHeight());
+        final int width  = (int) (32.0 / 30.0 * height);
+        buildUI()
+            .startPage(new TengenMsPacMan_StartPage(MS_PACMAN_TENGEN))
+            .game(MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel(), TengenMsPacMan_UIConfig.class)
+            .dashboardEntries(
+                DashboardID.README,
+                DashboardID.GENERAL,
+                DashboardID.GAME_CONTROL,
+                DashboardID.SETTINGS_3D,
+                DashboardID.GAME_INFO,
+                DashboardID.ACTOR_INFO,
+                DashboardID.KEYBOARD,
+                DashboardID.ABOUT)
+            .stage(primaryStage, width, height)
+            .selectGame(MS_PACMAN_TENGEN)
+            .show();
     }
 
     @Override

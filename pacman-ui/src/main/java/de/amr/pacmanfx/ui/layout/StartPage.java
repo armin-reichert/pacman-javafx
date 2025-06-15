@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.layout;
 
-import de.amr.pacmanfx.ui.GameAction;
 import javafx.scene.layout.Region;
 import org.tinylog.Logger;
 
