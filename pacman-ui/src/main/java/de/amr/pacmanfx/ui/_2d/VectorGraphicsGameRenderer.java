@@ -32,7 +32,7 @@ import static java.util.function.Predicate.not;
  *
  * @author Armin Reichert
  */
-public class VectorGraphicsGameRenderer extends SpriteGameRenderer {
+public class VectorGraphicsGameRenderer implements SpriteGameRenderer {
 
     private final SpriteSheet<?> spriteSheet;
     private final GraphicsContext ctx;

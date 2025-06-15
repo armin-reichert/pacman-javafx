@@ -29,7 +29,7 @@ import static de.amr.pacmanfx.ui.PacManGames_Env.theAssets;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
 import static java.util.Objects.requireNonNull;
 
-public class ArcadeMsPacMan_GameRenderer extends SpriteGameRenderer {
+public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
 
     private static final Sprite[] FULL_MAZE_SPRITES = {
         makeSprite(0,     0, 224, 248),
@@ -119,7 +119,7 @@ public class ArcadeMsPacMan_GameRenderer extends SpriteGameRenderer {
             drawClapperBoard(clapperboard);
         }
         else {
-            super.drawActor(actor);
+            SpriteGameRenderer.super.drawActor(actor);
         }
     }
 

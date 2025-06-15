@@ -15,9 +15,9 @@ import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
-public abstract class SpriteGameRenderer implements GameRenderer {
+public interface SpriteGameRenderer extends GameRenderer {
 
-    public abstract SpriteSheet<?> spriteSheet();
+    SpriteSheet<?> spriteSheet();
 
     /**
      * Draws a sprite (region inside sprite sheet) unscaled at the given position.
@@ -26,7 +26,7 @@ public abstract class SpriteGameRenderer implements GameRenderer {
      * @param x           x-coordinate of left-upper corner
      * @param y           y-coordinate of left-upper corner
      */
-    public void drawSprite(Sprite sprite, double x, double y) {
+    default void drawSprite(Sprite sprite, double x, double y) {
         if (sprite != null) {
             ctx().drawImage(spriteSheet().sourceImage(),
                     sprite.x(), sprite.y(), sprite.width(), sprite.height(),
@@ -42,7 +42,7 @@ public abstract class SpriteGameRenderer implements GameRenderer {
      * @param x             x-coordinate of left-upper corner (unscaled)
      * @param y             y-coordinate of left-upper corner (unscaled)
      */
-    public void drawSpriteScaled(Sprite sprite, double x, double y) {
+    default void drawSpriteScaled(Sprite sprite, double x, double y) {
         if (sprite != null) {
             drawSpriteScaled(spriteSheet().sourceImage(), sprite, x, y);
         }
@@ -55,7 +55,7 @@ public abstract class SpriteGameRenderer implements GameRenderer {
      * @param cx  x-coordinate of the center position
      * @param cy  y-coordinate of the center position
      */
-    public void drawSpriteScaledCenteredAt(Sprite sprite, double cx, double cy) {
+    default void drawSpriteScaledCenteredAt(Sprite sprite, double cx, double cy) {
         if (sprite != null) {
             drawSpriteScaled(sprite, cx - 0.5 * sprite.width(), cy - 0.5 * sprite.height());
         }
@@ -67,7 +67,7 @@ public abstract class SpriteGameRenderer implements GameRenderer {
      * @param actor an actor
      * @param sprite sprite sheet region (can be null)
      */
-    public void drawActorSprite(Actor actor, Sprite sprite) {
+    default void drawActorSprite(Actor actor, Sprite sprite) {
         requireNonNull(actor);
         if (actor.isVisible() && sprite != null) {
             drawSpriteScaledCenteredAt(sprite, actor.x() + HTS, actor.y() + HTS);
@@ -79,7 +79,7 @@ public abstract class SpriteGameRenderer implements GameRenderer {
      *
      * @param actor the actor to draw
      */
-    public void drawActor(Actor actor) {
+    default void drawActor(Actor actor) {
         requireNonNull(actor);
         if (!actor.isVisible()) {
             return;
@@ -100,7 +100,7 @@ public abstract class SpriteGameRenderer implements GameRenderer {
         }
     }
 
-    public void drawLivesCounter(int numLives, int maxLives, double x, double y, Sprite livesCounterSprite) {
+    default void drawLivesCounter(int numLives, int maxLives, double x, double y, Sprite livesCounterSprite) {
         if (numLives == 0) {
             return;
         }

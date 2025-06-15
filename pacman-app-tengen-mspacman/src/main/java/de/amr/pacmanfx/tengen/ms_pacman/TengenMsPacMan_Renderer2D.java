@@ -42,7 +42,7 @@ import static de.amr.pacmanfx.ui.PacManGames_UI.PY_CANVAS_BG_COLOR;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
-public class TengenMsPacMan_Renderer2D extends SpriteGameRenderer {
+public class TengenMsPacMan_Renderer2D implements SpriteGameRenderer {
 
     public static Color blueShadedColor(long tick) {
         // Blue color, changing from dark blue to brighter blue.
@@ -101,7 +101,7 @@ public class TengenMsPacMan_Renderer2D extends SpriteGameRenderer {
             drawAnyKindOfPac(pac);
         }
         else if (actor instanceof TengenMsPacMan_CutScene3.Stork stork) {
-            super.drawActor(stork);
+            SpriteGameRenderer.super.drawActor(stork);
             if (stork.isBagReleasedFromBeak()) { // over-paint bag still hanging at beak
                 ctx().setFill(PY_CANVAS_BG_COLOR.get());
                 //ctx().setFill(Color.RED);
@@ -112,7 +112,7 @@ public class TengenMsPacMan_Renderer2D extends SpriteGameRenderer {
             }
         }
         else {
-            super.drawActor(actor);
+            SpriteGameRenderer.super.drawActor(actor);
         }
     }
 
@@ -146,7 +146,7 @@ public class TengenMsPacMan_Renderer2D extends SpriteGameRenderer {
                     }
                     drawMovingActor(pac, dir, (Sprite) animation.currentSprite());
                 }
-                default -> super.drawActor(pac);
+                default -> SpriteGameRenderer.super.drawActor(pac);
             }
         });
     }
