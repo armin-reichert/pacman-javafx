@@ -28,7 +28,6 @@ public class TengenMsPacMan_App extends Application {
             .startPages(new TengenMsPacMan_StartPage(MS_PACMAN_TENGEN))
             .game(MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel(), TengenMsPacMan_UIConfig.class)
             .dashboardEntries(
-                DashboardID.README,
                 DashboardID.GENERAL,
                 DashboardID.GAME_CONTROL,
                 DashboardID.SETTINGS_3D,

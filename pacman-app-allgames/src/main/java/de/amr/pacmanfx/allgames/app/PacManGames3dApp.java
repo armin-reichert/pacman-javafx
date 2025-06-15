@@ -30,11 +30,11 @@ import static de.amr.pacmanfx.ui.PacManGames_UIBuilder.buildUI;
  */
 public class PacManGames3dApp extends Application {
 
-    private static final String MS_PACMAN = "MS_PACMAN";
+    private static final String MS_PACMAN        = "MS_PACMAN";
     private static final String MS_PACMAN_TENGEN = "MS_PACMAN_TENGEN";
-    private static final String MS_PACMAN_XXL = "MS_PACMAN_XXL";
-    private static final String PACMAN = "PACMAN";
-    private static final String PACMAN_XXL = "PACMAN_XXL";
+    private static final String MS_PACMAN_XXL    = "MS_PACMAN_XXL";
+    private static final String PACMAN           = "PACMAN";
+    private static final String PACMAN_XXL       = "PACMAN_XXL";
 
     @Override
     public void start(Stage primaryStage) {
@@ -55,7 +55,6 @@ public class PacManGames3dApp extends Application {
                 new TengenMsPacMan_StartPage(MS_PACMAN_TENGEN),
                 new PacManXXL_Common_StartPage())
             .dashboardEntries(
-                    DashboardID.README,
                     DashboardID.GENERAL,
                     DashboardID.GAME_CONTROL,
                     DashboardID.SETTINGS_3D,
