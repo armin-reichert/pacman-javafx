@@ -47,20 +47,26 @@ public class PacManGames3dApp extends Application {
             int width  = (int) (1.6 * height);
             var xxlMapSelector = new PacManXXL_Common_MapSelector(CUSTOM_MAP_DIR);
             PacManGames_UIBuilder.buildUI()
+                    .stage(primaryStage, width, height)
+
+                    .startPage(                 new ArcadePacMan_StartPage(PACMAN))
+                    .game(PACMAN,               new ArcadePacMan_GameModel(new ArcadePacMan_MapSelector()))
+                    .uiConfig(PACMAN,           ArcadePacMan_UIConfig.class)
+
+                    .startPage(                 new ArcadeMsPacMan_StartPage(MS_PACMAN))
                     .game(MS_PACMAN,            new ArcadeMsPacMan_GameModel(new ArcadeMsPacMan_MapSelector()))
                     .uiConfig(MS_PACMAN,        ArcadeMsPacMan_UIConfig.class)
+
+                    .startPage(                 new TengenMsPacMan_StartPage(MS_PACMAN_TENGEN))
                     .game(MS_PACMAN_TENGEN,     new TengenMsPacMan_GameModel())
                     .uiConfig(MS_PACMAN_TENGEN, TengenMsPacMan_UIConfig.class)
-                    .game(PACMAN, new           ArcadePacMan_GameModel(new ArcadePacMan_MapSelector()))
-                    .uiConfig(PACMAN,           ArcadePacMan_UIConfig.class)
+
+                    .startPage(                 new PacManXXL_Common_StartPage())
                     .game(PACMAN_XXL,           new PacManXXL_PacMan_GameModel(xxlMapSelector))
                     .uiConfig(PACMAN_XXL,       PacManXXL_PacMan_UIConfig.class)
-                    .uiConfig(MS_PACMAN_XXL,    PacManXXL_MsPacMan_UIConfig.class)
                     .game(MS_PACMAN_XXL,        new PacManXXL_MsPacMan_GameModel(xxlMapSelector))
-                    .startPage(                 new ArcadePacMan_StartPage(PACMAN))
-                    .startPage(                 new ArcadeMsPacMan_StartPage(MS_PACMAN))
-                    .startPage(                 new TengenMsPacMan_StartPage(MS_PACMAN_TENGEN))
-                    .startPage(                 new PacManXXL_Common_StartPage())
+                    .uiConfig(MS_PACMAN_XXL,    PacManXXL_MsPacMan_UIConfig.class)
+
                     .dashboardEntries(          DashboardID.README,
                                                 DashboardID.GENERAL,
                                                 DashboardID.GAME_CONTROL,
@@ -70,7 +76,6 @@ public class PacManGames3dApp extends Application {
                                                 DashboardID.CUSTOM_MAPS,
                                                 DashboardID.KEYBOARD,
                                                 DashboardID.ABOUT)
-                    .stage(primaryStage, width, height)
                     .selectGame(PACMAN)
                     .show();
         } catch (Exception x) {

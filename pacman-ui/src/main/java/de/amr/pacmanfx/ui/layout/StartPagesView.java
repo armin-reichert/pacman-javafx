@@ -8,25 +8,20 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.PacManGames_UI;
 import de.amr.pacmanfx.ui.input.Keyboard;
-import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.widgets.Carousel;
+import de.amr.pacmanfx.uilib.widgets.FancyButton;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.tinylog.Logger;
@@ -44,37 +39,6 @@ import static java.util.Objects.requireNonNull;
  * Carousel containing the start pages for the different game variants (XXL game variants share common start page).
  */
 public class StartPagesView implements PacManGames_View {
-
-    public static class FancyButton extends BorderPane {
-
-        private Runnable action;
-
-        public FancyButton(String buttonText, Font font, Color bgColor, Color fillColor) {
-            var shadow = new DropShadow();
-            shadow.setOffsetY(3.0f);
-            shadow.setColor(Color.color(0.2f, 0.2f, 0.2f));
-
-            var text = new Text();
-            text.setFill(fillColor);
-            text.setFont(font);
-            text.setText(buttonText);
-            text.setEffect(shadow);
-
-            setCenter(text);
-            setCursor(Cursor.HAND);
-            setMaxSize(200, 60);
-            setPadding(new Insets(5, 5, 5, 5));
-            setBackground(Ufx.coloredRoundedBackground(bgColor, 20));
-            addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-                if (action != null) action.run();
-                e.consume();
-            });
-        }
-
-        public void setAction(Runnable action) {
-            this.action = action;
-        }
-    }
 
     public static FancyButton createStartButton(Pos alignment) {
         var button = new FancyButton(
@@ -107,14 +71,12 @@ public class StartPagesView implements PacManGames_View {
         }
     }
 
-    private final PacManGames_UI ui;
     private final List<StartPage> startPageList = new ArrayList<>();
     private final Map<KeyCombination, GameAction> actionBindings = new HashMap<>();
     private final Carousel carousel;
     private StringBinding titleBinding;
 
     public StartPagesView(PacManGames_UI ui) {
-        this.ui = requireNonNull(ui);
         carousel = new StartPagesCarousel();
         carousel.selectedIndexProperty().addListener((py,ov,nv) -> {
             int oldIndex = ov.intValue(), newIndex = nv.intValue();
