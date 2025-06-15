@@ -98,7 +98,7 @@ public class TengenMsPacMan_Renderer2D extends SpriteGameRenderer {
         requireNonNull(actor);
         ctx().setImageSmoothing(false);
         if (actor instanceof Pac pac) {
-            drawAnyPac(pac);
+            drawAnyKindOfPac(pac);
         }
         else if (actor instanceof TengenMsPacMan_CutScene3.Stork stork) {
             super.drawActor(stork);
@@ -116,41 +116,43 @@ public class TengenMsPacMan_Renderer2D extends SpriteGameRenderer {
         }
     }
 
-    private void drawAnyPac(Pac pac) {
+    private void drawAnyKindOfPac(Pac pac) {
         if (!pac.isVisible()) {
             return;
         }
-        pac.animations().map(SpriteAnimationMap.class::cast).ifPresent(spriteAnimationMap -> {
-            SpriteAnimation animation = spriteAnimationMap.currentAnimation();
-            if (animation != null) {
-                switch (spriteAnimationMap.selectedAnimationID()) {
-                    case ANIM_PAC_MUNCHING,
-                         ANIM_PAC_MAN_MUNCHING,
-                         ANIM_MS_PAC_MAN_BOOSTER,
-                         ANIM_PAC_MAN_BOOSTER,
-                         ANIM_JUNIOR -> drawMovingActor(pac, pac.moveDir(), (Sprite) animation.currentSprite());
-                    case ANIM_PAC_DYING -> {
-                        Direction dir = Direction.UP;
-                        if (animation.frameIndex() < 11) {
-                            dir = switch (animation.frameIndex() % 4) {
-                                default -> Direction.DOWN; // start with DOWN
-                                case 1 -> Direction.LEFT;
-                                case 2 -> Direction.UP;
-                                case 3 -> Direction.RIGHT;
-                            };
-                        }
-                        drawMovingActor(pac, dir, (Sprite) animation.currentSprite());
-                    }
-                    default -> super.drawActor(pac);
-                }
-            } else {
+        pac.animations().map(SpriteAnimationMap.class::cast).ifPresent(spriteAnimations -> {
+            SpriteAnimation animation = spriteAnimations.currentAnimation();
+            if (animation == null) {
                 Logger.error("No animation found for {}", pac);
+                return;
+            }
+            switch (spriteAnimations.selectedAnimationID()) {
+                case ANIM_PAC_MUNCHING,
+                     ANIM_PAC_MAN_MUNCHING,
+                     ANIM_MS_PAC_MAN_BOOSTER,
+                     ANIM_PAC_MAN_BOOSTER,
+                     ANIM_JUNIOR
+                    -> drawMovingActor(pac, pac.moveDir(), (Sprite) animation.currentSprite());
+                case ANIM_PAC_DYING -> {
+                    //TODO: reconsider this
+                    Direction dir = Direction.UP;
+                    if (animation.frameIndex() < 11) {
+                        dir = switch (animation.frameIndex() % 4) {
+                            default -> Direction.DOWN; // start with DOWN
+                            case 1 -> Direction.LEFT;
+                            case 2 -> Direction.UP;
+                            case 3 -> Direction.RIGHT;
+                        };
+                    }
+                    drawMovingActor(pac, dir, (Sprite) animation.currentSprite());
+                }
+                default -> super.drawActor(pac);
             }
         });
     }
 
-    private void drawMovingActor(MovingActor movingActor, Direction dir, Sprite spriteLookingLeft) {
-        Vector2f center = movingActor.center().scaled(scaling());
+    private void drawMovingActor(MovingActor actor, Direction dir, Sprite spriteLookingLeft) {
+        Vector2f center = actor.center().scaled(scaling());
         ctx().save();
         ctx().translate(center.x(), center.y());
         switch (dir) {
@@ -176,7 +178,7 @@ public class TengenMsPacMan_Renderer2D extends SpriteGameRenderer {
                           boolean mazeHighlighted, boolean energizerHighlighted) {
         requireNonNull(level);
         if (coloredMapSet == null) {
-            Logger.warn("Tick {}: Maze cannot be drawn, no map set found", theClock().tickCount());
+            Logger.warn("Tick {}: Level cannot be drawn, no colored map set found", theClock().tickCount());
             return;
         }
 
