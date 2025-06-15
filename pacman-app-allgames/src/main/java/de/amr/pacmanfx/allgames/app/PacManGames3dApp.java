@@ -44,15 +44,16 @@ public class PacManGames3dApp extends Application {
         final var xxlMapSelector = new PacManXXL_Common_MapSelector(CUSTOM_MAP_DIR);
         buildUI()
             .stage(primaryStage, width, height)
-            .startPage(             new ArcadePacMan_StartPage(PACMAN))
             .game(PACMAN,           ArcadePacMan_GameModel.arcadeVersion(), ArcadePacMan_UIConfig.class)
-            .startPage(             new ArcadeMsPacMan_StartPage(MS_PACMAN))
             .game(MS_PACMAN,        ArcadeMsPacMan_GameModel.arcadeVersion(), ArcadeMsPacMan_UIConfig.class)
-            .startPage(             new TengenMsPacMan_StartPage(MS_PACMAN_TENGEN))
             .game(MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel(), TengenMsPacMan_UIConfig.class)
-            .startPage(             new PacManXXL_Common_StartPage())
             .game(PACMAN_XXL,       new PacManXXL_PacMan_GameModel(xxlMapSelector),   PacManXXL_PacMan_UIConfig.class)
             .game(MS_PACMAN_XXL,    new PacManXXL_MsPacMan_GameModel(xxlMapSelector), PacManXXL_MsPacMan_UIConfig.class)
+            .startPages(
+                new ArcadePacMan_StartPage(PACMAN),
+                new ArcadeMsPacMan_StartPage(MS_PACMAN),
+                new TengenMsPacMan_StartPage(MS_PACMAN_TENGEN),
+                new PacManXXL_Common_StartPage())
             .dashboardEntries(
                     DashboardID.README,
                     DashboardID.GENERAL,

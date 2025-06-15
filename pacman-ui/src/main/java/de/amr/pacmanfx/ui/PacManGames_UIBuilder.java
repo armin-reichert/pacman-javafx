@@ -12,12 +12,14 @@ import javafx.stage.Stage;
 import java.util.*;
 
 import static de.amr.pacmanfx.Globals.theGameController;
+import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
 
+//TODO parameter validation
 public class PacManGames_UIBuilder {
 
     private final Map<String, GameModel> models = new HashMap<>();
     private final Map<String, Class<? extends PacManGames_UIConfig>> configs = new HashMap<>();
-    private final List<StartPage> startPageList = new ArrayList<>();
+    private StartPage[] startPages;
     private DashboardID[] dashboardIDs;
     private String initialVariant;
     private Stage stage;
@@ -43,8 +45,8 @@ public class PacManGames_UIBuilder {
         return this;
     }
 
-    public PacManGames_UIBuilder startPage(StartPage startPage) {
-        startPageList.add(startPage);
+    public PacManGames_UIBuilder startPages(StartPage... startPages) {
+        this.startPages = startPages;
         return this;
     }
 
@@ -61,13 +63,14 @@ public class PacManGames_UIBuilder {
     }
 
     public void show() {
-        PacManGames_Env.theUI = new PacManGames_UI_Impl(configs);
-        PacManGames_Env.theUI.buildUI(stage, width, height, dashboardIDs);
-        startPageList.forEach(PacManGames_Env.theUI.startPagesView()::addStartPage);
+        var ui = new PacManGames_UI_Impl(configs);
+        ui.buildUI(stage, width, height, dashboardIDs);
         models.forEach((variant, model) -> theGameController().registerGame(variant, model));
         theGameController().setEventsEnabled(true);
         theGameController().selectGameVariant(initialVariant);
-        PacManGames_Env.theUI.startPagesView().selectStartPage(0);
-        PacManGames_Env.theUI.show();
+        for (StartPage startPage : startPages) ui.startPagesView().addStartPage(startPage);
+        ui.startPagesView().selectStartPage(0);
+        theUI = ui;
+        theUI.show();
     }
 }

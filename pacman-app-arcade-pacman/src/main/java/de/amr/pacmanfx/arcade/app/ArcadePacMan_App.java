@@ -26,7 +26,7 @@ public class ArcadePacMan_App extends Application {
         final int width  = (int) (1.2 * height);
         buildUI()
             .game(PACMAN, ArcadePacMan_GameModel.arcadeVersion(), ArcadePacMan_UIConfig.class)
-            .startPage(new ArcadePacMan_StartPage(PACMAN))
+            .startPages(new ArcadePacMan_StartPage(PACMAN))
             .dashboardEntries(
                 DashboardID.GENERAL,
                 DashboardID.GAME_CONTROL,

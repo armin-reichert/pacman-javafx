@@ -27,7 +27,7 @@ public class PacManXXL_Common_App extends Application {
         buildUI()
             .game(PACMAN_XXL,    new PacManXXL_PacMan_GameModel(xxlMapSelector),   PacManXXL_PacMan_UIConfig.class)
             .game(MS_PACMAN_XXL, new PacManXXL_MsPacMan_GameModel(xxlMapSelector), PacManXXL_MsPacMan_UIConfig.class)
-            .startPage(          new PacManXXL_Common_StartPage())
+            .startPages(         new PacManXXL_Common_StartPage())
             .dashboardEntries(
                 DashboardID.README,
                 DashboardID.GENERAL,

@@ -25,7 +25,7 @@ public class TengenMsPacMan_App extends Application {
         final int height = (int) (0.8 * Screen.getPrimary().getBounds().getHeight());
         final int width  = (int) (32.0 / 30.0 * height);
         buildUI()
-            .startPage(new TengenMsPacMan_StartPage(MS_PACMAN_TENGEN))
+            .startPages(new TengenMsPacMan_StartPage(MS_PACMAN_TENGEN))
             .game(MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel(), TengenMsPacMan_UIConfig.class)
             .dashboardEntries(
                 DashboardID.README,
