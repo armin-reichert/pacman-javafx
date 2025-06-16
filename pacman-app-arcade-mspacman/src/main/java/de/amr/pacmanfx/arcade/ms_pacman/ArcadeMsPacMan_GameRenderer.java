@@ -35,25 +35,27 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
 
-    private final SpriteSheet<String> brightMazesSpriteSheet = new SpriteSheet<>() {
-        private static final Map<String, Object> SPRITE_MAP = Map.of("BRIGHT_MAZES", new Sprite[] {
-            makeSprite(0,     0, 224, 248),
-            makeSprite(0,   248, 224, 248),
-            makeSprite(0, 2*248, 224, 248),
-            makeSprite(0, 3*248, 224, 248),
-            makeSprite(0, 4*248, 224, 248),
-            makeSprite(0, 5*248, 224, 248)});
+    private static class BrightMazesSpriteSheet implements SpriteSheet<String> {
+
+        private static final Map<String, Object> SPRITE_MAP = Map.of(
+            "BRIGHT_MAZES", new Sprite[] {
+                makeSprite(0,     0, 224, 248),
+                makeSprite(0,   248, 224, 248),
+                makeSprite(0, 2*248, 224, 248),
+                makeSprite(0, 3*248, 224, 248),
+                makeSprite(0, 4*248, 224, 248),
+                makeSprite(0, 5*248, 224, 248)
+            }
+        );
 
         @Override
-        public Image sourceImage() {
-            return theAssets().get("ms_pacman.flashing_mazes");
-        }
+        public Image sourceImage() { return theAssets().get("ms_pacman.flashing_mazes"); }
 
         @Override
-        public Map<String, Object> spriteMap() {
-            return SPRITE_MAP;
-        }
-    };
+        public Map<String, Object> spriteMap() { return SPRITE_MAP; }
+    }
+
+    private final BrightMazesSpriteSheet brightMazesSpriteSheet = new BrightMazesSpriteSheet();
     private final ArcadeMsPacMan_SpriteSheet spriteSheet;
     private final GraphicsContext ctx;
     private final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
@@ -66,17 +68,13 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
     }
 
     @Override
-    public ArcadeMsPacMan_SpriteSheet spriteSheet() {
-        return spriteSheet;
-    }
+    public ArcadeMsPacMan_SpriteSheet spriteSheet() { return spriteSheet; }
 
     @Override
     public GraphicsContext ctx() { return ctx; }
 
     @Override
-    public FloatProperty scalingProperty() {
-        return scalingPy;
-    }
+    public FloatProperty scalingProperty() { return scalingPy; }
 
     @Override
     public void applyRenderingHints(GameLevel level) {
@@ -178,20 +176,23 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
      */
     public void drawMarquee(Marquee marquee, Color onColor, Color offColor) {
         long tick = marquee.timer().tickCount();
+        ctx.setFill(offColor);
         for (int bulbIndex = 0; bulbIndex < marquee.totalBulbCount(); ++bulbIndex) {
-            drawBulb(marquee, bulbIndex, offColor);
+            drawBulb(marquee, bulbIndex);
         }
         int firstBrightIndex = (int) (tick % marquee.totalBulbCount());
+        ctx.setFill(onColor);
         for (int i = 0; i < marquee.brightBulbsCount(); ++i) {
-            drawBulb(marquee, (firstBrightIndex + i * marquee.brightBulbsDistance()) % marquee.totalBulbCount(), onColor);
+            drawBulb(marquee, (firstBrightIndex + i * marquee.brightBulbsDistance()) % marquee.totalBulbCount());
         }
         // simulate bug from original Arcade game
+        ctx.setFill(offColor);
         for (int bulbIndex = 81; bulbIndex < marquee.totalBulbCount(); bulbIndex += 2) {
-            drawBulb(marquee, bulbIndex, offColor);
+            drawBulb(marquee, bulbIndex);
         }
     }
 
-    private void drawBulb(Marquee marquee, int bulbIndex, Color bulbColor) {
+    private void drawBulb(Marquee marquee, int bulbIndex) {
         double x, y;
         if (bulbIndex <= 33) { // lower edge left-to-right
             x = marquee.bounds().getMinX() + 4 * bulbIndex;
@@ -209,7 +210,6 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
             x = marquee.bounds().getMinX();
             y = 4 * (bulbIndex - 59);
         }
-        ctx.setFill(bulbColor);
         ctx.fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
     }
 }
