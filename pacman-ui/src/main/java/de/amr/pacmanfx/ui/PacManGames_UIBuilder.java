@@ -4,16 +4,22 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui;
 
+import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.layout.StartPage;
+import de.amr.pacmanfx.ui.sound.PacManGames_SoundManager;
+import de.amr.pacmanfx.uilib.GameClock;
 import javafx.stage.Stage;
+import org.tinylog.Logger;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 import static de.amr.pacmanfx.Globals.theGameController;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
+import static java.util.Objects.requireNonNull;
 
 public class PacManGames_UIBuilder {
 
@@ -32,11 +38,44 @@ public class PacManGames_UIBuilder {
     private int width = 800;
     private int height = 600;
 
-    private PacManGames_UIBuilder() {
-        PacManGames_Env.init();
+    private PacManGames_UIBuilder() {}
+
+    private static void checkUserDirsExistingAndWritable() {
+        String homeDirDesc = "Pac-Man FX home directory";
+        String customMapDirDesc = "Pac-Man FX custom map directory";
+        boolean success = checkDirExistingAndWritable(Globals.HOME_DIR, homeDirDesc);
+        if (success) {
+            Logger.info(homeDirDesc + " is " + Globals.HOME_DIR);
+            success = checkDirExistingAndWritable(Globals.CUSTOM_MAP_DIR, customMapDirDesc);
+            if (success) {
+                Logger.info(customMapDirDesc + " is " + Globals.CUSTOM_MAP_DIR);
+            }
+            Logger.info("User directories exist and are writable!");
+        }
+    }
+
+    private static boolean checkDirExistingAndWritable(File dir, String description) {
+        requireNonNull(dir);
+        if (!dir.exists()) {
+            Logger.info(description + " does not exist, create it...");
+            if (!dir.mkdirs()) {
+                Logger.error(description + " could not be created");
+                return false;
+            }
+            Logger.info(description + " has been created");
+            if (!dir.canWrite()) {
+                Logger.error(description + " is not writable");
+                return false;
+            }
+        }
+        return true;
     }
 
     public static PacManGames_UIBuilder buildUI() {
+        checkUserDirsExistingAndWritable();
+        PacManGames_Env.theAssets = new PacManGames_Assets();
+        PacManGames_Env.theClock = new GameClock();
+        PacManGames_Env.theSound = new PacManGames_SoundManager();
         return new PacManGames_UIBuilder();
     }
 

@@ -9,7 +9,10 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
-import de.amr.pacmanfx.ui.layout.*;
+import de.amr.pacmanfx.ui.layout.EditorView;
+import de.amr.pacmanfx.ui.layout.GameView;
+import de.amr.pacmanfx.ui.layout.PacManGames_View;
+import de.amr.pacmanfx.ui.layout.StartPagesView;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -25,7 +28,9 @@ import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.tinylog.Logger;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.*;
@@ -52,7 +57,6 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
             try {
                 PacManGames_UIConfig config = configClass.getDeclaredConstructor(PacManGames_Assets.class).newInstance(theAssets());
                 setConfiguration(gameVariant, config);
-                Logger.info("Game variant {} uses UI configuration: {}", gameVariant, config);
             } catch (Exception x) {
                 Logger.error("Could not create UI configuration of class {}", configClass);
                 throw new IllegalStateException(x);

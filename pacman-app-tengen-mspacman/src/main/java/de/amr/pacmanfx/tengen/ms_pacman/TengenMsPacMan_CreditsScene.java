@@ -5,12 +5,11 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman;
 
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.ActionBindingSupport;
+import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_ActionBindings.TENGEN_ACTION_BINDINGS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 
 public class TengenMsPacMan_CreditsScene extends GameScene2D implements ActionBindingSupport {
