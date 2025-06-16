@@ -236,7 +236,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     @Override
     public Image createGhostNumberImage(int ghostIndex) {
         Sprite[] sprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
-        return spriteSheet.subImage(sprites[ghostIndex]);
+        return spriteSheet.image(sprites[ghostIndex]);
     }
 
     @Override

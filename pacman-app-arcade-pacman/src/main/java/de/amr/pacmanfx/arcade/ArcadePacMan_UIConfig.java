@@ -206,7 +206,7 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
     @Override
     public Image createGhostNumberImage(int ghostIndex) {
         Sprite[] sprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
-        return spriteSheet.subImage(sprites[ghostIndex]);
+        return spriteSheet.image(sprites[ghostIndex]);
     }
 
     @Override

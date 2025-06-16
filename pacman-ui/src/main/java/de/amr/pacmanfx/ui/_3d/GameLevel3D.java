@@ -272,7 +272,7 @@ public class GameLevel3D {
         for (byte symbol : levelCounter.symbols()) {
             var material = new PhongMaterial(Color.WHITE);
             Sprite sprite = theUI().configuration().createBonusSymbolSprite(symbol);
-            material.setDiffuseMap(spriteSheet.subImage(sprite));
+            material.setDiffuseMap(spriteSheet.image(sprite));
 
             var cube = new Box(TS, TS, TS);
             cube.setMaterial(material);
@@ -338,7 +338,7 @@ public class GameLevel3D {
         }
         Sprite bonusSymbolSprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
         Sprite bonusValueSprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
-        bonus3D = new Bonus3D(bonus, spriteSheet.subImage(bonusSymbolSprite), spriteSheet.subImage(bonusValueSprite));
+        bonus3D = new Bonus3D(bonus, spriteSheet.image(bonusSymbolSprite), spriteSheet.image(bonusValueSprite));
         bonus3D.showEdible();
         mazeGroup.getChildren().add(bonus3D);
     }

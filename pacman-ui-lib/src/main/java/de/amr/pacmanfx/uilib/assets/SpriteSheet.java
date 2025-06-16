@@ -60,13 +60,13 @@ public interface SpriteSheet<SID> {
      * @param height region height
      * @return image for given region
      */
-    default Image subImage(int x, int y, int width, int height) {
+    default Image image(int x, int y, int width, int height) {
         var section = new WritableImage(width, height);
         section.getPixelWriter().setPixels(0, 0, width, height, sourceImage().getPixelReader(), x, y);
         return section;
     }
 
-    default Image subImage(Sprite sprite) {
-        return subImage(sprite.x(), sprite.y(), sprite.width(), sprite.height());
+    default Image image(Sprite sprite) {
+        return image(sprite.x(), sprite.y(), sprite.width(), sprite.height());
     }
 }
