@@ -7,7 +7,6 @@ package de.amr.pacmanfx.arcade.ms_pacman;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
@@ -15,8 +14,8 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.ActionBindingSupport;
+import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -47,10 +46,6 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
     private static final int STOP_X_GHOST = TS * 6 - 4;
     private static final int STOP_X_MSPAC = TS * 15 + 2;
 
-    private static final int BULB_COUNT = 96;
-    private static final int ACTIVE_BULBS_DIST = 16;
-    private static final Sprite MARQUEE = new Sprite(60, 88, 132, 60);
-
     private static final String[] GHOST_NAMES = { "BLINKY", "PINKY", "INKY", "SUE" };
     private static final Color[] GHOST_COLORS = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
 
@@ -69,6 +64,11 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
                 return ArcadeMsPacMan_IntroScene.this;
             }
         };
+    }
+
+    @Override
+    public ArcadeMsPacMan_GameRenderer gr() {
+        return (ArcadeMsPacMan_GameRenderer) gameRenderer;
     }
 
     @Override
@@ -113,7 +113,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
 
     @Override
     public void drawSceneContent() {
-        drawMarquee();
+        gr().drawMarquee(marqueeTimer.tickCount(), ARCADE_WHITE, ARCADE_RED);
         gr().fillText("\"MS PAC-MAN\"", ARCADE_ORANGE, arcadeFont8(), TITLE_X, TITLE_Y);
         switch (sceneController.state()) {
             case GHOSTS_MARCHING_IN -> {
@@ -139,32 +139,6 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
         drawLevelCounter();
     }
 
-    /**
-     * 6 of the 96 light bulbs are lightning each frame, shifting counter-clockwise every tick.
-     * <p>
-     * The bulbs on the left border however are switched off every second frame. This is
-     * probably a bug in the original Arcade game.
-     * </p>
-     */
-    private void drawMarquee() {
-        int t = (int) (marqueeTimer.tickCount() % BULB_COUNT);
-        for (int i = 0; i < BULB_COUNT; ++i) { drawBulb(i, ARCADE_RED); }
-        for (int b = 0; b < 6; ++b) {
-            drawBulb((t + b * ACTIVE_BULBS_DIST) % BULB_COUNT, ARCADE_WHITE);
-        }
-        // simulate bug from original Arcade game
-        for (int i = 81; i < BULB_COUNT; i += 2) { drawBulb(i, ARCADE_RED); }
-    }
-
-    private void drawBulb(int i, Color color) {
-        int x, y;
-        if (i <= 33)      { x = MARQUEE.x() + 4 * i;   y = MARQUEE.yMax(); } // lower edge left-to-right
-        else if (i <= 48) { x = MARQUEE.xMax();        y = 4 * (70 - i); }   // right edge bottom-to-top
-        else if (i <= 81) { x = 4 * (BULB_COUNT - i);  y = MARQUEE.y(); }    // upper edge right-to-left
-        else              { x = MARQUEE.x();           y = 4 * (i - 59); }   // left edge top-to-bottom
-        ctx().setFill(color);
-        ctx().fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
-    }
 
     // Scene controller FSM
 

@@ -14,6 +14,7 @@ import de.amr.pacmanfx.model.actors.MovingBonus;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -24,40 +25,13 @@ import org.tinylog.Logger;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.arcade.ArcadePalette.ARCADE_WHITE;
-import static de.amr.pacmanfx.lib.Sprite.makeSprite;
+import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.ui.PacManGames.theAssets;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
-
-    private static final Sprite[] FULL_MAZE_SPRITES = {
-        makeSprite(0,     0, 224, 248),
-        makeSprite(0,   248, 224, 248),
-        makeSprite(0, 2*248, 224, 248),
-        makeSprite(0, 3*248, 224, 248),
-        makeSprite(0, 4*248, 224, 248),
-        makeSprite(0, 5*248, 224, 248),
-    };
-
-    private static final Sprite[] EMPTY_MAZE_SPRITES = {
-        makeSprite(228,     0, 224, 248),
-        makeSprite(228,   248, 224, 248),
-        makeSprite(228, 2*248, 224, 248),
-        makeSprite(228, 3*248, 224, 248),
-        makeSprite(228, 4*248, 224, 248),
-        makeSprite(228, 5*258, 224, 248),
-    };
-
-    private static final Sprite[] HIGHLIGHTED_MAZE_SPRITES = {
-        makeSprite(0,     0, 224, 248),
-        makeSprite(0,   248, 224, 248),
-        makeSprite(0, 2*248, 224, 248),
-        makeSprite(0, 3*248, 224, 248),
-        makeSprite(0, 4*248, 224, 248),
-        makeSprite(0, 5*248, 224, 248),
-    };
 
     private final ArcadeMsPacMan_SpriteSheet spriteSheet;
     private final GraphicsContext ctx;
@@ -170,5 +144,48 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
         ctx.fillText("©", scaled(x + TS * 5), scaled(y + TS * 2 + 2));
         ctx.fillText("MIDWAY MFG CO", scaled(x + TS * 7), scaled(y + TS * 2));
         ctx.fillText("1980/1981", scaled(x + TS * 8), scaled(y + TS * 4));
+    }
+
+    private static final Rectangle2D MARQUEE_BOUNDS = new Rectangle2D(60, 88, 132, 60);
+    private static final int BULB_COUNT = 96;
+    private static final int ACTIVE_BULBS_DIST = 16;
+
+    /**
+     * 6 of the 96 light bulbs are lightning each frame, shifting counter-clockwise every tick.
+     * <p>
+     * The bulbs on the left border however are switched off every second frame. This is
+     * probably a bug in the original Arcade game.
+     * </p>
+     */
+    public void drawMarquee(long tick, Color onColor, Color offColor) {
+        int t = (int) (tick % BULB_COUNT);
+        for (int i = 0; i < BULB_COUNT; ++i) { drawBulb(i, offColor); }
+        for (int b = 0; b < 6; ++b) {
+            drawBulb((t + b * ACTIVE_BULBS_DIST) % BULB_COUNT, onColor);
+        }
+        // simulate bug from original Arcade game
+        for (int i = 81; i < BULB_COUNT; i += 2) { drawBulb(i, offColor); }
+    }
+
+    private void drawBulb(int i, Color bulbColor) {
+        double x, y;
+        if (i <= 33) { // lower edge left-to-right
+            x = MARQUEE_BOUNDS.getMinX() + 4 * i;
+            y = MARQUEE_BOUNDS.getMaxY();
+        }
+        else if (i <= 48) { // right edge bottom-to-top
+            x = MARQUEE_BOUNDS.getMaxX();
+            y = 4 * (70 - i);
+        }
+        else if (i <= 81) { // upper edge right-to-left
+            x = 4 * (BULB_COUNT - i);
+            y = MARQUEE_BOUNDS.getMinY();
+        }
+        else { // left edge top-to-bottom
+            x = MARQUEE_BOUNDS.getMinX();
+            y = 4 * (i - 59);
+        }
+        ctx().setFill(bulbColor);
+        ctx().fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
     }
 }

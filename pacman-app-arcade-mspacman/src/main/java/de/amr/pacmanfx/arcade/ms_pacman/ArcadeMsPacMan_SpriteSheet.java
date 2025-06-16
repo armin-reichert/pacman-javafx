@@ -18,19 +18,48 @@ import static java.util.Objects.requireNonNull;
 
 public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements SpriteSheet<SpriteID> {
 
-    private static final byte R16 = 16;
-    private static final int OFF_X = 456;
+    // left from this x position, the maps are located
+    private static final int BEGIN_SPRITES_X = 456;
 
-    // third "column" contains the sprites (first two columns the maze images)
     private static Sprite tile(int tileX, int tileY) {
-        return makeSprite(OFF_X + R16 * tileX, R16 * tileY, R16, R16);
+        return makeSprite(BEGIN_SPRITES_X + 16 * tileX, 16 * tileY, 16, 16);
     }
 
     private static Sprite[] tilesRightOf(int tileX, int tileY, int numTiles) {
+        if (numTiles <= 0) {
+            throw new IllegalArgumentException("Number of tiles must be positive but is " + numTiles);
+        }
         return IntStream.range(tileX, tileX + numTiles)
-                .mapToObj(x -> makeSprite(OFF_X + R16 * x, R16 * tileY, R16, R16))
+                .mapToObj(x -> makeSprite(BEGIN_SPRITES_X + 16 * x, 16 * tileY, 16, 16))
                 .toArray(Sprite[]::new);
     }
+
+    public static final Sprite[] FULL_MAZE_SPRITES = {
+            makeSprite(0,     0, 224, 248),
+            makeSprite(0,   248, 224, 248),
+            makeSprite(0, 2*248, 224, 248),
+            makeSprite(0, 3*248, 224, 248),
+            makeSprite(0, 4*248, 224, 248),
+            makeSprite(0, 5*248, 224, 248),
+    };
+
+    public static final Sprite[] EMPTY_MAZE_SPRITES = {
+            makeSprite(228,     0, 224, 248),
+            makeSprite(228,   248, 224, 248),
+            makeSprite(228, 2*248, 224, 248),
+            makeSprite(228, 3*248, 224, 248),
+            makeSprite(228, 4*248, 224, 248),
+            makeSprite(228, 5*258, 224, 248),
+    };
+
+    public static final Sprite[] HIGHLIGHTED_MAZE_SPRITES = {
+            makeSprite(0,     0, 224, 248),
+            makeSprite(0,   248, 224, 248),
+            makeSprite(0, 2*248, 224, 248),
+            makeSprite(0, 3*248, 224, 248),
+            makeSprite(0, 4*248, 224, 248),
+            makeSprite(0, 5*248, 224, 248),
+    };
 
     private static final EnumMap<SpriteID, Object> SPRITE_MAP = new EnumMap<>(SpriteID.class);
     static {
@@ -39,7 +68,7 @@ public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements SpriteShe
         SPRITE_MAP.put(MS_PACMAN_MUNCHING_UP,    makeMsPacManMunchingSpriteSeq(2));
         SPRITE_MAP.put(MS_PACMAN_MUNCHING_DOWN,  makeMsPacManMunchingSpriteSeq(3));
         SPRITE_MAP.put(MS_PACMAN_DYING,          makeMsPacManDyingSpriteSeq());
-        SPRITE_MAP.put(MR_PACMAN_MUNCHING_RIGHT, new Sprite[] {tile(0, 9),  tile(1, 9),  tile(2, 9)});
+        SPRITE_MAP.put(MR_PACMAN_MUNCHING_RIGHT, tilesRightOf(0, 9, 3));
         SPRITE_MAP.put(MR_PACMAN_MUNCHING_LEFT,  new Sprite[] {tile(0, 10), tile(1, 10), tile(2, 9)});
         SPRITE_MAP.put(MR_PACMAN_MUNCHING_UP,    new Sprite[] {tile(0, 11), tile(1, 11), tile(2, 9)});
         SPRITE_MAP.put(MR_PACMAN_MUNCHING_DOWN,  new Sprite[] {tile(0, 12), tile(1, 12), tile(2, 9)});
