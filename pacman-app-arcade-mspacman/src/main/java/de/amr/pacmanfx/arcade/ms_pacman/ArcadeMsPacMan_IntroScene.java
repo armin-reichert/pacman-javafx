@@ -39,8 +39,6 @@ import static de.amr.pacmanfx.ui.PacManGames_UI.*;
  */
 public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBindingSupport {
 
-    public record Marquee(TickTimer timer, Rectangle2D bounds, int totalBulbCount, int brightBulbsCount, int brightBulbsDistance) {}
-
     private static final float SPEED = 1.11f;
 
     private static final int TOP_Y        = TS * 11 + 1;

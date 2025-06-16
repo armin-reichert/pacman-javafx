@@ -176,7 +176,7 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
      * probably a bug in the original Arcade game.
      * </p>
      */
-    public void drawMarquee(ArcadeMsPacMan_IntroScene.Marquee marquee, Color onColor, Color offColor) {
+    public void drawMarquee(Marquee marquee, Color onColor, Color offColor) {
         long tick = marquee.timer().tickCount();
         for (int bulbIndex = 0; bulbIndex < marquee.totalBulbCount(); ++bulbIndex) {
             drawBulb(marquee, bulbIndex, offColor);
@@ -191,7 +191,7 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
         }
     }
 
-    private void drawBulb(ArcadeMsPacMan_IntroScene.Marquee marquee, int bulbIndex, Color bulbColor) {
+    private void drawBulb(Marquee marquee, int bulbIndex, Color bulbColor) {
         double x, y;
         if (bulbIndex <= 33) { // lower edge left-to-right
             x = marquee.bounds().getMinX() + 4 * bulbIndex;
