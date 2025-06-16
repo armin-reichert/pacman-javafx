@@ -8,10 +8,7 @@ import de.amr.pacmanfx.ui.input.Keyboard;
 import javafx.scene.input.KeyCombination;
 import org.tinylog.Logger;
 
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.Map.entry;
 import static java.util.Objects.requireNonNull;
@@ -51,7 +48,10 @@ public interface ActionBindingSupport {
             keyboard().setBinding(combination, this);
         }
         Logger.info("Key bindings updated for {}", getClass().getSimpleName());
-        actionBindings().forEach((key, value) -> Logger.info("%-20s: %s".formatted(key, value.name())));
+        actionBindings().entrySet().stream()
+                // sort by string representation of key combination
+                .sorted(Comparator.comparing(entry -> entry.getKey().toString()))
+                .forEach(entry -> Logger.info("%-20s: %s".formatted(entry.getKey(), entry.getValue().name())));
     }
 
     default void deleteActionBindings() {

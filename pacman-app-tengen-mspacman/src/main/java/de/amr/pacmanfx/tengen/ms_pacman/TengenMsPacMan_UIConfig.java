@@ -13,9 +13,7 @@ import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui.GameScene;
-import de.amr.pacmanfx.ui.PacManGames_Assets;
-import de.amr.pacmanfx.ui.PacManGames_UIConfig;
+import de.amr.pacmanfx.ui.*;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
@@ -39,7 +37,9 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theAssets;
+import static de.amr.pacmanfx.ui.PacManGames_Env.theSound;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
+import static de.amr.pacmanfx.uilib.Ufx.toggle;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceManager {
@@ -294,4 +294,95 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         pac3D.light().setColor(theAssets().color(assetNamespace() + ".pac.color.head").desaturate());
         return pac3D;
     }
+
+    // Actions
+
+    public static final GameAction ACTION_QUIT_DEMO_LEVEL = new GameAction() {
+        @Override
+        public void execute(PacManGames_UI ui) {
+            theGameController().changeGameState(GameState.SETTING_OPTIONS);
+        }
+
+        @Override
+        public boolean isEnabled(PacManGames_UI ui) {
+            return optGameLevel().isPresent() && optGameLevel().get().isDemoLevel();
+        }
+
+        @Override
+        public String name() {
+            return "QUIT_DEMO_LEVEL";
+        }
+    };
+
+    public static final GameAction ACTION_START_GAME = new GameAction() {
+        @Override
+        public void execute(PacManGames_UI ui) {
+            theGameController().changeGameState(GameState.SETTING_OPTIONS);
+        }
+
+        @Override
+        public String name() {
+            return "START_GAME";
+        }
+    };
+
+    public static final GameAction ACTION_START_PLAYING = new GameAction() {
+        @Override
+        public void execute(PacManGames_UI ui) {
+            theSound().stopAll();
+            theGame().playingProperty().set(false);
+            theGameController().changeGameState(GameState.STARTING_GAME);
+        }
+
+        @Override
+        public String name() {
+            return "START_PLAYING";
+        }
+    };
+
+    public static final GameAction ACTION_TOGGLE_DISPLAY_MODE = new GameAction() {
+        @Override
+        public void execute(PacManGames_UI ui) {
+            SceneDisplayMode mode = PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.get();
+            PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.set(mode == SceneDisplayMode.SCROLLING
+                    ? SceneDisplayMode.SCALED_TO_FIT : SceneDisplayMode.SCROLLING);
+        }
+
+        @Override
+        public boolean isEnabled(PacManGames_UI ui) {
+            return ui.currentGameSceneIsPlayScene2D();
+        }
+
+        @Override
+        public String name() {
+            return "TOGGLE_DISPLAY_MODE";
+        }
+    };
+
+    public static final  GameAction ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED = new GameAction() {
+        @Override
+        public void execute(PacManGames_UI ui) {
+            toggle(PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED);
+        }
+
+        @Override
+        public String name() {
+            return "TOGGLE_JOYPAD_BINDINGS_DISPLAYED";
+        }
+    };
+
+    public static final GameAction ACTION_TOGGLE_PAC_BOOSTER = new GameAction() {
+        @Override
+        public void execute(PacManGames_UI ui) {
+            var tengenGame = (TengenMsPacMan_GameModel) theGame();
+            if (tengenGame.pacBooster() == PacBooster.USE_A_OR_B) {
+                tengenGame.activatePacBooster(!tengenGame.isBoosterActive());
+            }
+        }
+
+        @Override
+        public String name() {
+            return "TOGGLE_PAC_BOOSTER";
+        }
+    };
 }

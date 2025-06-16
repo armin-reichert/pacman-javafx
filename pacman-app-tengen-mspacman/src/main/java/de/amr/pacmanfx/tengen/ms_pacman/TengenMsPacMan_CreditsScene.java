@@ -11,8 +11,7 @@ import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_ActionBindings.TENGEN_ACTION_BINDINGS;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 
 public class TengenMsPacMan_CreditsScene extends GameScene2D implements ActionBindingSupport {
 
@@ -21,7 +20,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D implements ActionBi
     @Override
     protected void doInit() {
         theGame().setScoreVisible(false);
-        bindAction(TengenMsPacMan_Action.ACTION_START_GAME, TENGEN_ACTION_BINDINGS);
+        bindAction(ACTION_START_GAME, TENGEN_ACTION_BINDINGS);
     }
 
     @Override
