@@ -22,7 +22,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * @author Armin Reichert
  */
-public class PacManGames_SoundManager {
+public class PacManGames_Sound {
 
     private final BooleanProperty enabledPy = new SimpleBooleanProperty(true) {
         @Override

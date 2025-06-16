@@ -8,8 +8,6 @@ import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.layout.StartPage;
-import de.amr.pacmanfx.ui.sound.PacManGames_SoundManager;
-import de.amr.pacmanfx.uilib.GameClock;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
@@ -73,9 +71,6 @@ public class PacManGames_UIBuilder {
 
     public static PacManGames_UIBuilder buildUI() {
         checkUserDirsExistingAndWritable();
-        PacManGames.theAssets = new PacManGames_Assets();
-        PacManGames.theClock = new GameClock();
-        PacManGames.theSound = new PacManGames_SoundManager();
         return new PacManGames_UIBuilder();
     }
 
@@ -116,16 +111,15 @@ public class PacManGames_UIBuilder {
 
     public void show() {
         validateAll();
-        var ui = new PacManGames_UI_Impl(uiConfigClasses);
-        ui.buildUI(stage, width, height, dashboardIDs);
+        theUI = new PacManGames_UI_Impl(uiConfigClasses);
+        theUI.buildUI(stage, width, height, dashboardIDs);
         models.forEach((variant, model) -> theGameController().registerGame(variant, model));
         theGameController().setEventsEnabled(true);
-        for (StartPage startPage : startPages) ui.startPagesView().addStartPage(startPage);
-        ui.startPagesView().selectStartPage(selectedStartPageIndex);
-        ui.startPagesView().currentStartPage()
+        for (StartPage startPage : startPages) theUI.startPagesView().addStartPage(startPage);
+        theUI.startPagesView().selectStartPage(selectedStartPageIndex);
+        theUI.startPagesView().currentStartPage()
             .map(StartPage::currentGameVariant)
             .ifPresent(theGameController()::selectGameVariant);
-        theUI = ui;
         theUI.show();
     }
 

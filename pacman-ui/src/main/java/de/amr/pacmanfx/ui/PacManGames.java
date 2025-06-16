@@ -6,31 +6,24 @@ package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.Keyboard;
-import de.amr.pacmanfx.ui.sound.PacManGames_SoundManager;
+import de.amr.pacmanfx.ui.sound.PacManGames_Sound;
 import de.amr.pacmanfx.uilib.GameClock;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * Global environment accessible from every class in the UI layer.
  */
 public class PacManGames {
-
     // must be created before UI is instantiated
     private static final Keyboard theKeyboard = new Keyboard();
     private static final Joypad theJoypad = new Joypad(theKeyboard);
 
     // package-private to grant access from UI builder
-    static PacManGames_Assets theAssets;
-    static GameClock theClock;
-    static PacManGames_SoundManager theSound;
-    static PacManGames_UI theUI;
+    static PacManGames_UI_Impl theUI;
 
-    public static PacManGames_Assets theAssets() { return theAssets; }
-    public static GameClock theClock() { return theClock; }
-    public static Keyboard theKeyboard() { return theKeyboard; }
-    public static Joypad theJoypad() { return theJoypad; }
-    public static PacManGames_SoundManager theSound() { return theSound; }
-    public static PacManGames_UI theUI() { return theUI; }
-
+    public static PacManGames_Assets theAssets() { return PacManGames_UI_Impl.ASSETS; }
+    public static GameClock          theClock() { return PacManGames_UI_Impl.GAME_CLOCK; }
+    public static Joypad             theJoypad() { return theJoypad; }
+    public static Keyboard           theKeyboard() { return theKeyboard; }
+    public static PacManGames_Sound  theSound() { return PacManGames_UI_Impl.SOUND_MANAGER; }
+    public static PacManGames_UI     theUI() { return theUI; }
 }

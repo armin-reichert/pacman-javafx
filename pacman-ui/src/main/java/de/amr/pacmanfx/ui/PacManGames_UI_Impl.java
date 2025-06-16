@@ -13,6 +13,8 @@ import de.amr.pacmanfx.ui.layout.EditorView;
 import de.amr.pacmanfx.ui.layout.GameView;
 import de.amr.pacmanfx.ui.layout.PacManGames_View;
 import de.amr.pacmanfx.ui.layout.StartPagesView;
+import de.amr.pacmanfx.ui.sound.PacManGames_Sound;
+import de.amr.pacmanfx.uilib.GameClock;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -33,13 +35,19 @@ import java.util.Map;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.ui.PacManGames.*;
+import static de.amr.pacmanfx.ui.PacManGames.theAssets;
+import static de.amr.pacmanfx.ui.PacManGames.theKeyboard;
 import static java.util.Objects.requireNonNull;
 
 /**
  * User interface for all Pac-Man game variants.
  */
 public class PacManGames_UI_Impl implements PacManGames_UI {
+
+    // package-private access for games env API
+    static final PacManGames_Assets ASSETS = new PacManGames_Assets();
+    static final GameClock GAME_CLOCK = new GameClock();
+    static final PacManGames_Sound SOUND_MANAGER = new PacManGames_Sound();
 
     private final Map<String, PacManGames_UIConfig> configByGameVariant = new HashMap<>();
 
@@ -77,7 +85,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
     private void doSimulationStepAndUpdateGameScene() {
         try {
-            theSimulationStep().start(theClock().tickCount());
+            theSimulationStep().start(GAME_CLOCK.tickCount());
             theGameController().updateGameState();
             theSimulationStep().log();
             currentGameScene().ifPresent(GameScene::update);
@@ -141,8 +149,8 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
             var iconPaused = FontIcon.of(FontAwesomeSolid.PAUSE, 80, STATUS_ICON_COLOR);
             iconPaused.visibleProperty().bind(Bindings.createBooleanBinding(
-                () -> currentView() == gameView() && theClock().isPaused(),
-                currentViewProperty(), theClock().pausedProperty()));
+                () -> currentView() == gameView() && GAME_CLOCK.isPaused(),
+                currentViewProperty(), GAME_CLOCK.pausedProperty()));
             StackPane.setAlignment(iconPaused, Pos.CENTER);
 
             root.getChildren().addAll(iconPaused, iconBox);
@@ -160,7 +168,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
                     stage.setFullScreen(true);
                 }
                 else if (KEY_MUTE.match(e)) {
-                    theSound().toggleMuted();
+                    SOUND_MANAGER.toggleMuted();
                 }
                 else if (KEY_OPEN_EDITOR.match(e)) {
                     showEditorView();
@@ -179,8 +187,8 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         // Game view (includes dashboard)
         gameView = new GameView(this, mainScene, dashboardIDs);
 
-        theClock().setPausableAction(this::doSimulationStepAndUpdateGameScene);
-        theClock().setPermanentAction(this::drawGameView);
+        GAME_CLOCK.setPausableAction(this::doSimulationStepAndUpdateGameScene);
+        GAME_CLOCK.setPermanentAction(this::drawGameView);
 
         currentViewPy.addListener((py, oldView, newView) -> handleViewChange(oldView, newView));
         root.backgroundProperty().bind(currentGameSceneProperty().map(
@@ -222,10 +230,10 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
     @Override
     public void restart() {
-        theClock().stop();
-        theClock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
-        theClock().pausedProperty().set(false);
-        theClock().start();
+        GAME_CLOCK.stop();
+        GAME_CLOCK.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
+        GAME_CLOCK.pausedProperty().set(false);
+        GAME_CLOCK.start();
         theGameController().restart(GameState.BOOT);
     }
 
@@ -236,7 +244,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
             return;
         }
         PacManGames_UIConfig uiConfig = configuration(gameVariant);
-        theSound().selectGameVariant(gameVariant, uiConfig.assetNamespace());
+        SOUND_MANAGER.selectGameVariant(gameVariant, uiConfig.assetNamespace());
         stage.getIcons().setAll(uiConfig.appIcon());
         gameView.canvasContainer().decorationEnabledPy.set(uiConfig.isGameCanvasDecorated());
         // this triggers a game event and the event handlers:
@@ -253,10 +261,10 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
     @Override
     public void showEditorView() {
-        if (!theGame().isPlaying() || theClock().isPaused()) {
+        if (!theGame().isPlaying() || GAME_CLOCK.isPaused()) {
             currentGameScene().ifPresent(GameScene::end);
-            theSound().stopAll();
-            theClock().stop();
+            SOUND_MANAGER.stopAll();
+            GAME_CLOCK.stop();
             lazyGetEditorView().editor().start(stage);
             currentViewPy.set(lazyGetEditorView());
         } else {
@@ -276,9 +284,9 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
     @Override
     public void showStartView() {
-        theClock().stop();
-        theClock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
-        theSound().stopAll();
+        GAME_CLOCK.stop();
+        GAME_CLOCK.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
+        SOUND_MANAGER.stopAll();
         gameView.setDashboardVisible(false);
         currentViewPy.set(startPagesView);
         startPagesView.currentStartPage().ifPresent(startPage -> startPage.layoutRoot().requestFocus());
@@ -333,6 +341,4 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         GameScene currentGameScene = currentGameScene().orElse(null);
         return currentGameScene != null && configuration().gameSceneHasID(currentGameScene, "PlayScene3D");
     }
-
-
 }
