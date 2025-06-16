@@ -87,8 +87,7 @@ public class StartPagesView implements PacManGames_View {
             if (newIndex != -1) {
                 StartPage startPage = startPageList.get(newIndex);
                 ui.selectGameVariant(startPage.currentGameVariant());
-                startPage.requestFocus();
-                startPage.onEnter();
+                startPage.layoutRoot().requestFocus();
             }
         });
         setTitleBinding(Bindings.createStringBinding(() -> "JavaFX Pac-Man Games"));

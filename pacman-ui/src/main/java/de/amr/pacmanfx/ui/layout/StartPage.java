@@ -9,7 +9,6 @@ import org.tinylog.Logger;
 
 public interface StartPage {
     Region layoutRoot();
-    default void requestFocus() { layoutRoot().requestFocus(); }
     default void onEnter() { Logger.trace("{} onExit", getClass().getSimpleName()); }
     default void onExit() {
         Logger.trace("{} onExit", getClass().getSimpleName());

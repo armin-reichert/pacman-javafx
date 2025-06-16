@@ -242,7 +242,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     @Override
     public void show() {
         currentViewPy.set(startPagesView);
-        startPagesView.currentStartPage().ifPresent(StartPage::requestFocus);
+        startPagesView.currentStartPage().ifPresent(startPage -> startPage.layoutRoot().requestFocus());
         stage.centerOnScreen();
         stage.show();
     }
@@ -277,7 +277,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         theSound().stopAll();
         gameView.setDashboardVisible(false);
         currentViewPy.set(startPagesView);
-        startPagesView.currentStartPage().ifPresent(StartPage::requestFocus);
+        startPagesView.currentStartPage().ifPresent(startPage -> startPage.layoutRoot().requestFocus());
     }
 
     @Override

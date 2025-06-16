@@ -11,6 +11,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theSound;
@@ -36,6 +37,12 @@ public class PacManXXL_Common_StartPage implements StartPage {
 
         root.setBackground(Background.fill(Color.BLACK));
         root.getChildren().addAll(flyer, menu.root());
+        root.focusedProperty().addListener((py,ov,nv) -> {
+            if (root.isFocused()) {
+                onEnter();
+                Logger.info("Focus now on {}", root);
+            }
+        });
     }
 
     @Override
@@ -60,8 +67,4 @@ public class PacManXXL_Common_StartPage implements StartPage {
         return root;
     }
 
-    @Override
-    public void requestFocus() {
-        onEnter();
-    }
 }
