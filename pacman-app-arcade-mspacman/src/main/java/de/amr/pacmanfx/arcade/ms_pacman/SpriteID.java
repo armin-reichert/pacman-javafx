@@ -4,6 +4,8 @@
 package de.amr.pacmanfx.arcade.ms_pacman;
 
 public enum SpriteID {
+    FULL_MAZES,
+    EMPTY_MAZES,
     MS_PACMAN_MUNCHING_RIGHT,
     MS_PACMAN_MUNCHING_LEFT,
     MS_PACMAN_MUNCHING_UP,

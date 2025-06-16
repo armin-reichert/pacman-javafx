@@ -34,35 +34,24 @@ public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements SpriteShe
                 .toArray(Sprite[]::new);
     }
 
-    public static final Sprite[] FULL_MAZE_SPRITES = {
-            makeSprite(0,     0, 224, 248),
-            makeSprite(0,   248, 224, 248),
-            makeSprite(0, 2*248, 224, 248),
-            makeSprite(0, 3*248, 224, 248),
-            makeSprite(0, 4*248, 224, 248),
-            makeSprite(0, 5*248, 224, 248),
-    };
-
-    public static final Sprite[] EMPTY_MAZE_SPRITES = {
-            makeSprite(228,     0, 224, 248),
-            makeSprite(228,   248, 224, 248),
-            makeSprite(228, 2*248, 224, 248),
-            makeSprite(228, 3*248, 224, 248),
-            makeSprite(228, 4*248, 224, 248),
-            makeSprite(228, 5*258, 224, 248),
-    };
-
-    public static final Sprite[] HIGHLIGHTED_MAZE_SPRITES = {
-            makeSprite(0,     0, 224, 248),
-            makeSprite(0,   248, 224, 248),
-            makeSprite(0, 2*248, 224, 248),
-            makeSprite(0, 3*248, 224, 248),
-            makeSprite(0, 4*248, 224, 248),
-            makeSprite(0, 5*248, 224, 248),
-    };
-
     private static final EnumMap<SpriteID, Object> SPRITE_MAP = new EnumMap<>(SpriteID.class);
     static {
+        SPRITE_MAP.put(FULL_MAZES, new Sprite[] {
+                makeSprite(0,     0, 224, 248),
+                makeSprite(0,   248, 224, 248),
+                makeSprite(0, 2*248, 224, 248),
+                makeSprite(0, 3*248, 224, 248),
+                makeSprite(0, 4*248, 224, 248),
+                makeSprite(0, 5*248, 224, 248),
+        });
+        SPRITE_MAP.put(EMPTY_MAZES, new Sprite[] {
+                makeSprite(228,     0, 224, 248),
+                makeSprite(228,   248, 224, 248),
+                makeSprite(228, 2*248, 224, 248),
+                makeSprite(228, 3*248, 224, 248),
+                makeSprite(228, 4*248, 224, 248),
+                makeSprite(228, 5*258, 224, 248),
+        });
         SPRITE_MAP.put(MS_PACMAN_MUNCHING_RIGHT, makeMsPacManMunchingSpriteSeq(0));
         SPRITE_MAP.put(MS_PACMAN_MUNCHING_LEFT,  makeMsPacManMunchingSpriteSeq(1));
         SPRITE_MAP.put(MS_PACMAN_MUNCHING_UP,    makeMsPacManMunchingSpriteSeq(2));

@@ -12,6 +12,7 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.MovingBonus;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.geometry.Rectangle2D;
@@ -22,10 +23,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
+import java.util.Map;
+
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.arcade.ArcadePalette.ARCADE_WHITE;
-import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_SpriteSheet.*;
+import static de.amr.pacmanfx.lib.Sprite.makeSprite;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.ui.PacManGames.theAssets;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
@@ -33,6 +36,25 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
 
+    private final SpriteSheet<String> brightMazesSpriteSheet = new SpriteSheet<>() {
+        private static final Map<String, Object> SPRITE_MAP = Map.of("BRIGHT_MAZES", new Sprite[] {
+            makeSprite(0,     0, 224, 248),
+            makeSprite(0,   248, 224, 248),
+            makeSprite(0, 2*248, 224, 248),
+            makeSprite(0, 3*248, 224, 248),
+            makeSprite(0, 4*248, 224, 248),
+            makeSprite(0, 5*248, 224, 248)});
+
+        @Override
+        public Image sourceImage() {
+            return theAssets().get("ms_pacman.flashing_mazes");
+        }
+
+        @Override
+        public Map<String, Object> spriteMap() {
+            return SPRITE_MAP;
+        }
+    };
     private final ArcadeMsPacMan_SpriteSheet spriteSheet;
     private final GraphicsContext ctx;
     private final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
@@ -65,11 +87,13 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
     @Override
     public void drawLevel(GameLevel level, double x, double y, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted) {
         if (mazeHighlighted) {
-            drawSpriteScaled(theAssets().get("ms_pacman.flashing_mazes"), HIGHLIGHTED_MAZE_SPRITES[colorMapIndex], x, y);
+            drawSpriteScaled(
+                    brightMazesSpriteSheet.sourceImage(),
+                    brightMazesSpriteSheet.spriteSeq("BRIGHT_MAZES")[colorMapIndex], x, y);
         } else if (level.uneatenFoodCount() == 0) {
-            drawSpriteScaled(EMPTY_MAZE_SPRITES[colorMapIndex], x, y);
+            drawSpriteScaled(spriteSheet.spriteSeq(SpriteID.EMPTY_MAZES)[colorMapIndex], x, y);
         } else {
-            drawSpriteScaled(FULL_MAZE_SPRITES[colorMapIndex], x, y);
+            drawSpriteScaled(spriteSheet.spriteSeq(SpriteID.FULL_MAZES)[colorMapIndex], x, y);
             ctx.save();
             ctx.scale(scaling(), scaling());
             overPaintEatenPelletTiles(level, backgroundColor);
