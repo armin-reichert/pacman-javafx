@@ -84,8 +84,8 @@ public class OptionMenu {
 
     protected void updateAnimation() {}
 
-    public void requestFocus() {
-        canvas.requestFocus();
+    public Canvas canvas() {
+        return canvas;
     }
 
     protected void playSound(AudioClip clip) {

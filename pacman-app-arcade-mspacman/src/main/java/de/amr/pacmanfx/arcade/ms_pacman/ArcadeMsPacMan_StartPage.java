@@ -13,6 +13,7 @@ import javafx.geometry.Pos;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
 import static de.amr.pacmanfx.ui.PacManGames_UI.ACTION_BOOT_SHOW_GAME_VIEW;
@@ -49,5 +50,15 @@ public class ArcadeMsPacMan_StartPage extends StackPane implements StartPage, Re
     @Override
     public Region layoutRoot() {
         return this;
+    }
+
+    @Override
+    public void onEnter() {
+        Logger.info("onEnter {}", this);
+    }
+
+    @Override
+    public void onExit() {
+        Logger.info("onExit {}", this);
     }
 }

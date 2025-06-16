@@ -39,21 +39,26 @@ public class PacManXXL_Common_StartPage implements StartPage {
         root.getChildren().addAll(flyer, menu.root());
         root.focusedProperty().addListener((py,ov,nv) -> {
             if (root.isFocused()) {
-                onEnter();
-                Logger.info("Focus now on {}", root);
+                Logger.info("Focus now on {}, passing to {}", root, menu);
+                menu.canvas().requestFocus();
+                if (menu.canvas().isFocused()) {
+                    Logger.info("Focus now on {}", menu.canvas());
+
+                }
             }
         });
     }
 
     @Override
     public void onEnter() {
+        Logger.info("onEnter {}", this);
         menu.syncMenuState();
         menu.startAnimation();
-        menu.requestFocus();
     }
 
     @Override
     public void onExit() {
+        Logger.info("onExit {}", this);
         menu.stopAnimation();
     }
 

@@ -79,14 +79,15 @@ public class StartPagesView implements PacManGames_View {
     public StartPagesView(PacManGames_UI ui) {
         carousel = new StartPagesCarousel();
         carousel.selectedIndexProperty().addListener((py,ov,nv) -> {
+            Logger.info("Carousel selection changed from {} to {}", ov, nv);
             int oldIndex = ov.intValue(), newIndex = nv.intValue();
             if (oldIndex != -1) {
-                StartPage startPage = startPageList.get(oldIndex);
-                startPage.onExit();
+                startPageList.get(oldIndex).onExit();
             }
             if (newIndex != -1) {
                 StartPage startPage = startPageList.get(newIndex);
                 ui.selectGameVariant(startPage.currentGameVariant());
+                startPage.onEnter();
                 startPage.layoutRoot().requestFocus();
             }
         });
