@@ -43,8 +43,8 @@ public class PacManXXL_Common_StartPage implements StartPage {
                 menu.canvas().requestFocus();
                 if (menu.canvas().isFocused()) {
                     Logger.info("Focus now on {}", menu.canvas());
-
                 }
+                onEnter();
             }
         });
     }
