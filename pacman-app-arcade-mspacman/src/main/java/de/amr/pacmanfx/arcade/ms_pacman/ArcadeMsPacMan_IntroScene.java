@@ -34,8 +34,6 @@ import static de.amr.pacmanfx.ui.PacManGames_UI.*;
  * Intro scene of the Ms. Pac-Man game.
  * <p>
  * The ghosts and Ms. Pac-Man are introduced on a billboard and are marching in one after another.
- *
- * @author Armin Reichert
  */
 public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBindingSupport {
 
@@ -139,7 +137,6 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
         gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()), scoreColor(), arcadeFont8(), 2 * TS, sizeInPx().y() - 2);
         drawLevelCounter();
     }
-
 
     // Scene controller FSM
 
