@@ -15,7 +15,6 @@ import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -170,11 +169,6 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
         ctx.fillText("1980/1981", scaled(x + TS * 8), scaled(y + TS * 4));
     }
 
-    private static final Rectangle2D MARQUEE_BOUNDS = new Rectangle2D(60, 88, 132, 60);
-    private static final int TOTAL_BULBS_COUNT = 96;
-    private static final int BRIGHT_BULBS_COUNT = 6;
-    private static final int BRIGHT_BULBS_DISTANCE = 16;
-
     /**
      * 6 of the 96 light bulbs are bright in each frame, shifting counter-clockwise every tick.
      * <p>
@@ -182,36 +176,37 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
      * probably a bug in the original Arcade game.
      * </p>
      */
-    public void drawMarquee(long tick, Color onColor, Color offColor) {
-        for (int bulbIndex = 0; bulbIndex < TOTAL_BULBS_COUNT; ++bulbIndex) {
-            drawBulb(bulbIndex, offColor);
+    public void drawMarquee(ArcadeMsPacMan_IntroScene.Marquee marquee, Color onColor, Color offColor) {
+        long tick = marquee.timer().tickCount();
+        for (int bulbIndex = 0; bulbIndex < marquee.totalBulbCount(); ++bulbIndex) {
+            drawBulb(marquee, bulbIndex, offColor);
         }
-        int firstBrightIndex = (int) (tick % TOTAL_BULBS_COUNT);
-        for (int i = 0; i < BRIGHT_BULBS_COUNT; ++i) {
-            drawBulb((firstBrightIndex + i * BRIGHT_BULBS_DISTANCE) % TOTAL_BULBS_COUNT, onColor);
+        int firstBrightIndex = (int) (tick % marquee.totalBulbCount());
+        for (int i = 0; i < marquee.brightBulbsCount(); ++i) {
+            drawBulb(marquee, (firstBrightIndex + i * marquee.brightBulbsDistance()) % marquee.totalBulbCount(), onColor);
         }
         // simulate bug from original Arcade game
-        for (int bulbIndex = 81; bulbIndex < TOTAL_BULBS_COUNT; bulbIndex += 2) {
-            drawBulb(bulbIndex, offColor);
+        for (int bulbIndex = 81; bulbIndex < marquee.totalBulbCount(); bulbIndex += 2) {
+            drawBulb(marquee, bulbIndex, offColor);
         }
     }
 
-    private void drawBulb(int bulbIndex, Color bulbColor) {
+    private void drawBulb(ArcadeMsPacMan_IntroScene.Marquee marquee, int bulbIndex, Color bulbColor) {
         double x, y;
         if (bulbIndex <= 33) { // lower edge left-to-right
-            x = MARQUEE_BOUNDS.getMinX() + 4 * bulbIndex;
-            y = MARQUEE_BOUNDS.getMaxY();
+            x = marquee.bounds().getMinX() + 4 * bulbIndex;
+            y = marquee.bounds().getMaxY();
         }
         else if (bulbIndex <= 48) { // right edge bottom-to-top
-            x = MARQUEE_BOUNDS.getMaxX();
+            x = marquee.bounds().getMaxX();
             y = 4 * (70 - bulbIndex);
         }
         else if (bulbIndex <= 81) { // upper edge right-to-left
-            x = 4 * (TOTAL_BULBS_COUNT - bulbIndex);
-            y = MARQUEE_BOUNDS.getMinY();
+            x = 4 * (marquee.totalBulbCount() - bulbIndex);
+            y = marquee.bounds().getMinY();
         }
         else { // left edge top-to-bottom
-            x = MARQUEE_BOUNDS.getMinX();
+            x = marquee.bounds().getMinX();
             y = 4 * (bulbIndex - 59);
         }
         ctx.setFill(bulbColor);

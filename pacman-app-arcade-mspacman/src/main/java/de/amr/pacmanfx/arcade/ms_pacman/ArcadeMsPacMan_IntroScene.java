@@ -16,6 +16,7 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.ActionBindingSupport;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -38,6 +39,8 @@ import static de.amr.pacmanfx.ui.PacManGames_UI.*;
  */
 public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBindingSupport {
 
+    public record Marquee(TickTimer timer, Rectangle2D bounds, int totalBulbCount, int brightBulbsCount, int brightBulbsDistance) {}
+
     private static final float SPEED = 1.11f;
 
     private static final int TOP_Y        = TS * 11 + 1;
@@ -49,11 +52,12 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
     private static final String[] GHOST_NAMES = { "BLINKY", "PINKY", "INKY", "SUE" };
     private static final Color[] GHOST_COLORS = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
 
+    private final Marquee marquee = new Marquee(new TickTimer("Marquee-Timer"), new Rectangle2D(60, 88, 132, 60), 96, 6, 16);
+
     private final StateMachine<SceneState, ArcadeMsPacMan_IntroScene> sceneController;
 
     private Pac msPacMan;
     private Ghost[] ghosts;
-    private TickTimer marqueeTimer;
     private byte presented;
     private int numTicksBeforeRising;
 
@@ -83,7 +87,6 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
 
         msPacMan = createMsPacMan();
         ghosts = new Ghost[] { createRedGhost(), createPinkGhost(), createCyanGhost(), createOrangeGhost() };
-        marqueeTimer = new TickTimer("marquee-timer");
         presented = RED_GHOST_SHADOW;
         numTicksBeforeRising = 0;
 
@@ -113,7 +116,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
 
     @Override
     public void drawSceneContent() {
-        gr().drawMarquee(marqueeTimer.tickCount(), ARCADE_WHITE, ARCADE_RED);
+        gr().drawMarquee(marquee, ARCADE_WHITE, ARCADE_RED);
         gr().fillText("\"MS PAC-MAN\"", ARCADE_ORANGE, arcadeFont8(), TITLE_X, TITLE_Y);
         switch (sceneController.state()) {
             case GHOSTS_MARCHING_IN -> {
@@ -147,7 +150,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
         STARTING {
             @Override
             public void onEnter(ArcadeMsPacMan_IntroScene scene) {
-                scene.marqueeTimer.restartIndefinitely();
+                scene.marquee.timer().restartIndefinitely();
                 scene.msPacMan.setPosition(TS * 31, TS * 20);
                 scene.msPacMan.setMoveDir(Direction.LEFT);
                 scene.msPacMan.setSpeed(SPEED);
@@ -166,7 +169,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
 
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                scene.marqueeTimer.doTick();
+                scene.marquee.timer().doTick();
                 if (sceneTimer.atSecond(1)) {
                     scene.sceneController.changeState(GHOSTS_MARCHING_IN);
                 }
@@ -176,7 +179,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
         GHOSTS_MARCHING_IN {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                scene.marqueeTimer.doTick();
+                scene.marquee.timer().doTick();
                 boolean atEndPosition = letGhostWalkIn(scene);
                 if (atEndPosition) {
                     if (scene.presented == ORANGE_GHOST_POKEY) {
@@ -220,7 +223,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
         MS_PACMAN_MARCHING_IN {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                scene.marqueeTimer.doTick();
+                scene.marquee.timer().doTick();
                 scene.msPacMan.move();
                 if (scene.msPacMan.x() <= STOP_X_MSPAC) {
                     scene.msPacMan.setSpeed(0);
@@ -233,7 +236,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
         READY_TO_PLAY {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                scene.marqueeTimer.doTick();
+                scene.marquee.timer().doTick();
                 if (sceneTimer.atSecond(2.0) && !theGame().canStartNewGame()) {
                     theGameController().changeGameState(GameState.STARTING_GAME); // demo level
                 } else if (sceneTimer.atSecond(5)) {
