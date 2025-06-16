@@ -15,6 +15,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
+import de.amr.pacmanfx.ui.layout.StartPage;
 import javafx.application.Application;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -54,7 +55,7 @@ public class PacManGames3dApp extends Application {
                 new ArcadeMsPacMan_StartPage(MS_PACMAN),
                 new TengenMsPacMan_StartPage(MS_PACMAN_TENGEN),
                 new PacManXXL_Common_StartPage())
-            .selectStartPage(1)
+            .selectStartPage(0)
             .dashboardEntries(
                     DashboardID.GENERAL,
                     DashboardID.GAME_CONTROL,
