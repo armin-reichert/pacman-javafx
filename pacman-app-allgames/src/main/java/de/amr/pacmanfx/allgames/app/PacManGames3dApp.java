@@ -14,8 +14,8 @@ import de.amr.pacmanfx.arcade.pacman_xxl.*;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
+import de.amr.pacmanfx.ui.PacManGames_UIBuilder;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
-import de.amr.pacmanfx.ui.layout.StartPage;
 import javafx.application.Application;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -31,12 +31,6 @@ import static de.amr.pacmanfx.ui.PacManGames_UIBuilder.buildUI;
  */
 public class PacManGames3dApp extends Application {
 
-    private static final String MS_PACMAN        = "MS_PACMAN";
-    private static final String MS_PACMAN_TENGEN = "MS_PACMAN_TENGEN";
-    private static final String MS_PACMAN_XXL    = "MS_PACMAN_XXL";
-    private static final String PACMAN           = "PACMAN";
-    private static final String PACMAN_XXL       = "PACMAN_XXL";
-
     @Override
     public void start(Stage primaryStage) {
         // UI size: 80% of available screen height, aspect 16:10
@@ -45,15 +39,29 @@ public class PacManGames3dApp extends Application {
         final var xxlSelector = new PacManXXL_Common_MapSelector(CUSTOM_MAP_DIR);
         buildUI()
             .stage(primaryStage, width, height)
-            .game(PACMAN,           ArcadePacMan_GameModel.arcadeVersion(),        ArcadePacMan_UIConfig.class)
-            .game(MS_PACMAN,        ArcadeMsPacMan_GameModel.arcadeVersion(),      ArcadeMsPacMan_UIConfig.class)
-            .game(MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel(),                TengenMsPacMan_UIConfig.class)
-            .game(PACMAN_XXL,       new PacManXXL_PacMan_GameModel(xxlSelector),   PacManXXL_PacMan_UIConfig.class)
-            .game(MS_PACMAN_XXL,    new PacManXXL_MsPacMan_GameModel(xxlSelector), PacManXXL_MsPacMan_UIConfig.class)
+            .game(
+                PacManGames_UIBuilder.PACMAN,
+                ArcadePacMan_GameModel.arcadeVersion(),
+                ArcadePacMan_UIConfig.class)
+            .game(
+                PacManGames_UIBuilder.MS_PACMAN,
+                ArcadeMsPacMan_GameModel.arcadeVersion(),
+                ArcadeMsPacMan_UIConfig.class)
+            .game(
+                PacManGames_UIBuilder.MS_PACMAN_TENGEN,
+                new TengenMsPacMan_GameModel(),
+                TengenMsPacMan_UIConfig.class)
+            .game(PacManGames_UIBuilder.PACMAN_XXL,
+                new PacManXXL_PacMan_GameModel(xxlSelector),
+                PacManXXL_PacMan_UIConfig.class)
+            .game(
+                PacManGames_UIBuilder.MS_PACMAN_XXL,
+                new PacManXXL_MsPacMan_GameModel(xxlSelector),
+                PacManXXL_MsPacMan_UIConfig.class)
             .startPages(
-                new ArcadePacMan_StartPage(PACMAN),
-                new ArcadeMsPacMan_StartPage(MS_PACMAN),
-                new TengenMsPacMan_StartPage(MS_PACMAN_TENGEN),
+                new ArcadePacMan_StartPage(PacManGames_UIBuilder.PACMAN),
+                new ArcadeMsPacMan_StartPage(PacManGames_UIBuilder.MS_PACMAN),
+                new TengenMsPacMan_StartPage(PacManGames_UIBuilder.MS_PACMAN_TENGEN),
                 new PacManXXL_Common_StartPage())
             .selectStartPage(0)
             .dashboardEntries(
