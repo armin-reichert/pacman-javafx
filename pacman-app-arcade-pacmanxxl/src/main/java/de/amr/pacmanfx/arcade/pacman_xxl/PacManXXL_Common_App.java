@@ -39,7 +39,6 @@ public class PacManXXL_Common_App extends Application {
                 DashboardID.KEYBOARD,
                 DashboardID.ABOUT)
             .stage(primaryStage, width, height)
-            .selectGame(PACMAN_XXL)
             .show();
     }
 

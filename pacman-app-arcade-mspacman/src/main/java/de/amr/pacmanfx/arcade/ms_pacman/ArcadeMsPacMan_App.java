@@ -34,7 +34,6 @@ public class ArcadeMsPacMan_App extends Application {
                     DashboardID.KEYBOARD,
                     DashboardID.ABOUT)
             .stage(primaryStage, width, height)
-            .selectGame(MS_PACMAN)
             .show();
     }
 

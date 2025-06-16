@@ -37,7 +37,6 @@ public class TengenMsPacMan_App extends Application {
                 DashboardID.KEYBOARD,
                 DashboardID.ABOUT)
             .stage(primaryStage, width, height)
-            .selectGame(MS_PACMAN_TENGEN)
             .show();
     }
 

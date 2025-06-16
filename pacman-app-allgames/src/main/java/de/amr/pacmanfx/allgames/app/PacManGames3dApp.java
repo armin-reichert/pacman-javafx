@@ -41,19 +41,20 @@ public class PacManGames3dApp extends Application {
         // UI size: 80% of available screen height, aspect 16:10
         final int height = (int) (0.8 * Screen.getPrimary().getBounds().getHeight());
         final int width  = (int) (1.6 * height);
-        final var xxlMapSelector = new PacManXXL_Common_MapSelector(CUSTOM_MAP_DIR);
+        final var xxlSelector = new PacManXXL_Common_MapSelector(CUSTOM_MAP_DIR);
         buildUI()
             .stage(primaryStage, width, height)
-            .game(PACMAN,           ArcadePacMan_GameModel.arcadeVersion(), ArcadePacMan_UIConfig.class)
-            .game(MS_PACMAN,        ArcadeMsPacMan_GameModel.arcadeVersion(), ArcadeMsPacMan_UIConfig.class)
-            .game(MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel(), TengenMsPacMan_UIConfig.class)
-            .game(PACMAN_XXL,       new PacManXXL_PacMan_GameModel(xxlMapSelector),   PacManXXL_PacMan_UIConfig.class)
-            .game(MS_PACMAN_XXL,    new PacManXXL_MsPacMan_GameModel(xxlMapSelector), PacManXXL_MsPacMan_UIConfig.class)
+            .game(PACMAN,           ArcadePacMan_GameModel.arcadeVersion(),        ArcadePacMan_UIConfig.class)
+            .game(MS_PACMAN,        ArcadeMsPacMan_GameModel.arcadeVersion(),      ArcadeMsPacMan_UIConfig.class)
+            .game(MS_PACMAN_TENGEN, new TengenMsPacMan_GameModel(),                TengenMsPacMan_UIConfig.class)
+            .game(PACMAN_XXL,       new PacManXXL_PacMan_GameModel(xxlSelector),   PacManXXL_PacMan_UIConfig.class)
+            .game(MS_PACMAN_XXL,    new PacManXXL_MsPacMan_GameModel(xxlSelector), PacManXXL_MsPacMan_UIConfig.class)
             .startPages(
                 new ArcadePacMan_StartPage(PACMAN),
                 new ArcadeMsPacMan_StartPage(MS_PACMAN),
                 new TengenMsPacMan_StartPage(MS_PACMAN_TENGEN),
                 new PacManXXL_Common_StartPage())
+            .selectStartPage(1)
             .dashboardEntries(
                     DashboardID.GENERAL,
                     DashboardID.GAME_CONTROL,
@@ -63,7 +64,6 @@ public class PacManGames3dApp extends Application {
                     DashboardID.CUSTOM_MAPS,
                     DashboardID.KEYBOARD,
                     DashboardID.ABOUT)
-            .selectGame(PACMAN)
             .show();
     }
 

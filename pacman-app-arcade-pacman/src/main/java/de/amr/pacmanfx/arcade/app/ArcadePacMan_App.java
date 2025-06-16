@@ -36,7 +36,6 @@ public class ArcadePacMan_App extends Application {
                 DashboardID.ACTOR_INFO,
                 DashboardID.KEYBOARD,
                 DashboardID.ABOUT)
-            .selectGame(PACMAN)
             .show();
     }
 

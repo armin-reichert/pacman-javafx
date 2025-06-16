@@ -20,8 +20,8 @@ public class PacManGames_UIBuilder {
     private final Map<String, GameModel> models = new HashMap<>();
     private final Map<String, Class<? extends PacManGames_UIConfig>> configs = new HashMap<>();
     private StartPage[] startPages;
+    private int selectedStartPageIndex;
     private DashboardID[] dashboardIDs;
-    private String initialVariant;
     private Stage stage;
     private int width = 800;
     private int height = 600;
@@ -40,13 +40,13 @@ public class PacManGames_UIBuilder {
         return this;
     }
 
-    public PacManGames_UIBuilder selectGame(String variant) {
-        initialVariant = variant;
+    public PacManGames_UIBuilder startPages(StartPage... startPages) {
+        this.startPages = startPages;
         return this;
     }
 
-    public PacManGames_UIBuilder startPages(StartPage... startPages) {
-        this.startPages = startPages;
+    public PacManGames_UIBuilder selectStartPage(int index) {
+        this.selectedStartPageIndex = index;
         return this;
     }
 
@@ -67,9 +67,11 @@ public class PacManGames_UIBuilder {
         ui.buildUI(stage, width, height, dashboardIDs);
         models.forEach((variant, model) -> theGameController().registerGame(variant, model));
         theGameController().setEventsEnabled(true);
-        theGameController().selectGameVariant(initialVariant);
         for (StartPage startPage : startPages) ui.startPagesView().addStartPage(startPage);
-        ui.startPagesView().selectStartPage(0);
+        ui.startPagesView().selectStartPage(selectedStartPageIndex);
+        ui.startPagesView().currentStartPage()
+            .map(StartPage::currentGameVariant)
+            .ifPresent(theGameController()::selectGameVariant);
         theUI = ui;
         theUI.show();
     }
