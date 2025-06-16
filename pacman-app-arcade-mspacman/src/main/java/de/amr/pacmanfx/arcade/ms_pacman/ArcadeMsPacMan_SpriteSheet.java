@@ -66,8 +66,8 @@ public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements SpriteShe
         SPRITE_MAP.put(GHOST_EYES_UP,            tilesRightOf(10, 5, 1));
         SPRITE_MAP.put(GHOST_EYES_DOWN,          tilesRightOf(11, 5, 1));
         SPRITE_MAP.put(GHOST_NUMBERS,            tilesRightOf(0, 8, 4));
-        SPRITE_MAP.put(BONUS_SYMBOLS,            IntStream.range(0, 8).mapToObj(symbol -> tile(3 + symbol, 0)).toArray(Sprite[]::new));
-        SPRITE_MAP.put(BONUS_VALUES,             IntStream.range(0, 8).mapToObj(symbol -> tile(3 + symbol, 1)).toArray(Sprite[]::new));
+        SPRITE_MAP.put(BONUS_SYMBOLS,            tilesRightOf(3, 0, 7));
+        SPRITE_MAP.put(BONUS_VALUES,             tilesRightOf(3, 1, 7));
         SPRITE_MAP.put(LIVES_COUNTER_SYMBOL,     tile(1, 0));
         SPRITE_MAP.put(STORK,                    new Sprite[] {makeSprite(489, 176, 32, 16), makeSprite(521, 176, 32, 16)});
         SPRITE_MAP.put(CLAPPERBOARD,             new Sprite[] {
