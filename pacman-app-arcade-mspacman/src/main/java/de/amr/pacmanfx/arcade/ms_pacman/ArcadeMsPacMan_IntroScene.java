@@ -50,7 +50,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
     private static final String[] GHOST_NAMES = { "BLINKY", "PINKY", "INKY", "SUE" };
     private static final Color[] GHOST_COLORS = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
 
-    private final Marquee marquee = new Marquee(new TickTimer("Marquee-Timer"), new Rectangle2D(60, 88, 132, 60), 96, 6, 16);
+    private final Marquee marquee = new Marquee(new Rectangle2D(60, 88, 132, 60), 96, 6, 16);
 
     private final StateMachine<SceneState, ArcadeMsPacMan_IntroScene> sceneController;
 
