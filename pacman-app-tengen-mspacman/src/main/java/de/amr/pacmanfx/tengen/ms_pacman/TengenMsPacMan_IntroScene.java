@@ -26,7 +26,7 @@ import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Renderer2D.blueShadedColor;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
-import static de.amr.pacmanfx.ui.PacManGames_Env.*;
+import static de.amr.pacmanfx.ui.PacManGames.*;
 
 /**
  * @author Armin Reichert

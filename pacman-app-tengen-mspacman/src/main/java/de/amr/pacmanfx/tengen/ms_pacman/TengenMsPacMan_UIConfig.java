@@ -41,7 +41,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.ActionBindingSupport.createBinding;
-import static de.amr.pacmanfx.ui.PacManGames_Env.*;
+import static de.amr.pacmanfx.ui.PacManGames.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
 import static de.amr.pacmanfx.uilib.Ufx.toggle;

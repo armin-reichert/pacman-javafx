@@ -18,8 +18,8 @@ import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createPa
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_PacAnimationMap.PAC_MAN_MUNCHING;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
-import static de.amr.pacmanfx.ui.PacManGames_Env.theSound;
-import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
+import static de.amr.pacmanfx.ui.PacManGames.theSound;
+import static de.amr.pacmanfx.ui.PacManGames.theUI;
 
 /**
  * Intermission scene 2: "The chase".

@@ -11,7 +11,7 @@ import javafx.scene.layout.VBox;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.optGameLevel;
-import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
+import static de.amr.pacmanfx.ui.PacManGames.theUI;
 import static de.amr.pacmanfx.ui.PacManGames_UI.PY_CANVAS_BG_COLOR;
 import static de.amr.pacmanfx.ui.PacManGames_UI.PY_PIP_HEIGHT;
 import static java.util.Objects.requireNonNull;

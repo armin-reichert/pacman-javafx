@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static de.amr.pacmanfx.Globals.theGameController;
-import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
+import static de.amr.pacmanfx.ui.PacManGames.theUI;
 import static java.util.Objects.requireNonNull;
 
 public class PacManGames_UIBuilder {
@@ -73,9 +73,9 @@ public class PacManGames_UIBuilder {
 
     public static PacManGames_UIBuilder buildUI() {
         checkUserDirsExistingAndWritable();
-        PacManGames_Env.theAssets = new PacManGames_Assets();
-        PacManGames_Env.theClock = new GameClock();
-        PacManGames_Env.theSound = new PacManGames_SoundManager();
+        PacManGames.theAssets = new PacManGames_Assets();
+        PacManGames.theClock = new GameClock();
+        PacManGames.theSound = new PacManGames_SoundManager();
         return new PacManGames_UIBuilder();
     }
 

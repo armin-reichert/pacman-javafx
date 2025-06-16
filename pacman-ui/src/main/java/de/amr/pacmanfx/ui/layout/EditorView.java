@@ -15,7 +15,7 @@ import javafx.scene.paint.Color;
 
 import java.util.Map;
 
-import static de.amr.pacmanfx.ui.PacManGames_Env.theKeyboard;
+import static de.amr.pacmanfx.ui.PacManGames.theKeyboard;
 import static de.amr.pacmanfx.uilib.Ufx.coloredBackground;
 import static java.util.Objects.requireNonNull;
 

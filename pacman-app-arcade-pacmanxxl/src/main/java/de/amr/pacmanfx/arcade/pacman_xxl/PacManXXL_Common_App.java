@@ -10,7 +10,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import static de.amr.pacmanfx.Globals.CUSTOM_MAP_DIR;
-import static de.amr.pacmanfx.ui.PacManGames_Env.theClock;
+import static de.amr.pacmanfx.ui.PacManGames.theClock;
 import static de.amr.pacmanfx.ui.PacManGames_UIBuilder.*;
 
 public class PacManXXL_Common_App extends Application {

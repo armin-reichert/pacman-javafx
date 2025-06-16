@@ -18,7 +18,7 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.createMs
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.createPacMan;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_PacAnimationMap.ANIM_PAC_MAN_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
-import static de.amr.pacmanfx.ui.PacManGames_Env.*;
+import static de.amr.pacmanfx.ui.PacManGames.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.ACTION_LET_GAME_STATE_EXPIRE;
 
 /**

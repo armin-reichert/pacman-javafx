@@ -37,7 +37,7 @@ import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_TI
 import static de.amr.pacmanfx.arcade.ArcadePalette.*;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVEL_TEASERS;
-import static de.amr.pacmanfx.ui.PacManGames_Env.*;
+import static de.amr.pacmanfx.ui.PacManGames.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 
 /**

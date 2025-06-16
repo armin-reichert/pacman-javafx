@@ -18,7 +18,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.shape.DrawMode;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
+import static de.amr.pacmanfx.ui.PacManGames.theUI;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 
 /**

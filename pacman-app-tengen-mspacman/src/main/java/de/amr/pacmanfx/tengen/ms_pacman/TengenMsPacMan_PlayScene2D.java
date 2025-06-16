@@ -42,7 +42,7 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
-import static de.amr.pacmanfx.ui.PacManGames_Env.*;
+import static de.amr.pacmanfx.ui.PacManGames.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 
 /**

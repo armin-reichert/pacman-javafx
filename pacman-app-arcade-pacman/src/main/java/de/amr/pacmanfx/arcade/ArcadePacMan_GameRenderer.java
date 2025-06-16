@@ -19,8 +19,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.PacManGames_Env.theAssets;
-import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
+import static de.amr.pacmanfx.ui.PacManGames.theAssets;
+import static de.amr.pacmanfx.ui.PacManGames.theUI;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_GameRenderer implements SpriteGameRenderer {

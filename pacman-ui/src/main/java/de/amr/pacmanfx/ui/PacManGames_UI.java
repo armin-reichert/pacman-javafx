@@ -38,7 +38,7 @@ import static de.amr.pacmanfx.controller.GameState.INTRO;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
 import static de.amr.pacmanfx.ui.ActionBindingSupport.createBinding;
-import static de.amr.pacmanfx.ui.PacManGames_Env.*;
+import static de.amr.pacmanfx.ui.PacManGames.*;
 import static de.amr.pacmanfx.uilib.Ufx.toggle;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
 

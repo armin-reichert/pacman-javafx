@@ -12,7 +12,7 @@ import de.amr.pacmanfx.ui.ActionBindingSupport;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.arcade.ArcadePalette.*;
-import static de.amr.pacmanfx.ui.PacManGames_Env.theSound;
+import static de.amr.pacmanfx.ui.PacManGames.theSound;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 
 /**

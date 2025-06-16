@@ -26,8 +26,8 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.arcade.ArcadePalette.ARCADE_WHITE;
 import static de.amr.pacmanfx.lib.Sprite.makeSprite;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
-import static de.amr.pacmanfx.ui.PacManGames_Env.theAssets;
-import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
+import static de.amr.pacmanfx.ui.PacManGames.theAssets;
+import static de.amr.pacmanfx.ui.PacManGames.theUI;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {

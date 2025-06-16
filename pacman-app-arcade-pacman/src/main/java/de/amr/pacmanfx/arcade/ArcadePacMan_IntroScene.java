@@ -32,8 +32,8 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static de.amr.pacmanfx.model.actors.GhostState.EATEN;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
-import static de.amr.pacmanfx.ui.PacManGames_Env.theSound;
-import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
+import static de.amr.pacmanfx.ui.PacManGames.theSound;
+import static de.amr.pacmanfx.ui.PacManGames.theUI;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 
 /**

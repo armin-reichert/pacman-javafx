@@ -12,7 +12,7 @@ import javafx.scene.image.ImageView;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.ui.PacManGames_Env.theClock;
+import static de.amr.pacmanfx.ui.PacManGames.theClock;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 
 /**

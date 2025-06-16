@@ -16,8 +16,8 @@ import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PI
 import static de.amr.pacmanfx.arcade.ArcadePalette.ARCADE_ORANGE;
 import static de.amr.pacmanfx.arcade.ArcadePalette.ARCADE_RED;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
-import static de.amr.pacmanfx.ui.PacManGames_Env.theSound;
-import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
+import static de.amr.pacmanfx.ui.PacManGames.theSound;
+import static de.amr.pacmanfx.ui.PacManGames.theUI;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 
 public class ArcadeMsPacMan_StartScene extends GameScene2D implements ActionBindingSupport {

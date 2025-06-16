@@ -38,7 +38,7 @@ import static de.amr.pacmanfx.Validations.isOneOf;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
-import static de.amr.pacmanfx.ui.PacManGames_Env.*;
+import static de.amr.pacmanfx.ui.PacManGames.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 import static de.amr.pacmanfx.uilib.Ufx.*;
 import static java.util.Objects.requireNonNull;

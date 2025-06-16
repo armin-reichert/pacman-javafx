@@ -13,7 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.ui.PacManGames_Env.theAssets;
+import static de.amr.pacmanfx.ui.PacManGames.theAssets;
 
 public class Dashboard {
 

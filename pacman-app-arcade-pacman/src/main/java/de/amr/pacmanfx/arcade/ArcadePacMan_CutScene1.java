@@ -10,7 +10,6 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.theGame;
 import static de.amr.pacmanfx.Globals.theGameController;
@@ -20,8 +19,8 @@ import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ANIM_BIG_PAC_MAN;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
-import static de.amr.pacmanfx.ui.PacManGames_Env.theSound;
-import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
+import static de.amr.pacmanfx.ui.PacManGames.theSound;
+import static de.amr.pacmanfx.ui.PacManGames.theUI;
 import static de.amr.pacmanfx.ui.PacManGames_UI.DEBUG_TEXT_FILL;
 import static de.amr.pacmanfx.ui.PacManGames_UI.DEBUG_TEXT_FONT;
 

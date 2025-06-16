@@ -14,7 +14,7 @@ import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.PacManGames_Env.theSound;
+import static de.amr.pacmanfx.ui.PacManGames.theSound;
 
 /**
  * Displays an option menu where the game variant to be played and other options can be set.

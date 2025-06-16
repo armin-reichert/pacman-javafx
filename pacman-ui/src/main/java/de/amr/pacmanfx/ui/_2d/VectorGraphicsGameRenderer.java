@@ -23,7 +23,7 @@ import javafx.scene.paint.Color;
 import java.util.Map;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
+import static de.amr.pacmanfx.ui.PacManGames.theUI;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 

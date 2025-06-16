@@ -18,7 +18,7 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel.createRe
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Renderer2D.blueShadedColor;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
-import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
+import static de.amr.pacmanfx.ui.PacManGames.theUI;
 
 /**
  * Animated "TENGEN PRESENTS" text and ghost running through scene.

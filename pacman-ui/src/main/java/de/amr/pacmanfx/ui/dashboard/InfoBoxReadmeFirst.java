@@ -15,7 +15,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.ui.PacManGames_Env.theAssets;
+import static de.amr.pacmanfx.ui.PacManGames.theAssets;
 
 public class InfoBoxReadmeFirst extends InfoBox {
 

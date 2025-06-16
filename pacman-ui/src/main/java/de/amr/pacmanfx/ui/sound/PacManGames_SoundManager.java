@@ -16,7 +16,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.amr.pacmanfx.ui.PacManGames_Env.theAssets;
+import static de.amr.pacmanfx.ui.PacManGames.theAssets;
 import static java.util.Objects.requireNonNull;
 
 /**

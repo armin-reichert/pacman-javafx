@@ -15,8 +15,8 @@ import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PI
 import static de.amr.pacmanfx.arcade.ArcadePalette.ARCADE_WHITE;
 import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
-import static de.amr.pacmanfx.ui.PacManGames_Env.theSound;
-import static de.amr.pacmanfx.ui.PacManGames_Env.theUI;
+import static de.amr.pacmanfx.ui.PacManGames.theSound;
+import static de.amr.pacmanfx.ui.PacManGames.theUI;
 
 /**
  * The boot screen is showing some strange screen patterns and eventually  a grid.

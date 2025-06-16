@@ -28,8 +28,8 @@ import org.tinylog.Logger;
 
 import java.util.*;
 
-import static de.amr.pacmanfx.ui.PacManGames_Env.theAssets;
-import static de.amr.pacmanfx.ui.PacManGames_Env.theKeyboard;
+import static de.amr.pacmanfx.ui.PacManGames.theAssets;
+import static de.amr.pacmanfx.ui.PacManGames.theKeyboard;
 import static de.amr.pacmanfx.ui.PacManGames_UI.ACTION_BOOT_SHOW_GAME_VIEW;
 import static de.amr.pacmanfx.ui.PacManGames_UI.ACTION_TOGGLE_PAUSED;
 import static de.amr.pacmanfx.ui.input.Keyboard.nude;
