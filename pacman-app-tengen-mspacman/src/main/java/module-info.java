@@ -17,4 +17,7 @@ open module tengen.ms_pacman {
 
     exports de.amr.pacmanfx.tengen.ms_pacman;
     exports de.amr.pacmanfx.tengen.ms_pacman.app;
+    exports de.amr.pacmanfx.tengen.ms_pacman.model;
+    exports de.amr.pacmanfx.tengen.ms_pacman.rendering;
+    exports de.amr.pacmanfx.tengen.ms_pacman.scenes;
 }
