@@ -171,45 +171,50 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
     }
 
     private static final Rectangle2D MARQUEE_BOUNDS = new Rectangle2D(60, 88, 132, 60);
-    private static final int BULB_COUNT = 96;
-    private static final int ACTIVE_BULBS_DIST = 16;
+    private static final int TOTAL_BULBS_COUNT = 96;
+    private static final int BRIGHT_BULBS_COUNT = 6;
+    private static final int BRIGHT_BULBS_DISTANCE = 16;
 
     /**
-     * 6 of the 96 light bulbs are lightning each frame, shifting counter-clockwise every tick.
+     * 6 of the 96 light bulbs are bright in each frame, shifting counter-clockwise every tick.
      * <p>
      * The bulbs on the left border however are switched off every second frame. This is
      * probably a bug in the original Arcade game.
      * </p>
      */
     public void drawMarquee(long tick, Color onColor, Color offColor) {
-        int t = (int) (tick % BULB_COUNT);
-        for (int i = 0; i < BULB_COUNT; ++i) { drawBulb(i, offColor); }
-        for (int b = 0; b < 6; ++b) {
-            drawBulb((t + b * ACTIVE_BULBS_DIST) % BULB_COUNT, onColor);
+        for (int bulbIndex = 0; bulbIndex < TOTAL_BULBS_COUNT; ++bulbIndex) {
+            drawBulb(bulbIndex, offColor);
+        }
+        int firstBrightIndex = (int) (tick % TOTAL_BULBS_COUNT);
+        for (int i = 0; i < BRIGHT_BULBS_COUNT; ++i) {
+            drawBulb((firstBrightIndex + i * BRIGHT_BULBS_DISTANCE) % TOTAL_BULBS_COUNT, onColor);
         }
         // simulate bug from original Arcade game
-        for (int i = 81; i < BULB_COUNT; i += 2) { drawBulb(i, offColor); }
+        for (int bulbIndex = 81; bulbIndex < TOTAL_BULBS_COUNT; bulbIndex += 2) {
+            drawBulb(bulbIndex, offColor);
+        }
     }
 
-    private void drawBulb(int i, Color bulbColor) {
+    private void drawBulb(int bulbIndex, Color bulbColor) {
         double x, y;
-        if (i <= 33) { // lower edge left-to-right
-            x = MARQUEE_BOUNDS.getMinX() + 4 * i;
+        if (bulbIndex <= 33) { // lower edge left-to-right
+            x = MARQUEE_BOUNDS.getMinX() + 4 * bulbIndex;
             y = MARQUEE_BOUNDS.getMaxY();
         }
-        else if (i <= 48) { // right edge bottom-to-top
+        else if (bulbIndex <= 48) { // right edge bottom-to-top
             x = MARQUEE_BOUNDS.getMaxX();
-            y = 4 * (70 - i);
+            y = 4 * (70 - bulbIndex);
         }
-        else if (i <= 81) { // upper edge right-to-left
-            x = 4 * (BULB_COUNT - i);
+        else if (bulbIndex <= 81) { // upper edge right-to-left
+            x = 4 * (TOTAL_BULBS_COUNT - bulbIndex);
             y = MARQUEE_BOUNDS.getMinY();
         }
         else { // left edge top-to-bottom
             x = MARQUEE_BOUNDS.getMinX();
-            y = 4 * (i - 59);
+            y = 4 * (bulbIndex - 59);
         }
-        ctx().setFill(bulbColor);
-        ctx().fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
+        ctx.setFill(bulbColor);
+        ctx.fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
     }
 }
