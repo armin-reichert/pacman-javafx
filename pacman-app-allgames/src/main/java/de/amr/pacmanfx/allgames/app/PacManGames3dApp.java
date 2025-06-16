@@ -14,7 +14,6 @@ import de.amr.pacmanfx.arcade.pacman_xxl.*;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
-import de.amr.pacmanfx.ui.PacManGames_UIBuilder;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.application.Application;
 import javafx.stage.Screen;
@@ -22,7 +21,7 @@ import javafx.stage.Stage;
 
 import static de.amr.pacmanfx.Globals.CUSTOM_MAP_DIR;
 import static de.amr.pacmanfx.ui.PacManGames_Env.theClock;
-import static de.amr.pacmanfx.ui.PacManGames_UIBuilder.buildUI;
+import static de.amr.pacmanfx.ui.PacManGames_UIBuilder.*;
 
 /**
  * Application containing all game variants and including 3D play scene.
@@ -40,28 +39,29 @@ public class PacManGames3dApp extends Application {
         buildUI()
             .stage(primaryStage, width, height)
             .game(
-                PacManGames_UIBuilder.PACMAN,
+                PACMAN,
                 ArcadePacMan_GameModel.arcadeVersion(),
                 ArcadePacMan_UIConfig.class)
             .game(
-                PacManGames_UIBuilder.MS_PACMAN,
+                MS_PACMAN,
                 ArcadeMsPacMan_GameModel.arcadeVersion(),
                 ArcadeMsPacMan_UIConfig.class)
             .game(
-                PacManGames_UIBuilder.MS_PACMAN_TENGEN,
+                MS_PACMAN_TENGEN,
                 new TengenMsPacMan_GameModel(),
                 TengenMsPacMan_UIConfig.class)
-            .game(PacManGames_UIBuilder.PACMAN_XXL,
+            .game(
+                PACMAN_XXL,
                 new PacManXXL_PacMan_GameModel(xxlSelector),
                 PacManXXL_PacMan_UIConfig.class)
             .game(
-                PacManGames_UIBuilder.MS_PACMAN_XXL,
+                MS_PACMAN_XXL,
                 new PacManXXL_MsPacMan_GameModel(xxlSelector),
                 PacManXXL_MsPacMan_UIConfig.class)
             .startPages(
-                new ArcadePacMan_StartPage(PacManGames_UIBuilder.PACMAN),
-                new ArcadeMsPacMan_StartPage(PacManGames_UIBuilder.MS_PACMAN),
-                new TengenMsPacMan_StartPage(PacManGames_UIBuilder.MS_PACMAN_TENGEN),
+                new ArcadePacMan_StartPage(PACMAN),
+                new ArcadeMsPacMan_StartPage(MS_PACMAN),
+                new TengenMsPacMan_StartPage(MS_PACMAN_TENGEN),
                 new PacManXXL_Common_StartPage())
             .selectStartPage(0)
             .dashboardEntries(

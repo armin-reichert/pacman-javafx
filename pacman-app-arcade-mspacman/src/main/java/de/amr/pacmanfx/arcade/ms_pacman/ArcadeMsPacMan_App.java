@@ -10,11 +10,10 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import static de.amr.pacmanfx.ui.PacManGames_Env.theClock;
+import static de.amr.pacmanfx.ui.PacManGames_UIBuilder.MS_PACMAN;
 import static de.amr.pacmanfx.ui.PacManGames_UIBuilder.buildUI;
 
 public class ArcadeMsPacMan_App extends Application {
-
-    public static final String MS_PACMAN = "MS_PACMAN";
 
     @Override
     public void start(Stage primaryStage) {
