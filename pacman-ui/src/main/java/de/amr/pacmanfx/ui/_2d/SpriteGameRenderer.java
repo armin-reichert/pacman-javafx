@@ -6,6 +6,7 @@ import de.amr.pacmanfx.model.actors.AnimatedActor;
 import de.amr.pacmanfx.uilib.animation.SingleSpriteAnimationMap;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -46,6 +47,23 @@ public interface SpriteGameRenderer extends GameRenderer {
         if (sprite != null) {
             drawSpriteScaled(spriteSheet().sourceImage(), sprite, x, y);
         }
+    }
+
+    /**
+     * Draws the given sprite from the given sprite sheet image at the given position (left-upper corner).
+     * The position and the sprite size are scaled by the current scaling of the renderer.
+     *
+     * @param spriteSheetImage the sprite sheet image
+     * @param sprite a sprite
+     * @param x unscaled x-coordinate of left-upper corner
+     * @param y unscaled y-coordinate of left-upper corner
+     */
+    default void drawSpriteScaled(Image spriteSheetImage, Sprite sprite, double x, double y) {
+        requireNonNull(spriteSheetImage);
+        requireNonNull(sprite);
+        ctx().drawImage(spriteSheetImage,
+            sprite.x(), sprite.y(), sprite.width(), sprite.height(),
+            scaled(x), scaled(y), scaled(sprite.width()), scaled(sprite.height()));
     }
 
     /**

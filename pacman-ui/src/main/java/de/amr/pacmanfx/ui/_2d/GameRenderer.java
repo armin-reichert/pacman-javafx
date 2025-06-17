@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._2d;
 
-import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
@@ -15,7 +14,6 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import javafx.beans.property.FloatProperty;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
@@ -30,12 +28,6 @@ import static java.util.Objects.requireNonNull;
 public interface GameRenderer {
 
     GraphicsContext ctx();
-
-    default void fillCanvas(Color color) {
-        requireNonNull(color);
-        ctx().setFill(color);
-        ctx().fillRect(0, 0, ctx().getCanvas().getWidth(), ctx().getCanvas().getHeight());
-    }
 
     FloatProperty scalingProperty();
 
@@ -57,21 +49,10 @@ public interface GameRenderer {
      */
     void applyRenderingHints(GameLevel level);
 
-    /**
-     * Draws the given sprite from the given sprite sheet image at the given position (left-upper corner).
-     * The position and the sprite size are scaled by the current scaling of the renderer.
-     *
-     * @param spriteSheetImage the sprite sheet image
-     * @param sprite a sprite
-     * @param x unscaled x-coordinate of left-upper corner
-     * @param y unscaled y-coordinate of left-upper corner
-     */
-    default void drawSpriteScaled(Image spriteSheetImage, Sprite sprite, double x, double y) {
-        requireNonNull(spriteSheetImage);
-        requireNonNull(sprite);
-        ctx().drawImage(spriteSheetImage,
-            sprite.x(), sprite.y(), sprite.width(), sprite.height(),
-            scaled(x), scaled(y), scaled(sprite.width()), scaled(sprite.height()));
+    default void fillCanvas(Color color) {
+        requireNonNull(color);
+        ctx().setFill(color);
+        ctx().fillRect(0, 0, ctx().getCanvas().getWidth(), ctx().getCanvas().getHeight());
     }
 
     /**
@@ -122,6 +103,21 @@ public interface GameRenderer {
         }
     }
 
+    default void drawScores(ScoreManager scoreManager, Color color, Font font) {
+        if (scoreManager.isScoreVisible()) {
+            drawScore(scoreManager.score(), "SCORE", tiles_to_px(1), tiles_to_px(1), font, color);
+            drawScore(scoreManager.highScore(), "HIGH SCORE", tiles_to_px(14), tiles_to_px(1), font, color);
+        }
+    }
+
+    default void drawScore(Score score, String title, double x, double y, Font font, Color color) {
+        fillText(title, color, font, x, y);
+        fillText("%7s".formatted("%02d".formatted(score.points())), color, font, x, y + TS + 1);
+        if (score.points() != 0) {
+            fillText("L" + score.levelNumber(), color, font, x + tiles_to_px(8), y + TS + 1);
+        }
+    }
+
     /**
      * Draws text at the given tile position (scaled by the current scaling value).
      *
@@ -164,21 +160,6 @@ public interface GameRenderer {
         ctx().setTextAlign(TextAlignment.CENTER);
         fillText(text, color, font, x, y);
         ctx().restore();
-    }
-
-    default void drawScores(ScoreManager scoreManager, Color color, Font font) {
-        if (scoreManager.isScoreVisible()) {
-            drawScore(scoreManager.score(), "SCORE", tiles_to_px(1), tiles_to_px(1), font, color);
-            drawScore(scoreManager.highScore(), "HIGH SCORE", tiles_to_px(14), tiles_to_px(1), font, color);
-        }
-    }
-
-    default void drawScore(Score score, String title, double x, double y, Font font, Color color) {
-        fillText(title, color, font, x, y);
-        fillText("%7s".formatted("%02d".formatted(score.points())), color, font, x, y + TS + 1);
-        if (score.points() != 0) {
-            fillText("L" + score.levelNumber(), color, font, x + tiles_to_px(8), y + TS + 1);
-        }
     }
 
     default void drawTileGrid(double sizeX, double sizeY, Color strokeColor) {
