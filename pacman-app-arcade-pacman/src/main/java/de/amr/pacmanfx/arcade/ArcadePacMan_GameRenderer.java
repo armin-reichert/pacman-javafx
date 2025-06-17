@@ -82,11 +82,9 @@ public class ArcadePacMan_GameRenderer implements SpriteGameRenderer {
 
     @Override
     public void drawActor(Actor actor) {
-        if (actor instanceof StaticBonus bonus) {
-            drawStaticBonus(bonus);
-        }
-        else {
-            SpriteGameRenderer.super.drawActor(actor);
+        switch (actor) {
+            case StaticBonus staticBonus -> drawStaticBonus(staticBonus);
+            default -> SpriteGameRenderer.super.drawActor(actor);
         }
     }
 

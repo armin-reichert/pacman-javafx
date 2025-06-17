@@ -86,15 +86,18 @@ public interface SpriteGameRenderer extends GameRenderer {
         }
         if (actor instanceof AnimatedActor animatedActor) {
             animatedActor.animations().ifPresent(animationMap -> {
-                if (animationMap instanceof SpriteAnimationMap spriteAnimationMap) {
-                    if (spriteAnimationMap.currentAnimation() != null) {
-                        drawActorSprite(actor, spriteAnimationMap.currentSprite(actor));
-                    } else {
-                        Logger.error("No current animation for actor {}", actor);
+                switch (animationMap) {
+                    case SingleSpriteAnimationMap singleSpriteAnimationMap -> {
+                        drawActorSprite(actor, singleSpriteAnimationMap.singleSprite());
                     }
-                }
-                else if (animationMap instanceof SingleSpriteAnimationMap spriteAnimationMap) {
-                    drawActorSprite(actor, spriteAnimationMap.singleSprite());
+                    case SpriteAnimationMap spriteAnimationMap -> {
+                        if (spriteAnimationMap.currentAnimation() != null) {
+                            drawActorSprite(actor, spriteAnimationMap.currentSprite(actor));
+                        } else {
+                            Logger.error("No current animation for actor {}", actor);
+                        }
+                    }
+                    default -> Logger.error("Cannot render animated actor with animation map of type {}", animationMap.getClass());
                 }
             });
         }
