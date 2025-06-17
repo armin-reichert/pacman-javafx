@@ -9,24 +9,29 @@ import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.MovingBonus;
-import de.amr.pacmanfx.ui._2d.VectorGraphicsGameRenderer;
+import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
+import de.amr.pacmanfx.ui._2d.VectorGraphicsMapRenderer;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.arcade.rendering.ArcadePalette.ARCADE_WHITE;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
+import static java.util.Objects.requireNonNull;
 
 //TODO avoid code duplication with Arcade Ms. Pac-Man renderer
-public class PacManXXL_MsPacMan_GameRenderer extends VectorGraphicsGameRenderer {
+public class PacManXXL_MsPacMan_GameRenderer extends VectorGraphicsMapRenderer implements SpriteGameRenderer {
+
+    private final ArcadeMsPacMan_SpriteSheet spriteSheet;
 
     public PacManXXL_MsPacMan_GameRenderer(ArcadeMsPacMan_SpriteSheet spriteSheet, Canvas canvas) {
-        super(spriteSheet, canvas);
+        super(canvas);
+        this.spriteSheet = requireNonNull(spriteSheet);
     }
 
     @Override
     public ArcadeMsPacMan_SpriteSheet spriteSheet() {
-        return (ArcadeMsPacMan_SpriteSheet) super.spriteSheet();
+        return spriteSheet;
     }
 
     @Override
@@ -36,7 +41,7 @@ public class PacManXXL_MsPacMan_GameRenderer extends VectorGraphicsGameRenderer 
             case LevelCounter levelCounter -> drawLevelCounter(levelCounter);
             case Marquee marquee -> drawMarquee(marquee);
             case MovingBonus movingBonus -> drawMovingBonus(movingBonus);
-            default -> super.drawActor(actor);
+            default -> SpriteGameRenderer.super.drawActor(actor);
         }
     }
 

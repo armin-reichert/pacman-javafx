@@ -4,13 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._2d;
 
-import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.LevelCounter;
-import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.Bonus;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer;
@@ -22,17 +17,14 @@ import javafx.scene.paint.Color;
 
 import java.util.Map;
 
-import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.PacManGames.theUI;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
 /**
  * A vector graphics renderer that draws wall and obstacle paths generated from the tile map data.
  */
-public class VectorGraphicsGameRenderer implements SpriteGameRenderer {
+public class VectorGraphicsMapRenderer implements GameRenderer {
 
-    private final SpriteSheet<?> spriteSheet;
     private final GraphicsContext ctx;
     private final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
@@ -41,17 +33,11 @@ public class VectorGraphicsGameRenderer implements SpriteGameRenderer {
     private TerrainMapColorScheme blinkingOnColors;
     private TerrainMapColorScheme blinkingOffColors;
 
-    public VectorGraphicsGameRenderer(SpriteSheet<?> spriteSheet, Canvas canvas) {
-        this.spriteSheet = requireNonNull(spriteSheet);
+    public VectorGraphicsMapRenderer(Canvas canvas) {
         ctx = requireNonNull(canvas).getGraphicsContext2D();
         terrainRenderer.scalingProperty().bind(scalingPy);
         foodRenderer.scalingProperty().bind(scalingPy);
         setBackgroundColor(Color.BLACK);
-    }
-
-    @Override
-    public SpriteSheet<?> spriteSheet() {
-        return spriteSheet;
     }
 
     @Override
@@ -102,5 +88,4 @@ public class VectorGraphicsGameRenderer implements SpriteGameRenderer {
             }
         }
     }
-
 }

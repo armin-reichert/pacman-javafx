@@ -6,22 +6,25 @@ import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
-import de.amr.pacmanfx.ui._2d.VectorGraphicsGameRenderer;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
+import de.amr.pacmanfx.ui._2d.VectorGraphicsMapRenderer;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
+import static java.util.Objects.requireNonNull;
 
-public class PacManXXL_PacMan_GameRenderer extends VectorGraphicsGameRenderer {
+public class PacManXXL_PacMan_GameRenderer extends VectorGraphicsMapRenderer implements SpriteGameRenderer {
+
+    private final ArcadePacMan_SpriteSheet spriteSheet;
 
     public PacManXXL_PacMan_GameRenderer(ArcadePacMan_SpriteSheet spriteSheet, Canvas canvas) {
-        super(spriteSheet, canvas);
+        super(canvas);
+        this.spriteSheet = requireNonNull(spriteSheet);
     }
 
     @Override
     public ArcadePacMan_SpriteSheet spriteSheet() {
-        return (ArcadePacMan_SpriteSheet) super.spriteSheet();
+        return spriteSheet;
     }
 
     @Override
@@ -29,7 +32,7 @@ public class PacManXXL_PacMan_GameRenderer extends VectorGraphicsGameRenderer {
         switch (actor) {
             case LevelCounter levelCounter -> drawLevelCounter(levelCounter);
             case Bonus bonus -> drawBonus(bonus);
-            default -> super.drawActor(actor);
+            default -> SpriteGameRenderer.super.drawActor(actor);
         }
     }
 
@@ -51,5 +54,4 @@ public class PacManXXL_PacMan_GameRenderer extends VectorGraphicsGameRenderer {
             drawActorSprite(bonus.actor(), sprite);
         }
     }
-
 }
