@@ -4,15 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._2d;
 
-import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.AnimatedActor;
-import de.amr.pacmanfx.model.actors.MovingActor;
-import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import javafx.beans.property.FloatProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -73,43 +68,6 @@ public interface GameRenderer {
      * @param actor any actor
      */
     void drawActor(Actor actor);
-
-    default void drawMovingActorInfo(MovingActor movingActor) {
-        if (movingActor instanceof AnimatedActor animatedActor && movingActor.isVisible()) {
-            animatedActor.animations()
-                .filter(SpriteAnimationMap.class::isInstance)
-                .map(SpriteAnimationMap.class::cast)
-                .ifPresent(animations -> {
-                    String animID = animations.selectedAnimationID();
-                    if (animID != null) {
-                        String text = animID + " " + animations.currentAnimation().frameIndex();
-                        ctx().setFill(Color.WHITE);
-                        ctx().setFont(Font.font("Monospaced", scaled(6)));
-                        ctx().fillText(text, scaled(movingActor.x() - 4), scaled(movingActor.y() - 4));
-                    }
-                    if (movingActor.wishDir() != null) {
-                        float scaling = scaling();
-                        Vector2f center = movingActor.center();
-                        Vector2f arrowHead = center.plus(movingActor.wishDir().vector().scaled(12f)).scaled(scaling);
-                        Vector2f guyCenter = center.scaled(scaling);
-                        float radius = scaling * 2, diameter = 2 * radius;
-                        ctx().setStroke(Color.WHITE);
-                        ctx().setLineWidth(0.5);
-                        ctx().strokeLine(guyCenter.x(), guyCenter.y(), arrowHead.x(), arrowHead.y());
-                        ctx().setFill(movingActor.isNewTileEntered() ? Color.YELLOW : Color.GREEN);
-                        ctx().fillOval(arrowHead.x() - radius, arrowHead.y() - radius, diameter, diameter);
-                    }
-                });
-        }
-        if (movingActor instanceof Pac pac) {
-            String autopilot = pac.isUsingAutopilot() ? "autopilot" : "";
-            String immune = pac.isImmune() ? "immune" : "";
-            String text = "%s\n%s".formatted(autopilot, immune).trim();
-            ctx().setFill(Color.WHITE);
-            ctx().setFont(Font.font("Monospaced", scaled(6)));
-            ctx().fillText(text, scaled(pac.x() - 4), scaled(pac.y() + 16));
-        }
-    }
 
     default void drawScores(ScoreManager scoreManager, Color color, Font font) {
         if (scoreManager.isScoreVisible()) {
