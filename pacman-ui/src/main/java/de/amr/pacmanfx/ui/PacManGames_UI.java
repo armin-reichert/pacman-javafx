@@ -159,8 +159,8 @@ public interface PacManGames_UI {
     GameAction ACTION_CHEAT_ADD_LIVES = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
-            theGame().addLives(3);
-            ui.showFlashMessage(theAssets().text("cheat_add_lives", theGame().lifeCount()));
+            theGame().livesCounter().addLives(3);
+            ui.showFlashMessage(theAssets().text("cheat_add_lives", theGame().livesCounter().lifeCount()));
         }
 
         @Override

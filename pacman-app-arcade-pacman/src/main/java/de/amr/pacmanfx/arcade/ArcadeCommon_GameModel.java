@@ -61,7 +61,7 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
 
     @Override
     public void init() {
-        setInitialLifeCount(3);
+        livesCounter().setInitialLifeCount(3);
         mapSelector.loadAllMaps();
     }
 
@@ -74,7 +74,7 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
     @Override
     public void prepareForNewGame() {
         playingProperty().set(false);
-        setLifeCount(initialLifeCount());
+        livesCounter().setLifeCount(livesCounter().initialLifeCount());
         level = null;
         propertyMap().clear();
         loadHighScore();
@@ -99,7 +99,7 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
 
     @Override
     public boolean isOver() {
-        return lifeCount() == 0;
+        return livesCounter().lifeCount() == 0;
     }
 
     // Components

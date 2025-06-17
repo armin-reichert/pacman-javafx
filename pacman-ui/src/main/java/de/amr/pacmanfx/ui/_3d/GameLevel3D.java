@@ -133,7 +133,7 @@ public class GameLevel3D {
                 .anyMatch(Ghost::isVisible);
         houseOpenPy.set(ghostNearHouseEntry);
 
-        int livesCounterSize = theGame().lifeCount() - 1;
+        int livesCounterSize = theGame().livesCounter().lifeCount() - 1;
         // when the game starts and Pac-Man is not yet visible, show one more
         boolean oneMore = theGameState() == GameState.STARTING_GAME && !gameLevel.pac().isVisible();
         if (oneMore) livesCounterSize += 1;

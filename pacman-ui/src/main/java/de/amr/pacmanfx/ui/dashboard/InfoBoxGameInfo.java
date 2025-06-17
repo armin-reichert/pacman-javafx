@@ -77,7 +77,7 @@ public class InfoBoxGameInfo extends InfoBox {
             return InfoText.NO_INFO;
         });
 
-        addLabeledValue("Lives",           ifLevelPresent(level -> "%d".formatted(theGame().lifeCount())));
+        addLabeledValue("Lives",           ifLevelPresent(level -> "%d".formatted(theGame().livesCounter().lifeCount())));
 
         addLabeledValue("Hunting Phase",   () -> fmtHuntingPhase(theGame().huntingTimer()));
         addLabeledValue("",                () -> fmtHuntingTicksRunning(theGame().huntingTimer()));

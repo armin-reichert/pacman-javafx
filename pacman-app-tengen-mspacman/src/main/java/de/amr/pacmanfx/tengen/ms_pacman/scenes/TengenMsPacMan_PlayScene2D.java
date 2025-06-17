@@ -428,7 +428,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
 
         // As long as Pac-Man is still invisible on game start, one live more is shown in the counter
         int numLivesDisplayed = theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible()
-            ? theGame().lifeCount() : theGame().lifeCount() - 1;
+            ? theGame().livesCounter().lifeCount() : theGame().livesCounter().lifeCount() - 1;
         gr().drawLivesCounter(numLivesDisplayed, 5, 2 * TS, sizeInPx().y() - TS,
                 spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL));
 

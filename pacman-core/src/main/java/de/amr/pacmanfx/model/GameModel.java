@@ -10,9 +10,7 @@ import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.*;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -42,6 +40,7 @@ public abstract class GameModel implements ScoreManager {
     private final Score highScore = new Score();
     private File highScoreFile;
     private List<Integer> extraLifeScores = List.of();
+    private final LivesCounter livesCounter = new LivesCounter();
     private boolean scoreVisible;
 
     protected GameModel() {
@@ -54,6 +53,7 @@ public abstract class GameModel implements ScoreManager {
     public abstract MapSelector mapSelector();
     public abstract OptionalInt cutSceneNumber(int levelNumber);
 
+    public LivesCounter livesCounter() { return livesCounter; }
     public Optional<GateKeeper> gateKeeper() { return Optional.empty(); }
     public Optional<GameLevel> level() { return Optional.ofNullable(level); }
 
@@ -220,33 +220,6 @@ public abstract class GameModel implements ScoreManager {
         }
     }
 
-    // Life management
-
-    private int initialLifeCount;
-    private final IntegerProperty lifeCountPy = new SimpleIntegerProperty(0);
-
-    public int initialLifeCount() {
-        return initialLifeCount;
-    }
-
-    public void setInitialLifeCount(int initialLifeCount) {
-        this.initialLifeCount = initialLifeCount;
-    }
-
-    public int lifeCount() { return lifeCountPy.get(); }
-
-    public void setLifeCount(int n) {
-        if (n >= 0) {
-            lifeCountPy.set(n);
-        } else {
-            Logger.error("Cannot set life count to negative number");
-        }
-    }
-
-    public void addLives(int n) {
-        setLifeCount(lifeCount() + n);
-    }
-
     // Generic property store
     // TODO remove, is only used by cutscene tests
 
@@ -309,7 +282,7 @@ public abstract class GameModel implements ScoreManager {
             if (oldScore < extraLifeScore && newScore >= extraLifeScore) {
                 theSimulationStep().extraLifeWon = true;
                 theSimulationStep().extraLifeScore = extraLifeScore;
-                game.addLives(1);
+                livesCounter.addLives(1);
                 GameEvent event = new GameEvent(game, GameEventType.SPECIAL_SCORE_REACHED);
                 event.setPayload("score", extraLifeScore); // just for testing payload implementation
                 theGameEventManager().publishEvent(event);
