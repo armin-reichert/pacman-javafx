@@ -19,8 +19,6 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import java.util.function.Predicate;
-
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.arcade.rendering.ArcadePalette.ARCADE_WHITE;
@@ -64,58 +62,34 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
 
     @Override
     public void drawLevel(GameLevel level, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted) {
-        double y = GameLevel.EMPTY_ROWS_OVER_MAZE * TS;
         if (mazeHighlighted) {
             drawSpriteScaled(
                 brightMazesSpriteSheet.sourceImage(),
-                brightMazesSpriteSheet.spriteSeq(BrightMazesSpriteSheet.BRIGHT_MAZES_ID)[colorMapIndex], 0, y);
+                brightMazesSpriteSheet.spriteSeq(BrightMazesSpriteSheet.BRIGHT_MAZES_ID)[colorMapIndex],
+                    0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);
         } else if (level.uneatenFoodCount() == 0) {
-            drawSpriteScaled(spriteSheet.spriteSeq(SpriteID.EMPTY_MAZES)[colorMapIndex], 0, y);
+            drawSpriteScaled(spriteSheet.spriteSeq(SpriteID.EMPTY_MAZES)[colorMapIndex],
+                    0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);
         } else {
-            drawSpriteScaled(spriteSheet.spriteSeq(SpriteID.FULL_MAZES)[colorMapIndex], 0, y);
+            drawSpriteScaled(spriteSheet.spriteSeq(SpriteID.FULL_MAZES)[colorMapIndex],
+                    0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);
             ctx.save();
             ctx.scale(scaling(), scaling());
-            overPaintEatenPelletTiles(level, backgroundColor);
-            overPaintEnergizerTiles(level, tile -> !energizerHighlighted || level.tileContainsEatenFood(tile), backgroundColor);
+            level.worldMap().tiles()
+                    .filter(not(level::isEnergizerPosition))
+                    .filter(level::tileContainsEatenFood)
+                    .forEach(tile -> fillSquareAtTileCenter(tile, 4, backgroundColor));
+            level.energizerTiles()
+                    .filter(tile -> !energizerHighlighted || level.tileContainsEatenFood(tile))
+                    .forEach(tile -> fillSquareAtTileCenter(tile, 10, backgroundColor));
             ctx.restore();
         }
     }
 
-    /**
-     * Over-paints all eaten pellet tiles.
-     * Assumes to be called in scaled graphics context!
-     *
-     * @param level the game level
-     * @param color over-paint color (background color of level)
-     */
-    private void overPaintEatenPelletTiles(GameLevel level, Color color) {
-        level.worldMap().tiles()
-            .filter(not(level::isEnergizerPosition))
-            .filter(level::tileContainsEatenFood)
-            .forEach(tile -> paintSquareInsideTile(tile, 4, color));
-    }
-
-    /**
-     * Over-paints all eaten energizer tiles.
-     * Assumes to be called in scaled graphics context!
-     *
-     * @param level the game level
-     * @param overPaintCondition when {@code true} energizer tile is over-painted
-     * @param color over-paint color (background color of level)
-     */
-    private void overPaintEnergizerTiles(GameLevel level, Predicate<Vector2i> overPaintCondition, Color color) {
-        level.energizerTiles().filter(overPaintCondition)
-            .forEach(tile -> paintSquareInsideTile(tile, 10, color));
-    }
-
-    /**
-     * Draws a square of the given size in background color over the tile. Used to hide eaten food and energizers.
-     * Assumes to be called in scaled graphics context!
-     */
-    private void paintSquareInsideTile(Vector2i tile, double squareSize, Color color) {
+    private void fillSquareAtTileCenter(Vector2i tile, double edgeLength, Color color) {
         double centerX = tile.x() * TS + HTS, centerY = tile.y() * TS + HTS;
         ctx().setFill(color);
-        ctx().fillRect(centerX - 0.5 * squareSize, centerY - 0.5 * squareSize, squareSize, squareSize);
+        ctx().fillRect(centerX - 0.5 * edgeLength, centerY - 0.5 * edgeLength, edgeLength, edgeLength);
     }
 
     @Override
