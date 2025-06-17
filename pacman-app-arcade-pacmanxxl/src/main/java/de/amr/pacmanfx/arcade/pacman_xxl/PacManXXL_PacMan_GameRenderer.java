@@ -5,11 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.arcade.rendering.ArcadePacMan_SpriteSheet;
-import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.Bonus;
-import de.amr.pacmanfx.model.actors.StaticBonus;
 import de.amr.pacmanfx.ui._2d.GenericMapRenderer;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import javafx.beans.property.FloatProperty;
@@ -18,7 +14,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-import static de.amr.pacmanfx.ui.PacManGames.theUI;
 import static java.util.Objects.requireNonNull;
 
 public class PacManXXL_PacMan_GameRenderer implements SpriteGameRenderer {
@@ -53,24 +48,6 @@ public class PacManXXL_PacMan_GameRenderer implements SpriteGameRenderer {
     @Override
     public void applyRenderingHints(GameLevel level) {
         //TODO what?
-    }
-
-    @Override
-    public void drawActor(Actor actor) {
-        switch (actor) {
-            case StaticBonus staticBonus -> drawStaticBonus(staticBonus);
-            default -> SpriteGameRenderer.super.drawActor(actor);
-        }
-    }
-
-    private void drawStaticBonus(Bonus staticBonus) {
-        if (staticBonus.state() == Bonus.STATE_EDIBLE) {
-            Sprite sprite = theUI().configuration().createBonusSymbolSprite(staticBonus.symbol());
-            drawActorSprite(staticBonus.actor(), sprite);
-        } else if (staticBonus.state() == Bonus.STATE_EATEN) {
-            Sprite sprite = theUI().configuration().createBonusValueSprite(staticBonus.symbol());
-            drawActorSprite(staticBonus.actor(), sprite);
-        }
     }
 
     @Override

@@ -11,8 +11,6 @@ import de.amr.pacmanfx.arcade.ms_pacman.scenes.Marquee;
 import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.Bonus;
-import de.amr.pacmanfx.model.actors.MovingBonus;
 import de.amr.pacmanfx.ui._2d.GenericMapRenderer;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import javafx.beans.property.FloatProperty;
@@ -23,7 +21,6 @@ import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.arcade.rendering.ArcadePalette.ARCADE_WHITE;
-import static de.amr.pacmanfx.ui.PacManGames.theUI;
 import static java.util.Objects.requireNonNull;
 
 public class PacManXXL_MsPacMan_GameRenderer implements SpriteGameRenderer {
@@ -64,32 +61,10 @@ public class PacManXXL_MsPacMan_GameRenderer implements SpriteGameRenderer {
     public void drawActor(Actor actor) {
         switch (actor) {
             case Marquee marquee -> drawMarquee(marquee);
-            case MovingBonus movingBonus -> drawMovingBonus(movingBonus);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
             default -> SpriteGameRenderer.super.drawActor(actor);
         }
     }
-
-    private void drawMovingBonus(MovingBonus bonus) {
-        if (!bonus.isVisible()) {
-            return;
-        }
-        ctx().save();
-        ctx().setImageSmoothing(false);
-        ctx().translate(0, bonus.elongationY());
-        switch (bonus.state()) {
-            case Bonus.STATE_EDIBLE -> {
-                Sprite sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
-                drawActorSprite(bonus.actor(), sprite);
-            }
-            case Bonus.STATE_EATEN  -> {
-                Sprite sprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
-                drawActorSprite(bonus.actor(), sprite);
-            }
-        }
-        ctx().restore();
-    }
-
     private void drawClapperBoard(Clapperboard clapperboard) {
         if (!clapperboard.isVisible()) {
             return;
