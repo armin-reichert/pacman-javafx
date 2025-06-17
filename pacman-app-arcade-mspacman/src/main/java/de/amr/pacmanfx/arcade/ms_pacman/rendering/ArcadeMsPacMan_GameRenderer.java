@@ -21,7 +21,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
@@ -68,8 +67,8 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
     public void drawLevel(GameLevel level, double x, double y, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted) {
         if (mazeHighlighted) {
             drawSpriteScaled(
-                    brightMazesSpriteSheet.sourceImage(),
-                    brightMazesSpriteSheet.spriteSeq(BrightMazesSpriteSheet.BRIGHT_MAZES_ID)[colorMapIndex], x, y);
+                brightMazesSpriteSheet.sourceImage(),
+                brightMazesSpriteSheet.spriteSeq(BrightMazesSpriteSheet.BRIGHT_MAZES_ID)[colorMapIndex], x, y);
         } else if (level.uneatenFoodCount() == 0) {
             drawSpriteScaled(spriteSheet.spriteSeq(SpriteID.EMPTY_MAZES)[colorMapIndex], x, y);
         } else {
@@ -94,18 +93,10 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
 
     @Override
     public void drawActor(Actor actor) {
-        if (actor instanceof Clapperboard clapperboard) {
-            drawClapperBoard(clapperboard);
-        }
-        else if (actor instanceof Bonus bonus) {
-            if (actor instanceof MovingBonus movingBonus) {
-                drawMovingBonus(movingBonus);
-            } else {
-                Logger.warn("Cannot draw bonus of type {}", bonus.getClass().getSimpleName());
-            }
-        }
-        else {
-            SpriteGameRenderer.super.drawActor(actor);
+        switch (actor) {
+            case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
+            case MovingBonus movingBonus   -> drawMovingBonus(movingBonus);
+            default -> SpriteGameRenderer.super.drawActor(actor);
         }
     }
 

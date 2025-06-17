@@ -18,9 +18,9 @@ public record BrightMazesSpriteSheet(Image sourceImage) implements SpriteSheet<S
     public static final String BRIGHT_MAZES_ID = "BRIGHT_MAZES";
 
     private static final Map<String, Object> SPRITE_MAP = Map.of(
-        BRIGHT_MAZES_ID, new Sprite[]{
-            makeSprite(0, 0, 224, 248),
-            makeSprite(0, 248, 224, 248),
+        BRIGHT_MAZES_ID, new Sprite[] {
+            makeSprite(0,       0, 224, 248),
+            makeSprite(0,     248, 224, 248),
             makeSprite(0, 2 * 248, 224, 248),
             makeSprite(0, 3 * 248, 224, 248),
             makeSprite(0, 4 * 248, 224, 248),
