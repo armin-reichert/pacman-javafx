@@ -1,11 +1,11 @@
 package de.amr.pacmanfx.ui._2d;
 
+import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.AnimatedActor;
-import de.amr.pacmanfx.model.actors.MovingActor;
-import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.LevelCounter;
+import de.amr.pacmanfx.model.LivesCounter;
+import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.uilib.animation.SingleSpriteAnimationMap;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -15,8 +15,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.ui.PacManGames.theUI;
 import static java.util.Objects.requireNonNull;
 
 public interface SpriteGameRenderer extends GameRenderer {
@@ -105,21 +105,87 @@ public interface SpriteGameRenderer extends GameRenderer {
         if (!actor.isVisible()) {
             return;
         }
-        if (actor instanceof AnimatedActor animatedActor) {
-            animatedActor.animations().ifPresent(animationMap -> {
-                switch (animationMap) {
-                    case SingleSpriteAnimationMap singleSpriteAnimationMap ->
-                        drawActorSprite(actor, singleSpriteAnimationMap.singleSprite());
-                    case SpriteAnimationMap spriteAnimationMap -> {
-                        if (spriteAnimationMap.currentAnimation() != null) {
-                            drawActorSprite(actor, spriteAnimationMap.currentSprite(actor));
-                        } else {
-                            Logger.error("No current animation for actor {}", actor);
+        switch (actor) {
+            case StaticBonus staticBonus   -> drawStaticBonus(staticBonus);
+            case MovingBonus movingBonus   -> drawMovingBonus(movingBonus);
+            case LivesCounter livesCounter -> drawLivesCounter(livesCounter);
+            case LevelCounter levelCounter -> drawLevelCounter(levelCounter);
+            case AnimatedActor animatedActor ->
+                animatedActor.animations().ifPresent(animationMap -> {
+                    switch (animationMap) {
+                        case SingleSpriteAnimationMap singleSpriteAnimationMap ->
+                                drawActorSprite(actor, singleSpriteAnimationMap.singleSprite());
+                        case SpriteAnimationMap spriteAnimationMap -> {
+                            if (spriteAnimationMap.currentAnimation() != null) {
+                                drawActorSprite(actor, spriteAnimationMap.currentSprite(actor));
+                            } else {
+                                Logger.error("No current animation for actor {}", actor);
+                            }
                         }
+                        default -> Logger.error("Cannot render animated actor with animation map of type {}", animationMap.getClass());
                     }
-                    default -> Logger.error("Cannot render animated actor with animation map of type {}", animationMap.getClass());
-                }
-            });
+                });
+            default -> {}
+        }
+    }
+
+    private void drawMovingBonus(MovingBonus bonus) {
+        if (!bonus.isVisible()) {
+            return;
+        }
+        ctx().save();
+        ctx().setImageSmoothing(false);
+        ctx().translate(0, bonus.elongationY());
+        switch (bonus.state()) {
+            case Bonus.STATE_EDIBLE -> {
+                Sprite sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
+                drawActorSprite(bonus.actor(), sprite);
+            }
+            case Bonus.STATE_EATEN  -> {
+                Sprite sprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
+                drawActorSprite(bonus.actor(), sprite);
+            }
+        }
+        ctx().restore();
+    }
+
+    private void drawStaticBonus(Bonus bonus) {
+        if (bonus.state() == Bonus.STATE_EDIBLE) {
+            Sprite sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
+            drawActorSprite(bonus.actor(), sprite);
+        }
+        else if (bonus.state() == Bonus.STATE_EATEN) {
+            Sprite sprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
+            drawActorSprite(bonus.actor(), sprite);
+        }
+    }
+
+    default void drawLevelCounter(LevelCounter levelCounter) {
+        float x = levelCounter.x(), y = levelCounter.y();
+        for (byte symbol : levelCounter.symbols()) {
+            Sprite sprite = theUI().configuration().createBonusSymbolSprite(symbol);
+            drawSpriteScaled(sprite, x, y);
+            x -= TS * 2;
+        }
+    }
+
+    default void drawLivesCounter(LivesCounter livesCounter) {
+        if (livesCounter.lifeCount() == 0) {
+            return;
+        }
+        // As long as Pac-Man is still invisible on game start, one live more is shown in the counter
+        int numLivesDisplayed = theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible()
+                ? theGame().livesCounter().lifeCount() : theGame().livesCounter().lifeCount() - 1;
+        Sprite sprite = theUI().configuration().createLivesCounterSprite();
+        double x = livesCounter.x(), y = livesCounter.y();
+        for (int i = 0; i < Math.min(numLivesDisplayed, livesCounter.maxLivesDisplayed()); ++i) {
+            drawSpriteScaled(sprite, x + TS * (2 * i), y);
+        }
+        // show text indicating that more lives are available than symbols displayed (can happen when lives are added via cheat)
+        int excessLives = livesCounter.lifeCount() - livesCounter.maxLivesDisplayed();
+        if (excessLives > 0) {
+            Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
+            fillText("+" + excessLives, Color.YELLOW, font, x + TS * 10, y + TS);
         }
     }
 
@@ -168,21 +234,6 @@ public interface SpriteGameRenderer extends GameRenderer {
                             ctx().fillOval(arrowHead.x() - radius, arrowHead.y() - radius, diameter, diameter);
                         }
                     });
-        }
-    }
-
-    default void drawLivesCounter(int numLives, int maxLives, double x, double y, Sprite livesCounterSprite) {
-        if (numLives == 0) {
-            return;
-        }
-        for (int i = 0; i < Math.min(numLives, maxLives); ++i) {
-            drawSpriteScaled(livesCounterSprite, x + TS * (2 * i), y);
-        }
-        // show text indicating that more lives are available than symbols displayed (can happen when lives are added via cheat)
-        int moreLivesThanSymbols = numLives - maxLives;
-        if (moreLivesThanSymbols > 0) {
-            Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
-            fillText("+" + moreLivesThanSymbols, Color.YELLOW, font, x + TS * 10, y + TS);
         }
     }
 }

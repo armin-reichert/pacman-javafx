@@ -4,13 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.rendering;
 
-import de.amr.pacmanfx.arcade.ArcadePacMan_LevelCounter;
-import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.Bonus;
-import de.amr.pacmanfx.model.actors.StaticBonus;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
@@ -23,7 +18,6 @@ import java.util.function.Predicate;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.PacManGames.theAssets;
-import static de.amr.pacmanfx.ui.PacManGames.theUI;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
@@ -73,35 +67,6 @@ public class ArcadePacMan_GameRenderer implements SpriteGameRenderer {
             overPaintEnergizerTiles(level, tile -> !energizerHighlighted || level.tileContainsEatenFood(tile), backgroundColor);
         }
         ctx.restore();
-    }
-
-    @Override
-    public void drawActor(Actor actor) {
-        switch (actor) {
-            case StaticBonus staticBonus -> drawStaticBonus(staticBonus);
-            case ArcadePacMan_LevelCounter levelCounter -> drawLevelCounter(levelCounter);
-            default -> SpriteGameRenderer.super.drawActor(actor);
-        }
-    }
-
-    private void drawStaticBonus(Bonus bonus) {
-        if (bonus.state() == Bonus.STATE_EDIBLE) {
-            Sprite sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
-            drawActorSprite(bonus.actor(), sprite);
-        }
-        else if (bonus.state() == Bonus.STATE_EATEN) {
-            Sprite sprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
-            drawActorSprite(bonus.actor(), sprite);
-        }
-    }
-
-    private void drawLevelCounter(ArcadePacMan_LevelCounter levelCounter) {
-        float x = levelCounter.x(), y = levelCounter.y();
-        for (byte symbol : levelCounter.symbols()) {
-            Sprite sprite = theUI().configuration().createBonusSymbolSprite(symbol);
-            drawSpriteScaled(sprite, x, y);
-            x -= TS * 2;
-        }
     }
 
     /**

@@ -15,7 +15,6 @@ import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.MovingActor;
-import de.amr.pacmanfx.model.actors.MovingBonus;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengen.ms_pacman.model.*;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.Clapperboard;
@@ -36,8 +35,6 @@ import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
-import static de.amr.pacmanfx.model.actors.Bonus.STATE_EATEN;
-import static de.amr.pacmanfx.model.actors.Bonus.STATE_EDIBLE;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
@@ -104,22 +101,10 @@ public class TengenMsPacMan_Renderer2D implements SpriteGameRenderer {
         requireNonNull(actor);
         ctx().setImageSmoothing(false);
         switch (actor) {
-            case LevelCounter levelCounter -> drawLevelCounter(levelCounter);
             case Pac pac -> drawAnyKindOfPac(pac);
-            case MovingBonus movingBonus -> drawMovingBonus(movingBonus);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
             case TengenMsPacMan_CutScene3.Stork stork -> drawStork(stork);
             default -> SpriteGameRenderer.super.drawActor(actor);
-        }
-    }
-
-    //TODO maybe just extend sprite sheet to include stork without bag?
-    private void drawStork(TengenMsPacMan_CutScene3.Stork stork) {
-        SpriteGameRenderer.super.drawActor(stork);
-        if (stork.isBagReleasedFromBeak()) { // over-paint bag still hanging at beak
-            ctx().setFill(PY_CANVAS_BG_COLOR.get());
-            //TODO: clarify
-            ctx().fillRect(scaled(stork.x() - 13), scaled(stork.y() + 3), scaled(8), scaled(10));
         }
     }
 
@@ -169,25 +154,6 @@ public class TengenMsPacMan_Renderer2D implements SpriteGameRenderer {
             case DOWN  -> { ctx().scale(-1, 1); ctx().rotate(-90); }
         }
         drawSpriteScaledCenteredAt(spriteLookingLeft, 0, 0);
-        ctx().restore();
-    }
-
-    private void drawMovingBonus(MovingBonus bonus) {
-        requireNonNull(bonus);
-        ctx().save();
-        ctx().setImageSmoothing(false);
-        ctx().translate(0, bonus.elongationY());
-        switch (bonus.state()) {
-            case STATE_EDIBLE -> {
-                Sprite sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
-                drawActorSprite(bonus.actor(), sprite);
-            }
-            case STATE_EATEN  -> {
-                Sprite sprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
-                drawActorSprite(bonus.actor(), sprite);
-            }
-            default -> {}
-        }
         ctx().restore();
     }
 
@@ -393,17 +359,6 @@ public class TengenMsPacMan_Renderer2D implements SpriteGameRenderer {
         }
     }
 
-    private void drawLevelCounter(LevelCounter levelCounter) {
-        requireNonNull(levelCounter);
-        ctx().setImageSmoothing(false);
-        float x = levelCounter.x(), y = levelCounter.y();
-        for (byte symbol : levelCounter.symbols()) {
-            Sprite sprite = theUI().configuration().createBonusSymbolSprite(symbol);
-            drawSpriteScaled(sprite, x, y);
-            x -= TS * 2;
-        }
-    }
-
     public void drawLevelNumberBox(int levelNumber, double x, double y) {
         drawSpriteScaled(spriteSheet.sprite(SpriteID.LEVEL_NUMBER_BOX), x, y);
         int tens = levelNumber / 10, ones = levelNumber % 10;
@@ -463,6 +418,16 @@ public class TengenMsPacMan_Renderer2D implements SpriteGameRenderer {
                 ctx().fillText(clapperboard.text(), scaled(textX), scaled(textY));
             }
         });
+    }
+
+    //TODO maybe just extend sprite sheet to include stork without bag?
+    private void drawStork(TengenMsPacMan_CutScene3.Stork stork) {
+        SpriteGameRenderer.super.drawActor(stork);
+        if (stork.isBagReleasedFromBeak()) { // over-paint bag still hanging at beak
+            ctx().setFill(PY_CANVAS_BG_COLOR.get());
+            //TODO: clarify
+            ctx().fillRect(scaled(stork.x() - 13), scaled(stork.y() + 3), scaled(8), scaled(10));
+        }
     }
 
     public void drawJoypadKeyBinding(JoypadKeyBinding binding) {

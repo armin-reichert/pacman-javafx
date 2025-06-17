@@ -426,12 +426,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
         ghostsInZOrder().forEach(ghost -> gr().drawActor(ghost));
         theGameLevel().bonus().ifPresent(bonus -> gr().drawActor(bonus.actor()));
 
-        // As long as Pac-Man is still invisible on game start, one live more is shown in the counter
-        int numLivesDisplayed = theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible()
-            ? theGame().livesCounter().lifeCount() : theGame().livesCounter().lifeCount() - 1;
-        gr().drawLivesCounter(numLivesDisplayed, 5, 2 * TS, sizeInPx().y() - TS,
-                spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL));
+        theGame().livesCounter().setPosition(2 * TS, sizeInPx().y() - TS);
+        theGame().livesCounter().show();
+        gr().drawActor(theGame().livesCounter());
 
+        theGame().levelCounter().show();
         TengenMsPacMan_GameModel tengenGame = (TengenMsPacMan_GameModel) theGame();
         if (theGameLevel().isDemoLevel() || tengenGame.mapCategory() == MapCategory.ARCADE) {
             gr().drawActor(theGame().levelCounter());

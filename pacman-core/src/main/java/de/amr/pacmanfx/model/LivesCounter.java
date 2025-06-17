@@ -1,3 +1,7 @@
+/*
+Copyright (c) 2021-2025 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.pacmanfx.model;
 
 import de.amr.pacmanfx.model.actors.Actor;
@@ -6,8 +10,15 @@ import javafx.beans.property.SimpleIntegerProperty;
 import org.tinylog.Logger;
 
 public class LivesCounter extends Actor {
-    private int initialLifeCount;
+
     private final IntegerProperty lifeCountPy = new SimpleIntegerProperty(0);
+    private int initialLifeCount;
+    private int maxLivesDisplayed;
+
+    public LivesCounter() {
+        initialLifeCount = 3;
+        maxLivesDisplayed = 5;
+    }
 
     public int initialLifeCount() {
         return initialLifeCount;
@@ -18,6 +29,14 @@ public class LivesCounter extends Actor {
     }
 
     public int lifeCount() { return lifeCountPy.get(); }
+
+    public int maxLivesDisplayed() {
+        return maxLivesDisplayed;
+    }
+
+    public void setMaxLivesDisplayed(int maxLivesDisplayed) {
+        this.maxLivesDisplayed = maxLivesDisplayed;
+    }
 
     public void setLifeCount(int n) {
         if (n >= 0) {

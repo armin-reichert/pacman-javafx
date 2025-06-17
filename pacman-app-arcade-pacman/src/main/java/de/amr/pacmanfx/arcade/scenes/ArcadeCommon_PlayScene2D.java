@@ -184,15 +184,15 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
 
         // Draw either lives counter or credit text
         if (theGame().canStartNewGame()) {
-            // As long as Pac-Man is still invisible on game start, one live more is shown in the counter
-            int numLivesDisplayed = theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible()
-                ? theGame().livesCounter().lifeCount() : theGame().livesCounter().lifeCount() - 1;
-            Sprite sprite = theUI().configuration().createLivesCounterSprite();
-            gr().drawLivesCounter(numLivesDisplayed, 5, 2 * TS, sizeInPx().y() - 2 * TS, sprite);
+            theGame().livesCounter().setPosition(2 * TS, sizeInPx().y() - 2 * TS);
+            theGame().livesCounter().show();
         } else {
             gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
                 scoreColor(), arcadeFont8(), 2 * TS, sizeInPx().y() - 2);
+            theGame().livesCounter().hide();
         }
+        gr().drawActor(theGame().livesCounter());
+        theGame().levelCounter().show(); //TODO
         gr().drawActor(theGame().levelCounter());
     }
 

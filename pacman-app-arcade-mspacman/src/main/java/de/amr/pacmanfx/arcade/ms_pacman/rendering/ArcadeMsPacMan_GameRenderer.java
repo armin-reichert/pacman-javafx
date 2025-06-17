@@ -9,10 +9,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.scenes.Marquee;
 import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.Bonus;
-import de.amr.pacmanfx.model.actors.MovingBonus;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
@@ -29,7 +26,6 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.arcade.rendering.ArcadePalette.ARCADE_WHITE;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.ui.PacManGames.theAssets;
-import static de.amr.pacmanfx.ui.PacManGames.theUI;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
@@ -126,9 +122,7 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
     public void drawActor(Actor actor) {
         switch (actor) {
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
-            case LevelCounter levelCounter -> drawLevelCounter(levelCounter);
             case Marquee marquee           -> drawMarquee(marquee);
-            case MovingBonus movingBonus   -> drawMovingBonus(movingBonus);
             default -> SpriteGameRenderer.super.drawActor(actor);
         }
     }
@@ -146,15 +140,6 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
         ctx.setFill(ARCADE_WHITE);
         ctx.fillText(clapperboard.number(), numberX, numberY);
         ctx.fillText(clapperboard.text(), textX, numberY);
-    }
-
-    private void drawLevelCounter(LevelCounter levelCounter) {
-        float x = levelCounter.x(), y = levelCounter.y();
-        for (byte symbol : levelCounter.symbols()) {
-            Sprite sprite = theUI().configuration().createBonusSymbolSprite(symbol);
-            drawSpriteScaled(sprite, x, y);
-            x -= TS * 2;
-        }
     }
 
     /**
@@ -203,26 +188,6 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
             y = 4 * (bulbIndex - 59);
         }
         ctx.fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
-    }
-
-    private void drawMovingBonus(MovingBonus bonus) {
-        if (!bonus.isVisible()) {
-            return;
-        }
-        ctx.save();
-        ctx.setImageSmoothing(false);
-        ctx.translate(0, bonus.elongationY());
-        switch (bonus.state()) {
-            case Bonus.STATE_EDIBLE -> {
-                Sprite sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
-                drawActorSprite(bonus.actor(), sprite);
-            }
-            case Bonus.STATE_EATEN  -> {
-                Sprite sprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
-                drawActorSprite(bonus.actor(), sprite);
-            }
-        }
-        ctx.restore();
     }
 
     public void drawMsPacManCopyrightAtTile(Color color, Font font, int tileX, int tileY) {
