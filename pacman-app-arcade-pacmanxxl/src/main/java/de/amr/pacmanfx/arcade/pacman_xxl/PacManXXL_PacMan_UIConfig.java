@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
-import de.amr.pacmanfx.arcade.*;
+import de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.rendering.ArcadePacMan_GhostAnimationMap;
 import de.amr.pacmanfx.arcade.rendering.ArcadePacMan_PacAnimationMap;
 import de.amr.pacmanfx.arcade.rendering.ArcadePacMan_SpriteSheet;
@@ -16,12 +16,11 @@ import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.PacManGames_Assets;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.VectorGraphicsGameRenderer;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
-import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
@@ -152,8 +151,8 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
     }
 
     @Override
-    public VectorGraphicsGameRenderer createRenderer(Canvas canvas) {
-        return new VectorGraphicsGameRenderer(spriteSheet, canvas);
+    public PacManXXL_PacMan_GameRenderer createRenderer(Canvas canvas) {
+        return new PacManXXL_PacMan_GameRenderer(spriteSheet, canvas);
     }
     @Override
 

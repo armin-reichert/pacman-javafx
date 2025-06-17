@@ -103,31 +103,4 @@ public class VectorGraphicsGameRenderer implements SpriteGameRenderer {
         }
     }
 
-    @Override
-    public void drawActor(Actor actor) {
-        switch (actor) {
-            case LevelCounter levelCounter -> drawLevelCounter(levelCounter);
-            case Bonus bonus -> drawBonus(bonus);
-            default -> SpriteGameRenderer.super.drawActor(actor);
-        }
-    }
-
-    private void drawLevelCounter(LevelCounter levelCounter) {
-        float x = levelCounter.x(), y = levelCounter.y();
-        for (byte symbol : levelCounter.symbols()) {
-            Sprite sprite = theUI().configuration().createBonusSymbolSprite(symbol);
-            drawSpriteScaled(sprite, x, y);
-            x -= TS * 2;
-        }
-    }
-
-    private void drawBonus(Bonus bonus) {
-        if (bonus.state() == Bonus.STATE_EDIBLE) {
-            Sprite sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
-            drawActorSprite(bonus.actor(), sprite);
-        } else if (bonus.state() == Bonus.STATE_EATEN) {
-            Sprite sprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
-            drawActorSprite(bonus.actor(), sprite);
-        }
-    }
 }

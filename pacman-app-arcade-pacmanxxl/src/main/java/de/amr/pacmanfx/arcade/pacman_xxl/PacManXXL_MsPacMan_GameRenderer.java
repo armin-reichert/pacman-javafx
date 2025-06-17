@@ -5,6 +5,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.Clapperboard;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.Marquee;
 import de.amr.pacmanfx.lib.Sprite;
+import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.MovingBonus;
@@ -12,6 +13,7 @@ import de.amr.pacmanfx.ui._2d.VectorGraphicsGameRenderer;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.Globals.HTS;
+import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.arcade.rendering.ArcadePalette.ARCADE_WHITE;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
 
@@ -31,9 +33,19 @@ public class PacManXXL_MsPacMan_GameRenderer extends VectorGraphicsGameRenderer 
     public void drawActor(Actor actor) {
         switch (actor) {
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
+            case LevelCounter levelCounter -> drawLevelCounter(levelCounter);
             case Marquee marquee -> drawMarquee(marquee);
             case MovingBonus movingBonus -> drawMovingBonus(movingBonus);
             default -> super.drawActor(actor);
+        }
+    }
+
+    private void drawLevelCounter(LevelCounter levelCounter) {
+        float x = levelCounter.x(), y = levelCounter.y();
+        for (byte symbol : levelCounter.symbols()) {
+            Sprite sprite = theUI().configuration().createBonusSymbolSprite(symbol);
+            drawSpriteScaled(sprite, x, y);
+            x -= TS * 2;
         }
     }
 
