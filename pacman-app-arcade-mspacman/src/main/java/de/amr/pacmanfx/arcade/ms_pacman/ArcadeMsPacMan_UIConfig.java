@@ -6,6 +6,8 @@ package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.arcade.ArcadeCommon_BootScene2D;
 import de.amr.pacmanfx.arcade.ArcadeCommon_PlayScene2D;
+import de.amr.pacmanfx.arcade.ms_pacman.rendering.*;
+import de.amr.pacmanfx.arcade.ms_pacman.scenes.*;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;

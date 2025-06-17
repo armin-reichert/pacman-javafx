@@ -16,4 +16,6 @@ open module arcade.ms_pacman {
     requires x.arcade.pacman;
 
     exports de.amr.pacmanfx.arcade.ms_pacman;
+    exports de.amr.pacmanfx.arcade.ms_pacman.rendering;
+    exports de.amr.pacmanfx.arcade.ms_pacman.scenes;
 }

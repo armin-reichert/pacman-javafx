@@ -2,8 +2,10 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.arcade.ms_pacman;
+package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
+import de.amr.pacmanfx.arcade.ms_pacman.scenes.Clapperboard;
+import de.amr.pacmanfx.arcade.ms_pacman.scenes.Marquee;
 import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
@@ -23,6 +25,7 @@ import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import java.util.Map;
+import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
@@ -144,16 +147,23 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
     }
 
     private void drawClapperBoard(Clapperboard clapperboard) {
-        clapperboard.currentSprite().ifPresent(sprite -> {
-            float numberX = scaled(clapperboard.x() + sprite.width() - 25);
-            float numberY = scaled(clapperboard.y() + 18);
-            float textX = scaled(clapperboard.x() + sprite.width());
-            drawSpriteScaledCenteredAt(sprite, clapperboard.x() + HTS, clapperboard.y() + HTS);
-            ctx.setFont(clapperboard.font());
-            ctx.setFill(ARCADE_WHITE);
-            ctx.fillText(clapperboard.number(), numberX, numberY);
-            ctx.fillText(clapperboard.text(), textX, numberY);
-        });
+        switch (clapperboard.state()) {
+            case Clapperboard.HIDDEN -> {} //TODO use visible property
+            case Clapperboard.CLOSED,
+                 Clapperboard.OPEN,
+                 Clapperboard.WIDE_OPEN ->
+            {
+                Sprite sprite = spriteSheet.spriteSeq(SpriteID.CLAPPERBOARD)[clapperboard.state()];
+                float numberX = scaled(clapperboard.x() + sprite.width() - 25);
+                float numberY = scaled(clapperboard.y() + 18);
+                float textX = scaled(clapperboard.x() + sprite.width());
+                drawSpriteScaledCenteredAt(sprite, clapperboard.x() + HTS, clapperboard.y() + HTS);
+                ctx.setFont(clapperboard.font());
+                ctx.setFill(ARCADE_WHITE);
+                ctx.fillText(clapperboard.number(), numberX, numberY);
+                ctx.fillText(clapperboard.text(), textX, numberY);
+            }
+        }
     }
 
     public void drawMsPacManCopyrightAtTile(Color color, Font font, int tileX, int tileY) {

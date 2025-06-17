@@ -1,10 +1,8 @@
-package de.amr.pacmanfx.arcade.ms_pacman;
+package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
-import de.amr.pacmanfx.lib.Sprite;
+import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.model.actors.Actor;
 import javafx.scene.text.Font;
-
-import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
@@ -13,7 +11,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class Clapperboard extends Actor {
 
-    private static final byte HIDDEN = -1, WIDE_OPEN = 0, OPEN = 1, CLOSED = 2;
+    public static final byte HIDDEN = -1, WIDE_OPEN = 0, OPEN = 1, CLOSED = 2;
 
     private final ArcadeMsPacMan_SpriteSheet spriteSheet;
     private final String number;
@@ -63,10 +61,7 @@ public class Clapperboard extends Actor {
         }
     }
 
-    public Optional<Sprite> currentSprite() {
-        if (state == HIDDEN) return Optional.empty();
-        Sprite sprite = spriteSheet.spriteSeq(SpriteID.CLAPPERBOARD)[state];
-        return Optional.of(sprite);
+    public byte state() {
+        return state;
     }
-
 }
