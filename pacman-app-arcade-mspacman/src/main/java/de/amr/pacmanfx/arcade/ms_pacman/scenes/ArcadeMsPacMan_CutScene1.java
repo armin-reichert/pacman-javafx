@@ -72,7 +72,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         inky.setAnimations(config.createGhostAnimations(inky));
         pinky.setAnimations(config.createGhostAnimations(pinky));
 
-        clapperboard = new Clapperboard(spriteSheet, "1", "THEY MEET");
+        clapperboard = new Clapperboard("1", "THEY MEET");
         clapperboard.setPosition(tiles_to_px(3), tiles_to_px(10));
         clapperboard.setFont(arcadeFont8());
         clapperboard.startAnimation();

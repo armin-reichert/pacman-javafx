@@ -54,7 +54,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
         msPacMan.setAnimations(theUI().configuration().createPacAnimations(msPacMan));
         pacMan.setAnimations(theUI().configuration().createPacAnimations(pacMan));
 
-        clapperboard = new Clapperboard(spriteSheet, "2", "THE CHASE");
+        clapperboard = new Clapperboard("2", "THE CHASE");
         clapperboard.setPosition(tiles_to_px(3), tiles_to_px(10));
         clapperboard.setFont(arcadeFont8());
         clapperboard.startAnimation();

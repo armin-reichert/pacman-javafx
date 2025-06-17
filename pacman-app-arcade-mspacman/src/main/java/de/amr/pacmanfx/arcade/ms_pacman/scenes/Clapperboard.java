@@ -1,6 +1,5 @@
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.model.actors.Actor;
 import javafx.scene.text.Font;
 
@@ -11,9 +10,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class Clapperboard extends Actor {
 
-    public static final byte HIDDEN = -1, WIDE_OPEN = 0, OPEN = 1, CLOSED = 2;
+    public static final byte WIDE_OPEN = 0, OPEN = 1, CLOSED = 2;
 
-    private final ArcadeMsPacMan_SpriteSheet spriteSheet;
     private final String number;
     private final String text;
     private Font font = Font.font(8);
@@ -22,10 +20,14 @@ public class Clapperboard extends Actor {
     private boolean running;
     private byte state;
 
-    public Clapperboard(ArcadeMsPacMan_SpriteSheet spriteSheet, String number, String text) {
-        this.spriteSheet = requireNonNull(spriteSheet);
+    public Clapperboard(String number, String text) {
         this.number = number;
         this.text = text;
+        this.state = CLOSED;
+    }
+
+    public byte state() {
+        return state;
     }
 
     public String number() {
@@ -44,6 +46,7 @@ public class Clapperboard extends Actor {
         tick = 0;
         state = WIDE_OPEN;
         running = true;
+        show();
     }
 
     public void tick() {
@@ -53,15 +56,11 @@ public class Clapperboard extends Actor {
                 case 54 -> state = CLOSED;
                 case 59 -> state = WIDE_OPEN;
                 case 88 -> {
-                    state = HIDDEN;
+                    hide();
                     running = false;
                 }
             }
             ++tick;
         }
-    }
-
-    public byte state() {
-        return state;
     }
 }
