@@ -11,6 +11,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingPhase;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import javafx.scene.paint.Color;
 
@@ -21,6 +22,7 @@ import java.util.Map;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.timer.TickTimer.ticksToString;
+import static de.amr.pacmanfx.ui.PacManGames.theAssets;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
 import static de.amr.pacmanfx.uilib.Ufx.formatColorHex;
 
@@ -68,6 +70,12 @@ public class InfoBoxGameInfo extends InfoBox {
                 return InfoText.NO_INFO;
             }
         }));
+        addLabeledValue("Renderer class", () -> {
+            if (theUI().currentGameScene().isPresent() && theUI().currentGameScene().get() instanceof GameScene2D gameScene2D) {
+                return gameScene2D.gr().getClass().getSimpleName();
+            }
+            return InfoText.NO_INFO;
+        });
 
         addLabeledValue("Lives",           ifLevelPresent(level -> "%d".formatted(theGame().lifeCount())));
 
