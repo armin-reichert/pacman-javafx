@@ -14,7 +14,6 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.MovingBonus;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
@@ -24,12 +23,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
-import java.util.Map;
-
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.arcade.ArcadePalette.ARCADE_WHITE;
-import static de.amr.pacmanfx.lib.Sprite.makeSprite;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.ui.PacManGames.theAssets;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
@@ -37,34 +33,19 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
 
-    private static class BrightMazesSpriteSheet implements SpriteSheet<String> {
-
-        private static final Map<String, Object> SPRITE_MAP = Map.of(
-            "BRIGHT_MAZES", new Sprite[] {
-                makeSprite(0,     0, 224, 248),
-                makeSprite(0,   248, 224, 248),
-                makeSprite(0, 2*248, 224, 248),
-                makeSprite(0, 3*248, 224, 248),
-                makeSprite(0, 4*248, 224, 248),
-                makeSprite(0, 5*248, 224, 248)
-            }
-        );
-
-        @Override
-        public Image sourceImage() { return theAssets().get("ms_pacman.flashing_mazes"); }
-
-        @Override
-        public Map<String, Object> spriteMap() { return SPRITE_MAP; }
-    }
-
-    private final BrightMazesSpriteSheet brightMazesSpriteSheet = new BrightMazesSpriteSheet();
+    private final BrightMazesSpriteSheet brightMazesSpriteSheet;
     private final ArcadeMsPacMan_SpriteSheet spriteSheet;
     private final GraphicsContext ctx;
     private final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
     private int colorMapIndex;
 
-    public ArcadeMsPacMan_GameRenderer(ArcadeMsPacMan_SpriteSheet spriteSheet, Canvas canvas) {
+    public ArcadeMsPacMan_GameRenderer(
+        ArcadeMsPacMan_SpriteSheet spriteSheet,
+        BrightMazesSpriteSheet brightMazesSpriteSheet,
+        Canvas canvas)
+    {
         this.spriteSheet = requireNonNull(spriteSheet);
+        this.brightMazesSpriteSheet = requireNonNull(brightMazesSpriteSheet);
         ctx = requireNonNull(canvas).getGraphicsContext2D();
         colorMapIndex = -1; // undefined
     }
@@ -88,7 +69,7 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
         if (mazeHighlighted) {
             drawSpriteScaled(
                     brightMazesSpriteSheet.sourceImage(),
-                    brightMazesSpriteSheet.spriteSeq("BRIGHT_MAZES")[colorMapIndex], x, y);
+                    brightMazesSpriteSheet.spriteSeq(BrightMazesSpriteSheet.BRIGHT_MAZES_ID)[colorMapIndex], x, y);
         } else if (level.uneatenFoodCount() == 0) {
             drawSpriteScaled(spriteSheet.spriteSeq(SpriteID.EMPTY_MAZES)[colorMapIndex], x, y);
         } else {

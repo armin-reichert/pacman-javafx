@@ -14,11 +14,11 @@ import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.PacManGames_Assets;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
-import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
@@ -56,18 +56,15 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
 
     private final Image appIcon;
     private final ArcadeMsPacMan_SpriteSheet spriteSheet;
+    private final BrightMazesSpriteSheet brightMazesSpriteSheet;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
-
-    @Override
-    public Class<?> resourceRootClass() {
-        return ArcadeMsPacMan_UIConfig.class;
-    }
 
     public ArcadeMsPacMan_UIConfig(PacManGames_Assets assets) {
         appIcon = loadImage("graphics/icons/mspacman.png");
-        spriteSheet = new ArcadeMsPacMan_SpriteSheet(loadImage("graphics/mspacman_spritesheet.png"));
 
-        assets.store("ms_pacman.flashing_mazes",                  loadImage("graphics/mazes_flashing.png"));
+        spriteSheet = new ArcadeMsPacMan_SpriteSheet(loadImage("graphics/mspacman_spritesheet.png"));
+        brightMazesSpriteSheet = new BrightMazesSpriteSheet(loadImage("graphics/mazes_flashing.png"));
+
         assets.store("ms_pacman.logo.midway",                     loadImage("graphics/midway_logo.png"));
         assets.store("ms_pacman.startpage.image1",                loadImage("graphics/f1.jpg"));
         assets.store("ms_pacman.startpage.image2",                loadImage("graphics/f2.jpg"));
@@ -136,6 +133,11 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     }
 
     @Override
+    public Class<?> resourceRootClass() {
+        return ArcadeMsPacMan_UIConfig.class;
+    }
+
+    @Override
     public Image appIcon() {
         return appIcon;
     }
@@ -171,7 +173,7 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
 
     @Override
     public ArcadeMsPacMan_GameRenderer createRenderer(Canvas canvas) {
-        return new ArcadeMsPacMan_GameRenderer(spriteSheet, canvas);
+        return new ArcadeMsPacMan_GameRenderer(spriteSheet, brightMazesSpriteSheet, canvas);
     }
 
     @Override
