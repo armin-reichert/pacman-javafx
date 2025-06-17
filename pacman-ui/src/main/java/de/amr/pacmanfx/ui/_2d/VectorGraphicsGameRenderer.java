@@ -113,7 +113,6 @@ public class VectorGraphicsGameRenderer implements SpriteGameRenderer {
     }
 
     private void drawLevelCounter(LevelCounter levelCounter) {
-//        float x = sceneSizeInPixels.x() - 4 * TS, y = sceneSizeInPixels.y() - 2 * TS;
         float x = levelCounter.x(), y = levelCounter.y();
         for (byte symbol : levelCounter.symbols()) {
             Sprite sprite = theUI().configuration().createBonusSymbolSprite(symbol);
@@ -122,7 +121,7 @@ public class VectorGraphicsGameRenderer implements SpriteGameRenderer {
         }
     }
 
-    public void drawBonus(Bonus bonus) {
+    private void drawBonus(Bonus bonus) {
         if (bonus.state() == Bonus.STATE_EDIBLE) {
             Sprite sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
             drawActorSprite(bonus.actor(), sprite);
