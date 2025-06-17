@@ -1,3 +1,7 @@
+/*
+Copyright (c) 2021-2025 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
@@ -5,13 +9,18 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.Clapperboard;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.Marquee;
 import de.amr.pacmanfx.lib.Sprite;
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.MovingBonus;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.ui._2d.VectorGraphicsMapRenderer;
+import javafx.beans.property.FloatProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
@@ -19,19 +28,38 @@ import static de.amr.pacmanfx.arcade.rendering.ArcadePalette.ARCADE_WHITE;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
 import static java.util.Objects.requireNonNull;
 
-//TODO avoid code duplication with Arcade Ms. Pac-Man renderer
-public class PacManXXL_MsPacMan_GameRenderer extends VectorGraphicsMapRenderer implements SpriteGameRenderer {
+public class PacManXXL_MsPacMan_GameRenderer implements SpriteGameRenderer {
 
+    private final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
+    private final GraphicsContext ctx;
     private final ArcadeMsPacMan_SpriteSheet spriteSheet;
+    private final VectorGraphicsMapRenderer mapRenderer;
 
     public PacManXXL_MsPacMan_GameRenderer(ArcadeMsPacMan_SpriteSheet spriteSheet, Canvas canvas) {
-        super(canvas);
         this.spriteSheet = requireNonNull(spriteSheet);
+        ctx = requireNonNull(canvas).getGraphicsContext2D();
+        mapRenderer = new VectorGraphicsMapRenderer(canvas);
+        mapRenderer.scalingProperty().bind(scalingProperty());
+    }
+
+    @Override
+    public FloatProperty scalingProperty() {
+        return scalingPy;
+    }
+
+    @Override
+    public GraphicsContext ctx() {
+        return ctx;
     }
 
     @Override
     public ArcadeMsPacMan_SpriteSheet spriteSheet() {
         return spriteSheet;
+    }
+
+    @Override
+    public void applyRenderingHints(GameLevel level) {
+        //TODO what?
     }
 
     @Override
@@ -135,5 +163,10 @@ public class PacManXXL_MsPacMan_GameRenderer extends VectorGraphicsMapRenderer i
             y = 4 * (bulbIndex - 59);
         }
         ctx().fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
+    }
+
+    @Override
+    public void drawLevel(GameLevel level, double x, double y, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted) {
+        mapRenderer.drawLevel(level, mazeHighlighted, energizerHighlighted);
     }
 }

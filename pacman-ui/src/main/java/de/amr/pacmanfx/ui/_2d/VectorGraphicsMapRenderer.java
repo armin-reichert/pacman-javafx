@@ -23,7 +23,7 @@ import static java.util.function.Predicate.not;
 /**
  * A vector graphics renderer that draws wall and obstacle paths generated from the tile map data.
  */
-public class VectorGraphicsMapRenderer implements GameRenderer {
+public class VectorGraphicsMapRenderer {
 
     private final GraphicsContext ctx;
     private final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
@@ -40,18 +40,7 @@ public class VectorGraphicsMapRenderer implements GameRenderer {
         setBackgroundColor(Color.BLACK);
     }
 
-    @Override
-    public void applyRenderingHints(GameLevel level) {}
-
-    @Override
-    public GraphicsContext ctx() {
-        return ctx;
-    }
-
-    @Override
-    public FloatProperty scalingProperty() {
-        return scalingPy;
-    }
+    public FloatProperty scalingProperty() { return scalingPy; }
 
     public void setBackgroundColor(Color color) {
         bgColor = requireNonNull(color);
@@ -59,8 +48,7 @@ public class VectorGraphicsMapRenderer implements GameRenderer {
         blinkingOffColors = new TerrainMapColorScheme(bgColor, Color.WHITE, Color.BLACK, Color.BLACK);
     }
 
-    @Override
-    public void drawLevel(GameLevel level, double x, double y, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted) {
+    public void drawLevel(GameLevel level, boolean mazeHighlighted, boolean energizerHighlighted) {
         WorldMap worldMap = level.worldMap();
         if (mazeHighlighted) {
             terrainRenderer.setColorScheme(energizerHighlighted ? blinkingOnColors : blinkingOffColors);

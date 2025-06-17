@@ -1,25 +1,50 @@
+/*
+Copyright (c) 2021-2025 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.arcade.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.lib.Sprite;
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
+import de.amr.pacmanfx.model.actors.StaticBonus;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.ui._2d.VectorGraphicsMapRenderer;
+import javafx.beans.property.FloatProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
 import static java.util.Objects.requireNonNull;
 
-public class PacManXXL_PacMan_GameRenderer extends VectorGraphicsMapRenderer implements SpriteGameRenderer {
+public class PacManXXL_PacMan_GameRenderer implements SpriteGameRenderer {
 
+    private final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
+    private final GraphicsContext ctx;
     private final ArcadePacMan_SpriteSheet spriteSheet;
+    private final VectorGraphicsMapRenderer mapRenderer;
 
     public PacManXXL_PacMan_GameRenderer(ArcadePacMan_SpriteSheet spriteSheet, Canvas canvas) {
-        super(canvas);
         this.spriteSheet = requireNonNull(spriteSheet);
+        ctx = requireNonNull(canvas).getGraphicsContext2D();
+        mapRenderer = new VectorGraphicsMapRenderer(canvas);
+        mapRenderer.scalingProperty().bind(scalingProperty());
+    }
+
+    @Override
+    public FloatProperty scalingProperty() {
+        return scalingPy;
+    }
+
+    @Override
+    public GraphicsContext ctx() {
+        return ctx;
     }
 
     @Override
@@ -28,10 +53,15 @@ public class PacManXXL_PacMan_GameRenderer extends VectorGraphicsMapRenderer imp
     }
 
     @Override
+    public void applyRenderingHints(GameLevel level) {
+        //TODO what?
+    }
+
+    @Override
     public void drawActor(Actor actor) {
         switch (actor) {
             case LevelCounter levelCounter -> drawLevelCounter(levelCounter);
-            case Bonus bonus -> drawBonus(bonus);
+            case StaticBonus staticBonus -> drawStaticBonus(staticBonus);
             default -> SpriteGameRenderer.super.drawActor(actor);
         }
     }
@@ -45,13 +75,18 @@ public class PacManXXL_PacMan_GameRenderer extends VectorGraphicsMapRenderer imp
         }
     }
 
-    private void drawBonus(Bonus bonus) {
-        if (bonus.state() == Bonus.STATE_EDIBLE) {
-            Sprite sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
-            drawActorSprite(bonus.actor(), sprite);
-        } else if (bonus.state() == Bonus.STATE_EATEN) {
-            Sprite sprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
-            drawActorSprite(bonus.actor(), sprite);
+    private void drawStaticBonus(Bonus staticBonus) {
+        if (staticBonus.state() == Bonus.STATE_EDIBLE) {
+            Sprite sprite = theUI().configuration().createBonusSymbolSprite(staticBonus.symbol());
+            drawActorSprite(staticBonus.actor(), sprite);
+        } else if (staticBonus.state() == Bonus.STATE_EATEN) {
+            Sprite sprite = theUI().configuration().createBonusValueSprite(staticBonus.symbol());
+            drawActorSprite(staticBonus.actor(), sprite);
         }
+    }
+
+    @Override
+    public void drawLevel(GameLevel level, double x, double y, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted) {
+        mapRenderer.drawLevel(level, mazeHighlighted, energizerHighlighted);
     }
 }
