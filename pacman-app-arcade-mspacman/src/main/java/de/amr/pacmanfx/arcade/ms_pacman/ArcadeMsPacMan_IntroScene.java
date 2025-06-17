@@ -37,14 +37,15 @@ import static de.amr.pacmanfx.ui.PacManGames_UI.*;
  */
 public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBindingSupport {
 
-    private static final float SPEED = 1.11f;
+    private static final int TITLE_X          = TS * 10;
+    private static final int TITLE_Y          = TS * 8;
+    private static final int TOP_Y            = TS * 11;
+    private static final int STOP_X_GHOST     = TS * 6 - 4;
+    private static final int STOP_X_MS_PACMAN = TS * 15 + 2;
 
-    private static final int TOP_Y        = TS * 11 + 1;
-    private static final int TITLE_X      = TS * 10;
-    private static final int TITLE_Y      = TS * 8;
-    private static final int STOP_X_GHOST = TS * 6 - 4;
-    private static final int STOP_X_MSPAC = TS * 15 + 2;
+    private static final float ACTOR_SPEED = 1.11f;
 
+    private static final String TITLE = "\"MS PAC-MAN\"";
     private static final String[] GHOST_NAMES = { "BLINKY", "PINKY", "INKY", "SUE" };
     private static final Color[] GHOST_COLORS = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
 
@@ -54,7 +55,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
 
     private Pac msPacMan;
     private Ghost[] ghosts;
-    private byte presented;
+    private byte presentedGhostCharacter;
     private int numTicksBeforeRising;
 
     public ArcadeMsPacMan_IntroScene() {
@@ -83,7 +84,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
 
         msPacMan = createMsPacMan();
         ghosts = new Ghost[] { createRedGhost(), createPinkGhost(), createCyanGhost(), createOrangeGhost() };
-        presented = RED_GHOST_SHADOW;
+        presentedGhostCharacter = RED_GHOST_SHADOW;
         numTicksBeforeRising = 0;
 
         msPacMan.setAnimations(theUI().configuration().createPacAnimations(msPacMan));
@@ -112,26 +113,27 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
 
     @Override
     public void drawSceneContent() {
+        gr().fillText(TITLE, ARCADE_ORANGE, arcadeFont8(), TITLE_X, TITLE_Y);
         gr().drawMarquee(marquee, ARCADE_WHITE, ARCADE_RED);
-        gr().fillText("\"MS PAC-MAN\"", ARCADE_ORANGE, arcadeFont8(), TITLE_X, TITLE_Y);
+        for (Ghost ghost : ghosts) { gr().drawActor(ghost); }
+        gr().drawActor(msPacMan);
         switch (sceneController.state()) {
             case GHOSTS_MARCHING_IN -> {
-                String ghostName = GHOST_NAMES[presented];
-                if (presented == RED_GHOST_SHADOW) {
+                String ghostName = GHOST_NAMES[presentedGhostCharacter];
+                Color ghostColor = GHOST_COLORS[presentedGhostCharacter];
+                if (presentedGhostCharacter == RED_GHOST_SHADOW) {
                     gr().fillText("WITH", ARCADE_WHITE, arcadeFont8(), TITLE_X, TOP_Y + tiles_to_px(3));
                 }
-                double x = TITLE_X + tiles_to_px(3);
-                if (ghostName.length() < 4) x += TS;
-                gr().fillText(ghostName, GHOST_COLORS[presented], arcadeFont8(), x, TOP_Y + tiles_to_px(6));
+                double x = TITLE_X + (ghostName.length() < 4 ? tiles_to_px(4) : tiles_to_px(3));
+                double y = TOP_Y + tiles_to_px(6);
+                gr().fillText(ghostName, ghostColor, arcadeFont8(), x, y);
             }
             case MS_PACMAN_MARCHING_IN, READY_TO_PLAY -> {
                 gr().fillText("STARRING", ARCADE_WHITE, arcadeFont8(), TITLE_X, TOP_Y + tiles_to_px(3));
                 gr().fillText("MS PAC-MAN", ARCADE_YELLOW, arcadeFont8(), TITLE_X, TOP_Y + tiles_to_px(6));
             }
         }
-        for (Ghost ghost : ghosts) { gr().drawActor(ghost); }
-        gr().drawActor(msPacMan);
-        if (gr() instanceof ArcadeMsPacMan_GameRenderer r) { // might also be vector renderer!
+        if (gr() instanceof ArcadeMsPacMan_GameRenderer r) { // in MS_PACMAN_XXL, the vector renderer is used!
             r.drawMsPacManCopyrightAtTile(ARCADE_RED, arcadeFont8(), 6, 28);
         }
         gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()), scoreColor(), arcadeFont8(), 2 * TS, sizeInPx().y() - 2);
@@ -148,18 +150,18 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
                 scene.marquee.timer().restartIndefinitely();
                 scene.msPacMan.setPosition(TS * 31, TS * 20);
                 scene.msPacMan.setMoveDir(Direction.LEFT);
-                scene.msPacMan.setSpeed(SPEED);
+                scene.msPacMan.setSpeed(ACTOR_SPEED);
                 scene.msPacMan.setVisible(true);
                 scene.msPacMan.playAnimation(ANIM_PAC_MUNCHING);
                 for (Ghost ghost : scene.ghosts) {
                     ghost.setPosition(TS * 33.5f, TS * 20);
                     ghost.setMoveAndWishDir(Direction.LEFT);
-                    ghost.setSpeed(SPEED);
+                    ghost.setSpeed(ACTOR_SPEED);
                     ghost.setState(GhostState.HUNTING_PAC);
                     ghost.setVisible(true);
                     ghost.playAnimation(ANIM_GHOST_NORMAL);
                 }
-                scene.presented = RED_GHOST_SHADOW;
+                scene.presentedGhostCharacter = RED_GHOST_SHADOW;
             }
 
             @Override
@@ -177,16 +179,16 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
                 scene.marquee.timer().doTick();
                 boolean atEndPosition = letGhostWalkIn(scene);
                 if (atEndPosition) {
-                    if (scene.presented == ORANGE_GHOST_POKEY) {
+                    if (scene.presentedGhostCharacter == ORANGE_GHOST_POKEY) {
                         scene.sceneController.changeState(MS_PACMAN_MARCHING_IN);
                     } else {
-                        ++scene.presented;
+                        ++scene.presentedGhostCharacter;
                     }
                 }
             }
 
             boolean letGhostWalkIn(ArcadeMsPacMan_IntroScene scene) {
-                Ghost ghost = scene.ghosts[scene.presented];
+                Ghost ghost = scene.ghosts[scene.presentedGhostCharacter];
                 if (ghost.moveDir() == Direction.LEFT) {
                     if (ghost.x() <= STOP_X_GHOST) {
                         ghost.setX(STOP_X_GHOST);
@@ -197,7 +199,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
                     }
                 }
                 else if (ghost.moveDir() == Direction.UP) {
-                    int endPositionY = TOP_Y + scene.presented * 16;
+                    int endPositionY = TOP_Y + scene.presentedGhostCharacter * 16 + 1;
                     if (scene.numTicksBeforeRising > 0) {
                         scene.numTicksBeforeRising--;
                     }
@@ -220,7 +222,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
                 scene.marquee.timer().doTick();
                 scene.msPacMan.move();
-                if (scene.msPacMan.x() <= STOP_X_MSPAC) {
+                if (scene.msPacMan.x() <= STOP_X_MS_PACMAN) {
                     scene.msPacMan.setSpeed(0);
                     scene.msPacMan.resetAnimation();
                     scene.sceneController.changeState(READY_TO_PLAY);
