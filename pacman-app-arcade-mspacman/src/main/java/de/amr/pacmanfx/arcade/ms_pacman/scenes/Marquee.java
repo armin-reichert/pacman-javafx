@@ -5,10 +5,11 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.pacmanfx.lib.timer.TickTimer;
+import de.amr.pacmanfx.model.actors.Actor;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.paint.Color;
 
-public class Marquee {
+public class Marquee extends Actor {
     private final TickTimer timer = new TickTimer("Marquee-Timer");
     private final Rectangle2D bounds;
     private final int totalBulbCount;

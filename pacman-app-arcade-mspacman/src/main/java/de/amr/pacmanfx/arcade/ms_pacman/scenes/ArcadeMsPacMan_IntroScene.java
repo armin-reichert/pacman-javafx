@@ -117,7 +117,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
     @Override
     public void drawSceneContent() {
         gr().fillText(TITLE, ARCADE_ORANGE, arcadeFont8(), TITLE_X, TITLE_Y);
-        gr().drawMarquee(marquee);
+        gr().drawActor(marquee);
         for (Ghost ghost : ghosts) { gr().drawActor(ghost); }
         gr().drawActor(msPacMan);
         switch (sceneController.state()) {

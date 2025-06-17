@@ -95,6 +95,7 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
     public void drawActor(Actor actor) {
         switch (actor) {
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
+            case Marquee marquee           -> drawMarquee(marquee);
             case MovingBonus movingBonus   -> drawMovingBonus(movingBonus);
             default -> SpriteGameRenderer.super.drawActor(actor);
         }
@@ -153,7 +154,7 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
      * probably a bug in the original Arcade game.
      * </p>
      */
-    public void drawMarquee(Marquee marquee) {
+    private void drawMarquee(Marquee marquee) {
         long tick = marquee.timer().tickCount();
         ctx.setFill(marquee.bulbOffColor());
         for (int bulbIndex = 0; bulbIndex < marquee.totalBulbCount(); ++bulbIndex) {
