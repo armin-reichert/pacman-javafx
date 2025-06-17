@@ -17,7 +17,6 @@ import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 
 import java.util.function.Predicate;
 
@@ -127,17 +126,16 @@ public class ArcadePacMan_GameRenderer implements SpriteGameRenderer {
      * @param color over-paint color (background color of level)
      */
     private void overPaintEnergizerTiles(GameLevel level, Predicate<Vector2i> overPaintCondition, Color color) {
-        level.energizerTiles().filter(overPaintCondition)
-            .forEach(tile -> paintSquareInsideTile(tile, 10, color));
+        level.energizerTiles().filter(overPaintCondition).forEach(tile -> paintSquareInsideTile(tile, 10, color));
     }
 
     /**
      * Draws a square of the given size in background color over the tile. Used to hide eaten food and energizers.
      * Assumes to be called in scaled graphics context!
      */
-    private void paintSquareInsideTile(Vector2i tile, double squareSize, Paint paint) {
+    private void paintSquareInsideTile(Vector2i tile, double squareSize, Color color) {
         double centerX = tile.x() * TS + HTS, centerY = tile.y() * TS + HTS;
-        ctx().setFill(paint);
+        ctx().setFill(color);
         ctx().fillRect(centerX - 0.5 * squareSize, centerY - 0.5 * squareSize, squareSize, squareSize);
     }
 }

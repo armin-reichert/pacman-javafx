@@ -20,7 +20,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 
 import java.util.function.Predicate;
@@ -116,14 +115,13 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
      * Draws a square of the given size in background color over the tile. Used to hide eaten food and energizers.
      * Assumes to be called in scaled graphics context!
      */
-    private void paintSquareInsideTile(Vector2i tile, double squareSize, Paint paint) {
+    private void paintSquareInsideTile(Vector2i tile, double squareSize, Color color) {
         double centerX = tile.x() * TS + HTS, centerY = tile.y() * TS + HTS;
-        ctx().setFill(paint);
+        ctx().setFill(color);
         ctx().fillRect(centerX - 0.5 * squareSize, centerY - 0.5 * squareSize, squareSize, squareSize);
     }
 
     private void drawLevelCounter(LevelCounter levelCounter) {
-//        float x = sceneSizeInPixels.x() - 4 * TS, y = sceneSizeInPixels.y() - 2 * TS;
         float x = levelCounter.x(), y = levelCounter.y();
         for (byte symbol : levelCounter.symbols()) {
             Sprite sprite = theUI().configuration().createBonusSymbolSprite(symbol);
