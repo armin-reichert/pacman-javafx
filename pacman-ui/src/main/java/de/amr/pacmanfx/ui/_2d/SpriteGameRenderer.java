@@ -93,7 +93,7 @@ public interface SpriteGameRenderer extends GameRenderer {
     }
 
     /**
-     * Draws (animated) actor (Pac-Man, ghost, moving bonus) if visible.
+     * Draws an actor (Pac-Man, ghost, moving bonus, etc.) if it is visible.
      *
      * @param actor the actor to draw
      */

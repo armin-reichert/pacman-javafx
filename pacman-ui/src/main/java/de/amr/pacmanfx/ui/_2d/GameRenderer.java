@@ -8,6 +8,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.ScoreManager;
+import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.AnimatedActor;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -65,6 +66,13 @@ public interface GameRenderer {
      * @param energizerHighlighted if the blinking energizers are in their highlighted state
      */
     void drawLevel(GameLevel level, double x, double y, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted);
+
+    /**
+     * Draws the specified actor.
+     *
+     * @param actor any actor
+     */
+    void drawActor(Actor actor);
 
     default void drawAnimatedActorInfo(MovingActor movingActor) {
         if (movingActor instanceof AnimatedActor animatedActor && movingActor.isVisible()) {
