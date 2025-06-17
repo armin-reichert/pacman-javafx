@@ -455,8 +455,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
             ctx().setFill(DEBUG_TEXT_FILL);
             ctx().setFont(DEBUG_TEXT_FONT);
             ctx().fillText("%s %d".formatted(theGameState(), theGameState().timer().tickCount()), 0, scaled(3 * TS));
-            gr().drawAnimatedActorInfo(theGameLevel().pac());
-            ghostsInZOrder().forEach(gr()::drawAnimatedActorInfo);
+            gr().drawMovingActorInfo(theGameLevel().pac());
+            ghostsInZOrder().forEach(gr()::drawMovingActorInfo);
         }
         ctx().restore();
     }

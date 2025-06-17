@@ -17,9 +17,9 @@ import de.amr.pacmanfx.ui.ActionBindingSupport;
 import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.GenericMapRenderer;
 import de.amr.pacmanfx.ui._2d.LevelFinishedAnimation;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
-import de.amr.pacmanfx.ui._2d.GenericMapRenderer;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
@@ -178,8 +178,8 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
                 .map(theGameLevel()::ghost).forEach(ghost -> gr().drawActor(ghost));
 
         if (debugInfoVisibleProperty().get()) {
-            gr().drawAnimatedActorInfo(theGameLevel().pac());
-            theGameLevel().ghosts().forEach(gr()::drawAnimatedActorInfo);
+            gr().drawMovingActorInfo(theGameLevel().pac());
+            theGameLevel().ghosts().forEach(gr()::drawMovingActorInfo);
         }
 
         // Draw either lives counter or credit text

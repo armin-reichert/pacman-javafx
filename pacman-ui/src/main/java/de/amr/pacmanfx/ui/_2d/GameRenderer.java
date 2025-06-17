@@ -74,7 +74,7 @@ public interface GameRenderer {
      */
     void drawActor(Actor actor);
 
-    default void drawAnimatedActorInfo(MovingActor movingActor) {
+    default void drawMovingActorInfo(MovingActor movingActor) {
         if (movingActor instanceof AnimatedActor animatedActor && movingActor.isVisible()) {
             animatedActor.animations()
                 .filter(SpriteAnimationMap.class::isInstance)
