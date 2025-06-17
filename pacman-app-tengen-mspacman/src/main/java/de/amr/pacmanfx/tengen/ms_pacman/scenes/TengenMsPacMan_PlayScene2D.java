@@ -403,24 +403,22 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
     protected void drawSceneContent() {
         // NES screen is 32 tiles wide but mazes are only 28 tiles wide
         final double indent = scaled(2 * TS);
-        final int mazeTop = 3 * TS;
         final boolean flashing = levelFinishedAnimation != null && levelFinishedAnimation.isRunning();
-
 
         ctx().save();
         ctx().translate(indent, 0);
         if (flashing) {
             if (levelFinishedAnimation.isHighlighted()) {
-                gr().drawHighlightedLevel(theGameLevel(), 0, mazeTop, levelFinishedAnimation.flashingIndex());
+                gr().drawHighlightedLevel(theGameLevel(), levelFinishedAnimation.flashingIndex());
             } else {
-                gr().drawLevel(theGameLevel(), 0, mazeTop, null, false, false);
+                gr().drawLevel(theGameLevel(), null, false, false);
                 gr().drawFood(theGameLevel()); // this also hides the eaten food!
             }
         }
         else {
             //TODO in the original game, the message is drawn under the maze image but *over* the pellets!
             gr().drawLevelMessage(theGameLevel(), currentMessagePosition(), arcadeFont8());
-            gr().drawLevel(theGameLevel(), 0, mazeTop, null, false, false);
+            gr().drawLevel(theGameLevel(), null, false, false);
             gr().drawFood(theGameLevel());
         }
 

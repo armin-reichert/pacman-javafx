@@ -166,7 +166,7 @@ public class PacManXXL_MsPacMan_GameRenderer implements SpriteGameRenderer {
     }
 
     @Override
-    public void drawLevel(GameLevel level, double x, double y, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted) {
+    public void drawLevel(GameLevel level, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted) {
         mapRenderer.drawLevel(level, mazeHighlighted, energizerHighlighted);
     }
 }

@@ -54,13 +54,11 @@ public interface GameRenderer {
     /**
      *
      * @param level the game level to be drawn
-     * @param x x position of left-upper corner
-     * @param y y position of left-upper corner
      * @param backgroundColor level background color
      * @param mazeHighlighted if the maze is drawn as highlighted (flashing)
      * @param energizerHighlighted if the blinking energizers are in their highlighted state
      */
-    void drawLevel(GameLevel level, double x, double y, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted);
+    void drawLevel(GameLevel level, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted);
 
     /**
      * Draws the specified actor.

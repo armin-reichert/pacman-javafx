@@ -67,15 +67,16 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
     }
 
     @Override
-    public void drawLevel(GameLevel level, double x, double y, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted) {
+    public void drawLevel(GameLevel level, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted) {
+        double y = GameLevel.EMPTY_ROWS_OVER_MAZE * TS;
         if (mazeHighlighted) {
             drawSpriteScaled(
                 brightMazesSpriteSheet.sourceImage(),
-                brightMazesSpriteSheet.spriteSeq(BrightMazesSpriteSheet.BRIGHT_MAZES_ID)[colorMapIndex], x, y);
+                brightMazesSpriteSheet.spriteSeq(BrightMazesSpriteSheet.BRIGHT_MAZES_ID)[colorMapIndex], 0, y);
         } else if (level.uneatenFoodCount() == 0) {
-            drawSpriteScaled(spriteSheet.spriteSeq(SpriteID.EMPTY_MAZES)[colorMapIndex], x, y);
+            drawSpriteScaled(spriteSheet.spriteSeq(SpriteID.EMPTY_MAZES)[colorMapIndex], 0, y);
         } else {
-            drawSpriteScaled(spriteSheet.spriteSeq(SpriteID.FULL_MAZES)[colorMapIndex], x, y);
+            drawSpriteScaled(spriteSheet.spriteSeq(SpriteID.FULL_MAZES)[colorMapIndex], 0, y);
             ctx.save();
             ctx.scale(scaling(), scaling());
             overPaintEatenPelletTiles(level, backgroundColor);
@@ -121,15 +122,6 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
         ctx().fillRect(centerX - 0.5 * squareSize, centerY - 0.5 * squareSize, squareSize, squareSize);
     }
 
-    private void drawLevelCounter(LevelCounter levelCounter) {
-        float x = levelCounter.x(), y = levelCounter.y();
-        for (byte symbol : levelCounter.symbols()) {
-            Sprite sprite = theUI().configuration().createBonusSymbolSprite(symbol);
-            drawSpriteScaled(sprite, x, y);
-            x -= TS * 2;
-        }
-    }
-
     @Override
     public void drawActor(Actor actor) {
         switch (actor) {
@@ -139,6 +131,78 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
             case MovingBonus movingBonus   -> drawMovingBonus(movingBonus);
             default -> SpriteGameRenderer.super.drawActor(actor);
         }
+    }
+
+    private void drawClapperBoard(Clapperboard clapperboard) {
+        if (!clapperboard.isVisible()) {
+            return;
+        }
+        Sprite sprite = spriteSheet.spriteSeq(SpriteID.CLAPPERBOARD)[clapperboard.state()];
+        float numberX = scaled(clapperboard.x() + sprite.width() - 25);
+        float numberY = scaled(clapperboard.y() + 18);
+        float textX = scaled(clapperboard.x() + sprite.width());
+        drawSpriteScaledCenteredAt(sprite, clapperboard.x() + HTS, clapperboard.y() + HTS);
+        ctx.setFont(clapperboard.font());
+        ctx.setFill(ARCADE_WHITE);
+        ctx.fillText(clapperboard.number(), numberX, numberY);
+        ctx.fillText(clapperboard.text(), textX, numberY);
+    }
+
+    private void drawLevelCounter(LevelCounter levelCounter) {
+        float x = levelCounter.x(), y = levelCounter.y();
+        for (byte symbol : levelCounter.symbols()) {
+            Sprite sprite = theUI().configuration().createBonusSymbolSprite(symbol);
+            drawSpriteScaled(sprite, x, y);
+            x -= TS * 2;
+        }
+    }
+
+    /**
+     * 6 of the 96 light bulbs are bright in each frame, shifting counter-clockwise every tick.
+     * <p>
+     * The bulbs on the left border however are switched off every second frame. This is
+     * probably a bug in the original Arcade game.
+     * </p>
+     */
+    private void drawMarquee(Marquee marquee) {
+        long tick = marquee.timer().tickCount();
+        ctx.setFill(marquee.bulbOffColor());
+        for (int bulbIndex = 0; bulbIndex < marquee.totalBulbCount(); ++bulbIndex) {
+            drawMarqueeBulb(marquee, bulbIndex);
+        }
+        int firstBrightIndex = (int) (tick % marquee.totalBulbCount());
+        ctx.setFill(marquee.bulbOnColor());
+        for (int i = 0; i < marquee.brightBulbsCount(); ++i) {
+            drawMarqueeBulb(marquee, (firstBrightIndex + i * marquee.brightBulbsDistance()) % marquee.totalBulbCount());
+        }
+        // simulate bug from original Arcade game
+        ctx.setFill(marquee.bulbOffColor());
+        for (int bulbIndex = 81; bulbIndex < marquee.totalBulbCount(); bulbIndex += 2) {
+            drawMarqueeBulb(marquee, bulbIndex);
+        }
+    }
+
+    private void drawMarqueeBulb(Marquee marquee, int bulbIndex) {
+        final double minX = marquee.x(), minY = marquee.y();
+        final double maxX = marquee.x() + marquee.size().getWidth(), maxY = marquee.y() + marquee.size().getHeight();
+        double x, y;
+        if (bulbIndex <= 33) { // lower edge left-to-right
+            x = minX + 4 * bulbIndex;
+            y = maxY;
+        }
+        else if (bulbIndex <= 48) { // right edge bottom-to-top
+            x = maxX;
+            y = 4 * (70 - bulbIndex);
+        }
+        else if (bulbIndex <= 81) { // upper edge right-to-left
+            x = 4 * (marquee.totalBulbCount() - bulbIndex);
+            y = minY;
+        }
+        else { // left edge top-to-bottom
+            x = minX;
+            y = 4 * (bulbIndex - 59);
+        }
+        ctx.fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
     }
 
     private void drawMovingBonus(MovingBonus bonus) {
@@ -161,21 +225,6 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
         ctx.restore();
     }
 
-    private void drawClapperBoard(Clapperboard clapperboard) {
-        if (!clapperboard.isVisible()) {
-            return;
-        }
-        Sprite sprite = spriteSheet.spriteSeq(SpriteID.CLAPPERBOARD)[clapperboard.state()];
-        float numberX = scaled(clapperboard.x() + sprite.width() - 25);
-        float numberY = scaled(clapperboard.y() + 18);
-        float textX = scaled(clapperboard.x() + sprite.width());
-        drawSpriteScaledCenteredAt(sprite, clapperboard.x() + HTS, clapperboard.y() + HTS);
-        ctx.setFont(clapperboard.font());
-        ctx.setFill(ARCADE_WHITE);
-        ctx.fillText(clapperboard.number(), numberX, numberY);
-        ctx.fillText(clapperboard.text(), textX, numberY);
-    }
-
     public void drawMsPacManCopyrightAtTile(Color color, Font font, int tileX, int tileY) {
         Image image = theAssets().get("ms_pacman.logo.midway");
         double x = tiles_to_px(tileX), y = tiles_to_px(tileY);
@@ -185,53 +234,5 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
         ctx.fillText("©", scaled(x + TS * 5), scaled(y + TS * 2 + 2));
         ctx.fillText("MIDWAY MFG CO", scaled(x + TS * 7), scaled(y + TS * 2));
         ctx.fillText("1980/1981", scaled(x + TS * 8), scaled(y + TS * 4));
-    }
-
-    /**
-     * 6 of the 96 light bulbs are bright in each frame, shifting counter-clockwise every tick.
-     * <p>
-     * The bulbs on the left border however are switched off every second frame. This is
-     * probably a bug in the original Arcade game.
-     * </p>
-     */
-    private void drawMarquee(Marquee marquee) {
-        long tick = marquee.timer().tickCount();
-        ctx.setFill(marquee.bulbOffColor());
-        for (int bulbIndex = 0; bulbIndex < marquee.totalBulbCount(); ++bulbIndex) {
-            drawBulb(marquee, bulbIndex);
-        }
-        int firstBrightIndex = (int) (tick % marquee.totalBulbCount());
-        ctx.setFill(marquee.bulbOnColor());
-        for (int i = 0; i < marquee.brightBulbsCount(); ++i) {
-            drawBulb(marquee, (firstBrightIndex + i * marquee.brightBulbsDistance()) % marquee.totalBulbCount());
-        }
-        // simulate bug from original Arcade game
-        ctx.setFill(marquee.bulbOffColor());
-        for (int bulbIndex = 81; bulbIndex < marquee.totalBulbCount(); bulbIndex += 2) {
-            drawBulb(marquee, bulbIndex);
-        }
-    }
-
-    private void drawBulb(Marquee marquee, int bulbIndex) {
-        final double minX = marquee.x(), minY = marquee.y();
-        final double maxX = marquee.x() + marquee.size().getWidth(), maxY = marquee.y() + marquee.size().getHeight();
-        double x, y;
-        if (bulbIndex <= 33) { // lower edge left-to-right
-            x = minX + 4 * bulbIndex;
-            y = maxY;
-        }
-        else if (bulbIndex <= 48) { // right edge bottom-to-top
-            x = maxX;
-            y = 4 * (70 - bulbIndex);
-        }
-        else if (bulbIndex <= 81) { // upper edge right-to-left
-            x = 4 * (marquee.totalBulbCount() - bulbIndex);
-            y = minY;
-        }
-        else { // left edge top-to-bottom
-            x = minX;
-            y = 4 * (bulbIndex - 59);
-        }
-        ctx.fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
     }
 }

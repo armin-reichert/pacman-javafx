@@ -200,8 +200,7 @@ public class TengenMsPacMan_Renderer2D implements SpriteGameRenderer {
     }
 
     @Override
-    public void drawLevel(GameLevel level, double x, double y, Color optionalBackgroundColor,
-                          boolean mazeHighlighted, boolean energizerHighlighted) {
+    public void drawLevel(GameLevel level, Color optionalBackgroundColor, boolean mazeHighlighted, boolean energizerHighlighted) {
         requireNonNull(level);
         if (coloredMapSet == null) {
             Logger.warn("Tick {}: Level cannot be drawn, no colored map set found", theClock().tickCount());
@@ -218,12 +217,13 @@ public class TengenMsPacMan_Renderer2D implements SpriteGameRenderer {
                 level.worldMap().numCols() * HTS, tiles_to_px(2) + HTS);
         }
 
+        double y = GameLevel.EMPTY_ROWS_OVER_MAZE * TS;
         Sprite area = tengenGame.mapCategory() == MapCategory.STRANGE && mapNumber == 15
             ? strangeMap15Sprite(theClock().tickCount()) // Strange map #15: psychedelic animation
             : coloredMapSet.mapRegion().region();
         ctx().drawImage(coloredMapSet.mapRegion().image(),
             area.x(), area.y(), area.width(), area.height(),
-            scaled(x), scaled(y), scaled(area.width()), scaled(area.height())
+            0, scaled(y), scaled(area.width()), scaled(area.height())
         );
         // The maze images also contain the ghost and Ms. Pac-Man sprites at their initial positions
         overPaintActors(level);
@@ -243,8 +243,9 @@ public class TengenMsPacMan_Renderer2D implements SpriteGameRenderer {
         ctx().restore();
     }
 
-    public void drawHighlightedLevel(GameLevel level, double mapX, double mapY, int flashingIndex) {
+    public void drawHighlightedLevel(GameLevel level, int flashingIndex) {
         requireNonNull(level);
+        double mapTop = GameLevel.EMPTY_ROWS_OVER_MAZE * TS;
         final var game = (TengenMsPacMan_GameModel) theGame();
         final ColoredImageRegion mapImage = coloredMapSet.flashingMapRegions().get(flashingIndex);
         final Sprite region = mapImage.region();
@@ -255,7 +256,7 @@ public class TengenMsPacMan_Renderer2D implements SpriteGameRenderer {
         ctx().setImageSmoothing(false);
         ctx().drawImage(mapImage.image(),
             region.x(), region.y(), region.width(), region.height(),
-            scaled(mapX), scaled(mapY), scaled(region.width()), scaled(region.height())
+            0, scaled(mapTop), scaled(region.width()), scaled(region.height())
         );
         overPaintActors(level);
 

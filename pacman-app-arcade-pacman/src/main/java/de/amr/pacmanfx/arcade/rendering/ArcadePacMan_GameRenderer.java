@@ -57,17 +57,18 @@ public class ArcadePacMan_GameRenderer implements SpriteGameRenderer {
     }
 
     @Override
-    public void drawLevel(GameLevel level, double x, double y, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted) {
+    public void drawLevel(GameLevel level, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted) {
+        double y = GameLevel.EMPTY_ROWS_OVER_MAZE * TS;
         ctx.save();
         ctx.scale(scaling(), scaling());
         if (mazeHighlighted) {
-            ctx.drawImage(theAssets().image("pacman.flashing_maze"), x, y);
+            ctx.drawImage(theAssets().image("pacman.flashing_maze"), 0, y);
         }
         else if (level.uneatenFoodCount() == 0) {
-            drawSprite(spriteSheet.sprite(SpriteID.MAP_EMPTY), x, y);
+            drawSprite(spriteSheet.sprite(SpriteID.MAP_EMPTY), 0, y);
         }
         else {
-            drawSprite(spriteSheet.sprite(SpriteID.MAP_FULL), x, y);
+            drawSprite(spriteSheet.sprite(SpriteID.MAP_FULL), 0, y);
             overPaintEatenPelletTiles(level, backgroundColor);
             overPaintEnergizerTiles(level, tile -> !energizerHighlighted || level.tileContainsEatenFood(tile), backgroundColor);
         }
