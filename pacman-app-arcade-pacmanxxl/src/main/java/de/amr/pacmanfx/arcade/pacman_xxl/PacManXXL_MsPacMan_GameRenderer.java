@@ -15,7 +15,7 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.MovingBonus;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
-import de.amr.pacmanfx.ui._2d.VectorGraphicsMapRenderer;
+import de.amr.pacmanfx.ui._2d.GenericMapRenderer;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
@@ -33,12 +33,12 @@ public class PacManXXL_MsPacMan_GameRenderer implements SpriteGameRenderer {
     private final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
     private final GraphicsContext ctx;
     private final ArcadeMsPacMan_SpriteSheet spriteSheet;
-    private final VectorGraphicsMapRenderer mapRenderer;
+    private final GenericMapRenderer mapRenderer;
 
     public PacManXXL_MsPacMan_GameRenderer(ArcadeMsPacMan_SpriteSheet spriteSheet, Canvas canvas) {
         this.spriteSheet = requireNonNull(spriteSheet);
         ctx = requireNonNull(canvas).getGraphicsContext2D();
-        mapRenderer = new VectorGraphicsMapRenderer(canvas);
+        mapRenderer = new GenericMapRenderer(canvas);
         mapRenderer.scalingProperty().bind(scalingProperty());
     }
 

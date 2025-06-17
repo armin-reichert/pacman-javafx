@@ -21,9 +21,9 @@ import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
 /**
- * A vector graphics renderer that draws wall and obstacle paths generated from the tile map data.
+ * Draws wall and obstacle paths generated at runtime from the 2D tile map data.
  */
-public class VectorGraphicsMapRenderer {
+public class GenericMapRenderer {
 
     private final GraphicsContext ctx;
     private final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
@@ -33,7 +33,7 @@ public class VectorGraphicsMapRenderer {
     private TerrainMapColorScheme blinkingOnColors;
     private TerrainMapColorScheme blinkingOffColors;
 
-    public VectorGraphicsMapRenderer(Canvas canvas) {
+    public GenericMapRenderer(Canvas canvas) {
         ctx = requireNonNull(canvas).getGraphicsContext2D();
         terrainRenderer.scalingProperty().bind(scalingPy);
         foodRenderer.scalingProperty().bind(scalingPy);

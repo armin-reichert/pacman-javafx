@@ -19,7 +19,7 @@ import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelFinishedAnimation;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
-import de.amr.pacmanfx.ui._2d.VectorGraphicsMapRenderer;
+import de.amr.pacmanfx.ui._2d.GenericMapRenderer;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
@@ -159,7 +159,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
         gr().applyRenderingHints(theGameLevel());
 
         //TODO: check this
-        if (gr() instanceof VectorGraphicsMapRenderer vr) {
+        if (gr() instanceof GenericMapRenderer vr) {
             vr.setBackgroundColor(PY_CANVAS_BG_COLOR.get());
         }
 
