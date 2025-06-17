@@ -6,20 +6,20 @@ package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Actor;
-import javafx.geometry.Rectangle2D;
+import javafx.geometry.Dimension2D;
 import javafx.scene.paint.Color;
 
 public class Marquee extends Actor {
     private final TickTimer timer = new TickTimer("Marquee-Timer");
-    private final Rectangle2D bounds;
+    private final Dimension2D size;
     private final int totalBulbCount;
     private final int brightBulbsCount;
     private final int brightBulbsDistance;
     private Color bulbOnColor = Color.WHITE;
     private Color bulbOffColor = Color.GREEN;
 
-    public Marquee(Rectangle2D bounds, int totalBulbCount, int brightBulbsCount, int brightBulbsDistance) {
-        this.bounds = bounds;
+    public Marquee(float width, float height, int totalBulbCount, int brightBulbsCount, int brightBulbsDistance) {
+        this.size = new Dimension2D(width, height);
         this.totalBulbCount = totalBulbCount;
         this.brightBulbsCount = brightBulbsCount;
         this.brightBulbsDistance = brightBulbsDistance;
@@ -57,7 +57,7 @@ public class Marquee extends Actor {
         return brightBulbsDistance;
     }
 
-    public Rectangle2D bounds() {
-        return bounds;
+    public Dimension2D size() {
+        return size;
     }
 }

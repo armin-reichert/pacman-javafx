@@ -17,7 +17,6 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.ActionBindingSupport;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -82,7 +81,8 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
         bindAction(ACTION_TEST_LEVELS_BONI, COMMON_ACTION_BINDINGS);
         bindAction(ACTION_TEST_LEVELS_TEASERS, COMMON_ACTION_BINDINGS);
 
-        marquee = new Marquee(new Rectangle2D(60, 88, 132, 60), 96, 6, 16);
+        marquee = new Marquee(132, 60, 96, 6, 16);
+        marquee.setPosition(60, 88);
         marquee.setBulbOffColor(ARCADE_RED);
         marquee.setBulbOnColor(ARCADE_WHITE);
         msPacMan = createMsPacMan();

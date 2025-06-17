@@ -173,21 +173,23 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
     }
 
     private void drawBulb(Marquee marquee, int bulbIndex) {
+        final double minX = marquee.x(), minY = marquee.y();
+        final double maxX = marquee.x() + marquee.size().getWidth(), maxY = marquee.y() + marquee.size().getHeight();
         double x, y;
         if (bulbIndex <= 33) { // lower edge left-to-right
-            x = marquee.bounds().getMinX() + 4 * bulbIndex;
-            y = marquee.bounds().getMaxY();
+            x = minX + 4 * bulbIndex;
+            y = maxY;
         }
         else if (bulbIndex <= 48) { // right edge bottom-to-top
-            x = marquee.bounds().getMaxX();
+            x = maxX;
             y = 4 * (70 - bulbIndex);
         }
         else if (bulbIndex <= 81) { // upper edge right-to-left
             x = 4 * (marquee.totalBulbCount() - bulbIndex);
-            y = marquee.bounds().getMinY();
+            y = minY;
         }
         else { // left edge top-to-bottom
-            x = marquee.bounds().getMinX();
+            x = minX;
             y = 4 * (bulbIndex - 59);
         }
         ctx.fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
