@@ -2,7 +2,7 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.arcade;
+package de.amr.pacmanfx.arcade.scenes;
 
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
@@ -13,13 +13,13 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
+import de.amr.pacmanfx.ui.ActionBindingSupport;
+import de.amr.pacmanfx.ui.GameAction;
+import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelFinishedAnimation;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.ui._2d.VectorGraphicsGameRenderer;
-import de.amr.pacmanfx.ui.ActionBindingSupport;
-import de.amr.pacmanfx.ui.GameAction;
-import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
@@ -34,7 +34,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_TILES;
-import static de.amr.pacmanfx.arcade.ArcadePalette.*;
+import static de.amr.pacmanfx.arcade.rendering.ArcadePalette.*;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVEL_TEASERS;
 import static de.amr.pacmanfx.ui.PacManGames.*;
@@ -54,6 +54,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
 
     @Override
     public void onLevelCreated(GameEvent e) {
+        theGame().levelCounter().setPosition(sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
         gr().applyRenderingHints(theGameLevel());
         if (theGameLevel().isDemoLevel()) {
             bindAction(ACTION_ARCADE_INSERT_COIN, COMMON_ACTION_BINDINGS);
@@ -192,7 +193,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
             gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
                 scoreColor(), arcadeFont8(), 2 * TS, sizeInPx().y() - 2);
         }
-        drawLevelCounter();
+        gr().drawActor(theGame().levelCounter());
     }
 
     private void drawLevelMessage() {

@@ -5,6 +5,11 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.arcade.*;
+import de.amr.pacmanfx.arcade.rendering.ArcadePacMan_GhostAnimationMap;
+import de.amr.pacmanfx.arcade.rendering.ArcadePacMan_PacAnimationMap;
+import de.amr.pacmanfx.arcade.rendering.ArcadePacMan_SpriteSheet;
+import de.amr.pacmanfx.arcade.rendering.SpriteID;
+import de.amr.pacmanfx.arcade.scenes.*;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
@@ -34,7 +39,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.optGameLevel;
 import static de.amr.pacmanfx.Globals.theGameLevel;
-import static de.amr.pacmanfx.arcade.ArcadePalette.*;
+import static de.amr.pacmanfx.arcade.rendering.ArcadePalette.*;
 import static de.amr.pacmanfx.ui.PacManGames.theAssets;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 import static java.util.Objects.requireNonNull;

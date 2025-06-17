@@ -4,26 +4,25 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
-import de.amr.pacmanfx.arcade.ArcadeCommon_BootScene2D;
-import de.amr.pacmanfx.arcade.ArcadeCommon_PlayScene2D;
-import de.amr.pacmanfx.arcade.ms_pacman.*;
+import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_GhostAnimationMap;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_PacAnimationMap;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.*;
+import de.amr.pacmanfx.arcade.scenes.ArcadeCommon_BootScene2D;
+import de.amr.pacmanfx.arcade.scenes.ArcadeCommon_PlayScene2D;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.PacManGames_Assets;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.VectorGraphicsGameRenderer;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
-import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
@@ -42,7 +41,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.optGameLevel;
 import static de.amr.pacmanfx.Globals.theGameLevel;
-import static de.amr.pacmanfx.arcade.ArcadePalette.*;
+import static de.amr.pacmanfx.arcade.rendering.ArcadePalette.*;
 import static de.amr.pacmanfx.ui.PacManGames.theAssets;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 import static java.util.Objects.requireNonNull;
@@ -170,8 +169,8 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
     }
 
     @Override
-    public VectorGraphicsGameRenderer createRenderer(Canvas canvas) {
-        return new VectorGraphicsGameRenderer(spriteSheet, canvas);
+    public PacManXXL_MsPacMan_GameRenderer createRenderer(Canvas canvas) {
+        return new PacManXXL_MsPacMan_GameRenderer(spriteSheet, canvas);
     }
 
     @Override

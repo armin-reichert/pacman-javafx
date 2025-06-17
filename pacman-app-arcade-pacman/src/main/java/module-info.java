@@ -16,4 +16,6 @@ open module x.arcade.pacman {
 
     exports de.amr.pacmanfx.arcade;
     exports de.amr.pacmanfx.arcade.app;
+    exports de.amr.pacmanfx.arcade.rendering;
+    exports de.amr.pacmanfx.arcade.scenes;
 }

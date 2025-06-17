@@ -44,10 +44,11 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
     @Override
     protected void doInit() {
-        var spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
-
         t = -1;
         theGame().setScoreVisible(false);
+        theGame().levelCounter().setPosition(sizeInPx().minus(6 * TS, 3 * TS));
+
+        var spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
         clapperboard = new Clapperboard(spriteSheet, 4, "THE END");
         clapperboard.setPosition(3*TS, 10*TS);
         clapperboard.setFont(arcadeFont8());
@@ -210,10 +211,10 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     @Override
     protected void drawSceneContent() {
         gr().drawVerticalSceneBorders();
-        gr().drawClapperBoard(clapperboard);
+        gr().drawActor(clapperboard);
         gr().drawActor(msPacMan);
         gr().drawActor(pacMan);
         juniors.forEach(junior -> gr().drawActor(junior));
-        gr().drawLevelCounter(theGame().levelCounter(), sizeInPx().minus(0, 3*TS));
+        gr().drawActor(theGame().levelCounter());
     }
 }

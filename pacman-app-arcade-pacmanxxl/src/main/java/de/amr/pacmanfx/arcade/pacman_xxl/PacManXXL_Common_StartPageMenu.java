@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
-import de.amr.pacmanfx.arcade.ArcadePalette;
+import de.amr.pacmanfx.arcade.rendering.ArcadePalette;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.MapSelectionMode;

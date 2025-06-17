@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ArcadePacMan_LevelCounter implements LevelCounter {
+public class ArcadePacMan_LevelCounter extends LevelCounter {
 
     public static final byte LEVEL_COUNTER_MAX_SIZE = 7;
 

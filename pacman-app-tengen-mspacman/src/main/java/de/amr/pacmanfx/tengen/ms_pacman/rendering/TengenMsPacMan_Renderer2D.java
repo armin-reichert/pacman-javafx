@@ -21,9 +21,9 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.*;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.Clapperboard;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.TengenMsPacMan_CutScene3;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
+import de.amr.pacmanfx.ui.input.JoypadKeyBinding;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
-import de.amr.pacmanfx.ui.input.JoypadKeyBinding;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleFloatProperty;
@@ -40,9 +40,9 @@ import static de.amr.pacmanfx.model.actors.Bonus.STATE_EATEN;
 import static de.amr.pacmanfx.model.actors.Bonus.STATE_EDIBLE;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_MapRepository.strangeMap15Sprite;
 import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PacAnimationMap.*;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
 import static de.amr.pacmanfx.ui.PacManGames.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.PY_CANVAS_BG_COLOR;
 import static java.util.Objects.requireNonNull;
@@ -104,8 +104,10 @@ public class TengenMsPacMan_Renderer2D implements SpriteGameRenderer {
         requireNonNull(actor);
         ctx().setImageSmoothing(false);
         switch (actor) {
+            case LevelCounter levelCounter -> drawLevelCounter(levelCounter);
             case Pac pac -> drawAnyKindOfPac(pac);
             case MovingBonus movingBonus -> drawMovingBonus(movingBonus);
+            case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
             case TengenMsPacMan_CutScene3.Stork stork -> drawStork(stork);
             default -> SpriteGameRenderer.super.drawActor(actor);
         }
@@ -390,12 +392,10 @@ public class TengenMsPacMan_Renderer2D implements SpriteGameRenderer {
         }
     }
 
-    @Override
-    public void drawLevelCounter(LevelCounter levelCounter, Vector2f sceneSizeInPixels) {
+    private void drawLevelCounter(LevelCounter levelCounter) {
         requireNonNull(levelCounter);
-        requireNonNull(sceneSizeInPixels);
         ctx().setImageSmoothing(false);
-        float x = sceneSizeInPixels.x() - 4 * TS, y = sceneSizeInPixels.y() - TS;
+        float x = levelCounter.x(), y = levelCounter.y();
         for (byte symbol : levelCounter.symbols()) {
             Sprite sprite = theUI().configuration().createBonusSymbolSprite(symbol);
             drawSpriteScaled(sprite, x, y);
@@ -440,7 +440,7 @@ public class TengenMsPacMan_Renderer2D implements SpriteGameRenderer {
         ctx().restore();
     }
 
-    public void drawClapperBoard(Clapperboard clapperboard) {
+    private void drawClapperBoard(Clapperboard clapperboard) {
         requireNonNull(clapperboard);
         if (!clapperboard.isVisible()) return;
         clapperboard.sprite().ifPresent(sprite -> {

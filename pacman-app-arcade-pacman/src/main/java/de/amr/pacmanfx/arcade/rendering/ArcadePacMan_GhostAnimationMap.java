@@ -2,7 +2,7 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.arcade;
+package de.amr.pacmanfx.arcade.rendering;
 
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Sprite;
@@ -11,7 +11,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.*;
-import static de.amr.pacmanfx.arcade.SpriteID.*;
+import static de.amr.pacmanfx.arcade.rendering.SpriteID.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createAnimation;
 

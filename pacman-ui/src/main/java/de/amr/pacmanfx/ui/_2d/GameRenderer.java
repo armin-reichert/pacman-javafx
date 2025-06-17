@@ -8,7 +8,6 @@ import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.model.actors.AnimatedActor;
@@ -80,8 +79,6 @@ public interface GameRenderer {
             sprite.x(), sprite.y(), sprite.width(), sprite.height(),
             scaled(x), scaled(y), scaled(sprite.width()), scaled(sprite.height()));
     }
-
-    void drawLevelCounter(LevelCounter levelCounter, Vector2f sceneSizeInPixels);
 
     /**
      *

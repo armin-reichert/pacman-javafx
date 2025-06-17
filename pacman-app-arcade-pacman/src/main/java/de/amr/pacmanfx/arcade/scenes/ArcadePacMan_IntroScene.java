@@ -2,8 +2,9 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.arcade;
+package de.amr.pacmanfx.arcade.scenes;
 
+import de.amr.pacmanfx.arcade.rendering.SpriteID;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
@@ -26,8 +27,8 @@ import java.util.List;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_GameModel.*;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.pacmanfx.arcade.ArcadePalette.*;
-import static de.amr.pacmanfx.arcade.SpriteID.GALLERY_GHOSTS;
+import static de.amr.pacmanfx.arcade.rendering.ArcadePalette.*;
+import static de.amr.pacmanfx.arcade.rendering.SpriteID.GALLERY_GHOSTS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static de.amr.pacmanfx.model.actors.GhostState.EATEN;
@@ -127,7 +128,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D implements ActionBindin
         }
         String coinsText = "CREDIT %2d".formatted(theCoinMechanism().numCoins());
         gr().fillText(coinsText, scoreColor(), arcadeFont8(), 2 * TS, sizeInPx().y() - 2);
-        drawLevelCounter();
+        gr().drawActor(theGame().levelCounter());
     }
 
     private void drawGallery() {

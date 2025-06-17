@@ -234,6 +234,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
     public void onLevelCreated(GameEvent e) {
         bindActionsToKeys();
         gr().applyRenderingHints(theGameLevel());
+        theGame().levelCounter().setPosition(sizeInPx().x() - 4 * TS, sizeInPx().y() - TS);
     }
 
     @Override
@@ -247,6 +248,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
     public void onSwitch_3D_2D(GameScene scene3D) {
         bindActionsToKeys();
         gr().applyRenderingHints(theGameLevel());
+        theGame().levelCounter().setPosition(sizeInPx().x() - 4 * TS, sizeInPx().y() - TS);
     }
 
     @Override
@@ -434,7 +436,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
 
         TengenMsPacMan_GameModel tengenGame = (TengenMsPacMan_GameModel) theGame();
         if (theGameLevel().isDemoLevel() || tengenGame.mapCategory() == MapCategory.ARCADE) {
-            drawLevelCounter();
+            gr().drawActor(theGame().levelCounter());
         } else {
             gr().drawLevelCounterWithLevelNumbers(theGameLevel().number(), theGame().levelCounter(), sizeInPx());
         }

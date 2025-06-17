@@ -2,7 +2,7 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.arcade;
+package de.amr.pacmanfx.arcade.scenes;
 
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Sprite;
@@ -132,7 +132,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
                 tiles_to_px(14), tiles_to_px(19) + 3);
         gr().drawActor(blinky);
         gr().drawActor(pac);
-        drawLevelCounter();
+        gr().drawActor(theGame().levelCounter());
     }
 
     @Override

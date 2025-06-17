@@ -5,10 +5,10 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui._2d;
 
 import de.amr.pacmanfx.lib.Sprite;
-import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.LevelCounter;
+import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
@@ -29,8 +29,6 @@ import static java.util.function.Predicate.not;
 
 /**
  * A vector graphics renderer that draws wall and obstacle paths generated from the tile map data.
- *
- * @author Armin Reichert
  */
 public class VectorGraphicsGameRenderer implements SpriteGameRenderer {
 
@@ -106,8 +104,17 @@ public class VectorGraphicsGameRenderer implements SpriteGameRenderer {
     }
 
     @Override
-    public void drawLevelCounter(LevelCounter levelCounter, Vector2f sceneSizeInPixels) {
-        float x = sceneSizeInPixels.x() - 4 * TS, y = sceneSizeInPixels.y() - 2 * TS;
+    public void drawActor(Actor actor) {
+        switch (actor) {
+            case LevelCounter levelCounter -> drawLevelCounter(levelCounter);
+            case Bonus bonus -> drawBonus(bonus);
+            default -> SpriteGameRenderer.super.drawActor(actor);
+        }
+    }
+
+    private void drawLevelCounter(LevelCounter levelCounter) {
+//        float x = sceneSizeInPixels.x() - 4 * TS, y = sceneSizeInPixels.y() - 2 * TS;
+        float x = levelCounter.x(), y = levelCounter.y();
         for (byte symbol : levelCounter.symbols()) {
             Sprite sprite = theUI().configuration().createBonusSymbolSprite(symbol);
             drawSpriteScaled(sprite, x, y);

@@ -87,9 +87,8 @@ public interface SpriteGameRenderer extends GameRenderer {
         if (actor instanceof AnimatedActor animatedActor) {
             animatedActor.animations().ifPresent(animationMap -> {
                 switch (animationMap) {
-                    case SingleSpriteAnimationMap singleSpriteAnimationMap -> {
+                    case SingleSpriteAnimationMap singleSpriteAnimationMap ->
                         drawActorSprite(actor, singleSpriteAnimationMap.singleSprite());
-                    }
                     case SpriteAnimationMap spriteAnimationMap -> {
                         if (spriteAnimationMap.currentAnimation() != null) {
                             drawActorSprite(actor, spriteAnimationMap.currentSprite(actor));

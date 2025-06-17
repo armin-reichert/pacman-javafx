@@ -2,7 +2,7 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.arcade;
+package de.amr.pacmanfx.arcade.scenes;
 
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
@@ -11,7 +11,7 @@ import de.amr.pacmanfx.ui.ActionBindingSupport;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.pacmanfx.arcade.ArcadePalette.*;
+import static de.amr.pacmanfx.arcade.rendering.ArcadePalette.*;
 import static de.amr.pacmanfx.ui.PacManGames.theSound;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 
@@ -49,6 +49,6 @@ public class ArcadePacMan_StartScene extends GameScene2D implements ActionBindin
         gr().fillTextAtTile("© 1980 MIDWAY MFG.CO.", ARCADE_PINK, arcadeFont8(), 4, 29);
         gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
                 scoreColor(), arcadeFont8(), 2 * TS, sizeInPx().y() - 2);
-        drawLevelCounter();
+        gr().drawActor(theGame().levelCounter());
     }
 }

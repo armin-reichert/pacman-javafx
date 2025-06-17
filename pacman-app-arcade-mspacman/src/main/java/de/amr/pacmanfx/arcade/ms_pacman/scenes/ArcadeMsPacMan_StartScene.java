@@ -15,8 +15,8 @@ import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import static de.amr.pacmanfx.Globals.theCoinMechanism;
 import static de.amr.pacmanfx.Globals.theGame;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.pacmanfx.arcade.ArcadePalette.ARCADE_ORANGE;
-import static de.amr.pacmanfx.arcade.ArcadePalette.ARCADE_RED;
+import static de.amr.pacmanfx.arcade.rendering.ArcadePalette.ARCADE_ORANGE;
+import static de.amr.pacmanfx.arcade.rendering.ArcadePalette.ARCADE_RED;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.ui.PacManGames.theSound;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
@@ -58,6 +58,6 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D implements ActionBind
         }
         gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
                 scoreColor(), arcadeFont8(), tiles_to_px(2), sizeInPx().y() - 2);
-        drawLevelCounter();
+        gr().drawActor(theGame().levelCounter());
     }
 }

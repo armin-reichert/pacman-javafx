@@ -126,10 +126,6 @@ public abstract class GameScene2D implements GameScene {
         }
     }
 
-    protected void drawLevelCounter() {
-        gr().drawLevelCounter(theGame().levelCounter(), sizeInPx());
-    }
-
     /**
      * Draws the scene content using the already scaled game renderer.
      */

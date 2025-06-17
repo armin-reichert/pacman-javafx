@@ -7,7 +7,6 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.Clapperboard;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.Marquee;
 import de.amr.pacmanfx.lib.Sprite;
-import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.actors.Actor;
@@ -24,7 +23,7 @@ import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.arcade.ArcadePalette.ARCADE_WHITE;
+import static de.amr.pacmanfx.arcade.rendering.ArcadePalette.ARCADE_WHITE;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.ui.PacManGames.theAssets;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
@@ -81,9 +80,9 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
         }
     }
 
-    @Override
-    public void drawLevelCounter(LevelCounter levelCounter, Vector2f sceneSizeInPixels) {
-        float x = sceneSizeInPixels.x() - 4 * TS, y = sceneSizeInPixels.y() - 2 * TS;
+    private void drawLevelCounter(LevelCounter levelCounter) {
+//        float x = sceneSizeInPixels.x() - 4 * TS, y = sceneSizeInPixels.y() - 2 * TS;
+        float x = levelCounter.x(), y = levelCounter.y();
         for (byte symbol : levelCounter.symbols()) {
             Sprite sprite = theUI().configuration().createBonusSymbolSprite(symbol);
             drawSpriteScaled(sprite, x, y);
@@ -95,6 +94,7 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
     public void drawActor(Actor actor) {
         switch (actor) {
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
+            case LevelCounter levelCounter -> drawLevelCounter(levelCounter);
             case Marquee marquee           -> drawMarquee(marquee);
             case MovingBonus movingBonus   -> drawMovingBonus(movingBonus);
             default -> SpriteGameRenderer.super.drawActor(actor);
