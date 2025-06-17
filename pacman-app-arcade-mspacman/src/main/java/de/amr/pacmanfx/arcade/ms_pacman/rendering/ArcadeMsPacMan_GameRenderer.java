@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.Clapperboard;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.Marquee;
 import de.amr.pacmanfx.lib.Sprite;
+import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.actors.Actor;
@@ -19,7 +20,10 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
+
+import java.util.function.Predicate;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
@@ -28,6 +32,7 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.ui.PacManGames.theAssets;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
 import static java.util.Objects.requireNonNull;
+import static java.util.function.Predicate.not;
 
 public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
 
@@ -78,6 +83,43 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
             overPaintEnergizerTiles(level, tile -> !energizerHighlighted || level.tileContainsEatenFood(tile), backgroundColor);
             ctx.restore();
         }
+    }
+
+    /**
+     * Over-paints all eaten pellet tiles.
+     * Assumes to be called in scaled graphics context!
+     *
+     * @param level the game level
+     * @param color over-paint color (background color of level)
+     */
+    private void overPaintEatenPelletTiles(GameLevel level, Color color) {
+        level.worldMap().tiles()
+            .filter(not(level::isEnergizerPosition))
+            .filter(level::tileContainsEatenFood)
+            .forEach(tile -> paintSquareInsideTile(tile, 4, color));
+    }
+
+    /**
+     * Over-paints all eaten energizer tiles.
+     * Assumes to be called in scaled graphics context!
+     *
+     * @param level the game level
+     * @param overPaintCondition when {@code true} energizer tile is over-painted
+     * @param color over-paint color (background color of level)
+     */
+    private void overPaintEnergizerTiles(GameLevel level, Predicate<Vector2i> overPaintCondition, Color color) {
+        level.energizerTiles().filter(overPaintCondition)
+            .forEach(tile -> paintSquareInsideTile(tile, 10, color));
+    }
+
+    /**
+     * Draws a square of the given size in background color over the tile. Used to hide eaten food and energizers.
+     * Assumes to be called in scaled graphics context!
+     */
+    private void paintSquareInsideTile(Vector2i tile, double squareSize, Paint paint) {
+        double centerX = tile.x() * TS + HTS, centerY = tile.y() * TS + HTS;
+        ctx().setFill(paint);
+        ctx().fillRect(centerX - 0.5 * squareSize, centerY - 0.5 * squareSize, squareSize, squareSize);
     }
 
     private void drawLevelCounter(LevelCounter levelCounter) {
