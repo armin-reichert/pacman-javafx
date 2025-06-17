@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.paint.Color;
 
 public class Marquee {
     private final TickTimer timer = new TickTimer("Marquee-Timer");
@@ -13,6 +14,8 @@ public class Marquee {
     private final int totalBulbCount;
     private final int brightBulbsCount;
     private final int brightBulbsDistance;
+    private Color bulbOnColor = Color.WHITE;
+    private Color bulbOffColor = Color.GREEN;
 
     public Marquee(Rectangle2D bounds, int totalBulbCount, int brightBulbsCount, int brightBulbsDistance) {
         this.bounds = bounds;
@@ -23,6 +26,22 @@ public class Marquee {
 
     public TickTimer timer() {
         return timer;
+    }
+
+    public Color bulbOnColor() {
+        return bulbOnColor;
+    }
+
+    public void setBulbOnColor(Color bulbOnColor) {
+        this.bulbOnColor = bulbOnColor;
+    }
+
+    public Color bulbOffColor() {
+        return bulbOffColor;
+    }
+
+    public void setBulbOffColor(Color bulbOffColor) {
+        this.bulbOffColor = bulbOffColor;
     }
 
     public int totalBulbCount() {

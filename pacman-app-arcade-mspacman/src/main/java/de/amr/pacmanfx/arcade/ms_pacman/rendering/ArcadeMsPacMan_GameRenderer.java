@@ -101,6 +101,9 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
     }
 
     private void drawMovingBonus(MovingBonus bonus) {
+        if (!bonus.isVisible()) {
+            return;
+        }
         ctx.save();
         ctx.setImageSmoothing(false);
         ctx.translate(0, bonus.elongationY());
@@ -150,19 +153,19 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
      * probably a bug in the original Arcade game.
      * </p>
      */
-    public void drawMarquee(Marquee marquee, Color onColor, Color offColor) {
+    public void drawMarquee(Marquee marquee) {
         long tick = marquee.timer().tickCount();
-        ctx.setFill(offColor);
+        ctx.setFill(marquee.bulbOffColor());
         for (int bulbIndex = 0; bulbIndex < marquee.totalBulbCount(); ++bulbIndex) {
             drawBulb(marquee, bulbIndex);
         }
         int firstBrightIndex = (int) (tick % marquee.totalBulbCount());
-        ctx.setFill(onColor);
+        ctx.setFill(marquee.bulbOnColor());
         for (int i = 0; i < marquee.brightBulbsCount(); ++i) {
             drawBulb(marquee, (firstBrightIndex + i * marquee.brightBulbsDistance()) % marquee.totalBulbCount());
         }
         // simulate bug from original Arcade game
-        ctx.setFill(offColor);
+        ctx.setFill(marquee.bulbOffColor());
         for (int bulbIndex = 81; bulbIndex < marquee.totalBulbCount(); bulbIndex += 2) {
             drawBulb(marquee, bulbIndex);
         }

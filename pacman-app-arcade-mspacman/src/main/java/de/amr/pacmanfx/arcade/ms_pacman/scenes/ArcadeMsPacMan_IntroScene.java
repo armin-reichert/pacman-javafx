@@ -50,10 +50,9 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
     private static final String[] GHOST_NAMES = { "BLINKY", "PINKY", "INKY", "SUE" };
     private static final Color[] GHOST_COLORS = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
 
-    private final Marquee marquee = new Marquee(new Rectangle2D(60, 88, 132, 60), 96, 6, 16);
-
     private final StateMachine<SceneState, ArcadeMsPacMan_IntroScene> sceneController;
 
+    private Marquee marquee;
     private Pac msPacMan;
     private Ghost[] ghosts;
     private byte presentedGhostCharacter;
@@ -83,6 +82,9 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
         bindAction(ACTION_TEST_LEVELS_BONI, COMMON_ACTION_BINDINGS);
         bindAction(ACTION_TEST_LEVELS_TEASERS, COMMON_ACTION_BINDINGS);
 
+        marquee = new Marquee(new Rectangle2D(60, 88, 132, 60), 96, 6, 16);
+        marquee.setBulbOffColor(ARCADE_RED);
+        marquee.setBulbOnColor(ARCADE_WHITE);
         msPacMan = createMsPacMan();
         ghosts = new Ghost[] { createRedGhost(), createPinkGhost(), createCyanGhost(), createOrangeGhost() };
         presentedGhostCharacter = RED_GHOST_SHADOW;
@@ -115,7 +117,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
     @Override
     public void drawSceneContent() {
         gr().fillText(TITLE, ARCADE_ORANGE, arcadeFont8(), TITLE_X, TITLE_Y);
-        gr().drawMarquee(marquee, ARCADE_WHITE, ARCADE_RED);
+        gr().drawMarquee(marquee);
         for (Ghost ghost : ghosts) { gr().drawActor(ghost); }
         gr().drawActor(msPacMan);
         switch (sceneController.state()) {
