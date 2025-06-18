@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.Clapperboard;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.Marquee;
+import de.amr.pacmanfx.arcade.ms_pacman.scenes.MidwayCopyright;
 import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Actor;
@@ -16,12 +17,10 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePalette.ARCADE_WHITE;
-import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.ui.PacManGames.theAssets;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
@@ -81,6 +80,7 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
     @Override
     public void drawActor(Actor actor) {
         switch (actor) {
+            case MidwayCopyright copyright -> drawMidwayCopyright(copyright);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
             case Marquee marquee           -> drawMarquee(marquee);
             default -> SpriteGameRenderer.super.drawActor(actor);
@@ -150,14 +150,14 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
         ctx.fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
     }
 
-    public void drawMsPacManCopyrightAtTile(Color color, Font font, int tileX, int tileY) {
+    private void drawMidwayCopyright(MidwayCopyright copyright) {
         Image image = theAssets().get("ms_pacman.logo.midway");
-        double x = tiles_to_px(tileX), y = tiles_to_px(tileY);
-        ctx.drawImage(image, scaled(x), scaled(y + 2), scaled(tiles_to_px(4) - 2), scaled(tiles_to_px(4)));
-        ctx.setFont(font);
-        ctx.setFill(color);
-        ctx.fillText("©", scaled(x + TS * 5), scaled(y + TS * 2 + 2));
-        ctx.fillText("MIDWAY MFG CO", scaled(x + TS * 7), scaled(y + TS * 2));
-        ctx.fillText("1980/1981", scaled(x + TS * 8), scaled(y + TS * 4));
+        float x = scaled(copyright.x()), y = scaled(copyright.y());
+        ctx.drawImage(image, x, y + 2, scaled(TS * 4 - 2), scaled(TS * 4));
+        ctx.setFont(copyright.font());
+        ctx.setFill(copyright.color());
+        ctx.fillText("©", x + scaled(TS * 5), y + scaled(TS * 2 + 2));
+        ctx.fillText("MIDWAY MFG CO", x + scaled(TS * 7), y + scaled(TS * 2));
+        ctx.fillText("1980/1981", x + scaled(TS * 8), y + scaled(TS * 4));
     }
 }

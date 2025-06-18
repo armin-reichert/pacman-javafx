@@ -51,6 +51,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
 
     private final StateMachine<SceneState, ArcadeMsPacMan_IntroScene> sceneController;
 
+    private MidwayCopyright copyright;
     private Marquee marquee;
     private Pac msPacMan;
     private Ghost[] ghosts;
@@ -75,6 +76,12 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
         bindAction(ACTION_TEST_CUT_SCENES, COMMON_ACTION_BINDINGS);
         bindAction(ACTION_TEST_LEVELS_BONI, COMMON_ACTION_BINDINGS);
         bindAction(ACTION_TEST_LEVELS_TEASERS, COMMON_ACTION_BINDINGS);
+
+        copyright = new MidwayCopyright();
+        copyright.setPosition(TS * 6, TS * 28);
+        copyright.setColor(ARCADE_RED);
+        copyright.setFont(arcadeFont8());
+        copyright.show();
 
         marquee = new Marquee(132, 60, 96, 6, 16);
         marquee.setPosition(60, 88);
@@ -131,9 +138,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
                 gr().fillText("MS PAC-MAN", ARCADE_YELLOW, arcadeFont8(), TITLE_X, TOP_Y + tiles_to_px(6));
             }
         }
-        if (gr() instanceof ArcadeMsPacMan_GameRenderer r) { // in MS_PACMAN_XXL, the vector renderer is used!
-            r.drawMsPacManCopyrightAtTile(ARCADE_RED, arcadeFont8(), 6, 28);
-        }
+        gr().drawActor(copyright);
         gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()), scoreColor(), arcadeFont8(), 2 * TS, sizeInPx().y() - 2);
         gr().drawActor(theGame().levelCounter());
     }
