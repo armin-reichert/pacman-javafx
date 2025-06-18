@@ -4,9 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.allgames.app;
 
-import de.amr.pacmanfx.arcade.ArcadePacMan_GameModel;
-import de.amr.pacmanfx.arcade.ArcadePacMan_StartPage;
-import de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig;
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel;
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;

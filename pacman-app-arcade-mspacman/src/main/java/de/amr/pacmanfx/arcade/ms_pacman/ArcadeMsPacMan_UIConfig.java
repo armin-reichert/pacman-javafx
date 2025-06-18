@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman;
 
-import de.amr.pacmanfx.arcade.scenes.ArcadeCommon_BootScene2D;
-import de.amr.pacmanfx.arcade.scenes.ArcadeCommon_PlayScene2D;
+import de.amr.pacmanfx.arcade.pacman.scenes.ArcadeCommon_BootScene2D;
+import de.amr.pacmanfx.arcade.pacman.scenes.ArcadeCommon_PlayScene2D;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.*;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.*;
 import de.amr.pacmanfx.controller.GameState;
@@ -38,7 +38,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.optGameLevel;
 import static de.amr.pacmanfx.Globals.theGameLevel;
-import static de.amr.pacmanfx.arcade.rendering.ArcadePalette.*;
+import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePalette.*;
 import static de.amr.pacmanfx.ui.PacManGames.theAssets;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 import static java.util.Objects.requireNonNull;
@@ -248,12 +248,12 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     }
 
     @Override
-    public SpriteAnimationMap createGhostAnimations(Ghost ghost) {
+    public SpriteAnimationMap<SpriteID> createGhostAnimations(Ghost ghost) {
         return new ArcadeMsPacMan_GhostAnimationMap(spriteSheet, ghost.personality());
     }
 
     @Override
-    public SpriteAnimationMap createPacAnimations(Pac pac) {
+    public SpriteAnimationMap<SpriteID> createPacAnimations(Pac pac) {
         return new ArcadeMsPacMan_PacAnimationMap(spriteSheet);
     }
 }

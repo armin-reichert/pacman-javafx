@@ -2,7 +2,7 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.arcade.rendering;
+package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import javafx.scene.paint.Color;
 

@@ -7,13 +7,13 @@ package de.amr.pacmanfx.uilib.animation;
 import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.ActorAnimationMap;
-import de.amr.pacmanfx.model.actors.AnimatedActor;
+import de.amr.pacmanfx.model.actors.Animated;
 
 import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
-public class SingleSpriteActor extends Actor implements AnimatedActor {
+public class SingleSpriteActor extends Actor implements Animated {
 
     private final ActorAnimationMap animationMap;
 
@@ -23,7 +23,7 @@ public class SingleSpriteActor extends Actor implements AnimatedActor {
     }
 
     @Override
-    public Optional<ActorAnimationMap> animations() {
+    public Optional<ActorAnimationMap> animationMap() {
         return Optional.of(animationMap);
     }
 }

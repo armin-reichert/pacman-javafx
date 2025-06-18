@@ -115,7 +115,7 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
         if (!pac.isVisible()) {
             return;
         }
-        pac.animations().map(SpriteAnimationMap.class::cast).ifPresent(spriteAnimations -> {
+        pac.animationMap().map(SpriteAnimationMap.class::cast).ifPresent(spriteAnimations -> {
             SpriteAnimation animation = spriteAnimations.currentAnimation();
             if (animation == null) {
                 Logger.error("No animation found for {}", pac);

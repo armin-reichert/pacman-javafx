@@ -2,10 +2,10 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.arcade;
+package de.amr.pacmanfx.arcade.pacman;
 
-import de.amr.pacmanfx.arcade.rendering.*;
-import de.amr.pacmanfx.arcade.scenes.*;
+import de.amr.pacmanfx.arcade.pacman.rendering.*;
+import de.amr.pacmanfx.arcade.pacman.scenes.*;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.Vector2f;
@@ -14,11 +14,11 @@ import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.PacManGames_Assets;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
-import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -37,7 +37,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.optGameLevel;
 import static de.amr.pacmanfx.Globals.theGameLevel;
-import static de.amr.pacmanfx.arcade.rendering.ArcadePalette.*;
+import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePalette.*;
 import static de.amr.pacmanfx.ui.PacManGames.theAssets;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 import static java.util.Objects.requireNonNull;
@@ -196,12 +196,12 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
     public SpriteSheet<SpriteID> spriteSheet() {return spriteSheet;}
 
     @Override
-    public SpriteAnimationMap createGhostAnimations(Ghost ghost) {
+    public SpriteAnimationMap<SpriteID> createGhostAnimations(Ghost ghost) {
         return new ArcadePacMan_GhostAnimationMap(spriteSheet, ghost.personality());
     }
 
     @Override
-    public SpriteAnimationMap createPacAnimations(Pac pac) {
+    public SpriteAnimationMap<SpriteID> createPacAnimations(Pac pac) {
         return new ArcadePacMan_PacAnimationMap(spriteSheet);
     }
 

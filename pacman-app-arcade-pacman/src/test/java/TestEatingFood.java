@@ -1,4 +1,4 @@
-import de.amr.pacmanfx.arcade.ArcadePacMan_GameModel;
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

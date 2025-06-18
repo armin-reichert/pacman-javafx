@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.ActorAnimationMap;
-import de.amr.pacmanfx.model.actors.AnimatedActor;
+import de.amr.pacmanfx.model.actors.Animated;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
@@ -16,7 +16,7 @@ import java.util.Optional;
 
 import static de.amr.pacmanfx.tengen.ms_pacman.rendering.SpriteID.STORK;
 
-public class Stork extends Actor implements AnimatedActor {
+public class Stork extends Actor implements Animated {
     private final SpriteAnimationMap<SpriteID> animationMap;
     private boolean bagReleasedFromBeak;
 
@@ -36,7 +36,7 @@ public class Stork extends Actor implements AnimatedActor {
     }
 
     @Override
-    public Optional<ActorAnimationMap> animations() {
+    public Optional<ActorAnimationMap> animationMap() {
         return Optional.of(animationMap);
     }
 }

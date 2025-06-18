@@ -9,8 +9,8 @@ public interface ActorAnimationMap {
     String selectedAnimationID();
     void selectAnimationAtFrame(String id, int frameIndex);
     default void selectAnimation(String id) { selectAnimationAtFrame(id, 0); }
-    default void playAnimation(String id) { selectAnimation(id); play(); }
-    void play();
-    void stop();
-    void reset();
+    default void playAnimation(String id) { selectAnimation(id); playSelectedAnimation(); }
+    void playSelectedAnimation();
+    void stopSelectedAnimation();
+    void resetSelectedAnimation();
 }

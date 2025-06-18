@@ -20,8 +20,8 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.pacmanfx.arcade.rendering.ArcadePalette.*;
+import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
+import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePalette.*;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;

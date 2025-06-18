@@ -87,21 +87,21 @@ public class SpriteAnimationMap<SID> implements ActorAnimationMap {
     }
 
     @Override
-    public void play() {
+    public void playSelectedAnimation() {
         if (currentAnimation() != null) {
             currentAnimation().play();
         }
     }
 
     @Override
-    public void stop() {
+    public void stopSelectedAnimation() {
         if (currentAnimation() != null) {
             currentAnimation().stop();
         }
     }
 
     @Override
-    public void reset() {
+    public void resetSelectedAnimation() {
         if (currentAnimation() != null) {
             currentAnimation().reset();
         }

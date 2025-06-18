@@ -14,8 +14,8 @@ open module x.arcade.pacman {
     requires de.amr.pacmanfx.uilib;
     requires de.amr.pacmanfx.ui;
 
-    exports de.amr.pacmanfx.arcade;
-    exports de.amr.pacmanfx.arcade.app;
-    exports de.amr.pacmanfx.arcade.rendering;
-    exports de.amr.pacmanfx.arcade.scenes;
+    exports de.amr.pacmanfx.arcade.pacman;
+    exports de.amr.pacmanfx.arcade.pacman.app;
+    exports de.amr.pacmanfx.arcade.pacman.rendering;
+    exports de.amr.pacmanfx.arcade.pacman.scenes;
 }

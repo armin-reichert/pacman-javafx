@@ -26,7 +26,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Common ghost base class. The specific ghosts differ in their hunting behavior and their look.
  */
-public abstract class Ghost extends MovingActor implements AnimatedActor {
+public abstract class Ghost extends MovingActor implements Animated {
 
     private final byte personality;
     private final String name;
@@ -54,7 +54,7 @@ public abstract class Ghost extends MovingActor implements AnimatedActor {
     }
 
     @Override
-    public Optional<ActorAnimationMap> animations() {
+    public Optional<ActorAnimationMap> animationMap() {
         return Optional.ofNullable(animationMap);
     }
 

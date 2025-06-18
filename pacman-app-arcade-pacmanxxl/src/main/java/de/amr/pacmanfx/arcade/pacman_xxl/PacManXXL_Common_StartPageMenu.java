@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
-import de.amr.pacmanfx.arcade.rendering.ArcadePalette;
+import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePalette;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.MapSelectionMode;
@@ -23,7 +23,7 @@ import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.Globals.theGameController;
-import static de.amr.pacmanfx.arcade.ArcadePacMan_GameModel.*;
+import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static de.amr.pacmanfx.ui.PacManGames.theAssets;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
@@ -126,7 +126,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
             pac.setAnimations(config.createPacAnimations(pac));
             pac.playAnimation(ANIM_PAC_MUNCHING);
             for (Ghost ghost : ghosts) {
-                if (ghost.animations().isEmpty()) {
+                if (ghost.animationMap().isEmpty()) {
                     ghost.setAnimations(config.createGhostAnimations(ghost));
                     ghost.playAnimation(ANIM_GHOST_NORMAL);
                 }

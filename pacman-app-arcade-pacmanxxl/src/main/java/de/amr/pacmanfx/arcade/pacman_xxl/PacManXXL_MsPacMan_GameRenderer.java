@@ -20,7 +20,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.arcade.rendering.ArcadePalette.ARCADE_WHITE;
+import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePalette.ARCADE_WHITE;
 import static java.util.Objects.requireNonNull;
 
 public class PacManXXL_MsPacMan_GameRenderer implements SpriteGameRenderer {

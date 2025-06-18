@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman;
 
-import de.amr.pacmanfx.arcade.ArcadeCommon_GameModel;
-import de.amr.pacmanfx.arcade.ArcadePacMan_LevelCounter;
+import de.amr.pacmanfx.arcade.pacman.ArcadeCommon_GameModel;
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_LevelCounter;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.Waypoint;

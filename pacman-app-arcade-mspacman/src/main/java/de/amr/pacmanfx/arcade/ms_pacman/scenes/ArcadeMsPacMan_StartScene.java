@@ -14,9 +14,9 @@ import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
 import static de.amr.pacmanfx.Globals.theCoinMechanism;
 import static de.amr.pacmanfx.Globals.theGame;
-import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.pacmanfx.arcade.rendering.ArcadePalette.ARCADE_ORANGE;
-import static de.amr.pacmanfx.arcade.rendering.ArcadePalette.ARCADE_RED;
+import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
+import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePalette.ARCADE_ORANGE;
+import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePalette.ARCADE_RED;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.ui.PacManGames.theSound;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;

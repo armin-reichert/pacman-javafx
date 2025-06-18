@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
-import de.amr.pacmanfx.arcade.rendering.ArcadePacMan_SpriteSheet;
+import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui._2d.GenericMapRenderer;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;

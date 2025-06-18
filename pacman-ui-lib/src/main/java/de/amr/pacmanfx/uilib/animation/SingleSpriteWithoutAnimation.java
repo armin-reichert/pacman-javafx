@@ -33,11 +33,11 @@ public class SingleSpriteWithoutAnimation implements ActorAnimationMap {
     public void selectAnimationAtFrame(String id, int frameIndex) {}
 
     @Override
-    public void play() {}
+    public void playSelectedAnimation() {}
 
     @Override
-    public void stop() {}
+    public void stopSelectedAnimation() {}
 
     @Override
-    public void reset() {}
+    public void resetSelectedAnimation() {}
 }

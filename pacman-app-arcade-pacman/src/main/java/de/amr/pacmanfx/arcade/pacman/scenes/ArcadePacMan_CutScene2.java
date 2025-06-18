@@ -2,7 +2,7 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.arcade.scenes;
+package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Sprite;
@@ -16,9 +16,9 @@ import javafx.scene.media.MediaPlayer;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.arcade.ArcadePacMan_GameModel.createPac;
-import static de.amr.pacmanfx.arcade.ArcadePacMan_GameModel.createRedGhost;
-import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.*;
+import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createPac;
+import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createRedGhost;
+import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;

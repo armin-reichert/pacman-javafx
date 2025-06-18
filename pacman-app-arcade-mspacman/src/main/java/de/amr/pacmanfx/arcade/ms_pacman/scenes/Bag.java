@@ -8,7 +8,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.ActorAnimationMap;
-import de.amr.pacmanfx.model.actors.AnimatedActor;
+import de.amr.pacmanfx.model.actors.Animated;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
@@ -17,7 +17,7 @@ import java.util.Optional;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.BLUE_BAG;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.JUNIOR_PAC;
 
-class Bag extends Actor implements AnimatedActor {
+class Bag extends Actor implements Animated {
     private final SpriteAnimationMap<SpriteID> animationMap;
     private boolean open;
 
@@ -28,7 +28,7 @@ class Bag extends Actor implements AnimatedActor {
     }
 
     @Override
-    public Optional<ActorAnimationMap> animations() {
+    public Optional<ActorAnimationMap> animationMap() {
         return Optional.of(animationMap);
     }
 

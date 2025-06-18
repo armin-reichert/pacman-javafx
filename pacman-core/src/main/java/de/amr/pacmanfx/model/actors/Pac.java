@@ -21,7 +21,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Pac-Man / Ms. Pac-Man.
  */
-public class Pac extends MovingActor implements AnimatedActor {
+public class Pac extends MovingActor implements Animated {
 
     private static final byte INDEFINITELY = -1;
 
@@ -191,7 +191,7 @@ public class Pac extends MovingActor implements AnimatedActor {
     }
 
     @Override
-    public Optional<ActorAnimationMap> animations() {
+    public Optional<ActorAnimationMap> animationMap() {
         return Optional.ofNullable(animationMap);
     }
 }

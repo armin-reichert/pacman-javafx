@@ -106,15 +106,15 @@ public interface SpriteGameRenderer extends GameRenderer {
             case MovingBonus movingBonus     -> drawMovingBonus(movingBonus);
             case LivesCounter livesCounter   -> drawLivesCounter(livesCounter);
             case LevelCounter levelCounter   -> drawLevelCounter(levelCounter);
-            case AnimatedActor animatedActor -> drawAnimatedActor(animatedActor);
+            case Animated animated -> drawAnimatedActor(animated);
             default -> {}
         }
     }
 
-    private void drawAnimatedActor(AnimatedActor animatedActor) {
-        animatedActor.animations().ifPresent(animationMap -> {
+    private void drawAnimatedActor(Animated animated) {
+        animated.animationMap().ifPresent(animationMap -> {
             // assume interface is only implemented by Actor (sub-)classes
-            Actor actor = (Actor) animatedActor;
+            Actor actor = (Actor) animated;
             switch (animationMap) {
                 case SingleSpriteWithoutAnimation singleSpriteWithoutAnimation ->
                         drawActorSpriteCentered(actor, singleSpriteWithoutAnimation.singleSprite());
@@ -185,15 +185,15 @@ public interface SpriteGameRenderer extends GameRenderer {
                 ctx().setFont(Font.font("Monospaced", scaled(6)));
                 ctx().fillText(text, scaled(pac.x() - 4), scaled(pac.y() + 16));
             }
-            case AnimatedActor animatedActor -> drawAnimatedMovingActorInfo(animatedActor);
+            case Animated animated -> drawAnimatedMovingActorInfo(animated);
             default -> {}
         }
     }
 
-private void drawAnimatedMovingActorInfo(AnimatedActor animatedActor) {
-    if (!(animatedActor instanceof MovingActor movingActor)) return;
+private void drawAnimatedMovingActorInfo(Animated animated) {
+    if (!(animated instanceof MovingActor movingActor)) return;
 
-    animatedActor.animations()
+    animated.animationMap()
         .filter(SpriteAnimationMap.class::isInstance)
         .map(SpriteAnimationMap.class::cast)
         .ifPresent(spriteAnimationMap -> {

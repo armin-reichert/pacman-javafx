@@ -102,10 +102,10 @@ public class InfoBoxActorInfo extends InfoBox {
     }
 
     private String ghostAnimation(GameModel game, Ghost ghost) {
-        if (ghost.animations().isEmpty()) {
+        if (ghost.animationMap().isEmpty()) {
             return NO_INFO;
         }
-        SpriteAnimationMap sa = (SpriteAnimationMap) ghost.animations().get();
+        SpriteAnimationMap sa = (SpriteAnimationMap) ghost.animationMap().get();
         return sa.selectedAnimationID() != null ? sa.selectedAnimationID() : NO_INFO;
     }
 
