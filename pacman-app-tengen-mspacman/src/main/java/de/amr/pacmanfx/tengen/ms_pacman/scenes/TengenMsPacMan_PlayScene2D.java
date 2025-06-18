@@ -11,16 +11,15 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.LivesCounter;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
+import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.ActionBindingSupport;
 import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelFinishedAnimation;
-import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.uilib.CameraControlledView;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.beans.property.DoubleProperty;
@@ -44,8 +43,8 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_SHORT;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_MEDIUM;
+import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_SHORT;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.PacManGames.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
@@ -69,8 +68,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
 
     private MessageMovement messageMovement;
     private LevelFinishedAnimation levelFinishedAnimation;
-
-    private TengenMsPacMan_SpriteSheet spriteSheet;
 
     public TengenMsPacMan_PlayScene2D() {
         dynamicCamera.scalingProperty().bind(scalingProperty());
@@ -168,9 +165,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
 
     @Override
     public void doInit() {
-        spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
+        var config = (TengenMsPacMan_UIConfig) theUI().configuration();
         theGame().setScoreVisible(true);
-        setGameRenderer((SpriteGameRenderer) theUI().configuration().createRenderer(canvas()));
+        setGameRenderer(config.createRenderer(canvas()));
         dynamicCamera.moveTop();
         messageMovement = new MessageMovement();
     }
@@ -234,7 +231,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
     public void onLevelCreated(GameEvent e) {
         bindActionsToKeys();
         gr().applyRenderingHints(theGameLevel());
-        theGame().levelCounter().setPosition(sizeInPx().x() - 4 * TS, sizeInPx().y() - TS);
     }
 
     @Override
@@ -248,7 +244,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
     public void onSwitch_3D_2D(GameScene scene3D) {
         bindActionsToKeys();
         gr().applyRenderingHints(theGameLevel());
-        theGame().levelCounter().setPosition(sizeInPx().x() - 4 * TS, sizeInPx().y() - TS);
     }
 
     @Override
@@ -366,10 +361,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
 
         // game level exists from here
         gr().ensureMapSettingsApplied(theGameLevel());
-        //TODO check why sprite sheet may be null here
-        if (spriteSheet == null) {
-            spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
-        }
 
         // compute current scene scaling
         switch (displayModePy.get()) {
@@ -438,12 +429,13 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
         counter.setVisibleLifeCount(numLivesDisplayed);
         gr().drawActor(theGame().livesCounter());
 
-        theGame().levelCounter().show();
-        TengenMsPacMan_GameModel tengenGame = (TengenMsPacMan_GameModel) theGame();
-        if (theGameLevel().isDemoLevel() || tengenGame.mapCategory() == MapCategory.ARCADE) {
-            gr().drawActor(theGame().levelCounter());
+        var theGame = (TengenMsPacMan_GameModel) theGame();
+        theGame.levelCounter().setPosition(sizeInPx().x() - 4 * TS, sizeInPx().y() - TS);
+        theGame.levelCounter().show();
+        if (theGameLevel().isDemoLevel() || theGame.mapCategory() == MapCategory.ARCADE) {
+            gr().drawActor(theGame.levelCounter());
         } else {
-            gr().drawLevelCounterWithLevelNumbers(theGameLevel().number(), theGame().levelCounter(), sizeInPx());
+            gr().drawLevelCounterWithLevelNumbers(theGameLevel().number(), theGame.levelCounter(), sizeInPx());
         }
 
         ctx().restore();
