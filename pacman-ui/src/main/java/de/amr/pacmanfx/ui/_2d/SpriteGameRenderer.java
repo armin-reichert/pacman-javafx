@@ -190,32 +190,37 @@ public interface SpriteGameRenderer extends GameRenderer {
         }
     }
 
-    private void drawAnimatedMovingActorInfo(AnimatedActor animatedMovingActor) {
-        if (animatedMovingActor instanceof MovingActor movingActor) {
-            animatedMovingActor.animations()
-                    .filter(SpriteAnimationMap.class::isInstance)
-                    .map(SpriteAnimationMap.class::cast)
-                    .ifPresent(animations -> {
-                        String animID = animations.selectedAnimationID();
-                        if (animID != null) {
-                            String text = animID + " " + animations.currentAnimation().frameIndex();
-                            ctx().setFill(Color.WHITE);
-                            ctx().setFont(Font.font("Monospaced", scaled(6)));
-                            ctx().fillText(text, scaled(movingActor.x() - 4), scaled(movingActor.y() - 4));
-                        }
-                        if (movingActor.wishDir() != null) {
-                            float scaling = scaling();
-                            Vector2f center = movingActor.center();
-                            Vector2f arrowHead = center.plus(movingActor.wishDir().vector().scaled(12f)).scaled(scaling);
-                            Vector2f guyCenter = center.scaled(scaling);
-                            float radius = scaling * 2, diameter = 2 * radius;
-                            ctx().setStroke(Color.WHITE);
-                            ctx().setLineWidth(0.5);
-                            ctx().strokeLine(guyCenter.x(), guyCenter.y(), arrowHead.x(), arrowHead.y());
-                            ctx().setFill(movingActor.isNewTileEntered() ? Color.YELLOW : Color.GREEN);
-                            ctx().fillOval(arrowHead.x() - radius, arrowHead.y() - radius, diameter, diameter);
-                        }
-                    });
-        }
+private void drawAnimatedMovingActorInfo(AnimatedActor animatedActor) {
+    if (!(animatedActor instanceof MovingActor movingActor)) return;
+
+    animatedActor.animations()
+        .filter(SpriteAnimationMap.class::isInstance)
+        .map(SpriteAnimationMap.class::cast)
+        .ifPresent(spriteAnimationMap -> {
+            ctx().save();
+            String selectedID = spriteAnimationMap.selectedAnimationID();
+            if (selectedID != null) {
+                String text = "[%s:%d]".formatted(selectedID, spriteAnimationMap.currentAnimation().frameIndex());
+                double x = scaled(movingActor.x() - 4), y = scaled(movingActor.y() - 4);
+                ctx().setFill(Color.WHITE);
+                ctx().setFont(Font.font("Sans", scaled(7)));
+                ctx().fillText(text, x, y);
+                ctx().setStroke(Color.GRAY);
+                ctx().strokeText(text, x, y);
+            }
+            if (movingActor.wishDir() != null) {
+                float scaling = scaling();
+                Vector2f center = movingActor.center();
+                Vector2f arrowHead = center.plus(movingActor.wishDir().vector().scaled(12f)).scaled(scaling);
+                Vector2f guyCenter = center.scaled(scaling);
+                float radius = scaling * 2, diameter = 2 * radius;
+                ctx().setStroke(Color.WHITE);
+                ctx().setLineWidth(0.5);
+                ctx().strokeLine(guyCenter.x(), guyCenter.y(), arrowHead.x(), arrowHead.y());
+                ctx().setFill(movingActor.isNewTileEntered() ? Color.YELLOW : Color.GREEN);
+                ctx().fillOval(arrowHead.x() - radius, arrowHead.y() - radius, diameter, diameter);
+            }
+            ctx().restore();
+        });
     }
 }
