@@ -27,6 +27,7 @@ import javafx.beans.property.FloatProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -73,7 +74,9 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
         return spriteSheet;
     }
 
-    public ObjectProperty<Color> backgroundColorProperty() { return  backgroundColorPy; }
+    public ObjectProperty<Color> backgroundColorProperty() { return backgroundColorPy; }
+
+    public Color backgroundColor() { return backgroundColorPy.get(); }
 
     public void ensureMapSettingsApplied(GameLevel level) {
         requireNonNull(level);
@@ -192,7 +195,7 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
             0, scaled(y), scaled(area.width()), scaled(area.height())
         );
         // The maze images also contain the ghost and Ms. Pac-Man sprites at their initial positions
-        overPaintActors(level);
+        overPaintActorSprites(level);
     }
 
     public void drawFood(GameLevel level) {
@@ -224,7 +227,7 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
             region.x(), region.y(), region.width(), region.height(),
             0, scaled(mapTop), scaled(region.width()), scaled(region.height())
         );
-        overPaintActors(level);
+        overPaintActorSprites(level);
 
         // draw food to erase eaten food!
         ctx().save();
@@ -238,7 +241,7 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
     private void drawPellets(GameLevel level, Color pelletColor) {
         level.worldMap().tiles().filter(level::isFoodPosition).filter(not(level::isEnergizerPosition)).forEach(tile -> {
             double cx = tile.x() * TS + HTS, cy = tile.y() * TS + HTS;
-            ctx().setFill(backgroundColorPy.get());
+            ctx().setFill(backgroundColor());
             ctx().fillRect(cx - 2, cy - 2, 4, 4);
             if (!level.tileContainsEatenFood(tile)) {
                 ctx().setFill(pelletColor);
@@ -252,7 +255,7 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
         double offset = 0.5 * HTS;
         level.worldMap().tiles().filter(level::isEnergizerPosition).forEach(tile -> {
             double x = tile.x() * TS, y = tile.y() * TS;
-            ctx().setFill(backgroundColorPy.get());
+            ctx().setFill(backgroundColor());
             ctx().fillRect(x - 1, y - 1, TS + 2, TS + 2); // avoid blitzer
             if (!level.tileContainsEatenFood(tile) && level.blinking().isOn()) {
                 ctx().setFill(pelletColor);
@@ -288,21 +291,36 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
         }
     }
 
-    private void overPaintActors(GameLevel world) {
-        Vector2f topLeftPosition = world.houseMinTile().plus(1, 2).scaled(TS * scaling());
-        Vector2f size = new Vector2i(world.houseSizeInTiles().x() - 2, 2).scaled(TS * scaling());
-        ctx().setFill(backgroundColorPy.get());
-        ctx().fillRect(topLeftPosition.x(), topLeftPosition.y(), size.x(), size.y());
-        overPaint(world.worldMap().getTerrainTileProperty("pos_pac", Vector2i.of(14, 26)));
-        overPaint(world.worldMap().getTerrainTileProperty("pos_ghost_1_red", Vector2i.of(13, 14)));
+    private void overPaintActorSprites(GameLevel level) {
+        float margin = scaled(1), halfMargin = 0.5f * margin;
+        float s = scaled(TS);
+
+        // Over-paint area at house bottom where the ghost sprites are shown in map
+        var inHouseArea = new Rectangle2D(
+            halfMargin + s * (level.houseMinTile().x() + 1),
+            halfMargin + s * (level.houseMinTile().y() + 2),
+            s * (level.houseSizeInTiles().x() - 2) - margin,
+            s * 2 - margin
+        );
+
+        ctx().setFill(backgroundColor());
+        ctx().fillRect(inHouseArea.getMinX(), inHouseArea.getMinY(), inHouseArea.getWidth(), inHouseArea.getHeight());
+
+        // Now the actor sprites outside the house. Be careful not to over-paint nearby obstacle edges!
+        Vector2i pacTile = level.worldMap().getTerrainTileProperty("pos_pac", Vector2i.of(14, 26));
+        overPaintActorSprite(pacTile, margin);
+
+        Vector2i redGhostTile = level.worldMap().getTerrainTileProperty("pos_ghost_1_red", Vector2i.of(13, 14));
+        overPaintActorSprite(redGhostTile, margin);
     }
 
-    private void overPaint(Vector2i tile) {
-        // Parameter tile denotes the left of the two tiles where actor is located between. Compute center position.
-        double cx = tile.x() * TS;
-        double cy = tile.y() * TS - HTS;
-        ctx().setFill(backgroundColorPy.get());
-        ctx().fillRect(scaled(cx), scaled(cy), scaled(16), scaled(16));
+    private void overPaintActorSprite(Vector2i tile, float margin) {
+        float halfMargin = 0.5f * margin;
+        float overPaintSize = scaled(2 * TS) - margin;
+        ctx().fillRect(
+            halfMargin + scaled(tile.x() * TS),
+            halfMargin + scaled(tile.y() * TS - HTS),
+            overPaintSize, overPaintSize);
     }
 
     public void drawGameOptions(MapCategory category, Difficulty difficulty, PacBooster booster, double centerX, double y) {
@@ -403,7 +421,7 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
             // over-paint number from sprite sheet
             ctx().save();
             ctx().scale(scaling(), scaling());
-            ctx().setFill(backgroundColorPy.get());
+            ctx().setFill(backgroundColor());
             ctx().fillRect(numberX - 1, numberY - 8, 12, 8);
             ctx().restore();
 

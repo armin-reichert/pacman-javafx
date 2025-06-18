@@ -57,20 +57,21 @@ public class ArcadePacMan_GameRenderer implements SpriteGameRenderer {
         }
         else {
             drawSprite(spriteSheet.sprite(SpriteID.MAP_FULL), 0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);
+            ctx.setFill(backgroundColor);
             level.worldMap().tiles()
                     .filter(not(level::isEnergizerPosition))
                     .filter(level::tileContainsEatenFood)
-                    .forEach(tile -> fillSquareAtTileCenter(tile, 4, backgroundColor));
+                    .forEach(tile -> hideSquareAtTileCenter(tile, 4));
             level.energizerTiles()
                     .filter(tile -> !energizerHighlighted || level.tileContainsEatenFood(tile))
-                    .forEach(tile -> fillSquareAtTileCenter(tile, 10, backgroundColor));
+                    .forEach(tile -> hideSquareAtTileCenter(tile, 10));
         }
         ctx.restore();
     }
 
-    private void fillSquareAtTileCenter(Vector2i tile, double edgeLength, Color color) {
+    private void hideSquareAtTileCenter(Vector2i tile, int sideLength) {
         double centerX = tile.x() * TS + HTS, centerY = tile.y() * TS + HTS;
-        ctx().setFill(color);
-        ctx().fillRect(centerX - 0.5 * edgeLength, centerY - 0.5 * edgeLength, edgeLength, edgeLength);
+        float halfSideLength = 0.5f * sideLength;
+        ctx().fillRect(centerX - halfSideLength, centerY - halfSideLength, sideLength, sideLength);
     }
 }
