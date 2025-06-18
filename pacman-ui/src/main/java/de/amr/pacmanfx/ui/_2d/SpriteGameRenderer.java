@@ -93,27 +93,32 @@ public interface SpriteGameRenderer extends GameRenderer {
             return;
         }
         switch (actor) {
-            case StaticBonus staticBonus   -> drawStaticBonus(staticBonus);
-            case MovingBonus movingBonus   -> drawMovingBonus(movingBonus);
-            case LivesCounter livesCounter -> drawLivesCounter(livesCounter);
-            case LevelCounter levelCounter -> drawLevelCounter(levelCounter);
-            case AnimatedActor animatedActor ->
-                animatedActor.animations().ifPresent(animationMap -> {
-                    switch (animationMap) {
-                        case SingleSpriteAnimationMap singleSpriteAnimationMap ->
-                                drawSpriteCentered(actor, singleSpriteAnimationMap.singleSprite());
-                        case SpriteAnimationMap spriteAnimationMap -> {
-                            if (spriteAnimationMap.currentAnimation() != null) {
-                                drawSpriteCentered(actor, spriteAnimationMap.currentSprite(actor));
-                            } else {
-                                Logger.error("No current animation for actor {}", actor);
-                            }
-                        }
-                        default -> Logger.error("Cannot render animated actor with animation map of type {}", animationMap.getClass());
-                    }
-                });
+            case StaticBonus staticBonus     -> drawStaticBonus(staticBonus);
+            case MovingBonus movingBonus     -> drawMovingBonus(movingBonus);
+            case LivesCounter livesCounter   -> drawLivesCounter(livesCounter);
+            case LevelCounter levelCounter   -> drawLevelCounter(levelCounter);
+            case AnimatedActor animatedActor -> drawAnimatedActor(animatedActor);
             default -> {}
         }
+    }
+
+    private void drawAnimatedActor(AnimatedActor animatedActor) {
+        animatedActor.animations().ifPresent(animationMap -> {
+            // assume interface is only implemented by Actor (sub-)classes
+            Actor actor = (Actor) animatedActor;
+            switch (animationMap) {
+                case SingleSpriteAnimationMap singleSpriteAnimationMap ->
+                        drawSpriteCentered(actor, singleSpriteAnimationMap.singleSprite());
+                case SpriteAnimationMap spriteAnimationMap -> {
+                    if (spriteAnimationMap.currentAnimation() != null) {
+                        drawSpriteCentered(actor, spriteAnimationMap.currentSprite(actor));
+                    } else {
+                        Logger.error("No current animation for actor {}", actor);
+                    }
+                }
+                default -> Logger.error("Cannot render animated actor with animation map of type {}", animationMap.getClass());
+            }
+        });
     }
 
     /**
