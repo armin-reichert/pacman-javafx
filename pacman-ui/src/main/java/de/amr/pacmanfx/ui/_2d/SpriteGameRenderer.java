@@ -46,9 +46,8 @@ public interface SpriteGameRenderer extends GameRenderer {
      * @param y             y-coordinate of left-upper corner (unscaled)
      */
     default void drawSpriteScaled(Sprite sprite, double x, double y) {
-        if (sprite != null) {
-            drawSpriteScaled(spriteSheet().sourceImage(), sprite, x, y);
-        }
+        requireNonNull(sprite);
+        drawSpriteScaled(spriteSheet().sourceImage(), sprite, x, y);
     }
 
     /**
@@ -76,9 +75,8 @@ public interface SpriteGameRenderer extends GameRenderer {
      * @param cy  y-coordinate of the center position
      */
     default void drawSpriteScaledCenteredAt(Sprite sprite, double cx, double cy) {
-        if (sprite != null) {
-            drawSpriteScaled(sprite, cx - 0.5 * sprite.width(), cy - 0.5 * sprite.height());
-        }
+        requireNonNull(sprite);
+        drawSpriteScaled(sprite, cx - 0.5 * sprite.width(), cy - 0.5 * sprite.height());
     }
 
     /**
