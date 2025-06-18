@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_Renderer2D;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -19,7 +19,7 @@ import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.createRedGhost;
-import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_Renderer2D.blueShadedColor;
+import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer.blueShadedColor;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
 
 /**
@@ -93,7 +93,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
 
     @Override
     protected void drawSceneContent() {
-        var r = (TengenMsPacMan_Renderer2D) gr();
+        var r = (TengenMsPacMan_GameRenderer) gr();
         r.drawVerticalSceneBorders();
         if (grayScreen) {
             r.fillCanvas(nesPaletteColor(0x10));

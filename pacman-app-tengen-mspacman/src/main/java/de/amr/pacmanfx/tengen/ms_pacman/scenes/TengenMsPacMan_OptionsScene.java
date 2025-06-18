@@ -13,7 +13,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.PacBooster;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.SpriteID;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_Renderer2D;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.ActionBindingSupport;
 import de.amr.pacmanfx.ui.GameAction;
@@ -247,8 +247,8 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D implements ActionBi
     // Drawing
 
     @Override
-    public TengenMsPacMan_Renderer2D gr() {
-        return (TengenMsPacMan_Renderer2D) gameRenderer;
+    public TengenMsPacMan_GameRenderer gr() {
+        return (TengenMsPacMan_GameRenderer) gameRenderer;
     }
 
     @Override

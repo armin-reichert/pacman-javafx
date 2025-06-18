@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_Renderer2D;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
 import de.amr.pacmanfx.ui._3d.Bonus3D;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import javafx.scene.canvas.Canvas;
@@ -72,7 +72,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         var canvas = new Canvas(quality * infoWidth, quality * infoHeight);
         canvas.getGraphicsContext2D().setImageSmoothing(false); // important!
 
-        var r = (TengenMsPacMan_Renderer2D) theUI().configuration().createRenderer(canvas);
+        var r = (TengenMsPacMan_GameRenderer) theUI().configuration().createRenderer(canvas);
         r.setScaling(quality);
         r.fillCanvas(level3D.floorColor());
         r.drawGameOptions(game.mapCategory(), game.difficulty(), game.pacBooster(), 0.5 * infoWidth, TS + HTS);

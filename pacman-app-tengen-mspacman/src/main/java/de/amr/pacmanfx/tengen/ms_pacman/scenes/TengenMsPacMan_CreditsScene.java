@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_Renderer2D;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
 import de.amr.pacmanfx.ui.ActionBindingSupport;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.text.Font;
@@ -36,8 +36,8 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D implements ActionBi
     }
 
     @Override
-    public TengenMsPacMan_Renderer2D gr() {
-        return (TengenMsPacMan_Renderer2D) gameRenderer;
+    public TengenMsPacMan_GameRenderer gr() {
+        return (TengenMsPacMan_GameRenderer) gameRenderer;
     }
 
     @Override

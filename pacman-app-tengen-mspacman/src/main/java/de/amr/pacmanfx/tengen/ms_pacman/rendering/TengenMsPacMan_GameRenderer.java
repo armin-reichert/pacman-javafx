@@ -45,7 +45,7 @@ import static de.amr.pacmanfx.ui.PacManGames_UI.PY_CANVAS_BG_COLOR;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
-public class TengenMsPacMan_Renderer2D implements SpriteGameRenderer {
+public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
 
     public static Color blueShadedColor(long tick) {
         // Blue color, changing from dark blue to brighter blue.
@@ -62,7 +62,7 @@ public class TengenMsPacMan_Renderer2D implements SpriteGameRenderer {
 
     private ColoredMapConfiguration coloredMapSet;
 
-    public TengenMsPacMan_Renderer2D(TengenMsPacMan_SpriteSheet spriteSheet, TengenMsPacMan_MapRepository mapRepository, Canvas canvas) {
+    public TengenMsPacMan_GameRenderer(TengenMsPacMan_SpriteSheet spriteSheet, TengenMsPacMan_MapRepository mapRepository, Canvas canvas) {
         this.spriteSheet = requireNonNull(spriteSheet);
         this.mapRepository = requireNonNull(mapRepository);
         ctx = requireNonNull(canvas).getGraphicsContext2D();

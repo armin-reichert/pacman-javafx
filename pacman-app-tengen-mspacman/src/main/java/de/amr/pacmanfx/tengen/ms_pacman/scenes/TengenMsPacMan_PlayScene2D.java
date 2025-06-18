@@ -13,7 +13,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_Renderer2D;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.ActionBindingSupport;
 import de.amr.pacmanfx.ui.GameAction;
@@ -353,8 +353,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
     // drawing
 
     @Override
-    public TengenMsPacMan_Renderer2D gr() {
-        return (TengenMsPacMan_Renderer2D) gameRenderer;
+    public TengenMsPacMan_GameRenderer gr() {
+        return (TengenMsPacMan_GameRenderer) gameRenderer;
     }
 
     @Override

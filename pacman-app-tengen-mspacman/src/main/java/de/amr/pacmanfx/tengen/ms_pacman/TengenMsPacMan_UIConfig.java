@@ -227,8 +227,8 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     public TengenMsPacMan_SpriteSheet spriteSheet() {return spriteSheet;}
 
     @Override
-    public TengenMsPacMan_Renderer2D createRenderer(Canvas canvas) {
-        var renderer = new TengenMsPacMan_Renderer2D(spriteSheet, mapRepository, canvas);
+    public TengenMsPacMan_GameRenderer createRenderer(Canvas canvas) {
+        var renderer = new TengenMsPacMan_GameRenderer(spriteSheet, mapRepository, canvas);
         renderer.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
         return renderer;
     }

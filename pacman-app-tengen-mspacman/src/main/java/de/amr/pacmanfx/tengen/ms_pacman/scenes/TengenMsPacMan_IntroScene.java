@@ -16,7 +16,7 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.SpriteID;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_Renderer2D;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.ActionBindingSupport;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
@@ -30,7 +30,7 @@ import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.*;
-import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_Renderer2D.blueShadedColor;
+import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer.blueShadedColor;
 import static de.amr.pacmanfx.ui.PacManGames.*;
 
 /**
@@ -92,8 +92,8 @@ public class TengenMsPacMan_IntroScene extends GameScene2D implements ActionBind
     }
 
     @Override
-    public TengenMsPacMan_Renderer2D gr() {
-        return (TengenMsPacMan_Renderer2D) gameRenderer;
+    public TengenMsPacMan_GameRenderer gr() {
+        return (TengenMsPacMan_GameRenderer) gameRenderer;
     }
 
     @Override
