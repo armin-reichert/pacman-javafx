@@ -17,7 +17,7 @@ import static de.amr.pacmanfx.ui.PacManGames.theAssets;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
-public class ArcadePacMan_GameRenderer implements SpriteGameRenderer {
+public class ArcadePacMan_GameRenderer extends SpriteGameRenderer {
 
     private final ArcadePacMan_SpriteSheet spriteSheet;
     private final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);

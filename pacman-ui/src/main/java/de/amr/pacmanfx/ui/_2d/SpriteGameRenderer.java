@@ -19,9 +19,9 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
 import static java.util.Objects.requireNonNull;
 
-public interface SpriteGameRenderer extends GameRenderer {
+public abstract class SpriteGameRenderer implements GameRenderer {
 
-    SpriteSheet<?> spriteSheet();
+    public abstract SpriteSheet<?> spriteSheet();
 
     /**
      * Draws a sprite (region inside sprite sheet) unscaled at the given position.
@@ -30,7 +30,7 @@ public interface SpriteGameRenderer extends GameRenderer {
      * @param x           x-coordinate of left-upper corner
      * @param y           y-coordinate of left-upper corner
      */
-    default void drawSprite(Sprite sprite, double x, double y) {
+    public void drawSprite(Sprite sprite, double x, double y) {
         requireNonNull(sprite);
         ctx().drawImage(spriteSheet().sourceImage(),
                 sprite.x(), sprite.y(), sprite.width(), sprite.height(),
@@ -45,7 +45,7 @@ public interface SpriteGameRenderer extends GameRenderer {
      * @param x             x-coordinate of left-upper corner (unscaled)
      * @param y             y-coordinate of left-upper corner (unscaled)
      */
-    default void drawSpriteScaled(Sprite sprite, double x, double y) {
+    public void drawSpriteScaled(Sprite sprite, double x, double y) {
         requireNonNull(sprite);
         drawSpriteScaled(spriteSheet().sourceImage(), sprite, x, y);
     }
@@ -59,7 +59,7 @@ public interface SpriteGameRenderer extends GameRenderer {
      * @param x unscaled x-coordinate of left-upper corner
      * @param y unscaled y-coordinate of left-upper corner
      */
-    default void drawSpriteScaled(Image image, Sprite sprite, double x, double y) {
+    public void drawSpriteScaled(Image image, Sprite sprite, double x, double y) {
         requireNonNull(image);
         requireNonNull(sprite);
         ctx().drawImage(image,
@@ -74,7 +74,7 @@ public interface SpriteGameRenderer extends GameRenderer {
      * @param cx  x-coordinate of the center position
      * @param cy  y-coordinate of the center position
      */
-    default void drawSpriteScaledCenteredAt(Sprite sprite, double cx, double cy) {
+    public void drawSpriteScaledCenteredAt(Sprite sprite, double cx, double cy) {
         requireNonNull(sprite);
         drawSpriteScaled(sprite, cx - 0.5 * sprite.width(), cy - 0.5 * sprite.height());
     }
@@ -96,7 +96,7 @@ public interface SpriteGameRenderer extends GameRenderer {
      * @param actor the actor to draw
      */
     @Override
-    default void drawActor(Actor actor) {
+    public void drawActor(Actor actor) {
         requireNonNull(actor);
         if (!actor.isVisible()) {
             return;
@@ -118,7 +118,7 @@ public interface SpriteGameRenderer extends GameRenderer {
             switch (animationMap) {
                 case SingleSpriteWithoutAnimation singleSpriteWithoutAnimation ->
                         drawActorSpriteCentered(actor, singleSpriteWithoutAnimation.singleSprite());
-                case SpriteAnimationMap spriteAnimationMap -> {
+                case SpriteAnimationMap<?> spriteAnimationMap -> {
                     if (spriteAnimationMap.currentAnimation() != null) {
                         drawActorSpriteCentered(actor, spriteAnimationMap.currentSprite(actor));
                     } else {
@@ -171,7 +171,7 @@ public interface SpriteGameRenderer extends GameRenderer {
         }
     }
 
-    default void drawMovingActorInfo(MovingActor movingActor) {
+    public void drawMovingActorInfo(MovingActor movingActor) {
         if (!movingActor.isVisible()) {
             return;
         }

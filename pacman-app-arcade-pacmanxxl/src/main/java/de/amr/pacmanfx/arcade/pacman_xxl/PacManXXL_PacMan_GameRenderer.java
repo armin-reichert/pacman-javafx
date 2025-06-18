@@ -16,7 +16,7 @@ import javafx.scene.paint.Color;
 
 import static java.util.Objects.requireNonNull;
 
-public class PacManXXL_PacMan_GameRenderer implements SpriteGameRenderer {
+public class PacManXXL_PacMan_GameRenderer extends SpriteGameRenderer {
 
     private final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
     private final GraphicsContext ctx;

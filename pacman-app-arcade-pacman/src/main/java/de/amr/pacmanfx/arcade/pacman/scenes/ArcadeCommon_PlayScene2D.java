@@ -158,11 +158,6 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
 
         gr().applyRenderingHints(theGameLevel());
 
-        //TODO: check this
-        if (gr() instanceof GenericMapRenderer vr) {
-            vr.setBackgroundColor(PY_CANVAS_BG_COLOR.get());
-        }
-
         boolean highlighted = levelFinishedAnimation != null
             && levelFinishedAnimation.isRunning() && levelFinishedAnimation.isHighlighted();
         gr().drawLevel(theGameLevel(), backgroundColor(), highlighted, theGameLevel().blinking().isOn());

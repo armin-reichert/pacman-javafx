@@ -23,7 +23,7 @@ import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePalette.ARCADE_WHITE;
 import static java.util.Objects.requireNonNull;
 
-public class PacManXXL_MsPacMan_GameRenderer implements SpriteGameRenderer {
+public class PacManXXL_MsPacMan_GameRenderer extends SpriteGameRenderer {
 
     private final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
     private final GraphicsContext ctx;
@@ -57,7 +57,7 @@ public class PacManXXL_MsPacMan_GameRenderer implements SpriteGameRenderer {
         switch (actor) {
             case Marquee marquee -> drawMarquee(marquee);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
-            default -> SpriteGameRenderer.super.drawActor(actor);
+            default -> super.drawActor(actor);
         }
     }
     private void drawClapperBoard(Clapperboard clapperboard) {
