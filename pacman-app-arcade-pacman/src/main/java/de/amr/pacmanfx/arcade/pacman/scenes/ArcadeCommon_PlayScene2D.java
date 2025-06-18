@@ -53,7 +53,6 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        theGame().levelCounter().setPosition(sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
         if (theGameLevel().isDemoLevel()) {
             bindAction(ACTION_ARCADE_INSERT_COIN, COMMON_ACTION_BINDINGS);
         } else {
@@ -177,23 +176,28 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
 
         // Draw either lives counter or credit text
         if (theGame().canStartNewGame()) {
-            LivesCounter counter = theGame().livesCounter();
-            counter.setPosition(2 * TS, sizeInPx().y() - 2 * TS);
-            counter.show();
-            int numLivesDisplayed = counter.lifeCount() - 1;
-            // As long as Pac-Man is still hidden in the maze, he is shown as an entry in the counter
-            if (theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible()) {
-                numLivesDisplayed += 1;
-            }
-            numLivesDisplayed = Math.min(numLivesDisplayed, counter.maxLivesDisplayed());
-            counter.setVisibleLifeCount(numLivesDisplayed);
-            gr().drawActor(theGame().livesCounter());
+            drawLivesCounter();
         } else {
-            gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
-                scoreColor(), arcadeFont8(), 2 * TS, sizeInPx().y() - 2);
+            String creditText = "CREDIT %2d".formatted(theCoinMechanism().numCoins());
+            gr().fillText(creditText, scoreColor(), arcadeFont8(), 2 * TS, sizeInPx().y() - 2);
         }
-        theGame().levelCounter().show(); //TODO
+        theGame().levelCounter().setPosition(sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
+        theGame().levelCounter().show();
         gr().drawActor(theGame().levelCounter());
+    }
+
+    private void drawLivesCounter() {
+        LivesCounter counter = theGame().livesCounter();
+        int numLivesDisplayed = counter.lifeCount() - 1;
+        // As long as Pac-Man is still hidden in the maze, he is shown as an entry in the counter
+        if (theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible()) {
+            numLivesDisplayed += 1;
+        }
+        numLivesDisplayed = Math.min(numLivesDisplayed, counter.maxLivesDisplayed());
+        counter.setVisibleLifeCount(numLivesDisplayed);
+        counter.setPosition(2 * TS, sizeInPx().y() - 2 * TS);
+        counter.show();
+        gr().drawActor(theGame().livesCounter());
     }
 
     private void drawLevelMessage() {
