@@ -50,7 +50,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         public Stork(ArcadeMsPacMan_SpriteSheet spriteSheet) {
             animationMap = new SpriteAnimationMap(spriteSheet);
             animationMap.setAnimation("flying",
-                SpriteAnimation.createAnimation().ofSprites(spriteSheet.spriteSeq(SpriteID.STORK)).frameTicks(8).endless());
+                SpriteAnimation.build().of(spriteSheet.spriteSeq(SpriteID.STORK)).frameTicks(8).forever());
         }
 
         @Override
@@ -63,8 +63,8 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
         public Bag(ArcadeMsPacMan_SpriteSheet spriteSheet) {
             animationMap = new SpriteAnimationMap(spriteSheet);
-            animationMap.setAnimation("junior", SpriteAnimation.createAnimation().ofSprite(spriteSheet.sprite(JUNIOR_PAC)).end());
-            animationMap.setAnimation("bag",    SpriteAnimation.createAnimation().ofSprite(spriteSheet.sprite(BLUE_BAG)).end());
+            animationMap.setAnimation("junior", SpriteAnimation.build().ofSprite(spriteSheet.sprite(JUNIOR_PAC)).once());
+            animationMap.setAnimation("bag",    SpriteAnimation.build().ofSprite(spriteSheet.sprite(BLUE_BAG)).once());
         }
 
         @Override

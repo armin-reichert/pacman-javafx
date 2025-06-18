@@ -38,7 +38,7 @@ public class SpriteAnimation extends Transition {
             return this;
         }
 
-        public Builder ofSprites(Object[] sprites) {
+        public Builder of(Object[] sprites) {
             anim.sprites = requireNonNull(sprites);
             if (Arrays.stream(sprites).anyMatch(Objects::isNull)) {
                 throw new IllegalArgumentException("Found null sprite in sprite array");
@@ -51,11 +51,11 @@ public class SpriteAnimation extends Transition {
             return this;
         }
 
-        public SpriteAnimation endless() {
+        public SpriteAnimation forever() {
             return build(Animation.INDEFINITE);
         }
 
-        public SpriteAnimation end() {
+        public SpriteAnimation once() {
             return build(anim.sprites.length);
         }
 
@@ -68,7 +68,7 @@ public class SpriteAnimation extends Transition {
         }
     }
 
-    public static Builder createAnimation() {
+    public static Builder build() {
         return new Builder();
     }
 

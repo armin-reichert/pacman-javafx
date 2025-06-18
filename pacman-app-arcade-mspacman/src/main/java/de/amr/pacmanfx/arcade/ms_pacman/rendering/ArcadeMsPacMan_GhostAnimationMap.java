@@ -27,11 +27,11 @@ public class ArcadeMsPacMan_GhostAnimationMap extends SpriteAnimationMap {
     @Override
     protected SpriteAnimation createAnimation(String id) {
         return switch (id) {
-            case ANIM_GHOST_NORMAL     -> SpriteAnimation.createAnimation().ofSprites(ghostNormalSprites(personality, Direction.LEFT)).frameTicks(8).endless();
-            case ANIM_GHOST_FRIGHTENED -> SpriteAnimation.createAnimation().ofSprites(spriteSheet().spriteSeq(SpriteID.GHOST_FRIGHTENED)).frameTicks(8).endless();
-            case ANIM_GHOST_FLASHING   -> SpriteAnimation.createAnimation().ofSprites(spriteSheet().spriteSeq(SpriteID.GHOST_FLASHING)).frameTicks(7).endless();
-            case ANIM_GHOST_EYES       -> SpriteAnimation.createAnimation().ofSprites(ghostEyesSprites(Direction.LEFT)).end();
-            case ANIM_GHOST_NUMBER     -> SpriteAnimation.createAnimation().ofSprites(spriteSheet().spriteSeq(SpriteID.GHOST_NUMBERS)).end();
+            case ANIM_GHOST_NORMAL     -> SpriteAnimation.build().of(ghostNormalSprites(personality, Direction.LEFT)).frameTicks(8).forever();
+            case ANIM_GHOST_FRIGHTENED -> SpriteAnimation.build().of(spriteSheet().spriteSeq(SpriteID.GHOST_FRIGHTENED)).frameTicks(8).forever();
+            case ANIM_GHOST_FLASHING   -> SpriteAnimation.build().of(spriteSheet().spriteSeq(SpriteID.GHOST_FLASHING)).frameTicks(7).forever();
+            case ANIM_GHOST_EYES       -> SpriteAnimation.build().of(ghostEyesSprites(Direction.LEFT)).once();
+            case ANIM_GHOST_NUMBER     -> SpriteAnimation.build().of(spriteSheet().spriteSeq(SpriteID.GHOST_NUMBERS)).once();
             default -> throw new IllegalArgumentException("Illegal animation ID: " + id);
         };
     }

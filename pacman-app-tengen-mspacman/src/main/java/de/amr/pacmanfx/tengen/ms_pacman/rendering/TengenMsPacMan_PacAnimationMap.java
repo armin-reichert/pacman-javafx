@@ -33,16 +33,16 @@ public class TengenMsPacMan_PacAnimationMap extends SpriteAnimationMap {
     @Override
     protected SpriteAnimation createAnimation(String id) {
         return switch (id) {
-            case ANIM_PAC_DYING               -> SpriteAnimation.createAnimation().ofSprites(pacDyingSprites()).frameTicks(8).end();
-            case ANIM_PAC_MUNCHING            -> SpriteAnimation.createAnimation().ofSprites(spriteSheet().spriteSeq(SpriteID.MS_PAC_MUNCHING)).endless();
-            case ANIM_MS_PAC_MAN_BOOSTER      -> SpriteAnimation.createAnimation().ofSprites(spriteSheet().spriteSeq(SpriteID.MS_PAC_MUNCHING_BOOSTER)).endless();
-            case ANIM_MS_PAC_MAN_WAVING_HAND  -> SpriteAnimation.createAnimation().ofSprites(spriteSheet().spriteSeq(SpriteID.MS_PAC_WAVING_HAND)).frameTicks(8).endless();
-            case ANIM_MS_PAC_MAN_TURNING_AWAY -> SpriteAnimation.createAnimation().ofSprites(spriteSheet().spriteSeq(SpriteID.MS_PAC_TURNING_AWAY)).frameTicks(15).end();
-            case ANIM_PAC_MAN_MUNCHING        -> SpriteAnimation.createAnimation().ofSprites(spriteSheet().spriteSeq(SpriteID.MR_PAC_MUNCHING)).frameTicks(2).endless();
-            case ANIM_PAC_MAN_BOOSTER         -> SpriteAnimation.createAnimation().ofSprites(spriteSheet().spriteSeq(SpriteID.MR_PAC_MUNCHING_BOOSTER)).frameTicks(2).endless();
-            case ANIM_PAC_MAN_WAVING_HAND     -> SpriteAnimation.createAnimation().ofSprites(spriteSheet().spriteSeq(SpriteID.MR_PAC_WAVING_HAND)).frameTicks(8).endless();
-            case ANIM_PAC_MAN_TURNING_AWAY    -> SpriteAnimation.createAnimation().ofSprites(spriteSheet().spriteSeq(SpriteID.MR_PAC_TURNING_AWAY)).frameTicks(15).end();
-            case ANIM_JUNIOR                  -> SpriteAnimation.createAnimation().ofSprite(spriteSheet().sprite(SpriteID.JUNIOR_PAC)).end();
+            case ANIM_PAC_DYING               -> SpriteAnimation.build().of(pacDyingSprites()).frameTicks(8).once();
+            case ANIM_PAC_MUNCHING            -> SpriteAnimation.build().of(spriteSheet().spriteSeq(SpriteID.MS_PAC_MUNCHING)).forever();
+            case ANIM_MS_PAC_MAN_BOOSTER      -> SpriteAnimation.build().of(spriteSheet().spriteSeq(SpriteID.MS_PAC_MUNCHING_BOOSTER)).forever();
+            case ANIM_MS_PAC_MAN_WAVING_HAND  -> SpriteAnimation.build().of(spriteSheet().spriteSeq(SpriteID.MS_PAC_WAVING_HAND)).frameTicks(8).forever();
+            case ANIM_MS_PAC_MAN_TURNING_AWAY -> SpriteAnimation.build().of(spriteSheet().spriteSeq(SpriteID.MS_PAC_TURNING_AWAY)).frameTicks(15).once();
+            case ANIM_PAC_MAN_MUNCHING        -> SpriteAnimation.build().of(spriteSheet().spriteSeq(SpriteID.MR_PAC_MUNCHING)).frameTicks(2).forever();
+            case ANIM_PAC_MAN_BOOSTER         -> SpriteAnimation.build().of(spriteSheet().spriteSeq(SpriteID.MR_PAC_MUNCHING_BOOSTER)).frameTicks(2).forever();
+            case ANIM_PAC_MAN_WAVING_HAND     -> SpriteAnimation.build().of(spriteSheet().spriteSeq(SpriteID.MR_PAC_WAVING_HAND)).frameTicks(8).forever();
+            case ANIM_PAC_MAN_TURNING_AWAY    -> SpriteAnimation.build().of(spriteSheet().spriteSeq(SpriteID.MR_PAC_TURNING_AWAY)).frameTicks(15).once();
+            case ANIM_JUNIOR                  -> SpriteAnimation.build().ofSprite(spriteSheet().sprite(SpriteID.JUNIOR_PAC)).once();
             default -> throw new IllegalArgumentException("Illegal animation ID " + id);
         };
     }

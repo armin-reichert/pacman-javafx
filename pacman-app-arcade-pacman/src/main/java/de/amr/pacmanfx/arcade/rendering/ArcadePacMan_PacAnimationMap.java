@@ -15,7 +15,6 @@ import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ANIM_BIG_PAC_MAN;
 import static de.amr.pacmanfx.arcade.rendering.SpriteID.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
-import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createAnimation;
 
 public class ArcadePacMan_PacAnimationMap extends SpriteAnimationMap {
 
@@ -26,9 +25,9 @@ public class ArcadePacMan_PacAnimationMap extends SpriteAnimationMap {
     @Override
     protected SpriteAnimation createAnimation(String id) {
         return switch (id) {
-            case ANIM_PAC_MUNCHING -> SpriteAnimation.createAnimation().ofSprites(pacMunchingSprites(Direction.LEFT)).endless();
-            case ANIM_PAC_DYING    -> SpriteAnimation.createAnimation().ofSprites(spriteSheet().spriteSeq(PACMAN_DYING)).frameTicks(8).end();
-            case ANIM_BIG_PAC_MAN  -> SpriteAnimation.createAnimation().ofSprites(spriteSheet().spriteSeq(PACMAN_BIG)).frameTicks(3).endless();
+            case ANIM_PAC_MUNCHING -> SpriteAnimation.build().of(pacMunchingSprites(Direction.LEFT)).forever();
+            case ANIM_PAC_DYING    -> SpriteAnimation.build().of(spriteSheet().spriteSeq(PACMAN_DYING)).frameTicks(8).once();
+            case ANIM_BIG_PAC_MAN  -> SpriteAnimation.build().of(spriteSheet().spriteSeq(PACMAN_BIG)).frameTicks(3).forever();
             default -> throw new IllegalArgumentException("Illegal animation ID: " + id);
         };
     }

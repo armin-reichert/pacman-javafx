@@ -25,9 +25,9 @@ public class ArcadeMsPacMan_PacAnimationMap extends SpriteAnimationMap {
     @Override
     protected SpriteAnimation createAnimation(String id) {
         return switch (id) {
-            case ANIM_PAC_MUNCHING -> SpriteAnimation.createAnimation().ofSprites(msPacManMunchingSprites(Direction.LEFT)).endless();
-            case ANIM_PAC_DYING    -> SpriteAnimation.createAnimation().ofSprites(spriteSheet().spriteSeq(SpriteID.MS_PACMAN_DYING)).frameTicks(8).end();
-            case PAC_MAN_MUNCHING  -> SpriteAnimation.createAnimation().ofSprites(mrPacManMunchingSprites(Direction.LEFT)).frameTicks(2).endless();
+            case ANIM_PAC_MUNCHING -> SpriteAnimation.build().of(msPacManMunchingSprites(Direction.LEFT)).forever();
+            case ANIM_PAC_DYING    -> SpriteAnimation.build().of(spriteSheet().spriteSeq(SpriteID.MS_PACMAN_DYING)).frameTicks(8).once();
+            case PAC_MAN_MUNCHING  -> SpriteAnimation.build().of(mrPacManMunchingSprites(Direction.LEFT)).frameTicks(2).forever();
             default -> throw new IllegalArgumentException("Illegal animation ID: " + id);
         };
     }

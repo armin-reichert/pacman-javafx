@@ -51,8 +51,8 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         public Stork(TengenMsPacMan_SpriteSheet spriteSheet) {
             animationMap = new SpriteAnimationMap(spriteSheet);
             animationMap.setAnimation("flying",
-                SpriteAnimation.createAnimation()
-                    .ofSprites(spriteSheet.spriteSeq(STORK)).frameTicks(8).endless());
+                SpriteAnimation.build()
+                    .of(spriteSheet.spriteSeq(STORK)).frameTicks(8).forever());
         }
 
         public void setBagReleasedFromBeak(boolean released) {
@@ -73,8 +73,8 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
         public Bag(TengenMsPacMan_SpriteSheet spriteSheet) {
             animationMap = new SpriteAnimationMap(spriteSheet);
-            animationMap.setAnimation("junior", SpriteAnimation.createAnimation().ofSprite(spriteSheet.sprite(SpriteID.JUNIOR_PAC)).end());
-            animationMap.setAnimation("bag",    SpriteAnimation.createAnimation().ofSprite(spriteSheet.sprite(SpriteID.BLUE_BAG)).end());
+            animationMap.setAnimation("junior", SpriteAnimation.build().ofSprite(spriteSheet.sprite(SpriteID.JUNIOR_PAC)).once());
+            animationMap.setAnimation("bag",    SpriteAnimation.build().ofSprite(spriteSheet.sprite(SpriteID.BLUE_BAG)).once());
             setOpen(false);
         }
 
