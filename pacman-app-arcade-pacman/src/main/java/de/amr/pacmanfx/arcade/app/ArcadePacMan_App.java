@@ -7,17 +7,17 @@ package de.amr.pacmanfx.arcade.app;
 import de.amr.pacmanfx.arcade.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.ArcadePacMan_StartPage;
 import de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig;
+import de.amr.pacmanfx.ui.PacManGames_UIBuilder;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.application.Application;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import static de.amr.pacmanfx.ui.PacManGames.theClock;
+import static de.amr.pacmanfx.ui.PacManGames_UIBuilder.PACMAN;
 import static de.amr.pacmanfx.ui.PacManGames_UIBuilder.buildUI;
 
 public class ArcadePacMan_App extends Application {
-
-    public static final String PACMAN = "PACMAN";
 
     @Override
     public void start(Stage primaryStage) {
