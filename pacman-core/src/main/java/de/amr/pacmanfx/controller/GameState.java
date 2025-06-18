@@ -351,7 +351,7 @@ public enum GameState implements FsmState<GameModel> {
 
     // Tests
 
-    TESTING_LEVELS {
+    TESTING_LEVELS_SHORT {
 
         private int lastTestedLevelNumber;
 
@@ -432,9 +432,9 @@ public enum GameState implements FsmState<GameModel> {
     /**
      * Runs levels for some fixed time e.g. 10 seconds.
      */
-    TESTING_LEVEL_TEASERS {
+    TESTING_LEVELS_MEDIUM {
 
-        static final int TEASER_TIME_SECONDS = 10;
+        static final int TEST_DURATION_SEC = 10;
 
         private int lastTestedLevelNumber;
 
@@ -450,11 +450,8 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onEnter(GameModel game) {
-            lastTestedLevelNumber = 25;
-            if (theGameController().isSelected("MS_PACMAN_TENGEN")) {
-                lastTestedLevelNumber = 32;
-            }
-            timer.restartSeconds(TEASER_TIME_SECONDS);
+            lastTestedLevelNumber = game.lastLevelNumber() == Integer.MAX_VALUE ? 25 : game.lastLevelNumber();
+            timer.restartSeconds(TEST_DURATION_SEC);
             game.prepareForNewGame();
             game.buildNormalLevel(1);
             game.startLevel();
@@ -469,7 +466,7 @@ public enum GameState implements FsmState<GameModel> {
                     theGameEventManager().publishEvent(game, GameEventType.STOP_ALL_SOUNDS);
                     theGameController().changeGameState(INTRO);
                 } else {
-                    timer().restartSeconds(TEASER_TIME_SECONDS);
+                    timer().restartSeconds(TEST_DURATION_SEC);
                     game.startNextLevel();
                     configureLevelForTest();
                 }

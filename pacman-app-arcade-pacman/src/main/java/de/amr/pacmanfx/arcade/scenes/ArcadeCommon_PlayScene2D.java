@@ -6,7 +6,6 @@ package de.amr.pacmanfx.arcade.scenes;
 
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
@@ -35,8 +34,8 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_TILES;
 import static de.amr.pacmanfx.arcade.rendering.ArcadePalette.*;
-import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS;
-import static de.amr.pacmanfx.controller.GameState.TESTING_LEVEL_TEASERS;
+import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_SHORT;
+import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_MEDIUM;
 import static de.amr.pacmanfx.ui.PacManGames.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 
@@ -78,7 +77,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
 
     @Override
     public void onGameStarted(GameEvent e) {
-        boolean silent = theGameLevel().isDemoLevel() || theGameState() == TESTING_LEVELS || theGameState() == TESTING_LEVEL_TEASERS;
+        boolean silent = theGameLevel().isDemoLevel() || theGameState() == TESTING_LEVELS_SHORT || theGameState() == TESTING_LEVELS_MEDIUM;
         if (!silent) {
             theSound().playGameReadySound();
         }

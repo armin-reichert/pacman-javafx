@@ -295,7 +295,7 @@ public interface PacManGames_UI {
         public void execute(PacManGames_UI ui) {
             theSound().stopAll();
             ui.currentGameScene().ifPresent(GameScene::end);
-            if (theGameState() == GameState.TESTING_LEVELS) {
+            if (theGameState() == GameState.TESTING_LEVELS_SHORT) {
                 theGameState().onExit(theGame()); //TODO exit other states too?
             }
             theClock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
@@ -439,7 +439,7 @@ public interface PacManGames_UI {
     GameAction ACTION_TEST_LEVELS_BONI = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
-            theGameController().restart(GameState.TESTING_LEVELS);
+            theGameController().restart(GameState.TESTING_LEVELS_SHORT);
             ui.showFlashMessageSec(3, "Level TEST MODE");
         }
 
@@ -452,7 +452,7 @@ public interface PacManGames_UI {
     GameAction ACTION_TEST_LEVELS_TEASERS = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
-            theGameController().restart(GameState.TESTING_LEVEL_TEASERS);
+            theGameController().restart(GameState.TESTING_LEVELS_MEDIUM);
             ui.showFlashMessageSec(3, "Level TEST MODE");
         }
 
@@ -620,7 +620,7 @@ public interface PacManGames_UI {
         public boolean isEnabled(PacManGames_UI ui) {
             return isOneOf(theGameState(),
                     GameState.BOOT, GameState.INTRO, GameState.SETTING_OPTIONS, GameState.HUNTING,
-                    GameState.TESTING_LEVEL_TEASERS, GameState.TESTING_LEVELS
+                    GameState.TESTING_LEVELS_MEDIUM, GameState.TESTING_LEVELS_SHORT
             );
         }
 

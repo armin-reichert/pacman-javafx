@@ -35,8 +35,8 @@ import java.util.*;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.isOneOf;
-import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS;
-import static de.amr.pacmanfx.controller.GameState.TESTING_LEVEL_TEASERS;
+import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_SHORT;
+import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_MEDIUM;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.ui.PacManGames.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
@@ -218,7 +218,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
             replaceGameLevel3D();
         }
         switch (theGameState()) {
-            case TESTING_LEVELS, TESTING_LEVEL_TEASERS -> {
+            case TESTING_LEVELS_SHORT, TESTING_LEVELS_MEDIUM -> {
                 replaceGameLevel3D();
                 level3D.playLivesCounterAnimation();
                 level3D.energizers3D().forEach(Energizer3D::startPumping);
@@ -408,14 +408,14 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
                     theSound().stopAll();
                     theSound().playGameOverSound();
                 }
-                case TESTING_LEVELS -> {
+                case TESTING_LEVELS_SHORT -> {
                     replaceGameLevel3D();
                     level3D.pac3D().init();
                     level3D.ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.init(theGameLevel()));
                     showLevelTestMessage("TEST LEVEL" + theGameLevel().number());
                     PY_3D_PERSPECTIVE.set(PerspectiveID.TOTAL);
                 }
-                case TESTING_LEVEL_TEASERS -> {
+                case TESTING_LEVELS_MEDIUM -> {
                     replaceGameLevel3D();
                     level3D.pac3D().init();
                     level3D.ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.init(theGameLevel()));
@@ -476,7 +476,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
     @Override
     public void onGameStarted(GameEvent e) {
         boolean silent = theGameLevel().isDemoLevel()
-                || theGameState() == TESTING_LEVELS || theGameState() == TESTING_LEVEL_TEASERS;
+                || theGameState() == TESTING_LEVELS_SHORT || theGameState() == TESTING_LEVELS_MEDIUM;
         if (!silent) {
             theSound().playGameReadySound();
         }
