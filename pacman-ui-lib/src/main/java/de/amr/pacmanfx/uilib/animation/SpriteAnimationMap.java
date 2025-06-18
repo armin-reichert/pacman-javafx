@@ -17,8 +17,8 @@ import static java.util.Objects.requireNonNull;
 
 public class SpriteAnimationMap implements ActorAnimationMap {
 
-    private final SpriteSheet<?> spriteSheet;
-    private final Map<String, SpriteAnimation> animationsByID = new HashMap<>();
+    protected final SpriteSheet<?> spriteSheet;
+    protected final Map<String, SpriteAnimation> animationsByID = new HashMap<>();
     protected String currentAnimationID;
 
     public SpriteAnimationMap(SpriteSheet<?> spriteSheet) {
