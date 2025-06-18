@@ -87,6 +87,8 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
         marquee.setPosition(60, 88);
         marquee.setBulbOffColor(ARCADE_RED);
         marquee.setBulbOnColor(ARCADE_WHITE);
+        marquee.show();
+
         msPacMan = createMsPacMan();
         ghosts = new Ghost[] { createRedGhost(), createPinkGhost(), createCyanGhost(), createOrangeGhost() };
         presentedGhostCharacter = RED_GHOST_SHADOW;
