@@ -11,8 +11,7 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.LivesCounter;
-import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.GhostState;
+import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.ui.ActionBindingSupport;
 import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.GameScene;
@@ -44,7 +43,7 @@ import static de.amr.pacmanfx.ui.PacManGames_UI.*;
  */
 public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindingSupport {
 
-    private LevelFlashingAnimation levelFlashingAnimation;
+    private LevelFlashingAnimation levelFlashing;
 
     @Override
     protected void doInit() {
@@ -155,49 +154,50 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
 
         gr().applyRenderingHints(theGameLevel());
 
-        boolean highlighted = levelFlashingAnimation != null
-            && levelFlashingAnimation.isRunning() && levelFlashingAnimation.isHighlighted();
-        gr().drawLevel(theGameLevel(), backgroundColor(), highlighted, theGameLevel().blinking().isOn());
-
-        if (theGameLevel().message() != GameLevel.MESSAGE_NONE) {
-            drawLevelMessage();
-        }
-
-        // Use correct z-order: bonus, Pac-Man, ghosts in order
-        theGameLevel().bonus().ifPresent(bonus -> gameRenderer.drawActor(bonus.actor()));
-        gr().drawActor(theGameLevel().pac());
-        Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)
-                .map(theGameLevel()::ghost).forEach(ghost -> gr().drawActor(ghost));
-
-        if (debugInfoVisibleProperty().get()) {
-            gr().drawMovingActorInfo(theGameLevel().pac());
-            theGameLevel().ghosts().forEach(gr()::drawMovingActorInfo);
-        }
-
-        // Draw either lives counter or credit text
         if (theGame().canStartNewGame()) {
-            drawLivesCounter();
+            configureLivesCounter(theGame().livesCounter());
+            theGame().livesCounter().setPosition(2 * TS, sizeInPx().y() - 2 * TS);
+            theGame().livesCounter().show();
         } else {
+            theGame().livesCounter().hide();
+            //TODO make actor?
             String creditText = "CREDIT %2d".formatted(theCoinMechanism().numCoins());
             gr().fillText(creditText, scoreColor(), arcadeFont8(), 2 * TS, sizeInPx().y() - 2);
         }
+
+        // Position of level counter depends on map size, so set it every time for simplicity
         theGame().levelCounter().setPosition(sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
         theGame().levelCounter().show();
-        gr().drawActor(theGame().levelCounter());
+
+        // Level < Level message
+        boolean highlighted = levelFlashing != null && levelFlashing.isRunning() && levelFlashing.isHighlighted();
+        gr().drawLevel(theGameLevel(), backgroundColor(), highlighted, theGameLevel().blinking().isOn());
+        if (theGameLevel().message() != GameLevel.MESSAGE_NONE) drawLevelMessage();
+
+        // Collect and draw actors in correct z-order: Bonus < Pac-Man < ghosts in right order.
+        final List<Actor> actorsByZ = new ArrayList<>();
+        theGameLevel().bonus().map(Bonus::actor).ifPresent(actorsByZ::add);
+        actorsByZ.add(theGameLevel().pac());
+        Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)
+                .map(theGameLevel()::ghost)
+                .forEach(actorsByZ::add);
+        actorsByZ.add(theGame().levelCounter());
+        actorsByZ.add(theGame().livesCounter());
+        actorsByZ.forEach(gr()::drawActor);
+
+        if (debugInfoVisibleProperty().get()) {
+            actorsByZ.stream().filter(MovingActor.class::isInstance).map(MovingActor.class::cast).forEach(gr()::drawMovingActorInfo);
+        }
     }
 
-    private void drawLivesCounter() {
-        LivesCounter counter = theGame().livesCounter();
-        int numLivesDisplayed = counter.lifeCount() - 1;
+    private void configureLivesCounter(LivesCounter livesCounter) {
+        int numLivesDisplayed = livesCounter.lifeCount() - 1;
         // As long as Pac-Man is still hidden in the maze, he is shown as an entry in the counter
         if (theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible()) {
             numLivesDisplayed += 1;
         }
-        numLivesDisplayed = Math.min(numLivesDisplayed, counter.maxLivesDisplayed());
-        counter.setVisibleLifeCount(numLivesDisplayed);
-        counter.setPosition(2 * TS, sizeInPx().y() - 2 * TS);
-        counter.show();
-        gr().drawActor(theGame().livesCounter());
+        numLivesDisplayed = Math.min(numLivesDisplayed, livesCounter.maxLivesDisplayed());
+        livesCounter.setVisibleLifeCount(numLivesDisplayed);
     }
 
     private void drawLevelMessage() {
@@ -269,9 +269,9 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
         }
         else if (state == GameState.LEVEL_COMPLETE) {
             theSound().stopAll();
-            levelFlashingAnimation = new LevelFlashingAnimation(theGameLevel(), 333);
-            levelFlashingAnimation.setOnFinished(theGameController()::letCurrentGameStateExpire);
-            levelFlashingAnimation.play();
+            levelFlashing = new LevelFlashingAnimation(theGameLevel(), 333);
+            levelFlashing.setOnFinished(theGameController()::letCurrentGameStateExpire);
+            levelFlashing.play();
         }
     }
 
