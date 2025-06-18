@@ -97,6 +97,7 @@ public interface SpriteGameRenderer extends GameRenderer {
      *
      * @param actor the actor to draw
      */
+    @Override
     default void drawActor(Actor actor) {
         requireNonNull(actor);
         if (!actor.isVisible()) {
@@ -150,7 +151,7 @@ public interface SpriteGameRenderer extends GameRenderer {
         }
     }
 
-    default void drawLevelCounter(LevelCounter levelCounter) {
+    private void drawLevelCounter(LevelCounter levelCounter) {
         float x = levelCounter.x(), y = levelCounter.y();
         for (byte symbol : levelCounter.symbols()) {
             Sprite sprite = theUI().configuration().createBonusSymbolSprite(symbol);
@@ -159,7 +160,7 @@ public interface SpriteGameRenderer extends GameRenderer {
         }
     }
 
-    default void drawLivesCounter(LivesCounter livesCounter) {
+    private void drawLivesCounter(LivesCounter livesCounter) {
         Sprite sprite = theUI().configuration().createLivesCounterSprite();
         for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
             drawSpriteScaled(sprite, livesCounter.x() + TS * (2 * i), livesCounter.y());
@@ -191,7 +192,7 @@ public interface SpriteGameRenderer extends GameRenderer {
         }
     }
 
-    default void drawAnimatedMovingActorInfo(AnimatedActor animatedMovingActor) {
+    private void drawAnimatedMovingActorInfo(AnimatedActor animatedMovingActor) {
         if (animatedMovingActor instanceof MovingActor movingActor) {
             animatedMovingActor.animations()
                     .filter(SpriteAnimationMap.class::isInstance)
