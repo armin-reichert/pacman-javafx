@@ -8,11 +8,11 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
-import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createAnimation;
 
 public class TengenMsPacMan_GhostAnimationMap extends SpriteAnimationMap {
 
@@ -20,13 +20,23 @@ public class TengenMsPacMan_GhostAnimationMap extends SpriteAnimationMap {
     public static final int FRIGHTENED_TICKS = 8;  // TODO check this in emulator
     public static final int FLASH_TICKS = 7;  // TODO check this in emulator
 
-    public TengenMsPacMan_GhostAnimationMap(TengenMsPacMan_SpriteSheet ss, byte personality) {
-        super(ss);
-        set(ANIM_GHOST_NORMAL,     createAnimation().ofSprites(ghostNormalSprites(personality, Direction.LEFT)).frameTicks(NORMAL_TICKS).endless());
-        set(ANIM_GHOST_FRIGHTENED, createAnimation().ofSprites(ss.spriteSeq(SpriteID.GHOST_FRIGHTENED)).frameTicks(FRIGHTENED_TICKS).endless());
-        set(ANIM_GHOST_FLASHING,   createAnimation().ofSprites(ss.spriteSeq(SpriteID.GHOST_FLASHING)).frameTicks(FLASH_TICKS).endless());
-        set(ANIM_GHOST_EYES,       createAnimation().ofSprites(ghostEyesSprites(Direction.LEFT)).end());
-        set(ANIM_GHOST_NUMBER,     createAnimation().ofSprites(ss.spriteSeq(SpriteID.GHOST_NUMBERS)).end());
+    private final byte personality;
+
+    public TengenMsPacMan_GhostAnimationMap(TengenMsPacMan_SpriteSheet spriteSheet, byte personality) {
+        super(spriteSheet);
+        this.personality = personality;
+    }
+
+    @Override
+    protected SpriteAnimation createAnimation(String id) {
+        return switch (id) {
+            case ANIM_GHOST_NORMAL      -> SpriteAnimation.createAnimation().ofSprites(ghostNormalSprites(personality, Direction.LEFT)).frameTicks(NORMAL_TICKS).endless();
+            case ANIM_GHOST_FRIGHTENED  -> SpriteAnimation.createAnimation().ofSprites(spriteSheet().spriteSeq(SpriteID.GHOST_FRIGHTENED)).frameTicks(FRIGHTENED_TICKS).endless();
+            case ANIM_GHOST_FLASHING    -> SpriteAnimation.createAnimation().ofSprites(spriteSheet().spriteSeq(SpriteID.GHOST_FLASHING)).frameTicks(FLASH_TICKS).endless();
+            case ANIM_GHOST_EYES        -> SpriteAnimation.createAnimation().ofSprites(ghostEyesSprites(Direction.LEFT)).end();
+            case ANIM_GHOST_NUMBER      -> SpriteAnimation.createAnimation().ofSprites(spriteSheet().spriteSeq(SpriteID.GHOST_NUMBERS)).end();
+            default -> throw new IllegalArgumentException("Illegal animation ID " + id);
+        };
     }
 
     @Override

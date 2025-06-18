@@ -11,38 +11,34 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
+import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.*;
 import static de.amr.pacmanfx.arcade.rendering.SpriteID.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
-import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createAnimation;
 
 public class ArcadePacMan_GhostAnimationMap extends SpriteAnimationMap {
 
+    private final byte personality;
+
     public ArcadePacMan_GhostAnimationMap(ArcadePacMan_SpriteSheet spriteSheet, byte personality) {
         super(spriteSheet);
-        set(ANIM_GHOST_NORMAL,              createAnimation().ofSprites(ghostNormalSprites(personality, Direction.LEFT)).frameTicks(8).endless());
-        set(ANIM_GHOST_FRIGHTENED,          createAnimation().ofSprites(spriteSheet.spriteSeq(SpriteID.GHOST_FRIGHTENED)).frameTicks(8).endless());
-        set(ANIM_GHOST_FLASHING,            createAnimation().ofSprites(spriteSheet.spriteSeq(SpriteID.GHOST_FLASHING)).frameTicks(7).endless());
-        set(ANIM_GHOST_EYES,                createAnimation().ofSprites(ghostEyesSprites(Direction.LEFT)).end());
-        set(ANIM_GHOST_NUMBER,              createAnimation().ofSprites(spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS)).end());
+        this.personality = requireValidGhostPersonality(personality);
     }
 
     @Override
-    public SpriteAnimation animation(String id) {
-        if (!animationsByID.containsKey(id)) {
-            switch (id) {
-                case ANIM_BLINKY_DAMAGED -> set(id, createAnimation()
-                    .ofSprites(spriteSheet().spriteSeq(SpriteID.RED_GHOST_DAMAGED)).end());
-                case ANIM_BLINKY_NAIL_DRESS_RAPTURE -> set(id, createAnimation()
-                    .ofSprites(spriteSheet().spriteSeq(SpriteID.RED_GHOST_STRETCHED)).end());
-                case ANIM_BLINKY_PATCHED -> set(id, createAnimation()
-                    .ofSprites(spriteSheet().spriteSeq(SpriteID.RED_GHOST_PATCHED)).frameTicks(4).endless());
-                case ANIM_BLINKY_NAKED -> set(id, createAnimation()
-                    .ofSprites(spriteSheet().spriteSeq(SpriteID.RED_GHOST_NAKED)).frameTicks(4).endless());
-                default -> throw new IllegalArgumentException("Illegal animation ID: " + id);
-            }
-        }
-        return animationsByID.get(id);
+    public SpriteAnimation createAnimation(String id) {
+        return switch (id) {
+            case ANIM_GHOST_NORMAL              -> SpriteAnimation.createAnimation().ofSprites(ghostNormalSprites(personality, Direction.LEFT)).frameTicks(8).endless();
+            case ANIM_GHOST_FRIGHTENED          -> SpriteAnimation.createAnimation().ofSprites(spriteSheet().spriteSeq(SpriteID.GHOST_FRIGHTENED)).frameTicks(8).endless();
+            case ANIM_GHOST_FLASHING            -> SpriteAnimation.createAnimation().ofSprites(spriteSheet().spriteSeq(SpriteID.GHOST_FLASHING)).frameTicks(7).endless();
+            case ANIM_GHOST_EYES                -> SpriteAnimation.createAnimation().ofSprites(ghostEyesSprites(Direction.LEFT)).end();
+            case ANIM_GHOST_NUMBER              -> SpriteAnimation.createAnimation().ofSprites(spriteSheet().spriteSeq(SpriteID.GHOST_NUMBERS)).end();
+            case ANIM_BLINKY_DAMAGED            -> SpriteAnimation.createAnimation().ofSprites(spriteSheet().spriteSeq(SpriteID.RED_GHOST_DAMAGED)).end();
+            case ANIM_BLINKY_NAIL_DRESS_RAPTURE -> SpriteAnimation.createAnimation().ofSprites(spriteSheet().spriteSeq(SpriteID.RED_GHOST_STRETCHED)).end();
+            case ANIM_BLINKY_PATCHED            -> SpriteAnimation.createAnimation().ofSprites(spriteSheet().spriteSeq(SpriteID.RED_GHOST_PATCHED)).frameTicks(4).endless();
+            case ANIM_BLINKY_NAKED              -> SpriteAnimation.createAnimation().ofSprites(spriteSheet().spriteSeq(SpriteID.RED_GHOST_NAKED)).frameTicks(4).endless();
+            default -> throw new IllegalArgumentException("Illegal animation ID: " + id);
+        };
     }
 
     @Override

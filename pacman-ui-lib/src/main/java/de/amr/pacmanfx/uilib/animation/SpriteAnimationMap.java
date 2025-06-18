@@ -30,10 +30,6 @@ public class SpriteAnimationMap implements ActorAnimationMap {
     // TODO: this is somewhat crude but currently the way to keep the sprites up-to-date with actor direction etc.
     protected void updateActorSprites(Actor actor) {}
 
-    public void set(String key, SpriteAnimation animation) {
-        animationsByID.put(key, animation);
-    }
-
     public String currentAnimationID() { return currentAnimationID; }
 
     public boolean isCurrentAnimationID(String id) {
@@ -52,7 +48,21 @@ public class SpriteAnimationMap implements ActorAnimationMap {
 
     @Override
     public SpriteAnimation animation(String id) {
+        if (!animationsByID.containsKey(id)) {
+            SpriteAnimation spriteAnimation = createAnimation(id);
+            animationsByID.put(id, spriteAnimation);
+        }
         return animationsByID.get(id);
+    }
+
+    protected SpriteAnimation createAnimation(String id) {
+        throw new UnsupportedOperationException("No idea how to create animation with ID " + id);
+    }
+
+    public void setAnimation(String id, SpriteAnimation animation) {
+        requireNonNull(id);
+        requireNonNull(animation);
+        animationsByID.put(id, animation);
     }
 
     public SpriteAnimation currentAnimation() {

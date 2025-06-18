@@ -8,23 +8,32 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
-import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createAnimation;
 
 public class ArcadeMsPacMan_GhostAnimationMap extends SpriteAnimationMap {
 
+    private final byte personality;
+
     public ArcadeMsPacMan_GhostAnimationMap(ArcadeMsPacMan_SpriteSheet spriteSheet, byte personality) {
         super(spriteSheet);
-        requireValidGhostPersonality(personality);
-        set(ANIM_GHOST_NORMAL,     createAnimation().ofSprites(ghostNormalSprites(personality, Direction.LEFT)).frameTicks(8).endless());
-        set(ANIM_GHOST_FRIGHTENED, createAnimation().ofSprites(spriteSheet.spriteSeq(SpriteID.GHOST_FRIGHTENED)).frameTicks(8).endless());
-        set(ANIM_GHOST_FLASHING,   createAnimation().ofSprites(spriteSheet.spriteSeq(SpriteID.GHOST_FLASHING)).frameTicks(7).endless());
-        set(ANIM_GHOST_EYES,       createAnimation().ofSprites(ghostEyesSprites(Direction.LEFT)).end());
-        set(ANIM_GHOST_NUMBER,     createAnimation().ofSprites(spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS)).end());
+        this.personality = requireValidGhostPersonality(personality);
+    }
+
+    @Override
+    protected SpriteAnimation createAnimation(String id) {
+        return switch (id) {
+            case ANIM_GHOST_NORMAL     -> SpriteAnimation.createAnimation().ofSprites(ghostNormalSprites(personality, Direction.LEFT)).frameTicks(8).endless();
+            case ANIM_GHOST_FRIGHTENED -> SpriteAnimation.createAnimation().ofSprites(spriteSheet().spriteSeq(SpriteID.GHOST_FRIGHTENED)).frameTicks(8).endless();
+            case ANIM_GHOST_FLASHING   -> SpriteAnimation.createAnimation().ofSprites(spriteSheet().spriteSeq(SpriteID.GHOST_FLASHING)).frameTicks(7).endless();
+            case ANIM_GHOST_EYES       -> SpriteAnimation.createAnimation().ofSprites(ghostEyesSprites(Direction.LEFT)).end();
+            case ANIM_GHOST_NUMBER     -> SpriteAnimation.createAnimation().ofSprites(spriteSheet().spriteSeq(SpriteID.GHOST_NUMBERS)).end();
+            default -> throw new IllegalArgumentException("Illegal animation ID: " + id);
+        };
     }
 
     @Override

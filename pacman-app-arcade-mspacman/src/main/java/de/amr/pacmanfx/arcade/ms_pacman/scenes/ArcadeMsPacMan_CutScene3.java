@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
+import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
@@ -44,35 +45,34 @@ import static de.amr.pacmanfx.ui.PacManGames.theUI;
 public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
     private static class Stork extends Actor implements AnimatedActor {
-        private final SpriteAnimationMap animations;
+        private final SpriteAnimationMap animationMap;
 
         public Stork(ArcadeMsPacMan_SpriteSheet spriteSheet) {
-            animations = new SpriteAnimationMap(spriteSheet);
-            animations.set("flying",
-                SpriteAnimation.createAnimation()
-                    .ofSprites(spriteSheet.spriteSeq(STORK)).frameTicks(8).endless());
+            animationMap = new SpriteAnimationMap(spriteSheet);
+            animationMap.setAnimation("flying",
+                SpriteAnimation.createAnimation().ofSprites(spriteSheet.spriteSeq(SpriteID.STORK)).frameTicks(8).endless());
         }
 
         @Override
-        public Optional<ActorAnimationMap> animations() { return Optional.of(animations); }
+        public Optional<ActorAnimationMap> animations() { return Optional.of(animationMap); }
     }
 
     private static class Bag extends Actor implements AnimatedActor {
-        private final SpriteAnimationMap animations;
+        private final SpriteAnimationMap animationMap;
         private boolean open;
 
         public Bag(ArcadeMsPacMan_SpriteSheet spriteSheet) {
-            animations = new SpriteAnimationMap(spriteSheet);
-            animations.set("junior", SpriteAnimation.createAnimation().ofSprite(spriteSheet.sprite(JUNIOR_PAC)).end());
-            animations.set("bag",    SpriteAnimation.createAnimation().ofSprite(spriteSheet.sprite(BLUE_BAG)).end());
+            animationMap = new SpriteAnimationMap(spriteSheet);
+            animationMap.setAnimation("junior", SpriteAnimation.createAnimation().ofSprite(spriteSheet.sprite(JUNIOR_PAC)).end());
+            animationMap.setAnimation("bag",    SpriteAnimation.createAnimation().ofSprite(spriteSheet.sprite(BLUE_BAG)).end());
         }
 
         @Override
-        public Optional<ActorAnimationMap> animations() { return Optional.of(animations); }
+        public Optional<ActorAnimationMap> animations() { return Optional.of(animationMap); }
 
         public void setOpen(boolean open) {
             this.open = open;
-            animations.selectAnimation(open ? "junior" : "bag");
+            animationMap.selectAnimation(open ? "junior" : "bag");
         }
 
         public boolean isOpen() {

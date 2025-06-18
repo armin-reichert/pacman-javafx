@@ -45,12 +45,12 @@ import static de.amr.pacmanfx.ui.PacManGames_UI.ACTION_LET_GAME_STATE_EXPIRE;
 public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
     public static class Stork extends Actor implements AnimatedActor {
-        private final SpriteAnimationMap animations;
+        private final SpriteAnimationMap animationMap;
         private boolean bagReleasedFromBeak;
 
         public Stork(TengenMsPacMan_SpriteSheet spriteSheet) {
-            animations = new SpriteAnimationMap(spriteSheet);
-            animations.set("flying",
+            animationMap = new SpriteAnimationMap(spriteSheet);
+            animationMap.setAnimation("flying",
                 SpriteAnimation.createAnimation()
                     .ofSprites(spriteSheet.spriteSeq(STORK)).frameTicks(8).endless());
         }
@@ -64,26 +64,26 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         }
 
         @Override
-        public Optional<ActorAnimationMap> animations() { return Optional.of(animations); }
+        public Optional<ActorAnimationMap> animations() { return Optional.of(animationMap); }
     }
 
     public static class Bag extends Actor implements AnimatedActor {
-        private final SpriteAnimationMap animations;
+        private final SpriteAnimationMap animationMap;
         private boolean open;
 
         public Bag(TengenMsPacMan_SpriteSheet spriteSheet) {
-            animations = new SpriteAnimationMap(spriteSheet);
-            animations.set("junior", SpriteAnimation.createAnimation().ofSprite(spriteSheet.sprite(SpriteID.JUNIOR_PAC)).end());
-            animations.set("bag",    SpriteAnimation.createAnimation().ofSprite(spriteSheet.sprite(SpriteID.BLUE_BAG)).end());
+            animationMap = new SpriteAnimationMap(spriteSheet);
+            animationMap.setAnimation("junior", SpriteAnimation.createAnimation().ofSprite(spriteSheet.sprite(SpriteID.JUNIOR_PAC)).end());
+            animationMap.setAnimation("bag",    SpriteAnimation.createAnimation().ofSprite(spriteSheet.sprite(SpriteID.BLUE_BAG)).end());
             setOpen(false);
         }
 
         @Override
-        public Optional<ActorAnimationMap> animations() { return Optional.of(animations); }
+        public Optional<ActorAnimationMap> animations() { return Optional.of(animationMap); }
 
         public void setOpen(boolean open) {
             this.open = open;
-            animations.selectAnimation(open ? "junior" : "bag");
+            animationMap.selectAnimation(open ? "junior" : "bag");
         }
 
         public boolean isOpen() {

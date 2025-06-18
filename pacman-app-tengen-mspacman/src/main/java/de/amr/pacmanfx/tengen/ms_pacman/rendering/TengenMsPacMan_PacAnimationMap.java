@@ -7,13 +7,13 @@ package de.amr.pacmanfx.tengen.ms_pacman.rendering;
 import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
 import java.util.Arrays;
 
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
-import static de.amr.pacmanfx.uilib.animation.SpriteAnimation.createAnimation;
 
 public class TengenMsPacMan_PacAnimationMap extends SpriteAnimationMap {
 
@@ -26,21 +26,25 @@ public class TengenMsPacMan_PacAnimationMap extends SpriteAnimationMap {
     public static final String ANIM_PAC_MAN_TURNING_AWAY = "pac_man_turning_away";
     public static final String ANIM_JUNIOR = "junior";
 
-    public TengenMsPacMan_PacAnimationMap(TengenMsPacMan_SpriteSheet ss) {
-        super(ss);
-        set(ANIM_PAC_DYING,               createAnimation().ofSprites(pacDyingSprites()).frameTicks(8).end());
-        set(ANIM_PAC_MUNCHING,            createAnimation().ofSprites(ss.spriteSeq(SpriteID.MS_PAC_MUNCHING)).endless());
+    public TengenMsPacMan_PacAnimationMap(TengenMsPacMan_SpriteSheet spriteSheet) {
+        super(spriteSheet);
+    }
 
-        set(ANIM_MS_PAC_MAN_BOOSTER,      createAnimation().ofSprites(ss.spriteSeq(SpriteID.MS_PAC_MUNCHING_BOOSTER)).endless());
-        set(ANIM_MS_PAC_MAN_WAVING_HAND,  createAnimation().ofSprites(ss.spriteSeq(SpriteID.MS_PAC_WAVING_HAND)).frameTicks(8).endless());
-        set(ANIM_MS_PAC_MAN_TURNING_AWAY, createAnimation().ofSprites(ss.spriteSeq(SpriteID.MS_PAC_TURNING_AWAY)).frameTicks(15).end());
-
-        set(ANIM_PAC_MAN_MUNCHING,        createAnimation().ofSprites(ss.spriteSeq(SpriteID.MR_PAC_MUNCHING)).frameTicks(2).endless());
-        set(ANIM_PAC_MAN_BOOSTER,         createAnimation().ofSprites(ss.spriteSeq(SpriteID.MR_PAC_MUNCHING_BOOSTER)).frameTicks(2).endless());
-        set(ANIM_PAC_MAN_WAVING_HAND,     createAnimation().ofSprites(ss.spriteSeq(SpriteID.MR_PAC_WAVING_HAND)).frameTicks(8).endless());
-        set(ANIM_PAC_MAN_TURNING_AWAY,    createAnimation().ofSprites(ss.spriteSeq(SpriteID.MR_PAC_TURNING_AWAY)).frameTicks(15).end());
-
-        set(ANIM_JUNIOR,                  createAnimation().ofSprite(ss.sprite(SpriteID.JUNIOR_PAC)).end());
+    @Override
+    protected SpriteAnimation createAnimation(String id) {
+        return switch (id) {
+            case ANIM_PAC_DYING               -> SpriteAnimation.createAnimation().ofSprites(pacDyingSprites()).frameTicks(8).end();
+            case ANIM_PAC_MUNCHING            -> SpriteAnimation.createAnimation().ofSprites(spriteSheet().spriteSeq(SpriteID.MS_PAC_MUNCHING)).endless();
+            case ANIM_MS_PAC_MAN_BOOSTER      -> SpriteAnimation.createAnimation().ofSprites(spriteSheet().spriteSeq(SpriteID.MS_PAC_MUNCHING_BOOSTER)).endless();
+            case ANIM_MS_PAC_MAN_WAVING_HAND  -> SpriteAnimation.createAnimation().ofSprites(spriteSheet().spriteSeq(SpriteID.MS_PAC_WAVING_HAND)).frameTicks(8).endless();
+            case ANIM_MS_PAC_MAN_TURNING_AWAY -> SpriteAnimation.createAnimation().ofSprites(spriteSheet().spriteSeq(SpriteID.MS_PAC_TURNING_AWAY)).frameTicks(15).end();
+            case ANIM_PAC_MAN_MUNCHING        -> SpriteAnimation.createAnimation().ofSprites(spriteSheet().spriteSeq(SpriteID.MR_PAC_MUNCHING)).frameTicks(2).endless();
+            case ANIM_PAC_MAN_BOOSTER         -> SpriteAnimation.createAnimation().ofSprites(spriteSheet().spriteSeq(SpriteID.MR_PAC_MUNCHING_BOOSTER)).frameTicks(2).endless();
+            case ANIM_PAC_MAN_WAVING_HAND     -> SpriteAnimation.createAnimation().ofSprites(spriteSheet().spriteSeq(SpriteID.MR_PAC_WAVING_HAND)).frameTicks(8).endless();
+            case ANIM_PAC_MAN_TURNING_AWAY    -> SpriteAnimation.createAnimation().ofSprites(spriteSheet().spriteSeq(SpriteID.MR_PAC_TURNING_AWAY)).frameTicks(15).end();
+            case ANIM_JUNIOR                  -> SpriteAnimation.createAnimation().ofSprite(spriteSheet().sprite(SpriteID.JUNIOR_PAC)).end();
+            default -> throw new IllegalArgumentException("Illegal animation ID " + id);
+        };
     }
 
     @Override
