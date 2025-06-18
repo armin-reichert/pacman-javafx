@@ -26,16 +26,15 @@ public interface SpriteGameRenderer extends GameRenderer {
     /**
      * Draws a sprite (region inside sprite sheet) unscaled at the given position.
      *
-     * @param sprite      the sprite to draw (can be null)
+     * @param sprite      the sprite to draw
      * @param x           x-coordinate of left-upper corner
      * @param y           y-coordinate of left-upper corner
      */
     default void drawSprite(Sprite sprite, double x, double y) {
-        if (sprite != null) {
-            ctx().drawImage(spriteSheet().sourceImage(),
-                    sprite.x(), sprite.y(), sprite.width(), sprite.height(),
-                    x, y, sprite.width(), sprite.height());
-        }
+        requireNonNull(sprite);
+        ctx().drawImage(spriteSheet().sourceImage(),
+                sprite.x(), sprite.y(), sprite.width(), sprite.height(),
+                x, y, sprite.width(), sprite.height());
     }
 
     /**
