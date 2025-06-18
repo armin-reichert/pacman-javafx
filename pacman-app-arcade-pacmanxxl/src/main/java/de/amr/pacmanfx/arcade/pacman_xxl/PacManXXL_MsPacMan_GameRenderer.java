@@ -53,11 +53,6 @@ public class PacManXXL_MsPacMan_GameRenderer implements SpriteGameRenderer {
     }
 
     @Override
-    public void applyRenderingHints(GameLevel level) {
-        //TODO what?
-    }
-
-    @Override
     public void drawActor(Actor actor) {
         switch (actor) {
             case Marquee marquee -> drawMarquee(marquee);

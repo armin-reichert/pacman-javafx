@@ -261,13 +261,13 @@ public class WorldMap {
     public void setConfigValue(String key, Object value) {
         requireNonNull(key);
         requireNonNull(value);
-        configMap().put(key, value);
+        configMapIfNullCreate().put(key, value);
     }
 
     @SuppressWarnings("unchecked")
     public <T> T getConfigValue(String key) {
         requireNonNull(key);
-        return (T) configMap().get(key);
+        return (T) configMapIfNullCreate().get(key);
     }
 
     public boolean hasConfigValue(String key) {
@@ -275,7 +275,7 @@ public class WorldMap {
         return configMap != null && configMap.containsKey(key);
     }
 
-    private Map<String, Object> configMap() {
+    private Map<String, Object> configMapIfNullCreate() {
         if (configMap == null) {
             configMap = new HashMap<>();
         }

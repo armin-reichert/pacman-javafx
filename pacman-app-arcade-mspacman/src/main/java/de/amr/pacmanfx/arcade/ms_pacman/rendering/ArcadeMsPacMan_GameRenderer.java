@@ -33,7 +33,6 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
     private final ArcadeMsPacMan_SpriteSheet spriteSheet;
     private final GraphicsContext ctx;
     private final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
-    private int colorMapIndex;
 
     public ArcadeMsPacMan_GameRenderer(
         ArcadeMsPacMan_SpriteSheet spriteSheet,
@@ -43,7 +42,6 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
         this.spriteSheet = requireNonNull(spriteSheet);
         this.brightMazesSpriteSheet = requireNonNull(brightMazesSpriteSheet);
         ctx = requireNonNull(canvas).getGraphicsContext2D();
-        colorMapIndex = -1; // undefined
     }
 
     @Override
@@ -56,23 +54,17 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
     public FloatProperty scalingProperty() { return scalingPy; }
 
     @Override
-    public void applyRenderingHints(GameLevel level) {
-        colorMapIndex = level.worldMap().getConfigValue("colorMapIndex");
-    }
-
-    @Override
     public void drawLevel(GameLevel level, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted) {
+        final int colorMapIndex = level.worldMap().getConfigValue("colorMapIndex");
         if (mazeHighlighted) {
-            drawSpriteScaled(
-                brightMazesSpriteSheet.sourceImage(),
-                brightMazesSpriteSheet.spriteSeq(BrightMazesSpriteSheet.BRIGHT_MAZES_ID)[colorMapIndex],
-                    0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);
+            Sprite maze = brightMazesSpriteSheet.spriteSeq(BrightMazesSpriteSheet.BRIGHT_MAZES_ID)[colorMapIndex];
+            drawSpriteScaled(brightMazesSpriteSheet.sourceImage(), maze, 0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);
         } else if (level.uneatenFoodCount() == 0) {
-            drawSpriteScaled(spriteSheet.spriteSeq(SpriteID.EMPTY_MAZES)[colorMapIndex],
-                    0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);
+            Sprite maze = spriteSheet.spriteSeq(SpriteID.EMPTY_MAZES)[colorMapIndex];
+            drawSpriteScaled(maze, 0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);
         } else {
-            drawSpriteScaled(spriteSheet.spriteSeq(SpriteID.FULL_MAZES)[colorMapIndex],
-                    0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);
+            Sprite maze = spriteSheet.spriteSeq(SpriteID.FULL_MAZES)[colorMapIndex];
+            drawSpriteScaled(maze, 0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);
             ctx.save();
             ctx.scale(scaling(), scaling());
             level.worldMap().tiles()

@@ -36,9 +36,6 @@ public class ArcadePacMan_GameRenderer implements SpriteGameRenderer {
     }
 
     @Override
-    public void applyRenderingHints(GameLevel level) {}
-
-    @Override
     public GraphicsContext ctx() {
         return ctx;
     }

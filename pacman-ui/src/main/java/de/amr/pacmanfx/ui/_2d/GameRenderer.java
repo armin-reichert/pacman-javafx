@@ -29,7 +29,7 @@ public interface GameRenderer {
 
     default void setScaling(float value) {
         if (value <= 0) {
-            throw new IllegalArgumentException("Scaling value must be positive value but is %f".formatted(value));
+            throw new IllegalArgumentException("Scaling value must be positive but is %f".formatted(value));
         }
         scalingProperty().set(value);
     }
@@ -43,7 +43,7 @@ public interface GameRenderer {
      *
      * @param level the game level that is rendered
      */
-    void applyRenderingHints(GameLevel level);
+    default void applyRenderingHints(GameLevel level) {}
 
     default void fillCanvas(Color color) {
         requireNonNull(color);
