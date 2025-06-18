@@ -101,10 +101,10 @@ public interface SpriteGameRenderer extends GameRenderer {
                 animatedActor.animations().ifPresent(animationMap -> {
                     switch (animationMap) {
                         case SingleSpriteAnimationMap singleSpriteAnimationMap ->
-                                drawActorSprite(actor, singleSpriteAnimationMap.singleSprite());
+                                drawSpriteCentered(actor, singleSpriteAnimationMap.singleSprite());
                         case SpriteAnimationMap spriteAnimationMap -> {
                             if (spriteAnimationMap.currentAnimation() != null) {
-                                drawActorSprite(actor, spriteAnimationMap.currentSprite(actor));
+                                drawSpriteCentered(actor, spriteAnimationMap.currentSprite(actor));
                             } else {
                                 Logger.error("No current animation for actor {}", actor);
                             }
@@ -117,16 +117,14 @@ public interface SpriteGameRenderer extends GameRenderer {
     }
 
     /**
-     * Draws the sprite over the "collision box" (one-tile square) of the given actor (if visible).
+     * Draws the sprite centered over the "collision box" (one-tile square) of the given actor (if visible).
      *
      * @param actor an actor
-     * @param sprite sprite sheet region (can be null)
+     * @param sprite actor sprite
      */
-    private void drawActorSprite(Actor actor, Sprite sprite) {
-        requireNonNull(actor);
-        if (sprite != null) {
-            drawSpriteScaledCenteredAt(sprite, actor.x() + HTS, actor.y() + HTS);
-        }
+    private void drawSpriteCentered(Actor actor, Sprite sprite) {
+        float centerX = actor.x() + HTS, centerY = actor.y() + HTS;
+        drawSpriteScaledCenteredAt(sprite, centerX, centerY);
     }
 
     private void drawMovingBonus(MovingBonus bonus) {
@@ -134,8 +132,8 @@ public interface SpriteGameRenderer extends GameRenderer {
         ctx().save();
         ctx().translate(0, bonus.elongationY());
         switch (bonus.state()) {
-            case Bonus.STATE_EDIBLE -> drawActorSprite(bonus, theUI().configuration().createBonusSymbolSprite(bonus.symbol()));
-            case Bonus.STATE_EATEN  -> drawActorSprite(bonus, theUI().configuration().createBonusValueSprite(bonus.symbol()));
+            case Bonus.STATE_EDIBLE -> drawSpriteCentered(bonus, theUI().configuration().createBonusSymbolSprite(bonus.symbol()));
+            case Bonus.STATE_EATEN  -> drawSpriteCentered(bonus, theUI().configuration().createBonusValueSprite(bonus.symbol()));
         }
         ctx().restore();
     }
@@ -143,8 +141,8 @@ public interface SpriteGameRenderer extends GameRenderer {
     private void drawStaticBonus(StaticBonus bonus) {
         switch (bonus.state()) {
             case Bonus.STATE_INACTIVE -> {}
-            case Bonus.STATE_EDIBLE -> drawActorSprite(bonus, theUI().configuration().createBonusSymbolSprite(bonus.symbol()));
-            case Bonus.STATE_EATEN  -> drawActorSprite(bonus, theUI().configuration().createBonusValueSprite(bonus.symbol()));
+            case Bonus.STATE_EDIBLE -> drawSpriteCentered(bonus, theUI().configuration().createBonusSymbolSprite(bonus.symbol()));
+            case Bonus.STATE_EATEN  -> drawSpriteCentered(bonus, theUI().configuration().createBonusValueSprite(bonus.symbol()));
         }
     }
 
