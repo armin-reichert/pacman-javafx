@@ -18,7 +18,7 @@ import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengen.ms_pacman.model.*;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.Clapperboard;
-import de.amr.pacmanfx.tengen.ms_pacman.scenes.TengenMsPacMan_CutScene3;
+import de.amr.pacmanfx.tengen.ms_pacman.scenes.Stork;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.ui.input.JoypadKeyBinding;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
@@ -106,7 +106,7 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
         switch (actor) {
             case Pac pac -> drawAnyKindOfPac(pac);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
-            case TengenMsPacMan_CutScene3.Stork stork -> drawStork(stork);
+            case Stork stork -> drawStork(stork);
             default -> SpriteGameRenderer.super.drawActor(actor);
         }
     }
@@ -436,7 +436,7 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
     }
 
     //TODO maybe just extend sprite sheet to include stork without bag?
-    private void drawStork(TengenMsPacMan_CutScene3.Stork stork) {
+    private void drawStork(Stork stork) {
         SpriteGameRenderer.super.drawActor(stork);
         if (stork.isBagReleasedFromBeak()) { // over-paint bag still hanging at beak
             ctx().setFill(PY_CANVAS_BG_COLOR.get());

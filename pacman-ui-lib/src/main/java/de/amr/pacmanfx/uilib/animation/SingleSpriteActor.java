@@ -19,7 +19,7 @@ public class SingleSpriteActor extends Actor implements AnimatedActor {
 
     public SingleSpriteActor(Sprite sprite) {
         requireNonNull(sprite);
-        animationMap = new SingleSpriteAnimationMap(sprite);
+        animationMap = new SingleSpriteWithoutAnimation(sprite);
     }
 
     @Override

@@ -9,11 +9,11 @@ import de.amr.pacmanfx.model.actors.ActorAnimationMap;
 
 import static java.util.Objects.requireNonNull;
 
-public class SingleSpriteAnimationMap implements ActorAnimationMap {
+public class SingleSpriteWithoutAnimation implements ActorAnimationMap {
 
     private final Sprite sprite;
 
-    public SingleSpriteAnimationMap(Sprite sprite) {
+    public SingleSpriteWithoutAnimation(Sprite sprite) {
         this.sprite = requireNonNull(sprite);
     }
 

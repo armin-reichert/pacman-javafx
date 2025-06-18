@@ -5,7 +5,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.LivesCounter;
 import de.amr.pacmanfx.model.actors.*;
-import de.amr.pacmanfx.uilib.animation.SingleSpriteAnimationMap;
+import de.amr.pacmanfx.uilib.animation.SingleSpriteWithoutAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.image.Image;
@@ -116,8 +116,8 @@ public interface SpriteGameRenderer extends GameRenderer {
             // assume interface is only implemented by Actor (sub-)classes
             Actor actor = (Actor) animatedActor;
             switch (animationMap) {
-                case SingleSpriteAnimationMap singleSpriteAnimationMap ->
-                        drawActorSpriteCentered(actor, singleSpriteAnimationMap.singleSprite());
+                case SingleSpriteWithoutAnimation singleSpriteWithoutAnimation ->
+                        drawActorSpriteCentered(actor, singleSpriteWithoutAnimation.singleSprite());
                 case SpriteAnimationMap spriteAnimationMap -> {
                     if (spriteAnimationMap.currentAnimation() != null) {
                         drawActorSpriteCentered(actor, spriteAnimationMap.currentSprite(actor));

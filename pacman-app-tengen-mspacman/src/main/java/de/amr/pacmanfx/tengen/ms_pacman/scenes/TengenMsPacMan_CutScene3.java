@@ -7,24 +7,15 @@ package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
-import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.ActorAnimationMap;
-import de.amr.pacmanfx.model.actors.AnimatedActor;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import javafx.scene.media.MediaPlayer;
-
-import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
-import static de.amr.pacmanfx.tengen.ms_pacman.rendering.SpriteID.STORK;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.createMsPacMan;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.createPacMan;
 import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PacAnimationMap.ANIM_PAC_MAN_MUNCHING;
@@ -43,53 +34,6 @@ import static de.amr.pacmanfx.ui.PacManGames_UI.ACTION_LET_GAME_STATE_EXPIRE;
  * @author Armin Reichert
  */
 public class TengenMsPacMan_CutScene3 extends GameScene2D {
-
-    public static class Stork extends Actor implements AnimatedActor {
-        private final SpriteAnimationMap animationMap;
-        private boolean bagReleasedFromBeak;
-
-        public Stork(TengenMsPacMan_SpriteSheet spriteSheet) {
-            animationMap = new SpriteAnimationMap(spriteSheet);
-            animationMap.setAnimation("flying",
-                SpriteAnimation.build()
-                    .of(spriteSheet.spriteSeq(STORK)).frameTicks(8).forever());
-        }
-
-        public void setBagReleasedFromBeak(boolean released) {
-            bagReleasedFromBeak = released;
-        }
-
-        public boolean isBagReleasedFromBeak() {
-            return bagReleasedFromBeak;
-        }
-
-        @Override
-        public Optional<ActorAnimationMap> animations() { return Optional.of(animationMap); }
-    }
-
-    public static class Bag extends Actor implements AnimatedActor {
-        private final SpriteAnimationMap animationMap;
-        private boolean open;
-
-        public Bag(TengenMsPacMan_SpriteSheet spriteSheet) {
-            animationMap = new SpriteAnimationMap(spriteSheet);
-            animationMap.setAnimation("junior", SpriteAnimation.build().ofSprite(spriteSheet.sprite(SpriteID.JUNIOR_PAC)).once());
-            animationMap.setAnimation("bag",    SpriteAnimation.build().ofSprite(spriteSheet.sprite(SpriteID.BLUE_BAG)).once());
-            setOpen(false);
-        }
-
-        @Override
-        public Optional<ActorAnimationMap> animations() { return Optional.of(animationMap); }
-
-        public void setOpen(boolean open) {
-            this.open = open;
-            animationMap.selectAnimation(open ? "junior" : "bag");
-        }
-
-        public boolean isOpen() {
-            return open;
-        }
-    }
 
     private static final int GROUND_Y = TS * 24;
     private static final int RIGHT_BORDER = TS * 30;
