@@ -156,8 +156,6 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
 
         if (theGame().canStartNewGame()) {
             configureLivesCounter(theGame().livesCounter());
-            theGame().livesCounter().setPosition(2 * TS, sizeInPx().y() - 2 * TS);
-            theGame().livesCounter().show();
         } else {
             theGame().livesCounter().hide();
             //TODO make actor?
@@ -198,6 +196,8 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
         }
         numLivesDisplayed = Math.min(numLivesDisplayed, livesCounter.maxLivesDisplayed());
         livesCounter.setVisibleLifeCount(numLivesDisplayed);
+        theGame().livesCounter().setPosition(2 * TS, sizeInPx().y() - 2 * TS);
+        theGame().livesCounter().show();
     }
 
     private void drawLevelMessage() {
