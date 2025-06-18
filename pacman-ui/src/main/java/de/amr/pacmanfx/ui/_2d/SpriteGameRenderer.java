@@ -54,15 +54,15 @@ public interface SpriteGameRenderer extends GameRenderer {
      * Draws the given sprite from the given sprite sheet image at the given position (left-upper corner).
      * The position and the sprite size are scaled by the current scaling of the renderer.
      *
-     * @param spriteSheetImage the sprite sheet image
+     * @param image the sprite sheet image
      * @param sprite a sprite
      * @param x unscaled x-coordinate of left-upper corner
      * @param y unscaled y-coordinate of left-upper corner
      */
-    default void drawSpriteScaled(Image spriteSheetImage, Sprite sprite, double x, double y) {
-        requireNonNull(spriteSheetImage);
+    default void drawSpriteScaled(Image image, Sprite sprite, double x, double y) {
+        requireNonNull(image);
         requireNonNull(sprite);
-        ctx().drawImage(spriteSheetImage,
+        ctx().drawImage(image,
             sprite.x(), sprite.y(), sprite.width(), sprite.height(),
             scaled(x), scaled(y), scaled(sprite.width()), scaled(sprite.height()));
     }
