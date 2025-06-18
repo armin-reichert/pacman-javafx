@@ -14,7 +14,7 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 
-public class TengenMsPacMan_GhostAnimationMap extends SpriteAnimationMap {
+public class TengenMsPacMan_GhostAnimationMap extends SpriteAnimationMap<SpriteID> {
 
     public static final int NORMAL_TICKS = 8;  // TODO check this in emulator
     public static final int FRIGHTENED_TICKS = 8;  // TODO check this in emulator

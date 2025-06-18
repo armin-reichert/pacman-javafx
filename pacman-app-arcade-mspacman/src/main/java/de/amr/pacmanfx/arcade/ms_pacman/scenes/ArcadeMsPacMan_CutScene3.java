@@ -26,7 +26,8 @@ import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PI
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createMsPacMan;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createPacMan;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_PacAnimationMap.PAC_MAN_MUNCHING;
-import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.*;
+import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.BLUE_BAG;
+import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.JUNIOR_PAC;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.ui.PacManGames.theSound;
@@ -45,10 +46,10 @@ import static de.amr.pacmanfx.ui.PacManGames.theUI;
 public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
     private static class Stork extends Actor implements AnimatedActor {
-        private final SpriteAnimationMap animationMap;
+        private final SpriteAnimationMap<SpriteID> animationMap;
 
         public Stork(ArcadeMsPacMan_SpriteSheet spriteSheet) {
-            animationMap = new SpriteAnimationMap(spriteSheet);
+            animationMap = new SpriteAnimationMap<>(spriteSheet);
             animationMap.setAnimation("flying",
                 SpriteAnimation.build().of(spriteSheet.spriteSeq(SpriteID.STORK)).frameTicks(8).forever());
         }
@@ -58,11 +59,11 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     }
 
     private static class Bag extends Actor implements AnimatedActor {
-        private final SpriteAnimationMap animationMap;
+        private final SpriteAnimationMap<SpriteID> animationMap;
         private boolean open;
 
         public Bag(ArcadeMsPacMan_SpriteSheet spriteSheet) {
-            animationMap = new SpriteAnimationMap(spriteSheet);
+            animationMap = new SpriteAnimationMap<>(spriteSheet);
             animationMap.setAnimation("junior", SpriteAnimation.build().ofSprite(spriteSheet.sprite(JUNIOR_PAC)).once());
             animationMap.setAnimation("bag",    SpriteAnimation.build().ofSprite(spriteSheet.sprite(BLUE_BAG)).once());
         }

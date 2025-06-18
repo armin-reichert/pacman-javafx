@@ -15,7 +15,7 @@ import java.util.Arrays;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 
-public class TengenMsPacMan_PacAnimationMap extends SpriteAnimationMap {
+public class TengenMsPacMan_PacAnimationMap extends SpriteAnimationMap<SpriteID> {
 
     public static final String ANIM_MS_PAC_MAN_BOOSTER = "ms_pac_man_booster";
     public static final String ANIM_MS_PAC_MAN_WAVING_HAND = "ms_pac_man_waving_hand";

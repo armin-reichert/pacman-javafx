@@ -15,7 +15,7 @@ import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 
-public class ArcadeMsPacMan_GhostAnimationMap extends SpriteAnimationMap {
+public class ArcadeMsPacMan_GhostAnimationMap extends SpriteAnimationMap<SpriteID> {
 
     private final byte personality;
 

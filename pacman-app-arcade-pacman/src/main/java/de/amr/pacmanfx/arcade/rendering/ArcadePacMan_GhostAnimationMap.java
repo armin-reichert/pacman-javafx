@@ -16,7 +16,7 @@ import static de.amr.pacmanfx.arcade.ArcadePacMan_UIConfig.*;
 import static de.amr.pacmanfx.arcade.rendering.SpriteID.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 
-public class ArcadePacMan_GhostAnimationMap extends SpriteAnimationMap {
+public class ArcadePacMan_GhostAnimationMap extends SpriteAnimationMap<SpriteID> {
 
     private final byte personality;
 

@@ -15,17 +15,17 @@ import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
-public class SpriteAnimationMap implements ActorAnimationMap {
+public class SpriteAnimationMap<SID> implements ActorAnimationMap {
 
-    protected final SpriteSheet<?> spriteSheet;
+    protected final SpriteSheet<SID> spriteSheet;
     protected final Map<String, SpriteAnimation> animationsByID = new HashMap<>();
     protected String currentAnimationID;
 
-    public SpriteAnimationMap(SpriteSheet<?> spriteSheet) {
+    public SpriteAnimationMap(SpriteSheet<SID> spriteSheet) {
         this.spriteSheet = requireNonNull(spriteSheet);
     }
 
-    public SpriteSheet<?> spriteSheet() { return spriteSheet; }
+    public SpriteSheet<SID> spriteSheet() { return spriteSheet; }
 
     // TODO: this is somewhat crude but currently the way to keep the sprites up-to-date with actor direction etc.
     protected void updateActorSprites(Actor actor) {}
