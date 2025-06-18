@@ -54,10 +54,13 @@ public class PacManXXL_MsPacMan_GameRenderer extends SpriteGameRenderer {
 
     @Override
     public void drawActor(Actor actor) {
-        switch (actor) {
-            case Marquee marquee -> drawMarquee(marquee);
-            case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
-            default -> super.drawActor(actor);
+        requireNonNull(actor);
+        if (actor.isVisible()) {
+            switch (actor) {
+                case Marquee marquee -> drawMarquee(marquee);
+                case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
+                default -> super.drawActor(actor);
+            }
         }
     }
     private void drawClapperBoard(Clapperboard clapperboard) {

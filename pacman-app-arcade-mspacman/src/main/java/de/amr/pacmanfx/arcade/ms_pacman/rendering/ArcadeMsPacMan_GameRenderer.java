@@ -79,11 +79,14 @@ public class ArcadeMsPacMan_GameRenderer extends SpriteGameRenderer {
 
     @Override
     public void drawActor(Actor actor) {
-        switch (actor) {
-            case MidwayCopyright copyright -> drawMidwayCopyright(copyright);
-            case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
-            case Marquee marquee           -> drawMarquee(marquee);
-            default -> super.drawActor(actor);
+        requireNonNull(actor);
+        if (actor.isVisible()) {
+            switch (actor) {
+                case MidwayCopyright copyright -> drawMidwayCopyright(copyright);
+                case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
+                case Marquee marquee -> drawMarquee(marquee);
+                default -> super.drawActor(actor);
+            }
         }
     }
 

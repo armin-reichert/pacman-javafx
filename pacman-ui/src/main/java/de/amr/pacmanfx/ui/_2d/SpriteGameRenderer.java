@@ -85,7 +85,7 @@ public abstract class SpriteGameRenderer implements GameRenderer {
      * @param actor an actor
      * @param sprite actor sprite
      */
-    private void drawActorSpriteCentered(Actor actor, Sprite sprite) {
+    public void drawActorSpriteCentered(Actor actor, Sprite sprite) {
         float centerX = actor.x() + HTS, centerY = actor.y() + HTS;
         drawSpriteScaledCenteredAt(sprite, centerX, centerY);
     }
@@ -98,20 +98,19 @@ public abstract class SpriteGameRenderer implements GameRenderer {
     @Override
     public void drawActor(Actor actor) {
         requireNonNull(actor);
-        if (!actor.isVisible()) {
-            return;
-        }
-        switch (actor) {
-            case StaticBonus staticBonus     -> drawStaticBonus(staticBonus);
-            case MovingBonus movingBonus     -> drawMovingBonus(movingBonus);
-            case LivesCounter livesCounter   -> drawLivesCounter(livesCounter);
-            case LevelCounter levelCounter   -> drawLevelCounter(levelCounter);
-            case Animated animated -> drawAnimatedActor(animated);
-            default -> {}
+        if (actor.isVisible()) {
+            switch (actor) {
+                case StaticBonus staticBonus     -> drawStaticBonus(staticBonus);
+                case MovingBonus movingBonus     -> drawMovingBonus(movingBonus);
+                case LivesCounter livesCounter   -> drawLivesCounter(livesCounter);
+                case LevelCounter levelCounter   -> drawLevelCounter(levelCounter);
+                case Animated animated           -> drawAnimatedActor(animated);
+                default -> throw new IllegalArgumentException("Cannot draw actor of class {}" + actor.getClass().getSimpleName());
+            }
         }
     }
 
-    private void drawAnimatedActor(Animated animated) {
+    public void drawAnimatedActor(Animated animated) {
         animated.animationMap().ifPresent(animationMap -> {
             // assume interface is only implemented by Actor (sub-)classes
             Actor actor = (Actor) animated;
@@ -130,7 +129,7 @@ public abstract class SpriteGameRenderer implements GameRenderer {
         });
     }
 
-    private void drawMovingBonus(MovingBonus bonus) {
+    public void drawMovingBonus(MovingBonus bonus) {
         if (bonus.state() == Bonus.STATE_INACTIVE) return;
         ctx().save();
         ctx().translate(0, bonus.elongationY());
@@ -141,7 +140,7 @@ public abstract class SpriteGameRenderer implements GameRenderer {
         ctx().restore();
     }
 
-    private void drawStaticBonus(StaticBonus bonus) {
+    public void drawStaticBonus(StaticBonus bonus) {
         switch (bonus.state()) {
             case Bonus.STATE_INACTIVE -> {}
             case Bonus.STATE_EDIBLE -> drawActorSpriteCentered(bonus, theUI().configuration().createBonusSymbolSprite(bonus.symbol()));
@@ -149,7 +148,7 @@ public abstract class SpriteGameRenderer implements GameRenderer {
         }
     }
 
-    private void drawLevelCounter(LevelCounter levelCounter) {
+    public void drawLevelCounter(LevelCounter levelCounter) {
         float x = levelCounter.x(), y = levelCounter.y();
         for (byte symbol : levelCounter.symbols()) {
             Sprite sprite = theUI().configuration().createBonusSymbolSprite(symbol);
@@ -158,7 +157,7 @@ public abstract class SpriteGameRenderer implements GameRenderer {
         }
     }
 
-    private void drawLivesCounter(LivesCounter livesCounter) {
+    public void drawLivesCounter(LivesCounter livesCounter) {
         Sprite sprite = theUI().configuration().createLivesCounterSprite();
         for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
             drawSpriteScaled(sprite, livesCounter.x() + TS * (2 * i), livesCounter.y());
@@ -190,7 +189,7 @@ public abstract class SpriteGameRenderer implements GameRenderer {
         }
     }
 
-private void drawAnimatedMovingActorInfo(Animated animated) {
+public void drawAnimatedMovingActorInfo(Animated animated) {
     if (!(animated instanceof MovingActor movingActor)) return;
 
     animated.animationMap()

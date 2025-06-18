@@ -102,12 +102,13 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
     @Override
     public void drawActor(Actor actor) {
         requireNonNull(actor);
-        ctx().setImageSmoothing(false);
-        switch (actor) {
-            case Pac pac -> drawAnyKindOfPac(pac);
-            case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
-            case Stork stork -> drawStork(stork);
-            default -> super.drawActor(actor);
+        if (actor.isVisible()) {
+            switch (actor) {
+                case Pac pac -> drawAnyKindOfPac(pac);
+                case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
+                case Stork stork -> drawStork(stork);
+                default -> super.drawActor(actor);
+            }
         }
     }
 
@@ -436,10 +437,10 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
 
     //TODO maybe just extend sprite sheet to include stork without bag?
     private void drawStork(Stork stork) {
-        super.drawActor(stork);
+        super.drawAnimatedActor(stork);
         if (stork.isBagReleasedFromBeak()) { // over-paint bag still hanging at beak
             ctx().setFill(PY_CANVAS_BG_COLOR.get());
-            //TODO: clarify
+            //TODO: clarify coordinate values
             ctx().fillRect(scaled(stork.x() - 13), scaled(stork.y() + 3), scaled(8), scaled(10));
         }
     }
