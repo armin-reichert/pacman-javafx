@@ -396,24 +396,15 @@ public enum GameState implements FsmState<GameModel> {
                 theGameLevel().bonus().ifPresent(Bonus::setInactive); // needed?
                 game.activateNextBonus();
             }
-            else if (timer().atSecond(7.5)) {
+            else if (timer().atSecond(8.5)) {
                 theGameLevel().bonus().ifPresent(bonus -> bonus.setEaten(Globals.NUM_TICKS_PER_SEC));
                 theGameEventManager().publishEvent(game, GameEventType.BONUS_EATEN);
             }
-            else if (timer().atSecond(8.5)) {
+            else if (timer().atSecond(10.0)) {
                 theGameLevel().hidePacAndGhosts();
-                theGameLevel().blinking().stop();
-                theGameLevel().blinking().setStartPhase(Pulse.ON);
-                theGameLevel().blinking().reset();
+                theGame().onLevelCompleted(theGameLevel());
             }
-            else if (timer().atSecond(9.5)) {
-                theGameLevel().blinking().setStartPhase(Pulse.OFF);
-                theGameLevel().blinking().restart(2 * theGameLevel().data().numFlashes());
-            }
-            else if (timer().atSecond(12.0)) {
-                theGameLevel().blinking().reset();
-                theGameLevel().pac().stopAndShowInFullBeauty();
-                theGameLevel().bonus().ifPresent(Bonus::setInactive);
+            else if (timer().atSecond(11.0)) {
                 if (theGameLevel().number() == lastTestedLevelNumber) {
                     theGameController().restart(GameState.BOOT);
                 } else {
