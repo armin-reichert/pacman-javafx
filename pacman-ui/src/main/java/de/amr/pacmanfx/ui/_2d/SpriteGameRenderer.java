@@ -136,11 +136,11 @@ public interface SpriteGameRenderer extends GameRenderer {
         switch (bonus.state()) {
             case Bonus.STATE_EDIBLE -> {
                 Sprite sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
-                drawActorSprite(bonus.actor(), sprite);
+                drawActorSprite(bonus, sprite);
             }
             case Bonus.STATE_EATEN  -> {
                 Sprite sprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
-                drawActorSprite(bonus.actor(), sprite);
+                drawActorSprite(bonus, sprite);
             }
         }
         ctx().restore();

@@ -11,9 +11,7 @@ import de.amr.pacmanfx.model.GameModel;
  */
 public interface Bonus {
 
-    byte STATE_INACTIVE = 0;
-    byte STATE_EDIBLE = 1;
-    byte STATE_EATEN = 2;
+    byte STATE_INACTIVE = 0, STATE_EDIBLE = 1, STATE_EATEN = 2;
 
     default String stateName() {
         return switch (state()) {
@@ -25,7 +23,7 @@ public interface Bonus {
     }
 
     /**
-     * @return Entity representing this bonus in the world.
+     * @return actor representing this bonus.
      */
     Actor actor();
 
