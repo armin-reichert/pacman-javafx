@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._2d;
 
+import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.ScoreManager;
@@ -14,6 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 
+import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static java.util.Objects.requireNonNull;
@@ -49,6 +51,19 @@ public interface GameRenderer {
         requireNonNull(color);
         ctx().setFill(color);
         ctx().fillRect(0, 0, ctx().getCanvas().getWidth(), ctx().getCanvas().getHeight());
+    }
+
+    /**
+     * Fills a square at the center of the given tile with the current fill color. Used to hide pellets, energizers
+     * or sprites that are part of a map image.
+     *
+     * @param tile a tile
+     * @param sideLength side length of the square
+     */
+    default void fillSquareAtTileCenter(Vector2i tile, int sideLength) {
+        double centerX = tile.x() * TS + HTS, centerY = tile.y() * TS + HTS;
+        float halfSideLength = 0.5f * sideLength;
+        ctx().fillRect(centerX - halfSideLength, centerY - halfSideLength, sideLength, sideLength);
     }
 
     /**

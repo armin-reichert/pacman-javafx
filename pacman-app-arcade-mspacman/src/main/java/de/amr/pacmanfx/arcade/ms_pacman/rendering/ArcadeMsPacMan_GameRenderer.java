@@ -7,7 +7,6 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.Clapperboard;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.Marquee;
 import de.amr.pacmanfx.lib.Sprite;
-import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
@@ -71,18 +70,12 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
             level.worldMap().tiles()
                     .filter(not(level::isEnergizerPosition))
                     .filter(level::tileContainsEatenFood)
-                    .forEach(tile -> hideSquareAtTileCenter(tile, 4));
+                    .forEach(tile -> fillSquareAtTileCenter(tile, 4));
             level.energizerTiles()
                     .filter(tile -> !energizerHighlighted || level.tileContainsEatenFood(tile))
-                    .forEach(tile -> hideSquareAtTileCenter(tile, 10));
+                    .forEach(tile -> fillSquareAtTileCenter(tile, 10));
             ctx.restore();
         }
-    }
-
-    private void hideSquareAtTileCenter(Vector2i tile, int sideLength) {
-        double centerX = tile.x() * TS + HTS, centerY = tile.y() * TS + HTS;
-        float halfSideLength = 0.5f * sideLength;
-        ctx().fillRect(centerX - halfSideLength, centerY - halfSideLength, sideLength, sideLength);
     }
 
     @Override

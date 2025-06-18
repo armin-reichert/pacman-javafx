@@ -240,12 +240,12 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
 
     private void drawPellets(GameLevel level, Color pelletColor) {
         level.worldMap().tiles().filter(level::isFoodPosition).filter(not(level::isEnergizerPosition)).forEach(tile -> {
-            double cx = tile.x() * TS + HTS, cy = tile.y() * TS + HTS;
             ctx().setFill(backgroundColor());
-            ctx().fillRect(cx - 2, cy - 2, 4, 4);
+            fillSquareAtTileCenter(tile, 4);
             if (!level.tileContainsEatenFood(tile)) {
+                // draw pellet using the right color
                 ctx().setFill(pelletColor);
-                ctx().fillRect(cx - 1, cy - 1, 2, 2);
+                fillSquareAtTileCenter(tile, 2);
             }
         });
     }
@@ -254,15 +254,15 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
         double size = TS;
         double offset = 0.5 * HTS;
         level.worldMap().tiles().filter(level::isEnergizerPosition).forEach(tile -> {
-            double x = tile.x() * TS, y = tile.y() * TS;
             ctx().setFill(backgroundColor());
-            ctx().fillRect(x - 1, y - 1, TS + 2, TS + 2); // avoid blitzer
+            fillSquareAtTileCenter(tile, TS + 2);
             if (!level.tileContainsEatenFood(tile) && level.blinking().isOn()) {
                 ctx().setFill(pelletColor);
                 // draw pixelated "circle"
-                ctx().fillRect(x + offset, y, HTS, size);
-                ctx().fillRect(x, y + offset, size, HTS);
-                ctx().fillRect(x + 1, y + 1, size - 2, size - 2);
+                double cx = tile.x() * TS, cy = tile.y() * TS;
+                ctx().fillRect(cx + offset, cy, HTS, size);
+                ctx().fillRect(cx, cy + offset, size, HTS);
+                ctx().fillRect(cx + 1, cy + 1, size - 2, size - 2);
             }
         });
     }
