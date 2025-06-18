@@ -19,7 +19,7 @@ import de.amr.pacmanfx.ui.ActionBindingSupport;
 import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.LevelFinishedAnimation;
+import de.amr.pacmanfx.ui._2d.LevelFlashingAnimation;
 import de.amr.pacmanfx.uilib.CameraControlledView;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.beans.property.DoubleProperty;
@@ -67,7 +67,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
     private final Rectangle canvasClipRect = new Rectangle();
 
     private MessageMovement messageMovement;
-    private LevelFinishedAnimation levelFinishedAnimation;
+    private LevelFlashingAnimation levelFlashingAnimation;
 
     public TengenMsPacMan_PlayScene2D() {
         dynamicCamera.scalingProperty().bind(scalingProperty());
@@ -165,9 +165,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
 
     @Override
     public void doInit() {
-        var config = (TengenMsPacMan_UIConfig) theUI().configuration();
-        theGame().setScoreVisible(true);
+        TengenMsPacMan_UIConfig config = (TengenMsPacMan_UIConfig) theUI().configuration();
         setGameRenderer(config.createRenderer(canvas()));
+        theGame().setScoreVisible(true);
         dynamicCamera.moveTop();
         messageMovement = new MessageMovement();
     }
@@ -230,7 +230,17 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
     @Override
     public void onLevelCreated(GameEvent e) {
         bindActionsToKeys();
-        gr().applyRenderingHints(theGameLevel());
+        TengenMsPacMan_UIConfig config = (TengenMsPacMan_UIConfig) theUI().configuration();
+        setGameRenderer(config.createRenderer(canvas()));
+        gr().ensureRenderingHintsAreApplied(theGameLevel());
+    }
+
+    @Override
+    public void onSwitch_3D_2D(GameScene scene3D) {
+        bindActionsToKeys();
+        TengenMsPacMan_UIConfig config = (TengenMsPacMan_UIConfig) theUI().configuration();
+        setGameRenderer(config.createRenderer(canvas()));
+        gr().ensureRenderingHintsAreApplied(theGameLevel());
     }
 
     @Override
@@ -241,20 +251,14 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
     }
 
     @Override
-    public void onSwitch_3D_2D(GameScene scene3D) {
-        bindActionsToKeys();
-        gr().applyRenderingHints(theGameLevel());
-    }
-
-    @Override
     public void onEnterGameState(GameState state) {
         switch (state) {
             case HUNTING -> dynamicCamera.setFocussingActor(true);
             case LEVEL_COMPLETE -> {
                 theSound().stopAll();
-                levelFinishedAnimation = new LevelFinishedAnimation(theGameLevel(), 333);
-                levelFinishedAnimation.setOnFinished(theGameController()::letCurrentGameStateExpire);
-                levelFinishedAnimation.play();
+                levelFlashingAnimation = new LevelFlashingAnimation(theGameLevel(), 333);
+                levelFlashingAnimation.setOnFinished(theGameController()::letCurrentGameStateExpire);
+                levelFlashingAnimation.play();
             }
             case GAME_OVER -> {
                 var tengenGame = (TengenMsPacMan_GameModel) theGame();
@@ -360,7 +364,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
         }
 
         // game level exists from here
-        gr().ensureMapSettingsApplied(theGameLevel());
+        gr().ensureRenderingHintsAreApplied(theGameLevel());
 
         // compute current scene scaling
         switch (displayModePy.get()) {
@@ -394,13 +398,13 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
     protected void drawSceneContent() {
         // NES screen is 32 tiles wide but mazes are only 28 tiles wide
         final double indent = scaled(2 * TS);
-        final boolean flashing = levelFinishedAnimation != null && levelFinishedAnimation.isRunning();
+        final boolean flashing = levelFlashingAnimation != null && levelFlashingAnimation.isRunning();
 
         ctx().save();
         ctx().translate(indent, 0);
         if (flashing) {
-            if (levelFinishedAnimation.isHighlighted()) {
-                gr().drawHighlightedLevel(theGameLevel(), levelFinishedAnimation.flashingIndex());
+            if (levelFlashingAnimation.isHighlighted()) {
+                gr().drawHighlightedLevel(theGameLevel(), levelFlashingAnimation.flashingIndex());
             } else {
                 gr().drawLevel(theGameLevel(), null, false, false);
                 gr().drawFood(theGameLevel()); // this also hides the eaten food!
@@ -418,7 +422,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
         theGameLevel().bonus().ifPresent(bonus -> gr().drawActor(bonus.actor()));
 
         LivesCounter counter = theGame().livesCounter();
-        counter.setPosition(2 * TS, sizeInPx().y() - 2 * TS);
+        counter.setPosition(2 * TS, sizeInPx().y() - TS);
         counter.show();
         int numLivesDisplayed = counter.lifeCount() - 1;
         // As long as Pac-Man is still hidden in the maze, he is shown as an entry in the counter

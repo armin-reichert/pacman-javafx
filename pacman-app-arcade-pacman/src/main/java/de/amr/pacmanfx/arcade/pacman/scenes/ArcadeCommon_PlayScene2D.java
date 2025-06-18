@@ -17,8 +17,7 @@ import de.amr.pacmanfx.ui.ActionBindingSupport;
 import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.GenericMapRenderer;
-import de.amr.pacmanfx.ui._2d.LevelFinishedAnimation;
+import de.amr.pacmanfx.ui._2d.LevelFlashingAnimation;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.scene.control.CheckMenuItem;
@@ -35,8 +34,8 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_TILES;
 import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePalette.*;
-import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_SHORT;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_MEDIUM;
+import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_SHORT;
 import static de.amr.pacmanfx.ui.PacManGames.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 
@@ -45,7 +44,7 @@ import static de.amr.pacmanfx.ui.PacManGames_UI.*;
  */
 public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindingSupport {
 
-    private LevelFinishedAnimation levelFinishedAnimation;
+    private LevelFlashingAnimation levelFlashingAnimation;
 
     @Override
     protected void doInit() {
@@ -55,7 +54,6 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
     @Override
     public void onLevelCreated(GameEvent e) {
         theGame().levelCounter().setPosition(sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
-        gr().applyRenderingHints(theGameLevel());
         if (theGameLevel().isDemoLevel()) {
             bindAction(ACTION_ARCADE_INSERT_COIN, COMMON_ACTION_BINDINGS);
         } else {
@@ -158,8 +156,8 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
 
         gr().applyRenderingHints(theGameLevel());
 
-        boolean highlighted = levelFinishedAnimation != null
-            && levelFinishedAnimation.isRunning() && levelFinishedAnimation.isHighlighted();
+        boolean highlighted = levelFlashingAnimation != null
+            && levelFlashingAnimation.isRunning() && levelFlashingAnimation.isHighlighted();
         gr().drawLevel(theGameLevel(), backgroundColor(), highlighted, theGameLevel().blinking().isOn());
 
         if (theGameLevel().message() != GameLevel.MESSAGE_NONE) {
@@ -258,7 +256,6 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
             Logger.warn("No game renderer was existing when switching to 2D scene");
             setGameRenderer((SpriteGameRenderer) theUI().configuration().createRenderer(canvas()));
         }
-        optGameLevel().ifPresent(gr()::applyRenderingHints);
     }
 
     @Override
@@ -268,9 +265,9 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
         }
         else if (state == GameState.LEVEL_COMPLETE) {
             theSound().stopAll();
-            levelFinishedAnimation = new LevelFinishedAnimation(theGameLevel(), 333);
-            levelFinishedAnimation.setOnFinished(theGameController()::letCurrentGameStateExpire);
-            levelFinishedAnimation.play();
+            levelFlashingAnimation = new LevelFlashingAnimation(theGameLevel(), 333);
+            levelFlashingAnimation.setOnFinished(theGameController()::letCurrentGameStateExpire);
+            levelFlashingAnimation.play();
         }
     }
 

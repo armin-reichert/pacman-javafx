@@ -78,8 +78,7 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
 
     public Color backgroundColor() { return backgroundColorPy.get(); }
 
-    public void ensureMapSettingsApplied(GameLevel level) {
-        requireNonNull(level);
+    public void ensureRenderingHintsAreApplied(GameLevel level) {
         if (coloredMapSet == null) {
             applyRenderingHints(level);
         }
@@ -87,7 +86,6 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
 
     @Override
     public void applyRenderingHints(GameLevel level) {
-        requireNonNull(level);
         int flashCount = level.data().numFlashes();
         coloredMapSet = mapRepository.createMapSequence(level.worldMap(), flashCount);
         Logger.info("Created maze set with {} flash colors {}", flashCount, coloredMapSet);
