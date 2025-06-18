@@ -130,30 +130,21 @@ public interface SpriteGameRenderer extends GameRenderer {
     }
 
     private void drawMovingBonus(MovingBonus bonus) {
+        if (bonus.state() == Bonus.STATE_INACTIVE) return;
         ctx().save();
-        ctx().setImageSmoothing(false);
         ctx().translate(0, bonus.elongationY());
         switch (bonus.state()) {
-            case Bonus.STATE_EDIBLE -> {
-                Sprite sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
-                drawActorSprite(bonus, sprite);
-            }
-            case Bonus.STATE_EATEN  -> {
-                Sprite sprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
-                drawActorSprite(bonus, sprite);
-            }
+            case Bonus.STATE_EDIBLE -> drawActorSprite(bonus, theUI().configuration().createBonusSymbolSprite(bonus.symbol()));
+            case Bonus.STATE_EATEN  -> drawActorSprite(bonus, theUI().configuration().createBonusValueSprite(bonus.symbol()));
         }
         ctx().restore();
     }
 
     private void drawStaticBonus(StaticBonus bonus) {
-        if (bonus.state() == Bonus.STATE_EDIBLE) {
-            Sprite sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
-            drawActorSprite(bonus, sprite);
-        }
-        else if (bonus.state() == Bonus.STATE_EATEN) {
-            Sprite sprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
-            drawActorSprite(bonus, sprite);
+        switch (bonus.state()) {
+            case Bonus.STATE_INACTIVE -> {}
+            case Bonus.STATE_EDIBLE -> drawActorSprite(bonus, theUI().configuration().createBonusSymbolSprite(bonus.symbol()));
+            case Bonus.STATE_EATEN  -> drawActorSprite(bonus, theUI().configuration().createBonusValueSprite(bonus.symbol()));
         }
     }
 
