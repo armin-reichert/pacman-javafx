@@ -10,6 +10,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingTimer;
+import de.amr.pacmanfx.model.LivesCounter;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.ui.ActionBindingSupport;
@@ -183,14 +184,21 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
 
         // Draw either lives counter or credit text
         if (theGame().canStartNewGame()) {
-            theGame().livesCounter().setPosition(2 * TS, sizeInPx().y() - 2 * TS);
-            theGame().livesCounter().show();
+            LivesCounter counter = theGame().livesCounter();
+            counter.setPosition(2 * TS, sizeInPx().y() - 2 * TS);
+            counter.show();
+            int numLivesDisplayed = counter.lifeCount() - 1;
+            // As long as Pac-Man is still hidden in the maze, he is shown as an entry in the counter
+            if (theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible()) {
+                numLivesDisplayed += 1;
+            }
+            numLivesDisplayed = Math.min(numLivesDisplayed, counter.maxLivesDisplayed());
+            counter.setVisibleLifeCount(numLivesDisplayed);
+            gr().drawActor(theGame().livesCounter());
         } else {
             gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
                 scoreColor(), arcadeFont8(), 2 * TS, sizeInPx().y() - 2);
-            theGame().livesCounter().hide();
         }
-        gr().drawActor(theGame().livesCounter());
         theGame().levelCounter().show(); //TODO
         gr().drawActor(theGame().levelCounter());
     }

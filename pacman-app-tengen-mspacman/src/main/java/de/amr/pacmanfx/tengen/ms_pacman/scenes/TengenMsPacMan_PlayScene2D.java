@@ -8,6 +8,7 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.LivesCounter;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
@@ -425,8 +426,16 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
         ghostsInZOrder().forEach(ghost -> gr().drawActor(ghost));
         theGameLevel().bonus().ifPresent(bonus -> gr().drawActor(bonus.actor()));
 
-        theGame().livesCounter().setPosition(2 * TS, sizeInPx().y() - TS);
-        theGame().livesCounter().show();
+        LivesCounter counter = theGame().livesCounter();
+        counter.setPosition(2 * TS, sizeInPx().y() - 2 * TS);
+        counter.show();
+        int numLivesDisplayed = counter.lifeCount() - 1;
+        // As long as Pac-Man is still hidden in the maze, he is shown as an entry in the counter
+        if (theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible()) {
+            numLivesDisplayed += 1;
+        }
+        numLivesDisplayed = Math.min(numLivesDisplayed, counter.maxLivesDisplayed());
+        counter.setVisibleLifeCount(numLivesDisplayed);
         gr().drawActor(theGame().livesCounter());
 
         theGame().levelCounter().show();

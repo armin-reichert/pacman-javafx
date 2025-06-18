@@ -1,6 +1,5 @@
 package de.amr.pacmanfx.ui._2d;
 
-import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.LevelCounter;
@@ -15,7 +14,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.HTS;
+import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
 import static java.util.Objects.requireNonNull;
 
@@ -83,6 +83,17 @@ public interface SpriteGameRenderer extends GameRenderer {
     }
 
     /**
+     * Draws the sprite centered over the "collision box" (one-tile square) of the given actor (if visible).
+     *
+     * @param actor an actor
+     * @param sprite actor sprite
+     */
+    private void drawActorSpriteCentered(Actor actor, Sprite sprite) {
+        float centerX = actor.x() + HTS, centerY = actor.y() + HTS;
+        drawSpriteScaledCenteredAt(sprite, centerX, centerY);
+    }
+
+    /**
      * Draws an actor (Pac-Man, ghost, moving bonus, etc.) if it is visible.
      *
      * @param actor the actor to draw
@@ -108,10 +119,10 @@ public interface SpriteGameRenderer extends GameRenderer {
             Actor actor = (Actor) animatedActor;
             switch (animationMap) {
                 case SingleSpriteAnimationMap singleSpriteAnimationMap ->
-                        drawSpriteCentered(actor, singleSpriteAnimationMap.singleSprite());
+                        drawActorSpriteCentered(actor, singleSpriteAnimationMap.singleSprite());
                 case SpriteAnimationMap spriteAnimationMap -> {
                     if (spriteAnimationMap.currentAnimation() != null) {
-                        drawSpriteCentered(actor, spriteAnimationMap.currentSprite(actor));
+                        drawActorSpriteCentered(actor, spriteAnimationMap.currentSprite(actor));
                     } else {
                         Logger.error("No current animation for actor {}", actor);
                     }
@@ -121,24 +132,13 @@ public interface SpriteGameRenderer extends GameRenderer {
         });
     }
 
-    /**
-     * Draws the sprite centered over the "collision box" (one-tile square) of the given actor (if visible).
-     *
-     * @param actor an actor
-     * @param sprite actor sprite
-     */
-    private void drawSpriteCentered(Actor actor, Sprite sprite) {
-        float centerX = actor.x() + HTS, centerY = actor.y() + HTS;
-        drawSpriteScaledCenteredAt(sprite, centerX, centerY);
-    }
-
     private void drawMovingBonus(MovingBonus bonus) {
         if (bonus.state() == Bonus.STATE_INACTIVE) return;
         ctx().save();
         ctx().translate(0, bonus.elongationY());
         switch (bonus.state()) {
-            case Bonus.STATE_EDIBLE -> drawSpriteCentered(bonus, theUI().configuration().createBonusSymbolSprite(bonus.symbol()));
-            case Bonus.STATE_EATEN  -> drawSpriteCentered(bonus, theUI().configuration().createBonusValueSprite(bonus.symbol()));
+            case Bonus.STATE_EDIBLE -> drawActorSpriteCentered(bonus, theUI().configuration().createBonusSymbolSprite(bonus.symbol()));
+            case Bonus.STATE_EATEN  -> drawActorSpriteCentered(bonus, theUI().configuration().createBonusValueSprite(bonus.symbol()));
         }
         ctx().restore();
     }
@@ -146,8 +146,8 @@ public interface SpriteGameRenderer extends GameRenderer {
     private void drawStaticBonus(StaticBonus bonus) {
         switch (bonus.state()) {
             case Bonus.STATE_INACTIVE -> {}
-            case Bonus.STATE_EDIBLE -> drawSpriteCentered(bonus, theUI().configuration().createBonusSymbolSprite(bonus.symbol()));
-            case Bonus.STATE_EATEN  -> drawSpriteCentered(bonus, theUI().configuration().createBonusValueSprite(bonus.symbol()));
+            case Bonus.STATE_EDIBLE -> drawActorSpriteCentered(bonus, theUI().configuration().createBonusSymbolSprite(bonus.symbol()));
+            case Bonus.STATE_EATEN  -> drawActorSpriteCentered(bonus, theUI().configuration().createBonusValueSprite(bonus.symbol()));
         }
     }
 
@@ -161,22 +161,15 @@ public interface SpriteGameRenderer extends GameRenderer {
     }
 
     default void drawLivesCounter(LivesCounter livesCounter) {
-        if (livesCounter.lifeCount() == 0) {
-            return;
-        }
-        // As long as Pac-Man is still invisible on game start, one live more is shown in the counter
-        int numLivesDisplayed = theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible()
-                ? theGame().livesCounter().lifeCount() : theGame().livesCounter().lifeCount() - 1;
         Sprite sprite = theUI().configuration().createLivesCounterSprite();
-        double x = livesCounter.x(), y = livesCounter.y();
-        for (int i = 0; i < Math.min(numLivesDisplayed, livesCounter.maxLivesDisplayed()); ++i) {
-            drawSpriteScaled(sprite, x + TS * (2 * i), y);
+        for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
+            drawSpriteScaled(sprite, livesCounter.x() + TS * (2 * i), livesCounter.y());
         }
-        // show text indicating that more lives are available than symbols displayed (can happen when lives are added via cheat)
-        int excessLives = livesCounter.lifeCount() - livesCounter.maxLivesDisplayed();
-        if (excessLives > 0) {
+        if (livesCounter.lifeCount() > livesCounter.maxLivesDisplayed()) {
+            // show text indicating that more lives are available than symbols displayed (cheating may cause this)
             Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
-            fillText("+" + excessLives, Color.YELLOW, font, x + TS * 10, y + TS);
+            fillText("(%d)".formatted(livesCounter.lifeCount()), Color.YELLOW, font,
+                livesCounter.x() + TS * 10, livesCounter.y() + TS);
         }
     }
 

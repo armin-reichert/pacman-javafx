@@ -14,10 +14,19 @@ public class LivesCounter extends Actor {
     private final IntegerProperty lifeCountPy = new SimpleIntegerProperty(0);
     private int initialLifeCount;
     private int maxLivesDisplayed;
+    private int visibleLifeCount;
 
     public LivesCounter() {
         initialLifeCount = 3;
         maxLivesDisplayed = 5;
+    }
+
+    public int visibleLifeCount() {
+        return visibleLifeCount;
+    }
+
+    public void setVisibleLifeCount(int visibleLifeCount) {
+        this.visibleLifeCount = visibleLifeCount;
     }
 
     public int initialLifeCount() {
