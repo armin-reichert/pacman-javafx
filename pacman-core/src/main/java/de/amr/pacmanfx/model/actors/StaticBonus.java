@@ -11,11 +11,8 @@ import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.theGameEventManager;
 
-
 /**
  * Bonus that appears for some time at a fixed position before it gets eaten or vanishes.
- *
- * @author Armin Reichert
  */
 public class StaticBonus extends Actor implements Bonus {
 

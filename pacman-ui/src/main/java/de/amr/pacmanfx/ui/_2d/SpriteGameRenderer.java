@@ -83,19 +83,6 @@ public interface SpriteGameRenderer extends GameRenderer {
     }
 
     /**
-     * Draws the sprite over the "collision box" (one-tile square) of the given actor (if visible).
-     *
-     * @param actor an actor
-     * @param sprite sprite sheet region (can be null)
-     */
-    default void drawActorSprite(Actor actor, Sprite sprite) {
-        requireNonNull(actor);
-        if (actor.isVisible() && sprite != null) {
-            drawSpriteScaledCenteredAt(sprite, actor.x() + HTS, actor.y() + HTS);
-        }
-    }
-
-    /**
      * Draws an actor (Pac-Man, ghost, moving bonus, etc.) if it is visible.
      *
      * @param actor the actor to draw
@@ -129,10 +116,20 @@ public interface SpriteGameRenderer extends GameRenderer {
         }
     }
 
-    private void drawMovingBonus(MovingBonus bonus) {
-        if (!bonus.isVisible()) {
-            return;
+    /**
+     * Draws the sprite over the "collision box" (one-tile square) of the given actor (if visible).
+     *
+     * @param actor an actor
+     * @param sprite sprite sheet region (can be null)
+     */
+    private void drawActorSprite(Actor actor, Sprite sprite) {
+        requireNonNull(actor);
+        if (sprite != null) {
+            drawSpriteScaledCenteredAt(sprite, actor.x() + HTS, actor.y() + HTS);
         }
+    }
+
+    private void drawMovingBonus(MovingBonus bonus) {
         ctx().save();
         ctx().setImageSmoothing(false);
         ctx().translate(0, bonus.elongationY());
@@ -149,14 +146,14 @@ public interface SpriteGameRenderer extends GameRenderer {
         ctx().restore();
     }
 
-    private void drawStaticBonus(Bonus bonus) {
+    private void drawStaticBonus(StaticBonus bonus) {
         if (bonus.state() == Bonus.STATE_EDIBLE) {
             Sprite sprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
-            drawActorSprite(bonus.actor(), sprite);
+            drawActorSprite(bonus, sprite);
         }
         else if (bonus.state() == Bonus.STATE_EATEN) {
             Sprite sprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
-            drawActorSprite(bonus.actor(), sprite);
+            drawActorSprite(bonus, sprite);
         }
     }
 
