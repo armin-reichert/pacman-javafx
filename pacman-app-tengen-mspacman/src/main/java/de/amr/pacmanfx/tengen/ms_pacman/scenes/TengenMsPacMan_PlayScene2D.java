@@ -8,6 +8,8 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.actors.Actor;
+import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
@@ -428,9 +430,12 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
             gr().drawFood(theGameLevel());
         }
 
-        gr().drawActor(theGameLevel().pac());
-        ghostsInZOrder().forEach(ghost -> gr().drawActor(ghost));
-        theGameLevel().bonus().ifPresent(bonus -> gr().drawActor(bonus.actor()));
+        var actorsByZ = new ArrayList<Actor>();
+        theGameLevel().bonus().map(Bonus::actor).ifPresent(actorsByZ::add);
+        actorsByZ.add(theGameLevel().pac());
+        ghostsByZ().forEach(actorsByZ::add);
+
+        actorsByZ.forEach(gr()::drawActor);
 
         ctx().restore();
     }
@@ -447,12 +452,12 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
             ctx().setFont(DEBUG_TEXT_FONT);
             ctx().fillText("%s %d".formatted(theGameState(), theGameState().timer().tickCount()), 0, scaled(3 * TS));
             gr().drawMovingActorInfo(theGameLevel().pac());
-            ghostsInZOrder().forEach(gr()::drawMovingActorInfo);
+            ghostsByZ().forEach(gr()::drawMovingActorInfo);
         }
         ctx().restore();
     }
 
-    private Stream<Ghost> ghostsInZOrder() {
+    private Stream<Ghost> ghostsByZ() {
         return Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW).map(theGameLevel()::ghost);
     }
 
