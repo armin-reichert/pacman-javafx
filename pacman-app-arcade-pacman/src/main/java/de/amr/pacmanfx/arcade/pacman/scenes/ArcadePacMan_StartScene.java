@@ -44,11 +44,11 @@ public class ArcadePacMan_StartScene extends GameScene2D implements ActionBindin
 
     @Override
     public void drawSceneContent() {
-        gr().fillTextAtTile("PUSH START BUTTON", ARCADE_ORANGE, arcadeFont8(), 6, 17);
-        gr().fillTextAtTile("1 PLAYER ONLY", ARCADE_CYAN, arcadeFont8(), 8, 21);
-        gr().fillTextAtTile("BONUS PAC-MAN FOR 10000", ARCADE_ROSE, arcadeFont8(), 1, 25);
-        gr().fillTextAtTile("PTS", ARCADE_ROSE, arcadeFont6(), 25, 25);
-        gr().fillTextAtTile("© 1980 MIDWAY MFG.CO.", ARCADE_PINK, arcadeFont8(), 4, 29);
+        gr().fillTextAtScaledTilePosition("PUSH START BUTTON", ARCADE_ORANGE, arcadeFont8(), 6, 17);
+        gr().fillTextAtScaledTilePosition("1 PLAYER ONLY", ARCADE_CYAN, arcadeFont8(), 8, 21);
+        gr().fillTextAtScaledTilePosition("BONUS PAC-MAN FOR 10000", ARCADE_ROSE, arcadeFont8(), 1, 25);
+        gr().fillTextAtScaledTilePosition("PTS", ARCADE_ROSE, arcadeFont6(), 25, 25);
+        gr().fillTextAtScaledTilePosition("© 1980 MIDWAY MFG.CO.", ARCADE_PINK, arcadeFont8(), 4, 29);
         gr().fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
                 ARCADE_WHITE, arcadeFont8(), 2 * TS, sizeInPx().y() - 2);
     }

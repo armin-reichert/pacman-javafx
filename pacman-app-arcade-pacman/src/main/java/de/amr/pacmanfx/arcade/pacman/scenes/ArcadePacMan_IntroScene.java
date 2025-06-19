@@ -124,12 +124,12 @@ public class ArcadePacMan_IntroScene extends GameScene2D implements ActionBindin
                 drawPoints();
                 drawBlinkingEnergizer(tiles_to_px(LEFT_TILE_X), tiles_to_px(20));
                 drawGuys(true);
-                gr().fillTextAtTile(MIDWAY_MFG_CO, ARCADE_PINK, arcadeFont8(), 4, 32);
+                gr().fillTextAtScaledTilePosition(MIDWAY_MFG_CO, ARCADE_PINK, arcadeFont8(), 4, 32);
             }
             case CHASING_GHOSTS, READY_TO_PLAY -> {
                 drawPoints();
                 drawGuys(false);
-                gr().fillTextAtTile(MIDWAY_MFG_CO, ARCADE_PINK, arcadeFont8(), 4, 32);
+                gr().fillTextAtScaledTilePosition(MIDWAY_MFG_CO, ARCADE_PINK, arcadeFont8(), 4, 32);
             }
         }
 
@@ -182,12 +182,12 @@ public class ArcadePacMan_IntroScene extends GameScene2D implements ActionBindin
         ctx().setFill(ARCADE_ROSE);
         // normal pellet
         ctx().fillRect(scaled(tiles_to_px(LEFT_TILE_X + 6) + 4), scaled(tiles_to_px(24) + 4), scaled(2), scaled(2));
-        gr().fillTextAtTile("10",  ARCADE_WHITE, arcadeFont8(), LEFT_TILE_X + 8, 25);
-        gr().fillTextAtTile("PTS", ARCADE_WHITE, arcadeFont6(), LEFT_TILE_X + 11, 25);
+        gr().fillTextAtScaledTilePosition("10",  ARCADE_WHITE, arcadeFont8(), LEFT_TILE_X + 8, 25);
+        gr().fillTextAtScaledTilePosition("PTS", ARCADE_WHITE, arcadeFont6(), LEFT_TILE_X + 11, 25);
         // energizer
         drawBlinkingEnergizer(tiles_to_px(LEFT_TILE_X + 6), tiles_to_px(26));
-        gr().fillTextAtTile("50",  ARCADE_WHITE, arcadeFont8(), LEFT_TILE_X + 8, 27);
-        gr().fillTextAtTile("PTS", ARCADE_WHITE, arcadeFont6(), LEFT_TILE_X + 11, 27);
+        gr().fillTextAtScaledTilePosition("50",  ARCADE_WHITE, arcadeFont8(), LEFT_TILE_X + 8, 27);
+        gr().fillTextAtScaledTilePosition("PTS", ARCADE_WHITE, arcadeFont6(), LEFT_TILE_X + 11, 27);
     }
 
     private void drawBlinkingEnergizer(double x, double y) {

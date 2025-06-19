@@ -91,7 +91,7 @@ public interface GameRenderer {
      * @param tileX unscaled tile x-position
      * @param tileY unscaled tile y-position (baseline)
      */
-    default void fillTextAtTile(String text, Color color, Font font, int tileX, int tileY) {
+    default void fillTextAtScaledTilePosition(String text, Color color, Font font, int tileX, int tileY) {
         fillTextAtScaledPosition(text, color, font, tiles_to_px(tileX), tiles_to_px(tileY));
     }
 
@@ -119,7 +119,7 @@ public interface GameRenderer {
      * @param x     unscaled x-position
      * @param y     unscaled y-position (baseline)
      */
-    default void fillTextAtCenter(String text, Color color, Font font, double x, double y) {
+    default void fillTextAtScaledCenter(String text, Color color, Font font, double x, double y) {
         ctx().save();
         ctx().setTextAlign(TextAlignment.CENTER);
         fillTextAtScaledPosition(text, color, font, x, y);

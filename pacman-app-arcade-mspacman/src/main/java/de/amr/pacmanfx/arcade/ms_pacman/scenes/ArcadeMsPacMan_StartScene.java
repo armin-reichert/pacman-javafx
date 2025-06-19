@@ -56,11 +56,11 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D implements ActionBind
     public void drawSceneContent() {
         @SuppressWarnings("unchecked") SpriteSheet<SpriteID> spriteSheet = (SpriteSheet<SpriteID>) theUI().configuration().spriteSheet();
 
-        gr().fillTextAtTile("PUSH START BUTTON", ARCADE_ORANGE, arcadeFont8(), 6, 16);
-        gr().fillTextAtTile("1 PLAYER ONLY", ARCADE_ORANGE, arcadeFont8(), 8, 18);
-        gr().fillTextAtTile("ADDITIONAL    AT 10000", ARCADE_ORANGE, arcadeFont8(), 2, 25);
+        gr().fillTextAtScaledTilePosition("PUSH START BUTTON", ARCADE_ORANGE, arcadeFont8(), 6, 16);
+        gr().fillTextAtScaledTilePosition("1 PLAYER ONLY", ARCADE_ORANGE, arcadeFont8(), 8, 18);
+        gr().fillTextAtScaledTilePosition("ADDITIONAL    AT 10000", ARCADE_ORANGE, arcadeFont8(), 2, 25);
         gr().drawSpriteScaled(spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL), tiles_to_px(13), tiles_to_px(23) + 1);
-        gr().fillTextAtTile("PTS", ARCADE_ORANGE, arcadeFont6(), 25, 25);
+        gr().fillTextAtScaledTilePosition("PTS", ARCADE_ORANGE, arcadeFont6(), 25, 25);
         gr().drawActor(copyright);
         gr().fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
                 ARCADE_WHITE, arcadeFont8(), tiles_to_px(2), sizeInPx().y() - 2);

@@ -346,17 +346,17 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
         String ans = theUI().configuration().assetNamespace();
         switch (level.message()) {
             case GameLevel.MESSAGE_READY
-                -> fillTextAtCenter("READY!", theAssets().color(ans + ".color.ready_message"), font, x, y);
+                -> fillTextAtScaledCenter("READY!", theAssets().color(ans + ".color.ready_message"), font, x, y);
             case GameLevel.MESSAGE_GAME_OVER -> {
                 Color color = theAssets().color(ans + ".color.game_over_message");
                 if (level.isDemoLevel()) {
                     NES_ColorScheme nesColorScheme = level.worldMap().getConfigValue("nesColorScheme");
                     color = Color.web(nesColorScheme.strokeColor());
                 }
-                fillTextAtCenter("GAME OVER", color, font, x, y);
+                fillTextAtScaledCenter("GAME OVER", color, font, x, y);
             }
             case GameLevel.MESSAGE_TEST
-                -> fillTextAtCenter("TEST L%02d".formatted(level.number()), nesPaletteColor(0x28), font, x, y);
+                -> fillTextAtScaledCenter("TEST L%02d".formatted(level.number()), nesPaletteColor(0x28), font, x, y);
         }
     }
 
