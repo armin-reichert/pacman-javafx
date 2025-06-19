@@ -239,12 +239,12 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     }
 
     @Override
-    public Sprite createBonusSymbolSprite(byte symbol) {
-        return spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS)[symbol];
+    public Image createBonusSymbolImage(byte symbol) {
+        return spriteSheet.image(spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS)[symbol]);
     }
 
     @Override
-    public Sprite createBonusValueSprite(byte symbol) {
+    public Image createBonusValueImage(byte symbol) {
         //TODO should this logic be implemented here?
         // 0=100,1=200,2=500,3=700,4=1000,5=2000,6=3000,7=4000,8=5000,9=6000,10=7000,11=8000,12=9000, 13=10_000
         int index = switch (symbol) {
@@ -253,7 +253,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
             case TengenMsPacMan_GameModel.BONUS_ICE_CREAM -> 7; // 4000!
             default -> symbol;
         };
-        return spriteSheet.spriteSeq(SpriteID.BONUS_VALUES)[index];
+        return spriteSheet.image(spriteSheet.spriteSeq(SpriteID.BONUS_VALUES)[index]);
     }
 
     @Override

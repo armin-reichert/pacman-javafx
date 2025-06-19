@@ -7,6 +7,9 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.*;
+import de.amr.pacmanfx.model.actors.Actor;
+import de.amr.pacmanfx.model.actors.Bonus;
+import de.amr.pacmanfx.model.actors.StaticBonus;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
@@ -17,12 +20,10 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.Globals.theGameLevel;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePalette.ARCADE_WHITE;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.ui.PacManGames.theAssets;
-import static de.amr.pacmanfx.ui.PacManGames.theUI;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
@@ -77,7 +78,7 @@ public class ArcadePacMan_GameRenderer extends SpriteGameRenderer {
             LevelCounter levelCounter = hud.levelCounter();
             float x = sceneSize.x() - 4 * TS, y = sceneSize.y() - 2 * TS;
             for (byte symbol : levelCounter.symbols()) {
-                Sprite sprite = theUI().configuration().createBonusSymbolSprite(symbol);
+                Sprite sprite = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS)[symbol];
                 drawSpriteScaled(sprite, x, y);
                 x -= TS * 2;
             }
@@ -133,5 +134,27 @@ public class ArcadePacMan_GameRenderer extends SpriteGameRenderer {
                     .forEach(tile -> fillSquareAtTileCenter(tile, 10));
         }
         ctx.restore();
+    }
+
+    @Override
+    public void drawActor(Actor actor) {
+        if (actor instanceof StaticBonus staticBonus) {
+            drawStaticBonus(staticBonus);
+        }
+        else super.drawActor(actor);
+    }
+
+    public void drawStaticBonus(StaticBonus bonus) {
+        switch (bonus.state()) {
+            case Bonus.STATE_INACTIVE -> {}
+            case Bonus.STATE_EDIBLE -> {
+                Sprite sprite = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS)[bonus.symbol()];
+                drawActorSpriteCentered(bonus, sprite);
+            }
+            case Bonus.STATE_EATEN  -> {
+                Sprite sprite = spriteSheet.spriteSeq(SpriteID.BONUS_VALUES)[bonus.symbol()];
+                drawActorSpriteCentered(bonus, sprite);
+            }
+        }
     }
 }

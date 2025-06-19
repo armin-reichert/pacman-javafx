@@ -30,8 +30,10 @@ public interface PacManGames_UIConfig {
     Node createLivesCounter3D();
     PacBase3D createPac3D(Pac pac);
     Image createGhostNumberImage(int ghostIndex);
-    Sprite createBonusSymbolSprite(byte symbol);
-    Sprite createBonusValueSprite(byte symbol);
+    Image createBonusSymbolImage(byte symbol);
+    Image createBonusValueImage(byte symbol);
+    //Sprite createBonusSymbolSprite(byte symbol);
+    //Sprite createBonusValueSprite(byte symbol);
     GameScene2D createPiPScene(Canvas canvas);
     GameRenderer createRenderer(Canvas canvas);
     Stream<GameScene> gameScenes();

@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.controller.GameState;
-import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
@@ -14,7 +13,6 @@ import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.uilib.Ufx;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.Model3D;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
@@ -28,6 +26,7 @@ import javafx.geometry.Point3D;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -268,11 +267,10 @@ public class GameLevel3D {
         levelCounter3D.setTranslateY(y);
         levelCounter3D.setTranslateZ(-6);
         int n = 0;
-        SpriteSheet<?> spriteSheet = theUI().configuration().spriteSheet();
         for (byte symbol : levelCounter.symbols()) {
             var material = new PhongMaterial(Color.WHITE);
-            Sprite sprite = theUI().configuration().createBonusSymbolSprite(symbol);
-            material.setDiffuseMap(spriteSheet.image(sprite));
+            Image texture = theUI().configuration().createBonusSymbolImage(symbol);
+            material.setDiffuseMap(texture);
 
             var cube = new Box(TS, TS, TS);
             cube.setMaterial(material);
@@ -331,14 +329,14 @@ public class GameLevel3D {
         ).play();
     }
 
-    public void updateBonus3D(Bonus bonus, SpriteSheet<?> spriteSheet) {
+    public void updateBonus3D(Bonus bonus) {
         requireNonNull(bonus);
         if (bonus3D != null) {
             mazeGroup.getChildren().remove(bonus3D);
         }
-        Sprite bonusSymbolSprite = theUI().configuration().createBonusSymbolSprite(bonus.symbol());
-        Sprite bonusValueSprite = theUI().configuration().createBonusValueSprite(bonus.symbol());
-        bonus3D = new Bonus3D(bonus, spriteSheet.image(bonusSymbolSprite), spriteSheet.image(bonusValueSprite));
+        Image bonusSymbolTexture = theUI().configuration().createBonusSymbolImage(bonus.symbol());
+        Image bonusValueTexture  = theUI().configuration().createBonusValueImage(bonus.symbol());
+        bonus3D = new Bonus3D(bonus, bonusSymbolTexture, bonusValueTexture);
         bonus3D.showEdible();
         mazeGroup.getChildren().add(bonus3D);
     }

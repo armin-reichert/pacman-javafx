@@ -35,8 +35,8 @@ import java.util.*;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.isOneOf;
-import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_SHORT;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_MEDIUM;
+import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_SHORT;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.ui.PacManGames.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
@@ -430,7 +430,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
     @Override
     public void onBonusActivated(GameEvent event) {
         theGameLevel().bonus().ifPresent(bonus -> {
-            level3D.updateBonus3D(bonus, theUI().configuration().spriteSheet());
+            level3D.updateBonus3D(bonus);
             if (bonus instanceof MovingBonus) {
                 theSound().playBonusActiveSound();
             }

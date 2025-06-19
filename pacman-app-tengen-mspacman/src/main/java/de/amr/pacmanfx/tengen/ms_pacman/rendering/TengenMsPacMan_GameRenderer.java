@@ -15,9 +15,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.LivesCounter;
-import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.MovingActor;
-import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.tengen.ms_pacman.model.*;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.Clapperboard;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.Stork;
@@ -174,12 +172,30 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
         requireNonNull(actor);
         if (actor.isVisible()) {
             switch (actor) {
+                case MovingBonus movingBonus -> drawMovingBonus(movingBonus);
                 case Pac pac -> drawAnyKindOfPac(pac);
                 case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
                 case Stork stork -> drawStork(stork);
                 default -> super.drawActor(actor);
             }
         }
+    }
+
+    public void drawMovingBonus(MovingBonus bonus) {
+        if (bonus.state() == Bonus.STATE_INACTIVE) return;
+        ctx().save();
+        ctx().translate(0, bonus.elongationY());
+        switch (bonus.state()) {
+            case Bonus.STATE_EDIBLE -> {
+                Sprite sprite = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS)[bonus.symbol()];
+                drawActorSpriteCentered(bonus, sprite);
+            }
+            case Bonus.STATE_EATEN  -> {
+                Sprite sprite = spriteSheet.spriteSeq(SpriteID.BONUS_VALUES)[bonus.symbol()];
+                drawActorSpriteCentered(bonus, sprite);
+            }
+        }
+        ctx().restore();
     }
 
     private void drawAnyKindOfPac(Pac pac) {
@@ -424,7 +440,7 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
         }
         x -= 2 * TS;
         for (byte symbol : levelCounter.symbols()) {
-            Sprite sprite = theUI().configuration().createBonusSymbolSprite(symbol);
+            Sprite sprite = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS)[symbol];
             drawSpriteScaled(sprite, x, y);
             x -= TS * 2;
         }

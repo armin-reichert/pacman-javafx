@@ -179,13 +179,13 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
     }
 
     @Override
-    public Sprite createBonusSymbolSprite(byte symbol) {
-        return spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS)[symbol];
+    public Image createBonusSymbolImage(byte symbol) {
+        return spriteSheet.image(spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS)[symbol]);
     }
 
     @Override
-    public Sprite createBonusValueSprite(byte symbol) {
-        return spriteSheet.spriteSeq(SpriteID.BONUS_VALUES)[symbol];
+    public Image createBonusValueImage(byte symbol) {
+        return spriteSheet.image(spriteSheet.spriteSeq(SpriteID.BONUS_VALUES)[symbol]);
     }
 
     @Override

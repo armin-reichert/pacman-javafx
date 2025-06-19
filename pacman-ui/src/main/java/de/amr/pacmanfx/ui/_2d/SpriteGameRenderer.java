@@ -2,22 +2,19 @@ package de.amr.pacmanfx.ui._2d;
 
 import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.HUD;
-import de.amr.pacmanfx.model.LevelCounter;
-import de.amr.pacmanfx.model.LivesCounter;
-import de.amr.pacmanfx.model.actors.*;
+import de.amr.pacmanfx.model.actors.Actor;
+import de.amr.pacmanfx.model.actors.Animated;
+import de.amr.pacmanfx.model.actors.MovingActor;
+import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SingleSpriteWithoutAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.ui.PacManGames.theUI;
+import static de.amr.pacmanfx.Globals.HTS;
 import static java.util.Objects.requireNonNull;
 
 public abstract class SpriteGameRenderer implements GameRenderer {
@@ -100,13 +97,11 @@ public abstract class SpriteGameRenderer implements GameRenderer {
     public void drawActor(Actor actor) {
         requireNonNull(actor);
         if (actor.isVisible()) {
-            switch (actor) {
-                case StaticBonus staticBonus     -> drawStaticBonus(staticBonus);
-                case MovingBonus movingBonus     -> drawMovingBonus(movingBonus);
-                case Animated animated           -> drawAnimatedActor(animated);
-                default -> throw new IllegalArgumentException(
-                    "%s: Cannot draw actor of class %s".formatted(getClass().getSimpleName(), actor.getClass().getSimpleName()));
+            if (actor instanceof Animated animated) {
+                drawAnimatedActor(animated);
             }
+            else throw new IllegalArgumentException("%s: Cannot draw actor of class %s".formatted(
+                    getClass().getSimpleName(), actor.getClass().getSimpleName()));
         }
     }
 
@@ -127,25 +122,6 @@ public abstract class SpriteGameRenderer implements GameRenderer {
                 default -> Logger.error("Cannot render animated actor with animation map of type {}", animationMap.getClass());
             }
         });
-    }
-
-    public void drawMovingBonus(MovingBonus bonus) {
-        if (bonus.state() == Bonus.STATE_INACTIVE) return;
-        ctx().save();
-        ctx().translate(0, bonus.elongationY());
-        switch (bonus.state()) {
-            case Bonus.STATE_EDIBLE -> drawActorSpriteCentered(bonus, theUI().configuration().createBonusSymbolSprite(bonus.symbol()));
-            case Bonus.STATE_EATEN  -> drawActorSpriteCentered(bonus, theUI().configuration().createBonusValueSprite(bonus.symbol()));
-        }
-        ctx().restore();
-    }
-
-    public void drawStaticBonus(StaticBonus bonus) {
-        switch (bonus.state()) {
-            case Bonus.STATE_INACTIVE -> {}
-            case Bonus.STATE_EDIBLE -> drawActorSpriteCentered(bonus, theUI().configuration().createBonusSymbolSprite(bonus.symbol()));
-            case Bonus.STATE_EATEN  -> drawActorSpriteCentered(bonus, theUI().configuration().createBonusValueSprite(bonus.symbol()));
-        }
     }
 
     public void drawMovingActorInfo(MovingActor movingActor) {

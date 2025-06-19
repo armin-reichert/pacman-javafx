@@ -211,15 +211,15 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
     }
 
     @Override
-    public Sprite createBonusSymbolSprite(byte symbol) {
+    public Image createBonusSymbolImage(byte symbol) {
         Sprite[] symbolSprites = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS);
-        return symbolSprites[symbol];
+        return spriteSheet.image(symbolSprites[symbol]);
     }
 
     @Override
-    public Sprite createBonusValueSprite(byte symbol) {
+    public Image createBonusValueImage(byte symbol) {
         Sprite[] valueSprites = spriteSheet.spriteSeq(SpriteID.BONUS_VALUES);
-        return valueSprites[symbol];
+        return spriteSheet.image(valueSprites[symbol]);
     }
 
     @Override

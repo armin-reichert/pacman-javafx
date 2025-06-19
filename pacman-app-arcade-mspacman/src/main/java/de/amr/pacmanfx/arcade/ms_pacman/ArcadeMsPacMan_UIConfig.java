@@ -4,10 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman;
 
-import de.amr.pacmanfx.arcade.pacman.scenes.ArcadeCommon_BootScene2D;
-import de.amr.pacmanfx.arcade.pacman.scenes.ArcadeCommon_PlayScene2D;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.*;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.*;
+import de.amr.pacmanfx.arcade.pacman.scenes.ArcadeCommon_BootScene2D;
+import de.amr.pacmanfx.arcade.pacman.scenes.ArcadeCommon_PlayScene2D;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
@@ -182,13 +182,13 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     }
 
     @Override
-    public Sprite createBonusSymbolSprite(byte symbol) {
-        return spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS)[symbol];
+    public Image createBonusSymbolImage(byte symbol) {
+        return spriteSheet.image(spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS)[symbol]);
     }
 
     @Override
-    public Sprite createBonusValueSprite(byte symbol) {
-        return spriteSheet.spriteSeq(SpriteID.BONUS_VALUES)[symbol];
+    public Image createBonusValueImage(byte symbol) {
+        return spriteSheet.image(spriteSheet.spriteSeq(SpriteID.BONUS_VALUES)[symbol]);
     }
 
     @Override
