@@ -135,13 +135,13 @@ public class ArcadePacMan_IntroScene extends GameScene2D implements ActionBindin
 
         //TODO move to HUD
         String coinsText = "CREDIT %2d".formatted(theCoinMechanism().numCoins());
-        gr().fillText(coinsText, ARCADE_WHITE, arcadeFont8(), 2 * TS, sizeInPx().y() - 2);
+        gr().fillTextAtScaledPosition(coinsText, ARCADE_WHITE, arcadeFont8(), 2 * TS, sizeInPx().y() - 2);
     }
 
     private void drawGallery() {
         @SuppressWarnings("unchecked") SpriteSheet<SpriteID> spriteSheet = (SpriteSheet<SpriteID>) theUI().configuration().spriteSheet();
         if (titleVisible) {
-            gr().fillText("CHARACTER / NICKNAME", ARCADE_WHITE, arcadeFont8(),
+            gr().fillTextAtScaledPosition("CHARACTER / NICKNAME", ARCADE_WHITE, arcadeFont8(),
                 tiles_to_px(LEFT_TILE_X + 3), tiles_to_px(6));
         }
         for (byte personality = RED_GHOST_SHADOW; personality <= ORANGE_GHOST_POKEY; ++personality) {
@@ -150,11 +150,11 @@ public class ArcadePacMan_IntroScene extends GameScene2D implements ActionBindin
                     tiles_to_px(LEFT_TILE_X) + TS, tiles_to_px(7 + 3 * personality) + HTS);
             }
             if (ghostCharacterVisible[personality]) {
-                gr().fillText("-" + GHOST_CHARACTERS[personality], GHOST_COLORS[personality], arcadeFont8(),
+                gr().fillTextAtScaledPosition("-" + GHOST_CHARACTERS[personality], GHOST_COLORS[personality], arcadeFont8(),
                     tiles_to_px(LEFT_TILE_X + 3), tiles_to_px(8 + 3 * personality));
             }
             if (ghostNicknameVisible[personality]) {
-                gr().fillText(GHOST_NICKNAMES[personality], GHOST_COLORS[personality], arcadeFont8(),
+                gr().fillTextAtScaledPosition(GHOST_NICKNAMES[personality], GHOST_COLORS[personality], arcadeFont8(),
                     tiles_to_px(LEFT_TILE_X + 14), tiles_to_px(8 + 3 * personality));
             }
         }

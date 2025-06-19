@@ -92,7 +92,7 @@ public interface GameRenderer {
      * @param tileY unscaled tile y-position (baseline)
      */
     default void fillTextAtTile(String text, Color color, Font font, int tileX, int tileY) {
-        fillText(text, color, font, tiles_to_px(tileX), tiles_to_px(tileY));
+        fillTextAtScaledPosition(text, color, font, tiles_to_px(tileX), tiles_to_px(tileY));
     }
 
     /**
@@ -104,7 +104,7 @@ public interface GameRenderer {
      * @param x     unscaled x-position
      * @param y     unscaled y-position (baseline)
      */
-    default void fillText(String text, Color color, Font font, double x, double y) {
+    default void fillTextAtScaledPosition(String text, Color color, Font font, double x, double y) {
         ctx().setFont(font);
         ctx().setFill(color);
         ctx().fillText(text, scaled(x), scaled(y));
@@ -122,7 +122,7 @@ public interface GameRenderer {
     default void fillTextAtCenter(String text, Color color, Font font, double x, double y) {
         ctx().save();
         ctx().setTextAlign(TextAlignment.CENTER);
-        fillText(text, color, font, x, y);
+        fillTextAtScaledPosition(text, color, font, x, y);
         ctx().restore();
     }
 

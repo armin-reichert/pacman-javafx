@@ -62,7 +62,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D implements ActionBind
         gr().drawSpriteScaled(spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL), tiles_to_px(13), tiles_to_px(23) + 1);
         gr().fillTextAtTile("PTS", ARCADE_ORANGE, arcadeFont6(), 25, 25);
         gr().drawActor(copyright);
-        gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
+        gr().fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
                 ARCADE_WHITE, arcadeFont8(), tiles_to_px(2), sizeInPx().y() - 2);
     }
 }

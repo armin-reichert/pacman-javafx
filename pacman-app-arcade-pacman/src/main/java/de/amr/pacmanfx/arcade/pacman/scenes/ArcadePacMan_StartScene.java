@@ -49,7 +49,7 @@ public class ArcadePacMan_StartScene extends GameScene2D implements ActionBindin
         gr().fillTextAtTile("BONUS PAC-MAN FOR 10000", ARCADE_ROSE, arcadeFont8(), 1, 25);
         gr().fillTextAtTile("PTS", ARCADE_ROSE, arcadeFont6(), 25, 25);
         gr().fillTextAtTile("© 1980 MIDWAY MFG.CO.", ARCADE_PINK, arcadeFont8(), 4, 29);
-        gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
+        gr().fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
                 ARCADE_WHITE, arcadeFont8(), 2 * TS, sizeInPx().y() - 2);
     }
 }

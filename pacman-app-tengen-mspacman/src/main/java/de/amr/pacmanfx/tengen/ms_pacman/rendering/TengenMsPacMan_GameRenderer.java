@@ -137,7 +137,7 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
             }
             if (game.lifeCount() > livesCounter.maxLivesDisplayed()) {
                 Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
-                fillText("(%d)".formatted(game.lifeCount()), Color.YELLOW, font,
+                fillTextAtScaledPosition("(%d)".formatted(game.lifeCount()), Color.YELLOW, font,
                     livesCounter.x() + TS * 10, livesCounter.y() + TS);
             }
         }

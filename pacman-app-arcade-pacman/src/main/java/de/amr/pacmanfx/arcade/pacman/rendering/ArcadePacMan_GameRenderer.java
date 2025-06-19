@@ -91,17 +91,17 @@ public class ArcadePacMan_GameRenderer extends SpriteGameRenderer {
             if (game.lifeCount() > livesCounter.maxLivesDisplayed()) {
                 // show text indicating that more lives are available than symbols displayed (cheating may cause this)
                 Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
-                fillText("(%d)".formatted(game.lifeCount()), Color.YELLOW, font,
+                fillTextAtScaledPosition("(%d)".formatted(game.lifeCount()), Color.YELLOW, font,
                     livesCounter.x() + TS * 10, livesCounter.y() + TS);
             }
         }
     }
 
     private void drawScore(Score score, String title, double x, double y, Font font, Color color) {
-        fillText(title, color, font, x, y);
-        fillText("%7s".formatted("%02d".formatted(score.points())), color, font, x, y + TS + 1);
+        fillTextAtScaledPosition(title, color, font, x, y);
+        fillTextAtScaledPosition("%7s".formatted("%02d".formatted(score.points())), color, font, x, y + TS + 1);
         if (score.points() != 0) {
-            fillText("L" + score.levelNumber(), color, font, x + tiles_to_px(8), y + TS + 1);
+            fillTextAtScaledPosition("L" + score.levelNumber(), color, font, x + tiles_to_px(8), y + TS + 1);
         }
     }
 

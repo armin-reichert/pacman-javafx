@@ -218,7 +218,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
             //TODO
         } else {
             String creditText = "CREDIT %2d".formatted(theCoinMechanism().numCoins());
-            gr().fillText(creditText, ARCADE_WHITE, arcadeFont8(), 2 * TS, sizeInPx().y() - 2);
+            gr().fillTextAtScaledPosition(creditText, ARCADE_WHITE, arcadeFont8(), 2 * TS, sizeInPx().y() - 2);
         }
     }
 

@@ -59,45 +59,45 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D implements ActionBi
 
     private void drawOriginalGameAuthors(Font font) {
         int y = 7 * TS;
-        gr().fillText("CREDITS FOR MS PAC-MAN", nesPaletteColor(0x20), font, 3 * TS, y);
+        gr().fillTextAtScaledPosition("CREDITS FOR MS PAC-MAN", nesPaletteColor(0x20), font, 3 * TS, y);
         y += 4 * TS;
-        gr().fillText("GAME PROGRAMMER:", nesPaletteColor(0x23), font, 4 * TS, y);
+        gr().fillTextAtScaledPosition("GAME PROGRAMMER:", nesPaletteColor(0x23), font, 4 * TS, y);
         y += 2 * TS;
-        gr().fillText("FRANZ LANZINGER", nesPaletteColor(0x23), font, 10 * TS, y);
+        gr().fillTextAtScaledPosition("FRANZ LANZINGER", nesPaletteColor(0x23), font, 10 * TS, y);
         y += 3 * TS;
-        gr().fillText("SPECIAL THANKS:", nesPaletteColor(0x23), font, 4 * TS, y);
+        gr().fillTextAtScaledPosition("SPECIAL THANKS:", nesPaletteColor(0x23), font, 4 * TS, y);
         y += 2 * TS;
-        gr().fillText("JEFF YONAN", nesPaletteColor(0x23), font, 10 * TS, y);
+        gr().fillTextAtScaledPosition("JEFF YONAN", nesPaletteColor(0x23), font, 10 * TS, y);
         y += TS;
-        gr().fillText("DAVE O'RIVA", nesPaletteColor(0x23), font, 10 * TS, y);
+        gr().fillTextAtScaledPosition("DAVE O'RIVA", nesPaletteColor(0x23), font, 10 * TS, y);
         y += 4 * TS;
-        gr().fillText("MS PAC-MAN TM NAMCO LTD", nesPaletteColor(0x19), font, 5 * TS, y);
+        gr().fillTextAtScaledPosition("MS PAC-MAN TM NAMCO LTD", nesPaletteColor(0x19), font, 5 * TS, y);
         y += TS;
-        gr().fillText("©1990 TENGEN INC", nesPaletteColor(0x19), font, 7 * TS, y);
+        gr().fillTextAtScaledPosition("©1990 TENGEN INC", nesPaletteColor(0x19), font, 7 * TS, y);
         y += TS;
-        gr().fillText("ALL RIGHTS RESERVED", nesPaletteColor(0x19), font, 6 * TS, y);
+        gr().fillTextAtScaledPosition("ALL RIGHTS RESERVED", nesPaletteColor(0x19), font, 6 * TS, y);
     }
 
     private void drawJavaFXVersionAuthors(Font font) {
         int y = 7 * TS;
-        gr().fillText("CREDITS FOR JAVAFX REMAKE", nesPaletteColor(0x20), font, 3 * TS, y);
+        gr().fillTextAtScaledPosition("CREDITS FOR JAVAFX REMAKE", nesPaletteColor(0x20), font, 3 * TS, y);
         y += 4 * TS;
-        gr().fillText("GAME PROGRAMMER:", nesPaletteColor(0x23), font, 4 * TS, y);
+        gr().fillTextAtScaledPosition("GAME PROGRAMMER:", nesPaletteColor(0x23), font, 4 * TS, y);
         y += 2 * TS;
-        gr().fillText("ARMIN REICHERT", nesPaletteColor(0x23), font, 10 * TS, y);
+        gr().fillTextAtScaledPosition("ARMIN REICHERT", nesPaletteColor(0x23), font, 10 * TS, y);
         y += 3 * TS;
-        gr().fillText("SPECIAL THANKS:", nesPaletteColor(0x23), font, 4 * TS, y);
+        gr().fillTextAtScaledPosition("SPECIAL THANKS:", nesPaletteColor(0x23), font, 4 * TS, y);
         y += 2 * TS;
-        gr().fillText("@RUSSIANMANSMWC", nesPaletteColor(0x23), font, 10 * TS, y);
+        gr().fillTextAtScaledPosition("@RUSSIANMANSMWC", nesPaletteColor(0x23), font, 10 * TS, y);
         y += TS;
-        gr().fillText("@FLICKY1211", nesPaletteColor(0x23), font, 10 * TS, y);
+        gr().fillTextAtScaledPosition("@FLICKY1211", nesPaletteColor(0x23), font, 10 * TS, y);
         y += TS;
-        gr().fillText("ANDYANA JONSEPH", nesPaletteColor(0x23), font, 10 * TS, y);
+        gr().fillTextAtScaledPosition("ANDYANA JONSEPH", nesPaletteColor(0x23), font, 10 * TS, y);
         y += 3 * TS;
-        gr().fillText("GITHUB.COM/ARMIN-REICHERT", nesPaletteColor(0x19), font, 3 * TS, y);
+        gr().fillTextAtScaledPosition("GITHUB.COM/ARMIN-REICHERT", nesPaletteColor(0x19), font, 3 * TS, y);
         y += TS;
-        gr().fillText("©2024 MIT LICENSE", nesPaletteColor(0x19), font, 6 * TS, y);
+        gr().fillTextAtScaledPosition("©2024 MIT LICENSE", nesPaletteColor(0x19), font, 6 * TS, y);
         y += TS;
-        gr().fillText("ALL RIGHTS GRANTED", nesPaletteColor(0x19), font, 5 * TS, y);
+        gr().fillTextAtScaledPosition("ALL RIGHTS GRANTED", nesPaletteColor(0x19), font, 5 * TS, y);
     }
 }
