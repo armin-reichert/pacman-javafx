@@ -51,6 +51,44 @@ public class ArcadePacMan_GameRenderer extends SpriteGameRenderer {
     }
 
     @Override
+    public void drawHUD(GameModel game) {
+        requireNonNull(game);
+
+        final HUD hud = game.hud();
+
+        Vector2f sceneSize = ARCADE_MAP_SIZE_IN_PIXELS;
+        if (optGameLevel().isPresent()) {
+            int numRows = theGameLevel().worldMap().numRows();
+            int numCols = theGameLevel().worldMap().numCols();
+            sceneSize = new Vector2f(numCols * TS, numRows * TS);
+        }
+
+        if (hud.isLevelCounterVisible()) {
+            LevelCounter levelCounter = hud.levelCounter();
+            float x = sceneSize.x() - 4 * TS, y = sceneSize.y() - 2 * TS;
+            for (byte symbol : levelCounter.symbols()) {
+                Sprite sprite = theUI().configuration().createBonusSymbolSprite(symbol);
+                drawSpriteScaled(sprite, x, y);
+                x -= TS * 2;
+            }
+        }
+
+        if (hud.isLivesCounterVisible()) {
+            LivesCounter livesCounter = hud.livesCounter();
+            Sprite sprite = theUI().configuration().createLivesCounterSprite();
+            for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
+                drawSpriteScaled(sprite, livesCounter.x() + TS * (2 * i), livesCounter.y());
+            }
+            if (game.lifeCount() > livesCounter.maxLivesDisplayed()) {
+                // show text indicating that more lives are available than symbols displayed (cheating may cause this)
+                Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
+                fillText("(%d)".formatted(game.lifeCount()), Color.YELLOW, font,
+                    livesCounter.x() + TS * 10, livesCounter.y() + TS);
+            }
+        }
+    }
+
+    @Override
     public void drawLevel(GameLevel level, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted) {
         ctx.save();
         ctx.scale(scaling(), scaling());
@@ -72,37 +110,5 @@ public class ArcadePacMan_GameRenderer extends SpriteGameRenderer {
                     .forEach(tile -> fillSquareAtTileCenter(tile, 10));
         }
         ctx.restore();
-    }
-
-    @Override
-    public void drawHUD(GameModel game) {
-        requireNonNull(game);
-
-        Vector2f sceneSize = ARCADE_MAP_SIZE_IN_PIXELS;
-        if (optGameLevel().isPresent()) {
-            int numRows = theGameLevel().worldMap().numRows();
-            int numCols = theGameLevel().worldMap().numCols();
-            sceneSize = new Vector2f(numCols * TS, numRows * TS);
-        }
-
-        LevelCounter levelCounter = game.hud().levelCounter();
-        float x = sceneSize.x() - 4 * TS, y = sceneSize.y() - 2*TS;
-        for (byte symbol : levelCounter.symbols()) {
-            Sprite sprite = theUI().configuration().createBonusSymbolSprite(symbol);
-            drawSpriteScaled(sprite, x, y);
-            x -= TS * 2;
-        }
-
-        LivesCounter livesCounter = game.hud().livesCounter();
-        Sprite sprite = theUI().configuration().createLivesCounterSprite();
-        for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
-            drawSpriteScaled(sprite, livesCounter.x() + TS * (2 * i), livesCounter.y());
-        }
-        if (game.lifeCount() > livesCounter.maxLivesDisplayed()) {
-            // show text indicating that more lives are available than symbols displayed (cheating may cause this)
-            Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
-            fillText("(%d)".formatted(game.lifeCount()), Color.YELLOW, font,
-                livesCounter.x() + TS * 10, livesCounter.y() + TS);
-        }
     }
 }

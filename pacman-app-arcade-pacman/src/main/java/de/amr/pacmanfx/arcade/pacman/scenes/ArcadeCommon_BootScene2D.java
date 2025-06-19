@@ -30,13 +30,16 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
 
     @Override
     public void doInit() {
+        theGame().setScoreVisible(false);//TODO
+        theGame().hud().hideLevelCounter();
+        theGame().hud().hideLivesCounter();
+
         SpriteSheet<?> spriteSheet = theUI().configuration().spriteSheet();
         double width = spriteSheet.sourceImage().getWidth(), height = spriteSheet.sourceImage().getHeight();
         // ignore left half of sprite sheet image containing maze images
         minPoint = Vector2f.of(width / 2, 0);
         maxPoint = Vector2f.of(width - FRAGMENT_SIZE, height - FRAGMENT_SIZE);
         theSound().playVoice("voice.explain", 0);
-        theGame().setScoreVisible(false);
     }
 
     @Override

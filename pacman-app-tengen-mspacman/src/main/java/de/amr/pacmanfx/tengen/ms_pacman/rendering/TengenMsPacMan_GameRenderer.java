@@ -101,6 +101,7 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
     @Override
     public void drawHUD(GameModel game) {
         var theGame = (TengenMsPacMan_GameModel) theGame();
+        final TengenMsPacMan_HUD hud = theGame.hud();
 
         Vector2f sceneSize = NES_SIZE.toVector2f();
         if (optGameLevel().isPresent()) {
@@ -109,31 +110,36 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
             sceneSize = new Vector2f(numCols * TS, numRows * TS);
         }
 
-        LivesCounter livesCounter = game.hud().livesCounter();
-        livesCounter.setPosition(2 * TS, sceneSize.y() - TS);
-        livesCounter.show();
-        int numLivesDisplayed = game.lifeCount() - 1;
-        // As long as Pac-Man is still hidden in the maze, he is shown as an entry in the counter
-        if (theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible()) {
-            numLivesDisplayed += 1;
-        }
-        numLivesDisplayed = Math.min(numLivesDisplayed, livesCounter.maxLivesDisplayed());
-        livesCounter.setVisibleLifeCount(numLivesDisplayed);
-        Sprite sprite = theUI().configuration().createLivesCounterSprite();
-        for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
-            drawSpriteScaled(sprite, livesCounter.x() + TS * (2 * i), livesCounter.y());
-        }
-        if (game.lifeCount() > livesCounter.maxLivesDisplayed()) {
-            // show text indicating that more lives are available than symbols displayed (cheating may cause this)
-            Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
-            fillText("(%d)".formatted(game.lifeCount()), Color.YELLOW, font,
-                livesCounter.x() + TS * 10, livesCounter.y() + TS);
+        if (hud.isLivesCounterVisible()) {
+            LivesCounter livesCounter = game.hud().livesCounter();
+            livesCounter.setPosition(2 * TS, sceneSize.y() - TS);
+            livesCounter.show();
+            int numLivesDisplayed = game.lifeCount() - 1;
+            // As long as Pac-Man is still hidden in the maze, he is shown as an entry in the counter
+            if (theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible()) {
+                numLivesDisplayed += 1;
+            }
+            numLivesDisplayed = Math.min(numLivesDisplayed, livesCounter.maxLivesDisplayed());
+            livesCounter.setVisibleLifeCount(numLivesDisplayed);
+            Sprite sprite = theUI().configuration().createLivesCounterSprite();
+            for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
+                drawSpriteScaled(sprite, livesCounter.x() + TS * (2 * i), livesCounter.y());
+            }
+            if (game.lifeCount() > livesCounter.maxLivesDisplayed()) {
+                // show text indicating that more lives are available than symbols displayed (cheating may cause this)
+                Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
+                fillText("(%d)".formatted(game.lifeCount()), Color.YELLOW, font,
+                    livesCounter.x() + TS * 10, livesCounter.y() + TS);
+            }
         }
 
-        if (theGameLevel().isDemoLevel() || theGame.mapCategory() == MapCategory.ARCADE) {
-            drawLevelCounterWithLevelNumbers(false, 0, game.hud().levelCounter(), sceneSize);
-        } else {
-            drawLevelCounterWithLevelNumbers(true, theGameLevel().number(), game.hud().levelCounter(), sceneSize);
+        if (hud.isLevelCounterVisible()) {
+            //TODO move this code
+            if (theGameLevel().isDemoLevel() || theGame.mapCategory() == MapCategory.ARCADE) {
+                drawLevelCounterWithLevelNumbers(false, 0, game.hud().levelCounter(), sceneSize);
+            } else {
+                drawLevelCounterWithLevelNumbers(true, theGameLevel().number(), game.hud().levelCounter(), sceneSize);
+            }
         }
     }
 

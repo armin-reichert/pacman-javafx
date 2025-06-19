@@ -6,6 +6,38 @@ import de.amr.pacmanfx.model.LivesCounter;
 public class TengenMsPacMan_HUD implements HUD {
     private final TengenMsPacMan_LevelCounter levelCounter = new TengenMsPacMan_LevelCounter();
     private final LivesCounter livesCounter = new LivesCounter();
+    private boolean livesCounterVisible = true;
+    private boolean levelCounterVisible = true;
+
+    @Override
+    public boolean isLevelCounterVisible() {
+        return levelCounterVisible;
+    }
+
+    @Override
+    public void showLevelCounter() {
+        levelCounterVisible = true;
+    }
+
+    @Override
+    public void hideLevelCounter() {
+        levelCounterVisible = false;
+    }
+
+    @Override
+    public boolean isLivesCounterVisible() {
+        return livesCounterVisible;
+    }
+
+    @Override
+    public void showLivesCounter() {
+        livesCounterVisible = true;
+    }
+
+    @Override
+    public void hideLivesCounter() {
+        livesCounterVisible = false;
+    }
 
     @Override
     public TengenMsPacMan_LevelCounter levelCounter() {

@@ -32,7 +32,6 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_TILES;
 import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePalette.*;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_MEDIUM;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_SHORT;
@@ -48,14 +47,20 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
 
     @Override
     protected void doInit() {
-        theGame().setScoreVisible(true);
+        theGame().setScoreVisible(true); //TODO
+        theGame().hud().hideLevelCounter();
+        theGame().hud().hideLivesCounter();
     }
 
     @Override
     public void onLevelCreated(GameEvent e) {
         if (theGameLevel().isDemoLevel()) {
+            theGame().hud().showLevelCounter();
+            theGame().hud().hideLivesCounter();
             bindAction(ACTION_ARCADE_INSERT_COIN, COMMON_ACTION_BINDINGS);
         } else {
+            theGame().hud().showLevelCounter();
+            theGame().hud().showLivesCounter();
             bindAction(ACTION_STEER_UP,               COMMON_ACTION_BINDINGS);
             bindAction(ACTION_STEER_DOWN,             COMMON_ACTION_BINDINGS);
             bindAction(ACTION_STEER_LEFT,             COMMON_ACTION_BINDINGS);
@@ -72,6 +77,8 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
     public void onSwitch_3D_2D(GameScene scene3D) {
         Logger.info("2D scene {} entered from 3D scene {}", this, scene3D);
         if (optGameLevel().isPresent() && !theGameLevel().isDemoLevel()) {
+            theGame().hud().showLevelCounter();
+            theGame().hud().hideLivesCounter();
             bindAction(ACTION_STEER_UP, COMMON_ACTION_BINDINGS);
             bindAction(ACTION_STEER_DOWN, COMMON_ACTION_BINDINGS);
             bindAction(ACTION_STEER_LEFT, COMMON_ACTION_BINDINGS);
@@ -208,9 +215,6 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
         livesCounter.setPosition(2 * TS, sizeInPx().y() - 2 * TS);
         livesCounter.show();
 
-        // Position of level counter depends on map size, so set it every time for simplicity
-//        hud.levelCounter().setPosition(sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
-//        hud.levelCounter().show();
         if (theGame().canStartNewGame()) {
             //TODO
         } else {
