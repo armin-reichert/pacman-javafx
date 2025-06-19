@@ -164,9 +164,12 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
 
     @Override
     public void doInit() {
+        theGame().setScoreVisible(true); //TODO
+        theGame().hud().showLevelCounter();
+        theGame().hud().showLivesCounter();
+
         TengenMsPacMan_UIConfig config = (TengenMsPacMan_UIConfig) theUI().configuration();
         setGameRenderer(config.createRenderer(canvas()));
-        theGame().setScoreVisible(true);
         dynamicCamera.moveTop();
         messageMovement = new MessageMovement();
     }
@@ -228,6 +231,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
 
     @Override
     public void onLevelCreated(GameEvent e) {
+        theGame().hud().showLevelCounter();
+        theGame().hud().showLivesCounter(); // is also visible in demo level!
+
         bindActionsToKeys();
         TengenMsPacMan_UIConfig config = (TengenMsPacMan_UIConfig) theUI().configuration();
         setGameRenderer(config.createRenderer(canvas()));
@@ -236,6 +242,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
 
     @Override
     public void onSwitch_3D_2D(GameScene scene3D) {
+        theGame().hud().showLevelCounter();
+        theGame().hud().showLivesCounter(); // is also visible in demo level!
+
         bindActionsToKeys();
         TengenMsPacMan_UIConfig config = (TengenMsPacMan_UIConfig) theUI().configuration();
         setGameRenderer(config.createRenderer(canvas()));
@@ -390,6 +399,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
             canvas.setClip(canvasClipRect);
             drawSceneContent();
         }
+        gr().drawHUD(theGame());
         ctx().restore();
     }
 
