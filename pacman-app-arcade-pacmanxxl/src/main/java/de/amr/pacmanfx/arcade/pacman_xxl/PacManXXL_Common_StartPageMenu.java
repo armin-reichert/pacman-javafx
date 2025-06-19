@@ -22,7 +22,8 @@ import javafx.scene.input.KeyEvent;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.*;
+import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createGhost;
+import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createPac;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static de.amr.pacmanfx.ui.PacManGames.theAssets;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;

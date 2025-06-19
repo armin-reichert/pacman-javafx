@@ -11,9 +11,11 @@ import de.amr.pacmanfx.ui.ActionBindingSupport;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.Globals.theGame;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePalette.*;
+import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePalette.ARCADE_ORANGE;
+import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePalette.ARCADE_RED;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.ui.PacManGames.theSound;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;

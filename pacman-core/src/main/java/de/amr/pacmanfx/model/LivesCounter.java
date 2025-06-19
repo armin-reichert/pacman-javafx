@@ -5,9 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.model;
 
 import de.amr.pacmanfx.model.actors.Actor;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import org.tinylog.Logger;
 
 public class LivesCounter extends Actor {
 

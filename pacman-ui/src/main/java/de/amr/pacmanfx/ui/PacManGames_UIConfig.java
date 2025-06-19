@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.controller.GameState;
-import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.ActorAnimationMap;
@@ -32,8 +31,6 @@ public interface PacManGames_UIConfig {
     Image createGhostNumberImage(int ghostIndex);
     Image createBonusSymbolImage(byte symbol);
     Image createBonusValueImage(byte symbol);
-    //Sprite createBonusSymbolSprite(byte symbol);
-    //Sprite createBonusValueSprite(byte symbol);
     GameScene2D createPiPScene(Canvas canvas);
     GameRenderer createRenderer(Canvas canvas);
     Stream<GameScene> gameScenes();

@@ -5,7 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui._2d;
 
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.model.*;
+import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Actor;
 import javafx.beans.property.FloatProperty;
 import javafx.scene.canvas.GraphicsContext;

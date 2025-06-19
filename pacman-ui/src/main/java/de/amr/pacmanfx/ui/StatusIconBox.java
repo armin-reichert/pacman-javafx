@@ -14,7 +14,7 @@ import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.ui.PacManGames.*;
+import static de.amr.pacmanfx.ui.PacManGames.theSound;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 
 public class StatusIconBox extends HBox {
