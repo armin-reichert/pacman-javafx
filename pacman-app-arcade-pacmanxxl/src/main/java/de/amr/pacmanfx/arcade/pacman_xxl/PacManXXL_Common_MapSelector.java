@@ -41,9 +41,9 @@ public class PacManXXL_Common_MapSelector implements MapSelector {
 
     public PacManXXL_Common_MapSelector(File customMapDir) {
         this.customMapDir = requireNonNull(customMapDir);
-        goodBoy = new DirectoryWatchdog(customMapDir);
         mapSelectionMode = MapSelectionMode.CUSTOM_MAPS_FIRST;
         customMapsUpToDate = false;
+        goodBoy = new DirectoryWatchdog(customMapDir);
         goodBoy.setEventConsumer(eventList -> {
             Logger.info("Custom map change(s) detected: {}",
                 eventList.stream()
