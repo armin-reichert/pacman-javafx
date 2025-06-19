@@ -56,9 +56,11 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void doInit() {
-        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
-
         theGame().setScoreVisible(true);
+        theGame().hud().showLevelCounter();
+        theGame().hud().hideLivesCounter();
+
+        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
 
         pacMan = createPacMan();
         msPacMan = createMsPacMan();

@@ -14,10 +14,10 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.media.MediaPlayer;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createMsPacMan;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createPacMan;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_PacAnimationMap.PAC_MAN_MUNCHING;
+import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.ui.PacManGames.theSound;
@@ -48,8 +48,11 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void doInit() {
-        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
         theGame().setScoreVisible(true);
+        theGame().hud().showLevelCounter();
+        theGame().hud().hideLivesCounter();
+
+        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
 
         pacMan = createPacMan();
         msPacMan = createMsPacMan();

@@ -39,7 +39,9 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
     @Override
     public void doInit() {
         theGame().setScoreVisible(true);
-        //theGame().levelCounter().setPosition(sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
+        theGame().hud().showLevelCounter();
+        theGame().hud().hideLivesCounter();
+
         pac = createPac();
         blinky = createGhost(RED_GHOST_SHADOW);
         music = theSound().createSound("intermission", 2);

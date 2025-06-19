@@ -48,8 +48,8 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
     @Override
     protected void doInit() {
         theGame().setScoreVisible(true); //TODO
-        theGame().hud().hideLevelCounter();
-        theGame().hud().hideLivesCounter();
+        theGame().hud().showLevelCounter();
+        theGame().hud().showLivesCounter();
     }
 
     @Override
