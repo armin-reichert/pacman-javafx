@@ -65,10 +65,11 @@ public class WorldMap {
     }
 
     public static WorldMap fromURL(URL url) throws IOException {
-        var reader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
-        WorldMap worldMap = WorldMapParser.parse(reader.lines(), WorldMap::isValidTerrainValue, WorldMap::isValidFoodValue);
-        worldMap.url = url.toExternalForm();
-        return worldMap;
+        try (var reader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
+            WorldMap worldMap = WorldMapParser.parse(reader.lines(), WorldMap::isValidTerrainValue, WorldMap::isValidFoodValue);
+            worldMap.url = url.toExternalForm();
+            return worldMap;
+        }
     }
 
     public static WorldMap fromFile(File file) throws IOException {
