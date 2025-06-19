@@ -77,7 +77,7 @@ public class ArcadeMsPacMan_GameRenderer extends SpriteGameRenderer {
 
         if (hud.isScoreVisible()) {
             Color scoreColor = theAssets().color(theUI().configuration().assetNamespace() + ".color.score");
-            Font scoreFont = theAssets().arcadeFont(8);
+            Font scoreFont = theAssets().arcadeFont(scaled(8)); //TODO
             drawScore(game.score(), "SCORE", tiles_to_px(1), tiles_to_px(1), scoreFont, scoreColor);
             drawScore(game.highScore(), "HIGH SCORE", tiles_to_px(14), tiles_to_px(1), scoreFont, scoreColor);
         }
@@ -104,6 +104,11 @@ public class ArcadeMsPacMan_GameRenderer extends SpriteGameRenderer {
                 fillTextAtScaledPosition("(%d)".formatted(game.lifeCount()), Color.YELLOW, font,
                     livesCounter.x() + TS * 10, livesCounter.y() + TS);
             }
+        }
+
+        if (hud.isCreditVisible()) {
+            String coinsText = "CREDIT %2d".formatted(theCoinMechanism().numCoins());
+            fillTextAtScaledPosition(coinsText, ARCADE_WHITE, theAssets().arcadeFont(scaled(8)), 2 * TS, sceneSize.y() - 2);
         }
     }
 

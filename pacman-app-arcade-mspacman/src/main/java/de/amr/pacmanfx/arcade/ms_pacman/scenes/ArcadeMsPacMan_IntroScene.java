@@ -69,6 +69,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
 
     @Override
     public void doInit() {
+        theGame().hud().showCredit(true);
         theGame().hud().showScore(true);
         theGame().hud().showLevelCounter(true);
         theGame().hud().showLivesCounter(false);
@@ -148,9 +149,6 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
             }
         }
         gr().drawActor(copyright);
-
-        //TODO move to HUD
-        gr().fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()), ARCADE_WHITE, arcadeFont8(), 2 * TS, sizeInPx().y() - 2);
     }
 
     // Scene controller FSM

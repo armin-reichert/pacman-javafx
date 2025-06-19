@@ -19,6 +19,7 @@ import javafx.scene.text.FontWeight;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Globals.theGameLevel;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
+import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePalette.ARCADE_WHITE;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.ui.PacManGames.theAssets;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
@@ -67,7 +68,7 @@ public class ArcadePacMan_GameRenderer extends SpriteGameRenderer {
 
         if (hud.isScoreVisible()) {
             Color scoreColor = theAssets().color(theUI().configuration().assetNamespace() + ".color.score");
-            Font scoreFont = theAssets().arcadeFont(8);
+            Font scoreFont = theAssets().arcadeFont(scaled(8)); //TODO
             drawScore(game.score(), "SCORE", tiles_to_px(1), tiles_to_px(1), scoreFont, scoreColor);
             drawScore(game.highScore(), "HIGH SCORE", tiles_to_px(14), tiles_to_px(1), scoreFont, scoreColor);
         }
@@ -94,6 +95,11 @@ public class ArcadePacMan_GameRenderer extends SpriteGameRenderer {
                 fillTextAtScaledPosition("(%d)".formatted(game.lifeCount()), Color.YELLOW, font,
                     livesCounter.x() + TS * 10, livesCounter.y() + TS);
             }
+        }
+
+        if (hud.isCreditVisible()) {
+            String coinsText = "CREDIT %2d".formatted(theCoinMechanism().numCoins());
+            fillTextAtScaledPosition(coinsText, ARCADE_WHITE, theAssets().arcadeFont(scaled(8)), 2 * TS, sceneSize.y() - 2);
         }
     }
 

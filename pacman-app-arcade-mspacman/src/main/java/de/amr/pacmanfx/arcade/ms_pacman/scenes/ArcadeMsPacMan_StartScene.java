@@ -25,6 +25,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D implements ActionBind
 
     @Override
     public void doInit() {
+        theGame().hud().showCredit(true);
         theGame().hud().showScore(true);
         theGame().hud().showLevelCounter(true);
         theGame().hud().showLivesCounter(false);
@@ -62,7 +63,5 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D implements ActionBind
         gr().drawSpriteScaled(spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL), tiles_to_px(13), tiles_to_px(23) + 1);
         gr().fillTextAtScaledTilePosition("PTS", ARCADE_ORANGE, arcadeFont6(), 25, 25);
         gr().drawActor(copyright);
-        gr().fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
-                ARCADE_WHITE, arcadeFont8(), tiles_to_px(2), sizeInPx().y() - 2);
     }
 }

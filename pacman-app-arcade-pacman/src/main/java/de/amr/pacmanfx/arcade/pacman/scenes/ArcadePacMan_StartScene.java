@@ -22,6 +22,7 @@ public class ArcadePacMan_StartScene extends GameScene2D implements ActionBindin
 
     @Override
     public void doInit() {
+        theGame().hud().showCredit(true);
         theGame().hud().showScore(true);
         theGame().hud().showLevelCounter(true);
         theGame().hud().showLivesCounter(false);
@@ -49,7 +50,5 @@ public class ArcadePacMan_StartScene extends GameScene2D implements ActionBindin
         gr().fillTextAtScaledTilePosition("BONUS PAC-MAN FOR 10000", ARCADE_ROSE, arcadeFont8(), 1, 25);
         gr().fillTextAtScaledTilePosition("PTS", ARCADE_ROSE, arcadeFont6(), 25, 25);
         gr().fillTextAtScaledTilePosition("© 1980 MIDWAY MFG.CO.", ARCADE_PINK, arcadeFont8(), 4, 29);
-        gr().fillTextAtScaledPosition("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
-                ARCADE_WHITE, arcadeFont8(), 2 * TS, sizeInPx().y() - 2);
     }
 }

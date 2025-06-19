@@ -10,6 +10,7 @@ public class ArcadeMsPacMan_HUD implements HUD {
     private final ArcadePacMan_LevelCounter levelCounter = new ArcadePacMan_LevelCounter();
 
     private boolean visible = true;
+    private boolean creditVisible;
     private boolean livesCounterVisible = true;
     private boolean levelCounterVisible = true;
     private boolean scoreVisible = true;
@@ -19,6 +20,11 @@ public class ArcadeMsPacMan_HUD implements HUD {
 
     @Override
     public boolean isVisible() { return visible; }
+
+    @Override
+    public boolean isCreditVisible() { return creditVisible; }
+
+    public void showCredit(boolean b) { creditVisible = b; }
 
     @Override
     public boolean isLevelCounterVisible() {

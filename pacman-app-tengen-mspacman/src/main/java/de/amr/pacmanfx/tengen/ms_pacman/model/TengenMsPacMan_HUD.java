@@ -19,6 +19,11 @@ public class TengenMsPacMan_HUD implements HUD {
     public boolean isVisible() { return visible; }
 
     @Override
+    public boolean isCreditVisible() { return false; }
+
+    public void showCredit(boolean b) { /* not needed */ }
+
+    @Override
     public boolean isLevelCounterVisible() {
         return levelCounterVisible;
     }

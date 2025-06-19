@@ -21,5 +21,6 @@ public interface HUD {
     boolean isScoreVisible();
     void showScore(boolean b);
 
-    //boolean isCreditVisible();
+    boolean isCreditVisible();
+    void showCredit(boolean b);
 }
