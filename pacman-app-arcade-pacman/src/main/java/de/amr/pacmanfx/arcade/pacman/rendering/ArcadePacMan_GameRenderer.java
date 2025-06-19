@@ -91,10 +91,12 @@ public class ArcadePacMan_GameRenderer extends SpriteGameRenderer {
     }
 
     private void drawScore(Score score, String title, double x, double y, Font font, Color color) {
-        fillTextAtScaledPosition(title, color, font, x, y);
-        fillTextAtScaledPosition("%7s".formatted("%02d".formatted(score.points())), color, font, x, y + TS + 1);
+        ctx.setFont(font);
+        ctx.setFill(color);
+        fillTextAtScaledPosition(title, x, y);
+        fillTextAtScaledPosition("%7s".formatted("%02d".formatted(score.points())), x, y + TS + 1);
         if (score.points() != 0) {
-            fillTextAtScaledPosition("L" + score.levelNumber(), color, font, x + tiles_to_px(8), y + TS + 1);
+            fillTextAtScaledPosition("L" + score.levelNumber(), x + tiles_to_px(8), y + TS + 1);
         }
     }
 

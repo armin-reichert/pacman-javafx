@@ -128,7 +128,8 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
 
     @Override
     public void drawSceneContent() {
-        gr().fillTextAtScaledPosition(TITLE, ARCADE_ORANGE, arcadeFont8(), TITLE_X, TITLE_Y);
+        ctx().setFont(arcadeFont8());
+        gr().fillTextAtScaledPosition(TITLE, ARCADE_ORANGE, TITLE_X, TITLE_Y);
         gr().drawActor(marquee);
         for (Ghost ghost : ghosts) { gr().drawActor(ghost); }
         gr().drawActor(msPacMan);
@@ -137,15 +138,15 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
                 String ghostName = GHOST_NAMES[presentedGhostCharacter];
                 Color ghostColor = GHOST_COLORS[presentedGhostCharacter];
                 if (presentedGhostCharacter == RED_GHOST_SHADOW) {
-                    gr().fillTextAtScaledPosition("WITH", ARCADE_WHITE, arcadeFont8(), TITLE_X, TOP_Y + tiles_to_px(3));
+                    gr().fillTextAtScaledPosition("WITH", ARCADE_WHITE, TITLE_X, TOP_Y + tiles_to_px(3));
                 }
                 double x = TITLE_X + (ghostName.length() < 4 ? tiles_to_px(4) : tiles_to_px(3));
                 double y = TOP_Y + tiles_to_px(6);
-                gr().fillTextAtScaledPosition(ghostName, ghostColor, arcadeFont8(), x, y);
+                gr().fillTextAtScaledPosition(ghostName, ghostColor, x, y);
             }
             case MS_PACMAN_MARCHING_IN, READY_TO_PLAY -> {
-                gr().fillTextAtScaledPosition("STARRING", ARCADE_WHITE, arcadeFont8(), TITLE_X, TOP_Y + tiles_to_px(3));
-                gr().fillTextAtScaledPosition("MS PAC-MAN", ARCADE_YELLOW, arcadeFont8(), TITLE_X, TOP_Y + tiles_to_px(6));
+                gr().fillTextAtScaledPosition("STARRING", ARCADE_WHITE, TITLE_X, TOP_Y + tiles_to_px(3));
+                gr().fillTextAtScaledPosition("MS PAC-MAN", ARCADE_YELLOW, TITLE_X, TOP_Y + tiles_to_px(6));
             }
         }
         gr().drawActor(copyright);
