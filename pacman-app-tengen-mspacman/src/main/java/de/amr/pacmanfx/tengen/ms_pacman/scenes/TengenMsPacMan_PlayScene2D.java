@@ -409,12 +409,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
 
     @Override
     protected void drawSceneContent() {
-        // NES screen is 32 tiles wide but mazes are only 28 tiles wide
-        final double indent = scaled(2 * TS);
-        final boolean flashing = levelFlashingAnimation != null && levelFlashingAnimation.isRunning();
-
         ctx().save();
-        ctx().translate(indent, 0);
+        centerOnScreen();
+
+        final boolean flashing = levelFlashingAnimation != null && levelFlashingAnimation.isRunning();
         if (flashing) {
             if (levelFlashingAnimation.isHighlighted()) {
                 gr().drawHighlightedLevel(theGameLevel(), levelFlashingAnimation.flashingIndex());
@@ -445,9 +443,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
         ctx().save();
         gr().drawTileGrid(UNSCALED_CANVAS_WIDTH, UNSCALED_CANVAS_HEIGHT, Color.LIGHTGRAY);
         if (optGameLevel().isPresent()) {
-            // NES screen width is 32 tiles but mazes are only 28 tiles wide
-            double margin = scaled((NES_TILES.x() - theGameLevel().worldMap().numCols()) * HTS);
-            ctx().translate(margin, 0);
+            centerOnScreen();
             ctx().setFill(DEBUG_TEXT_FILL);
             ctx().setFont(DEBUG_TEXT_FONT);
             ctx().fillText("%s %d".formatted(theGameState(), theGameState().timer().tickCount()), 0, scaled(3 * TS));
@@ -455,6 +451,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
             ghostsByZ().forEach(gr()::drawMovingActorInfo);
         }
         ctx().restore();
+    }
+
+    // NES screen is 32 tiles wide but mazes are only 28 tiles wide, so indent by 2 tiles to center on available width
+    private void centerOnScreen() {
+        ctx().translate(scaled(2 * TS), 0);
     }
 
     private Stream<Ghost> ghostsByZ() {
