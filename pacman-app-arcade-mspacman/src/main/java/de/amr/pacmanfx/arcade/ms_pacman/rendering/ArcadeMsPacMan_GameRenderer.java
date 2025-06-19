@@ -24,6 +24,7 @@ import javafx.scene.text.FontWeight;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePalette.ARCADE_WHITE;
+import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.ui.PacManGames.theAssets;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
 import static java.util.Objects.requireNonNull;
@@ -74,6 +75,13 @@ public class ArcadeMsPacMan_GameRenderer extends SpriteGameRenderer {
             sceneSize = new Vector2f(numCols * TS, numRows * TS);
         }
 
+        if (hud.isScoreVisible()) {
+            Color scoreColor = theAssets().color(theUI().configuration().assetNamespace() + ".color.score");
+            Font scoreFont = theAssets().arcadeFont(8);
+            drawScore(game.score(), "SCORE", tiles_to_px(1), tiles_to_px(1), scoreFont, scoreColor);
+            drawScore(game.highScore(), "HIGH SCORE", tiles_to_px(14), tiles_to_px(1), scoreFont, scoreColor);
+        }
+
         if (hud.isLevelCounterVisible()) {
             LevelCounter levelCounter = hud.levelCounter();
             float x = sceneSize.x() - 4 * TS, y = sceneSize.y() - 2 * TS;
@@ -96,6 +104,14 @@ public class ArcadeMsPacMan_GameRenderer extends SpriteGameRenderer {
                 fillText("(%d)".formatted(game.lifeCount()), Color.YELLOW, font,
                     livesCounter.x() + TS * 10, livesCounter.y() + TS);
             }
+        }
+    }
+
+    private void drawScore(Score score, String title, double x, double y, Font font, Color color) {
+        fillText(title, color, font, x, y);
+        fillText("%7s".formatted("%02d".formatted(score.points())), color, font, x, y + TS + 1);
+        if (score.points() != 0) {
+            fillText("L" + score.levelNumber(), color, font, x + tiles_to_px(8), y + TS + 1);
         }
     }
 

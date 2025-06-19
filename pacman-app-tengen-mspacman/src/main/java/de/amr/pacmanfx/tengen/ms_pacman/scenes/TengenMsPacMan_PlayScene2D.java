@@ -164,7 +164,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
 
     @Override
     public void doInit() {
-        theGame().setScoreVisible(true); //TODO
+        theGame().hud().showScore();
         theGame().hud().showLevelCounter();
         theGame().hud().showLivesCounter();
 
@@ -386,10 +386,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
         }
         gr().setScaling(scaling());
 
-        if (theGame().isScoreVisible()) {
-            gr().drawScores(theGame(), scoreColor(), arcadeFont8());
-        }
-
         ctx().save();
         if (debugInfoVisiblePy.get()) {
             canvas.setClip(null);
@@ -401,9 +397,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
         }
         ctx().restore();
 
-        ctx().save();
         // NES screen is 32 tiles wide but mazes are only 28 tiles wide
         final double indent = scaled(2 * TS);
+        ctx().save();
         ctx().translate(indent, 0);
         gr().drawHUD(theGame());
         ctx().restore();

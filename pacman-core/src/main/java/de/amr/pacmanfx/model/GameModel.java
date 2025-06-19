@@ -43,9 +43,7 @@ public abstract class GameModel implements ScoreManager {
     private final Score highScore = new Score();
     private File highScoreFile;
     private List<Integer> extraLifeScores = List.of();
-    private boolean scoreVisible;
     private int initialLifeCount;
-
 
     protected GameModel() {
         score.pointsProperty().addListener((py, ov, nv) -> onScoreChanged(this, ov.intValue(), nv.intValue()));
@@ -278,14 +276,6 @@ public abstract class GameModel implements ScoreManager {
     @Override
     public void setExtraLifeScores(Integer... scores) {
         extraLifeScores = Arrays.stream(scores).toList();
-    }
-
-    @Override
-    public boolean isScoreVisible() { return scoreVisible; }
-
-    @Override
-    public void setScoreVisible(boolean visible) {
-        scoreVisible = visible;
     }
 
     @Override

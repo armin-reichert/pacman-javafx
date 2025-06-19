@@ -13,13 +13,18 @@ import javafx.scene.text.Font;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 
+/**
+ * Gives credit to the people that helped in making the game, original and remake authors.
+ */
 public class TengenMsPacMan_CreditsScene extends GameScene2D implements ActionBindingSupport {
 
     static final float DISPLAY_SECONDS = 12;
 
     @Override
     protected void doInit() {
-        theGame().setScoreVisible(false);
+        theGame().hud().hideScore();
+        theGame().hud().hideLevelCounter();
+        theGame().hud().hideLivesCounter();
         bindAction(ACTION_START_GAME, TENGEN_ACTION_BINDINGS);
     }
 

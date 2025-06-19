@@ -49,8 +49,10 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     @Override
     public void doInit() {
         t = -1;
-        theGame().setScoreVisible(false);
-        //theGame().levelCounter().setPosition(sizeInPx().minus(6 * TS, 3 * TS));
+
+        theGame().hud().hideScore();
+        theGame().hud().showLevelCounter();
+        theGame().hud().hideLivesCounter();
 
         bindActionToKeyCombination(ACTION_LET_GAME_STATE_EXPIRE, theJoypad().key(JoypadButton.START));
         music = theSound().createSound("intermission.2");

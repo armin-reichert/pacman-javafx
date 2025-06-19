@@ -45,8 +45,10 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     @Override
     protected void doInit() {
         t = -1;
-        theGame().setScoreVisible(false);
-        //theGame().levelCounter().setPosition(sizeInPx().minus(6 * TS, 3 * TS));
+
+        theGame().hud().hideScore();
+        theGame().hud().showLevelCounter();
+        theGame().hud().hideLivesCounter();
 
         var spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
         clapperboard = new Clapperboard(spriteSheet, 4, "THE END");

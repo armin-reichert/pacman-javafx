@@ -11,7 +11,10 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
-import de.amr.pacmanfx.model.*;
+import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.model.LevelCounter;
+import de.amr.pacmanfx.model.LivesCounter;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -112,6 +115,12 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
             sceneSize = new Vector2f(numCols * TS, numRows * TS);
         }
 
+        if (hud.isScoreVisible()) {
+            Color scoreColor = theAssets().color(theUI().configuration().assetNamespace() + ".color.score");
+            Font scoreFont = theAssets().arcadeFont(8);
+            drawScores(theGame, scoreColor, scoreFont);
+        }
+
         if (hud.isLivesCounterVisible()) {
             LivesCounter livesCounter = hud.livesCounter();
             livesCounter.setPosition(2 * TS, sceneSize.y() - TS);
@@ -134,13 +143,29 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
         }
 
         if (hud.isLevelCounterVisible()) {
-            //TODO move this code
-            if (theGameLevel().isDemoLevel() || theGame.mapCategory() == MapCategory.ARCADE) {
+            //TODO move this code elsewhere
+            if (theGame.mapCategory() == MapCategory.ARCADE
+                || optGameLevel().isPresent() && theGameLevel().isDemoLevel())
+            {
                 drawLevelCounterWithLevelNumbers(false, 0, game.hud().levelCounter(), sceneSize);
             } else {
                 drawLevelCounterWithLevelNumbers(true, theGameLevel().number(), game.hud().levelCounter(), sceneSize);
             }
         }
+    }
+
+    private void drawScores(GameModel game, Color color, Font font) {
+        ctx.save();
+        ctx.scale(scaling(), scaling());
+        ctx.setFill(color);
+        ctx.setFont(font);
+        if (theClock().tickCount() % 60 < 30) {
+            ctx.fillText("1UP", tiles_to_px(4), tiles_to_px(1));
+        }
+        ctx.fillText("HIGH SCORE", tiles_to_px(11), tiles_to_px(1));
+        ctx.fillText("%6d".formatted(game.score().points()), tiles_to_px(2), tiles_to_px(2));
+        ctx.fillText("%6d".formatted(game.highScore().points()), tiles_to_px(13), tiles_to_px(2));
+        ctx.restore();
     }
 
     @Override
@@ -385,21 +410,6 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
         drawSpriteScaledCenteredAt(difficultySprite, centerX, y);
         if (requireNonNull(booster) != PacBooster.OFF) {
             drawSpriteScaledCenteredAt(spriteSheet.sprite(SpriteID.INFO_BOOSTER), centerX - tiles_to_px(6), y);
-        }
-    }
-
-    @Override
-    public void drawScores(ScoreManager scoreManager, Color color, Font font) {
-        requireNonNull(scoreManager);
-        requireNonNull(color);
-        requireNonNull(font);
-        if (scoreManager.isScoreVisible()) {
-            if (theClock().tickCount() % 60 < 30) {
-                fillText("1UP", color, font, tiles_to_px(4), tiles_to_px(1));
-            }
-            fillText("HIGH SCORE", color, font, tiles_to_px(11), tiles_to_px(1));
-            fillText("%6d".formatted(scoreManager.score().points()), color, font, tiles_to_px(2), tiles_to_px(2));
-            fillText("%6d".formatted(scoreManager.highScore().points()), color, font, tiles_to_px(13), tiles_to_px(2));
         }
     }
 

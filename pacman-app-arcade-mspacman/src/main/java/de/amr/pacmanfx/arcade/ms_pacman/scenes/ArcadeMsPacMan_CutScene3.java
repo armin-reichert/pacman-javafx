@@ -48,7 +48,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void doInit() {
-        theGame().setScoreVisible(true);
+        theGame().hud().showScore();
         theGame().hud().showLevelCounter();
         theGame().hud().hideLivesCounter();
 

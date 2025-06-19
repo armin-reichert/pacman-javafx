@@ -82,21 +82,6 @@ public interface GameRenderer {
      */
     void drawActor(Actor actor);
 
-    default void drawScores(ScoreManager scoreManager, Color color, Font font) {
-        if (scoreManager.isScoreVisible()) {
-            drawScore(scoreManager.score(), "SCORE", tiles_to_px(1), tiles_to_px(1), font, color);
-            drawScore(scoreManager.highScore(), "HIGH SCORE", tiles_to_px(14), tiles_to_px(1), font, color);
-        }
-    }
-
-    default void drawScore(Score score, String title, double x, double y, Font font, Color color) {
-        fillText(title, color, font, x, y);
-        fillText("%7s".formatted("%02d".formatted(score.points())), color, font, x, y + TS + 1);
-        if (score.points() != 0) {
-            fillText("L" + score.levelNumber(), color, font, x + tiles_to_px(8), y + TS + 1);
-        }
-    }
-
     /**
      * Draws text at the given tile position (scaled by the current scaling value).
      *

@@ -69,7 +69,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D implements ActionBindin
 
     @Override
     public void doInit() {
-        theGame().setScoreVisible(true); //TODO
+        theGame().hud().showScore();
         theGame().hud().hideLivesCounter();
         theGame().hud().showLevelCounter();
 
@@ -135,7 +135,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D implements ActionBindin
 
         //TODO move to HUD
         String coinsText = "CREDIT %2d".formatted(theCoinMechanism().numCoins());
-        gr().fillText(coinsText, scoreColor(), arcadeFont8(), 2 * TS, sizeInPx().y() - 2);
+        gr().fillText(coinsText, ARCADE_WHITE, arcadeFont8(), 2 * TS, sizeInPx().y() - 2);
     }
 
     private void drawGallery() {

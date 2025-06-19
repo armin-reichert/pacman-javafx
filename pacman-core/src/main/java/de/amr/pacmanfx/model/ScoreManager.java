@@ -15,8 +15,6 @@ public interface ScoreManager {
     void saveHighScore();
     void updateHighScore();
     void setScoreLevelNumber(int levelNumber);
-    boolean isScoreVisible();
-    void setScoreVisible(boolean visible);
     void onScoreChanged(GameModel game, int oldScore, int newScore);
     void setHighScoreFile(File file);
     void setExtraLifeScores(Integer... scores);

@@ -89,11 +89,6 @@ public abstract class GameScene2D implements GameScene {
     public Color backgroundColor() { return backgroundColorPy.get(); }
     public void setBackgroundColor(Color color) { backgroundColorPy.set(color); }
 
-    /**
-     * @return color used for drawing scores and credit info
-     */
-    public Color scoreColor() { return theAssets().color(theUI().configuration().assetNamespace() + ".color.score"); }
-
     public SpriteGameRenderer gr() { return gameRenderer; }
     public void setGameRenderer(SpriteGameRenderer renderer) { gameRenderer = requireNonNull(renderer); }
     public GraphicsContext ctx() { return gameRenderer.ctx(); }
@@ -117,9 +112,6 @@ public abstract class GameScene2D implements GameScene {
     public void draw() {
         gameRenderer.fillCanvas(backgroundColor());
         gameRenderer.setScaling(scaling());
-        if (theGame().isScoreVisible()) {
-            gameRenderer.drawScores(theGame(), scoreColor(), arcadeFont8());
-        }
         drawSceneContent();
         if (debugInfoVisiblePy.get()) {
             drawDebugInfo();

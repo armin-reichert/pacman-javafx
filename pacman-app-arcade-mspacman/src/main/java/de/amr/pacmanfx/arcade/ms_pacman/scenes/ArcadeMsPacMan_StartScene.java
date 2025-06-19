@@ -13,8 +13,7 @@ import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePalette.ARCADE_ORANGE;
-import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePalette.ARCADE_RED;
+import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePalette.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.ui.PacManGames.theSound;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
@@ -26,12 +25,16 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D implements ActionBind
 
     @Override
     public void doInit() {
+        theGame().hud().showScore();
+        theGame().hud().showLevelCounter();
+        theGame().hud().hideLivesCounter();
+
         copyright = new MidwayCopyright();
         copyright.setPosition(TS * 6, TS * 28);
         copyright.setColor(ARCADE_RED);
         copyright.setFont(arcadeFont8());
         copyright.show();
-        theGame().setScoreVisible(true);
+
         bindAction(ACTION_ARCADE_INSERT_COIN, COMMON_ACTION_BINDINGS);
         bindAction(ACTION_ARCADE_START_GAME, COMMON_ACTION_BINDINGS);
     }
@@ -60,6 +63,6 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D implements ActionBind
         gr().fillTextAtTile("PTS", ARCADE_ORANGE, arcadeFont6(), 25, 25);
         gr().drawActor(copyright);
         gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
-                scoreColor(), arcadeFont8(), tiles_to_px(2), sizeInPx().y() - 2);
+                ARCADE_WHITE, arcadeFont8(), tiles_to_px(2), sizeInPx().y() - 2);
     }
 }

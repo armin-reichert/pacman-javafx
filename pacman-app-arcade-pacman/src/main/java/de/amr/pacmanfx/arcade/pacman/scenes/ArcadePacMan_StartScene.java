@@ -22,8 +22,9 @@ public class ArcadePacMan_StartScene extends GameScene2D implements ActionBindin
 
     @Override
     public void doInit() {
-        theGame().setScoreVisible(true);
-        //theGame().levelCounter().setPosition(sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
+        theGame().hud().showScore();
+        theGame().hud().showLevelCounter();
+        theGame().hud().hideLivesCounter();
         bindAction(ACTION_ARCADE_INSERT_COIN, COMMON_ACTION_BINDINGS);
         bindAction(ACTION_ARCADE_START_GAME,  COMMON_ACTION_BINDINGS);
     }
@@ -49,6 +50,6 @@ public class ArcadePacMan_StartScene extends GameScene2D implements ActionBindin
         gr().fillTextAtTile("PTS", ARCADE_ROSE, arcadeFont6(), 25, 25);
         gr().fillTextAtTile("© 1980 MIDWAY MFG.CO.", ARCADE_PINK, arcadeFont8(), 4, 29);
         gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
-                scoreColor(), arcadeFont8(), 2 * TS, sizeInPx().y() - 2);
+                ARCADE_WHITE, arcadeFont8(), 2 * TS, sizeInPx().y() - 2);
     }
 }

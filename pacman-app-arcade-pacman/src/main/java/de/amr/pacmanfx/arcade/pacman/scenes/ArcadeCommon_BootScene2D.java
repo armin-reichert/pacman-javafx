@@ -30,7 +30,7 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
 
     @Override
     public void doInit() {
-        theGame().setScoreVisible(false);//TODO
+        theGame().hud().hideScore();
         theGame().hud().hideLevelCounter();
         theGame().hud().hideLivesCounter();
 

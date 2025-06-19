@@ -75,9 +75,10 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D implements ActionBi
 
     @Override
     public void doInit() {
-        spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
 
-        theGame().setScoreVisible(false);
+        theGame().hud().hideScore();
+        theGame().hud().hideLevelCounter();
+        theGame().hud().hideLivesCounter();
 
         bindAction(ACTION_START_PLAYING, TENGEN_ACTION_BINDINGS);
         bindAction(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, TENGEN_ACTION_BINDINGS);
@@ -86,6 +87,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D implements ActionBi
         bindAction(ACTION_TEST_LEVELS_TEASERS, COMMON_ACTION_BINDINGS);
         bindActionToKeyCombination(actionSelectNextJoypadBinding, alt(KeyCode.J));
 
+        spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
         selectedOption = OPTION_PAC_BOOSTER;
         tengenGame().setCanStartNewGame(true);
         resetIdleTimer();

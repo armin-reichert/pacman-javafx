@@ -69,7 +69,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D implements ActionBind
 
     @Override
     public void doInit() {
-        theGame().setScoreVisible(false); //TODO
+        theGame().hud().hideScore();
         theGame().hud().hideLevelCounter();
         theGame().hud().hideLivesCounter();
 
