@@ -95,12 +95,7 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
         final TengenMsPacMan_HUD hud = theGame.hud();
         if (!hud.isVisible()) return;
 
-        Vector2f sceneSize = NES_SIZE_PX;
-        if (optGameLevel().isPresent()) {
-            int numRows = theGameLevel().worldMap().numRows();
-            int numCols = theGameLevel().worldMap().numCols();
-            sceneSize = new Vector2f(numCols * TS, numRows * TS);
-        }
+        Vector2f sceneSize = optGameLevel().map(GameLevel::worldSizePx).orElse(NES_SIZE_PX);
 
         if (hud.isScoreVisible()) {
             Color scoreColor = nesPaletteColor(0x20);

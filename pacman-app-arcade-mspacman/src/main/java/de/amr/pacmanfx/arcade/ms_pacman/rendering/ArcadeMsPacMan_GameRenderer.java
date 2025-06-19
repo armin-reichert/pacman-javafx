@@ -59,18 +59,12 @@ public class ArcadeMsPacMan_GameRenderer extends SpriteGameRenderer {
         final HUD hud = game.hud();
         if (!hud.isVisible()) return;
 
-        Vector2f sceneSize = ARCADE_MAP_SIZE_IN_PIXELS;
-        if (optGameLevel().isPresent()) {
-            int numRows = theGameLevel().worldMap().numRows();
-            int numCols = theGameLevel().worldMap().numCols();
-            sceneSize = new Vector2f(numCols * TS, numRows * TS);
-        }
+        Vector2f sceneSize = optGameLevel().map(GameLevel::worldSizePx).orElse(ARCADE_MAP_SIZE_IN_PIXELS);
 
         if (hud.isScoreVisible()) {
-            Color scoreColor = ARCADE_WHITE;
-            Font scoreFont = theAssets().arcadeFont(scaled(8)); //TODO
-            drawScore(game.score(), "SCORE", tiles_to_px(1), tiles_to_px(1), scoreFont, scoreColor);
-            drawScore(game.highScore(), "HIGH SCORE", tiles_to_px(14), tiles_to_px(1), scoreFont, scoreColor);
+            Font scoreFont = theAssets().arcadeFont(scaled(8));
+            drawScore(game.score(), "SCORE", tiles_to_px(1), tiles_to_px(1), scoreFont, ARCADE_WHITE);
+            drawScore(game.highScore(), "HIGH SCORE", tiles_to_px(14), tiles_to_px(1), scoreFont, ARCADE_WHITE);
         }
 
         if (hud.isLevelCounterVisible()) {
@@ -99,8 +93,8 @@ public class ArcadeMsPacMan_GameRenderer extends SpriteGameRenderer {
         }
 
         if (hud.isCreditVisible()) {
-            String coinsText = "CREDIT %2d".formatted(theCoinMechanism().numCoins());
-            fillTextAtScaledPosition(coinsText, ARCADE_WHITE, theAssets().arcadeFont(scaled(8)), 2 * TS, sceneSize.y() - 2);
+            String text = "CREDIT %2d".formatted(theCoinMechanism().numCoins());
+            fillTextAtScaledPosition(text, ARCADE_WHITE, theAssets().arcadeFont(scaled(8)), 2 * TS, sceneSize.y() - 2);
         }
     }
 
