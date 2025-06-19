@@ -147,15 +147,14 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
     }
 
     private void updateHUD() {
-        HUD hud = theGame().hud();
-        LivesCounter livesCounter = hud.livesCounter();
+        LivesCounter livesCounter = theGame().hud().livesCounter();
         int numLivesDisplayed = theGame().lifeCount() - 1;
         // As long as Pac-Man is still initially hidden in the maze, he is shown as an entry in the lives counter
         if (theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible()) {
             numLivesDisplayed += 1;
         }
         livesCounter.setVisibleLifeCount(Math.min(numLivesDisplayed, livesCounter.maxLivesDisplayed()));
-        hud.showCredit(theCoinMechanism().isEmpty());
+        theGame().hud().showCredit(theCoinMechanism().isEmpty());
     }
 
     private void updateSound() {
