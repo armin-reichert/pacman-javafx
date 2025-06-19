@@ -74,7 +74,6 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
         assets.store("pacman.startpage.image2",                loadImage("graphics/f2.jpg"));
         assets.store("pacman.startpage.image3",                loadImage("graphics/f3.jpg"));
 
-        assets.store("pacman.color.score",                     ARCADE_WHITE);
         assets.store("pacman.color.game_over_message",         ARCADE_RED);
 
         assets.store("pacman.pac.color.head",                  ARCADE_YELLOW);

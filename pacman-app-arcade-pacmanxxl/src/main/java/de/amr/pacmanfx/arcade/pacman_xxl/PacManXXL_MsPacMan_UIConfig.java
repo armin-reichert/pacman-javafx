@@ -65,7 +65,6 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
 
         assets.store("ms_pacman_xxl.logo.midway",                   rm.loadImage("graphics/midway_logo.png"));
 
-        assets.store("ms_pacman_xxl.color.score",                     ARCADE_WHITE);
         assets.store("ms_pacman_xxl.color.game_over_message",         ARCADE_RED);
 
         assets.store("ms_pacman_xxl.pac.color.head",                  ARCADE_YELLOW);

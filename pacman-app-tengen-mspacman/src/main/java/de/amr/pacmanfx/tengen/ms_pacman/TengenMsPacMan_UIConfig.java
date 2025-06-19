@@ -86,7 +86,6 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         assets.store("tengen.startpage.image1",                 loadImage("graphics/f1.png"));
         assets.store("tengen.startpage.image2",                 loadImage("graphics/f2.png"));
 
-        assets.store("tengen.color.score",                      nesPaletteColor(0x20));
         assets.store("tengen.color.game_over_message",          nesPaletteColor(0x11));
         assets.store("tengen.color.ready_message",              nesPaletteColor(0x28));
 

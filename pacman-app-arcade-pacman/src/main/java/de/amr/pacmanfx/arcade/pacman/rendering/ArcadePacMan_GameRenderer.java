@@ -67,7 +67,7 @@ public class ArcadePacMan_GameRenderer extends SpriteGameRenderer {
         }
 
         if (hud.isScoreVisible()) {
-            Color scoreColor = theAssets().color(theUI().configuration().assetNamespace() + ".color.score");
+            Color scoreColor = ARCADE_WHITE;
             Font scoreFont = theAssets().arcadeFont(scaled(8)); //TODO
             drawScore(game.score(), "SCORE", tiles_to_px(1), tiles_to_px(1), scoreFont, scoreColor);
             drawScore(game.highScore(), "HIGH SCORE", tiles_to_px(14), tiles_to_px(1), scoreFont, scoreColor);

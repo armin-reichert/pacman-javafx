@@ -116,7 +116,7 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
         }
 
         if (hud.isScoreVisible()) {
-            Color scoreColor = theAssets().color(theUI().configuration().assetNamespace() + ".color.score");
+            Color scoreColor = nesPaletteColor(0x20);
             Font scoreFont = theAssets().arcadeFont(8);
             drawScores(theGame, scoreColor, scoreFont);
         }
