@@ -111,6 +111,11 @@ public interface GameRenderer {
         ctx().fillText(text, scaled(x), scaled(y));
     }
 
+    default void fillTextAtScaledPosition(String text, Color color, double x, double y) {
+        ctx().setFill(color);
+        ctx().fillText(text, scaled(x), scaled(y));
+    }
+
     /**
      * Draws text center-aligned at the given x position (scaled by the current scaling value).
      *
