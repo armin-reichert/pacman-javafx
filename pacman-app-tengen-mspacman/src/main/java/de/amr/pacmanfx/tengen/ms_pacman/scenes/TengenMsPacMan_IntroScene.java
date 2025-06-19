@@ -69,9 +69,9 @@ public class TengenMsPacMan_IntroScene extends GameScene2D implements ActionBind
 
     @Override
     public void doInit() {
-        theGame().hud().hideScore();
-        theGame().hud().hideLevelCounter();
-        theGame().hud().hideLivesCounter();
+        theGame().hud().showScore(false);
+        theGame().hud().showLevelCounter(false);
+        theGame().hud().showLivesCounter(false);
 
         spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
 

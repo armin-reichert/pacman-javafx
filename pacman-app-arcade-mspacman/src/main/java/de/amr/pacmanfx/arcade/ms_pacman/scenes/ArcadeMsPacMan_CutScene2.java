@@ -43,9 +43,9 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void doInit() {
-        theGame().hud().showScore();
-        theGame().hud().showLevelCounter();
-        theGame().hud().hideLivesCounter();
+        theGame().hud().showScore(true);
+        theGame().hud().showLevelCounter(true);
+        theGame().hud().showLivesCounter(false);
 
         pacMan = createPacMan();
         msPacMan = createMsPacMan();

@@ -47,20 +47,20 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
 
     @Override
     protected void doInit() {
-        theGame().hud().showScore();
-        theGame().hud().showLevelCounter();
-        theGame().hud().showLivesCounter();
+        theGame().hud().showScore(true);
+        theGame().hud().showLevelCounter(true);
+        theGame().hud().showLivesCounter(true);
     }
 
     @Override
     public void onLevelCreated(GameEvent e) {
         if (theGameLevel().isDemoLevel()) {
-            theGame().hud().showLevelCounter();
-            theGame().hud().hideLivesCounter();
+            theGame().hud().showLevelCounter(true);
+            theGame().hud().showLivesCounter(false);
             bindAction(ACTION_ARCADE_INSERT_COIN, COMMON_ACTION_BINDINGS);
         } else {
-            theGame().hud().showLevelCounter();
-            theGame().hud().showLivesCounter();
+            theGame().hud().showLevelCounter(true);
+            theGame().hud().showLivesCounter(true);
             bindAction(ACTION_STEER_UP,               COMMON_ACTION_BINDINGS);
             bindAction(ACTION_STEER_DOWN,             COMMON_ACTION_BINDINGS);
             bindAction(ACTION_STEER_LEFT,             COMMON_ACTION_BINDINGS);
@@ -77,8 +77,8 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
     public void onSwitch_3D_2D(GameScene scene3D) {
         Logger.info("2D scene {} entered from 3D scene {}", this, scene3D);
         if (optGameLevel().isPresent() && !theGameLevel().isDemoLevel()) {
-            theGame().hud().showLevelCounter();
-            theGame().hud().hideLivesCounter();
+            theGame().hud().showLevelCounter(true);
+            theGame().hud().showLivesCounter(false);
             bindAction(ACTION_STEER_UP, COMMON_ACTION_BINDINGS);
             bindAction(ACTION_STEER_DOWN, COMMON_ACTION_BINDINGS);
             bindAction(ACTION_STEER_LEFT, COMMON_ACTION_BINDINGS);
@@ -214,8 +214,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
         livesCounter.setPosition(2 * TS, sizeInPx().y() - 2 * TS);
         livesCounter.show();
 
-        if (theGame().canStartNewGame()) {
-            //TODO
+        if (theGame().canStartNewGame()) { //TODO
         } else {
             String creditText = "CREDIT %2d".formatted(theCoinMechanism().numCoins());
             gr().fillTextAtScaledPosition(creditText, ARCADE_WHITE, arcadeFont8(), 2 * TS, sizeInPx().y() - 2);

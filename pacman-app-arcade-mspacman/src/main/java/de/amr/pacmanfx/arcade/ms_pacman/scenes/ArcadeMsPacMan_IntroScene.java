@@ -69,9 +69,9 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
 
     @Override
     public void doInit() {
-        theGame().hud().showScore();
-        theGame().hud().showLevelCounter();
-        theGame().hud().hideLivesCounter();
+        theGame().hud().showScore(true);
+        theGame().hud().showLevelCounter(true);
+        theGame().hud().showLivesCounter(false);
 
         bindAction(ACTION_ARCADE_INSERT_COIN, COMMON_ACTION_BINDINGS);
         bindAction(ACTION_ARCADE_START_GAME, COMMON_ACTION_BINDINGS);

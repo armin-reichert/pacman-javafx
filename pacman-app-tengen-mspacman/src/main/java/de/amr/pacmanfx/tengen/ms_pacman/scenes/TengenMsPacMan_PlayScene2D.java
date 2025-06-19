@@ -166,9 +166,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
 
     @Override
     public void doInit() {
-        theGame().hud().showScore();
-        theGame().hud().showLevelCounter();
-        theGame().hud().showLivesCounter();
+        theGame().hud().showScore(true);
+        theGame().hud().showLevelCounter(true);
+        theGame().hud().showLivesCounter(true);
 
         TengenMsPacMan_UIConfig config = (TengenMsPacMan_UIConfig) theUI().configuration();
         setGameRenderer(config.createRenderer(canvas()));
@@ -233,8 +233,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        theGame().hud().showLevelCounter();
-        theGame().hud().showLivesCounter(); // is also visible in demo level!
+        theGame().hud().showLevelCounter(true);
+        theGame().hud().showLivesCounter(true); // is also visible in demo level!
 
         bindActionsToKeys();
         TengenMsPacMan_UIConfig config = (TengenMsPacMan_UIConfig) theUI().configuration();
@@ -244,8 +244,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
 
     @Override
     public void onSwitch_3D_2D(GameScene scene3D) {
-        theGame().hud().showLevelCounter();
-        theGame().hud().showLivesCounter(); // is also visible in demo level!
+        theGame().hud().showLevelCounter(true);
+        theGame().hud().showLivesCounter(true); // is also visible in demo level!
 
         bindActionsToKeys();
         TengenMsPacMan_UIConfig config = (TengenMsPacMan_UIConfig) theUI().configuration();
@@ -271,8 +271,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
                 levelFlashingAnimation.play();
             }
             case GAME_OVER -> {
-                var tengenGame = (TengenMsPacMan_GameModel) theGame();
-                if (tengenGame.mapCategory() != MapCategory.ARCADE) {
+                var theGame = (TengenMsPacMan_GameModel) theGame();
+                if (theGame.mapCategory() != MapCategory.ARCADE) {
                     float belowHouse = centerPosBelowHouse().x();
                     messageMovement.start(MOVING_MESSAGE_DELAY, belowHouse, sizeInPx().x());
                 }

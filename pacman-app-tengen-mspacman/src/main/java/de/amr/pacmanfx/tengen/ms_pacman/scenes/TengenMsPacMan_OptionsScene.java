@@ -76,9 +76,9 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D implements ActionBi
     @Override
     public void doInit() {
 
-        theGame().hud().hideScore();
-        theGame().hud().hideLevelCounter();
-        theGame().hud().hideLivesCounter();
+        theGame().hud().showScore(false);
+        theGame().hud().showLevelCounter(false);
+        theGame().hud().showLivesCounter(false);
 
         bindAction(ACTION_START_PLAYING, TENGEN_ACTION_BINDINGS);
         bindAction(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, TENGEN_ACTION_BINDINGS);

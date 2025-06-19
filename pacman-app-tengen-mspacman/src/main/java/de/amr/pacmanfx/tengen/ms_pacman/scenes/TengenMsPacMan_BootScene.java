@@ -36,9 +36,9 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        theGame().hud().hideScore();
-        theGame().hud().hideLivesCounter();
-        theGame().hud().hideLevelCounter();
+        theGame().hud().showScore(false);
+        theGame().hud().showLivesCounter(false);
+        theGame().hud().showLevelCounter(false);
 
         grayScreen = false;
         presentsText = new Actor();

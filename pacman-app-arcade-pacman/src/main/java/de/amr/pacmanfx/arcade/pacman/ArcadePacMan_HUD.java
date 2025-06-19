@@ -14,20 +14,10 @@ public class ArcadePacMan_HUD implements HUD {
     private boolean scoreVisible = true;
 
     @Override
-    public void show() {
-        visible = true;
-    }
+    public void show(boolean b) { visible = b; }
 
     @Override
-    public void hide() {
-        visible = false;
-    }
-
-    @Override
-    public boolean isVisible() {
-        return visible;
-    }
-
+    public boolean isVisible() { return visible; }
 
     @Override
     public boolean isLevelCounterVisible() {
@@ -35,13 +25,8 @@ public class ArcadePacMan_HUD implements HUD {
     }
 
     @Override
-    public void showLevelCounter() {
-        levelCounterVisible = true;
-    }
-
-    @Override
-    public void hideLevelCounter() {
-        levelCounterVisible = false;
+    public void showLevelCounter(boolean b) {
+        levelCounterVisible = b;
     }
 
     @Override
@@ -50,13 +35,8 @@ public class ArcadePacMan_HUD implements HUD {
     }
 
     @Override
-    public void showLivesCounter() {
-        livesCounterVisible = true;
-    }
-
-    @Override
-    public void hideLivesCounter() {
-        livesCounterVisible = false;
+    public void showLivesCounter(boolean b) {
+        livesCounterVisible = b;
     }
 
     @Override
@@ -65,13 +45,8 @@ public class ArcadePacMan_HUD implements HUD {
     }
 
     @Override
-    public void showScore() {
-        scoreVisible = true;
-    }
-
-    @Override
-    public void hideScore() {
-        scoreVisible = false;
+    public void showScore(boolean b) {
+        scoreVisible = b;
     }
 
     @Override

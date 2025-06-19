@@ -7,21 +7,19 @@ package de.amr.pacmanfx.model;
 public interface HUD {
 
     boolean isVisible();
-    void show();
-    void hide();
+    void show(boolean b);
 
     LevelCounter levelCounter();
     LivesCounter livesCounter();
 
     boolean isLevelCounterVisible();
-    void showLevelCounter();
-    void hideLevelCounter();
+    void showLevelCounter(boolean b);
 
     boolean isLivesCounterVisible();
-    void showLivesCounter();
-    void hideLivesCounter();
+    void showLivesCounter(boolean b);
 
     boolean isScoreVisible();
-    void showScore();
-    void hideScore();
+    void showScore(boolean b);
+
+    //boolean isCreditVisible();
 }

@@ -25,9 +25,9 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D implements ActionBind
 
     @Override
     public void doInit() {
-        theGame().hud().showScore();
-        theGame().hud().showLevelCounter();
-        theGame().hud().hideLivesCounter();
+        theGame().hud().showScore(true);
+        theGame().hud().showLevelCounter(true);
+        theGame().hud().showLivesCounter(false);
 
         copyright = new MidwayCopyright();
         copyright.setPosition(TS * 6, TS * 28);

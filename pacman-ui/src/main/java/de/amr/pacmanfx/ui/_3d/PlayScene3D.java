@@ -192,8 +192,8 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
 
     @Override
     public void init() {
+        theGame().hud().showScore(true);
         scores3D.setFont(theAssets().arcadeFont(TS));
-        theGame().hud().showScore();
         perspectiveIDPy.bind(PY_3D_PERSPECTIVE);
     }
 

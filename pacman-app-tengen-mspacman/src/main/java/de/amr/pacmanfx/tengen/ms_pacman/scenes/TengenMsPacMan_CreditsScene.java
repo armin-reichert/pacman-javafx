@@ -22,9 +22,9 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D implements ActionBi
 
     @Override
     protected void doInit() {
-        theGame().hud().hideScore();
-        theGame().hud().hideLevelCounter();
-        theGame().hud().hideLivesCounter();
+        theGame().hud().showScore(false);
+        theGame().hud().showLevelCounter(false);
+        theGame().hud().showLivesCounter(false);
         bindAction(ACTION_START_GAME, TENGEN_ACTION_BINDINGS);
     }
 

@@ -30,9 +30,9 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
 
     @Override
     public void doInit() {
-        theGame().hud().hideScore();
-        theGame().hud().hideLevelCounter();
-        theGame().hud().hideLivesCounter();
+        theGame().hud().showScore(false);
+        theGame().hud().showLevelCounter(false);
+        theGame().hud().showLivesCounter(false);
 
         SpriteSheet<?> spriteSheet = theUI().configuration().spriteSheet();
         double width = spriteSheet.sourceImage().getWidth(), height = spriteSheet.sourceImage().getHeight();
