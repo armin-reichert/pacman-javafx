@@ -70,7 +70,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D implements ActionBindin
     @Override
     public void doInit() {
         theGame().setScoreVisible(true);
-        theGame().levelCounter().setPosition(sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
+        //theGame().levelCounter().setPosition(sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
 
         bindAction(ACTION_ARCADE_INSERT_COIN, COMMON_ACTION_BINDINGS);
         bindAction(ACTION_ARCADE_START_GAME, COMMON_ACTION_BINDINGS);
@@ -133,7 +133,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D implements ActionBindin
         }
         String coinsText = "CREDIT %2d".formatted(theCoinMechanism().numCoins());
         gr().fillText(coinsText, scoreColor(), arcadeFont8(), 2 * TS, sizeInPx().y() - 2);
-        gr().drawActor(theGame().levelCounter());
+        gr().drawHUD(theGame());
     }
 
     private void drawGallery() {

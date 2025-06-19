@@ -147,7 +147,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
         }
         gr().drawActor(copyright);
         gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()), scoreColor(), arcadeFont8(), 2 * TS, sizeInPx().y() - 2);
-        gr().drawActor(theGame().levelCounter());
+        gr().drawHUD(theGame());
     }
 
     // Scene controller FSM

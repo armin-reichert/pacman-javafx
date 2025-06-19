@@ -160,6 +160,8 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
         return new ArcadePacMan_GameModel(new ArcadePacMan_MapSelector());
     }
 
+    private final HUD hud = new ArcadePacMan_HUD();
+
     /**
      * @param mapSelector e.g. selector that selects custom maps before standard maps
      */
@@ -216,6 +218,11 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
             wp(6,23) /* eaten at 3,23 in original game */
         ));
         autopilot = new RuleBasedPacSteering(this);
+    }
+
+    @Override
+    public HUD hud() {
+        return hud;
     }
 
     @Override

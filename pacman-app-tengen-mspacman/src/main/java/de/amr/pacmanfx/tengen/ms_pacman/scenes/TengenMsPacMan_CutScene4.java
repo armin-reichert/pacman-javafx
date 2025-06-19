@@ -46,7 +46,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     protected void doInit() {
         t = -1;
         theGame().setScoreVisible(false);
-        theGame().levelCounter().setPosition(sizeInPx().minus(6 * TS, 3 * TS));
+        //theGame().levelCounter().setPosition(sizeInPx().minus(6 * TS, 3 * TS));
 
         var spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
         clapperboard = new Clapperboard(spriteSheet, 4, "THE END");
@@ -215,6 +215,6 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         gr().drawActor(msPacMan);
         gr().drawActor(pacMan);
         juniors.forEach(junior -> gr().drawActor(junior));
-        gr().drawActor(theGame().levelCounter());
+        gr().drawHUD(theGame());
     }
 }

@@ -5,9 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui._2d;
 
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.Score;
-import de.amr.pacmanfx.model.ScoreManager;
+import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Actor;
 import javafx.beans.property.FloatProperty;
 import javafx.scene.canvas.GraphicsContext;
@@ -65,6 +63,8 @@ public interface GameRenderer {
         float halfSideLength = 0.5f * sideLength;
         ctx().fillRect(centerX - halfSideLength, centerY - halfSideLength, sideLength, sideLength);
     }
+
+    void drawHUD(GameModel game);
 
     /**
      *

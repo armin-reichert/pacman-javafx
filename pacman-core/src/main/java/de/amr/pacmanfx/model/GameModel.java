@@ -43,9 +43,9 @@ public abstract class GameModel implements ScoreManager {
     private final Score highScore = new Score();
     private File highScoreFile;
     private List<Integer> extraLifeScores = List.of();
-    private final LivesCounter livesCounter = new LivesCounter();
     private boolean scoreVisible;
     private int initialLifeCount;
+
 
     protected GameModel() {
         score.pointsProperty().addListener((py, ov, nv) -> onScoreChanged(this, ov.intValue(), nv.intValue()));
@@ -53,11 +53,10 @@ public abstract class GameModel implements ScoreManager {
 
     public abstract ActorSpeedControl actorSpeedControl();
     public abstract HuntingTimer huntingTimer();
-    public abstract LevelCounter levelCounter();
     public abstract MapSelector mapSelector();
     public abstract OptionalInt cutSceneNumber(int levelNumber);
 
-    public LivesCounter livesCounter() { return livesCounter; }
+    public abstract HUD hud();
     public Optional<GateKeeper> gateKeeper() { return Optional.empty(); }
     public Optional<GameLevel> level() { return Optional.ofNullable(level); }
 

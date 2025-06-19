@@ -6,8 +6,8 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.ActionBindingSupport;
+import de.amr.pacmanfx.ui._2d.GameScene2D;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
@@ -23,7 +23,7 @@ public class ArcadePacMan_StartScene extends GameScene2D implements ActionBindin
     @Override
     public void doInit() {
         theGame().setScoreVisible(true);
-        theGame().levelCounter().setPosition(sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
+        //theGame().levelCounter().setPosition(sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
         bindAction(ACTION_ARCADE_INSERT_COIN, COMMON_ACTION_BINDINGS);
         bindAction(ACTION_ARCADE_START_GAME,  COMMON_ACTION_BINDINGS);
     }
@@ -50,6 +50,6 @@ public class ArcadePacMan_StartScene extends GameScene2D implements ActionBindin
         gr().fillTextAtTile("© 1980 MIDWAY MFG.CO.", ARCADE_PINK, arcadeFont8(), 4, 29);
         gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
                 scoreColor(), arcadeFont8(), 2 * TS, sizeInPx().y() - 2);
-        gr().drawActor(theGame().levelCounter());
+        gr().drawHUD(theGame());
     }
 }

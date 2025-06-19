@@ -15,7 +15,6 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import javafx.scene.media.MediaPlayer;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createGhost;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createPac;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.*;
@@ -49,7 +48,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     @Override
     public void doInit() {
         theGame().setScoreVisible(true);
-        theGame().levelCounter().setPosition(sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
+        //theGame().levelCounter().setPosition(sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
         pac = createPac();
         blinky = createGhost(RED_GHOST_SHADOW);
         blinky.setSpeed(0);
@@ -133,7 +132,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
                 tiles_to_px(14), tiles_to_px(19) + 3);
         gr().drawActor(blinky);
         gr().drawActor(pac);
-        gr().drawActor(theGame().levelCounter());
+        gr().drawHUD(theGame());
     }
 
     @Override

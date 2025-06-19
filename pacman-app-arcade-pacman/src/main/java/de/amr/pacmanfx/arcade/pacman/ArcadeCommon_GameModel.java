@@ -114,11 +114,6 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
     public Optional<GateKeeper> gateKeeper() { return Optional.of(gateKeeper); }
 
     @Override
-    public LevelCounter levelCounter() {
-        return levelCounter;
-    }
-
-    @Override
     public MapSelector mapSelector() {
         return mapSelector;
     }
@@ -279,7 +274,7 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
             highScore().setEnabled(false);
             Logger.info("Demo level {} started", level.number());
         } else {
-            levelCounter().update(level.number(), level.bonusSymbol(0));
+            hud().levelCounter().update(level.number(), level.bonusSymbol(0));
             level.showMessage(GameLevel.MESSAGE_READY);
             score().setEnabled(true);
             highScore().setEnabled(true);

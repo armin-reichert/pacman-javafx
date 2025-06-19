@@ -53,7 +53,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         t = -1;
         darkness = false;
         theGame().setScoreVisible(false);
-        theGame().levelCounter().setPosition(sizeInPx().minus(6 * TS, 3 * TS));
+        //theGame().levelCounter().setPosition(sizeInPx().minus(6 * TS, 3 * TS));
 
         bindActionToKeyCombination(ACTION_LET_GAME_STATE_EXPIRE, theJoypad().key(JoypadButton.START));
         music = theSound().createSound("intermission.3");
@@ -163,7 +163,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
             gr().drawActor(flyingBag);
             gr().drawActor(msPacMan);
             gr().drawActor(pacMan);
-            gr().drawActor(theGame().levelCounter());
+            gr().drawHUD(theGame());
         }
     }
 }

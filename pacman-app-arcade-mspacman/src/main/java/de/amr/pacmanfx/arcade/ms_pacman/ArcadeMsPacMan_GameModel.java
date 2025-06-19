@@ -179,6 +179,8 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
         return new ArcadeMsPacMan_GameModel(new ArcadeMsPacMan_MapSelector());
     }
 
+    private final ArcadeMsPacMan_HUD hud = new ArcadeMsPacMan_HUD();
+
     /**
      * @param mapSelector map selector e.g. selector that selects custom maps before standard maps
      */
@@ -224,6 +226,11 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
     }
 
     @Override
+    public ArcadeMsPacMan_HUD hud() {
+        return hud;
+    }
+
+    @Override
     public OptionalInt cutSceneNumber(int levelNumber) {
         return switch (levelNumber) {
             case 2 -> OptionalInt.of(1);
@@ -262,7 +269,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
 
         /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
-        levelCounter().setEnabled(levelNumber < 8);
+        hud().levelCounter().setEnabled(levelNumber < 8);
     }
 
     @Override

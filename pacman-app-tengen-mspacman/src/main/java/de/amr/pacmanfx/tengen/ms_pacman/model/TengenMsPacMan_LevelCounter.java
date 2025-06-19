@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class TengenMsPacMan_LevelCounter extends LevelCounter {
+public class TengenMsPacMan_LevelCounter implements LevelCounter {
 
     public static final byte LEVEL_COUNTER_MAX_SIZE = 7;
 

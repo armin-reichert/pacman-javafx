@@ -259,7 +259,7 @@ public class GameLevel3D {
         // Place level counter at top right maze corner
         double x = gameLevel.worldMap().numCols() * TS - 2 * TS;
         double y = 2 * TS;
-        root.getChildren().add(createLevelCounter3D(theGame().levelCounter(), x, y));
+        root.getChildren().add(createLevelCounter3D(theGame().hud().levelCounter(), x, y));
     }
 
     private Node createLevelCounter3D(LevelCounter levelCounter, double x, double y) {

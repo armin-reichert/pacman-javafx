@@ -4,15 +4,14 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman.rendering;
 
+import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
-import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.LevelCounter;
-import de.amr.pacmanfx.model.ScoreManager;
+import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -32,12 +31,14 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_MapRepository.strangeMap15Sprite;
 import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PacAnimationMap.*;
@@ -96,6 +97,45 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
 
     @Override
     public FloatProperty scalingProperty() { return scalingPy; }
+
+    @Override
+    public void drawHUD(GameModel game) {
+        var theGame = (TengenMsPacMan_GameModel) theGame();
+
+        Vector2f sceneSize = NES_SIZE.toVector2f();
+        if (optGameLevel().isPresent()) {
+            int numRows = theGameLevel().worldMap().numRows();
+            int numCols = theGameLevel().worldMap().numCols();
+            sceneSize = new Vector2f(numCols * TS, numRows * TS);
+        }
+
+        LivesCounter livesCounter = game.hud().livesCounter();
+        livesCounter.setPosition(2 * TS, sceneSize.y() - TS);
+        livesCounter.show();
+        int numLivesDisplayed = game.lifeCount() - 1;
+        // As long as Pac-Man is still hidden in the maze, he is shown as an entry in the counter
+        if (theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible()) {
+            numLivesDisplayed += 1;
+        }
+        numLivesDisplayed = Math.min(numLivesDisplayed, livesCounter.maxLivesDisplayed());
+        livesCounter.setVisibleLifeCount(numLivesDisplayed);
+        Sprite sprite = theUI().configuration().createLivesCounterSprite();
+        for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
+            drawSpriteScaled(sprite, livesCounter.x() + TS * (2 * i), livesCounter.y());
+        }
+        if (game.lifeCount() > livesCounter.maxLivesDisplayed()) {
+            // show text indicating that more lives are available than symbols displayed (cheating may cause this)
+            Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
+            fillText("(%d)".formatted(game.lifeCount()), Color.YELLOW, font,
+                livesCounter.x() + TS * 10, livesCounter.y() + TS);
+        }
+
+        if (theGameLevel().isDemoLevel() || theGame.mapCategory() == MapCategory.ARCADE) {
+            drawLevelCounterWithLevelNumbers(false, 0, game.hud().levelCounter(), sceneSize);
+        } else {
+            drawLevelCounterWithLevelNumbers(true, theGameLevel().number(), game.hud().levelCounter(), sceneSize);
+        }
+    }
 
     @Override
     public void drawActor(Actor actor) {
@@ -357,13 +397,14 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
         }
     }
 
-    public void drawLevelCounterWithLevelNumbers(int levelNumber, LevelCounter levelCounter, Vector2f sizeInPx) {
+    public void drawLevelCounterWithLevelNumbers(boolean withNumbers, int levelNumber, LevelCounter levelCounter, Vector2f sizeInPx) {
         requireNonNull(levelCounter);
         requireNonNull(sizeInPx);
-        ctx().setImageSmoothing(false);
         float x = sizeInPx.x() - 2 * TS, y = sizeInPx.y() - TS;
-        drawLevelNumberBox(levelNumber, 0, y); // left box
-        drawLevelNumberBox(levelNumber, x, y); // right box
+        if (withNumbers) {
+            drawLevelNumberBox(levelNumber, 0, y); // left box
+            drawLevelNumberBox(levelNumber, x, y); // right box
+        }
         x -= 2 * TS;
         for (byte symbol : levelCounter.symbols()) {
             Sprite sprite = theUI().configuration().createBonusSymbolSprite(symbol);

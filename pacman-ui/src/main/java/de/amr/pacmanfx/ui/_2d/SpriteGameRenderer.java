@@ -3,6 +3,7 @@ package de.amr.pacmanfx.ui._2d;
 import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.model.HUD;
 import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.LivesCounter;
 import de.amr.pacmanfx.model.actors.*;
@@ -102,8 +103,6 @@ public abstract class SpriteGameRenderer implements GameRenderer {
             switch (actor) {
                 case StaticBonus staticBonus     -> drawStaticBonus(staticBonus);
                 case MovingBonus movingBonus     -> drawMovingBonus(movingBonus);
-                case LivesCounter livesCounter   -> drawLivesCounter(theGame());
-                case LevelCounter levelCounter   -> drawLevelCounter(levelCounter);
                 case Animated animated           -> drawAnimatedActor(animated);
                 default -> throw new IllegalArgumentException(
                     "%s: Cannot draw actor of class %s".formatted(getClass().getSimpleName(), actor.getClass().getSimpleName()));
@@ -146,29 +145,6 @@ public abstract class SpriteGameRenderer implements GameRenderer {
             case Bonus.STATE_INACTIVE -> {}
             case Bonus.STATE_EDIBLE -> drawActorSpriteCentered(bonus, theUI().configuration().createBonusSymbolSprite(bonus.symbol()));
             case Bonus.STATE_EATEN  -> drawActorSpriteCentered(bonus, theUI().configuration().createBonusValueSprite(bonus.symbol()));
-        }
-    }
-
-    public void drawLevelCounter(LevelCounter levelCounter) {
-        float x = levelCounter.x(), y = levelCounter.y();
-        for (byte symbol : levelCounter.symbols()) {
-            Sprite sprite = theUI().configuration().createBonusSymbolSprite(symbol);
-            drawSpriteScaled(sprite, x, y);
-            x -= TS * 2;
-        }
-    }
-
-    public void drawLivesCounter(GameModel game) {
-        LivesCounter livesCounter = game.livesCounter();
-        Sprite sprite = theUI().configuration().createLivesCounterSprite();
-        for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
-            drawSpriteScaled(sprite, livesCounter.x() + TS * (2 * i), livesCounter.y());
-        }
-        if (game.lifeCount() > livesCounter.maxLivesDisplayed()) {
-            // show text indicating that more lives are available than symbols displayed (cheating may cause this)
-            Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
-            fillText("(%d)".formatted(game.lifeCount()), Color.YELLOW, font,
-                livesCounter.x() + TS * 10, livesCounter.y() + TS);
         }
     }
 
