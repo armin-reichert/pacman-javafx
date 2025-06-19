@@ -15,14 +15,10 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import javafx.scene.paint.Color;
 
-import java.net.URL;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.timer.TickTimer.ticksToString;
-import static de.amr.pacmanfx.ui.PacManGames.theAssets;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
 import static de.amr.pacmanfx.uilib.Ufx.formatColorHex;
 
@@ -39,12 +35,8 @@ public class InfoBoxGameInfo extends InfoBox {
         addLabeledValue("Level Number", ifLevelPresent(level -> "%d".formatted(level.number())));
         addLabeledValue("Demo Level", ifLevelPresent(level -> level.isDemoLevel() ? "Yes" : "No"));
         addLabeledValue("World Map", ifLevelPresent(level -> {
-            URL url = level.worldMap().url();
-            if (url == null) {
-                return InfoText.NO_INFO;
-            }
-            String urlString = URLDecoder.decode(url.toExternalForm(), StandardCharsets.UTF_8);
-            return urlString.substring(urlString.lastIndexOf("/") + 1);
+            String url = level.worldMap().url();
+            return url == null ? InfoText.NO_INFO : url.substring(url.lastIndexOf("/") + 1);
         }));
         addLabeledValue("Fill/Stroke/Pellet", ifLevelPresent(level -> {
             WorldMap worldMap = level.worldMap();

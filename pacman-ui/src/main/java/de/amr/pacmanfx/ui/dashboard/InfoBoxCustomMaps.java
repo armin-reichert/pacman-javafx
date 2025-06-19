@@ -19,14 +19,13 @@ public class InfoBoxCustomMaps extends InfoBox {
 
     private final TableView<WorldMap> mapsTableView = new TableView<>();
 
-    private static String urlToText(URL url) {
+    private static String trimURL(String url) {
         if (url == null) return InfoText.NO_INFO;
-        String text = URLDecoder.decode(url.toString(), StandardCharsets.UTF_8);
-        int lastSlash = text.lastIndexOf('/');
+        int lastSlash = url.lastIndexOf('/');
         if (lastSlash != -1) {
-            return text.substring(lastSlash + 1);
+            return url.substring(lastSlash + 1);
         } else {
-            return text.substring(0, 10); //TODO
+            return url.substring(0, 10); //TODO
         }
     }
 
@@ -35,7 +34,7 @@ public class InfoBoxCustomMaps extends InfoBox {
         mapsTableView.setPrefHeight(200);
 
         var tcMapURL = new TableColumn<WorldMap, String>("Map");
-        tcMapURL.setCellValueFactory(data -> new SimpleStringProperty(urlToText(data.getValue().url())));
+        tcMapURL.setCellValueFactory(data -> new SimpleStringProperty(trimURL(data.getValue().url())));
 
         var tcMapRowCount = new TableColumn<WorldMap, Integer>("Rows");
         tcMapRowCount.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().numRows()).asObject());

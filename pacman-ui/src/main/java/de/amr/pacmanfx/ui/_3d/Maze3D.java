@@ -22,9 +22,6 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
-
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
@@ -43,7 +40,7 @@ public class Maze3D extends Group {
     private final MaterialColorAnimation materialColorAnimation;
 
     public Maze3D(GameLevel level, WorldMapColorScheme colorScheme) {
-        Logger.info("Build 3D maze for map with URL '{}'", URLDecoder.decode(level.worldMap().url().toExternalForm(), StandardCharsets.UTF_8));
+        Logger.info("Build 3D maze for map with URL '{}'", level.worldMap().url());
 
         Color wallBaseColor = colorScheme.stroke();
         // Add some contrast with floor if wall fill color is black:

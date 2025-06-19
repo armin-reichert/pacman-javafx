@@ -68,6 +68,26 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
     }
 
     @Override
+    public void onSwitch_3D_2D(GameScene scene3D) {
+        Logger.info("2D scene {} entered from 3D scene {}", this, scene3D);
+        if (optGameLevel().isPresent() && !theGameLevel().isDemoLevel()) {
+            bindAction(ACTION_STEER_UP, COMMON_ACTION_BINDINGS);
+            bindAction(ACTION_STEER_DOWN, COMMON_ACTION_BINDINGS);
+            bindAction(ACTION_STEER_LEFT, COMMON_ACTION_BINDINGS);
+            bindAction(ACTION_STEER_RIGHT, COMMON_ACTION_BINDINGS);
+            bindAction(ACTION_CHEAT_EAT_ALL_PELLETS, COMMON_ACTION_BINDINGS);
+            bindAction(ACTION_CHEAT_ADD_LIVES, COMMON_ACTION_BINDINGS);
+            bindAction(ACTION_CHEAT_ENTER_NEXT_LEVEL, COMMON_ACTION_BINDINGS);
+            bindAction(ACTION_CHEAT_KILL_GHOSTS, COMMON_ACTION_BINDINGS);
+            updateActionBindings();
+        }
+        if (gameRenderer == null) { //TODO check if this can happen
+            Logger.warn("No game renderer was existing when switching to 2D scene");
+            setGameRenderer((SpriteGameRenderer) theUI().configuration().createRenderer(canvas()));
+        }
+    }
+
+    @Override
     public void onGameContinued(GameEvent e) {
         theGameLevel().showMessage(GameLevel.MESSAGE_READY);
     }
@@ -194,10 +214,9 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
         if (theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible()) {
             numLivesDisplayed += 1;
         }
-        numLivesDisplayed = Math.min(numLivesDisplayed, livesCounter.maxLivesDisplayed());
-        livesCounter.setVisibleLifeCount(numLivesDisplayed);
-        theGame().livesCounter().setPosition(2 * TS, sizeInPx().y() - 2 * TS);
-        theGame().livesCounter().show();
+        livesCounter.setVisibleLifeCount(Math.min(numLivesDisplayed, livesCounter.maxLivesDisplayed()));
+        livesCounter.setPosition(2 * TS, sizeInPx().y() - 2 * TS);
+        livesCounter.show();
     }
 
     private void drawLevelMessage() {
@@ -242,24 +261,6 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
             }
             ctx().fillText("%s%s".formatted(gameStateText, huntingPhaseText), 0, 64);
         });
-    }
-
-    @Override
-    public void onSwitch_3D_2D(GameScene scene3D) {
-        Logger.info("2D scene {} entered from 3D scene {}", this, scene3D);
-        bindAction(ACTION_STEER_UP,               COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_STEER_DOWN,             COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_STEER_LEFT,             COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_STEER_RIGHT,            COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_CHEAT_EAT_ALL_PELLETS,  COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_CHEAT_ADD_LIVES,        COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_CHEAT_ENTER_NEXT_LEVEL, COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_CHEAT_KILL_GHOSTS,      COMMON_ACTION_BINDINGS);
-        updateActionBindings();
-        if (gameRenderer == null) { //TODO check if this can happen
-            Logger.warn("No game renderer was existing when switching to 2D scene");
-            setGameRenderer((SpriteGameRenderer) theUI().configuration().createRenderer(canvas()));
-        }
     }
 
     @Override

@@ -67,7 +67,7 @@ public class WorldMap {
     public static WorldMap fromURL(URL url) throws IOException {
         var reader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
         WorldMap worldMap = WorldMapParser.parse(reader.lines(), WorldMap::isValidTerrainValue, WorldMap::isValidFoodValue);
-        worldMap.url = url;
+        worldMap.url = url.toExternalForm();
         return worldMap;
     }
 
@@ -77,7 +77,7 @@ public class WorldMap {
 
     // Package access for parser
 
-    URL url;
+    String url;
     WorldMapLayer terrainLayer;
     WorldMapLayer foodLayer;
     Set<Obstacle> obstacles = null; // uninitialized!
@@ -194,7 +194,7 @@ public class WorldMap {
         return terrainLayer.numRows();
     }
 
-    public URL url() {
+    public String url() {
         return url;
     }
 
