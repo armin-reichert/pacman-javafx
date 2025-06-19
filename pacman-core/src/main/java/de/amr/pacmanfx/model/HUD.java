@@ -8,7 +8,6 @@ public interface HUD {
 
     LevelCounter levelCounter();
     LivesCounter livesCounter();
-    // score ...
 
     boolean isLevelCounterVisible();
     void showLevelCounter();
@@ -17,4 +16,8 @@ public interface HUD {
     boolean isLivesCounterVisible();
     void showLivesCounter();
     void hideLivesCounter();
+
+    boolean isScoreVisible();
+    void showScore();
+    void hideScore();
 }

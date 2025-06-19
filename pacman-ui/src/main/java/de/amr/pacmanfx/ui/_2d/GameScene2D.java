@@ -32,8 +32,8 @@ public abstract class GameScene2D implements GameScene {
 
     protected final Map<KeyCombination, GameAction> actionBindings = new HashMap<>();
 
-    protected final ObjectProperty<Font> arcadeFont8Py = new SimpleObjectProperty<>();
-    protected final ObjectProperty<Font> arcadeFont6Py = new SimpleObjectProperty<>();
+    protected final ObjectProperty<Font>  arcadeFont8Py = new SimpleObjectProperty<>();
+    protected final ObjectProperty<Font>  arcadeFont6Py = new SimpleObjectProperty<>();
     protected final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
     protected final BooleanProperty       debugInfoVisiblePy = new SimpleBooleanProperty(false);
     protected final FloatProperty         scalingPy = new SimpleFloatProperty(1.0f);
