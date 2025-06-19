@@ -83,16 +83,17 @@ public class ArcadeMsPacMan_GameRenderer extends SpriteGameRenderer {
         }
 
         if (hud.isLivesCounterVisible()) {
+            float x = 2 * TS, y = sceneSize.y() - 2 * TS;
             LivesCounter livesCounter = hud.livesCounter();
             Sprite sprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
             for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
-                drawSpriteScaled(sprite, livesCounter.x() + TS * (2 * i), livesCounter.y());
+                drawSpriteScaled(sprite, x + TS * (2 * i), y);
             }
             if (game.lifeCount() > livesCounter.maxLivesDisplayed()) {
                 // show text indicating that more lives are available than symbols displayed (cheating may cause this)
                 Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
                 fillTextAtScaledPosition("(%d)".formatted(game.lifeCount()), Color.YELLOW, font,
-                    livesCounter.x() + TS * 10, livesCounter.y() + TS);
+                    x + TS * 10, y + TS);
             }
         }
 

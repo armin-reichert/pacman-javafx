@@ -4,9 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model;
 
-import de.amr.pacmanfx.model.actors.Actor;
-
-public class LivesCounter extends Actor {
+public class LivesCounter {
 
     private int maxLivesDisplayed;
     private int visibleLifeCount;

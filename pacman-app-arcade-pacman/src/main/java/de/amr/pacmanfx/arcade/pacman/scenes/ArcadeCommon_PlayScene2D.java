@@ -211,9 +211,6 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
             numLivesDisplayed += 1;
         }
         livesCounter.setVisibleLifeCount(Math.min(numLivesDisplayed, livesCounter.maxLivesDisplayed()));
-        livesCounter.setPosition(2 * TS, sizeInPx().y() - 2 * TS);
-        livesCounter.show();
-
         theGame().hud().showCredit(theCoinMechanism().isEmpty());
     }
 
