@@ -62,9 +62,10 @@ public class ArcadeMsPacMan_GameRenderer extends SpriteGameRenderer {
         Vector2f sceneSize = optGameLevel().map(GameLevel::worldSizePx).orElse(ARCADE_MAP_SIZE_IN_PIXELS);
 
         if (hud.isScoreVisible()) {
-            Font scoreFont = theAssets().arcadeFont(scaled(8));
-            drawScore(game.score(), "SCORE", tiles_to_px(1), tiles_to_px(1), scoreFont, ARCADE_WHITE);
-            drawScore(game.highScore(), "HIGH SCORE", tiles_to_px(14), tiles_to_px(1), scoreFont, ARCADE_WHITE);
+            ctx.setFont(theAssets().arcadeFont(scaled(8)));
+            ctx.setFill(ARCADE_WHITE);
+            drawScore(game.score(), "SCORE", tiles_to_px(1), tiles_to_px(1));
+            drawScore(game.highScore(), "HIGH SCORE", tiles_to_px(14), tiles_to_px(1));
         }
 
         if (hud.isLevelCounterVisible()) {
@@ -98,9 +99,7 @@ public class ArcadeMsPacMan_GameRenderer extends SpriteGameRenderer {
         }
     }
 
-    private void drawScore(Score score, String title, double x, double y, Font font, Color color) {
-        ctx.setFont(font);
-        ctx.setFill(color);
+    private void drawScore(Score score, String title, double x, double y) {
         fillTextAtScaledPosition(title, x, y);
         fillTextAtScaledPosition("%7s".formatted("%02d".formatted(score.points())), x, y + TS + 1);
         if (score.points() != 0) {
