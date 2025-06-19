@@ -50,6 +50,5 @@ public class ArcadePacMan_StartScene extends GameScene2D implements ActionBindin
         gr().fillTextAtTile("© 1980 MIDWAY MFG.CO.", ARCADE_PINK, arcadeFont8(), 4, 29);
         gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
                 scoreColor(), arcadeFont8(), 2 * TS, sizeInPx().y() - 2);
-        gr().drawHUD(theGame());
     }
 }

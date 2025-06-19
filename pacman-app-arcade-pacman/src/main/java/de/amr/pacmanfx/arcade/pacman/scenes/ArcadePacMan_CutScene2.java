@@ -134,7 +134,6 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
                 tiles_to_px(14), tiles_to_px(19) + 3);
         gr().drawActor(blinky);
         gr().drawActor(pac);
-        gr().drawHUD(theGame());
     }
 
     @Override

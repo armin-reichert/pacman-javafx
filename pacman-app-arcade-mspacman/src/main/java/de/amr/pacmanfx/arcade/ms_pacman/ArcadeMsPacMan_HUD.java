@@ -9,8 +9,24 @@ public class ArcadeMsPacMan_HUD implements HUD {
     private final LivesCounter livesCounter = new LivesCounter();
     private final ArcadePacMan_LevelCounter levelCounter = new ArcadePacMan_LevelCounter();
 
+    private boolean visible = true;
     private boolean livesCounterVisible = true;
     private boolean levelCounterVisible = true;
+
+    @Override
+    public void show() {
+        visible = true;
+    }
+
+    @Override
+    public void hide() {
+        visible = false;
+    }
+
+    @Override
+    public boolean isVisible() {
+        return visible;
+    }
 
     @Override
     public boolean isLevelCounterVisible() {

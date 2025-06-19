@@ -215,6 +215,5 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         gr().drawActor(msPacMan);
         gr().drawActor(pacMan);
         juniors.forEach(junior -> gr().drawActor(junior));
-        gr().drawHUD(theGame());
     }
 }

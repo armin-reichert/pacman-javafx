@@ -160,6 +160,5 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         gr().drawActor(clapperboard);
         gr().drawActor(msPacMan);
         gr().drawActor(pacMan);
-        gr().drawHUD(theGame());
     }
 }

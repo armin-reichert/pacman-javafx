@@ -97,7 +97,6 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
     public void drawSceneContent() {
         gr().drawActor(pac);
         gr().drawActor(blinky);
-        gr().drawHUD(theGame());
     }
 
     @Override

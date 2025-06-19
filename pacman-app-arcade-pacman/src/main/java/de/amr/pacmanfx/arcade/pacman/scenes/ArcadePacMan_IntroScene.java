@@ -132,9 +132,10 @@ public class ArcadePacMan_IntroScene extends GameScene2D implements ActionBindin
                 gr().fillTextAtTile(MIDWAY_MFG_CO, ARCADE_PINK, arcadeFont8(), 4, 32);
             }
         }
+
+        //TODO move to HUD
         String coinsText = "CREDIT %2d".formatted(theCoinMechanism().numCoins());
         gr().fillText(coinsText, scoreColor(), arcadeFont8(), 2 * TS, sizeInPx().y() - 2);
-        gr().drawHUD(theGame());
     }
 
     private void drawGallery() {

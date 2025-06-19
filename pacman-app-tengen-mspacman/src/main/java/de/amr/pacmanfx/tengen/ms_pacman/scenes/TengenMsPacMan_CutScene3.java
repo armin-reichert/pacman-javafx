@@ -163,7 +163,6 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
             gr().drawActor(flyingBag);
             gr().drawActor(msPacMan);
             gr().drawActor(pacMan);
-            gr().drawHUD(theGame());
         }
     }
 }

@@ -65,6 +65,7 @@ public class ArcadeMsPacMan_GameRenderer extends SpriteGameRenderer {
         requireNonNull(game);
 
         final HUD hud = game.hud();
+        if (!hud.isVisible()) return;
 
         Vector2f sceneSize = ARCADE_MAP_SIZE_IN_PIXELS;
         if (optGameLevel().isPresent()) {

@@ -113,7 +113,6 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         gr().drawActor(inky);
         gr().drawActor(pinky);
         gr().drawActor(heart);
-        gr().drawHUD(theGame());
     }
 
     // Scene controller state machine

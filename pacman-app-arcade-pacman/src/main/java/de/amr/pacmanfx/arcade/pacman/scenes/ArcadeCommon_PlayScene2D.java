@@ -201,7 +201,6 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
         }
 
         configureHUD();
-        gr().drawHUD(theGame());
     }
 
     private void configureHUD() {

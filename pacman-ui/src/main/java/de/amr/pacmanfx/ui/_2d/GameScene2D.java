@@ -124,6 +124,7 @@ public abstract class GameScene2D implements GameScene {
         if (debugInfoVisiblePy.get()) {
             drawDebugInfo();
         }
+        gameRenderer.drawHUD(theGame());
     }
 
     /**

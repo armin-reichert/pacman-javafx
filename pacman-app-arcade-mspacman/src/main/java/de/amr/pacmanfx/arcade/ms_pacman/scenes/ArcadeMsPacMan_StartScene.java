@@ -61,6 +61,5 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D implements ActionBind
         gr().drawActor(copyright);
         gr().fillText("CREDIT %2d".formatted(theCoinMechanism().numCoins()),
                 scoreColor(), arcadeFont8(), tiles_to_px(2), sizeInPx().y() - 2);
-        gr().drawHUD(theGame());
     }
 }

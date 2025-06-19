@@ -2,6 +2,10 @@ package de.amr.pacmanfx.model;
 
 public interface HUD {
 
+    boolean isVisible();
+    void show();
+    void hide();
+
     LevelCounter levelCounter();
     LivesCounter livesCounter();
     // score ...

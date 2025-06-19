@@ -420,7 +420,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
         ghostsInZOrder().forEach(ghost -> gr().drawActor(ghost));
         theGameLevel().bonus().ifPresent(bonus -> gr().drawActor(bonus.actor()));
 
-        gr().drawHUD(theGame());
         ctx().restore();
     }
 
