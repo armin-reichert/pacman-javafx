@@ -569,6 +569,8 @@ public class TileMapEditor {
         sourceView.setPrefWidth(600);
         sourceView.setPrefHeight(800);
         sourceView.setFont(FONT_SOURCE_VIEW);
+        //TODO this does not set a black background. Why?
+        //sourceView.setStyle("-fx-background-color: #000; -fx-text-fill: #f00;");
     }
 
     private void createTabPaneWithEditViews() {
