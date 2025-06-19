@@ -9,6 +9,7 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.HUD;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.LivesCounter;
 import de.amr.pacmanfx.model.actors.*;
@@ -96,31 +97,6 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
     }
 
     @Override
-    public void onGameContinued(GameEvent e) {
-        theGameLevel().showMessage(GameLevel.MESSAGE_READY);
-    }
-
-    @Override
-    public void onGameStarted(GameEvent e) {
-        boolean silent = theGameLevel().isDemoLevel() || theGameState() == TESTING_LEVELS_SHORT || theGameState() == TESTING_LEVELS_MEDIUM;
-        if (!silent) {
-            theSound().playGameReadySound();
-        }
-    }
-
-    @Override
-    public void update() {
-        if (optGameLevel().isPresent()) {
-            if (!theGameLevel().isDemoLevel()) {
-                updateSound();
-            }
-        } else {
-            // Scene is already active 2 ticks before game level is created!
-            Logger.info("Tick {}: Game level not yet available", theClock().tickCount());
-        }
-    }
-
-    @Override
     public List<MenuItem> supplyContextMenuItems(ContextMenuEvent e) {
         List<MenuItem> items = new ArrayList<>();
         items.add(Ufx.contextMenuTitleItem(theAssets().text("pacman")));
@@ -144,6 +120,42 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
         items.add(miQuit);
 
         return items;
+    }
+
+    @Override
+    public void onGameContinued(GameEvent e) {
+        theGameLevel().showMessage(GameLevel.MESSAGE_READY);
+    }
+
+    @Override
+    public void onGameStarted(GameEvent e) {
+        boolean silent = theGameLevel().isDemoLevel() || theGameState() == TESTING_LEVELS_SHORT || theGameState() == TESTING_LEVELS_MEDIUM;
+        if (!silent) {
+            theSound().playGameReadySound();
+        }
+    }
+
+    @Override
+    public void update() {
+        if (optGameLevel().isPresent()) {
+            if (!theGameLevel().isDemoLevel()) updateSound();
+            updateHUD();
+        } else {
+            // Scene is already active 2 ticks before game level is created!
+            Logger.info("Tick {}: Game level not yet available", theClock().tickCount());
+        }
+    }
+
+    private void updateHUD() {
+        HUD hud = theGame().hud();
+        LivesCounter livesCounter = hud.livesCounter();
+        int numLivesDisplayed = theGame().lifeCount() - 1;
+        // As long as Pac-Man is still initially hidden in the maze, he is shown as an entry in the lives counter
+        if (theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible()) {
+            numLivesDisplayed += 1;
+        }
+        livesCounter.setVisibleLifeCount(Math.min(numLivesDisplayed, livesCounter.maxLivesDisplayed()));
+        hud.showCredit(theCoinMechanism().isEmpty());
     }
 
     private void updateSound() {
@@ -199,19 +211,6 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
         if (debugInfoVisibleProperty().get()) {
             actorsByZ.stream().filter(MovingActor.class::isInstance).map(MovingActor.class::cast).forEach(gr()::drawMovingActorInfo);
         }
-
-        configureHUD();
-    }
-
-    private void configureHUD() {
-        LivesCounter livesCounter = theGame().hud().livesCounter();
-        int numLivesDisplayed = theGame().lifeCount() - 1;
-        // As long as Pac-Man is still hidden in the maze, he is shown as an entry in the counter
-        if (theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible()) {
-            numLivesDisplayed += 1;
-        }
-        livesCounter.setVisibleLifeCount(Math.min(numLivesDisplayed, livesCounter.maxLivesDisplayed()));
-        theGame().hud().showCredit(theCoinMechanism().isEmpty());
     }
 
     private void drawLevelMessage() {

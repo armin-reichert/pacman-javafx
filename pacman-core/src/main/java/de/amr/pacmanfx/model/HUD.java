@@ -4,6 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model;
 
+/**
+ * Heads-Up Display aka HUD.
+ */
 public interface HUD {
 
     boolean isVisible();
