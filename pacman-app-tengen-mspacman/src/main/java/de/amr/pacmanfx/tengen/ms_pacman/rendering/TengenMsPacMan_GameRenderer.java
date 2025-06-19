@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman.rendering;
 
-import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.Vector2f;
@@ -112,20 +111,13 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
         if (hud.isLivesCounterVisible()) {
             LivesCounter livesCounter = hud.livesCounter();
             float x = 2 * TS, y = sceneSize.y() - TS;
-            int numLivesDisplayed = game.lifeCount() - 1;
-            // As long as Pac-Man is still hidden in the maze, he is shown as an entry in the counter
-            if (theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible()) {
-                numLivesDisplayed += 1;
-            }
-            numLivesDisplayed = Math.min(numLivesDisplayed, livesCounter.maxLivesDisplayed());
-            livesCounter.setVisibleLifeCount(numLivesDisplayed);
             Sprite sprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
             for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
                 drawSpriteScaled(sprite, x + TS * (2 * i), y);
             }
             if (game.lifeCount() > livesCounter.maxLivesDisplayed()) {
                 Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
-                fillTextAtScaledPosition("(%d)".formatted(game.lifeCount()), Color.YELLOW, font, x + TS * 10, y + TS);
+                fillTextAtScaledPosition("(%d)".formatted(game.lifeCount()), nesPaletteColor(0x28), font, x + TS * 10, y + TS);
             }
         }
 

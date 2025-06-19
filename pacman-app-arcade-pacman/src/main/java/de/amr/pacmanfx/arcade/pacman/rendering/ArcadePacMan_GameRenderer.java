@@ -19,6 +19,7 @@ import javafx.scene.text.FontWeight;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePalette.ARCADE_WHITE;
+import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePalette.ARCADE_YELLOW;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.ui.PacManGames.theAssets;
 import static java.util.Objects.requireNonNull;
@@ -79,8 +80,7 @@ public class ArcadePacMan_GameRenderer extends SpriteGameRenderer {
             if (game.lifeCount() > livesCounter.maxLivesDisplayed()) {
                 // show text indicating that more lives are available than symbols displayed (cheating may cause this)
                 Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
-                fillTextAtScaledPosition("(%d)".formatted(game.lifeCount()), Color.YELLOW, font,
-                    x + TS * 10, y + TS);
+                fillTextAtScaledPosition("(%d)".formatted(game.lifeCount()), ARCADE_YELLOW, font, x + TS * 10, y + TS);
             }
         }
 

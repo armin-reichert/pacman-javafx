@@ -8,6 +8,8 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.HUD;
+import de.amr.pacmanfx.model.LivesCounter;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -190,6 +192,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
                 dynamicCamera.setVerticalRangeInTiles(level.worldMap().numRows());
                 dynamicCamera.update(level.pac());
             }
+            updateHUD();
         });
     }
 
@@ -468,4 +471,16 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
                 .plus(0.5f * theGameLevel().houseSizeInTiles().x(), theGameLevel().houseSizeInTiles().y() + 1)
                 .scaled(TS);
     }
+
+    private void updateHUD() {
+        HUD hud = theGame().hud();
+        LivesCounter livesCounter = hud.livesCounter();
+        int numLivesDisplayed = theGame().lifeCount() - 1;
+        // As long as Pac-Man is still initially hidden in the maze, he is shown as an entry in the lives counter
+        if (theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible()) {
+            numLivesDisplayed += 1;
+        }
+        livesCounter.setVisibleLifeCount(Math.min(numLivesDisplayed, livesCounter.maxLivesDisplayed()));
+    }
+
 }
