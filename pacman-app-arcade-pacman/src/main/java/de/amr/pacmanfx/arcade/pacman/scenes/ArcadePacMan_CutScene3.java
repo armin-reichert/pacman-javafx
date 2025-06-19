@@ -13,8 +13,8 @@ import javafx.scene.media.MediaPlayer;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createGhost;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createPac;
-import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createRedGhost;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
@@ -42,7 +42,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
         theGame().setScoreVisible(true);
         theGame().levelCounter().setPosition(sizeInPx().x() - 4 * TS, sizeInPx().y() - 2 * TS);
         pac = createPac();
-        blinky = createRedGhost();
+        blinky = createGhost(RED_GHOST_SHADOW);
         music = theSound().createSound("intermission", 2);
 
         pac.setAnimations(theUI().configuration().createPacAnimations(pac));

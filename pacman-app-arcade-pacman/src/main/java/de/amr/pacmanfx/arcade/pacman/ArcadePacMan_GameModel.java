@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.OptionalInt;
 
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.lib.Waypoint.wp;
@@ -54,76 +55,69 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
         return pac;
     }
 
-    public static Ghost createRedGhost() {
-        return new Ghost(RED_GHOST_SHADOW, "Blinky") {
-            @Override
-            public void hunt(GameLevel level) {
-                var arcadeGame = (ArcadeCommon_GameModel) theGame();
-                boolean chase = arcadeGame.huntingTimer.phase() == HuntingPhase.CHASING || arcadeGame.cruiseElroy() > 0;
-                Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
-                setSpeed(theGame().actorSpeedControl().ghostAttackSpeed(level, this));
-                tryMovingTowardsTargetTile(level, targetTile);
-            }
-            @Override
-            public Vector2i chasingTargetTile(GameLevel level) {
-                // Blinky (red ghost) attacks Pac-Man directly
-                return level.pac().tile();
-            }
-        };
-    }
-
-    /** @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>. */
-    public static Ghost createPinkGhost() {
-        return new Ghost(PINK_GHOST_SPEEDY, "Pinky") {
-            @Override
-            public void hunt(GameLevel level) {
-                boolean chase = theGame().huntingTimer().phase() == HuntingPhase.CHASING;
-                Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
-                setSpeed(theGame().actorSpeedControl().ghostAttackSpeed(level, this));
-                tryMovingTowardsTargetTile(level, targetTile);
-            }
-            @Override
-            public Vector2i chasingTargetTile(GameLevel level) {
-                // Pinky (pink ghost) ambushes Pac-Man
-                return level.pac().tilesAheadWithOverflowBug(4);
-            }
-        };
-    }
-
-    /** @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>. */
-    public static Ghost createCyanGhost() {
-        return new Ghost(CYAN_GHOST_BASHFUL, "Inky") {
-            @Override
-            public void hunt(GameLevel level) {
-                boolean chase = theGame().huntingTimer().phase() == HuntingPhase.CHASING;
-                Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
-                setSpeed(theGame().actorSpeedControl().ghostAttackSpeed(level, this));
-                tryMovingTowardsTargetTile(level, targetTile);
-            }
-            @Override
-            public Vector2i chasingTargetTile(GameLevel level) {
-                // Inky (cyan ghost) attacks from opposite side as Blinky
-                return level.pac().tilesAheadWithOverflowBug(2).scaled(2).minus(level.ghost(RED_GHOST_SHADOW).tile());
-            }
-        };
-    }
-
-    public static Ghost createOrangeGhost() {
-        return new Ghost(ORANGE_GHOST_POKEY, "Clyde") {
-            @Override
-            public void hunt(GameLevel level) {
-                boolean chase = theGame().huntingTimer().phase() == HuntingPhase.CHASING;
-                Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
-                setSpeed(theGame().actorSpeedControl().ghostAttackSpeed(level, this));
-                tryMovingTowardsTargetTile(level, targetTile);
-            }
-            @Override
-            public Vector2i chasingTargetTile(GameLevel level) {
-                // Attacks directly or retreats towards scatter target if Pac is near
-                return tile().euclideanDist(level.pac().tile()) < 8
-                    ? level.ghostScatterTile(personality())
-                    : level.pac().tile();
-            }
+    public static Ghost createGhost(byte personality) {
+        requireValidGhostPersonality(personality);
+        return switch (personality) {
+            case RED_GHOST_SHADOW -> new Ghost(RED_GHOST_SHADOW, "Blinky") {
+                @Override
+                public void hunt(GameLevel level) {
+                    var arcadeGame = (ArcadeCommon_GameModel) theGame();
+                    boolean chase = arcadeGame.huntingTimer.phase() == HuntingPhase.CHASING || arcadeGame.cruiseElroy() > 0;
+                    Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
+                    setSpeed(theGame().actorSpeedControl().ghostAttackSpeed(level, this));
+                    tryMovingTowardsTargetTile(level, targetTile);
+                }
+                @Override
+                public Vector2i chasingTargetTile(GameLevel level) {
+                    // Blinky (red ghost) attacks Pac-Man directly
+                    return level.pac().tile();
+                }
+            };
+            case PINK_GHOST_SPEEDY -> new Ghost(PINK_GHOST_SPEEDY, "Pinky") {
+                @Override
+                public void hunt(GameLevel level) {
+                    boolean chase = theGame().huntingTimer().phase() == HuntingPhase.CHASING;
+                    Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
+                    setSpeed(theGame().actorSpeedControl().ghostAttackSpeed(level, this));
+                    tryMovingTowardsTargetTile(level, targetTile);
+                }
+                @Override
+                public Vector2i chasingTargetTile(GameLevel level) {
+                    // Pinky (pink ghost) ambushes Pac-Man
+                    return level.pac().tilesAheadWithOverflowBug(4);
+                }
+            };
+            case CYAN_GHOST_BASHFUL -> new Ghost(CYAN_GHOST_BASHFUL, "Inky") {
+                @Override
+                public void hunt(GameLevel level) {
+                    boolean chase = theGame().huntingTimer().phase() == HuntingPhase.CHASING;
+                    Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
+                    setSpeed(theGame().actorSpeedControl().ghostAttackSpeed(level, this));
+                    tryMovingTowardsTargetTile(level, targetTile);
+                }
+                @Override
+                public Vector2i chasingTargetTile(GameLevel level) {
+                    // Inky (cyan ghost) attacks from opposite side as Blinky
+                    return level.pac().tilesAheadWithOverflowBug(2).scaled(2).minus(level.ghost(RED_GHOST_SHADOW).tile());
+                }
+            };
+            case ORANGE_GHOST_POKEY -> new Ghost(ORANGE_GHOST_POKEY, "Clyde") {
+                @Override
+                public void hunt(GameLevel level) {
+                    boolean chase = theGame().huntingTimer().phase() == HuntingPhase.CHASING;
+                    Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
+                    setSpeed(theGame().actorSpeedControl().ghostAttackSpeed(level, this));
+                    tryMovingTowardsTargetTile(level, targetTile);
+                }
+                @Override
+                public Vector2i chasingTargetTile(GameLevel level) {
+                    // Attacks directly or retreats towards scatter target if Pac is near
+                    return tile().euclideanDist(level.pac().tile()) < 8
+                        ? level.ghostScatterTile(personality())
+                        : level.pac().tile();
+                }
+            };
+            default -> throw new IllegalArgumentException("Illegal ghost personality " + personality);
         };
     }
 
@@ -249,7 +243,11 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
         List<Vector2i> oneWayDownTiles = worldMap.tiles()
             .filter(tile -> worldMap.content(LayerID.TERRAIN, tile) == TerrainTile.ONE_WAY_DOWN.code())
             .toList();
-        level.setGhosts(createRedGhost(), createPinkGhost(), createCyanGhost(), createOrangeGhost());
+        level.setGhosts(
+            createGhost(RED_GHOST_SHADOW),
+            createGhost(PINK_GHOST_SPEEDY),
+            createGhost(CYAN_GHOST_BASHFUL),
+            createGhost(ORANGE_GHOST_POKEY));
         level.ghosts().forEach(ghost -> {
             ghost.reset();
             ghost.setRevivalPosition(ghost.personality() == RED_GHOST_SHADOW

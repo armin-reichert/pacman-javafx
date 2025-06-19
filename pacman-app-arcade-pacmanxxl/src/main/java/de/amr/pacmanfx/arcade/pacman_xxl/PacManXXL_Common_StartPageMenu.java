@@ -21,8 +21,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.Globals.theGameController;
+import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static de.amr.pacmanfx.ui.PacManGames.theAssets;
@@ -51,7 +50,12 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         ChaseAnimation(Canvas canvas) {
             ctx = canvas.getGraphicsContext2D();
             pac = createPac();
-            ghosts = new Ghost[] {createRedGhost(), createPinkGhost(), createCyanGhost(), createOrangeGhost()};
+            ghosts = new Ghost[] {
+                createGhost(RED_GHOST_SHADOW),
+                createGhost(PINK_GHOST_SPEEDY),
+                createGhost(CYAN_GHOST_BASHFUL),
+                createGhost(ORANGE_GHOST_POKEY)
+            };
         }
 
         void start() {
