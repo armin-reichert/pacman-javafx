@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 
 import static de.amr.pacmanfx.Globals.CUSTOM_MAP_DIR;
 import static de.amr.pacmanfx.ui.PacManGames.theClock;
+import static de.amr.pacmanfx.ui.PacManGames.theWatchdog;
 import static de.amr.pacmanfx.ui.PacManGames_UIBuilder.*;
 
 public class PacManXXL_Common_App extends Application {
@@ -37,10 +38,13 @@ public class PacManXXL_Common_App extends Application {
                 DashboardID.ABOUT)
             .stage(primaryStage, width, height)
             .show();
+
+        theWatchdog().addEventListener(watchEvents -> xxlMapSelector.loadCustomMaps());
     }
 
     @Override
     public void stop() {
         theClock().stop();
+        theWatchdog().stopWatching();
     }
 }

@@ -13,6 +13,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import static de.amr.pacmanfx.ui.PacManGames.theClock;
+import static de.amr.pacmanfx.ui.PacManGames.theWatchdog;
 import static de.amr.pacmanfx.ui.PacManGames_UIBuilder.PACMAN;
 import static de.amr.pacmanfx.ui.PacManGames_UIBuilder.buildUI;
 
@@ -41,5 +42,6 @@ public class ArcadePacMan_App extends Application {
     @Override
     public void stop() {
         theClock().stop();
+        theWatchdog().stopWatching();
     }
 }

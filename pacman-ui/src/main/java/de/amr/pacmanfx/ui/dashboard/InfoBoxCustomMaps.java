@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.dashboard;
 
-import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -17,10 +16,10 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 import static de.amr.pacmanfx.Globals.CUSTOM_MAP_DIR;
+import static de.amr.pacmanfx.ui.PacManGames.theWatchdog;
 
 public class InfoBoxCustomMaps extends InfoBox {
 
@@ -63,18 +62,15 @@ public class InfoBoxCustomMaps extends InfoBox {
         });
 
         addRow(mapsTableView);
-
         updateCustomMapList();
 
-        DirectoryWatchdog goodBoy = new DirectoryWatchdog(CUSTOM_MAP_DIR);
-        goodBoy.setEventConsumer(eventList -> {
+        theWatchdog().addEventListener(eventList -> {
             Logger.info("Custom map change(s) detected: {}",
                 eventList.stream()
                     .map(watchEvent -> String.format("%s: '%s'", watchEvent.kind(), watchEvent.context()))
                     .toList());
             updateCustomMapList();
         });
-        goodBoy.startWatching();
     }
 
     private void updateCustomMapList() {

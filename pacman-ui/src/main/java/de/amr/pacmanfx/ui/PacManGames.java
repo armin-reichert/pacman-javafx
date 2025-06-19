@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui;
 
+import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.sound.PacManGames_Sound;
@@ -26,4 +27,5 @@ public class PacManGames {
     public static Keyboard           theKeyboard() { return theKeyboard; }
     public static PacManGames_Sound  theSound() { return PacManGames_UI_Impl.SOUND_MANAGER; }
     public static PacManGames_UI     theUI() { return theUI; }
+    public static DirectoryWatchdog  theWatchdog() { return PacManGames_UI_Impl.WATCHDOG; }
 }

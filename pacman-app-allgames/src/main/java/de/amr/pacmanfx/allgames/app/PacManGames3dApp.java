@@ -21,6 +21,7 @@ import javafx.stage.Stage;
 
 import static de.amr.pacmanfx.Globals.CUSTOM_MAP_DIR;
 import static de.amr.pacmanfx.ui.PacManGames.theClock;
+import static de.amr.pacmanfx.ui.PacManGames.theWatchdog;
 import static de.amr.pacmanfx.ui.PacManGames_UIBuilder.*;
 
 /**
@@ -74,10 +75,13 @@ public class PacManGames3dApp extends Application {
                     DashboardID.KEYBOARD,
                     DashboardID.ABOUT)
             .show();
+
+        theWatchdog().addEventListener(watchEvents -> xxlSelector.loadCustomMaps());
     }
 
     @Override
     public void stop() {
         theClock().stop();
+        theWatchdog().stopWatching();
     }
 }

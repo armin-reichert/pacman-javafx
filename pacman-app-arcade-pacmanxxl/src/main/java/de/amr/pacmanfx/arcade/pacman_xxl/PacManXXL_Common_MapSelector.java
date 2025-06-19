@@ -1,6 +1,5 @@
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
-import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.MapSelectionMode;
@@ -35,23 +34,11 @@ public class PacManXXL_Common_MapSelector implements MapSelector {
     private final File customMapDir;
     private List<WorldMap> builtinMaps = new ArrayList<>();
     private final ObservableList<WorldMap> customMapsByFile = FXCollections.observableList(new ArrayList<>());
-    private final DirectoryWatchdog goodBoy;
-    private boolean customMapsUpToDate;
     private MapSelectionMode mapSelectionMode;
 
     public PacManXXL_Common_MapSelector(File customMapDir) {
         this.customMapDir = requireNonNull(customMapDir);
         mapSelectionMode = MapSelectionMode.CUSTOM_MAPS_FIRST;
-        customMapsUpToDate = false;
-        goodBoy = new DirectoryWatchdog(customMapDir);
-        goodBoy.setEventConsumer(eventList -> {
-            Logger.info("Custom map change(s) detected: {}",
-                eventList.stream()
-                    .map(watchEvent -> String.format("%s: '%s'", watchEvent.kind(), watchEvent.context()))
-                    .toList());
-            setCustomMapsUpToDate(false);
-            loadCustomMaps();
-        });
     }
 
     public MapSelectionMode mapSelectionMode() {
@@ -60,18 +47,6 @@ public class PacManXXL_Common_MapSelector implements MapSelector {
 
     public void setMapSelectionMode(MapSelectionMode mapSelectionMode) {
         this.mapSelectionMode = requireNonNull(mapSelectionMode);
-    }
-
-    public void startWatchingCustomMaps() {
-        goodBoy.startWatching();
-    }
-
-    public void setCustomMapsUpToDate(boolean customMapsUpToDate) {
-        this.customMapsUpToDate = customMapsUpToDate;
-    }
-
-    public boolean areCustomMapsUpToDate() {
-        return customMapsUpToDate;
     }
 
     @Override
@@ -86,10 +61,6 @@ public class PacManXXL_Common_MapSelector implements MapSelector {
 
     @Override
     public void loadCustomMaps() {
-        if (customMapsUpToDate) {
-            Logger.info("Custom maps not loaded as they are up-to-date");
-            return;
-        }
         File[] mapFiles = customMapDir.listFiles((dir, name) -> name.endsWith(".world"));
         if (mapFiles == null) {
             Logger.error("An error occurred accessing custom map directory {}", customMapDir);
@@ -111,7 +82,6 @@ public class PacManXXL_Common_MapSelector implements MapSelector {
                 Logger.error("Could not read custom map from file {}", mapFile);
             }
         }
-        customMapsUpToDate = true;
     }
 
     @Override

@@ -105,7 +105,8 @@ public abstract class SpriteGameRenderer implements GameRenderer {
                 case LivesCounter livesCounter   -> drawLivesCounter(livesCounter);
                 case LevelCounter levelCounter   -> drawLevelCounter(levelCounter);
                 case Animated animated           -> drawAnimatedActor(animated);
-                default -> throw new IllegalArgumentException("Cannot draw actor of class {}" + actor.getClass().getSimpleName());
+                default -> throw new IllegalArgumentException(
+                    "%s: Cannot draw actor of class %s".formatted(getClass().getSimpleName(), actor.getClass().getSimpleName()));
             }
         }
     }

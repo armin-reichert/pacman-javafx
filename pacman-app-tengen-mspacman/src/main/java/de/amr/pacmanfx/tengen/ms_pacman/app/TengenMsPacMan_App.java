@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_ASPECT;
 import static de.amr.pacmanfx.ui.PacManGames.theClock;
+import static de.amr.pacmanfx.ui.PacManGames.theWatchdog;
 import static de.amr.pacmanfx.ui.PacManGames_UIBuilder.MS_PACMAN_TENGEN;
 import static de.amr.pacmanfx.ui.PacManGames_UIBuilder.buildUI;
 
@@ -45,5 +46,6 @@ public class TengenMsPacMan_App extends Application {
     @Override
     public void stop() {
         theClock().stop();
+        theWatchdog().stopWatching();
     }
 }

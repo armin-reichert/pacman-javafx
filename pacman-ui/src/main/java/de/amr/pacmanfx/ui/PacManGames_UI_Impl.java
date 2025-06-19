@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.controller.GameState;
+import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
@@ -48,6 +49,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     static final PacManGames_Assets ASSETS = new PacManGames_Assets();
     static final GameClock GAME_CLOCK = new GameClock();
     static final PacManGames_Sound SOUND_MANAGER = new PacManGames_Sound();
+    static final DirectoryWatchdog WATCHDOG = new DirectoryWatchdog(CUSTOM_MAP_DIR);
 
     private final Map<String, PacManGames_UIConfig> configByGameVariant = new HashMap<>();
 
@@ -257,6 +259,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         startPagesView.currentStartPage().ifPresent(startPage -> startPage.layoutRoot().requestFocus());
         stage.centerOnScreen();
         stage.show();
+        WATCHDOG.startWatching();
     }
 
     @Override

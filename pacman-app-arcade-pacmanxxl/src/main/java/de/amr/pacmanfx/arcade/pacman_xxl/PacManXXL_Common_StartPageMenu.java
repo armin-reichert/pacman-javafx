@@ -46,11 +46,16 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         private final Ghost[] ghosts;
         private SpriteGameRenderer renderer;
         private boolean chasingGhosts;
+        private boolean running;
 
         ChaseAnimation(Canvas canvas) {
             ctx = canvas.getGraphicsContext2D();
             pac = createPac();
             ghosts = new Ghost[] {createRedGhost(), createPinkGhost(), createCyanGhost(), createOrangeGhost()};
+        }
+
+        void start() {
+            running = true;
         }
 
         void reset() {
@@ -70,6 +75,8 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         }
 
         void update() {
+            if (!running) return;
+
             if (ghosts[3].x() < -4 * TS && !chasingGhosts) {
                 chasingGhosts = true;
                 pac.setMoveAndWishDir(pac.moveDir().opposite());
@@ -111,6 +118,9 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         }
 
         void draw(float scaling) {
+            if (!running) return;
+            if (scaling == 0) return;
+
             ctx.save();
             ctx.translate(0, 23.5 * TS * scaling);
             ctx.setImageSmoothing(false);
@@ -131,6 +141,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
                     ghost.playAnimation(ANIM_GHOST_NORMAL);
                 }
             }
+            start();
         }
     }
 
@@ -291,7 +302,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
     @Override
     public void draw() {
         super.draw();
-        chaseAnimation.draw(scalingProperty().get());
+        chaseAnimation.draw(scalingPy.floatValue());
     }
 
     public MenuState state() { return state; }
