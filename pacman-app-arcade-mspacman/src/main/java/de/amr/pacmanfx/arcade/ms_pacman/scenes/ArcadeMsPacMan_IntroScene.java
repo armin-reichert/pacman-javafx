@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_GameRenderer;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
@@ -20,9 +19,10 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createGhost;
+import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createMsPacMan;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePalette.*;
-import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
@@ -90,7 +90,12 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
         marquee.show();
 
         msPacMan = createMsPacMan();
-        ghosts = new Ghost[] { createRedGhost(), createPinkGhost(), createCyanGhost(), createOrangeGhost() };
+        ghosts = new Ghost[] {
+            createGhost(RED_GHOST_SHADOW),
+            createGhost(PINK_GHOST_SPEEDY),
+            createGhost(CYAN_GHOST_BASHFUL),
+            createGhost(ORANGE_GHOST_POKEY)
+        };
         presentedGhostCharacter = RED_GHOST_SHADOW;
         numTicksBeforeRising = 0;
 
