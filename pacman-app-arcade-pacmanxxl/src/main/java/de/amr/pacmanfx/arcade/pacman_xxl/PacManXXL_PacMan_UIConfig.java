@@ -212,7 +212,6 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
         return new ArcadePacMan_PacAnimationMap(spriteSheet);
     }
 
-
     @Override
     public Node createLivesCounter3D() {
         String namespace = assetNamespace();
@@ -222,11 +221,6 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
                 theAssets().color(namespace + ".pac.color.eyes"),
                 theAssets().color(namespace + ".pac.color.palate")
         );
-    }
-
-    @Override
-    public Sprite createLivesCounterSprite() {
-        return spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
     }
 
     @Override

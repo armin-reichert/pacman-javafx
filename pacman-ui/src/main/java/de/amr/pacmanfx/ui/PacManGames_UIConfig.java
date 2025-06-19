@@ -28,7 +28,6 @@ public interface PacManGames_UIConfig {
     ActorAnimationMap createPacAnimations(Pac pac);
     ActorAnimationMap createGhostAnimations(Ghost ghost);
     Node createLivesCounter3D();
-    Sprite createLivesCounterSprite();
     PacBase3D createPac3D(Pac pac);
     Image createGhostNumberImage(int ghostIndex);
     Sprite createBonusSymbolSprite(byte symbol);

@@ -207,11 +207,6 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
     }
 
     @Override
-    public Sprite createLivesCounterSprite() {
-        return spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
-    }
-
-    @Override
     public PacBase3D createPac3D(Pac pac) {
         var pac3D = new MsPacMan3D(pac, PAC_3D_SIZE, theAssets(), assetNamespace());
         pac3D.light().setColor(theAssets().color(assetNamespace() + ".pac.color.head").desaturate());
@@ -244,13 +239,12 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
     }
 
     @Override
-    public SpriteAnimationMap createGhostAnimations(Ghost ghost) {
+    public SpriteAnimationMap<SpriteID> createGhostAnimations(Ghost ghost) {
         return new ArcadeMsPacMan_GhostAnimationMap(spriteSheet, ghost.personality());
     }
 
     @Override
-    public SpriteAnimationMap createPacAnimations(Pac pac) {
+    public SpriteAnimationMap<SpriteID> createPacAnimations(Pac pac) {
         return new ArcadeMsPacMan_PacAnimationMap(spriteSheet);
     }
-
 }

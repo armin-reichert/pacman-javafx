@@ -85,7 +85,7 @@ public class ArcadePacMan_GameRenderer extends SpriteGameRenderer {
 
         if (hud.isLivesCounterVisible()) {
             LivesCounter livesCounter = hud.livesCounter();
-            Sprite sprite = theUI().configuration().createLivesCounterSprite();
+            Sprite sprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
             for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
                 drawSpriteScaled(sprite, livesCounter.x() + TS * (2 * i), livesCounter.y());
             }

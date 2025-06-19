@@ -71,6 +71,7 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
         this.spriteSheet = requireNonNull(spriteSheet);
         this.mapRepository = requireNonNull(mapRepository);
         ctx = requireNonNull(canvas).getGraphicsContext2D();
+        ctx.setImageSmoothing(false);
     }
 
     @Override
@@ -131,7 +132,7 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
             }
             numLivesDisplayed = Math.min(numLivesDisplayed, livesCounter.maxLivesDisplayed());
             livesCounter.setVisibleLifeCount(numLivesDisplayed);
-            Sprite sprite = theUI().configuration().createLivesCounterSprite();
+            Sprite sprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
             for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
                 drawSpriteScaled(sprite, livesCounter.x() + TS * (2 * i), livesCounter.y());
             }
@@ -471,7 +472,6 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
         if (!clapperboard.isVisible()) return;
         clapperboard.sprite().ifPresent(sprite -> {
             double numberX = clapperboard.x() + 8, numberY = clapperboard.y() + 18; // baseline
-            ctx().setImageSmoothing(false);
             drawSpriteScaledCenteredAt(sprite, clapperboard.x() + HTS, clapperboard.y() + HTS);
             // over-paint number from sprite sheet
             ctx().save();

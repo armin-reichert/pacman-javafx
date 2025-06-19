@@ -71,6 +71,7 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
     public GameView(PacManGames_UI ui, Scene parentScene, DashboardID... dashboardIDs) {
         this.ui = requireNonNull(ui);
         this.parentScene = requireNonNull(parentScene);
+        canvas.getGraphicsContext2D().setImageSmoothing(false);
         configureCanvasContainer();
         configurePiPView();
         createLayers();

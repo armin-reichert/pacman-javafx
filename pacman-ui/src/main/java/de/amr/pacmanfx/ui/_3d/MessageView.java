@@ -62,6 +62,7 @@ public class MessageView extends ImageView {
         var canvas = new Canvas(width * QUALITY, height * QUALITY);
         double canvasFontSize = font.getSize() * QUALITY;
         var g = canvas.getGraphicsContext2D();
+        g.setImageSmoothing(false);
         g.setFill(Color.BLACK);
         g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         g.setStroke(borderColor);

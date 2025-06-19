@@ -12,8 +12,7 @@ import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.optGameLevel;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
-import static de.amr.pacmanfx.ui.PacManGames_UI.PY_CANVAS_BG_COLOR;
-import static de.amr.pacmanfx.ui.PacManGames_UI.PY_PIP_HEIGHT;
+import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -28,6 +27,7 @@ public class PictureInPictureView extends VBox {
 
     public PictureInPictureView() {
         canvas.heightProperty().bind(PY_PIP_HEIGHT);
+        canvas.getGraphicsContext2D().setImageSmoothing(false);
         getChildren().add(canvas);
         setPadding(new Insets(5, 15, 5, 15));
         visibleProperty().addListener((py,ov,nv) -> recomputeLayout());
