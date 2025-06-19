@@ -14,10 +14,7 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.MovingBonus;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
-import javafx.beans.property.FloatProperty;
-import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -35,32 +32,24 @@ public class ArcadeMsPacMan_GameRenderer extends SpriteGameRenderer {
 
     private final ArcadeMsPacMan_SpriteSheet spriteSheet;
     private BrightMazesSpriteSheet brightMazesSpriteSheet;
-    private final GraphicsContext ctx;
-    private final FloatProperty scalingPy = new SimpleFloatProperty(1.0f);
 
     public ArcadeMsPacMan_GameRenderer(
         ArcadeMsPacMan_SpriteSheet spriteSheet,
         BrightMazesSpriteSheet brightMazesSpriteSheet,
         Canvas canvas)
     {
+        super(canvas);
         this.spriteSheet = requireNonNull(spriteSheet);
         this.brightMazesSpriteSheet = requireNonNull(brightMazesSpriteSheet);
-        ctx = requireNonNull(canvas).getGraphicsContext2D();
     }
 
     protected ArcadeMsPacMan_GameRenderer(ArcadeMsPacMan_SpriteSheet spriteSheet, Canvas canvas) {
+        super(canvas);
         this.spriteSheet = requireNonNull(spriteSheet);
-        ctx = requireNonNull(canvas).getGraphicsContext2D();
     }
 
     @Override
     public ArcadeMsPacMan_SpriteSheet spriteSheet() { return spriteSheet; }
-
-    @Override
-    public GraphicsContext ctx() { return ctx; }
-
-    @Override
-    public FloatProperty scalingProperty() { return scalingPy; }
 
     @Override
     public void drawHUD(GameModel game) {
@@ -163,8 +152,8 @@ public class ArcadeMsPacMan_GameRenderer extends SpriteGameRenderer {
 
     public void drawMovingBonus(MovingBonus bonus) {
         if (bonus.state() == Bonus.STATE_INACTIVE) return;
-        ctx().save();
-        ctx().translate(0, bonus.elongationY());
+        ctx.save();
+        ctx.translate(0, bonus.elongationY());
         switch (bonus.state()) {
             case Bonus.STATE_EDIBLE -> {
                 Sprite sprite = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS)[bonus.symbol()];
@@ -175,7 +164,7 @@ public class ArcadeMsPacMan_GameRenderer extends SpriteGameRenderer {
                 drawActorSpriteCentered(bonus, sprite);
             }
         }
-        ctx().restore();
+        ctx.restore();
     }
 
     public void drawClapperBoard(Clapperboard clapperboard) {

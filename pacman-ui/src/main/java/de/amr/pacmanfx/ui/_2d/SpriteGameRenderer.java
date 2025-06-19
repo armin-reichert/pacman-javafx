@@ -9,6 +9,10 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SingleSpriteWithoutAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
+import javafx.beans.property.FloatProperty;
+import javafx.beans.property.SimpleFloatProperty;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -18,6 +22,19 @@ import static de.amr.pacmanfx.Globals.HTS;
 import static java.util.Objects.requireNonNull;
 
 public abstract class SpriteGameRenderer implements GameRenderer {
+
+    protected final GraphicsContext ctx;
+    protected final FloatProperty scalingPy = new SimpleFloatProperty(1);
+
+    protected SpriteGameRenderer(Canvas canvas) {
+        ctx = requireNonNull(canvas).getGraphicsContext2D();
+    }
+
+    @Override
+    public GraphicsContext ctx() { return ctx; }
+
+    @Override
+    public FloatProperty scalingProperty() { return scalingPy; }
 
     public abstract SpriteSheet<?> spriteSheet();
 
@@ -30,7 +47,7 @@ public abstract class SpriteGameRenderer implements GameRenderer {
      */
     public void drawSprite(Sprite sprite, double x, double y) {
         requireNonNull(sprite);
-        ctx().drawImage(spriteSheet().sourceImage(),
+        ctx.drawImage(spriteSheet().sourceImage(),
                 sprite.x(), sprite.y(), sprite.width(), sprite.height(),
                 x, y, sprite.width(), sprite.height());
     }
@@ -60,7 +77,7 @@ public abstract class SpriteGameRenderer implements GameRenderer {
     public void drawSpriteScaled(Image image, Sprite sprite, double x, double y) {
         requireNonNull(image);
         requireNonNull(sprite);
-        ctx().drawImage(image,
+        ctx.drawImage(image,
             sprite.x(), sprite.y(), sprite.width(), sprite.height(),
             scaled(x), scaled(y), scaled(sprite.width()), scaled(sprite.height()));
     }
@@ -134,9 +151,9 @@ public abstract class SpriteGameRenderer implements GameRenderer {
                 String autopilot = pac.isUsingAutopilot() ? "autopilot" : "";
                 String immune = pac.isImmune() ? "immune" : "";
                 String text = "%s\n%s".formatted(autopilot, immune).trim();
-                ctx().setFill(Color.WHITE);
-                ctx().setFont(Font.font("Monospaced", scaled(6)));
-                ctx().fillText(text, scaled(pac.x() - 4), scaled(pac.y() + 16));
+                ctx.setFill(Color.WHITE);
+                ctx.setFont(Font.font("Monospaced", scaled(6)));
+                ctx.fillText(text, scaled(pac.x() - 4), scaled(pac.y() + 16));
             }
             case Animated animated -> drawAnimatedMovingActorInfo(animated);
             default -> {}
@@ -150,16 +167,16 @@ public void drawAnimatedMovingActorInfo(Animated animated) {
         .filter(SpriteAnimationMap.class::isInstance)
         .map(SpriteAnimationMap.class::cast)
         .ifPresent(spriteAnimationMap -> {
-            ctx().save();
+            ctx.save();
             String selectedID = spriteAnimationMap.selectedAnimationID();
             if (selectedID != null) {
                 String text = "[%s:%d]".formatted(selectedID, spriteAnimationMap.currentAnimation().frameIndex());
                 double x = scaled(movingActor.x() - 4), y = scaled(movingActor.y() - 4);
-                ctx().setFill(Color.WHITE);
-                ctx().setFont(Font.font("Sans", scaled(7)));
-                ctx().fillText(text, x, y);
-                ctx().setStroke(Color.GRAY);
-                ctx().strokeText(text, x, y);
+                ctx.setFill(Color.WHITE);
+                ctx.setFont(Font.font("Sans", scaled(7)));
+                ctx.fillText(text, x, y);
+                ctx.setStroke(Color.GRAY);
+                ctx.strokeText(text, x, y);
             }
             if (movingActor.wishDir() != null) {
                 float scaling = scaling();
@@ -167,13 +184,13 @@ public void drawAnimatedMovingActorInfo(Animated animated) {
                 Vector2f arrowHead = center.plus(movingActor.wishDir().vector().scaled(12f)).scaled(scaling);
                 Vector2f guyCenter = center.scaled(scaling);
                 float radius = scaling * 2, diameter = 2 * radius;
-                ctx().setStroke(Color.WHITE);
-                ctx().setLineWidth(0.5);
-                ctx().strokeLine(guyCenter.x(), guyCenter.y(), arrowHead.x(), arrowHead.y());
-                ctx().setFill(movingActor.isNewTileEntered() ? Color.YELLOW : Color.GREEN);
-                ctx().fillOval(arrowHead.x() - radius, arrowHead.y() - radius, diameter, diameter);
+                ctx.setStroke(Color.WHITE);
+                ctx.setLineWidth(0.5);
+                ctx.strokeLine(guyCenter.x(), guyCenter.y(), arrowHead.x(), arrowHead.y());
+                ctx.setFill(movingActor.isNewTileEntered() ? Color.YELLOW : Color.GREEN);
+                ctx.fillOval(arrowHead.x() - radius, arrowHead.y() - radius, diameter, diameter);
             }
-            ctx().restore();
+            ctx.restore();
         });
     }
 }
