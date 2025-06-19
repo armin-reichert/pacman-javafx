@@ -11,6 +11,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
+import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.*;
 import static de.amr.pacmanfx.arcade.pacman.rendering.SpriteID.*;
@@ -28,7 +29,7 @@ public class ArcadePacMan_GhostAnimationMap extends SpriteAnimationMap<SpriteID>
     @Override
     public SpriteAnimation createAnimation(String id) {
         return switch (id) {
-            case ANIM_GHOST_NORMAL              -> SpriteAnimation.build().of(ghostNormalSprites(personality, Direction.LEFT)).frameTicks(8).forever();
+            case ANIM_GHOST_NORMAL              -> SpriteAnimation.build().of(ghostNormalSprites(Direction.LEFT)).frameTicks(8).forever();
             case ANIM_GHOST_FRIGHTENED          -> SpriteAnimation.build().of(spriteSheet().spriteSeq(SpriteID.GHOST_FRIGHTENED)).frameTicks(8).forever();
             case ANIM_GHOST_FLASHING            -> SpriteAnimation.build().of(spriteSheet().spriteSeq(SpriteID.GHOST_FLASHING)).frameTicks(7).forever();
             case ANIM_GHOST_EYES                -> SpriteAnimation.build().of(ghostEyesSprites(Direction.LEFT)).once();
@@ -58,7 +59,7 @@ public class ArcadePacMan_GhostAnimationMap extends SpriteAnimationMap<SpriteID>
     protected void updateActorSprites(Actor actor) {
         if (actor instanceof Ghost ghost) {
             if (isCurrentAnimationID(ANIM_GHOST_NORMAL)) {
-                currentAnimation().setSprites(ghostNormalSprites(ghost.personality(), ghost.wishDir()));
+                currentAnimation().setSprites(ghostNormalSprites(ghost.wishDir()));
             }
             if (isCurrentAnimationID(ANIM_GHOST_EYES)) {
                 currentAnimation().setSprites(ghostEyesSprites(ghost.wishDir()));
@@ -66,33 +67,33 @@ public class ArcadePacMan_GhostAnimationMap extends SpriteAnimationMap<SpriteID>
         }
     }
 
-    private Sprite[] ghostNormalSprites(byte id, Direction dir) {
-        return spriteSheet().spriteSeq(switch (id) {
-            case 0 -> switch (dir) {
+    private Sprite[] ghostNormalSprites(Direction dir) {
+        return spriteSheet().spriteSeq(switch (personality) {
+            case RED_GHOST_SHADOW -> switch (dir) {
                 case RIGHT -> SpriteID.RED_GHOST_RIGHT;
                 case LEFT ->  SpriteID.RED_GHOST_LEFT;
                 case UP ->    SpriteID.RED_GHOST_UP;
                 case DOWN ->  SpriteID.RED_GHOST_DOWN;
             };
-            case 1 -> switch (dir) {
+            case PINK_GHOST_SPEEDY -> switch (dir) {
                 case RIGHT -> SpriteID.PINK_GHOST_RIGHT;
                 case LEFT ->  SpriteID.PINK_GHOST_LEFT;
                 case UP ->    SpriteID.PINK_GHOST_UP;
                 case DOWN ->  SpriteID.PINK_GHOST_DOWN;
             };
-            case 2 -> switch (dir) {
+            case CYAN_GHOST_BASHFUL -> switch (dir) {
                 case RIGHT -> SpriteID.CYAN_GHOST_RIGHT;
                 case LEFT ->  SpriteID.CYAN_GHOST_LEFT;
                 case UP ->    SpriteID.CYAN_GHOST_UP;
                 case DOWN ->  SpriteID.CYAN_GHOST_DOWN;
             };
-            case 3 -> switch (dir) {
+            case ORANGE_GHOST_POKEY -> switch (dir) {
                 case RIGHT -> SpriteID.ORANGE_GHOST_RIGHT;
                 case LEFT ->  SpriteID.ORANGE_GHOST_LEFT;
                 case UP ->    SpriteID.ORANGE_GHOST_UP;
                 case DOWN ->  SpriteID.ORANGE_GHOST_DOWN;
             };
-            default -> throw new IllegalArgumentException("Illegal ghost ID " + id);
+            default -> throw new IllegalArgumentException();
         });
     }
 

@@ -12,6 +12,7 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 
 public class TengenMsPacMan_GhostAnimationMap extends SpriteAnimationMap<SpriteID> {
@@ -24,13 +25,13 @@ public class TengenMsPacMan_GhostAnimationMap extends SpriteAnimationMap<SpriteI
 
     public TengenMsPacMan_GhostAnimationMap(TengenMsPacMan_SpriteSheet spriteSheet, byte personality) {
         super(spriteSheet);
-        this.personality = personality;
+        this.personality = requireValidGhostPersonality(personality);
     }
 
     @Override
     protected SpriteAnimation createAnimation(String id) {
         return switch (id) {
-            case ANIM_GHOST_NORMAL      -> SpriteAnimation.build().of(ghostNormalSprites(personality, Direction.LEFT)).frameTicks(NORMAL_TICKS).forever();
+            case ANIM_GHOST_NORMAL      -> SpriteAnimation.build().of(ghostNormalSprites(Direction.LEFT)).frameTicks(NORMAL_TICKS).forever();
             case ANIM_GHOST_FRIGHTENED  -> SpriteAnimation.build().of(spriteSheet().spriteSeq(SpriteID.GHOST_FRIGHTENED)).frameTicks(FRIGHTENED_TICKS).forever();
             case ANIM_GHOST_FLASHING    -> SpriteAnimation.build().of(spriteSheet().spriteSeq(SpriteID.GHOST_FLASHING)).frameTicks(FLASH_TICKS).forever();
             case ANIM_GHOST_EYES        -> SpriteAnimation.build().of(ghostEyesSprites(Direction.LEFT)).once();
@@ -56,7 +57,7 @@ public class TengenMsPacMan_GhostAnimationMap extends SpriteAnimationMap<SpriteI
     protected void updateActorSprites(Actor actor) {
         if (actor instanceof Ghost ghost) {
             if (isCurrentAnimationID(ANIM_GHOST_NORMAL)) {
-                currentAnimation().setSprites(ghostNormalSprites(ghost.personality(), ghost.wishDir()));
+                currentAnimation().setSprites(ghostNormalSprites(ghost.wishDir()));
             }
             if (isCurrentAnimationID(ANIM_GHOST_EYES)) {
                 currentAnimation().setSprites(ghostEyesSprites(ghost.wishDir()));
@@ -64,8 +65,8 @@ public class TengenMsPacMan_GhostAnimationMap extends SpriteAnimationMap<SpriteI
         }
     }
 
-    private Sprite[] ghostNormalSprites(byte id, Direction dir) {
-        return switch (id) {
+    private Sprite[] ghostNormalSprites(Direction dir) {
+        return switch (personality) {
             case RED_GHOST_SHADOW -> switch (dir) {
                 case Direction.RIGHT -> spriteSheet().spriteSeq(SpriteID.RED_GHOST_RIGHT);
                 case Direction.LEFT  -> spriteSheet().spriteSeq(SpriteID.RED_GHOST_LEFT);
