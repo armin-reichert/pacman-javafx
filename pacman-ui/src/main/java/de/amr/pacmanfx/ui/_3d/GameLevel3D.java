@@ -133,7 +133,7 @@ public class GameLevel3D {
                 .anyMatch(Ghost::isVisible);
         houseOpenPy.set(ghostNearHouseEntry);
 
-        int livesCounterSize = theGame().livesCounter().lifeCount() - 1;
+        int livesCounterSize = theGame().lifeCount() - 1;
         // when the game starts and Pac-Man is not yet visible, show one more
         boolean oneMore = theGameState() == GameState.STARTING_GAME && !gameLevel.pac().isVisible();
         if (oneMore) livesCounterSize += 1;
@@ -268,7 +268,7 @@ public class GameLevel3D {
         levelCounter3D.setTranslateY(y);
         levelCounter3D.setTranslateZ(-6);
         int n = 0;
-        SpriteSheet spriteSheet = theUI().configuration().spriteSheet();
+        SpriteSheet<?> spriteSheet = theUI().configuration().spriteSheet();
         for (byte symbol : levelCounter.symbols()) {
             var material = new PhongMaterial(Color.WHITE);
             Sprite sprite = theUI().configuration().createBonusSymbolSprite(symbol);
@@ -331,7 +331,7 @@ public class GameLevel3D {
         ).play();
     }
 
-    public void updateBonus3D(Bonus bonus, SpriteSheet spriteSheet) {
+    public void updateBonus3D(Bonus bonus, SpriteSheet<?> spriteSheet) {
         requireNonNull(bonus);
         if (bonus3D != null) {
             mazeGroup.getChildren().remove(bonus3D);

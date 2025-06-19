@@ -221,7 +221,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     public void init() {
         mapSelector.loadAllMaps();
-        livesCounter().setInitialLifeCount(3);
+        setInitialLifeCount(3);
         resetEverything();
     }
 
@@ -237,7 +237,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     @Override
     public void prepareForNewGame() {
-        livesCounter().setLifeCount(livesCounter().initialLifeCount());
+        setLifeCount(initialLifeCount());
         level = null;
         propertyMap().clear();
         levelCounter.clear();
@@ -402,7 +402,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    public boolean isOver() { return livesCounter().lifeCount() == 0; }
+    public boolean isOver() { return lifeCount() == 0; }
 
     @Override
     public void startNewGame() {

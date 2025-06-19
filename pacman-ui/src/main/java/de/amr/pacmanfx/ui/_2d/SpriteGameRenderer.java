@@ -2,6 +2,7 @@ package de.amr.pacmanfx.ui._2d;
 
 import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.Vector2f;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.LivesCounter;
 import de.amr.pacmanfx.model.actors.*;
@@ -14,8 +15,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
 import static java.util.Objects.requireNonNull;
 
@@ -102,7 +102,7 @@ public abstract class SpriteGameRenderer implements GameRenderer {
             switch (actor) {
                 case StaticBonus staticBonus     -> drawStaticBonus(staticBonus);
                 case MovingBonus movingBonus     -> drawMovingBonus(movingBonus);
-                case LivesCounter livesCounter   -> drawLivesCounter(livesCounter);
+                case LivesCounter livesCounter   -> drawLivesCounter(theGame());
                 case LevelCounter levelCounter   -> drawLevelCounter(levelCounter);
                 case Animated animated           -> drawAnimatedActor(animated);
                 default -> throw new IllegalArgumentException(
@@ -158,15 +158,16 @@ public abstract class SpriteGameRenderer implements GameRenderer {
         }
     }
 
-    public void drawLivesCounter(LivesCounter livesCounter) {
+    public void drawLivesCounter(GameModel game) {
+        LivesCounter livesCounter = game.livesCounter();
         Sprite sprite = theUI().configuration().createLivesCounterSprite();
         for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
             drawSpriteScaled(sprite, livesCounter.x() + TS * (2 * i), livesCounter.y());
         }
-        if (livesCounter.lifeCount() > livesCounter.maxLivesDisplayed()) {
+        if (game.lifeCount() > livesCounter.maxLivesDisplayed()) {
             // show text indicating that more lives are available than symbols displayed (cheating may cause this)
             Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
-            fillText("(%d)".formatted(livesCounter.lifeCount()), Color.YELLOW, font,
+            fillText("(%d)".formatted(game.lifeCount()), Color.YELLOW, font,
                 livesCounter.x() + TS * 10, livesCounter.y() + TS);
         }
     }

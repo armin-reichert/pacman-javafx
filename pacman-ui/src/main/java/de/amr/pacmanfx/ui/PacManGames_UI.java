@@ -39,8 +39,8 @@ import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
 import static de.amr.pacmanfx.ui.ActionBindingSupport.createBinding;
 import static de.amr.pacmanfx.ui.PacManGames.*;
-import static de.amr.pacmanfx.uilib.Ufx.toggle;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
+import static de.amr.pacmanfx.uilib.Ufx.toggle;
 
 public interface PacManGames_UI {
     Color DEBUG_TEXT_FILL          = Color.YELLOW;
@@ -130,9 +130,9 @@ public interface PacManGames_UI {
 
     // Actions
 
-    static final int SIMULATION_SPEED_DELTA = 2;
-    static final int SIMULATION_SPEED_MIN   = 10;
-    static final int SIMULATION_SPEED_MAX   = 240;
+    int SIMULATION_SPEED_DELTA = 2;
+    int SIMULATION_SPEED_MIN   = 10;
+    int SIMULATION_SPEED_MAX   = 240;
 
     record SteeringAction(Direction dir) implements GameAction {
         @Override
@@ -159,8 +159,8 @@ public interface PacManGames_UI {
     GameAction ACTION_CHEAT_ADD_LIVES = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
-            theGame().livesCounter().addLives(3);
-            ui.showFlashMessage(theAssets().text("cheat_add_lives", theGame().livesCounter().lifeCount()));
+            theGame().addLives(3);
+            ui.showFlashMessage(theAssets().text("cheat_add_lives", theGame().lifeCount()));
         }
 
         @Override

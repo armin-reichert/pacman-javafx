@@ -51,7 +51,7 @@ public class InfoBoxGameControl extends InfoBox {
         setAction(buttonGroupLevelActions[GAME_LEVEL_START], ACTION_ARCADE_START_GAME); //TODO Tengen?
         setAction(buttonGroupLevelActions[GAME_LEVEL_QUIT], ACTION_RESTART_INTRO);
         setAction(buttonGroupLevelActions[GAME_LEVEL_NEXT], ACTION_CHEAT_ENTER_NEXT_LEVEL);
-        setAction(choiceBoxInitialLives, () -> theGame().livesCounter().setInitialLifeCount(choiceBoxInitialLives.getValue()));
+        setAction(choiceBoxInitialLives, () -> theGame().setInitialLifeCount(choiceBoxInitialLives.getValue()));
     }
 
     @Override
@@ -59,7 +59,7 @@ public class InfoBoxGameControl extends InfoBox {
         super.update();
 
         //TODO use binding
-        choiceBoxInitialLives.setValue(theGame().livesCounter().initialLifeCount());
+        choiceBoxInitialLives.setValue(theGame().initialLifeCount());
 
         spinnerCredit.setDisable(!(isOneOf(theGameState(), GameState.INTRO, GameState.SETTING_OPTIONS)));
         choiceBoxInitialLives.setDisable(theGameState() != GameState.INTRO);

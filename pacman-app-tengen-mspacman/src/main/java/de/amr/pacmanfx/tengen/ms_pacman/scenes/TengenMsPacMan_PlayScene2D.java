@@ -424,7 +424,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
         LivesCounter counter = theGame().livesCounter();
         counter.setPosition(2 * TS, sizeInPx().y() - TS);
         counter.show();
-        int numLivesDisplayed = counter.lifeCount() - 1;
+        int numLivesDisplayed = theGame().lifeCount() - 1;
         // As long as Pac-Man is still hidden in the maze, he is shown as an entry in the counter
         if (theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible()) {
             numLivesDisplayed += 1;
