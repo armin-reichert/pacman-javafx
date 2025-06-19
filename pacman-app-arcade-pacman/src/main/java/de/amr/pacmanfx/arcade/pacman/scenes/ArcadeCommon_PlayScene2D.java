@@ -179,12 +179,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
 
     @Override
     public Vector2f sizeInPx() {
-        if (optGameLevel().isPresent()) {
-            int numRows = theGameLevel().worldMap().numRows();
-            int numCols = theGameLevel().worldMap().numCols();
-            return new Vector2f(numCols * TS, numRows * TS);
-        }
-        return ARCADE_MAP_SIZE_IN_PIXELS;
+        return optGameLevel().map(GameLevel::worldSizePx).orElse(ARCADE_MAP_SIZE_IN_PIXELS);
     }
 
     @Override

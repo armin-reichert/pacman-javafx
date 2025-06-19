@@ -6,6 +6,7 @@ package de.amr.pacmanfx.tengen.ms_pacman;
 
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.Sprite;
+import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
@@ -62,8 +63,8 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     }
 
     public static final Vector2i NES_TILES = new Vector2i(32, 30);
-    public static final Vector2i NES_SIZE = NES_TILES.scaled(TS);
-    public static final float NES_ASPECT = (float) NES_SIZE.x() / NES_SIZE.y();
+    public static final Vector2f NES_SIZE_PX = NES_TILES.scaled(TS).toVector2f();
+    public static final float NES_ASPECT = NES_SIZE_PX.x() / NES_SIZE_PX.y();
 
     private final Image appIcon;
     private final TengenMsPacMan_SpriteSheet spriteSheet;
@@ -264,15 +265,14 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     }
 
     @Override
-    public SpriteAnimationMap createGhostAnimations(Ghost ghost) {
+    public SpriteAnimationMap<SpriteID> createGhostAnimations(Ghost ghost) {
         return new TengenMsPacMan_GhostAnimationMap(spriteSheet, ghost.personality());
     }
 
     @Override
-    public SpriteAnimationMap createPacAnimations(Pac pac) {
+    public SpriteAnimationMap<SpriteID> createPacAnimations(Pac pac) {
         return new TengenMsPacMan_PacAnimationMap(spriteSheet);
     }
-
 
     @Override
     public Node createLivesCounter3D() {

@@ -39,9 +39,7 @@ public class ArcadePacMan_StartScene extends GameScene2D implements ActionBindin
     }
 
     @Override
-    public Vector2f sizeInPx() {
-        return ARCADE_MAP_SIZE_IN_PIXELS;
-    }
+    public Vector2f sizeInPx() { return ARCADE_MAP_SIZE_IN_PIXELS; }
 
     @Override
     public void drawSceneContent() {

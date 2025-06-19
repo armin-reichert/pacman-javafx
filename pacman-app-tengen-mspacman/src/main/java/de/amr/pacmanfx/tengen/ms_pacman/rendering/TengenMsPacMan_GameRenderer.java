@@ -36,7 +36,7 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_MapRepository.strangeMap15Sprite;
 import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PacAnimationMap.*;
@@ -96,7 +96,7 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
         final TengenMsPacMan_HUD hud = theGame.hud();
         if (!hud.isVisible()) return;
 
-        Vector2f sceneSize = NES_SIZE.toVector2f();
+        Vector2f sceneSize = NES_SIZE_PX;
         if (optGameLevel().isPresent()) {
             int numRows = theGameLevel().worldMap().numRows();
             int numCols = theGameLevel().worldMap().numCols();

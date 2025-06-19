@@ -91,9 +91,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D implements ActionBind
     }
 
     @Override
-    public Vector2f sizeInPx() {
-        return NES_SIZE.toVector2f();
-    }
+    public Vector2f sizeInPx() { return NES_SIZE_PX; }
 
     @Override
     public TengenMsPacMan_GameRenderer gr() {

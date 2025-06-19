@@ -95,9 +95,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     }
 
     @Override
-    public Vector2f sizeInPx() {
-        return ARCADE_MAP_SIZE_IN_PIXELS;
-    }
+    public Vector2f sizeInPx() { return ARCADE_MAP_SIZE_IN_PIXELS; }
 
     @Override
     public void drawSceneContent() {

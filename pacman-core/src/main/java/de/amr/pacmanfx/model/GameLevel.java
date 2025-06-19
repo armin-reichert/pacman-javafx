@@ -231,6 +231,13 @@ public class GameLevel {
 
     public WorldMap worldMap() { return worldMap; }
 
+    /**
+     * @return world size in pixels as (size-x, size-y)
+     */
+    public Vector2f worldSizePx() {
+        return new Vector2f(worldMap.numCols() * TS, worldMap.numRows() * TS);
+    }
+
     public boolean isTileInsideWorld(Vector2i tile) { return !worldMap.outOfWorld(tile); }
 
     public Stream<Vector2i> neighborsOutsideWorld(Vector2i tile) {

@@ -114,9 +114,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D implements ActionBi
     }
 
     @Override
-    public Vector2f sizeInPx() {
-        return NES_SIZE.toVector2f();
-    }
+    public Vector2f sizeInPx() { return NES_SIZE_PX; }
 
     private TengenMsPacMan_GameModel tengenGame() { return (TengenMsPacMan_GameModel) theGame(); }
     

@@ -215,12 +215,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
 
     @Override
     public Vector2f sizeInPx() {
-        if (optGameLevel().isPresent()) {
-            int numRows = theGameLevel().worldMap().numRows();
-            int numCols = theGameLevel().worldMap().numCols();
-            return new Vector2f(numCols * TS, numRows * TS);
-        }
-        return NES_SIZE.toVector2f();
+        return optGameLevel().map(GameLevel::worldSizePx).orElse(NES_SIZE_PX);
     }
 
     @Override
@@ -384,7 +379,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
                 fixedCamera.setTranslateY(camY);
                 setScaling(fxSubScene.getHeight() / (tilesY * TS));
             }
-            case SCROLLING -> setScaling(fxSubScene.getHeight() / NES_SIZE.y());
+            case SCROLLING -> setScaling(fxSubScene.getHeight() / NES_SIZE_PX.y());
         }
         gr().setScaling(scaling());
 
@@ -399,10 +394,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
         }
         ctx().restore();
 
-        // NES screen is 32 tiles wide but mazes are only 28 tiles wide
-        final double indent = scaled(2 * TS);
         ctx().save();
-        ctx().translate(indent, 0);
+        // NES screen is 32 tiles wide but mazes are only 28 tiles wide
+        ctx().translate(scaled(2 * TS), 0);
         gr().drawHUD(theGame());
         ctx().restore();
     }
