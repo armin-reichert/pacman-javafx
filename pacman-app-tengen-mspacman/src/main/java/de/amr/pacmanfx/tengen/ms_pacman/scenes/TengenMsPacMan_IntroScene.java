@@ -208,10 +208,10 @@ public class TengenMsPacMan_IntroScene extends GameScene2D implements ActionBind
                 scene.msPacMan.setVisible(true);
 
                 scene.ghosts = new Ghost[] {
-                    createRedGhost(),
-                    createCyanGhost(),
-                    createPinkGhost(),
-                    createOrangeGhost()
+                    createGhost(RED_GHOST_SHADOW),
+                    createGhost(CYAN_GHOST_BASHFUL),
+                    createGhost(PINK_GHOST_SPEEDY),
+                    createGhost(ORANGE_GHOST_POKEY)
                 };
                 for (Ghost ghost : scene.ghosts) {
                     ghost.setPosition(TS * 33, ACTOR_Y);

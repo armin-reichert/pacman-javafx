@@ -18,7 +18,7 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
-import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.createRedGhost;
+import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.createGhost;
 import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer.blueShadedColor;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
 
@@ -39,7 +39,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
         theGame().setScoreVisible(false);
         grayScreen = false;
         presentsText = new Actor();
-        ghost = createRedGhost();
+        ghost = createGhost(RED_GHOST_SHADOW);
         ghost.setSpeed(0);
         ghost.setAnimations(theUI().configuration().createGhostAnimations(ghost));
         ghost.selectAnimation(ANIM_GHOST_NORMAL);
