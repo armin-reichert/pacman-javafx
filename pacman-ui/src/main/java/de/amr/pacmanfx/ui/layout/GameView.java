@@ -327,7 +327,7 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
                 }
             }
             case GameScene2D gameScene2D -> {
-                SpriteGameRenderer renderer = (SpriteGameRenderer) gameUIConfig.createRenderer(canvas);
+                SpriteGameRenderer renderer = (SpriteGameRenderer) gameUIConfig.createGameRenderer(canvas);
                 Vector2f sceneSize = gameScene2D.sizeInPx();
                 canvasContainer.setUnscaledCanvasWidth(sceneSize.x());
                 canvasContainer.setUnscaledCanvasHeight(sceneSize.y());

@@ -147,7 +147,7 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
     @Override
     public GameScene2D createPiPScene(Canvas canvas) {
         var gameScene = new ArcadeCommon_PlayScene2D();
-        gameScene.setGameRenderer(createRenderer(canvas));
+        gameScene.setGameRenderer(createGameRenderer(canvas));
         return gameScene;
     }
 
@@ -159,7 +159,7 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
     }
 
     @Override
-    public PacManXXL_MsPacMan_GameRenderer createRenderer(Canvas canvas) {
+    public PacManXXL_MsPacMan_GameRenderer createGameRenderer(Canvas canvas) {
         return new PacManXXL_MsPacMan_GameRenderer(spriteSheet, canvas);
     }
 

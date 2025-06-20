@@ -9,7 +9,6 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.HUD;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.LivesCounter;
 import de.amr.pacmanfx.model.actors.*;
@@ -92,7 +91,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
         }
         if (gameRenderer == null) { //TODO check if this can happen
             Logger.warn("No game renderer was existing when switching to 2D scene");
-            setGameRenderer((SpriteGameRenderer) theUI().configuration().createRenderer(canvas()));
+            setGameRenderer((SpriteGameRenderer) theUI().configuration().createGameRenderer(canvas()));
         }
     }
 

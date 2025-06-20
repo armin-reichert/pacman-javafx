@@ -72,7 +72,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         var canvas = new Canvas(quality * infoWidth, quality * infoHeight);
         canvas.getGraphicsContext2D().setImageSmoothing(false); // important!
 
-        var r = (TengenMsPacMan_GameRenderer) theUI().configuration().createRenderer(canvas);
+        var r = (TengenMsPacMan_GameRenderer) theUI().configuration().createGameRenderer(canvas);
         r.setScaling(quality);
         r.fillCanvas(level3D.floorColor());
         r.drawGameOptions(game.mapCategory(), game.difficulty(), game.pacBooster(), 0.5 * infoWidth, TS + HTS);

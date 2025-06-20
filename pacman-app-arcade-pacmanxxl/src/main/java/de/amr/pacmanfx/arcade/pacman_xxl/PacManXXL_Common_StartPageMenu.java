@@ -137,7 +137,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
 
         void setGameVariant(String gameVariant) {
             final PacManGames_UIConfig config = theUI().configuration(gameVariant);
-            renderer = (SpriteGameRenderer) config.createRenderer(ctx.getCanvas());
+            renderer = (SpriteGameRenderer) config.createGameRenderer(ctx.getCanvas());
             pac.setAnimations(config.createPacAnimations(pac));
             pac.playAnimation(ANIM_PAC_MUNCHING);
             for (Ghost ghost : ghosts) {

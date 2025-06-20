@@ -61,7 +61,6 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
     public ArcadeMsPacMan_UIConfig(PacManGames_Assets assets) {
-
         spriteSheet = new ArcadeMsPacMan_SpriteSheet(loadImage("graphics/mspacman_spritesheet.png"));
         brightMazesSpriteSheet = new BrightMazesSpriteSheet(loadImage("graphics/mazes_flashing.png"));
 
@@ -157,7 +156,7 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     @Override
     public GameScene2D createPiPScene(Canvas canvas) {
         var gameScene = new ArcadeCommon_PlayScene2D();
-        gameScene.setGameRenderer(createRenderer(canvas));
+        gameScene.setGameRenderer(createGameRenderer(canvas));
         return gameScene;
     }
 
@@ -167,7 +166,7 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     }
 
     @Override
-    public ArcadeMsPacMan_GameRenderer createRenderer(Canvas canvas) {
+    public ArcadeMsPacMan_GameRenderer createGameRenderer(Canvas canvas) {
         return new ArcadeMsPacMan_GameRenderer(spriteSheet, brightMazesSpriteSheet, canvas);
     }
 

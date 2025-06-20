@@ -37,7 +37,7 @@ public class PictureInPictureView extends VBox {
 
     public void setScene2D(GameScene2D scene2D) {
         this.scene2D = requireNonNull(scene2D);
-        this.scene2D.setGameRenderer((SpriteGameRenderer) theUI().configuration().createRenderer(canvas));
+        this.scene2D.setGameRenderer((SpriteGameRenderer) theUI().configuration().createGameRenderer(canvas));
         this.scene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
         recomputeLayout();
     }

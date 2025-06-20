@@ -174,7 +174,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
         theGame().hud().showLivesCounter(true);
 
         TengenMsPacMan_UIConfig config = (TengenMsPacMan_UIConfig) theUI().configuration();
-        setGameRenderer(config.createRenderer(canvas()));
+        setGameRenderer(config.createGameRenderer(canvas()));
         dynamicCamera.moveTop();
         messageMovement = new MessageMovement();
     }
@@ -237,7 +237,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
 
         bindActionsToKeys();
         TengenMsPacMan_UIConfig config = (TengenMsPacMan_UIConfig) theUI().configuration();
-        setGameRenderer(config.createRenderer(canvas()));
+        setGameRenderer(config.createGameRenderer(canvas()));
         gr().ensureRenderingHintsAreApplied(theGameLevel());
     }
 
@@ -248,7 +248,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
 
         bindActionsToKeys();
         TengenMsPacMan_UIConfig config = (TengenMsPacMan_UIConfig) theUI().configuration();
-        setGameRenderer(config.createRenderer(canvas()));
+        setGameRenderer(config.createGameRenderer(canvas()));
         gr().ensureRenderingHintsAreApplied(theGameLevel());
     }
 

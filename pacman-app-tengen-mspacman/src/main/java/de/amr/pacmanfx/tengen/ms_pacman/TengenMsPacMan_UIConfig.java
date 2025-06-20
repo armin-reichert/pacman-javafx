@@ -210,7 +210,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     @Override
     public GameScene2D createPiPScene(Canvas canvasNotUsed) {
         var gameScene = new TengenMsPacMan_PiPScene();
-        gameScene.setGameRenderer(createRenderer(gameScene.canvas()));
+        gameScene.setGameRenderer(createGameRenderer(gameScene.canvas()));
         return gameScene;
     }
 
@@ -221,7 +221,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     public TengenMsPacMan_SpriteSheet spriteSheet() {return spriteSheet;}
 
     @Override
-    public TengenMsPacMan_GameRenderer createRenderer(Canvas canvas) {
+    public TengenMsPacMan_GameRenderer createGameRenderer(Canvas canvas) {
         var renderer = new TengenMsPacMan_GameRenderer(spriteSheet, mapRepository, canvas);
         renderer.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
         return renderer;

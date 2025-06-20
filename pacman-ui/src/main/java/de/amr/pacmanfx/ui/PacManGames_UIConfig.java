@@ -35,7 +35,7 @@ public interface PacManGames_UIConfig {
     Image createBonusSymbolImage(byte symbol);
     Image createBonusValueImage(byte symbol);
     GameScene2D createPiPScene(Canvas canvas);
-    GameRenderer createRenderer(Canvas canvas);
+    GameRenderer createGameRenderer(Canvas canvas);
     Stream<GameScene> gameScenes();
     boolean gameSceneHasID(GameScene gameScene, String sceneID);
     default boolean isGameCanvasDecorated() { return true; }

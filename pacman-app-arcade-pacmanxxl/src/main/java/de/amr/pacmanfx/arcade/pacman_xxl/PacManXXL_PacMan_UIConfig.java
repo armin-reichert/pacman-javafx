@@ -141,12 +141,12 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
     @Override
     public GameScene2D createPiPScene(Canvas canvas) {
         var gameScene = new ArcadeCommon_PlayScene2D();
-        gameScene.setGameRenderer(createRenderer(canvas));
+        gameScene.setGameRenderer(createGameRenderer(canvas));
         return gameScene;
     }
 
     @Override
-    public PacManXXL_PacMan_GameRenderer createRenderer(Canvas canvas) {
+    public PacManXXL_PacMan_GameRenderer createGameRenderer(Canvas canvas) {
         return new PacManXXL_PacMan_GameRenderer(spriteSheet, canvas);
     }
     @Override
