@@ -75,6 +75,11 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         });
         configByGameVariant.forEach((gameVariant, config) -> {
             config.createGameScenes();
+            config.gameScenes().forEach(scene -> {
+                if (scene instanceof GameScene2D gameScene2D) {
+                    gameScene2D.debugInfoVisibleProperty().bind(PY_DEBUG_INFO_VISIBLE);
+                }
+            });
             Logger.info("Game scenes for game variant {} created", gameVariant);
         });
     }
@@ -325,11 +330,6 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     public void setConfiguration(String variant, PacManGames_UIConfig configuration) {
         requireNonNull(variant);
         requireNonNull(configuration);
-        configuration.gameScenes().forEach(scene -> {
-            if (scene instanceof GameScene2D gameScene2D) {
-                gameScene2D.debugInfoVisibleProperty().bind(PY_DEBUG_INFO_VISIBLE);
-            }
-        });
         configByGameVariant.put(variant, configuration);
     }
 
