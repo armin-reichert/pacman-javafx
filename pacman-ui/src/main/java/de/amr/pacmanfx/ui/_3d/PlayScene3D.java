@@ -17,6 +17,7 @@ import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.uilib.CameraControlledView;
+import de.amr.pacmanfx.uilib.Ufx;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.beans.property.DoubleProperty;
@@ -376,20 +377,25 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
                         level3D.ghost3D(ghost.personality()).setNumberTexture(numberImage);
                     });
                 case LEVEL_COMPLETE -> {
+                    theGameState().timer().resetIndefiniteTime(); // expires when animation ends
                     theSound().stopAll();
+
+                    level3D.stopAnimations();
                     level3D.pellets3D().forEach(Pellet3D::onEaten);
                     level3D.energizers3D().forEach(Energizer3D::onEaten);
                     level3D.maze3D().door3D().setVisible(false);
-                    level3D.stopAnimations();
-                    Animation animation = level3D.createLevelCompleteAnimation();
-                    animation.setDelay(Duration.seconds(2));
+
+                    var animation = new SequentialTransition(
+                        Ufx.doAfterSec(3, () -> {
+                            perspectiveIDPy.unbind();
+                            perspectiveIDPy.set(PerspectiveID.TOTAL);
+                        }),
+                        level3D.createLevelCompleteAnimation()
+                    );
                     animation.setOnFinished(e -> {
                         perspectiveIDPy.bind(PY_3D_PERSPECTIVE);
                         theGameController().letCurrentGameStateExpire();
                     });
-                    theGameState().timer().resetIndefiniteTime();
-                    perspectiveIDPy.unbind();
-                    perspectiveIDPy.set(PerspectiveID.TOTAL);
                     animation.play();
                 }
                 case LEVEL_TRANSITION -> {

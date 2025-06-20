@@ -150,7 +150,8 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
         }
     }
 
-    private void drawLevelNumberBox(int number, double x, double y) {
+    // this is also used by the 3D scene
+    public void drawLevelNumberBox(int number, double x, double y) {
         drawSpriteScaled(spriteSheet.sprite(SpriteID.LEVEL_NUMBER_BOX), x, y);
         int tens = number / 10, ones = number % 10;
         if (tens > 0) {
