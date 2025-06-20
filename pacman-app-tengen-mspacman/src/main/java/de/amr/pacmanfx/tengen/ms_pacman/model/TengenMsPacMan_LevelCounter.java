@@ -66,4 +66,19 @@ public class TengenMsPacMan_LevelCounter implements LevelCounter {
     public boolean isEnabled() {
         return enabledProperty().get();
     }
+
+    // Additional features
+
+    private int displayedLevelNumber;
+
+    /**
+     * @param number level number or 0 if no level number shall be displayed
+     */
+    public void setDisplayedLevelNumber(int number) {
+        displayedLevelNumber = number;
+    }
+
+    public int displayedLevelNumber() {
+        return displayedLevelNumber;
+    }
 }

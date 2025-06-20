@@ -8,7 +8,6 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.HUD;
 import de.amr.pacmanfx.model.LivesCounter;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
@@ -17,6 +16,8 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
+import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_HUD;
+import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_LevelCounter;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
 import de.amr.pacmanfx.ui.ActionBindingSupport;
 import de.amr.pacmanfx.ui.GameAction;
@@ -473,7 +474,17 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
     }
 
     private void updateHUD() {
-        HUD hud = theGame().hud();
+        TengenMsPacMan_GameModel theGame = (TengenMsPacMan_GameModel) theGame();
+        TengenMsPacMan_HUD hud = theGame.hud();
+
+        TengenMsPacMan_LevelCounter levelCounter = hud.levelCounter();
+        //TODO check demo level behavior in emulator. Are there demo levels for non-ARCADE maps at all?
+        if (theGame.mapCategory() == MapCategory.ARCADE || optGameLevel().isEmpty() || theGameLevel().isDemoLevel()) {
+            levelCounter.setDisplayedLevelNumber(0); // no level number boxes for ARCADE maps or when level not yet created
+        } else {
+            levelCounter.setDisplayedLevelNumber(theGameLevel().number());
+        }
+
         LivesCounter livesCounter = hud.livesCounter();
         int numLivesDisplayed = theGame().lifeCount() - 1;
         // As long as Pac-Man is still initially hidden in the maze, he is shown as an entry in the lives counter
@@ -482,5 +493,4 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
         }
         livesCounter.setVisibleLifeCount(Math.min(numLivesDisplayed, livesCounter.maxLivesDisplayed()));
     }
-
 }

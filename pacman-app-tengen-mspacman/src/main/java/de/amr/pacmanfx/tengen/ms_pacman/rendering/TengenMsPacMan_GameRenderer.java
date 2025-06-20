@@ -98,9 +98,7 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
         Vector2f sceneSize = optGameLevel().map(GameLevel::worldSizePx).orElse(NES_SIZE_PX);
 
         if (hud.isScoreVisible()) {
-            Color scoreColor = nesPaletteColor(0x20);
-            Font scoreFont = theAssets().arcadeFont(8);
-            drawScores(theGame, scoreColor, scoreFont);
+            drawScores(theGame, nesPaletteColor(0x20), theAssets().arcadeFont(8));
         }
 
         if (hud.isLivesCounterVisible()) {
@@ -108,7 +106,7 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
             float x = 2 * TS, y = sceneSize.y() - TS;
             Sprite sprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
             for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
-                drawSpriteScaled(sprite, x + TS * (2 * i), y);
+                drawSpriteScaled(sprite, x + i * 2 * TS, y);
             }
             if (game.lifeCount() > livesCounter.maxLivesDisplayed()) {
                 Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
@@ -117,13 +115,11 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
         }
 
         if (hud.isLevelCounterVisible()) {
-            //TODO move this code elsewhere
-            if (theGame.mapCategory() == MapCategory.ARCADE
-                || optGameLevel().isPresent() && theGameLevel().isDemoLevel())
-            {
-                drawLevelCounterWithLevelNumbers(false, 0, game.hud().levelCounter(), sceneSize);
+            TengenMsPacMan_LevelCounter levelCounter = hud.levelCounter();
+            if (levelCounter.displayedLevelNumber() != 0) {
+                drawLevelCounterWithLevelNumbers(true, levelCounter.displayedLevelNumber(), levelCounter, sceneSize);
             } else {
-                drawLevelCounterWithLevelNumbers(true, theGameLevel().number(), game.hud().levelCounter(), sceneSize);
+                drawLevelCounterWithLevelNumbers(false, 0, levelCounter, sceneSize);
             }
         }
     }
