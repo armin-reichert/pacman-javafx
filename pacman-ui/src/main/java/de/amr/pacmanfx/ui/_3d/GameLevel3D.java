@@ -398,9 +398,6 @@ public class GameLevel3D {
         if (livesCounterAnimation != null) {
             livesCounterAnimation.stop();
         }
-        if (levelCompleteAnimation != null) {
-            levelCompleteAnimation.stop();
-        }
     }
 
     public Maze3D maze3D() { return maze3D; }
