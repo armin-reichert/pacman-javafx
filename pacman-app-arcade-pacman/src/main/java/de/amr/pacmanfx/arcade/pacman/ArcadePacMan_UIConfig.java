@@ -120,61 +120,11 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
         storeLocalAsset(assets, "audio.siren.3",                   url("sound/siren_3.mp3"));
         storeLocalAsset(assets, "audio.siren.4",                   url("sound/siren_4.mp3"));
         storeLocalAsset(assets, "audio.ghost_returns",             url("sound/retreating.mp3"));
-
-        scenesByID.put("BootScene",   new ArcadeCommon_BootScene2D());
-        scenesByID.put("IntroScene",  new ArcadePacMan_IntroScene());
-        scenesByID.put("StartScene",  new ArcadePacMan_StartScene());
-        scenesByID.put("PlayScene2D", new ArcadeCommon_PlayScene2D());
-        scenesByID.put("PlayScene3D", new PlayScene3D());
-        scenesByID.put("CutScene1",   new ArcadePacMan_CutScene1());
-        scenesByID.put("CutScene2",   new ArcadePacMan_CutScene2());
-        scenesByID.put("CutScene3",   new ArcadePacMan_CutScene3());
-    }
-
-    @Override
-    public GameScene selectGameScene(GameModel game, GameState gameState) {
-        String sceneID = switch (gameState) {
-            case GameState.BOOT               -> "BootScene";
-            case GameState.SETTING_OPTIONS    -> "StartScene";
-            case GameState.INTRO              -> "IntroScene";
-            case GameState.INTERMISSION       -> {
-                if (optGameLevel().isEmpty()) {
-                    throw new IllegalStateException("Cannot determine cut scene, no game level available");
-                }
-                int levelNumber = theGameLevel().number();
-                if (game.cutSceneNumber(levelNumber).isEmpty()) {
-                    throw new IllegalStateException("Cannot determine cut scene after level %d".formatted(levelNumber));
-                }
-                yield "CutScene" + game.cutSceneNumber(levelNumber).getAsInt();
-            }
-            case GameState.TESTING_CUT_SCENES -> "CutScene" + game.<Integer>getProperty("intermissionTestNumber");
-            default -> PY_3D_ENABLED.get() ?  "PlayScene3D" : "PlayScene2D";
-        };
-        return scenesByID.get(sceneID);
     }
 
     @Override
     public String assetNamespace() {
         return ANS;
-    }
-
-    @Override
-    public boolean gameSceneHasID(GameScene gameScene, String sceneID) {
-        requireNonNull(gameScene);
-        requireNonNull(sceneID);
-        return scenesByID.get(sceneID) == gameScene;
-    }
-
-    @Override
-    public Stream<GameScene> gameScenes() {
-        return scenesByID.values().stream();
-    }
-
-    @Override
-    public GameScene2D createPiPScene(Canvas canvas) {
-        var gameScene = new ArcadeCommon_PlayScene2D();
-        gameScene.setGameRenderer(createGameRenderer(canvas));
-        return gameScene;
     }
 
     @Override
@@ -201,9 +151,9 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
     }
 
     @Override
-    public Image createGhostNumberImage(int ghostIndex) {
+    public Image createGhostNumberImage(int index) {
         Sprite[] numberSprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
-        return spriteSheet.image(numberSprites[ghostIndex]);
+        return spriteSheet.image(numberSprites[index]);
     }
 
     @Override
@@ -233,5 +183,60 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
         var pac3D = new PacMan3D(pac, PAC_3D_SIZE, theAssets(), ANS);
         pac3D.light().setColor(theAssets().color(ANS + ".pac.color.head").desaturate());
         return pac3D;
+    }
+
+    // Game scene config
+
+    @Override
+    public Stream<GameScene> gameScenes() {
+        return scenesByID.values().stream();
+    }
+
+    @Override
+    public void createGameScenes() {
+        scenesByID.put("BootScene",   new ArcadeCommon_BootScene2D());
+        scenesByID.put("IntroScene",  new ArcadePacMan_IntroScene());
+        scenesByID.put("StartScene",  new ArcadePacMan_StartScene());
+        scenesByID.put("PlayScene2D", new ArcadeCommon_PlayScene2D());
+        scenesByID.put("PlayScene3D", new PlayScene3D());
+        scenesByID.put("CutScene1",   new ArcadePacMan_CutScene1());
+        scenesByID.put("CutScene2",   new ArcadePacMan_CutScene2());
+        scenesByID.put("CutScene3",   new ArcadePacMan_CutScene3());
+    }
+
+    @Override
+    public GameScene2D createPiPScene(Canvas canvas) {
+        var gameScene = new ArcadeCommon_PlayScene2D();
+        gameScene.setGameRenderer(createGameRenderer(canvas));
+        return gameScene;
+    }
+
+    @Override
+    public GameScene selectGameScene(GameModel game, GameState gameState) {
+        String sceneID = switch (gameState) {
+            case GameState.BOOT               -> "BootScene";
+            case GameState.SETTING_OPTIONS    -> "StartScene";
+            case GameState.INTRO              -> "IntroScene";
+            case GameState.INTERMISSION       -> {
+                if (optGameLevel().isEmpty()) {
+                    throw new IllegalStateException("Cannot determine cut scene, no game level available");
+                }
+                int levelNumber = theGameLevel().number();
+                if (game.cutSceneNumber(levelNumber).isEmpty()) {
+                    throw new IllegalStateException("Cannot determine cut scene after level %d".formatted(levelNumber));
+                }
+                yield "CutScene" + game.cutSceneNumber(levelNumber).getAsInt();
+            }
+            case GameState.TESTING_CUT_SCENES -> "CutScene" + game.<Integer>getProperty("intermissionTestNumber");
+            default -> PY_3D_ENABLED.get() ?  "PlayScene3D" : "PlayScene2D";
+        };
+        return scenesByID.get(sceneID);
+    }
+
+    @Override
+    public boolean gameSceneHasID(GameScene gameScene, String sceneID) {
+        requireNonNull(gameScene);
+        requireNonNull(sceneID);
+        return scenesByID.get(sceneID) == gameScene;
     }
 }

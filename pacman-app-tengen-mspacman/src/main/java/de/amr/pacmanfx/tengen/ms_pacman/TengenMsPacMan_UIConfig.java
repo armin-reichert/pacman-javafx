@@ -132,7 +132,6 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         storeLocalAsset(assets, "audio.intermission.4.junior.1",    loadAudioClip("sound/ms-theend1.wav"));
         storeLocalAsset(assets, "audio.intermission.4.junior.2",    loadAudioClip("sound/ms-theend2.wav"));
 
-
         // used only in 3D scene when level is completed:
         storeLocalAsset(assets, "audio.level_complete",             url("sound/common/level-complete.mp3"));
         storeLocalAsset(assets, "audio.sweep",                      loadAudioClip("sound/common/sweep.mp3"));
@@ -152,7 +151,93 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         storeLocalAsset(assets, "audio.siren.4",                    url("sound/ms-siren2.wav"));
         storeLocalAsset(assets, "audio.ghost_returns",              url("sound/ms-eyes.wav"));
         storeLocalAsset(assets, "audio.bonus_bouncing",             url("sound/fruitbounce.wav"));
+    }
 
+    @Override
+    public String assetNamespace() { return ANS; }
+
+    @Override
+    public boolean isGameCanvasDecorated() { return false; }
+
+    @Override
+    public TengenMsPacMan_SpriteSheet spriteSheet() {return spriteSheet;}
+
+    @Override
+    public TengenMsPacMan_GameRenderer createGameRenderer(Canvas canvas) {
+        var renderer = new TengenMsPacMan_GameRenderer(spriteSheet, mapRepository, canvas);
+        renderer.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
+        return renderer;
+    }
+
+    @Override
+    public Image createGhostNumberImage(int index) {
+        Sprite[] sprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
+        return spriteSheet.image(sprites[index]);
+    }
+
+    @Override
+    public Image createBonusSymbolImage(byte symbol) {
+        return spriteSheet.image(spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS)[symbol]);
+    }
+
+    @Override
+    public Image createBonusValueImage(byte symbol) {
+        //TODO should this logic be implemented here?
+        // 0=100,1=200,2=500,3=700,4=1000,5=2000,6=3000,7=4000,8=5000,9=6000,10=7000,11=8000,12=9000, 13=10_000
+        int index = switch (symbol) {
+            case TengenMsPacMan_GameModel.BONUS_BANANA -> 8;    // 5000!
+            case TengenMsPacMan_GameModel.BONUS_MILK -> 6;      // 3000!
+            case TengenMsPacMan_GameModel.BONUS_ICE_CREAM -> 7; // 4000!
+            default -> symbol;
+        };
+        return spriteSheet.image(spriteSheet.spriteSeq(SpriteID.BONUS_VALUES)[index]);
+    }
+
+    @Override
+    public WorldMapColorScheme worldMapColorScheme(WorldMap worldMap) {
+        NES_ColorScheme colorScheme = worldMap.getConfigValue("nesColorScheme");
+        return new WorldMapColorScheme(
+            colorScheme.fillColor(), colorScheme.strokeColor(), colorScheme.strokeColor(), colorScheme.pelletColor());
+    }
+
+    @Override
+    public SpriteAnimationMap<SpriteID> createGhostAnimations(Ghost ghost) {
+        return new TengenMsPacMan_GhostAnimationMap(spriteSheet, ghost.personality());
+    }
+
+    @Override
+    public SpriteAnimationMap<SpriteID> createPacAnimations(Pac pac) {
+        return new TengenMsPacMan_PacAnimationMap(spriteSheet);
+    }
+
+    @Override
+    public Node createLivesCounter3D() {
+        return new Group(
+            Model3DRepository.get().createPacShape(
+                    LIVES_COUNTER_3D_SIZE,
+                    theAssets().color(ANS + ".pac.color.head"),
+                    theAssets().color(ANS + ".pac.color.eyes"),
+                    theAssets().color(ANS + ".pac.color.palate")
+            ),
+            Model3DRepository.get().createFemaleBodyParts(LIVES_COUNTER_3D_SIZE,
+                    theAssets().color(ANS + ".pac.color.hairbow"),
+                    theAssets().color(ANS + ".pac.color.hairbow.pearls"),
+                    theAssets().color(ANS + ".pac.color.boobs")
+            )
+        );
+    }
+
+    @Override
+    public PacBase3D createPac3D(Pac pac) {
+        var pac3D = new MsPacMan3D(pac, PAC_3D_SIZE, theAssets(), ANS);
+        pac3D.light().setColor(theAssets().color(ANS + ".pac.color.head").desaturate());
+        return pac3D;
+    }
+
+    // Game scenes
+
+    @Override
+    public void createGameScenes() {
         scenesByID.put("BootScene",      new TengenMsPacMan_BootScene());
         scenesByID.put("IntroScene",     new TengenMsPacMan_IntroScene());
         scenesByID.put("StartScene",     new TengenMsPacMan_OptionsScene());
@@ -168,9 +253,6 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         var playScene2D = (TengenMsPacMan_PlayScene2D) scenesByID.get("PlayScene2D");
         playScene2D.displayModeProperty().bind(PY_TENGEN_PLAY_SCENE_DISPLAY_MODE);
     }
-
-    @Override
-    public String assetNamespace() { return ANS; }
 
     @Override
     public GameScene selectGameScene(GameModel game, GameState gameState) {
@@ -212,85 +294,6 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         var gameScene = new TengenMsPacMan_PiPScene();
         gameScene.setGameRenderer(createGameRenderer(gameScene.canvas()));
         return gameScene;
-    }
-
-    @Override
-    public boolean isGameCanvasDecorated() { return false; }
-
-    @Override
-    public TengenMsPacMan_SpriteSheet spriteSheet() {return spriteSheet;}
-
-    @Override
-    public TengenMsPacMan_GameRenderer createGameRenderer(Canvas canvas) {
-        var renderer = new TengenMsPacMan_GameRenderer(spriteSheet, mapRepository, canvas);
-        renderer.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
-        return renderer;
-    }
-
-    @Override
-    public Image createGhostNumberImage(int ghostIndex) {
-        Sprite[] sprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
-        return spriteSheet.image(sprites[ghostIndex]);
-    }
-
-    @Override
-    public Image createBonusSymbolImage(byte symbol) {
-        return spriteSheet.image(spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS)[symbol]);
-    }
-
-    @Override
-    public Image createBonusValueImage(byte symbol) {
-        //TODO should this logic be implemented here?
-        // 0=100,1=200,2=500,3=700,4=1000,5=2000,6=3000,7=4000,8=5000,9=6000,10=7000,11=8000,12=9000, 13=10_000
-        int index = switch (symbol) {
-            case TengenMsPacMan_GameModel.BONUS_BANANA -> 8;    // 5000!
-            case TengenMsPacMan_GameModel.BONUS_MILK -> 6;      // 3000!
-            case TengenMsPacMan_GameModel.BONUS_ICE_CREAM -> 7; // 4000!
-            default -> symbol;
-        };
-        return spriteSheet.image(spriteSheet.spriteSeq(SpriteID.BONUS_VALUES)[index]);
-    }
-
-    @Override
-    public WorldMapColorScheme worldMapColorScheme(WorldMap worldMap) {
-        NES_ColorScheme colorScheme = worldMap.getConfigValue("nesColorScheme");
-        return new WorldMapColorScheme(
-            colorScheme.fillColor(), colorScheme.strokeColor(), colorScheme.strokeColor(), colorScheme.pelletColor());
-    }
-
-    @Override
-    public SpriteAnimationMap<SpriteID> createGhostAnimations(Ghost ghost) {
-        return new TengenMsPacMan_GhostAnimationMap(spriteSheet, ghost.personality());
-    }
-
-    @Override
-    public SpriteAnimationMap<SpriteID> createPacAnimations(Pac pac) {
-        return new TengenMsPacMan_PacAnimationMap(spriteSheet);
-    }
-
-    @Override
-    public Node createLivesCounter3D() {
-        String namespace = assetNamespace();
-        return new Group(
-            Model3DRepository.get().createPacShape(
-                    LIVES_COUNTER_3D_SIZE,
-                    theAssets().color(namespace + ".pac.color.head"),
-                    theAssets().color(namespace + ".pac.color.eyes"),
-                    theAssets().color(namespace + ".pac.color.palate")
-            ),
-            Model3DRepository.get().createFemaleBodyParts(LIVES_COUNTER_3D_SIZE,
-                    theAssets().color(namespace + ".pac.color.hairbow"),
-                    theAssets().color(namespace + ".pac.color.hairbow.pearls"),
-                    theAssets().color(namespace + ".pac.color.boobs")
-            )
-        );
-    }
-
-    @Override
-    public PacBase3D createPac3D(Pac pac) {
-        var pac3D = new MsPacMan3D(pac, PAC_3D_SIZE, theAssets(), assetNamespace());
-        pac3D.light().setColor(theAssets().color(assetNamespace() + ".pac.color.head").desaturate());
-        return pac3D;
     }
 
     // Actions
@@ -385,6 +388,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     };
 
     // Key bindings
+
     public static final Map<GameAction, Set<KeyCombination>> TENGEN_ACTION_BINDINGS = Map.ofEntries(
         createBinding(ACTION_STEER_UP,                theJoypad().key(JoypadButton.UP),    control(KeyCode.UP)),
         createBinding(ACTION_STEER_DOWN,              theJoypad().key(JoypadButton.DOWN),  control(KeyCode.DOWN)),

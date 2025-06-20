@@ -270,7 +270,9 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
         PacManGames_UIConfig uiConfig = ui.configuration();
         final GameScene nextGameScene = uiConfig.selectGameScene(theGame(), theGameState());
         if (nextGameScene == null) {
-            throw new IllegalStateException("Could not determine next game scene");
+            String errorMessage = " Katastrophe! Could not determine game scene!";
+            theUI().showFlashMessageSec(60, errorMessage);
+            return;
         }
         final GameScene currentGameScene = ui.currentGameScene().orElse(null);
         final boolean changing = nextGameScene != currentGameScene;

@@ -116,15 +116,6 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
         rm = this::getClass;
         storeLocalAsset(assets, "audio.option.selection_changed",  rm.loadAudioClip("sound/ms-select1.wav"));
         storeLocalAsset(assets, "audio.option.value_changed",      rm.loadAudioClip("sound/ms-select2.wav"));
-
-        scenesByID.put("BootScene",   new ArcadeCommon_BootScene2D());
-        scenesByID.put("IntroScene",  new ArcadeMsPacMan_IntroScene());
-        scenesByID.put("StartScene",  new ArcadeMsPacMan_StartScene());
-        scenesByID.put("PlayScene2D", new ArcadeCommon_PlayScene2D());
-        scenesByID.put("PlayScene3D", new PlayScene3D());
-        scenesByID.put("CutScene1",   new ArcadeMsPacMan_CutScene1());
-        scenesByID.put("CutScene2",   new ArcadeMsPacMan_CutScene2());
-        scenesByID.put("CutScene3",   new ArcadeMsPacMan_CutScene3());
     }
 
     @Override
@@ -133,23 +124,7 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
     }
 
     @Override
-    public boolean gameSceneHasID(GameScene gameScene, String sceneID) {
-        requireNonNull(gameScene);
-        requireNonNull(sceneID);
-        return scenesByID.get(sceneID) == gameScene;
-    }
-
-    @Override
-    public Stream<GameScene> gameScenes() {
-        return scenesByID.values().stream();
-    }
-
-    @Override
-    public GameScene2D createPiPScene(Canvas canvas) {
-        var gameScene = new ArcadeCommon_PlayScene2D();
-        gameScene.setGameRenderer(createGameRenderer(canvas));
-        return gameScene;
-    }
+    public ArcadeMsPacMan_SpriteSheet spriteSheet() {return spriteSheet;}
 
     @Override
     public WorldMapColorScheme worldMapColorScheme(WorldMap worldMap) {
@@ -164,9 +139,19 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
     }
 
     @Override
-    public Image createGhostNumberImage(int ghostIndex) {
+    public SpriteAnimationMap<SpriteID> createGhostAnimations(Ghost ghost) {
+        return new ArcadeMsPacMan_GhostAnimationMap(spriteSheet, ghost.personality());
+    }
+
+    @Override
+    public SpriteAnimationMap<SpriteID> createPacAnimations(Pac pac) {
+        return new ArcadeMsPacMan_PacAnimationMap(spriteSheet);
+    }
+
+    @Override
+    public Image createGhostNumberImage(int index) {
         Sprite[] sprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
-        return spriteSheet.image(sprites[ghostIndex]);
+        return spriteSheet.image(sprites[index]);
     }
 
     @Override
@@ -204,8 +189,31 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
         return pac3D;
     }
 
+    // Game scenes
+
     @Override
-    public ArcadeMsPacMan_SpriteSheet spriteSheet() {return spriteSheet;}
+    public void createGameScenes() {
+        scenesByID.put("BootScene",   new ArcadeCommon_BootScene2D());
+        scenesByID.put("IntroScene",  new ArcadeMsPacMan_IntroScene());
+        scenesByID.put("StartScene",  new ArcadeMsPacMan_StartScene());
+        scenesByID.put("PlayScene2D", new ArcadeCommon_PlayScene2D());
+        scenesByID.put("PlayScene3D", new PlayScene3D());
+        scenesByID.put("CutScene1",   new ArcadeMsPacMan_CutScene1());
+        scenesByID.put("CutScene2",   new ArcadeMsPacMan_CutScene2());
+        scenesByID.put("CutScene3",   new ArcadeMsPacMan_CutScene3());
+    }
+
+    @Override
+    public Stream<GameScene> gameScenes() {
+        return scenesByID.values().stream();
+    }
+
+    @Override
+    public boolean gameSceneHasID(GameScene gameScene, String sceneID) {
+        requireNonNull(gameScene);
+        requireNonNull(sceneID);
+        return scenesByID.get(sceneID) == gameScene;
+    }
 
     @Override
     public GameScene selectGameScene(GameModel game, GameState gameState) {
@@ -230,12 +238,9 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
     }
 
     @Override
-    public SpriteAnimationMap<SpriteID> createGhostAnimations(Ghost ghost) {
-        return new ArcadeMsPacMan_GhostAnimationMap(spriteSheet, ghost.personality());
-    }
-
-    @Override
-    public SpriteAnimationMap<SpriteID> createPacAnimations(Pac pac) {
-        return new ArcadeMsPacMan_PacAnimationMap(spriteSheet);
+    public GameScene2D createPiPScene(Canvas canvas) {
+        var gameScene = new ArcadeCommon_PlayScene2D();
+        gameScene.setGameRenderer(createGameRenderer(canvas));
+        return gameScene;
     }
 }

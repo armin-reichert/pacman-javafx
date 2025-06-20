@@ -110,15 +110,6 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
         rm = this::getClass;
         storeLocalAsset(assets, "audio.option.selection_changed",  rm.loadAudioClip("sound/ms-select1.wav"));
         storeLocalAsset(assets, "audio.option.value_changed",      rm.loadAudioClip("sound/ms-select2.wav"));
-
-        scenesByID.put("BootScene",   new ArcadeCommon_BootScene2D());
-        scenesByID.put("IntroScene",  new ArcadePacMan_IntroScene());
-        scenesByID.put("StartScene",  new ArcadePacMan_StartScene());
-        scenesByID.put("PlayScene2D", new ArcadeCommon_PlayScene2D());
-        scenesByID.put("PlayScene3D", new PlayScene3D());
-        scenesByID.put("CutScene1",   new ArcadePacMan_CutScene1());
-        scenesByID.put("CutScene2",   new ArcadePacMan_CutScene2());
-        scenesByID.put("CutScene3",   new ArcadePacMan_CutScene3());
     }
 
     @Override
@@ -127,33 +118,14 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
     }
 
     @Override
-    public boolean gameSceneHasID(GameScene gameScene, String sceneID) {
-        requireNonNull(gameScene);
-        requireNonNull(sceneID);
-        return scenesByID.get(sceneID) == gameScene;
-    }
-
-    @Override
-    public Stream<GameScene> gameScenes() {
-        return scenesByID.values().stream();
-    }
-
-    @Override
-    public GameScene2D createPiPScene(Canvas canvas) {
-        var gameScene = new ArcadeCommon_PlayScene2D();
-        gameScene.setGameRenderer(createGameRenderer(canvas));
-        return gameScene;
-    }
-
-    @Override
     public PacManXXL_PacMan_GameRenderer createGameRenderer(Canvas canvas) {
         return new PacManXXL_PacMan_GameRenderer(spriteSheet, canvas);
     }
     @Override
 
-    public Image createGhostNumberImage(int ghostIndex) {
+    public Image createGhostNumberImage(int index) {
         Sprite[] sprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
-        return spriteSheet.image(sprites[ghostIndex]);
+        return spriteSheet.image(sprites[index]);
     }
 
     @Override
@@ -175,28 +147,6 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
 
     @Override
     public ArcadePacMan_SpriteSheet spriteSheet() {return spriteSheet;}
-
-    @Override
-    public GameScene selectGameScene(GameModel game, GameState gameState) {
-        String sceneID = switch (gameState) {
-            case GameState.BOOT               -> "BootScene";
-            case GameState.SETTING_OPTIONS    -> "StartScene";
-            case GameState.INTRO              -> "IntroScene";
-            case GameState.INTERMISSION       -> {
-                if (optGameLevel().isEmpty()) {
-                    throw new IllegalStateException("Cannot determine cut scene, no game level available");
-                }
-                int levelNumber = theGameLevel().number();
-                if (game.cutSceneNumber(levelNumber).isEmpty()) {
-                    throw new IllegalStateException("Cannot determine cut scene after level %d".formatted(levelNumber));
-                }
-                yield "CutScene" + game.cutSceneNumber(levelNumber).getAsInt();
-            }
-            case GameState.TESTING_CUT_SCENES -> "CutScene" + game.<Integer>getProperty("intermissionTestNumber");
-            default -> PY_3D_ENABLED.get() ?  "PlayScene3D" : "PlayScene2D";
-        };
-        return scenesByID.get(sceneID);
-    }
 
     @Override
     public SpriteAnimationMap<SpriteID> createGhostAnimations(Ghost ghost) {
@@ -224,5 +174,60 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
         var pac3D = new PacMan3D(pac, PAC_3D_SIZE, theAssets(), assetNamespace());
         pac3D.light().setColor(theAssets().color(assetNamespace() + ".pac.color.head").desaturate());
         return pac3D;
+    }
+
+    // Game scenes
+
+    @Override
+    public void createGameScenes() {
+        scenesByID.put("BootScene",   new ArcadeCommon_BootScene2D());
+        scenesByID.put("IntroScene",  new ArcadePacMan_IntroScene());
+        scenesByID.put("StartScene",  new ArcadePacMan_StartScene());
+        scenesByID.put("PlayScene2D", new ArcadeCommon_PlayScene2D());
+        scenesByID.put("PlayScene3D", new PlayScene3D());
+        scenesByID.put("CutScene1",   new ArcadePacMan_CutScene1());
+        scenesByID.put("CutScene2",   new ArcadePacMan_CutScene2());
+        scenesByID.put("CutScene3",   new ArcadePacMan_CutScene3());
+    }
+
+    @Override
+    public boolean gameSceneHasID(GameScene gameScene, String sceneID) {
+        requireNonNull(gameScene);
+        requireNonNull(sceneID);
+        return scenesByID.get(sceneID) == gameScene;
+    }
+
+    @Override
+    public Stream<GameScene> gameScenes() {
+        return scenesByID.values().stream();
+    }
+
+    @Override
+    public GameScene selectGameScene(GameModel game, GameState gameState) {
+        String sceneID = switch (gameState) {
+            case GameState.BOOT               -> "BootScene";
+            case GameState.SETTING_OPTIONS    -> "StartScene";
+            case GameState.INTRO              -> "IntroScene";
+            case GameState.INTERMISSION       -> {
+                if (optGameLevel().isEmpty()) {
+                    throw new IllegalStateException("Cannot determine cut scene, no game level available");
+                }
+                int levelNumber = theGameLevel().number();
+                if (game.cutSceneNumber(levelNumber).isEmpty()) {
+                    throw new IllegalStateException("Cannot determine cut scene after level %d".formatted(levelNumber));
+                }
+                yield "CutScene" + game.cutSceneNumber(levelNumber).getAsInt();
+            }
+            case GameState.TESTING_CUT_SCENES -> "CutScene" + game.<Integer>getProperty("intermissionTestNumber");
+            default -> PY_3D_ENABLED.get() ?  "PlayScene3D" : "PlayScene2D";
+        };
+        return scenesByID.get(sceneID);
+    }
+
+    @Override
+    public GameScene2D createPiPScene(Canvas canvas) {
+        var gameScene = new ArcadeCommon_PlayScene2D();
+        gameScene.setGameRenderer(createGameRenderer(canvas));
+        return gameScene;
     }
 }

@@ -4,14 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
-import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.ActorAnimationMap;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
-import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
@@ -20,9 +17,7 @@ import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
-import java.util.stream.Stream;
-
-public interface PacManGames_UIConfig {
+public interface PacManGames_UIConfig extends PacManGames_GameSceneConfig {
     String assetNamespace();
     default void storeLocalAsset(AssetStorage assetStorage, String key, Object value) {
         assetStorage.store(assetNamespace() + "." + key, value);
@@ -31,15 +26,11 @@ public interface PacManGames_UIConfig {
     ActorAnimationMap createGhostAnimations(Ghost ghost);
     Node createLivesCounter3D();
     PacBase3D createPac3D(Pac pac);
-    Image createGhostNumberImage(int ghostIndex);
+    Image createGhostNumberImage(int index);
     Image createBonusSymbolImage(byte symbol);
     Image createBonusValueImage(byte symbol);
-    GameScene2D createPiPScene(Canvas canvas);
     GameRenderer createGameRenderer(Canvas canvas);
-    Stream<GameScene> gameScenes();
-    boolean gameSceneHasID(GameScene gameScene, String sceneID);
     default boolean isGameCanvasDecorated() { return true; }
-    GameScene selectGameScene(GameModel game, GameState gameState);
     SpriteSheet<?> spriteSheet();
     WorldMapColorScheme worldMapColorScheme(WorldMap worldMap);
 }

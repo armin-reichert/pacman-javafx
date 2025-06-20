@@ -111,7 +111,8 @@ public class PacManGames_UIBuilder {
 
     public void show() {
         validateAll();
-        theUI = new PacManGames_UI_Impl(uiConfigClasses);
+        theUI = new PacManGames_UI_Impl();
+        theUI.createUIConfigurations(uiConfigClasses);
         theUI.buildUI(stage, width, height, dashboardIDs);
         models.forEach((variant, model) -> theGameController().registerGame(variant, model));
         theGameController().setEventsEnabled(true);
