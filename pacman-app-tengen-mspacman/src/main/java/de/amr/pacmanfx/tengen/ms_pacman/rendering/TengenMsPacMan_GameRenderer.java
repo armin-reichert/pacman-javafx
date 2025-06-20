@@ -75,6 +75,7 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
 
     public Color backgroundColor() { return backgroundColorPy.get(); }
 
+    //TODO check cases where colored map set is not initialized properly
     public void ensureRenderingHintsAreApplied(GameLevel level) {
         if (coloredMapSet == null) {
             applyRenderingHints(level);
@@ -85,14 +86,14 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
     public void applyRenderingHints(GameLevel level) {
         int flashCount = level.data().numFlashes();
         coloredMapSet = mapRepository.createMapSequence(level.worldMap(), flashCount);
-        Logger.info("Created maze set with {} flash colors {}", flashCount, coloredMapSet);
+        Logger.info("Created recolored map set with {} flash colors: {}", flashCount, coloredMapSet);
     }
 
     @Override
     public void drawHUD(GameModel game) {
         var theGame = (TengenMsPacMan_GameModel) requireNonNull(game);
+        TengenMsPacMan_HUD hud = theGame.hud();
 
-        final TengenMsPacMan_HUD hud = theGame.hud();
         if (!hud.isVisible()) return;
 
         Vector2f sceneSize = optGameLevel().map(GameLevel::worldSizePx).orElse(NES_SIZE_PX);
@@ -103,8 +104,8 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
 
         if (hud.isLivesCounterVisible()) {
             LivesCounter livesCounter = hud.livesCounter();
-            float x = 2 * TS, y = sceneSize.y() - TS;
             Sprite sprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
+            float x = 2 * TS, y = sceneSize.y() - TS;
             for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
                 drawSpriteScaled(sprite, x + i * 2 * TS, y);
             }
@@ -116,15 +117,11 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
 
         if (hud.isLevelCounterVisible()) {
             TengenMsPacMan_LevelCounter levelCounter = hud.levelCounter();
-            if (levelCounter.displayedLevelNumber() != 0) {
-                drawLevelCounterWithLevelNumbers(true, levelCounter.displayedLevelNumber(), levelCounter, sceneSize);
-            } else {
-                drawLevelCounterWithLevelNumbers(false, 0, levelCounter, sceneSize);
-            }
+            drawLevelCounter(levelCounter.displayedLevelNumber(), levelCounter, sceneSize);
         }
     }
 
-    private void drawScores(GameModel game, Color color, Font font) {
+    private void drawScores(TengenMsPacMan_GameModel game, Color color, Font font) {
         ctx.save();
         ctx.scale(scaling(), scaling());
         ctx.setFill(color);
@@ -136,6 +133,46 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
         ctx.fillText("%6d".formatted(game.score().points()), tiles_to_px(2), tiles_to_px(2));
         ctx.fillText("%6d".formatted(game.highScore().points()), tiles_to_px(13), tiles_to_px(2));
         ctx.restore();
+    }
+
+    private void drawLevelCounter(int levelNumber, LevelCounter levelCounter, Vector2f sceneSizePx) {
+        float x = sceneSizePx.x() - 2 * TS, y = sceneSizePx.y() - TS;
+        if (levelNumber != 0) {
+            drawLevelNumberBox(levelNumber, 0, y); // left box
+            drawLevelNumberBox(levelNumber, x, y); // right box
+        }
+        Sprite[] symbolSprites = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS);
+        x -= 2 * TS;
+        // symbols are drawn from right to left!
+        for (byte symbol : levelCounter.symbols()) {
+            drawSpriteScaled(symbolSprites[symbol], x, y);
+            x -= TS * 2;
+        }
+    }
+
+    private void drawLevelNumberBox(int number, double x, double y) {
+        drawSpriteScaled(spriteSheet.sprite(SpriteID.LEVEL_NUMBER_BOX), x, y);
+        int tens = number / 10, ones = number % 10;
+        if (tens > 0) {
+            drawSpriteScaled(digitSprite(tens), x + 2, y + 2);
+        }
+        drawSpriteScaled(digitSprite(ones), x + 10, y + 2);
+    }
+
+    private Sprite digitSprite(int digit) {
+        return spriteSheet.sprite(switch (digit) {
+            case 1 -> SpriteID.DIGIT_1;
+            case 2 -> SpriteID.DIGIT_2;
+            case 3 -> SpriteID.DIGIT_3;
+            case 4 -> SpriteID.DIGIT_4;
+            case 5 -> SpriteID.DIGIT_5;
+            case 6 -> SpriteID.DIGIT_6;
+            case 7 -> SpriteID.DIGIT_7;
+            case 8 -> SpriteID.DIGIT_8;
+            case 9 -> SpriteID.DIGIT_9;
+            case 0 -> SpriteID.DIGIT_0;
+            default -> throw new IllegalArgumentException("Illegal digit value " + digit);
+        });
     }
 
     @Override
@@ -399,47 +436,6 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
         if (requireNonNull(booster) != PacBooster.OFF) {
             drawSpriteScaledCenteredAt(spriteSheet.sprite(SpriteID.INFO_BOOSTER), centerX - tiles_to_px(6), y);
         }
-    }
-
-    public void drawLevelCounterWithLevelNumbers(boolean withNumbers, int levelNumber, LevelCounter levelCounter, Vector2f sizeInPx) {
-        requireNonNull(levelCounter);
-        requireNonNull(sizeInPx);
-        float x = sizeInPx.x() - 2 * TS, y = sizeInPx.y() - TS;
-        if (withNumbers) {
-            drawLevelNumberBox(levelNumber, 0, y); // left box
-            drawLevelNumberBox(levelNumber, x, y); // right box
-        }
-        x -= 2 * TS;
-        for (byte symbol : levelCounter.symbols()) {
-            Sprite sprite = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS)[symbol];
-            drawSpriteScaled(sprite, x, y);
-            x -= TS * 2;
-        }
-    }
-
-    public void drawLevelNumberBox(int levelNumber, double x, double y) {
-        drawSpriteScaled(spriteSheet.sprite(SpriteID.LEVEL_NUMBER_BOX), x, y);
-        int tens = levelNumber / 10, ones = levelNumber % 10;
-        if (tens > 0) {
-            drawSpriteScaled(digitSprite(tens), x + 2, y + 2);
-        }
-        drawSpriteScaled(digitSprite(ones), x + 10, y + 2);
-    }
-
-    private Sprite digitSprite(int digit) {
-        return spriteSheet.sprite(switch (digit) {
-            case 1 -> SpriteID.DIGIT_1;
-            case 2 -> SpriteID.DIGIT_2;
-            case 3 -> SpriteID.DIGIT_3;
-            case 4 -> SpriteID.DIGIT_4;
-            case 5 -> SpriteID.DIGIT_5;
-            case 6 -> SpriteID.DIGIT_6;
-            case 7 -> SpriteID.DIGIT_7;
-            case 8 -> SpriteID.DIGIT_8;
-            case 9 -> SpriteID.DIGIT_9;
-            case 0 -> SpriteID.DIGIT_0;
-            default -> throw new IllegalArgumentException("Illegal digit value " + digit);
-        });
     }
 
     public void drawBar(Color outlineColor, Color barColor, double width, double y) {
