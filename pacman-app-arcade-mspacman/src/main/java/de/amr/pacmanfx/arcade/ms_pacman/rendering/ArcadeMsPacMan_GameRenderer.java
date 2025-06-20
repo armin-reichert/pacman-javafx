@@ -53,10 +53,9 @@ public class ArcadeMsPacMan_GameRenderer extends SpriteGameRenderer {
     public ArcadeMsPacMan_SpriteSheet spriteSheet() { return spriteSheet; }
 
     @Override
-    public void drawHUD(GameModel game) {
-        requireNonNull(game);
+    public void drawHUD(HUD hud) {
+        requireNonNull(hud);
 
-        final HUD hud = game.hud();
         if (!hud.isVisible()) return;
 
         Vector2f sceneSize = optGameLevel().map(GameLevel::worldSizePx).orElse(ARCADE_MAP_SIZE_IN_PIXELS);
@@ -64,8 +63,8 @@ public class ArcadeMsPacMan_GameRenderer extends SpriteGameRenderer {
         if (hud.isScoreVisible()) {
             ctx.setFont(theAssets().arcadeFont(scaled(8)));
             ctx.setFill(ARCADE_WHITE);
-            drawScore(game.score(), "SCORE", tiles_to_px(1), tiles_to_px(1));
-            drawScore(game.highScore(), "HIGH SCORE", tiles_to_px(14), tiles_to_px(1));
+            drawScore(theGame().score(), "SCORE", tiles_to_px(1), tiles_to_px(1));
+            drawScore(theGame().highScore(), "HIGH SCORE", tiles_to_px(14), tiles_to_px(1));
         }
 
         if (hud.isLevelCounterVisible()) {
@@ -85,10 +84,10 @@ public class ArcadeMsPacMan_GameRenderer extends SpriteGameRenderer {
             for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
                 drawSpriteScaled(sprite, x + TS * (2 * i), y);
             }
-            if (game.lifeCount() > livesCounter.maxLivesDisplayed()) {
+            if (theGame().lifeCount() > livesCounter.maxLivesDisplayed()) {
                 // show text indicating that more lives are available than symbols displayed (cheating may cause this)
                 Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
-                fillTextAtScaledPosition("(%d)".formatted(game.lifeCount()), ARCADE_YELLOW, font,
+                fillTextAtScaledPosition("(%d)".formatted(theGame().lifeCount()), ARCADE_YELLOW, font,
                     x + TS * 10, y + TS);
             }
         }

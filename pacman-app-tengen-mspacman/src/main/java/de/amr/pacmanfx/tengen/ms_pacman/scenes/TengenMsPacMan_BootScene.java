@@ -93,7 +93,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     public Vector2f sizeInPx() { return NES_SIZE_PX; }
 
     @Override
-    protected void drawSceneContent() {
+    public void drawSceneContent() {
         var r = (TengenMsPacMan_GameRenderer) gr();
         r.drawVerticalSceneBorders();
         if (grayScreen) {

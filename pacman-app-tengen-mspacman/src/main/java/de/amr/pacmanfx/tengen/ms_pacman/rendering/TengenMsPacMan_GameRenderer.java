@@ -10,10 +10,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
-import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.LevelCounter;
-import de.amr.pacmanfx.model.LivesCounter;
+import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.tengen.ms_pacman.model.*;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.Clapperboard;
@@ -90,12 +87,12 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
     }
 
     @Override
-    public void drawHUD(GameModel game) {
-        var theGame = (TengenMsPacMan_GameModel) requireNonNull(game);
-        TengenMsPacMan_HUD hud = theGame.hud();
+    public void drawHUD(HUD hud) {
+        requireNonNull(hud);
 
         if (!hud.isVisible()) return;
 
+        var theGame = (TengenMsPacMan_GameModel) theGame();
         Vector2f sceneSize = optGameLevel().map(GameLevel::worldSizePx).orElse(NES_SIZE_PX);
 
         if (hud.isScoreVisible()) {
@@ -109,15 +106,17 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
             for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
                 drawSpriteScaled(sprite, x + i * 2 * TS, y);
             }
-            if (game.lifeCount() > livesCounter.maxLivesDisplayed()) {
+            if (theGame.lifeCount() > livesCounter.maxLivesDisplayed()) {
                 Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
-                fillTextAtScaledPosition("(%d)".formatted(game.lifeCount()), nesPaletteColor(0x28), font, x + TS * 10, y + TS);
+                fillTextAtScaledPosition("(%d)".formatted(theGame.lifeCount()), nesPaletteColor(0x28), font, x + TS * 10, y + TS);
             }
         }
 
         if (hud.isLevelCounterVisible()) {
-            TengenMsPacMan_LevelCounter levelCounter = hud.levelCounter();
-            drawLevelCounter(levelCounter.displayedLevelNumber(), levelCounter, sceneSize);
+            if (hud instanceof TengenMsPacMan_HUD tengenHUD) {
+                TengenMsPacMan_LevelCounter levelCounter = tengenHUD.levelCounter();
+                drawLevelCounter(levelCounter.displayedLevelNumber(), levelCounter, sceneSize);
+            }
         }
     }
 

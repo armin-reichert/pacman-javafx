@@ -43,7 +43,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D implements ActionBi
     }
 
     @Override
-    protected void drawSceneContent() {
+    public void drawSceneContent() {
         double barWidth = sizeInPx().x();
         gr().drawBar(nesPaletteColor(0x20), nesPaletteColor(0x13), barWidth, 20);
         gr().drawBar(nesPaletteColor(0x20), nesPaletteColor(0x13), barWidth, 212);

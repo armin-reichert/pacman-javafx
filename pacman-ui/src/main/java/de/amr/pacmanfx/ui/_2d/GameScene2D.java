@@ -117,13 +117,13 @@ public abstract class GameScene2D implements GameScene {
         if (debugInfoVisiblePy.get()) {
             drawDebugInfo();
         }
-        gameRenderer.drawHUD(theGame());
+        gameRenderer.drawHUD(theGame().hud());
     }
 
     /**
      * Draws the scene content using the already scaled game renderer.
      */
-    protected abstract void drawSceneContent();
+    public abstract void drawSceneContent();
 
     /**
      * Default implementation: Draws a grid indicating the tiles, the game state and the state timer.

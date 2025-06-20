@@ -189,7 +189,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
     }
 
     @Override
-    protected void drawSceneContent() {
+    public void drawSceneContent() {
         if (optGameLevel().isEmpty())
             return; // Scene is drawn already 2 ticks before level has been created
 

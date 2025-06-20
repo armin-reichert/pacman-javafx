@@ -252,7 +252,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D implements ActionBi
     }
 
     @Override
-    protected void drawSceneContent() {
+    public void drawSceneContent() {
         if (initialDelay > 0) {
             return;
         }

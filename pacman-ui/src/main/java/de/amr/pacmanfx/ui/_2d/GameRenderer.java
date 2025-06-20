@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui._2d;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.model.HUD;
 import de.amr.pacmanfx.model.actors.Actor;
 import javafx.beans.property.FloatProperty;
 import javafx.scene.canvas.GraphicsContext;
@@ -65,7 +66,7 @@ public interface GameRenderer {
         ctx().fillRect(centerX - halfSideLength, centerY - halfSideLength, sideLength, sideLength);
     }
 
-    void drawHUD(GameModel game);
+    void drawHUD(HUD hud);
 
     /**
      *

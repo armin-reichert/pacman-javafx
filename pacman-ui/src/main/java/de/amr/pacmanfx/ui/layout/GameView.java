@@ -203,6 +203,7 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
                     // size of game scene might have changed, so re-embed
                     ui.currentGameScene().ifPresent(gameScene -> embedGameScene(config, gameScene));
                     pipView.setScene2D(config.createPiPScene(canvas));
+                    //TODO set a suitable HUD for the PiP view
                     Logger.info("Game view handled level creation event");
                 });
             }

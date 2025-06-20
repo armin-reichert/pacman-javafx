@@ -69,7 +69,7 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
     }
 
     @Override
-    protected void drawSceneContent() {
+    public void drawSceneContent() {
         TickTimer timer = theGameState().timer();
         if (timer.betweenSeconds(1, 2) && timer.tickCount() % 4 == 0) {
             gr().fillCanvas(backgroundColor());
