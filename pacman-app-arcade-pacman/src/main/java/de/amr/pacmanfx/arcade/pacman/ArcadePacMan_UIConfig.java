@@ -155,7 +155,7 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
 
     @Override
     public String assetNamespace() {
-        return "pacman";
+        return ANS;
     }
 
     @Override
@@ -202,8 +202,8 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
 
     @Override
     public Image createGhostNumberImage(int ghostIndex) {
-        Sprite[] sprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
-        return spriteSheet.image(sprites[ghostIndex]);
+        Sprite[] numberSprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
+        return spriteSheet.image(numberSprites[ghostIndex]);
     }
 
     @Override
@@ -220,19 +220,18 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
 
     @Override
     public Node createLivesCounter3D() {
-        String namespace = assetNamespace();
         return Model3DRepository.get().createPacShape(
                 LIVES_COUNTER_3D_SIZE,
-                theAssets().color(namespace + ".pac.color.head"),
-                theAssets().color(namespace + ".pac.color.eyes"),
-                theAssets().color(namespace + ".pac.color.palate")
+                theAssets().color(ANS + ".pac.color.head"),
+                theAssets().color(ANS + ".pac.color.eyes"),
+                theAssets().color(ANS + ".pac.color.palate")
         );
     }
 
     @Override
     public PacBase3D createPac3D(Pac pac) {
-        var pac3D = new PacMan3D(pac, PAC_3D_SIZE, theAssets(), assetNamespace());
-        pac3D.light().setColor(theAssets().color(assetNamespace() + ".pac.color.head").desaturate());
+        var pac3D = new PacMan3D(pac, PAC_3D_SIZE, theAssets(), ANS);
+        pac3D.light().setColor(theAssets().color(ANS + ".pac.color.head").desaturate());
         return pac3D;
     }
 }
