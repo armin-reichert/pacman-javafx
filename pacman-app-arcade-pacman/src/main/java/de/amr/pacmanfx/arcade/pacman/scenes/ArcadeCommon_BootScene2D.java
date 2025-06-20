@@ -8,6 +8,7 @@ import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -51,6 +52,11 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
 
     @Override
     public Vector2f sizeInPx() { return ARCADE_MAP_SIZE_IN_PIXELS; }
+
+    @Override
+    public SpriteGameRenderer gr() {
+        return (SpriteGameRenderer) super.gr();
+    }
 
     @Override
     public void draw() {

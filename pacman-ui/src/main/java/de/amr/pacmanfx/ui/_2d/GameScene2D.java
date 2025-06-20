@@ -39,7 +39,7 @@ public abstract class GameScene2D implements GameScene {
     protected final BooleanProperty       debugInfoVisiblePy = new SimpleBooleanProperty(false);
     protected final FloatProperty         scalingPy = new SimpleFloatProperty(1.0f);
 
-    protected SpriteGameRenderer gameRenderer;
+    protected GameRenderer gameRenderer;
     protected Canvas canvas;
 
     protected GameScene2D() {
@@ -90,7 +90,7 @@ public abstract class GameScene2D implements GameScene {
     public Color backgroundColor() { return backgroundColorPy.get(); }
     public void setBackgroundColor(Color color) { backgroundColorPy.set(color); }
 
-    public SpriteGameRenderer gr() { return gameRenderer; }
+    public GameRenderer gr() { return gameRenderer; }
     public void setGameRenderer(SpriteGameRenderer renderer) { gameRenderer = requireNonNull(renderer); }
     public GraphicsContext ctx() { return gameRenderer.ctx(); }
 
@@ -137,9 +137,7 @@ public abstract class GameScene2D implements GameScene {
         String stateText = "Game State: '%s' (Tick %d of %s)".formatted(
             theGameState(),
             stateTimer.tickCount(),
-            stateTimer.durationTicks() == TickTimer.INDEFINITE
-                ? "\u221e"
-                : String.valueOf(stateTimer.tickCount())
+            stateTimer.durationTicks() == TickTimer.INDEFINITE ? "∞" : String.valueOf(stateTimer.tickCount())
             );
         ctx().fillText(stateText, 0, scaled(3 * TS));
     }

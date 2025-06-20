@@ -9,6 +9,7 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.ui.ActionBindingSupport;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
 import static de.amr.pacmanfx.Globals.TS;
@@ -24,6 +25,11 @@ import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 public class ArcadeMsPacMan_StartScene extends GameScene2D implements ActionBindingSupport {
 
     private MidwayCopyright copyright;
+
+    @Override
+    public SpriteGameRenderer gr() {
+        return (SpriteGameRenderer) super.gr();
+    }
 
     @Override
     public void doInit() {

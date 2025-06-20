@@ -11,6 +11,7 @@ import de.amr.pacmanfx.model.actors.ActorAnimationMap;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import javafx.scene.media.MediaPlayer;
 
@@ -44,6 +45,11 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     private SpriteAnimation blinkyDamaged;
     private SpriteAnimation nailDressRaptureAnimation;
     private MediaPlayer music;
+
+    @Override
+    public SpriteGameRenderer gr() {
+        return (SpriteGameRenderer) super.gr();
+    }
 
     @Override
     public void doInit() {

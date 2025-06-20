@@ -46,6 +46,11 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
     private LevelFlashingAnimation levelFlashing;
 
     @Override
+    public SpriteGameRenderer gr() {
+        return (SpriteGameRenderer) super.gr();
+    }
+
+    @Override
     protected void doInit() {
         theGame().hud().showScore(true);
         theGame().hud().showLevelCounter(true);

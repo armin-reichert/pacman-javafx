@@ -18,6 +18,7 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.ActionBindingSupport;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.paint.Color;
 
@@ -67,6 +68,11 @@ public class ArcadePacMan_IntroScene extends GameScene2D implements ActionBindin
     private boolean titleVisible;
     private int ghostIndex;
     private long ghostKilledTime;
+
+    @Override
+    public SpriteGameRenderer gr() {
+        return (SpriteGameRenderer) super.gr();
+    }
 
     @Override
     public void doInit() {
