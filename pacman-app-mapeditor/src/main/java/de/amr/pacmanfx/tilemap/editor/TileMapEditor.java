@@ -94,7 +94,7 @@ public class TileMapEditor {
 
     public static final Font FONT_DROP_HINT               = Font.font("Sans", FontWeight.BOLD, 16);
     public static final Font FONT_MESSAGE                 = Font.font("Sans", FontWeight.BOLD, 14);
-    public static final Font FONT_SOURCE_VIEW             = Font.font("Monospace", FontWeight.NORMAL, 14);
+    public static final Font FONT_SOURCE_VIEW             = Font.font("Consolas", FontWeight.NORMAL, 14);
     public static final Font FONT_STATUS_LINE_EDIT_MODE   = Font.font("Sans", FontWeight.BOLD, 18);
     public static final Font FONT_STATUS_LINE_NORMAL      = Font.font("Sans", FontWeight.NORMAL, 14);
 
@@ -569,8 +569,7 @@ public class TileMapEditor {
         sourceView.setPrefWidth(600);
         sourceView.setPrefHeight(800);
         sourceView.setFont(FONT_SOURCE_VIEW);
-        //TODO this does not set a black background. Why?
-        //sourceView.setStyle("-fx-background-color: #000; -fx-text-fill: #f00;");
+        sourceView.setStyle("-fx-control-inner-background:#222; -fx-text-fill: #f0f0f0;");
     }
 
     private void createTabPaneWithEditViews() {
