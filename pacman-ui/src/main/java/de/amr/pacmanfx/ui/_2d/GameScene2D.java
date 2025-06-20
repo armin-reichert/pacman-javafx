@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui._2d;
 
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
+import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.input.Keyboard;
@@ -128,9 +129,18 @@ public abstract class GameScene2D implements GameScene {
      * Default implementation: Draws a grid indicating the tiles, the game state and the state timer.
      */
     protected void drawDebugInfo() {
-        gameRenderer.drawTileGrid(sizeInPx().x(), sizeInPx().y(), Color.LIGHTGRAY);
-        gameRenderer.ctx().setFill(DEBUG_TEXT_FILL);
-        gameRenderer.ctx().setFont(DEBUG_TEXT_FONT);
-        gameRenderer.ctx().fillText("%s %d".formatted(theGameState(), theGameState().timer().tickCount()), 0, scaled(3 * TS));
+        Vector2f sizePx = sizeInPx();
+        gameRenderer.drawTileGrid(sizePx.x(), sizePx.y(), Color.LIGHTGRAY);
+        ctx().setFill(DEBUG_TEXT_FILL);
+        ctx().setFont(DEBUG_TEXT_FONT);
+        TickTimer stateTimer = theGameState().timer();
+        String stateText = "Game State: '%s' (Tick %d of %s)".formatted(
+            theGameState(),
+            stateTimer.tickCount(),
+            stateTimer.durationTicks() == TickTimer.INDEFINITE
+                ? "\u221e"
+                : String.valueOf(stateTimer.tickCount())
+            );
+        ctx().fillText(stateText, 0, scaled(3 * TS));
     }
 }

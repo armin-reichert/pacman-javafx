@@ -44,7 +44,7 @@ import static de.amr.pacmanfx.uilib.Ufx.toggle;
 
 public interface PacManGames_UI {
     Color DEBUG_TEXT_FILL          = Color.YELLOW;
-    Font DEBUG_TEXT_FONT           = Font.font("Sans", FontWeight.BOLD, 18);
+    Font DEBUG_TEXT_FONT           = Font.font("Sans", FontWeight.BOLD, 16);
 
     double MAX_SCENE_2D_SCALING    = 5;
 
