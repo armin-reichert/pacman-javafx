@@ -45,6 +45,8 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceManager {
 
+    private static final String ANS = "ms_pacman";
+
     private static final List<WorldMapColorScheme> WORLD_MAP_COLOR_SCHEMES = List.of(
         new WorldMapColorScheme("FFB7AE", "FF0000", "FCB5FF", "DEDEFF"),
         new WorldMapColorScheme("47B7FF", "DEDEFF", "FCB5FF", "FFFF00"),
@@ -54,72 +56,71 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         new WorldMapColorScheme("FFB7AE", "FF0000", "FCB5FF", "DEDEFF")
     );
 
-    private final Image appIcon;
     private final ArcadeMsPacMan_SpriteSheet spriteSheet;
     private final BrightMazesSpriteSheet brightMazesSpriteSheet;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
     public ArcadeMsPacMan_UIConfig(PacManGames_Assets assets) {
-        appIcon = loadImage("graphics/icons/mspacman.png");
 
         spriteSheet = new ArcadeMsPacMan_SpriteSheet(loadImage("graphics/mspacman_spritesheet.png"));
         brightMazesSpriteSheet = new BrightMazesSpriteSheet(loadImage("graphics/mazes_flashing.png"));
 
-        assets.store("ms_pacman.logo.midway",                     loadImage("graphics/midway_logo.png"));
-        assets.store("ms_pacman.startpage.image1",                loadImage("graphics/f1.jpg"));
-        assets.store("ms_pacman.startpage.image2",                loadImage("graphics/f2.jpg"));
+        storeLocalAsset(assets, "app_icon",                        loadImage("graphics/icons/mspacman.png"));
+        storeLocalAsset(assets, "logo.midway",                     loadImage("graphics/midway_logo.png"));
+        storeLocalAsset(assets, "startpage.image1",                loadImage("graphics/f1.jpg"));
+        storeLocalAsset(assets, "startpage.image2",                loadImage("graphics/f2.jpg"));
 
-        assets.store("ms_pacman.color.game_over_message",         ARCADE_RED);
+        storeLocalAsset(assets, "color.game_over_message",         ARCADE_RED);
 
-        assets.store("ms_pacman.pac.color.head",                  ARCADE_YELLOW);
-        assets.store("ms_pacman.pac.color.eyes",                  Color.grayRgb(33));
-        assets.store("ms_pacman.pac.color.palate",                Color.rgb(240, 180, 160));
-        assets.store("ms_pacman.pac.color.boobs",                 ARCADE_YELLOW.deriveColor(0, 1.0, 0.96, 1.0));
-        assets.store("ms_pacman.pac.color.hairbow",               ARCADE_RED);
-        assets.store("ms_pacman.pac.color.hairbow.pearls",        ARCADE_BLUE);
+        storeLocalAsset(assets, "pac.color.head",                  ARCADE_YELLOW);
+        storeLocalAsset(assets, "pac.color.eyes",                  Color.grayRgb(33));
+        storeLocalAsset(assets, "pac.color.palate",                Color.rgb(240, 180, 160));
+        storeLocalAsset(assets, "pac.color.boobs",                 ARCADE_YELLOW.deriveColor(0, 1.0, 0.96, 1.0));
+        storeLocalAsset(assets, "pac.color.hairbow",               ARCADE_RED);
+        storeLocalAsset(assets, "pac.color.hairbow.pearls",        ARCADE_BLUE);
 
-        assets.store("ms_pacman.ghost.0.color.normal.dress",      ARCADE_RED);
-        assets.store("ms_pacman.ghost.0.color.normal.eyeballs",   ARCADE_WHITE);
-        assets.store("ms_pacman.ghost.0.color.normal.pupils",     ARCADE_BLUE);
-        assets.store("ms_pacman.ghost.1.color.normal.dress",      ARCADE_PINK);
-        assets.store("ms_pacman.ghost.1.color.normal.eyeballs",   ARCADE_WHITE);
-        assets.store("ms_pacman.ghost.1.color.normal.pupils",     ARCADE_BLUE);
-        assets.store("ms_pacman.ghost.2.color.normal.dress",      ARCADE_CYAN);
-        assets.store("ms_pacman.ghost.2.color.normal.eyeballs",   ARCADE_WHITE);
-        assets.store("ms_pacman.ghost.2.color.normal.pupils",     ARCADE_BLUE);
-        assets.store("ms_pacman.ghost.3.color.normal.dress",      ARCADE_ORANGE);
-        assets.store("ms_pacman.ghost.3.color.normal.eyeballs",   ARCADE_WHITE);
-        assets.store("ms_pacman.ghost.3.color.normal.pupils",     ARCADE_BLUE);
-        assets.store("ms_pacman.ghost.color.frightened.dress",    ARCADE_BLUE);
-        assets.store("ms_pacman.ghost.color.frightened.eyeballs", ARCADE_ROSE);
-        assets.store("ms_pacman.ghost.color.frightened.pupils",   ARCADE_ROSE);
-        assets.store("ms_pacman.ghost.color.flashing.dress",      ARCADE_WHITE);
-        assets.store("ms_pacman.ghost.color.flashing.eyeballs",   ARCADE_ROSE);
-        assets.store("ms_pacman.ghost.color.flashing.pupils",     ARCADE_RED);
+        storeLocalAsset(assets, "ghost.0.color.normal.dress",      ARCADE_RED);
+        storeLocalAsset(assets, "ghost.0.color.normal.eyeballs",   ARCADE_WHITE);
+        storeLocalAsset(assets, "ghost.0.color.normal.pupils",     ARCADE_BLUE);
+        storeLocalAsset(assets, "ghost.1.color.normal.dress",      ARCADE_PINK);
+        storeLocalAsset(assets, "ghost.1.color.normal.eyeballs",   ARCADE_WHITE);
+        storeLocalAsset(assets, "ghost.1.color.normal.pupils",     ARCADE_BLUE);
+        storeLocalAsset(assets, "ghost.2.color.normal.dress",      ARCADE_CYAN);
+        storeLocalAsset(assets, "ghost.2.color.normal.eyeballs",   ARCADE_WHITE);
+        storeLocalAsset(assets, "ghost.2.color.normal.pupils",     ARCADE_BLUE);
+        storeLocalAsset(assets, "ghost.3.color.normal.dress",      ARCADE_ORANGE);
+        storeLocalAsset(assets, "ghost.3.color.normal.eyeballs",   ARCADE_WHITE);
+        storeLocalAsset(assets, "ghost.3.color.normal.pupils",     ARCADE_BLUE);
+        storeLocalAsset(assets, "ghost.color.frightened.dress",    ARCADE_BLUE);
+        storeLocalAsset(assets, "ghost.color.frightened.eyeballs", ARCADE_ROSE);
+        storeLocalAsset(assets, "ghost.color.frightened.pupils",   ARCADE_ROSE);
+        storeLocalAsset(assets, "ghost.color.flashing.dress",      ARCADE_WHITE);
+        storeLocalAsset(assets, "ghost.color.flashing.eyeballs",   ARCADE_ROSE);
+        storeLocalAsset(assets, "ghost.color.flashing.pupils",     ARCADE_RED);
 
         // Clips
-        assets.store("ms_pacman.audio.bonus_eaten",             loadAudioClip("sound/Fruit.mp3"));
-        assets.store("ms_pacman.audio.credit",                  loadAudioClip("sound/credit.wav"));
-        assets.store("ms_pacman.audio.extra_life",              loadAudioClip("sound/ExtraLife.mp3"));
-        assets.store("ms_pacman.audio.ghost_eaten",             loadAudioClip("sound/Ghost.mp3"));
-        assets.store("ms_pacman.audio.sweep",                   loadAudioClip("sound/sweep.mp3"));
+        storeLocalAsset(assets, "audio.bonus_eaten",             loadAudioClip("sound/Fruit.mp3"));
+        storeLocalAsset(assets, "audio.credit",                  loadAudioClip("sound/credit.wav"));
+        storeLocalAsset(assets, "audio.extra_life",              loadAudioClip("sound/ExtraLife.mp3"));
+        storeLocalAsset(assets, "audio.ghost_eaten",             loadAudioClip("sound/Ghost.mp3"));
+        storeLocalAsset(assets, "audio.sweep",                   loadAudioClip("sound/sweep.mp3"));
 
         // Audio played by MediaPlayer
-        assets.store("ms_pacman.audio.bonus_bouncing",          url("sound/Fruit_Bounce.mp3"));
-        assets.store("ms_pacman.audio.game_ready",              url("sound/Start.mp3"));
-        assets.store("ms_pacman.audio.game_over",               url("sound/game-over.mp3"));
-        assets.store("ms_pacman.audio.intermission.1",          url("sound/Act_1_They_Meet.mp3"));
-        assets.store("ms_pacman.audio.intermission.2",          url("sound/Act_2_The_Chase.mp3"));
-        assets.store("ms_pacman.audio.intermission.3",          url("sound/Act_3_Junior.mp3"));
-        assets.store("ms_pacman.audio.level_complete",          url("sound/level-complete.mp3"));
-        assets.store("ms_pacman.audio.pacman_death",            url("sound/Died.mp3"));
-        assets.store("ms_pacman.audio.pacman_munch",            url("sound/munch.wav"));
-        assets.store("ms_pacman.audio.pacman_power",            url("sound/ScaredGhost.mp3"));
-        assets.store("ms_pacman.audio.siren.1",                 url("sound/GhostNoise1.wav"));
-        assets.store("ms_pacman.audio.siren.2",                 url("sound/GhostNoise1.wav"));// TODO
-        assets.store("ms_pacman.audio.siren.3",                 url("sound/GhostNoise1.wav"));// TODO
-        assets.store("ms_pacman.audio.siren.4",                 url("sound/GhostNoise1.wav"));// TODO
-        assets.store("ms_pacman.audio.ghost_returns",           url("sound/GhostEyes.mp3"));
+        storeLocalAsset(assets, "audio.bonus_bouncing",          url("sound/Fruit_Bounce.mp3"));
+        storeLocalAsset(assets, "audio.game_ready",              url("sound/Start.mp3"));
+        storeLocalAsset(assets, "audio.game_over",               url("sound/game-over.mp3"));
+        storeLocalAsset(assets, "audio.intermission.1",          url("sound/Act_1_They_Meet.mp3"));
+        storeLocalAsset(assets, "audio.intermission.2",          url("sound/Act_2_The_Chase.mp3"));
+        storeLocalAsset(assets, "audio.intermission.3",          url("sound/Act_3_Junior.mp3"));
+        storeLocalAsset(assets, "audio.level_complete",          url("sound/level-complete.mp3"));
+        storeLocalAsset(assets, "audio.pacman_death",            url("sound/Died.mp3"));
+        storeLocalAsset(assets, "audio.pacman_munch",            url("sound/munch.wav"));
+        storeLocalAsset(assets, "audio.pacman_power",            url("sound/ScaredGhost.mp3"));
+        storeLocalAsset(assets, "audio.siren.1",                 url("sound/GhostNoise1.wav"));
+        storeLocalAsset(assets, "audio.siren.2",                 url("sound/GhostNoise1.wav"));// TODO
+        storeLocalAsset(assets, "audio.siren.3",                 url("sound/GhostNoise1.wav"));// TODO
+        storeLocalAsset(assets, "audio.siren.4",                 url("sound/GhostNoise1.wav"));// TODO
+        storeLocalAsset(assets, "audio.ghost_returns",           url("sound/GhostEyes.mp3"));
 
         scenesByID.put("BootScene",   new ArcadeCommon_BootScene2D());
         scenesByID.put("IntroScene",  new ArcadeMsPacMan_IntroScene());
@@ -137,13 +138,8 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     }
 
     @Override
-    public Image appIcon() {
-        return appIcon;
-    }
-
-    @Override
     public String assetNamespace() {
-        return "ms_pacman";
+        return ANS;
     }
 
     @Override

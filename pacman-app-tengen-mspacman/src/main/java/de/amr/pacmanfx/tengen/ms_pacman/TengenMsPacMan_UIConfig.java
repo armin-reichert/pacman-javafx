@@ -55,6 +55,8 @@ import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceManager {
 
+    private static final String ANS = "tengen";
+
     public static final BooleanProperty PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED = new SimpleBooleanProperty(false);
     public static final ObjectProperty<SceneDisplayMode> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING);
 
@@ -66,7 +68,6 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     public static final Vector2f NES_SIZE_PX = NES_TILES.scaled(TS).toVector2f();
     public static final float NES_ASPECT = NES_SIZE_PX.x() / NES_SIZE_PX.y();
 
-    private final Image appIcon;
     private final TengenMsPacMan_SpriteSheet spriteSheet;
     private final TengenMsPacMan_MapRepository mapRepository;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
@@ -77,80 +78,80 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     }
 
     public TengenMsPacMan_UIConfig(PacManGames_Assets assets) {
-        appIcon = loadImage("graphics/icons/mspacman.png");
         spriteSheet = new TengenMsPacMan_SpriteSheet(loadImage("graphics/spritesheet.png"));
         mapRepository = new TengenMsPacMan_MapRepository(
             loadImage("graphics/arcade_mazes.png"),
             loadImage("graphics/non_arcade_mazes.png")
         );
 
-        assets.store("tengen.startpage.image1",                 loadImage("graphics/f1.png"));
-        assets.store("tengen.startpage.image2",                 loadImage("graphics/f2.png"));
+        storeLocalAsset(assets, "app_icon",                         loadImage("graphics/icons/mspacman.png"));
+        storeLocalAsset(assets, "startpage.image1",                 loadImage("graphics/f1.png"));
+        storeLocalAsset(assets, "startpage.image2",                 loadImage("graphics/f2.png"));
 
-        assets.store("tengen.color.game_over_message",          nesPaletteColor(0x11));
-        assets.store("tengen.color.ready_message",              nesPaletteColor(0x28));
+        storeLocalAsset(assets, "color.game_over_message",          nesPaletteColor(0x11));
+        storeLocalAsset(assets, "color.ready_message",              nesPaletteColor(0x28));
 
-        assets.store("tengen.pac.color.head",                   nesPaletteColor(0x28));
-        assets.store("tengen.pac.color.eyes",                   nesPaletteColor(0x02));
-        assets.store("tengen.pac.color.palate",                 nesPaletteColor(0x2d));
-        assets.store("tengen.pac.color.boobs",                  nesPaletteColor(0x28).deriveColor(0, 1.0, 0.96, 1.0));
-        assets.store("tengen.pac.color.hairbow",                nesPaletteColor(0x05));
-        assets.store("tengen.pac.color.hairbow.pearls",         nesPaletteColor(0x02));
+        storeLocalAsset(assets, "pac.color.head",                   nesPaletteColor(0x28));
+        storeLocalAsset(assets, "pac.color.eyes",                   nesPaletteColor(0x02));
+        storeLocalAsset(assets, "pac.color.palate",                 nesPaletteColor(0x2d));
+        storeLocalAsset(assets, "pac.color.boobs",                  nesPaletteColor(0x28).deriveColor(0, 1.0, 0.96, 1.0));
+        storeLocalAsset(assets, "pac.color.hairbow",                nesPaletteColor(0x05));
+        storeLocalAsset(assets, "pac.color.hairbow.pearls",         nesPaletteColor(0x02));
 
-        assets.store("tengen.ghost.0.color.normal.dress",       nesPaletteColor(0x05));
-        assets.store("tengen.ghost.0.color.normal.eyeballs",    nesPaletteColor(0x20));
-        assets.store("tengen.ghost.0.color.normal.pupils",      nesPaletteColor(0x16));
+        storeLocalAsset(assets, "ghost.0.color.normal.dress",       nesPaletteColor(0x05));
+        storeLocalAsset(assets, "ghost.0.color.normal.eyeballs",    nesPaletteColor(0x20));
+        storeLocalAsset(assets, "ghost.0.color.normal.pupils",      nesPaletteColor(0x16));
 
-        assets.store("tengen.ghost.1.color.normal.dress",       nesPaletteColor(0x25));
-        assets.store("tengen.ghost.1.color.normal.eyeballs",    nesPaletteColor(0x20));
-        assets.store("tengen.ghost.1.color.normal.pupils",      nesPaletteColor(0x11));
+        storeLocalAsset(assets, "ghost.1.color.normal.dress",       nesPaletteColor(0x25));
+        storeLocalAsset(assets, "ghost.1.color.normal.eyeballs",    nesPaletteColor(0x20));
+        storeLocalAsset(assets, "ghost.1.color.normal.pupils",      nesPaletteColor(0x11));
 
-        assets.store("tengen.ghost.2.color.normal.dress",       nesPaletteColor(0x11));
-        assets.store("tengen.ghost.2.color.normal.eyeballs",    nesPaletteColor(0x20));
-        assets.store("tengen.ghost.2.color.normal.pupils",      nesPaletteColor(0x11));
+        storeLocalAsset(assets, "ghost.2.color.normal.dress",       nesPaletteColor(0x11));
+        storeLocalAsset(assets, "ghost.2.color.normal.eyeballs",    nesPaletteColor(0x20));
+        storeLocalAsset(assets, "ghost.2.color.normal.pupils",      nesPaletteColor(0x11));
 
-        assets.store("tengen.ghost.3.color.normal.dress",       nesPaletteColor(0x16));
-        assets.store("tengen.ghost.3.color.normal.eyeballs",    nesPaletteColor(0x20));
-        assets.store("tengen.ghost.3.color.normal.pupils",      nesPaletteColor(0x05));
+        storeLocalAsset(assets, "ghost.3.color.normal.dress",       nesPaletteColor(0x16));
+        storeLocalAsset(assets, "ghost.3.color.normal.eyeballs",    nesPaletteColor(0x20));
+        storeLocalAsset(assets, "ghost.3.color.normal.pupils",      nesPaletteColor(0x05));
 
-        assets.store("tengen.ghost.color.frightened.dress",     nesPaletteColor(0x01));
-        assets.store("tengen.ghost.color.frightened.eyeballs",  nesPaletteColor(0x20));
-        assets.store("tengen.ghost.color.frightened.pupils",    nesPaletteColor(0x20));
+        storeLocalAsset(assets, "ghost.color.frightened.dress",     nesPaletteColor(0x01));
+        storeLocalAsset(assets, "ghost.color.frightened.eyeballs",  nesPaletteColor(0x20));
+        storeLocalAsset(assets, "ghost.color.frightened.pupils",    nesPaletteColor(0x20));
 
         //TODO has two flashing colors, when to use which?
-        assets.store("tengen.ghost.color.flashing.dress",       nesPaletteColor(0x20));
-        assets.store("tengen.ghost.color.flashing.eyeballs",    nesPaletteColor(0x20));
-        assets.store("tengen.ghost.color.flashing.pupils",      nesPaletteColor(0x20));
-        assets.store("tengen.audio.option.selection_changed",   loadAudioClip("sound/ms-select1.wav"));
-        assets.store("tengen.audio.option.value_changed",       loadAudioClip("sound/ms-select2.wav"));
+        storeLocalAsset(assets, "ghost.color.flashing.dress",       nesPaletteColor(0x20));
+        storeLocalAsset(assets, "ghost.color.flashing.eyeballs",    nesPaletteColor(0x20));
+        storeLocalAsset(assets, "ghost.color.flashing.pupils",      nesPaletteColor(0x20));
+        storeLocalAsset(assets, "audio.option.selection_changed",   loadAudioClip("sound/ms-select1.wav"));
+        storeLocalAsset(assets, "audio.option.value_changed",       loadAudioClip("sound/ms-select2.wav"));
 
-        assets.store("tengen.audio.bonus_eaten",                loadAudioClip("sound/ms-fruit.wav"));
-        assets.store("tengen.audio.extra_life",                 loadAudioClip("sound/ms-extralife.wav"));
-        assets.store("tengen.audio.ghost_eaten",                loadAudioClip("sound/ms-ghosteat.wav"));
+        storeLocalAsset(assets, "audio.bonus_eaten",                loadAudioClip("sound/ms-fruit.wav"));
+        storeLocalAsset(assets, "audio.extra_life",                 loadAudioClip("sound/ms-extralife.wav"));
+        storeLocalAsset(assets, "audio.ghost_eaten",                loadAudioClip("sound/ms-ghosteat.wav"));
 
-        assets.store("tengen.audio.intermission.4.junior.1",    loadAudioClip("sound/ms-theend1.wav"));
-        assets.store("tengen.audio.intermission.4.junior.2",    loadAudioClip("sound/ms-theend2.wav"));
+        storeLocalAsset(assets, "audio.intermission.4.junior.1",    loadAudioClip("sound/ms-theend1.wav"));
+        storeLocalAsset(assets, "audio.intermission.4.junior.2",    loadAudioClip("sound/ms-theend2.wav"));
 
 
         // used only in 3D scene when level is completed:
-        assets.store("tengen.audio.level_complete",             url("sound/common/level-complete.mp3"));
-        assets.store("tengen.audio.sweep",                      loadAudioClip("sound/common/sweep.mp3"));
+        storeLocalAsset(assets, "audio.level_complete",             url("sound/common/level-complete.mp3"));
+        storeLocalAsset(assets, "audio.sweep",                      loadAudioClip("sound/common/sweep.mp3"));
 
         // Audio played by MediaPlayer
-        assets.store("tengen.audio.game_ready",                 url("sound/ms-start.wav"));
-        assets.store("tengen.audio.intermission.1",             url("sound/theymeet.wav"));
-        assets.store("tengen.audio.intermission.2",             url("sound/thechase.wav"));
-        assets.store("tengen.audio.intermission.3",             url("sound/junior.wav"));
-        assets.store("tengen.audio.intermission.4",             url("sound/theend.wav"));
-        assets.store("tengen.audio.pacman_death",               url("sound/ms-death.wav"));
-        assets.store("tengen.audio.pacman_munch",               url("sound/ms-dot.wav"));
-        assets.store("tengen.audio.pacman_power",               url("sound/ms-power.wav"));
-        assets.store("tengen.audio.siren.1",                    url("sound/ms-siren1.wav"));
-        assets.store("tengen.audio.siren.2",                    url("sound/ms-siren2.wav"));
-        assets.store("tengen.audio.siren.3",                    url("sound/ms-siren2.wav"));
-        assets.store("tengen.audio.siren.4",                    url("sound/ms-siren2.wav"));
-        assets.store("tengen.audio.ghost_returns",              url("sound/ms-eyes.wav"));
-        assets.store("tengen.audio.bonus_bouncing",             url("sound/fruitbounce.wav"));
+        storeLocalAsset(assets, "audio.game_ready",                 url("sound/ms-start.wav"));
+        storeLocalAsset(assets, "audio.intermission.1",             url("sound/theymeet.wav"));
+        storeLocalAsset(assets, "audio.intermission.2",             url("sound/thechase.wav"));
+        storeLocalAsset(assets, "audio.intermission.3",             url("sound/junior.wav"));
+        storeLocalAsset(assets, "audio.intermission.4",             url("sound/theend.wav"));
+        storeLocalAsset(assets, "audio.pacman_death",               url("sound/ms-death.wav"));
+        storeLocalAsset(assets, "audio.pacman_munch",               url("sound/ms-dot.wav"));
+        storeLocalAsset(assets, "audio.pacman_power",               url("sound/ms-power.wav"));
+        storeLocalAsset(assets, "audio.siren.1",                    url("sound/ms-siren1.wav"));
+        storeLocalAsset(assets, "audio.siren.2",                    url("sound/ms-siren2.wav"));
+        storeLocalAsset(assets, "audio.siren.3",                    url("sound/ms-siren2.wav"));
+        storeLocalAsset(assets, "audio.siren.4",                    url("sound/ms-siren2.wav"));
+        storeLocalAsset(assets, "audio.ghost_returns",              url("sound/ms-eyes.wav"));
+        storeLocalAsset(assets, "audio.bonus_bouncing",             url("sound/fruitbounce.wav"));
 
         scenesByID.put("BootScene",      new TengenMsPacMan_BootScene());
         scenesByID.put("IntroScene",     new TengenMsPacMan_IntroScene());
@@ -169,14 +170,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     }
 
     @Override
-    public Image appIcon() {
-        return appIcon;
-    }
-
-    @Override
-    public String assetNamespace() {
-        return "tengen";
-    }
+    public String assetNamespace() { return ANS; }
 
     @Override
     public GameScene selectGameScene(GameModel game, GameState gameState) {

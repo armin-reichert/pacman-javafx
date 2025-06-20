@@ -23,6 +23,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -247,7 +248,8 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         }
         PacManGames_UIConfig uiConfig = configuration(gameVariant);
         SOUND_MANAGER.selectGameVariant(gameVariant, uiConfig.assetNamespace());
-        stage.getIcons().setAll(uiConfig.appIcon());
+        Image appIcon = ASSETS.image(uiConfig.assetNamespace() + ".app_icon");
+        stage.getIcons().setAll(appIcon);
         gameView.canvasContainer().decorationEnabledPy.set(uiConfig.isGameCanvasDecorated());
         // this triggers a game event and the event handlers:
         theGameController().selectGameVariant(gameVariant);
