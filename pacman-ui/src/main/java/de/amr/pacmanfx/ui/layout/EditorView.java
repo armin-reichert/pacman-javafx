@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.layout;
 
+import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.input.Keyboard;
@@ -31,6 +32,9 @@ public class EditorView implements PacManGames_View {
         layout.setCenter(editor.getContentPane());
         layout.setTop(editor.getMenuBar());
     }
+
+    @Override
+    public void onGameEvent(GameEvent event) {}
 
     @Override
     public Keyboard keyboard() {

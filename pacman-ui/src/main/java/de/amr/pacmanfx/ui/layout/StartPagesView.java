@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.layout;
 
+import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.PacManGames_UI;
@@ -120,6 +121,9 @@ public class StartPagesView implements PacManGames_View {
         bindActionToKeyCombination(ACTION_BOOT_SHOW_GAME_VIEW, nude(KeyCode.ENTER));
         bindActionToKeyCombination(ACTION_TOGGLE_PAUSED,       nude(KeyCode.P));
     }
+
+    @Override
+    public void onGameEvent(GameEvent event) {}
 
     @Override
     public Keyboard keyboard() {

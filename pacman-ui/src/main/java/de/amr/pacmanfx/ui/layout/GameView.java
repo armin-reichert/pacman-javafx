@@ -193,24 +193,23 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
     @Override
     public void onGameEvent(GameEvent event) {
         Logger.trace("{} received game event {}", getClass().getSimpleName(), event);
-        // dispatch event to event specific method:
-        PacManGames_View.super.onGameEvent(event);
-        // dispatch to current game scene
+        switch (event.type) {
+            case LEVEL_CREATED -> {
+                optGameLevel().ifPresent(level -> {
+                    PacManGames_UIConfig config = ui.configuration();
+                    level.pac().setAnimations(config.createPacAnimations(level.pac()));
+                    level.ghosts().forEach(ghost -> ghost.setAnimations(config.createGhostAnimations(ghost)));
+                    theSound().setEnabled(!level.isDemoLevel());
+                    // size of game scene might have changed, so re-embed
+                    ui.currentGameScene().ifPresent(gameScene -> embedGameScene(config, gameScene));
+                    pipView.setScene2D(config.createPiPScene(canvas));
+                    Logger.info("Game view handled level creation event");
+                });
+            }
+            default -> {}
+        }
         ui.currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(event));
         updateGameScene(false);
-    }
-
-    @Override
-    public void onLevelCreated(GameEvent event) {
-        optGameLevel().ifPresent(level -> {
-            PacManGames_UIConfig config = ui.configuration();
-            level.pac().setAnimations(config.createPacAnimations(level.pac()));
-            level.ghosts().forEach(ghost -> ghost.setAnimations(config.createGhostAnimations(ghost)));
-            theSound().setEnabled(!level.isDemoLevel());
-            // size of game scene might have changed, so re-embed
-            ui.currentGameScene().ifPresent(gameScene -> embedGameScene(config, gameScene));
-            pipView.setScene2D(config.createPiPScene(canvas));
-        });
     }
 
     // -----------------------------------------------------------------------------------------------------------------
