@@ -249,7 +249,11 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         PacManGames_UIConfig uiConfig = configuration(gameVariant);
         SOUND_MANAGER.selectGameVariant(gameVariant, uiConfig.assetNamespace());
         Image appIcon = ASSETS.image(uiConfig.assetNamespace() + ".app_icon");
-        stage.getIcons().setAll(appIcon);
+        if (appIcon != null) {
+            stage.getIcons().setAll(appIcon);
+        } else {
+            Logger.error("Could not find app icon for current game variant {}", gameVariant);
+        }
         gameView.canvasContainer().decorationEnabledPy.set(uiConfig.isGameCanvasDecorated());
         // this triggers a game event and the event handlers:
         theGameController().selectGameVariant(gameVariant);
