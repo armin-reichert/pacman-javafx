@@ -66,7 +66,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
         clapperboard = new Clapperboard("3", "JUNIOR");
         clapperboard.setPosition(tiles_to_px(3), tiles_to_px(10));
-        clapperboard.setFont(arcadeFont8());
+        clapperboard.setFont(scaledArcadeFont8());
         clapperboard.startAnimation();
 
         music = theSound().createSound("intermission.3");

@@ -262,20 +262,20 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D implements ActionBi
             gr().drawJoypadKeyBinding(theJoypad().currentKeyBinding());
         }
 
-        gr().ctx().setFont(arcadeFont8());
+        gr().ctx().setFont(scaledArcadeFont8());
 
         gr().drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), sizeInPx().x(), 20);
         gr().drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), sizeInPx().x(), 212);
         gr().fillTextAtScaledPosition("MS PAC-MAN OPTIONS", NES_YELLOW, COL_LABEL + 3 * TS, 48);
 
         // Players (not implemented)
-        drawArrowAtSelectedOption(OPTION_PLAYERS, 72, arcadeFont8());
+        drawArrowAtSelectedOption(OPTION_PLAYERS, 72, scaledArcadeFont8());
         gr().fillTextAtScaledPosition("TYPE", NES_YELLOW, COL_LABEL, 72);
         gr().fillTextAtScaledPosition(":", NES_YELLOW, COL_LABEL + 4 * TS + 4, 72);
         gr().fillTextAtScaledPosition("1 PLAYER", NES_WHITE, COL_LABEL + 6 * TS  , 72);
 
         // Pac-Booster
-        drawArrowAtSelectedOption(OPTION_PAC_BOOSTER, 96, arcadeFont8());
+        drawArrowAtSelectedOption(OPTION_PAC_BOOSTER, 96, scaledArcadeFont8());
         gr().fillTextAtScaledPosition("PAC BOOSTER", NES_YELLOW, COL_LABEL, 96);
         gr().fillTextAtScaledPosition(":", NES_YELLOW, COL_COLON, 96);
         String pacBoosterText = switch (theTengenGame().pacBooster()) {
@@ -286,19 +286,19 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D implements ActionBi
         gr().fillTextAtScaledPosition(pacBoosterText, NES_WHITE, COL_VALUE, 96);
 
         // Game difficulty
-        drawArrowAtSelectedOption(OPTION_DIFFICULTY, 120, arcadeFont8());
+        drawArrowAtSelectedOption(OPTION_DIFFICULTY, 120, scaledArcadeFont8());
         gr().fillTextAtScaledPosition("GAME DIFFICULTY", NES_YELLOW, COL_LABEL, 120);
         gr().fillTextAtScaledPosition(":", NES_YELLOW, COL_COLON, 120);
         gr().fillTextAtScaledPosition(theTengenGame().difficulty().name(), NES_WHITE, COL_VALUE, 120);
 
         // Maze (type) selection
-        drawArrowAtSelectedOption(OPTION_MAZE_SELECTION, 144, arcadeFont8());
+        drawArrowAtSelectedOption(OPTION_MAZE_SELECTION, 144, scaledArcadeFont8());
         gr().fillTextAtScaledPosition("MAZE SELECTION", NES_YELLOW, COL_LABEL, 144);
         gr().fillTextAtScaledPosition(":", NES_YELLOW, COL_COLON, 144);
         gr().fillTextAtScaledPosition(theTengenGame().mapCategory().name(), NES_WHITE, COL_VALUE, 144);
 
         // Starting level number
-        drawArrowAtSelectedOption(OPTION_STARTING_LEVEL, 168, arcadeFont8());
+        drawArrowAtSelectedOption(OPTION_STARTING_LEVEL, 168, scaledArcadeFont8());
         gr().fillTextAtScaledPosition("STARTING LEVEL", NES_YELLOW, COL_LABEL, 168);
         gr().fillTextAtScaledPosition(":", NES_YELLOW, COL_COLON, 168);
         gr().fillTextAtScaledPosition(String.valueOf(theTengenGame().startLevelNumber()), NES_WHITE, COL_VALUE, 168);

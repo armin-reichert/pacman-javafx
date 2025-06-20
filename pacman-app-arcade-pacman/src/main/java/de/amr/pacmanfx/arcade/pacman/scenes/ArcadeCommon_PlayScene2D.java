@@ -216,10 +216,10 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
         float cx = TS * (houseMinTile.x() + houseSize.x() * 0.5f);
         float cy = TS * (houseMinTile.y() + houseSize.y() + 1);
         switch (theGameLevel().message()) {
-            case GameLevel.MESSAGE_GAME_OVER -> gr().fillTextAtScaledCenter("GAME  OVER", ARCADE_RED, arcadeFont8(), cx, cy);
-            case GameLevel.MESSAGE_READY -> gr().fillTextAtScaledCenter("READY!", ARCADE_YELLOW, arcadeFont8(), cx, cy);
+            case GameLevel.MESSAGE_GAME_OVER -> gr().fillTextAtScaledCenter("GAME  OVER", ARCADE_RED, scaledArcadeFont8(), cx, cy);
+            case GameLevel.MESSAGE_READY -> gr().fillTextAtScaledCenter("READY!", ARCADE_YELLOW, scaledArcadeFont8(), cx, cy);
             case GameLevel.MESSAGE_TEST -> gr().fillTextAtScaledCenter("TEST    L%02d".formatted(theGameLevel().number()),
-                    ARCADE_WHITE, arcadeFont8(), cx, cy);
+                    ARCADE_WHITE, scaledArcadeFont8(), cx, cy);
         }
     }
 

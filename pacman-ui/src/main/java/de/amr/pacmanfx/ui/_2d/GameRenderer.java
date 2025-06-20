@@ -116,6 +116,11 @@ public interface GameRenderer {
         ctx().fillText(text, scaled(x), scaled(y));
     }
 
+    default void fillTextAtScaledPosition(String text, Font font, double x, double y) {
+        ctx().setFont(font);
+        ctx().fillText(text, scaled(x), scaled(y));
+    }
+
     default void fillTextAtScaledPosition(String text, double x, double y) {
         ctx().fillText(text, scaled(x), scaled(y));
     }

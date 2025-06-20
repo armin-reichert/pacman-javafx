@@ -100,7 +100,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D implements ActionBind
 
     @Override
     public void drawSceneContent() {
-        ctx().setFont(arcadeFont8());
+        ctx().setFont(scaledArcadeFont8());
         gr().drawVerticalSceneBorders();
         TickTimer timer = sceneController.state().timer;
         long tick = timer.tickCount();

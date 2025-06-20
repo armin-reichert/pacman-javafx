@@ -53,7 +53,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         var spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
         clapperboard = new Clapperboard(spriteSheet, 4, "THE END");
         clapperboard.setPosition(3*TS, 10*TS);
-        clapperboard.setFont(arcadeFont8());
+        clapperboard.setFont(scaledArcadeFont8());
         msPacMan = createMsPacMan();
         pacMan = createPacMan();
         msPacMan.setAnimations(theUI().configuration().createPacAnimations(msPacMan));

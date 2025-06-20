@@ -83,7 +83,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
         copyright = new MidwayCopyright();
         copyright.setPosition(TS * 6, TS * 28);
         copyright.setColor(ARCADE_RED);
-        copyright.setFont(arcadeFont8());
+        copyright.setFont(scaledArcadeFont8());
         copyright.show();
 
         marquee = new Marquee(132, 60, 96, 6, 16);
@@ -128,7 +128,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
 
     @Override
     public void drawSceneContent() {
-        ctx().setFont(arcadeFont8());
+        ctx().setFont(scaledArcadeFont8());
         gr().fillTextAtScaledPosition(TITLE, ARCADE_ORANGE, TITLE_X, TITLE_Y);
         gr().drawActor(marquee);
         for (Ghost ghost : ghosts) { gr().drawActor(ghost); }

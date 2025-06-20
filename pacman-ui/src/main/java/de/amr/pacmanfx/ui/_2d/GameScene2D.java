@@ -84,8 +84,8 @@ public abstract class GameScene2D implements GameScene {
     public float scaling() { return scalingPy.get(); }
     public float scaled(double value) { return (float) value * scaling(); }
 
-    public Font arcadeFont8() { return arcadeFont8Py.get(); }
-    public Font arcadeFont6() { return arcadeFont6Py.get(); }
+    public Font scaledArcadeFont8() { return arcadeFont8Py.get(); }
+    public Font scaledArcadeFont6() { return arcadeFont6Py.get(); }
 
     public Color backgroundColor() { return backgroundColorPy.get(); }
     public void setBackgroundColor(Color color) { backgroundColorPy.set(color); }
