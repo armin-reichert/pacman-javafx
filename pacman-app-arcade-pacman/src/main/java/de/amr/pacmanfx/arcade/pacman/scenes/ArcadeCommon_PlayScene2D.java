@@ -98,6 +98,9 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
             Logger.warn("No game renderer was existing when switching to 2D scene");
             setGameRenderer((SpriteGameRenderer) theUI().configuration().createGameRenderer(canvas()));
         }
+        theGame().hud().showScore(true);
+        theGame().hud().showLevelCounter(true);
+        theGame().hud().showLivesCounter(true);
     }
 
     @Override
