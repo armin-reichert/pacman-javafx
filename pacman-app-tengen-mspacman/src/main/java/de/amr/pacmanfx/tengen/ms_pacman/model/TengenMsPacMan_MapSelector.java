@@ -15,25 +15,21 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
 import static de.amr.pacmanfx.lib.nes.NES_ColorScheme.*;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.MAP_ROOT_PATH;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory.*;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_MapSelector implements MapSelector {
 
-    private static final String MAP_ROOT_PATH = "/de/amr/pacmanfx/tengen/ms_pacman/maps/";
-
     private final Map<MapCategory, List<WorldMap>> mapRepository = new EnumMap<>(MapCategory.class);
 
     @Override
     public List<WorldMap> builtinMaps() {
-        List<WorldMap> maps = new ArrayList<>();
-        for (MapCategory category : MapCategory.values()) {
-            maps.addAll(mapRepository.get(category));
-        }
-        return maps;
+        return mapRepository.values().stream().flatMap(List::stream).collect(Collectors.toList());
     }
 
     @Override
@@ -59,19 +55,8 @@ public class TengenMsPacMan_MapSelector implements MapSelector {
         throw new UnsupportedOperationException(); //TODO ugly! Reconsider API
     }
 
-    public WorldMap createWorldMapForLevel(MapCategory mapCategory, int levelNumber) {
-        requireNonNull(mapCategory);
-        requireValidLevelNumber(levelNumber);
-        return switch (mapCategory) {
-            case ARCADE  -> createArcadeMap(levelNumber);
-            case STRANGE -> createStrangeMap(levelNumber);
-            case MINI    -> createMiniMap(levelNumber);
-            case BIG     -> createBigMap(levelNumber);
-        };
-    }
-
     private List<WorldMap> loadMaps(String pattern, int count) {
-        ArrayList<WorldMap> maps = new ArrayList<>();
+        var maps = new ArrayList<WorldMap>();
         for (int num = 1; num <= count; ++num) {
             String path = pattern.formatted(num);
             URL url = getClass().getResource(path);
@@ -89,6 +74,17 @@ public class TengenMsPacMan_MapSelector implements MapSelector {
         }
         maps.trimToSize();
         return maps;
+    }
+
+    public WorldMap createWorldMapForLevel(MapCategory mapCategory, int levelNumber) {
+        requireNonNull(mapCategory);
+        requireValidLevelNumber(levelNumber);
+        return switch (mapCategory) {
+            case ARCADE  -> createArcadeMap(levelNumber);
+            case STRANGE -> createStrangeMap(levelNumber);
+            case MINI    -> createMiniMap(levelNumber);
+            case BIG     -> createBigMap(levelNumber);
+        };
     }
 
     private WorldMap createArcadeMap(int levelNumber) {

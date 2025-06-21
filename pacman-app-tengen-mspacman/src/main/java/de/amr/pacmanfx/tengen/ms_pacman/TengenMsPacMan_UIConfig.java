@@ -56,6 +56,8 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
 
     private static final String ANS = "tengen";
 
+    public static final String MAP_ROOT_PATH = "/de/amr/pacmanfx/tengen/ms_pacman/maps/";
+
     public static final BooleanProperty PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED = new SimpleBooleanProperty(false);
     public static final ObjectProperty<SceneDisplayMode> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING);
 
