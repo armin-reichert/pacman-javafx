@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.app;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
+import de.amr.pacmanfx.ui.PacManGames_UI;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.application.Application;
 import javafx.stage.Screen;
@@ -15,7 +16,6 @@ import javafx.stage.Stage;
 import static de.amr.pacmanfx.ui.PacManGames.theClock;
 import static de.amr.pacmanfx.ui.PacManGames.theWatchdog;
 import static de.amr.pacmanfx.ui.PacManGames_UIBuilder.PACMAN;
-import static de.amr.pacmanfx.ui.PacManGames_UIBuilder.buildUI;
 
 public class ArcadePacMan_App extends Application {
 
@@ -24,7 +24,7 @@ public class ArcadePacMan_App extends Application {
         // UI size: 80% of available screen height, aspect 12:10
         final int height = (int) (0.8 * Screen.getPrimary().getBounds().getHeight());
         final int width  = (int) (1.2 * height);
-        buildUI()
+        PacManGames_UI.builder()
             .stage(primaryStage, width, height)
             .game(PACMAN, ArcadePacMan_GameModel.arcadeVersion(), ArcadePacMan_UIConfig.class)
             .startPages(new ArcadePacMan_StartPage(PACMAN))

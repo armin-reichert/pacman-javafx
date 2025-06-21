@@ -36,7 +36,9 @@ public class PacManGames_UIBuilder {
     private int width = 800;
     private int height = 600;
 
-    private PacManGames_UIBuilder() {}
+    public PacManGames_UIBuilder() {
+        checkUserDirsExistingAndWritable();
+    }
 
     private static void checkUserDirsExistingAndWritable() {
         String homeDirDesc = "Pac-Man FX home directory";
@@ -67,11 +69,6 @@ public class PacManGames_UIBuilder {
             }
         }
         return true;
-    }
-
-    public static PacManGames_UIBuilder buildUI() {
-        checkUserDirsExistingAndWritable();
-        return new PacManGames_UIBuilder();
     }
 
     public PacManGames_UIBuilder game(String variant, GameModel model, Class<? extends PacManGames_UIConfig> configClass) {

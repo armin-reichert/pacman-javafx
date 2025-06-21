@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman;
 
+import de.amr.pacmanfx.ui.PacManGames_UI;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.application.Application;
 import javafx.stage.Screen;
@@ -12,7 +13,6 @@ import javafx.stage.Stage;
 import static de.amr.pacmanfx.ui.PacManGames.theClock;
 import static de.amr.pacmanfx.ui.PacManGames.theWatchdog;
 import static de.amr.pacmanfx.ui.PacManGames_UIBuilder.MS_PACMAN;
-import static de.amr.pacmanfx.ui.PacManGames_UIBuilder.buildUI;
 
 public class ArcadeMsPacMan_App extends Application {
 
@@ -21,7 +21,7 @@ public class ArcadeMsPacMan_App extends Application {
         // UI size: 80% of available screen height, aspect 12:10
         final int height = (int) (0.8 * Screen.getPrimary().getBounds().getHeight());
         final int width  = (int) (1.2 * height);
-        buildUI()
+        PacManGames_UI.builder()
             .game(MS_PACMAN, ArcadeMsPacMan_GameModel.arcadeVersion(), ArcadeMsPacMan_UIConfig.class)
             .startPages(new ArcadeMsPacMan_StartPage(MS_PACMAN))
             .dashboardEntries(

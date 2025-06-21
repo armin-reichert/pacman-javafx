@@ -43,6 +43,11 @@ import static de.amr.pacmanfx.ui.input.Keyboard.*;
 import static de.amr.pacmanfx.uilib.Ufx.toggle;
 
 public interface PacManGames_UI {
+
+    static PacManGames_UIBuilder builder() {
+        return new PacManGames_UIBuilder();
+    }
+
     Color DEBUG_TEXT_FILL          = Color.YELLOW;
     Font DEBUG_TEXT_FONT           = Font.font("Sans", FontWeight.BOLD, 16);
 
