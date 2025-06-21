@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.layout;
 
+import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2f;
@@ -205,19 +206,26 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
     @Override
     public void onGameEvent(GameEvent gameEvent) {
         Logger.trace("GameView received {}", gameEvent);
-        if (gameEvent.type == GameEventType.LEVEL_CREATED) {
-            PacManGames_UIConfig config = ui.configuration();
-            ActorAnimationMap pacAnimationMap = config.createPacAnimations(theGameLevel().pac());
-            theGameLevel().pac().setAnimations(pacAnimationMap);
-            theGameLevel().ghosts().forEach(ghost -> {
-                ActorAnimationMap ghostAnimationMap = config.createGhostAnimations(ghost);
-                ghost.setAnimations(ghostAnimationMap);
-            });
-            theSound().setEnabled(!theGameLevel().isDemoLevel());
-            miniGameView.onLevelCreated(theGameLevel());
+        switch (gameEvent.type) {
+            case LEVEL_CREATED -> {
+                PacManGames_UIConfig config = ui.configuration();
+                ActorAnimationMap pacAnimationMap = config.createPacAnimations(theGameLevel().pac());
+                theGameLevel().pac().setAnimations(pacAnimationMap);
+                theGameLevel().ghosts().forEach(ghost -> {
+                    ActorAnimationMap ghostAnimationMap = config.createGhostAnimations(ghost);
+                    ghost.setAnimations(ghostAnimationMap);
+                });
+                theSound().setEnabled(!theGameLevel().isDemoLevel());
+                miniGameView.onLevelCreated(theGameLevel());
 
-            // size of game scene might have changed, so re-embed
-            ui.currentGameScene().ifPresent(gameScene -> embedGameScene(config, gameScene));
+                // size of game scene might have changed, so re-embed
+                ui.currentGameScene().ifPresent(gameScene -> embedGameScene(config, gameScene));
+            }
+            case GAME_STATE_CHANGED -> {
+                if (theGameState() == GameState.LEVEL_COMPLETE) {
+                    miniGameView.onLevelCompleted(theGameLevel());
+                }
+            }
         }
         ui.currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(gameEvent));
         updateGameScene(false);

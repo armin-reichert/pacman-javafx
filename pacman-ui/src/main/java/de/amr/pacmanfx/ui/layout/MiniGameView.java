@@ -9,6 +9,8 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
+import javafx.animation.FadeTransition;
+import javafx.animation.Interpolator;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.geometry.Insets;
@@ -18,6 +20,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.stream.Stream;
@@ -107,6 +110,30 @@ public class MiniGameView {
         gr = theUI().configuration().createGameRenderer(canvas);
         gr.applyRenderingHints(gameLevel);
         gr.setScaling(scalingPy.floatValue());
+        fadeIn();
+    }
+
+    public void onLevelCompleted(GameLevel level) {
+        fadeOut();
+    }
+
+    private void fadeIn() {
+        root.opacityProperty().unbind();
+        var fadeInAnimation = new FadeTransition(Duration.seconds(2), root);
+        fadeInAnimation.setFromValue(0);
+        fadeInAnimation.setToValue(opacityProperty().get());
+        fadeInAnimation.setByValue(0.1);
+        fadeInAnimation.setOnFinished(e -> root.opacityProperty().bind(opacityProperty()));
+        fadeInAnimation.play();
+    }
+
+    private void fadeOut() {
+        root.opacityProperty().unbind();
+        var fadeOutAnimation = new FadeTransition(Duration.seconds(2), root);
+        fadeOutAnimation.setToValue(0);
+        fadeOutAnimation.setByValue(0.1);
+        fadeOutAnimation.setInterpolator(Interpolator.EASE_IN);
+        fadeOutAnimation.play();
     }
 
     private void drawGameScene(GameRenderer gr) {
