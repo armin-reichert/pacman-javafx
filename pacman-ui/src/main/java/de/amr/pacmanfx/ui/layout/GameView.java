@@ -80,6 +80,7 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
         this.parentScene = requireNonNull(parentScene);
         this.miniGameView = new MiniGameView();
 
+        configureMiniGameView();
         configureCanvasContainer();
         createLayers();
         createDashboard(dashboardIDs);
@@ -213,6 +214,8 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
                 ghost.setAnimations(ghostAnimationMap);
             });
             theSound().setEnabled(!theGameLevel().isDemoLevel());
+            miniGameView.onLevelCreated(theGameLevel());
+
             // size of game scene might have changed, so re-embed
             ui.currentGameScene().ifPresent(gameScene -> embedGameScene(config, gameScene));
         }
@@ -357,6 +360,18 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+
+    private void configureMiniGameView() {
+        miniGameView.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
+        miniGameView.debugProperty().bind(PY_DEBUG_INFO_VISIBLE);
+        miniGameView.heightProperty().bind(PY_PIP_HEIGHT);
+        miniGameView.opacityProperty().bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
+        miniGameView.visibleProperty().bind(Bindings.createObjectBinding(
+            () -> PY_PIP_ON.get() && theUI().currentGameSceneIsPlayScene3D(),
+            PY_PIP_ON, theUI().currentGameSceneProperty()
+        ));
+
+    }
 
     private void configureCanvasContainer() {
         canvasContainer.setMinScaling(0.5);

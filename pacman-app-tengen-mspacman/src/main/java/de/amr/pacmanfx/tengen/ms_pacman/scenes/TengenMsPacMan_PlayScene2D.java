@@ -416,14 +416,12 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
                 gr().drawHighlightedLevel(theGameLevel(), levelFlashingAnimation.flashingIndex());
             } else {
                 gr().drawLevel(theGameLevel(), null, false, false);
-                gr().drawFood(theGameLevel()); // this also hides the eaten food!
             }
         }
         else {
             //TODO in the original game, the message is drawn under the maze image but *over* the pellets!
             gr().drawLevelMessage(theGameLevel(), currentMessagePosition(), scaledArcadeFont8());
             gr().drawLevel(theGameLevel(), null, false, false);
-            gr().drawFood(theGameLevel());
         }
 
         var actorsByZ = new ArrayList<Actor>();

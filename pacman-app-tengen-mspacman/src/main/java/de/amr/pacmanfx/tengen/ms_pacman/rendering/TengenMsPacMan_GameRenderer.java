@@ -290,6 +290,8 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
         );
         // The maze images also contain the ghost and Ms. Pac-Man sprites at their initial positions
         overPaintActorSprites(level);
+
+        drawFood(level);
     }
 
     public void drawFood(GameLevel level) {
