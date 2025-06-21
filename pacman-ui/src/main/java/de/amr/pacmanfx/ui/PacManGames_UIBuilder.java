@@ -33,10 +33,10 @@ public class PacManGames_UIBuilder {
     private int selectedStartPageIndex;
     private DashboardID[] dashboardIDs = new DashboardID[0];
     private final Stage stage;
-    private int width = 800;
-    private int height = 600;
+    private double width = 800;
+    private double height = 600;
 
-    public PacManGames_UIBuilder(Stage stage, int width, int height) {
+    public PacManGames_UIBuilder(Stage stage, double width, double height) {
         checkUserDirsExistingAndWritable();
         validateStage(stage, width, height);
         this.stage = stage;
@@ -102,7 +102,7 @@ public class PacManGames_UIBuilder {
         return this;
     }
 
-    public void createAndShowUI() {
+    public void buildAndShow() {
         validateAll();
         theUI = new PacManGames_UI_Impl();
         theUI.createUIConfigurations(uiConfigClasses);
@@ -183,15 +183,15 @@ public class PacManGames_UIBuilder {
         }
     }
 
-    private void validateStage(Stage stage, int width, int height) {
+    private void validateStage(Stage stage, double width, double height) {
         if (stage == null) {
             error("Stage is null");
         }
         if (width <= 0) {
-            error("Stage width (%d) must be a positive number".formatted(width));
+            error("Stage width (%.2f) must be a positive number".formatted(width));
         }
         if (height <= 0) {
-            error("Stage height (%d) must be a positive number".formatted(height));
+            error("Stage height (%.2f) must be a positive number".formatted(height));
         }
     }
 

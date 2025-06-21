@@ -44,7 +44,7 @@ import static de.amr.pacmanfx.uilib.Ufx.toggle;
 
 public interface PacManGames_UI {
 
-    static PacManGames_UIBuilder builder(Stage stage, int width, int height) {
+    static PacManGames_UIBuilder useStage(Stage stage, double width, double height) {
         return new PacManGames_UIBuilder(stage, width, height);
     }
 

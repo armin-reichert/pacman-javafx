@@ -19,20 +19,16 @@ public class ArcadeMsPacMan_App extends Application {
     @Override
     public void start(Stage primaryStage) {
         // UI size: 80% of available screen height, aspect 12:10
-        final int height = (int) (0.8 * Screen.getPrimary().getBounds().getHeight());
-        final int width  = (int) (1.2 * height);
-        PacManGames_UI.builder(primaryStage, width, height)
-            .game(MS_PACMAN, ArcadeMsPacMan_GameModel.arcadeVersion(), ArcadeMsPacMan_UIConfig.class)
-            .startPages(new ArcadeMsPacMan_StartPage(MS_PACMAN))
-            .dashboardEntries(
-                    DashboardID.GENERAL,
-                    DashboardID.GAME_CONTROL,
-                    DashboardID.SETTINGS_3D,
-                    DashboardID.GAME_INFO,
-                    DashboardID.ACTOR_INFO,
-                    DashboardID.KEYBOARD,
-                    DashboardID.ABOUT)
-            .createAndShowUI();
+        final double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
+        final double width  = 1.2 * height;
+        PacManGames_UI
+                .useStage(primaryStage, width, height)
+                .game(MS_PACMAN, ArcadeMsPacMan_GameModel.arcadeVersion(), ArcadeMsPacMan_UIConfig.class)
+                .startPages(new ArcadeMsPacMan_StartPage(MS_PACMAN))
+                .dashboardEntries(
+                        DashboardID.GENERAL, DashboardID.GAME_CONTROL, DashboardID.SETTINGS_3D,
+                        DashboardID.GAME_INFO, DashboardID.ACTOR_INFO, DashboardID.KEYBOARD, DashboardID.ABOUT)
+                .buildAndShow();
     }
 
     @Override

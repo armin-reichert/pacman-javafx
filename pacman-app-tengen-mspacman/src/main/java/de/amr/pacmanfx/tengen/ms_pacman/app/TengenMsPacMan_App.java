@@ -23,23 +23,18 @@ public class TengenMsPacMan_App extends Application {
     @Override
     public void start(Stage primaryStage) {
         // UI size: 80% of available screen height, aspect NES screen aspect 32:30
-        final int height = (int) (0.8 * Screen.getPrimary().getBounds().getHeight());
-        final int width  = (int) (NES_ASPECT * height);
-        PacManGames_UI.builder(primaryStage, width, height)
-            .game(
-                MS_PACMAN_TENGEN,
-                new TengenMsPacMan_GameModel(),
-                TengenMsPacMan_UIConfig.class)
-            .startPages(new TengenMsPacMan_StartPage(MS_PACMAN_TENGEN))
-            .dashboardEntries(
-                DashboardID.GENERAL,
-                DashboardID.GAME_CONTROL,
-                DashboardID.SETTINGS_3D,
-                DashboardID.GAME_INFO,
-                DashboardID.ACTOR_INFO,
-                DashboardID.KEYBOARD,
-                DashboardID.ABOUT)
-            .createAndShowUI();
+        final double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
+        final double width  = NES_ASPECT * height;
+        PacManGames_UI
+                .useStage(primaryStage, width, height)
+                .game(
+                    MS_PACMAN_TENGEN,
+                    new TengenMsPacMan_GameModel(),
+                    TengenMsPacMan_UIConfig.class)
+                .startPages(new TengenMsPacMan_StartPage(MS_PACMAN_TENGEN))
+                .dashboardEntries(DashboardID.GENERAL, DashboardID.GAME_CONTROL, DashboardID.SETTINGS_3D,
+                    DashboardID.GAME_INFO, DashboardID.ACTOR_INFO, DashboardID.KEYBOARD, DashboardID.ABOUT)
+                .buildAndShow();
     }
 
     @Override
