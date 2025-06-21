@@ -11,7 +11,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.WatchEvent;
 import java.time.LocalTime;
@@ -28,7 +27,7 @@ public class WatchCustomMapsApp extends Application {
     private final ObservableList<String> eventsDescriptions = FXCollections.observableList(new ArrayList<>());
 
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) {
         BorderPane root = new BorderPane();
         var eventListView = new ListView<String>();
         eventListView.setItems(eventsDescriptions);
@@ -40,7 +39,7 @@ public class WatchCustomMapsApp extends Application {
         stage.show();
 
         DirectoryWatchdog dog = new DirectoryWatchdog(CUSTOM_MAP_DIR);
-        dog.setEventConsumer(this::showEventsInList);
+        dog.addEventListener(this::showEventsInList);
         dog.startWatching();
     }
 

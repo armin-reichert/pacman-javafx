@@ -38,8 +38,7 @@ public class PacManGames3dApp extends Application {
         final int height = (int) (0.8 * Screen.getPrimary().getBounds().getHeight());
         final int width  = (int) (1.6 * height);
         final var xxlSelector = new PacManXXL_Common_MapSelector(CUSTOM_MAP_DIR);
-        PacManGames_UI.builder()
-            .stage(primaryStage, width, height)
+        PacManGames_UI.builder(primaryStage, width, height)
             .game(
                 PACMAN,
                 ArcadePacMan_GameModel.arcadeVersion(),

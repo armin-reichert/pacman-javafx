@@ -32,12 +32,16 @@ public class PacManGames_UIBuilder {
     private StartPage[] startPages;
     private int selectedStartPageIndex;
     private DashboardID[] dashboardIDs = new DashboardID[0];
-    private Stage stage;
+    private final Stage stage;
     private int width = 800;
     private int height = 600;
 
-    public PacManGames_UIBuilder() {
+    public PacManGames_UIBuilder(Stage stage, int width, int height) {
         checkUserDirsExistingAndWritable();
+        validateStage(stage, width, height);
+        this.stage = stage;
+        this.width = width;
+        this.height = height;
     }
 
     private static void checkUserDirsExistingAndWritable() {
@@ -95,14 +99,6 @@ public class PacManGames_UIBuilder {
     public PacManGames_UIBuilder dashboardEntries(DashboardID... dashboardIDs) {
         validateDashboardEntryList(dashboardIDs);
         this.dashboardIDs = dashboardIDs;
-        return this;
-    }
-
-    public PacManGames_UIBuilder stage(Stage stage, int width, int height) {
-        validateStage(stage, width, height);
-        this.stage = stage;
-        this.width = width;
-        this.height = height;
         return this;
     }
 

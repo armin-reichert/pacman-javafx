@@ -23,7 +23,7 @@ public class PacManXXL_Common_App extends Application {
         int height = (int) (0.8 * Screen.getPrimary().getBounds().getHeight());
         int width  = (int) (1.6 * height);
         var xxlMapSelector = new PacManXXL_Common_MapSelector(CUSTOM_MAP_DIR);
-        PacManGames_UI.builder()
+        PacManGames_UI.builder(primaryStage, width, height)
             .game(PACMAN_XXL,    new PacManXXL_PacMan_GameModel(xxlMapSelector),   PacManXXL_PacMan_UIConfig.class)
             .game(MS_PACMAN_XXL, new PacManXXL_MsPacMan_GameModel(xxlMapSelector), PacManXXL_MsPacMan_UIConfig.class)
             .startPages(         new PacManXXL_Common_StartPage())
@@ -37,7 +37,6 @@ public class PacManXXL_Common_App extends Application {
                 DashboardID.CUSTOM_MAPS,
                 DashboardID.KEYBOARD,
                 DashboardID.ABOUT)
-            .stage(primaryStage, width, height)
             .createAndShowUI();
 
         theWatchdog().addEventListener(watchEvents -> xxlMapSelector.loadCustomMaps());

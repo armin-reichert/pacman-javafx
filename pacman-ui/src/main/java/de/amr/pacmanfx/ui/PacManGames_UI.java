@@ -44,8 +44,8 @@ import static de.amr.pacmanfx.uilib.Ufx.toggle;
 
 public interface PacManGames_UI {
 
-    static PacManGames_UIBuilder builder() {
-        return new PacManGames_UIBuilder();
+    static PacManGames_UIBuilder builder(Stage stage, int width, int height) {
+        return new PacManGames_UIBuilder(stage, width, height);
     }
 
     Color DEBUG_TEXT_FILL          = Color.YELLOW;
