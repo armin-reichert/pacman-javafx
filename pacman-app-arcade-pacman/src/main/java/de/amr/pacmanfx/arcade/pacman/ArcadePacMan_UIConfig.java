@@ -17,7 +17,6 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.PacManGames_Assets;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
-import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
@@ -202,13 +201,6 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
         scenesByID.put("CutScene1",   new ArcadePacMan_CutScene1());
         scenesByID.put("CutScene2",   new ArcadePacMan_CutScene2());
         scenesByID.put("CutScene3",   new ArcadePacMan_CutScene3());
-    }
-
-    @Override
-    public GameScene2D createPiPScene(Canvas canvas) {
-        var gameScene = new ArcadeCommon_PlayScene2D();
-        gameScene.setGameRenderer(createGameRenderer(canvas));
-        return gameScene;
     }
 
     @Override

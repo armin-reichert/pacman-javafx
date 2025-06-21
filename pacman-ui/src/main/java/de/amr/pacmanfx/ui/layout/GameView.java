@@ -5,9 +5,14 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2f;
+import de.amr.pacmanfx.model.actors.ActorAnimationMap;
 import de.amr.pacmanfx.ui.*;
-import de.amr.pacmanfx.ui._2d.*;
+import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.PopupLayer;
+import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
+import de.amr.pacmanfx.ui._2d.TooFancyCanvasContainer;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
@@ -28,7 +33,9 @@ import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.FontSmoothingType;
 import org.tinylog.Logger;
@@ -63,17 +70,17 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
     private final Dashboard dashboard = new Dashboard();
     private final Canvas canvas = new Canvas();
     private final TooFancyCanvasContainer canvasContainer = new TooFancyCanvasContainer(canvas);
-    private final PictureInPictureView pipView = new PictureInPictureView();
-    private final VBox pipContainer = new VBox(pipView, new HBox());
     private final ContextMenu contextMenu = new ContextMenu();
     private final StringBinding titleBinding;
+
+    private final MiniGameView miniGameView;
 
     public GameView(PacManGames_UI ui, Scene parentScene, DashboardID... dashboardIDs) {
         this.ui = requireNonNull(ui);
         this.parentScene = requireNonNull(parentScene);
-        canvas.getGraphicsContext2D().setImageSmoothing(false);
+        this.miniGameView = new MiniGameView();
+
         configureCanvasContainer();
-        configurePiPView();
         createLayers();
         createDashboard(dashboardIDs);
         configurePropertyBindings();
@@ -164,8 +171,12 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
                 gameScene2D.draw();
             }
         });
-        pipView.draw();
+
+        if (miniGameView.root().isVisible()) {
+            miniGameView.draw();
+        }
         flashMessageLayer.update();
+
         // Dashboard updates must be called from permanent clock task too!
         if (dashboardLayer.isVisible()) {
             dashboard.infoBoxes().filter(InfoBox::isExpanded).forEach(InfoBox::update);
@@ -191,25 +202,21 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public void onGameEvent(GameEvent event) {
-        Logger.trace("{} received game event {}", getClass().getSimpleName(), event);
-        switch (event.type) {
-            case LEVEL_CREATED -> {
-                optGameLevel().ifPresent(level -> {
-                    PacManGames_UIConfig config = ui.configuration();
-                    level.pac().setAnimations(config.createPacAnimations(level.pac()));
-                    level.ghosts().forEach(ghost -> ghost.setAnimations(config.createGhostAnimations(ghost)));
-                    theSound().setEnabled(!level.isDemoLevel());
-                    // size of game scene might have changed, so re-embed
-                    ui.currentGameScene().ifPresent(gameScene -> embedGameScene(config, gameScene));
-                    pipView.setScene2D(config.createPiPScene(canvas));
-                    //TODO set a suitable HUD for the PiP view
-                    Logger.info("Game view handled level creation event");
-                });
-            }
-            default -> {}
+    public void onGameEvent(GameEvent gameEvent) {
+        Logger.trace("GameView received {}", gameEvent);
+        if (gameEvent.type == GameEventType.LEVEL_CREATED) {
+            PacManGames_UIConfig config = ui.configuration();
+            ActorAnimationMap pacAnimationMap = config.createPacAnimations(theGameLevel().pac());
+            theGameLevel().pac().setAnimations(pacAnimationMap);
+            theGameLevel().ghosts().forEach(ghost -> {
+                ActorAnimationMap ghostAnimationMap = config.createGhostAnimations(ghost);
+                ghost.setAnimations(ghostAnimationMap);
+            });
+            theSound().setEnabled(!theGameLevel().isDemoLevel());
+            // size of game scene might have changed, so re-embed
+            ui.currentGameScene().ifPresent(gameScene -> embedGameScene(config, gameScene));
         }
-        ui.currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(event));
+        ui.currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(gameEvent));
         updateGameScene(false);
     }
 
@@ -311,8 +318,8 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
             throw new IllegalStateException("WTF is going on here, switch between NULL scenes?");
         }
         return switch (sceneBefore) {
-            case GameScene2D scene2D when sceneAfter instanceof PlayScene3D -> 23;
-            case PlayScene3D playScene3D when sceneAfter instanceof GameScene2D -> 32;
+            case GameScene2D ignored when sceneAfter instanceof PlayScene3D -> 23;
+            case PlayScene3D ignored when sceneAfter instanceof GameScene2D -> 32;
             case null, default -> 0; // may happen, it's ok
         };
     }
@@ -361,15 +368,6 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
             ui.currentGameScene().ifPresent(gameScene -> embedGameScene(ui.configuration(), gameScene)));
     }
 
-    private void configurePiPView() {
-        pipView.backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Background::fill));
-        pipView.opacityProperty().bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
-        pipView.visibleProperty().bind(Bindings.createObjectBinding(
-            () -> PY_PIP_ON.get() && ui.currentGameSceneIsPlayScene3D(),
-            PY_PIP_ON, ui.currentGameSceneProperty()
-        ));
-    }
-
     private void configurePropertyBindings() {
         GraphicsContext g = canvas.getGraphicsContext2D();
         PY_CANVAS_FONT_SMOOTHING.addListener((py, ov, on) -> g.setFontSmoothingType(on ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
@@ -395,7 +393,9 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
             dashboardContainer.visibleProperty(), PY_PIP_ON
         ));
         dashboardLayer.setLeft(dashboardContainer);
-        dashboardLayer.setRight(pipContainer);
+
+//        dashboardLayer.setRight(pipContainer);
+        dashboardLayer.setRight(miniGameView.root());
 
         //TODO reconsider this and the help functionality
         popupLayer = new PopupLayer(canvasContainer);

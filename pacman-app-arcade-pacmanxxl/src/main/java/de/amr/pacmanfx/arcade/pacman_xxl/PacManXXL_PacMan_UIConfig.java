@@ -19,7 +19,6 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.PacManGames_Assets;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
-import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
@@ -114,7 +113,7 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
 
     @Override
     public String assetNamespace() {
-        return "pacman_xxl";
+        return ANS;
     }
 
     @Override
@@ -222,12 +221,5 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
             default -> PY_3D_ENABLED.get() ?  "PlayScene3D" : "PlayScene2D";
         };
         return scenesByID.get(sceneID);
-    }
-
-    @Override
-    public GameScene2D createPiPScene(Canvas canvas) {
-        var gameScene = new ArcadeCommon_PlayScene2D();
-        gameScene.setGameRenderer(createGameRenderer(canvas));
-        return gameScene;
     }
 }

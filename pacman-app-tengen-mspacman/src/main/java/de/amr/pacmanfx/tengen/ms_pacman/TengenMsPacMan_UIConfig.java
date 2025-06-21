@@ -21,7 +21,6 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_MapRepository;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.*;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.*;
 import de.amr.pacmanfx.ui.*;
-import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
@@ -287,13 +286,6 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     @Override
     public Stream<GameScene> gameScenes() {
         return scenesByID.values().stream();
-    }
-
-    @Override
-    public GameScene2D createPiPScene(Canvas canvasNotUsed) {
-        var gameScene = new TengenMsPacMan_PiPScene();
-        gameScene.setGameRenderer(createGameRenderer(gameScene.canvas()));
-        return gameScene;
     }
 
     // Actions

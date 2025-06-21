@@ -51,15 +51,15 @@ public class GameEvent {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("GameEvent{");
-        sb.append("game=").append(game);
-        sb.append(", type=").append(type);
+        var sb = new StringBuilder("GameEvent[");
+        sb.append(type);
         if (payloadMap != null) {
-            for (Map.Entry<String, Object> entry : payloadMap.entrySet()) {
-                sb.append(entry.getKey()).append("=").append(entry.getValue());
-            }
+            sb.append(" [");
+            payloadMap.forEach((key, value) -> sb.append(key).append("=").append(value).append(","));
+            sb.append("]");
         }
-        sb.append("}");
+        sb.append(" game=").append(game);
+        sb.append("]");
         return sb.toString();
     }
 
