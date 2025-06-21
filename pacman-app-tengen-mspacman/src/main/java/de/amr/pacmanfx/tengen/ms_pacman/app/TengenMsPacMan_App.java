@@ -40,7 +40,7 @@ public class TengenMsPacMan_App extends Application {
                 DashboardID.KEYBOARD,
                 DashboardID.ABOUT)
             .stage(primaryStage, width, height)
-            .show();
+            .createAndShowUI();
     }
 
     @Override

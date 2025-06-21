@@ -33,7 +33,7 @@ public class ArcadeMsPacMan_App extends Application {
                     DashboardID.KEYBOARD,
                     DashboardID.ABOUT)
             .stage(primaryStage, width, height)
-            .show();
+            .createAndShowUI();
     }
 
     @Override

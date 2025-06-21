@@ -109,7 +109,7 @@ public class PacManGames_UIBuilder {
         return this;
     }
 
-    public void show() {
+    public void createAndShowUI() {
         validateAll();
         theUI = new PacManGames_UI_Impl();
         theUI.createUIConfigurations(uiConfigClasses);

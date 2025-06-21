@@ -37,7 +37,7 @@ public class PacManXXL_Common_App extends Application {
                 DashboardID.KEYBOARD,
                 DashboardID.ABOUT)
             .stage(primaryStage, width, height)
-            .show();
+            .createAndShowUI();
 
         theWatchdog().addEventListener(watchEvents -> xxlMapSelector.loadCustomMaps());
     }
