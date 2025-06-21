@@ -9,8 +9,8 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
-import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
+import javafx.animation.TranslateTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.geometry.Insets;
@@ -42,6 +42,7 @@ public class MiniGameView {
 
     private final VBox root = new VBox();
     private final Canvas canvas = new Canvas();
+    private final HBox canvasContainer = new HBox(canvas);
     private final GraphicsContext ctx = canvas.getGraphicsContext2D();
     private long drawCount;
     private GameRenderer gr;
@@ -49,7 +50,6 @@ public class MiniGameView {
     public MiniGameView() {
         // The VBox fills the complete parent container height (why?), so we put the canvas
         // into an HBox that does not grow in height and provides some padding around the canvas
-        HBox canvasContainer = new HBox(canvas);
         canvasContainer.setPadding(new Insets(0, 10, 0, 10));
         canvasContainer.backgroundProperty().bind(backgroundColorProperty().map(Background::fill));
         VBox.setVgrow(canvasContainer, Priority.NEVER);
@@ -111,30 +111,29 @@ public class MiniGameView {
         gr = theUI().configuration().createGameRenderer(canvas);
         gr.applyRenderingHints(gameLevel);
         gr.setScaling(scalingPy.floatValue());
-        fadeIn();
+        moveDownIntoScreen();
     }
 
     public void onLevelCompleted(GameLevel level) {
-        fadeOut();
+        moveUpOffScreen();
     }
 
-    private void fadeIn() {
-        root.opacityProperty().unbind();
-        var fadeInAnimation = new FadeTransition(Duration.seconds(2), root);
-        fadeInAnimation.setFromValue(0);
-        fadeInAnimation.setToValue(opacityProperty().get());
-        fadeInAnimation.setByValue(0.1);
-        fadeInAnimation.setOnFinished(e -> root.opacityProperty().bind(opacityProperty()));
-        fadeInAnimation.play();
+    private void moveDownIntoScreen() {
+        var transition = new TranslateTransition(Duration.seconds(1), root);
+        transition.setToY(0);
+        transition.setByY(10);
+        transition.setDelay(Duration.seconds(2));
+        transition.setInterpolator(Interpolator.EASE_OUT);
+        transition.play();
     }
 
-    private void fadeOut() {
-        root.opacityProperty().unbind();
-        var fadeOutAnimation = new FadeTransition(Duration.seconds(2), root);
-        fadeOutAnimation.setToValue(0);
-        fadeOutAnimation.setByValue(0.1);
-        fadeOutAnimation.setInterpolator(Interpolator.EASE_IN);
-        fadeOutAnimation.play();
+    private void moveUpOffScreen() {
+        var transition = new TranslateTransition(Duration.seconds(2), root);
+        transition.setToY(-canvasContainer.getHeight());
+        transition.setByY(10);
+        transition.setDelay(Duration.seconds(2));
+        transition.setInterpolator(Interpolator.EASE_IN);
+        transition.play();
     }
 
     private void drawGameScene(GameLevel gameLevel) {
