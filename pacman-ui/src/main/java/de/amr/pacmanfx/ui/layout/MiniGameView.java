@@ -21,6 +21,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
+import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.stream.Stream;
@@ -98,7 +99,7 @@ public class MiniGameView {
         ctx.setFill(backgroundColorProperty().get());
         ctx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         if (optGameLevel().isPresent() && theUI().currentGameSceneIsPlayScene3D()) {
-            drawGameScene(gr);
+            drawGameScene(theGameLevel());
         }
         if (debugProperty().get()) {
             drawInfo();
@@ -136,14 +137,17 @@ public class MiniGameView {
         fadeOutAnimation.play();
     }
 
-    private void drawGameScene(GameRenderer gr) {
+    private void drawGameScene(GameLevel gameLevel) {
+        if (gr == null) {
+            Logger.warn("Cannot draw game scene without game renderer");
+            return;
+        }
         gr.setScaling(scalingPy.floatValue());
-        gr.drawLevel(theGameLevel(), Color.BLACK, false, false);
+        gr.drawLevel(gameLevel, backgroundColorProperty().get(), false, false);
         var actors = new ArrayList<Actor>();
-        theGameLevel().bonus().map(Bonus::actor).ifPresent(actors::add);
-        actors.add(theGameLevel().pac());
-        Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)
-            .map(theGameLevel()::ghost).forEach(actors::add);
+        gameLevel.bonus().map(Bonus::actor).ifPresent(actors::add);
+        actors.add(gameLevel.pac());
+        Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW).map(gameLevel::ghost).forEach(actors::add);
         actors.forEach(gr::drawActor);
     }
 
