@@ -6,7 +6,11 @@ package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.MapSelector;
+import org.tinylog.Logger;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
@@ -31,7 +35,7 @@ public class ArcadeMsPacMan_MapSelector implements MapSelector {
     @Override
     public void loadAllMaps() {
         if (maps.isEmpty()) {
-            maps = MapSelector.loadMapsFromModule(getClass(), "maps/mspacman_%d.world", 4);
+            maps = WorldMap.loadMapsFromModule(getClass(), "maps/mspacman_%d.world", 4);
         }
     }
 
@@ -52,7 +56,7 @@ public class ArcadeMsPacMan_MapSelector implements MapSelector {
      * <p>
      */
     @Override
-    public WorldMap findWorldMap(int levelNumber) {
+    public WorldMap getWorldMap(int levelNumber) {
         requireValidLevelNumber(levelNumber);
         final int mapNumber = switch (levelNumber) {
             case 1, 2 -> 1;

@@ -242,14 +242,13 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
 
     @Override
     public void createLevel(int levelNumber) {
-        WorldMap worldMap = mapSelector.findWorldMap(levelNumber);
+        WorldMap worldMap = mapSelector.getWorldMap(levelNumber);
         level = new GameLevel(levelNumber, worldMap, createLevelData(levelNumber));
-        addHouse(level);
         level.setGameOverStateTicks(150);
+        addHouse(level);
 
-        var msPacMan = createMsPacMan();
-        msPacMan.setAutopilotSteering(autopilot);
-        level.setPac(msPacMan);
+        level.setPac(createMsPacMan());
+        level.pac().setAutopilotSteering(autopilot);
 
         level.setGhosts(
             createGhost(RED_GHOST_SHADOW),

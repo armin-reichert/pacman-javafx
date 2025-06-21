@@ -87,13 +87,13 @@ public class PacManXXL_Common_MapSelector implements MapSelector {
     @Override
     public void loadAllMaps() {
         if (builtinMaps.isEmpty()) {
-            builtinMaps = MapSelector.loadMapsFromModule(getClass(), "maps/masonic_%d.world", 8);
+            builtinMaps = WorldMap.loadMapsFromModule(getClass(), "maps/masonic_%d.world", 8);
         }
         loadCustomMaps();
     }
 
     @Override
-    public WorldMap findWorldMap(int levelNumber) {
+    public WorldMap getWorldMap(int levelNumber) {
         WorldMap template = switch (mapSelectionMode) {
             case NO_CUSTOM_MAPS ->
                     levelNumber <= builtinMaps.size()

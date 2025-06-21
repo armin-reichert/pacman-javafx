@@ -51,7 +51,7 @@ public class TengenMsPacMan_MapSelector implements MapSelector {
     public void loadCustomMaps() {}
 
     @Override
-    public WorldMap findWorldMap(int levelNumber) {
+    public WorldMap getWorldMap(int levelNumber) {
         throw new UnsupportedOperationException(); //TODO ugly! Reconsider API
     }
 

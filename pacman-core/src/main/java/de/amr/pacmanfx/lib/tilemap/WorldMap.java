@@ -76,6 +76,32 @@ public class WorldMap {
         return fromURL(file.toURI().toURL());
     }
 
+    /**
+     * @param mapPattern path (pattern) to access the map files inside resources folder,
+     *                   counting from 1, e.g. <code>"maps/masonic_%d.world"</code>
+     * @param mapCount number of maps to be loaded
+     */
+    public static List<WorldMap> loadMapsFromModule(Class<?> loaderClass, String mapPattern, int mapCount) {
+        var maps = new ArrayList<WorldMap>();
+        for (int n = 1; n <= mapCount; ++n) {
+            String name = mapPattern.formatted(n);
+            URL url = loaderClass.getResource(name);
+            if (url == null) {
+                Logger.error("Map not found for resource name='{}'", name);
+                throw new IllegalArgumentException();
+            }
+            try {
+                WorldMap worldMap = WorldMap.fromURL(url);
+                maps.add(worldMap);
+                Logger.info("Map loaded, URL='{}'", url);
+            } catch (IOException x) {
+                Logger.error("Could not load map, URL='{}'", url);
+                throw new IllegalArgumentException(x);
+            }
+        }
+        return maps;
+    }
+
     // Package access for parser
 
     String url;
