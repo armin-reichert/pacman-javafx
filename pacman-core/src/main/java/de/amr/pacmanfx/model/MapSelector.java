@@ -5,11 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.model;
 
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
-import org.tinylog.Logger;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 public interface MapSelector {
@@ -18,5 +14,4 @@ public interface MapSelector {
     List<WorldMap> customMaps();
     void loadCustomMaps();
     void loadAllMaps();
-
 }

@@ -6,11 +6,7 @@ package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.MapSelector;
-import org.tinylog.Logger;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.pacmanfx.Validations.requireValidLevelNumber;

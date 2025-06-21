@@ -19,23 +19,21 @@ import static de.amr.pacmanfx.ui.PacManGames.theUI;
 import static de.amr.pacmanfx.ui.PacManGames_UI.ACTION_BOOT_SHOW_GAME_VIEW;
 import static java.util.Objects.requireNonNull;
 
-public class ArcadePacMan_StartPage extends StackPane implements StartPage, ResourceManager {
-
-    @Override
-    public Class<?> resourceRootClass() {
-        return ArcadePacMan_StartPage.class;
-    }
+public class ArcadePacMan_StartPage extends StackPane implements StartPage {
 
     public ArcadePacMan_StartPage(String gameVariant) {
         setUserData(requireNonNull(gameVariant));
-        var flyer = new Flyer(loadImage("graphics/f1.jpg"), loadImage("graphics/f2.jpg"), loadImage("graphics/f3.jpg"));
-        flyer.selectPage(0);
+
+        ResourceManager rm = () -> ArcadePacMan_StartPage.class;
+        var flyer = new Flyer(rm.loadImage("graphics/f1.jpg"), rm.loadImage("graphics/f2.jpg"), rm.loadImage("graphics/f3.jpg"));
         addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             switch (e.getCode()) {
                 case DOWN -> flyer.nextFlyerPage();
                 case UP -> flyer.prevFlyerPage();
             }
         });
+        flyer.selectPage(0);
+
         var startButton = StartPagesView.createStartButton(Pos.BOTTOM_CENTER);
         startButton.setAction(() -> GameAction.executeIfEnabled(theUI(), ACTION_BOOT_SHOW_GAME_VIEW));
         startButton.setTranslateY(-50);
@@ -50,15 +48,5 @@ public class ArcadePacMan_StartPage extends StackPane implements StartPage, Reso
     @Override
     public Region layoutRoot() {
         return this;
-    }
-
-    @Override
-    public void onEnter() {
-        Logger.info("onEnter {}", this);
-    }
-
-    @Override
-    public void onExit() {
-        Logger.info("onExit {}", this);
     }
 }

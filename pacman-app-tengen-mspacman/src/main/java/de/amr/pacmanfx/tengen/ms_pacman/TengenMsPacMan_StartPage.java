@@ -13,29 +13,26 @@ import javafx.geometry.Pos;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
 import static de.amr.pacmanfx.ui.PacManGames_UI.ACTION_BOOT_SHOW_GAME_VIEW;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_StartPage extends StackPane implements StartPage, ResourceManager {
-
-    @Override
-    public Class<?> resourceRootClass() {
-        return TengenMsPacMan_StartPage.class;
-    }
+public class TengenMsPacMan_StartPage extends StackPane implements StartPage {
 
     public TengenMsPacMan_StartPage(String gameVariant) {
         setUserData(requireNonNull(gameVariant));
-        var flyer = new Flyer(loadImage("graphics/f1.png"), loadImage("graphics/f2.png"));
-        flyer.selectPage(0);
+
+        ResourceManager rm = () -> TengenMsPacMan_StartPage.class;
+        var flyer = new Flyer(rm.loadImage("graphics/f1.png"), rm.loadImage("graphics/f2.png"));
         addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             switch (e.getCode()) {
                 case DOWN -> flyer.nextFlyerPage();
                 case UP -> flyer.prevFlyerPage();
             }
         });
+        flyer.selectPage(0);
+
         var startButton = StartPagesView.createStartButton(Pos.BOTTOM_CENTER);
         startButton.setAction(() -> GameAction.executeIfEnabled(theUI(), ACTION_BOOT_SHOW_GAME_VIEW));
         startButton.setTranslateY(-50);
@@ -50,15 +47,5 @@ public class TengenMsPacMan_StartPage extends StackPane implements StartPage, Re
     @Override
     public Region layoutRoot() {
         return this;
-    }
-
-    @Override
-    public void onEnter() {
-        Logger.info("onEnter {}", this);
-    }
-
-    @Override
-    public void onExit() {
-        Logger.info("onExit {}", this);
     }
 }

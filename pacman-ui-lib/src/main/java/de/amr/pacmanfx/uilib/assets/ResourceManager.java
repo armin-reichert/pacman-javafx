@@ -36,7 +36,6 @@ import static java.util.Objects.requireNonNull;
  */
 @FunctionalInterface
 public interface ResourceManager {
-
     /**
      * @return class relative to which resources are loaded if the path does not start with '/'
      */

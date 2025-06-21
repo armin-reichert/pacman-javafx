@@ -25,7 +25,7 @@ public class PacManXXL_Common_StartPage implements StartPage {
     private final PacManXXL_Common_StartPageMenu menu;
 
     public PacManXXL_Common_StartPage() {
-        ResourceManager rm = this::getClass;
+        ResourceManager rm = () -> PacManXXL_Common_StartPage.class;
         Flyer flyer = new Flyer(rm.loadImage("graphics/pacman_xxl_startpage.jpg"));
         flyer.setPageLayout(0, Flyer.LayoutMode.FILL);
         flyer.selectPage(0);
@@ -51,14 +51,12 @@ public class PacManXXL_Common_StartPage implements StartPage {
 
     @Override
     public void onEnter() {
-        Logger.info("onEnter {}", this);
         menu.syncMenuState();
         menu.startAnimation();
     }
 
     @Override
     public void onExit() {
-        Logger.info("onExit {}", this);
         menu.stopAnimation();
     }
 
@@ -71,5 +69,4 @@ public class PacManXXL_Common_StartPage implements StartPage {
     public Region layoutRoot() {
         return root;
     }
-
 }
