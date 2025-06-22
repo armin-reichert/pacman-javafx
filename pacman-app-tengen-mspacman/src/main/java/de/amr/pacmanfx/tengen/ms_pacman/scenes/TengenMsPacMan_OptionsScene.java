@@ -71,6 +71,11 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D implements ActionBi
         public void execute(PacManGames_UI ui) {
             theJoypad().selectNextKeyBinding(TengenMsPacMan_OptionsScene.this);
         }
+
+        @Override
+        public String name() {
+            return "SELECT_NEXT_JOYPAD_BINDING";
+        }
     };
 
     @Override
