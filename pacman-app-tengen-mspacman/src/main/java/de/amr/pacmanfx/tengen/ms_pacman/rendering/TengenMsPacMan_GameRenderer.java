@@ -54,7 +54,7 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
     private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
     private final TengenMsPacMan_SpriteSheet spriteSheet;
     private final TengenMsPacMan_MapRepository mapRepository;
-    private ColoredMapConfiguration mapConfiguration;
+    private ColoredMazeConfiguration mapConfiguration;
 
     public TengenMsPacMan_GameRenderer(TengenMsPacMan_SpriteSheet spriteSheet, TengenMsPacMan_MapRepository mapRepository, Canvas canvas) {
         super(canvas);
@@ -82,7 +82,7 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
     @Override
     public void applyRenderingHints(GameLevel level) {
         int flashCount = level.data().numFlashes();
-        mapConfiguration = mapRepository.createMapConfiguration(level.worldMap(), flashCount);
+        mapConfiguration = mapRepository.createMazeConfiguration(level.worldMap(), flashCount);
         Logger.info("Created map configuration with {} flash colors: {}", flashCount, mapConfiguration);
     }
 
@@ -277,8 +277,8 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
 
         Sprite mapSprite = theGame.mapCategory() == MapCategory.STRANGE && mapNumber == 15
             ? strangeMap15Sprite(theClock().tickCount()) // Strange map #15: psychedelic animation
-            : mapConfiguration.coloredMapSprite().sprite();
-        Image mapImage = mapConfiguration.coloredMapSprite().image();
+            : mapConfiguration.mazeSprite().sprite();
+        Image mapImage = mapConfiguration.mazeSprite().image();
         int y = GameLevel.EMPTY_ROWS_OVER_MAZE * TS;
         ctx.drawImage(mapImage,
             mapSprite.x(), mapSprite.y(), mapSprite.width(), mapSprite.height(),
@@ -298,7 +298,7 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
         }
         ctx.save();
         ctx.scale(scaling(), scaling());
-        Color pelletColor = Color.web(mapConfiguration.coloredMapSprite().colorScheme().pelletColor());
+        Color pelletColor = Color.web(mapConfiguration.mazeSprite().colorScheme().pelletColor());
         drawPellets(level, pelletColor);
         drawEnergizers(level, pelletColor);
         ctx.restore();
@@ -308,7 +308,7 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
         requireNonNull(level);
         double mapTop = GameLevel.EMPTY_ROWS_OVER_MAZE * TS;
         final var game = (TengenMsPacMan_GameModel) theGame();
-        final ColorSchemedSprite mapImage = mapConfiguration.flashingMapSprites().get(flashingIndex);
+        final ColorSchemedSprite mapImage = mapConfiguration.flashingMazeSprites().get(flashingIndex);
         final Sprite region = mapImage.sprite();
         if (!game.optionsAreInitial()) {
             drawGameOptions(game.mapCategory(), game.difficulty(), game.pacBooster(),
@@ -324,7 +324,7 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
         // draw food to erase eaten food!
         ctx.save();
         ctx.scale(scaling(), scaling());
-        Color pelletColor = Color.web(mapConfiguration.coloredMapSprite().colorScheme().pelletColor());
+        Color pelletColor = Color.web(mapConfiguration.mazeSprite().colorScheme().pelletColor());
         drawPellets(level, pelletColor);
         drawEnergizers(level, pelletColor);
         ctx.restore();

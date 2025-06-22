@@ -16,7 +16,10 @@ import javafx.beans.property.ObjectProperty;
 import javafx.geometry.Insets;
 import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.MenuItem;
-import javafx.scene.image.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -81,13 +84,6 @@ public interface Ufx {
                 e.printStackTrace(System.err);
             }
         }
-    }
-
-    static ImageView createIcon(Image iconImage, int size) {
-        var icon = new ImageView(iconImage);
-        icon.setFitWidth(size);
-        icon.setPreserveRatio(true);
-        return icon;
     }
 
     static void toggle(BooleanProperty booleanProperty) {
@@ -340,12 +336,12 @@ public interface Ufx {
 
     Set<Color> NES_PALETTE_COLORS = Stream.of(NES_Palette.COLORS).map(Color::valueOf).collect(Collectors.toSet());
 
-    static Image replaceColors(Image source, NES_ColorScheme from, NES_ColorScheme to) {
+    static Image recolorImage(Image image, NES_ColorScheme sourceColorScheme, NES_ColorScheme targetColorScheme) {
         Map<String, ColorChange> colorChanges = Map.of(
-            "fill",   new ColorChange(Color.web(from.fillColor()),   Color.web(to.fillColor())),
-            "stroke", new ColorChange(Color.web(from.strokeColor()), Color.web(to.strokeColor())),
-            "pellet", new ColorChange(Color.web(from.pelletColor()), Color.web(to.pelletColor()))
+            "fill",   new ColorChange(Color.web(sourceColorScheme.fillColor()),   Color.web(targetColorScheme.fillColor())),
+            "stroke", new ColorChange(Color.web(sourceColorScheme.strokeColor()), Color.web(targetColorScheme.strokeColor())),
+            "pellet", new ColorChange(Color.web(sourceColorScheme.pelletColor()), Color.web(targetColorScheme.pelletColor()))
         );
-        return exchangeColors(colorChanges, source);
+        return exchangeColors(colorChanges, image);
     }
 }
