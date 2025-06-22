@@ -8,4 +8,4 @@ import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import javafx.scene.image.Image;
 
-public record ColoredImageRegion(Image image, Sprite region, NES_ColorScheme colorScheme) {}
+public record ColorSchemedSprite(Image image, Sprite sprite, NES_ColorScheme colorScheme) {}

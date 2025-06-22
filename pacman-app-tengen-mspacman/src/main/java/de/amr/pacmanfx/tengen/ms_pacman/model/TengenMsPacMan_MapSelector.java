@@ -7,11 +7,7 @@ package de.amr.pacmanfx.tengen.ms_pacman.model;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.MapSelector;
-import org.tinylog.Logger;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +15,8 @@ import java.util.stream.Collectors;
 
 import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
 import static de.amr.pacmanfx.lib.nes.NES_ColorScheme.*;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.MAP_ROOT_PATH;
+import static de.amr.pacmanfx.lib.tilemap.WorldMap.loadMapsFromModule;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.MAP_PATH;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory.*;
 import static java.util.Objects.requireNonNull;
 
@@ -40,10 +37,10 @@ public class TengenMsPacMan_MapSelector implements MapSelector {
     @Override
     public void loadAllMaps() {
         if (mapRepository.isEmpty()) {
-            mapRepository.put(MapCategory.ARCADE,  loadMaps(MAP_ROOT_PATH + "arcade%d.world", 4));
-            mapRepository.put(MapCategory.MINI,    loadMaps(MAP_ROOT_PATH + "mini%d.world", 6));
-            mapRepository.put(MapCategory.BIG,     loadMaps(MAP_ROOT_PATH + "big%02d.world", 11));
-            mapRepository.put(MapCategory.STRANGE, loadMaps(MAP_ROOT_PATH + "strange%02d.world", 15));
+            mapRepository.put(MapCategory.ARCADE,  loadMapsFromModule(getClass(), MAP_PATH + "arcade%d.world",     4));
+            mapRepository.put(MapCategory.MINI,    loadMapsFromModule(getClass(), MAP_PATH + "mini%d.world",       6));
+            mapRepository.put(MapCategory.BIG,     loadMapsFromModule(getClass(), MAP_PATH + "big%02d.world",     11));
+            mapRepository.put(MapCategory.STRANGE, loadMapsFromModule(getClass(), MAP_PATH + "strange%02d.world", 15));
         }
     }
 
@@ -55,33 +52,17 @@ public class TengenMsPacMan_MapSelector implements MapSelector {
         throw new UnsupportedOperationException(); //TODO ugly! Reconsider API
     }
 
-    private List<WorldMap> loadMaps(String pattern, int count) {
-        var maps = new ArrayList<WorldMap>();
-        for (int num = 1; num <= count; ++num) {
-            String path = pattern.formatted(num);
-            URL url = getClass().getResource(path);
-            if (url != null) {
-                try {
-                    maps.add(WorldMap.fromURL(url));
-                    Logger.info("Map #{} loaded, URL={}", num, url);
-                } catch (IOException x) {
-                    Logger.error(x);
-                    Logger.error("Could not create world map, url={}", url);
-                }
-            } else {
-                Logger.error("World map #{} could not be read. path='{}'", num, path);
-            }
-        }
-        maps.trimToSize();
-        return maps;
-    }
-
     public WorldMap createWorldMapForLevel(MapCategory mapCategory, int levelNumber) {
         requireNonNull(mapCategory);
         requireValidLevelNumber(levelNumber);
         return switch (mapCategory) {
             case ARCADE  -> createArcadeMap(levelNumber);
-            case STRANGE -> createStrangeMap(levelNumber);
+            case STRANGE -> {
+                WorldMap worldMap = createStrangeMap(levelNumber);
+                // Hack: Store level number in map such that the renderer can easily determine the corresponding map image
+                worldMap.setConfigValue("levelNumber", levelNumber);
+                yield worldMap;
+            }
             case MINI    -> createMiniMap(levelNumber);
             case BIG     -> createBigMap(levelNumber);
         };
@@ -214,8 +195,6 @@ public class TengenMsPacMan_MapSelector implements MapSelector {
             case 32 -> recoloredMap(STRANGE, 15, _15_25_20_RED_ROSE_WHITE);
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         };
-        // Hack: Store level number in map such that the renderer can easily determine the corresponding map image
-        worldMap.setConfigValue("levelNumber", levelNumber);
         return worldMap;
     }
 

@@ -5,4 +5,4 @@ package de.amr.pacmanfx.tengen.ms_pacman.rendering;
 
 import java.util.List;
 
-public record ColoredMapConfiguration(ColoredImageRegion mapRegion, List<ColoredImageRegion> flashingMapRegions) {}
+public record ColoredMapConfiguration(ColorSchemedSprite coloredMapSprite, List<ColorSchemedSprite> flashingMapSprites) {}

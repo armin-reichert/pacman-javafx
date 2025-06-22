@@ -23,6 +23,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -53,8 +54,7 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
     private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
     private final TengenMsPacMan_SpriteSheet spriteSheet;
     private final TengenMsPacMan_MapRepository mapRepository;
-
-    private ColoredMapConfiguration coloredMapSet;
+    private ColoredMapConfiguration mapConfiguration;
 
     public TengenMsPacMan_GameRenderer(TengenMsPacMan_SpriteSheet spriteSheet, TengenMsPacMan_MapRepository mapRepository, Canvas canvas) {
         super(canvas);
@@ -74,7 +74,7 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
 
     //TODO check cases where colored map set is not initialized properly
     public void ensureRenderingHintsAreApplied(GameLevel level) {
-        if (coloredMapSet == null) {
+        if (mapConfiguration == null) {
             applyRenderingHints(level);
         }
     }
@@ -82,8 +82,8 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
     @Override
     public void applyRenderingHints(GameLevel level) {
         int flashCount = level.data().numFlashes();
-        coloredMapSet = mapRepository.createMapSequence(level.worldMap(), flashCount);
-        Logger.info("Created recolored map set with {} flash colors: {}", flashCount, coloredMapSet);
+        mapConfiguration = mapRepository.createMapConfiguration(level.worldMap(), flashCount);
+        Logger.info("Created map configuration with {} flash colors: {}", flashCount, mapConfiguration);
     }
 
     @Override
@@ -263,32 +263,28 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
     }
 
     @Override
-    public void drawLevel(GameLevel level, Color optionalBackgroundColor, boolean mazeHighlighted, boolean energizerHighlighted) {
+    public void drawLevel(GameLevel level, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted) {
         requireNonNull(level);
-        if (coloredMapSet == null) {
-            Logger.warn("Tick {}: Level cannot be drawn, no colored map set found", theClock().tickCount());
-            return;
-        }
-
-        final var tengenGame = (TengenMsPacMan_GameModel) theGame();
+        final var theGame = (TengenMsPacMan_GameModel) theGame();
         final int mapNumber = level.worldMap().getConfigValue("mapNumber");
 
         ctx.setImageSmoothing(false);
 
-        if (!tengenGame.optionsAreInitial()) {
-            drawGameOptions(tengenGame.mapCategory(), tengenGame.difficulty(), tengenGame.pacBooster(),
+        if (!theGame.optionsAreInitial()) {
+            drawGameOptions(theGame.mapCategory(), theGame.difficulty(), theGame.pacBooster(),
                 level.worldMap().numCols() * HTS, tiles_to_px(2) + HTS);
         }
 
-        double y = GameLevel.EMPTY_ROWS_OVER_MAZE * TS;
-        Sprite area = tengenGame.mapCategory() == MapCategory.STRANGE && mapNumber == 15
+        Sprite mapSprite = theGame.mapCategory() == MapCategory.STRANGE && mapNumber == 15
             ? strangeMap15Sprite(theClock().tickCount()) // Strange map #15: psychedelic animation
-            : coloredMapSet.mapRegion().region();
-        ctx.drawImage(coloredMapSet.mapRegion().image(),
-            area.x(), area.y(), area.width(), area.height(),
-            0, scaled(y), scaled(area.width()), scaled(area.height())
+            : mapConfiguration.coloredMapSprite().sprite();
+        Image mapImage = mapConfiguration.coloredMapSprite().image();
+        int y = GameLevel.EMPTY_ROWS_OVER_MAZE * TS;
+        ctx.drawImage(mapImage,
+            mapSprite.x(), mapSprite.y(), mapSprite.width(), mapSprite.height(),
+            0, scaled(y), scaled(mapSprite.width()), scaled(mapSprite.height())
         );
-        // The maze images also contain the ghost and Ms. Pac-Man sprites at their initial positions
+        // The maze images show the ghosts and Ms. Pac-Man at their initial locations: must over-paint these
         overPaintActorSprites(level);
 
         drawFood(level);
@@ -296,13 +292,13 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
 
     public void drawFood(GameLevel level) {
         requireNonNull(level);
-        if (coloredMapSet == null) {
+        if (mapConfiguration == null) {
             Logger.error("Draw food: no map set found");
             return;
         }
         ctx.save();
         ctx.scale(scaling(), scaling());
-        Color pelletColor = Color.web(coloredMapSet.mapRegion().colorScheme().pelletColor());
+        Color pelletColor = Color.web(mapConfiguration.coloredMapSprite().colorScheme().pelletColor());
         drawPellets(level, pelletColor);
         drawEnergizers(level, pelletColor);
         ctx.restore();
@@ -312,8 +308,8 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
         requireNonNull(level);
         double mapTop = GameLevel.EMPTY_ROWS_OVER_MAZE * TS;
         final var game = (TengenMsPacMan_GameModel) theGame();
-        final ColoredImageRegion mapImage = coloredMapSet.flashingMapRegions().get(flashingIndex);
-        final Sprite region = mapImage.region();
+        final ColorSchemedSprite mapImage = mapConfiguration.flashingMapSprites().get(flashingIndex);
+        final Sprite region = mapImage.sprite();
         if (!game.optionsAreInitial()) {
             drawGameOptions(game.mapCategory(), game.difficulty(), game.pacBooster(),
                     level.worldMap().numCols() * HTS, tiles_to_px(2) + HTS);
@@ -328,7 +324,7 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
         // draw food to erase eaten food!
         ctx.save();
         ctx.scale(scaling(), scaling());
-        Color pelletColor = Color.web(coloredMapSet.mapRegion().colorScheme().pelletColor());
+        Color pelletColor = Color.web(mapConfiguration.coloredMapSprite().colorScheme().pelletColor());
         drawPellets(level, pelletColor);
         drawEnergizers(level, pelletColor);
         ctx.restore();
