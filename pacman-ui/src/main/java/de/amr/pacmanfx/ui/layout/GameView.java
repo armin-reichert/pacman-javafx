@@ -42,6 +42,7 @@ import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -408,16 +409,15 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
     private void createLayers() {
         canvasLayer = new BorderPane(canvasContainer);
 
-        dashboardContainer.setVisible(false);
         dashboardLayer = new BorderPane();
         dashboardLayer.visibleProperty().bind(Bindings.createObjectBinding(
             () -> dashboardContainer.isVisible() || PY_PIP_ON.get(),
             dashboardContainer.visibleProperty(), PY_PIP_ON
         ));
         dashboardLayer.setLeft(dashboardContainer);
-
-//        dashboardLayer.setRight(pipContainer);
         dashboardLayer.setRight(miniGameView.root());
+
+        dashboardContainer.setVisible(false);
 
         //TODO reconsider this and the help functionality
         popupLayer = new PopupLayer(canvasContainer);
@@ -428,19 +428,19 @@ public class GameView implements PacManGames_View, ActionBindingSupport {
         root.getChildren().addAll(canvasLayer, dashboardLayer, popupLayer, flashMessageLayer);
     }
 
-    private void handleContextMenuRequest(ContextMenuEvent e) {
-        var menuItems = new ArrayList<MenuItem>();
+    private void handleContextMenuRequest(ContextMenuEvent contextMenuEvent) {
+        contextMenu.getItems().clear();
         ui.currentGameScene().ifPresent(gameScene -> {
-            menuItems.addAll(gameScene.supplyContextMenuItems(e));
             if (ui.currentGameSceneIsPlayScene2D()) {
-                var item = new MenuItem(theAssets().text("use_3D_scene"));
-                item.setOnAction(ae -> GameAction.executeIfEnabled(ui, ACTION_TOGGLE_PLAY_SCENE_2D_3D));
-                menuItems.addFirst(item);
-                menuItems.addFirst(contextMenuTitleItem(theAssets().text("scene_display")));
+                var miSwitchTo3D = new MenuItem(theAssets().text("use_3D_scene"));
+                miSwitchTo3D.setOnAction(actionEvent -> GameAction.executeIfEnabled(ui, ACTION_TOGGLE_PLAY_SCENE_2D_3D));
+                contextMenu.getItems().add(contextMenuTitleItem(theAssets().text("scene_display")));
+                contextMenu.getItems().add(miSwitchTo3D);
             }
+            List<MenuItem> gameSceneItems = gameScene.supplyContextMenuItems(contextMenuEvent);
+            contextMenu.getItems().addAll(gameSceneItems);
         });
-        contextMenu.getItems().setAll(menuItems);
-        contextMenu.show(root, e.getScreenX(), e.getScreenY());
+        contextMenu.show(root, contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY());
         contextMenu.requestFocus();
     }
 }
