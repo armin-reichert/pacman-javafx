@@ -62,7 +62,7 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
     private final TengenMsPacMan_SpriteSheet spriteSheet;
     private final FloatProperty scalingPy = new SimpleFloatProperty(1);
     private final TengenMsPacMan_MapRepository mapRepository;
-    private ColoredMazeConfiguration mapConfiguration;
+    private ColoredMazeConfiguration mazeConfig;
 
     public TengenMsPacMan_GameRenderer(TengenMsPacMan_SpriteSheet spriteSheet, TengenMsPacMan_MapRepository mapRepository, Canvas canvas) {
         this.ctx = requireNonNull(canvas).getGraphicsContext2D();
@@ -90,7 +90,7 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
 
     //TODO check cases where colored map set is not initialized properly
     public void ensureRenderingHintsAreApplied(GameLevel level) {
-        if (mapConfiguration == null) {
+        if (mazeConfig == null) {
             applyRenderingHints(level);
         }
     }
@@ -98,8 +98,8 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
     @Override
     public void applyRenderingHints(GameLevel level) {
         int flashCount = level.data().numFlashes();
-        mapConfiguration = mapRepository.createMazeConfiguration(level.worldMap(), flashCount);
-        Logger.info("Created map configuration with {} flash colors: {}", flashCount, mapConfiguration);
+        mazeConfig = mapRepository.createMazeConfiguration(level.worldMap(), flashCount);
+        Logger.info("Created map configuration with {} flash colors: {}", flashCount, mazeConfig);
     }
 
     @Override
@@ -282,67 +282,44 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
 
     @Override
     public void drawLevel(GameLevel level, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted) {
-        requireNonNull(level);
-        final var theGame = (TengenMsPacMan_GameModel) theGame();
-        final int mapNumber = level.worldMap().getConfigValue("mapNumber");
+        var tengenGame = (TengenMsPacMan_GameModel) theGame();
+        int mapNumber = level.worldMap().getConfigValue("mapNumber");
+        Sprite mazeSprite = tengenGame.mapCategory() == MapCategory.STRANGE && mapNumber == 15
+            ? strangeMap15Sprite(theClock().tickCount()) // Strange map #15: psychedelic animation
+            : mazeConfig.mazeSprite().sprite();
+        drawLevelWithMaze(level, mazeConfig.mazeSprite().image(), mazeSprite);
+    }
 
+    public void drawHighlightedLevel(GameLevel level, int flashingIndex) {
+        ColorSchemedSprite flashingMazeSprite = mazeConfig.flashingMazeSprites().get(flashingIndex);
+        drawLevelWithMaze(level, flashingMazeSprite.image(), flashingMazeSprite.sprite());
+    }
+
+    private void drawLevelWithMaze(GameLevel level, Image mazeImage, Sprite mazeSprite) {
+        var tengenGame = (TengenMsPacMan_GameModel) theGame();
         ctx.setImageSmoothing(false);
-
-        if (!theGame.optionsAreInitial()) {
-            drawGameOptions(theGame.mapCategory(), theGame.difficulty(), theGame.pacBooster(),
+        if (!tengenGame.optionsAreInitial()) {
+            drawGameOptions(tengenGame.mapCategory(), tengenGame.difficulty(), tengenGame.pacBooster(),
                 level.worldMap().numCols() * HTS, tiles_to_px(2) + HTS);
         }
-
-        Sprite mapSprite = theGame.mapCategory() == MapCategory.STRANGE && mapNumber == 15
-            ? strangeMap15Sprite(theClock().tickCount()) // Strange map #15: psychedelic animation
-            : mapConfiguration.mazeSprite().sprite();
-        Image mapImage = mapConfiguration.mazeSprite().image();
-        int y = GameLevel.EMPTY_ROWS_OVER_MAZE * TS;
-        ctx.drawImage(mapImage,
-            mapSprite.x(), mapSprite.y(), mapSprite.width(), mapSprite.height(),
-            0, scaled(y), scaled(mapSprite.width()), scaled(mapSprite.height())
+        int x = 0, y = GameLevel.EMPTY_ROWS_OVER_MAZE * TS;
+        ctx.drawImage(mazeImage,
+            mazeSprite.x(), mazeSprite.y(), mazeSprite.width(), mazeSprite.height(),
+            scaled(x), scaled(y), scaled(mazeSprite.width()), scaled(mazeSprite.height())
         );
-        // The maze images show the ghosts and Ms. Pac-Man at their initial locations: must over-paint these
         overPaintActorSprites(level);
-
         drawFood(level);
     }
 
     public void drawFood(GameLevel level) {
         requireNonNull(level);
-        if (mapConfiguration == null) {
+        if (mazeConfig == null) {
             Logger.error("Draw food: no map set found");
             return;
         }
         ctx.save();
         ctx.scale(scaling(), scaling());
-        Color pelletColor = Color.web(mapConfiguration.mazeSprite().colorScheme().pelletColor());
-        drawPellets(level, pelletColor);
-        drawEnergizers(level, pelletColor);
-        ctx.restore();
-    }
-
-    public void drawHighlightedLevel(GameLevel level, int flashingIndex) {
-        requireNonNull(level);
-        double mapTop = GameLevel.EMPTY_ROWS_OVER_MAZE * TS;
-        final var game = (TengenMsPacMan_GameModel) theGame();
-        final ColorSchemedSprite mapImage = mapConfiguration.flashingMazeSprites().get(flashingIndex);
-        final Sprite region = mapImage.sprite();
-        if (!game.optionsAreInitial()) {
-            drawGameOptions(game.mapCategory(), game.difficulty(), game.pacBooster(),
-                    level.worldMap().numCols() * HTS, tiles_to_px(2) + HTS);
-        }
-        ctx.setImageSmoothing(false);
-        ctx.drawImage(mapImage.image(),
-            region.x(), region.y(), region.width(), region.height(),
-            0, scaled(mapTop), scaled(region.width()), scaled(region.height())
-        );
-        overPaintActorSprites(level);
-
-        // draw food to erase eaten food!
-        ctx.save();
-        ctx.scale(scaling(), scaling());
-        Color pelletColor = Color.web(mapConfiguration.mazeSprite().colorScheme().pelletColor());
+        Color pelletColor = Color.web(mazeConfig.mazeSprite().colorScheme().pelletColor());
         drawPellets(level, pelletColor);
         drawEnergizers(level, pelletColor);
         ctx.restore();
