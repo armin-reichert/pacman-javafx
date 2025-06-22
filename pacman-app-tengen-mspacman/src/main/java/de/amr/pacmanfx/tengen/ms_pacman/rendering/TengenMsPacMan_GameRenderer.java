@@ -116,27 +116,19 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
         }
 
         if (hud.isLivesCounterVisible()) {
-            LivesCounter livesCounter = hud.livesCounter();
-            Sprite sprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
-            float x = 2 * TS, y = sceneSize.y() - TS;
-            for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
-                drawSpriteScaled(sprite, x + i * 2 * TS, y);
-            }
-            if (theGame.lifeCount() > livesCounter.maxLivesDisplayed()) {
-                Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
-                fillTextAtScaledPosition("(%d)".formatted(theGame.lifeCount()), nesPaletteColor(0x28), font, x + TS * 10, y + TS);
-            }
+            drawLivesCounter(hud.livesCounter(), theGame.lifeCount(), 2 * TS, sceneSize.y() - TS);
         }
 
         if (hud.isLevelCounterVisible()) {
             if (hud instanceof TengenMsPacMan_HUD tengenHUD) {
                 TengenMsPacMan_LevelCounter levelCounter = tengenHUD.levelCounter();
-                drawLevelCounter(levelCounter.displayedLevelNumber(), levelCounter, sceneSize);
+                float x = sceneSize.x() - 2 * TS, y = sceneSize.y() - TS;
+                drawLevelCounter(levelCounter.displayedLevelNumber(), levelCounter, x, y);
             }
         }
     }
 
-    private void drawScores(TengenMsPacMan_GameModel game, Color color, Font font) {
+    public void drawScores(TengenMsPacMan_GameModel game, Color color, Font font) {
         ctx.save();
         ctx.scale(scaling(), scaling());
         ctx.setFill(color);
@@ -150,8 +142,18 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
         ctx.restore();
     }
 
-    private void drawLevelCounter(int levelNumber, LevelCounter levelCounter, Vector2f sceneSizePx) {
-        float x = sceneSizePx.x() - 2 * TS, y = sceneSizePx.y() - TS;
+    public void drawLivesCounter(LivesCounter livesCounter, int lifeCount, float x, float y) {
+        Sprite sprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
+        for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
+            drawSpriteScaled(sprite, x + i * 2 * TS, y);
+        }
+        if (lifeCount > livesCounter.maxLivesDisplayed()) {
+            Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
+            fillTextAtScaledPosition("(%d)".formatted(lifeCount), nesPaletteColor(0x28), font, x + TS * 10, y + TS);
+        }
+    }
+
+    public void drawLevelCounter(int levelNumber, LevelCounter levelCounter, float x, float y) {
         if (levelNumber != 0) {
             drawLevelNumberBox(levelNumber, 0, y); // left box
             drawLevelNumberBox(levelNumber, x, y); // right box
