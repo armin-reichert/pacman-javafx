@@ -117,7 +117,7 @@ public abstract class InfoBox extends TitledPane {
     }
 
     protected void addRow(String labelText, Node right) {
-        addRow(createLabel(labelText), right);
+        addRow(createLabel(labelText, true), right);
     }
 
     protected void addLabeledValue(String labelText, Supplier<?> fnValue) {
@@ -128,10 +128,10 @@ public abstract class InfoBox extends TitledPane {
         addRow(labelText, info);
     }
 
-    protected Label createLabel(String text) {
+    protected Label createLabel(String text, boolean enabled) {
         Label label = new Label(text);
         label.setMinWidth(minLabelWidth);
-        label.setTextFill(textColor);
+        label.setTextFill(enabled ? textColor : Color.DIMGRAY);
         label.setFont(textFont);
         return label;
     }

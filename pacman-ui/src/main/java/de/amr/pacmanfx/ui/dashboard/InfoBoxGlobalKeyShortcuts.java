@@ -20,7 +20,7 @@ public class InfoBoxGlobalKeyShortcuts extends InfoBox {
         bindings.entrySet().stream().sorted(Comparator.comparing(e -> e.getKey().getDisplayText())).forEach(entry -> {
             KeyCombination keyCombination = entry.getKey();
             GameAction action = entry.getValue();
-            addRow(keyCombination.getDisplayText(), createLabel(action.name()));
+            addRow(keyCombination.getDisplayText(), createLabel(action.name(), action.isEnabled(theUI())));
         });
     }
 }
