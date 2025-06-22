@@ -18,6 +18,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_HUD;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_LevelCounter;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.ColorSchemedSprite;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
 import de.amr.pacmanfx.ui.ActionBindingSupport;
 import de.amr.pacmanfx.ui.GameAction;
@@ -71,7 +72,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
     private final Rectangle canvasClipRect = new Rectangle();
 
     private MessageMovement messageMovement;
-    private LevelFlashingAnimation levelFlashingAnimation;
+    private LevelFlashingAnimation mazeFlashing;
 
     public TengenMsPacMan_PlayScene2D() {
         dynamicCamera.scalingProperty().bind(scalingProperty());
@@ -265,9 +266,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
             case HUNTING -> dynamicCamera.setFocussingActor(true);
             case LEVEL_COMPLETE -> {
                 theSound().stopAll();
-                levelFlashingAnimation = new LevelFlashingAnimation(theGameLevel(), 333);
-                levelFlashingAnimation.setOnFinished(theGameController()::letCurrentGameStateExpire);
-                levelFlashingAnimation.play();
+                mazeFlashing = new LevelFlashingAnimation(theGameLevel(), 333);
+                mazeFlashing.setOnFinished(theGameController()::letCurrentGameStateExpire);
+                mazeFlashing.play();
             }
             case GAME_OVER -> {
                 var theGame = (TengenMsPacMan_GameModel) theGame();
@@ -410,10 +411,13 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
         ctx().save();
         centerOnScreen();
 
-        final boolean flashing = levelFlashingAnimation != null && levelFlashingAnimation.isRunning();
-        if (flashing) {
-            if (levelFlashingAnimation.isHighlighted()) {
-                gr().drawHighlightedLevel(theGameLevel(), levelFlashingAnimation.flashingIndex());
+        final boolean flashingActive = mazeFlashing != null && mazeFlashing.isRunning();
+        if (flashingActive) {
+            if (mazeFlashing.isHighlighted()) {
+                // get the current flashing maze "animation frame"
+                int frameIndex = mazeFlashing.flashingIndex();
+                ColorSchemedSprite flashingMazeSprite = gr().mazeConfig().flashingMazeSprites().get(frameIndex);
+                gr().drawLevelWithMaze(theGameLevel(), flashingMazeSprite.image(), flashingMazeSprite.sprite());
             } else {
                 gr().drawLevel(theGameLevel(), null, false, false);
             }

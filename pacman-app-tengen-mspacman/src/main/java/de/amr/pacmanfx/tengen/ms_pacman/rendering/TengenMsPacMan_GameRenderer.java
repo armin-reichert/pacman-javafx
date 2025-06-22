@@ -95,6 +95,10 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
         }
     }
 
+    public ColoredMazeConfiguration mazeConfig() {
+        return mazeConfig;
+    }
+
     @Override
     public void applyRenderingHints(GameLevel level) {
         int flashCount = level.data().numFlashes();
@@ -286,16 +290,11 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
         int mapNumber = level.worldMap().getConfigValue("mapNumber");
         Sprite mazeSprite = tengenGame.mapCategory() == MapCategory.STRANGE && mapNumber == 15
             ? strangeMap15Sprite(theClock().tickCount()) // Strange map #15: psychedelic animation
-            : mazeConfig.mazeSprite().sprite();
-        drawLevelWithMaze(level, mazeConfig.mazeSprite().image(), mazeSprite);
+            : mazeConfig.colorSchemedMazeSprite().sprite();
+        drawLevelWithMaze(level, mazeConfig.colorSchemedMazeSprite().image(), mazeSprite);
     }
 
-    public void drawHighlightedLevel(GameLevel level, int flashingIndex) {
-        ColorSchemedSprite flashingMazeSprite = mazeConfig.flashingMazeSprites().get(flashingIndex);
-        drawLevelWithMaze(level, flashingMazeSprite.image(), flashingMazeSprite.sprite());
-    }
-
-    private void drawLevelWithMaze(GameLevel level, Image mazeImage, Sprite mazeSprite) {
+    public void drawLevelWithMaze(GameLevel level, Image mazeImage, Sprite mazeSprite) {
         var tengenGame = (TengenMsPacMan_GameModel) theGame();
         ctx.setImageSmoothing(false);
         if (!tengenGame.optionsAreInitial()) {
@@ -319,7 +318,7 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
         }
         ctx.save();
         ctx.scale(scaling(), scaling());
-        Color pelletColor = Color.web(mazeConfig.mazeSprite().colorScheme().pelletColor());
+        Color pelletColor = Color.web(mazeConfig.colorSchemedMazeSprite().colorScheme().pelletColor());
         drawPellets(level, pelletColor);
         drawEnergizers(level, pelletColor);
         ctx.restore();
