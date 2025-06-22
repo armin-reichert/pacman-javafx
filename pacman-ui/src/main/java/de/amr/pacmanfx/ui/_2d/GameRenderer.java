@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui._2d;
 
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.HUD;
 import de.amr.pacmanfx.model.actors.Actor;
 import javafx.beans.property.FloatProperty;
@@ -31,7 +30,7 @@ public interface GameRenderer {
 
     default void setScaling(float value) {
         if (value <= 0) {
-            throw new IllegalArgumentException("Scaling value must be positive but is %f".formatted(value));
+            throw new IllegalArgumentException("Scaling value must be positive but is %.2f".formatted(value));
         }
         scalingProperty().set(value);
     }
@@ -41,11 +40,36 @@ public interface GameRenderer {
     default float scaled(double value) { return scaling() * (float) value; }
 
     /**
-     * Applies the rendering hints from the world map to this renderer.
+     * Applies rendering hints for the given game level to this renderer.
      *
      * @param level the game level that is rendered
      */
     default void applyRenderingHints(GameLevel level) {}
+
+    /**
+     * Draws the Head-Up Display (score, live counter, level counter, coins inserted)
+     *
+     * @param hud the Head-Up Display
+     */
+    void drawHUD(HUD hud);
+
+    /**
+     *
+     * @param level the game level to be drawn
+     * @param backgroundColor level background color
+     * @param mazeHighlighted if the maze is drawn as highlighted (flashing)
+     * @param energizerHighlighted if the blinking energizers are in their highlighted state
+     */
+    void drawLevel(GameLevel level, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted);
+
+    /**
+     * Draws the specified actor.
+     *
+     * @param actor any actor
+     */
+    void drawActor(Actor actor);
+
+    // Utility methods
 
     default void fillCanvas(Color color) {
         requireNonNull(color);
@@ -65,24 +89,6 @@ public interface GameRenderer {
         float halfSideLength = 0.5f * sideLength;
         ctx().fillRect(centerX - halfSideLength, centerY - halfSideLength, sideLength, sideLength);
     }
-
-    void drawHUD(HUD hud);
-
-    /**
-     *
-     * @param level the game level to be drawn
-     * @param backgroundColor level background color
-     * @param mazeHighlighted if the maze is drawn as highlighted (flashing)
-     * @param energizerHighlighted if the blinking energizers are in their highlighted state
-     */
-    void drawLevel(GameLevel level, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted);
-
-    /**
-     * Draws the specified actor.
-     *
-     * @param actor any actor
-     */
-    void drawActor(Actor actor);
 
     /**
      * Draws text at the given tile position (scaled by the current scaling value).
@@ -112,16 +118,39 @@ public interface GameRenderer {
         ctx().fillText(text, scaled(x), scaled(y));
     }
 
+    /**
+     * Draws text left-aligned at the given position (scaled by the current scaling value).
+     *
+     * @param text  text
+     * @param color text color
+     * @param x     unscaled x-position
+     * @param y     unscaled y-position (baseline)
+     */
     default void fillTextAtScaledPosition(String text, Color color, double x, double y) {
         ctx().setFill(color);
         ctx().fillText(text, scaled(x), scaled(y));
     }
 
+    /**
+     * Draws text left-aligned at the given position (scaled by the current scaling value).
+     *
+     * @param text  text
+     * @param font  text font
+     * @param x     unscaled x-position
+     * @param y     unscaled y-position (baseline)
+     */
     default void fillTextAtScaledPosition(String text, Font font, double x, double y) {
         ctx().setFont(font);
         ctx().fillText(text, scaled(x), scaled(y));
     }
 
+    /**
+     * Draws text left-aligned at the given position (scaled by the current scaling value).
+     *
+     * @param text  text
+     * @param x     unscaled x-position
+     * @param y     unscaled y-position (baseline)
+     */
     default void fillTextAtScaledPosition(String text, double x, double y) {
         ctx().fillText(text, scaled(x), scaled(y));
     }
@@ -142,12 +171,12 @@ public interface GameRenderer {
         ctx().restore();
     }
 
-    default void drawTileGrid(double sizeX, double sizeY, Color strokeColor) {
+    default void drawTileGrid(double sizeX, double sizeY, Color gridColor) {
         double thin = 0.2, medium = 0.3, thick = 0.35;
         int numCols = (int) (sizeX / TS), numRows = (int) (sizeY / TS);
         double width = scaled(numCols * TS), height = scaled(numRows * TS);
         ctx().save();
-        ctx().setStroke(strokeColor);
+        ctx().setStroke(gridColor);
         for (int row = 0; row <= numRows; ++row) {
             double y = scaled(row * TS);
             ctx().setLineWidth(row % 10 == 0 ? thick : row % 5 == 0 ? medium : thin);
