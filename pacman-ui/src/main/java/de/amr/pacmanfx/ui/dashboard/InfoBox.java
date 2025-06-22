@@ -117,11 +117,7 @@ public abstract class InfoBox extends TitledPane {
     }
 
     protected void addRow(String labelText, Node right) {
-        var label = new Label(labelText);
-        label.setTextFill(textColor);
-        label.setFont(labelFont);
-        label.setMinWidth(minLabelWidth);
-        addRow(label, right);
+        addRow(createLabel(labelText), right);
     }
 
     protected void addLabeledValue(String labelText, Supplier<?> fnValue) {
@@ -130,6 +126,14 @@ public abstract class InfoBox extends TitledPane {
         info.setFont(textFont);
         infoTexts.add(info);
         addRow(labelText, info);
+    }
+
+    protected Label createLabel(String text) {
+        Label label = new Label(text);
+        label.setMinWidth(minLabelWidth);
+        label.setTextFill(textColor);
+        label.setFont(textFont);
+        return label;
     }
 
     protected void addLabeledValue(String labelText, String value) {

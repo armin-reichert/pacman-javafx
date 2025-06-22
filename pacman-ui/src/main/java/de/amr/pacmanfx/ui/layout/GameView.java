@@ -8,7 +8,10 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.actors.ActorAnimationMap;
-import de.amr.pacmanfx.ui.*;
+import de.amr.pacmanfx.ui.GameAction;
+import de.amr.pacmanfx.ui.GameScene;
+import de.amr.pacmanfx.ui.PacManGames_UI;
+import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.PopupLayer;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
@@ -40,7 +43,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.FontSmoothingType;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +56,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * This view shows the game play and the overlays like dashboard and picture-in-picture view of the running play scene.
  */
-public class GameView implements PacManGames_View, ActionBindingSupport {
+public class GameView implements PacManGames_View {
 
     /**
      * @param sceneBefore scene displayed before switching
