@@ -85,6 +85,7 @@ public interface GameRenderer {
      * @param sideLength side length of the square
      */
     default void fillSquareAtTileCenter(Vector2i tile, int sideLength) {
+        requireNonNull(tile);
         double centerX = tile.x() * TS + HTS, centerY = tile.y() * TS + HTS;
         float halfSideLength = 0.5f * sideLength;
         ctx().fillRect(centerX - halfSideLength, centerY - halfSideLength, sideLength, sideLength);

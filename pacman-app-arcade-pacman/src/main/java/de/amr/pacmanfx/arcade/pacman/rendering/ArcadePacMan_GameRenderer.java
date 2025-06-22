@@ -11,7 +11,10 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.StaticBonus;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
+import javafx.beans.property.FloatProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -27,17 +30,27 @@ import static java.util.function.Predicate.not;
 
 public class ArcadePacMan_GameRenderer extends SpriteGameRenderer {
 
+    private final GraphicsContext ctx;
     private final ArcadePacMan_SpriteSheet spriteSheet;
+    private final FloatProperty scalingPy = new SimpleFloatProperty(1);
 
     public ArcadePacMan_GameRenderer(ArcadePacMan_SpriteSheet spriteSheet, Canvas canvas) {
-        super(canvas);
+        this.ctx = requireNonNull(canvas).getGraphicsContext2D();
         this.spriteSheet = requireNonNull(spriteSheet);
+    }
+
+    @Override
+    public GraphicsContext ctx() {
+        return ctx;
     }
 
     @Override
     public ArcadePacMan_SpriteSheet spriteSheet() {
         return spriteSheet;
     }
+
+    @Override
+    public FloatProperty scalingProperty() { return scalingPy; }
 
     @Override
     public void drawHUD(HUD hud) {

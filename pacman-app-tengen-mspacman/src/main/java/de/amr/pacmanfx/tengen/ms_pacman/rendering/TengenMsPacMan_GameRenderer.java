@@ -10,7 +10,10 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
-import de.amr.pacmanfx.model.*;
+import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.HUD;
+import de.amr.pacmanfx.model.LevelCounter;
+import de.amr.pacmanfx.model.LivesCounter;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.tengen.ms_pacman.model.*;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.Clapperboard;
@@ -19,10 +22,13 @@ import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.ui.input.JoypadKeyBinding;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
+import javafx.beans.property.FloatProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -52,16 +58,26 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
     }
 
     private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
+    private final GraphicsContext ctx;
     private final TengenMsPacMan_SpriteSheet spriteSheet;
+    private final FloatProperty scalingPy = new SimpleFloatProperty(1);
     private final TengenMsPacMan_MapRepository mapRepository;
     private ColoredMazeConfiguration mapConfiguration;
 
     public TengenMsPacMan_GameRenderer(TengenMsPacMan_SpriteSheet spriteSheet, TengenMsPacMan_MapRepository mapRepository, Canvas canvas) {
-        super(canvas);
+        this.ctx = requireNonNull(canvas).getGraphicsContext2D();
         this.spriteSheet = requireNonNull(spriteSheet);
         this.mapRepository = requireNonNull(mapRepository);
         ctx.setImageSmoothing(false);
     }
+
+    @Override
+    public GraphicsContext ctx() {
+        return ctx;
+    }
+
+    @Override
+    public FloatProperty scalingProperty() { return scalingPy; }
 
     @Override
     public TengenMsPacMan_SpriteSheet spriteSheet() {
