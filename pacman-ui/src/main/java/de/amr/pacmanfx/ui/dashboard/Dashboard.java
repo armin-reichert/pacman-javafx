@@ -45,7 +45,8 @@ public class Dashboard {
             case GAME_CONTROL -> addInfoBox(id, "infobox.game_control.title", new InfoBoxGameControl());
             case GAME_INFO    -> addInfoBox(id, "infobox.game_info.title", new InfoBoxGameInfo());
             case JOYPAD       -> addInfoBox(id, "infobox.joypad.title", new InfoBoxJoypad());
-            case KEYBOARD     -> addInfoBox(id, "infobox.keyboard_shortcuts.title", new InfoBoxKeys());
+            case KEYBOARD_SHORTCUTS_GLOBAL -> addInfoBox(id, "infobox.keyboard_shortcuts_global.title", new InfoBoxGlobalKeyShortcuts());
+            case KEYBOARD_SHORTCUTS_LOCAL ->  addInfoBox(id, "infobox.keyboard_shortcuts_local.title", new InfoBoxLocalKeyShortcuts());
             case README -> {
                 InfoBox infoBox = new InfoBoxReadmeFirst();
                 infoBox.setExpanded(true);

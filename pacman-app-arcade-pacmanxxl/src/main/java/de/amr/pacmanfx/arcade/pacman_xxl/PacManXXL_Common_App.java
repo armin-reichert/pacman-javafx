@@ -29,8 +29,12 @@ public class PacManXXL_Common_App extends Application {
                 .game(PACMAN_XXL,    new PacManXXL_PacMan_GameModel(xxlMapSelector),   PacManXXL_PacMan_UIConfig.class)
                 .game(MS_PACMAN_XXL, new PacManXXL_MsPacMan_GameModel(xxlMapSelector), PacManXXL_MsPacMan_UIConfig.class)
                 .startPages(new PacManXXL_Common_StartPage())
-                .dashboardEntries(DashboardID.README, DashboardID.GENERAL, DashboardID.GAME_CONTROL, DashboardID.SETTINGS_3D,
-                    DashboardID.GAME_INFO, DashboardID.ACTOR_INFO, DashboardID.CUSTOM_MAPS, DashboardID.KEYBOARD, DashboardID.ABOUT)
+                .dashboardEntries(
+                        DashboardID.README, DashboardID.GENERAL,
+                        DashboardID.GAME_CONTROL, DashboardID.SETTINGS_3D,
+                        DashboardID.GAME_INFO, DashboardID.ACTOR_INFO, DashboardID.CUSTOM_MAPS,
+                        DashboardID.KEYBOARD_SHORTCUTS_GLOBAL, DashboardID.KEYBOARD_SHORTCUTS_LOCAL,
+                        DashboardID.ABOUT)
                 .buildAndShow();
         theWatchdog().addEventListener(watchEvents -> xxlMapSelector.loadCustomMaps());
     }

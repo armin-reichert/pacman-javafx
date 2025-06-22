@@ -61,7 +61,8 @@ public class PacManGames3dApp extends Application {
                 .dashboardEntries(
                         DashboardID.GENERAL, DashboardID.GAME_CONTROL, DashboardID.SETTINGS_3D,
                         DashboardID.GAME_INFO, DashboardID.ACTOR_INFO, DashboardID.CUSTOM_MAPS,
-                        DashboardID.KEYBOARD, DashboardID.ABOUT)
+                        DashboardID.KEYBOARD_SHORTCUTS_GLOBAL, DashboardID.KEYBOARD_SHORTCUTS_LOCAL,
+                        DashboardID.ABOUT)
                 .buildAndShow();
         theWatchdog().addEventListener(watchEvents -> xxlSelector.loadCustomMaps());
     }
