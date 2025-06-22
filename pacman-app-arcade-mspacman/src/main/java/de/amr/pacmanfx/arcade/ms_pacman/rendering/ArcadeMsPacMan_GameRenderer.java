@@ -32,7 +32,7 @@ import static de.amr.pacmanfx.ui.PacManGames.theAssets;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
-public class ArcadeMsPacMan_GameRenderer extends SpriteGameRenderer {
+public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
 
     private final GraphicsContext ctx;
     private final ArcadeMsPacMan_SpriteSheet spriteSheet;
@@ -154,7 +154,7 @@ public class ArcadeMsPacMan_GameRenderer extends SpriteGameRenderer {
                 case MidwayCopyright copyright -> drawMidwayCopyright(copyright);
                 case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
                 case Marquee marquee -> drawMarquee(marquee);
-                default -> super.drawActor(actor);
+                default -> SpriteGameRenderer.super.drawActor(actor);
             }
         }
     }

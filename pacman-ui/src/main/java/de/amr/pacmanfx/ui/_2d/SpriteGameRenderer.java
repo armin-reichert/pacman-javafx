@@ -17,9 +17,9 @@ import org.tinylog.Logger;
 import static de.amr.pacmanfx.Globals.HTS;
 import static java.util.Objects.requireNonNull;
 
-public abstract class SpriteGameRenderer implements GameRenderer {
+public interface SpriteGameRenderer extends GameRenderer {
 
-    public abstract SpriteSheet<?> spriteSheet();
+    SpriteSheet<?> spriteSheet();
 
     /**
      * Draws a sprite (region inside sprite sheet) unscaled at the given position.
@@ -28,7 +28,7 @@ public abstract class SpriteGameRenderer implements GameRenderer {
      * @param x           x-coordinate of left-upper corner
      * @param y           y-coordinate of left-upper corner
      */
-    public void drawSprite(Sprite sprite, double x, double y) {
+    default void drawSprite(Sprite sprite, double x, double y) {
         requireNonNull(sprite);
         ctx().drawImage(spriteSheet().sourceImage(),
                 sprite.x(), sprite.y(), sprite.width(), sprite.height(),
@@ -39,11 +39,11 @@ public abstract class SpriteGameRenderer implements GameRenderer {
      * Draws a sprite (region inside sprite sheet) the given position. The sprite size and the position are scaled using
      * the current scale factor.
      *
-     * @param sprite        the sprite to draw (may be null)
+     * @param sprite        the sprite to draw (can be null)
      * @param x             x-coordinate of left-upper corner (unscaled)
      * @param y             y-coordinate of left-upper corner (unscaled)
      */
-    public void drawSpriteScaled(Sprite sprite, double x, double y) {
+    default void drawSpriteScaled(Sprite sprite, double x, double y) {
         requireNonNull(sprite);
         drawSpriteScaled(spriteSheet().sourceImage(), sprite, x, y);
     }
@@ -57,7 +57,7 @@ public abstract class SpriteGameRenderer implements GameRenderer {
      * @param x unscaled x-coordinate of left-upper corner
      * @param y unscaled y-coordinate of left-upper corner
      */
-    public void drawSpriteScaled(Image image, Sprite sprite, double x, double y) {
+    default void drawSpriteScaled(Image image, Sprite sprite, double x, double y) {
         requireNonNull(image);
         requireNonNull(sprite);
         ctx().drawImage(image,
@@ -72,7 +72,7 @@ public abstract class SpriteGameRenderer implements GameRenderer {
      * @param cx  x-coordinate of the center position
      * @param cy  y-coordinate of the center position
      */
-    public void drawSpriteScaledCenteredAt(Sprite sprite, double cx, double cy) {
+    default void drawSpriteScaledCenteredAt(Sprite sprite, double cx, double cy) {
         requireNonNull(sprite);
         drawSpriteScaled(sprite, cx - 0.5 * sprite.width(), cy - 0.5 * sprite.height());
     }
@@ -83,7 +83,7 @@ public abstract class SpriteGameRenderer implements GameRenderer {
      * @param actor an actor
      * @param sprite actor sprite
      */
-    public void drawActorSpriteCentered(Actor actor, Sprite sprite) {
+    default void drawActorSpriteCentered(Actor actor, Sprite sprite) {
         float centerX = actor.x() + HTS, centerY = actor.y() + HTS;
         drawSpriteScaledCenteredAt(sprite, centerX, centerY);
     }
@@ -94,7 +94,7 @@ public abstract class SpriteGameRenderer implements GameRenderer {
      * @param actor the actor to draw
      */
     @Override
-    public void drawActor(Actor actor) {
+    default void drawActor(Actor actor) {
         requireNonNull(actor);
         if (actor.isVisible()) {
             if (actor instanceof Animated animated) {
@@ -105,7 +105,7 @@ public abstract class SpriteGameRenderer implements GameRenderer {
         }
     }
 
-    public void drawAnimatedActor(Animated animated) {
+    default void drawAnimatedActor(Animated animated) {
         animated.animationMap().ifPresent(animationMap -> {
             // assume interface is only implemented by Actor (sub-)classes
             Actor actor = (Actor) animated;
@@ -124,7 +124,7 @@ public abstract class SpriteGameRenderer implements GameRenderer {
         });
     }
 
-    public void drawMovingActorInfo(MovingActor movingActor) {
+    default void drawMovingActorInfo(MovingActor movingActor) {
         if (!movingActor.isVisible()) {
             return;
         }
@@ -143,7 +143,7 @@ public abstract class SpriteGameRenderer implements GameRenderer {
         }
     }
 
-public void drawAnimatedMovingActorInfo(Animated animated) {
+default void drawAnimatedMovingActorInfo(Animated animated) {
     if (!(animated instanceof MovingActor movingActor)) return;
 
     animated.animationMap()

@@ -28,7 +28,7 @@ import static de.amr.pacmanfx.ui.PacManGames.theAssets;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
-public class ArcadePacMan_GameRenderer extends SpriteGameRenderer {
+public class ArcadePacMan_GameRenderer implements SpriteGameRenderer {
 
     private final GraphicsContext ctx;
     private final ArcadePacMan_SpriteSheet spriteSheet;
@@ -133,7 +133,7 @@ public class ArcadePacMan_GameRenderer extends SpriteGameRenderer {
         if (actor instanceof StaticBonus staticBonus) {
             drawStaticBonus(staticBonus);
         }
-        else super.drawActor(actor);
+        else SpriteGameRenderer.super.drawActor(actor);
     }
 
     public void drawStaticBonus(StaticBonus bonus) {

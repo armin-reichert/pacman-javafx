@@ -48,7 +48,7 @@ import static de.amr.pacmanfx.ui.PacManGames_UI.PY_CANVAS_BG_COLOR;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
-public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
+public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
 
     public static Color blueShadedColor(long tick) {
         // Blue color, changing from dark blue to brighter blue.
@@ -200,7 +200,7 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
                 case Pac pac -> drawAnyKindOfPac(pac);
                 case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
                 case Stork stork -> drawStork(stork);
-                default -> super.drawActor(actor);
+                default -> SpriteGameRenderer.super.drawActor(actor);
             }
         }
     }
@@ -489,7 +489,7 @@ public class TengenMsPacMan_GameRenderer extends SpriteGameRenderer {
 
     //TODO maybe just extend sprite sheet to include stork without bag?
     private void drawStork(Stork stork) {
-        super.drawAnimatedActor(stork);
+        SpriteGameRenderer.super.drawAnimatedActor(stork);
         if (stork.isBagReleasedFromBeak()) { // over-paint bag still hanging at beak
             ctx.setFill(PY_CANVAS_BG_COLOR.get());
             //TODO: clarify coordinate values
