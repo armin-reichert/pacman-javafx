@@ -25,11 +25,16 @@ public class InfoBoxKeyShortcutsLocal extends InfoBox {
     }
 
     private void addEntries(Map<KeyCombination, GameAction> bindings) {
-        bindings.entrySet().stream().sorted(Comparator.comparing(e -> e.getKey().getDisplayText())).forEach(entry -> {
-            KeyCombination keyCombination = entry.getKey();
-            GameAction action = entry.getValue();
-            String localizedActionText = theAssets().text(action.name());
-            addRow(keyCombination.getDisplayText(), createLabel(localizedActionText, action.isEnabled(theUI())));
-        });
+        if (bindings.isEmpty()) {
+            addRow(createLabel(InfoText.NO_INFO, false));
+        }
+        else {
+            bindings.entrySet().stream().sorted(Comparator.comparing(e -> e.getKey().getDisplayText())).forEach(entry -> {
+                KeyCombination keyCombination = entry.getKey();
+                GameAction action = entry.getValue();
+                String localizedActionText = theAssets().text(action.name());
+                addRow(keyCombination.getDisplayText(), createLabel(localizedActionText, action.isEnabled(theUI())));
+            });
+        }
     }
 }
