@@ -6,9 +6,10 @@ import javafx.scene.input.KeyCombination;
 import java.util.Comparator;
 import java.util.Map;
 
+import static de.amr.pacmanfx.ui.PacManGames.theAssets;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
 
-public class InfoBoxGlobalKeyShortcuts extends InfoBox {
+public class InfoBoxKeyShortcutsGlobal extends InfoBox {
 
     @Override
     public void update() {
@@ -20,7 +21,8 @@ public class InfoBoxGlobalKeyShortcuts extends InfoBox {
         bindings.entrySet().stream().sorted(Comparator.comparing(e -> e.getKey().getDisplayText())).forEach(entry -> {
             KeyCombination keyCombination = entry.getKey();
             GameAction action = entry.getValue();
-            addRow(keyCombination.getDisplayText(), createLabel(action.name(), action.isEnabled(theUI())));
+            String localizedActionText = theAssets().text(action.name());
+            addRow(keyCombination.getDisplayText(), createLabel(localizedActionText, action.isEnabled(theUI())));
         });
     }
 }
