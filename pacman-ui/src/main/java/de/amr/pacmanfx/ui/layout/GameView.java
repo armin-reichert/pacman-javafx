@@ -128,6 +128,7 @@ public class GameView implements PacManGames_View {
         );
 
         bindAction(ACTION_BOOT_SHOW_GAME_VIEW,     COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_ENTER_FULLSCREEN,        COMMON_ACTION_BINDINGS);
         bindAction(ACTION_QUIT_GAME_SCENE,         COMMON_ACTION_BINDINGS);
         bindAction(ACTION_SHOW_HELP,               COMMON_ACTION_BINDINGS);
         bindAction(ACTION_SIMULATION_SLOWER,       COMMON_ACTION_BINDINGS);
@@ -137,6 +138,7 @@ public class GameView implements PacManGames_View {
         bindAction(ACTION_SIMULATION_TEN_STEPS,    COMMON_ACTION_BINDINGS);
         bindAction(ACTION_TOGGLE_AUTOPILOT,        COMMON_ACTION_BINDINGS);
         bindAction(ACTION_TOGGLE_DEBUG_INFO,       COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_TOGGLE_MUTED,            COMMON_ACTION_BINDINGS);
         bindAction(ACTION_TOGGLE_PAUSED,           COMMON_ACTION_BINDINGS);
         bindAction(ACTION_TOGGLE_DASHBOARD,        COMMON_ACTION_BINDINGS);
         bindAction(ACTION_TOGGLE_IMMUNITY,         COMMON_ACTION_BINDINGS);

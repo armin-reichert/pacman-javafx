@@ -153,7 +153,19 @@ public interface PacManGames_UI {
             return "STEER_PAC_" + dir;
         }
     }
-    
+
+    GameAction ACTION_ENTER_FULLSCREEN = new GameAction() {
+        @Override
+        public void execute(PacManGames_UI ui) {
+            theUI.stage().setFullScreen(true);
+        }
+
+        @Override
+        public String name() {
+            return "ENTER_FULLSCREEN";
+        }
+    };
+
     GameAction ACTION_LET_GAME_STATE_EXPIRE = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
@@ -508,6 +520,18 @@ public interface PacManGames_UI {
         }
     };
 
+    GameAction ACTION_TOGGLE_MUTED = new GameAction() {
+        @Override
+        public void execute(PacManGames_UI ui) {
+            theSound().toggleMuted();
+        }
+
+        @Override
+        public String name() {
+            return "TOGGLE_MUTED";
+        }
+    };
+
     GameAction ACTION_TOGGLE_PAUSED = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
@@ -660,6 +684,7 @@ public interface PacManGames_UI {
             createBinding(ACTION_CHEAT_ADD_LIVES,         alt(KeyCode.L)),
             createBinding(ACTION_CHEAT_ENTER_NEXT_LEVEL,  alt(KeyCode.N)),
             createBinding(ACTION_CHEAT_KILL_GHOSTS,       alt(KeyCode.X)),
+            createBinding(ACTION_ENTER_FULLSCREEN,        nude(KeyCode.F11)),
             createBinding(ACTION_PERSPECTIVE_PREVIOUS,    alt(KeyCode.LEFT)),
             createBinding(ACTION_PERSPECTIVE_NEXT,        alt(KeyCode.RIGHT)),
             createBinding(ACTION_SHOW_HELP,               nude(KeyCode.H)),
@@ -678,6 +703,7 @@ public interface PacManGames_UI {
             createBinding(ACTION_TEST_LEVELS_TEASERS,     alt_shift(KeyCode.T)),
             createBinding(ACTION_TOGGLE_AUTOPILOT,        alt(KeyCode.A)),
             createBinding(ACTION_TOGGLE_DEBUG_INFO,       alt(KeyCode.D)),
+            createBinding(ACTION_TOGGLE_MUTED,            alt(KeyCode.M)),
             createBinding(ACTION_TOGGLE_PAUSED,           nude(KeyCode.P), nude(KeyCode.F5)),
             createBinding(ACTION_TOGGLE_DASHBOARD,        nude(KeyCode.F1), alt(KeyCode.B)),
             createBinding(ACTION_TOGGLE_IMMUNITY,         alt(KeyCode.I)),
@@ -685,5 +711,4 @@ public interface PacManGames_UI {
             createBinding(ACTION_TOGGLE_PLAY_SCENE_2D_3D, alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3)),
             createBinding(ACTION_TOGGLE_DRAW_MODE,        alt(KeyCode.W))
     );
-
 }

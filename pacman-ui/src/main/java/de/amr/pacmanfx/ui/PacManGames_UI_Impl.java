@@ -84,6 +84,10 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         });
     }
 
+    public Stage stage() {
+        return stage;
+    }
+
     /**
      * @param x cause of catastrophe
      *
@@ -177,10 +181,10 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
             mainScene.addEventFilter(KeyEvent.KEY_RELEASED, theKeyboard()::onKeyReleased);
             mainScene.setOnKeyPressed(e -> {
                 if (KEY_FULLSCREEN.match(e)) {
-                    stage.setFullScreen(true);
+                    ACTION_ENTER_FULLSCREEN.execute(this);
                 }
                 else if (KEY_MUTE.match(e)) {
-                    SOUND_MANAGER.toggleMuted();
+                    ACTION_TOGGLE_MUTED.execute(this);
                 }
                 else if (KEY_OPEN_EDITOR.match(e)) {
                     showEditorView();
