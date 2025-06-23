@@ -51,7 +51,7 @@ public interface ActionBindingSupport {
         actionBindings().entrySet().stream()
                 // sort by string representation of key combination
                 .sorted(Comparator.comparing(entry -> entry.getKey().toString()))
-                .forEach(entry -> Logger.info("%-20s: %s".formatted(entry.getKey(), entry.getValue().name())));
+                .forEach(entry -> Logger.debug("%-20s: %s".formatted(entry.getKey(), entry.getValue().name())));
     }
 
     default void deleteActionBindings() {
