@@ -336,7 +336,7 @@ public class GameView implements PacManGames_View {
         }
 
         if (changing) {
-            ui.setCurrentGameScene(nextGameScene);
+            ui.currentGameSceneProperty().set(nextGameScene);
         }
     }
 

@@ -365,11 +365,6 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     }
 
     @Override
-    public void setCurrentGameScene(GameScene gameScene) {
-        currentGameScenePy.set(gameScene);
-    }
-
-    @Override
     public Optional<GameScene> currentGameScene() {
         return Optional.ofNullable(currentGameScenePy.get());
     }

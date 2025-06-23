@@ -111,7 +111,6 @@ public interface PacManGames_UI {
     // Game scenes
     ObjectProperty<GameScene> currentGameSceneProperty();
     Optional<GameScene> currentGameScene();
-    void setCurrentGameScene(GameScene gameScene);
     boolean currentGameSceneIsPlayScene2D();
     boolean currentGameSceneIsPlayScene3D();
     void updateGameScene(boolean reload);
