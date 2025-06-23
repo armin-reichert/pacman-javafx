@@ -31,8 +31,8 @@ import java.util.*;
 
 import static de.amr.pacmanfx.ui.PacManGames.theAssets;
 import static de.amr.pacmanfx.ui.PacManGames.theKeyboard;
-import static de.amr.pacmanfx.ui.PacManGames_UI.ACTION_BOOT_SHOW_GAME_VIEW;
-import static de.amr.pacmanfx.ui.PacManGames_UI.ACTION_TOGGLE_PAUSED;
+import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_BOOT_SHOW_GAME_VIEW;
+import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_TOGGLE_PAUSED;
 import static de.amr.pacmanfx.ui.input.Keyboard.nude;
 import static java.util.Objects.requireNonNull;
 

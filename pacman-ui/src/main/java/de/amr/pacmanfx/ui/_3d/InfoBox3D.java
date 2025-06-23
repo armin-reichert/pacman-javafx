@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui._3d;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.GameScene;
+import de.amr.pacmanfx.ui.PacManGames_GameActions;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.dashboard.InfoBox;
 import de.amr.pacmanfx.ui.dashboard.InfoText;
@@ -73,8 +74,8 @@ public class InfoBox3D extends InfoBox {
         setEditor(comboPerspectives, PY_3D_PERSPECTIVE);
 
         //TODO check these
-        cbUsePlayScene3D.setOnAction(e -> GameAction.executeIfEnabled(theUI(), ACTION_TOGGLE_PLAY_SCENE_2D_3D));
-        cbWireframeMode.setOnAction(e -> GameAction.executeIfEnabled(theUI(), ACTION_TOGGLE_DRAW_MODE));
+        cbUsePlayScene3D.setOnAction(e -> GameAction.executeIfEnabled(theUI(), PacManGames_GameActions.ACTION_TOGGLE_PLAY_SCENE_2D_3D));
+        cbWireframeMode.setOnAction(e -> GameAction.executeIfEnabled(theUI(), PacManGames_GameActions.ACTION_TOGGLE_DRAW_MODE));
     }
 
     private void updateControlsFromProperties() {

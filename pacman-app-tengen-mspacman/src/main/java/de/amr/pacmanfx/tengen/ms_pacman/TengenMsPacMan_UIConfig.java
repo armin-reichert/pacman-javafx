@@ -388,10 +388,10 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     // Key bindings
 
     public static final Map<GameAction, Set<KeyCombination>> TENGEN_ACTION_BINDINGS = Map.ofEntries(
-        createBinding(ACTION_STEER_UP,                theJoypad().key(JoypadButton.UP),    control(KeyCode.UP)),
-        createBinding(ACTION_STEER_DOWN,              theJoypad().key(JoypadButton.DOWN),  control(KeyCode.DOWN)),
-        createBinding(ACTION_STEER_LEFT,              theJoypad().key(JoypadButton.LEFT),  control(KeyCode.LEFT)),
-        createBinding(ACTION_STEER_RIGHT,             theJoypad().key(JoypadButton.RIGHT), control(KeyCode.RIGHT)),
+        createBinding(PacManGames_GameActions.ACTION_STEER_UP,                theJoypad().key(JoypadButton.UP),    control(KeyCode.UP)),
+        createBinding(PacManGames_GameActions.ACTION_STEER_DOWN,              theJoypad().key(JoypadButton.DOWN),  control(KeyCode.DOWN)),
+        createBinding(PacManGames_GameActions.ACTION_STEER_LEFT,              theJoypad().key(JoypadButton.LEFT),  control(KeyCode.LEFT)),
+        createBinding(PacManGames_GameActions.ACTION_STEER_RIGHT,             theJoypad().key(JoypadButton.RIGHT), control(KeyCode.RIGHT)),
         createBinding(ACTION_QUIT_DEMO_LEVEL,          theJoypad().key(JoypadButton.START)),
         createBinding(ACTION_START_GAME,               theJoypad().key(JoypadButton.START)),
         createBinding(ACTION_START_PLAYING,            theJoypad().key(JoypadButton.START)),

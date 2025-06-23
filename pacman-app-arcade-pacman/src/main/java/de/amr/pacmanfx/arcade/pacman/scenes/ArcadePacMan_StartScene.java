@@ -13,7 +13,9 @@ import static de.amr.pacmanfx.Globals.theGame;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePalette.*;
 import static de.amr.pacmanfx.ui.PacManGames.theSound;
-import static de.amr.pacmanfx.ui.PacManGames_UI.*;
+import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_ARCADE_INSERT_COIN;
+import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_ARCADE_START_GAME;
+import static de.amr.pacmanfx.ui.PacManGames_UI.COMMON_ACTION_BINDINGS;
 
 /**
  * Scene shown after credit has been added and where game can be started.

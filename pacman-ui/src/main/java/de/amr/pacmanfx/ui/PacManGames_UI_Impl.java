@@ -63,7 +63,70 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     private GameView gameView;
     private EditorView editorView; // created on first access
 
-    public void createUIConfigurations(Map<String, Class<? extends PacManGames_UIConfig>> configClassesMap) {
+    public void build(Stage stage, double width, double height, DashboardID... dashboardIDs) {
+        this.stage = requireNonNull(stage);
+        stage.setMinWidth(280);
+        stage.setMinHeight(360);
+
+        var root = new StackPane(new Pane()); // placeholder for root of current view
+
+        // Status and "paused" icon
+        {
+            var iconBox = new StatusIconBox(this);
+            StackPane.setAlignment(iconBox, Pos.BOTTOM_LEFT);
+
+            var iconPaused = FontIcon.of(FontAwesomeSolid.PAUSE, 80, STATUS_ICON_COLOR);
+            iconPaused.visibleProperty().bind(Bindings.createBooleanBinding(
+                () -> currentView() == gameView() && GAME_CLOCK.isPaused(),
+                currentViewProperty(), GAME_CLOCK.pausedProperty()));
+            StackPane.setAlignment(iconPaused, Pos.CENTER);
+
+            root.getChildren().addAll(iconPaused, iconBox);
+        }
+
+        // Main scene
+        {
+            mainScene = new Scene(root, width, height);
+            mainScene.widthProperty() .addListener((py,ov,nv) -> gameView.resize(mainScene));
+            mainScene.heightProperty().addListener((py,ov,nv) -> gameView.resize(mainScene));
+            mainScene.addEventFilter(KeyEvent.KEY_PRESSED, theKeyboard()::onKeyPressed);
+            mainScene.addEventFilter(KeyEvent.KEY_RELEASED, theKeyboard()::onKeyReleased);
+            mainScene.setOnKeyPressed(e -> {
+                if (KEY_FULLSCREEN.match(e)) {
+                    PacManGames_GameActions.ACTION_ENTER_FULLSCREEN.execute(this);
+                }
+                else if (KEY_MUTE.match(e)) {
+                    PacManGames_GameActions.ACTION_TOGGLE_MUTED.execute(this);
+                }
+                else if (KEY_OPEN_EDITOR.match(e)) {
+                    showEditorView();
+                }
+                else {
+                    currentView().handleKeyboardInput();
+                }
+            });
+        }
+        stage.setScene(mainScene);
+
+        // Start pages view
+        startPagesView = new StartPagesView(this);
+        startPagesView.setBackground(theAssets().background("background.scene"));
+
+        // Game view (includes dashboard)
+        gameView = new GameView(this, mainScene, dashboardIDs);
+
+        GAME_CLOCK.setPausableAction(this::doSimulationStepAndUpdateGameScene);
+        GAME_CLOCK.setPermanentAction(this::drawGameView);
+
+        currentViewPy.addListener((py, oldView, newView) -> handleViewChange(oldView, newView));
+        root.backgroundProperty().bind(currentGameSceneProperty().map(
+            gameScene -> currentGameSceneIsPlayScene3D()
+                ? theAssets().get("background.play_scene3d")
+                : theAssets().get("background.scene"))
+        );
+    }
+
+    public void configure(Map<String, Class<? extends PacManGames_UIConfig>> configClassesMap) {
         configClassesMap.forEach((gameVariant, configClass) -> {
             try {
                 PacManGames_UIConfig config = configClass.getDeclaredConstructor(PacManGames_Assets.class).newInstance(theAssets());
@@ -149,70 +212,6 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     // -----------------------------------------------------------------------------------------------------------------
     // GameUI interface implementation
     // -----------------------------------------------------------------------------------------------------------------
-
-    @Override
-    public void buildUI(Stage stage, double width, double height, DashboardID... dashboardIDs) {
-        this.stage = requireNonNull(stage);
-        stage.setMinWidth(280);
-        stage.setMinHeight(360);
-
-        var root = new StackPane(new Pane()); // placeholder for root of current view
-
-        // Status and "paused" icon
-        {
-            var iconBox = new StatusIconBox(this);
-            StackPane.setAlignment(iconBox, Pos.BOTTOM_LEFT);
-
-            var iconPaused = FontIcon.of(FontAwesomeSolid.PAUSE, 80, STATUS_ICON_COLOR);
-            iconPaused.visibleProperty().bind(Bindings.createBooleanBinding(
-                () -> currentView() == gameView() && GAME_CLOCK.isPaused(),
-                currentViewProperty(), GAME_CLOCK.pausedProperty()));
-            StackPane.setAlignment(iconPaused, Pos.CENTER);
-
-            root.getChildren().addAll(iconPaused, iconBox);
-        }
-
-        // Main scene
-        {
-            mainScene = new Scene(root, width, height);
-            mainScene.widthProperty() .addListener((py,ov,nv) -> gameView.resize(mainScene));
-            mainScene.heightProperty().addListener((py,ov,nv) -> gameView.resize(mainScene));
-            mainScene.addEventFilter(KeyEvent.KEY_PRESSED, theKeyboard()::onKeyPressed);
-            mainScene.addEventFilter(KeyEvent.KEY_RELEASED, theKeyboard()::onKeyReleased);
-            mainScene.setOnKeyPressed(e -> {
-                if (KEY_FULLSCREEN.match(e)) {
-                    ACTION_ENTER_FULLSCREEN.execute(this);
-                }
-                else if (KEY_MUTE.match(e)) {
-                    ACTION_TOGGLE_MUTED.execute(this);
-                }
-                else if (KEY_OPEN_EDITOR.match(e)) {
-                    showEditorView();
-                }
-                else {
-                    currentView().handleKeyboardInput();
-                }
-            });
-        }
-        stage.setScene(mainScene);
-
-        // Start pages view
-        startPagesView = new StartPagesView(this);
-        startPagesView.setBackground(theAssets().background("background.scene"));
-
-        // Game view (includes dashboard)
-        gameView = new GameView(this, mainScene, dashboardIDs);
-
-        GAME_CLOCK.setPausableAction(this::doSimulationStepAndUpdateGameScene);
-        GAME_CLOCK.setPermanentAction(this::drawGameView);
-
-        currentViewPy.addListener((py, oldView, newView) -> handleViewChange(oldView, newView));
-        root.backgroundProperty().bind(currentGameSceneProperty().map(
-            gameScene -> currentGameSceneIsPlayScene3D()
-                ? theAssets().get("background.play_scene3d")
-                : theAssets().get("background.scene"))
-        );
-    }
 
     @Override
     public ObjectProperty<GameScene> currentGameSceneProperty() {

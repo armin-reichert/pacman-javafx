@@ -105,8 +105,8 @@ public class PacManGames_UIBuilder {
     public void buildAndShow() {
         validateAll();
         theUI = new PacManGames_UI_Impl();
-        theUI.createUIConfigurations(uiConfigClasses);
-        theUI.buildUI(stage, width, height, dashboardIDs);
+        theUI.configure(uiConfigClasses);
+        theUI.build(stage, width, height, dashboardIDs);
         models.forEach((variant, model) -> theGameController().registerGame(variant, model));
         theGameController().setEventsEnabled(true);
         for (StartPage startPage : startPages) theUI.startPagesView().addStartPage(startPage);

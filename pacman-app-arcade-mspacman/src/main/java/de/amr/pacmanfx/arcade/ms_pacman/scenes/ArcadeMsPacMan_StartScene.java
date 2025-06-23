@@ -20,7 +20,9 @@ import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePalette.ARCADE_ORANG
 import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePalette.ARCADE_RED;
 import static de.amr.pacmanfx.ui.PacManGames.theSound;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
-import static de.amr.pacmanfx.ui.PacManGames_UI.*;
+import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_ARCADE_INSERT_COIN;
+import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_ARCADE_START_GAME;
+import static de.amr.pacmanfx.ui.PacManGames_UI.COMMON_ACTION_BINDINGS;
 
 public class ArcadeMsPacMan_StartScene extends GameScene2D implements ActionBindingSupport {
 

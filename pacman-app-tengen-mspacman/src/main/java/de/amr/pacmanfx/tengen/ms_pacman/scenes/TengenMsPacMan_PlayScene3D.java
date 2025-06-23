@@ -19,7 +19,8 @@ import javafx.scene.paint.Color;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.PacManGames.*;
-import static de.amr.pacmanfx.ui.PacManGames_UI.*;
+import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
+import static de.amr.pacmanfx.ui.PacManGames_UI.COMMON_ACTION_BINDINGS;
 
 /**
  * The 3D play scene of Tengen Ms. Pac-Man. Differs slightly from the Arcade version, e.g. the

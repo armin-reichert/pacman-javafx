@@ -28,7 +28,8 @@ import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.ui.PacManGames.theSound;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
-import static de.amr.pacmanfx.ui.PacManGames_UI.*;
+import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
+import static de.amr.pacmanfx.ui.PacManGames_UI.COMMON_ACTION_BINDINGS;
 
 /**
  * Intro scene of the Ms. Pac-Man game.

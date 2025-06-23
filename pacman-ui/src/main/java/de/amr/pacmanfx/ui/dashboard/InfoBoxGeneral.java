@@ -4,7 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.dashboard;
 
-import de.amr.pacmanfx.ui.PacManGames_UI_Impl;
+import de.amr.pacmanfx.ui.PacManGames_GameActions;
+import de.amr.pacmanfx.ui.PacManGames_UI;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
@@ -29,7 +30,7 @@ public class InfoBoxGeneral extends InfoBox {
 
         // Simulation control
 
-        ResourceManager rm = () -> PacManGames_UI_Impl.class;
+        ResourceManager rm = () -> PacManGames_UI.class;
         var iconPlay = new ImageView(rm.loadImage("graphics/icons/play.png"));
         var iconStop = new ImageView(rm.loadImage("graphics/icons/stop.png"));
         var iconStep = new ImageView(rm.loadImage("graphics/icons/step.png"));
@@ -43,7 +44,7 @@ public class InfoBoxGeneral extends InfoBox {
         btnPlayPause.setStyle("-fx-background-color: transparent");
         btnPlayPause.graphicProperty().bind(theClock().pausedProperty().map(paused -> paused ? iconPlay : iconStop));
         btnPlayPause.tooltipProperty().bind(theClock().pausedProperty().map(paused -> paused ? tooltipPlay : tooltipStop));
-        setAction(btnPlayPause, ACTION_TOGGLE_PAUSED);
+        setAction(btnPlayPause, PacManGames_GameActions.ACTION_TOGGLE_PAUSED);
 
         Button btnStep = buttonsSimulationControl[1];
         btnStep.setGraphic(iconStep);

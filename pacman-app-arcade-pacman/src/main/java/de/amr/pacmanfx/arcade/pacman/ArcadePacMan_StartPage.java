@@ -13,10 +13,9 @@ import javafx.geometry.Pos;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
-import static de.amr.pacmanfx.ui.PacManGames_UI.ACTION_BOOT_SHOW_GAME_VIEW;
+import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_BOOT_SHOW_GAME_VIEW;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_StartPage extends StackPane implements StartPage {
