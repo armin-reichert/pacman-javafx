@@ -161,10 +161,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
             bindAction(ACTION_STEER_RIGHT,            TENGEN_ACTION_BINDINGS);
             bindAction(ACTION_TOGGLE_DISPLAY_MODE,    TENGEN_ACTION_BINDINGS);
             bindAction(ACTION_TOGGLE_PAC_BOOSTER,     TENGEN_ACTION_BINDINGS);
-            bindAction(ACTION_CHEAT_EAT_ALL_PELLETS,  COMMON_ACTION_BINDINGS);
-            bindAction(ACTION_CHEAT_ADD_LIVES,        COMMON_ACTION_BINDINGS);
-            bindAction(ACTION_CHEAT_ENTER_NEXT_LEVEL, COMMON_ACTION_BINDINGS);
-            bindAction(ACTION_CHEAT_KILL_GHOSTS,      COMMON_ACTION_BINDINGS);
+            bindAction(ACTION_CHEAT_EAT_ALL_PELLETS, GLOBAL_ACTION_BINDINGS);
+            bindAction(ACTION_CHEAT_ADD_LIVES, GLOBAL_ACTION_BINDINGS);
+            bindAction(ACTION_CHEAT_ENTER_NEXT_LEVEL, GLOBAL_ACTION_BINDINGS);
+            bindAction(ACTION_CHEAT_KILL_GHOSTS, GLOBAL_ACTION_BINDINGS);
         }
         updateActionBindings();
     }

@@ -63,18 +63,18 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
         if (theGameLevel().isDemoLevel()) {
             theGame().hud().showLevelCounter(true);
             theGame().hud().showLivesCounter(false);
-            bindAction(ACTION_ARCADE_INSERT_COIN, COMMON_ACTION_BINDINGS);
+            bindAction(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDINGS);
         } else {
             theGame().hud().showLevelCounter(true);
             theGame().hud().showLivesCounter(true);
-            bindAction(ACTION_STEER_UP,               COMMON_ACTION_BINDINGS);
-            bindAction(ACTION_STEER_DOWN,             COMMON_ACTION_BINDINGS);
-            bindAction(ACTION_STEER_LEFT,             COMMON_ACTION_BINDINGS);
-            bindAction(ACTION_STEER_RIGHT,            COMMON_ACTION_BINDINGS);
-            bindAction(ACTION_CHEAT_EAT_ALL_PELLETS,  COMMON_ACTION_BINDINGS);
-            bindAction(ACTION_CHEAT_ADD_LIVES,        COMMON_ACTION_BINDINGS);
-            bindAction(ACTION_CHEAT_ENTER_NEXT_LEVEL, COMMON_ACTION_BINDINGS);
-            bindAction(ACTION_CHEAT_KILL_GHOSTS,      COMMON_ACTION_BINDINGS);
+            bindAction(ACTION_STEER_UP, GLOBAL_ACTION_BINDINGS);
+            bindAction(ACTION_STEER_DOWN, GLOBAL_ACTION_BINDINGS);
+            bindAction(ACTION_STEER_LEFT, GLOBAL_ACTION_BINDINGS);
+            bindAction(ACTION_STEER_RIGHT, GLOBAL_ACTION_BINDINGS);
+            bindAction(ACTION_CHEAT_EAT_ALL_PELLETS, GLOBAL_ACTION_BINDINGS);
+            bindAction(ACTION_CHEAT_ADD_LIVES, GLOBAL_ACTION_BINDINGS);
+            bindAction(ACTION_CHEAT_ENTER_NEXT_LEVEL, GLOBAL_ACTION_BINDINGS);
+            bindAction(ACTION_CHEAT_KILL_GHOSTS, GLOBAL_ACTION_BINDINGS);
         }
         updateActionBindings();
     }
@@ -85,14 +85,14 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
         if (optGameLevel().isPresent() && !theGameLevel().isDemoLevel()) {
             theGame().hud().showLevelCounter(true);
             theGame().hud().showLivesCounter(false);
-            bindAction(ACTION_STEER_UP, COMMON_ACTION_BINDINGS);
-            bindAction(ACTION_STEER_DOWN, COMMON_ACTION_BINDINGS);
-            bindAction(ACTION_STEER_LEFT, COMMON_ACTION_BINDINGS);
-            bindAction(ACTION_STEER_RIGHT, COMMON_ACTION_BINDINGS);
-            bindAction(ACTION_CHEAT_EAT_ALL_PELLETS, COMMON_ACTION_BINDINGS);
-            bindAction(ACTION_CHEAT_ADD_LIVES, COMMON_ACTION_BINDINGS);
-            bindAction(ACTION_CHEAT_ENTER_NEXT_LEVEL, COMMON_ACTION_BINDINGS);
-            bindAction(ACTION_CHEAT_KILL_GHOSTS, COMMON_ACTION_BINDINGS);
+            bindAction(ACTION_STEER_UP, GLOBAL_ACTION_BINDINGS);
+            bindAction(ACTION_STEER_DOWN, GLOBAL_ACTION_BINDINGS);
+            bindAction(ACTION_STEER_LEFT, GLOBAL_ACTION_BINDINGS);
+            bindAction(ACTION_STEER_RIGHT, GLOBAL_ACTION_BINDINGS);
+            bindAction(ACTION_CHEAT_EAT_ALL_PELLETS, GLOBAL_ACTION_BINDINGS);
+            bindAction(ACTION_CHEAT_ADD_LIVES, GLOBAL_ACTION_BINDINGS);
+            bindAction(ACTION_CHEAT_ENTER_NEXT_LEVEL, GLOBAL_ACTION_BINDINGS);
+            bindAction(ACTION_CHEAT_KILL_GHOSTS, GLOBAL_ACTION_BINDINGS);
             updateActionBindings();
         }
         if (gameRenderer == null) { //TODO check if this can happen

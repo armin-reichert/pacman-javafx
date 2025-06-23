@@ -27,7 +27,7 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.PacManGames.*;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
-import static de.amr.pacmanfx.ui.PacManGames_UI.COMMON_ACTION_BINDINGS;
+import static de.amr.pacmanfx.ui.PacManGames_UI.GLOBAL_ACTION_BINDINGS;
 import static de.amr.pacmanfx.ui.input.Keyboard.alt;
 
 /**
@@ -88,9 +88,9 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D implements ActionBi
 
         bindAction(ACTION_START_PLAYING, TENGEN_ACTION_BINDINGS);
         bindAction(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, TENGEN_ACTION_BINDINGS);
-        bindAction(ACTION_TEST_CUT_SCENES, COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_TEST_LEVELS_BONI, COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_TEST_LEVELS_TEASERS, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_TEST_CUT_SCENES, GLOBAL_ACTION_BINDINGS);
+        bindAction(ACTION_TEST_LEVELS_BONI, GLOBAL_ACTION_BINDINGS);
+        bindAction(ACTION_TEST_LEVELS_TEASERS, GLOBAL_ACTION_BINDINGS);
         bindActionToKeyCombination(actionSelectNextJoypadBinding, alt(KeyCode.J));
 
         spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();

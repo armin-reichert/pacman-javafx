@@ -38,7 +38,7 @@ import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.ui.PacManGames.theSound;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
-import static de.amr.pacmanfx.ui.PacManGames_UI.COMMON_ACTION_BINDINGS;
+import static de.amr.pacmanfx.ui.PacManGames_UI.GLOBAL_ACTION_BINDINGS;
 
 /**
  * The ghosts are presented one by one, Pac-Man is chased by the ghosts, turns the cards and hunts the ghosts himself.
@@ -82,11 +82,11 @@ public class ArcadePacMan_IntroScene extends GameScene2D implements ActionBindin
         theGame().hud().showLivesCounter(false);
         theGame().hud().showLevelCounter(true);
 
-        bindAction(ACTION_ARCADE_INSERT_COIN, COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_ARCADE_START_GAME, COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_TEST_CUT_SCENES, COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_TEST_LEVELS_BONI, COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_TEST_LEVELS_TEASERS, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDINGS);
+        bindAction(ACTION_ARCADE_START_GAME, GLOBAL_ACTION_BINDINGS);
+        bindAction(ACTION_TEST_CUT_SCENES, GLOBAL_ACTION_BINDINGS);
+        bindAction(ACTION_TEST_LEVELS_BONI, GLOBAL_ACTION_BINDINGS);
+        bindAction(ACTION_TEST_LEVELS_TEASERS, GLOBAL_ACTION_BINDINGS);
 
         blinking = new Pulse(10, true);
         pacMan = createPac();

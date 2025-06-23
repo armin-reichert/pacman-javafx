@@ -168,28 +168,28 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
 
     protected void bindActions() {
         clearActionBindings();
-        bindAction(ACTION_PERSPECTIVE_PREVIOUS, COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_PERSPECTIVE_NEXT, COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_TOGGLE_DRAW_MODE, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_PERSPECTIVE_PREVIOUS, GLOBAL_ACTION_BINDINGS);
+        bindAction(ACTION_PERSPECTIVE_NEXT, GLOBAL_ACTION_BINDINGS);
+        bindAction(ACTION_TOGGLE_DRAW_MODE, GLOBAL_ACTION_BINDINGS);
         if (optGameLevel().isPresent()) {
             if (theGameLevel().isDemoLevel()) {
-                bindAction(ACTION_ARCADE_INSERT_COIN, COMMON_ACTION_BINDINGS);
+                bindAction(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDINGS);
             } else {
                 bindPlayerSteeringActions();
-                bindAction(ACTION_CHEAT_EAT_ALL_PELLETS, COMMON_ACTION_BINDINGS);
-                bindAction(ACTION_CHEAT_ADD_LIVES, COMMON_ACTION_BINDINGS);
-                bindAction(ACTION_CHEAT_ENTER_NEXT_LEVEL, COMMON_ACTION_BINDINGS);
-                bindAction(ACTION_CHEAT_KILL_GHOSTS, COMMON_ACTION_BINDINGS);
+                bindAction(ACTION_CHEAT_EAT_ALL_PELLETS, GLOBAL_ACTION_BINDINGS);
+                bindAction(ACTION_CHEAT_ADD_LIVES, GLOBAL_ACTION_BINDINGS);
+                bindAction(ACTION_CHEAT_ENTER_NEXT_LEVEL, GLOBAL_ACTION_BINDINGS);
+                bindAction(ACTION_CHEAT_KILL_GHOSTS, GLOBAL_ACTION_BINDINGS);
             }
         }
         updateActionBindings();
     }
 
     protected void bindPlayerSteeringActions() {
-        bindAction(ACTION_STEER_UP, COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_STEER_DOWN, COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_STEER_LEFT, COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_STEER_RIGHT, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_STEER_UP, GLOBAL_ACTION_BINDINGS);
+        bindAction(ACTION_STEER_DOWN, GLOBAL_ACTION_BINDINGS);
+        bindAction(ACTION_STEER_LEFT, GLOBAL_ACTION_BINDINGS);
+        bindAction(ACTION_STEER_RIGHT, GLOBAL_ACTION_BINDINGS);
     }
 
     @Override

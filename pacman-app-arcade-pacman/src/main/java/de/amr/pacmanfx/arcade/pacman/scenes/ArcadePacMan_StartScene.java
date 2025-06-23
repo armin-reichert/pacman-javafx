@@ -15,7 +15,7 @@ import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePalette.*;
 import static de.amr.pacmanfx.ui.PacManGames.theSound;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_ARCADE_INSERT_COIN;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_ARCADE_START_GAME;
-import static de.amr.pacmanfx.ui.PacManGames_UI.COMMON_ACTION_BINDINGS;
+import static de.amr.pacmanfx.ui.PacManGames_UI.GLOBAL_ACTION_BINDINGS;
 
 /**
  * Scene shown after credit has been added and where game can be started.
@@ -28,8 +28,8 @@ public class ArcadePacMan_StartScene extends GameScene2D implements ActionBindin
         theGame().hud().showScore(true);
         theGame().hud().showLevelCounter(true);
         theGame().hud().showLivesCounter(false);
-        bindAction(ACTION_ARCADE_INSERT_COIN, COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_ARCADE_START_GAME,  COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDINGS);
+        bindAction(ACTION_ARCADE_START_GAME, GLOBAL_ACTION_BINDINGS);
     }
 
     @Override

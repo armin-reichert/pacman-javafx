@@ -26,7 +26,12 @@ import static de.amr.pacmanfx.ui.input.Keyboard.*;
 
 public interface PacManGames_UI {
 
-    Map<GameAction, Set<KeyCombination>> COMMON_ACTION_BINDINGS = Map.ofEntries(
+    // Global key combinations and action bindings
+    KeyCombination KEY_FULLSCREEN  = nude(KeyCode.F11);
+    KeyCombination KEY_MUTE        = alt(KeyCode.M);
+    KeyCombination KEY_OPEN_EDITOR = alt_shift(KeyCode.E);
+
+    Map<GameAction, Set<KeyCombination>> GLOBAL_ACTION_BINDINGS = Map.ofEntries(
         createBinding(ACTION_ARCADE_INSERT_COIN,      nude(KeyCode.DIGIT5), nude(KeyCode.NUMPAD5)),
         createBinding(ACTION_ARCADE_START_GAME,       nude(KeyCode.DIGIT1), nude(KeyCode.NUMPAD1)),
         createBinding(ACTION_BOOT_SHOW_GAME_VIEW,     nude(KeyCode.F3)),
@@ -71,11 +76,6 @@ public interface PacManGames_UI {
     byte STATUS_ICON_PADDING       = 10;
     byte STATUS_ICON_SIZE          = 24;
     byte STATUS_ICON_SPACING       = 5;
-
-    // Global key combinations
-    KeyCombination KEY_FULLSCREEN  = nude(KeyCode.F11);
-    KeyCombination KEY_MUTE        = alt(KeyCode.M);
-    KeyCombination KEY_OPEN_EDITOR = alt_shift(KeyCode.E);
 
     // Global properties
     ObjectProperty<Color>         PY_CANVAS_BG_COLOR        = new SimpleObjectProperty<>(Color.BLACK);

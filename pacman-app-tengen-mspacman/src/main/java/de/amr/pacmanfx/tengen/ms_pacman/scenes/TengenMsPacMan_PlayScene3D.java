@@ -20,7 +20,7 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.PacManGames.*;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
-import static de.amr.pacmanfx.ui.PacManGames_UI.COMMON_ACTION_BINDINGS;
+import static de.amr.pacmanfx.ui.PacManGames_UI.GLOBAL_ACTION_BINDINGS;
 
 /**
  * The 3D play scene of Tengen Ms. Pac-Man. Differs slightly from the Arcade version, e.g. the
@@ -35,15 +35,15 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
             bindAction(ACTION_QUIT_DEMO_LEVEL, TENGEN_ACTION_BINDINGS);
         } else {
             bindPlayerSteeringActions();
-            bindAction(ACTION_CHEAT_EAT_ALL_PELLETS, COMMON_ACTION_BINDINGS);
-            bindAction(ACTION_CHEAT_ADD_LIVES, COMMON_ACTION_BINDINGS);
-            bindAction(ACTION_CHEAT_ENTER_NEXT_LEVEL, COMMON_ACTION_BINDINGS);
-            bindAction(ACTION_CHEAT_KILL_GHOSTS, COMMON_ACTION_BINDINGS);
+            bindAction(ACTION_CHEAT_EAT_ALL_PELLETS, GLOBAL_ACTION_BINDINGS);
+            bindAction(ACTION_CHEAT_ADD_LIVES, GLOBAL_ACTION_BINDINGS);
+            bindAction(ACTION_CHEAT_ENTER_NEXT_LEVEL, GLOBAL_ACTION_BINDINGS);
+            bindAction(ACTION_CHEAT_KILL_GHOSTS, GLOBAL_ACTION_BINDINGS);
             bindAction(ACTION_TOGGLE_PAC_BOOSTER, TENGEN_ACTION_BINDINGS);
         }
-        bindAction(ACTION_PERSPECTIVE_PREVIOUS, COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_PERSPECTIVE_NEXT, COMMON_ACTION_BINDINGS);
-        bindAction(ACTION_TOGGLE_DRAW_MODE, COMMON_ACTION_BINDINGS);
+        bindAction(ACTION_PERSPECTIVE_PREVIOUS, GLOBAL_ACTION_BINDINGS);
+        bindAction(ACTION_PERSPECTIVE_NEXT, GLOBAL_ACTION_BINDINGS);
+        bindAction(ACTION_TOGGLE_DRAW_MODE, GLOBAL_ACTION_BINDINGS);
 
         updateActionBindings();
     }
