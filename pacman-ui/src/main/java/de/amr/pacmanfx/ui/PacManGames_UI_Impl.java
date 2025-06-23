@@ -235,8 +235,8 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         // Main scene
         {
             mainScene = new Scene(root, width, height);
-            mainScene.widthProperty() .addListener((py,ov,nv) -> gameView.resize(mainScene));
-            mainScene.heightProperty().addListener((py,ov,nv) -> gameView.resize(mainScene));
+            mainScene.widthProperty() .addListener((py,ov,nv) -> gameView.resize());
+            mainScene.heightProperty().addListener((py,ov,nv) -> gameView.resize());
             mainScene.addEventFilter(KeyEvent.KEY_PRESSED, theKeyboard()::onKeyPressed);
             mainScene.addEventFilter(KeyEvent.KEY_RELEASED, theKeyboard()::onKeyReleased);
             mainScene.setOnKeyPressed(e -> {

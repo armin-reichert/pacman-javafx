@@ -302,8 +302,8 @@ public class GameView implements PacManGames_View {
         return canvasContainer;
     }
 
-    public void resize(Scene containingScene) {
-        canvasContainer.resizeTo(containingScene.getWidth(), containingScene.getHeight());
+    public void resize() {
+        canvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
     }
 
     public void updateGameScene(boolean reloadCurrent) {
