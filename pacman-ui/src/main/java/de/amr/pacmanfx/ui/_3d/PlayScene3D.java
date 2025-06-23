@@ -224,7 +224,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
                 replaceGameLevel3D();
                 level3D.playLivesCounterAnimation();
                 level3D.energizers3D().forEach(Energizer3D::startPumping);
-                showLevelTestMessage("TEST LEVEL " + theGameLevel().number());
+                showLevelTestMessage("LEVEL %d TEST".formatted(theGameLevel().number()));
             }
             default -> {
                 if (!theGameLevel().isDemoLevel()) {
@@ -419,14 +419,14 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
                     replaceGameLevel3D();
                     level3D.pac3D().init();
                     level3D.ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.init(theGameLevel()));
-                    showLevelTestMessage("TEST LEVEL" + theGameLevel().number());
+                    showLevelTestMessage("LEVEL %d TEST".formatted(theGameLevel().number()));
                     PY_3D_PERSPECTIVE.set(PerspectiveID.TOTAL);
                 }
                 case TESTING_LEVELS_MEDIUM -> {
                     replaceGameLevel3D();
                     level3D.pac3D().init();
                     level3D.ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.init(theGameLevel()));
-                    showLevelTestMessage("PREVIEW LEVEL " + theGameLevel().number());
+                    showLevelTestMessage("LEVEL %d TEST".formatted(theGameLevel().number()));
                     PY_3D_PERSPECTIVE.set(PerspectiveID.TOTAL);
                 }
                 default -> {}
