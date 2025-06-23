@@ -21,6 +21,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_MapRepository;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.*;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.*;
 import de.amr.pacmanfx.ui.*;
+import de.amr.pacmanfx.ui._3d.Settings3D;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
@@ -215,12 +216,12 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     public Node createLivesCounter3D() {
         return new Group(
             Model3DRepository.get().createPacShape(
-                    LIVES_COUNTER_3D_SIZE,
+                    Settings3D.LIVES_COUNTER_3D_SIZE,
                     theAssets().color(ANS + ".pac.color.head"),
                     theAssets().color(ANS + ".pac.color.eyes"),
                     theAssets().color(ANS + ".pac.color.palate")
             ),
-            Model3DRepository.get().createFemaleBodyParts(LIVES_COUNTER_3D_SIZE,
+            Model3DRepository.get().createFemaleBodyParts(Settings3D.LIVES_COUNTER_3D_SIZE,
                     theAssets().color(ANS + ".pac.color.hairbow"),
                     theAssets().color(ANS + ".pac.color.hairbow.pearls"),
                     theAssets().color(ANS + ".pac.color.boobs")
@@ -230,7 +231,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
 
     @Override
     public PacBase3D createPac3D(Pac pac) {
-        var pac3D = new MsPacMan3D(pac, PAC_3D_SIZE, theAssets(), ANS);
+        var pac3D = new MsPacMan3D(pac, Settings3D.PAC_3D_SIZE, theAssets(), ANS);
         pac3D.light().setColor(theAssets().color(ANS + ".pac.color.head").desaturate());
         return pac3D;
     }

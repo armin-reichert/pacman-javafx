@@ -7,7 +7,6 @@ package de.amr.pacmanfx.ui._3d;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
-import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -68,7 +67,6 @@ public class GameLevel3D {
         }
     };
 
-    private final GameLevel gameLevel;
     private final IntegerProperty livesCountPy = new SimpleIntegerProperty(0);
 
     private final Group root = new Group();
@@ -84,11 +82,9 @@ public class GameLevel3D {
     private MessageView messageView;
     private Bonus3D bonus3D;
 
-    private Animation levelCompleteAnimation;
     private Animation livesCounterAnimation;
 
-    public GameLevel3D(GameLevel gameLevel) {
-        this.gameLevel = requireNonNull(gameLevel);
+    public GameLevel3D() {
         createAmbientLight();
         createPac3D();
         createGhosts3D();
@@ -120,21 +116,23 @@ public class GameLevel3D {
     }
 
     public void update() {
-        pac3D.update(gameLevel);
-        ghosts3D().forEach(ghost3D -> ghost3D.update(gameLevel));
+        pac3D.update(theGameLevel());
+        ghosts3D().forEach(ghost3D -> ghost3D.update(theGameLevel()));
         bonus3D().ifPresent(Bonus3D::update);
-        boolean houseAccessRequired = gameLevel.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+        boolean houseAccessRequired = theGameLevel()
+                .ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
                 .anyMatch(Ghost::isVisible);
         maze3D.setHouseLightOn(houseAccessRequired);
 
-        boolean ghostNearHouseEntry = gameLevel.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
-                .filter(ghost -> ghost.position().euclideanDist(gameLevel.houseEntryPosition()) <= HOUSE_3D_SENSITIVITY)
+        boolean ghostNearHouseEntry = theGameLevel()
+                .ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+                .filter(ghost -> ghost.position().euclideanDist(theGameLevel().houseEntryPosition()) <= Settings3D.HOUSE_3D_SENSITIVITY)
                 .anyMatch(Ghost::isVisible);
         houseOpenPy.set(ghostNearHouseEntry);
 
         int livesCounterSize = theGame().lifeCount() - 1;
         // when the game starts and Pac-Man is not yet visible, show one more
-        boolean oneMore = theGameState() == GameState.STARTING_GAME && !gameLevel.pac().isVisible();
+        boolean oneMore = theGameState() == GameState.STARTING_GAME && !theGameLevel().pac().isVisible();
         if (oneMore) livesCounterSize += 1;
         livesCountPy.set(livesCounterSize);
 
@@ -149,13 +147,13 @@ public class GameLevel3D {
     }
 
     private void createPac3D() {
-        pac3D = theUI().configuration().createPac3D(gameLevel.pac());
+        pac3D = theUI().configuration().createPac3D(theGameLevel().pac());
         Model3D.bindDrawMode(pac3D.root(), PY_3D_DRAW_MODE);
     }
 
     private void createGhosts3D() {
-        ghosts3D = gameLevel.ghosts()
-            .map(ghost -> createGhost3D(ghost, gameLevel.data().numFlashes()))
+        ghosts3D = theGameLevel().ghosts()
+            .map(ghost -> createGhost3D(ghost, theGameLevel().data().numFlashes()))
             .toList();
     }
 
@@ -164,24 +162,23 @@ public class GameLevel3D {
             new MeshView(Model3DRepository.get().ghostDressMesh()),
             new MeshView(Model3DRepository.get().ghostPupilsMesh()),
             new MeshView(Model3DRepository.get().ghostEyeballsMesh()),
-            ghost, GHOST_3D_SIZE, numFlashes);
+            ghost, Settings3D.GHOST_3D_SIZE, numFlashes);
         Model3D.bindDrawMode(ghost3D, PY_3D_DRAW_MODE);
         return ghost3D;
     }
 
     private void createMaze3D() {
-        final WorldMap worldMap = gameLevel.worldMap();
+        final WorldMap worldMap = theGameLevel().worldMap();
         final WorldMapColorScheme colorScheme = theUI().configuration().worldMapColorScheme(worldMap);
         floor3D = createFloor3D(worldMap.numCols() * TS, worldMap.numRows() * TS);
-        maze3D = new Maze3D(gameLevel, colorScheme);
+        maze3D = new Maze3D(theGameLevel(), colorScheme);
         mazeGroup.getChildren().addAll(floor3D, maze3D);
         createFood3D(colorScheme);
     }
 
     private Box createFloor3D(double sizeX, double sizeY) {
-        double paddingX = 5;
-        var floor3D = new Box(sizeX + 2*paddingX, sizeY, FLOOR_3D_THICKNESS);
-        floor3D.translateXProperty().bind(floor3D.widthProperty().divide(2).subtract(paddingX));
+        var floor3D = new Box(sizeX + 2 * Settings3D.FLOOR_3D_PADDING, sizeY, Settings3D.FLOOR_3D_THICKNESS);
+        floor3D.translateXProperty().bind(floor3D.widthProperty().divide(2).subtract(Settings3D.FLOOR_3D_PADDING));
         floor3D.translateYProperty().bind(floor3D.heightProperty().divide(2));
         floor3D.translateZProperty().bind(floor3D.depthProperty().divide(2));
         floor3D.materialProperty().bind(PY_3D_FLOOR_COLOR.map(Ufx::coloredPhongMaterial));
@@ -192,8 +189,8 @@ public class GameLevel3D {
     private void createFood3D(WorldMapColorScheme colorScheme) {
         final Mesh pelletMesh = Model3DRepository.get().pelletMesh();
         final PhongMaterial material = coloredPhongMaterial(colorScheme.pellet());
-        gameLevel.tilesContainingFood().forEach(tile -> {
-            if (gameLevel.isEnergizerPosition(tile)) {
+        theGameLevel().tilesContainingFood().forEach(tile -> {
+            if (theGameLevel().isEnergizerPosition(tile)) {
                 Energizer3D energizer3D = createEnergizer3D(tile, material);
                 SquirtingAnimation squirting = createSquirtingAnimation(energizer3D, material);
                 root.getChildren().add(squirting.root());
@@ -209,8 +206,8 @@ public class GameLevel3D {
     }
 
     private Energizer3D createEnergizer3D(Vector2i tile, PhongMaterial material) {
-        var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -2*ENERGIZER_3D_RADIUS);
-        var energizer3D = new Energizer3D(ENERGIZER_3D_RADIUS);
+        var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -2* Settings3D.ENERGIZER_3D_RADIUS);
+        var energizer3D = new Energizer3D(Settings3D.ENERGIZER_3D_RADIUS);
         energizer3D.setTile(tile);
         energizer3D.shape3D().setTranslateX(center.getX());
         energizer3D.shape3D().setTranslateY(center.getY());
@@ -220,11 +217,11 @@ public class GameLevel3D {
     }
 
     private SquirtingAnimation createSquirtingAnimation(Energizer3D energizer3D, PhongMaterial dropMaterial) {
-        var center = new Point3D(energizer3D.tile().x() * TS + HTS, energizer3D.tile().y() * TS + HTS, -2*ENERGIZER_3D_RADIUS);
+        var center = new Point3D(energizer3D.tile().x() * TS + HTS, energizer3D.tile().y() * TS + HTS, -2* Settings3D.ENERGIZER_3D_RADIUS);
         var animation = new SquirtingAnimation(Duration.seconds(2));
         animation.createDrops(23, 69, dropMaterial, center);
         animation.setDropFinalPosition(drop -> drop.getTranslateZ() >= -1
-                && isInsideWorldMap(gameLevel.worldMap(), drop.getTranslateX(), drop.getTranslateY()));
+                && isInsideWorldMap(theGameLevel().worldMap(), drop.getTranslateX(), drop.getTranslateY()));
         animation.setOnFinished(e -> root.getChildren().remove(animation.root()));
         energizer3D.setEatenAnimation(animation);
         return animation;
@@ -232,7 +229,7 @@ public class GameLevel3D {
 
     private Pellet3D createPellet3D(Vector2i tile, Shape3D shape3D, PhongMaterial foodMaterial) {
         var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
-        var pellet3D = new Pellet3D(shape3D, PELLET_3D_RADIUS);
+        var pellet3D = new Pellet3D(shape3D, Settings3D.PELLET_3D_RADIUS);
         pellet3D.setTile(tile);
         pellet3D.shape3D().setTranslateX(center.getX());
         pellet3D.shape3D().setTranslateY(center.getY());
@@ -256,7 +253,7 @@ public class GameLevel3D {
 
     public void addLevelCounter() {
         // Place level counter at top right maze corner
-        double x = gameLevel.worldMap().numCols() * TS - 2 * TS;
+        double x = theGameLevel().worldMap().numCols() * TS - 2 * TS;
         double y = 2 * TS;
         root.getChildren().add(createLevelCounter3D(theGame().hud().levelCounter(), x, y));
     }
@@ -311,7 +308,7 @@ public class GameLevel3D {
         messageView.setTranslateZ(halfHeight); // just under floor
 
         var moveUpAnimation = new TranslateTransition(Duration.seconds(1), messageView);
-        moveUpAnimation.setToZ(-(halfHeight + 0.5 * OBSTACLE_3D_BASE_HEIGHT));
+        moveUpAnimation.setToZ(-(halfHeight + 0.5 * Settings3D.OBSTACLE_3D_BASE_HEIGHT));
         moveUpAnimation.setOnFinished(e -> Logger.info("Moving message3D up finished: {}", messageView));
 
         var moveDownAnimation = new TranslateTransition(Duration.seconds(1), messageView);
@@ -357,17 +354,17 @@ public class GameLevel3D {
     }
 
     public Animation createLevelCompleteAnimation() {
-        levelCompleteAnimation = theGame().cutSceneNumber(gameLevel.number()).isPresent()
-            ? levelTransformationBeforeIntermission(gameLevel.data().numFlashes())
-            : levelTransformation(gameLevel.data().numFlashes());
-        return levelCompleteAnimation;
+        int numFlashes = theGameLevel().data().numFlashes();
+        return theGame().cutSceneNumber(theGameLevel().number()).isPresent()
+                ? levelTransformationBeforeIntermission(numFlashes)
+                : levelTransformation(numFlashes);
     }
 
     private Animation levelTransformationBeforeIntermission(int numFlashes) {
         return new SequentialTransition(
-                doAfterSec(1.0, () -> gameLevel.ghosts().forEach(Ghost::hide)),
+                doAfterSec(1.0, () -> theGameLevel().ghosts().forEach(Ghost::hide)),
                 maze3D.mazeFlashAnimation(numFlashes),
-                doAfterSec(2.5, () -> gameLevel.pac().hide())
+                doAfterSec(2.5, () -> theGameLevel().pac().hide())
         );
     }
 
@@ -376,12 +373,12 @@ public class GameLevel3D {
             new KeyFrame(Duration.ZERO, e -> {
                 livesCounter3D().light().setLightOn(false);
                 if (randomInt(1, 100) < 25) {
-                    theUI().showFlashMessageSec(3, theAssets().localizedLevelCompleteMessage(gameLevel.number()));
+                    theUI().showFlashMessageSec(3, theAssets().localizedLevelCompleteMessage(theGameLevel().number()));
                 }
             }),
-            new KeyFrame(Duration.seconds(1.0), e -> gameLevel.ghosts().forEach(Ghost::hide)),
+            new KeyFrame(Duration.seconds(1.0), e -> theGameLevel().ghosts().forEach(Ghost::hide)),
             new KeyFrame(Duration.seconds(1.5), e -> maze3D.mazeFlashAnimation(numFlashes).play()),
-            new KeyFrame(Duration.seconds(4.5), e -> gameLevel.pac().hide()),
+            new KeyFrame(Duration.seconds(4.5), e -> theGameLevel().pac().hide()),
             new KeyFrame(Duration.seconds(5.0), e -> playLevelRotateAnimation()),
             new KeyFrame(Duration.seconds(7.0), e -> {
                 maze3D.wallsDisappearAnimation(2.0).play();

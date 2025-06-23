@@ -92,7 +92,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
     protected Perspective perspective() { return perspectiveMap.get(perspectiveIDPy.get()); }
 
     protected void replaceGameLevel3D() {
-        level3D = new GameLevel3D(theGameLevel());
+        level3D = new GameLevel3D();
         level3D.addLevelCounter();
         root.getChildren().set(root.getChildren().size() - 1, level3D.root());
         scores3D.translateXProperty().bind(level3D.root().translateXProperty().add(TS));
@@ -224,7 +224,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
                 replaceGameLevel3D();
                 level3D.playLivesCounterAnimation();
                 level3D.energizers3D().forEach(Energizer3D::startPumping);
-                showLevelTestMessage("LEVEL %d TEST".formatted(theGameLevel().number()));
+                showLevelMessage("LEVEL %d (TEST)".formatted(theGameLevel().number()));
             }
             default -> {
                 if (!theGameLevel().isDemoLevel()) {
@@ -415,18 +415,11 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
                     theSound().stopAll();
                     theSound().playGameOverSound();
                 }
-                case TESTING_LEVELS_SHORT -> {
+                case TESTING_LEVELS_SHORT, TESTING_LEVELS_MEDIUM -> {
                     replaceGameLevel3D();
                     level3D.pac3D().init();
                     level3D.ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.init(theGameLevel()));
-                    showLevelTestMessage("LEVEL %d TEST".formatted(theGameLevel().number()));
-                    PY_3D_PERSPECTIVE.set(PerspectiveID.TOTAL);
-                }
-                case TESTING_LEVELS_MEDIUM -> {
-                    replaceGameLevel3D();
-                    level3D.pac3D().init();
-                    level3D.ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.init(theGameLevel()));
-                    showLevelTestMessage("LEVEL %d TEST".formatted(theGameLevel().number()));
+                    showLevelMessage("LEVEL %d (TEST)".formatted(theGameLevel().number()));
                     PY_3D_PERSPECTIVE.set(PerspectiveID.TOTAL);
                 }
                 default -> {}
@@ -537,7 +530,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
         theUI().updateGameScene(true);
     }
 
-    private void showLevelTestMessage(String message) {
+    private void showLevelMessage(String message) {
         WorldMap worldMap = theGameLevel().worldMap();
         double x = worldMap.numCols() * HTS;
         double y = (worldMap.numRows() - 2) * TS;

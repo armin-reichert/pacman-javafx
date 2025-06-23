@@ -18,6 +18,7 @@ import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.PacManGames_Assets;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
+import de.amr.pacmanfx.ui._3d.Settings3D;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -170,7 +171,7 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
     @Override
     public Node createLivesCounter3D() {
         return Model3DRepository.get().createPacShape(
-                LIVES_COUNTER_3D_SIZE,
+                Settings3D.LIVES_COUNTER_3D_SIZE,
                 theAssets().color(ANS + ".pac.color.head"),
                 theAssets().color(ANS + ".pac.color.eyes"),
                 theAssets().color(ANS + ".pac.color.palate")
@@ -179,7 +180,7 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
 
     @Override
     public PacBase3D createPac3D(Pac pac) {
-        var pac3D = new PacMan3D(pac, PAC_3D_SIZE, theAssets(), ANS);
+        var pac3D = new PacMan3D(pac, Settings3D.PAC_3D_SIZE, theAssets(), ANS);
         pac3D.light().setColor(theAssets().color(ANS + ".pac.color.head").desaturate());
         return pac3D;
     }

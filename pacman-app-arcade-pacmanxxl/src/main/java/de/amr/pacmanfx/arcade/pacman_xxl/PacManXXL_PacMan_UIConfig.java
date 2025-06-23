@@ -20,6 +20,7 @@ import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.PacManGames_Assets;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
+import de.amr.pacmanfx.ui._3d.Settings3D;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
@@ -161,7 +162,7 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
     public Node createLivesCounter3D() {
         String namespace = assetNamespace();
         return Model3DRepository.get().createPacShape(
-                LIVES_COUNTER_3D_SIZE,
+                Settings3D.LIVES_COUNTER_3D_SIZE,
                 theAssets().color(namespace + ".pac.color.head"),
                 theAssets().color(namespace + ".pac.color.eyes"),
                 theAssets().color(namespace + ".pac.color.palate")
@@ -170,7 +171,7 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
 
     @Override
     public PacBase3D createPac3D(Pac pac) {
-        var pac3D = new PacMan3D(pac, PAC_3D_SIZE, theAssets(), assetNamespace());
+        var pac3D = new PacMan3D(pac, Settings3D.PAC_3D_SIZE, theAssets(), assetNamespace());
         pac3D.light().setColor(theAssets().color(assetNamespace() + ".pac.color.head").desaturate());
         return pac3D;
     }
