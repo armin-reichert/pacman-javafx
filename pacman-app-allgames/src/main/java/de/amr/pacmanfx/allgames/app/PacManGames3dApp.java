@@ -14,7 +14,7 @@ import de.amr.pacmanfx.arcade.pacman_xxl.*;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.ui.PacManGames_UI;
+import de.amr.pacmanfx.ui.PacManGames_UI_Impl;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.application.Application;
 import javafx.stage.Screen;
@@ -23,7 +23,7 @@ import javafx.stage.Stage;
 import static de.amr.pacmanfx.Globals.CUSTOM_MAP_DIR;
 import static de.amr.pacmanfx.ui.PacManGames.theClock;
 import static de.amr.pacmanfx.ui.PacManGames.theWatchdog;
-import static de.amr.pacmanfx.ui.PacManGames_UIBuilder.*;
+import static de.amr.pacmanfx.ui.PacManGames_UI_Impl.Builder.*;
 
 /**
  * Application containing all game variants and 3D play scenes.
@@ -36,34 +36,48 @@ public class PacManGames3dApp extends Application {
         final double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
         final double width  = 1.6 * height;
         final var xxlSelector = new PacManXXL_Common_MapSelector(CUSTOM_MAP_DIR);
-        PacManGames_UI
-                .useStage(primaryStage, width, height)
-                .game(PACMAN,
-                    ArcadePacMan_GameModel.arcadeVersion(),
-                    ArcadePacMan_UIConfig.class)
-                .game(MS_PACMAN,
-                    ArcadeMsPacMan_GameModel.arcadeVersion(),
-                    ArcadeMsPacMan_UIConfig.class)
-                .game(MS_PACMAN_TENGEN,
-                    new TengenMsPacMan_GameModel(),
-                    TengenMsPacMan_UIConfig.class)
-                .game(PACMAN_XXL,
-                    new PacManXXL_PacMan_GameModel(xxlSelector),
-                    PacManXXL_PacMan_UIConfig.class)
-                .game(MS_PACMAN_XXL,
-                    new PacManXXL_MsPacMan_GameModel(xxlSelector),
-                    PacManXXL_MsPacMan_UIConfig.class)
-                .startPages(
-                    new ArcadePacMan_StartPage(PACMAN),
-                    new ArcadeMsPacMan_StartPage(MS_PACMAN),
-                    new TengenMsPacMan_StartPage(MS_PACMAN_TENGEN),
-                    new PacManXXL_Common_StartPage())
-                .dashboardEntries(
-                        DashboardID.GENERAL, DashboardID.GAME_CONTROL, DashboardID.SETTINGS_3D,
-                        DashboardID.GAME_INFO, DashboardID.ACTOR_INFO, DashboardID.CUSTOM_MAPS,
-                        DashboardID.KEYBOARD_SHORTCUTS_GLOBAL, DashboardID.KEYBOARD_SHORTCUTS_LOCAL,
-                        DashboardID.ABOUT)
-                .buildAndShow();
+        new PacManGames_UI_Impl.Builder(primaryStage, width, height)
+            .game(
+                PACMAN,
+                ArcadePacMan_GameModel.arcadeVersion(),
+                ArcadePacMan_UIConfig.class
+            )
+            .game(
+                MS_PACMAN,
+                ArcadeMsPacMan_GameModel.arcadeVersion(),
+                ArcadeMsPacMan_UIConfig.class
+            )
+            .game(
+                MS_PACMAN_TENGEN,
+                new TengenMsPacMan_GameModel(),
+                TengenMsPacMan_UIConfig.class
+            )
+            .game(
+                PACMAN_XXL,
+                new PacManXXL_PacMan_GameModel(xxlSelector),
+                PacManXXL_PacMan_UIConfig.class
+            )
+            .game(
+                MS_PACMAN_XXL,
+                new PacManXXL_MsPacMan_GameModel(xxlSelector),
+                PacManXXL_MsPacMan_UIConfig.class
+            )
+            .startPages(
+                new ArcadePacMan_StartPage(PACMAN),
+                new ArcadeMsPacMan_StartPage(MS_PACMAN),
+                new TengenMsPacMan_StartPage(MS_PACMAN_TENGEN),
+                new PacManXXL_Common_StartPage()
+            )
+            .dashboardEntries(
+                DashboardID.GENERAL, DashboardID.GAME_CONTROL,
+                DashboardID.SETTINGS_3D,
+                DashboardID.GAME_INFO, DashboardID.ACTOR_INFO,
+                DashboardID.CUSTOM_MAPS,
+                DashboardID.KEYBOARD_SHORTCUTS_GLOBAL, DashboardID.KEYBOARD_SHORTCUTS_LOCAL,
+                DashboardID.ABOUT
+            )
+            .buildAndShow();
+
         theWatchdog().addEventListener(watchEvents -> xxlSelector.loadCustomMaps());
     }
 

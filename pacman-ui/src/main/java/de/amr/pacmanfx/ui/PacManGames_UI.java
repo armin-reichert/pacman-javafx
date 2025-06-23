@@ -15,7 +15,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.stage.Stage;
 
 import java.util.Map;
 import java.util.Optional;
@@ -27,10 +26,6 @@ import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
 
 public interface PacManGames_UI {
-
-    static PacManGames_UIBuilder useStage(Stage stage, double width, double height) {
-        return new PacManGames_UIBuilder(stage, width, height);
-    }
 
     Map<GameAction, Set<KeyCombination>> COMMON_ACTION_BINDINGS = Map.ofEntries(
         createBinding(ACTION_ARCADE_INSERT_COIN,      nude(KeyCode.DIGIT5), nude(KeyCode.NUMPAD5)),
