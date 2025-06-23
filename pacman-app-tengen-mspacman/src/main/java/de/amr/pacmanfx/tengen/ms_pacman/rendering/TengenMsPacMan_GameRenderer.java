@@ -62,7 +62,7 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
     private final TengenMsPacMan_SpriteSheet spriteSheet;
     private final FloatProperty scalingPy = new SimpleFloatProperty(1);
     private final TengenMsPacMan_MapRepository mapRepository;
-    private ColoredMazeConfiguration mazeConfig;
+    private ColoredMazeSpriteSet mazeSpriteSet;
 
     public TengenMsPacMan_GameRenderer(TengenMsPacMan_SpriteSheet spriteSheet, TengenMsPacMan_MapRepository mapRepository, Canvas canvas) {
         this.ctx = requireNonNull(canvas).getGraphicsContext2D();
@@ -90,20 +90,20 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
 
     //TODO check cases where colored map set is not initialized properly
     public void ensureRenderingHintsAreApplied(GameLevel level) {
-        if (mazeConfig == null) {
+        if (mazeSpriteSet == null) {
             applyRenderingHints(level);
         }
     }
 
-    public ColoredMazeConfiguration mazeConfig() {
-        return mazeConfig;
+    public ColoredMazeSpriteSet mazeConfig() {
+        return mazeSpriteSet;
     }
 
     @Override
     public void applyRenderingHints(GameLevel level) {
-        int flashCount = level.data().numFlashes();
-        mazeConfig = mapRepository.createMazeConfiguration(level.worldMap(), flashCount);
-        Logger.info("Created map configuration with {} flash colors: {}", flashCount, mazeConfig);
+        mazeSpriteSet = mapRepository.createMazeSpriteSet(level.worldMap(), level.data().numFlashes());
+        Logger.info("Created maze sprite set ({} flash colors: {})", level.data().numFlashes(),
+            mazeSpriteSet.colorSchemedMazeSprite());
     }
 
     @Override
@@ -290,8 +290,8 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
         int mapNumber = level.worldMap().getConfigValue("mapNumber");
         Sprite mazeSprite = tengenGame.mapCategory() == MapCategory.STRANGE && mapNumber == 15
             ? strangeMap15Sprite(theClock().tickCount()) // Strange map #15: psychedelic animation
-            : mazeConfig.colorSchemedMazeSprite().sprite();
-        drawLevelWithMaze(level, mazeConfig.colorSchemedMazeSprite().image(), mazeSprite);
+            : mazeSpriteSet.colorSchemedMazeSprite().sprite();
+        drawLevelWithMaze(level, mazeSpriteSet.colorSchemedMazeSprite().image(), mazeSprite);
     }
 
     public void drawLevelWithMaze(GameLevel level, Image mazeImage, Sprite mazeSprite) {
@@ -310,15 +310,11 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
         drawFood(level);
     }
 
-    public void drawFood(GameLevel level) {
+    private void drawFood(GameLevel level) {
         requireNonNull(level);
-        if (mazeConfig == null) {
-            Logger.error("Draw food: no map set found");
-            return;
-        }
         ctx.save();
         ctx.scale(scaling(), scaling());
-        Color pelletColor = Color.web(mazeConfig.colorSchemedMazeSprite().colorScheme().pelletColor());
+        Color pelletColor = Color.web(mazeSpriteSet.colorSchemedMazeSprite().colorScheme().pelletColor());
         drawPellets(level, pelletColor);
         drawEnergizers(level, pelletColor);
         ctx.restore();

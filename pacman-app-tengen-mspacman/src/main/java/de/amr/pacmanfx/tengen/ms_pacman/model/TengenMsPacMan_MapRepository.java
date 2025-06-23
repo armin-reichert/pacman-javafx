@@ -8,7 +8,7 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.ColorSchemedSprite;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.ColoredMazeConfiguration;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.ColoredMazeSpriteSet;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import org.tinylog.Logger;
@@ -119,17 +119,17 @@ public class TengenMsPacMan_MapRepository {
         this.nonArcadeMazesSpriteSheet = requireNonNull(nonArcadeMazesSpriteSheet);
     }
 
-    public ColoredMazeConfiguration createMazeConfiguration(WorldMap worldMap, int flashCount) {
+    public ColoredMazeSpriteSet createMazeSpriteSet(WorldMap worldMap, int flashCount) {
         MapCategory mapCategory = worldMap.getConfigValue("mapCategory");
         int mapNumber = worldMap.getConfigValue("mapNumber");
         NES_ColorScheme nesColorScheme = worldMap.getConfigValue("nesColorScheme");
         // for randomly colored maps (levels 28-31, non-ARCADE map categories), multiple flash colors appear
         boolean multipleFlashColors = worldMap.getConfigValue("multipleFlashColors");
         return switch (mapCategory) {
-            case ARCADE  -> arcadeMazeConfiguration(mapNumber, nesColorScheme, flashCount);
-            case MINI    -> miniMazeConfiguration(mapNumber, nesColorScheme, flashCount, multipleFlashColors);
-            case BIG     -> bigMazeConfiguration(mapNumber, nesColorScheme, flashCount, multipleFlashColors);
-            case STRANGE -> strangeMazeConfiguration(
+            case ARCADE  -> arcadeMazeSpriteSet(mapNumber, nesColorScheme, flashCount);
+            case MINI    -> miniMazeSpriteSet(mapNumber, nesColorScheme, flashCount, multipleFlashColors);
+            case BIG     -> bigMazeSpriteSet(mapNumber, nesColorScheme, flashCount, multipleFlashColors);
+            case STRANGE -> strangeMazeSpriteSet(
                 worldMap.getConfigValue("levelNumber"),
                 multipleFlashColors ? worldMap.getConfigValue("nesColorScheme") : null,
                 flashCount,
@@ -137,7 +137,7 @@ public class TengenMsPacMan_MapRepository {
         };
     }
 
-    private ColoredMazeConfiguration arcadeMazeConfiguration(int mapNumber, NES_ColorScheme colorScheme, int flashCount) {
+    private ColoredMazeSpriteSet arcadeMazeSpriteSet(int mapNumber, NES_ColorScheme colorScheme, int flashCount) {
         int spriteIndex = switch (mapNumber) {
             case 1 -> 0;
             case 2 -> 1;
@@ -161,15 +161,17 @@ public class TengenMsPacMan_MapRepository {
         var mazeSprite = new ColorSchemedSprite(arcadeMazesSpriteSheet, originalMazeSprite, colorScheme);
         var flashingMazeSprites = new ArrayList<ColorSchemedSprite>();
         //TODO: Handle case when color scheme is already black & white
-        ColorSchemedSprite blackWhiteMazeImageRegion = getCachedSprite(
+        ColorSchemedSprite blackWhiteMazeSprite = coloredSprite(
             MapCategory.ARCADE, mapNumber, originalMazeSprite, NES_ColorScheme._0F_20_0F_BLACK_WHITE_BLACK, colorScheme);
         for (int i = 0; i < flashCount; ++i) {
-            flashingMazeSprites.add(blackWhiteMazeImageRegion);
+            flashingMazeSprites.add(blackWhiteMazeSprite);
         }
-        return new ColoredMazeConfiguration(mazeSprite, flashingMazeSprites);
+        return new ColoredMazeSpriteSet(mazeSprite, flashingMazeSprites);
     }
 
-    private ColoredMazeConfiguration miniMazeConfiguration(int mapNumber, NES_ColorScheme colorScheme, int flashCount, boolean multipleFlashColors) {
+    private ColoredMazeSpriteSet miniMazeSpriteSet(
+        int mapNumber, NES_ColorScheme colorScheme, int flashCount, boolean multipleFlashColors)
+    {
         int spriteNumber = switch (mapNumber) {
             case 1 -> 34;
             case 2 -> 35;
@@ -191,26 +193,26 @@ public class TengenMsPacMan_MapRepository {
         Sprite originalMazeSprite = nonArcadeMazesSprite(spriteNumber);
         ColorSchemedSprite mazeSprite = colorScheme.equals(availableColorScheme)
             ? new ColorSchemedSprite(nonArcadeMazesSpriteSheet, nonArcadeMazesSprite(spriteNumber), colorScheme)
-            : getCachedSprite(MapCategory.MINI, spriteNumber, originalMazeSprite, colorScheme, availableColorScheme);
+            : coloredSprite(MapCategory.MINI, spriteNumber, originalMazeSprite, colorScheme, availableColorScheme);
 
         var flashingMazeSprites = new ArrayList<ColorSchemedSprite>();
         if (multipleFlashColors) {
             for (var randomScheme : randomColorSchemes(flashCount, colorScheme)) {
-                ColorSchemedSprite randomMazeSprite = getCachedSprite(MapCategory.MINI, spriteNumber, originalMazeSprite,
+                ColorSchemedSprite randomMazeSprite = coloredSprite(MapCategory.MINI, spriteNumber, originalMazeSprite,
                     randomScheme, availableColorScheme);
                 flashingMazeSprites.add(randomMazeSprite);
             }
         } else {
-            ColorSchemedSprite blackWhiteMazeSprite = getCachedSprite(MapCategory.MINI, spriteNumber, originalMazeSprite,
+            ColorSchemedSprite blackWhiteMazeSprite = coloredSprite(MapCategory.MINI, spriteNumber, originalMazeSprite,
                 NES_ColorScheme._0F_20_0F_BLACK_WHITE_BLACK, availableColorScheme);
             for (int i = 0; i < flashCount; ++i) {
                 flashingMazeSprites.add(blackWhiteMazeSprite);
             }
         }
-        return new ColoredMazeConfiguration(mazeSprite, flashingMazeSprites);
+        return new ColoredMazeSpriteSet(mazeSprite, flashingMazeSprites);
     }
 
-    private ColoredMazeConfiguration bigMazeConfiguration(
+    private ColoredMazeSpriteSet bigMazeSpriteSet(
         int mapNumber, NES_ColorScheme colorScheme, int flashCount, boolean multipleFlashColors)
     {
         int spriteNumber = switch (mapNumber) {
@@ -244,53 +246,50 @@ public class TengenMsPacMan_MapRepository {
         Sprite originalMazeSprite = nonArcadeMazesSprite(spriteNumber);
         ColorSchemedSprite mazeSprite = colorScheme.equals(colorSchemeInSpriteSheet)
             ? new ColorSchemedSprite(nonArcadeMazesSpriteSheet, nonArcadeMazesSprite(spriteNumber), colorScheme)
-            : getCachedSprite(MapCategory.BIG, spriteNumber, originalMazeSprite, colorScheme, colorSchemeInSpriteSheet);
+            : coloredSprite(MapCategory.BIG, spriteNumber, originalMazeSprite, colorScheme, colorSchemeInSpriteSheet);
 
         var flashingMazeSprites = new ArrayList<ColorSchemedSprite>();
         if (multipleFlashColors) {
             for (var randomScheme : randomColorSchemes(flashCount, colorScheme)) {
-                ColorSchemedSprite randomColorMazeSprite = getCachedSprite(MapCategory.BIG, spriteNumber, originalMazeSprite,
+                ColorSchemedSprite randomColorMazeSprite = coloredSprite(MapCategory.BIG, spriteNumber, originalMazeSprite,
                     randomScheme, colorSchemeInSpriteSheet);
                 flashingMazeSprites.add(randomColorMazeSprite);
             }
         } else {
-            ColorSchemedSprite blackWhiteMazeSprite = getCachedSprite(MapCategory.BIG, spriteNumber, originalMazeSprite,
+            ColorSchemedSprite blackWhiteMazeSprite = coloredSprite(MapCategory.BIG, spriteNumber, originalMazeSprite,
                 NES_ColorScheme._0F_20_0F_BLACK_WHITE_BLACK, colorSchemeInSpriteSheet);
             for (int i = 0; i < flashCount; ++i) {
                 flashingMazeSprites.add(blackWhiteMazeSprite);
             }
         }
-        return new ColoredMazeConfiguration(mazeSprite, flashingMazeSprites);
+        return new ColoredMazeSpriteSet(mazeSprite, flashingMazeSprites);
     }
 
-    private ColoredMazeConfiguration strangeMazeConfiguration(
-        int spriteNumber,
-        NES_ColorScheme randomColorScheme,
-        int flashCount,
-        boolean multipleFlashColors)
+    private ColoredMazeSpriteSet strangeMazeSpriteSet(
+        int spriteNumber, NES_ColorScheme randomColorScheme, int flashCount, boolean multipleFlashColors)
     {
         final Sprite originalMazeSprite = nonArcadeMazesSprite(spriteNumber);
         final NES_ColorScheme originalColorScheme = colorSchemeFromNonArcadeMapsSpriteSheet(spriteNumber);
         final NES_ColorScheme requestedColorScheme = randomColorScheme != null ? randomColorScheme : originalColorScheme;
         final ColorSchemedSprite mazeSprite = requestedColorScheme.equals(originalColorScheme)
             ? new ColorSchemedSprite(nonArcadeMazesSpriteSheet, originalMazeSprite, originalColorScheme)
-            : getCachedSprite(MapCategory.STRANGE, spriteNumber, originalMazeSprite, requestedColorScheme, originalColorScheme);
+            : coloredSprite(MapCategory.STRANGE, spriteNumber, originalMazeSprite, requestedColorScheme, originalColorScheme);
 
         final var flashingMazeSprites = new ArrayList<ColorSchemedSprite>();
         if (multipleFlashColors) {
             for (NES_ColorScheme colorScheme : randomColorSchemes(flashCount, requestedColorScheme)) {
-                ColorSchemedSprite randomColorMazeSprite = getCachedSprite(MapCategory.STRANGE, spriteNumber, originalMazeSprite,
+                ColorSchemedSprite randomColorMazeSprite = coloredSprite(MapCategory.STRANGE, spriteNumber, originalMazeSprite,
                     colorScheme, originalColorScheme);
                 flashingMazeSprites.add(randomColorMazeSprite);
             }
         } else {
-            ColorSchemedSprite blackWhiteMazeSprite = getCachedSprite(MapCategory.STRANGE, spriteNumber, originalMazeSprite,
+            ColorSchemedSprite blackWhiteMazeSprite = coloredSprite(MapCategory.STRANGE, spriteNumber, originalMazeSprite,
                 NES_ColorScheme._0F_20_0F_BLACK_WHITE_BLACK, originalColorScheme);
             for (int i = 0; i < flashCount; ++i) {
                 flashingMazeSprites.add(blackWhiteMazeSprite);
             }
         }
-        return new ColoredMazeConfiguration(mazeSprite, flashingMazeSprites);
+        return new ColoredMazeSpriteSet(mazeSprite, flashingMazeSprites);
     }
 
     private Sprite nonArcadeMazesSprite(int spriteNumber) {
@@ -307,21 +306,19 @@ public class TengenMsPacMan_MapRepository {
         return new Sprite(colIndex * width, y, width, height);
     }
 
-    private ColorSchemedSprite getCachedSprite(
-        MapCategory mapCategory,
-        int spriteNumber,
-        Sprite mazeSprite,
-        NES_ColorScheme newColorScheme,
-        NES_ColorScheme existingColorScheme)
+    private ColorSchemedSprite coloredSprite(
+        MapCategory mapCategory, int spriteNumber, Sprite mazeSprite,
+        NES_ColorScheme requestedScheme, NES_ColorScheme existingScheme)
     {
-        var key = new CacheKey(mapCategory, spriteNumber, newColorScheme);
+        var key = new CacheKey(mapCategory, spriteNumber, requestedScheme);
         if (!cache.containsKey(key)) {
             Image spriteSheet = mapCategory == MapCategory.ARCADE ? arcadeMazesSpriteSheet : nonArcadeMazesSpriteSheet;
-            Image recoloredMazeImage = recolorImage(crop(spriteSheet, mazeSprite), existingColorScheme, newColorScheme);
-            Sprite sprite = new Sprite(0, 0, mazeSprite.width(), mazeSprite.height());
-            var recoloredMazeSprite = new ColorSchemedSprite(recoloredMazeImage, sprite, newColorScheme);
+            var recoloredMazeSprite = new ColorSchemedSprite(
+                recolorImage(crop(spriteSheet, mazeSprite), existingScheme, requestedScheme),
+                new Sprite(0, 0, mazeSprite.width(), mazeSprite.height()),
+                requestedScheme);
             cache.put(key, recoloredMazeSprite);
-            Logger.info("{} map image recolored to {} and stored in cache (size: {})", mapCategory, newColorScheme, cache.size());
+            Logger.info("{} maze image recolored to {}, cache size: {}", mapCategory, requestedScheme, cache.size());
         }
         return cache.get(key);
     }
