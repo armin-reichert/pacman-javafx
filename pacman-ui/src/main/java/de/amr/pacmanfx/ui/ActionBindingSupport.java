@@ -54,7 +54,7 @@ public interface ActionBindingSupport {
                 .forEach(entry -> Logger.debug("%-20s: %s".formatted(entry.getKey(), entry.getValue().name())));
     }
 
-    default void deleteActionBindings() {
+    default void clearActionBindings() {
         for (KeyCombination combination : actionBindings().keySet()) {
             keyboard().removeBinding(combination, this);
         }

@@ -180,12 +180,12 @@ public class GameView implements PacManGames_View {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public StackPane container() {
+    public StackPane rootNode() {
         return root;
     }
 
     @Override
-    public StringBinding titleBinding() {
+    public StringBinding title() {
         return titleBinding;
     }
 

@@ -131,10 +131,10 @@ public class StartPagesView implements PacManGames_View {
     }
 
     @Override
-    public Region container() { return carousel; }
+    public Region rootNode() { return carousel; }
 
     @Override
-    public StringBinding titleBinding() {
+    public StringBinding title() {
         return titleBinding;
     }
 

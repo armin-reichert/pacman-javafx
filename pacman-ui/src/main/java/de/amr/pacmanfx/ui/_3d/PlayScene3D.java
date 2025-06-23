@@ -167,7 +167,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
     }
 
     protected void bindActions() {
-        deleteActionBindings();
+        clearActionBindings();
         bindAction(ACTION_PERSPECTIVE_PREVIOUS, COMMON_ACTION_BINDINGS);
         bindAction(ACTION_PERSPECTIVE_NEXT, COMMON_ACTION_BINDINGS);
         bindAction(ACTION_TOGGLE_DRAW_MODE, COMMON_ACTION_BINDINGS);
@@ -202,7 +202,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
     @Override
     public final void end() {
         theSound().stopAll();
-        deleteActionBindings();
+        clearActionBindings();
         perspectiveIDPy.unbind();
         if (level3D != null) {
             level3D.stopAnimations();

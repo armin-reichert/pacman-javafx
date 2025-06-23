@@ -44,12 +44,12 @@ public class EditorView implements PacManGames_View {
     public TileMapEditor editor() { return editor; }
 
     @Override
-    public Region container() {
+    public Region rootNode() {
         return layout;
     }
 
     @Override
-    public StringProperty titleBinding() {
+    public StringProperty title() {
         return editor.titleProperty();
     }
 
