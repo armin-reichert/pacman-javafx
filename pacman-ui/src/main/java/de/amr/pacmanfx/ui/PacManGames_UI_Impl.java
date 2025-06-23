@@ -37,7 +37,6 @@ import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.PacManGames.*;
-import static de.amr.pacmanfx.ui.PacManGames.theUI;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -101,7 +100,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
             return true;
         }
 
-        public de.amr.pacmanfx.ui.PacManGames_UI_Impl.Builder game(String variant, GameModel model, Class<? extends PacManGames_UIConfig> configClass) {
+        public Builder game(String variant, GameModel model, Class<? extends PacManGames_UIConfig> configClass) {
             validateGameVariant(variant);
             validateGameModel(model);
             validateUIConfigClass(configClass);
@@ -110,19 +109,19 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
             return this;
         }
 
-        public de.amr.pacmanfx.ui.PacManGames_UI_Impl.Builder startPages(StartPage... startPages) {
+        public Builder startPages(StartPage... startPages) {
             validateStartPageList(startPages);
             this.startPages = startPages;
             return this;
         }
 
-        public de.amr.pacmanfx.ui.PacManGames_UI_Impl.Builder selectStartPage(int index) {
+        public Builder selectStartPage(int index) {
             // is checked after start page list has been specified
             this.selectedStartPageIndex = index;
             return this;
         }
 
-        public de.amr.pacmanfx.ui.PacManGames_UI_Impl.Builder dashboardEntries(DashboardID... dashboardIDs) {
+        public Builder dashboardEntries(DashboardID... dashboardIDs) {
             validateDashboardEntryList(dashboardIDs);
             this.dashboardIDs = dashboardIDs;
             return this;
