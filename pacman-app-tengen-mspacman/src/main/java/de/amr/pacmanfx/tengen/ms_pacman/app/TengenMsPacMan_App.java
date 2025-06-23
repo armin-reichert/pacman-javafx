@@ -41,7 +41,8 @@ public class TengenMsPacMan_App extends Application {
                 DashboardID.KEYBOARD_SHORTCUTS_GLOBAL, DashboardID.KEYBOARD_SHORTCUTS_LOCAL,
                 DashboardID.ABOUT
             )
-            .buildAndShow();
+            .build()
+            .show();
     }
 
     @Override

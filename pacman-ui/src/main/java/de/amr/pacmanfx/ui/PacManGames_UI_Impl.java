@@ -127,7 +127,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
             return this;
         }
 
-        public void buildAndShow() {
+        public PacManGames_UI build() {
             validateAll();
             theUI = new PacManGames_UI_Impl();
             theUI.configure(uiConfigClasses);
@@ -139,7 +139,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
             theUI.startPagesView().currentStartPage()
                 .map(StartPage::currentGameVariant)
                 .ifPresent(theGameController()::selectGameVariant);
-            theUI.show();
+            return theUI;
         }
 
         private void validateAll() {
