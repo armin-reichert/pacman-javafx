@@ -370,9 +370,13 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         @Override
         public void execute(PacManGames_UI ui) {
             var tengenGame = (TengenMsPacMan_GameModel) theGame();
-            if (tengenGame.pacBooster() == PacBooster.USE_A_OR_B) {
-                tengenGame.activatePacBooster(!tengenGame.isBoosterActive());
-            }
+            tengenGame.activatePacBooster(!tengenGame.isBoosterActive());
+        }
+
+        @Override
+        public boolean isEnabled(PacManGames_UI ui) {
+            var tengenGame = (TengenMsPacMan_GameModel) theGame();
+            return tengenGame.pacBooster() == PacBooster.USE_A_OR_B;
         }
 
         @Override
