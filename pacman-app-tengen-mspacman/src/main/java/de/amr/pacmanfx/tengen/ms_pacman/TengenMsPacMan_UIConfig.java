@@ -46,8 +46,9 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.ui.ActionBindingSupport.createBinding;
+import static de.amr.pacmanfx.ui.ActionBindingSupport.binding;
 import static de.amr.pacmanfx.ui.PacManGames.*;
+import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
 import static de.amr.pacmanfx.uilib.Ufx.toggle;
@@ -389,15 +390,15 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     // Key bindings
 
     public static final Map<GameAction, Set<KeyCombination>> TENGEN_ACTION_BINDINGS = Map.ofEntries(
-        createBinding(PacManGames_GameActions.ACTION_STEER_UP,                theJoypad().key(JoypadButton.UP),    control(KeyCode.UP)),
-        createBinding(PacManGames_GameActions.ACTION_STEER_DOWN,              theJoypad().key(JoypadButton.DOWN),  control(KeyCode.DOWN)),
-        createBinding(PacManGames_GameActions.ACTION_STEER_LEFT,              theJoypad().key(JoypadButton.LEFT),  control(KeyCode.LEFT)),
-        createBinding(PacManGames_GameActions.ACTION_STEER_RIGHT,             theJoypad().key(JoypadButton.RIGHT), control(KeyCode.RIGHT)),
-        createBinding(ACTION_QUIT_DEMO_LEVEL,          theJoypad().key(JoypadButton.START)),
-        createBinding(ACTION_START_GAME,               theJoypad().key(JoypadButton.START)),
-        createBinding(ACTION_START_PLAYING,            theJoypad().key(JoypadButton.START)),
-        createBinding(ACTION_TOGGLE_DISPLAY_MODE,      alt(KeyCode.C)),
-        createBinding(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, nude(KeyCode.SPACE)),
-        createBinding(ACTION_TOGGLE_PAC_BOOSTER,       theJoypad().key(JoypadButton.A), theJoypad().key(JoypadButton.B))
+        binding(ACTION_STEER_UP,            theJoypad().key(JoypadButton.UP),    control(KeyCode.UP)),
+        binding(ACTION_STEER_DOWN,          theJoypad().key(JoypadButton.DOWN),  control(KeyCode.DOWN)),
+        binding(ACTION_STEER_LEFT,          theJoypad().key(JoypadButton.LEFT),  control(KeyCode.LEFT)),
+        binding(ACTION_STEER_RIGHT,         theJoypad().key(JoypadButton.RIGHT), control(KeyCode.RIGHT)),
+        binding(ACTION_QUIT_DEMO_LEVEL,     theJoypad().key(JoypadButton.START)),
+        binding(ACTION_START_GAME,          theJoypad().key(JoypadButton.START)),
+        binding(ACTION_START_PLAYING,       theJoypad().key(JoypadButton.START)),
+        binding(ACTION_TOGGLE_PAC_BOOSTER,  theJoypad().key(JoypadButton.A), theJoypad().key(JoypadButton.B)),
+        binding(ACTION_TOGGLE_DISPLAY_MODE, alt(KeyCode.C)),
+        binding(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, nude(KeyCode.SPACE))
     );
 }

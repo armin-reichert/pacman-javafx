@@ -19,7 +19,7 @@ import static java.util.Objects.requireNonNull;
  */
 public interface ActionBindingSupport {
 
-    static Map.Entry<GameAction, Set<KeyCombination>> createBinding(GameAction action, KeyCombination... combinations) {
+    static Map.Entry<GameAction, Set<KeyCombination>> binding(GameAction action, KeyCombination... combinations) {
         requireNonNull(combinations);
         if (combinations.length == 0) {
             throw new IllegalArgumentException("No key combinations specified for action " + action);
