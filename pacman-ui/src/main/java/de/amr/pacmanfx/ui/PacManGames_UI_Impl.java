@@ -23,7 +23,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
@@ -207,7 +206,6 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
     private final StackPane rootPane = new StackPane();
     private Stage stage;
-    private Scene mainScene;
     private StartPagesView startPagesView;
     private GameView gameView;
     private EditorView editorView; // created on first access
@@ -215,32 +213,30 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     public void build(Stage stage, double width, double height, DashboardID... dashboardIDs) {
         this.stage = requireNonNull(stage);
 
-        {
-            mainScene = new Scene(rootPane, width, height);
-            mainScene.widthProperty() .addListener((py,ov,nv) -> gameView.resize());
-            mainScene.heightProperty().addListener((py,ov,nv) -> gameView.resize());
-            mainScene.addEventFilter(KeyEvent.KEY_PRESSED, theKeyboard()::onKeyPressed);
-            mainScene.addEventFilter(KeyEvent.KEY_RELEASED, theKeyboard()::onKeyReleased);
-            //TODO use actions and key binding instead?
-            mainScene.setOnKeyPressed(e -> {
-                if (KEY_FULLSCREEN.match(e)) {
-                    PacManGames_GameActions.ACTION_ENTER_FULLSCREEN.execute(this);
-                }
-                else if (KEY_MUTE.match(e)) {
-                    PacManGames_GameActions.ACTION_TOGGLE_MUTED.execute(this);
-                }
-                else if (KEY_OPEN_EDITOR.match(e)) {
-                    showEditorView();
-                }
-                else {
-                    currentView().handleKeyboardInput();
-                }
-            });
-        }
+        Scene mainScene = new Scene(rootPane, width, height);
+        mainScene.widthProperty() .addListener((py, ov, nv) -> gameView.resize());
+        mainScene.heightProperty().addListener((py, ov, nv) -> gameView.resize());
+        mainScene.addEventFilter(KeyEvent.KEY_PRESSED, theKeyboard()::onKeyPressed);
+        mainScene.addEventFilter(KeyEvent.KEY_RELEASED, theKeyboard()::onKeyReleased);
+        //TODO use actions and key binding instead?
+        mainScene.setOnKeyPressed(e -> {
+            if (KEY_FULLSCREEN.match(e)) {
+                PacManGames_GameActions.ACTION_ENTER_FULLSCREEN.execute(this);
+            }
+            else if (KEY_MUTE.match(e)) {
+                PacManGames_GameActions.ACTION_TOGGLE_MUTED.execute(this);
+            }
+            else if (KEY_OPEN_EDITOR.match(e)) {
+                showEditorView();
+            }
+            else {
+                currentView().handleKeyboardInput();
+            }
+        });
+        stage.setScene(mainScene);
 
         stage.setMinWidth(280);
         stage.setMinHeight(360);
-        stage.setScene(mainScene);
 
         startPagesView = new StartPagesView(this);
         startPagesView.setBackground(theAssets().background("background.scene"));
