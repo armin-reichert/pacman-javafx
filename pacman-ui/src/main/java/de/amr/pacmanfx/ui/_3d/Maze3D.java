@@ -23,6 +23,7 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import java.util.Map;
 import java.util.Set;
 
 import static de.amr.pacmanfx.Globals.HTS;
@@ -114,7 +115,7 @@ public class Maze3D extends Group implements AnimationRegistry {
     }
 
     @Override
-    public Set<Animation> registeredAnimations() {
+    public Map<String, Animation> registeredAnimations() {
         return parentAnimationRegistry.registeredAnimations();
     }
 
@@ -128,7 +129,7 @@ public class Maze3D extends Group implements AnimationRegistry {
     }
 
     public void playWallColorFlashingAnimation() {
-        playRegisteredAnimation(wallColorFlashingAnimation);
+        playRegisteredAnimation("MazeWallColorFlashing_Animation", wallColorFlashingAnimation);
     }
 
     public void stopWallColorFlashingAnimation() {

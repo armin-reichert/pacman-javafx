@@ -25,6 +25,7 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import java.util.Map;
 import java.util.Set;
 
 import static de.amr.pacmanfx.Globals.HTS;
@@ -92,7 +93,7 @@ public class Ghost3D_Appearance extends Group implements AnimationRegistry {
     }
 
     @Override
-    public Set<Animation> registeredAnimations() {
+    public Map<String, Animation> registeredAnimations() {
         return parentAnimationRegistry.registeredAnimations();
     }
 
@@ -160,7 +161,7 @@ public class Ghost3D_Appearance extends Group implements AnimationRegistry {
             brakeAnimation.setAutoReverse(true);
             brakeAnimation.setCycleCount(2);
             brakeAnimation.setInterpolator(Interpolator.EASE_OUT);
-            playRegisteredAnimation(brakeAnimation);
+            playRegisteredAnimation("GhostBraking_Animation", brakeAnimation);
         }
     }
 

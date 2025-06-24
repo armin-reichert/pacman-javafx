@@ -11,6 +11,7 @@ import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
 
+import java.util.Map;
 import java.util.Set;
 
 import static de.amr.pacmanfx.Validations.requireNonNegative;
@@ -56,7 +57,7 @@ public class Energizer3D implements Eatable3D, AnimationRegistry {
     }
 
     @Override
-    public Set<Animation> registeredAnimations() {
+    public Map<String, Animation> registeredAnimations() {
         return parentAnimationRegistry.registeredAnimations();
     }
 
@@ -69,9 +70,9 @@ public class Energizer3D implements Eatable3D, AnimationRegistry {
         pumpingAnimation.stop();
         if (eatenAnimation != null) {
             var animation = new SequentialTransition(hideAfterSmallDelay, eatenAnimation);
-            playRegisteredAnimation(animation);
+            playRegisteredAnimation("Energizer_HideAndEat", animation);
         } else {
-            playRegisteredAnimation(hideAfterSmallDelay);
+            playRegisteredAnimation("Energizer_Hide", hideAfterSmallDelay);
         }
     }
 

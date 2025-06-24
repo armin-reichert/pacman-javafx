@@ -67,7 +67,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
     };
 
     protected GameLevel3D level3D;
-    protected Set<Animation> animations = Collections.newSetFromMap(new WeakHashMap<>());
+    protected Map<String, Animation> animationRegistry = new WeakHashMap<>();
 
     public PlayScene3D() {
         scores3D = new Scores3D(theAssets().text("score.score"), theAssets().text("score.high_score"));
@@ -103,8 +103,8 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
     }
 
     @Override
-    public Set<Animation> registeredAnimations() {
-        return animations;
+    public Map<String, Animation> registeredAnimations() {
+        return animationRegistry;
     }
 
     @Override
@@ -212,10 +212,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
         clearActionBindings();
         perspectiveIDPy.unbind();
         stopActiveAnimations();
-        if (level3D != null) {
-            level3D.stopActiveAnimations();
-            level3D = null;
-        }
+        level3D = null;
     }
 
     @Override
@@ -377,7 +374,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
                     );
                     dyingAnimation.setDelay(Duration.seconds(2));
                     dyingAnimation.setOnFinished(e -> theGameController().letCurrentGameStateExpire());
-                    playRegisteredAnimation(dyingAnimation);
+                    playRegisteredAnimation("PacManDying_Animation", dyingAnimation);
                 }
                 case GHOST_DYING ->
                     theSimulationStep().killedGhosts.forEach(ghost -> {
@@ -406,7 +403,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
                         perspectiveIDPy.bind(PY_3D_PERSPECTIVE);
                         theGameController().letCurrentGameStateExpire();
                     });
-                    playRegisteredAnimation(levelCompleteAnimation);
+                    playRegisteredAnimation("LevelComplete_Animation", levelCompleteAnimation);
                 }
                 case LEVEL_TRANSITION -> {
                     theGameState().timer().restartSeconds(3);

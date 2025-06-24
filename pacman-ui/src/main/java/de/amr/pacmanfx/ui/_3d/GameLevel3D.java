@@ -36,10 +36,7 @@ import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -118,7 +115,7 @@ public class GameLevel3D implements AnimationRegistry {
     }
 
     @Override
-    public Set<Animation> registeredAnimations() {
+    public Map<String, Animation> registeredAnimations() {
         return parentAnimationRegistry.registeredAnimations();
     }
 
@@ -219,7 +216,7 @@ public class GameLevel3D implements AnimationRegistry {
         theGameLevel().tilesContainingFood().forEach(tile -> {
             if (theGameLevel().isEnergizerPosition(tile)) {
                 Energizer3D energizer3D = createEnergizer3D(tile, material);
-                SquirtingAnimation squirting = createSquirtingAnimation(energizer3D, material);
+                SquirtingAnimation squirting = createSquirtingAnimation(energizer3D, material, theGameLevel().worldMap());
                 root.getChildren().add(squirting.root());
                 energizers3D.add(energizer3D);
             } else {
@@ -243,12 +240,12 @@ public class GameLevel3D implements AnimationRegistry {
         return energizer3D;
     }
 
-    private SquirtingAnimation createSquirtingAnimation(Energizer3D energizer3D, PhongMaterial dropMaterial) {
+    private SquirtingAnimation createSquirtingAnimation(Energizer3D energizer3D, PhongMaterial dropMaterial, WorldMap worldMap) {
         var center = new Point3D(energizer3D.tile().x() * TS + HTS, energizer3D.tile().y() * TS + HTS, -2* Settings3D.ENERGIZER_3D_RADIUS);
         var animation = new SquirtingAnimation(Duration.seconds(2));
         animation.createDrops(23, 69, dropMaterial, center);
         animation.setDropFinalPosition(drop -> drop.getTranslateZ() >= -1
-                && isInsideWorldMap(theGameLevel().worldMap(), drop.getTranslateX(), drop.getTranslateY()));
+                && isInsideWorldMap(worldMap, drop.getTranslateX(), drop.getTranslateY()));
         animation.setOnFinished(e -> root.getChildren().remove(animation.root()));
         energizer3D.setEatenAnimation(animation);
         return animation;
@@ -307,7 +304,7 @@ public class GameLevel3D implements AnimationRegistry {
             spinning.setAxis(Rotate.X_AXIS);
             spinning.setByAngle(360);
             spinning.setRate(n % 2 == 0 ? 1 : -1);
-            playRegisteredAnimation(spinning);
+            playRegisteredAnimation("LevelCounter_Spinning", spinning);
 
             levelCounter3D.getChildren().add(cube);
             n += 1;
@@ -346,7 +343,7 @@ public class GameLevel3D implements AnimationRegistry {
             new PauseTransition(Duration.seconds(displaySeconds)),
             moveDownAnimation
         );
-        playRegisteredAnimation(animation);
+        playRegisteredAnimation("LevelMessage_Movement", animation);
     }
 
     public void updateBonus3D(Bonus bonus) {
@@ -364,7 +361,7 @@ public class GameLevel3D implements AnimationRegistry {
     public void playLivesCounterAnimation() {
         var livesCounterAnimation = livesCounter3D.createAnimation();
         livesCounter3D.resetShapes();
-        playRegisteredAnimation(livesCounterAnimation);
+        playRegisteredAnimation("LivesCounter_Animation", livesCounterAnimation);
     }
 
     private void playLevelRotateAnimation() {
@@ -373,7 +370,7 @@ public class GameLevel3D implements AnimationRegistry {
         rotation.setFromAngle(0);
         rotation.setToAngle(360);
         rotation.setInterpolator(Interpolator.LINEAR);
-        playRegisteredAnimation(rotation);
+        playRegisteredAnimation("LevelRotate_Animation", rotation);
     }
 
     public Animation createLevelCompleteAnimation() {
@@ -401,11 +398,11 @@ public class GameLevel3D implements AnimationRegistry {
                 }
             }),
             Ufx.doAfterSec(1.0, () -> theGameLevel().ghosts().forEach(Ghost::hide)),
-            Ufx.doAfterSec(0.5, () -> playRegisteredAnimation(maze3D.createMazeFlashAnimation(numFlashes))),
+            Ufx.doAfterSec(0.5, () -> playRegisteredAnimation("MazeFlashing_Animation", maze3D.createMazeFlashAnimation(numFlashes))),
             Ufx.doAfterSec(1.5, () -> theGameLevel().pac().hide()),
             Ufx.doAfterSec(0.5, this::playLevelRotateAnimation),
             Ufx.doAfterSec(2.0, () -> {
-                playRegisteredAnimation(maze3D.createWallsDisappearAnimation(2.0));
+                playRegisteredAnimation("MazeWallsDisappearing_Animation", maze3D.createWallsDisappearAnimation(2.0));
                 theSound().playLevelCompleteSound();
             }),
             Ufx.doAfterSec(1.5, () -> theSound().playLevelChangedSound())

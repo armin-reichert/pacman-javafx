@@ -7,7 +7,7 @@ package de.amr.pacmanfx.uilib.animation;
 import javafx.animation.Animation;
 import org.tinylog.Logger;
 
-import java.util.Set;
+import java.util.Map;
 
 /**
  * 3D entities with animations implement this interface such that all potentially running animations can be stopped
@@ -15,25 +15,29 @@ import java.util.Set;
  */
 public interface AnimationRegistry {
 
-    Set<Animation> registeredAnimations();
+    Map<String, Animation> registeredAnimations();
 
-     default <T extends Animation> T playRegisteredAnimation(T animation) {
-        registeredAnimations().add(animation);
+     default <T extends Animation> T playRegisteredAnimation(String name, T animation) {
+        registeredAnimations().put(name, animation);
         animation.playFromStart();
+        Logger.info("Playing animation '{}'", name);
         return animation;
      }
 
      default void stopActiveAnimations() {
-        Set<Animation> original = registeredAnimations();
-        Animation[] copy = original.toArray(Animation[]::new);
-        for (Animation animation : copy) {
+        Map<String, Animation> original = registeredAnimations();
+        @SuppressWarnings("unchecked") Map.Entry<String, Animation>[] copy = (Map.Entry<String, Animation>[]) original.entrySet().toArray(Map.Entry[]::new);
+        String host = getClass().getSimpleName();
+        for (Map.Entry<String, Animation> entry : copy) {
+            String name = entry.getKey();
+            Animation animation = entry.getValue();
             try {
                 animation.stop();
-                Logger.info("{}: Animation {} stopped", getClass().getSimpleName(), animation);
+                Logger.info("{}: Stopped animation '{}' ({})", host, name, animation);
             } catch (IllegalStateException x) {
-                Logger.warn("{}: Animation could not be stopped (embedded?)", getClass().getSimpleName());
+                Logger.warn("{}: Could not stop (embedded?) animation '{}' ({})", host, name, animation);
             }
-            registeredAnimations().remove(animation);
+            registeredAnimations().remove(name);
         }
     }
 }

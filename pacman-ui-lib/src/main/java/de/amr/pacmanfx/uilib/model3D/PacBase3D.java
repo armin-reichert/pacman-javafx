@@ -20,6 +20,7 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import java.util.Map;
 import java.util.Set;
 
 import static de.amr.pacmanfx.Globals.HTS;
@@ -99,7 +100,7 @@ public abstract class PacBase3D implements AnimationRegistry {
     }
 
     @Override
-    public Set<Animation> registeredAnimations() {
+    public Map<String, Animation> registeredAnimations() {
         return parentAnimationRegistry.registeredAnimations();
     }
 
