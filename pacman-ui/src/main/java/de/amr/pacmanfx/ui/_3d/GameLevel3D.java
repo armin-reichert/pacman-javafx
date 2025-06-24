@@ -82,7 +82,8 @@ public class GameLevel3D {
     private MessageView messageView;
     private Bonus3D bonus3D;
 
-    private Animation livesCounterAnimation;
+    // store all (unembedded!) animations in this list and stop them when the scene containing this level ends!
+    private final List<Animation> animations = new ArrayList<>();
 
     public GameLevel3D() {
         createAmbientLight();
@@ -114,6 +115,38 @@ public class GameLevel3D {
             .map(Shape3D.class::cast)
             .forEach(shape3D -> shape3D.drawModeProperty().bind(PY_3D_DRAW_MODE));
     }
+
+    public void stopAnimations() {
+        energizers3D().forEach(Energizer3D::stopAnimations);
+        maze3D.stopMaterialAnimation();
+        animations.forEach(animation -> {
+            try {
+                animation.stop();
+            } catch (IllegalStateException x) {
+                Logger.warn("Animation could not be stopped (probably embedded in another one)");
+            }
+        });
+    }
+
+    public Maze3D maze3D() { return maze3D; }
+
+    public PacBase3D pac3D() { return pac3D; }
+
+    public Stream<Ghost3D_Appearance> ghosts3D() { return ghosts3D.stream(); }
+
+    public Ghost3D_Appearance ghost3D(byte id) { return ghosts3D.get(id); }
+
+    public Optional<Bonus3D> bonus3D() { return Optional.ofNullable(bonus3D); }
+
+    public LivesCounter3D livesCounter3D() { return livesCounter3D; }
+
+    public Stream<Pellet3D> pellets3D() { return pellets3D.stream(); }
+
+    public Stream<Energizer3D> energizers3D() { return energizers3D.stream(); }
+
+    public Color floorColor() { return PY_3D_FLOOR_COLOR.get(); }
+
+    public double floorThickness() { return floor3D.getDepth(); }
 
     public void update() {
         pac3D.update(theGameLevel());
@@ -193,6 +226,7 @@ public class GameLevel3D {
             if (theGameLevel().isEnergizerPosition(tile)) {
                 Energizer3D energizer3D = createEnergizer3D(tile, material);
                 SquirtingAnimation squirting = createSquirtingAnimation(energizer3D, material);
+                animations.add(squirting);
                 root.getChildren().add(squirting.root());
                 energizers3D.add(energizer3D);
             } else {
@@ -281,6 +315,7 @@ public class GameLevel3D {
             spinning.setByAngle(360);
             spinning.setRate(n % 2 == 0 ? 1 : -1);
             spinning.play();
+            animations.add(spinning);
 
             levelCounter3D.getChildren().add(cube);
             n += 1;
@@ -309,21 +344,18 @@ public class GameLevel3D {
 
         var moveUpAnimation = new TranslateTransition(Duration.seconds(1), messageView);
         moveUpAnimation.setToZ(-(halfHeight + 0.5 * Settings3D.OBSTACLE_3D_BASE_HEIGHT));
-        moveUpAnimation.setOnFinished(e -> Logger.info("Moving message3D up finished: {}", messageView));
 
         var moveDownAnimation = new TranslateTransition(Duration.seconds(1), messageView);
         moveDownAnimation.setToZ(halfHeight);
-        moveDownAnimation.setOnFinished(e -> {
-            messageView.setVisible(false);
-            Logger.info("Moving message3D down finished: {}", messageView);
-        });
+        moveDownAnimation.setOnFinished(e -> messageView.setVisible(false));
 
-        Logger.info("Message3D before move: {}", messageView);
-        new SequentialTransition(
+        var animation = new SequentialTransition(
             moveUpAnimation,
             new PauseTransition(Duration.seconds(displaySeconds)),
             moveDownAnimation
-        ).play();
+        );
+        animations.add(animation);
+        animation.play();
     }
 
     public void updateBonus3D(Bonus bonus) {
@@ -339,7 +371,8 @@ public class GameLevel3D {
     }
 
     public void playLivesCounterAnimation() {
-        livesCounterAnimation = livesCounter3D.createAnimation();
+        var livesCounterAnimation = livesCounter3D.createAnimation();
+        animations.add(livesCounterAnimation);
         livesCounter3D.resetShapes();
         livesCounterAnimation.play();
     }
@@ -361,16 +394,18 @@ public class GameLevel3D {
     }
 
     private Animation levelCompleteAnimationBeforeCutScene(int numFlashes) {
-        return new SequentialTransition(
+        var animation = new SequentialTransition(
                 doAfterSec(1.0, () -> theGameLevel().ghosts().forEach(Ghost::hide)),
                 maze3D.mazeFlashAnimation(numFlashes),
                 doAfterSec(2.5, () -> theGameLevel().pac().hide())
         );
+        animations.add(animation);
+        return animation;
     }
 
     private Animation levelCompleteAnimationBeforeNextLevel(int numFlashes) {
         boolean showFlashMessage = randomInt(1, 100) < 25;
-        return new SequentialTransition(
+        var animation = new SequentialTransition(
             Ufx.now(() -> {
                 livesCounter3D().light().setLightOn(false);
                 if (showFlashMessage) {
@@ -387,25 +422,7 @@ public class GameLevel3D {
             }),
             Ufx.doAfterSec(1.5, () -> theSound().playLevelChangedSound())
         );
+        animations.add(animation);
+        return animation;
     }
-
-    public void stopAnimations() {
-        energizers3D().forEach(Energizer3D::stopPumping);
-        bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
-        maze3D.stopMaterialAnimation();
-        if (livesCounterAnimation != null) {
-            livesCounterAnimation.stop();
-        }
-    }
-
-    public Maze3D maze3D() { return maze3D; }
-    public PacBase3D pac3D() { return pac3D; }
-    public Stream<Ghost3D_Appearance> ghosts3D() { return ghosts3D.stream(); }
-    public Ghost3D_Appearance ghost3D(byte id) { return ghosts3D.get(id); }
-    public Optional<Bonus3D> bonus3D() { return Optional.ofNullable(bonus3D); }
-    public LivesCounter3D livesCounter3D() { return livesCounter3D; }
-    public Stream<Pellet3D> pellets3D() { return pellets3D.stream(); }
-    public Stream<Energizer3D> energizers3D() { return energizers3D.stream(); }
-    public Color floorColor() { return PY_3D_FLOOR_COLOR.get(); }
-    public double floorThickness() { return floor3D.getDepth(); }
 }

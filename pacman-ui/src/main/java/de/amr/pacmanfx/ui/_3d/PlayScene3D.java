@@ -385,6 +385,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
                     level3D.pellets3D().forEach(Pellet3D::onEaten);
                     level3D.energizers3D().forEach(Energizer3D::onEaten);
                     level3D.maze3D().door3D().setVisible(false);
+                    level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
 
                     var animation = new SequentialTransition(
                         Ufx.doAfterSec(3, () -> {
@@ -409,6 +410,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
                     // delay state exit for 3 seconds:
                     theGameState().timer().restartSeconds(3);
                     level3D.stopAnimations();
+                    level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
                     if (!theGameLevel().isDemoLevel() && randomInt(0, 100) < 25) {
                         theUI().showFlashMessageSec(3, theAssets().localizedGameOverMessage());
                     }

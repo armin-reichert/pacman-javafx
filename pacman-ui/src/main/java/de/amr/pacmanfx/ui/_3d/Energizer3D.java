@@ -9,6 +9,10 @@ import javafx.animation.Animation.Status;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
+import org.tinylog.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static java.util.Objects.requireNonNull;
@@ -26,6 +30,8 @@ public class Energizer3D implements Eatable3D {
     private final Animation hideAfterSmallDelay;
     private Animation eatenAnimation;
 
+    private final List<Animation> animations = new ArrayList<>();
+
     public Energizer3D(double radius) {
         requireNonNegative(radius, "Energizer radius must be positive but is %f");
         sphere = new Sphere(radius);
@@ -40,17 +46,25 @@ public class Energizer3D implements Eatable3D {
         pumpingAnimation.setToX(MIN_SCALING);
         pumpingAnimation.setToY(MIN_SCALING);
         pumpingAnimation.setToZ(MIN_SCALING);
+        animations.add(pumpingAnimation);
 
         hideAfterSmallDelay = new PauseTransition(Duration.seconds(0.05));
         hideAfterSmallDelay.setOnFinished(e -> shape3D().setVisible(false));
+        animations.add(hideAfterSmallDelay);
     }
 
     public void startPumping() {
         pumpingAnimation.playFromStart();
     }
 
-    public void stopPumping() {
-        pumpingAnimation.stop();
+    public void stopAnimations() {
+        animations.forEach(animation -> {
+            try {
+                animation.stop();
+            } catch (IllegalStateException x) {
+                Logger.warn("Animation could not be stopped (probably embedded in another one)");
+            }
+        });
     }
 
     public void setEatenAnimation(Animation animation) {
