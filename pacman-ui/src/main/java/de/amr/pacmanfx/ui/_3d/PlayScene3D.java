@@ -13,7 +13,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.MovingBonus;
 import de.amr.pacmanfx.ui.ActionBindingSupport;
-import de.amr.pacmanfx.ui.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.input.Keyboard;
@@ -377,8 +377,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
                     );
                     dyingAnimation.setDelay(Duration.seconds(2));
                     dyingAnimation.setOnFinished(e -> theGameController().letCurrentGameStateExpire());
-                    dyingAnimation.play();
-                    animations.add(dyingAnimation);
+                    playRegisteredAnimation(dyingAnimation);
                 }
                 case GHOST_DYING ->
                     theSimulationStep().killedGhosts.forEach(ghost -> {
@@ -407,8 +406,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
                         perspectiveIDPy.bind(PY_3D_PERSPECTIVE);
                         theGameController().letCurrentGameStateExpire();
                     });
-                    levelCompleteAnimation.play();
-                    animations.add(levelCompleteAnimation);
+                    playRegisteredAnimation(levelCompleteAnimation);
                 }
                 case LEVEL_TRANSITION -> {
                     theGameState().timer().restartSeconds(3);

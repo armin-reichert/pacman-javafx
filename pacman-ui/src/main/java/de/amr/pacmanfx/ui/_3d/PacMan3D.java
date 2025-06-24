@@ -2,10 +2,12 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.uilib.model3D;
+package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
+import de.amr.pacmanfx.uilib.model3D.PacBase3D;
 import javafx.animation.*;
 import javafx.geometry.Point3D;
 import javafx.scene.transform.Rotate;
@@ -16,8 +18,8 @@ import static de.amr.pacmanfx.uilib.Ufx.now;
 
 public class PacMan3D extends PacBase3D {
 
-    public PacMan3D(Pac pac, double size, AssetStorage assets, String ans) {
-        super(pac, size, assets, ans);
+    public PacMan3D(AnimationRegistry parentAnimationRegistry, Pac pac, double size, AssetStorage assets, String ans) {
+        super(parentAnimationRegistry, pac, size, assets, ans);
     }
 
     @Override

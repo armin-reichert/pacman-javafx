@@ -11,8 +11,8 @@ import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
-import de.amr.pacmanfx.ui.AnimationRegistry;
 import de.amr.pacmanfx.uilib.Ufx;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.Model3D;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
@@ -174,7 +174,7 @@ public class GameLevel3D implements AnimationRegistry {
     }
 
     private void createPac3D() {
-        pac3D = theUI().configuration().createPac3D(theGameLevel().pac());
+        pac3D = theUI().configuration().createPac3D(this, theGameLevel().pac());
         Model3D.bindDrawMode(pac3D.root(), PY_3D_DRAW_MODE);
     }
 
@@ -401,11 +401,11 @@ public class GameLevel3D implements AnimationRegistry {
                 }
             }),
             Ufx.doAfterSec(1.0, () -> theGameLevel().ghosts().forEach(Ghost::hide)),
-            Ufx.doAfterSec(0.5, () -> maze3D.createMazeFlashAnimation(numFlashes).play()),
+            Ufx.doAfterSec(0.5, () -> playRegisteredAnimation(maze3D.createMazeFlashAnimation(numFlashes))),
             Ufx.doAfterSec(1.5, () -> theGameLevel().pac().hide()),
             Ufx.doAfterSec(0.5, this::playLevelRotateAnimation),
             Ufx.doAfterSec(2.0, () -> {
-                maze3D.createWallsDisappearAnimation(2.0).play();
+                playRegisteredAnimation(maze3D.createWallsDisappearAnimation(2.0));
                 theSound().playLevelCompleteSound();
             }),
             Ufx.doAfterSec(1.5, () -> theSound().playLevelChangedSound())

@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._3d;
 
-import de.amr.pacmanfx.ui.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import javafx.animation.*;
 import javafx.animation.Animation.Status;
 import javafx.scene.shape.Shape3D;

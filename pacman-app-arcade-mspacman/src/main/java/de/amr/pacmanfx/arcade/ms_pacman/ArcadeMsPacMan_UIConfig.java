@@ -18,6 +18,7 @@ import de.amr.pacmanfx.ui.PacManGames_Assets;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui._3d.Settings3D;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
@@ -187,8 +188,8 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     }
 
     @Override
-    public PacBase3D createPac3D(Pac pac) {
-        var pac3D = new MsPacMan3D(pac, Settings3D.PAC_3D_SIZE, theAssets(), ANS);
+    public PacBase3D createPac3D(AnimationRegistry parentAnimationRegistry, Pac pac) {
+        var pac3D = new MsPacMan3D(parentAnimationRegistry, pac, Settings3D.PAC_3D_SIZE, theAssets(), ANS);
         pac3D.light().setColor(theAssets().color(ANS + ".pac.color.head").desaturate());
         return pac3D;
     }

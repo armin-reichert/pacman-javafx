@@ -21,12 +21,13 @@ import de.amr.pacmanfx.ui.PacManGames_Assets;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui._3d.Settings3D;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.model3D.PacBase3D;
-import de.amr.pacmanfx.uilib.model3D.PacMan3D;
+import de.amr.pacmanfx.ui._3d.PacMan3D;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -170,8 +171,8 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
     }
 
     @Override
-    public PacBase3D createPac3D(Pac pac) {
-        var pac3D = new PacMan3D(pac, Settings3D.PAC_3D_SIZE, theAssets(), assetNamespace());
+    public PacBase3D createPac3D(AnimationRegistry parentAnimationRegistry, Pac pac) {
+        var pac3D = new PacMan3D(parentAnimationRegistry, pac, Settings3D.PAC_3D_SIZE, theAssets(), assetNamespace());
         pac3D.light().setColor(theAssets().color(assetNamespace() + ".pac.color.head").desaturate());
         return pac3D;
     }
