@@ -34,7 +34,6 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
-import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +51,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * 3D representation of game level.
  */
-public class GameLevel3D {
+public class GameLevel3D implements AnimationProvider3D {
 
     private static boolean isInsideWorldMap(WorldMap worldMap, double x, double y) {
         return 0 <= x && x < worldMap.numCols() * TS && 0 <= y && y < worldMap.numRows() * TS;
@@ -116,16 +115,16 @@ public class GameLevel3D {
             .forEach(shape3D -> shape3D.drawModeProperty().bind(PY_3D_DRAW_MODE));
     }
 
+    @Override
+    public List<Animation> animations() {
+        return animations;
+    }
+
+    @Override
     public void stopAnimations() {
+        AnimationProvider3D.super.stopAnimations();
         energizers3D().forEach(Energizer3D::stopAnimations);
         maze3D.stopMaterialAnimation();
-        animations.forEach(animation -> {
-            try {
-                animation.stop();
-            } catch (IllegalStateException x) {
-                Logger.warn("Animation could not be stopped (probably embedded in another one)");
-            }
-        });
     }
 
     public Maze3D maze3D() { return maze3D; }
@@ -226,7 +225,6 @@ public class GameLevel3D {
             if (theGameLevel().isEnergizerPosition(tile)) {
                 Energizer3D energizer3D = createEnergizer3D(tile, material);
                 SquirtingAnimation squirting = createSquirtingAnimation(energizer3D, material);
-                animations.add(squirting);
                 root.getChildren().add(squirting.root());
                 energizers3D.add(energizer3D);
             } else {
@@ -315,6 +313,7 @@ public class GameLevel3D {
             spinning.setByAngle(360);
             spinning.setRate(n % 2 == 0 ? 1 : -1);
             spinning.play();
+
             animations.add(spinning);
 
             levelCounter3D.getChildren().add(cube);
@@ -354,8 +353,8 @@ public class GameLevel3D {
             new PauseTransition(Duration.seconds(displaySeconds)),
             moveDownAnimation
         );
-        animations.add(animation);
         animation.play();
+        animations.add(animation);
     }
 
     public void updateBonus3D(Bonus bonus) {
@@ -372,9 +371,9 @@ public class GameLevel3D {
 
     public void playLivesCounterAnimation() {
         var livesCounterAnimation = livesCounter3D.createAnimation();
-        animations.add(livesCounterAnimation);
         livesCounter3D.resetShapes();
         livesCounterAnimation.play();
+        animations.add(livesCounterAnimation);
     }
 
     private void playLevelRotateAnimation() {
@@ -384,6 +383,7 @@ public class GameLevel3D {
         rotation.setToAngle(360);
         rotation.setInterpolator(Interpolator.LINEAR);
         rotation.play();
+        animations.add(rotation);
     }
 
     public Animation createLevelCompleteAnimation() {
@@ -394,18 +394,16 @@ public class GameLevel3D {
     }
 
     private Animation levelCompleteAnimationBeforeCutScene(int numFlashes) {
-        var animation = new SequentialTransition(
+        return new SequentialTransition(
                 doAfterSec(1.0, () -> theGameLevel().ghosts().forEach(Ghost::hide)),
                 maze3D.mazeFlashAnimation(numFlashes),
                 doAfterSec(2.5, () -> theGameLevel().pac().hide())
         );
-        animations.add(animation);
-        return animation;
     }
 
     private Animation levelCompleteAnimationBeforeNextLevel(int numFlashes) {
         boolean showFlashMessage = randomInt(1, 100) < 25;
-        var animation = new SequentialTransition(
+        return new SequentialTransition(
             Ufx.now(() -> {
                 livesCounter3D().light().setLightOn(false);
                 if (showFlashMessage) {
@@ -422,7 +420,5 @@ public class GameLevel3D {
             }),
             Ufx.doAfterSec(1.5, () -> theSound().playLevelChangedSound())
         );
-        animations.add(animation);
-        return animation;
     }
 }

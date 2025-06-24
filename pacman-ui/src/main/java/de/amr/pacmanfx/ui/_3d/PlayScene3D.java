@@ -49,7 +49,7 @@ import static java.util.Objects.requireNonNull;
  * 3D play scene. Provides different camera perspectives that can be stepped
  * through using keys <code>Alt+LEFT</code> and <code>Alt+RIGHT</code>.
  */
-public class PlayScene3D implements GameScene, ActionBindingSupport, CameraControlledView {
+public class PlayScene3D implements GameScene, ActionBindingSupport, CameraControlledView, AnimationProvider3D {
 
     protected final SubScene subScene3D;
     protected final Group root = new Group();
@@ -66,6 +66,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
     };
 
     protected GameLevel3D level3D;
+    protected List<Animation> animations = new ArrayList<>();
 
     public PlayScene3D() {
         scores3D = new Scores3D(theAssets().text("score.score"), theAssets().text("score.high_score"));
@@ -98,6 +99,11 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
         scores3D.translateXProperty().bind(level3D.root().translateXProperty().add(TS));
         scores3D.translateYProperty().bind(level3D.root().translateYProperty().subtract(3.5 * TS));
         scores3D.translateZProperty().bind(level3D.root().translateZProperty().subtract(3.5 * TS));
+    }
+
+    @Override
+    public List<Animation> animations() {
+        return animations;
     }
 
     @Override
@@ -204,10 +210,11 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
         theSound().stopAll();
         clearActionBindings();
         perspectiveIDPy.unbind();
+        stopAnimations();
         if (level3D != null) {
             level3D.stopAnimations();
+            level3D = null;
         }
-        level3D = null;
     }
 
     @Override
@@ -362,14 +369,15 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
                     // last update before dying animation
                     level3D.pac3D().update(theGameLevel());
                     theGameState().timer().resetIndefiniteTime();
-                    Animation animation = new SequentialTransition(
+                    Animation dyingAnimation = new SequentialTransition(
                         now(theSound()::playPacDeathSound),
                         level3D.pac3D().createDyingAnimation(),
                         pauseSec(1)
                     );
-                    animation.setDelay(Duration.seconds(2));
-                    animation.setOnFinished(e -> theGameController().letCurrentGameStateExpire());
-                    animation.play();
+                    dyingAnimation.setDelay(Duration.seconds(2));
+                    dyingAnimation.setOnFinished(e -> theGameController().letCurrentGameStateExpire());
+                    dyingAnimation.play();
+                    animations.add(dyingAnimation);
                 }
                 case GHOST_DYING ->
                     theSimulationStep().killedGhosts.forEach(ghost -> {
@@ -387,18 +395,19 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
                     level3D.maze3D().door3D().setVisible(false);
                     level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
 
-                    var animation = new SequentialTransition(
+                    var levelCompleteAnimation = new SequentialTransition(
                         Ufx.doAfterSec(3, () -> {
                             perspectiveIDPy.unbind();
                             perspectiveIDPy.set(PerspectiveID.TOTAL);
                         }),
                         level3D.createLevelCompleteAnimation()
                     );
-                    animation.setOnFinished(e -> {
+                    levelCompleteAnimation.setOnFinished(e -> {
                         perspectiveIDPy.bind(PY_3D_PERSPECTIVE);
                         theGameController().letCurrentGameStateExpire();
                     });
-                    animation.play();
+                    levelCompleteAnimation.play();
+                    animations.add(levelCompleteAnimation);
                 }
                 case LEVEL_TRANSITION -> {
                     theGameState().timer().restartSeconds(3);

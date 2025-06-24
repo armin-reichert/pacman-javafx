@@ -9,7 +9,6 @@ import javafx.animation.Animation.Status;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
-import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +19,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * 3D energizer pellet.
  */
-public class Energizer3D implements Eatable3D {
+public class Energizer3D implements Eatable3D, AnimationProvider3D {
 
     private static final double MIN_SCALING = 0.20;
     private static final double MAX_SCALING = 1.00;
@@ -46,25 +45,18 @@ public class Energizer3D implements Eatable3D {
         pumpingAnimation.setToX(MIN_SCALING);
         pumpingAnimation.setToY(MIN_SCALING);
         pumpingAnimation.setToZ(MIN_SCALING);
-        animations.add(pumpingAnimation);
 
         hideAfterSmallDelay = new PauseTransition(Duration.seconds(0.05));
         hideAfterSmallDelay.setOnFinished(e -> shape3D().setVisible(false));
-        animations.add(hideAfterSmallDelay);
     }
 
     public void startPumping() {
         pumpingAnimation.playFromStart();
     }
 
-    public void stopAnimations() {
-        animations.forEach(animation -> {
-            try {
-                animation.stop();
-            } catch (IllegalStateException x) {
-                Logger.warn("Animation could not be stopped (probably embedded in another one)");
-            }
-        });
+    @Override
+    public List<Animation> animations() {
+        return animations;
     }
 
     public void setEatenAnimation(Animation animation) {
@@ -75,8 +67,11 @@ public class Energizer3D implements Eatable3D {
     public void onEaten() {
         pumpingAnimation.stop();
         if (eatenAnimation != null) {
-            new SequentialTransition(hideAfterSmallDelay, eatenAnimation).play();
+            var animation = new SequentialTransition(hideAfterSmallDelay, eatenAnimation);
+            animations.add(animation);
+            animation.play();
         } else {
+            animations.add(hideAfterSmallDelay);
             hideAfterSmallDelay.play();
         }
     }
