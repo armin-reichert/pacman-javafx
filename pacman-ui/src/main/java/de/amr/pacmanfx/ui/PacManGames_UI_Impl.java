@@ -120,11 +120,11 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
         public PacManGames_UI build() {
             validate();
-            theUI = new PacManGames_UI_Impl();
+            theUI = new PacManGames_UI_Impl(stage, width, height);
             theUI.configure(uiConfigClasses);
-            theUI.build(stage, width, height, dashboardIDs);
             models.forEach((variant, model) -> theGameController().registerGame(variant, model));
             theGameController().setEventsEnabled(true);
+            theUI.gameView().configureDashboard(dashboardIDs);
             for (StartPage startPage : startPages) theUI.startPagesView().addStartPage(startPage);
             theUI.startPagesView().selectStartPage(selectedStartPageIndex);
             theUI.startPagesView().currentStartPage()
@@ -205,15 +205,42 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     private final ObjectProperty<GameScene>        currentGameScenePy = new SimpleObjectProperty<>();
 
     private final StackPane rootPane = new StackPane();
-    private Stage stage;
-    private StartPagesView startPagesView;
-    private GameView gameView;
+    private final Stage stage;
+    private final StartPagesView startPagesView;
+    private final GameView gameView;
     private EditorView editorView; // created on first access
 
-    public void build(Stage stage, double width, double height, DashboardID... dashboardIDs) {
+    public PacManGames_UI_Impl(Stage stage, double width, double height) {
         this.stage = requireNonNull(stage);
 
         Scene mainScene = new Scene(rootPane, width, height);
+        stage.setScene(mainScene);
+
+        stage.setMinWidth(280);
+        stage.setMinHeight(360);
+
+        startPagesView = new StartPagesView(this);
+        startPagesView.setBackground(theAssets().background("background.scene"));
+        gameView = new GameView(this, mainScene);
+
+        rootPane.getChildren().add(startPagesView.rootNode());
+
+        {
+            var iconBox = new StatusIconBox(this);
+            StackPane.setAlignment(iconBox, Pos.BOTTOM_LEFT);
+
+            var iconPaused = FontIcon.of(FontAwesomeSolid.PAUSE, 80, STATUS_ICON_COLOR);
+            iconPaused.visibleProperty().bind(Bindings.createBooleanBinding(
+                () -> currentView() == gameView() && GAME_CLOCK.isPaused(),
+                currentViewProperty(), GAME_CLOCK.pausedProperty()));
+            StackPane.setAlignment(iconPaused, Pos.CENTER);
+
+            rootPane.getChildren().addAll(iconPaused, iconBox);
+        }
+
+        GAME_CLOCK.setPausableAction(this::doSimulationStepAndUpdateGameScene);
+        GAME_CLOCK.setPermanentAction(this::drawGameView);
+
         mainScene.widthProperty() .addListener((py, ov, nv) -> gameView.resize());
         mainScene.heightProperty().addListener((py, ov, nv) -> gameView.resize());
         mainScene.addEventFilter(KeyEvent.KEY_PRESSED, theKeyboard()::onKeyPressed);
@@ -233,57 +260,14 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
                 currentView().handleKeyboardInput();
             }
         });
-        stage.setScene(mainScene);
-
-        stage.setMinWidth(280);
-        stage.setMinHeight(360);
-
-        startPagesView = new StartPagesView(this);
-        startPagesView.setBackground(theAssets().background("background.scene"));
-
-        gameView = new GameView(this, mainScene, dashboardIDs);
-
-        rootPane.getChildren().add(startPagesView.rootNode());
-
-        {
-            var iconBox = new StatusIconBox(this);
-            StackPane.setAlignment(iconBox, Pos.BOTTOM_LEFT);
-
-            var iconPaused = FontIcon.of(FontAwesomeSolid.PAUSE, 80, STATUS_ICON_COLOR);
-            iconPaused.visibleProperty().bind(Bindings.createBooleanBinding(
-                    () -> currentView() == gameView() && GAME_CLOCK.isPaused(),
-                    currentViewProperty(), GAME_CLOCK.pausedProperty()));
-            StackPane.setAlignment(iconPaused, Pos.CENTER);
-
-            rootPane.getChildren().addAll(iconPaused, iconBox);
-        }
-
-        GAME_CLOCK.setPausableAction(this::doSimulationStepAndUpdateGameScene);
-        GAME_CLOCK.setPermanentAction(this::drawGameView);
-
         currentViewPy.addListener((py, oldView, newView) -> handleViewChange(oldView, newView));
 
         rootPane.backgroundProperty().bind(currentGameSceneProperty().map(gameScene ->
-                currentGameSceneIsPlayScene3D()
-                        ? theAssets().get("background.play_scene3d")
-                        : theAssets().get("background.scene"))
+            currentGameSceneIsPlayScene3D()
+                ? theAssets().get("background.play_scene3d")
+                : theAssets().get("background.scene"))
         );
     }
-
-    private void handleViewChange(PacManGames_View oldView, PacManGames_View newView) {
-        requireNonNull(newView);
-        if (oldView != null) {
-            oldView.clearActionBindings();
-            theGameEventManager().removeEventListener(oldView);
-        }
-        newView.updateActionBindings();
-        newView.rootNode().requestFocus();
-        stage.titleProperty().bind(newView.title());
-        theGameEventManager().addEventListener(newView);
-
-        rootPane.getChildren().set(0, newView.rootNode());
-    }
-
 
     public void configure(Map<String, Class<? extends PacManGames_UIConfig>> configClassesMap) {
         configClassesMap.forEach((gameVariant, configClass) -> {
@@ -304,6 +288,20 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
             });
             Logger.info("Game scenes for game variant {} created", gameVariant);
         });
+    }
+
+    private void handleViewChange(PacManGames_View oldView, PacManGames_View newView) {
+        requireNonNull(newView);
+        if (oldView != null) {
+            oldView.clearActionBindings();
+            theGameEventManager().removeEventListener(oldView);
+        }
+        newView.updateActionBindings();
+        newView.rootNode().requestFocus();
+        stage.titleProperty().bind(newView.title());
+        theGameEventManager().addEventListener(newView);
+
+        rootPane.getChildren().set(0, newView.rootNode());
     }
 
     public Stage stage() {

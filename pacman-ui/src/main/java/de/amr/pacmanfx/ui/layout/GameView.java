@@ -96,7 +96,7 @@ public class GameView implements PacManGames_View {
 
     private final MiniGameView miniGameView;
 
-    public GameView(PacManGames_UI ui, Scene parentScene, DashboardID... dashboardIDs) {
+    public GameView(PacManGames_UI ui, Scene parentScene) {
         this.ui = requireNonNull(ui);
         this.parentScene = requireNonNull(parentScene);
         this.miniGameView = new MiniGameView();
@@ -104,7 +104,6 @@ public class GameView implements PacManGames_View {
         configureMiniGameView();
         configureCanvasContainer();
         createLayers();
-        createDashboard(dashboardIDs);
         configurePropertyBindings();
 
         ui.currentGameSceneProperty().addListener((py, ov, gameScene) -> {
@@ -145,6 +144,15 @@ public class GameView implements PacManGames_View {
         bindAction(ACTION_TOGGLE_IMMUNITY, GLOBAL_ACTION_BINDINGS);
         bindAction(ACTION_TOGGLE_PIP_VISIBILITY, GLOBAL_ACTION_BINDINGS);
         bindAction(ACTION_TOGGLE_PLAY_SCENE_2D_3D, GLOBAL_ACTION_BINDINGS);
+    }
+
+    public void configureDashboard(DashboardID... dashboardIDS) {
+        dashboard.addInfoBox(DashboardID.README);
+        for (DashboardID id : dashboardIDS) {
+            if (id != DashboardID.README) {
+                dashboard.addInfoBox(id);
+            }
+        }
     }
 
     public void showHelp() {
@@ -272,17 +280,6 @@ public class GameView implements PacManGames_View {
         }
     }
 
-    private void createDashboard(DashboardID... ids) {
-        if (ids.length > 0) {
-            dashboard.addInfoBox(DashboardID.README);
-            for (DashboardID id : ids) {
-                if (id != DashboardID.README) {
-                    dashboard.addInfoBox(id);
-                }
-            }
-        }
-    }
-
     public void updateDashboard() {
         InfoBox[] infoBoxes = dashboard.infoBoxes()
                 .filter(infoBox -> !(infoBox instanceof InfoBoxReadmeFirst infoBoxReadmeFirst) || !infoBoxReadmeFirst.isRead())
@@ -311,7 +308,7 @@ public class GameView implements PacManGames_View {
         final GameScene nextGameScene = uiConfig.selectGameScene(theGame(), theGameState());
         if (nextGameScene == null) {
             String errorMessage = " Katastrophe! Could not determine game scene!";
-            theUI().showFlashMessageSec(60, errorMessage);
+            ui.showFlashMessageSec(60, errorMessage);
             return;
         }
         final GameScene currentGameScene = ui.currentGameScene().orElse(null);
@@ -380,8 +377,8 @@ public class GameView implements PacManGames_View {
         miniGameView.heightProperty().bind(PY_PIP_HEIGHT);
         miniGameView.opacityProperty().bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
         miniGameView.visibleProperty().bind(Bindings.createObjectBinding(
-            () -> PY_PIP_ON.get() && theUI().currentGameSceneIsPlayScene3D(),
-            PY_PIP_ON, theUI().currentGameSceneProperty()
+            () -> PY_PIP_ON.get() && ui.currentGameSceneIsPlayScene3D(),
+            PY_PIP_ON, ui.currentGameSceneProperty()
         ));
 
     }
