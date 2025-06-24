@@ -50,7 +50,7 @@ import static java.util.Objects.requireNonNull;
  * 3D play scene. Provides different camera perspectives that can be stepped
  * through using keys <code>Alt+LEFT</code> and <code>Alt+RIGHT</code>.
  */
-public class PlayScene3D implements GameScene, ActionBindingSupport, CameraControlledView, AnimationRegistry {
+public class PlayScene3D implements GameScene, ActionBindingSupport, CameraControlledView {
 
     protected final SubScene subScene3D;
     protected final Group root = new Group();
@@ -67,7 +67,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
     };
 
     protected GameLevel3D level3D;
-    protected Map<String, Animation> animationMap = new WeakHashMap<>();
+    protected AnimationRegistry animationRegistry = new AnimationRegistry();
 
     public PlayScene3D() {
         scores3D = new Scores3D(theAssets().text("score.score"), theAssets().text("score.high_score"));
@@ -94,17 +94,12 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
     protected Perspective perspective() { return perspectiveMap.get(perspectiveIDPy.get()); }
 
     protected void replaceGameLevel3D() {
-        level3D = new GameLevel3D(this);
+        level3D = new GameLevel3D(animationRegistry);
         level3D.addLevelCounter();
         root.getChildren().set(root.getChildren().size() - 1, level3D.root());
         scores3D.translateXProperty().bind(level3D.root().translateXProperty().add(TS));
         scores3D.translateYProperty().bind(level3D.root().translateYProperty().subtract(3.5 * TS));
         scores3D.translateZProperty().bind(level3D.root().translateZProperty().subtract(3.5 * TS));
-    }
-
-    @Override
-    public Map<String, Animation> registeredAnimations() {
-        return animationMap;
     }
 
     @Override
@@ -211,7 +206,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
         theSound().stopAll();
         clearActionBindings();
         perspectiveIDPy.unbind();
-        stopRegisteredAnimations();
+        animationRegistry.stopRegisteredAnimations();
         level3D = null;
     }
 
@@ -362,7 +357,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
                     level3D.playLivesCounterAnimation();
                 }
                 case PACMAN_DYING -> {
-                    level3D.stopRegisteredAnimations();
+                    animationRegistry.stopRegisteredAnimations();
                     theSound().stopAll();
                     // last update before dying animation
                     level3D.pac3D().update(theGameLevel());
@@ -374,7 +369,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
                     );
                     dyingAnimation.setDelay(Duration.seconds(2));
                     dyingAnimation.setOnFinished(e -> theGameController().letCurrentGameStateExpire());
-                    registerAndPlayAnimation("PacManDying_Animation", dyingAnimation);
+                    animationRegistry.registerAnimationAndPlay("PacManDying_Animation", dyingAnimation);
                 }
                 case GHOST_DYING ->
                     theSimulationStep().killedGhosts.forEach(ghost -> {
@@ -385,8 +380,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
                 case LEVEL_COMPLETE -> {
                     theGameState().timer().resetIndefiniteTime(); // expires when animation ends
                     theSound().stopAll();
-
-                    level3D.stopRegisteredAnimations();
+                    animationRegistry.stopRegisteredAnimations();
                     level3D.pellets3D().forEach(Pellet3D::onEaten);
                     level3D.energizers3D().forEach(Energizer3D::onEaten);
                     level3D.maze3D().door3D().setVisible(false);
@@ -403,7 +397,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
                         perspectiveIDPy.bind(PY_3D_PERSPECTIVE);
                         theGameController().letCurrentGameStateExpire();
                     });
-                    registerAndPlayAnimation("LevelComplete_Animation", levelCompleteAnimation);
+                    animationRegistry.registerAnimationAndPlay("LevelComplete_Animation", levelCompleteAnimation);
                 }
                 case LEVEL_TRANSITION -> {
                     theGameState().timer().restartSeconds(3);
@@ -414,7 +408,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
                 case GAME_OVER -> {
                     // delay state exit for 3 seconds:
                     theGameState().timer().restartSeconds(3);
-                    level3D.stopRegisteredAnimations();
+                    animationRegistry.stopRegisteredAnimations();
                     level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
                     if (!theGameLevel().isDemoLevel() && randomInt(0, 100) < 25) {
                         theUI().showFlashMessageSec(3, theAssets().localizedGameOverMessage());

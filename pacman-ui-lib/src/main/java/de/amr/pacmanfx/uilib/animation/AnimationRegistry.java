@@ -8,36 +8,39 @@ import javafx.animation.Animation;
 import org.tinylog.Logger;
 
 import java.util.Map;
+import java.util.WeakHashMap;
 
 /**
  * 3D entities with animations implement this interface such that all potentially running animations can be stopped
  * when the containing 3D scene ends, e.g. when the quit action is executed.
  */
-public interface AnimationRegistry {
+public class AnimationRegistry {
 
-    Map<String, Animation> registeredAnimations();
+    private final Map<String, Animation> animationMap = new WeakHashMap<>();
 
-     default void registerAndPlayAnimation(String name, Animation animation) {
-        registeredAnimations().put(name, animation);
-        animation.playFromStart();
-        Logger.info("Playing animation '{}'", name);
-     }
+    public void registerAnimation(String name, Animation animation) {
+        animationMap.put(name, animation);
+    }
 
-     default void stopRegisteredAnimations() {
-        Map<String, Animation> originalMap = registeredAnimations();
+    public void registerAnimationAndPlay(String name, Animation animation) {
+        animationMap.put(name, animation);
+        animation.play();
+        Logger.info("Playing animation '{}' ({})", name, animation);
+    }
+
+    public void stopRegisteredAnimations() {
         @SuppressWarnings("unchecked") Map.Entry<String, Animation>[] copy
-                = (Map.Entry<String, Animation>[]) originalMap.entrySet().toArray(Map.Entry[]::new);
-        String callingClass = getClass().getSimpleName();
+                = (Map.Entry<String, Animation>[]) animationMap.entrySet().toArray(Map.Entry[]::new);
         for (Map.Entry<String, Animation> entry : copy) {
             String name = entry.getKey();
             Animation animation = entry.getValue();
             try {
                 animation.stop();
-                Logger.info("{}: Stopped animation '{}' ({})", callingClass, name, animation);
+                Logger.info("Stopped animation '{}' ({})", name, animation);
             } catch (IllegalStateException x) {
-                Logger.warn("{}: Could not stop (embedded?) animation '{}' ({})", callingClass, name, animation);
+                Logger.warn("Could not stop (embedded?) animation '{}' ({})", name, animation);
             }
-            registeredAnimations().remove(name);
+            animationMap.remove(name);
         }
     }
 }

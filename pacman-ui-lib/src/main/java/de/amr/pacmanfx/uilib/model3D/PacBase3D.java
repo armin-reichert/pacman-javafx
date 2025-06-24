@@ -20,9 +20,6 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.util.Map;
-import java.util.Set;
-
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
@@ -30,7 +27,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Common base class for Pac-Man and Ms. Pac-Man 3D representations.
  */
-public abstract class PacBase3D implements AnimationRegistry {
+public abstract class PacBase3D {
 
     public static Animation createChewingAnimation(Node jaw) {
         var closed = new KeyValue[] {
@@ -52,7 +49,7 @@ public abstract class PacBase3D implements AnimationRegistry {
         return animation;
     }
 
-    protected final AnimationRegistry parentAnimationRegistry;
+    protected final AnimationRegistry animationRegistry;
     protected final Pac pac;
     protected final PointLight light = new PointLight();
     protected final Group root = new Group();
@@ -70,8 +67,8 @@ public abstract class PacBase3D implements AnimationRegistry {
     protected abstract void stopMovementAnimation();
     protected abstract void updateMovementAnimation();
 
-    protected PacBase3D(AnimationRegistry parentAnimationRegistry, Pac pac, double size, AssetStorage assets, String ans) {
-        this.parentAnimationRegistry = requireNonNull(parentAnimationRegistry);
+    protected PacBase3D(AnimationRegistry animationRegistry, Pac pac, double size, AssetStorage assets, String ans) {
+        this.animationRegistry = requireNonNull(animationRegistry);
         this.pac = requireNonNull(pac);
         this.size = size;
 
@@ -97,11 +94,6 @@ public abstract class PacBase3D implements AnimationRegistry {
         light.translateXProperty().bind(root.translateXProperty());
         light.translateYProperty().bind(root.translateYProperty());
         light.setTranslateZ(-30);
-    }
-
-    @Override
-    public Map<String, Animation> registeredAnimations() {
-        return parentAnimationRegistry.registeredAnimations();
     }
 
     public Node root() {

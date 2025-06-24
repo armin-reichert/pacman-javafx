@@ -23,8 +23,6 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.util.Map;
-
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
@@ -33,19 +31,19 @@ import static de.amr.pacmanfx.uilib.Ufx.opaqueColor;
 import static de.amr.pacmanfx.uilib.Ufx.pauseSec;
 import static java.util.Objects.requireNonNull;
 
-public class Maze3D extends Group implements AnimationRegistry {
+public class Maze3D extends Group {
 
     private final DoubleProperty obstacleBaseHeightPy = new SimpleDoubleProperty(Settings3D.OBSTACLE_3D_BASE_HEIGHT);
     private final DoubleProperty wallOpacityPy = new SimpleDoubleProperty(1);
     private final DoubleProperty houseBaseHeightPy = new SimpleDoubleProperty(Settings3D.HOUSE_3D_BASE_HEIGHT);
     private final BooleanProperty houseLightOnPy = new SimpleBooleanProperty(false);
 
-    private final AnimationRegistry parentAnimationRegistry;
+    private final AnimationRegistry animationRegistry;
     private final ArcadeHouse3D house3D;
     private final MaterialColorAnimation wallColorFlashingAnimation;
 
-    public Maze3D(GameLevel level, WorldMapColorScheme colorScheme, AnimationRegistry parentAnimationRegistry) {
-        this.parentAnimationRegistry = requireNonNull(parentAnimationRegistry);
+    public Maze3D(GameLevel level, WorldMapColorScheme colorScheme, AnimationRegistry animationRegistry) {
+        this.animationRegistry = requireNonNull(animationRegistry);
 
         Logger.info("Build 3D maze for map with URL '{}'", level.worldMap().url());
 
@@ -113,11 +111,6 @@ public class Maze3D extends Group implements AnimationRegistry {
         return house3D.door3D();
     }
 
-    @Override
-    public Map<String, Animation> registeredAnimations() {
-        return parentAnimationRegistry.registeredAnimations();
-    }
-
     private boolean isWorldBorder(WorldMap worldMap, Obstacle obstacle) {
         Vector2i start = obstacle.startPoint();
         if (obstacle.isClosed()) {
@@ -128,7 +121,7 @@ public class Maze3D extends Group implements AnimationRegistry {
     }
 
     public void playWallColorFlashingAnimation() {
-        registerAndPlayAnimation("MazeWallColorFlashing_Animation", wallColorFlashingAnimation);
+        animationRegistry.registerAnimationAndPlay("MazeWallColorFlashing_Animation", wallColorFlashingAnimation);
     }
 
     public void stopWallColorFlashingAnimation() {

@@ -36,7 +36,9 @@ import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -50,7 +52,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * 3D representation of game level.
  */
-public class GameLevel3D implements AnimationRegistry {
+public class GameLevel3D {
 
     private static boolean isInsideWorldMap(WorldMap worldMap, double x, double y) {
         return 0 <= x && x < worldMap.numCols() * TS && 0 <= y && y < worldMap.numRows() * TS;
@@ -80,10 +82,10 @@ public class GameLevel3D implements AnimationRegistry {
     private MessageView messageView;
     private Bonus3D bonus3D;
 
-    private final AnimationRegistry parentAnimationRegistry;
+    private final AnimationRegistry animationRegistry;
 
-    public GameLevel3D(AnimationRegistry parentAnimationRegistry) {
-        this.parentAnimationRegistry = requireNonNull(parentAnimationRegistry);
+    public GameLevel3D(AnimationRegistry animationRegistry) {
+        this.animationRegistry = requireNonNull(animationRegistry);
         createAmbientLight();
         createPac3D();
         createGhosts3D();
@@ -112,11 +114,6 @@ public class GameLevel3D implements AnimationRegistry {
             .filter(Shape3D.class::isInstance)
             .map(Shape3D.class::cast)
             .forEach(shape3D -> shape3D.drawModeProperty().bind(PY_3D_DRAW_MODE));
-    }
-
-    @Override
-    public Map<String, Animation> registeredAnimations() {
-        return parentAnimationRegistry.registeredAnimations();
     }
 
     public Maze3D maze3D() { return maze3D; }
@@ -171,7 +168,7 @@ public class GameLevel3D implements AnimationRegistry {
     }
 
     private void createPac3D() {
-        pac3D = theUI().configuration().createPac3D(this, theGameLevel().pac());
+        pac3D = theUI().configuration().createPac3D(animationRegistry, theGameLevel().pac());
         Model3D.bindDrawMode(pac3D.root(), PY_3D_DRAW_MODE);
     }
 
@@ -182,7 +179,7 @@ public class GameLevel3D implements AnimationRegistry {
     }
 
     private Ghost3D_Appearance createGhost3D(Ghost ghost, int numFlashes) {
-        var ghost3D = new Ghost3D_Appearance(this, theAssets(), theUI().configuration().assetNamespace(),
+        var ghost3D = new Ghost3D_Appearance(animationRegistry, theAssets(), theUI().configuration().assetNamespace(),
             new MeshView(Model3DRepository.get().ghostDressMesh()),
             new MeshView(Model3DRepository.get().ghostPupilsMesh()),
             new MeshView(Model3DRepository.get().ghostEyeballsMesh()),
@@ -195,7 +192,7 @@ public class GameLevel3D implements AnimationRegistry {
         final WorldMap worldMap = theGameLevel().worldMap();
         final WorldMapColorScheme colorScheme = theUI().configuration().worldMapColorScheme(worldMap);
         floor3D = createFloor3D(worldMap.numCols() * TS, worldMap.numRows() * TS);
-        maze3D = new Maze3D(theGameLevel(), colorScheme, parentAnimationRegistry);
+        maze3D = new Maze3D(theGameLevel(), colorScheme, animationRegistry);
         mazeGroup.getChildren().addAll(floor3D, maze3D);
         createFood3D(colorScheme);
     }
@@ -231,7 +228,7 @@ public class GameLevel3D implements AnimationRegistry {
 
     private Energizer3D createEnergizer3D(Vector2i tile, PhongMaterial material) {
         var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -2* Settings3D.ENERGIZER_3D_RADIUS);
-        var energizer3D = new Energizer3D(Settings3D.ENERGIZER_3D_RADIUS, this);
+        var energizer3D = new Energizer3D(Settings3D.ENERGIZER_3D_RADIUS, animationRegistry);
         energizer3D.setTile(tile);
         energizer3D.shape3D().setTranslateX(center.getX());
         energizer3D.shape3D().setTranslateY(center.getY());
@@ -304,7 +301,7 @@ public class GameLevel3D implements AnimationRegistry {
             spinning.setAxis(Rotate.X_AXIS);
             spinning.setByAngle(360);
             spinning.setRate(n % 2 == 0 ? 1 : -1);
-            registerAndPlayAnimation("LevelCounter_Spinning", spinning);
+            animationRegistry.registerAnimationAndPlay("LevelCounter_Spinning", spinning);
 
             levelCounter3D.getChildren().add(cube);
             n += 1;
@@ -343,7 +340,7 @@ public class GameLevel3D implements AnimationRegistry {
             new PauseTransition(Duration.seconds(displaySeconds)),
             moveDownAnimation
         );
-        registerAndPlayAnimation("LevelMessage_Movement", animation);
+        animationRegistry.registerAnimationAndPlay("LevelMessage_Movement", animation);
     }
 
     public void updateBonus3D(Bonus bonus) {
@@ -361,7 +358,7 @@ public class GameLevel3D implements AnimationRegistry {
     public void playLivesCounterAnimation() {
         var livesCounterAnimation = livesCounter3D.createAnimation();
         livesCounter3D.resetShapes();
-        registerAndPlayAnimation("LivesCounter_Animation", livesCounterAnimation);
+        animationRegistry.registerAnimationAndPlay("LivesCounter_Animation", livesCounterAnimation);
     }
 
     private void playLevelRotateAnimation() {
@@ -370,7 +367,7 @@ public class GameLevel3D implements AnimationRegistry {
         rotation.setFromAngle(0);
         rotation.setToAngle(360);
         rotation.setInterpolator(Interpolator.LINEAR);
-        registerAndPlayAnimation("LevelRotate_Animation", rotation);
+        animationRegistry.registerAnimationAndPlay("LevelRotate_Animation", rotation);
     }
 
     public Animation createLevelCompleteAnimation() {
@@ -398,11 +395,11 @@ public class GameLevel3D implements AnimationRegistry {
                 }
             }),
             Ufx.doAfterSec(1.0, () -> theGameLevel().ghosts().forEach(Ghost::hide)),
-            Ufx.doAfterSec(0.5, () -> registerAndPlayAnimation("MazeFlashing_Animation", maze3D.createMazeFlashAnimation(numFlashes))),
+            Ufx.doAfterSec(0.5, () -> animationRegistry.registerAnimationAndPlay("MazeFlashing_Animation", maze3D.createMazeFlashAnimation(numFlashes))),
             Ufx.doAfterSec(1.5, () -> theGameLevel().pac().hide()),
             Ufx.doAfterSec(0.5, this::playLevelRotateAnimation),
             Ufx.doAfterSec(2.0, () -> {
-                registerAndPlayAnimation("MazeWallsDisappearing_Animation", maze3D.createWallsDisappearAnimation(2.0));
+                animationRegistry.registerAnimationAndPlay("MazeWallsDisappearing_Animation", maze3D.createWallsDisappearAnimation(2.0));
                 theSound().playLevelCompleteSound();
             }),
             Ufx.doAfterSec(1.5, () -> theSound().playLevelChangedSound())

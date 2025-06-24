@@ -11,15 +11,13 @@ import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
 
-import java.util.Map;
-
 import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static java.util.Objects.requireNonNull;
 
 /**
  * 3D energizer pellet.
  */
-public class Energizer3D implements Eatable3D, AnimationRegistry {
+public class Energizer3D implements Eatable3D {
 
     private static final double MIN_SCALING = 0.20;
     private static final double MAX_SCALING = 1.00;
@@ -29,10 +27,10 @@ public class Energizer3D implements Eatable3D, AnimationRegistry {
     private final Animation hideAfterSmallDelay;
     private Animation eatenAnimation;
 
-    private final AnimationRegistry parentAnimationRegistry;
+    private final AnimationRegistry animationRegistry;
 
-    public Energizer3D(double radius, AnimationRegistry parentAnimationRegistry) {
-        this.parentAnimationRegistry = requireNonNull(parentAnimationRegistry);
+    public Energizer3D(double radius, AnimationRegistry animationRegistry) {
+        this.animationRegistry = requireNonNull(animationRegistry);
         requireNonNegative(radius, "Energizer radius must be positive but is %f");
         sphere = new Sphere(radius);
         // 3 full blinks per second
@@ -55,11 +53,6 @@ public class Energizer3D implements Eatable3D, AnimationRegistry {
         pumpingAnimation.playFromStart();
     }
 
-    @Override
-    public Map<String, Animation> registeredAnimations() {
-        return parentAnimationRegistry.registeredAnimations();
-    }
-
     public void setEatenAnimation(Animation animation) {
         this.eatenAnimation = requireNonNull(animation);
     }
@@ -69,9 +62,9 @@ public class Energizer3D implements Eatable3D, AnimationRegistry {
         pumpingAnimation.stop();
         if (eatenAnimation != null) {
             var animation = new SequentialTransition(hideAfterSmallDelay, eatenAnimation);
-            registerAndPlayAnimation("Energizer_HideAndEat", animation);
+            animationRegistry.registerAnimationAndPlay("Energizer_HideAndEat", animation);
         } else {
-            registerAndPlayAnimation("Energizer_Hide", hideAfterSmallDelay);
+            animationRegistry.registerAnimationAndPlay("Energizer_Hide", hideAfterSmallDelay);
         }
     }
 
