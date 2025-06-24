@@ -11,8 +11,7 @@ import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static java.util.Objects.requireNonNull;
@@ -30,9 +29,10 @@ public class Energizer3D implements Eatable3D, AnimationProvider {
     private final Animation hideAfterSmallDelay;
     private Animation eatenAnimation;
 
-    private final List<Animation> animations = new ArrayList<>();
+    private final AnimationProvider parentAnimationProvider;
 
-    public Energizer3D(double radius) {
+    public Energizer3D(double radius, AnimationProvider parentAnimationProvider) {
+        this.parentAnimationProvider = requireNonNull(parentAnimationProvider);
         requireNonNegative(radius, "Energizer radius must be positive but is %f");
         sphere = new Sphere(radius);
         // 3 full blinks per second
@@ -56,8 +56,8 @@ public class Energizer3D implements Eatable3D, AnimationProvider {
     }
 
     @Override
-    public List<Animation> animations() {
-        return animations;
+    public Set<Animation> registeredAnimations() {
+        return parentAnimationProvider.registeredAnimations();
     }
 
     public void setEatenAnimation(Animation animation) {
@@ -69,11 +69,9 @@ public class Energizer3D implements Eatable3D, AnimationProvider {
         pumpingAnimation.stop();
         if (eatenAnimation != null) {
             var animation = new SequentialTransition(hideAfterSmallDelay, eatenAnimation);
-            animations.add(animation);
-            animation.play();
+            playRegisteredAnimation(animation);
         } else {
-            animations.add(hideAfterSmallDelay);
-            hideAfterSmallDelay.play();
+            playRegisteredAnimation(hideAfterSmallDelay);
         }
     }
 

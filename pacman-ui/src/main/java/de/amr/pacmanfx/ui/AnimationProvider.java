@@ -7,8 +7,8 @@ package de.amr.pacmanfx.ui;
 import javafx.animation.Animation;
 import org.tinylog.Logger;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 3D entities with animations implement this interface such that all potentially running animations can be stopped
@@ -16,16 +16,24 @@ import java.util.List;
  */
 public interface AnimationProvider {
 
-    Collection<Animation> animations();
+    Set<Animation> registeredAnimations();
 
-     default void stopAnimations() {
-        animations().forEach(animation -> {
+     default <T extends Animation> T playRegisteredAnimation(T animation) {
+        registeredAnimations().add(animation);
+        animation.playFromStart();
+        return animation;
+     }
+
+     default void stopActiveAnimations() {
+        Set<Animation> copy = new HashSet<>(registeredAnimations());
+        copy.forEach(animation -> {
             try {
                 animation.stop();
                 Logger.info("{}: Animation {} stopped", getClass().getSimpleName(), animation);
             } catch (IllegalStateException x) {
                 Logger.warn("{}: Animation could not be stopped (embedded?)", getClass().getSimpleName());
             }
+            registeredAnimations().remove(animation);
         });
     }
 }

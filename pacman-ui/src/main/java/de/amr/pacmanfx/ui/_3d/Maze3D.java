@@ -23,7 +23,7 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.util.Collection;
+import java.util.Set;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
@@ -106,8 +106,8 @@ public class Maze3D extends Group implements AnimationProvider {
     }
 
     @Override
-    public Collection<Animation> animations() {
-        return parentAnimationProvider.animations();
+    public Set<Animation> registeredAnimations() {
+        return parentAnimationProvider.registeredAnimations();
     }
 
     private boolean isWorldBorder(WorldMap worldMap, Obstacle obstacle) {
@@ -120,8 +120,7 @@ public class Maze3D extends Group implements AnimationProvider {
     }
 
     public void playWallColorFlashingAnimation() {
-        wallColorFlashingAnimation.play();
-        animations().add(wallColorFlashingAnimation);
+        playRegisteredAnimation(wallColorFlashingAnimation);
     }
 
     public void stopWallColorFlashingAnimation() {

@@ -36,10 +36,7 @@ import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -118,13 +115,13 @@ public class GameLevel3D implements AnimationProvider {
     }
 
     @Override
-    public Collection<Animation> animations() {
-        return parentAnimationProvider.animations();
+    public Set<Animation> registeredAnimations() {
+        return parentAnimationProvider.registeredAnimations();
     }
 
     @Override
-    public void stopAnimations() {
-        energizers3D().forEach(Energizer3D::stopAnimations);
+    public void stopActiveAnimations() {
+        energizers3D().forEach(Energizer3D::stopActiveAnimations);
         maze3D.stopWallColorFlashingAnimation();
     }
 
@@ -240,7 +237,7 @@ public class GameLevel3D implements AnimationProvider {
 
     private Energizer3D createEnergizer3D(Vector2i tile, PhongMaterial material) {
         var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -2* Settings3D.ENERGIZER_3D_RADIUS);
-        var energizer3D = new Energizer3D(Settings3D.ENERGIZER_3D_RADIUS);
+        var energizer3D = new Energizer3D(Settings3D.ENERGIZER_3D_RADIUS, this);
         energizer3D.setTile(tile);
         energizer3D.shape3D().setTranslateX(center.getX());
         energizer3D.shape3D().setTranslateY(center.getY());
@@ -313,9 +310,7 @@ public class GameLevel3D implements AnimationProvider {
             spinning.setAxis(Rotate.X_AXIS);
             spinning.setByAngle(360);
             spinning.setRate(n % 2 == 0 ? 1 : -1);
-            spinning.play();
-
-            animations().add(spinning);
+            playRegisteredAnimation(spinning);
 
             levelCounter3D.getChildren().add(cube);
             n += 1;
@@ -354,8 +349,7 @@ public class GameLevel3D implements AnimationProvider {
             new PauseTransition(Duration.seconds(displaySeconds)),
             moveDownAnimation
         );
-        animation.play();
-        animations().add(animation);
+        playRegisteredAnimation(animation);
     }
 
     public void updateBonus3D(Bonus bonus) {
@@ -373,8 +367,7 @@ public class GameLevel3D implements AnimationProvider {
     public void playLivesCounterAnimation() {
         var livesCounterAnimation = livesCounter3D.createAnimation();
         livesCounter3D.resetShapes();
-        livesCounterAnimation.play();
-        animations().add(livesCounterAnimation);
+        playRegisteredAnimation(livesCounterAnimation);
     }
 
     private void playLevelRotateAnimation() {
@@ -383,8 +376,7 @@ public class GameLevel3D implements AnimationProvider {
         rotation.setFromAngle(0);
         rotation.setToAngle(360);
         rotation.setInterpolator(Interpolator.LINEAR);
-        rotation.play();
-        animations().add(rotation);
+        playRegisteredAnimation(rotation);
     }
 
     public Animation createLevelCompleteAnimation() {

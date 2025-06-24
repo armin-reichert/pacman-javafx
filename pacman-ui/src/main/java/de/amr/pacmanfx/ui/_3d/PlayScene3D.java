@@ -67,7 +67,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
     };
 
     protected GameLevel3D level3D;
-    protected List<Animation> animations = new ArrayList<>();
+    protected Set<Animation> animations = Collections.newSetFromMap(new WeakHashMap<>());
 
     public PlayScene3D() {
         scores3D = new Scores3D(theAssets().text("score.score"), theAssets().text("score.high_score"));
@@ -103,7 +103,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
     }
 
     @Override
-    public List<Animation> animations() {
+    public Set<Animation> registeredAnimations() {
         return animations;
     }
 
@@ -211,9 +211,9 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
         theSound().stopAll();
         clearActionBindings();
         perspectiveIDPy.unbind();
-        stopAnimations();
+        stopActiveAnimations();
         if (level3D != null) {
-            level3D.stopAnimations();
+            level3D.stopActiveAnimations();
             level3D = null;
         }
     }
@@ -365,7 +365,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
                     level3D.playLivesCounterAnimation();
                 }
                 case PACMAN_DYING -> {
-                    level3D.stopAnimations();
+                    level3D.stopActiveAnimations();
                     theSound().stopAll();
                     // last update before dying animation
                     level3D.pac3D().update(theGameLevel());
@@ -390,7 +390,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
                     theGameState().timer().resetIndefiniteTime(); // expires when animation ends
                     theSound().stopAll();
 
-                    level3D.stopAnimations();
+                    level3D.stopActiveAnimations();
                     level3D.pellets3D().forEach(Pellet3D::onEaten);
                     level3D.energizers3D().forEach(Energizer3D::onEaten);
                     level3D.maze3D().door3D().setVisible(false);
@@ -419,7 +419,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
                 case GAME_OVER -> {
                     // delay state exit for 3 seconds:
                     theGameState().timer().restartSeconds(3);
-                    level3D.stopAnimations();
+                    level3D.stopActiveAnimations();
                     level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
                     if (!theGameLevel().isDemoLevel() && randomInt(0, 100) < 25) {
                         theUI().showFlashMessageSec(3, theAssets().localizedGameOverMessage());
