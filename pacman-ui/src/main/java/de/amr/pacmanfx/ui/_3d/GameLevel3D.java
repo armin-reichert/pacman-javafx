@@ -356,11 +356,11 @@ public class GameLevel3D {
     public Animation createLevelCompleteAnimation() {
         int numFlashes = theGameLevel().data().numFlashes();
         return theGame().cutSceneNumber(theGameLevel().number()).isPresent()
-                ? levelTransformationBeforeIntermission(numFlashes)
-                : levelTransformation(numFlashes);
+                ? levelCompleteAnimationBeforeCutScene(numFlashes)
+                : levelCompleteAnimationBeforeNextLevel(numFlashes);
     }
 
-    private Animation levelTransformationBeforeIntermission(int numFlashes) {
+    private Animation levelCompleteAnimationBeforeCutScene(int numFlashes) {
         return new SequentialTransition(
                 doAfterSec(1.0, () -> theGameLevel().ghosts().forEach(Ghost::hide)),
                 maze3D.mazeFlashAnimation(numFlashes),
@@ -368,23 +368,24 @@ public class GameLevel3D {
         );
     }
 
-    private Animation levelTransformation(int numFlashes) {
-        return new Timeline(
-            new KeyFrame(Duration.ZERO, e -> {
+    private Animation levelCompleteAnimationBeforeNextLevel(int numFlashes) {
+        boolean showFlashMessage = randomInt(1, 100) < 25;
+        return new SequentialTransition(
+            Ufx.now(() -> {
                 livesCounter3D().light().setLightOn(false);
-                if (randomInt(1, 100) < 25) {
+                if (showFlashMessage) {
                     theUI().showFlashMessageSec(3, theAssets().localizedLevelCompleteMessage(theGameLevel().number()));
                 }
             }),
-            new KeyFrame(Duration.seconds(1.0), e -> theGameLevel().ghosts().forEach(Ghost::hide)),
-            new KeyFrame(Duration.seconds(1.5), e -> maze3D.mazeFlashAnimation(numFlashes).play()),
-            new KeyFrame(Duration.seconds(4.5), e -> theGameLevel().pac().hide()),
-            new KeyFrame(Duration.seconds(5.0), e -> playLevelRotateAnimation()),
-            new KeyFrame(Duration.seconds(7.0), e -> {
+            Ufx.doAfterSec(1.0, () -> theGameLevel().ghosts().forEach(Ghost::hide)),
+            Ufx.doAfterSec(0.5, () -> maze3D.mazeFlashAnimation(numFlashes).play()),
+            Ufx.doAfterSec(1.5, () -> theGameLevel().pac().hide()),
+            Ufx.doAfterSec(0.5, this::playLevelRotateAnimation),
+            Ufx.doAfterSec(2.0, () -> {
                 maze3D.wallsDisappearAnimation(2.0).play();
                 theSound().playLevelCompleteSound();
             }),
-            new KeyFrame(Duration.seconds(9.5), e -> theSound().playLevelChangedSound())
+            Ufx.doAfterSec(1.5, () -> theSound().playLevelChangedSound())
         );
     }
 
