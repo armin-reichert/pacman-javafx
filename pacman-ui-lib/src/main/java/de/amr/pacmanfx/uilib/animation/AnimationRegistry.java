@@ -7,6 +7,8 @@ package de.amr.pacmanfx.uilib.animation;
 import javafx.animation.Animation;
 import org.tinylog.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -29,9 +31,7 @@ public class AnimationRegistry {
     }
 
     public void stopAll() {
-        @SuppressWarnings("unchecked") Map.Entry<String, Animation>[] copy
-                = (Map.Entry<String, Animation>[]) animationMap.entrySet().toArray(Map.Entry[]::new);
-        for (Map.Entry<String, Animation> entry : copy) {
+        for (Map.Entry<String, Animation> entry : new ArrayList<>(animationMap.entrySet())) {
             String name = entry.getKey();
             Animation animation = entry.getValue();
             try {
