@@ -8,8 +8,10 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.ui.AnimationProvider;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.model3D.Ghost3D;
+import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.beans.property.ObjectProperty;
@@ -22,6 +24,8 @@ import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
+
+import java.util.Set;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
@@ -38,7 +42,7 @@ import static java.util.Objects.requireNonNull;
  * <li>{@link Appearance#VALUE}: showing eaten ghost's value.
  * </ul>
  */
-public class Ghost3D_Appearance extends Group {
+public class Ghost3D_Appearance extends Group implements AnimationProvider {
 
     public enum Appearance {NORMAL, FRIGHTENED, FLASHING, EATEN, VALUE}
 
@@ -47,6 +51,7 @@ public class Ghost3D_Appearance extends Group {
         protected void invalidated() { onAppearanceChanged(getValue()); }
     };
 
+    private final AnimationProvider parentAnimationProvider;
     private final Ghost ghost;
     private final Ghost3D ghost3D;
     private final Box numberBox;
@@ -55,21 +60,22 @@ public class Ghost3D_Appearance extends Group {
     private final int numFlashes;
     private RotateTransition brakeAnimation;
 
-    public Ghost3D_Appearance(AssetStorage assets, String assetPrefix,
-        Shape3D dressShape, Shape3D pupilsShape, Shape3D eyeballsShape,
-        Ghost ghost, double size, int numFlashes)
+    public Ghost3D_Appearance(
+            AnimationProvider parentAnimationProvider,
+            AssetStorage assets, String assetPrefix,
+            Shape3D dressShape, Shape3D pupilsShape, Shape3D eyeballsShape,
+            Ghost ghost, double size, int numFlashes)
     {
         requireNonNull(assets);
         requireNonNull(assetPrefix);
         requireNonNull(dressShape);
         requireNonNull(pupilsShape);
         requireNonNull(eyeballsShape);
-        requireNonNull(ghost);
-        requireNonNegative(size);
         requireNonNegative(numFlashes);
 
-        this.ghost = ghost;
-        this.size = size;
+        this.parentAnimationProvider = requireNonNull(parentAnimationProvider);
+        this.ghost = requireNonNull(ghost);
+        this.size = requireNonNegative(size);
         this.numFlashes = numFlashes;
 
         ghost3D = new Ghost3D(assets, assetPrefix, ghost.personality(), dressShape, pupilsShape, eyeballsShape, size);
@@ -83,6 +89,11 @@ public class Ghost3D_Appearance extends Group {
         numberBoxRotation.setRate(0.75);
 
         setAppearance(Appearance.NORMAL);
+    }
+
+    @Override
+    public Set<Animation> registeredAnimations() {
+        return parentAnimationProvider.registeredAnimations();
     }
 
     public Appearance appearance() { return appearancePy.get(); }
@@ -149,7 +160,7 @@ public class Ghost3D_Appearance extends Group {
             brakeAnimation.setAutoReverse(true);
             brakeAnimation.setCycleCount(2);
             brakeAnimation.setInterpolator(Interpolator.EASE_OUT);
-            brakeAnimation.play();
+            playRegisteredAnimation(brakeAnimation);
         }
     }
 

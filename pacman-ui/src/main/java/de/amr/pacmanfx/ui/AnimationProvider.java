@@ -25,8 +25,9 @@ public interface AnimationProvider {
      }
 
      default void stopActiveAnimations() {
-        Set<Animation> copy = new HashSet<>(registeredAnimations());
-        copy.forEach(animation -> {
+        Set<Animation> original = registeredAnimations();
+        Animation[] copy = original.toArray(Animation[]::new);
+        for (Animation animation : copy) {
             try {
                 animation.stop();
                 Logger.info("{}: Animation {} stopped", getClass().getSimpleName(), animation);
@@ -34,6 +35,6 @@ public interface AnimationProvider {
                 Logger.warn("{}: Animation could not be stopped (embedded?)", getClass().getSimpleName());
             }
             registeredAnimations().remove(animation);
-        });
+        }
     }
 }

@@ -36,7 +36,10 @@ import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -188,7 +191,7 @@ public class GameLevel3D implements AnimationProvider {
     }
 
     private Ghost3D_Appearance createGhost3D(Ghost ghost, int numFlashes) {
-        var ghost3D = new Ghost3D_Appearance(theAssets(), theUI().configuration().assetNamespace(),
+        var ghost3D = new Ghost3D_Appearance(this, theAssets(), theUI().configuration().assetNamespace(),
             new MeshView(Model3DRepository.get().ghostDressMesh()),
             new MeshView(Model3DRepository.get().ghostPupilsMesh()),
             new MeshView(Model3DRepository.get().ghostEyeballsMesh()),
