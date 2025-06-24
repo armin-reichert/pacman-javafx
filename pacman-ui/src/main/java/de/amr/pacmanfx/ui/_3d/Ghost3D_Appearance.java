@@ -8,7 +8,7 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.ui.AnimationProvider;
+import de.amr.pacmanfx.ui.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.model3D.Ghost3D;
 import javafx.animation.Animation;
@@ -42,7 +42,7 @@ import static java.util.Objects.requireNonNull;
  * <li>{@link Appearance#VALUE}: showing eaten ghost's value.
  * </ul>
  */
-public class Ghost3D_Appearance extends Group implements AnimationProvider {
+public class Ghost3D_Appearance extends Group implements AnimationRegistry {
 
     public enum Appearance {NORMAL, FRIGHTENED, FLASHING, EATEN, VALUE}
 
@@ -51,7 +51,7 @@ public class Ghost3D_Appearance extends Group implements AnimationProvider {
         protected void invalidated() { onAppearanceChanged(getValue()); }
     };
 
-    private final AnimationProvider parentAnimationProvider;
+    private final AnimationRegistry parentAnimationRegistry;
     private final Ghost ghost;
     private final Ghost3D ghost3D;
     private final Box numberBox;
@@ -61,7 +61,7 @@ public class Ghost3D_Appearance extends Group implements AnimationProvider {
     private RotateTransition brakeAnimation;
 
     public Ghost3D_Appearance(
-            AnimationProvider parentAnimationProvider,
+            AnimationRegistry parentAnimationRegistry,
             AssetStorage assets, String assetPrefix,
             Shape3D dressShape, Shape3D pupilsShape, Shape3D eyeballsShape,
             Ghost ghost, double size, int numFlashes)
@@ -73,7 +73,7 @@ public class Ghost3D_Appearance extends Group implements AnimationProvider {
         requireNonNull(eyeballsShape);
         requireNonNegative(numFlashes);
 
-        this.parentAnimationProvider = requireNonNull(parentAnimationProvider);
+        this.parentAnimationRegistry = requireNonNull(parentAnimationRegistry);
         this.ghost = requireNonNull(ghost);
         this.size = requireNonNegative(size);
         this.numFlashes = numFlashes;
@@ -93,7 +93,7 @@ public class Ghost3D_Appearance extends Group implements AnimationProvider {
 
     @Override
     public Set<Animation> registeredAnimations() {
-        return parentAnimationProvider.registeredAnimations();
+        return parentAnimationRegistry.registeredAnimations();
     }
 
     public Appearance appearance() { return appearancePy.get(); }

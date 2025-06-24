@@ -7,14 +7,13 @@ package de.amr.pacmanfx.ui;
 import javafx.animation.Animation;
 import org.tinylog.Logger;
 
-import java.util.HashSet;
 import java.util.Set;
 
 /**
  * 3D entities with animations implement this interface such that all potentially running animations can be stopped
  * when the containing 3D scene ends, e.g. when the quit action is executed.
  */
-public interface AnimationProvider {
+public interface AnimationRegistry {
 
     Set<Animation> registeredAnimations();
 

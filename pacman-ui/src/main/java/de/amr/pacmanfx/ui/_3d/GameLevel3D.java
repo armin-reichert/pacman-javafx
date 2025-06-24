@@ -11,7 +11,7 @@ import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
-import de.amr.pacmanfx.ui.AnimationProvider;
+import de.amr.pacmanfx.ui.AnimationRegistry;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.Model3D;
@@ -53,7 +53,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * 3D representation of game level.
  */
-public class GameLevel3D implements AnimationProvider {
+public class GameLevel3D implements AnimationRegistry {
 
     private static boolean isInsideWorldMap(WorldMap worldMap, double x, double y) {
         return 0 <= x && x < worldMap.numCols() * TS && 0 <= y && y < worldMap.numRows() * TS;
@@ -83,10 +83,10 @@ public class GameLevel3D implements AnimationProvider {
     private MessageView messageView;
     private Bonus3D bonus3D;
 
-    private final AnimationProvider parentAnimationProvider;
+    private final AnimationRegistry parentAnimationRegistry;
 
-    public GameLevel3D(AnimationProvider parentAnimationProvider) {
-        this.parentAnimationProvider = requireNonNull(parentAnimationProvider);
+    public GameLevel3D(AnimationRegistry parentAnimationRegistry) {
+        this.parentAnimationRegistry = requireNonNull(parentAnimationRegistry);
         createAmbientLight();
         createPac3D();
         createGhosts3D();
@@ -119,7 +119,7 @@ public class GameLevel3D implements AnimationProvider {
 
     @Override
     public Set<Animation> registeredAnimations() {
-        return parentAnimationProvider.registeredAnimations();
+        return parentAnimationRegistry.registeredAnimations();
     }
 
     public Maze3D maze3D() { return maze3D; }
@@ -198,7 +198,7 @@ public class GameLevel3D implements AnimationProvider {
         final WorldMap worldMap = theGameLevel().worldMap();
         final WorldMapColorScheme colorScheme = theUI().configuration().worldMapColorScheme(worldMap);
         floor3D = createFloor3D(worldMap.numCols() * TS, worldMap.numRows() * TS);
-        maze3D = new Maze3D(theGameLevel(), colorScheme, parentAnimationProvider);
+        maze3D = new Maze3D(theGameLevel(), colorScheme, parentAnimationRegistry);
         mazeGroup.getChildren().addAll(floor3D, maze3D);
         createFood3D(colorScheme);
     }

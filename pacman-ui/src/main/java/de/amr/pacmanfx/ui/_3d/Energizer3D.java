@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._3d;
 
-import de.amr.pacmanfx.ui.AnimationProvider;
+import de.amr.pacmanfx.ui.AnimationRegistry;
 import javafx.animation.*;
 import javafx.animation.Animation.Status;
 import javafx.scene.shape.Shape3D;
@@ -19,7 +19,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * 3D energizer pellet.
  */
-public class Energizer3D implements Eatable3D, AnimationProvider {
+public class Energizer3D implements Eatable3D, AnimationRegistry {
 
     private static final double MIN_SCALING = 0.20;
     private static final double MAX_SCALING = 1.00;
@@ -29,10 +29,10 @@ public class Energizer3D implements Eatable3D, AnimationProvider {
     private final Animation hideAfterSmallDelay;
     private Animation eatenAnimation;
 
-    private final AnimationProvider parentAnimationProvider;
+    private final AnimationRegistry parentAnimationRegistry;
 
-    public Energizer3D(double radius, AnimationProvider parentAnimationProvider) {
-        this.parentAnimationProvider = requireNonNull(parentAnimationProvider);
+    public Energizer3D(double radius, AnimationRegistry parentAnimationRegistry) {
+        this.parentAnimationRegistry = requireNonNull(parentAnimationRegistry);
         requireNonNegative(radius, "Energizer radius must be positive but is %f");
         sphere = new Sphere(radius);
         // 3 full blinks per second
@@ -57,7 +57,7 @@ public class Energizer3D implements Eatable3D, AnimationProvider {
 
     @Override
     public Set<Animation> registeredAnimations() {
-        return parentAnimationProvider.registeredAnimations();
+        return parentAnimationRegistry.registeredAnimations();
     }
 
     public void setEatenAnimation(Animation animation) {

@@ -8,7 +8,7 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.Obstacle;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.ui.AnimationProvider;
+import de.amr.pacmanfx.ui.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer3D;
 import javafx.animation.*;
@@ -33,19 +33,19 @@ import static de.amr.pacmanfx.uilib.Ufx.opaqueColor;
 import static de.amr.pacmanfx.uilib.Ufx.pauseSec;
 import static java.util.Objects.requireNonNull;
 
-public class Maze3D extends Group implements AnimationProvider {
+public class Maze3D extends Group implements AnimationRegistry {
 
     private final DoubleProperty obstacleBaseHeightPy = new SimpleDoubleProperty(Settings3D.OBSTACLE_3D_BASE_HEIGHT);
     private final DoubleProperty wallOpacityPy = new SimpleDoubleProperty(1);
     private final DoubleProperty houseBaseHeightPy = new SimpleDoubleProperty(Settings3D.HOUSE_3D_BASE_HEIGHT);
     private final BooleanProperty houseLightOnPy = new SimpleBooleanProperty(false);
 
-    private final AnimationProvider parentAnimationProvider;
+    private final AnimationRegistry parentAnimationRegistry;
     private final ArcadeHouse3D house3D;
     private final MaterialColorAnimation wallColorFlashingAnimation;
 
-    public Maze3D(GameLevel level, WorldMapColorScheme colorScheme, AnimationProvider parentAnimationProvider) {
-        this.parentAnimationProvider = requireNonNull(parentAnimationProvider);
+    public Maze3D(GameLevel level, WorldMapColorScheme colorScheme, AnimationRegistry parentAnimationRegistry) {
+        this.parentAnimationRegistry = requireNonNull(parentAnimationRegistry);
 
         Logger.info("Build 3D maze for map with URL '{}'", level.worldMap().url());
 
@@ -115,7 +115,7 @@ public class Maze3D extends Group implements AnimationProvider {
 
     @Override
     public Set<Animation> registeredAnimations() {
-        return parentAnimationProvider.registeredAnimations();
+        return parentAnimationRegistry.registeredAnimations();
     }
 
     private boolean isWorldBorder(WorldMap worldMap, Obstacle obstacle) {
