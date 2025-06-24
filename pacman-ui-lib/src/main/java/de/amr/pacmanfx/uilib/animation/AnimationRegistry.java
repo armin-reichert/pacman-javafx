@@ -17,25 +17,25 @@ public interface AnimationRegistry {
 
     Map<String, Animation> registeredAnimations();
 
-     default <T extends Animation> T playRegisteredAnimation(String name, T animation) {
+     default void registerAndPlayAnimation(String name, Animation animation) {
         registeredAnimations().put(name, animation);
         animation.playFromStart();
         Logger.info("Playing animation '{}'", name);
-        return animation;
      }
 
-     default void stopActiveAnimations() {
-        Map<String, Animation> original = registeredAnimations();
-        @SuppressWarnings("unchecked") Map.Entry<String, Animation>[] copy = (Map.Entry<String, Animation>[]) original.entrySet().toArray(Map.Entry[]::new);
-        String host = getClass().getSimpleName();
+     default void stopRegisteredAnimations() {
+        Map<String, Animation> originalMap = registeredAnimations();
+        @SuppressWarnings("unchecked") Map.Entry<String, Animation>[] copy
+                = (Map.Entry<String, Animation>[]) originalMap.entrySet().toArray(Map.Entry[]::new);
+        String callingClass = getClass().getSimpleName();
         for (Map.Entry<String, Animation> entry : copy) {
             String name = entry.getKey();
             Animation animation = entry.getValue();
             try {
                 animation.stop();
-                Logger.info("{}: Stopped animation '{}' ({})", host, name, animation);
+                Logger.info("{}: Stopped animation '{}' ({})", callingClass, name, animation);
             } catch (IllegalStateException x) {
-                Logger.warn("{}: Could not stop (embedded?) animation '{}' ({})", host, name, animation);
+                Logger.warn("{}: Could not stop (embedded?) animation '{}' ({})", callingClass, name, animation);
             }
             registeredAnimations().remove(name);
         }

@@ -211,7 +211,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
         theSound().stopAll();
         clearActionBindings();
         perspectiveIDPy.unbind();
-        stopActiveAnimations();
+        stopRegisteredAnimations();
         level3D = null;
     }
 
@@ -362,7 +362,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
                     level3D.playLivesCounterAnimation();
                 }
                 case PACMAN_DYING -> {
-                    level3D.stopActiveAnimations();
+                    level3D.stopRegisteredAnimations();
                     theSound().stopAll();
                     // last update before dying animation
                     level3D.pac3D().update(theGameLevel());
@@ -374,7 +374,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
                     );
                     dyingAnimation.setDelay(Duration.seconds(2));
                     dyingAnimation.setOnFinished(e -> theGameController().letCurrentGameStateExpire());
-                    playRegisteredAnimation("PacManDying_Animation", dyingAnimation);
+                    registerAndPlayAnimation("PacManDying_Animation", dyingAnimation);
                 }
                 case GHOST_DYING ->
                     theSimulationStep().killedGhosts.forEach(ghost -> {
@@ -386,7 +386,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
                     theGameState().timer().resetIndefiniteTime(); // expires when animation ends
                     theSound().stopAll();
 
-                    level3D.stopActiveAnimations();
+                    level3D.stopRegisteredAnimations();
                     level3D.pellets3D().forEach(Pellet3D::onEaten);
                     level3D.energizers3D().forEach(Energizer3D::onEaten);
                     level3D.maze3D().door3D().setVisible(false);
@@ -403,7 +403,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
                         perspectiveIDPy.bind(PY_3D_PERSPECTIVE);
                         theGameController().letCurrentGameStateExpire();
                     });
-                    playRegisteredAnimation("LevelComplete_Animation", levelCompleteAnimation);
+                    registerAndPlayAnimation("LevelComplete_Animation", levelCompleteAnimation);
                 }
                 case LEVEL_TRANSITION -> {
                     theGameState().timer().restartSeconds(3);
@@ -414,7 +414,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
                 case GAME_OVER -> {
                     // delay state exit for 3 seconds:
                     theGameState().timer().restartSeconds(3);
-                    level3D.stopActiveAnimations();
+                    level3D.stopRegisteredAnimations();
                     level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
                     if (!theGameLevel().isDemoLevel() && randomInt(0, 100) < 25) {
                         theUI().showFlashMessageSec(3, theAssets().localizedGameOverMessage());

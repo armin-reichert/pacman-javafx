@@ -12,7 +12,6 @@ import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
 
 import java.util.Map;
-import java.util.Set;
 
 import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static java.util.Objects.requireNonNull;
@@ -70,9 +69,9 @@ public class Energizer3D implements Eatable3D, AnimationRegistry {
         pumpingAnimation.stop();
         if (eatenAnimation != null) {
             var animation = new SequentialTransition(hideAfterSmallDelay, eatenAnimation);
-            playRegisteredAnimation("Energizer_HideAndEat", animation);
+            registerAndPlayAnimation("Energizer_HideAndEat", animation);
         } else {
-            playRegisteredAnimation("Energizer_Hide", hideAfterSmallDelay);
+            registerAndPlayAnimation("Energizer_Hide", hideAfterSmallDelay);
         }
     }
 

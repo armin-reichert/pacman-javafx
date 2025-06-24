@@ -24,7 +24,6 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.util.Map;
-import java.util.Set;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
@@ -129,7 +128,7 @@ public class Maze3D extends Group implements AnimationRegistry {
     }
 
     public void playWallColorFlashingAnimation() {
-        playRegisteredAnimation("MazeWallColorFlashing_Animation", wallColorFlashingAnimation);
+        registerAndPlayAnimation("MazeWallColorFlashing_Animation", wallColorFlashingAnimation);
     }
 
     public void stopWallColorFlashingAnimation() {
