@@ -12,10 +12,7 @@ import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.PacManGames_UI;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
-import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.PopupLayer;
-import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
-import de.amr.pacmanfx.ui._2d.TooFancyCanvasContainer;
+import de.amr.pacmanfx.ui._2d.*;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
@@ -107,7 +104,7 @@ public class GameView implements PacManGames_View {
         configurePropertyBindings();
 
         ui.currentGameSceneProperty().addListener((py, ov, gameScene) -> {
-            if (gameScene != null) embedGameScene(ui.configuration(), gameScene);
+            if (gameScene != null) embedGameScene(gameScene);
             contextMenu.hide();
         });
 
@@ -249,7 +246,7 @@ public class GameView implements PacManGames_View {
                 miniGameView.onLevelCreated(theGameLevel());
 
                 // size of game scene might have changed, so re-embed
-                ui.currentGameScene().ifPresent(gameScene -> embedGameScene(config, gameScene));
+                ui.currentGameScene().ifPresent(this::embedGameScene);
             }
             case GAME_STATE_CHANGED -> {
                 if (theGameState() == GameState.LEVEL_COMPLETE) {
@@ -304,8 +301,7 @@ public class GameView implements PacManGames_View {
     }
 
     public void updateGameScene(boolean reloadCurrent) {
-        PacManGames_UIConfig uiConfig = ui.configuration();
-        final GameScene nextGameScene = uiConfig.selectGameScene(theGame(), theGameState());
+        final GameScene nextGameScene = ui.configuration().selectGameScene(theGame(), theGameState());
         if (nextGameScene == null) {
             String errorMessage = " Katastrophe! Could not determine game scene!";
             ui.showFlashMessageSec(60, errorMessage);
@@ -320,7 +316,7 @@ public class GameView implements PacManGames_View {
             currentGameScene.end();
             Logger.info("Game scene ended: {}", currentGameScene.displayName());
         }
-        embedGameScene(uiConfig, nextGameScene);
+        embedGameScene(nextGameScene);
         nextGameScene.init();
 
         // Handle switching between 2D and 3D game variants
@@ -337,7 +333,7 @@ public class GameView implements PacManGames_View {
         }
     }
 
-    public void embedGameScene(PacManGames_UIConfig gameUIConfig, GameScene gameScene) {
+    private void embedGameScene(GameScene gameScene) {
         requireNonNull(gameScene);
         switch (gameScene) {
             case CameraControlledView gameSceneUsingCamera -> {
@@ -349,7 +345,6 @@ public class GameView implements PacManGames_View {
                 }
             }
             case GameScene2D gameScene2D -> {
-                SpriteGameRenderer renderer = (SpriteGameRenderer) gameUIConfig.createGameRenderer(canvas);
                 Vector2f sceneSize = gameScene2D.sizeInPx();
                 canvasContainer.setUnscaledCanvasWidth(sceneSize.x());
                 canvasContainer.setUnscaledCanvasHeight(sceneSize.y());
@@ -362,7 +357,12 @@ public class GameView implements PacManGames_View {
                 canvas.getGraphicsContext2D().setFill(PY_CANVAS_BG_COLOR.get());
                 canvas.getGraphicsContext2D().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
                 gameScene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
-                gameScene2D.setGameRenderer(renderer);
+                GameRenderer gameRenderer = ui.configuration().createGameRenderer(canvas);
+                if (gameRenderer instanceof SpriteGameRenderer spriteGameRenderer) {
+                    gameScene2D.setGameRenderer(spriteGameRenderer);
+                } else {
+                    Logger.error("Currently, only sprite game renderers are supported for 2D game scenes");
+                }
                 root.getChildren().set(0, canvasLayer);
             }
             default -> Logger.error("Cannot embed game scene of class {}", gameScene.getClass().getName());
@@ -380,7 +380,6 @@ public class GameView implements PacManGames_View {
             () -> PY_PIP_ON.get() && ui.currentGameSceneIsPlayScene3D(),
             PY_PIP_ON, ui.currentGameSceneProperty()
         ));
-
     }
 
     private void configureCanvasContainer() {
@@ -390,7 +389,7 @@ public class GameView implements PacManGames_View {
         canvasContainer.setBorderColor(Color.rgb(222, 222, 255));
         //TODO check this:
         canvasContainer.decorationEnabledPy.addListener((py, ov, nv) ->
-            ui.currentGameScene().ifPresent(gameScene -> embedGameScene(ui.configuration(), gameScene)));
+            ui.currentGameScene().ifPresent(this::embedGameScene));
     }
 
     private void configurePropertyBindings() {
