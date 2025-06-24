@@ -67,7 +67,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
     };
 
     protected GameLevel3D level3D;
-    protected Map<String, Animation> animationRegistry = new WeakHashMap<>();
+    protected Map<String, Animation> animationMap = new WeakHashMap<>();
 
     public PlayScene3D() {
         scores3D = new Scores3D(theAssets().text("score.score"), theAssets().text("score.high_score"));
@@ -104,7 +104,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
 
     @Override
     public Map<String, Animation> registeredAnimations() {
-        return animationRegistry;
+        return animationMap;
     }
 
     @Override
