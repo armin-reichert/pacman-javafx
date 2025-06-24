@@ -301,7 +301,7 @@ public class GameLevel3D {
             spinning.setAxis(Rotate.X_AXIS);
             spinning.setByAngle(360);
             spinning.setRate(n % 2 == 0 ? 1 : -1);
-            animationRegistry.registerAnimationAndPlay("LevelCounter_Spinning", spinning);
+            animationRegistry.registerAndPlayFromStart("LevelCounter_Spinning", spinning);
 
             levelCounter3D.getChildren().add(cube);
             n += 1;
@@ -340,7 +340,7 @@ public class GameLevel3D {
             new PauseTransition(Duration.seconds(displaySeconds)),
             moveDownAnimation
         );
-        animationRegistry.registerAnimationAndPlay("LevelMessage_Movement", animation);
+        animationRegistry.registerAndPlayFromStart("LevelMessage_Movement", animation);
     }
 
     public void updateBonus3D(Bonus bonus) {
@@ -358,7 +358,7 @@ public class GameLevel3D {
     public void playLivesCounterAnimation() {
         var livesCounterAnimation = livesCounter3D.createAnimation();
         livesCounter3D.resetShapes();
-        animationRegistry.registerAnimationAndPlay("LivesCounter_Animation", livesCounterAnimation);
+        animationRegistry.registerAndPlayFromStart("LivesCounter_Animation", livesCounterAnimation);
     }
 
     private void playLevelRotateAnimation() {
@@ -367,7 +367,7 @@ public class GameLevel3D {
         rotation.setFromAngle(0);
         rotation.setToAngle(360);
         rotation.setInterpolator(Interpolator.LINEAR);
-        animationRegistry.registerAnimationAndPlay("LevelRotate_Animation", rotation);
+        animationRegistry.registerAndPlayFromStart("LevelRotate_Animation", rotation);
     }
 
     public Animation createLevelCompleteAnimation() {
@@ -395,11 +395,11 @@ public class GameLevel3D {
                 }
             }),
             Ufx.doAfterSec(1.0, () -> theGameLevel().ghosts().forEach(Ghost::hide)),
-            Ufx.doAfterSec(0.5, () -> animationRegistry.registerAnimationAndPlay("MazeFlashing_Animation", maze3D.createMazeFlashAnimation(numFlashes))),
+            Ufx.doAfterSec(0.5, () -> animationRegistry.registerAndPlayFromStart("MazeFlashing_Animation", maze3D.createMazeFlashAnimation(numFlashes))),
             Ufx.doAfterSec(1.5, () -> theGameLevel().pac().hide()),
             Ufx.doAfterSec(0.5, this::playLevelRotateAnimation),
             Ufx.doAfterSec(2.0, () -> {
-                animationRegistry.registerAnimationAndPlay("MazeWallsDisappearing_Animation", maze3D.createWallsDisappearAnimation(2.0));
+                animationRegistry.registerAndPlayFromStart("MazeWallsDisappearing_Animation", maze3D.createWallsDisappearAnimation(2.0));
                 theSound().playLevelCompleteSound();
             }),
             Ufx.doAfterSec(1.5, () -> theSound().playLevelChangedSound())

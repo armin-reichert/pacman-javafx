@@ -121,7 +121,7 @@ public class Maze3D extends Group {
     }
 
     public void playWallColorFlashingAnimation() {
-        animationRegistry.registerAnimationAndPlay("MazeWallColorFlashing_Animation", wallColorFlashingAnimation);
+        animationRegistry.registerAndPlayFromStart("MazeWallColorFlashing_Animation", wallColorFlashingAnimation);
     }
 
     public void stopWallColorFlashingAnimation() {

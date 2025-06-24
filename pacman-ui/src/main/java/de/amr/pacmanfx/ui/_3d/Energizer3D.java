@@ -62,9 +62,9 @@ public class Energizer3D implements Eatable3D {
         pumpingAnimation.stop();
         if (eatenAnimation != null) {
             var animation = new SequentialTransition(hideAfterSmallDelay, eatenAnimation);
-            animationRegistry.registerAnimationAndPlay("Energizer_HideAndEat", animation);
+            animationRegistry.registerAndPlayFromStart("Energizer_HideAndEat", animation);
         } else {
-            animationRegistry.registerAnimationAndPlay("Energizer_Hide", hideAfterSmallDelay);
+            animationRegistry.registerAndPlayFromStart("Energizer_Hide", hideAfterSmallDelay);
         }
     }
 

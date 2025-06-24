@@ -18,17 +18,17 @@ public class AnimationRegistry {
 
     private final Map<String, Animation> animationMap = new WeakHashMap<>();
 
-    public void registerAnimation(String name, Animation animation) {
+    public void register(String name, Animation animation) {
         animationMap.put(name, animation);
     }
 
-    public void registerAnimationAndPlay(String name, Animation animation) {
+    public void registerAndPlayFromStart(String name, Animation animation) {
         animationMap.put(name, animation);
-        animation.play();
+        animation.playFromStart();
         Logger.info("Playing animation '{}' ({})", name, animation);
     }
 
-    public void stopRegisteredAnimations() {
+    public void stopAll() {
         @SuppressWarnings("unchecked") Map.Entry<String, Animation>[] copy
                 = (Map.Entry<String, Animation>[]) animationMap.entrySet().toArray(Map.Entry[]::new);
         for (Map.Entry<String, Animation> entry : copy) {
