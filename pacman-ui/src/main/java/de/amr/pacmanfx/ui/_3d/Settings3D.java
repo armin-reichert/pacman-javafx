@@ -9,6 +9,8 @@ import static de.amr.pacmanfx.Globals.TS;
 public interface Settings3D {
     float BONUS_3D_SYMBOL_WIDTH    = TS;
     float BONUS_3D_POINTS_WIDTH    = 1.8f * TS;
+    float ENERGIZER_3D_MIN_SCALING = 0.2f;
+    float ENERGIZER_3D_MAX_SCALING = 1.0f;
     float ENERGIZER_3D_RADIUS      = 3.5f;
     float FLOOR_3D_PADDING         = 5.0f;
     float FLOOR_3D_THICKNESS       = 0.5f;

@@ -19,9 +19,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class Energizer3D implements Eatable3D {
 
-    private static final double MIN_SCALING = 0.20;
-    private static final double MAX_SCALING = 1.00;
-
     private final Sphere sphere;
     private final ScaleTransition pumpingAnimation;
     private final Animation hideAfterSmallDelay;
@@ -38,19 +35,19 @@ public class Energizer3D implements Eatable3D {
         pumpingAnimation.setAutoReverse(true);
         pumpingAnimation.setCycleCount(Animation.INDEFINITE);
         pumpingAnimation.setInterpolator(Interpolator.EASE_BOTH);
-        pumpingAnimation.setFromX(MAX_SCALING);
-        pumpingAnimation.setFromY(MAX_SCALING);
-        pumpingAnimation.setFromZ(MAX_SCALING);
-        pumpingAnimation.setToX(MIN_SCALING);
-        pumpingAnimation.setToY(MIN_SCALING);
-        pumpingAnimation.setToZ(MIN_SCALING);
+        pumpingAnimation.setFromX(Settings3D.ENERGIZER_3D_MAX_SCALING);
+        pumpingAnimation.setFromY(Settings3D.ENERGIZER_3D_MAX_SCALING);
+        pumpingAnimation.setFromZ(Settings3D.ENERGIZER_3D_MAX_SCALING);
+        pumpingAnimation.setToX(Settings3D.ENERGIZER_3D_MIN_SCALING);
+        pumpingAnimation.setToY(Settings3D.ENERGIZER_3D_MIN_SCALING);
+        pumpingAnimation.setToZ(Settings3D.ENERGIZER_3D_MIN_SCALING);
 
         hideAfterSmallDelay = new PauseTransition(Duration.seconds(0.05));
         hideAfterSmallDelay.setOnFinished(e -> shape3D().setVisible(false));
     }
 
     public void startPumping() {
-        pumpingAnimation.playFromStart();
+        animationRegistry.registerAndPlayFromStart("Energizer_Pumping", pumpingAnimation);
     }
 
     public void setEatenAnimation(Animation animation) {
