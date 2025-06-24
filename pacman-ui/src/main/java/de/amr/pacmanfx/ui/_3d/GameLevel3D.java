@@ -386,7 +386,7 @@ public class GameLevel3D implements AnimationProvider {
     private Animation levelCompleteAnimationBeforeCutScene(int numFlashes) {
         return new SequentialTransition(
                 doAfterSec(1.0, () -> theGameLevel().ghosts().forEach(Ghost::hide)),
-                maze3D.mazeFlashAnimation(numFlashes),
+                maze3D.createMazeFlashAnimation(numFlashes),
                 doAfterSec(2.5, () -> theGameLevel().pac().hide())
         );
     }
@@ -401,11 +401,11 @@ public class GameLevel3D implements AnimationProvider {
                 }
             }),
             Ufx.doAfterSec(1.0, () -> theGameLevel().ghosts().forEach(Ghost::hide)),
-            Ufx.doAfterSec(0.5, () -> maze3D.mazeFlashAnimation(numFlashes).play()),
+            Ufx.doAfterSec(0.5, () -> maze3D.createMazeFlashAnimation(numFlashes).play()),
             Ufx.doAfterSec(1.5, () -> theGameLevel().pac().hide()),
             Ufx.doAfterSec(0.5, this::playLevelRotateAnimation),
             Ufx.doAfterSec(2.0, () -> {
-                maze3D.wallsDisappearAnimation(2.0).play();
+                maze3D.createWallsDisappearAnimation(2.0).play();
                 theSound().playLevelCompleteSound();
             }),
             Ufx.doAfterSec(1.5, () -> theSound().playLevelChangedSound())

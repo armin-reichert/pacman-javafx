@@ -105,6 +105,14 @@ public class Maze3D extends Group implements AnimationProvider {
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
     }
 
+    public void setHouseLightOn(boolean on) {
+        houseLightOnPy.set(on);
+    }
+
+    public Door3D door3D() {
+        return house3D.door3D();
+    }
+
     @Override
     public Set<Animation> registeredAnimations() {
         return parentAnimationProvider.registeredAnimations();
@@ -128,15 +136,7 @@ public class Maze3D extends Group implements AnimationProvider {
         wallColorFlashingAnimation.jumpTo(Duration.ZERO);
     }
 
-    public void setHouseLightOn(boolean on) {
-        houseLightOnPy.set(on);
-    }
-
-    public Door3D door3D() {
-        return house3D.door3D();
-    }
-
-    public Animation wallsDisappearAnimation(double seconds) {
+    public Animation createWallsDisappearAnimation(double seconds) {
         var totalDuration = Duration.seconds(seconds);
         var houseDisappears = new Timeline(
             new KeyFrame(totalDuration.multiply(0.33), new KeyValue(houseBaseHeightPy, 0, Interpolator.EASE_IN)));
@@ -147,7 +147,7 @@ public class Maze3D extends Group implements AnimationProvider {
         return animation;
     }
 
-    public Animation mazeFlashAnimation(int numFlashes) {
+    public Animation createMazeFlashAnimation(int numFlashes) {
         if (numFlashes == 0) {
             return pauseSec(1.0);
         }
