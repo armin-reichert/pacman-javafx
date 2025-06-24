@@ -122,12 +122,6 @@ public class GameLevel3D implements AnimationProvider {
         return parentAnimationProvider.registeredAnimations();
     }
 
-    @Override
-    public void stopActiveAnimations() {
-        energizers3D().forEach(Energizer3D::stopActiveAnimations);
-        maze3D.stopWallColorFlashingAnimation();
-    }
-
     public Maze3D maze3D() { return maze3D; }
 
     public PacBase3D pac3D() { return pac3D; }
