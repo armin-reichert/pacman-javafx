@@ -18,8 +18,8 @@ import static de.amr.pacmanfx.uilib.Ufx.now;
 
 public class PacMan3D extends PacBase3D {
 
-    public PacMan3D(AnimationRegistry parentAnimationRegistry, Pac pac, double size, AssetStorage assets, String ans) {
-        super(parentAnimationRegistry, pac, size, assets, ans);
+    public PacMan3D(AnimationRegistry animationRegistry, Pac pac, double size, AssetStorage assets, String ans) {
+        super(animationRegistry, pac, size, assets, ans);
     }
 
     @Override

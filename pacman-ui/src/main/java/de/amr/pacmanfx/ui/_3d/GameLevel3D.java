@@ -350,7 +350,7 @@ public class GameLevel3D {
         }
         Image bonusSymbolTexture = theUI().configuration().createBonusSymbolImage(bonus.symbol());
         Image bonusValueTexture  = theUI().configuration().createBonusValueImage(bonus.symbol());
-        bonus3D = new Bonus3D(bonus, bonusSymbolTexture, bonusValueTexture);
+        bonus3D = new Bonus3D(animationRegistry, bonus, bonusSymbolTexture, bonusValueTexture);
         bonus3D.showEdible();
         mazeGroup.getChildren().add(bonus3D);
     }
