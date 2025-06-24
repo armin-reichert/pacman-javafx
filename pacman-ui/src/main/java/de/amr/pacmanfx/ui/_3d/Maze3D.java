@@ -8,6 +8,7 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.Obstacle;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.ui.AnimationProvider;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer3D;
 import javafx.animation.*;
@@ -22,24 +23,30 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import java.util.Collection;
+
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 import static de.amr.pacmanfx.uilib.Ufx.opaqueColor;
 import static de.amr.pacmanfx.uilib.Ufx.pauseSec;
+import static java.util.Objects.requireNonNull;
 
-public class Maze3D extends Group {
+public class Maze3D extends Group implements AnimationProvider {
 
     private final DoubleProperty obstacleBaseHeightPy = new SimpleDoubleProperty(Settings3D.OBSTACLE_3D_BASE_HEIGHT);
     private final DoubleProperty wallOpacityPy = new SimpleDoubleProperty(1);
     private final DoubleProperty houseBaseHeightPy = new SimpleDoubleProperty(Settings3D.HOUSE_3D_BASE_HEIGHT);
     private final BooleanProperty houseLightOnPy = new SimpleBooleanProperty(false);
 
+    private final AnimationProvider parentAnimationProvider;
     private final ArcadeHouse3D house3D;
-    private final MaterialColorAnimation materialColorAnimation;
+    private final MaterialColorAnimation wallColorFlashingAnimation;
 
-    public Maze3D(GameLevel level, WorldMapColorScheme colorScheme) {
+    public Maze3D(GameLevel level, WorldMapColorScheme colorScheme, AnimationProvider parentAnimationProvider) {
+        this.parentAnimationProvider = requireNonNull(parentAnimationProvider);
+
         Logger.info("Build 3D maze for map with URL '{}'", level.worldMap().url());
 
         Color wallBaseColor = colorScheme.stroke();
@@ -56,7 +63,7 @@ public class Maze3D extends Group {
         wallTopMaterial.setDiffuseColor(wallTopColor);
         wallTopMaterial.setSpecularColor(wallTopColor.brighter());
 
-        materialColorAnimation = new MaterialColorAnimation(Duration.seconds(0.25), wallTopMaterial, wallTopColor, wallBaseColor);
+        wallColorFlashingAnimation = new MaterialColorAnimation(Duration.seconds(0.25), wallTopMaterial, wallTopColor, wallBaseColor);
 
         PhongMaterial cornerBaseMaterial = new PhongMaterial();
         cornerBaseMaterial.setDiffuseColor(wallBaseColor); // for now use same color
@@ -98,6 +105,11 @@ public class Maze3D extends Group {
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
     }
 
+    @Override
+    public Collection<Animation> animations() {
+        return parentAnimationProvider.animations();
+    }
+
     private boolean isWorldBorder(WorldMap worldMap, Obstacle obstacle) {
         Vector2i start = obstacle.startPoint();
         if (obstacle.isClosed()) {
@@ -107,13 +119,14 @@ public class Maze3D extends Group {
         }
     }
 
-    public void playMaterialAnimation() {
-        materialColorAnimation.play();
+    public void playWallColorFlashingAnimation() {
+        wallColorFlashingAnimation.play();
+        animations().add(wallColorFlashingAnimation);
     }
 
-    public void stopMaterialAnimation() {
-        materialColorAnimation.stop();
-        materialColorAnimation.jumpTo(Duration.ZERO);
+    public void stopWallColorFlashingAnimation() {
+        wallColorFlashingAnimation.stop();
+        wallColorFlashingAnimation.jumpTo(Duration.ZERO);
     }
 
     public void setHouseLightOn(boolean on) {

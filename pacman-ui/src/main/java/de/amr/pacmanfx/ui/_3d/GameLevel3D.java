@@ -11,6 +11,7 @@ import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
+import de.amr.pacmanfx.ui.AnimationProvider;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.Model3D;
@@ -36,6 +37,7 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -51,7 +53,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * 3D representation of game level.
  */
-public class GameLevel3D implements AnimationProvider3D {
+public class GameLevel3D implements AnimationProvider {
 
     private static boolean isInsideWorldMap(WorldMap worldMap, double x, double y) {
         return 0 <= x && x < worldMap.numCols() * TS && 0 <= y && y < worldMap.numRows() * TS;
@@ -81,10 +83,10 @@ public class GameLevel3D implements AnimationProvider3D {
     private MessageView messageView;
     private Bonus3D bonus3D;
 
-    // store all (unembedded!) animations in this list and stop them when the scene containing this level ends!
-    private final List<Animation> animations = new ArrayList<>();
+    private final AnimationProvider parentAnimationProvider;
 
-    public GameLevel3D() {
+    public GameLevel3D(AnimationProvider parentAnimationProvider) {
+        this.parentAnimationProvider = requireNonNull(parentAnimationProvider);
         createAmbientLight();
         createPac3D();
         createGhosts3D();
@@ -116,15 +118,14 @@ public class GameLevel3D implements AnimationProvider3D {
     }
 
     @Override
-    public List<Animation> animations() {
-        return animations;
+    public Collection<Animation> animations() {
+        return parentAnimationProvider.animations();
     }
 
     @Override
     public void stopAnimations() {
-        AnimationProvider3D.super.stopAnimations();
         energizers3D().forEach(Energizer3D::stopAnimations);
-        maze3D.stopMaterialAnimation();
+        maze3D.stopWallColorFlashingAnimation();
     }
 
     public Maze3D maze3D() { return maze3D; }
@@ -203,7 +204,7 @@ public class GameLevel3D implements AnimationProvider3D {
         final WorldMap worldMap = theGameLevel().worldMap();
         final WorldMapColorScheme colorScheme = theUI().configuration().worldMapColorScheme(worldMap);
         floor3D = createFloor3D(worldMap.numCols() * TS, worldMap.numRows() * TS);
-        maze3D = new Maze3D(theGameLevel(), colorScheme);
+        maze3D = new Maze3D(theGameLevel(), colorScheme, parentAnimationProvider);
         mazeGroup.getChildren().addAll(floor3D, maze3D);
         createFood3D(colorScheme);
     }
@@ -314,7 +315,7 @@ public class GameLevel3D implements AnimationProvider3D {
             spinning.setRate(n % 2 == 0 ? 1 : -1);
             spinning.play();
 
-            animations.add(spinning);
+            animations().add(spinning);
 
             levelCounter3D.getChildren().add(cube);
             n += 1;
@@ -354,7 +355,7 @@ public class GameLevel3D implements AnimationProvider3D {
             moveDownAnimation
         );
         animation.play();
-        animations.add(animation);
+        animations().add(animation);
     }
 
     public void updateBonus3D(Bonus bonus) {
@@ -373,7 +374,7 @@ public class GameLevel3D implements AnimationProvider3D {
         var livesCounterAnimation = livesCounter3D.createAnimation();
         livesCounter3D.resetShapes();
         livesCounterAnimation.play();
-        animations.add(livesCounterAnimation);
+        animations().add(livesCounterAnimation);
     }
 
     private void playLevelRotateAnimation() {
@@ -383,7 +384,7 @@ public class GameLevel3D implements AnimationProvider3D {
         rotation.setToAngle(360);
         rotation.setInterpolator(Interpolator.LINEAR);
         rotation.play();
-        animations.add(rotation);
+        animations().add(rotation);
     }
 
     public Animation createLevelCompleteAnimation() {

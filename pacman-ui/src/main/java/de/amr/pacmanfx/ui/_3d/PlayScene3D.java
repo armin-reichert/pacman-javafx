@@ -13,6 +13,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.MovingBonus;
 import de.amr.pacmanfx.ui.ActionBindingSupport;
+import de.amr.pacmanfx.ui.AnimationProvider;
 import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.input.Keyboard;
@@ -49,7 +50,7 @@ import static java.util.Objects.requireNonNull;
  * 3D play scene. Provides different camera perspectives that can be stepped
  * through using keys <code>Alt+LEFT</code> and <code>Alt+RIGHT</code>.
  */
-public class PlayScene3D implements GameScene, ActionBindingSupport, CameraControlledView, AnimationProvider3D {
+public class PlayScene3D implements GameScene, ActionBindingSupport, CameraControlledView, AnimationProvider {
 
     protected final SubScene subScene3D;
     protected final Group root = new Group();
@@ -93,7 +94,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
     protected Perspective perspective() { return perspectiveMap.get(perspectiveIDPy.get()); }
 
     protected void replaceGameLevel3D() {
-        level3D = new GameLevel3D();
+        level3D = new GameLevel3D(this);
         level3D.addLevelCounter();
         root.getChildren().set(root.getChildren().size() - 1, level3D.root());
         scores3D.translateXProperty().bind(level3D.root().translateXProperty().add(TS));
@@ -518,7 +519,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
     @Override
     public void onPacGetsPower(GameEvent event) {
         level3D.pac3D().setMovementPowerMode(true);
-        level3D.maze3D().playMaterialAnimation();
+        level3D.maze3D().playWallColorFlashingAnimation();
         theSound().stopSiren();
         theSound().playPacPowerSound();
     }
@@ -526,7 +527,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
     @Override
     public void onPacLostPower(GameEvent event) {
         level3D.pac3D().setMovementPowerMode(false);
-        level3D.maze3D().stopMaterialAnimation();
+        level3D.maze3D().stopWallColorFlashingAnimation();
         theSound().stopPacPowerSound();
     }
 

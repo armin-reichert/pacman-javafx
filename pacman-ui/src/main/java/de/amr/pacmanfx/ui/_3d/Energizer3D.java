@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._3d;
 
+import de.amr.pacmanfx.ui.AnimationProvider;
 import javafx.animation.*;
 import javafx.animation.Animation.Status;
 import javafx.scene.shape.Shape3D;
@@ -19,7 +20,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * 3D energizer pellet.
  */
-public class Energizer3D implements Eatable3D, AnimationProvider3D {
+public class Energizer3D implements Eatable3D, AnimationProvider {
 
     private static final double MIN_SCALING = 0.20;
     private static final double MAX_SCALING = 1.00;
