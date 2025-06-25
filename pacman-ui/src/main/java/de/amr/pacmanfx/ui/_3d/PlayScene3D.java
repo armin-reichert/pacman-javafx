@@ -56,7 +56,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     protected final ObjectProperty<PerspectiveID> perspectiveIDPy = new SimpleObjectProperty<>() {
         @Override
         protected void invalidated() {
-            optGameLevel().ifPresent(level -> perspective().init(subScene3D, level));
+            initCameraPerspectiveForGameLevel();
         }
     };
 
@@ -96,8 +96,6 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         perspectiveMap.put(PerspectiveID.TRACK_PLAYER, new Perspective.TrackingPlayer());
         perspectiveMap.put(PerspectiveID.NEAR_PLAYER, new Perspective.StalkingPlayer());
     }
-
-    protected Perspective perspective() { return perspectiveMap.get(perspectiveIDPy.get()); }
 
     @Override
     public List<MenuItem> supplyContextMenuItems(ContextMenuEvent e) {
@@ -231,7 +229,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             }
         }
         updateScores();
-        perspective().init(subScene3D, theGameLevel());
+        initCameraPerspectiveForGameLevel();
         subScene3D.setFill(Color.TRANSPARENT);
     }
 
@@ -279,41 +277,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         level3D.update();
         updateScores();
         updateSound();
-        perspective().update(subScene3D, theGameLevel(), theGameLevel().pac());
-    }
-
-    protected void updateSound() {
-        if (theGameLevel().isDemoLevel()) {
-            return; // demo level is silent
-        }
-        if (theGameState() == GameState.HUNTING && !theGameLevel().pac().powerTimer().isRunning()) {
-            int sirenNumber = 1 + theGame().huntingTimer().phaseIndex() / 2;
-            theSound().selectSiren(sirenNumber);
-            theSound().playSiren();
-        }
-        if (theGameLevel().pac().starvingTicks() > 5) { // TODO not sure how to do this right
-            theSound().stopMunchingSound();
-        }
-        boolean ghostsReturning = theGameLevel().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
-        if (theGameLevel().pac().isAlive() && ghostsReturning) {
-            theSound().playGhostReturningHomeSound();
-        } else {
-            theSound().stopGhostReturningHomeSound();
-        }
-    }
-
-    protected void updateScores() {
-        final Score score = theGame().score(), highScore = theGame().highScore();
-        if (score.isEnabled()) {
-            scores3D.showScore(score.points(), score.levelNumber());
-        }
-        else { // disabled, show text "GAME OVER"
-            String ans = theUI().configuration().assetNamespace();
-            Color color = theAssets().color(ans + ".color.game_over_message");
-            scores3D.showTextAsScore(theAssets().text("score.game_over"), color);
-        }
-        // Always show high score
-        scores3D.showHighScore(highScore.points(), highScore.levelNumber());
+        updateCameraPerspectiveForGameLevel();
     }
 
     @Override
@@ -399,7 +363,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 theGameState().timer().restartSeconds(3);
                 replaceGameLevel3D();
                 level3D.pac3D().init();
-                perspective().init(subScene3D, theGameLevel());
+                initCameraPerspectiveForGameLevel();
             }
             case GAME_OVER -> {
                 // delay state exit for 3 seconds:
@@ -526,6 +490,30 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         theUI().updateGameScene(true);
     }
 
+    protected void initCameraPerspectiveForGameLevel() {
+        optGameLevel().ifPresent(gameLevel -> {
+            PerspectiveID id = perspectiveIDPy.get();
+            if (id != null && perspectiveMap.containsKey(id)) {
+                perspectiveMap.get(id).init(subScene3D, gameLevel);
+            } else {
+                Logger.error("Cannot init camera perspective with ID '{}'", id);
+            }
+        });
+    }
+
+    protected void updateCameraPerspectiveForGameLevel() {
+        optGameLevel().ifPresent(gameLevel -> {
+            PerspectiveID id = perspectiveIDPy.get();
+            if (id != null && perspectiveMap.containsKey(id)) {
+                perspectiveMap.get(id).update(subScene3D, gameLevel, gameLevel.pac());
+            } else {
+                Logger.error("Cannot update camera perspective with ID '{}'", id);
+            }
+        });
+    }
+
+    //protected Perspective perspective() { return perspectiveMap.get(perspectiveIDPy.get()); }
+
     protected void replaceGameLevel3D() {
         level3D = new GameLevel3D(animationRegistry);
         level3D.addLevelCounter();
@@ -535,14 +523,48 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         scores3D.translateZProperty().bind(level3D.root().translateZProperty().subtract(3.5 * TS));
     }
 
-    private void showLevelTestMessage(int levelNumber) {
+    protected void updateSound() {
+        if (theGameLevel().isDemoLevel()) {
+            return; // demo level is silent
+        }
+        if (theGameState() == GameState.HUNTING && !theGameLevel().pac().powerTimer().isRunning()) {
+            int sirenNumber = 1 + theGame().huntingTimer().phaseIndex() / 2;
+            theSound().selectSiren(sirenNumber);
+            theSound().playSiren();
+        }
+        if (theGameLevel().pac().starvingTicks() > 5) { // TODO not sure how to do this right
+            theSound().stopMunchingSound();
+        }
+        boolean ghostsReturning = theGameLevel().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
+        if (theGameLevel().pac().isAlive() && ghostsReturning) {
+            theSound().playGhostReturningHomeSound();
+        } else {
+            theSound().stopGhostReturningHomeSound();
+        }
+    }
+
+    protected void updateScores() {
+        final Score score = theGame().score(), highScore = theGame().highScore();
+        if (score.isEnabled()) {
+            scores3D.showScore(score.points(), score.levelNumber());
+        }
+        else { // disabled, show text "GAME OVER"
+            String ans = theUI().configuration().assetNamespace();
+            Color color = theAssets().color(ans + ".color.game_over_message");
+            scores3D.showTextAsScore(theAssets().text("score.game_over"), color);
+        }
+        // Always show high score
+        scores3D.showHighScore(highScore.points(), highScore.levelNumber());
+    }
+
+    protected void showLevelTestMessage(int levelNumber) {
         WorldMap worldMap = theGameLevel().worldMap();
         double x = worldMap.numCols() * HTS;
         double y = (worldMap.numRows() - 2) * TS;
         level3D.showAnimatedMessage("LEVEL %d (TEST)".formatted(levelNumber), 5, x, y);
     }
 
-    private void showReadyMessage() {
+    protected void showReadyMessage() {
         Vector2i houseMinTile = theGameLevel().houseMinTile();
         Vector2i houseSizeInTiles = theGameLevel().houseSizeInTiles();
         double x = TS * (houseMinTile.x() + 0.5 * houseSizeInTiles.x());
