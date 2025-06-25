@@ -84,7 +84,7 @@ public class LivesCounter3D extends Group {
 
     public ObjectProperty<Color> pillarColorProperty() { return pillarColorPy; }
 
-    public ObjectProperty<Color> plateColorProperty() { return pillarColorPy; }
+    public ObjectProperty<Color> plateColorProperty() { return plateColorPy; }
 
     public PointLight light() {
         return light;
