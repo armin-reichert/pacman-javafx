@@ -38,16 +38,16 @@ public class Dashboard {
 
     public void addInfoBox(DashboardID id) {
         switch (id) {
-            case ABOUT        -> addInfoBox(id, "infobox.about.title", new InfoBoxAbout());
-            case ACTOR_INFO   -> addInfoBox(id, "infobox.actor_info.title", new InfoBoxActorInfo());
-            case ANIMATION_INFO -> addInfoBox(id, "infobox.animation_info.title", new InfoBoxPlayScene3DAnimations());
-            case CUSTOM_MAPS  -> addInfoBox(id, "infobox.custom_maps.title", new InfoBoxCustomMaps());
-            case GENERAL      -> addInfoBox(id, "infobox.general.title", new InfoBoxGeneral());
-            case GAME_CONTROL -> addInfoBox(id, "infobox.game_control.title", new InfoBoxGameControl());
-            case GAME_INFO    -> addInfoBox(id, "infobox.game_info.title", new InfoBoxGameInfo());
-            case JOYPAD       -> addInfoBox(id, "infobox.joypad.title", new InfoBoxJoypad());
+            case ABOUT                     -> addInfoBox(id, "infobox.about.title", new InfoBoxAbout());
+            case ACTOR_INFO                -> addInfoBox(id, "infobox.actor_info.title", new InfoBoxActorInfo());
+            case ANIMATION_INFO            -> addInfoBox(id, "infobox.animation_info.title", new InfoBoxPlayScene3DAnimations());
+            case CUSTOM_MAPS               -> addInfoBox(id, "infobox.custom_maps.title", new InfoBoxCustomMaps());
+            case GENERAL                   -> addInfoBox(id, "infobox.general.title", new InfoBoxGeneral());
+            case GAME_CONTROL              -> addInfoBox(id, "infobox.game_control.title", new InfoBoxGameControl());
+            case GAME_INFO                 -> addInfoBox(id, "infobox.game_info.title", new InfoBoxGameInfo());
+            case JOYPAD                    -> addInfoBox(id, "infobox.joypad.title", new InfoBoxJoypad());
             case KEYBOARD_SHORTCUTS_GLOBAL -> addInfoBox(id, "infobox.keyboard_shortcuts_global.title", new InfoBoxKeyShortcutsGlobal());
-            case KEYBOARD_SHORTCUTS_LOCAL ->  addInfoBox(id, "infobox.keyboard_shortcuts_local.title", new InfoBoxKeyShortcutsLocal());
+            case KEYBOARD_SHORTCUTS_LOCAL  ->  addInfoBox(id, "infobox.keyboard_shortcuts_local.title", new InfoBoxKeyShortcutsLocal());
             case README -> {
                 InfoBox infoBox = new InfoBoxReadmeFirst();
                 infoBox.setExpanded(true);
