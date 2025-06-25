@@ -252,9 +252,9 @@ public class PacManGames_Sound {
         }
     }
 
-    public void playBonusActiveSound() { playIfEnabled("bonus_bouncing"); }
+    public void playBonusBouncingSound() { playIfEnabled("bonus_bouncing"); }
 
-    public void stopBonusActiveSound() { stop("bonus_bouncing"); }
+    public void stopBonusBouncingSound() { stop("bonus_bouncing"); }
 
     public void playBonusEatenSound() {
         playClipIfEnabled("bonus_eaten", 1);

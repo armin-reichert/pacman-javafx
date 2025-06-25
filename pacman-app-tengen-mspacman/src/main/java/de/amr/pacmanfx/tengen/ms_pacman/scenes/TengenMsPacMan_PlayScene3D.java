@@ -54,6 +54,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         bindAction(ACTION_STEER_DOWN, TENGEN_ACTION_BINDINGS);
         bindAction(ACTION_STEER_LEFT, TENGEN_ACTION_BINDINGS);
         bindAction(ACTION_STEER_RIGHT, TENGEN_ACTION_BINDINGS);
+        updateActionBindings();
     }
 
     @Override
@@ -108,19 +109,19 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     @Override
     public void onBonusActivated(GameEvent event) {
         optGameLevel().flatMap(GameLevel::bonus).ifPresent(bonus -> level3D.updateBonus3D(bonus));
-        theSound().playBonusActiveSound();
+        theSound().playBonusBouncingSound();
     }
 
     @Override
     public void onBonusEaten(GameEvent event) {
         level3D.bonus3D().ifPresent(Bonus3D::showEaten);
-        theSound().stopBonusActiveSound();
+        theSound().stopBonusBouncingSound();
         theSound().playBonusEatenSound();
     }
 
     @Override
     public void onBonusExpired(GameEvent event) {
         level3D.bonus3D().ifPresent(Bonus3D::expire);
-        theSound().stopBonusActiveSound();
+        theSound().stopBonusBouncingSound();
     }
 }

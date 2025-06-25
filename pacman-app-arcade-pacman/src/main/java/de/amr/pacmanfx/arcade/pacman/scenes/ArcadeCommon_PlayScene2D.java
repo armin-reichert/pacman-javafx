@@ -274,18 +274,18 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
 
     @Override
     public void onBonusActivated(GameEvent e) {
-        theSound().playBonusActiveSound();
+        theSound().playBonusBouncingSound();
     }
 
     @Override
     public void onBonusEaten(GameEvent e) {
-        theSound().stopBonusActiveSound();
+        theSound().stopBonusBouncingSound();
         theSound().playBonusEatenSound();
     }
 
     @Override
     public void onBonusExpired(GameEvent e) {
-        theSound().stopBonusActiveSound();
+        theSound().stopBonusBouncingSound();
     }
 
     @Override

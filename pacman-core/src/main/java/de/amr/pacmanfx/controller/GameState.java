@@ -78,10 +78,10 @@ public enum GameState implements FsmState<GameModel> {
 
 
     STARTING_GAME {
-        static final short TICK_NEW_GAME_SHOW_GUYS       = 120;
-        static final short TICK_NEW_GAME_START_PLAYING   = 240;
-        static final short TICK_DEMO_LEVEL_START         = 120;
-        static final short TICK_RESUME_GAME              =  90;
+        static final short TICK_NEW_GAME_SHOW_GUYS = 120;
+        static final short TICK_NEW_GAME_START_HUNTING = 240;
+        static final short TICK_DEMO_LEVEL_START_HUNTING = 120;
+        static final short TICK_RESUME_GAME =  90;
 
         @Override
         public void onEnter(GameModel game) {
@@ -111,7 +111,7 @@ public enum GameState implements FsmState<GameModel> {
                 else if (timer.tickCount() == TICK_NEW_GAME_SHOW_GUYS) {
                     theGameLevel().showPacAndGhosts();
                 }
-                else if (timer.tickCount() == TICK_NEW_GAME_START_PLAYING) {
+                else if (timer.tickCount() == TICK_NEW_GAME_START_HUNTING) {
                     game.playingProperty().set(true);
                     theGameController().changeGameState(GameState.HUNTING);
                 }
@@ -128,7 +128,7 @@ public enum GameState implements FsmState<GameModel> {
                     // Now, actor animations are available
                     theGameLevel().showPacAndGhosts();
                 }
-                else if (timer.tickCount() == TICK_DEMO_LEVEL_START) {
+                else if (timer.tickCount() == TICK_DEMO_LEVEL_START_HUNTING) {
                     theGameController().changeGameState(GameState.HUNTING);
                 }
             }
