@@ -28,14 +28,6 @@ public class AnimationManager {
         return animationName + "@" + node.hashCode();
     }
 
-    private String dump() {
-        StringBuilder sb = new StringBuilder();
-        animationMap.forEach((id, animation) -> {
-            sb.append("%10s => %20s (%s)\n".formatted(id, animation, animation.getStatus()));
-        });
-        return sb.toString();
-    }
-
     public Animation register(Node node, String animationName, Animation animation) {
         requireNonNull(node);
         requireValidIdentifier(animationName);
