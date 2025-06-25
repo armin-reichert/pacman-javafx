@@ -62,7 +62,9 @@ public class GameLevel3D {
         @Override
         protected void invalidated() {
             if (houseOpenPy.get()) {
-                maze3D.door3D().playOpenCloseAnimation();
+                animationMgr.registerAndPlayFromStart(maze3D.door3D(),
+                    "Door_OpenClose",
+                    maze3D.door3D().createOpenCloseAnimation());
             }
         }
     };
@@ -78,7 +80,7 @@ public class GameLevel3D {
     private Maze3D maze3D;
     private LivesCounter3D livesCounter3D;
     private PacBase3D pac3D;
-    private List<Ghost3D_Appearance> ghosts3D;
+    private List<MutatingGhost3D> ghosts3D;
     private MessageView messageView;
     private Bonus3D bonus3D;
 
@@ -120,9 +122,9 @@ public class GameLevel3D {
 
     public PacBase3D pac3D() { return pac3D; }
 
-    public Stream<Ghost3D_Appearance> ghosts3D() { return ghosts3D.stream(); }
+    public Stream<MutatingGhost3D> ghosts3D() { return ghosts3D.stream(); }
 
-    public Ghost3D_Appearance ghost3D(byte id) { return ghosts3D.get(id); }
+    public MutatingGhost3D ghost3D(byte id) { return ghosts3D.get(id); }
 
     public Optional<Bonus3D> bonus3D() { return Optional.ofNullable(bonus3D); }
 
@@ -178,8 +180,8 @@ public class GameLevel3D {
             .toList();
     }
 
-    private Ghost3D_Appearance createGhost3D(Ghost ghost, int numFlashes) {
-        var ghost3D = new Ghost3D_Appearance(animationMgr, theAssets(), theUI().configuration().assetNamespace(),
+    private MutatingGhost3D createGhost3D(Ghost ghost, int numFlashes) {
+        var ghost3D = new MutatingGhost3D(animationMgr, theAssets(), theUI().configuration().assetNamespace(),
             new MeshView(Model3DRepository.get().ghostDressMesh()),
             new MeshView(Model3DRepository.get().ghostPupilsMesh()),
             new MeshView(Model3DRepository.get().ghostEyeballsMesh()),

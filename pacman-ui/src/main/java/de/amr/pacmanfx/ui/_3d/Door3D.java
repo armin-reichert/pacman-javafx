@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.uilib.Ufx;
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -39,15 +40,11 @@ public class Door3D extends Group {
 
     public ObjectProperty<DrawMode> drawModeProperty() { return drawModePy; }
 
-    public void playOpenCloseAnimation() {
-        new Timeline(
-            new KeyFrame(Duration.seconds(0.25),
-                    new KeyValue(barThicknessPy, 0)),
-            new KeyFrame(Duration.seconds(1),
-                    new KeyValue(barThicknessPy, 0)),
-            new KeyFrame(Duration.seconds(1.5),
-                    new KeyValue(barThicknessPy, 0.75))
-        ).play();
+    public Animation createOpenCloseAnimation() {
+        return new Timeline(
+            new KeyFrame(Duration.seconds(0.75), new KeyValue(barThicknessPy, 0)),
+            new KeyFrame(Duration.seconds(1.5),  new KeyValue(barThicknessPy, 0.75))
+        );
     }
 
     private Group createDoorWing(Vector2i tile, double height) {

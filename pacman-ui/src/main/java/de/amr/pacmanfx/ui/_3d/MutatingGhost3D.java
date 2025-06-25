@@ -30,7 +30,7 @@ import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Appearance of a 3D ghost. One of:
+ * Appearances of a 3D ghost. One of:
  * <ul>
  * <li>{@link Appearance#NORMAL}: colored ghost with blue eyes,
  * <li>{@link Appearance#FRIGHTENED}: blue ghost with empty, "pinkish" eyes (looking blind),
@@ -39,7 +39,7 @@ import static java.util.Objects.requireNonNull;
  * <li>{@link Appearance#VALUE}: showing eaten ghost's value.
  * </ul>
  */
-public class Ghost3D_Appearance extends Group {
+public class MutatingGhost3D extends Group {
 
     public enum Appearance {NORMAL, FRIGHTENED, FLASHING, EATEN, VALUE}
 
@@ -57,7 +57,7 @@ public class Ghost3D_Appearance extends Group {
     private final int numFlashes;
     private RotateTransition brakeAnimation;
 
-    public Ghost3D_Appearance(
+    public MutatingGhost3D(
         AnimationManager animationMgr,
         AssetStorage assets, String assetPrefix,
         Shape3D dressShape, Shape3D pupilsShape, Shape3D eyeballsShape,
