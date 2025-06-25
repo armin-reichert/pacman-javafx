@@ -89,7 +89,7 @@ public class Bonus3D extends Box {
         if (!edibleAnimation.getAxis().equals(rotationAxis)) {
             edibleAnimation.stop();
             edibleAnimation.setAxis(rotationAxis);
-            animationMgr.registerAndPlayFromStart("Bonus_Edible_Animation", edibleAnimation);
+            animationMgr.registerAndPlayFromStart(this, "Bonus_Edible", edibleAnimation);
         }
     }
 
@@ -100,7 +100,7 @@ public class Bonus3D extends Box {
         if (bonus instanceof StaticBonus) {
             edibleAnimation.setAxis(Rotate.X_AXIS);
         }
-        animationMgr.registerAndPlayFromStart("Bonus_Edible_Animation", edibleAnimation);
+        animationMgr.registerAndPlayFromStart(this, "Bonus_Edible", edibleAnimation);
     }
 
     public void expire() {
@@ -115,7 +115,7 @@ public class Bonus3D extends Box {
         setRotationAxis(Rotate.X_AXIS);
         setRotate(0);
         edibleAnimation.stop();
-        animationMgr.registerAndPlayFromStart("Bonus_Eaten_Animation", eatenAnimation);
+        animationMgr.registerAndPlayFromStart(this, "Bonus_Eaten", eatenAnimation);
     }
 
     private void setTexture(Image texture) {

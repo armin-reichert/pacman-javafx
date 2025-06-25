@@ -5,9 +5,11 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib.animation;
 
 import javafx.animation.Animation;
+import javafx.scene.Node;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -20,30 +22,46 @@ import static java.util.Objects.requireNonNull;
  */
 public class AnimationManager {
 
-    private final Map<String, Animation> animationMap = new WeakHashMap<>();
+    private final Map<String, Animation> animationMap = new HashMap<>();
 
-    public Animation register(String name, Animation animation) {
-        animationMap.put(requireValidIdentifier(name), requireNonNull(animation));
+    private String makeID(Node node, String animationName) {
+        return animationName + "@" + node.hashCode();
+    }
+    public Animation register(Node node, String animationName, Animation animation) {
+        requireNonNull(node);
+        requireValidIdentifier(animationName);
+        requireNonNull(animation);
+        String id = makeID(node, animationName);
+        if (animationMap.containsKey(id)) {
+            Logger.warn("Animation map already contains animation with ID '{}'", id);
+        }
+        animationMap.put(id, animation);
+        Logger.info("New animation map entry ID={}", id);
         return animation;
     }
 
-    public void registerAndPlayFromStart(String name, Animation animation) {
-        register(name, animation);
+    public void registerAndPlayFromStart(Node node, String animationName, Animation animation) {
+        register(node, animationName, animation);
         animation.playFromStart();
-        Logger.info("Playing animation '{}' ({})", name, animation);
+        String id = makeID(node, animationName);
+        Logger.info("Playing animation ID='{}' ({})", id, animation);
     }
 
     public void stopAll() {
         for (Map.Entry<String, Animation> entry : new ArrayList<>(animationMap.entrySet())) {
-            String name = entry.getKey();
+            String id = entry.getKey();
             Animation animation = entry.getValue();
             try {
-                animation.stop();
-                Logger.info("Stopped animation '{}' ({})", name, animation);
+                if (animation.getStatus() == Animation.Status.STOPPED) {
+                    Logger.info("Already stopped: animation ID='{}' ({})", id, animation);
+                } else {
+                    animation.stop();
+                    Logger.info("Stopped animation ID='{}' ({})", id, animation);
+                }
             } catch (IllegalStateException x) {
-                Logger.warn("Could not stop (embedded?) animation '{}' ({})", name, animation);
+                Logger.warn("Could not stop (embedded?) animation ID='{}' ({})", id, animation);
             }
-            animationMap.remove(name);
+            animationMap.remove(id);
         }
     }
 }

@@ -152,7 +152,7 @@ public class Ghost3D_Appearance extends Group {
             brakeAnimation.setAutoReverse(true);
             brakeAnimation.setCycleCount(2);
             brakeAnimation.setInterpolator(Interpolator.EASE_OUT);
-            animationMgr.registerAndPlayFromStart("GhostBraking_Animation", brakeAnimation);
+            animationMgr.registerAndPlayFromStart(this, "GhostBraking", brakeAnimation);
         }
     }
 

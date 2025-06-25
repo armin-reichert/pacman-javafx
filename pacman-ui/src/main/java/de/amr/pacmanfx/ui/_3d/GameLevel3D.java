@@ -304,7 +304,7 @@ public class GameLevel3D {
             spinning.setAxis(Rotate.X_AXIS);
             spinning.setByAngle(360);
             spinning.setRate(n % 2 == 0 ? 1 : -1);
-            animationMgr.registerAndPlayFromStart("LevelCounter_Spinning", spinning);
+            animationMgr.registerAndPlayFromStart(cube, "LevelCounter_Spinning", spinning);
 
             levelCounter3D.getChildren().add(cube);
             n += 1;
@@ -343,7 +343,7 @@ public class GameLevel3D {
             new PauseTransition(Duration.seconds(displaySeconds)),
             moveDownAnimation
         );
-        animationMgr.registerAndPlayFromStart("LevelMessage_Movement", animation);
+        animationMgr.registerAndPlayFromStart(messageView, "LevelMessage_Movement", animation);
     }
 
     public void updateBonus3D(Bonus bonus) {
