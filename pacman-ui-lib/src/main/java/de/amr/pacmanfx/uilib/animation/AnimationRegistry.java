@@ -8,9 +8,11 @@ import javafx.animation.Animation;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
+
+import static de.amr.pacmanfx.Validations.requireValidIdentifier;
+import static java.util.Objects.requireNonNull;
 
 /**
  * 3D entities with animations implement this interface such that all potentially running animations can be stopped
@@ -21,11 +23,11 @@ public class AnimationRegistry {
     private final Map<String, Animation> animationMap = new WeakHashMap<>();
 
     public void register(String name, Animation animation) {
-        animationMap.put(name, animation);
+        animationMap.put(requireValidIdentifier(name), requireNonNull(animation));
     }
 
     public void registerAndPlayFromStart(String name, Animation animation) {
-        animationMap.put(name, animation);
+        register(name, animation);
         animation.playFromStart();
         Logger.info("Playing animation '{}' ({})", name, animation);
     }

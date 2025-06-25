@@ -7,8 +7,14 @@ package de.amr.pacmanfx;
 import de.amr.pacmanfx.model.GameException;
 
 import java.util.Set;
+import java.util.regex.Pattern;
+
+import static java.util.Objects.requireNonNull;
 
 public interface Validations {
+
+    Pattern PATTERN_IDENTIFIER = Pattern.compile("^[a-zA-Z_$][a-zA-Z0-9_$]*$");
+
     static byte requireValidGhostPersonality(byte id) {
         if (id < 0 || id > 3) throw GameException.invalidGhostPersonality(id);
         return id;
@@ -31,6 +37,14 @@ public interface Validations {
     static int requireNonNegativeInt(int value) {
         if (value < 0) throw new IllegalArgumentException("Non-negative integer required, but got %d".formatted(value));
         return value;
+    }
+
+    static String requireValidIdentifier(String s) {
+        requireNonNull(s);
+        if (PATTERN_IDENTIFIER.matcher(s).matches()) {
+            return s;
+        }
+        throw new IllegalArgumentException("'%s' is no valid identifier".formatted(s));
     }
 
     /**
