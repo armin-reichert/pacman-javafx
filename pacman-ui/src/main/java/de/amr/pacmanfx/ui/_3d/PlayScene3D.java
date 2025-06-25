@@ -12,13 +12,12 @@ import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.MovingBonus;
-import de.amr.pacmanfx.ui.ActionBindingSupport;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.uilib.CameraControlledView;
 import de.amr.pacmanfx.uilib.Ufx;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.beans.property.DoubleProperty;
@@ -47,10 +46,12 @@ import static de.amr.pacmanfx.uilib.Ufx.*;
 import static java.util.Objects.requireNonNull;
 
 /**
- * 3D play scene. Provides different camera perspectives that can be stepped
- * through using keys <code>Alt+LEFT</code> and <code>Alt+RIGHT</code>.
+ * 3D play scene.
+ *
+ * <p>Provides different camera perspectives that can be stepped  through using key combinations
+ * <code>Alt+LEFT</code> and <code>Alt+RIGHT</code>.
  */
-public class PlayScene3D implements GameScene, ActionBindingSupport, CameraControlledView {
+public class PlayScene3D implements GameScene, CameraControlledView {
 
     protected final SubScene subScene3D;
     protected final Group root = new Group();
@@ -224,7 +225,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
                 replaceGameLevel3D();
                 level3D.playLivesCounterAnimation();
                 level3D.energizers3D().forEach(Energizer3D::startPumping);
-                showLevelMessage("LEVEL %d (TEST)".formatted(theGameLevel().number()));
+                showLevelTestMessage(theGameLevel().number());
             }
             default -> {
                 if (!theGameLevel().isDemoLevel()) {
@@ -420,7 +421,7 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
                     replaceGameLevel3D();
                     level3D.pac3D().init();
                     level3D.ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.init(theGameLevel()));
-                    showLevelMessage("LEVEL %d (TEST)".formatted(theGameLevel().number()));
+                    showLevelTestMessage(theGameLevel().number());
                     PY_3D_PERSPECTIVE.set(PerspectiveID.TOTAL);
                 }
                 default -> {}
@@ -531,11 +532,11 @@ public class PlayScene3D implements GameScene, ActionBindingSupport, CameraContr
         theUI().updateGameScene(true);
     }
 
-    private void showLevelMessage(String message) {
+    private void showLevelTestMessage(int levelNumber) {
         WorldMap worldMap = theGameLevel().worldMap();
         double x = worldMap.numCols() * HTS;
         double y = (worldMap.numRows() - 2) * TS;
-        level3D.showAnimatedMessage(message, 5, x, y);
+        level3D.showAnimatedMessage("LEVEL %d (TEST)".formatted(levelNumber), 5, x, y);
     }
 
     private void showReadyMessage() {
