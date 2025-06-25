@@ -4,8 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._3d;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -18,48 +16,44 @@ import static de.amr.pacmanfx.Globals.TS;
  */
 public class Scores3D extends GridPane {
 
-    private final ObjectProperty<Font> fontPy = new SimpleObjectProperty<>(Font.font("Monospace", 12));
-    private final Text txtLeft;
-    private final Text txtRight;
+    private final Text textDisplayLeft;
+    private final Text textDisplayRight;
 
-    public Scores3D(String leftTitle, String rightTitle) {
-        var txtLeftTitle = new Text(leftTitle);
-        txtLeftTitle.setFill(Color.GHOSTWHITE);
-        txtLeftTitle.fontProperty().bind(fontPy);
+    public Scores3D(String titleTextLeft, String titleTextRight, Font font) {
+        var titleDisplayLeft = new Text(titleTextLeft);
+        titleDisplayLeft.setFill(Color.GHOSTWHITE);
+        titleDisplayLeft.setFont(font);
 
-        txtLeft = new Text();
-        txtLeft.fontProperty().bind(fontPy);
+        textDisplayLeft = new Text();
+        textDisplayLeft.setFont(font);
 
-        var txtRightTitle = new Text(rightTitle);
-        txtRightTitle.setFill(Color.GHOSTWHITE);
-        txtRightTitle.fontProperty().bind(fontPy);
+        var titleDisplayRight = new Text(titleTextRight);
+        titleDisplayRight.setFill(Color.GHOSTWHITE);
+        titleDisplayRight.setFont(font);
 
-        txtRight = new Text();
-        txtRight.setFill(Color.YELLOW);
-        txtRight.fontProperty().bind(fontPy);
+        textDisplayRight = new Text();
+        textDisplayRight.setFill(Color.YELLOW);
+        textDisplayRight.setFont(font);
 
         setHgap(5 * TS);
-        add(txtLeftTitle,  0,0);
-        add(txtLeft,       0,1);
-        add(txtRightTitle,1,0);
-        add(txtRight,     1,1);
-    }
-
-    public void setFont(Font font) {
-        fontPy.set(font);
+        add(titleDisplayLeft,  0,0);
+        add(textDisplayLeft,       0,1);
+        add(titleDisplayRight,1,0);
+        add(textDisplayRight,     1,1);
     }
 
     public void showScore(int score, int levelNumber) {
-        txtLeft.setFill(Color.YELLOW);
-        txtLeft.setText(String.format("%7d L%d", score, levelNumber));
+        textDisplayLeft.setFill(Color.YELLOW);
+        textDisplayLeft.setText(String.format("%7d L%d", score, levelNumber));
     }
+
     public void showHighScore(int highScore, int highScoreLevelNumber) {
-        txtLeft.setFill(Color.YELLOW);
-        txtRight.setText(String.format("%7d L%d", highScore, highScoreLevelNumber));
+        textDisplayLeft.setFill(Color.YELLOW);
+        textDisplayRight.setText(String.format("%7d L%d", highScore, highScoreLevelNumber));
     }
 
     public void showTextAsScore(String text, Color color) {
-        txtLeft.setText(text);
-        txtLeft.setFill(color);
+        textDisplayLeft.setText(text);
+        textDisplayLeft.setFill(color);
     }
 }

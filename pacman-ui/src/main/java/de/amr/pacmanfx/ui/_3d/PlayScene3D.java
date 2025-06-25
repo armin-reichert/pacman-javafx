@@ -71,7 +71,11 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     protected AnimationRegistry animationRegistry = new AnimationRegistry();
 
     public PlayScene3D() {
-        scores3D = new Scores3D(theAssets().text("score.score"), theAssets().text("score.high_score"));
+        scores3D = new Scores3D(
+            theAssets().text("score.score"),
+            theAssets().text("score.high_score"),
+            theAssets().arcadeFont(TS)
+        );
         scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
         scores3D.rotateProperty().bind(camera.rotateProperty());
 
@@ -198,7 +202,6 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     @Override
     public void init() {
         theGame().hud().showScore(true);
-        scores3D.setFont(theAssets().arcadeFont(TS));
         perspectiveIDPy.bind(PY_3D_PERSPECTIVE);
     }
 
