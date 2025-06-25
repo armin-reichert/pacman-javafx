@@ -22,9 +22,8 @@ public class Energizer3D implements Eatable3D {
     private final Sphere sphere;
     private final ScaleTransition pumpingAnimation;
     private final Animation hideAfterSmallDelay;
-    private Animation eatenAnimation;
-
     private final AnimationManager animationMgr;
+    private Animation hideAndEatAnimation;
 
     public Energizer3D(double radius, AnimationManager animationMgr) {
         this.animationMgr = requireNonNull(animationMgr);
@@ -50,16 +49,15 @@ public class Energizer3D implements Eatable3D {
         animationMgr.registerAndPlayFromStart(sphere, "Energizer_Pumping", pumpingAnimation);
     }
 
-    public void setEatenAnimation(Animation animation) {
-        this.eatenAnimation = requireNonNull(animation);
+    public void setEatenAnimation(Animation eatenAnimation) {
+        hideAndEatAnimation = new SequentialTransition(hideAfterSmallDelay, eatenAnimation);
     }
 
     @Override
     public void onEaten() {
         pumpingAnimation.stop();
-        if (eatenAnimation != null) {
-            var animation = new SequentialTransition(hideAfterSmallDelay, eatenAnimation);
-            animationMgr.registerAndPlayFromStart(sphere, "Energizer_HideAndEat", animation);
+        if (hideAndEatAnimation != null) {
+            animationMgr.registerAndPlayFromStart(sphere, "Energizer_HideAndEat", hideAndEatAnimation);
         } else {
             animationMgr.registerAndPlayFromStart(sphere, "Energizer_Hide", hideAfterSmallDelay);
         }

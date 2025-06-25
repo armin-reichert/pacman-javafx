@@ -15,14 +15,16 @@ import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.ui.PacManGames_UI_Impl;
+import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
+import de.amr.pacmanfx.ui.dashboard.InfoBoxPlayScene3DAnimations;
 import javafx.application.Application;
+import javafx.beans.binding.Bindings;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import static de.amr.pacmanfx.Globals.CUSTOM_MAP_DIR;
-import static de.amr.pacmanfx.ui.PacManGames.theClock;
-import static de.amr.pacmanfx.ui.PacManGames.theWatchdog;
+import static de.amr.pacmanfx.ui.PacManGames.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI_Impl.Builder.*;
 
 /**
@@ -71,6 +73,7 @@ public class PacManGames3dApp extends Application {
             .dashboardEntries(
                 DashboardID.GENERAL, DashboardID.GAME_CONTROL,
                 DashboardID.SETTINGS_3D,
+                DashboardID.ANIMATION_INFO,
                 DashboardID.GAME_INFO, DashboardID.ACTOR_INFO,
                 DashboardID.CUSTOM_MAPS,
                 DashboardID.KEYBOARD_SHORTCUTS_GLOBAL, DashboardID.KEYBOARD_SHORTCUTS_LOCAL,

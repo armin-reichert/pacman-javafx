@@ -5,13 +5,13 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib.animation;
 
 import javafx.animation.Animation;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableMap;
 import javafx.scene.Node;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 import static de.amr.pacmanfx.Validations.requireValidIdentifier;
 import static java.util.Objects.requireNonNull;
@@ -22,7 +22,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class AnimationManager {
 
-    private final Map<String, Animation> animationMap = new HashMap<>();
+    private final ObservableMap<String, Animation> animationMap = FXCollections.observableHashMap();
 
     private String makeID(Node node, String animationName) {
         return animationName + "@" + node.hashCode();
@@ -46,7 +46,6 @@ public class AnimationManager {
         }
         animationMap.put(id, animation);
         Logger.info("New animation map entry ID={}", id);
-        Logger.debug(this::dump);
         return animation;
     }
 
@@ -73,5 +72,9 @@ public class AnimationManager {
             }
             animationMap.remove(id);
         }
+    }
+
+    public ObservableMap<String, Animation> animationMap() {
+        return animationMap;
     }
 }
