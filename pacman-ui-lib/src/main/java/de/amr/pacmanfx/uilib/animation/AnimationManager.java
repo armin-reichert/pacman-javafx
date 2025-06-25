@@ -27,6 +27,15 @@ public class AnimationManager {
     private String makeID(Node node, String animationName) {
         return animationName + "@" + node.hashCode();
     }
+
+    private String dump() {
+        StringBuilder sb = new StringBuilder();
+        animationMap.forEach((id, animation) -> {
+            sb.append("%10s => %20s (%s)\n".formatted(id, animation, animation.getStatus()));
+        });
+        return sb.toString();
+    }
+
     public Animation register(Node node, String animationName, Animation animation) {
         requireNonNull(node);
         requireValidIdentifier(animationName);
@@ -37,6 +46,7 @@ public class AnimationManager {
         }
         animationMap.put(id, animation);
         Logger.info("New animation map entry ID={}", id);
+        Logger.debug(this::dump);
         return animation;
     }
 
