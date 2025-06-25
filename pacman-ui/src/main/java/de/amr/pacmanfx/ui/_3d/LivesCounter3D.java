@@ -27,16 +27,15 @@ import static de.amr.pacmanfx.Globals.TS;
  */
 public class LivesCounter3D extends Group {
 
-    public final DoubleProperty pillarHeightPy = new SimpleDoubleProperty(this, "pillarHeight", 8);
-    public final ObjectProperty<Color> pillarColorPy = new SimpleObjectProperty<>(this, "pillarColor", Color.grayRgb(120));
-    public final DoubleProperty plateRadiusPy = new SimpleDoubleProperty(this, "plateRadius", 6);
-    public final DoubleProperty plateThicknessPy = new SimpleDoubleProperty(this, "plateThickness", 1);
-    public final ObjectProperty<Color> plateColorPy = new SimpleObjectProperty<>(this, "plateColor", Color.grayRgb(180));
-    public final IntegerProperty livesCountPy = new SimpleIntegerProperty(this, "livesCount", 0);
-    public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
-
-    private final ObjectProperty<PhongMaterial> pillarMaterialPy = new SimpleObjectProperty<>(this, "pillarMaterial", new PhongMaterial());
-    private final ObjectProperty<PhongMaterial> plateMaterialPy = new SimpleObjectProperty<>(this, "plateMaterial", new PhongMaterial());
+    private final DoubleProperty pillarHeightPy = new SimpleDoubleProperty(8);
+    private final ObjectProperty<Color> pillarColorPy = new SimpleObjectProperty<>(Color.grayRgb(120));
+    private final DoubleProperty plateRadiusPy = new SimpleDoubleProperty(6);
+    private final DoubleProperty plateThicknessPy = new SimpleDoubleProperty(1);
+    private final ObjectProperty<Color> plateColorPy = new SimpleObjectProperty<>(Color.grayRgb(180));
+    private final IntegerProperty livesCountPy = new SimpleIntegerProperty(0);
+    private final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(DrawMode.FILL);
+    private final ObjectProperty<PhongMaterial> pillarMaterialPy = new SimpleObjectProperty<>(new PhongMaterial());
+    private final ObjectProperty<PhongMaterial> plateMaterialPy = new SimpleObjectProperty<>(new PhongMaterial());
 
     private final Node[] pacShapes;
     private final PointLight light = new PointLight();
@@ -68,34 +67,46 @@ public class LivesCounter3D extends Group {
             standsGroup.getChildren().add(createStand(x));
             getChildren().add(pacShape);
         }
-        resetShapes();
+        setInitialShapeRotation();
         getChildren().addAll(standsGroup, light);
     }
 
-    public PointLight light() {
-        return light;
-    }
-
-    public void resetShapes() {
+    private void setInitialShapeRotation() {
         for (Node shape : pacShapes) {
             shape.setRotationAxis(Rotate.Z_AXIS);
             shape.setRotate(240);
         }
     }
 
-    public Animation createAnimation() {
-        var transition = new ParallelTransition();
-        for (Node shape : pacShapes) {
-            var rotation = new RotateTransition(Duration.seconds(10.0), shape);
+    public ObjectProperty<DrawMode> drawModeProperty() { return drawModePy; }
+
+    public IntegerProperty livesCountProperty() { return livesCountPy; }
+
+    public ObjectProperty<Color> pillarColorProperty() { return pillarColorPy; }
+
+    public ObjectProperty<Color> plateColorProperty() { return pillarColorPy; }
+
+    public PointLight light() {
+        return light;
+    }
+
+    /**
+     * @return animation that lets the Pac shapes in the live counter look around.
+     */
+    public Animation createPacShapesLookAroundAnimation() {
+        var animation = new ParallelTransition();
+        for (Node pacShape : pacShapes) {
+            var rotation = new RotateTransition(Duration.seconds(10.0), pacShape);
             rotation.setAxis(Rotate.Z_AXIS);
             rotation.setFromAngle(240);
             rotation.setToAngle(300);
             rotation.setInterpolator(Interpolator.LINEAR);
             rotation.setCycleCount(Animation.INDEFINITE);
             rotation.setAutoReverse(true);
-            transition.getChildren().add(rotation);
+            animation.getChildren().add(rotation);
         }
-        return transition;
+        setInitialShapeRotation();
+        return animation;
     }
 
     private Group createStand(double x) {

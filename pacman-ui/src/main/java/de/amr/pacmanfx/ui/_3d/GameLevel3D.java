@@ -267,8 +267,11 @@ public class GameLevel3D {
         livesCounter3D = new LivesCounter3D(counterShapes);
         livesCounter3D.setTranslateX(2 * TS);
         livesCounter3D.setTranslateY(2 * TS);
-        livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
-        livesCounter3D.livesCountPy.bind(livesCountPy);
+        livesCounter3D.drawModeProperty().bind(PY_3D_DRAW_MODE);
+        livesCounter3D.livesCountProperty().bind(livesCountPy);
+        livesCounter3D.pillarColorProperty().set(Settings3D.LIVES_COUNTER_PILLAR_COLOR);
+        livesCounter3D.plateColorProperty().set(Settings3D.LIVES_COUNTER_PLATE_COLOR);
+
         livesCounter3D.light().colorProperty().set(Color.CORNFLOWERBLUE);
     }
 
@@ -355,10 +358,8 @@ public class GameLevel3D {
         mazeGroup.getChildren().add(bonus3D);
     }
 
-    public void playLivesCounterAnimation() {
-        var livesCounterAnimation = livesCounter3D.createAnimation();
-        livesCounter3D.resetShapes();
-        animationRegistry.registerAndPlayFromStart("LivesCounter_Animation", livesCounterAnimation);
+    public Animation createLivesCounterAnimation() {
+        return livesCounter3D.createPacShapesLookAroundAnimation();
     }
 
     private void playLevelRotateAnimation() {

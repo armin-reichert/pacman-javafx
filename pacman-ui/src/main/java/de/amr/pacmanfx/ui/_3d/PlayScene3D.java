@@ -256,9 +256,10 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         switch (state) {
             case HUNTING -> {
                 level3D.pac3D().init();
-                level3D.ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.init(theGameLevel()));
+                level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(theGameLevel()));
                 level3D.energizers3D().forEach(Energizer3D::startPumping);
-                level3D.playLivesCounterAnimation();
+                Animation livesCounterAnimation = level3D.createLivesCounterAnimation();
+                animationRegistry.registerAndPlayFromStart("LivesCounter_Animation", livesCounterAnimation);
             }
             case PACMAN_DYING -> {
                 animationRegistry.stopAll();
@@ -344,7 +345,8 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             }
             case TESTING_LEVELS_SHORT, TESTING_LEVELS_MEDIUM -> {
                 replaceGameLevel3D();
-                level3D.playLivesCounterAnimation();
+                Animation livesCounterAnimation = level3D.createLivesCounterAnimation();
+                animationRegistry.registerAndPlayFromStart("LivesCounter_Animation", livesCounterAnimation);
                 level3D.energizers3D().forEach(Energizer3D::startPumping);
                 showLevelTestMessage(theGameLevel().number());
             }
@@ -377,7 +379,8 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             if (theGameLevel().pac().powerTimer().isRunning()) {
                 theSound().playPacPowerSound();
             }
-            level3D.playLivesCounterAnimation();
+            Animation livesCounterAnimation = level3D.createLivesCounterAnimation();
+            animationRegistry.registerAndPlayFromStart("LivesCounter_Animation", livesCounterAnimation);
         }
 
         updateScores();
