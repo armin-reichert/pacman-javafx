@@ -383,6 +383,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             animationRegistry.registerAndPlayFromStart("LivesCounter_Animation", livesCounterAnimation);
         }
 
+        subScene3D.setFill(Color.TRANSPARENT);
         updateScores();
         bindActions();
     }

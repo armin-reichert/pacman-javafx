@@ -362,13 +362,13 @@ public class GameLevel3D {
         return livesCounter3D.createPacShapesLookAroundAnimation();
     }
 
-    private void playLevelRotateAnimation() {
+    private Animation createLevelRotateAnimation() {
         var rotation = new RotateTransition(Duration.seconds(1.5), root);
         rotation.setAxis(theRNG().nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
         rotation.setFromAngle(0);
         rotation.setToAngle(360);
         rotation.setInterpolator(Interpolator.LINEAR);
-        animationRegistry.registerAndPlayFromStart("LevelRotate_Animation", rotation);
+        return rotation;
     }
 
     public Animation createLevelCompleteAnimation() {
@@ -396,14 +396,15 @@ public class GameLevel3D {
                 }
             }),
             Ufx.doAfterSec(1.0, () -> theGameLevel().ghosts().forEach(Ghost::hide)),
-            Ufx.doAfterSec(0.5, () -> animationRegistry.registerAndPlayFromStart("MazeFlashing_Animation", maze3D.createMazeFlashAnimation(numFlashes))),
-            Ufx.doAfterSec(1.5, () -> theGameLevel().pac().hide()),
-            Ufx.doAfterSec(0.5, this::playLevelRotateAnimation),
-            Ufx.doAfterSec(2.0, () -> {
-                animationRegistry.registerAndPlayFromStart("MazeWallsDisappearing_Animation", maze3D.createWallsDisappearAnimation(2.0));
-                theSound().playLevelCompleteSound();
-            }),
-            Ufx.doAfterSec(1.5, () -> theSound().playLevelChangedSound())
+            Ufx.doAfterSec(1.0, () -> animationRegistry.registerAndPlayFromStart(
+                "MazeFlashing_Animation", maze3D.createMazeFlashAnimation(numFlashes))),
+            Ufx.doAfterSec(1.0, () -> theGameLevel().pac().hide()),
+            Ufx.doAfterSec(0.5, () -> theSound().playLevelCompleteSound()),
+            Ufx.doAfterSec(1.0, () -> animationRegistry.registerAndPlayFromStart(
+                "LevelRotate_Animation", createLevelRotateAnimation())),
+            Ufx.doAfterSec(2.0, () -> animationRegistry.registerAndPlayFromStart(
+                "MazeWallsDisappearing_Animation", maze3D.createWallsDisappearAnimation(2.0))),
+            Ufx.doAfterSec(2.0, () -> theSound().playLevelChangedSound())
         );
     }
 }
