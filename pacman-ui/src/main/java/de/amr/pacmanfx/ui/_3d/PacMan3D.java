@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.model3D.PacBase3D;
 import javafx.animation.*;
@@ -18,8 +18,8 @@ import static de.amr.pacmanfx.uilib.Ufx.now;
 
 public class PacMan3D extends PacBase3D {
 
-    public PacMan3D(AnimationRegistry animationRegistry, Pac pac, double size, AssetStorage assets, String ans) {
-        super(animationRegistry, pac, size, assets, ans);
+    public PacMan3D(AnimationManager animationManager, Pac pac, double size, AssetStorage assets, String ans) {
+        super(animationManager, pac, size, assets, ans);
     }
 
     @Override

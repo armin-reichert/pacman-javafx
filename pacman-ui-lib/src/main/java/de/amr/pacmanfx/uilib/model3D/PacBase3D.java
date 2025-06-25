@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import javafx.animation.*;
 import javafx.scene.Group;
@@ -49,7 +49,7 @@ public abstract class PacBase3D {
         return animation;
     }
 
-    protected final AnimationRegistry animationRegistry;
+    protected final AnimationManager animationMgr;
     protected final Pac pac;
     protected final PointLight light = new PointLight();
     protected final Group root = new Group();
@@ -67,8 +67,8 @@ public abstract class PacBase3D {
     protected abstract void stopMovementAnimation();
     protected abstract void updateMovementAnimation();
 
-    protected PacBase3D(AnimationRegistry animationRegistry, Pac pac, double size, AssetStorage assets, String ans) {
-        this.animationRegistry = requireNonNull(animationRegistry);
+    protected PacBase3D(AnimationManager animationMgr, Pac pac, double size, AssetStorage assets, String ans) {
+        this.animationMgr = requireNonNull(animationMgr);
         this.pac = requireNonNull(pac);
         this.size = size;
 

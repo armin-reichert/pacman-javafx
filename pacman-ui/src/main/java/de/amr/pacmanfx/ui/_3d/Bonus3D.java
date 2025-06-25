@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.MovingBonus;
 import de.amr.pacmanfx.model.actors.StaticBonus;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -32,17 +32,17 @@ import static java.util.Objects.requireNonNull;
  */
 public class Bonus3D extends Box {
 
-    private final AnimationRegistry animationRegistry;
+    private final AnimationManager animationMgr;
     private final Bonus bonus;
     private final ImageView symbolImageView;
     private final ImageView pointsImageView;
     private final RotateTransition eatenAnimation;
     private final RotateTransition edibleAnimation;
 
-    public Bonus3D(AnimationRegistry animationRegistry, Bonus bonus, Image symbolImage, Image pointsImage) {
+    public Bonus3D(AnimationManager animationMgr, Bonus bonus, Image symbolImage, Image pointsImage) {
         super(BONUS_3D_SYMBOL_WIDTH, TS, TS);
 
-        this.animationRegistry = requireNonNull(animationRegistry);
+        this.animationMgr = requireNonNull(animationMgr);
         this.bonus = requireNonNull(bonus);
 
         symbolImageView = new ImageView(requireNonNull(symbolImage));
@@ -89,7 +89,7 @@ public class Bonus3D extends Box {
         if (!edibleAnimation.getAxis().equals(rotationAxis)) {
             edibleAnimation.stop();
             edibleAnimation.setAxis(rotationAxis);
-            animationRegistry.registerAndPlayFromStart("Bonus_Edible_Animation", edibleAnimation);
+            animationMgr.registerAndPlayFromStart("Bonus_Edible_Animation", edibleAnimation);
         }
     }
 
@@ -100,7 +100,7 @@ public class Bonus3D extends Box {
         if (bonus instanceof StaticBonus) {
             edibleAnimation.setAxis(Rotate.X_AXIS);
         }
-        animationRegistry.registerAndPlayFromStart("Bonus_Edible_Animation", edibleAnimation);
+        animationMgr.registerAndPlayFromStart("Bonus_Edible_Animation", edibleAnimation);
     }
 
     public void expire() {
@@ -115,7 +115,7 @@ public class Bonus3D extends Box {
         setRotationAxis(Rotate.X_AXIS);
         setRotate(0);
         edibleAnimation.stop();
-        animationRegistry.registerAndPlayFromStart("Bonus_Eaten_Animation", eatenAnimation);
+        animationMgr.registerAndPlayFromStart("Bonus_Eaten_Animation", eatenAnimation);
     }
 
     private void setTexture(Image texture) {

@@ -12,7 +12,7 @@ import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.uilib.Ufx;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.Model3D;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
@@ -82,10 +82,10 @@ public class GameLevel3D {
     private MessageView messageView;
     private Bonus3D bonus3D;
 
-    private final AnimationRegistry animationRegistry;
+    private final AnimationManager animationMgr;
 
-    public GameLevel3D(AnimationRegistry animationRegistry) {
-        this.animationRegistry = requireNonNull(animationRegistry);
+    public GameLevel3D(AnimationManager animationMgr) {
+        this.animationMgr = requireNonNull(animationMgr);
         createAmbientLight();
         createPac3D();
         createGhosts3D();
@@ -168,7 +168,7 @@ public class GameLevel3D {
     }
 
     private void createPac3D() {
-        pac3D = theUI().configuration().createPac3D(animationRegistry, theGameLevel().pac());
+        pac3D = theUI().configuration().createPac3D(animationMgr, theGameLevel().pac());
         Model3D.bindDrawMode(pac3D.root(), PY_3D_DRAW_MODE);
     }
 
@@ -179,7 +179,7 @@ public class GameLevel3D {
     }
 
     private Ghost3D_Appearance createGhost3D(Ghost ghost, int numFlashes) {
-        var ghost3D = new Ghost3D_Appearance(animationRegistry, theAssets(), theUI().configuration().assetNamespace(),
+        var ghost3D = new Ghost3D_Appearance(animationMgr, theAssets(), theUI().configuration().assetNamespace(),
             new MeshView(Model3DRepository.get().ghostDressMesh()),
             new MeshView(Model3DRepository.get().ghostPupilsMesh()),
             new MeshView(Model3DRepository.get().ghostEyeballsMesh()),
@@ -192,7 +192,7 @@ public class GameLevel3D {
         final WorldMap worldMap = theGameLevel().worldMap();
         final WorldMapColorScheme colorScheme = theUI().configuration().worldMapColorScheme(worldMap);
         floor3D = createFloor3D(worldMap.numCols() * TS, worldMap.numRows() * TS);
-        maze3D = new Maze3D(theGameLevel(), colorScheme, animationRegistry);
+        maze3D = new Maze3D(theGameLevel(), colorScheme, animationMgr);
         mazeGroup.getChildren().addAll(floor3D, maze3D);
         createFood3D(colorScheme);
     }
@@ -228,7 +228,7 @@ public class GameLevel3D {
 
     private Energizer3D createEnergizer3D(Vector2i tile, PhongMaterial material) {
         var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -2* Settings3D.ENERGIZER_3D_RADIUS);
-        var energizer3D = new Energizer3D(Settings3D.ENERGIZER_3D_RADIUS, animationRegistry);
+        var energizer3D = new Energizer3D(Settings3D.ENERGIZER_3D_RADIUS, animationMgr);
         energizer3D.setTile(tile);
         energizer3D.shape3D().setTranslateX(center.getX());
         energizer3D.shape3D().setTranslateY(center.getY());
@@ -304,7 +304,7 @@ public class GameLevel3D {
             spinning.setAxis(Rotate.X_AXIS);
             spinning.setByAngle(360);
             spinning.setRate(n % 2 == 0 ? 1 : -1);
-            animationRegistry.registerAndPlayFromStart("LevelCounter_Spinning", spinning);
+            animationMgr.registerAndPlayFromStart("LevelCounter_Spinning", spinning);
 
             levelCounter3D.getChildren().add(cube);
             n += 1;
@@ -343,7 +343,7 @@ public class GameLevel3D {
             new PauseTransition(Duration.seconds(displaySeconds)),
             moveDownAnimation
         );
-        animationRegistry.registerAndPlayFromStart("LevelMessage_Movement", animation);
+        animationMgr.registerAndPlayFromStart("LevelMessage_Movement", animation);
     }
 
     public void updateBonus3D(Bonus bonus) {
@@ -353,7 +353,7 @@ public class GameLevel3D {
         }
         Image bonusSymbolTexture = theUI().configuration().createBonusSymbolImage(bonus.symbol());
         Image bonusValueTexture  = theUI().configuration().createBonusValueImage(bonus.symbol());
-        bonus3D = new Bonus3D(animationRegistry, bonus, bonusSymbolTexture, bonusValueTexture);
+        bonus3D = new Bonus3D(animationMgr, bonus, bonusSymbolTexture, bonusValueTexture);
         bonus3D.showEdible();
         mazeGroup.getChildren().add(bonus3D);
     }
@@ -372,39 +372,33 @@ public class GameLevel3D {
     }
 
     public Animation createLevelCompleteAnimation() {
-        int numFlashes = theGameLevel().data().numFlashes();
-        return theGame().cutSceneNumber(theGameLevel().number()).isPresent()
-                ? levelCompleteAnimationBeforeCutScene(numFlashes)
-                : levelCompleteAnimationBeforeNextLevel(numFlashes);
-    }
-
-    private Animation levelCompleteAnimationBeforeCutScene(int numFlashes) {
-        return new SequentialTransition(
+        int levelNumber = theGameLevel().number();
+        int numMazeFlashes = theGameLevel().data().numFlashes();
+        if (theGame().cutSceneNumber(levelNumber).isPresent()) {
+            // when a cut scene follows, only play the maze flashing animation
+            return new SequentialTransition(
                 doAfterSec(1.0, () -> theGameLevel().ghosts().forEach(Ghost::hide)),
-                maze3D.createMazeFlashAnimation(numFlashes),
-                doAfterSec(2.5, () -> theGameLevel().pac().hide())
-        );
-    }
-
-    private Animation levelCompleteAnimationBeforeNextLevel(int numFlashes) {
-        boolean showFlashMessage = randomInt(1, 100) < 25;
-        return new SequentialTransition(
-            Ufx.now(() -> {
-                livesCounter3D().light().setLightOn(false);
-                if (showFlashMessage) {
-                    theUI().showFlashMessageSec(3, theAssets().localizedLevelCompleteMessage(theGameLevel().number()));
-                }
-            }),
-            Ufx.doAfterSec(1.0, () -> theGameLevel().ghosts().forEach(Ghost::hide)),
-            Ufx.doAfterSec(1.0, () -> animationRegistry.registerAndPlayFromStart(
-                "MazeFlashing_Animation", maze3D.createMazeFlashAnimation(numFlashes))),
-            Ufx.doAfterSec(1.0, () -> theGameLevel().pac().hide()),
-            Ufx.doAfterSec(0.5, () -> theSound().playLevelCompleteSound()),
-            Ufx.doAfterSec(1.0, () -> animationRegistry.registerAndPlayFromStart(
-                "LevelRotate_Animation", createLevelRotateAnimation())),
-            Ufx.doAfterSec(2.0, () -> animationRegistry.registerAndPlayFromStart(
-                "MazeWallsDisappearing_Animation", maze3D.createWallsDisappearAnimation(2.0))),
-            Ufx.doAfterSec(2.0, () -> theSound().playLevelChangedSound())
-        );
+                maze3D.createMazeFlashAnimation(numMazeFlashes),
+                doAfterSec(2.0, () -> theGameLevel().pac().hide())
+            );
+        }
+        else {
+            boolean showFlashMessage = randomInt(1, 1000) < 250; // every 4th time also show a message
+            return new SequentialTransition(
+                Ufx.now(() -> {
+                    livesCounter3D().light().setLightOn(false);
+                    if (showFlashMessage) {
+                        theUI().showFlashMessageSec(3, theAssets().localizedLevelCompleteMessage(levelNumber));
+                    }
+                }),
+                Ufx.doAfterSec(1.0, () -> theGameLevel().ghosts().forEach(Ghost::hide)),
+                Ufx.doAfterSec(1.0, maze3D.createMazeFlashAnimation(numMazeFlashes)),
+                Ufx.doAfterSec(2.0, () -> theGameLevel().pac().hide()),
+                Ufx.doAfterSec(0.5, () -> theSound().playLevelCompleteSound()),
+                Ufx.doAfterSec(1.0, createLevelRotateAnimation()),
+                Ufx.doAfterSec(1.0, maze3D.createWallsDisappearAnimation(1.0)),
+                Ufx.doAfterSec(1.0, () -> theSound().playLevelChangedSound())
+            );
+        }
     }
 }

@@ -17,7 +17,7 @@ import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.uilib.CameraControlledView;
 import de.amr.pacmanfx.uilib.Ufx;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.beans.property.DoubleProperty;
@@ -65,7 +65,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     protected final PerspectiveCamera camera = new PerspectiveCamera(true);
     protected final Map<PerspectiveID, Perspective> perspectiveMap = new EnumMap<>(PerspectiveID.class);
     protected final Map<KeyCombination, GameAction> actionBindingMap = new HashMap<>();
-    protected final AnimationRegistry animationRegistry = new AnimationRegistry();
+    protected final AnimationManager animationMgr = new AnimationManager();
 
     protected final Scores3D scores3D;
     protected GameLevel3D level3D;
@@ -200,7 +200,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         theSound().stopAll();
         clearActionBindings();
         perspectiveIDPy.unbind();
-        animationRegistry.stopAll();
+        animationMgr.stopAll();
         level3D = null;
     }
 
@@ -259,10 +259,10 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(theGameLevel()));
                 level3D.energizers3D().forEach(Energizer3D::startPumping);
                 Animation livesCounterAnimation = level3D.createLivesCounterAnimation();
-                animationRegistry.registerAndPlayFromStart("LivesCounter_Animation", livesCounterAnimation);
+                animationMgr.registerAndPlayFromStart("LivesCounter_Animation", livesCounterAnimation);
             }
             case PACMAN_DYING -> {
-                animationRegistry.stopAll();
+                animationMgr.stopAll();
                 theSound().stopAll();
                 // last update before dying animation
                 level3D.pac3D().update(theGameLevel());
@@ -274,7 +274,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 );
                 dyingAnimation.setDelay(Duration.seconds(2));
                 dyingAnimation.setOnFinished(e -> theGameController().letCurrentGameStateExpire());
-                animationRegistry.registerAndPlayFromStart("PacManDying_Animation", dyingAnimation);
+                animationMgr.registerAndPlayFromStart("PacManDying_Animation", dyingAnimation);
             }
             case GHOST_DYING ->
                 theSimulationStep().killedGhosts.forEach(ghost -> {
@@ -285,7 +285,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             case LEVEL_COMPLETE -> {
                 theGameState().timer().resetIndefiniteTime(); // expires when animation ends
                 theSound().stopAll();
-                animationRegistry.stopAll();
+                animationMgr.stopAll();
                 level3D.pellets3D().forEach(Pellet3D::onEaten);
                 level3D.energizers3D().forEach(Energizer3D::onEaten);
                 level3D.maze3D().door3D().setVisible(false);
@@ -302,7 +302,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                     perspectiveIDPy.bind(PY_3D_PERSPECTIVE);
                     theGameController().letCurrentGameStateExpire();
                 });
-                animationRegistry.registerAndPlayFromStart("LevelComplete_Animation", levelCompleteAnimation);
+                animationMgr.registerAndPlayFromStart("LevelComplete_Animation", levelCompleteAnimation);
             }
             case LEVEL_TRANSITION -> {
                 theGameState().timer().restartSeconds(3);
@@ -313,7 +313,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             case GAME_OVER -> {
                 // delay state exit for 3 seconds:
                 theGameState().timer().restartSeconds(3);
-                animationRegistry.stopAll();
+                animationMgr.stopAll();
                 level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
                 if (!theGameLevel().isDemoLevel() && randomInt(0, 100) < 25) {
                     theUI().showFlashMessageSec(3, theAssets().localizedGameOverMessage());
@@ -346,7 +346,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             case TESTING_LEVELS_SHORT, TESTING_LEVELS_MEDIUM -> {
                 replaceGameLevel3D();
                 Animation livesCounterAnimation = level3D.createLivesCounterAnimation();
-                animationRegistry.registerAndPlayFromStart("LivesCounter_Animation", livesCounterAnimation);
+                animationMgr.registerAndPlayFromStart("LivesCounter_Animation", livesCounterAnimation);
                 level3D.energizers3D().forEach(Energizer3D::startPumping);
                 showLevelTestMessage(theGameLevel().number());
             }
@@ -380,7 +380,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 theSound().playPacPowerSound();
             }
             Animation livesCounterAnimation = level3D.createLivesCounterAnimation();
-            animationRegistry.registerAndPlayFromStart("LivesCounter_Animation", livesCounterAnimation);
+            animationMgr.registerAndPlayFromStart("LivesCounter_Animation", livesCounterAnimation);
         }
 
         subScene3D.setFill(Color.TRANSPARENT);
@@ -514,7 +514,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     }
 
     protected void replaceGameLevel3D() {
-        level3D = new GameLevel3D(animationRegistry);
+        level3D = new GameLevel3D(animationMgr);
         level3D.addLevelCounter();
         root.getChildren().set(root.getChildren().size() - 1, level3D.root());
         scores3D.translateXProperty().bind(level3D.root().translateXProperty().add(TS));

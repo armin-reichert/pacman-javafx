@@ -23,7 +23,7 @@ import de.amr.pacmanfx.ui.PacManGames_Assets;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui._3d.Settings3D;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
@@ -184,8 +184,8 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
     }
 
     @Override
-    public PacBase3D createPac3D(AnimationRegistry parentAnimationRegistry, Pac pac) {
-        var pac3D = new MsPacMan3D(parentAnimationRegistry, pac, Settings3D.PAC_3D_SIZE, theAssets(), assetNamespace());
+    public PacBase3D createPac3D(AnimationManager animationMgr, Pac pac) {
+        var pac3D = new MsPacMan3D(animationMgr, pac, Settings3D.PAC_3D_SIZE, theAssets(), assetNamespace());
         pac3D.light().setColor(theAssets().color(assetNamespace() + ".pac.color.head").desaturate());
         return pac3D;
     }

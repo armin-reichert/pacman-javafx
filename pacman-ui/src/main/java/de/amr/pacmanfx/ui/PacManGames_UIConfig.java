@@ -9,7 +9,7 @@ import de.amr.pacmanfx.model.actors.ActorAnimationMap;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
@@ -26,7 +26,7 @@ public interface PacManGames_UIConfig extends PacManGames_GameSceneConfig {
     ActorAnimationMap createPacAnimations(Pac pac);
     ActorAnimationMap createGhostAnimations(Ghost ghost);
     Node createLivesCounter3D();
-    PacBase3D createPac3D(AnimationRegistry parentAnimationRegistry, Pac pac);
+    PacBase3D createPac3D(AnimationManager animationMgr, Pac pac);
     Image createGhostNumberImage(int index);
     Image createBonusSymbolImage(byte symbol);
     Image createBonusValueImage(byte symbol);

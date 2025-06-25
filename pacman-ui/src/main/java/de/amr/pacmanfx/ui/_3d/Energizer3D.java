@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._3d;
 
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import javafx.animation.*;
 import javafx.animation.Animation.Status;
 import javafx.scene.shape.Shape3D;
@@ -24,10 +24,10 @@ public class Energizer3D implements Eatable3D {
     private final Animation hideAfterSmallDelay;
     private Animation eatenAnimation;
 
-    private final AnimationRegistry animationRegistry;
+    private final AnimationManager animationMgr;
 
-    public Energizer3D(double radius, AnimationRegistry animationRegistry) {
-        this.animationRegistry = requireNonNull(animationRegistry);
+    public Energizer3D(double radius, AnimationManager animationMgr) {
+        this.animationMgr = requireNonNull(animationMgr);
         requireNonNegative(radius, "Energizer radius must be positive but is %f");
         sphere = new Sphere(radius);
         // 3 full blinks per second
@@ -47,7 +47,7 @@ public class Energizer3D implements Eatable3D {
     }
 
     public void startPumping() {
-        animationRegistry.registerAndPlayFromStart("Energizer_Pumping", pumpingAnimation);
+        animationMgr.registerAndPlayFromStart("Energizer_Pumping", pumpingAnimation);
     }
 
     public void setEatenAnimation(Animation animation) {
@@ -59,9 +59,9 @@ public class Energizer3D implements Eatable3D {
         pumpingAnimation.stop();
         if (eatenAnimation != null) {
             var animation = new SequentialTransition(hideAfterSmallDelay, eatenAnimation);
-            animationRegistry.registerAndPlayFromStart("Energizer_HideAndEat", animation);
+            animationMgr.registerAndPlayFromStart("Energizer_HideAndEat", animation);
         } else {
-            animationRegistry.registerAndPlayFromStart("Energizer_Hide", hideAfterSmallDelay);
+            animationMgr.registerAndPlayFromStart("Energizer_Hide", hideAfterSmallDelay);
         }
     }
 

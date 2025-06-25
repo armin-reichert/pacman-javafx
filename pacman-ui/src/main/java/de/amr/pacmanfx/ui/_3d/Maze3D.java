@@ -8,7 +8,7 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.Obstacle;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer3D;
 import javafx.animation.*;
@@ -38,12 +38,12 @@ public class Maze3D extends Group {
     private final DoubleProperty houseBaseHeightPy = new SimpleDoubleProperty(Settings3D.HOUSE_3D_BASE_HEIGHT);
     private final BooleanProperty houseLightOnPy = new SimpleBooleanProperty(false);
 
-    private final AnimationRegistry animationRegistry;
+    private final AnimationManager animationMgr;
     private final ArcadeHouse3D house3D;
     private final MaterialColorAnimation wallColorFlashingAnimation;
 
-    public Maze3D(GameLevel level, WorldMapColorScheme colorScheme, AnimationRegistry animationRegistry) {
-        this.animationRegistry = requireNonNull(animationRegistry);
+    public Maze3D(GameLevel level, WorldMapColorScheme colorScheme, AnimationManager animationMgr) {
+        this.animationMgr = requireNonNull(animationMgr);
 
         Logger.info("Build 3D maze for map with URL '{}'", level.worldMap().url());
 
@@ -121,7 +121,7 @@ public class Maze3D extends Group {
     }
 
     public void playWallColorFlashingAnimation() {
-        animationRegistry.registerAndPlayFromStart("MazeWallColorFlashing_Animation", wallColorFlashingAnimation);
+        animationMgr.registerAndPlayFromStart("MazeWallColorFlashing_Animation", wallColorFlashingAnimation);
     }
 
     public void stopWallColorFlashingAnimation() {

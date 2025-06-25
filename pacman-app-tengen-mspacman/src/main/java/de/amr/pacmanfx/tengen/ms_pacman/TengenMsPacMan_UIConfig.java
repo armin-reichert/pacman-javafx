@@ -22,7 +22,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.rendering.*;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.*;
 import de.amr.pacmanfx.ui.*;
 import de.amr.pacmanfx.ui._3d.Settings3D;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
@@ -232,8 +232,8 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     }
 
     @Override
-    public PacBase3D createPac3D(AnimationRegistry parentAnimationRegistry, Pac pac) {
-        var pac3D = new MsPacMan3D(parentAnimationRegistry, pac, Settings3D.PAC_3D_SIZE, theAssets(), ANS);
+    public PacBase3D createPac3D(AnimationManager animationMgr, Pac pac) {
+        var pac3D = new MsPacMan3D(animationMgr, pac, Settings3D.PAC_3D_SIZE, theAssets(), ANS);
         pac3D.light().setColor(theAssets().color(ANS + ".pac.color.head").desaturate());
         return pac3D;
     }

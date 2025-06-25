@@ -8,7 +8,7 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.model3D.Ghost3D;
 import javafx.animation.Interpolator;
@@ -48,7 +48,7 @@ public class Ghost3D_Appearance extends Group {
         protected void invalidated() { onAppearanceChanged(getValue()); }
     };
 
-    private final AnimationRegistry animationRegistry;
+    private final AnimationManager animationMgr;
     private final Ghost ghost;
     private final Ghost3D ghost3D;
     private final Box numberBox;
@@ -58,7 +58,7 @@ public class Ghost3D_Appearance extends Group {
     private RotateTransition brakeAnimation;
 
     public Ghost3D_Appearance(
-        AnimationRegistry animationRegistry,
+        AnimationManager animationMgr,
         AssetStorage assets, String assetPrefix,
         Shape3D dressShape, Shape3D pupilsShape, Shape3D eyeballsShape,
         Ghost ghost, double size, int numFlashes)
@@ -70,7 +70,7 @@ public class Ghost3D_Appearance extends Group {
         requireNonNull(eyeballsShape);
         requireNonNegative(numFlashes);
 
-        this.animationRegistry = requireNonNull(animationRegistry);
+        this.animationMgr = requireNonNull(animationMgr);
         this.ghost = requireNonNull(ghost);
         this.size = requireNonNegative(size);
         this.numFlashes = numFlashes;
@@ -152,7 +152,7 @@ public class Ghost3D_Appearance extends Group {
             brakeAnimation.setAutoReverse(true);
             brakeAnimation.setCycleCount(2);
             brakeAnimation.setInterpolator(Interpolator.EASE_OUT);
-            animationRegistry.registerAndPlayFromStart("GhostBraking_Animation", brakeAnimation);
+            animationMgr.registerAndPlayFromStart("GhostBraking_Animation", brakeAnimation);
         }
     }
 

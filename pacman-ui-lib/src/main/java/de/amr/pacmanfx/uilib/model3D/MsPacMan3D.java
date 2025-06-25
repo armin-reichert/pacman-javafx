@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -16,8 +16,8 @@ import javafx.util.Duration;
 
 public class MsPacMan3D extends PacBase3D {
 
-    public MsPacMan3D(AnimationRegistry parentAnimationRegistry, Pac pac, double size, AssetStorage assets, String ans) {
-        super(parentAnimationRegistry, pac, size, assets, ans);
+    public MsPacMan3D(AnimationManager animationMgr, Pac pac, double size, AssetStorage assets, String ans) {
+        super(animationMgr, pac, size, assets, ans);
 
         Group femaleBodyParts = Model3DRepository.get().createFemaleBodyParts(size,
             assets.color(ans + ".pac.color.hairbow"),

@@ -18,12 +18,13 @@ import static java.util.Objects.requireNonNull;
  * 3D entities with animations implement this interface such that all potentially running animations can be stopped
  * when the containing 3D scene ends, e.g. when the quit action is executed.
  */
-public class AnimationRegistry {
+public class AnimationManager {
 
     private final Map<String, Animation> animationMap = new WeakHashMap<>();
 
-    public void register(String name, Animation animation) {
+    public Animation register(String name, Animation animation) {
         animationMap.put(requireValidIdentifier(name), requireNonNull(animation));
+        return animation;
     }
 
     public void registerAndPlayFromStart(String name, Animation animation) {
