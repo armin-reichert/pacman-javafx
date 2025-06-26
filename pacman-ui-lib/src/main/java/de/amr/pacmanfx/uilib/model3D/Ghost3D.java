@@ -122,7 +122,7 @@ public class Ghost3D {
             dressAnimation = createDressAnimation();
         }
         if (dressAnimation.getStatus() != Status.RUNNING) {
-            animationManager.registerAndPlayFromStart(root, "Ghost_DressMoving", dressAnimation);
+            animationManager.registerAndPlayFromStart(dressShape, "Ghost_DressMoving", dressAnimation);
         }
     }
 
