@@ -34,10 +34,14 @@ public class AnimationManager {
         requireNonNull(animation);
         String id = makeID(node, animationName);
         if (animationMap.containsKey(id)) {
-            Logger.warn("Animation map already contains animation with ID '{}'", id);
+            Logger.warn("Replace existing animation map entry with ID '{}'", id);
+        } else {
+            Logger.info("Add animation map entry, ID={}", id);
         }
-        animationMap.put(id, animation);
-        Logger.info("New animation map entry, ID={}", id);
+        Animation previous = animationMap.put(id, animation);
+        if (previous != null) {
+            previous.stop();
+        }
         return animation;
     }
 

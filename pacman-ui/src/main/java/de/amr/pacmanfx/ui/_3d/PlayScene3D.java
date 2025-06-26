@@ -285,8 +285,9 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 theGameState().timer().resetIndefiniteTime(); // expires when animation ends
                 theSound().stopAll();
                 animationManager.stopAll();
-                level3D.pellets3D().forEach(Pellet3D::onEaten);
-                level3D.energizers3D().forEach(Energizer3D::onEaten);
+                // hide explicitly because level might have been completed using cheat!
+                level3D.pellets3D().forEach(pellet3D -> pellet3D.shape3D().setVisible(false));
+                level3D.energizers3D().forEach(energizer3D -> energizer3D.shape3D().setVisible(false));
                 level3D.maze3D().door3D().setVisible(false);
                 level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
                 playLevelCompleteAnimation();
