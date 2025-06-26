@@ -108,11 +108,8 @@ public class GameLevel3D {
         root.getChildren().addAll(pac3D.root(), pac3D.light());
         root.getChildren().addAll(ghosts3D);
         root.getChildren().add(livesCounter3D);
-        root.getChildren().add(mazeGroup);
-        // Place level counter at top right maze corner
-        levelCounter3D.setTranslateX(theGameLevel().worldMap().numCols() * TS - 2 * TS);
-        levelCounter3D.setTranslateY(2 * TS);
         root.getChildren().add(levelCounter3D);
+        root.getChildren().add(mazeGroup);
     }
 
     // Pellet shapes are not bound because this would cause huge performance penalty!
@@ -289,6 +286,9 @@ public class GameLevel3D {
 
     public void createLevelCounter() {
         levelCounter3D = new LevelCounter3D(animationManager, theGame().hud().levelCounter());
+        // Place level counter at top right maze corner
+        levelCounter3D.setTranslateX(theGameLevel().worldMap().numCols() * TS - 2 * TS);
+        levelCounter3D.setTranslateY(2 * TS);
         levelCounter3D.playAnimation();
     }
 
