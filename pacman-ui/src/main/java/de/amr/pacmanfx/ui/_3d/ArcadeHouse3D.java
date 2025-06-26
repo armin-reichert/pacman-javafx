@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer3D;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -26,6 +27,7 @@ public class ArcadeHouse3D {
     private final Door3D door3D;
 
     public ArcadeHouse3D(
+        AnimationManager animationManager,
         GameLevel level,
         TerrainMapRenderer3D r3D,
         Color houseBaseColor, Color houseTopColor, Color doorColor, float wallOpacity,
@@ -43,7 +45,7 @@ public class ArcadeHouse3D {
         int xMin = level.houseMinTile().x(), xMax = xMin + tilesX - 1;
         int yMin = level.houseMinTile().y(), yMax = yMin + tilesY - 1;
         Vector2i leftDoorTile = level.houseLeftDoorTile(), rightDoorTile = level.houseRightDoorTile();
-        door3D = new Door3D(leftDoorTile, rightDoorTile, doorColor, wallBaseHeightPy.get());
+        door3D = new Door3D(animationManager, leftDoorTile, rightDoorTile, doorColor, wallBaseHeightPy.get());
 
         float centerX = xMin * TS + tilesX * HTS;
         float centerY = yMin * TS + tilesY * HTS;

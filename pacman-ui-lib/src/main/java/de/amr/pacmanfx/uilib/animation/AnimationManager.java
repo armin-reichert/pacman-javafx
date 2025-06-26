@@ -5,13 +5,12 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib.animation;
 
 import javafx.animation.Animation;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableMap;
-import javafx.scene.Node;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import static de.amr.pacmanfx.Validations.requireValidIdentifier;
 import static java.util.Objects.requireNonNull;
@@ -22,45 +21,18 @@ import static java.util.Objects.requireNonNull;
  */
 public class AnimationManager {
 
-    private final ObservableMap<String, Animation> animationMap = FXCollections.observableHashMap();
+    private final Map<String, Animation> animationMap = new HashMap<>();
 
-    private String makeID(Node node, String animationName) {
-        return animationName + "@" + node.hashCode();
+    private String makeID(String description) {
+        return description + "#" + UUID.randomUUID();
     }
 
-    public Animation register(Node node, String animationName, Animation animation) {
-        requireNonNull(node);
-        requireValidIdentifier(animationName);
+    public String register(String description, Animation animation) {
+        requireValidIdentifier(description);
         requireNonNull(animation);
-        String id = makeID(node, animationName);
-        if (animationMap.containsKey(id)) {
-            Logger.warn("Replace existing animation map entry with ID '{}'", id);
-        } else {
-            Logger.info("Add animation map entry, ID={}", id);
-        }
-        Animation previous = animationMap.put(id, animation);
-        if (previous != null) {
-            previous.stop();
-        }
-        return animation;
-    }
-
-    public void registerAndPlayFromStart(Node node, String animationName, Animation animation) {
-        register(node, animationName, animation);
-        animation.playFromStart();
-        Logger.info("Playing animation ID='{}' ({})", makeID(node, animationName), animation);
-    }
-
-    public void remove(Node node, String animationName) {
-        requireNonNull(node);
-        requireValidIdentifier(animationName);
-        String id = makeID(node, animationName);
-        if (animationMap.containsKey(id)) {
-            animationMap.remove(id);
-            Logger.info("Removed animation map entry, ID={}", id);
-        } else {
-            Logger.warn("Cannot remove: Animation map does not contain animation with ID '{}'", id);
-        }
+        String id = makeID(description);
+        animationMap.put(id, animation);
+        return id;
     }
 
     public void stopAll() {
@@ -81,7 +53,7 @@ public class AnimationManager {
         }
     }
 
-    public ObservableMap<String, Animation> animationMap() {
+    public Map<String, Animation> animationMap() {
         return animationMap;
     }
 }

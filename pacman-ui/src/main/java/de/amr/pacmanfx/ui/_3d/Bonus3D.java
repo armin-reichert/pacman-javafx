@@ -9,7 +9,6 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.MovingBonus;
-import de.amr.pacmanfx.model.actors.StaticBonus;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -41,14 +40,14 @@ public class Bonus3D extends Box {
     private final PhongMaterial symbolImageTexture;
     private final PhongMaterial pointsImageTexture;
 
-    private final AnimationManager animationMgr;
+    private final AnimationManager animationManager;
     private RotateTransition eatenAnimation;
     private RotateTransition edibleAnimation;
 
-    public Bonus3D(AnimationManager animationMgr, Bonus bonus, Image symbolImage, Image pointsImage) {
+    public Bonus3D(AnimationManager animationManager, Bonus bonus, Image symbolImage, Image pointsImage) {
         super(BONUS_3D_SYMBOL_WIDTH, TS, TS);
 
-        this.animationMgr = requireNonNull(animationMgr);
+        this.animationManager = requireNonNull(animationManager);
         this.bonus = requireNonNull(bonus);
 
         var symbolImageView = new ImageView(requireNonNull(symbolImage));
@@ -106,8 +105,9 @@ public class Bonus3D extends Box {
     private void playEdibleAnimation() {
         if (edibleAnimation == null) {
             edibleAnimation = createEdibleAnimation();
+            animationManager.register("Bonus_Edible", edibleAnimation);
         }
-        animationMgr.registerAndPlayFromStart(this, "Bonus_Edible", edibleAnimation);
+        edibleAnimation.playFromStart();
     }
 
     private void stopEdibleAnimation() {
@@ -148,8 +148,9 @@ public class Bonus3D extends Box {
     private void playEatenAnimation() {
         if (eatenAnimation == null) {
             eatenAnimation = createEatenAnimation();
+            animationManager.register("Bonus_Eaten", eatenAnimation);
         }
-        animationMgr.registerAndPlayFromStart(this, "Bonus_Eaten", eatenAnimation);
+        eatenAnimation.playFromStart();
     }
 
     private void stopEatenAnimation() {

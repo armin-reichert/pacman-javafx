@@ -26,7 +26,8 @@ public class InfoBoxPlayScene3DAnimations extends InfoBox {
         private final StringProperty animationStatusPy;
 
         AnimationData(String id, Animation animation) {
-            idPy = new SimpleStringProperty(id);
+            String idPrefix = id.substring(0, id.indexOf("#") + 3);
+            idPy = new SimpleStringProperty(idPrefix);
             animationStatusPy = new SimpleStringProperty(animation.getStatus().name());
         }
 

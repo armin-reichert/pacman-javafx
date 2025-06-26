@@ -120,10 +120,9 @@ public class Ghost3D {
     public void playDressAnimation() {
         if (dressAnimation == null) {
             dressAnimation = createDressAnimation();
+            animationManager.register("Ghost_DressMoving", dressAnimation);
         }
-        if (dressAnimation.getStatus() != Status.RUNNING) {
-            animationManager.registerAndPlayFromStart(dressShape, "Ghost_DressMoving", dressAnimation);
-        }
+        dressAnimation.play();
     }
 
     public void stopDressAnimation() {
@@ -151,10 +150,9 @@ public class Ghost3D {
     private void playFlashingAnimation(int numFlashes, Duration duration) {
         if (flashingAnimation == null) {
             flashingAnimation = createFlashingAnimation(numFlashes, duration);
+            animationManager.register("Ghost_Flashing", flashingAnimation);
         }
-        if (flashingAnimation.getStatus() != Status.RUNNING) {
-            animationManager.registerAndPlayFromStart(root, "Ghost_Flashing", flashingAnimation);
-        }
+        flashingAnimation.playFromStart();
     }
 
     private void stopFlashingAnimation() {

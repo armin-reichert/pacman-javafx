@@ -11,7 +11,6 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.model3D.Ghost3D;
-import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.beans.property.ObjectProperty;
@@ -49,7 +48,7 @@ public class MutatingGhost3D extends Group {
         protected void invalidated() { onAppearanceChanged(getValue()); }
     };
 
-    private final AnimationManager animationMgr;
+    private final AnimationManager animationManager;
     private final Ghost ghost;
     private final Ghost3D ghost3D;
     private final Box numberBox;
@@ -72,7 +71,7 @@ public class MutatingGhost3D extends Group {
         requireNonNull(eyeballsShape);
         requireNonNegative(numFlashes);
 
-        this.animationMgr = requireNonNull(animationManager);
+        this.animationManager = requireNonNull(animationManager);
         this.ghost = requireNonNull(ghost);
         this.size = requireNonNegative(size);
         this.numFlashes = numFlashes;
@@ -174,9 +173,11 @@ public class MutatingGhost3D extends Group {
     private void playBrakeAnimation() {
         if (brakeAnimation == null) {
             brakeAnimation = createBrakeAnimation();
+            animationManager.register("Ghost_Braking", brakeAnimation);
         }
+        brakeAnimation.stop();
         brakeAnimation.setByAngle(ghost.moveDir() == Direction.LEFT ? -35 : 35);
-        animationMgr.registerAndPlayFromStart(this, "Ghost_Braking", brakeAnimation);
+        brakeAnimation.playFromStart();
     }
 
     private void stopBrakeAnimation() {

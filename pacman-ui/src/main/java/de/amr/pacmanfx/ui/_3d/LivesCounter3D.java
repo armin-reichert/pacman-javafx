@@ -43,7 +43,7 @@ public class LivesCounter3D extends Group {
     private final PointLight light = new PointLight();
 
     private final AnimationManager animationManager;
-    private Animation animation;
+    private Animation lookingAroundAnimation;
 
     public LivesCounter3D(AnimationManager animationManager, Node[] pacShapes) {
         this.animationManager = requireNonNull(animationManager);
@@ -89,11 +89,12 @@ public class LivesCounter3D extends Group {
         return light;
     }
 
-    public void playAnimation() {
-        if (animation == null) {
-            animation = createPacShapesLookAroundAnimation();
+    public void playLookingAroundAnimation() {
+        if (lookingAroundAnimation == null) {
+            lookingAroundAnimation = createPacShapesLookAroundAnimation();
+            animationManager.register("LivesCounter_LookingAroundAnimation", lookingAroundAnimation);
         }
-        animationManager.registerAndPlayFromStart(this, "LivesCounter_Animation", animation);
+        lookingAroundAnimation.play();
     }
 
     private Animation createPacShapesLookAroundAnimation() {

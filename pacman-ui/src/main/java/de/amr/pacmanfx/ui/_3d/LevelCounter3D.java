@@ -27,7 +27,7 @@ import static java.util.Objects.requireNonNull;
 public class LevelCounter3D extends Group {
 
     private final AnimationManager animationManager;
-    private Animation animation;
+    private Animation spinningAnimation;
 
     public LevelCounter3D(AnimationManager animationManager, LevelCounter levelCounter) {
         this.animationManager = requireNonNull(animationManager);
@@ -46,14 +46,7 @@ public class LevelCounter3D extends Group {
         }
     }
 
-    public void playAnimation() {
-        if (animation == null) {
-            animation = createAnimation();
-        }
-        animationManager.registerAndPlayFromStart(this, "LevelCounter_Spinning", animation);
-    }
-
-    private Animation createAnimation() {
+    private Animation createSpinningAnimation() {
         var cubesAnimation = new ParallelTransition();
         for (int i = 0; i < getChildren().size(); ++i) {
             Node cube = getChildren().get(i);
@@ -65,5 +58,13 @@ public class LevelCounter3D extends Group {
             cubesAnimation.getChildren().add(spinning);
         }
         return cubesAnimation;
+    }
+
+    public void playSpinningAnimation() {
+        if (spinningAnimation == null) {
+            spinningAnimation = createSpinningAnimation();
+            animationManager.register("LevelCounter_Spinning", spinningAnimation);
+        }
+        spinningAnimation.playFromStart();
     }
 }

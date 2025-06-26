@@ -264,8 +264,8 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             case HUNTING -> {
                 level3D.pac3D().init();
                 level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(theGameLevel()));
-                level3D.energizers3D().forEach(Energizer3D::startPumping);
-                level3D.livesCounter3D().playAnimation();
+                level3D.energizers3D().forEach(Energizer3D::startPumpingAnimation);
+                level3D.livesCounter3D().playLookingAroundAnimation();
             }
             case PACMAN_DYING -> {
                 theGameState().timer().resetIndefiniteTime(); // expires when animation ends
@@ -332,8 +332,8 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             }
             case TESTING_LEVELS_SHORT, TESTING_LEVELS_MEDIUM -> {
                 replaceGameLevel3D();
-                level3D.livesCounter3D().playAnimation();
-                level3D.energizers3D().forEach(Energizer3D::startPumping);
+                level3D.livesCounter3D().playLookingAroundAnimation();
+                level3D.energizers3D().forEach(Energizer3D::startPumpingAnimation);
                 showLevelTestMessage(theGameLevel().number());
             }
             default -> Logger.error("Unexpected game state '{}' on level start", theGameState());
@@ -354,7 +354,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         level3D.pellets3D().forEach(pellet -> pellet.shape3D().setVisible(!theGameLevel().tileContainsEatenFood(pellet.tile())));
         level3D.energizers3D().forEach(energizer -> energizer.shape3D().setVisible(!theGameLevel().tileContainsEatenFood(energizer.tile())));
         if (isOneOf(theGameState(), GameState.HUNTING, GameState.GHOST_DYING)) { //TODO check this
-            level3D.energizers3D().filter(energizer -> energizer.shape3D().isVisible()).forEach(Energizer3D::startPumping);
+            level3D.energizers3D().filter(energizer -> energizer.shape3D().isVisible()).forEach(Energizer3D::startPumpingAnimation);
         }
         theGameLevel().pac().show();
         theGameLevel().ghosts().forEach(Ghost::show);
@@ -365,7 +365,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             if (theGameLevel().pac().powerTimer().isRunning()) {
                 theSound().playPacPowerSound();
             }
-            level3D.livesCounter3D().playAnimation();
+            level3D.livesCounter3D().playLookingAroundAnimation();
         }
 
         subScene3D.setFill(Color.TRANSPARENT);
@@ -504,6 +504,8 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         scores3D.translateXProperty().bind(level3D.root().translateXProperty().add(TS));
         scores3D.translateYProperty().bind(level3D.root().translateYProperty().subtract(3.5 * TS));
         scores3D.translateZProperty().bind(level3D.root().translateZProperty().subtract(3.5 * TS));
+        //TODO check
+        levelCompleteAnimation = null;
     }
 
     protected void updateSound() {
@@ -552,7 +554,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         Vector2i houseSizeInTiles = theGameLevel().houseSizeInTiles();
         double x = TS * (houseMinTile.x() + 0.5 * houseSizeInTiles.x());
         double y = TS * (houseMinTile.y() +       houseSizeInTiles.y());
-        double seconds = theGame().isPlaying() ? 0.5 : 2.5;
+        float seconds = theGame().isPlaying() ? 0.5f : 2.5f;
         level3D.showAnimatedMessage("READY!", seconds, x, y);
     }
 
@@ -572,8 +574,9 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     private void playPacDyingAnimation() {
         if (pacDyingAnimation == null) {
             pacDyingAnimation = createPacDyingAnimation();
+            animationManager.register("PacMan_Dying", pacDyingAnimation);
         }
-        animationManager.registerAndPlayFromStart(root, "PacMan_Dying", pacDyingAnimation);
+        pacDyingAnimation.playFromStart();
     }
 
     private Animation createLevelCompleteAnimation() {
@@ -594,7 +597,8 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     private void playLevelCompleteAnimation() {
         if (levelCompleteAnimation == null) {
             levelCompleteAnimation = createLevelCompleteAnimation();
+            animationManager.register("Level_Complete", levelCompleteAnimation);
         }
-        animationManager.registerAndPlayFromStart(level3D.root(), "Level_Complete", levelCompleteAnimation);
+        levelCompleteAnimation.playFromStart();
     }
 }

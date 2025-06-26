@@ -61,9 +61,7 @@ public class GameLevel3D {
         @Override
         protected void invalidated() {
             if (houseOpenPy.get()) {
-                animationManager.registerAndPlayFromStart(maze3D.door3D(),
-                    "Door_OpenClose",
-                    maze3D.door3D().createOpenCloseAnimation());
+                maze3D.door3D().playOpenCloseAnimation();
             }
         }
     };
@@ -224,6 +222,7 @@ public class GameLevel3D {
                 Energizer3D energizer3D = createEnergizer3D(tile, material);
                 SquirtingAnimation squirting = createSquirtingAnimation(energizer3D, material, theGameLevel().worldMap());
                 root.getChildren().add(squirting.root());
+                energizer3D.setEatenAnimation(squirting);
                 energizers3D.add(energizer3D);
             } else {
                 var meshView = new MeshView(pelletMesh);
@@ -244,17 +243,6 @@ public class GameLevel3D {
         energizer3D.shape3D().setTranslateZ(center.getZ());
         energizer3D.shape3D().setMaterial(material);
         return energizer3D;
-    }
-
-    private SquirtingAnimation createSquirtingAnimation(Energizer3D energizer3D, PhongMaterial dropMaterial, WorldMap worldMap) {
-        var center = new Point3D(energizer3D.tile().x() * TS + HTS, energizer3D.tile().y() * TS + HTS, -2* Settings3D.ENERGIZER_3D_RADIUS);
-        var animation = new SquirtingAnimation(Duration.seconds(2));
-        animation.createDrops(23, 69, dropMaterial, center);
-        animation.setDropFinalPosition(drop -> drop.getTranslateZ() >= -1
-                && isInsideWorldMap(worldMap, drop.getTranslateX(), drop.getTranslateY()));
-        animation.setOnFinished(e -> root.getChildren().remove(animation.root()));
-        energizer3D.setEatenAnimation(animation);
-        return animation;
     }
 
     private Pellet3D createPellet3D(Vector2i tile, Shape3D shape3D, PhongMaterial foodMaterial) {
@@ -289,41 +277,40 @@ public class GameLevel3D {
         // Place level counter at top right maze corner
         levelCounter3D.setTranslateX(theGameLevel().worldMap().numCols() * TS - 2 * TS);
         levelCounter3D.setTranslateY(2 * TS);
-        levelCounter3D.playAnimation();
+        levelCounter3D.playSpinningAnimation();
     }
 
     public Group root() { return root; }
 
-    public void showAnimatedMessage(String text, double displaySeconds, double centerX, double y) {
+    private SquirtingAnimation createSquirtingAnimation(Energizer3D energizer3D, PhongMaterial dropMaterial, WorldMap worldMap) {
+        var center = new Point3D(energizer3D.tile().x() * TS + HTS, energizer3D.tile().y() * TS + HTS, -2* Settings3D.ENERGIZER_3D_RADIUS);
+        var animation = new SquirtingAnimation(Duration.seconds(2));
+        animation.createDrops(23, 69, dropMaterial, center);
+        animation.setDropFinalPosition(drop -> drop.getTranslateZ() >= -1
+                && isInsideWorldMap(worldMap, drop.getTranslateX(), drop.getTranslateY()));
+        animation.setOnFinished(e -> root.getChildren().remove(animation.root()));
+        return animation;
+    }
+
+    public void showAnimatedMessage(String text, float displaySeconds, double centerX, double y) {
         if (messageView != null) {
             root.getChildren().remove(messageView);
         }
         messageView = MessageView.builder()
-            .text(text)
-            .font(theAssets().arcadeFont(6))
-            .borderColor(Color.WHITE)
-            .textColor(Color.YELLOW)
-            .build();
-        root.getChildren().add(messageView);
+                .text(text)
+                .font(theAssets().arcadeFont(6))
+                .borderColor(Color.WHITE)
+                .displaySeconds(displaySeconds)
+                .textColor(Color.YELLOW)
+                .build(animationManager);
 
         double halfHeight = 0.5 * messageView.getBoundsInLocal().getHeight();
         messageView.setTranslateX(centerX - 0.5 * messageView.getFitWidth());
         messageView.setTranslateY(y);
         messageView.setTranslateZ(halfHeight); // just under floor
 
-        var moveUpAnimation = new TranslateTransition(Duration.seconds(1), messageView);
-        moveUpAnimation.setToZ(-(halfHeight + 0.5 * Settings3D.OBSTACLE_3D_BASE_HEIGHT));
-
-        var moveDownAnimation = new TranslateTransition(Duration.seconds(1), messageView);
-        moveDownAnimation.setToZ(halfHeight);
-        moveDownAnimation.setOnFinished(e -> messageView.setVisible(false));
-
-        var animation = new SequentialTransition(
-            moveUpAnimation,
-            new PauseTransition(Duration.seconds(displaySeconds)),
-            moveDownAnimation
-        );
-        animationManager.registerAndPlayFromStart(messageView, "LevelMessage_Movement", animation);
+        root.getChildren().add(messageView);
+        messageView.playMovementAnimation();
     }
 
     public void updateBonus3D(Bonus bonus) {

@@ -38,18 +38,23 @@ public class Maze3D extends Group {
     private final DoubleProperty houseBaseHeightPy = new SimpleDoubleProperty(Settings3D.HOUSE_3D_BASE_HEIGHT);
     private final BooleanProperty houseLightOnPy = new SimpleBooleanProperty(false);
 
-    private final AnimationManager animationMgr;
-    private final ArcadeHouse3D house3D;
-    private final MaterialColorAnimation wallColorFlashingAnimation;
+    private final PhongMaterial wallTopMaterial;
+    private final Color wallBaseColor;
+    private final Color wallTopColor;
 
-    public Maze3D(GameLevel level, WorldMapColorScheme colorScheme, AnimationManager animationMgr) {
-        this.animationMgr = requireNonNull(animationMgr);
+    private final ArcadeHouse3D house3D;
+
+    private final AnimationManager animationMgr;
+    private MaterialColorAnimation wallColorFlashingAnimation;
+
+    public Maze3D(GameLevel level, WorldMapColorScheme colorScheme, AnimationManager animationManager) {
+        this.animationMgr = requireNonNull(animationManager);
 
         Logger.info("Build 3D maze for map with URL '{}'", level.worldMap().url());
 
-        Color wallBaseColor = colorScheme.stroke();
+        wallBaseColor = colorScheme.stroke();
         // Add some contrast with floor if wall fill color is black:
-        Color wallTopColor = colorScheme.fill().equals(Color.BLACK) ? Color.grayRgb(42) : colorScheme.fill();
+        wallTopColor = colorScheme.fill().equals(Color.BLACK) ? Color.grayRgb(42) : colorScheme.fill();
 
         PhongMaterial wallBaseMaterial = new PhongMaterial();
         wallBaseMaterial.diffuseColorProperty().bind(Bindings.createObjectBinding(
@@ -57,11 +62,9 @@ public class Maze3D extends Group {
         ));
         wallBaseMaterial.specularColorProperty().bind(wallBaseMaterial.diffuseColorProperty().map(Color::brighter));
 
-        PhongMaterial wallTopMaterial = new PhongMaterial();
+        wallTopMaterial = new PhongMaterial();
         wallTopMaterial.setDiffuseColor(wallTopColor);
         wallTopMaterial.setSpecularColor(wallTopColor.brighter());
-
-        wallColorFlashingAnimation = new MaterialColorAnimation(Duration.seconds(0.25), wallTopMaterial, wallTopColor, wallBaseColor);
 
         PhongMaterial cornerBaseMaterial = new PhongMaterial();
         cornerBaseMaterial.setDiffuseColor(wallBaseColor); // for now use same color
@@ -91,10 +94,16 @@ public class Maze3D extends Group {
             }
         }
 
-        house3D = new ArcadeHouse3D(level, r3D,
-            colorScheme.fill(), colorScheme.stroke(), colorScheme.door(),
-            Settings3D.HOUSE_3D_OPACITY,  houseBaseHeightPy, Settings3D.HOUSE_3D_WALL_TOP_HEIGHT, Settings3D.HOUSE_3D_WALL_THICKNESS,
-            houseLightOnPy);
+        house3D = new ArcadeHouse3D(
+                animationManager,
+                level,
+                r3D,
+                colorScheme.fill(), colorScheme.stroke(), colorScheme.door(),
+                Settings3D.HOUSE_3D_OPACITY,
+                houseBaseHeightPy,
+                Settings3D.HOUSE_3D_WALL_TOP_HEIGHT,
+                Settings3D.HOUSE_3D_WALL_THICKNESS,
+                houseLightOnPy);
 
         getChildren().add(house3D.root()); //TODO check this
         house3D.door3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
@@ -120,13 +129,23 @@ public class Maze3D extends Group {
         }
     }
 
+    private MaterialColorAnimation createWallColorFlashingAnimation() {
+        return new MaterialColorAnimation(Duration.seconds(0.25), wallTopMaterial, wallTopColor, wallBaseColor);
+    }
+
     public void playWallColorFlashingAnimation() {
-        animationMgr.registerAndPlayFromStart(this, "MazeWallColorFlashing", wallColorFlashingAnimation);
+        if (wallColorFlashingAnimation == null) {
+            wallColorFlashingAnimation = createWallColorFlashingAnimation();
+            animationMgr.register("MazeWallColorFlashing", wallColorFlashingAnimation);
+        }
+        wallColorFlashingAnimation.playFromStart();
     }
 
     public void stopWallColorFlashingAnimation() {
-        wallColorFlashingAnimation.stop();
-        wallColorFlashingAnimation.jumpTo(Duration.ZERO);
+        if (wallColorFlashingAnimation != null) {
+            wallColorFlashingAnimation.stop();
+            wallColorFlashingAnimation.jumpTo(Duration.ZERO);
+        }
     }
 
     public Animation createWallsDisappearAnimation(double seconds) {
