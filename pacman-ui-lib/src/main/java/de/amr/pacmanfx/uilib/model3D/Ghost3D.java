@@ -45,16 +45,14 @@ public class Ghost3D {
     private Animation dressAnimation;
     private Animation flashingAnimation;
 
-    private Color assetColor(String keySuffix) { return assets.color(assetNamespace + keySuffix); }
-
-    public Color normalDressColor()        { return assetColor(".ghost.%d.color.normal.dress".formatted(personality));  }
-    public Color normalPupilsColor()       { return assetColor(".ghost.%d.color.normal.pupils".formatted(personality)); }
-    public Color normalEyeballsColor()     { return assetColor(".ghost.%d.color.normal.eyeballs".formatted(personality)); }
-    public Color frightenedDressColor()    { return assetColor(".ghost.color.frightened.dress"); }
-    public Color frightenedPupilsColor()   { return assetColor(".ghost.color.frightened.pupils"); }
-    public Color frightenedEyeballsColor() { return assetColor(".ghost.color.frightened.eyeballs"); }
-    public Color flashingDressColor()      { return assetColor(".ghost.color.flashing.dress"); }
-    public Color flashingPupilsColor()     { return assetColor(".ghost.color.flashing.pupils"); }
+    public Color normalDressColor()        { return assets.color(assetNamespace + ".ghost.%d.color.normal.dress".formatted(personality));  }
+    public Color normalPupilsColor()       { return assets.color(assetNamespace + ".ghost.%d.color.normal.pupils".formatted(personality)); }
+    public Color normalEyeballsColor()     { return assets.color(assetNamespace + ".ghost.%d.color.normal.eyeballs".formatted(personality)); }
+    public Color frightenedDressColor()    { return assets.color(assetNamespace + ".ghost.color.frightened.dress"); }
+    public Color frightenedPupilsColor()   { return assets.color(assetNamespace + ".ghost.color.frightened.pupils"); }
+    public Color frightenedEyeballsColor() { return assets.color(assetNamespace + ".ghost.color.frightened.eyeballs"); }
+    public Color flashingDressColor()      { return assets.color(assetNamespace + ".ghost.color.flashing.dress"); }
+    public Color flashingPupilsColor()     { return assets.color(assetNamespace + ".ghost.color.flashing.pupils"); }
 
     public Ghost3D(
         AnimationManager animationManager,
@@ -93,18 +91,11 @@ public class Ghost3D {
         dressShape.getTransforms().add(centeredOverOrigin);
         eyesGroup.getTransforms().add(centeredOverOrigin);
 
-        fixOrientation(root);
-        resizeTo(size);
-    }
-
-    // TODO: fix orientation in OBJ file
-    private void fixOrientation(Node shape) {
-        shape.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(180, Rotate.Y_AXIS), new Rotate(180, Rotate.Z_AXIS));
-    }
-
-    private void resizeTo(double size) {
+        // TODO: fix orientation in OBJ file
+        root.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(180, Rotate.Y_AXIS), new Rotate(180, Rotate.Z_AXIS));
         Bounds bounds = root.getBoundsInLocal();
-        root.getTransforms().add(new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth()));
+        Scale scale = new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
+        root.getTransforms().add(scale);
     }
 
     public Group root() {
@@ -178,8 +169,7 @@ public class Ghost3D {
             setFrightenedAppearance();
         } else {
             // Note: Total flashing time must be shorter than Pac power fading time (2s)!
-            Duration totalFlashingTime = Duration.millis(1966);
-            playFlashingAnimation(numFlashes, totalFlashingTime);
+            playFlashingAnimation(numFlashes, Duration.millis(1966));
         }
     }
 
