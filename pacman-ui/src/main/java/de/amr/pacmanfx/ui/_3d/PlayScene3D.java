@@ -284,12 +284,13 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             case LEVEL_COMPLETE -> {
                 theGameState().timer().resetIndefiniteTime(); // expires when animation ends
                 theSound().stopAll();
-                animationManager.stopAll();
                 // hide explicitly because level might have been completed using cheat!
                 level3D.pellets3D().forEach(pellet3D -> pellet3D.shape3D().setVisible(false));
                 level3D.energizers3D().forEach(energizer3D -> energizer3D.shape3D().setVisible(false));
                 level3D.maze3D().door3D().setVisible(false);
                 level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
+                //TODO some animations need to run until the end e.g. the squirting animation
+                animationManager.stopAll();
                 playLevelCompleteAnimation();
             }
             case LEVEL_TRANSITION -> {

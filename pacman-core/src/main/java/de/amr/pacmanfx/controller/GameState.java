@@ -176,18 +176,30 @@ public enum GameState implements FsmState<GameModel> {
 
 
     LEVEL_COMPLETE {
+
+        private static final int COOL_DOWN_TICKS = 60;
+
         @Override
         public void onEnter(GameModel game) {
-            timer.restartIndefinitely(); // UI triggers timeout e.g. when animation finishes
-            game.onLevelCompleted(theGameLevel());
+            timer.restartIndefinitely(); // UI triggers timeout
         }
 
         @Override
         public void onUpdate(GameModel game) {
+            if (timer.tickCount() < COOL_DOWN_TICKS) {
+                return;
+            }
+
+            if (timer.tickCount() == COOL_DOWN_TICKS) {
+                game.onLevelCompleted(theGameLevel());
+            }
+
+            //TODO this is crap. Maybe Tengen Ms. Pac-Man needs its own state machine?
             if (theGameController().isSelected("MS_PACMAN_TENGEN") && theGameLevel().isDemoLevel()) {
                 theGameController().changeGameState(SHOWING_CREDITS);
                 return;
             }
+
             if (timer.hasExpired()) {
                 if (theGameLevel().isDemoLevel()) {
                     // just in case: if demo level is complete, go back to intro scene

@@ -92,7 +92,7 @@ public class LivesCounter3D extends Group {
     public void playLookingAroundAnimation() {
         if (lookingAroundAnimation == null) {
             lookingAroundAnimation = createPacShapesLookAroundAnimation();
-            animationManager.register("LivesCounter_LookingAroundAnimation", lookingAroundAnimation);
+            animationManager.register("LivesCounter_LookingAround", lookingAroundAnimation);
         }
         lookingAroundAnimation.play();
     }
