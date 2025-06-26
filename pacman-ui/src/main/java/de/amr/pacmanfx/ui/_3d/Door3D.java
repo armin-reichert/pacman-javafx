@@ -29,6 +29,8 @@ import static de.amr.pacmanfx.Globals.TS;
  */
 public class Door3D extends Group {
 
+    private static final int NUM_VERTICAL_BARS = 2;
+
     private final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(DrawMode.FILL);
     private final DoubleProperty barThicknessPy = new SimpleDoubleProperty(0.75);
     private final PhongMaterial barMaterial;
@@ -38,22 +40,13 @@ public class Door3D extends Group {
         getChildren().addAll(createDoorWing(leftWingTile, height), createDoorWing(rightWingTile, height));
     }
 
-    public ObjectProperty<DrawMode> drawModeProperty() { return drawModePy; }
-
-    public Animation createOpenCloseAnimation() {
-        return new Timeline(
-            new KeyFrame(Duration.seconds(0.75), new KeyValue(barThicknessPy, 0)),
-            new KeyFrame(Duration.seconds(1.5),  new KeyValue(barThicknessPy, 0.75))
-        );
-    }
-
     private Group createDoorWing(Vector2i tile, double height) {
         var group = new Group();
 
         group.setTranslateX(tile.x() * TS);
         group.setTranslateY(tile.y() * TS);
 
-        for (int i = 0; i < 2; ++i) {
+        for (int i = 0; i < NUM_VERTICAL_BARS; ++i) {
             var verticalBar = new Cylinder(barThicknessPy.get(), height);
             verticalBar.radiusProperty().bind(barThicknessPy);
             verticalBar.setMaterial(barMaterial);
@@ -78,5 +71,14 @@ public class Door3D extends Group {
         group.getChildren().add(horizontalBar);
 
         return group;
+    }
+
+    public ObjectProperty<DrawMode> drawModeProperty() { return drawModePy; }
+
+    public Animation createOpenCloseAnimation() {
+        return new Timeline(
+            new KeyFrame(Duration.seconds(0.75), new KeyValue(barThicknessPy, 0)),
+            new KeyFrame(Duration.seconds(1.5),  new KeyValue(barThicknessPy, 0.75))
+        );
     }
 }

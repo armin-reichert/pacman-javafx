@@ -7,7 +7,6 @@ package de.amr.pacmanfx.ui._3d;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
-import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
@@ -62,7 +61,7 @@ public class GameLevel3D {
         @Override
         protected void invalidated() {
             if (houseOpenPy.get()) {
-                animationMgr.registerAndPlayFromStart(maze3D.door3D(),
+                animationManager.registerAndPlayFromStart(maze3D.door3D(),
                     "Door_OpenClose",
                     maze3D.door3D().createOpenCloseAnimation());
             }
@@ -78,20 +77,22 @@ public class GameLevel3D {
     private AmbientLight ambientLight;
     private Box floor3D;
     private Maze3D maze3D;
+    private LevelCounter3D levelCounter3D;
     private LivesCounter3D livesCounter3D;
     private PacBase3D pac3D;
     private List<MutatingGhost3D> ghosts3D;
     private MessageView messageView;
     private Bonus3D bonus3D;
 
-    private final AnimationManager animationMgr;
+    private final AnimationManager animationManager;
 
-    public GameLevel3D(AnimationManager animationMgr) {
-        this.animationMgr = requireNonNull(animationMgr);
+    public GameLevel3D(AnimationManager animationManager) {
+        this.animationManager = requireNonNull(animationManager);
         createAmbientLight();
         createPac3D();
         createGhosts3D();
         createMaze3D();
+        createLevelCounter();
         createLivesCounter3D();
         compose();
         bindShape3DDrawingMode();
@@ -108,6 +109,10 @@ public class GameLevel3D {
         root.getChildren().addAll(ghosts3D);
         root.getChildren().add(livesCounter3D);
         root.getChildren().add(mazeGroup);
+        // Place level counter at top right maze corner
+        levelCounter3D.setTranslateX(theGameLevel().worldMap().numCols() * TS - 2 * TS);
+        levelCounter3D.setTranslateY(2 * TS);
+        root.getChildren().add(levelCounter3D);
     }
 
     // Pellet shapes are not bound because this would cause huge performance penalty!
@@ -170,7 +175,7 @@ public class GameLevel3D {
     }
 
     private void createPac3D() {
-        pac3D = theUI().configuration().createPac3D(animationMgr, theGameLevel().pac());
+        pac3D = theUI().configuration().createPac3D(animationManager, theGameLevel().pac());
         Model3D.bindDrawMode(pac3D.root(), PY_3D_DRAW_MODE);
     }
 
@@ -181,7 +186,7 @@ public class GameLevel3D {
     }
 
     private MutatingGhost3D createGhost3D(Ghost ghost, int numFlashes) {
-        var ghost3D = new MutatingGhost3D(animationMgr, theAssets(), theUI().configuration().assetNamespace(),
+        var ghost3D = new MutatingGhost3D(animationManager, theAssets(), theUI().configuration().assetNamespace(),
             new MeshView(Model3DRepository.get().ghostDressMesh()),
             new MeshView(Model3DRepository.get().ghostPupilsMesh()),
             new MeshView(Model3DRepository.get().ghostEyeballsMesh()),
@@ -194,7 +199,7 @@ public class GameLevel3D {
         final WorldMap worldMap = theGameLevel().worldMap();
         final WorldMapColorScheme colorScheme = theUI().configuration().worldMapColorScheme(worldMap);
         floor3D = createFloor3D(worldMap.numCols() * TS, worldMap.numRows() * TS);
-        maze3D = new Maze3D(theGameLevel(), colorScheme, animationMgr);
+        maze3D = new Maze3D(theGameLevel(), colorScheme, animationManager);
         mazeGroup.getChildren().addAll(floor3D, maze3D);
         createFood3D(colorScheme);
     }
@@ -230,7 +235,7 @@ public class GameLevel3D {
 
     private Energizer3D createEnergizer3D(Vector2i tile, PhongMaterial material) {
         var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -2* Settings3D.ENERGIZER_3D_RADIUS);
-        var energizer3D = new Energizer3D(Settings3D.ENERGIZER_3D_RADIUS, animationMgr);
+        var energizer3D = new Energizer3D(Settings3D.ENERGIZER_3D_RADIUS, animationManager);
         energizer3D.setTile(tile);
         energizer3D.shape3D().setTranslateX(center.getX());
         energizer3D.shape3D().setTranslateY(center.getY());
@@ -266,7 +271,7 @@ public class GameLevel3D {
         for (int i = 0; i < counterShapes.length; ++i) {
             counterShapes[i] = theUI().configuration().createLivesCounter3D();
         }
-        livesCounter3D = new LivesCounter3D(counterShapes);
+        livesCounter3D = new LivesCounter3D(animationManager, counterShapes);
         livesCounter3D.setTranslateX(2 * TS);
         livesCounter3D.setTranslateY(2 * TS);
         livesCounter3D.drawModeProperty().bind(PY_3D_DRAW_MODE);
@@ -277,41 +282,9 @@ public class GameLevel3D {
         livesCounter3D.light().colorProperty().set(Color.CORNFLOWERBLUE);
     }
 
-    public void addLevelCounter() {
-        // Place level counter at top right maze corner
-        double x = theGameLevel().worldMap().numCols() * TS - 2 * TS;
-        double y = 2 * TS;
-        root.getChildren().add(createLevelCounter3D(theGame().hud().levelCounter(), x, y));
-    }
-
-    private Node createLevelCounter3D(LevelCounter levelCounter, double x, double y) {
-        var levelCounter3D = new Group();
-        levelCounter3D.setTranslateX(x);
-        levelCounter3D.setTranslateY(y);
-        levelCounter3D.setTranslateZ(-6);
-        int n = 0;
-        for (byte symbol : levelCounter.symbols()) {
-            var material = new PhongMaterial(Color.WHITE);
-            Image texture = theUI().configuration().createBonusSymbolImage(symbol);
-            material.setDiffuseMap(texture);
-
-            var cube = new Box(TS, TS, TS);
-            cube.setMaterial(material);
-            cube.setTranslateX(-n * (double) 16);
-            cube.setTranslateZ(-HTS);
-
-            var spinning = new RotateTransition(Duration.seconds(6), cube);
-            spinning.setCycleCount(Animation.INDEFINITE);
-            spinning.setInterpolator(Interpolator.LINEAR);
-            spinning.setAxis(Rotate.X_AXIS);
-            spinning.setByAngle(360);
-            spinning.setRate(n % 2 == 0 ? 1 : -1);
-            animationMgr.registerAndPlayFromStart(cube, "LevelCounter_Spinning", spinning);
-
-            levelCounter3D.getChildren().add(cube);
-            n += 1;
-        }
-        return levelCounter3D;
+    public void createLevelCounter() {
+        levelCounter3D = new LevelCounter3D(animationManager, theGame().hud().levelCounter());
+        levelCounter3D.playAnimation();
     }
 
     public Group root() { return root; }
@@ -345,7 +318,7 @@ public class GameLevel3D {
             new PauseTransition(Duration.seconds(displaySeconds)),
             moveDownAnimation
         );
-        animationMgr.registerAndPlayFromStart(messageView, "LevelMessage_Movement", animation);
+        animationManager.registerAndPlayFromStart(messageView, "LevelMessage_Movement", animation);
     }
 
     public void updateBonus3D(Bonus bonus) {
@@ -355,13 +328,9 @@ public class GameLevel3D {
         }
         Image bonusSymbolTexture = theUI().configuration().createBonusSymbolImage(bonus.symbol());
         Image bonusValueTexture  = theUI().configuration().createBonusValueImage(bonus.symbol());
-        bonus3D = new Bonus3D(animationMgr, bonus, bonusSymbolTexture, bonusValueTexture);
+        bonus3D = new Bonus3D(animationManager, bonus, bonusSymbolTexture, bonusValueTexture);
         bonus3D.showEdible();
         mazeGroup.getChildren().add(bonus3D);
-    }
-
-    public Animation createLivesCounterAnimation() {
-        return livesCounter3D.createPacShapesLookAroundAnimation();
     }
 
     private Animation createLevelRotateAnimation() {

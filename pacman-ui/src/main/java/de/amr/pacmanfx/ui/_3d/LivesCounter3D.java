@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.uilib.Ufx;
+import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
@@ -21,6 +22,7 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import static de.amr.pacmanfx.Globals.TS;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Displays a Pac-Man shape for each live remaining.
@@ -40,7 +42,11 @@ public class LivesCounter3D extends Group {
     private final Node[] pacShapes;
     private final PointLight light = new PointLight();
 
-    public LivesCounter3D(Node[] pacShapes) {
+    private final AnimationManager animationManager;
+    private Animation animation;
+
+    public LivesCounter3D(AnimationManager animationManager, Node[] pacShapes) {
+        this.animationManager = requireNonNull(animationManager);
         this.pacShapes = pacShapes;
 
         pillarMaterialPy.bind(pillarColorPy.map(Ufx::coloredPhongMaterial));
@@ -71,13 +77,6 @@ public class LivesCounter3D extends Group {
         getChildren().addAll(standsGroup, light);
     }
 
-    private void setInitialShapeRotation() {
-        for (Node shape : pacShapes) {
-            shape.setRotationAxis(Rotate.Z_AXIS);
-            shape.setRotate(240);
-        }
-    }
-
     public ObjectProperty<DrawMode> drawModeProperty() { return drawModePy; }
 
     public IntegerProperty livesCountProperty() { return livesCountPy; }
@@ -90,10 +89,14 @@ public class LivesCounter3D extends Group {
         return light;
     }
 
-    /**
-     * @return animation that lets the Pac shapes in the live counter look around.
-     */
-    public Animation createPacShapesLookAroundAnimation() {
+    public void playAnimation() {
+        if (animation == null) {
+            animation = createPacShapesLookAroundAnimation();
+        }
+        animationManager.registerAndPlayFromStart(this, "LivesCounter_Animation", animation);
+    }
+
+    private Animation createPacShapesLookAroundAnimation() {
         var animation = new ParallelTransition();
         for (Node pacShape : pacShapes) {
             var rotation = new RotateTransition(Duration.seconds(10.0), pacShape);
@@ -107,6 +110,13 @@ public class LivesCounter3D extends Group {
         }
         setInitialShapeRotation();
         return animation;
+    }
+
+    private void setInitialShapeRotation() {
+        for (Node shape : pacShapes) {
+            shape.setRotationAxis(Rotate.Z_AXIS);
+            shape.setRotate(240);
+        }
     }
 
     private Group createStand(double x) {

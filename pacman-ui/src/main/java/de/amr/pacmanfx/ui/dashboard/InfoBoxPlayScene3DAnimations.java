@@ -14,6 +14,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
@@ -47,6 +48,7 @@ public class InfoBoxPlayScene3DAnimations extends InfoBox {
         table.setItems(animationDataRows);
         table.setPrefWidth(300);
         table.setPrefHeight(400);
+        table.setPlaceholder(new Text("No animations"));
 
         TableColumn<AnimationData, String> idColumn = new TableColumn<>("Animation ID");
         idColumn.setCellValueFactory(data -> data.getValue().idPy());

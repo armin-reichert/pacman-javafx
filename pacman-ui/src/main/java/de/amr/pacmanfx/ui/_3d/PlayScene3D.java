@@ -262,8 +262,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 level3D.pac3D().init();
                 level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(theGameLevel()));
                 level3D.energizers3D().forEach(Energizer3D::startPumping);
-                Animation livesCounterAnimation = level3D.createLivesCounterAnimation();
-                animationManager.registerAndPlayFromStart(level3D.livesCounter3D(), "LivesCounter", livesCounterAnimation);
+                level3D.livesCounter3D().playAnimation();
             }
             case PACMAN_DYING -> {
                 animationManager.stopAll();
@@ -349,8 +348,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             }
             case TESTING_LEVELS_SHORT, TESTING_LEVELS_MEDIUM -> {
                 replaceGameLevel3D();
-                Animation livesCounterAnimation = level3D.createLivesCounterAnimation();
-                animationManager.registerAndPlayFromStart(level3D.livesCounter3D(), "LivesCounter", livesCounterAnimation);
+                level3D.livesCounter3D().playAnimation();
                 level3D.energizers3D().forEach(Energizer3D::startPumping);
                 showLevelTestMessage(theGameLevel().number());
             }
@@ -383,7 +381,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             if (theGameLevel().pac().powerTimer().isRunning()) {
                 theSound().playPacPowerSound();
             }
-            animationManager.registerAndPlayFromStart(level3D.livesCounter3D(), "LivesCounter", level3D.createLivesCounterAnimation());
+            level3D.livesCounter3D().playAnimation();
         }
 
         subScene3D.setFill(Color.TRANSPARENT);
@@ -518,7 +516,6 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     protected void replaceGameLevel3D() {
         level3D = new GameLevel3D(animationManager);
-        level3D.addLevelCounter();
         root.getChildren().set(root.getChildren().size() - 1, level3D.root());
         scores3D.translateXProperty().bind(level3D.root().translateXProperty().add(TS));
         scores3D.translateYProperty().bind(level3D.root().translateYProperty().subtract(3.5 * TS));
