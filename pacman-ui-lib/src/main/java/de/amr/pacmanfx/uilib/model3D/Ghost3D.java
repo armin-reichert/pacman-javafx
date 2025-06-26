@@ -20,7 +20,6 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 import javafx.util.Duration;
-import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
@@ -142,47 +141,9 @@ public class Ghost3D {
         }
     }
 
-    public void setFlashingAppearance(int numFlashes) {
-        dressShape.setVisible(true);
-        if (numFlashes == 0) {
-            setFrightenedAppearance();
-        } else {
-            // Note: Total flashing time must be shorter than Pac power fading time (2s)!
-            Duration totalFlashingTime = Duration.millis(1966);
-            ensureFlashingAnimationIsPlaying(numFlashes, totalFlashingTime);
-            Logger.trace("{} is flashing {} times", personality, numFlashes);
-        }
-    }
-
-    public void setFrightenedAppearance() {
-        ensureFlashingAnimationIsStopped();
-        dressColorPy.set(frightenedDressColor());
-        eyeballsColorPy.set(frightenedEyeballsColor());
-        pupilsColorPy.set(frightenedPupilsColor());
-        dressShape.setVisible(true);
-        Logger.trace("Appear frightened, ghost {}", personality);
-    }
-
-    public void setNormalAppearance() {
-        ensureFlashingAnimationIsStopped();
-        dressColorPy.set(normalDressColor());
-        eyeballsColorPy.set(normalEyeballsColor());
-        pupilsColorPy.set(normalPupilsColor());
-        dressShape.setVisible(true);
-        Logger.trace("Appear normal, ghost {}", personality);
-    }
-
-    public void setEyesOnlyAppearance() {
-        ensureFlashingAnimationIsStopped();
-        eyeballsColorPy.set(normalEyeballsColor());
-        pupilsColorPy.set(normalPupilsColor());
-        dressShape.setVisible(false);
-        Logger.trace("Appear eyes, ghost {}", personality);
-    }
-
-    private void createFlashingAnimation(int numFlashes, Duration totalDuration) {
+    private Animation createFlashingAnimation(int numFlashes, Duration totalDuration) {
         Duration flashEndTime = totalDuration.divide(numFlashes), highlightTime = flashEndTime.divide(3);
-        flashingAnimation = new Timeline(
+        var flashingTimeline = new Timeline(
             new KeyFrame(highlightTime,
                 new KeyValue(dressColorPy,  flashingDressColor()),
                 new KeyValue(pupilsColorPy, flashingPupilsColor())
@@ -192,26 +153,56 @@ public class Ghost3D {
                 new KeyValue(pupilsColorPy, frightenedPupilsColor())
             )
         );
-        flashingAnimation.setCycleCount(numFlashes);
-        Logger.trace("Created flashing animation ({} flashes, total time: {} seconds) for ghost {}",
-            numFlashes, totalDuration.toSeconds(), personality);
+        flashingTimeline.setCycleCount(numFlashes);
+        return flashingTimeline;
     }
 
-    private void ensureFlashingAnimationIsPlaying(int numFlashes, Duration duration) {
+    private void playFlashingAnimation(int numFlashes, Duration duration) {
         if (flashingAnimation == null) {
-            createFlashingAnimation(numFlashes, duration);
+            flashingAnimation = createFlashingAnimation(numFlashes, duration);
         }
         if (flashingAnimation.getStatus() != Status.RUNNING) {
-            Logger.trace("Playing flashing animation for ghost {}", personality);
-            flashingAnimation.play();
+            animationManager.registerAndPlayFromStart(root, "Ghost_Flashing", flashingAnimation);
         }
     }
 
-    private void ensureFlashingAnimationIsStopped() {
+    private void stopFlashingAnimation() {
         if (flashingAnimation != null) {
             flashingAnimation.stop();
-            flashingAnimation = null;
-            Logger.trace("Stopped flashing animation for ghost {}", personality);
         }
+    }
+
+    public void setFlashingAppearance(int numFlashes) {
+        dressShape.setVisible(true);
+        if (numFlashes == 0) {
+            setFrightenedAppearance();
+        } else {
+            // Note: Total flashing time must be shorter than Pac power fading time (2s)!
+            Duration totalFlashingTime = Duration.millis(1966);
+            playFlashingAnimation(numFlashes, totalFlashingTime);
+        }
+    }
+
+    public void setFrightenedAppearance() {
+        stopFlashingAnimation();;
+        dressColorPy.set(frightenedDressColor());
+        eyeballsColorPy.set(frightenedEyeballsColor());
+        pupilsColorPy.set(frightenedPupilsColor());
+        dressShape.setVisible(true);
+    }
+
+    public void setNormalAppearance() {
+        stopFlashingAnimation();
+        dressColorPy.set(normalDressColor());
+        eyeballsColorPy.set(normalEyeballsColor());
+        pupilsColorPy.set(normalPupilsColor());
+        dressShape.setVisible(true);
+    }
+
+    public void setEyesOnlyAppearance() {
+        stopFlashingAnimation();
+        eyeballsColorPy.set(normalEyeballsColor());
+        pupilsColorPy.set(normalPupilsColor());
+        dressShape.setVisible(false);
     }
 }
