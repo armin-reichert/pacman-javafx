@@ -11,6 +11,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.model3D.Ghost3D;
+import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.beans.property.ObjectProperty;
@@ -55,6 +56,7 @@ public class MutatingGhost3D extends Group {
     private final RotateTransition numberBoxRotation;
     private final double size;
     private final int numFlashes;
+
     private RotateTransition brakeAnimation;
 
     public MutatingGhost3D(
@@ -104,6 +106,22 @@ public class MutatingGhost3D extends Group {
         updateAnimations();
     }
 
+    private void updateAppearance(GameLevel level) {
+        boolean powerFading = level.pac().isPowerFading(level);
+        boolean powerActive = level.pac().powerTimer().isRunning();
+        setAppearance(switch (ghost.state()) {
+            case LEAVING_HOUSE, LOCKED -> {
+                // ghost that got killed already during the current power phase do not look frightened anymore
+                boolean killedDuringCurrentPhase = level.victims().contains(ghost);
+                yield powerActive && !killedDuringCurrentPhase ? frightenedOrFlashing(powerFading) : Appearance.NORMAL;
+            }
+            case FRIGHTENED -> frightenedOrFlashing(powerFading);
+            case ENTERING_HOUSE, RETURNING_HOME -> Appearance.EATEN;
+            case EATEN -> Appearance.VALUE;
+            default -> Appearance.NORMAL;
+        });
+    }
+
     public void setNumberTexture(Image numberTexture) {
         var material = new PhongMaterial();
         material.setDiffuseMap(numberTexture);
@@ -127,7 +145,7 @@ public class MutatingGhost3D extends Group {
     }
 
     private void stopAllAnimations() {
-        endBrakeAnimation();
+        stopBrakeAnimation();
         ghost3D.stopDressAnimation();
         numberBoxRotation.stop();
     }
@@ -144,19 +162,24 @@ public class MutatingGhost3D extends Group {
         }
     }
 
-    private void playBrakeAnimation() {
-        if (ghost.moveDir().isHorizontal()) {
-            brakeAnimation = new RotateTransition(Duration.seconds(0.5), this);
-            brakeAnimation.setAxis(Rotate.Y_AXIS);
-            brakeAnimation.setByAngle(ghost.moveDir() == Direction.LEFT ? -35 : 35);
-            brakeAnimation.setAutoReverse(true);
-            brakeAnimation.setCycleCount(2);
-            brakeAnimation.setInterpolator(Interpolator.EASE_OUT);
-            animationMgr.registerAndPlayFromStart(this, "GhostBraking", brakeAnimation);
-        }
+    private RotateTransition createBrakeAnimation() {
+        var animation = new RotateTransition(Duration.seconds(0.5), this);
+        animation.setAxis(Rotate.Y_AXIS);
+        animation.setAutoReverse(true);
+        animation.setCycleCount(2);
+        animation.setInterpolator(Interpolator.EASE_OUT);
+        return animation;
     }
 
-    private void endBrakeAnimation() {
+    private void playBrakeAnimation() {
+        if (brakeAnimation == null) {
+            brakeAnimation = createBrakeAnimation();
+        }
+        brakeAnimation.setByAngle(ghost.moveDir() == Direction.LEFT ? -35 : 35);
+        animationMgr.registerAndPlayFromStart(this, "Ghost_Braking", brakeAnimation);
+    }
+
+    private void stopBrakeAnimation() {
         if (brakeAnimation != null) {
             brakeAnimation.stop();
             setRotationAxis(Rotate.Y_AXIS);
@@ -174,21 +197,6 @@ public class MutatingGhost3D extends Group {
             case VALUE -> numberBoxRotation.playFromStart();
         }
         Logger.trace("Ghost {} appearance changed to {}", ghost.personality(), appearance);
-    }
-
-    private void updateAppearance(GameLevel level) {
-        Appearance nextAppearance = switch (ghost.state()) {
-            case LEAVING_HOUSE, LOCKED ->
-                // ghost that have been killed by current energizer will not look frightened
-                level.pac().powerTimer().isRunning() && !level.victims().contains(ghost)
-                        ? frightenedOrFlashing(level.pac().isPowerFading(level))
-                        : Appearance.NORMAL;
-            case FRIGHTENED -> frightenedOrFlashing(level.pac().isPowerFading(level));
-            case ENTERING_HOUSE, RETURNING_HOME -> Appearance.EATEN;
-            case EATEN -> Appearance.VALUE;
-            default -> Appearance.NORMAL;
-        };
-        setAppearance(nextAppearance);
     }
 
     private Appearance frightenedOrFlashing(boolean powerFading) {

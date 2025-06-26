@@ -186,11 +186,16 @@ public class GameLevel3D {
     }
 
     private MutatingGhost3D createGhost3D(Ghost ghost, int numFlashes) {
-        var ghost3D = new MutatingGhost3D(animationManager, theAssets(), theUI().configuration().assetNamespace(),
+        var ghost3D = new MutatingGhost3D(
+            animationManager,
+            theAssets(),
+            theUI().configuration().assetNamespace(),
             new MeshView(Model3DRepository.get().ghostDressMesh()),
             new MeshView(Model3DRepository.get().ghostPupilsMesh()),
             new MeshView(Model3DRepository.get().ghostEyeballsMesh()),
-            ghost, Settings3D.GHOST_3D_SIZE, numFlashes);
+            ghost,
+            Settings3D.GHOST_3D_SIZE,
+            numFlashes);
         Model3D.bindDrawMode(ghost3D, PY_3D_DRAW_MODE);
         return ghost3D;
     }
