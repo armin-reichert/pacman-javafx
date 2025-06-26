@@ -37,15 +37,26 @@ public class AnimationManager {
             Logger.warn("Animation map already contains animation with ID '{}'", id);
         }
         animationMap.put(id, animation);
-        Logger.info("New animation map entry ID={}", id);
+        Logger.info("New animation map entry, ID={}", id);
         return animation;
     }
 
     public void registerAndPlayFromStart(Node node, String animationName, Animation animation) {
         register(node, animationName, animation);
         animation.playFromStart();
+        Logger.info("Playing animation ID='{}' ({})", makeID(node, animationName), animation);
+    }
+
+    public void remove(Node node, String animationName) {
+        requireNonNull(node);
+        requireValidIdentifier(animationName);
         String id = makeID(node, animationName);
-        Logger.info("Playing animation ID='{}' ({})", id, animation);
+        if (animationMap.containsKey(id)) {
+            animationMap.remove(id);
+            Logger.info("Removed animation map entry, ID={}", id);
+        } else {
+            Logger.warn("Cannot remove: Animation map does not contain animation with ID '{}'", id);
+        }
     }
 
     public void stopAll() {

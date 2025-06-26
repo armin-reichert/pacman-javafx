@@ -58,7 +58,7 @@ public class MutatingGhost3D extends Group {
     private RotateTransition brakeAnimation;
 
     public MutatingGhost3D(
-        AnimationManager animationMgr,
+        AnimationManager animationManager,
         AssetStorage assets, String assetPrefix,
         Shape3D dressShape, Shape3D pupilsShape, Shape3D eyeballsShape,
         Ghost ghost, double size, int numFlashes)
@@ -70,12 +70,12 @@ public class MutatingGhost3D extends Group {
         requireNonNull(eyeballsShape);
         requireNonNegative(numFlashes);
 
-        this.animationMgr = requireNonNull(animationMgr);
+        this.animationMgr = requireNonNull(animationManager);
         this.ghost = requireNonNull(ghost);
         this.size = requireNonNegative(size);
         this.numFlashes = numFlashes;
 
-        ghost3D = new Ghost3D(assets, assetPrefix, ghost.personality(), dressShape, pupilsShape, eyeballsShape, size);
+        ghost3D = new Ghost3D(animationManager, assets, assetPrefix, ghost.personality(), dressShape, pupilsShape, eyeballsShape, size);
 
         numberBox = new Box(14, 8, 8);
         numberBoxRotation = new RotateTransition(Duration.seconds(1), numberBox);

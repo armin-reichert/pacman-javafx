@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.uilib.Ufx;
+import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import javafx.animation.*;
 import javafx.animation.Animation.Status;
@@ -36,14 +37,16 @@ public class Ghost3D {
 
     private final byte personality;
     private final AssetStorage assets;
-    private final String assetKeyPrefix;
+    private final String assetNamespace;
     private final Group root = new Group();
     private final Shape3D dressShape;
+    private final Group dressGroup;
 
-    private final RotateTransition dressAnimation;
+    private final AnimationManager animationManager;
+    private Animation dressAnimation;
     private Animation flashingAnimation;
 
-    private Color assetColor(String keySuffix) { return assets.color(assetKeyPrefix + keySuffix); }
+    private Color assetColor(String keySuffix) { return assets.color(assetNamespace + keySuffix); }
 
     public Color normalDressColor()        { return assetColor(".ghost.%d.color.normal.dress".formatted(personality));  }
     public Color normalPupilsColor()       { return assetColor(".ghost.%d.color.normal.pupils".formatted(personality)); }
@@ -54,23 +57,25 @@ public class Ghost3D {
     public Color flashingDressColor()      { return assetColor(".ghost.color.flashing.dress"); }
     public Color flashingPupilsColor()     { return assetColor(".ghost.color.flashing.pupils"); }
 
-    public Ghost3D(AssetStorage assets, String assetKeyPrefix,
-                   byte personality,
-                   Shape3D dressShape, Shape3D pupilsShape, Shape3D eyeballsShape,
-                   double size)
+    public Ghost3D(
+        AnimationManager animationManager,
+        AssetStorage assets,
+        String assetNamespace,
+        byte personality,
+        Shape3D dressShape,
+        Shape3D pupilsShape,
+        Shape3D eyeballsShape,
+        double size)
     {
-        requireNonNull(assets);
-        requireNonNull(assetKeyPrefix);
-        requireValidGhostPersonality(personality);
-        requireNonNull(dressShape);
+        this.animationManager = requireNonNull(animationManager);
+        this.assets = requireNonNull(assets);
+        this.assetNamespace = requireNonNull(assetNamespace);
+        this.personality = requireValidGhostPersonality(personality);
+        this.dressShape = requireNonNull(dressShape);
+
         requireNonNull(pupilsShape);
         requireNonNull(eyeballsShape);
         requireNonNegative(size);
-
-        this.assets = assets;
-        this.personality = personality;
-        this.assetKeyPrefix = assetKeyPrefix;
-        this.dressShape = dressShape;
 
         dressShape.materialProperty().bind(dressColorPy.map(Ufx::coloredPhongMaterial));
         pupilsShape.materialProperty().bind(pupilsColorPy.map(Ufx::coloredPhongMaterial));
@@ -81,20 +86,13 @@ public class Ghost3D {
         eyeballsColorPy.set(normalEyeballsColor());
 
         var eyesGroup = new Group(pupilsShape, eyeballsShape);
-        var dressGroup = new Group(dressShape);
+        dressGroup = new Group(dressShape);
         root.getChildren().setAll(dressGroup, eyesGroup);
 
         Bounds dressBounds = dressShape.getBoundsInLocal();
         var centeredOverOrigin = new Translate(-dressBounds.getCenterX(), -dressBounds.getCenterY(), -dressBounds.getCenterZ());
         dressShape.getTransforms().add(centeredOverOrigin);
         eyesGroup.getTransforms().add(centeredOverOrigin);
-
-        dressAnimation = new RotateTransition(Duration.seconds(0.3), dressGroup);
-        // TODO I expected this should be the z-axis but... (transforms messed-up?)
-        dressAnimation.setAxis(Rotate.Y_AXIS);
-        dressAnimation.setByAngle(30);
-        dressAnimation.setCycleCount(Animation.INDEFINITE);
-        dressAnimation.setAutoReverse(true);
 
         fixOrientation(root);
         resizeTo(size);
@@ -119,12 +117,29 @@ public class Ghost3D {
         root.setRotate(angle);
     }
 
+    private RotateTransition createDressAnimation() {
+        var animation = new RotateTransition(Duration.seconds(0.3), dressGroup);
+        // TODO I expected this should be the z-axis but... (transforms messed-up?)
+        animation.setAxis(Rotate.Y_AXIS);
+        animation.setByAngle(30);
+        animation.setCycleCount(Animation.INDEFINITE);
+        animation.setAutoReverse(true);
+        return animation;
+    }
+
     public void playDressAnimation() {
-        dressAnimation.play();
+        if (dressAnimation == null) {
+            dressAnimation = createDressAnimation();
+        }
+        if (dressAnimation.getStatus() != Status.RUNNING) {
+            animationManager.registerAndPlayFromStart(root, "Ghost_DressMoving", dressAnimation);
+        }
     }
 
     public void stopDressAnimation() {
-        dressAnimation.stop();
+        if (dressAnimation != null) {
+            dressAnimation.stop();
+        }
     }
 
     public void setFlashingAppearance(int numFlashes) {
