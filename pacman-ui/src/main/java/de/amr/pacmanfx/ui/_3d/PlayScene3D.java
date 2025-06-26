@@ -65,10 +65,13 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     protected final PerspectiveCamera camera = new PerspectiveCamera(true);
     protected final Map<PerspectiveID, Perspective> perspectiveMap = new EnumMap<>(PerspectiveID.class);
     protected final Map<KeyCombination, GameAction> actionBindingMap = new HashMap<>();
-    protected final AnimationManager animationManager = new AnimationManager();
 
     protected final Scores3D scores3D;
     protected GameLevel3D level3D;
+
+    protected final AnimationManager animationManager = new AnimationManager();
+    private Animation pacDyingAnimation;
+    private Animation levelCompleteAnimation;
 
     public PlayScene3D() {
         scores3D = new Scores3D(
@@ -270,14 +273,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 // last update before dying animation
                 level3D.pac3D().update(theGameLevel());
                 theGameState().timer().resetIndefiniteTime();
-                Animation dyingAnimation = new SequentialTransition(
-                    now(theSound()::playPacDeathSound),
-                    level3D.pac3D().createDyingAnimation(),
-                    pauseSec(1)
-                );
-                dyingAnimation.setDelay(Duration.seconds(2));
-                dyingAnimation.setOnFinished(e -> theGameController().letCurrentGameStateExpire());
-                animationManager.registerAndPlayFromStart(level3D.pac3D().root(), "PacManDying", dyingAnimation);
+                playPacDyingAnimation();
             }
             case GHOST_DYING ->
                 theSimulationStep().killedGhosts.forEach(ghost -> {
@@ -286,26 +282,14 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                     level3D.ghost3D(ghost.personality()).setNumberTexture(numberImage);
                 });
             case LEVEL_COMPLETE -> {
-                theGameState().timer().resetIndefiniteTime(); // expires when animation ends
                 theSound().stopAll();
                 animationManager.stopAll();
                 level3D.pellets3D().forEach(Pellet3D::onEaten);
                 level3D.energizers3D().forEach(Energizer3D::onEaten);
                 level3D.maze3D().door3D().setVisible(false);
                 level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
-
-                var levelCompleteAnimation = new SequentialTransition(
-                    Ufx.doAfterSec(3, () -> {
-                        perspectiveIDPy.unbind();
-                        perspectiveIDPy.set(PerspectiveID.TOTAL);
-                    }),
-                    level3D.createLevelCompleteAnimation()
-                );
-                levelCompleteAnimation.setOnFinished(e -> {
-                    perspectiveIDPy.bind(PY_3D_PERSPECTIVE);
-                    theGameController().letCurrentGameStateExpire();
-                });
-                animationManager.registerAndPlayFromStart(level3D.root(), "LevelComplete", levelCompleteAnimation);
+                theGameState().timer().resetIndefiniteTime(); // expires when animation ends
+                playLevelCompleteAnimation();
             }
             case LEVEL_TRANSITION -> {
                 theGameState().timer().restartSeconds(3);
@@ -316,18 +300,18 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             case GAME_OVER -> {
                 // delay state exit for 3 seconds:
                 theGameState().timer().restartSeconds(3);
-                animationManager.stopAll();
                 level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
                 if (!theGameLevel().isDemoLevel() && randomInt(0, 100) < 25) {
                     theUI().showFlashMessageSec(3, theAssets().localizedGameOverMessage());
                 }
                 theSound().stopAll();
                 theSound().playGameOverSound();
+                animationManager.stopAll();
             }
             case TESTING_LEVELS_SHORT, TESTING_LEVELS_MEDIUM -> {
                 replaceGameLevel3D();
                 level3D.pac3D().init();
-                level3D.ghosts3D().forEach(ghost3DAppearance -> ghost3DAppearance.init(theGameLevel()));
+                level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(theGameLevel()));
                 showLevelTestMessage(theGameLevel().number());
                 PY_3D_PERSPECTIVE.set(PerspectiveID.TOTAL);
             }
@@ -570,5 +554,47 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         double y = TS * (houseMinTile.y() +       houseSizeInTiles.y());
         double seconds = theGame().isPlaying() ? 0.5 : 2.5;
         level3D.showAnimatedMessage("READY!", seconds, x, y);
+    }
+
+    // Animations
+
+    private Animation createPacDyingAnimation() {
+        Animation animation = new SequentialTransition(
+            now(theSound()::playPacDeathSound),
+            level3D.pac3D().createDyingAnimation(),
+            pauseSec(1)
+        );
+        animation.setDelay(Duration.seconds(2));
+        animation.setOnFinished(e -> theGameController().letCurrentGameStateExpire());
+        return animation;
+    }
+
+    private void playPacDyingAnimation() {
+        if (pacDyingAnimation == null) {
+            pacDyingAnimation = createPacDyingAnimation();
+        }
+        animationManager.registerAndPlayFromStart(root, "PacMan_Dying", pacDyingAnimation);
+    }
+
+    private Animation createLevelCompleteAnimation() {
+        var animation = new SequentialTransition(
+            Ufx.doAfterSec(3, () -> {
+                perspectiveIDPy.unbind();
+                perspectiveIDPy.set(PerspectiveID.TOTAL);
+            }),
+            level3D.createLevelCompleteAnimation()
+        );
+        animation.setOnFinished(e -> {
+            perspectiveIDPy.bind(PY_3D_PERSPECTIVE);
+            theGameController().letCurrentGameStateExpire();
+        });
+        return animation;
+    }
+
+    private void playLevelCompleteAnimation() {
+        if (levelCompleteAnimation == null) {
+            levelCompleteAnimation = createLevelCompleteAnimation();
+        }
+        animationManager.registerAndPlayFromStart(level3D.root(), "Level_Complete", levelCompleteAnimation);
     }
 }
