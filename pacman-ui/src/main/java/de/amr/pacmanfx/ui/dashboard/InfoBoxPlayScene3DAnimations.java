@@ -52,9 +52,11 @@ public class InfoBoxPlayScene3DAnimations extends InfoBox {
 
         TableColumn<AnimationData, String> idColumn = new TableColumn<>("Animation ID");
         idColumn.setCellValueFactory(data -> data.getValue().idPy());
+        idColumn.setSortable(false);
 
         TableColumn<AnimationData, String> statusColumn = new TableColumn<>("Status");
         statusColumn.setCellValueFactory(data -> data.getValue().animationStatusProperty());
+        statusColumn.setSortable(false);
 
         table.getColumns().add(idColumn);
         table.getColumns().add(statusColumn);
