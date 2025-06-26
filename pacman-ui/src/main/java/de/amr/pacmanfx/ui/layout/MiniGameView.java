@@ -142,7 +142,7 @@ public class MiniGameView {
             return;
         }
         gr.setScaling(scalingPy.floatValue());
-        gr.drawLevel(gameLevel, backgroundColorProperty().get(), false, false);
+        gr.drawLevel(gameLevel, backgroundColorProperty().get(), false, gameLevel.blinking().isOn());
         var actors = new ArrayList<Actor>();
         gameLevel.bonus().map(Bonus::actor).ifPresent(actors::add);
         actors.add(gameLevel.pac());
