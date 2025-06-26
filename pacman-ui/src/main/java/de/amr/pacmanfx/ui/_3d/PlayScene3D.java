@@ -207,7 +207,8 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         theSound().stopAll();
         clearActionBindings();
         perspectiveIDPy.unbind();
-        animationManager.stopAll();
+        animationManager.stopAllAnimations();
+        animationManager.clearAnimations();
         level3D = null;
     }
 
@@ -270,9 +271,9 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             case PACMAN_DYING -> {
                 theGameState().timer().resetIndefiniteTime(); // expires when animation ends
                 theSound().stopAll();
-                animationManager.stopAll();
                 // do one last update before dying animation starts
                 level3D.pac3D().update(theGameLevel());
+                level3D.ghosts3D().forEach(MutatingGhost3D::stopAllAnimations);
                 playPacDyingAnimation();
             }
             case GHOST_DYING ->
@@ -289,7 +290,8 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 level3D.energizers3D().forEach(energizer3D -> energizer3D.shape3D().setVisible(false));
                 level3D.maze3D().door3D().setVisible(false);
                 level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
-                animationManager.stopAll();
+                //TODO we need a "cool down" time such that e.g. squirting animations can complete before stopping all animations
+                animationManager.stopAllAnimations();
                 playLevelCompleteAnimation();
             }
             case LEVEL_TRANSITION -> {
@@ -306,7 +308,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 }
                 theSound().stopAll();
                 theSound().playGameOverSound();
-                animationManager.stopAll();
+                animationManager.stopAllAnimations();
             }
             case TESTING_LEVELS_SHORT, TESTING_LEVELS_MEDIUM -> {
                 replaceGameLevel3D();

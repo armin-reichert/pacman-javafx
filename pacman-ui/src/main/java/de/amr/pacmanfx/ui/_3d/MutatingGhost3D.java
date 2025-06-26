@@ -48,15 +48,15 @@ public class MutatingGhost3D extends Group {
         protected void invalidated() { onAppearanceChanged(getValue()); }
     };
 
-    private final AnimationManager animationManager;
     private final Ghost ghost;
     private final Ghost3D ghost3D;
     private final Box numberBox;
-    private final RotateTransition numberBoxRotation;
     private final double size;
     private final int numFlashes;
 
+    private final AnimationManager animationManager;
     private RotateTransition brakeAnimation;
+    private RotateTransition numberBoxRotation;
 
     public MutatingGhost3D(
         AnimationManager animationManager,
@@ -70,22 +70,12 @@ public class MutatingGhost3D extends Group {
         requireNonNull(pupilsShape);
         requireNonNull(eyeballsShape);
         requireNonNegative(numFlashes);
-
         this.animationManager = requireNonNull(animationManager);
         this.ghost = requireNonNull(ghost);
         this.size = requireNonNegative(size);
         this.numFlashes = numFlashes;
-
         ghost3D = new Ghost3D(animationManager, assets, assetPrefix, ghost.personality(), dressShape, pupilsShape, eyeballsShape, size);
-
         numberBox = new Box(14, 8, 8);
-        numberBoxRotation = new RotateTransition(Duration.seconds(1), numberBox);
-        numberBoxRotation.setAxis(Rotate.X_AXIS);
-        numberBoxRotation.setFromAngle(0);
-        numberBoxRotation.setToAngle(360);
-        numberBoxRotation.setInterpolator(Interpolator.LINEAR);
-        numberBoxRotation.setRate(0.75);
-
         setAppearance(Appearance.NORMAL);
     }
 
@@ -143,21 +133,46 @@ public class MutatingGhost3D extends Group {
         setVisible(ghost.isVisible() && !outsideTerrain);
     }
 
-    private void stopAllAnimations() {
+    public void stopAllAnimations() {
         stopBrakeAnimation();
         ghost3D.stopDressAnimation();
-        numberBoxRotation.stop();
+        ghost3D.stopFlashingAnimation();
+        stopNumberBoxAnimation();
     }
 
     private void updateAnimations() {
         if (appearance() == Appearance.VALUE) {
             ghost3D.stopDressAnimation();
         } else {
-            numberBoxRotation.stop();
+            stopNumberBoxAnimation();
             ghost3D.playDressAnimation();
             if (ghost.moveInfo().tunnelEntered) {
                 playBrakeAnimation();
             }
+        }
+    }
+
+    private RotateTransition createNumberBoxAnimation() {
+        var numberBoxRotation = new RotateTransition(Duration.seconds(1), numberBox);
+        numberBoxRotation.setAxis(Rotate.X_AXIS);
+        numberBoxRotation.setFromAngle(0);
+        numberBoxRotation.setToAngle(360);
+        numberBoxRotation.setInterpolator(Interpolator.LINEAR);
+        numberBoxRotation.setRate(0.75);
+        return numberBoxRotation;
+    }
+
+    private void playNumberBoxAnimation() {
+        if (numberBoxRotation == null) {
+            numberBoxRotation = createNumberBoxAnimation();
+            animationManager.register("Ghost_Points", numberBoxRotation);
+        }
+        numberBoxRotation.playFromStart();
+    }
+
+    public void stopNumberBoxAnimation() {
+        if (numberBoxRotation != null) {
+            numberBoxRotation.stop();
         }
     }
 
@@ -195,7 +210,7 @@ public class MutatingGhost3D extends Group {
             case FRIGHTENED -> ghost3D.setFrightenedAppearance();
             case EATEN -> ghost3D.setEyesOnlyAppearance();
             case FLASHING -> ghost3D.setFlashingAppearance(numFlashes);
-            case VALUE -> numberBoxRotation.playFromStart();
+            case VALUE -> playNumberBoxAnimation();
         }
         Logger.trace("Ghost {} appearance changed to {}", ghost.personality(), appearance);
     }

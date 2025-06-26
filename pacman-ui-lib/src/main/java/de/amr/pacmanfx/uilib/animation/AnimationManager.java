@@ -35,7 +35,7 @@ public class AnimationManager {
         return id;
     }
 
-    public void stopAll() {
+    public void stopAllAnimations() {
         for (Map.Entry<String, Animation> entry : new ArrayList<>(animationMap.entrySet())) {
             String id = entry.getKey();
             Animation animation = entry.getValue();
@@ -49,8 +49,11 @@ public class AnimationManager {
             } catch (IllegalStateException x) {
                 Logger.warn("Could not stop (embedded?) animation ID='{}' ({})", id, animation);
             }
-            animationMap.remove(id);
         }
+    }
+
+    public void clearAnimations() {
+        animationMap.clear();
     }
 
     public Map<String, Animation> animationMap() {

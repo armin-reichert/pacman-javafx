@@ -155,7 +155,7 @@ public class Ghost3D {
         flashingAnimation.playFromStart();
     }
 
-    private void stopFlashingAnimation() {
+    public void stopFlashingAnimation() {
         if (flashingAnimation != null) {
             flashingAnimation.stop();
         }
