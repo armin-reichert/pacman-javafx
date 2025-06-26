@@ -289,7 +289,6 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 level3D.energizers3D().forEach(energizer3D -> energizer3D.shape3D().setVisible(false));
                 level3D.maze3D().door3D().setVisible(false);
                 level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
-                //TODO some animations need to run until the end e.g. the squirting animation
                 animationManager.stopAll();
                 playLevelCompleteAnimation();
             }

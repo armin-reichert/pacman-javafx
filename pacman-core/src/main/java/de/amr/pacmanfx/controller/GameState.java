@@ -177,8 +177,6 @@ public enum GameState implements FsmState<GameModel> {
 
     LEVEL_COMPLETE {
 
-        private static final int COOL_DOWN_TICKS = 60;
-
         @Override
         public void onEnter(GameModel game) {
             timer.restartIndefinitely(); // UI triggers timeout
@@ -186,11 +184,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onUpdate(GameModel game) {
-            if (timer.tickCount() < COOL_DOWN_TICKS) {
-                return;
-            }
-
-            if (timer.tickCount() == COOL_DOWN_TICKS) {
+            if (timer.tickCount() == 1) {
                 game.onLevelCompleted(theGameLevel());
             }
 
