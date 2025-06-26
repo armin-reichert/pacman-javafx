@@ -17,6 +17,12 @@ import javafx.scene.control.TableView;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
 
 public class InfoBoxPlayScene3DAnimations extends InfoBox {
@@ -72,14 +78,27 @@ public class InfoBoxPlayScene3DAnimations extends InfoBox {
         animationDataRows.clear();
         if (animationManagerPy.get() != null) {
             AnimationManager animationManager = animationManagerPy.get();
-            animationManager.animationMap().entrySet().stream()
-                .sorted(java.util.Map.Entry.comparingByKey())
-                .forEach(entry -> {
-                    String id = entry.getKey();
-                    Animation animation = entry.getValue();
-                    animationDataRows.add(new AnimationData(id, animation));
-            });
+            animationDataRows.addAll(createTableRows(animationManager));
         }
+    }
+
+    private List<AnimationData> createTableRows(AnimationManager animationManager) {
+        Map<String, Animation> animationMap = animationManager.animationMap();
+        List<AnimationData> tableRows = new ArrayList<>();
+        tableRows.addAll(createTableRows(animationMap, animation -> animation.getStatus() == Animation.Status.RUNNING));
+        tableRows.addAll(createTableRows(animationMap, animation -> animation.getStatus() != Animation.Status.RUNNING));
+        return tableRows;
+    }
+
+    private List<AnimationData> createTableRows(Map<String, Animation> animationMap, Predicate<Animation> filter) {
+        return animationMap.entrySet().stream()
+            .filter(entry -> filter.test(entry.getValue()))
+            .sorted(Map.Entry.comparingByKey())
+            .map(entry -> {
+                String id = entry.getKey();
+                Animation animation = entry.getValue();
+                return new AnimationData(id, animation);
+            }).toList();
     }
 
     public Timeline refreshTimer() {
