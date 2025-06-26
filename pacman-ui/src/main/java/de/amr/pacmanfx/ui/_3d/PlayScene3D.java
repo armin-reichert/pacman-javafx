@@ -268,11 +268,11 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 level3D.livesCounter3D().playAnimation();
             }
             case PACMAN_DYING -> {
-                animationManager.stopAll();
+                theGameState().timer().resetIndefiniteTime(); // expires when animation ends
                 theSound().stopAll();
-                // last update before dying animation
+                animationManager.stopAll();
+                // do one last update before dying animation starts
                 level3D.pac3D().update(theGameLevel());
-                theGameState().timer().resetIndefiniteTime();
                 playPacDyingAnimation();
             }
             case GHOST_DYING ->
@@ -282,13 +282,13 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                     level3D.ghost3D(ghost.personality()).setNumberTexture(numberImage);
                 });
             case LEVEL_COMPLETE -> {
+                theGameState().timer().resetIndefiniteTime(); // expires when animation ends
                 theSound().stopAll();
                 animationManager.stopAll();
                 level3D.pellets3D().forEach(Pellet3D::onEaten);
                 level3D.energizers3D().forEach(Energizer3D::onEaten);
                 level3D.maze3D().door3D().setVisible(false);
                 level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
-                theGameState().timer().resetIndefiniteTime(); // expires when animation ends
                 playLevelCompleteAnimation();
             }
             case LEVEL_TRANSITION -> {
@@ -298,7 +298,6 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 initCameraPerspectiveForGameLevel();
             }
             case GAME_OVER -> {
-                // delay state exit for 3 seconds:
                 theGameState().timer().restartSeconds(3);
                 level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
                 if (!theGameLevel().isDemoLevel() && randomInt(0, 100) < 25) {

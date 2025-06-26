@@ -8,7 +8,6 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.MovingBonus;
-import de.amr.pacmanfx.model.actors.StaticBonus;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -32,12 +31,13 @@ import static java.util.Objects.requireNonNull;
  */
 public class Bonus3D extends Box {
 
-    private final AnimationManager animationMgr;
     private final Bonus bonus;
-    private final ImageView symbolImageView;
-    private final ImageView pointsImageView;
-    private final RotateTransition eatenAnimation;
-    private final RotateTransition edibleAnimation;
+    private final PhongMaterial symbolImageTexture;
+    private final PhongMaterial pointsImageTexture;
+
+    private final AnimationManager animationMgr;
+    private RotateTransition eatenAnimation;
+    private RotateTransition edibleAnimation;
 
     public Bonus3D(AnimationManager animationMgr, Bonus bonus, Image symbolImage, Image pointsImage) {
         super(BONUS_3D_SYMBOL_WIDTH, TS, TS);
@@ -45,27 +45,15 @@ public class Bonus3D extends Box {
         this.animationMgr = requireNonNull(animationMgr);
         this.bonus = requireNonNull(bonus);
 
-        symbolImageView = new ImageView(requireNonNull(symbolImage));
+        var symbolImageView = new ImageView(requireNonNull(symbolImage));
         symbolImageView.setPreserveRatio(true);
         symbolImageView.setFitWidth(BONUS_3D_SYMBOL_WIDTH);
+        symbolImageTexture = new PhongMaterial(Color.GHOSTWHITE, symbolImageView.getImage(), null, null, null);
 
-        pointsImageView = new ImageView(requireNonNull(pointsImage));
+        var pointsImageView = new ImageView(requireNonNull(pointsImage));
         pointsImageView.setPreserveRatio(true);
         pointsImageView.setFitWidth(BONUS_3D_POINTS_WIDTH);
-
-        edibleAnimation = new RotateTransition(Duration.seconds(1), this);
-        edibleAnimation.setAxis(Rotate.Z_AXIS); // to trigger initial change
-        edibleAnimation.setFromAngle(0);
-        edibleAnimation.setToAngle(360);
-        edibleAnimation.setInterpolator(Interpolator.LINEAR);
-        edibleAnimation.setCycleCount(Animation.INDEFINITE);
-
-        eatenAnimation = new RotateTransition(Duration.seconds(1), this);
-        eatenAnimation.setAxis(Rotate.X_AXIS);
-        eatenAnimation.setByAngle(360);
-        eatenAnimation.setInterpolator(Interpolator.LINEAR);
-        eatenAnimation.setRate(2);
-        eatenAnimation.setCycleCount(2);
+        pointsImageTexture = new PhongMaterial(Color.GHOSTWHITE, pointsImageView.getImage(), null, null, null);
     }
 
     public void update() {
@@ -77,49 +65,93 @@ public class Bonus3D extends Box {
             boolean outsideWorld = center.x() < HTS || center.x() > level.worldMap().numCols() * TS - HTS;
             boolean visible = !(bonus.state() == Bonus.STATE_INACTIVE || outsideWorld);
             setVisible(visible);
-            if (edibleAnimation.getStatus() == Animation.Status.RUNNING && bonus instanceof MovingBonus movingBonus) {
-                updateMovingBonusEdibleAnimation(movingBonus.actor().moveDir());
+            if (edibleAnimation != null
+                && edibleAnimation.getStatus() == Animation.Status.RUNNING
+                && bonus instanceof MovingBonus movingBonus) {
+                updateEdibleAnimation(movingBonus.actor().moveDir());
             }
         });
-    }
-
-    private void updateMovingBonusEdibleAnimation(Direction moveDir) {
-        Point3D rotationAxis = moveDir.isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
-        edibleAnimation.setRate(moveDir == Direction.DOWN || moveDir == Direction.LEFT ? 1 : -1);
-        if (!edibleAnimation.getAxis().equals(rotationAxis)) {
-            edibleAnimation.stop();
-            edibleAnimation.setAxis(rotationAxis);
-            animationMgr.registerAndPlayFromStart(this, "Bonus_Edible", edibleAnimation);
-        }
     }
 
     public void showEdible() {
         setVisible(true);
         setWidth(BONUS_3D_SYMBOL_WIDTH);
-        setTexture(symbolImageView.getImage());
-        if (bonus instanceof StaticBonus) {
-            edibleAnimation.setAxis(Rotate.X_AXIS);
-        }
-        animationMgr.registerAndPlayFromStart(this, "Bonus_Edible", edibleAnimation);
+        setMaterial(symbolImageTexture);
+        playEdibleAnimation();
     }
 
     public void expire() {
-        edibleAnimation.stop();
+        stopEdibleAnimation();
+        stopEatenAnimation();
         setVisible(false);
     }
 
     public void showEaten() {
+        stopEdibleAnimation();
         setVisible(true);
         setWidth(BONUS_3D_POINTS_WIDTH);
-        setTexture(pointsImageView.getImage());
+        setMaterial(pointsImageTexture);
         setRotationAxis(Rotate.X_AXIS);
         setRotate(0);
-        edibleAnimation.stop();
+        playEatenAnimation();
+    }
+
+    private RotateTransition createEdibleAnimation() {
+        var animation = new RotateTransition(Duration.seconds(1), this);
+        animation.setAxis(Rotate.X_AXIS);
+        animation.setFromAngle(0);
+        animation.setToAngle(360);
+        animation.setInterpolator(Interpolator.LINEAR);
+        animation.setCycleCount(Animation.INDEFINITE);
+        return animation;
+    }
+
+    private void playEdibleAnimation() {
+        if (edibleAnimation == null) {
+            edibleAnimation = createEdibleAnimation();
+        }
+        animationMgr.registerAndPlayFromStart(this, "Bonus_Edible", edibleAnimation);
+    }
+
+    private void stopEdibleAnimation() {
+        if (edibleAnimation != null) {
+            edibleAnimation.stop();
+        }
+    }
+
+    private void updateEdibleAnimation(Direction moveDir) {
+        if (edibleAnimation == null) {
+            return;
+        }
+        Point3D axis = moveDir.isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
+        edibleAnimation.setRate(moveDir == Direction.DOWN || moveDir == Direction.LEFT ? 1 : -1);
+        if (!edibleAnimation.getAxis().equals(axis)) {
+            edibleAnimation.stop();
+            edibleAnimation.setAxis(axis);
+            edibleAnimation.play(); // play from stopped position, not from start
+        }
+    }
+
+    private RotateTransition createEatenAnimation() {
+        var animation = new RotateTransition(Duration.seconds(1), this);
+        animation.setAxis(Rotate.X_AXIS);
+        animation.setByAngle(360);
+        animation.setInterpolator(Interpolator.LINEAR);
+        animation.setRate(2);
+        animation.setCycleCount(2);
+        return animation;
+    }
+
+    private void playEatenAnimation() {
+        if (eatenAnimation == null) {
+            eatenAnimation = createEatenAnimation();
+        }
         animationMgr.registerAndPlayFromStart(this, "Bonus_Eaten", eatenAnimation);
     }
 
-    private void setTexture(Image texture) {
-        //TODO when using Color.TRANSPARENT, nothing is shown, why?
-        setMaterial(new PhongMaterial(Color.GHOSTWHITE, texture, null, null, null));
+    private void stopEatenAnimation() {
+        if (eatenAnimation != null) {
+            eatenAnimation.stop();
+        }
     }
 }
