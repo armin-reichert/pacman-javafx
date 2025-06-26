@@ -6,8 +6,10 @@ package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.MovingBonus;
+import de.amr.pacmanfx.model.actors.StaticBonus;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -27,7 +29,11 @@ import static de.amr.pacmanfx.ui._3d.Settings3D.BONUS_3D_SYMBOL_WIDTH;
 import static java.util.Objects.requireNonNull;
 
 /**
- * 3D bonus symbol.
+ * 3D representation of a bonus symbol.
+ *
+ * <p>A static bonus is represented by a rotating cube located at the worlds' bonus position displaying the bonus symbol
+ * on each of its faces. When eaten, the bonus symbol is replaced by the points earned for eating the bonus.
+ * For a moving bonus, the rotating cube moves through the world and rotates towards its current move direction.</p>
  */
 public class Bonus3D extends Box {
 
@@ -61,16 +67,7 @@ public class Bonus3D extends Box {
         setTranslateX(center.x());
         setTranslateY(center.y());
         setTranslateZ(-HTS);
-        optGameLevel().ifPresent(level -> {
-            boolean outsideWorld = center.x() < HTS || center.x() > level.worldMap().numCols() * TS - HTS;
-            boolean visible = !(bonus.state() == Bonus.STATE_INACTIVE || outsideWorld);
-            setVisible(visible);
-            if (edibleAnimation != null
-                && edibleAnimation.getStatus() == Animation.Status.RUNNING
-                && bonus instanceof MovingBonus movingBonus) {
-                updateEdibleAnimation(movingBonus.actor().moveDir());
-            }
-        });
+        optGameLevel().ifPresent(this::updateEdibleAnimation);
     }
 
     public void showEdible() {
@@ -119,16 +116,22 @@ public class Bonus3D extends Box {
         }
     }
 
-    private void updateEdibleAnimation(Direction moveDir) {
-        if (edibleAnimation == null) {
-            return;
-        }
-        Point3D axis = moveDir.isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
-        edibleAnimation.setRate(moveDir == Direction.DOWN || moveDir == Direction.LEFT ? 1 : -1);
-        if (!edibleAnimation.getAxis().equals(axis)) {
-            edibleAnimation.stop();
-            edibleAnimation.setAxis(axis);
-            edibleAnimation.play(); // play from stopped position, not from start
+    private void updateEdibleAnimation(GameLevel level) {
+        if (edibleAnimation != null
+            && edibleAnimation.getStatus() == Animation.Status.RUNNING
+            && bonus instanceof MovingBonus movingBonus)
+        {
+            Vector2f center = bonus.actor().center();
+            boolean outsideWorld = center.x() < HTS || center.x() > level.worldMap().numCols() * TS - HTS;
+            setVisible(bonus.state() == Bonus.STATE_EDIBLE && !outsideWorld);
+            Direction moveDir = movingBonus.actor().moveDir();
+            Point3D axis = moveDir.isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
+            edibleAnimation.setRate(moveDir == Direction.DOWN || moveDir == Direction.LEFT ? 1 : -1);
+            if (!edibleAnimation.getAxis().equals(axis)) {
+                edibleAnimation.stop();
+                edibleAnimation.setAxis(axis);
+                edibleAnimation.play(); // play from stopped position, not from start
+            }
         }
     }
 
