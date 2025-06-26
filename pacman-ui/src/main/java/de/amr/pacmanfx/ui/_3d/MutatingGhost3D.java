@@ -133,6 +133,24 @@ public class MutatingGhost3D extends Group {
         setVisible(ghost.isVisible() && !outsideTerrain);
     }
 
+    private void onAppearanceChanged(Appearance appearance) {
+        getChildren().setAll(appearance == Appearance.VALUE ? numberBox : ghost3D.root());
+        switch (appearance) {
+            case NORMAL -> ghost3D.setNormalAppearance();
+            case FRIGHTENED -> ghost3D.setFrightenedAppearance();
+            case EATEN -> ghost3D.setEyesOnlyAppearance();
+            case FLASHING -> ghost3D.setFlashingAppearance(numFlashes);
+            case VALUE -> playNumberBoxAnimation();
+        }
+        Logger.trace("Ghost {} appearance changed to {}", ghost.personality(), appearance);
+    }
+
+    private Appearance frightenedOrFlashing(boolean powerFading) {
+        return powerFading ? Appearance.FLASHING : Appearance.FRIGHTENED;
+    }
+
+    // Animations
+
     public void stopAllAnimations() {
         stopBrakeAnimation();
         ghost3D.stopDressAnimation();
@@ -151,6 +169,8 @@ public class MutatingGhost3D extends Group {
             }
         }
     }
+
+    // Number box animation
 
     private RotateTransition createNumberBoxAnimation() {
         var numberBoxRotation = new RotateTransition(Duration.seconds(1), numberBox);
@@ -175,6 +195,8 @@ public class MutatingGhost3D extends Group {
             numberBoxRotation.stop();
         }
     }
+
+    // Brake animation
 
     private RotateTransition createBrakeAnimation() {
         var animation = new RotateTransition(Duration.seconds(0.5), this);
@@ -201,21 +223,5 @@ public class MutatingGhost3D extends Group {
             setRotationAxis(Rotate.Y_AXIS);
             setRotate(0);
         }
-    }
-
-    private void onAppearanceChanged(Appearance appearance) {
-        getChildren().setAll(appearance == Appearance.VALUE ? numberBox : ghost3D.root());
-        switch (appearance) {
-            case NORMAL -> ghost3D.setNormalAppearance();
-            case FRIGHTENED -> ghost3D.setFrightenedAppearance();
-            case EATEN -> ghost3D.setEyesOnlyAppearance();
-            case FLASHING -> ghost3D.setFlashingAppearance(numFlashes);
-            case VALUE -> playNumberBoxAnimation();
-        }
-        Logger.trace("Ghost {} appearance changed to {}", ghost.personality(), appearance);
-    }
-
-    private Appearance frightenedOrFlashing(boolean powerFading) {
-        return powerFading ? Appearance.FLASHING : Appearance.FRIGHTENED;
     }
 }

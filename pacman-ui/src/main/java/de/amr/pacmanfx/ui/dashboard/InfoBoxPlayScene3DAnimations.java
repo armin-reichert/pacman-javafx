@@ -21,11 +21,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
 
 public class InfoBoxPlayScene3DAnimations extends InfoBox {
+
+    private static final float REFRESH_TIME_SEC = 0.5f;
 
     public static class AnimationData {
         private final StringProperty idPy;
@@ -70,7 +71,7 @@ public class InfoBoxPlayScene3DAnimations extends InfoBox {
 
         addRow(table);
 
-        refreshTimer = new Timeline(new KeyFrame(Duration.seconds(1), e -> reloadData()));
+        refreshTimer = new Timeline(new KeyFrame(Duration.seconds(REFRESH_TIME_SEC), e -> reloadData()));
         refreshTimer.setCycleCount(Animation.INDEFINITE);
     }
 
@@ -108,7 +109,6 @@ public class InfoBoxPlayScene3DAnimations extends InfoBox {
     @Override
     public void init() {
         super.init();
-        // Experimental
         animationManagerProperty().bind(Bindings.createObjectBinding(
                 () -> theUI().currentGameScene().isPresent() && theUI().currentGameScene().get() instanceof PlayScene3D playScene3D
                         ? playScene3D.animationManager() : null,

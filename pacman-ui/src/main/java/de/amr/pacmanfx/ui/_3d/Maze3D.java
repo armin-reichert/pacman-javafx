@@ -129,6 +129,8 @@ public class Maze3D extends Group {
         }
     }
 
+    // Wall color flashing animation
+
     private MaterialColorAnimation createWallColorFlashingAnimation() {
         return new MaterialColorAnimation(Duration.seconds(0.25), wallTopMaterial, wallTopColor, wallBaseColor);
     }
@@ -148,6 +150,8 @@ public class Maze3D extends Group {
         }
     }
 
+    // Walls disappear animation
+
     public Animation createWallsDisappearAnimation(double seconds) {
         var totalDuration = Duration.seconds(seconds);
         var houseDisappears = new Timeline(
@@ -158,6 +162,8 @@ public class Maze3D extends Group {
         animation.setOnFinished(e -> setVisible(false));
         return animation;
     }
+
+    // Maze flashing animation
 
     public Animation createMazeFlashAnimation(int numFlashes) {
         if (numFlashes == 0) {

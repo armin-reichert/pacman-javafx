@@ -560,7 +560,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         level3D.showAnimatedMessage("READY!", seconds, x, y);
     }
 
-    // Animations
+    // Pac dying animation
 
     private Animation createPacDyingAnimation() {
         Animation animation = new SequentialTransition(
@@ -580,6 +580,8 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         }
         pacDyingAnimation.playFromStart();
     }
+
+    // Level complete animation
 
     private Animation createLevelCompleteAnimation() {
         var animation = new SequentialTransition(

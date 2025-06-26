@@ -92,6 +92,8 @@ public class Bonus3D extends Box {
         playEatenAnimation();
     }
 
+    // Edible animation
+
     private RotateTransition createEdibleAnimation() {
         var animation = new RotateTransition(Duration.seconds(1), this);
         animation.setAxis(Rotate.X_AXIS);
@@ -134,6 +136,8 @@ public class Bonus3D extends Box {
             }
         }
     }
+
+    // Eaten animation
 
     private RotateTransition createEatenAnimation() {
         var animation = new RotateTransition(Duration.seconds(1), this);

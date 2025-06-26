@@ -107,60 +107,6 @@ public class Ghost3D {
         root.setRotate(angle);
     }
 
-    private RotateTransition createDressAnimation() {
-        var animation = new RotateTransition(Duration.seconds(0.3), dressGroup);
-        // TODO I expected this should be the z-axis but... (transforms messed-up?)
-        animation.setAxis(Rotate.Y_AXIS);
-        animation.setByAngle(30);
-        animation.setCycleCount(Animation.INDEFINITE);
-        animation.setAutoReverse(true);
-        return animation;
-    }
-
-    public void playDressAnimation() {
-        if (dressAnimation == null) {
-            dressAnimation = createDressAnimation();
-            animationManager.register("Ghost_DressMoving", dressAnimation);
-        }
-        dressAnimation.play();
-    }
-
-    public void stopDressAnimation() {
-        if (dressAnimation != null) {
-            dressAnimation.stop();
-        }
-    }
-
-    private Animation createFlashingAnimation(int numFlashes, Duration totalDuration) {
-        Duration flashEndTime = totalDuration.divide(numFlashes), highlightTime = flashEndTime.divide(3);
-        var flashingTimeline = new Timeline(
-            new KeyFrame(highlightTime,
-                new KeyValue(dressColorPy,  flashingDressColor()),
-                new KeyValue(pupilsColorPy, flashingPupilsColor())
-            ),
-            new KeyFrame(flashEndTime,
-                new KeyValue(dressColorPy,  frightenedDressColor()),
-                new KeyValue(pupilsColorPy, frightenedPupilsColor())
-            )
-        );
-        flashingTimeline.setCycleCount(numFlashes);
-        return flashingTimeline;
-    }
-
-    private void playFlashingAnimation(int numFlashes, Duration duration) {
-        if (flashingAnimation == null) {
-            flashingAnimation = createFlashingAnimation(numFlashes, duration);
-            animationManager.register("Ghost_Flashing", flashingAnimation);
-        }
-        flashingAnimation.playFromStart();
-    }
-
-    public void stopFlashingAnimation() {
-        if (flashingAnimation != null) {
-            flashingAnimation.stop();
-        }
-    }
-
     public void setFlashingAppearance(int numFlashes) {
         dressShape.setVisible(true);
         if (numFlashes == 0) {
@@ -192,5 +138,63 @@ public class Ghost3D {
         eyeballsColorPy.set(normalEyeballsColor());
         pupilsColorPy.set(normalPupilsColor());
         dressShape.setVisible(false);
+    }
+
+    // Dress animation
+
+    private RotateTransition createDressAnimation() {
+        var animation = new RotateTransition(Duration.seconds(0.3), dressGroup);
+        // TODO I expected this should be the z-axis but... (transforms messed-up?)
+        animation.setAxis(Rotate.Y_AXIS);
+        animation.setByAngle(30);
+        animation.setCycleCount(Animation.INDEFINITE);
+        animation.setAutoReverse(true);
+        return animation;
+    }
+
+    public void playDressAnimation() {
+        if (dressAnimation == null) {
+            dressAnimation = createDressAnimation();
+            animationManager.register("Ghost_DressMoving", dressAnimation);
+        }
+        dressAnimation.play();
+    }
+
+    public void stopDressAnimation() {
+        if (dressAnimation != null) {
+            dressAnimation.stop();
+        }
+    }
+
+    // Flashing animation
+
+    private Animation createFlashingAnimation(int numFlashes, Duration totalDuration) {
+        Duration flashEndTime = totalDuration.divide(numFlashes), highlightTime = flashEndTime.divide(3);
+        var flashingTimeline = new Timeline(
+            new KeyFrame(highlightTime,
+                new KeyValue(dressColorPy,  flashingDressColor()),
+                new KeyValue(pupilsColorPy, flashingPupilsColor())
+            ),
+            new KeyFrame(flashEndTime,
+                new KeyValue(dressColorPy,  frightenedDressColor()),
+                new KeyValue(pupilsColorPy, frightenedPupilsColor())
+            )
+        );
+        flashingTimeline.setCycleCount(numFlashes);
+        return flashingTimeline;
+    }
+
+    private void playFlashingAnimation(int numFlashes, Duration duration) {
+        if (flashingAnimation == null) {
+            flashingAnimation = createFlashingAnimation(numFlashes, duration);
+            animationManager.register("Ghost_Flashing", flashingAnimation);
+        }
+        flashingAnimation.playFromStart();
+    }
+
+    public void stopFlashingAnimation() {
+        if (flashingAnimation != null) {
+            flashingAnimation.stop();
+        }
     }
 }
