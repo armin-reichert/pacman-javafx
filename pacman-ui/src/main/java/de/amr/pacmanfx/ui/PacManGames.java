@@ -10,15 +10,12 @@ import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.sound.PacManGames_Sound;
 import de.amr.pacmanfx.uilib.GameClock;
 
-/**
- * Global environment accessible from every class in the UI layer.
- */
-public class PacManGames {
-    public static PacManGames_Assets theAssets()   { return PacManGames_UI_Impl.ASSETS; }
-    public static GameClock          theClock()    { return PacManGames_UI_Impl.GAME_CLOCK; }
-    public static Joypad             theJoypad()   { return PacManGames_UI_Impl.JOYPAD; }
-    public static Keyboard           theKeyboard() { return PacManGames_UI_Impl.KEYBOARD; }
-    public static PacManGames_Sound  theSound()    { return PacManGames_UI_Impl.SOUND_MANAGER; }
-    public static PacManGames_UI     theUI()       { return PacManGames_UI_Impl.SINGLE_INSTANCE; }
-    public static DirectoryWatchdog  theWatchdog() { return PacManGames_UI_Impl.WATCHDOG; }
+public interface PacManGames {
+    static PacManGames_Assets theAssets()   { return PacManGames_UI_Impl.ASSETS; }
+    static GameClock          theClock()    { return PacManGames_UI_Impl.GAME_CLOCK; }
+    static Joypad             theJoypad()   { return PacManGames_UI_Impl.JOYPAD; }
+    static Keyboard           theKeyboard() { return PacManGames_UI_Impl.KEYBOARD; }
+    static PacManGames_Sound  theSound()    { return PacManGames_UI_Impl.SOUND_MANAGER; }
+    static PacManGames_UI     theUI()       { return PacManGames_UI_Impl.SINGLE_INSTANCE; }
+    static DirectoryWatchdog  theWatchdog() { return PacManGames_UI_Impl.WATCHDOG; }
 }
