@@ -306,7 +306,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             case HUNTING -> {
                 level3D.pac3D().init();
                 level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(theGameLevel()));
-                level3D.energizers3D().forEach(Energizer3D::startPumpingAnimation);
+                level3D.energizers3D().forEach(energizer3D -> energizer3D.pumpingAnimation().play(ManagedAnimation.FROM_START));
                 level3D.livesCounter3D().lookingAroundAnimation().play(ManagedAnimation.CONTINUE);
             }
             case PACMAN_DYING -> {
@@ -379,7 +379,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             case TESTING_LEVELS_SHORT, TESTING_LEVELS_MEDIUM -> {
                 replaceGameLevel3D();
                 level3D.livesCounter3D().lookingAroundAnimation().play(ManagedAnimation.FROM_START);
-                level3D.energizers3D().forEach(Energizer3D::startPumpingAnimation);
+                level3D.energizers3D().forEach(energizer3D -> energizer3D.pumpingAnimation().play(ManagedAnimation.FROM_START));
                 showLevelTestMessage(theGameLevel().number());
             }
             default -> Logger.error("Unexpected game state '{}' on level start", theGameState());
@@ -400,7 +400,9 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         level3D.pellets3D().forEach(pellet -> pellet.shape3D().setVisible(!theGameLevel().tileContainsEatenFood(pellet.tile())));
         level3D.energizers3D().forEach(energizer -> energizer.shape3D().setVisible(!theGameLevel().tileContainsEatenFood(energizer.tile())));
         if (isOneOf(theGameState(), GameState.HUNTING, GameState.GHOST_DYING)) { //TODO check this
-            level3D.energizers3D().filter(energizer -> energizer.shape3D().isVisible()).forEach(Energizer3D::startPumpingAnimation);
+            level3D.energizers3D()
+                .filter(energizer3D -> energizer3D.shape3D().isVisible())
+                .forEach(energizer3D -> energizer3D.pumpingAnimation().play(ManagedAnimation.FROM_START));
         }
         theGameLevel().pac().show();
         theGameLevel().ghosts().forEach(Ghost::show);

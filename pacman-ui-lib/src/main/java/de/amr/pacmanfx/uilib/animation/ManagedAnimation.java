@@ -2,6 +2,8 @@ package de.amr.pacmanfx.uilib.animation;
 
 import javafx.animation.Animation;
 
+import java.util.Optional;
+
 import static java.util.Objects.requireNonNull;
 
 public abstract class ManagedAnimation {
@@ -18,6 +20,10 @@ public abstract class ManagedAnimation {
     }
 
     protected abstract Animation createAnimation();
+
+    public Optional<Animation> animation() {
+        return Optional.ofNullable(animation);
+    }
 
     public void invalidate() {
         animation = null;
