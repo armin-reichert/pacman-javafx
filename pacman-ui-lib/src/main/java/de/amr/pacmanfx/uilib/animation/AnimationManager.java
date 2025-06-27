@@ -16,8 +16,8 @@ import static de.amr.pacmanfx.Validations.requireValidIdentifier;
 import static java.util.Objects.requireNonNull;
 
 /**
- * 3D entities with animations implement this interface such that all potentially running animations can be stopped
- * when the containing 3D scene ends, e.g. when the quit action is executed.
+ * A central registry for animations (used by PlayScene3D to manage the 3D animations in the level). Allows to
+ * stop all running animations more easily when the play scene ends or a level is complete.
  */
 public class AnimationManager {
 
