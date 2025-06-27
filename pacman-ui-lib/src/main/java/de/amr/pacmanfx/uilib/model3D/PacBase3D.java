@@ -30,37 +30,14 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class PacBase3D {
 
-    public static Animation createChewingAnimation(Node jaw) {
-        var closed = new KeyValue[] {
-                new KeyValue(jaw.rotationAxisProperty(), Rotate.Y_AXIS),
-                new KeyValue(jaw.rotateProperty(), -54, Interpolator.LINEAR)
-        };
-        var open = new KeyValue[] {
-                new KeyValue(jaw.rotationAxisProperty(), Rotate.Y_AXIS),
-                new KeyValue(jaw.rotateProperty(), 0, Interpolator.LINEAR)
-        };
-        Timeline animation = new Timeline(
-                new KeyFrame(Duration.ZERO,        "Open on Start", open),
-                new KeyFrame(Duration.millis(100), "Start Closing", open),
-                new KeyFrame(Duration.millis(130), "Closed",        closed),
-                new KeyFrame(Duration.millis(200), "Start Opening", closed),
-                new KeyFrame(Duration.millis(280), "Open",          open)
-        );
-        animation.setCycleCount(Animation.INDEFINITE);
-        return animation;
-    }
-
-
     protected final Pac pac;
     protected final PointLight light = new PointLight();
     protected final Group root = new Group();
     protected final double size;
+    protected final Rotate moveRotation = new Rotate();
 
     protected final AnimationManager animationManager;
-
-    protected final Rotate moveRotation = new Rotate();
-    protected Animation chewingAnimation;
-
+    protected ManagedAnimation chewingAnimation;
     protected ManagedAnimation movementAnimation;
     protected ManagedAnimation dyingAnimation;
 
@@ -90,7 +67,37 @@ public abstract class PacBase3D {
         root.setTranslateZ(-0.5 * size);
         root.getTransforms().add(moveRotation);
 
-        chewingAnimation = createChewingAnimation(jaw);
+        chewingAnimation = new ManagedAnimation(animationManager, "PacMan_Chewing") {
+            @Override
+            protected Animation createAnimation() {
+                var closed = new KeyValue[] {
+                        new KeyValue(jaw.rotationAxisProperty(), Rotate.Y_AXIS),
+                        new KeyValue(jaw.rotateProperty(), -54, Interpolator.LINEAR)
+                };
+                var open = new KeyValue[] {
+                        new KeyValue(jaw.rotationAxisProperty(), Rotate.Y_AXIS),
+                        new KeyValue(jaw.rotateProperty(), 0, Interpolator.LINEAR)
+                };
+                var timeline = new Timeline(
+                        new KeyFrame(Duration.ZERO,        "Open on Start", open),
+                        new KeyFrame(Duration.millis(100), "Start Closing", open),
+                        new KeyFrame(Duration.millis(130), "Closed",        closed),
+                        new KeyFrame(Duration.millis(200), "Start Opening", closed),
+                        new KeyFrame(Duration.millis(280), "Open",          open)
+                );
+                timeline.setCycleCount(Animation.INDEFINITE);
+                return timeline;
+            }
+
+            @Override
+            public void stop() {
+                Animation animation = getOrCreateAnimation();
+                animation.stop();
+                // open mouth when stopped
+                jaw.setRotationAxis(Rotate.Y_AXIS);
+                jaw.setRotate(0);
+            }
+        };
 
         light.translateXProperty().bind(root.translateXProperty());
         light.translateYProperty().bind(root.translateYProperty());
@@ -119,7 +126,7 @@ public abstract class PacBase3D {
         root.setScaleZ(1.0);
 
         updatePosition();
-        stopChewingAndOpenMouth();
+        chewingAnimation.stop();
         movementAnimation.stop();
         setMovementPowerMode(false);
     }
@@ -136,10 +143,10 @@ public abstract class PacBase3D {
         }
         if (pac.isAlive() && !pac.isStandingStill()) {
             movementAnimation.play(ManagedAnimation.CONTINUE);
-            chewingAnimation.play();
+            chewingAnimation.play(ManagedAnimation.CONTINUE);
         } else {
             movementAnimation.stop();
-            stopChewingAndOpenMouth();
+            chewingAnimation.stop();
         }
     }
 
@@ -178,11 +185,5 @@ public abstract class PacBase3D {
         } else {
             light.setLightOn(false);
         }
-    }
-
-    protected void stopChewingAndOpenMouth() {
-        chewingAnimation.stop();
-        jaw.setRotationAxis(Rotate.Y_AXIS);
-        jaw.setRotate(0);
     }
 }
