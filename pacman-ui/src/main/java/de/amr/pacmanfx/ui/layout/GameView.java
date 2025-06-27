@@ -35,7 +35,6 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.FontSmoothingType;
 import org.tinylog.Logger;
@@ -84,7 +83,6 @@ public class GameView implements PacManGames_View {
     private PopupLayer popupLayer; // help, signature
     private BorderPane dashboardLayer;
 
-    private final VBox dashboardContainer = new VBox();
     private final Dashboard dashboard = new Dashboard();
     private final Canvas canvas = new Canvas();
     private final TooFancyCanvasContainer canvasContainer = new TooFancyCanvasContainer(canvas);
@@ -270,10 +268,10 @@ public class GameView implements PacManGames_View {
 
     public void setDashboardVisible(boolean visible) {
         if (visible) {
-            dashboardContainer.setVisible(true);
+            dashboard.setVisible(true);
             updateDashboard();
         } else {
-            dashboardContainer.setVisible(false);
+            dashboard.setVisible(false);
         }
     }
 
@@ -285,11 +283,11 @@ public class GameView implements PacManGames_View {
             InfoBoxReadmeFirst readmeFirst = (InfoBoxReadmeFirst) infoBox;
             readmeFirst.setActionIfRead(this::updateDashboard);
         });
-        dashboardContainer.getChildren().setAll(infoBoxes);
+        dashboard.getChildren().setAll(infoBoxes);
     }
 
     public void toggleDashboardVisibility() {
-        setDashboardVisible(!dashboardContainer.isVisible());
+        setDashboardVisible(!dashboard.isVisible());
     }
 
     public TooFancyCanvasContainer canvasContainer() {
@@ -412,13 +410,13 @@ public class GameView implements PacManGames_View {
 
         dashboardLayer = new BorderPane();
         dashboardLayer.visibleProperty().bind(Bindings.createObjectBinding(
-            () -> dashboardContainer.isVisible() || PY_PIP_ON.get(),
-            dashboardContainer.visibleProperty(), PY_PIP_ON
+            () -> dashboard.isVisible() || PY_PIP_ON.get(),
+            dashboard.visibleProperty(), PY_PIP_ON
         ));
-        dashboardLayer.setLeft(dashboardContainer);
+        dashboardLayer.setLeft(dashboard);
         dashboardLayer.setRight(miniGameView.root());
 
-        dashboardContainer.setVisible(false);
+        dashboard.setVisible(false);
 
         //TODO reconsider this and the help functionality
         popupLayer = new PopupLayer(canvasContainer);

@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.dashboard;
 
 import de.amr.pacmanfx.ui._3d.InfoBox3D;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -15,7 +16,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.ui.PacManGames.theAssets;
 
-public class Dashboard {
+public class Dashboard extends VBox {
 
     public static final int INFOBOX_MIN_LABEL_WIDTH = 110;
     public static final int INFOBOX_MIN_WIDTH = 180;
