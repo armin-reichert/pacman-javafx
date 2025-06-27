@@ -55,8 +55,8 @@ public class MsPacMan3D extends PacBase3D {
         }
     }
 
-    public MsPacMan3D(AnimationManager animationMgr, Pac pac, double size, AssetStorage assets, String ans) {
-        super(animationMgr, pac, size, assets, ans);
+    public MsPacMan3D(AnimationManager animationManager, Pac pac, double size, AssetStorage assets, String ans) {
+        super(animationManager, pac, size, assets, ans);
 
         Group femaleBodyParts = Model3DRepository.get().createFemaleBodyParts(size,
             assets.color(ans + ".pac.color.hairbow"),
@@ -78,7 +78,7 @@ public class MsPacMan3D extends PacBase3D {
             }
         };
 
-        movementAnimation = new HipSwayingAnimation(animationMgr);
+        movementAnimation = new HipSwayingAnimation(animationManager);
         setMovementPowerMode(false);
     }
 

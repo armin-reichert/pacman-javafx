@@ -36,7 +36,6 @@ public abstract class PacBase3D {
     protected final double size;
     protected final Rotate moveRotation = new Rotate();
 
-    protected final AnimationManager animationManager;
     protected ManagedAnimation chewingAnimation;
     protected ManagedAnimation movementAnimation;
     protected ManagedAnimation dyingAnimation;
@@ -47,7 +46,7 @@ public abstract class PacBase3D {
     protected abstract void updateMovementAnimation();
 
     protected PacBase3D(AnimationManager animationManager, Pac pac, double size, AssetStorage assets, String ans) {
-        this.animationManager = requireNonNull(animationManager);
+        requireNonNull(animationManager);
         this.pac = requireNonNull(pac);
         this.size = size;
 
