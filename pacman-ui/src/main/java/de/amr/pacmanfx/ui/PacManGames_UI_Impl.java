@@ -124,7 +124,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
             theUI.configure(uiConfigClasses);
             models.forEach((variant, model) -> theGameController().registerGame(variant, model));
             theGameController().setEventsEnabled(true);
-            theUI.gameView().configureDashboard(dashboardIDs);
+            theUI.gameView().dashboard().configure(dashboardIDs);
             for (StartPage startPage : startPages) theUI.startPagesView().addStartPage(startPage);
             theUI.startPagesView().selectStartPage(selectedStartPageIndex);
             theUI.startPagesView().currentStartPage()

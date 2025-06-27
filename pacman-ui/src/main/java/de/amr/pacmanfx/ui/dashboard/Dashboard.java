@@ -58,6 +58,15 @@ public class Dashboard extends VBox {
         }
     }
 
+    public void configure(DashboardID... dashboardIDS) {
+        addInfoBox(DashboardID.README);
+        for (DashboardID id : dashboardIDS) {
+            if (id != DashboardID.README) {
+                addInfoBox(id);
+            }
+        }
+    }
+
     private void addInfoBox(DashboardID id, String titleKey, InfoBox infoBox) {
         infoBoxMap.put(id, preconfiguredInfoBox(theAssets().text(titleKey), infoBox));
     }

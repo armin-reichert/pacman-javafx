@@ -15,7 +15,6 @@ import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.*;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
-import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.dashboard.InfoBox;
 import de.amr.pacmanfx.ui.dashboard.InfoBoxReadmeFirst;
 import de.amr.pacmanfx.ui.input.Keyboard;
@@ -139,15 +138,6 @@ public class GameView implements PacManGames_View {
         bindAction(ACTION_TOGGLE_IMMUNITY, GLOBAL_ACTION_BINDINGS);
         bindAction(ACTION_TOGGLE_PIP_VISIBILITY, GLOBAL_ACTION_BINDINGS);
         bindAction(ACTION_TOGGLE_PLAY_SCENE_2D_3D, GLOBAL_ACTION_BINDINGS);
-    }
-
-    public void configureDashboard(DashboardID... dashboardIDS) {
-        dashboard.addInfoBox(DashboardID.README);
-        for (DashboardID id : dashboardIDS) {
-            if (id != DashboardID.README) {
-                dashboard.addInfoBox(id);
-            }
-        }
     }
 
     public void showHelp() {
