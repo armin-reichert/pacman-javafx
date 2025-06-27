@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
@@ -25,12 +26,10 @@ import static de.amr.pacmanfx.ui.PacManGames.theUI;
 import static java.util.Objects.requireNonNull;
 
 public class LevelCounter3D extends Group {
-
-    private final AnimationManager animationManager;
-    private Animation spinningAnimation;
+    private final ManagedAnimation spinningAnimation;
 
     public LevelCounter3D(AnimationManager animationManager, LevelCounter levelCounter) {
-        this.animationManager = requireNonNull(animationManager);
+        requireNonNull(animationManager);
         setTranslateZ(-6);
         int n = 0;
         for (byte symbol : levelCounter.symbols()) {
@@ -44,27 +43,26 @@ public class LevelCounter3D extends Group {
             getChildren().add(cube);
             n += 1;
         }
+
+        spinningAnimation = new ManagedAnimation(animationManager, "LevelCounter_Spinning") {
+            @Override
+            protected Animation createAnimation() {
+                var cubesAnimation = new ParallelTransition();
+                for (int i = 0; i < getChildren().size(); ++i) {
+                    Node cube = getChildren().get(i);
+                    var spinning = new RotateTransition(Duration.seconds(6), cube);
+                    spinning.setCycleCount(Animation.INDEFINITE);
+                    spinning.setInterpolator(Interpolator.LINEAR);
+                    spinning.setAxis(Rotate.X_AXIS);
+                    spinning.setByAngle(i % 2 == 0 ? 360 : -360);
+                    cubesAnimation.getChildren().add(spinning);
+                }
+                return cubesAnimation;
+            }
+        };
     }
 
-    private Animation createSpinningAnimation() {
-        var cubesAnimation = new ParallelTransition();
-        for (int i = 0; i < getChildren().size(); ++i) {
-            Node cube = getChildren().get(i);
-            var spinning = new RotateTransition(Duration.seconds(6), cube);
-            spinning.setCycleCount(Animation.INDEFINITE);
-            spinning.setInterpolator(Interpolator.LINEAR);
-            spinning.setAxis(Rotate.X_AXIS);
-            spinning.setByAngle(i % 2 == 0 ? 360 : -360);
-            cubesAnimation.getChildren().add(spinning);
-        }
-        return cubesAnimation;
-    }
-
-    public void playSpinningAnimation() {
-        if (spinningAnimation == null) {
-            spinningAnimation = createSpinningAnimation();
-            animationManager.register("LevelCounter_Spinning", spinningAnimation);
-        }
-        spinningAnimation.playFromStart();
+    public ManagedAnimation spinningAnimation() {
+        return spinningAnimation;
     }
 }

@@ -75,7 +75,7 @@ public class Energizer3D implements Eatable3D {
 
     @Override
     public void onEaten() {
-        pumpingAnimation().stop();
+        pumpingAnimation.stop();
         hideAndEatAnimation.play(ManagedAnimation.FROM_START);
     }
 

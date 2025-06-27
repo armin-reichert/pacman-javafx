@@ -278,7 +278,7 @@ public class GameLevel3D {
         // Place level counter at top right maze corner
         levelCounter3D.setTranslateX(theGameLevel().worldMap().numCols() * TS - 2 * TS);
         levelCounter3D.setTranslateY(2 * TS);
-        levelCounter3D.playSpinningAnimation();
+        levelCounter3D.spinningAnimation().play(ManagedAnimation.FROM_START);
     }
 
     public Group root() { return root; }
