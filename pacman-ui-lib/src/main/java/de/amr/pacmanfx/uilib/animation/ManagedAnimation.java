@@ -19,6 +19,10 @@ public abstract class ManagedAnimation {
 
     protected abstract Animation createAnimation();
 
+    public void invalidate() {
+        animation = null;
+    }
+
     public void play(boolean playMode) {
         if (animation == null) {
             animation = createAnimation();

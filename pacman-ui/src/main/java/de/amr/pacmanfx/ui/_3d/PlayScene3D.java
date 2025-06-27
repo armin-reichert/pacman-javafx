@@ -70,9 +70,9 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     protected final Scores3D scores3D;
     protected GameLevel3D level3D;
 
-    protected final AnimationManager animationManager = new AnimationManager();
-    private Animation pacDyingAnimation;
-    private Animation levelCompleteAnimation;
+    private final AnimationManager animationManager = new AnimationManager();
+    private final ManagedAnimation pacDyingAnimation;
+    private final ManagedAnimation levelCompleteAnimation;
 
     public PlayScene3D() {
         scores3D = new Scores3D(
@@ -98,6 +98,38 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         perspectiveMap.put(PerspectiveID.TOTAL, new Perspective.Total());
         perspectiveMap.put(PerspectiveID.TRACK_PLAYER, new Perspective.TrackingPlayer());
         perspectiveMap.put(PerspectiveID.NEAR_PLAYER, new Perspective.StalkingPlayer());
+
+        pacDyingAnimation = new ManagedAnimation(animationManager, "PacMan_Dying") {
+            @Override
+            protected Animation createAnimation() {
+                Animation animation = new SequentialTransition(
+                    now(theSound()::playPacDeathSound),
+                    level3D.pac3D().createDyingAnimation(),
+                    pauseSec(1)
+                );
+                animation.setDelay(Duration.seconds(2));
+                animation.setOnFinished(e -> theGameController().letCurrentGameStateExpire());
+                return animation;
+            }
+        };
+
+        levelCompleteAnimation = new ManagedAnimation(animationManager, "Level_Complete") {
+            @Override
+            protected Animation createAnimation() {
+                var animation = new SequentialTransition(
+                    Ufx.doAfterSec(3, () -> {
+                        perspectiveIDPy.unbind();
+                        perspectiveIDPy.set(PerspectiveID.TOTAL);
+                    }),
+                    level3D.createLevelCompleteAnimation()
+                );
+                animation.setOnFinished(e -> {
+                    perspectiveIDPy.bind(PY_3D_PERSPECTIVE);
+                    theGameController().letCurrentGameStateExpire();
+                });
+                return animation;
+            }
+        };
     }
 
     @Override
@@ -197,6 +229,14 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         return animationManager;
     }
 
+    public ManagedAnimation pacDyingAnimation() {
+        return pacDyingAnimation;
+    }
+
+    public ManagedAnimation levelCompleteAnimation() {
+        return levelCompleteAnimation;
+    }
+
     @Override
     public void init() {
         theGame().hud().showScore(true);
@@ -276,7 +316,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 level3D.pac3D().update(theGameLevel());
                 level3D.livesCounter3D().lookingAroundAnimation().stop();
                 level3D.ghosts3D().forEach(MutatingGhost3D::stopAllAnimations);
-                playPacDyingAnimation();
+                pacDyingAnimation().play(ManagedAnimation.FROM_START);
             }
             case GHOST_DYING ->
                 theSimulationStep().killedGhosts.forEach(ghost -> {
@@ -294,7 +334,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
                 //TODO we need a "cool down" time such that e.g. squirting animations can complete before stopping all animations
                 animationManager.stopAllAnimations();
-                playLevelCompleteAnimation();
+                levelCompleteAnimation().play(ManagedAnimation.FROM_START);
             }
             case LEVEL_TRANSITION -> {
                 theGameState().timer().restartSeconds(3);
@@ -510,8 +550,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         scores3D.translateXProperty().bind(level3D.root().translateXProperty().add(TS));
         scores3D.translateYProperty().bind(level3D.root().translateYProperty().subtract(3.5 * TS));
         scores3D.translateZProperty().bind(level3D.root().translateZProperty().subtract(3.5 * TS));
-        //TODO check
-        levelCompleteAnimation = null;
+        levelCompleteAnimation.invalidate();
     }
 
     protected void updateSound() {
@@ -562,51 +601,5 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         double y = TS * (houseMinTile.y() +       houseSizeInTiles.y());
         float seconds = theGame().isPlaying() ? 0.5f : 2.5f;
         level3D.showAnimatedMessage("READY!", seconds, x, y);
-    }
-
-    // Pac dying animation
-
-    private Animation createPacDyingAnimation() {
-        Animation animation = new SequentialTransition(
-            now(theSound()::playPacDeathSound),
-            level3D.pac3D().createDyingAnimation(),
-            pauseSec(1)
-        );
-        animation.setDelay(Duration.seconds(2));
-        animation.setOnFinished(e -> theGameController().letCurrentGameStateExpire());
-        return animation;
-    }
-
-    private void playPacDyingAnimation() {
-        if (pacDyingAnimation == null) {
-            pacDyingAnimation = createPacDyingAnimation();
-            animationManager.register("PacMan_Dying", pacDyingAnimation);
-        }
-        pacDyingAnimation.playFromStart();
-    }
-
-    // Level complete animation
-
-    private Animation createLevelCompleteAnimation() {
-        var animation = new SequentialTransition(
-            Ufx.doAfterSec(3, () -> {
-                perspectiveIDPy.unbind();
-                perspectiveIDPy.set(PerspectiveID.TOTAL);
-            }),
-            level3D.createLevelCompleteAnimation()
-        );
-        animation.setOnFinished(e -> {
-            perspectiveIDPy.bind(PY_3D_PERSPECTIVE);
-            theGameController().letCurrentGameStateExpire();
-        });
-        return animation;
-    }
-
-    private void playLevelCompleteAnimation() {
-        if (levelCompleteAnimation == null) {
-            levelCompleteAnimation = createLevelCompleteAnimation();
-            animationManager.register("Level_Complete", levelCompleteAnimation);
-        }
-        levelCompleteAnimation.playFromStart();
     }
 }
