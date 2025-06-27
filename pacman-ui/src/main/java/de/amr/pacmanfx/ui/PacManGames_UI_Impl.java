@@ -11,6 +11,8 @@ import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
+import de.amr.pacmanfx.ui.input.Joypad;
+import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.layout.*;
 import de.amr.pacmanfx.ui.sound.PacManGames_Sound;
 import de.amr.pacmanfx.uilib.GameClock;
@@ -42,6 +44,17 @@ import static java.util.Objects.requireNonNull;
  * User interface for all Pac-Man game variants.
  */
 public class PacManGames_UI_Impl implements PacManGames_UI {
+
+    // package-private access for PacManGames API class
+    static final PacManGames_Assets ASSETS = new PacManGames_Assets();
+    static final GameClock          GAME_CLOCK = new GameClock();
+    static final Keyboard           KEYBOARD = new Keyboard();
+    static final Joypad             JOYPAD = new Joypad(KEYBOARD);
+    static final PacManGames_Sound  SOUND_MANAGER = new PacManGames_Sound();
+    static final DirectoryWatchdog  WATCHDOG = new DirectoryWatchdog(CUSTOM_MAP_DIR);
+
+    // the single instance
+    static PacManGames_UI_Impl SINGLE_INSTANCE;
 
     public static class Builder {
 
@@ -120,17 +133,17 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
         public PacManGames_UI build() {
             validate();
-            theUI = new PacManGames_UI_Impl(stage, width, height);
-            theUI.configure(uiConfigClasses);
+            SINGLE_INSTANCE = new PacManGames_UI_Impl(stage, width, height);
+            SINGLE_INSTANCE.configure(uiConfigClasses);
             models.forEach((variant, model) -> theGameController().registerGame(variant, model));
             theGameController().setEventsEnabled(true);
-            theUI.gameView().dashboard().configure(dashboardIDs);
-            for (StartPage startPage : startPages) theUI.startPagesView().addStartPage(startPage);
-            theUI.startPagesView().selectStartPage(selectedStartPageIndex);
-            theUI.startPagesView().currentStartPage()
+            SINGLE_INSTANCE.gameView().dashboard().configure(dashboardIDs);
+            for (StartPage startPage : startPages) SINGLE_INSTANCE.startPagesView().addStartPage(startPage);
+            SINGLE_INSTANCE.startPagesView().selectStartPage(selectedStartPageIndex);
+            SINGLE_INSTANCE.startPagesView().currentStartPage()
                 .map(StartPage::currentGameVariant)
                 .ifPresent(theGameController()::selectGameVariant);
-            return theUI;
+            return SINGLE_INSTANCE;
         }
 
         private void validate() {
@@ -193,11 +206,6 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         }
     }
 
-    // package-private access for games env API
-    static final PacManGames_Assets ASSETS = new PacManGames_Assets();
-    static final GameClock GAME_CLOCK = new GameClock();
-    static final PacManGames_Sound SOUND_MANAGER = new PacManGames_Sound();
-    static final DirectoryWatchdog WATCHDOG = new DirectoryWatchdog(CUSTOM_MAP_DIR);
 
     private final Map<String, PacManGames_UIConfig> configByGameVariant = new HashMap<>();
 
@@ -300,10 +308,6 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         theGameEventManager().addEventListener(newView);
 
         rootPane.getChildren().set(0, newView.rootNode());
-    }
-
-    public Stage stage() {
-        return stage;
     }
 
     /**
@@ -448,6 +452,11 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         gameView.dashboard().setVisible(false);
         currentViewPy.set(startPagesView);
         startPagesView.currentStartPage().ifPresent(startPage -> startPage.layoutRoot().requestFocus());
+    }
+
+    @Override
+    public Stage stage() {
+        return stage;
     }
 
     @Override

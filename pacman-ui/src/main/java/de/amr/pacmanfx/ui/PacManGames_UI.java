@@ -15,6 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.Stage;
 
 import java.util.Map;
 import java.util.Optional;
@@ -99,6 +100,7 @@ public interface PacManGames_UI {
     DoubleProperty                PY_3D_WALL_HEIGHT         = new SimpleDoubleProperty(3.5);
     DoubleProperty                PY_3D_WALL_OPACITY        = new SimpleDoubleProperty(1.0);
 
+    Stage stage();
     void restart();
     void selectGameVariant(String variant);
     void show();
