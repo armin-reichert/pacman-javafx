@@ -302,32 +302,35 @@ public class GameView implements PacManGames_View {
 
     private void embedGameScene(GameScene gameScene) {
         requireNonNull(gameScene);
+        // a camera controlled game scene can also be a 2D game scene!
+        if (gameScene instanceof GameScene2D gameScene2D) {
+            gameScene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
+        }
         switch (gameScene) {
-            case CameraControlledView gameSceneUsingCamera -> {
-                root.getChildren().set(0, gameSceneUsingCamera.viewPort());
-                gameSceneUsingCamera.viewPortWidthProperty().bind(parentScene.widthProperty());
-                gameSceneUsingCamera.viewPortHeightProperty().bind(parentScene.heightProperty());
-                if (gameScene instanceof GameScene2D gameScene2D) {
-                    gameScene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
-                }
+            case CameraControlledView gameSceneWithCamera -> {
+                gameSceneWithCamera.viewPortWidthProperty().bind(parentScene.widthProperty());
+                gameSceneWithCamera.viewPortHeightProperty().bind(parentScene.heightProperty());
+
+                root.getChildren().set(0, gameSceneWithCamera.viewPort());
             }
             case GameScene2D gameScene2D -> {
                 Vector2f sceneSize = gameScene2D.sizeInPx();
+                canvasContainer.backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Ufx::coloredBackground));
                 canvasContainer.setUnscaledCanvasSize(sceneSize.x(), sceneSize.y());
                 canvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
-                canvasContainer.backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Ufx::coloredBackground));
+
                 gameScene2D.scalingProperty().bind(canvasContainer.scalingProperty()
                         .map(scaling -> Math.min(scaling.doubleValue(), MAX_SCENE_2D_SCALING)));
                 gameScene2D.setCanvas(canvas);
-                gameScene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
+
                 GameRenderer gameRenderer = ui.configuration().createGameRenderer(canvas);
                 if (gameRenderer instanceof SpriteGameRenderer spriteGameRenderer) {
                     gameScene2D.setGameRenderer(spriteGameRenderer);
                 } else {
                     Logger.error("Currently, only sprite game renderers are supported for 2D game scenes");
                 }
-                // avoid showing old content before new scene is rendered
                 gameRenderer.fillCanvas(gameScene2D.backgroundColor());
+
                 root.getChildren().set(0, canvasLayer);
             }
             default -> Logger.error("Cannot embed game scene of class {}", gameScene.getClass().getName());
