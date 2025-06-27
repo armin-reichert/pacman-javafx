@@ -150,10 +150,10 @@ public class CrudeCanvasContainer extends BorderPane {
     }
 
     public DoubleProperty scalingProperty() { return scalingPy; }
-    public double scaling() {
+    public double         scaling() {
         return scalingPy.get();
     }
-    public void setScaling(double scaling) {
+    public void           setScaling(double scaling) {
         scalingPy.set(scaling);
     }
 
@@ -161,12 +161,13 @@ public class CrudeCanvasContainer extends BorderPane {
         minScaling = value;
     }
 
-    public double          unscaledCanvasWidth() {
+    public double unscaledCanvasWidth() {
         return unscaledCanvasWidthPy.get();
     }
-    public double          unscaledCanvasHeight() {
+    public double unscaledCanvasHeight() {
         return unscaledCanvasHeightPy.get();
     }
+
     public void setUnscaledCanvasSize(double width, double height) {
         unscaledCanvasWidthPy.set(width);
         unscaledCanvasHeightPy.set(height);
@@ -180,17 +181,17 @@ public class CrudeCanvasContainer extends BorderPane {
         roundedBorderPy.set(enabled);
     }
 
-    public Color           borderColor() {
+    public Color borderColor() {
         return borderColorPy.get();
     }
-    public void            setBorderColor(Color color) {
+    public void  setBorderColor(Color color) {
         borderColorPy.set(color);
     }
 
-    public boolean         isBorderVisible() {
+    public boolean isBorderVisible() {
         return borderVisiblePy.get();
     }
-    public void            setBorderVisible(boolean visible) {
+    public void   setBorderVisible(boolean visible) {
         borderVisiblePy.set(visible);
     }
 }
