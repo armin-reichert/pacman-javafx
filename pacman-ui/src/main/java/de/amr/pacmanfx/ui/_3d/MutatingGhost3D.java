@@ -12,6 +12,7 @@ import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.model3D.Ghost3D;
+import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.beans.property.ObjectProperty;
@@ -55,9 +56,8 @@ public class MutatingGhost3D extends Group {
     private final double size;
     private final int numFlashes;
 
-    private final AnimationManager animationManager;
-    private RotateTransition brakeAnimation;
-    private RotateTransition numberBoxRotation;
+    private final ManagedAnimation brakeAnimation;
+    private final ManagedAnimation pointsAnimation;
 
     public MutatingGhost3D(
         AnimationManager animationManager,
@@ -65,24 +65,65 @@ public class MutatingGhost3D extends Group {
         Shape3D dressShape, Shape3D pupilsShape, Shape3D eyeballsShape,
         Ghost ghost, double size, int numFlashes)
     {
+        requireNonNull(animationManager);
         requireNonNull(assets);
         requireNonNull(assetPrefix);
         requireNonNull(dressShape);
         requireNonNull(pupilsShape);
         requireNonNull(eyeballsShape);
         requireNonNegative(numFlashes);
-        this.animationManager = requireNonNull(animationManager);
+
         this.ghost = requireNonNull(ghost);
         this.size = requireNonNegative(size);
         this.numFlashes = numFlashes;
-        ghost3D = new Ghost3D(animationManager, assets, assetPrefix, ghost.personality(), dressShape, pupilsShape, eyeballsShape, size);
-        numberBox = new Box(14, 8, 8);
+        this.ghost3D = new Ghost3D(animationManager, assets, assetPrefix, ghost.personality(), dressShape, pupilsShape, eyeballsShape, size);
+        this.numberBox = new Box(14, 8, 8);
         setAppearance(Appearance.NORMAL);
+
+        pointsAnimation = new ManagedAnimation(animationManager, "Ghost_Points") {
+            @Override
+            protected Animation createAnimation() {
+                var numberBoxRotation = new RotateTransition(Duration.seconds(1), numberBox);
+                numberBoxRotation.setAxis(Rotate.X_AXIS);
+                numberBoxRotation.setFromAngle(0);
+                numberBoxRotation.setToAngle(360);
+                numberBoxRotation.setInterpolator(Interpolator.LINEAR);
+                numberBoxRotation.setRate(0.75);
+                return numberBoxRotation;
+            }
+        };
+
+        brakeAnimation = new ManagedAnimation(animationManager, "Ghost_Braking") {
+            @Override
+            protected Animation createAnimation() {
+                var rotateTransition = new RotateTransition(Duration.seconds(0.5), MutatingGhost3D.this);
+                rotateTransition.setAxis(Rotate.Y_AXIS);
+                rotateTransition.setAutoReverse(true);
+                rotateTransition.setCycleCount(2);
+                rotateTransition.setInterpolator(Interpolator.EASE_OUT);
+                return rotateTransition;
+            }
+
+            @Override
+            public void play(boolean playMode) {
+                var rotateTransition = (RotateTransition) animation;
+                rotateTransition.stop();
+                rotateTransition.setByAngle(ghost.moveDir() == Direction.LEFT ? -35 : 35);
+                if (playMode == FROM_START) {
+                    rotateTransition.playFromStart();
+                } else {
+                    rotateTransition.play();
+                }
+            }
+
+            @Override
+            public void stop() {
+                super.stop();
+                setRotationAxis(Rotate.Y_AXIS);
+                setRotate(0);
+            }
+        };
     }
-
-    public Appearance appearance() { return appearancePy.get(); }
-
-    public void setAppearance(Appearance appearance) { appearancePy.set(requireNonNull(appearance)); }
 
     public void init(GameLevel level) {
         stopAllAnimations();
@@ -95,6 +136,10 @@ public class MutatingGhost3D extends Group {
         updateAppearance(level);
         updateAnimations();
     }
+
+    public Appearance appearance() { return appearancePy.get(); }
+
+    public void setAppearance(Appearance appearance) { appearancePy.set(requireNonNull(appearance)); }
 
     private void updateAppearance(GameLevel level) {
         boolean powerFading = level.pac().isPowerFading(level);
@@ -112,10 +157,10 @@ public class MutatingGhost3D extends Group {
         });
     }
 
-    public void setNumberTexture(Image numberTexture) {
-        var material = new PhongMaterial();
-        material.setDiffuseMap(numberTexture);
-        numberBox.setMaterial(material);
+    public void setNumberTexture(Image numberImage) {
+        var texture = new PhongMaterial();
+        texture.setDiffuseMap(numberImage);
+        numberBox.setMaterial(texture);
     }
 
     private void updateTransform(GameLevel level) {
@@ -141,7 +186,7 @@ public class MutatingGhost3D extends Group {
             case FRIGHTENED -> ghost3D.setFrightenedAppearance();
             case EATEN -> ghost3D.setEyesOnlyAppearance();
             case FLASHING -> ghost3D.setFlashingAppearance(numFlashes);
-            case VALUE -> playNumberBoxAnimation();
+            case VALUE -> pointsAnimation.play(ManagedAnimation.FROM_START);
         }
         Logger.trace("Ghost {} appearance changed to {}", ghost.personality(), appearance);
     }
@@ -153,80 +198,25 @@ public class MutatingGhost3D extends Group {
     // Animations
 
     public void stopAllAnimations() {
-        stopBrakeAnimation();
+        brakeAnimation.stop();
+        pointsAnimation.stop();
         ghost3D.dressAnimation().stop();
         ghost3D.flashingAnimation().stop();
-        stopNumberBoxAnimation();
     }
 
     private void updateAnimations() {
         if (appearance() == Appearance.VALUE) {
             ghost3D.dressAnimation().stop();
         } else {
-            stopNumberBoxAnimation();
+            pointsAnimation.stop();
             if (ghost.isVisible()) {
                 ghost3D.dressAnimation().play(ManagedAnimation.CONTINUE);
             } else {
                 ghost3D.dressAnimation().stop();
             }
             if (ghost.moveInfo().tunnelEntered) {
-                playBrakeAnimation();
+                brakeAnimation.stop();
             }
-        }
-    }
-
-    // Number box animation
-
-    private RotateTransition createNumberBoxAnimation() {
-        var numberBoxRotation = new RotateTransition(Duration.seconds(1), numberBox);
-        numberBoxRotation.setAxis(Rotate.X_AXIS);
-        numberBoxRotation.setFromAngle(0);
-        numberBoxRotation.setToAngle(360);
-        numberBoxRotation.setInterpolator(Interpolator.LINEAR);
-        numberBoxRotation.setRate(0.75);
-        return numberBoxRotation;
-    }
-
-    private void playNumberBoxAnimation() {
-        if (numberBoxRotation == null) {
-            numberBoxRotation = createNumberBoxAnimation();
-            animationManager.register("Ghost_Points", numberBoxRotation);
-        }
-        numberBoxRotation.playFromStart();
-    }
-
-    public void stopNumberBoxAnimation() {
-        if (numberBoxRotation != null) {
-            numberBoxRotation.stop();
-        }
-    }
-
-    // Brake animation
-
-    private RotateTransition createBrakeAnimation() {
-        var animation = new RotateTransition(Duration.seconds(0.5), this);
-        animation.setAxis(Rotate.Y_AXIS);
-        animation.setAutoReverse(true);
-        animation.setCycleCount(2);
-        animation.setInterpolator(Interpolator.EASE_OUT);
-        return animation;
-    }
-
-    private void playBrakeAnimation() {
-        if (brakeAnimation == null) {
-            brakeAnimation = createBrakeAnimation();
-            animationManager.register("Ghost_Braking", brakeAnimation);
-        }
-        brakeAnimation.stop();
-        brakeAnimation.setByAngle(ghost.moveDir() == Direction.LEFT ? -35 : 35);
-        brakeAnimation.playFromStart();
-    }
-
-    private void stopBrakeAnimation() {
-        if (brakeAnimation != null) {
-            brakeAnimation.stop();
-            setRotationAxis(Rotate.Y_AXIS);
-            setRotate(0);
         }
     }
 }
