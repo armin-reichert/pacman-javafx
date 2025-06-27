@@ -26,6 +26,18 @@ public class Dashboard extends VBox {
 
     private final Map<DashboardID, InfoBox> infoBoxMap = new LinkedHashMap<>();
 
+    public Dashboard() {
+        visibleProperty().addListener((py, ov, visible) -> {
+            if (visible) {
+                update();
+            }
+        });
+    }
+
+    public void toggleVisibility() {
+        setVisible(!isVisible());
+    }
+
     public Stream<InfoBox> infoBoxes() { return infoBoxMap.values().stream(); }
 
     @SuppressWarnings("unchecked")
@@ -66,6 +78,18 @@ public class Dashboard extends VBox {
             }
         }
     }
+
+    public void update() {
+        InfoBox[] infoBoxes = infoBoxes()
+                .filter(infoBox -> !(infoBox instanceof InfoBoxReadmeFirst infoBoxReadmeFirst) || !infoBoxReadmeFirst.isRead())
+                .toArray(InfoBox[]::new);
+        infoBoxes().filter(infoBox -> infoBox instanceof InfoBoxReadmeFirst).findFirst().ifPresent(infoBox -> {
+            InfoBoxReadmeFirst readmeFirst = (InfoBoxReadmeFirst) infoBox;
+            readmeFirst.setActionIfRead(this::update);
+        });
+        getChildren().setAll(infoBoxes);
+    }
+
 
     private void addInfoBox(DashboardID id, String titleKey, InfoBox infoBox) {
         infoBoxMap.put(id, preconfiguredInfoBox(theAssets().text(titleKey), infoBox));

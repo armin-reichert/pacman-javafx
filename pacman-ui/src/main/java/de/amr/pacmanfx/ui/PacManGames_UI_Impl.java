@@ -447,7 +447,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         GAME_CLOCK.stop();
         GAME_CLOCK.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
         SOUND_MANAGER.stopAll();
-        gameView.setDashboardVisible(false);
+        gameView.dashboard().setVisible(false);
         currentViewPy.set(startPagesView);
         startPagesView.currentStartPage().ifPresent(startPage -> startPage.layoutRoot().requestFocus());
     }

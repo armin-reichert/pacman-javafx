@@ -466,7 +466,7 @@ public interface PacManGames_GameActions {
     GameAction ACTION_TOGGLE_DASHBOARD = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
-            ui.gameView().toggleDashboardVisibility();
+            ui.gameView().dashboard().toggleVisibility();
         }
 
         @Override

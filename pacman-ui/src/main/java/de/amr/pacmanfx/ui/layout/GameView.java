@@ -16,7 +16,6 @@ import de.amr.pacmanfx.ui._2d.*;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.InfoBox;
-import de.amr.pacmanfx.ui.dashboard.InfoBoxReadmeFirst;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.uilib.CameraControlledView;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -254,30 +253,6 @@ public class GameView implements PacManGames_View {
 
     public Dashboard dashboard() {
         return dashboard;
-    }
-
-    public void setDashboardVisible(boolean visible) {
-        if (visible) {
-            dashboard.setVisible(true);
-            updateDashboard();
-        } else {
-            dashboard.setVisible(false);
-        }
-    }
-
-    public void updateDashboard() {
-        InfoBox[] infoBoxes = dashboard.infoBoxes()
-                .filter(infoBox -> !(infoBox instanceof InfoBoxReadmeFirst infoBoxReadmeFirst) || !infoBoxReadmeFirst.isRead())
-                .toArray(InfoBox[]::new);
-        dashboard.infoBoxes().filter(infoBox -> infoBox instanceof InfoBoxReadmeFirst).findFirst().ifPresent(infoBox -> {
-            InfoBoxReadmeFirst readmeFirst = (InfoBoxReadmeFirst) infoBox;
-            readmeFirst.setActionIfRead(this::updateDashboard);
-        });
-        dashboard.getChildren().setAll(infoBoxes);
-    }
-
-    public void toggleDashboardVisibility() {
-        setDashboardVisible(!dashboard.isVisible());
     }
 
     public TooFancyCanvasContainer canvasContainer() {
