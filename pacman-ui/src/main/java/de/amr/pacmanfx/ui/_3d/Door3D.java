@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui._3d;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -37,13 +38,26 @@ public class Door3D extends Group {
     private final DoubleProperty barThicknessPy = new SimpleDoubleProperty(0.75);
     private final PhongMaterial barMaterial;
 
-    private final AnimationManager animationManager;
-    private Animation openCloseAnimation;
+    private final ManagedAnimation openCloseAnimation;
 
     public Door3D(AnimationManager animationManager, Vector2i leftWingTile, Vector2i rightWingTile, Color color, double height) {
-        this.animationManager = requireNonNull(animationManager);
+        requireNonNull(animationManager);
         barMaterial = Ufx.coloredPhongMaterial(color);
         getChildren().addAll(createDoorWing(leftWingTile, height), createDoorWing(rightWingTile, height));
+
+        openCloseAnimation = new ManagedAnimation(animationManager, "Door_OpenClose") {
+            @Override
+            protected Animation createAnimation() {
+                return new Timeline(
+                    new KeyFrame(Duration.seconds(0.75), new KeyValue(barThicknessPy, 0)),
+                    new KeyFrame(Duration.seconds(1.5),  new KeyValue(barThicknessPy, 0.75))
+                );
+            }
+        };
+    }
+
+    public ManagedAnimation openCloseAnimation() {
+        return openCloseAnimation;
     }
 
     private Group createDoorWing(Vector2i tile, double height) {
@@ -80,19 +94,4 @@ public class Door3D extends Group {
     }
 
     public ObjectProperty<DrawMode> drawModeProperty() { return drawModePy; }
-
-    private Animation createOpenCloseAnimation() {
-        return new Timeline(
-            new KeyFrame(Duration.seconds(0.75), new KeyValue(barThicknessPy, 0)),
-            new KeyFrame(Duration.seconds(1.5),  new KeyValue(barThicknessPy, 0.75))
-        );
-    }
-
-    public void playOpenCloseAnimation() {
-        if (openCloseAnimation == null) {
-            openCloseAnimation = createOpenCloseAnimation();
-            animationManager.register("Door_OpenClose", openCloseAnimation);
-        }
-        openCloseAnimation.playFromStart();
-    }
 }

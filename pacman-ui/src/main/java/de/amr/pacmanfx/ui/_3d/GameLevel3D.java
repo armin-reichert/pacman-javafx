@@ -12,6 +12,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.Model3D;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
@@ -61,7 +62,7 @@ public class GameLevel3D {
         @Override
         protected void invalidated() {
             if (houseOpenPy.get()) {
-                maze3D.door3D().playOpenCloseAnimation();
+                maze3D.door3D().openCloseAnimation().play(ManagedAnimation.FROM_START);
             }
         }
     };
