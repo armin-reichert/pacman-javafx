@@ -133,6 +133,10 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         };
     }
 
+    public AnimationManager animationManager() {
+        return animationManager;
+    }
+
     @Override
     public List<MenuItem> supplyContextMenuItems(ContextMenuEvent e) {
         List<MenuItem> items = new ArrayList<>();

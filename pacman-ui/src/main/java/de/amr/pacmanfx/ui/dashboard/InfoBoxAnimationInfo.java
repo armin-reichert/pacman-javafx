@@ -30,23 +30,18 @@ public class InfoBoxAnimationInfo extends InfoBox {
 
     public static class AnimationData {
         private final StringProperty idPy;
-        private final ObjectProperty<Animation> animationPy;
-        private final StringProperty animationStatusPy;
+        private final ObjectProperty<Animation.Status> animationStatusPy;
 
         AnimationData(String id, Animation animation) {
             String idPrefix = id.substring(0, id.indexOf("#") + 4);
             idPy = new SimpleStringProperty(idPrefix);
-            animationPy = new SimpleObjectProperty<>(animation);
-            animationStatusPy = new SimpleStringProperty(animation.getStatus().name());
+            animationStatusPy = new SimpleObjectProperty<>(animation.getStatus());
         }
 
-        public StringProperty idPy() {
+        public StringProperty idProperty() {
             return idPy;
         }
-        public ObjectProperty<Animation> animationProperty() {
-            return animationPy;
-        }
-        public StringProperty animationStatusProperty() {
+        public ObjectProperty<Animation.Status> animationStatusProperty() {
             return animationStatusPy;
         }
     }
@@ -63,10 +58,10 @@ public class InfoBoxAnimationInfo extends InfoBox {
         tableView.setPlaceholder(new Text("No animations"));
 
         TableColumn<AnimationData, String> idColumn = new TableColumn<>("Animation ID");
-        idColumn.setCellValueFactory(data -> data.getValue().idPy());
+        idColumn.setCellValueFactory(data -> data.getValue().idProperty());
         idColumn.setSortable(false);
 
-        TableColumn<AnimationData, String> statusColumn = new TableColumn<>("Status");
+        TableColumn<AnimationData, Animation.Status> statusColumn = new TableColumn<>("Status");
         statusColumn.setCellValueFactory(data -> data.getValue().animationStatusProperty());
         statusColumn.setSortable(false);
 
