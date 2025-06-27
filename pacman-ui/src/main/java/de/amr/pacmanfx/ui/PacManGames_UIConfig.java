@@ -31,7 +31,7 @@ public interface PacManGames_UIConfig extends PacManGames_GameSceneConfig {
     Image createBonusSymbolImage(byte symbol);
     Image createBonusValueImage(byte symbol);
     GameRenderer createGameRenderer(Canvas canvas);
-    default boolean isGameCanvasDecorated() { return true; }
+    default boolean hasGameCanvasRoundedBorder() { return true; }
     SpriteSheet<?> spriteSheet();
     WorldMapColorScheme worldMapColorScheme(WorldMap worldMap);
 }

@@ -20,7 +20,7 @@ public class PopupLayer extends Pane {
 
     private final FadingPane helpPopUp = new FadingPane();
 
-    public PopupLayer(TooFancyCanvasContainer canvasContainer) {
+    public PopupLayer(CrudeCanvasContainer canvasContainer) {
         getChildren().addAll(helpPopUp);
 
         minHeightProperty().bind(canvasContainer.minHeightProperty());

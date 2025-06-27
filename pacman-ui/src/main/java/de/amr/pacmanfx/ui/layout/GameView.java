@@ -83,7 +83,7 @@ public class GameView implements PacManGames_View {
 
     private final Dashboard dashboard = new Dashboard();
     private final Canvas canvas = new Canvas();
-    private final TooFancyCanvasContainer canvasContainer = new TooFancyCanvasContainer(canvas);
+    private final CrudeCanvasContainer canvasContainer = new CrudeCanvasContainer(canvas);
     private final ContextMenu contextMenu = new ContextMenu();
     private final StringBinding titleBinding;
 
@@ -255,7 +255,7 @@ public class GameView implements PacManGames_View {
         return dashboard;
     }
 
-    public TooFancyCanvasContainer canvasContainer() {
+    public CrudeCanvasContainer canvasContainer() {
         return canvasContainer;
     }
 
@@ -309,12 +309,11 @@ public class GameView implements PacManGames_View {
             }
             case GameScene2D gameScene2D -> {
                 Vector2f sceneSize = gameScene2D.sizeInPx();
-                canvasContainer.setUnscaledCanvasWidth(sceneSize.x());
-                canvasContainer.setUnscaledCanvasHeight(sceneSize.y());
+                canvasContainer.setUnscaledCanvasSize(sceneSize.x(), sceneSize.y());
                 canvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
                 canvasContainer.backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Ufx::coloredBackground));
-                gameScene2D.scalingProperty().bind(
-                    canvasContainer.scalingPy.map(scaling -> Math.min(scaling.doubleValue(), MAX_SCENE_2D_SCALING)));
+                gameScene2D.scalingProperty().bind(canvasContainer.scalingProperty()
+                        .map(scaling -> Math.min(scaling.doubleValue(), MAX_SCENE_2D_SCALING)));
                 gameScene2D.setCanvas(canvas);
                 // avoid showing old content before new scene is rendered
                 canvas.getGraphicsContext2D().setFill(PY_CANVAS_BG_COLOR.get());
@@ -347,26 +346,19 @@ public class GameView implements PacManGames_View {
 
     private void configureCanvasContainer() {
         canvasContainer.setMinScaling(0.5);
-        canvasContainer.setUnscaledCanvasWidth(28*TS); // 28x36 = Arcade map size
-        canvasContainer.setUnscaledCanvasHeight(36*TS);
+        // 28*TS x 36*TS = Arcade map size in pixels
+        canvasContainer.setUnscaledCanvasSize(28 *TS, 36 * TS);
         canvasContainer.setBorderColor(Color.rgb(222, 222, 255));
-        //TODO check this:
-        canvasContainer.decorationEnabledPy.addListener((py, ov, nv) ->
-            ui.currentGameScene().ifPresent(this::embedGameScene));
+        canvasContainer.roundedBorderProperty().addListener((py, ov, nv) -> ui.currentGameScene().ifPresent(this::embedGameScene));
     }
 
     private void configurePropertyBindings() {
-        GraphicsContext g = canvas.getGraphicsContext2D();
-        PY_CANVAS_FONT_SMOOTHING.addListener((py, ov, on) -> g.setFontSmoothingType(on ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
-        PY_CANVAS_IMAGE_SMOOTHING.addListener((py, ov, on) -> g.setImageSmoothing(on));
+        GraphicsContext ctx = canvas.getGraphicsContext2D();
+        PY_CANVAS_FONT_SMOOTHING.addListener((py, ov, on) -> ctx.setFontSmoothingType(on ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
+        PY_CANVAS_IMAGE_SMOOTHING.addListener((py, ov, on) -> ctx.setImageSmoothing(on));
         PY_DEBUG_INFO_VISIBLE.addListener((py, ov, debug) -> {
-            if (debug) {
-                canvasLayer.setBackground(coloredBackground(Color.DARKGREEN));
-                canvasLayer.setBorder(border(Color.LIGHTGREEN, 2));
-            } else {
-                canvasLayer.setBackground(null);
-                canvasLayer.setBorder(null);
-            }
+            canvasLayer.setBackground(debug? coloredBackground(Color.TEAL) : null);
+            canvasLayer.setBorder(debug? border(Color.LIGHTGREEN, 1) : null);
         });
     }
 

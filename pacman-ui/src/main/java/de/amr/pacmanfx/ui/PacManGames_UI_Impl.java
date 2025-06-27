@@ -405,7 +405,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         } else {
             Logger.error("Could not find app icon for current game variant {}", gameVariant);
         }
-        gameView.canvasContainer().decorationEnabledPy.set(uiConfig.isGameCanvasDecorated());
+        gameView.canvasContainer().roundedBorderProperty().set(uiConfig.hasGameCanvasRoundedBorder());
         // this triggers a game event and the event handlers:
         theGameController().selectGameVariant(gameVariant);
     }

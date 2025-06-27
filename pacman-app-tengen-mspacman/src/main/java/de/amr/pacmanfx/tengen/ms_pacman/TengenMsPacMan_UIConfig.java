@@ -161,7 +161,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     public String assetNamespace() { return ANS; }
 
     @Override
-    public boolean isGameCanvasDecorated() { return false; }
+    public boolean hasGameCanvasRoundedBorder() { return false; }
 
     @Override
     public TengenMsPacMan_SpriteSheet spriteSheet() {return spriteSheet;}

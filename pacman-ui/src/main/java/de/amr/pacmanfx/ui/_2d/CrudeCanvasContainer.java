@@ -17,88 +17,82 @@ import org.tinylog.Logger;
 import static java.util.Objects.requireNonNull;
 
 /**
- * @author Armin Reichert
+ * This whole thing need to get clarified.
  */
-public class TooFancyCanvasContainer extends BorderPane {
+public class CrudeCanvasContainer extends BorderPane {
 
-    static final Vector2f DOWNSCALING_IF_BORDER = new Vector2f(0.85f, 0.93f);
+    static final Vector2f DOWNSCALING_WHEN_BORDER_VISIBLE = new Vector2f(0.85f, 0.93f);
 
-    public final BooleanProperty borderVisiblePy = new SimpleBooleanProperty(true) {
+    private final BooleanProperty borderVisiblePy = new SimpleBooleanProperty(true) {
+        @Override
+        protected void invalidated() { updateLayout(); }
+    };
+
+    private final ObjectProperty<Color> borderColorPy = new SimpleObjectProperty<>(Color.LIGHTBLUE);
+
+    private final BooleanProperty roundedBorderPy = new SimpleBooleanProperty(true) {
         @Override
         protected void invalidated() {
-            doLayout(scaling(), true);
+            updateLayout();
         }
     };
 
-    public final ObjectProperty<Color> borderColorPy = new SimpleObjectProperty<>(Color.LIGHTBLUE);
-
-    public final BooleanProperty decorationEnabledPy = new SimpleBooleanProperty(true) {
+    private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0) {
         @Override
         protected void invalidated() {
-            doLayout(scaling(), true);
+            updateLayout();
         }
     };
 
-    private final BooleanProperty roundedCornersPy = new SimpleBooleanProperty(true) {
+    private final DoubleProperty unscaledCanvasWidthPy = new SimpleDoubleProperty(500) {
         @Override
         protected void invalidated() {
-            doLayout(scaling(), true);
+            updateLayout();
         }
     };
 
-    public final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0) {
+    private final DoubleProperty unscaledCanvasHeightPy = new SimpleDoubleProperty(400) {
         @Override
         protected void invalidated() {
-            doLayout(scaling(), true);
-        }
-    };
-
-    public final DoubleProperty unscaledCanvasWidthPy = new SimpleDoubleProperty(500) {
-        @Override
-        protected void invalidated() {
-            doLayout(scaling(), true);
-        }
-    };
-
-    public final DoubleProperty unscaledCanvasHeightPy = new SimpleDoubleProperty(400) {
-        @Override
-        protected void invalidated() {
-            doLayout(scaling(), true);
+            updateLayout();
         }
     };
 
     private final Canvas canvas;
+
     private double minScaling = 1.0;
 
-    public TooFancyCanvasContainer(Canvas canvas) {
+    public CrudeCanvasContainer(Canvas canvas) {
         this.canvas = requireNonNull(canvas);
+        canvas.widthProperty() .bind(scalingPy.multiply(unscaledCanvasWidthPy));
+        canvas.heightProperty().bind(scalingPy.multiply(unscaledCanvasHeightPy));
         setCenter(canvas);
-        canvas.widthProperty().bind(unscaledCanvasWidthPy.multiply(scalingPy));
-        canvas.heightProperty().bind(unscaledCanvasHeightPy.multiply(scalingPy));
 
         clipProperty().bind(Bindings.createObjectBinding(() -> {
-            if (!isDecorationEnabled()) {
+            if (!hasRoundedBorder()) {
                 return null;
             }
             Dimension2D size = computeSize();
-            var clipNode = new Rectangle(size.getWidth(), size.getHeight());
-            if (roundedCornersPy.get()) {
+            var clipRect = new Rectangle(size.getWidth(), size.getHeight());
+            if (hasRoundedBorder()) {
                 double arcSize = 26 * scaling(); // TODO avoid magic numbers
-                clipNode.setArcWidth(arcSize);
-                clipNode.setArcHeight(arcSize);
+                clipRect.setArcWidth(arcSize);
+                clipRect.setArcHeight(arcSize);
             }
-            return clipNode;
-        }, decorationEnabledPy, roundedCornersPy, scalingPy, unscaledCanvasWidthPy, unscaledCanvasHeightPy));
+            return clipRect;
+        }, roundedBorderPy, scalingPy, unscaledCanvasWidthPy, unscaledCanvasHeightPy));
 
         borderProperty().bind(Bindings.createObjectBinding(() -> {
-            if (!isDecorationEnabled() || !isBorderVisible()) {
+            if (!hasRoundedBorder() || !isBorderVisible()) {
                 return null;
             }
             double bw = Math.max(5, Math.ceil(computeSize().getHeight() / 55)); // TODO avoid magic numbers
-            CornerRadii cr = hasRoundedCorners() ? new CornerRadii(Math.ceil(10 * scaling())) : null;
+            CornerRadii cr = hasRoundedBorder() ? new CornerRadii(Math.ceil(10 * scaling())) : null;
             return new Border(new BorderStroke(borderColor(), BorderStrokeStyle.SOLID, cr, new BorderWidths(bw)));
-        }, decorationEnabledPy, borderVisiblePy, roundedCornersPy, scalingPy, unscaledCanvasWidthPy, unscaledCanvasHeightPy));
+        }, roundedBorderPy, borderVisiblePy, scalingPy, unscaledCanvasWidthPy, unscaledCanvasHeightPy));
     }
+
+    private void updateLayout() { doLayout(scaling(), true); }
 
     private void doLayout(double newScaling, boolean forced) {
         if (newScaling < minScaling) {
@@ -111,7 +105,7 @@ public class TooFancyCanvasContainer extends BorderPane {
         }
         double width = canvas().getWidth();
         double height = canvas().getHeight();
-        if (isDecorationEnabled()) {
+        if (hasRoundedBorder()) {
             Dimension2D size = computeSize();
             width = size.getWidth();
             height = size.getHeight();
@@ -126,10 +120,6 @@ public class TooFancyCanvasContainer extends BorderPane {
             canvas.getWidth(), canvas.getHeight(), canvas.getWidth() / canvas.getHeight(), scaling());
     }
 
-    public Canvas canvas() {
-        return canvas;
-    }
-
     private Dimension2D computeSize() {
         return new Dimension2D(
             Math.round((unscaledCanvasWidth()  + 25) * scaling()), // TODO avoid magic numbers
@@ -137,40 +127,16 @@ public class TooFancyCanvasContainer extends BorderPane {
         );
     }
 
-    public double scaling() {
-        return scalingPy.get();
-    }
-
-    public void setScaling(double scaling) {
-        scalingPy.set(scaling);
-    }
-
-    public void setMinScaling(double value) {
-        minScaling = value;
-    }
-
-    public double unscaledCanvasWidth() {
-        return unscaledCanvasWidthPy.get();
-    }
-
-    public void setUnscaledCanvasWidth(double w) {
-        unscaledCanvasWidthPy.set(w);
-    }
-
-    public double unscaledCanvasHeight() {
-        return unscaledCanvasHeightPy.get();
-    }
-
-    public void setUnscaledCanvasHeight(double h) {
-        unscaledCanvasHeightPy.set(h);
+    public Canvas canvas() {
+        return canvas;
     }
 
     public void resizeTo(double width, double height) {
-        if (isDecorationEnabled()) {
+        if (hasRoundedBorder()) {
             double downScaledWidth = width, downScaledHeight = height;
             if (isBorderVisible()) {
-                downScaledWidth = DOWNSCALING_IF_BORDER.x() * width;
-                downScaledHeight = DOWNSCALING_IF_BORDER.y() * height;
+                downScaledWidth = DOWNSCALING_WHEN_BORDER_VISIBLE.x() * width;
+                downScaledHeight = DOWNSCALING_WHEN_BORDER_VISIBLE.y() * height;
             }
             double scaling = downScaledHeight / unscaledCanvasHeight();
             if (scaling * unscaledCanvasWidth() > downScaledWidth) {
@@ -183,35 +149,48 @@ public class TooFancyCanvasContainer extends BorderPane {
         Logger.debug("Game canvas container resized to width={} height={}", getWidth(), getHeight());
     }
 
-    public boolean isDecorationEnabled() {
-        return decorationEnabledPy.get();
+    public DoubleProperty scalingProperty() { return scalingPy; }
+    public double scaling() {
+        return scalingPy.get();
+    }
+    public void setScaling(double scaling) {
+        scalingPy.set(scaling);
     }
 
-    public void setEnabled(boolean enabled) {
-        decorationEnabledPy.set(enabled);
+    public void setMinScaling(double value) {
+        minScaling = value;
     }
 
-    public Color borderColor() {
+    public double          unscaledCanvasWidth() {
+        return unscaledCanvasWidthPy.get();
+    }
+    public double          unscaledCanvasHeight() {
+        return unscaledCanvasHeightPy.get();
+    }
+    public void setUnscaledCanvasSize(double width, double height) {
+        unscaledCanvasWidthPy.set(width);
+        unscaledCanvasHeightPy.set(height);
+    }
+
+    public BooleanProperty roundedBorderProperty() { return roundedBorderPy; }
+    public boolean         hasRoundedBorder() {
+        return roundedBorderPy.get();
+    }
+    public void            setRoundedBorder(boolean enabled) {
+        roundedBorderPy.set(enabled);
+    }
+
+    public Color           borderColor() {
         return borderColorPy.get();
     }
-
-    public void setBorderColor(Color color) {
+    public void            setBorderColor(Color color) {
         borderColorPy.set(color);
     }
 
-    public boolean isBorderVisible() {
+    public boolean         isBorderVisible() {
         return borderVisiblePy.get();
     }
-
-    public void setBorderVisible(boolean visible) {
+    public void            setBorderVisible(boolean visible) {
         borderVisiblePy.set(visible);
-    }
-
-    public boolean hasRoundedCorners() {
-        return roundedCornersPy.get();
-    }
-
-    public void setRoundedCorers(boolean rounded) {
-        roundedCornersPy.set(rounded);
     }
 }
