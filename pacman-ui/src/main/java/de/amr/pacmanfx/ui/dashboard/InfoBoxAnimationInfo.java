@@ -24,24 +24,28 @@ import java.util.function.Predicate;
 
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
 
-public class InfoBoxPlayScene3DAnimations extends InfoBox {
+public class InfoBoxAnimationInfo extends InfoBox {
 
     private static final float REFRESH_TIME_SEC = 0.5f;
 
     public static class AnimationData {
         private final StringProperty idPy;
+        private final ObjectProperty<Animation> animationPy;
         private final StringProperty animationStatusPy;
 
         AnimationData(String id, Animation animation) {
-            String idPrefix = id.substring(0, id.indexOf("#") + 7);
+            String idPrefix = id.substring(0, id.indexOf("#") + 4);
             idPy = new SimpleStringProperty(idPrefix);
+            animationPy = new SimpleObjectProperty<>(animation);
             animationStatusPy = new SimpleStringProperty(animation.getStatus().name());
         }
 
         public StringProperty idPy() {
             return idPy;
         }
-
+        public ObjectProperty<Animation> animationProperty() {
+            return animationPy;
+        }
         public StringProperty animationStatusProperty() {
             return animationStatusPy;
         }
@@ -51,12 +55,12 @@ public class InfoBoxPlayScene3DAnimations extends InfoBox {
     private final ObservableList<AnimationData> animationDataRows = FXCollections.observableArrayList();
     private final Timeline refreshTimer;
 
-    public InfoBoxPlayScene3DAnimations() {
-        TableView<AnimationData> table = new TableView<>();
-        table.setItems(animationDataRows);
-        table.setPrefWidth(300);
-        table.setPrefHeight(400);
-        table.setPlaceholder(new Text("No animations"));
+    public InfoBoxAnimationInfo() {
+        TableView<AnimationData> tableView = new TableView<>();
+        tableView.setItems(animationDataRows);
+        tableView.setPrefWidth(300);
+        tableView.setPrefHeight(600);
+        tableView.setPlaceholder(new Text("No animations"));
 
         TableColumn<AnimationData, String> idColumn = new TableColumn<>("Animation ID");
         idColumn.setCellValueFactory(data -> data.getValue().idPy());
@@ -66,10 +70,10 @@ public class InfoBoxPlayScene3DAnimations extends InfoBox {
         statusColumn.setCellValueFactory(data -> data.getValue().animationStatusProperty());
         statusColumn.setSortable(false);
 
-        table.getColumns().add(idColumn);
-        table.getColumns().add(statusColumn);
+        tableView.getColumns().add(idColumn);
+        tableView.getColumns().add(statusColumn);
 
-        addRow(table);
+        addRow(tableView);
 
         refreshTimer = new Timeline(new KeyFrame(Duration.seconds(REFRESH_TIME_SEC), e -> reloadData()));
         refreshTimer.setCycleCount(Animation.INDEFINITE);

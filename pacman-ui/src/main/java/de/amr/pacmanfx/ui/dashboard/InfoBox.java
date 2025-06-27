@@ -42,6 +42,7 @@ public abstract class InfoBox extends TitledPane {
         return String.format("-fx-font: %.0fpx \"%s\";", font.getSize(), font.getFamily());
     }
 
+    protected Dashboard dashboard;
     protected final List<InfoText> infoTexts = new ArrayList<>();
     protected final GridPane grid = new GridPane();
     protected int minLabelWidth;
@@ -49,15 +50,45 @@ public abstract class InfoBox extends TitledPane {
     protected Font textFont;
     protected Font labelFont;
     protected int rowIndex;
+    protected boolean showMaximized;
 
     public InfoBox() {
         grid.setVgap(2);
         grid.setHgap(3);
         setContent(grid);
-
         setExpanded(false);
         setFocusTraversable(false);
         setOpacity(0.9);
+        setShowMaximized(false);
+
+        expandedProperty().addListener((py,ov,expanded) -> {
+            if (expanded && showMaximized) {
+                dashboard.infoBoxes()
+                        .filter(infoBox -> infoBox != this)
+                        .forEach(infoBox -> infoBox.setVisible(false));
+                dashboard.showOnlyVisibleInfoBoxes(true);
+            }
+            if (!expanded && showMaximized) {
+                dashboard.infoBoxes().forEach(infoBox -> infoBox.setVisible(true));
+                dashboard.showOnlyVisibleInfoBoxes(false);
+            }
+        });
+    }
+
+    public void setDashboard(Dashboard dashboard) {
+        this.dashboard = dashboard;
+    }
+
+    public Dashboard dashboard() {
+        return dashboard;
+    }
+
+    public void setShowMaximized(boolean showMaximized) {
+        this.showMaximized = showMaximized;
+    }
+
+    public boolean showMaximized() {
+        return showMaximized;
     }
 
     public void init() {}

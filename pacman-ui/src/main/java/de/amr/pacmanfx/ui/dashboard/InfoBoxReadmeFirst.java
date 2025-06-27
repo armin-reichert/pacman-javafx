@@ -13,14 +13,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.ui.PacManGames.theAssets;
 
 public class InfoBoxReadmeFirst extends InfoBox {
-
-    private boolean read;
-    private Runnable actionIfRead = () -> { Logger.info("README text has been read!"); };
 
     @Override
     public void init() {
@@ -41,20 +37,11 @@ public class InfoBoxReadmeFirst extends InfoBox {
         var btnGotIt = new Button(theAssets().text("infobox.readme.got_it"));
         buttonPane.getChildren().add(btnGotIt);
         btnGotIt.setOnAction(e -> {
-            read = true;
-            actionIfRead.run();
+            dashboard.removeInfoBox(DashboardID.README);
         });
 
         pane.setCenter(readmeText);
         pane.setBottom(buttonPane);
         addRow(pane);
-    }
-
-    public void setActionIfRead(Runnable actionIfRead) {
-        this.actionIfRead = actionIfRead;
-    }
-
-    public boolean isRead() {
-        return read;
     }
 }
