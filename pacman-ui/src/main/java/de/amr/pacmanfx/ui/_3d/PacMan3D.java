@@ -19,6 +19,58 @@ import static de.amr.pacmanfx.uilib.Ufx.now;
 
 public class PacMan3D extends PacBase3D {
 
+    private class HeadBangingAnimation extends ManagedAnimation {
+        private static final float POWER_AMPLIFICATION = 2;
+        private static final short BANG_ANGLE_FROM = -10;
+        private static final short BANG_ANGLE_TO = 15;
+        private static final Duration BANG_TIME = Duration.seconds(0.3);
+
+        public HeadBangingAnimation(AnimationManager animationManager) {
+            super(animationManager, "Pac_Man_Movement");
+        }
+
+        @Override
+        protected Animation createAnimation() {
+            var rotateTransition = new RotateTransition(BANG_TIME, root);
+            rotateTransition.setAxis(Rotate.X_AXIS);
+            rotateTransition.setCycleCount(Animation.INDEFINITE);
+            rotateTransition.setAutoReverse(true);
+            rotateTransition.setInterpolator(Interpolator.EASE_BOTH);
+            return rotateTransition;
+        }
+
+        @Override
+        public void stop() {
+            super.stop();
+            var rotateTransition = (RotateTransition) animation;
+            root.setRotationAxis(rotateTransition.getAxis());
+            root.setRotate(0);
+        }
+
+        public void update() {
+            var rotateTransition = (RotateTransition) getOrCreateAnimation();
+            if (pac.isStandingStill()) {
+                stop();
+            } else {
+                Point3D axis = pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
+                if (!axis.equals(rotateTransition.getAxis())) {
+                    stop();
+                    rotateTransition.setAxis(axis);
+                }
+                play(CONTINUE);
+            }
+        }
+
+        public void setPowerMode(boolean power) {
+            float rate = power ? POWER_AMPLIFICATION : 1;
+            var rotateTransition = (RotateTransition) getOrCreateAnimation();
+            rotateTransition.stop();
+            rotateTransition.setFromAngle(BANG_ANGLE_FROM * rate);
+            rotateTransition.setToAngle(BANG_ANGLE_TO * rate);
+            rotateTransition.setRate(rate);
+        }
+    }
+
     public PacMan3D(AnimationManager animationManager, Pac pac, double size, AssetStorage assets, String ans) {
         super(animationManager, pac, size, assets, ans);
 
@@ -58,57 +110,18 @@ public class PacMan3D extends PacBase3D {
                 );
             }
         };
-    }
 
-    // Movement animation: Head banging
-
-    private static final float POWER_AMPLIFICATION = 2;
-    private static final short BANG_ANGLE_FROM = -10;
-    private static final short BANG_ANGLE_TO = 15;
-    private static final Duration BANG_TIME = Duration.seconds(0.3);
-
-    @Override
-    protected void createMovementAnimation() {
-        movementAnimation = new RotateTransition(BANG_TIME, root);
-        movementAnimation.setAxis(Rotate.X_AXIS);
-        movementAnimation.setCycleCount(Animation.INDEFINITE);
-        movementAnimation.setAutoReverse(true);
-        movementAnimation.setInterpolator(Interpolator.EASE_BOTH);
+        movementAnimation = new HeadBangingAnimation(animationManager);
         setMovementPowerMode(false);
     }
 
     @Override
     protected void updateMovementAnimation() {
-        if (pac.isStandingStill()) {
-            stopMovementAnimation();
-        } else {
-            Point3D axis = pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
-            if (!axis.equals(movementAnimation.getAxis())) {
-                movementAnimation.stop();
-                movementAnimation.setAxis(axis);
-            }
-            movementAnimation.play();
-        }
+        ((HeadBangingAnimation) movementAnimation).update();
     }
 
     @Override
-    protected void startMovementAnimation() {
-        movementAnimation.play();
-    }
-
-    @Override
-    protected void stopMovementAnimation() {
-        movementAnimation.stop();
-        movementAnimation.getNode().setRotationAxis(movementAnimation.getAxis());
-        movementAnimation.getNode().setRotate(0);
-    }
-
-    @Override
-    public void setMovementPowerMode(boolean on) {
-        float rate = on ? POWER_AMPLIFICATION : 1;
-        movementAnimation.stop();
-        movementAnimation.setFromAngle(BANG_ANGLE_FROM * rate);
-        movementAnimation.setToAngle(BANG_ANGLE_TO * rate);
-        movementAnimation.setRate(rate);
+    public void setMovementPowerMode(boolean power) {
+        ((HeadBangingAnimation) movementAnimation).setPowerMode(power);
     }
 }

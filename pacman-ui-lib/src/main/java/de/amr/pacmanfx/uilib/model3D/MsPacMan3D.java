@@ -17,6 +17,44 @@ import javafx.util.Duration;
 
 public class MsPacMan3D extends PacBase3D {
 
+    private class HipSwayingAnimation extends ManagedAnimation {
+        private static final short HIP_ANGLE_FROM = -20;
+        private static final short HIP_ANGLE_TO = 20;
+        private static final Duration SWING_TIME = Duration.seconds(0.4);
+
+        public HipSwayingAnimation(AnimationManager animationManager) {
+            super(animationManager, "MsPacMan_HipSwaying");
+        }
+
+        @Override
+        protected Animation createAnimation() {
+            var rotateTransition = new RotateTransition(SWING_TIME, root);
+            rotateTransition.setAxis(Rotate.Z_AXIS);
+            rotateTransition.setCycleCount(Animation.INDEFINITE);
+            rotateTransition.setAutoReverse(true);
+            rotateTransition.setInterpolator(Interpolator.EASE_BOTH);
+            return rotateTransition;
+        }
+
+        @Override
+        public void stop() {
+            var rotateTransition = (RotateTransition) getOrCreateAnimation();
+            super.stop();
+            root.setRotationAxis(rotateTransition.getAxis());
+            root.setRotate(0);
+        }
+
+        public void setPowerMode(boolean power) {
+            var rotateTransition = (RotateTransition) getOrCreateAnimation();
+            double amplification = power ? 1.5 : 1;
+            double rate = power ? 2 : 1;
+            rotateTransition.stop();
+            rotateTransition.setFromAngle(HIP_ANGLE_FROM * amplification);
+            rotateTransition.setToAngle(HIP_ANGLE_TO * amplification);
+            rotateTransition.setRate(rate);
+        }
+    }
+
     public MsPacMan3D(AnimationManager animationMgr, Pac pac, double size, AssetStorage assets, String ans) {
         super(animationMgr, pac, size, assets, ans);
 
@@ -39,46 +77,16 @@ public class MsPacMan3D extends PacBase3D {
                 return spinning;
             }
         };
-    }
 
-    // Movement animation: Hip swaying
-
-    private static final short HIP_ANGLE_FROM = -20;
-    private static final short HIP_ANGLE_TO = 20;
-    private static final Duration SWING_TIME = Duration.seconds(0.4);
-
-    @Override
-    protected void createMovementAnimation() {
-        movementAnimation = new RotateTransition(SWING_TIME, root);
-        movementAnimation.setAxis(Rotate.Z_AXIS);
-        movementAnimation.setCycleCount(Animation.INDEFINITE);
-        movementAnimation.setAutoReverse(true);
-        movementAnimation.setInterpolator(Interpolator.EASE_BOTH);
+        movementAnimation = new HipSwayingAnimation(animationMgr);
         setMovementPowerMode(false);
-    }
-
-    @Override
-    protected void startMovementAnimation() {
-        movementAnimation.play();
-    }
-
-    @Override
-    protected void stopMovementAnimation() {
-        movementAnimation.stop();
-        movementAnimation.getNode().setRotationAxis(movementAnimation.getAxis());
-        movementAnimation.getNode().setRotate(0);
     }
 
     @Override
     protected void updateMovementAnimation() {}
 
     @Override
-    public void setMovementPowerMode(boolean on) {
-        double amplification = on ? 1.5 : 1;
-        double rate = on ? 2 : 1;
-        movementAnimation.stop();
-        movementAnimation.setFromAngle(HIP_ANGLE_FROM * amplification);
-        movementAnimation.setToAngle(HIP_ANGLE_TO * amplification);
-        movementAnimation.setRate(rate);
+    public void setMovementPowerMode(boolean power) {
+        ((HipSwayingAnimation) movementAnimation).setPowerMode(power);
     }
 }

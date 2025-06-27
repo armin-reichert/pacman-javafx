@@ -57,19 +57,16 @@ public abstract class PacBase3D {
     protected final double size;
 
     protected final AnimationManager animationManager;
+
     protected final Rotate moveRotation = new Rotate();
-    protected RotateTransition movementAnimation;
     protected Animation chewingAnimation;
 
+    protected ManagedAnimation movementAnimation;
     protected ManagedAnimation dyingAnimation;
 
     protected Node jaw;
 
     public abstract void setMovementPowerMode(boolean power);
-
-    protected abstract void createMovementAnimation();
-    protected abstract void startMovementAnimation();
-    protected abstract void stopMovementAnimation();
     protected abstract void updateMovementAnimation();
 
     protected PacBase3D(AnimationManager animationManager, Pac pac, double size, AssetStorage assets, String ans) {
@@ -93,7 +90,6 @@ public abstract class PacBase3D {
         root.setTranslateZ(-0.5 * size);
         root.getTransforms().add(moveRotation);
 
-        createMovementAnimation();
         chewingAnimation = createChewingAnimation(jaw);
 
         light.translateXProperty().bind(root.translateXProperty());
@@ -114,6 +110,9 @@ public abstract class PacBase3D {
     }
 
     public void init() {
+        requireNonNull(movementAnimation);
+        requireNonNull(chewingAnimation);
+
         root.setVisible(pac.isVisible());
         root.setScaleX(1.0);
         root.setScaleY(1.0);
@@ -121,11 +120,14 @@ public abstract class PacBase3D {
 
         updatePosition();
         stopChewingAndOpenMouth();
-        stopMovementAnimation();
+        movementAnimation.stop();
         setMovementPowerMode(false);
     }
 
     public void update(GameLevel level) {
+        requireNonNull(movementAnimation);
+        requireNonNull(chewingAnimation);
+
         if (pac.isAlive()) {
             updatePosition();
             updateVisibility(level);
@@ -133,10 +135,10 @@ public abstract class PacBase3D {
             updateLight();
         }
         if (pac.isAlive() && !pac.isStandingStill()) {
-            startMovementAnimation();
+            movementAnimation.play(ManagedAnimation.CONTINUE);
             chewingAnimation.play();
         } else {
-            stopMovementAnimation();
+            movementAnimation.stop();
             stopChewingAndOpenMouth();
         }
     }
