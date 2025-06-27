@@ -163,7 +163,11 @@ public class MutatingGhost3D extends Group {
             ghost3D.stopDressAnimation();
         } else {
             stopNumberBoxAnimation();
-            ghost3D.playDressAnimation();
+            if (ghost.isVisible()) {
+                ghost3D.playDressAnimation();
+            } else {
+                ghost3D.stopDressAnimation();
+            }
             if (ghost.moveInfo().tunnelEntered) {
                 playBrakeAnimation();
             }

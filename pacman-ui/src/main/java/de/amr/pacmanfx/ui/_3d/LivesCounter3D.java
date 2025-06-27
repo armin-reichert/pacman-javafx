@@ -89,14 +89,6 @@ public class LivesCounter3D extends Group {
         return light;
     }
 
-    public void playLookingAroundAnimation() {
-        if (lookingAroundAnimation == null) {
-            lookingAroundAnimation = createPacShapesLookAroundAnimation();
-            animationManager.register("LivesCounter_LookingAround", lookingAroundAnimation);
-        }
-        lookingAroundAnimation.play();
-    }
-
     private Animation createPacShapesLookAroundAnimation() {
         var animation = new ParallelTransition();
         for (Node pacShape : pacShapes) {
@@ -111,6 +103,20 @@ public class LivesCounter3D extends Group {
         }
         setInitialShapeRotation();
         return animation;
+    }
+
+    public void playLookingAroundAnimation() {
+        if (lookingAroundAnimation == null) {
+            lookingAroundAnimation = createPacShapesLookAroundAnimation();
+            animationManager.register("LivesCounter_LookingAround", lookingAroundAnimation);
+        }
+        lookingAroundAnimation.play();
+    }
+
+    public void stopLookingAroundAnimation() {
+        if (lookingAroundAnimation != null) {
+            lookingAroundAnimation.stop();
+        }
     }
 
     private void setInitialShapeRotation() {

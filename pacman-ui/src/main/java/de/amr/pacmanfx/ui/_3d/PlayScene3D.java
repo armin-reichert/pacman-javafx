@@ -273,6 +273,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 theSound().stopAll();
                 // do one last update before dying animation starts
                 level3D.pac3D().update(theGameLevel());
+                level3D.livesCounter3D().stopLookingAroundAnimation();
                 level3D.ghosts3D().forEach(MutatingGhost3D::stopAllAnimations);
                 playPacDyingAnimation();
             }
@@ -302,12 +303,14 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             }
             case GAME_OVER -> {
                 theGameState().timer().restartSeconds(3);
-                level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
-                if (!theGameLevel().isDemoLevel() && randomInt(0, 100) < 25) {
+                boolean oneOutOf4Times = randomInt(0, 1000) < 250;
+                if (!theGameLevel().isDemoLevel() && oneOutOf4Times) {
                     theUI().showFlashMessageSec(3, theAssets().localizedGameOverMessage());
                 }
                 theSound().stopAll();
                 theSound().playGameOverSound();
+                level3D.energizers3D().forEach(energizer3D -> energizer3D.shape3D().setVisible(false));
+                level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
                 animationManager.stopAllAnimations();
             }
             case TESTING_LEVELS_SHORT, TESTING_LEVELS_MEDIUM -> {
