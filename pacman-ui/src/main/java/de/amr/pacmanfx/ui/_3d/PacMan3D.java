@@ -20,10 +20,11 @@ import static de.amr.pacmanfx.uilib.Ufx.now;
 public class PacMan3D extends PacBase3D {
 
     private class HeadBangingAnimation extends ManagedAnimation {
-        private static final float POWER_AMPLIFICATION = 2;
         private static final short BANG_ANGLE_FROM = -10;
         private static final short BANG_ANGLE_TO = 15;
         private static final Duration BANG_TIME = Duration.seconds(0.3);
+        private static final float POWER_ANGLE_AMPLIFICATION = 2;
+        private static final float POWER_RATE = 2;
 
         public HeadBangingAnimation(AnimationManager animationManager) {
             super(animationManager, "Pac_Man_Movement");
@@ -62,12 +63,15 @@ public class PacMan3D extends PacBase3D {
         }
 
         public void setPowerMode(boolean power) {
-            float rate = power ? POWER_AMPLIFICATION : 1;
             var rotateTransition = (RotateTransition) getOrCreateAnimation();
+            boolean running = rotateTransition.getStatus() == Animation.Status.RUNNING;
             rotateTransition.stop();
-            rotateTransition.setFromAngle(BANG_ANGLE_FROM * rate);
-            rotateTransition.setToAngle(BANG_ANGLE_TO * rate);
-            rotateTransition.setRate(rate);
+            rotateTransition.setFromAngle(BANG_ANGLE_FROM * POWER_ANGLE_AMPLIFICATION);
+            rotateTransition.setToAngle(BANG_ANGLE_TO * POWER_ANGLE_AMPLIFICATION);
+            rotateTransition.setRate(power ? POWER_RATE : 1);
+            if (running) {
+                rotateTransition.play();
+            }
         }
     }
 
@@ -116,7 +120,7 @@ public class PacMan3D extends PacBase3D {
     }
 
     @Override
-    protected void updateMovementAnimation() {
+    public void updateMovementAnimation() {
         ((HeadBangingAnimation) movementAnimation).update();
     }
 

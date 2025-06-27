@@ -21,6 +21,8 @@ public class MsPacMan3D extends PacBase3D {
         private static final short HIP_ANGLE_FROM = -20;
         private static final short HIP_ANGLE_TO = 20;
         private static final Duration SWING_TIME = Duration.seconds(0.4);
+        private static final float POWER_ANGLE_AMPLIFICATION = 1.5f;
+        private static final float POWER_RATE = 2;
 
         public HipSwayingAnimation(AnimationManager animationManager) {
             super(animationManager, "MsPacMan_HipSwaying");
@@ -46,12 +48,15 @@ public class MsPacMan3D extends PacBase3D {
 
         public void setPowerMode(boolean power) {
             var rotateTransition = (RotateTransition) getOrCreateAnimation();
-            double amplification = power ? 1.5 : 1;
-            double rate = power ? 2 : 1;
+            boolean running = rotateTransition.getStatus() == Animation.Status.RUNNING;
+            double amplification = power ? POWER_ANGLE_AMPLIFICATION : 1;
             rotateTransition.stop();
             rotateTransition.setFromAngle(HIP_ANGLE_FROM * amplification);
             rotateTransition.setToAngle(HIP_ANGLE_TO * amplification);
-            rotateTransition.setRate(rate);
+            rotateTransition.setRate(power ? POWER_RATE : 1);
+            if (running) {
+                rotateTransition.play();
+            }
         }
     }
 
@@ -83,7 +88,7 @@ public class MsPacMan3D extends PacBase3D {
     }
 
     @Override
-    protected void updateMovementAnimation() {}
+    public void updateMovementAnimation() {}
 
     @Override
     public void setMovementPowerMode(boolean power) {

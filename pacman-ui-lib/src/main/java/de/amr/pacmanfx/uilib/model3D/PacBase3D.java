@@ -28,7 +28,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Common base class for Pac-Man and Ms. Pac-Man 3D representations.
  */
-public abstract class PacBase3D {
+public class PacBase3D {
 
     protected final Pac pac;
     protected final PointLight light = new PointLight();
@@ -41,9 +41,6 @@ public abstract class PacBase3D {
     protected ManagedAnimation dyingAnimation;
 
     protected Node jaw;
-
-    public abstract void setMovementPowerMode(boolean power);
-    protected abstract void updateMovementAnimation();
 
     protected PacBase3D(AnimationManager animationManager, Pac pac, double size, AssetStorage assets, String ans) {
         requireNonNull(animationManager);
@@ -114,6 +111,10 @@ public abstract class PacBase3D {
     public ManagedAnimation dyingAnimation() {
         return dyingAnimation;
     }
+
+    public void setMovementPowerMode(boolean power) {}
+
+    public void updateMovementAnimation() {}
 
     public void init() {
         requireNonNull(movementAnimation);
