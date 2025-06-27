@@ -9,6 +9,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.model3D.Ghost3D;
 import javafx.animation.Interpolator;
@@ -153,20 +154,20 @@ public class MutatingGhost3D extends Group {
 
     public void stopAllAnimations() {
         stopBrakeAnimation();
-        ghost3D.stopDressAnimation();
-        ghost3D.stopFlashingAnimation();
+        ghost3D.dressAnimation().stop();
+        ghost3D.flashingAnimation().stop();
         stopNumberBoxAnimation();
     }
 
     private void updateAnimations() {
         if (appearance() == Appearance.VALUE) {
-            ghost3D.stopDressAnimation();
+            ghost3D.dressAnimation().stop();
         } else {
             stopNumberBoxAnimation();
             if (ghost.isVisible()) {
-                ghost3D.playDressAnimation();
+                ghost3D.dressAnimation().play(ManagedAnimation.CONTINUE);
             } else {
-                ghost3D.stopDressAnimation();
+                ghost3D.dressAnimation().stop();
             }
             if (ghost.moveInfo().tunnelEntered) {
                 playBrakeAnimation();

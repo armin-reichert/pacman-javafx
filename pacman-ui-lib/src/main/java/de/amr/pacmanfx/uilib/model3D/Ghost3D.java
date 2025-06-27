@@ -6,14 +6,13 @@ package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import javafx.animation.*;
-import javafx.animation.Animation.Status;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
@@ -41,9 +40,8 @@ public class Ghost3D {
     private final Shape3D dressShape;
     private final Group dressGroup;
 
-    private final AnimationManager animationManager;
-    private Animation dressAnimation;
-    private Animation flashingAnimation;
+    private final ManagedAnimation dressAnimation;
+    private final FlashingAnimation flashingAnimation;
 
     public Color normalDressColor()        { return assets.color(assetNamespace + ".ghost.%d.color.normal.dress".formatted(personality));  }
     public Color normalPupilsColor()       { return assets.color(assetNamespace + ".ghost.%d.color.normal.pupils".formatted(personality)); }
@@ -64,7 +62,7 @@ public class Ghost3D {
         Shape3D eyeballsShape,
         double size)
     {
-        this.animationManager = requireNonNull(animationManager);
+        requireNonNull(animationManager);
         this.assets = requireNonNull(assets);
         this.assetNamespace = requireNonNull(assetNamespace);
         this.personality = requireValidGhostPersonality(personality);
@@ -96,6 +94,66 @@ public class Ghost3D {
         Bounds bounds = root.getBoundsInLocal();
         Scale scale = new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
         root.getTransforms().add(scale);
+
+        dressAnimation = new ManagedAnimation(animationManager, "Ghost_DressMoving") {
+            @Override
+            protected Animation createAnimation() {
+                var animation = new RotateTransition(Duration.seconds(0.3), dressGroup);
+                // TODO I expected this should be the z-axis but... (transforms messed-up?)
+                animation.setAxis(Rotate.Y_AXIS);
+                animation.setByAngle(30);
+                animation.setCycleCount(Animation.INDEFINITE);
+                animation.setAutoReverse(true);
+                return animation;
+            }
+        };
+
+        flashingAnimation = new FlashingAnimation(animationManager);
+    }
+
+    public class FlashingAnimation extends ManagedAnimation {
+
+        private Duration totalDuration = Duration.seconds(3);
+        private int numFlashes = 5;
+
+        public FlashingAnimation(AnimationManager animationManager) {
+            super(animationManager, "Ghost_Flashing");
+        }
+
+        public void setTotalDuration(Duration totalDuration) {
+            this.totalDuration = totalDuration;
+            animation = null; // trigger creation
+        }
+
+        public void setNumFlashes(int numFlashed) {
+            this.numFlashes = numFlashed;
+            animation = null; // trigger creation
+        }
+
+        @Override
+        protected Animation createAnimation() {
+            Duration flashEndTime = totalDuration.divide(numFlashes), highlightTime = flashEndTime.divide(3);
+            var flashingTimeline = new Timeline(
+                new KeyFrame(highlightTime,
+                    new KeyValue(dressColorPy,  flashingDressColor()),
+                    new KeyValue(pupilsColorPy, flashingPupilsColor())
+                ),
+                new KeyFrame(flashEndTime,
+                    new KeyValue(dressColorPy,  frightenedDressColor()),
+                    new KeyValue(pupilsColorPy, frightenedPupilsColor())
+                )
+            );
+            flashingTimeline.setCycleCount(numFlashes);
+            return flashingTimeline;
+        }
+    }
+
+    public ManagedAnimation dressAnimation() {
+        return dressAnimation;
+    }
+
+    public FlashingAnimation flashingAnimation() {
+        return flashingAnimation;
     }
 
     public Group root() {
@@ -112,13 +170,15 @@ public class Ghost3D {
         if (numFlashes == 0) {
             setFrightenedAppearance();
         } else {
-            // Note: Total flashing time must be shorter than Pac power fading time (2s)!
-            playFlashingAnimation(numFlashes, Duration.millis(1966));
+            flashingAnimation.setNumFlashes(numFlashes);
+            // TODO (fixme): Total flashing time must be shorter than Pac power fading time (2s)!
+            flashingAnimation.setTotalDuration(Duration.millis(1950));
+            flashingAnimation.play(ManagedAnimation.FROM_START);
         }
     }
 
     public void setFrightenedAppearance() {
-        stopFlashingAnimation();;
+        flashingAnimation.stop();
         dressColorPy.set(frightenedDressColor());
         eyeballsColorPy.set(frightenedEyeballsColor());
         pupilsColorPy.set(frightenedPupilsColor());
@@ -126,7 +186,7 @@ public class Ghost3D {
     }
 
     public void setNormalAppearance() {
-        stopFlashingAnimation();
+        flashingAnimation.stop();
         dressColorPy.set(normalDressColor());
         eyeballsColorPy.set(normalEyeballsColor());
         pupilsColorPy.set(normalPupilsColor());
@@ -134,67 +194,9 @@ public class Ghost3D {
     }
 
     public void setEyesOnlyAppearance() {
-        stopFlashingAnimation();
+        flashingAnimation.stop();
         eyeballsColorPy.set(normalEyeballsColor());
         pupilsColorPy.set(normalPupilsColor());
         dressShape.setVisible(false);
-    }
-
-    // Dress animation
-
-    private RotateTransition createDressAnimation() {
-        var animation = new RotateTransition(Duration.seconds(0.3), dressGroup);
-        // TODO I expected this should be the z-axis but... (transforms messed-up?)
-        animation.setAxis(Rotate.Y_AXIS);
-        animation.setByAngle(30);
-        animation.setCycleCount(Animation.INDEFINITE);
-        animation.setAutoReverse(true);
-        return animation;
-    }
-
-    public void playDressAnimation() {
-        if (dressAnimation == null) {
-            dressAnimation = createDressAnimation();
-            animationManager.register("Ghost_DressMoving", dressAnimation);
-        }
-        dressAnimation.play();
-    }
-
-    public void stopDressAnimation() {
-        if (dressAnimation != null) {
-            dressAnimation.stop();
-        }
-    }
-
-    // Flashing animation
-
-    private Animation createFlashingAnimation(int numFlashes, Duration totalDuration) {
-        Duration flashEndTime = totalDuration.divide(numFlashes), highlightTime = flashEndTime.divide(3);
-        var flashingTimeline = new Timeline(
-            new KeyFrame(highlightTime,
-                new KeyValue(dressColorPy,  flashingDressColor()),
-                new KeyValue(pupilsColorPy, flashingPupilsColor())
-            ),
-            new KeyFrame(flashEndTime,
-                new KeyValue(dressColorPy,  frightenedDressColor()),
-                new KeyValue(pupilsColorPy, frightenedPupilsColor())
-            )
-        );
-        flashingTimeline.setCycleCount(numFlashes);
-        return flashingTimeline;
-    }
-
-    private void playFlashingAnimation(int numFlashes, Duration duration) {
-        if (flashingAnimation == null) {
-            flashingAnimation = createFlashingAnimation(numFlashes, duration);
-            animationManager.register("Ghost_Flashing", flashingAnimation);
-        }
-        flashingAnimation.playFromStart();
-    }
-
-    public void stopFlashingAnimation() {
-        if (flashingAnimation != null) {
-            flashingAnimation.stop();
-        }
     }
 }

@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
@@ -42,11 +43,10 @@ public class LivesCounter3D extends Group {
     private final Node[] pacShapes;
     private final PointLight light = new PointLight();
 
-    private final AnimationManager animationManager;
-    private Animation lookingAroundAnimation;
+    private final ManagedAnimation lookingAroundAnimation;
 
     public LivesCounter3D(AnimationManager animationManager, Node[] pacShapes) {
-        this.animationManager = requireNonNull(animationManager);
+        requireNonNull(animationManager);
         this.pacShapes = pacShapes;
 
         pillarMaterialPy.bind(pillarColorPy.map(Ufx::coloredPhongMaterial));
@@ -75,6 +75,29 @@ public class LivesCounter3D extends Group {
         }
         setInitialShapeRotation();
         getChildren().addAll(standsGroup, light);
+
+        lookingAroundAnimation = new ManagedAnimation(animationManager, "LivesCounter_LookingAround") {
+            @Override
+            protected Animation createAnimation() {
+                var animation = new ParallelTransition();
+                for (Node pacShape : pacShapes) {
+                    var rotation = new RotateTransition(Duration.seconds(10.0), pacShape);
+                    rotation.setAxis(Rotate.Z_AXIS);
+                    rotation.setFromAngle(240);
+                    rotation.setToAngle(300);
+                    rotation.setInterpolator(Interpolator.LINEAR);
+                    rotation.setCycleCount(Animation.INDEFINITE);
+                    rotation.setAutoReverse(true);
+                    animation.getChildren().add(rotation);
+                }
+                setInitialShapeRotation();
+                return animation;
+            }
+        };
+    }
+
+    public ManagedAnimation lookingAroundAnimation() {
+        return lookingAroundAnimation;
     }
 
     public ObjectProperty<DrawMode> drawModeProperty() { return drawModePy; }
@@ -87,36 +110,6 @@ public class LivesCounter3D extends Group {
 
     public PointLight light() {
         return light;
-    }
-
-    private Animation createPacShapesLookAroundAnimation() {
-        var animation = new ParallelTransition();
-        for (Node pacShape : pacShapes) {
-            var rotation = new RotateTransition(Duration.seconds(10.0), pacShape);
-            rotation.setAxis(Rotate.Z_AXIS);
-            rotation.setFromAngle(240);
-            rotation.setToAngle(300);
-            rotation.setInterpolator(Interpolator.LINEAR);
-            rotation.setCycleCount(Animation.INDEFINITE);
-            rotation.setAutoReverse(true);
-            animation.getChildren().add(rotation);
-        }
-        setInitialShapeRotation();
-        return animation;
-    }
-
-    public void playLookingAroundAnimation() {
-        if (lookingAroundAnimation == null) {
-            lookingAroundAnimation = createPacShapesLookAroundAnimation();
-            animationManager.register("LivesCounter_LookingAround", lookingAroundAnimation);
-        }
-        lookingAroundAnimation.play();
-    }
-
-    public void stopLookingAroundAnimation() {
-        if (lookingAroundAnimation != null) {
-            lookingAroundAnimation.stop();
-        }
     }
 
     private void setInitialShapeRotation() {

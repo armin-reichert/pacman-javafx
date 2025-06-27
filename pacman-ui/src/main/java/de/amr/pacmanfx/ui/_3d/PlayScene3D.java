@@ -18,6 +18,7 @@ import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.uilib.CameraControlledView;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.beans.property.DoubleProperty;
@@ -266,14 +267,14 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 level3D.pac3D().init();
                 level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(theGameLevel()));
                 level3D.energizers3D().forEach(Energizer3D::startPumpingAnimation);
-                level3D.livesCounter3D().playLookingAroundAnimation();
+                level3D.livesCounter3D().lookingAroundAnimation().play(ManagedAnimation.CONTINUE);
             }
             case PACMAN_DYING -> {
                 theGameState().timer().resetIndefiniteTime(); // expires when animation ends
                 theSound().stopAll();
                 // do one last update before dying animation starts
                 level3D.pac3D().update(theGameLevel());
-                level3D.livesCounter3D().stopLookingAroundAnimation();
+                level3D.livesCounter3D().lookingAroundAnimation().stop();
                 level3D.ghosts3D().forEach(MutatingGhost3D::stopAllAnimations);
                 playPacDyingAnimation();
             }
@@ -337,7 +338,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             }
             case TESTING_LEVELS_SHORT, TESTING_LEVELS_MEDIUM -> {
                 replaceGameLevel3D();
-                level3D.livesCounter3D().playLookingAroundAnimation();
+                level3D.livesCounter3D().lookingAroundAnimation().play(ManagedAnimation.FROM_START);
                 level3D.energizers3D().forEach(Energizer3D::startPumpingAnimation);
                 showLevelTestMessage(theGameLevel().number());
             }
@@ -370,7 +371,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             if (theGameLevel().pac().powerTimer().isRunning()) {
                 theSound().playPacPowerSound();
             }
-            level3D.livesCounter3D().playLookingAroundAnimation();
+            level3D.livesCounter3D().lookingAroundAnimation().play(ManagedAnimation.FROM_START);
         }
 
         subScene3D.setFill(Color.TRANSPARENT);
