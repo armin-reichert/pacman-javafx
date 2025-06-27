@@ -37,7 +37,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.ui.PacManGames.*;
+import static de.amr.pacmanfx.ui.PacManGames.theAssets;
+import static de.amr.pacmanfx.ui.PacManGames.theKeyboard;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -54,7 +55,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     static final DirectoryWatchdog  WATCHDOG = new DirectoryWatchdog(CUSTOM_MAP_DIR);
 
     // the single instance
-    static PacManGames_UI_Impl SINGLE_INSTANCE;
+    static PacManGames_UI_Impl THE_ONE;
 
     public static class Builder {
 
@@ -133,17 +134,18 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
         public PacManGames_UI build() {
             validate();
-            SINGLE_INSTANCE = new PacManGames_UI_Impl(stage, width, height);
-            SINGLE_INSTANCE.configure(uiConfigClasses);
+            final var ui = new PacManGames_UI_Impl(stage, width, height);
+            ui.configure(uiConfigClasses);
             models.forEach((variant, model) -> theGameController().registerGame(variant, model));
             theGameController().setEventsEnabled(true);
-            SINGLE_INSTANCE.gameView().dashboard().configure(dashboardIDs);
-            for (StartPage startPage : startPages) SINGLE_INSTANCE.startPagesView().addStartPage(startPage);
-            SINGLE_INSTANCE.startPagesView().selectStartPage(selectedStartPageIndex);
-            SINGLE_INSTANCE.startPagesView().currentStartPage()
+            ui.gameView().dashboard().configure(dashboardIDs);
+            for (StartPage startPage : startPages) ui.startPagesView().addStartPage(startPage);
+            ui.startPagesView().selectStartPage(selectedStartPageIndex);
+            ui.startPagesView().currentStartPage()
                 .map(StartPage::currentGameVariant)
                 .ifPresent(theGameController()::selectGameVariant);
-            return SINGLE_INSTANCE;
+            THE_ONE = ui;
+            return THE_ONE;
         }
 
         private void validate() {
@@ -416,6 +418,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     public void show() {
         currentViewPy.set(startPagesView);
         startPagesView.currentStartPage().ifPresent(startPage -> startPage.layoutRoot().requestFocus());
+        gameView.dashboard().init();
         stage.centerOnScreen();
         stage.show();
         WATCHDOG.startWatching();

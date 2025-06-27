@@ -33,8 +33,6 @@ import static de.amr.pacmanfx.ui.PacManGames.theUI;
 
 /**
  * Base class for area displaying UI info/editors.
- *
- * @author Armin Reichert
  */
 public abstract class InfoBox extends TitledPane {
 

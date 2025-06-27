@@ -35,6 +35,10 @@ public class Dashboard extends VBox {
         });
     }
 
+    public void init() {
+        infoBoxes().forEach(InfoBox::init);
+    }
+
     public void toggleVisibility() {
         setVisible(!isVisible());
     }
@@ -107,7 +111,6 @@ public class Dashboard extends VBox {
         infoBox.setTextColor(INFO_BOX_TEXT_COLOR);
         infoBox.setContentTextFont(INFO_BOX_FONT);
         infoBox.setLabelFont(INFO_BOX_FONT);
-        infoBox.init();
         return infoBox;
     }
 }

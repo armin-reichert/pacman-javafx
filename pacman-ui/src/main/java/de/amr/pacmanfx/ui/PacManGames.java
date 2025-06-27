@@ -16,6 +16,6 @@ public interface PacManGames {
     static Joypad             theJoypad()   { return PacManGames_UI_Impl.JOYPAD; }
     static Keyboard           theKeyboard() { return PacManGames_UI_Impl.KEYBOARD; }
     static PacManGames_Sound  theSound()    { return PacManGames_UI_Impl.SOUND_MANAGER; }
-    static PacManGames_UI     theUI()       { return PacManGames_UI_Impl.SINGLE_INSTANCE; }
+    static PacManGames_UI     theUI()       { return PacManGames_UI_Impl.THE_ONE; }
     static DirectoryWatchdog  theWatchdog() { return PacManGames_UI_Impl.WATCHDOG; }
 }
