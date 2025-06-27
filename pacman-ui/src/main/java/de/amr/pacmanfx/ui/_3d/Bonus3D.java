@@ -10,6 +10,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.MovingBonus;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -40,14 +41,50 @@ public class Bonus3D extends Box {
     private final PhongMaterial symbolImageTexture;
     private final PhongMaterial pointsImageTexture;
 
-    private final AnimationManager animationManager;
-    private RotateTransition eatenAnimation;
-    private RotateTransition edibleAnimation;
+    private final ManagedAnimation eatenAnimation;
+    private final EdibleAnimation edibleAnimation;
+
+    private class EdibleAnimation extends ManagedAnimation {
+
+        public EdibleAnimation(AnimationManager animationManager) {
+            super(animationManager, "Bonus_Edible");
+        }
+
+        @Override
+        protected Animation createAnimation() {
+            var animation = new RotateTransition(Duration.seconds(1), Bonus3D.this);
+            animation.setAxis(Rotate.X_AXIS);
+            animation.setFromAngle(0);
+            animation.setToAngle(360);
+            animation.setInterpolator(Interpolator.LINEAR);
+            animation.setCycleCount(Animation.INDEFINITE);
+            return animation;
+        }
+
+        public void update(GameLevel level) {
+            if (animation != null && animation.getStatus() == Animation.Status.RUNNING
+                && bonus instanceof MovingBonus movingBonus)
+            {
+                RotateTransition rotateTransition = (RotateTransition) animation;
+                Vector2f center = bonus.actor().center();
+                boolean outsideWorld = center.x() < HTS || center.x() > level.worldMap().numCols() * TS - HTS;
+                setVisible(bonus.state() == Bonus.STATE_EDIBLE && !outsideWorld);
+                Direction moveDir = movingBonus.actor().moveDir();
+                Point3D axis = moveDir.isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
+                rotateTransition.setRate(moveDir == Direction.DOWN || moveDir == Direction.LEFT ? 1 : -1);
+                if (!rotateTransition.getAxis().equals(axis)) {
+                    rotateTransition.stop();
+                    rotateTransition.setAxis(axis);
+                    rotateTransition.play(); // continue from stopped rotation value
+                }
+            }
+        }
+    }
 
     public Bonus3D(AnimationManager animationManager, Bonus bonus, Image symbolImage, Image pointsImage) {
         super(BONUS_3D_SYMBOL_WIDTH, TS, TS);
 
-        this.animationManager = requireNonNull(animationManager);
+        requireNonNull(animationManager);
         this.bonus = requireNonNull(bonus);
 
         var symbolImageView = new ImageView(requireNonNull(symbolImage));
@@ -59,6 +96,21 @@ public class Bonus3D extends Box {
         pointsImageView.setPreserveRatio(true);
         pointsImageView.setFitWidth(BONUS_3D_POINTS_WIDTH);
         pointsImageTexture = new PhongMaterial(Color.GHOSTWHITE, pointsImageView.getImage(), null, null, null);
+
+        edibleAnimation = new EdibleAnimation(animationManager);
+
+        eatenAnimation = new ManagedAnimation(animationManager, "Bonus_Eaten") {
+            @Override
+            protected Animation createAnimation() {
+                var animation = new RotateTransition(Duration.seconds(1), Bonus3D.this);
+                animation.setAxis(Rotate.X_AXIS);
+                animation.setByAngle(360);
+                animation.setInterpolator(Interpolator.LINEAR);
+                animation.setRate(2);
+                animation.setCycleCount(2);
+                return animation;
+            }
+        };
     }
 
     public void update() {
@@ -66,100 +118,29 @@ public class Bonus3D extends Box {
         setTranslateX(center.x());
         setTranslateY(center.y());
         setTranslateZ(-HTS);
-        optGameLevel().ifPresent(this::updateEdibleAnimation);
+        optGameLevel().ifPresent(edibleAnimation::update);
     }
 
     public void showEdible() {
         setVisible(true);
         setWidth(BONUS_3D_SYMBOL_WIDTH);
         setMaterial(symbolImageTexture);
-        playEdibleAnimation();
-    }
-
-    public void expire() {
-        stopEdibleAnimation();
-        stopEatenAnimation();
-        setVisible(false);
+        edibleAnimation.play(ManagedAnimation.FROM_START);
     }
 
     public void showEaten() {
-        stopEdibleAnimation();
         setVisible(true);
         setWidth(BONUS_3D_POINTS_WIDTH);
         setMaterial(pointsImageTexture);
         setRotationAxis(Rotate.X_AXIS);
         setRotate(0);
-        playEatenAnimation();
+        edibleAnimation.stop();
+        eatenAnimation.play(ManagedAnimation.FROM_START);
     }
 
-    // Edible animation
-
-    private RotateTransition createEdibleAnimation() {
-        var animation = new RotateTransition(Duration.seconds(1), this);
-        animation.setAxis(Rotate.X_AXIS);
-        animation.setFromAngle(0);
-        animation.setToAngle(360);
-        animation.setInterpolator(Interpolator.LINEAR);
-        animation.setCycleCount(Animation.INDEFINITE);
-        return animation;
-    }
-
-    private void playEdibleAnimation() {
-        if (edibleAnimation == null) {
-            edibleAnimation = createEdibleAnimation();
-            animationManager.register("Bonus_Edible", edibleAnimation);
-        }
-        edibleAnimation.playFromStart();
-    }
-
-    private void stopEdibleAnimation() {
-        if (edibleAnimation != null) {
-            edibleAnimation.stop();
-        }
-    }
-
-    private void updateEdibleAnimation(GameLevel level) {
-        if (edibleAnimation != null
-            && edibleAnimation.getStatus() == Animation.Status.RUNNING
-            && bonus instanceof MovingBonus movingBonus)
-        {
-            Vector2f center = bonus.actor().center();
-            boolean outsideWorld = center.x() < HTS || center.x() > level.worldMap().numCols() * TS - HTS;
-            setVisible(bonus.state() == Bonus.STATE_EDIBLE && !outsideWorld);
-            Direction moveDir = movingBonus.actor().moveDir();
-            Point3D axis = moveDir.isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
-            edibleAnimation.setRate(moveDir == Direction.DOWN || moveDir == Direction.LEFT ? 1 : -1);
-            if (!edibleAnimation.getAxis().equals(axis)) {
-                edibleAnimation.stop();
-                edibleAnimation.setAxis(axis);
-                edibleAnimation.play(); // play from stopped position, not from start
-            }
-        }
-    }
-
-    // Eaten animation
-
-    private RotateTransition createEatenAnimation() {
-        var animation = new RotateTransition(Duration.seconds(1), this);
-        animation.setAxis(Rotate.X_AXIS);
-        animation.setByAngle(360);
-        animation.setInterpolator(Interpolator.LINEAR);
-        animation.setRate(2);
-        animation.setCycleCount(2);
-        return animation;
-    }
-
-    private void playEatenAnimation() {
-        if (eatenAnimation == null) {
-            eatenAnimation = createEatenAnimation();
-            animationManager.register("Bonus_Eaten", eatenAnimation);
-        }
-        eatenAnimation.playFromStart();
-    }
-
-    private void stopEatenAnimation() {
-        if (eatenAnimation != null) {
-            eatenAnimation.stop();
-        }
+    public void expire() {
+        edibleAnimation.stop();
+        eatenAnimation.stop();
+        setVisible(false);
     }
 }
