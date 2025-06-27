@@ -111,6 +111,7 @@ public class GameView implements PacManGames_View {
                 contextMenu.hide();
             }
         });
+
         titleBinding = Bindings.createStringBinding(
             () -> computeTitleText(PY_3D_ENABLED.get(), PY_DEBUG_INFO_VISIBLE.get()),
             PY_3D_ENABLED,
@@ -119,6 +120,13 @@ public class GameView implements PacManGames_View {
             parentScene.heightProperty(),
             ui.currentGameSceneProperty()
         );
+
+        parentScene.widthProperty().addListener((py, ov, width) -> {
+            canvasContainer.resizeTo(width.doubleValue(), parentScene.getHeight());
+        });
+        parentScene.heightProperty().addListener((py, ov, height) -> {
+            canvasContainer.resizeTo(parentScene.getWidth(), height.doubleValue());
+        });
 
         bindAction(ACTION_BOOT_SHOW_GAME_VIEW, GLOBAL_ACTION_BINDINGS);
         bindAction(ACTION_ENTER_FULLSCREEN, GLOBAL_ACTION_BINDINGS);
@@ -257,10 +265,6 @@ public class GameView implements PacManGames_View {
 
     public CrudeCanvasContainer canvasContainer() {
         return canvasContainer;
-    }
-
-    public void resize() {
-        canvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
     }
 
     public void updateGameScene(boolean reloadCurrent) {

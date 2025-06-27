@@ -241,8 +241,6 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         GAME_CLOCK.setPausableAction(this::doSimulationStepAndUpdateGameScene);
         GAME_CLOCK.setPermanentAction(this::drawGameView);
 
-        mainScene.widthProperty() .addListener((py, ov, nv) -> gameView.resize());
-        mainScene.heightProperty().addListener((py, ov, nv) -> gameView.resize());
         mainScene.addEventFilter(KeyEvent.KEY_PRESSED, theKeyboard()::onKeyPressed);
         mainScene.addEventFilter(KeyEvent.KEY_RELEASED, theKeyboard()::onKeyReleased);
         //TODO use actions and key binding instead?
