@@ -1,6 +1,7 @@
 package de.amr.pacmanfx.uilib.animation;
 
 import javafx.animation.Animation;
+import org.tinylog.Logger;
 
 import java.util.Optional;
 
@@ -39,15 +40,20 @@ public abstract class ManagedAnimation {
 
     public void play(boolean playMode) {
         getOrCreateAnimation();
-        if (playMode == FROM_START) {
-            animation.playFromStart();
-        } else if (playMode == CONTINUE) {
-            animation.play();
+        if (animation.getStatus() != Animation.Status.RUNNING) {
+            if (playMode == FROM_START) {
+                Logger.info("Playing animation {} from start", description);
+                animation.playFromStart();
+            } else if (playMode == CONTINUE) {
+                Logger.info("Continuing animation {}", description);
+                animation.play();
+            }
         }
     }
 
     public void stop() {
-        if (animation != null) {
+        if (animation != null && animation.getStatus() != Animation.Status.STOPPED) {
+            Logger.info("Stopping animation {}", description);
             animation.stop();
         }
     }

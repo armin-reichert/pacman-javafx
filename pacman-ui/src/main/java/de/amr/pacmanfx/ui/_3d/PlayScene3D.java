@@ -102,6 +102,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         pacDyingAnimation = new ManagedAnimation(animationManager, "PacMan_Dying") {
             @Override
             protected Animation createAnimation() {
+                level3D.pac3D().dyingAnimation().invalidate(); // ensure always newly created!
                 Animation animation = new SequentialTransition(
                     now(theSound()::playPacDeathSound),
                     level3D.pac3D().dyingAnimation().getOrCreateAnimation(),
@@ -225,18 +226,6 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         updateActionBindings();
     }
 
-    public AnimationManager animationManager() {
-        return animationManager;
-    }
-
-    public ManagedAnimation pacDyingAnimation() {
-        return pacDyingAnimation;
-    }
-
-    public ManagedAnimation levelCompleteAnimation() {
-        return levelCompleteAnimation;
-    }
-
     @Override
     public void init() {
         theGame().hud().showScore(true);
@@ -316,7 +305,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 level3D.pac3D().update(theGameLevel());
                 level3D.livesCounter3D().lookingAroundAnimation().stop();
                 level3D.ghosts3D().forEach(MutatingGhost3D::stopAllAnimations);
-                pacDyingAnimation().play(ManagedAnimation.FROM_START);
+                pacDyingAnimation.play(ManagedAnimation.FROM_START);
             }
             case GHOST_DYING ->
                 theSimulationStep().killedGhosts.forEach(ghost -> {
@@ -334,7 +323,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
                 //TODO we need a "cool down" time such that e.g. squirting animations can complete before stopping all animations
                 animationManager.stopAllAnimations();
-                levelCompleteAnimation().play(ManagedAnimation.FROM_START);
+                levelCompleteAnimation.play(ManagedAnimation.FROM_START);
             }
             case LEVEL_TRANSITION -> {
                 theGameState().timer().restartSeconds(3);
