@@ -319,9 +319,6 @@ public class GameView implements PacManGames_View {
                 gameScene2D.scalingProperty().bind(canvasContainer.scalingProperty()
                         .map(scaling -> Math.min(scaling.doubleValue(), MAX_SCENE_2D_SCALING)));
                 gameScene2D.setCanvas(canvas);
-                // avoid showing old content before new scene is rendered
-                canvas.getGraphicsContext2D().setFill(PY_CANVAS_BG_COLOR.get());
-                canvas.getGraphicsContext2D().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
                 gameScene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
                 GameRenderer gameRenderer = ui.configuration().createGameRenderer(canvas);
                 if (gameRenderer instanceof SpriteGameRenderer spriteGameRenderer) {
@@ -329,6 +326,8 @@ public class GameView implements PacManGames_View {
                 } else {
                     Logger.error("Currently, only sprite game renderers are supported for 2D game scenes");
                 }
+                // avoid showing old content before new scene is rendered
+                gameRenderer.fillCanvas(gameScene2D.backgroundColor());
                 root.getChildren().set(0, canvasLayer);
             }
             default -> Logger.error("Cannot embed game scene of class {}", gameScene.getClass().getName());
