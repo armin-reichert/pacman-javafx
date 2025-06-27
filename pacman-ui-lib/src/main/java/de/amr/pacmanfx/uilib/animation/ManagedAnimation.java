@@ -25,15 +25,20 @@ public abstract class ManagedAnimation {
         return Optional.ofNullable(animation);
     }
 
+    public Animation getOrCreateAnimation() {
+        if (animation == null) {
+            animation = createAnimation();
+            animationManager.register(description, animation);
+        }
+        return animation;
+    }
+
     public void invalidate() {
         animation = null;
     }
 
     public void play(boolean playMode) {
-        if (animation == null) {
-            animation = createAnimation();
-            animationManager.register(description, animation);
-        }
+        getOrCreateAnimation();
         if (playMode == FROM_START) {
             animation.playFromStart();
         } else if (playMode == CONTINUE) {

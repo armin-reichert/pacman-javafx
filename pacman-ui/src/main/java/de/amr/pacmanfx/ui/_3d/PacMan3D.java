@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.model3D.PacBase3D;
 import javafx.animation.*;
@@ -20,42 +21,43 @@ public class PacMan3D extends PacBase3D {
 
     public PacMan3D(AnimationManager animationManager, Pac pac, double size, AssetStorage assets, String ans) {
         super(animationManager, pac, size, assets, ans);
-    }
 
-    @Override
-    public Animation createDyingAnimation() {
-        Duration duration = Duration.seconds(1.5);
-        byte numSpins = 5;
+        dyingAnimation = new ManagedAnimation(animationManager, "PacMan_Dying") {
+            @Override
+            protected Animation createAnimation() {
+                Duration duration = Duration.seconds(1.5);
+                byte numSpins = 5;
 
-        var spinning = new RotateTransition(duration.divide(numSpins), root);
-        spinning.setAxis(Rotate.Z_AXIS);
-        spinning.setByAngle(360);
-        spinning.setCycleCount(numSpins);
-        spinning.setInterpolator(Interpolator.LINEAR);
+                var spinning = new RotateTransition(duration.divide(numSpins), root);
+                spinning.setAxis(Rotate.Z_AXIS);
+                spinning.setByAngle(360);
+                spinning.setCycleCount(numSpins);
+                spinning.setInterpolator(Interpolator.LINEAR);
 
-        var shrinking = new ScaleTransition(duration.multiply(0.5), root);
-        shrinking.setToX(0.25);
-        shrinking.setToY(0.25);
-        shrinking.setToZ(0.02);
+                var shrinking = new ScaleTransition(duration.multiply(0.5), root);
+                shrinking.setToX(0.25);
+                shrinking.setToY(0.25);
+                shrinking.setToZ(0.02);
 
-        var expanding = new ScaleTransition(duration.multiply(0.5), root);
-        expanding.setToX(0.75);
-        expanding.setToY(0.75);
+                var expanding = new ScaleTransition(duration.multiply(0.5), root);
+                expanding.setToX(0.75);
+                expanding.setToY(0.75);
 
-        var sinking = new TranslateTransition(duration, root);
-        sinking.setToZ(0);
+                var sinking = new TranslateTransition(duration, root);
+                sinking.setToZ(0);
 
-        //TODO convert to Timeline?
-        return new SequentialTransition(
-            now(this::init), // TODO check this
-            new ParallelTransition(spinning, new SequentialTransition(shrinking, expanding), sinking),
-            doAfterSec(1.0, () -> {
-                root.setVisible(false);
-                root.setScaleX(1.0);
-                root.setScaleY(1.0);
-                root.setScaleZ(1.0);
-            })
-        );
+                return new SequentialTransition(
+                    now(PacMan3D.this::init), // TODO check this
+                    new ParallelTransition(spinning, new SequentialTransition(shrinking, expanding), sinking),
+                    doAfterSec(1.0, () -> {
+                        root.setVisible(false);
+                        root.setScaleX(1.0);
+                        root.setScaleY(1.0);
+                        root.setScaleZ(1.0);
+                    })
+                );
+            }
+        };
     }
 
     // Movement animation: Head banging

@@ -104,7 +104,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             protected Animation createAnimation() {
                 Animation animation = new SequentialTransition(
                     now(theSound()::playPacDeathSound),
-                    level3D.pac3D().createDyingAnimation(),
+                    level3D.pac3D().dyingAnimation().getOrCreateAnimation(),
                     pauseSec(1)
                 );
                 animation.setDelay(Duration.seconds(2));

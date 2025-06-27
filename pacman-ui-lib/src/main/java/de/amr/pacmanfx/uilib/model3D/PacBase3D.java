@@ -10,6 +10,7 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import javafx.animation.*;
 import javafx.scene.Group;
@@ -49,17 +50,21 @@ public abstract class PacBase3D {
         return animation;
     }
 
-    protected final AnimationManager animationMgr;
+
     protected final Pac pac;
     protected final PointLight light = new PointLight();
     protected final Group root = new Group();
     protected final double size;
+
+    protected final AnimationManager animationManager;
     protected final Rotate moveRotation = new Rotate();
     protected RotateTransition movementAnimation;
     protected Animation chewingAnimation;
+
+    protected ManagedAnimation dyingAnimation;
+
     protected Node jaw;
 
-    public abstract Animation createDyingAnimation();
     public abstract void setMovementPowerMode(boolean power);
 
     protected abstract void createMovementAnimation();
@@ -67,8 +72,8 @@ public abstract class PacBase3D {
     protected abstract void stopMovementAnimation();
     protected abstract void updateMovementAnimation();
 
-    protected PacBase3D(AnimationManager animationMgr, Pac pac, double size, AssetStorage assets, String ans) {
-        this.animationMgr = requireNonNull(animationMgr);
+    protected PacBase3D(AnimationManager animationManager, Pac pac, double size, AssetStorage assets, String ans) {
+        this.animationManager = requireNonNull(animationManager);
         this.pac = requireNonNull(pac);
         this.size = size;
 
@@ -102,6 +107,10 @@ public abstract class PacBase3D {
 
     public LightBase light() {
         return light;
+    }
+
+    public ManagedAnimation dyingAnimation() {
+        return dyingAnimation;
     }
 
     public void init() {

@@ -6,6 +6,7 @@ package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -25,17 +26,19 @@ public class MsPacMan3D extends PacBase3D {
             assets.color(ans + ".pac.color.boobs"));
 
         root.getChildren().add(femaleBodyParts);
-    }
 
-    @Override
-    public Animation createDyingAnimation() {
-        var spinning = new RotateTransition(Duration.seconds(0.25), root);
-        spinning.setAxis(Rotate.Z_AXIS);
-        spinning.setFromAngle(0);
-        spinning.setToAngle(360);
-        spinning.setInterpolator(Interpolator.LINEAR);
-        spinning.setCycleCount(4);
-        return spinning;
+        dyingAnimation = new ManagedAnimation(animationManager, "Ms_PacMan_Dying") {
+            @Override
+            protected Animation createAnimation() {
+                var spinning = new RotateTransition(Duration.seconds(0.25), root);
+                spinning.setAxis(Rotate.Z_AXIS);
+                spinning.setFromAngle(0);
+                spinning.setToAngle(360);
+                spinning.setInterpolator(Interpolator.LINEAR);
+                spinning.setCycleCount(4);
+                return spinning;
+            }
+        };
     }
 
     // Movement animation: Hip swaying
