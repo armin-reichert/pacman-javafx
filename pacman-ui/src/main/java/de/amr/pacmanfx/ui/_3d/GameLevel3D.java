@@ -269,8 +269,8 @@ public class GameLevel3D {
         livesCounter3D.livesCountProperty().bind(livesCountPy);
         livesCounter3D.pillarColorProperty().set(Settings3D.LIVES_COUNTER_PILLAR_COLOR);
         livesCounter3D.plateColorProperty().set(Settings3D.LIVES_COUNTER_PLATE_COLOR);
-
         livesCounter3D.light().colorProperty().set(Color.CORNFLOWERBLUE);
+        livesCounter3D.lookingAroundAnimation().play(ManagedAnimation.FROM_START);
     }
 
     public void createLevelCounter() {
