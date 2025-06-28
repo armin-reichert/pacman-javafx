@@ -327,13 +327,14 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void onLevelStarted(GameEvent event) {
+        requireNonNull(theGameLevel()); // just to be sure nothing bad happened
         bindActions();
         switch (theGameState()) {
             case STARTING_GAME -> {
                 if (level3D == null) {
                     replaceGameLevel3D();
                 }
-                Vector2f position = centerPositionUnderHouse();
+                Vector2f position = theGameLevel().centerPositionUnderHouse();
                 level3D.showAnimatedMessage("READY!", 2.5f, position.x(), position.y());
                 bindPlayerSteeringActions();
             }
@@ -425,7 +426,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void onGameContinued(GameEvent e) {
-        Vector2f position = centerPositionUnderHouse();
+        Vector2f position = theGameLevel().centerPositionUnderHouse();
         level3D.showAnimatedMessage("READY!", 0.5f, position.x(), position.y());
     }
 
@@ -533,13 +534,5 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         double x = worldMap.numCols() * HTS;
         double y = (worldMap.numRows() - 2) * TS;
         level3D.showAnimatedMessage("LEVEL %d (TEST)".formatted(levelNumber), 5, x, y);
-    }
-
-    private Vector2f centerPositionUnderHouse() {
-        Vector2i houseMinTile = theGameLevel().houseMinTile();
-        Vector2i houseSizeInTiles = theGameLevel().houseSizeInTiles();
-        double x = TS * (houseMinTile.x() + 0.5 * houseSizeInTiles.x());
-        double y = TS * (houseMinTile.y() +       houseSizeInTiles.y());
-        return Vector2f.of(x, y);
     }
 }

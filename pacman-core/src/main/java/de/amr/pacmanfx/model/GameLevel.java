@@ -326,6 +326,17 @@ public class GameLevel {
         return houseMinTile().toVector2f().scaled(TS).plus(houseSizeInTiles().toVector2f().scaled(HTS));
     }
 
+    /**
+     * @return center position under house, used e.g. as anchor for level messages
+     */
+    public Vector2f centerPositionUnderHouse() {
+        Vector2i houseMinTile = houseMinTile(), houseSizeTiles = houseSizeInTiles();
+        return Vector2f.of(
+            TS * (houseMinTile.x() + 0.5f * houseSizeTiles.x()),
+            TS * (houseMinTile.y() +        houseSizeTiles.y())
+        );
+    }
+
     public boolean isTileInHouseArea(Vector2i tile) {
         requireNonNull(tile);
         return tile.x() >= houseMinTile().x() && tile.x() <= houseMaxTile().x()
