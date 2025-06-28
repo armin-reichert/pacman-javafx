@@ -12,12 +12,12 @@ public abstract class ManagedAnimation {
     public static final boolean CONTINUE = false, FROM_START = true;
 
     protected final AnimationManager animationManager;
-    protected final String description;
+    protected final String identifier;
     protected Animation animation;
 
-    protected ManagedAnimation(AnimationManager animationManager, String description) {
+    protected ManagedAnimation(AnimationManager animationManager, String identifier) {
         this.animationManager = requireNonNull(animationManager);
-        this.description = requireNonNull(description);
+        this.identifier = requireNonNull(identifier);
     }
 
     protected abstract Animation createAnimation();
@@ -29,7 +29,7 @@ public abstract class ManagedAnimation {
     public Animation getOrCreateAnimation() {
         if (animation == null) {
             animation = createAnimation();
-            animationManager.register(description, animation);
+            animationManager.register(identifier, animation);
         }
         return animation;
     }
@@ -42,10 +42,10 @@ public abstract class ManagedAnimation {
         getOrCreateAnimation();
         if (animation.getStatus() != Animation.Status.RUNNING) {
             if (playMode == FROM_START) {
-                Logger.info("Playing animation {} from start", description);
+                Logger.info("Playing animation {} from start", identifier);
                 animation.playFromStart();
             } else if (playMode == CONTINUE) {
-                Logger.info("Continuing animation {}", description);
+                Logger.info("Continuing animation {}", identifier);
                 animation.play();
             }
         }
@@ -53,7 +53,7 @@ public abstract class ManagedAnimation {
 
     public void stop() {
         if (animation != null && animation.getStatus() != Animation.Status.STOPPED) {
-            Logger.info("Stopping animation {}", description);
+            Logger.info("Stopping animation {}", identifier);
             animation.stop();
         }
     }

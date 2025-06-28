@@ -122,7 +122,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                         perspectiveIDPy.unbind();
                         perspectiveIDPy.set(PerspectiveID.TOTAL);
                     }),
-                    level3D.createLevelCompleteAnimation()
+                    level3D.createLevelCompleteAnimation(theGameLevel())
                 );
                 animation.setOnFinished(e -> {
                     perspectiveIDPy.bind(PY_3D_PERSPECTIVE);
@@ -260,7 +260,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             Logger.warn("Tick #{}: 3D game level not yet existing", theClock().tickCount());
             return;
         }
-        level3D.update();
+        level3D.update(theGameLevel());
         updateScores();
         updateSound();
         updateCameraPerspectiveForGameLevel();
@@ -540,7 +540,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     }
 
     protected void replaceGameLevel3D() {
-        level3D = new GameLevel3D(animationManager);
+        level3D = new GameLevel3D(theGameLevel(), animationManager);
         root.getChildren().set(root.getChildren().size() - 1, level3D.root());
         scores3D.translateXProperty().bind(level3D.root().translateXProperty().add(TS));
         scores3D.translateYProperty().bind(level3D.root().translateYProperty().subtract(3.5 * TS));
