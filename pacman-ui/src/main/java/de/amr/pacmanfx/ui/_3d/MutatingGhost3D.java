@@ -106,7 +106,7 @@ public class MutatingGhost3D extends Group {
 
             @Override
             public void play(boolean playMode) {
-                var rotateTransition = (RotateTransition) animation;
+                var rotateTransition = (RotateTransition) getOrCreateAnimation();
                 rotateTransition.stop();
                 rotateTransition.setByAngle(ghost.moveDir() == Direction.LEFT ? -35 : 35);
                 if (playMode == FROM_START) {
@@ -215,7 +215,7 @@ public class MutatingGhost3D extends Group {
                 ghost3D.dressAnimation().stop();
             }
             if (ghost.moveInfo().tunnelEntered) {
-                brakeAnimation.stop();
+                brakeAnimation.play(ManagedAnimation.FROM_START);
             }
         }
     }
