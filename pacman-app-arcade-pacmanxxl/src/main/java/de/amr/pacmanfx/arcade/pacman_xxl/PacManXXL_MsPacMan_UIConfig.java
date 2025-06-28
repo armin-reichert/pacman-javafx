@@ -170,12 +170,12 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
         String namespace = assetNamespace();
         return new Group(
             Model3DRepository.get().createPacShape(
-                    Settings3D.LIVES_COUNTER_3D_SIZE,
+                    Settings3D.LIVES_COUNTER_3D_SHAPE_SIZE,
                     theAssets().color(namespace + ".pac.color.head"),
                     theAssets().color(namespace + ".pac.color.eyes"),
                     theAssets().color(namespace + ".pac.color.palate")
             ),
-            Model3DRepository.get().createFemaleBodyParts(Settings3D.LIVES_COUNTER_3D_SIZE,
+            Model3DRepository.get().createFemaleBodyParts(Settings3D.LIVES_COUNTER_3D_SHAPE_SIZE,
                     theAssets().color(namespace + ".pac.color.hairbow"),
                     theAssets().color(namespace + ".pac.color.hairbow.pearls"),
                     theAssets().color(namespace + ".pac.color.boobs")

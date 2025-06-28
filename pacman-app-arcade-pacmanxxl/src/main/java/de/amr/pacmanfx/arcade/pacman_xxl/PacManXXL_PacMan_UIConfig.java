@@ -163,7 +163,7 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
     public Node createLivesCounter3D() {
         String namespace = assetNamespace();
         return Model3DRepository.get().createPacShape(
-                Settings3D.LIVES_COUNTER_3D_SIZE,
+                Settings3D.LIVES_COUNTER_3D_SHAPE_SIZE,
                 theAssets().color(namespace + ".pac.color.head"),
                 theAssets().color(namespace + ".pac.color.eyes"),
                 theAssets().color(namespace + ".pac.color.palate")

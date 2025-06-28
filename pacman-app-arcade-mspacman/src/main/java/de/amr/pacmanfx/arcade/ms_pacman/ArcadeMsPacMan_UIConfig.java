@@ -174,12 +174,12 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     public Node createLivesCounter3D() {
         return new Group(
             Model3DRepository.get().createPacShape(
-                    Settings3D.LIVES_COUNTER_3D_SIZE,
+                    Settings3D.LIVES_COUNTER_3D_SHAPE_SIZE,
                     theAssets().color(ANS + ".pac.color.head"),
                     theAssets().color(ANS + ".pac.color.eyes"),
                     theAssets().color(ANS + ".pac.color.palate")
             ),
-            Model3DRepository.get().createFemaleBodyParts(Settings3D.LIVES_COUNTER_3D_SIZE,
+            Model3DRepository.get().createFemaleBodyParts(Settings3D.LIVES_COUNTER_3D_SHAPE_SIZE,
                     theAssets().color(ANS + ".pac.color.hairbow"),
                     theAssets().color(ANS + ".pac.color.hairbow.pearls"),
                     theAssets().color(ANS + ".pac.color.boobs")

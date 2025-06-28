@@ -172,7 +172,7 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
     @Override
     public Node createLivesCounter3D() {
         return Model3DRepository.get().createPacShape(
-                Settings3D.LIVES_COUNTER_3D_SIZE,
+                Settings3D.LIVES_COUNTER_3D_SHAPE_SIZE,
                 theAssets().color(ANS + ".pac.color.head"),
                 theAssets().color(ANS + ".pac.color.eyes"),
                 theAssets().color(ANS + ".pac.color.palate")

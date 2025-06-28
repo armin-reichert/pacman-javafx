@@ -72,11 +72,11 @@ public class GameLevel3D {
 
     private final IntegerProperty livesCountPy = new SimpleIntegerProperty(0);
 
+    private final AnimationManager animationManager;
     private final Group root = new Group();
     private final Group mazeGroup = new Group();
     private final List<Pellet3D> pellets3D = new ArrayList<>();
     private final ArrayList<Energizer3D> energizers3D = new ArrayList<>();
-    private AmbientLight ambientLight;
     private Box floor3D;
     private Maze3D maze3D;
     private LevelCounter3D levelCounter3D;
@@ -86,40 +86,64 @@ public class GameLevel3D {
     private MessageView messageView;
     private Bonus3D bonus3D;
 
-    private final AnimationManager animationManager;
 
     public GameLevel3D(GameLevel gameLevel, AnimationManager animationManager) {
+        requireNonNull(gameLevel);
         this.animationManager = requireNonNull(animationManager);
-        createAmbientLight();
-        createPac3D(gameLevel);
-        createGhosts3D(gameLevel);
+
+        var ambientLight = new AmbientLight();
+        ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
+
         createMaze3D(gameLevel);
         createLevelCounter(gameLevel);
         createLivesCounter3D();
-        compose();
-        bindShape3DDrawingMode();
-        root.setMouseTransparent(true); // this increases performance, they say...
-    }
+        createPac3D(gameLevel);
+        createGhosts3D(gameLevel);
 
-    // Note: The order in which children are added matters!
-    // Walls and house must be added after actors, otherwise, transparency is not working correctly.
-    private void compose() {
+        root.setMouseTransparent(true); // this increases performance, they say...
+
         root.getChildren().add(ambientLight);
+        root.getChildren().add(livesCounter3D);
+        root.getChildren().add(levelCounter3D);
         energizers3D.forEach(energizer3D -> root.getChildren().add(energizer3D.shape3D()));
         pellets3D.forEach(pellet3D -> root.getChildren().add(pellet3D.shape3D()));
         root.getChildren().addAll(pac3D.root(), pac3D.light());
         root.getChildren().addAll(ghosts3D);
-        root.getChildren().add(livesCounter3D);
-        root.getChildren().add(levelCounter3D);
+        // Note: The order in which children are added matters! Walls and house must be added *after* the actors,
+        // otherwise the transparency is not working correctly.
         root.getChildren().add(mazeGroup);
-    }
 
-    // Pellet shapes are not bound because this would cause huge performance penalty!
-    private void bindShape3DDrawingMode() {
-        Stream.concat(mazeGroup.lookupAll("*").stream(), livesCounter3D.lookupAll("*").stream())
+        // For wireframe view, bind all 3D maze building blocks to global "draw mode" property.
+        mazeGroup.lookupAll("*").stream()
             .filter(Shape3D.class::isInstance)
             .map(Shape3D.class::cast)
             .forEach(shape3D -> shape3D.drawModeProperty().bind(PY_3D_DRAW_MODE));
+    }
+
+    public void update(GameLevel gameLevel) {
+        pac3D.update(gameLevel);
+        ghosts3D().forEach(ghost3D -> ghost3D.update(gameLevel));
+        bonus3D().ifPresent(Bonus3D::update);
+        boolean houseAccessRequired = gameLevel
+            .ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+            .anyMatch(Ghost::isVisible);
+        maze3D.setHouseLightOn(houseAccessRequired);
+
+        boolean ghostNearHouseEntry = gameLevel
+            .ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+            .filter(ghost -> ghost.position().euclideanDist(gameLevel.houseEntryPosition()) <= Settings3D.HOUSE_3D_SENSITIVITY)
+            .anyMatch(Ghost::isVisible);
+        houseOpenPy.set(ghostNearHouseEntry);
+
+        int livesCounterSize = theGame().lifeCount() - 1;
+        // when the game starts and Pac-Man is not yet visible, show one more
+        boolean oneMore = theGameState() == GameState.STARTING_GAME && !gameLevel.pac().isVisible();
+        if (oneMore) livesCounterSize += 1;
+        livesCountPy.set(livesCounterSize);
+
+        boolean visible = theGame().canStartNewGame();
+        livesCounter3D.setVisible(visible);
+        livesCounter3D.light().setLightOn(visible);
     }
 
     public Maze3D maze3D() { return maze3D; }
@@ -141,37 +165,6 @@ public class GameLevel3D {
     public Color floorColor() { return PY_3D_FLOOR_COLOR.get(); }
 
     public double floorThickness() { return floor3D.getDepth(); }
-
-    public void update(GameLevel gameLevel) {
-        pac3D.update(gameLevel);
-        ghosts3D().forEach(ghost3D -> ghost3D.update(gameLevel));
-        bonus3D().ifPresent(Bonus3D::update);
-        boolean houseAccessRequired = gameLevel
-                .ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
-                .anyMatch(Ghost::isVisible);
-        maze3D.setHouseLightOn(houseAccessRequired);
-
-        boolean ghostNearHouseEntry = gameLevel
-                .ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
-                .filter(ghost -> ghost.position().euclideanDist(gameLevel.houseEntryPosition()) <= Settings3D.HOUSE_3D_SENSITIVITY)
-                .anyMatch(Ghost::isVisible);
-        houseOpenPy.set(ghostNearHouseEntry);
-
-        int livesCounterSize = theGame().lifeCount() - 1;
-        // when the game starts and Pac-Man is not yet visible, show one more
-        boolean oneMore = theGameState() == GameState.STARTING_GAME && !gameLevel.pac().isVisible();
-        if (oneMore) livesCounterSize += 1;
-        livesCountPy.set(livesCounterSize);
-
-        boolean visible = theGame().canStartNewGame();
-        livesCounter3D.setVisible(visible);
-        livesCounter3D.light().setLightOn(visible);
-    }
-
-    private void createAmbientLight() {
-        ambientLight = new AmbientLight();
-        ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
-    }
 
     private void createPac3D(GameLevel gameLevel) {
         pac3D = theUI().configuration().createPac3D(animationManager, gameLevel.pac());
@@ -262,7 +255,7 @@ public class GameLevel3D {
     }
 
     private void createLivesCounter3D() {
-        Node[] counterShapes = new Node[5];
+        Node[] counterShapes = new Node[Settings3D.LIVES_COUNTER_3D_CAPACITY];
         for (int i = 0; i < counterShapes.length; ++i) {
             counterShapes[i] = theUI().configuration().createLivesCounter3D();
         }
