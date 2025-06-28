@@ -43,7 +43,7 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.ui.PacManGames.*;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
-import static de.amr.pacmanfx.uilib.Ufx.contextMenuTitleItem;
+import static de.amr.pacmanfx.uilib.Ufx.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -263,7 +263,14 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 level3D.pac3D().update(theGameLevel());
                 level3D.livesCounter3D().lookingAroundAnimation().stop();
                 level3D.ghosts3D().forEach(MutatingGhost3D::stopAllAnimations);
-                level3D.pacDyingAnimation().play(ManagedAnimation.FROM_START);
+                var animation = new SequentialTransition(
+                    pauseSec(2),
+                    now(theSound()::playPacDeathSound),
+                    level3D.pac3D().dyingAnimation().getOrCreateAnimation(),
+                    pauseSec(1)
+                );
+                animation.setOnFinished(e -> theGameController().letCurrentGameStateExpire());
+                animation.play();
             }
             case GHOST_DYING ->
                 theSimulationStep().killedGhosts.forEach(ghost -> {

@@ -48,8 +48,8 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.ui.PacManGames.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
-import static de.amr.pacmanfx.uilib.Ufx.*;
-import static de.amr.pacmanfx.uilib.Ufx.pauseSec;
+import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
+import static de.amr.pacmanfx.uilib.Ufx.doAfterSec;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -73,7 +73,6 @@ public class GameLevel3D {
     private final IntegerProperty livesCountPy = new SimpleIntegerProperty(0);
 
     private final AnimationManager animationManager;
-    private final ManagedAnimation pacDyingAnimation;
     private final ManagedAnimation levelCompletedAnimation;
 
     private final Group root = new Group();
@@ -120,21 +119,6 @@ public class GameLevel3D {
             .filter(Shape3D.class::isInstance)
             .map(Shape3D.class::cast)
             .forEach(shape3D -> shape3D.drawModeProperty().bind(PY_3D_DRAW_MODE));
-
-        pacDyingAnimation = new ManagedAnimation(animationManager, "PacMan_Dying") {
-            @Override
-            protected Animation createAnimation() {
-                pac3D.dyingAnimation().invalidate(); // ensure always newly created!
-                Animation animation = new SequentialTransition(
-                    now(theSound()::playPacDeathSound),
-                    pac3D.dyingAnimation().getOrCreateAnimation(),
-                    pauseSec(1)
-                );
-                animation.setDelay(Duration.seconds(2));
-                animation.setOnFinished(e -> theGameController().letCurrentGameStateExpire());
-                return animation;
-            }
-        };
 
         levelCompletedAnimation = new ManagedAnimation(animationManager, "Level_Complete") {
             @Override
@@ -232,10 +216,6 @@ public class GameLevel3D {
     public Color floorColor() { return PY_3D_FLOOR_COLOR.get(); }
 
     public double floorThickness() { return floor3D.getDepth(); }
-
-    public ManagedAnimation pacDyingAnimation() {
-        return pacDyingAnimation;
-    }
 
     public ManagedAnimation levelCompletedAnimation() {
         return levelCompletedAnimation;
