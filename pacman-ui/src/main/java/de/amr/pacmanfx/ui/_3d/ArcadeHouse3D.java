@@ -24,7 +24,7 @@ import static de.amr.pacmanfx.uilib.Ufx.opaqueColor;
  */
 public class ArcadeHouse3D {
     private final Group root = new Group();
-    private final Door3D door3D;
+    private Door3D door3D;
 
     public ArcadeHouse3D(
         AnimationManager animationManager,
@@ -34,38 +34,40 @@ public class ArcadeHouse3D {
         DoubleProperty wallBaseHeightPy, float wallTopHeight, float wallThickness,
         BooleanProperty houseLightOnPy)
     {
-        Vector2i houseSize = level.houseSizeInTiles();
-        r3D.setWallBaseHeightProperty(wallBaseHeightPy);
-        r3D.setWallTopHeight(wallTopHeight);
-        r3D.setWallThickness(wallThickness);
-        r3D.setWallBaseMaterial(coloredPhongMaterial(opaqueColor(houseBaseColor, wallOpacity)));
-        r3D.setWallTopMaterial(coloredPhongMaterial(houseTopColor));
+        level.house().ifPresent(house -> {
+            Vector2i houseSize = house.sizeInTiles();
+            r3D.setWallBaseHeightProperty(wallBaseHeightPy);
+            r3D.setWallTopHeight(wallTopHeight);
+            r3D.setWallThickness(wallThickness);
+            r3D.setWallBaseMaterial(coloredPhongMaterial(opaqueColor(houseBaseColor, wallOpacity)));
+            r3D.setWallTopMaterial(coloredPhongMaterial(houseTopColor));
 
-        int tilesX = houseSize.x(), tilesY = houseSize.y();
-        int xMin = level.houseMinTile().x(), xMax = xMin + tilesX - 1;
-        int yMin = level.houseMinTile().y(), yMax = yMin + tilesY - 1;
-        Vector2i leftDoorTile = level.houseLeftDoorTile(), rightDoorTile = level.houseRightDoorTile();
-        door3D = new Door3D(animationManager, leftDoorTile, rightDoorTile, doorColor, wallBaseHeightPy.get());
+            int tilesX = houseSize.x(), tilesY = houseSize.y();
+            int xMin = house.minTile().x(), xMax = xMin + tilesX - 1;
+            int yMin = house.minTile().y(), yMax = yMin + tilesY - 1;
+            Vector2i leftDoorTile = house.leftDoorTile(), rightDoorTile = house.rightDoorTile();
+            door3D = new Door3D(animationManager, leftDoorTile, rightDoorTile, doorColor, wallBaseHeightPy.get());
 
-        float centerX = xMin * TS + tilesX * HTS;
-        float centerY = yMin * TS + tilesY * HTS;
-        var light = new PointLight();
-        light.lightOnProperty().bind(houseLightOnPy);
-        light.setColor(Color.GHOSTWHITE);
-        light.setMaxRange(3 * TS);
-        light.setTranslateX(centerX);
-        light.setTranslateY(centerY - 6);
-        light.translateZProperty().bind(wallBaseHeightPy.multiply(-1));
+            float centerX = xMin * TS + tilesX * HTS;
+            float centerY = yMin * TS + tilesY * HTS;
+            var light = new PointLight();
+            light.lightOnProperty().bind(houseLightOnPy);
+            light.setColor(Color.GHOSTWHITE);
+            light.setMaxRange(3 * TS);
+            light.setTranslateX(centerX);
+            light.setTranslateY(centerY - 6);
+            light.translateZProperty().bind(wallBaseHeightPy.multiply(-1));
 
-        root.getChildren().addAll(
-            light,
-            door3D,
-            r3D.createWallBetweenTiles(Vector2i.of(xMin, yMin), Vector2i.of(leftDoorTile.x() - 1, yMin)),
-            r3D.createWallBetweenTiles(Vector2i.of(rightDoorTile.x() + 1, yMin), Vector2i.of(xMax, yMin)),
-            r3D.createWallBetweenTiles(Vector2i.of(xMin, yMin), Vector2i.of(xMin, yMax)),
-            r3D.createWallBetweenTiles(Vector2i.of(xMax, yMin), Vector2i.of(xMax, yMax)),
-            r3D.createWallBetweenTiles(Vector2i.of(xMin, yMax), Vector2i.of(xMax, yMax))
-        );
+            root.getChildren().addAll(
+                light,
+                door3D,
+                r3D.createWallBetweenTiles(Vector2i.of(xMin, yMin), Vector2i.of(leftDoorTile.x() - 1, yMin)),
+                r3D.createWallBetweenTiles(Vector2i.of(rightDoorTile.x() + 1, yMin), Vector2i.of(xMax, yMin)),
+                r3D.createWallBetweenTiles(Vector2i.of(xMin, yMin), Vector2i.of(xMin, yMax)),
+                r3D.createWallBetweenTiles(Vector2i.of(xMax, yMin), Vector2i.of(xMax, yMax)),
+                r3D.createWallBetweenTiles(Vector2i.of(xMin, yMax), Vector2i.of(xMax, yMax))
+            );
+        });
     }
 
     public Group root() {

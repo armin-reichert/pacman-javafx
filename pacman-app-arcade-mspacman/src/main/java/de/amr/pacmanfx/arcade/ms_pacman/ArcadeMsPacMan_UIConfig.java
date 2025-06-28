@@ -40,7 +40,7 @@ import static de.amr.pacmanfx.Globals.optGameLevel;
 import static de.amr.pacmanfx.Globals.theGameLevel;
 import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePalette.*;
 import static de.amr.pacmanfx.ui.PacManGames.theAssets;
-import static de.amr.pacmanfx.ui.PacManGames_UI.*;
+import static de.amr.pacmanfx.ui.PacManGames_UI.PY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceManager {

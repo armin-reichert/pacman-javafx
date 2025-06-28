@@ -10,6 +10,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
@@ -334,7 +335,8 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 if (level3D == null) {
                     replaceGameLevel3D();
                 }
-                Vector2f position = theGameLevel().centerPositionUnderHouse();
+                //TODO default position if no house
+                Vector2f position = theGameLevel().house().map(House::centerPositionUnderHouse).orElse(Vector2f.ZERO);
                 level3D.showAnimatedMessage("READY!", 2.5f, position.x(), position.y());
                 bindPlayerSteeringActions();
             }
@@ -426,7 +428,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void onGameContinued(GameEvent e) {
-        Vector2f position = theGameLevel().centerPositionUnderHouse();
+        Vector2f position = theGameLevel().house().map(House::centerPositionUnderHouse).orElse(Vector2f.ZERO);
         level3D.showAnimatedMessage("READY!", 0.5f, position.x(), position.y());
     }
 

@@ -15,6 +15,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.Direction.LEFT;
+import static java.util.Objects.requireNonNull;
 
 /**
  * From the Pac-Man dossier:
@@ -112,6 +113,12 @@ public class GateKeeper {
 
     private Consumer<Ghost> onGhostReleasedAction = ghost -> Logger.info("Ghost {} released from house", ghost.name());
 
+    private House house;
+
+    public void setHouse(House house) {
+        this.house = house;
+    }
+
     public void setOnGhostReleased(Consumer<Ghost> onGhostReleasedAction) {
         this.onGhostReleasedAction = onGhostReleasedAction;
     }
@@ -179,7 +186,8 @@ public class GateKeeper {
                 Logger.trace("Global dot counter = {}", globalCounter);
             }
         } else {
-            level.ghosts(GhostState.LOCKED).filter(level::isActorInsideHouse).findFirst().ifPresent(ghost -> {
+            requireNonNull(house);
+            level.ghosts(GhostState.LOCKED).filter(house::isActorInsideHouse).findFirst().ifPresent(ghost -> {
                 countersByGhost[ghost.personality()]++;
                 Logger.trace("{} dot counter = {}", ghost.name(), countersByGhost[ghost.personality()]);
             });
@@ -187,9 +195,10 @@ public class GateKeeper {
     }
 
     public void unlockGhosts(GameLevel level) {
+        requireNonNull(house);
         Ghost blinky = level.ghost(RED_GHOST_SHADOW);
         if (blinky.inAnyOfStates(GhostState.LOCKED)) {
-            if (level.isActorInsideHouse(blinky)) {
+            if (house.isActorInsideHouse(blinky)) {
                 blinky.setMoveAndWishDir(Direction.UP);
                 blinky.setState(GhostState.LEAVING_HOUSE);
             } else {

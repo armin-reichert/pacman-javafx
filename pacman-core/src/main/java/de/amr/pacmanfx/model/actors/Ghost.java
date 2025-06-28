@@ -10,6 +10,7 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.TerrainTile;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.House;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -171,7 +172,7 @@ public abstract class Ghost extends MovingActor implements Animated {
             Logger.debug("Hunting {} cannot move up to special tile {}", name, tile);
             return false;
         }
-        if (level.isDoorAt(tile)) {
+        if (level.house().isPresent() && level.house().get().isDoorAt(tile)) {
             return inAnyOfStates(GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE);
         }
         return !level.isTileBlocked(tile);
@@ -249,9 +250,14 @@ public abstract class Ghost extends MovingActor implements Animated {
      * and start blinking when Pac-Man's power starts fading. After that, they return to their normal color.
      */
     private void updateStateLocked(GameLevel level) {
-        if (level.isActorInsideHouse(this)) {
-            float minY = (level.houseMinTile().y() + 1) * TS + HTS;
-            float maxY = (level.houseMaxTile().y() - 1) * TS - HTS;
+        if (level.house().isEmpty()) {
+            Logger.error("No ghosthouse in level?");
+            return;
+        }
+        House house = level.house().get();
+        if (house.isActorInsideHouse(this)) {
+            float minY = (house.minTile().y() + 1) * TS + HTS;
+            float maxY = (house.maxTile().y() - 1) * TS - HTS;
             setSpeed(theGame().actorSpeedControl().ghostSpeedInsideHouse(level, this));
             move();
             if (y <= minY) {
@@ -280,8 +286,13 @@ public abstract class Ghost extends MovingActor implements Animated {
      * The ghost speed is slower than outside, but I do not know the exact value.
      */
     private void updateStateLeavingHouse(GameLevel level) {
+        if (level.house().isEmpty()) {
+            Logger.error("No ghost house in level?");
+            return;
+        }
+        House house = level.house().get();
         float speedInsideHouse = theGame().actorSpeedControl().ghostSpeedInsideHouse(level, this);
-        Vector2f houseEntryPosition = level.houseEntryPosition();
+        Vector2f houseEntryPosition = house.entryPosition();
         if (y <= houseEntryPosition.y()) {
             // has raised and is outside house
             setPosition(houseEntryPosition);
@@ -296,7 +307,7 @@ public abstract class Ghost extends MovingActor implements Animated {
         }
         // move inside house
         float centerX = x + HTS;
-        float houseCenterX = level.houseCenter().x();
+        float houseCenterX = house.center().x();
         if (differsAtMost(0.5f * speedInsideHouse, centerX, houseCenterX)) {
             // align horizontally and raise
             setX(houseCenterX - HTS);
@@ -376,15 +387,20 @@ public abstract class Ghost extends MovingActor implements Animated {
      * to the ghost house to be revived. Hallelujah!
      */
     private void updateStateReturningToHouse(GameLevel level) {
+        if (level.house().isEmpty()) {
+            Logger.error("No ghost house in level?");
+            return;
+        }
+        House house = level.house().get();
         float speed = theGame().actorSpeedControl().ghostSpeedReturningToHouse(level, this);
-        Vector2f houseEntry = level.houseEntryPosition();
+        Vector2f houseEntry = house.entryPosition();
         if (position().roughlyEquals(houseEntry, speed, 0)) {
             setPosition(houseEntry);
             setMoveAndWishDir(DOWN);
             setState(GhostState.ENTERING_HOUSE);
         } else {
             setSpeed(speed);
-            setTargetTile(level.houseLeftDoorTile());
+            setTargetTile(house.leftDoorTile());
             navigateTowardsTarget(level);
             tryMoving(level);
         }

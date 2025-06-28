@@ -351,6 +351,11 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
         if (level.portals().isEmpty()) {
             return; // should not happen
         }
+        House house = level.house().orElse(null);
+        if (house == null) {
+            Logger.error("No house exists in this level!");
+            return;
+        }
 
         Vector2i entryTile = level.worldMap().getTerrainTileProperty(WorldMapProperty.POS_BONUS);
         Vector2i exitTile;
@@ -376,8 +381,8 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
             }
         }
 
-        Vector2i houseEntry = tileAt(level.houseEntryPosition());
-        Vector2i backyard = houseEntry.plus(0, level.houseSizeInTiles().y() + 1);
+        Vector2i houseEntry = tileAt(house.entryPosition());
+        Vector2i backyard = houseEntry.plus(0, house.sizeInTiles().y() + 1);
         List<Waypoint> route = Stream.of(entryTile, houseEntry, backyard, houseEntry, exitTile)
             .map(Waypoint::new).toList();
 

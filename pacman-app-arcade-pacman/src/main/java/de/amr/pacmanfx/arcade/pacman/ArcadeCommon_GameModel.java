@@ -244,6 +244,7 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
         huntingTimer.reset();
         setScoreLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
+        level.house().ifPresent(house -> gateKeeper.setHouse(house)); //TODO what if no house exists?
         theGameEventManager().publishEvent(this, GameEventType.LEVEL_CREATED);
     }
 
@@ -260,6 +261,7 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
         huntingTimer.reset();
         setScoreLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
+        level.house().ifPresent(house -> gateKeeper.setHouse(house)); //TODO what if no house exists?
         theGameEventManager().publishEvent(this, GameEventType.LEVEL_CREATED);
     }
 
@@ -320,8 +322,6 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
                 level.worldMap().setContent(LayerID.TERRAIN, houseMinTile.y() + y, houseMinTile.x() + x, DEFAULT_HOUSE[y][x]);
             }
         }
-        level.setLeftDoorTile(houseMinTile.plus(3, 0));
-        level.setRightDoorTile(houseMinTile.plus(4, 0));
 
         level.setGhostStartDirection(RED_GHOST_SHADOW, Direction.LEFT);
         level.setGhostStartDirection(PINK_GHOST_SPEEDY, Direction.DOWN);

@@ -176,7 +176,6 @@ public class WorldMap {
         return newMap;
     }
 
-
     public List<Vector2i> buildObstacleList() {
         List<Vector2i> tilesWithErrors = new ArrayList<>();
         obstacles = ObstacleBuilder.buildObstacles(this, tilesWithErrors);

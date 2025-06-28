@@ -10,10 +10,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
-import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.HUD;
-import de.amr.pacmanfx.model.LevelCounter;
-import de.amr.pacmanfx.model.LivesCounter;
+import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.tengen.ms_pacman.model.*;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.Clapperboard;
@@ -374,14 +371,20 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
     }
 
     private void overPaintActorSprites(GameLevel level) {
+        House house = level.house().orElse(null);
+        if (house == null) {
+            Logger.error("No house exists in game level!");
+            return;
+        }
+
         float margin = scaled(1), halfMargin = 0.5f * margin;
         float s = scaled(TS);
 
         // Over-paint area at house bottom where the ghost sprites are shown in map
         var inHouseArea = new Rectangle2D(
-            halfMargin + s * (level.houseMinTile().x() + 1),
-            halfMargin + s * (level.houseMinTile().y() + 2),
-            s * (level.houseSizeInTiles().x() - 2) - margin,
+            halfMargin + s * (house.minTile().x() + 1),
+            halfMargin + s * (house.minTile().y() + 2),
+            s * (house.sizeInTiles().x() - 2) - margin,
             s * 2 - margin
         );
 

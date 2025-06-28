@@ -499,8 +499,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
                 level.worldMap().setContent(LayerID.TERRAIN, houseMinTile.y() + y, houseMinTile.x() + x, HOUSE[y][x]);
             }
         }
-        level.setLeftDoorTile(houseMinTile.plus(3, 0));
-        level.setRightDoorTile(houseMinTile.plus(4, 0));
         level.setGhostStartDirection(RED_GHOST_SHADOW, Direction.LEFT);
         level.setGhostStartDirection(PINK_GHOST_SPEEDY, Direction.DOWN);
         level.setGhostStartDirection(CYAN_GHOST_BASHFUL, Direction.UP);
@@ -533,7 +531,10 @@ public class TengenMsPacMan_GameModel extends GameModel {
         level.pac().usingAutopilotProperty().bind(PY_USING_AUTOPILOT);
         huntingTimer().reset();
         setScoreLevelNumber(levelNumber);
-        gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(levelNumber));
+        gateKeeper().ifPresent(gateKeeper -> {
+            gateKeeper.setLevelNumber(levelNumber);
+            level.house().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
+        });
         theGameEventManager().publishEvent(this, GameEventType.LEVEL_CREATED);
     }
 
@@ -548,7 +549,10 @@ public class TengenMsPacMan_GameModel extends GameModel {
         demoLevelSteering.init();
         huntingTimer.reset();
         setScoreLevelNumber(1);
-        gateKeeper().ifPresent(gateKeeper -> gateKeeper.setLevelNumber(1));
+        gateKeeper().ifPresent(gateKeeper -> {
+            gateKeeper.setLevelNumber(1);
+            level.house().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
+        });
         theGameEventManager().publishEvent(this, GameEventType.LEVEL_CREATED);
     }
 
@@ -592,9 +596,15 @@ public class TengenMsPacMan_GameModel extends GameModel {
             Logger.error("No portal found in current maze");
             return; // TODO: can this happen?
         }
+        House house = level.house().orElse(null);
+        if (house == null) {
+            Logger.error("No house exists in game level!");
+            return;
+        }
+
         boolean leftToRight = theRNG().nextBoolean();
-        Vector2i houseEntry = tileAt(level.houseEntryPosition());
-        Vector2i houseEntryOpposite = houseEntry.plus(0, level.houseSizeInTiles().y() + 1);
+        Vector2i houseEntry = tileAt(house.entryPosition());
+        Vector2i houseEntryOpposite = houseEntry.plus(0, house.sizeInTiles().y() + 1);
         Portal entryPortal = level.portals().get(theRNG().nextInt(level.portals().size()));
         Portal exitPortal  = level.portals().get(theRNG().nextInt(level.portals().size()));
         List<Waypoint> route = Stream.of(
