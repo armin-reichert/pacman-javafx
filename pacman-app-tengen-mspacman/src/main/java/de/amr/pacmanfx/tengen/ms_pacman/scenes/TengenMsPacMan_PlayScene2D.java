@@ -8,6 +8,7 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.LivesCounter;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
@@ -274,8 +275,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
             case GAME_OVER -> {
                 var theGame = (TengenMsPacMan_GameModel) theGame();
                 if (theGame.mapCategory() != MapCategory.ARCADE) {
-                    float belowHouse = centerPosBelowHouse().x();
-                    messageMovement.start(MOVING_MESSAGE_DELAY, belowHouse, sizeInPx().x());
+                    theGameLevel().house().ifPresent(house -> {
+                        float belowHouse = house.centerPositionUnderHouse().x();
+                        messageMovement.start(MOVING_MESSAGE_DELAY, belowHouse, sizeInPx().x());
+                    });
                 }
                 dynamicCamera.moveTop();
             }
@@ -464,16 +467,15 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
     }
 
     private Vector2f currentMessagePosition() {
-        Vector2f center = centerPosBelowHouse();
+        House house = theGameLevel().house().orElse(null);
+        if (house == null) {
+            Logger.error("No house in game level!");
+            return Vector2f.ZERO; //TODO
+        }
+        Vector2f center = house.centerPositionUnderHouse();
         return messageMovement != null && messageMovement.isRunning()
             ? new Vector2f(messageMovement.currentX(), center.y())
             : center;
-    }
-
-    private Vector2f centerPosBelowHouse() {
-        return theGameLevel().houseMinTile()
-                .plus(0.5f * theGameLevel().houseSizeInTiles().x(), theGameLevel().houseSizeInTiles().y() + 1)
-                .scaled(TS);
     }
 
     private void updateHUD() {

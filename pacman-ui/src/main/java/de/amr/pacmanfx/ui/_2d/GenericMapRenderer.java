@@ -66,7 +66,7 @@ public class GenericMapRenderer {
             terrainRenderer.setColorScheme(colors);
 
             terrainRenderer.drawTerrain(ctx, worldMap, worldMap.obstacles());
-            terrainRenderer.drawHouse(ctx, level.houseMinTile(), level.houseSizeInTiles());
+            level.house().ifPresent(house -> terrainRenderer.drawHouse(ctx, house.minTile(), house.sizeInTiles()));
             foodRenderer.setPelletColor(Color.web(colorMap.get("pellet")));
             foodRenderer.setEnergizerColor(Color.web(colorMap.get("pellet")));
             worldMap.tiles().filter(level::tileContainsFood).filter(not(level::isEnergizerPosition))

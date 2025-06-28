@@ -164,11 +164,13 @@ public class GameLevel3D {
             .anyMatch(Ghost::isVisible);
         maze3D.setHouseLightOn(houseAccessRequired);
 
-        boolean ghostNearHouseEntry = gameLevel
-            .ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
-            .filter(ghost -> ghost.position().euclideanDist(gameLevel.houseEntryPosition()) <= Settings3D.HOUSE_3D_SENSITIVITY)
-            .anyMatch(Ghost::isVisible);
-        houseOpenPy.set(ghostNearHouseEntry);
+        gameLevel.house().ifPresent(house -> {
+            boolean ghostNearHouseEntry = gameLevel
+                .ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+                .filter(ghost -> ghost.position().euclideanDist(house.entryPosition()) <= Settings3D.HOUSE_3D_SENSITIVITY)
+                .anyMatch(Ghost::isVisible);
+            houseOpenPy.set(ghostNearHouseEntry);
+        });
 
         int livesCounterSize = theGame().lifeCount() - 1;
         // when the game starts and Pac-Man is not yet visible, show one more

@@ -55,8 +55,7 @@ public class GameLevel {
     private final Vector2i[] energizerTiles;
     private final Portal[] portals;
 
-    private Vector2i leftDoorTile;
-    private Vector2i rightDoorTile;
+    private House house;
 
     // instead of Set<Vector2i> we use a bit-set indexed by top-down-left-to-right tile index
     private final BitSet eatenFoodBits;
@@ -86,6 +85,7 @@ public class GameLevel {
 
         blinking = new Pulse(10, Pulse.OFF);
         portals = findPortals(worldMap);
+        findHouseIfAny();
 
         currentBonusIndex = -1;
         energizerTiles = worldMap.tilesContaining(LayerID.FOOD, ENERGIZER.code()).toArray(Vector2i[]::new);
@@ -147,6 +147,16 @@ public class GameLevel {
             }
         }
         return portals.toArray(new Portal[0]);
+    }
+
+    private void findHouseIfAny() {
+        Vector2i minTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE);
+        Vector2i maxTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE);
+        if (minTile != null && maxTile != null) {
+            Vector2i leftDoorTile = minTile.plus(3, 0);
+            Vector2i rightDoorTile = minTile.plus(4, 0);
+            house = new House(minTile, maxTile, leftDoorTile, rightDoorTile);
+        }
     }
 
     public void makeReadyForPlaying() {
@@ -261,11 +271,6 @@ public class GameLevel {
         return portals().stream().anyMatch(portal -> portal.contains(tile));
     }
 
-    public boolean isDoorAt(Vector2i tile) {
-        requireNonNull(tile);
-        return tile.equals(leftDoorTile) || tile.equals(rightDoorTile);
-    }
-
     public boolean isTileBlocked(Vector2i tile) {
         return isTileInsideWorld(tile) && isBlocked(worldMap.content(LayerID.TERRAIN, tile));
     }
@@ -275,72 +280,23 @@ public class GameLevel {
     }
 
     public boolean isIntersection(Vector2i tile) {
-        if (worldMap.outOfWorld(tile) || isTileInHouseArea(tile) || isTileBlocked(tile)) {
+        if (worldMap.outOfWorld(tile) || isTileBlocked(tile)) {
+            return false;
+        }
+        if (house != null && house.isTileInHouseArea(tile)) {
             return false;
         }
         int freeNeighbors = 4;
         freeNeighbors -= (int) neighborsOutsideWorld(tile).count();
         freeNeighbors -= (int) neighborsInsideWorld(tile).filter(this::isTileBlocked).count();
-        freeNeighbors -= (int) neighborsInsideWorld(tile).filter(this::isDoorAt).count();
+        if (house != null) {
+            freeNeighbors -= (int) neighborsInsideWorld(tile).filter(house::isDoorAt).count();
+        }
         return freeNeighbors >= 3;
     }
 
-    // House
-
-    public void setLeftDoorTile(Vector2i tile) {
-        leftDoorTile = requireNonNull(tile);
-    }
-
-    public void setRightDoorTile(Vector2i tile) {
-        rightDoorTile = requireNonNull(tile);
-    }
-
-    public Vector2i houseMinTile() {
-        return worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE);
-    }
-
-    public Vector2i houseMaxTile() {
-        return worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE);
-    }
-
-    public Vector2i houseSizeInTiles() {
-        return houseMaxTile().minus(houseMinTile()).plus(1, 1);
-    }
-
-    public Vector2i houseLeftDoorTile() {
-        return leftDoorTile;
-    }
-
-    public Vector2i houseRightDoorTile() {
-        return rightDoorTile;
-    }
-
-    /**
-     * @return position at which ghosts can enter the house, one tile above and horizontally between the two door tiles
-     */
-    public Vector2f houseEntryPosition() {
-        return Vector2f.of(TS * rightDoorTile.x() - HTS, TS * (rightDoorTile.y() - 1));
-    }
-
-    public Vector2f houseCenter() {
-        return houseMinTile().toVector2f().scaled(TS).plus(houseSizeInTiles().toVector2f().scaled(HTS));
-    }
-
-    /**
-     * @return center position under house, used e.g. as anchor for level messages
-     */
-    public Vector2f centerPositionUnderHouse() {
-        Vector2i houseMinTile = houseMinTile(), houseSizeTiles = houseSizeInTiles();
-        return Vector2f.of(
-            TS * (houseMinTile.x() + 0.5f * houseSizeTiles.x()),
-            TS * (houseMinTile.y() +        houseSizeTiles.y())
-        );
-    }
-
-    public boolean isTileInHouseArea(Vector2i tile) {
-        requireNonNull(tile);
-        return tile.x() >= houseMinTile().x() && tile.x() <= houseMaxTile().x()
-            && tile.y() >= houseMinTile().y() && tile.y() <= houseMaxTile().y();
+    public Optional<House> house() {
+        return Optional.ofNullable(house);
     }
 
     // Actor positions
@@ -368,14 +324,6 @@ public class GameLevel {
     public Direction ghostStartDirection(byte personality) {
         requireValidGhostPersonality(personality);
         return ghostStartDirections[personality];
-    }
-
-    /**
-     * @param actor some actor
-     * @return tells if the given actor is located inside the house
-     */
-    public boolean isActorInsideHouse(Actor actor) {
-        return isTileInHouseArea(requireNonNull(actor).tile());
     }
 
     // Food

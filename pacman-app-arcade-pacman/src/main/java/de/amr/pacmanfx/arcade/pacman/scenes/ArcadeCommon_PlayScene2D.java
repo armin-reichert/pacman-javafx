@@ -199,7 +199,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
         // Level < Level message
         boolean highlighted = levelFlashing != null && levelFlashing.isRunning() && levelFlashing.isHighlighted();
         gr().drawLevel(theGameLevel(), backgroundColor(), highlighted, theGameLevel().blinking().isOn());
-        if (theGameLevel().message() != GameLevel.MESSAGE_NONE) drawLevelMessage();
+        if (theGameLevel().message() != GameLevel.MESSAGE_NONE) drawLevelMessage(theGameLevel());
 
         // Collect and draw actors in correct z-order: Bonus < Pac-Man < ghosts in right order.
         final List<Actor> actorsByZ = new ArrayList<>();
@@ -215,16 +215,18 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
         }
     }
 
-    private void drawLevelMessage() {
-        Vector2i houseMinTile = theGameLevel().houseMinTile(), houseSize = theGameLevel().houseSizeInTiles();
-        float cx = TS * (houseMinTile.x() + houseSize.x() * 0.5f);
-        float cy = TS * (houseMinTile.y() + houseSize.y() + 1);
-        switch (theGameLevel().message()) {
-            case GameLevel.MESSAGE_GAME_OVER -> gr().fillTextAtScaledCenter("GAME  OVER", ARCADE_RED, scaledArcadeFont8(), cx, cy);
-            case GameLevel.MESSAGE_READY -> gr().fillTextAtScaledCenter("READY!", ARCADE_YELLOW, scaledArcadeFont8(), cx, cy);
-            case GameLevel.MESSAGE_TEST -> gr().fillTextAtScaledCenter("TEST    L%02d".formatted(theGameLevel().number()),
+    private void drawLevelMessage(GameLevel gameLevel) {
+        gameLevel.house().ifPresent(house -> {
+            Vector2i houseSizeTiles = house.sizeInTiles();
+            float cx = TS * (house.minTile().x() + houseSizeTiles.x() * 0.5f);
+            float cy = TS * (house.minTile().y() + houseSizeTiles.y() + 1);
+            switch (gameLevel.message()) {
+                case GameLevel.MESSAGE_GAME_OVER -> gr().fillTextAtScaledCenter("GAME  OVER", ARCADE_RED, scaledArcadeFont8(), cx, cy);
+                case GameLevel.MESSAGE_READY -> gr().fillTextAtScaledCenter("READY!", ARCADE_YELLOW, scaledArcadeFont8(), cx, cy);
+                case GameLevel.MESSAGE_TEST -> gr().fillTextAtScaledCenter("TEST    L%02d".formatted(theGameLevel().number()),
                     ARCADE_WHITE, scaledArcadeFont8(), cx, cy);
-        }
+            }
+        });
     }
 
     @Override
