@@ -16,7 +16,8 @@ import java.util.List;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.isOneOf;
-import static de.amr.pacmanfx.ui.PacManGames_UI.*;
+import static de.amr.pacmanfx.ui.PacManGames_UI.PY_IMMUNITY;
+import static de.amr.pacmanfx.ui.PacManGames_UI.PY_USING_AUTOPILOT;
 
 /**
  * Game related settings.
