@@ -21,8 +21,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * 3D energizer pellet.
  */
-public class Energizer3D implements Eatable3D {
-    private final Sphere sphere;
+public class Energizer3D extends Sphere implements Eatable3D {
     private final ManagedAnimation pumpingAnimation;
     private final ManagedAnimation hideAndEatAnimation;
     private Animation eatenAnimation;
@@ -34,14 +33,13 @@ public class Energizer3D implements Eatable3D {
     public Energizer3D(double radius, AnimationManager animationManager) {
         requireNonNegative(radius, "Energizer radius must be positive but is %f");
         requireNonNull(animationManager);
-
-        sphere = new Sphere(radius);
+        setRadius(radius);
 
         pumpingAnimation = new ManagedAnimation(animationManager, "Energizer_Pumping") {
             @Override
             protected Animation createAnimation() {
                 // 3 full blinks per second
-                var scaleTransition = new ScaleTransition(Duration.millis(166.6), sphere);
+                var scaleTransition = new ScaleTransition(Duration.millis(166.6), shape3D());
                 scaleTransition.setAutoReverse(true);
                 scaleTransition.setCycleCount(Animation.INDEFINITE);
                 scaleTransition.setInterpolator(Interpolator.EASE_BOTH);
@@ -74,13 +72,13 @@ public class Energizer3D implements Eatable3D {
     }
 
     @Override
-    public void onEaten() {
-        pumpingAnimation.stop();
-        hideAndEatAnimation.play(ManagedAnimation.FROM_START);
+    public Shape3D shape3D() {
+        return this;
     }
 
     @Override
-    public Shape3D shape3D() {
-        return sphere;
+    public void onEaten() {
+        pumpingAnimation.stop();
+        hideAndEatAnimation.play(ManagedAnimation.FROM_START);
     }
 }

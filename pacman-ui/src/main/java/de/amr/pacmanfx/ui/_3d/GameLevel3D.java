@@ -205,7 +205,7 @@ public class GameLevel3D {
         floor3D = createFloor3D(worldMap.numCols() * TS, worldMap.numRows() * TS);
         maze3D = new Maze3D(gameLevel, colorScheme, animationManager);
         mazeGroup.getChildren().addAll(floor3D, maze3D);
-        createFood3D(gameLevel, colorScheme);
+        createPelletsAndEnergizers3D(gameLevel, colorScheme);
     }
 
     private Box createFloor3D(double sizeX, double sizeY) {
@@ -218,7 +218,7 @@ public class GameLevel3D {
         return floor3D;
     }
 
-    private void createFood3D(GameLevel gameLevel, WorldMapColorScheme colorScheme) {
+    private void createPelletsAndEnergizers3D(GameLevel gameLevel, WorldMapColorScheme colorScheme) {
         final Mesh pelletMesh = Model3DRepository.get().pelletMesh();
         final PhongMaterial pelletMaterial = coloredPhongMaterial(colorScheme.pellet());
         gameLevel.tilesContainingFood().forEach(tile -> {
@@ -229,18 +229,20 @@ public class GameLevel3D {
                     -2 * Settings3D.ENERGIZER_3D_RADIUS - 0.5 * Settings3D.FLOOR_3D_THICKNESS  // sitting just on floor
                 );
                 var energizer3D = new Energizer3D(Settings3D.ENERGIZER_3D_RADIUS, animationManager);
+                energizer3D.setMaterial(pelletMaterial);
                 energizer3D.setTile(tile);
-                energizer3D.shape3D().setTranslateX(center.getX());
-                energizer3D.shape3D().setTranslateY(center.getY());
-                energizer3D.shape3D().setTranslateZ(center.getZ());
-                energizer3D.shape3D().setMaterial(pelletMaterial);
-                var animation = new SquirtingAnimation(Duration.seconds(2));
-                animation.createDrops(23, 69, pelletMaterial, center);
-                animation.setDropFinalPosition(drop -> drop.getTranslateZ() >= -1
+                energizer3D.setTranslateX(center.getX());
+                energizer3D.setTranslateY(center.getY());
+                energizer3D.setTranslateZ(center.getZ());
+
+                var eatenAnimation = new SquirtingAnimation(Duration.seconds(2));
+                eatenAnimation.createDrops(23, 69, pelletMaterial, center);
+                eatenAnimation.setDropFinalPosition(drop -> drop.getTranslateZ() >= -1
                     && isInsideWorldMap(gameLevel.worldMap(), drop.getTranslateX(), drop.getTranslateY()));
-                animation.setOnFinished(e -> root.getChildren().remove(animation.root()));
-                root.getChildren().add(animation.root());
-                energizer3D.setEatenAnimation(animation);
+                eatenAnimation.setOnFinished(e -> root.getChildren().remove(eatenAnimation.root()));
+                root.getChildren().add(eatenAnimation.root());
+                energizer3D.setEatenAnimation(eatenAnimation);
+
                 energizers3D.add(energizer3D);
             } else {
                 var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
