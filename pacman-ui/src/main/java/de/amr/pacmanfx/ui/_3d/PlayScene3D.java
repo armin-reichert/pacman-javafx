@@ -274,14 +274,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             case LEVEL_COMPLETE -> {
                 theGameState().timer().resetIndefiniteTime(); // expires when animation ends
                 theSound().stopAll();
-                // hide explicitly because level might have been completed using cheat!
-                level3D.pellets3D().forEach(pellet3D -> pellet3D.shape3D().setVisible(false));
-                level3D.energizers3D().forEach(energizer3D -> energizer3D.shape3D().setVisible(false));
-                level3D.maze3D().door3D().setVisible(false);
-                level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
-                //TODO we need a "cool down" time such that e.g. squirting animations can complete before stopping all animations
-                animationManager.stopAllAnimations();
-
+                level3D.onLevelCompleted();
                 new SequentialTransition(
                     Ufx.doAfterSec(3, () -> {
                         perspectiveManager.perspectiveIDProperty().unbind();
@@ -290,6 +283,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                     level3D.levelCompletedAnimation().getOrCreateAnimation(),
                     Ufx.doAfterSec(1, () -> {
                         perspectiveManager.perspectiveIDProperty().bind(PY_3D_PERSPECTIVE);
+                        animationManager.stopAllAnimations();
                         theGameController().letCurrentGameStateExpire();
                     })
                 ).play();
@@ -459,7 +453,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     @Override
     public void onPacGetsPower(GameEvent event) {
         level3D.pac3D().setMovementPowerMode(true);
-        level3D.maze3D().playWallColorFlashingAnimation();
+        level3D.maze3D().wallColorFlashingAnimation().play(ManagedAnimation.FROM_START);
         theSound().stopSiren();
         theSound().playPacPowerSound();
     }
@@ -467,7 +461,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     @Override
     public void onPacLostPower(GameEvent event) {
         level3D.pac3D().setMovementPowerMode(false);
-        level3D.maze3D().stopWallColorFlashingAnimation();
+        level3D.maze3D().wallColorFlashingAnimation().stop();
         theSound().stopPacPowerSound();
     }
 

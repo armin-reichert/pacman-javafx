@@ -163,7 +163,7 @@ public class GameLevel3D {
                         Ufx.doAfterSec(2.0, () -> gameLevel.pac().hide()),
                         Ufx.doAfterSec(0.5, () -> theSound().playLevelCompleteSound()),
                         Ufx.doAfterSec(1.0, createLevelRotateAnimation()),
-                        Ufx.doAfterSec(1.0, maze3D.createWallsDisappearAnimation(1.0)),
+                        Ufx.doAfterSec(1.0, maze3D.wallsDisappearingAnimation().getOrCreateAnimation()),
                         Ufx.doAfterSec(1.0, () -> theSound().playLevelChangedSound())
                     );
                 }
@@ -197,6 +197,20 @@ public class GameLevel3D {
         livesCounter3D.light().setLightOn(visible);
     }
 
+    public void onLevelCompleted() {
+        // hide explicitly because level might have been completed using cheat!
+        pellets3D().forEach(pellet3D -> pellet3D.shape3D().setVisible(false));
+        energizers3D().forEach(energizer3D -> {
+            energizer3D.pumpingAnimation().stop();
+            energizer3D.shape3D().setVisible(false);
+        });
+        maze3D().door3D().setVisible(false);
+        maze3D.wallColorFlashingAnimation().stop();
+        bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
+        levelCounter3D().spinningAnimation().stop();
+        livesCounter3D().lookingAroundAnimation().stop();
+    }
+
     public Maze3D maze3D() { return maze3D; }
 
     public PacBase3D pac3D() { return pac3D; }
@@ -206,6 +220,8 @@ public class GameLevel3D {
     public MutatingGhost3D ghost3D(byte id) { return ghosts3D.get(id); }
 
     public Optional<Bonus3D> bonus3D() { return Optional.ofNullable(bonus3D); }
+
+    public LevelCounter3D levelCounter3D() { return levelCounter3D; }
 
     public LivesCounter3D livesCounter3D() { return livesCounter3D; }
 

@@ -9,6 +9,7 @@ import de.amr.pacmanfx.lib.tilemap.Obstacle;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer3D;
 import javafx.animation.*;
@@ -44,11 +45,11 @@ public class Maze3D extends Group {
 
     private final ArcadeHouse3D house3D;
 
-    private final AnimationManager animationMgr;
-    private MaterialColorAnimation wallColorFlashingAnimation;
+    private final ManagedAnimation wallColorFlashingAnimation;
+    private final ManagedAnimation wallsDisappearingAnimation;
 
     public Maze3D(GameLevel level, WorldMapColorScheme colorScheme, AnimationManager animationManager) {
-        this.animationMgr = requireNonNull(animationManager);
+        requireNonNull(animationManager);
 
         Logger.info("Build 3D maze for map with URL '{}'", level.worldMap().url());
 
@@ -110,6 +111,49 @@ public class Maze3D extends Group {
 
         PY_3D_WALL_HEIGHT.addListener((py, ov, nv) -> obstacleBaseHeightPy.set(nv.doubleValue()));
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
+
+        wallColorFlashingAnimation = new ManagedAnimation(animationManager, "MazeWallColorFlashing") {
+            @Override
+            protected Animation createAnimation() {
+                return new MaterialColorAnimation(Duration.seconds(0.25), wallTopMaterial, wallTopColor, wallBaseColor);
+            }
+        };
+
+        wallsDisappearingAnimation = new ManagedAnimation(animationManager, "Maze_WallsDisappearing") {
+            @Override
+            protected Animation createAnimation() {
+                var totalDuration = Duration.seconds(1);
+                var houseDisappears = new Timeline(
+                    new KeyFrame(totalDuration.multiply(0.33), new KeyValue(houseBaseHeightPy, 0, Interpolator.EASE_IN)));
+                var obstaclesDisappear = new Timeline(
+                    new KeyFrame(totalDuration.multiply(0.33), new KeyValue(obstacleBaseHeightPy, 0, Interpolator.EASE_IN)));
+                var animation = new SequentialTransition(houseDisappears, obstaclesDisappear);
+                animation.setOnFinished(e -> setVisible(false));
+                return animation;
+            }
+        };
+    }
+
+    // Maze flashing animation
+
+    public Animation createMazeFlashAnimation(int numFlashes) {
+        if (numFlashes == 0) {
+            return pauseSec(1.0);
+        }
+        var animation = new Timeline(
+            new KeyFrame(Duration.millis(125), new KeyValue(obstacleBaseHeightPy, 0, Interpolator.EASE_BOTH)));
+        animation.setAutoReverse(true);
+        animation.setCycleCount(2 * numFlashes);
+        return animation;
+    }
+
+
+    public ManagedAnimation wallColorFlashingAnimation() {
+        return wallColorFlashingAnimation;
+    }
+
+    public ManagedAnimation wallsDisappearingAnimation() {
+        return wallsDisappearingAnimation;
     }
 
     public void setHouseLightOn(boolean on) {
@@ -127,52 +171,5 @@ public class Maze3D extends Group {
         } else {
             return start.x() == 0 || start.x() == worldMap.numCols() * TS;
         }
-    }
-
-    // Wall color flashing animation
-
-    private MaterialColorAnimation createWallColorFlashingAnimation() {
-        return new MaterialColorAnimation(Duration.seconds(0.25), wallTopMaterial, wallTopColor, wallBaseColor);
-    }
-
-    public void playWallColorFlashingAnimation() {
-        if (wallColorFlashingAnimation == null) {
-            wallColorFlashingAnimation = createWallColorFlashingAnimation();
-            animationMgr.register("MazeWallColorFlashing", wallColorFlashingAnimation);
-        }
-        wallColorFlashingAnimation.playFromStart();
-    }
-
-    public void stopWallColorFlashingAnimation() {
-        if (wallColorFlashingAnimation != null) {
-            wallColorFlashingAnimation.stop();
-            wallColorFlashingAnimation.jumpTo(Duration.ZERO);
-        }
-    }
-
-    // Walls disappear animation
-
-    public Animation createWallsDisappearAnimation(double seconds) {
-        var totalDuration = Duration.seconds(seconds);
-        var houseDisappears = new Timeline(
-            new KeyFrame(totalDuration.multiply(0.33), new KeyValue(houseBaseHeightPy, 0, Interpolator.EASE_IN)));
-        var obstaclesDisappear = new Timeline(
-            new KeyFrame(totalDuration.multiply(0.33), new KeyValue(obstacleBaseHeightPy, 0, Interpolator.EASE_IN)));
-        var animation = new SequentialTransition(houseDisappears, obstaclesDisappear);
-        animation.setOnFinished(e -> setVisible(false));
-        return animation;
-    }
-
-    // Maze flashing animation
-
-    public Animation createMazeFlashAnimation(int numFlashes) {
-        if (numFlashes == 0) {
-            return pauseSec(1.0);
-        }
-        var animation = new Timeline(
-            new KeyFrame(Duration.millis(125), new KeyValue(obstacleBaseHeightPy, 0, Interpolator.EASE_BOTH)));
-        animation.setAutoReverse(true);
-        animation.setCycleCount(2 * numFlashes);
-        return animation;
     }
 }
