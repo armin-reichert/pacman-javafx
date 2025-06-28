@@ -60,6 +60,7 @@ public class InfoBoxAnimationInfo extends InfoBox {
         tableView.setPrefWidth(300);
         tableView.setPrefHeight(600);
         tableView.setPlaceholder(new Text("No animations"));
+        tableView.setFocusTraversable(false);
 
         TableColumn<AnimationData, String> idColumn = new TableColumn<>("Animation ID");
         idColumn.setCellValueFactory(data -> data.getValue().idProperty());
