@@ -48,8 +48,8 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.ui.PacManGames.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
-import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
-import static de.amr.pacmanfx.uilib.Ufx.doAfterSec;
+import static de.amr.pacmanfx.uilib.Ufx.*;
+import static de.amr.pacmanfx.uilib.Ufx.pauseSec;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -73,6 +73,9 @@ public class GameLevel3D {
     private final IntegerProperty livesCountPy = new SimpleIntegerProperty(0);
 
     private final AnimationManager animationManager;
+    private final ManagedAnimation pacDyingAnimation;
+    private final ManagedAnimation levelCompletedAnimation;
+
     private final Group root = new Group();
     private final Group mazeGroup = new Group();
     private final List<Pellet3D> pellets3D = new ArrayList<>();
@@ -85,7 +88,6 @@ public class GameLevel3D {
     private List<MutatingGhost3D> ghosts3D;
     private MessageView messageView;
     private Bonus3D bonus3D;
-
 
     public GameLevel3D(GameLevel gameLevel, AnimationManager animationManager) {
         requireNonNull(gameLevel);
@@ -118,6 +120,55 @@ public class GameLevel3D {
             .filter(Shape3D.class::isInstance)
             .map(Shape3D.class::cast)
             .forEach(shape3D -> shape3D.drawModeProperty().bind(PY_3D_DRAW_MODE));
+
+        pacDyingAnimation = new ManagedAnimation(animationManager, "PacMan_Dying") {
+            @Override
+            protected Animation createAnimation() {
+                pac3D.dyingAnimation().invalidate(); // ensure always newly created!
+                Animation animation = new SequentialTransition(
+                    now(theSound()::playPacDeathSound),
+                    pac3D.dyingAnimation().getOrCreateAnimation(),
+                    pauseSec(1)
+                );
+                animation.setDelay(Duration.seconds(2));
+                animation.setOnFinished(e -> theGameController().letCurrentGameStateExpire());
+                return animation;
+            }
+        };
+
+        levelCompletedAnimation = new ManagedAnimation(animationManager, "Level_Complete") {
+            @Override
+            protected Animation createAnimation() {
+                int levelNumber = gameLevel.number();
+                int numMazeFlashes = gameLevel.data().numFlashes();
+                if (theGame().cutSceneNumber(levelNumber).isPresent()) {
+                    // when a cut scene follows, only play the maze flashing animation
+                    return new SequentialTransition(
+                        doAfterSec(1.0, () -> gameLevel.ghosts().forEach(Ghost::hide)),
+                        maze3D.createMazeFlashAnimation(numMazeFlashes),
+                        doAfterSec(2.0, () -> gameLevel.pac().hide())
+                    );
+                }
+                else {
+                    boolean showFlashMessage = randomInt(1, 1000) < 250; // every 4th time also show a message
+                    return new SequentialTransition(
+                        Ufx.now(() -> {
+                            livesCounter3D().light().setLightOn(false);
+                            if (showFlashMessage) {
+                                theUI().showFlashMessageSec(3, theAssets().localizedLevelCompleteMessage(levelNumber));
+                            }
+                        }),
+                        Ufx.doAfterSec(1.0, () -> gameLevel.ghosts().forEach(Ghost::hide)),
+                        Ufx.doAfterSec(1.0, maze3D.createMazeFlashAnimation(numMazeFlashes)),
+                        Ufx.doAfterSec(2.0, () -> gameLevel.pac().hide()),
+                        Ufx.doAfterSec(0.5, () -> theSound().playLevelCompleteSound()),
+                        Ufx.doAfterSec(1.0, createLevelRotateAnimation()),
+                        Ufx.doAfterSec(1.0, maze3D.createWallsDisappearAnimation(1.0)),
+                        Ufx.doAfterSec(1.0, () -> theSound().playLevelChangedSound())
+                    );
+                }
+            }
+        };
     }
 
     public void update(GameLevel gameLevel) {
@@ -165,6 +216,14 @@ public class GameLevel3D {
     public Color floorColor() { return PY_3D_FLOOR_COLOR.get(); }
 
     public double floorThickness() { return floor3D.getDepth(); }
+
+    public ManagedAnimation pacDyingAnimation() {
+        return pacDyingAnimation;
+    }
+
+    public ManagedAnimation levelCompletedAnimation() {
+        return levelCompletedAnimation;
+    }
 
     private void createPac3D(GameLevel gameLevel) {
         pac3D = theUI().configuration().createPac3D(animationManager, gameLevel.pac());
@@ -320,36 +379,5 @@ public class GameLevel3D {
         rotation.setToAngle(360);
         rotation.setInterpolator(Interpolator.LINEAR);
         return rotation;
-    }
-
-    public Animation createLevelCompleteAnimation(GameLevel gameLevel) {
-        int levelNumber = gameLevel.number();
-        int numMazeFlashes = gameLevel.data().numFlashes();
-        if (theGame().cutSceneNumber(levelNumber).isPresent()) {
-            // when a cut scene follows, only play the maze flashing animation
-            return new SequentialTransition(
-                doAfterSec(1.0, () -> gameLevel.ghosts().forEach(Ghost::hide)),
-                maze3D.createMazeFlashAnimation(numMazeFlashes),
-                doAfterSec(2.0, () -> gameLevel.pac().hide())
-            );
-        }
-        else {
-            boolean showFlashMessage = randomInt(1, 1000) < 250; // every 4th time also show a message
-            return new SequentialTransition(
-                Ufx.now(() -> {
-                    livesCounter3D().light().setLightOn(false);
-                    if (showFlashMessage) {
-                        theUI().showFlashMessageSec(3, theAssets().localizedLevelCompleteMessage(levelNumber));
-                    }
-                }),
-                Ufx.doAfterSec(1.0, () -> gameLevel.ghosts().forEach(Ghost::hide)),
-                Ufx.doAfterSec(1.0, maze3D.createMazeFlashAnimation(numMazeFlashes)),
-                Ufx.doAfterSec(2.0, () -> gameLevel.pac().hide()),
-                Ufx.doAfterSec(0.5, () -> theSound().playLevelCompleteSound()),
-                Ufx.doAfterSec(1.0, createLevelRotateAnimation()),
-                Ufx.doAfterSec(1.0, maze3D.createWallsDisappearAnimation(1.0)),
-                Ufx.doAfterSec(1.0, () -> theSound().playLevelChangedSound())
-            );
-        }
     }
 }

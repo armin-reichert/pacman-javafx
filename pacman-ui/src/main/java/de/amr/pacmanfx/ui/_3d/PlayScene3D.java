@@ -19,7 +19,6 @@ import de.amr.pacmanfx.uilib.CameraControlledView;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -30,7 +29,6 @@ import javafx.scene.image.Image;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.paint.Color;
-import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.util.*;
@@ -43,7 +41,7 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.ui.PacManGames.*;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
-import static de.amr.pacmanfx.uilib.Ufx.*;
+import static de.amr.pacmanfx.uilib.Ufx.contextMenuTitleItem;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -71,8 +69,6 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     protected GameLevel3D level3D;
 
     private final AnimationManager animationManager = new AnimationManager();
-    private final ManagedAnimation pacDyingAnimation;
-    private final ManagedAnimation levelCompleteAnimation;
 
     public PlayScene3D() {
         scores3D = new Scores3D(
@@ -98,39 +94,6 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         perspectiveMap.put(PerspectiveID.TOTAL, new Perspective.Total());
         perspectiveMap.put(PerspectiveID.TRACK_PLAYER, new Perspective.TrackingPlayer());
         perspectiveMap.put(PerspectiveID.NEAR_PLAYER, new Perspective.StalkingPlayer());
-
-        pacDyingAnimation = new ManagedAnimation(animationManager, "PacMan_Dying") {
-            @Override
-            protected Animation createAnimation() {
-                level3D.pac3D().dyingAnimation().invalidate(); // ensure always newly created!
-                Animation animation = new SequentialTransition(
-                    now(theSound()::playPacDeathSound),
-                    level3D.pac3D().dyingAnimation().getOrCreateAnimation(),
-                    pauseSec(1)
-                );
-                animation.setDelay(Duration.seconds(2));
-                animation.setOnFinished(e -> theGameController().letCurrentGameStateExpire());
-                return animation;
-            }
-        };
-
-        levelCompleteAnimation = new ManagedAnimation(animationManager, "Level_Complete") {
-            @Override
-            protected Animation createAnimation() {
-                var animation = new SequentialTransition(
-                    Ufx.doAfterSec(3, () -> {
-                        perspectiveIDPy.unbind();
-                        perspectiveIDPy.set(PerspectiveID.TOTAL);
-                    }),
-                    level3D.createLevelCompleteAnimation(theGameLevel())
-                );
-                animation.setOnFinished(e -> {
-                    perspectiveIDPy.bind(PY_3D_PERSPECTIVE);
-                    theGameController().letCurrentGameStateExpire();
-                });
-                return animation;
-            }
-        };
     }
 
     public AnimationManager animationManager() {
@@ -309,7 +272,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 level3D.pac3D().update(theGameLevel());
                 level3D.livesCounter3D().lookingAroundAnimation().stop();
                 level3D.ghosts3D().forEach(MutatingGhost3D::stopAllAnimations);
-                pacDyingAnimation.play(ManagedAnimation.FROM_START);
+                level3D.pacDyingAnimation().play(ManagedAnimation.FROM_START);
             }
             case GHOST_DYING ->
                 theSimulationStep().killedGhosts.forEach(ghost -> {
@@ -327,7 +290,18 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
                 //TODO we need a "cool down" time such that e.g. squirting animations can complete before stopping all animations
                 animationManager.stopAllAnimations();
-                levelCompleteAnimation.play(ManagedAnimation.FROM_START);
+
+                new SequentialTransition(
+                    Ufx.doAfterSec(3, () -> {
+                        perspectiveIDPy.unbind();
+                        perspectiveIDPy.set(PerspectiveID.TOTAL);
+                    }),
+                    level3D.levelCompletedAnimation().getOrCreateAnimation(),
+                    Ufx.doAfterSec(1, () -> {
+                        perspectiveIDPy.bind(PY_3D_PERSPECTIVE);
+                        theGameController().letCurrentGameStateExpire();
+                    })
+                ).play();
             }
             case LEVEL_TRANSITION -> {
                 theGameState().timer().restartSeconds(3);
@@ -545,7 +519,6 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         scores3D.translateXProperty().bind(level3D.root().translateXProperty().add(TS));
         scores3D.translateYProperty().bind(level3D.root().translateYProperty().subtract(3.5 * TS));
         scores3D.translateZProperty().bind(level3D.root().translateZProperty().subtract(3.5 * TS));
-        levelCompleteAnimation.invalidate();
     }
 
     protected void updateSound() {
