@@ -127,9 +127,9 @@ public class GameLevel3D {
                 if (theGame().cutSceneNumber(levelNumber).isPresent()) {
                     // when a cut scene follows, only play the maze flashing animation
                     return new SequentialTransition(
-                        doAfterSec(1.0, () -> gameLevel.ghosts().forEach(Ghost::hide)),
-                        maze3D.createMazeFlashAnimation(numMazeFlashes),
-                        doAfterSec(2.0, () -> gameLevel.pac().hide())
+                        doAfterSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
+                        doAfterSec(0.5, maze3D.createMazeFlashAnimation(numMazeFlashes)),
+                        doAfterSec(0.5, () -> gameLevel.pac().hide())
                     );
                 }
                 else {
@@ -141,12 +141,12 @@ public class GameLevel3D {
                                 theUI().showFlashMessageSec(3, theAssets().localizedLevelCompleteMessage(levelNumber));
                             }
                         }),
-                        doAfterSec(1.0, () -> gameLevel.ghosts().forEach(Ghost::hide)),
-                        doAfterSec(1.0, maze3D.createMazeFlashAnimation(numMazeFlashes)),
-                        doAfterSec(2.0, () -> gameLevel.pac().hide()),
+                        doAfterSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
+                        doAfterSec(0.5, maze3D.createMazeFlashAnimation(numMazeFlashes)),
+                        doAfterSec(0.5, () -> gameLevel.pac().hide()),
+                        doAfterSec(0.5, createLevelRotateAnimation()),
                         doAfterSec(0.5, () -> theSound().playLevelCompleteSound()),
-                        doAfterSec(1.0, createLevelRotateAnimation()),
-                        doAfterSec(1.0, maze3D.wallsDisappearingAnimation().getOrCreateAnimation()),
+                        doAfterSec(0.5, maze3D.wallsDisappearingAnimation().getOrCreateAnimation()),
                         doAfterSec(1.0, () -> theSound().playLevelChangedSound())
                     );
                 }
