@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.model3D;
 
+import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -27,7 +28,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * 3D representation of a ghost.
  */
-public class Ghost3D {
+public class Ghost3D extends Group {
 
     private final ObjectProperty<Color> dressColorPy    = new SimpleObjectProperty<>(Color.ORANGE);
     private final ObjectProperty<Color> eyeballsColorPy = new SimpleObjectProperty<>(Color.WHITE);
@@ -36,7 +37,6 @@ public class Ghost3D {
     private final byte personality;
     private final AssetStorage assets;
     private final String assetNamespace;
-    private final Group root = new Group();
     private final Shape3D dressShape;
     private final Group dressGroup;
 
@@ -82,7 +82,7 @@ public class Ghost3D {
 
         var eyesGroup = new Group(pupilsShape, eyeballsShape);
         dressGroup = new Group(dressShape);
-        root.getChildren().setAll(dressGroup, eyesGroup);
+        getChildren().setAll(dressGroup, eyesGroup);
 
         Bounds dressBounds = dressShape.getBoundsInLocal();
         var centeredOverOrigin = new Translate(-dressBounds.getCenterX(), -dressBounds.getCenterY(), -dressBounds.getCenterZ());
@@ -90,10 +90,10 @@ public class Ghost3D {
         eyesGroup.getTransforms().add(centeredOverOrigin);
 
         // TODO: fix orientation in OBJ file
-        root.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(180, Rotate.Y_AXIS), new Rotate(180, Rotate.Z_AXIS));
-        Bounds bounds = root.getBoundsInLocal();
+        getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(180, Rotate.Y_AXIS), new Rotate(180, Rotate.Z_AXIS));
+        Bounds bounds = getBoundsInLocal();
         Scale scale = new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
-        root.getTransforms().add(scale);
+        getTransforms().add(scale);
 
         dressAnimation = new ManagedAnimation(animationManager, "Ghost_DressMoving") {
             @Override
@@ -157,12 +157,17 @@ public class Ghost3D {
     }
 
     public Group root() {
-        return root;
+        return this;
     }
 
-    public void setRotation(double angle) {
-        root.setRotationAxis(Rotate.Z_AXIS);
-        root.setRotate(angle);
+    public void turnTowards(Direction dir) {
+        setRotationAxis(Rotate.Z_AXIS);
+        setRotate(switch (dir) {
+            case LEFT  -> 0;
+            case UP    -> 90;
+            case RIGHT -> 180;
+            case DOWN  -> 270;
+        });
     }
 
     public void setFlashingAppearance(int numFlashes) {

@@ -168,13 +168,7 @@ public class MutatingGhost3D extends Group {
         setTranslateX(center.x());
         setTranslateY(center.y());
         setTranslateZ(-0.5 * size - 2.0); // a little bit over the floor
-        double angle = switch (ghost.wishDir()) {
-            case LEFT  -> 0;
-            case UP    -> 90;
-            case RIGHT -> 180;
-            case DOWN  -> 270;
-        };
-        ghost3D.setRotation(angle);
+        ghost3D.turnTowards(ghost.wishDir());
         boolean outsideTerrain = center.x() < HTS || center.x() > level.worldMap().numCols() * TS - HTS;
         setVisible(ghost.isVisible() && !outsideTerrain);
     }
