@@ -9,6 +9,7 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
@@ -215,8 +216,8 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             return;
         }
         level3D.update(theGameLevel());
-        updateScores();
-        updateSound();
+        updateScores(theGameLevel());
+        updateSound(theGameLevel());
         perspectiveManager.updatePerspective(theGameLevel());
     }
 
@@ -376,7 +377,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         }
 
         subScene3D.setFill(Color.TRANSPARENT);
-        updateScores();
+        updateScores(theGameLevel());
         bindActions();
     }
 
@@ -491,27 +492,27 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         scores3D.translateZProperty().bind(level3D.root().translateZProperty().subtract(3.5 * TS));
     }
 
-    protected void updateSound() {
-        if (theGameLevel().isDemoLevel()) {
+    protected void updateSound(GameLevel gameLevel) {
+        if (gameLevel.isDemoLevel()) {
             return; // demo level is silent
         }
-        if (theGameState() == GameState.HUNTING && !theGameLevel().pac().powerTimer().isRunning()) {
+        if (theGameState() == GameState.HUNTING && !gameLevel.pac().powerTimer().isRunning()) {
             int sirenNumber = 1 + theGame().huntingTimer().phaseIndex() / 2;
             theSound().selectSiren(sirenNumber);
             theSound().playSiren();
         }
-        if (theGameLevel().pac().starvingTicks() > 5) { // TODO not sure how to do this right
+        if (gameLevel.pac().starvingTicks() > 5) { // TODO not sure how to do this right
             theSound().stopMunchingSound();
         }
-        boolean ghostsReturning = theGameLevel().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
-        if (theGameLevel().pac().isAlive() && ghostsReturning) {
+        boolean ghostsReturning = gameLevel.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
+        if (gameLevel.pac().isAlive() && ghostsReturning) {
             theSound().playGhostReturningHomeSound();
         } else {
             theSound().stopGhostReturningHomeSound();
         }
     }
 
-    protected void updateScores() {
+    protected void updateScores(GameLevel gameLevel) {
         final Score score = theGame().score(), highScore = theGame().highScore();
         if (score.isEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());
