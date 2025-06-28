@@ -193,14 +193,18 @@ public interface Ufx {
         return animation;
     }
 
+    static Transition emptyTransition() {
+        return new Transition() {
+            @Override
+            protected void interpolate(double t) {}
+        };
+    }
+
     static Transition now(Runnable action) {
         requireNonNull(action);
-        var wrapper = new Transition() {
-            @Override
-            protected void interpolate(double frac) {}
-        };
-        wrapper.setOnFinished(e -> action.run());
-        return wrapper;
+        var transition = emptyTransition();
+        transition.setOnFinished(e -> action.run());
+        return transition;
     }
 
     record ColorChange(Color from, Color to) {}

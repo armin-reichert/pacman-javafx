@@ -48,8 +48,7 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.ui.PacManGames.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
-import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
-import static de.amr.pacmanfx.uilib.Ufx.doAfterSec;
+import static de.amr.pacmanfx.uilib.Ufx.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -136,19 +135,19 @@ public class GameLevel3D {
                 else {
                     boolean showFlashMessage = randomInt(1, 1000) < 250; // every 4th time also show a message
                     return new SequentialTransition(
-                        Ufx.now(() -> {
+                        now(() -> {
                             livesCounter3D().light().setLightOn(false);
                             if (showFlashMessage) {
                                 theUI().showFlashMessageSec(3, theAssets().localizedLevelCompleteMessage(levelNumber));
                             }
                         }),
-                        Ufx.doAfterSec(1.0, () -> gameLevel.ghosts().forEach(Ghost::hide)),
-                        Ufx.doAfterSec(1.0, maze3D.createMazeFlashAnimation(numMazeFlashes)),
-                        Ufx.doAfterSec(2.0, () -> gameLevel.pac().hide()),
-                        Ufx.doAfterSec(0.5, () -> theSound().playLevelCompleteSound()),
-                        Ufx.doAfterSec(1.0, createLevelRotateAnimation()),
-                        Ufx.doAfterSec(1.0, maze3D.wallsDisappearingAnimation().getOrCreateAnimation()),
-                        Ufx.doAfterSec(1.0, () -> theSound().playLevelChangedSound())
+                        doAfterSec(1.0, () -> gameLevel.ghosts().forEach(Ghost::hide)),
+                        doAfterSec(1.0, maze3D.createMazeFlashAnimation(numMazeFlashes)),
+                        doAfterSec(2.0, () -> gameLevel.pac().hide()),
+                        doAfterSec(0.5, () -> theSound().playLevelCompleteSound()),
+                        doAfterSec(1.0, createLevelRotateAnimation()),
+                        doAfterSec(1.0, maze3D.wallsDisappearingAnimation().getOrCreateAnimation()),
+                        doAfterSec(1.0, () -> theSound().playLevelChangedSound())
                     );
                 }
             }
