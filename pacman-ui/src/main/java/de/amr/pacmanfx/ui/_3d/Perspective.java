@@ -18,14 +18,14 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
  */
 public interface Perspective {
 
-    void init(SubScene scene, GameLevel level);
+    void init(SubScene scene);
     void update(SubScene scene, GameLevel level, Actor spottedActor);
 
     class Drone implements Perspective {
         static final int HEIGHT_OVER_GROUND = 200;
 
         @Override
-        public void init(SubScene scene, GameLevel level) {
+        public void init(SubScene scene) {
             PerspectiveCamera camera = (PerspectiveCamera) scene.getCamera();
             camera.setNearClip(0.1);
             camera.setFarClip(10000.0);
@@ -52,7 +52,7 @@ public interface Perspective {
     class Total implements Perspective {
 
         @Override
-        public void init(SubScene scene, GameLevel level) {
+        public void init(SubScene scene) {
             PerspectiveCamera camera = (PerspectiveCamera) scene.getCamera();
             camera.setNearClip(0.1);
             camera.setFarClip(10000.0);
@@ -75,7 +75,7 @@ public interface Perspective {
     class TrackingPlayer implements Perspective {
 
         @Override
-        public void init(SubScene scene, GameLevel level) {
+        public void init(SubScene scene) {
             PerspectiveCamera camera = (PerspectiveCamera) scene.getCamera();
             camera.setNearClip(0.1);
             camera.setFarClip(10000.0);
@@ -101,7 +101,7 @@ public interface Perspective {
     class StalkingPlayer implements Perspective {
 
         @Override
-        public void init(SubScene scene, GameLevel level) {
+        public void init(SubScene scene) {
             PerspectiveCamera camera = (PerspectiveCamera) scene.getCamera();
             camera.setNearClip(0.1);
             camera.setFarClip(10000.0);

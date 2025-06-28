@@ -22,8 +22,6 @@ import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.SequentialTransition;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -32,7 +30,10 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.isOneOf;
@@ -53,18 +54,11 @@ import static java.util.Objects.requireNonNull;
  */
 public class PlayScene3D implements GameScene, CameraControlledView {
 
-    protected final ObjectProperty<PerspectiveID> perspectiveIDPy = new SimpleObjectProperty<>() {
-        @Override
-        protected void invalidated() {
-            initCameraPerspectiveForGameLevel();
-        }
-    };
-
     protected final AnimationManager animationManager = new AnimationManager();
     protected final Group root = new Group();
     protected final SubScene subScene3D;
     protected final PerspectiveCamera camera = new PerspectiveCamera(true);
-    protected final Map<PerspectiveID, Perspective> perspectiveMap = new EnumMap<>(PerspectiveID.class);
+    protected final PerspectiveManager perspectiveManager;
     protected final Map<KeyCombination, GameAction> actionBindingMap = new HashMap<>();
     protected final Scores3D scores3D;
 
@@ -90,10 +84,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         subScene3D.setCamera(camera);
         subScene3D.setFill(Color.BLACK); // gets transparent when level is available
 
-        perspectiveMap.put(PerspectiveID.DRONE, new Perspective.Drone());
-        perspectiveMap.put(PerspectiveID.TOTAL, new Perspective.Total());
-        perspectiveMap.put(PerspectiveID.TRACK_PLAYER, new Perspective.TrackingPlayer());
-        perspectiveMap.put(PerspectiveID.NEAR_PLAYER, new Perspective.StalkingPlayer());
+        perspectiveManager = new PerspectiveManager(subScene3D);
     }
 
     public AnimationManager animationManager() {
@@ -196,16 +187,16 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     @Override
     public void init() {
         theGame().hud().showScore(true);
-        perspectiveIDPy.bind(PY_3D_PERSPECTIVE);
+        perspectiveManager.perspectiveIDProperty().bind(PY_3D_PERSPECTIVE);
     }
 
     @Override
     public final void end() {
         theSound().stopAll();
         clearActionBindings();
-        perspectiveIDPy.unbind();
         animationManager.stopAllAnimations();
         animationManager.clearAnimations();
+        perspectiveManager.perspectiveIDProperty().unbind();
         level3D = null;
     }
 
@@ -226,7 +217,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         level3D.update(theGameLevel());
         updateScores();
         updateSound();
-        updateCameraPerspectiveForGameLevel();
+        perspectiveManager.updatePerspective(theGameLevel());
     }
 
     @Override
@@ -293,12 +284,12 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
                 new SequentialTransition(
                     Ufx.doAfterSec(3, () -> {
-                        perspectiveIDPy.unbind();
-                        perspectiveIDPy.set(PerspectiveID.TOTAL);
+                        perspectiveManager.perspectiveIDProperty().unbind();
+                        perspectiveManager.setPerspective(PerspectiveID.TOTAL);
                     }),
                     level3D.levelCompletedAnimation().getOrCreateAnimation(),
                     Ufx.doAfterSec(1, () -> {
-                        perspectiveIDPy.bind(PY_3D_PERSPECTIVE);
+                        perspectiveManager.perspectiveIDProperty().bind(PY_3D_PERSPECTIVE);
                         theGameController().letCurrentGameStateExpire();
                     })
                 ).play();
@@ -307,7 +298,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 theGameState().timer().restartSeconds(3);
                 replaceGameLevel3D();
                 level3D.pac3D().init();
-                initCameraPerspectiveForGameLevel();
+                perspectiveManager.initPerspective();
             }
             case GAME_OVER -> {
                 theGameState().timer().restartSeconds(3);
@@ -352,7 +343,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             default -> Logger.error("Unexpected game state '{}' on level start", theGameState());
         }
         subScene3D.setFill(Color.TRANSPARENT);
-        initCameraPerspectiveForGameLevel();
+        perspectiveManager.initPerspective();
     }
 
     @Override
@@ -489,28 +480,6 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     public void onUnspecifiedChange(GameEvent event) {
         // TODO: remove (this is only used by game state GameState.TESTING_CUT_SCENES)
         theUI().updateGameScene(true);
-    }
-
-    protected void initCameraPerspectiveForGameLevel() {
-        optGameLevel().ifPresent(gameLevel -> {
-            PerspectiveID id = perspectiveIDPy.get();
-            if (id != null && perspectiveMap.containsKey(id)) {
-                perspectiveMap.get(id).init(subScene3D, gameLevel);
-            } else {
-                Logger.error("Cannot init camera perspective with ID '{}'", id);
-            }
-        });
-    }
-
-    protected void updateCameraPerspectiveForGameLevel() {
-        optGameLevel().ifPresent(gameLevel -> {
-            PerspectiveID id = perspectiveIDPy.get();
-            if (id != null && perspectiveMap.containsKey(id)) {
-                perspectiveMap.get(id).update(subScene3D, gameLevel, gameLevel.pac());
-            } else {
-                Logger.error("Cannot update camera perspective with ID '{}'", id);
-            }
-        });
     }
 
     protected void replaceGameLevel3D() {
