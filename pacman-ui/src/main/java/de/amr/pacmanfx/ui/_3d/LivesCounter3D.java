@@ -91,7 +91,24 @@ public class LivesCounter3D extends Group {
                     animation.getChildren().add(rotation);
                 }
                 setInitialShapeRotation();
+                animation.setCycleCount(Animation.INDEFINITE);
                 return animation;
+            }
+
+            @Override
+            public void play(boolean playMode) {
+                if (playMode == CONTINUE) {
+                    super.play(playMode);
+                }
+                ParallelTransition pt = (ParallelTransition) getOrCreateAnimation();
+                var copy = pt.getChildren().toArray(Animation[]::new);
+                pt.getChildren().clear();
+                for (Animation childAnimation : copy) {
+                    childAnimation.stop();
+                    childAnimation.jumpTo(Duration.ZERO);
+                    pt.getChildren().add(childAnimation);
+                }
+                pt.playFromStart();
             }
         };
     }
