@@ -23,6 +23,7 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.Globals.theRNG;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -66,11 +67,34 @@ public class LivesCounter3D extends Group {
             pacShape.setUserData(i);
             pacShape.setTranslateX(x);
             pacShape.setTranslateY(0);
-            // let Pac shape sit on top of plate
-            pacShape.translateZProperty().bind(pillarHeightPy.add(plateThicknessPy).add(shapeRadius).negate());
             pacShape.visibleProperty().bind(livesCountPy.map(count -> count.intValue() > (int) pacShape.getUserData()));
 
-            standsGroup.getChildren().add(createStand(x));
+            var pillar = new Cylinder(1, 0.1);
+            pillar.heightProperty().bind(pillarHeightPy.add(i % 2 == 0 ? 0 : 4));
+            pillar.materialProperty().bind(pillarMaterialPy);
+            pillar.setTranslateX(x);
+            pillar.translateZProperty().bind(pillar.heightProperty().multiply(-0.5));
+            pillar.setRotationAxis(Rotate.X_AXIS);
+            pillar.setRotate(90);
+            pillar.drawModeProperty().bind(drawModePy);
+
+            var podium = new Cylinder();
+            podium.radiusProperty().bind(plateRadiusPy);
+            podium.heightProperty().bind(plateThicknessPy);
+            podium.materialProperty().bind(plateMaterialPy);
+            podium.setTranslateX(x);
+            podium.translateZProperty().bind(pillar.heightProperty().add(plateThicknessPy).negate());
+            podium.setRotationAxis(Rotate.X_AXIS);
+            podium.setRotate(90);
+            podium.drawModeProperty().bind(drawModePy);
+
+            Group stand = new Group(pillar, podium);
+            standsGroup.getChildren().add(stand);
+
+            // let Pac shape sit on top of plate
+            pacShape.translateZProperty().bind(pillar.heightProperty().add(plateThicknessPy).add(shapeRadius).negate());
+
+
             getChildren().add(pacShape);
         }
         setInitialShapeRotation();
@@ -83,11 +107,12 @@ public class LivesCounter3D extends Group {
                 for (Node pacShape : pacShapes) {
                     var rotation = new RotateTransition(Duration.seconds(10.0), pacShape);
                     rotation.setAxis(Rotate.Z_AXIS);
-                    rotation.setFromAngle(240);
-                    rotation.setToAngle(300);
+                    rotation.setFromAngle(210);
+                    rotation.setToAngle(270);
                     rotation.setInterpolator(Interpolator.LINEAR);
                     rotation.setCycleCount(Animation.INDEFINITE);
                     rotation.setAutoReverse(true);
+                    rotation.setRate(theRNG().nextDouble(1, 6));
                     animation.getChildren().add(rotation);
                 }
                 setInitialShapeRotation();
@@ -113,6 +138,13 @@ public class LivesCounter3D extends Group {
         };
     }
 
+    private void setInitialShapeRotation() {
+        for (Node shape : pacShapes) {
+            shape.setRotationAxis(Rotate.Z_AXIS);
+            shape.setRotate(240);
+        }
+    }
+
     public ManagedAnimation lookingAroundAnimation() {
         return lookingAroundAnimation;
     }
@@ -127,35 +159,5 @@ public class LivesCounter3D extends Group {
 
     public PointLight light() {
         return light;
-    }
-
-    private void setInitialShapeRotation() {
-        for (Node shape : pacShapes) {
-            shape.setRotationAxis(Rotate.Z_AXIS);
-            shape.setRotate(240);
-        }
-    }
-
-    private Group createStand(double x) {
-        var pillar = new Cylinder(1, 0.1);
-        pillar.heightProperty().bind(pillarHeightPy);
-        pillar.materialProperty().bind(pillarMaterialPy);
-        pillar.setTranslateX(x);
-        pillar.translateZProperty().bind(pillarHeightPy.multiply(-0.5));
-        pillar.setRotationAxis(Rotate.X_AXIS);
-        pillar.setRotate(90);
-        pillar.drawModeProperty().bind(drawModePy);
-
-        var podium = new Cylinder();
-        podium.radiusProperty().bind(plateRadiusPy);
-        podium.heightProperty().bind(plateThicknessPy);
-        podium.materialProperty().bind(plateMaterialPy);
-        podium.setTranslateX(x);
-        podium.translateZProperty().bind(pillarHeightPy.add(plateThicknessPy).negate());
-        podium.setRotationAxis(Rotate.X_AXIS);
-        podium.setRotate(90);
-        podium.drawModeProperty().bind(drawModePy);
-
-        return new Group(pillar, podium);
     }
 }
