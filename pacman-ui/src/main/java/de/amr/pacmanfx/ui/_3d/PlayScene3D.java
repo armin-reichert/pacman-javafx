@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.Score;
@@ -47,8 +48,8 @@ import static java.util.Objects.requireNonNull;
 /**
  * 3D play scene.
  *
- * <p>Provides different camera perspectives that can be stepped  through using key combinations
- * <code>Alt+LEFT</code> and <code>Alt+RIGHT</code>.
+ * <p>Provides different camera perspectives that can be stepped through using key combinations
+ * <code>Alt+LEFT</code> and <code>Alt+RIGHT</code> (Did he really said Alt-Right?).
  */
 public class PlayScene3D implements GameScene, CameraControlledView {
 
@@ -59,16 +60,15 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         }
     };
 
+    protected final AnimationManager animationManager = new AnimationManager();
     protected final Group root = new Group();
     protected final SubScene subScene3D;
     protected final PerspectiveCamera camera = new PerspectiveCamera(true);
     protected final Map<PerspectiveID, Perspective> perspectiveMap = new EnumMap<>(PerspectiveID.class);
     protected final Map<KeyCombination, GameAction> actionBindingMap = new HashMap<>();
-
     protected final Scores3D scores3D;
-    protected GameLevel3D level3D;
 
-    private final AnimationManager animationManager = new AnimationManager();
+    protected GameLevel3D level3D;
 
     public PlayScene3D() {
         scores3D = new Scores3D(
@@ -340,7 +340,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 if (level3D == null) {
                     replaceGameLevel3D();
                 }
-                showReadyMessage();
+                showReadyMessage(theGame().isPlaying() ? 0.5f : 2.5f);
                 bindPlayerSteeringActions();
             }
             case TESTING_LEVELS_SHORT, TESTING_LEVELS_MEDIUM -> {
@@ -431,7 +431,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void onGameContinued(GameEvent e) {
-        showReadyMessage();
+        showReadyMessage(0.5f);
     }
 
     @Override
@@ -562,12 +562,16 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         level3D.showAnimatedMessage("LEVEL %d (TEST)".formatted(levelNumber), 5, x, y);
     }
 
-    protected void showReadyMessage() {
+    protected void showReadyMessage(float seconds) {
+        Vector2f position = centerPositionUnderHouse();
+        level3D.showAnimatedMessage("READY!", seconds, position.x(), position.y());
+    }
+
+    private Vector2f centerPositionUnderHouse() {
         Vector2i houseMinTile = theGameLevel().houseMinTile();
         Vector2i houseSizeInTiles = theGameLevel().houseSizeInTiles();
         double x = TS * (houseMinTile.x() + 0.5 * houseSizeInTiles.x());
         double y = TS * (houseMinTile.y() +       houseSizeInTiles.y());
-        float seconds = theGame().isPlaying() ? 0.5f : 2.5f;
-        level3D.showAnimatedMessage("READY!", seconds, x, y);
+        return Vector2f.of(x, y);
     }
 }
