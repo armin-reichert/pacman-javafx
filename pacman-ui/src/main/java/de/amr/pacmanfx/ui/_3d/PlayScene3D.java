@@ -333,7 +333,8 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 if (level3D == null) {
                     replaceGameLevel3D();
                 }
-                showReadyMessage(theGame().isPlaying() ? 0.5f : 2.5f);
+                Vector2f position = centerPositionUnderHouse();
+                level3D.showAnimatedMessage("READY!", 2.5f, position.x(), position.y());
                 bindPlayerSteeringActions();
             }
             case TESTING_LEVELS_SHORT, TESTING_LEVELS_MEDIUM -> {
@@ -424,7 +425,8 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void onGameContinued(GameEvent e) {
-        showReadyMessage(0.5f);
+        Vector2f position = centerPositionUnderHouse();
+        level3D.showAnimatedMessage("READY!", 0.5f, position.x(), position.y());
     }
 
     @Override
@@ -531,11 +533,6 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         double x = worldMap.numCols() * HTS;
         double y = (worldMap.numRows() - 2) * TS;
         level3D.showAnimatedMessage("LEVEL %d (TEST)".formatted(levelNumber), 5, x, y);
-    }
-
-    protected void showReadyMessage(float seconds) {
-        Vector2f position = centerPositionUnderHouse();
-        level3D.showAnimatedMessage("READY!", seconds, position.x(), position.y());
     }
 
     private Vector2f centerPositionUnderHouse() {
