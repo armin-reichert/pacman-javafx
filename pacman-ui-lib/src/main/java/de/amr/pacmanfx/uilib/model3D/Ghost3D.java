@@ -101,7 +101,7 @@ public class Ghost3D extends Group {
         Scale scale = new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
         getTransforms().add(scale);
 
-        dressAnimation = new ManagedAnimation(animationManager, "Ghost_%s_DressMoving".formatted(ghost.name())) {
+        dressAnimation = new ManagedAnimation(animationManager, "Ghost_DressMoving_%s".formatted(ghost.name())) {
             @Override
             protected Animation createAnimation() {
                 var animation = new RotateTransition(Duration.seconds(0.3), dressGroup);
@@ -123,7 +123,7 @@ public class Ghost3D extends Group {
         private int numFlashes = 5;
 
         public FlashingAnimation(AnimationManager animationManager, String ghostName) {
-            super(animationManager, "Ghost_%s_Flashing".formatted(ghostName));
+            super(animationManager, "Ghost_Flashing_%s".formatted(ghostName));
         }
 
         public void setTotalDuration(Duration totalDuration) {

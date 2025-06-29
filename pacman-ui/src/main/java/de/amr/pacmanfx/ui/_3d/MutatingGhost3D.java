@@ -89,7 +89,7 @@ public class MutatingGhost3D extends Group {
         getChildren().setAll(ghost3D, numberBox);
         setAppearance(GhostAppearance.NORMAL);
 
-        pointsAnimation = new ManagedAnimation(animationManager, "Ghost_%s_Points".formatted(ghost.name())) {
+        pointsAnimation = new ManagedAnimation(animationManager, "Ghost_Points_%s".formatted(ghost.name())) {
             @Override
             protected Animation createAnimation() {
                 var numberBoxRotation = new RotateTransition(Duration.seconds(1), numberBox);
@@ -102,7 +102,7 @@ public class MutatingGhost3D extends Group {
             }
         };
 
-        brakeAnimation = new ManagedAnimation(animationManager, "Ghost_%s_Braking".formatted(ghost.name())) {
+        brakeAnimation = new ManagedAnimation(animationManager, "Ghost_Braking_%s".formatted(ghost.name())) {
             @Override
             protected Animation createAnimation() {
                 var rotateTransition = new RotateTransition(Duration.seconds(0.5), MutatingGhost3D.this);
