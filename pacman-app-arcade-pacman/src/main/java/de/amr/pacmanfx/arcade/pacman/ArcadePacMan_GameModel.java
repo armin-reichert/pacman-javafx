@@ -263,13 +263,11 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
             ghost.setSpecialTerrainTiles(oneWayDownTiles);
         });
 
-        // Each level has a single bonus symbol appearing twice during the level
-        // From level 13 on, the same symbol (7 = "key") appears
-        byte bonusSymbol = levelNumber >= 13
-            ? BONUS_SYMBOLS_BY_LEVEL_NUMBER[13]
-            : BONUS_SYMBOLS_BY_LEVEL_NUMBER[levelNumber];
-        level.setBonusSymbol(0, bonusSymbol);
-        level.setBonusSymbol(1, bonusSymbol);
+        // Each level has a single bonus symbol appearing twice during the level. From level 13 on, the same symbol
+        // (7 = "key") appears.
+        byte symbol = BONUS_SYMBOLS_BY_LEVEL_NUMBER[Math.min(levelNumber, 13)];
+        level.setBonusSymbol(0, symbol);
+        level.setBonusSymbol(1, symbol);
 
         levelCounter.setEnabled(true);
     }
