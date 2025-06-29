@@ -33,7 +33,7 @@ public abstract class MovingActor extends Actor {
 
     private final ObjectProperty<Direction> moveDirProperty = new SimpleObjectProperty<>();
     private final ObjectProperty<Direction> wishDirProperty = new SimpleObjectProperty<>();
-    protected Vector2i targetTile;
+    private final ObjectProperty<Vector2i> targetTileProperty = new SimpleObjectProperty<>();
 
     protected boolean newTileEntered;
     protected boolean gotReverseCommand;
@@ -49,7 +49,7 @@ public abstract class MovingActor extends Actor {
                 ", acceleration=" + acceleration() +
                 ", moveDir=" + moveDir() +
                 ", wishDir=" + wishDir() +
-                ", targetTile=" + targetTile +
+                ", targetTile=" + targetTile() +
                 ", newTileEntered=" + newTileEntered +
                 ", gotReverseCommand=" + gotReverseCommand +
                 ", canTeleport=" + canTeleport +
@@ -61,7 +61,7 @@ public abstract class MovingActor extends Actor {
         super.reset();
         moveInfo.clear();
         setMoveAndWishDir(RIGHT); // updates velocity vector!
-        targetTile = null;
+        setTargetTile(null);
         newTileEntered = true;
         gotReverseCommand = false;
         canTeleport = true;
@@ -88,20 +88,24 @@ public abstract class MovingActor extends Actor {
      */
     public abstract boolean canAccessTile(GameLevel level, Vector2i tile);
 
+    public ObjectProperty<Vector2i> targetTileProperty() {
+        return targetTileProperty;
+    }
+
     /**
      * Sets the tile this actor tries to reach (can be an unreachable tile or <code>null</code>).
      *
      * @param tile some tile or <code>null</code>
      */
     public void setTargetTile(Vector2i tile) {
-        targetTile = tile;
+        targetTileProperty.set(tile);
     }
 
     /**
      * @return (Optional) target tile. Can be inaccessible or outside the world.
      */
     public Optional<Vector2i> targetTile() {
-        return Optional.ofNullable(targetTile);
+        return Optional.ofNullable(targetTileProperty.get());
     }
 
     /**
@@ -238,7 +242,7 @@ public abstract class MovingActor extends Actor {
 
     public void navigateTowardsTarget(GameLevel level) {
         requireNonNull(level);
-        if (!newTileEntered && moveInfo.moved || targetTile == null) {
+        if (!newTileEntered && moveInfo.moved || targetTileProperty.get() == null) {
             return; // we don't need no navigation, dim dit didit didit...
         }
         final Vector2i currentTile = tile();
@@ -254,7 +258,7 @@ public abstract class MovingActor extends Actor {
             }
             final Vector2i neighborTile = currentTile.plus(dir.vector());
             if (canAccessTile(level, neighborTile)) {
-                double dist = neighborTile.euclideanDist(targetTile);
+                double dist = neighborTile.euclideanDist(targetTileProperty.get());
                 if (dist < minDistToTarget) {
                     minDistToTarget = dist;
                     candidateDir = dir;
