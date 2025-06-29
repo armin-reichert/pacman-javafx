@@ -11,6 +11,8 @@ import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.TerrainTile;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.House;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -31,7 +33,7 @@ public abstract class Ghost extends MovingActor implements Animated {
 
     private final byte personality;
     private final String name;
-    private GhostState state;
+    private final ObjectProperty<GhostState> stateProperty = new SimpleObjectProperty<>();
     private Vector2f revivalPosition;
     private List<Vector2i> specialTerrainTiles = List.of();
     private ActorAnimationMap animationMap;
@@ -63,7 +65,7 @@ public abstract class Ghost extends MovingActor implements Animated {
     public String toString() {
         return "Ghost{" +
                 "name='" + name + '\'' +
-                ", state=" + state +
+                ", state=" + state() +
                 ", visible=" + isVisible() +
                 ", position=" + position() +
                 ", velocity=" + velocity() +
@@ -162,7 +164,7 @@ public abstract class Ghost extends MovingActor implements Animated {
         // Hunting ghosts cannot enter some tiles in Pac-Man game from below
         // TODO: this is game-specific and does not belong here
         if (specialTerrainTiles.contains(tile)
-                && state == GhostState.HUNTING_PAC
+                && state() == GhostState.HUNTING_PAC
                 && level.worldMap().content(LayerID.TERRAIN, tile) == TerrainTile.ONE_WAY_DOWN.code()
                 && tile.equals(tile().plus(UP.vector()))
         ) {
@@ -186,7 +188,7 @@ public abstract class Ghost extends MovingActor implements Animated {
      * The current state of this ghost.
      */
     public GhostState state() {
-        return state;
+        return stateProperty.get();
     }
 
     /**
@@ -196,22 +198,22 @@ public abstract class Ghost extends MovingActor implements Animated {
      * <code>false</code>
      */
     public boolean inAnyOfStates(GhostState... states) {
-        return state != null && isOneOf(state, states);
+        return state() != null && isOneOf(state(), states);
     }
 
     /**
      * Changes the state of this ghost.
      *
-     * @param state the new state
+     * @param newState the new state
      */
-    public void setState(GhostState state) {
-        requireNonNull(state);
-        if (this.state == state) {
-            Logger.warn("{} is already in state {}", name, state);
+    public void setState(GhostState newState) {
+        requireNonNull(newState);
+        if (state() == newState) {
+            Logger.warn("{} is already in state {}", name, newState);
         }
-        this.state = state;
+        stateProperty.set(newState);
         // onEntry action:
-        switch (state) {
+        switch (newState) {
             case LOCKED, HUNTING_PAC -> selectAnimation(ANIM_GHOST_NORMAL);
             case ENTERING_HOUSE, RETURNING_HOME -> selectAnimation(ANIM_GHOST_EYES);
             case FRIGHTENED -> playAnimation(ANIM_GHOST_FRIGHTENED);
@@ -224,7 +226,7 @@ public abstract class Ghost extends MovingActor implements Animated {
      */
     public void update(GameLevel level) {
         requireNonNull(level);
-        switch (state) {
+        switch (state()) {
             case LOCKED             -> updateStateLocked(level);
             case LEAVING_HOUSE      -> updateStateLeavingHouse(level);
             case HUNTING_PAC        -> updateStateHuntingPac(level);
@@ -263,7 +265,7 @@ public abstract class Ghost extends MovingActor implements Animated {
             } else if (y >= maxY) {
                 setMoveAndWishDir(UP);
             }
-            y = Math.clamp(y, minY, maxY);
+            setPosition(position().x(), Math.clamp(y, minY, maxY));
         } else {
             setSpeed(0);
         }
