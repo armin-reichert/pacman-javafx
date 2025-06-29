@@ -41,20 +41,19 @@ public abstract class MovingActor extends Actor {
     @Override
     public String toString() {
         return "WorldMovingActor{" +
-            "visible=" + visible +
-            ", x=" + x +
-            ", y=" + y +
-            ", vx=" + vx +
-            ", vy=" + vy +
-            ", acceleration=" + acceleration() +
-            ", moveDir=" + moveDir +
-            ", wishDir=" + wishDir +
-            ", targetTile=" + targetTile +
-            ", newTileEntered=" + newTileEntered +
-            ", gotReverseCommand=" + gotReverseCommand +
-            ", canTeleport=" + canTeleport +
-            ", corneringSpeedUp" + corneringSpeedUp +
-            '}';
+                "visible=" + visible +
+                ", x=" + x +
+                ", y=" + y +
+                ", velocity=" + velocity() +
+                ", acceleration=" + acceleration() +
+                ", moveDir=" + moveDir +
+                ", wishDir=" + wishDir +
+                ", targetTile=" + targetTile +
+                ", newTileEntered=" + newTileEntered +
+                ", gotReverseCommand=" + gotReverseCommand +
+                ", canTeleport=" + canTeleport +
+                ", corneringSpeedUp" + corneringSpeedUp +
+                '}';
     }
 
     public void reset() {

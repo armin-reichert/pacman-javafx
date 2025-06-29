@@ -24,7 +24,7 @@ public class Actor {
 
     protected boolean visible;
     protected float x, y;
-    protected float vx, vy;
+    private final ObjectProperty<Vector2f> velocityProperty = new SimpleObjectProperty<>(Vector2f.ZERO);
     private final ObjectProperty<Vector2f> accelerationProperty = new SimpleObjectProperty<>(Vector2f.ZERO);
 
     @Override
@@ -33,8 +33,7 @@ public class Actor {
             "visible=" + visible +
             ", x=" + x +
             ", y=" + y +
-            ", vx=" + vx +
-            ", vy=" + vy +
+            ", velocity=" + velocity() +
             ", acceleration=" + acceleration() +
             '}';
     }
@@ -44,7 +43,8 @@ public class Actor {
      */
     public void reset() {
         visible = false;
-        x = y = vx = vy = 0;
+        x = y = 0;
+        velocityProperty.set(Vector2f.ZERO);
         accelerationProperty.set(Vector2f.ZERO);
     }
 
@@ -102,18 +102,16 @@ public class Actor {
     }
 
     public Vector2f velocity() {
-        return Vector2f.of(vx, vy);
+        return velocityProperty.get();
     }
 
     public void setVelocity(Vector2f velocity) {
         requireNonNull(velocity, "Velocity of actor must not be null");
-        vx = velocity.x();
-        vy = velocity.y();
+        velocityProperty.set(velocity);
     }
 
     public void setVelocity(float vx, float vy) {
-        this.vx = vx;
-        this.vy = vy;
+        setVelocity(new Vector2f(vx, vy));
     }
 
     public Vector2f acceleration() {
@@ -126,7 +124,7 @@ public class Actor {
     }
 
     public void setAcceleration(float ax, float ay) {
-        accelerationProperty.set(new Vector2f(ax, ay));
+        setAcceleration(new Vector2f(ax, ay));
     }
 
     public ObjectProperty<Vector2f> accelerationProperty() {
@@ -137,11 +135,10 @@ public class Actor {
      * Moves this actor by its current velocity and increases its velocity by its current acceleration.
      */
     public void move() {
-        x += vx;
-        y += vy;
-        Vector2f acc = acceleration();
-        vx += acc.x();
-        vy += acc.y();
+        Vector2f velocity = velocity();
+        x += velocity.x();
+        y += velocity.y();
+        setVelocity(velocity().plus(acceleration()));
     }
 
     /**

@@ -47,17 +47,16 @@ public class Pac extends MovingActor implements Animated {
     @Override
     public String toString() {
         return "Pac{" +
-            "immune=" + immunePy.get() +
-            ", dead=" + dead +
-            ", restingTicks=" + restingTicks +
-            ", starvingTicks=" + starvingTicks +
-            ", visible=" + visible +
-            ", pos_x=" + x +
-            ", pos_y=" + y +
-            ", vel_x=" + vx +
-            ", vel_y=" + vy +
-            ", acceleration=" + acceleration() +
-        '}';
+                "immune=" + immunePy.get() +
+                ", dead=" + dead +
+                ", restingTicks=" + restingTicks +
+                ", starvingTicks=" + starvingTicks +
+                ", visible=" + visible +
+                ", pos_x=" + x +
+                ", pos_y=" + y +
+                ", velocity=" + velocity() +
+                ", acceleration=" + acceleration() +
+                '}';
     }
 
     @Override
