@@ -46,8 +46,7 @@ public abstract class MovingActor extends Actor {
             ", y=" + y +
             ", vx=" + vx +
             ", vy=" + vy +
-            ", ax=" + ax +
-            ", ay=" + ay +
+            ", acceleration=" + acceleration() +
             ", moveDir=" + moveDir +
             ", wishDir=" + wishDir +
             ", targetTile=" + targetTile +

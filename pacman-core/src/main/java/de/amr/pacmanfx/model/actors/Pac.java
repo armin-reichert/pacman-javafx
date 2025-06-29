@@ -56,9 +56,8 @@ public class Pac extends MovingActor implements Animated {
             ", pos_y=" + y +
             ", vel_x=" + vx +
             ", vel_y=" + vy +
-            ", acc_x=" + ax +
-            ", acc_y=" + ay +
-            '}';
+            ", acceleration=" + acceleration() +
+        '}';
     }
 
     @Override

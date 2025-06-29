@@ -6,6 +6,8 @@ package de.amr.pacmanfx.model.actors;
 
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
@@ -23,7 +25,7 @@ public class Actor {
     protected boolean visible;
     protected float x, y;
     protected float vx, vy;
-    protected float ax, ay;
+    private final ObjectProperty<Vector2f> accelerationProperty = new SimpleObjectProperty<>(Vector2f.ZERO);
 
     @Override
     public String toString() {
@@ -33,8 +35,7 @@ public class Actor {
             ", y=" + y +
             ", vx=" + vx +
             ", vy=" + vy +
-            ", ax=" + ax +
-            ", ay=" + ay +
+            ", acceleration=" + acceleration() +
             '}';
     }
 
@@ -43,7 +44,8 @@ public class Actor {
      */
     public void reset() {
         visible = false;
-        x = y = vx = vy = ax = ay = 0;
+        x = y = vx = vy = 0;
+        accelerationProperty.set(Vector2f.ZERO);
     }
 
     public boolean isVisible() {
@@ -115,18 +117,20 @@ public class Actor {
     }
 
     public Vector2f acceleration() {
-        return Vector2f.of(ax, ay);
+        return accelerationProperty.get();
     }
 
     public void setAcceleration(Vector2f acceleration) {
-        requireNonNull(acceleration, "Acceleration of actor must not be null");
-        ax = acceleration.x();
-        ay = acceleration.y();
+        requireNonNull(acceleration, "Acceleration vector must not be null");
+        accelerationProperty.set(acceleration);
     }
 
     public void setAcceleration(float ax, float ay) {
-        this.ax = ax;
-        this.ay = ay;
+        accelerationProperty.set(new Vector2f(ax, ay));
+    }
+
+    public ObjectProperty<Vector2f> accelerationProperty() {
+        return accelerationProperty;
     }
 
     /**
@@ -135,8 +139,9 @@ public class Actor {
     public void move() {
         x += vx;
         y += vy;
-        vx += ax;
-        vy += ay;
+        Vector2f acc = acceleration();
+        vx += acc.x();
+        vy += acc.y();
     }
 
     /**
