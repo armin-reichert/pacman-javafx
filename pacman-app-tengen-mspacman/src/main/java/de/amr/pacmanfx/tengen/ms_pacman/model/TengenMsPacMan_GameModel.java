@@ -357,7 +357,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     @Override
     public void startLevel() {
         level.setStartTime(System.currentTimeMillis());
-        level.makeReadyForPlaying();
+        level.getReadyToPlay();
         initAnimationOfPacManAndGhosts();
         if (pacBooster == PacBooster.ALWAYS_ON) {
             activatePacBooster(true);

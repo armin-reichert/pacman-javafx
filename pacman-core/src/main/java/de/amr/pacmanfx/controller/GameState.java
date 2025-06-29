@@ -94,7 +94,7 @@ public enum GameState implements FsmState<GameModel> {
                 // resume running game
                 if (timer.tickCount() == 1) {
                     game.initAnimationOfPacManAndGhosts();
-                    theGameLevel().makeReadyForPlaying();
+                    theGameLevel().getReadyToPlay();
                     theGameLevel().showPacAndGhosts();
                     theGameEventManager().publishEvent(game, GameEventType.GAME_CONTINUED);
                 } else if (timer.tickCount() == TICK_RESUME_GAME) {
@@ -383,7 +383,7 @@ public enum GameState implements FsmState<GameModel> {
             }
             if (timer().atSecond(1.0)) {
                 game.initAnimationOfPacManAndGhosts();
-                theGameLevel().makeReadyForPlaying();
+                theGameLevel().getReadyToPlay();
                 theGameLevel().showPacAndGhosts();
             }
             else if (timer().atSecond(2)) {

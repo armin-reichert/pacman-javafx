@@ -88,7 +88,7 @@ public class GameLevel {
 
         blinking = new Pulse(10, Pulse.OFF);
         portals = findPortals(worldMap);
-        findHouseIfAny();
+        findHouse();
 
         currentBonusIndex = -1;
         energizerTiles = worldMap.tilesContaining(LayerID.FOOD, ENERGIZER.code()).toArray(Vector2i[]::new);
@@ -152,7 +152,7 @@ public class GameLevel {
         return portals.toArray(new Portal[0]);
     }
 
-    private void findHouseIfAny() {
+    private void findHouse() {
         Vector2i minTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE);
         Vector2i maxTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE);
         if (minTile != null && maxTile != null) {
@@ -162,7 +162,7 @@ public class GameLevel {
         }
     }
 
-    public void makeReadyForPlaying() {
+    public void getReadyToPlay() {
         pac.reset(); // initially invisible!
         pac.setPosition(pacStartPosition());
         pac.setMoveAndWishDir(Direction.LEFT);
