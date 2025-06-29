@@ -50,7 +50,6 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
     protected MapSelector mapSelector;
     protected HuntingTimer huntingTimer;
     protected GateKeeper gateKeeper;
-    protected LevelCounter levelCounter;
     protected Steering autopilot;
     protected Steering demoLevelSteering;
     protected int cruiseElroy;
@@ -68,7 +67,7 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
     @Override
     public void resetEverything() {
         prepareForNewGame();
-        levelCounter.clear();
+        hud().levelCounter().clear();
     }
 
     @Override
@@ -86,7 +85,7 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
     @Override
     public void startNewGame() {
         prepareForNewGame();
-        levelCounter.clear();
+        hud().levelCounter().clear();
         buildNormalLevel(1);
         theGameEventManager().publishEvent(this, GameEventType.GAME_STARTED);
     }
@@ -240,7 +239,7 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
         level.setDemoLevel(false);
         level.pac().immuneProperty().bind(PY_IMMUNITY);
         level.pac().usingAutopilotProperty().bind(PY_USING_AUTOPILOT);
-        levelCounter.setEnabled(true);
+        hud().levelCounter().setEnabled(true);
         huntingTimer.reset();
         setScoreLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
@@ -257,7 +256,7 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
         level.pac().setUsingAutopilot(true);
         level.pac().setAutopilotSteering(demoLevelSteering);
         demoLevelSteering.init();
-        levelCounter.setEnabled(true);
+        hud().levelCounter().setEnabled(true);
         huntingTimer.reset();
         setScoreLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);

@@ -411,6 +411,8 @@ public enum GameState implements FsmState<GameModel> {
             }
             else if (timer().atSecond(11.0)) {
                 if (theGameLevel().number() == lastTestedLevelNumber) {
+                    theCoinMechanism().setNumCoins(0);
+                    theGame().resetEverything();
                     theGameController().restart(GameState.BOOT);
                 } else {
                     timer().restartIndefinitely();
@@ -422,7 +424,8 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onExit(GameModel game) {
-            theCoinMechanism().consumeCoin();
+            theCoinMechanism().setNumCoins(0);
+            theGame().resetEverything();
             game.hud().levelCounter().clear();
         }
     },

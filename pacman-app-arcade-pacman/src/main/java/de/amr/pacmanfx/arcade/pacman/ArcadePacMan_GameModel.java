@@ -169,7 +169,6 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
         this.mapSelector = requireNonNull(mapSelector);
         setHighScoreFile(new File(HOME_DIR, "highscore-pacman.xml"));
         setExtraLifeScores(EXTRA_LIFE_SCORE);
-        levelCounter = new ArcadePacMan_LevelCounter();
 
         huntingTimer = new HuntingTimer("ArcadePacMan-HuntingTimer", 8) {
             // Ticks of scatter and chasing phases, -1 = INFINITE
@@ -269,7 +268,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
         level.setBonusSymbol(0, symbol);
         level.setBonusSymbol(1, symbol);
 
-        levelCounter.setEnabled(true);
+        hud.levelCounter().setEnabled(true);
     }
 
     @Override

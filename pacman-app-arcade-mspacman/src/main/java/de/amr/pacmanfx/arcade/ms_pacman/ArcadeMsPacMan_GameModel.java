@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.arcade.pacman.ArcadeCommon_GameModel;
-import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_LevelCounter;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.Waypoint;
@@ -188,7 +187,6 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
         this.mapSelector = requireNonNull(mapSelector);
         setHighScoreFile(new File(HOME_DIR, "highscore-ms_pacman.xml"));
         setExtraLifeScores(EXTRA_LIFE_SCORE);
-        levelCounter = new ArcadePacMan_LevelCounter();
 
         /*
          * Details are from a conversation with user @damselindis on Reddit. I am not sure if they are correct.
