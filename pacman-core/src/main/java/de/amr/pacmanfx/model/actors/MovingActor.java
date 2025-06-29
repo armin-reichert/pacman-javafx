@@ -31,8 +31,8 @@ public abstract class MovingActor extends Actor {
 
     protected final MoveResult moveInfo = new MoveResult();
 
-    protected ObjectProperty<Direction> moveDirProperty = new SimpleObjectProperty<>();
-    protected ObjectProperty<Direction> wishDirProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Direction> moveDirProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Direction> wishDirProperty = new SimpleObjectProperty<>();
     protected Vector2i targetTile;
 
     protected boolean newTileEntered;
@@ -136,6 +136,10 @@ public abstract class MovingActor extends Actor {
         placeAtTile(tile.x(), tile.y());
     }
 
+    public ObjectProperty<Direction> moveDirProperty() {
+        return moveDirProperty;
+    }
+
     /**
      * Sets the move direction and updates the velocity vector.
      *
@@ -151,6 +155,10 @@ public abstract class MovingActor extends Actor {
      */
     public Direction moveDir() {
         return moveDirProperty.get();
+    }
+
+    public ObjectProperty<Direction> wishDirProperty() {
+        return wishDirProperty;
     }
 
     /**
