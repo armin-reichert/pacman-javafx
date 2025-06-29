@@ -216,7 +216,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             Logger.warn("Tick #{}: 3D game level not yet existing", theClock().tickCount());
             return;
         }
-        level3D.update(theGameLevel());
+        level3D.tick(theGameLevel());
         updateScores(theGameLevel());
         updateSound(theGameLevel());
         perspectiveManager.updatePerspective(theGameLevel());

@@ -65,14 +65,14 @@ public class Ghost3D extends Group {
         requireNonNull(ghost);
         this.dressShape = requireNonNull(dressShape);
 
-        normalDressColor          = assets.color(assetNamespace + ".ghost.%d.color.normal.dress".formatted(ghost.personality()));
-        normalPupilsColor         = assets.color(assetNamespace + ".ghost.%d.color.normal.pupils".formatted(ghost.personality()));
-        normalEyeballsColor       = assets.color(assetNamespace + ".ghost.%d.color.normal.eyeballs".formatted(ghost.personality()));
-        frightenedDressColor      = assets.color(assetNamespace + ".ghost.color.frightened.dress");
-        frightenedPupilsColor     = assets.color(assetNamespace + ".ghost.color.frightened.pupils");
-        frightenedEyeballsColor   = assets.color(assetNamespace + ".ghost.color.frightened.eyeballs");
-        flashingDressColor        = assets.color(assetNamespace + ".ghost.color.flashing.dress");
-        flashingPupilsColor       = assets.color(assetNamespace + ".ghost.color.flashing.pupils");
+        normalDressColor        = assets.color(assetNamespace + ".ghost.%d.color.normal.dress".formatted(ghost.personality()));
+        normalPupilsColor       = assets.color(assetNamespace + ".ghost.%d.color.normal.pupils".formatted(ghost.personality()));
+        normalEyeballsColor     = assets.color(assetNamespace + ".ghost.%d.color.normal.eyeballs".formatted(ghost.personality()));
+        frightenedDressColor    = assets.color(assetNamespace + ".ghost.color.frightened.dress");
+        frightenedPupilsColor   = assets.color(assetNamespace + ".ghost.color.frightened.pupils");
+        frightenedEyeballsColor = assets.color(assetNamespace + ".ghost.color.frightened.eyeballs");
+        flashingDressColor      = assets.color(assetNamespace + ".ghost.color.flashing.dress");
+        flashingPupilsColor     = assets.color(assetNamespace + ".ghost.color.flashing.pupils");
 
         requireNonNull(pupilsShape);
         requireNonNull(eyeballsShape);

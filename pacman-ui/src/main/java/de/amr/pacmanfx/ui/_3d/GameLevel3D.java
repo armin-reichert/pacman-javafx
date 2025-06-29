@@ -154,7 +154,12 @@ public class GameLevel3D {
         };
     }
 
-    public void update(GameLevel gameLevel) {
+    /**
+     * Called on each clock tick (frame).
+     *
+     * @param gameLevel the game level
+     */
+    public void tick(GameLevel gameLevel) {
         pac3D.update(gameLevel);
         ghosts3D().forEach(ghost3D -> ghost3D.update(gameLevel));
         bonus3D().ifPresent(Bonus3D::update);

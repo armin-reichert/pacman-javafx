@@ -8,6 +8,7 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
@@ -44,6 +45,23 @@ import static java.util.Objects.requireNonNull;
 public class MutatingGhost3D extends Group {
 
     public enum Appearance {NORMAL, FRIGHTENED, FLASHING, EATEN, VALUE}
+
+    private static Appearance selectAppearance(
+        GhostState ghostState, boolean powerActive, boolean powerFading, boolean killedDuringCurrentPhase) {
+        return switch (ghostState) {
+            case LEAVING_HOUSE, LOCKED -> powerActive && !killedDuringCurrentPhase
+                ? frightenedOrFlashing(powerFading)
+                : Appearance.NORMAL;
+            case FRIGHTENED -> frightenedOrFlashing(powerFading);
+            case ENTERING_HOUSE, RETURNING_HOME -> Appearance.EATEN;
+            case EATEN -> Appearance.VALUE;
+            default -> Appearance.NORMAL;
+        };
+    }
+
+    private static Appearance frightenedOrFlashing(boolean powerFading) {
+        return powerFading ? Appearance.FLASHING : Appearance.FRIGHTENED;
+    }
 
     private final ObjectProperty<Appearance> appearancePy = new SimpleObjectProperty<>(this, "appearance") {
         @Override
@@ -128,15 +146,20 @@ public class MutatingGhost3D extends Group {
         };
     }
 
-    public void init(GameLevel level) {
+    public void init(GameLevel gameLevel) {
         stopAllAnimations();
-        updateTransform(level);
-        updateAppearance(level);
+        updateTransform(gameLevel);
+        updateAppearance(gameLevel);
     }
 
-    public void update(GameLevel level) {
-        updateTransform(level);
-        updateAppearance(level);
+    /**
+     * Called on each clock tick (frame).
+     *
+     * @param gameLevel the game level
+     */
+    public void update(GameLevel gameLevel) {
+        updateTransform(gameLevel);
+        updateAppearance(gameLevel);
         updateAnimations();
     }
 
@@ -147,17 +170,10 @@ public class MutatingGhost3D extends Group {
     private void updateAppearance(GameLevel level) {
         boolean powerFading = level.pac().isPowerFading(level);
         boolean powerActive = level.pac().powerTimer().isRunning();
-        setAppearance(switch (ghost.state()) {
-            case LEAVING_HOUSE, LOCKED -> {
-                // ghost that got killed already during the current power phase do not look frightened anymore
-                boolean killedDuringCurrentPhase = level.victims().contains(ghost);
-                yield powerActive && !killedDuringCurrentPhase ? frightenedOrFlashing(powerFading) : Appearance.NORMAL;
-            }
-            case FRIGHTENED -> frightenedOrFlashing(powerFading);
-            case ENTERING_HOUSE, RETURNING_HOME -> Appearance.EATEN;
-            case EATEN -> Appearance.VALUE;
-            default -> Appearance.NORMAL;
-        });
+        // ghost that got killed already during the current power phase do not look frightened anymore
+        boolean killedDuringCurrentPhase = level.victims().contains(ghost);
+        Appearance appearance = selectAppearance(ghost.state(), powerActive, powerFading, killedDuringCurrentPhase);
+        setAppearance(appearance);
     }
 
     public void setNumberTexture(Image numberImage) {
@@ -186,10 +202,6 @@ public class MutatingGhost3D extends Group {
             case VALUE -> pointsAnimation.play(ManagedAnimation.FROM_START);
         }
         Logger.trace("Ghost {} appearance changed to {}", ghost.personality(), appearance);
-    }
-
-    private Appearance frightenedOrFlashing(boolean powerFading) {
-        return powerFading ? Appearance.FLASHING : Appearance.FRIGHTENED;
     }
 
     // Animations
