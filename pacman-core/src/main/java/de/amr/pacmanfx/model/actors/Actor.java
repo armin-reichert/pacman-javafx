@@ -49,6 +49,10 @@ public class Actor {
         setAcceleration(Vector2f.ZERO);
     }
 
+    public BooleanProperty visibleProperty() {
+        return visibleProperty;
+    }
+
     public boolean isVisible() {
         return visibleProperty.get();
     }
@@ -79,6 +83,10 @@ public class Actor {
 
     public float y() {
         return position().y();
+    }
+
+    public ObjectProperty<Vector2f> positionProperty() {
+        return positionProperty;
     }
 
     /**

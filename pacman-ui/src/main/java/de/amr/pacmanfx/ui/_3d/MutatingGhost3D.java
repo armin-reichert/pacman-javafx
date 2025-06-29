@@ -15,6 +15,7 @@ import de.amr.pacmanfx.uilib.model3D.Ghost3D;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
@@ -28,10 +29,8 @@ import org.tinylog.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.WeakHashMap;
 
-import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static java.util.Objects.requireNonNull;
 
@@ -46,6 +45,12 @@ import static java.util.Objects.requireNonNull;
  * </ul>
  */
 public class MutatingGhost3D extends Group {
+
+    private static final double GHOST_ELEVATION = 2.0;
+
+    private static boolean isPositionOutsideWorld(GameLevel gameLevel, Vector2f center) {
+        return center.x() < HTS || center.x() > gameLevel.worldMap().numCols() * TS - HTS;
+    }
 
     private final ObjectProperty<GhostAppearance> appearanceProperty = new SimpleObjectProperty<>() {
         @Override
@@ -80,15 +85,14 @@ public class MutatingGhost3D extends Group {
         this.size = requireNonNegative(size);
         this.numFlashes = numFlashes;
 
-        this.ghost3D = new Ghost3D(animationManager,
+        ghost3D = new Ghost3D(animationManager,
             assets, assetPrefix,
             ghost,
             dressShape, pupilsShape, eyeballsShape, size);
 
-        this.numberBox = new Box(14, 8, 8);
+        numberBox = new Box(14, 8, 8);
 
         getChildren().setAll(ghost3D, numberBox);
-        setAppearance(GhostAppearance.NORMAL);
 
         pointsAnimation = new ManagedAnimation(animationManager, "Ghost_Points_%s".formatted(ghost.name())) {
             @Override
@@ -133,11 +137,33 @@ public class MutatingGhost3D extends Group {
                 setRotate(0);
             }
         };
+
+        ghost.positionProperty().addListener((py, ov, newPosition) -> updateTranslate(ghost));
+        ghost.wishDirProperty().addListener((py, ov, newWishDir) -> ghost3D.turnTowards(newWishDir));
+        visibleProperty().bind(Bindings.createBooleanBinding(
+                () -> ghost.isVisible() && !isPositionOutsideWorld(theGameLevel(), ghost.center()),
+                ghost.visibleProperty(), ghost.positionProperty()
+        ));
+
+        initTransform();
+        setAppearance(GhostAppearance.NORMAL);
+    }
+
+    private void initTransform() {
+        updateTranslate(ghost);
+        ghost3D.turnTowards(ghost.wishDir());
+    }
+
+    private void updateTranslate(Ghost ghost) {
+        Vector2f center = ghost.center();
+        setTranslateX(center.x());
+        setTranslateY(center.y());
+        setTranslateZ(-0.5 * size - GHOST_ELEVATION); // a little bit over the floor
     }
 
     public void init(GameLevel gameLevel) {
         stopAllAnimations();
-        updateTransform(gameLevel);
+        initTransform();
         updateAppearance(gameLevel);
     }
 
@@ -147,7 +173,6 @@ public class MutatingGhost3D extends Group {
      * @param gameLevel the game level
      */
     public void update(GameLevel gameLevel) {
-        updateTransform(gameLevel);
         updateAppearance(gameLevel);
         if (appearance() == GhostAppearance.VALUE) {
             ghost3D.dressAnimation().stop();
@@ -211,16 +236,6 @@ public class MutatingGhost3D extends Group {
                 powerFading,
                 killedDuringCurrentPhase);
         setAppearance(appearance);
-    }
-
-    private void updateTransform(GameLevel level) {
-        Vector2f center = ghost.center();
-        setTranslateX(center.x());
-        setTranslateY(center.y());
-        setTranslateZ(-0.5 * size - 2.0); // a little bit over the floor
-        ghost3D.turnTowards(ghost.wishDir());
-        boolean outsideTerrain = center.x() < HTS || center.x() > level.worldMap().numCols() * TS - HTS;
-        setVisible(ghost.isVisible() && !outsideTerrain);
     }
 
     // Animations
