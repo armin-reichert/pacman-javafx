@@ -14,6 +14,9 @@ public interface GhostAppearanceSelector {
             boolean powerFading,
             boolean killedDuringCurrentPhase)
     {
+        if (ghostState == null) {
+            return GhostAppearance.NORMAL; //TODO check why this happens
+        }
         return switch (ghostState) {
             case LEAVING_HOUSE, LOCKED -> powerActive && !killedDuringCurrentPhase
                     ? frightenedOrFlashing(powerFading)

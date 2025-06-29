@@ -265,6 +265,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 level3D.pac3D().update(theGameLevel());
                 level3D.livesCounter3D().lookingAroundAnimation().stop();
                 level3D.ghosts3D().forEach(MutatingGhost3D::stopAllAnimations);
+                level3D.bonus3D().ifPresent(Bonus3D::expire);
                 var animation = new SequentialTransition(
                     pauseSec(2),
                     now(theSound()::playPacDeathSound),

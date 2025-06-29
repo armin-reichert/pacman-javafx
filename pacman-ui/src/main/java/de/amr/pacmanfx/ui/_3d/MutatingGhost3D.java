@@ -145,16 +145,26 @@ public class MutatingGhost3D extends Group {
             if (newValue == GhostAppearance.VALUE) {
                 numberBox.setVisible(true);
                 ghost3D.setVisible(false);
+                ghost3D.dressAnimation().stop();
+                pointsAnimation.play(ManagedAnimation.FROM_START);
             } else {
                 numberBox.setVisible(false);
                 ghost3D.setVisible(true);
-            }
-            switch (newValue) {
-                case NORMAL     -> ghost3D.setNormalLook();
-                case FRIGHTENED -> ghost3D.setFrightenedLook();
-                case EATEN      -> ghost3D.setEyesOnlyLook();
-                case FLASHING   -> ghost3D.setFlashingLook(numFlashes);
-                case VALUE      -> pointsAnimation.play(ManagedAnimation.FROM_START);
+                switch (newValue) {
+                    case NORMAL     -> ghost3D.setNormalLook();
+                    case FRIGHTENED -> ghost3D.setFrightenedLook();
+                    case EATEN      -> ghost3D.setEyesOnlyLook();
+                    case FLASHING   -> ghost3D.setFlashingLook(numFlashes);
+                }
+                pointsAnimation.stop();
+                if (ghost.isVisible()) {
+                    ghost3D.dressAnimation().play(ManagedAnimation.CONTINUE);
+                } else {
+                    ghost3D.dressAnimation().stop();
+                }
+                if (ghost.moveInfo().tunnelEntered) {
+                    brakeAnimation.play(ManagedAnimation.FROM_START);
+                }
             }
         });
 
@@ -182,19 +192,6 @@ public class MutatingGhost3D extends Group {
      */
     public void update(GameLevel gameLevel) {
         selectAppearance(gameLevel);
-        if (appearance() == GhostAppearance.VALUE) {
-            ghost3D.dressAnimation().stop();
-        } else {
-            pointsAnimation.stop();
-            if (ghost.isVisible()) {
-                ghost3D.dressAnimation().play(ManagedAnimation.CONTINUE);
-            } else {
-                ghost3D.dressAnimation().stop();
-            }
-            if (ghost.moveInfo().tunnelEntered) {
-                brakeAnimation.play(ManagedAnimation.FROM_START);
-            }
-        }
     }
 
     public GhostAppearance appearance() { return appearanceProperty.get(); }
