@@ -363,6 +363,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onEnter(GameModel game) {
+            theCoinMechanism().setNumCoins(1);
             lastTestedLevelNumber = 25;
             if (theGameController().isSelected("MS_PACMAN_TENGEN")) {
                 lastTestedLevelNumber = 32;
@@ -422,6 +423,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onExit(GameModel game) {
+            theCoinMechanism().consumeCoin();
             game.hud().levelCounter().clear();
         }
     },
