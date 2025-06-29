@@ -27,6 +27,9 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import java.util.Map;
+import java.util.WeakHashMap;
+
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.Validations.requireNonNegative;
@@ -68,6 +71,7 @@ public class MutatingGhost3D extends Group {
         protected void invalidated() { onAppearanceChanged(getValue()); }
     };
 
+    private final Map<Image, PhongMaterial> textureCache = new WeakHashMap<>();
     private final Ghost ghost;
     private final Ghost3D ghost3D;
     private final Box numberBox;
@@ -189,9 +193,12 @@ public class MutatingGhost3D extends Group {
     }
 
     public void setNumberTexture(Image numberImage) {
-        var texture = new PhongMaterial();
-        texture.setDiffuseMap(numberImage);
-        numberBox.setMaterial(texture);
+        if (!textureCache.containsKey(numberImage)) {
+            var texture = new PhongMaterial();
+            texture.setDiffuseMap(numberImage);
+            textureCache.put(numberImage, texture);
+        }
+        numberBox.setMaterial(textureCache.get(numberImage));
     }
 
     private void onAppearanceChanged(Appearance appearance) {
