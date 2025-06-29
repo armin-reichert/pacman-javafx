@@ -329,6 +329,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     @Override
     public void onLevelStarted(GameEvent event) {
         requireNonNull(theGameLevel()); // just to be sure nothing bad happened
+        animationManager.clearAnimations();
         bindActions();
         switch (theGameState()) {
             case STARTING_GAME -> {

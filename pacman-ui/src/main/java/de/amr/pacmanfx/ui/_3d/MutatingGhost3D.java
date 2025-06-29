@@ -76,11 +76,13 @@ public class MutatingGhost3D extends Group {
         this.ghost = requireNonNull(ghost);
         this.size = requireNonNegative(size);
         this.numFlashes = numFlashes;
-        this.ghost3D = new Ghost3D(animationManager, assets, assetPrefix, ghost.personality(), dressShape, pupilsShape, eyeballsShape, size);
+        this.ghost3D = new Ghost3D(animationManager, assets, assetPrefix,
+            ghost.personality(), ghost.name(),
+            dressShape, pupilsShape, eyeballsShape, size);
         this.numberBox = new Box(14, 8, 8);
         setAppearance(Appearance.NORMAL);
 
-        pointsAnimation = new ManagedAnimation(animationManager, "Ghost_Points") {
+        pointsAnimation = new ManagedAnimation(animationManager, "Ghost_%s_Points".formatted(ghost.name())) {
             @Override
             protected Animation createAnimation() {
                 var numberBoxRotation = new RotateTransition(Duration.seconds(1), numberBox);
@@ -93,7 +95,7 @@ public class MutatingGhost3D extends Group {
             }
         };
 
-        brakeAnimation = new ManagedAnimation(animationManager, "Ghost_Braking") {
+        brakeAnimation = new ManagedAnimation(animationManager, "Ghost_%s_Braking".formatted(ghost.name())) {
             @Override
             protected Animation createAnimation() {
                 var rotateTransition = new RotateTransition(Duration.seconds(0.5), MutatingGhost3D.this);

@@ -57,6 +57,7 @@ public class Ghost3D extends Group {
         AssetStorage assets,
         String assetNamespace,
         byte personality,
+        String ghostName,
         Shape3D dressShape,
         Shape3D pupilsShape,
         Shape3D eyeballsShape,
@@ -95,7 +96,7 @@ public class Ghost3D extends Group {
         Scale scale = new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
         getTransforms().add(scale);
 
-        dressAnimation = new ManagedAnimation(animationManager, "Ghost_DressMoving") {
+        dressAnimation = new ManagedAnimation(animationManager, "Ghost_%s_DressMoving".formatted(ghostName)) {
             @Override
             protected Animation createAnimation() {
                 var animation = new RotateTransition(Duration.seconds(0.3), dressGroup);
@@ -108,7 +109,7 @@ public class Ghost3D extends Group {
             }
         };
 
-        flashingAnimation = new FlashingAnimation(animationManager);
+        flashingAnimation = new FlashingAnimation(animationManager, ghostName);
     }
 
     public class FlashingAnimation extends ManagedAnimation {
@@ -116,8 +117,8 @@ public class Ghost3D extends Group {
         private Duration totalDuration = Duration.seconds(3);
         private int numFlashes = 5;
 
-        public FlashingAnimation(AnimationManager animationManager) {
-            super(animationManager, "Ghost_Flashing");
+        public FlashingAnimation(AnimationManager animationManager, String ghostName) {
+            super(animationManager, "Ghost_%s_Flashing".formatted(ghostName));
         }
 
         public void setTotalDuration(Duration totalDuration) {

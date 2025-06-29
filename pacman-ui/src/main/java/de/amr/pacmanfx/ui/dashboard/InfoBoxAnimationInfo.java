@@ -37,7 +37,7 @@ public class InfoBoxAnimationInfo extends InfoBox {
         private final ObjectProperty<Animation.Status> animationStatusPy;
 
         AnimationData(String id, Animation animation) {
-            String idPrefix = id.substring(0, id.indexOf("#") + 4);
+            String idPrefix = id.substring(0, id.indexOf("#"));
             idPy = new SimpleStringProperty(idPrefix);
             animationStatusPy = new SimpleObjectProperty<>(animation.getStatus());
         }
