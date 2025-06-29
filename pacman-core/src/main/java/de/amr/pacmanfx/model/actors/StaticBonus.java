@@ -61,7 +61,7 @@ public class StaticBonus extends Actor implements Bonus {
     @Override
     public void setInactive() {
         countdown = 0;
-        visible = false;
+        hide();
         state = STATE_INACTIVE;
         Logger.trace("Bonus inactive: {}", this);
     }
@@ -72,7 +72,7 @@ public class StaticBonus extends Actor implements Bonus {
             throw new IllegalArgumentException("Bonus edible time must be larger than zero");
         }
         countdown = ticks;
-        visible = true;
+        show();
         state = STATE_EDIBLE;
         Logger.trace("Bonus edible: {}", this);
     }

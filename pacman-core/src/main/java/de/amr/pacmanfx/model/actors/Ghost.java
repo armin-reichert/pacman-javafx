@@ -64,7 +64,7 @@ public abstract class Ghost extends MovingActor implements Animated {
         return "Ghost{" +
                 "name='" + name + '\'' +
                 ", state=" + state +
-                ", visible=" + visible +
+                ", visible=" + isVisible() +
                 ", position=" + position() +
                 ", velocity=" + velocity() +
                 ", acceleration=" + acceleration() +

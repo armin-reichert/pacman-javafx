@@ -6,7 +6,9 @@ package de.amr.pacmanfx.model.actors;
 
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
 import static de.amr.pacmanfx.Globals.HTS;
@@ -22,15 +24,15 @@ import static java.util.Objects.requireNonNull;
  */
 public class Actor {
 
-    protected boolean visible;
     private final ObjectProperty<Vector2f> positionProperty = new SimpleObjectProperty<>(Vector2f.ZERO);
     private final ObjectProperty<Vector2f> velocityProperty = new SimpleObjectProperty<>(Vector2f.ZERO);
     private final ObjectProperty<Vector2f> accelerationProperty = new SimpleObjectProperty<>(Vector2f.ZERO);
+    private final BooleanProperty visibleProperty = new SimpleBooleanProperty(false);
 
     @Override
     public String toString() {
         return "Actor{" +
-               "visible=" + visible +
+               "visible=" + isVisible() +
                 ", position=" + position() +
                 ", velocity=" + velocity() +
                 ", acceleration=" + acceleration() +
@@ -41,26 +43,26 @@ public class Actor {
      * Resets this actor thingy to its initial state, not that it is invisible by default!
      */
     public void reset() {
-        visible = false;
+        setVisible(false);
         setPosition(Vector2f.ZERO);
         setVelocity(Vector2f.ZERO);
         setAcceleration(Vector2f.ZERO);
     }
 
     public boolean isVisible() {
-        return visible;
+        return visibleProperty.get();
     }
 
     public void setVisible(boolean visible) {
-        this.visible = visible;
+        visibleProperty.set(visible);
     }
 
     public void show() {
-        visible = true;
+        setVisible(true);
     }
 
     public void hide() {
-        visible = false;
+        setVisible(false);
     }
 
     public void setX(double x) {

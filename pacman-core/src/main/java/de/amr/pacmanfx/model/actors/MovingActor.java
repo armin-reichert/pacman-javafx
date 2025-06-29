@@ -41,7 +41,7 @@ public abstract class MovingActor extends Actor {
     @Override
     public String toString() {
         return "WorldMovingActor{" +
-                "visible=" + visible +
+                "visible=" + isVisible() +
                 ", position=" + position() +
                 ", velocity=" + velocity() +
                 ", acceleration=" + acceleration() +
