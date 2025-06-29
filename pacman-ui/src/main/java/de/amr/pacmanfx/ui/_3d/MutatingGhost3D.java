@@ -8,7 +8,6 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
@@ -38,35 +37,16 @@ import static java.util.Objects.requireNonNull;
 /**
  * Appearances of a 3D ghost. One of:
  * <ul>
- * <li>{@link Appearance#NORMAL}: colored ghost with blue eyes,
- * <li>{@link Appearance#FRIGHTENED}: blue ghost with empty, "pinkish" eyes (looking blind),
- * <li>{@link Appearance#FLASHING}: blue-white flashing skin, pink-red flashing eyes,
- * <li>{@link Appearance#EATEN} eyes only,
- * <li>{@link Appearance#VALUE}: showing eaten ghost's value.
+ * <li>{@link GhostAppearance#NORMAL}: colored ghost with blue eyes,
+ * <li>{@link GhostAppearance#FRIGHTENED}: blue ghost with empty, "pinkish" eyes (looking blind),
+ * <li>{@link GhostAppearance#FLASHING}: blue-white flashing skin, pink-red flashing eyes,
+ * <li>{@link GhostAppearance#EATEN} eyes only,
+ * <li>{@link GhostAppearance#VALUE}: showing eaten ghost's value.
  * </ul>
  */
 public class MutatingGhost3D extends Group {
 
-    public enum Appearance {NORMAL, FRIGHTENED, FLASHING, EATEN, VALUE}
-
-    private static Appearance selectAppearance(
-        GhostState ghostState, boolean powerActive, boolean powerFading, boolean killedDuringCurrentPhase) {
-        return switch (ghostState) {
-            case LEAVING_HOUSE, LOCKED -> powerActive && !killedDuringCurrentPhase
-                ? frightenedOrFlashing(powerFading)
-                : Appearance.NORMAL;
-            case FRIGHTENED -> frightenedOrFlashing(powerFading);
-            case ENTERING_HOUSE, RETURNING_HOME -> Appearance.EATEN;
-            case EATEN -> Appearance.VALUE;
-            default -> Appearance.NORMAL;
-        };
-    }
-
-    private static Appearance frightenedOrFlashing(boolean powerFading) {
-        return powerFading ? Appearance.FLASHING : Appearance.FRIGHTENED;
-    }
-
-    private final ObjectProperty<Appearance> appearanceProperty = new SimpleObjectProperty<>() {
+    private final ObjectProperty<GhostAppearance> appearanceProperty = new SimpleObjectProperty<>() {
         @Override
         protected void invalidated() { onAppearanceChanged(getValue()); }
     };
@@ -107,7 +87,7 @@ public class MutatingGhost3D extends Group {
         this.numberBox = new Box(14, 8, 8);
 
         getChildren().setAll(ghost3D, numberBox);
-        setAppearance(Appearance.NORMAL);
+        setAppearance(GhostAppearance.NORMAL);
 
         pointsAnimation = new ManagedAnimation(animationManager, "Ghost_%s_Points".formatted(ghost.name())) {
             @Override
@@ -168,7 +148,7 @@ public class MutatingGhost3D extends Group {
     public void update(GameLevel gameLevel) {
         updateTransform(gameLevel);
         updateAppearance(gameLevel);
-        if (appearance() == Appearance.VALUE) {
+        if (appearance() == GhostAppearance.VALUE) {
             ghost3D.dressAnimation().stop();
         } else {
             pointsAnimation.stop();
@@ -183,9 +163,9 @@ public class MutatingGhost3D extends Group {
         }
     }
 
-    public Appearance appearance() { return appearanceProperty.get(); }
+    public GhostAppearance appearance() { return appearanceProperty.get(); }
 
-    public void setAppearance(Appearance newAppearance) {
+    public void setAppearance(GhostAppearance newAppearance) {
         requireNonNull(newAppearance);
         if (newAppearance != appearance()) {
             appearanceProperty.set(newAppearance);
@@ -201,8 +181,8 @@ public class MutatingGhost3D extends Group {
         numberBox.setMaterial(textureCache.get(numberImage));
     }
 
-    private void onAppearanceChanged(Appearance appearance) {
-        if (appearance == Appearance.VALUE) {
+    private void onAppearanceChanged(GhostAppearance appearance) {
+        if (appearance == GhostAppearance.VALUE) {
             numberBox.setVisible(true);
             ghost3D.setVisible(false);
         } else {
@@ -224,7 +204,11 @@ public class MutatingGhost3D extends Group {
         boolean powerActive = level.pac().powerTimer().isRunning();
         // ghost that got killed already during the current power phase do not look frightened anymore
         boolean killedDuringCurrentPhase = level.victims().contains(ghost);
-        Appearance appearance = selectAppearance(ghost.state(), powerActive, powerFading, killedDuringCurrentPhase);
+        GhostAppearance appearance = GhostAppearanceSelector.selectAppearance(
+                ghost.state(),
+                powerActive,
+                powerFading,
+                killedDuringCurrentPhase);
         setAppearance(appearance);
     }
 
