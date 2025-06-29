@@ -52,8 +52,7 @@ public class Pac extends MovingActor implements Animated {
                 ", restingTicks=" + restingTicks +
                 ", starvingTicks=" + starvingTicks +
                 ", visible=" + visible +
-                ", pos_x=" + x +
-                ", pos_y=" + y +
+                ", position=" + position() +
                 ", velocity=" + velocity() +
                 ", acceleration=" + acceleration() +
                 '}';

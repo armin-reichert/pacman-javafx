@@ -42,8 +42,7 @@ public abstract class MovingActor extends Actor {
     public String toString() {
         return "WorldMovingActor{" +
                 "visible=" + visible +
-                ", x=" + x +
-                ", y=" + y +
+                ", position=" + position() +
                 ", velocity=" + velocity() +
                 ", acceleration=" + acceleration() +
                 ", moveDir=" + moveDir +
@@ -271,16 +270,15 @@ public abstract class MovingActor extends Actor {
     }
 
     private void tryTeleport(Vector2i currentTile, Portal portal) {
-        var oldX = x;
-        var oldY = y;
-        if (currentTile.y() == portal.leftTunnelEnd().y() && x < portal.leftTunnelEnd().x() - portal.depth() * TS) {
+        Vector2f oldPosition = position();
+        if (currentTile.y() == portal.leftTunnelEnd().y() && oldPosition.x() < portal.leftTunnelEnd().x() - portal.depth() * TS) {
             placeAtTile(portal.rightTunnelEnd());
             moveInfo.teleported = true;
-            moveInfo.log(String.format("%s: Teleported from (%.2f,%.2f) to (%.2f,%.2f)", name(), oldX, oldY, x, y));
+            moveInfo.log(String.format("%s: Teleported from %s to %s", name(), oldPosition,position()));
         } else if (currentTile.equals(portal.rightTunnelEnd().plus(portal.depth(), 0))) {
             placeAtTile(portal.leftTunnelEnd().minus(portal.depth(), 0));
             moveInfo.teleported = true;
-            moveInfo.log(String.format("%s: Teleported from (%.2f,%.2f) to (%.2f,%.2f)", name(), oldX, oldY, x, y));
+            moveInfo.log(String.format("%s: Teleported from %s to %s", name(), oldPosition,position()));
         }
     }
 

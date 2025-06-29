@@ -65,8 +65,7 @@ public abstract class Ghost extends MovingActor implements Animated {
                 "name='" + name + '\'' +
                 ", state=" + state +
                 ", visible=" + visible +
-                ", x=" + x +
-                ", y=" + y +
+                ", position=" + position() +
                 ", velocity=" + velocity() +
                 ", acceleration=" + acceleration() +
                 ", moveDir=" + moveDir +
@@ -258,6 +257,7 @@ public abstract class Ghost extends MovingActor implements Animated {
             float maxY = (house.maxTile().y() - 1) * TS - HTS;
             setSpeed(theGame().actorSpeedControl().ghostSpeedInsideHouse(level, this));
             move();
+            float y = position().y();
             if (y <= minY) {
                 setMoveAndWishDir(DOWN);
             } else if (y >= maxY) {
@@ -291,7 +291,8 @@ public abstract class Ghost extends MovingActor implements Animated {
         House house = level.house().get();
         float speedInsideHouse = theGame().actorSpeedControl().ghostSpeedInsideHouse(level, this);
         Vector2f houseEntryPosition = house.entryPosition();
-        if (y <= houseEntryPosition.y()) {
+        Vector2f position = position();
+        if (position.y() <= houseEntryPosition.y()) {
             // has raised and is outside house
             setPosition(houseEntryPosition);
             setMoveAndWishDir(LEFT);
@@ -304,7 +305,7 @@ public abstract class Ghost extends MovingActor implements Animated {
             return;
         }
         // move inside house
-        float centerX = x + HTS;
+        float centerX = position.x() + HTS;
         float houseCenterX = house.center().x();
         if (differsAtMost(0.5f * speedInsideHouse, centerX, houseCenterX)) {
             // align horizontally and raise
@@ -412,17 +413,18 @@ public abstract class Ghost extends MovingActor implements Animated {
      */
     private void updateStateEnteringHouse(GameLevel level) {
         float speed = theGame().actorSpeedControl().ghostSpeedReturningToHouse(level, this);
-        if (position().roughlyEquals(revivalPosition, 0.5f * speed, 0.5f * speed)) {
+        Vector2f position = position();
+        if (position.roughlyEquals(revivalPosition, 0.5f * speed, 0.5f * speed)) {
             setPosition(revivalPosition);
             setMoveAndWishDir(UP);
             setState(GhostState.LOCKED);
             return;
         }
-        if (y < revivalPosition.y()) {
+        if (position.y() < revivalPosition.y()) {
             setMoveAndWishDir(DOWN);
-        } else if (x > revivalPosition.x()) {
+        } else if (position.x() > revivalPosition.x()) {
             setMoveAndWishDir(LEFT);
-        } else if (x < revivalPosition.x()) {
+        } else if (position.x() < revivalPosition.x()) {
             setMoveAndWishDir(RIGHT);
         }
         setSpeed(speed);

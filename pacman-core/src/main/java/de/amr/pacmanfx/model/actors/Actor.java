@@ -23,19 +23,18 @@ import static java.util.Objects.requireNonNull;
 public class Actor {
 
     protected boolean visible;
-    protected float x, y;
+    private final ObjectProperty<Vector2f> positionProperty = new SimpleObjectProperty<>(Vector2f.ZERO);
     private final ObjectProperty<Vector2f> velocityProperty = new SimpleObjectProperty<>(Vector2f.ZERO);
     private final ObjectProperty<Vector2f> accelerationProperty = new SimpleObjectProperty<>(Vector2f.ZERO);
 
     @Override
     public String toString() {
         return "Actor{" +
-            "visible=" + visible +
-            ", x=" + x +
-            ", y=" + y +
-            ", velocity=" + velocity() +
-            ", acceleration=" + acceleration() +
-            '}';
+               "visible=" + visible +
+                ", position=" + position() +
+                ", velocity=" + velocity() +
+                ", acceleration=" + acceleration() +
+                '}';
     }
 
     /**
@@ -43,9 +42,9 @@ public class Actor {
      */
     public void reset() {
         visible = false;
-        x = y = 0;
-        velocityProperty.set(Vector2f.ZERO);
-        accelerationProperty.set(Vector2f.ZERO);
+        setPosition(Vector2f.ZERO);
+        setVelocity(Vector2f.ZERO);
+        setAcceleration(Vector2f.ZERO);
     }
 
     public boolean isVisible() {
@@ -64,41 +63,39 @@ public class Actor {
         visible = false;
     }
 
-    public void setX(float value) {
-        x = value;
+    public void setX(double x) {
+        setPosition((float) x, position().y());
     }
 
     public float x() {
-        return x;
+        return position().x();
     }
 
-    public void setY(float value) {
-        y = value;
+    public void setY(double y) {
+        setPosition(position().x(), (float) y);
     }
 
     public float y() {
-        return y;
+        return position().y();
     }
 
     /**
      * @return upper left corner of the entity collision box which is a square of size 1 tile.
      */
-    public Vector2f position() { return Vector2f.of(x, y); }
+    public Vector2f position() { return positionProperty.get(); }
 
     /**
      * @return center of the entity collision box which is a square of size 1 tile.
      */
-    public Vector2f center() { return Vector2f.of(x + HTS, y + HTS); }
+    public Vector2f center() { return position().plus(HTS, HTS); }
 
     public void setPosition(float x, float y) {
-        this.x = x;
-        this.y = y;
+        setPosition(new Vector2f(x, y));
     }
 
     public void setPosition(Vector2f position) {
         requireNonNull(position, "Position of actor must not be null");
-        x = position.x();
-        y = position.y();
+        positionProperty.set(position);
     }
 
     public Vector2f velocity() {
@@ -135,9 +132,7 @@ public class Actor {
      * Moves this actor by its current velocity and increases its velocity by its current acceleration.
      */
     public void move() {
-        Vector2f velocity = velocity();
-        x += velocity.x();
-        y += velocity.y();
+        setPosition(position().plus(velocity()));
         setVelocity(velocity().plus(acceleration()));
     }
 
@@ -145,15 +140,15 @@ public class Actor {
      * @return Tile containing the center of the actor collision box.
      */
     public Vector2i tile() {
-        return tileAt(x + HTS, y + HTS);
+        Vector2f position = position();
+        return tileAt(position.x() + HTS, position.y() + HTS);
     }
 
     /**
      * @return Offset inside current tile: (0, 0) if centered, range: [-4, +4)
      */
     public Vector2f offset() {
-        var tile = tile();
-        return Vector2f.of(x - TS * tile.x(), y - TS * tile.y());
+        return position().minus(tile().scaled((float)TS));
     }
 
     /**
