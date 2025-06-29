@@ -26,6 +26,7 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -51,7 +52,7 @@ public class MutatingGhost3D extends Group {
         protected void invalidated() { onAppearanceChanged(getValue()); }
     };
 
-    private final Map<Image, PhongMaterial> textureCache = new WeakHashMap<>();
+    private final Map<Image, PhongMaterial> textureCache = new HashMap<>();
     private final Ghost ghost;
     private final Ghost3D ghost3D;
     private final Box numberBox;
