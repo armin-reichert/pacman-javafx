@@ -9,6 +9,8 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Portal;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
 
 import java.util.List;
@@ -29,8 +31,8 @@ public abstract class MovingActor extends Actor {
 
     protected final MoveResult moveInfo = new MoveResult();
 
-    protected Direction moveDir;
-    protected Direction wishDir;
+    protected ObjectProperty<Direction> moveDirProperty = new SimpleObjectProperty<>();
+    protected ObjectProperty<Direction> wishDirProperty = new SimpleObjectProperty<>();
     protected Vector2i targetTile;
 
     protected boolean newTileEntered;
@@ -45,8 +47,8 @@ public abstract class MovingActor extends Actor {
                 ", position=" + position() +
                 ", velocity=" + velocity() +
                 ", acceleration=" + acceleration() +
-                ", moveDir=" + moveDir +
-                ", wishDir=" + wishDir +
+                ", moveDir=" + moveDir() +
+                ", wishDir=" + wishDir() +
                 ", targetTile=" + targetTile +
                 ", newTileEntered=" + newTileEntered +
                 ", gotReverseCommand=" + gotReverseCommand +
@@ -137,36 +139,34 @@ public abstract class MovingActor extends Actor {
     /**
      * Sets the move direction and updates the velocity vector.
      *
-     * @param dir the move direction
+     * @param dir the move direction (must not be null)
      */
     public void setMoveDir(Direction dir) {
-        moveDir = requireNonNull(dir);
-        setVelocity(moveDir.vector().scaled(velocity().length()));
-        Logger.trace("{}: moveDir: {}. {}", name(), moveDir, this);
+        moveDirProperty.set(requireNonNull(dir));
+        setVelocity(dir.vector().scaled(velocity().length()));
     }
 
     /**
      * @return The current move direction.
      */
     public Direction moveDir() {
-        return moveDir;
+        return moveDirProperty.get();
     }
 
     /**
      * Sets the wish direction.
      *
-     * @param dir the wish direction
+     * @param dir the wish direction (must not be null)
      */
     public void setWishDir(Direction dir) {
-        wishDir = requireNonNull(dir);
-        Logger.trace("{}: wishDir: {}. {}", name(), wishDir, this);
+        wishDirProperty.set(requireNonNull(dir));
     }
 
     /**
      * @return The wish direction. Will be taken as soon as possible.
      */
     public Direction wishDir() {
-        return wishDir;
+        return wishDirProperty.get();
     }
 
     /**
@@ -184,7 +184,7 @@ public abstract class MovingActor extends Actor {
      * @return the tile located the given number of tiles towards the current move direction of the actor.
      */
     public Vector2i tilesAhead(int numTiles) {
-        return tile().plus(moveDir.vector().scaled(numTiles));
+        return tile().plus(moveDir().vector().scaled(numTiles));
     }
 
     /**
@@ -194,7 +194,7 @@ public abstract class MovingActor extends Actor {
      */
     public Vector2i tilesAheadWithOverflowBug(int numTiles) {
         Vector2i ahead = tilesAhead(numTiles);
-        if (moveDir == UP) {
+        if (moveDir() == UP) {
             ahead = ahead.minus(numTiles, 0);
         }
         return ahead;
@@ -221,7 +221,7 @@ public abstract class MovingActor extends Actor {
         if (speed < 0) {
             throw new IllegalArgumentException("Speed must not be negative but is: " + speed);
         }
-        setVelocity(speed == 0 ? Vector2f.ZERO : moveDir.vector().scaled(speed));
+        setVelocity(speed == 0 ? Vector2f.ZERO : moveDir().vector().scaled(speed));
     }
 
     public boolean isNewTileEntered() {
@@ -241,7 +241,7 @@ public abstract class MovingActor extends Actor {
         double minDistToTarget = Double.MAX_VALUE;
         // Order in which directions are selected when navigation decision is met.
         for (Direction dir : List.of(UP, LEFT, DOWN, RIGHT)) {
-            if (dir == moveDir.opposite()) {
+            if (dir == moveDir().opposite()) {
                 continue; // reversing the move direction is not allowed  (except to get out of dead-ends, see below)
             }
             final Vector2i neighborTile = currentTile.plus(dir.vector());
@@ -254,7 +254,7 @@ public abstract class MovingActor extends Actor {
             }
         }
         // if not directory could be determined, reverse move direction (leave dead-end)
-        setWishDir(candidateDir != null ? candidateDir : moveDir.opposite());
+        setWishDir(candidateDir != null ? candidateDir : moveDir().opposite());
     }
 
     /**
@@ -303,15 +303,15 @@ public abstract class MovingActor extends Actor {
         }
         if (!moveInfo.teleported) {
             if (gotReverseCommand && canReverse()) {
-                setWishDir(moveDir.opposite());
+                setWishDir(moveDir().opposite());
                 Logger.trace("{}: turned around at tile {}", name(), tile());
                 gotReverseCommand = false;
             }
-            tryMovingTowards(level, currentTile, wishDir);
+            tryMovingTowards(level, currentTile, wishDir());
             if (moveInfo.moved) {
-                setMoveDir(wishDir);
+                setMoveDir(wishDir());
             } else {
-                tryMovingTowards(level, currentTile, moveDir);
+                tryMovingTowards(level, currentTile, moveDir());
             }
         }
     }
@@ -320,7 +320,7 @@ public abstract class MovingActor extends Actor {
         final Vector2f newVelocity = dir.vector().scaled(velocity().length());
         final Vector2f touchPosition = center().plus(dir.vector().scaled((float) HTS)).plus(newVelocity);
         final Vector2i touchedTile = tileAt(touchPosition);
-        final boolean turn = dir.vector().isOrthogonalTo(moveDir.vector());
+        final boolean turn = dir.vector().isOrthogonalTo(moveDir().vector());
 
         if (!canAccessTile(level, touchedTile)) {
             if (!turn) {

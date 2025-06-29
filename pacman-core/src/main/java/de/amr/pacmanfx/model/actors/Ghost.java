@@ -70,8 +70,8 @@ public abstract class Ghost extends MovingActor implements Animated {
                 ", position=" + position() +
                 ", velocity=" + velocity() +
                 ", acceleration=" + acceleration() +
-                ", moveDir=" + moveDir +
-                ", wishDir=" + wishDir +
+                ", moveDir=" + moveDir() +
+                ", wishDir=" + wishDir() +
                 ", targetTile=" + targetTile +
                 ", newTileEntered=" + newTileEntered +
                 ", gotReverseCommand=" + gotReverseCommand +
@@ -136,10 +136,10 @@ public abstract class Ghost extends MovingActor implements Animated {
     private Direction computeRoamingDirection(GameLevel level, Vector2i currentTile) {
         Direction dir = pseudoRandomDirection();
         int turns = 0;
-        while (dir == moveDir.opposite() || !canAccessTile(level, currentTile.plus(dir.vector()))) {
+        while (dir == moveDir().opposite() || !canAccessTile(level, currentTile.plus(dir.vector()))) {
             dir = dir.nextClockwise();
             if (++turns > 4) {
-                return moveDir.opposite();  // avoid endless loop
+                return moveDir().opposite();  // avoid endless loop
             }
         }
         return dir;
