@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -22,7 +23,6 @@ import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
 import static de.amr.pacmanfx.Validations.requireNonNegative;
-import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -34,40 +34,45 @@ public class Ghost3D extends Group {
     private final ObjectProperty<Color> eyeballsColorPy = new SimpleObjectProperty<>(Color.WHITE);
     private final ObjectProperty<Color> pupilsColorPy   = new SimpleObjectProperty<>(Color.BLUE);
 
-    private final byte personality;
-    private final AssetStorage assets;
-    private final String assetNamespace;
     private final Shape3D dressShape;
     private final Group dressGroup;
 
     private final ManagedAnimation dressAnimation;
     private final FlashingAnimation flashingAnimation;
 
-    public Color normalDressColor()        { return assets.color(assetNamespace + ".ghost.%d.color.normal.dress".formatted(personality));  }
-    public Color normalPupilsColor()       { return assets.color(assetNamespace + ".ghost.%d.color.normal.pupils".formatted(personality)); }
-    public Color normalEyeballsColor()     { return assets.color(assetNamespace + ".ghost.%d.color.normal.eyeballs".formatted(personality)); }
-    public Color frightenedDressColor()    { return assets.color(assetNamespace + ".ghost.color.frightened.dress"); }
-    public Color frightenedPupilsColor()   { return assets.color(assetNamespace + ".ghost.color.frightened.pupils"); }
-    public Color frightenedEyeballsColor() { return assets.color(assetNamespace + ".ghost.color.frightened.eyeballs"); }
-    public Color flashingDressColor()      { return assets.color(assetNamespace + ".ghost.color.flashing.dress"); }
-    public Color flashingPupilsColor()     { return assets.color(assetNamespace + ".ghost.color.flashing.pupils"); }
+    private final Color normalDressColor;
+    private final Color normalPupilsColor;
+    private final Color normalEyeballsColor;
+    private final Color frightenedDressColor;
+    private final Color frightenedPupilsColor;
+    private final Color frightenedEyeballsColor;
+    private final Color flashingDressColor;
+    private final Color flashingPupilsColor;
 
     public Ghost3D(
         AnimationManager animationManager,
         AssetStorage assets,
         String assetNamespace,
-        byte personality,
-        String ghostName,
+        Ghost ghost,
         Shape3D dressShape,
         Shape3D pupilsShape,
         Shape3D eyeballsShape,
         double size)
     {
         requireNonNull(animationManager);
-        this.assets = requireNonNull(assets);
-        this.assetNamespace = requireNonNull(assetNamespace);
-        this.personality = requireValidGhostPersonality(personality);
+        requireNonNull(assets);
+        requireNonNull(assetNamespace);
+        requireNonNull(ghost);
         this.dressShape = requireNonNull(dressShape);
+
+        normalDressColor          = assets.color(assetNamespace + ".ghost.%d.color.normal.dress".formatted(ghost.personality()));
+        normalPupilsColor         = assets.color(assetNamespace + ".ghost.%d.color.normal.pupils".formatted(ghost.personality()));
+        normalEyeballsColor       = assets.color(assetNamespace + ".ghost.%d.color.normal.eyeballs".formatted(ghost.personality()));
+        frightenedDressColor      = assets.color(assetNamespace + ".ghost.color.frightened.dress");
+        frightenedPupilsColor     = assets.color(assetNamespace + ".ghost.color.frightened.pupils");
+        frightenedEyeballsColor   = assets.color(assetNamespace + ".ghost.color.frightened.eyeballs");
+        flashingDressColor        = assets.color(assetNamespace + ".ghost.color.flashing.dress");
+        flashingPupilsColor       = assets.color(assetNamespace + ".ghost.color.flashing.pupils");
 
         requireNonNull(pupilsShape);
         requireNonNull(eyeballsShape);
@@ -77,9 +82,9 @@ public class Ghost3D extends Group {
         pupilsShape.materialProperty().bind(pupilsColorPy.map(Ufx::coloredPhongMaterial));
         eyeballsShape.materialProperty().bind(eyeballsColorPy.map(Ufx::coloredPhongMaterial));
 
-        pupilsColorPy.set(normalPupilsColor());
-        dressColorPy.set(normalDressColor());
-        eyeballsColorPy.set(normalEyeballsColor());
+        pupilsColorPy.set(normalPupilsColor);
+        dressColorPy.set(normalDressColor);
+        eyeballsColorPy.set(normalEyeballsColor);
 
         var eyesGroup = new Group(pupilsShape, eyeballsShape);
         dressGroup = new Group(dressShape);
@@ -96,7 +101,7 @@ public class Ghost3D extends Group {
         Scale scale = new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
         getTransforms().add(scale);
 
-        dressAnimation = new ManagedAnimation(animationManager, "Ghost_%s_DressMoving".formatted(ghostName)) {
+        dressAnimation = new ManagedAnimation(animationManager, "Ghost_%s_DressMoving".formatted(ghost.name())) {
             @Override
             protected Animation createAnimation() {
                 var animation = new RotateTransition(Duration.seconds(0.3), dressGroup);
@@ -109,7 +114,7 @@ public class Ghost3D extends Group {
             }
         };
 
-        flashingAnimation = new FlashingAnimation(animationManager, ghostName);
+        flashingAnimation = new FlashingAnimation(animationManager, ghost.name());
     }
 
     public class FlashingAnimation extends ManagedAnimation {
@@ -136,12 +141,12 @@ public class Ghost3D extends Group {
             Duration flashEndTime = totalDuration.divide(numFlashes), highlightTime = flashEndTime.divide(3);
             var flashingTimeline = new Timeline(
                 new KeyFrame(highlightTime,
-                    new KeyValue(dressColorPy,  flashingDressColor()),
-                    new KeyValue(pupilsColorPy, flashingPupilsColor())
+                    new KeyValue(dressColorPy,  flashingDressColor),
+                    new KeyValue(pupilsColorPy, flashingPupilsColor)
                 ),
                 new KeyFrame(flashEndTime,
-                    new KeyValue(dressColorPy,  frightenedDressColor()),
-                    new KeyValue(pupilsColorPy, frightenedPupilsColor())
+                    new KeyValue(dressColorPy,  frightenedDressColor),
+                    new KeyValue(pupilsColorPy, frightenedPupilsColor)
                 )
             );
             flashingTimeline.setCycleCount(numFlashes);
@@ -185,24 +190,24 @@ public class Ghost3D extends Group {
 
     public void setFrightenedAppearance() {
         flashingAnimation.stop();
-        dressColorPy.set(frightenedDressColor());
-        eyeballsColorPy.set(frightenedEyeballsColor());
-        pupilsColorPy.set(frightenedPupilsColor());
+        dressColorPy.set(frightenedDressColor);
+        eyeballsColorPy.set(frightenedEyeballsColor);
+        pupilsColorPy.set(frightenedPupilsColor);
         dressShape.setVisible(true);
     }
 
     public void setNormalAppearance() {
         flashingAnimation.stop();
-        dressColorPy.set(normalDressColor());
-        eyeballsColorPy.set(normalEyeballsColor());
-        pupilsColorPy.set(normalPupilsColor());
+        dressColorPy.set(normalDressColor);
+        eyeballsColorPy.set(normalEyeballsColor);
+        pupilsColorPy.set(normalPupilsColor);
         dressShape.setVisible(true);
     }
 
     public void setEyesOnlyAppearance() {
         flashingAnimation.stop();
-        eyeballsColorPy.set(normalEyeballsColor());
-        pupilsColorPy.set(normalPupilsColor());
+        eyeballsColorPy.set(normalEyeballsColor);
+        pupilsColorPy.set(normalPupilsColor);
         dressShape.setVisible(false);
     }
 }
