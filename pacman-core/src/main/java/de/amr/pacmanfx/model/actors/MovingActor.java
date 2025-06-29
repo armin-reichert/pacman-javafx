@@ -49,7 +49,7 @@ public abstract class MovingActor extends Actor {
                 ", acceleration=" + acceleration() +
                 ", moveDir=" + moveDir() +
                 ", wishDir=" + wishDir() +
-                ", targetTile=" + targetTile() +
+                ", targetTile=" + optTargetTile() +
                 ", newTileEntered=" + newTileEntered +
                 ", gotReverseCommand=" + gotReverseCommand +
                 ", canTeleport=" + canTeleport +
@@ -104,7 +104,7 @@ public abstract class MovingActor extends Actor {
     /**
      * @return (Optional) target tile. Can be inaccessible or outside the world.
      */
-    public Optional<Vector2i> targetTile() {
+    public Optional<Vector2i> optTargetTile() {
         return Optional.ofNullable(targetTileProperty.get());
     }
 

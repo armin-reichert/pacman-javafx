@@ -42,13 +42,13 @@ public class RouteBasedSteering implements Steering {
         movingActor.navigateTowardsTarget(level);
         if (targetIndex == route.size()) {
             complete = true;
-        } else if (movingActor.targetTile().isEmpty()) {
+        } else if (movingActor.optTargetTile().isEmpty()) {
             movingActor.setTargetTile(currentTarget().tile());
             movingActor.navigateTowardsTarget(level);
-            Logger.trace("New target tile for {}={}s", movingActor.name(), movingActor.targetTile().get());
+            Logger.trace("New target tile for {}={}s", movingActor.name(), movingActor.optTargetTile().get());
         } else if (movingActor.tile().equals(currentTarget().tile())) {
             nextTarget(level, movingActor);
-            Logger.trace("New target tile for {}={}", movingActor.name(), movingActor.targetTile().get());
+            Logger.trace("New target tile for {}={}", movingActor.name(), movingActor.optTargetTile().get());
         }
     }
 
