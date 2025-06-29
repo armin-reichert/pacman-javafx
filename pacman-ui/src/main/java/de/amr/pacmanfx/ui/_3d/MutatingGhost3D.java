@@ -94,11 +94,15 @@ public class MutatingGhost3D extends Group {
         this.ghost = requireNonNull(ghost);
         this.size = requireNonNegative(size);
         this.numFlashes = numFlashes;
+
         this.ghost3D = new Ghost3D(animationManager,
             assets, assetPrefix,
             ghost,
             dressShape, pupilsShape, eyeballsShape, size);
+
         this.numberBox = new Box(14, 8, 8);
+
+        getChildren().setAll(ghost3D, numberBox);
         setAppearance(Appearance.NORMAL);
 
         pointsAnimation = new ManagedAnimation(animationManager, "Ghost_%s_Points".formatted(ghost.name())) {
@@ -172,6 +176,30 @@ public class MutatingGhost3D extends Group {
         }
     }
 
+    public void setNumberTexture(Image numberImage) {
+        var texture = new PhongMaterial();
+        texture.setDiffuseMap(numberImage);
+        numberBox.setMaterial(texture);
+    }
+
+    private void onAppearanceChanged(Appearance appearance) {
+        if (appearance == Appearance.VALUE) {
+            numberBox.setVisible(true);
+            ghost3D.setVisible(false);
+        } else {
+            numberBox.setVisible(false);
+            ghost3D.setVisible(true);
+        }
+        switch (appearance) {
+            case NORMAL -> ghost3D.setNormalAppearance();
+            case FRIGHTENED -> ghost3D.setFrightenedAppearance();
+            case EATEN -> ghost3D.setEyesOnlyAppearance();
+            case FLASHING -> ghost3D.setFlashingAppearance(numFlashes);
+            case VALUE -> pointsAnimation.play(ManagedAnimation.FROM_START);
+        }
+        Logger.trace("Ghost {} appearance changed to {}", ghost.personality(), appearance);
+    }
+
     private void updateAppearance(GameLevel level) {
         boolean powerFading = level.pac().isPowerFading(level);
         boolean powerActive = level.pac().powerTimer().isRunning();
@@ -179,12 +207,6 @@ public class MutatingGhost3D extends Group {
         boolean killedDuringCurrentPhase = level.victims().contains(ghost);
         Appearance appearance = selectAppearance(ghost.state(), powerActive, powerFading, killedDuringCurrentPhase);
         setAppearance(appearance);
-    }
-
-    public void setNumberTexture(Image numberImage) {
-        var texture = new PhongMaterial();
-        texture.setDiffuseMap(numberImage);
-        numberBox.setMaterial(texture);
     }
 
     private void updateTransform(GameLevel level) {
@@ -195,18 +217,6 @@ public class MutatingGhost3D extends Group {
         ghost3D.turnTowards(ghost.wishDir());
         boolean outsideTerrain = center.x() < HTS || center.x() > level.worldMap().numCols() * TS - HTS;
         setVisible(ghost.isVisible() && !outsideTerrain);
-    }
-
-    private void onAppearanceChanged(Appearance appearance) {
-        getChildren().setAll(appearance == Appearance.VALUE ? numberBox : ghost3D.root());
-        switch (appearance) {
-            case NORMAL -> ghost3D.setNormalAppearance();
-            case FRIGHTENED -> ghost3D.setFrightenedAppearance();
-            case EATEN -> ghost3D.setEyesOnlyAppearance();
-            case FLASHING -> ghost3D.setFlashingAppearance(numFlashes);
-            case VALUE -> pointsAnimation.play(ManagedAnimation.FROM_START);
-        }
-        Logger.trace("Ghost {} appearance changed to {}", ghost.personality(), appearance);
     }
 
     // Animations
