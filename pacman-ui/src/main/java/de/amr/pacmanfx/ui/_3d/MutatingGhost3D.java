@@ -25,7 +25,6 @@ import javafx.scene.shape.Box;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
-import org.tinylog.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -138,33 +137,28 @@ public class MutatingGhost3D extends Group {
             }
         };
 
-        ghost.positionProperty().addListener((py, ov, newPosition) -> updateTranslate(ghost));
-        ghost.wishDirProperty().addListener((py, ov, newWishDir) -> ghost3D.turnTowards(newWishDir));
+        ghost.positionProperty().addListener((py, ov, newPosition) -> updateTransform());
+        ghost.wishDirProperty().addListener((py, ov, newWishDir) -> updateTransform());
         visibleProperty().bind(Bindings.createBooleanBinding(
                 () -> ghost.isVisible() && !isPositionOutsideWorld(theGameLevel(), ghost.center()),
                 ghost.visibleProperty(), ghost.positionProperty()
         ));
 
-        initTransform();
+        updateTransform();
         setAppearance(GhostAppearance.NORMAL);
     }
 
-    private void initTransform() {
-        updateTranslate(ghost);
-        ghost3D.turnTowards(ghost.wishDir());
-    }
-
-    private void updateTranslate(Ghost ghost) {
-        Vector2f center = ghost.center();
-        setTranslateX(center.x());
-        setTranslateY(center.y());
-        setTranslateZ(-0.5 * size - GHOST_ELEVATION); // a little bit over the floor
+    public void stopAllAnimations() {
+        brakeAnimation.stop();
+        pointsAnimation.stop();
+        ghost3D.dressAnimation().stop();
+        ghost3D.flashingAnimation().stop();
     }
 
     public void init(GameLevel gameLevel) {
         stopAllAnimations();
-        initTransform();
-        updateAppearance(gameLevel);
+        updateTransform();
+        selectAppearance(gameLevel);
     }
 
     /**
@@ -173,7 +167,7 @@ public class MutatingGhost3D extends Group {
      * @param gameLevel the game level
      */
     public void update(GameLevel gameLevel) {
-        updateAppearance(gameLevel);
+        selectAppearance(gameLevel);
         if (appearance() == GhostAppearance.VALUE) {
             ghost3D.dressAnimation().stop();
         } else {
@@ -207,25 +201,15 @@ public class MutatingGhost3D extends Group {
         numberBox.setMaterial(textureCache.get(numberImage));
     }
 
-    private void onAppearanceChanged(GhostAppearance appearance) {
-        if (appearance == GhostAppearance.VALUE) {
-            numberBox.setVisible(true);
-            ghost3D.setVisible(false);
-        } else {
-            numberBox.setVisible(false);
-            ghost3D.setVisible(true);
-        }
-        switch (appearance) {
-            case NORMAL -> ghost3D.setNormalAppearance();
-            case FRIGHTENED -> ghost3D.setFrightenedAppearance();
-            case EATEN -> ghost3D.setEyesOnlyAppearance();
-            case FLASHING -> ghost3D.setFlashingAppearance(numFlashes);
-            case VALUE -> pointsAnimation.play(ManagedAnimation.FROM_START);
-        }
-        Logger.trace("Ghost {} appearance changed to {}", ghost.personality(), appearance);
+    private void updateTransform() {
+        Vector2f center = ghost.center();
+        setTranslateX(center.x());
+        setTranslateY(center.y());
+        setTranslateZ(-0.5 * size - GHOST_ELEVATION); // a little bit over the floor
+        ghost3D.turnTowards(ghost.wishDir());
     }
 
-    private void updateAppearance(GameLevel level) {
+    private void selectAppearance(GameLevel level) {
         boolean powerFading = level.pac().isPowerFading(level);
         boolean powerActive = level.pac().powerTimer().isRunning();
         // ghost that got killed already during the current power phase do not look frightened anymore
@@ -238,12 +222,20 @@ public class MutatingGhost3D extends Group {
         setAppearance(appearance);
     }
 
-    // Animations
-
-    public void stopAllAnimations() {
-        brakeAnimation.stop();
-        pointsAnimation.stop();
-        ghost3D.dressAnimation().stop();
-        ghost3D.flashingAnimation().stop();
+    private void onAppearanceChanged(GhostAppearance newAppearance) {
+        if (newAppearance == GhostAppearance.VALUE) {
+            numberBox.setVisible(true);
+            ghost3D.setVisible(false);
+        } else {
+            numberBox.setVisible(false);
+            ghost3D.setVisible(true);
+        }
+        switch (newAppearance) {
+            case NORMAL     -> ghost3D.setNormalLook();
+            case FRIGHTENED -> ghost3D.setFrightenedLook();
+            case EATEN      -> ghost3D.setEyesOnlyLook();
+            case FLASHING   -> ghost3D.setFlashingLook(numFlashes);
+            case VALUE      -> pointsAnimation.play(ManagedAnimation.FROM_START);
+        }
     }
 }

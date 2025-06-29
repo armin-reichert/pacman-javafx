@@ -176,10 +176,10 @@ public class Ghost3D extends Group {
         });
     }
 
-    public void setFlashingAppearance(int numFlashes) {
+    public void setFlashingLook(int numFlashes) {
         dressShape.setVisible(true);
         if (numFlashes == 0) {
-            setFrightenedAppearance();
+            setFrightenedLook();
         } else {
             flashingAnimation.setNumFlashes(numFlashes);
             // TODO (fixme): Total flashing time must be shorter than Pac power fading time (2s)!
@@ -188,7 +188,7 @@ public class Ghost3D extends Group {
         }
     }
 
-    public void setFrightenedAppearance() {
+    public void setFrightenedLook() {
         flashingAnimation.stop();
         dressColorPy.set(frightenedDressColor);
         eyeballsColorPy.set(frightenedEyeballsColor);
@@ -196,7 +196,7 @@ public class Ghost3D extends Group {
         dressShape.setVisible(true);
     }
 
-    public void setNormalAppearance() {
+    public void setNormalLook() {
         flashingAnimation.stop();
         dressColorPy.set(normalDressColor);
         eyeballsColorPy.set(normalEyeballsColor);
@@ -204,7 +204,7 @@ public class Ghost3D extends Group {
         dressShape.setVisible(true);
     }
 
-    public void setEyesOnlyAppearance() {
+    public void setEyesOnlyLook() {
         flashingAnimation.stop();
         eyeballsColorPy.set(normalEyeballsColor);
         pupilsColorPy.set(normalPupilsColor);
