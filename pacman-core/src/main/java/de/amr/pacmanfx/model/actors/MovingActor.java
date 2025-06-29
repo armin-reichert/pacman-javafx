@@ -102,6 +102,11 @@ public abstract class MovingActor extends Actor {
     }
 
     /**
+     * @return current target tile. Can be null, an inaccessible tile or a tile outside the world.
+     */
+    public Vector2i targetTile() { return targetTileProperty.get(); }
+
+    /**
      * @return (Optional) target tile. Can be inaccessible or outside the world.
      */
     public Optional<Vector2i> optTargetTile() {
