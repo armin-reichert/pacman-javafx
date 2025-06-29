@@ -59,7 +59,6 @@ public class MutatingGhost3D extends Group {
     private final Ghost3D ghost3D;
     private final Box numberBox;
     private final double size;
-    private final int numFlashes;
 
     private final ManagedAnimation brakeAnimation;
     private final ManagedAnimation pointsAnimation;
@@ -80,7 +79,6 @@ public class MutatingGhost3D extends Group {
 
         this.ghost = requireNonNull(ghost);
         this.size = requireNonNegative(size);
-        this.numFlashes = numFlashes;
 
         ghost3D = new Ghost3D(animationManager,
             assets, assetPrefix,
