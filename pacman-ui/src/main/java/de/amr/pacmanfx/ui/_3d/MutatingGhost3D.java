@@ -63,7 +63,7 @@ public class MutatingGhost3D extends Group {
         return powerFading ? Appearance.FLASHING : Appearance.FRIGHTENED;
     }
 
-    private final ObjectProperty<Appearance> appearancePy = new SimpleObjectProperty<>(this, "appearance") {
+    private final ObjectProperty<Appearance> appearanceProperty = new SimpleObjectProperty<>() {
         @Override
         protected void invalidated() { onAppearanceChanged(getValue()); }
     };
@@ -163,9 +163,14 @@ public class MutatingGhost3D extends Group {
         updateAnimations();
     }
 
-    public Appearance appearance() { return appearancePy.get(); }
+    public Appearance appearance() { return appearanceProperty.get(); }
 
-    public void setAppearance(Appearance appearance) { appearancePy.set(requireNonNull(appearance)); }
+    public void setAppearance(Appearance newAppearance) {
+        requireNonNull(newAppearance);
+        if (newAppearance != appearance()) {
+            appearanceProperty.set(newAppearance);
+        }
+    }
 
     private void updateAppearance(GameLevel level) {
         boolean powerFading = level.pac().isPowerFading(level);
