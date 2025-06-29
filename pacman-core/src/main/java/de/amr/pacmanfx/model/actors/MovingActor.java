@@ -49,7 +49,7 @@ public abstract class MovingActor extends Actor {
                 ", acceleration=" + acceleration() +
                 ", moveDir=" + moveDir() +
                 ", wishDir=" + wishDir() +
-                ", targetTile=" + optTargetTile() +
+                ", targetTile=" + targetTile() +
                 ", newTileEntered=" + newTileEntered +
                 ", gotReverseCommand=" + gotReverseCommand +
                 ", canTeleport=" + canTeleport +
