@@ -199,6 +199,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         animationManager.stopAllAnimations();
         animationManager.clearAnimations();
         perspectiveManager.perspectiveIDProperty().unbind();
+        level3D.destroy();
         level3D = null;
     }
 
@@ -214,6 +215,10 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         }
         if (level3D == null) {
             Logger.warn("Tick #{}: 3D game level not yet existing", theClock().tickCount());
+            return;
+        }
+        if (level3D.inDestroyPhase()) {
+            Logger.warn("Tick #{}: 3D game level is in destroy phase", theClock().tickCount());
             return;
         }
         level3D.tick(theGameLevel());
@@ -286,7 +291,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 theGameState().timer().resetIndefiniteTime(); // expires when animation ends
                 theSound().stopAll();
                 level3D.onLevelCompleted();
-                new SequentialTransition(
+                var animation = new SequentialTransition(
                     Ufx.doAfterSec(3, () -> {
                         perspectiveManager.perspectiveIDProperty().unbind();
                         perspectiveManager.setPerspective(PerspectiveID.TOTAL);
@@ -295,9 +300,11 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                     Ufx.doAfterSec(1, () -> {
                         perspectiveManager.perspectiveIDProperty().bind(PY_3D_PERSPECTIVE);
                         animationManager.stopAllAnimations();
+                        level3D.destroy();
                         theGameController().letCurrentGameStateExpire();
                     })
-                ).play();
+                );
+                animation.play();
             }
             case LEVEL_TRANSITION -> {
                 theGameState().timer().restartSeconds(3);
@@ -431,8 +438,10 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void onGameContinued(GameEvent e) {
-        Vector2f position = theGameLevel().house().map(House::centerPositionUnderHouse).orElse(Vector2f.ZERO);
-        level3D.showAnimatedMessage("READY!", 0.5f, position.x(), position.y());
+        if (level3D != null && !level3D.inDestroyPhase()) {
+            Vector2f position = theGameLevel().house().map(House::centerPositionUnderHouse).orElse(Vector2f.ZERO);
+            level3D.showAnimatedMessage("READY!", 0.5f, position.x(), position.y());
+        }
     }
 
     @Override

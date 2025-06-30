@@ -71,13 +71,12 @@ public class GameLevel3D {
 
     private final IntegerProperty livesCountPy = new SimpleIntegerProperty(0);
 
-    private final AnimationManager animationManager;
-    private final ManagedAnimation levelCompletedAnimation;
-
-    private final Group root = new Group();
-    private final Group mazeGroup = new Group();
-    private final List<Pellet3D> pellets3D = new ArrayList<>();
-    private final ArrayList<Energizer3D> energizers3D = new ArrayList<>();
+    private AnimationManager animationManager;
+    private ManagedAnimation levelCompletedAnimation;
+    private Group root = new Group();
+    private Group mazeGroup = new Group();
+    private List<Pellet3D> pellets3D = new ArrayList<>();
+    private ArrayList<Energizer3D> energizers3D = new ArrayList<>();
     private Box floor3D;
     private Maze3D maze3D;
     private LevelCounter3D levelCounter3D;
@@ -136,7 +135,7 @@ public class GameLevel3D {
                     boolean showFlashMessage = randomInt(1, 1000) < 250; // every 4th time also show a message
                     return new SequentialTransition(
                         now(() -> {
-                            livesCounter3D().light().setLightOn(false);
+                            livesCounter3D.light().setLightOn(false);
                             if (showFlashMessage) {
                                 theUI().showFlashMessageSec(3, theAssets().localizedLevelCompleteMessage(levelNumber));
                             }
@@ -152,6 +151,34 @@ public class GameLevel3D {
                 }
             }
         };
+    }
+
+    private boolean inDestroyPhase;
+
+    public boolean inDestroyPhase() {
+        return inDestroyPhase;
+    }
+
+    // Attempt to get objects garbage-collected
+    public void destroy() {
+        inDestroyPhase = true;
+
+        animationManager = null;
+        levelCompletedAnimation = null;
+        root = null;
+        mazeGroup = null;
+        pellets3D = null;
+        energizers3D = null;
+        floor3D = null;
+        maze3D = null;
+        levelCounter3D = null;
+        livesCounter3D = null;
+        pac3D = null;
+        ghosts3D = null;
+        messageView = null;
+        bonus3D = null;
+
+        System.gc();
     }
 
     /**

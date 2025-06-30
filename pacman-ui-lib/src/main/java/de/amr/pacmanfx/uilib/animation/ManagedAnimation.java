@@ -42,10 +42,10 @@ public abstract class ManagedAnimation {
         getOrCreateAnimation();
         if (animation.getStatus() != Animation.Status.RUNNING) {
             if (playMode == FROM_START) {
-                Logger.info("Playing animation {} from start", identifier);
+                Logger.trace("Playing animation {} from start", identifier);
                 animation.playFromStart();
             } else if (playMode == CONTINUE) {
-                Logger.info("Continuing animation {}", identifier);
+                Logger.trace("Continuing animation {}", identifier);
                 animation.play();
             }
         }

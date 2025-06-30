@@ -110,7 +110,7 @@ public class TengenMsPacMan_MapRepository {
         return randomColorSchemes.stream().toList();
     }
 
-    private final Map<CacheKey, ColorSchemedSprite> cache = new HashMap<>();
+    private final Map<CacheKey, ColorSchemedSprite> cache = new WeakHashMap<>();
     private final Image arcadeMazesSpriteSheet;
     private final Image nonArcadeMazesSpriteSheet;
 
