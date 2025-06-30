@@ -22,8 +22,7 @@ import static de.amr.pacmanfx.uilib.Ufx.opaqueColor;
 /**
  * 3D Arcade style house.
  */
-public class ArcadeHouse3D {
-    private final Group root = new Group();
+public class ArcadeHouse3D extends Group {
     private Door3D door3D;
 
     public ArcadeHouse3D(
@@ -58,7 +57,7 @@ public class ArcadeHouse3D {
             light.setTranslateY(centerY - 6);
             light.translateZProperty().bind(wallBaseHeightPy.multiply(-1));
 
-            root.getChildren().addAll(
+            getChildren().addAll(
                 light,
                 door3D,
                 r3D.createWallBetweenTiles(Vector2i.of(xMin, yMin), Vector2i.of(leftDoorTile.x() - 1, yMin)),
@@ -68,10 +67,6 @@ public class ArcadeHouse3D {
                 r3D.createWallBetweenTiles(Vector2i.of(xMin, yMax), Vector2i.of(xMax, yMax))
             );
         });
-    }
-
-    public Group root() {
-        return root;
     }
 
     public Door3D door3D() {

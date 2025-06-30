@@ -41,10 +41,10 @@ public class AnimationManager {
             Animation animation = entry.getValue();
             try {
                 if (animation.getStatus() == Animation.Status.STOPPED) {
-                    Logger.info("Already stopped: animation ID='{}' ({})", id, animation);
+                    Logger.debug("Already stopped: animation ID='{}' ({})", id, animation);
                 } else {
                     animation.stop();
-                    Logger.info("Stopped animation ID='{}' ({})", id, animation);
+                    Logger.debug("Stopped animation ID='{}' ({})", id, animation);
                 }
             } catch (IllegalStateException x) {
                 Logger.warn("Could not stop (embedded?) animation ID='{}' ({})", id, animation);

@@ -199,8 +199,10 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         animationManager.stopAllAnimations();
         animationManager.clearAnimations();
         perspectiveManager.perspectiveIDProperty().unbind();
-        level3D.destroy();
-        level3D = null;
+        if (level3D != null) {
+            level3D.destroy();
+            level3D = null;
+        }
     }
 
     @Override
@@ -290,7 +292,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             case LEVEL_COMPLETE -> {
                 theGameState().timer().resetIndefiniteTime(); // expires when animation ends
                 theSound().stopAll();
-                level3D.onLevelCompleted();
+                level3D.complete();
                 var animation = new SequentialTransition(
                     Ufx.doAfterSec(3, () -> {
                         perspectiveManager.perspectiveIDProperty().unbind();
@@ -478,7 +480,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     @Override
     public void onPacGetsPower(GameEvent event) {
         level3D.pac3D().setMovementPowerMode(true);
-        level3D.maze3D().wallColorFlashingAnimation().play(ManagedAnimation.FROM_START);
+        level3D.wallColorFlashingAnimation().play(ManagedAnimation.FROM_START);
         theSound().stopSiren();
         theSound().playPacPowerSound();
     }
@@ -486,7 +488,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     @Override
     public void onPacLostPower(GameEvent event) {
         level3D.pac3D().setMovementPowerMode(false);
-        level3D.maze3D().wallColorFlashingAnimation().stop();
+        level3D.wallColorFlashingAnimation().stop();
         theSound().stopPacPowerSound();
     }
 
