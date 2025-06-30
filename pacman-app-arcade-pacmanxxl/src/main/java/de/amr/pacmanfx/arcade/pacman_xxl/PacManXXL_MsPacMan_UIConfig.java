@@ -65,12 +65,20 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
         storeLocalAsset(assets, "startpage.image2",                rm.loadImage("graphics/f2.jpg"));
         storeLocalAsset(assets, "logo.midway",                     rm.loadImage("graphics/midway_logo.png"));
         storeLocalAsset(assets, "color.game_over_message",         ARCADE_RED);
+
         storeLocalAsset(assets, "pac.color.head",                  ARCADE_YELLOW);
         storeLocalAsset(assets, "pac.color.eyes",                  Color.grayRgb(33));
         storeLocalAsset(assets, "pac.color.palate",                Color.rgb(240, 180, 160));
         storeLocalAsset(assets, "pac.color.boobs",                 ARCADE_YELLOW.deriveColor(0, 1.0, 0.96, 1.0));
         storeLocalAsset(assets, "pac.color.hairbow",               ARCADE_RED);
         storeLocalAsset(assets, "pac.color.hairbow.pearls",        ARCADE_BLUE);
+
+        Sprite[] numberSprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
+        storeLocalAsset(assets, "ghost_points_0", spriteSheet.image(numberSprites[0]));
+        storeLocalAsset(assets, "ghost_points_1", spriteSheet.image(numberSprites[1]));
+        storeLocalAsset(assets, "ghost_points_2", spriteSheet.image(numberSprites[2]));
+        storeLocalAsset(assets, "ghost_points_3", spriteSheet.image(numberSprites[3]));
+
         storeLocalAsset(assets, "ghost.0.color.normal.dress",      ARCADE_RED);
         storeLocalAsset(assets, "ghost.0.color.normal.eyeballs",   ARCADE_WHITE);
         storeLocalAsset(assets, "ghost.0.color.normal.pupils",     ARCADE_BLUE);
@@ -147,12 +155,6 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
     @Override
     public SpriteAnimationMap<SpriteID> createPacAnimations(Pac pac) {
         return new ArcadeMsPacMan_PacAnimationMap(spriteSheet);
-    }
-
-    @Override
-    public Image createGhostNumberImage(int index) {
-        Sprite[] sprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
-        return spriteSheet.image(sprites[index]);
     }
 
     @Override

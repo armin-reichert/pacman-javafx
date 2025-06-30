@@ -278,7 +278,8 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             case GHOST_DYING ->
                 theSimulationStep().killedGhosts.forEach(ghost -> {
                     int victimIndex = theGameLevel().victims().indexOf(ghost);
-                    Image numberImage = theUI().configuration().createGhostNumberImage(victimIndex);
+                    String assetNamespace = theUI().configuration().assetNamespace();
+                    Image numberImage = theAssets().image(assetNamespace + ".ghost_points_" + victimIndex);
                     level3D.ghost3D(ghost.personality()).setNumberTexture(numberImage);
                 });
             case LEVEL_COMPLETE -> {

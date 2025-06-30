@@ -9,6 +9,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.scenes.*;
 import de.amr.pacmanfx.arcade.pacman.scenes.ArcadeCommon_BootScene2D;
 import de.amr.pacmanfx.arcade.pacman.scenes.ArcadeCommon_PlayScene2D;
 import de.amr.pacmanfx.controller.GameState;
+import de.amr.pacmanfx.lib.Sprite;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -77,6 +78,12 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         storeLocalAsset(assets, "pac.color.boobs",                 ARCADE_YELLOW.deriveColor(0, 1.0, 0.96, 1.0));
         storeLocalAsset(assets, "pac.color.hairbow",               ARCADE_RED);
         storeLocalAsset(assets, "pac.color.hairbow.pearls",        ARCADE_BLUE);
+
+        Sprite[] numberSprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
+        storeLocalAsset(assets, "ghost_points_0", spriteSheet.image(numberSprites[0]));
+        storeLocalAsset(assets, "ghost_points_1", spriteSheet.image(numberSprites[1]));
+        storeLocalAsset(assets, "ghost_points_2", spriteSheet.image(numberSprites[2]));
+        storeLocalAsset(assets, "ghost_points_3", spriteSheet.image(numberSprites[3]));
 
         storeLocalAsset(assets, "ghost.0.color.normal.dress",      ARCADE_RED);
         storeLocalAsset(assets, "ghost.0.color.normal.eyeballs",   ARCADE_WHITE);
@@ -153,11 +160,6 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     @Override
     public SpriteAnimationMap<SpriteID> createPacAnimations(Pac pac) {
         return new ArcadeMsPacMan_PacAnimationMap(spriteSheet);
-    }
-
-    @Override
-    public Image createGhostNumberImage(int index) {
-        return spriteSheet.image(spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS)[index]);
     }
 
     @Override

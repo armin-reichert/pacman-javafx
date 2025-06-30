@@ -103,6 +103,12 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         storeLocalAsset(assets, "pac.color.hairbow",                nesPaletteColor(0x05));
         storeLocalAsset(assets, "pac.color.hairbow.pearls",         nesPaletteColor(0x02));
 
+        Sprite[] numberSprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
+        storeLocalAsset(assets, "ghost_points_0", spriteSheet.image(numberSprites[0]));
+        storeLocalAsset(assets, "ghost_points_1", spriteSheet.image(numberSprites[1]));
+        storeLocalAsset(assets, "ghost_points_2", spriteSheet.image(numberSprites[2]));
+        storeLocalAsset(assets, "ghost_points_3", spriteSheet.image(numberSprites[3]));
+
         storeLocalAsset(assets, "ghost.0.color.normal.dress",       nesPaletteColor(0x05));
         storeLocalAsset(assets, "ghost.0.color.normal.eyeballs",    nesPaletteColor(0x20));
         storeLocalAsset(assets, "ghost.0.color.normal.pupils",      nesPaletteColor(0x16));
@@ -172,12 +178,6 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         var renderer = new TengenMsPacMan_GameRenderer(spriteSheet, mapRepository, canvas);
         renderer.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
         return renderer;
-    }
-
-    @Override
-    public Image createGhostNumberImage(int index) {
-        Sprite[] sprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
-        return spriteSheet.image(sprites[index]);
     }
 
     @Override

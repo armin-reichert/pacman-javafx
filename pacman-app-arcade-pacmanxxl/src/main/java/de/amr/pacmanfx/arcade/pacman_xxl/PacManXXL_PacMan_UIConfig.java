@@ -63,6 +63,12 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
         storeLocalAsset(assets, "pac.color.eyes",                  Color.grayRgb(33));
         storeLocalAsset(assets, "pac.color.palate",                Color.rgb(240, 180, 160));
 
+        Sprite[] numberSprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
+        storeLocalAsset(assets, "ghost_points_0", spriteSheet.image(numberSprites[0]));
+        storeLocalAsset(assets, "ghost_points_1", spriteSheet.image(numberSprites[1]));
+        storeLocalAsset(assets, "ghost_points_2", spriteSheet.image(numberSprites[2]));
+        storeLocalAsset(assets, "ghost_points_3", spriteSheet.image(numberSprites[3]));
+
         storeLocalAsset(assets, "ghost.0.color.normal.dress",      ARCADE_RED);
         storeLocalAsset(assets, "ghost.0.color.normal.eyeballs",   ARCADE_WHITE);
         storeLocalAsset(assets, "ghost.0.color.normal.pupils",     ARCADE_BLUE);
@@ -121,12 +127,6 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
     @Override
     public PacManXXL_PacMan_GameRenderer createGameRenderer(Canvas canvas) {
         return new PacManXXL_PacMan_GameRenderer(spriteSheet, canvas);
-    }
-    @Override
-
-    public Image createGhostNumberImage(int index) {
-        Sprite[] sprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
-        return spriteSheet.image(sprites[index]);
     }
 
     @Override
