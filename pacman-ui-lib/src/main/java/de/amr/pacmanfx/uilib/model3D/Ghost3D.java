@@ -162,10 +162,6 @@ public class Ghost3D extends Group {
         return flashingAnimation;
     }
 
-    public Group root() {
-        return this;
-    }
-
     public void turnTowards(Direction dir) {
         setRotationAxis(Rotate.Z_AXIS);
         setRotate(switch (dir) {
