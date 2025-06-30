@@ -79,8 +79,10 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
         storeLocalAsset(assets, "color.game_over_message",         ARCADE_RED);
 
         Sprite[] symbolSprites = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS);
+        Sprite[] valueSprites = spriteSheet.spriteSeq(SpriteID.BONUS_VALUES);
         for (byte symbol = 0; symbol <= 7; ++symbol) {
             storeLocalAsset(assets, "bonus_symbol_" + symbol, spriteSheet.image(symbolSprites[symbol]));
+            storeLocalAsset(assets, "bonus_value_" + symbol,  spriteSheet.image(valueSprites[symbol]));
         }
 
         storeLocalAsset(assets, "pac.color.head",                  ARCADE_YELLOW);
@@ -168,9 +170,8 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
     }
 
     @Override
-    public Image createBonusValueImage(byte symbol) {
-        Sprite[] valueSprites = spriteSheet.spriteSeq(SpriteID.BONUS_VALUES);
-        return spriteSheet.image(valueSprites[symbol]);
+    public Image bonusValueImage(byte symbol) {
+        return theAssets().image(ANS + ".bonus_value_" + symbol);
     }
 
     @Override

@@ -60,8 +60,10 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
         storeLocalAsset(assets, "color.game_over_message",         ARCADE_RED);
 
         Sprite[] symbolSprites = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS);
+        Sprite[] valueSprites  = spriteSheet.spriteSeq(SpriteID.BONUS_VALUES);
         for (byte symbol = 0; symbol <= 7; ++symbol) {
             storeLocalAsset(assets, "bonus_symbol_" + symbol, spriteSheet.image(symbolSprites[symbol]));
+            storeLocalAsset(assets, "bonus_value_"  + symbol,  spriteSheet.image(valueSprites[symbol]));
         }
 
         storeLocalAsset(assets, "pac.color.head",                  ARCADE_YELLOW);
@@ -140,8 +142,8 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
     }
 
     @Override
-    public Image createBonusValueImage(byte symbol) {
-        return spriteSheet.image(spriteSheet.spriteSeq(SpriteID.BONUS_VALUES)[symbol]);
+    public Image bonusValueImage(byte symbol) {
+        return theAssets().image(ANS + ".bonus_value_" + symbol);
     }
 
     @Override
