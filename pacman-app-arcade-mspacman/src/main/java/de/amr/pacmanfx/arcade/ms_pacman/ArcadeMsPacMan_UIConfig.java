@@ -72,6 +72,11 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
 
         storeLocalAsset(assets, "color.game_over_message",         ARCADE_RED);
 
+        Sprite[] symbolSprites = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS);
+        for (byte symbol = 0; symbol <= 6; ++symbol) {
+            storeLocalAsset(assets, "bonus_symbol_" + symbol, spriteSheet.image(symbolSprites[symbol]));
+        }
+
         storeLocalAsset(assets, "pac.color.head",                  ARCADE_YELLOW);
         storeLocalAsset(assets, "pac.color.eyes",                  Color.grayRgb(33));
         storeLocalAsset(assets, "pac.color.palate",                Color.rgb(240, 180, 160));
@@ -163,8 +168,8 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     }
 
     @Override
-    public Image createBonusSymbolImage(byte symbol) {
-        return spriteSheet.image(spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS)[symbol]);
+    public Image bonusSymbolImage(byte symbol) {
+        return theAssets().image(ANS + ".bonus_symbol_" + symbol);
     }
 
     @Override

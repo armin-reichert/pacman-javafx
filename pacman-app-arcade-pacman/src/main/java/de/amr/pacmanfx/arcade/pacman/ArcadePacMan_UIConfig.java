@@ -78,15 +78,20 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
 
         storeLocalAsset(assets, "color.game_over_message",         ARCADE_RED);
 
+        Sprite[] symbolSprites = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS);
+        for (byte symbol = 0; symbol <= 7; ++symbol) {
+            storeLocalAsset(assets, "bonus_symbol_" + symbol, spriteSheet.image(symbolSprites[symbol]));
+        }
+
         storeLocalAsset(assets, "pac.color.head",                  ARCADE_YELLOW);
         storeLocalAsset(assets, "pac.color.eyes",                  Color.grayRgb(33));
         storeLocalAsset(assets, "pac.color.palate",                Color.rgb(240, 180, 160));
 
         Sprite[] numberSprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
-        storeLocalAsset(assets, "ghost_points_0", spriteSheet.image(numberSprites[0]));
-        storeLocalAsset(assets, "ghost_points_1", spriteSheet.image(numberSprites[1]));
-        storeLocalAsset(assets, "ghost_points_2", spriteSheet.image(numberSprites[2]));
-        storeLocalAsset(assets, "ghost_points_3", spriteSheet.image(numberSprites[3]));
+        storeLocalAsset(assets, "ghost_points_0",                  spriteSheet.image(numberSprites[0]));
+        storeLocalAsset(assets, "ghost_points_1",                  spriteSheet.image(numberSprites[1]));
+        storeLocalAsset(assets, "ghost_points_2",                  spriteSheet.image(numberSprites[2]));
+        storeLocalAsset(assets, "ghost_points_3",                  spriteSheet.image(numberSprites[3]));
 
         storeLocalAsset(assets, "ghost.0.color.normal.dress",      ARCADE_RED);
         storeLocalAsset(assets, "ghost.0.color.normal.eyeballs",   ARCADE_WHITE);
@@ -158,9 +163,8 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
     }
 
     @Override
-    public Image createBonusSymbolImage(byte symbol) {
-        Sprite[] symbolSprites = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS);
-        return spriteSheet.image(symbolSprites[symbol]);
+    public Image bonusSymbolImage(byte symbol) {
+        return theAssets().image(ANS + ".bonus_symbol_" + symbol);
     }
 
     @Override

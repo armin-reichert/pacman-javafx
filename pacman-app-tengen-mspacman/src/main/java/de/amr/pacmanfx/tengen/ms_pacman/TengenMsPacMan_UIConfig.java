@@ -96,6 +96,11 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         storeLocalAsset(assets, "color.game_over_message",          nesPaletteColor(0x11));
         storeLocalAsset(assets, "color.ready_message",              nesPaletteColor(0x28));
 
+        Sprite[] symbolSprites = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS);
+        for (byte symbol = 0; symbol <= 6; ++symbol) {
+            storeLocalAsset(assets, "bonus_symbol_" + symbol, spriteSheet.image(symbolSprites[symbol]));
+        }
+
         storeLocalAsset(assets, "pac.color.head",                   nesPaletteColor(0x28));
         storeLocalAsset(assets, "pac.color.eyes",                   nesPaletteColor(0x02));
         storeLocalAsset(assets, "pac.color.palate",                 nesPaletteColor(0x2d));
@@ -181,8 +186,8 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     }
 
     @Override
-    public Image createBonusSymbolImage(byte symbol) {
-        return spriteSheet.image(spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS)[symbol]);
+    public Image bonusSymbolImage(byte symbol) {
+        return theAssets().image(ANS + ".bonus_symbol_" + symbol);
     }
 
     @Override

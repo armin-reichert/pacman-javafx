@@ -27,8 +27,7 @@ public interface PacManGames_UIConfig extends PacManGames_GameSceneConfig {
     ActorAnimationMap createGhostAnimations(Ghost ghost);
     Node createLivesCounter3D();
     PacBase3D createPac3D(AnimationManager animationMgr, Pac pac);
-    //Image createGhostNumberImage(int index);
-    Image createBonusSymbolImage(byte symbol);
+    Image bonusSymbolImage(byte symbol);
     Image createBonusValueImage(byte symbol);
     GameRenderer createGameRenderer(Canvas canvas);
     default boolean hasGameCanvasRoundedBorder() { return true; }

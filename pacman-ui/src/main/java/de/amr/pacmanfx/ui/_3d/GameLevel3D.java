@@ -367,7 +367,7 @@ public class GameLevel3D {
         if (bonus3D != null) {
             mazeGroup.getChildren().remove(bonus3D);
         }
-        Image bonusSymbolTexture = theUI().configuration().createBonusSymbolImage(bonus.symbol());
+        Image bonusSymbolTexture = theUI().configuration().bonusSymbolImage(bonus.symbol());
         Image bonusValueTexture  = theUI().configuration().createBonusValueImage(bonus.symbol());
         bonus3D = new Bonus3D(animationManager, bonus, bonusSymbolTexture, bonusValueTexture);
         bonus3D.showEdible();

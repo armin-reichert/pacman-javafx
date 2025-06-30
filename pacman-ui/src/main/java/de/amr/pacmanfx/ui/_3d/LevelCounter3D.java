@@ -33,9 +33,9 @@ public class LevelCounter3D extends Group {
         setTranslateZ(-6);
         int n = 0;
         for (byte symbol : levelCounter.symbols()) {
-            Image texture = theUI().configuration().createBonusSymbolImage(symbol);
+            Image bonusSymbolImage = theUI().configuration().bonusSymbolImage(symbol);
             var material = new PhongMaterial(Color.WHITE);
-            material.setDiffuseMap(texture);
+            material.setDiffuseMap(bonusSymbolImage);
             Box cube = new Box(TS, TS, TS);
             cube.setMaterial(material);
             cube.setTranslateX(-n * 16);
