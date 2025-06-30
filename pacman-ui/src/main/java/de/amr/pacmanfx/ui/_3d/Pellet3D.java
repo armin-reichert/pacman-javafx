@@ -31,7 +31,7 @@ public class Pellet3D implements Eatable3D {
         shape.getTransforms().add(new Scale(diameter / maxExtent, diameter / maxExtent, diameter / maxExtent));
 
         hideAfterSmallDelay = new PauseTransition(Duration.seconds(0.05));
-        hideAfterSmallDelay.setOnFinished(e -> shape3D().setVisible(false));
+        hideAfterSmallDelay.setOnFinished(e -> shape.setVisible(false));
     }
 
     @Override
