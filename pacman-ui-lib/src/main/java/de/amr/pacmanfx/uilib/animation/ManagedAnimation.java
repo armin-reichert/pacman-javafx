@@ -53,7 +53,7 @@ public abstract class ManagedAnimation {
 
     public void stop() {
         if (animation != null && animation.getStatus() != Animation.Status.STOPPED) {
-            Logger.info("Stopping animation {}", identifier);
+            Logger.trace("Stopping animation {}", identifier);
             animation.stop();
         }
     }

@@ -367,9 +367,9 @@ public class GameLevel3D {
     private void createMaze3D(GameLevel gameLevel) {
         final WorldMap worldMap = gameLevel.worldMap();
         final WorldMapColorScheme colorScheme = theUI().configuration().worldMapColorScheme(worldMap);
-        floor3D = createFloor3D(worldMap.numCols() * TS, worldMap.numRows() * TS);
+        Logger.info("Build 3D maze for map (URL '{}') and color scheme {}", worldMap.url(), colorScheme);
 
-        Logger.info("Build 3D maze for map with URL '{}'", gameLevel.worldMap().url());
+        floor3D = createFloor3D(worldMap.numCols() * TS, worldMap.numRows() * TS);
 
         wallBaseColor = colorScheme.stroke();
         // Add some contrast with floor if wall fill color is black:
