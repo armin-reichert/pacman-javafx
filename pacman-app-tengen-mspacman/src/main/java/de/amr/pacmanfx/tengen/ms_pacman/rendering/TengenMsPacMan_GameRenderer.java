@@ -352,7 +352,7 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
         requireNonNull(font);
         if (level.message() == GameLevel.MESSAGE_NONE) return;
 
-        float x = position.x(), y = position.y();
+        float x = position.x(), y = position.y() + TS;
         String ans = theUI().configuration().assetNamespace();
         switch (level.message()) {
             case GameLevel.MESSAGE_READY
