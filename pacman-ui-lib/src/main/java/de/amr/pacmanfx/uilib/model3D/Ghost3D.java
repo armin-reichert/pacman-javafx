@@ -173,13 +173,13 @@ public class Ghost3D extends Group {
     }
 
     public void setFlashingLook(int numFlashes) {
-        dressShape.setVisible(true);
         if (numFlashes == 0) {
             setFrightenedLook();
         } else {
+            dressShape.setVisible(true);
             flashingAnimation.setNumFlashes(numFlashes);
             // TODO (fixme): Total flashing time must be shorter than Pac power fading time (2s)!
-            flashingAnimation.setTotalDuration(Duration.millis(1950));
+            flashingAnimation.setTotalDuration(Duration.millis(1966));
             flashingAnimation.play(ManagedAnimation.FROM_START);
         }
     }
