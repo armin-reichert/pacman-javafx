@@ -19,6 +19,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
 public interface PacManGames_UIConfig extends PacManGames_GameSceneConfig {
+    void loadAssets(AssetStorage assetStorage);
+    void unloadAssets(AssetStorage assetStorage);
     String assetNamespace();
     default void storeLocalAsset(AssetStorage assetStorage, String key, Object value) {
         assetStorage.store(assetNamespace() + "." + key, value);

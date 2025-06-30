@@ -11,10 +11,7 @@ import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import java.text.MessageFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import static java.util.Objects.requireNonNull;
 
@@ -30,6 +27,20 @@ public class AssetStorage {
         requireNonNull(key);
         requireNonNull(value);
         assets.put(key, value);
+    }
+
+    public void removeAll(String keyPrefix) {
+        for (Iterator<String> it = assets.keySet().iterator(); it.hasNext(); ) {
+            String key = it.next();
+            if (key.startsWith(keyPrefix)) {
+                it.remove();
+            }
+        }
+    }
+
+    public void remove(String key) {
+        requireNonNull(key);
+        assets.remove(key);
     }
 
     public String text(String keyOrPattern, Object... args) {

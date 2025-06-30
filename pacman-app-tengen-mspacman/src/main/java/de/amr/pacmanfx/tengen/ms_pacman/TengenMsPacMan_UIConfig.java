@@ -20,10 +20,14 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_MapRepository;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.*;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.*;
-import de.amr.pacmanfx.ui.*;
+import de.amr.pacmanfx.ui.GameAction;
+import de.amr.pacmanfx.ui.GameScene;
+import de.amr.pacmanfx.ui.PacManGames_UI;
+import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._3d.Settings3D;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
@@ -73,8 +77,9 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     public static final Vector2f NES_SIZE_PX = NES_TILES.scaled(TS).toVector2f();
     public static final float NES_ASPECT = NES_SIZE_PX.x() / NES_SIZE_PX.y();
 
-    private final TengenMsPacMan_SpriteSheet spriteSheet;
-    private final TengenMsPacMan_MapRepository mapRepository;
+    private TengenMsPacMan_SpriteSheet spriteSheet;
+    private TengenMsPacMan_MapRepository mapRepository;
+
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
     @Override
@@ -82,7 +87,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         return TengenMsPacMan_UIConfig.class;
     }
 
-    public TengenMsPacMan_UIConfig(PacManGames_Assets assets) {
+    public void loadAssets(AssetStorage assets) {
         spriteSheet = new TengenMsPacMan_SpriteSheet(loadImage("graphics/spritesheet.png"));
         mapRepository = new TengenMsPacMan_MapRepository(
             loadImage("graphics/arcade_mazes.png"),
@@ -169,6 +174,11 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         storeLocalAsset(assets, "audio.siren.4",                    url("sound/ms-siren2.wav"));
         storeLocalAsset(assets, "audio.ghost_returns",              url("sound/ms-eyes.wav"));
         storeLocalAsset(assets, "audio.bonus_bouncing",             url("sound/fruitbounce.wav"));
+    }
+
+    @Override
+    public void unloadAssets(AssetStorage assetStorage) {
+        assetStorage.removeAll(ANS + ".");
     }
 
     @Override

@@ -25,6 +25,7 @@ import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui._3d.Settings3D;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
@@ -51,10 +52,11 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
 
     private static final String ANS = "ms_pacman_xxl";
 
-    private final ArcadeMsPacMan_SpriteSheet spriteSheet;
+    private ArcadeMsPacMan_SpriteSheet spriteSheet;
+
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
-    public PacManXXL_MsPacMan_UIConfig(PacManGames_Assets assets) {
+    public void loadAssets(AssetStorage assets) {
         ResourceManager rm = () -> ArcadeMsPacMan_UIConfig.class;
 
         spriteSheet = new ArcadeMsPacMan_SpriteSheet(rm.loadImage("graphics/mspacman_spritesheet.png"));
@@ -132,6 +134,11 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
         rm = this::getClass;
         storeLocalAsset(assets, "audio.option.selection_changed",  rm.loadAudioClip("sound/ms-select1.wav"));
         storeLocalAsset(assets, "audio.option.value_changed",      rm.loadAudioClip("sound/ms-select2.wav"));
+    }
+
+    @Override
+    public void unloadAssets(AssetStorage assetStorage) {
+        assetStorage.removeAll(ANS + ".");
     }
 
     @Override

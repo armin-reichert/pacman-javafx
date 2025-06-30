@@ -26,6 +26,9 @@ import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.AudioClip;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.shape.Mesh;
 import javafx.stage.Stage;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -280,7 +283,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     public void configure(Map<String, Class<? extends PacManGames_UIConfig>> configClassesMap) {
         configClassesMap.forEach((gameVariant, configClass) -> {
             try {
-                PacManGames_UIConfig config = configClass.getDeclaredConstructor(PacManGames_Assets.class).newInstance(theAssets());
+                PacManGames_UIConfig config = configClass.getDeclaredConstructor().newInstance();
                 setConfiguration(gameVariant, config);
             } catch (Exception x) {
                 Logger.error("Could not create UI configuration of class {}", configClass);
@@ -401,15 +404,31 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
             Logger.error("Cannot select game variant (NULL)");
             return;
         }
-        PacManGames_UIConfig uiConfig = configuration(gameVariant);
-        SOUND_MANAGER.selectGameVariant(gameVariant, uiConfig.assetNamespace());
-        Image appIcon = ASSETS.image(uiConfig.assetNamespace() + ".app_icon");
+        String previousVariant = theGameController().selectedGameVariant();
+        if (previousVariant != null) {
+            Logger.info("Unloading assets for game variant {}", previousVariant);
+            configuration(previousVariant).unloadAssets(theAssets());
+            Logger.info(theAssets().summary(Map.of(
+                Image.class, "Images",
+                AudioClip.class, "Sounds")
+            ));
+        }
+        PacManGames_UIConfig newConfig = configuration(gameVariant);
+
+        Logger.info("Loading assets for game variant {}", gameVariant);
+        newConfig.loadAssets(theAssets());
+        Logger.info(theAssets().summary(Map.of(
+            Image.class, "Images",
+            AudioClip.class, "Sounds")
+        ));
+        SOUND_MANAGER.selectGameVariant(gameVariant, newConfig.assetNamespace());
+        Image appIcon = ASSETS.image(newConfig.assetNamespace() + ".app_icon");
         if (appIcon != null) {
             stage.getIcons().setAll(appIcon);
         } else {
             Logger.error("Could not find app icon for current game variant {}", gameVariant);
         }
-        gameView.canvasContainer().roundedBorderProperty().set(uiConfig.hasGameCanvasRoundedBorder());
+        gameView.canvasContainer().roundedBorderProperty().set(newConfig.hasGameCanvasRoundedBorder());
         // this triggers a game event and the event handlers:
         theGameController().selectGameVariant(gameVariant);
     }

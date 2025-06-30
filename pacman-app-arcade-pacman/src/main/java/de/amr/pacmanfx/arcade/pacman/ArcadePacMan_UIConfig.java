@@ -15,13 +15,13 @@ import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameScene;
-import de.amr.pacmanfx.ui.PacManGames_Assets;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._3d.PacMan3D;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui._3d.Settings3D;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
@@ -58,7 +58,8 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
 
     private static final WorldMapColorScheme MAP_COLORING = new WorldMapColorScheme("#000000", "#2121ff", "#fcb5ff", "#febdb4");
 
-    private final ArcadePacMan_SpriteSheet spriteSheet;
+    private ArcadePacMan_SpriteSheet spriteSheet;
+
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
     @Override
@@ -66,7 +67,7 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
         return ArcadePacMan_UIConfig.class;
     }
 
-    public ArcadePacMan_UIConfig(PacManGames_Assets assets) {
+    public void loadAssets(AssetStorage assets) {
         spriteSheet = new ArcadePacMan_SpriteSheet(loadImage("graphics/pacman_spritesheet.png"));
 
         storeLocalAsset(assets, "app_icon",                        loadImage("graphics/icons/pacman.png"));
@@ -134,6 +135,11 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
         storeLocalAsset(assets, "audio.siren.3",                   url("sound/siren_3.mp3"));
         storeLocalAsset(assets, "audio.siren.4",                   url("sound/siren_4.mp3"));
         storeLocalAsset(assets, "audio.ghost_returns",             url("sound/retreating.mp3"));
+    }
+
+    @Override
+    public void unloadAssets(AssetStorage assetStorage) {
+        assetStorage.removeAll(ANS + ".");
     }
 
     @Override

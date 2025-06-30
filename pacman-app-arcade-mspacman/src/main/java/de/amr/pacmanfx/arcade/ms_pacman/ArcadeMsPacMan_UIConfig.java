@@ -21,6 +21,7 @@ import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui._3d.Settings3D;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
@@ -57,11 +58,12 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         new WorldMapColorScheme("FFB7AE", "FF0000", "FCB5FF", "DEDEFF")
     );
 
-    private final ArcadeMsPacMan_SpriteSheet spriteSheet;
-    private final BrightMazesSpriteSheet brightMazesSpriteSheet;
+    private ArcadeMsPacMan_SpriteSheet spriteSheet;
+    private BrightMazesSpriteSheet brightMazesSpriteSheet;
+
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
-    public ArcadeMsPacMan_UIConfig(PacManGames_Assets assets) {
+    public void loadAssets(AssetStorage assets) {
         spriteSheet = new ArcadeMsPacMan_SpriteSheet(loadImage("graphics/mspacman_spritesheet.png"));
         brightMazesSpriteSheet = new BrightMazesSpriteSheet(loadImage("graphics/mazes_flashing.png"));
 
@@ -134,6 +136,11 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         storeLocalAsset(assets, "audio.siren.3",                 url("sound/GhostNoise1.wav"));// TODO
         storeLocalAsset(assets, "audio.siren.4",                 url("sound/GhostNoise1.wav"));// TODO
         storeLocalAsset(assets, "audio.ghost_returns",           url("sound/GhostEyes.mp3"));
+    }
+
+    @Override
+    public void unloadAssets(AssetStorage assetStorage) {
+        assetStorage.removeAll(ANS + ".");
     }
 
     @Override
