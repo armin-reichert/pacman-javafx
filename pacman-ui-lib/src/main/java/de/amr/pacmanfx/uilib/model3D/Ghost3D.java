@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.model3D;
 
+import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -29,6 +30,42 @@ import static java.util.Objects.requireNonNull;
  * 3D representation of a ghost.
  */
 public class Ghost3D extends Group {
+
+    public class FlashingAnimation extends ManagedAnimation {
+        private Duration totalDuration = Duration.seconds(3);
+        private int numFlashes = 5;
+
+        public FlashingAnimation(AnimationManager animationManager, String ghostName) {
+            super(animationManager, "Ghost_Flashing_%s".formatted(ghostName));
+        }
+
+        public void setTotalDuration(Duration totalDuration) {
+            this.totalDuration = requireNonNull(totalDuration);
+            invalidate();
+        }
+
+        public void setNumFlashes(int numFlashes) {
+            this.numFlashes = Validations.requireNonNegativeInt(numFlashes);
+            invalidate();
+        }
+
+        @Override
+        protected Animation createAnimation() {
+            Duration flashEndTime = totalDuration.divide(numFlashes), highlightTime = flashEndTime.divide(3);
+            var flashingTimeline = new Timeline(
+                new KeyFrame(highlightTime,
+                    new KeyValue(dressColorPy,  flashingDressColor),
+                    new KeyValue(pupilsColorPy, flashingPupilsColor)
+                ),
+                new KeyFrame(flashEndTime,
+                    new KeyValue(dressColorPy,  frightenedDressColor),
+                    new KeyValue(pupilsColorPy, frightenedPupilsColor)
+                )
+            );
+            flashingTimeline.setCycleCount(numFlashes);
+            return flashingTimeline;
+        }
+    }
 
     private final ObjectProperty<Color> dressColorPy    = new SimpleObjectProperty<>(Color.ORANGE);
     private final ObjectProperty<Color> eyeballsColorPy = new SimpleObjectProperty<>(Color.WHITE);
@@ -115,43 +152,6 @@ public class Ghost3D extends Group {
         };
 
         flashingAnimation = new FlashingAnimation(animationManager, ghost.name());
-    }
-
-    public class FlashingAnimation extends ManagedAnimation {
-
-        private Duration totalDuration = Duration.seconds(3);
-        private int numFlashes = 5;
-
-        public FlashingAnimation(AnimationManager animationManager, String ghostName) {
-            super(animationManager, "Ghost_Flashing_%s".formatted(ghostName));
-        }
-
-        public void setTotalDuration(Duration totalDuration) {
-            this.totalDuration = totalDuration;
-            animation = null; // trigger creation
-        }
-
-        public void setNumFlashes(int numFlashed) {
-            this.numFlashes = numFlashed;
-            animation = null; // trigger creation
-        }
-
-        @Override
-        protected Animation createAnimation() {
-            Duration flashEndTime = totalDuration.divide(numFlashes), highlightTime = flashEndTime.divide(3);
-            var flashingTimeline = new Timeline(
-                new KeyFrame(highlightTime,
-                    new KeyValue(dressColorPy,  flashingDressColor),
-                    new KeyValue(pupilsColorPy, flashingPupilsColor)
-                ),
-                new KeyFrame(flashEndTime,
-                    new KeyValue(dressColorPy,  frightenedDressColor),
-                    new KeyValue(pupilsColorPy, frightenedPupilsColor)
-                )
-            );
-            flashingTimeline.setCycleCount(numFlashes);
-            return flashingTimeline;
-        }
     }
 
     public ManagedAnimation dressAnimation() {
