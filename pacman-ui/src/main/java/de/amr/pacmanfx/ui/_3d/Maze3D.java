@@ -39,14 +39,14 @@ public class Maze3D extends Group {
     private final DoubleProperty houseBaseHeightPy = new SimpleDoubleProperty(Settings3D.HOUSE_3D_BASE_HEIGHT);
     private final BooleanProperty houseLightOnPy = new SimpleBooleanProperty(false);
 
-    private final PhongMaterial wallTopMaterial;
+    private PhongMaterial wallTopMaterial;
     private final Color wallBaseColor;
     private final Color wallTopColor;
 
-    private final ArcadeHouse3D house3D;
+    private ArcadeHouse3D house3D;
 
-    private final ManagedAnimation wallColorFlashingAnimation;
-    private final ManagedAnimation wallsDisappearingAnimation;
+    private ManagedAnimation wallColorFlashingAnimation;
+    private ManagedAnimation wallsDisappearingAnimation;
 
     public Maze3D(GameLevel level, WorldMapColorScheme colorScheme, AnimationManager animationManager) {
         requireNonNull(animationManager);
@@ -132,6 +132,14 @@ public class Maze3D extends Group {
                 return animation;
             }
         };
+    }
+
+    public void destroy() {
+        wallTopMaterial = null;
+        house3D = null;
+        wallColorFlashingAnimation = null;
+        wallsDisappearingAnimation = null;
+        getChildren().clear();
     }
 
     // Maze flashing animation

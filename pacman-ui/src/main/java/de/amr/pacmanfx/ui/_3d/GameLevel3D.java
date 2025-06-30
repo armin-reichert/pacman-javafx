@@ -163,6 +163,9 @@ public class GameLevel3D {
     public void destroy() {
         inDestroyPhase = true;
 
+        maze3D.destroy();
+        maze3D = null;
+
         animationManager = null;
         levelCompletedAnimation = null;
         root = null;
@@ -170,7 +173,6 @@ public class GameLevel3D {
         pellets3D = null;
         energizers3D = null;
         floor3D = null;
-        maze3D = null;
         levelCounter3D = null;
         livesCounter3D = null;
         pac3D = null;
