@@ -41,8 +41,8 @@ public class Bonus3D extends Box {
     private PhongMaterial symbolTexture;
     private PhongMaterial pointsTexture;
 
-    private final EdibleAnimation edibleAnimation;
-    private final ManagedAnimation eatenAnimation;
+    private EdibleAnimation edibleAnimation;
+    private ManagedAnimation eatenAnimation;
 
     private class EdibleAnimation extends ManagedAnimation {
 
@@ -117,7 +117,9 @@ public class Bonus3D extends Box {
         symbolTexture = null;
         pointsTexture = null;
         edibleAnimation.stop();
+        edibleAnimation = null;
         eatenAnimation.stop();
+        eatenAnimation = null;
     }
 
     public void update() {
