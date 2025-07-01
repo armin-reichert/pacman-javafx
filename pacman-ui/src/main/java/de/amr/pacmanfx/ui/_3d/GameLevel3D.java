@@ -598,32 +598,9 @@ public class GameLevel3D {
         if (animationManager != null) {
             animationManager.stopAllAnimations();
             animationManager.clearAnimations();
+            animationManager.destroy();
             animationManager = null;
             Logger.info("Stopped and removed all managed animation, destroyed animation manager");
-        }
-
-        if (levelCompletedAnimation != null) {
-            levelCompletedAnimation.destroy();
-            levelCompletedAnimation = null;
-            Logger.info("Destroyed 'level completed' animation");
-        }
-
-        if (levelCompletedAnimationBeforeCutScene != null) {
-            levelCompletedAnimationBeforeCutScene.destroy();
-            levelCompletedAnimationBeforeCutScene = null;
-            Logger.info("Destroyed 'level completed before cut scene' animation");
-        }
-
-        if (wallColorFlashingAnimation != null) {
-            wallColorFlashingAnimation.destroy();
-            wallColorFlashingAnimation = null;
-            Logger.info("Destroyed 'wall color flashing' animation");
-        }
-
-        if (wallsDisappearingAnimation != null) {
-            wallsDisappearingAnimation.destroy();
-            wallsDisappearingAnimation = null;
-            Logger.info("Destroyed 'walls disappearing' animation");
         }
 
         PY_3D_DRAW_MODE.removeListener(this::handleDrawModeChange);

@@ -4,6 +4,7 @@ import javafx.animation.Animation;
 import org.tinylog.Logger;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static java.util.Objects.requireNonNull;
 
@@ -12,18 +13,23 @@ public abstract class ManagedAnimation {
     public static final boolean CONTINUE = false, FROM_START = true;
 
     protected AnimationManager animationManager;
-    protected final String identifier;
+    protected String id;
+    protected String label;
     protected Animation animation;
 
     protected abstract Animation createAnimation();
 
-    protected ManagedAnimation(AnimationManager animationManager, String identifier) {
+    protected ManagedAnimation(AnimationManager animationManager, String label) {
         this.animationManager = requireNonNull(animationManager);
-        this.identifier = requireNonNull(identifier);
+        this.label = requireNonNull(label);
     }
 
-    public String identifier() {
-        return identifier;
+    public String id() {
+        return id;
+    }
+
+    public String label() {
+        return label;
     }
 
     public Optional<Animation> animation() {
@@ -42,6 +48,7 @@ public abstract class ManagedAnimation {
         if (animation != null) {
             animation.setOnFinished(null);
             animation = null;
+            Logger.info("Destroyed managed animation with ID '{}'", id);
         }
         animationManager = null;
     }
@@ -52,12 +59,13 @@ public abstract class ManagedAnimation {
 
     public void play(boolean playMode) {
         getOrCreateAnimation();
+        animationManager.register(label, this);
         if (animation.getStatus() != Animation.Status.RUNNING) {
             if (playMode == FROM_START) {
-                Logger.trace("Playing animation {} from start", identifier);
+                Logger.trace("Playing animation {} from start", id);
                 animation.playFromStart();
             } else if (playMode == CONTINUE) {
-                Logger.trace("Continuing animation {}", identifier);
+                Logger.trace("Continuing animation {}", id);
                 animation.play();
             }
         }
@@ -65,7 +73,7 @@ public abstract class ManagedAnimation {
 
     public void stop() {
         if (animation != null && animation.getStatus() != Animation.Status.STOPPED) {
-            Logger.trace("Stopping animation {}", identifier);
+            Logger.trace("Stopping animation {}", id);
             animation.stop();
         }
     }
