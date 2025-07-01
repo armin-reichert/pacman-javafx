@@ -23,6 +23,7 @@ import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.SequentialTransition;
+import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.*;
 import javafx.scene.control.*;
@@ -200,8 +201,10 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         animationManager.clearAnimations();
         perspectiveManager.perspectiveIDProperty().unbind();
         if (level3D != null) {
-            level3D.destroy();
-            level3D = null;
+            Platform.runLater(() -> {
+                level3D.destroy();
+                level3D = null;
+            });
         }
     }
 
@@ -306,7 +309,10 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                     doAfterSec(1, () -> {
                         perspectiveManager.perspectiveIDProperty().bind(PY_3D_PERSPECTIVE);
                         animationManager.stopAllAnimations();
-                        level3D.destroy();
+                        Platform.runLater(() -> {
+                            level3D.destroy();
+                            level3D = null;
+                        });
                         theGameController().letCurrentGameStateExpire();
                     })
                 );
