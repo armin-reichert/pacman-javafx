@@ -32,18 +32,18 @@ public class AnimationManager {
         }
     }
 
-    public void stopAnimation(ManagedAnimation managedAnimation) {
-        requireNonNull(managedAnimation);
-        managedAnimation.animation().ifPresent(animation -> {
+    public void stopAnimation(ManagedAnimation ma) {
+        requireNonNull(ma);
+        ma.animation().ifPresent(animation -> {
             try {
                 if (animation.getStatus() == Animation.Status.STOPPED) {
-                    Logger.debug("Already stopped: animation ID='{}' ({})", managedAnimation.id(), managedAnimation);
+                    Logger.debug("Already stopped: animation with label='{}' ({})", ma.label(), ma);
                 } else {
                     animation.stop();
-                    Logger.debug("Stopped animation ID='{}' ({})", managedAnimation.id(), managedAnimation);
+                    Logger.debug("Stopped animation with label='{}' ({})", ma.label(), ma);
                 }
             } catch (IllegalStateException x) {
-                Logger.warn("Could not stop (embedded?) animation ID='{}' ({})", managedAnimation.id(), managedAnimation);
+                Logger.warn("Could not stop (embedded?) animation with label='{}' ({})", ma.label(), ma);
             }
         });
     }

@@ -108,7 +108,7 @@ public class InfoBoxAnimationInfo extends InfoBox {
         if (animationManager != null) {
             tableModel.addAll(createTableDataSortedByKey(Animation.Status.RUNNING));
             tableModel.addAll(createTableDataSortedByKey(Animation.Status.PAUSED));
-            Logger.info("Animation table updated");
+            Logger.trace("Animation table updated");
         }
     }
 

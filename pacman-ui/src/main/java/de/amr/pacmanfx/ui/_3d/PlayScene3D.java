@@ -314,10 +314,13 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 animation.play();
             }
             case LEVEL_TRANSITION -> {
-                theGameState().timer().restartSeconds(3);
-                replaceGameLevel3D();
-                level3D.pac3D().init();
-                perspectiveManager.initPerspective();
+                theGameState().timer().resetIndefiniteTime();
+                Platform.runLater(() -> {
+                    replaceGameLevel3D();
+                    level3D.pac3D().init();
+                    perspectiveManager.initPerspective();
+                    theGameState().timer().expire();
+                });
             }
             case GAME_OVER -> {
                 theGameState().timer().restartSeconds(3);
@@ -347,18 +350,18 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         requireNonNull(theGameLevel()); // just to be sure nothing bad happened
         animationManager.removeAllAnimations();
         bindActions();
+        if (level3D == null) {
+            replaceGameLevel3D();
+        }
         switch (theGameState()) {
             case STARTING_GAME -> {
-                if (level3D == null) {
-                    replaceGameLevel3D();
-                }
                 //TODO default position if no house
                 Vector2f position = theGameLevel().house().map(House::centerPositionUnderHouse).orElse(Vector2f.ZERO);
                 level3D.showAnimatedMessage("READY!", 2.5f, position.x(), position.y());
                 bindPlayerSteeringActions();
             }
             case TESTING_LEVELS_SHORT, TESTING_LEVELS_MEDIUM -> {
-                replaceGameLevel3D();
+                replaceGameLevel3D(); //TODO check when to destroy previous level
                 level3D.livesCounter3D().lookingAroundAnimation().play(ManagedAnimation.FROM_START);
                 level3D.energizers3D().forEach(energizer3D -> energizer3D.pumpingAnimation().play(ManagedAnimation.FROM_START));
                 showLevelTestMessage(theGameLevel().number());
@@ -374,7 +377,6 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         if (optGameLevel().isEmpty()) {
             return;
         }
-
         if (level3D == null) {
             replaceGameLevel3D();
         }

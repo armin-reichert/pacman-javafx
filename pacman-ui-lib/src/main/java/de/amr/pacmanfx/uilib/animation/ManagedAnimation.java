@@ -12,7 +12,6 @@ public abstract class ManagedAnimation {
     public static final boolean CONTINUE = false, FROM_START = true;
 
     protected AnimationManager animationManager;
-    protected String id;
     protected String label;
     protected Animation animation;
 
@@ -22,10 +21,6 @@ public abstract class ManagedAnimation {
         this.animationManager = requireNonNull(animationManager);
         this.label = requireNonNull(label);
         animationManager.register(label, this);
-    }
-
-    public String id() {
-        return id;
     }
 
     public String label() {
@@ -48,7 +43,7 @@ public abstract class ManagedAnimation {
         if (animation != null) {
             animation.setOnFinished(null);
             animation = null;
-            Logger.info("Destroyed managed animation with ID '{}'", id);
+            Logger.info("Destroyed managed animation with label '{}'", label);
         }
         animationManager = null;
     }
@@ -61,10 +56,10 @@ public abstract class ManagedAnimation {
         getOrCreateAnimation();
         if (animation.getStatus() != Animation.Status.RUNNING) {
             if (playMode == FROM_START) {
-                Logger.trace("Playing animation {} from start", id);
+                Logger.trace("Playing animation with label '{}' from start", label);
                 animation.playFromStart();
             } else if (playMode == CONTINUE) {
-                Logger.trace("Continuing animation {}", id);
+                Logger.trace("Continuing animation with label '{}'", label);
                 animation.play();
             }
         }
@@ -72,7 +67,7 @@ public abstract class ManagedAnimation {
 
     public void stop() {
         if (animation != null && animation.getStatus() != Animation.Status.STOPPED) {
-            Logger.trace("Stopping animation {}", id);
+            Logger.trace("Stopping animation with label '{}'", label);
             animation.stop();
         }
     }
