@@ -11,7 +11,7 @@ public abstract class ManagedAnimation {
 
     public static final boolean CONTINUE = false, FROM_START = true;
 
-    protected final AnimationManager animationManager;
+    protected AnimationManager animationManager;
     protected final String identifier;
     protected Animation animation;
 
@@ -32,6 +32,15 @@ public abstract class ManagedAnimation {
             animationManager.register(identifier, animation);
         }
         return animation;
+    }
+
+    public void destroy() {
+        if (animation != null) {
+            animation.stop();
+            animation.setOnFinished(null);
+            animation = null;
+        }
+        animationManager = null;
     }
 
     public void invalidate() {

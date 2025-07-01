@@ -590,19 +590,46 @@ public class GameLevel3D {
             bonus3D = null;
             Logger.info("Removed bonus 3D");
         }
-        messageView = null;
 
-        animationManager.stopAllAnimations();
-        animationManager.clearAnimations();
-        levelCompletedAnimation = null;
-        levelCompletedAnimationBeforeCutScene = null;
-        wallColorFlashingAnimation = null;
-        wallsDisappearingAnimation = null;
-        animationManager = null;
-        Logger.info("Stopped and removed all animations, cleared animation manager");
+        if (messageView != null) {
+//TODO            messageView.destroy();
+            messageView = null;
+        }
+
+        if (animationManager != null) {
+            animationManager.stopAllAnimations();
+            animationManager.clearAnimations();
+            animationManager = null;
+            Logger.info("Stopped and removed all managed animation, destroyed animation manager");
+        }
+
+        if (levelCompletedAnimation != null) {
+            levelCompletedAnimation.destroy();
+            levelCompletedAnimation = null;
+            Logger.info("Destroyed 'level completed' animation");
+        }
+
+        if (levelCompletedAnimationBeforeCutScene != null) {
+            levelCompletedAnimationBeforeCutScene.destroy();
+            levelCompletedAnimationBeforeCutScene = null;
+            Logger.info("Destroyed 'level completed before cut scene' animation");
+        }
+
+        if (wallColorFlashingAnimation != null) {
+            wallColorFlashingAnimation.destroy();
+            wallColorFlashingAnimation = null;
+            Logger.info("Destroyed 'wall color flashing' animation");
+        }
+
+        if (wallsDisappearingAnimation != null) {
+            wallsDisappearingAnimation.destroy();
+            wallsDisappearingAnimation = null;
+            Logger.info("Destroyed 'walls disappearing' animation");
+        }
 
         PY_3D_DRAW_MODE.removeListener(this::handleDrawModeChange);
         Logger.info("Removed draw mode listener");
+
         PY_3D_WALL_HEIGHT.removeListener(this::handleWallHeightChange);
         Logger.info("Removed wall height listener");
     }
