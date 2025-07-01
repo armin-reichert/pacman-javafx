@@ -38,8 +38,8 @@ import static java.util.Objects.requireNonNull;
 public class Bonus3D extends Box {
 
     private final Bonus bonus;
-    private final PhongMaterial symbolImageTexture;
-    private final PhongMaterial pointsImageTexture;
+    private PhongMaterial symbolTexture;
+    private PhongMaterial pointsTexture;
 
     private final ManagedAnimation eatenAnimation;
     private final EdibleAnimation edibleAnimation;
@@ -90,12 +90,12 @@ public class Bonus3D extends Box {
         var symbolImageView = new ImageView(requireNonNull(symbolImage));
         symbolImageView.setPreserveRatio(true);
         symbolImageView.setFitWidth(BONUS_3D_SYMBOL_WIDTH);
-        symbolImageTexture = new PhongMaterial(Color.GHOSTWHITE, symbolImageView.getImage(), null, null, null);
+        symbolTexture = new PhongMaterial(Color.GHOSTWHITE, symbolImageView.getImage(), null, null, null);
 
         var pointsImageView = new ImageView(requireNonNull(pointsImage));
         pointsImageView.setPreserveRatio(true);
         pointsImageView.setFitWidth(BONUS_3D_POINTS_WIDTH);
-        pointsImageTexture = new PhongMaterial(Color.GHOSTWHITE, pointsImageView.getImage(), null, null, null);
+        pointsTexture = new PhongMaterial(Color.GHOSTWHITE, pointsImageView.getImage(), null, null, null);
 
         edibleAnimation = new EdibleAnimation(animationManager);
 
@@ -128,17 +128,17 @@ public class Bonus3D extends Box {
     public void showEdible() {
         setVisible(true);
         setWidth(BONUS_3D_SYMBOL_WIDTH);
-        setMaterial(symbolImageTexture);
+        setMaterial(symbolTexture);
         edibleAnimation.play(ManagedAnimation.FROM_START);
     }
 
     public void showEaten() {
+        edibleAnimation.stop();
         setVisible(true);
         setWidth(BONUS_3D_POINTS_WIDTH);
-        setMaterial(pointsImageTexture);
+        setMaterial(pointsTexture);
         setRotationAxis(Rotate.X_AXIS);
         setRotate(0);
-        edibleAnimation.stop();
         eatenAnimation.play(ManagedAnimation.FROM_START);
     }
 
