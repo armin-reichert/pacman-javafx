@@ -16,7 +16,6 @@ import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
-import de.amr.pacmanfx.uilib.model3D.Model3D;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.model3D.PacBase3D;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer3D;
@@ -32,7 +31,6 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
-import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -60,7 +58,7 @@ public class GameLevel3D {
         return 0 <= x && x < worldMap.numCols() * TS && 0 <= y && y < worldMap.numRows() * TS;
     }
 
-    private static boolean isWorldBorder(WorldMap worldMap, Obstacle obstacle) {
+    private static boolean isObstacleTheWorldBorder(WorldMap worldMap, Obstacle obstacle) {
         Vector2i start = obstacle.startPoint();
         if (obstacle.isClosed()) {
             return start.x() == TS || start.y() == GameLevel.EMPTY_ROWS_OVER_MAZE * TS + HTS;
@@ -124,6 +122,7 @@ public class GameLevel3D {
     private Color wallBaseColor;
     private Color wallTopColor;
 
+    private AmbientLight ambientLight;
     private Box floor3D;
     private LevelCounter3D levelCounter3D;
     private LivesCounter3D livesCounter3D;
@@ -138,18 +137,56 @@ public class GameLevel3D {
         requireNonNull(gameLevel);
         this.animationManager = requireNonNull(animationManager);
 
-        var ambientLight = new AmbientLight();
-        ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
+        {
+            ambientLight = new AmbientLight();
+            ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
+        }
+
+        {
+            levelCounter3D = new LevelCounter3D(animationManager, theGame().hud().levelCounter());
+            levelCounter3D.setTranslateX(gameLevel.worldMap().numCols() * TS - 2 * TS);
+            levelCounter3D.setTranslateY(2 * TS);
+            levelCounter3D.spinningAnimation().play(ManagedAnimation.FROM_START);
+        }
+
+        {
+            Node[] counterShapes = new Node[Settings3D.LIVES_COUNTER_3D_CAPACITY];
+            for (int i = 0; i < counterShapes.length; ++i) {
+                counterShapes[i] = theUI().configuration().createLivesCounter3D();
+            }
+            livesCounter3D = new LivesCounter3D(animationManager, counterShapes);
+            livesCounter3D.setTranslateX(2 * TS);
+            livesCounter3D.setTranslateY(2 * TS);
+            livesCounter3D.drawModeProperty().bind(PY_3D_DRAW_MODE);
+            livesCounter3D.livesCountProperty().bind(livesCountPy);
+            livesCounter3D.pillarColorProperty().set(Settings3D.LIVES_COUNTER_PILLAR_COLOR);
+            livesCounter3D.plateColorProperty().set(Settings3D.LIVES_COUNTER_PLATE_COLOR);
+            livesCounter3D.light().colorProperty().set(Color.CORNFLOWERBLUE);
+            livesCounter3D.lookingAroundAnimation().play(ManagedAnimation.FROM_START);
+        }
+
+        {
+            pac3D = theUI().configuration().createPac3D(animationManager, gameLevel.pac());
+        }
+
+        {
+            ghosts3D = gameLevel.ghosts()
+                .map(ghost -> {
+                    var ghost3D = new MutatingGhost3D(animationManager,
+                        theAssets(), theUI().configuration().assetNamespace(),
+                        dressMeshViews[ghost.personality()],
+                        pupilsMeshViews[ghost.personality()],
+                        eyesMeshViews[ghost.personality()],
+                        ghost,
+                        Settings3D.GHOST_3D_SIZE,
+                        gameLevel.data().numFlashes()
+                    );
+                    bindDrawMode(ghost3D, PY_3D_DRAW_MODE);
+                    return ghost3D;
+                }).toList();
+        }
 
         createMaze3D(gameLevel);
-        createLevelCounter(gameLevel);
-        createLivesCounter3D();
-
-        pac3D = theUI().configuration().createPac3D(animationManager, gameLevel.pac());
-
-        ghosts3D = gameLevel.ghosts()
-            .map(ghost -> createGhost3D(ghost, gameLevel.data().numFlashes()))
-            .toList();
 
         root.getChildren().addAll(ambientLight, livesCounter3D, levelCounter3D);
         energizers3D.forEach(energizer3D -> root.getChildren().add(energizer3D.shape3D()));
@@ -161,11 +198,13 @@ public class GameLevel3D {
         // otherwise the transparency is not working correctly.
         root.getChildren().add(mazeGroup);
 
+        /*
         // For wireframe view, bind all 3D maze building blocks to global "draw mode" property.
         mazeGroup.lookupAll("*").stream()
             .filter(Shape3D.class::isInstance)
             .map(Shape3D.class::cast)
             .forEach(shape3D -> shape3D.drawModeProperty().bind(PY_3D_DRAW_MODE));
+        */
 
         root.setMouseTransparent(true); // this increases performance, they say...
 
@@ -224,12 +263,9 @@ public class GameLevel3D {
         levelCompletedAnimationBeforeCutScene = new ManagedAnimation(animationManager, "Level_Complete_Before_CutScene") {
             @Override
             protected Animation createAnimation() {
-                int levelNumber = gameLevel.number();
-                int numMazeFlashes = gameLevel.data().numFlashes();
-                // when a cut scene follows, only play the maze flashing animation
                 return new SequentialTransition(
                     doAfterSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
-                    doAfterSec(0.5, createMazeFlashAnimation(numMazeFlashes)),
+                    doAfterSec(0.5, createMazeFlashAnimation(gameLevel.data().numFlashes())),
                     doAfterSec(0.5, () -> gameLevel.pac().hide())
                 );
             }
@@ -300,21 +336,6 @@ public class GameLevel3D {
     public ManagedAnimation levelCompletedAnimationBeforeCutScene() { return levelCompletedAnimationBeforeCutScene; }
     public ManagedAnimation wallColorFlashingAnimation() { return wallColorFlashingAnimation; }
 
-    private MutatingGhost3D createGhost3D(Ghost ghost, int numFlashes) {
-        var ghost3D = new MutatingGhost3D(
-            animationManager,
-            theAssets(),
-            theUI().configuration().assetNamespace(),
-            dressMeshViews[ghost.personality()],
-            pupilsMeshViews[ghost.personality()],
-            eyesMeshViews[ghost.personality()],
-            ghost,
-            Settings3D.GHOST_3D_SIZE,
-            numFlashes);
-        bindDrawMode(ghost3D, PY_3D_DRAW_MODE);
-        return ghost3D;
-    }
-
     private void createMaze3D(GameLevel gameLevel) {
         final WorldMap worldMap = gameLevel.worldMap();
         final WorldMapColorScheme colorScheme = theUI().configuration().worldMapColorScheme(worldMap);
@@ -356,7 +377,7 @@ public class GameLevel3D {
                 r3D.setWallThickness(Settings3D.OBSTACLE_3D_THICKNESS);
                 r3D.setWallBaseMaterial(wallBaseMaterial);
                 r3D.setWallTopMaterial(wallTopMaterial);
-                r3D.renderObstacle3D(maze3D, obstacle, isWorldBorder(gameLevel.worldMap(), obstacle));
+                r3D.renderObstacle3D(maze3D, obstacle, isObstacleTheWorldBorder(gameLevel.worldMap(), obstacle));
             }
         }
 
@@ -433,30 +454,6 @@ public class GameLevel3D {
         energizers3D.trimToSize();
     }
 
-    private void createLivesCounter3D() {
-        Node[] counterShapes = new Node[Settings3D.LIVES_COUNTER_3D_CAPACITY];
-        for (int i = 0; i < counterShapes.length; ++i) {
-            counterShapes[i] = theUI().configuration().createLivesCounter3D();
-        }
-        livesCounter3D = new LivesCounter3D(animationManager, counterShapes);
-        livesCounter3D.setTranslateX(2 * TS);
-        livesCounter3D.setTranslateY(2 * TS);
-        livesCounter3D.drawModeProperty().bind(PY_3D_DRAW_MODE);
-        livesCounter3D.livesCountProperty().bind(livesCountPy);
-        livesCounter3D.pillarColorProperty().set(Settings3D.LIVES_COUNTER_PILLAR_COLOR);
-        livesCounter3D.plateColorProperty().set(Settings3D.LIVES_COUNTER_PLATE_COLOR);
-        livesCounter3D.light().colorProperty().set(Color.CORNFLOWERBLUE);
-        livesCounter3D.lookingAroundAnimation().play(ManagedAnimation.FROM_START);
-    }
-
-    public void createLevelCounter(GameLevel gameLevel) {
-        levelCounter3D = new LevelCounter3D(animationManager, theGame().hud().levelCounter());
-        // Place level counter at top right maze corner
-        levelCounter3D.setTranslateX(gameLevel.worldMap().numCols() * TS - 2 * TS);
-        levelCounter3D.setTranslateY(2 * TS);
-        levelCounter3D.spinningAnimation().play(ManagedAnimation.FROM_START);
-    }
-
     public void showAnimatedMessage(String text, float displaySeconds, double centerX, double y) {
         if (messageView != null) {
             root.getChildren().remove(messageView);
@@ -497,13 +494,16 @@ public class GameLevel3D {
             return pauseSec(1.0);
         }
         var animation = new Timeline(
-                new KeyFrame(Duration.millis(125), new KeyValue(obstacleBaseHeightPy, 0, Interpolator.EASE_BOTH)));
+            new KeyFrame(Duration.millis(125),
+                new KeyValue(obstacleBaseHeightPy, 0, Interpolator.EASE_BOTH)
+            )
+        );
         animation.setAutoReverse(true);
         animation.setCycleCount(2 * numFlashes);
         return animation;
     }
 
-    // testing
+    // experiment
 
     private boolean inDestroyPhase;
 
@@ -518,6 +518,11 @@ public class GameLevel3D {
             return;
         }
         inDestroyPhase = true;
+
+        wallBaseMaterial = null;
+        wallTopMaterial = null;
+        cornerBaseMaterial= null;
+        cornerTopMaterial = null;
 
         if (maze3D != null) {
             maze3D.getChildren().clear();
@@ -548,6 +553,7 @@ public class GameLevel3D {
 
         animationManager = null;
         levelCompletedAnimation = null;
+        levelCompletedAnimationBeforeCutScene = null;
         wallColorFlashingAnimation = null;
         wallsDisappearingAnimation = null;
 
