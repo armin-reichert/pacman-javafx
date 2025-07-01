@@ -28,9 +28,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Box;
-import javafx.scene.shape.Mesh;
-import javafx.scene.shape.MeshView;
+import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -109,11 +107,6 @@ public class GameLevel3D {
             new MeshView(Model3DRepository.get().ghostEyeballsMesh()),
     };
 
-    private Group root = new Group();
-    private Group mazeGroup = new Group();
-    private Group maze3D = new Group();
-    private ArcadeHouse3D house3D;
-
     private PhongMaterial wallBaseMaterial = new PhongMaterial();
     private PhongMaterial wallTopMaterial = new PhongMaterial();
     private PhongMaterial cornerBaseMaterial= new PhongMaterial();
@@ -122,9 +115,14 @@ public class GameLevel3D {
     private Color wallBaseColor;
     private Color wallTopColor;
 
+    private Group root = new Group();
+    private Group mazeGroup = new Group();
+    private Group maze3D = new Group();
     private AmbientLight ambientLight;
+    private ArcadeHouse3D house3D;
     private Box floor3D;
     private LevelCounter3D levelCounter3D;
+    private Node[] livesCounterShapes = new Node[Settings3D.LIVES_COUNTER_3D_CAPACITY];
     private LivesCounter3D livesCounter3D;
     private PacBase3D pac3D;
     private List<MutatingGhost3D> ghosts3D;
@@ -150,14 +148,12 @@ public class GameLevel3D {
         }
 
         {
-            Node[] counterShapes = new Node[Settings3D.LIVES_COUNTER_3D_CAPACITY];
-            for (int i = 0; i < counterShapes.length; ++i) {
-                counterShapes[i] = theUI().configuration().createLivesCounter3D();
+            for (int i = 0; i < livesCounterShapes.length; ++i) {
+                livesCounterShapes[i] = theUI().configuration().createLivesCounter3D();
             }
-            livesCounter3D = new LivesCounter3D(animationManager, counterShapes);
+            livesCounter3D = new LivesCounter3D(animationManager, livesCounterShapes);
             livesCounter3D.setTranslateX(2 * TS);
             livesCounter3D.setTranslateY(2 * TS);
-            livesCounter3D.drawModeProperty().bind(PY_3D_DRAW_MODE);
             livesCounter3D.livesCountProperty().bind(livesCountPy);
             livesCounter3D.pillarColorProperty().set(Settings3D.LIVES_COUNTER_PILLAR_COLOR);
             livesCounter3D.plateColorProperty().set(Settings3D.LIVES_COUNTER_PLATE_COLOR);
@@ -171,19 +167,15 @@ public class GameLevel3D {
 
         {
             ghosts3D = gameLevel.ghosts()
-                .map(ghost -> {
-                    var ghost3D = new MutatingGhost3D(animationManager,
-                        theAssets(), theUI().configuration().assetNamespace(),
-                        dressMeshViews[ghost.personality()],
-                        pupilsMeshViews[ghost.personality()],
-                        eyesMeshViews[ghost.personality()],
-                        ghost,
-                        Settings3D.GHOST_3D_SIZE,
-                        gameLevel.data().numFlashes()
-                    );
-                    bindDrawMode(ghost3D, PY_3D_DRAW_MODE);
-                    return ghost3D;
-                }).toList();
+                .map(ghost -> new MutatingGhost3D(animationManager,
+                    theAssets(), theUI().configuration().assetNamespace(),
+                    dressMeshViews[ghost.personality()],
+                    pupilsMeshViews[ghost.personality()],
+                    eyesMeshViews[ghost.personality()],
+                    ghost,
+                    Settings3D.GHOST_3D_SIZE,
+                    gameLevel.data().numFlashes()
+                )).toList();
         }
 
         createMaze3D(gameLevel);
@@ -198,13 +190,14 @@ public class GameLevel3D {
         // otherwise the transparency is not working correctly.
         root.getChildren().add(mazeGroup);
 
-        /*
-        // For wireframe view, bind all 3D maze building blocks to global "draw mode" property.
-        mazeGroup.lookupAll("*").stream()
-            .filter(Shape3D.class::isInstance)
-            .map(Shape3D.class::cast)
-            .forEach(shape3D -> shape3D.drawModeProperty().bind(PY_3D_DRAW_MODE));
-        */
+        PY_3D_DRAW_MODE.addListener((py,ov,drawMode) -> {
+            setDrawModeForTree(mazeGroup, drawMode);
+            setDrawModeForTree(levelCounter3D, drawMode);
+            setDrawModeForTree(livesCounter3D, drawMode);
+            setDrawModeForTree(pac3D.root(), drawMode);
+            ghosts3D.forEach(ghost3D -> setDrawModeForTree(ghost3D, drawMode));
+            Logger.info("Draw mode set to {}", drawMode);
+        });
 
         root.setMouseTransparent(true); // this increases performance, they say...
 
@@ -243,7 +236,7 @@ public class GameLevel3D {
                         }
                     }),
                     doAfterSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
-                    doAfterSec(0.5, createMazeFlashAnimation(numMazeFlashes)),
+                    doAfterSec(0.5, createMazeFlashAnimation(numMazeFlashes, 250)),
                     doAfterSec(0.5, () -> gameLevel.pac().hide()),
                     doAfterSec(0.5, () -> {
                             var spin360 = new RotateTransition(Duration.seconds(1.5), root);
@@ -265,7 +258,7 @@ public class GameLevel3D {
             protected Animation createAnimation() {
                 return new SequentialTransition(
                     doAfterSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
-                    doAfterSec(0.5, createMazeFlashAnimation(gameLevel.data().numFlashes())),
+                    doAfterSec(0.5, createMazeFlashAnimation(gameLevel.data().numFlashes(), 250)),
                     doAfterSec(0.5, () -> gameLevel.pac().hide())
                 );
             }
@@ -273,6 +266,20 @@ public class GameLevel3D {
     }
 
     public Group root() { return root; }
+    public PacBase3D pac3D() { return pac3D; }
+    public Stream<MutatingGhost3D> ghosts3D() { return ghosts3D.stream(); }
+    public MutatingGhost3D ghost3D(byte id) { return ghosts3D.get(id); }
+    public Optional<Bonus3D> bonus3D() { return Optional.ofNullable(bonus3D); }
+    public LevelCounter3D levelCounter3D() { return levelCounter3D; }
+    public LivesCounter3D livesCounter3D() { return livesCounter3D; }
+    public Stream<Pellet3D> pellets3D() { return pellets3D.stream(); }
+    public Stream<Energizer3D> energizers3D() { return energizers3D.stream(); }
+    public Color floorColor() { return PY_3D_FLOOR_COLOR.get(); }
+    public double floorThickness() { return floor3D.getDepth(); }
+
+    public ManagedAnimation levelCompletedAnimation() { return levelCompletedAnimation; }
+    public ManagedAnimation levelCompletedAnimationBeforeCutScene() { return levelCompletedAnimationBeforeCutScene; }
+    public ManagedAnimation wallColorFlashingAnimation() { return wallColorFlashingAnimation; }
 
     /**
      * Called on each clock tick (frame).
@@ -321,21 +328,6 @@ public class GameLevel3D {
         livesCounter3D.lookingAroundAnimation().stop();
     }
 
-    public PacBase3D pac3D() { return pac3D; }
-    public Stream<MutatingGhost3D> ghosts3D() { return ghosts3D.stream(); }
-    public MutatingGhost3D ghost3D(byte id) { return ghosts3D.get(id); }
-    public Optional<Bonus3D> bonus3D() { return Optional.ofNullable(bonus3D); }
-    public LevelCounter3D levelCounter3D() { return levelCounter3D; }
-    public LivesCounter3D livesCounter3D() { return livesCounter3D; }
-    public Stream<Pellet3D> pellets3D() { return pellets3D.stream(); }
-    public Stream<Energizer3D> energizers3D() { return energizers3D.stream(); }
-    public Color floorColor() { return PY_3D_FLOOR_COLOR.get(); }
-    public double floorThickness() { return floor3D.getDepth(); }
-
-    public ManagedAnimation levelCompletedAnimation() { return levelCompletedAnimation; }
-    public ManagedAnimation levelCompletedAnimationBeforeCutScene() { return levelCompletedAnimationBeforeCutScene; }
-    public ManagedAnimation wallColorFlashingAnimation() { return wallColorFlashingAnimation; }
-
     private void createMaze3D(GameLevel gameLevel) {
         final WorldMap worldMap = gameLevel.worldMap();
         final WorldMapColorScheme colorScheme = theUI().configuration().worldMapColorScheme(worldMap);
@@ -354,6 +346,8 @@ public class GameLevel3D {
 
         wallTopMaterial.setDiffuseColor(wallTopColor);
         wallTopMaterial.setSpecularColor(wallTopColor.brighter());
+
+        wallOpacityPy.bind(PY_3D_WALL_OPACITY);
 
         cornerBaseMaterial.setDiffuseColor(wallBaseColor); // for now use same color
         cornerBaseMaterial.specularColorProperty().bind(cornerBaseMaterial.diffuseColorProperty().map(Color::brighter));
@@ -392,14 +386,12 @@ public class GameLevel3D {
                 Settings3D.HOUSE_3D_WALL_THICKNESS,
                 houseLightOnPy);
 
-        house3D.door3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
         maze3D.getChildren().add(house3D); //TODO check this
         mazeGroup.getChildren().addAll(floor3D, maze3D);
 
         createPelletsAndEnergizers3D(gameLevel, colorScheme, Model3DRepository.get().pelletMesh());
 
         PY_3D_WALL_HEIGHT.addListener((py, ov, nv) -> obstacleBaseHeightPy.set(nv.doubleValue()));
-        wallOpacityPy.bind(PY_3D_WALL_OPACITY);
     }
 
     private Box createFloor3D(double sizeX, double sizeY) {
@@ -408,7 +400,6 @@ public class GameLevel3D {
         floor3D.translateYProperty().bind(floor3D.heightProperty().divide(2));
         floor3D.translateZProperty().bind(floor3D.depthProperty().divide(2));
         floor3D.materialProperty().bind(PY_3D_FLOOR_COLOR.map(Ufx::coloredPhongMaterial));
-        floor3D.drawModeProperty().bind(PY_3D_DRAW_MODE);
         return floor3D;
     }
 
@@ -454,6 +445,13 @@ public class GameLevel3D {
         energizers3D.trimToSize();
     }
 
+    private void setDrawModeForTree(Node root, DrawMode drawMode) {
+        root.lookupAll("*").stream()
+            .filter(Shape3D.class::isInstance)
+            .map(Shape3D.class::cast)
+            .forEach(shape3D -> shape3D.setDrawMode(drawMode));
+    }
+
     public void showAnimatedMessage(String text, float displaySeconds, double centerX, double y) {
         if (messageView != null) {
             root.getChildren().remove(messageView);
@@ -489,18 +487,18 @@ public class GameLevel3D {
         bonus3D.showEdible();
     }
 
-    private Animation createMazeFlashAnimation(int numFlashes) {
+    private Animation createMazeFlashAnimation(int numFlashes, int flashDurationMillis) {
         if (numFlashes == 0) {
             return pauseSec(1.0);
         }
-        var animation = new Timeline(
-            new KeyFrame(Duration.millis(125),
+        var flashing = new Timeline(
+            new KeyFrame(Duration.millis(0.5 * flashDurationMillis),
                 new KeyValue(obstacleBaseHeightPy, 0, Interpolator.EASE_BOTH)
             )
         );
-        animation.setAutoReverse(true);
-        animation.setCycleCount(2 * numFlashes);
-        return animation;
+        flashing.setAutoReverse(true);
+        flashing.setCycleCount(2 * numFlashes);
+        return flashing;
     }
 
     // experiment
@@ -511,7 +509,7 @@ public class GameLevel3D {
         return inDestroyPhase;
     }
 
-    // Attempt to get objects garbage-collected
+    // Attempt to help objects getting garbage-collected
     public void destroy() {
         if (inDestroyPhase) {
             Logger.warn("destroy() called while in destroy phase?");
@@ -523,11 +521,6 @@ public class GameLevel3D {
         wallTopMaterial = null;
         cornerBaseMaterial= null;
         cornerTopMaterial = null;
-
-        if (maze3D != null) {
-            maze3D.getChildren().clear();
-            maze3D = null;
-        }
 
         for (MeshView meshView : dressMeshViews) {
             meshView.setMesh(null);
@@ -551,22 +544,34 @@ public class GameLevel3D {
         });
         pellets3D = null;
 
-        animationManager = null;
-        levelCompletedAnimation = null;
-        levelCompletedAnimationBeforeCutScene = null;
-        wallColorFlashingAnimation = null;
-        wallsDisappearingAnimation = null;
-
+        root.getChildren().clear();
         root = null;
+
+        mazeGroup.getChildren().clear();
         mazeGroup = null;
+
+        if (maze3D != null) {
+            maze3D.getChildren().clear();
+            maze3D = null;
+        }
+
+        ambientLight = null;
         energizers3D = null;
         floor3D = null;
+        Arrays.fill(livesCounterShapes, null);
+        livesCounterShapes = null;
         levelCounter3D = null;
         livesCounter3D = null;
         pac3D = null;
         ghosts3D = null;
         messageView = null;
         bonus3D = null;
+
+        animationManager = null;
+        levelCompletedAnimation = null;
+        levelCompletedAnimationBeforeCutScene = null;
+        wallColorFlashingAnimation = null;
+        wallsDisappearingAnimation = null;
 
         System.gc();
     }

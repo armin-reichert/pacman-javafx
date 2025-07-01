@@ -13,14 +13,11 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
-import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
@@ -34,7 +31,6 @@ public class Door3D extends Group {
 
     private static final int NUM_VERTICAL_BARS = 2;
 
-    private final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(DrawMode.FILL);
     private final DoubleProperty barThicknessPy = new SimpleDoubleProperty(0.75);
     private final PhongMaterial barMaterial;
 
@@ -75,7 +71,6 @@ public class Door3D extends Group {
             verticalBar.translateZProperty().bind(verticalBar.heightProperty().multiply(-0.5));
             verticalBar.setRotationAxis(Rotate.X_AXIS);
             verticalBar.setRotate(90);
-            verticalBar.drawModeProperty().bind(drawModePy);
             group.getChildren().add(verticalBar);
         }
 
@@ -87,11 +82,8 @@ public class Door3D extends Group {
         horizontalBar.setTranslateZ(0.25 - horizontalBar.getHeight() * 0.5);
         horizontalBar.setRotationAxis(Rotate.Z_AXIS);
         horizontalBar.setRotate(90);
-        horizontalBar.drawModeProperty().bind(drawModePy);
         group.getChildren().add(horizontalBar);
 
         return group;
     }
-
-    public ObjectProperty<DrawMode> drawModeProperty() { return drawModePy; }
 }

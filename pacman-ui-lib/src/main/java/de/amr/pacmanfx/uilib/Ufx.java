@@ -24,7 +24,6 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -359,14 +358,6 @@ public interface Ufx {
             "pellet", new ColorChange(Color.web(sourceColorScheme.pelletColor()), Color.web(targetColorScheme.pelletColor()))
         );
         return exchangeColors(colorChanges, image);
-    }
-
-    static Stream<MeshView> allMeshViewsUnder(Node root) {
-        return root.lookupAll("*").stream().filter(MeshView.class::isInstance).map(MeshView.class::cast);
-    }
-
-    static void bindDrawMode(Node root, ObjectProperty<DrawMode> property) {
-        allMeshViewsUnder(root).map(MeshView::drawModeProperty).forEach(py -> py.bind(property));
     }
 
     static MeshView meshViewById(Node root, String id) {

@@ -30,7 +30,6 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
-import de.amr.pacmanfx.uilib.model3D.Model3D;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.model3D.MsPacMan3D;
 import de.amr.pacmanfx.uilib.model3D.PacBase3D;
@@ -55,9 +54,9 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.ActionBindingSupport.binding;
 import static de.amr.pacmanfx.ui.PacManGames.*;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
-import static de.amr.pacmanfx.ui.PacManGames_UI.*;
+import static de.amr.pacmanfx.ui.PacManGames_UI.PY_3D_ENABLED;
+import static de.amr.pacmanfx.ui.PacManGames_UI.PY_CANVAS_BG_COLOR;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
-import static de.amr.pacmanfx.uilib.Ufx.bindDrawMode;
 import static de.amr.pacmanfx.uilib.Ufx.toggle;
 import static java.util.Objects.requireNonNull;
 
@@ -254,7 +253,6 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     public PacBase3D createPac3D(AnimationManager animationMgr, Pac pac) {
         var pac3D = new MsPacMan3D(animationMgr, pac, Settings3D.PAC_3D_SIZE, theAssets(), ANS);
         pac3D.light().setColor(theAssets().color(ANS + ".pac.color.head").desaturate());
-        bindDrawMode(pac3D.root(), PY_3D_DRAW_MODE);
         return pac3D;
     }
 

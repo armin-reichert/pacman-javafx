@@ -18,7 +18,6 @@ import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
-import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
@@ -31,15 +30,16 @@ import static java.util.Objects.requireNonNull;
  */
 public class LivesCounter3D extends Group {
 
-    private final DoubleProperty pillarHeightPy = new SimpleDoubleProperty(8);
-    private final ObjectProperty<Color> pillarColorPy = new SimpleObjectProperty<>(Color.grayRgb(120));
-    private final DoubleProperty plateRadiusPy = new SimpleDoubleProperty(6);
-    private final DoubleProperty plateThicknessPy = new SimpleDoubleProperty(1);
-    private final ObjectProperty<Color> plateColorPy = new SimpleObjectProperty<>(Color.grayRgb(180));
-    private final IntegerProperty livesCountPy = new SimpleIntegerProperty(0);
-    private final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(DrawMode.FILL);
-    private final ObjectProperty<PhongMaterial> pillarMaterialPy = new SimpleObjectProperty<>(new PhongMaterial());
-    private final ObjectProperty<PhongMaterial> plateMaterialPy = new SimpleObjectProperty<>(new PhongMaterial());
+    private final ObjectProperty<Color>         pillarColorProperty = new SimpleObjectProperty<>(Color.grayRgb(120));
+    private final ObjectProperty<PhongMaterial> pillarMaterialProperty = new SimpleObjectProperty<>(new PhongMaterial());
+    private final DoubleProperty                pillarHeightProperty = new SimpleDoubleProperty(8);
+
+    private final ObjectProperty<Color>         plateColorProperty = new SimpleObjectProperty<>(Color.grayRgb(180));
+    private final ObjectProperty<PhongMaterial> plateMaterialProperty = new SimpleObjectProperty<>(new PhongMaterial());
+    private final DoubleProperty                plateThicknessProperty = new SimpleDoubleProperty(1);
+    private final DoubleProperty                plateRadiusProperty = new SimpleDoubleProperty(6);
+
+    private final IntegerProperty               livesCountProperty = new SimpleIntegerProperty(0);
 
     private final Node[] pacShapes;
     private final PointLight light = new PointLight();
@@ -50,13 +50,13 @@ public class LivesCounter3D extends Group {
         requireNonNull(animationManager);
         this.pacShapes = pacShapes;
 
-        pillarMaterialPy.bind(pillarColorPy.map(Ufx::coloredPhongMaterial));
-        plateMaterialPy.bind((plateColorPy.map(Ufx::coloredPhongMaterial)));
+        pillarMaterialProperty.bind(pillarColorProperty.map(Ufx::coloredPhongMaterial));
+        plateMaterialProperty.bind((plateColorProperty.map(Ufx::coloredPhongMaterial)));
 
         light.setMaxRange  (TS * (pacShapes.length + 1));
         light.setTranslateX(TS * (pacShapes.length - 1));
         light.setTranslateY(TS * (-1));
-        light.translateZProperty().bind(pillarHeightPy.add(20).multiply(-1));
+        light.translateZProperty().bind(pillarHeightProperty.add(20).multiply(-1));
 
         var standsGroup = new Group();
         for (int i = 0; i < pacShapes.length; ++i) {
@@ -67,32 +67,30 @@ public class LivesCounter3D extends Group {
             pacShape.setUserData(i);
             pacShape.setTranslateX(x);
             pacShape.setTranslateY(0);
-            pacShape.visibleProperty().bind(livesCountPy.map(count -> count.intValue() > (int) pacShape.getUserData()));
+            pacShape.visibleProperty().bind(livesCountProperty.map(count -> count.intValue() > (int) pacShape.getUserData()));
 
             var pillar = new Cylinder(1, 0.1);
-            pillar.heightProperty().bind(pillarHeightPy.add(i % 2 == 0 ? 0 : 4));
-            pillar.materialProperty().bind(pillarMaterialPy);
+            pillar.heightProperty().bind(pillarHeightProperty.add(i % 2 == 0 ? 0 : 4));
+            pillar.materialProperty().bind(pillarMaterialProperty);
             pillar.setTranslateX(x);
             pillar.translateZProperty().bind(pillar.heightProperty().multiply(-0.5));
             pillar.setRotationAxis(Rotate.X_AXIS);
             pillar.setRotate(90);
-            pillar.drawModeProperty().bind(drawModePy);
 
             var podium = new Cylinder();
-            podium.radiusProperty().bind(plateRadiusPy);
-            podium.heightProperty().bind(plateThicknessPy);
-            podium.materialProperty().bind(plateMaterialPy);
+            podium.radiusProperty().bind(plateRadiusProperty);
+            podium.heightProperty().bind(plateThicknessProperty);
+            podium.materialProperty().bind(plateMaterialProperty);
             podium.setTranslateX(x);
-            podium.translateZProperty().bind(pillar.heightProperty().add(plateThicknessPy).negate());
+            podium.translateZProperty().bind(pillar.heightProperty().add(plateThicknessProperty).negate());
             podium.setRotationAxis(Rotate.X_AXIS);
             podium.setRotate(90);
-            podium.drawModeProperty().bind(drawModePy);
 
             Group stand = new Group(pillar, podium);
             standsGroup.getChildren().add(stand);
 
             // let Pac shape sit on top of plate
-            pacShape.translateZProperty().bind(pillar.heightProperty().add(plateThicknessPy).add(shapeRadius).negate());
+            pacShape.translateZProperty().bind(pillar.heightProperty().add(plateThicknessProperty).add(shapeRadius).negate());
 
 
             getChildren().add(pacShape);
@@ -138,26 +136,20 @@ public class LivesCounter3D extends Group {
         };
     }
 
+    public IntegerProperty livesCountProperty() { return livesCountProperty; }
+    public ObjectProperty<Color> pillarColorProperty() { return pillarColorProperty; }
+    public ObjectProperty<Color> plateColorProperty() { return plateColorProperty; }
+    public PointLight light() {
+        return light;
+    }
+    public ManagedAnimation lookingAroundAnimation() {
+        return lookingAroundAnimation;
+    }
+
     private void setInitialShapeRotation() {
         for (Node shape : pacShapes) {
             shape.setRotationAxis(Rotate.Z_AXIS);
             shape.setRotate(240);
         }
-    }
-
-    public ManagedAnimation lookingAroundAnimation() {
-        return lookingAroundAnimation;
-    }
-
-    public ObjectProperty<DrawMode> drawModeProperty() { return drawModePy; }
-
-    public IntegerProperty livesCountProperty() { return livesCountPy; }
-
-    public ObjectProperty<Color> pillarColorProperty() { return pillarColorPy; }
-
-    public ObjectProperty<Color> plateColorProperty() { return plateColorPy; }
-
-    public PointLight light() {
-        return light;
     }
 }
