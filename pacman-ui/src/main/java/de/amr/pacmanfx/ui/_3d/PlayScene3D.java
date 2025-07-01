@@ -309,10 +309,6 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                     doAfterSec(1, () -> {
                         perspectiveManager.perspectiveIDProperty().bind(PY_3D_PERSPECTIVE);
                         animationManager.stopAllAnimations();
-                        Platform.runLater(() -> {
-                            level3D.destroy();
-                            level3D = null;
-                        });
                         theGameController().letCurrentGameStateExpire();
                     })
                 );
@@ -514,6 +510,9 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     }
 
     protected void replaceGameLevel3D() {
+        if (level3D != null) {
+            level3D.destroy();
+        }
         level3D = new GameLevel3D(theGameLevel(), animationManager);
         level3D.pac3D().init();
         level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(theGameLevel()));

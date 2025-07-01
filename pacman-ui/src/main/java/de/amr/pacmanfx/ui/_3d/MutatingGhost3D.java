@@ -167,6 +167,11 @@ public class MutatingGhost3D extends Group {
         setAppearance(GhostAppearance.NORMAL);
     }
 
+    public void destroy() {
+        stopAllAnimations();
+        //TODO...
+    }
+
     public void stopAllAnimations() {
         brakeAnimation.stop();
         pointsAnimation.stop();

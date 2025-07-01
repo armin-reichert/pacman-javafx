@@ -113,6 +113,10 @@ public class Bonus3D extends Box {
         };
     }
 
+    public void destroy() {
+        //TODO
+    }
+
     public void update() {
         Vector2f center = bonus.actor().center();
         setTranslateX(center.x());

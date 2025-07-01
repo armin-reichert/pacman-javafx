@@ -520,70 +520,86 @@ public class GameLevel3D {
             return;
         }
         inDestroyPhase = true;
+        Logger.info("Destroying game level 3D, clearing resources...");
 
         wallBaseMaterial = null;
         wallTopMaterial = null;
         cornerBaseMaterial= null;
         cornerTopMaterial = null;
+        Logger.info("Cleared materials");
 
         for (MeshView meshView : dressMeshViews) {
             meshView.setMesh(null);
         }
         dressMeshViews = null;
+        Logger.info("Cleared dress mesh views");
 
         for (MeshView meshView : pupilsMeshViews) {
             meshView.setMesh(null);
         }
         pupilsMeshViews = null;
+        Logger.info("Cleared pupils mesh views");
 
         for (MeshView meshView : eyesMeshViews) {
             meshView.setMesh(null);
         }
         eyesMeshViews = null;
+        Logger.info("Cleared eyes mesh views");
 
         pellets3D.forEach(Pellet3D::destroy);
         pellets3D = null;
+        Logger.info("Cleared 3D pellets");
 
         energizers3D.forEach(Energizer3D::destroy);
         energizers3D = null;
+        Logger.info("Cleared 3D energizers");
 
         root.getChildren().clear();
         root = null;
+        Logger.info("Removed all child nodes of game level 3D root ");
 
-        mazeGroup.getChildren().clear();
         mazeGroup = null;
-
         floor3D = null;
-
         if (maze3D != null) {
-            maze3D.getChildren().clear();
             maze3D = null;
         }
 
         ambientLight.colorProperty().unbind();
         ambientLight = null;
+        Logger.info("Removed ambient light");
 
         livesCounterShapes = null;
-
         livesCounter3D.destroy();
         livesCounter3D = null;
+        Logger.info("Removed lives counter 3D");
 
         levelCounter3D = null;
+        Logger.info("Removed level counter 3D");
 
         pac3D = null;
-        ghosts3D = null;
-        bonus3D = null;
+        Logger.info("Removed Pac 3D");
 
+        ghosts3D.forEach(MutatingGhost3D::destroy);
+        ghosts3D = null;
+        Logger.info("Removed ghosts 3D");
+
+        if (bonus3D != null) {
+            bonus3D.destroy();
+            bonus3D = null;
+            Logger.info("Removed bonus 3D");
+        }
         messageView = null;
 
         animationManager.stopAllAnimations();
         animationManager.clearAnimations();
-        animationManager = null;
         levelCompletedAnimation = null;
         levelCompletedAnimationBeforeCutScene = null;
         wallColorFlashingAnimation = null;
         wallsDisappearingAnimation = null;
+        animationManager = null;
+        Logger.info("Stopped and removed all animations, cleared animation manager");
 
         PY_3D_DRAW_MODE.removeListener(this::handleDrawModeChange);
+        Logger.info("Removed draw mode listener");
     }
 }
