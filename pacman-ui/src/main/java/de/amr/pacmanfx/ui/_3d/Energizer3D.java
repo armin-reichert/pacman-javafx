@@ -63,9 +63,9 @@ public class Energizer3D extends Sphere implements Eatable3D {
     }
 
     public void destroy() {
-        pumpingAnimation.stop();
+        pumpingAnimation.destroy();
         pumpingAnimation = null;
-        hideAndEatAnimation.stop();
+        hideAndEatAnimation.destroy();
         hideAndEatAnimation = null;
         eatenAnimation = null;
     }

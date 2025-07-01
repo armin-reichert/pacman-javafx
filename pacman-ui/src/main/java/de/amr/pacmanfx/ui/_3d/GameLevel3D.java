@@ -80,7 +80,7 @@ public class GameLevel3D {
     private final DoubleProperty  houseBaseHeightPy    = new SimpleDoubleProperty(Settings3D.HOUSE_3D_BASE_HEIGHT);
     private final BooleanProperty houseLightOnPy       = new SimpleBooleanProperty(false);
 
-    private AnimationManager animationManager;
+    private final AnimationManager animationManager;
     private ManagedAnimation wallColorFlashingAnimation;
     private ManagedAnimation wallsDisappearingAnimation;
     private ManagedAnimation levelCompletedAnimation;
@@ -597,10 +597,8 @@ public class GameLevel3D {
 
         if (animationManager != null) {
             animationManager.stopAllAnimations();
-            animationManager.clearAnimations();
-            animationManager.destroy();
-            animationManager = null;
-            Logger.info("Stopped and removed all managed animation, destroyed animation manager");
+            animationManager.removeAllAnimations();
+            Logger.info("Stopped and removed all managed animation");
         }
 
         PY_3D_DRAW_MODE.removeListener(this::handleDrawModeChange);

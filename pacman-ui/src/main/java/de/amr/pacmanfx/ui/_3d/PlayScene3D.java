@@ -19,7 +19,6 @@ import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.uilib.CameraControlledView;
-import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.SequentialTransition;
@@ -198,7 +197,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         theSound().stopAll();
         clearActionBindings();
         animationManager.stopAllAnimations();
-        animationManager.clearAnimations();
+        animationManager.removeAllAnimations();
         perspectiveManager.perspectiveIDProperty().unbind();
         if (level3D != null) {
             Platform.runLater(() -> {
@@ -346,7 +345,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     @Override
     public void onLevelStarted(GameEvent event) {
         requireNonNull(theGameLevel()); // just to be sure nothing bad happened
-        animationManager.clearAnimations();
+        animationManager.removeAllAnimations();
         bindActions();
         switch (theGameState()) {
             case STARTING_GAME -> {

@@ -7,7 +7,9 @@ package de.amr.pacmanfx.uilib.animation;
 import javafx.animation.Animation;
 import org.tinylog.Logger;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 import static java.util.Objects.requireNonNull;
 
@@ -22,9 +24,11 @@ public class AnimationManager {
         requireNonNull(label);
         requireNonNull(managedAnimation);
         if (animationMap.containsValue(managedAnimation)) {
-            Logger.debug("Animation with label '{}' is already registered", label);
+            Logger.info("Animation with label '{}' is already registered", label);
         } else {
-            animationMap.put(label + "_" + UUID.randomUUID(), managedAnimation);
+            String id = label + "_" + UUID.randomUUID();
+            animationMap.put(id, managedAnimation);
+            Logger.info("Animation registered: ID='{}'", id);
         }
     }
 
@@ -48,14 +52,9 @@ public class AnimationManager {
         animationMap.values().forEach(this::stopAnimation);
     }
 
-    public void clearAnimations() {
+    public void removeAllAnimations() {
         animationMap.clear();
-    }
-
-    public void destroy() {
-        stopAllAnimations();
-        animationMap.values().forEach(ManagedAnimation::destroy);
-        clearAnimations();
+        Logger.info("Animations removed");
     }
 
     public Map<String, ManagedAnimation> animationMap() {

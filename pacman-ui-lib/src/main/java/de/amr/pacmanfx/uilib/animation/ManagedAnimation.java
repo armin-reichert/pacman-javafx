@@ -4,7 +4,6 @@ import javafx.animation.Animation;
 import org.tinylog.Logger;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import static java.util.Objects.requireNonNull;
 
@@ -22,6 +21,7 @@ public abstract class ManagedAnimation {
     protected ManagedAnimation(AnimationManager animationManager, String label) {
         this.animationManager = requireNonNull(animationManager);
         this.label = requireNonNull(label);
+        animationManager.register(label, this);
     }
 
     public String id() {
@@ -59,7 +59,6 @@ public abstract class ManagedAnimation {
 
     public void play(boolean playMode) {
         getOrCreateAnimation();
-        animationManager.register(label, this);
         if (animation.getStatus() != Animation.Status.RUNNING) {
             if (playMode == FROM_START) {
                 Logger.trace("Playing animation {} from start", id);

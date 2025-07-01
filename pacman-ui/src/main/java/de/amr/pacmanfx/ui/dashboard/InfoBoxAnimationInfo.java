@@ -12,6 +12,8 @@ import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -20,111 +22,110 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import org.tinylog.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 
 import static de.amr.pacmanfx.Globals.theGameEventManager;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
 
 public class InfoBoxAnimationInfo extends InfoBox {
 
-    private static final float REFRESH_TIME_SEC = 0.5f;
+    private static final float REFRESH_TIME_SEC = 1.0f;
 
-    public static class AnimationData {
+    public static class TableData {
         private final StringProperty labelProperty;
-        private final StringProperty animationStatusProperty;
+        private final ObjectProperty<Animation> animationProperty;
 
-        AnimationData(String label, Animation animation) {
+        TableData(String label, Animation animation) {
             labelProperty = new SimpleStringProperty(label);
-            animationStatusProperty = new SimpleStringProperty(animation != null ? animation.getStatus().name() : "unknown");
+            animationProperty = new SimpleObjectProperty<>(animation);
         }
 
         public StringProperty labelProperty() { return labelProperty; }
-        public StringProperty animationStatusProperty() {
-            return animationStatusProperty;
+        public ObjectProperty<Animation> animationProperty() {
+            return animationProperty;
         }
     }
 
     private AnimationManager animationManager;
-    private final ObservableList<AnimationData> animationDataRows = FXCollections.observableArrayList();
+    private final TableView<TableData> tableView = new TableView<>();
+    private final ObservableList<TableData> tableModel = FXCollections.observableArrayList();
     private final Timeline refreshTimer;
 
     public InfoBoxAnimationInfo() {
-        TableView<AnimationData> tableView = new TableView<>();
-        tableView.setItems(animationDataRows);
-        tableView.setPrefWidth(300);
-        tableView.setPrefHeight(600);
+        tableView.setItems(tableModel);
         tableView.setPlaceholder(new Text("No animations"));
         tableView.setFocusTraversable(false);
 
-        TableColumn<AnimationData, String> idColumn = new TableColumn<>("Animation Name");
-        idColumn.setCellValueFactory(data -> data.getValue().labelProperty());
-        idColumn.setSortable(false);
+        TableColumn<TableData, String> labelColumn = new TableColumn<>("Animation Name");
+        labelColumn.setCellValueFactory(data -> data.getValue().labelProperty());
+        labelColumn.setSortable(false);
 
-        TableColumn<AnimationData, String> statusColumn = new TableColumn<>("Status");
-        statusColumn.setCellValueFactory(data -> data.getValue().animationStatusProperty());
+        TableColumn<TableData, String> statusColumn = new TableColumn<>("Status");
+        statusColumn.setCellValueFactory(data -> data.getValue().animationProperty()
+                .map(animation -> animation == null ? "unknown" : animation.getStatus().name()));
         statusColumn.setSortable(false);
 
-        tableView.getColumns().add(idColumn);
+        tableView.getColumns().add(labelColumn);
         tableView.getColumns().add(statusColumn);
 
         addRow(tableView);
 
-        refreshTimer = new Timeline(new KeyFrame(Duration.seconds(REFRESH_TIME_SEC), e -> reloadData()));
+        refreshTimer = new Timeline(new KeyFrame(Duration.seconds(REFRESH_TIME_SEC), e -> updateTableData()));
         refreshTimer.setCycleCount(Animation.INDEFINITE);
-    }
-
-    private void reloadData() {
-        if (!isVisible()) return;
-        animationDataRows.clear();
-        if (animationManager != null) {
-            animationDataRows.addAll(createTableRows(animationManager));
-        }
-    }
-
-    private List<AnimationData> createTableRows(AnimationManager animationManager) {
-        Map<String, ManagedAnimation> animationMap = animationManager.animationMap();
-        List<AnimationData> tableRows = new ArrayList<>();
-        tableRows.addAll(createTableRows(animationMap, this::animationExistsAndRuns));
-        tableRows.addAll(createTableRows(animationMap, this::animationExistsAndRuns));
-        return tableRows;
-    }
-
-    private boolean animationExistsAndRuns(ManagedAnimation managedAnimation) {
-        return managedAnimation.animation().isPresent()
-            && managedAnimation.animation().get().getStatus() == Animation.Status.RUNNING;
-    }
-
-    private List<AnimationData> createTableRows(Map<String, ManagedAnimation> animationMap, Predicate<ManagedAnimation> filter) {
-        return animationMap.entrySet().stream()
-            .filter(entry -> filter.test(entry.getValue()))
-            .sorted(Map.Entry.comparingByKey())
-            .map(entry -> {
-                ManagedAnimation managedAnimation = entry.getValue();
-                return new AnimationData(managedAnimation.label(), managedAnimation.animation().orElse(null));
-            }).toList();
-    }
-
-    public Timeline refreshTimer() {
-        return refreshTimer;
     }
 
     @Override
     public void init() {
         super.init();
+        tableView.setPrefWidth(300);
+        tableView.setPrefHeight(600);
 
         theGameEventManager().addEventListener(new DefaultGameEventListener() {
             @Override
             public void onLevelStarted(GameEvent e) {
                 theUI().currentGameScene().ifPresent(gameScene -> {
                     animationManager = gameScene instanceof PlayScene3D playScene3D ? playScene3D.animationManager() : null;
-                    reloadData();
+                    updateTableData();
                 });
             }
         });
-        refreshTimer().play();
+        refreshTimer.play();
+    }
+
+    @Override
+    public void update() {
+        super.update();
+        tableView.setPrefHeight(theUI().stage().getHeight() * 0.85);
+    }
+
+
+    private void updateTableData() {
+        if (!isVisible()) return;
+        tableModel.clear();
+        if (animationManager != null) {
+            tableModel.addAll(createTableDataSortedByKey(Animation.Status.RUNNING));
+            tableModel.addAll(createTableDataSortedByKey(Animation.Status.PAUSED));
+            Logger.info("Animation table updated");
+        }
+    }
+
+    private List<TableData> createTableDataSortedByKey(Animation.Status status) {
+        return animationManager.animationMap().entrySet().stream()
+            .filter(entry -> testAnimationStatus(entry.getValue(), status))
+            .sorted(Map.Entry.comparingByKey())
+            .map(entry -> {
+                ManagedAnimation managedAnimation = entry.getValue();
+                return new TableData(managedAnimation.label(), managedAnimation.animation().orElse(null));
+            }).toList();
+    }
+
+    private boolean testAnimationStatus(ManagedAnimation ma, Animation.Status status) {
+        if (ma.animation().isPresent()) {
+            return ma.animation().get().getStatus() == status;
+        }
+        return false;
     }
 }
