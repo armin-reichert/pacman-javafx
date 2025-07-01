@@ -35,7 +35,6 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -132,6 +131,8 @@ public class GameLevel3D {
     private List<Pellet3D> pellets3D = new ArrayList<>();
     private ArrayList<Energizer3D> energizers3D = new ArrayList<>();
 
+    // Note: The order in which children are added to the root matters!
+    // Walls and house must be added *after* the actors, otherwise the transparency is not working correctly.
     public GameLevel3D(GameLevel gameLevel, AnimationManager animationManager) {
         requireNonNull(gameLevel);
         this.animationManager = requireNonNull(animationManager);
@@ -139,6 +140,7 @@ public class GameLevel3D {
         {
             ambientLight = new AmbientLight();
             ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
+            root.getChildren().add(ambientLight);
         }
 
         {
@@ -146,6 +148,7 @@ public class GameLevel3D {
             levelCounter3D.setTranslateX(gameLevel.worldMap().numCols() * TS - 2 * TS);
             levelCounter3D.setTranslateY(2 * TS);
             levelCounter3D.spinningAnimation().play(ManagedAnimation.FROM_START);
+            root.getChildren().add(levelCounter3D);
         }
 
         {
@@ -160,10 +163,12 @@ public class GameLevel3D {
             livesCounter3D.plateColorProperty().set(Settings3D.LIVES_COUNTER_PLATE_COLOR);
             livesCounter3D.light().colorProperty().set(Color.CORNFLOWERBLUE);
             livesCounter3D.lookingAroundAnimation().play(ManagedAnimation.FROM_START);
+            root.getChildren().add(livesCounter3D);
         }
 
         {
             pac3D = theUI().configuration().createPac3D(animationManager, gameLevel.pac());
+            root.getChildren().addAll(pac3D.root(), pac3D.light());
         }
 
         {
@@ -177,20 +182,19 @@ public class GameLevel3D {
                     Settings3D.GHOST_3D_SIZE,
                     gameLevel.data().numFlashes()
                 )).toList();
+            root.getChildren().addAll(ghosts3D);
         }
 
-        createMaze3D(gameLevel);
-
-        root.getChildren().addAll(ambientLight, livesCounter3D, levelCounter3D);
-        energizers3D.forEach(energizer3D -> root.getChildren().add(energizer3D.shape3D()));
-        pellets3D.forEach(pellet3D -> root.getChildren().add(pellet3D.shape3D()));
-        root.getChildren().addAll(pac3D.root(), pac3D.light());
-        root.getChildren().addAll(ghosts3D);
-
-        // Note: The order in which children are added matters! Walls and house must be added *after* the actors,
-        // otherwise the transparency is not working correctly.
         root.getChildren().add(mazeGroup);
 
+        WorldMapColorScheme colorScheme = theUI().configuration().worldMapColorScheme(gameLevel.worldMap());
+        createMaze3D(gameLevel, colorScheme);
+
+        createPelletsAndEnergizers3D(gameLevel, colorScheme, Model3DRepository.get().pelletMesh());
+        energizers3D.forEach(energizer3D -> root.getChildren().add(energizer3D.shape3D()));
+        pellets3D.forEach(pellet3D -> root.getChildren().add(pellet3D.shape3D()));
+
+        PY_3D_WALL_HEIGHT.addListener(this::handleWallHeightChange);
         PY_3D_DRAW_MODE.addListener(this::handleDrawModeChange);
 
         root.setMouseTransparent(true); // this increases performance, they say...
@@ -322,9 +326,8 @@ public class GameLevel3D {
         livesCounter3D.lookingAroundAnimation().stop();
     }
 
-    private void createMaze3D(GameLevel gameLevel) {
+    private void createMaze3D(GameLevel gameLevel, WorldMapColorScheme colorScheme) {
         final WorldMap worldMap = gameLevel.worldMap();
-        final WorldMapColorScheme colorScheme = theUI().configuration().worldMapColorScheme(worldMap);
         Logger.info("Build 3D maze for map (URL '{}') and color scheme {}", worldMap.url(), colorScheme);
 
         floor3D = createFloor3D(worldMap.numCols() * TS, worldMap.numRows() * TS);
@@ -382,10 +385,6 @@ public class GameLevel3D {
 
         maze3D.getChildren().add(house3D); //TODO check this
         mazeGroup.getChildren().addAll(floor3D, maze3D);
-
-        createPelletsAndEnergizers3D(gameLevel, colorScheme, Model3DRepository.get().pelletMesh());
-
-        PY_3D_WALL_HEIGHT.addListener((py, ov, nv) -> obstacleBaseHeightPy.set(nv.doubleValue()));
     }
 
     private Box createFloor3D(double sizeX, double sizeY) {
@@ -476,7 +475,7 @@ public class GameLevel3D {
             animationManager,
             bonus,
             theUI().configuration().bonusSymbolImage(bonus.symbol()),
-            theUI().configuration().bonusSymbolImage(bonus.symbol()));
+            theUI().configuration().bonusValueImage(bonus.symbol()));
         mazeGroup.getChildren().add(bonus3D);
         bonus3D.showEdible();
     }
@@ -504,6 +503,9 @@ public class GameLevel3D {
         Logger.info("Draw mode set to {}", drawMode);
     }
 
+    private void handleWallHeightChange(ObservableValue<? extends Number> py, Number ov, Number newHeight) {
+        obstacleBaseHeightPy.set(newHeight.doubleValue());
+    }
 
     // experiment
 
@@ -601,5 +603,7 @@ public class GameLevel3D {
 
         PY_3D_DRAW_MODE.removeListener(this::handleDrawModeChange);
         Logger.info("Removed draw mode listener");
+        PY_3D_WALL_HEIGHT.removeListener(this::handleWallHeightChange);
+        Logger.info("Removed wall height listener");
     }
 }
