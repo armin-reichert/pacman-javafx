@@ -20,6 +20,8 @@ import org.tinylog.Logger;
 
 import java.util.stream.Stream;
 
+import static de.amr.pacmanfx.uilib.Ufx.toCSS_ID;
+
 public final class Model3DRepository {
 
     private static final String PAC_MAN_MESH_ID_EYES   = "PacMan.Eyes";
@@ -93,15 +95,15 @@ public final class Model3DRepository {
 
     public Group createPacShape(double size, Color headColor, Color eyesColor, Color palateColor) {
         var head = new MeshView(pacManModel3D().mesh(PAC_MAN_MESH_ID_HEAD));
-        head.setId(Model3D.toCSS_ID(PAC_MAN_MESH_ID_HEAD));
+        head.setId(toCSS_ID(PAC_MAN_MESH_ID_HEAD));
         head.setMaterial(Ufx.coloredPhongMaterial(headColor));
 
         var eyes = new MeshView(pacManModel3D().mesh(PAC_MAN_MESH_ID_EYES));
-        eyes.setId(Model3D.toCSS_ID(PAC_MAN_MESH_ID_EYES));
+        eyes.setId(toCSS_ID(PAC_MAN_MESH_ID_EYES));
         eyes.setMaterial(Ufx.coloredPhongMaterial(eyesColor));
 
         var palate = new MeshView(pacManModel3D().mesh(PAC_MAN_MESH_ID_PALATE));
-        palate.setId(Model3D.toCSS_ID(PAC_MAN_MESH_ID_PALATE));
+        palate.setId(toCSS_ID(PAC_MAN_MESH_ID_PALATE));
         palate.setMaterial(Ufx.coloredPhongMaterial(palateColor));
 
         var root = new Group(head, eyes, palate);
@@ -123,11 +125,11 @@ public final class Model3DRepository {
 
     public Group createPacSkull(double size, Color headColor, Color palateColor) {
         var head = new MeshView(pacManModel3D().mesh(PAC_MAN_MESH_ID_HEAD));
-        head.setId(Model3D.toCSS_ID(PAC_MAN_MESH_ID_HEAD));
+        head.setId(toCSS_ID(PAC_MAN_MESH_ID_HEAD));
         head.setMaterial(Ufx.coloredPhongMaterial(headColor));
 
         var palate = new MeshView(pacManModel3D().mesh(PAC_MAN_MESH_ID_PALATE));
-        palate.setId(Model3D.toCSS_ID(PAC_MAN_MESH_ID_PALATE));
+        palate.setId(toCSS_ID(PAC_MAN_MESH_ID_PALATE));
         palate.setMaterial(Ufx.coloredPhongMaterial(palateColor));
 
         Bounds bounds = head.getBoundsInLocal();

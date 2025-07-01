@@ -5,21 +5,16 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.uilib.objimport.ObjImporter;
-import javafx.beans.property.ObjectProperty;
 import javafx.scene.Node;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.DrawMode;
-import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Scale;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
@@ -37,39 +32,9 @@ public class Model3D {
         return new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
     }
 
-    public static Stream<MeshView> allMeshViewsUnder(Node root) {
-        return root.lookupAll("*").stream().filter(MeshView.class::isInstance).map(MeshView.class::cast);
-    }
-
-    public static void bindDrawMode(Node root, ObjectProperty<DrawMode> property) {
-        allMeshViewsUnder(root).map(MeshView::drawModeProperty).forEach(py -> py.bind(property));
-    }
-
-    public static MeshView meshViewById(Node root, String id) {
-        requireNonNull(root);
-        requireNonNull(id);
-        var cssID = toCSS_ID(id);
-        var node = root.lookup("#" + cssID);
-        if (node == null) {
-            throw new IllegalArgumentException("No mesh view with ID '%s' found".formatted(cssID));
-        }
-        if (node instanceof MeshView meshView) {
-            return meshView;
-        }
-        throw new IllegalArgumentException("Node with CSS ID '%s' is no MeshView but a %s".formatted(cssID, node.getClass()));
-    }
-
-    public static String toCSS_ID(String id) {
-        return id.replace('.', '-'); //TODO what else needs to be escaped?
-    }
-
     private final String url;
     private final Map<String, TriangleMesh> meshesByName = new HashMap<>();
     private final Map<String, PhongMaterial> materials = new HashMap<>();
-
-    public Model3D(URI objFileURI) throws IOException, URISyntaxException {
-        this(requireNonNull(objFileURI).toURL());
-    }
 
     public Model3D(URL objFileURL) throws IOException, URISyntaxException {
         url = requireNonNull(objFileURL).toExternalForm();

@@ -28,6 +28,7 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
+import de.amr.pacmanfx.uilib.model3D.Model3D;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.model3D.MsPacMan3D;
 import de.amr.pacmanfx.uilib.model3D.PacBase3D;
@@ -45,7 +46,9 @@ import static de.amr.pacmanfx.Globals.optGameLevel;
 import static de.amr.pacmanfx.Globals.theGameLevel;
 import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePalette.*;
 import static de.amr.pacmanfx.ui.PacManGames.theAssets;
+import static de.amr.pacmanfx.ui.PacManGames_UI.PY_3D_DRAW_MODE;
 import static de.amr.pacmanfx.ui.PacManGames_UI.PY_3D_ENABLED;
+import static de.amr.pacmanfx.uilib.Ufx.bindDrawMode;
 import static java.util.Objects.requireNonNull;
 
 public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
@@ -203,6 +206,7 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
     public PacBase3D createPac3D(AnimationManager animationMgr, Pac pac) {
         var pac3D = new MsPacMan3D(animationMgr, pac, Settings3D.PAC_3D_SIZE, theAssets(), assetNamespace());
         pac3D.light().setColor(theAssets().color(assetNamespace() + ".pac.color.head").desaturate());
+        bindDrawMode(pac3D.root(), PY_3D_DRAW_MODE);
         return pac3D;
     }
 

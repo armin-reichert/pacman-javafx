@@ -146,9 +146,10 @@ public class GameLevel3D {
         createLivesCounter3D();
 
         pac3D = theUI().configuration().createPac3D(animationManager, gameLevel.pac());
-        Model3D.bindDrawMode(pac3D.root(), PY_3D_DRAW_MODE);
 
-        createGhosts3D(gameLevel);
+        ghosts3D = gameLevel.ghosts()
+            .map(ghost -> createGhost3D(ghost, gameLevel.data().numFlashes()))
+            .toList();
 
         root.getChildren().addAll(ambientLight, livesCounter3D, levelCounter3D);
         energizers3D.forEach(energizer3D -> root.getChildren().add(energizer3D.shape3D()));
@@ -299,12 +300,6 @@ public class GameLevel3D {
     public ManagedAnimation levelCompletedAnimationBeforeCutScene() { return levelCompletedAnimationBeforeCutScene; }
     public ManagedAnimation wallColorFlashingAnimation() { return wallColorFlashingAnimation; }
 
-    private void createGhosts3D(GameLevel gameLevel) {
-        ghosts3D = gameLevel.ghosts()
-            .map(ghost -> createGhost3D(ghost, gameLevel.data().numFlashes()))
-            .toList();
-    }
-
     private MutatingGhost3D createGhost3D(Ghost ghost, int numFlashes) {
         var ghost3D = new MutatingGhost3D(
             animationManager,
@@ -316,7 +311,7 @@ public class GameLevel3D {
             ghost,
             Settings3D.GHOST_3D_SIZE,
             numFlashes);
-        Model3D.bindDrawMode(ghost3D, PY_3D_DRAW_MODE);
+        bindDrawMode(ghost3D, PY_3D_DRAW_MODE);
         return ghost3D;
     }
 
