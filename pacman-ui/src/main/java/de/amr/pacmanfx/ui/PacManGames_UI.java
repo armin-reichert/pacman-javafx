@@ -86,7 +86,7 @@ public interface PacManGames_UI {
     BooleanProperty               PY_IMMUNITY               = new SimpleBooleanProperty(false);
     IntegerProperty               PY_PIP_HEIGHT             = new SimpleIntegerProperty(400);
     BooleanProperty               PY_PIP_ON                 = new SimpleBooleanProperty(false);
-    IntegerProperty               PY_PIP_OPACITY_PERCENT    = new SimpleIntegerProperty(100);
+    IntegerProperty               PY_PIP_OPACITY_PERCENT    = new SimpleIntegerProperty(69);
     IntegerProperty               PY_SIMULATION_STEPS       = new SimpleIntegerProperty(1);
     BooleanProperty               PY_USING_AUTOPILOT        = new SimpleBooleanProperty(false);
     BooleanProperty               PY_3D_AXES_VISIBLE        = new SimpleBooleanProperty(false);

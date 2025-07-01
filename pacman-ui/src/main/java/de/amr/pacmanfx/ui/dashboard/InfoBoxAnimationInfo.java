@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.dashboard;
 
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -34,18 +35,19 @@ public class InfoBoxAnimationInfo extends InfoBox {
 
     public static class AnimationData {
         private final StringProperty idPy;
-        private final ObjectProperty<Animation.Status> animationStatusPy;
+        private final StringProperty animationStatusPy;
 
         AnimationData(String id, Animation animation) {
             String idPrefix = id.substring(0, id.indexOf("#"));
             idPy = new SimpleStringProperty(idPrefix);
-            animationStatusPy = new SimpleObjectProperty<>(animation.getStatus());
+            animationStatusPy = new SimpleStringProperty(animation != null
+                ? animation.getStatus().name() : "unknown");
         }
 
         public StringProperty idProperty() {
             return idPy;
         }
-        public ObjectProperty<Animation.Status> animationStatusProperty() {
+        public StringProperty animationStatusProperty() {
             return animationStatusPy;
         }
     }
@@ -66,7 +68,7 @@ public class InfoBoxAnimationInfo extends InfoBox {
         idColumn.setCellValueFactory(data -> data.getValue().idProperty());
         idColumn.setSortable(false);
 
-        TableColumn<AnimationData, Animation.Status> statusColumn = new TableColumn<>("Status");
+        TableColumn<AnimationData, String> statusColumn = new TableColumn<>("Status");
         statusColumn.setCellValueFactory(data -> data.getValue().animationStatusProperty());
         statusColumn.setSortable(false);
 
@@ -88,21 +90,26 @@ public class InfoBoxAnimationInfo extends InfoBox {
     }
 
     private List<AnimationData> createTableRows(AnimationManager animationManager) {
-        Map<String, Animation> animationMap = animationManager.animationMap();
+        Map<String, ManagedAnimation> animationMap = animationManager.animationMap();
         List<AnimationData> tableRows = new ArrayList<>();
-        tableRows.addAll(createTableRows(animationMap, animation -> animation.getStatus() == Animation.Status.RUNNING));
-        tableRows.addAll(createTableRows(animationMap, animation -> animation.getStatus() != Animation.Status.RUNNING));
+        tableRows.addAll(createTableRows(animationMap, this::animationExistsAndRuns));
+        tableRows.addAll(createTableRows(animationMap, this::animationExistsAndRuns));
         return tableRows;
     }
 
-    private List<AnimationData> createTableRows(Map<String, Animation> animationMap, Predicate<Animation> filter) {
+    private boolean animationExistsAndRuns(ManagedAnimation managedAnimation) {
+        return managedAnimation.animation().isPresent()
+            && managedAnimation.animation().get().getStatus() == Animation.Status.RUNNING;
+    }
+
+    private List<AnimationData> createTableRows(Map<String, ManagedAnimation> animationMap, Predicate<ManagedAnimation> filter) {
         return animationMap.entrySet().stream()
             .filter(entry -> filter.test(entry.getValue()))
             .sorted(Map.Entry.comparingByKey())
             .map(entry -> {
                 String id = entry.getKey();
-                Animation animation = entry.getValue();
-                return new AnimationData(id, animation);
+                ManagedAnimation managedAnimation = entry.getValue();
+                return new AnimationData(id, managedAnimation.animation().orElse(null));
             }).toList();
     }
 

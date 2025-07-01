@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
@@ -104,29 +105,40 @@ public class MessageView extends ImageView {
         return canvas.snapshot(null, null);
     }
 
-    private final AnimationManager animationManager;
-    private Animation movementAnimation;
+    private AnimationManager animationManager;
+    private ManagedAnimation movementAnimation;
     private float displaySeconds = 2;
 
     private MessageView(AnimationManager animationManager) {
         this.animationManager = requireNonNull(animationManager);
+        movementAnimation = new ManagedAnimation(animationManager, "Message_Movement") {
+            @Override
+            protected Animation createAnimation() {
+                double halfHeight = 0.5 * getBoundsInLocal().getHeight();
+
+                var moveUpAnimation = new TranslateTransition(Duration.seconds(1), MessageView.this);
+                moveUpAnimation.setToZ(-(halfHeight + 0.5 * Settings3D.OBSTACLE_3D_BASE_HEIGHT));
+
+                var moveDownAnimation = new TranslateTransition(Duration.seconds(1), MessageView.this);
+                moveDownAnimation.setToZ(halfHeight);
+                moveDownAnimation.setOnFinished(e -> setVisible(false));
+
+                return new SequentialTransition(
+                    moveUpAnimation,
+                    new PauseTransition(Duration.seconds(displaySeconds)),
+                    moveDownAnimation
+                );
+            }
+        };
     }
 
-    private Animation createMovementAnimation() {
-        double halfHeight = 0.5 * getBoundsInLocal().getHeight();
-
-        var moveUpAnimation = new TranslateTransition(Duration.seconds(1), this);
-        moveUpAnimation.setToZ(-(halfHeight + 0.5 * Settings3D.OBSTACLE_3D_BASE_HEIGHT));
-
-        var moveDownAnimation = new TranslateTransition(Duration.seconds(1), this);
-        moveDownAnimation.setToZ(halfHeight);
-        moveDownAnimation.setOnFinished(e -> setVisible(false));
-
-        return new SequentialTransition(
-                moveUpAnimation,
-                new PauseTransition(Duration.seconds(displaySeconds)),
-                moveDownAnimation
-        );
+    public void destroy() {
+        if (movementAnimation != null) {
+            movementAnimation.stop();
+            movementAnimation.destroy();
+            movementAnimation = null;
+        }
+        animationManager = null;
     }
 
     public void setDisplaySeconds(float sec) {
@@ -137,11 +149,7 @@ public class MessageView extends ImageView {
         return displaySeconds;
     }
 
-    public void playMovementAnimation() {
-        if (movementAnimation == null) {
-            movementAnimation = createMovementAnimation();
-            animationManager.register("MessageView_Movement", movementAnimation);
-        }
-        movementAnimation.playFromStart();
+    public ManagedAnimation movementAnimation() {
+        return movementAnimation;
     }
 }

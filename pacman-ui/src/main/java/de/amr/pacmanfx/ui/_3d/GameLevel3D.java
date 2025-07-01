@@ -461,9 +461,8 @@ public class GameLevel3D {
         messageView.setTranslateX(centerX - 0.5 * messageView.getFitWidth());
         messageView.setTranslateY(y);
         messageView.setTranslateZ(halfHeight); // just under floor
-
         root.getChildren().add(messageView);
-        messageView.playMovementAnimation();
+        messageView.movementAnimation().play(ManagedAnimation.FROM_START);
     }
 
     public void updateBonus3D(Bonus bonus) {
@@ -592,7 +591,7 @@ public class GameLevel3D {
         }
 
         if (messageView != null) {
-//TODO            messageView.destroy();
+            messageView.destroy();
             messageView = null;
         }
 

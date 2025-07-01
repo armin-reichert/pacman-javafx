@@ -7,7 +7,6 @@ package de.amr.pacmanfx.uilib.animation;
 import javafx.animation.Animation;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -16,47 +15,57 @@ import static de.amr.pacmanfx.Validations.requireValidIdentifier;
 import static java.util.Objects.requireNonNull;
 
 /**
- * A central registry for animations (used by PlayScene3D to manage the 3D animations in the level). Allows to
- * stop all running animations more easily when the play scene ends or a level is complete.
+ * A central registry for managed animations.
  */
 public class AnimationManager {
 
-    private final Map<String, Animation> animationMap = new HashMap<>();
+    private Map<String, ManagedAnimation> animationMap = new HashMap<>();
 
     private String makeID(String description) {
         return description + "#" + UUID.randomUUID();
     }
 
-    public String register(String description, Animation animation) {
-        requireValidIdentifier(description);
-        requireNonNull(animation);
-        String id = makeID(description);
-        animationMap.put(id, animation);
+    public String register(String identifier, ManagedAnimation managedAnimation) {
+        requireValidIdentifier(identifier);
+        requireNonNull(managedAnimation);
+        String id = makeID(identifier);
+        animationMap.put(id, managedAnimation);
         return id;
     }
 
-    public void stopAllAnimations() {
-        for (Map.Entry<String, Animation> entry : new ArrayList<>(animationMap.entrySet())) {
-            String id = entry.getKey();
-            Animation animation = entry.getValue();
+    public void stopAnimation(ManagedAnimation managedAnimation) {
+        requireNonNull(managedAnimation);
+        managedAnimation.animation().ifPresent(animation -> {
             try {
                 if (animation.getStatus() == Animation.Status.STOPPED) {
-                    Logger.debug("Already stopped: animation ID='{}' ({})", id, animation);
+                    Logger.debug("Already stopped: animation ID='{}' ({})", managedAnimation.identifier(), managedAnimation);
                 } else {
                     animation.stop();
-                    Logger.debug("Stopped animation ID='{}' ({})", id, animation);
+                    Logger.debug("Stopped animation ID='{}' ({})", managedAnimation.identifier(), managedAnimation);
                 }
             } catch (IllegalStateException x) {
-                Logger.warn("Could not stop (embedded?) animation ID='{}' ({})", id, animation);
+                Logger.warn("Could not stop (embedded?) animation ID='{}' ({})", managedAnimation.identifier(), managedAnimation);
             }
-        }
+        });
+    }
+
+    public void stopAllAnimations() {
+        animationMap.values().forEach(this::stopAnimation);
     }
 
     public void clearAnimations() {
         animationMap.clear();
     }
 
-    public Map<String, Animation> animationMap() {
+    public void destroy() {
+        if (animationMap != null) {
+            stopAllAnimations();
+            clearAnimations();
+            animationMap = null;
+        }
+    }
+
+    public Map<String, ManagedAnimation> animationMap() {
         return animationMap;
     }
 }

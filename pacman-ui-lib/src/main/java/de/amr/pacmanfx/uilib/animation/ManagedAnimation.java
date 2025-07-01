@@ -15,12 +15,16 @@ public abstract class ManagedAnimation {
     protected final String identifier;
     protected Animation animation;
 
+    protected abstract Animation createAnimation();
+
     protected ManagedAnimation(AnimationManager animationManager, String identifier) {
         this.animationManager = requireNonNull(animationManager);
         this.identifier = requireNonNull(identifier);
     }
 
-    protected abstract Animation createAnimation();
+    public String identifier() {
+        return identifier;
+    }
 
     public Optional<Animation> animation() {
         return Optional.ofNullable(animation);
@@ -29,14 +33,13 @@ public abstract class ManagedAnimation {
     public Animation getOrCreateAnimation() {
         if (animation == null) {
             animation = createAnimation();
-            animationManager.register(identifier, animation);
         }
         return animation;
     }
 
     public void destroy() {
+        animationManager.stopAnimation(this); // handles "embedded animation cannot be stopped" issue!
         if (animation != null) {
-            animation.stop();
             animation.setOnFinished(null);
             animation = null;
         }
