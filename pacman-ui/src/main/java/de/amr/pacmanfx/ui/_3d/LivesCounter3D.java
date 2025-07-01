@@ -30,6 +30,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class LivesCounter3D extends Group {
 
+    private static final int SHAPES_ROTATION_ZERO = 240;
+
     private final ObjectProperty<Color>         pillarColorProperty = new SimpleObjectProperty<>(Color.grayRgb(120));
     private final ObjectProperty<PhongMaterial> pillarMaterialProperty = new SimpleObjectProperty<>(new PhongMaterial());
     private final DoubleProperty                pillarHeightProperty = new SimpleDoubleProperty(8);
@@ -92,10 +94,9 @@ public class LivesCounter3D extends Group {
             // let Pac shape sit on top of plate
             pacShape.translateZProperty().bind(pillar.heightProperty().add(plateThicknessProperty).add(shapeRadius).negate());
 
-
             getChildren().add(pacShape);
         }
-        setInitialShapeRotation();
+        resetShapes();
         getChildren().addAll(standsGroup, light);
 
         lookingAroundAnimation = new ManagedAnimation(animationManager, "LivesCounter_LookingAround") {
@@ -105,15 +106,15 @@ public class LivesCounter3D extends Group {
                 for (Node pacShape : pacShapes) {
                     var rotation = new RotateTransition(Duration.seconds(10.0), pacShape);
                     rotation.setAxis(Rotate.Z_AXIS);
-                    rotation.setFromAngle(210);
-                    rotation.setToAngle(270);
+                    rotation.setFromAngle(SHAPES_ROTATION_ZERO- 30);
+                    rotation.setToAngle(SHAPES_ROTATION_ZERO + 30);
                     rotation.setInterpolator(Interpolator.LINEAR);
                     rotation.setCycleCount(Animation.INDEFINITE);
                     rotation.setAutoReverse(true);
                     rotation.setRate(theRNG().nextDouble(1, 6));
                     animation.getChildren().add(rotation);
                 }
-                setInitialShapeRotation();
+                resetShapes();
                 animation.setCycleCount(Animation.INDEFINITE);
                 return animation;
             }
@@ -146,10 +147,19 @@ public class LivesCounter3D extends Group {
         return lookingAroundAnimation;
     }
 
-    private void setInitialShapeRotation() {
+    public void destroy() {
+        livesCountProperty.unbind();
+        pillarMaterialProperty.unbind();
+        pillarColorProperty.unbind();
+        plateColorProperty.unbind();
+        plateMaterialProperty.unbind();
+        light.translateZProperty().unbind();
+    }
+
+    private void resetShapes() {
         for (Node shape : pacShapes) {
             shape.setRotationAxis(Rotate.Z_AXIS);
-            shape.setRotate(240);
+            shape.setRotate(SHAPES_ROTATION_ZERO);
         }
     }
 }

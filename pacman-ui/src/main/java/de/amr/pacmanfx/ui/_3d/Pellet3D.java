@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui._3d;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.geometry.Bounds;
+import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Scale;
 import javafx.util.Duration;
@@ -19,8 +20,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class Pellet3D implements Eatable3D {
 
-    private final Shape3D shape;
-    private final Animation hideAfterSmallDelay;
+    private Shape3D shape;
+    private Animation hideAfterSmallDelay;
 
     public Pellet3D(Shape3D shape, double radius) {
         this.shape = requireNonNull(shape);
@@ -32,6 +33,15 @@ public class Pellet3D implements Eatable3D {
 
         hideAfterSmallDelay = new PauseTransition(Duration.seconds(0.05));
         hideAfterSmallDelay.setOnFinished(e -> shape.setVisible(false));
+    }
+
+    public void destroy() {
+        hideAfterSmallDelay.stop();
+        hideAfterSmallDelay = null;
+        if (shape instanceof MeshView meshView) {
+            meshView.setMesh(null);
+            shape = null;
+        }
     }
 
     @Override

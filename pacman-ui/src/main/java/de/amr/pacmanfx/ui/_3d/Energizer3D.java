@@ -22,8 +22,8 @@ import static java.util.Objects.requireNonNull;
  * 3D energizer pellet.
  */
 public class Energizer3D extends Sphere implements Eatable3D {
-    private final ManagedAnimation pumpingAnimation;
-    private final ManagedAnimation hideAndEatAnimation;
+    private ManagedAnimation pumpingAnimation;
+    private ManagedAnimation hideAndEatAnimation;
     private Animation eatenAnimation;
 
     /**
@@ -60,6 +60,14 @@ public class Energizer3D extends Sphere implements Eatable3D {
                 return eatenAnimation == null? hide : new SequentialTransition(hide, eatenAnimation);
             }
         };
+    }
+
+    public void destroy() {
+        pumpingAnimation.stop();
+        hideAndEatAnimation.stop();
+        if (eatenAnimation != null) {
+            eatenAnimation.stop();
+        }
     }
 
     public ManagedAnimation pumpingAnimation() {

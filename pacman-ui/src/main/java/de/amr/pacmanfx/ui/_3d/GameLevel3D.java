@@ -22,6 +22,7 @@ import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer3D;
 import javafx.animation.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Point3D;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
@@ -86,21 +87,21 @@ public class GameLevel3D {
     private ManagedAnimation levelCompletedAnimation;
     private ManagedAnimation levelCompletedAnimationBeforeCutScene;
 
-    private final MeshView[] dressMeshViews = {
+    private MeshView[] dressMeshViews = {
             new MeshView(Model3DRepository.get().ghostDressMesh()),
             new MeshView(Model3DRepository.get().ghostDressMesh()),
             new MeshView(Model3DRepository.get().ghostDressMesh()),
             new MeshView(Model3DRepository.get().ghostDressMesh()),
     };
 
-    private final MeshView[] pupilsMeshViews = {
+    private MeshView[] pupilsMeshViews = {
             new MeshView(Model3DRepository.get().ghostPupilsMesh()),
             new MeshView(Model3DRepository.get().ghostPupilsMesh()),
             new MeshView(Model3DRepository.get().ghostPupilsMesh()),
             new MeshView(Model3DRepository.get().ghostPupilsMesh()),
     };
 
-    private final MeshView[] eyesMeshViews = new MeshView[] {
+    private MeshView[] eyesMeshViews = new MeshView[] {
             new MeshView(Model3DRepository.get().ghostEyeballsMesh()),
             new MeshView(Model3DRepository.get().ghostEyeballsMesh()),
             new MeshView(Model3DRepository.get().ghostEyeballsMesh()),
@@ -190,14 +191,7 @@ public class GameLevel3D {
         // otherwise the transparency is not working correctly.
         root.getChildren().add(mazeGroup);
 
-        PY_3D_DRAW_MODE.addListener((py,ov,drawMode) -> {
-            setDrawModeForTree(mazeGroup, drawMode);
-            setDrawModeForTree(levelCounter3D, drawMode);
-            setDrawModeForTree(livesCounter3D, drawMode);
-            setDrawModeForTree(pac3D.root(), drawMode);
-            ghosts3D.forEach(ghost3D -> setDrawModeForTree(ghost3D, drawMode));
-            Logger.info("Draw mode set to {}", drawMode);
-        });
+        PY_3D_DRAW_MODE.addListener(this::handleDrawModeChange);
 
         root.setMouseTransparent(true); // this increases performance, they say...
 
@@ -501,6 +495,16 @@ public class GameLevel3D {
         return flashing;
     }
 
+    private void handleDrawModeChange(ObservableValue<? extends DrawMode> py, DrawMode ov, DrawMode drawMode) {
+        setDrawModeForTree(mazeGroup, drawMode);
+        setDrawModeForTree(levelCounter3D, drawMode);
+        setDrawModeForTree(livesCounter3D, drawMode);
+        setDrawModeForTree(pac3D.root(), drawMode);
+        ghosts3D.forEach(ghost3D -> setDrawModeForTree(ghost3D, drawMode));
+        Logger.info("Draw mode set to {}", drawMode);
+    }
+
+
     // experiment
 
     private boolean inDestroyPhase;
@@ -525,24 +529,23 @@ public class GameLevel3D {
         for (MeshView meshView : dressMeshViews) {
             meshView.setMesh(null);
         }
-        Arrays.fill(dressMeshViews, null);
+        dressMeshViews = null;
 
         for (MeshView meshView : pupilsMeshViews) {
             meshView.setMesh(null);
         }
-        Arrays.fill(pupilsMeshViews, null);
+        pupilsMeshViews = null;
 
         for (MeshView meshView : eyesMeshViews) {
             meshView.setMesh(null);
         }
-        Arrays.fill(eyesMeshViews, null);
+        eyesMeshViews = null;
 
-        pellets3D.forEach(pellet3D -> {
-            if (pellet3D.shape3D() instanceof MeshView meshView) {
-                meshView.setMesh(null);
-            }
-        });
+        pellets3D.forEach(Pellet3D::destroy);
         pellets3D = null;
+
+        energizers3D.forEach(Energizer3D::destroy);
+        energizers3D = null;
 
         root.getChildren().clear();
         root = null;
@@ -550,29 +553,37 @@ public class GameLevel3D {
         mazeGroup.getChildren().clear();
         mazeGroup = null;
 
+        floor3D = null;
+
         if (maze3D != null) {
             maze3D.getChildren().clear();
             maze3D = null;
         }
 
+        ambientLight.colorProperty().unbind();
         ambientLight = null;
-        energizers3D = null;
-        floor3D = null;
-        Arrays.fill(livesCounterShapes, null);
+
         livesCounterShapes = null;
-        levelCounter3D = null;
+
+        livesCounter3D.destroy();
         livesCounter3D = null;
+
+        levelCounter3D = null;
+
         pac3D = null;
         ghosts3D = null;
-        messageView = null;
         bonus3D = null;
 
+        messageView = null;
+
+        animationManager.stopAllAnimations();
+        animationManager.clearAnimations();
         animationManager = null;
         levelCompletedAnimation = null;
         levelCompletedAnimationBeforeCutScene = null;
         wallColorFlashingAnimation = null;
         wallsDisappearingAnimation = null;
 
-        System.gc();
+        PY_3D_DRAW_MODE.removeListener(this::handleDrawModeChange);
     }
 }
