@@ -35,6 +35,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiPredicate;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -190,6 +191,14 @@ public interface Ufx {
     static Animation doAfterSec(double delaySeconds, Animation animation) {
         requireNonNull(animation);
         animation.setDelay(Duration.seconds(delaySeconds).add(animation.getDelay()));
+        return animation;
+    }
+
+    static Animation doAfterSec(double delaySeconds, Supplier<Animation> animationSupplier) {
+        requireNonNull(animationSupplier);
+        Animation animation = animationSupplier.get();
+        requireNonNull(animation);
+        animation.setDelay(animation.getDelay().add(Duration.seconds(delaySeconds)));
         return animation;
     }
 

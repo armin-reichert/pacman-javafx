@@ -27,7 +27,6 @@ import javafx.geometry.Point3D;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -79,16 +78,17 @@ public class GameLevel3D {
         }
     };
 
-    private final IntegerProperty livesCountPy = new SimpleIntegerProperty(0);
-    private final DoubleProperty obstacleBaseHeightPy = new SimpleDoubleProperty(Settings3D.OBSTACLE_3D_BASE_HEIGHT);
-    private final DoubleProperty wallOpacityPy = new SimpleDoubleProperty(1);
-    private final DoubleProperty houseBaseHeightPy = new SimpleDoubleProperty(Settings3D.HOUSE_3D_BASE_HEIGHT);
-    private final BooleanProperty houseLightOnPy = new SimpleBooleanProperty(false);
+    private final IntegerProperty livesCountPy         = new SimpleIntegerProperty(0);
+    private final DoubleProperty  obstacleBaseHeightPy = new SimpleDoubleProperty(Settings3D.OBSTACLE_3D_BASE_HEIGHT);
+    private final DoubleProperty  wallOpacityPy        = new SimpleDoubleProperty(1);
+    private final DoubleProperty  houseBaseHeightPy    = new SimpleDoubleProperty(Settings3D.HOUSE_3D_BASE_HEIGHT);
+    private final BooleanProperty houseLightOnPy       = new SimpleBooleanProperty(false);
 
     private AnimationManager animationManager;
     private ManagedAnimation wallColorFlashingAnimation;
     private ManagedAnimation wallsDisappearingAnimation;
     private ManagedAnimation levelCompletedAnimation;
+    private ManagedAnimation levelCompletedAnimationBeforeCutScene;
 
     private final MeshView[] dressMeshViews = {
             new MeshView(Model3DRepository.get().ghostDressMesh()),
@@ -116,7 +116,11 @@ public class GameLevel3D {
     private Group maze3D = new Group();
     private ArcadeHouse3D house3D;
 
-    private final PhongMaterial wallTopMaterial = new PhongMaterial();
+    private PhongMaterial wallBaseMaterial = new PhongMaterial();
+    private PhongMaterial wallTopMaterial = new PhongMaterial();
+    private PhongMaterial cornerBaseMaterial= new PhongMaterial();
+    private PhongMaterial cornerTopMaterial = new PhongMaterial();
+
     private Color wallBaseColor;
     private Color wallTopColor;
 
@@ -190,97 +194,48 @@ public class GameLevel3D {
             protected Animation createAnimation() {
                 int levelNumber = gameLevel.number();
                 int numMazeFlashes = gameLevel.data().numFlashes();
-                if (theGame().cutSceneNumber(levelNumber).isPresent()) {
-                    // when a cut scene follows, only play the maze flashing animation
-                    return new SequentialTransition(
-                        doAfterSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
-                        doAfterSec(0.5, createMazeFlashAnimation(numMazeFlashes)),
-                        doAfterSec(0.5, () -> gameLevel.pac().hide())
-                    );
-                }
-                else {
-                    boolean showFlashMessage = randomInt(1, 1000) < 250; // every 4th time also show a message
-                    return new SequentialTransition(
-                        now(() -> {
-                            livesCounter3D.light().setLightOn(false);
-                            if (showFlashMessage) {
-                                theUI().showFlashMessageSec(3, theAssets().localizedLevelCompleteMessage(levelNumber));
-                            }
-                        }),
-                        doAfterSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
-                        doAfterSec(0.5, createMazeFlashAnimation(numMazeFlashes)),
-                        doAfterSec(0.5, () -> gameLevel.pac().hide()),
-                        doAfterSec(0.5, createLevelRotateAnimation()),
-                        doAfterSec(0.5, () -> theSound().playLevelCompleteSound()),
-                        doAfterSec(0.5, wallsDisappearingAnimation.getOrCreateAnimation()),
-                        doAfterSec(1.0, () -> theSound().playLevelChangedSound())
-                    );
-                }
+                boolean showFlashMessage = randomInt(1, 1000) < 250; // every 4th time also show a message
+                return new SequentialTransition(
+                    now(() -> {
+                        livesCounter3D.light().setLightOn(false);
+                        if (showFlashMessage) {
+                            theUI().showFlashMessageSec(3, theAssets().localizedLevelCompleteMessage(levelNumber));
+                        }
+                    }),
+                    doAfterSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
+                    doAfterSec(0.5, createMazeFlashAnimation(numMazeFlashes)),
+                    doAfterSec(0.5, () -> gameLevel.pac().hide()),
+                    doAfterSec(0.5, () -> {
+                            var spin360 = new RotateTransition(Duration.seconds(1.5), root);
+                            spin360.setAxis(theRNG().nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
+                            spin360.setFromAngle(0);
+                            spin360.setToAngle(360);
+                            spin360.setInterpolator(Interpolator.LINEAR);
+                            return spin360;
+                    }),
+                    doAfterSec(0.5, () -> theSound().playLevelCompleteSound()),
+                    doAfterSec(0.5, wallsDisappearingAnimation.getOrCreateAnimation()),
+                    doAfterSec(1.0, () -> theSound().playLevelChangedSound())
+                );
+            }
+        };
+
+        levelCompletedAnimationBeforeCutScene = new ManagedAnimation(animationManager, "Level_Complete_Before_CutScene") {
+            @Override
+            protected Animation createAnimation() {
+                int levelNumber = gameLevel.number();
+                int numMazeFlashes = gameLevel.data().numFlashes();
+                // when a cut scene follows, only play the maze flashing animation
+                return new SequentialTransition(
+                    doAfterSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
+                    doAfterSec(0.5, createMazeFlashAnimation(numMazeFlashes)),
+                    doAfterSec(0.5, () -> gameLevel.pac().hide())
+                );
             }
         };
     }
 
     public Group root() { return root; }
-
-    private boolean inDestroyPhase;
-
-    public boolean inDestroyPhase() {
-        return inDestroyPhase;
-    }
-
-    // Attempt to get objects garbage-collected
-    public void destroy() {
-        if (inDestroyPhase) {
-            Logger.warn("destroy() called while in destroy phase?");
-            return;
-        }
-        inDestroyPhase = true;
-
-        if (maze3D != null) {
-            maze3D.getChildren().clear();
-            maze3D = null;
-        }
-
-        for (MeshView meshView : dressMeshViews) {
-            meshView.setMesh(null);
-        }
-        Arrays.fill(dressMeshViews, null);
-
-        for (MeshView meshView : pupilsMeshViews) {
-            meshView.setMesh(null);
-        }
-        Arrays.fill(pupilsMeshViews, null);
-
-        for (MeshView meshView : eyesMeshViews) {
-            meshView.setMesh(null);
-        }
-        Arrays.fill(eyesMeshViews, null);
-
-        pellets3D.forEach(pellet3D -> {
-            if (pellet3D.shape3D() instanceof MeshView meshView) {
-                meshView.setMesh(null);
-            }
-        });
-        pellets3D = null;
-
-        animationManager = null;
-        levelCompletedAnimation = null;
-        wallColorFlashingAnimation = null;
-        wallsDisappearingAnimation = null;
-
-        root = null;
-        mazeGroup = null;
-        energizers3D = null;
-        floor3D = null;
-        levelCounter3D = null;
-        livesCounter3D = null;
-        pac3D = null;
-        ghosts3D = null;
-        messageView = null;
-        bonus3D = null;
-
-        System.gc();
-    }
 
     /**
      * Called on each clock tick (frame).
@@ -341,6 +296,7 @@ public class GameLevel3D {
     public double floorThickness() { return floor3D.getDepth(); }
 
     public ManagedAnimation levelCompletedAnimation() { return levelCompletedAnimation; }
+    public ManagedAnimation levelCompletedAnimationBeforeCutScene() { return levelCompletedAnimationBeforeCutScene; }
     public ManagedAnimation wallColorFlashingAnimation() { return wallColorFlashingAnimation; }
 
     private void createGhosts3D(GameLevel gameLevel) {
@@ -375,7 +331,6 @@ public class GameLevel3D {
         // Add some contrast with floor if wall fill color is black:
         wallTopColor = colorScheme.fill().equals(Color.BLACK) ? Color.grayRgb(42) : colorScheme.fill();
 
-        PhongMaterial wallBaseMaterial = new PhongMaterial();
         wallBaseMaterial.diffuseColorProperty().bind(Bindings.createObjectBinding(
                 () -> opaqueColor(wallBaseColor, wallOpacityPy.get()), wallOpacityPy
         ));
@@ -384,11 +339,9 @@ public class GameLevel3D {
         wallTopMaterial.setDiffuseColor(wallTopColor);
         wallTopMaterial.setSpecularColor(wallTopColor.brighter());
 
-        PhongMaterial cornerBaseMaterial = new PhongMaterial();
         cornerBaseMaterial.setDiffuseColor(wallBaseColor); // for now use same color
         cornerBaseMaterial.specularColorProperty().bind(cornerBaseMaterial.diffuseColorProperty().map(Color::brighter));
 
-        PhongMaterial cornerTopMaterial = new PhongMaterial();
         cornerTopMaterial.setDiffuseColor(wallTopColor);
         cornerTopMaterial.specularColorProperty().bind(cornerTopMaterial.diffuseColorProperty().map(Color::brighter));
 
@@ -535,20 +488,13 @@ public class GameLevel3D {
         if (bonus3D != null) {
             mazeGroup.getChildren().remove(bonus3D);
         }
-        Image bonusSymbolImage = theUI().configuration().bonusSymbolImage(bonus.symbol());
-        Image bonusValueImage  = theUI().configuration().bonusValueImage(bonus.symbol());
-        bonus3D = new Bonus3D(animationManager, bonus, bonusSymbolImage, bonusValueImage);
-        bonus3D.showEdible();
+        bonus3D = new Bonus3D(
+            animationManager,
+            bonus,
+            theUI().configuration().bonusSymbolImage(bonus.symbol()),
+            theUI().configuration().bonusSymbolImage(bonus.symbol()));
         mazeGroup.getChildren().add(bonus3D);
-    }
-
-    private Animation createLevelRotateAnimation() {
-        var rotation = new RotateTransition(Duration.seconds(1.5), root);
-        rotation.setAxis(theRNG().nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
-        rotation.setFromAngle(0);
-        rotation.setToAngle(360);
-        rotation.setInterpolator(Interpolator.LINEAR);
-        return rotation;
+        bonus3D.showEdible();
     }
 
     private Animation createMazeFlashAnimation(int numFlashes) {
@@ -560,5 +506,67 @@ public class GameLevel3D {
         animation.setAutoReverse(true);
         animation.setCycleCount(2 * numFlashes);
         return animation;
+    }
+
+    // testing
+
+    private boolean inDestroyPhase;
+
+    public boolean inDestroyPhase() {
+        return inDestroyPhase;
+    }
+
+    // Attempt to get objects garbage-collected
+    public void destroy() {
+        if (inDestroyPhase) {
+            Logger.warn("destroy() called while in destroy phase?");
+            return;
+        }
+        inDestroyPhase = true;
+
+        if (maze3D != null) {
+            maze3D.getChildren().clear();
+            maze3D = null;
+        }
+
+        for (MeshView meshView : dressMeshViews) {
+            meshView.setMesh(null);
+        }
+        Arrays.fill(dressMeshViews, null);
+
+        for (MeshView meshView : pupilsMeshViews) {
+            meshView.setMesh(null);
+        }
+        Arrays.fill(pupilsMeshViews, null);
+
+        for (MeshView meshView : eyesMeshViews) {
+            meshView.setMesh(null);
+        }
+        Arrays.fill(eyesMeshViews, null);
+
+        pellets3D.forEach(pellet3D -> {
+            if (pellet3D.shape3D() instanceof MeshView meshView) {
+                meshView.setMesh(null);
+            }
+        });
+        pellets3D = null;
+
+        animationManager = null;
+        levelCompletedAnimation = null;
+        wallColorFlashingAnimation = null;
+        wallsDisappearingAnimation = null;
+
+        root = null;
+        mazeGroup = null;
+        energizers3D = null;
+        floor3D = null;
+        levelCounter3D = null;
+        livesCounter3D = null;
+        pac3D = null;
+        ghosts3D = null;
+        messageView = null;
+        bonus3D = null;
+
+        System.gc();
     }
 }

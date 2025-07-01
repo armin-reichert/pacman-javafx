@@ -293,13 +293,17 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 theGameState().timer().resetIndefiniteTime(); // expires when animation ends
                 theSound().stopAll();
                 level3D.complete();
+                boolean cutSceneFollows = theGame().cutSceneNumber(theGameLevel().number()).isPresent();
                 var animation = new SequentialTransition(
-                    Ufx.doAfterSec(3, () -> {
+                    doAfterSec(2, () -> {
                         perspectiveManager.perspectiveIDProperty().unbind();
                         perspectiveManager.setPerspective(PerspectiveID.TOTAL);
                     }),
-                    level3D.levelCompletedAnimation().getOrCreateAnimation(),
-                    Ufx.doAfterSec(1, () -> {
+                    pauseSec(1),
+                    cutSceneFollows
+                        ? level3D.levelCompletedAnimationBeforeCutScene().getOrCreateAnimation()
+                        : level3D.levelCompletedAnimation().getOrCreateAnimation(),
+                    doAfterSec(1, () -> {
                         perspectiveManager.perspectiveIDProperty().bind(PY_3D_PERSPECTIVE);
                         animationManager.stopAllAnimations();
                         level3D.destroy();
