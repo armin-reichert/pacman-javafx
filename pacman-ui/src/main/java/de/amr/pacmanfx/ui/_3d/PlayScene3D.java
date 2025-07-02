@@ -19,7 +19,6 @@ import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.uilib.CameraControlledView;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.SequentialTransition;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
@@ -257,8 +256,8 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             case HUNTING -> {
                 level3D.pac3D().init();
                 level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(theGameLevel()));
-                level3D.energizers3D().forEach(energizer3D -> energizer3D.pumpingAnimation().play(ManagedAnimation.FROM_START));
-                level3D.livesCounter3D().lookingAroundAnimation().play(ManagedAnimation.CONTINUE);
+                level3D.energizers3D().forEach(energizer3D -> energizer3D.pumpingAnimation().playFromStart());
+                level3D.livesCounter3D().lookingAroundAnimation().playOrContinue();
             }
             case PACMAN_DYING -> {
                 theGameState().timer().resetIndefiniteTime(); // expires when animation ends
@@ -352,8 +351,8 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             }
             case TESTING_LEVELS_SHORT, TESTING_LEVELS_MEDIUM -> {
                 replaceGameLevel3D(); //TODO check when to destroy previous level
-                level3D.livesCounter3D().lookingAroundAnimation().play(ManagedAnimation.FROM_START);
-                level3D.energizers3D().forEach(energizer3D -> energizer3D.pumpingAnimation().play(ManagedAnimation.FROM_START));
+                level3D.livesCounter3D().lookingAroundAnimation().playFromStart();
+                level3D.energizers3D().forEach(energizer3D -> energizer3D.pumpingAnimation().playFromStart());
                 showLevelTestMessage(theGameLevel().number());
             }
             default -> Logger.error("Unexpected game state '{}' on level start", theGameState());
@@ -375,7 +374,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         if (isOneOf(theGameState(), GameState.HUNTING, GameState.GHOST_DYING)) { //TODO check this
             level3D.energizers3D()
                 .filter(energizer3D -> energizer3D.shape3D().isVisible())
-                .forEach(energizer3D -> energizer3D.pumpingAnimation().play(ManagedAnimation.FROM_START));
+                .forEach(energizer3D -> energizer3D.pumpingAnimation().playFromStart());
         }
         theGameLevel().pac().show();
         theGameLevel().ghosts().forEach(Ghost::show);
@@ -386,7 +385,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             if (theGameLevel().pac().powerTimer().isRunning()) {
                 theSound().playPacPowerSound();
             }
-            level3D.livesCounter3D().lookingAroundAnimation().play(ManagedAnimation.FROM_START);
+            level3D.livesCounter3D().lookingAroundAnimation().playFromStart();
         }
 
         subScene3D.setFill(Color.TRANSPARENT);
@@ -477,7 +476,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     @Override
     public void onPacGetsPower(GameEvent event) {
         level3D.pac3D().setMovementPowerMode(true);
-        level3D.wallColorFlashingAnimation().play(ManagedAnimation.FROM_START);
+        level3D.wallColorFlashingAnimation().playFromStart();
         theSound().stopSiren();
         theSound().playPacPowerSound();
     }

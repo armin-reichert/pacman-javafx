@@ -52,23 +52,23 @@ public abstract class ManagedAnimation {
         animation = null;
     }
 
-    public void play(boolean playMode) {
-        getOrCreateAnimation();
-        if (animation.getStatus() != Animation.Status.RUNNING) {
-            if (playMode == FROM_START) {
-                Logger.trace("Playing animation with label '{}' from start", label);
-                animation.playFromStart();
-            } else if (playMode == CONTINUE) {
-                Logger.trace("Continuing animation with label '{}'", label);
-                animation.play();
-            }
-        }
+    public void playFromStart() {
+        play(FROM_START);
+    }
+
+    public void playOrContinue() {
+        play(CONTINUE);
+    }
+
+    protected void play(boolean playMode) {
+        animationManager.playAnimation(this, playMode);
+    }
+
+    public void pause() {
+        animationManager.pauseAnimation(this);
     }
 
     public void stop() {
-        if (animation != null && animation.getStatus() != Animation.Status.STOPPED) {
-            Logger.trace("Stopping animation with label '{}'", label);
-            animation.stop();
-        }
+        animationManager.stopAnimation(this);
     }
 }

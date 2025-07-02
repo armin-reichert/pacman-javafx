@@ -69,7 +69,7 @@ public class GameLevel3D {
         @Override
         protected void invalidated() {
             if (houseOpenPy.get()) {
-                house3D.doorOpenCloseAnimation().play(ManagedAnimation.FROM_START);
+                house3D.doorOpenCloseAnimation().playFromStart();
             }
         }
     };
@@ -152,7 +152,7 @@ public class GameLevel3D {
             levelCounter3D = new LevelCounter3D(animationManager, theGame().hud().levelCounter());
             levelCounter3D.setTranslateX(gameLevel.worldMap().numCols() * TS - 2 * TS);
             levelCounter3D.setTranslateY(2 * TS);
-            levelCounter3D.spinningAnimation().play(ManagedAnimation.FROM_START);
+            levelCounter3D.spinningAnimation().playFromStart();
             root.getChildren().add(levelCounter3D);
         }
 
@@ -167,7 +167,7 @@ public class GameLevel3D {
             livesCounter3D.pillarColorProperty().set(Settings3D.LIVES_COUNTER_PILLAR_COLOR);
             livesCounter3D.plateColorProperty().set(Settings3D.LIVES_COUNTER_PLATE_COLOR);
             livesCounter3D.light().colorProperty().set(Color.CORNFLOWERBLUE);
-            livesCounter3D.lookingAroundAnimation().play(ManagedAnimation.FROM_START);
+            livesCounter3D.lookingAroundAnimation().playFromStart();
             root.getChildren().add(livesCounter3D);
         }
 
@@ -464,7 +464,7 @@ public class GameLevel3D {
         messageView.setTranslateY(y);
         messageView.setTranslateZ(halfHeight); // just under floor
         root.getChildren().add(messageView);
-        messageView.movementAnimation().play(ManagedAnimation.FROM_START);
+        messageView.movementAnimation().playFromStart();
     }
 
     public void updateBonus3D(Bonus bonus) {

@@ -146,7 +146,7 @@ public class MutatingGhost3D extends Group {
                 numberBox.setVisible(true);
                 ghost3D.setVisible(false);
                 ghost3D.dressAnimation().stop();
-                pointsAnimation.play(ManagedAnimation.FROM_START);
+                pointsAnimation.playFromStart();
             } else {
                 numberBox.setVisible(false);
                 ghost3D.setVisible(true);
@@ -158,7 +158,7 @@ public class MutatingGhost3D extends Group {
                 }
                 pointsAnimation.stop();
                 if (ghost.moveInfo().tunnelEntered) {
-                    brakeAnimation.play(ManagedAnimation.FROM_START);
+                    brakeAnimation.playFromStart();
                 }
             }
         });
@@ -193,7 +193,7 @@ public class MutatingGhost3D extends Group {
     public void update(GameLevel gameLevel) {
         selectAppearance(gameLevel);
         if (ghost.isVisible()) {
-            ghost3D.dressAnimation().play(ManagedAnimation.CONTINUE);
+            ghost3D.dressAnimation().playOrContinue();
         } else {
             ghost3D.dressAnimation().stop();
         }

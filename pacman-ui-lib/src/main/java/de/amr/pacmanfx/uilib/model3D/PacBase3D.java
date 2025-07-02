@@ -142,8 +142,8 @@ public class PacBase3D {
             updateLight();
         }
         if (pac.isAlive() && !pac.isStandingStill()) {
-            movementAnimation.play(ManagedAnimation.CONTINUE);
-            chewingAnimation.play(ManagedAnimation.CONTINUE);
+            movementAnimation.playOrContinue();
+            chewingAnimation.playOrContinue();
         } else {
             movementAnimation.stop();
             chewingAnimation.stop();

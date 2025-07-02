@@ -134,7 +134,7 @@ public class Bonus3D extends Box {
         setVisible(true);
         setWidth(BONUS_3D_SYMBOL_WIDTH);
         setMaterial(symbolTexture);
-        edibleAnimation.play(ManagedAnimation.FROM_START);
+        edibleAnimation.playFromStart();
     }
 
     public void showEaten() {
@@ -144,7 +144,7 @@ public class Bonus3D extends Box {
         setMaterial(pointsTexture);
         setRotationAxis(Rotate.X_AXIS);
         setRotate(0);
-        eatenAnimation.play(ManagedAnimation.FROM_START);
+        eatenAnimation.playFromStart();
     }
 
     public void expire() {

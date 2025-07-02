@@ -9,6 +9,7 @@ import org.tinylog.Logger;
 
 import java.util.*;
 
+import static de.amr.pacmanfx.uilib.animation.ManagedAnimation.CONTINUE;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -27,6 +28,19 @@ public class AnimationManager {
             String id = label + "_" + UUID.randomUUID();
             animationMap.put(id, managedAnimation);
             Logger.info("Animation registered: ID='{}'", id);
+        }
+    }
+
+    public void playAnimation(ManagedAnimation ma, boolean playMode) {
+        ma.getOrCreateAnimation();
+        if (ma.animation.getStatus() != Animation.Status.RUNNING) {
+            if (playMode == ManagedAnimation.FROM_START) {
+                Logger.trace("Playing animation with label '{}' from start", ma.label);
+                ma.animation.playFromStart();
+            } else if (playMode == CONTINUE) {
+                Logger.trace("Continuing animation with label '{}'", ma.label);
+                ma.animation.play();
+            }
         }
     }
 
