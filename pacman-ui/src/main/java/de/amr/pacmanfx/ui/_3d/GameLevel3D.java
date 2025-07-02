@@ -494,6 +494,7 @@ public class GameLevel3D {
     }
 
     private void handleDrawModeChange(ObservableValue<? extends DrawMode> py, DrawMode ov, DrawMode drawMode) {
+        if (inDestroyPhase()) return; //TODO how can that be?
         setDrawModeForTree(mazeGroup, drawMode);
         setDrawModeForTree(levelCounter3D, drawMode);
         setDrawModeForTree(livesCounter3D, drawMode);
@@ -503,6 +504,7 @@ public class GameLevel3D {
     }
 
     private void handleWallHeightChange(ObservableValue<? extends Number> py, Number ov, Number newHeight) {
+        if (inDestroyPhase()) return; //TODO how can that be?
         obstacleBaseHeightPy.set(newHeight.doubleValue());
     }
 
@@ -522,6 +524,12 @@ public class GameLevel3D {
         }
         inDestroyPhase = true;
         Logger.info("Destroying game level 3D, clearing resources...");
+
+        PY_3D_DRAW_MODE.removeListener(this::handleDrawModeChange);
+        Logger.info("Removed draw mode listener");
+
+        PY_3D_WALL_HEIGHT.removeListener(this::handleWallHeightChange);
+        Logger.info("Removed wall height listener");
 
         wallBaseMaterial = null;
         wallTopMaterial = null;
@@ -600,11 +608,5 @@ public class GameLevel3D {
             animationManager.removeAllAnimations();
             Logger.info("Stopped and removed all managed animation");
         }
-
-        PY_3D_DRAW_MODE.removeListener(this::handleDrawModeChange);
-        Logger.info("Removed draw mode listener");
-
-        PY_3D_WALL_HEIGHT.removeListener(this::handleWallHeightChange);
-        Logger.info("Removed wall height listener");
     }
 }
