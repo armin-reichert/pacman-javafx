@@ -54,15 +54,17 @@ public class TerrainMapRenderer3D {
         return false;
     }
 
-    private PhongMaterial wallBaseMaterial = new PhongMaterial();
-    private PhongMaterial wallTopMaterial = new PhongMaterial();
-    private PhongMaterial cornerBaseMaterial = new PhongMaterial();
-    private PhongMaterial cornerTopMaterial = new PhongMaterial();
+    private PhongMaterial wallBaseMaterial;
+    private PhongMaterial wallTopMaterial;
+    private PhongMaterial cornerBaseMaterial;
+    private PhongMaterial cornerTopMaterial;
 
     private DoubleProperty wallBaseHeightPy = new SimpleDoubleProperty(3.5);
     private float wallTopHeight = 0.2f;
     private float wallThickness = 2;
     private boolean oShapeFilled = true;
+
+    public TerrainMapRenderer3D() {}
 
     public void destroy() {
         wallBaseMaterial = null;

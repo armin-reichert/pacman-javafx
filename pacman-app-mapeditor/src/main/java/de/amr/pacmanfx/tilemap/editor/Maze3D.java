@@ -147,6 +147,7 @@ public class Maze3D extends Group {
                 parseColor(MS_PACMAN_COLOR_WALL_STROKE));
         Color wallTopColor = getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_FILL,
                 parseColor(MS_PACMAN_COLOR_WALL_FILL));
+
         r3D.setWallBaseHeightProperty(wallBaseHeightPy);
         r3D.setWallBaseMaterial(coloredMaterial(wallBaseColor));
         r3D.setWallTopMaterial(coloredMaterial(wallTopColor));
