@@ -63,6 +63,10 @@ public class Ghost3D extends Group {
                 )
             );
             flashingTimeline.setCycleCount(numFlashes);
+            flashingTimeline.setOnFinished(e -> {
+                dressColorPy.set(frightenedDressColor);
+                pupilsColorPy.set(frightenedPupilsColor);
+            });
             return flashingTimeline;
         }
     }
