@@ -581,6 +581,7 @@ public class GameLevel3D {
         root = null;
         Logger.info("Removed all child nodes of game level 3D root ");
 
+        mazeGroup.getChildren().clear();
         mazeGroup = null;
 
         if (r3D != null) {
