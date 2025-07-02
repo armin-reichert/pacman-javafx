@@ -7,9 +7,7 @@ package de.amr.pacmanfx.uilib.animation;
 import javafx.animation.Animation;
 import org.tinylog.Logger;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static java.util.Objects.requireNonNull;
 
@@ -32,6 +30,22 @@ public class AnimationManager {
         }
     }
 
+    public void pauseAnimation(ManagedAnimation ma) {
+        requireNonNull(ma);
+        ma.animation().ifPresent(animation -> {
+            try {
+                if (animation.getStatus() == Animation.Status.PAUSED) {
+                    Logger.debug("Already paused: animation with label='{}' ({})", ma.label(), ma);
+                } else {
+                    animation.pause();
+                    Logger.debug("Paused animation with label='{}' ({})", ma.label(), ma);
+                }
+            } catch (IllegalStateException x) {
+                Logger.warn("Could not pause (embedded?) animation with label='{}' ({})", ma.label(), ma);
+            }
+        });
+    }
+
     public void stopAnimation(ManagedAnimation ma) {
         requireNonNull(ma);
         ma.animation().ifPresent(animation -> {
@@ -48,6 +62,10 @@ public class AnimationManager {
         });
     }
 
+    public void pauseAllAnimations() {
+        animationMap.values().forEach(this::pauseAnimation);
+    }
+
     public void stopAllAnimations() {
         animationMap.values().forEach(this::stopAnimation);
     }
@@ -58,6 +76,6 @@ public class AnimationManager {
     }
 
     public Map<String, ManagedAnimation> animationMap() {
-        return animationMap;
+        return Collections.unmodifiableMap(animationMap);
     }
 }
