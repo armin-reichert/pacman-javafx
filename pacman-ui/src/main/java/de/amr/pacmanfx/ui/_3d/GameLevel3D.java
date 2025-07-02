@@ -80,7 +80,7 @@ public class GameLevel3D {
     private final DoubleProperty  houseBaseHeightPy    = new SimpleDoubleProperty(Settings3D.HOUSE_3D_BASE_HEIGHT);
     private final BooleanProperty houseLightOnPy       = new SimpleBooleanProperty(false);
 
-    private final AnimationManager animationManager;
+    private final AnimationManager animationManager = new AnimationManager();
     private ManagedAnimation wallColorFlashingAnimation;
     private ManagedAnimation wallsDisappearingAnimation;
     private ManagedAnimation levelCompletedAnimation;
@@ -133,13 +133,9 @@ public class GameLevel3D {
 
     // Note: The order in which children are added to the root matters!
     // Walls and house must be added *after* the actors, otherwise the transparency is not working correctly.
-    public GameLevel3D(
-        GameLevel gameLevel,
-        AnimationManager animationManager,
-        WorldMapColorScheme colorScheme)
+    public GameLevel3D(GameLevel gameLevel, WorldMapColorScheme colorScheme)
     {
         requireNonNull(gameLevel);
-        this.animationManager = requireNonNull(animationManager);
 
         {
             ambientLight = new AmbientLight();
@@ -338,6 +334,7 @@ public class GameLevel3D {
     public Color floorColor() { return PY_3D_FLOOR_COLOR.get(); }
     public double floorThickness() { return floor3D.getDepth(); }
 
+    public AnimationManager animationManager() { return animationManager; }
     public ManagedAnimation levelCompletedAnimation() { return levelCompletedAnimation; }
     public ManagedAnimation levelCompletedAnimationBeforeCutScene() { return levelCompletedAnimationBeforeCutScene; }
     public ManagedAnimation wallColorFlashingAnimation() { return wallColorFlashingAnimation; }
@@ -376,6 +373,7 @@ public class GameLevel3D {
     }
 
     public void complete() {
+        animationManager.stopAllAnimations();
         // hide explicitly because level might have been completed using cheat!
         pellets3D.forEach(pellet3D -> pellet3D.shape3D().setVisible(false));
         energizers3D.forEach(energizer3D -> {
@@ -383,10 +381,7 @@ public class GameLevel3D {
             energizer3D.shape3D().setVisible(false);
         });
         house3D.setDoorVisible(false);
-        wallColorFlashingAnimation.stop();
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
-        levelCounter3D.spinningAnimation().stop();
-        livesCounter3D.lookingAroundAnimation().stop();
     }
 
     private Box createFloor3D(double sizeX, double sizeY) {
@@ -532,16 +527,13 @@ public class GameLevel3D {
         PY_3D_WALL_HEIGHT.removeListener(this::handleWallHeightChange);
         Logger.info("Removed wall height listener");
 
-
-        if (animationManager != null) {
-            animationManager.stopAllAnimations();
-            animationManager.removeAllAnimations();
-            wallColorFlashingAnimation = null;
-            wallsDisappearingAnimation = null;
-            levelCompletedAnimation = null;
-            levelCompletedAnimationBeforeCutScene = null;
-            Logger.info("Stopped and removed all managed animations");
-        }
+        animationManager.stopAllAnimations();
+        animationManager.removeAllAnimations();
+        wallColorFlashingAnimation = null;
+        wallsDisappearingAnimation = null;
+        levelCompletedAnimation = null;
+        levelCompletedAnimationBeforeCutScene = null;
+        Logger.info("Stopped and removed all managed animations");
 
         wallBaseMaterial = null;
         wallTopMaterial = null;

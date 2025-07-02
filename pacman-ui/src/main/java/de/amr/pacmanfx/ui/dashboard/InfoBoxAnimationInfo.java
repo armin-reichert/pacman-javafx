@@ -82,25 +82,21 @@ public class InfoBoxAnimationInfo extends InfoBox {
         super.init();
         tableView.setPrefWidth(300);
         tableView.setPrefHeight(600);
-
-        theGameEventManager().addEventListener(new DefaultGameEventListener() {
-            @Override
-            public void onLevelStarted(GameEvent e) {
-                theUI().currentGameScene().ifPresent(gameScene -> {
-                    animationManager = gameScene instanceof PlayScene3D playScene3D ? playScene3D.animationManager() : null;
-                    updateTableData();
-                });
-            }
-        });
-        refreshTimer.play();
     }
 
     @Override
     public void update() {
         super.update();
         tableView.setPrefHeight(theUI().stage().getHeight() * 0.85);
+        if (animationManager == null && theUI().currentGameScene().isPresent()) {
+            if (theUI().currentGameScene().get() instanceof PlayScene3D playScene3D) {
+                playScene3D.level3D().ifPresent(gameLevel3D -> {
+                    animationManager = gameLevel3D.animationManager();
+                    refreshTimer.play();
+                });
+            }
+        }
     }
-
 
     private void updateTableData() {
         if (!isVisible()) return;
@@ -108,6 +104,7 @@ public class InfoBoxAnimationInfo extends InfoBox {
         if (animationManager != null) {
             tableModel.addAll(createTableDataSortedByKey(Animation.Status.RUNNING));
             tableModel.addAll(createTableDataSortedByKey(Animation.Status.PAUSED));
+            tableModel.addAll(createTableDataSortedByKey(Animation.Status.STOPPED));
             Logger.trace("Animation table updated");
         }
     }

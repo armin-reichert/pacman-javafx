@@ -19,9 +19,7 @@ import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.uilib.CameraControlledView;
-import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import javafx.animation.SequentialTransition;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
@@ -33,10 +31,7 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.isOneOf;
@@ -57,7 +52,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class PlayScene3D implements GameScene, CameraControlledView {
 
-    protected final AnimationManager animationManager = new AnimationManager();
     protected final Group root = new Group();
     protected final SubScene subScene3D;
     protected final PerspectiveCamera camera = new PerspectiveCamera(true);
@@ -90,8 +84,8 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         perspectiveManager = new PerspectiveManager(subScene3D);
     }
 
-    public AnimationManager animationManager() {
-        return animationManager;
+    public Optional<GameLevel3D> level3D() {
+        return level3D != null && !level3D.inDestroyPhase() ? Optional.of(level3D) : Optional.empty();
     }
 
     @Override
@@ -197,8 +191,6 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     public final void end() {
         theSound().stopAll();
         clearActionBindings();
-        animationManager.stopAllAnimations();
-        animationManager.removeAllAnimations();
         perspectiveManager.perspectiveIDProperty().unbind();
         if (level3D != null) {
             Platform.runLater(() -> {
@@ -308,7 +300,6 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                         : level3D.levelCompletedAnimation().getOrCreateAnimation(),
                     doAfterSec(1, () -> {
                         perspectiveManager.perspectiveIDProperty().bind(PY_3D_PERSPECTIVE);
-                        animationManager.stopAllAnimations();
                         theGameController().letCurrentGameStateExpire();
                     })
                 );
@@ -333,7 +324,6 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 theSound().playGameOverSound();
                 level3D.energizers3D().forEach(energizer3D -> energizer3D.shape3D().setVisible(false));
                 level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
-                animationManager.stopAllAnimations();
             }
             case TESTING_LEVELS_SHORT, TESTING_LEVELS_MEDIUM -> {
                 replaceGameLevel3D();
@@ -349,7 +339,6 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     @Override
     public void onLevelStarted(GameEvent event) {
         requireNonNull(theGameLevel()); // just to be sure nothing bad happened
-        animationManager.removeAllAnimations();
         bindActions();
         if (level3D == null) {
             replaceGameLevel3D();
@@ -516,7 +505,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             level3D.destroy();
         }
         level3D = new GameLevel3D(
-            theGameLevel(), animationManager,
+            theGameLevel(),
             theUI().configuration().worldMapColorScheme(theGameLevel().worldMap())
         );
         level3D.pac3D().init();
