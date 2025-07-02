@@ -24,13 +24,13 @@ import static java.util.Objects.requireNonNull;
 public class Energizer3D extends Sphere implements Eatable3D {
     private ManagedAnimation pumpingAnimation;
     private ManagedAnimation hideAndEatAnimation;
-    private Animation eatenAnimation;
+    private ManagedAnimation eatenEffectAnimation;
 
     /**
      * @param radius radius of sphere (positive number)
      * @param animationManager the animation manager
      */
-    public Energizer3D(double radius, AnimationManager animationManager) {
+    public Energizer3D(double radius, AnimationManager animationManager, boolean explodes) {
         requireNonNegative(radius, "Energizer radius must be positive but is %f");
         requireNonNull(animationManager);
         setRadius(radius);
@@ -53,11 +53,13 @@ public class Energizer3D extends Sphere implements Eatable3D {
             }
         };
 
-        hideAndEatAnimation = new ManagedAnimation(animationManager, "Energizer_Hide") {
+        hideAndEatAnimation = new ManagedAnimation(animationManager, "Energizer_Eaten") {
             @Override
             protected Animation createAnimation() {
-                Animation hide = Ufx.doAfterSec(0.05, () -> shape3D().setVisible(false));
-                return eatenAnimation == null? hide : new SequentialTransition(hide, eatenAnimation);
+                Animation delayedHide = Ufx.doAfterSec(0.05, () -> shape3D().setVisible(false));
+                return eatenEffectAnimation == null
+                        ? delayedHide
+                        : new SequentialTransition(delayedHide, eatenEffectAnimation.getOrCreateAnimation());
             }
         };
     }
@@ -67,15 +69,15 @@ public class Energizer3D extends Sphere implements Eatable3D {
         pumpingAnimation = null;
         hideAndEatAnimation.destroy();
         hideAndEatAnimation = null;
-        eatenAnimation = null;
+        eatenEffectAnimation = null;
     }
 
     public ManagedAnimation pumpingAnimation() {
         return pumpingAnimation;
     }
 
-    public void setEatenAnimation(Animation eatenAnimation) {
-        this.eatenAnimation = requireNonNull(eatenAnimation);
+    public void setEatenEffectAnimation(ManagedAnimation eatenEffectAnimation) {
+        this.eatenEffectAnimation = requireNonNull(eatenEffectAnimation);
         hideAndEatAnimation.invalidate();
     }
 
