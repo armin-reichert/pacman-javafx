@@ -90,9 +90,11 @@ public class PacBase3D {
             public void stop() {
                 Animation animation = getOrCreateAnimation();
                 animation.stop();
-                // open mouth when stopped
-                jaw.setRotationAxis(Rotate.Y_AXIS);
-                jaw.setRotate(0);
+                if (jaw != null) {
+                    // open mouth when stopped
+                    jaw.setRotationAxis(Rotate.Y_AXIS);
+                    jaw.setRotate(0);
+                }
             }
         };
 
