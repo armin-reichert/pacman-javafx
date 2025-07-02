@@ -64,6 +64,13 @@ public class TerrainMapRenderer3D {
     private float wallThickness = 2;
     private boolean oShapeFilled = true;
 
+    public void destroy() {
+        wallBaseMaterial = null;
+        wallTopMaterial = null;
+        cornerBaseMaterial = null;
+        cornerTopMaterial = null;
+    }
+
     public void setCornerBaseMaterial(PhongMaterial material) {
         this.cornerBaseMaterial = material;
     }

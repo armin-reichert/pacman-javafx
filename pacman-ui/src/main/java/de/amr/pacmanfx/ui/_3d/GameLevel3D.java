@@ -113,6 +113,7 @@ public class GameLevel3D {
     private PhongMaterial cornerTopMaterial;
 
     private WorldMapColorScheme colorScheme;
+    private TerrainMapRenderer3D r3D;
 
     private Group root = new Group();
     private Group mazeGroup = new Group();
@@ -197,27 +198,27 @@ public class GameLevel3D {
         floor3D = createFloor3D(gameLevel.worldMap().numCols() * TS, gameLevel.worldMap().numRows() * TS);
 
         wallBaseMaterial = new PhongMaterial();
-        wallTopMaterial = new PhongMaterial();
-        cornerBaseMaterial= new PhongMaterial();
-        cornerTopMaterial = new PhongMaterial();
-
         wallBaseMaterial.diffuseColorProperty().bind(Bindings.createObjectBinding(
-            () -> opaqueColor(colorScheme.stroke(), wallOpacityPy.get()), wallOpacityPy
+                () -> opaqueColor(colorScheme.stroke(), wallOpacityPy.get()),
+                wallOpacityPy
         ));
         wallBaseMaterial.specularColorProperty().bind(wallBaseMaterial.diffuseColorProperty().map(Color::brighter));
 
+        wallTopMaterial = new PhongMaterial();
         wallTopMaterial.setDiffuseColor(colorScheme.fill());
         wallTopMaterial.setSpecularColor(colorScheme.fill().brighter());
 
-        wallOpacityPy.bind(PY_3D_WALL_OPACITY);
-
-        cornerBaseMaterial.setDiffuseColor(colorScheme.stroke()); // for now use same color
+        cornerBaseMaterial= new PhongMaterial();
+        cornerBaseMaterial.setDiffuseColor(colorScheme.stroke());
         cornerBaseMaterial.specularColorProperty().bind(cornerBaseMaterial.diffuseColorProperty().map(Color::brighter));
 
+        cornerTopMaterial = new PhongMaterial();
         cornerTopMaterial.setDiffuseColor(colorScheme.fill());
         cornerTopMaterial.specularColorProperty().bind(cornerTopMaterial.diffuseColorProperty().map(Color::brighter));
 
-        TerrainMapRenderer3D r3D = new TerrainMapRenderer3D();
+        wallOpacityPy.bind(PY_3D_WALL_OPACITY);
+
+        r3D = new TerrainMapRenderer3D();
         r3D.setWallBaseHeightProperty(obstacleBaseHeightPy);
         r3D.setWallTopHeight(Settings3D.OBSTACLE_3D_TOP_HEIGHT);
         r3D.setWallTopMaterial(wallTopMaterial);
@@ -581,6 +582,11 @@ public class GameLevel3D {
         Logger.info("Removed all child nodes of game level 3D root ");
 
         mazeGroup = null;
+
+        if (r3D != null) {
+            r3D.destroy();
+            r3D = null;
+        }
 
         //TODO
         floor3D = null;
