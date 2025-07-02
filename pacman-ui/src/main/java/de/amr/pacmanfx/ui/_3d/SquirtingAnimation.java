@@ -86,6 +86,7 @@ public abstract class SquirtingAnimation extends Transition {
                 randomFloat((float) MIN_PARTICLE_VELOCITY.getZ(), (float) MAX_PARTICLE_VELOCITY.getZ()));
             particleGroup.getChildren().add(drop);
         }
+        embeddingParent.getChildren().add(particleGroup);
         Logger.info("{} particles created", particleGroup.getChildren().size());
     }
 

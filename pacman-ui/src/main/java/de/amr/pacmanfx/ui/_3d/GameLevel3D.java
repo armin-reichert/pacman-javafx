@@ -413,17 +413,15 @@ public class GameLevel3D {
                 energizer3D.setTranslateX(center.getX());
                 energizer3D.setTranslateY(center.getY());
                 energizer3D.setTranslateZ(center.getZ());
-
-                var eatenAnimation = new SquirtingAnimation(root, Duration.seconds(2), 23, 69, pelletMaterial, center) {
+                PhongMaterial particleMaterial = pelletMaterial; // TODO choose some other color or change color while exploding
+                var eatenAnimation = new SquirtingAnimation(root, Duration.seconds(2), 23, 69, particleMaterial, center) {
                     @Override
                     public boolean particleShouldVanish(Particle particle) {
                         return particle.getTranslateZ() >= -1
                             && isInsideWorldMap(gameLevel.worldMap(), particle.getTranslateX(), particle.getTranslateY());
                     }
                 };
-                root.getChildren().add(eatenAnimation.node());
                 energizer3D.setEatenAnimation(eatenAnimation);
-
                 energizers3D.add(energizer3D);
             } else {
                 var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
