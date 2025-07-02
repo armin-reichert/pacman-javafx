@@ -414,12 +414,14 @@ public class GameLevel3D {
                 energizer3D.setTranslateY(center.getY());
                 energizer3D.setTranslateZ(center.getZ());
 
-                var eatenAnimation = new SquirtingAnimation(Duration.seconds(2));
-                eatenAnimation.createDrops(23, 69, pelletMaterial, center);
-                eatenAnimation.setDropFinalPosition(drop -> drop.getTranslateZ() >= -1
-                    && isInsideWorldMap(gameLevel.worldMap(), drop.getTranslateX(), drop.getTranslateY()));
-                eatenAnimation.setOnFinished(e -> root.getChildren().remove(eatenAnimation.root()));
-                root.getChildren().add(eatenAnimation.root());
+                var eatenAnimation = new SquirtingAnimation(root, Duration.seconds(2), 23, 69, pelletMaterial, center) {
+                    @Override
+                    public boolean particleShouldVanish(Particle particle) {
+                        return particle.getTranslateZ() >= -1
+                            && isInsideWorldMap(gameLevel.worldMap(), particle.getTranslateX(), particle.getTranslateY());
+                    }
+                };
+                root.getChildren().add(eatenAnimation.node());
                 energizer3D.setEatenAnimation(eatenAnimation);
 
                 energizers3D.add(energizer3D);
