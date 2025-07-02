@@ -23,7 +23,7 @@ import javafx.stage.Stage;
 import static de.amr.pacmanfx.Globals.CUSTOM_MAP_DIR;
 import static de.amr.pacmanfx.ui.PacManGames.theClock;
 import static de.amr.pacmanfx.ui.PacManGames.theWatchdog;
-import static de.amr.pacmanfx.ui.PacManGames_UI_Impl.Builder.*;
+import static de.amr.pacmanfx.ui.PacManGames_UI_Impl.*;
 
 /**
  * Application containing all game variants and 3D play scenes.

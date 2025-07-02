@@ -13,8 +13,8 @@ import javafx.stage.Stage;
 import static de.amr.pacmanfx.Globals.CUSTOM_MAP_DIR;
 import static de.amr.pacmanfx.ui.PacManGames.theClock;
 import static de.amr.pacmanfx.ui.PacManGames.theWatchdog;
-import static de.amr.pacmanfx.ui.PacManGames_UI_Impl.Builder.MS_PACMAN_XXL;
-import static de.amr.pacmanfx.ui.PacManGames_UI_Impl.Builder.PACMAN_XXL;
+import static de.amr.pacmanfx.ui.PacManGames_UI_Impl.MS_PACMAN_XXL;
+import static de.amr.pacmanfx.ui.PacManGames_UI_Impl.PACMAN_XXL;
 
 public class PacManXXL_Common_App extends Application {
 

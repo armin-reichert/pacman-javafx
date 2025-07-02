@@ -27,8 +27,6 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.shape.Mesh;
 import javafx.stage.Stage;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -49,6 +47,12 @@ import static java.util.Objects.requireNonNull;
  */
 public class PacManGames_UI_Impl implements PacManGames_UI {
 
+    public static String MS_PACMAN = "MS_PACMAN";
+    public static String MS_PACMAN_TENGEN = "MS_PACMAN_TENGEN";
+    public static String MS_PACMAN_XXL = "MS_PACMAN_XXL";
+    public static String PACMAN = "PACMAN";
+    public static String PACMAN_XXL = "PACMAN_XXL";
+
     // package-private access for PacManGames API class
     static final PacManGames_Assets ASSETS = new PacManGames_Assets();
     static final GameClock          GAME_CLOCK = new GameClock();
@@ -61,12 +65,6 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     static PacManGames_UI_Impl THE_ONE;
 
     public static class Builder {
-
-        public static String MS_PACMAN = "MS_PACMAN";
-        public static String MS_PACMAN_TENGEN = "MS_PACMAN_TENGEN";
-        public static String MS_PACMAN_XXL = "MS_PACMAN_XXL";
-        public static String PACMAN = "PACMAN";
-        public static String PACMAN_XXL = "PACMAN_XXL";
 
         private static void checkUserDirsExistingAndWritable() {
             String homeDirDesc = "Pac-Man FX home directory";

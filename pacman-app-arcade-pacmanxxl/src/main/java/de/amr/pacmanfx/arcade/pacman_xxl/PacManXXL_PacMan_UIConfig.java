@@ -32,6 +32,7 @@ import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import org.tinylog.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -48,11 +49,18 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
 
     private static final String ANS = "pacman_xxl";
 
+    private boolean assetsLoaded;
     private ArcadePacMan_SpriteSheet spriteSheet;
 
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
     public void loadAssets(AssetStorage assets) {
+        if (assetsLoaded) {
+            Logger.warn("Assets are already loaded");
+            return;
+        }
+        assetsLoaded = true;
+
         ResourceManager rm = () -> ArcadePacMan_UIConfig.class;
 
         spriteSheet = new ArcadePacMan_SpriteSheet(rm.loadImage("graphics/pacman_spritesheet.png"));

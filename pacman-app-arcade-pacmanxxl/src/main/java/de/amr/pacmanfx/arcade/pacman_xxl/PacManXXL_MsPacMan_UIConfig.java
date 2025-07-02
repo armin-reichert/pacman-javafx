@@ -35,6 +35,7 @@ import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import org.tinylog.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,11 +52,18 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
 
     private static final String ANS = "ms_pacman_xxl";
 
+    private boolean assetsLoaded;
     private ArcadeMsPacMan_SpriteSheet spriteSheet;
 
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
     public void loadAssets(AssetStorage assets) {
+        if (assetsLoaded) {
+            Logger.warn("Assets are already loaded");
+            return;
+        }
+        assetsLoaded = true;
+
         ResourceManager rm = () -> ArcadeMsPacMan_UIConfig.class;
 
         spriteSheet = new ArcadeMsPacMan_SpriteSheet(rm.loadImage("graphics/mspacman_spritesheet.png"));
@@ -146,7 +154,7 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
     }
 
     @Override
-    public ArcadeMsPacMan_SpriteSheet spriteSheet() {return spriteSheet;}
+    public ArcadeMsPacMan_SpriteSheet spriteSheet() { return spriteSheet; }
 
     @Override
     public WorldMapColorScheme worldMapColorScheme(WorldMap worldMap) {

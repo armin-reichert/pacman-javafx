@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
+import de.amr.pacmanfx.ui.PacManGames_UI_Impl;
 import de.amr.pacmanfx.ui.layout.StartPage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
@@ -14,7 +15,7 @@ import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.PacManGames.theSound;
+import static de.amr.pacmanfx.ui.PacManGames.*;
 
 /**
  * Displays an option menu where the game variant to be played and other options can be set.
@@ -49,8 +50,16 @@ public class PacManXXL_Common_StartPage implements StartPage {
         });
     }
 
+    private void ensureAssetsLoaded() {
+        theUI().configuration(PacManGames_UI_Impl.PACMAN).loadAssets(theAssets());
+        theUI().configuration(PacManGames_UI_Impl.PACMAN_XXL).loadAssets(theAssets());
+        theUI().configuration(PacManGames_UI_Impl.MS_PACMAN).loadAssets(theAssets());
+        theUI().configuration(PacManGames_UI_Impl.MS_PACMAN_XXL).loadAssets(theAssets());
+    }
+
     @Override
     public void onEnter() {
+        ensureAssetsLoaded();
         menu.syncMenuState();
         menu.startAnimation();
     }

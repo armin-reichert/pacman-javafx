@@ -261,10 +261,9 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
             "PRESS E TO OPEN EDITOR",
             "PRESS ENTER TO START"
         );
+
         chaseAnimation = new ChaseAnimation(canvas);
         chaseAnimation.reset();
-        //TODO check this
-        //chaseAnimation.setGameVariant("PACMAN_XXL");
     }
 
     public void syncMenuState() {

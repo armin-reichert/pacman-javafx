@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 
 import static de.amr.pacmanfx.ui.PacManGames.theClock;
 import static de.amr.pacmanfx.ui.PacManGames.theWatchdog;
-import static de.amr.pacmanfx.ui.PacManGames_UI_Impl.Builder.MS_PACMAN;
+import static de.amr.pacmanfx.ui.PacManGames_UI_Impl.MS_PACMAN;
 
 public class ArcadeMsPacMan_App extends Application {
 
