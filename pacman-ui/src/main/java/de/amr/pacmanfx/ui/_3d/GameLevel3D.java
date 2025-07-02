@@ -195,69 +195,71 @@ public class GameLevel3D {
 
         Logger.info("Build 3D maze for map (URL '{}') and color scheme {}", gameLevel.worldMap().url(), colorScheme);
 
-        floor3D = createFloor3D(gameLevel.worldMap().numCols() * TS, gameLevel.worldMap().numRows() * TS);
+        {
+            floor3D = createFloor3D(gameLevel.worldMap().numCols() * TS, gameLevel.worldMap().numRows() * TS);
 
-        wallBaseMaterial = new PhongMaterial();
-        wallBaseMaterial.diffuseColorProperty().bind(Bindings.createObjectBinding(
-                () -> opaqueColor(colorScheme.stroke(), wallOpacityPy.get()),
-                wallOpacityPy
-        ));
-        wallBaseMaterial.specularColorProperty().bind(wallBaseMaterial.diffuseColorProperty().map(Color::brighter));
+            wallBaseMaterial = new PhongMaterial();
+            wallBaseMaterial.diffuseColorProperty().bind(Bindings.createObjectBinding(
+                    () -> opaqueColor(colorScheme.stroke(), wallOpacityPy.get()),
+                    wallOpacityPy
+            ));
+            wallBaseMaterial.specularColorProperty().bind(wallBaseMaterial.diffuseColorProperty().map(Color::brighter));
 
-        wallTopMaterial = new PhongMaterial();
-        wallTopMaterial.setDiffuseColor(colorScheme.fill());
-        wallTopMaterial.setSpecularColor(colorScheme.fill().brighter());
+            wallTopMaterial = new PhongMaterial();
+            wallTopMaterial.setDiffuseColor(colorScheme.fill());
+            wallTopMaterial.setSpecularColor(colorScheme.fill().brighter());
 
-        cornerBaseMaterial= new PhongMaterial();
-        cornerBaseMaterial.setDiffuseColor(colorScheme.stroke());
-        cornerBaseMaterial.specularColorProperty().bind(cornerBaseMaterial.diffuseColorProperty().map(Color::brighter));
+            cornerBaseMaterial = new PhongMaterial();
+            cornerBaseMaterial.setDiffuseColor(colorScheme.stroke());
+            cornerBaseMaterial.specularColorProperty().bind(cornerBaseMaterial.diffuseColorProperty().map(Color::brighter));
 
-        cornerTopMaterial = new PhongMaterial();
-        cornerTopMaterial.setDiffuseColor(colorScheme.fill());
-        cornerTopMaterial.specularColorProperty().bind(cornerTopMaterial.diffuseColorProperty().map(Color::brighter));
+            cornerTopMaterial = new PhongMaterial();
+            cornerTopMaterial.setDiffuseColor(colorScheme.fill());
+            cornerTopMaterial.specularColorProperty().bind(cornerTopMaterial.diffuseColorProperty().map(Color::brighter));
 
-        wallOpacityPy.bind(PY_3D_WALL_OPACITY);
+            wallOpacityPy.bind(PY_3D_WALL_OPACITY);
 
-        r3D = new TerrainMapRenderer3D();
-        r3D.setWallBaseHeightProperty(obstacleBaseHeightPy);
-        r3D.setWallTopHeight(Settings3D.OBSTACLE_3D_TOP_HEIGHT);
-        r3D.setWallTopMaterial(wallTopMaterial);
-        r3D.setCornerBaseMaterial(cornerBaseMaterial);
-        r3D.setCornerTopMaterial(wallTopMaterial); // for now such that power animation also affects corner top
+            r3D = new TerrainMapRenderer3D();
+            r3D.setWallBaseHeightProperty(obstacleBaseHeightPy);
+            r3D.setWallTopHeight(Settings3D.OBSTACLE_3D_TOP_HEIGHT);
+            r3D.setWallTopMaterial(wallTopMaterial);
+            r3D.setCornerBaseMaterial(cornerBaseMaterial);
+            r3D.setCornerTopMaterial(wallTopMaterial); // for now such that power animation also affects corner top
 
-        //TODO check this:
-        obstacleBaseHeightPy.set(PY_3D_WALL_HEIGHT.get());
+            //TODO check this:
+            obstacleBaseHeightPy.set(PY_3D_WALL_HEIGHT.get());
 
-        for (Obstacle obstacle : gameLevel.worldMap().obstacles()) {
-            Vector2i tile = tileAt(obstacle.startPoint().toVector2f());
-            if (gameLevel.house().isPresent() && !gameLevel.house().get().isTileInHouseArea(tile)) {
-                r3D.setWallThickness(Settings3D.OBSTACLE_3D_THICKNESS);
-                r3D.setWallBaseMaterial(wallBaseMaterial);
-                r3D.setWallTopMaterial(wallTopMaterial);
-                r3D.renderObstacle3D(maze3D, obstacle, isObstacleTheWorldBorder(gameLevel.worldMap(), obstacle));
+            for (Obstacle obstacle : gameLevel.worldMap().obstacles()) {
+                Vector2i tile = tileAt(obstacle.startPoint().toVector2f());
+                if (gameLevel.house().isPresent() && !gameLevel.house().get().isTileInHouseArea(tile)) {
+                    r3D.setWallThickness(Settings3D.OBSTACLE_3D_THICKNESS);
+                    r3D.setWallBaseMaterial(wallBaseMaterial);
+                    r3D.setWallTopMaterial(wallTopMaterial);
+                    r3D.renderObstacle3D(maze3D, obstacle, isObstacleTheWorldBorder(gameLevel.worldMap(), obstacle));
+                }
             }
-        }
 
-        if (gameLevel.house().isEmpty()) {
-            Logger.error("There is no house in this game level!");
-        } else {
-            house3D = new ArcadeHouse3D(
-                animationManager,
-                gameLevel.house().get(),
-                colorScheme.fill(),
-                colorScheme.stroke(),
-                colorScheme.door()
-            );
-            house3D.wallBaseHeightProperty().bind(houseBaseHeightPy);
-            house3D.light().lightOnProperty().bind(houseLightOnPy);
-            maze3D.getChildren().add(house3D);
-        }
+            if (gameLevel.house().isEmpty()) {
+                Logger.error("There is no house in this game level!");
+            } else {
+                house3D = new ArcadeHouse3D(
+                        animationManager,
+                        gameLevel.house().get(),
+                        colorScheme.fill(),
+                        colorScheme.stroke(),
+                        colorScheme.door()
+                );
+                house3D.wallBaseHeightProperty().bind(houseBaseHeightPy);
+                house3D.light().lightOnProperty().bind(houseLightOnPy);
+                maze3D.getChildren().add(house3D);
+            }
 
-        mazeGroup.getChildren().addAll(floor3D, maze3D);
+            mazeGroup.getChildren().addAll(floor3D, maze3D);
+        }
 
         createPelletsAndEnergizers3D(gameLevel, colorScheme, Model3DRepository.get().pelletMesh());
-        energizers3D.forEach(energizer3D -> root.getChildren().add(energizer3D.shape3D()));
-        pellets3D.forEach(pellet3D -> root.getChildren().add(pellet3D.shape3D()));
+        energizers3D.stream().map(Eatable3D::shape3D).forEach(root.getChildren()::add);
+        pellets3D   .stream().map(Eatable3D::shape3D).forEach(root.getChildren()::add);
 
         PY_3D_WALL_HEIGHT.addListener(this::handleWallHeightChange);
         PY_3D_DRAW_MODE.addListener(this::handleDrawModeChange);
