@@ -30,20 +30,21 @@ import static java.util.Objects.requireNonNull;
  */
 public class PacBase3D {
 
-    protected final Pac pac;
-    protected final PointLight light = new PointLight();
-    protected final Group root = new Group();
-    protected final double size;
-    protected final Rotate moveRotation = new Rotate();
+    protected double size;
+    protected Pac pac;
+    protected PointLight light = new PointLight();
+    protected Group root = new Group();
+    protected Group body;
+    protected Group jaw;
+    protected Rotate moveRotation = new Rotate();
 
+    protected AnimationManager animationManager;
     protected ManagedAnimation chewingAnimation;
     protected ManagedAnimation movementAnimation;
     protected ManagedAnimation dyingAnimation;
 
-    protected Node jaw;
-
     protected PacBase3D(AnimationManager animationManager, Pac pac, double size, AssetStorage assets, String ans) {
-        requireNonNull(animationManager);
+        this.animationManager = requireNonNull(animationManager);
         this.pac = requireNonNull(pac);
         this.size = size;
 
@@ -54,7 +55,7 @@ public class PacBase3D {
             assets.color(ans + ".pac.color.head"),
             assets.color(ans + ".pac.color.palate"));
 
-        Node body = Model3DRepository.get().createPacShape(size,
+        body = Model3DRepository.get().createPacShape(size,
             assets.color(ans + ".pac.color.head"),
             assets.color(ans + ".pac.color.eyes"),
             assets.color(ans + ".pac.color.palate"));
@@ -115,6 +116,32 @@ public class PacBase3D {
     public void setMovementPowerMode(boolean power) {}
 
     public void updateMovementAnimation() {}
+
+    public void destroy() {
+        if (body != null) {
+            body.getChildren().clear();
+            body = null;
+        }
+        if (jaw != null) {
+            jaw.getChildren().clear();
+            jaw = null;
+        }
+        if (root != null) {
+            root.getChildren().clear();
+        }
+        if (chewingAnimation != null) {
+            chewingAnimation.stop();
+            chewingAnimation = null;
+        }
+        if (movementAnimation != null) {
+            movementAnimation.stop();
+            movementAnimation = null;
+        }
+        if (dyingAnimation != null) {
+            dyingAnimation.stop();
+            dyingAnimation = null;
+        }
+    }
 
     public void init() {
         requireNonNull(movementAnimation);

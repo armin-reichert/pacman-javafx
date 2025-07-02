@@ -502,7 +502,7 @@ public class GameLevel3D {
     }
 
     private void handleDrawModeChange(ObservableValue<? extends DrawMode> py, DrawMode ov, DrawMode drawMode) {
-        if (inDestroyPhase()) return; //TODO how can that be?
+        if (isDestroyed()) return; //TODO how can that be?
         setDrawModeForTree(mazeGroup, drawMode);
         setDrawModeForTree(levelCounter3D, drawMode);
         setDrawModeForTree(livesCounter3D, drawMode);
@@ -512,32 +512,32 @@ public class GameLevel3D {
     }
 
     private void handleWallHeightChange(ObservableValue<? extends Number> py, Number ov, Number newHeight) {
-        if (inDestroyPhase()) return; //TODO how can that be?
+        if (isDestroyed()) return; //TODO how can that be?
         obstacleBaseHeightPy.set(newHeight.doubleValue());
     }
 
     // experimental
 
-    private boolean inDestroyPhase;
+    private boolean destroyed;
 
-    public boolean inDestroyPhase() {
-        return inDestroyPhase;
+    public boolean isDestroyed() {
+        return destroyed;
     }
 
     // Attempt to help objects getting garbage-collected
     public void destroy() {
-        if (inDestroyPhase) {
-            Logger.warn("destroy() called while in destroy phase?");
+        if (destroyed) {
+            Logger.warn("Game level has already been destroyed");
             return;
         }
-        inDestroyPhase = true;
+        destroyed = true;
         Logger.info("Destroying game level 3D, clearing resources...");
 
         PY_3D_DRAW_MODE.removeListener(this::handleDrawModeChange);
-        Logger.info("Removed draw mode listener");
+        Logger.info("Removed 'draw mode' listener");
 
         PY_3D_WALL_HEIGHT.removeListener(this::handleWallHeightChange);
-        Logger.info("Removed wall height listener");
+        Logger.info("Removed 'wall height' listener");
 
         animationManager.stopAllAnimations();
         animationManager.removeAllAnimations();
@@ -551,91 +551,105 @@ public class GameLevel3D {
         wallTopMaterial = null;
         cornerBaseMaterial= null;
         cornerTopMaterial = null;
-        Logger.info("Cleared materials");
+        Logger.info("Cleared material references");
 
-        for (MeshView meshView : dressMeshViews) {
-            meshView.setMesh(null);
+        if (dressMeshViews != null) {
+            for (MeshView meshView : dressMeshViews) {
+                meshView.setMesh(null);
+            }
+            dressMeshViews = null;
+            Logger.info("Cleared dress mesh views");
         }
-        dressMeshViews = null;
-        Logger.info("Cleared dress mesh views");
-
-        for (MeshView meshView : pupilsMeshViews) {
-            meshView.setMesh(null);
+        if (pupilsMeshViews != null) {
+            for (MeshView meshView : pupilsMeshViews) {
+                meshView.setMesh(null);
+            }
+            pupilsMeshViews = null;
+            Logger.info("Cleared pupils mesh views");
         }
-        pupilsMeshViews = null;
-        Logger.info("Cleared pupils mesh views");
-
-        for (MeshView meshView : eyesMeshViews) {
-            meshView.setMesh(null);
+        if (eyesMeshViews != null) {
+            for (MeshView meshView : eyesMeshViews) {
+                meshView.setMesh(null);
+            }
+            eyesMeshViews = null;
+            Logger.info("Cleared eyes mesh views");
         }
-        eyesMeshViews = null;
-        Logger.info("Cleared eyes mesh views");
-
-        pellets3D.forEach(Pellet3D::destroy);
-        pellets3D = null;
-        Logger.info("Cleared 3D pellets");
-
-        energizers3D.forEach(Energizer3D::destroy);
-        energizers3D = null;
-        Logger.info("Cleared 3D energizers");
-
-        root.getChildren().clear();
-        root = null;
-        Logger.info("Removed all child nodes of game level 3D root ");
-
-        mazeGroup.getChildren().clear();
-        mazeGroup = null;
-
         if (r3D != null) {
             r3D.destroy();
             r3D = null;
+            Logger.info("Destroyed 3D renderer");
         }
-
-        floor3D.translateXProperty().unbind();
-        floor3D.translateYProperty().unbind();
-        floor3D.translateZProperty().unbind();
-        floor3D.materialProperty().unbind();
-        floor3D = null;
-
+        if (pellets3D != null) {
+            pellets3D.forEach(Pellet3D::destroy);
+            pellets3D = null;
+            Logger.info("Destroyed 3D pellets");
+        }
+        if (energizers3D != null) {
+            energizers3D.forEach(Energizer3D::destroy);
+            energizers3D = null;
+            Logger.info("Destroyed 3D energizers");
+        }
+        if (root != null) {
+            root.getChildren().clear();
+            root = null;
+            Logger.info("Removed all nodes under root group");
+        }
+        if (mazeGroup != null) {
+            mazeGroup.getChildren().clear();
+            mazeGroup = null;
+            Logger.info("Removed all nodes under maze group");
+        }
+        if (floor3D != null) {
+            floor3D.translateXProperty().unbind();
+            floor3D.translateYProperty().unbind();
+            floor3D.translateZProperty().unbind();
+            floor3D.materialProperty().unbind();
+            floor3D = null;
+            Logger.info("Unbound and cleared 3D floor");
+        }
         if (house3D != null) {
             house3D.light().lightOnProperty().unbind();
             house3D.destroy();
             house3D = null;
             Logger.info("Destroyed and cleared 3D house");
         }
-
         if (maze3D != null) {
             maze3D = null;
         }
-
-        ambientLight.colorProperty().unbind();
-        ambientLight = null;
-        Logger.info("Removed ambient light");
-
+        if (ambientLight != null) {
+            ambientLight.colorProperty().unbind();
+            ambientLight = null;
+            Logger.info("Unbound and cleared ambient light");
+        }
         livesCounterShapes = null;
-        livesCounter3D.destroy();
-        livesCounter3D = null;
-        Logger.info("Removed lives counter 3D");
-
-        levelCounter3D = null;
-        Logger.info("Removed level counter 3D");
-
-        pac3D = null;
-        Logger.info("Removed Pac 3D");
-
-        ghosts3D.forEach(MutatingGhost3D::destroy);
-        ghosts3D = null;
-        Logger.info("Removed ghosts 3D");
-
+        if (livesCounter3D != null) {
+            livesCounter3D.destroy();
+            livesCounter3D = null;
+            Logger.info("Removed lives counter 3D");
+        }
+        if (levelCounter3D != null) {
+            levelCounter3D = null;
+            Logger.info("Removed level counter 3D");
+        }
+        if (pac3D != null) {
+            pac3D.destroy();
+            pac3D = null;
+            Logger.info("Removed Pac 3D");
+        }
+        if (ghosts3D != null) {
+            ghosts3D.forEach(MutatingGhost3D::destroy);
+            ghosts3D = null;
+            Logger.info("Destroyed and cleared 3D ghosts");
+        }
         if (bonus3D != null) {
             bonus3D.destroy();
             bonus3D = null;
-            Logger.info("Removed bonus 3D");
+            Logger.info("Destroyed and cleared 3D bonus");
         }
-
         if (messageView != null) {
             messageView.destroy();
             messageView = null;
+            Logger.info("Destroyed and cleared message view");
         }
     }
 }

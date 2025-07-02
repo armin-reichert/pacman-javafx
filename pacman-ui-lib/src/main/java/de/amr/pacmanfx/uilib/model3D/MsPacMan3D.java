@@ -60,10 +60,12 @@ public class MsPacMan3D extends PacBase3D {
         }
     }
 
+    private Group femaleBodyParts;
+
     public MsPacMan3D(AnimationManager animationManager, Pac pac, double size, AssetStorage assets, String ans) {
         super(animationManager, pac, size, assets, ans);
 
-        Group femaleBodyParts = Model3DRepository.get().createFemaleBodyParts(size,
+        femaleBodyParts = Model3DRepository.get().createFemaleBodyParts(size,
             assets.color(ans + ".pac.color.hairbow"),
             assets.color(ans + ".pac.color.hairbow.pearls"),
             assets.color(ans + ".pac.color.boobs"));
@@ -87,8 +89,13 @@ public class MsPacMan3D extends PacBase3D {
         setMovementPowerMode(false);
     }
 
-    @Override
-    public void updateMovementAnimation() {}
+    public void destroy() {
+        if (femaleBodyParts != null) {
+            femaleBodyParts.getChildren().clear();
+            femaleBodyParts = null;
+        }
+        super.destroy();
+    }
 
     @Override
     public void setMovementPowerMode(boolean power) {

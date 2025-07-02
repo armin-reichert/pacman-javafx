@@ -84,7 +84,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     }
 
     public Optional<GameLevel3D> level3D() {
-        return level3D != null && !level3D.inDestroyPhase() ? Optional.of(level3D) : Optional.empty();
+        return level3D != null && !level3D.isDestroyed() ? Optional.of(level3D) : Optional.empty();
     }
 
     @Override
@@ -213,7 +213,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             Logger.warn("Tick #{}: 3D game level not yet existing", theClock().tickCount());
             return;
         }
-        if (level3D.inDestroyPhase()) {
+        if (level3D.isDestroyed()) {
             Logger.warn("Tick #{}: 3D game level is in destroy phase", theClock().tickCount());
             return;
         }
@@ -436,7 +436,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void onGameContinued(GameEvent e) {
-        if (level3D != null && !level3D.inDestroyPhase()) {
+        if (level3D != null && !level3D.isDestroyed()) {
             Vector2f position = theGameLevel().house().map(House::centerPositionUnderHouse).orElse(Vector2f.ZERO);
             level3D.showAnimatedMessage("READY!", 0.5f, position.x(), position.y());
         }
