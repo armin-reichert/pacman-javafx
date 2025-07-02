@@ -69,7 +69,7 @@ public class GameLevel3D {
         @Override
         protected void invalidated() {
             if (houseOpenPy.get()) {
-                house3D.door3D().openCloseAnimation().play(ManagedAnimation.FROM_START);
+                house3D.doorOpenCloseAnimation().play(ManagedAnimation.FROM_START);
             }
         }
     };
@@ -381,7 +381,7 @@ public class GameLevel3D {
             energizer3D.pumpingAnimation().stop();
             energizer3D.shape3D().setVisible(false);
         });
-        house3D.door3D().setVisible(false);
+        house3D.setDoorVisible(false);
         wallColorFlashingAnimation.stop();
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
         levelCounter3D.spinningAnimation().stop();
@@ -531,6 +531,17 @@ public class GameLevel3D {
         PY_3D_WALL_HEIGHT.removeListener(this::handleWallHeightChange);
         Logger.info("Removed wall height listener");
 
+
+        if (animationManager != null) {
+            animationManager.stopAllAnimations();
+            animationManager.removeAllAnimations();
+            wallColorFlashingAnimation = null;
+            wallsDisappearingAnimation = null;
+            levelCompletedAnimation = null;
+            levelCompletedAnimationBeforeCutScene = null;
+            Logger.info("Stopped and removed all managed animations");
+        }
+
         wallBaseMaterial = null;
         wallTopMaterial = null;
         cornerBaseMaterial= null;
@@ -608,12 +619,6 @@ public class GameLevel3D {
         if (messageView != null) {
             messageView.destroy();
             messageView = null;
-        }
-
-        if (animationManager != null) {
-            animationManager.stopAllAnimations();
-            animationManager.removeAllAnimations();
-            Logger.info("Stopped and removed all managed animation");
         }
     }
 }
