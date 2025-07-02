@@ -588,7 +588,10 @@ public class GameLevel3D {
             r3D = null;
         }
 
-        //TODO
+        floor3D.translateXProperty().unbind();
+        floor3D.translateYProperty().unbind();
+        floor3D.translateZProperty().unbind();
+        floor3D.materialProperty().unbind();
         floor3D = null;
 
         if (house3D != null) {
