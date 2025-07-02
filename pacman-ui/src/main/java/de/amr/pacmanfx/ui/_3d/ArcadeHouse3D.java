@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.House;
-import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer3D;
@@ -14,7 +13,6 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;
@@ -33,49 +31,39 @@ import static de.amr.pacmanfx.uilib.Ufx.opaqueColor;
 import static java.util.Objects.requireNonNull;
 
 /**
- * 3D Arcade style house.
+ * 3D house in Arcade style.
  */
 public class ArcadeHouse3D extends Group {
 
     private static final int NUM_VERTICAL_BARS = 2;
+    private static final float BAR_THICKNESS = 0.75f;
 
-    private final DoubleProperty barThicknessPy = new SimpleDoubleProperty(0.75);
-    private PointLight light;
+    private final DoubleProperty barThicknessProperty = new SimpleDoubleProperty(BAR_THICKNESS);
+    private final DoubleProperty wallBaseHeightProperty = new SimpleDoubleProperty(Settings3D.HOUSE_3D_BASE_HEIGHT);
+
     private PhongMaterial wallBaseMaterial;
     private PhongMaterial wallTopMaterial;
-
+    private PhongMaterial barMaterial;
 
     private Group door;
-    private PhongMaterial barMaterial;
     private Group leftWing;
     private Group rightWing;
+    private PointLight light;
+
     private ManagedAnimation doorOpenCloseAnimation;
 
     public ArcadeHouse3D(
         AnimationManager animationManager,
         House house,
-        TerrainMapRenderer3D r3D,
         Color houseBaseColor,
         Color houseTopColor,
-        Color doorColor,
-        float wallOpacity,
-        DoubleProperty wallBaseHeightPy,
-        float wallTopHeight,
-        float wallThickness,
-        BooleanProperty houseLightOnPy)
+        Color doorColor)
     {
         requireNonNull(animationManager);
         requireNonNull(house);
-        requireNonNull(r3D);
         requireNonNull(houseBaseColor);
         requireNonNull(houseTopColor);
         requireNonNull(doorColor);
-        requireNonNull(wallBaseHeightPy);
-        requireNonNull(houseLightOnPy);
-
-        wallBaseMaterial = coloredPhongMaterial(opaqueColor(houseBaseColor, wallOpacity));
-        wallTopMaterial = coloredPhongMaterial(houseTopColor);
-        barMaterial = Ufx.coloredPhongMaterial(doorColor);
 
         Vector2i houseSize = house.sizeInTiles();
         int tilesX = houseSize.x(), tilesY = houseSize.y();
@@ -84,20 +72,25 @@ public class ArcadeHouse3D extends Group {
         float centerX = xMin * TS + tilesX * HTS;
         float centerY = yMin * TS + tilesY * HTS;
 
-        r3D.setWallBaseHeightProperty(wallBaseHeightPy);
-        r3D.setWallTopHeight(wallTopHeight);
-        r3D.setWallThickness(wallThickness);
+        wallBaseMaterial = coloredPhongMaterial(opaqueColor(houseBaseColor, Settings3D.HOUSE_3D_OPACITY));
+        wallTopMaterial  = coloredPhongMaterial(houseTopColor);
+        barMaterial      = coloredPhongMaterial(doorColor);
+
+        TerrainMapRenderer3D r3D = new TerrainMapRenderer3D();
+        r3D.setWallBaseHeightProperty(wallBaseHeightProperty);
+        r3D.setWallTopHeight(Settings3D.HOUSE_3D_WALL_TOP_HEIGHT);
+        r3D.setWallThickness(Settings3D.HOUSE_3D_WALL_THICKNESS);
         r3D.setWallBaseMaterial(wallBaseMaterial);
         r3D.setWallTopMaterial(wallTopMaterial);
 
-        door = createDoor(house.leftDoorTile(), house.rightDoorTile(), wallBaseHeightPy.get());
+        door = createDoor(house.leftDoorTile(), house.rightDoorTile(), wallBaseHeightProperty.get());
 
         doorOpenCloseAnimation = new ManagedAnimation(animationManager, "Door_OpenClose") {
             @Override
             protected Animation createAnimation() {
                 return new Timeline(
-                    new KeyFrame(Duration.seconds(0.75), new KeyValue(barThicknessPy, 0)),
-                    new KeyFrame(Duration.seconds(1.5),  new KeyValue(barThicknessPy, 0.75))
+                    new KeyFrame(Duration.seconds(0.75), new KeyValue(barThicknessProperty, 0)),
+                    new KeyFrame(Duration.seconds(1.5),  new KeyValue(barThicknessProperty, 0.75))
                 );
             }
         };
@@ -107,8 +100,7 @@ public class ArcadeHouse3D extends Group {
         light.setMaxRange(3 * TS);
         light.setTranslateX(centerX);
         light.setTranslateY(centerY - 6);
-        light.translateZProperty().bind(wallBaseHeightPy.multiply(-1));
-        light.lightOnProperty().bind(houseLightOnPy);
+        light.translateZProperty().bind(wallBaseHeightProperty.multiply(-1));
 
         getChildren().addAll(
             light,
@@ -121,12 +113,20 @@ public class ArcadeHouse3D extends Group {
         );
     }
 
+    public DoubleProperty wallBaseHeightProperty() {
+        return wallBaseHeightProperty;
+    }
+
     public void setDoorVisible(boolean visible) {
         door.setVisible(visible);
     }
 
     public ManagedAnimation doorOpenCloseAnimation() {
         return doorOpenCloseAnimation;
+    }
+
+    public PointLight light() {
+        return light;
     }
 
     private Group createDoor(Vector2i leftWingTile, Vector2i rightWingTile, double height) {
@@ -143,8 +143,8 @@ public class ArcadeHouse3D extends Group {
         root.setTranslateY(tile.y() * TS);
 
         for (int i = 0; i < NUM_VERTICAL_BARS; ++i) {
-            var verticalBar = new Cylinder(barThicknessPy.get(), height);
-            verticalBar.radiusProperty().bind(barThicknessPy);
+            var verticalBar = new Cylinder(barThicknessProperty.get(), height);
+            verticalBar.radiusProperty().bind(barThicknessProperty);
             verticalBar.setMaterial(barMaterial);
             verticalBar.setTranslateX(i * 4 + 2);
             verticalBar.setTranslateY(4);
@@ -154,8 +154,8 @@ public class ArcadeHouse3D extends Group {
             root.getChildren().add(verticalBar);
         }
 
-        var horizontalBar = new Cylinder(barThicknessPy.get(), 14);
-        horizontalBar.radiusProperty().bind(barThicknessPy);
+        var horizontalBar = new Cylinder(barThicknessProperty.get(), 14);
+        horizontalBar.radiusProperty().bind(barThicknessProperty);
         horizontalBar.setMaterial(barMaterial);
         horizontalBar.setTranslateX(4);
         horizontalBar.setTranslateY(4);
@@ -196,7 +196,6 @@ public class ArcadeHouse3D extends Group {
 
         barMaterial = null;
 
-        light.lightOnProperty().unbind();
         light.translateZProperty().unbind();
         light = null;
     }

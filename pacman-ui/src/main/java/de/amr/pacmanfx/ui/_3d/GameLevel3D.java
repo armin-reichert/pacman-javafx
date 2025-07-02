@@ -236,19 +236,20 @@ public class GameLevel3D {
             }
         }
 
-        gameLevel.house().ifPresent(house -> {
+        if (gameLevel.house().isEmpty()) {
+            Logger.error("There is no house in this game level!");
+        } else {
             house3D = new ArcadeHouse3D(
                 animationManager,
-                house,
-                r3D,
-                colorScheme.fill(), colorScheme.stroke(), colorScheme.door(),
-                Settings3D.HOUSE_3D_OPACITY,
-                houseBaseHeightPy,
-                Settings3D.HOUSE_3D_WALL_TOP_HEIGHT,
-                Settings3D.HOUSE_3D_WALL_THICKNESS,
-                houseLightOnPy);
-            maze3D.getChildren().add(house3D); //TODO check this
-        });
+                gameLevel.house().get(),
+                colorScheme.fill(),
+                colorScheme.stroke(),
+                colorScheme.door()
+            );
+            house3D.wallBaseHeightProperty().bind(houseBaseHeightPy);
+            house3D.light().lightOnProperty().bind(houseLightOnPy);
+            maze3D.getChildren().add(house3D);
+        }
 
         mazeGroup.getChildren().addAll(floor3D, maze3D);
 
@@ -583,9 +584,12 @@ public class GameLevel3D {
         //TODO
         floor3D = null;
 
-        house3D.destroy();
-        house3D = null;
-        Logger.info("Destroyed and cleared 3D house");
+        if (house3D != null) {
+            house3D.light().lightOnProperty().unbind();
+            house3D.destroy();
+            house3D = null;
+            Logger.info("Destroyed and cleared 3D house");
+        }
 
         if (maze3D != null) {
             maze3D = null;
