@@ -133,7 +133,11 @@ public class GameLevel3D {
 
     // Note: The order in which children are added to the root matters!
     // Walls and house must be added *after* the actors, otherwise the transparency is not working correctly.
-    public GameLevel3D(GameLevel gameLevel, AnimationManager animationManager) {
+    public GameLevel3D(
+        GameLevel gameLevel,
+        AnimationManager animationManager,
+        WorldMapColorScheme colorScheme)
+    {
         requireNonNull(gameLevel);
         this.animationManager = requireNonNull(animationManager);
 
@@ -187,8 +191,66 @@ public class GameLevel3D {
 
         root.getChildren().add(mazeGroup);
 
-        WorldMapColorScheme colorScheme = theUI().configuration().worldMapColorScheme(gameLevel.worldMap());
-        createMaze3D(gameLevel, colorScheme);
+        final WorldMap worldMap = gameLevel.worldMap();
+        Logger.info("Build 3D maze for map (URL '{}') and color scheme {}", worldMap.url(), colorScheme);
+
+        floor3D = createFloor3D(worldMap.numCols() * TS, worldMap.numRows() * TS);
+
+        wallBaseColor = colorScheme.stroke();
+        // Add some contrast with floor if wall fill color is black:
+        wallTopColor = colorScheme.fill().equals(Color.BLACK) ? Color.grayRgb(42) : colorScheme.fill();
+
+        wallBaseMaterial.diffuseColorProperty().bind(Bindings.createObjectBinding(
+            () -> opaqueColor(wallBaseColor, wallOpacityPy.get()), wallOpacityPy
+        ));
+        wallBaseMaterial.specularColorProperty().bind(wallBaseMaterial.diffuseColorProperty().map(Color::brighter));
+
+        wallTopMaterial.setDiffuseColor(wallTopColor);
+        wallTopMaterial.setSpecularColor(wallTopColor.brighter());
+
+        wallOpacityPy.bind(PY_3D_WALL_OPACITY);
+
+        cornerBaseMaterial.setDiffuseColor(wallBaseColor); // for now use same color
+        cornerBaseMaterial.specularColorProperty().bind(cornerBaseMaterial.diffuseColorProperty().map(Color::brighter));
+
+        cornerTopMaterial.setDiffuseColor(wallTopColor);
+        cornerTopMaterial.specularColorProperty().bind(cornerTopMaterial.diffuseColorProperty().map(Color::brighter));
+
+        TerrainMapRenderer3D r3D = new TerrainMapRenderer3D();
+        r3D.setWallBaseHeightProperty(obstacleBaseHeightPy);
+        r3D.setWallTopHeight(Settings3D.OBSTACLE_3D_TOP_HEIGHT);
+        r3D.setWallTopMaterial(wallTopMaterial);
+        r3D.setCornerBaseMaterial(cornerBaseMaterial);
+        r3D.setCornerTopMaterial(wallTopMaterial); // for now such that power animation also affects corner top
+
+        //TODO check this:
+        obstacleBaseHeightPy.set(PY_3D_WALL_HEIGHT.get());
+
+        for (Obstacle obstacle : gameLevel.worldMap().obstacles()) {
+            Vector2i tile = tileAt(obstacle.startPoint().toVector2f());
+            if (gameLevel.house().isPresent() && !gameLevel.house().get().isTileInHouseArea(tile)) {
+                r3D.setWallThickness(Settings3D.OBSTACLE_3D_THICKNESS);
+                r3D.setWallBaseMaterial(wallBaseMaterial);
+                r3D.setWallTopMaterial(wallTopMaterial);
+                r3D.renderObstacle3D(maze3D, obstacle, isObstacleTheWorldBorder(gameLevel.worldMap(), obstacle));
+            }
+        }
+
+        gameLevel.house().ifPresent(house -> {
+            house3D = new ArcadeHouse3D(
+                animationManager,
+                house,
+                r3D,
+                colorScheme.fill(), colorScheme.stroke(), colorScheme.door(),
+                Settings3D.HOUSE_3D_OPACITY,
+                houseBaseHeightPy,
+                Settings3D.HOUSE_3D_WALL_TOP_HEIGHT,
+                Settings3D.HOUSE_3D_WALL_THICKNESS,
+                houseLightOnPy);
+            maze3D.getChildren().add(house3D); //TODO check this
+        });
+
+        mazeGroup.getChildren().addAll(floor3D, maze3D);
 
         createPelletsAndEnergizers3D(gameLevel, colorScheme, Model3DRepository.get().pelletMesh());
         energizers3D.forEach(energizer3D -> root.getChildren().add(energizer3D.shape3D()));
@@ -326,67 +388,6 @@ public class GameLevel3D {
         livesCounter3D.lookingAroundAnimation().stop();
     }
 
-    private void createMaze3D(GameLevel gameLevel, WorldMapColorScheme colorScheme) {
-        final WorldMap worldMap = gameLevel.worldMap();
-        Logger.info("Build 3D maze for map (URL '{}') and color scheme {}", worldMap.url(), colorScheme);
-
-        floor3D = createFloor3D(worldMap.numCols() * TS, worldMap.numRows() * TS);
-
-        wallBaseColor = colorScheme.stroke();
-        // Add some contrast with floor if wall fill color is black:
-        wallTopColor = colorScheme.fill().equals(Color.BLACK) ? Color.grayRgb(42) : colorScheme.fill();
-
-        wallBaseMaterial.diffuseColorProperty().bind(Bindings.createObjectBinding(
-                () -> opaqueColor(wallBaseColor, wallOpacityPy.get()), wallOpacityPy
-        ));
-        wallBaseMaterial.specularColorProperty().bind(wallBaseMaterial.diffuseColorProperty().map(Color::brighter));
-
-        wallTopMaterial.setDiffuseColor(wallTopColor);
-        wallTopMaterial.setSpecularColor(wallTopColor.brighter());
-
-        wallOpacityPy.bind(PY_3D_WALL_OPACITY);
-
-        cornerBaseMaterial.setDiffuseColor(wallBaseColor); // for now use same color
-        cornerBaseMaterial.specularColorProperty().bind(cornerBaseMaterial.diffuseColorProperty().map(Color::brighter));
-
-        cornerTopMaterial.setDiffuseColor(wallTopColor);
-        cornerTopMaterial.specularColorProperty().bind(cornerTopMaterial.diffuseColorProperty().map(Color::brighter));
-
-        TerrainMapRenderer3D r3D = new TerrainMapRenderer3D();
-        r3D.setWallBaseHeightProperty(obstacleBaseHeightPy);
-        r3D.setWallTopHeight(Settings3D.OBSTACLE_3D_TOP_HEIGHT);
-        r3D.setWallTopMaterial(wallTopMaterial);
-        r3D.setCornerBaseMaterial(cornerBaseMaterial);
-        r3D.setCornerTopMaterial(wallTopMaterial); // for now such that power animation also affects corner top
-
-        //TODO check this:
-        obstacleBaseHeightPy.set(PY_3D_WALL_HEIGHT.get());
-
-        for (Obstacle obstacle : gameLevel.worldMap().obstacles()) {
-            Vector2i tile = tileAt(obstacle.startPoint().toVector2f());
-            if (gameLevel.house().isPresent() && !gameLevel.house().get().isTileInHouseArea(tile)) {
-                r3D.setWallThickness(Settings3D.OBSTACLE_3D_THICKNESS);
-                r3D.setWallBaseMaterial(wallBaseMaterial);
-                r3D.setWallTopMaterial(wallTopMaterial);
-                r3D.renderObstacle3D(maze3D, obstacle, isObstacleTheWorldBorder(gameLevel.worldMap(), obstacle));
-            }
-        }
-
-        house3D = new ArcadeHouse3D(
-                animationManager,
-                gameLevel,
-                r3D,
-                colorScheme.fill(), colorScheme.stroke(), colorScheme.door(),
-                Settings3D.HOUSE_3D_OPACITY,
-                houseBaseHeightPy,
-                Settings3D.HOUSE_3D_WALL_TOP_HEIGHT,
-                Settings3D.HOUSE_3D_WALL_THICKNESS,
-                houseLightOnPy);
-
-        maze3D.getChildren().add(house3D); //TODO check this
-        mazeGroup.getChildren().addAll(floor3D, maze3D);
-    }
-
     private Box createFloor3D(double sizeX, double sizeY) {
         var floor3D = new Box(sizeX + 2 * Settings3D.FLOOR_3D_PADDING, sizeY, Settings3D.FLOOR_3D_THICKNESS);
         floor3D.translateXProperty().bind(floor3D.widthProperty().divide(2).subtract(Settings3D.FLOOR_3D_PADDING));
@@ -469,10 +470,9 @@ public class GameLevel3D {
         requireNonNull(bonus);
         if (bonus3D != null) {
             mazeGroup.getChildren().remove(bonus3D);
+            bonus3D.destroy();
         }
-        bonus3D = new Bonus3D(
-            animationManager,
-            bonus,
+        bonus3D = new Bonus3D(animationManager, bonus,
             theUI().configuration().bonusSymbolImage(bonus.symbol()),
             theUI().configuration().bonusValueImage(bonus.symbol()));
         mazeGroup.getChildren().add(bonus3D);
@@ -508,7 +508,7 @@ public class GameLevel3D {
         obstacleBaseHeightPy.set(newHeight.doubleValue());
     }
 
-    // experiment
+    // experimental
 
     private boolean inDestroyPhase;
 
@@ -568,7 +568,14 @@ public class GameLevel3D {
         Logger.info("Removed all child nodes of game level 3D root ");
 
         mazeGroup = null;
+
+        //TODO
         floor3D = null;
+
+        house3D.destroy();
+        house3D = null;
+        Logger.info("Destroyed and cleared 3D house");
+
         if (maze3D != null) {
             maze3D = null;
         }

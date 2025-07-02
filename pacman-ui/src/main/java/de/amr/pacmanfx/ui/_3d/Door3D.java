@@ -15,6 +15,7 @@ import javafx.animation.Timeline;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
@@ -32,14 +33,27 @@ public class Door3D extends Group {
     private static final int NUM_VERTICAL_BARS = 2;
 
     private final DoubleProperty barThicknessPy = new SimpleDoubleProperty(0.75);
-    private final PhongMaterial barMaterial;
 
-    private final ManagedAnimation openCloseAnimation;
+    private PhongMaterial barMaterial;
+    private ManagedAnimation openCloseAnimation;
+    private Group leftWing;
+    private Group rightWing;
 
-    public Door3D(AnimationManager animationManager, Vector2i leftWingTile, Vector2i rightWingTile, Color color, double height) {
+    public Door3D(
+        AnimationManager animationManager,
+        Vector2i leftWingTile,
+        Vector2i rightWingTile,
+        Color color,
+        double height)
+    {
         requireNonNull(animationManager);
+        requireNonNull(leftWingTile);
+        requireNonNull(color);
+
         barMaterial = Ufx.coloredPhongMaterial(color);
-        getChildren().addAll(createDoorWing(leftWingTile, height), createDoorWing(rightWingTile, height));
+        leftWing = createDoorWing(leftWingTile, height);
+        rightWing = createDoorWing(rightWingTile, height);
+        getChildren().addAll(leftWing, rightWing);
 
         openCloseAnimation = new ManagedAnimation(animationManager, "Door_OpenClose") {
             @Override
@@ -52,15 +66,10 @@ public class Door3D extends Group {
         };
     }
 
-    public ManagedAnimation openCloseAnimation() {
-        return openCloseAnimation;
-    }
-
     private Group createDoorWing(Vector2i tile, double height) {
-        var group = new Group();
-
-        group.setTranslateX(tile.x() * TS);
-        group.setTranslateY(tile.y() * TS);
+        var root = new Group();
+        root.setTranslateX(tile.x() * TS);
+        root.setTranslateY(tile.y() * TS);
 
         for (int i = 0; i < NUM_VERTICAL_BARS; ++i) {
             var verticalBar = new Cylinder(barThicknessPy.get(), height);
@@ -71,7 +80,7 @@ public class Door3D extends Group {
             verticalBar.translateZProperty().bind(verticalBar.heightProperty().multiply(-0.5));
             verticalBar.setRotationAxis(Rotate.X_AXIS);
             verticalBar.setRotate(90);
-            group.getChildren().add(verticalBar);
+            root.getChildren().add(verticalBar);
         }
 
         var horizontalBar = new Cylinder(barThicknessPy.get(), 14);
@@ -82,8 +91,34 @@ public class Door3D extends Group {
         horizontalBar.setTranslateZ(0.25 - horizontalBar.getHeight() * 0.5);
         horizontalBar.setRotationAxis(Rotate.Z_AXIS);
         horizontalBar.setRotate(90);
-        group.getChildren().add(horizontalBar);
+        root.getChildren().add(horizontalBar);
 
-        return group;
+        return root;
     }
+
+    public void destroy() {
+        openCloseAnimation.destroy();
+        openCloseAnimation = null;
+        destroyDoorWing(leftWing);
+        leftWing = null;
+        destroyDoorWing(rightWing);
+        rightWing = null;
+        getChildren().clear();
+        barMaterial = null;
+    }
+
+    private void destroyDoorWing(Group doorWing) {
+        for (Node node : doorWing.getChildren()) {
+            if (node instanceof Cylinder bar) {
+                bar.radiusProperty().unbind();
+                bar.translateZProperty().unbind();
+                bar.setMaterial(null);
+            }
+        }
+    }
+
+    public ManagedAnimation openCloseAnimation() {
+        return openCloseAnimation;
+    }
+
 }

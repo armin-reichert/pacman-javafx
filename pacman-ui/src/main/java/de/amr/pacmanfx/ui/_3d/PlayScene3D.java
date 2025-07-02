@@ -21,6 +21,7 @@ import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.uilib.CameraControlledView;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
+import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import javafx.animation.SequentialTransition;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
@@ -514,7 +515,10 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         if (level3D != null) {
             level3D.destroy();
         }
-        level3D = new GameLevel3D(theGameLevel(), animationManager);
+        level3D = new GameLevel3D(
+            theGameLevel(), animationManager,
+            theUI().configuration().worldMapColorScheme(theGameLevel().worldMap())
+        );
         level3D.pac3D().init();
         level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(theGameLevel()));
         root.getChildren().set(root.getChildren().size() - 1, level3D.root());
