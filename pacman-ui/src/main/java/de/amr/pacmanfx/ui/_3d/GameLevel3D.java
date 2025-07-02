@@ -107,13 +107,12 @@ public class GameLevel3D {
             new MeshView(Model3DRepository.get().ghostEyeballsMesh()),
     };
 
-    private PhongMaterial wallBaseMaterial = new PhongMaterial();
-    private PhongMaterial wallTopMaterial = new PhongMaterial();
-    private PhongMaterial cornerBaseMaterial= new PhongMaterial();
-    private PhongMaterial cornerTopMaterial = new PhongMaterial();
+    private PhongMaterial wallBaseMaterial;
+    private PhongMaterial wallTopMaterial;
+    private PhongMaterial cornerBaseMaterial;
+    private PhongMaterial cornerTopMaterial;
 
-    private Color wallBaseColor;
-    private Color wallTopColor;
+    private WorldMapColorScheme colorScheme;
 
     private Group root = new Group();
     private Group mazeGroup = new Group();
@@ -133,9 +132,15 @@ public class GameLevel3D {
 
     // Note: The order in which children are added to the root matters!
     // Walls and house must be added *after* the actors, otherwise the transparency is not working correctly.
-    public GameLevel3D(GameLevel gameLevel, WorldMapColorScheme colorScheme)
+    public GameLevel3D(GameLevel gameLevel, WorldMapColorScheme proposedColorScheme)
     {
         requireNonNull(gameLevel);
+
+        requireNonNull(proposedColorScheme);
+        // Add some contrast with floor if wall fill color is black
+        colorScheme = proposedColorScheme.fill().equals(Color.BLACK)
+            ? new WorldMapColorScheme(Color.grayRgb(42), proposedColorScheme.stroke(), proposedColorScheme.door(), proposedColorScheme.pellet())
+            : proposedColorScheme;
 
         {
             ambientLight = new AmbientLight();
@@ -187,29 +192,29 @@ public class GameLevel3D {
 
         root.getChildren().add(mazeGroup);
 
-        final WorldMap worldMap = gameLevel.worldMap();
-        Logger.info("Build 3D maze for map (URL '{}') and color scheme {}", worldMap.url(), colorScheme);
+        Logger.info("Build 3D maze for map (URL '{}') and color scheme {}", gameLevel.worldMap().url(), colorScheme);
 
-        floor3D = createFloor3D(worldMap.numCols() * TS, worldMap.numRows() * TS);
+        floor3D = createFloor3D(gameLevel.worldMap().numCols() * TS, gameLevel.worldMap().numRows() * TS);
 
-        wallBaseColor = colorScheme.stroke();
-        // Add some contrast with floor if wall fill color is black:
-        wallTopColor = colorScheme.fill().equals(Color.BLACK) ? Color.grayRgb(42) : colorScheme.fill();
+        wallBaseMaterial = new PhongMaterial();
+        wallTopMaterial = new PhongMaterial();
+        cornerBaseMaterial= new PhongMaterial();
+        cornerTopMaterial = new PhongMaterial();
 
         wallBaseMaterial.diffuseColorProperty().bind(Bindings.createObjectBinding(
-            () -> opaqueColor(wallBaseColor, wallOpacityPy.get()), wallOpacityPy
+            () -> opaqueColor(colorScheme.stroke(), wallOpacityPy.get()), wallOpacityPy
         ));
         wallBaseMaterial.specularColorProperty().bind(wallBaseMaterial.diffuseColorProperty().map(Color::brighter));
 
-        wallTopMaterial.setDiffuseColor(wallTopColor);
-        wallTopMaterial.setSpecularColor(wallTopColor.brighter());
+        wallTopMaterial.setDiffuseColor(colorScheme.fill());
+        wallTopMaterial.setSpecularColor(colorScheme.fill().brighter());
 
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
 
-        cornerBaseMaterial.setDiffuseColor(wallBaseColor); // for now use same color
+        cornerBaseMaterial.setDiffuseColor(colorScheme.stroke()); // for now use same color
         cornerBaseMaterial.specularColorProperty().bind(cornerBaseMaterial.diffuseColorProperty().map(Color::brighter));
 
-        cornerTopMaterial.setDiffuseColor(wallTopColor);
+        cornerTopMaterial.setDiffuseColor(colorScheme.fill());
         cornerTopMaterial.specularColorProperty().bind(cornerTopMaterial.diffuseColorProperty().map(Color::brighter));
 
         TerrainMapRenderer3D r3D = new TerrainMapRenderer3D();
@@ -261,7 +266,7 @@ public class GameLevel3D {
         wallColorFlashingAnimation = new ManagedAnimation(animationManager, "MazeWallColorFlashing") {
             @Override
             protected Animation createAnimation() {
-                return new MaterialColorAnimation(Duration.seconds(0.25), wallTopMaterial, wallTopColor, wallBaseColor);
+                return new MaterialColorAnimation(Duration.seconds(0.25), wallTopMaterial, colorScheme.fill(), colorScheme.stroke());
             }
         };
 
