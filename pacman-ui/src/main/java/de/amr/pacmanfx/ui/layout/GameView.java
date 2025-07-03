@@ -121,12 +121,8 @@ public class GameView implements PacManGames_View {
             ui.currentGameSceneProperty()
         );
 
-        parentScene.widthProperty().addListener((py, ov, width) -> {
-            canvasContainer.resizeTo(width.doubleValue(), parentScene.getHeight());
-        });
-        parentScene.heightProperty().addListener((py, ov, height) -> {
-            canvasContainer.resizeTo(parentScene.getWidth(), height.doubleValue());
-        });
+        parentScene.widthProperty() .addListener((py, ov, width)  -> canvasContainer.resizeTo(width.doubleValue(), parentScene.getHeight()));
+        parentScene.heightProperty().addListener((py, ov, height) -> canvasContainer.resizeTo(parentScene.getWidth(), height.doubleValue()));
 
         bindAction(ACTION_BOOT_SHOW_GAME_VIEW, GLOBAL_ACTION_BINDINGS);
         bindAction(ACTION_ENTER_FULLSCREEN, GLOBAL_ACTION_BINDINGS);
@@ -196,8 +192,8 @@ public class GameView implements PacManGames_View {
             }
         });
 
-        if (miniGameView.root().isVisible()) {
-            miniGameView.draw();
+        if (miniGameView.isVisible() && theUI().currentGameSceneIsPlayScene3D() && optGameLevel().isPresent()) {
+            miniGameView.draw(theGameLevel());
         }
         flashMessageLayer.update();
 
@@ -342,7 +338,7 @@ public class GameView implements PacManGames_View {
     private void configureMiniGameView() {
         miniGameView.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
         miniGameView.debugProperty().bind(PY_DEBUG_INFO_VISIBLE);
-        miniGameView.heightProperty().bind(PY_PIP_HEIGHT);
+        miniGameView.canvasHeightProperty().bind(PY_PIP_HEIGHT);
         miniGameView.opacityProperty().bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
         miniGameView.visibleProperty().bind(Bindings.createObjectBinding(
             () -> PY_PIP_ON.get() && ui.currentGameSceneIsPlayScene3D(),
@@ -377,7 +373,7 @@ public class GameView implements PacManGames_View {
             dashboard.visibleProperty(), PY_PIP_ON
         ));
         dashboardLayer.setLeft(dashboard);
-        dashboardLayer.setRight(miniGameView.root());
+        dashboardLayer.setRight(miniGameView);
 
         dashboard.setVisible(false);
 
