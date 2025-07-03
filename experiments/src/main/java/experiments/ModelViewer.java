@@ -1,6 +1,5 @@
 package experiments;
 
-import de.amr.pacmanfx.uilib.model3D.Model3D;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import javafx.application.Application;
 import javafx.scene.*;
@@ -10,7 +9,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
 import javafx.stage.FileChooser;
@@ -25,6 +23,7 @@ public class ModelViewer extends Application {
     static final String DIR = REPOSITORY_DIR
         + "pacman-ui-lib/src/main/resources/de/amr/pacmanfx/uilib/model3D";
 
+    private final Model3DRepository model3DRepository = new Model3DRepository();
     private Stage stage;
     private SubScene previewArea;
     private final BorderPane layoutPane = new BorderPane();
@@ -90,8 +89,8 @@ public class ModelViewer extends Application {
         if (selectedFile != null) {
             Logger.info("File {} selected", selectedFile);
             try {
-                Node shape = Model3DRepository.get().createPacShape(16, Color.YELLOW, Color.BLACK, Color.PINK);
-                Model3D.allMeshViewsUnder(shape).forEach(meshView -> meshView.setDrawMode(DrawMode.LINE));
+                Node shape = model3DRepository.createPacShape(16, Color.YELLOW, Color.BLACK, Color.PINK);
+                //allMeshViewsUnder(shape).forEach(meshView -> meshView.setDrawMode(DrawMode.LINE));
                 setCurrentNode(new Group(shape));
             } catch (Exception x) {
                 Logger.error(x);

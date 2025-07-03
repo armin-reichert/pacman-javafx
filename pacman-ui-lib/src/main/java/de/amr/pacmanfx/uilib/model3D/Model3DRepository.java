@@ -30,6 +30,12 @@ public final class Model3DRepository {
     public static final String ID_GHOST_MODEL = "Ghost";
     public static final String ID_PELLET_MODEL = "Pellet";
 
+    public static final Map<String, String> MODEL_PATHS = Map.of(
+            ID_PAC_MAN_MODEL, "/de/amr/pacmanfx/uilib/model3D/pacman.obj",
+            ID_GHOST_MODEL,   "/de/amr/pacmanfx/uilib/model3D/ghost.obj",
+            ID_PELLET_MODEL,  "/de/amr/pacmanfx/uilib/model3D/pellet.obj"
+    );
+
     private static final String PAC_MAN_MESH_ID_EYES   = "PacMan.Eyes";
     private static final String PAC_MAN_MESH_ID_HEAD   = "PacMan.Head";
     private static final String PAC_MAN_MESH_ID_PALATE = "PacMan.Palate";
@@ -46,17 +52,11 @@ public final class Model3DRepository {
 
     public Model3D getModel(String modelID) {
         requireNonNull(modelID);
-        return getOrLoadModel(modelID, switch (modelID) {
-            case ID_PAC_MAN_MODEL -> "/de/amr/pacmanfx/uilib/model3D/pacman.obj";
-            case ID_GHOST_MODEL   -> "/de/amr/pacmanfx/uilib/model3D/ghost.obj";
-            case ID_PELLET_MODEL  -> "/de/amr/pacmanfx/uilib/model3D/pellet.obj";
-            default -> throw new IllegalArgumentException("Illegal 3D model ID %s".formatted(modelID));
-        });
-    }
-
-    private Model3D getOrLoadModel(String modelID, String path) {
+        if (!MODEL_PATHS.containsKey(modelID)) {
+            throw new IllegalArgumentException("Illegal 3D model ID %s".formatted(modelID));
+        }
         if (!modelMap.containsKey(modelID)) {
-            modelMap.put(modelID, loadModel(path));
+            modelMap.put(modelID, loadModel(MODEL_PATHS.get(modelID)));
         }
         return modelMap.get(modelID);
     }
