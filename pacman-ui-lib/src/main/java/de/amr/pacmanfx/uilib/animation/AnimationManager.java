@@ -7,7 +7,10 @@ package de.amr.pacmanfx.uilib.animation;
 import javafx.animation.Animation;
 import org.tinylog.Logger;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 import static de.amr.pacmanfx.uilib.animation.ManagedAnimation.CONTINUE;
 import static java.util.Objects.requireNonNull;
@@ -23,23 +26,25 @@ public class AnimationManager {
         requireNonNull(label);
         requireNonNull(managedAnimation);
         if (animationMap.containsValue(managedAnimation)) {
-            Logger.info("Animation with label '{}' is already registered", label);
+            Logger.warn("Animation with label '{}' is already registered", label);
         } else {
             String id = label + "_" + UUID.randomUUID();
             animationMap.put(id, managedAnimation);
-            Logger.info("Animation registered: ID='{}'", id);
+            Logger.trace("Animation registered: ID='{}'", id);
         }
     }
 
     public void playAnimation(ManagedAnimation ma, boolean playMode) {
-        ma.getOrCreateAnimation();
-        if (ma.animation.getStatus() != Animation.Status.RUNNING) {
+        requireNonNull(ma);
+        Animation animation = ma.getOrCreateAnimation();
+        requireNonNull(animation);
+        if (animation.getStatus() != Animation.Status.RUNNING) {
             if (playMode == ManagedAnimation.FROM_START) {
                 Logger.trace("Playing animation with label '{}' from start", ma.label);
-                ma.animation.playFromStart();
+                animation.playFromStart();
             } else if (playMode == CONTINUE) {
                 Logger.trace("Continuing animation with label '{}'", ma.label);
-                ma.animation.play();
+                animation.play();
             }
         }
     }
@@ -48,14 +53,12 @@ public class AnimationManager {
         requireNonNull(ma);
         ma.animation().ifPresent(animation -> {
             try {
-                if (animation.getStatus() == Animation.Status.PAUSED) {
-                    Logger.debug("Already paused: animation with label='{}' ({})", ma.label(), ma);
-                } else {
+                if (animation.getStatus() != Animation.Status.PAUSED) {
                     animation.pause();
-                    Logger.debug("Paused animation with label='{}' ({})", ma.label(), ma);
+                    Logger.debug("Paused animation with label='{}'", ma.label());
                 }
             } catch (IllegalStateException x) {
-                Logger.warn("Could not pause (embedded?) animation with label='{}' ({})", ma.label(), ma);
+                Logger.warn("Could not pause (embedded?) animation with label='{}'", ma.label());
             }
         });
     }
@@ -64,14 +67,12 @@ public class AnimationManager {
         requireNonNull(ma);
         ma.animation().ifPresent(animation -> {
             try {
-                if (animation.getStatus() == Animation.Status.STOPPED) {
-                    Logger.debug("Already stopped: animation with label='{}' ({})", ma.label(), ma);
-                } else {
+                if (animation.getStatus() != Animation.Status.STOPPED) {
                     animation.stop();
-                    Logger.debug("Stopped animation with label='{}' ({})", ma.label(), ma);
+                    Logger.debug("Stopped animation with label='{}'", ma.label());
                 }
             } catch (IllegalStateException x) {
-                Logger.warn("Could not stop (embedded?) animation with label='{}' ({})", ma.label(), ma);
+                Logger.warn("Could not stop (embedded?) animation with label='{}'", ma.label());
             }
         });
     }
@@ -86,7 +87,7 @@ public class AnimationManager {
 
     public void removeAllAnimations() {
         animationMap.clear();
-        Logger.info("Animations removed");
+        Logger.info("Animation map cleared");
     }
 
     public Map<String, ManagedAnimation> animationMap() {
