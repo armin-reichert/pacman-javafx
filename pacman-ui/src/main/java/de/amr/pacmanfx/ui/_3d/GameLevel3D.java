@@ -174,6 +174,7 @@ public class GameLevel3D {
 
         {
             pac3D = theUI().configuration().createPac3D(animationManager, gameLevel.pac());
+            pac3D.init();
             root.getChildren().addAll(pac3D.root(), pac3D.light());
         }
 
@@ -189,6 +190,7 @@ public class GameLevel3D {
                     gameLevel.data().numFlashes()
                 )).toList();
             root.getChildren().addAll(ghosts3D);
+            ghosts3D.forEach(ghost3D -> ghost3D.init(gameLevel));
         }
 
         root.getChildren().add(mazeGroup);
