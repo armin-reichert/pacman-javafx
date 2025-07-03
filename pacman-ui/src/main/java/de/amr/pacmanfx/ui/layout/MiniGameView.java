@@ -128,6 +128,10 @@ public class MiniGameView extends VBox {
             Logger.warn("Cannot draw game scene without game renderer");
             return;
         }
+        if (gameLevel == null) {
+            Logger.warn("No game level to draw in mini game view");
+            return;
+        }
         gr.setScaling(scaling);
         gr.drawLevel(gameLevel, backgroundColorProperty().get(), false, gameLevel.blinking().isOn());
         gameLevel.bonus().map(Bonus::actor).ifPresent(gr::drawActor);
