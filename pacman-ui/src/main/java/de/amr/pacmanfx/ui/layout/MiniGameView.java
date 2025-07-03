@@ -130,16 +130,15 @@ public class MiniGameView extends VBox {
         }
         gr.setScaling(scaling);
         gr.drawLevel(gameLevel, backgroundColorProperty().get(), false, gameLevel.blinking().isOn());
-        var actors = new ArrayList<Actor>();
-        gameLevel.bonus().map(Bonus::actor).ifPresent(actors::add);
-        actors.add(gameLevel.pac());
-        Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW).map(gameLevel::ghost).forEach(actors::add);
-        actors.forEach(gr::drawActor);
+        gameLevel.bonus().map(Bonus::actor).ifPresent(gr::drawActor);
+        gr.drawActor(gameLevel.pac());
+        Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)
+            .map(gameLevel::ghost).forEach(gr::drawActor);
         if (debugProperty().get()) {
             ctx.save();
+            ctx.setTextAlign(TextAlignment.CENTER);
             ctx.setFill(Color.WHITE);
             ctx.setFont(Font.font(14 * scaling));
-            ctx.setTextAlign(TextAlignment.CENTER);
             ctx.fillText("scaling: %.2f, draw calls: %d".formatted(scaling, drawCallCount), canvas.getWidth() * 0.5, 16 * scaling);
             ctx.restore();
         }
