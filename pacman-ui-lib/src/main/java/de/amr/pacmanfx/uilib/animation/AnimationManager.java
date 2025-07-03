@@ -90,6 +90,19 @@ public class AnimationManager {
         Logger.info("Animation map cleared");
     }
 
+    public void destroyAnimation(ManagedAnimation managedAnimation) {
+        if (managedAnimation != null && managedAnimation.animation != null) {
+            managedAnimation.animation.stop();
+            managedAnimation.animation.setOnFinished(null);
+            Logger.info("Destroyed managed animation '{}'", managedAnimation.label);
+        }
+    }
+
+    public void destroyAllAnimations() {
+        animationMap.values().forEach(this::destroyAnimation);
+        removeAllAnimations();
+    }
+
     public Map<String, ManagedAnimation> animationMap() {
         return Collections.unmodifiableMap(animationMap);
     }

@@ -65,20 +65,20 @@ public class GameLevel3D {
         }
     }
 
-    private final BooleanProperty houseOpenPy = new SimpleBooleanProperty() {
+    private final BooleanProperty houseOpenProperty = new SimpleBooleanProperty() {
         @Override
         protected void invalidated() {
-            if (houseOpenPy.get()) {
+            if (houseOpenProperty.get()) {
                 house3D.doorOpenCloseAnimation().playFromStart();
             }
         }
     };
 
-    private final IntegerProperty livesCountPy         = new SimpleIntegerProperty(0);
-    private final DoubleProperty  obstacleBaseHeightPy = new SimpleDoubleProperty(Settings3D.OBSTACLE_3D_BASE_HEIGHT);
-    private final DoubleProperty  wallOpacityPy        = new SimpleDoubleProperty(1);
-    private final DoubleProperty  houseBaseHeightPy    = new SimpleDoubleProperty(Settings3D.HOUSE_3D_BASE_HEIGHT);
-    private final BooleanProperty houseLightOnPy       = new SimpleBooleanProperty(false);
+    private final IntegerProperty livesCountProperty = new SimpleIntegerProperty(0);
+    private final DoubleProperty  obstacleBaseHeightProperty = new SimpleDoubleProperty(Settings3D.OBSTACLE_3D_BASE_HEIGHT);
+    private final DoubleProperty  wallOpacityProperty = new SimpleDoubleProperty(1);
+    private final DoubleProperty  houseBaseHeightProperty = new SimpleDoubleProperty(Settings3D.HOUSE_3D_BASE_HEIGHT);
+    private final BooleanProperty houseLightOnProperty = new SimpleBooleanProperty(false);
 
     private final AnimationManager animationManager = new AnimationManager();
     private ManagedAnimation wallColorFlashingAnimation;
@@ -164,7 +164,7 @@ public class GameLevel3D {
             livesCounter3D = new LivesCounter3D(animationManager, livesCounterShapes);
             livesCounter3D.setTranslateX(2 * TS);
             livesCounter3D.setTranslateY(2 * TS);
-            livesCounter3D.livesCountProperty().bind(livesCountPy);
+            livesCounter3D.livesCountProperty().bind(livesCountProperty);
             livesCounter3D.pillarColorProperty().set(Settings3D.LIVES_COUNTER_PILLAR_COLOR);
             livesCounter3D.plateColorProperty().set(Settings3D.LIVES_COUNTER_PLATE_COLOR);
             livesCounter3D.light().colorProperty().set(Color.CORNFLOWERBLUE);
@@ -202,8 +202,8 @@ public class GameLevel3D {
 
             wallBaseMaterial = new PhongMaterial();
             wallBaseMaterial.diffuseColorProperty().bind(Bindings.createObjectBinding(
-                    () -> opaqueColor(colorScheme.stroke(), wallOpacityPy.get()),
-                    wallOpacityPy
+                    () -> opaqueColor(colorScheme.stroke(), wallOpacityProperty.get()),
+                wallOpacityProperty
             ));
             wallBaseMaterial.specularColorProperty().bind(wallBaseMaterial.diffuseColorProperty().map(Color::brighter));
 
@@ -219,17 +219,17 @@ public class GameLevel3D {
             cornerTopMaterial.setDiffuseColor(colorScheme.fill());
             cornerTopMaterial.specularColorProperty().bind(cornerTopMaterial.diffuseColorProperty().map(Color::brighter));
 
-            wallOpacityPy.bind(PY_3D_WALL_OPACITY);
+            wallOpacityProperty.bind(PY_3D_WALL_OPACITY);
 
             r3D = new TerrainMapRenderer3D();
-            r3D.setWallBaseHeightProperty(obstacleBaseHeightPy);
+            r3D.setWallBaseHeightProperty(obstacleBaseHeightProperty);
             r3D.setWallTopHeight(Settings3D.OBSTACLE_3D_TOP_HEIGHT);
             r3D.setWallTopMaterial(wallTopMaterial);
             r3D.setCornerBaseMaterial(cornerBaseMaterial);
             r3D.setCornerTopMaterial(wallTopMaterial); // for now such that power animation also affects corner top
 
             //TODO check this:
-            obstacleBaseHeightPy.set(PY_3D_WALL_HEIGHT.get());
+            obstacleBaseHeightProperty.set(PY_3D_WALL_HEIGHT.get());
 
             for (Obstacle obstacle : gameLevel.worldMap().obstacles()) {
                 Vector2i tile = tileAt(obstacle.startPoint().toVector2f());
@@ -251,8 +251,8 @@ public class GameLevel3D {
                         colorScheme.stroke(),
                         colorScheme.door()
                 );
-                house3D.wallBaseHeightProperty().bind(houseBaseHeightPy);
-                house3D.light().lightOnProperty().bind(houseLightOnPy);
+                house3D.wallBaseHeightProperty().bind(houseBaseHeightProperty);
+                house3D.light().lightOnProperty().bind(houseLightOnProperty);
                 maze3D.getChildren().add(house3D);
             }
 
@@ -280,9 +280,9 @@ public class GameLevel3D {
             protected Animation createAnimation() {
                 var totalDuration = Duration.seconds(1);
                 var houseDisappears = new Timeline(
-                    new KeyFrame(totalDuration.multiply(0.33), new KeyValue(houseBaseHeightPy, 0, Interpolator.EASE_IN)));
+                    new KeyFrame(totalDuration.multiply(0.33), new KeyValue(houseBaseHeightProperty, 0, Interpolator.EASE_IN)));
                 var obstaclesDisappear = new Timeline(
-                    new KeyFrame(totalDuration.multiply(0.33), new KeyValue(obstacleBaseHeightPy, 0, Interpolator.EASE_IN)));
+                    new KeyFrame(totalDuration.multiply(0.33), new KeyValue(obstacleBaseHeightProperty, 0, Interpolator.EASE_IN)));
                 var animation = new SequentialTransition(houseDisappears, obstaclesDisappear);
                 animation.setOnFinished(e -> maze3D.setVisible(false));
                 return animation;
@@ -361,21 +361,21 @@ public class GameLevel3D {
         boolean houseAccessRequired = gameLevel
             .ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
             .anyMatch(Ghost::isVisible);
-        houseLightOnPy.set(houseAccessRequired);
+        houseLightOnProperty.set(houseAccessRequired);
 
         gameLevel.house().ifPresent(house -> {
             boolean ghostNearHouseEntry = gameLevel
                 .ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
                 .filter(ghost -> ghost.position().euclideanDist(house.entryPosition()) <= Settings3D.HOUSE_3D_SENSITIVITY)
                 .anyMatch(Ghost::isVisible);
-            houseOpenPy.set(ghostNearHouseEntry);
+            houseOpenProperty.set(ghostNearHouseEntry);
         });
 
         int livesCounterSize = theGame().lifeCount() - 1;
         // when the game starts and Pac-Man is not yet visible, show one more
         boolean oneMore = theGameState() == GameState.STARTING_GAME && !gameLevel.pac().isVisible();
         if (oneMore) livesCounterSize += 1;
-        livesCountPy.set(livesCounterSize);
+        livesCountProperty.set(livesCounterSize);
 
         boolean visible = theGame().canStartNewGame();
         livesCounter3D.setVisible(visible);
@@ -495,7 +495,7 @@ public class GameLevel3D {
         }
         var flashing = new Timeline(
             new KeyFrame(Duration.millis(0.5 * flashDurationMillis),
-                new KeyValue(obstacleBaseHeightPy, 0, Interpolator.EASE_BOTH)
+                new KeyValue(obstacleBaseHeightProperty, 0, Interpolator.EASE_BOTH)
             )
         );
         flashing.setAutoReverse(true);
@@ -515,7 +515,7 @@ public class GameLevel3D {
 
     private void handleWallHeightChange(ObservableValue<? extends Number> py, Number ov, Number newHeight) {
         if (isDestroyed()) return; //TODO how can that be?
-        obstacleBaseHeightPy.set(newHeight.doubleValue());
+        obstacleBaseHeightProperty.set(newHeight.doubleValue());
     }
 
     // experimental
@@ -526,7 +526,9 @@ public class GameLevel3D {
         return destroyed;
     }
 
-    // Attempt to help objects getting garbage-collected
+    /**
+     * Attempt to help objects getting garbage-collected.
+     */
     public void destroy() {
         if (destroyed) {
             Logger.warn("Game level has already been destroyed");
@@ -541,19 +543,41 @@ public class GameLevel3D {
         PY_3D_WALL_HEIGHT.removeListener(this::handleWallHeightChange);
         Logger.info("Removed 'wall height' listener");
 
-        animationManager.stopAllAnimations();
-        animationManager.removeAllAnimations();
+        if (wallBaseMaterial != null) {
+            wallBaseMaterial.diffuseColorProperty().unbind();
+            wallBaseMaterial.specularColorProperty().unbind();
+            wallBaseMaterial = null;
+        }
+        if (wallTopMaterial != null) {
+            wallTopMaterial.diffuseColorProperty().unbind();
+            wallTopMaterial.specularColorProperty().unbind();
+            wallTopMaterial = null;
+        }
+        if (cornerBaseMaterial != null) {
+            cornerBaseMaterial.diffuseColorProperty().unbind();
+            cornerBaseMaterial.specularColorProperty().unbind();
+            cornerBaseMaterial = null;
+        }
+        if (cornerTopMaterial != null) {
+            cornerTopMaterial.diffuseColorProperty().unbind();
+            cornerTopMaterial.specularColorProperty().unbind();
+            cornerTopMaterial = null;
+        }
+        Logger.info("Unbound and cleared material references");
+
+        livesCountProperty.unbind();
+        houseOpenProperty.unbind();
+        obstacleBaseHeightProperty.unbind();
+        houseBaseHeightProperty.unbind();
+        houseLightOnProperty.unbind();
+
+        animationManager.destroyAllAnimations();
         wallColorFlashingAnimation = null;
         wallsDisappearingAnimation = null;
         levelCompletedAnimation = null;
         levelCompletedAnimationBeforeCutScene = null;
-        Logger.info("Stopped and removed all managed animations");
+        Logger.info("Destroyed and removed all managed animations");
 
-        wallBaseMaterial = null;
-        wallTopMaterial = null;
-        cornerBaseMaterial= null;
-        cornerTopMaterial = null;
-        Logger.info("Cleared material references");
 
         if (dressMeshViews != null) {
             for (MeshView meshView : dressMeshViews) {
