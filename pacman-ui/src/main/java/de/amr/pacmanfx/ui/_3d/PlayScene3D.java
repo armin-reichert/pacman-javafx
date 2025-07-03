@@ -84,7 +84,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     }
 
     public Optional<GameLevel3D> level3D() {
-        return level3D != null && !level3D.isDestroyed() ? Optional.of(level3D) : Optional.empty();
+        return Optional.ofNullable(level3D);
     }
 
     @Override
@@ -214,8 +214,8 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             return;
         }
         if (level3D.isDestroyed()) {
-            Logger.warn("Tick #{}: 3D game level is in destroy phase", theClock().tickCount());
-            return;
+            Logger.error("Tick #{}: 3D game level is in destroy phase", theClock().tickCount());
+            theUI().terminateApp();
         }
         level3D.tick(theGameLevel());
         updateScores(theGameLevel());

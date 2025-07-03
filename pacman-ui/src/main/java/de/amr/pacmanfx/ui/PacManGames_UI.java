@@ -129,4 +129,6 @@ public interface PacManGames_UI {
     // Flash messages
     default void showFlashMessage(String message, Object... args) { showFlashMessageSec(1.5, message, args); }
     void showFlashMessageSec(double seconds, String message, Object... args);
+
+    void terminateApp();
 }

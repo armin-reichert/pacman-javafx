@@ -16,6 +16,7 @@ import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.layout.*;
 import de.amr.pacmanfx.ui.sound.PacManGames_Sound;
 import de.amr.pacmanfx.uilib.GameClock;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -38,8 +39,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.ui.PacManGames.theAssets;
-import static de.amr.pacmanfx.ui.PacManGames.theKeyboard;
+import static de.amr.pacmanfx.ui.PacManGames.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -361,6 +361,12 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     // -----------------------------------------------------------------------------------------------------------------
     // GameUI interface implementation
     // -----------------------------------------------------------------------------------------------------------------
+
+
+    @Override
+    public void terminateApp() {
+        Platform.exit();
+    }
 
     @Override
     public ObjectProperty<GameScene> currentGameSceneProperty() {
