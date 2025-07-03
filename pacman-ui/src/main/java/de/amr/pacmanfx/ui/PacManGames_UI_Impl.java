@@ -16,6 +16,7 @@ import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.layout.*;
 import de.amr.pacmanfx.ui.sound.PacManGames_Sound;
 import de.amr.pacmanfx.uilib.GameClock;
+import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
@@ -39,7 +40,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.ui.PacManGames.*;
+import static de.amr.pacmanfx.ui.PacManGames.theAssets;
+import static de.amr.pacmanfx.ui.PacManGames.theKeyboard;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -215,6 +217,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     private final ObjectProperty<PacManGames_View> currentViewPy      = new SimpleObjectProperty<>();
     private final ObjectProperty<GameScene>        currentGameScenePy = new SimpleObjectProperty<>();
 
+    private final Model3DRepository model3DRepository = new Model3DRepository();
     private final StackPane rootPane = new StackPane();
     private final Stage stage;
     private final StartPagesView startPagesView;
@@ -345,7 +348,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
     private EditorView lazyGetEditorView() {
         if (editorView == null) {
-            var editor = new TileMapEditor(stage);
+            var editor = new TileMapEditor(stage, model3DRepository);
             var miQuit = new MenuItem(theAssets().text("back_to_game"));
             miQuit.setOnAction(e -> {
                 editor.stop();
@@ -362,6 +365,10 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     // GameUI interface implementation
     // -----------------------------------------------------------------------------------------------------------------
 
+    @Override
+    public Model3DRepository model3DRepository() {
+        return model3DRepository;
+    }
 
     @Override
     public void terminateApp() {

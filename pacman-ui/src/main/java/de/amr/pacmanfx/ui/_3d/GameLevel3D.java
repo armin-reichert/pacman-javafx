@@ -86,26 +86,9 @@ public class GameLevel3D {
     private ManagedAnimation levelCompletedAnimation;
     private ManagedAnimation levelCompletedAnimationBeforeCutScene;
 
-    private MeshView[] dressMeshViews = {
-            new MeshView(Model3DRepository.get().ghostDressMesh()),
-            new MeshView(Model3DRepository.get().ghostDressMesh()),
-            new MeshView(Model3DRepository.get().ghostDressMesh()),
-            new MeshView(Model3DRepository.get().ghostDressMesh()),
-    };
-
-    private MeshView[] pupilsMeshViews = {
-            new MeshView(Model3DRepository.get().ghostPupilsMesh()),
-            new MeshView(Model3DRepository.get().ghostPupilsMesh()),
-            new MeshView(Model3DRepository.get().ghostPupilsMesh()),
-            new MeshView(Model3DRepository.get().ghostPupilsMesh()),
-    };
-
-    private MeshView[] eyesMeshViews = new MeshView[] {
-            new MeshView(Model3DRepository.get().ghostEyeballsMesh()),
-            new MeshView(Model3DRepository.get().ghostEyeballsMesh()),
-            new MeshView(Model3DRepository.get().ghostEyeballsMesh()),
-            new MeshView(Model3DRepository.get().ghostEyeballsMesh()),
-    };
+    private MeshView[] dressMeshViews;
+    private MeshView[] pupilsMeshViews;
+    private MeshView[] eyesMeshViews;
 
     private PhongMaterial wallBaseMaterial;
     private PhongMaterial wallTopMaterial;
@@ -133,8 +116,9 @@ public class GameLevel3D {
 
     // Note: The order in which children are added to the root matters!
     // Walls and house must be added *after* the actors, otherwise the transparency is not working correctly.
-    public GameLevel3D(GameLevel gameLevel, WorldMapColorScheme proposedColorScheme)
+    public GameLevel3D(Model3DRepository model3DRepository, GameLevel gameLevel, WorldMapColorScheme proposedColorScheme)
     {
+        requireNonNull(model3DRepository);
         requireNonNull(gameLevel);
 
         requireNonNull(proposedColorScheme);
@@ -142,6 +126,28 @@ public class GameLevel3D {
         colorScheme = proposedColorScheme.fill().equals(Color.BLACK)
             ? new WorldMapColorScheme(Color.grayRgb(42), proposedColorScheme.stroke(), proposedColorScheme.door(), proposedColorScheme.pellet())
             : proposedColorScheme;
+
+
+        dressMeshViews = new MeshView[] {
+                new MeshView(model3DRepository.ghostDressMesh()),
+                new MeshView(model3DRepository.ghostDressMesh()),
+                new MeshView(model3DRepository.ghostDressMesh()),
+                new MeshView(model3DRepository.ghostDressMesh()),
+        };
+
+        pupilsMeshViews = new MeshView[] {
+                new MeshView(model3DRepository.ghostPupilsMesh()),
+                new MeshView(model3DRepository.ghostPupilsMesh()),
+                new MeshView(model3DRepository.ghostPupilsMesh()),
+                new MeshView(model3DRepository.ghostPupilsMesh()),
+        };
+
+        eyesMeshViews = new MeshView[] {
+                new MeshView(model3DRepository.ghostEyeballsMesh()),
+                new MeshView(model3DRepository.ghostEyeballsMesh()),
+                new MeshView(model3DRepository.ghostEyeballsMesh()),
+                new MeshView(model3DRepository.ghostEyeballsMesh()),
+        };
 
         {
             ambientLight = new AmbientLight();
@@ -159,7 +165,7 @@ public class GameLevel3D {
 
         {
             for (int i = 0; i < livesCounterShapes.length; ++i) {
-                livesCounterShapes[i] = theUI().configuration().createLivesCounter3D();
+                livesCounterShapes[i] = theUI().configuration().createLivesCounter3D(model3DRepository);
             }
             livesCounter3D = new LivesCounter3D(animationManager, livesCounterShapes);
             livesCounter3D.setTranslateX(2 * TS);
@@ -173,7 +179,7 @@ public class GameLevel3D {
         }
 
         {
-            pac3D = theUI().configuration().createPac3D(animationManager, gameLevel.pac());
+            pac3D = theUI().configuration().createPac3D(model3DRepository, animationManager, gameLevel.pac());
             pac3D.init();
             root.getChildren().addAll(pac3D.root(), pac3D.light());
         }
@@ -259,7 +265,7 @@ public class GameLevel3D {
             mazeGroup.getChildren().addAll(floor3D, maze3D);
         }
 
-        createPelletsAndEnergizers3D(gameLevel, colorScheme, Model3DRepository.get().pelletMesh());
+        createPelletsAndEnergizers3D(gameLevel, colorScheme, model3DRepository.pelletMesh());
         energizers3D.stream().map(Eatable3D::shape3D).forEach(root.getChildren()::add);
         pellets3D   .stream().map(Eatable3D::shape3D).forEach(root.getChildren()::add);
 

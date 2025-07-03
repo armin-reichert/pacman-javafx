@@ -181,8 +181,8 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
     }
 
     @Override
-    public Node createLivesCounter3D() {
-        return Model3DRepository.get().createPacShape(
+    public Node createLivesCounter3D(Model3DRepository model3DRepository) {
+        return model3DRepository.createPacShape(
                 Settings3D.LIVES_COUNTER_3D_SHAPE_SIZE,
                 theAssets().color(ANS + ".pac.color.head"),
                 theAssets().color(ANS + ".pac.color.eyes"),
@@ -191,8 +191,8 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
     }
 
     @Override
-    public PacBase3D createPac3D(AnimationManager animationMgr, Pac pac) {
-        var pac3D = new PacMan3D(animationMgr, pac, Settings3D.PAC_3D_SIZE, theAssets(), ANS);
+    public PacBase3D createPac3D(Model3DRepository model3DRepository, AnimationManager animationManager, Pac pac) {
+        var pac3D = new PacMan3D(model3DRepository, animationManager, pac, Settings3D.PAC_3D_SIZE, theAssets(), ANS);
         pac3D.light().setColor(theAssets().color(ANS + ".pac.color.head").desaturate());
         return pac3D;
     }

@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tilemap.editor;
 
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
+import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -18,6 +19,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 
 import static de.amr.pacmanfx.Globals.TS;
+import static java.util.Objects.requireNonNull;
 
 public class MazePreview3D {
 
@@ -31,8 +33,10 @@ public class MazePreview3D {
     private double anchorX;
     private double anchorAngle;
 
-    public MazePreview3D(double width, double height) {
-        maze3D = new Maze3D();
+    public MazePreview3D(Model3DRepository model3DRepository, double width, double height) {
+        requireNonNull(model3DRepository);
+
+        maze3D = new Maze3D(model3DRepository);
         maze3D.foodVisibleProperty().bind(foodVisiblePy);
         maze3D.terrainVisibleProperty().bind(terrainVisiblePy);
 

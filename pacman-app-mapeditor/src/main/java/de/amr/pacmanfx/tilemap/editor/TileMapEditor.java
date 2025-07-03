@@ -8,6 +8,7 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.*;
 import de.amr.pacmanfx.model.WorldMapProperty;
+import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapColorScheme;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer;
@@ -172,8 +173,7 @@ public class TileMapEditor {
         }
     }
 
-    // Attributes
-
+    private final Model3DRepository model3DRepository;
     private final ChangeManager changeManager = new ChangeManager();
     private File currentDirectory;
     private Instant messageCloseTime;
@@ -371,8 +371,9 @@ public class TileMapEditor {
         return tilesWithErrors;
     }
 
-    public TileMapEditor(Stage stage) {
+    public TileMapEditor(Stage stage, Model3DRepository model3DRepository) {
         this.stage = requireNonNull(stage);
+        this.model3DRepository = requireNonNull(model3DRepository);
 
         TerrainMapColorScheme initialColors = new TerrainMapColorScheme(
             Color.BLACK,
@@ -517,7 +518,7 @@ public class TileMapEditor {
     }
 
     private void createPreview3D() {
-        mazePreview3D = new MazePreview3D(500, 500);
+        mazePreview3D = new MazePreview3D(model3DRepository, 500, 500);
         mazePreview3D.foodVisibleProperty().bind(foodVisiblePy);
         mazePreview3D.terrainVisibleProperty().bind(terrainVisiblePy);
         mazePreview3D.worldMapProperty().bind(editedWorldMapPy);

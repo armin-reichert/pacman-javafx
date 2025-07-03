@@ -8,6 +8,7 @@ import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.layout.GameView;
 import de.amr.pacmanfx.ui.layout.PacManGames_View;
 import de.amr.pacmanfx.ui.layout.StartPagesView;
+import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import javafx.beans.property.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
@@ -109,6 +110,8 @@ public interface PacManGames_UI {
     PacManGames_UIConfig configuration(String gameVariant);
     PacManGames_UIConfig configuration();
     void setConfiguration(String variant, PacManGames_UIConfig configuration);
+
+    Model3DRepository model3DRepository();
 
     // Game scenes
     ObjectProperty<GameScene> currentGameSceneProperty();

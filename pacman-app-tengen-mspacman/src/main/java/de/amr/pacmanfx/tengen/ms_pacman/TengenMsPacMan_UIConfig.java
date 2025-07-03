@@ -233,15 +233,15 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     }
 
     @Override
-    public Node createLivesCounter3D() {
+    public Node createLivesCounter3D(Model3DRepository model3DRepository) {
         return new Group(
-            Model3DRepository.get().createPacShape(
+            model3DRepository.createPacShape(
                     Settings3D.LIVES_COUNTER_3D_SHAPE_SIZE,
                     theAssets().color(ANS + ".pac.color.head"),
                     theAssets().color(ANS + ".pac.color.eyes"),
                     theAssets().color(ANS + ".pac.color.palate")
             ),
-            Model3DRepository.get().createFemaleBodyParts(Settings3D.LIVES_COUNTER_3D_SHAPE_SIZE,
+            model3DRepository.createFemaleBodyParts(Settings3D.LIVES_COUNTER_3D_SHAPE_SIZE,
                     theAssets().color(ANS + ".pac.color.hairbow"),
                     theAssets().color(ANS + ".pac.color.hairbow.pearls"),
                     theAssets().color(ANS + ".pac.color.boobs")
@@ -250,8 +250,8 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     }
 
     @Override
-    public PacBase3D createPac3D(AnimationManager animationMgr, Pac pac) {
-        var pac3D = new MsPacMan3D(animationMgr, pac, Settings3D.PAC_3D_SIZE, theAssets(), ANS);
+    public PacBase3D createPac3D(Model3DRepository model3DRepository, AnimationManager animationManager, Pac pac) {
+        var pac3D = new MsPacMan3D(model3DRepository, animationManager, pac, Settings3D.PAC_3D_SIZE, theAssets(), ANS);
         pac3D.light().setColor(theAssets().color(ANS + ".pac.color.head").desaturate());
         return pac3D;
     }

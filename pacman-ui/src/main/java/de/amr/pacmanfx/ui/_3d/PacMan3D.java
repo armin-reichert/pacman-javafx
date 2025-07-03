@@ -8,6 +8,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
+import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.model3D.PacBase3D;
 import javafx.animation.*;
 import javafx.geometry.Point3D;
@@ -75,8 +76,8 @@ public class PacMan3D extends PacBase3D {
         }
     }
 
-    public PacMan3D(AnimationManager animationManager, Pac pac, double size, AssetStorage assets, String ans) {
-        super(animationManager, pac, size, assets, ans);
+    public PacMan3D(Model3DRepository model3DRepository, AnimationManager animationManager, Pac pac, double size, AssetStorage assets, String ans) {
+        super(model3DRepository, animationManager, pac, size, assets, ans);
 
         dyingAnimation = new ManagedAnimation(animationManager, "PacMan_Dying") {
             @Override

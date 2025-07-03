@@ -43,7 +43,8 @@ public class PacBase3D {
     protected ManagedAnimation movementAnimation;
     protected ManagedAnimation dyingAnimation;
 
-    protected PacBase3D(AnimationManager animationManager, Pac pac, double size, AssetStorage assets, String ans) {
+    protected PacBase3D(Model3DRepository model3DRepository, AnimationManager animationManager, Pac pac, double size, AssetStorage assets, String ans) {
+        requireNonNull(model3DRepository);
         this.animationManager = requireNonNull(animationManager);
         this.pac = requireNonNull(pac);
         this.size = size;
@@ -51,11 +52,11 @@ public class PacBase3D {
         requireNonNull(assets);
         requireNonNull(ans);
 
-        jaw = Model3DRepository.get().createPacSkull(size,
+        jaw = model3DRepository.createPacSkull(size,
             assets.color(ans + ".pac.color.head"),
             assets.color(ans + ".pac.color.palate"));
 
-        body = Model3DRepository.get().createPacShape(size,
+        body = model3DRepository.createPacShape(size,
             assets.color(ans + ".pac.color.head"),
             assets.color(ans + ".pac.color.eyes"),
             assets.color(ans + ".pac.color.palate"));
