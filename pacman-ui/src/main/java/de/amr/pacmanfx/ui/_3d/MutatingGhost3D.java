@@ -18,6 +18,7 @@ import javafx.animation.RotateTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.paint.PhongMaterial;
@@ -32,6 +33,7 @@ import java.util.WeakHashMap;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireNonNegative;
+import static de.amr.pacmanfx.Validations.requireNonNegativeInt;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -46,7 +48,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class MutatingGhost3D extends Group {
 
-    private static final double GHOST_ELEVATION = 2.0;
+    private static final double GHOST_OVER_FLOOR_DIST = 2.0;
 
     private static boolean isPositionOutsideWorld(GameLevel gameLevel, Vector2f center) {
         return center.x() < HTS || center.x() > gameLevel.worldMap().numCols() * TS - HTS;
@@ -54,14 +56,17 @@ public class MutatingGhost3D extends Group {
 
     private final ObjectProperty<GhostAppearance> appearanceProperty = new SimpleObjectProperty<>();
 
-    private final Map<Image, PhongMaterial> textureCache = new WeakHashMap<>();
+    private final Map<Image, PhongMaterial> numberMaterialCache = new WeakHashMap<>();
     private final Ghost ghost;
-    private final Ghost3D ghost3D;
-    private final Box numberBox;
     private final double size;
+    private final int numFlashes;
 
-    private final ManagedAnimation brakeAnimation;
-    private final ManagedAnimation pointsAnimation;
+    private Ghost3D ghost3D;
+    private Box numberBox;
+
+    private final AnimationManager animationManager;
+    private ManagedAnimation brakeAnimation;
+    private ManagedAnimation pointsAnimation;
 
     public MutatingGhost3D(
         AnimationManager animationManager,
@@ -69,13 +74,13 @@ public class MutatingGhost3D extends Group {
         Shape3D dressShape, Shape3D pupilsShape, Shape3D eyeballsShape,
         Ghost ghost, double size, int numFlashes)
     {
-        requireNonNull(animationManager);
+        this.animationManager = requireNonNull(animationManager);
         requireNonNull(assets);
         requireNonNull(assetPrefix);
         requireNonNull(dressShape);
         requireNonNull(pupilsShape);
         requireNonNull(eyeballsShape);
-        requireNonNegative(numFlashes);
+        this.numFlashes = requireNonNegativeInt(numFlashes);
 
         this.ghost = requireNonNull(ghost);
         this.size = requireNonNegative(size);
@@ -133,43 +138,71 @@ public class MutatingGhost3D extends Group {
             }
         };
 
-        ghost.positionProperty().addListener((py, ov, newPosition) -> updateTransform());
-        ghost.wishDirProperty().addListener((py, ov, newWishDir) -> updateTransform());
+        ghost.positionProperty().addListener(this::handleGhostPositionChange);
+        ghost.wishDirProperty().addListener(this::handleGhostWishDirChange);
+
         visibleProperty().bind(Bindings.createBooleanBinding(
                 () -> ghost.isVisible() && !isPositionOutsideWorld(theGameLevel(), ghost.center()),
                 ghost.visibleProperty(), ghost.positionProperty()
         ));
 
-        appearanceProperty.addListener((property, oldValue, newValue) -> {
-            Logger.info("Ghost {} now has appearance {}", ghost.name(), newValue);
-            if (newValue == GhostAppearance.VALUE) {
-                numberBox.setVisible(true);
-                ghost3D.setVisible(false);
-                ghost3D.dressAnimation().stop();
-                pointsAnimation.playFromStart();
-            } else {
-                numberBox.setVisible(false);
-                ghost3D.setVisible(true);
-                switch (newValue) {
-                    case NORMAL     -> ghost3D.setNormalLook();
-                    case FRIGHTENED -> ghost3D.setFrightenedLook();
-                    case EATEN      -> ghost3D.setEyesOnlyLook();
-                    case FLASHING   -> ghost3D.setFlashingLook(numFlashes);
-                }
-                pointsAnimation.stop();
-                if (ghost.moveInfo().tunnelEntered) {
-                    brakeAnimation.playFromStart();
-                }
-            }
-        });
+        appearanceProperty.addListener(this::handleAppearanceChange);
 
-        updateTransform();
+        update3DTransform();
         setAppearance(GhostAppearance.NORMAL);
+    }
+
+    private void handleAppearanceChange(
+            ObservableValue<? extends GhostAppearance> property,
+            GhostAppearance oldAppearance,
+            GhostAppearance newAppearance)
+    {
+        Logger.info("Ghost {} now has appearance {}", ghost.name(), newAppearance);
+        if (newAppearance == GhostAppearance.VALUE) {
+            numberBox.setVisible(true);
+            ghost3D.setVisible(false);
+            ghost3D.dressAnimation().stop();
+            pointsAnimation.playFromStart();
+        } else {
+            numberBox.setVisible(false);
+            ghost3D.setVisible(true);
+            switch (newAppearance) {
+                case NORMAL     -> ghost3D.setNormalLook();
+                case FRIGHTENED -> ghost3D.setFrightenedLook();
+                case EATEN      -> ghost3D.setEyesOnlyLook();
+                case FLASHING   -> ghost3D.setFlashingLook(numFlashes);
+            }
+            pointsAnimation.stop();
+            if (ghost.moveInfo().tunnelEntered) {
+                brakeAnimation.playFromStart();
+            }
+        }
     }
 
     public void destroy() {
         stopAllAnimations();
-        //TODO...
+        if (ghost != null) {
+            ghost.positionProperty().removeListener(this::handleGhostPositionChange);
+            ghost.wishDirProperty().removeListener(this::handleGhostWishDirChange);
+        }
+        visibleProperty().unbind();
+        appearanceProperty.removeListener(this::handleAppearanceChange);
+        numberMaterialCache.clear();
+        if (brakeAnimation != null) {
+            animationManager.destroyAnimation(brakeAnimation);
+            brakeAnimation = null;
+        }
+        if (pointsAnimation != null) {
+            animationManager.destroyAnimation(pointsAnimation);
+            pointsAnimation = null;
+        }
+        getChildren().clear();
+        if (ghost3D != null) {
+            ghost3D.destroy();
+            ghost3D = null;
+        }
+        numberBox = null;
+
     }
 
     public void stopAllAnimations() {
@@ -181,7 +214,7 @@ public class MutatingGhost3D extends Group {
 
     public void init(GameLevel gameLevel) {
         stopAllAnimations();
-        updateTransform();
+        update3DTransform();
         selectAppearance(gameLevel);
     }
 
@@ -209,20 +242,38 @@ public class MutatingGhost3D extends Group {
     }
 
     public void setNumberTexture(Image numberImage) {
-        if (!textureCache.containsKey(numberImage)) {
-            var texture = new PhongMaterial();
-            texture.setDiffuseMap(numberImage);
-            textureCache.put(numberImage, texture);
+        if (!numberMaterialCache.containsKey(numberImage)) {
+            var numberMaterial = new PhongMaterial();
+            numberMaterial.setDiffuseMap(numberImage);
+            numberMaterialCache.put(numberImage, numberMaterial);
         }
-        numberBox.setMaterial(textureCache.get(numberImage));
+        numberBox.setMaterial(numberMaterialCache.get(numberImage));
     }
 
-    private void updateTransform() {
+    private void handleGhostPositionChange(
+            ObservableValue<? extends Vector2f> property,
+            Vector2f oldPosition,
+            Vector2f newPosition)
+    {
+        update3DTransform();
+    }
+
+    private void handleGhostWishDirChange(
+            ObservableValue<? extends Direction> property,
+            Direction oldDir,
+            Direction newDir)
+    {
+        update3DTransform();
+    }
+
+    private void update3DTransform() {
         Vector2f center = ghost.center();
         setTranslateX(center.x());
         setTranslateY(center.y());
-        setTranslateZ(-0.5 * size - GHOST_ELEVATION); // a little bit over the floor
-        ghost3D.turnTowards(ghost.wishDir());
+        setTranslateZ(-0.5 * size - GHOST_OVER_FLOOR_DIST);
+        if (ghost3D != null) {
+            ghost3D.turnTowards(ghost.wishDir());
+        }
     }
 
     private void selectAppearance(GameLevel level) {

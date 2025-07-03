@@ -158,6 +158,10 @@ public class Ghost3D extends Group {
         flashingAnimation = new FlashingAnimation(animationManager, ghost.name());
     }
 
+    public void destroy() {
+
+    }
+
     public ManagedAnimation dressAnimation() {
         return dressAnimation;
     }
