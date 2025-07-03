@@ -34,45 +34,45 @@ public class AnimationManager {
         }
     }
 
-    public void playAnimation(ManagedAnimation ma, boolean playMode) {
-        requireNonNull(ma);
-        Animation animation = ma.getOrCreateAnimation();
+    public void playAnimation(ManagedAnimation managedAnimation, boolean playMode) {
+        requireNonNull(managedAnimation);
+        Animation animation = managedAnimation.getOrCreateAnimation();
         requireNonNull(animation);
         if (animation.getStatus() != Animation.Status.RUNNING) {
             if (playMode == ManagedAnimation.FROM_START) {
-                Logger.trace("Playing animation with label '{}' from start", ma.label);
+                Logger.trace("Playing animation with label '{}' from start", managedAnimation.label);
                 animation.playFromStart();
             } else if (playMode == CONTINUE) {
-                Logger.trace("Continuing animation with label '{}'", ma.label);
+                Logger.trace("Continuing animation with label '{}'", managedAnimation.label);
                 animation.play();
             }
         }
     }
 
-    public void pauseAnimation(ManagedAnimation ma) {
-        requireNonNull(ma);
-        ma.animation().ifPresent(animation -> {
+    public void pauseAnimation(ManagedAnimation managedAnimation) {
+        requireNonNull(managedAnimation);
+        managedAnimation.animation().ifPresent(animation -> {
             try {
                 if (animation.getStatus() != Animation.Status.PAUSED) {
                     animation.pause();
-                    Logger.debug("Paused animation with label='{}'", ma.label());
+                    Logger.debug("Paused animation with label='{}'", managedAnimation.label());
                 }
             } catch (IllegalStateException x) {
-                Logger.warn("Could not pause (embedded?) animation with label='{}'", ma.label());
+                Logger.warn("Could not pause (embedded?) animation with label='{}'", managedAnimation.label());
             }
         });
     }
 
-    public void stopAnimation(ManagedAnimation ma) {
-        requireNonNull(ma);
-        ma.animation().ifPresent(animation -> {
+    public void stopAnimation(ManagedAnimation managedAnimation) {
+        requireNonNull(managedAnimation);
+        managedAnimation.animation().ifPresent(animation -> {
             try {
                 if (animation.getStatus() != Animation.Status.STOPPED) {
                     animation.stop();
-                    Logger.debug("Stopped animation with label='{}'", ma.label());
+                    Logger.debug("Stopped animation with label='{}'", managedAnimation.label());
                 }
             } catch (IllegalStateException x) {
-                Logger.warn("Could not stop (embedded?) animation with label='{}'", ma.label());
+                Logger.warn("Could not stop (embedded?) animation with label='{}'", managedAnimation.label());
             }
         });
     }
@@ -91,11 +91,12 @@ public class AnimationManager {
     }
 
     public void destroyAnimation(ManagedAnimation managedAnimation) {
-        if (managedAnimation != null && managedAnimation.animation != null) {
-            managedAnimation.animation.stop();
+        requireNonNull(managedAnimation);
+        stopAnimation(managedAnimation);
+        if (managedAnimation.animation != null) {
             managedAnimation.animation.setOnFinished(null);
-            Logger.info("Destroyed managed animation '{}'", managedAnimation.label);
         }
+        Logger.info("Destroyed managed animation '{}'", managedAnimation.label);
     }
 
     public void destroyAllAnimations() {
