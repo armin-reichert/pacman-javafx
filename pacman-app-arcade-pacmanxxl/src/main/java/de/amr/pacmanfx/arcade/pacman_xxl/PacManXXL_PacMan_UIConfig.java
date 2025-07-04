@@ -28,6 +28,7 @@ import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.model3D.PacBase3D;
+import de.amr.pacmanfx.uilib.model3D.PacBody;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -181,9 +182,9 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
     }
 
     @Override
-    public Node createLivesCounter3D(Model3DRepository model3DRepository) {
+    public PacBody createLivesCounter3D(Model3DRepository model3DRepository) {
         String namespace = assetNamespace();
-        return model3DRepository.createPacMan(
+        return model3DRepository.createPacBody(
                 Settings3D.LIVES_COUNTER_3D_SHAPE_SIZE,
                 theAssets().color(namespace + ".pac.color.head"),
                 theAssets().color(namespace + ".pac.color.eyes"),

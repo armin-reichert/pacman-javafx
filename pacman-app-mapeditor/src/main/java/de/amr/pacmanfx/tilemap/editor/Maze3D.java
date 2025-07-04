@@ -92,7 +92,7 @@ public class Maze3D extends Group {
         foodGroup.visibleProperty().bind(foodVisiblePy);
         mazeGroup.visibleProperty().bind(terrainVisiblePy);
 
-        pacmanShape3D = model3DRepository.createPacMan(ACTOR_SIZE, Color.YELLOW, Color.BLACK, Color.GRAY);
+        pacmanShape3D = model3DRepository.createPacBody(ACTOR_SIZE, Color.YELLOW, Color.BLACK, Color.GRAY);
 
         ghostShapes = new Node[4];
         ghostShapes[0] = model3DRepository.createGhost(ACTOR_SIZE, Color.RED, 0);

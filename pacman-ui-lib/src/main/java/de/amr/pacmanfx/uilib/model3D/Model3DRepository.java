@@ -11,7 +11,6 @@ import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
-import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
@@ -20,9 +19,7 @@ import org.tinylog.Logger;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.uilib.Ufx.toCSS_ID;
 import static java.util.Objects.requireNonNull;
 
 public final class Model3DRepository {
@@ -88,97 +85,15 @@ public final class Model3DRepository {
 
     public Mesh pelletMesh() { return model3D(MODEL_ID_PELLET).mesh(MESH_ID_PELLET); }
 
-    public Group createPacMan(double size, Color headColor, Color eyesColor, Color palateColor) {
-        var headMeshView = new MeshView(pacHeadMesh());
-        headMeshView.setMaterial(Ufx.coloredPhongMaterial(headColor));
-
-        var eyesMeshView = new MeshView(pacEyesMesh());
-        eyesMeshView.setMaterial(Ufx.coloredPhongMaterial(eyesColor));
-
-        var palateMeshView = new MeshView(pacPalateMesh());
-        palateMeshView.setMaterial(Ufx.coloredPhongMaterial(palateColor));
-
-        var root = new Group(headMeshView, eyesMeshView, palateMeshView);
-
-        var bounds = headMeshView.getBoundsInLocal();
-        var centeredOverOrigin = new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ());
-        Stream.of(headMeshView, eyesMeshView, palateMeshView).forEach(node -> node.getTransforms().add(centeredOverOrigin));
-
-        // TODO check/fix Pac-Man mesh position and rotation in OBJ file
-        root.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-        root.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
-        root.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
-
-        var rootBounds = root.getBoundsInLocal();
-        root.getTransforms().add(new Scale(size / rootBounds.getWidth(), size / rootBounds.getHeight(), size / rootBounds.getDepth()));
-
-        return root;
+    public PacBody createPacBody(double size, Color headColor, Color eyesColor, Color palateColor) {
+        return new PacBody(this, size, headColor, eyesColor, palateColor);
     }
 
-    public Group createPacManWithoutEyes(double size, Color headColor, Color palateColor) {
-        var headMeshView = new MeshView(pacHeadMesh());
-        headMeshView.setMaterial(Ufx.coloredPhongMaterial(headColor));
-
-        var palateMeshView = new MeshView(pacPalateMesh());
-        palateMeshView.setMaterial(Ufx.coloredPhongMaterial(palateColor));
-
-        var bounds = headMeshView.getBoundsInLocal();
-        var centeredOverOrigin = new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ());
-        Stream.of(headMeshView, palateMeshView).forEach(node -> node.getTransforms().add(centeredOverOrigin));
-
-        var root = new Group(headMeshView, palateMeshView);
-
-        // TODO check/fix Pac-Man mesh position and rotation in OBJ file
-        root.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-        root.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
-        root.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
-
-        var rootBounds = root.getBoundsInLocal();
-        root.getTransforms().add(new Scale(size / rootBounds.getWidth(), size / rootBounds.getHeight(), size / rootBounds.getDepth()));
-
-        return root;
+    public PacBodyNoEyes createBlindPacBody(double size, Color headColor, Color palateColor) {
+        return new PacBodyNoEyes(this, size, headColor, palateColor);
     }
-
-    public Group createFemaleBodyParts(double pacSize, Color hairBowColor, Color hairBowPearlsColor, Color boobsColor) {
-        var bowMaterial = Ufx.coloredPhongMaterial(hairBowColor);
-        int divisions = 16; // 64 is default
-
-        var bowLeft = new Sphere(1.2, divisions);
-        bowLeft.getTransforms().addAll(new Translate(3.0, 1.5, -pacSize * 0.55));
-        bowLeft.setMaterial(bowMaterial);
-
-        var bowRight = new Sphere(1.2, divisions);
-        bowRight.getTransforms().addAll(new Translate(3.0, -1.5, -pacSize * 0.55));
-        bowRight.setMaterial(bowMaterial);
-
-        var pearlMaterial = Ufx.coloredPhongMaterial(hairBowPearlsColor);
-
-        var pearlLeft = new Sphere(0.4, divisions);
-        pearlLeft.getTransforms().addAll(new Translate(2, 0.5, -pacSize * 0.58));
-        pearlLeft.setMaterial(pearlMaterial);
-
-        var pearlRight = new Sphere(0.4, divisions);
-        pearlRight.getTransforms().addAll(new Translate(2, -0.5, -pacSize * 0.58));
-        pearlRight.setMaterial(pearlMaterial);
-
-        var beautySpot = new Sphere(0.5, divisions);
-        beautySpot.getTransforms().addAll(new Translate(-0.33 * pacSize, -0.4 * pacSize, -0.14 * pacSize));
-        beautySpot.setMaterial(Ufx.coloredPhongMaterial(Color.rgb(120, 120, 120)));
-
-        var silicone = Ufx.coloredPhongMaterial(boobsColor);
-
-        double bx = -0.2 * pacSize; // forward
-        double by = 1.6; // or - 1.6 // sidewards
-        double bz = 0.4 * pacSize; // up/down
-        var boobLeft = new Sphere(1.8, divisions);
-        boobLeft.setMaterial(silicone);
-        boobLeft.getTransforms().addAll(new Translate(bx, -by, bz));
-
-        var boobRight = new Sphere(1.8, divisions);
-        boobRight.setMaterial(silicone);
-        boobRight.getTransforms().addAll(new Translate(bx, by, bz));
-
-        return new Group(bowLeft, bowRight, pearlLeft, pearlRight, boobLeft, boobRight, beautySpot);
+    public MsPacManFemaleParts createFemaleBodyParts(double pacSize, Color hairBowColor, Color hairBowPearlsColor, Color boobsColor) {
+        return new MsPacManFemaleParts(pacSize, hairBowColor, hairBowPearlsColor, boobsColor);
     }
 
     public Group createGhost(double size, Color dressColor, double rotate) {
@@ -213,7 +128,7 @@ public final class Model3DRepository {
         Color hairBowColor, Color hairBowPearlsColor, Color boobsColor)
     {
         return new Group(
-            createPacMan(size, headColor, eyesColor, palateColor),
+            createPacBody(size, headColor, eyesColor, palateColor),
             createFemaleBodyParts(size, hairBowColor, hairBowPearlsColor, boobsColor)
         );
     }

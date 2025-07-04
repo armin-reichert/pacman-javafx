@@ -11,7 +11,6 @@ import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
-import javafx.scene.Group;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
@@ -60,7 +59,7 @@ public class MsPacMan3D extends PacBase3D {
         }
     }
 
-    private Group femaleBodyParts;
+    private MsPacManFemaleParts femaleBodyParts;
 
     public MsPacMan3D(Model3DRepository model3DRepository, AnimationManager animationManager, Pac pac, double size, AssetStorage assets, String ans) {
         super(model3DRepository, animationManager, pac, size, assets, ans);
@@ -91,7 +90,7 @@ public class MsPacMan3D extends PacBase3D {
 
     public void destroy() {
         if (femaleBodyParts != null) {
-            femaleBodyParts.getChildren().clear();
+            femaleBodyParts.destroy();
             femaleBodyParts = null;
         }
         super.destroy();

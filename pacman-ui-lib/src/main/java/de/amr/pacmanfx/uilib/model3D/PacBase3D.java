@@ -9,27 +9,20 @@ import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import javafx.animation.*;
-import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.LightBase;
 import javafx.scene.Node;
 import javafx.scene.PointLight;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Scale;
-import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.uilib.model3D.Model3DRepository.MODEL_ID_PAC_MAN;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -41,7 +34,7 @@ public class PacBase3D {
     protected Pac pac;
     protected PointLight light = new PointLight();
     protected Group root = new Group();
-    protected Group body;
+    protected PacBody body;
     protected Group jaw;
     protected Rotate moveRotation = new Rotate();
 
@@ -65,13 +58,13 @@ public class PacBase3D {
         requireNonNull(assets);
         requireNonNull(ans);
 
-        body = model3DRepository.createPacMan(
+        body = model3DRepository.createPacBody(
             size,
             assets.color(ans + ".pac.color.head"),
             assets.color(ans + ".pac.color.eyes"),
             assets.color(ans + ".pac.color.palate"));
 
-        jaw = model3DRepository.createPacManWithoutEyes(
+        jaw = model3DRepository.createBlindPacBody(
             size,
             assets.color(ans + ".pac.color.head"),
             assets.color(ans + ".pac.color.palate"));
@@ -137,7 +130,7 @@ public class PacBase3D {
 
     public void destroy() {
         if (body != null) {
-            body.getChildren().clear();
+            body.destroy();
             body = null;
         }
         if (jaw != null) {
