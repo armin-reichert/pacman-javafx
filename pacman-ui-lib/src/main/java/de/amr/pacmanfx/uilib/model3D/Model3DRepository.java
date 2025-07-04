@@ -17,47 +17,42 @@ import javafx.scene.transform.Translate;
 import org.tinylog.Logger;
 
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
-import static java.util.Objects.requireNonNull;
+public class Model3DRepository {
 
-public final class Model3DRepository {
+    public static final byte MODEL_ID_PAC_MAN = 0, MODEL_ID_GHOST = 1, MODEL_ID_PELLET = 2;
 
-    public  static final String MODEL_ID_PAC_MAN       = "PacManModel";
+    private static final String[] OBJ_FILE_PATHS = {
+            "/de/amr/pacmanfx/uilib/model3D/pacman.obj",
+            "/de/amr/pacmanfx/uilib/model3D/ghost.obj",
+            "/de/amr/pacmanfx/uilib/model3D/pellet.obj"
+    };
+
+    private final Model3D[] models = new Model3D[3];
+
     private static final String MESH_ID_PAC_MAN_EYES   = "PacMan.Eyes";
     private static final String MESH_ID_PAC_MAN_HEAD   = "PacMan.Head";
     private static final String MESH_ID_PAC_MAN_PALATE = "PacMan.Palate";
 
-    public  static final String MODEL_ID_GHOST         = "GhostModel";
+
     private static final String MESH_ID_GHOST_DRESS    = "Sphere.004_Sphere.034_light_blue_ghost";
     private static final String MESH_ID_GHOST_EYEBALLS = "Sphere.009_Sphere.036_white";
     private static final String MESH_ID_GHOST_PUPILS   = "Sphere.010_Sphere.039_grey_wall";
 
-    public  static final String MODEL_ID_PELLET        = "PelletModel";
     private static final String MESH_ID_PELLET         = "Pellet";
-
-    private static final Map<String, String> OBJ_FILE_PATHS = Map.of(
-        MODEL_ID_PAC_MAN, "/de/amr/pacmanfx/uilib/model3D/pacman.obj",
-        MODEL_ID_GHOST,   "/de/amr/pacmanfx/uilib/model3D/ghost.obj",
-        MODEL_ID_PELLET,  "/de/amr/pacmanfx/uilib/model3D/pellet.obj"
-    );
-
-    private final Map<String, Model3D> model3DMap = new HashMap<>();
 
     /**
      * @param id one of {@link #MODEL_ID_PAC_MAN}, {@link #MODEL_ID_GHOST}, {@link #MODEL_ID_PELLET}.
      * @return meshes and materials of loaded OBJ file
      */
-    public Model3D model3D(String id) {
-        requireNonNull(id);
-        if (!OBJ_FILE_PATHS.containsKey(id)) {
-            throw new IllegalArgumentException("Illegal 3D model ID %s".formatted(id));
+    public Model3D model3D(byte id) {
+        if (id < 0 || id >= models.length) {
+            throw new IllegalArgumentException("Illegal model ID: " + id);
         }
-        if (!model3DMap.containsKey(id)) {
-            model3DMap.put(id, loadModel(OBJ_FILE_PATHS.get(id)));
+        if (models[id] == null) {
+            models[id] = loadModel(OBJ_FILE_PATHS[id]);
         }
-        return model3DMap.get(id);
+        return models[id];
     }
 
     private Model3D loadModel(String path) {
