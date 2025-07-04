@@ -13,6 +13,7 @@ import javafx.scene.transform.Scale;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,6 +54,14 @@ public class Model3D {
         materials.clear();
     }
 
+    public Map<String, TriangleMesh> meshesByName() {
+        return Collections.unmodifiableMap(meshesByName);
+    }
+
+    public Map<String, PhongMaterial> materials() {
+        return Collections.unmodifiableMap(materials);
+    }
+
     public TriangleMesh mesh(String name) {
         requireNonNull(name);
         if (meshesByName.containsKey(name)) {
@@ -67,19 +76,5 @@ public class Model3D {
             return materials.get(name);
         }
         throw new Model3DException("No material with name %s found", name);
-    }
-
-    public String contentAsText(URL url) {
-        var sb = new StringBuilder();
-        sb.append("3D model loaded from URL ").append(url).append("\n");
-        sb.append("\tMeshes:\n");
-        for (var entry : meshesByName.entrySet()) {
-            sb.append("\t\t'%s': %s%n".formatted(entry.getKey(), entry.getValue()));
-        }
-        sb.append("\tMaterials:\n");
-        for (var entry : materials.entrySet()) {
-            sb.append("\t\t'%s': %s%n".formatted(entry.getKey(), entry.getValue()));
-        }
-        return sb.toString();
     }
 }
