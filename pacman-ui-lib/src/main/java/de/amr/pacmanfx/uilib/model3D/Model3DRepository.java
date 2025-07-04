@@ -89,23 +89,44 @@ public final class Model3DRepository {
     public Mesh pelletMesh() { return model3D(MODEL_ID_PELLET).mesh(MESH_ID_PELLET); }
 
     public Group createPacMan(double size, Color headColor, Color eyesColor, Color palateColor) {
-        var head = new MeshView(model3D(MODEL_ID_PAC_MAN).mesh(MESH_ID_PAC_MAN_HEAD));
-        head.setId(toCSS_ID(MESH_ID_PAC_MAN_HEAD));
-        head.setMaterial(Ufx.coloredPhongMaterial(headColor));
+        var headMeshView = new MeshView(pacHeadMesh());
+        headMeshView.setMaterial(Ufx.coloredPhongMaterial(headColor));
 
-        var eyes = new MeshView(model3D(MODEL_ID_PAC_MAN).mesh(MESH_ID_PAC_MAN_EYES));
-        eyes.setId(toCSS_ID(MESH_ID_PAC_MAN_EYES));
-        eyes.setMaterial(Ufx.coloredPhongMaterial(eyesColor));
+        var eyesMeshView = new MeshView(pacEyesMesh());
+        eyesMeshView.setMaterial(Ufx.coloredPhongMaterial(eyesColor));
 
-        var palate = new MeshView(model3D(MODEL_ID_PAC_MAN).mesh(MESH_ID_PAC_MAN_PALATE));
-        palate.setId(toCSS_ID(MESH_ID_PAC_MAN_PALATE));
-        palate.setMaterial(Ufx.coloredPhongMaterial(palateColor));
+        var palateMeshView = new MeshView(pacPalateMesh());
+        palateMeshView.setMaterial(Ufx.coloredPhongMaterial(palateColor));
 
-        var root = new Group(head, eyes, palate);
+        var root = new Group(headMeshView, eyesMeshView, palateMeshView);
 
-        var bounds = head.getBoundsInLocal();
+        var bounds = headMeshView.getBoundsInLocal();
         var centeredOverOrigin = new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ());
-        Stream.of(head, eyes, palate).forEach(node -> node.getTransforms().add(centeredOverOrigin));
+        Stream.of(headMeshView, eyesMeshView, palateMeshView).forEach(node -> node.getTransforms().add(centeredOverOrigin));
+
+        // TODO check/fix Pac-Man mesh position and rotation in OBJ file
+        root.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
+        root.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
+        root.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
+
+        var rootBounds = root.getBoundsInLocal();
+        root.getTransforms().add(new Scale(size / rootBounds.getWidth(), size / rootBounds.getHeight(), size / rootBounds.getDepth()));
+
+        return root;
+    }
+
+    public Group createPacManWithoutEyes(double size, Color headColor, Color palateColor) {
+        var headMeshView = new MeshView(pacHeadMesh());
+        headMeshView.setMaterial(Ufx.coloredPhongMaterial(headColor));
+
+        var palateMeshView = new MeshView(pacPalateMesh());
+        palateMeshView.setMaterial(Ufx.coloredPhongMaterial(palateColor));
+
+        var bounds = headMeshView.getBoundsInLocal();
+        var centeredOverOrigin = new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ());
+        Stream.of(headMeshView, palateMeshView).forEach(node -> node.getTransforms().add(centeredOverOrigin));
+
+        var root = new Group(headMeshView, palateMeshView);
 
         // TODO check/fix Pac-Man mesh position and rotation in OBJ file
         root.getTransforms().add(new Rotate(90, Rotate.X_AXIS));

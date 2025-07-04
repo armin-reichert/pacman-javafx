@@ -50,30 +50,35 @@ public class PacBase3D {
     protected ManagedAnimation movementAnimation;
     protected ManagedAnimation dyingAnimation;
 
-    protected PacBase3D(Model3DRepository model3DRepository, AnimationManager animationManager, Pac pac, double size, AssetStorage assets, String ans) {
+    protected PacBase3D(
+        Model3DRepository model3DRepository,
+        AnimationManager animationManager,
+        Pac pac,
+        double size,
+        AssetStorage assets,
+        String ans)
+    {
         requireNonNull(model3DRepository);
         this.animationManager = requireNonNull(animationManager);
         this.pac = requireNonNull(pac);
         this.size = size;
-
         requireNonNull(assets);
         requireNonNull(ans);
 
-        Model3D pacManModel3D = model3DRepository.model3D(MODEL_ID_PAC_MAN);
-        jaw = createPacSkull(
+        body = model3DRepository.createPacMan(
             size,
-            model3DRepository,
-            assets.color(ans + ".pac.color.head"),
-            assets.color(ans + ".pac.color.palate"));
-
-        body = model3DRepository.createPacMan(size,
             assets.color(ans + ".pac.color.head"),
             assets.color(ans + ".pac.color.eyes"),
             assets.color(ans + ".pac.color.palate"));
 
+        jaw = model3DRepository.createPacManWithoutEyes(
+            size,
+            assets.color(ans + ".pac.color.head"),
+            assets.color(ans + ".pac.color.palate"));
+
         root.getChildren().addAll(jaw, body);
-        root.setTranslateZ(-0.5 * size);
         root.getTransforms().add(moveRotation);
+        root.setTranslateZ(-0.5 * size);
 
         chewingAnimation = new ManagedAnimation(animationManager, "PacMan_Chewing") {
             @Override
@@ -112,30 +117,6 @@ public class PacBase3D {
         light.translateXProperty().bind(root.translateXProperty());
         light.translateYProperty().bind(root.translateYProperty());
         light.setTranslateZ(-30);
-    }
-
-    private Group createPacSkull(double size, Model3DRepository model3DRepository, Color headColor, Color palateColor) {
-        var head = new MeshView(model3DRepository.pacHeadMesh());
-        head.setMaterial(Ufx.coloredPhongMaterial(headColor));
-
-        var palate = new MeshView(model3DRepository.pacPalateMesh());
-        palate.setMaterial(Ufx.coloredPhongMaterial(palateColor));
-
-        Bounds bounds = head.getBoundsInLocal();
-        var centeredOverOrigin = new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ());
-        head.getTransforms().add(centeredOverOrigin);
-        palate.getTransforms().add(centeredOverOrigin);
-
-        var root = new Group(head, palate);
-
-        Bounds rootBounds = root.getBoundsInLocal();
-        // TODO check/fix Pac-Man mesh position and rotation in .obj file
-        root.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-        root.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
-        root.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
-        root.getTransforms().add(new Scale(size / rootBounds.getWidth(), size / rootBounds.getHeight(), size / rootBounds.getDepth()));
-
-        return root;
     }
 
     public Node root() {
