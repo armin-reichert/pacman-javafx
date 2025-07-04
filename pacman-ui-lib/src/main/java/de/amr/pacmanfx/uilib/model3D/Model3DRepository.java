@@ -4,16 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.model3D;
 
-import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
-import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Mesh;
-import javafx.scene.shape.MeshView;
-import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Scale;
-import javafx.scene.transform.Translate;
 import org.tinylog.Logger;
 
 import java.net.URL;
@@ -33,7 +27,6 @@ public class Model3DRepository {
     private static final String MESH_ID_PAC_MAN_EYES   = "PacMan.Eyes";
     private static final String MESH_ID_PAC_MAN_HEAD   = "PacMan.Head";
     private static final String MESH_ID_PAC_MAN_PALATE = "PacMan.Palate";
-
 
     private static final String MESH_ID_GHOST_DRESS    = "Sphere.004_Sphere.034_light_blue_ghost";
     private static final String MESH_ID_GHOST_EYEBALLS = "Sphere.009_Sphere.036_white";
@@ -91,30 +84,8 @@ public class Model3DRepository {
         return new MsPacManFemaleParts(pacSize, hairBowColor, hairBowPearlsColor, boobsColor);
     }
 
-    public Group createGhost(double size, Color dressColor, double rotate) {
-        MeshView dress = new MeshView(model3D(MODEL_ID_GHOST).mesh(MESH_ID_GHOST_DRESS));
-        dress.setMaterial(Ufx.coloredPhongMaterial(dressColor));
-        Bounds dressBounds = dress.getBoundsInLocal();
-        var centeredOverOrigin = new Translate(-dressBounds.getCenterX(), -dressBounds.getCenterY(), -dressBounds.getCenterZ());
-        dress.getTransforms().add(centeredOverOrigin);
-
-        MeshView pupils = new MeshView(model3D(MODEL_ID_GHOST).mesh(MESH_ID_GHOST_PUPILS));
-        pupils.setMaterial(Ufx.coloredPhongMaterial(Color.BLUE));
-
-        MeshView eyeballs = new MeshView(model3D(MODEL_ID_GHOST).mesh(MESH_ID_GHOST_EYEBALLS));
-        eyeballs.setMaterial(Ufx.coloredPhongMaterial(Color.WHITE));
-        var eyesGroup = new Group(pupils, eyeballs);
-        eyesGroup.getTransforms().add(centeredOverOrigin);
-
-        var dressGroup = new Group(dress);
-
-        Group root = new Group(dressGroup, eyesGroup);
-        root.getTransforms().add(new Rotate(270, Rotate.X_AXIS));
-        root.getTransforms().add(new Rotate(rotate, Rotate.Y_AXIS));
-        Bounds b = root.getBoundsInLocal();
-        root.getTransforms().add(new Scale(size / b.getWidth(), size / b.getHeight(), size / b.getDepth()));
-
-        return root;
+    public GhostBody createGhostBody(double size, Color dressColor, double rotateY) {
+        return new GhostBody(this, size, dressColor, rotateY);
     }
 
     public Group createMsPacMan(

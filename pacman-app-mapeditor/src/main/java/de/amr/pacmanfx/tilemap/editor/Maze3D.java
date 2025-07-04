@@ -11,6 +11,7 @@ import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.Obstacle;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.WorldMapProperty;
+import de.amr.pacmanfx.uilib.model3D.GhostBody;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer3D;
 import javafx.beans.property.BooleanProperty;
@@ -70,7 +71,7 @@ public class Maze3D extends Group {
     private final DoubleProperty houseBaseHeightPy = new SimpleDoubleProperty(12);
 
     private final Node pacmanShape3D;
-    private final Node[] ghostShapes;
+    private final GhostBody[] ghostShapes;
 
     public PerspectiveCamera camera() {
         return camera;
@@ -94,11 +95,11 @@ public class Maze3D extends Group {
 
         pacmanShape3D = model3DRepository.createPacBody(ACTOR_SIZE, Color.YELLOW, Color.BLACK, Color.GRAY);
 
-        ghostShapes = new Node[4];
-        ghostShapes[0] = model3DRepository.createGhost(ACTOR_SIZE, Color.RED, 0);
-        ghostShapes[1] = model3DRepository.createGhost(ACTOR_SIZE, Color.PINK, 90);
-        ghostShapes[2] = model3DRepository.createGhost(ACTOR_SIZE, Color.CYAN, 270);
-        ghostShapes[3] = model3DRepository.createGhost(ACTOR_SIZE, Color.ORANGE, 270);
+        ghostShapes = new GhostBody[4];
+        ghostShapes[0] = model3DRepository.createGhostBody(ACTOR_SIZE, Color.RED, 0);
+        ghostShapes[1] = model3DRepository.createGhostBody(ACTOR_SIZE, Color.PINK, 90);
+        ghostShapes[2] = model3DRepository.createGhostBody(ACTOR_SIZE, Color.CYAN, 270);
+        ghostShapes[3] = model3DRepository.createGhostBody(ACTOR_SIZE, Color.ORANGE, 270);
     }
 
     public void moveTowardsUser(double pixels) {
