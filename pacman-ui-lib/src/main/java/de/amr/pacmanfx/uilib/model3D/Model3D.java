@@ -9,12 +9,14 @@ import javafx.scene.Node;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Scale;
+import org.tinylog.Logger;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 import static java.util.Objects.requireNonNull;
 
@@ -47,6 +49,12 @@ public class Model3D {
         for (var materialLibrary : importer.materialLibrary()) {
             materialLibrary.forEach((materialName, material) -> materials.put(materialName, (PhongMaterial) material));
         }
+    }
+
+    public void destroy() {
+        meshesByName.clear();
+        materials.clear();
+        Logger.info("Model3D destroyed, cleared meshes and materials for URL: {}", url);
     }
 
     public TriangleMesh mesh(String name) {

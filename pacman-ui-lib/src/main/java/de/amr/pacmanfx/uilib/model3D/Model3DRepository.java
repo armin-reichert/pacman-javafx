@@ -15,7 +15,9 @@ import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
+import org.tinylog.Logger;
 
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -25,67 +27,78 @@ import static java.util.Objects.requireNonNull;
 
 public final class Model3DRepository {
 
-    public static final String ID_PAC_MAN_MODEL = "PacMan";
-    public static final String ID_GHOST_MODEL = "Ghost";
-    public static final String ID_PELLET_MODEL = "Pellet";
+    public  static final String MODEL_ID_PAC_MAN       = "PacManModel";
+    private static final String MESH_ID_PAC_MAN_EYES   = "PacMan.Eyes";
+    private static final String MESH_ID_PAC_MAN_HEAD   = "PacMan.Head";
+    private static final String MESH_ID_PAC_MAN_PALATE = "PacMan.Palate";
 
-    public static final Map<String, String> MODEL_PATHS = Map.of(
-            ID_PAC_MAN_MODEL, "/de/amr/pacmanfx/uilib/model3D/pacman.obj",
-            ID_GHOST_MODEL,   "/de/amr/pacmanfx/uilib/model3D/ghost.obj",
-            ID_PELLET_MODEL,  "/de/amr/pacmanfx/uilib/model3D/pellet.obj"
+    public  static final String MODEL_ID_GHOST         = "GhostModel";
+    private static final String MESH_ID_GHOST_DRESS    = "Sphere.004_Sphere.034_light_blue_ghost";
+    private static final String MESH_ID_GHOST_EYEBALLS = "Sphere.009_Sphere.036_white";
+    private static final String MESH_ID_GHOST_PUPILS   = "Sphere.010_Sphere.039_grey_wall";
+
+    public  static final String MODEL_ID_PELLET        = "PelletModel";
+    private static final String MESH_ID_PELLET         = "Pellet";
+
+    private static final Map<String, String> OBJ_FILE_PATHS = Map.of(
+        MODEL_ID_PAC_MAN, "/de/amr/pacmanfx/uilib/model3D/pacman.obj",
+        MODEL_ID_GHOST,   "/de/amr/pacmanfx/uilib/model3D/ghost.obj",
+        MODEL_ID_PELLET,  "/de/amr/pacmanfx/uilib/model3D/pellet.obj"
     );
 
-    public static final String PAC_MAN_MESH_ID_EYES   = "PacMan.Eyes";
-    public static final String PAC_MAN_MESH_ID_HEAD   = "PacMan.Head";
-    public static final String PAC_MAN_MESH_ID_PALATE = "PacMan.Palate";
+    private final Map<String, Model3D> model3DMap = new HashMap<>();
 
-    public static final String GHOST_MESH_ID_DRESS    = "Sphere.004_Sphere.034_light_blue_ghost";
-    public static final String GHOST_MESH_ID_PUPILS   = "Sphere.010_Sphere.039_grey_wall";
-    public static final String GHOST_MESH_ID_EYEBALLS = "Sphere.009_Sphere.036_white";
-
-    public static final String PELLET_MESH_ID          = "Pellet";
-
-    private final Map<String, Model3D> modelMap = new HashMap<>();
-
-    public Model3DRepository() {}
-
-    public Model3D getModel(String modelID) {
-        requireNonNull(modelID);
-        if (!MODEL_PATHS.containsKey(modelID)) {
-            throw new IllegalArgumentException("Illegal 3D model ID %s".formatted(modelID));
+    /**
+     * @param id one of {@link #MODEL_ID_PAC_MAN}, {@link #MODEL_ID_GHOST}, {@link #MODEL_ID_PELLET}.
+     * @return meshes and materials of loaded OBJ file
+     */
+    public Model3D model3D(String id) {
+        requireNonNull(id);
+        if (!OBJ_FILE_PATHS.containsKey(id)) {
+            throw new IllegalArgumentException("Illegal 3D model ID %s".formatted(id));
         }
-        if (!modelMap.containsKey(modelID)) {
-            modelMap.put(modelID, loadModel(MODEL_PATHS.get(modelID)));
+        if (!model3DMap.containsKey(id)) {
+            model3DMap.put(id, loadModel(OBJ_FILE_PATHS.get(id)));
         }
-        return modelMap.get(modelID);
+        return model3DMap.get(id);
     }
 
     private Model3D loadModel(String path) {
         ResourceManager rm = () -> Model3DRepository.class;
+        URL url = rm.url(path);
         try {
-            return new Model3D(rm.url(path));
+            if (url != null) {
+                Model3D model3D = new Model3D(url);
+                Logger.info("3D model loaded from URL {}", url);
+                return model3D;
+            }
+            throw new IllegalArgumentException("Could not access resource at path %s".formatted(path));
         } catch (Exception x) {
-            throw new IllegalArgumentException("Could not load 3D model from resource path %s".formatted(path));
+            throw new IllegalArgumentException("Could not load 3D model from URL %s".formatted(url));
         }
     }
 
-    public Mesh ghostDressMesh()   { return getModel(ID_GHOST_MODEL).mesh("Sphere.004_Sphere.034_light_blue_ghost"); }
-    public Mesh ghostPupilsMesh()  { return getModel(ID_GHOST_MODEL).mesh("Sphere.010_Sphere.039_grey_wall"); }
-    public Mesh ghostEyeballsMesh() { return getModel(ID_GHOST_MODEL).mesh("Sphere.009_Sphere.036_white"); }
+    public Mesh pacEyesMesh()       { return model3D(MODEL_ID_PAC_MAN).mesh(MESH_ID_PAC_MAN_EYES); }
+    public Mesh pacHeadMesh()       { return model3D(MODEL_ID_PAC_MAN).mesh(MESH_ID_PAC_MAN_HEAD); }
+    public Mesh pacPalateMesh()     { return model3D(MODEL_ID_PAC_MAN).mesh(MESH_ID_PAC_MAN_PALATE); }
 
-    public Mesh pelletMesh() { return getModel(ID_PELLET_MODEL).mesh(PELLET_MESH_ID); }
+    public Mesh ghostDressMesh()    { return model3D(MODEL_ID_GHOST).mesh(MESH_ID_GHOST_DRESS); }
+    public Mesh ghostEyeballsMesh() { return model3D(MODEL_ID_GHOST).mesh(MESH_ID_GHOST_EYEBALLS); }
+    public Mesh ghostPupilsMesh()   { return model3D(MODEL_ID_GHOST).mesh(MESH_ID_GHOST_PUPILS); }
+
+    public Mesh pelletMesh() { return model3D(MODEL_ID_PELLET).mesh(MESH_ID_PELLET); }
 
     public Group createPacMan(double size, Color headColor, Color eyesColor, Color palateColor) {
-        var head = new MeshView(getModel(ID_PAC_MAN_MODEL).mesh(PAC_MAN_MESH_ID_HEAD));
-        head.setId(toCSS_ID(PAC_MAN_MESH_ID_HEAD));
+        var head = new MeshView(model3D(MODEL_ID_PAC_MAN).mesh(MESH_ID_PAC_MAN_HEAD));
+        head.setId(toCSS_ID(MESH_ID_PAC_MAN_HEAD));
         head.setMaterial(Ufx.coloredPhongMaterial(headColor));
 
-        var eyes = new MeshView(getModel(ID_PAC_MAN_MODEL).mesh(PAC_MAN_MESH_ID_EYES));
-        eyes.setId(toCSS_ID(PAC_MAN_MESH_ID_EYES));
+        var eyes = new MeshView(model3D(MODEL_ID_PAC_MAN).mesh(MESH_ID_PAC_MAN_EYES));
+        eyes.setId(toCSS_ID(MESH_ID_PAC_MAN_EYES));
         eyes.setMaterial(Ufx.coloredPhongMaterial(eyesColor));
 
-        var palate = new MeshView(getModel(ID_PAC_MAN_MODEL).mesh(PAC_MAN_MESH_ID_PALATE));
-        palate.setId(toCSS_ID(PAC_MAN_MESH_ID_PALATE));
+        var palate = new MeshView(model3D(MODEL_ID_PAC_MAN).mesh(MESH_ID_PAC_MAN_PALATE));
+        palate.setId(toCSS_ID(MESH_ID_PAC_MAN_PALATE));
         palate.setMaterial(Ufx.coloredPhongMaterial(palateColor));
 
         var root = new Group(head, eyes, palate);
@@ -148,16 +161,16 @@ public final class Model3DRepository {
     }
 
     public Group createGhost(double size, Color dressColor, double rotate) {
-        MeshView dress = new MeshView(getModel(ID_GHOST_MODEL).mesh(GHOST_MESH_ID_DRESS));
+        MeshView dress = new MeshView(model3D(MODEL_ID_GHOST).mesh(MESH_ID_GHOST_DRESS));
         dress.setMaterial(Ufx.coloredPhongMaterial(dressColor));
         Bounds dressBounds = dress.getBoundsInLocal();
         var centeredOverOrigin = new Translate(-dressBounds.getCenterX(), -dressBounds.getCenterY(), -dressBounds.getCenterZ());
         dress.getTransforms().add(centeredOverOrigin);
 
-        MeshView pupils = new MeshView(getModel(ID_GHOST_MODEL).mesh(GHOST_MESH_ID_PUPILS));
+        MeshView pupils = new MeshView(model3D(MODEL_ID_GHOST).mesh(MESH_ID_GHOST_PUPILS));
         pupils.setMaterial(Ufx.coloredPhongMaterial(Color.BLUE));
 
-        MeshView eyeballs = new MeshView(getModel(ID_GHOST_MODEL).mesh(GHOST_MESH_ID_EYEBALLS));
+        MeshView eyeballs = new MeshView(model3D(MODEL_ID_GHOST).mesh(MESH_ID_GHOST_EYEBALLS));
         eyeballs.setMaterial(Ufx.coloredPhongMaterial(Color.WHITE));
         var eyesGroup = new Group(pupils, eyeballs);
         eyesGroup.getTransforms().add(centeredOverOrigin);
