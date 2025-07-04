@@ -10,18 +10,30 @@ import javafx.scene.shape.Mesh;
 import org.tinylog.Logger;
 
 import java.net.URL;
+import java.util.EnumMap;
+import java.util.Map;
+
+import static java.util.Objects.requireNonNull;
 
 public class Model3DRepository {
 
-    public static final byte MODEL_ID_PAC_MAN = 0, MODEL_ID_GHOST = 1, MODEL_ID_PELLET = 2;
+    public enum ModelID {
+        PAC_MAN("/de/amr/pacmanfx/uilib/model3D/pacman.obj"),
+        GHOST("/de/amr/pacmanfx/uilib/model3D/ghost.obj"),
+        PELLET("/de/amr/pacmanfx/uilib/model3D/pellet.obj");
 
-    private static final String[] OBJ_FILE_PATHS = {
-            "/de/amr/pacmanfx/uilib/model3D/pacman.obj",
-            "/de/amr/pacmanfx/uilib/model3D/ghost.obj",
-            "/de/amr/pacmanfx/uilib/model3D/pellet.obj"
-    };
+        ModelID(String objFile) {
+            this.objFile = objFile;
+        }
 
-    private final Model3D[] models = new Model3D[3];
+        public String objFile() {
+            return objFile;
+        }
+
+        private final String objFile;
+    }
+
+    private final Map<ModelID, Model3D> models = new EnumMap<>(ModelID.class);
 
     private static final String MESH_ID_PAC_MAN_EYES   = "PacMan.Eyes";
     private static final String MESH_ID_PAC_MAN_HEAD   = "PacMan.Head";
@@ -34,17 +46,15 @@ public class Model3DRepository {
     private static final String MESH_ID_PELLET         = "Pellet";
 
     /**
-     * @param id one of {@link #MODEL_ID_PAC_MAN}, {@link #MODEL_ID_GHOST}, {@link #MODEL_ID_PELLET}.
+     * @param id one of {@link ModelID#PAC_MAN}, {@link ModelID#GHOST}, {@link ModelID#PELLET}.
      * @return meshes and materials of loaded OBJ file
      */
-    public Model3D model3D(byte id) {
-        if (id < 0 || id >= models.length) {
-            throw new IllegalArgumentException("Illegal model ID: " + id);
+    public Model3D model3D(ModelID id) {
+        requireNonNull(id);
+        if (models.get(id) == null) {
+            models.put(id, loadModel(id.objFile()));
         }
-        if (models[id] == null) {
-            models[id] = loadModel(OBJ_FILE_PATHS[id]);
-        }
-        return models[id];
+        return models.get(id);
     }
 
     private Model3D loadModel(String path) {
@@ -58,19 +68,19 @@ public class Model3DRepository {
             }
             throw new IllegalArgumentException("Could not access resource at path %s".formatted(path));
         } catch (Exception x) {
-            throw new IllegalArgumentException("Could not load 3D model from URL %s".formatted(url));
+            throw new IllegalArgumentException("Could not load 3D model from URL %s".formatted(url), x);
         }
     }
 
-    public Mesh pacEyesMesh()       { return model3D(MODEL_ID_PAC_MAN).mesh(MESH_ID_PAC_MAN_EYES); }
-    public Mesh pacHeadMesh()       { return model3D(MODEL_ID_PAC_MAN).mesh(MESH_ID_PAC_MAN_HEAD); }
-    public Mesh pacPalateMesh()     { return model3D(MODEL_ID_PAC_MAN).mesh(MESH_ID_PAC_MAN_PALATE); }
+    public Mesh pacEyesMesh()       { return model3D(ModelID.PAC_MAN).mesh(MESH_ID_PAC_MAN_EYES); }
+    public Mesh pacHeadMesh()       { return model3D(ModelID.PAC_MAN).mesh(MESH_ID_PAC_MAN_HEAD); }
+    public Mesh pacPalateMesh()     { return model3D(ModelID.PAC_MAN).mesh(MESH_ID_PAC_MAN_PALATE); }
 
-    public Mesh ghostDressMesh()    { return model3D(MODEL_ID_GHOST).mesh(MESH_ID_GHOST_DRESS); }
-    public Mesh ghostEyeballsMesh() { return model3D(MODEL_ID_GHOST).mesh(MESH_ID_GHOST_EYEBALLS); }
-    public Mesh ghostPupilsMesh()   { return model3D(MODEL_ID_GHOST).mesh(MESH_ID_GHOST_PUPILS); }
+    public Mesh ghostDressMesh()    { return model3D(ModelID.GHOST).mesh(MESH_ID_GHOST_DRESS); }
+    public Mesh ghostEyeballsMesh() { return model3D(ModelID.GHOST).mesh(MESH_ID_GHOST_EYEBALLS); }
+    public Mesh ghostPupilsMesh()   { return model3D(ModelID.GHOST).mesh(MESH_ID_GHOST_PUPILS); }
 
-    public Mesh pelletMesh() { return model3D(MODEL_ID_PELLET).mesh(MESH_ID_PELLET); }
+    public Mesh pelletMesh()        { return model3D(ModelID.PELLET).mesh(MESH_ID_PELLET); }
 
     public PacBody createPacBody(double size, Color headColor, Color eyesColor, Color palateColor) {
         return new PacBody(this, size, headColor, eyesColor, palateColor);
@@ -84,9 +94,10 @@ public class Model3DRepository {
         return new MsPacManFemaleParts(pacSize, hairBowColor, hairBowPearlsColor, boobsColor);
     }
 
-    public MsPacManBody createMsPacManBody(double size,
-                                           Color headColor, Color eyesColor, Color palateColor,
-                                           Color hairBowColor, Color hairBowPearlsColor, Color boobsColor) {
+    public MsPacManBody createMsPacManBody(
+            double size,
+            Color headColor, Color eyesColor, Color palateColor,
+            Color hairBowColor, Color hairBowPearlsColor, Color boobsColor) {
         return new MsPacManBody(this, size, headColor, eyesColor, palateColor, hairBowColor, hairBowPearlsColor, boobsColor);
     }
 

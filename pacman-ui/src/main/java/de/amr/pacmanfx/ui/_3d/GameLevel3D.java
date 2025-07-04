@@ -585,7 +585,6 @@ public class GameLevel3D {
         levelCompletedAnimationBeforeCutScene = null;
         Logger.info("Destroyed and removed all managed animations");
 
-
         if (dressMeshViews != null) {
             for (MeshView meshView : dressMeshViews) {
                 meshView.setMesh(null);
