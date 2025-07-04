@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
-import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Mesh;
 import org.tinylog.Logger;
@@ -80,22 +79,18 @@ public class Model3DRepository {
     public PacBodyNoEyes createBlindPacBody(double size, Color headColor, Color palateColor) {
         return new PacBodyNoEyes(this, size, headColor, palateColor);
     }
+
     public MsPacManFemaleParts createFemaleBodyParts(double pacSize, Color hairBowColor, Color hairBowPearlsColor, Color boobsColor) {
         return new MsPacManFemaleParts(pacSize, hairBowColor, hairBowPearlsColor, boobsColor);
     }
 
-    public GhostBody createGhostBody(double size, Color dressColor, double rotateY) {
-        return new GhostBody(this, size, dressColor, rotateY);
+    public MsPacManBody createMsPacManBody(double size,
+                                           Color headColor, Color eyesColor, Color palateColor,
+                                           Color hairBowColor, Color hairBowPearlsColor, Color boobsColor) {
+        return new MsPacManBody(this, size, headColor, eyesColor, palateColor, hairBowColor, hairBowPearlsColor, boobsColor);
     }
 
-    public Group createMsPacMan(
-        double size,
-        Color headColor, Color eyesColor, Color palateColor,
-        Color hairBowColor, Color hairBowPearlsColor, Color boobsColor)
-    {
-        return new Group(
-            createPacBody(size, headColor, eyesColor, palateColor),
-            createFemaleBodyParts(size, hairBowColor, hairBowPearlsColor, boobsColor)
-        );
+    public GhostBody createGhostBody(double size, Color dressColor, double rotateY) {
+        return new GhostBody(this, size, dressColor, rotateY);
     }
 }

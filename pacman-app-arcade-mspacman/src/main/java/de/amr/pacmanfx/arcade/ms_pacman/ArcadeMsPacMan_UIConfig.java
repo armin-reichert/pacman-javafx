@@ -25,8 +25,8 @@ import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.model3D.MsPacMan3D;
+import de.amr.pacmanfx.uilib.model3D.MsPacManBody;
 import de.amr.pacmanfx.uilib.model3D.PacBase3D;
-import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -184,10 +184,9 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         return theAssets().image(ANS + ".bonus_value_" + symbol);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public Group createLivesCounterShape3D(Model3DRepository model3DRepository) {
-        return model3DRepository.createMsPacMan(
+    public MsPacManBody createLivesCounterShape3D(Model3DRepository model3DRepository) {
+        return model3DRepository.createMsPacManBody(
             Settings3D.LIVES_COUNTER_3D_SHAPE_SIZE,
             theAssets().color(ANS + ".pac.color.head"),
             theAssets().color(ANS + ".pac.color.eyes"),
