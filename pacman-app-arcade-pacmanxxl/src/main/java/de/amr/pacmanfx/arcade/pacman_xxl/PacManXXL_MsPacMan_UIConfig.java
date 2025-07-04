@@ -188,8 +188,9 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
         return theAssets().image(ANS + ".bonus_value_" + symbol);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Node createLivesCounter3D(Model3DRepository model3DRepository) {
+    public Group createLivesCounterShape3D(Model3DRepository model3DRepository) {
         return model3DRepository.createMsPacMan(
             Settings3D.LIVES_COUNTER_3D_SHAPE_SIZE,
             theAssets().color(ANS + ".pac.color.head"),

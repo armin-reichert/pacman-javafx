@@ -18,6 +18,7 @@ import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.model3D.PacBase3D;
+import de.amr.pacmanfx.uilib.model3D.PacBody;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer3D;
 import javafx.animation.*;
 import javafx.beans.binding.Bindings;
@@ -105,7 +106,7 @@ public class GameLevel3D {
     private ArcadeHouse3D house3D;
     private Box floor3D;
     private LevelCounter3D levelCounter3D;
-    private Node[] livesCounterShapes = new Node[Settings3D.LIVES_COUNTER_3D_CAPACITY];
+    private PacBody[] livesCounterShapes = new PacBody[Settings3D.LIVES_COUNTER_3D_CAPACITY];
     private LivesCounter3D livesCounter3D;
     private PacBase3D pac3D;
     private List<MutatingGhost3D> ghosts3D;
@@ -165,7 +166,7 @@ public class GameLevel3D {
 
         {
             for (int i = 0; i < livesCounterShapes.length; ++i) {
-                livesCounterShapes[i] = theUI().configuration().createLivesCounter3D(model3DRepository);
+                livesCounterShapes[i] = theUI().configuration().createLivesCounterShape3D(model3DRepository);
             }
             livesCounter3D = new LivesCounter3D(animationManager, livesCounterShapes);
             livesCounter3D.setTranslateX(2 * TS);
@@ -653,7 +654,12 @@ public class GameLevel3D {
             ambientLight = null;
             Logger.info("Unbound and cleared ambient light");
         }
-        livesCounterShapes = null;
+        if (livesCounterShapes != null) {
+            for (var shape : livesCounterShapes) {
+                shape.destroy();
+            }
+            livesCounterShapes = null;
+        }
         if (livesCounter3D != null) {
             livesCounter3D.destroy();
             livesCounter3D = null;
