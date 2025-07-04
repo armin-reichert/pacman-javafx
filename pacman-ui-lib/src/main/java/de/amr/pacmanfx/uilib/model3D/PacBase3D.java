@@ -28,7 +28,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Common base class for Pac-Man and Ms. Pac-Man 3D representations.
  */
-public class PacBase3D {
+public class PacBase3D implements Destroyable {
 
     protected double size;
     protected Pac pac;
@@ -128,6 +128,7 @@ public class PacBase3D {
 
     public void updateMovementAnimation() {}
 
+    @Override
     public void destroy() {
         if (body != null) {
             body.destroy();

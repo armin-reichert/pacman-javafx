@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 
-public class PacBodyNoEyes extends Group {
+public class PacBodyNoEyes extends Group implements Destroyable {
 
     private MeshView headMeshView;
     private MeshView palateMeshView;
@@ -47,6 +47,7 @@ public class PacBodyNoEyes extends Group {
         getTransforms().add(new Scale(size / rootBounds.getWidth(), size / rootBounds.getHeight(), size / rootBounds.getDepth()));
     }
 
+    @Override
     public void destroy() {
         getChildren().clear();
         if (headMeshView != null) {

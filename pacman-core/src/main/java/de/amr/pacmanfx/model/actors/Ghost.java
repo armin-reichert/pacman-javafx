@@ -33,7 +33,7 @@ public abstract class Ghost extends MovingActor implements Animated {
 
     private final byte personality;
     private final String name;
-    private final ObjectProperty<GhostState> stateProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<GhostState> stateProperty = new SimpleObjectProperty<>(GhostState.LOCKED);
     private Vector2f revivalPosition;
     private List<Vector2i> specialTerrainTiles = List.of();
     private ActorAnimationMap animationMap;

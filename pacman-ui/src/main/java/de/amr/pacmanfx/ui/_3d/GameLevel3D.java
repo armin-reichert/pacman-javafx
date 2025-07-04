@@ -16,9 +16,9 @@ import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
+import de.amr.pacmanfx.uilib.model3D.Destroyable;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.model3D.PacBase3D;
-import de.amr.pacmanfx.uilib.model3D.PacBody;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer3D;
 import javafx.animation.*;
 import javafx.beans.binding.Bindings;
@@ -106,7 +106,7 @@ public class GameLevel3D {
     private ArcadeHouse3D house3D;
     private Box floor3D;
     private LevelCounter3D levelCounter3D;
-    private PacBody[] livesCounterShapes = new PacBody[Settings3D.LIVES_COUNTER_3D_CAPACITY];
+    private Node[] livesCounterShapes = new Node[Settings3D.LIVES_COUNTER_3D_CAPACITY];
     private LivesCounter3D livesCounter3D;
     private PacBase3D pac3D;
     private List<MutatingGhost3D> ghosts3D;
@@ -656,7 +656,9 @@ public class GameLevel3D {
         }
         if (livesCounterShapes != null) {
             for (var shape : livesCounterShapes) {
-                shape.destroy();
+                if (shape instanceof Destroyable destroyable) {
+                    destroyable.destroy();
+                }
             }
             livesCounterShapes = null;
         }

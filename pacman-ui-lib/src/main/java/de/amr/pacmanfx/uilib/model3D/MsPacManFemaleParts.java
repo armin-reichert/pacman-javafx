@@ -11,7 +11,7 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Translate;
 
-public class MsPacManFemaleParts extends Group {
+public class MsPacManFemaleParts extends Group implements Destroyable{
 
     private Sphere bowLeft;
     private Sphere bowRight;
@@ -64,6 +64,7 @@ public class MsPacManFemaleParts extends Group {
         getChildren().addAll(bowLeft, bowRight, pearlLeft, pearlRight, boobLeft, boobRight, beautySpot);
     }
 
+    @Override
     public void destroy() {
         getChildren().clear();
         bowLeft.setMaterial(null);

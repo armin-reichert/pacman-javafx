@@ -7,6 +7,7 @@ package de.amr.pacmanfx.uilib.model3D;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
@@ -14,17 +15,30 @@ import javafx.scene.transform.Translate;
 
 import java.util.stream.Stream;
 
-public class PacBody extends Group {
+import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
+
+public class PacBody extends Group implements Destroyable {
+
+    private PhongMaterial headMaterial;
+    private PhongMaterial eyesMaterial;
+    private PhongMaterial palateMaterial;
+
+    private MeshView headMeshView;
+    private MeshView eyesMeshView;
+    private MeshView palateMeshView;
 
     public PacBody(Model3DRepository model3DRepository, double size, Color headColor, Color eyesColor, Color palateColor) {
-        var headMeshView = new MeshView(model3DRepository.pacHeadMesh());
-        headMeshView.setMaterial(Ufx.coloredPhongMaterial(headColor));
+        headMaterial = coloredPhongMaterial(headColor);
+        headMeshView = new MeshView(model3DRepository.pacHeadMesh());
+        headMeshView.setMaterial(headMaterial);
 
-        var eyesMeshView = new MeshView(model3DRepository.pacEyesMesh());
-        eyesMeshView.setMaterial(Ufx.coloredPhongMaterial(eyesColor));
+        eyesMaterial = coloredPhongMaterial(eyesColor);
+        eyesMeshView = new MeshView(model3DRepository.pacEyesMesh());
+        eyesMeshView.setMaterial(eyesMaterial);
 
-        var palateMeshView = new MeshView(model3DRepository.pacPalateMesh());
-        palateMeshView.setMaterial(Ufx.coloredPhongMaterial(palateColor));
+        palateMaterial = coloredPhongMaterial(palateColor);
+        palateMeshView = new MeshView(model3DRepository.pacPalateMesh());
+        palateMeshView.setMaterial(palateMaterial);
 
         getChildren().addAll(headMeshView, eyesMeshView, palateMeshView);
 
@@ -41,6 +55,7 @@ public class PacBody extends Group {
         getTransforms().add(new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth()));
     }
 
+    @Override
     public void destroy() {
         //TODO
         getChildren().clear();

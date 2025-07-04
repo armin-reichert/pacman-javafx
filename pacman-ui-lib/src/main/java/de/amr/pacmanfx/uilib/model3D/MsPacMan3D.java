@@ -88,6 +88,7 @@ public class MsPacMan3D extends PacBase3D {
         setMovementPowerMode(false);
     }
 
+    @Override
     public void destroy() {
         if (femaleBodyParts != null) {
             femaleBodyParts.destroy();
