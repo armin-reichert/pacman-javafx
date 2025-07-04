@@ -9,20 +9,28 @@ import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import javafx.animation.*;
+import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.LightBase;
 import javafx.scene.Node;
 import javafx.scene.PointLight;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Scale;
+import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.uilib.Ufx.toCSS_ID;
+import static de.amr.pacmanfx.uilib.model3D.Model3DRepository.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -52,11 +60,14 @@ public class PacBase3D {
         requireNonNull(assets);
         requireNonNull(ans);
 
-        jaw = model3DRepository.createPacSkull(size,
+        Model3D pacManModel3D = model3DRepository.getModel(ID_PAC_MAN_MODEL);
+        jaw = createPacSkull(
+            size,
+            pacManModel3D,
             assets.color(ans + ".pac.color.head"),
             assets.color(ans + ".pac.color.palate"));
 
-        body = model3DRepository.createPacShape(size,
+        body = model3DRepository.createPacMan(size,
             assets.color(ans + ".pac.color.head"),
             assets.color(ans + ".pac.color.eyes"),
             assets.color(ans + ".pac.color.palate"));
@@ -102,6 +113,32 @@ public class PacBase3D {
         light.translateXProperty().bind(root.translateXProperty());
         light.translateYProperty().bind(root.translateYProperty());
         light.setTranslateZ(-30);
+    }
+
+    private Group createPacSkull(double size, Model3D pacManModel, Color headColor, Color palateColor) {
+        var head = new MeshView(pacManModel.mesh(PAC_MAN_MESH_ID_HEAD));
+        head.setId(toCSS_ID(PAC_MAN_MESH_ID_HEAD));
+        head.setMaterial(Ufx.coloredPhongMaterial(headColor));
+
+        var palate = new MeshView(pacManModel.mesh(PAC_MAN_MESH_ID_PALATE));
+        palate.setId(toCSS_ID(PAC_MAN_MESH_ID_PALATE));
+        palate.setMaterial(Ufx.coloredPhongMaterial(palateColor));
+
+        Bounds bounds = head.getBoundsInLocal();
+        var centeredOverOrigin = new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ());
+        head.getTransforms().add(centeredOverOrigin);
+        palate.getTransforms().add(centeredOverOrigin);
+
+        var root = new Group(head, palate);
+
+        Bounds rootBounds = root.getBoundsInLocal();
+        // TODO check/fix Pac-Man mesh position and rotation in .obj file
+        root.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
+        root.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
+        root.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
+        root.getTransforms().add(new Scale(size / rootBounds.getWidth(), size / rootBounds.getHeight(), size / rootBounds.getDepth()));
+
+        return root;
     }
 
     public Node root() {

@@ -8,7 +8,6 @@ import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
@@ -36,13 +35,13 @@ public final class Model3DRepository {
             ID_PELLET_MODEL,  "/de/amr/pacmanfx/uilib/model3D/pellet.obj"
     );
 
-    private static final String PAC_MAN_MESH_ID_EYES   = "PacMan.Eyes";
-    private static final String PAC_MAN_MESH_ID_HEAD   = "PacMan.Head";
-    private static final String PAC_MAN_MESH_ID_PALATE = "PacMan.Palate";
+    public static final String PAC_MAN_MESH_ID_EYES   = "PacMan.Eyes";
+    public static final String PAC_MAN_MESH_ID_HEAD   = "PacMan.Head";
+    public static final String PAC_MAN_MESH_ID_PALATE = "PacMan.Palate";
 
-    private static final String GHOST_MESH_ID_DRESS    = "Sphere.004_Sphere.034_light_blue_ghost";
-    private static final String GHOST_MESH_ID_PUPILS   = "Sphere.010_Sphere.039_grey_wall";
-    private static final String GHOST_MESH_ID_EYEBALLS = "Sphere.009_Sphere.036_white";
+    public static final String GHOST_MESH_ID_DRESS    = "Sphere.004_Sphere.034_light_blue_ghost";
+    public static final String GHOST_MESH_ID_PUPILS   = "Sphere.010_Sphere.039_grey_wall";
+    public static final String GHOST_MESH_ID_EYEBALLS = "Sphere.009_Sphere.036_white";
 
     public static final String PELLET_MESH_ID          = "Pellet";
 
@@ -76,7 +75,7 @@ public final class Model3DRepository {
 
     public Mesh pelletMesh() { return getModel(ID_PELLET_MODEL).mesh(PELLET_MESH_ID); }
 
-    public Group createPacShape(double size, Color headColor, Color eyesColor, Color palateColor) {
+    public Group createPacMan(double size, Color headColor, Color eyesColor, Color palateColor) {
         var head = new MeshView(getModel(ID_PAC_MAN_MODEL).mesh(PAC_MAN_MESH_ID_HEAD));
         head.setId(toCSS_ID(PAC_MAN_MESH_ID_HEAD));
         head.setMaterial(Ufx.coloredPhongMaterial(headColor));
@@ -101,32 +100,6 @@ public final class Model3DRepository {
         root.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
 
         var rootBounds = root.getBoundsInLocal();
-        root.getTransforms().add(new Scale(size / rootBounds.getWidth(), size / rootBounds.getHeight(), size / rootBounds.getDepth()));
-
-        return root;
-    }
-
-    public Group createPacSkull(double size, Color headColor, Color palateColor) {
-        var head = new MeshView(getModel(ID_PAC_MAN_MODEL).mesh(PAC_MAN_MESH_ID_HEAD));
-        head.setId(toCSS_ID(PAC_MAN_MESH_ID_HEAD));
-        head.setMaterial(Ufx.coloredPhongMaterial(headColor));
-
-        var palate = new MeshView(getModel(ID_PAC_MAN_MODEL).mesh(PAC_MAN_MESH_ID_PALATE));
-        palate.setId(toCSS_ID(PAC_MAN_MESH_ID_PALATE));
-        palate.setMaterial(Ufx.coloredPhongMaterial(palateColor));
-
-        Bounds bounds = head.getBoundsInLocal();
-        var centeredOverOrigin = new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ());
-        head.getTransforms().add(centeredOverOrigin);
-        palate.getTransforms().add(centeredOverOrigin);
-
-        var root = new Group(head, palate);
-
-        Bounds rootBounds = root.getBoundsInLocal();
-        // TODO check/fix Pac-Man mesh position and rotation in .obj file
-        root.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-        root.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
-        root.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
         root.getTransforms().add(new Scale(size / rootBounds.getWidth(), size / rootBounds.getHeight(), size / rootBounds.getDepth()));
 
         return root;
@@ -174,7 +147,7 @@ public final class Model3DRepository {
         return new Group(bowLeft, bowRight, pearlLeft, pearlRight, boobLeft, boobRight, beautySpot);
     }
 
-    public Node createGhostShape3D(double size, Color dressColor, double rotate) {
+    public Group createGhost(double size, Color dressColor, double rotate) {
         MeshView dress = new MeshView(getModel(ID_GHOST_MODEL).mesh(GHOST_MESH_ID_DRESS));
         dress.setMaterial(Ufx.coloredPhongMaterial(dressColor));
         Bounds dressBounds = dress.getBoundsInLocal();

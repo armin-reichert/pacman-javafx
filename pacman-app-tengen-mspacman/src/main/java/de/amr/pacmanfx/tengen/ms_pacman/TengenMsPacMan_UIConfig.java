@@ -235,7 +235,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     @Override
     public Node createLivesCounter3D(Model3DRepository model3DRepository) {
         return new Group(
-            model3DRepository.createPacShape(
+            model3DRepository.createPacMan(
                     Settings3D.LIVES_COUNTER_3D_SHAPE_SIZE,
                     theAssets().color(ANS + ".pac.color.head"),
                     theAssets().color(ANS + ".pac.color.eyes"),

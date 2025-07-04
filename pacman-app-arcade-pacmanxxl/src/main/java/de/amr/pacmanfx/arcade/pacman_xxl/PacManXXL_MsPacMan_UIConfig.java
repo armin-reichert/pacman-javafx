@@ -192,7 +192,7 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
     public Node createLivesCounter3D(Model3DRepository model3DRepository) {
         String namespace = assetNamespace();
         return new Group(
-            model3DRepository.createPacShape(
+            model3DRepository.createPacMan(
                     Settings3D.LIVES_COUNTER_3D_SHAPE_SIZE,
                     theAssets().color(namespace + ".pac.color.head"),
                     theAssets().color(namespace + ".pac.color.eyes"),
