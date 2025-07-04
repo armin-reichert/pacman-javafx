@@ -28,7 +28,7 @@ public interface PacManGames_UIConfig extends PacManGames_GameSceneConfig {
     }
     ActorAnimationMap createPacAnimations(Pac pac);
     ActorAnimationMap createGhostAnimations(Ghost ghost);
-    <T extends Node> T createLivesCounterShape3D(Model3DRepository model3DRepository);
+    Node createLivesCounterShape3D(Model3DRepository model3DRepository);
     PacBase3D createPac3D(Model3DRepository model3DRepository, AnimationManager animationMgr, Pac pac);
     Image bonusSymbolImage(byte symbol);
     Image bonusValueImage(byte symbol);
