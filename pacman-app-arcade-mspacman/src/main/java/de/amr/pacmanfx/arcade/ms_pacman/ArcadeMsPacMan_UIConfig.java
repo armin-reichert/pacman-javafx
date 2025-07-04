@@ -26,7 +26,6 @@ import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.model3D.MsPacMan3D;
 import de.amr.pacmanfx.uilib.model3D.PacBase3D;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -187,18 +186,14 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
 
     @Override
     public Node createLivesCounter3D(Model3DRepository model3DRepository) {
-        return new Group(
-                model3DRepository.createPacMan(
-                    Settings3D.LIVES_COUNTER_3D_SHAPE_SIZE,
-                    theAssets().color(ANS + ".pac.color.head"),
-                    theAssets().color(ANS + ".pac.color.eyes"),
-                    theAssets().color(ANS + ".pac.color.palate")
-            ),
-                model3DRepository.createFemaleBodyParts(Settings3D.LIVES_COUNTER_3D_SHAPE_SIZE,
-                    theAssets().color(ANS + ".pac.color.hairbow"),
-                    theAssets().color(ANS + ".pac.color.hairbow.pearls"),
-                    theAssets().color(ANS + ".pac.color.boobs")
-            )
+        return model3DRepository.createMsPacMan(
+            Settings3D.LIVES_COUNTER_3D_SHAPE_SIZE,
+            theAssets().color(ANS + ".pac.color.head"),
+            theAssets().color(ANS + ".pac.color.eyes"),
+            theAssets().color(ANS + ".pac.color.palate"),
+            theAssets().color(ANS + ".pac.color.hairbow"),
+            theAssets().color(ANS + ".pac.color.hairbow.pearls"),
+            theAssets().color(ANS + ".pac.color.boobs")
         );
     }
 

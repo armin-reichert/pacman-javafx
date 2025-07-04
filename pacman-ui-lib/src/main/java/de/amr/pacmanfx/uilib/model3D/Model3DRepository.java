@@ -206,4 +206,15 @@ public final class Model3DRepository {
 
         return root;
     }
+
+    public Group createMsPacMan(
+        double size,
+        Color headColor, Color eyesColor, Color palateColor,
+        Color hairBowColor, Color hairBowPearlsColor, Color boobsColor)
+    {
+        return new Group(
+            createPacMan(size, headColor, eyesColor, palateColor),
+            createFemaleBodyParts(size, hairBowColor, hairBowPearlsColor, boobsColor)
+        );
+    }
 }

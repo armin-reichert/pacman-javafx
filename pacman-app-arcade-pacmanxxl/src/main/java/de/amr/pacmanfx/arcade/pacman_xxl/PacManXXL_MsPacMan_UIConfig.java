@@ -190,19 +190,14 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
 
     @Override
     public Node createLivesCounter3D(Model3DRepository model3DRepository) {
-        String namespace = assetNamespace();
-        return new Group(
-            model3DRepository.createPacMan(
-                    Settings3D.LIVES_COUNTER_3D_SHAPE_SIZE,
-                    theAssets().color(namespace + ".pac.color.head"),
-                    theAssets().color(namespace + ".pac.color.eyes"),
-                    theAssets().color(namespace + ".pac.color.palate")
-            ),
-            model3DRepository.createFemaleBodyParts(Settings3D.LIVES_COUNTER_3D_SHAPE_SIZE,
-                    theAssets().color(namespace + ".pac.color.hairbow"),
-                    theAssets().color(namespace + ".pac.color.hairbow.pearls"),
-                    theAssets().color(namespace + ".pac.color.boobs")
-            )
+        return model3DRepository.createMsPacMan(
+            Settings3D.LIVES_COUNTER_3D_SHAPE_SIZE,
+            theAssets().color(ANS + ".pac.color.head"),
+            theAssets().color(ANS + ".pac.color.eyes"),
+            theAssets().color(ANS + ".pac.color.palate"),
+            theAssets().color(ANS + ".pac.color.hairbow"),
+            theAssets().color(ANS + ".pac.color.hairbow.pearls"),
+            theAssets().color(ANS + ".pac.color.boobs")
         );
     }
 
