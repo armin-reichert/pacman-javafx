@@ -102,7 +102,7 @@ public class ObjImporter {
 
     private String objFileUrl;
     private final Map<String, TriangleMesh> meshes = new HashMap<>();
-    private final List<Map<String, Material>> materialLibrary = new ArrayList<>();
+    private final List<Map<String, Material>> materialLibraries = new ArrayList<>();
     private final ObservableFloatArray vertexes = FXCollections.observableFloatArray();
     private final ObservableFloatArray uvs = FXCollections.observableFloatArray();
     private final IntegerArrayList faces = new IntegerArrayList();
@@ -130,8 +130,8 @@ public class ObjImporter {
         return meshes.get(key);
     }
 
-    public List<Map<String, Material>> materialLibrary() {
-        return materialLibrary;
+    public List<Map<String, Material>> materialLibraries() {
+        return materialLibraries;
     }
 
     private int vertexIndex(int vertexIndex) {
@@ -306,7 +306,7 @@ public class ObjImporter {
                     String[] split = line.substring("mtllib ".length()).trim().split("\\s+");
                     for (String filename : split) {
                         MtlReader mtlReader = new MtlReader(filename, objFileUrl);
-                        materialLibrary.add(mtlReader.getMaterials());
+                        materialLibraries.add(mtlReader.getMaterials());
                     }
                 }
 

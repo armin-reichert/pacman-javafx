@@ -9,14 +9,12 @@ import javafx.scene.Node;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Scale;
-import org.tinylog.Logger;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 import static java.util.Objects.requireNonNull;
 
@@ -34,19 +32,18 @@ public class Model3D {
         return new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
     }
 
-    private final String url;
     private final Map<String, TriangleMesh> meshesByName = new HashMap<>();
     private final Map<String, PhongMaterial> materials = new HashMap<>();
 
     public Model3D(URL objFileURL) throws IOException, URISyntaxException {
-        url = requireNonNull(objFileURL).toExternalForm();
-        var importer = new ObjImporter(url);
+        requireNonNull(objFileURL);
+        var importer = new ObjImporter(objFileURL.toExternalForm());
         for (String meshName : importer.getMeshNames()) {
             TriangleMesh mesh = importer.getMesh(meshName);
             ObjImporter.validateTriangleMesh(mesh);
             meshesByName.put(meshName, mesh);
         }
-        for (var materialLibrary : importer.materialLibrary()) {
+        for (var materialLibrary : importer.materialLibraries()) {
             materialLibrary.forEach((materialName, material) -> materials.put(materialName, (PhongMaterial) material));
         }
     }
@@ -54,7 +51,6 @@ public class Model3D {
     public void destroy() {
         meshesByName.clear();
         materials.clear();
-        Logger.info("Model3D destroyed, cleared meshes and materials for URL: {}", url);
     }
 
     public TriangleMesh mesh(String name) {
@@ -71,10 +67,6 @@ public class Model3D {
             return materials.get(name);
         }
         throw new Model3DException("No material with name %s found", name);
-    }
-
-    public String url() {
-        return url;
     }
 
     public String contentAsText(URL url) {
