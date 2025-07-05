@@ -51,7 +51,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * 3D representation of game level.
  */
-public class GameLevel3D {
+public class GameLevel3D extends Group implements  Destroyable {
 
     private static boolean isInsideWorldMap(WorldMap worldMap, double x, double y) {
         return 0 <= x && x < worldMap.numCols() * TS && 0 <= y && y < worldMap.numRows() * TS;
@@ -99,7 +99,6 @@ public class GameLevel3D {
     private WorldMapColorScheme colorScheme;
     private TerrainMapRenderer3D r3D;
 
-    private Group root = new Group();
     private Group mazeGroup = new Group();
     private Group maze3D = new Group();
     private AmbientLight ambientLight;
@@ -153,7 +152,7 @@ public class GameLevel3D {
         {
             ambientLight = new AmbientLight();
             ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
-            root.getChildren().add(ambientLight);
+            getChildren().add(ambientLight);
         }
 
         {
@@ -161,7 +160,7 @@ public class GameLevel3D {
             levelCounter3D.setTranslateX(gameLevel.worldMap().numCols() * TS - 2 * TS);
             levelCounter3D.setTranslateY(2 * TS);
             levelCounter3D.spinningAnimation().playFromStart();
-            root.getChildren().add(levelCounter3D);
+            getChildren().add(levelCounter3D);
         }
 
         {
@@ -176,13 +175,13 @@ public class GameLevel3D {
             livesCounter3D.plateColorProperty().set(Settings3D.LIVES_COUNTER_PLATE_COLOR);
             livesCounter3D.light().colorProperty().set(Color.CORNFLOWERBLUE);
             livesCounter3D.lookingAroundAnimation().playFromStart();
-            root.getChildren().add(livesCounter3D);
+            getChildren().add(livesCounter3D);
         }
 
         {
             pac3D = theUI().configuration().createPac3D(model3DRepository, animationManager, gameLevel.pac());
             pac3D.init();
-            root.getChildren().addAll(pac3D.root(), pac3D.light());
+            getChildren().addAll(pac3D.root(), pac3D.light());
         }
 
         {
@@ -196,11 +195,11 @@ public class GameLevel3D {
                     Settings3D.GHOST_3D_SIZE,
                     gameLevel.data().numFlashes()
                 )).toList();
-            root.getChildren().addAll(ghosts3D);
+            getChildren().addAll(ghosts3D);
             ghosts3D.forEach(ghost3D -> ghost3D.init(gameLevel));
         }
 
-        root.getChildren().add(mazeGroup);
+        getChildren().add(mazeGroup);
 
         Logger.info("Build 3D maze for map (URL '{}') and color scheme {}", gameLevel.worldMap().url(), colorScheme);
 
@@ -267,13 +266,13 @@ public class GameLevel3D {
         }
 
         createPelletsAndEnergizers3D(gameLevel, colorScheme, model3DRepository.pelletMesh());
-        energizers3D.stream().map(Eatable3D::shape3D).forEach(root.getChildren()::add);
-        pellets3D   .stream().map(Eatable3D::shape3D).forEach(root.getChildren()::add);
+        energizers3D.stream().map(Eatable3D::shape3D).forEach(getChildren()::add);
+        pellets3D   .stream().map(Eatable3D::shape3D).forEach(getChildren()::add);
 
         PY_3D_WALL_HEIGHT.addListener(this::handleWallHeightChange);
         PY_3D_DRAW_MODE.addListener(this::handleDrawModeChange);
 
-        root.setMouseTransparent(true); // this increases performance, they say...
+        setMouseTransparent(true); // this increases performance, they say...
 
         wallColorFlashingAnimation = new ManagedAnimation(animationManager, "MazeWallColorFlashing") {
             @Override
@@ -313,7 +312,7 @@ public class GameLevel3D {
                     doAfterSec(0.5, createMazeFlashAnimation(numMazeFlashes, 250)),
                     doAfterSec(0.5, () -> gameLevel.pac().hide()),
                     doAfterSec(0.5, () -> {
-                            var spin360 = new RotateTransition(Duration.seconds(1.5), root);
+                            var spin360 = new RotateTransition(Duration.seconds(1.5), GameLevel3D.this);
                             spin360.setAxis(theRNG().nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
                             spin360.setFromAngle(0);
                             spin360.setToAngle(360);
@@ -339,7 +338,7 @@ public class GameLevel3D {
         };
     }
 
-    public Group root() { return root; }
+//    public Group root() { return root; }
     public PacBase3D pac3D() { return pac3D; }
     public Stream<MutatingGhost3D> ghosts3D() { return ghosts3D.stream(); }
     public MutatingGhost3D ghost3D(byte id) { return ghosts3D.get(id); }
@@ -428,7 +427,7 @@ public class GameLevel3D {
                 var explosion = new ManagedAnimation(animationManager, "Energizer_Explosion") {
                     @Override
                     protected Animation createAnimation() {
-                        return new SquirtingAnimation(root, Duration.seconds(2), 23, 69, pelletMaterial, center) {
+                        return new SquirtingAnimation(GameLevel3D.this, Duration.seconds(2), 23, 69, pelletMaterial, center) {
                             @Override
                             public boolean particleShouldVanish(Particle particle) {
                                 return particle.getTranslateZ() >= -1
@@ -465,7 +464,7 @@ public class GameLevel3D {
 
     public void showAnimatedMessage(String text, float displaySeconds, double centerX, double y) {
         if (messageView != null) {
-            root.getChildren().remove(messageView);
+            getChildren().remove(messageView);
         }
         messageView = MessageView.builder()
                 .text(text)
@@ -479,7 +478,7 @@ public class GameLevel3D {
         messageView.setTranslateX(centerX - 0.5 * messageView.getFitWidth());
         messageView.setTranslateY(y);
         messageView.setTranslateZ(halfHeight); // just under floor
-        root.getChildren().add(messageView);
+        getChildren().add(messageView);
         messageView.movementAnimation().playFromStart();
     }
 
@@ -611,6 +610,15 @@ public class GameLevel3D {
             r3D = null;
             Logger.info("Destroyed 3D renderer");
         }
+
+        getChildren().clear();
+        Logger.info("Removed all nodes under game level");
+
+        if (ambientLight != null) {
+            ambientLight.colorProperty().unbind();
+            ambientLight = null;
+            Logger.info("Unbound and cleared ambient light");
+        }
         if (pellets3D != null) {
             pellets3D.forEach(Pellet3D::destroy);
             pellets3D = null;
@@ -620,11 +628,6 @@ public class GameLevel3D {
             energizers3D.forEach(Energizer3D::destroy);
             energizers3D = null;
             Logger.info("Destroyed 3D energizers");
-        }
-        if (root != null) {
-            root.getChildren().clear();
-            root = null;
-            Logger.info("Removed all nodes under root group");
         }
         if (mazeGroup != null) {
             mazeGroup.getChildren().clear();
@@ -646,12 +649,8 @@ public class GameLevel3D {
             Logger.info("Destroyed and cleared 3D house");
         }
         if (maze3D != null) {
+            //TODO destroy()
             maze3D = null;
-        }
-        if (ambientLight != null) {
-            ambientLight.colorProperty().unbind();
-            ambientLight = null;
-            Logger.info("Unbound and cleared ambient light");
         }
         if (livesCounterShapes != null) {
             for (var shape : livesCounterShapes) {

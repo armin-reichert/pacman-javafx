@@ -63,7 +63,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         var tengenGame = (TengenMsPacMan_GameModel) theGame();
         if (!tengenGame.optionsAreInitial()) {
             ImageView infoView = createGameInfoView(tengenGame, theGameLevel());
-            level3D.root().getChildren().add(infoView);
+            level3D.getChildren().add(infoView);
         }
     }
 

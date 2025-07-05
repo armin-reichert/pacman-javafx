@@ -8,6 +8,7 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
+import de.amr.pacmanfx.uilib.model3D.Destroyable;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer3D;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -33,7 +34,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * 3D house in Arcade style.
  */
-public class ArcadeHouse3D extends Group {
+public class ArcadeHouse3D extends Group implements Destroyable {
 
     private static final int NUM_VERTICAL_BARS = 2;
     private static final float BAR_THICKNESS = 0.75f;
@@ -177,6 +178,7 @@ public class ArcadeHouse3D extends Group {
         }
     }
 
+    @Override
     public void destroy() {
         getChildren().clear();
         wallBaseMaterial = null;
