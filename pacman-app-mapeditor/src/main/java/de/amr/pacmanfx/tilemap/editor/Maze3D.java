@@ -68,9 +68,6 @@ public class Maze3D extends Group {
     private final TerrainMapRenderer3D r3D;
     private final PerspectiveCamera camera;
 
-    private final DoubleProperty wallBaseHeightPy = new SimpleDoubleProperty(3.5);
-    private final DoubleProperty houseBaseHeightPy = new SimpleDoubleProperty(12);
-
     private final Node pacmanShape3D;
     private final GhostBody[] ghostShapes;
 
@@ -187,6 +184,8 @@ public class Maze3D extends Group {
         PhongMaterial wallBaseMaterial = coloredMaterial(opaqueColor(wallBaseColor, 0.4));
         PhongMaterial wallTopMaterial = coloredMaterial(wallTopColor);
 
+        r3D.setWallCreatedCallback(wall3D -> wall3D.baseHeightProperty().set(12));
+        //r3D.setCornerCreatedCallback(corner3D -> corner3D.baseHeightProperty().set(3.5));
         mazeGroup.getChildren().addAll(
             r3D.createWallBetweenTiles(houseMinTile, houseMinTile.plus(2, 0), Wall3D.DEFAULT_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial),
             r3D.createWallBetweenTiles(houseRightUpper.minus(2, 0), houseRightUpper, Wall3D.DEFAULT_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial),
@@ -194,11 +193,13 @@ public class Maze3D extends Group {
             r3D.createWallBetweenTiles(houseLeftLower, houseMaxTile, Wall3D.DEFAULT_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial),
             r3D.createWallBetweenTiles(houseMaxTile, houseRightUpper, Wall3D.DEFAULT_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial)
         );
+        r3D.setWallCreatedCallback(null);
+
 
         Color doorColor = getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR));
         var doorMaterial = coloredMaterial(doorColor);
         Stream.of(houseMinTile.plus(3.0f, 0), houseMinTile.plus(4.0f, 0)).forEach(doorTile -> {
-            Box door = new Box(TS+HTS, 2, houseBaseHeightPy.get());
+            Box door = new Box(TS+HTS, 2, 10);
             door.setMaterial(doorMaterial);
             door.setTranslateX(doorTile.x() * TS + HTS);
             door.setTranslateY(doorTile.y() * TS + HTS);
