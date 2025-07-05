@@ -12,6 +12,8 @@ import javafx.scene.shape.Box;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.Shape3D;
 
+import static java.util.Objects.requireNonNull;
+
 public class Wall3D extends Group implements Destroyable {
 
     public static final double DEFAULT_BASE_HEIGHT = 4;
@@ -21,6 +23,8 @@ public class Wall3D extends Group implements Destroyable {
     private final DoubleProperty baseHeightProperty = new SimpleDoubleProperty(DEFAULT_BASE_HEIGHT);
 
     public Wall3D(Node base, Node top) {
+        requireNonNull(base);
+        requireNonNull(top);
         getChildren().setAll(base, top);
         if (base instanceof Box box) {
             box.depthProperty().bind(baseHeightProperty);
@@ -28,7 +32,7 @@ public class Wall3D extends Group implements Destroyable {
             cylinder.heightProperty().bind(baseHeightProperty);
         }
         base.translateZProperty().bind(baseHeightProperty.multiply(-0.5));
-        top.translateZProperty().bind(baseHeightProperty.add(0.5 * DEFAULT_TOP_HEIGHT).multiply(-1));
+        top.translateZProperty().bind(baseHeightProperty.add(0.5 * DEFAULT_TOP_HEIGHT).negate());
     }
 
     public DoubleProperty baseHeightProperty() {
