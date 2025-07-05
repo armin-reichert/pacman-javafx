@@ -52,7 +52,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * 3D representation of game level.
  */
-public class GameLevel3D extends Group implements  Destroyable {
+public class GameLevel3D extends Group implements Destroyable {
 
     private static boolean isInsideWorldMap(WorldMap worldMap, double x, double y) {
         return 0 <= x && x < worldMap.numCols() * TS && 0 <= y && y < worldMap.numRows() * TS;
@@ -235,7 +235,7 @@ public class GameLevel3D extends Group implements  Destroyable {
             r3D.setCylinderDivisions(24);
             for (Obstacle obstacle : gameLevel.worldMap().obstacles()) {
                 Vector2i tile = tileAt(obstacle.startPoint().toVector2f());
-                if (gameLevel.house().isPresent() && !gameLevel.house().get().isTileInHouseArea(tile)) {
+                if (gameLevel.house().isEmpty() || !gameLevel.house().get().isTileInHouseArea(tile)) {
                     r3D.renderObstacle3D(
                             maze3D,
                             obstacle, isObstacleTheWorldBorder(gameLevel.worldMap(), obstacle),
