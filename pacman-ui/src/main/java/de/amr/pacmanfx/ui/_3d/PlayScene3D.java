@@ -511,9 +511,10 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         level3D.pac3D().init();
         level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(theGameLevel()));
         root.getChildren().set(root.getChildren().size() - 1, level3D);
+
         scores3D.translateXProperty().bind(level3D.translateXProperty().add(TS));
-        scores3D.translateYProperty().bind(level3D.translateYProperty().subtract(3.5 * TS));
-        scores3D.translateZProperty().bind(level3D.translateZProperty().subtract(3.5 * TS));
+        scores3D.translateYProperty().bind(level3D.translateYProperty().subtract(4.5 * TS));
+        scores3D.translateZProperty().bind(level3D.translateZProperty().subtract(4.5 * TS));
     }
 
     protected void updateSound(GameLevel gameLevel) {
