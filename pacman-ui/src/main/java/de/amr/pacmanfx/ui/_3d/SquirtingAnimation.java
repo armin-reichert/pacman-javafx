@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._3d;
 
-import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.lib.Vector3f;
 import de.amr.pacmanfx.uilib.model3D.Destroyable;
 import javafx.animation.Animation;
@@ -48,11 +47,11 @@ public abstract class SquirtingAnimation extends Transition implements Destroyab
             velocity = new Vector3f(x, y, z);
         }
 
-        public void move(Vector3f acceleration) {
+        public void move() {
             setTranslateX(getTranslateX() + velocity.x());
             setTranslateY(getTranslateY() + velocity.y());
             setTranslateZ(getTranslateZ() + velocity.z());
-            velocity = velocity.add(acceleration);
+            velocity = velocity.add(GRAVITY);
         }
     }
 
@@ -117,7 +116,7 @@ public abstract class SquirtingAnimation extends Transition implements Destroyab
                 particle.setVelocity(0, 0, 0);
                 particle.setScaleZ(0.1);
             } else {
-                particle.move(GRAVITY);
+                particle.move();
             }
         }
     }
