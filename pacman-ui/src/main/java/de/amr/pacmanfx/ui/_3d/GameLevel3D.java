@@ -229,19 +229,17 @@ public class GameLevel3D extends Group implements  Destroyable {
             wallOpacityProperty.bind(PY_3D_WALL_OPACITY);
 
             r3D = new TerrainMapRenderer3D();
-
-            //TODO check this:
-            obstacleBaseHeightProperty.set(PY_3D_WALL_HEIGHT.get());
-
+            r3D.setWallThickness(Settings3D.OBSTACLE_3D_THICKNESS);
+            r3D.setWallCreatedCallback(wall3D -> wall3D.baseHeightProperty().bind(PY_3D_WALL_HEIGHT));
+            r3D.setCornerCreatedCallback(wall3D -> wall3D.baseHeightProperty().bind(PY_3D_WALL_HEIGHT));
+            r3D.setCylinderDivisions(24);
             for (Obstacle obstacle : gameLevel.worldMap().obstacles()) {
                 Vector2i tile = tileAt(obstacle.startPoint().toVector2f());
                 if (gameLevel.house().isPresent() && !gameLevel.house().get().isTileInHouseArea(tile)) {
-                    r3D.setWallThickness(Settings3D.OBSTACLE_3D_THICKNESS);
-                    r3D.setWallCreatedCallback(wall3D -> wall3D.baseHeightProperty().bind(PY_3D_WALL_HEIGHT));
-                    r3D.setCornerCreatedCallback(wall3D -> wall3D.baseHeightProperty().bind(PY_3D_WALL_HEIGHT));
-                    r3D.renderObstacle3D(maze3D, obstacle,
-                        isObstacleTheWorldBorder(gameLevel.worldMap(), obstacle),
-                        wallBaseMaterial, wallTopMaterial);
+                    r3D.renderObstacle3D(
+                            maze3D,
+                            obstacle, isObstacleTheWorldBorder(gameLevel.worldMap(), obstacle),
+                            wallBaseMaterial, wallTopMaterial);
                 }
             }
 

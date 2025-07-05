@@ -26,12 +26,12 @@ import static de.amr.pacmanfx.Globals.TS;
  */
 public class TerrainMapRenderer3D {
 
-    private int cylinderDivisions = 24; // default=64
+    private int cylinderDivisions = 32; // default=64
     private float wallThickness = 2;
     private boolean oShapeFilled = true;
 
-    private Consumer<Wall3D> wallCreatedCallback = wall3D -> Logger.info("Wall created: {}", wall3D);
-    private Consumer<Wall3D> cornerCreatedCallback = wall3D -> Logger.info("Corner created: {}", wall3D);
+    private Consumer<Wall3D> wallCreatedCallback = wall3D -> Logger.debug(() -> "Wall created: " + wall3D);
+    private Consumer<Wall3D> cornerCreatedCallback = wall3D -> Logger.debug(() -> "Corner created: " + wall3D);
 
     public TerrainMapRenderer3D() {}
 
