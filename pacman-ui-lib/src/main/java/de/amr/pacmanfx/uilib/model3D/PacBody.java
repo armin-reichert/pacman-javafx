@@ -59,5 +59,23 @@ public class PacBody extends Group implements Destroyable {
     public void destroy() {
         //TODO
         getChildren().clear();
+        if (headMeshView != null) {
+            headMeshView.setMesh(null);
+            headMeshView.setMaterial(null);
+            headMeshView = null;
+        }
+        headMaterial = null;
+        if (eyesMeshView != null) {
+            eyesMeshView.setMesh(null);
+            eyesMeshView.setMaterial(null);
+            eyesMeshView = null;
+        }
+        eyesMaterial = null;
+        if (palateMeshView != null) {
+            palateMeshView.setMesh(null);
+            palateMeshView.setMaterial(null);
+            palateMeshView = null;
+        }
+        palateMaterial = null;
     }
 }
