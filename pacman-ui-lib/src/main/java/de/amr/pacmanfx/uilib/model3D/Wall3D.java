@@ -36,6 +36,7 @@ public class Wall3D extends Group implements Destroyable {
 
     @Override
     public void destroy() {
+        baseHeightProperty.unbind();
         getChildren().forEach(child -> {
             switch (child) {
                 case Box box -> {
