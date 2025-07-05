@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.sound;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.media.AudioClip;
@@ -15,40 +16,22 @@ import org.tinylog.Logger;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static de.amr.pacmanfx.ui.PacManGames.theAssets;
 import static java.util.Objects.requireNonNull;
 
-/**
- * @author Armin Reichert
- */
 public class PacManGames_Sound {
 
-    private final BooleanProperty enabledPy = new SimpleBooleanProperty(true) {
-        @Override
-        protected void invalidated() {
-            Logger.debug("Game sound is {}", get() ? "enabled" : "disabled");
-        }
-    };
+    private final BooleanProperty enabledProperty = new SimpleBooleanProperty(true);
+    private final BooleanProperty mutedProperty = new SimpleBooleanProperty(false);
 
-    private final BooleanProperty mutedPy = new SimpleBooleanProperty(false);
+    private final Map<String, Map<String, MediaPlayer>> mediaPlayersByGameVariant = new HashMap<>();
 
     private String gameVariant;
     private String assetNamespace;
-
-    private final Map<String, Map<String, MediaPlayer>> soundsByGameVariant = new HashMap<>();
     private Siren siren;
     private MediaPlayer voice;
-
-    private String soundURL(String keySuffix) {
-        String key = assetNamespace + ".audio." + keySuffix;
-        URL url = theAssets().get(key);
-        return url != null ? url.toExternalForm() : null;
-    }
-
-    public MediaPlayer createSound(String key) {
-        return createSound(key, 1);
-    }
 
     public MediaPlayer createSound(String key, int repetitions) {
         String url = soundURL(key);
@@ -59,69 +42,64 @@ public class PacManGames_Sound {
         var player = new MediaPlayer(new Media(url));
         player.setCycleCount(repetitions);
         player.setVolume(1.0);
-        player.muteProperty().bind(mutedPy);
+        player.muteProperty().bind(Bindings.createBooleanBinding(
+                () -> mutedProperty.get() || !enabledProperty.get(),
+                mutedProperty, enabledProperty
+        ));
         player.statusProperty().addListener((py,ov,nv) -> logPlayerStatusChange(player, key, ov, nv));
         Logger.debug("Media player created from URL {}", url);
         return player;
     }
 
-    private Map<String, MediaPlayer> soundsByGameVariant(String gameVariant) {
-        if (!soundsByGameVariant.containsKey(gameVariant)) {
-            soundsByGameVariant.put(gameVariant, new HashMap<>());
-        }
-        return soundsByGameVariant.get(gameVariant);
+    private String soundURL(String keySuffix) {
+        String key = assetNamespace + ".audio." + keySuffix;
+        URL url = theAssets().get(key);
+        return url != null ? url.toExternalForm() : null;
     }
 
+    private Map<String, MediaPlayer> soundsByGameVariant(String gameVariant) {
+        if (!mediaPlayersByGameVariant.containsKey(gameVariant)) {
+            mediaPlayersByGameVariant.put(gameVariant, new HashMap<>());
+        }
+        return mediaPlayersByGameVariant.get(gameVariant);
+    }
 
     public void selectGameVariant(String gameVariant, String assetNamespace) {
         this.gameVariant = requireNonNull(gameVariant);
         this.assetNamespace = requireNonNull(assetNamespace);
         if (soundsByGameVariant(gameVariant).isEmpty()) {
             var soundMap = new HashMap<String, MediaPlayer>();
-            soundMap.put("game_over",      createSound("game_over"));
-            soundMap.put("game_ready",     createSound("game_ready"));
-            soundMap.put("ghost_returns",  createSound("ghost_returns", MediaPlayer.INDEFINITE));
-            soundMap.put("level_complete", createSound("level_complete"));
-            soundMap.put("pacman_munch",   createSound("pacman_munch", MediaPlayer.INDEFINITE));
-            soundMap.put("pacman_death",   createSound("pacman_death"));
-            soundMap.put("pacman_power",   createSound("pacman_power", MediaPlayer.INDEFINITE));
-            soundMap.put("bonus_bouncing", createSound("bonus_bouncing", MediaPlayer.INDEFINITE));
+            addSoundMapEntry(soundMap, "game_over",      createSound("game_over"));
+            addSoundMapEntry(soundMap, "game_ready",     createSound("game_ready"));
+            addSoundMapEntry(soundMap, "ghost_returns",  createSound("ghost_returns", MediaPlayer.INDEFINITE));
+            addSoundMapEntry(soundMap, "level_complete", createSound("level_complete"));
+            addSoundMapEntry(soundMap, "pacman_munch",   createSound("pacman_munch", MediaPlayer.INDEFINITE));
+            addSoundMapEntry(soundMap, "pacman_death",   createSound("pacman_death"));
+            addSoundMapEntry(soundMap, "pacman_power",   createSound("pacman_power", MediaPlayer.INDEFINITE));
+            addSoundMapEntry(soundMap, "bonus_bouncing", createSound("bonus_bouncing", MediaPlayer.INDEFINITE));
 
-            //TODO check this
+            //TODO this is crap
             MediaPlayer bounceSound = soundMap.get("bonus_bouncing");
             if (bounceSound != null && gameVariant.equals("MS_PACMAN_TENGEN")) {
                 bounceSound.setRate(0.25);
             }
 
-            soundsByGameVariant.put(gameVariant, soundMap);
+            mediaPlayersByGameVariant.put(gameVariant, soundMap);
             Logger.debug("Created sound map for game variant {}", gameVariant);
         }
         siren = null;
         logPlayerStatus();
     }
 
-    public void playVoice(String voiceClipID, double delaySeconds) {
-        URL url = theAssets().get(voiceClipID);
-        voice = new MediaPlayer(new Media(url.toExternalForm()));
-        // media player stays in state PLAYING, so we remove the reference when it reaches the end
-        voice.muteProperty().bind(mutedPy);
-        voice.setStartTime(Duration.seconds(delaySeconds));
-        voice.play(); // play also if enabledPy is set to false
-    }
-
-    public void stopVoice() {
-        if (voice != null) {
-            voice.stop();
+    private void addSoundMapEntry(HashMap<String, MediaPlayer> soundMap, String key, MediaPlayer sound) {
+        if (sound != null) {
+            soundMap.put(key, sound);
         }
     }
 
-    private Map<String, MediaPlayer> players(String gameVariant) {
-        return soundsByGameVariant.get(gameVariant);
-    }
-
     private void logPlayerStatus() {
-        for (String key : players(gameVariant).keySet()) {
-            logPlayerStatus(players(gameVariant).get(key), key);
+        for (String key : mediaPlayersByGameVariant.get(gameVariant).keySet()) {
+            player(key).ifPresent(player -> logPlayerStatus(player, key));
         }
         if (siren != null) {
             logPlayerStatus(siren.player(), "Siren" + siren.number());
@@ -141,86 +119,57 @@ public class PacManGames_Sound {
         Logger.debug("[{}] {} -> {}, volume {}", key, (oldStatus != null ? oldStatus : "undefined"), newStatus, player.getVolume());
     }
 
-    private void playIfEnabled(MediaPlayer player) {
-        if (player == null) {
-            //Logger.error("Cannot play sound, player is NULL");
-            return;
-        }
-        if (isEnabled()) {
-            player.play();
-        }
+    public void setEnabled(boolean enabled) {
+        enabledProperty.set(enabled);
     }
 
-    private void playIfEnabled(String key) {
-        playIfEnabled(players(gameVariant).get(key));
+    public boolean isEnabled() {
+        return enabledProperty.get();
     }
 
-    private void stop(MediaPlayer player) {
-        if (player == null) {
-            Logger.debug("No media player to stop");
-            return;
-        }
-        player.stop();
+    public MediaPlayer createSound(String key) {
+        return createSound(key, 1);
     }
-
-    private void stop(String key) {
-        stop(players(gameVariant).get(key));
-    }
-
-    private void pause(MediaPlayer player) {
-        if (player == null) {
-            Logger.debug("No media player to stop");
-            return;
-        }
-        player.pause();
-    }
-
-    private void pause(String key) { pause(players(gameVariant).get(key)); }
 
     public void playClipIfEnabled(String keySuffix, double volume) {
         requireNonNull(keySuffix);
-        String key = assetNamespace + ".audio." + keySuffix;
-        AudioClip clip = theAssets().get(key);
-        if (clip == null) {
-            Logger.error("No audio clip with key {}", key);
-            return;
-        }
         if (isUnMuted() && isEnabled()) {
+            String key = assetNamespace + ".audio." + keySuffix;
+            AudioClip clip = theAssets().get(key);
+            if (clip == null) {
+                Logger.error("No audio clip with key {}", key);
+                return;
+            }
             clip.setVolume(volume);
             clip.play();
         }
     }
 
-    // Public API
+    public void playVoice(String voiceClipID, double delaySeconds) {
+        URL url = theAssets().get(voiceClipID);
+        voice = new MediaPlayer(new Media(url.toExternalForm()));
+        // media player stays in state PLAYING, so we remove the reference when it reaches the end
+        voice.muteProperty().bind(mutedProperty);
+        voice.setStartTime(Duration.seconds(delaySeconds));
+        voice.play(); // play also if enabledPy is set to false
+    }
 
-    public BooleanProperty enabledProperty() {
-        return enabledPy;
+    public void stopVoice() {
+        if (voice != null) {
+            voice.stop();
+        }
+    }
+
+    public Optional<MediaPlayer> player(String key) {
+        return Optional.ofNullable(mediaPlayersByGameVariant.get(gameVariant).get(key));
     }
 
     public BooleanProperty mutedProperty() {
-        return mutedPy;
-    }
-
-    public void stopAll() {
-        for (MediaPlayer player : players(gameVariant).values()) {
-            stop(player);
-        }
-        stopMunchingSound(); // TODO check
-        stopSiren();
-        stopVoice();
-        Logger.debug("All sounds stopped ({})", gameVariant);
-    }
-
-    public void setEnabled(boolean enabled) {
-        enabledProperty().set(enabled);
-    }
-
-    public boolean isEnabled() {
-        return enabledPy.get();
+        return mutedProperty;
     }
 
     public void setMuted(boolean muted) {
-        mutedPy.set(muted);
+        mutedProperty.set(muted);
     }
 
     public void toggleMuted() {
@@ -228,7 +177,7 @@ public class PacManGames_Sound {
     }
 
     public boolean isUnMuted() {
-        return !mutedPy.get();
+        return !mutedProperty.get();
     }
 
     public void selectSiren(int number) {
@@ -238,7 +187,7 @@ public class PacManGames_Sound {
         }
         if (siren == null || siren.number() != number) {
             if (siren != null) {
-                stop(siren.player());
+                siren.player().stop();
             }
             MediaPlayer sirenPlayer = createSound("siren." + number, MediaPlayer.INDEFINITE);
             if (sirenPlayer == null) {
@@ -253,7 +202,7 @@ public class PacManGames_Sound {
 
     public void playSiren() {
         if (siren != null) {
-            playIfEnabled(siren.player());
+            siren.player().play();
         }
     }
 
@@ -263,9 +212,17 @@ public class PacManGames_Sound {
         }
     }
 
-    public void playBonusBouncingSound() { playIfEnabled("bonus_bouncing"); }
+    public void stopAll() {
+        mediaPlayersByGameVariant.get(gameVariant).forEach((key, player) -> player.stop());
+        stopMunchingSound(); // TODO check
+        stopSiren();
+        stopVoice();
+        Logger.debug("All sounds stopped ({})", gameVariant);
+    }
 
-    public void stopBonusBouncingSound() { stop("bonus_bouncing"); }
+    public void playBonusBouncingSound() { player("bonus_bouncing").ifPresent(MediaPlayer::play); }
+
+    public void stopBonusBouncingSound() { player("bonus_bouncing").ifPresent(MediaPlayer::stop); }
 
     public void playBonusEatenSound() {
         playClipIfEnabled("bonus_eaten", 1);
@@ -279,12 +236,10 @@ public class PacManGames_Sound {
         playClipIfEnabled("extra_life", 1);
     }
 
-    public void playGameOverSound() {
-        playIfEnabled("game_over");
-    }
+    public void playGameOverSound() { player("game_over").ifPresent(MediaPlayer::play); }
 
     public void playGameReadySound() {
-        playIfEnabled("game_ready");
+        player("game_ready").ifPresent(MediaPlayer::play);
     }
 
     public void playGhostEatenSound() {
@@ -292,34 +247,30 @@ public class PacManGames_Sound {
     }
 
     public void playGhostReturningHomeSound() {
-        playIfEnabled("ghost_returns");
+        player("ghost_returns").ifPresent(MediaPlayer::play);
     }
 
-    public void stopGhostReturningHomeSound() {
-        stop("ghost_returns");
-    }
+    public void stopGhostReturningHomeSound() { player("ghost_returns").ifPresent(MediaPlayer::stop); }
 
     public void playLevelChangedSound() {
         playClipIfEnabled("sweep", 1);
     }
 
     public void playLevelCompleteSound() {
-        playIfEnabled("level_complete");
+        player("level_complete").ifPresent(MediaPlayer::play);
     }
 
     public void playMunchingSound() {
-        playIfEnabled("pacman_munch");
+        player("pacman_munch").ifPresent(MediaPlayer::play);
     }
 
-    public void stopMunchingSound() { stop("pacman_munch"); }
+    public void stopMunchingSound() { player("pacman_munch").ifPresent(MediaPlayer::stop); }
 
-    public void pauseMunchingSound() { pause("pacman_munch"); }
+    public void pauseMunchingSound() { player("pacman_munch").ifPresent(MediaPlayer::pause); }
 
-    public void playPacDeathSound() { playIfEnabled("pacman_death"); }
+    public void playPacDeathSound() { player("pacman_death").ifPresent(MediaPlayer::play); }
 
-    public void playPacPowerSound() { playIfEnabled("pacman_power"); }
+    public void playPacPowerSound() { player("pacman_power").ifPresent(MediaPlayer::play); }
 
-    public void stopPacPowerSound() {
-        stop("pacman_power");
-    }
+    public void stopPacPowerSound() { player("pacman_power").ifPresent(MediaPlayer::stop); }
 }

@@ -185,8 +185,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
     @Override
     public void update() {
         optGameLevel().ifPresent(level -> {
-            if (!level.isDemoLevel()) {
+            if (level.isDemoLevel()) {
+                theSound().setEnabled(false);
+            } else {
                 messageMovement.update();
+                theSound().setEnabled(true);
                 updateSound(level);
             }
             if (fxSubScene.getCamera() == dynamicCamera) {

@@ -146,7 +146,12 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
     @Override
     public void update() {
         if (optGameLevel().isPresent()) {
-            if (!theGameLevel().isDemoLevel()) updateSound();
+            if (theGameLevel().isDemoLevel()) {
+                theSound().setEnabled(false);
+            } else {
+                theSound().setEnabled(true);
+                updateSound();
+            }
             updateHUD();
         } else {
             // Scene is already active 2 ticks before game level is created!

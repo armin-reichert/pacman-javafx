@@ -518,8 +518,10 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     protected void updateSound(GameLevel gameLevel) {
         if (gameLevel.isDemoLevel()) {
+            theSound().setEnabled(false);
             return; // demo level is silent
         }
+        theSound().setEnabled(true);
         if (theGameState() == GameState.HUNTING && !gameLevel.pac().powerTimer().isRunning()) {
             int sirenNumber = 1 + theGame().huntingTimer().phaseIndex() / 2;
             theSound().selectSiren(sirenNumber);

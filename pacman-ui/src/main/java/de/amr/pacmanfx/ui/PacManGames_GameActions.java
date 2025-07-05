@@ -177,8 +177,8 @@ public interface PacManGames_GameActions {
         @Override
         public void execute(PacManGames_UI ui) {
             if (theCoinMechanism().numCoins() < CoinMechanism.MAX_COINS) {
+                theSound().setEnabled(true);
                 theCoinMechanism().insertCoin();
-                theSound().enabledProperty().set(true);
                 theGameEventManager().publishEvent(theGame(), GameEventType.CREDIT_ADDED);
             }
             theGameController().changeGameState(GameState.SETTING_OPTIONS);

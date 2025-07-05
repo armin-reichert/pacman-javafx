@@ -233,7 +233,6 @@ public class GameView implements PacManGames_View {
                     ActorAnimationMap ghostAnimationMap = config.createGhostAnimations(ghost);
                     ghost.setAnimations(ghostAnimationMap);
                 });
-                theSound().setEnabled(!theGameLevel().isDemoLevel());
                 miniGameView.onLevelCreated(theGameLevel());
 
                 // size of game scene might have changed, so re-embed
