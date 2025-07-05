@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._3d;
 
+import de.amr.pacmanfx.lib.Vector3f;
 import de.amr.pacmanfx.uilib.model3D.Destroyable;
 import javafx.animation.Animation;
 import javafx.animation.Transition;
@@ -17,15 +18,20 @@ import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomFloat;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
-import static java.util.Objects.requireNonNull;
 
 /**
  * Animation played when energizer explodes.
  */
 public abstract class SquirtingAnimation extends Transition implements Destroyable {
 
+    private static final float MIN_PARTICLE_RADIUS = 0.1f;
+    private static final float MAX_PARTICLE_RADIUS =  1.0f;
+    private static final Vector3f MIN_PARTICLE_VELOCITY = new Vector3f(-0.25f, -0.25f, -4.0f);
+    private static final Vector3f MAX_PARTICLE_VELOCITY = new Vector3f(0.25f, 0.25f, -1.0f);
+    private static final Vector3f GRAVITY = new Vector3f(0, 0, 0.1f);
+
     public static class Particle extends Sphere {
-        private float vx, vy, vz;
+        private Vector3f velocity = Vector3f.ZERO;
 
         public Particle(Material material, double radius, Point3D origin) {
             super(radius);
@@ -36,29 +42,18 @@ public abstract class SquirtingAnimation extends Transition implements Destroyab
         }
 
         public void setVelocity(double x, double y, double z) {
-            vx = (float) x;
-            vy = (float) y;
-            vz = (float) z;
+            velocity = new Vector3f(x, y, z);
         }
 
-        public void move(Point3D acceleration) {
-            setTranslateX(getTranslateX() + vx);
-            setTranslateY(getTranslateY() + vy);
-            setTranslateZ(getTranslateZ() + vz);
-            vx += (float) acceleration.getX();
-            vy += (float) acceleration.getY();
-            vz += (float) acceleration.getZ();
+        public void move(Vector3f acceleration) {
+            setTranslateX(getTranslateX() + velocity.x());
+            setTranslateY(getTranslateY() + velocity.y());
+            setTranslateZ(getTranslateZ() + velocity.z());
+            velocity = velocity.add(acceleration);
         }
     }
 
-    private final Group embeddingParent;
     private final Group particleGroup = new Group();
-
-    private static final float MIN_PARTICLE_RADIUS = 0.1f;
-    private static final float MAX_PARTICLE_RADIUS =  1.0f;
-    private static final Point3D MIN_PARTICLE_VELOCITY = new Point3D(-0.25f, -0.25f, -4.0f);
-    private static final Point3D MAX_PARTICLE_VELOCITY = new Point3D(0.25f, 0.25f, -1.0f);
-    private static final Point3D GRAVITY = new Point3D(0, 0, 0.1f);
 
     public SquirtingAnimation(
         Group embeddingParent,
@@ -67,12 +62,11 @@ public abstract class SquirtingAnimation extends Transition implements Destroyab
         Material particleMaterial,
         Point3D origin)
     {
-        this.embeddingParent = requireNonNull(embeddingParent);
         setCycleDuration(duration);
-        setOnFinished(e -> removeFromEmbeddingParent());
-        statusProperty().addListener((py, ov, nv) -> {
-            if (ov == Animation.Status.RUNNING) {
-                removeFromEmbeddingParent();
+        setOnFinished(e ->  embeddingParent.getChildren().remove(particleGroup));
+        statusProperty().addListener((py, oldStatus, newStatus) -> {
+            if (oldStatus == Animation.Status.RUNNING) {
+                embeddingParent.getChildren().remove(particleGroup);
             }
         });
 
@@ -82,17 +76,13 @@ public abstract class SquirtingAnimation extends Transition implements Destroyab
             var particle = new Particle(particleMaterial, radius, origin);
             particle.setVisible(false);
             particle.setVelocity(
-                randomFloat((float) MIN_PARTICLE_VELOCITY.getX(), (float) MAX_PARTICLE_VELOCITY.getX()),
-                randomFloat((float) MIN_PARTICLE_VELOCITY.getY(), (float) MAX_PARTICLE_VELOCITY.getY()),
-                randomFloat((float) MIN_PARTICLE_VELOCITY.getZ(), (float) MAX_PARTICLE_VELOCITY.getZ()));
+                randomFloat(MIN_PARTICLE_VELOCITY.x(), MAX_PARTICLE_VELOCITY.x()),
+                randomFloat(MIN_PARTICLE_VELOCITY.y(), MAX_PARTICLE_VELOCITY.y()),
+                randomFloat(MIN_PARTICLE_VELOCITY.z(), MAX_PARTICLE_VELOCITY.z()));
             particleGroup.getChildren().add(particle);
         }
         embeddingParent.getChildren().add(particleGroup);
         Logger.info("{} particles created", particleGroup.getChildren().size());
-    }
-
-    private void removeFromEmbeddingParent() {
-        embeddingParent.getChildren().remove(particleGroup);
     }
 
     @Override

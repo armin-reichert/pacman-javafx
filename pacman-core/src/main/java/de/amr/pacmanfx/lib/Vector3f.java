@@ -2,17 +2,27 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.uilib.objimport;
+package de.amr.pacmanfx.lib;
 
 /**
  * Immutable 3D vector with float precision. No full-fledged implementation, just the needed methods.
  *
  * @author Armin Reichert
  */
-record Vector3f(float x, float y, float z) {
+public record Vector3f(float x, float y, float z) {
+
+    public static final Vector3f ZERO = new Vector3f(0, 0, 0);
+
+    public Vector3f(double x, double y, double z) {
+        this((float) x, (float) y, (float) z);
+    }
 
     public Vector3f(Vector3f v) {
         this(v.x, v.y, v.z);
+    }
+
+    public Vector3f add(Vector3f v) {
+        return new Vector3f(x + v.x, y + v.y, z + v.z);
     }
 
     /**
