@@ -19,6 +19,7 @@ import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.Destroyable;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.model3D.PacBase3D;
+import de.amr.pacmanfx.uilib.model3D.Wall3D;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer3D;
 import javafx.animation.*;
 import javafx.beans.binding.Bindings;
@@ -656,8 +657,14 @@ public class GameLevel3D extends Group implements  Destroyable {
             Logger.info("Destroyed and cleared 3D house");
         }
         if (maze3D != null) {
-            //TODO destroy()
+            maze3D.getChildren().forEach(child -> {
+                if (child instanceof Wall3D wall3D) {
+                    wall3D.destroy();
+                }
+            });
+            maze3D.getChildren().clear();
             maze3D = null;
+            Logger.info("3D maze destroyed");
         }
         if (livesCounterShapes != null) {
             for (var shape : livesCounterShapes) {

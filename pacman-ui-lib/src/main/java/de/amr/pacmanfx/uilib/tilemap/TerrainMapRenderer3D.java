@@ -8,6 +8,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.Obstacle;
 import de.amr.pacmanfx.lib.tilemap.ObstacleSegment;
+import de.amr.pacmanfx.uilib.model3D.Wall3D;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;
@@ -90,7 +91,7 @@ public class TerrainMapRenderer3D {
         }
     }
 
-    public Group createWallBetweenTiles(Vector2i t1, Vector2i t2, PhongMaterial wallBaseMaterial, PhongMaterial wallTopMaterial) {
+    public Wall3D createWallBetweenTiles(Vector2i t1, Vector2i t2, PhongMaterial wallBaseMaterial, PhongMaterial wallTopMaterial) {
         Vector2i center = t1.plus(t2).scaled(HTS).plus(HTS, HTS);
         if (t1.y() == t2.y()) { // horizontal wall
             int length = TS * Math.abs((t2.x() - t1.x()));
@@ -112,25 +113,27 @@ public class TerrainMapRenderer3D {
      * @param parent the group into which the 3D shapes are added
      * @param obstacle an obstacle
      */
-    public void renderObstacle3D(Group parent, Obstacle obstacle, boolean worldBorder,
-                                 PhongMaterial wallBaseMaterial, PhongMaterial wallTopMaterial) {
+    public void renderObstacle3D(
+        Group parent, Obstacle obstacle, boolean worldBorder,
+        PhongMaterial wallBaseMaterial, PhongMaterial wallTopMaterial)
+    {
         String encoding = obstacle.encoding();
         Logger.debug("Render 3D obstacle with encoding '{}'", encoding);
         if (obstacle.isClosed() && !worldBorder) {
-            Group og = new Group();
-            addTags(og, TAG_INNER_OBSTACLE);
-            parent.getChildren().add(og);
+            Group obstacleGroup = new Group();
+            addTags(obstacleGroup, TAG_INNER_OBSTACLE);
+            parent.getChildren().add(obstacleGroup);
             //TODO provide more general solution for polygons with holes
             if ("dcgbfceb".equals(encoding) && !oShapeFilled) { // O-shape with hole
                 Vector2i[] cornerCenters = obstacle.cornerCenters();
                 for (Vector2i center : cornerCenters) {
-                    og.getChildren().add(
+                    obstacleGroup.getChildren().add(
                         createCircularWall(center, HTS, wallBaseMaterial, wallTopMaterial));
                 }
-                addWallBetween(og, cornerCenters[0], cornerCenters[1], TS, wallBaseMaterial, wallTopMaterial);
-                addWallBetween(og, cornerCenters[1], cornerCenters[2], TS, wallBaseMaterial, wallTopMaterial);
-                addWallBetween(og, cornerCenters[2], cornerCenters[3], TS, wallBaseMaterial, wallTopMaterial);
-                addWallBetween(og, cornerCenters[3], cornerCenters[0], TS, wallBaseMaterial, wallTopMaterial);
+                addWallBetween(obstacleGroup, cornerCenters[0], cornerCenters[1], TS, wallBaseMaterial, wallTopMaterial);
+                addWallBetween(obstacleGroup, cornerCenters[1], cornerCenters[2], TS, wallBaseMaterial, wallTopMaterial);
+                addWallBetween(obstacleGroup, cornerCenters[2], cornerCenters[3], TS, wallBaseMaterial, wallTopMaterial);
+                addWallBetween(obstacleGroup, cornerCenters[3], cornerCenters[0], TS, wallBaseMaterial, wallTopMaterial);
             } else {
                 render_ClosedSingleWallObstacle(parent, obstacle, wallBaseMaterial, wallTopMaterial);
             }
@@ -191,23 +194,23 @@ public class TerrainMapRenderer3D {
 
     private void addCornerShape(Group parent, Vector2i cornerCenter, Vector2i horEndPoint, Vector2i vertEndPoint,
                                 PhongMaterial wallBaseMaterial, PhongMaterial wallTopMaterial) {
-        Node hWall = createWallCenteredAt(
+        Wall3D hWall = createWallCenteredAt(
             cornerCenter.midpoint(horEndPoint),
             cornerCenter.manhattanDist(horEndPoint),
             wallThickness,
             wallBaseMaterial, wallTopMaterial);
-        Node vWall = createWallCenteredAt(
+        Wall3D vWall = createWallCenteredAt(
             cornerCenter.midpoint(vertEndPoint),
             wallThickness,
             cornerCenter.manhattanDist(vertEndPoint),
             wallBaseMaterial, wallTopMaterial);
-        Group cWall = createCircularWall(cornerCenter, 0.5 * wallThickness, wallBaseMaterial, wallTopMaterial);
+        Wall3D cWall = createCircularWall(cornerCenter, 0.5 * wallThickness, wallBaseMaterial, wallTopMaterial);
         addTags(cWall.getChildren().getFirst(), TAG_CORNER);
         addTags(cWall.getChildren().getLast(), TAG_CORNER);
         parent.getChildren().addAll(hWall, vWall, cWall);
     }
 
-    public Group createCircularWall(Vector2i center, double radius, PhongMaterial cornerBaseMaterial, PhongMaterial cornerTopMaterial) {
+    public Wall3D createCircularWall(Vector2i center, double radius, PhongMaterial cornerBaseMaterial, PhongMaterial cornerTopMaterial) {
         Cylinder base = new Cylinder(radius, wallBaseHeightPy.get(), CYLINDER_DIVISIONS);
         base.setMaterial(cornerBaseMaterial);
         base.heightProperty().bind(wallBaseHeightPy);
@@ -224,14 +227,14 @@ public class TerrainMapRenderer3D {
         addTags(base, TAG_WALL_BASE);
         addTags(top, TAG_WALL_TOP);
 
-        Group wall = new Group(base, top);
+        Wall3D wall = new Wall3D(base, top);
         wall.setTranslateX(center.x());
         wall.setTranslateY(center.y());
         wall.setMouseTransparent(true);
         return wall;
     }
 
-    public Group createWallCenteredAt(Vector2f center, double sizeX, double sizeY, PhongMaterial wallBaseMaterial, PhongMaterial wallTopMaterial) {
+    public Wall3D createWallCenteredAt(Vector2f center, double sizeX, double sizeY, PhongMaterial wallBaseMaterial, PhongMaterial wallTopMaterial) {
         var base = new Box(sizeX, sizeY, wallBaseHeightPy.get());
         base.depthProperty().bind(wallBaseHeightPy);
         base.setMaterial(wallBaseMaterial);
@@ -243,7 +246,7 @@ public class TerrainMapRenderer3D {
         top.translateZProperty().bind(wallBaseHeightPy.add(0.5 * wallTopHeight).multiply(-1));
         addTags(top, TAG_WALL_TOP);
 
-        Group wall = new Group(base, top);
+        Wall3D wall = new Wall3D(base, top);
         wall.setTranslateX(center.x());
         wall.setTranslateY(center.y());
         wall.setMouseTransparent(true);
