@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.House;
+import de.amr.pacmanfx.ui.PacManGames_UI;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.Destroyable;
@@ -40,7 +41,7 @@ public class ArcadeHouse3D extends Group implements Destroyable {
     private static final float BAR_THICKNESS = 0.75f;
 
     private final DoubleProperty barThicknessProperty = new SimpleDoubleProperty(BAR_THICKNESS);
-    private final DoubleProperty wallBaseHeightProperty = new SimpleDoubleProperty(Settings3D.HOUSE_3D_BASE_HEIGHT);
+    private final DoubleProperty wallBaseHeightProperty = new SimpleDoubleProperty(PacManGames_UI.HOUSE_3D_BASE_HEIGHT);
 
     private PhongMaterial wallBaseMaterial;
     private PhongMaterial wallTopMaterial;
@@ -73,7 +74,7 @@ public class ArcadeHouse3D extends Group implements Destroyable {
         float centerX = xMin * TS + tilesX * HTS;
         float centerY = yMin * TS + tilesY * HTS;
 
-        wallBaseMaterial = coloredPhongMaterial(opaqueColor(houseBaseColor, Settings3D.HOUSE_3D_OPACITY));
+        wallBaseMaterial = coloredPhongMaterial(opaqueColor(houseBaseColor, PacManGames_UI.HOUSE_3D_OPACITY));
         wallTopMaterial  = coloredPhongMaterial(houseTopColor);
         barMaterial      = coloredPhongMaterial(doorColor);
 
@@ -104,19 +105,19 @@ public class ArcadeHouse3D extends Group implements Destroyable {
             door,
             r3D.createWallBetweenTiles(
                     Vector2i.of(xMin, yMin), Vector2i.of(house.leftDoorTile().x() - 1, yMin),
-                    Settings3D.HOUSE_3D_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial),
+                    PacManGames_UI.HOUSE_3D_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial),
             r3D.createWallBetweenTiles(
                     Vector2i.of(house.rightDoorTile().x() + 1, yMin), Vector2i.of(xMax, yMin),
-                    Settings3D.HOUSE_3D_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial),
+                    PacManGames_UI.HOUSE_3D_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial),
             r3D.createWallBetweenTiles(
                     Vector2i.of(xMin, yMin), Vector2i.of(xMin, yMax),
-                    Settings3D.HOUSE_3D_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial),
+                    PacManGames_UI.HOUSE_3D_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial),
             r3D.createWallBetweenTiles(
                     Vector2i.of(xMax, yMin), Vector2i.of(xMax, yMax),
-                    Settings3D.HOUSE_3D_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial),
+                    PacManGames_UI.HOUSE_3D_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial),
             r3D.createWallBetweenTiles(
                     Vector2i.of(xMin, yMax), Vector2i.of(xMax, yMax),
-                    Settings3D.HOUSE_3D_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial)
+                    PacManGames_UI.HOUSE_3D_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial)
         );
     }
 

@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._3d;
 
+import de.amr.pacmanfx.ui.PacManGames_UI;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
@@ -36,12 +37,12 @@ public class Energizer3D extends Sphere implements Eatable3D {
                 scaleTransition.setAutoReverse(true);
                 scaleTransition.setCycleCount(Animation.INDEFINITE);
                 scaleTransition.setInterpolator(Interpolator.EASE_BOTH);
-                scaleTransition.setFromX(Settings3D.ENERGIZER_3D_MAX_SCALING);
-                scaleTransition.setFromY(Settings3D.ENERGIZER_3D_MAX_SCALING);
-                scaleTransition.setFromZ(Settings3D.ENERGIZER_3D_MAX_SCALING);
-                scaleTransition.setToX(Settings3D.ENERGIZER_3D_MIN_SCALING);
-                scaleTransition.setToY(Settings3D.ENERGIZER_3D_MIN_SCALING);
-                scaleTransition.setToZ(Settings3D.ENERGIZER_3D_MIN_SCALING);
+                scaleTransition.setFromX(PacManGames_UI.ENERGIZER_3D_MAX_SCALING);
+                scaleTransition.setFromY(PacManGames_UI.ENERGIZER_3D_MAX_SCALING);
+                scaleTransition.setFromZ(PacManGames_UI.ENERGIZER_3D_MAX_SCALING);
+                scaleTransition.setToX(PacManGames_UI.ENERGIZER_3D_MIN_SCALING);
+                scaleTransition.setToY(PacManGames_UI.ENERGIZER_3D_MIN_SCALING);
+                scaleTransition.setToZ(PacManGames_UI.ENERGIZER_3D_MIN_SCALING);
                 return scaleTransition;
             }
         };

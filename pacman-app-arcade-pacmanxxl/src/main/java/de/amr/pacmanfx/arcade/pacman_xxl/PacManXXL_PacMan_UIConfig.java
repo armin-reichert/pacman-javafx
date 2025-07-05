@@ -17,10 +17,10 @@ import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameScene;
+import de.amr.pacmanfx.ui.PacManGames_UI;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._3d.PacMan3D;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
-import de.amr.pacmanfx.ui._3d.Settings3D;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
@@ -185,7 +185,7 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
     public PacBody createLivesCounterShape3D(Model3DRepository model3DRepository) {
         String namespace = assetNamespace();
         return model3DRepository.createPacBody(
-                Settings3D.LIVES_COUNTER_3D_SHAPE_SIZE,
+                PacManGames_UI.LIVES_COUNTER_3D_SHAPE_SIZE,
                 theAssets().color(namespace + ".pac.color.head"),
                 theAssets().color(namespace + ".pac.color.eyes"),
                 theAssets().color(namespace + ".pac.color.palate")
@@ -194,7 +194,7 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
 
     @Override
     public PacBase3D createPac3D(Model3DRepository model3DRepository, AnimationManager animationManager, Pac pac) {
-        var pac3D = new PacMan3D(model3DRepository, animationManager, pac, Settings3D.PAC_3D_SIZE,
+        var pac3D = new PacMan3D(model3DRepository, animationManager, pac, PacManGames_UI.PAC_3D_SIZE,
             theAssets().color(ANS + ".pac.color.head"),
             theAssets().color(ANS + ".pac.color.eyes"),
             theAssets().color(ANS + ".pac.color.palate"));

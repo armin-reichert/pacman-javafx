@@ -47,7 +47,10 @@ public class Maze3D extends Group {
 
     private static final int EMPTY_ROWS_OVER_MAZE = 3;
 
-    private static final double ACTOR_SIZE = 12.0;
+    public static final float ACTOR_SIZE = 12.0f;
+    public static final float HOUSE_WALL_HEIGHT = 12;
+    public static final float HOUSE_DOOR_HEIGHT = 10;
+    public static final float OBSTACLE_HEIGHT = 4;
 
     private static PhongMaterial coloredMaterial(Color color) {
         requireNonNull(color);
@@ -152,9 +155,13 @@ public class Maze3D extends Group {
         PhongMaterial wallBaseMaterial = coloredMaterial(wallBaseColor);
         PhongMaterial wallTopMaterial = coloredMaterial(wallTopColor);
 
+        r3D.setWallCreatedCallback(wall3D -> wall3D.baseHeightProperty().set(OBSTACLE_HEIGHT));
+        r3D.setCornerCreatedCallback(wall3D -> wall3D.baseHeightProperty().set(OBSTACLE_HEIGHT));
         for (Obstacle obstacle : worldMap.obstacles()) {
             r3D.renderObstacle3D(mazeGroup, obstacle, isWorldBorder(worldMap, obstacle), Wall3D.DEFAULT_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial);
         }
+        r3D.setWallCreatedCallback(null);
+        r3D.setCornerCreatedCallback(null);
 
         addHouse(worldMap, wallBaseColor, wallTopColor);
 
@@ -184,8 +191,7 @@ public class Maze3D extends Group {
         PhongMaterial wallBaseMaterial = coloredMaterial(opaqueColor(wallBaseColor, 0.4));
         PhongMaterial wallTopMaterial = coloredMaterial(wallTopColor);
 
-        r3D.setWallCreatedCallback(wall3D -> wall3D.baseHeightProperty().set(12));
-        //r3D.setCornerCreatedCallback(corner3D -> corner3D.baseHeightProperty().set(3.5));
+        r3D.setWallCreatedCallback(wall3D -> wall3D.baseHeightProperty().set(HOUSE_WALL_HEIGHT));
         mazeGroup.getChildren().addAll(
             r3D.createWallBetweenTiles(houseMinTile, houseMinTile.plus(2, 0), Wall3D.DEFAULT_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial),
             r3D.createWallBetweenTiles(houseRightUpper.minus(2, 0), houseRightUpper, Wall3D.DEFAULT_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial),
@@ -195,11 +201,10 @@ public class Maze3D extends Group {
         );
         r3D.setWallCreatedCallback(null);
 
-
         Color doorColor = getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR));
         var doorMaterial = coloredMaterial(doorColor);
-        Stream.of(houseMinTile.plus(3.0f, 0), houseMinTile.plus(4.0f, 0)).forEach(doorTile -> {
-            Box door = new Box(TS+HTS, 2, 10);
+        Stream.of(houseMinTile.plus(3, 0), houseMinTile.plus(4, 0)).forEach(doorTile -> {
+            Box door = new Box(TS + HTS, 2, HOUSE_DOOR_HEIGHT);
             door.setMaterial(doorMaterial);
             door.setTranslateX(doorTile.x() * TS + HTS);
             door.setTranslateY(doorTile.y() * TS + HTS);

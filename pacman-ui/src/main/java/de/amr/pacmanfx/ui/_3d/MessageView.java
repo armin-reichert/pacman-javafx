@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._3d;
 
+import de.amr.pacmanfx.ui.PacManGames_UI;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
@@ -117,7 +118,7 @@ public class MessageView extends ImageView {
                 double halfHeight = 0.5 * getBoundsInLocal().getHeight();
 
                 var moveUpAnimation = new TranslateTransition(Duration.seconds(1), MessageView.this);
-                moveUpAnimation.setToZ(-(halfHeight + 0.5 * Settings3D.OBSTACLE_3D_BASE_HEIGHT));
+                moveUpAnimation.setToZ(-(halfHeight + 0.5 * PacManGames_UI.OBSTACLE_3D_BASE_HEIGHT));
 
                 var moveDownAnimation = new TranslateTransition(Duration.seconds(1), MessageView.this);
                 moveDownAnimation.setToZ(halfHeight);
