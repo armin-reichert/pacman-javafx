@@ -151,14 +151,12 @@ public class Maze3D extends Group {
         Color wallTopColor = getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_FILL,
                 parseColor(MS_PACMAN_COLOR_WALL_FILL));
 
-        r3D.setWallBaseHeightProperty(wallBaseHeightPy);
-        r3D.setWallBaseMaterial(coloredMaterial(wallBaseColor));
-        r3D.setWallTopMaterial(coloredMaterial(wallTopColor));
-        r3D.setCornerBaseMaterial(coloredMaterial(wallBaseColor));
-        r3D.setCornerTopMaterial(coloredMaterial(wallTopColor));
+        PhongMaterial wallBaseMaterial = coloredMaterial(wallBaseColor);
+        PhongMaterial wallTopMaterial = coloredMaterial(wallTopColor);
 
+        r3D.setWallBaseHeightProperty(wallBaseHeightPy);
         for (Obstacle obstacle : worldMap.obstacles()) {
-            r3D.renderObstacle3D(mazeGroup, obstacle, isWorldBorder(worldMap, obstacle));
+            r3D.renderObstacle3D(mazeGroup, obstacle, isWorldBorder(worldMap, obstacle), wallBaseMaterial, wallTopMaterial);
         }
 
         addHouse(worldMap, wallBaseColor, wallTopColor);
@@ -189,15 +187,15 @@ public class Maze3D extends Group {
         r3D.setWallBaseHeightProperty(houseBaseHeightPy);
         r3D.setWallTopHeight(0.2f);
         r3D.setWallThickness(2);
-        r3D.setWallBaseMaterial(coloredMaterial(opaqueColor(wallBaseColor, 0.4)));
-        r3D.setWallTopMaterial(coloredMaterial(wallTopColor));
+        PhongMaterial wallBaseMaterial = coloredMaterial(opaqueColor(wallBaseColor, 0.4));
+        PhongMaterial wallTopMaterial = coloredMaterial(wallTopColor);
 
         mazeGroup.getChildren().addAll(
-            r3D.createWallBetweenTiles(houseMinTile, houseMinTile.plus(2, 0)),
-            r3D.createWallBetweenTiles(houseRightUpper.minus(2, 0), houseRightUpper),
-            r3D.createWallBetweenTiles(houseMinTile, houseLeftLower),
-            r3D.createWallBetweenTiles(houseLeftLower, houseMaxTile),
-            r3D.createWallBetweenTiles(houseMaxTile, houseRightUpper)
+            r3D.createWallBetweenTiles(houseMinTile, houseMinTile.plus(2, 0), wallBaseMaterial, wallTopMaterial),
+            r3D.createWallBetweenTiles(houseRightUpper.minus(2, 0), houseRightUpper, wallBaseMaterial, wallTopMaterial),
+            r3D.createWallBetweenTiles(houseMinTile, houseLeftLower, wallBaseMaterial, wallTopMaterial),
+            r3D.createWallBetweenTiles(houseLeftLower, houseMaxTile, wallBaseMaterial, wallTopMaterial),
+            r3D.createWallBetweenTiles(houseMaxTile, houseRightUpper, wallBaseMaterial, wallTopMaterial)
         );
 
         Color doorColor = getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR));

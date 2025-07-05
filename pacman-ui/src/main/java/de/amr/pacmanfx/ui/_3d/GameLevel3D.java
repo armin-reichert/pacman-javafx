@@ -230,9 +230,6 @@ public class GameLevel3D extends Group implements  Destroyable {
             r3D = new TerrainMapRenderer3D();
             r3D.setWallBaseHeightProperty(obstacleBaseHeightProperty);
             r3D.setWallTopHeight(Settings3D.OBSTACLE_3D_TOP_HEIGHT);
-            r3D.setWallTopMaterial(wallTopMaterial);
-            r3D.setCornerBaseMaterial(cornerBaseMaterial);
-            r3D.setCornerTopMaterial(wallTopMaterial); // for now such that power animation also affects corner top
 
             //TODO check this:
             obstacleBaseHeightProperty.set(PY_3D_WALL_HEIGHT.get());
@@ -241,9 +238,9 @@ public class GameLevel3D extends Group implements  Destroyable {
                 Vector2i tile = tileAt(obstacle.startPoint().toVector2f());
                 if (gameLevel.house().isPresent() && !gameLevel.house().get().isTileInHouseArea(tile)) {
                     r3D.setWallThickness(Settings3D.OBSTACLE_3D_THICKNESS);
-                    r3D.setWallBaseMaterial(wallBaseMaterial);
-                    r3D.setWallTopMaterial(wallTopMaterial);
-                    r3D.renderObstacle3D(maze3D, obstacle, isObstacleTheWorldBorder(gameLevel.worldMap(), obstacle));
+                    r3D.renderObstacle3D(maze3D, obstacle,
+                        isObstacleTheWorldBorder(gameLevel.worldMap(), obstacle),
+                        wallBaseMaterial, wallTopMaterial);
                 }
             }
 
@@ -338,7 +335,6 @@ public class GameLevel3D extends Group implements  Destroyable {
         };
     }
 
-//    public Group root() { return root; }
     public PacBase3D pac3D() { return pac3D; }
     public Stream<MutatingGhost3D> ghosts3D() { return ghosts3D.stream(); }
     public MutatingGhost3D ghost3D(byte id) { return ghosts3D.get(id); }
@@ -447,7 +443,9 @@ public class GameLevel3D extends Group implements  Destroyable {
                     @Override
                     public void destroy() {
                         super.destroy();
-                        squirtingAnimation.destroy();
+                        if (squirtingAnimation != null) {
+                            squirtingAnimation.destroy();
+                        }
                     }
                 };
                 energizer3D.setHideAndEatAnimation(hideAndExplodeAnimation);
@@ -618,12 +616,8 @@ public class GameLevel3D extends Group implements  Destroyable {
             eyesMeshViews = null;
             Logger.info("Cleared eyes mesh views");
         }
-        if (r3D != null) {
-            r3D.destroy();
-            r3D = null;
-            Logger.info("Destroyed 3D renderer");
-        }
-
+        r3D = null;
+        Logger.info("Removed 3D renderer");
         getChildren().clear();
         Logger.info("Removed all nodes under game level");
 

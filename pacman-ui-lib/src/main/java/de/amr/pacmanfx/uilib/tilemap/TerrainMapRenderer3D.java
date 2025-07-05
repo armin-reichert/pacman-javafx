@@ -54,40 +54,12 @@ public class TerrainMapRenderer3D {
         return false;
     }
 
-    private PhongMaterial wallBaseMaterial;
-    private PhongMaterial wallTopMaterial;
-    private PhongMaterial cornerBaseMaterial;
-    private PhongMaterial cornerTopMaterial;
-
     private DoubleProperty wallBaseHeightPy = new SimpleDoubleProperty(3.5);
     private float wallTopHeight = 0.2f;
     private float wallThickness = 2;
     private boolean oShapeFilled = true;
 
     public TerrainMapRenderer3D() {}
-
-    public void destroy() {
-        wallBaseMaterial = null;
-        wallTopMaterial = null;
-        cornerBaseMaterial = null;
-        cornerTopMaterial = null;
-    }
-
-    public void setCornerBaseMaterial(PhongMaterial material) {
-        this.cornerBaseMaterial = material;
-    }
-
-    public void setCornerTopMaterial(PhongMaterial cornerTopMaterial) {
-        this.cornerTopMaterial = cornerTopMaterial;
-    }
-
-    public void setWallBaseMaterial(PhongMaterial material) {
-        wallBaseMaterial = material;
-    }
-
-    public void setWallTopMaterial(PhongMaterial material) {
-        wallTopMaterial = material;
-    }
 
     public void setWallBaseHeightProperty(DoubleProperty py) {
         wallBaseHeightPy = py;
@@ -105,25 +77,28 @@ public class TerrainMapRenderer3D {
         this.oShapeFilled = value;
     }
 
-    public void addWallBetween(Group parent, Vector2i p1, Vector2i p2, double wallThickness) {
+    public void addWallBetween(Group parent, Vector2i p1, Vector2i p2, double wallThickness, PhongMaterial wallBaseMaterial, PhongMaterial wallTopMaterial) {
         if (p1.x() == p2.x()) { // vertical wall
-            parent.getChildren().add(createWallCenteredAt(p1.midpoint(p2), wallThickness, Math.abs(p1.y() - p2.y())));
+            parent.getChildren().add(
+                createWallCenteredAt(p1.midpoint(p2), wallThickness, Math.abs(p1.y() - p2.y()), wallBaseMaterial, wallTopMaterial)
+            );
         } else if (p1.y() == p2.y()) { // horizontal wall
-            parent.getChildren().add(createWallCenteredAt(p1.midpoint(p2), Math.abs(p1.x() - p2.x()), wallThickness));
+            parent.getChildren().add(
+                createWallCenteredAt(p1.midpoint(p2), Math.abs(p1.x() - p2.x()), wallThickness, wallBaseMaterial, wallTopMaterial));
         } else {
             Logger.error("Cannot add horizontal/vertical wall between {} and {}", p1, p2);
         }
     }
 
-    public Group createWallBetweenTiles(Vector2i t1, Vector2i t2) {
+    public Group createWallBetweenTiles(Vector2i t1, Vector2i t2, PhongMaterial wallBaseMaterial, PhongMaterial wallTopMaterial) {
         Vector2i center = t1.plus(t2).scaled(HTS).plus(HTS, HTS);
         if (t1.y() == t2.y()) { // horizontal wall
             int length = TS * Math.abs((t2.x() - t1.x()));
-            return createWallCenteredAt(center.toVector2f(), length + wallThickness, wallThickness);
+            return createWallCenteredAt(center.toVector2f(), length + wallThickness, wallThickness, wallBaseMaterial, wallTopMaterial);
         }
         else if (t1.x() == t2.x()) { // vertical wall
             int length = TS * Math.abs((t2.y() - t1.y()));
-            return createWallCenteredAt(center.toVector2f(), wallThickness, length);
+            return createWallCenteredAt(center.toVector2f(), wallThickness, length, wallBaseMaterial, wallTopMaterial);
         }
         throw new IllegalArgumentException("Cannot build wall between tiles %s and %s".formatted(t1, t2));
     }
@@ -137,7 +112,8 @@ public class TerrainMapRenderer3D {
      * @param parent the group into which the 3D shapes are added
      * @param obstacle an obstacle
      */
-    public void renderObstacle3D(Group parent, Obstacle obstacle, boolean worldBorder) {
+    public void renderObstacle3D(Group parent, Obstacle obstacle, boolean worldBorder,
+                                 PhongMaterial wallBaseMaterial, PhongMaterial wallTopMaterial) {
         String encoding = obstacle.encoding();
         Logger.debug("Render 3D obstacle with encoding '{}'", encoding);
         if (obstacle.isClosed() && !worldBorder) {
@@ -148,73 +124,90 @@ public class TerrainMapRenderer3D {
             if ("dcgbfceb".equals(encoding) && !oShapeFilled) { // O-shape with hole
                 Vector2i[] cornerCenters = obstacle.cornerCenters();
                 for (Vector2i center : cornerCenters) {
-                    og.getChildren().add(createCircularWall(center, HTS));
+                    og.getChildren().add(
+                        createCircularWall(center, HTS, wallBaseMaterial, wallTopMaterial));
                 }
-                addWallBetween(og, cornerCenters[0], cornerCenters[1], TS);
-                addWallBetween(og, cornerCenters[1], cornerCenters[2], TS);
-                addWallBetween(og, cornerCenters[2], cornerCenters[3], TS);
-                addWallBetween(og, cornerCenters[3], cornerCenters[0], TS);
+                addWallBetween(og, cornerCenters[0], cornerCenters[1], TS, wallBaseMaterial, wallTopMaterial);
+                addWallBetween(og, cornerCenters[1], cornerCenters[2], TS, wallBaseMaterial, wallTopMaterial);
+                addWallBetween(og, cornerCenters[2], cornerCenters[3], TS, wallBaseMaterial, wallTopMaterial);
+                addWallBetween(og, cornerCenters[3], cornerCenters[0], TS, wallBaseMaterial, wallTopMaterial);
             } else {
-                render_ClosedSingleWallObstacle(parent, obstacle);
+                render_ClosedSingleWallObstacle(parent, obstacle, wallBaseMaterial, wallTopMaterial);
             }
         } else {
-            render_UnfilledObstacle(parent, obstacle);
+            render_UnfilledObstacle(parent, obstacle, wallBaseMaterial, wallTopMaterial);
         }
     }
 
-    private void render_ClosedSingleWallObstacle(Group parent, Obstacle obstacle) {
+    private void render_ClosedSingleWallObstacle(
+        Group parent, Obstacle obstacle,
+        PhongMaterial wallBaseMaterial, PhongMaterial wallTopMaterial) {
         for (Vector2i center : obstacle.cornerCenters()) {
-            parent.getChildren().add(createCircularWall(center, HTS));
+            parent.getChildren().add(
+                createCircularWall(center, HTS, wallBaseMaterial, wallTopMaterial));
         }
-        obstacle.innerAreaRectangles()
-            .forEach(r -> parent.getChildren().add( createWallCenteredAt(r.center(), r.width(), r.height()) ));
+        obstacle.innerAreaRectangles().forEach(r -> parent.getChildren().add(
+                createWallCenteredAt(r.center(), r.width(), r.height(), wallBaseMaterial, wallTopMaterial)
+        ));
     }
 
-    private void render_UnfilledObstacle(Group parent, Obstacle obstacle){
+    private void render_UnfilledObstacle(
+        Group parent, Obstacle obstacle,
+        PhongMaterial wallBaseMaterial, PhongMaterial wallTopMaterial)
+    {
         int r = HTS;
         for (ObstacleSegment segment : obstacle.segments()) {
             boolean counterClockwise = segment.ccw();
             Vector2i start = segment.startPoint(), end = segment.endPoint();
             if (segment.isStraightLine()) {
-                addWallBetween(parent, start, end, wallThickness);
+                addWallBetween(parent, start, end, wallThickness, wallBaseMaterial, wallTopMaterial);
             } else if (segment.isNWCorner()) {
                 if (counterClockwise) {
-                    addCornerShape(parent, start.plus(-r, 0), start, end);
+                    addCornerShape(parent, start.plus(-r, 0), start, end, wallBaseMaterial, wallTopMaterial);
                 } else {
-                    addCornerShape(parent, start.plus(0, -r), end, start);
+                    addCornerShape(parent, start.plus(0, -r), end, start, wallBaseMaterial, wallTopMaterial);
                 }
             } else if (segment.isSWCorner()) {
                 if (counterClockwise) {
-                    addCornerShape(parent, start.plus(0, r), end, start);
+                    addCornerShape(parent, start.plus(0, r), end, start, wallBaseMaterial, wallTopMaterial);
                 } else {
-                    addCornerShape(parent, start.plus(-r, 0), start, end);
+                    addCornerShape(parent, start.plus(-r, 0), start, end, wallBaseMaterial, wallTopMaterial);
                 }
             } else if (segment.isSECorner()) {
                 if (counterClockwise) {
-                    addCornerShape(parent, start.plus(r, 0), start, end);
+                    addCornerShape(parent, start.plus(r, 0), start, end, wallBaseMaterial, wallTopMaterial);
                 } else {
-                    addCornerShape(parent, start.plus(0, r), end, start);
+                    addCornerShape(parent, start.plus(0, r), end, start, wallBaseMaterial, wallTopMaterial);
                 }
             } else if (segment.isNECorner()) {
                 if (counterClockwise) {
-                    addCornerShape(parent, start.plus(0, -r), end, start);
+                    addCornerShape(parent, start.plus(0, -r), end, start, wallBaseMaterial, wallTopMaterial);
                 } else {
-                    addCornerShape(parent, start.plus(r, 0), start, end);
+                    addCornerShape(parent, start.plus(r, 0), start, end, wallBaseMaterial, wallTopMaterial);
                 }
             }
         }
     }
 
-    private void addCornerShape(Group parent, Vector2i cornerCenter, Vector2i horEndPoint, Vector2i vertEndPoint) {
-        Node hWall = createWallCenteredAt(cornerCenter.midpoint(horEndPoint), cornerCenter.manhattanDist(horEndPoint), wallThickness);
-        Node vWall = createWallCenteredAt(cornerCenter.midpoint(vertEndPoint), wallThickness, cornerCenter.manhattanDist(vertEndPoint));
-        Group cWall = createCircularWall(cornerCenter, 0.5 * wallThickness);
+    private void addCornerShape(Group parent, Vector2i cornerCenter, Vector2i horEndPoint, Vector2i vertEndPoint,
+                                PhongMaterial wallBaseMaterial, PhongMaterial wallTopMaterial) {
+        Node hWall = createWallCenteredAt(
+            cornerCenter.midpoint(horEndPoint),
+            cornerCenter.manhattanDist(horEndPoint),
+            wallThickness,
+            wallBaseMaterial, wallTopMaterial);
+        Node vWall = createWallCenteredAt(
+            cornerCenter.midpoint(vertEndPoint),
+            wallThickness,
+            cornerCenter.manhattanDist(vertEndPoint),
+            wallBaseMaterial, wallTopMaterial);
+        Group cWall = createCircularWall(cornerCenter, 0.5 * wallThickness, wallBaseMaterial, wallTopMaterial);
         addTags(cWall.getChildren().getFirst(), TAG_CORNER);
         addTags(cWall.getChildren().getLast(), TAG_CORNER);
         parent.getChildren().addAll(hWall, vWall, cWall);
     }
 
-    public Group createCircularWall(Vector2i center, double radius) {
+    public Group createCircularWall(Vector2i center, double radius, PhongMaterial cornerBaseMaterial, PhongMaterial cornerTopMaterial) {
         Cylinder base = new Cylinder(radius, wallBaseHeightPy.get(), CYLINDER_DIVISIONS);
         base.setMaterial(cornerBaseMaterial);
         base.heightProperty().bind(wallBaseHeightPy);
@@ -238,7 +231,7 @@ public class TerrainMapRenderer3D {
         return wall;
     }
 
-    public Group createWallCenteredAt(Vector2f center, double sizeX, double sizeY) {
+    public Group createWallCenteredAt(Vector2f center, double sizeX, double sizeY, PhongMaterial wallBaseMaterial, PhongMaterial wallTopMaterial) {
         var base = new Box(sizeX, sizeY, wallBaseHeightPy.get());
         base.depthProperty().bind(wallBaseHeightPy);
         base.setMaterial(wallBaseMaterial);

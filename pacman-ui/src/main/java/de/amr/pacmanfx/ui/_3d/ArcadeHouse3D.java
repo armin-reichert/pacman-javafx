@@ -81,8 +81,6 @@ public class ArcadeHouse3D extends Group implements Destroyable {
         r3D.setWallBaseHeightProperty(wallBaseHeightProperty);
         r3D.setWallTopHeight(Settings3D.HOUSE_3D_WALL_TOP_HEIGHT);
         r3D.setWallThickness(Settings3D.HOUSE_3D_WALL_THICKNESS);
-        r3D.setWallBaseMaterial(wallBaseMaterial);
-        r3D.setWallTopMaterial(wallTopMaterial);
 
         door = createDoor(house.leftDoorTile(), house.rightDoorTile(), wallBaseHeightProperty.get());
 
@@ -106,11 +104,21 @@ public class ArcadeHouse3D extends Group implements Destroyable {
         getChildren().addAll(
             light,
             door,
-            r3D.createWallBetweenTiles(Vector2i.of(xMin, yMin), Vector2i.of(house.leftDoorTile().x() - 1, yMin)),
-            r3D.createWallBetweenTiles(Vector2i.of(house.rightDoorTile().x() + 1, yMin), Vector2i.of(xMax, yMin)),
-            r3D.createWallBetweenTiles(Vector2i.of(xMin, yMin), Vector2i.of(xMin, yMax)),
-            r3D.createWallBetweenTiles(Vector2i.of(xMax, yMin), Vector2i.of(xMax, yMax)),
-            r3D.createWallBetweenTiles(Vector2i.of(xMin, yMax), Vector2i.of(xMax, yMax))
+            r3D.createWallBetweenTiles(
+                Vector2i.of(xMin, yMin), Vector2i.of(house.leftDoorTile().x() - 1, yMin),
+                wallBaseMaterial, wallTopMaterial),
+            r3D.createWallBetweenTiles(
+                Vector2i.of(house.rightDoorTile().x() + 1, yMin), Vector2i.of(xMax, yMin),
+                wallBaseMaterial, wallTopMaterial),
+            r3D.createWallBetweenTiles(
+                Vector2i.of(xMin, yMin), Vector2i.of(xMin, yMax),
+                wallBaseMaterial, wallTopMaterial),
+            r3D.createWallBetweenTiles(
+                Vector2i.of(xMax, yMin), Vector2i.of(xMax, yMax),
+                wallBaseMaterial, wallTopMaterial),
+            r3D.createWallBetweenTiles(
+                Vector2i.of(xMin, yMax), Vector2i.of(xMax, yMax),
+                wallBaseMaterial, wallTopMaterial)
         );
     }
 
