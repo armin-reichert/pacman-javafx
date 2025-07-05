@@ -238,6 +238,7 @@ public class GameLevel3D extends Group implements Destroyable {
                     r3D.renderObstacle3D(
                             maze3D,
                             obstacle, isObstacleTheWorldBorder(gameLevel.worldMap(), obstacle),
+                            Settings3D.OBSTACLE_3D_WALL_THICKNESS,
                             wallBaseMaterial, wallTopMaterial);
                 }
             }

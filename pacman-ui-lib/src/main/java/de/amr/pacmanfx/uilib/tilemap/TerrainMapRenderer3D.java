@@ -63,16 +63,22 @@ public class TerrainMapRenderer3D {
         }
     }
 
-    public Wall3D createWallBetweenTiles(Vector2i t1, Vector2i t2, PhongMaterial wallBaseMaterial, PhongMaterial wallTopMaterial) {
+    public Wall3D createWallBetweenTiles(
+        Vector2i t1,
+        Vector2i t2,
+        double wallThickness,
+        PhongMaterial baseMaterial,
+        PhongMaterial topMaterial)
+    {
         Vector2i center = t1.plus(t2).scaled(HTS).plus(HTS, HTS);
         if (t1.y() == t2.y()) { // horizontal wall
             int length = TS * Math.abs((t2.x() - t1.x()));
-            return createWallCenteredAt(center.toVector2f(), length + Wall3D.DEFAULT_WALL_THICKNESS,
-                    Wall3D.DEFAULT_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial);
+            return createWallCenteredAt(center.toVector2f(), length + wallThickness,
+                    wallThickness, baseMaterial, topMaterial);
         }
         else if (t1.x() == t2.x()) { // vertical wall
             int length = TS * Math.abs((t2.y() - t1.y()));
-            return createWallCenteredAt(center.toVector2f(), Wall3D.DEFAULT_WALL_THICKNESS, length, wallBaseMaterial, wallTopMaterial);
+            return createWallCenteredAt(center.toVector2f(), wallThickness, length, baseMaterial, topMaterial);
         }
         throw new IllegalArgumentException("Cannot build wall between tiles %s and %s".formatted(t1, t2));
     }
@@ -82,13 +88,14 @@ public class TerrainMapRenderer3D {
      * <p>
      * For each closed obstacle, a group of Cylinder and Box primitives is created. For all other obstacles,
      * a sequence of walls with cylinders as corners is created.
-     *
-     * @param parent the group into which the 3D shapes are added
-     * @param obstacle an obstacle
      */
     public void renderObstacle3D(
-        Group parent, Obstacle obstacle, boolean worldBorder,
-        PhongMaterial wallBaseMaterial, PhongMaterial wallTopMaterial)
+        Group parent,
+        Obstacle obstacle,
+        boolean worldBorder,
+        double wallThickness,
+        PhongMaterial baseMaterial,
+        PhongMaterial topMaterial)
     {
         String encoding = obstacle.encoding();
         Logger.debug("Render 3D obstacle with encoding '{}'", encoding);
@@ -100,94 +107,114 @@ public class TerrainMapRenderer3D {
                 Vector2i[] cornerCenters = obstacle.cornerCenters();
                 for (Vector2i center : cornerCenters) {
                     obstacleGroup.getChildren().add(
-                        createCircularWall(center, HTS, wallBaseMaterial, wallTopMaterial));
+                        createCircularWall(center, HTS, baseMaterial, topMaterial));
                 }
-                addWallBetween(obstacleGroup, cornerCenters[0], cornerCenters[1], TS, wallBaseMaterial, wallTopMaterial);
-                addWallBetween(obstacleGroup, cornerCenters[1], cornerCenters[2], TS, wallBaseMaterial, wallTopMaterial);
-                addWallBetween(obstacleGroup, cornerCenters[2], cornerCenters[3], TS, wallBaseMaterial, wallTopMaterial);
-                addWallBetween(obstacleGroup, cornerCenters[3], cornerCenters[0], TS, wallBaseMaterial, wallTopMaterial);
+                addWallBetween(obstacleGroup, cornerCenters[0], cornerCenters[1], TS, baseMaterial, topMaterial);
+                addWallBetween(obstacleGroup, cornerCenters[1], cornerCenters[2], TS, baseMaterial, topMaterial);
+                addWallBetween(obstacleGroup, cornerCenters[2], cornerCenters[3], TS, baseMaterial, topMaterial);
+                addWallBetween(obstacleGroup, cornerCenters[3], cornerCenters[0], TS, baseMaterial, topMaterial);
             } else {
-                render_ClosedSingleWallObstacle(parent, obstacle, wallBaseMaterial, wallTopMaterial);
+                render_ClosedSingleWallObstacle(parent, obstacle, baseMaterial, topMaterial);
             }
         } else {
-            render_UnfilledObstacle(parent, obstacle, wallBaseMaterial, wallTopMaterial);
+            render_UnfilledObstacle(parent, obstacle, wallThickness, baseMaterial, topMaterial);
         }
     }
 
     private void render_ClosedSingleWallObstacle(
-        Group parent, Obstacle obstacle,
-        PhongMaterial wallBaseMaterial, PhongMaterial wallTopMaterial) {
+        Group parent,
+        Obstacle obstacle,
+        PhongMaterial baseMaterial,
+        PhongMaterial topMaterial)
+    {
         for (Vector2i center : obstacle.cornerCenters()) {
-            parent.getChildren().add(
-                createCircularWall(center, HTS, wallBaseMaterial, wallTopMaterial));
+            parent.getChildren().add(createCircularWall(center, HTS, baseMaterial, topMaterial));
         }
         obstacle.innerAreaRectangles().forEach(r -> parent.getChildren().add(
-                createWallCenteredAt(r.center(), r.width(), r.height(), wallBaseMaterial, wallTopMaterial)
+                createWallCenteredAt(r.center(), r.width(), r.height(), baseMaterial, topMaterial)
         ));
     }
 
     private void render_UnfilledObstacle(
-        Group parent, Obstacle obstacle,
-        PhongMaterial wallBaseMaterial, PhongMaterial wallTopMaterial)
+        Group parent,
+        Obstacle obstacle,
+        double wallThickness,
+        PhongMaterial baseMaterial,
+        PhongMaterial topMaterial)
     {
         int r = HTS;
         for (ObstacleSegment segment : obstacle.segments()) {
             boolean counterClockwise = segment.ccw();
             Vector2i start = segment.startPoint(), end = segment.endPoint();
             if (segment.isStraightLine()) {
-                addWallBetween(parent, start, end, Wall3D.DEFAULT_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial);
+                addWallBetween(parent, start, end, wallThickness, baseMaterial, topMaterial);
             } else if (segment.isNWCorner()) {
                 if (counterClockwise) {
-                    addCornerShape(parent, start.plus(-r, 0), start, end, wallBaseMaterial, wallTopMaterial);
+                    addCornerShape(parent, start.plus(-r, 0), start, end, wallThickness, baseMaterial, topMaterial);
                 } else {
-                    addCornerShape(parent, start.plus(0, -r), end, start, wallBaseMaterial, wallTopMaterial);
+                    addCornerShape(parent, start.plus(0, -r), end, start, wallThickness, baseMaterial, topMaterial);
                 }
             } else if (segment.isSWCorner()) {
                 if (counterClockwise) {
-                    addCornerShape(parent, start.plus(0, r), end, start, wallBaseMaterial, wallTopMaterial);
+                    addCornerShape(parent, start.plus(0, r), end, start, wallThickness, baseMaterial, topMaterial);
                 } else {
-                    addCornerShape(parent, start.plus(-r, 0), start, end, wallBaseMaterial, wallTopMaterial);
+                    addCornerShape(parent, start.plus(-r, 0), start, end, wallThickness, baseMaterial, topMaterial);
                 }
             } else if (segment.isSECorner()) {
                 if (counterClockwise) {
-                    addCornerShape(parent, start.plus(r, 0), start, end, wallBaseMaterial, wallTopMaterial);
+                    addCornerShape(parent, start.plus(r, 0), start, end, wallThickness, baseMaterial, topMaterial);
                 } else {
-                    addCornerShape(parent, start.plus(0, r), end, start, wallBaseMaterial, wallTopMaterial);
+                    addCornerShape(parent, start.plus(0, r), end, start, wallThickness, baseMaterial, topMaterial);
                 }
             } else if (segment.isNECorner()) {
                 if (counterClockwise) {
-                    addCornerShape(parent, start.plus(0, -r), end, start, wallBaseMaterial, wallTopMaterial);
+                    addCornerShape(parent, start.plus(0, -r), end, start, wallThickness, baseMaterial, topMaterial);
                 } else {
-                    addCornerShape(parent, start.plus(r, 0), start, end, wallBaseMaterial, wallTopMaterial);
+                    addCornerShape(parent, start.plus(r, 0), start, end, wallThickness, baseMaterial, topMaterial);
                 }
             }
         }
     }
 
-    private void addCornerShape(Group parent, Vector2i cornerCenter, Vector2i horEndPoint, Vector2i vertEndPoint,
-                                PhongMaterial wallBaseMaterial, PhongMaterial wallTopMaterial) {
+    private void addCornerShape(
+            Group parent,
+            Vector2i cornerCenter,
+            Vector2i horEndPoint,
+            Vector2i vertEndPoint,
+            double wallThickness,
+            PhongMaterial baseMaterial,
+            PhongMaterial topMaterial)
+    {
         Wall3D hWall = createWallCenteredAt(
             cornerCenter.midpoint(horEndPoint),
             cornerCenter.manhattanDist(horEndPoint),
-            Wall3D.DEFAULT_WALL_THICKNESS,
-            wallBaseMaterial, wallTopMaterial);
+            wallThickness,
+            baseMaterial, topMaterial);
+
         Wall3D vWall = createWallCenteredAt(
             cornerCenter.midpoint(vertEndPoint),
-            Wall3D.DEFAULT_WALL_THICKNESS,
+            wallThickness,
             cornerCenter.manhattanDist(vertEndPoint),
-            wallBaseMaterial, wallTopMaterial);
-        Wall3D cWall = createCircularWall(cornerCenter, 0.5 * Wall3D.DEFAULT_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial);
+            baseMaterial, topMaterial);
+
+        Wall3D cWall = createCircularWall(cornerCenter, 0.5 * wallThickness, baseMaterial, topMaterial);
+
         parent.getChildren().addAll(hWall, vWall, cWall);
     }
 
-    public Wall3D createCircularWall(Vector2i center, double radius, PhongMaterial cornerBaseMaterial, PhongMaterial cornerTopMaterial) {
+    public Wall3D createCircularWall(
+            Vector2i center,
+            double radius,
+            PhongMaterial baseMaterial,
+            PhongMaterial topMaterial)
+    {
         Cylinder base = new Cylinder(radius, Wall3D.DEFAULT_BASE_HEIGHT, cylinderDivisions);
-        base.setMaterial(cornerBaseMaterial);
+        base.setMaterial(baseMaterial);
         base.setRotationAxis(Rotate.X_AXIS);
         base.setRotate(90);
 
         Cylinder top = new Cylinder(radius, Wall3D.DEFAULT_TOP_HEIGHT, cylinderDivisions);
-        top.setMaterial(cornerTopMaterial);
+        top.setMaterial(topMaterial);
         top.setRotationAxis(Rotate.X_AXIS);
         top.setRotate(90);
 
@@ -202,12 +229,18 @@ public class TerrainMapRenderer3D {
         return wall3D;
     }
 
-    public Wall3D createWallCenteredAt(Vector2f center, double sizeX, double sizeY, PhongMaterial wallBaseMaterial, PhongMaterial wallTopMaterial) {
+    public Wall3D createWallCenteredAt(
+        Vector2f center,
+        double sizeX,
+        double sizeY,
+        PhongMaterial baseMaterial,
+        PhongMaterial topMaterial)
+    {
         var base = new Box(sizeX, sizeY, Wall3D.DEFAULT_BASE_HEIGHT);
-        base.setMaterial(wallBaseMaterial);
+        base.setMaterial(baseMaterial);
 
         var top = new Box(sizeX, sizeY, Wall3D.DEFAULT_TOP_HEIGHT);
-        top.setMaterial(wallTopMaterial);
+        top.setMaterial(topMaterial);
 
         Wall3D wall3D = new Wall3D(base, top);
         wall3D.setTranslateX(center.x());
