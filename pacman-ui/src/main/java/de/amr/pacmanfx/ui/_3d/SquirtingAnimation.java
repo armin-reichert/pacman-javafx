@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._3d;
 
+import de.amr.pacmanfx.uilib.model3D.Destroyable;
 import javafx.animation.Animation;
 import javafx.animation.Transition;
 import javafx.geometry.Point3D;
@@ -21,7 +22,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Animation played when energizer explodes.
  */
-public abstract class SquirtingAnimation extends Transition {
+public abstract class SquirtingAnimation extends Transition implements Destroyable {
 
     public static class Particle extends Sphere {
         private float vx, vy, vz;
@@ -78,27 +79,29 @@ public abstract class SquirtingAnimation extends Transition {
         int numParticles = randomInt(minParticleCount, maxParticleCount + 1);
         for (int i = 0; i < numParticles; ++i) {
             float radius = randomFloat(MIN_PARTICLE_RADIUS, MAX_PARTICLE_RADIUS);
-            var drop = new Particle(particleMaterial, radius, origin);
-            drop.setVisible(false);
-            drop.setVelocity(
+            var particle = new Particle(particleMaterial, radius, origin);
+            particle.setVisible(false);
+            particle.setVelocity(
                 randomFloat((float) MIN_PARTICLE_VELOCITY.getX(), (float) MAX_PARTICLE_VELOCITY.getX()),
                 randomFloat((float) MIN_PARTICLE_VELOCITY.getY(), (float) MAX_PARTICLE_VELOCITY.getY()),
                 randomFloat((float) MIN_PARTICLE_VELOCITY.getZ(), (float) MAX_PARTICLE_VELOCITY.getZ()));
-            particleGroup.getChildren().add(drop);
+            particleGroup.getChildren().add(particle);
         }
         embeddingParent.getChildren().add(particleGroup);
         Logger.info("{} particles created", particleGroup.getChildren().size());
-    }
-
-    public Group node() {
-        return particleGroup;
     }
 
     private void removeFromEmbeddingParent() {
         embeddingParent.getChildren().remove(particleGroup);
     }
 
+    @Override
     public void destroy() {
+        for (Node child : particleGroup.getChildren()) {
+            if (child instanceof Sphere sphere) {
+                sphere.setMaterial(null);
+            }
+        }
         particleGroup.getChildren().clear();
     }
 
