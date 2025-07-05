@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.Validations.requireNonNegative;
+import static de.amr.pacmanfx.Validations.requireNonNegativeInt;
 import static java.util.Objects.requireNonNull;
 
 public class WorldMap {
@@ -45,9 +45,9 @@ public class WorldMap {
     }
 
     public static WorldMap emptyMap(int numRows, int numCols) {
-        requireNonNegative(numRows);
-        requireNonNegative(numCols);
         WorldMap worldMap = new WorldMap();
+        worldMap.numRows = requireNonNegativeInt(numRows);
+        worldMap.numCols = requireNonNegativeInt(numCols);
         worldMap.terrainLayer = new WorldMapLayer(numRows, numCols);
         worldMap.foodLayer = new WorldMapLayer(numRows, numCols);
         return worldMap;
@@ -56,6 +56,8 @@ public class WorldMap {
     public static WorldMap copyMap(WorldMap original) {
         requireNonNull(original);
         WorldMap copy = new WorldMap();
+        copy.numRows = original.numRows;
+        copy.numCols = original.numCols;
         copy.terrainLayer = new WorldMapLayer(original.terrainLayer);
         copy.foodLayer = new WorldMapLayer(original.foodLayer);
         copy.obstacles = original.obstacles != null ? new HashSet<>(original.obstacles) : null;
@@ -105,6 +107,8 @@ public class WorldMap {
     // Package access for parser
 
     String url;
+    int numCols;
+    int numRows;
     WorldMapLayer terrainLayer;
     WorldMapLayer foodLayer;
     Set<Obstacle> obstacles = null; // uninitialized!
@@ -213,11 +217,11 @@ public class WorldMap {
     }
 
     public int numCols() {
-        return terrainLayer.numCols();
+        return numCols;
     }
 
     public int numRows() {
-        return terrainLayer.numRows();
+        return numRows;
     }
 
     public String url() {

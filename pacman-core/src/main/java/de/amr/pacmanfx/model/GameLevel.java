@@ -381,7 +381,7 @@ public class GameLevel {
     }
 
     public boolean tileContainsEatenFood(Vector2i tile) {
-        return isTileInsideWorld(tile) && eatenFoodBits.get(worldMap.indexInRowWiseOrder(tile));
+        return eatenFoodBits.get(worldMap.indexInRowWiseOrder(tile));
     }
 
     public Stream<Vector2i> tilesContainingFood() {

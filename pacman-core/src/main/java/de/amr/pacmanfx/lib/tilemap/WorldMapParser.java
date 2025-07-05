@@ -36,9 +36,10 @@ public interface WorldMapParser {
     }
 
 
-    static WorldMap parse(Stream<String> linesStream,
-                          Predicate<Byte> validTerrainValueTest,
-                          Predicate<Byte> validFoodValueTest)
+    static WorldMap parse(
+        Stream<String> linesStream,
+        Predicate<Byte> validTerrainValueTest,
+        Predicate<Byte> validFoodValueTest)
     {
         final var lines = new ArrayList<>(linesStream.toList()); // modifiable list!
         final WorldMap worldMap = new WorldMap();
@@ -71,13 +72,15 @@ public interface WorldMapParser {
                 Logger.error("Line skipped: '{}'", line);
             }
         }
-        worldMap.terrainLayer = parseTileMap(terrainLayerRows, validTerrainValueTest);
-        worldMap.foodLayer = parseTileMap(foodLayerRows, validFoodValueTest);
+        worldMap.terrainLayer = parseLayer(terrainLayerRows, validTerrainValueTest);
+        worldMap.numRows = worldMap.terrainLayer.numRows();
+        worldMap.numCols = worldMap.terrainLayer.numCols();
+        worldMap.foodLayer = parseLayer(foodLayerRows, validFoodValueTest);
 
         return worldMap;
     }
 
-    private static WorldMapLayer parseTileMap(List<String> lines, Predicate<Byte> valueAllowed) {
+    private static WorldMapLayer parseLayer(List<String> lines, Predicate<Byte> valueAllowed) {
         // First pass: read property section and determine data section size
         int numDataRows = 0, numDataCols = -1;
         int dataStartIndex = -1;
