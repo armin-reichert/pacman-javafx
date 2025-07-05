@@ -12,7 +12,6 @@ import de.amr.pacmanfx.uilib.model3D.Wall3D;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Cylinder;
@@ -27,40 +26,18 @@ import static de.amr.pacmanfx.Globals.TS;
  */
 public class TerrainMapRenderer3D {
 
-    private static final int CYLINDER_DIVISIONS = 24;
-
-    // Tags
-    public static final byte TAG_WALL_BASE      = 0x01;
-    public static final byte TAG_WALL_TOP       = 0x02;
-    public static final byte TAG_OUTER_WALL     = 0x04;
-    public static final byte TAG_CORNER         = 0x08;
-    public static final byte TAG_INNER_OBSTACLE = 0x10;
-
-    public static void addTags(Node node, byte... tags) {
-        if (node.getUserData() == null) {
-            node.setUserData((byte) 0);
-        }
-        byte value = (byte) node.getUserData();
-        for (byte tag : tags) {
-            value |= tag;
-        }
-        node.setUserData(value);
-    }
-
-    public static boolean isTagged(Node node, byte tag) {
-        if (node.getUserData() != null) {
-            byte value = (byte) node.getUserData();
-            return (value & tag) != 0;
-        }
-        return false;
-    }
-
     private DoubleProperty wallBaseHeightPy = new SimpleDoubleProperty(3.5);
+
+    private int cylinderDivisions = 24;
     private float wallTopHeight = 0.2f;
     private float wallThickness = 2;
     private boolean oShapeFilled = true;
 
     public TerrainMapRenderer3D() {}
+
+    public void setCylinderDivisions(int cylinderDivisions) {
+        this.cylinderDivisions = cylinderDivisions;
+    }
 
     public void setWallBaseHeightProperty(DoubleProperty py) {
         wallBaseHeightPy = py;
@@ -121,7 +98,6 @@ public class TerrainMapRenderer3D {
         Logger.debug("Render 3D obstacle with encoding '{}'", encoding);
         if (obstacle.isClosed() && !worldBorder) {
             Group obstacleGroup = new Group();
-            addTags(obstacleGroup, TAG_INNER_OBSTACLE);
             parent.getChildren().add(obstacleGroup);
             //TODO provide more general solution for polygons with holes
             if ("dcgbfceb".equals(encoding) && !oShapeFilled) { // O-shape with hole
@@ -205,27 +181,22 @@ public class TerrainMapRenderer3D {
             cornerCenter.manhattanDist(vertEndPoint),
             wallBaseMaterial, wallTopMaterial);
         Wall3D cWall = createCircularWall(cornerCenter, 0.5 * wallThickness, wallBaseMaterial, wallTopMaterial);
-        addTags(cWall.getChildren().getFirst(), TAG_CORNER);
-        addTags(cWall.getChildren().getLast(), TAG_CORNER);
         parent.getChildren().addAll(hWall, vWall, cWall);
     }
 
     public Wall3D createCircularWall(Vector2i center, double radius, PhongMaterial cornerBaseMaterial, PhongMaterial cornerTopMaterial) {
-        Cylinder base = new Cylinder(radius, wallBaseHeightPy.get(), CYLINDER_DIVISIONS);
+        Cylinder base = new Cylinder(radius, wallBaseHeightPy.get(), cylinderDivisions);
         base.setMaterial(cornerBaseMaterial);
         base.heightProperty().bind(wallBaseHeightPy);
         base.translateZProperty().bind(wallBaseHeightPy.multiply(-0.5));
         base.setRotationAxis(Rotate.X_AXIS);
         base.setRotate(90);
 
-        Cylinder top = new Cylinder(radius, wallTopHeight, CYLINDER_DIVISIONS);
+        Cylinder top = new Cylinder(radius, wallTopHeight, cylinderDivisions);
         top.setMaterial(cornerTopMaterial);
         top.setRotationAxis(Rotate.X_AXIS);
         top.setRotate(90);
         top.translateZProperty().bind(wallBaseHeightPy.add(0.5 * wallTopHeight).multiply(-1));
-
-        addTags(base, TAG_WALL_BASE);
-        addTags(top, TAG_WALL_TOP);
 
         Wall3D wall = new Wall3D(base, top);
         wall.setTranslateX(center.x());
@@ -239,12 +210,10 @@ public class TerrainMapRenderer3D {
         base.depthProperty().bind(wallBaseHeightPy);
         base.setMaterial(wallBaseMaterial);
         base.translateZProperty().bind(wallBaseHeightPy.multiply(-0.5));
-        addTags(base, TAG_WALL_BASE);
 
         var top = new Box(sizeX, sizeY, wallTopHeight);
         top.setMaterial(wallTopMaterial);
         top.translateZProperty().bind(wallBaseHeightPy.add(0.5 * wallTopHeight).multiply(-1));
-        addTags(top, TAG_WALL_TOP);
 
         Wall3D wall = new Wall3D(base, top);
         wall.setTranslateX(center.x());
