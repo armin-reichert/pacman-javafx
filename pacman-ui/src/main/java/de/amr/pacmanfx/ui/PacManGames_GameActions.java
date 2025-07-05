@@ -113,7 +113,7 @@ public interface PacManGames_GameActions {
         @Override
         public void execute(PacManGames_UI ui) {
             theGameLevel().eatAllPellets();
-            theSound().stopMunchingSound();
+            theSound().pauseMunchingSound();
             theGameEventManager().publishEvent(theGame(), GameEventType.PAC_FOUND_FOOD);
         }
 

@@ -167,6 +167,16 @@ public class PacManGames_Sound {
         stop(players(gameVariant).get(key));
     }
 
+    private void pause(MediaPlayer player) {
+        if (player == null) {
+            Logger.debug("No media player to stop");
+            return;
+        }
+        player.pause();
+    }
+
+    private void pause(String key) { pause(players(gameVariant).get(key)); }
+
     public void playClipIfEnabled(String keySuffix, double volume) {
         requireNonNull(keySuffix);
         String key = assetNamespace + ".audio." + keySuffix;
@@ -235,6 +245,7 @@ public class PacManGames_Sound {
                 //Logger.error("Could not create media player for siren number {}", number);
                 siren = null;
             } else {
+                sirenPlayer.setVolume(0.5);
                 siren = new Siren(number, sirenPlayer);
             }
         }
@@ -300,9 +311,9 @@ public class PacManGames_Sound {
         playIfEnabled("pacman_munch");
     }
 
-    public void stopMunchingSound() {
-        stop("pacman_munch");
-    }
+    public void stopMunchingSound() { stop("pacman_munch"); }
+
+    public void pauseMunchingSound() { pause("pacman_munch"); }
 
     public void playPacDeathSound() { playIfEnabled("pacman_death"); }
 

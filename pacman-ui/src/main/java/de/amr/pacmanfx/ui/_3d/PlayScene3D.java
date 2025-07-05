@@ -525,8 +525,8 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             theSound().selectSiren(sirenNumber);
             theSound().playSiren();
         }
-        if (gameLevel.pac().starvingTicks() > 5) { // TODO not sure how to do this right
-            theSound().stopMunchingSound();
+        if (gameLevel.pac().starvingTicks() > 10) { // TODO not sure how to do this right
+            theSound().pauseMunchingSound();
         }
         boolean ghostsReturning = gameLevel.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
         if (gameLevel.pac().isAlive() && ghostsReturning) {

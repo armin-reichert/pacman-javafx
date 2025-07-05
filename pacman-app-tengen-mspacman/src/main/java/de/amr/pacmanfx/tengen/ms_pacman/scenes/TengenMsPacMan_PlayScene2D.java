@@ -352,8 +352,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
             theSound().selectSiren(sirenNumber);
             theSound().playSiren();
         }
-        if (level.pac().starvingTicks() > 5) { // TODO not sure how to do this right
-            theSound().stopMunchingSound();
+        if (level.pac().starvingTicks() > 10) { // TODO not sure how to do this right
+            theSound().pauseMunchingSound();
         }
         boolean ghostsReturning = level.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
         if (level.pac().isAlive() && ghostsReturning) {

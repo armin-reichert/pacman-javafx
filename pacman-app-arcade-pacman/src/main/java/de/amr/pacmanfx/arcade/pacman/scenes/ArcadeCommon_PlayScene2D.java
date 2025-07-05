@@ -173,8 +173,8 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
             theSound().playSiren();
         }
         // TODO: how exactly is the munching sound created in the original game?
-        if (theGameLevel().pac().starvingTicks() > 5) {
-            theSound().stopMunchingSound();
+        if (theGameLevel().pac().starvingTicks() > 10) {
+            theSound().pauseMunchingSound();
         }
         boolean ghostsReturning = theGameLevel().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
         if (theGameLevel().pac().isAlive() && ghostsReturning) {
