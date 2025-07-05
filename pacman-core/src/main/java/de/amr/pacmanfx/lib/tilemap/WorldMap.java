@@ -121,8 +121,8 @@ public class WorldMap {
         StringBuilder s = new StringBuilder();
         s.append("WorldMap{");
         if (terrainLayer != null) {
-            s.append("numRows=").append(numRows());
-            s.append(", numCols=").append(numCols());
+            s.append("numRows=").append(numRows);
+            s.append(", numCols=").append(numCols);
         }
         s.append(", url=").append(url);
         s.append("}");
@@ -130,14 +130,14 @@ public class WorldMap {
     }
 
     public WorldMap insertRowBeforeIndex(int rowIndex) {
-        if (rowIndex < 0 || rowIndex > numRows()) {
+        if (rowIndex < 0 || rowIndex > numRows) {
             throw new IllegalArgumentException("Illegal row index for inserting row: " + rowIndex);
         }
-        WorldMap newMap = emptyMap(numRows() + 1, numCols());
+        WorldMap newMap = emptyMap(numRows + 1, numCols);
         newMap.terrainLayer.replaceProperties(terrainLayer.properties());
         newMap.foodLayer.replaceProperties(foodLayer.properties());
-        for (int row = 0; row < newMap.numRows(); ++row) {
-            for (int col = 0; col < newMap.numCols(); ++col) {
+        for (int row = 0; row < newMap.numRows; ++row) {
+            for (int col = 0; col < newMap.numCols; ++col) {
                 byte terrainValue = TerrainTile.EMPTY.code();
                 byte foodValue = FoodTile.EMPTY.code();
                 if (row < rowIndex) {
@@ -147,7 +147,7 @@ public class WorldMap {
                     terrainValue = content(LayerID.TERRAIN, row - 1, col);
                     foodValue = content(LayerID.FOOD, row - 1, col);
                 } else {
-                    if ((col == 0 || col == numCols() - 1)
+                    if ((col == 0 || col == numCols - 1)
                         && content(LayerID.TERRAIN, row, col) == TerrainTile.WALL_V.code()) {
                         terrainValue = TerrainTile.WALL_V.code(); // keep vertical border wall
                     }
@@ -160,14 +160,14 @@ public class WorldMap {
     }
 
     public WorldMap deleteRowAtIndex(int rowIndexToDelete) {
-        if (rowIndexToDelete < 0 || rowIndexToDelete > numRows() - 1) {
+        if (rowIndexToDelete < 0 || rowIndexToDelete > numRows - 1) {
             throw new IllegalArgumentException("Illegal row index for deleting row: " + rowIndexToDelete);
         }
-        WorldMap newMap = emptyMap(numRows() - 1, numCols());
+        WorldMap newMap = emptyMap(numRows - 1, numCols);
         newMap.terrainLayer.replaceProperties(terrainLayer.properties());
         newMap.foodLayer.replaceProperties(foodLayer.properties());
-        for (int row = 0; row < newMap.numRows(); ++row) {
-            for (int col = 0; col < newMap.numCols(); ++col) {
+        for (int row = 0; row < newMap.numRows; ++row) {
+            for (int col = 0; col < newMap.numCols; ++col) {
                 if (row < rowIndexToDelete) {
                     newMap.setContent(LayerID.TERRAIN, row, col, content(LayerID.TERRAIN, row, col));
                     newMap.setContent(LayerID.FOOD, row, col, content(LayerID.FOOD, row, col));
@@ -233,7 +233,7 @@ public class WorldMap {
     }
 
     public boolean outOfWorld(int row, int col) {
-        return row < 0 || row >= numRows() || col < 0 || col >= numCols();
+        return row < 0 || row >= numRows || col < 0 || col >= numCols;
     }
 
     public void assertInsideWorld(Vector2i tile) {
@@ -248,15 +248,14 @@ public class WorldMap {
      * @return index in row-by-row order
      */
     public int indexInRowWiseOrder(Vector2i tile) {
-        assertInsideWorld(tile);
-        return numCols() * tile.y() + tile.x();
+        return numCols * tile.y() + tile.x();
     }
 
     /**
      * @return stream of all tiles of this map (row-by-row)
      */
     public Stream<Vector2i> tiles() {
-        return IntStream.range(0, numCols() * numRows()).mapToObj(this::tile);
+        return IntStream.range(0, numCols * numRows).mapToObj(this::tile);
     }
 
     /**
@@ -264,7 +263,7 @@ public class WorldMap {
      * @return tile with given index
      */
     public Vector2i tile(int index) {
-        return Vector2i.of(index % numCols(), index / numCols());
+        return Vector2i.of(index % numCols, index / numCols);
     }
 
     /**
@@ -283,7 +282,7 @@ public class WorldMap {
      */
     public Vector2i mirroredTile(Vector2i tile) {
         assertInsideWorld(tile);
-        return Vector2i.of(numCols() - 1 - tile.x(), tile.y());
+        return Vector2i.of(numCols - 1 - tile.x(), tile.y());
     }
 
     // Configuration map, can store values of any data type. Keys and values must not be null.
