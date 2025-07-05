@@ -27,7 +27,6 @@ import static de.amr.pacmanfx.Globals.TS;
 public class TerrainMapRenderer3D {
 
     private int cylinderDivisions = 32; // default=64
-    private float wallThickness = 2;
     private boolean oShapeFilled = true;
 
     private Consumer<Wall3D> wallCreatedCallback = wall3D -> Logger.debug(() -> "Wall created: " + wall3D);
@@ -45,10 +44,6 @@ public class TerrainMapRenderer3D {
 
     public void setCylinderDivisions(int cylinderDivisions) {
         this.cylinderDivisions = cylinderDivisions;
-    }
-
-    public void setWallThickness(float wallThickness) {
-        this.wallThickness = wallThickness;
     }
 
     public void setOShapeFilled(boolean value) {
@@ -72,11 +67,12 @@ public class TerrainMapRenderer3D {
         Vector2i center = t1.plus(t2).scaled(HTS).plus(HTS, HTS);
         if (t1.y() == t2.y()) { // horizontal wall
             int length = TS * Math.abs((t2.x() - t1.x()));
-            return createWallCenteredAt(center.toVector2f(), length + wallThickness, wallThickness, wallBaseMaterial, wallTopMaterial);
+            return createWallCenteredAt(center.toVector2f(), length + Wall3D.DEFAULT_WALL_THICKNESS,
+                    Wall3D.DEFAULT_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial);
         }
         else if (t1.x() == t2.x()) { // vertical wall
             int length = TS * Math.abs((t2.y() - t1.y()));
-            return createWallCenteredAt(center.toVector2f(), wallThickness, length, wallBaseMaterial, wallTopMaterial);
+            return createWallCenteredAt(center.toVector2f(), Wall3D.DEFAULT_WALL_THICKNESS, length, wallBaseMaterial, wallTopMaterial);
         }
         throw new IllegalArgumentException("Cannot build wall between tiles %s and %s".formatted(t1, t2));
     }
@@ -139,7 +135,7 @@ public class TerrainMapRenderer3D {
             boolean counterClockwise = segment.ccw();
             Vector2i start = segment.startPoint(), end = segment.endPoint();
             if (segment.isStraightLine()) {
-                addWallBetween(parent, start, end, wallThickness, wallBaseMaterial, wallTopMaterial);
+                addWallBetween(parent, start, end, Wall3D.DEFAULT_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial);
             } else if (segment.isNWCorner()) {
                 if (counterClockwise) {
                     addCornerShape(parent, start.plus(-r, 0), start, end, wallBaseMaterial, wallTopMaterial);
@@ -173,14 +169,14 @@ public class TerrainMapRenderer3D {
         Wall3D hWall = createWallCenteredAt(
             cornerCenter.midpoint(horEndPoint),
             cornerCenter.manhattanDist(horEndPoint),
-            wallThickness,
+            Wall3D.DEFAULT_WALL_THICKNESS,
             wallBaseMaterial, wallTopMaterial);
         Wall3D vWall = createWallCenteredAt(
             cornerCenter.midpoint(vertEndPoint),
-            wallThickness,
+            Wall3D.DEFAULT_WALL_THICKNESS,
             cornerCenter.manhattanDist(vertEndPoint),
             wallBaseMaterial, wallTopMaterial);
-        Wall3D cWall = createCircularWall(cornerCenter, 0.5 * wallThickness, wallBaseMaterial, wallTopMaterial);
+        Wall3D cWall = createCircularWall(cornerCenter, 0.5 * Wall3D.DEFAULT_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial);
         parent.getChildren().addAll(hWall, vWall, cWall);
     }
 

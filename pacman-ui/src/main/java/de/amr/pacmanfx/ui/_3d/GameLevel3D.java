@@ -229,7 +229,6 @@ public class GameLevel3D extends Group implements Destroyable {
             wallOpacityProperty.bind(PY_3D_WALL_OPACITY);
 
             r3D = new TerrainMapRenderer3D();
-            r3D.setWallThickness(Settings3D.OBSTACLE_3D_THICKNESS);
             r3D.setWallCreatedCallback(wall3D -> wall3D.baseHeightProperty().bind(PY_3D_WALL_HEIGHT));
             r3D.setCornerCreatedCallback(wall3D -> wall3D.baseHeightProperty().bind(PY_3D_WALL_HEIGHT));
             r3D.setCylinderDivisions(24);

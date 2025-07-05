@@ -183,7 +183,6 @@ public class Maze3D extends Group {
         Vector2i houseRightUpper = Vector2i.of(houseMaxTile.x(), houseMinTile.y());
         Vector2i houseLeftLower = Vector2i.of(houseMinTile.x(), houseMaxTile.y());
 
-        r3D.setWallThickness(2);
         PhongMaterial wallBaseMaterial = coloredMaterial(opaqueColor(wallBaseColor, 0.4));
         PhongMaterial wallTopMaterial = coloredMaterial(wallTopColor);
 

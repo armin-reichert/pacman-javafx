@@ -16,6 +16,7 @@ public class Wall3D extends Group implements Destroyable {
 
     public static final double DEFAULT_BASE_HEIGHT = 4;
     public static final double DEFAULT_TOP_HEIGHT = 0.2;
+    public static final double DEFAULT_WALL_THICKNESS = 2;
 
     private final DoubleProperty baseHeightProperty = new SimpleDoubleProperty(DEFAULT_BASE_HEIGHT);
 
