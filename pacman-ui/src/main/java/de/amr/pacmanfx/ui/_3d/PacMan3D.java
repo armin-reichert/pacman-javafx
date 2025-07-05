@@ -7,10 +7,10 @@ package de.amr.pacmanfx.ui._3d;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.model3D.PacBase3D;
 import javafx.animation.*;
+import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
@@ -19,8 +19,14 @@ import static de.amr.pacmanfx.uilib.Ufx.now;
 
 public class PacMan3D extends PacBase3D {
 
-    public PacMan3D(Model3DRepository model3DRepository, AnimationManager animationManager, Pac pac, double size, AssetStorage assets, String ans) {
-        super(model3DRepository, animationManager, pac, size, assets, ans);
+    public PacMan3D(
+        Model3DRepository model3DRepository,
+        AnimationManager animationManager,
+        Pac pac,
+        double size,
+        Color headColor, Color eyesColor, Color palateColor)
+    {
+        super(model3DRepository, animationManager, pac, size, headColor, eyesColor, palateColor);
 
         dyingAnimation = new ManagedAnimation(animationManager, "PacMan_Dying") {
             @Override

@@ -418,26 +418,39 @@ public class GameLevel3D extends Group implements  Destroyable {
                     tile.y() * TS + HTS,
                     -2 * Settings3D.ENERGIZER_3D_RADIUS - 0.5 * Settings3D.FLOOR_3D_THICKNESS  // sitting just on floor
                 );
-                var energizer3D = new Energizer3D(Settings3D.ENERGIZER_3D_RADIUS, animationManager, true);
+                var energizer3D = new Energizer3D(Settings3D.ENERGIZER_3D_RADIUS, animationManager);
                 energizer3D.setMaterial(pelletMaterial);
                 energizer3D.setTile(tile);
                 energizer3D.setTranslateX(center.getX());
                 energizer3D.setTranslateY(center.getY());
                 energizer3D.setTranslateZ(center.getZ());
-                var explosion = new ManagedAnimation(animationManager, "Energizer_Explosion") {
+                energizers3D.add(energizer3D);
+
+                var hideAndExplodeAnimation = new ManagedAnimation(animationManager, "Energizer_Explosion") {
+                    private SquirtingAnimation squirtingAnimation;
+
                     @Override
                     protected Animation createAnimation() {
-                        return new SquirtingAnimation(GameLevel3D.this, Duration.seconds(2), 23, 69, pelletMaterial, center) {
+                        squirtingAnimation = new SquirtingAnimation(GameLevel3D.this, Duration.seconds(2), 23, 69, pelletMaterial, center) {
                             @Override
                             public boolean particleShouldVanish(Particle particle) {
                                 return particle.getTranslateZ() >= -1
-                                        && isInsideWorldMap(gameLevel.worldMap(), particle.getTranslateX(), particle.getTranslateY());
+                                    && isInsideWorldMap(gameLevel.worldMap(), particle.getTranslateX(), particle.getTranslateY());
                             }
                         };
+                        return new SequentialTransition(
+                            doAfterSec(0.5, () -> energizer3D.shape3D().setVisible(false)),
+                            squirtingAnimation
+                        );
+                    }
+
+                    @Override
+                    public void destroy() {
+                        super.destroy();
+                        squirtingAnimation.destroy();
                     }
                 };
-                energizer3D.setEatenEffectAnimation(explosion);
-                energizers3D.add(energizer3D);
+                energizer3D.setHideAndEatAnimation(hideAndExplodeAnimation);
             } else {
                 var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
                 var pelletShape = new MeshView(pelletMesh);

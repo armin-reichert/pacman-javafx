@@ -11,12 +11,12 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import javafx.animation.*;
 import javafx.scene.Group;
 import javafx.scene.LightBase;
 import javafx.scene.Node;
 import javafx.scene.PointLight;
+import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -48,26 +48,15 @@ public class PacBase3D implements Destroyable {
         AnimationManager animationManager,
         Pac pac,
         double size,
-        AssetStorage assets,
-        String ans)
+        Color headColor, Color eyesColor, Color palateColor)
     {
         requireNonNull(model3DRepository);
         this.animationManager = requireNonNull(animationManager);
         this.pac = requireNonNull(pac);
         this.size = size;
-        requireNonNull(assets);
-        requireNonNull(ans);
 
-        body = model3DRepository.createPacBody(
-            size,
-            assets.color(ans + ".pac.color.head"),
-            assets.color(ans + ".pac.color.eyes"),
-            assets.color(ans + ".pac.color.palate"));
-
-        jaw = model3DRepository.createBlindPacBody(
-            size,
-            assets.color(ans + ".pac.color.head"),
-            assets.color(ans + ".pac.color.palate"));
+        body = model3DRepository.createPacBody(size, headColor, eyesColor, palateColor);
+        jaw = model3DRepository.createBlindPacBody(size, headColor, palateColor);
 
         root.getChildren().addAll(jaw, body);
         root.getTransforms().add(moveRotation);

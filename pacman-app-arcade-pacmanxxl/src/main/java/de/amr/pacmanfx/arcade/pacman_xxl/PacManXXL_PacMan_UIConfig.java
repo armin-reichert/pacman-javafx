@@ -29,7 +29,6 @@ import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.model3D.PacBase3D;
 import de.amr.pacmanfx.uilib.model3D.PacBody;
-import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -195,8 +194,11 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
 
     @Override
     public PacBase3D createPac3D(Model3DRepository model3DRepository, AnimationManager animationManager, Pac pac) {
-        var pac3D = new PacMan3D(model3DRepository, animationManager, pac, Settings3D.PAC_3D_SIZE, theAssets(), assetNamespace());
-        pac3D.light().setColor(theAssets().color(assetNamespace() + ".pac.color.head").desaturate());
+        var pac3D = new PacMan3D(model3DRepository, animationManager, pac, Settings3D.PAC_3D_SIZE,
+            theAssets().color(ANS + ".pac.color.head"),
+            theAssets().color(ANS + ".pac.color.eyes"),
+            theAssets().color(ANS + ".pac.color.palate"));
+        pac3D.light().setColor(theAssets().color(ANS + ".pac.color.head").desaturate());
         return pac3D;
     }
 

@@ -8,6 +8,7 @@ import de.amr.pacmanfx.lib.Vector3f;
 import de.amr.pacmanfx.uilib.model3D.Destroyable;
 import javafx.animation.Animation;
 import javafx.animation.Transition;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -55,6 +56,7 @@ public abstract class SquirtingAnimation extends Transition implements Destroyab
         }
     }
 
+    private Group embeddingParent;
     private Group particleGroup = new Group();
 
     public abstract boolean particleShouldVanish(Particle particle);
@@ -66,7 +68,7 @@ public abstract class SquirtingAnimation extends Transition implements Destroyab
         Material particleMaterial,
         Point3D origin)
     {
-        requireNonNull(embeddingParent);
+        this.embeddingParent = requireNonNull(embeddingParent);
         requireNonNull(duration);
         requireNonNegativeInt(minParticleCount);
         requireNonNegativeInt(maxParticleCount);
@@ -74,12 +76,8 @@ public abstract class SquirtingAnimation extends Transition implements Destroyab
         requireNonNull(origin);
 
         setCycleDuration(duration);
-        setOnFinished(e ->  embeddingParent.getChildren().remove(particleGroup));
-        statusProperty().addListener((py, oldStatus, newStatus) -> {
-            if (oldStatus == Animation.Status.RUNNING) {
-                embeddingParent.getChildren().remove(particleGroup);
-            }
-        });
+        setOnFinished(e -> embeddingParent.getChildren().remove(particleGroup));
+        statusProperty().addListener(this::handleStatusChange);
 
         int numParticles = randomInt(minParticleCount, maxParticleCount + 1);
         for (int i = 0; i < numParticles; ++i) {
@@ -96,8 +94,16 @@ public abstract class SquirtingAnimation extends Transition implements Destroyab
         Logger.info("{} particles created", particleGroup.getChildren().size());
     }
 
+    private void handleStatusChange(ObservableValue<? extends Animation.Status> property, Animation.Status oldStatus, Animation.Status newStatus) {
+        if (oldStatus == Animation.Status.RUNNING) {
+            embeddingParent.getChildren().remove(particleGroup);
+        }
+    }
+
     @Override
     public void destroy() {
+        setOnFinished(null);
+        statusProperty().removeListener(this::handleStatusChange);
         for (Node child : particleGroup.getChildren()) {
             if (child instanceof Sphere sphere) {
                 sphere.setMaterial(null);
@@ -105,6 +111,7 @@ public abstract class SquirtingAnimation extends Transition implements Destroyab
         }
         particleGroup.getChildren().clear();
         particleGroup = null;
+        embeddingParent = null;
     }
 
     @Override

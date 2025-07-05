@@ -4,13 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._3d;
 
-import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.ScaleTransition;
-import javafx.animation.SequentialTransition;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
@@ -24,16 +22,11 @@ import static java.util.Objects.requireNonNull;
 public class Energizer3D extends Sphere implements Eatable3D {
     private ManagedAnimation pumpingAnimation;
     private ManagedAnimation hideAndEatAnimation;
-    private ManagedAnimation eatenEffectAnimation;
 
-    /**
-     * @param radius radius of sphere (positive number)
-     * @param animationManager the animation manager
-     */
-    public Energizer3D(double radius, AnimationManager animationManager, boolean explodes) {
-        requireNonNegative(radius, "Energizer radius must be positive but is %f");
+    public Energizer3D(double radius, AnimationManager animationManager) {
+        setRadius(requireNonNegative(radius, "Energizer radius must be positive but is %f"));
+
         requireNonNull(animationManager);
-        setRadius(radius);
 
         pumpingAnimation = new ManagedAnimation(animationManager, "Energizer_Pumping") {
             @Override
@@ -52,16 +45,10 @@ public class Energizer3D extends Sphere implements Eatable3D {
                 return scaleTransition;
             }
         };
+    }
 
-        hideAndEatAnimation = new ManagedAnimation(animationManager, "Energizer_Eaten") {
-            @Override
-            protected Animation createAnimation() {
-                Animation delayedHide = Ufx.doAfterSec(0.05, () -> shape3D().setVisible(false));
-                return eatenEffectAnimation == null
-                        ? delayedHide
-                        : new SequentialTransition(delayedHide, eatenEffectAnimation.getOrCreateAnimation());
-            }
-        };
+    public void setHideAndEatAnimation(ManagedAnimation hideAndEatAnimation) {
+        this.hideAndEatAnimation = requireNonNull(hideAndEatAnimation);
     }
 
     public void destroy() {
@@ -69,16 +56,10 @@ public class Energizer3D extends Sphere implements Eatable3D {
         pumpingAnimation = null;
         hideAndEatAnimation.destroy();
         hideAndEatAnimation = null;
-        eatenEffectAnimation = null;
     }
 
     public ManagedAnimation pumpingAnimation() {
         return pumpingAnimation;
-    }
-
-    public void setEatenEffectAnimation(ManagedAnimation eatenEffectAnimation) {
-        this.eatenEffectAnimation = requireNonNull(eatenEffectAnimation);
-        hideAndEatAnimation.invalidate();
     }
 
     @Override

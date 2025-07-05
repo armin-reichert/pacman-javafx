@@ -7,10 +7,10 @@ package de.amr.pacmanfx.uilib.model3D;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
+import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
@@ -61,14 +61,14 @@ public class MsPacMan3D extends PacBase3D {
 
     private MsPacManFemaleParts femaleBodyParts;
 
-    public MsPacMan3D(Model3DRepository model3DRepository, AnimationManager animationManager, Pac pac, double size, AssetStorage assets, String ans) {
-        super(model3DRepository, animationManager, pac, size, assets, ans);
-
-        femaleBodyParts = model3DRepository.createFemaleBodyParts(size,
-            assets.color(ans + ".pac.color.hairbow"),
-            assets.color(ans + ".pac.color.hairbow.pearls"),
-            assets.color(ans + ".pac.color.boobs"));
-
+    public MsPacMan3D(
+        Model3DRepository model3DRepository,
+        AnimationManager animationManager,
+        Pac pac,
+        double size,
+        Color headColor, Color eyesColor, Color palateColor, Color hairBowColor, Color hairBowPearlsColor, Color boobsColor) {
+        super(model3DRepository, animationManager, pac, size, headColor, eyesColor, palateColor);
+        femaleBodyParts = model3DRepository.createFemaleBodyParts(size, hairBowColor, hairBowPearlsColor, boobsColor);
         root.getChildren().add(femaleBodyParts);
 
         dyingAnimation = new ManagedAnimation(animationManager, "Ms_PacMan_Dying") {

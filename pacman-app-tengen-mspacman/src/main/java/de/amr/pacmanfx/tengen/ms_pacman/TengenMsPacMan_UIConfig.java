@@ -33,7 +33,6 @@ import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.model3D.MsPacMan3D;
 import de.amr.pacmanfx.uilib.model3D.MsPacManBody;
-import de.amr.pacmanfx.uilib.model3D.PacBase3D;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -245,8 +244,14 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     }
 
     @Override
-    public PacBase3D createPac3D(Model3DRepository model3DRepository, AnimationManager animationManager, Pac pac) {
-        var pac3D = new MsPacMan3D(model3DRepository, animationManager, pac, Settings3D.PAC_3D_SIZE, theAssets(), ANS);
+    public MsPacMan3D createPac3D(Model3DRepository model3DRepository, AnimationManager animationManager, Pac pac) {
+        var pac3D = new MsPacMan3D(model3DRepository, animationManager, pac, Settings3D.PAC_3D_SIZE,
+            theAssets().color(ANS + ".pac.color.head"),
+            theAssets().color(ANS + ".pac.color.eyes"),
+            theAssets().color(ANS + ".pac.color.palate"),
+            theAssets().color(ANS + ".pac.color.hairbow"),
+            theAssets().color(ANS + ".pac.color.hairbow.pearls"),
+            theAssets().color(ANS + ".pac.color.boobs"));
         pac3D.light().setColor(theAssets().color(ANS + ".pac.color.head").desaturate());
         return pac3D;
     }

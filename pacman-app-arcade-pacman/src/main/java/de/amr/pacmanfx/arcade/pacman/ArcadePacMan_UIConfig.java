@@ -26,7 +26,6 @@ import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
-import de.amr.pacmanfx.uilib.model3D.PacBase3D;
 import de.amr.pacmanfx.uilib.model3D.PacBody;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -180,7 +179,6 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
         return theAssets().image(ANS + ".bonus_value_" + symbol);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public PacBody createLivesCounterShape3D(Model3DRepository model3DRepository) {
         return model3DRepository.createPacBody(
@@ -192,8 +190,11 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
     }
 
     @Override
-    public PacBase3D createPac3D(Model3DRepository model3DRepository, AnimationManager animationManager, Pac pac) {
-        var pac3D = new PacMan3D(model3DRepository, animationManager, pac, Settings3D.PAC_3D_SIZE, theAssets(), ANS);
+    public PacMan3D createPac3D(Model3DRepository model3DRepository, AnimationManager animationManager, Pac pac) {
+        var pac3D = new PacMan3D(model3DRepository, animationManager, pac, Settings3D.PAC_3D_SIZE,
+            theAssets().color(ANS + ".pac.color.head"),
+            theAssets().color(ANS + ".pac.color.eyes"),
+            theAssets().color(ANS + ".pac.color.palate"));
         pac3D.light().setColor(theAssets().color(ANS + ".pac.color.head").desaturate());
         return pac3D;
     }
