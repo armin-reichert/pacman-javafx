@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._3d;
 
+import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.lib.Vector3f;
 import de.amr.pacmanfx.uilib.model3D.Destroyable;
 import javafx.animation.Animation;
@@ -16,8 +17,10 @@ import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import static de.amr.pacmanfx.Validations.requireNonNegativeInt;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomFloat;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Animation played when energizer explodes.
@@ -53,7 +56,9 @@ public abstract class SquirtingAnimation extends Transition implements Destroyab
         }
     }
 
-    private final Group particleGroup = new Group();
+    private Group particleGroup = new Group();
+
+    public abstract boolean particleShouldVanish(Particle particle);
 
     public SquirtingAnimation(
         Group embeddingParent,
@@ -62,6 +67,13 @@ public abstract class SquirtingAnimation extends Transition implements Destroyab
         Material particleMaterial,
         Point3D origin)
     {
+        requireNonNull(embeddingParent);
+        requireNonNull(duration);
+        requireNonNegativeInt(minParticleCount);
+        requireNonNegativeInt(maxParticleCount);
+        requireNonNull(particleMaterial);
+        requireNonNull(origin);
+
         setCycleDuration(duration);
         setOnFinished(e ->  embeddingParent.getChildren().remove(particleGroup));
         statusProperty().addListener((py, oldStatus, newStatus) -> {
@@ -93,16 +105,11 @@ public abstract class SquirtingAnimation extends Transition implements Destroyab
             }
         }
         particleGroup.getChildren().clear();
+        particleGroup = null;
     }
-
-    public abstract boolean particleShouldVanish(Particle particle);
 
     @Override
     protected void interpolate(double t) {
-        if (t >= 1.0) {
-            Logger.debug("Last interpolation frame t={}", t);
-            return;
-        }
         for (Node child : particleGroup.getChildren()) {
             var particle = (Particle) child;
             particle.setVisible(true);
