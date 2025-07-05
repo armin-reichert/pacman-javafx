@@ -597,6 +597,7 @@ public class GameLevel3D extends Group implements Destroyable {
         if (dressMeshViews != null) {
             for (MeshView meshView : dressMeshViews) {
                 meshView.setMesh(null);
+                meshView.materialProperty().unbind();
                 meshView.setMaterial(null);
             }
             dressMeshViews = null;
@@ -605,6 +606,7 @@ public class GameLevel3D extends Group implements Destroyable {
         if (pupilsMeshViews != null) {
             for (MeshView meshView : pupilsMeshViews) {
                 meshView.setMesh(null);
+                meshView.materialProperty().unbind();
                 meshView.setMaterial(null);
             }
             pupilsMeshViews = null;
@@ -613,6 +615,7 @@ public class GameLevel3D extends Group implements Destroyable {
         if (eyesMeshViews != null) {
             for (MeshView meshView : eyesMeshViews) {
                 meshView.setMesh(null);
+                meshView.materialProperty().unbind();
                 meshView.setMaterial(null);
             }
             eyesMeshViews = null;
