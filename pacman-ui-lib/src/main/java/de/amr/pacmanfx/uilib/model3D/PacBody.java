@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.model3D;
 
-import de.amr.pacmanfx.uilib.Ufx;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -44,7 +43,9 @@ public class PacBody extends Group implements Destroyable {
 
         var headBounds = headMeshView.getBoundsInLocal();
         var centeredOverOrigin = new Translate(-headBounds.getCenterX(), -headBounds.getCenterY(), -headBounds.getCenterZ());
-        Stream.of(headMeshView, eyesMeshView, palateMeshView).forEach(node -> node.getTransforms().add(centeredOverOrigin));
+        Stream.of(headMeshView, eyesMeshView, palateMeshView)
+            .map(MeshView::getTransforms)
+            .forEach(tf -> tf.add(centeredOverOrigin));
 
         // TODO check/fix Pac-Man mesh position and rotation in OBJ file
         getTransforms().add(new Rotate(90, Rotate.X_AXIS));
@@ -57,7 +58,6 @@ public class PacBody extends Group implements Destroyable {
 
     @Override
     public void destroy() {
-        //TODO
         getChildren().clear();
         if (headMeshView != null) {
             headMeshView.setMesh(null);

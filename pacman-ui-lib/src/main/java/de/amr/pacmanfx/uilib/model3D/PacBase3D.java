@@ -33,7 +33,7 @@ public class PacBase3D extends Group implements Destroyable {
     protected Pac pac;
     protected PointLight light = new PointLight();
     protected PacBody body;
-    protected Group jaw;
+    protected PacBodyNoEyes jaw;
     protected Rotate moveRotation = new Rotate();
 
     protected AnimationManager animationManager;
@@ -113,25 +113,27 @@ public class PacBase3D extends Group implements Destroyable {
 
     @Override
     public void destroy() {
+        light.translateXProperty().unbind();
+        light.translateYProperty().unbind();
+        getChildren().clear();
         if (body != null) {
             body.destroy();
             body = null;
         }
         if (jaw != null) {
-            jaw.getChildren().clear();
+            jaw.destroy();
             jaw = null;
         }
-        getChildren().clear();
         if (chewingAnimation != null) {
-            chewingAnimation.stop();
+            animationManager.destroyAnimation(chewingAnimation);
             chewingAnimation = null;
         }
         if (movementAnimation != null) {
-            movementAnimation.stop();
+            animationManager.destroyAnimation(movementAnimation);
             movementAnimation = null;
         }
         if (dyingAnimation != null) {
-            dyingAnimation.stop();
+            animationManager.destroyAnimation(dyingAnimation);
             dyingAnimation = null;
         }
     }
