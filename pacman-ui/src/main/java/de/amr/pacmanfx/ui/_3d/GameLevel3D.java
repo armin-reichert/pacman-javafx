@@ -229,8 +229,6 @@ public class GameLevel3D extends Group implements  Destroyable {
             wallOpacityProperty.bind(PY_3D_WALL_OPACITY);
 
             r3D = new TerrainMapRenderer3D();
-            r3D.setWallBaseHeightProperty(obstacleBaseHeightProperty);
-            r3D.setWallTopHeight(Settings3D.OBSTACLE_3D_TOP_HEIGHT);
 
             //TODO check this:
             obstacleBaseHeightProperty.set(PY_3D_WALL_HEIGHT.get());
@@ -239,6 +237,8 @@ public class GameLevel3D extends Group implements  Destroyable {
                 Vector2i tile = tileAt(obstacle.startPoint().toVector2f());
                 if (gameLevel.house().isPresent() && !gameLevel.house().get().isTileInHouseArea(tile)) {
                     r3D.setWallThickness(Settings3D.OBSTACLE_3D_THICKNESS);
+                    r3D.setWallCreatedCallback(wall3D -> wall3D.baseHeightProperty().bind(PY_3D_WALL_HEIGHT));
+                    r3D.setCornerCreatedCallback(wall3D -> wall3D.baseHeightProperty().bind(PY_3D_WALL_HEIGHT));
                     r3D.renderObstacle3D(maze3D, obstacle,
                         isObstacleTheWorldBorder(gameLevel.worldMap(), obstacle),
                         wallBaseMaterial, wallTopMaterial);

@@ -9,14 +9,14 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.Obstacle;
 import de.amr.pacmanfx.lib.tilemap.ObstacleSegment;
 import de.amr.pacmanfx.uilib.model3D.Wall3D;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.transform.Rotate;
 import org.tinylog.Logger;
+
+import java.util.function.Consumer;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
@@ -26,25 +26,25 @@ import static de.amr.pacmanfx.Globals.TS;
  */
 public class TerrainMapRenderer3D {
 
-    private DoubleProperty wallBaseHeightPy = new SimpleDoubleProperty(3.5);
-
-    private int cylinderDivisions = 24;
-    private float wallTopHeight = 0.2f;
+    private int cylinderDivisions = 24; // default=64
     private float wallThickness = 2;
     private boolean oShapeFilled = true;
 
+    private Consumer<Wall3D> wallCreatedCallback = wall3D -> Logger.info("Wall created: {}", wall3D);
+    private Consumer<Wall3D> cornerCreatedCallback = wall3D -> Logger.info("Corner created: {}", wall3D);
+
     public TerrainMapRenderer3D() {}
+
+    public void setWallCreatedCallback(Consumer<Wall3D> wallCreatedCallback) {
+        this.wallCreatedCallback = wallCreatedCallback;
+    }
+
+    public void setCornerCreatedCallback(Consumer<Wall3D> cornerCreatedCallback) {
+        this.cornerCreatedCallback = cornerCreatedCallback;
+    }
 
     public void setCylinderDivisions(int cylinderDivisions) {
         this.cylinderDivisions = cylinderDivisions;
-    }
-
-    public void setWallBaseHeightProperty(DoubleProperty py) {
-        wallBaseHeightPy = py;
-    }
-
-    public void setWallTopHeight(float height) {
-        wallTopHeight = height;
     }
 
     public void setWallThickness(float wallThickness) {
@@ -185,40 +185,42 @@ public class TerrainMapRenderer3D {
     }
 
     public Wall3D createCircularWall(Vector2i center, double radius, PhongMaterial cornerBaseMaterial, PhongMaterial cornerTopMaterial) {
-        Cylinder base = new Cylinder(radius, wallBaseHeightPy.get(), cylinderDivisions);
+        Cylinder base = new Cylinder(radius, Wall3D.DEFAULT_BASE_HEIGHT, cylinderDivisions);
         base.setMaterial(cornerBaseMaterial);
-        base.heightProperty().bind(wallBaseHeightPy);
-        base.translateZProperty().bind(wallBaseHeightPy.multiply(-0.5));
         base.setRotationAxis(Rotate.X_AXIS);
         base.setRotate(90);
 
-        Cylinder top = new Cylinder(radius, wallTopHeight, cylinderDivisions);
+        Cylinder top = new Cylinder(radius, Wall3D.DEFAULT_TOP_HEIGHT, cylinderDivisions);
         top.setMaterial(cornerTopMaterial);
         top.setRotationAxis(Rotate.X_AXIS);
         top.setRotate(90);
-        top.translateZProperty().bind(wallBaseHeightPy.add(0.5 * wallTopHeight).multiply(-1));
 
-        Wall3D wall = new Wall3D(base, top);
-        wall.setTranslateX(center.x());
-        wall.setTranslateY(center.y());
-        wall.setMouseTransparent(true);
-        return wall;
+        Wall3D wall3D = new Wall3D(base, top);
+        wall3D.setTranslateX(center.x());
+        wall3D.setTranslateY(center.y());
+        wall3D.setMouseTransparent(true);
+
+        if (cornerCreatedCallback != null) {
+            cornerCreatedCallback.accept(wall3D);
+        }
+        return wall3D;
     }
 
     public Wall3D createWallCenteredAt(Vector2f center, double sizeX, double sizeY, PhongMaterial wallBaseMaterial, PhongMaterial wallTopMaterial) {
-        var base = new Box(sizeX, sizeY, wallBaseHeightPy.get());
-        base.depthProperty().bind(wallBaseHeightPy);
+        var base = new Box(sizeX, sizeY, Wall3D.DEFAULT_BASE_HEIGHT);
         base.setMaterial(wallBaseMaterial);
-        base.translateZProperty().bind(wallBaseHeightPy.multiply(-0.5));
 
-        var top = new Box(sizeX, sizeY, wallTopHeight);
+        var top = new Box(sizeX, sizeY, Wall3D.DEFAULT_TOP_HEIGHT);
         top.setMaterial(wallTopMaterial);
-        top.translateZProperty().bind(wallBaseHeightPy.add(0.5 * wallTopHeight).multiply(-1));
 
-        Wall3D wall = new Wall3D(base, top);
-        wall.setTranslateX(center.x());
-        wall.setTranslateY(center.y());
-        wall.setMouseTransparent(true);
-        return wall;
+        Wall3D wall3D = new Wall3D(base, top);
+        wall3D.setTranslateX(center.x());
+        wall3D.setTranslateY(center.y());
+        wall3D.setMouseTransparent(true);
+
+        if (wallCreatedCallback != null) {
+            wallCreatedCallback.accept(wall3D);
+        }
+        return wall3D;
     }
 }

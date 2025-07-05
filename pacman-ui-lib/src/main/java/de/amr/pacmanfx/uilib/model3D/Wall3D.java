@@ -4,16 +4,34 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.model3D;
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.Shape3D;
 
-public class Wall3D extends Group implements  Destroyable {
+public class Wall3D extends Group implements Destroyable {
+
+    public static final double DEFAULT_BASE_HEIGHT = 4;
+    public static final double DEFAULT_TOP_HEIGHT = 0.2;
+
+    private final DoubleProperty baseHeightProperty = new SimpleDoubleProperty(DEFAULT_BASE_HEIGHT);
 
     public Wall3D(Node base, Node top) {
         getChildren().setAll(base, top);
+        if (base instanceof Box box) {
+            box.depthProperty().bind(baseHeightProperty);
+        } else if (base instanceof Cylinder cylinder) {
+            cylinder.heightProperty().bind(baseHeightProperty);
+        }
+        base.translateZProperty().bind(baseHeightProperty.multiply(-0.5));
+        top.translateZProperty().bind(baseHeightProperty.add(0.5 * DEFAULT_TOP_HEIGHT).multiply(-1));
+    }
+
+    public DoubleProperty baseHeightProperty() {
+        return baseHeightProperty;
     }
 
     @Override
