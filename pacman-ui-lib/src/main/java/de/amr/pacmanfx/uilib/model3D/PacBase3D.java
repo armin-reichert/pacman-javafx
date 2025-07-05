@@ -14,7 +14,6 @@ import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.*;
 import javafx.scene.Group;
 import javafx.scene.LightBase;
-import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
@@ -28,12 +27,11 @@ import static java.util.Objects.requireNonNull;
 /**
  * Common base class for Pac-Man and Ms. Pac-Man 3D representations.
  */
-public class PacBase3D implements Destroyable {
+public class PacBase3D extends Group implements Destroyable {
 
     protected double size;
     protected Pac pac;
     protected PointLight light = new PointLight();
-    protected Group root = new Group();
     protected PacBody body;
     protected Group jaw;
     protected Rotate moveRotation = new Rotate();
@@ -58,9 +56,9 @@ public class PacBase3D implements Destroyable {
         body = model3DRepository.createPacBody(size, headColor, eyesColor, palateColor);
         jaw = model3DRepository.createBlindPacBody(size, headColor, palateColor);
 
-        root.getChildren().addAll(jaw, body);
-        root.getTransforms().add(moveRotation);
-        root.setTranslateZ(-0.5 * size);
+        getChildren().addAll(jaw, body);
+        getTransforms().add(moveRotation);
+        setTranslateZ(-0.5 * size);
 
         chewingAnimation = new ManagedAnimation(animationManager, "PacMan_Chewing") {
             @Override
@@ -96,13 +94,9 @@ public class PacBase3D implements Destroyable {
             }
         };
 
-        light.translateXProperty().bind(root.translateXProperty());
-        light.translateYProperty().bind(root.translateYProperty());
+        light.translateXProperty().bind(translateXProperty());
+        light.translateYProperty().bind(translateYProperty());
         light.setTranslateZ(-30);
-    }
-
-    public Node root() {
-        return root;
     }
 
     public LightBase light() {
@@ -127,9 +121,7 @@ public class PacBase3D implements Destroyable {
             jaw.getChildren().clear();
             jaw = null;
         }
-        if (root != null) {
-            root.getChildren().clear();
-        }
+        getChildren().clear();
         if (chewingAnimation != null) {
             chewingAnimation.stop();
             chewingAnimation = null;
@@ -148,10 +140,10 @@ public class PacBase3D implements Destroyable {
         requireNonNull(movementAnimation);
         requireNonNull(chewingAnimation);
 
-        root.setVisible(pac.isVisible());
-        root.setScaleX(1.0);
-        root.setScaleY(1.0);
-        root.setScaleZ(1.0);
+        setVisible(pac.isVisible());
+        setScaleX(1.0);
+        setScaleY(1.0);
+        setScaleZ(1.0);
 
         updatePosition();
         chewingAnimation.stop();
@@ -180,9 +172,9 @@ public class PacBase3D implements Destroyable {
 
     protected void updatePosition() {
         Vector2f center = pac.center();
-        root.setTranslateX(center.x());
-        root.setTranslateY(center.y());
-        root.setTranslateZ(-0.5 * size);
+        setTranslateX(center.x());
+        setTranslateY(center.y());
+        setTranslateZ(-0.5 * size);
         moveRotation.setAxis(Rotate.Z_AXIS);
         double angle = switch (pac.moveDir()) {
             case LEFT  -> 0;
@@ -195,8 +187,8 @@ public class PacBase3D implements Destroyable {
 
     protected void updateVisibility(GameLevel level) {
         WorldMap worldMap = level.worldMap();
-        boolean outsideWorld = root.getTranslateX() < HTS || root.getTranslateX() > TS * worldMap.numCols() - HTS;
-        root.setVisible(pac.isVisible() && !outsideWorld);
+        boolean outsideWorld = getTranslateX() < HTS || getTranslateX() > TS * worldMap.numCols() - HTS;
+        setVisible(pac.isVisible() && !outsideWorld);
     }
 
     /**

@@ -181,7 +181,7 @@ public class GameLevel3D extends Group implements  Destroyable {
         {
             pac3D = theUI().configuration().createPac3D(model3DRepository, animationManager, gameLevel.pac());
             pac3D.init();
-            getChildren().addAll(pac3D.root(), pac3D.light());
+            getChildren().addAll(pac3D, pac3D.light());
         }
 
         {
@@ -527,7 +527,7 @@ public class GameLevel3D extends Group implements  Destroyable {
         setDrawModeForTree(mazeGroup, drawMode);
         setDrawModeForTree(levelCounter3D, drawMode);
         setDrawModeForTree(livesCounter3D, drawMode);
-        setDrawModeForTree(pac3D.root(), drawMode);
+        setDrawModeForTree(pac3D, drawMode);
         ghosts3D.forEach(ghost3D -> setDrawModeForTree(ghost3D, drawMode));
         Logger.info("Draw mode set to {}", drawMode);
     }

@@ -29,7 +29,7 @@ public class MsPacMan3D extends PacBase3D {
 
         @Override
         protected Animation createAnimation() {
-            var rotateTransition = new RotateTransition(SWING_TIME, root);
+            var rotateTransition = new RotateTransition(SWING_TIME, MsPacMan3D.this);
             rotateTransition.setAxis(Rotate.Z_AXIS);
             rotateTransition.setCycleCount(Animation.INDEFINITE);
             rotateTransition.setAutoReverse(true);
@@ -41,8 +41,8 @@ public class MsPacMan3D extends PacBase3D {
         public void stop() {
             var rotateTransition = (RotateTransition) getOrCreateAnimation();
             super.stop();
-            root.setRotationAxis(rotateTransition.getAxis());
-            root.setRotate(0);
+            setRotationAxis(rotateTransition.getAxis());
+            setRotate(0);
         }
 
         public void setPowerMode(boolean power) {
@@ -64,17 +64,19 @@ public class MsPacMan3D extends PacBase3D {
     public MsPacMan3D(
         Model3DRepository model3DRepository,
         AnimationManager animationManager,
-        Pac pac,
+        Pac msPacMan,
         double size,
-        Color headColor, Color eyesColor, Color palateColor, Color hairBowColor, Color hairBowPearlsColor, Color boobsColor) {
-        super(model3DRepository, animationManager, pac, size, headColor, eyesColor, palateColor);
+        Color headColor, Color eyesColor, Color palateColor,
+        Color hairBowColor, Color hairBowPearlsColor, Color boobsColor)
+    {
+        super(model3DRepository, animationManager, msPacMan, size, headColor, eyesColor, palateColor);
         femaleBodyParts = model3DRepository.createFemaleBodyParts(size, hairBowColor, hairBowPearlsColor, boobsColor);
-        root.getChildren().add(femaleBodyParts);
+        getChildren().add(femaleBodyParts);
 
         dyingAnimation = new ManagedAnimation(animationManager, "Ms_PacMan_Dying") {
             @Override
             protected Animation createAnimation() {
-                var spinning = new RotateTransition(Duration.seconds(0.25), root);
+                var spinning = new RotateTransition(Duration.seconds(0.25), MsPacMan3D.this);
                 spinning.setAxis(Rotate.Z_AXIS);
                 spinning.setFromAngle(0);
                 spinning.setToAngle(360);
