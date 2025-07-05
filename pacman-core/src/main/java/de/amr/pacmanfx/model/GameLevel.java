@@ -18,6 +18,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import org.tinylog.Logger;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -55,7 +56,7 @@ public class GameLevel {
     private final Vector2f[] ghostStartPositions = new Vector2f[4];
     private final Vector2i[] ghostScatterTiles = new Vector2i[4];
     private final Direction[] ghostStartDirections = new Direction[4];
-    private final Vector2i[] energizerTiles;
+    private final Set<Vector2i> energizerTiles;
     private final Portal[] portals;
 
     private House house;
@@ -91,8 +92,8 @@ public class GameLevel {
         findHouse();
 
         currentBonusIndex = -1;
-        energizerTiles = worldMap.tilesContaining(LayerID.FOOD, ENERGIZER.code()).toArray(Vector2i[]::new);
-        totalFoodCount = (int) worldMap.tilesContaining(LayerID.FOOD, PELLET.code()).count() + energizerTiles.length;
+        energizerTiles = worldMap.tilesContaining(LayerID.FOOD, ENERGIZER.code()).collect(Collectors.toSet());
+        totalFoodCount = (int) worldMap.tilesContaining(LayerID.FOOD, PELLET.code()).count() + energizerTiles.size();
         uneatenFoodCount = totalFoodCount;
         eatenFoodBits = new BitSet(worldMap.numCols() * worldMap.numRows());
 
@@ -369,10 +370,10 @@ public class GameLevel {
         return isTileInsideWorld(tile) && worldMap.content(LayerID.FOOD, tile) != FoodTile.EMPTY.code();
     }
 
-    public Stream<Vector2i> energizerTiles() { return Arrays.stream(energizerTiles); }
+    public Stream<Vector2i> energizerTiles() { return energizerTiles.stream(); }
 
     public boolean isEnergizerPosition(Vector2i tile) {
-        return isTileInsideWorld(tile) && worldMap.content(LayerID.FOOD, tile) == ENERGIZER.code();
+        return energizerTiles.contains(tile);
     }
 
     public boolean tileContainsFood(Vector2i tile) {
