@@ -133,7 +133,7 @@ public class ObjFileData {
         return materialLibsList;
     }
 
-    private String restOfLine(int start) {
+    private String currentLineAfter(int start) {
         return currentLine.substring(start);
     }
 
@@ -143,45 +143,45 @@ public class ObjFileData {
                 Logger.trace("Blank or comment line, ignored");
             }
             else if (currentLine.startsWith("f ")) {
-                parseFace(restOfLine(2));
+                parseFace(currentLineAfter(2));
             }
             else if (currentLine.startsWith("g ")) {
-                addMesh(currentName);
-                currentName = restOfLine(2);
+                commitCurrentMesh();
+                currentName = currentLineAfter(2);
             }
             else if (currentLine.equals("g")) {
-                addMesh(currentName);
+                commitCurrentMesh();
                 currentName = "default";
             }
             else if (currentLine.startsWith("mtllib ")) {
-                parseMaterialLib(restOfLine(7));
+                parseMaterialLib(currentLineAfter(7));
             }
             else if (currentLine.startsWith("o ")) {
-                addMesh(currentName);
-                currentName = restOfLine(2);
+                commitCurrentMesh();
+                currentName = currentLineAfter(2);
             }
             else if (currentLine.startsWith("s ")) {
-                parseSmoothingGroup(restOfLine(2));
+                parseSmoothingGroup(currentLineAfter(2));
             }
             else if (currentLine.startsWith("usemtl ")) {
-                addMesh(currentName);
+                commitCurrentMesh();
                 // unsupported yet
-                Logger.warn("usemtl '{}' command not supported", restOfLine(7));
+                Logger.warn("usemtl '{}' command not supported", currentLineAfter(7));
             }
             else if (currentLine.startsWith("v ")) {
-                parseVertex(restOfLine(2));
+                parseVertex(currentLineAfter(2));
             }
             else if (currentLine.startsWith("vn ")) {
-                parseVertexNormal(restOfLine(3));
+                parseVertexNormal(currentLineAfter(3));
             }
             else if (currentLine.startsWith("vt ")) {
-                parseTextureCoordinate(restOfLine(3));
+                parseTextureCoordinate(currentLineAfter(3));
             }
             else {
-                Logger.trace("Unknown line skipped: {}", currentLine);
+                Logger.warn("Line skipped: {} (no idea what it means)", currentLine);
             }
         }
-        addMesh(currentName);
+        commitCurrentMesh();
 
         Logger.info("OBJ file parsed: {} vertices, {} uvs, {} faces, {} smoothing groups",
             vertexArray.size() / 3, uvArray.size() / 2, faceList.size() / 6, smoothingGroupList.size());
@@ -332,7 +332,7 @@ public class ObjFileData {
         return (n < 0) ? n + normals.size() / 3 : n - 1;
     }
 
-    private void addMesh(final String meshName) {
+    private void commitCurrentMesh() {
         if (facesStart >= faceList.size()) {
             // we're only interested in faces
             smoothingGroupsStart = smoothingGroupList.size();
@@ -416,16 +416,16 @@ public class ObjFileData {
 
         // try specified name, if already used, make unique name using serial number e.g. "my_mesh (3)"
         int serialNumber = 2;
-        String nextMeshName = meshName;
+        String nextMeshName = currentName;
         while (meshMap.containsKey(nextMeshName)) {
             Logger.info("Mesh name '{}' already exists", nextMeshName);
-            nextMeshName = "%s (%d)".formatted(meshName, serialNumber);
+            nextMeshName = "%s (%d)".formatted(currentName, serialNumber);
             ++serialNumber;
         }
         meshMap.put(nextMeshName, mesh);
 
         Logger.trace("Mesh '{}' added, vertices: {}, uvs: {}, faces: {}, smoothing groups: {}",
-            meshName,
+            currentName,
             mesh.getPoints().size() / mesh.getPointElementSize(),
             mesh.getTexCoords().size() / mesh.getTexCoordElementSize(),
             mesh.getFaces().size() / mesh.getFaceElementSize(),
