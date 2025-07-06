@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.ui._3d.PerspectiveID;
+import de.amr.pacmanfx.ui._3d.Perspective;
 import de.amr.pacmanfx.ui.layout.GameView;
 import de.amr.pacmanfx.ui.layout.PacManGames_View;
 import de.amr.pacmanfx.ui.layout.StartPagesView;
@@ -102,26 +102,26 @@ public interface PacManGames_UI {
     byte STATUS_ICON_SPACING       = 5;
 
     // Global properties
-    ObjectProperty<Color>         PY_CANVAS_BG_COLOR        = new SimpleObjectProperty<>(Color.BLACK);
-    BooleanProperty               PY_CANVAS_FONT_SMOOTHING  = new SimpleBooleanProperty(false);
-    BooleanProperty               PY_CANVAS_IMAGE_SMOOTHING = new SimpleBooleanProperty(false);
-    BooleanProperty               PY_DEBUG_INFO_VISIBLE     = new SimpleBooleanProperty(false);
-    BooleanProperty               PY_IMMUNITY               = new SimpleBooleanProperty(false);
-    IntegerProperty               PY_PIP_HEIGHT             = new SimpleIntegerProperty(400);
-    BooleanProperty               PY_PIP_ON                 = new SimpleBooleanProperty(false);
-    IntegerProperty               PY_PIP_OPACITY_PERCENT    = new SimpleIntegerProperty(69);
-    IntegerProperty               PY_SIMULATION_STEPS       = new SimpleIntegerProperty(1);
-    BooleanProperty               PY_USING_AUTOPILOT        = new SimpleBooleanProperty(false);
-    BooleanProperty               PY_3D_AXES_VISIBLE        = new SimpleBooleanProperty(false);
-    ObjectProperty<DrawMode>      PY_3D_DRAW_MODE           = new SimpleObjectProperty<>(DrawMode.FILL);
-    BooleanProperty               PY_3D_ENABLED             = new SimpleBooleanProperty(false);
-    BooleanProperty               PY_3D_ENERGIZER_EXPLODES  = new SimpleBooleanProperty(true);
-    ObjectProperty<Color>         PY_3D_FLOOR_COLOR         = new SimpleObjectProperty<>(Color.rgb(20,20,20));
-    ObjectProperty<Color>         PY_3D_LIGHT_COLOR         = new SimpleObjectProperty<>(Color.WHITE);
-    BooleanProperty               PY_3D_PAC_LIGHT_ENABLED   = new SimpleBooleanProperty(true);
-    ObjectProperty<PerspectiveID> PY_3D_PERSPECTIVE         = new SimpleObjectProperty<>(PerspectiveID.TRACK_PLAYER);
-    DoubleProperty                PY_3D_WALL_HEIGHT         = new SimpleDoubleProperty(OBSTACLE_3D_BASE_HEIGHT);
-    DoubleProperty                PY_3D_WALL_OPACITY        = new SimpleDoubleProperty(1.0);
+    ObjectProperty<Color>           PY_CANVAS_BG_COLOR        = new SimpleObjectProperty<>(Color.BLACK);
+    BooleanProperty                 PY_CANVAS_FONT_SMOOTHING  = new SimpleBooleanProperty(false);
+    BooleanProperty                 PY_CANVAS_IMAGE_SMOOTHING = new SimpleBooleanProperty(false);
+    BooleanProperty                 PY_DEBUG_INFO_VISIBLE     = new SimpleBooleanProperty(false);
+    BooleanProperty                 PY_IMMUNITY               = new SimpleBooleanProperty(false);
+    IntegerProperty                 PY_PIP_HEIGHT             = new SimpleIntegerProperty(400);
+    BooleanProperty                 PY_PIP_ON                 = new SimpleBooleanProperty(false);
+    IntegerProperty                 PY_PIP_OPACITY_PERCENT    = new SimpleIntegerProperty(69);
+    IntegerProperty                 PY_SIMULATION_STEPS       = new SimpleIntegerProperty(1);
+    BooleanProperty                 PY_USING_AUTOPILOT        = new SimpleBooleanProperty(false);
+    BooleanProperty                 PY_3D_AXES_VISIBLE        = new SimpleBooleanProperty(false);
+    ObjectProperty<DrawMode>        PY_3D_DRAW_MODE           = new SimpleObjectProperty<>(DrawMode.FILL);
+    BooleanProperty                 PY_3D_ENABLED             = new SimpleBooleanProperty(false);
+    BooleanProperty                 PY_3D_ENERGIZER_EXPLODES  = new SimpleBooleanProperty(true);
+    ObjectProperty<Color>           PY_3D_FLOOR_COLOR         = new SimpleObjectProperty<>(Color.rgb(20,20,20));
+    ObjectProperty<Color>           PY_3D_LIGHT_COLOR         = new SimpleObjectProperty<>(Color.WHITE);
+    BooleanProperty                 PY_3D_PAC_LIGHT_ENABLED   = new SimpleBooleanProperty(true);
+    ObjectProperty<Perspective.ID> PY_3D_PERSPECTIVE         = new SimpleObjectProperty<>(Perspective.ID.TRACK_PLAYER);
+    DoubleProperty                 PY_3D_WALL_HEIGHT         = new SimpleDoubleProperty(OBSTACLE_3D_BASE_HEIGHT);
+    DoubleProperty                 PY_3D_WALL_OPACITY        = new SimpleDoubleProperty(1.0);
 
     Stage stage();
     void restart();

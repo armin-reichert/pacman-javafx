@@ -17,10 +17,10 @@ import static java.util.Objects.requireNonNull;
 
 public class PerspectiveManager {
 
-    private final Map<PerspectiveID, Perspective> perspectiveMap = new EnumMap<>(PerspectiveID.class);
+    private final Map<Perspective.ID, Perspective> perspectiveMap = new EnumMap<>(Perspective.ID.class);
     private final SubScene subScene;
 
-    private final ObjectProperty<PerspectiveID> perspectiveIDPy = new SimpleObjectProperty<>(PerspectiveID.TOTAL) {
+    private final ObjectProperty<Perspective.ID> perspectiveIDPy = new SimpleObjectProperty<>(Perspective.ID.TOTAL) {
         @Override
         protected void invalidated() {
             initPerspective();
@@ -29,24 +29,24 @@ public class PerspectiveManager {
 
     public PerspectiveManager(SubScene subScene) {
         this.subScene = requireNonNull(subScene);
-        perspectiveMap.put(PerspectiveID.DRONE, new Perspective.Drone());
-        perspectiveMap.put(PerspectiveID.TOTAL, new Perspective.Total());
-        perspectiveMap.put(PerspectiveID.TRACK_PLAYER, new Perspective.TrackingPlayer());
-        perspectiveMap.put(PerspectiveID.NEAR_PLAYER, new Perspective.StalkingPlayer());
+        perspectiveMap.put(Perspective.ID.DRONE, new Perspective.Drone());
+        perspectiveMap.put(Perspective.ID.TOTAL, new Perspective.Total());
+        perspectiveMap.put(Perspective.ID.TRACK_PLAYER, new Perspective.TrackingPlayer());
+        perspectiveMap.put(Perspective.ID.NEAR_PLAYER, new Perspective.StalkingPlayer());
     }
 
-    public ObjectProperty<PerspectiveID> perspectiveIDProperty() {
+    public ObjectProperty<Perspective.ID> perspectiveIDProperty() {
         return perspectiveIDPy;
     }
 
-    public void setPerspective(PerspectiveID perspectiveID) {
+    public void setPerspective(Perspective.ID perspectiveID) {
         requireNonNull(perspectiveID);
         perspectiveIDProperty().unbind();
         perspectiveIDProperty().set(perspectiveID);
     }
 
     public void initPerspective() {
-        PerspectiveID id = perspectiveIDPy.get();
+        Perspective.ID id = perspectiveIDPy.get();
         if (id != null && perspectiveMap.containsKey(id)) {
             perspectiveMap.get(id).init(subScene);
         } else {
@@ -55,7 +55,7 @@ public class PerspectiveManager {
     }
 
     public void updatePerspective(GameLevel gameLevel) {
-        PerspectiveID id = perspectiveIDPy.get();
+        Perspective.ID id = perspectiveIDPy.get();
         if (id != null && perspectiveMap.containsKey(id)) {
             perspectiveMap.get(id).update(subScene, gameLevel, gameLevel.pac());
         } else {

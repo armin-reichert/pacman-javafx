@@ -12,7 +12,7 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._3d.PerspectiveID;
+import de.amr.pacmanfx.ui._3d.Perspective;
 import javafx.scene.shape.DrawMode;
 import org.tinylog.Logger;
 
@@ -416,7 +416,7 @@ public interface PacManGames_GameActions {
     GameAction ACTION_PERSPECTIVE_NEXT = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
-            PerspectiveID id = PacManGames_UI.PY_3D_PERSPECTIVE.get().next();
+            Perspective.ID id = PacManGames_UI.PY_3D_PERSPECTIVE.get().next();
             PacManGames_UI.PY_3D_PERSPECTIVE.set(id);
             String msgKey = theAssets().text("camera_perspective", theAssets().text("perspective_id_" + id.name()));
             ui.showFlashMessage(msgKey);
@@ -430,7 +430,7 @@ public interface PacManGames_GameActions {
     GameAction ACTION_PERSPECTIVE_PREVIOUS = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
-            PerspectiveID id = PacManGames_UI.PY_3D_PERSPECTIVE.get().prev();
+            Perspective.ID id = PacManGames_UI.PY_3D_PERSPECTIVE.get().prev();
             PacManGames_UI.PY_3D_PERSPECTIVE.set(id);
             String msgKey = theAssets().text("camera_perspective", theAssets().text("perspective_id_" + id.name()));
             ui.showFlashMessage(msgKey);

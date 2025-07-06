@@ -116,14 +116,16 @@ public abstract class SquirtingAnimation extends Transition implements Destroyab
 
     @Override
     protected void interpolate(double t) {
-        for (Node child : particleGroup.getChildren()) {
-            var particle = (Particle) child;
-            particle.setVisible(true);
-            if (particleShouldVanish(particle)) {
-                particle.setVelocity(0, 0, 0);
-                particle.setScaleZ(0.1);
-            } else {
-                particle.move();
+        if (particleGroup != null) {
+            for (Node child : particleGroup.getChildren()) {
+                var particle = (Particle) child;
+                particle.setVisible(true);
+                if (particleShouldVanish(particle)) {
+                    particle.setVelocity(0, 0, 0);
+                    particle.setScaleZ(0.1);
+                } else {
+                    particle.move();
+                }
             }
         }
     }

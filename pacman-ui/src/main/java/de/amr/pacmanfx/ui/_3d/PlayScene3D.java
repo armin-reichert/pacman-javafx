@@ -108,7 +108,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
         // Camera perspective radio buttons
         var radioButtonGroup = new ToggleGroup();
-        for (var perspective : PerspectiveID.values()) {
+        for (var perspective : Perspective.ID.values()) {
             var miPerspective = new RadioMenuItem(theAssets().text("perspective_id_" + perspective.name()));
             miPerspective.setToggleGroup(radioButtonGroup);
             miPerspective.setUserData(perspective);
@@ -120,7 +120,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         // keep radio button group in sync with global property value
         radioButtonGroup.selectedToggleProperty().addListener((py, ov, radioButton) -> {
             if (radioButton != null) {
-                PY_3D_PERSPECTIVE.set((PerspectiveID) radioButton.getUserData());
+                PY_3D_PERSPECTIVE.set((Perspective.ID) radioButton.getUserData());
             }
         });
         PY_3D_PERSPECTIVE.addListener((py, ov, name) -> {
@@ -293,7 +293,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 var animation = new SequentialTransition(
                     doAfterSec(2, () -> {
                         perspectiveManager.perspectiveIDProperty().unbind();
-                        perspectiveManager.setPerspective(PerspectiveID.TOTAL);
+                        perspectiveManager.setPerspective(Perspective.ID.TOTAL);
                     }),
                     pauseSec(1),
                     cutSceneFollows
@@ -331,7 +331,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 level3D.pac3D().init();
                 level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(theGameLevel()));
                 showLevelTestMessage(theGameLevel().number());
-                PY_3D_PERSPECTIVE.set(PerspectiveID.TOTAL);
+                PY_3D_PERSPECTIVE.set(Perspective.ID.TOTAL);
             }
             default -> {}
         }
