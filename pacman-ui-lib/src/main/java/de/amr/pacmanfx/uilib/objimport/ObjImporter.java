@@ -337,7 +337,7 @@ public class ObjImporter {
                 else {
                     Logger.trace("Unknown line skipped: {}", currentLine);
                 }
-            } catch (Exception x) {
+            } catch (Throwable x) {
                 Logger.error(x);
                 Logger.error("Failed to parse line: {}", currentLine);
             }
@@ -348,7 +348,7 @@ public class ObjImporter {
             vertexArray.size() / 3, uvArray.size() / 2, faceList.size() / 6, smoothingGroupList.size());
     }
 
-    private void addMesh(String name) {
+    private void addMesh(final String meshName) {
         if (facesStart >= faceList.size()) {
             // we're only interested in faces
             smoothingGroupsStart = smoothingGroupList.size();
@@ -419,14 +419,18 @@ public class ObjImporter {
                 smoothingGroupList.subList(smoothingGroupsStart, smoothingGroupList.size()).toIntArray());
         }
 
-        int keyIndex = 2;
-        String keyBase = name;
-        while (meshMap.get(name) != null) {
-            name = keyBase + " (" + keyIndex++ + ")";
+        // try specified name, if already used, make unique name using serial number e.g. "my_mesh (3)"
+        int serialNumber = 2;
+        String nextMeshName = meshName;
+        while (meshMap.containsKey(nextMeshName)) {
+            Logger.info("Mesh name '{}' already exists", nextMeshName);
+            nextMeshName = "%s (%d)".formatted(meshName, serialNumber);
+            ++serialNumber;
         }
-        meshMap.put(name, mesh);
+        meshMap.put(nextMeshName, mesh);
 
-        Logger.trace("Mesh '{}' added, vertices: {}, uvs: {}, faces: {}, smoothing groups: {}", name,
+        Logger.trace("Mesh '{}' added, vertices: {}, uvs: {}, faces: {}, smoothing groups: {}",
+            meshName,
             mesh.getPoints().size() / mesh.getPointElementSize(),
             mesh.getTexCoords().size() / mesh.getTexCoordElementSize(),
             mesh.getFaces().size() / mesh.getFaceElementSize(),
