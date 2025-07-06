@@ -44,7 +44,7 @@ import static java.util.Objects.requireNonNull;
  * <li>{@link GhostAppearance#VALUE}: showing eaten ghost's value.
  * </ul>
  */
-public class MutatingGhost3D extends Group {
+public class MutatingGhost3D extends Group implements Destroyable {
 
     private static final double GHOST_OVER_FLOOR_DIST = 2.0;
 
@@ -183,8 +183,8 @@ public class MutatingGhost3D extends Group {
         }
     }
 
+    @Override
     public void destroy() {
-        stopAllAnimations();
         if (ghost != null) {
             ghost.positionProperty().removeListener(this::handleGhostPositionChange);
             ghost.wishDirProperty().removeListener(this::handleGhostWishDirChange);
@@ -192,6 +192,8 @@ public class MutatingGhost3D extends Group {
         visibleProperty().unbind();
         appearanceProperty.removeListener(this::handleAppearanceChange);
         numberMaterialCache.clear();
+
+        stopAllAnimations();
         if (brakeAnimation != null) {
             animationManager.destroyAnimation(brakeAnimation);
             brakeAnimation = null;
@@ -206,7 +208,6 @@ public class MutatingGhost3D extends Group {
             ghost3D = null;
         }
         numberBox = null;
-
     }
 
     public void stopAllAnimations() {

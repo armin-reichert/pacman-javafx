@@ -28,7 +28,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * 3D representation of a ghost.
  */
-public class Ghost3D extends Group {
+public class Ghost3D extends Group implements Destroyable {
 
     public class FlashingAnimation extends ManagedAnimation {
         private Duration totalDuration = Duration.seconds(3);
@@ -74,11 +74,12 @@ public class Ghost3D extends Group {
     private final ObjectProperty<Color> eyeballsColorPy = new SimpleObjectProperty<>(Color.WHITE);
     private final ObjectProperty<Color> pupilsColorPy   = new SimpleObjectProperty<>(Color.BLUE);
 
-    private final Shape3D dressShape;
-    private final Group dressGroup;
+    private Shape3D dressShape;
+    private Group dressGroup;
 
-    private final ManagedAnimation dressAnimation;
-    private final FlashingAnimation flashingAnimation;
+    private final AnimationManager animationManager;
+    private ManagedAnimation dressAnimation;
+    private FlashingAnimation flashingAnimation;
 
     private final GhostColoring coloring;
 
@@ -91,7 +92,7 @@ public class Ghost3D extends Group {
         Shape3D eyeballsShape,
         double size)
     {
-        requireNonNull(animationManager);
+        this.animationManager = requireNonNull(animationManager);
         requireNonNull(ghost);
         this.dressShape = requireNonNull(dressShape);
         this.coloring = coloring;
@@ -138,8 +139,20 @@ public class Ghost3D extends Group {
         flashingAnimation = new FlashingAnimation(animationManager, ghost.name());
     }
 
+    @Override
     public void destroy() {
-
+        dressColorPy.unbind();
+        eyeballsColorPy.unbind();
+        pupilsColorPy.unbind();
+        getChildren().clear();
+        dressShape.materialProperty().unbind();
+        dressShape.setMaterial(null);
+        dressGroup.getChildren().clear();
+        dressGroup = null;
+        animationManager.destroyAnimation(dressAnimation);
+        dressAnimation = null;
+        animationManager.destroyAnimation(flashingAnimation);
+        flashingAnimation = null;
     }
 
     public ManagedAnimation dressAnimation() {
