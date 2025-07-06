@@ -5,66 +5,46 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.uilib.objimport.ObjFileData;
-import javafx.scene.paint.PhongMaterial;
+import javafx.scene.paint.Material;
 import javafx.scene.shape.TriangleMesh;
 
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
 /**
  * A 3D-model imported from a Wavefront .obj file.
- * <p>
- * Uses an adapted version of the OBJ importer from Oracle's JFX3DViewer sample project.
  */
-public class Model3D {
+public class Model3D implements Destroyable {
 
-    private final Map<String, TriangleMesh> triangleMeshMap = new HashMap<>();
-    private final Map<String, PhongMaterial> materialMap = new HashMap<>();
+    private ObjFileData data;
 
     public Model3D(URL objFileURL) {
         requireNonNull(objFileURL);
-        var objFileData = ObjFileData.fromFile(objFileURL, StandardCharsets.UTF_8);
-        for (String meshName : objFileData.getMeshNames()) {
-            TriangleMesh mesh = objFileData.getTriangleMesh(meshName);
-            ObjFileData.validateTriangleMesh(mesh);
-            triangleMeshMap.put(meshName, mesh);
-        }
-        for (var materialLibrary : objFileData.materialLibsList()) {
-            materialLibrary.forEach((materialName, material) -> materialMap.put(materialName, (PhongMaterial) material));
-        }
+        data = ObjFileData.fromFile(objFileURL, StandardCharsets.UTF_8);
     }
 
+    @Override
     public void destroy() {
-        triangleMeshMap.clear();
-        materialMap.clear();
+        data.meshMap().clear();
+        data.materialLibsList().clear();
+        data = null;
     }
 
     public Map<String, TriangleMesh> meshesByName() {
-        return Collections.unmodifiableMap(triangleMeshMap);
+        return data.meshMap();
     }
 
-    public Map<String, PhongMaterial> materials() {
-        return Collections.unmodifiableMap(materialMap);
-    }
+    public List<Map<String, Material>> materialLibs() { return data.materialLibsList(); }
 
     public TriangleMesh mesh(String name) {
         requireNonNull(name);
-        if (triangleMeshMap.containsKey(name)) {
-            return triangleMeshMap.get(name);
+        if (meshesByName().containsKey(name)) {
+            return meshesByName().get(name);
         }
         throw new Model3DException("No mesh with name %s found", name);
-    }
-
-    public PhongMaterial material(String name) {
-        requireNonNull(name);
-        if (materialMap.containsKey(name)) {
-            return materialMap.get(name);
-        }
-        throw new Model3DException("No material with name %s found", name);
     }
 }

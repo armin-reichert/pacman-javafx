@@ -61,6 +61,9 @@ public class ObjFileData {
         ObjFileData data = new ObjFileData(objFileURL);
         try (InputStream is = objFileURL.openStream()) {
             data.parse(new BufferedReader(new InputStreamReader(is, charset)));
+            for (TriangleMesh mesh : data.meshMap.values()) {
+                validateTriangleMesh(mesh);
+            }
         }
         catch (IOException x) {
             Logger.error(x);
@@ -119,6 +122,10 @@ public class ObjFileData {
 
     private ObjFileData(URL url) {
         this.url = requireNonNull(url);
+    }
+
+    public Map<String, TriangleMesh> meshMap() {
+        return Collections.unmodifiableMap(meshMap);
     }
 
     public Set<String> getMeshNames() {

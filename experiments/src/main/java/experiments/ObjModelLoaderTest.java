@@ -6,9 +6,11 @@ package experiments;
 
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.model3D.Model3D;
+import javafx.scene.paint.Material;
 import org.tinylog.Logger;
 
 import java.net.URL;
+import java.util.Map;
 
 /**
  * @author Armin Reichert
@@ -38,8 +40,10 @@ public class ObjModelLoaderTest {
             sb.append("\t\t'%s': %s%n".formatted(entry.getKey(), entry.getValue()));
         }
         sb.append("\tMaterials:\n");
-        for (var entry : model.materials().entrySet()) {
-            sb.append("\t\t'%s': %s%n".formatted(entry.getKey(), entry.getValue()));
+        for (Map<String, Material> lib : model.materialLibs()) {
+            for (var entry : lib.entrySet()) {
+                sb.append("\t\t'%s': %s%n".formatted(entry.getKey(), entry.getValue()));
+            }
         }
         return sb.toString();
     }
