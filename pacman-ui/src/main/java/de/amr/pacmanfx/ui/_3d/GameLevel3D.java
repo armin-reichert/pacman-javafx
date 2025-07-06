@@ -498,8 +498,8 @@ public class GameLevel3D extends Group implements Destroyable {
             bonus3D.destroy();
         }
         bonus3D = new Bonus3D(animationManager, bonus,
-            theUI().configuration().bonusSymbolImage(bonus.symbol()),
-            theUI().configuration().bonusValueImage(bonus.symbol()));
+            theUI().configuration().bonusSymbolImage(bonus.symbol()), BONUS_3D_SYMBOL_WIDTH,
+            theUI().configuration().bonusValueImage(bonus.symbol()), BONUS_3D_POINTS_WIDTH);
         mazeGroup.getChildren().add(bonus3D);
         bonus3D.showEdible();
     }

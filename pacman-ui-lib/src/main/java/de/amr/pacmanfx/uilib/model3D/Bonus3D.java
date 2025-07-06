@@ -2,7 +2,7 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.ui._3d;
+package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
@@ -24,8 +24,7 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.ui.PacManGames_UI.BONUS_3D_POINTS_WIDTH;
-import static de.amr.pacmanfx.ui.PacManGames_UI.BONUS_3D_SYMBOL_WIDTH;
+import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -38,6 +37,9 @@ import static java.util.Objects.requireNonNull;
 public class Bonus3D extends Box {
 
     private final Bonus bonus;
+
+    private final double symbolWidth;
+    private final double pointsWidth;
     private PhongMaterial symbolTexture;
     private PhongMaterial pointsTexture;
 
@@ -81,20 +83,24 @@ public class Bonus3D extends Box {
         }
     }
 
-    public Bonus3D(AnimationManager animationManager, Bonus bonus, Image symbolImage, Image pointsImage) {
-        super(BONUS_3D_SYMBOL_WIDTH, TS, TS);
-
+    public Bonus3D(AnimationManager animationManager, Bonus bonus, Image symbolImage, double symbolWidth, Image pointsImage, double pointsWidth) {
         requireNonNull(animationManager);
         this.bonus = requireNonNull(bonus);
+        this.symbolWidth = requireNonNegative(symbolWidth);
+        this.pointsWidth = requireNonNegative(pointsWidth);
+
+        setWidth(symbolWidth);
+        setHeight(TS);
+        setDepth(TS);
 
         var symbolImageView = new ImageView(requireNonNull(symbolImage));
         symbolImageView.setPreserveRatio(true);
-        symbolImageView.setFitWidth(BONUS_3D_SYMBOL_WIDTH);
+        symbolImageView.setFitWidth(symbolWidth);
         symbolTexture = new PhongMaterial(Color.GHOSTWHITE, symbolImageView.getImage(), null, null, null);
 
         var pointsImageView = new ImageView(requireNonNull(pointsImage));
         pointsImageView.setPreserveRatio(true);
-        pointsImageView.setFitWidth(BONUS_3D_POINTS_WIDTH);
+        pointsImageView.setFitWidth(pointsWidth);
         pointsTexture = new PhongMaterial(Color.GHOSTWHITE, pointsImageView.getImage(), null, null, null);
 
         edibleAnimation = new EdibleAnimation(animationManager);
@@ -132,7 +138,7 @@ public class Bonus3D extends Box {
 
     public void showEdible() {
         setVisible(true);
-        setWidth(BONUS_3D_SYMBOL_WIDTH);
+        setWidth(symbolWidth);
         setMaterial(symbolTexture);
         edibleAnimation.playFromStart();
     }
@@ -140,7 +146,7 @@ public class Bonus3D extends Box {
     public void showEaten() {
         edibleAnimation.stop();
         setVisible(true);
-        setWidth(BONUS_3D_POINTS_WIDTH);
+        setWidth(pointsWidth);
         setMaterial(pointsTexture);
         setRotationAxis(Rotate.X_AXIS);
         setRotate(0);
