@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.animation;
 
-import de.amr.pacmanfx.lib.Sprite;
+import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.ActorAnimationMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -37,13 +37,13 @@ public class SpriteAnimationMap<SID> implements ActorAnimationMap {
         return id.equals(currentAnimationID);
     }
 
-    public Sprite currentSprite(Actor actor) {
+    public RectShort currentSprite(Actor actor) {
         var currentAnimation = currentAnimation();
         if (currentAnimation == null) {
             return null;
         }
         updateActorSprites(actor);
-        return (Sprite) currentAnimation.currentSprite();
+        return (RectShort) currentAnimation.currentSprite();
     }
 
     @Override

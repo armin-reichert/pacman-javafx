@@ -4,20 +4,20 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.animation;
 
-import de.amr.pacmanfx.lib.Sprite;
+import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.model.actors.ActorAnimationMap;
 
 import static java.util.Objects.requireNonNull;
 
 public class SingleSpriteWithoutAnimation implements ActorAnimationMap {
 
-    private final Sprite sprite;
+    private final RectShort sprite;
 
-    public SingleSpriteWithoutAnimation(Sprite sprite) {
+    public SingleSpriteWithoutAnimation(RectShort sprite) {
         this.sprite = requireNonNull(sprite);
     }
 
-    public Sprite singleSprite() { return sprite; }
+    public RectShort singleSprite() { return sprite; }
 
     @Override
     public Object animation(String id) {

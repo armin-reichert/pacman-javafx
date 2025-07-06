@@ -13,7 +13,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.scenes.*;
 import de.amr.pacmanfx.arcade.pacman.scenes.ArcadeCommon_BootScene2D;
 import de.amr.pacmanfx.arcade.pacman.scenes.ArcadeCommon_PlayScene2D;
 import de.amr.pacmanfx.controller.GameState;
-import de.amr.pacmanfx.lib.Sprite;
+import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -74,8 +74,8 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
         storeLocalAsset(assets, "logo.midway",                     rm.loadImage("graphics/midway_logo.png"));
         storeLocalAsset(assets, "color.game_over_message",         ARCADE_RED);
 
-        Sprite[] symbolSprites = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS);
-        Sprite[] valueSprites  = spriteSheet.spriteSeq(SpriteID.BONUS_VALUES);
+        RectShort[] symbolSprites = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS);
+        RectShort[] valueSprites  = spriteSheet.spriteSeq(SpriteID.BONUS_VALUES);
         for (byte symbol = 0; symbol <= 6; ++symbol) {
             storeLocalAsset(assets, "bonus_symbol_" + symbol, spriteSheet.image(symbolSprites[symbol]));
             storeLocalAsset(assets, "bonus_value_"  + symbol, spriteSheet.image(valueSprites[symbol]));
@@ -88,7 +88,7 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
         storeLocalAsset(assets, "pac.color.hairbow",               ARCADE_RED);
         storeLocalAsset(assets, "pac.color.hairbow.pearls",        ARCADE_BLUE);
 
-        Sprite[] numberSprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
+        RectShort[] numberSprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
         storeLocalAsset(assets, "ghost_points_0", spriteSheet.image(numberSprites[0]));
         storeLocalAsset(assets, "ghost_points_1", spriteSheet.image(numberSprites[1]));
         storeLocalAsset(assets, "ghost_points_2", spriteSheet.image(numberSprites[2]));

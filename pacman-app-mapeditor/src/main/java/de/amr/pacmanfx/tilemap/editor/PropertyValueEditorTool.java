@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tilemap.editor;
 
-import de.amr.pacmanfx.lib.Sprite;
+import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
@@ -76,7 +76,7 @@ public class PropertyValueEditorTool implements Tool {
         }
     }
 
-    private void drawSprite(GraphicsContext g, double x, double y, Sprite sprite) {
+    private void drawSprite(GraphicsContext g, double x, double y, RectShort sprite) {
         g.drawImage(SPRITE_SHEET,
             sprite.x(), sprite.y(), sprite.width(), sprite.height(),
             x + 1, y + 1, TS - 2, TS - 2);

@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
-import de.amr.pacmanfx.lib.Sprite;
+import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
@@ -56,9 +56,9 @@ public class Clapperboard extends Actor {
         return textVisible;
     }
 
-    public Optional<Sprite> sprite() {
+    public Optional<RectShort> sprite() {
         if (state == HIDDEN) return Optional.empty();
-        Sprite[] clapperboardSprites = spriteSheet.spriteSeq(SpriteID.CLAPPERBOARD);
+        RectShort[] clapperboardSprites = spriteSheet.spriteSeq(SpriteID.CLAPPERBOARD);
         return Optional.of(clapperboardSprites[state]);
     }
 

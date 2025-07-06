@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.animation;
 
-import de.amr.pacmanfx.lib.Sprite;
+import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.ActorAnimationMap;
 import de.amr.pacmanfx.model.actors.Animated;
@@ -17,7 +17,7 @@ public class SingleSpriteActor extends Actor implements Animated {
 
     private final ActorAnimationMap animationMap;
 
-    public SingleSpriteActor(Sprite sprite) {
+    public SingleSpriteActor(RectShort sprite) {
         requireNonNull(sprite);
         animationMap = new SingleSpriteWithoutAnimation(sprite);
     }

@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.Sprite;
+import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
@@ -43,7 +43,7 @@ public class ArcadePacMan_PacAnimationMap extends SpriteAnimationMap<SpriteID> {
         }
     }
 
-    private Sprite[] pacMunchingSprites(Direction dir) {
+    private RectShort[] pacMunchingSprites(Direction dir) {
         return switch (dir) {
             case RIGHT -> spriteSheet().spriteSeq(SpriteID.PACMAN_MUNCHING_RIGHT);
             case LEFT  -> spriteSheet().spriteSeq(SpriteID.PACMAN_MUNCHING_LEFT);

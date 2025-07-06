@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.assets;
 
-import de.amr.pacmanfx.lib.Sprite;
+import de.amr.pacmanfx.lib.RectShort;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 
@@ -21,7 +21,7 @@ public interface SpriteSheet<SID> {
     Image sourceImage();
     Map<SID, Object> spriteMap();
 
-    default Sprite sprite(SID id) {
+    default RectShort sprite(SID id) {
         requireNonNull(id);
         if (!spriteMap().containsKey(id)) {
             throw new IllegalArgumentException("Unknown sprite ID '%s'".formatted(id));
@@ -30,14 +30,14 @@ public interface SpriteSheet<SID> {
         if (value == null) {
             throw new IllegalArgumentException("Sprite value is null for id '%s'".formatted(id));
         }
-        if (value instanceof Sprite) {
-            return (Sprite) value;
+        if (value instanceof RectShort) {
+            return (RectShort) value;
         }
         throw new IllegalArgumentException("Value stored in sprite map for id '%s' is no sprite but of type %s"
             .formatted(id, value.getClass()));
     }
 
-    default Sprite[] spriteSeq(SID id) {
+    default RectShort[] spriteSeq(SID id) {
         requireNonNull(id);
         if (!spriteMap().containsKey(id)) {
             throw new IllegalArgumentException("Unknown sprite ID '%s'".formatted(id));
@@ -46,8 +46,8 @@ public interface SpriteSheet<SID> {
         if (value == null) {
             throw new IllegalArgumentException("Sprite value is null for id '%s'".formatted(id));
         }
-        if (value instanceof Sprite[]) {
-            return (Sprite[]) value;
+        if (value instanceof RectShort[]) {
+            return (RectShort[]) value;
         }
         throw new IllegalArgumentException("Value stored in sprite map for id '%s' is no sprite array but of type %s"
             .formatted(id, value.getClass()));
@@ -66,7 +66,7 @@ public interface SpriteSheet<SID> {
         return section;
     }
 
-    default Image image(Sprite sprite) {
+    default Image image(RectShort sprite) {
         return image(sprite.x(), sprite.y(), sprite.width(), sprite.height());
     }
 }

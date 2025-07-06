@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman.rendering;
 
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.Sprite;
+import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
@@ -65,7 +65,7 @@ public class TengenMsPacMan_GhostAnimationMap extends SpriteAnimationMap<SpriteI
         }
     }
 
-    private Sprite[] ghostNormalSprites(Direction dir) {
+    private RectShort[] ghostNormalSprites(Direction dir) {
         return switch (personality) {
             case RED_GHOST_SHADOW -> switch (dir) {
                 case Direction.RIGHT -> spriteSheet().spriteSeq(SpriteID.RED_GHOST_RIGHT);
@@ -95,8 +95,8 @@ public class TengenMsPacMan_GhostAnimationMap extends SpriteAnimationMap<SpriteI
         };
     }
 
-    private Sprite[] ghostEyesSprites(Direction dir) {
-        return new Sprite[] {
+    private RectShort[] ghostEyesSprites(Direction dir) {
+        return new RectShort[] {
             switch (dir) {
                 case RIGHT -> spriteSheet().sprite(SpriteID.GHOST_EYES_RIGHT);
                 case LEFT  -> spriteSheet().sprite(SpriteID.GHOST_EYES_LEFT);

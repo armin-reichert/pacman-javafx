@@ -1,6 +1,6 @@
 package de.amr.pacmanfx.tilemap.editor;
 
-import de.amr.pacmanfx.lib.Sprite;
+import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2i;
 import javafx.scene.image.Image;
 
@@ -10,12 +10,12 @@ public class ArcadeMap {
 
     public static final Image SPRITE_SHEET = new Image(urlString("graphics/pacman_spritesheet.png"));
 
-    public static final Sprite PAC_SPRITE          = new Sprite(473,  16, 14, 14);
-    public static final Sprite RED_GHOST_SPRITE    = new Sprite(505,  65, 14, 14);
-    public static final Sprite PINK_GHOST_SPRITE   = new Sprite(553,  81, 14, 14);
-    public static final Sprite CYAN_GHOST_SPRITE   = new Sprite(521,  97, 14, 14);
-    public static final Sprite ORANGE_GHOST_SPRITE = new Sprite(521, 113, 14, 14);
-    public static final Sprite BONUS_SPRITE        = new Sprite(505,  49, 14, 14);
+    public static final RectShort PAC_SPRITE          = new RectShort(473,  16, 14, 14);
+    public static final RectShort RED_GHOST_SPRITE    = new RectShort(505,  65, 14, 14);
+    public static final RectShort PINK_GHOST_SPRITE   = new RectShort(553,  81, 14, 14);
+    public static final RectShort CYAN_GHOST_SPRITE   = new RectShort(521,  97, 14, 14);
+    public static final RectShort ORANGE_GHOST_SPRITE = new RectShort(521, 113, 14, 14);
+    public static final RectShort BONUS_SPRITE        = new RectShort(505,  49, 14, 14);
 
     public static final String MS_PACMAN_COLOR_FOOD = "#dedeff";
     public static final String MS_PACMAN_COLOR_WALL_STROKE = "#ff0000";

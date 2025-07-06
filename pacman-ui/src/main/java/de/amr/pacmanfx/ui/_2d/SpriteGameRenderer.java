@@ -1,6 +1,6 @@
 package de.amr.pacmanfx.ui._2d;
 
-import de.amr.pacmanfx.lib.Sprite;
+import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Animated;
@@ -28,7 +28,7 @@ public interface SpriteGameRenderer extends GameRenderer {
      * @param x           x-coordinate of left-upper corner
      * @param y           y-coordinate of left-upper corner
      */
-    default void drawSprite(Sprite sprite, double x, double y) {
+    default void drawSprite(RectShort sprite, double x, double y) {
         requireNonNull(sprite);
         ctx().drawImage(spriteSheet().sourceImage(),
                 sprite.x(), sprite.y(), sprite.width(), sprite.height(),
@@ -43,7 +43,7 @@ public interface SpriteGameRenderer extends GameRenderer {
      * @param x             x-coordinate of left-upper corner (unscaled)
      * @param y             y-coordinate of left-upper corner (unscaled)
      */
-    default void drawSpriteScaled(Sprite sprite, double x, double y) {
+    default void drawSpriteScaled(RectShort sprite, double x, double y) {
         requireNonNull(sprite);
         drawSpriteScaled(spriteSheet().sourceImage(), sprite, x, y);
     }
@@ -57,7 +57,7 @@ public interface SpriteGameRenderer extends GameRenderer {
      * @param x unscaled x-coordinate of left-upper corner
      * @param y unscaled y-coordinate of left-upper corner
      */
-    default void drawSpriteScaled(Image image, Sprite sprite, double x, double y) {
+    default void drawSpriteScaled(Image image, RectShort sprite, double x, double y) {
         requireNonNull(image);
         requireNonNull(sprite);
         ctx().drawImage(image,
@@ -72,7 +72,7 @@ public interface SpriteGameRenderer extends GameRenderer {
      * @param cx  x-coordinate of the center position
      * @param cy  y-coordinate of the center position
      */
-    default void drawSpriteScaledCenteredAt(Sprite sprite, double cx, double cy) {
+    default void drawSpriteScaledCenteredAt(RectShort sprite, double cx, double cy) {
         requireNonNull(sprite);
         drawSpriteScaled(sprite, cx - 0.5 * sprite.width(), cy - 0.5 * sprite.height());
     }
@@ -83,7 +83,7 @@ public interface SpriteGameRenderer extends GameRenderer {
      * @param actor an actor
      * @param sprite actor sprite
      */
-    default void drawActorSpriteCentered(Actor actor, Sprite sprite) {
+    default void drawActorSpriteCentered(Actor actor, RectShort sprite) {
         float centerX = actor.x() + HTS, centerY = actor.y() + HTS;
         drawSpriteScaledCenteredAt(sprite, centerX, centerY);
     }

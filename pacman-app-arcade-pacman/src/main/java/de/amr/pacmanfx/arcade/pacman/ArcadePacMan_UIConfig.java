@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.pacman;
 import de.amr.pacmanfx.arcade.pacman.rendering.*;
 import de.amr.pacmanfx.arcade.pacman.scenes.*;
 import de.amr.pacmanfx.controller.GameState;
-import de.amr.pacmanfx.lib.Sprite;
+import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
@@ -78,8 +78,8 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
 
         storeLocalAsset(assets, "color.game_over_message",         ARCADE_RED);
 
-        Sprite[] symbolSprites = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS);
-        Sprite[] valueSprites = spriteSheet.spriteSeq(SpriteID.BONUS_VALUES);
+        RectShort[] symbolSprites = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS);
+        RectShort[] valueSprites = spriteSheet.spriteSeq(SpriteID.BONUS_VALUES);
         for (byte symbol = 0; symbol <= 7; ++symbol) {
             storeLocalAsset(assets, "bonus_symbol_" + symbol, spriteSheet.image(symbolSprites[symbol]));
             storeLocalAsset(assets, "bonus_value_" + symbol,  spriteSheet.image(valueSprites[symbol]));
@@ -89,7 +89,7 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
         storeLocalAsset(assets, "pac.color.eyes",                  Color.grayRgb(33));
         storeLocalAsset(assets, "pac.color.palate",                Color.rgb(240, 180, 160));
 
-        Sprite[] numberSprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
+        RectShort[] numberSprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
         storeLocalAsset(assets, "ghost_points_0",                  spriteSheet.image(numberSprites[0]));
         storeLocalAsset(assets, "ghost_points_1",                  spriteSheet.image(numberSprites[1]));
         storeLocalAsset(assets, "ghost_points_2",                  spriteSheet.image(numberSprites[2]));

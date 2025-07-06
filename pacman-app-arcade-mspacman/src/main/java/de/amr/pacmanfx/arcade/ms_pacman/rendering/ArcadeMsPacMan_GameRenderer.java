@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.Clapperboard;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.Marquee;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.MidwayCopyright;
-import de.amr.pacmanfx.lib.Sprite;
+import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Actor;
@@ -84,7 +84,7 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
             LevelCounter levelCounter = hud.levelCounter();
             float x = sceneSize.x() - 4 * TS, y = sceneSize.y() - 2 * TS;
             for (byte symbol : levelCounter.symbols()) {
-                Sprite sprite = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS)[symbol];
+                RectShort sprite = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS)[symbol];
                 drawSpriteScaled(sprite, x, y);
                 x -= TS * 2;
             }
@@ -93,7 +93,7 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
         if (hud.isLivesCounterVisible()) {
             float x = 2 * TS, y = sceneSize.y() - 2 * TS;
             LivesCounter livesCounter = hud.livesCounter();
-            Sprite sprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
+            RectShort sprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
             for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
                 drawSpriteScaled(sprite, x + TS * (2 * i), y);
             }
@@ -123,13 +123,13 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
     public void drawLevel(GameLevel level, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted) {
         final int colorMapIndex = level.worldMap().getConfigValue("colorMapIndex");
         if (mazeHighlighted) {
-            Sprite maze = brightMazesSpriteSheet.spriteSeq(BrightMazesSpriteSheet.BRIGHT_MAZES_ID)[colorMapIndex];
+            RectShort maze = brightMazesSpriteSheet.spriteSeq(BrightMazesSpriteSheet.BRIGHT_MAZES_ID)[colorMapIndex];
             drawSpriteScaled(brightMazesSpriteSheet.sourceImage(), maze, 0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);
         } else if (level.uneatenFoodCount() == 0) {
-            Sprite maze = spriteSheet.spriteSeq(SpriteID.EMPTY_MAZES)[colorMapIndex];
+            RectShort maze = spriteSheet.spriteSeq(SpriteID.EMPTY_MAZES)[colorMapIndex];
             drawSpriteScaled(maze, 0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);
         } else {
-            Sprite maze = spriteSheet.spriteSeq(SpriteID.FULL_MAZES)[colorMapIndex];
+            RectShort maze = spriteSheet.spriteSeq(SpriteID.FULL_MAZES)[colorMapIndex];
             drawSpriteScaled(maze, 0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);
             ctx.save();
             ctx.scale(scaling(), scaling());
@@ -165,11 +165,11 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
         ctx.translate(0, bonus.elongationY());
         switch (bonus.state()) {
             case Bonus.STATE_EDIBLE -> {
-                Sprite sprite = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS)[bonus.symbol()];
+                RectShort sprite = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS)[bonus.symbol()];
                 drawActorSpriteCentered(bonus, sprite);
             }
             case Bonus.STATE_EATEN  -> {
-                Sprite sprite = spriteSheet.spriteSeq(SpriteID.BONUS_VALUES)[bonus.symbol()];
+                RectShort sprite = spriteSheet.spriteSeq(SpriteID.BONUS_VALUES)[bonus.symbol()];
                 drawActorSpriteCentered(bonus, sprite);
             }
         }
@@ -180,7 +180,7 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
         if (!clapperboard.isVisible()) {
             return;
         }
-        Sprite sprite = spriteSheet.spriteSeq(SpriteID.CLAPPERBOARD)[clapperboard.state()];
+        RectShort sprite = spriteSheet.spriteSeq(SpriteID.CLAPPERBOARD)[clapperboard.state()];
         float numberX = scaled(clapperboard.x() + sprite.width() - 25);
         float numberY = scaled(clapperboard.y() + 18);
         float textX = scaled(clapperboard.x() + sprite.width());

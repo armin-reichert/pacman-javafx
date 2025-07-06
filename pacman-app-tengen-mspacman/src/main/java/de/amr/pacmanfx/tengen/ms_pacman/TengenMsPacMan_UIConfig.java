@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman;
 
 import de.amr.pacmanfx.controller.GameState;
-import de.amr.pacmanfx.lib.Sprite;
+import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
@@ -98,8 +98,8 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         storeLocalAsset(assets, "color.game_over_message",          nesPaletteColor(0x11));
         storeLocalAsset(assets, "color.ready_message",              nesPaletteColor(0x28));
 
-        Sprite[] symbolSprites = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS);
-        Sprite[] valueSprites  = spriteSheet.spriteSeq(SpriteID.BONUS_VALUES);
+        RectShort[] symbolSprites = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS);
+        RectShort[] valueSprites  = spriteSheet.spriteSeq(SpriteID.BONUS_VALUES);
         for (byte symbol = 0; symbol <= 13; ++symbol) {
             storeLocalAsset(assets, "bonus_symbol_" + symbol, spriteSheet.image(symbolSprites[symbol]));
             storeLocalAsset(assets, "bonus_value_"  + symbol, spriteSheet.image(valueSprites[symbol]));
@@ -112,7 +112,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         storeLocalAsset(assets, "pac.color.hairbow",                nesPaletteColor(0x05));
         storeLocalAsset(assets, "pac.color.hairbow.pearls",         nesPaletteColor(0x02));
 
-        Sprite[] numberSprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
+        RectShort[] numberSprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
         storeLocalAsset(assets, "ghost_points_0", spriteSheet.image(numberSprites[0]));
         storeLocalAsset(assets, "ghost_points_1", spriteSheet.image(numberSprites[1]));
         storeLocalAsset(assets, "ghost_points_2", spriteSheet.image(numberSprites[2]));

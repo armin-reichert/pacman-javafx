@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.Sprite;
+import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
@@ -60,7 +60,7 @@ public class ArcadeMsPacMan_GhostAnimationMap extends SpriteAnimationMap<SpriteI
         }
     }
 
-    private Sprite[] ghostNormalSprites(Direction dir) {
+    private RectShort[] ghostNormalSprites(Direction dir) {
         return spriteSheet().spriteSeq(switch (personality) {
             case RED_GHOST_SHADOW -> switch (dir) {
                 case RIGHT -> RED_GHOST_RIGHT;
@@ -90,7 +90,7 @@ public class ArcadeMsPacMan_GhostAnimationMap extends SpriteAnimationMap<SpriteI
         });
     }
 
-    private Sprite[] ghostEyesSprites(Direction dir) {
+    private RectShort[] ghostEyesSprites(Direction dir) {
         return spriteSheet().spriteSeq(switch (dir) {
             case Direction.RIGHT -> GHOST_EYES_RIGHT;
             case Direction.LEFT  -> GHOST_EYES_LEFT;

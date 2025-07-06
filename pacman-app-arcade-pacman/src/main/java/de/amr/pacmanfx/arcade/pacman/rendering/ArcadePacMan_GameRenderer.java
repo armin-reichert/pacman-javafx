@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
-import de.amr.pacmanfx.lib.Sprite;
+import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Actor;
@@ -70,7 +70,7 @@ public class ArcadePacMan_GameRenderer implements SpriteGameRenderer {
             LevelCounter levelCounter = hud.levelCounter();
             float x = sceneSize.x() - 4 * TS, y = sceneSize.y() - 2 * TS;
             for (byte symbol : levelCounter.symbols()) {
-                Sprite sprite = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS)[symbol];
+                RectShort sprite = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS)[symbol];
                 drawSpriteScaled(sprite, x, y);
                 x -= TS * 2;
             }
@@ -79,7 +79,7 @@ public class ArcadePacMan_GameRenderer implements SpriteGameRenderer {
         if (hud.isLivesCounterVisible()) {
             LivesCounter livesCounter = hud.livesCounter();
             float x = 2 * TS, y = sceneSize.y() - 2 * TS;
-            Sprite sprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
+            RectShort sprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
             for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
                 drawSpriteScaled(sprite, x + TS * (2 * i), y);
             }
@@ -140,11 +140,11 @@ public class ArcadePacMan_GameRenderer implements SpriteGameRenderer {
         switch (bonus.state()) {
             case Bonus.STATE_INACTIVE -> {}
             case Bonus.STATE_EDIBLE -> {
-                Sprite sprite = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS)[bonus.symbol()];
+                RectShort sprite = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS)[bonus.symbol()];
                 drawActorSpriteCentered(bonus, sprite);
             }
             case Bonus.STATE_EATEN  -> {
-                Sprite sprite = spriteSheet.spriteSeq(SpriteID.BONUS_VALUES)[bonus.symbol()];
+                RectShort sprite = spriteSheet.spriteSeq(SpriteID.BONUS_VALUES)[bonus.symbol()];
                 drawActorSpriteCentered(bonus, sprite);
             }
         }

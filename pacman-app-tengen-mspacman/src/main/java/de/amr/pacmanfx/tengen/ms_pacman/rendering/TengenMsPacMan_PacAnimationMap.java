@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman.rendering;
 
-import de.amr.pacmanfx.lib.Sprite;
+import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
@@ -67,11 +67,11 @@ public class TengenMsPacMan_PacAnimationMap extends SpriteAnimationMap<SpriteID>
         }
     }
 
-    private Sprite[] pacDyingSprites() {
+    private RectShort[] pacDyingSprites() {
         // TODO this is nuts
         // renderer rotates single sprite to create animation effect
-        var sprites = new Sprite[11];
-        Sprite munchingOpen = spriteSheet().spriteSeq(SpriteID.MS_PAC_MUNCHING)[0];
+        var sprites = new RectShort[11];
+        RectShort munchingOpen = spriteSheet().spriteSeq(SpriteID.MS_PAC_MUNCHING)[0];
         Arrays.fill(sprites, munchingOpen);
         return sprites;
     }
