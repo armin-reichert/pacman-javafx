@@ -2,15 +2,14 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.ui._3d;
+package de.amr.pacmanfx.ui.dashboard;
 
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.PacManGames_GameActions;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui.dashboard.InfoBox;
-import de.amr.pacmanfx.ui.dashboard.InfoText;
+import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.uilib.CameraControlledView;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -25,7 +24,7 @@ import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 /**
  * Infobox with 3D related settings.
  */
-public class InfoBox3D extends InfoBox {
+public class InfoBox3DSettings extends InfoBox {
 
     private static final int PIP_MIN_HEIGHT = 200;
     private static final int PIP_MAX_HEIGHT = 600;

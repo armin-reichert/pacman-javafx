@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.dashboard;
 
-import de.amr.pacmanfx.ui._3d.InfoBox3D;
 import javafx.scene.Node;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
@@ -72,7 +71,7 @@ public class Dashboard extends VBox {
                 infoBox.setExpanded(true);
                 addInfoBox(id, "infobox.readme.title", infoBox);
             }
-            case SETTINGS_3D -> addInfoBox(id, "infobox.3D_settings.title", new InfoBox3D());
+            case SETTINGS_3D -> addInfoBox(id, "infobox.3D_settings.title", new InfoBox3DSettings());
         }
     }
 
