@@ -22,6 +22,7 @@ import de.amr.pacmanfx.uilib.CameraControlledView;
 import de.amr.pacmanfx.uilib.model3D.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.Pellet3D;
+import de.amr.pacmanfx.uilib.model3D.Scores3D;
 import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
 import javafx.animation.SequentialTransition;
 import javafx.application.Platform;
