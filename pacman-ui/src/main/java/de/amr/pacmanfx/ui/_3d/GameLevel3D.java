@@ -15,11 +15,9 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
+import de.amr.pacmanfx.uilib.animation.MaterialColorAnimation;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
-import de.amr.pacmanfx.uilib.model3D.Destroyable;
-import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
-import de.amr.pacmanfx.uilib.model3D.PacBase3D;
-import de.amr.pacmanfx.uilib.model3D.Wall3D;
+import de.amr.pacmanfx.uilib.model3D.*;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer3D;
 import javafx.animation.*;
 import javafx.beans.binding.Bindings;
@@ -413,7 +411,7 @@ public class GameLevel3D extends Group implements Destroyable {
                     tile.y() * TS + HTS,
                     -2 * ENERGIZER_3D_RADIUS - 0.5 * FLOOR_3D_THICKNESS  // sitting just on floor
                 );
-                var energizer3D = new Energizer3D(ENERGIZER_3D_RADIUS, animationManager);
+                var energizer3D = new Energizer3D(animationManager, ENERGIZER_3D_RADIUS, ENERGIZER_3D_MIN_SCALING, ENERGIZER_3D_MAX_SCALING);
                 energizer3D.setMaterial(pelletMaterial);
                 energizer3D.setTile(tile);
                 energizer3D.setTranslateX(center.getX());

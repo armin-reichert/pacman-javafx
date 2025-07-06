@@ -25,6 +25,7 @@ SOFTWARE.
 package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.lib.Vector2f;
+import de.amr.pacmanfx.uilib.model3D.Pellet3D;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
 import javafx.scene.Group;

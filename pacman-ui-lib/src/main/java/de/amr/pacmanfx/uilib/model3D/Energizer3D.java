@@ -2,9 +2,8 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.ui._3d;
+package de.amr.pacmanfx.uilib.model3D;
 
-import de.amr.pacmanfx.ui.PacManGames_UI;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
@@ -21,10 +20,11 @@ import static java.util.Objects.requireNonNull;
  * 3D energizer pellet.
  */
 public class Energizer3D extends Sphere implements Eatable3D {
+
     private ManagedAnimation pumpingAnimation;
     private ManagedAnimation hideAndEatAnimation;
 
-    public Energizer3D(double radius, AnimationManager animationManager) {
+    public Energizer3D(AnimationManager animationManager, double radius, double minScaling, double maxScaling) {
         setRadius(requireNonNegative(radius, "Energizer radius must be positive but is %f"));
 
         requireNonNull(animationManager);
@@ -37,12 +37,12 @@ public class Energizer3D extends Sphere implements Eatable3D {
                 scaleTransition.setAutoReverse(true);
                 scaleTransition.setCycleCount(Animation.INDEFINITE);
                 scaleTransition.setInterpolator(Interpolator.EASE_BOTH);
-                scaleTransition.setFromX(PacManGames_UI.ENERGIZER_3D_MAX_SCALING);
-                scaleTransition.setFromY(PacManGames_UI.ENERGIZER_3D_MAX_SCALING);
-                scaleTransition.setFromZ(PacManGames_UI.ENERGIZER_3D_MAX_SCALING);
-                scaleTransition.setToX(PacManGames_UI.ENERGIZER_3D_MIN_SCALING);
-                scaleTransition.setToY(PacManGames_UI.ENERGIZER_3D_MIN_SCALING);
-                scaleTransition.setToZ(PacManGames_UI.ENERGIZER_3D_MIN_SCALING);
+                scaleTransition.setFromX(maxScaling);
+                scaleTransition.setFromY(maxScaling);
+                scaleTransition.setFromZ(maxScaling);
+                scaleTransition.setToX(minScaling);
+                scaleTransition.setToY(minScaling);
+                scaleTransition.setToZ(minScaling);
                 return scaleTransition;
             }
         };
