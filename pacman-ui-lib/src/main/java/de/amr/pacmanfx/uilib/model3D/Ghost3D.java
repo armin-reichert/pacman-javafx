@@ -16,7 +16,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Shape3D;
+import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
@@ -74,7 +74,10 @@ public class Ghost3D extends Group implements Destroyable {
     private final ObjectProperty<Color> eyeballsColorPy = new SimpleObjectProperty<>(Color.WHITE);
     private final ObjectProperty<Color> pupilsColorPy   = new SimpleObjectProperty<>(Color.BLUE);
 
-    private Shape3D dressShape;
+    private MeshView dressShape;
+    private MeshView pupilsShape;
+    private MeshView eyeballsShape;
+
     private Group dressGroup;
 
     private final AnimationManager animationManager;
@@ -87,14 +90,18 @@ public class Ghost3D extends Group implements Destroyable {
         AnimationManager animationManager,
         Ghost ghost,
         GhostColoring coloring,
-        Shape3D dressShape,
-        Shape3D pupilsShape,
-        Shape3D eyeballsShape,
+        MeshView dressShape,
+        MeshView pupilsShape,
+        MeshView eyeballsShape,
         double size)
     {
         this.animationManager = requireNonNull(animationManager);
         requireNonNull(ghost);
+
         this.dressShape = requireNonNull(dressShape);
+        this.pupilsShape = requireNonNull(pupilsShape);
+        this.eyeballsShape = requireNonNull(eyeballsShape);
+
         this.coloring = coloring;
         requireNonNull(pupilsShape);
         requireNonNull(eyeballsShape);
@@ -145,10 +152,25 @@ public class Ghost3D extends Group implements Destroyable {
         eyeballsColorPy.unbind();
         pupilsColorPy.unbind();
         getChildren().clear();
+
+        dressShape.setMesh(null);
         dressShape.materialProperty().unbind();
         dressShape.setMaterial(null);
+        dressShape = null;
+
+        pupilsShape.setMesh(null);
+        pupilsShape.materialProperty().unbind();
+        pupilsShape.setMaterial(null);
+        pupilsShape = null;
+
+        eyeballsShape.setMesh(null);
+        eyeballsShape.materialProperty().unbind();
+        eyeballsShape.setMaterial(null);
+        eyeballsShape = null;
+
         dressGroup.getChildren().clear();
         dressGroup = null;
+
         animationManager.destroyAnimation(dressAnimation);
         dressAnimation = null;
         animationManager.destroyAnimation(flashingAnimation);

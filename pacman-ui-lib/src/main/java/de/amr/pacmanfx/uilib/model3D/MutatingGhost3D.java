@@ -21,7 +21,7 @@ import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
-import javafx.scene.shape.Shape3D;
+import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -70,9 +70,9 @@ public class MutatingGhost3D extends Group implements Destroyable {
         AnimationManager animationManager,
         Ghost ghost,
         GhostColoring coloring,
-        Shape3D dressShape,
-        Shape3D pupilsShape,
-        Shape3D eyeballsShape,
+        MeshView dressShape,
+        MeshView pupilsShape,
+        MeshView eyeballsShape,
         double size,
         int numFlashes)
     {
