@@ -53,18 +53,18 @@ public class Ghost3D extends Group {
             Duration flashEndTime = totalDuration.divide(numFlashes), highlightTime = flashEndTime.divide(3);
             var flashingTimeline = new Timeline(
                 new KeyFrame(highlightTime,
-                    new KeyValue(dressColorPy,  flashingDressColor),
-                    new KeyValue(pupilsColorPy, flashingPupilsColor)
+                    new KeyValue(dressColorPy,  coloring.flashingDressColor()),
+                    new KeyValue(pupilsColorPy, coloring.flashingPupilsColor())
                 ),
                 new KeyFrame(flashEndTime,
-                    new KeyValue(dressColorPy,  frightenedDressColor),
-                    new KeyValue(pupilsColorPy, frightenedPupilsColor)
+                    new KeyValue(dressColorPy,  coloring.frightenedDressColor()),
+                    new KeyValue(pupilsColorPy, coloring.frightenedPupilsColor())
                 )
             );
             flashingTimeline.setCycleCount(numFlashes);
             flashingTimeline.setOnFinished(e -> {
-                dressColorPy.set(frightenedDressColor);
-                pupilsColorPy.set(frightenedPupilsColor);
+                dressColorPy.set(coloring.frightenedDressColor());
+                pupilsColorPy.set(coloring.frightenedPupilsColor());
             });
             return flashingTimeline;
         }
@@ -80,26 +80,12 @@ public class Ghost3D extends Group {
     private final ManagedAnimation dressAnimation;
     private final FlashingAnimation flashingAnimation;
 
-    private final Color normalDressColor;
-    private final Color normalPupilsColor;
-    private final Color normalEyeballsColor;
-    private final Color frightenedDressColor;
-    private final Color frightenedPupilsColor;
-    private final Color frightenedEyeballsColor;
-    private final Color flashingDressColor;
-    private final Color flashingPupilsColor;
+    private final GhostColoring coloring;
 
     public Ghost3D(
         AnimationManager animationManager,
         Ghost ghost,
-        Color normalDressColor,
-        Color normalPupilsColor,
-        Color normalEyeballsColor,
-        Color frightenedDressColor,
-        Color frightenedPupilsColor,
-        Color frightenedEyeballsColor,
-        Color flashingDressColor,
-        Color flashingPupilsColor,
+        GhostColoring coloring,
         Shape3D dressShape,
         Shape3D pupilsShape,
         Shape3D eyeballsShape,
@@ -108,16 +94,7 @@ public class Ghost3D extends Group {
         requireNonNull(animationManager);
         requireNonNull(ghost);
         this.dressShape = requireNonNull(dressShape);
-
-        this.normalDressColor = requireNonNull(normalDressColor);
-        this.normalPupilsColor = requireNonNull(normalPupilsColor);
-        this.normalEyeballsColor = requireNonNull(normalEyeballsColor);
-        this.frightenedDressColor = requireNonNull(frightenedDressColor);
-        this.frightenedPupilsColor = requireNonNull(frightenedPupilsColor);
-        this.frightenedEyeballsColor = requireNonNull(frightenedEyeballsColor);
-        this.flashingDressColor = requireNonNull(flashingDressColor);
-        this.flashingPupilsColor = requireNonNull(flashingPupilsColor);
-
+        this.coloring = coloring;
         requireNonNull(pupilsShape);
         requireNonNull(eyeballsShape);
         requireNonNegative(size);
@@ -126,9 +103,9 @@ public class Ghost3D extends Group {
         pupilsShape.materialProperty().bind(pupilsColorPy.map(Ufx::coloredPhongMaterial));
         eyeballsShape.materialProperty().bind(eyeballsColorPy.map(Ufx::coloredPhongMaterial));
 
-        pupilsColorPy.set(normalPupilsColor);
-        dressColorPy.set(normalDressColor);
-        eyeballsColorPy.set(normalEyeballsColor);
+        pupilsColorPy.set(coloring.normalPupilsColor());
+        dressColorPy.set(coloring.normalDressColor());
+        eyeballsColorPy.set(coloring.normalEyeballsColor());
 
         var eyesGroup = new Group(pupilsShape, eyeballsShape);
         dressGroup = new Group(dressShape);
@@ -198,26 +175,26 @@ public class Ghost3D extends Group {
     public void setFrightenedLook() {
         flashingAnimation.stop();
         dressAnimation.playOrContinue();
-        dressColorPy.set(frightenedDressColor);
-        eyeballsColorPy.set(frightenedEyeballsColor);
-        pupilsColorPy.set(frightenedPupilsColor);
+        dressColorPy.set(coloring.frightenedDressColor());
+        eyeballsColorPy.set(coloring.frightenedEyeballsColor());
+        pupilsColorPy.set(coloring.frightenedPupilsColor());
         dressShape.setVisible(true);
     }
 
     public void setNormalLook() {
         flashingAnimation.stop();
         dressAnimation.playOrContinue();
-        dressColorPy.set(normalDressColor);
-        eyeballsColorPy.set(normalEyeballsColor);
-        pupilsColorPy.set(normalPupilsColor);
+        dressColorPy.set(coloring.normalDressColor());
+        eyeballsColorPy.set(coloring.normalEyeballsColor());
+        pupilsColorPy.set(coloring.normalPupilsColor());
         dressShape.setVisible(true);
     }
 
     public void setEyesOnlyLook() {
         flashingAnimation.stop();
         dressAnimation.pause();
-        eyeballsColorPy.set(normalEyeballsColor);
-        pupilsColorPy.set(normalPupilsColor);
+        eyeballsColorPy.set(coloring.normalEyeballsColor());
+        pupilsColorPy.set(coloring.normalPupilsColor());
         dressShape.setVisible(false);
     }
 }

@@ -19,7 +19,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Shape3D;
@@ -70,14 +69,7 @@ public class MutatingGhost3D extends Group {
     public MutatingGhost3D(
         AnimationManager animationManager,
         Ghost ghost,
-        Color normalDressColor,
-        Color normalPupilsColor,
-        Color normalEyeballsColor,
-        Color frightenedDressColor,
-        Color frightenedPupilsColor,
-        Color frightenedEyeballsColor,
-        Color flashingDressColor,
-        Color flashingPupilsColor,
+        GhostColoring coloring,
         Shape3D dressShape,
         Shape3D pupilsShape,
         Shape3D eyeballsShape,
@@ -85,25 +77,18 @@ public class MutatingGhost3D extends Group {
         int numFlashes)
     {
         this.animationManager = requireNonNull(animationManager);
+        this.ghost = requireNonNull(ghost);
+        requireNonNull(coloring);
         requireNonNull(dressShape);
         requireNonNull(pupilsShape);
         requireNonNull(eyeballsShape);
-        this.numFlashes = requireNonNegativeInt(numFlashes);
-
-        this.ghost = requireNonNull(ghost);
         this.size = requireNonNegative(size);
+        this.numFlashes = requireNonNegativeInt(numFlashes);
 
         ghost3D = new Ghost3D(
             animationManager,
             ghost,
-            normalDressColor,
-            normalPupilsColor,
-            normalEyeballsColor,
-            frightenedDressColor,
-            frightenedPupilsColor,
-            frightenedEyeballsColor,
-            flashingDressColor,
-            flashingPupilsColor,
+            coloring,
             dressShape,
             pupilsShape,
             eyeballsShape,

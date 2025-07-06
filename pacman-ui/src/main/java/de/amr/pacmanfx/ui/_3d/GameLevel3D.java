@@ -177,23 +177,28 @@ public class GameLevel3D extends Group implements Destroyable {
 
         {
             String ans = theUI().configuration().assetNamespace();
-            ghosts3D = gameLevel.ghosts().map(ghost -> new MutatingGhost3D(
-                animationManager,
-                ghost,
-                theAssets().color("%s.ghost.%d.color.normal.dress".formatted(ans, ghost.personality())),
-                theAssets().color("%s.ghost.%d.color.normal.pupils".formatted(ans, ghost.personality())),
-                theAssets().color("%s.ghost.%d.color.normal.eyeballs".formatted(ans, ghost.personality())),
-                theAssets().color("%s.ghost.color.frightened.dress".formatted(ans)),
-                theAssets().color("%s.ghost.color.frightened.pupils".formatted(ans)),
-                theAssets().color("%s.ghost.color.frightened.eyeballs".formatted(ans)),
-                theAssets().color("%s.ghost.color.flashing.dress".formatted(ans)),
-                theAssets().color("%s.ghost.color.flashing.pupils".formatted(ans)),
-                dressMeshViews[ghost.personality()],
-                pupilsMeshViews[ghost.personality()],
-                eyesMeshViews[ghost.personality()],
-                GHOST_3D_SIZE,
-                gameLevel.data().numFlashes()
-            )).toList();
+            ghosts3D = gameLevel.ghosts().map(ghost -> {
+                GhostColoring ghostColoring = new GhostColoring(
+                    theAssets().color("%s.ghost.%d.color.normal.dress".formatted(ans, ghost.personality())),
+                    theAssets().color("%s.ghost.%d.color.normal.pupils".formatted(ans, ghost.personality())),
+                    theAssets().color("%s.ghost.%d.color.normal.eyeballs".formatted(ans, ghost.personality())),
+                    theAssets().color("%s.ghost.color.frightened.dress".formatted(ans)),
+                    theAssets().color("%s.ghost.color.frightened.pupils".formatted(ans)),
+                    theAssets().color("%s.ghost.color.frightened.eyeballs".formatted(ans)),
+                    theAssets().color("%s.ghost.color.flashing.dress".formatted(ans)),
+                    theAssets().color("%s.ghost.color.flashing.pupils".formatted(ans))
+                );
+                return new MutatingGhost3D(
+                    animationManager,
+                    ghost,
+                    ghostColoring,
+                    dressMeshViews[ghost.personality()],
+                    pupilsMeshViews[ghost.personality()],
+                    eyesMeshViews[ghost.personality()],
+                    GHOST_3D_SIZE,
+                    gameLevel.data().numFlashes()
+                );
+            }).toList();
             getChildren().addAll(ghosts3D);
             ghosts3D.forEach(ghost3D -> ghost3D.init(gameLevel));
         }
@@ -339,7 +344,6 @@ public class GameLevel3D extends Group implements Destroyable {
     public Stream<MutatingGhost3D> ghosts3D() { return ghosts3D.stream(); }
     public MutatingGhost3D ghost3D(byte id) { return ghosts3D.get(id); }
     public Optional<Bonus3D> bonus3D() { return Optional.ofNullable(bonus3D); }
-    public LevelCounter3D levelCounter3D() { return levelCounter3D; }
     public LivesCounter3D livesCounter3D() { return livesCounter3D; }
     public Stream<Pellet3D> pellets3D() { return pellets3D.stream(); }
     public Stream<Energizer3D> energizers3D() { return energizers3D.stream(); }
@@ -581,6 +585,8 @@ public class GameLevel3D extends Group implements Destroyable {
             cornerTopMaterial = null;
         }
         Logger.info("Unbound and cleared material references");
+
+        colorScheme = null;
 
         livesCountProperty.unbind();
         houseOpenProperty.unbind();
