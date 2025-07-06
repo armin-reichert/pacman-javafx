@@ -248,6 +248,9 @@ public class GameLevel3D extends Group implements Destroyable {
                 house3D = new ArcadeHouse3D(
                         animationManager,
                         gameLevel.house().get(),
+                        HOUSE_3D_BASE_HEIGHT,
+                        HOUSE_3D_WALL_THICKNESS,
+                        HOUSE_3D_OPACITY,
                         colorScheme.fill(),
                         colorScheme.stroke(),
                         colorScheme.door()

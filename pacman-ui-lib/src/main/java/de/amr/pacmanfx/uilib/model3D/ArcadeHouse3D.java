@@ -2,14 +2,12 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.ui._3d;
+package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.House;
-import de.amr.pacmanfx.ui.PacManGames_UI;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.model3D.Destroyable;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer3D;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -41,7 +39,7 @@ public class ArcadeHouse3D extends Group implements Destroyable {
     private static final float BAR_THICKNESS = 0.75f;
 
     private final DoubleProperty barThicknessProperty = new SimpleDoubleProperty(BAR_THICKNESS);
-    private final DoubleProperty wallBaseHeightProperty = new SimpleDoubleProperty(PacManGames_UI.HOUSE_3D_BASE_HEIGHT);
+    private final DoubleProperty wallBaseHeightProperty = new SimpleDoubleProperty();
 
     private PhongMaterial wallBaseMaterial;
     private PhongMaterial wallTopMaterial;
@@ -57,6 +55,9 @@ public class ArcadeHouse3D extends Group implements Destroyable {
     public ArcadeHouse3D(
         AnimationManager animationManager,
         House house,
+        double baseHeight,
+        double wallThickness,
+        double opacity,
         Color houseBaseColor,
         Color houseTopColor,
         Color doorColor)
@@ -67,6 +68,8 @@ public class ArcadeHouse3D extends Group implements Destroyable {
         requireNonNull(houseTopColor);
         requireNonNull(doorColor);
 
+        wallBaseHeightProperty.set(baseHeight);
+
         Vector2i houseSize = house.sizeInTiles();
         int tilesX = houseSize.x(), tilesY = houseSize.y();
         int xMin = house.minTile().x(), xMax = xMin + tilesX - 1;
@@ -74,7 +77,7 @@ public class ArcadeHouse3D extends Group implements Destroyable {
         float centerX = xMin * TS + tilesX * HTS;
         float centerY = yMin * TS + tilesY * HTS;
 
-        wallBaseMaterial = coloredPhongMaterial(opaqueColor(houseBaseColor, PacManGames_UI.HOUSE_3D_OPACITY));
+        wallBaseMaterial = coloredPhongMaterial(opaqueColor(houseBaseColor, opacity));
         wallTopMaterial  = coloredPhongMaterial(houseTopColor);
         barMaterial      = coloredPhongMaterial(doorColor);
 
@@ -105,19 +108,19 @@ public class ArcadeHouse3D extends Group implements Destroyable {
             door,
             r3D.createWallBetweenTiles(
                     Vector2i.of(xMin, yMin), Vector2i.of(house.leftDoorTile().x() - 1, yMin),
-                    PacManGames_UI.HOUSE_3D_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial),
+                    wallThickness, wallBaseMaterial, wallTopMaterial),
             r3D.createWallBetweenTiles(
                     Vector2i.of(house.rightDoorTile().x() + 1, yMin), Vector2i.of(xMax, yMin),
-                    PacManGames_UI.HOUSE_3D_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial),
+                    wallThickness, wallBaseMaterial, wallTopMaterial),
             r3D.createWallBetweenTiles(
                     Vector2i.of(xMin, yMin), Vector2i.of(xMin, yMax),
-                    PacManGames_UI.HOUSE_3D_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial),
+                    wallThickness, wallBaseMaterial, wallTopMaterial),
             r3D.createWallBetweenTiles(
                     Vector2i.of(xMax, yMin), Vector2i.of(xMax, yMax),
-                    PacManGames_UI.HOUSE_3D_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial),
+                    wallThickness, wallBaseMaterial, wallTopMaterial),
             r3D.createWallBetweenTiles(
                     Vector2i.of(xMin, yMax), Vector2i.of(xMax, yMax),
-                    PacManGames_UI.HOUSE_3D_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial)
+                    wallThickness, wallBaseMaterial, wallTopMaterial)
         );
     }
 
