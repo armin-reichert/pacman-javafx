@@ -27,7 +27,6 @@ import static de.amr.pacmanfx.Globals.TS;
 public class TerrainMapRenderer3D {
 
     private int cylinderDivisions = 32; // default=64
-    private boolean oShapeFilled = true;
 
     private Consumer<Wall3D> wallCreatedCallback = wall3D -> Logger.debug(() -> "Wall created: " + wall3D);
     private Consumer<Wall3D> cornerCreatedCallback = wall3D -> Logger.debug(() -> "Corner created: " + wall3D);
@@ -44,10 +43,6 @@ public class TerrainMapRenderer3D {
 
     public void setCylinderDivisions(int cylinderDivisions) {
         this.cylinderDivisions = cylinderDivisions;
-    }
-
-    public void setOShapeFilled(boolean value) {
-        this.oShapeFilled = value;
     }
 
     public void addWallBetween(Group parent, Vector2i p1, Vector2i p2, double wallThickness, PhongMaterial wallBaseMaterial, PhongMaterial wallTopMaterial) {
@@ -98,12 +93,11 @@ public class TerrainMapRenderer3D {
         PhongMaterial topMaterial)
     {
         String encoding = obstacle.encoding();
-        Logger.debug("Render 3D obstacle with encoding '{}'", encoding);
         if (obstacle.isClosed() && !worldBorder) {
             Group obstacleGroup = new Group();
             parent.getChildren().add(obstacleGroup);
             //TODO provide more general solution for polygons with holes
-            if ("dcgbfceb".equals(encoding) && !oShapeFilled) { // O-shape with hole
+            if ("dcgbfceb".equals(encoding)) { // O-shape with hole
                 Vector2i[] cornerCenters = obstacle.cornerCenters();
                 for (Vector2i center : cornerCenters) {
                     obstacleGroup.getChildren().add(
@@ -114,14 +108,14 @@ public class TerrainMapRenderer3D {
                 addWallBetween(obstacleGroup, cornerCenters[2], cornerCenters[3], TS, baseMaterial, topMaterial);
                 addWallBetween(obstacleGroup, cornerCenters[3], cornerCenters[0], TS, baseMaterial, topMaterial);
             } else {
-                render_ClosedSingleWallObstacle(parent, obstacle, baseMaterial, topMaterial);
+                renderClosedSingleWallObstacle(parent, obstacle, baseMaterial, topMaterial);
             }
         } else {
-            render_UnfilledObstacle(parent, obstacle, wallThickness, baseMaterial, topMaterial);
+            renderUnfilledObstacle(parent, obstacle, wallThickness, baseMaterial, topMaterial);
         }
     }
 
-    private void render_ClosedSingleWallObstacle(
+    private void renderClosedSingleWallObstacle(
         Group parent,
         Obstacle obstacle,
         PhongMaterial baseMaterial,
@@ -135,7 +129,7 @@ public class TerrainMapRenderer3D {
         ));
     }
 
-    private void render_UnfilledObstacle(
+    private void renderUnfilledObstacle(
         Group parent,
         Obstacle obstacle,
         double wallThickness,
