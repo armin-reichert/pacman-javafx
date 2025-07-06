@@ -10,7 +10,6 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import javafx.animation.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -92,28 +91,32 @@ public class Ghost3D extends Group {
 
     public Ghost3D(
         AnimationManager animationManager,
-        AssetStorage assets,
-        String assetNamespace,
         Ghost ghost,
+        Color normalDressColor,
+        Color normalPupilsColor,
+        Color normalEyeballsColor,
+        Color frightenedDressColor,
+        Color frightenedPupilsColor,
+        Color frightenedEyeballsColor,
+        Color flashingDressColor,
+        Color flashingPupilsColor,
         Shape3D dressShape,
         Shape3D pupilsShape,
         Shape3D eyeballsShape,
         double size)
     {
         requireNonNull(animationManager);
-        requireNonNull(assets);
-        requireNonNull(assetNamespace);
         requireNonNull(ghost);
         this.dressShape = requireNonNull(dressShape);
 
-        normalDressColor        = assets.color(assetNamespace + ".ghost.%d.color.normal.dress".formatted(ghost.personality()));
-        normalPupilsColor       = assets.color(assetNamespace + ".ghost.%d.color.normal.pupils".formatted(ghost.personality()));
-        normalEyeballsColor     = assets.color(assetNamespace + ".ghost.%d.color.normal.eyeballs".formatted(ghost.personality()));
-        frightenedDressColor    = assets.color(assetNamespace + ".ghost.color.frightened.dress");
-        frightenedPupilsColor   = assets.color(assetNamespace + ".ghost.color.frightened.pupils");
-        frightenedEyeballsColor = assets.color(assetNamespace + ".ghost.color.frightened.eyeballs");
-        flashingDressColor      = assets.color(assetNamespace + ".ghost.color.flashing.dress");
-        flashingPupilsColor     = assets.color(assetNamespace + ".ghost.color.flashing.pupils");
+        this.normalDressColor = requireNonNull(normalDressColor);
+        this.normalPupilsColor = requireNonNull(normalPupilsColor);
+        this.normalEyeballsColor = requireNonNull(normalEyeballsColor);
+        this.frightenedDressColor = requireNonNull(frightenedDressColor);
+        this.frightenedPupilsColor = requireNonNull(frightenedPupilsColor);
+        this.frightenedEyeballsColor = requireNonNull(frightenedEyeballsColor);
+        this.flashingDressColor = requireNonNull(flashingDressColor);
+        this.flashingPupilsColor = requireNonNull(flashingPupilsColor);
 
         requireNonNull(pupilsShape);
         requireNonNull(eyeballsShape);

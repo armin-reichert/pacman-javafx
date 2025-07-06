@@ -120,13 +120,12 @@ public class GameLevel3D extends Group implements Destroyable {
     {
         requireNonNull(model3DRepository);
         requireNonNull(gameLevel);
-
         requireNonNull(proposedColorScheme);
+
         // Add some contrast with floor if wall fill color is black
         colorScheme = proposedColorScheme.fill().equals(Color.BLACK)
             ? new WorldMapColorScheme(Color.grayRgb(42), proposedColorScheme.stroke(), proposedColorScheme.door(), proposedColorScheme.pellet())
             : proposedColorScheme;
-
 
         dressMeshViews = new MeshView[] {
                 new MeshView(model3DRepository.ghostDressMesh()),
@@ -149,52 +148,52 @@ public class GameLevel3D extends Group implements Destroyable {
                 new MeshView(model3DRepository.ghostEyeballsMesh()),
         };
 
-        {
-            ambientLight = new AmbientLight();
-            ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
-            getChildren().add(ambientLight);
+        ambientLight = new AmbientLight();
+        ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
+        getChildren().add(ambientLight);
+
+        levelCounter3D = new LevelCounter3D(animationManager, theGame().hud().levelCounter());
+        levelCounter3D.setTranslateX(gameLevel.worldMap().numCols() * TS - 2 * TS);
+        levelCounter3D.setTranslateY(2 * TS);
+        levelCounter3D.spinningAnimation().playFromStart();
+        getChildren().add(levelCounter3D);
+
+        for (int i = 0; i < livesCounterShapes.length; ++i) {
+            livesCounterShapes[i] = theUI().configuration().createLivesCounterShape3D(model3DRepository);
         }
+        livesCounter3D = new LivesCounter3D(animationManager, livesCounterShapes);
+        livesCounter3D.setTranslateX(2 * TS);
+        livesCounter3D.setTranslateY(2 * TS);
+        livesCounter3D.livesCountProperty().bind(livesCountProperty);
+        livesCounter3D.pillarColorProperty().set(LIVES_COUNTER_PILLAR_COLOR);
+        livesCounter3D.plateColorProperty().set(LIVES_COUNTER_PLATE_COLOR);
+        livesCounter3D.light().colorProperty().set(Color.CORNFLOWERBLUE);
+        livesCounter3D.lookingAroundAnimation().playFromStart();
+        getChildren().add(livesCounter3D);
+
+        pac3D = theUI().configuration().createPac3D(model3DRepository, animationManager, gameLevel.pac());
+        pac3D.init();
+        getChildren().addAll(pac3D, pac3D.light());
 
         {
-            levelCounter3D = new LevelCounter3D(animationManager, theGame().hud().levelCounter());
-            levelCounter3D.setTranslateX(gameLevel.worldMap().numCols() * TS - 2 * TS);
-            levelCounter3D.setTranslateY(2 * TS);
-            levelCounter3D.spinningAnimation().playFromStart();
-            getChildren().add(levelCounter3D);
-        }
-
-        {
-            for (int i = 0; i < livesCounterShapes.length; ++i) {
-                livesCounterShapes[i] = theUI().configuration().createLivesCounterShape3D(model3DRepository);
-            }
-            livesCounter3D = new LivesCounter3D(animationManager, livesCounterShapes);
-            livesCounter3D.setTranslateX(2 * TS);
-            livesCounter3D.setTranslateY(2 * TS);
-            livesCounter3D.livesCountProperty().bind(livesCountProperty);
-            livesCounter3D.pillarColorProperty().set(LIVES_COUNTER_PILLAR_COLOR);
-            livesCounter3D.plateColorProperty().set(LIVES_COUNTER_PLATE_COLOR);
-            livesCounter3D.light().colorProperty().set(Color.CORNFLOWERBLUE);
-            livesCounter3D.lookingAroundAnimation().playFromStart();
-            getChildren().add(livesCounter3D);
-        }
-
-        {
-            pac3D = theUI().configuration().createPac3D(model3DRepository, animationManager, gameLevel.pac());
-            pac3D.init();
-            getChildren().addAll(pac3D, pac3D.light());
-        }
-
-        {
-            ghosts3D = gameLevel.ghosts()
-                .map(ghost -> new MutatingGhost3D(animationManager,
-                    theAssets(), theUI().configuration().assetNamespace(),
-                    dressMeshViews[ghost.personality()],
-                    pupilsMeshViews[ghost.personality()],
-                    eyesMeshViews[ghost.personality()],
-                    ghost,
-                    GHOST_3D_SIZE,
-                    gameLevel.data().numFlashes()
-                )).toList();
+            String ans = theUI().configuration().assetNamespace();
+            ghosts3D = gameLevel.ghosts().map(ghost -> new MutatingGhost3D(
+                animationManager,
+                ghost,
+                theAssets().color("%s.ghost.%d.color.normal.dress".formatted(ans, ghost.personality())),
+                theAssets().color("%s.ghost.%d.color.normal.pupils".formatted(ans, ghost.personality())),
+                theAssets().color("%s.ghost.%d.color.normal.eyeballs".formatted(ans, ghost.personality())),
+                theAssets().color("%s.ghost.color.frightened.dress".formatted(ans)),
+                theAssets().color("%s.ghost.color.frightened.pupils".formatted(ans)),
+                theAssets().color("%s.ghost.color.frightened.eyeballs".formatted(ans)),
+                theAssets().color("%s.ghost.color.flashing.dress".formatted(ans)),
+                theAssets().color("%s.ghost.color.flashing.pupils".formatted(ans)),
+                dressMeshViews[ghost.personality()],
+                pupilsMeshViews[ghost.personality()],
+                eyesMeshViews[ghost.personality()],
+                GHOST_3D_SIZE,
+                gameLevel.data().numFlashes()
+            )).toList();
             getChildren().addAll(ghosts3D);
             ghosts3D.forEach(ghost3D -> ghost3D.init(gameLevel));
         }

@@ -10,7 +10,6 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -20,6 +19,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Shape3D;
@@ -69,13 +69,22 @@ public class MutatingGhost3D extends Group {
 
     public MutatingGhost3D(
         AnimationManager animationManager,
-        AssetStorage assets, String assetPrefix,
-        Shape3D dressShape, Shape3D pupilsShape, Shape3D eyeballsShape,
-        Ghost ghost, double size, int numFlashes)
+        Ghost ghost,
+        Color normalDressColor,
+        Color normalPupilsColor,
+        Color normalEyeballsColor,
+        Color frightenedDressColor,
+        Color frightenedPupilsColor,
+        Color frightenedEyeballsColor,
+        Color flashingDressColor,
+        Color flashingPupilsColor,
+        Shape3D dressShape,
+        Shape3D pupilsShape,
+        Shape3D eyeballsShape,
+        double size,
+        int numFlashes)
     {
         this.animationManager = requireNonNull(animationManager);
-        requireNonNull(assets);
-        requireNonNull(assetPrefix);
         requireNonNull(dressShape);
         requireNonNull(pupilsShape);
         requireNonNull(eyeballsShape);
@@ -84,10 +93,21 @@ public class MutatingGhost3D extends Group {
         this.ghost = requireNonNull(ghost);
         this.size = requireNonNegative(size);
 
-        ghost3D = new Ghost3D(animationManager,
-            assets, assetPrefix,
+        ghost3D = new Ghost3D(
+            animationManager,
             ghost,
-            dressShape, pupilsShape, eyeballsShape, size);
+            normalDressColor,
+            normalPupilsColor,
+            normalEyeballsColor,
+            frightenedDressColor,
+            frightenedPupilsColor,
+            frightenedEyeballsColor,
+            flashingDressColor,
+            flashingPupilsColor,
+            dressShape,
+            pupilsShape,
+            eyeballsShape,
+            size);
 
         numberBox = new Box(14, 8, 8);
 
@@ -250,17 +270,17 @@ public class MutatingGhost3D extends Group {
     }
 
     private void handleGhostPositionChange(
-            ObservableValue<? extends Vector2f> property,
-            Vector2f oldPosition,
-            Vector2f newPosition)
+        ObservableValue<? extends Vector2f> property,
+        Vector2f oldPosition,
+        Vector2f newPosition)
     {
         update3DTransform();
     }
 
     private void handleGhostWishDirChange(
-            ObservableValue<? extends Direction> property,
-            Direction oldDir,
-            Direction newDir)
+        ObservableValue<? extends Direction> property,
+        Direction oldDir,
+        Direction newDir)
     {
         update3DTransform();
     }
@@ -281,10 +301,10 @@ public class MutatingGhost3D extends Group {
         // ghost that got killed already during the current power phase do not look frightened anymore
         boolean killedDuringCurrentPhase = level.victims().contains(ghost);
         GhostAppearance appearance = GhostAppearanceSelector.selectAppearance(
-                ghost.state(),
-                powerActive,
-                powerFading,
-                killedDuringCurrentPhase);
+            ghost.state(),
+            powerActive,
+            powerFading,
+            killedDuringCurrentPhase);
         setAppearance(appearance);
     }
 }
