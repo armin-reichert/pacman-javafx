@@ -20,7 +20,8 @@ import de.amr.pacmanfx.uilib.animation.SquirtingAnimation;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.*;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer3D;
-import javafx.animation.*;
+import javafx.animation.Animation;
+import javafx.animation.SequentialTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
@@ -41,9 +42,9 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
-import static de.amr.pacmanfx.ui.PacManGames.*;
+import static de.amr.pacmanfx.ui.PacManGames.theAssets;
+import static de.amr.pacmanfx.ui.PacManGames.theUI;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 import static de.amr.pacmanfx.uilib.Ufx.*;
 import static java.util.Objects.requireNonNull;
@@ -83,7 +84,6 @@ public class GameLevel3D extends Group implements Destroyable {
 
     private final AnimationManager animationManager = new AnimationManager();
     private ManagedAnimation wallColorFlashingAnimation;
-    private ManagedAnimation wallsDisappearingAnimation;
     private ManagedAnimation levelCompletedAnimation;
     private ManagedAnimation levelCompletedAnimationBeforeCutScene;
 
@@ -283,72 +283,29 @@ public class GameLevel3D extends Group implements Destroyable {
             }
         };
 
-        wallsDisappearingAnimation = new ManagedAnimation(animationManager, "Maze_WallsDisappearing") {
-            @Override
-            protected Animation createAnimation() {
-                var totalDuration = Duration.seconds(1);
-                var houseDisappears = new Timeline(
-                    new KeyFrame(totalDuration.multiply(0.33), new KeyValue(houseBaseHeightProperty, 0, Interpolator.EASE_IN)));
-                var obstaclesDisappear = new Timeline(
-                    new KeyFrame(totalDuration.multiply(0.33), new KeyValue(obstacleBaseHeightProperty, 0, Interpolator.EASE_IN)));
-                var animation = new SequentialTransition(houseDisappears, obstaclesDisappear);
-                animation.setOnFinished(e -> maze3D.setVisible(false));
-                return animation;
-            }
-        };
+        levelCompletedAnimation = new LevelCompletedAnimation(animationManager, this, gameLevel);
+        levelCompletedAnimationBeforeCutScene = new LevelCompletedAnimationBeforeCutScene(animationManager, this, gameLevel);
+    }
 
-        levelCompletedAnimation = new ManagedAnimation(animationManager, "Level_Complete") {
-            @Override
-            protected Animation createAnimation() {
-                int levelNumber = gameLevel.number();
-                int numMazeFlashes = gameLevel.data().numFlashes();
-                boolean showFlashMessage = randomInt(1, 1000) < 250; // every 4th time also show a message
-                return new SequentialTransition(
-                    now(() -> {
-                        livesCounter3D.light().setLightOn(false);
-                        if (showFlashMessage) {
-                            theUI().showFlashMessageSec(3, theAssets().localizedLevelCompleteMessage(levelNumber));
-                        }
-                    }),
-                    doAfterSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
-                    doAfterSec(0.5, createMazeFlashAnimation(numMazeFlashes, 250)),
-                    doAfterSec(0.5, () -> gameLevel.pac().hide()),
-                    doAfterSec(0.5, () -> {
-                            var spin360 = new RotateTransition(Duration.seconds(1.5), GameLevel3D.this);
-                            spin360.setAxis(theRNG().nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
-                            spin360.setFromAngle(0);
-                            spin360.setToAngle(360);
-                            spin360.setInterpolator(Interpolator.LINEAR);
-                            return spin360;
-                    }),
-                    doAfterSec(0.5, () -> theSound().playLevelCompleteSound()),
-                    doAfterSec(0.5, wallsDisappearingAnimation.getOrCreateAnimation()),
-                    doAfterSec(1.0, () -> theSound().playLevelChangedSound())
-                );
-            }
-        };
+    public DoubleProperty houseBaseHeightProperty() {
+        return houseBaseHeightProperty;
+    }
 
-        levelCompletedAnimationBeforeCutScene = new ManagedAnimation(animationManager, "Level_Complete_Before_CutScene") {
-            @Override
-            protected Animation createAnimation() {
-                return new SequentialTransition(
-                    doAfterSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
-                    doAfterSec(0.5, createMazeFlashAnimation(gameLevel.data().numFlashes(), 250)),
-                    doAfterSec(0.5, () -> gameLevel.pac().hide())
-                );
-            }
-        };
+    public DoubleProperty obstacleBaseHeightProperty() {
+        return obstacleBaseHeightProperty;
     }
 
     public PacBase3D pac3D() { return pac3D; }
     public Stream<MutatingGhost3D> ghosts3D() { return ghosts3D.stream(); }
     public MutatingGhost3D ghost3D(byte id) { return ghosts3D.get(id); }
     public Optional<Bonus3D> bonus3D() { return Optional.ofNullable(bonus3D); }
+    public Group maze3D() { return maze3D; }
     public LivesCounter3D livesCounter3D() { return livesCounter3D; }
     public Stream<Pellet3D> pellets3D() { return pellets3D.stream(); }
     public Stream<Energizer3D> energizers3D() { return energizers3D.stream(); }
     public Color floorColor() { return PY_3D_FLOOR_COLOR.get(); }
     public double floorThickness() { return floor3D.getDepth(); }
+
 
     public AnimationManager animationManager() { return animationManager; }
     public ManagedAnimation levelCompletedAnimation() { return levelCompletedAnimation; }
@@ -510,20 +467,6 @@ public class GameLevel3D extends Group implements Destroyable {
         bonus3D.showEdible();
     }
 
-    private Animation createMazeFlashAnimation(int numFlashes, int flashDurationMillis) {
-        if (numFlashes == 0) {
-            return pauseSec(1.0);
-        }
-        var flashing = new Timeline(
-            new KeyFrame(Duration.millis(0.5 * flashDurationMillis),
-                new KeyValue(obstacleBaseHeightProperty, 0, Interpolator.EASE_BOTH)
-            )
-        );
-        flashing.setAutoReverse(true);
-        flashing.setCycleCount(2 * numFlashes);
-        return flashing;
-    }
-
     private void handleDrawModeChange(ObservableValue<? extends DrawMode> py, DrawMode ov, DrawMode drawMode) {
         if (isDestroyed()) return; //TODO how can that be?
         setDrawModeForTree(mazeGroup, drawMode);
@@ -596,7 +539,6 @@ public class GameLevel3D extends Group implements Destroyable {
 
         animationManager.destroyAllAnimations();
         wallColorFlashingAnimation = null;
-        wallsDisappearingAnimation = null;
         levelCompletedAnimation = null;
         levelCompletedAnimationBeforeCutScene = null;
         Logger.info("Destroyed and removed all managed animations");

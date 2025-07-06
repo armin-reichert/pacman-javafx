@@ -1,5 +1,6 @@
 package de.amr.pacmanfx.uilib.animation;
 
+import de.amr.pacmanfx.uilib.model3D.Destroyable;
 import javafx.animation.Animation;
 import org.tinylog.Logger;
 
@@ -7,7 +8,7 @@ import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
-public abstract class ManagedAnimation {
+public abstract class ManagedAnimation implements Destroyable {
 
     public static final boolean CONTINUE = false, FROM_START = true;
 
@@ -38,6 +39,7 @@ public abstract class ManagedAnimation {
         return animation;
     }
 
+    @Override
     public void destroy() {
         animationManager.stopAnimation(this); // handles "embedded animation cannot be stopped" issue!
         if (animation != null) {
