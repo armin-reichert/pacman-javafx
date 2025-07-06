@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-package de.amr.pacmanfx.ui._3d;
+package de.amr.pacmanfx.uilib.animation;
 
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.uilib.model3D.Pellet3D;
