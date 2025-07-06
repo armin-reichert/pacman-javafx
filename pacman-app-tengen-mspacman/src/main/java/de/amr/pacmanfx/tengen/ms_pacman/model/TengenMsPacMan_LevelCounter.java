@@ -26,7 +26,7 @@ public class TengenMsPacMan_LevelCounter implements LevelCounter {
     void setStartLevel(int startLevelNumber) {
         if (startLevelNumber > 1) {
             symbols.clear();
-            for (byte number = 1; number <= Math.min(startLevelNumber, LEVEL_COUNTER_MAX_SIZE); ++number) {
+            for (byte number = 1; number < Math.min(startLevelNumber, LEVEL_COUNTER_MAX_SIZE); ++number) {
                 symbols.add((byte) (number - 1));
             }
         } else {
