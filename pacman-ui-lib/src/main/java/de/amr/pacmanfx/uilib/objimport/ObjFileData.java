@@ -133,7 +133,7 @@ public class ObjFileData {
         return materialLibsList;
     }
 
-    private String currentLineAfter(int start) {
+    private String currentLineSkip(int start) {
         return currentLine.substring(start);
     }
 
@@ -143,39 +143,39 @@ public class ObjFileData {
                 Logger.trace("Blank or comment line, ignored");
             }
             else if (currentLine.startsWith("f ")) {
-                parseFace(currentLineAfter(2));
+                parseFace(currentLineSkip(2));
             }
             else if (currentLine.startsWith("g ")) {
                 commitCurrentMesh();
-                currentName = currentLineAfter(2);
+                currentName = currentLineSkip(2);
             }
             else if (currentLine.equals("g")) {
                 commitCurrentMesh();
                 currentName = "default";
             }
             else if (currentLine.startsWith("mtllib ")) {
-                parseMaterialLib(currentLineAfter(7));
+                parseMaterialLib(currentLineSkip(7));
             }
             else if (currentLine.startsWith("o ")) {
                 commitCurrentMesh();
-                currentName = currentLineAfter(2);
+                currentName = currentLineSkip(2);
             }
             else if (currentLine.startsWith("s ")) {
-                parseSmoothingGroup(currentLineAfter(2));
+                parseSmoothingGroup(currentLineSkip(2));
             }
             else if (currentLine.startsWith("usemtl ")) {
                 commitCurrentMesh();
                 // unsupported yet
-                Logger.warn("usemtl '{}' command not supported", currentLineAfter(7));
+                Logger.warn("usemtl '{}' command not supported", currentLineSkip(7));
             }
             else if (currentLine.startsWith("v ")) {
-                parseVertex(currentLineAfter(2));
+                parseVertex(currentLineSkip(2));
             }
             else if (currentLine.startsWith("vn ")) {
-                parseVertexNormal(currentLineAfter(3));
+                parseVertexNormal(currentLineSkip(3));
             }
             else if (currentLine.startsWith("vt ")) {
-                parseTextureCoordinate(currentLineAfter(3));
+                parseTextureCoordinate(currentLineSkip(3));
             }
             else {
                 Logger.warn("Line skipped: {} (no idea what it means)", currentLine);
