@@ -9,8 +9,8 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.TriangleMesh;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,9 +27,9 @@ public class Model3D {
     private final Map<String, TriangleMesh> triangleMeshMap = new HashMap<>();
     private final Map<String, PhongMaterial> materialMap = new HashMap<>();
 
-    public Model3D(URL objFileURL) throws IOException, URISyntaxException {
+    public Model3D(URL objFileURL) throws IOException {
         requireNonNull(objFileURL);
-        var importer = new ObjImporter(objFileURL.toExternalForm());
+        var importer = new ObjImporter(objFileURL, StandardCharsets.UTF_8);
         for (String meshName : importer.getMeshNames()) {
             TriangleMesh mesh = importer.getTriangleMesh(meshName);
             ObjImporter.validateTriangleMesh(mesh);

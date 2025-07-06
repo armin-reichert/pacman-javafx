@@ -63,8 +63,8 @@ import java.util.*;
  * resizes the backing array; merely setting the value of an element is not a structural modification.) This is
  * typically accomplished by synchronizing on some object that naturally encapsulates the list.
  * <p/>
- * If no such object exists, the list should be "wrapped" using the {@link Collections#synchronizedList
- * Collections.synchronizedList} method. This is best done at creation time, to prevent accidental unsynchronized access
+ * If no such object exists, the list should be "wrapped" using the Collections#synchronizedList method.
+ * This is best done at creation time, to prevent accidental unsynchronized access
  * to the list:
  *
  * <pre>
@@ -877,7 +877,7 @@ public class IntegerArrayList extends AbstractList<Integer>
      * @throws IllegalArgumentException  {@inheritDoc}
      */
     @Override
-    public List<Integer> subList(int fromIndex, int toIndex) {
+    public IntegerArrayList subList(int fromIndex, int toIndex) {
         subListRangeCheck(fromIndex, toIndex, size);
         return new IntegerArrayList.SubList(this, 0, fromIndex, toIndex);
     }
@@ -1094,7 +1094,7 @@ public class IntegerArrayList extends AbstractList<Integer>
         }
 
         @Override
-        public List<Integer> subList(int fromIndex, int toIndex) {
+        public IntegerArrayList subList(int fromIndex, int toIndex) {
             subListRangeCheck(fromIndex, toIndex, size);
             return new IntegerArrayList.SubList(this, offset, fromIndex, toIndex);
         }
