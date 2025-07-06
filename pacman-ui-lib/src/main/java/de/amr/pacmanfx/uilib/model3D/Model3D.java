@@ -5,10 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.uilib.objimport.ObjImporter;
-import javafx.scene.Node;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.TriangleMesh;
-import javafx.scene.transform.Scale;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -22,19 +20,12 @@ import static java.util.Objects.requireNonNull;
 /**
  * A 3D-model imported from a Wavefront .obj file.
  * <p>
- * Uses the importer code from Oracle's JFX3DViewer sample project.
- *
- * @author Armin Reichert
+ * Uses an adapted version of the OBJ importer from Oracle's JFX3DViewer sample project.
  */
 public class Model3D {
 
-    public static Scale scaled(Node node, double size) {
-        var bounds = node.getBoundsInLocal();
-        return new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
-    }
-
-    private final Map<String, TriangleMesh> meshesByName = new HashMap<>();
-    private final Map<String, PhongMaterial> materials = new HashMap<>();
+    private final Map<String, TriangleMesh> triangleMeshMap = new HashMap<>();
+    private final Map<String, PhongMaterial> materialMap = new HashMap<>();
 
     public Model3D(URL objFileURL) throws IOException, URISyntaxException {
         requireNonNull(objFileURL);
@@ -42,38 +33,38 @@ public class Model3D {
         for (String meshName : importer.getMeshNames()) {
             TriangleMesh mesh = importer.getMesh(meshName);
             ObjImporter.validateTriangleMesh(mesh);
-            meshesByName.put(meshName, mesh);
+            triangleMeshMap.put(meshName, mesh);
         }
         for (var materialLibrary : importer.materialLibraries()) {
-            materialLibrary.forEach((materialName, material) -> materials.put(materialName, (PhongMaterial) material));
+            materialLibrary.forEach((materialName, material) -> materialMap.put(materialName, (PhongMaterial) material));
         }
     }
 
     public void destroy() {
-        meshesByName.clear();
-        materials.clear();
+        triangleMeshMap.clear();
+        materialMap.clear();
     }
 
     public Map<String, TriangleMesh> meshesByName() {
-        return Collections.unmodifiableMap(meshesByName);
+        return Collections.unmodifiableMap(triangleMeshMap);
     }
 
     public Map<String, PhongMaterial> materials() {
-        return Collections.unmodifiableMap(materials);
+        return Collections.unmodifiableMap(materialMap);
     }
 
     public TriangleMesh mesh(String name) {
         requireNonNull(name);
-        if (meshesByName.containsKey(name)) {
-            return meshesByName.get(name);
+        if (triangleMeshMap.containsKey(name)) {
+            return triangleMeshMap.get(name);
         }
         throw new Model3DException("No mesh with name %s found", name);
     }
 
     public PhongMaterial material(String name) {
         requireNonNull(name);
-        if (materials.containsKey(name)) {
-            return materials.get(name);
+        if (materialMap.containsKey(name)) {
+            return materialMap.get(name);
         }
         throw new Model3DException("No material with name %s found", name);
     }
