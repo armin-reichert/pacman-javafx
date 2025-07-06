@@ -55,7 +55,19 @@ import static java.util.Objects.requireNonNull;
  * "https://github.com/teamfx/openjfx-10-dev-rt/tree/master/apps/samples/3DViewer/src/main/java/com/javafx/experiments/importers">3DViewer
  * Sample</a>
  */
-public class ObjImporter {
+public class ObjFileData {
+
+    public static ObjFileData fromFile(URL objFileURL, Charset charset) {
+        ObjFileData data = new ObjFileData(objFileURL);
+        try (InputStream is = objFileURL.openStream()) {
+            data.parse(new BufferedReader(new InputStreamReader(is, charset)));
+        }
+        catch (IOException x) {
+            Logger.error(x);
+            Logger.error("Importing OBJ file '{}' failed!", objFileURL);
+        }
+        return data;
+    }
 
     public static void validateTriangleMesh(TriangleMesh mesh) {
         int numPoints = mesh.getPoints().size() / mesh.getPointElementSize();
@@ -87,7 +99,7 @@ public class ObjImporter {
         }
     }
 
-    private final URL objFileUrl;
+    private final URL url;
     private final Map<String, TriangleMesh> meshMap = new HashMap<>();
     private final List<Map<String, Material>> materialLibsList = new ArrayList<>();
     private final ObservableFloatArray vertexArray = FXCollections.observableFloatArray();
@@ -105,11 +117,8 @@ public class ObjImporter {
     private String currentName = "default";
     private int currentSmoothGroup = 0;
 
-    public ObjImporter(URL objFileURL, Charset charset) throws IOException {
-        this.objFileUrl = requireNonNull(objFileURL);
-        try (InputStream is = objFileURL.openStream()) {
-            parse(new BufferedReader(new InputStreamReader(is, charset)));
-        }
+    private ObjFileData(URL url) {
+        this.url = requireNonNull(url);
     }
 
     public Set<String> getMeshNames() {
@@ -124,68 +133,65 @@ public class ObjImporter {
         return materialLibsList;
     }
 
-    private int vertexIndex(int v) {
-        return (v < 0) ? v + vertexArray.size() / 3 : v - 1;
+    private String restOfLine(int start) {
+        return currentLine.substring(start);
     }
 
-    private int uvIndex(int uv) {
-        return (uv < 0) ? uv + uvArray.size() / 2 : uv - 1;
-    }
-
-    private int normalIndex(int n) {
-        return (n < 0) ? n + normals.size() / 3 : n - 1;
-    }
-
-    // "o <objectname>"
-    private void parseObject() {
-        String rest = currentLine.substring(2);
+    private void parse(BufferedReader reader) throws IOException {
+        while ((currentLine = reader.readLine()) != null) {
+            if (currentLine.isBlank() || currentLine.startsWith("#")) {
+                Logger.trace("Blank or comment line, ignored");
+            }
+            else if (currentLine.startsWith("f ")) {
+                parseFace(restOfLine(2));
+            }
+            else if (currentLine.startsWith("g ")) {
+                addMesh(currentName);
+                currentName = restOfLine(2);
+            }
+            else if (currentLine.equals("g")) {
+                addMesh(currentName);
+                currentName = "default";
+            }
+            else if (currentLine.startsWith("mtllib ")) {
+                parseMaterialLib(restOfLine(7));
+            }
+            else if (currentLine.startsWith("o ")) {
+                addMesh(currentName);
+                currentName = restOfLine(2);
+            }
+            else if (currentLine.startsWith("s ")) {
+                parseSmoothingGroup(restOfLine(2));
+            }
+            else if (currentLine.startsWith("usemtl ")) {
+                addMesh(currentName);
+                // unsupported yet
+                Logger.warn("usemtl '{}' command not supported", restOfLine(7));
+            }
+            else if (currentLine.startsWith("v ")) {
+                parseVertex(restOfLine(2));
+            }
+            else if (currentLine.startsWith("vn ")) {
+                parseVertexNormal(restOfLine(3));
+            }
+            else if (currentLine.startsWith("vt ")) {
+                parseTextureCoordinate(restOfLine(3));
+            }
+            else {
+                Logger.trace("Unknown line skipped: {}", currentLine);
+            }
+        }
         addMesh(currentName);
-        currentName = rest;
-        Logger.trace("Object name: {}", currentName);
-    }
 
-    // "g <group_name>" or "g" (default group)
-    private void parseGroup() {
-        boolean defaultGroup = currentLine.equals("g");
-        addMesh(currentName);
-        currentName = defaultGroup ? "default" : currentLine.substring(2);
-        Logger.trace("Group name: {}", currentName);
-    }
-
-    /*
-     * "v <x> <y> <z> (<w>)"
-     *
-     * List of geometric vertices, with (x, y, z, [w]) coordinates, w is optional and defaults to 1.0.
-     */
-    private void parseVertex() {
-        String rest = currentLine.substring(2);
-        String[] parts = rest.trim().split("\\s+");
-        float x = Float.parseFloat(parts[0]);
-        float y = Float.parseFloat(parts[1]);
-        float z = Float.parseFloat(parts[2]);
-        vertexArray.addAll(x, y, z);
-    }
-
-    /*
-     * "vt ..."
-     *
-     * List of texture coordinates, in (u, [v, w]) coordinates, these will vary between 0 and 1. v, w are optional
-     * and default to 0.
-     */
-    private void parseTextureCoordinate() {
-        String rest = currentLine.substring(3);
-        String[] parts = rest.trim().split("\\s+");
-        float u = Float.parseFloat(parts[0]);
-        float v = Float.parseFloat(parts[1]);
-        uvArray.addAll(u, 1 - v);
+        Logger.info("OBJ file parsed: {} vertices, {} uvs, {} faces, {} smoothing groups",
+            vertexArray.size() / 3, uvArray.size() / 2, faceList.size() / 6, smoothingGroupList.size());
     }
 
     /*
      * Face: "f v1/v2/v3 ...."
      */
-    private void parseFace() {
-        String rest = currentLine.substring(2);
-        String[] parts = rest.trim().split("\\s+");
+    private void parseFace(String argText) {
+        String[] parts = argText.trim().split("\\s+");
         int[][] data = new int[parts.length][];
         boolean uvProvided = true;
         boolean normalProvided = true;
@@ -256,96 +262,74 @@ public class ObjImporter {
     }
 
     /*
+     * "v <x> <y> <z> (<w>)"
+     *
+     * List of geometric vertices, with (x, y, z, [w]) coordinates, w is optional and defaults to 1.0.
+     */
+    private void parseVertex(String argsText) {
+        String[] parts = argsText.trim().split("\\s+");
+        float x = Float.parseFloat(parts[0]);
+        float y = Float.parseFloat(parts[1]);
+        float z = Float.parseFloat(parts[2]);
+        vertexArray.addAll(x, y, z);
+    }
+
+    /*
+     * "vt ..."
+     *
+     * List of texture coordinates, in (u, [v, w]) coordinates, these will vary between 0 and 1. v, w are optional
+     * and default to 0.
+     */
+    private void parseTextureCoordinate(String argsText) {
+        String[] parts = argsText.trim().split("\\s+");
+        float u = Float.parseFloat(parts[0]);
+        float v = Float.parseFloat(parts[1]);
+        uvArray.addAll(u, 1 - v);
+    }
+
+    /*
      * Smoothing group: "s <integer> ..." or "s off"
      */
-    private void parseSmoothingGroup() {
-        String rest = currentLine.substring(2);
-        if (rest.equals("off")) {
+    private void parseSmoothingGroup(String argsText) {
+        if (argsText.equals("off")) {
             currentSmoothGroup = 0;
         } else {
-            currentSmoothGroup = Integer.parseInt(rest);
+            currentSmoothGroup = Integer.parseInt(argsText);
         }
     }
 
     /*
      * Material lib: "mtllib filename1 filename2 ..."
      */
-    private void parseMaterialLib() {
-        String rest = currentLine.substring(7);
-        String[] parts = rest.trim().split("\\s+");
+    private void parseMaterialLib(String argsText) {
+        String[] parts = argsText.trim().split("\\s+");
         for (String filename : parts) {
-            MtlReader mtlReader = new MtlReader(filename, objFileUrl.toExternalForm());
+            MtlReader mtlReader = new MtlReader(filename, url.toExternalForm());
             materialLibsList.add(mtlReader.getMaterials());
         }
     }
 
     /*
-     * Use material: "usemtl ..."
-     */
-    private void parseUseMaterial() {
-        //TODO what?
-    }
-
-    /*
      * Vertex normal: "vn ..."
      */
-    private void parseVertexNormal() {
-        String[] split = currentLine.substring(2).trim().split("\\s+");
-        float x = Float.parseFloat(split[0]);
-        float y = Float.parseFloat(split[1]);
-        float z = Float.parseFloat(split[2]);
+    private void parseVertexNormal(String argsText) {
+        String[] parts = argsText.trim().split("\\s+");
+        float x = Float.parseFloat(parts[0]);
+        float y = Float.parseFloat(parts[1]);
+        float z = Float.parseFloat(parts[2]);
         normals.addAll(x, y, z);
     }
 
-    private void parse(BufferedReader reader) throws IOException {
-        while ((currentLine = reader.readLine()) != null) {
-            try {
-                if (currentLine.isBlank() || currentLine.startsWith("#")) {
-                    Logger.trace("Blank or comment line, ignored");
-                }
-                else if (currentLine.startsWith("f ")) {
-                    parseFace();
-                }
-                else if (currentLine.startsWith("g ")) {
-                    parseGroup();
-                }
-                else if (currentLine.equals("g")) {
-                    parseGroup();
-                }
-                else if (currentLine.startsWith("mtllib ")) {
-                    parseMaterialLib();
-                }
-                else if (currentLine.startsWith("o ")) {
-                    parseObject();
-                }
-                else if (currentLine.startsWith("s ")) {
-                    parseSmoothingGroup();
-                }
-                else if (currentLine.startsWith("usemtl ")) {
-                    addMesh(currentName);
-                    parseUseMaterial();
-                }
-                else if (currentLine.startsWith("v ")) {
-                    parseVertex();
-                }
-                else if (currentLine.startsWith("vn ")) {
-                    parseVertexNormal();
-                }
-                else if (currentLine.startsWith("vt ")) {
-                    parseTextureCoordinate();
-                }
-                else {
-                    Logger.trace("Unknown line skipped: {}", currentLine);
-                }
-            } catch (Throwable x) {
-                Logger.error(x);
-                Logger.error("Failed to parse line: {}", currentLine);
-            }
-        }
-        addMesh(currentName);
+    private int vertexIndex(int v) {
+        return (v < 0) ? v + vertexArray.size() / 3 : v - 1;
+    }
 
-        Logger.info("OBJ file parsed: {} vertices, {} uvs, {} faces, {} smoothing groups",
-            vertexArray.size() / 3, uvArray.size() / 2, faceList.size() / 6, smoothingGroupList.size());
+    private int uvIndex(int uv) {
+        return (uv < 0) ? uv + uvArray.size() / 2 : uv - 1;
+    }
+
+    private int normalIndex(int n) {
+        return (n < 0) ? n + normals.size() / 3 : n - 1;
     }
 
     private void addMesh(final String meshName) {
@@ -354,33 +338,40 @@ public class ObjImporter {
             smoothingGroupsStart = smoothingGroupList.size();
             return;
         }
-        var vertexMap = new HashMap<Integer, Integer>(vertexArray.size() / 2);
-        var uvMap = new HashMap<Integer, Integer>(uvArray.size() / 2);
-        var normalMap = new HashMap<Integer, Integer>(normals.size() / 2);
-        var newVertexList = FXCollections.observableFloatArray();
-        var newUVs = FXCollections.observableFloatArray();
-        var newNormals = FXCollections.observableFloatArray();
+        var vertexMap      = new HashMap<Integer, Integer>(vertexArray.size() / 2);
+        var uvMap          = new HashMap<Integer, Integer>(uvArray.size() / 2);
+        var normalMap      = new HashMap<Integer, Integer>(normals.size() / 2);
+        var newVertexArray = FXCollections.observableFloatArray();
+        var newUVArray     = FXCollections.observableFloatArray();
+        var newNormalArray = FXCollections.observableFloatArray();
         boolean useNormals = true;
 
         for (int i = facesStart; i < faceList.size(); i += 2) {
             int vi = faceList.get(i);
             Integer nvi = vertexMap.get(vi);
             if (nvi == null) {
-                nvi = newVertexList.size() / 3;
+                nvi = newVertexArray.size() / 3;
                 vertexMap.put(vi, nvi);
-                newVertexList.addAll(vertexArray.get(vi * 3), vertexArray.get(vi * 3 + 1), vertexArray.get(vi * 3 + 2));
+                newVertexArray.addAll(
+                    vertexArray.get(vi * 3),
+                    vertexArray.get(vi * 3 + 1),
+                    vertexArray.get(vi * 3 + 2)
+                );
             }
             faceList.set(i, nvi);
 
             int uvi = faceList.get(i + 1);
             Integer nuvi = uvMap.get(uvi);
             if (nuvi == null) {
-                nuvi = newUVs.size() / 2;
+                nuvi = newUVArray.size() / 2;
                 uvMap.put(uvi, nuvi);
                 if (uvi >= 0) {
-                    newUVs.addAll(uvArray.get(uvi * 2), uvArray.get(uvi * 2 + 1));
+                    newUVArray.addAll(
+                        uvArray.get(uvi * 2),
+                        uvArray.get(uvi * 2 + 1)
+                    );
                 } else {
-                    newUVs.addAll(0f, 0f);
+                    newUVArray.addAll(0f, 0f);
                 }
             }
             faceList.set(i + 1, nuvi);
@@ -389,30 +380,34 @@ public class ObjImporter {
                 int ni = faceNormals.get(i / 2);
                 Integer nni = normalMap.get(ni);
                 if (nni == null) {
-                    nni = newNormals.size() / 3;
+                    nni = newNormalArray.size() / 3;
                     normalMap.put(ni, nni);
                     if (ni >= 0 && normals.size() >= (ni + 1) * 3) {
-                        newNormals.addAll(normals.get(ni * 3), normals.get(ni * 3 + 1), normals.get(ni * 3 + 2));
+                        newNormalArray.addAll(
+                            normals.get(ni * 3),
+                            normals.get(ni * 3 + 1),
+                            normals.get(ni * 3 + 2)
+                        );
                     } else {
                         useNormals = false;
-                        newNormals.addAll(0f, 0f, 0f);
+                        newNormalArray.addAll(0f, 0f, 0f);
                     }
                 }
                 faceNormals.set(i / 2, nni);
             }
         }
 
-        var mesh = new TriangleMesh();
-        mesh.getPoints().setAll(newVertexList);
-        mesh.getTexCoords().setAll(newUVs);
+        final var mesh = new TriangleMesh();
+        mesh.getPoints().setAll(newVertexArray);
+        mesh.getTexCoords().setAll(newUVArray);
         mesh.getFaces().setAll(faceList.subList(facesStart, faceList.size()).toIntArray());
 
         // Use normals if they are provided
         if (useNormals) {
-            int[] flatFaces = (faceList.subList(facesStart, faceList.size())).toIntArray();
-            int[] flatFaceNormals = (faceNormals.subList(facesNormalStart, faceNormals.size())).toIntArray();
-            float[] normals = newNormals.toArray(new float[newNormals.size()]);
-            int[] smGroups = SmoothingGroups.calcSmoothGroups(mesh, flatFaces, flatFaceNormals, normals);
+            int[]   flatFaces = faceList.subList(facesStart, faceList.size()).toIntArray();
+            int[]   flatFaceNormals = faceNormals.subList(facesNormalStart, faceNormals.size()).toIntArray();
+            float[] normals = newNormalArray.toArray(new float[0]);
+            int[]   smGroups = SmoothingGroups.calcSmoothGroups(mesh, flatFaces, flatFaceNormals, normals);
             mesh.getFaceSmoothingGroups().setAll(smGroups);
         } else {
             mesh.getFaceSmoothingGroups().setAll(

@@ -4,11 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.model3D;
 
-import de.amr.pacmanfx.uilib.objimport.ObjImporter;
+import de.amr.pacmanfx.uilib.objimport.ObjFileData;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.TriangleMesh;
 
-import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
@@ -27,15 +26,15 @@ public class Model3D {
     private final Map<String, TriangleMesh> triangleMeshMap = new HashMap<>();
     private final Map<String, PhongMaterial> materialMap = new HashMap<>();
 
-    public Model3D(URL objFileURL) throws IOException {
+    public Model3D(URL objFileURL) {
         requireNonNull(objFileURL);
-        var importer = new ObjImporter(objFileURL, StandardCharsets.UTF_8);
-        for (String meshName : importer.getMeshNames()) {
-            TriangleMesh mesh = importer.getTriangleMesh(meshName);
-            ObjImporter.validateTriangleMesh(mesh);
+        var objFileData = ObjFileData.fromFile(objFileURL, StandardCharsets.UTF_8);
+        for (String meshName : objFileData.getMeshNames()) {
+            TriangleMesh mesh = objFileData.getTriangleMesh(meshName);
+            ObjFileData.validateTriangleMesh(mesh);
             triangleMeshMap.put(meshName, mesh);
         }
-        for (var materialLibrary : importer.materialLibsList()) {
+        for (var materialLibrary : objFileData.materialLibsList()) {
             materialLibrary.forEach((materialName, material) -> materialMap.put(materialName, (PhongMaterial) material));
         }
     }
