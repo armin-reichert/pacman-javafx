@@ -31,11 +31,11 @@ public class Model3D {
         requireNonNull(objFileURL);
         var importer = new ObjImporter(objFileURL.toExternalForm());
         for (String meshName : importer.getMeshNames()) {
-            TriangleMesh mesh = importer.getMesh(meshName);
+            TriangleMesh mesh = importer.getTriangleMesh(meshName);
             ObjImporter.validateTriangleMesh(mesh);
             triangleMeshMap.put(meshName, mesh);
         }
-        for (var materialLibrary : importer.materialLibraries()) {
+        for (var materialLibrary : importer.materialLibsList()) {
             materialLibrary.forEach((materialName, material) -> materialMap.put(materialName, (PhongMaterial) material));
         }
     }
