@@ -67,10 +67,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
 
     private static final int MOVING_MESSAGE_DELAY = 120;
 
+    private final ObjectProperty<SceneDisplayMode> displayModeProperty = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING);
+
     private final SubScene fxSubScene;
     private final DynamicCamera dynamicCamera = new DynamicCamera();
     private final ParallelCamera fixedCamera  = new ParallelCamera();
-    private final ObjectProperty<SceneDisplayMode> displayModePy = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING);
     private final Rectangle canvasClipRect = new Rectangle();
 
     private MessageMovement messageMovement;
@@ -79,9 +80,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
     public TengenMsPacMan_PlayScene2D() {
         dynamicCamera.scalingProperty().bind(scalingProperty());
 
-        canvas = new Canvas();
-        setCanvas(canvas);
-
+        // use own canvas, not shared canvas
+        setCanvas(new Canvas());
         canvas.widthProperty() .bind(scalingProperty().multiply(UNSCALED_CANVAS_WIDTH));
         canvas.heightProperty().bind(scalingProperty().multiply(UNSCALED_CANVAS_HEIGHT));
 
@@ -95,10 +95,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
         var root = new StackPane(canvas);
         root.setBackground(Background.EMPTY);
 
-        fxSubScene = new SubScene(root, 0, 0); // size is bound to parent scene size when embedded in game view
+        fxSubScene = new SubScene(root, 88, 88); // size gets bound to parent scene size when embedded in game view
+        fxSubScene.setFill(backgroundColor());
         fxSubScene.cameraProperty().bind(displayModeProperty()
             .map(displayMode -> displayMode == SceneDisplayMode.SCROLLING ? dynamicCamera : fixedCamera));
-        fxSubScene.setFill(PY_CANVAS_BG_COLOR.get());
     }
 
     @Override
@@ -149,7 +149,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
     }
 
     public ObjectProperty<SceneDisplayMode> displayModeProperty() {
-        return displayModePy;
+        return displayModeProperty;
     }
 
     private void bindActionsToKeys() {
@@ -393,7 +393,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
         gr().ensureRenderingHintsAreApplied(theGameLevel());
 
         // compute current scene scaling
-        switch (displayModePy.get()) {
+        switch (displayModeProperty.get()) {
             case SCALED_TO_FIT -> { //TODO this code smells
                 int tilesY = theGameLevel().worldMap().numRows() + 3;
                 double camY = scaled((tilesY - 46) * HTS);
