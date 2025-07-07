@@ -416,7 +416,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
             return;
         }
         String previousVariant = theGameController().selectedGameVariant();
-        if (previousVariant != null) {
+        if (previousVariant != null && !previousVariant.equals(gameVariant)) {
             Logger.info("Unloading assets for game variant {}", previousVariant);
             configuration(previousVariant).unloadAssets(theAssets());
             Logger.info(theAssets().summary(Map.of(

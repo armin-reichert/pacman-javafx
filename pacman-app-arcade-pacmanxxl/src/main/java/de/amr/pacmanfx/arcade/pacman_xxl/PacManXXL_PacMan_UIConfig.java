@@ -180,7 +180,6 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
         return new ArcadePacMan_PacAnimationMap(spriteSheet);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public PacBody createLivesCounterShape3D(Model3DRepository model3DRepository) {
         String namespace = assetNamespace();
