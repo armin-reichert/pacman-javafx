@@ -400,7 +400,7 @@ public class GameLevel3D extends Group implements Destroyable {
                             }
                         };
                         return new SequentialTransition(
-                            doAfterSec(0.5, () -> energizer3D.shape3D().setVisible(false)),
+                            pauseSec(0.5, () -> energizer3D.shape3D().setVisible(false)),
                             squirtingAnimation
                         );
                     }

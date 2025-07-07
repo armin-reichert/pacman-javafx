@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui._2d;
 
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
@@ -14,7 +15,6 @@ import javafx.animation.SequentialTransition;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 
-import static de.amr.pacmanfx.uilib.Ufx.doAfterSec;
 import static de.amr.pacmanfx.uilib.Ufx.pauseSec;
 import static java.util.Objects.requireNonNull;
 
@@ -54,8 +54,9 @@ public class LevelCompletedAnimation extends ManagedAnimation {
         );
         flashingTimeline.setCycleCount(numFlashes);
         return new SequentialTransition(
-            doAfterSec(1.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
-            doAfterSec(0.5, numFlashes > 0 ? flashingTimeline : pauseSec(0)),
+            Ufx.pauseSec(1.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
+            pauseSec(0.5),
+            numFlashes > 0 ? flashingTimeline : pauseSec(0),
             pauseSec(1)
         );
     }

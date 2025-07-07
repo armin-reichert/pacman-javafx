@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.*;
@@ -15,7 +16,8 @@ import javafx.util.Duration;
 import static de.amr.pacmanfx.Globals.theRNG;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.ui.PacManGames.*;
-import static de.amr.pacmanfx.uilib.Ufx.*;
+import static de.amr.pacmanfx.uilib.Ufx.doNow;
+import static de.amr.pacmanfx.uilib.Ufx.pauseSec;
 import static java.util.Objects.requireNonNull;
 
 public class LevelCompletedAnimation extends ManagedAnimation {
@@ -51,17 +53,20 @@ public class LevelCompletedAnimation extends ManagedAnimation {
     protected Animation createAnimation() {
         GameLevel gameLevel = gameLevel3D.gameLevel();
         return new SequentialTransition(
-                now(() -> {
+                doNow(() -> {
                     gameLevel3D.livesCounter3D().light().setLightOn(false);
                     sometimesShowLevelCompleteFlashMessage();
                 }),
-                doAfterSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
-                doAfterSec(0.5, createWallsFlashAnimation()),
-                doAfterSec(0.5, () -> gameLevel.pac().hide()),
-                doAfterSec(0.5, createSpinningAnimation()),
-                doAfterSec(0.5, () -> theSound().playLevelCompleteSound()),
-                doAfterSec(0.5, wallsDisappearingAnimation.getOrCreateAnimation()),
-                doAfterSec(1.0, () -> theSound().playLevelChangedSound())
+                Ufx.pauseSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
+                pauseSec(0.5),
+                createWallsFlashAnimation(),
+                pauseSec(0.5, () -> gameLevel.pac().hide()),
+                pauseSec(0.5),
+                createSpinningAnimation(),
+                pauseSec(0.5, () -> theSound().playLevelCompleteSound()),
+                pauseSec(0.5),
+                wallsDisappearingAnimation.getOrCreateAnimation(),
+                pauseSec(1.0, () -> theSound().playLevelChangedSound())
         );
     }
 

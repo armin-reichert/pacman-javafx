@@ -14,7 +14,6 @@ import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
@@ -24,7 +23,6 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.MeshView;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -37,7 +35,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiPredicate;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -163,6 +160,16 @@ public interface Ufx {
         return material;
     }
 
+    static Transition doNow(Runnable action) {
+        requireNonNull(action);
+        var transition = new Transition() {
+            @Override
+            protected void interpolate(double t) {}
+        };
+        transition.setOnFinished(e -> action.run());
+        return transition;
+    }
+
     /**
      * Pauses for the given number of seconds.
      *
@@ -174,48 +181,20 @@ public interface Ufx {
     }
 
     /**
-     * Prepends a pause of the given duration (in seconds) before the given action can be run. Note that you have to call
+     * Prepends a pause of the given duration (in seconds) before the given action is executed. Note that you have to call
      * {@link Animation#play()} to execute the action!
      * <p>
-     * NOTE: Do NOT start an animation in the code!
+     * NOTE: Do NOT start an animation in the action!
      *
-     * @param delaySeconds number of seconds
+     * @param seconds number of seconds to wait before the action is executed
      * @param action       code to run
      * @return pause transition
      */
-    static Transition doAfterSec(double delaySeconds, Runnable action) {
+    static Transition pauseSec(double seconds, Runnable action) {
         requireNonNull(action);
-        var pause = new PauseTransition(Duration.seconds(delaySeconds));
+        var pause = new PauseTransition(Duration.seconds(seconds));
         pause.setOnFinished(e -> action.run());
         return pause;
-    }
-
-    static Animation doAfterSec(double delaySeconds, Animation animation) {
-        requireNonNull(animation);
-        animation.setDelay(Duration.seconds(delaySeconds).add(animation.getDelay()));
-        return animation;
-    }
-
-    static Animation doAfterSec(double delaySeconds, Supplier<Animation> animationSupplier) {
-        requireNonNull(animationSupplier);
-        Animation animation = animationSupplier.get();
-        requireNonNull(animation);
-        animation.setDelay(animation.getDelay().add(Duration.seconds(delaySeconds)));
-        return animation;
-    }
-
-    static Transition emptyTransition() {
-        return new Transition() {
-            @Override
-            protected void interpolate(double t) {}
-        };
-    }
-
-    static Transition now(Runnable action) {
-        requireNonNull(action);
-        var transition = emptyTransition();
-        transition.setOnFinished(e -> action.run());
-        return transition;
     }
 
     record ColorChange(Color from, Color to) {}
@@ -358,23 +337,5 @@ public interface Ufx {
             "pellet", new ColorChange(Color.web(sourceColorScheme.pelletColor()), Color.web(targetColorScheme.pelletColor()))
         );
         return exchangeColors(colorChanges, image);
-    }
-
-    static MeshView meshViewById(Node root, String id) {
-        requireNonNull(root);
-        requireNonNull(id);
-        var cssID = toCSS_ID(id);
-        var node = root.lookup("#" + cssID);
-        if (node == null) {
-            throw new IllegalArgumentException("No mesh view with ID '%s' found".formatted(cssID));
-        }
-        if (node instanceof MeshView meshView) {
-            return meshView;
-        }
-        throw new IllegalArgumentException("Node with CSS ID '%s' is no MeshView but a %s".formatted(cssID, node.getClass()));
-    }
-
-    static String toCSS_ID(String id) {
-        return id.replace('.', '-'); //TODO what else needs to be escaped?
     }
 }

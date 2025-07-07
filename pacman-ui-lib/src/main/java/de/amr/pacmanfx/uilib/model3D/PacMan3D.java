@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.*;
@@ -12,8 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import static de.amr.pacmanfx.uilib.Ufx.doAfterSec;
-import static de.amr.pacmanfx.uilib.Ufx.now;
+import static de.amr.pacmanfx.uilib.Ufx.doNow;
 
 public class PacMan3D extends PacBase3D {
 
@@ -51,9 +51,9 @@ public class PacMan3D extends PacBase3D {
                 sinking.setToZ(0);
 
                 return new SequentialTransition(
-                    now(PacMan3D.this::init), // TODO check this
+                    doNow(PacMan3D.this::init), // TODO check this
                     new ParallelTransition(spinning, new SequentialTransition(shrinking, expanding), sinking),
-                    doAfterSec(1.0, () -> {
+                    Ufx.pauseSec(1.0, () -> {
                         setVisible(false);
                         setScaleX(1.0);
                         setScaleY(1.0);
