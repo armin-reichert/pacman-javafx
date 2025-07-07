@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui._3d;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
+import de.amr.pacmanfx.uilib.model3D.Destroyable;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
@@ -28,7 +29,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Displays a Pac-Man shape for each live remaining.
  */
-public class LivesCounter3D extends Group {
+public class LivesCounter3D extends Group implements Destroyable  {
 
     private static final int SHAPES_ROTATION_ZERO = 240;
 
@@ -120,19 +121,16 @@ public class LivesCounter3D extends Group {
             }
 
             @Override
-            public void play(boolean playMode) {
-                if (playMode == CONTINUE) {
-                    super.play(playMode);
+            public void playFromStart() {
+                ParallelTransition parallelTransition = (ParallelTransition) getOrCreateAnimation();
+                parallelTransition.stop();
+                var childAnimationsCopy = parallelTransition.getChildren().toArray(Animation[]::new);
+                parallelTransition.getChildren().clear();
+                for (Animation childAnimation : childAnimationsCopy) {
+                    childAnimation.jumpTo(Duration.ZERO); //TODO needed?
                 }
-                ParallelTransition pt = (ParallelTransition) getOrCreateAnimation();
-                var copy = pt.getChildren().toArray(Animation[]::new);
-                pt.getChildren().clear();
-                for (Animation childAnimation : copy) {
-                    childAnimation.stop();
-                    childAnimation.jumpTo(Duration.ZERO);
-                    pt.getChildren().add(childAnimation);
-                }
-                pt.playFromStart();
+                parallelTransition.getChildren().setAll(childAnimationsCopy);
+                parallelTransition.playFromStart();
             }
         };
     }
@@ -147,6 +145,7 @@ public class LivesCounter3D extends Group {
         return lookingAroundAnimation;
     }
 
+    @Override
     public void destroy() {
         livesCountProperty.unbind();
         pillarMaterialProperty.unbind();

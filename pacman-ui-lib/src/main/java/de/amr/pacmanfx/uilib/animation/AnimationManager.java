@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static de.amr.pacmanfx.uilib.animation.ManagedAnimation.CONTINUE;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -34,18 +33,22 @@ public class AnimationManager {
         }
     }
 
-    public void playAnimation(ManagedAnimation managedAnimation, boolean playMode) {
+    public void playAnimation(ManagedAnimation managedAnimation) {
         requireNonNull(managedAnimation);
         Animation animation = managedAnimation.getOrCreateAnimation();
         requireNonNull(animation);
         if (animation.getStatus() != Animation.Status.RUNNING) {
-            if (playMode == ManagedAnimation.FROM_START) {
-                Logger.trace("Playing animation with label '{}' from start", managedAnimation.label);
-                animation.playFromStart();
-            } else if (playMode == CONTINUE) {
-                Logger.trace("Continuing animation with label '{}'", managedAnimation.label);
-                animation.play();
-            }
+            Logger.trace("Continuing animation with label '{}'", managedAnimation.label);
+            animation.play();
+        }
+    }
+    public void playAnimationFromStart(ManagedAnimation managedAnimation) {
+        requireNonNull(managedAnimation);
+        Animation animation = managedAnimation.getOrCreateAnimation();
+        requireNonNull(animation);
+        if (animation.getStatus() != Animation.Status.RUNNING) {
+            Logger.trace("Playing animation with label '{}' from start", managedAnimation.label);
+            animation.playFromStart();
         }
     }
 

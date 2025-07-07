@@ -43,6 +43,7 @@ public class LevelCompletedAnimation extends ManagedAnimation {
 
     @Override
     protected Animation createAnimation() {
+        requireNonNull(gameLevel);
         int numFlashes = gameLevel.data().numFlashes();
         var flashingTimeline = new Timeline(
             new KeyFrame(Duration.millis(singleFlashMillis * 0.25), e -> highlighted = true),
@@ -60,12 +61,10 @@ public class LevelCompletedAnimation extends ManagedAnimation {
     }
 
     @Override
-    public void play(boolean playMode) {
-        if (playMode == FROM_START) {
-            flashingIndex = 0;
-            highlighted = false;
-        }
-        super.play(playMode);
+    public void playFromStart() {
+        flashingIndex = 0;
+        highlighted = false;
+        super.playFromStart();
     }
 
     public void setGameLevel(GameLevel gameLevel) {
