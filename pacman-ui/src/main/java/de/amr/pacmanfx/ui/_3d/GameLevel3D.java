@@ -286,7 +286,7 @@ public class GameLevel3D extends Group implements Destroyable {
         };
 
         levelCompletedAnimation = new LevelCompletedAnimation(animationManager, this);
-        levelCompletedAnimationBeforeCutScene = new LevelCompletedAnimationBeforeCutScene(animationManager, this, gameLevel);
+        levelCompletedAnimationBeforeCutScene = new LevelCompletedAnimationBeforeCutScene(animationManager, this);
     }
 
     public GameLevel gameLevel() {
