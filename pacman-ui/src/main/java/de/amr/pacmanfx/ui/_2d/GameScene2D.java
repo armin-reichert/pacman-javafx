@@ -10,6 +10,7 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.input.Keyboard;
+import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -39,6 +40,8 @@ public abstract class GameScene2D implements GameScene {
     protected final Map<KeyCombination, GameAction> actionBindings = new HashMap<>();
     protected GameRenderer gameRenderer;
     protected Canvas canvas;
+
+    protected AnimationManager animationManager = new AnimationManager();
 
     @Override
     public final void init() {

@@ -56,13 +56,15 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
         theGame().hud().showScore(true);
         theGame().hud().showLevelCounter(true);
         theGame().hud().showLivesCounter(true);
+        levelFlashing = new LevelFlashingAnimation(animationManager);
     }
 
     @Override
     protected void doEnd() {
         if (levelFlashing != null) {
-            //TODO levelFlashing.stop();
+            animationManager.destroyAnimation(levelFlashing);
         }
+        levelFlashing = null;
     }
 
     @Override
@@ -209,7 +211,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
         gr().applyRenderingHints(theGameLevel());
 
         // Level < Level message
-        boolean highlighted = levelFlashing != null && levelFlashing.isRunning() && levelFlashing.isHighlighted();
+        boolean highlighted = levelFlashing != null && levelFlashing.isHighlighted();
         gr().drawLevel(theGameLevel(), backgroundColor(), highlighted, theGameLevel().blinking().isOn());
         if (theGameLevel().message() != GameLevel.MESSAGE_NONE) drawLevelMessage(theGameLevel());
 
@@ -280,9 +282,10 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
         }
         else if (state == GameState.LEVEL_COMPLETE) {
             theSound().stopAll();
-            levelFlashing = new LevelFlashingAnimation(theGameLevel(), 333);
-            levelFlashing.setOnFinished(theGameController()::letCurrentGameStateExpire);
-            levelFlashing.play();
+            levelFlashing.setGameLevel(theGameLevel());
+            levelFlashing.setSingleFlashMillis(333);
+            levelFlashing.getOrCreateAnimation().setOnFinished(e -> theGameController().letCurrentGameStateExpire());
+            levelFlashing.playFromStart();
         }
     }
 

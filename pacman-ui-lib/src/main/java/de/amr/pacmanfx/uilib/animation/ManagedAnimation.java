@@ -73,4 +73,8 @@ public abstract class ManagedAnimation implements Destroyable {
     public void stop() {
         animationManager.stopAnimation(this);
     }
+
+    public boolean isRunning() {
+        return animation != null && animation.getStatus() == Animation.Status.RUNNING;
+    }
 }

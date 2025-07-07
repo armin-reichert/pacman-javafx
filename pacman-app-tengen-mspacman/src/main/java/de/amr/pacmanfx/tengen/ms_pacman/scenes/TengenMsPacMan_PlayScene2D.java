@@ -28,6 +28,7 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelFlashingAnimation;
 import de.amr.pacmanfx.uilib.CameraControlledView;
 import de.amr.pacmanfx.uilib.Ufx;
+import javafx.animation.Animation;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -74,7 +75,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
     private final Rectangle canvasClipRect = new Rectangle();
 
     private MessageMovement messageMovement;
-    private LevelFlashingAnimation mazeFlashing;
+    private LevelFlashingAnimation levelFlashing;
 
     public TengenMsPacMan_PlayScene2D() {
         dynamicCamera.scalingProperty().bind(scalingProperty());
@@ -180,10 +181,14 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
         setGameRenderer(config.createGameRenderer(canvas()));
         dynamicCamera.moveTop();
         messageMovement = new MessageMovement();
+        levelFlashing = new LevelFlashingAnimation(animationManager);
     }
 
     @Override
     protected void doEnd() {
+        if (levelFlashing != null) {
+            animationManager.destroyAnimation(levelFlashing);
+        }
     }
 
     @Override
@@ -275,9 +280,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
             case HUNTING -> dynamicCamera.setFocussingActor(true);
             case LEVEL_COMPLETE -> {
                 theSound().stopAll();
-                mazeFlashing = new LevelFlashingAnimation(theGameLevel(), 333);
-                mazeFlashing.setOnFinished(theGameController()::letCurrentGameStateExpire);
-                mazeFlashing.play();
+                levelFlashing.setGameLevel(theGameLevel());
+                levelFlashing.setSingleFlashMillis(333);
+                levelFlashing.getOrCreateAnimation().setOnFinished(e -> theGameController().letCurrentGameStateExpire());
+                levelFlashing.playFromStart();
             }
             case GAME_OVER -> {
                 var theGame = (TengenMsPacMan_GameModel) theGame();
@@ -422,11 +428,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
         ctx().save();
         centerOnScreen();
 
-        final boolean flashingActive = mazeFlashing != null && mazeFlashing.isRunning();
-        if (flashingActive) {
-            if (mazeFlashing.isHighlighted()) {
+        if (levelFlashing.isRunning()) {
+            if (levelFlashing.isHighlighted()) {
                 // get the current flashing maze "animation frame"
-                int frameIndex = mazeFlashing.flashingIndex();
+                int frameIndex = levelFlashing.flashingIndex();
                 ColorSchemedSprite flashingMazeSprite = gr().mazeConfig().flashingMazeSprites().get(frameIndex);
                 gr().drawLevelWithMaze(theGameLevel(), flashingMazeSprite.image(), flashingMazeSprite.sprite());
             } else {
