@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.*;
@@ -62,10 +63,10 @@ public class LevelCompletedAnimation extends ManagedAnimation {
                 pauseSec(0.5, () -> gameLevel.pac().hide()),
                 pauseSec(0.5),
                 createSpinningAnimation(),
-                pauseSec(0.5, () -> theSound().playLevelCompleteSound()),
+                pauseSec(0.5, () -> theSound().playSound(SoundID.LEVEL_COMPLETE)),
                 pauseSec(0.5),
                 wallsDisappearingAnimation.getOrCreateAnimation(),
-                pauseSec(1.0, () -> theSound().playLevelChangedSound())
+                pauseSec(1.0, () -> theSound().playSound(SoundID.LEVEL_CHANGED))
         );
     }
 

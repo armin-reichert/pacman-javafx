@@ -18,6 +18,7 @@ import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
+import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
@@ -148,7 +149,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
     public void onGameStarted(GameEvent e) {
         boolean silent = theGameLevel().isDemoLevel() || theGameState() == TESTING_LEVELS_SHORT || theGameState() == TESTING_LEVELS_MEDIUM;
         if (!silent) {
-            theSound().playGameReadySound();
+            theSound().playSound(SoundID.GAME_READY);
         }
     }
 
@@ -188,13 +189,13 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
         }
         // TODO: how exactly is the munching sound created in the original game?
         if (theGameLevel().pac().starvingTicks() > 10) {
-            theSound().pauseMunchingSound();
+            theSound().pauseSound(SoundID.PAC_MAN_MUNCHING);
         }
         boolean ghostsReturning = theGameLevel().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
         if (theGameLevel().pac().isAlive() && ghostsReturning) {
-            theSound().playGhostReturningHomeSound();
+            theSound().playSound(SoundID.GHOST_RETURNS);
         } else {
-            theSound().stopGhostReturningHomeSound();
+            theSound().stopSound(SoundID.GHOST_RETURNS);
         }
     }
 
@@ -278,7 +279,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
     @Override
     public void onEnterGameState(GameState state) {
         if (state == GameState.GAME_OVER) {
-            theSound().playGameOverSound();
+            theSound().playSound(SoundID.GAME_OVER);
         }
         else if (state == GameState.LEVEL_COMPLETE) {
             theSound().stopAll();
@@ -291,35 +292,35 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
 
     @Override
     public void onBonusActivated(GameEvent e) {
-        theSound().playBonusBouncingSound();
+        theSound().playSound(SoundID.BONUS_BOUNCING);
     }
 
     @Override
     public void onBonusEaten(GameEvent e) {
-        theSound().stopBonusBouncingSound();
-        theSound().playBonusEatenSound();
+        theSound().stopSound(SoundID.BONUS_BOUNCING);
+        theSound().playSound(SoundID.BONUS_EATEN);
     }
 
     @Override
     public void onBonusExpired(GameEvent e) {
-        theSound().stopBonusBouncingSound();
+        theSound().stopSound(SoundID.BONUS_BOUNCING);
     }
 
     @Override
     public void onCreditAdded(GameEvent e) {
-        theSound().playInsertCoinSound();
+        theSound().playSound(SoundID.COIN_INSERTED);
     }
 
     @Override
     public void onSpecialScoreReached(GameEvent e) {
         int score = e.payload("score");
         Logger.info("Extra life won for reaching score of {}", score);
-        theSound().playExtraLifeSound();
+        theSound().playSound(SoundID.EXTRA_LIFE);
     }
 
     @Override
     public void onGhostEaten(GameEvent e) {
-        theSound().playGhostEatenSound();
+        theSound().playSound(SoundID.GHOST_EATEN);
     }
 
     @Override
@@ -330,22 +331,22 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
     @Override
     public void onPacDying(GameEvent e) {
         theSound().pauseSiren();
-        theSound().playPacDeathSound();
+        theSound().playSound(SoundID.PAC_MAN_DEATH);
     }
 
     @Override
     public void onPacFoundFood(GameEvent e) {
-        theSound().playMunchingSound();
+        theSound().playSound(SoundID.PAC_MAN_MUNCHING);
     }
 
     @Override
     public void onPacGetsPower(GameEvent e) {
         theSound().pauseSiren();
-        theSound().playPacPowerSound();
+        theSound().playSound(SoundID.PAC_MAN_POWER);
     }
 
     @Override
     public void onPacLostPower(GameEvent e) {
-        theSound().stopPacPowerSound();
+        theSound().stopSound(SoundID.PAC_MAN_POWER);
     }
 }

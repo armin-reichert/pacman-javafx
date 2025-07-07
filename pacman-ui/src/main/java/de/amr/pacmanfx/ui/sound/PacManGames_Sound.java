@@ -26,97 +26,67 @@ public class PacManGames_Sound {
     private final BooleanProperty enabledProperty = new SimpleBooleanProperty(true);
     private final BooleanProperty mutedProperty = new SimpleBooleanProperty(false);
 
-    private final Map<String, Map<String, MediaPlayer>> mediaPlayersByGameVariant = new HashMap<>();
+    private final Map<String, Map<String, MediaPlayer>> mediaPlayerMaps = new HashMap<>();
 
     private String gameVariant;
     private String assetNamespace;
     private Siren siren;
     private MediaPlayer voice;
 
-    public MediaPlayer createSound(String key, int repetitions) {
-        String url = soundURL(key);
+    private MediaPlayer createSound(SoundID id, int repetitions) {
+        return createSound(id.key(), repetitions);
+    }
+
+    public MediaPlayer createSound(String keySuffix, int repetitions) {
+        String key = assetNamespace + ".audio." + keySuffix;
+        URL url = theAssets().get(key);
         if (url == null) {
-            Logger.warn("Missing audio resource '%s' (%s)".formatted(key, gameVariant));
+            Logger.warn("Missing audio resource '%s' (%s)".formatted(keySuffix, gameVariant));
             return null;
         }
-        var player = new MediaPlayer(new Media(url));
+        var player = new MediaPlayer(new Media(url.toExternalForm()));
         player.setCycleCount(repetitions);
         player.setVolume(1.0);
         player.muteProperty().bind(Bindings.createBooleanBinding(
                 () -> mutedProperty.get() || !enabledProperty.get(),
                 mutedProperty, enabledProperty
         ));
-        player.statusProperty().addListener((py,ov,nv) -> logPlayerStatusChange(player, key, ov, nv));
+        player.statusProperty().addListener((py,ov,nv) -> logPlayerStatusChange(player, keySuffix, ov, nv));
         Logger.debug("Media player created from URL {}", url);
         return player;
-    }
-
-    private String soundURL(String keySuffix) {
-        String key = assetNamespace + ".audio." + keySuffix;
-        URL url = theAssets().get(key);
-        return url != null ? url.toExternalForm() : null;
-    }
-
-    private Map<String, MediaPlayer> soundsByGameVariant(String gameVariant) {
-        if (!mediaPlayersByGameVariant.containsKey(gameVariant)) {
-            mediaPlayersByGameVariant.put(gameVariant, new HashMap<>());
-        }
-        return mediaPlayersByGameVariant.get(gameVariant);
     }
 
     public void selectGameVariant(String gameVariant, String assetNamespace) {
         this.gameVariant = requireNonNull(gameVariant);
         this.assetNamespace = requireNonNull(assetNamespace);
-        if (soundsByGameVariant(gameVariant).isEmpty()) {
-            var soundMap = new HashMap<String, MediaPlayer>();
-            addSoundMapEntry(soundMap, "game_over",      createSound("game_over"));
-            addSoundMapEntry(soundMap, "game_ready",     createSound("game_ready"));
-            addSoundMapEntry(soundMap, "ghost_returns",  createSound("ghost_returns", MediaPlayer.INDEFINITE));
-            addSoundMapEntry(soundMap, "level_complete", createSound("level_complete"));
-            addSoundMapEntry(soundMap, "pacman_munch",   createSound("pacman_munch", MediaPlayer.INDEFINITE));
-            addSoundMapEntry(soundMap, "pacman_death",   createSound("pacman_death"));
-            addSoundMapEntry(soundMap, "pacman_power",   createSound("pacman_power", MediaPlayer.INDEFINITE));
-            addSoundMapEntry(soundMap, "bonus_bouncing", createSound("bonus_bouncing", MediaPlayer.INDEFINITE));
+        if (mediaPlayerMap(gameVariant).isEmpty()) {
+            var map = new HashMap<String, MediaPlayer>();
+            mediaPlayerMaps.put(gameVariant, map);
+            Logger.debug("Created media player map for game variant {}", gameVariant);
 
-            //TODO this is crap
-            MediaPlayer bounceSound = soundMap.get("bonus_bouncing");
+            addMediaPlayerMapEntry(map, SoundID.BONUS_BOUNCING,   createSound(SoundID.BONUS_BOUNCING, MediaPlayer.INDEFINITE));
+            addMediaPlayerMapEntry(map, SoundID.GAME_OVER,        createSound(SoundID.GAME_OVER, 1));
+            addMediaPlayerMapEntry(map, SoundID.GAME_READY,       createSound(SoundID.GAME_READY, 1));
+            addMediaPlayerMapEntry(map, SoundID.GHOST_RETURNS,    createSound(SoundID.GHOST_RETURNS, MediaPlayer.INDEFINITE));
+            addMediaPlayerMapEntry(map, SoundID.LEVEL_COMPLETE,   createSound(SoundID.LEVEL_COMPLETE, 1));
+            addMediaPlayerMapEntry(map, SoundID.PAC_MAN_MUNCHING, createSound(SoundID.PAC_MAN_MUNCHING, MediaPlayer.INDEFINITE));
+            addMediaPlayerMapEntry(map, SoundID.PAC_MAN_DEATH,    createSound(SoundID.PAC_MAN_DEATH, 1));
+            addMediaPlayerMapEntry(map, SoundID.PAC_MAN_POWER,    createSound(SoundID.PAC_MAN_POWER, MediaPlayer.INDEFINITE));
+
+            //TODO this is total crap, clean it up
+            MediaPlayer bounceSound = map.get("bonus_bouncing");
             if (bounceSound != null && gameVariant.equals("MS_PACMAN_TENGEN")) {
                 bounceSound.setRate(0.25);
             }
-
-            mediaPlayersByGameVariant.put(gameVariant, soundMap);
-            Logger.debug("Created sound map for game variant {}", gameVariant);
         }
         siren = null;
-        logPlayerStatus();
+        logMediaPlayerStatus();
     }
 
-    private void addSoundMapEntry(HashMap<String, MediaPlayer> soundMap, String key, MediaPlayer sound) {
+    private void addMediaPlayerMapEntry(HashMap<String, MediaPlayer> map, SoundID id, MediaPlayer sound) {
         if (sound != null) {
-            soundMap.put(key, sound);
+            map.put(id.key(), sound);
         }
-    }
-
-    private void logPlayerStatus() {
-        for (String key : mediaPlayersByGameVariant.get(gameVariant).keySet()) {
-            player(key).ifPresent(player -> logPlayerStatus(player, key));
-        }
-        if (siren != null) {
-            logPlayerStatus(siren.player(), "Siren" + siren.number());
-        }
-        logPlayerStatus(voice, "Voice");
-    }
-
-    private void logPlayerStatus(MediaPlayer player, String key) {
-        if (player != null) {
-            Logger.debug("[{}] state={} volume={}", key, player.getStatus() != null ? player.getStatus() : "UNDEFINED", player.getVolume());
-        } else {
-            Logger.debug("No player exists for key {}", key);
-        }
-    }
-
-    private void logPlayerStatusChange(MediaPlayer player, String key, MediaPlayer.Status oldStatus, MediaPlayer.Status newStatus) {
-        Logger.debug("[{}] {} -> {}, volume {}", key, (oldStatus != null ? oldStatus : "undefined"), newStatus, player.getVolume());
     }
 
     public void setEnabled(boolean enabled) {
@@ -158,10 +128,6 @@ public class PacManGames_Sound {
         if (voice != null) {
             voice.stop();
         }
-    }
-
-    public Optional<MediaPlayer> player(String key) {
-        return Optional.ofNullable(mediaPlayersByGameVariant.get(gameVariant).get(key));
     }
 
     public BooleanProperty mutedProperty() {
@@ -219,64 +185,80 @@ public class PacManGames_Sound {
     }
 
     public void stopAll() {
-        mediaPlayersByGameVariant.get(gameVariant).forEach((key, player) -> player.stop());
-        stopMunchingSound(); // TODO check
+        mediaPlayerMaps.get(gameVariant).forEach((key, player) -> player.stop());
+        stopSound(SoundID.PAC_MAN_MUNCHING); // TODO check
         stopSiren();
         stopVoice();
         Logger.debug("All sounds stopped ({})", gameVariant);
     }
 
-    public void playBonusBouncingSound() { player("bonus_bouncing").ifPresent(MediaPlayer::play); }
-
-    public void stopBonusBouncingSound() { player("bonus_bouncing").ifPresent(MediaPlayer::stop); }
-
-    public void playBonusEatenSound() {
-        playClipIfEnabled("bonus_eaten", 1);
+    public void playSound(SoundID id) {
+        switch (id.type()) {
+            case MEDIA_PLAYER -> {
+                Logger.debug("Play media player '{}'", id.key());
+                mediaPlayer(id.key()).ifPresent(MediaPlayer::play);
+            }
+            case CLIP -> {
+                Logger.debug("Play audio clip '{}'", id.key());
+                playClipIfEnabled(id.key(), 1);
+            }
+        }
     }
 
-    public void playInsertCoinSound() {
-        playClipIfEnabled("credit", 1);
+    public void pauseSound(SoundID id) {
+        switch (id.type()) {
+            case MEDIA_PLAYER -> {
+                Logger.debug("Pause media player '{}'", id.key());
+                mediaPlayer(id.key()).ifPresent(MediaPlayer::pause);
+            }
+            case CLIP -> {
+                Logger.debug("Pausing audio clip '{}' not supported", id.key());
+            }
+        }
     }
 
-    public void playExtraLifeSound() {
-        playClipIfEnabled("extra_life", 1);
+    public void stopSound(SoundID id)  {
+        switch (id.type()) {
+            case MEDIA_PLAYER -> {
+                Logger.debug("Play media player '{}'", id.key());
+                mediaPlayer(id.key()).ifPresent(MediaPlayer::stop);
+            }
+            case CLIP -> {
+                Logger.debug("Stopping audio clip '{}' not supported", id.key());
+            }
+        }
     }
 
-    public void playGameOverSound() { player("game_over").ifPresent(MediaPlayer::play); }
-
-    public void playGameReadySound() {
-        player("game_ready").ifPresent(MediaPlayer::play);
+    private Map<String, MediaPlayer> mediaPlayerMap(String gameVariant) {
+        if (!mediaPlayerMaps.containsKey(gameVariant)) {
+            mediaPlayerMaps.put(gameVariant, new HashMap<>());
+        }
+        return mediaPlayerMaps.get(gameVariant);
     }
 
-    public void playGhostEatenSound() {
-        playClipIfEnabled("ghost_eaten", 1);
+    private Optional<MediaPlayer> mediaPlayer(String key) {
+        return Optional.ofNullable(mediaPlayerMap(gameVariant).get(key));
     }
 
-    public void playGhostReturningHomeSound() {
-        player("ghost_returns").ifPresent(MediaPlayer::play);
+    private void logMediaPlayerStatus() {
+        for (String key : mediaPlayerMap(gameVariant).keySet()) {
+            mediaPlayer(key).ifPresent(player -> logMediaPlayerStatus(player, key));
+        }
+        if (siren != null) {
+            logMediaPlayerStatus(siren.player(), "Siren" + siren.number());
+        }
+        logMediaPlayerStatus(voice, "Voice");
     }
 
-    public void stopGhostReturningHomeSound() { player("ghost_returns").ifPresent(MediaPlayer::stop); }
-
-    public void playLevelChangedSound() {
-        playClipIfEnabled("sweep", 1);
+    private void logMediaPlayerStatus(MediaPlayer player, String key) {
+        if (player != null) {
+            Logger.debug("[{}] state={} volume={}", key, player.getStatus() != null ? player.getStatus() : "UNDEFINED", player.getVolume());
+        } else {
+            Logger.debug("No player exists for key {}", key);
+        }
     }
 
-    public void playLevelCompleteSound() {
-        player("level_complete").ifPresent(MediaPlayer::play);
+    private void logPlayerStatusChange(MediaPlayer player, String key, MediaPlayer.Status oldStatus, MediaPlayer.Status newStatus) {
+        Logger.debug("[{}] {} -> {}, volume {}", key, (oldStatus != null ? oldStatus : "undefined"), newStatus, player.getVolume());
     }
-
-    public void playMunchingSound() {
-        player("pacman_munch").ifPresent(MediaPlayer::play);
-    }
-
-    public void stopMunchingSound() { player("pacman_munch").ifPresent(MediaPlayer::stop); }
-
-    public void pauseMunchingSound() { player("pacman_munch").ifPresent(MediaPlayer::pause); }
-
-    public void playPacDeathSound() { player("pacman_death").ifPresent(MediaPlayer::play); }
-
-    public void playPacPowerSound() { player("pacman_power").ifPresent(MediaPlayer::play); }
-
-    public void stopPacPowerSound() { player("pacman_power").ifPresent(MediaPlayer::stop); }
 }

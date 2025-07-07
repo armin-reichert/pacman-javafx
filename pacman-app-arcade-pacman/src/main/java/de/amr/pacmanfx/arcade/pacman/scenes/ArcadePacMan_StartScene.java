@@ -8,6 +8,7 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.ui.ActionBindingSupport;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui.sound.SoundID;
 
 import static de.amr.pacmanfx.Globals.theGame;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
@@ -41,7 +42,7 @@ public class ArcadePacMan_StartScene extends GameScene2D implements ActionBindin
 
     @Override
     public void onCreditAdded(GameEvent e) {
-        theSound().playInsertCoinSound();
+        theSound().playSound(SoundID.COIN_INSERTED);
     }
 
     @Override

@@ -11,6 +11,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.ui.ActionBindingSupport;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
+import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
 import static de.amr.pacmanfx.Globals.TS;
@@ -63,7 +64,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D implements ActionBind
 
     @Override
     public void onCreditAdded(GameEvent e) {
-        theSound().playInsertCoinSound();
+        theSound().playSound(SoundID.COIN_INSERTED);
     }
 
     @Override

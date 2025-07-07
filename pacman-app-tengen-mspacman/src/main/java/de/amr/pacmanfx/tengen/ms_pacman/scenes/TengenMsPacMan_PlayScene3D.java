@@ -11,6 +11,7 @@ import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
+import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.model3D.Bonus3D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.ImageView;
@@ -108,19 +109,19 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     @Override
     public void onBonusActivated(GameEvent event) {
         optGameLevel().flatMap(GameLevel::bonus).ifPresent(bonus -> gameLevel3D.updateBonus3D(bonus));
-        theSound().playBonusBouncingSound();
+        theSound().playSound(SoundID.BONUS_BOUNCING);
     }
 
     @Override
     public void onBonusEaten(GameEvent event) {
         gameLevel3D.bonus3D().ifPresent(Bonus3D::showEaten);
-        theSound().stopBonusBouncingSound();
-        theSound().playBonusEatenSound();
+        theSound().stopSound(SoundID.BONUS_BOUNCING);
+        theSound().playSound(SoundID.BONUS_EATEN);
     }
 
     @Override
     public void onBonusExpired(GameEvent event) {
         gameLevel3D.bonus3D().ifPresent(Bonus3D::expire);
-        theSound().stopBonusBouncingSound();
+        theSound().stopSound(SoundID.BONUS_BOUNCING);
     }
 }

@@ -13,6 +13,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._3d.Perspective;
+import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.shape.DrawMode;
 import org.tinylog.Logger;
 
@@ -113,7 +114,7 @@ public interface PacManGames_GameActions {
         @Override
         public void execute(PacManGames_UI ui) {
             theGameLevel().eatAllPellets();
-            theSound().pauseMunchingSound();
+            theSound().pauseSound(SoundID.PAC_MAN_MUNCHING);
             theGameEventManager().publishEvent(theGame(), GameEventType.PAC_FOUND_FOOD);
         }
 
