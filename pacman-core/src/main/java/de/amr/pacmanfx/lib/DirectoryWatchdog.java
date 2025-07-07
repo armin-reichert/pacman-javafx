@@ -25,6 +25,7 @@ public class DirectoryWatchdog {
 
     private final Thread pollingThread = new Thread(this::pollEvents);
     private final File watchedDir;
+    private final WatchService watchService;
     private final WatchKey watchKey;
     private final List<WatchEventListener> eventListeners = new ArrayList<>();
     private boolean polling;
@@ -41,7 +42,7 @@ public class DirectoryWatchdog {
         }
         watchedDir = path;
         try {
-            WatchService watchService = FileSystems.getDefault().newWatchService();
+            watchService = FileSystems.getDefault().newWatchService();
             watchKey = watchedDir.toPath().register(watchService, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
         } catch (IOException x) {
             throw new RuntimeException(x);
@@ -57,16 +58,28 @@ public class DirectoryWatchdog {
     }
 
     public void startWatching() {
+        if (pollingThread.isAlive()) return;
+        polling = true;
         pollingThread.setDaemon(true);
         pollingThread.start();
-        polling = true;
         Logger.info("Start watching directory {}", watchedDir);
     }
 
-    public void stopWatching() {
+    public void dispose() {
         polling = false;
-        Logger.info("Stopped watching directory {}", watchedDir);
+        watchKey.cancel();
+        pollingThread.interrupt();
+        try {
+            pollingThread.join(100);
+            watchService.close();
+            eventListeners.clear();
+            Logger.info("Stopped watching directory {}", watchedDir);
+        } catch (Exception x) {
+            Logger.error("Exception occurred when stopping directory watchdog");
+        }
     }
+
+    public boolean isWatching() { return polling && pollingThread.isAlive(); }
 
     private void pollEvents() {
         while (polling) {
@@ -77,7 +90,8 @@ public class DirectoryWatchdog {
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {
-                Logger.error("Interrupted");
+                Logger.debug("Directory polling thread interrupted");
+                Thread.currentThread().interrupt(); // restore flag
             }
         }
     }

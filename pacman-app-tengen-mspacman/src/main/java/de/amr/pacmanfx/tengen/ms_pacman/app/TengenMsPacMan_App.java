@@ -48,6 +48,6 @@ public class TengenMsPacMan_App extends Application {
     @Override
     public void stop() {
         theClock().stop();
-        theWatchdog().stopWatching();
+        theWatchdog().dispose();
     }
 }

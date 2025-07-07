@@ -44,6 +44,6 @@ public class ArcadeMsPacMan_App extends Application {
     @Override
     public void stop() {
         theClock().stop();
-        theWatchdog().stopWatching();
+        theWatchdog().dispose();
     }
 }

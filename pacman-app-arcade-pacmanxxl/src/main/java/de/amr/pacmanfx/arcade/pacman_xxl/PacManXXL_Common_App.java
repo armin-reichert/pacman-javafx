@@ -54,6 +54,6 @@ public class PacManXXL_Common_App extends Application {
     @Override
     public void stop() {
         theClock().stop();
-        theWatchdog().stopWatching();
+        theWatchdog().dispose();
     }
 }

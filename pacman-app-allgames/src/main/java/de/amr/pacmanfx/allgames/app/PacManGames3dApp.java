@@ -86,6 +86,6 @@ public class PacManGames3dApp extends Application {
     @Override
     public void stop() {
         theClock().stop();
-        theWatchdog().stopWatching();
+        theWatchdog().dispose();
     }
 }
