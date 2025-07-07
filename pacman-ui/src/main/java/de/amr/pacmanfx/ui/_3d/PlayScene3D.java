@@ -219,7 +219,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             Logger.error("Tick #{}: 3D game level is in destroy phase", theClock().tickCount());
             theUI().terminateApp();
         }
-        level3D.tick(theGameLevel());
+        level3D.tick();
         updateScores(theGameLevel());
         updateSound(theGameLevel());
         perspectiveManager.updatePerspective(theGameLevel());
