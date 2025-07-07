@@ -59,6 +59,13 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
     }
 
     @Override
+    protected void doEnd() {
+        if (levelFlashing != null) {
+            //TODO levelFlashing.stop();
+        }
+    }
+
+    @Override
     public void onLevelCreated(GameEvent e) {
         if (theGameLevel().isDemoLevel()) {
             theGame().hud().showLevelCounter(true);
@@ -319,6 +326,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
 
     @Override
     public void onPacDying(GameEvent e) {
+        theSound().pauseSiren();
         theSound().playPacDeathSound();
     }
 
@@ -329,7 +337,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
 
     @Override
     public void onPacGetsPower(GameEvent e) {
-        theSound().stopSiren();
+        theSound().pauseSiren();
         theSound().playPacPowerSound();
     }
 

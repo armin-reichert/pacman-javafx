@@ -193,10 +193,8 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         clearActionBindings();
         perspectiveManager.perspectiveIDProperty().unbind();
         if (level3D != null) {
-            Platform.runLater(() -> {
-                level3D.destroy();
-                level3D = null;
-            });
+            level3D.destroy();
+            level3D = null;
         }
     }
 
@@ -222,6 +220,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
         updateScores(theGameLevel());
         updateSound(theGameLevel());
         perspectiveManager.updatePerspective(theGameLevel());
+        subScene3D.setFill(Color.TRANSPARENT);
     }
 
     @Override
@@ -358,7 +357,6 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
             }
             default -> Logger.error("Unexpected game state '{}' on level start", theGameState());
         }
-        subScene3D.setFill(Color.TRANSPARENT);
         perspectiveManager.initPerspective();
     }
 
@@ -478,7 +476,7 @@ public class PlayScene3D extends Group implements GameScene, CameraControlledVie
     public void onPacGetsPower(GameEvent event) {
         level3D.pac3D().setMovementPowerMode(true);
         level3D.wallColorFlashingAnimation().playFromStart();
-        theSound().stopSiren();
+        theSound().pauseSiren();
         theSound().playPacPowerSound();
     }
 

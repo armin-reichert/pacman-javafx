@@ -109,6 +109,11 @@ public class ArcadePacMan_IntroScene extends GameScene2D implements ActionBindin
     }
 
     @Override
+    protected void doEnd() {
+        blinking.stop();
+    }
+
+    @Override
     public void update() {
         sceneController.update();
     }

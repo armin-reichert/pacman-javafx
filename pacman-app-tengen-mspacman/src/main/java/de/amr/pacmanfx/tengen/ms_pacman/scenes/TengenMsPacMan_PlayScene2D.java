@@ -183,6 +183,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
     }
 
     @Override
+    protected void doEnd() {
+    }
+
+    @Override
     public void update() {
         optGameLevel().ifPresent(level -> {
             if (level.isDemoLevel()) {
@@ -340,7 +344,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
 
     @Override
     public void onPacGetsPower(GameEvent e) {
-        theSound().stopSiren();
+        theSound().pauseSiren();
         theSound().playPacPowerSound();
     }
 
@@ -396,7 +400,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
         gr().setScaling(scaling());
 
         ctx().save();
-        if (debugInfoVisiblePy.get()) {
+        if (debugInfoVisibleProperty.get()) {
             canvas.setClip(null);
             drawSceneContent();
             drawDebugInfo();

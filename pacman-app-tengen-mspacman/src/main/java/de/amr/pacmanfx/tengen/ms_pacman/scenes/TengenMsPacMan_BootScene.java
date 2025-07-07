@@ -50,6 +50,10 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     }
 
     @Override
+    protected void doEnd() {
+    }
+
+    @Override
     public void update() {
         ghost.move();
         presentsText.move();
