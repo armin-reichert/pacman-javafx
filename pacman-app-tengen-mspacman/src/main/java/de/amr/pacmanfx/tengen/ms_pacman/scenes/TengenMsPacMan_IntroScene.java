@@ -84,6 +84,10 @@ public class TengenMsPacMan_IntroScene extends GameScene2D implements ActionBind
     }
 
     @Override
+    protected void doEnd() {
+    }
+
+    @Override
     public void update() {
         if (!theClock().isPaused()) {
             sceneController.update();

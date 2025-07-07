@@ -14,50 +14,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
+import static java.util.Objects.requireNonNull;
+
 public class MsPacMan3D extends PacBase3D {
-
-    private class HipSwayingAnimation extends ManagedAnimation {
-        private static final short HIP_ANGLE_FROM = -20;
-        private static final short HIP_ANGLE_TO = 20;
-        private static final Duration SWING_TIME = Duration.seconds(0.4);
-        private static final float POWER_ANGLE_AMPLIFICATION = 1.5f;
-        private static final float POWER_RATE = 2;
-
-        public HipSwayingAnimation(AnimationManager animationManager) {
-            super(animationManager, "MsPacMan_HipSwaying");
-        }
-
-        @Override
-        protected Animation createAnimation() {
-            var rotateTransition = new RotateTransition(SWING_TIME, MsPacMan3D.this);
-            rotateTransition.setAxis(Rotate.Z_AXIS);
-            rotateTransition.setCycleCount(Animation.INDEFINITE);
-            rotateTransition.setAutoReverse(true);
-            rotateTransition.setInterpolator(Interpolator.EASE_BOTH);
-            return rotateTransition;
-        }
-
-        @Override
-        public void stop() {
-            var rotateTransition = (RotateTransition) getOrCreateAnimation();
-            super.stop();
-            setRotationAxis(rotateTransition.getAxis());
-            setRotate(0);
-        }
-
-        public void setPowerMode(boolean power) {
-            var rotateTransition = (RotateTransition) getOrCreateAnimation();
-            boolean running = rotateTransition.getStatus() == Animation.Status.RUNNING;
-            double amplification = power ? POWER_ANGLE_AMPLIFICATION : 1;
-            rotateTransition.stop();
-            rotateTransition.setFromAngle(HIP_ANGLE_FROM * amplification);
-            rotateTransition.setToAngle(HIP_ANGLE_TO * amplification);
-            rotateTransition.setRate(power ? POWER_RATE : 1);
-            if (running) {
-                rotateTransition.play();
-            }
-        }
-    }
 
     private MsPacManFemaleParts femaleBodyParts;
 
@@ -86,7 +45,7 @@ public class MsPacMan3D extends PacBase3D {
             }
         };
 
-        movementAnimation = new HipSwayingAnimation(animationManager);
+        movementAnimation = new HipSwayingAnimation(animationManager, this);
         setMovementPowerMode(false);
     }
 

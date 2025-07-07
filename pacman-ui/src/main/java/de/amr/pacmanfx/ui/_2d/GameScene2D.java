@@ -10,6 +10,7 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.input.Keyboard;
+import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -30,31 +31,26 @@ import static java.util.Objects.requireNonNull;
  * Base class of all 2D scenes.
  */
 public abstract class GameScene2D implements GameScene {
+    protected final ObjectProperty<Font> arcadeFont8Property = new SimpleObjectProperty<>();
+    protected final ObjectProperty<Font> arcadeFont6Property = new SimpleObjectProperty<>();
+    protected final ObjectProperty<Color> backgroundColorProperty = new SimpleObjectProperty<>(Color.BLACK);
+    protected final BooleanProperty debugInfoVisibleProperty = new SimpleBooleanProperty(false);
+    protected final FloatProperty scalingProperty = new SimpleFloatProperty(1.0f);
 
     protected final Map<KeyCombination, GameAction> actionBindings = new HashMap<>();
-
-    protected final ObjectProperty<Font>  arcadeFont8Py = new SimpleObjectProperty<>();
-    protected final ObjectProperty<Font>  arcadeFont6Py = new SimpleObjectProperty<>();
-    protected final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
-    protected final BooleanProperty       debugInfoVisiblePy = new SimpleBooleanProperty(false);
-    protected final FloatProperty         scalingPy = new SimpleFloatProperty(1.0f);
-
     protected GameRenderer gameRenderer;
     protected Canvas canvas;
 
-    protected GameScene2D() {
-        arcadeFont8Py.bind(scalingPy.map(s -> theAssets().arcadeFont(s.floatValue() * 8)));
-        arcadeFont6Py.bind(scalingPy.map(s -> theAssets().arcadeFont(s.floatValue() * 6)));
-    }
+    protected AnimationManager animationManager = new AnimationManager();
 
     @Override
     public final void init() {
+        arcadeFont8Property.bind(scalingProperty.map(s -> theAssets().arcadeFont(s.floatValue() * 8)));
+        arcadeFont6Property.bind(scalingProperty.map(s -> theAssets().arcadeFont(s.floatValue() * 6)));
         doInit();
         updateActionBindings();
         theKeyboard().logCurrentBindings();
     }
-
-    protected void doInit() {}
 
     @Override
     public final void end() {
@@ -63,7 +59,8 @@ public abstract class GameScene2D implements GameScene {
         theSound().stopAll();
     }
 
-    protected void doEnd() {}
+    protected abstract void doInit();
+    protected abstract void doEnd();
 
     @Override
     public Map<KeyCombination, GameAction> actionBindings() { return actionBindings; }
@@ -80,15 +77,15 @@ public abstract class GameScene2D implements GameScene {
     @Override
     public Keyboard keyboard() { return theKeyboard(); }
 
-    public void  setScaling(double scaling) { scalingPy.set((float) scaling); }
-    public float scaling() { return scalingPy.get(); }
+    public void  setScaling(double scaling) { scalingProperty.set((float) scaling); }
+    public float scaling() { return scalingProperty.get(); }
     public float scaled(double value) { return (float) value * scaling(); }
 
-    public Font scaledArcadeFont8() { return arcadeFont8Py.get(); }
-    public Font scaledArcadeFont6() { return arcadeFont6Py.get(); }
+    public Font scaledArcadeFont8() { return arcadeFont8Property.get(); }
+    public Font scaledArcadeFont6() { return arcadeFont6Property.get(); }
 
-    public Color backgroundColor() { return backgroundColorPy.get(); }
-    public void setBackgroundColor(Color color) { backgroundColorPy.set(color); }
+    public Color backgroundColor() { return backgroundColorProperty.get(); }
+    public void setBackgroundColor(Color color) { backgroundColorProperty.set(color); }
 
     public GameRenderer gr() { return gameRenderer; }
     public void setGameRenderer(SpriteGameRenderer renderer) { gameRenderer = requireNonNull(renderer); }
@@ -97,9 +94,9 @@ public abstract class GameScene2D implements GameScene {
     public Canvas canvas() { return canvas; }
     public void setCanvas(Canvas canvas) { this.canvas = canvas; }
 
-    public ObjectProperty<Color> backgroundColorProperty() { return backgroundColorPy; }
-    public BooleanProperty debugInfoVisibleProperty() { return debugInfoVisiblePy; }
-    public FloatProperty scalingProperty() { return scalingPy; }
+    public ObjectProperty<Color> backgroundColorProperty() { return backgroundColorProperty; }
+    public BooleanProperty debugInfoVisibleProperty() { return debugInfoVisibleProperty; }
+    public FloatProperty scalingProperty() { return scalingProperty; }
 
     /**
      * @return (unscaled) scene size in pixels e.g. 224x288
@@ -114,7 +111,7 @@ public abstract class GameScene2D implements GameScene {
         gameRenderer.fillCanvas(backgroundColor());
         gameRenderer.setScaling(scaling());
         drawSceneContent();
-        if (debugInfoVisiblePy.get()) {
+        if (debugInfoVisibleProperty.get()) {
             drawDebugInfo();
         }
         gameRenderer.drawHUD(theGame().hud());

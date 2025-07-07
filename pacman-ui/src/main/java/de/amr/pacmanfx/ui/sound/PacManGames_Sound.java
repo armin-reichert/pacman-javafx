@@ -206,6 +206,12 @@ public class PacManGames_Sound {
         }
     }
 
+    public void pauseSiren() {
+        if (siren != null) {
+            siren.player().pause();
+        }
+    }
+
     public void stopSiren() {
         if (siren != null) {
             siren.player().stop();

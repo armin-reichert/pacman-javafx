@@ -10,8 +10,6 @@ import static java.util.Objects.requireNonNull;
 
 public abstract class ManagedAnimation implements Destroyable {
 
-    public static final boolean CONTINUE = false, FROM_START = true;
-
     protected AnimationManager animationManager;
     protected String label;
     protected Animation animation;
@@ -55,16 +53,10 @@ public abstract class ManagedAnimation implements Destroyable {
     }
 
     public void playFromStart() {
-        play(FROM_START);
+        animationManager.playAnimationFromStart(this);
     }
 
-    public void playOrContinue() {
-        play(CONTINUE);
-    }
-
-    protected void play(boolean playMode) {
-        animationManager.playAnimation(this, playMode);
-    }
+    public void playOrContinue() { animationManager.playAnimation(this); }
 
     public void pause() {
         animationManager.pauseAnimation(this);
@@ -72,5 +64,9 @@ public abstract class ManagedAnimation implements Destroyable {
 
     public void stop() {
         animationManager.stopAnimation(this);
+    }
+
+    public boolean isRunning() {
+        return animation != null && animation.getStatus() == Animation.Status.RUNNING;
     }
 }

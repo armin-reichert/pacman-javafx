@@ -25,7 +25,7 @@ import de.amr.pacmanfx.ui.ActionBindingSupport;
 import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.LevelFlashingAnimation;
+import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.uilib.CameraControlledView;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.beans.property.DoubleProperty;
@@ -67,21 +67,21 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
 
     private static final int MOVING_MESSAGE_DELAY = 120;
 
+    private final ObjectProperty<SceneDisplayMode> displayModeProperty = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING);
+
     private final SubScene fxSubScene;
     private final DynamicCamera dynamicCamera = new DynamicCamera();
     private final ParallelCamera fixedCamera  = new ParallelCamera();
-    private final ObjectProperty<SceneDisplayMode> displayModePy = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING);
     private final Rectangle canvasClipRect = new Rectangle();
 
     private MessageMovement messageMovement;
-    private LevelFlashingAnimation mazeFlashing;
+    private LevelCompletedAnimation levelCompletedAnimation;
 
     public TengenMsPacMan_PlayScene2D() {
         dynamicCamera.scalingProperty().bind(scalingProperty());
 
-        canvas = new Canvas();
-        setCanvas(canvas);
-
+        // use own canvas, not shared canvas
+        setCanvas(new Canvas());
         canvas.widthProperty() .bind(scalingProperty().multiply(UNSCALED_CANVAS_WIDTH));
         canvas.heightProperty().bind(scalingProperty().multiply(UNSCALED_CANVAS_HEIGHT));
 
@@ -95,10 +95,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
         var root = new StackPane(canvas);
         root.setBackground(Background.EMPTY);
 
-        fxSubScene = new SubScene(root, 0, 0); // size is bound to parent scene size when embedded in game view
+        fxSubScene = new SubScene(root, 88, 88); // size gets bound to parent scene size when embedded in game view
+        fxSubScene.setFill(backgroundColor());
         fxSubScene.cameraProperty().bind(displayModeProperty()
             .map(displayMode -> displayMode == SceneDisplayMode.SCROLLING ? dynamicCamera : fixedCamera));
-        fxSubScene.setFill(PY_CANVAS_BG_COLOR.get());
     }
 
     @Override
@@ -149,7 +149,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
     }
 
     public ObjectProperty<SceneDisplayMode> displayModeProperty() {
-        return displayModePy;
+        return displayModeProperty;
     }
 
     private void bindActionsToKeys() {
@@ -180,6 +180,14 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
         setGameRenderer(config.createGameRenderer(canvas()));
         dynamicCamera.moveTop();
         messageMovement = new MessageMovement();
+        levelCompletedAnimation = new LevelCompletedAnimation(animationManager);
+    }
+
+    @Override
+    protected void doEnd() {
+        if (levelCompletedAnimation != null) {
+            animationManager.destroyAnimation(levelCompletedAnimation);
+        }
     }
 
     @Override
@@ -271,9 +279,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
             case HUNTING -> dynamicCamera.setFocussingActor(true);
             case LEVEL_COMPLETE -> {
                 theSound().stopAll();
-                mazeFlashing = new LevelFlashingAnimation(theGameLevel(), 333);
-                mazeFlashing.setOnFinished(theGameController()::letCurrentGameStateExpire);
-                mazeFlashing.play();
+                levelCompletedAnimation.setGameLevel(theGameLevel());
+                levelCompletedAnimation.setSingleFlashMillis(333);
+                levelCompletedAnimation.getOrCreateAnimation().setOnFinished(e -> theGameController().letCurrentGameStateExpire());
+                levelCompletedAnimation.playFromStart();
             }
             case GAME_OVER -> {
                 var theGame = (TengenMsPacMan_GameModel) theGame();
@@ -340,7 +349,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
 
     @Override
     public void onPacGetsPower(GameEvent e) {
-        theSound().stopSiren();
+        theSound().pauseSiren();
         theSound().playPacPowerSound();
     }
 
@@ -384,7 +393,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
         gr().ensureRenderingHintsAreApplied(theGameLevel());
 
         // compute current scene scaling
-        switch (displayModePy.get()) {
+        switch (displayModeProperty.get()) {
             case SCALED_TO_FIT -> { //TODO this code smells
                 int tilesY = theGameLevel().worldMap().numRows() + 3;
                 double camY = scaled((tilesY - 46) * HTS);
@@ -396,7 +405,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
         gr().setScaling(scaling());
 
         ctx().save();
-        if (debugInfoVisiblePy.get()) {
+        if (debugInfoVisibleProperty.get()) {
             canvas.setClip(null);
             drawSceneContent();
             drawDebugInfo();
@@ -418,11 +427,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
         ctx().save();
         centerOnScreen();
 
-        final boolean flashingActive = mazeFlashing != null && mazeFlashing.isRunning();
-        if (flashingActive) {
-            if (mazeFlashing.isHighlighted()) {
+        if (levelCompletedAnimation.isRunning()) {
+            if (levelCompletedAnimation.isHighlighted()) {
                 // get the current flashing maze "animation frame"
-                int frameIndex = mazeFlashing.flashingIndex();
+                int frameIndex = levelCompletedAnimation.flashingIndex();
                 ColorSchemedSprite flashingMazeSprite = gr().mazeConfig().flashingMazeSprites().get(frameIndex);
                 gr().drawLevelWithMaze(theGameLevel(), flashingMazeSprite.image(), flashingMazeSprite.sprite());
             } else {

@@ -16,7 +16,7 @@ import de.amr.pacmanfx.ui.ActionBindingSupport;
 import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.LevelFlashingAnimation;
+import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.scene.control.CheckMenuItem;
@@ -44,7 +44,7 @@ import static de.amr.pacmanfx.ui.PacManGames_UI.*;
  */
 public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindingSupport {
 
-    private LevelFlashingAnimation levelFlashing;
+    private LevelCompletedAnimation levelCompletedAnimation;
 
     @Override
     public SpriteGameRenderer gr() {
@@ -56,6 +56,15 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
         theGame().hud().showScore(true);
         theGame().hud().showLevelCounter(true);
         theGame().hud().showLivesCounter(true);
+        levelCompletedAnimation = new LevelCompletedAnimation(animationManager);
+    }
+
+    @Override
+    protected void doEnd() {
+        if (levelCompletedAnimation != null) {
+            animationManager.destroyAnimation(levelCompletedAnimation);
+        }
+        levelCompletedAnimation = null;
     }
 
     @Override
@@ -202,7 +211,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
         gr().applyRenderingHints(theGameLevel());
 
         // Level < Level message
-        boolean highlighted = levelFlashing != null && levelFlashing.isRunning() && levelFlashing.isHighlighted();
+        boolean highlighted = levelCompletedAnimation != null && levelCompletedAnimation.isHighlighted();
         gr().drawLevel(theGameLevel(), backgroundColor(), highlighted, theGameLevel().blinking().isOn());
         if (theGameLevel().message() != GameLevel.MESSAGE_NONE) drawLevelMessage(theGameLevel());
 
@@ -273,9 +282,10 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
         }
         else if (state == GameState.LEVEL_COMPLETE) {
             theSound().stopAll();
-            levelFlashing = new LevelFlashingAnimation(theGameLevel(), 333);
-            levelFlashing.setOnFinished(theGameController()::letCurrentGameStateExpire);
-            levelFlashing.play();
+            levelCompletedAnimation.setGameLevel(theGameLevel());
+            levelCompletedAnimation.setSingleFlashMillis(333);
+            levelCompletedAnimation.getOrCreateAnimation().setOnFinished(e -> theGameController().letCurrentGameStateExpire());
+            levelCompletedAnimation.playFromStart();
         }
     }
 
@@ -319,6 +329,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
 
     @Override
     public void onPacDying(GameEvent e) {
+        theSound().pauseSiren();
         theSound().playPacDeathSound();
     }
 
@@ -329,7 +340,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
 
     @Override
     public void onPacGetsPower(GameEvent e) {
-        theSound().stopSiren();
+        theSound().pauseSiren();
         theSound().playPacPowerSound();
     }
 

@@ -123,15 +123,19 @@ public class MutatingGhost3D extends Group implements Destroyable {
             }
 
             @Override
-            public void play(boolean playMode) {
+            public void playFromStart() {
                 var rotateTransition = (RotateTransition) getOrCreateAnimation();
                 rotateTransition.stop();
                 rotateTransition.setByAngle(ghost.moveDir() == Direction.LEFT ? -35 : 35);
-                if (playMode == FROM_START) {
-                    rotateTransition.playFromStart();
-                } else {
-                    rotateTransition.play();
-                }
+                rotateTransition.playFromStart();
+            }
+
+            @Override
+            public void playOrContinue() {
+                var rotateTransition = (RotateTransition) getOrCreateAnimation();
+                rotateTransition.stop();
+                rotateTransition.setByAngle(ghost.moveDir() == Direction.LEFT ? -35 : 35);
+                rotateTransition.play();
             }
 
             @Override

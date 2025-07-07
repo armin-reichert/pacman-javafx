@@ -33,6 +33,10 @@ public class ArcadePacMan_StartScene extends GameScene2D implements ActionBindin
     }
 
     @Override
+    protected void doEnd() {
+    }
+
+    @Override
     public void update() {}
 
     @Override

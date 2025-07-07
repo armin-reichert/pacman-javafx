@@ -55,6 +55,10 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D implements ActionBind
     }
 
     @Override
+    protected void doEnd() {
+    }
+
+    @Override
     public void update() {}
 
     @Override

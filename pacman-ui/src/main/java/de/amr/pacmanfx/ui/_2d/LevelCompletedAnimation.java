@@ -6,6 +6,8 @@ package de.amr.pacmanfx.ui._2d;
 
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.uilib.animation.AnimationManager;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.SequentialTransition;
@@ -14,6 +16,7 @@ import javafx.util.Duration;
 
 import static de.amr.pacmanfx.uilib.Ufx.doAfterSec;
 import static de.amr.pacmanfx.uilib.Ufx.pauseSec;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Animation played when level is complete. Consists of the following steps:
@@ -27,45 +30,49 @@ import static de.amr.pacmanfx.uilib.Ufx.pauseSec;
  * After each flashing cycle, the flashing index is incremented. This is used by the Tengen play scene renderer to
  * draw a different map color for each flashing cycle (only for the non-ARCADE maps starting at level 28)
  */
-public class LevelFlashingAnimation {
+public class LevelCompletedAnimation extends ManagedAnimation {
 
-    private final SequentialTransition animation;
+    private GameLevel gameLevel;
+    private int singleFlashMillis;
     private int flashingIndex;
     private boolean highlighted;
 
-    public LevelFlashingAnimation(GameLevel level, int singleFlashMillis) {
-        int numFlashes = level.data().numFlashes();
-        animation = new SequentialTransition(
-            doAfterSec(1.5, () -> level.ghosts().forEach(Ghost::hide)),
-            doAfterSec(0.5, numFlashes > 0 ? flashingAnimation(numFlashes, singleFlashMillis) : pauseSec(0)),
-            pauseSec(1)
-        );
+    public LevelCompletedAnimation(AnimationManager animationManager) {
+        super(animationManager, "Level_Completed");
     }
 
-    private Animation flashingAnimation(int numFlashes, int singleFlashMillis) {
-        var flashingAnimation = new Timeline(
+    @Override
+    protected Animation createAnimation() {
+        requireNonNull(gameLevel);
+        int numFlashes = gameLevel.data().numFlashes();
+        var flashingTimeline = new Timeline(
             new KeyFrame(Duration.millis(singleFlashMillis * 0.25), e -> highlighted = true),
             new KeyFrame(Duration.millis(singleFlashMillis * 0.75), e -> highlighted = false),
             new KeyFrame(Duration.millis(singleFlashMillis), e -> {
                 if (flashingIndex + 1 < numFlashes) flashingIndex++;
             })
         );
-        flashingAnimation.setCycleCount(numFlashes);
-        return flashingAnimation;
+        flashingTimeline.setCycleCount(numFlashes);
+        return new SequentialTransition(
+            doAfterSec(1.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
+            doAfterSec(0.5, numFlashes > 0 ? flashingTimeline : pauseSec(0)),
+            pauseSec(1)
+        );
     }
 
-    public void play() {
+    @Override
+    public void playFromStart() {
         flashingIndex = 0;
         highlighted = false;
-        animation.play();
+        super.playFromStart();
     }
 
-    public boolean isRunning() {
-        return animation.getStatus() == Animation.Status.RUNNING;
+    public void setGameLevel(GameLevel gameLevel) {
+        this.gameLevel = gameLevel;
     }
 
-    public void setOnFinished(Runnable action) {
-        animation.setOnFinished(e -> action.run());
+    public void setSingleFlashMillis(int singleFlashMillis) {
+        this.singleFlashMillis = singleFlashMillis;
     }
 
     public int flashingIndex() {

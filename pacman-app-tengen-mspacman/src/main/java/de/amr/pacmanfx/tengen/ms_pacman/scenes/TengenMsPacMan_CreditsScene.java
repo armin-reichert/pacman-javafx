@@ -28,6 +28,10 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D implements ActionBi
     }
 
     @Override
+    protected void doEnd() {
+    }
+
+    @Override
     public void update() {
         if (theGameState().timer().atSecond(DISPLAY_SECONDS)) {
             theGameController().letCurrentGameStateExpire();
