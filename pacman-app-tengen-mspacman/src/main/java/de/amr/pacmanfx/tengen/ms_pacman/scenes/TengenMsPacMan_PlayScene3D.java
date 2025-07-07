@@ -63,7 +63,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         var tengenGame = (TengenMsPacMan_GameModel) theGame();
         if (!tengenGame.optionsAreInitial()) {
             ImageView infoView = createGameInfoView(tengenGame, theGameLevel());
-            level3D.getChildren().add(infoView);
+            gameLevel3D.getChildren().add(infoView);
         }
     }
 
@@ -76,7 +76,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
         var r = (TengenMsPacMan_GameRenderer) theUI().configuration().createGameRenderer(canvas);
         r.setScaling(quality);
-        r.fillCanvas(level3D.floorColor());
+        r.fillCanvas(gameLevel3D.floorColor());
         r.drawGameOptions(game.mapCategory(), game.difficulty(), game.pacBooster(), 0.5 * infoWidth, TS + HTS);
         r.drawLevelNumberBox(level.number(), 0, 0);
         r.drawLevelNumberBox(level.number(), infoWidth - 2 * TS, 0);
@@ -85,7 +85,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         infoView.setFitWidth(infoWidth);
         infoView.setFitHeight(infoHeight);
         infoView.setTranslateY((level.worldMap().numRows() - 2) * TS);
-        infoView.setTranslateZ(-level3D.floorThickness());
+        infoView.setTranslateZ(-gameLevel3D.floorThickness());
         return infoView;
     }
 
@@ -107,20 +107,20 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     public void onBonusActivated(GameEvent event) {
-        optGameLevel().flatMap(GameLevel::bonus).ifPresent(bonus -> level3D.updateBonus3D(bonus));
+        optGameLevel().flatMap(GameLevel::bonus).ifPresent(bonus -> gameLevel3D.updateBonus3D(bonus));
         theSound().playBonusBouncingSound();
     }
 
     @Override
     public void onBonusEaten(GameEvent event) {
-        level3D.bonus3D().ifPresent(Bonus3D::showEaten);
+        gameLevel3D.bonus3D().ifPresent(Bonus3D::showEaten);
         theSound().stopBonusBouncingSound();
         theSound().playBonusEatenSound();
     }
 
     @Override
     public void onBonusExpired(GameEvent event) {
-        level3D.bonus3D().ifPresent(Bonus3D::expire);
+        gameLevel3D.bonus3D().ifPresent(Bonus3D::expire);
         theSound().stopBonusBouncingSound();
     }
 }

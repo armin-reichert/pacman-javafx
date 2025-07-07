@@ -82,6 +82,8 @@ public class GameLevel3D extends Group implements Destroyable {
     private final DoubleProperty  houseBaseHeightProperty = new SimpleDoubleProperty(HOUSE_3D_BASE_HEIGHT);
     private final BooleanProperty houseLightOnProperty = new SimpleBooleanProperty(false);
 
+    private final GameLevel gameLevel;
+
     private final AnimationManager animationManager = new AnimationManager();
     private ManagedAnimation wallColorFlashingAnimation;
     private ManagedAnimation levelCompletedAnimation;
@@ -119,7 +121,7 @@ public class GameLevel3D extends Group implements Destroyable {
     public GameLevel3D(Model3DRepository model3DRepository, GameLevel gameLevel, WorldMapColorScheme proposedColorScheme)
     {
         requireNonNull(model3DRepository);
-        requireNonNull(gameLevel);
+        this.gameLevel = requireNonNull(gameLevel);
         requireNonNull(proposedColorScheme);
 
         // Add some contrast with floor if wall fill color is black
@@ -232,8 +234,8 @@ public class GameLevel3D extends Group implements Destroyable {
             wallOpacityProperty.bind(PY_3D_WALL_OPACITY);
 
             r3D = new TerrainMapRenderer3D();
-            r3D.setWallCreatedCallback(wall3D -> wall3D.baseHeightProperty().bind(PY_3D_WALL_HEIGHT));
-            r3D.setCornerCreatedCallback(wall3D -> wall3D.baseHeightProperty().bind(PY_3D_WALL_HEIGHT));
+            r3D.setWallCreatedCallback(wall3D -> wall3D.baseHeightProperty().bind(obstacleBaseHeightProperty));
+            r3D.setCornerCreatedCallback(wall3D -> wall3D.baseHeightProperty().bind(obstacleBaseHeightProperty));
             r3D.setCylinderDivisions(24);
             for (Obstacle obstacle : gameLevel.worldMap().obstacles()) {
                 Vector2i tile = tileAt(obstacle.startPoint().toVector2f());
@@ -267,7 +269,7 @@ public class GameLevel3D extends Group implements Destroyable {
             mazeGroup.getChildren().addAll(floor3D, maze3D);
         }
 
-        createPelletsAndEnergizers3D(gameLevel, colorScheme, model3DRepository.pelletMesh());
+        createPelletsAndEnergizers3D(colorScheme, model3DRepository.pelletMesh());
         energizers3D.stream().map(Eatable3D::shape3D).forEach(getChildren()::add);
         pellets3D   .stream().map(Eatable3D::shape3D).forEach(getChildren()::add);
 
@@ -283,8 +285,12 @@ public class GameLevel3D extends Group implements Destroyable {
             }
         };
 
-        levelCompletedAnimation = new LevelCompletedAnimation(animationManager, this, gameLevel);
+        levelCompletedAnimation = new LevelCompletedAnimation(animationManager, this);
         levelCompletedAnimationBeforeCutScene = new LevelCompletedAnimationBeforeCutScene(animationManager, this, gameLevel);
+    }
+
+    public GameLevel gameLevel() {
+        return gameLevel;
     }
 
     public DoubleProperty houseBaseHeightProperty() {
@@ -314,10 +320,8 @@ public class GameLevel3D extends Group implements Destroyable {
 
     /**
      * Called on each clock tick (frame).
-     *
-     * @param gameLevel the game level
      */
-    public void tick(GameLevel gameLevel) {
+    public void tick() {
         pac3D.update(gameLevel);
         ghosts3D.forEach(ghost3D -> ghost3D.update(gameLevel));
         bonus3D().ifPresent(Bonus3D::update);
@@ -366,7 +370,7 @@ public class GameLevel3D extends Group implements Destroyable {
         return floor3D;
     }
 
-    private void createPelletsAndEnergizers3D(GameLevel gameLevel, WorldMapColorScheme colorScheme, Mesh pelletMesh) {
+    private void createPelletsAndEnergizers3D(WorldMapColorScheme colorScheme, Mesh pelletMesh) {
         final PhongMaterial pelletMaterial = coloredPhongMaterial(colorScheme.pellet());
         gameLevel.tilesContainingFood().forEach(tile -> {
             if (gameLevel.isEnergizerPosition(tile)) {

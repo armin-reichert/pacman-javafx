@@ -1,3 +1,7 @@
+/*
+Copyright (c) 2021-2025 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.model.GameLevel;
@@ -16,14 +20,15 @@ import static java.util.Objects.requireNonNull;
 
 public class LevelCompletedAnimation extends ManagedAnimation {
 
-    private GameLevel gameLevel;
+    public static final int FLASH_DURATION_MILLIS = 250;
+
     private GameLevel3D gameLevel3D;
+
     private ManagedAnimation wallsDisappearingAnimation;
 
-    public LevelCompletedAnimation(AnimationManager animationManager, GameLevel3D gameLevel3D, GameLevel gameLevel) {
+    public LevelCompletedAnimation(AnimationManager animationManager, GameLevel3D gameLevel3D) {
         super(animationManager, "Level_Complete");
         this.gameLevel3D = requireNonNull(gameLevel3D);
-        this.gameLevel = requireNonNull(gameLevel);
 
         wallsDisappearingAnimation = new ManagedAnimation(animationManager, "Maze_WallsDisappearing") {
             @Override
@@ -44,27 +49,16 @@ public class LevelCompletedAnimation extends ManagedAnimation {
 
     @Override
     protected Animation createAnimation() {
-        int levelNumber = gameLevel.number();
-        int numMazeFlashes = gameLevel.data().numFlashes();
-        boolean showFlashMessage = randomInt(1, 1000) < 250; // every 4th time also show a message
+        GameLevel gameLevel = gameLevel3D.gameLevel();
         return new SequentialTransition(
                 now(() -> {
                     gameLevel3D.livesCounter3D().light().setLightOn(false);
-                    if (showFlashMessage) {
-                        theUI().showFlashMessageSec(3, theAssets().localizedLevelCompleteMessage(levelNumber));
-                    }
+                    sometimesShowLevelCompleteFlashMessage();
                 }),
                 doAfterSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
-                doAfterSec(0.5, createMazeFlashAnimation(numMazeFlashes, 250)),
+                doAfterSec(0.5, createWallsFlashAnimation()),
                 doAfterSec(0.5, () -> gameLevel.pac().hide()),
-                doAfterSec(0.5, () -> {
-                    var spin360 = new RotateTransition(Duration.seconds(1.5), gameLevel3D);
-                    spin360.setAxis(theRNG().nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
-                    spin360.setFromAngle(0);
-                    spin360.setToAngle(360);
-                    spin360.setInterpolator(Interpolator.LINEAR);
-                    return spin360;
-                }),
+                doAfterSec(0.5, createSpinningAnimation()),
                 doAfterSec(0.5, () -> theSound().playLevelCompleteSound()),
                 doAfterSec(0.5, wallsDisappearingAnimation.getOrCreateAnimation()),
                 doAfterSec(1.0, () -> theSound().playLevelChangedSound())
@@ -73,19 +67,43 @@ public class LevelCompletedAnimation extends ManagedAnimation {
 
     @Override
     public void destroy() {
+        gameLevel3D = null;
+        if (wallsDisappearingAnimation != null) {
+            animationManager.destroyAnimation(wallsDisappearingAnimation);
+            wallsDisappearingAnimation = null;
+        }
     }
 
-    private Animation createMazeFlashAnimation(int numFlashes, int flashDurationMillis) {
+    private void sometimesShowLevelCompleteFlashMessage() {
+        boolean showFlashMessage = randomInt(1, 1000) < 250; // every 4th time also show a message
+        if (showFlashMessage) {
+            int levelNumber = gameLevel3D.gameLevel().number();
+            String message = theAssets().localizedLevelCompleteMessage(levelNumber);
+            theUI().showFlashMessageSec(3, message);
+        }
+    }
+
+    private Animation createSpinningAnimation() {
+        var spin360 = new RotateTransition(Duration.seconds(1.5), gameLevel3D);
+        spin360.setAxis(theRNG().nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
+        spin360.setFromAngle(0);
+        spin360.setToAngle(360);
+        spin360.setInterpolator(Interpolator.LINEAR);
+        return spin360;
+    }
+
+    private Animation createWallsFlashAnimation() {
+        int numFlashes = gameLevel3D.gameLevel().data().numFlashes();
         if (numFlashes == 0) {
             return pauseSec(1.0);
         }
-        var flashing = new Timeline(
-                new KeyFrame(Duration.millis(0.5 * flashDurationMillis),
-                        new KeyValue(gameLevel3D.obstacleBaseHeightProperty(), 0, Interpolator.EASE_BOTH)
-                )
+        var flashingTimeline = new Timeline(
+            new KeyFrame(Duration.millis(0.5 * FLASH_DURATION_MILLIS),
+                new KeyValue(gameLevel3D.obstacleBaseHeightProperty(), 0, Interpolator.EASE_BOTH)
+            )
         );
-        flashing.setAutoReverse(true);
-        flashing.setCycleCount(2 * numFlashes);
-        return flashing;
+        flashingTimeline.setAutoReverse(true);
+        flashingTimeline.setCycleCount(2 * numFlashes);
+        return flashingTimeline;
     }
 }
