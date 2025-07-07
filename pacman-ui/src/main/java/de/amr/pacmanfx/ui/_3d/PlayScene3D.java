@@ -51,9 +51,8 @@ import static java.util.Objects.requireNonNull;
  * <p>Provides different camera perspectives that can be stepped through using key combinations
  * <code>Alt+LEFT</code> and <code>Alt+RIGHT</code> (Did he really said Alt-Right?).
  */
-public class PlayScene3D implements GameScene, CameraControlledView {
+public class PlayScene3D extends Group implements GameScene, CameraControlledView {
 
-    protected final Group root = new Group();
     protected final SubScene subScene3D;
     protected final PerspectiveCamera camera = new PerspectiveCamera(true);
     protected final PerspectiveManager perspectiveManager;
@@ -75,10 +74,10 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         coordinateSystem.visibleProperty().bind(PY_3D_AXES_VISIBLE);
 
         // last child is placeholder for level 3D
-        root.getChildren().addAll(scores3D, coordinateSystem, new Group());
+        getChildren().addAll(scores3D, coordinateSystem, new Group());
 
         // initial size is irrelevant because size gets bound to parent scene size anyway
-        subScene3D = new SubScene(root, 88, 88, true, SceneAntialiasing.BALANCED);
+        subScene3D = new SubScene(this, 88, 88, true, SceneAntialiasing.BALANCED);
         subScene3D.setCamera(camera);
         subScene3D.setFill(Color.BLACK); // gets transparent when level is available
 
@@ -512,7 +511,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         );
         level3D.pac3D().init();
         level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(theGameLevel()));
-        root.getChildren().set(root.getChildren().size() - 1, level3D);
+        getChildren().set(getChildren().size() - 1, level3D);
 
         scores3D.translateXProperty().bind(level3D.translateXProperty().add(TS));
         scores3D.translateYProperty().bind(level3D.translateYProperty().subtract(4.5 * TS));
