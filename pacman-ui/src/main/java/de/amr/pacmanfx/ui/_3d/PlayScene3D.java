@@ -19,7 +19,6 @@ import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.uilib.CameraControlledView;
-import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.model3D.*;
 import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
 import javafx.animation.SequentialTransition;
@@ -292,7 +291,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 gameLevel3D.complete();
                 boolean cutSceneFollows = theGame().cutSceneNumber(theGameLevel().number()).isPresent();
                 var animation = new SequentialTransition(
-                    Ufx.pauseSec(2, () -> {
+                    pauseSec(2, () -> {
                         perspectiveManager.perspectiveIDProperty().unbind();
                         perspectiveManager.setPerspective(Perspective.ID.TOTAL);
                     }),
@@ -300,7 +299,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                     cutSceneFollows
                         ? gameLevel3D.levelCompletedAnimationBeforeCutScene().getOrCreateAnimation()
                         : gameLevel3D.levelCompletedAnimation().getOrCreateAnimation(),
-                    Ufx.pauseSec(1, () -> {
+                    pauseSec(1, () -> {
                         perspectiveManager.perspectiveIDProperty().bind(PY_3D_PERSPECTIVE);
                         theGameController().letCurrentGameStateExpire();
                     })

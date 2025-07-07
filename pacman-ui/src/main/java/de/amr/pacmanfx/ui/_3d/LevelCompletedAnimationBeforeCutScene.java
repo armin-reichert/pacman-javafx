@@ -2,7 +2,6 @@ package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.*;
@@ -25,10 +24,10 @@ public class LevelCompletedAnimationBeforeCutScene extends ManagedAnimation {
     @Override
     protected Animation createAnimation() {
         return new SequentialTransition(
-                Ufx.pauseSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
-                pauseSec(0.5),
-                createMazeFlashAnimation(gameLevel.data().numFlashes(), 250),
-                Ufx.pauseSec(0.5, () -> gameLevel.pac().hide())
+            pauseSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
+            pauseSec(0.5),
+            mazeFlashAnimation(gameLevel.data().numFlashes(), 250),
+            pauseSec(0.5, () -> gameLevel.pac().hide())
         );
     }
 
@@ -36,7 +35,7 @@ public class LevelCompletedAnimationBeforeCutScene extends ManagedAnimation {
     public void destroy() {
     }
 
-    private Animation createMazeFlashAnimation(int numFlashes, int flashDurationMillis) {
+    private Animation mazeFlashAnimation(int numFlashes, int flashDurationMillis) {
         if (numFlashes == 0) {
             return pauseSec(1.0);
         }

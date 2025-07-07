@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.*;
@@ -57,7 +56,7 @@ public class LevelCompletedAnimation extends ManagedAnimation {
                     gameLevel3D.livesCounter3D().light().setLightOn(false);
                     sometimesShowLevelCompleteFlashMessage();
                 }),
-                Ufx.pauseSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
+                pauseSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
                 pauseSec(0.5),
                 createWallsFlashAnimation(),
                 pauseSec(0.5, () -> gameLevel.pac().hide()),

@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
 import javafx.animation.Animation;
@@ -27,7 +26,6 @@ import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;

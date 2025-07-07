@@ -14,8 +14,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import static java.util.Objects.requireNonNull;
-
 public class MsPacMan3D extends PacBase3D {
 
     private MsPacManFemaleParts femaleBodyParts;
