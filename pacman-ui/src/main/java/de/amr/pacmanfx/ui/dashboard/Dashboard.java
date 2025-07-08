@@ -58,7 +58,7 @@ public class Dashboard extends VBox {
         switch (id) {
             case ABOUT                     -> addInfoBox(id, "infobox.about.title", new InfoBoxAbout());
             case ACTOR_INFO                -> addInfoBox(id, "infobox.actor_info.title", new InfoBoxActorInfo());
-            case ANIMATION_INFO            -> addInfoBox(id, "infobox.animation_info.title", new InfoBoxAnimationInfo());
+            case ANIMATION_INFO            -> addInfoBox(id, "infobox.animation_info.title", new InfoBoxGameLevelAnimations());
             case CUSTOM_MAPS               -> addInfoBox(id, "infobox.custom_maps.title", new InfoBoxCustomMaps());
             case GENERAL                   -> addInfoBox(id, "infobox.general.title", new InfoBoxGeneral());
             case GAME_CONTROL              -> addInfoBox(id, "infobox.game_control.title", new InfoBoxGameControl());

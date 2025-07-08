@@ -26,7 +26,7 @@ import java.util.Map;
 
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
 
-public class InfoBoxAnimationInfo extends InfoBox {
+public class InfoBoxGameLevelAnimations extends InfoBox {
 
     private static final float RELATIVE_TABLE_HEIGHT = 0.80f;
     private static final float REFRESH_PERIOD_SECONDS = 0.5f;
@@ -51,7 +51,7 @@ public class InfoBoxAnimationInfo extends InfoBox {
     // References the animation timer of the current 3D game level (if present)
     private final ObjectProperty<AnimationManager> animationManagerProperty = new SimpleObjectProperty<>();
 
-    public InfoBoxAnimationInfo() {
+    public InfoBoxGameLevelAnimations() {
         tableView.setItems(tableModel);
         tableView.setPlaceholder(new Text("No 3D animations"));
         tableView.setFocusTraversable(false);
@@ -111,13 +111,13 @@ public class InfoBoxAnimationInfo extends InfoBox {
 
     private List<TableData> dataSortedByMapKey(Map<String, ManagedAnimation> animationMap, Animation.Status status) {
         return animationMap.entrySet().stream()
-            .filter(entry -> testAnimationStatus(entry.getValue(), status))
+            .filter(entry -> hasStatus(entry.getValue(), status))
             .sorted(Map.Entry.comparingByKey())
             .map(entry -> new TableData(entry.getValue()))
             .toList();
     }
 
-    private boolean testAnimationStatus(ManagedAnimation ma, Animation.Status status) {
-        return ma.animation().isPresent() && ma.animation().get().getStatus() == status;
+    private boolean hasStatus(ManagedAnimation ma, Animation.Status status) {
+        return ma.animation().map(animation -> animation.getStatus() == status).orElse(false);
     }
 }
