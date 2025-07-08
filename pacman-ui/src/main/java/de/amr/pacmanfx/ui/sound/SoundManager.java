@@ -11,7 +11,6 @@ public interface SoundManager {
     void setEnabled(boolean enabled);
 
     BooleanProperty mutedProperty();
-    void toggleMuted();
 
     void playAudioClip(String keySuffix, double volume);
 

@@ -78,11 +78,6 @@ public class DefaultSoundManager implements SoundManager {
     }
 
     @Override
-    public void toggleMuted() {
-        mutedProperty.set(!mutedProperty().get());
-    }
-
-    @Override
     public void playAudioClip(String keySuffix, double volume) {
         requireNonNull(keySuffix);
         if (!mutedProperty.get() && enabledProperty.get()) {
