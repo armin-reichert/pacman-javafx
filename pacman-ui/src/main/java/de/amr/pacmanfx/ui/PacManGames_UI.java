@@ -133,6 +133,8 @@ public interface PacManGames_UI {
     PacManGames_UIConfig configuration();
     void setConfiguration(String variant, PacManGames_UIConfig configuration);
 
+    BooleanProperty mutedProperty();
+
     Model3DRepository model3DRepository();
 
     // Game scenes

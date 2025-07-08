@@ -18,7 +18,9 @@ import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -213,6 +215,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
     private final ObjectProperty<PacManGames_View> currentViewPy      = new SimpleObjectProperty<>();
     private final ObjectProperty<GameScene>        currentGameScenePy = new SimpleObjectProperty<>();
+    private final BooleanProperty                  mutedProperty = new SimpleBooleanProperty(false);
 
     private final Model3DRepository model3DRepository = new Model3DRepository();
     private final StackPane rootPane = new StackPane();
@@ -399,6 +402,11 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     }
 
     @Override
+    public BooleanProperty mutedProperty() {
+        return mutedProperty;
+    }
+
+    @Override
     public void restart() {
         GAME_CLOCK.stop();
         GAME_CLOCK.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
@@ -415,28 +423,34 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         }
         String previousVariant = theGameController().selectedGameVariant();
         if (previousVariant != null && !previousVariant.equals(gameVariant)) {
+            PacManGames_UIConfig previousConfig = configuration(previousVariant);
             Logger.info("Unloading assets for game variant {}", previousVariant);
-            configuration(previousVariant).unloadAssets(theAssets());
+            previousConfig.unloadAssets(theAssets());
             Logger.info(theAssets().summary(Map.of(
                 Image.class, "Images",
                 AudioClip.class, "Sounds")
             ));
+            previousConfig.soundManager().mutedProperty().unbind();
         }
-        PacManGames_UIConfig newConfig = configuration(gameVariant);
 
+        PacManGames_UIConfig newConfig = configuration(gameVariant);
         Logger.info("Loading assets for game variant {}", gameVariant);
         newConfig.loadAssets(theAssets());
         Logger.info(theAssets().summary(Map.of(
             Image.class, "Images",
             AudioClip.class, "Sounds")
         ));
+        newConfig.soundManager().mutedProperty().bind(mutedProperty);
+
         Image appIcon = ASSETS.image(newConfig.assetNamespace() + ".app_icon");
         if (appIcon != null) {
             stage.getIcons().setAll(appIcon);
         } else {
             Logger.error("Could not find app icon for current game variant {}", gameVariant);
         }
+
         gameView.canvasContainer().roundedBorderProperty().set(newConfig.hasGameCanvasRoundedBorder());
+
         // this triggers a game event and the event handlers:
         theGameController().selectGameVariant(gameVariant);
     }
@@ -447,7 +461,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         startPagesView.currentStartPage().ifPresent(startPage -> startPage.layoutRoot().requestFocus());
         gameView.dashboard().init();
 
-        iconBox.iconMuted().visibleProperty().bind(theSound().mutedProperty());
+        iconBox.iconMuted().visibleProperty().bind(mutedProperty());
         iconBox.icon3D().visibleProperty().bind(PY_3D_ENABLED);
         iconBox.iconAutopilot().visibleProperty().bind(PY_USING_AUTOPILOT);
         iconBox.iconImmune().visibleProperty().bind(PY_IMMUNITY);

@@ -21,6 +21,7 @@ import de.amr.pacmanfx.ui.PacManGames_UI;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.sound.DefaultSoundManager;
+import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
@@ -33,6 +34,7 @@ import de.amr.pacmanfx.uilib.model3D.PacBody;
 import de.amr.pacmanfx.uilib.model3D.PacMan3D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
@@ -53,6 +55,7 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
 
     private boolean assetsLoaded;
     private ArcadePacMan_SpriteSheet spriteSheet;
+    private final DefaultSoundManager soundManager = new DefaultSoundManager(assetNamespace());
 
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
@@ -131,6 +134,14 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
         storeLocalAsset(assets, "audio.siren.3",        rm.url("sound/siren_3.mp3"));
         storeLocalAsset(assets, "audio.siren.4",        rm.url("sound/siren_4.mp3"));
         storeLocalAsset(assets, "audio.ghost_returns",  rm.url("sound/retreating.mp3"));
+
+        soundManager.addMediaPlayer(SoundID.GAME_OVER,        1);
+        soundManager.addMediaPlayer(SoundID.GAME_READY,       1);
+        soundManager.addMediaPlayer(SoundID.GHOST_RETURNS,    MediaPlayer.INDEFINITE);
+        soundManager.addMediaPlayer(SoundID.LEVEL_COMPLETE,   1);
+        soundManager.addMediaPlayer(SoundID.PAC_MAN_MUNCHING, MediaPlayer.INDEFINITE);
+        soundManager.addMediaPlayer(SoundID.PAC_MAN_DEATH,    1);
+        soundManager.addMediaPlayer(SoundID.PAC_MAN_POWER,    MediaPlayer.INDEFINITE);
 
         rm = this::getClass;
         storeLocalAsset(assets, "audio.option.selection_changed",  rm.loadAudioClip("sound/ms-select1.wav"));
@@ -250,10 +261,6 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
         };
         return scenesByID.get(sceneID);
     }
-
-    // in progress
-
-    private final SoundManager soundManager = new DefaultSoundManager(assetNamespace());
 
     @Override
     public SoundManager soundManager() {

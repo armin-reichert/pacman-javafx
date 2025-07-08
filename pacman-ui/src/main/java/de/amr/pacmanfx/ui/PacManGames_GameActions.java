@@ -29,6 +29,7 @@ import static de.amr.pacmanfx.ui.PacManGames.*;
 import static de.amr.pacmanfx.uilib.Ufx.toggle;
 
 public interface PacManGames_GameActions {
+
     int SIMULATION_SPEED_DELTA = 2;
     int SIMULATION_SPEED_MIN   = 10;
     int SIMULATION_SPEED_MAX   = 240;
@@ -63,6 +64,7 @@ public interface PacManGames_GameActions {
             return "SIMULATION_FASTER";
         }
     };
+
     GameAction ACTION_SIMULATION_SLOWER = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
@@ -78,6 +80,7 @@ public interface PacManGames_GameActions {
             return "SIMULATION_SLOWER";
         }
     };
+
     GameAction ACTION_ENTER_FULLSCREEN = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
@@ -89,12 +92,19 @@ public interface PacManGames_GameActions {
             return "ENTER_FULLSCREEN";
         }
     };
+
     GameAction ACTION_LET_GAME_STATE_EXPIRE = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
             theGameController().letCurrentGameStateExpire();
         }
+
+        @Override
+        public String name() {
+            return "LET_GAME_STATE_EXPIRE";
+        }
     };
+
     GameAction ACTION_CHEAT_ADD_LIVES = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
@@ -110,6 +120,7 @@ public interface PacManGames_GameActions {
             return "CHEAT_ADD_LIVES";
         }
     };
+
     GameAction ACTION_CHEAT_EAT_ALL_PELLETS = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
@@ -130,6 +141,7 @@ public interface PacManGames_GameActions {
             return "CHEAT_EAT_ALL_PELLETS";
         }
     };
+
     GameAction ACTION_CHEAT_KILL_GHOSTS = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
@@ -152,6 +164,7 @@ public interface PacManGames_GameActions {
             return "CHEAT_KILL_GHOSTS";
         }
     };
+
     GameAction ACTION_CHEAT_ENTER_NEXT_LEVEL = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
@@ -171,6 +184,7 @@ public interface PacManGames_GameActions {
             return "CHEAT_ENTER_NEXT_LEVEL";
         }
     };
+
     /**
      * Adds credit (simulates insertion of a coin) and switches the game state accordingly.
      */
@@ -201,10 +215,15 @@ public interface PacManGames_GameActions {
             return "INSERT_COIN";
         }
     };
+
     GameAction ACTION_STEER_UP = new SteeringAction(Direction.UP);
+
     GameAction ACTION_STEER_DOWN = new SteeringAction(Direction.DOWN);
+
     GameAction ACTION_STEER_LEFT = new SteeringAction(Direction.LEFT);
+
     GameAction ACTION_STEER_RIGHT = new SteeringAction(Direction.RIGHT);
+
     GameAction ACTION_QUIT_GAME_SCENE = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
@@ -216,6 +235,7 @@ public interface PacManGames_GameActions {
             return "QUIT_GAME_SCENE";
         }
     };
+
     GameAction ACTION_RESTART_INTRO = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
@@ -233,6 +253,7 @@ public interface PacManGames_GameActions {
             return "RESTART_INTRO";
         }
     };
+
     GameAction ACTION_BOOT_SHOW_GAME_VIEW = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
@@ -245,6 +266,7 @@ public interface PacManGames_GameActions {
             return "BOOT_SHOW_GAME_VIEW";
         }
     };
+
     GameAction ACTION_SIMULATION_ONE_STEP = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
@@ -262,6 +284,7 @@ public interface PacManGames_GameActions {
             return "SIMULATION_ONE_STEP";
         }
     };
+
     GameAction ACTION_SIMULATION_TEN_STEPS = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
@@ -279,6 +302,7 @@ public interface PacManGames_GameActions {
             return "SIMULATION_TEN_STEPS";
         }
     };
+
     GameAction ACTION_SIMULATION_RESET = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
@@ -291,6 +315,7 @@ public interface PacManGames_GameActions {
             return "SIMULATION_RESET";
         }
     };
+
     GameAction ACTION_ARCADE_START_GAME = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
@@ -311,6 +336,7 @@ public interface PacManGames_GameActions {
             return "START_GAME";
         }
     };
+
     GameAction ACTION_TEST_CUT_SCENES = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
@@ -323,6 +349,7 @@ public interface PacManGames_GameActions {
             return "TEST_CUT_SCENES";
         }
     };
+
     GameAction ACTION_TEST_LEVELS_BONI = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
@@ -335,6 +362,7 @@ public interface PacManGames_GameActions {
             return "TEST_LEVELS_BONI";
         }
     };
+
     GameAction ACTION_TEST_LEVELS_TEASERS = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
@@ -347,6 +375,7 @@ public interface PacManGames_GameActions {
             return "TEST_LEVELS_TEASERS";
         }
     };
+
     GameAction ACTION_TOGGLE_AUTOPILOT = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
@@ -361,6 +390,7 @@ public interface PacManGames_GameActions {
             return "TOGGLE_AUTOPILOT";
         }
     };
+
     GameAction ACTION_TOGGLE_DEBUG_INFO = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
@@ -372,6 +402,7 @@ public interface PacManGames_GameActions {
             return "TOGGLE_DEBUG_INFO";
         }
     };
+
     GameAction ACTION_TOGGLE_IMMUNITY = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
@@ -385,10 +416,11 @@ public interface PacManGames_GameActions {
             return "TOGGLE_IMMUNITY";
         }
     };
+
     GameAction ACTION_TOGGLE_MUTED = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
-            theSound().toggleMuted();
+            ui.mutedProperty().set(!ui.mutedProperty().get());
         }
 
         @Override
@@ -396,6 +428,7 @@ public interface PacManGames_GameActions {
             return "TOGGLE_MUTED";
         }
     };
+
     GameAction ACTION_TOGGLE_PAUSED = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
@@ -411,6 +444,7 @@ public interface PacManGames_GameActions {
             return "TOGGLE_PAUSED";
         }
     };
+
     GameAction ACTION_PERSPECTIVE_NEXT = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
@@ -425,6 +459,7 @@ public interface PacManGames_GameActions {
             return "PERSPECTIVE_NEXT";
         }
     };
+
     GameAction ACTION_PERSPECTIVE_PREVIOUS = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
@@ -439,6 +474,7 @@ public interface PacManGames_GameActions {
             return "PERSPECTIVE_PREVIOUS";
         }
     };
+
     GameAction ACTION_SHOW_HELP = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
@@ -461,6 +497,7 @@ public interface PacManGames_GameActions {
             return "SHOW_HELP";
         }
     };
+
     GameAction ACTION_TOGGLE_DASHBOARD = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
@@ -477,6 +514,7 @@ public interface PacManGames_GameActions {
             return "TOGGLE_DASHBOARD";
         }
     };
+
     GameAction ACTION_TOGGLE_DRAW_MODE = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
@@ -488,6 +526,7 @@ public interface PacManGames_GameActions {
             return "TOGGLE_DRAW_MODE";
         }
     };
+
     GameAction ACTION_TOGGLE_PLAY_SCENE_2D_3D = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
@@ -516,6 +555,7 @@ public interface PacManGames_GameActions {
             return "TOGGLE_PLAY_SCENE_2D_3D";
         }
     };
+
     GameAction ACTION_TOGGLE_PIP_VISIBILITY = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {

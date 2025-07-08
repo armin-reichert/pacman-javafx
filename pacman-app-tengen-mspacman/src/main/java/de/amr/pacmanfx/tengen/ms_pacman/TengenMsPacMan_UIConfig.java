@@ -25,6 +25,7 @@ import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.PacManGames_UI;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui.sound.DefaultSoundManager;
+import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
@@ -42,6 +43,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 
 import java.util.HashMap;
@@ -78,6 +80,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
 
     private TengenMsPacMan_SpriteSheet spriteSheet;
     private TengenMsPacMan_MapRepository mapRepository;
+    private final DefaultSoundManager soundManager = new DefaultSoundManager(assetNamespace());
 
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
@@ -173,6 +176,19 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         storeLocalAsset(assets, "audio.siren.4",                    url("sound/ms-siren2.wav"));
         storeLocalAsset(assets, "audio.ghost_returns",              url("sound/ms-eyes.wav"));
         storeLocalAsset(assets, "audio.bonus_bouncing",             url("sound/fruitbounce.wav"));
+
+        MediaPlayer bounceSound = soundManager.addMediaPlayer(SoundID.BONUS_BOUNCING, MediaPlayer.INDEFINITE);
+        if (bounceSound != null) {
+            bounceSound.setRate(0.25); // TODO ugly!
+        }
+
+        soundManager.addMediaPlayer(SoundID.GAME_OVER,        1);
+        soundManager.addMediaPlayer(SoundID.GAME_READY,       1);
+        soundManager.addMediaPlayer(SoundID.GHOST_RETURNS,    MediaPlayer.INDEFINITE);
+        soundManager.addMediaPlayer(SoundID.LEVEL_COMPLETE,   1);
+        soundManager.addMediaPlayer(SoundID.PAC_MAN_MUNCHING, MediaPlayer.INDEFINITE);
+        soundManager.addMediaPlayer(SoundID.PAC_MAN_DEATH,    1);
+        soundManager.addMediaPlayer(SoundID.PAC_MAN_POWER,    MediaPlayer.INDEFINITE);
     }
 
     @Override
@@ -421,10 +437,6 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         binding(ACTION_TOGGLE_DISPLAY_MODE, alt(KeyCode.C)),
         binding(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, nude(KeyCode.SPACE))
     );
-
-    // in progress
-
-    private final SoundManager soundManager = new DefaultSoundManager(assetNamespace());
 
     @Override
     public SoundManager soundManager() {

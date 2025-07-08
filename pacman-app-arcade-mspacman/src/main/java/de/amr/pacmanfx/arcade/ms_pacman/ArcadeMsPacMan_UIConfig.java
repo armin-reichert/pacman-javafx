@@ -19,6 +19,7 @@ import de.amr.pacmanfx.ui.PacManGames_UI;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.sound.DefaultSoundManager;
+import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
@@ -30,6 +31,7 @@ import de.amr.pacmanfx.uilib.model3D.MsPacMan3D;
 import de.amr.pacmanfx.uilib.model3D.MsPacManBody;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 
 import java.util.HashMap;
@@ -59,6 +61,7 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
 
     private ArcadeMsPacMan_SpriteSheet spriteSheet;
     private BrightMazesSpriteSheet brightMazesSpriteSheet;
+    private final DefaultSoundManager soundManager = new DefaultSoundManager(assetNamespace());
 
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
@@ -135,6 +138,15 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         storeLocalAsset(assets, "audio.siren.3",                 url("sound/GhostNoise1.wav"));// TODO
         storeLocalAsset(assets, "audio.siren.4",                 url("sound/GhostNoise1.wav"));// TODO
         storeLocalAsset(assets, "audio.ghost_returns",           url("sound/GhostEyes.mp3"));
+
+        soundManager.addMediaPlayer(SoundID.BONUS_BOUNCING,   MediaPlayer.INDEFINITE);
+        soundManager.addMediaPlayer(SoundID.GAME_OVER,        1);
+        soundManager.addMediaPlayer(SoundID.GAME_READY,       1);
+        soundManager.addMediaPlayer(SoundID.GHOST_RETURNS,    MediaPlayer.INDEFINITE);
+        soundManager.addMediaPlayer(SoundID.LEVEL_COMPLETE,   1);
+        soundManager.addMediaPlayer(SoundID.PAC_MAN_MUNCHING, MediaPlayer.INDEFINITE);
+        soundManager.addMediaPlayer(SoundID.PAC_MAN_DEATH,    1);
+        soundManager.addMediaPlayer(SoundID.PAC_MAN_POWER,    MediaPlayer.INDEFINITE);
     }
 
     @Override
@@ -258,10 +270,6 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         };
         return scenesByID.get(sceneID);
     }
-
-    // in progress
-
-    private final DefaultSoundManager soundManager = new DefaultSoundManager(assetNamespace());
 
     @Override
     public SoundManager soundManager() {

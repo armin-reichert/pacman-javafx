@@ -32,13 +32,14 @@ public class DefaultSoundManager implements SoundManager {
         this.assetNamespace = requireNonNull(assetNamespace);
     }
 
-    public void addMediaPlayer(SoundID id, int numRepetitions) {
+    public MediaPlayer addMediaPlayer(SoundID id, int numRepetitions) {
         MediaPlayer mediaPlayer = createMediaPlayer(id.key(), numRepetitions);
         if (mediaPlayer != null) {
             mediaPlayerMap.put(id.key(), mediaPlayer);
         } else {
             Logger.warn("Media player for ID '{}' could not be created", id);
         }
+        return mediaPlayer;
     }
 
     @Override
@@ -56,7 +57,7 @@ public class DefaultSoundManager implements SoundManager {
                 () -> mutedProperty().get() || !enabledProperty().get(),
                 mutedProperty(), enabledProperty()
         ));
-//            player.statusProperty().addListener((py,ov,nv) -> logPlayerStatusChange(player, keySuffix, ov, nv));
+        player.statusProperty().addListener((py,ov,nv) -> logPlayerStatusChange(player, keySuffix, ov, nv));
         Logger.debug("Media player created from URL {}", url);
         return player;
     }
@@ -210,4 +211,27 @@ public class DefaultSoundManager implements SoundManager {
             siren.player().stop();
         }
     }
+
+    private void logMediaPlayerStatus() {
+        for (String key : mediaPlayerMap.keySet()) {
+            mediaPlayer(key).ifPresent(player -> logMediaPlayerStatus(player, key));
+        }
+        if (siren != null) {
+            logMediaPlayerStatus(siren.player(), "Siren" + siren.number());
+        }
+        logMediaPlayerStatus(voice, "Voice");
+    }
+
+    private void logMediaPlayerStatus(MediaPlayer player, String key) {
+        if (player != null) {
+            Logger.debug("[{}] state={} volume={}", key, player.getStatus() != null ? player.getStatus() : "UNDEFINED", player.getVolume());
+        } else {
+            Logger.debug("No player exists for key {}", key);
+        }
+    }
+
+    private void logPlayerStatusChange(MediaPlayer player, String key, MediaPlayer.Status oldStatus, MediaPlayer.Status newStatus) {
+        Logger.debug("[{}] {} -> {}, volume {}", key, (oldStatus != null ? oldStatus : "undefined"), newStatus, player.getVolume());
+    }
+
 }

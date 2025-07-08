@@ -62,6 +62,7 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
     private static final WorldMapColorScheme MAP_COLORING = new WorldMapColorScheme("#000000", "#2121ff", "#fcb5ff", "#febdb4");
 
     private ArcadePacMan_SpriteSheet spriteSheet;
+    private final DefaultSoundManager soundManager = new DefaultSoundManager(assetNamespace());
 
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
@@ -139,7 +140,6 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
         storeLocalAsset(assets, "audio.siren.4",                   url("sound/siren_4.mp3"));
         storeLocalAsset(assets, "audio.ghost_returns",             url("sound/retreating.mp3"));
 
-        //soundManager.addMediaPlayer(SoundID.BONUS_BOUNCING,   MediaPlayer.INDEFINITE);
         soundManager.addMediaPlayer(SoundID.GAME_OVER,        1);
         soundManager.addMediaPlayer(SoundID.GAME_READY,       1);
         soundManager.addMediaPlayer(SoundID.GHOST_RETURNS,    MediaPlayer.INDEFINITE);
@@ -260,13 +260,8 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
         return scenesByID.get(sceneID) == gameScene;
     }
 
-    // in progress
-
-    private final DefaultSoundManager soundManager = new DefaultSoundManager(assetNamespace());
-
     @Override
     public SoundManager soundManager() {
         return soundManager;
     }
-
 }

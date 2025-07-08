@@ -49,12 +49,6 @@ public class PacManGames_Sound {
             addMediaPlayerMapEntry(map, SoundID.PAC_MAN_MUNCHING, createMediaPlayerForID(SoundID.PAC_MAN_MUNCHING, MediaPlayer.INDEFINITE));
             addMediaPlayerMapEntry(map, SoundID.PAC_MAN_DEATH,    createMediaPlayerForID(SoundID.PAC_MAN_DEATH, 1));
             addMediaPlayerMapEntry(map, SoundID.PAC_MAN_POWER,    createMediaPlayerForID(SoundID.PAC_MAN_POWER, MediaPlayer.INDEFINITE));
-
-            //TODO this is total crap, clean it up
-            MediaPlayer bounceSound = map.get("bonus_bouncing");
-            if (bounceSound != null && gameVariant.equals("MS_PACMAN_TENGEN")) {
-                bounceSound.setRate(0.25);
-            }
         }
         siren = null;
         logMediaPlayerStatus();
