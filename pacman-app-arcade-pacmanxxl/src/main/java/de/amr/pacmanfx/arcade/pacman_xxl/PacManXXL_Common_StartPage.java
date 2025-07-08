@@ -34,7 +34,6 @@ public class PacManXXL_Common_StartPage implements StartPage {
         menu = new PacManXXL_Common_StartPageMenu();
         // scale menu to take 90% of start page height
         menu.scalingProperty().bind(root.heightProperty().multiply(0.9).divide(menu.numTilesY() * TS));
-        menu.soundEnabledProperty().bind(theSound().mutedProperty().not());
 
         root.setBackground(Background.fill(Color.BLACK));
         root.getChildren().addAll(flyer, menu.root());
@@ -50,16 +49,17 @@ public class PacManXXL_Common_StartPage implements StartPage {
         });
     }
 
-    private void ensureAssetsLoaded() {
+    private void init() {
         theUI().configuration(PacManGames_UI_Impl.PACMAN).loadAssets(theAssets());
         theUI().configuration(PacManGames_UI_Impl.PACMAN_XXL).loadAssets(theAssets());
         theUI().configuration(PacManGames_UI_Impl.MS_PACMAN).loadAssets(theAssets());
         theUI().configuration(PacManGames_UI_Impl.MS_PACMAN_XXL).loadAssets(theAssets());
+        menu.soundEnabledProperty().bind(theSound().mutedProperty().not());
     }
 
     @Override
     public void onEnter() {
-        ensureAssetsLoaded();
+        init();
         menu.syncMenuState();
         menu.startAnimation();
     }

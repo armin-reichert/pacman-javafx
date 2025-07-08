@@ -21,7 +21,7 @@ import java.util.Optional;
 import static de.amr.pacmanfx.ui.PacManGames.theAssets;
 import static java.util.Objects.requireNonNull;
 
-public class PacManGames_Sound implements SoundManager {
+public class PacManGames_Sound {
 
     private final BooleanProperty enabledProperty = new SimpleBooleanProperty(true);
     private final BooleanProperty mutedProperty = new SimpleBooleanProperty(false);
@@ -222,7 +222,7 @@ public class PacManGames_Sound implements SoundManager {
         return createMediaPlayer(id.key(), repetitions);
     }
 
-    public MediaPlayer createMediaPlayer(String keySuffix, int repetitions) {
+    public MediaPlayer createMediaPlayer(String keySuffix, int numRepetitions) {
         String key = assetNamespace + ".audio." + keySuffix;
         URL url = theAssets().get(key);
         if (url == null) {
@@ -230,7 +230,7 @@ public class PacManGames_Sound implements SoundManager {
             return null;
         }
         var player = new MediaPlayer(new Media(url.toExternalForm()));
-        player.setCycleCount(repetitions);
+        player.setCycleCount(numRepetitions);
         player.setVolume(1.0);
         player.muteProperty().bind(Bindings.createBooleanBinding(
                 () -> mutedProperty.get() || !enabledProperty.get(),

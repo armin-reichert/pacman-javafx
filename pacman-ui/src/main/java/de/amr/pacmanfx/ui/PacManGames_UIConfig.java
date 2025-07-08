@@ -42,5 +42,5 @@ public interface PacManGames_UIConfig extends PacManGames_GameSceneConfig {
     WorldMapColorScheme worldMapColorScheme(WorldMap worldMap);
 
 
-    default SoundManager soundManager() { return null; }
+    SoundManager soundManager();
 }

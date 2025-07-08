@@ -14,24 +14,16 @@ import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.ui.PacManGames.theSound;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 
 public class StatusIconBox extends HBox {
 
+    private final FontIcon iconMuted = FontIcon.of(FontAwesomeSolid.DEAF, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
+    private final FontIcon icon3D = FontIcon.of(FontAwesomeSolid.CUBES, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
+    private final FontIcon iconAutopilot = FontIcon.of(FontAwesomeSolid.TAXI, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
+    private final FontIcon iconImmune = FontIcon.of(FontAwesomeSolid.USER_SECRET, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
+
     public StatusIconBox(PacManGames_UI ui) {
-        var iconMuted = FontIcon.of(FontAwesomeSolid.DEAF, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
-        iconMuted.visibleProperty().bind(theSound().mutedProperty());
-
-        var icon3D = FontIcon.of(FontAwesomeSolid.CUBES, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
-        icon3D.visibleProperty().bind(PY_3D_ENABLED);
-
-        var iconAutopilot = FontIcon.of(FontAwesomeSolid.TAXI, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
-        iconAutopilot.visibleProperty().bind(PY_USING_AUTOPILOT);
-
-        var iconImmune = FontIcon.of(FontAwesomeSolid.USER_SECRET, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
-        iconImmune.visibleProperty().bind(PY_IMMUNITY);
-
         final List<FontIcon> icons = List.of(iconMuted, icon3D, iconAutopilot, iconImmune);
         getChildren().addAll(icons);
         setMaxHeight(STATUS_ICON_SIZE);
@@ -45,5 +37,21 @@ public class StatusIconBox extends HBox {
         ChangeListener<? super Boolean> iconVisibilityChangeHandler = (py, ov, nv) ->
             getChildren().setAll(icons.stream().filter(Node::isVisible).toList());
         icons.forEach(icon -> icon.visibleProperty().addListener(iconVisibilityChangeHandler));
+    }
+
+    public FontIcon iconAutopilot() {
+        return iconAutopilot;
+    }
+
+    public FontIcon iconImmune() {
+        return iconImmune;
+    }
+
+    public FontIcon iconMuted() {
+        return iconMuted;
+    }
+
+    public FontIcon icon3D() {
+        return icon3D;
     }
 }

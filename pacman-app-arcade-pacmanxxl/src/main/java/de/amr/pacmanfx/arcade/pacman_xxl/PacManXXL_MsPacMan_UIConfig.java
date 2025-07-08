@@ -22,6 +22,8 @@ import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.PacManGames_UI;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
+import de.amr.pacmanfx.ui.sound.DefaultSoundManager;
+import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
@@ -260,4 +262,14 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
         };
         return scenesByID.get(sceneID);
     }
+
+    // in progress
+
+    private final SoundManager soundManager = new DefaultSoundManager(assetNamespace());
+
+    @Override
+    public SoundManager soundManager() {
+        return soundManager;
+    }
+
 }

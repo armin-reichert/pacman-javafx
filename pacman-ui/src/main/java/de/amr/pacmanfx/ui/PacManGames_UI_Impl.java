@@ -40,8 +40,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.ui.PacManGames.theAssets;
-import static de.amr.pacmanfx.ui.PacManGames.theKeyboard;
+import static de.amr.pacmanfx.ui.PacManGames.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -223,6 +222,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     private final StartPagesView startPagesView;
     private final GameView gameView;
     private EditorView editorView; // created on first access
+    private StatusIconBox iconBox;
 
     public PacManGames_UI_Impl(Stage stage, double width, double height) {
         this.stage = requireNonNull(stage);
@@ -240,7 +240,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         rootPane.getChildren().add(startPagesView.rootNode());
 
         {
-            var iconBox = new StatusIconBox(this);
+            iconBox = new StatusIconBox(this);
             StackPane.setAlignment(iconBox, Pos.BOTTOM_LEFT);
 
             var iconPaused = FontIcon.of(FontAwesomeSolid.PAUSE, 80, STATUS_ICON_COLOR);
@@ -449,6 +449,12 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         currentViewPy.set(startPagesView);
         startPagesView.currentStartPage().ifPresent(startPage -> startPage.layoutRoot().requestFocus());
         gameView.dashboard().init();
+
+        iconBox.iconMuted().visibleProperty().bind(theSound().mutedProperty());
+        iconBox.icon3D().visibleProperty().bind(PY_3D_ENABLED);
+        iconBox.iconAutopilot().visibleProperty().bind(PY_USING_AUTOPILOT);
+        iconBox.iconImmune().visibleProperty().bind(PY_IMMUNITY);
+
         stage.centerOnScreen();
         stage.show();
         WATCHDOG.startWatching();

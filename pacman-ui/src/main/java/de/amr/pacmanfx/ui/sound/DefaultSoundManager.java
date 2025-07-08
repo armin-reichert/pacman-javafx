@@ -1,0 +1,199 @@
+package de.amr.pacmanfx.ui.sound;
+
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
+import org.tinylog.Logger;
+
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import static de.amr.pacmanfx.ui.PacManGames.theAssets;
+import static java.util.Objects.requireNonNull;
+
+public class DefaultSoundManager implements SoundManager {
+
+    private final String assetNamespace;
+    private final BooleanProperty enabledProperty = new SimpleBooleanProperty(true);
+    private final BooleanProperty mutedProperty = new SimpleBooleanProperty(false);
+
+    //TODO store as assets?
+    protected final Map<String, MediaPlayer> mediaPlayerMap = new HashMap<>();
+    private Siren siren;
+    private MediaPlayer voice;
+
+    public DefaultSoundManager(String assetNamespace) {
+        this.assetNamespace = requireNonNull(assetNamespace);
+    }
+
+    @Override
+    public MediaPlayer createMediaPlayer(String keySuffix, int numRepetitions) {
+        String key = assetNamespace + ".audio." + keySuffix;
+        URL url = theAssets().get(key);
+        if (url == null) {
+            Logger.warn("Missing audio resource '%s'".formatted(keySuffix));
+            return null;
+        }
+        var player = new MediaPlayer(new Media(url.toExternalForm()));
+        player.setCycleCount(numRepetitions);
+        player.setVolume(1.0);
+        player.muteProperty().bind(Bindings.createBooleanBinding(
+                () -> mutedProperty().get() || !enabledProperty().get(),
+                mutedProperty(), enabledProperty()
+        ));
+//            player.statusProperty().addListener((py,ov,nv) -> logPlayerStatusChange(player, keySuffix, ov, nv));
+        Logger.debug("Media player created from URL {}", url);
+        return player;
+    }
+
+    @Override
+    public BooleanProperty enabledProperty() {
+        return enabledProperty;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        enabledProperty.set(enabled);
+    }
+
+    @Override
+    public BooleanProperty mutedProperty() {
+        return mutedProperty;
+    }
+
+    @Override
+    public void toggleMuted() {
+        mutedProperty.set(!mutedProperty().get());
+    }
+
+    @Override
+    public void playAudioClip(String keySuffix, double volume) {
+        requireNonNull(keySuffix);
+        if (!mutedProperty.get() && enabledProperty.get()) {
+            String key = assetNamespace + ".audio." + keySuffix;
+            AudioClip clip = theAssets().get(key);
+            if (clip == null) {
+                Logger.error("No audio clip with key {}", key);
+                return;
+            }
+            clip.setVolume(volume);
+            clip.play();
+        }
+    }
+
+    private Optional<MediaPlayer> mediaPlayer(String key) {
+        return Optional.ofNullable(mediaPlayerMap.get(key));
+    }
+
+    public void play(SoundID id) {
+        switch (id.type()) {
+            case MEDIA_PLAYER -> {
+                Logger.debug("Play media player '{}'", id.key());
+                mediaPlayer(id.key()).ifPresent(MediaPlayer::play);
+            }
+            case CLIP -> {
+                Logger.debug("Play audio clip '{}'", id.key());
+                playAudioClip(id.key(), 1);
+            }
+        }
+    }
+
+    public void pause(SoundID id) {
+        switch (id.type()) {
+            case MEDIA_PLAYER -> {
+                Logger.debug("Pause media player '{}'", id.key());
+                mediaPlayer(id.key()).ifPresent(MediaPlayer::pause);
+            }
+            case CLIP -> {
+                Logger.debug("Pausing audio clip '{}' not supported", id.key());
+            }
+        }
+    }
+
+    public void stop(SoundID id)  {
+        switch (id.type()) {
+            case MEDIA_PLAYER -> {
+                Logger.debug("Play media player '{}'", id.key());
+                mediaPlayer(id.key()).ifPresent(MediaPlayer::stop);
+            }
+            case CLIP -> {
+                Logger.debug("Stopping audio clip '{}' not supported", id.key());
+            }
+        }
+    }
+
+    @Override
+    public void stopAll() {
+        mediaPlayerMap.forEach((key, player) -> player.stop());
+        stop(SoundID.PAC_MAN_MUNCHING); // TODO check
+        stopSiren();
+        stopVoice();
+        Logger.debug("All sounds stopped");
+    }
+
+    @Override
+    public void stopVoice() {
+        if (voice != null) {
+            voice.stop();
+        }
+    }
+
+    @Override
+    public void playVoice(String assetKey, double delaySeconds) {
+        URL url = theAssets().get(assetKey);
+        voice = new MediaPlayer(new Media(url.toExternalForm()));
+        // media player stays in state PLAYING, so we remove the reference when it reaches the end
+        voice.muteProperty().bind(mutedProperty);
+        voice.setStartTime(Duration.seconds(delaySeconds));
+        voice.play(); // play also if enabledPy is set to false
+
+    }
+
+    @Override
+    public void selectSiren(int number) {
+        if (number < 1 || number > 4) {
+            Logger.error("Siren number must be in 1..4 but is " + number);
+            return;
+        }
+        if (siren == null || siren.number() != number) {
+            if (siren != null) {
+                siren.player().stop();
+            }
+            MediaPlayer sirenPlayer = createMediaPlayer("siren." + number, MediaPlayer.INDEFINITE);
+            if (sirenPlayer == null) {
+                //Logger.error("Could not create media player for siren number {}", number);
+                siren = null;
+            } else {
+                sirenPlayer.setVolume(0.5);
+                siren = new Siren(number, sirenPlayer);
+            }
+        }
+    }
+
+    @Override
+    public void playSiren() {
+        if (siren != null) {
+            siren.player().play();
+        }
+    }
+
+    @Override
+    public void pauseSiren() {
+        if (siren != null) {
+            siren.player().pause();
+        }
+    }
+
+    @Override
+    public void stopSiren() {
+        if (siren != null) {
+            siren.player().stop();
+        }
+    }
+}
