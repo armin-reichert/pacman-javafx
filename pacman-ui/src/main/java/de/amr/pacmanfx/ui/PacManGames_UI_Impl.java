@@ -14,7 +14,6 @@ import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.layout.*;
-import de.amr.pacmanfx.ui.sound.PacManGames_Sound;
 import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import javafx.application.Platform;
@@ -59,7 +58,6 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     static final GameClock          GAME_CLOCK = new GameClock();
     static final Keyboard           KEYBOARD = new Keyboard();
     static final Joypad             JOYPAD = new Joypad(KEYBOARD);
-    static final PacManGames_Sound  SOUND_MANAGER = new PacManGames_Sound();
     static final DirectoryWatchdog  WATCHDOG = new DirectoryWatchdog(CUSTOM_MAP_DIR);
 
     // the single instance
@@ -432,7 +430,6 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
             Image.class, "Images",
             AudioClip.class, "Sounds")
         ));
-        SOUND_MANAGER.selectGameVariant(gameVariant, newConfig.assetNamespace());
         Image appIcon = ASSETS.image(newConfig.assetNamespace() + ".app_icon");
         if (appIcon != null) {
             stage.getIcons().setAll(appIcon);
@@ -464,7 +461,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     public void showEditorView() {
         if (!theGame().isPlaying() || GAME_CLOCK.isPaused()) {
             currentGameScene().ifPresent(GameScene::end);
-            SOUND_MANAGER.stopAll();
+            theSound().stopAll();
             GAME_CLOCK.stop();
             lazyGetEditorView().editor().start(stage);
             currentViewPy.set(lazyGetEditorView());
@@ -487,7 +484,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     public void showStartView() {
         GAME_CLOCK.stop();
         GAME_CLOCK.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
-        SOUND_MANAGER.stopAll();
+        theSound().stopAll();
         gameView.dashboard().setVisible(false);
         currentViewPy.set(startPagesView);
         startPagesView.currentStartPage().ifPresent(startPage -> startPage.layoutRoot().requestFocus());

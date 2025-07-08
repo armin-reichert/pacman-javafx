@@ -261,7 +261,7 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
 
     // in progress
 
-    private final SoundManager soundManager = new DefaultSoundManager(assetNamespace());
+    private final DefaultSoundManager soundManager = new DefaultSoundManager(assetNamespace());
 
     @Override
     public SoundManager soundManager() {

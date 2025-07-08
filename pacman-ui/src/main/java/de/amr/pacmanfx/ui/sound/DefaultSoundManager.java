@@ -32,6 +32,15 @@ public class DefaultSoundManager implements SoundManager {
         this.assetNamespace = requireNonNull(assetNamespace);
     }
 
+    public void addMediaPlayer(SoundID id, int numRepetitions) {
+        MediaPlayer mediaPlayer = createMediaPlayer(id.key(), numRepetitions);
+        if (mediaPlayer != null) {
+            mediaPlayerMap.put(id.key(), mediaPlayer);
+        } else {
+            Logger.warn("Media player for ID '{}' could not be created", id);
+        }
+    }
+
     @Override
     public MediaPlayer createMediaPlayer(String keySuffix, int numRepetitions) {
         String key = assetNamespace + ".audio." + keySuffix;
@@ -95,7 +104,12 @@ public class DefaultSoundManager implements SoundManager {
         switch (id.type()) {
             case MEDIA_PLAYER -> {
                 Logger.debug("Play media player '{}'", id.key());
-                mediaPlayer(id.key()).ifPresent(MediaPlayer::play);
+                Optional<MediaPlayer> optPlayer = mediaPlayer(id.key());
+                if (optPlayer.isPresent()) {
+                    optPlayer.get().play();
+                } else {
+                    Logger.warn("Cannot play sound ID '{}': no media player found", id);
+                }
             }
             case CLIP -> {
                 Logger.debug("Play audio clip '{}'", id.key());
