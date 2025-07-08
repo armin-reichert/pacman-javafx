@@ -295,6 +295,17 @@ public class GameView implements PacManGames_View {
         }
     }
 
+    public void quitCurrentGameScene() {
+        ui.currentGameScene().ifPresent(gameScene -> {
+            gameScene.end();
+            theGameController().changeGameState(GameState.BOOT);
+            theGame().resetEverything();
+            if (!theCoinMechanism().isEmpty()) theCoinMechanism().consumeCoin();
+            ui.showStartView();
+            Logger.info("Current game scene ({}) has been quit", gameScene.getClass().getSimpleName());
+        });
+    }
+
     private void embedGameScene(GameScene gameScene) {
         requireNonNull(gameScene);
         // a camera controlled game scene can also be a 2D game scene!

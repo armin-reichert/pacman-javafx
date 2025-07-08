@@ -109,19 +109,19 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     @Override
     public void onBonusActivated(GameEvent event) {
         optGameLevel().flatMap(GameLevel::bonus).ifPresent(bonus -> gameLevel3D.updateBonus3D(bonus));
-        theSound().playSound(SoundID.BONUS_BOUNCING);
+        theSound().play(SoundID.BONUS_BOUNCING);
     }
 
     @Override
     public void onBonusEaten(GameEvent event) {
         gameLevel3D.bonus3D().ifPresent(Bonus3D::showEaten);
-        theSound().stopSound(SoundID.BONUS_BOUNCING);
-        theSound().playSound(SoundID.BONUS_EATEN);
+        theSound().stop(SoundID.BONUS_BOUNCING);
+        theSound().play(SoundID.BONUS_EATEN);
     }
 
     @Override
     public void onBonusExpired(GameEvent event) {
         gameLevel3D.bonus3D().ifPresent(Bonus3D::expire);
-        theSound().stopSound(SoundID.BONUS_BOUNCING);
+        theSound().stop(SoundID.BONUS_BOUNCING);
     }
 }

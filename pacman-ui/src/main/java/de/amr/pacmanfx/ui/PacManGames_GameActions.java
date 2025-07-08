@@ -114,7 +114,7 @@ public interface PacManGames_GameActions {
         @Override
         public void execute(PacManGames_UI ui) {
             theGameLevel().eatAllPellets();
-            theSound().pauseSound(SoundID.PAC_MAN_MUNCHING);
+            theSound().pause(SoundID.PAC_MAN_MUNCHING);
             theGameEventManager().publishEvent(theGame(), GameEventType.PAC_FOUND_FOOD);
         }
 
@@ -208,10 +208,7 @@ public interface PacManGames_GameActions {
     GameAction ACTION_QUIT_GAME_SCENE = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
-            ui.currentGameScene().ifPresent(GameScene::end);
-            theGame().resetEverything();
-            if (!theCoinMechanism().isEmpty()) theCoinMechanism().consumeCoin();
-            ui.showStartView();
+            ui.gameView().quitCurrentGameScene();
         }
 
         @Override

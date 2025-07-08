@@ -33,29 +33,6 @@ public class PacManGames_Sound {
     private Siren siren;
     private MediaPlayer voice;
 
-    private MediaPlayer createSound(SoundID id, int repetitions) {
-        return createSound(id.key(), repetitions);
-    }
-
-    public MediaPlayer createSound(String keySuffix, int repetitions) {
-        String key = assetNamespace + ".audio." + keySuffix;
-        URL url = theAssets().get(key);
-        if (url == null) {
-            Logger.warn("Missing audio resource '%s' (%s)".formatted(keySuffix, gameVariant));
-            return null;
-        }
-        var player = new MediaPlayer(new Media(url.toExternalForm()));
-        player.setCycleCount(repetitions);
-        player.setVolume(1.0);
-        player.muteProperty().bind(Bindings.createBooleanBinding(
-                () -> mutedProperty.get() || !enabledProperty.get(),
-                mutedProperty, enabledProperty
-        ));
-        player.statusProperty().addListener((py,ov,nv) -> logPlayerStatusChange(player, keySuffix, ov, nv));
-        Logger.debug("Media player created from URL {}", url);
-        return player;
-    }
-
     public void selectGameVariant(String gameVariant, String assetNamespace) {
         this.gameVariant = requireNonNull(gameVariant);
         this.assetNamespace = requireNonNull(assetNamespace);
@@ -64,14 +41,14 @@ public class PacManGames_Sound {
             mediaPlayerMaps.put(gameVariant, map);
             Logger.debug("Created media player map for game variant {}", gameVariant);
 
-            addMediaPlayerMapEntry(map, SoundID.BONUS_BOUNCING,   createSound(SoundID.BONUS_BOUNCING, MediaPlayer.INDEFINITE));
-            addMediaPlayerMapEntry(map, SoundID.GAME_OVER,        createSound(SoundID.GAME_OVER, 1));
-            addMediaPlayerMapEntry(map, SoundID.GAME_READY,       createSound(SoundID.GAME_READY, 1));
-            addMediaPlayerMapEntry(map, SoundID.GHOST_RETURNS,    createSound(SoundID.GHOST_RETURNS, MediaPlayer.INDEFINITE));
-            addMediaPlayerMapEntry(map, SoundID.LEVEL_COMPLETE,   createSound(SoundID.LEVEL_COMPLETE, 1));
-            addMediaPlayerMapEntry(map, SoundID.PAC_MAN_MUNCHING, createSound(SoundID.PAC_MAN_MUNCHING, MediaPlayer.INDEFINITE));
-            addMediaPlayerMapEntry(map, SoundID.PAC_MAN_DEATH,    createSound(SoundID.PAC_MAN_DEATH, 1));
-            addMediaPlayerMapEntry(map, SoundID.PAC_MAN_POWER,    createSound(SoundID.PAC_MAN_POWER, MediaPlayer.INDEFINITE));
+            addMediaPlayerMapEntry(map, SoundID.BONUS_BOUNCING,   createMediaPlayerForID(SoundID.BONUS_BOUNCING, MediaPlayer.INDEFINITE));
+            addMediaPlayerMapEntry(map, SoundID.GAME_OVER,        createMediaPlayerForID(SoundID.GAME_OVER, 1));
+            addMediaPlayerMapEntry(map, SoundID.GAME_READY,       createMediaPlayerForID(SoundID.GAME_READY, 1));
+            addMediaPlayerMapEntry(map, SoundID.GHOST_RETURNS,    createMediaPlayerForID(SoundID.GHOST_RETURNS, MediaPlayer.INDEFINITE));
+            addMediaPlayerMapEntry(map, SoundID.LEVEL_COMPLETE,   createMediaPlayerForID(SoundID.LEVEL_COMPLETE, 1));
+            addMediaPlayerMapEntry(map, SoundID.PAC_MAN_MUNCHING, createMediaPlayerForID(SoundID.PAC_MAN_MUNCHING, MediaPlayer.INDEFINITE));
+            addMediaPlayerMapEntry(map, SoundID.PAC_MAN_DEATH,    createMediaPlayerForID(SoundID.PAC_MAN_DEATH, 1));
+            addMediaPlayerMapEntry(map, SoundID.PAC_MAN_POWER,    createMediaPlayerForID(SoundID.PAC_MAN_POWER, MediaPlayer.INDEFINITE));
 
             //TODO this is total crap, clean it up
             MediaPlayer bounceSound = map.get("bonus_bouncing");
@@ -97,11 +74,7 @@ public class PacManGames_Sound {
         return enabledProperty.get();
     }
 
-    public MediaPlayer createSound(String key) {
-        return createSound(key, 1);
-    }
-
-    public void playClipIfEnabled(String keySuffix, double volume) {
+    public void playAudioClip(String keySuffix, double volume) {
         requireNonNull(keySuffix);
         if (isUnMuted() && isEnabled()) {
             String key = assetNamespace + ".audio." + keySuffix;
@@ -155,7 +128,7 @@ public class PacManGames_Sound {
             if (siren != null) {
                 siren.player().stop();
             }
-            MediaPlayer sirenPlayer = createSound("siren." + number, MediaPlayer.INDEFINITE);
+            MediaPlayer sirenPlayer = createMediaPlayer("siren." + number, MediaPlayer.INDEFINITE);
             if (sirenPlayer == null) {
                 //Logger.error("Could not create media player for siren number {}", number);
                 siren = null;
@@ -186,13 +159,13 @@ public class PacManGames_Sound {
 
     public void stopAll() {
         mediaPlayerMaps.get(gameVariant).forEach((key, player) -> player.stop());
-        stopSound(SoundID.PAC_MAN_MUNCHING); // TODO check
+        stop(SoundID.PAC_MAN_MUNCHING); // TODO check
         stopSiren();
         stopVoice();
         Logger.debug("All sounds stopped ({})", gameVariant);
     }
 
-    public void playSound(SoundID id) {
+    public void play(SoundID id) {
         switch (id.type()) {
             case MEDIA_PLAYER -> {
                 Logger.debug("Play media player '{}'", id.key());
@@ -200,12 +173,12 @@ public class PacManGames_Sound {
             }
             case CLIP -> {
                 Logger.debug("Play audio clip '{}'", id.key());
-                playClipIfEnabled(id.key(), 1);
+                playAudioClip(id.key(), 1);
             }
         }
     }
 
-    public void pauseSound(SoundID id) {
+    public void pause(SoundID id) {
         switch (id.type()) {
             case MEDIA_PLAYER -> {
                 Logger.debug("Pause media player '{}'", id.key());
@@ -217,7 +190,7 @@ public class PacManGames_Sound {
         }
     }
 
-    public void stopSound(SoundID id)  {
+    public void stop(SoundID id)  {
         switch (id.type()) {
             case MEDIA_PLAYER -> {
                 Logger.debug("Play media player '{}'", id.key());
@@ -228,6 +201,48 @@ public class PacManGames_Sound {
             }
         }
     }
+
+    public void dispose(SoundID id) {
+        switch (id.type()) {
+            case MEDIA_PLAYER -> {
+                mediaPlayer(id.key()).ifPresent(mediaPlayer -> {
+                    mediaPlayer.stop();
+                    mediaPlayer.dispose();
+                    mediaPlayerMap(gameVariant).remove(id.key());
+                    Logger.debug("Dispose media player '{}'", id.key());
+                });
+            }
+            case CLIP -> {
+                Logger.debug("Disposing audio clip '{}' is not supported", id.key());
+            }
+        }
+    }
+
+    private MediaPlayer createMediaPlayerForID(SoundID id, int repetitions) {
+        return createMediaPlayer(id.key(), repetitions);
+    }
+
+    public MediaPlayer createMediaPlayer(String keySuffix, int repetitions) {
+        String key = assetNamespace + ".audio." + keySuffix;
+        URL url = theAssets().get(key);
+        if (url == null) {
+            Logger.warn("Missing audio resource '%s' (%s)".formatted(keySuffix, gameVariant));
+            return null;
+        }
+        var player = new MediaPlayer(new Media(url.toExternalForm()));
+        player.setCycleCount(repetitions);
+        player.setVolume(1.0);
+        player.muteProperty().bind(Bindings.createBooleanBinding(
+                () -> mutedProperty.get() || !enabledProperty.get(),
+                mutedProperty, enabledProperty
+        ));
+        player.statusProperty().addListener((py,ov,nv) -> logPlayerStatusChange(player, keySuffix, ov, nv));
+        Logger.debug("Media player created from URL {}", url);
+        return player;
+    }
+
+
+
 
     private Map<String, MediaPlayer> mediaPlayerMap(String gameVariant) {
         if (!mediaPlayerMaps.containsKey(gameVariant)) {

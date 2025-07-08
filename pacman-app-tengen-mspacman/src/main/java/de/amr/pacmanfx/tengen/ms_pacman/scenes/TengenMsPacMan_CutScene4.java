@@ -60,12 +60,13 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         pacMan  .setAnimations(theUI().configuration().createPacAnimations(pacMan));
         juniors = new ArrayList<>();
         juniorCreationTime = new ArrayList<>();
-        music = theSound().createSound("intermission.4");
+        music = theSound().createMediaPlayer("intermission.4", 1);
     }
 
     @Override
     protected void doEnd() {
         music.stop();
+        music.dispose();
     }
 
     @Override

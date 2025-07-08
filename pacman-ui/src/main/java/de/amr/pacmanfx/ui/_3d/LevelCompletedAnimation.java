@@ -63,10 +63,10 @@ public class LevelCompletedAnimation extends ManagedAnimation {
                 pauseSec(0.5, () -> gameLevel.pac().hide()),
                 pauseSec(0.5),
                 createSpinningAnimation(),
-                pauseSec(0.5, () -> theSound().playSound(SoundID.LEVEL_COMPLETE)),
+                pauseSec(0.5, () -> theSound().play(SoundID.LEVEL_COMPLETE)),
                 pauseSec(0.5),
                 wallsDisappearingAnimation.getOrCreateAnimation(),
-                pauseSec(1.0, () -> theSound().playSound(SoundID.LEVEL_CHANGED))
+                pauseSec(1.0, () -> theSound().play(SoundID.LEVEL_CHANGED))
         );
     }
 

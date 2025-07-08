@@ -64,7 +64,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D implements ActionBind
 
     @Override
     public void onCreditAdded(GameEvent e) {
-        theSound().playSound(SoundID.COIN_INSERTED);
+        theSound().play(SoundID.COIN_INSERTED);
     }
 
     @Override

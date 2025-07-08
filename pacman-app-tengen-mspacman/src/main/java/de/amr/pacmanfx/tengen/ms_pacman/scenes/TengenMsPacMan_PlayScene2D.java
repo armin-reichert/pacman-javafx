@@ -241,7 +241,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
     public void onGameStarted(GameEvent e) {
         boolean silent = theGameLevel().isDemoLevel() || theGameState() == TESTING_LEVELS_SHORT || theGameState() == TESTING_LEVELS_MEDIUM;
         if (!silent) {
-            theSound().playSound(SoundID.GAME_READY);
+            theSound().play(SoundID.GAME_READY);
         }
     }
 
@@ -301,25 +301,25 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
 
     @Override
     public void onBonusActivated(GameEvent e) {
-        theSound().playSound(SoundID.BONUS_BOUNCING);
+        theSound().play(SoundID.BONUS_BOUNCING);
     }
 
     @Override
     public void onBonusEaten(GameEvent e) {
-        theSound().stopSound(SoundID.BONUS_BOUNCING);
-        theSound().playSound(SoundID.BONUS_EATEN);
+        theSound().stop(SoundID.BONUS_BOUNCING);
+        theSound().play(SoundID.BONUS_EATEN);
     }
 
     @Override
     public void onBonusExpired(GameEvent e) {
-        theSound().stopSound(SoundID.BONUS_BOUNCING);
+        theSound().stop(SoundID.BONUS_BOUNCING);
     }
 
     @Override
     public void onSpecialScoreReached(GameEvent e) {
         int score = e.payload("score");
         Logger.info("Extra life won for reaching score of {}", score);
-        theSound().playSound(SoundID.EXTRA_LIFE);
+        theSound().play(SoundID.EXTRA_LIFE);
     }
 
     @Override
@@ -329,7 +329,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
 
     @Override
     public void onGhostEaten(GameEvent e) {
-        theSound().playSound(SoundID.GHOST_EATEN);
+        theSound().play(SoundID.GHOST_EATEN);
     }
 
     @Override
@@ -340,23 +340,23 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
 
     @Override
     public void onPacDying(GameEvent e) {
-        theSound().playSound(SoundID.PAC_MAN_DEATH);
+        theSound().play(SoundID.PAC_MAN_DEATH);
     }
 
     @Override
     public void onPacFoundFood(GameEvent e) {
-        theSound().playSound(SoundID.PAC_MAN_MUNCHING);
+        theSound().play(SoundID.PAC_MAN_MUNCHING);
     }
 
     @Override
     public void onPacGetsPower(GameEvent e) {
         theSound().pauseSiren();
-        theSound().playSound(SoundID.PAC_MAN_POWER);
+        theSound().play(SoundID.PAC_MAN_POWER);
     }
 
     @Override
     public void onPacLostPower(GameEvent e) {
-        theSound().stopSound(SoundID.PAC_MAN_POWER);
+        theSound().stop(SoundID.PAC_MAN_POWER);
     }
 
     private void updateSound(GameLevel level) {
@@ -366,13 +366,13 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
             theSound().playSiren();
         }
         if (level.pac().starvingTicks() > 10) { // TODO not sure how to do this right
-            theSound().pauseSound(SoundID.PAC_MAN_MUNCHING);
+            theSound().pause(SoundID.PAC_MAN_MUNCHING);
         }
         boolean ghostsReturning = level.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
         if (level.pac().isAlive() && ghostsReturning) {
-            theSound().playSound(SoundID.GHOST_RETURNS);
+            theSound().play(SoundID.GHOST_RETURNS);
         } else {
-            theSound().stopSound(SoundID.GHOST_RETURNS);
+            theSound().stop(SoundID.GHOST_RETURNS);
         }
     }
 

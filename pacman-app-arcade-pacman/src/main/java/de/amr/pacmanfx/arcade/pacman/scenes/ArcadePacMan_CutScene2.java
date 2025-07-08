@@ -14,6 +14,7 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import javafx.scene.media.MediaPlayer;
+import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createGhost;
@@ -61,7 +62,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         blinky = createGhost(RED_GHOST_SHADOW);
         blinky.setSpeed(0);
         blinky.hide();
-        music = theSound().createSound("intermission");
+        music = theSound().createMediaPlayer("intermission", 1);
 
         pac.setAnimations(theUI().configuration().createPacAnimations(pac));
 
@@ -77,6 +78,8 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     @Override
     protected void doEnd() {
         music.stop();
+        music.dispose();
+        Logger.info("{} ends", getClass().getSimpleName());
     }
 
     @Override

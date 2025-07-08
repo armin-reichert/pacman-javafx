@@ -69,7 +69,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         clapperboard.setFont(scaledArcadeFont8());
         clapperboard.startAnimation();
 
-        music = theSound().createSound("intermission.3");
+        music = theSound().createMediaPlayer("intermission.3", 1);
 
         setSceneState(STATE_CLAPPERBOARD, TickTimer.INDEFINITE);
     }
@@ -77,6 +77,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     @Override
     protected void doEnd() {
         music.stop();
+        music.dispose();
     }
 
     @Override
