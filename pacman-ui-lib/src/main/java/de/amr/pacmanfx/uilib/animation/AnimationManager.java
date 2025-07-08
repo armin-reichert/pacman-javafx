@@ -42,6 +42,7 @@ public class AnimationManager {
             animation.play();
         }
     }
+
     public void playAnimationFromStart(ManagedAnimation managedAnimation) {
         requireNonNull(managedAnimation);
         Animation animation = managedAnimation.getOrCreateAnimation();
