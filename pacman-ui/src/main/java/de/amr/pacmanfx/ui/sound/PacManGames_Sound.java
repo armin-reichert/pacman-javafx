@@ -21,7 +21,7 @@ import java.util.Optional;
 import static de.amr.pacmanfx.ui.PacManGames.theAssets;
 import static java.util.Objects.requireNonNull;
 
-public class PacManGames_Sound {
+public class PacManGames_Sound implements SoundManager {
 
     private final BooleanProperty enabledProperty = new SimpleBooleanProperty(true);
     private final BooleanProperty mutedProperty = new SimpleBooleanProperty(false);
@@ -240,9 +240,6 @@ public class PacManGames_Sound {
         Logger.debug("Media player created from URL {}", url);
         return player;
     }
-
-
-
 
     private Map<String, MediaPlayer> mediaPlayerMap(String gameVariant) {
         if (!mediaPlayerMaps.containsKey(gameVariant)) {

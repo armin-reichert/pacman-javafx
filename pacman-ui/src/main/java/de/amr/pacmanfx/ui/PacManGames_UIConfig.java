@@ -9,6 +9,7 @@ import de.amr.pacmanfx.model.actors.ActorAnimationMap;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
+import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -39,4 +40,7 @@ public interface PacManGames_UIConfig extends PacManGames_GameSceneConfig {
     default boolean hasGameCanvasRoundedBorder() { return true; }
     SpriteSheet<?> spriteSheet();
     WorldMapColorScheme worldMapColorScheme(WorldMap worldMap);
+
+
+    default SoundManager soundManager() { return null; }
 }
