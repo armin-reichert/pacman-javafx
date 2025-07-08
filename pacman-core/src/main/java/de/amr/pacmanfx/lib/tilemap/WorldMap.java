@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.IntStream;
@@ -67,9 +68,10 @@ public class WorldMap {
     }
 
     public static WorldMap fromURL(URL url) throws IOException {
+        requireNonNull(url);
         try (var reader = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
             WorldMap worldMap = WorldMapParser.parse(reader.lines(), WorldMap::isValidTerrainValue, WorldMap::isValidFoodValue);
-            worldMap.url = url.toExternalForm();
+            worldMap.url = URLDecoder.decode(url.toExternalForm(), StandardCharsets.UTF_8);
             return worldMap;
         }
     }
