@@ -359,8 +359,14 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
     private void updateSound(GameLevel level) {
         if (theGameState() == GameState.HUNTING && !level.pac().powerTimer().isRunning()) {
             int sirenNumber = 1 + theGame().huntingTimer().phaseIndex() / 2; // TODO check how this works in original game
-            theSound().selectSiren(sirenNumber);
-            theSound().playSiren();
+            SoundID sirenID = switch(sirenNumber) {
+                case 1 -> SoundID.SIREN_1;
+                case 2 -> SoundID.SIREN_2;
+                case 3 -> SoundID.SIREN_3;
+                case 4 -> SoundID.SIREN_4;
+                default -> throw new IllegalArgumentException("Illegal siren number " + sirenNumber);
+            };
+            theSound().playSiren(sirenID, 1.0);
         }
         if (level.pac().starvingTicks() > 10) { // TODO not sure how to do this right
             theSound().pause(SoundID.PAC_MAN_MUNCHING);

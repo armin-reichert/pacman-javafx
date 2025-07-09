@@ -182,8 +182,14 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
         boolean pacChased = theGameState() == GameState.HUNTING && !theGameLevel().pac().powerTimer().isRunning();
         if (pacChased) {
             int sirenNumber = 1 + theGame().huntingTimer().phaseIndex() / 2;
-            theSound().selectSiren(sirenNumber);
-            theSound().playSiren();
+            SoundID sirenID = switch(sirenNumber) {
+                case 1 -> SoundID.SIREN_1;
+                case 2 -> SoundID.SIREN_2;
+                case 3 -> SoundID.SIREN_3;
+                case 4 -> SoundID.SIREN_4;
+                default -> throw new IllegalArgumentException("Illegal siren number " + sirenNumber);
+            };
+            theSound().playSiren(sirenID, 1.0);
         }
         // TODO: how exactly is the munching sound created in the original game?
         if (theGameLevel().pac().starvingTicks() > 10) {

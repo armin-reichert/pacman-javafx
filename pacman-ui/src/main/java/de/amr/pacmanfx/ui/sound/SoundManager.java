@@ -21,8 +21,7 @@ public interface SoundManager {
     void stopVoice();
     void playVoice(String key, double delaySeconds);
 
-    void selectSiren(int number);
-    void playSiren();
+    void playSiren(SoundID sirenID, double volume);
     void pauseSiren();
     void stopSiren();
 }

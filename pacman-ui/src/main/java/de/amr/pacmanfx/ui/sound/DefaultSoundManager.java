@@ -166,30 +166,26 @@ public class DefaultSoundManager implements SoundManager {
     }
 
     @Override
-    public void selectSiren(int number) {
-        if (number < 1 || number > 4) {
-            Logger.error("Siren number must be in 1..4 but is " + number);
-            return;
+    public void playSiren(SoundID sirenID, double volume) {
+        requireNonNull(sirenID);
+        if (sirenID != SoundID.SIREN_1
+                && sirenID != SoundID.SIREN_2
+                && sirenID != SoundID.SIREN_3
+                && sirenID != SoundID.SIREN_4) {
+            throw new IllegalArgumentException("Illegal sound ID for siren: " + sirenID);
         }
-        if (siren == null || siren.number() != number) {
-            if (siren != null) {
-                siren.player().stop();
-            }
-            MediaPlayer sirenPlayer = createMediaPlayer(".audio.siren." + number, MediaPlayer.INDEFINITE);
+        if (siren == null || siren.id() != sirenID) {
+            stopSiren();
+            MediaPlayer sirenPlayer = createMediaPlayer(sirenID.keySuffix(), MediaPlayer.INDEFINITE);
             if (sirenPlayer == null) {
-                //Logger.error("Could not create media player for siren number {}", number);
+                Logger.error("Could not create media player for siren ID {}", sirenID);
                 siren = null;
             } else {
-                sirenPlayer.setVolume(0.5);
-                siren = new Siren(number, sirenPlayer);
+                sirenPlayer.setVolume(volume);
+                siren = new Siren(sirenID, sirenPlayer);
+                siren.player().play();
+                Logger.info("Created new siren player, playing at volume " + sirenPlayer.getVolume());
             }
-        }
-    }
-
-    @Override
-    public void playSiren() {
-        if (siren != null) {
-            siren.player().play();
         }
     }
 
@@ -212,7 +208,7 @@ public class DefaultSoundManager implements SoundManager {
             mediaPlayer(key).ifPresent(player -> logMediaPlayerStatus(player, key));
         }
         if (siren != null) {
-            logMediaPlayerStatus(siren.player(), "Siren" + siren.number());
+            logMediaPlayerStatus(siren.player(), siren.id().keySuffix());
         }
         logMediaPlayerStatus(voice, "Voice");
     }

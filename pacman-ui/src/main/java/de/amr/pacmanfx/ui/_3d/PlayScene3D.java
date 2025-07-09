@@ -521,8 +521,14 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         theSound().setEnabled(true);
         if (theGameState() == GameState.HUNTING && !gameLevel.pac().powerTimer().isRunning()) {
             int sirenNumber = 1 + theGame().huntingTimer().phaseIndex() / 2;
-            theSound().selectSiren(sirenNumber);
-            theSound().playSiren();
+            SoundID sirenID = switch (sirenNumber) {
+                case 1 -> SoundID.SIREN_1;
+                case 2 -> SoundID.SIREN_2;
+                case 3 -> SoundID.SIREN_3;
+                case 4 -> SoundID.SIREN_4;
+                default -> throw new IllegalArgumentException("Illegal siren number " + sirenNumber);
+            };
+            theSound().playSiren(sirenID, 1.0);
         }
         if (gameLevel.pac().starvingTicks() > 10) { // TODO not sure how to do this right
             theSound().pause(SoundID.PAC_MAN_MUNCHING);

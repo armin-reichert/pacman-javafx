@@ -9,11 +9,8 @@ import javafx.scene.media.MediaPlayer;
 /**
  * @author Armin Reichert
  */
-public record Siren(int number, MediaPlayer player) {
+public record Siren(SoundID id, MediaPlayer player) {
     public Siren {
-        if (number < 1 || number > 4) {
-            throw new IllegalArgumentException("Illegal siren number: " + number);
-        }
         if (player == null) {
             throw new IllegalArgumentException("No siren player specified");
         }

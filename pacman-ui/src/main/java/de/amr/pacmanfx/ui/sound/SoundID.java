@@ -17,7 +17,11 @@ public enum SoundID {
     LEVEL_COMPLETE    (".audio.level_complete",   SoundType.MEDIA_PLAYER),
     PAC_MAN_DEATH     (".audio.pacman_death",     SoundType.MEDIA_PLAYER),
     PAC_MAN_MUNCHING  (".audio.pacman_munch",     SoundType.MEDIA_PLAYER),
-    PAC_MAN_POWER     (".audio.pacman_power",     SoundType.MEDIA_PLAYER);
+    PAC_MAN_POWER     (".audio.pacman_power",     SoundType.MEDIA_PLAYER),
+    SIREN_1           (".audio.siren.1",          SoundType.MEDIA_PLAYER),
+    SIREN_2           (".audio.siren.2",          SoundType.MEDIA_PLAYER),
+    SIREN_3           (".audio.siren.3",          SoundType.MEDIA_PLAYER),
+    SIREN_4           (".audio.siren.4",          SoundType.MEDIA_PLAYER);
 
     SoundID(String keySuffix, SoundType type) {
         this.keySuffix = keySuffix;
