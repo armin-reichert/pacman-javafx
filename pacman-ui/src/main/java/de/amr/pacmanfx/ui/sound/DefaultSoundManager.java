@@ -33,9 +33,9 @@ public class DefaultSoundManager implements SoundManager {
     }
 
     public MediaPlayer addMediaPlayer(SoundID id, int numRepetitions) {
-        MediaPlayer mediaPlayer = createMediaPlayer(id.key(), numRepetitions);
+        MediaPlayer mediaPlayer = createMediaPlayer(id.keySuffix(), numRepetitions);
         if (mediaPlayer != null) {
-            mediaPlayerMap.put(id.key(), mediaPlayer);
+            mediaPlayerMap.put(id.keySuffix(), mediaPlayer);
         } else {
             Logger.warn("Media player for ID '{}' could not be created", id);
         }
@@ -44,7 +44,7 @@ public class DefaultSoundManager implements SoundManager {
 
     @Override
     public MediaPlayer createMediaPlayer(String keySuffix, int numRepetitions) {
-        String key = assetNamespace + ".audio." + keySuffix;
+        String key = assetNamespace + keySuffix;
         URL url = theAssets().get(key);
         if (url == null) {
             Logger.warn("Missing audio resource '%s'".formatted(keySuffix));
@@ -81,7 +81,7 @@ public class DefaultSoundManager implements SoundManager {
     public void playAudioClip(String keySuffix, double volume) {
         requireNonNull(keySuffix);
         if (!mutedProperty.get() && enabledProperty.get()) {
-            String key = assetNamespace + ".audio." + keySuffix;
+            String key = assetNamespace + keySuffix;
             AudioClip clip = theAssets().get(key);
             if (clip == null) {
                 Logger.error("No audio clip with key {}", key);
@@ -99,8 +99,8 @@ public class DefaultSoundManager implements SoundManager {
     public void play(SoundID id) {
         switch (id.type()) {
             case MEDIA_PLAYER -> {
-                Logger.debug("Play media player '{}'", id.key());
-                Optional<MediaPlayer> optPlayer = mediaPlayer(id.key());
+                Logger.debug("Play media player '{}'", id.keySuffix());
+                Optional<MediaPlayer> optPlayer = mediaPlayer(id.keySuffix());
                 if (optPlayer.isPresent()) {
                     optPlayer.get().play();
                 } else {
@@ -108,8 +108,8 @@ public class DefaultSoundManager implements SoundManager {
                 }
             }
             case CLIP -> {
-                Logger.debug("Play audio clip '{}'", id.key());
-                playAudioClip(id.key(), 1);
+                Logger.debug("Play audio clip '{}'", id.keySuffix());
+                playAudioClip(id.keySuffix(), 1);
             }
         }
     }
@@ -117,11 +117,11 @@ public class DefaultSoundManager implements SoundManager {
     public void pause(SoundID id) {
         switch (id.type()) {
             case MEDIA_PLAYER -> {
-                Logger.debug("Pause media player '{}'", id.key());
-                mediaPlayer(id.key()).ifPresent(MediaPlayer::pause);
+                Logger.debug("Pause media player '{}'", id.keySuffix());
+                mediaPlayer(id.keySuffix()).ifPresent(MediaPlayer::pause);
             }
             case CLIP -> {
-                Logger.debug("Pausing audio clip '{}' not supported", id.key());
+                Logger.debug("Pausing audio clip '{}' not supported", id.keySuffix());
             }
         }
     }
@@ -129,11 +129,11 @@ public class DefaultSoundManager implements SoundManager {
     public void stop(SoundID id)  {
         switch (id.type()) {
             case MEDIA_PLAYER -> {
-                Logger.debug("Play media player '{}'", id.key());
-                mediaPlayer(id.key()).ifPresent(MediaPlayer::stop);
+                Logger.debug("Play media player '{}'", id.keySuffix());
+                mediaPlayer(id.keySuffix()).ifPresent(MediaPlayer::stop);
             }
             case CLIP -> {
-                Logger.debug("Stopping audio clip '{}' not supported", id.key());
+                Logger.debug("Stopping audio clip '{}' not supported", id.keySuffix());
             }
         }
     }
@@ -175,7 +175,7 @@ public class DefaultSoundManager implements SoundManager {
             if (siren != null) {
                 siren.player().stop();
             }
-            MediaPlayer sirenPlayer = createMediaPlayer("siren." + number, MediaPlayer.INDEFINITE);
+            MediaPlayer sirenPlayer = createMediaPlayer(".audio.siren." + number, MediaPlayer.INDEFINITE);
             if (sirenPlayer == null) {
                 //Logger.error("Could not create media player for siren number {}", number);
                 siren = null;
