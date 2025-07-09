@@ -25,7 +25,6 @@ import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
 import javafx.animation.SequentialTransition;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.value.WeakChangeListener;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -117,7 +116,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         items.add(miUse2DScene);
         items.add(miToggleMiniView);
         items.add(contextMenuTitleItem(theAssets().text("select_perspective")));
-        items.addAll(createPerspectiveRadioButtons());
+        items.addAll(createPerspectiveRadioItems());
         items.add(contextMenuTitleItem(theAssets().text("pacman")));
         items.add(miAutopilot);
         items.add(miImmunity);
@@ -128,18 +127,18 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         return items;
     }
 
-    private List<MenuItem> createPerspectiveRadioButtons() {
+    private List<MenuItem> createPerspectiveRadioItems() {
         List<MenuItem> items = new ArrayList<>();
         var toggleGroup = new ToggleGroup();
         for (var perspectiveID : Perspective.ID.values()) {
-            var miPerspective = new RadioMenuItem(theAssets().text("perspective_id_" + perspectiveID.name()));
-            miPerspective.setToggleGroup(toggleGroup);
-            miPerspective.setOnAction(e -> PY_3D_PERSPECTIVE.set(perspectiveID));
-            miPerspective.setUserData(perspectiveID);
+            var radioItem = new RadioMenuItem(theAssets().text("perspective_id_" + perspectiveID.name()));
+            radioItem.setToggleGroup(toggleGroup);
+            radioItem.setOnAction(e -> PY_3D_PERSPECTIVE.set(perspectiveID));
+            radioItem.setUserData(perspectiveID);
             if (perspectiveID == PY_3D_PERSPECTIVE.get())  {
-                miPerspective.setSelected(true);
+                radioItem.setSelected(true);
             }
-            items.add(miPerspective);
+            items.add(radioItem);
         }
         PY_3D_PERSPECTIVE.addListener((py, ov, newPerspectiveID) -> {
             for (MenuItem item : items) {
