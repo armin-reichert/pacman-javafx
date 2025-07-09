@@ -28,17 +28,12 @@ public class TerrainMapRenderer3D {
 
     private int cylinderDivisions = 32; // default=64
 
-    private Consumer<Wall3D> wallCreatedCallback = wall3D -> Logger.debug(() -> "Wall created: " + wall3D);
-    private Consumer<Wall3D> cornerCreatedCallback = wall3D -> Logger.debug(() -> "Corner created: " + wall3D);
+    private Consumer<Wall3D> onWallCreated = wall3D -> Logger.debug(() -> "Wall created: " + wall3D);
 
     public TerrainMapRenderer3D() {}
 
-    public void setWallCreatedCallback(Consumer<Wall3D> wallCreatedCallback) {
-        this.wallCreatedCallback = wallCreatedCallback;
-    }
-
-    public void setCornerCreatedCallback(Consumer<Wall3D> cornerCreatedCallback) {
-        this.cornerCreatedCallback = cornerCreatedCallback;
+    public void setOnWallCreated(Consumer<Wall3D> callback) {
+        onWallCreated = callback;
     }
 
     public void setCylinderDivisions(int cylinderDivisions) {
@@ -223,8 +218,8 @@ public class TerrainMapRenderer3D {
         wall3D.setTranslateY(center.y());
         wall3D.setMouseTransparent(true);
 
-        if (cornerCreatedCallback != null) {
-            cornerCreatedCallback.accept(wall3D);
+        if (onWallCreated != null) {
+            onWallCreated.accept(wall3D);
         }
         return wall3D;
     }
@@ -247,8 +242,8 @@ public class TerrainMapRenderer3D {
         wall3D.setTranslateY(center.y());
         wall3D.setMouseTransparent(true);
 
-        if (wallCreatedCallback != null) {
-            wallCreatedCallback.accept(wall3D);
+        if (onWallCreated != null) {
+            onWallCreated.accept(wall3D);
         }
         return wall3D;
     }

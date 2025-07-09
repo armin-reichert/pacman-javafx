@@ -21,6 +21,7 @@ public class Wall3D extends Group implements Destroyable {
     public static final double DEFAULT_WALL_THICKNESS = 2;
 
     private final DoubleProperty baseHeightProperty = new SimpleDoubleProperty(DEFAULT_BASE_HEIGHT);
+    private boolean cornerWall;
 
     public Wall3D(Node base, Node top) {
         requireNonNull(base);
@@ -28,12 +29,16 @@ public class Wall3D extends Group implements Destroyable {
         getChildren().setAll(base, top);
         if (base instanceof Box box) {
             box.depthProperty().bind(baseHeightProperty);
+            cornerWall = false;
         } else if (base instanceof Cylinder cylinder) {
             cylinder.heightProperty().bind(baseHeightProperty);
+            cornerWall = true;
         }
         base.translateZProperty().bind(baseHeightProperty.multiply(-0.5));
         top.translateZProperty().bind(baseHeightProperty.add(0.5 * DEFAULT_TOP_HEIGHT).negate());
     }
+
+    public boolean isCornerWall() { return cornerWall; }
 
     public DoubleProperty baseHeightProperty() {
         return baseHeightProperty;

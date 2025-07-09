@@ -155,13 +155,11 @@ public class Maze3D extends Group {
         PhongMaterial wallBaseMaterial = coloredMaterial(wallBaseColor);
         PhongMaterial wallTopMaterial = coloredMaterial(wallTopColor);
 
-        r3D.setWallCreatedCallback(wall3D -> wall3D.baseHeightProperty().set(OBSTACLE_HEIGHT));
-        r3D.setCornerCreatedCallback(wall3D -> wall3D.baseHeightProperty().set(OBSTACLE_HEIGHT));
+        r3D.setOnWallCreated(wall3D -> wall3D.baseHeightProperty().set(OBSTACLE_HEIGHT));
         for (Obstacle obstacle : worldMap.obstacles()) {
             r3D.renderObstacle3D(mazeGroup, obstacle, isWorldBorder(worldMap, obstacle), Wall3D.DEFAULT_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial);
         }
-        r3D.setWallCreatedCallback(null);
-        r3D.setCornerCreatedCallback(null);
+        r3D.setOnWallCreated(null);
 
         addHouse(worldMap, wallBaseColor, wallTopColor);
 
@@ -191,7 +189,7 @@ public class Maze3D extends Group {
         PhongMaterial wallBaseMaterial = coloredMaterial(opaqueColor(wallBaseColor, 0.4));
         PhongMaterial wallTopMaterial = coloredMaterial(wallTopColor);
 
-        r3D.setWallCreatedCallback(wall3D -> wall3D.baseHeightProperty().set(HOUSE_WALL_HEIGHT));
+        r3D.setOnWallCreated(wall3D -> wall3D.baseHeightProperty().set(HOUSE_WALL_HEIGHT));
         mazeGroup.getChildren().addAll(
             r3D.createWallBetweenTiles(houseMinTile, houseMinTile.plus(2, 0), Wall3D.DEFAULT_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial),
             r3D.createWallBetweenTiles(houseRightUpper.minus(2, 0), houseRightUpper, Wall3D.DEFAULT_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial),
@@ -199,7 +197,7 @@ public class Maze3D extends Group {
             r3D.createWallBetweenTiles(houseLeftLower, houseMaxTile, Wall3D.DEFAULT_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial),
             r3D.createWallBetweenTiles(houseMaxTile, houseRightUpper, Wall3D.DEFAULT_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial)
         );
-        r3D.setWallCreatedCallback(null);
+        r3D.setOnWallCreated(null);
 
         Color doorColor = getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR));
         var doorMaterial = coloredMaterial(doorColor);

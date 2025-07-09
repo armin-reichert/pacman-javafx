@@ -82,7 +82,7 @@ public class ArcadeHouse3D extends Group implements Destroyable {
         barMaterial      = coloredPhongMaterial(doorColor);
 
         TerrainMapRenderer3D r3D = new TerrainMapRenderer3D();
-        r3D.setWallCreatedCallback(wall3D -> wall3D.baseHeightProperty().bind(wallBaseHeightProperty));
+        r3D.setOnWallCreated(wall3D -> wall3D.baseHeightProperty().bind(wallBaseHeightProperty));
 
         door = createDoor(house.leftDoorTile(), house.rightDoorTile(), wallBaseHeightProperty.get());
 

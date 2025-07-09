@@ -177,33 +177,31 @@ public class GameLevel3D extends Group implements Destroyable {
         pac3D.init();
         getChildren().addAll(pac3D, pac3D.light());
 
-        {
-            String ans = theUI().configuration().assetNamespace();
-            ghosts3D = gameLevel.ghosts().map(ghost -> {
-                GhostColoring ghostColoring = new GhostColoring(
-                    theAssets().color("%s.ghost.%d.color.normal.dress".formatted(ans, ghost.personality())),
-                    theAssets().color("%s.ghost.%d.color.normal.pupils".formatted(ans, ghost.personality())),
-                    theAssets().color("%s.ghost.%d.color.normal.eyeballs".formatted(ans, ghost.personality())),
-                    theAssets().color("%s.ghost.color.frightened.dress".formatted(ans)),
-                    theAssets().color("%s.ghost.color.frightened.pupils".formatted(ans)),
-                    theAssets().color("%s.ghost.color.frightened.eyeballs".formatted(ans)),
-                    theAssets().color("%s.ghost.color.flashing.dress".formatted(ans)),
-                    theAssets().color("%s.ghost.color.flashing.pupils".formatted(ans))
-                );
-                return new MutatingGhost3D(
-                    animationManager,
-                    ghost,
-                    ghostColoring,
-                    dressMeshViews[ghost.personality()],
-                    pupilsMeshViews[ghost.personality()],
-                    eyesMeshViews[ghost.personality()],
-                    GHOST_3D_SIZE,
-                    gameLevel.data().numFlashes()
-                );
-            }).toList();
-            getChildren().addAll(ghosts3D);
-            ghosts3D.forEach(ghost3D -> ghost3D.init(gameLevel));
-        }
+        final String ans = theUI().configuration().assetNamespace();
+        ghosts3D = gameLevel.ghosts().map(ghost -> {
+            var ghostColoring = new GhostColoring(
+                theAssets().color("%s.ghost.%d.color.normal.dress".formatted(ans, ghost.personality())),
+                theAssets().color("%s.ghost.%d.color.normal.pupils".formatted(ans, ghost.personality())),
+                theAssets().color("%s.ghost.%d.color.normal.eyeballs".formatted(ans, ghost.personality())),
+                theAssets().color("%s.ghost.color.frightened.dress".formatted(ans)),
+                theAssets().color("%s.ghost.color.frightened.pupils".formatted(ans)),
+                theAssets().color("%s.ghost.color.frightened.eyeballs".formatted(ans)),
+                theAssets().color("%s.ghost.color.flashing.dress".formatted(ans)),
+                theAssets().color("%s.ghost.color.flashing.pupils".formatted(ans))
+            );
+            return new MutatingGhost3D(
+                animationManager,
+                ghost,
+                ghostColoring,
+                dressMeshViews[ghost.personality()],
+                pupilsMeshViews[ghost.personality()],
+                eyesMeshViews[ghost.personality()],
+                GHOST_3D_SIZE,
+                gameLevel.data().numFlashes()
+            );
+        }).toList();
+        getChildren().addAll(ghosts3D);
+        ghosts3D.forEach(ghost3D -> ghost3D.init(gameLevel));
 
         getChildren().add(mazeGroup);
 
@@ -234,8 +232,7 @@ public class GameLevel3D extends Group implements Destroyable {
             wallOpacityProperty.bind(PY_3D_WALL_OPACITY);
 
             r3D = new TerrainMapRenderer3D();
-            r3D.setWallCreatedCallback(wall3D -> wall3D.baseHeightProperty().bind(obstacleBaseHeightProperty));
-            r3D.setCornerCreatedCallback(wall3D -> wall3D.baseHeightProperty().bind(obstacleBaseHeightProperty));
+            r3D.setOnWallCreated(wall3D -> wall3D.baseHeightProperty().bind(obstacleBaseHeightProperty));
             r3D.setCylinderDivisions(24);
             for (Obstacle obstacle : gameLevel.worldMap().obstacles()) {
                 Vector2i tile = tileAt(obstacle.startPoint().toVector2f());
