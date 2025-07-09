@@ -2,13 +2,12 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.uilib.tilemap;
+package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.Obstacle;
 import de.amr.pacmanfx.lib.tilemap.ObstacleSegment;
-import de.amr.pacmanfx.uilib.model3D.Wall3D;
 import javafx.scene.Group;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -24,13 +23,13 @@ import static de.amr.pacmanfx.Globals.TS;
 /**
  * Renders 3D terrain.
  */
-public class TerrainMapRenderer3D {
+public class TerrainRenderer3D {
 
     private int cylinderDivisions = 32; // default=64
 
     private Consumer<Wall3D> onWallCreated = wall3D -> Logger.debug(() -> "Wall created: " + wall3D);
 
-    public TerrainMapRenderer3D() {}
+    public TerrainRenderer3D() {}
 
     public void setOnWallCreated(Consumer<Wall3D> callback) {
         onWallCreated = callback;

@@ -8,7 +8,6 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer3D;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -81,7 +80,7 @@ public class ArcadeHouse3D extends Group implements Destroyable {
         wallTopMaterial  = coloredPhongMaterial(houseTopColor);
         barMaterial      = coloredPhongMaterial(doorColor);
 
-        TerrainMapRenderer3D r3D = new TerrainMapRenderer3D();
+        TerrainRenderer3D r3D = new TerrainRenderer3D();
         r3D.setOnWallCreated(wall3D -> wall3D.baseHeightProperty().bind(wallBaseHeightProperty));
 
         door = createDoor(house.leftDoorTile(), house.rightDoorTile(), wallBaseHeightProperty.get());

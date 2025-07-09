@@ -14,7 +14,7 @@ import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.uilib.model3D.GhostBody;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.model3D.Wall3D;
-import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer3D;
+import de.amr.pacmanfx.uilib.model3D.TerrainRenderer3D;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -68,7 +68,7 @@ public class Maze3D extends Group {
     private final Group mazeGroup = new Group();
     private final Group foodGroup = new Group();
 
-    private final TerrainMapRenderer3D r3D;
+    private final TerrainRenderer3D r3D;
     private final PerspectiveCamera camera;
 
     private final Node pacmanShape3D;
@@ -86,7 +86,7 @@ public class Maze3D extends Group {
         camera.setFarClip(10000.0);
         camera.setFieldOfView(40); // default: 30
 
-        r3D = new TerrainMapRenderer3D();
+        r3D = new TerrainRenderer3D();
 
         AmbientLight ambientLight = new AmbientLight(Color.WHITE);
         getChildren().addAll(ambientLight, mazeGroup, foodGroup);

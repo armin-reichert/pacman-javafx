@@ -19,7 +19,7 @@ import de.amr.pacmanfx.uilib.animation.MaterialColorAnimation;
 import de.amr.pacmanfx.uilib.animation.SquirtingAnimation;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.*;
-import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer3D;
+import de.amr.pacmanfx.uilib.model3D.TerrainRenderer3D;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.beans.binding.Bindings;
@@ -99,7 +99,7 @@ public class GameLevel3D extends Group implements Destroyable {
     private PhongMaterial cornerTopMaterial;
 
     private WorldMapColorScheme colorScheme;
-    private TerrainMapRenderer3D r3D;
+    private TerrainRenderer3D r3D;
 
     private Group mazeGroup = new Group();
     private Group maze3D = new Group();
@@ -231,7 +231,7 @@ public class GameLevel3D extends Group implements Destroyable {
 
             wallOpacityProperty.bind(PY_3D_WALL_OPACITY);
 
-            r3D = new TerrainMapRenderer3D();
+            r3D = new TerrainRenderer3D();
             r3D.setOnWallCreated(wall3D -> wall3D.baseHeightProperty().bind(obstacleBaseHeightProperty));
             r3D.setCylinderDivisions(24);
             for (Obstacle obstacle : gameLevel.worldMap().obstacles()) {
