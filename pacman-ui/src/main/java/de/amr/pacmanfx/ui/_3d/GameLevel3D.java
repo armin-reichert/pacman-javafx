@@ -30,7 +30,10 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.*;
+import javafx.scene.shape.DrawMode;
+import javafx.scene.shape.Mesh;
+import javafx.scene.shape.MeshView;
+import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -52,24 +55,6 @@ import static java.util.Objects.requireNonNull;
  * 3D representation of game level.
  */
 public class GameLevel3D extends Group implements Destroyable {
-
-    private static class Floor3D extends Box implements Destroyable {
-        public Floor3D(double sizeX, double sizeY) {
-            super(sizeX + 2 * FLOOR_3D_PADDING, sizeY, FLOOR_3D_THICKNESS);
-            translateXProperty().bind(widthProperty().divide(2).subtract(FLOOR_3D_PADDING));
-            translateYProperty().bind(heightProperty().divide(2));
-            translateZProperty().bind(depthProperty().divide(2));
-            materialProperty().bind(PY_3D_FLOOR_COLOR.map(Ufx::coloredPhongMaterial));
-        }
-
-        @Override
-        public void destroy() {
-            translateXProperty().unbind();
-            translateYProperty().unbind();
-            translateZProperty().unbind();
-            materialProperty().unbind();
-        }
-    }
 
     private static boolean isInsideWorldMap(WorldMap worldMap, double x, double y) {
         return 0 <= x && x < worldMap.numCols() * TS && 0 <= y && y < worldMap.numRows() * TS;
@@ -225,7 +210,13 @@ public class GameLevel3D extends Group implements Destroyable {
         Logger.info("Build 3D maze for map (URL '{}') and color scheme {}", gameLevel.worldMap().url(), colorScheme);
 
         {
-            floor3D = new Floor3D(gameLevel.worldMap().numCols() * TS, gameLevel.worldMap().numRows() * TS);
+            floor3D = new Floor3D(
+                gameLevel.worldMap().numCols() * TS,
+                gameLevel.worldMap().numRows() * TS,
+                FLOOR_3D_THICKNESS,
+                FLOOR_3D_PADDING
+            );
+            floor3D.materialProperty().bind(PY_3D_FLOOR_COLOR.map(Ufx::coloredPhongMaterial));
 
             wallBaseMaterial = new PhongMaterial();
             wallBaseMaterial.diffuseColorProperty().bind(Bindings.createObjectBinding(
