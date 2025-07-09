@@ -22,6 +22,7 @@ import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -84,10 +85,9 @@ public class GameView implements PacManGames_View {
     private final Dashboard dashboard = new Dashboard();
     private final Canvas canvas = new Canvas();
     private final CrudeCanvasContainer canvasContainer = new CrudeCanvasContainer(canvas);
+    private final MiniGameView miniGameView;
     private final ContextMenu contextMenu = new ContextMenu();
     private final StringBinding titleBinding;
-
-    private final MiniGameView miniGameView;
 
     public GameView(PacManGames_UI ui, Scene parentScene) {
         this.ui = requireNonNull(ui);
@@ -99,18 +99,22 @@ public class GameView implements PacManGames_View {
         createLayers();
         configurePropertyBindings();
 
-        ui.currentGameSceneProperty().addListener((py, ov, gameScene) -> {
-            if (gameScene != null) embedGameScene(gameScene);
-            contextMenu.hide();
-        });
-
         root.setOnContextMenuRequested(this::handleContextMenuRequest);
-        //TODO is this the recommended way to close a context-menu?
+
+        //TODO what is the cleanest solution to hide the context menu in all needed cases?
+
+        // game scene changes: hide it
+        ui.currentGameSceneProperty().addListener(this::handleGameSceneChange);
+
+        // any other mouse button clicked: hide it
         parentScene.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
-            if (contextMenu.isShowing() && e.getButton() == MouseButton.PRIMARY) {
+            if (e.getButton() == MouseButton.PRIMARY) {
                 contextMenu.hide();
             }
         });
+
+        parentScene.widthProperty() .addListener((py, ov, width)  -> canvasContainer.resizeTo(width.doubleValue(), parentScene.getHeight()));
+        parentScene.heightProperty().addListener((py, ov, height) -> canvasContainer.resizeTo(parentScene.getWidth(), height.doubleValue()));
 
         titleBinding = Bindings.createStringBinding(
             () -> computeTitleText(PY_3D_ENABLED.get(), PY_DEBUG_INFO_VISIBLE.get()),
@@ -120,9 +124,6 @@ public class GameView implements PacManGames_View {
             parentScene.heightProperty(),
             ui.currentGameSceneProperty()
         );
-
-        parentScene.widthProperty() .addListener((py, ov, width)  -> canvasContainer.resizeTo(width.doubleValue(), parentScene.getHeight()));
-        parentScene.heightProperty().addListener((py, ov, height) -> canvasContainer.resizeTo(parentScene.getWidth(), height.doubleValue()));
 
         bindAction(ACTION_BOOT_SHOW_GAME_VIEW, GLOBAL_ACTION_BINDINGS);
         bindAction(ACTION_ENTER_FULLSCREEN, GLOBAL_ACTION_BINDINGS);
@@ -141,6 +142,34 @@ public class GameView implements PacManGames_View {
         bindAction(ACTION_TOGGLE_IMMUNITY, GLOBAL_ACTION_BINDINGS);
         bindAction(ACTION_TOGGLE_PIP_VISIBILITY, GLOBAL_ACTION_BINDINGS);
         bindAction(ACTION_TOGGLE_PLAY_SCENE_2D_3D, GLOBAL_ACTION_BINDINGS);
+    }
+
+    private void handleGameSceneChange(ObservableValue<? extends GameScene> obs, GameScene oldScene, GameScene newScene) {
+        if (newScene != null) embedGameScene(newScene);
+        contextMenu.hide();
+    }
+
+    private void handleContextMenuRequest(ContextMenuEvent contextMenuEvent) {
+        contextMenu.getItems().clear();
+        ui.currentGameScene().ifPresent(gameScene -> {
+            if (ui.currentGameSceneIsPlayScene2D()) {
+                var miSwitchTo3D = new MenuItem(theAssets().text("use_3D_scene"));
+                miSwitchTo3D.setOnAction(actionEvent -> GameAction.executeIfEnabled(ui, ACTION_TOGGLE_PLAY_SCENE_2D_3D));
+                contextMenu.getItems().add(contextMenuTitleItem(theAssets().text("scene_display")));
+                contextMenu.getItems().add(miSwitchTo3D);
+            }
+            List<MenuItem> gameSceneItems = gameScene.supplyContextMenuItems(contextMenuEvent, contextMenu);
+            contextMenu.getItems().addAll(gameSceneItems);
+        });
+        // wrap all action handlers into menu closing actions
+        contextMenu.getItems().stream()
+            .filter(item -> item.getOnAction() != null)
+            .forEach(item -> {
+                var handler = item.getOnAction();
+                item.setOnAction(e -> { handler.handle(e); contextMenu.hide(); });
+            });
+        contextMenu.requestFocus();
+        contextMenu.show(root, contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY());
     }
 
     public void showHelp() {
@@ -394,21 +423,5 @@ public class GameView implements PacManGames_View {
         flashMessageLayer = new FlashMessageView();
 
         root.getChildren().addAll(canvasLayer, dashboardLayer, popupLayer, flashMessageLayer);
-    }
-
-    private void handleContextMenuRequest(ContextMenuEvent contextMenuEvent) {
-        contextMenu.getItems().clear();
-        ui.currentGameScene().ifPresent(gameScene -> {
-            if (ui.currentGameSceneIsPlayScene2D()) {
-                var miSwitchTo3D = new MenuItem(theAssets().text("use_3D_scene"));
-                miSwitchTo3D.setOnAction(actionEvent -> GameAction.executeIfEnabled(ui, ACTION_TOGGLE_PLAY_SCENE_2D_3D));
-                contextMenu.getItems().add(contextMenuTitleItem(theAssets().text("scene_display")));
-                contextMenu.getItems().add(miSwitchTo3D);
-            }
-            List<MenuItem> gameSceneItems = gameScene.supplyContextMenuItems(contextMenuEvent);
-            contextMenu.getItems().addAll(gameSceneItems);
-        });
-        contextMenu.show(root, contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY());
-        contextMenu.requestFocus();
     }
 }

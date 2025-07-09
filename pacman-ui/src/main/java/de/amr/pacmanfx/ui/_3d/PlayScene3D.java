@@ -25,6 +25,7 @@ import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
 import javafx.animation.SequentialTransition;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.value.WeakChangeListener;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -91,7 +92,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     }
 
     @Override
-    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent e) {
+    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent e, ContextMenu menu) {
         List<MenuItem> items = new ArrayList<>();
 
         items.add(contextMenuTitleItem(theAssets().text("scene_display")));
@@ -124,13 +125,14 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 PY_3D_PERSPECTIVE.set((Perspective.ID) radioButton.getUserData());
             }
         });
-        PY_3D_PERSPECTIVE.addListener((py, ov, name) -> {
+
+        PY_3D_PERSPECTIVE.addListener(new WeakChangeListener<>((py, ov, name) -> {
             for (Toggle toggle : radioButtonGroup.getToggles()) {
                 if (toggle.getUserData() == name) { // == allowed for enum values
                     radioButtonGroup.selectToggle(toggle);
                 }
             }
-        });
+        }));
 
         // Common items
         items.add(contextMenuTitleItem(theAssets().text("pacman")));
@@ -146,7 +148,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         items.add(new SeparatorMenuItem());
 
         var miMuted = new CheckMenuItem(theAssets().text("muted"));
-        miMuted.selectedProperty().bindBidirectional(theSound().mutedProperty());
+        miMuted.selectedProperty().bindBidirectional(theUI().mutedProperty());
         items.add(miMuted);
 
         var miQuit = new MenuItem(theAssets().text("quit"));
@@ -195,10 +197,9 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         clearActionBindings();
         perspectiveManager.perspectiveIDProperty().unbind();
         if (gameLevel3D != null) {
-            Platform.runLater(() -> {
-                gameLevel3D.destroy();
-                gameLevel3D = null;
-            });
+            gameLevel3D.destroy();
+            gameLevel3D = null;
+            Logger.info("GameLevel3D has been destroyed");
         }
     }
 

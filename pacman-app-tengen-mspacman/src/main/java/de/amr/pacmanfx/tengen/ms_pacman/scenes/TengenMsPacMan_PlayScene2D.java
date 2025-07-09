@@ -103,7 +103,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
     }
 
     @Override
-    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent e) {
+    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent e, ContextMenu menu) {
         List<MenuItem> items = new ArrayList<>();
         // Switching scene display mode
         var miScaledToFit = new RadioMenuItem(theAssets().text("scaled_to_fit"));
@@ -139,7 +139,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
         items.add(new SeparatorMenuItem());
 
         var miMuted = new CheckMenuItem(theAssets().text("muted"));
-        miMuted.selectedProperty().bindBidirectional(theSound().mutedProperty());
+        miMuted.selectedProperty().bindBidirectional(theUI().mutedProperty());
         items.add(miMuted);
 
         var miQuit = new MenuItem(theAssets().text("quit"));

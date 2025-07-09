@@ -21,6 +21,7 @@ import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.ContextMenuEvent;
@@ -39,6 +40,7 @@ import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_SHORT;
 import static de.amr.pacmanfx.ui.PacManGames.*;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
+import static de.amr.pacmanfx.uilib.Ufx.contextMenuTitleItem;
 
 /**
  * 2D play scene for Arcade game variants.
@@ -115,29 +117,26 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
     }
 
     @Override
-    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent e) {
-        List<MenuItem> items = new ArrayList<>();
-        items.add(Ufx.contextMenuTitleItem(theAssets().text("pacman")));
-
+    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent e, ContextMenu menu) {
         var miAutopilot = new CheckMenuItem(theAssets().text("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(PY_USING_AUTOPILOT);
-        items.add(miAutopilot);
 
         var miImmunity = new CheckMenuItem(theAssets().text("immunity"));
         miImmunity.selectedProperty().bindBidirectional(PY_IMMUNITY);
-        items.add(miImmunity);
-
-        items.add(new SeparatorMenuItem());
 
         var miMuted = new CheckMenuItem(theAssets().text("muted"));
-        miMuted.selectedProperty().bindBidirectional(theSound().mutedProperty());
-        items.add(miMuted);
+        miMuted.selectedProperty().bindBidirectional(theUI().mutedProperty());
 
         var miQuit = new MenuItem(theAssets().text("quit"));
         miQuit.setOnAction(ae -> GameAction.executeIfEnabled(theUI(), ACTION_QUIT_GAME_SCENE));
-        items.add(miQuit);
 
-        return items;
+        return List.of(
+            contextMenuTitleItem(theAssets().text("pacman")),
+            miAutopilot,
+            miImmunity,
+            new SeparatorMenuItem(),
+            miMuted,
+            miQuit);
     }
 
     @Override
