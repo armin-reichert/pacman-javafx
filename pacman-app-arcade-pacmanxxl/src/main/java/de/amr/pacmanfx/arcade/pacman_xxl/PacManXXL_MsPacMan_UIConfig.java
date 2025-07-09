@@ -53,7 +53,7 @@ import static java.util.Objects.requireNonNull;
 
 public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
 
-    private static final String ANS = "ms_pacman_xxl";
+    private static final String NAMESPACE = "ms_pacman_xxl";
 
     private boolean assetsLoaded;
     private ArcadeMsPacMan_SpriteSheet spriteSheet;
@@ -155,12 +155,12 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
 
     @Override
     public void unloadAssets(AssetStorage assetStorage) {
-        assetStorage.removeAll(ANS + ".");
+        assetStorage.removeAll(NAMESPACE + ".");
     }
 
     @Override
     public String assetNamespace() {
-        return ANS;
+        return NAMESPACE;
     }
 
     @Override
@@ -190,37 +190,37 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
 
     @Override
     public Image bonusSymbolImage(byte symbol) {
-        return theAssets().image(ANS + ".bonus_symbol_" + symbol);
+        return theAssets().image(NAMESPACE + ".bonus_symbol_" + symbol);
     }
 
     @Override
     public Image bonusValueImage(byte symbol) {
-        return theAssets().image(ANS + ".bonus_value_" + symbol);
+        return theAssets().image(NAMESPACE + ".bonus_value_" + symbol);
     }
 
     @Override
     public MsPacManBody createLivesCounterShape3D(Model3DRepository model3DRepository) {
         return model3DRepository.createMsPacManBody(
             PacManGames_UI.LIVES_COUNTER_3D_SHAPE_SIZE,
-            theAssets().color(ANS + ".pac.color.head"),
-            theAssets().color(ANS + ".pac.color.eyes"),
-            theAssets().color(ANS + ".pac.color.palate"),
-            theAssets().color(ANS + ".pac.color.hairbow"),
-            theAssets().color(ANS + ".pac.color.hairbow.pearls"),
-            theAssets().color(ANS + ".pac.color.boobs")
+            theAssets().color(NAMESPACE + ".pac.color.head"),
+            theAssets().color(NAMESPACE + ".pac.color.eyes"),
+            theAssets().color(NAMESPACE + ".pac.color.palate"),
+            theAssets().color(NAMESPACE + ".pac.color.hairbow"),
+            theAssets().color(NAMESPACE + ".pac.color.hairbow.pearls"),
+            theAssets().color(NAMESPACE + ".pac.color.boobs")
         );
     }
 
     @Override
     public PacBase3D createPac3D(Model3DRepository model3DRepository, AnimationManager animationManager, Pac pac) {
         var pac3D = new MsPacMan3D(model3DRepository, animationManager, pac, PacManGames_UI.PAC_3D_SIZE,
-            theAssets().color(ANS + ".pac.color.head"),
-            theAssets().color(ANS + ".pac.color.eyes"),
-            theAssets().color(ANS + ".pac.color.palate"),
-            theAssets().color(ANS + ".pac.color.hairbow"),
-            theAssets().color(ANS + ".pac.color.hairbow.pearls"),
-            theAssets().color(ANS + ".pac.color.boobs"));
-        pac3D.light().setColor(theAssets().color(ANS + ".pac.color.head").desaturate());
+            theAssets().color(NAMESPACE + ".pac.color.head"),
+            theAssets().color(NAMESPACE + ".pac.color.eyes"),
+            theAssets().color(NAMESPACE + ".pac.color.palate"),
+            theAssets().color(NAMESPACE + ".pac.color.hairbow"),
+            theAssets().color(NAMESPACE + ".pac.color.hairbow.pearls"),
+            theAssets().color(NAMESPACE + ".pac.color.boobs"));
+        pac3D.light().setColor(theAssets().color(NAMESPACE + ".pac.color.head").desaturate());
         return pac3D;
     }
 

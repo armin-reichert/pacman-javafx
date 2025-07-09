@@ -48,7 +48,7 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceManager {
 
-    private static final String ANS = "pacman";
+    private static final String NAMESPACE = "pacman";
 
     public static final Vector2i ARCADE_MAP_SIZE_IN_TILES  = new Vector2i(28, 36);
     public static final Vector2f ARCADE_MAP_SIZE_IN_PIXELS = new Vector2f(224, 288);
@@ -148,12 +148,12 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
 
     @Override
     public void unloadAssets(AssetStorage assetStorage) {
-        assetStorage.removeAll(ANS + ".");
+        assetStorage.removeAll(NAMESPACE + ".");
     }
 
     @Override
     public String assetNamespace() {
-        return ANS;
+        return NAMESPACE;
     }
 
     @Override
@@ -181,31 +181,31 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
 
     @Override
     public Image bonusSymbolImage(byte symbol) {
-        return theAssets().image(ANS + ".bonus_symbol_" + symbol);
+        return theAssets().image(NAMESPACE + ".bonus_symbol_" + symbol);
     }
 
     @Override
     public Image bonusValueImage(byte symbol) {
-        return theAssets().image(ANS + ".bonus_value_" + symbol);
+        return theAssets().image(NAMESPACE + ".bonus_value_" + symbol);
     }
 
     @Override
     public PacBody createLivesCounterShape3D(Model3DRepository model3DRepository) {
         return model3DRepository.createPacBody(
                 PacManGames_UI.LIVES_COUNTER_3D_SHAPE_SIZE,
-                theAssets().color(ANS + ".pac.color.head"),
-                theAssets().color(ANS + ".pac.color.eyes"),
-                theAssets().color(ANS + ".pac.color.palate")
+                theAssets().color(NAMESPACE + ".pac.color.head"),
+                theAssets().color(NAMESPACE + ".pac.color.eyes"),
+                theAssets().color(NAMESPACE + ".pac.color.palate")
         );
     }
 
     @Override
     public PacMan3D createPac3D(Model3DRepository model3DRepository, AnimationManager animationManager, Pac pac) {
         var pac3D = new PacMan3D(model3DRepository, animationManager, pac, PacManGames_UI.PAC_3D_SIZE,
-            theAssets().color(ANS + ".pac.color.head"),
-            theAssets().color(ANS + ".pac.color.eyes"),
-            theAssets().color(ANS + ".pac.color.palate"));
-        pac3D.light().setColor(theAssets().color(ANS + ".pac.color.head").desaturate());
+            theAssets().color(NAMESPACE + ".pac.color.head"),
+            theAssets().color(NAMESPACE + ".pac.color.eyes"),
+            theAssets().color(NAMESPACE + ".pac.color.palate"));
+        pac3D.light().setColor(theAssets().color(NAMESPACE + ".pac.color.head").desaturate());
         return pac3D;
     }
 

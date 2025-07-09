@@ -63,7 +63,7 @@ import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceManager {
 
-    private static final String ANS = "tengen";
+    private static final String NAMESPACE = "tengen";
 
     public static final String MAP_PATH = "/de/amr/pacmanfx/tengen/ms_pacman/maps/";
 
@@ -118,10 +118,10 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         storeInMyNamespace(assets, "pac.color.hairbow.pearls",         nesPaletteColor(0x02));
 
         RectShort[] numberSprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
-        storeInMyNamespace(assets, "ghost_points_0", spriteSheet.image(numberSprites[0]));
-        storeInMyNamespace(assets, "ghost_points_1", spriteSheet.image(numberSprites[1]));
-        storeInMyNamespace(assets, "ghost_points_2", spriteSheet.image(numberSprites[2]));
-        storeInMyNamespace(assets, "ghost_points_3", spriteSheet.image(numberSprites[3]));
+        storeInMyNamespace(assets, "ghost_points_0",                   spriteSheet.image(numberSprites[0]));
+        storeInMyNamespace(assets, "ghost_points_1",                   spriteSheet.image(numberSprites[1]));
+        storeInMyNamespace(assets, "ghost_points_2",                   spriteSheet.image(numberSprites[2]));
+        storeInMyNamespace(assets, "ghost_points_3",                   spriteSheet.image(numberSprites[3]));
 
         storeInMyNamespace(assets, "ghost.0.color.normal.dress",       nesPaletteColor(0x05));
         storeInMyNamespace(assets, "ghost.0.color.normal.eyeballs",    nesPaletteColor(0x20));
@@ -148,14 +148,13 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         storeInMyNamespace(assets, "ghost.color.flashing.eyeballs",    nesPaletteColor(0x20));
         storeInMyNamespace(assets, "ghost.color.flashing.pupils",      nesPaletteColor(0x20));
 
-        // these have no SoundID, are handled in other way
+        // these have no SoundID, so store audio clip inside assets and access directly
         storeInMyNamespace(assets, "audio.option.selection_changed",   loadAudioClip("sound/ms-select1.wav"));
         storeInMyNamespace(assets, "audio.option.value_changed",       loadAudioClip("sound/ms-select2.wav"));
 
         storeInMyNamespace(assets, "audio.bonus_bouncing",             url("sound/fruitbounce.wav"));
         storeInMyNamespace(assets, "audio.bonus_eaten",                url("sound/ms-fruit.wav"));
         storeInMyNamespace(assets, "audio.extra_life",                 url("sound/ms-extralife.wav"));
-        // used only in 3D scene when level is completed:
         storeInMyNamespace(assets, "audio.game_ready",                 url("sound/ms-start.wav"));
         storeInMyNamespace(assets, "audio.ghost_eaten",                url("sound/ms-ghosteat.wav"));
         storeInMyNamespace(assets, "audio.ghost_returns",              url("sound/ms-eyes.wav"));
@@ -191,11 +190,11 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
 
     @Override
     public void unloadAssets(AssetStorage assetStorage) {
-        assetStorage.removeAll(ANS + ".");
+        assetStorage.removeAll(NAMESPACE + ".");
     }
 
     @Override
-    public String assetNamespace() { return ANS; }
+    public String assetNamespace() { return NAMESPACE; }
 
     @Override
     public boolean hasGameCanvasRoundedBorder() { return false; }
@@ -212,7 +211,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
 
     @Override
     public Image bonusSymbolImage(byte symbol) {
-        return theAssets().image(ANS + ".bonus_symbol_" + symbol);
+        return theAssets().image(NAMESPACE + ".bonus_symbol_" + symbol);
     }
 
     @Override
@@ -225,7 +224,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
             case TengenMsPacMan_GameModel.BONUS_ICE_CREAM -> 7; // 4000!
             default -> symbol;
         };
-        return theAssets().image(ANS + ".bonus_value_" + usedSymbol);
+        return theAssets().image(NAMESPACE + ".bonus_value_" + usedSymbol);
     }
 
     @Override
@@ -249,25 +248,25 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     public MsPacManBody createLivesCounterShape3D(Model3DRepository model3DRepository) {
         return model3DRepository.createMsPacManBody(
             PacManGames_UI.LIVES_COUNTER_3D_SHAPE_SIZE,
-            theAssets().color(ANS + ".pac.color.head"),
-            theAssets().color(ANS + ".pac.color.eyes"),
-            theAssets().color(ANS + ".pac.color.palate"),
-            theAssets().color(ANS + ".pac.color.hairbow"),
-            theAssets().color(ANS + ".pac.color.hairbow.pearls"),
-            theAssets().color(ANS + ".pac.color.boobs")
+            theAssets().color(NAMESPACE + ".pac.color.head"),
+            theAssets().color(NAMESPACE + ".pac.color.eyes"),
+            theAssets().color(NAMESPACE + ".pac.color.palate"),
+            theAssets().color(NAMESPACE + ".pac.color.hairbow"),
+            theAssets().color(NAMESPACE + ".pac.color.hairbow.pearls"),
+            theAssets().color(NAMESPACE + ".pac.color.boobs")
         );
     }
 
     @Override
     public MsPacMan3D createPac3D(Model3DRepository model3DRepository, AnimationManager animationManager, Pac pac) {
         var pac3D = new MsPacMan3D(model3DRepository, animationManager, pac, PacManGames_UI.PAC_3D_SIZE,
-            theAssets().color(ANS + ".pac.color.head"),
-            theAssets().color(ANS + ".pac.color.eyes"),
-            theAssets().color(ANS + ".pac.color.palate"),
-            theAssets().color(ANS + ".pac.color.hairbow"),
-            theAssets().color(ANS + ".pac.color.hairbow.pearls"),
-            theAssets().color(ANS + ".pac.color.boobs"));
-        pac3D.light().setColor(theAssets().color(ANS + ".pac.color.head").desaturate());
+            theAssets().color(NAMESPACE + ".pac.color.head"),
+            theAssets().color(NAMESPACE + ".pac.color.eyes"),
+            theAssets().color(NAMESPACE + ".pac.color.palate"),
+            theAssets().color(NAMESPACE + ".pac.color.hairbow"),
+            theAssets().color(NAMESPACE + ".pac.color.hairbow.pearls"),
+            theAssets().color(NAMESPACE + ".pac.color.boobs"));
+        pac3D.light().setColor(theAssets().color(NAMESPACE + ".pac.color.head").desaturate());
         return pac3D;
     }
 

@@ -48,7 +48,7 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceManager {
 
-    private static final String ANS = "ms_pacman";
+    private static final String NAMESPACE = "ms_pacman";
 
     private static final List<WorldMapColorScheme> WORLD_MAP_COLOR_SCHEMES = List.of(
         new WorldMapColorScheme("FFB7AE", "FF0000", "FCB5FF", "DEDEFF"),
@@ -91,10 +91,10 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         storeInMyNamespace(assets, "pac.color.hairbow.pearls",        ARCADE_BLUE);
 
         RectShort[] numberSprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
-        storeInMyNamespace(assets, "ghost_points_0", spriteSheet.image(numberSprites[0]));
-        storeInMyNamespace(assets, "ghost_points_1", spriteSheet.image(numberSprites[1]));
-        storeInMyNamespace(assets, "ghost_points_2", spriteSheet.image(numberSprites[2]));
-        storeInMyNamespace(assets, "ghost_points_3", spriteSheet.image(numberSprites[3]));
+        storeInMyNamespace(assets, "ghost_points_0",                  spriteSheet.image(numberSprites[0]));
+        storeInMyNamespace(assets, "ghost_points_1",                  spriteSheet.image(numberSprites[1]));
+        storeInMyNamespace(assets, "ghost_points_2",                  spriteSheet.image(numberSprites[2]));
+        storeInMyNamespace(assets, "ghost_points_3",                  spriteSheet.image(numberSprites[3]));
 
         storeInMyNamespace(assets, "ghost.0.color.normal.dress",      ARCADE_RED);
         storeInMyNamespace(assets, "ghost.0.color.normal.eyeballs",   ARCADE_WHITE);
@@ -115,26 +115,26 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         storeInMyNamespace(assets, "ghost.color.flashing.eyeballs",   ARCADE_ROSE);
         storeInMyNamespace(assets, "ghost.color.flashing.pupils",     ARCADE_RED);
 
-        storeInMyNamespace(assets, "audio.bonus_bouncing",          url("sound/Fruit_Bounce.mp3"));
-        storeInMyNamespace(assets, "audio.bonus_eaten",             url("sound/Fruit.mp3"));
-        storeInMyNamespace(assets, "audio.credit",                  url("sound/credit.wav"));
-        storeInMyNamespace(assets, "audio.extra_life",              url("sound/ExtraLife.mp3"));
-        storeInMyNamespace(assets, "audio.game_over",               url("sound/game-over.mp3"));
-        storeInMyNamespace(assets, "audio.game_ready",              url("sound/Start.mp3"));
-        storeInMyNamespace(assets, "audio.ghost_eaten",             url("sound/Ghost.mp3"));
-        storeInMyNamespace(assets, "audio.ghost_returns",           url("sound/GhostEyes.mp3"));
-        storeInMyNamespace(assets, "audio.intermission.1",          url("sound/Act_1_They_Meet.mp3"));
-        storeInMyNamespace(assets, "audio.intermission.2",          url("sound/Act_2_The_Chase.mp3"));
-        storeInMyNamespace(assets, "audio.intermission.3",          url("sound/Act_3_Junior.mp3"));
-        storeInMyNamespace(assets, "audio.level_complete",          url("sound/level-complete.mp3"));
-        storeInMyNamespace(assets, "audio.pacman_death",            url("sound/Died.mp3"));
-        storeInMyNamespace(assets, "audio.pacman_munch",            url("sound/munch.wav"));
-        storeInMyNamespace(assets, "audio.pacman_power",            url("sound/ScaredGhost.mp3"));
-        storeInMyNamespace(assets, "audio.siren.1",                 url("sound/GhostNoise1.wav"));
-        storeInMyNamespace(assets, "audio.siren.2",                 url("sound/GhostNoise1.wav"));// TODO
-        storeInMyNamespace(assets, "audio.siren.3",                 url("sound/GhostNoise1.wav"));// TODO
-        storeInMyNamespace(assets, "audio.siren.4",                 url("sound/GhostNoise1.wav"));// TODO
-        storeInMyNamespace(assets, "audio.sweep",                   url("sound/sweep.mp3"));
+        storeInMyNamespace(assets, "audio.bonus_bouncing",            url("sound/Fruit_Bounce.mp3"));
+        storeInMyNamespace(assets, "audio.bonus_eaten",               url("sound/Fruit.mp3"));
+        storeInMyNamespace(assets, "audio.credit",                    url("sound/credit.wav"));
+        storeInMyNamespace(assets, "audio.extra_life",                url("sound/ExtraLife.mp3"));
+        storeInMyNamespace(assets, "audio.game_over",                 url("sound/game-over.mp3"));
+        storeInMyNamespace(assets, "audio.game_ready",                url("sound/Start.mp3"));
+        storeInMyNamespace(assets, "audio.ghost_eaten",               url("sound/Ghost.mp3"));
+        storeInMyNamespace(assets, "audio.ghost_returns",             url("sound/GhostEyes.mp3"));
+        storeInMyNamespace(assets, "audio.intermission.1",            url("sound/Act_1_They_Meet.mp3"));
+        storeInMyNamespace(assets, "audio.intermission.2",            url("sound/Act_2_The_Chase.mp3"));
+        storeInMyNamespace(assets, "audio.intermission.3",            url("sound/Act_3_Junior.mp3"));
+        storeInMyNamespace(assets, "audio.level_complete",            url("sound/level-complete.mp3"));
+        storeInMyNamespace(assets, "audio.pacman_death",              url("sound/Died.mp3"));
+        storeInMyNamespace(assets, "audio.pacman_munch",              url("sound/munch.wav"));
+        storeInMyNamespace(assets, "audio.pacman_power",              url("sound/ScaredGhost.mp3"));
+        storeInMyNamespace(assets, "audio.siren.1",                   url("sound/GhostNoise1.wav"));
+        storeInMyNamespace(assets, "audio.siren.2",                   url("sound/GhostNoise1.wav"));// TODO
+        storeInMyNamespace(assets, "audio.siren.3",                   url("sound/GhostNoise1.wav"));// TODO
+        storeInMyNamespace(assets, "audio.siren.4",                   url("sound/GhostNoise1.wav"));// TODO
+        storeInMyNamespace(assets, "audio.sweep",                     url("sound/sweep.mp3"));
 
         soundManager.addMediaPlayer(SoundID.BONUS_BOUNCING,   MediaPlayer.INDEFINITE);
         soundManager.addMediaPlayer(SoundID.GAME_OVER,        1);
@@ -148,7 +148,7 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
 
     @Override
     public void unloadAssets(AssetStorage assetStorage) {
-        assetStorage.removeAll(ANS + ".");
+        assetStorage.removeAll(NAMESPACE + ".");
     }
 
     @Override
@@ -158,7 +158,7 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
 
     @Override
     public String assetNamespace() {
-        return ANS;
+        return NAMESPACE;
     }
 
     @Override
@@ -186,37 +186,37 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
 
     @Override
     public Image bonusSymbolImage(byte symbol) {
-        return theAssets().image(ANS + ".bonus_symbol_" + symbol);
+        return theAssets().image(NAMESPACE + ".bonus_symbol_" + symbol);
     }
 
     @Override
     public Image bonusValueImage(byte symbol) {
-        return theAssets().image(ANS + ".bonus_value_" + symbol);
+        return theAssets().image(NAMESPACE + ".bonus_value_" + symbol);
     }
 
     @Override
     public MsPacManBody createLivesCounterShape3D(Model3DRepository model3DRepository) {
         return model3DRepository.createMsPacManBody(
             PacManGames_UI.LIVES_COUNTER_3D_SHAPE_SIZE,
-            theAssets().color(ANS + ".pac.color.head"),
-            theAssets().color(ANS + ".pac.color.eyes"),
-            theAssets().color(ANS + ".pac.color.palate"),
-            theAssets().color(ANS + ".pac.color.hairbow"),
-            theAssets().color(ANS + ".pac.color.hairbow.pearls"),
-            theAssets().color(ANS + ".pac.color.boobs")
+            theAssets().color(NAMESPACE + ".pac.color.head"),
+            theAssets().color(NAMESPACE + ".pac.color.eyes"),
+            theAssets().color(NAMESPACE + ".pac.color.palate"),
+            theAssets().color(NAMESPACE + ".pac.color.hairbow"),
+            theAssets().color(NAMESPACE + ".pac.color.hairbow.pearls"),
+            theAssets().color(NAMESPACE + ".pac.color.boobs")
         );
     }
 
     @Override
     public MsPacMan3D createPac3D(Model3DRepository model3DRepository, AnimationManager animationManager, Pac pac) {
         var pac3D = new MsPacMan3D(model3DRepository, animationManager, pac, PacManGames_UI.PAC_3D_SIZE,
-            theAssets().color(ANS + ".pac.color.head"),
-            theAssets().color(ANS + ".pac.color.eyes"),
-            theAssets().color(ANS + ".pac.color.palate"),
-            theAssets().color(ANS + ".pac.color.hairbow"),
-            theAssets().color(ANS + ".pac.color.hairbow.pearls"),
-            theAssets().color(ANS + ".pac.color.boobs"));
-        pac3D.light().setColor(theAssets().color(ANS + ".pac.color.head").desaturate());
+            theAssets().color(NAMESPACE + ".pac.color.head"),
+            theAssets().color(NAMESPACE + ".pac.color.eyes"),
+            theAssets().color(NAMESPACE + ".pac.color.palate"),
+            theAssets().color(NAMESPACE + ".pac.color.hairbow"),
+            theAssets().color(NAMESPACE + ".pac.color.hairbow.pearls"),
+            theAssets().color(NAMESPACE + ".pac.color.boobs"));
+        pac3D.light().setColor(theAssets().color(NAMESPACE + ".pac.color.head").desaturate());
         return pac3D;
     }
 
