@@ -416,7 +416,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
         ctx().save();
         // NES screen is 32 tiles wide but mazes are only 28 tiles wide
         ctx().translate(scaled(2 * TS), 0);
-        gr().drawHUD(theGame().hud());
+        gr().drawHUD(theGame().hud(), sizeInPx());
         ctx().restore();
     }
 

@@ -104,13 +104,12 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
     }
 
     @Override
-    public void drawHUD(HUD hud) {
+    public void drawHUD(HUD hud, Vector2f sceneSize) {
         requireNonNull(hud);
 
         if (!hud.isVisible()) return;
 
         var theGame = (TengenMsPacMan_GameModel) theGame();
-        Vector2f sceneSize = optGameLevel().map(GameLevel::worldSizePx).orElse(NES_SIZE_PX);
 
         if (hud.isScoreVisible()) {
             drawScores(theGame, nesPaletteColor(0x20), theAssets().arcadeFont(8));

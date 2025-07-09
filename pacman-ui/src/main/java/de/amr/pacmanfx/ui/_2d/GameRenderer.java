@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._2d;
 
+import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HUD;
@@ -28,11 +29,11 @@ public interface GameRenderer {
 
     FloatProperty scalingProperty();
 
-    default void setScaling(float value) {
+    default void setScaling(double value) {
         if (value <= 0) {
             throw new IllegalArgumentException("Scaling value must be positive but is %.2f".formatted(value));
         }
-        scalingProperty().set(value);
+        scalingProperty().set((float)value);
     }
 
     default float scaling() { return scalingProperty().get(); }
@@ -50,8 +51,9 @@ public interface GameRenderer {
      * Draws the Head-Up Display (score, live counter, level counter, coins inserted)
      *
      * @param hud the Head-Up Display
+     * @param sceneSize scene size in pixels
      */
-    void drawHUD(HUD hud);
+    void drawHUD(HUD hud, Vector2f sceneSize);
 
     /**
      *
@@ -173,7 +175,7 @@ public interface GameRenderer {
     }
 
     default void drawTileGrid(double sizeX, double sizeY, Color gridColor) {
-        double thin = 0.2, medium = 0.3, thick = 0.35;
+        double thin = 0.2, medium = 0.4, thick = 0.8;
         int numCols = (int) (sizeX / TS), numRows = (int) (sizeY / TS);
         double width = scaled(numCols * TS), height = scaled(numRows * TS);
         ctx().save();

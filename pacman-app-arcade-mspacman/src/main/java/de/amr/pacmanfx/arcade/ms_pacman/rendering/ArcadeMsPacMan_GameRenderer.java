@@ -24,7 +24,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePalette.ARCADE_WHITE;
 import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePalette.ARCADE_YELLOW;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
@@ -66,12 +65,10 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
     public FloatProperty scalingProperty() { return scalingPy; }
 
     @Override
-    public void drawHUD(HUD hud) {
+    public void drawHUD(HUD hud, Vector2f sceneSize) {
         requireNonNull(hud);
 
         if (!hud.isVisible()) return;
-
-        Vector2f sceneSize = optGameLevel().map(GameLevel::worldSizePx).orElse(ARCADE_MAP_SIZE_IN_PIXELS);
 
         if (hud.isScoreVisible()) {
             ctx.setFont(theAssets().arcadeFont(scaled(8)));
