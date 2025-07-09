@@ -74,68 +74,68 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
     public void loadAssets(AssetStorage assets) {
         spriteSheet = new ArcadePacMan_SpriteSheet(loadImage("graphics/pacman_spritesheet.png"));
 
-        storeLocalAsset(assets, "app_icon",                        loadImage("graphics/icons/pacman.png"));
-        storeLocalAsset(assets, "flashing_maze",                   loadImage("graphics/maze_flashing.png"));
+        storeInMyNamespace(assets, "app_icon",                        loadImage("graphics/icons/pacman.png"));
+        storeInMyNamespace(assets, "flashing_maze",                   loadImage("graphics/maze_flashing.png"));
 
-        storeLocalAsset(assets, "startpage.image1",                loadImage("graphics/f1.jpg"));
-        storeLocalAsset(assets, "startpage.image2",                loadImage("graphics/f2.jpg"));
-        storeLocalAsset(assets, "startpage.image3",                loadImage("graphics/f3.jpg"));
+        storeInMyNamespace(assets, "startpage.image1",                loadImage("graphics/f1.jpg"));
+        storeInMyNamespace(assets, "startpage.image2",                loadImage("graphics/f2.jpg"));
+        storeInMyNamespace(assets, "startpage.image3",                loadImage("graphics/f3.jpg"));
 
-        storeLocalAsset(assets, "color.game_over_message",         ARCADE_RED);
+        storeInMyNamespace(assets, "color.game_over_message",         ARCADE_RED);
 
         RectShort[] symbolSprites = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS);
         RectShort[] valueSprites = spriteSheet.spriteSeq(SpriteID.BONUS_VALUES);
         for (byte symbol = 0; symbol <= 7; ++symbol) {
-            storeLocalAsset(assets, "bonus_symbol_" + symbol, spriteSheet.image(symbolSprites[symbol]));
-            storeLocalAsset(assets, "bonus_value_" + symbol,  spriteSheet.image(valueSprites[symbol]));
+            storeInMyNamespace(assets, "bonus_symbol_" + symbol, spriteSheet.image(symbolSprites[symbol]));
+            storeInMyNamespace(assets, "bonus_value_" + symbol,  spriteSheet.image(valueSprites[symbol]));
         }
 
-        storeLocalAsset(assets, "pac.color.head",                  ARCADE_YELLOW);
-        storeLocalAsset(assets, "pac.color.eyes",                  Color.grayRgb(33));
-        storeLocalAsset(assets, "pac.color.palate",                Color.rgb(240, 180, 160));
+        storeInMyNamespace(assets, "pac.color.head",                  ARCADE_YELLOW);
+        storeInMyNamespace(assets, "pac.color.eyes",                  Color.grayRgb(33));
+        storeInMyNamespace(assets, "pac.color.palate",                Color.rgb(240, 180, 160));
 
         RectShort[] numberSprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
-        storeLocalAsset(assets, "ghost_points_0",                  spriteSheet.image(numberSprites[0]));
-        storeLocalAsset(assets, "ghost_points_1",                  spriteSheet.image(numberSprites[1]));
-        storeLocalAsset(assets, "ghost_points_2",                  spriteSheet.image(numberSprites[2]));
-        storeLocalAsset(assets, "ghost_points_3",                  spriteSheet.image(numberSprites[3]));
+        storeInMyNamespace(assets, "ghost_points_0",                  spriteSheet.image(numberSprites[0]));
+        storeInMyNamespace(assets, "ghost_points_1",                  spriteSheet.image(numberSprites[1]));
+        storeInMyNamespace(assets, "ghost_points_2",                  spriteSheet.image(numberSprites[2]));
+        storeInMyNamespace(assets, "ghost_points_3",                  spriteSheet.image(numberSprites[3]));
 
-        storeLocalAsset(assets, "ghost.0.color.normal.dress",      ARCADE_RED);
-        storeLocalAsset(assets, "ghost.0.color.normal.eyeballs",   ARCADE_WHITE);
-        storeLocalAsset(assets, "ghost.0.color.normal.pupils",     ARCADE_BLUE);
-        storeLocalAsset(assets, "ghost.1.color.normal.dress",      ARCADE_PINK);
-        storeLocalAsset(assets, "ghost.1.color.normal.eyeballs",   ARCADE_WHITE);
-        storeLocalAsset(assets, "ghost.1.color.normal.pupils",     ARCADE_BLUE);
-        storeLocalAsset(assets, "ghost.2.color.normal.dress",      ARCADE_CYAN);
-        storeLocalAsset(assets, "ghost.2.color.normal.eyeballs",   ARCADE_WHITE);
-        storeLocalAsset(assets, "ghost.2.color.normal.pupils",     ARCADE_BLUE);
-        storeLocalAsset(assets, "ghost.3.color.normal.dress",      ARCADE_ORANGE);
-        storeLocalAsset(assets, "ghost.3.color.normal.eyeballs",   ARCADE_WHITE);
-        storeLocalAsset(assets, "ghost.3.color.normal.pupils",     ARCADE_BLUE);
-        storeLocalAsset(assets, "ghost.color.frightened.dress",    ARCADE_BLUE);
-        storeLocalAsset(assets, "ghost.color.frightened.eyeballs", ARCADE_ROSE);
-        storeLocalAsset(assets, "ghost.color.frightened.pupils",   ARCADE_ROSE);
-        storeLocalAsset(assets, "ghost.color.flashing.dress",      ARCADE_WHITE);
-        storeLocalAsset(assets, "ghost.color.flashing.eyeballs",   ARCADE_ROSE);
-        storeLocalAsset(assets, "ghost.color.flashing.pupils",     ARCADE_RED);
+        storeInMyNamespace(assets, "ghost.0.color.normal.dress",      ARCADE_RED);
+        storeInMyNamespace(assets, "ghost.0.color.normal.eyeballs",   ARCADE_WHITE);
+        storeInMyNamespace(assets, "ghost.0.color.normal.pupils",     ARCADE_BLUE);
+        storeInMyNamespace(assets, "ghost.1.color.normal.dress",      ARCADE_PINK);
+        storeInMyNamespace(assets, "ghost.1.color.normal.eyeballs",   ARCADE_WHITE);
+        storeInMyNamespace(assets, "ghost.1.color.normal.pupils",     ARCADE_BLUE);
+        storeInMyNamespace(assets, "ghost.2.color.normal.dress",      ARCADE_CYAN);
+        storeInMyNamespace(assets, "ghost.2.color.normal.eyeballs",   ARCADE_WHITE);
+        storeInMyNamespace(assets, "ghost.2.color.normal.pupils",     ARCADE_BLUE);
+        storeInMyNamespace(assets, "ghost.3.color.normal.dress",      ARCADE_ORANGE);
+        storeInMyNamespace(assets, "ghost.3.color.normal.eyeballs",   ARCADE_WHITE);
+        storeInMyNamespace(assets, "ghost.3.color.normal.pupils",     ARCADE_BLUE);
+        storeInMyNamespace(assets, "ghost.color.frightened.dress",    ARCADE_BLUE);
+        storeInMyNamespace(assets, "ghost.color.frightened.eyeballs", ARCADE_ROSE);
+        storeInMyNamespace(assets, "ghost.color.frightened.pupils",   ARCADE_ROSE);
+        storeInMyNamespace(assets, "ghost.color.flashing.dress",      ARCADE_WHITE);
+        storeInMyNamespace(assets, "ghost.color.flashing.eyeballs",   ARCADE_ROSE);
+        storeInMyNamespace(assets, "ghost.color.flashing.pupils",     ARCADE_RED);
 
-        storeLocalAsset(assets, "audio.bonus_eaten",               url("sound/eat_fruit.mp3"));
-        storeLocalAsset(assets, "audio.credit",                    url("sound/credit.wav"));
-        storeLocalAsset(assets, "audio.extra_life",                url("sound/extend.mp3"));
-        storeLocalAsset(assets, "audio.game_over",                 url("sound/common/game-over.mp3"));
-        storeLocalAsset(assets, "audio.game_ready",                url("sound/game_start.mp3"));
-        storeLocalAsset(assets, "audio.ghost_eaten",               url("sound/eat_ghost.mp3"));
-        storeLocalAsset(assets, "audio.ghost_returns",             url("sound/retreating.mp3"));
-        storeLocalAsset(assets, "audio.intermission",              url("sound/intermission.mp3"));
-        storeLocalAsset(assets, "audio.level_complete",            url("sound/common/level-complete.mp3"));
-        storeLocalAsset(assets, "audio.pacman_death",              url("sound/pacman_death.wav"));
-        storeLocalAsset(assets, "audio.pacman_munch",              url("sound/munch.wav"));
-        storeLocalAsset(assets, "audio.pacman_power",              url("sound/ghost-turn-to-blue.mp3"));
-        storeLocalAsset(assets, "audio.siren.1",                   url("sound/siren_1.mp3"));
-        storeLocalAsset(assets, "audio.siren.2",                   url("sound/siren_2.mp3"));
-        storeLocalAsset(assets, "audio.siren.3",                   url("sound/siren_3.mp3"));
-        storeLocalAsset(assets, "audio.siren.4",                   url("sound/siren_4.mp3"));
-        storeLocalAsset(assets, "audio.sweep",                     url("sound/common/sweep.mp3"));
+        storeInMyNamespace(assets, "audio.bonus_eaten",               url("sound/eat_fruit.mp3"));
+        storeInMyNamespace(assets, "audio.credit",                    url("sound/credit.wav"));
+        storeInMyNamespace(assets, "audio.extra_life",                url("sound/extend.mp3"));
+        storeInMyNamespace(assets, "audio.game_over",                 url("sound/common/game-over.mp3"));
+        storeInMyNamespace(assets, "audio.game_ready",                url("sound/game_start.mp3"));
+        storeInMyNamespace(assets, "audio.ghost_eaten",               url("sound/eat_ghost.mp3"));
+        storeInMyNamespace(assets, "audio.ghost_returns",             url("sound/retreating.mp3"));
+        storeInMyNamespace(assets, "audio.intermission",              url("sound/intermission.mp3"));
+        storeInMyNamespace(assets, "audio.level_complete",            url("sound/common/level-complete.mp3"));
+        storeInMyNamespace(assets, "audio.pacman_death",              url("sound/pacman_death.wav"));
+        storeInMyNamespace(assets, "audio.pacman_munch",              url("sound/munch.wav"));
+        storeInMyNamespace(assets, "audio.pacman_power",              url("sound/ghost-turn-to-blue.mp3"));
+        storeInMyNamespace(assets, "audio.siren.1",                   url("sound/siren_1.mp3"));
+        storeInMyNamespace(assets, "audio.siren.2",                   url("sound/siren_2.mp3"));
+        storeInMyNamespace(assets, "audio.siren.3",                   url("sound/siren_3.mp3"));
+        storeInMyNamespace(assets, "audio.siren.4",                   url("sound/siren_4.mp3"));
+        storeInMyNamespace(assets, "audio.sweep",                     url("sound/common/sweep.mp3"));
 
         soundManager.addMediaPlayer(SoundID.GAME_OVER,        1);
         soundManager.addMediaPlayer(SoundID.GAME_READY,       1);

@@ -96,84 +96,84 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
             loadImage("graphics/non_arcade_mazes.png")
         );
 
-        storeLocalAsset(assets, "app_icon",                         loadImage("graphics/icons/mspacman.png"));
-        storeLocalAsset(assets, "startpage.image1",                 loadImage("graphics/f1.png"));
-        storeLocalAsset(assets, "startpage.image2",                 loadImage("graphics/f2.png"));
+        storeInMyNamespace(assets, "app_icon",                         loadImage("graphics/icons/mspacman.png"));
+        storeInMyNamespace(assets, "startpage.image1",                 loadImage("graphics/f1.png"));
+        storeInMyNamespace(assets, "startpage.image2",                 loadImage("graphics/f2.png"));
 
-        storeLocalAsset(assets, "color.game_over_message",          nesPaletteColor(0x11));
-        storeLocalAsset(assets, "color.ready_message",              nesPaletteColor(0x28));
+        storeInMyNamespace(assets, "color.game_over_message",          nesPaletteColor(0x11));
+        storeInMyNamespace(assets, "color.ready_message",              nesPaletteColor(0x28));
 
         RectShort[] symbolSprites = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS);
         RectShort[] valueSprites  = spriteSheet.spriteSeq(SpriteID.BONUS_VALUES);
         for (byte symbol = 0; symbol <= 13; ++symbol) {
-            storeLocalAsset(assets, "bonus_symbol_" + symbol, spriteSheet.image(symbolSprites[symbol]));
-            storeLocalAsset(assets, "bonus_value_"  + symbol, spriteSheet.image(valueSprites[symbol]));
+            storeInMyNamespace(assets, "bonus_symbol_" + symbol, spriteSheet.image(symbolSprites[symbol]));
+            storeInMyNamespace(assets, "bonus_value_"  + symbol, spriteSheet.image(valueSprites[symbol]));
         }
 
-        storeLocalAsset(assets, "pac.color.head",                   nesPaletteColor(0x28));
-        storeLocalAsset(assets, "pac.color.eyes",                   nesPaletteColor(0x02));
-        storeLocalAsset(assets, "pac.color.palate",                 nesPaletteColor(0x2d));
-        storeLocalAsset(assets, "pac.color.boobs",                  nesPaletteColor(0x28).deriveColor(0, 1.0, 0.96, 1.0));
-        storeLocalAsset(assets, "pac.color.hairbow",                nesPaletteColor(0x05));
-        storeLocalAsset(assets, "pac.color.hairbow.pearls",         nesPaletteColor(0x02));
+        storeInMyNamespace(assets, "pac.color.head",                   nesPaletteColor(0x28));
+        storeInMyNamespace(assets, "pac.color.eyes",                   nesPaletteColor(0x02));
+        storeInMyNamespace(assets, "pac.color.palate",                 nesPaletteColor(0x2d));
+        storeInMyNamespace(assets, "pac.color.boobs",                  nesPaletteColor(0x28).deriveColor(0, 1.0, 0.96, 1.0));
+        storeInMyNamespace(assets, "pac.color.hairbow",                nesPaletteColor(0x05));
+        storeInMyNamespace(assets, "pac.color.hairbow.pearls",         nesPaletteColor(0x02));
 
         RectShort[] numberSprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
-        storeLocalAsset(assets, "ghost_points_0", spriteSheet.image(numberSprites[0]));
-        storeLocalAsset(assets, "ghost_points_1", spriteSheet.image(numberSprites[1]));
-        storeLocalAsset(assets, "ghost_points_2", spriteSheet.image(numberSprites[2]));
-        storeLocalAsset(assets, "ghost_points_3", spriteSheet.image(numberSprites[3]));
+        storeInMyNamespace(assets, "ghost_points_0", spriteSheet.image(numberSprites[0]));
+        storeInMyNamespace(assets, "ghost_points_1", spriteSheet.image(numberSprites[1]));
+        storeInMyNamespace(assets, "ghost_points_2", spriteSheet.image(numberSprites[2]));
+        storeInMyNamespace(assets, "ghost_points_3", spriteSheet.image(numberSprites[3]));
 
-        storeLocalAsset(assets, "ghost.0.color.normal.dress",       nesPaletteColor(0x05));
-        storeLocalAsset(assets, "ghost.0.color.normal.eyeballs",    nesPaletteColor(0x20));
-        storeLocalAsset(assets, "ghost.0.color.normal.pupils",      nesPaletteColor(0x16));
+        storeInMyNamespace(assets, "ghost.0.color.normal.dress",       nesPaletteColor(0x05));
+        storeInMyNamespace(assets, "ghost.0.color.normal.eyeballs",    nesPaletteColor(0x20));
+        storeInMyNamespace(assets, "ghost.0.color.normal.pupils",      nesPaletteColor(0x16));
 
-        storeLocalAsset(assets, "ghost.1.color.normal.dress",       nesPaletteColor(0x25));
-        storeLocalAsset(assets, "ghost.1.color.normal.eyeballs",    nesPaletteColor(0x20));
-        storeLocalAsset(assets, "ghost.1.color.normal.pupils",      nesPaletteColor(0x11));
+        storeInMyNamespace(assets, "ghost.1.color.normal.dress",       nesPaletteColor(0x25));
+        storeInMyNamespace(assets, "ghost.1.color.normal.eyeballs",    nesPaletteColor(0x20));
+        storeInMyNamespace(assets, "ghost.1.color.normal.pupils",      nesPaletteColor(0x11));
 
-        storeLocalAsset(assets, "ghost.2.color.normal.dress",       nesPaletteColor(0x11));
-        storeLocalAsset(assets, "ghost.2.color.normal.eyeballs",    nesPaletteColor(0x20));
-        storeLocalAsset(assets, "ghost.2.color.normal.pupils",      nesPaletteColor(0x11));
+        storeInMyNamespace(assets, "ghost.2.color.normal.dress",       nesPaletteColor(0x11));
+        storeInMyNamespace(assets, "ghost.2.color.normal.eyeballs",    nesPaletteColor(0x20));
+        storeInMyNamespace(assets, "ghost.2.color.normal.pupils",      nesPaletteColor(0x11));
 
-        storeLocalAsset(assets, "ghost.3.color.normal.dress",       nesPaletteColor(0x16));
-        storeLocalAsset(assets, "ghost.3.color.normal.eyeballs",    nesPaletteColor(0x20));
-        storeLocalAsset(assets, "ghost.3.color.normal.pupils",      nesPaletteColor(0x05));
+        storeInMyNamespace(assets, "ghost.3.color.normal.dress",       nesPaletteColor(0x16));
+        storeInMyNamespace(assets, "ghost.3.color.normal.eyeballs",    nesPaletteColor(0x20));
+        storeInMyNamespace(assets, "ghost.3.color.normal.pupils",      nesPaletteColor(0x05));
 
-        storeLocalAsset(assets, "ghost.color.frightened.dress",     nesPaletteColor(0x01));
-        storeLocalAsset(assets, "ghost.color.frightened.eyeballs",  nesPaletteColor(0x20));
-        storeLocalAsset(assets, "ghost.color.frightened.pupils",    nesPaletteColor(0x20));
+        storeInMyNamespace(assets, "ghost.color.frightened.dress",     nesPaletteColor(0x01));
+        storeInMyNamespace(assets, "ghost.color.frightened.eyeballs",  nesPaletteColor(0x20));
+        storeInMyNamespace(assets, "ghost.color.frightened.pupils",    nesPaletteColor(0x20));
 
         //TODO has two flashing colors, when to use which?
-        storeLocalAsset(assets, "ghost.color.flashing.dress",       nesPaletteColor(0x20));
-        storeLocalAsset(assets, "ghost.color.flashing.eyeballs",    nesPaletteColor(0x20));
-        storeLocalAsset(assets, "ghost.color.flashing.pupils",      nesPaletteColor(0x20));
+        storeInMyNamespace(assets, "ghost.color.flashing.dress",       nesPaletteColor(0x20));
+        storeInMyNamespace(assets, "ghost.color.flashing.eyeballs",    nesPaletteColor(0x20));
+        storeInMyNamespace(assets, "ghost.color.flashing.pupils",      nesPaletteColor(0x20));
 
         // these have no SoundID, are handled in other way
-        storeLocalAsset(assets, "audio.option.selection_changed",   loadAudioClip("sound/ms-select1.wav"));
-        storeLocalAsset(assets, "audio.option.value_changed",       loadAudioClip("sound/ms-select2.wav"));
+        storeInMyNamespace(assets, "audio.option.selection_changed",   loadAudioClip("sound/ms-select1.wav"));
+        storeInMyNamespace(assets, "audio.option.value_changed",       loadAudioClip("sound/ms-select2.wav"));
 
-        storeLocalAsset(assets, "audio.bonus_bouncing",             url("sound/fruitbounce.wav"));
-        storeLocalAsset(assets, "audio.bonus_eaten",                url("sound/ms-fruit.wav"));
-        storeLocalAsset(assets, "audio.extra_life",                 url("sound/ms-extralife.wav"));
+        storeInMyNamespace(assets, "audio.bonus_bouncing",             url("sound/fruitbounce.wav"));
+        storeInMyNamespace(assets, "audio.bonus_eaten",                url("sound/ms-fruit.wav"));
+        storeInMyNamespace(assets, "audio.extra_life",                 url("sound/ms-extralife.wav"));
         // used only in 3D scene when level is completed:
-        storeLocalAsset(assets, "audio.game_ready",                 url("sound/ms-start.wav"));
-        storeLocalAsset(assets, "audio.ghost_eaten",                url("sound/ms-ghosteat.wav"));
-        storeLocalAsset(assets, "audio.ghost_returns",              url("sound/ms-eyes.wav"));
-        storeLocalAsset(assets, "audio.intermission.1",             url("sound/theymeet.wav"));
-        storeLocalAsset(assets, "audio.intermission.2",             url("sound/thechase.wav"));
-        storeLocalAsset(assets, "audio.intermission.3",             url("sound/junior.wav"));
-        storeLocalAsset(assets, "audio.intermission.4",             url("sound/theend.wav"));
-        storeLocalAsset(assets, "audio.intermission.4.junior.1",    url("sound/ms-theend1.wav"));
-        storeLocalAsset(assets, "audio.intermission.4.junior.2",    url("sound/ms-theend2.wav"));
-        storeLocalAsset(assets, "audio.level_complete",             url("sound/common/level-complete.mp3"));
-        storeLocalAsset(assets, "audio.pacman_death",               url("sound/ms-death.wav"));
-        storeLocalAsset(assets, "audio.pacman_munch",               url("sound/ms-dot.wav"));
-        storeLocalAsset(assets, "audio.pacman_power",               url("sound/ms-power.wav"));
-        storeLocalAsset(assets, "audio.siren.1",                    url("sound/ms-siren1.wav"));
-        storeLocalAsset(assets, "audio.siren.2",                    url("sound/ms-siren2.wav"));
-        storeLocalAsset(assets, "audio.siren.3",                    url("sound/ms-siren2.wav"));
-        storeLocalAsset(assets, "audio.siren.4",                    url("sound/ms-siren2.wav"));
-        storeLocalAsset(assets, "audio.sweep",                      url("sound/common/sweep.mp3"));
+        storeInMyNamespace(assets, "audio.game_ready",                 url("sound/ms-start.wav"));
+        storeInMyNamespace(assets, "audio.ghost_eaten",                url("sound/ms-ghosteat.wav"));
+        storeInMyNamespace(assets, "audio.ghost_returns",              url("sound/ms-eyes.wav"));
+        storeInMyNamespace(assets, "audio.intermission.1",             url("sound/theymeet.wav"));
+        storeInMyNamespace(assets, "audio.intermission.2",             url("sound/thechase.wav"));
+        storeInMyNamespace(assets, "audio.intermission.3",             url("sound/junior.wav"));
+        storeInMyNamespace(assets, "audio.intermission.4",             url("sound/theend.wav"));
+        storeInMyNamespace(assets, "audio.intermission.4.junior.1",    url("sound/ms-theend1.wav"));
+        storeInMyNamespace(assets, "audio.intermission.4.junior.2",    url("sound/ms-theend2.wav"));
+        storeInMyNamespace(assets, "audio.level_complete",             url("sound/common/level-complete.mp3"));
+        storeInMyNamespace(assets, "audio.pacman_death",               url("sound/ms-death.wav"));
+        storeInMyNamespace(assets, "audio.pacman_munch",               url("sound/ms-dot.wav"));
+        storeInMyNamespace(assets, "audio.pacman_power",               url("sound/ms-power.wav"));
+        storeInMyNamespace(assets, "audio.siren.1",                    url("sound/ms-siren1.wav"));
+        storeInMyNamespace(assets, "audio.siren.2",                    url("sound/ms-siren2.wav"));
+        storeInMyNamespace(assets, "audio.siren.3",                    url("sound/ms-siren2.wav"));
+        storeInMyNamespace(assets, "audio.siren.4",                    url("sound/ms-siren2.wav"));
+        storeInMyNamespace(assets, "audio.sweep",                      url("sound/common/sweep.mp3"));
 
         MediaPlayer bounceSound = soundManager.addMediaPlayer(SoundID.BONUS_BOUNCING, MediaPlayer.INDEFINITE);
         if (bounceSound != null) {

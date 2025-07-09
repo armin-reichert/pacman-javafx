@@ -24,10 +24,10 @@ public interface PacManGames_UIConfig extends PacManGames_GameSceneConfig {
     void loadAssets(AssetStorage assetStorage);
     void unloadAssets(AssetStorage assetStorage);
     String assetNamespace();
-    default void storeLocalAsset(AssetStorage assetStorage, String key, Object value) {
-        storeAsset(assetStorage, assetNamespace(), key, value);
+    default void storeInMyNamespace(AssetStorage assetStorage, String key, Object value) {
+        store(assetStorage, assetNamespace(), key, value);
     }
-    default void storeAsset(AssetStorage assetStorage, String namespace, String key, Object value) {
+    default void store(AssetStorage assetStorage, String namespace, String key, Object value) {
         assetStorage.store(namespace + "." + key, value);
     }
     ActorAnimationMap createPacAnimations(Pac pac);
