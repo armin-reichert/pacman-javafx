@@ -81,7 +81,7 @@ public class DefaultSoundManager implements SoundManager {
     }
 
     @Override
-    public void playAudioClip(String keySuffix, double volume) {
+    public void playAudioClipFromAssets(String keySuffix) {
         requireNonNull(keySuffix);
         if (!mutedProperty.get() && enabledProperty.get()) {
             String key = assetNamespace + keySuffix;
@@ -90,7 +90,6 @@ public class DefaultSoundManager implements SoundManager {
                 Logger.error("No audio clip with key {}", key);
                 return;
             }
-            clip.setVolume(volume);
             clip.play();
         }
     }
@@ -100,6 +99,14 @@ public class DefaultSoundManager implements SoundManager {
     }
 
     public void play(SoundID id) {
+        if (mutedProperty.get()) {
+            Logger.trace("Sound with ID {} not played, sound is muted", id);
+            return;
+        }
+        if (!enabledProperty.get()) {
+            Logger.info("Sound with ID {} not played, sound is disabled", id);
+            return;
+        }
         switch (id.type()) {
             case MEDIA_PLAYER -> {
                 Logger.debug("Play media player '{}'", id.keySuffix());
@@ -111,8 +118,14 @@ public class DefaultSoundManager implements SoundManager {
                 }
             }
             case CLIP -> {
-                Logger.debug("Play audio clip '{}'", id.keySuffix());
-                playAudioClip(id.keySuffix(), 1);
+                Logger.debug("Create and play audio clip '{}'", id.keySuffix());
+                URL url = theAssets().get(assetNamespace + id.keySuffix());
+                if (url == null) {
+                    Logger.error("No audio clip URL found for key suffix {}", id.keySuffix());
+                } else {
+                    AudioClip audioClip = new AudioClip(url.toExternalForm());
+                    audioClip.play(1.0); //TODO volume
+                }
             }
         }
     }

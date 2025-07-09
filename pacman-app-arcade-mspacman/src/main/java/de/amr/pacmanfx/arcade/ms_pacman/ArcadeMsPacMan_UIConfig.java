@@ -115,17 +115,14 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         storeLocalAsset(assets, "ghost.color.flashing.eyeballs",   ARCADE_ROSE);
         storeLocalAsset(assets, "ghost.color.flashing.pupils",     ARCADE_RED);
 
-        // Clips
-        storeLocalAsset(assets, "audio.bonus_eaten",             loadAudioClip("sound/Fruit.mp3"));
-        storeLocalAsset(assets, "audio.credit",                  loadAudioClip("sound/credit.wav"));
-        storeLocalAsset(assets, "audio.extra_life",              loadAudioClip("sound/ExtraLife.mp3"));
-        storeLocalAsset(assets, "audio.ghost_eaten",             loadAudioClip("sound/Ghost.mp3"));
-        storeLocalAsset(assets, "audio.sweep",                   loadAudioClip("sound/sweep.mp3"));
-
-        // Audio played by MediaPlayer
         storeLocalAsset(assets, "audio.bonus_bouncing",          url("sound/Fruit_Bounce.mp3"));
-        storeLocalAsset(assets, "audio.game_ready",              url("sound/Start.mp3"));
+        storeLocalAsset(assets, "audio.bonus_eaten",             url("sound/Fruit.mp3"));
+        storeLocalAsset(assets, "audio.credit",                  url("sound/credit.wav"));
+        storeLocalAsset(assets, "audio.extra_life",              url("sound/ExtraLife.mp3"));
         storeLocalAsset(assets, "audio.game_over",               url("sound/game-over.mp3"));
+        storeLocalAsset(assets, "audio.game_ready",              url("sound/Start.mp3"));
+        storeLocalAsset(assets, "audio.ghost_eaten",             url("sound/Ghost.mp3"));
+        storeLocalAsset(assets, "audio.ghost_returns",           url("sound/GhostEyes.mp3"));
         storeLocalAsset(assets, "audio.intermission.1",          url("sound/Act_1_They_Meet.mp3"));
         storeLocalAsset(assets, "audio.intermission.2",          url("sound/Act_2_The_Chase.mp3"));
         storeLocalAsset(assets, "audio.intermission.3",          url("sound/Act_3_Junior.mp3"));
@@ -137,7 +134,7 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         storeLocalAsset(assets, "audio.siren.2",                 url("sound/GhostNoise1.wav"));// TODO
         storeLocalAsset(assets, "audio.siren.3",                 url("sound/GhostNoise1.wav"));// TODO
         storeLocalAsset(assets, "audio.siren.4",                 url("sound/GhostNoise1.wav"));// TODO
-        storeLocalAsset(assets, "audio.ghost_returns",           url("sound/GhostEyes.mp3"));
+        storeLocalAsset(assets, "audio.sweep",                   url("sound/sweep.mp3"));
 
         soundManager.addMediaPlayer(SoundID.BONUS_BOUNCING,   MediaPlayer.INDEFINITE);
         soundManager.addMediaPlayer(SoundID.GAME_OVER,        1);

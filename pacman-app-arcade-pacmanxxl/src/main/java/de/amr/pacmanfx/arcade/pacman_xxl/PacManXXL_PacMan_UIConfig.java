@@ -114,26 +114,23 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
         storeLocalAsset(assets, "ghost.color.flashing.eyeballs",   ARCADE_ROSE);
         storeLocalAsset(assets, "ghost.color.flashing.pupils",     ARCADE_RED);
 
-        // Clips
-        storeLocalAsset(assets, "audio.bonus_eaten",    rm.loadAudioClip("sound/eat_fruit.mp3"));
-        storeLocalAsset(assets, "audio.credit",         rm.loadAudioClip("sound/credit.wav"));
-        storeLocalAsset(assets, "audio.extra_life",     rm.loadAudioClip("sound/extend.mp3"));
-        storeLocalAsset(assets, "audio.ghost_eaten",    rm.loadAudioClip("sound/eat_ghost.mp3"));
-        storeLocalAsset(assets, "audio.sweep",          rm.loadAudioClip("sound/common/sweep.mp3"));
-
-        // Media player sounds
-        storeLocalAsset(assets, "audio.game_ready",     rm.url("sound/game_start.mp3"));
-        storeLocalAsset(assets, "audio.game_over",      rm.url("sound/common/game-over.mp3"));
-        storeLocalAsset(assets, "audio.intermission",   rm.url("sound/intermission.mp3"));
-        storeLocalAsset(assets, "audio.pacman_death",   rm.url("sound/pacman_death.wav"));
-        storeLocalAsset(assets, "audio.pacman_munch",   rm.url("sound/munch.wav"));
-        storeLocalAsset(assets, "audio.pacman_power",   rm.url("sound/ghost-turn-to-blue.mp3"));
-        storeLocalAsset(assets, "audio.level_complete", rm.url("sound/common/level-complete.mp3"));
-        storeLocalAsset(assets, "audio.siren.1",        rm.url("sound/siren_1.mp3"));
-        storeLocalAsset(assets, "audio.siren.2",        rm.url("sound/siren_2.mp3"));
-        storeLocalAsset(assets, "audio.siren.3",        rm.url("sound/siren_3.mp3"));
-        storeLocalAsset(assets, "audio.siren.4",        rm.url("sound/siren_4.mp3"));
-        storeLocalAsset(assets, "audio.ghost_returns",  rm.url("sound/retreating.mp3"));
+        storeLocalAsset(assets, "audio.bonus_eaten",               rm.url("sound/eat_fruit.mp3"));
+        storeLocalAsset(assets, "audio.credit",                    rm.url("sound/credit.wav"));
+        storeLocalAsset(assets, "audio.extra_life",                rm.url("sound/extend.mp3"));
+        storeLocalAsset(assets, "audio.game_ready",                rm.url("sound/game_start.mp3"));
+        storeLocalAsset(assets, "audio.game_over",                 rm.url("sound/common/game-over.mp3"));
+        storeLocalAsset(assets, "audio.ghost_eaten",               rm.url("sound/eat_ghost.mp3"));
+        storeLocalAsset(assets, "audio.ghost_returns",             rm.url("sound/retreating.mp3"));
+        storeLocalAsset(assets, "audio.intermission",              rm.url("sound/intermission.mp3"));
+        storeLocalAsset(assets, "audio.pacman_death",              rm.url("sound/pacman_death.wav"));
+        storeLocalAsset(assets, "audio.pacman_munch",              rm.url("sound/munch.wav"));
+        storeLocalAsset(assets, "audio.pacman_power",              rm.url("sound/ghost-turn-to-blue.mp3"));
+        storeLocalAsset(assets, "audio.level_complete",            rm.url("sound/common/level-complete.mp3"));
+        storeLocalAsset(assets, "audio.siren.1",                   rm.url("sound/siren_1.mp3"));
+        storeLocalAsset(assets, "audio.siren.2",                   rm.url("sound/siren_2.mp3"));
+        storeLocalAsset(assets, "audio.siren.3",                   rm.url("sound/siren_3.mp3"));
+        storeLocalAsset(assets, "audio.siren.4",                   rm.url("sound/siren_4.mp3"));
+        storeLocalAsset(assets, "audio.sweep",                     rm.url("sound/common/sweep.mp3"));
 
         soundManager.addMediaPlayer(SoundID.GAME_OVER,        1);
         soundManager.addMediaPlayer(SoundID.GAME_READY,       1);

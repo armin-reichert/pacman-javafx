@@ -147,26 +147,25 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         storeLocalAsset(assets, "ghost.color.flashing.dress",       nesPaletteColor(0x20));
         storeLocalAsset(assets, "ghost.color.flashing.eyeballs",    nesPaletteColor(0x20));
         storeLocalAsset(assets, "ghost.color.flashing.pupils",      nesPaletteColor(0x20));
+
+        // these have no SoundID, are handled in other way
         storeLocalAsset(assets, "audio.option.selection_changed",   loadAudioClip("sound/ms-select1.wav"));
         storeLocalAsset(assets, "audio.option.value_changed",       loadAudioClip("sound/ms-select2.wav"));
 
-        storeLocalAsset(assets, "audio.bonus_eaten",                loadAudioClip("sound/ms-fruit.wav"));
-        storeLocalAsset(assets, "audio.extra_life",                 loadAudioClip("sound/ms-extralife.wav"));
-        storeLocalAsset(assets, "audio.ghost_eaten",                loadAudioClip("sound/ms-ghosteat.wav"));
-
-        storeLocalAsset(assets, "audio.intermission.4.junior.1",    loadAudioClip("sound/ms-theend1.wav"));
-        storeLocalAsset(assets, "audio.intermission.4.junior.2",    loadAudioClip("sound/ms-theend2.wav"));
-
+        storeLocalAsset(assets, "audio.bonus_bouncing",             url("sound/fruitbounce.wav"));
+        storeLocalAsset(assets, "audio.bonus_eaten",                url("sound/ms-fruit.wav"));
+        storeLocalAsset(assets, "audio.extra_life",                 url("sound/ms-extralife.wav"));
         // used only in 3D scene when level is completed:
-        storeLocalAsset(assets, "audio.level_complete",             url("sound/common/level-complete.mp3"));
-        storeLocalAsset(assets, "audio.sweep",                      loadAudioClip("sound/common/sweep.mp3"));
-
-        // Audio played by MediaPlayer
         storeLocalAsset(assets, "audio.game_ready",                 url("sound/ms-start.wav"));
+        storeLocalAsset(assets, "audio.ghost_eaten",                url("sound/ms-ghosteat.wav"));
+        storeLocalAsset(assets, "audio.ghost_returns",              url("sound/ms-eyes.wav"));
         storeLocalAsset(assets, "audio.intermission.1",             url("sound/theymeet.wav"));
         storeLocalAsset(assets, "audio.intermission.2",             url("sound/thechase.wav"));
         storeLocalAsset(assets, "audio.intermission.3",             url("sound/junior.wav"));
         storeLocalAsset(assets, "audio.intermission.4",             url("sound/theend.wav"));
+        storeLocalAsset(assets, "audio.intermission.4.junior.1",    url("sound/ms-theend1.wav"));
+        storeLocalAsset(assets, "audio.intermission.4.junior.2",    url("sound/ms-theend2.wav"));
+        storeLocalAsset(assets, "audio.level_complete",             url("sound/common/level-complete.mp3"));
         storeLocalAsset(assets, "audio.pacman_death",               url("sound/ms-death.wav"));
         storeLocalAsset(assets, "audio.pacman_munch",               url("sound/ms-dot.wav"));
         storeLocalAsset(assets, "audio.pacman_power",               url("sound/ms-power.wav"));
@@ -174,8 +173,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         storeLocalAsset(assets, "audio.siren.2",                    url("sound/ms-siren2.wav"));
         storeLocalAsset(assets, "audio.siren.3",                    url("sound/ms-siren2.wav"));
         storeLocalAsset(assets, "audio.siren.4",                    url("sound/ms-siren2.wav"));
-        storeLocalAsset(assets, "audio.ghost_returns",              url("sound/ms-eyes.wav"));
-        storeLocalAsset(assets, "audio.bonus_bouncing",             url("sound/fruitbounce.wav"));
+        storeLocalAsset(assets, "audio.sweep",                      url("sound/common/sweep.mp3"));
 
         MediaPlayer bounceSound = soundManager.addMediaPlayer(SoundID.BONUS_BOUNCING, MediaPlayer.INDEFINITE);
         if (bounceSound != null) {

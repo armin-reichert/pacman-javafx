@@ -12,7 +12,7 @@ public interface SoundManager {
 
     BooleanProperty mutedProperty();
 
-    void playAudioClip(String keySuffix, double volume);
+    void playAudioClipFromAssets(String keySuffix);
 
     void play(SoundID id);
     void pause(SoundID id);
