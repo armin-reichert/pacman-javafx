@@ -28,7 +28,6 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.CameraControlledView;
-import de.amr.pacmanfx.uilib.Ufx;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -56,6 +55,7 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.PacManGames.*;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
+import static de.amr.pacmanfx.uilib.Ufx.menuTitleItem;
 
 /**
  * Tengen play scene, uses vertical scrolling.
@@ -103,47 +103,44 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
     }
 
     @Override
-    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent e, ContextMenu menu) {
-        List<MenuItem> items = new ArrayList<>();
-        // Switching scene display mode
+    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent, ContextMenu menu) {
+
+        SceneDisplayMode mode = PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.get();
+
         var miScaledToFit = new RadioMenuItem(theAssets().text("scaled_to_fit"));
-        miScaledToFit.selectedProperty().addListener(
-            (py,ov,nv) -> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.set(nv? SceneDisplayMode.SCALED_TO_FIT:SceneDisplayMode.SCROLLING));
-        PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.addListener((py, ov, nv) -> miScaledToFit.setSelected(nv == SceneDisplayMode.SCALED_TO_FIT));
-        items.add(miScaledToFit);
+        miScaledToFit.setSelected(mode == SceneDisplayMode.SCALED_TO_FIT);
+        miScaledToFit.setOnAction(e -> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.set(SceneDisplayMode.SCALED_TO_FIT));
 
         var miScrolling = new RadioMenuItem(theAssets().text("scrolling"));
-        miScrolling.selectedProperty().addListener(
-            (py,ov,nv) -> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.set(nv? SceneDisplayMode.SCROLLING:SceneDisplayMode.SCALED_TO_FIT));
-        PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.addListener((py, ov, nv) -> miScrolling.setSelected(nv == SceneDisplayMode.SCROLLING));
-        items.add(miScrolling);
+        miScrolling.setSelected(mode == SceneDisplayMode.SCROLLING);
+        miScrolling.setOnAction(e -> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.set(SceneDisplayMode.SCROLLING));
 
-        ToggleGroup exclusion = new ToggleGroup();
-        miScaledToFit.setToggleGroup(exclusion);
-        miScrolling.setToggleGroup(exclusion);
-        if (PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.get() == SceneDisplayMode.SCALED_TO_FIT) {
-            miScaledToFit.setSelected(true);
-        } else {
-            miScrolling.setSelected(true);
-        }
-        items.add(Ufx.menuTitleItem(theAssets().text("pacman")));
+        var radio = new ToggleGroup();
+        miScaledToFit.setToggleGroup(radio);
+        miScrolling.setToggleGroup(radio);
+        PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.addListener((py, ov, newMode) ->
+            radio.selectToggle(newMode == SceneDisplayMode.SCROLLING ? miScrolling : miScaledToFit));
 
         var miAutopilot = new CheckMenuItem(theAssets().text("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(PY_USING_AUTOPILOT);
-        items.add(miAutopilot);
 
         var miImmunity = new CheckMenuItem(theAssets().text("immunity"));
         miImmunity.selectedProperty().bindBidirectional(PY_IMMUNITY);
-        items.add(miImmunity);
-
-        items.add(new SeparatorMenuItem());
 
         var miMuted = new CheckMenuItem(theAssets().text("muted"));
         miMuted.selectedProperty().bindBidirectional(theUI().mutedProperty());
-        items.add(miMuted);
 
         var miQuit = new MenuItem(theAssets().text("quit"));
-        miQuit.setOnAction(ae -> GameAction.executeIfEnabled(theUI(), ACTION_QUIT_GAME_SCENE));
+        miQuit.setOnAction(e -> GameAction.executeIfEnabled(theUI(), ACTION_QUIT_GAME_SCENE));
+
+        List<MenuItem> items = new ArrayList<>();
+        items.add(miScaledToFit);
+        items.add(miScrolling);
+        items.add(menuTitleItem(theAssets().text("pacman")));
+        items.add(miAutopilot);
+        items.add(miImmunity);
+        items.add(new SeparatorMenuItem());
+        items.add(miMuted);
         items.add(miQuit);
 
         return items;
