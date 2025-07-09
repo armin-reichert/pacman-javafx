@@ -10,6 +10,7 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.net.URL;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -25,7 +26,9 @@ public class DefaultSoundManager implements SoundManager {
 
     //TODO store as assets?
     protected final Map<String, MediaPlayer> mediaPlayerMap = new HashMap<>();
-    private Siren siren;
+    private final EnumMap<SoundID, MediaPlayer> sirenPlayerMap = new EnumMap<>(SoundID.class);
+    private SoundID currentSirenID;
+
     private MediaPlayer voice;
 
     public DefaultSoundManager(String assetNamespace) {
@@ -174,16 +177,17 @@ public class DefaultSoundManager implements SoundManager {
                 && sirenID != SoundID.SIREN_4) {
             throw new IllegalArgumentException("Illegal sound ID for siren: " + sirenID);
         }
-        if (siren == null || siren.id() != sirenID) {
+        if (!sirenPlayerMap.containsKey(sirenID) || currentSirenID != sirenID) {
             stopSiren();
             MediaPlayer sirenPlayer = createMediaPlayer(sirenID.keySuffix(), MediaPlayer.INDEFINITE);
             if (sirenPlayer == null) {
                 Logger.error("Could not create media player for siren ID {}", sirenID);
-                siren = null;
+                currentSirenID = null;
             } else {
+                currentSirenID = sirenID;
+                sirenPlayerMap.put(currentSirenID, sirenPlayer);
                 sirenPlayer.setVolume(volume);
-                siren = new Siren(sirenID, sirenPlayer);
-                siren.player().play();
+                sirenPlayer.play();
                 Logger.info("Created new siren player, playing at volume " + sirenPlayer.getVolume());
             }
         }
@@ -191,15 +195,15 @@ public class DefaultSoundManager implements SoundManager {
 
     @Override
     public void pauseSiren() {
-        if (siren != null) {
-            siren.player().pause();
+        if (currentSirenID != null) {
+            sirenPlayerMap.get(currentSirenID).stop();
         }
     }
 
     @Override
     public void stopSiren() {
-        if (siren != null) {
-            siren.player().stop();
+        if (currentSirenID != null) {
+            sirenPlayerMap.get(currentSirenID).stop();
         }
     }
 
@@ -207,8 +211,8 @@ public class DefaultSoundManager implements SoundManager {
         for (String key : mediaPlayerMap.keySet()) {
             mediaPlayer(key).ifPresent(player -> logMediaPlayerStatus(player, key));
         }
-        if (siren != null) {
-            logMediaPlayerStatus(siren.player(), siren.id().keySuffix());
+        if (currentSirenID != null) {
+            logMediaPlayerStatus(sirenPlayerMap.get(currentSirenID), currentSirenID.keySuffix());
         }
         logMediaPlayerStatus(voice, "Voice");
     }
