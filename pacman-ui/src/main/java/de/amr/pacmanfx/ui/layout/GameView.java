@@ -380,8 +380,8 @@ public class GameView implements PacManGames_View {
         miniGameView.canvasHeightProperty().bind(PY_PIP_HEIGHT);
         miniGameView.opacityProperty().bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
         miniGameView.visibleProperty().bind(Bindings.createObjectBinding(
-            () -> PY_PIP_ON.get() && ui.currentGameSceneIsPlayScene3D(),
-            PY_PIP_ON, ui.currentGameSceneProperty()
+            () -> PY_MINI_VIEW_ON.get() && ui.currentGameSceneIsPlayScene3D(),
+            PY_MINI_VIEW_ON, ui.currentGameSceneProperty()
         ));
     }
 
@@ -408,8 +408,8 @@ public class GameView implements PacManGames_View {
 
         dashboardLayer = new BorderPane();
         dashboardLayer.visibleProperty().bind(Bindings.createObjectBinding(
-            () -> dashboard.isVisible() || PY_PIP_ON.get(),
-            dashboard.visibleProperty(), PY_PIP_ON
+            () -> dashboard.isVisible() || PY_MINI_VIEW_ON.get(),
+            dashboard.visibleProperty(), PY_MINI_VIEW_ON
         ));
         dashboardLayer.setLeft(dashboard);
         dashboardLayer.setRight(miniGameView);

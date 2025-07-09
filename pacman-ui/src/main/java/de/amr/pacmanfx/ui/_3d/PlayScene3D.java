@@ -92,23 +92,16 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     }
 
     @Override
-    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent e, ContextMenu menu) {
-        List<MenuItem> items = new ArrayList<>();
+    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent, ContextMenu menu) {
 
-        items.add(contextMenuTitleItem(theAssets().text("scene_display")));
+        var miUse2DScene = new MenuItem(theAssets().text("use_2D_scene"));
+        miUse2DScene.setOnAction(e -> GameAction.executeIfEnabled(theUI(), ACTION_TOGGLE_PLAY_SCENE_2D_3D));
 
-        var item = new MenuItem(theAssets().text("use_2D_scene"));
-        item.setOnAction(ae -> GameAction.executeIfEnabled(theUI(), ACTION_TOGGLE_PLAY_SCENE_2D_3D));
-        items.add(item);
-
-        // Toggle picture-in-picture display
-        var miPiP = new CheckMenuItem(theAssets().text("pip"));
-        miPiP.selectedProperty().bindBidirectional(PY_PIP_ON);
-        items.add(miPiP);
-
-        items.add(contextMenuTitleItem(theAssets().text("select_perspective")));
+        var miToggleMiniView = new CheckMenuItem(theAssets().text("pip"));
+        miToggleMiniView.selectedProperty().bindBidirectional(PY_MINI_VIEW_ON);
 
         // Camera perspective radio buttons
+        List<MenuItem> perspectiveItems = new ArrayList<>();
         var radioButtonGroup = new ToggleGroup();
         for (var perspective : Perspective.ID.values()) {
             var miPerspective = new RadioMenuItem(theAssets().text("perspective_id_" + perspective.name()));
@@ -117,7 +110,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             if (perspective == PY_3D_PERSPECTIVE.get())  { // == allowed for enum values
                 miPerspective.setSelected(true);
             }
-            items.add(miPerspective);
+            perspectiveItems.add(miPerspective);
         }
         // keep radio button group in sync with global property value
         radioButtonGroup.selectedToggleProperty().addListener((py, ov, radioButton) -> {
@@ -134,25 +127,29 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             }
         }));
 
-        // Common items
-        items.add(contextMenuTitleItem(theAssets().text("pacman")));
-
         var miAutopilot = new CheckMenuItem(theAssets().text("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(PY_USING_AUTOPILOT);
-        items.add(miAutopilot);
 
         var miImmunity = new CheckMenuItem(theAssets().text("immunity"));
         miImmunity.selectedProperty().bindBidirectional(PY_IMMUNITY);
-        items.add(miImmunity);
-
-        items.add(new SeparatorMenuItem());
 
         var miMuted = new CheckMenuItem(theAssets().text("muted"));
         miMuted.selectedProperty().bindBidirectional(theUI().mutedProperty());
-        items.add(miMuted);
 
         var miQuit = new MenuItem(theAssets().text("quit"));
         miQuit.setOnAction(ae -> GameAction.executeIfEnabled(theUI(), ACTION_QUIT_GAME_SCENE));
+
+        var items = new ArrayList<MenuItem>();
+        items.add(contextMenuTitleItem(theAssets().text("scene_display")));
+        items.add(miUse2DScene);
+        items.add(miToggleMiniView);
+        items.add(contextMenuTitleItem(theAssets().text("select_perspective")));
+        items.addAll(perspectiveItems);
+        items.add(contextMenuTitleItem(theAssets().text("pacman")));
+        items.add(miAutopilot);
+        items.add(miImmunity);
+        items.add(new SeparatorMenuItem());
+        items.add(miMuted);
         items.add(miQuit);
 
         return items;

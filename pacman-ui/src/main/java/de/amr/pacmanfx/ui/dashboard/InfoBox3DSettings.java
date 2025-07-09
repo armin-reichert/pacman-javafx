@@ -53,7 +53,7 @@ public class InfoBox3DSettings extends InfoBox {
         addLabeledValue("Camera",        this::sceneCameraInfo);
         addLabeledValue("Viewport Size", this::sceneViewportSizeInfo);
         addLabeledValue("Scene Size",    this::sceneSizeInfo);
-        cbPiPOn              = addCheckBox("Picture-In-Picture", PY_PIP_ON);
+        cbPiPOn              = addCheckBox("Picture-In-Picture", PY_MINI_VIEW_ON);
         sliderPiPSceneHeight = addSlider("- Height", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, PY_PIP_HEIGHT.get(), false, false);
         sliderPiPOpacity     = addSlider("- Opacity", 0, 100, PY_PIP_OPACITY_PERCENT.get(), false, false);
         sliderWallHeight     = addSlider("Obstacle Height", 0, 16, PY_3D_WALL_HEIGHT.get(), false, false);
@@ -84,7 +84,7 @@ public class InfoBox3DSettings extends InfoBox {
         sliderWallHeight.setValue(PY_3D_WALL_HEIGHT.get());
         sliderWallOpacity.setValue(PY_3D_WALL_OPACITY.get());
         cbUsePlayScene3D.setSelected(PY_3D_ENABLED.get());
-        cbPiPOn.setSelected(PY_PIP_ON.getValue());
+        cbPiPOn.setSelected(PY_MINI_VIEW_ON.getValue());
         comboPerspectives.setValue(PY_3D_PERSPECTIVE.get());
         cbEnergizerExplodes.setSelected(PY_3D_ENERGIZER_EXPLODES.get());
         cbPacLighted.setSelected(PY_3D_PAC_LIGHT_ENABLED.get());

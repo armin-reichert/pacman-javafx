@@ -559,9 +559,9 @@ public interface PacManGames_GameActions {
     GameAction ACTION_TOGGLE_PIP_VISIBILITY = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
-            toggle(PacManGames_UI.PY_PIP_ON);
+            toggle(PacManGames_UI.PY_MINI_VIEW_ON);
             if (!ui.currentGameSceneIsPlayScene3D()) {
-                ui.showFlashMessage(theAssets().text(PacManGames_UI.PY_PIP_ON.get() ? "pip_on" : "pip_off"));
+                ui.showFlashMessage(theAssets().text(PacManGames_UI.PY_MINI_VIEW_ON.get() ? "pip_on" : "pip_off"));
             }
         }
 
