@@ -60,7 +60,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     static final GameClock          GAME_CLOCK = new GameClock();
     static final Keyboard           KEYBOARD = new Keyboard();
     static final Joypad             JOYPAD = new Joypad(KEYBOARD);
-    static final DirectoryWatchdog  WATCHDOG = new DirectoryWatchdog(CUSTOM_MAP_DIR);
+    static DirectoryWatchdog  WATCHDOG;
 
     // the single instance
     static PacManGames_UI_Impl THE_ONE;
@@ -152,6 +152,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
         private void validate() {
             checkUserDirsExistingAndWritable();
+            WATCHDOG = new DirectoryWatchdog(CUSTOM_MAP_DIR);
             if (stage == null) {
                 error("Stage is null");
             }
