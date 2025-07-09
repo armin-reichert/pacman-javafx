@@ -54,7 +54,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class PlayScene3D implements GameScene, CameraControlledView {
 
-    protected final Group root = new Group();
     protected final SubScene subScene3D;
     protected final PerspectiveCamera camera = new PerspectiveCamera(true);
     protected final PerspectiveManager perspectiveManager;
@@ -75,6 +74,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         var coordinateSystem = new CoordinateSystem();
         coordinateSystem.visibleProperty().bind(PY_3D_AXES_VISIBLE);
 
+        var root = new Group();
         // last child is placeholder for level 3D
         root.getChildren().addAll(scores3D, coordinateSystem, new Group());
 
@@ -513,6 +513,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         );
         gameLevel3D.pac3D().init();
         gameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(theGameLevel()));
+        Group root = (Group) subScene3D.getRoot();
         root.getChildren().set(root.getChildren().size() - 1, gameLevel3D);
 
         scores3D.translateXProperty().bind(gameLevel3D.translateXProperty().add(TS));
