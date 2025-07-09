@@ -19,7 +19,6 @@ import de.amr.pacmanfx.uilib.animation.MaterialColorAnimation;
 import de.amr.pacmanfx.uilib.animation.SquirtingAnimation;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.*;
-import de.amr.pacmanfx.uilib.model3D.TerrainRenderer3D;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.beans.binding.Bindings;
@@ -53,6 +52,24 @@ import static java.util.Objects.requireNonNull;
  * 3D representation of game level.
  */
 public class GameLevel3D extends Group implements Destroyable {
+
+    private static class Floor3D extends Box implements Destroyable {
+        public Floor3D(double sizeX, double sizeY) {
+            super(sizeX + 2 * FLOOR_3D_PADDING, sizeY, FLOOR_3D_THICKNESS);
+            translateXProperty().bind(widthProperty().divide(2).subtract(FLOOR_3D_PADDING));
+            translateYProperty().bind(heightProperty().divide(2));
+            translateZProperty().bind(depthProperty().divide(2));
+            materialProperty().bind(PY_3D_FLOOR_COLOR.map(Ufx::coloredPhongMaterial));
+        }
+
+        @Override
+        public void destroy() {
+            translateXProperty().unbind();
+            translateYProperty().unbind();
+            translateZProperty().unbind();
+            materialProperty().unbind();
+        }
+    }
 
     private static boolean isInsideWorldMap(WorldMap worldMap, double x, double y) {
         return 0 <= x && x < worldMap.numCols() * TS && 0 <= y && y < worldMap.numRows() * TS;
@@ -105,7 +122,7 @@ public class GameLevel3D extends Group implements Destroyable {
     private Group maze3D = new Group();
     private AmbientLight ambientLight;
     private ArcadeHouse3D house3D;
-    private Box floor3D;
+    private Floor3D floor3D;
     private LevelCounter3D levelCounter3D;
     private Node[] livesCounterShapes = new Node[LIVES_COUNTER_3D_CAPACITY];
     private LivesCounter3D livesCounter3D;
@@ -208,7 +225,7 @@ public class GameLevel3D extends Group implements Destroyable {
         Logger.info("Build 3D maze for map (URL '{}') and color scheme {}", gameLevel.worldMap().url(), colorScheme);
 
         {
-            floor3D = createFloor3D(gameLevel.worldMap().numCols() * TS, gameLevel.worldMap().numRows() * TS);
+            floor3D = new Floor3D(gameLevel.worldMap().numCols() * TS, gameLevel.worldMap().numRows() * TS);
 
             wallBaseMaterial = new PhongMaterial();
             wallBaseMaterial.diffuseColorProperty().bind(Bindings.createObjectBinding(
@@ -238,10 +255,10 @@ public class GameLevel3D extends Group implements Destroyable {
                 Vector2i tile = tileAt(obstacle.startPoint().toVector2f());
                 if (gameLevel.house().isEmpty() || !gameLevel.house().get().isTileInHouseArea(tile)) {
                     r3D.renderObstacle3D(
-                            maze3D,
-                            obstacle, isObstacleTheWorldBorder(gameLevel.worldMap(), obstacle),
-                            OBSTACLE_3D_WALL_THICKNESS,
-                            wallBaseMaterial, wallTopMaterial);
+                        maze3D,
+                        obstacle, isObstacleTheWorldBorder(gameLevel.worldMap(), obstacle),
+                        OBSTACLE_3D_WALL_THICKNESS,
+                        wallBaseMaterial, wallTopMaterial);
                 }
             }
 
@@ -309,7 +326,6 @@ public class GameLevel3D extends Group implements Destroyable {
     public Color floorColor() { return PY_3D_FLOOR_COLOR.get(); }
     public double floorThickness() { return floor3D.getDepth(); }
 
-
     public AnimationManager animationManager() { return animationManager; }
     public ManagedAnimation levelCompletedAnimation() { return levelCompletedAnimation; }
     public ManagedAnimation levelCompletedAnimationBeforeCutScene() { return levelCompletedAnimationBeforeCutScene; }
@@ -322,14 +338,12 @@ public class GameLevel3D extends Group implements Destroyable {
         pac3D.update(gameLevel);
         ghosts3D.forEach(ghost3D -> ghost3D.update(gameLevel));
         bonus3D().ifPresent(Bonus3D::update);
-        boolean houseAccessRequired = gameLevel
-            .ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+        boolean houseAccessRequired = gameLevel.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
             .anyMatch(Ghost::isVisible);
         houseLightOnProperty.set(houseAccessRequired);
 
         gameLevel.house().ifPresent(house -> {
-            boolean ghostNearHouseEntry = gameLevel
-                .ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+            boolean ghostNearHouseEntry = gameLevel.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
                 .filter(ghost -> ghost.position().euclideanDist(house.entryPosition()) <= HOUSE_3D_SENSITIVITY)
                 .anyMatch(Ghost::isVisible);
             houseOpenProperty.set(ghostNearHouseEntry);
@@ -356,15 +370,6 @@ public class GameLevel3D extends Group implements Destroyable {
         });
         house3D.setDoorVisible(false);
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
-    }
-
-    private Box createFloor3D(double sizeX, double sizeY) {
-        var floor3D = new Box(sizeX + 2 * FLOOR_3D_PADDING, sizeY, FLOOR_3D_THICKNESS);
-        floor3D.translateXProperty().bind(floor3D.widthProperty().divide(2).subtract(FLOOR_3D_PADDING));
-        floor3D.translateYProperty().bind(floor3D.heightProperty().divide(2));
-        floor3D.translateZProperty().bind(floor3D.depthProperty().divide(2));
-        floor3D.materialProperty().bind(PY_3D_FLOOR_COLOR.map(Ufx::coloredPhongMaterial));
-        return floor3D;
     }
 
     private void createPelletsAndEnergizers3D(WorldMapColorScheme colorScheme, Mesh pelletMesh) {
@@ -597,10 +602,7 @@ public class GameLevel3D extends Group implements Destroyable {
             Logger.info("Removed all nodes under maze group");
         }
         if (floor3D != null) {
-            floor3D.translateXProperty().unbind();
-            floor3D.translateYProperty().unbind();
-            floor3D.translateZProperty().unbind();
-            floor3D.materialProperty().unbind();
+            floor3D.destroy();
             floor3D = null;
             Logger.info("Unbound and cleared 3D floor");
         }
