@@ -20,17 +20,17 @@ import static java.util.Objects.requireNonNull;
  */
 public class AssetStorage {
 
-    private final Map<String, Object> assets = new HashMap<>();
-    protected ResourceBundle localizedTexts;
+    private final Map<String, Object> assetMap = new HashMap<>();
+    protected ResourceBundle localizedTextBundle;
 
     public void store(String key, Object value) {
         requireNonNull(key);
         requireNonNull(value);
-        assets.put(key, value);
+        assetMap.put(key, value);
     }
 
     public void removeAll(String keyPrefix) {
-        for (Iterator<String> it = assets.keySet().iterator(); it.hasNext(); ) {
+        for (Iterator<String> it = assetMap.keySet().iterator(); it.hasNext(); ) {
             String key = it.next();
             if (key.startsWith(keyPrefix)) {
                 it.remove();
@@ -40,18 +40,18 @@ public class AssetStorage {
 
     public void remove(String key) {
         requireNonNull(key);
-        assets.remove(key);
+        assetMap.remove(key);
     }
 
     public String text(String keyOrPattern, Object... args) {
         requireNonNull(keyOrPattern);
         requireNonNull(args);
-        if (localizedTexts == null) {
+        if (localizedTextBundle == null) {
             Logger.error("No localized text resources available");
             return "???";
         }
-        if (localizedTexts.containsKey(keyOrPattern)) {
-            return MessageFormat.format(localizedTexts.getString(keyOrPattern), args);
+        if (localizedTextBundle.containsKey(keyOrPattern)) {
+            return MessageFormat.format(localizedTextBundle.getString(keyOrPattern), args);
         }
         Logger.error("Missing localized text for key {}", keyOrPattern);
         return "[" + keyOrPattern + "]";
@@ -68,7 +68,7 @@ public class AssetStorage {
      */
     @SuppressWarnings("unchecked")
     public <T> T get(String key) {
-        T value = (T) assets.get(key);
+        T value = (T) assetMap.get(key);
         if (value == null) {
             Logger.error("Asset not found, key={}", key);
         }
@@ -86,9 +86,9 @@ public class AssetStorage {
     public Background background(String key) { return get(key); }
 
     public long countAssetsOfClass(Class<?> assetClass) {
-        long count = assets.values().stream()
+        long count = assetMap.values().stream()
             .filter(asset -> asset.getClass().isAssignableFrom(assetClass)).count();
-        for (var mapValue : assets.values()) {
+        for (var mapValue : assetMap.values()) {
             if (mapValue instanceof List<?> assetList) {
                 count += assetList.stream()
                     .filter(asset -> asset.getClass().isAssignableFrom(assetClass)).count();

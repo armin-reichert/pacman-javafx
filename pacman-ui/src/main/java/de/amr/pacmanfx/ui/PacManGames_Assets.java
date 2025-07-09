@@ -22,10 +22,10 @@ public class PacManGames_Assets extends AssetStorage implements ResourceManager 
     public Class<?> resourceRootClass() { return PacManGames_Assets.class; }
 
     public PacManGames_Assets() {
-        localizedTexts = getModuleBundle("de.amr.pacmanfx.ui.localized_texts");
+        localizedTextBundle = getModuleBundle("de.amr.pacmanfx.ui.localized_texts");
 
-        pickerForGameOverTexts = Picker.fromBundle(localizedTexts, "game.over");
-        pickerForLevelCompleteTexts = Picker.fromBundle(localizedTexts, "level.complete");
+        pickerForGameOverTexts = Picker.fromBundle(localizedTextBundle, "game.over");
+        pickerForLevelCompleteTexts = Picker.fromBundle(localizedTextBundle, "level.complete");
 
         store("background.scene",        Ufx.imageBackground(loadImage("graphics/pacman_wallpaper.png")));
         store("background.play_scene3d", Ufx.imageBackground(loadImage("graphics/blue_sky.jpg")));
