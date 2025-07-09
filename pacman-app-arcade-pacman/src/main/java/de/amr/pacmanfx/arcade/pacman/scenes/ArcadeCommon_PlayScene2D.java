@@ -19,7 +19,6 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.pacmanfx.uilib.Ufx;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -40,7 +39,7 @@ import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_SHORT;
 import static de.amr.pacmanfx.ui.PacManGames.*;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
-import static de.amr.pacmanfx.uilib.Ufx.contextMenuTitleItem;
+import static de.amr.pacmanfx.uilib.Ufx.menuTitleItem;
 
 /**
  * 2D play scene for Arcade game variants.
@@ -131,7 +130,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
         miQuit.setOnAction(ae -> GameAction.executeIfEnabled(theUI(), ACTION_QUIT_GAME_SCENE));
 
         return List.of(
-            contextMenuTitleItem(theAssets().text("pacman")),
+            menuTitleItem(theAssets().text("pacman")),
             miAutopilot,
             miImmunity,
             new SeparatorMenuItem(),

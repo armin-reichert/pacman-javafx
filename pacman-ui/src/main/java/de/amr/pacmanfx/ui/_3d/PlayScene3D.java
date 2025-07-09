@@ -92,7 +92,6 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent, ContextMenu menu) {
-
         var miUse2DScene = new MenuItem(theAssets().text("use_2D_scene"));
         miUse2DScene.setOnAction(e -> GameAction.executeIfEnabled(theUI(), ACTION_TOGGLE_PLAY_SCENE_2D_3D));
 
@@ -109,15 +108,15 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         miMuted.selectedProperty().bindBidirectional(theUI().mutedProperty());
 
         var miQuit = new MenuItem(theAssets().text("quit"));
-        miQuit.setOnAction(ae -> GameAction.executeIfEnabled(theUI(), ACTION_QUIT_GAME_SCENE));
+        miQuit.setOnAction(e -> GameAction.executeIfEnabled(theUI(), ACTION_QUIT_GAME_SCENE));
 
         var items = new ArrayList<MenuItem>();
-        items.add(contextMenuTitleItem(theAssets().text("scene_display")));
+        items.add(menuTitleItem(theAssets().text("scene_display")));
         items.add(miUse2DScene);
         items.add(miToggleMiniView);
-        items.add(contextMenuTitleItem(theAssets().text("select_perspective")));
+        items.add(menuTitleItem(theAssets().text("select_perspective")));
         items.addAll(createPerspectiveRadioItems());
-        items.add(contextMenuTitleItem(theAssets().text("pacman")));
+        items.add(menuTitleItem(theAssets().text("pacman")));
         items.add(miAutopilot);
         items.add(miImmunity);
         items.add(new SeparatorMenuItem());

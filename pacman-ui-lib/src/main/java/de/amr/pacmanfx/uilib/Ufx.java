@@ -54,7 +54,7 @@ public interface Ufx {
     Font  CONTEXT_MENU_TITLE_FONT = Font.font("Dialog", FontWeight.BLACK, 14);
     Color CONTEXT_MENU_TITLE_BACKGROUND = Color.CORNFLOWERBLUE; // "Kornblumenblau, sind die Augen der Frauen beim Weine..."
 
-    static MenuItem contextMenuTitleItem(String title) {
+    static MenuItem menuTitleItem(String title) {
         var text = new Text(title);
         text.setFont(CONTEXT_MENU_TITLE_FONT);
         text.setFill(CONTEXT_MENU_TITLE_BACKGROUND);

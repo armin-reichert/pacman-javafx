@@ -126,7 +126,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
         } else {
             miScrolling.setSelected(true);
         }
-        items.add(Ufx.contextMenuTitleItem(theAssets().text("pacman")));
+        items.add(Ufx.menuTitleItem(theAssets().text("pacman")));
 
         var miAutopilot = new CheckMenuItem(theAssets().text("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(PY_USING_AUTOPILOT);
