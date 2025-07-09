@@ -11,9 +11,13 @@ import javafx.scene.Node;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.Shape3D;
+import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
+/**
+ * 3D wall composed of a base and a top part. Expects the base part to be either a box or a cylinder.
+ */
 public class Wall3D extends Group implements Destroyable {
 
     public static final double DEFAULT_BASE_HEIGHT = 4;
@@ -28,14 +32,18 @@ public class Wall3D extends Group implements Destroyable {
         requireNonNull(top);
         getChildren().setAll(base, top);
         if (base instanceof Box box) {
-            box.depthProperty().bind(baseHeightProperty);
             cornerWall = false;
+            box.depthProperty().bind(baseHeightProperty);
+            base.translateZProperty().bind(baseHeightProperty.multiply(-0.5));
+            top.translateZProperty().bind(baseHeightProperty.add(0.5 * DEFAULT_TOP_HEIGHT).negate());
         } else if (base instanceof Cylinder cylinder) {
-            cylinder.heightProperty().bind(baseHeightProperty);
             cornerWall = true;
+            cylinder.heightProperty().bind(baseHeightProperty);
+            base.translateZProperty().bind(baseHeightProperty.multiply(-0.5));
+            top.translateZProperty().bind(baseHeightProperty.add(0.5 * DEFAULT_TOP_HEIGHT).negate());
+        } else {
+            Logger.warn("The base of a 3D wall should either be a box or a cylinder");
         }
-        base.translateZProperty().bind(baseHeightProperty.multiply(-0.5));
-        top.translateZProperty().bind(baseHeightProperty.add(0.5 * DEFAULT_TOP_HEIGHT).negate());
     }
 
     public boolean isCornerWall() { return cornerWall; }
