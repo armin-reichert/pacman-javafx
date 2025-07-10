@@ -235,12 +235,6 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
                 return;
             }
             switch (spriteAnimations.selectedAnimationID()) {
-                case ANIM_PAC_MUNCHING,
-                     ANIM_PAC_MAN_MUNCHING,
-                     ANIM_MS_PAC_MAN_BOOSTER,
-                     ANIM_PAC_MAN_BOOSTER,
-                     ANIM_JUNIOR
-                    -> drawMovingActor(pac, pac.moveDir(), (RectShort) animation.currentSprite());
                 case ANIM_PAC_DYING -> {
                     //TODO: reconsider this
                     Direction dir = Direction.UP;
@@ -254,6 +248,7 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
                     }
                     drawMovingActor(pac, dir, (RectShort) animation.currentSprite());
                 }
+                default -> drawMovingActor(pac, pac.moveDir(), (RectShort) animation.currentSprite());
             }
         });
     }

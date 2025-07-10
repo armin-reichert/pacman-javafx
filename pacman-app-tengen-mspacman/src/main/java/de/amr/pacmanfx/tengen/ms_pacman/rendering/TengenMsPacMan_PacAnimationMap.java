@@ -61,8 +61,20 @@ public class TengenMsPacMan_PacAnimationMap extends SpriteAnimationMap<SpriteID>
             if (isCurrentAnimationID(ANIM_MS_PAC_MAN_BOOSTER)) {
                 currentAnimation().setSprites(spriteSheet().spriteSeq(SpriteID.MS_PAC_MUNCHING_BOOSTER));
             }
+            if (isCurrentAnimationID(ANIM_MS_PAC_MAN_TURNING_AWAY)) {
+                currentAnimation().setSprites(spriteSheet.spriteSeq(SpriteID.MS_PAC_TURNING_AWAY));
+            }
+            if (isCurrentAnimationID(ANIM_MS_PAC_MAN_WAVING_HAND)) {
+                currentAnimation().setSprites(spriteSheet.spriteSeq(SpriteID.MS_PAC_WAVING_HAND));
+            }
             if (isCurrentAnimationID(ANIM_PAC_MAN_MUNCHING)) {
                 currentAnimation().setSprites(spriteSheet().spriteSeq(SpriteID.MR_PAC_MUNCHING));
+            }
+            if (isCurrentAnimationID(ANIM_PAC_MAN_TURNING_AWAY)) {
+                currentAnimation().setSprites(spriteSheet.spriteSeq(SpriteID.MR_PAC_TURNING_AWAY));
+            }
+            if (isCurrentAnimationID(ANIM_PAC_MAN_WAVING_HAND)) {
+                currentAnimation().setSprites(spriteSheet.spriteSeq(SpriteID.MR_PAC_WAVING_HAND));
             }
         }
     }

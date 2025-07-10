@@ -152,7 +152,6 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     }
 
     private void spawnJunior() {
-        String assetNamespace = theUI().configuration().assetNamespace();
         var junior = createPacMan();
         double randomX = 8 * TS + (8 * TS) * Math.random();
         junior.setPosition((float) randomX, sizeInPx().y() - 4 * TS);
