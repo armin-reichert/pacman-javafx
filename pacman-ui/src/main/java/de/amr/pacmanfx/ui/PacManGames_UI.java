@@ -29,6 +29,10 @@ import static de.amr.pacmanfx.ui.input.Keyboard.*;
 
 public interface PacManGames_UI {
 
+    static PacManGames_UI_Impl.Builder build(Stage stage, double width, double height) {
+        return new PacManGames_UI_Impl.Builder(stage, width, height);
+    }
+
     float BONUS_3D_SYMBOL_WIDTH       = TS;
     float BONUS_3D_POINTS_WIDTH       = 1.8f * TS;
     float ENERGIZER_3D_MIN_SCALING    = 0.2f;

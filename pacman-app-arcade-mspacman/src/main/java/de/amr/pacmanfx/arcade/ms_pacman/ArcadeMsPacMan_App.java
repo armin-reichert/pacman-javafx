@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman;
 
-import de.amr.pacmanfx.ui.PacManGames_UI_Impl;
+import de.amr.pacmanfx.ui.PacManGames_UI;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.application.Application;
 import javafx.stage.Screen;
@@ -21,7 +21,7 @@ public class ArcadeMsPacMan_App extends Application {
         // UI size: 80% of available screen height, aspect 12:10
         final double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
         final double width  = 1.2 * height;
-        new PacManGames_UI_Impl.Builder(primaryStage, width, height)
+        PacManGames_UI.build(primaryStage, width, height)
                 .game(
                     MS_PACMAN,
                     ArcadeMsPacMan_GameModel.arcadeVersion(),

@@ -107,7 +107,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         private int selectedStartPageIndex;
         private DashboardID[] dashboardIDs = new DashboardID[0];
 
-        public Builder(Stage stage, double width, double height) {
+        Builder(Stage stage, double width, double height) {
             this.stage = stage;
             this.width = width;
             this.height = height;
