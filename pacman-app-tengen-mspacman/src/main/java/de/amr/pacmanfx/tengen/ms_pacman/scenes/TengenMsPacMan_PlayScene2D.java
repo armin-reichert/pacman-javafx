@@ -101,15 +101,14 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
 
     @Override
     public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent, ContextMenu menu) {
-
-        SceneDisplayMode mode = PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.get();
+        SceneDisplayMode displayMode = PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.get();
 
         var miScaledToFit = new RadioMenuItem(theAssets().text("scaled_to_fit"));
-        miScaledToFit.setSelected(mode == SceneDisplayMode.SCALED_TO_FIT);
+        miScaledToFit.setSelected(displayMode == SceneDisplayMode.SCALED_TO_FIT);
         miScaledToFit.setOnAction(e -> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.set(SceneDisplayMode.SCALED_TO_FIT));
 
         var miScrolling = new RadioMenuItem(theAssets().text("scrolling"));
-        miScrolling.setSelected(mode == SceneDisplayMode.SCROLLING);
+        miScrolling.setSelected(displayMode == SceneDisplayMode.SCROLLING);
         miScrolling.setOnAction(e -> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.set(SceneDisplayMode.SCROLLING));
 
         var radio = new ToggleGroup();
@@ -130,17 +129,16 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
         var miQuit = new MenuItem(theAssets().text("quit"));
         miQuit.setOnAction(e -> GameAction.executeIfEnabled(theUI(), ACTION_QUIT_GAME_SCENE));
 
-        List<MenuItem> items = new ArrayList<>();
-        items.add(miScaledToFit);
-        items.add(miScrolling);
-        items.add(menuTitleItem(theAssets().text("pacman")));
-        items.add(miAutopilot);
-        items.add(miImmunity);
-        items.add(new SeparatorMenuItem());
-        items.add(miMuted);
-        items.add(miQuit);
-
-        return items;
+        return List.of(
+            miScaledToFit,
+            miScrolling,
+            menuTitleItem(theAssets().text("pacman")),
+            miAutopilot,
+            miImmunity,
+            new SeparatorMenuItem(),
+            miMuted,
+            miQuit
+        );
     }
 
     public ObjectProperty<SceneDisplayMode> displayModeProperty() {
