@@ -62,25 +62,6 @@ public class DefaultSoundManager implements SoundManager {
     }
 
     @Override
-    public MediaPlayer createMediaPlayerFromMyNamespace(String keySuffix, int numRepetitions) {
-        String key = assetNamespace + keySuffix;
-        URL url = theAssets().get(key);
-        if (url == null) {
-            Logger.warn("Missing audio resource '%s'".formatted(keySuffix));
-            return null;
-        }
-        var player = new MediaPlayer(new Media(url.toExternalForm()));
-        player.setCycleCount(numRepetitions);
-        player.setVolume(1.0);
-        player.muteProperty().bind(Bindings.createBooleanBinding(
-                () -> mutedProperty().get() || !enabledProperty().get(),
-                mutedProperty(), enabledProperty()
-        ));
-        Logger.debug("Media player created from URL {}", url);
-        return player;
-    }
-
-    @Override
     public BooleanProperty enabledProperty() {
         return enabledProperty;
     }
