@@ -54,15 +54,14 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void doInit() {
-        theGame().hud().showScore(true);
-        theGame().hud().showLevelCounter(true);
-        theGame().hud().showLivesCounter(false);
+        frame = -1;
+
+        music = theSound().createMediaPlayerFromMyNamespace(".audio.intermission", 1);
 
         pac = createPac();
         blinky = createGhost(RED_GHOST_SHADOW);
         blinky.setSpeed(0);
         blinky.hide();
-        music = theSound().createMediaPlayer("intermission", 1);
 
         pac.setAnimations(theUI().configuration().createPacAnimations(pac));
 
@@ -72,7 +71,9 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         nailDressRaptureAnimation = (SpriteAnimation) blinkyAnimations.animation(ANIM_BLINKY_NAIL_DRESS_RAPTURE);
         blinkyDamaged = (SpriteAnimation) blinkyAnimations.animation(ANIM_BLINKY_DAMAGED);
 
-        frame = -1;
+        theGame().hud().showScore(true);
+        theGame().hud().showLevelCounter(true);
+        theGame().hud().showLivesCounter(false);
     }
 
     @Override

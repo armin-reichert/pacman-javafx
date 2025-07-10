@@ -40,16 +40,18 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void doInit() {
-        theGame().hud().showScore(true);
-        theGame().hud().showLevelCounter(true);
-        theGame().hud().showLivesCounter(false);
+        frame = -1;
+
+        music = theSound().createMediaPlayerFromMyNamespace(".audio.intermission", 2);
 
         pac = createPac();
         blinky = createGhost(RED_GHOST_SHADOW);
-        music = theSound().createMediaPlayer("intermission", 2);
         pac.setAnimations(theUI().configuration().createPacAnimations(pac));
         blinky.setAnimations(theUI().configuration().createGhostAnimations(blinky));
-        frame = -1;
+
+        theGame().hud().showScore(true);
+        theGame().hud().showLevelCounter(true);
+        theGame().hud().showLivesCounter(false);
     }
 
     @Override

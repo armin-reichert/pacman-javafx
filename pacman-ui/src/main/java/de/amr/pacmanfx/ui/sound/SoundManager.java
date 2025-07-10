@@ -5,14 +5,15 @@ import javafx.scene.media.MediaPlayer;
 
 public interface SoundManager {
 
-    MediaPlayer createMediaPlayer(String keySuffix, int numRepetitions);
 
     BooleanProperty enabledProperty();
     void setEnabled(boolean enabled);
 
     BooleanProperty mutedProperty();
 
-    void playAudioClipFromAssets(String keySuffix);
+    MediaPlayer createMediaPlayerFromMyNamespace(String keySuffix, int numRepetitions);
+//    AudioClip createAudioClipFromMyANamespace(String keySuffix);
+    void playAudioClipFromMyNamespace(String keySuffix);
 
     void play(SoundID id);
     void pause(SoundID id);

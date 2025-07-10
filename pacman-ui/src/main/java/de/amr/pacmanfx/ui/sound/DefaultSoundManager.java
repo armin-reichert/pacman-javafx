@@ -36,7 +36,7 @@ public class DefaultSoundManager implements SoundManager {
     }
 
     public MediaPlayer addMediaPlayer(SoundID id, int numRepetitions) {
-        MediaPlayer mediaPlayer = createMediaPlayer(id.keySuffix(), numRepetitions);
+        MediaPlayer mediaPlayer = createMediaPlayerFromMyNamespace(id.keySuffix(), numRepetitions);
         if (mediaPlayer != null) {
             mediaPlayerMap.put(id.keySuffix(), mediaPlayer);
         } else {
@@ -46,7 +46,7 @@ public class DefaultSoundManager implements SoundManager {
     }
 
     @Override
-    public MediaPlayer createMediaPlayer(String keySuffix, int numRepetitions) {
+    public MediaPlayer createMediaPlayerFromMyNamespace(String keySuffix, int numRepetitions) {
         String key = assetNamespace + keySuffix;
         URL url = theAssets().get(key);
         if (url == null) {
@@ -66,6 +66,20 @@ public class DefaultSoundManager implements SoundManager {
     }
 
     @Override
+    public void playAudioClipFromMyNamespace(String keySuffix) {
+        requireNonNull(keySuffix);
+        if (!mutedProperty.get() && enabledProperty.get()) {
+            String key = assetNamespace + keySuffix;
+            AudioClip clip = theAssets().get(key);
+            if (clip == null) {
+                Logger.error("No audio clip with key {}", key);
+                return;
+            }
+            clip.play();
+        }
+    }
+
+    @Override
     public BooleanProperty enabledProperty() {
         return enabledProperty;
     }
@@ -78,20 +92,6 @@ public class DefaultSoundManager implements SoundManager {
     @Override
     public BooleanProperty mutedProperty() {
         return mutedProperty;
-    }
-
-    @Override
-    public void playAudioClipFromAssets(String keySuffix) {
-        requireNonNull(keySuffix);
-        if (!mutedProperty.get() && enabledProperty.get()) {
-            String key = assetNamespace + keySuffix;
-            AudioClip clip = theAssets().get(key);
-            if (clip == null) {
-                Logger.error("No audio clip with key {}", key);
-                return;
-            }
-            clip.play();
-        }
     }
 
     private Optional<MediaPlayer> mediaPlayer(String key) {
@@ -192,7 +192,7 @@ public class DefaultSoundManager implements SoundManager {
         }
         if (!sirenPlayerMap.containsKey(sirenID) || currentSirenID != sirenID) {
             stopSiren();
-            MediaPlayer sirenPlayer = createMediaPlayer(sirenID.keySuffix(), MediaPlayer.INDEFINITE);
+            MediaPlayer sirenPlayer = createMediaPlayerFromMyNamespace(sirenID.keySuffix(), MediaPlayer.INDEFINITE);
             if (sirenPlayer == null) {
                 Logger.error("Could not create media player for siren ID {}", sirenID);
                 currentSirenID = null;

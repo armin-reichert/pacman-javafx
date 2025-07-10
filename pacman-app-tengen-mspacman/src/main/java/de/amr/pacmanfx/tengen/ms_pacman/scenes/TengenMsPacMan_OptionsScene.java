@@ -129,12 +129,12 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D implements ActionBi
     }
 
     private void optionSelectionChanged() {
-        theSound().playAudioClipFromAssets(".audio.option.selection_changed");
+        theSound().playAudioClipFromMyNamespace(".audio.option.selection_changed");
         resetIdleTimer();
     }
 
     private void optionValueChanged() {
-        theSound().playAudioClipFromAssets(".audio.option.value_changed");
+        theSound().playAudioClipFromMyNamespace(".audio.option.value_changed");
         resetIdleTimer();
     }
 
