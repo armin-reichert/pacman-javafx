@@ -361,7 +361,9 @@ public class GameLevel3D extends Group implements Destroyable {
         });
         house3D.setDoorVisible(false);
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
-        messageView.setVisible(false);
+        if (messageView != null) {
+            messageView.setVisible(false);
+        }
     }
 
     private void createPelletsAndEnergizers3D(WorldMapColorScheme colorScheme, Mesh pelletMesh) {
