@@ -7,13 +7,14 @@ package de.amr.pacmanfx.ui;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
-import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.Keyboard;
-import de.amr.pacmanfx.ui.layout.*;
+import de.amr.pacmanfx.ui.layout.EditorView;
+import de.amr.pacmanfx.ui.layout.GameView;
+import de.amr.pacmanfx.ui.layout.PacManGames_View;
+import de.amr.pacmanfx.ui.layout.StartPagesView;
 import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import javafx.application.Platform;
@@ -35,13 +36,14 @@ import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.tinylog.Logger;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.PacManGames.*;
+import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_ENTER_FULLSCREEN;
+import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_TOGGLE_MUTED;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -49,30 +51,28 @@ import static java.util.Objects.requireNonNull;
  */
 public class PacManGames_UI_Impl implements PacManGames_UI {
 
-    // package-private access for PacManGames API class
     static final PacManGames_Assets ASSETS = new PacManGames_Assets();
     static final GameClock          GAME_CLOCK = new GameClock();
     static final Keyboard           KEYBOARD = new Keyboard();
     static final Joypad             JOYPAD = new Joypad(KEYBOARD);
-    static DirectoryWatchdog  WATCHDOG;
-
-    // the single instance
-    static PacManGames_UI_Impl THE_ONE;
-
+    static       DirectoryWatchdog  WATCHDOG;
+    static       PacManGames_UI_Impl THE_ONE;
 
     private final Map<String, PacManGames_UIConfig> configByGameVariant = new HashMap<>();
 
-    private final ObjectProperty<PacManGames_View> currentViewPy      = new SimpleObjectProperty<>();
-    private final ObjectProperty<GameScene>        currentGameScenePy = new SimpleObjectProperty<>();
-    private final BooleanProperty                  mutedProperty = new SimpleBooleanProperty(false);
+    private final ObjectProperty<PacManGames_View> currentViewProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<GameScene> currentGameSceneProperty   = new SimpleObjectProperty<>();
+    private final BooleanProperty mutedProperty                        = new SimpleBooleanProperty(false);
 
     private final Model3DRepository model3DRepository = new Model3DRepository();
+
     private final StackPane rootPane = new StackPane();
     private final Stage stage;
     private final StartPagesView startPagesView;
     private final GameView gameView;
-    private EditorView editorView; // created on first access
-    private StatusIconBox iconBox;
+    private       EditorView editorView; // created on first access
+    private final StatusIconBox iconBox;
+    private final FontIcon iconPaused;
 
     public PacManGames_UI_Impl(Stage stage, double width, double height) {
         this.stage = requireNonNull(stage);
@@ -89,31 +89,32 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
         rootPane.getChildren().add(startPagesView.rootNode());
 
-        {
-            iconBox = new StatusIconBox(this);
-            StackPane.setAlignment(iconBox, Pos.BOTTOM_LEFT);
+        // "paused" icon appears on center of game view
+        iconPaused = FontIcon.of(FontAwesomeSolid.PAUSE, 80, STATUS_ICON_COLOR);
+        iconPaused.visibleProperty().bind(Bindings.createBooleanBinding(
+            () -> currentView() == gameView && GAME_CLOCK.isPaused(),
+            currentViewProperty, GAME_CLOCK.pausedProperty()));
+        StackPane.setAlignment(iconPaused, Pos.CENTER);
 
-            var iconPaused = FontIcon.of(FontAwesomeSolid.PAUSE, 80, STATUS_ICON_COLOR);
-            iconPaused.visibleProperty().bind(Bindings.createBooleanBinding(
-                () -> currentView() == gameView() && GAME_CLOCK.isPaused(),
-                currentViewProperty(), GAME_CLOCK.pausedProperty()));
-            StackPane.setAlignment(iconPaused, Pos.CENTER);
+        // status icon box appears at bottom-left corner of any view except editor
+        iconBox = new StatusIconBox(this);
+        StackPane.setAlignment(iconBox, Pos.BOTTOM_LEFT);
 
-            rootPane.getChildren().addAll(iconPaused, iconBox);
-        }
+        rootPane.getChildren().addAll(iconPaused, iconBox);
 
         GAME_CLOCK.setPausableAction(this::doSimulationStepAndUpdateGameScene);
         GAME_CLOCK.setPermanentAction(this::drawGameView);
 
         mainScene.addEventFilter(KeyEvent.KEY_PRESSED, theKeyboard()::onKeyPressed);
         mainScene.addEventFilter(KeyEvent.KEY_RELEASED, theKeyboard()::onKeyReleased);
-        //TODO use actions and key binding instead?
+
+        //TODO should I use key binding for global actions too?
         mainScene.setOnKeyPressed(e -> {
             if (KEY_FULLSCREEN.match(e)) {
-                PacManGames_GameActions.ACTION_ENTER_FULLSCREEN.execute(this);
+                ACTION_ENTER_FULLSCREEN.execute(this);
             }
             else if (KEY_MUTE.match(e)) {
-                PacManGames_GameActions.ACTION_TOGGLE_MUTED.execute(this);
+                ACTION_TOGGLE_MUTED.execute(this);
             }
             else if (KEY_OPEN_EDITOR.match(e)) {
                 showEditorView();
@@ -122,7 +123,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
                 currentView().handleKeyboardInput();
             }
         });
-        currentViewPy.addListener((py, oldView, newView) -> handleViewChange(oldView, newView));
+        currentViewProperty.addListener((py, oldView, newView) -> handleViewChange(oldView, newView));
 
         rootPane.backgroundProperty().bind(currentGameSceneProperty().map(gameScene ->
             currentGameSceneIsPlayScene3D()
@@ -167,7 +168,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     }
 
     /**
-     * @param x cause of catastrophe
+     * @param x what caused this catastrophe
      *
      * @see <a href="https://de.wikipedia.org/wiki/Steel_Buddies_%E2%80%93_Stahlharte_Gesch%C3%A4fte">Here.</a>
      */
@@ -196,15 +197,15 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         }
     }
 
-    private EditorView lazyGetEditorView() {
+    private EditorView getEditorViewCreateIfNeeded() {
         if (editorView == null) {
             var editor = new TileMapEditor(stage, model3DRepository);
-            var miQuit = new MenuItem(theAssets().text("back_to_game"));
-            miQuit.setOnAction(e -> {
+            var miReturnToGame = new MenuItem(theAssets().text("back_to_game"));
+            miReturnToGame.setOnAction(e -> {
                 editor.stop();
                 editor.executeWithCheckForUnsavedChanges(this::showStartView);
             });
-            editor.getFileMenu().getItems().addAll(new SeparatorMenuItem(), miQuit);
+            editor.getFileMenu().getItems().addAll(new SeparatorMenuItem(), miReturnToGame);
             editor.init(CUSTOM_MAP_DIR);
             editorView = new EditorView(editor);
         }
@@ -216,38 +217,33 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Model3DRepository model3DRepository() {
-        return model3DRepository;
-    }
-
-    @Override
-    public void terminateApp() {
-        Platform.exit();
-    }
-
-    @Override
     public ObjectProperty<GameScene> currentGameSceneProperty() {
-        return currentGameScenePy;
+        return currentGameSceneProperty;
     }
 
     @Override
     public Optional<GameScene> currentGameScene() {
-        return Optional.ofNullable(currentGameScenePy.get());
+        return Optional.ofNullable(currentGameSceneProperty.get());
     }
 
     @Override
     public ObjectProperty<PacManGames_View> currentViewProperty() {
-        return currentViewPy;
+        return currentViewProperty;
     }
 
     @Override
     public PacManGames_View currentView() {
-        return currentViewPy.get();
+        return currentViewProperty.get();
     }
 
     @Override
     public GameView gameView() {
         return gameView;
+    }
+
+    @Override
+    public Model3DRepository model3DRepository() {
+        return model3DRepository;
     }
 
     @Override
@@ -306,7 +302,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
     @Override
     public void show() {
-        currentViewPy.set(startPagesView);
+        currentViewProperty.set(startPagesView);
         startPagesView.currentStartPage().ifPresent(startPage -> startPage.layoutRoot().requestFocus());
         gameView.dashboard().init();
 
@@ -326,8 +322,8 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
             currentGameScene().ifPresent(GameScene::end);
             theSound().stopAll();
             GAME_CLOCK.stop();
-            lazyGetEditorView().editor().start(stage);
-            currentViewPy.set(lazyGetEditorView());
+            getEditorViewCreateIfNeeded().editor().start(stage);
+            currentViewProperty.set(getEditorViewCreateIfNeeded());
         } else {
             Logger.info("Editor view cannot be opened, game is playing");
         }
@@ -340,7 +336,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
     @Override
     public void showGameView() {
-        currentViewPy.set(gameView);
+        currentViewProperty.set(gameView);
     }
 
     @Override
@@ -349,7 +345,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         GAME_CLOCK.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
         theSound().stopAll();
         gameView.dashboard().setVisible(false);
-        currentViewPy.set(startPagesView);
+        currentViewProperty.set(startPagesView);
         startPagesView.currentStartPage().ifPresent(startPage -> startPage.layoutRoot().requestFocus());
     }
 
@@ -360,6 +356,11 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
     @Override
     public StartPagesView startPagesView() { return startPagesView; }
+
+    @Override
+    public void terminateApp() {
+        Platform.exit();
+    }
 
     @Override
     public void updateGameScene(boolean reloadCurrent) {
