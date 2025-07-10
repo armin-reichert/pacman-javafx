@@ -12,7 +12,6 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.LivesCounter;
 import de.amr.pacmanfx.model.actors.*;
-import de.amr.pacmanfx.ui.ActionBindingSupport;
 import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
@@ -44,7 +43,7 @@ import static de.amr.pacmanfx.uilib.Ufx.menuTitleItem;
 /**
  * 2D play scene for Arcade game variants.
  */
-public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindingSupport {
+public class ArcadeCommon_PlayScene2D extends GameScene2D {
 
     private LevelCompletedAnimation levelCompletedAnimation;
 
@@ -65,16 +64,21 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
     protected void doEnd() {
         if (levelCompletedAnimation != null) {
             animationManager.destroyAnimation(levelCompletedAnimation);
+            levelCompletedAnimation = null;
         }
-        levelCompletedAnimation = null;
     }
 
-    @Override
-    public void onLevelCreated(GameEvent e) {
-        if (theGameLevel().isDemoLevel()) {
+    /*
+      Note: If the corresponding 3D scene is displayed when the game level gets created,
+      the onLevelCreated() handler of this scene is not called!
+      So we have to initialize the scene also with the game level when switching from the 3D scene.
+     */
+    private void initWithGameLevel(GameLevel gameLevel) {
+        if (gameLevel.isDemoLevel()) {
             theGame().hud().showLevelCounter(true);
             theGame().hud().showLivesCounter(false);
             bindAction(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDINGS);
+            updateActionBindings();
         } else {
             theGame().hud().showLevelCounter(true);
             theGame().hud().showLivesCounter(true);
@@ -86,33 +90,26 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D implements ActionBindi
             bindAction(ACTION_CHEAT_ADD_LIVES, GLOBAL_ACTION_BINDINGS);
             bindAction(ACTION_CHEAT_ENTER_NEXT_LEVEL, GLOBAL_ACTION_BINDINGS);
             bindAction(ACTION_CHEAT_KILL_GHOSTS, GLOBAL_ACTION_BINDINGS);
+            updateActionBindings();
         }
-        updateActionBindings();
+        if (gameRenderer == null) { //TODO can this happen at all?
+            gameRenderer = theUI().configuration().createGameRenderer(canvas);
+            Logger.warn("No game renderer existed for 2D play scene, created one...");
+        }
+        Logger.info("Scene {} initialized with game level", getClass().getSimpleName());
+    }
+
+    @Override
+    public void onLevelCreated(GameEvent e) {
+        initWithGameLevel(theGameLevel());
     }
 
     @Override
     public void onSwitch_3D_2D(GameScene scene3D) {
         Logger.info("2D scene {} entered from 3D scene {}", this, scene3D);
-        if (optGameLevel().isPresent() && !theGameLevel().isDemoLevel()) {
-            theGame().hud().showLevelCounter(true);
-            theGame().hud().showLivesCounter(false);
-            bindAction(ACTION_STEER_UP, GLOBAL_ACTION_BINDINGS);
-            bindAction(ACTION_STEER_DOWN, GLOBAL_ACTION_BINDINGS);
-            bindAction(ACTION_STEER_LEFT, GLOBAL_ACTION_BINDINGS);
-            bindAction(ACTION_STEER_RIGHT, GLOBAL_ACTION_BINDINGS);
-            bindAction(ACTION_CHEAT_EAT_ALL_PELLETS, GLOBAL_ACTION_BINDINGS);
-            bindAction(ACTION_CHEAT_ADD_LIVES, GLOBAL_ACTION_BINDINGS);
-            bindAction(ACTION_CHEAT_ENTER_NEXT_LEVEL, GLOBAL_ACTION_BINDINGS);
-            bindAction(ACTION_CHEAT_KILL_GHOSTS, GLOBAL_ACTION_BINDINGS);
-            updateActionBindings();
+        if (optGameLevel().isPresent()) {
+            initWithGameLevel(theGameLevel());
         }
-        if (gameRenderer == null) { //TODO check if this can happen
-            Logger.warn("No game renderer was existing when switching to 2D scene");
-            setGameRenderer((SpriteGameRenderer) theUI().configuration().createGameRenderer(canvas()));
-        }
-        theGame().hud().showScore(true);
-        theGame().hud().showLevelCounter(true);
-        theGame().hud().showLivesCounter(true);
     }
 
     @Override
