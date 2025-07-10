@@ -314,8 +314,7 @@ public abstract class GameModel implements ScoreManager {
             highScore.read(highScoreFile);
             Logger.info("High Score loaded from file '{}': points={}, level={}", highScoreFile, highScore.points(), highScore.levelNumber());
         } catch (IOException x) {
-            Logger.error("High Score could not be loaded from file '{}'", highScoreFile);
-            Logger.error(x);
+            Logger.error("High Score file could not be opened: '{}'", highScoreFile);
         }
     }
 

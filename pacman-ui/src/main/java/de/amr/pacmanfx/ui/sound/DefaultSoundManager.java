@@ -104,7 +104,7 @@ public class DefaultSoundManager implements SoundManager {
             return;
         }
         if (!enabledProperty.get()) {
-            Logger.info("Sound with ID {} not played, sound is disabled", id);
+            Logger.trace("Sound with ID {} not played, sound is disabled", id);
             return;
         }
         switch (id.type()) {
