@@ -60,7 +60,6 @@ public interface DefaultGameEventListener extends GameEventListener {
     default void onPacDead(GameEvent e) {}
     default void onPacDying(GameEvent e) {}
     default void onPacFoundFood(GameEvent e) {}
-    default void onPacGetsExtraLife(GameEvent e) {}
     default void onPacGetsPower(GameEvent e) {}
     default void onPacLostPower(GameEvent e) {}
     default void onPacStartsLosingPower(GameEvent e) {}
