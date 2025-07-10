@@ -127,17 +127,17 @@ There are some new videos about the different game variants available on [YouTub
 
 #### Ms. Pac-Man (Tengen)
 
-![Start Page](doc/tengen/screenshots/startpage.png)
+![Start Page](https://github.com/armin-reichert/pacman-javafx-doc/tree/main/doc/tengen/screenshots/startpage.png)
 
-![Boot Scene](doc/tengen/screenshots/boot-scene.png)
+![Boot Scene](https://github.com/armin-reichert/pacman-javafx-doc/tree/main/doc/tengen/screenshots/boot-scene.png)
 
-![Intro Scene](doc/tengen/screenshots/intro-scene.png)
+![Intro Scene](https://github.com/armin-reichert/pacman-javafx-doc/tree/main/doc/tengen/screenshots/intro-scene.png)
 
-![Options Scene](doc/tengen/screenshots/options-scene.png)
+![Options Scene](https://github.com/armin-reichert/pacman-javafx-doc/tree/main/doc/tengen/screenshots/options-scene.png)
 
-![Demo Level](doc/tengen/screenshots/demolevel.png)
+![Demo Level](https://github.com/armin-reichert/pacman-javafx-doc/tree/main/doc/tengen/screenshots/demolevel.png)
 
-![Strange Mode Scene](doc/tengen/screenshots/strange-maze-level-8.png)
+![Strange Mode Scene](https://github.com/armin-reichert/pacman-javafx-doc/tree/main/doc/tengen/screenshots/strange-maze-level-8.png)
 
 
 ### 3D Play Scenes
@@ -155,7 +155,7 @@ There are some new videos about the different game variants available on [YouTub
 ![Ms. Pac-Man Play Scene](doc/mspacman-maze.png)
 
 ### Ms. Pac-Man (Tengen)
-![Ms. Pac-Man Tengen Play Scene](doc/tengen-playscene-3d.png)
+![Ms. Pac-Man Tengen Play Scene](https://github.com/armin-reichert/pacman-javafx-doc/tree/main/doc/tengen-playscene-3d.png)
 
 
 ### Tile map editor
