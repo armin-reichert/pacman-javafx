@@ -61,7 +61,7 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
     private static final WorldMapColorScheme MAP_COLORING = new WorldMapColorScheme("#000000", "#2121ff", "#fcb5ff", "#febdb4");
 
     private ArcadePacMan_SpriteSheet spriteSheet;
-    private final DefaultSoundManager soundManager = new DefaultSoundManager(assetNamespace());
+    private final DefaultSoundManager soundManager = new DefaultSoundManager();
 
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 

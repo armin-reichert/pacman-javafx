@@ -22,20 +22,15 @@ import static java.util.Objects.requireNonNull;
 
 public class DefaultSoundManager implements SoundManager {
 
-    private final String assetNamespace;
     private final BooleanProperty enabledProperty = new SimpleBooleanProperty(true);
     private final BooleanProperty mutedProperty = new SimpleBooleanProperty(false);
 
     private final Map<Object, MediaPlayer> mediaPlayerMap = new HashMap<>();
     private final Map<Object, URL> clipURLMap = new HashMap<>();
     private SoundID currentSirenID;
-
     private MediaPlayer voice;
 
-
-    public DefaultSoundManager(String assetNamespace) {
-        this.assetNamespace = requireNonNull(assetNamespace);
-    }
+    public DefaultSoundManager() {}
 
     public MediaPlayer mediaPlayer(Object key) {
         return mediaPlayerMap.get(key);
@@ -170,10 +165,7 @@ public class DefaultSoundManager implements SoundManager {
     @Override
     public void playSiren(SoundID sirenID, double volume) {
         requireNonNull(sirenID);
-        if (sirenID != SoundID.SIREN_1
-                && sirenID != SoundID.SIREN_2
-                && sirenID != SoundID.SIREN_3
-                && sirenID != SoundID.SIREN_4) {
+        if (sirenID != SoundID.SIREN_1 && sirenID != SoundID.SIREN_2 && sirenID != SoundID.SIREN_3 && sirenID != SoundID.SIREN_4) {
             throw new IllegalArgumentException("Illegal sound ID for siren: " + sirenID);
         }
         if (currentSirenID != sirenID) {

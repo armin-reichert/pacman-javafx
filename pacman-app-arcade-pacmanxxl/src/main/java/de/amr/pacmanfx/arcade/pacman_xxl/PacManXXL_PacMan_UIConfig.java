@@ -54,7 +54,7 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
 
     private boolean assetsLoaded;
     private ArcadePacMan_SpriteSheet spriteSheet;
-    private final DefaultSoundManager soundManager = new DefaultSoundManager(assetNamespace());
+    private final DefaultSoundManager soundManager = new DefaultSoundManager();
 
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 

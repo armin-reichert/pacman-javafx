@@ -60,7 +60,7 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
 
     private ArcadeMsPacMan_SpriteSheet spriteSheet;
     private BrightMazesSpriteSheet brightMazesSpriteSheet;
-    private final DefaultSoundManager soundManager = new DefaultSoundManager(assetNamespace());
+    private final DefaultSoundManager soundManager = new DefaultSoundManager();
 
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 

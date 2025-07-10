@@ -85,7 +85,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
 
     private TengenMsPacMan_SpriteSheet spriteSheet;
     private TengenMsPacMan_MapRepository mapRepository;
-    private final DefaultSoundManager soundManager = new DefaultSoundManager(assetNamespace());
+    private final DefaultSoundManager soundManager = new DefaultSoundManager();
 
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
