@@ -36,7 +36,6 @@ import de.amr.pacmanfx.uilib.model3D.MsPacManBody;
 import de.amr.pacmanfx.uilib.model3D.PacBase3D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
-import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
@@ -119,26 +118,26 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
         storeInMyNamespace(assets, "ghost.color.flashing.eyeballs",   ARCADE_ROSE);
         storeInMyNamespace(assets, "ghost.color.flashing.pupils",     ARCADE_RED);
 
-        soundManager.registerAudioClip(SoundID.BONUS_ACTIVE,            msPacManRes.url("sound/Fruit_Bounce.mp3"));
-        soundManager.registerAudioClip(SoundID.BONUS_EATEN,             msPacManRes.url("sound/Fruit.mp3"));
-        soundManager.registerAudioClip(SoundID.COIN_INSERTED,           msPacManRes.url("sound/credit.wav"));
-        soundManager.registerAudioClip(SoundID.EXTRA_LIFE,              msPacManRes.url("sound/ExtraLife.mp3"));
-        soundManager.registerMediaPlayer(SoundID.GAME_OVER,           msPacManRes.url("sound/game-over.mp3"), 1);
-        soundManager.registerMediaPlayer(SoundID.GAME_READY,          msPacManRes.url("sound/Start.mp3"), 1);
-        soundManager.registerAudioClip(SoundID.GHOST_EATEN,             msPacManRes.url("sound/Ghost.mp3"));
-        soundManager.registerMediaPlayer(SoundID.GHOST_RETURNS,       msPacManRes.url("sound/GhostEyes.mp3"), MediaPlayer.INDEFINITE);
-        soundManager.registerMediaPlayer("audio.intermission.1",      msPacManRes.url("sound/Act_1_They_Meet.mp3"), 1);
-        soundManager.registerMediaPlayer("audio.intermission.2",      msPacManRes.url("sound/Act_2_The_Chase.mp3"), 1);
-        soundManager.registerMediaPlayer("audio.intermission.3",      msPacManRes.url("sound/Act_3_Junior.mp3"), 1);
-        soundManager.registerAudioClip(SoundID.LEVEL_CHANGED,           msPacManRes.url("sound/sweep.mp3"));
-        soundManager.registerMediaPlayer(SoundID.LEVEL_COMPLETE,      msPacManRes.url("sound/level-complete.mp3"), 1);
-        soundManager.registerMediaPlayer(SoundID.PAC_MAN_DEATH,       msPacManRes.url("sound/Died.mp3"), 1);
-        soundManager.registerMediaPlayer(SoundID.PAC_MAN_MUNCHING,    msPacManRes.url("sound/munch.wav"), MediaPlayer.INDEFINITE);
-        soundManager.registerMediaPlayer(SoundID.PAC_MAN_POWER,       msPacManRes.url("sound/ScaredGhost.mp3"), MediaPlayer.INDEFINITE);
-        soundManager.registerMediaPlayer(SoundID.SIREN_1,             msPacManRes.url("sound/GhostNoise1.wav"), MediaPlayer.INDEFINITE);
-        soundManager.registerMediaPlayer(SoundID.SIREN_2,             msPacManRes.url("sound/GhostNoise1.wav"), MediaPlayer.INDEFINITE);// TODO
-        soundManager.registerMediaPlayer(SoundID.SIREN_3,             msPacManRes.url("sound/GhostNoise1.wav"), MediaPlayer.INDEFINITE);// TODO
-        soundManager.registerMediaPlayer(SoundID.SIREN_4,             msPacManRes.url("sound/GhostNoise1.wav"), MediaPlayer.INDEFINITE);// TODO
+        soundManager.registerAudioClip(SoundID.BONUS_ACTIVE,          msPacManRes.url("sound/Fruit_Bounce.mp3"));
+        soundManager.registerAudioClip(SoundID.BONUS_EATEN,           msPacManRes.url("sound/Fruit.mp3"));
+        soundManager.registerAudioClip(SoundID.COIN_INSERTED,         msPacManRes.url("sound/credit.wav"));
+        soundManager.registerAudioClip(SoundID.EXTRA_LIFE,            msPacManRes.url("sound/ExtraLife.mp3"));
+        soundManager.registerMediaPlayer(SoundID.GAME_OVER,           msPacManRes.url("sound/game-over.mp3"));
+        soundManager.registerMediaPlayer(SoundID.GAME_READY,          msPacManRes.url("sound/Start.mp3"));
+        soundManager.registerAudioClip(SoundID.GHOST_EATEN,           msPacManRes.url("sound/Ghost.mp3"));
+        soundManager.registerMediaPlayer(SoundID.GHOST_RETURNS,       msPacManRes.url("sound/GhostEyes.mp3"));
+        soundManager.registerMediaPlayer("audio.intermission.1",      msPacManRes.url("sound/Act_1_They_Meet.mp3"));
+        soundManager.registerMediaPlayer("audio.intermission.2",      msPacManRes.url("sound/Act_2_The_Chase.mp3"));
+        soundManager.registerMediaPlayer("audio.intermission.3",      msPacManRes.url("sound/Act_3_Junior.mp3"));
+        soundManager.registerAudioClip(SoundID.LEVEL_CHANGED,         msPacManRes.url("sound/sweep.mp3"));
+        soundManager.registerMediaPlayer(SoundID.LEVEL_COMPLETE,      msPacManRes.url("sound/level-complete.mp3"));
+        soundManager.registerMediaPlayer(SoundID.PAC_MAN_DEATH,       msPacManRes.url("sound/Died.mp3"));
+        soundManager.registerMediaPlayer(SoundID.PAC_MAN_MUNCHING,    msPacManRes.url("sound/munch.wav"));
+        soundManager.registerMediaPlayer(SoundID.PAC_MAN_POWER,       msPacManRes.url("sound/ScaredGhost.mp3"));
+        soundManager.registerMediaPlayer(SoundID.SIREN_1,             msPacManRes.url("sound/GhostNoise1.wav"));
+        soundManager.registerMediaPlayer(SoundID.SIREN_2,             msPacManRes.url("sound/GhostNoise1.wav"));// TODO
+        soundManager.registerMediaPlayer(SoundID.SIREN_3,             msPacManRes.url("sound/GhostNoise1.wav"));// TODO
+        soundManager.registerMediaPlayer(SoundID.SIREN_4,             msPacManRes.url("sound/GhostNoise1.wav"));// TODO
 
         storeInMyNamespace(assets, "audio.option.selection_changed",  msPacManXXLRes.loadAudioClip("sound/ms-select1.wav"));
         storeInMyNamespace(assets, "audio.option.value_changed",      msPacManXXLRes.loadAudioClip("sound/ms-select2.wav"));

@@ -41,9 +41,8 @@ public class DefaultSoundManager implements SoundManager {
         return mediaPlayerMap.get(key);
     }
 
-    public void registerMediaPlayer(Object id, URL url, int numRepetitions) {
+    public void registerMediaPlayer(Object id, URL url) {
         MediaPlayer mediaPlayer = createMediaPlayer(url);
-        mediaPlayer.setCycleCount(numRepetitions);
         mediaPlayerMap.put(id, mediaPlayer);
     }
 

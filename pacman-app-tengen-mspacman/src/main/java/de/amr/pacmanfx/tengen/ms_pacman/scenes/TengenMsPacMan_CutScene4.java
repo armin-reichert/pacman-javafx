@@ -161,7 +161,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         juniorCreationTime.add(t);
 
         String id = "audio.intermission.4.junior." + randomInt(1, 3); // 1 or 2
-        theSound().play(id);
+        theSound().loop(id);
 
         Logger.info("Junior spawned at tick {}", t);
     }

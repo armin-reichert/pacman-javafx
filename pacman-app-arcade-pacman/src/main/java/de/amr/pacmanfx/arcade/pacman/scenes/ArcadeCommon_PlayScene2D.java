@@ -303,7 +303,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
 
     @Override
     public void onBonusActivated(GameEvent e) {
-        theSound().play(SoundID.BONUS_ACTIVE);
+        theSound().loop(SoundID.BONUS_ACTIVE);
     }
 
     @Override
@@ -353,7 +353,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
     @Override
     public void onPacGetsPower(GameEvent e) {
         theSound().pauseSiren();
-        theSound().play(SoundID.PAC_MAN_POWER);
+        theSound().loop(SoundID.PAC_MAN_POWER);
     }
 
     @Override

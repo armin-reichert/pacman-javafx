@@ -153,30 +153,30 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         storeInMyNamespace(assets, "ghost.color.flashing.eyeballs",    nesPaletteColor(0x20));
         storeInMyNamespace(assets, "ghost.color.flashing.pupils",      nesPaletteColor(0x20));
 
-        soundManager.registerMediaPlayer(SoundID.BONUS_ACTIVE,            url("sound/fruitbounce.wav"), MediaPlayer.INDEFINITE);
+        soundManager.registerMediaPlayer(SoundID.BONUS_ACTIVE,            url("sound/fruitbounce.wav"));
         soundManager.registerAudioClip(SoundID.BONUS_EATEN,               url("sound/ms-fruit.wav"));
         soundManager.registerAudioClip(SoundID.EXTRA_LIFE,                url("sound/ms-extralife.wav"));
-        soundManager.registerMediaPlayer(SoundID.GAME_OVER,               url("sound/common/game-over.mp3"), 1);
-        soundManager.registerMediaPlayer(SoundID.GAME_READY,              url("sound/ms-start.wav"), 1);
+        soundManager.registerMediaPlayer(SoundID.GAME_OVER,               url("sound/common/game-over.mp3"));
+        soundManager.registerMediaPlayer(SoundID.GAME_READY,              url("sound/ms-start.wav"));
         soundManager.registerAudioClip(SoundID.GHOST_EATEN,               url("sound/ms-ghosteat.wav"));
-        soundManager.registerMediaPlayer(SoundID.GHOST_RETURNS,           url("sound/ms-eyes.wav"), MediaPlayer.INDEFINITE);
-        soundManager.registerMediaPlayer("audio.intermission.1",          url("sound/theymeet.wav"), 1);
-        soundManager.registerMediaPlayer("audio.intermission.2",          url("sound/thechase.wav"), 1);
-        soundManager.registerMediaPlayer("audio.intermission.3",          url("sound/junior.wav"), 1);
-        soundManager.registerMediaPlayer("audio.intermission.4",          url("sound/theend.wav"), 1);
-        soundManager.registerMediaPlayer("audio.intermission.4.junior.1", url("sound/ms-theend1.wav"), MediaPlayer.INDEFINITE);
-        soundManager.registerMediaPlayer("audio.intermission.4.junior.2", url("sound/ms-theend2.wav"), MediaPlayer.INDEFINITE);
+        soundManager.registerMediaPlayer(SoundID.GHOST_RETURNS,           url("sound/ms-eyes.wav"));
+        soundManager.registerMediaPlayer("audio.intermission.1",          url("sound/theymeet.wav"));
+        soundManager.registerMediaPlayer("audio.intermission.2",          url("sound/thechase.wav"));
+        soundManager.registerMediaPlayer("audio.intermission.3",          url("sound/junior.wav"));
+        soundManager.registerMediaPlayer("audio.intermission.4",          url("sound/theend.wav"));
+        soundManager.registerMediaPlayer("audio.intermission.4.junior.1", url("sound/ms-theend1.wav"));
+        soundManager.registerMediaPlayer("audio.intermission.4.junior.2", url("sound/ms-theend2.wav"));
         soundManager.registerAudioClip("audio.option.selection_changed",  url("sound/ms-select1.wav"));
         soundManager.registerAudioClip("audio.option.value_changed",      url("sound/ms-select2.wav"));
         soundManager.registerAudioClip(SoundID.LEVEL_CHANGED,             url("sound/common/sweep.mp3"));
-        soundManager.registerMediaPlayer(SoundID.LEVEL_COMPLETE,          url("sound/common/level-complete.mp3"), 1);
-        soundManager.registerMediaPlayer(SoundID.PAC_MAN_DEATH,           url("sound/ms-death.wav"), 1);
-        soundManager.registerMediaPlayer(SoundID.PAC_MAN_MUNCHING,        url("sound/ms-dot.wav"), MediaPlayer.INDEFINITE);
-        soundManager.registerMediaPlayer(SoundID.PAC_MAN_POWER,           url("sound/ms-power.wav"), MediaPlayer.INDEFINITE);
-        soundManager.registerMediaPlayer(SoundID.SIREN_1,                 url("sound/ms-siren1.wav"), MediaPlayer.INDEFINITE);
-        soundManager.registerMediaPlayer(SoundID.SIREN_2,                 url("sound/ms-siren2.wav"), MediaPlayer.INDEFINITE);// TODO
-        soundManager.registerMediaPlayer(SoundID.SIREN_3,                 url("sound/ms-siren2.wav"), MediaPlayer.INDEFINITE);// TODO
-        soundManager.registerMediaPlayer(SoundID.SIREN_4,                 url("sound/ms-siren2.wav"), MediaPlayer.INDEFINITE);// TODO
+        soundManager.registerMediaPlayer(SoundID.LEVEL_COMPLETE,          url("sound/common/level-complete.mp3"));
+        soundManager.registerMediaPlayer(SoundID.PAC_MAN_DEATH,           url("sound/ms-death.wav"));
+        soundManager.registerMediaPlayer(SoundID.PAC_MAN_MUNCHING,        url("sound/ms-dot.wav"));
+        soundManager.registerMediaPlayer(SoundID.PAC_MAN_POWER,           url("sound/ms-power.wav"));
+        soundManager.registerMediaPlayer(SoundID.SIREN_1,                 url("sound/ms-siren1.wav"));
+        soundManager.registerMediaPlayer(SoundID.SIREN_2,                 url("sound/ms-siren2.wav"));// TODO
+        soundManager.registerMediaPlayer(SoundID.SIREN_3,                 url("sound/ms-siren2.wav"));// TODO
+        soundManager.registerMediaPlayer(SoundID.SIREN_4,                 url("sound/ms-siren2.wav"));// TODO
 
         MediaPlayer bounceSound = soundManager.mediaPlayer(SoundID.BONUS_ACTIVE);
         if (bounceSound != null) {

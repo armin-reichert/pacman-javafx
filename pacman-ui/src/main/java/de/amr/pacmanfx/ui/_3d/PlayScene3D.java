@@ -377,7 +377,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
         if (theGameState() == GameState.HUNTING) {
             if (theGameLevel().pac().powerTimer().isRunning()) {
-                theSound().play(SoundID.PAC_MAN_POWER);
+                theSound().loop(SoundID.PAC_MAN_POWER);
             }
             gameLevel3D.livesCounter3D().lookingAroundAnimation().playFromStart();
         }
@@ -466,7 +466,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         gameLevel3D.pac3D().setMovementPowerMode(true);
         gameLevel3D.wallColorFlashingAnimation().playFromStart();
         theSound().stopSiren();
-        theSound().play(SoundID.PAC_MAN_POWER);
+        theSound().loop(SoundID.PAC_MAN_POWER);
     }
 
     @Override

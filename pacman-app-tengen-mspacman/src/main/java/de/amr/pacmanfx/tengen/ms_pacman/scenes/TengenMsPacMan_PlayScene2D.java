@@ -343,7 +343,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
     @Override
     public void onPacGetsPower(GameEvent e) {
         theSound().pauseSiren();
-        theSound().play(SoundID.PAC_MAN_POWER);
+        theSound().loop(SoundID.PAC_MAN_POWER);
     }
 
     @Override
