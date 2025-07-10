@@ -10,7 +10,6 @@ import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PacAnimationMap;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import javafx.scene.media.AudioClip;
 import javafx.scene.media.MediaPlayer;
 import org.tinylog.Logger;
 
@@ -25,7 +24,8 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.createMsPacMan;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.createPacMan;
 import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PacAnimationMap.*;
-import static de.amr.pacmanfx.ui.PacManGames.*;
+import static de.amr.pacmanfx.ui.PacManGames.theSound;
+import static de.amr.pacmanfx.ui.PacManGames.theUI;
 
 public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
@@ -62,7 +62,8 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         pacMan  .setAnimations(theUI().configuration().createPacAnimations(pacMan));
         juniors = new ArrayList<>();
         juniorCreationTime = new ArrayList<>();
-        music = theSound().createMediaPlayer("intermission.4", 1);
+
+        music = theSound().createMediaPlayer(".audio.intermission.4", 1);
     }
 
     @Override
@@ -154,8 +155,6 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         String assetNamespace = theUI().configuration().assetNamespace();
         var junior = createPacMan();
         double randomX = 8 * TS + (8 * TS) * Math.random();
-        int rnd = randomInt(1, 3);
-        AudioClip clip = theAssets().get(assetNamespace + ".audio.intermission.4.junior." + rnd);
         junior.setPosition((float) randomX, sizeInPx().y() - 4 * TS);
         junior.setMoveDir(Direction.UP);
         junior.setSpeed(2);
@@ -164,7 +163,10 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         junior.show();
         juniors.add(junior);
         juniorCreationTime.add(t);
-        clip.play();
+
+        String keySuffix = ".audio.intermission.4.junior." + randomInt(1, 3); // 1 or 2
+        theSound().playAudioClipFromAssets(keySuffix);
+
         Logger.info("Junior spawned at tick {}", t);
     }
 

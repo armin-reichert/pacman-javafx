@@ -57,7 +57,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         theGame().hud().showLivesCounter(false);
 
         bindActionToKeyCombination(ACTION_LET_GAME_STATE_EXPIRE, theJoypad().key(JoypadButton.START));
-        music = theSound().createMediaPlayer("intermission.2", 1);
+        music = theSound().createMediaPlayer(".audio.intermission.2", 1);
 
         PacManGames_UIConfig config = theUI().configuration();
         var spriteSheet = (TengenMsPacMan_SpriteSheet) config.spriteSheet();

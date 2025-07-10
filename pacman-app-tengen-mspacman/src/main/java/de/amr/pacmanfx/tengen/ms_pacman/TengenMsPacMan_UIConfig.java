@@ -167,9 +167,6 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         storeInMyNamespace(assets, "audio.intermission.2",             url("sound/thechase.wav"));
         storeInMyNamespace(assets, "audio.intermission.3",             url("sound/junior.wav"));
         storeInMyNamespace(assets, "audio.intermission.4",             url("sound/theend.wav"));
-        storeInMyNamespace(assets, "audio.intermission.4.junior.1",    url("sound/ms-theend1.wav"));
-        storeInMyNamespace(assets, "audio.intermission.4.junior.2",    url("sound/ms-theend2.wav"));
-        storeInMyNamespace(assets, "audio.level_complete",             url("sound/common/level-complete.mp3"));
         storeInMyNamespace(assets, "audio.pacman_death",               url("sound/ms-death.wav"));
         storeInMyNamespace(assets, "audio.pacman_munch",               url("sound/ms-dot.wav"));
         storeInMyNamespace(assets, "audio.pacman_power",               url("sound/ms-power.wav"));
@@ -177,6 +174,14 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         storeInMyNamespace(assets, "audio.siren.2",                    url("sound/ms-siren2.wav"));
         storeInMyNamespace(assets, "audio.siren.3",                    url("sound/ms-siren2.wav"));
         storeInMyNamespace(assets, "audio.siren.4",                    url("sound/ms-siren2.wav"));
+
+        // no sound ID, are loaded directly:
+        storeInMyNamespace(assets, "audio.intermission.4.junior.1",    loadAudioClip("sound/ms-theend1.wav"));
+        storeInMyNamespace(assets, "audio.intermission.4.junior.2",    loadAudioClip("sound/ms-theend2.wav"));
+
+        // not used in original game but used here in 3D play scene:
+        storeInMyNamespace(assets, "audio.level_complete",             url("sound/common/level-complete.mp3"));
+        storeInMyNamespace(assets, "audio.game_over",                  url("sound/common/game-over.mp3"));
         storeInMyNamespace(assets, "audio.sweep",                      url("sound/common/sweep.mp3"));
 
         MediaPlayer bounceSound = soundManager.addMediaPlayer(SoundID.BONUS_BOUNCING, MediaPlayer.INDEFINITE);
