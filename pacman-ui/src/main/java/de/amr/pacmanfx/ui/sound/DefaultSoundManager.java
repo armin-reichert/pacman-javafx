@@ -172,10 +172,10 @@ public class DefaultSoundManager implements SoundManager {
             stopSiren();
         }
         currentSirenID = sirenID;
-        MediaPlayer sirenPlayer = mediaPlayerMap.get(sirenID);
-        sirenPlayer.setVolume(volume);
-        sirenPlayer.play();
-        Logger.info("Playing siren with ID {} at volume {}", sirenID, sirenPlayer.getVolume());
+        MediaPlayer siren = mediaPlayerMap.get(sirenID);
+        siren.setVolume(volume);
+        siren.play();
+        Logger.info("Playing siren with ID {} at volume {}", sirenID, siren.getVolume());
     }
 
     @Override
