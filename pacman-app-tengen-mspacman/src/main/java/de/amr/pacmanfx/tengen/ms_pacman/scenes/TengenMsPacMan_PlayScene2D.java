@@ -10,10 +10,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.LivesCounter;
-import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.Bonus;
-import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.GhostState;
+import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
@@ -196,7 +193,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
             } else {
                 messageMovement.update();
                 theSound().setEnabled(true);
-                updateSound(level);
+                updateSound();
             }
             if (fxSubScene.getCamera() == dynamicCamera) {
                 if (theGameState() == GameState.HUNTING) {
@@ -356,23 +353,35 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
         theSound().stop(SoundID.PAC_MAN_POWER);
     }
 
-    private void updateSound(GameLevel level) {
-        if (theGameState() == GameState.HUNTING && !level.pac().powerTimer().isRunning()) {
-            int sirenNumber = 1 + theGame().huntingTimer().phaseIndex() / 2; // TODO check how this works in original game
-            SoundID sirenID = switch(sirenNumber) {
-                case 1 -> SoundID.SIREN_1;
-                case 2 -> SoundID.SIREN_2;
-                case 3 -> SoundID.SIREN_3;
-                case 4 -> SoundID.SIREN_4;
+    private void updateSound() {
+        final Pac pac = theGameLevel().pac();
+
+        //TODO check in simulator when exactly which siren plays
+        boolean pacChased = theGameState() == GameState.HUNTING && !pac.powerTimer().isRunning();
+        if (pacChased) {
+            // siren numbers are 1..4, hunting phase index = 0..7
+            int huntingPhase = theGame().huntingTimer().phaseIndex();
+            int sirenNumber = 1 + huntingPhase / 2;
+            switch (sirenNumber) {
+                case 1 -> theSound().playSiren(SoundID.SIREN_1, 1.0);
+                case 2 -> theSound().playSiren(SoundID.SIREN_2, 1.0);
+                case 3 -> theSound().playSiren(SoundID.SIREN_3, 1.0);
+                case 4 -> theSound().playSiren(SoundID.SIREN_4, 1.0);
                 default -> throw new IllegalArgumentException("Illegal siren number " + sirenNumber);
-            };
-            theSound().playSiren(sirenID, 1.0);
+            }
         }
-        if (level.pac().starvingTicks() > 10) { // TODO not sure how to do this right
+
+        // TODO: how exactly is the munching sound created in the original game?
+        if (pac.starvingTicks() > 10) {
             theSound().pause(SoundID.PAC_MAN_MUNCHING);
         }
-        boolean ghostsReturning = level.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
-        if (level.pac().isAlive() && ghostsReturning) {
+
+        //TODO check in simulator when exactly this sound is played
+        var ghostReturningToHouse = theGameLevel()
+            .ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
+            .findAny();
+        if (ghostReturningToHouse.isPresent()
+            && (theGameState() == GameState.HUNTING || theGameState() == GameState.GHOST_DYING)) {
             theSound().play(SoundID.GHOST_RETURNS);
         } else {
             theSound().stop(SoundID.GHOST_RETURNS);
