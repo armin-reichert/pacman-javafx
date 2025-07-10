@@ -28,7 +28,6 @@ public class Score {
             score.read(scoreFile);
         } catch (IOException x) {
             Logger.error("Score could not be read from file '{}'", score);
-            Logger.error(x);
         }
         return score;
     }
