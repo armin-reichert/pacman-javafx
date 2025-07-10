@@ -7,7 +7,6 @@ package de.amr.pacmanfx.ui._3d;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.House;
@@ -448,19 +447,18 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void onPacFoundFood(GameEvent event) {
-        Vector2i tile = event.tile().orElse(null);
-        if (tile == null) {
+        if (event.tile() == null) {
             // When cheat "eat all pellets" has been used, no tile is present in the event.
             gameLevel3D.pellets3D().forEach(Pellet3D::onEaten);
         } else {
             Energizer3D energizer3D = gameLevel3D.energizers3D()
-                .filter(e3D -> tile.equals(e3D.tile()))
+                .filter(e3D -> event.tile().equals(e3D.tile()))
                 .findFirst().orElse(null);
             if (energizer3D != null) {
                 energizer3D.onEaten();
             } else {
                 gameLevel3D.pellets3D()
-                    .filter(pellet3D -> tile.equals(pellet3D.tile()))
+                    .filter(pellet3D -> event.tile().equals(pellet3D.tile()))
                     .findFirst()
                     .ifPresent(Pellet3D::onEaten);
             }

@@ -6,7 +6,7 @@ public interface DefaultGameEventListener extends GameEventListener {
 
     @Override
     default void onGameEvent(GameEvent event) {
-        switch (event.type) {
+        switch (event.type()) {
             case BONUS_ACTIVATED -> onBonusActivated(event);
             case BONUS_EATEN -> onBonusEaten(event);
             case BONUS_EXPIRED -> onBonusExpired(event);
@@ -16,8 +16,8 @@ public interface DefaultGameEventListener extends GameEventListener {
             case GAME_STARTED -> onGameStarted(event);
             case GAME_STATE_CHANGED -> {
                 var stateChangeEvent = (GameStateChangeEvent) event;
-                onExitGameState(stateChangeEvent.oldState);
-                onEnterGameState(stateChangeEvent.newState);
+                onExitGameState(stateChangeEvent.oldState());
+                onEnterGameState(stateChangeEvent.newState());
             }
             case GAME_VARIANT_CHANGED -> onGameVariantChanged(event);
             case GHOST_EATEN -> onGhostEaten(event);

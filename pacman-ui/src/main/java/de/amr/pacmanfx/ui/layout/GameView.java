@@ -252,8 +252,8 @@ public class GameView implements PacManGames_View {
 
     @Override
     public void onGameEvent(GameEvent gameEvent) {
-        Logger.trace("GameView received {}", gameEvent);
-        switch (gameEvent.type) {
+        Logger.trace("Handle {}", gameEvent);
+        switch (gameEvent.type()) {
             case LEVEL_CREATED -> {
                 PacManGames_UIConfig config = ui.configuration();
                 ActorAnimationMap pacAnimationMap = config.createPacAnimations(theGameLevel().pac());
