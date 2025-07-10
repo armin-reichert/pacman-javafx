@@ -43,9 +43,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void doInit() {
-        theGame().hud().showScore(true);
-        theGame().hud().showLevelCounter(true);
-        theGame().hud().showLivesCounter(false);
+        music = theSound().createMediaPlayerFromMyNamespace(".audio.intermission.2", 1);
 
         pacMan = createPacMan();
         msPacMan = createMsPacMan();
@@ -58,7 +56,9 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
         clapperboard.setFont(scaledArcadeFont8());
         clapperboard.startAnimation();
 
-        music = theSound().createMediaPlayerFromMyNamespace("intermission.2", 1);
+        theGame().hud().showScore(true);
+        theGame().hud().showLevelCounter(true);
+        theGame().hud().showLivesCounter(false);
 
         setSceneState(STATE_CLAPPERBOARD, 120);
     }
