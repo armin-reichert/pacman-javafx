@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
-import de.amr.pacmanfx.ui.PacManGames_UI_Impl;
+import de.amr.pacmanfx.ui.PacManGames_UI.GameVariant;
 import de.amr.pacmanfx.ui.layout.StartPage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
@@ -50,10 +50,10 @@ public class PacManXXL_Common_StartPage implements StartPage {
     }
 
     private void init() {
-        theUI().configuration(PacManGames_UI_Impl.PACMAN).loadAssets(theAssets());
-        theUI().configuration(PacManGames_UI_Impl.PACMAN_XXL).loadAssets(theAssets());
-        theUI().configuration(PacManGames_UI_Impl.MS_PACMAN).loadAssets(theAssets());
-        theUI().configuration(PacManGames_UI_Impl.MS_PACMAN_XXL).loadAssets(theAssets());
+        theUI().configuration(GameVariant.PACMAN.name()).loadAssets(theAssets());
+        theUI().configuration(GameVariant.PACMAN_XXL.name()).loadAssets(theAssets());
+        theUI().configuration(GameVariant.MS_PACMAN.name()).loadAssets(theAssets());
+        theUI().configuration(GameVariant.MS_PACMAN_XXL.name()).loadAssets(theAssets());
         menu.soundEnabledProperty().bind(theSound().mutedProperty().not());
     }
 

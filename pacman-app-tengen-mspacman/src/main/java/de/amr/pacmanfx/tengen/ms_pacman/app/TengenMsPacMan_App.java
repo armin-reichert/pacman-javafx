@@ -16,7 +16,7 @@ import javafx.stage.Stage;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_ASPECT;
 import static de.amr.pacmanfx.ui.PacManGames.theClock;
 import static de.amr.pacmanfx.ui.PacManGames.theWatchdog;
-import static de.amr.pacmanfx.ui.PacManGames_UI_Impl.MS_PACMAN_TENGEN;
+import static de.amr.pacmanfx.ui.PacManGames_UI.GameVariant.*;
 
 public class TengenMsPacMan_App extends Application {
 
@@ -27,12 +27,12 @@ public class TengenMsPacMan_App extends Application {
         final double width  = NES_ASPECT * height;
         PacManGames_UI.build(primaryStage, width, height)
             .game(
-                MS_PACMAN_TENGEN,
+                MS_PACMAN_TENGEN.name(),
                 new TengenMsPacMan_GameModel(),
                 TengenMsPacMan_UIConfig.class
             )
             .startPages(
-                new TengenMsPacMan_StartPage(MS_PACMAN_TENGEN)
+                new TengenMsPacMan_StartPage(MS_PACMAN_TENGEN.name())
             )
             .dashboardEntries(
                 DashboardID.GENERAL, DashboardID.GAME_CONTROL,

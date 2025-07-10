@@ -13,8 +13,8 @@ import javafx.stage.Stage;
 import static de.amr.pacmanfx.Globals.CUSTOM_MAP_DIR;
 import static de.amr.pacmanfx.ui.PacManGames.theClock;
 import static de.amr.pacmanfx.ui.PacManGames.theWatchdog;
-import static de.amr.pacmanfx.ui.PacManGames_UI_Impl.MS_PACMAN_XXL;
-import static de.amr.pacmanfx.ui.PacManGames_UI_Impl.PACMAN_XXL;
+import static de.amr.pacmanfx.ui.PacManGames_UI.GameVariant.MS_PACMAN_XXL;
+import static de.amr.pacmanfx.ui.PacManGames_UI.GameVariant.PACMAN_XXL;
 
 public class PacManXXL_Common_App extends Application {
 
@@ -26,12 +26,12 @@ public class PacManXXL_Common_App extends Application {
         var xxlMapSelector = new PacManXXL_Common_MapSelector(CUSTOM_MAP_DIR);
         PacManGames_UI.build(primaryStage, width, height)
                 .game(
-                    PACMAN_XXL,
+                    PACMAN_XXL.name(),
                     new PacManXXL_PacMan_GameModel(xxlMapSelector),
                     PacManXXL_PacMan_UIConfig.class
                 )
                 .game(
-                    MS_PACMAN_XXL,
+                    MS_PACMAN_XXL.name(),
                     new PacManXXL_MsPacMan_GameModel(xxlMapSelector),
                     PacManXXL_MsPacMan_UIConfig.class
                 )
