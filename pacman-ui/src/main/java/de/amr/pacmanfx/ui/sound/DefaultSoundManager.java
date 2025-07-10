@@ -82,7 +82,7 @@ public class DefaultSoundManager implements SoundManager {
             return;
         }
         if (mediaPlayerMap.containsKey(id)) {
-            Logger.info("Play media player with ID='{}'", id);
+            Logger.trace("Play media player with ID='{}'", id);
             MediaPlayer mediaPlayer = mediaPlayerMap.get(id);
             if (mediaPlayer != null) {
                 mediaPlayer.setCycleCount(repetitions);
@@ -170,28 +170,19 @@ public class DefaultSoundManager implements SoundManager {
         }
         if (currentSirenID != sirenID) {
             stopSiren();
-            MediaPlayer sirenPlayer = mediaPlayerMap.get(sirenID);
-            if (sirenPlayer == null) {
-                Logger.error("Could not create media player for siren ID {}", sirenID);
-                currentSirenID = null;
-            } else {
-                currentSirenID = sirenID;
-                sirenPlayer.setVolume(volume);
-                sirenPlayer.play();
-                Logger.info("Created new siren player {}, playing at volume {} ", sirenID, sirenPlayer.getVolume());
-            }
-        } else {
-            MediaPlayer sirenPlayer = mediaPlayerMap.get(sirenID);
-            sirenPlayer.setVolume(volume);
-            sirenPlayer.play();
-            Logger.trace("Playing siren {} at volume {}", sirenID, sirenPlayer.getVolume());
         }
+        currentSirenID = sirenID;
+        MediaPlayer sirenPlayer = mediaPlayerMap.get(sirenID);
+        sirenPlayer.setVolume(volume);
+        sirenPlayer.play();
+        Logger.info("Playing siren with ID {} at volume {}", sirenID, sirenPlayer.getVolume());
     }
 
     @Override
     public void pauseSiren() {
         if (currentSirenID != null) {
             mediaPlayerMap.get(currentSirenID).pause();
+            Logger.info("Paused siren with ID {}", currentSirenID);
         }
     }
 
@@ -199,6 +190,7 @@ public class DefaultSoundManager implements SoundManager {
     public void stopSiren() {
         if (currentSirenID != null) {
             mediaPlayerMap.get(currentSirenID).stop();
+            Logger.info("Stopped siren with ID {}", currentSirenID);
         }
     }
 }
