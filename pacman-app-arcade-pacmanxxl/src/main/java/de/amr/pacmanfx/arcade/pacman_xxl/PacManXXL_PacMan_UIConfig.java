@@ -66,11 +66,12 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
         }
         assetsLoaded = true;
 
-        ResourceManager rm = () -> ArcadePacMan_UIConfig.class;
+        final ResourceManager pacManXXLRes = this::getClass;
+        final ResourceManager pacManRes = () -> ArcadePacMan_UIConfig.class;
 
-        spriteSheet = new ArcadePacMan_SpriteSheet(rm.loadImage("graphics/pacman_spritesheet.png"));
+        spriteSheet = new ArcadePacMan_SpriteSheet(pacManRes.loadImage("graphics/pacman_spritesheet.png"));
 
-        storeInMyNamespace(assets, "app_icon",                        rm.loadImage("graphics/icons/pacman.png"));
+        storeInMyNamespace(assets, "app_icon",                        pacManRes.loadImage("graphics/icons/pacman.png"));
         storeInMyNamespace(assets, "color.game_over_message",         ARCADE_RED);
 
         RectShort[] symbolSprites = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS);
@@ -114,35 +115,26 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
         storeInMyNamespace(assets, "ghost.color.flashing.eyeballs",   ARCADE_ROSE);
         storeInMyNamespace(assets, "ghost.color.flashing.pupils",     ARCADE_RED);
 
-        storeInMyNamespace(assets, "audio.bonus_eaten",               rm.url("sound/eat_fruit.mp3"));
-        storeInMyNamespace(assets, "audio.credit",                    rm.url("sound/credit.wav"));
-        storeInMyNamespace(assets, "audio.extra_life",                rm.url("sound/extend.mp3"));
-        storeInMyNamespace(assets, "audio.game_ready",                rm.url("sound/game_start.mp3"));
-        storeInMyNamespace(assets, "audio.game_over",                 rm.url("sound/common/game-over.mp3"));
-        storeInMyNamespace(assets, "audio.ghost_eaten",               rm.url("sound/eat_ghost.mp3"));
-        storeInMyNamespace(assets, "audio.ghost_returns",             rm.url("sound/retreating.mp3"));
-        storeInMyNamespace(assets, "audio.intermission",              rm.url("sound/intermission.mp3"));
-        storeInMyNamespace(assets, "audio.pacman_death",              rm.url("sound/pacman_death.wav"));
-        storeInMyNamespace(assets, "audio.pacman_munch",              rm.url("sound/munch.wav"));
-        storeInMyNamespace(assets, "audio.pacman_power",              rm.url("sound/ghost-turn-to-blue.mp3"));
-        storeInMyNamespace(assets, "audio.level_complete",            rm.url("sound/common/level-complete.mp3"));
-        storeInMyNamespace(assets, "audio.siren.1",                   rm.url("sound/siren_1.mp3"));
-        storeInMyNamespace(assets, "audio.siren.2",                   rm.url("sound/siren_2.mp3"));
-        storeInMyNamespace(assets, "audio.siren.3",                   rm.url("sound/siren_3.mp3"));
-        storeInMyNamespace(assets, "audio.siren.4",                   rm.url("sound/siren_4.mp3"));
-        storeInMyNamespace(assets, "audio.sweep",                     rm.url("sound/common/sweep.mp3"));
+        soundManager.registerAudioClip(SoundID.BONUS_EATEN,             pacManRes.url("sound/eat_fruit.mp3"));
+        soundManager.registerAudioClip(SoundID.COIN_INSERTED,           pacManRes.url("sound/credit.wav"));
+        soundManager.registerAudioClip(SoundID.EXTRA_LIFE,              pacManRes.url("sound/extend.mp3"));
+        soundManager.registerMediaPlayer(SoundID.GAME_OVER,           pacManRes.url("sound/common/game-over.mp3"), 1);
+        soundManager.registerMediaPlayer(SoundID.GAME_READY,          pacManRes.url("sound/game_start.mp3"), 1);
+        soundManager.registerAudioClip(SoundID.GHOST_EATEN,             pacManRes.url("sound/eat_ghost.mp3"));
+        soundManager.registerMediaPlayer(SoundID.GHOST_RETURNS,       pacManRes.url("sound/retreating.mp3"), MediaPlayer.INDEFINITE);
+        soundManager.registerAudioClip("audio.intermission",            pacManRes.url("sound/intermission.mp3"));
+        soundManager.registerAudioClip(SoundID.LEVEL_CHANGED,           pacManRes.url("sound/common/sweep.mp3"));
+        soundManager.registerMediaPlayer(SoundID.LEVEL_COMPLETE,      pacManRes.url("sound/common/level-complete.mp3"), 1);
+        soundManager.registerMediaPlayer(SoundID.PAC_MAN_DEATH,       pacManRes.url("sound/pacman_death.wav"), 1);
+        soundManager.registerMediaPlayer(SoundID.PAC_MAN_MUNCHING,    pacManRes.url("sound/munch.wav"), MediaPlayer.INDEFINITE);
+        soundManager.registerMediaPlayer(SoundID.PAC_MAN_POWER,       pacManRes.url("sound/ghost-turn-to-blue.mp3"), MediaPlayer.INDEFINITE);
+        soundManager.registerMediaPlayer(SoundID.SIREN_1,             pacManRes.url("sound/siren_1.mp3"), MediaPlayer.INDEFINITE);
+        soundManager.registerMediaPlayer(SoundID.SIREN_2,             pacManRes.url("sound/siren_2.mp3"), MediaPlayer.INDEFINITE);
+        soundManager.registerMediaPlayer(SoundID.SIREN_3,             pacManRes.url("sound/siren_3.mp3"), MediaPlayer.INDEFINITE);
+        soundManager.registerMediaPlayer(SoundID.SIREN_4,             pacManRes.url("sound/siren_4.mp3"), MediaPlayer.INDEFINITE);
 
-        soundManager.addMediaPlayer(SoundID.GAME_OVER,        1);
-        soundManager.addMediaPlayer(SoundID.GAME_READY,       1);
-        soundManager.addMediaPlayer(SoundID.GHOST_RETURNS,    MediaPlayer.INDEFINITE);
-        soundManager.addMediaPlayer(SoundID.LEVEL_COMPLETE,   1);
-        soundManager.addMediaPlayer(SoundID.PAC_MAN_MUNCHING, MediaPlayer.INDEFINITE);
-        soundManager.addMediaPlayer(SoundID.PAC_MAN_DEATH,    1);
-        soundManager.addMediaPlayer(SoundID.PAC_MAN_POWER,    MediaPlayer.INDEFINITE);
-
-        rm = this::getClass;
-        storeInMyNamespace(assets, "audio.option.selection_changed",  rm.loadAudioClip("sound/ms-select1.wav"));
-        storeInMyNamespace(assets, "audio.option.value_changed",      rm.loadAudioClip("sound/ms-select2.wav"));
+        storeInMyNamespace(assets, "audio.option.selection_changed",  pacManXXLRes.loadAudioClip("sound/ms-select1.wav"));
+        storeInMyNamespace(assets, "audio.option.value_changed",      pacManXXLRes.loadAudioClip("sound/ms-select2.wav"));
     }
 
     @Override

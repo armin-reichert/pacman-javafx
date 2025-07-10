@@ -153,49 +153,35 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         storeInMyNamespace(assets, "ghost.color.flashing.eyeballs",    nesPaletteColor(0x20));
         storeInMyNamespace(assets, "ghost.color.flashing.pupils",      nesPaletteColor(0x20));
 
-        // these have no SoundID, so store audio clip inside assets and access directly
-        storeInMyNamespace(assets, "audio.option.selection_changed",   loadAudioClip("sound/ms-select1.wav"));
-        storeInMyNamespace(assets, "audio.option.value_changed",       loadAudioClip("sound/ms-select2.wav"));
+        soundManager.registerMediaPlayer(SoundID.BONUS_ACTIVE,            url("sound/fruitbounce.wav"), MediaPlayer.INDEFINITE);
+        soundManager.registerAudioClip(SoundID.BONUS_EATEN,               url("sound/ms-fruit.wav"));
+        soundManager.registerAudioClip(SoundID.EXTRA_LIFE,                url("sound/ms-extralife.wav"));
+        soundManager.registerMediaPlayer(SoundID.GAME_OVER,               url("sound/common/game-over.mp3"), 1);
+        soundManager.registerMediaPlayer(SoundID.GAME_READY,              url("sound/ms-start.wav"), 1);
+        soundManager.registerAudioClip(SoundID.GHOST_EATEN,               url("sound/ms-ghosteat.wav"));
+        soundManager.registerMediaPlayer(SoundID.GHOST_RETURNS,           url("sound/ms-eyes.wav"), MediaPlayer.INDEFINITE);
+        soundManager.registerMediaPlayer("audio.intermission.1",          url("sound/theymeet.wav"), 1);
+        soundManager.registerMediaPlayer("audio.intermission.2",          url("sound/thechase.wav"), 1);
+        soundManager.registerMediaPlayer("audio.intermission.3",          url("sound/junior.wav"), 1);
+        soundManager.registerMediaPlayer("audio.intermission.4",          url("sound/theend.wav"), 1);
+        soundManager.registerMediaPlayer("audio.intermission.4.junior.1", url("sound/ms-theend1.wav"), MediaPlayer.INDEFINITE);
+        soundManager.registerMediaPlayer("audio.intermission.4.junior.2", url("sound/ms-theend2.wav"), MediaPlayer.INDEFINITE);
+        soundManager.registerAudioClip("audio.option.selection_changed",  url("sound/ms-select1.wav"));
+        soundManager.registerAudioClip("audio.option.value_changed",      url("sound/ms-select2.wav"));
+        soundManager.registerAudioClip(SoundID.LEVEL_CHANGED,             url("sound/common/sweep.mp3"));
+        soundManager.registerMediaPlayer(SoundID.LEVEL_COMPLETE,          url("sound/common/level-complete.mp3"), 1);
+        soundManager.registerMediaPlayer(SoundID.PAC_MAN_DEATH,           url("sound/ms-death.wav"), 1);
+        soundManager.registerMediaPlayer(SoundID.PAC_MAN_MUNCHING,        url("sound/ms-dot.wav"), MediaPlayer.INDEFINITE);
+        soundManager.registerMediaPlayer(SoundID.PAC_MAN_POWER,           url("sound/ms-power.wav"), MediaPlayer.INDEFINITE);
+        soundManager.registerMediaPlayer(SoundID.SIREN_1,                 url("sound/ms-siren1.wav"), MediaPlayer.INDEFINITE);
+        soundManager.registerMediaPlayer(SoundID.SIREN_2,                 url("sound/ms-siren2.wav"), MediaPlayer.INDEFINITE);// TODO
+        soundManager.registerMediaPlayer(SoundID.SIREN_3,                 url("sound/ms-siren2.wav"), MediaPlayer.INDEFINITE);// TODO
+        soundManager.registerMediaPlayer(SoundID.SIREN_4,                 url("sound/ms-siren2.wav"), MediaPlayer.INDEFINITE);// TODO
 
-        storeInMyNamespace(assets, "audio.bonus_bouncing",             url("sound/fruitbounce.wav"));
-        storeInMyNamespace(assets, "audio.bonus_eaten",                url("sound/ms-fruit.wav"));
-        storeInMyNamespace(assets, "audio.extra_life",                 url("sound/ms-extralife.wav"));
-        storeInMyNamespace(assets, "audio.game_ready",                 url("sound/ms-start.wav"));
-        storeInMyNamespace(assets, "audio.ghost_eaten",                url("sound/ms-ghosteat.wav"));
-        storeInMyNamespace(assets, "audio.ghost_returns",              url("sound/ms-eyes.wav"));
-        storeInMyNamespace(assets, "audio.intermission.1",             url("sound/theymeet.wav"));
-        storeInMyNamespace(assets, "audio.intermission.2",             url("sound/thechase.wav"));
-        storeInMyNamespace(assets, "audio.intermission.3",             url("sound/junior.wav"));
-        storeInMyNamespace(assets, "audio.intermission.4",             url("sound/theend.wav"));
-        storeInMyNamespace(assets, "audio.pacman_death",               url("sound/ms-death.wav"));
-        storeInMyNamespace(assets, "audio.pacman_munch",               url("sound/ms-dot.wav"));
-        storeInMyNamespace(assets, "audio.pacman_power",               url("sound/ms-power.wav"));
-        storeInMyNamespace(assets, "audio.siren.1",                    url("sound/ms-siren1.wav"));
-        storeInMyNamespace(assets, "audio.siren.2",                    url("sound/ms-siren2.wav"));
-        storeInMyNamespace(assets, "audio.siren.3",                    url("sound/ms-siren2.wav"));
-        storeInMyNamespace(assets, "audio.siren.4",                    url("sound/ms-siren2.wav"));
-
-        // no sound ID, are loaded directly:
-        storeInMyNamespace(assets, "audio.intermission.4.junior.1",    loadAudioClip("sound/ms-theend1.wav"));
-        storeInMyNamespace(assets, "audio.intermission.4.junior.2",    loadAudioClip("sound/ms-theend2.wav"));
-
-        // not used in original game but used here in 3D play scene:
-        storeInMyNamespace(assets, "audio.level_complete",             url("sound/common/level-complete.mp3"));
-        storeInMyNamespace(assets, "audio.game_over",                  url("sound/common/game-over.mp3"));
-        storeInMyNamespace(assets, "audio.sweep",                      url("sound/common/sweep.mp3"));
-
-        MediaPlayer bounceSound = soundManager.addMediaPlayer(SoundID.BONUS_ACTIVE, MediaPlayer.INDEFINITE);
+        MediaPlayer bounceSound = soundManager.mediaPlayer(SoundID.BONUS_ACTIVE);
         if (bounceSound != null) {
             bounceSound.setRate(0.25); // TODO ugly!
         }
-
-        soundManager.addMediaPlayer(SoundID.GAME_OVER,        1);
-        soundManager.addMediaPlayer(SoundID.GAME_READY,       1);
-        soundManager.addMediaPlayer(SoundID.GHOST_RETURNS,    MediaPlayer.INDEFINITE);
-        soundManager.addMediaPlayer(SoundID.LEVEL_COMPLETE,   1);
-        soundManager.addMediaPlayer(SoundID.PAC_MAN_MUNCHING, MediaPlayer.INDEFINITE);
-        soundManager.addMediaPlayer(SoundID.PAC_MAN_DEATH,    1);
-        soundManager.addMediaPlayer(SoundID.PAC_MAN_POWER,    MediaPlayer.INDEFINITE);
     }
 
     @Override

@@ -14,7 +14,6 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.animation.SingleSpriteActor;
-import javafx.scene.media.MediaPlayer;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.*;
@@ -37,6 +36,8 @@ import static de.amr.pacmanfx.ui.PacManGames.theUI;
  */
 public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
+    private static final String MUSIC_ID = "audio.intermission.1";
+
     private static final int UPPER_LANE_Y  = TS * 12;
     private static final int MIDDLE_LANE_Y = TS * 18;
     private static final int LOWER_LANE_Y  = TS * 24;
@@ -52,12 +53,9 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     private Ghost pinky;
     private SingleSpriteActor heart;
     private Clapperboard clapperboard;
-    private MediaPlayer music;
 
     @Override
     public void doInit() {
-        music = theSound().createMediaPlayerFromMyNamespace(".audio.intermission.1", 1);
-
         var spriteSheet = (ArcadeMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
 
         pacMan = createPacMan();
@@ -86,8 +84,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        music.stop();
-        music.dispose();
+        theSound().stop(MUSIC_ID);
     }
 
     @Override
@@ -136,7 +133,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     private void updateStateClapperboard() {
         clapperboard.tick();
         if (sceneTimer.atSecond(1)) {
-            music.play();
+            theSound().play(MUSIC_ID);
         } else if (sceneTimer.hasExpired()) {
             enterStateChasedByGhosts();
         }

@@ -13,7 +13,6 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
-import javafx.scene.media.MediaPlayer;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -35,6 +34,7 @@ import static de.amr.pacmanfx.ui.PacManGames_UI.DEBUG_TEXT_FONT;
  */
 public class ArcadePacMan_CutScene2 extends GameScene2D {
 
+    private static final String MUSIC_ID = "audio.intermission";
     private static final short ANIMATION_START = 120;
 
     private static final byte NAIL = 0, STRETCHED_S = 1, STRETCHED_M = 2, STRETCHED_L = 3, RAPTURED = 4;
@@ -45,7 +45,6 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     private SpriteAnimation blinkyNormal;
     private SpriteAnimation blinkyDamaged;
     private SpriteAnimation nailDressRaptureAnimation;
-    private MediaPlayer music;
 
     @Override
     public SpriteGameRenderer gr() {
@@ -55,8 +54,6 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     @Override
     public void doInit() {
         frame = -1;
-
-        music = theSound().createMediaPlayerFromMyNamespace(".audio.intermission", 1);
 
         pac = createPac();
         blinky = createGhost(RED_GHOST_SHADOW);
@@ -78,8 +75,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        music.stop();
-        music.dispose();
+        theSound().stop(MUSIC_ID);
         Logger.info("{} ends", getClass().getSimpleName());
     }
 
@@ -90,7 +86,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
             return;
         }
         switch (frame) {
-            case ANIMATION_START -> music.play();
+            case ANIMATION_START -> theSound().play(MUSIC_ID);
             case ANIMATION_START + 1 -> nailDressRaptureAnimation.setFrameIndex(NAIL);
             case ANIMATION_START + 25 -> {
                 pac.placeAtTile(28, 20);

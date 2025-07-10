@@ -10,7 +10,6 @@ import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PacAnimationMap;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import javafx.scene.media.MediaPlayer;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -29,17 +28,18 @@ import static de.amr.pacmanfx.ui.PacManGames.theUI;
 
 public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
-    static final int LEFT_BORDER = TS;
-    static final int RIGHT_BORDER = TS * (NES_TILES.x() - 2);
+    private static final String MUSIC_ID = "audio.intermission.4";
 
-    static final int LOWER_LANE = TS * 21; // TODO not sure
+    private static final int LEFT_BORDER = TS;
+    private static final int RIGHT_BORDER = TS * (NES_TILES.x() - 2);
+
+    private static final int LOWER_LANE = TS * 21; // TODO not sure
 
     private Pac pacMan;
     private Pac msPacMan;
     private List<Pac> juniors;
     private List<Integer> juniorCreationTime;
 
-    private MediaPlayer music;
     private Clapperboard clapperboard;
 
     private int t;
@@ -62,14 +62,11 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         pacMan  .setAnimations(theUI().configuration().createPacAnimations(pacMan));
         juniors = new ArrayList<>();
         juniorCreationTime = new ArrayList<>();
-
-        music = theSound().createMediaPlayerFromMyNamespace(".audio.intermission.4", 1);
     }
 
     @Override
     protected void doEnd() {
-        music.stop();
-        music.dispose();
+        theSound().stop(MUSIC_ID);
     }
 
     @Override
@@ -78,7 +75,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         if (t == 0) {
             clapperboard.setVisible(true);
             clapperboard.startAnimation();
-            music.play();
+            theSound().play(MUSIC_ID);
         }
         else if (t == 130) {
             pacMan.setMoveDir(Direction.RIGHT);
@@ -163,8 +160,8 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         juniors.add(junior);
         juniorCreationTime.add(t);
 
-        String keySuffix = ".audio.intermission.4.junior." + randomInt(1, 3); // 1 or 2
-        theSound().playAudioClipFromMyNamespace(keySuffix);
+        String id = "audio.intermission.4.junior." + randomInt(1, 3); // 1 or 2
+        theSound().play(id);
 
         Logger.info("Junior spawned at tick {}", t);
     }

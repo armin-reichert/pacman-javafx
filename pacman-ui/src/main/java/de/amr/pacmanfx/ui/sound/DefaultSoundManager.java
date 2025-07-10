@@ -14,10 +14,8 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.net.URL;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import static de.amr.pacmanfx.ui.PacManGames.theAssets;
 import static java.util.Objects.requireNonNull;
@@ -28,25 +26,40 @@ public class DefaultSoundManager implements SoundManager {
     private final BooleanProperty enabledProperty = new SimpleBooleanProperty(true);
     private final BooleanProperty mutedProperty = new SimpleBooleanProperty(false);
 
-    //TODO store as assets?
-    protected final Map<String, MediaPlayer> mediaPlayerMap = new HashMap<>();
-    private final EnumMap<SoundID, MediaPlayer> sirenPlayerMap = new EnumMap<>(SoundID.class);
+    private final Map<Object, MediaPlayer> mediaPlayerMap = new HashMap<>();
+    private final Map<Object, URL> clipURLMap = new HashMap<>();
     private SoundID currentSirenID;
 
     private MediaPlayer voice;
+
 
     public DefaultSoundManager(String assetNamespace) {
         this.assetNamespace = requireNonNull(assetNamespace);
     }
 
-    public MediaPlayer addMediaPlayer(SoundID id, int numRepetitions) {
-        MediaPlayer mediaPlayer = createMediaPlayerFromMyNamespace(id.keySuffix(), numRepetitions);
-        if (mediaPlayer != null) {
-            mediaPlayerMap.put(id.keySuffix(), mediaPlayer);
-        } else {
-            Logger.warn("Media player for ID '{}' could not be created", id);
-        }
-        return mediaPlayer;
+    public MediaPlayer mediaPlayer(Object key) {
+        return mediaPlayerMap.get(key);
+    }
+
+    public void registerMediaPlayer(Object id, URL url, int numRepetitions) {
+        MediaPlayer mediaPlayer = createMediaPlayer(url);
+        mediaPlayer.setCycleCount(numRepetitions);
+        mediaPlayerMap.put(id, mediaPlayer);
+    }
+
+    private MediaPlayer createMediaPlayer(URL url) {
+        var player = new MediaPlayer(new Media(url.toExternalForm()));
+        player.setVolume(1.0);
+        player.muteProperty().bind(Bindings.createBooleanBinding(
+                () -> mutedProperty().get() || !enabledProperty().get(),
+                mutedProperty(), enabledProperty()
+        ));
+        Logger.debug("Media player created from URL {}", url);
+        return player;
+    }
+
+    public void registerAudioClip(Object key, URL url) {
+        clipURLMap.put(requireNonNull(key), requireNonNull(url));
     }
 
     @Override
@@ -64,23 +77,8 @@ public class DefaultSoundManager implements SoundManager {
                 () -> mutedProperty().get() || !enabledProperty().get(),
                 mutedProperty(), enabledProperty()
         ));
-        player.statusProperty().addListener((py,ov,nv) -> logPlayerStatusChange(player, keySuffix, ov, nv));
         Logger.debug("Media player created from URL {}", url);
         return player;
-    }
-
-    @Override
-    public void playAudioClipFromMyNamespace(String keySuffix) {
-        requireNonNull(keySuffix);
-        if (!mutedProperty.get() && enabledProperty.get()) {
-            String key = assetNamespace + keySuffix;
-            AudioClip clip = theAssets().get(key);
-            if (clip == null) {
-                Logger.error("No audio clip with key {}", key);
-                return;
-            }
-            clip.play();
-        }
     }
 
     @Override
@@ -98,11 +96,8 @@ public class DefaultSoundManager implements SoundManager {
         return mutedProperty;
     }
 
-    private Optional<MediaPlayer> mediaPlayer(String key) {
-        return Optional.ofNullable(mediaPlayerMap.get(key));
-    }
-
-    public void play(SoundID id) {
+    @Override
+    public void play(Object id, int repetitions) {
         if (mutedProperty.get()) {
             Logger.trace("Sound with ID {} not played, sound is muted", id);
             return;
@@ -111,50 +106,57 @@ public class DefaultSoundManager implements SoundManager {
             Logger.trace("Sound with ID {} not played, sound is disabled", id);
             return;
         }
-        switch (id.type()) {
-            case MEDIA_PLAYER -> {
-                Logger.debug("Play media player '{}'", id.keySuffix());
-                Optional<MediaPlayer> optPlayer = mediaPlayer(id.keySuffix());
-                if (optPlayer.isPresent()) {
-                    optPlayer.get().play();
-                } else {
-                    Logger.warn("Cannot play sound ID '{}': no media player found", id);
-                }
+        if (mediaPlayerMap.containsKey(id)) {
+            Logger.info("Play media player with ID='{}'", id);
+            MediaPlayer mediaPlayer = mediaPlayerMap.get(id);
+            if (mediaPlayer != null) {
+                mediaPlayer.setCycleCount(repetitions);
+                mediaPlayer.play();
+            } else {
+                Logger.warn("Cannot play sound ID '{}': no media player found", id);
             }
-            case CLIP -> {
-                Logger.debug("Create and play audio clip '{}'", id.keySuffix());
-                URL url = theAssets().get(assetNamespace + id.keySuffix());
-                if (url == null) {
-                    Logger.error("No audio clip URL found for key suffix {}", id.keySuffix());
-                } else {
-                    AudioClip audioClip = new AudioClip(url.toExternalForm());
-                    audioClip.play(1.0); //TODO volume
-                }
+        }
+        else if (clipURLMap.containsKey(id)) {
+            Logger.info("Create and play audio clip for ID '{}'", id);
+            URL url = clipURLMap.get(id);
+            if (url == null) {
+                Logger.error("No audio clip URL found for ID '{}'", id);
+            } else {
+                AudioClip audioClip = new AudioClip(url.toExternalForm());
+                audioClip.setCycleCount(repetitions);
+                audioClip.play(1.0); //TODO volume
             }
+        }
+        else {
+            Logger.error("No media player and no clip URL registered for ID='{}'", id);
         }
     }
 
-    public void pause(SoundID id) {
-        switch (id.type()) {
-            case MEDIA_PLAYER -> {
-                Logger.debug("Pause media player '{}'", id.keySuffix());
-                mediaPlayer(id.keySuffix()).ifPresent(MediaPlayer::pause);
+    @Override
+    public void pause(Object id) {
+        if (mediaPlayerMap.containsKey(id)) {
+            Logger.debug("Pause media player for ID '{}'", id);
+            MediaPlayer mediaPlayer = mediaPlayerMap.get(id);
+            if (mediaPlayer != null) {
+                mediaPlayer.pause();
             }
-            case CLIP -> {
-                Logger.debug("Pausing audio clip '{}' not supported", id.keySuffix());
-            }
+        }
+        else if (clipURLMap.containsKey(id)) {
+            Logger.debug("Pausing audio clip with ID='{}' is not supported", id);
         }
     }
 
-    public void stop(SoundID id)  {
-        switch (id.type()) {
-            case MEDIA_PLAYER -> {
-                Logger.debug("Play media player '{}'", id.keySuffix());
-                mediaPlayer(id.keySuffix()).ifPresent(MediaPlayer::stop);
+    @Override
+    public void stop(Object id)  {
+        if (mediaPlayerMap.containsKey(id)) {
+            Logger.debug("Stop media player for ID '{}'", id);
+            MediaPlayer mediaPlayer = mediaPlayerMap.get(id);
+            if (mediaPlayer != null) {
+                mediaPlayer.stop();
             }
-            case CLIP -> {
-                Logger.debug("Stopping audio clip '{}' not supported", id.keySuffix());
-            }
+        }
+        else if (clipURLMap.containsKey(id)) {
+            Logger.debug("Stopping audio clip with ID='{}' is not supported", id);
         }
     }
 
@@ -194,21 +196,20 @@ public class DefaultSoundManager implements SoundManager {
                 && sirenID != SoundID.SIREN_4) {
             throw new IllegalArgumentException("Illegal sound ID for siren: " + sirenID);
         }
-        if (!sirenPlayerMap.containsKey(sirenID) || currentSirenID != sirenID) {
+        if (currentSirenID != sirenID) {
             stopSiren();
-            MediaPlayer sirenPlayer = createMediaPlayerFromMyNamespace(sirenID.keySuffix(), MediaPlayer.INDEFINITE);
+            MediaPlayer sirenPlayer = mediaPlayerMap.get(sirenID);
             if (sirenPlayer == null) {
                 Logger.error("Could not create media player for siren ID {}", sirenID);
                 currentSirenID = null;
             } else {
                 currentSirenID = sirenID;
-                sirenPlayerMap.put(currentSirenID, sirenPlayer);
                 sirenPlayer.setVolume(volume);
                 sirenPlayer.play();
                 Logger.info("Created new siren player {}, playing at volume {} ", sirenID, sirenPlayer.getVolume());
             }
         } else {
-            MediaPlayer sirenPlayer = sirenPlayerMap.get(sirenID);
+            MediaPlayer sirenPlayer = mediaPlayerMap.get(sirenID);
             sirenPlayer.setVolume(volume);
             sirenPlayer.play();
             Logger.trace("Playing siren {} at volume {}", sirenID, sirenPlayer.getVolume());
@@ -218,37 +219,14 @@ public class DefaultSoundManager implements SoundManager {
     @Override
     public void pauseSiren() {
         if (currentSirenID != null) {
-            sirenPlayerMap.get(currentSirenID).stop();
+            mediaPlayerMap.get(currentSirenID).pause();
         }
     }
 
     @Override
     public void stopSiren() {
         if (currentSirenID != null) {
-            sirenPlayerMap.get(currentSirenID).stop();
+            mediaPlayerMap.get(currentSirenID).stop();
         }
     }
-
-    private void logMediaPlayerStatus() {
-        for (String key : mediaPlayerMap.keySet()) {
-            mediaPlayer(key).ifPresent(player -> logMediaPlayerStatus(player, key));
-        }
-        if (currentSirenID != null) {
-            logMediaPlayerStatus(sirenPlayerMap.get(currentSirenID), currentSirenID.keySuffix());
-        }
-        logMediaPlayerStatus(voice, "Voice");
-    }
-
-    private void logMediaPlayerStatus(MediaPlayer player, String key) {
-        if (player != null) {
-            Logger.debug("[{}] state={} volume={}", key, player.getStatus() != null ? player.getStatus() : "UNDEFINED", player.getVolume());
-        } else {
-            Logger.debug("No player exists for key {}", key);
-        }
-    }
-
-    private void logPlayerStatusChange(MediaPlayer player, String key, MediaPlayer.Status oldStatus, MediaPlayer.Status newStatus) {
-        Logger.debug("[{}] {} -> {}, volume {}", key, (oldStatus != null ? oldStatus : "undefined"), newStatus, player.getVolume());
-    }
-
 }

@@ -293,7 +293,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
 
     @Override
     public void onBonusActivated(GameEvent e) {
-        theSound().play(SoundID.BONUS_ACTIVE);
+        theSound().loop(SoundID.BONUS_ACTIVE);
     }
 
     @Override
@@ -337,7 +337,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
 
     @Override
     public void onPacFoundFood(GameEvent e) {
-        theSound().play(SoundID.PAC_MAN_MUNCHING);
+        theSound().loop(SoundID.PAC_MAN_MUNCHING);
     }
 
     @Override
@@ -380,7 +380,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
             .findAny();
         if (ghostReturningToHouse.isPresent()
             && (theGameState() == GameState.HUNTING || theGameState() == GameState.GHOST_DYING)) {
-            theSound().play(SoundID.GHOST_RETURNS);
+            theSound().loop(SoundID.GHOST_RETURNS);
         } else {
             theSound().stop(SoundID.GHOST_RETURNS);
         }

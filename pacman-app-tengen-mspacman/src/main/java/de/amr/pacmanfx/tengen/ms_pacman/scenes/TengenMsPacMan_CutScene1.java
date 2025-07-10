@@ -17,7 +17,6 @@ import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.animation.SingleSpriteActor;
-import javafx.scene.media.MediaPlayer;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
@@ -37,6 +36,8 @@ import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_LET_GAME_STATE_E
  */
 public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
+    private static final String MUSIC_ID = "audio.intermission.1";
+
     private static final int UPPER_LANE   = TS * 8;
     private static final int LOWER_LANE   = TS * 24;
     private static final int MIDDLE_LANE  = TS * 16;
@@ -47,7 +48,6 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     private static final float SPEED_RISING = 1.0f;
     private static final float SPEED_GHOST_AFTER_COLLISION = 0.5f;
 
-    private MediaPlayer music;
     private Clapperboard clapperboard;
     private Pac pacMan;
     private Pac msPacMan;
@@ -67,7 +67,6 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         theGame().hud().showLivesCounter(false);
 
         bindActionToKeyCombination(ACTION_LET_GAME_STATE_EXPIRE, theJoypad().key(JoypadButton.START));
-        music = theSound().createMediaPlayerFromMyNamespace(".audio.intermission.1", 1);
 
         PacManGames_UIConfig config = theUI().configuration();
         var spriteSheet = (TengenMsPacMan_SpriteSheet) config.spriteSheet();
@@ -88,8 +87,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        music.stop();
-        music.dispose();
+        theSound().stop(MUSIC_ID);
     }
 
     @Override
@@ -98,7 +96,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         if (t == 0) {
             clapperboard.show();
             clapperboard.startAnimation();
-            music.play();
+            theSound().play(MUSIC_ID);
         }
         else if (t == 130) {
             pacMan.setMoveDir(Direction.RIGHT);

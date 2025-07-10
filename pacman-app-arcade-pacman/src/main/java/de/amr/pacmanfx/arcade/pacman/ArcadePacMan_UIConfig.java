@@ -119,31 +119,23 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
         storeInMyNamespace(assets, "ghost.color.flashing.eyeballs",   ARCADE_ROSE);
         storeInMyNamespace(assets, "ghost.color.flashing.pupils",     ARCADE_RED);
 
-        storeInMyNamespace(assets, "audio.bonus_eaten",               url("sound/eat_fruit.mp3"));
-        storeInMyNamespace(assets, "audio.credit",                    url("sound/credit.wav"));
-        storeInMyNamespace(assets, "audio.extra_life",                url("sound/extend.mp3"));
-        storeInMyNamespace(assets, "audio.game_over",                 url("sound/common/game-over.mp3"));
-        storeInMyNamespace(assets, "audio.game_ready",                url("sound/game_start.mp3"));
-        storeInMyNamespace(assets, "audio.ghost_eaten",               url("sound/eat_ghost.mp3"));
-        storeInMyNamespace(assets, "audio.ghost_returns",             url("sound/retreating.mp3"));
-        storeInMyNamespace(assets, "audio.intermission",              url("sound/intermission.mp3"));
-        storeInMyNamespace(assets, "audio.level_complete",            url("sound/common/level-complete.mp3"));
-        storeInMyNamespace(assets, "audio.pacman_death",              url("sound/pacman_death.wav"));
-        storeInMyNamespace(assets, "audio.pacman_munch",              url("sound/munch.wav"));
-        storeInMyNamespace(assets, "audio.pacman_power",              url("sound/ghost-turn-to-blue.mp3"));
-        storeInMyNamespace(assets, "audio.siren.1",                   url("sound/siren_1.mp3"));
-        storeInMyNamespace(assets, "audio.siren.2",                   url("sound/siren_2.mp3"));
-        storeInMyNamespace(assets, "audio.siren.3",                   url("sound/siren_3.mp3"));
-        storeInMyNamespace(assets, "audio.siren.4",                   url("sound/siren_4.mp3"));
-        storeInMyNamespace(assets, "audio.sweep",                     url("sound/common/sweep.mp3"));
-
-        soundManager.addMediaPlayer(SoundID.GAME_OVER,        1);
-        soundManager.addMediaPlayer(SoundID.GAME_READY,       1);
-        soundManager.addMediaPlayer(SoundID.GHOST_RETURNS,    MediaPlayer.INDEFINITE);
-        soundManager.addMediaPlayer(SoundID.LEVEL_COMPLETE,   1);
-        soundManager.addMediaPlayer(SoundID.PAC_MAN_MUNCHING, MediaPlayer.INDEFINITE);
-        soundManager.addMediaPlayer(SoundID.PAC_MAN_DEATH,    1);
-        soundManager.addMediaPlayer(SoundID.PAC_MAN_POWER,    MediaPlayer.INDEFINITE);
+        soundManager.registerAudioClip(SoundID.BONUS_EATEN,             url("sound/eat_fruit.mp3"));
+        soundManager.registerAudioClip(SoundID.COIN_INSERTED,           url("sound/credit.wav"));
+        soundManager.registerAudioClip(SoundID.EXTRA_LIFE,              url("sound/extend.mp3"));
+        soundManager.registerMediaPlayer(SoundID.GAME_OVER,           url("sound/common/game-over.mp3"), 1);
+        soundManager.registerMediaPlayer(SoundID.GAME_READY,          url("sound/game_start.mp3"), 1);
+        soundManager.registerAudioClip(SoundID.GHOST_EATEN,             url("sound/eat_ghost.mp3"));
+        soundManager.registerMediaPlayer(SoundID.GHOST_RETURNS,       url("sound/retreating.mp3"), MediaPlayer.INDEFINITE);
+        soundManager.registerAudioClip("audio.intermission",            url("sound/intermission.mp3"));
+        soundManager.registerAudioClip(SoundID.LEVEL_CHANGED,           url("sound/common/sweep.mp3"));
+        soundManager.registerMediaPlayer(SoundID.LEVEL_COMPLETE,      url("sound/common/level-complete.mp3"), 1);
+        soundManager.registerMediaPlayer(SoundID.PAC_MAN_DEATH,       url("sound/pacman_death.wav"), 1);
+        soundManager.registerMediaPlayer(SoundID.PAC_MAN_MUNCHING,    url("sound/munch.wav"), MediaPlayer.INDEFINITE);
+        soundManager.registerMediaPlayer(SoundID.PAC_MAN_POWER,       url("sound/ghost-turn-to-blue.mp3"), MediaPlayer.INDEFINITE);
+        soundManager.registerMediaPlayer(SoundID.SIREN_1,             url("sound/siren_1.mp3"), MediaPlayer.INDEFINITE);
+        soundManager.registerMediaPlayer(SoundID.SIREN_2,             url("sound/siren_2.mp3"), MediaPlayer.INDEFINITE);
+        soundManager.registerMediaPlayer(SoundID.SIREN_3,             url("sound/siren_3.mp3"), MediaPlayer.INDEFINITE);
+        soundManager.registerMediaPlayer(SoundID.SIREN_4,             url("sound/siren_4.mp3"), MediaPlayer.INDEFINITE);
     }
 
     @Override

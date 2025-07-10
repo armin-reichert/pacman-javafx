@@ -9,7 +9,6 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import javafx.scene.media.MediaPlayer;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -31,18 +30,16 @@ import static de.amr.pacmanfx.ui.PacManGames_UI.DEBUG_TEXT_FONT;
  */
 public class ArcadePacMan_CutScene1 extends GameScene2D {
 
+    private static final String MUSIC_ID = "audio.intermission";
     private static final short ANIMATION_START = 120;
 
     private int frame;
     private Pac pac;
     private Ghost blinky;
-    private MediaPlayer music;
 
     @Override
     public void doInit() {
         frame = -1;
-
-        music = theSound().createMediaPlayerFromMyNamespace(".audio.intermission", 2);
 
         pac = createPac();
         blinky = createGhost(RED_GHOST_SHADOW);
@@ -56,8 +53,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        music.stop();
-        music.dispose();
+        theSound().stop(MUSIC_ID);
         Logger.info("{} ends", getClass().getSimpleName());
     }
 
@@ -65,7 +61,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     public void update() {
         ++frame;
         if (frame == ANIMATION_START) {
-            music.play();
+            theSound().play(MUSIC_ID, 2);
 
             pac.placeAtTile(29, 20);
             pac.setMoveDir(Direction.LEFT);

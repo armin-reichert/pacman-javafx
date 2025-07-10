@@ -12,12 +12,12 @@ public interface SoundManager {
     BooleanProperty mutedProperty();
 
     MediaPlayer createMediaPlayerFromMyNamespace(String keySuffix, int numRepetitions);
-//    AudioClip createAudioClipFromMyANamespace(String keySuffix);
-    void playAudioClipFromMyNamespace(String keySuffix);
 
-    void play(SoundID id);
-    void pause(SoundID id);
-    void stop(SoundID id);
+    default void play(Object id) { play(id, 1); }
+    void play(Object id, int repetitions);
+    default void loop(Object id) { play(id, MediaPlayer.INDEFINITE); }
+    void pause(Object id);
+    void stop(Object id);
     void stopAll();
     void stopVoice();
     void playVoice(String key, double delaySeconds);

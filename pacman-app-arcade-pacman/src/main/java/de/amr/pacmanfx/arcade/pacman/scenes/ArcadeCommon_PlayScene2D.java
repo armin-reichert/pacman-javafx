@@ -204,7 +204,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
             .findAny();
         if (ghostReturningToHouse.isPresent()
             && (theGameState() == GameState.HUNTING || theGameState() == GameState.GHOST_DYING)) {
-            theSound().play(SoundID.GHOST_RETURNS);
+            theSound().loop(SoundID.GHOST_RETURNS);
         } else {
             theSound().stop(SoundID.GHOST_RETURNS);
         }
@@ -347,7 +347,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
 
     @Override
     public void onPacFoundFood(GameEvent e) {
-        theSound().play(SoundID.PAC_MAN_MUNCHING);
+        theSound().loop(SoundID.PAC_MAN_MUNCHING);
     }
 
     @Override

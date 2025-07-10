@@ -68,16 +68,17 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
         }
         assetsLoaded = true;
 
-        ResourceManager rm = () -> ArcadeMsPacMan_UIConfig.class;
+        final ResourceManager msPacManXXLRes = this::getClass;
+        final ResourceManager msPacManRes = () -> ArcadeMsPacMan_UIConfig.class;
 
-        spriteSheet = new ArcadeMsPacMan_SpriteSheet(rm.loadImage("graphics/mspacman_spritesheet.png"));
+        spriteSheet = new ArcadeMsPacMan_SpriteSheet(msPacManRes.loadImage("graphics/mspacman_spritesheet.png"));
 
-        storeInMyNamespace(assets, "app_icon",                        rm.loadImage("graphics/icons/mspacman.png"));
-        storeInMyNamespace(assets, "flashing_mazes",                  rm.loadImage("graphics/mazes_flashing.png"));
-        storeInMyNamespace(assets, "startpage.image1",                rm.loadImage("graphics/f1.jpg"));
-        storeInMyNamespace(assets, "startpage.image2",                rm.loadImage("graphics/f2.jpg"));
-        storeInMyNamespace(assets, "logo.midway",                     rm.loadImage("graphics/midway_logo.png"));
-        storeInMyNamespace(assets, "color.game_over_message",         ARCADE_RED);
+        storeInMyNamespace(assets, "app_icon",                msPacManRes.loadImage("graphics/icons/mspacman.png"));
+        storeInMyNamespace(assets, "flashing_mazes",          msPacManRes.loadImage("graphics/mazes_flashing.png"));
+        storeInMyNamespace(assets, "startpage.image1",        msPacManRes.loadImage("graphics/f1.jpg"));
+        storeInMyNamespace(assets, "startpage.image2",        msPacManRes.loadImage("graphics/f2.jpg"));
+        storeInMyNamespace(assets, "logo.midway",             msPacManRes.loadImage("graphics/midway_logo.png"));
+        storeInMyNamespace(assets, "color.game_over_message", ARCADE_RED);
 
         RectShort[] symbolSprites = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS);
         RectShort[] valueSprites  = spriteSheet.spriteSeq(SpriteID.BONUS_VALUES);
@@ -86,12 +87,12 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
             storeInMyNamespace(assets, "bonus_value_"  + symbol, spriteSheet.image(valueSprites[symbol]));
         }
 
-        storeInMyNamespace(assets, "pac.color.head",                  ARCADE_YELLOW);
-        storeInMyNamespace(assets, "pac.color.eyes",                  Color.grayRgb(33));
-        storeInMyNamespace(assets, "pac.color.palate",                Color.rgb(240, 180, 160));
-        storeInMyNamespace(assets, "pac.color.boobs",                 ARCADE_YELLOW.deriveColor(0, 1.0, 0.96, 1.0));
-        storeInMyNamespace(assets, "pac.color.hairbow",               ARCADE_RED);
-        storeInMyNamespace(assets, "pac.color.hairbow.pearls",        ARCADE_BLUE);
+        storeInMyNamespace(assets, "pac.color.head",           ARCADE_YELLOW);
+        storeInMyNamespace(assets, "pac.color.eyes",           Color.grayRgb(33));
+        storeInMyNamespace(assets, "pac.color.palate",         Color.rgb(240, 180, 160));
+        storeInMyNamespace(assets, "pac.color.boobs",          ARCADE_YELLOW.deriveColor(0, 1.0, 0.96, 1.0));
+        storeInMyNamespace(assets, "pac.color.hairbow",        ARCADE_RED);
+        storeInMyNamespace(assets, "pac.color.hairbow.pearls", ARCADE_BLUE);
 
         RectShort[] numberSprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
         storeInMyNamespace(assets, "ghost_points_0", spriteSheet.image(numberSprites[0]));
@@ -118,39 +119,29 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
         storeInMyNamespace(assets, "ghost.color.flashing.eyeballs",   ARCADE_ROSE);
         storeInMyNamespace(assets, "ghost.color.flashing.pupils",     ARCADE_RED);
 
-        storeInMyNamespace(assets, "audio.bonus_bouncing",            rm.url("sound/Fruit_Bounce.mp3"));
-        storeInMyNamespace(assets, "audio.bonus_eaten",               rm.url("sound/Fruit.mp3"));
-        storeInMyNamespace(assets, "audio.credit",                    rm.url("sound/credit.wav"));
-        storeInMyNamespace(assets, "audio.extra_life",                rm.url("sound/ExtraLife.mp3"));
-        storeInMyNamespace(assets, "audio.ghost_eaten",               rm.url("sound/Ghost.mp3"));
-        storeInMyNamespace(assets, "audio.ghost_returns",             rm.url("sound/GhostEyes.mp3"));
-        storeInMyNamespace(assets, "audio.game_ready",                rm.url("sound/Start.mp3"));
-        storeInMyNamespace(assets, "audio.game_over",                 rm.url("sound/game-over.mp3"));
-        storeInMyNamespace(assets, "audio.intermission.1",            rm.url("sound/Act_1_They_Meet.mp3"));
-        storeInMyNamespace(assets, "audio.intermission.2",            rm.url("sound/Act_2_The_Chase.mp3"));
-        storeInMyNamespace(assets, "audio.intermission.3",            rm.url("sound/Act_3_Junior.mp3"));
-        storeInMyNamespace(assets, "audio.level_complete",            rm.url("sound/level-complete.mp3"));
-        storeInMyNamespace(assets, "audio.pacman_death",              rm.url("sound/Died.mp3"));
-        storeInMyNamespace(assets, "audio.pacman_munch",              rm.url("sound/munch.wav"));
-        storeInMyNamespace(assets, "audio.pacman_power",              rm.url("sound/ScaredGhost.mp3"));
-        storeInMyNamespace(assets, "audio.siren.1",                   rm.url("sound/GhostNoise1.wav"));
-        storeInMyNamespace(assets, "audio.siren.2",                   rm.url("sound/GhostNoise1.wav"));// TODO
-        storeInMyNamespace(assets, "audio.siren.3",                   rm.url("sound/GhostNoise1.wav"));// TODO
-        storeInMyNamespace(assets, "audio.siren.4",                   rm.url("sound/GhostNoise1.wav"));// TODO
-        storeInMyNamespace(assets, "audio.sweep",                     rm.url("sound/sweep.mp3"));
+        soundManager.registerAudioClip(SoundID.BONUS_ACTIVE,            msPacManRes.url("sound/Fruit_Bounce.mp3"));
+        soundManager.registerAudioClip(SoundID.BONUS_EATEN,             msPacManRes.url("sound/Fruit.mp3"));
+        soundManager.registerAudioClip(SoundID.COIN_INSERTED,           msPacManRes.url("sound/credit.wav"));
+        soundManager.registerAudioClip(SoundID.EXTRA_LIFE,              msPacManRes.url("sound/ExtraLife.mp3"));
+        soundManager.registerMediaPlayer(SoundID.GAME_OVER,           msPacManRes.url("sound/game-over.mp3"), 1);
+        soundManager.registerMediaPlayer(SoundID.GAME_READY,          msPacManRes.url("sound/Start.mp3"), 1);
+        soundManager.registerAudioClip(SoundID.GHOST_EATEN,             msPacManRes.url("sound/Ghost.mp3"));
+        soundManager.registerMediaPlayer(SoundID.GHOST_RETURNS,       msPacManRes.url("sound/GhostEyes.mp3"), MediaPlayer.INDEFINITE);
+        soundManager.registerMediaPlayer("audio.intermission.1",      msPacManRes.url("sound/Act_1_They_Meet.mp3"), 1);
+        soundManager.registerMediaPlayer("audio.intermission.2",      msPacManRes.url("sound/Act_2_The_Chase.mp3"), 1);
+        soundManager.registerMediaPlayer("audio.intermission.3",      msPacManRes.url("sound/Act_3_Junior.mp3"), 1);
+        soundManager.registerAudioClip(SoundID.LEVEL_CHANGED,           msPacManRes.url("sound/sweep.mp3"));
+        soundManager.registerMediaPlayer(SoundID.LEVEL_COMPLETE,      msPacManRes.url("sound/level-complete.mp3"), 1);
+        soundManager.registerMediaPlayer(SoundID.PAC_MAN_DEATH,       msPacManRes.url("sound/Died.mp3"), 1);
+        soundManager.registerMediaPlayer(SoundID.PAC_MAN_MUNCHING,    msPacManRes.url("sound/munch.wav"), MediaPlayer.INDEFINITE);
+        soundManager.registerMediaPlayer(SoundID.PAC_MAN_POWER,       msPacManRes.url("sound/ScaredGhost.mp3"), MediaPlayer.INDEFINITE);
+        soundManager.registerMediaPlayer(SoundID.SIREN_1,             msPacManRes.url("sound/GhostNoise1.wav"), MediaPlayer.INDEFINITE);
+        soundManager.registerMediaPlayer(SoundID.SIREN_2,             msPacManRes.url("sound/GhostNoise1.wav"), MediaPlayer.INDEFINITE);// TODO
+        soundManager.registerMediaPlayer(SoundID.SIREN_3,             msPacManRes.url("sound/GhostNoise1.wav"), MediaPlayer.INDEFINITE);// TODO
+        soundManager.registerMediaPlayer(SoundID.SIREN_4,             msPacManRes.url("sound/GhostNoise1.wav"), MediaPlayer.INDEFINITE);// TODO
 
-        soundManager.addMediaPlayer(SoundID.BONUS_ACTIVE,   MediaPlayer.INDEFINITE);
-        soundManager.addMediaPlayer(SoundID.GAME_OVER,        1);
-        soundManager.addMediaPlayer(SoundID.GAME_READY,       1);
-        soundManager.addMediaPlayer(SoundID.GHOST_RETURNS,    MediaPlayer.INDEFINITE);
-        soundManager.addMediaPlayer(SoundID.LEVEL_COMPLETE,   1);
-        soundManager.addMediaPlayer(SoundID.PAC_MAN_MUNCHING, MediaPlayer.INDEFINITE);
-        soundManager.addMediaPlayer(SoundID.PAC_MAN_DEATH,    1);
-        soundManager.addMediaPlayer(SoundID.PAC_MAN_POWER,    MediaPlayer.INDEFINITE);
-
-        rm = this::getClass;
-        storeInMyNamespace(assets, "audio.option.selection_changed",  rm.loadAudioClip("sound/ms-select1.wav"));
-        storeInMyNamespace(assets, "audio.option.value_changed",      rm.loadAudioClip("sound/ms-select2.wav"));
+        storeInMyNamespace(assets, "audio.option.selection_changed",  msPacManXXLRes.loadAudioClip("sound/ms-select1.wav"));
+        storeInMyNamespace(assets, "audio.option.value_changed",      msPacManXXLRes.loadAudioClip("sound/ms-select2.wav"));
     }
 
     @Override

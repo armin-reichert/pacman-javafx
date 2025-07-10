@@ -392,7 +392,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         theGameLevel().bonus().ifPresent(bonus -> {
             gameLevel3D.updateBonus3D(bonus);
             if (bonus instanceof MovingBonus) {
-                theSound().play(SoundID.BONUS_ACTIVE);
+                theSound().loop(SoundID.BONUS_ACTIVE);
             }
         });
     }
@@ -416,11 +416,6 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 theSound().stop(SoundID.BONUS_ACTIVE);
             }
         });
-    }
-
-    @Override
-    public void onSpecialScoreReached(GameEvent e) {
-        theSound().play(SoundID.EXTRA_LIFE);
     }
 
     @Override
@@ -462,7 +457,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                     .findFirst()
                     .ifPresent(Pellet3D::onEaten);
             }
-            theSound().play(SoundID.PAC_MAN_MUNCHING);
+            theSound().loop(SoundID.PAC_MAN_MUNCHING);
         }
     }
 
@@ -479,6 +474,11 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         gameLevel3D.pac3D().setMovementPowerMode(false);
         gameLevel3D.wallColorFlashingAnimation().stop();
         theSound().stop(SoundID.PAC_MAN_POWER);
+    }
+
+    @Override
+    public void onSpecialScoreReached(GameEvent e) {
+        theSound().play(SoundID.EXTRA_LIFE);
     }
 
     @Override
@@ -533,7 +533,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         }
         boolean ghostsReturning = gameLevel.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
         if (gameLevel.pac().isAlive() && ghostsReturning) {
-            theSound().play(SoundID.GHOST_RETURNS);
+            theSound().loop(SoundID.GHOST_RETURNS);
         } else {
             theSound().stop(SoundID.GHOST_RETURNS);
         }

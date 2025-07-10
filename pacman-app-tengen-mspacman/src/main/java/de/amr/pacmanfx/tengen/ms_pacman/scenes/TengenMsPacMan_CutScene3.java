@@ -14,7 +14,6 @@ import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import javafx.scene.media.MediaPlayer;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
@@ -37,10 +36,11 @@ import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_LET_GAME_STATE_E
  */
 public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
+    private static final String MUSIC_ID = "audio.intermission.3";
+
     private static final int GROUND_Y = TS * 24;
     private static final int RIGHT_BORDER = TS * 30;
 
-    private MediaPlayer music;
     private Clapperboard clapperboard;
     private Pac pacMan;
     private Pac msPacMan;
@@ -60,7 +60,6 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         theGame().hud().showLivesCounter(false);
 
         bindActionToKeyCombination(ACTION_LET_GAME_STATE_EXPIRE, theJoypad().key(JoypadButton.START));
-        music = theSound().createMediaPlayerFromMyNamespace(".audio.intermission.3", 1);
 
         PacManGames_UIConfig config = theUI().configuration();
         var spriteSheet = (TengenMsPacMan_SpriteSheet) config.spriteSheet();
@@ -78,8 +77,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        music.stop();
-        music.dispose();
+        theSound().stop(MUSIC_ID);
     }
 
     @Override
@@ -88,7 +86,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         if (t == 0) {
             clapperboard.show();
             clapperboard.startAnimation();
-            music.play();
+            theSound().play(MUSIC_ID);
         }
         else if (t == 130) {
             pacMan.setMoveDir(Direction.RIGHT);
