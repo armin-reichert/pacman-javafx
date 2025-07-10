@@ -14,7 +14,8 @@ import java.util.Map;
 import static java.util.Objects.requireNonNull;
 
 /**
- * @author Armin Reichert
+ * Game events are send by the model/controller layer and handled by the view layer. The serve to decouple these
+ * layers.
  */
 public class GameEvent {
 
@@ -58,6 +59,12 @@ public class GameEvent {
         return sb.toString();
     }
 
+    public void setPayload(String key, Object value) { payload.put(key, value); }
+
+    @SuppressWarnings("unchecked")
+
+    public <T> T payload(String key) { return (T) payload.get(key); }
+
     public GameEventType type() {
         return type;
     }
@@ -73,9 +80,4 @@ public class GameEvent {
      * @return the tile or {@code null} associated with this event
      */
     public Vector2i tile() { return payload(PAYLOAD_KEY_TILE); }
-
-    public void setPayload(String key, Object value) { payload.put(key, value); }
-
-    @SuppressWarnings("unchecked")
-    public <T> T payload(String key) { return (T) payload.get(key); }
 }
