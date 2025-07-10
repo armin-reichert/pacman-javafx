@@ -325,8 +325,7 @@ public abstract class GameModel implements ScoreManager {
             try {
                 highScore.save(highScoreFile, "High Score updated at %s".formatted(LocalTime.now()));
             } catch (IOException x) {
-                Logger.error("High Score could not be saved to file '{}'", highScoreFile);
-                Logger.error(x);
+                Logger.error("High Score file could not be saved: '{}'", highScoreFile);
             }
         }
     }
