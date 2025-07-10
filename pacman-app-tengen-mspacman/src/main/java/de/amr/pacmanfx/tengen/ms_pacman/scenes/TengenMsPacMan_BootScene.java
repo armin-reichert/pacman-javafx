@@ -23,30 +23,33 @@ import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRend
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
 
 /**
- * Animated "TENGEN PRESENTS" text and ghost running through scene.
+ * Shows moving and color changing "TENGEN PRESENTS" text and ghost running through scene.
  */
 public class TengenMsPacMan_BootScene extends GameScene2D {
+
+    public static final String TENGEN_PRESENTS = "TENGEN PRESENTS";
 
     private static final float GHOST_Y = 21.5f * TS;
 
     private long tick;
-    private Ghost ghost;
     private boolean grayScreen;
-    private Actor presentsText;
+    private Actor movingText;
+    private Ghost ghost;
 
     @Override
     public void doInit() {
-        theGame().hud().showScore(false);
-        theGame().hud().showLivesCounter(false);
-        theGame().hud().showLevelCounter(false);
-
+        tick = 0;
         grayScreen = false;
-        presentsText = new Actor();
+
+        movingText = new Actor();
         ghost = createGhost(RED_GHOST_SHADOW);
         ghost.setSpeed(0);
         ghost.setAnimations(theUI().configuration().createGhostAnimations(ghost));
         ghost.selectAnimation(ANIM_GHOST_NORMAL);
-        tick = 0;
+
+        theGame().hud().showScore(false);
+        theGame().hud().showLivesCounter(false);
+        theGame().hud().showLevelCounter(false);
     }
 
     @Override
@@ -56,7 +59,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     @Override
     public void update() {
         ghost.move();
-        presentsText.move();
+        movingText.move();
         tick += 1;
         if (tick == 7) {
             grayScreen = true;
@@ -65,13 +68,13 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
             grayScreen = false;
         }
         else if (tick == 21) {
-            presentsText.setPosition(9 * TS, sizeInPx().y()); // lower border of screen
-            presentsText.setVelocity(0, -HTS);
-            presentsText.show();
+            movingText.setPosition(9 * TS, sizeInPx().y()); // lower border of screen
+            movingText.setVelocity(0, -HTS);
+            movingText.show();
         }
         else if (tick == 55) {
-            presentsText.setPosition(9 * TS, 13 * TS);
-            presentsText.setVelocity(Vector2f.ZERO);
+            movingText.setPosition(9 * TS, 13 * TS);
+            movingText.setVelocity(Vector2f.ZERO);
         }
         else if (tick == 113) {
             ghost.setPosition(sizeInPx().x() - TS, GHOST_Y);
@@ -80,7 +83,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
             ghost.show();
         }
         else if (tick == 181) {
-            presentsText.setVelocity(0, TS);
+            movingText.setVelocity(0, TS);
         }
         else if (tick == 203) {
             grayScreen = true;
@@ -103,7 +106,8 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
         if (grayScreen) {
             r.fillCanvas(nesPaletteColor(0x10));
         } else {
-            r.fillTextAtScaledPosition("TENGEN PRESENTS", blueShadedColor(tick), scaledArcadeFont8(), presentsText.x(), presentsText.y());
+            r.fillTextAtScaledPosition(TENGEN_PRESENTS, blueShadedColor(tick), scaledArcadeFont8(),
+                movingText.x(), movingText.y());
             r.drawActor(ghost);
         }
     }

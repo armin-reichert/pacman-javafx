@@ -74,8 +74,13 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         return Color.web(NES_Palette.color(index));
     }
 
+    /** 32x30 */
     public static final Vector2i NES_TILES = new Vector2i(32, 30);
+
+    /** 256x240 */
     public static final Vector2f NES_SIZE_PX = NES_TILES.scaled(TS).toVector2f();
+
+    /** 32/30 */
     public static final float NES_ASPECT = NES_SIZE_PX.x() / NES_SIZE_PX.y();
 
     private TengenMsPacMan_SpriteSheet spriteSheet;
