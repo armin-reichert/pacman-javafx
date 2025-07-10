@@ -393,7 +393,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         theGameLevel().bonus().ifPresent(bonus -> {
             gameLevel3D.updateBonus3D(bonus);
             if (bonus instanceof MovingBonus) {
-                theSound().play(SoundID.BONUS_BOUNCING);
+                theSound().play(SoundID.BONUS_ACTIVE);
             }
         });
     }
@@ -403,7 +403,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         theGameLevel().bonus().ifPresent(bonus -> {
             gameLevel3D.bonus3D().ifPresent(Bonus3D::showEaten);
             if (bonus instanceof MovingBonus) {
-                theSound().stop(SoundID.BONUS_BOUNCING);
+                theSound().stop(SoundID.BONUS_ACTIVE);
             }
             theSound().play(SoundID.BONUS_EATEN);
         });
@@ -414,7 +414,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         theGameLevel().bonus().ifPresent(bonus -> {
             gameLevel3D.bonus3D().ifPresent(Bonus3D::expire);
             if (bonus instanceof MovingBonus) {
-                theSound().stop(SoundID.BONUS_BOUNCING);
+                theSound().stop(SoundID.BONUS_ACTIVE);
             }
         });
     }

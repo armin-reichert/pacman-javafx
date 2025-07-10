@@ -136,7 +136,7 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         storeInMyNamespace(assets, "audio.siren.4",                   url("sound/GhostNoise1.wav"));// TODO
         storeInMyNamespace(assets, "audio.sweep",                     url("sound/sweep.mp3"));
 
-        soundManager.addMediaPlayer(SoundID.BONUS_BOUNCING,   MediaPlayer.INDEFINITE);
+        soundManager.addMediaPlayer(SoundID.BONUS_ACTIVE,   MediaPlayer.INDEFINITE);
         soundManager.addMediaPlayer(SoundID.GAME_OVER,        1);
         soundManager.addMediaPlayer(SoundID.GAME_READY,       1);
         soundManager.addMediaPlayer(SoundID.GHOST_RETURNS,    MediaPlayer.INDEFINITE);

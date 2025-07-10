@@ -303,18 +303,18 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
 
     @Override
     public void onBonusActivated(GameEvent e) {
-        theSound().play(SoundID.BONUS_BOUNCING);
+        theSound().play(SoundID.BONUS_ACTIVE);
     }
 
     @Override
     public void onBonusEaten(GameEvent e) {
-        theSound().stop(SoundID.BONUS_BOUNCING);
+        theSound().stop(SoundID.BONUS_ACTIVE);
         theSound().play(SoundID.BONUS_EATEN);
     }
 
     @Override
     public void onBonusExpired(GameEvent e) {
-        theSound().stop(SoundID.BONUS_BOUNCING);
+        theSound().stop(SoundID.BONUS_ACTIVE);
     }
 
     @Override
@@ -358,6 +358,6 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
 
     @Override
     public void onPacLostPower(GameEvent e) {
-        theSound().stop(SoundID.PAC_MAN_POWER);
+        theSound().pause(SoundID.PAC_MAN_POWER);
     }
 }

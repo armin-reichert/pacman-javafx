@@ -184,7 +184,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         storeInMyNamespace(assets, "audio.game_over",                  url("sound/common/game-over.mp3"));
         storeInMyNamespace(assets, "audio.sweep",                      url("sound/common/sweep.mp3"));
 
-        MediaPlayer bounceSound = soundManager.addMediaPlayer(SoundID.BONUS_BOUNCING, MediaPlayer.INDEFINITE);
+        MediaPlayer bounceSound = soundManager.addMediaPlayer(SoundID.BONUS_ACTIVE, MediaPlayer.INDEFINITE);
         if (bounceSound != null) {
             bounceSound.setRate(0.25); // TODO ugly!
         }

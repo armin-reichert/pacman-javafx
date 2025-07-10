@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.sound;
 
 public enum SoundID {
-    BONUS_BOUNCING    (".audio.bonus_bouncing",   SoundType.MEDIA_PLAYER),
+    BONUS_ACTIVE(".audio.bonus_bouncing",   SoundType.MEDIA_PLAYER),
     BONUS_EATEN       (".audio.bonus_eaten",      SoundType.CLIP),
     COIN_INSERTED     (".audio.credit",           SoundType.CLIP),
     EXTRA_LIFE        (".audio.extra_life",       SoundType.CLIP),
