@@ -22,7 +22,9 @@ import de.amr.pacmanfx.uilib.CameraControlledView;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.*;
 import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
+import javafx.animation.Interpolator;
 import javafx.animation.SequentialTransition;
+import javafx.animation.Transition;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.*;
 import javafx.scene.control.*;
@@ -30,6 +32,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.util.*;
@@ -52,6 +55,9 @@ import static java.util.Objects.requireNonNull;
  * <code>Alt+LEFT</code> and <code>Alt+RIGHT</code> (Did he really said Alt-Right?).
  */
 public class PlayScene3D implements GameScene, CameraControlledView {
+
+    private static final Color SUBSCENE_FILL_DARK = Color.BLACK;
+    private static final Color SUBSCENE_FILL_BRIGHT = Color.TRANSPARENT;
 
     protected final SubScene subScene3D;
     protected final PerspectiveCamera camera = new PerspectiveCamera(true);
@@ -79,7 +85,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         // initial size is irrelevant because size gets bound to parent scene size anyway
         subScene3D = new SubScene(root, 88, 88, true, SceneAntialiasing.BALANCED);
         subScene3D.setCamera(camera);
-        subScene3D.setFill(Color.BLACK); // gets transparent when level is available
+        subScene3D.setFill(SUBSCENE_FILL_DARK);
 
         perspectiveManager = new PerspectiveManager(subScene3D);
     }
@@ -348,8 +354,21 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             }
             default -> Logger.error("Unexpected game state '{}' on level start", theGameState());
         }
-        subScene3D.setFill(Color.TRANSPARENT);
         perspectiveManager.initPerspective();
+        fadeInSubScene();
+    }
+
+    private void fadeInSubScene() {
+        new Transition() {
+            {
+                setCycleDuration(Duration.seconds(4));
+                setInterpolator(Interpolator.EASE_IN);
+            }
+            @Override
+            protected void interpolate(double t) {
+                subScene3D.setFill(SUBSCENE_FILL_DARK.interpolate(SUBSCENE_FILL_BRIGHT, t));
+            }
+        }.play();
     }
 
     @Override
