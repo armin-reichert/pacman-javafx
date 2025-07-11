@@ -268,7 +268,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 gameLevel3D.pac3D().init();
                 gameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(theGameLevel()));
                 gameLevel3D.energizers3D().forEach(energizer3D -> energizer3D.pumpingAnimation().playFromStart());
-                gameLevel3D.livesCounter3D().lookingAroundAnimation().playOrContinue();
+                gameLevel3D.livesCounter3D().lookingAroundAnimation().playFromStart();
             }
             case PACMAN_DYING -> {
                 theGameState().timer().resetIndefiniteTime(); // expires when animation ends
@@ -276,6 +276,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 // do one last update before dying animation starts
                 gameLevel3D.pac3D().update(theGameLevel());
                 gameLevel3D.livesCounter3D().lookingAroundAnimation().stop();
+                gameLevel3D.livesCounter3D().lookingAroundAnimation().invalidate();
                 gameLevel3D.ghosts3D().forEach(MutatingGhost3D::stopAllAnimations);
                 gameLevel3D.bonus3D().ifPresent(Bonus3D::expire);
                 var animation = new SequentialTransition(
