@@ -49,7 +49,7 @@ import static de.amr.pacmanfx.uilib.Ufx.menuTitleItem;
  */
 public class ArcadeCommon_PlayScene2D extends GameScene2D {
 
-    private List<Actor> actorsInDrawingOrder;
+    private final List<Actor> actorsInDrawingOrder = new ArrayList<>();
     private LevelCompletedAnimation levelCompletedAnimation;
 
     public ArcadeCommon_PlayScene2D() {}
@@ -61,7 +61,6 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
             levelCompletedAnimation = null;
         }
         actorsInDrawingOrder.clear();
-        actorsInDrawingOrder = null;
         if (gameRenderer != null) {
             gameRenderer.destroy();
             gameRenderer = null;
@@ -244,7 +243,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
         theGameLevel().house().ifPresent(house -> drawLevelMessageCenteredUnderHouse(house, theGameLevel().messageType()));
 
         // Collect and draw actors in drawing z-order: bonus < Pac-Man < ghosts.
-        actorsInDrawingOrder = new ArrayList<>();
+        actorsInDrawingOrder.clear();
         theGameLevel().bonus().map(Bonus::actor).ifPresent(actorsInDrawingOrder::add);
         actorsInDrawingOrder.add(theGameLevel().pac());
         Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW).map(theGameLevel()::ghost)
