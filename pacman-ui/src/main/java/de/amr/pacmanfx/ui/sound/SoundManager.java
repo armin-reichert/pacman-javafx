@@ -1,9 +1,10 @@
 package de.amr.pacmanfx.ui.sound;
 
+import de.amr.pacmanfx.uilib.model3D.Destroyable;
 import javafx.beans.property.BooleanProperty;
 import javafx.scene.media.MediaPlayer;
 
-public interface SoundManager {
+public interface SoundManager extends Destroyable {
     BooleanProperty enabledProperty();
     void setEnabled(boolean enabled);
     BooleanProperty mutedProperty();

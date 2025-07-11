@@ -270,7 +270,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         if (previousVariant != null && !previousVariant.equals(gameVariant)) {
             PacManGames_UIConfig previousConfig = configuration(previousVariant);
             Logger.info("Unloading assets for game variant {}", previousVariant);
-            previousConfig.unloadAssets(theAssets());
+            previousConfig.destroy();
             Logger.info(theAssets().summary(Map.of(
                 Image.class, "Images",
                 AudioClip.class, "Sounds")

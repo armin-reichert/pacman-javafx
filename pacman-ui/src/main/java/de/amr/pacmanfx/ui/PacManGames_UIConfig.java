@@ -14,15 +14,16 @@ import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
+import de.amr.pacmanfx.uilib.model3D.Destroyable;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.model3D.PacBase3D;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
-public interface PacManGames_UIConfig extends PacManGames_GameSceneConfig {
+public interface PacManGames_UIConfig extends PacManGames_GameSceneConfig, Destroyable {
     void loadAssets(AssetStorage assetStorage);
-    void unloadAssets(AssetStorage assetStorage);
+    void destroy();
     String assetNamespace();
     default void storeInMyNamespace(AssetStorage assetStorage, String key, Object value) {
         store(assetStorage, assetNamespace(), key, value);

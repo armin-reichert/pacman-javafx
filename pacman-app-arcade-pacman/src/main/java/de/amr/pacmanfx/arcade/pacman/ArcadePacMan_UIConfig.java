@@ -145,8 +145,9 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
     }
 
     @Override
-    public void unloadAssets(AssetStorage assetStorage) {
-        assetStorage.removeAll(NAMESPACE + ".");
+    public void destroy() {
+        theAssets().removeAll(NAMESPACE + ".");
+        soundManager.destroy();
     }
 
     @Override

@@ -19,7 +19,6 @@ import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
-//TODO when to destroy all these resources?
 public class DefaultSoundManager implements SoundManager {
 
     private final BooleanProperty enabledProperty = new SimpleBooleanProperty(true);
@@ -31,6 +30,17 @@ public class DefaultSoundManager implements SoundManager {
     private MediaPlayer currentVoice;
 
     public DefaultSoundManager() {}
+
+    @Override
+    public void destroy() {
+        enabledProperty.unbind();
+        mutedProperty.unbind();
+        stopAll();
+        soundMap.clear();
+        currentVoice = null;
+        currentSirenID = null;
+        Logger.info("Destroyed sound manager {}", this);
+    }
 
     public MediaPlayer mediaPlayer(Object key) {
         requireNonNull(key);
