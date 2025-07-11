@@ -40,9 +40,9 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.optGameLevel;
 import static de.amr.pacmanfx.Globals.theGameLevel;
-import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePalette.*;
 import static de.amr.pacmanfx.ui.PacManGames.theAssets;
 import static de.amr.pacmanfx.ui.PacManGames_UI.PY_3D_ENABLED;
+import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceManager {
@@ -91,7 +91,7 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
 
         storeInMyNamespace(assets, "pac.color.head",                  ARCADE_YELLOW);
         storeInMyNamespace(assets, "pac.color.eyes",                  Color.grayRgb(33));
-        storeInMyNamespace(assets, "pac.color.palate",                Color.rgb(240, 180, 160));
+        storeInMyNamespace(assets, "pac.color.palate",                ARCADE_BROWN);
 
         RectShort[] numberSprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
         storeInMyNamespace(assets, "ghost_points_0",                  spriteSheet.image(numberSprites[0]));
@@ -132,7 +132,7 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
         soundManager.registerMediaPlayer(SoundID.GAME_READY,          url("sound/game_start.mp3"));
         soundManager.registerAudioClip(SoundID.GHOST_EATEN,           url("sound/eat_ghost.mp3"));
         soundManager.registerMediaPlayer(SoundID.GHOST_RETURNS,       url("sound/retreating.mp3"));
-        soundManager.registerAudioClip("audio.intermission",          url("sound/intermission.mp3"));
+        soundManager.registerMediaPlayer("audio.intermission",        url("sound/intermission.mp3"));
         soundManager.registerAudioClip(SoundID.LEVEL_CHANGED,         url("sound/common/sweep.mp3"));
         soundManager.registerMediaPlayer(SoundID.LEVEL_COMPLETE,      url("sound/common/level-complete.mp3"));
         soundManager.registerMediaPlayer(SoundID.PAC_MAN_DEATH,       url("sound/pacman_death.wav"));

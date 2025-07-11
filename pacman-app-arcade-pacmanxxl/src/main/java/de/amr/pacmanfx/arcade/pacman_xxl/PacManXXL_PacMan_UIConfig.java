@@ -43,9 +43,9 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.optGameLevel;
 import static de.amr.pacmanfx.Globals.theGameLevel;
-import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePalette.*;
 import static de.amr.pacmanfx.ui.PacManGames.theAssets;
 import static de.amr.pacmanfx.ui.PacManGames_UI.PY_3D_ENABLED;
+import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
 import static java.util.Objects.requireNonNull;
 
 public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
@@ -82,7 +82,7 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
 
         storeInMyNamespace(assets, "pac.color.head",                  ARCADE_YELLOW);
         storeInMyNamespace(assets, "pac.color.eyes",                  Color.grayRgb(33));
-        storeInMyNamespace(assets, "pac.color.palate",                Color.rgb(240, 180, 160));
+        storeInMyNamespace(assets, "pac.color.palate",                ARCADE_BROWN);
 
         RectShort[] numberSprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
         storeInMyNamespace(assets, "ghost_points_0", spriteSheet.image(numberSprites[0]));

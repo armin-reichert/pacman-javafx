@@ -17,13 +17,13 @@ import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.Globals.theGame;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePalette.ARCADE_ORANGE;
-import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePalette.ARCADE_RED;
 import static de.amr.pacmanfx.ui.PacManGames.theSound;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_ARCADE_INSERT_COIN;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_ARCADE_START_GAME;
 import static de.amr.pacmanfx.ui.PacManGames_UI.GLOBAL_ACTION_BINDING_MAP;
+import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_ORANGE;
+import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_RED;
 
 public class ArcadeMsPacMan_StartScene extends GameScene2D implements ActionBindingSupport {
 

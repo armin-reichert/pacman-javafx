@@ -33,9 +33,9 @@ public class DefaultSoundManager implements SoundManager {
 
     @Override
     public void destroy() {
+        stopAll();
         enabledProperty.unbind();
         mutedProperty.unbind();
-        stopAll();
         soundMap.clear();
         currentVoice = null;
         currentSirenID = null;
