@@ -57,23 +57,6 @@ public class DefaultSoundManager implements SoundManager {
     public void registerMediaPlayer(Object key, URL url) {
         requireNonNull(key);
         requireNonNull(url);
-        MediaPlayer mediaPlayer = createMediaPlayer(url);
-        setSoundMapValue(key, mediaPlayer);
-    }
-
-    public void registerVoice(SoundID id, URL url) {
-        requireNonNull(id);
-        if (!id.isVoiceID()) {
-            Logger.error("Sound ID '{}' is no voice ID", id);
-            return;
-        }
-        MediaPlayer voice = createMediaPlayer(requireNonNull(url));
-        // voice is also played when enabled (game-specific) is false!
-        voice.muteProperty().bind(mutedProperty);
-        setSoundMapValue(id, voice);
-    }
-
-    private MediaPlayer createMediaPlayer(URL url) {
         var mediaPlayer = new MediaPlayer(new Media(url.toExternalForm()));
         mediaPlayer.setVolume(1.0);
         mediaPlayer.muteProperty().bind(Bindings.createBooleanBinding(
@@ -81,7 +64,13 @@ public class DefaultSoundManager implements SoundManager {
                 mutedProperty(), enabledProperty()
         ));
         Logger.info("Media player created from URL '{}'", url);
-        return mediaPlayer;
+        setSoundMapValue(key, mediaPlayer);
+    }
+
+    public void registerVoice(SoundID id, URL url) {
+        registerMediaPlayer(id, url);
+        // voice is also played when enabled (game-specific) is false!
+        mediaPlayer(id).muteProperty().bind(mutedProperty);
     }
 
     @Override
