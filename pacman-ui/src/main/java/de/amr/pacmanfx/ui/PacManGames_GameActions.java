@@ -26,6 +26,7 @@ import static de.amr.pacmanfx.controller.GameState.INTRO;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
 import static de.amr.pacmanfx.ui.PacManGames.*;
+import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 import static de.amr.pacmanfx.uilib.Ufx.toggle;
 
 public interface PacManGames_GameActions {
@@ -379,10 +380,10 @@ public interface PacManGames_GameActions {
     GameAction ACTION_TOGGLE_AUTOPILOT = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
-            toggle(PacManGames_UI.PY_USING_AUTOPILOT);
-            boolean auto = PacManGames_UI.PY_USING_AUTOPILOT.get();
-            ui.showFlashMessage(theAssets().text(auto ? "autopilot_on" : "autopilot_off"));
-            theSound().playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off", 0);
+            toggle(PY_USING_AUTOPILOT);
+            boolean autoPilotOn = PY_USING_AUTOPILOT.get();
+            ui.showFlashMessage(theAssets().text(autoPilotOn ? "autopilot_on" : "autopilot_off"));
+            theSound().playVoice(autoPilotOn ? SoundID.VOICE_AUTOPILOT_ON : SoundID.VOICE_AUTOPILOT_OFF, 0);
         }
 
         @Override
@@ -394,7 +395,7 @@ public interface PacManGames_GameActions {
     GameAction ACTION_TOGGLE_DEBUG_INFO = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
-            toggle(PacManGames_UI.PY_DEBUG_INFO_VISIBLE);
+            toggle(PY_DEBUG_INFO_VISIBLE);
         }
 
         @Override
@@ -406,9 +407,10 @@ public interface PacManGames_GameActions {
     GameAction ACTION_TOGGLE_IMMUNITY = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
-            toggle(PacManGames_UI.PY_IMMUNITY);
-            ui.showFlashMessage(theAssets().text(PacManGames_UI.PY_IMMUNITY.get() ? "player_immunity_on" : "player_immunity_off"));
-            theSound().playVoice(PacManGames_UI.PY_IMMUNITY.get() ? "voice.immunity.on" : "voice.immunity.off", 0);
+            toggle(PY_IMMUNITY);
+            boolean immunityOn = PY_IMMUNITY.get();
+            ui.showFlashMessage(theAssets().text(immunityOn ? "player_immunity_on" : "player_immunity_off"));
+            theSound().playVoice(immunityOn ? SoundID.VOICE_IMMUNITY_ON : SoundID.VOICE_IMMUNITY_OFF, 0);
         }
 
         @Override

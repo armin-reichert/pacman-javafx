@@ -17,7 +17,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.amr.pacmanfx.ui.PacManGames.theAssets;
 import static java.util.Objects.requireNonNull;
 
 //TODO when to destroy all these resources?
@@ -42,6 +41,19 @@ public class DefaultSoundManager implements SoundManager {
         requireNonNull(url);
         MediaPlayer mediaPlayer = createMediaPlayer(url);
         mediaPlayerMap.put(id, mediaPlayer);
+    }
+
+    public void registerVoice(SoundID id, URL url) {
+        requireNonNull(id);
+        requireNonNull(url);
+        if (!id.isVoiceID()) {
+            Logger.error("Sound ID '{}' is no voice ID", id);
+            return;
+        }
+        MediaPlayer voice = createMediaPlayer(url);
+        // voice is also played when enabled (game-specific) is false
+        voice.muteProperty().bind(mutedProperty);
+        mediaPlayerMap.put(id, voice);
     }
 
     private MediaPlayer createMediaPlayer(URL url) {
@@ -146,6 +158,17 @@ public class DefaultSoundManager implements SoundManager {
     }
 
     @Override
+    public void playVoice(SoundID voiceID, double delaySeconds) {
+        requireNonNull(voiceID);
+        if (mediaPlayerMap.containsKey(voiceID)) {
+            voice = mediaPlayerMap.get(voiceID);
+            voice.setStartTime(Duration.seconds(delaySeconds));
+            Logger.trace("Play voice");
+            voice.play();
+        }
+    }
+
+    @Override
     public void stopVoice() {
         if (voice != null) {
             Logger.trace("Stop voice");
@@ -154,20 +177,9 @@ public class DefaultSoundManager implements SoundManager {
     }
 
     @Override
-    public void playVoice(String assetKey, double delaySeconds) {
-        URL url = theAssets().get(assetKey);
-        voice = new MediaPlayer(new Media(url.toExternalForm()));
-        // media player stays in state PLAYING, so we remove the reference when it reaches the end
-        voice.muteProperty().bind(mutedProperty);
-        voice.setStartTime(Duration.seconds(delaySeconds));
-        Logger.trace("Play voice");
-        voice.play(); // play also if enabled is set to false!
-    }
-
-    @Override
     public void playSiren(SoundID sirenID, double volume) {
         requireNonNull(sirenID);
-        if (sirenID != SoundID.SIREN_1 && sirenID != SoundID.SIREN_2 && sirenID != SoundID.SIREN_3 && sirenID != SoundID.SIREN_4) {
+        if (!sirenID.isSirenID()) {
             throw new IllegalArgumentException("Illegal siren ID '%s'".formatted(sirenID));
         }
         if (currentSirenID != sirenID) {

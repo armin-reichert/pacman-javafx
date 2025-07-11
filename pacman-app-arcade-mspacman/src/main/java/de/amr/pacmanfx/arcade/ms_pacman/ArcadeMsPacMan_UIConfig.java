@@ -114,6 +114,13 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         storeInMyNamespace(assets, "ghost.color.flashing.eyeballs",   ARCADE_ROSE);
         storeInMyNamespace(assets, "ghost.color.flashing.pupils",     ARCADE_RED);
 
+        ResourceManager uiResMgr = () -> PacManGames_UI.class;
+        soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_OFF,       uiResMgr.url("sound/voice/autopilot-off.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_ON,        uiResMgr.url("sound/voice/autopilot-on.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_IMMUNITY_OFF,        uiResMgr.url("sound/voice/immunity-off.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_IMMUNITY_ON,         uiResMgr.url("sound/voice/immunity-on.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_EXPLAIN,             uiResMgr.url("sound/voice/press-key.mp3"));
+
         soundManager.registerMediaPlayer(SoundID.BONUS_ACTIVE,        url("sound/Fruit_Bounce.mp3"));
         soundManager.registerAudioClip(SoundID.BONUS_EATEN,           url("sound/Fruit.mp3"));
         soundManager.registerAudioClip(SoundID.COIN_INSERTED,         url("sound/credit.wav"));

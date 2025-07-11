@@ -42,7 +42,6 @@ import static de.amr.pacmanfx.Globals.optGameLevel;
 import static de.amr.pacmanfx.Globals.theGameLevel;
 import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePalette.*;
 import static de.amr.pacmanfx.ui.PacManGames.theAssets;
-import static de.amr.pacmanfx.ui.PacManGames.theUI;
 import static de.amr.pacmanfx.ui.PacManGames_UI.PY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
 
@@ -118,6 +117,13 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
         storeInMyNamespace(assets, "ghost.color.flashing.dress",      ARCADE_WHITE);
         storeInMyNamespace(assets, "ghost.color.flashing.eyeballs",   ARCADE_ROSE);
         storeInMyNamespace(assets, "ghost.color.flashing.pupils",     ARCADE_RED);
+
+        ResourceManager uiResMgr = () -> PacManGames_UI.class;
+        soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_OFF,       uiResMgr.url("sound/voice/autopilot-off.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_ON,        uiResMgr.url("sound/voice/autopilot-on.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_IMMUNITY_OFF,        uiResMgr.url("sound/voice/immunity-off.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_IMMUNITY_ON,         uiResMgr.url("sound/voice/immunity-on.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_EXPLAIN,             uiResMgr.url("sound/voice/press-key.mp3"));
 
         soundManager.registerAudioClip(SoundID.BONUS_EATEN,           url("sound/eat_fruit.mp3"));
         soundManager.registerAudioClip(SoundID.COIN_INSERTED,         url("sound/credit.wav"));

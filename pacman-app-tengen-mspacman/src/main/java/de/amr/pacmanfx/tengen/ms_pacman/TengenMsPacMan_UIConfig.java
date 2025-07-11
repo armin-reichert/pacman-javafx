@@ -153,6 +153,13 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         storeInMyNamespace(assets, "ghost.color.flashing.eyeballs",    nesPaletteColor(0x20));
         storeInMyNamespace(assets, "ghost.color.flashing.pupils",      nesPaletteColor(0x20));
 
+        ResourceManager uiResMgr = () -> PacManGames_UI.class;
+        soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_OFF,       uiResMgr.url("sound/voice/autopilot-off.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_ON,        uiResMgr.url("sound/voice/autopilot-on.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_IMMUNITY_OFF,        uiResMgr.url("sound/voice/immunity-off.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_IMMUNITY_ON,         uiResMgr.url("sound/voice/immunity-on.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_EXPLAIN,             uiResMgr.url("sound/voice/press-key.mp3"));
+
         soundManager.registerMediaPlayer(SoundID.BONUS_ACTIVE,            url("sound/fruitbounce.wav"));
         soundManager.registerAudioClip(SoundID.BONUS_EATEN,               url("sound/ms-fruit.wav"));
         soundManager.registerAudioClip(SoundID.EXTRA_LIFE,                url("sound/ms-extralife.wav"));
