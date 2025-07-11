@@ -116,6 +116,9 @@ public abstract class GameScene2D implements GameScene {
      * clears the canvas and draws the scores (if on), scene content and debug information (if on).
      */
     public void draw() {
+        if (gameRenderer == null) {
+            gameRenderer = theUI().configuration().createGameRenderer(canvas);
+        }
         gameRenderer.fillCanvas(backgroundColor());
         gameRenderer.setScaling(scaling());
         drawSceneContent();

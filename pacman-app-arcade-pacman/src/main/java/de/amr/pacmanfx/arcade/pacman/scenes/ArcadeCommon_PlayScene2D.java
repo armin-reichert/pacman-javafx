@@ -43,12 +43,13 @@ import static de.amr.pacmanfx.uilib.Ufx.menuTitleItem;
 
 /**
  * 2D play scene for Arcade game variants.
- *
+ * <p>
  * TODO: Currently the instance of this scene is permanently stored in the UI configuration and lives as long as the
  *       game, so no garbage collection occurs!
  */
 public class ArcadeCommon_PlayScene2D extends GameScene2D {
 
+    private List<Actor> actorsInDrawingOrder;
     private LevelCompletedAnimation levelCompletedAnimation;
 
     public ArcadeCommon_PlayScene2D() {}
@@ -59,15 +60,12 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
             animationManager.destroyAnimation(levelCompletedAnimation);
             levelCompletedAnimation = null;
         }
+        actorsInDrawingOrder.clear();
+        actorsInDrawingOrder = null;
         if (gameRenderer != null) {
             gameRenderer.destroy();
             gameRenderer = null;
         }
-    }
-
-    @Override
-    public SpriteGameRenderer gr() {
-        return (SpriteGameRenderer) super.gr();
     }
 
     @Override
@@ -76,11 +74,16 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
         theGame().hud().showLevelCounter(true);
         theGame().hud().showLivesCounter(true);
         levelCompletedAnimation = new LevelCompletedAnimation(animationManager);
+        gameRenderer = theUI().configuration().createGameRenderer(canvas);
     }
 
     @Override
     protected void doEnd() {
-        destroy();
+    }
+
+    @Override
+    public SpriteGameRenderer gr() {
+        return (SpriteGameRenderer) super.gr();
     }
 
     /*
@@ -241,19 +244,18 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
         theGameLevel().house().ifPresent(house -> drawLevelMessageCenteredUnderHouse(house, theGameLevel().messageType()));
 
         // Collect and draw actors in drawing z-order: bonus < Pac-Man < ghosts.
-        List<Actor> actorsInDrawingOrder = new ArrayList<>();
-
+        actorsInDrawingOrder = new ArrayList<>();
         theGameLevel().bonus().map(Bonus::actor).ifPresent(actorsInDrawingOrder::add);
         actorsInDrawingOrder.add(theGameLevel().pac());
         Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW).map(theGameLevel()::ghost)
                 .forEach(actorsInDrawingOrder::add);
-
         actorsInDrawingOrder.forEach(actor -> {
             gr().drawActor(actor);
             if (debugInfoVisibleProperty().get() && actor instanceof MovingActor movingActor) {
                 gr().drawMovingActorInfo(movingActor);
             }
         });
+        actorsInDrawingOrder.clear();
     }
 
     private void drawLevelMessageCenteredUnderHouse(House house, byte messageType) {

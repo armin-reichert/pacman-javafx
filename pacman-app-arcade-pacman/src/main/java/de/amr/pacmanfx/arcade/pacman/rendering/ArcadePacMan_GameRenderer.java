@@ -42,6 +42,7 @@ public class ArcadePacMan_GameRenderer implements SpriteGameRenderer {
     public void destroy() {
         ctx = null;
         spriteSheet = null;
+        scalingPy.unbind();
     }
 
     @Override
