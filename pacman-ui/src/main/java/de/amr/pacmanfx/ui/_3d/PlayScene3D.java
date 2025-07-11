@@ -23,7 +23,6 @@ import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.*;
 import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
 import javafx.animation.SequentialTransition;
-import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.*;
 import javafx.scene.control.*;
@@ -304,32 +303,26 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             }
             case LEVEL_TRANSITION -> {
                 theGameState().timer().resetIndefiniteTime();
-                Platform.runLater(() -> {
-                    replaceGameLevel3D();
-                    gameLevel3D.pac3D().init();
-                    perspectiveManager.initPerspective();
-                    theGameState().timer().expire();
-                });
+                replaceGameLevel3D();
+                perspectiveManager.initPerspective();
+                theGameState().timer().expire();
             }
             case GAME_OVER -> {
                 theGameState().timer().restartSeconds(3);
-                boolean oneOutOf4Times = randomInt(0, 1000) < 250;
-                if (!theGameLevel().isDemoLevel() && oneOutOf4Times) {
-                    theUI().showFlashMessageSec(3, theAssets().localizedGameOverMessage());
-                }
-                theSound().stopAll();
-                theSound().play(SoundID.GAME_OVER);
                 gameLevel3D.energizers3D().forEach(energizer3D -> energizer3D.shape3D().setVisible(false));
                 gameLevel3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
+                theSound().stopAll();
+                theSound().play(SoundID.GAME_OVER);
+                boolean inOneOf4Cases = randomInt(0, 1000) < 250;
+                if (!theGameLevel().isDemoLevel() && inOneOf4Cases) {
+                    theUI().showFlashMessageSec(2.5, theAssets().localizedGameOverMessage());
+                }
             }
             case TESTING_LEVELS_SHORT, TESTING_LEVELS_MEDIUM -> {
                 replaceGameLevel3D();
-                gameLevel3D.pac3D().init();
-                gameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(theGameLevel()));
                 showLevelTestMessage(theGameLevel().number());
                 PY_3D_PERSPECTIVE.set(Perspective.ID.TOTAL);
             }
-            default -> {}
         }
     }
 
