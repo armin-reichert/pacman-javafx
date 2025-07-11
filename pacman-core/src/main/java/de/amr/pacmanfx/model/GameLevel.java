@@ -74,7 +74,7 @@ public class GameLevel {
     private Bonus bonus;
     private final byte[] bonusSymbols = new byte[2];
     private int currentBonusIndex; // -1=no bonus, 0=first, 1=second
-    private byte message = MESSAGE_NONE;
+    private byte messageType = MESSAGE_NONE;
 
     private final Pulse blinking;
 
@@ -202,9 +202,9 @@ public class GameLevel {
     public void setGameOverStateTicks(int ticks) { gameOverStateTicks = ticks; }
     public int gameOverStateTicks() { return gameOverStateTicks; }
 
-    public void showMessage(byte message) { this.message = message; }
-    public void clearMessage() { message = MESSAGE_NONE; }
-    public byte message() { return message; }
+    public void showMessage(byte messageType) { this.messageType = messageType; }
+    public void clearMessage() { messageType = MESSAGE_NONE; }
+    public byte messageType() { return messageType; }
 
     public void setPac(Pac pac) { this.pac = pac; }
     public Pac pac() { return pac; }

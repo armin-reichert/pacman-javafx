@@ -9,6 +9,7 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.LivesCounter;
 import de.amr.pacmanfx.model.actors.*;
@@ -222,47 +223,50 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
         // Level < Level message
         boolean highlighted = levelCompletedAnimation != null && levelCompletedAnimation.isHighlighted();
         gr().drawLevel(theGameLevel(), backgroundColor(), highlighted, theGameLevel().blinking().isOn());
-        if (theGameLevel().message() != GameLevel.MESSAGE_NONE) drawLevelMessage(theGameLevel());
+        theGameLevel().house().ifPresent(house -> drawLevelMessageCenteredUnderHouse(house, theGameLevel().messageType()));
 
-        // Collect and draw actors in correct z-order: Bonus < Pac-Man < ghosts in right order.
-        final List<Actor> actorsByZ = new ArrayList<>();
-        theGameLevel().bonus().map(Bonus::actor).ifPresent(actorsByZ::add);
-        actorsByZ.add(theGameLevel().pac());
-        Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)
-                .map(theGameLevel()::ghost)
-                .forEach(actorsByZ::add);
-        actorsByZ.forEach(gr()::drawActor);
+        // Collect and draw actors in drawing z-order: bonus < Pac-Man < ghosts.
+        List<Actor> actorsInDrawingOrder = new ArrayList<>();
 
-        if (debugInfoVisibleProperty().get()) {
-            actorsByZ.stream().filter(MovingActor.class::isInstance).map(MovingActor.class::cast).forEach(gr()::drawMovingActorInfo);
-        }
-    }
+        theGameLevel().bonus().map(Bonus::actor).ifPresent(actorsInDrawingOrder::add);
+        actorsInDrawingOrder.add(theGameLevel().pac());
+        Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW).map(theGameLevel()::ghost)
+                .forEach(actorsInDrawingOrder::add);
 
-    private void drawLevelMessage(GameLevel gameLevel) {
-        gameLevel.house().ifPresent(house -> {
-            Vector2i houseSizeTiles = house.sizeInTiles();
-            float cx = TS * (house.minTile().x() + houseSizeTiles.x() * 0.5f);
-            float cy = TS * (house.minTile().y() + houseSizeTiles.y() + 1);
-            switch (gameLevel.message()) {
-                case GameLevel.MESSAGE_GAME_OVER -> gr().fillTextAtScaledCenter("GAME  OVER", ARCADE_RED, scaledArcadeFont8(), cx, cy);
-                case GameLevel.MESSAGE_READY -> gr().fillTextAtScaledCenter("READY!", ARCADE_YELLOW, scaledArcadeFont8(), cx, cy);
-                case GameLevel.MESSAGE_TEST -> gr().fillTextAtScaledCenter("TEST    L%02d".formatted(theGameLevel().number()),
-                    ARCADE_WHITE, scaledArcadeFont8(), cx, cy);
+        actorsInDrawingOrder.forEach(actor -> {
+            gr().drawActor(actor);
+            if (debugInfoVisibleProperty().get() && actor instanceof MovingActor movingActor) {
+                gr().drawMovingActorInfo(movingActor);
             }
         });
+    }
+
+    private void drawLevelMessageCenteredUnderHouse(House house, byte messageType) {
+        Vector2i houseSize = house.sizeInTiles();
+        float cx = TS * (house.minTile().x() + houseSize.x() * 0.5f);
+        float cy = TS * (house.minTile().y() + houseSize.y() + 1);
+        switch (messageType) {
+            case GameLevel.MESSAGE_GAME_OVER -> gr().fillTextAtScaledCenter(
+                "GAME  OVER", ARCADE_RED, scaledArcadeFont8(), cx, cy);
+            case GameLevel.MESSAGE_READY -> gr().fillTextAtScaledCenter(
+                "READY!", ARCADE_YELLOW, scaledArcadeFont8(), cx, cy);
+            case GameLevel.MESSAGE_TEST -> gr().fillTextAtScaledCenter(
+                "TEST    L%02d".formatted(theGameLevel().number()), ARCADE_WHITE, scaledArcadeFont8(), cx, cy);
+        }
     }
 
     @Override
     protected void drawDebugInfo() {
         gr().drawTileGrid(sizeInPx().x(), sizeInPx().y(), Color.LIGHTGRAY);
-        optGameLevel().ifPresent(level -> {
-            // assume all ghosts have the same special tiles
-            level.ghost(RED_GHOST_SHADOW).specialTerrainTiles().forEach(tile -> {
+        if (optGameLevel().isPresent()) {
+            // assuming all ghosts have the same set of special terrain tiles
+            theGameLevel().ghost(RED_GHOST_SHADOW).specialTerrainTiles().forEach(tile -> {
                 double x = scaled(tile.x() * TS), y = scaled(tile.y() * TS + HTS), size = scaled(TS);
                 ctx().setFill(Color.RED);
                 ctx().fillRect(x, y, size, 2);
             });
-            level.worldMap().tiles().filter(level::isIntersection).forEach(tile -> {
+            // mark intersection tiles
+            theGameLevel().worldMap().tiles().filter(theGameLevel()::isIntersection).forEach(tile -> {
                 ctx().setStroke(Color.gray(0.8));
                 ctx().setLineWidth(0.5);
                 ctx().save();
@@ -281,20 +285,21 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
                 huntingPhaseText = " %s (Tick %d)".formatted(huntingTimer.phase(), huntingTimer.tickCount());
             }
             ctx().fillText("%s%s".formatted(gameStateText, huntingPhaseText), 0, 64);
-        });
+        }
     }
 
     @Override
     public void onEnterGameState(GameState state) {
-        if (state == GameState.GAME_OVER) {
-            theSound().play(SoundID.GAME_OVER);
-        }
-        else if (state == GameState.LEVEL_COMPLETE) {
+        if (state == GameState.LEVEL_COMPLETE) {
             theSound().stopAll();
             levelCompletedAnimation.setGameLevel(theGameLevel());
             levelCompletedAnimation.setSingleFlashMillis(333);
             levelCompletedAnimation.getOrCreateAnimation().setOnFinished(e -> theGameController().letCurrentGameStateExpire());
             levelCompletedAnimation.playFromStart();
+        }
+        else if (state == GameState.GAME_OVER) {
+            theSound().stopAll();
+            theSound().play(SoundID.GAME_OVER);
         }
     }
 
@@ -322,7 +327,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
     @Override
     public void onSpecialScoreReached(GameEvent e) {
         int score = e.payload("score");
-        Logger.info("Extra life won for reaching score of {}", score);
+        Logger.info("Extra life awarded for reaching score {}", score);
         theSound().play(SoundID.EXTRA_LIFE);
     }
 

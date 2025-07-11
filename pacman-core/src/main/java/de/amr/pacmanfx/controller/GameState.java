@@ -152,7 +152,7 @@ public enum GameState implements FsmState<GameModel> {
             }
             if (timer.tickCount() == delay) {
                 game.startHunting();
-                if (theGameLevel().message() == GameLevel.MESSAGE_READY) {
+                if (theGameLevel().messageType() == GameLevel.MESSAGE_READY) {
                     theGameLevel().clearMessage();
                 }
             }
@@ -168,7 +168,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onExit(GameModel game) {
-            if (theGameLevel().message() == GameLevel.MESSAGE_READY) {
+            if (theGameLevel().messageType() == GameLevel.MESSAGE_READY) {
                 theGameLevel().clearMessage();
             }
         }

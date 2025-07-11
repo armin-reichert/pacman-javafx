@@ -35,11 +35,8 @@ import org.tinylog.Logger;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
-import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_MapRepository.strangeMap15Sprite;
-import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PacAnimationMap.*;
 import static de.amr.pacmanfx.ui.PacManGames.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.PY_CANVAS_BG_COLOR;
 import static java.util.Objects.requireNonNull;
@@ -344,11 +341,11 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
         requireNonNull(level);
         requireNonNull(position);
         requireNonNull(font);
-        if (level.message() == GameLevel.MESSAGE_NONE) return;
+        if (level.messageType() == GameLevel.MESSAGE_NONE) return;
 
         float x = position.x(), y = position.y() + TS;
         String ans = theUI().configuration().assetNamespace();
-        switch (level.message()) {
+        switch (level.messageType()) {
             case GameLevel.MESSAGE_READY
                 -> fillTextAtScaledCenter("READY!", theAssets().color(ans + ".color.ready_message"), font, x, y);
             case GameLevel.MESSAGE_GAME_OVER -> {
