@@ -9,6 +9,7 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HUD;
 import de.amr.pacmanfx.model.actors.Actor;
+import de.amr.pacmanfx.uilib.model3D.Destroyable;
 import javafx.beans.property.FloatProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -23,7 +24,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Common interface of all 2D game renderers.
  */
-public interface GameRenderer {
+public interface GameRenderer extends Destroyable {
 
     GraphicsContext ctx();
 

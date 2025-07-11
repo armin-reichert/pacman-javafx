@@ -43,6 +43,14 @@ public abstract class GameScene2D implements GameScene {
 
     protected AnimationManager animationManager = new AnimationManager();
 
+    protected GameScene2D() {
+    }
+
+    @Override
+    public void destroy() {
+        clearActionBindings();
+    }
+
     @Override
     public final void init() {
         arcadeFont8Property.bind(scalingProperty.map(s -> theAssets().arcadeFont(s.floatValue() * 8)));
@@ -54,9 +62,9 @@ public abstract class GameScene2D implements GameScene {
 
     @Override
     public final void end() {
-        doEnd();
-        clearActionBindings();
         theSound().stopAll();
+        doEnd();
+        destroy();
     }
 
     protected abstract void doInit();

@@ -51,18 +51,28 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
         return nesPaletteColor(0x01 + i * 0x10);
     }
 
-    private final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(Color.BLACK);
-    private final GraphicsContext ctx;
-    private final TengenMsPacMan_SpriteSheet spriteSheet;
-    private final FloatProperty scalingPy = new SimpleFloatProperty(1);
-    private final TengenMsPacMan_MapRepository mapRepository;
+    private final ObjectProperty<Color> backgroundColorProperty = new SimpleObjectProperty<>(Color.BLACK);
+    private final FloatProperty scalingProperty = new SimpleFloatProperty(1);
+
+    private GraphicsContext ctx;
+    private TengenMsPacMan_SpriteSheet spriteSheet;
+    private TengenMsPacMan_MapRepository mapRepository;
     private ColoredMazeSpriteSet mazeSpriteSet;
 
     public TengenMsPacMan_GameRenderer(TengenMsPacMan_SpriteSheet spriteSheet, TengenMsPacMan_MapRepository mapRepository, Canvas canvas) {
-        this.ctx = requireNonNull(canvas).getGraphicsContext2D();
+        ctx = requireNonNull(canvas).getGraphicsContext2D();
+        ctx.setImageSmoothing(false);
         this.spriteSheet = requireNonNull(spriteSheet);
         this.mapRepository = requireNonNull(mapRepository);
-        ctx.setImageSmoothing(false);
+    }
+
+    @Override
+    public void destroy() {
+        ctx = null;
+        spriteSheet = null;
+        mapRepository = null;
+        backgroundColorProperty.unbind();
+        scalingProperty.unbind();
     }
 
     @Override
@@ -71,16 +81,16 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
     }
 
     @Override
-    public FloatProperty scalingProperty() { return scalingPy; }
+    public FloatProperty scalingProperty() { return scalingProperty; }
 
     @Override
     public TengenMsPacMan_SpriteSheet spriteSheet() {
         return spriteSheet;
     }
 
-    public ObjectProperty<Color> backgroundColorProperty() { return backgroundColorPy; }
+    public ObjectProperty<Color> backgroundColorProperty() { return backgroundColorProperty; }
 
-    public Color backgroundColor() { return backgroundColorPy.get(); }
+    public Color backgroundColor() { return backgroundColorProperty.get(); }
 
     //TODO check cases where colored map set is not initialized properly
     public void ensureRenderingHintsAreApplied(GameLevel level) {

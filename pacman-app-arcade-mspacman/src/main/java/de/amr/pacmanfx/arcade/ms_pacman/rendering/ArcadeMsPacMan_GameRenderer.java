@@ -33,8 +33,8 @@ import static java.util.function.Predicate.not;
 
 public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
 
-    private final GraphicsContext ctx;
-    private final ArcadeMsPacMan_SpriteSheet spriteSheet;
+    private GraphicsContext ctx;
+    private ArcadeMsPacMan_SpriteSheet spriteSheet;
     private BrightMazesSpriteSheet brightMazesSpriteSheet;
     private final FloatProperty scalingPy = new SimpleFloatProperty(1);
 
@@ -43,9 +43,16 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
         BrightMazesSpriteSheet brightMazesSpriteSheet,
         Canvas canvas)
     {
-        this.ctx = requireNonNull(canvas).getGraphicsContext2D();
+        ctx = requireNonNull(canvas).getGraphicsContext2D();
         this.spriteSheet = requireNonNull(spriteSheet);
         this.brightMazesSpriteSheet = requireNonNull(brightMazesSpriteSheet);
+    }
+
+    @Override
+    public void destroy() {
+        ctx = null;
+        spriteSheet = null;
+        brightMazesSpriteSheet = null;
     }
 
     protected ArcadeMsPacMan_GameRenderer(ArcadeMsPacMan_SpriteSheet spriteSheet, Canvas canvas) {

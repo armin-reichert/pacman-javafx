@@ -90,6 +90,17 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         perspectiveManager = new PerspectiveManager(subScene3D);
     }
 
+    @Override
+    public void destroy() {
+        clearActionBindings();
+        perspectiveManager.perspectiveIDProperty().unbind();
+        if (gameLevel3D != null) {
+            gameLevel3D.destroy();
+            gameLevel3D = null;
+            Logger.info("GameLevel3D has been destroyed");
+        }
+    }
+
     public Optional<GameLevel3D> level3D() {
         return Optional.ofNullable(gameLevel3D);
     }
@@ -196,13 +207,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     @Override
     public final void end() {
         theSound().stopAll();
-        clearActionBindings();
-        perspectiveManager.perspectiveIDProperty().unbind();
-        if (gameLevel3D != null) {
-            gameLevel3D.destroy();
-            gameLevel3D = null;
-            Logger.info("GameLevel3D has been destroyed");
-        }
+        destroy();
     }
 
     @Override

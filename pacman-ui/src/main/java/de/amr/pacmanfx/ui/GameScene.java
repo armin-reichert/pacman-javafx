@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.event.DefaultGameEventListener;
+import de.amr.pacmanfx.uilib.model3D.Destroyable;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.ContextMenuEvent;
@@ -19,7 +20,7 @@ import static de.amr.pacmanfx.ui.PacManGames.theUI;
  *
  * @author Armin Reichert
  */
-public interface GameScene extends DefaultGameEventListener, ActionBindingSupport {
+public interface GameScene extends DefaultGameEventListener, ActionBindingSupport, Destroyable {
 
     /**
      * By default, the first matching game action is executed.

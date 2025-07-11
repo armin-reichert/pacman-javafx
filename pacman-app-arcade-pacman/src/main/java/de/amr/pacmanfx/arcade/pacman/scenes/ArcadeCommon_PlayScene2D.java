@@ -43,10 +43,27 @@ import static de.amr.pacmanfx.uilib.Ufx.menuTitleItem;
 
 /**
  * 2D play scene for Arcade game variants.
+ *
+ * TODO: Currently the instance of this scene is permanently stored in the UI configuration and lives as long as the
+ *       game, so no garbage collection occurs!
  */
 public class ArcadeCommon_PlayScene2D extends GameScene2D {
 
     private LevelCompletedAnimation levelCompletedAnimation;
+
+    public ArcadeCommon_PlayScene2D() {}
+
+    @Override
+    public void destroy() {
+        if (levelCompletedAnimation != null) {
+            animationManager.destroyAnimation(levelCompletedAnimation);
+            levelCompletedAnimation = null;
+        }
+        if (gameRenderer != null) {
+            gameRenderer.destroy();
+            gameRenderer = null;
+        }
+    }
 
     @Override
     public SpriteGameRenderer gr() {
@@ -63,10 +80,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        if (levelCompletedAnimation != null) {
-            animationManager.destroyAnimation(levelCompletedAnimation);
-            levelCompletedAnimation = null;
-        }
+        destroy();
     }
 
     /*

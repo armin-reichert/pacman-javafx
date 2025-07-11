@@ -29,13 +29,19 @@ import static java.util.function.Predicate.not;
 
 public class ArcadePacMan_GameRenderer implements SpriteGameRenderer {
 
-    private final GraphicsContext ctx;
-    private final ArcadePacMan_SpriteSheet spriteSheet;
+    private GraphicsContext ctx;
+    private ArcadePacMan_SpriteSheet spriteSheet;
     private final FloatProperty scalingPy = new SimpleFloatProperty(1);
 
     public ArcadePacMan_GameRenderer(ArcadePacMan_SpriteSheet spriteSheet, Canvas canvas) {
         this.ctx = requireNonNull(canvas).getGraphicsContext2D();
         this.spriteSheet = requireNonNull(spriteSheet);
+    }
+
+    @Override
+    public void destroy() {
+        ctx = null;
+        spriteSheet = null;
     }
 
     @Override
