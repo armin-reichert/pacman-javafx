@@ -206,6 +206,11 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     }
 
     @Override
+    public Image killedGhostPointsImage(Ghost ghost, int killedIndex) {
+        return theAssets().image(NAMESPACE + ".ghost_points_" + killedIndex);
+    }
+
+    @Override
     public Image bonusSymbolImage(byte symbol) {
         return theAssets().image(NAMESPACE + ".bonus_symbol_" + symbol);
     }

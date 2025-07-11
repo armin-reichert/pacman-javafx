@@ -30,17 +30,16 @@ public interface PacManGames_UIConfig extends PacManGames_GameSceneConfig {
     default void store(AssetStorage assetStorage, String namespace, String key, Object value) {
         assetStorage.store(namespace + "." + key, value);
     }
+    SpriteSheet<?> spriteSheet();
+    GameRenderer createGameRenderer(Canvas canvas);
     ActorAnimationMap createPacAnimations(Pac pac);
     ActorAnimationMap createGhostAnimations(Ghost ghost);
     Node createLivesCounterShape3D(Model3DRepository model3DRepository);
     PacBase3D createPac3D(Model3DRepository model3DRepository, AnimationManager animationMgr, Pac pac);
     Image bonusSymbolImage(byte symbol);
     Image bonusValueImage(byte symbol);
-    GameRenderer createGameRenderer(Canvas canvas);
     default boolean hasGameCanvasRoundedBorder() { return true; }
-    SpriteSheet<?> spriteSheet();
+    Image killedGhostPointsImage(Ghost ghost, int killedIndex);
     WorldMapColorScheme worldMapColorScheme(WorldMap worldMap);
-
-
     SoundManager soundManager();
 }

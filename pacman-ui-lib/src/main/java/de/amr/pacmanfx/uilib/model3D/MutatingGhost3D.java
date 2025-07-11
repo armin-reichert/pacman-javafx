@@ -250,7 +250,7 @@ public class MutatingGhost3D extends Group implements Destroyable {
         }
     }
 
-    public void setNumberTexture(Image numberImage) {
+    public void setNumberImage(Image numberImage) {
         if (!numberMaterialCache.containsKey(numberImage)) {
             var numberMaterial = new PhongMaterial();
             numberMaterial.setDiffuseMap(numberImage);

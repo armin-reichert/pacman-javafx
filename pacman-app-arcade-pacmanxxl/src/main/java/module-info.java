@@ -15,6 +15,7 @@ open module arcade.pacman_xxl {
     requires de.amr.pacmanfx.ui;
     requires arcade.ms_pacman;
     requires x.arcade.pacman;
+    requires java.desktop;
 
     exports de.amr.pacmanfx.arcade.pacman_xxl;
 }

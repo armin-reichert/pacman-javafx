@@ -77,19 +77,19 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
         if (gameLevel.isDemoLevel()) {
             theGame().hud().showLevelCounter(true);
             theGame().hud().showLivesCounter(false);
-            bindAction(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDINGS);
+            bindAction(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDING_MAP);
             updateActionBindings();
         } else {
             theGame().hud().showLevelCounter(true);
             theGame().hud().showLivesCounter(true);
-            bindAction(ACTION_STEER_UP, GLOBAL_ACTION_BINDINGS);
-            bindAction(ACTION_STEER_DOWN, GLOBAL_ACTION_BINDINGS);
-            bindAction(ACTION_STEER_LEFT, GLOBAL_ACTION_BINDINGS);
-            bindAction(ACTION_STEER_RIGHT, GLOBAL_ACTION_BINDINGS);
-            bindAction(ACTION_CHEAT_EAT_ALL_PELLETS, GLOBAL_ACTION_BINDINGS);
-            bindAction(ACTION_CHEAT_ADD_LIVES, GLOBAL_ACTION_BINDINGS);
-            bindAction(ACTION_CHEAT_ENTER_NEXT_LEVEL, GLOBAL_ACTION_BINDINGS);
-            bindAction(ACTION_CHEAT_KILL_GHOSTS, GLOBAL_ACTION_BINDINGS);
+            bindAction(ACTION_STEER_UP, GLOBAL_ACTION_BINDING_MAP);
+            bindAction(ACTION_STEER_DOWN, GLOBAL_ACTION_BINDING_MAP);
+            bindAction(ACTION_STEER_LEFT, GLOBAL_ACTION_BINDING_MAP);
+            bindAction(ACTION_STEER_RIGHT, GLOBAL_ACTION_BINDING_MAP);
+            bindAction(ACTION_CHEAT_EAT_ALL_PELLETS, GLOBAL_ACTION_BINDING_MAP);
+            bindAction(ACTION_CHEAT_ADD_LIVES, GLOBAL_ACTION_BINDING_MAP);
+            bindAction(ACTION_CHEAT_ENTER_NEXT_LEVEL, GLOBAL_ACTION_BINDING_MAP);
+            bindAction(ACTION_CHEAT_KILL_GHOSTS, GLOBAL_ACTION_BINDING_MAP);
             updateActionBindings();
         }
         if (gameRenderer == null) { //TODO can this happen at all?

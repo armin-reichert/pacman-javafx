@@ -23,7 +23,7 @@ import static de.amr.pacmanfx.ui.PacManGames.theSound;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_ARCADE_INSERT_COIN;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_ARCADE_START_GAME;
-import static de.amr.pacmanfx.ui.PacManGames_UI.GLOBAL_ACTION_BINDINGS;
+import static de.amr.pacmanfx.ui.PacManGames_UI.GLOBAL_ACTION_BINDING_MAP;
 
 public class ArcadeMsPacMan_StartScene extends GameScene2D implements ActionBindingSupport {
 
@@ -51,8 +51,8 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D implements ActionBind
         @SuppressWarnings("unchecked") var spriteSheet = (SpriteSheet<SpriteID>) theUI().configuration().spriteSheet();
         livesCounterSprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
 
-        bindAction(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDINGS);
-        bindAction(ACTION_ARCADE_START_GAME, GLOBAL_ACTION_BINDINGS);
+        bindAction(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDING_MAP);
+        bindAction(ACTION_ARCADE_START_GAME, GLOBAL_ACTION_BINDING_MAP);
     }
 
     @Override

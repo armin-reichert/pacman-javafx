@@ -73,9 +73,8 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         var coordinateSystem = new CoordinateSystem();
         coordinateSystem.visibleProperty().bind(PY_3D_AXES_VISIBLE);
 
-        var root = new Group();
         // last child is placeholder for level 3D
-        root.getChildren().addAll(scores3D, coordinateSystem, new Group());
+        var root = new Group(scores3D, coordinateSystem, new Group());
 
         // initial size is irrelevant because size gets bound to parent scene size anyway
         subScene3D = new SubScene(root, 88, 88, true, SceneAntialiasing.BALANCED);
@@ -148,31 +147,38 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         return items;
     }
 
-    protected void bindActions() {
+    protected void setActionBindings() {
         clearActionBindings();
-        bindAction(ACTION_PERSPECTIVE_PREVIOUS, GLOBAL_ACTION_BINDINGS);
-        bindAction(ACTION_PERSPECTIVE_NEXT, GLOBAL_ACTION_BINDINGS);
-        bindAction(ACTION_TOGGLE_DRAW_MODE, GLOBAL_ACTION_BINDINGS);
+        bindAction(ACTION_PERSPECTIVE_PREVIOUS, GLOBAL_ACTION_BINDING_MAP);
+        bindAction(ACTION_PERSPECTIVE_NEXT, GLOBAL_ACTION_BINDING_MAP);
+        bindAction(ACTION_TOGGLE_DRAW_MODE, GLOBAL_ACTION_BINDING_MAP);
         if (optGameLevel().isPresent()) {
             if (theGameLevel().isDemoLevel()) {
-                bindAction(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDINGS);
+                bindAction(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDING_MAP);
             } else {
-                bindPlayerSteeringActions();
-                bindAction(ACTION_CHEAT_EAT_ALL_PELLETS, GLOBAL_ACTION_BINDINGS);
-                bindAction(ACTION_CHEAT_ADD_LIVES, GLOBAL_ACTION_BINDINGS);
-                bindAction(ACTION_CHEAT_ENTER_NEXT_LEVEL, GLOBAL_ACTION_BINDINGS);
-                bindAction(ACTION_CHEAT_KILL_GHOSTS, GLOBAL_ACTION_BINDINGS);
+                setPlayerSteeringActionBindings();
+                bindAction(ACTION_CHEAT_EAT_ALL_PELLETS, GLOBAL_ACTION_BINDING_MAP);
+                bindAction(ACTION_CHEAT_ADD_LIVES, GLOBAL_ACTION_BINDING_MAP);
+                bindAction(ACTION_CHEAT_ENTER_NEXT_LEVEL, GLOBAL_ACTION_BINDING_MAP);
+                bindAction(ACTION_CHEAT_KILL_GHOSTS, GLOBAL_ACTION_BINDING_MAP);
             }
         }
         updateActionBindings();
     }
 
-    protected void bindPlayerSteeringActions() {
-        bindAction(ACTION_STEER_UP, GLOBAL_ACTION_BINDINGS);
-        bindAction(ACTION_STEER_DOWN, GLOBAL_ACTION_BINDINGS);
-        bindAction(ACTION_STEER_LEFT, GLOBAL_ACTION_BINDINGS);
-        bindAction(ACTION_STEER_RIGHT, GLOBAL_ACTION_BINDINGS);
-        updateActionBindings();
+    /**
+     * Overridden by Tengen play scene 3D to use keys corresponding to "Joypad" buttons
+     */
+    protected void setPlayerSteeringActionBindings() {
+        bindAction(ACTION_STEER_UP, GLOBAL_ACTION_BINDING_MAP);
+        bindAction(ACTION_STEER_DOWN, GLOBAL_ACTION_BINDING_MAP);
+        bindAction(ACTION_STEER_LEFT, GLOBAL_ACTION_BINDING_MAP);
+        bindAction(ACTION_STEER_RIGHT, GLOBAL_ACTION_BINDING_MAP);
+    }
+
+    @Override
+    public Map<KeyCombination, GameAction> actionBindings() {
+        return actionBindingMap;
     }
 
     @Override
@@ -199,27 +205,22 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     @Override
     public final void update() {
         if (optGameLevel().isEmpty()) {
-            // Scene is already visible 2 ticks before level has been created
-            Logger.warn("Tick #{}: Game level not yet existing", theClock().tickCount());
+            // Scene gets already update 2 ticks before level has been created!
+            Logger.info("Tick #{}: Game level not yet created, update ignored", theClock().tickCount());
             return;
         }
         if (gameLevel3D == null) {
-            Logger.warn("Tick #{}: 3D game level not yet existing", theClock().tickCount());
+            Logger.warn("Tick #{}: 3D game level not yet created", theClock().tickCount());
             return;
         }
         if (gameLevel3D.isDestroyed()) {
-            Logger.error("Tick #{}: 3D game level is in destroy phase", theClock().tickCount());
+            Logger.error("Tick #{}: 3D game level is being destroyed, terminating app", theClock().tickCount());
             theUI().terminateApp();
         }
         gameLevel3D.tick();
         updateScores(theGameLevel());
         updateSound(theGameLevel());
         perspectiveManager.updatePerspective(theGameLevel());
-    }
-
-    @Override
-    public Map<KeyCombination, GameAction> actionBindings() {
-        return actionBindingMap;
     }
 
     @Override
@@ -267,15 +268,16 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                     gameLevel3D.pac3D().dyingAnimation().getOrCreateAnimation(),
                     pauseSec(1)
                 );
+                // Note: adding this inside the animation as last action does not work!
                 animation.setOnFinished(e -> theGameController().letCurrentGameStateExpire());
                 animation.play();
             }
             case GHOST_DYING ->
-                theSimulationStep().killedGhosts.forEach(ghost -> {
-                    int victimIndex = theGameLevel().victims().indexOf(ghost);
-                    String assetNamespace = theUI().configuration().assetNamespace();
-                    Image numberImage = theAssets().image(assetNamespace + ".ghost_points_" + victimIndex);
-                    gameLevel3D.ghost3D(ghost.personality()).setNumberTexture(numberImage);
+                theSimulationStep().killedGhosts.forEach(killedGhost -> {
+                    byte personality = killedGhost.personality();
+                    int killedIndex = theGameLevel().victims().indexOf(killedGhost);
+                    Image pointsImage = theUI().configuration().killedGhostPointsImage(killedGhost, killedIndex);
+                    gameLevel3D.ghost3D(personality).setNumberImage(pointsImage);
                 });
             case LEVEL_COMPLETE -> {
                 theGameState().timer().resetIndefiniteTime(); // expires when animation ends
@@ -332,7 +334,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     @Override
     public void onLevelStarted(GameEvent event) {
         requireNonNull(theGameLevel()); // just to be sure nothing bad happened
-        bindActions();
+        setActionBindings();
         if (gameLevel3D == null) {
             replaceGameLevel3D();
         }
@@ -341,7 +343,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 //TODO default position if no house
                 Vector2f position = theGameLevel().house().map(House::centerPositionUnderHouse).orElse(Vector2f.ZERO);
                 gameLevel3D.showAnimatedMessage("READY!", 2.5f, position.x(), position.y());
-                bindPlayerSteeringActions();
+                setPlayerSteeringActionBindings();
             }
             case TESTING_LEVELS_SHORT, TESTING_LEVELS_MEDIUM -> {
                 replaceGameLevel3D(); //TODO check when to destroy previous level
@@ -384,7 +386,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
         subScene3D.setFill(Color.TRANSPARENT);
         updateScores(theGameLevel());
-        bindActions();
+        setActionBindings();
     }
 
     @Override

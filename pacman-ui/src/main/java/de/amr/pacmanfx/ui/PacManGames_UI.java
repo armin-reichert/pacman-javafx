@@ -35,7 +35,7 @@ public interface PacManGames_UI {
 
     /** Predefined game variants */
     enum GameVariant {
-        MS_PACMAN, MS_PACMAN_TENGEN, MS_PACMAN_XXL, PACMAN, PACMAN_XXL;
+        MS_PACMAN, MS_PACMAN_TENGEN, MS_PACMAN_XXL, PACMAN, PACMAN_XXL
     }
 
     float BONUS_3D_SYMBOL_WIDTH       = TS;
@@ -64,7 +64,7 @@ public interface PacManGames_UI {
     KeyCombination KEY_MUTE        = alt(KeyCode.M);
     KeyCombination KEY_OPEN_EDITOR = alt_shift(KeyCode.E);
 
-    Map<GameAction, Set<KeyCombination>> GLOBAL_ACTION_BINDINGS = Map.ofEntries(
+    Map<GameAction, Set<KeyCombination>> GLOBAL_ACTION_BINDING_MAP = Map.ofEntries(
         binding(ACTION_ARCADE_INSERT_COIN,      nude(KeyCode.DIGIT5), nude(KeyCode.NUMPAD5)),
         binding(ACTION_ARCADE_START_GAME,       nude(KeyCode.DIGIT1), nude(KeyCode.NUMPAD1)),
         binding(ACTION_BOOT_SHOW_GAME_VIEW,     nude(KeyCode.F3)),

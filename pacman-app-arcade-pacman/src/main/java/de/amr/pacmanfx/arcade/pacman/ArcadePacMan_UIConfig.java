@@ -42,6 +42,7 @@ import static de.amr.pacmanfx.Globals.optGameLevel;
 import static de.amr.pacmanfx.Globals.theGameLevel;
 import static de.amr.pacmanfx.arcade.pacman.rendering.ArcadePalette.*;
 import static de.amr.pacmanfx.ui.PacManGames.theAssets;
+import static de.amr.pacmanfx.ui.PacManGames.theUI;
 import static de.amr.pacmanfx.ui.PacManGames_UI.PY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
 
@@ -168,6 +169,11 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig, ResourceMana
     @Override
     public SpriteAnimationMap<SpriteID> createPacAnimations(Pac pac) {
         return new ArcadePacMan_PacAnimationMap(spriteSheet);
+    }
+
+    @Override
+    public Image killedGhostPointsImage(Ghost ghost, int killedIndex) {
+        return theAssets().image(NAMESPACE + ".ghost_points_" + killedIndex);
     }
 
     @Override
