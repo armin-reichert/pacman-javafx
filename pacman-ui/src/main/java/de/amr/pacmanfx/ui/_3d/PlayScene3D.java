@@ -19,6 +19,7 @@ import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.CameraControlledView;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.*;
 import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
 import javafx.animation.SequentialTransition;
@@ -281,23 +282,24 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 });
             case LEVEL_COMPLETE -> {
                 theGameState().timer().resetIndefiniteTime(); // expires when animation ends
-                theSound().stopAll();
-                gameLevel3D.complete();
+                gameLevel3D.onLevelComplete();
                 boolean cutSceneFollows = theGame().cutSceneNumber(theGameLevel().number()).isPresent();
+                ManagedAnimation levelCompletedAnimation = cutSceneFollows
+                    ? gameLevel3D.levelCompletedAnimationBeforeCutScene()
+                    : gameLevel3D.levelCompletedAnimation();
+
                 var animation = new SequentialTransition(
                     pauseSec(2, () -> {
                         perspectiveManager.perspectiveIDProperty().unbind();
                         perspectiveManager.setPerspective(Perspective.ID.TOTAL);
                     }),
-                    pauseSec(1),
-                    cutSceneFollows
-                        ? gameLevel3D.levelCompletedAnimationBeforeCutScene().getOrCreateAnimation()
-                        : gameLevel3D.levelCompletedAnimation().getOrCreateAnimation(),
-                    pauseSec(1, () -> {
-                        perspectiveManager.perspectiveIDProperty().bind(PY_3D_PERSPECTIVE);
-                        theGameController().letCurrentGameStateExpire();
-                    })
+                    levelCompletedAnimation.getOrCreateAnimation(),
+                    pauseSec(1)
                 );
+                animation.setOnFinished(e -> {
+                    perspectiveManager.perspectiveIDProperty().bind(PY_3D_PERSPECTIVE);
+                    theGameController().letCurrentGameStateExpire();
+                });
                 animation.play();
             }
             case LEVEL_TRANSITION -> {
