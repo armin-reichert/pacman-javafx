@@ -225,7 +225,12 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         }
         gameLevel3D.tick();
         updateScores(theGameLevel());
-        updateSound(theGameLevel());
+        if (theGameLevel().isDemoLevel()) {
+            theSound().setEnabled(false);
+        } else {
+            theSound().setEnabled(true);
+            updateSound(theGameLevel());
+        }
         perspectiveManager.updatePerspective(theGameLevel());
     }
 
@@ -358,19 +363,6 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         fadeInSubScene();
     }
 
-    private void fadeInSubScene() {
-        new Transition() {
-            {
-                setCycleDuration(Duration.seconds(4));
-                setInterpolator(Interpolator.EASE_IN);
-            }
-            @Override
-            protected void interpolate(double t) {
-                subScene3D.setFill(SUBSCENE_FILL_DARK.interpolate(SUBSCENE_FILL_BRIGHT, t));
-            }
-        }.play();
-    }
-
     @Override
     public void onSwitch_2D_3D(GameScene scene2D) {
         if (optGameLevel().isEmpty()) {
@@ -379,6 +371,10 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         if (gameLevel3D == null) {
             replaceGameLevel3D();
         }
+        theGameLevel().pac().show();
+        theGameLevel().ghosts().forEach(Ghost::show);
+        gameLevel3D.pac3D().init();
+        gameLevel3D.pac3D().update(theGameLevel());
         gameLevel3D.pellets3D().forEach(pellet -> pellet.shape3D().setVisible(!theGameLevel().tileContainsEatenFood(pellet.tile())));
         gameLevel3D.energizers3D().forEach(energizer -> energizer.shape3D().setVisible(!theGameLevel().tileContainsEatenFood(energizer.tile())));
         if (isOneOf(theGameState(), GameState.HUNTING, GameState.GHOST_DYING)) { //TODO check this
@@ -386,10 +382,6 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 .filter(energizer3D -> energizer3D.shape3D().isVisible())
                 .forEach(energizer3D -> energizer3D.pumpingAnimation().playFromStart());
         }
-        theGameLevel().pac().show();
-        theGameLevel().ghosts().forEach(Ghost::show);
-        gameLevel3D.pac3D().init();
-        gameLevel3D.pac3D().update(theGameLevel());
 
         if (theGameState() == GameState.HUNTING) {
             if (theGameLevel().pac().powerTimer().isRunning()) {
@@ -397,10 +389,9 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             }
             gameLevel3D.livesCounter3D().lookingAroundAnimation().playFromStart();
         }
-
-        subScene3D.setFill(Color.TRANSPARENT);
         updateScores(theGameLevel());
         setActionBindings();
+        fadeInSubScene();
     }
 
     @Override
@@ -528,11 +519,6 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     }
 
     protected void updateSound(GameLevel gameLevel) {
-        if (gameLevel.isDemoLevel()) {
-            theSound().setEnabled(false);
-            return; // demo level is silent
-        }
-        theSound().setEnabled(true);
         if (theGameState() == GameState.HUNTING && !gameLevel.pac().powerTimer().isRunning()) {
             int sirenNumber = 1 + theGame().huntingTimer().phaseIndex() / 2;
             SoundID sirenID = switch (sirenNumber) {
@@ -574,5 +560,18 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         double x = worldMap.numCols() * HTS;
         double y = (worldMap.numRows() - 2) * TS;
         gameLevel3D.showAnimatedMessage("LEVEL %d (TEST)".formatted(levelNumber), 5, x, y);
+    }
+
+    private void fadeInSubScene() {
+        new Transition() {
+            {
+                setCycleDuration(Duration.seconds(4));
+                setInterpolator(Interpolator.EASE_IN);
+            }
+            @Override
+            protected void interpolate(double t) {
+                subScene3D.setFill(SUBSCENE_FILL_DARK.interpolate(SUBSCENE_FILL_BRIGHT, t));
+            }
+        }.play();
     }
 }

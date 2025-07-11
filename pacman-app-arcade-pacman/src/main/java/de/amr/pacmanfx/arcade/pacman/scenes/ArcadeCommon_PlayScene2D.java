@@ -150,18 +150,18 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
 
     @Override
     public void update() {
-        if (optGameLevel().isPresent()) {
-            if (theGameLevel().isDemoLevel()) {
-                theSound().setEnabled(false);
-            } else {
-                theSound().setEnabled(true);
-                updateSound();
-            }
-            updateHUD();
-        } else {
-            // Scene is already active 2 ticks before game level is created!
-            Logger.info("Tick {}: Game level not yet available", theClock().tickCount());
+        if (optGameLevel().isEmpty()) {
+            // Scene is already updated 2 ticks before the game level gets created!
+            Logger.info("Tick {}: Game level not yet created", theClock().tickCount());
+            return;
         }
+        if (theGameLevel().isDemoLevel()) {
+            theSound().setEnabled(false);
+        } else {
+            theSound().setEnabled(true);
+            updateSound(theGameLevel());
+        }
+        updateHUD();
     }
 
     private void updateHUD() {
@@ -175,9 +175,8 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
         theGame().hud().showCredit(theCoinMechanism().isEmpty());
     }
 
-    private void updateSound() {
-        final Pac pac = theGameLevel().pac();
-
+    private void updateSound(GameLevel gameLevel) {
+        final Pac pac = gameLevel.pac();
         //TODO check in simulator when exactly which siren plays
         boolean pacChased = theGameState() == GameState.HUNTING && !pac.powerTimer().isRunning();
         if (pacChased) {
@@ -199,10 +198,8 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
         }
 
         //TODO check in simulator when exactly this sound is played
-        var ghostReturningToHouse = theGameLevel()
-            .ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
-            .findAny();
-        if (ghostReturningToHouse.isPresent()
+        var ghostReturning = gameLevel.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).findAny();
+        if (ghostReturning.isPresent()
             && (theGameState() == GameState.HUNTING || theGameState() == GameState.GHOST_DYING)) {
             theSound().loop(SoundID.GHOST_RETURNS);
         } else {
