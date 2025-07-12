@@ -34,8 +34,7 @@ public class Globals {
         private final File homeDir = new File(System.getProperty("user.home"), ".pacmanfx");
         private final File customMapDir = new File(homeDir, "maps");
         private final CoinMechanism coinMechanism = new CoinMechanism();
-        private final GameEventManager gameEventManager = new GameEventManager();
-        private final GameController gameController = new GameController(gameEventManager);
+        private final GameController gameController = new GameController();
         private final Random random = new Random();
         private final SimulationStep simulationStep = new SimulationStep();
 
@@ -61,7 +60,7 @@ public class Globals {
 
         @Override
         public GameEventManager theGameEventManager() {
-            return gameEventManager;
+            return gameController.gameEventManager();
         }
 
         @Override

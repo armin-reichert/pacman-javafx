@@ -35,10 +35,10 @@ public class GameController  {
     private final Map<String, GameModel> knownGames = new HashMap<>();
     private final StringProperty gameVariantPy = new SimpleStringProperty();
     private final StateMachine<GameState, GameModel> stateMachine;
+    private final GameEventManager gameEventManager = new GameEventManager();
     private boolean eventsEnabled;
 
-    public GameController(GameEventManager gameEventManager) {
-        requireNonNull(gameEventManager);
+    public GameController() {
         stateMachine = new StateMachine<>(GameState.values()) {
             @Override public GameModel context() { return currentGame(); }
         };
@@ -52,6 +52,10 @@ public class GameController  {
                 gameEventManager.publishEvent(newGame, GameEventType.GAME_VARIANT_CHANGED);
             }
         });
+    }
+
+    public GameEventManager gameEventManager() {
+        return gameEventManager;
     }
 
     public void setEventsEnabled(boolean enabled) {
