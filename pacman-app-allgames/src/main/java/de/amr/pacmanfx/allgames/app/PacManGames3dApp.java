@@ -70,7 +70,7 @@ public class PacManGames3dApp extends Application {
             )
             .startPages(
                 new ArcadePacMan_StartPage(GameVariant.PACMAN.name()),
-                new ArcadeMsPacMan_StartPage(GameVariant.MS_PACMAN.name()),
+                new ArcadeMsPacMan_StartPage(theGameContext(), GameVariant.MS_PACMAN.name()),
                 new TengenMsPacMan_StartPage(GameVariant.MS_PACMAN_TENGEN.name()),
                 new PacManXXL_Common_StartPage()
             )

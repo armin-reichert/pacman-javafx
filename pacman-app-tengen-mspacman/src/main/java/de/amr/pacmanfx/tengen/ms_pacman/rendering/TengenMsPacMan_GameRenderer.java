@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman.rendering;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
@@ -32,7 +33,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.HTS;
+import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
@@ -111,12 +113,12 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
     }
 
     @Override
-    public void drawHUD(HUD hud, Vector2f sceneSize) {
+    public void drawHUD(GameContext gameContext, HUD hud, Vector2f sceneSize) {
         requireNonNull(hud);
 
         if (!hud.isVisible()) return;
 
-        var theGame = (TengenMsPacMan_GameModel) theGameContext().theGame();
+        var theGame = (TengenMsPacMan_GameModel) gameContext.theGame();
 
         if (hud.isScoreVisible()) {
             drawScores(theGame, nesPaletteColor(0x20), theAssets().arcadeFont(8));
@@ -283,17 +285,17 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
     }
 
     @Override
-    public void drawLevel(GameLevel level, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted) {
-        var tengenGame = (TengenMsPacMan_GameModel) theGameContext().theGame();
+    public void drawLevel(GameContext gameContext, GameLevel level, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted) {
+        var tengenGame = (TengenMsPacMan_GameModel) gameContext.theGame();
         int mapNumber = level.worldMap().getConfigValue("mapNumber");
         RectShort mazeSprite = tengenGame.mapCategory() == MapCategory.STRANGE && mapNumber == 15
             ? strangeMap15Sprite(theClock().tickCount()) // Strange map #15: psychedelic animation
             : mazeSpriteSet.colorSchemedMazeSprite().sprite();
-        drawLevelWithMaze(level, mazeSpriteSet.colorSchemedMazeSprite().image(), mazeSprite);
+        drawLevelWithMaze(gameContext, level, mazeSpriteSet.colorSchemedMazeSprite().image(), mazeSprite);
     }
 
-    public void drawLevelWithMaze(GameLevel level, Image mazeImage, RectShort mazeSprite) {
-        var tengenGame = (TengenMsPacMan_GameModel) theGameContext().theGame();
+    public void drawLevelWithMaze(GameContext gameContext, GameLevel level, Image mazeImage, RectShort mazeSprite) {
+        var tengenGame = (TengenMsPacMan_GameModel) gameContext.theGame();
         ctx.setImageSmoothing(false);
         if (!tengenGame.optionsAreInitial()) {
             drawGameOptions(tengenGame.mapCategory(), tengenGame.difficulty(), tengenGame.pacBooster(),

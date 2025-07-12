@@ -220,7 +220,7 @@ public class GameView implements PacManGames_View {
         });
 
         if (miniGameView.isVisible() && theUI().currentGameSceneIsPlayScene3D() && theGameContext().optGameLevel().isPresent()) {
-            miniGameView.draw(theGameContext().theGameLevel());
+            miniGameView.draw(theGameContext(), theGameContext().theGameLevel());
         }
         flashMessageLayer.update();
 

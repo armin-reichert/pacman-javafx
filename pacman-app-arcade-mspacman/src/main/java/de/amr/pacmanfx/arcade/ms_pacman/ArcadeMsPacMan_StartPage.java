@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.layout.StartPage;
 import de.amr.pacmanfx.ui.layout.StartPagesView;
@@ -14,14 +15,13 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 
-import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_BOOT_SHOW_GAME_VIEW;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_StartPage extends StackPane implements StartPage {
 
-    public ArcadeMsPacMan_StartPage(String gameVariant) {
+    public ArcadeMsPacMan_StartPage(GameContext gameContext, String gameVariant) {
         setUserData(requireNonNull(gameVariant));
 
         ResourceManager rm = () -> ArcadeMsPacMan_StartPage.class;
@@ -36,7 +36,7 @@ public class ArcadeMsPacMan_StartPage extends StackPane implements StartPage {
 
         var startButton = StartPagesView.createStartButton(Pos.BOTTOM_CENTER);
         startButton.setTranslateY(-50);
-        startButton.setAction(() -> GameAction.executeIfEnabled(theUI(), theGameContext(), ACTION_BOOT_SHOW_GAME_VIEW));
+        startButton.setAction(() -> GameAction.executeIfEnabled(theUI(), gameContext, ACTION_BOOT_SHOW_GAME_VIEW));
         getChildren().addAll(flyer, startButton);
     }
 

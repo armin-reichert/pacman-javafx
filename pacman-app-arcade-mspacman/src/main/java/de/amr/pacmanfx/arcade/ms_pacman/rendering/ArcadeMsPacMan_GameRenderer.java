@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.Clapperboard;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.Marquee;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.MidwayCopyright;
@@ -23,7 +24,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.HTS;
+import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.ui.PacManGames.theAssets;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_WHITE;
@@ -72,7 +74,7 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
     public FloatProperty scalingProperty() { return scalingPy; }
 
     @Override
-    public void drawHUD(HUD hud, Vector2f sceneSize) {
+    public void drawHUD(GameContext gameContext, HUD hud, Vector2f sceneSize) {
         requireNonNull(hud);
 
         if (!hud.isVisible()) return;
@@ -80,8 +82,8 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
         if (hud.isScoreVisible()) {
             ctx.setFont(theAssets().arcadeFont(scaled(8)));
             ctx.setFill(ARCADE_WHITE);
-            drawScore(theGameContext().theGame().score(), "SCORE", tiles_to_px(1), tiles_to_px(1));
-            drawScore(theGameContext().theGame().highScore(), "HIGH SCORE", tiles_to_px(14), tiles_to_px(1));
+            drawScore(gameContext.theGame().score(), "SCORE", tiles_to_px(1), tiles_to_px(1));
+            drawScore(gameContext.theGame().highScore(), "HIGH SCORE", tiles_to_px(14), tiles_to_px(1));
         }
 
         if (hud.isLevelCounterVisible()) {
@@ -101,16 +103,16 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
             for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
                 drawSpriteScaled(sprite, x + TS * (2 * i), y);
             }
-            if (theGameContext().theGame().lifeCount() > livesCounter.maxLivesDisplayed()) {
+            if (gameContext.theGame().lifeCount() > livesCounter.maxLivesDisplayed()) {
                 // show text indicating that more lives are available than symbols displayed (cheating may cause this)
                 Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
-                fillTextAtScaledPosition("(%d)".formatted(theGameContext().theGame().lifeCount()), ARCADE_YELLOW, font,
+                fillTextAtScaledPosition("(%d)".formatted(gameContext.theGame().lifeCount()), ARCADE_YELLOW, font,
                     x + TS * 10, y + TS);
             }
         }
 
         if (hud.isCreditVisible()) {
-            String text = "CREDIT %2d".formatted(theGameContext().theCoinMechanism().numCoins());
+            String text = "CREDIT %2d".formatted(gameContext.theCoinMechanism().numCoins());
             fillTextAtScaledPosition(text, ARCADE_WHITE, theAssets().arcadeFont(scaled(8)), 2 * TS, sceneSize.y() - 2);
         }
     }
@@ -124,7 +126,7 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
     }
 
     @Override
-    public void drawLevel(GameLevel level, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted) {
+    public void drawLevel(GameContext gameContext, GameLevel level, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted) {
         final int colorMapIndex = level.worldMap().getConfigValue("colorMapIndex");
         if (mazeHighlighted) {
             RectShort maze = brightMazesSpriteSheet.spriteSeq(BrightMazesSpriteSheet.BRIGHT_MAZES_ID)[colorMapIndex];

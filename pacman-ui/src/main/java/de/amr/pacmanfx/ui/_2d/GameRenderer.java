@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._2d;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
@@ -60,19 +61,21 @@ public interface GameRenderer extends Destroyable {
     /**
      * Draws the Head-Up Display (score, live counter, level counter, coins inserted)
      *
+     * @param gameContext the game context
      * @param hud the Head-Up Display
      * @param sceneSize scene size in pixels
      */
-    void drawHUD(HUD hud, Vector2f sceneSize);
+    void drawHUD(GameContext gameContext, HUD hud, Vector2f sceneSize);
 
     /**
      *
+     * @param gameContext the game context
      * @param level the game level to be drawn
      * @param backgroundColor level background color
      * @param mazeHighlighted if the maze is drawn as highlighted (flashing)
      * @param energizerHighlighted if the blinking energizers are in their highlighted state
      */
-    void drawLevel(GameLevel level, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted);
+    void drawLevel(GameContext gameContext, GameLevel level, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted);
 
     /**
      * Draws the specified actor.

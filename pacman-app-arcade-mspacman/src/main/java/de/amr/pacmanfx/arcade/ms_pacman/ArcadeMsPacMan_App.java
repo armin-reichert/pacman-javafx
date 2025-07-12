@@ -4,13 +4,13 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman;
 
-import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.ui.PacManGames_UI;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.application.Application;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import static de.amr.pacmanfx.Globals.initGameContext;
 import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.ui.PacManGames.theClock;
 import static de.amr.pacmanfx.ui.PacManGames.theWatchdog;
@@ -20,7 +20,7 @@ public class ArcadeMsPacMan_App extends Application {
 
     @Override
     public void init() {
-        Globals.initGameContext();
+        initGameContext();
     }
 
     @Override
@@ -35,7 +35,7 @@ public class ArcadeMsPacMan_App extends Application {
                     ArcadeMsPacMan_UIConfig.class
                 )
                 .startPages(
-                    new ArcadeMsPacMan_StartPage(MS_PACMAN.name())
+                    new ArcadeMsPacMan_StartPage(theGameContext(), MS_PACMAN.name())
                 )
                 .dashboardEntries(
                     DashboardID.GENERAL, DashboardID.GAME_CONTROL,
