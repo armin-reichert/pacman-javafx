@@ -17,7 +17,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.GameAction;
-import de.amr.pacmanfx.ui.PacManGames_UI;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -25,9 +25,9 @@ import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
-import static de.amr.pacmanfx.ui.GameUIContext.*;
+import static de.amr.pacmanfx.ui.GameUI.GLOBAL_ACTION_BINDINGS;
+import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
-import static de.amr.pacmanfx.ui.PacManGames_UI.GLOBAL_ACTION_BINDINGS;
 import static de.amr.pacmanfx.ui.input.Keyboard.alt;
 
 /**
@@ -69,8 +69,8 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     private final GameAction actionSelectNextJoypadBinding = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui, GameContext gameContext) {
-            theJoypad().selectNextKeyBinding(actionBindings);
+        public void execute(GameUI ui, GameContext gameContext) {
+            theUI().theJoypad().selectNextKeyBinding(actionBindings);
         }
 
         @Override
@@ -102,12 +102,12 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         theTengenGame().setCanStartNewGame(true);
         resetIdleTimer();
         initialDelay = INITIAL_DELAY;
-        theJoypad().registerCurrentBinding(actionBindings);
+        theUI().theJoypad().registerCurrentBinding(actionBindings);
     }
 
     @Override
     protected void doEnd() {
-        theJoypad().unregisterCurrentBinding(actionBindings);
+        theUI().theJoypad().unregisterCurrentBinding(actionBindings);
     }
 
     @Override
@@ -133,26 +133,26 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     }
 
     private void optionSelectionChanged() {
-        theSound().play("audio.option.selection_changed");
+        theUI().theSound().play("audio.option.selection_changed");
         resetIdleTimer();
     }
 
     private void optionValueChanged() {
-        theSound().play("audio.option.value_changed");
+        theUI().theSound().play("audio.option.value_changed");
         resetIdleTimer();
     }
 
     @Override
     public void handleKeyboardInput() {
-        if (theJoypad().isButtonPressed(JoypadButton.DOWN)) {
+        if (theUI().theJoypad().isButtonPressed(JoypadButton.DOWN)) {
             selectNextOption();
         }
-        else if (theJoypad().isButtonPressed(JoypadButton.UP)) {
+        else if (theUI().theJoypad().isButtonPressed(JoypadButton.UP)) {
             selectPrevOption();
         }
 
         // Button "A" is right of "B": select next value
-        else if (theJoypad().isButtonPressed(JoypadButton.A)) {
+        else if (theUI().theJoypad().isButtonPressed(JoypadButton.A)) {
             switch (selectedOption) {
                 case OPTION_PAC_BOOSTER    -> setNextPacBoosterValue();
                 case OPTION_DIFFICULTY     -> setNextDifficultyValue();
@@ -163,7 +163,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         }
 
         // Button "B" is left of "A": select previous value
-        else if (theJoypad().isButtonPressed(JoypadButton.B)) {
+        else if (theUI().theJoypad().isButtonPressed(JoypadButton.B)) {
             switch (selectedOption) {
                 case OPTION_PAC_BOOSTER    -> setPrevPacBoosterValue();
                 case OPTION_DIFFICULTY     -> setPrevDifficultyValue();
@@ -269,7 +269,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
         gr().drawVerticalSceneBorders();
         if (PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED.get()) {
-            gr().drawJoypadKeyBinding(theJoypad().currentKeyBinding());
+            gr().drawJoypadKeyBinding(theUI().theJoypad().currentKeyBinding());
         }
 
         gr().ctx().setFont(scaledArcadeFont8());

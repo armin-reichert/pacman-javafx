@@ -25,7 +25,7 @@ import javafx.util.Duration;
 import java.util.List;
 import java.util.Map;
 
-import static de.amr.pacmanfx.ui.GameUIContext.theUI;
+import static de.amr.pacmanfx.ui.GameUI.theUI;
 
 public class InfoBoxGameLevelAnimations extends InfoBox {
 

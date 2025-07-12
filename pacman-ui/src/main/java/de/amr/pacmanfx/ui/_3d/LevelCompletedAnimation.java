@@ -16,7 +16,7 @@ import javafx.util.Duration;
 import java.util.Random;
 
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
-import static de.amr.pacmanfx.ui.GameUIContext.*;
+import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.uilib.Ufx.doNow;
 import static de.amr.pacmanfx.uilib.Ufx.pauseSec;
 import static java.util.Objects.requireNonNull;
@@ -64,10 +64,10 @@ public class LevelCompletedAnimation extends ManagedAnimation {
                 pauseSec(0.5, () -> gameLevel.pac().hide()),
                 pauseSec(0.5),
                 createSpinningAnimation(),
-                pauseSec(0.5, () -> theSound().play(SoundID.LEVEL_COMPLETE)),
+                pauseSec(0.5, () -> theUI().theSound().play(SoundID.LEVEL_COMPLETE)),
                 pauseSec(0.5),
                 wallsDisappearingAnimation.getOrCreateAnimation(),
-                pauseSec(1.0, () -> theSound().play(SoundID.LEVEL_CHANGED))
+                pauseSec(1.0, () -> theUI().theSound().play(SoundID.LEVEL_CHANGED))
         );
     }
 
@@ -84,7 +84,7 @@ public class LevelCompletedAnimation extends ManagedAnimation {
         boolean showFlashMessage = randomInt(1, 1000) < 250; // every 4th time also show a message
         if (showFlashMessage) {
             int levelNumber = gameLevel3D.gameLevel().number();
-            String message = theAssets().localizedLevelCompleteMessage(levelNumber);
+            String message = theUI().theAssets().localizedLevelCompleteMessage(levelNumber);
             theUI().showFlashMessageSec(3, message);
         }
     }

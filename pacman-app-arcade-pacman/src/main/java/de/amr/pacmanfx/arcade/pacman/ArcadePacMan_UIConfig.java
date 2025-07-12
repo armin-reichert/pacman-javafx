@@ -15,7 +15,7 @@ import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameScene;
-import de.amr.pacmanfx.ui.PacManGames_UI;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.sound.DefaultSoundManager;
@@ -38,8 +38,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.ui.GameUIContext.theAssets;
-import static de.amr.pacmanfx.ui.PacManGames_UI.PY_3D_ENABLED;
+import static de.amr.pacmanfx.ui.GameUI.PY_3D_ENABLED;
+import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
 import static java.util.Objects.requireNonNull;
 
@@ -47,7 +47,7 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig {
 
     private static final String NAMESPACE = "pacman";
 
-    public static final ResourceManager RES_PACMAN_UI = () -> PacManGames_UI.class;
+    public static final ResourceManager RES_PACMAN_UI = () -> GameUI.class;
     public static final ResourceManager RES_ARCADE_PAC_MAN = () -> ArcadePacMan_UIConfig.class;
 
     public static final Vector2i ARCADE_MAP_SIZE_IN_TILES  = new Vector2i(28, 36);
@@ -141,7 +141,7 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig {
 
     @Override
     public void destroy() {
-        theAssets().removeAll(NAMESPACE + ".");
+        theUI().theAssets().removeAll(NAMESPACE + ".");
         soundManager.destroy();
     }
 
@@ -175,36 +175,36 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig {
 
     @Override
     public Image killedGhostPointsImage(Ghost ghost, int killedIndex) {
-        return theAssets().image(NAMESPACE + ".ghost_points_" + killedIndex);
+        return theUI().theAssets().image(NAMESPACE + ".ghost_points_" + killedIndex);
     }
 
     @Override
     public Image bonusSymbolImage(byte symbol) {
-        return theAssets().image(NAMESPACE + ".bonus_symbol_" + symbol);
+        return theUI().theAssets().image(NAMESPACE + ".bonus_symbol_" + symbol);
     }
 
     @Override
     public Image bonusValueImage(byte symbol) {
-        return theAssets().image(NAMESPACE + ".bonus_value_" + symbol);
+        return theUI().theAssets().image(NAMESPACE + ".bonus_value_" + symbol);
     }
 
     @Override
     public PacBody createLivesCounterShape3D(Model3DRepository model3DRepository) {
         return model3DRepository.createPacBody(
-                PacManGames_UI.LIVES_COUNTER_3D_SHAPE_SIZE,
-                theAssets().color(NAMESPACE + ".pac.color.head"),
-                theAssets().color(NAMESPACE + ".pac.color.eyes"),
-                theAssets().color(NAMESPACE + ".pac.color.palate")
+                GameUI.LIVES_COUNTER_3D_SHAPE_SIZE,
+                theUI().theAssets().color(NAMESPACE + ".pac.color.head"),
+                theUI().theAssets().color(NAMESPACE + ".pac.color.eyes"),
+                theUI().theAssets().color(NAMESPACE + ".pac.color.palate")
         );
     }
 
     @Override
     public PacMan3D createPac3D(Model3DRepository model3DRepository, AnimationManager animationManager, Pac pac) {
-        var pac3D = new PacMan3D(model3DRepository, animationManager, pac, PacManGames_UI.PAC_3D_SIZE,
-            theAssets().color(NAMESPACE + ".pac.color.head"),
-            theAssets().color(NAMESPACE + ".pac.color.eyes"),
-            theAssets().color(NAMESPACE + ".pac.color.palate"));
-        pac3D.light().setColor(theAssets().color(NAMESPACE + ".pac.color.head").desaturate());
+        var pac3D = new PacMan3D(model3DRepository, animationManager, pac, GameUI.PAC_3D_SIZE,
+            theUI().theAssets().color(NAMESPACE + ".pac.color.head"),
+            theUI().theAssets().color(NAMESPACE + ".pac.color.eyes"),
+            theUI().theAssets().color(NAMESPACE + ".pac.color.palate"));
+        pac3D.light().setColor(theUI().theAssets().color(NAMESPACE + ".pac.color.head").desaturate());
         return pac3D;
     }
 

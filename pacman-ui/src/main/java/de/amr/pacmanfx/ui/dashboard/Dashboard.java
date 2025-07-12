@@ -15,7 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.ui.GameUIContext.theAssets;
+import static de.amr.pacmanfx.ui.GameUI.theUI;
 
 public class Dashboard extends VBox {
 
@@ -101,7 +101,7 @@ public class Dashboard extends VBox {
     }
 
     private void addInfoBox(DashboardID id, String titleKey, InfoBox infoBox) {
-        infoBoxMap.put(id, preconfiguredInfoBox(theAssets().text(titleKey), infoBox));
+        infoBoxMap.put(id, preconfiguredInfoBox(theUI().theAssets().text(titleKey), infoBox));
         infoBox.setDashboard(this);
         infoBox.setShowMaximized(id == DashboardID.ANIMATION_INFO); //TODO just a test
     }

@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static de.amr.pacmanfx.ui.GameUIContext.theUI;
+import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static java.util.Objects.requireNonNull;
 
 /**

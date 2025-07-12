@@ -17,8 +17,7 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
-import static de.amr.pacmanfx.ui.GameUIContext.theSound;
-import static de.amr.pacmanfx.ui.GameUIContext.theUI;
+import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_WHITE;
 import static de.amr.pacmanfx.ui._2d.GameRenderer.fillCanvas;
 
@@ -47,7 +46,7 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
         // ignore left half of sprite sheet image containing maze images
         minPoint = Vector2f.of(width / 2, 0);
         maxPoint = Vector2f.of(width - FRAGMENT_SIZE, height - FRAGMENT_SIZE);
-        theSound().playVoice(SoundID.VOICE_EXPLAIN, 0);
+        theUI().theSound().playVoice(SoundID.VOICE_EXPLAIN, 0);
     }
 
     @Override

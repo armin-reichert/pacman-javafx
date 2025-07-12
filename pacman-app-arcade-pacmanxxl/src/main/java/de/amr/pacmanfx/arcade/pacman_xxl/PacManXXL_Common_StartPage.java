@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.ui.PacManGames_UI.GameVariant;
+import de.amr.pacmanfx.ui.GameUI.GameVariant;
 import de.amr.pacmanfx.ui.layout.StartPage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
@@ -16,7 +16,7 @@ import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.GameUIContext.*;
+import static de.amr.pacmanfx.ui.GameUI.theUI;
 
 /**
  * Displays an option menu where the game variant to be played and other options can be set.
@@ -51,11 +51,11 @@ public class PacManXXL_Common_StartPage implements StartPage {
     }
 
     private void init() {
-        theUI().configuration(GameVariant.PACMAN.name()).loadAssets(theAssets());
-        theUI().configuration(GameVariant.PACMAN_XXL.name()).loadAssets(theAssets());
-        theUI().configuration(GameVariant.MS_PACMAN.name()).loadAssets(theAssets());
-        theUI().configuration(GameVariant.MS_PACMAN_XXL.name()).loadAssets(theAssets());
-        menu.soundEnabledProperty().bind(theSound().mutedProperty().not());
+        theUI().configuration(GameVariant.PACMAN.name()).loadAssets(theUI().theAssets());
+        theUI().configuration(GameVariant.PACMAN_XXL.name()).loadAssets(theUI().theAssets());
+        theUI().configuration(GameVariant.MS_PACMAN.name()).loadAssets(theUI().theAssets());
+        theUI().configuration(GameVariant.MS_PACMAN_XXL.name()).loadAssets(theUI().theAssets());
+        menu.soundEnabledProperty().bind(theUI().theSound().mutedProperty().not());
     }
 
     @Override

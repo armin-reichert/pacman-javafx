@@ -9,7 +9,8 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.ui.ActionBindingMap;
 import de.amr.pacmanfx.ui.GameAction;
-import de.amr.pacmanfx.ui.PacManGames_UI;
+import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.PacManGames_Assets;
 import de.amr.pacmanfx.uilib.widgets.Carousel;
 import de.amr.pacmanfx.uilib.widgets.FancyButton;
 import javafx.beans.binding.Bindings;
@@ -31,8 +32,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static de.amr.pacmanfx.ui.GameUIContext.theAssets;
-import static de.amr.pacmanfx.ui.GameUIContext.theKeyboard;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_BOOT_SHOW_GAME_VIEW;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_TOGGLE_PAUSED;
 import static de.amr.pacmanfx.ui.input.Keyboard.nude;
@@ -43,10 +42,10 @@ import static java.util.Objects.requireNonNull;
  */
 public class StartPagesView implements PacManGames_View {
 
-    public static FancyButton createStartButton(Pos alignment) {
+    public static FancyButton createStartButton(PacManGames_Assets assets, Pos alignment) {
         var button = new FancyButton(
-                theAssets().text("play_button"),
-                theAssets().arcadeFont(30),
+                assets.text("play_button"),
+                assets.arcadeFont(30),
                 Color.rgb(0, 155, 252, 0.7),
                 Color.WHITE);
         StackPane.setAlignment(button, alignment);
@@ -75,11 +74,13 @@ public class StartPagesView implements PacManGames_View {
     }
 
     private final List<StartPage> startPageList = new ArrayList<>();
-    private final ActionBindingMap actionBindings = new ActionBindingMap(theKeyboard());
+    private final ActionBindingMap actionBindings;
     private final Carousel carousel;
     private StringBinding titleBinding;
 
-    public StartPagesView(PacManGames_UI ui) {
+    public StartPagesView(GameUI ui) {
+        requireNonNull(ui);
+        this.actionBindings = new ActionBindingMap(ui.theKeyboard());
         carousel = new StartPagesCarousel();
         carousel.selectedIndexProperty().addListener((py,ov,nv) -> {
             Logger.info("Carousel selection changed from {} to {}", ov, nv);
@@ -98,7 +99,7 @@ public class StartPagesView implements PacManGames_View {
 
         GameAction actionPrevSlide = new GameAction() {
             @Override
-            public void execute(PacManGames_UI ui, GameContext gameContext) {
+            public void execute(GameUI ui, GameContext gameContext) {
                 carousel.showPreviousSlide();
             }
 
@@ -109,7 +110,7 @@ public class StartPagesView implements PacManGames_View {
         };
         GameAction actionNextSlide = new GameAction() {
             @Override
-            public void execute(PacManGames_UI ui, GameContext gameContext) {
+            public void execute(GameUI ui, GameContext gameContext) {
                 carousel.showNextSlide();
             }
 

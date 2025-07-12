@@ -39,8 +39,8 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_MapRepository.strangeMap15Sprite;
-import static de.amr.pacmanfx.ui.GameUIContext.*;
-import static de.amr.pacmanfx.ui.PacManGames_UI.PY_CANVAS_BG_COLOR;
+import static de.amr.pacmanfx.ui.GameUI.PY_CANVAS_BG_COLOR;
+import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
@@ -121,7 +121,7 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
         var theGame = (TengenMsPacMan_GameModel) gameContext.theGame();
 
         if (hud.isScoreVisible()) {
-            drawScores(theGame, nesPaletteColor(0x20), theAssets().arcadeFont(8));
+            drawScores(theGame, nesPaletteColor(0x20), theUI().theAssets().arcadeFont(8));
         }
 
         if (hud.isLivesCounterVisible()) {
@@ -142,7 +142,7 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
         ctx.scale(scaling(), scaling());
         ctx.setFill(color);
         ctx.setFont(font);
-        if (theClock().tickCount() % 60 < 30) {
+        if (theUI().theGameClock().tickCount() % 60 < 30) {
             ctx.fillText("1UP", tiles_to_px(4), tiles_to_px(1));
         }
         ctx.fillText("HIGH SCORE", tiles_to_px(11), tiles_to_px(1));
@@ -289,7 +289,7 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
         var tengenGame = (TengenMsPacMan_GameModel) gameContext.theGame();
         int mapNumber = level.worldMap().getConfigValue("mapNumber");
         RectShort mazeSprite = tengenGame.mapCategory() == MapCategory.STRANGE && mapNumber == 15
-            ? strangeMap15Sprite(theClock().tickCount()) // Strange map #15: psychedelic animation
+            ? strangeMap15Sprite(theUI().theGameClock().tickCount()) // Strange map #15: psychedelic animation
             : mazeSpriteSet.colorSchemedMazeSprite().sprite();
         drawLevelWithMaze(gameContext, level, mazeSpriteSet.colorSchemedMazeSprite().image(), mazeSprite);
     }
@@ -359,9 +359,9 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
         String ans = theUI().configuration().assetNamespace();
         switch (level.messageType()) {
             case GameLevel.MESSAGE_READY
-                -> fillTextAtScaledCenter("READY!", theAssets().color(ans + ".color.ready_message"), font, x, y);
+                -> fillTextAtScaledCenter("READY!", theUI().theAssets().color(ans + ".color.ready_message"), font, x, y);
             case GameLevel.MESSAGE_GAME_OVER -> {
-                Color color = theAssets().color(ans + ".color.game_over_message");
+                Color color = theUI().theAssets().color(ans + ".color.game_over_message");
                 if (level.isDemoLevel()) {
                     NES_ColorScheme nesColorScheme = level.worldMap().getConfigValue("nesColorScheme");
                     color = Color.web(nesColorScheme.strokeColor());

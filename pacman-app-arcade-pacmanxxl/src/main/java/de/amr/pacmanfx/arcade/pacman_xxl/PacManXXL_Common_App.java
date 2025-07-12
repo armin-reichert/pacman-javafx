@@ -5,17 +5,16 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.Globals;
-import de.amr.pacmanfx.ui.PacManGames_UI;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.application.Application;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import static de.amr.pacmanfx.Globals.theGameContext;
-import static de.amr.pacmanfx.ui.GameUIContext.theClock;
-import static de.amr.pacmanfx.ui.GameUIContext.theWatchdog;
-import static de.amr.pacmanfx.ui.PacManGames_UI.GameVariant.MS_PACMAN_XXL;
-import static de.amr.pacmanfx.ui.PacManGames_UI.GameVariant.PACMAN_XXL;
+import static de.amr.pacmanfx.ui.GameUI.GameVariant.MS_PACMAN_XXL;
+import static de.amr.pacmanfx.ui.GameUI.GameVariant.PACMAN_XXL;
+import static de.amr.pacmanfx.ui.GameUI.theUI;
 
 public class PacManXXL_Common_App extends Application {
 
@@ -30,7 +29,7 @@ public class PacManXXL_Common_App extends Application {
         final double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
         final double width  = 1.6 * height;
         var xxlMapSelector = new PacManXXL_Common_MapSelector(theGameContext().theCustomMapDir());
-        PacManGames_UI.build(theGameContext(), primaryStage, width, height)
+        GameUI.build(theGameContext(), primaryStage, width, height)
                 .game(
                     PACMAN_XXL.name(),
                     new PacManXXL_PacMan_GameModel(theGameContext(), xxlMapSelector),
@@ -54,12 +53,12 @@ public class PacManXXL_Common_App extends Application {
             .build()
             .show();
 
-        theWatchdog().addEventListener(watchEvents -> xxlMapSelector.loadCustomMaps());
+        theUI().theWatchdog().addEventListener(watchEvents -> xxlMapSelector.loadCustomMaps());
     }
 
     @Override
     public void stop() {
-        theClock().stop();
-        theWatchdog().dispose();
+        theUI().theGameClock().stop();
+        theUI().theWatchdog().dispose();
     }
 }

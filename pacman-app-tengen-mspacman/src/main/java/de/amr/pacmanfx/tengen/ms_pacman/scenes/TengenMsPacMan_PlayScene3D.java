@@ -21,9 +21,9 @@ import javafx.scene.paint.Color;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
-import static de.amr.pacmanfx.ui.GameUIContext.*;
+import static de.amr.pacmanfx.ui.GameUI.GLOBAL_ACTION_BINDINGS;
+import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
-import static de.amr.pacmanfx.ui.PacManGames_UI.GLOBAL_ACTION_BINDINGS;
 import static de.amr.pacmanfx.ui._2d.GameRenderer.fillCanvas;
 
 /**
@@ -106,7 +106,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
             // if score is disabled, display "GAME OVER" using maze-specific color
             NES_ColorScheme nesColorScheme = gameLevel.worldMap().getConfigValue("nesColorScheme");
             Color color = Color.web(nesColorScheme.strokeColor());
-            scores3D.showTextAsScore(theAssets().text("score.game_over"), color);
+            scores3D.showTextAsScore(theUI().theAssets().text("score.game_over"), color);
         }
         // Always show high score
         scores3D.showHighScore(highScore.points(), highScore.levelNumber());
@@ -115,19 +115,19 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     @Override
     public void onBonusActivated(GameEvent event) {
         gameContext.optGameLevel().flatMap(GameLevel::bonus).ifPresent(bonus -> gameLevel3D.updateBonus3D(bonus));
-        theSound().loop(SoundID.BONUS_ACTIVE);
+        theUI().theSound().loop(SoundID.BONUS_ACTIVE);
     }
 
     @Override
     public void onBonusEaten(GameEvent event) {
         gameLevel3D.bonus3D().ifPresent(Bonus3D::showEaten);
-        theSound().stop(SoundID.BONUS_ACTIVE);
-        theSound().play(SoundID.BONUS_EATEN);
+        theUI().theSound().stop(SoundID.BONUS_ACTIVE);
+        theUI().theSound().play(SoundID.BONUS_EATEN);
     }
 
     @Override
     public void onBonusExpired(GameEvent event) {
         gameLevel3D.bonus3D().ifPresent(Bonus3D::expire);
-        theSound().stop(SoundID.BONUS_ACTIVE);
+        theUI().theSound().stop(SoundID.BONUS_ACTIVE);
     }
 }

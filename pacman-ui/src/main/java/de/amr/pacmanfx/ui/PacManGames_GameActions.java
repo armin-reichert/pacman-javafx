@@ -26,8 +26,7 @@ import static de.amr.pacmanfx.Validations.isOneOf;
 import static de.amr.pacmanfx.controller.GameState.INTRO;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
-import static de.amr.pacmanfx.ui.GameUIContext.*;
-import static de.amr.pacmanfx.ui.PacManGames_UI.*;
+import static de.amr.pacmanfx.ui.GameUI.*;
 import static de.amr.pacmanfx.uilib.Ufx.toggle;
 
 public interface PacManGames_GameActions {
@@ -38,10 +37,10 @@ public interface PacManGames_GameActions {
 
     record SteeringAction(Direction dir) implements GameAction {
         @Override
-        public void execute(PacManGames_UI ui, GameContext gameContext) { gameContext.theGameLevel().pac().setWishDir(dir); }
+        public void execute(GameUI ui, GameContext gameContext) { gameContext.theGameLevel().pac().setWishDir(dir); }
 
         @Override
-        public boolean isEnabled(PacManGames_UI ui, GameContext gameContext) {
+        public boolean isEnabled(GameUI ui, GameContext gameContext) {
             return gameContext.optGameLevel().isPresent() && !gameContext.theGameLevel().pac().isUsingAutopilot();
         }
 
@@ -53,10 +52,10 @@ public interface PacManGames_GameActions {
 
     GameAction ACTION_SIMULATION_FASTER = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui, GameContext gameContext) {
-            double newRate = theClock().targetFrameRate() + SIMULATION_SPEED_DELTA;
+        public void execute(GameUI ui, GameContext gameContext) {
+            double newRate = ui.theGameClock().targetFrameRate() + SIMULATION_SPEED_DELTA;
             newRate = Math.clamp(newRate, SIMULATION_SPEED_MIN, SIMULATION_SPEED_MAX);
-            theClock().setTargetFrameRate(newRate);
+            ui.theGameClock().setTargetFrameRate(newRate);
             String prefix = newRate == SIMULATION_SPEED_MAX ? "At maximum speed: " : "";
             ui.showFlashMessageSec(0.75, prefix + newRate + "Hz");
         }
@@ -69,10 +68,10 @@ public interface PacManGames_GameActions {
 
     GameAction ACTION_SIMULATION_SLOWER = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui, GameContext gameContext) {
-            double newRate = theClock().targetFrameRate() - SIMULATION_SPEED_DELTA;
+        public void execute(GameUI ui, GameContext gameContext) {
+            double newRate = ui.theGameClock().targetFrameRate() - SIMULATION_SPEED_DELTA;
             newRate = Math.clamp(newRate, SIMULATION_SPEED_MIN, SIMULATION_SPEED_MAX);
-            theClock().setTargetFrameRate(newRate);
+            ui.theGameClock().setTargetFrameRate(newRate);
             String prefix = newRate == SIMULATION_SPEED_MIN ? "At minimum speed: " : "";
             ui.showFlashMessageSec(0.75, prefix + newRate + "Hz");
         }
@@ -85,7 +84,7 @@ public interface PacManGames_GameActions {
 
     GameAction ACTION_ENTER_FULLSCREEN = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui, GameContext gameContext) {
+        public void execute(GameUI ui, GameContext gameContext) {
             ui.stage().setFullScreen(true);
         }
 
@@ -97,7 +96,7 @@ public interface PacManGames_GameActions {
 
     GameAction ACTION_LET_GAME_STATE_EXPIRE = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui, GameContext gameContext) {
+        public void execute(GameUI ui, GameContext gameContext) {
             gameContext.theGameController().letCurrentGameStateExpire();
         }
 
@@ -109,13 +108,13 @@ public interface PacManGames_GameActions {
 
     GameAction ACTION_CHEAT_ADD_LIVES = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui, GameContext gameContext) {
+        public void execute(GameUI ui, GameContext gameContext) {
             gameContext.theGame().addLives(3);
-            ui.showFlashMessage(theAssets().text("cheat_add_lives", gameContext.theGame().lifeCount()));
+            ui.showFlashMessage(ui.theAssets().text("cheat_add_lives", gameContext.theGame().lifeCount()));
         }
 
         @Override
-        public boolean isEnabled(PacManGames_UI ui, GameContext gameContext) { return gameContext.optGameLevel().isPresent(); }
+        public boolean isEnabled(GameUI ui, GameContext gameContext) { return gameContext.optGameLevel().isPresent(); }
 
         @Override
         public String name() {
@@ -125,14 +124,14 @@ public interface PacManGames_GameActions {
 
     GameAction ACTION_CHEAT_EAT_ALL_PELLETS = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui, GameContext gameContext) {
+        public void execute(GameUI ui, GameContext gameContext) {
             gameContext.theGameLevel().eatAllPellets();
-            theSound().pause(SoundID.PAC_MAN_MUNCHING);
+            ui.theSound().pause(SoundID.PAC_MAN_MUNCHING);
             gameContext.theGameEventManager().publishEvent(gameContext.theGame(), GameEventType.PAC_FOUND_FOOD);
         }
 
         @Override
-        public boolean isEnabled(PacManGames_UI ui, GameContext gameContext) {
+        public boolean isEnabled(GameUI ui, GameContext gameContext) {
             return gameContext.optGameLevel().isPresent()
                     && !gameContext.theGameLevel().isDemoLevel()
                     && gameContext.theGameState() == GameState.HUNTING;
@@ -146,7 +145,7 @@ public interface PacManGames_GameActions {
 
     GameAction ACTION_CHEAT_KILL_GHOSTS = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui, GameContext gameContext) {
+        public void execute(GameUI ui, GameContext gameContext) {
             GameLevel level = gameContext.theGameLevel();
             List<Ghost> vulnerableGhosts = level.ghosts(FRIGHTENED, HUNTING_PAC).toList();
             if (!vulnerableGhosts.isEmpty()) {
@@ -157,7 +156,7 @@ public interface PacManGames_GameActions {
         }
 
         @Override
-        public boolean isEnabled(PacManGames_UI ui, GameContext gameContext) {
+        public boolean isEnabled(GameUI ui, GameContext gameContext) {
             return gameContext.theGameState() == GameState.HUNTING && gameContext.optGameLevel().isPresent() && !gameContext.theGameLevel().isDemoLevel();
         }
 
@@ -169,12 +168,12 @@ public interface PacManGames_GameActions {
 
     GameAction ACTION_CHEAT_ENTER_NEXT_LEVEL = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui, GameContext gameContext) {
+        public void execute(GameUI ui, GameContext gameContext) {
             gameContext.theGameController().changeGameState(GameState.LEVEL_COMPLETE);
         }
 
         @Override
-        public boolean isEnabled(PacManGames_UI ui, GameContext gameContext) {
+        public boolean isEnabled(GameUI ui, GameContext gameContext) {
             return gameContext.theGame().isPlaying()
                     && gameContext.theGameState() == GameState.HUNTING
                     && gameContext.optGameLevel().isPresent()
@@ -192,9 +191,9 @@ public interface PacManGames_GameActions {
      */
     GameAction ACTION_ARCADE_INSERT_COIN = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui, GameContext gameContext) {
+        public void execute(GameUI ui, GameContext gameContext) {
             if (gameContext.theCoinMechanism().numCoins() < CoinMechanism.MAX_COINS) {
-                theSound().setEnabled(true);
+                ui.theSound().setEnabled(true);
                 gameContext.theCoinMechanism().insertCoin();
                 gameContext.theGameEventManager().publishEvent(gameContext.theGame(), GameEventType.CREDIT_ADDED);
             }
@@ -202,7 +201,7 @@ public interface PacManGames_GameActions {
         }
 
         @Override
-        public boolean isEnabled(PacManGames_UI ui, GameContext gameContext) {
+        public boolean isEnabled(GameUI ui, GameContext gameContext) {
             if (gameContext.theGame().isPlaying()) {
                 return false;
             }
@@ -228,7 +227,7 @@ public interface PacManGames_GameActions {
 
     GameAction ACTION_QUIT_GAME_SCENE = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui, GameContext gameContext) {
+        public void execute(GameUI ui, GameContext gameContext) {
             ui.gameView().quitCurrentGameScene();
         }
 
@@ -240,13 +239,13 @@ public interface PacManGames_GameActions {
 
     GameAction ACTION_RESTART_INTRO = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui, GameContext gameContext) {
-            theSound().stopAll();
+        public void execute(GameUI ui, GameContext gameContext) {
+            ui.theSound().stopAll();
             ui.currentGameScene().ifPresent(GameScene::end);
             if (gameContext.theGameState() == GameState.TESTING_LEVELS_SHORT) {
                 gameContext.theGameState().onExit(gameContext); //TODO exit other states too?
             }
-            theClock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
+            ui.theGameClock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
             gameContext.theGameController().restart(INTRO);
         }
 
@@ -258,7 +257,7 @@ public interface PacManGames_GameActions {
 
     GameAction ACTION_BOOT_SHOW_GAME_VIEW = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui, GameContext gameContext) {
+        public void execute(GameUI ui, GameContext gameContext) {
             ui.showGameView();
             ui.restart();
         }
@@ -271,15 +270,15 @@ public interface PacManGames_GameActions {
 
     GameAction ACTION_SIMULATION_ONE_STEP = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui, GameContext gameContext) {
-            boolean success = theClock().makeOneStep(true);
+        public void execute(GameUI ui, GameContext gameContext) {
+            boolean success = ui.theGameClock().makeOneStep(true);
             if (!success) {
                 ui.showFlashMessage("Simulation step error, clock stopped!");
             }
         }
 
         @Override
-        public boolean isEnabled(PacManGames_UI ui, GameContext gameContext) { return theClock().isPaused(); }
+        public boolean isEnabled(GameUI ui, GameContext gameContext) { return ui.theGameClock().isPaused(); }
 
         @Override
         public String name() {
@@ -289,15 +288,15 @@ public interface PacManGames_GameActions {
 
     GameAction ACTION_SIMULATION_TEN_STEPS = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui, GameContext gameContext) {
-            boolean success = theClock().makeSteps(10, true);
+        public void execute(GameUI ui, GameContext gameContext) {
+            boolean success = ui.theGameClock().makeSteps(10, true);
             if (!success) {
                 ui.showFlashMessage("Simulation step error, clock stopped!");
             }
         }
 
         @Override
-        public boolean isEnabled(PacManGames_UI ui, GameContext gameContext) { return theClock().isPaused(); }
+        public boolean isEnabled(GameUI ui, GameContext gameContext) { return ui.theGameClock().isPaused(); }
 
         @Override
         public String name() {
@@ -307,9 +306,9 @@ public interface PacManGames_GameActions {
 
     GameAction ACTION_SIMULATION_RESET = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui, GameContext gameContext) {
-            theClock().setTargetFrameRate(NUM_TICKS_PER_SEC);
-            ui.showFlashMessageSec(0.75, theClock().targetFrameRate() + "Hz");
+        public void execute(GameUI ui, GameContext gameContext) {
+            ui.theGameClock().setTargetFrameRate(NUM_TICKS_PER_SEC);
+            ui.showFlashMessageSec(0.75, ui.theGameClock().targetFrameRate() + "Hz");
         }
 
         @Override
@@ -320,13 +319,13 @@ public interface PacManGames_GameActions {
 
     GameAction ACTION_ARCADE_START_GAME = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui, GameContext gameContext) {
-            theSound().stopVoice();
+        public void execute(GameUI ui, GameContext gameContext) {
+            ui.theSound().stopVoice();
             gameContext.theGameController().changeGameState(GameState.STARTING_GAME);
         }
 
         @Override
-        public boolean isEnabled(PacManGames_UI ui, GameContext gameContext) {
+        public boolean isEnabled(GameUI ui, GameContext gameContext) {
             return  Set.of("PACMAN", "MS_PACMAN", "PACMAN_XXL", "MS_PACMAN_XXL").contains(gameContext.theGameController().selectedGameVariant())
                     && !gameContext.theCoinMechanism().isEmpty()
                     && (gameContext.theGameState() == GameState.INTRO || gameContext.theGameState() == GameState.SETTING_OPTIONS)
@@ -341,7 +340,7 @@ public interface PacManGames_GameActions {
 
     GameAction ACTION_TEST_CUT_SCENES = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui, GameContext gameContext) {
+        public void execute(GameUI ui, GameContext gameContext) {
             gameContext.theGameController().changeGameState(GameState.TESTING_CUT_SCENES);
             ui.showFlashMessage("Cut scenes test"); //TODO localize
         }
@@ -354,7 +353,7 @@ public interface PacManGames_GameActions {
 
     GameAction ACTION_TEST_LEVELS_BONI = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui, GameContext gameContext) {
+        public void execute(GameUI ui, GameContext gameContext) {
             gameContext.theGameController().restart(GameState.TESTING_LEVELS_SHORT);
             ui.showFlashMessageSec(3, "Level TEST MODE");
         }
@@ -367,7 +366,7 @@ public interface PacManGames_GameActions {
 
     GameAction ACTION_TEST_LEVELS_TEASERS = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui, GameContext gameContext) {
+        public void execute(GameUI ui, GameContext gameContext) {
             gameContext.theGameController().restart(GameState.TESTING_LEVELS_MEDIUM);
             ui.showFlashMessageSec(3, "Level TEST MODE");
         }
@@ -380,11 +379,11 @@ public interface PacManGames_GameActions {
 
     GameAction ACTION_TOGGLE_AUTOPILOT = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui, GameContext gameContext) {
+        public void execute(GameUI ui, GameContext gameContext) {
             toggle(PY_USING_AUTOPILOT);
             boolean autoPilotOn = PY_USING_AUTOPILOT.get();
-            ui.showFlashMessage(theAssets().text(autoPilotOn ? "autopilot_on" : "autopilot_off"));
-            theSound().playVoice(autoPilotOn ? SoundID.VOICE_AUTOPILOT_ON : SoundID.VOICE_AUTOPILOT_OFF, 0);
+            ui.showFlashMessage(ui.theAssets().text(autoPilotOn ? "autopilot_on" : "autopilot_off"));
+            ui.theSound().playVoice(autoPilotOn ? SoundID.VOICE_AUTOPILOT_ON : SoundID.VOICE_AUTOPILOT_OFF, 0);
         }
 
         @Override
@@ -395,7 +394,7 @@ public interface PacManGames_GameActions {
 
     GameAction ACTION_TOGGLE_DEBUG_INFO = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui, GameContext gameContext) {
+        public void execute(GameUI ui, GameContext gameContext) {
             toggle(PY_DEBUG_INFO_VISIBLE);
         }
 
@@ -407,11 +406,11 @@ public interface PacManGames_GameActions {
 
     GameAction ACTION_TOGGLE_IMMUNITY = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui, GameContext gameContext) {
+        public void execute(GameUI ui, GameContext gameContext) {
             toggle(PY_IMMUNITY);
             boolean immunityOn = PY_IMMUNITY.get();
-            ui.showFlashMessage(theAssets().text(immunityOn ? "player_immunity_on" : "player_immunity_off"));
-            theSound().playVoice(immunityOn ? SoundID.VOICE_IMMUNITY_ON : SoundID.VOICE_IMMUNITY_OFF, 0);
+            ui.showFlashMessage(ui.theAssets().text(immunityOn ? "player_immunity_on" : "player_immunity_off"));
+            ui.theSound().playVoice(immunityOn ? SoundID.VOICE_IMMUNITY_ON : SoundID.VOICE_IMMUNITY_OFF, 0);
         }
 
         @Override
@@ -422,7 +421,7 @@ public interface PacManGames_GameActions {
 
     GameAction ACTION_TOGGLE_MUTED = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui, GameContext gameContext) {
+        public void execute(GameUI ui, GameContext gameContext) {
             ui.mutedProperty().set(!ui.mutedProperty().get());
         }
 
@@ -434,12 +433,12 @@ public interface PacManGames_GameActions {
 
     GameAction ACTION_TOGGLE_PAUSED = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui, GameContext gameContext) {
-            toggle(theClock().pausedProperty());
-            if (theClock().isPaused()) {
-                theSound().stopAll();
+        public void execute(GameUI ui, GameContext gameContext) {
+            toggle(ui.theGameClock().pausedProperty());
+            if (ui.theGameClock().isPaused()) {
+                ui.theSound().stopAll();
             }
-            Logger.info("Game ({}) {}", gameContext.theGameController().selectedGameVariant(), theClock().isPaused() ? "paused" : "resumed");
+            Logger.info("Game ({}) {}", gameContext.theGameController().selectedGameVariant(), ui.theGameClock().isPaused() ? "paused" : "resumed");
         }
 
         @Override
@@ -450,10 +449,10 @@ public interface PacManGames_GameActions {
 
     GameAction ACTION_PERSPECTIVE_NEXT = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui, GameContext gameContext) {
-            Perspective.ID id = PacManGames_UI.PY_3D_PERSPECTIVE.get().next();
-            PacManGames_UI.PY_3D_PERSPECTIVE.set(id);
-            String msgKey = theAssets().text("camera_perspective", theAssets().text("perspective_id_" + id.name()));
+        public void execute(GameUI ui, GameContext gameContext) {
+            Perspective.ID id = GameUI.PY_3D_PERSPECTIVE.get().next();
+            GameUI.PY_3D_PERSPECTIVE.set(id);
+            String msgKey = ui.theAssets().text("camera_perspective", ui.theAssets().text("perspective_id_" + id.name()));
             ui.showFlashMessage(msgKey);
         }
 
@@ -465,10 +464,10 @@ public interface PacManGames_GameActions {
 
     GameAction ACTION_PERSPECTIVE_PREVIOUS = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui, GameContext gameContext) {
-            Perspective.ID id = PacManGames_UI.PY_3D_PERSPECTIVE.get().prev();
-            PacManGames_UI.PY_3D_PERSPECTIVE.set(id);
-            String msgKey = theAssets().text("camera_perspective", theAssets().text("perspective_id_" + id.name()));
+        public void execute(GameUI ui, GameContext gameContext) {
+            Perspective.ID id = GameUI.PY_3D_PERSPECTIVE.get().prev();
+            GameUI.PY_3D_PERSPECTIVE.set(id);
+            String msgKey = ui.theAssets().text("camera_perspective", ui.theAssets().text("perspective_id_" + id.name()));
             ui.showFlashMessage(msgKey);
         }
 
@@ -480,12 +479,12 @@ public interface PacManGames_GameActions {
 
     GameAction ACTION_SHOW_HELP = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui, GameContext gameContext) {
+        public void execute(GameUI ui, GameContext gameContext) {
             ui.gameView().showHelp(gameContext);
         }
 
         @Override
-        public boolean isEnabled(PacManGames_UI ui, GameContext gameContext) {
+        public boolean isEnabled(GameUI ui, GameContext gameContext) {
             return (gameContext.theGameController().isSelected("PACMAN")
                     || gameContext.theGameController().isSelected("PACMAN_XXL")
                     || gameContext.theGameController().isSelected("MS_PACMAN")
@@ -503,12 +502,12 @@ public interface PacManGames_GameActions {
 
     GameAction ACTION_TOGGLE_DASHBOARD = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui, GameContext gameContext) {
+        public void execute(GameUI ui, GameContext gameContext) {
             ui.gameView().dashboard().toggleVisibility();
         }
 
         @Override
-        public boolean isEnabled(PacManGames_UI ui, GameContext gameContext) {
+        public boolean isEnabled(GameUI ui, GameContext gameContext) {
             return ui.currentView().equals(ui.gameView());
         }
 
@@ -520,8 +519,8 @@ public interface PacManGames_GameActions {
 
     GameAction ACTION_TOGGLE_DRAW_MODE = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui, GameContext gameContext) {
-            PacManGames_UI.PY_3D_DRAW_MODE.set(PacManGames_UI.PY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+        public void execute(GameUI ui, GameContext gameContext) {
+            GameUI.PY_3D_DRAW_MODE.set(GameUI.PY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
         }
 
         @Override
@@ -532,21 +531,21 @@ public interface PacManGames_GameActions {
 
     GameAction ACTION_TOGGLE_PLAY_SCENE_2D_3D = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui, GameContext gameContext) {
+        public void execute(GameUI ui, GameContext gameContext) {
             ui.currentGameScene().ifPresent(gameScene -> {
-                toggle(PacManGames_UI.PY_3D_ENABLED);
+                toggle(GameUI.PY_3D_ENABLED);
                 if (ui.currentGameSceneIsPlayScene2D() || ui.currentGameSceneIsPlayScene3D()) {
                     ui.updateGameScene(true);
                     gameContext.theGameController().updateGameState(); //TODO needed?
                 }
                 if (!gameContext.theGame().isPlaying()) {
-                    ui.showFlashMessage(theAssets().text(PacManGames_UI.PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
+                    ui.showFlashMessage(ui.theAssets().text(GameUI.PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
                 }
             });
         }
 
         @Override
-        public boolean isEnabled(PacManGames_UI ui, GameContext gameContext) {
+        public boolean isEnabled(GameUI ui, GameContext gameContext) {
             return isOneOf(gameContext.theGameState(),
                     GameState.BOOT, GameState.INTRO, GameState.SETTING_OPTIONS, GameState.HUNTING,
                     GameState.TESTING_LEVELS_MEDIUM, GameState.TESTING_LEVELS_SHORT
@@ -561,10 +560,10 @@ public interface PacManGames_GameActions {
 
     GameAction ACTION_TOGGLE_PIP_VISIBILITY = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui, GameContext gameContext) {
-            toggle(PacManGames_UI.PY_MINI_VIEW_ON);
+        public void execute(GameUI ui, GameContext gameContext) {
+            toggle(GameUI.PY_MINI_VIEW_ON);
             if (!ui.currentGameSceneIsPlayScene3D()) {
-                ui.showFlashMessage(theAssets().text(PacManGames_UI.PY_MINI_VIEW_ON.get() ? "pip_on" : "pip_off"));
+                ui.showFlashMessage(ui.theAssets().text(GameUI.PY_MINI_VIEW_ON.get() ? "pip_on" : "pip_off"));
             }
         }
 

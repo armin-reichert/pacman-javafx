@@ -95,11 +95,11 @@ public class ActionBindingMap {
             .findFirst();
     }
 
-    public void runMatchingAction(PacManGames_UI ui, GameContext gameContext) {
+    public void runMatchingAction(GameUI ui, GameContext gameContext) {
         matchingAction().ifPresent(action -> GameAction.executeIfEnabled(ui, gameContext, action));
     }
 
-    public void runMatchingActionOrElse(PacManGames_UI ui, GameContext gameContext, Runnable defaultAction) {
+    public void runMatchingActionOrElse(GameUI ui, GameContext gameContext, Runnable defaultAction) {
         matchingAction().ifPresentOrElse(action -> GameAction.executeIfEnabled(ui, gameContext, action), defaultAction);
     }
 }

@@ -14,7 +14,7 @@ import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.ui.PacManGames_UI.*;
+import static de.amr.pacmanfx.ui.GameUI.*;
 
 public class StatusIconBox extends HBox {
 
@@ -23,7 +23,7 @@ public class StatusIconBox extends HBox {
     private final FontIcon iconAutopilot = FontIcon.of(FontAwesomeSolid.TAXI, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
     private final FontIcon iconImmune = FontIcon.of(FontAwesomeSolid.USER_SECRET, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
 
-    public StatusIconBox(PacManGames_UI ui) {
+    public StatusIconBox(GameUI ui) {
         final List<FontIcon> icons = List.of(iconMuted, icon3D, iconAutopilot, iconImmune);
         getChildren().addAll(icons);
         setMaxHeight(STATUS_ICON_SIZE);

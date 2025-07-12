@@ -16,6 +16,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import static de.amr.pacmanfx.ui.PacManGames_UI_Impl.THE_ONE;
 import static java.util.Objects.requireNonNull;
 
 public class PacManGames_UI_Builder {
@@ -54,9 +55,6 @@ public class PacManGames_UI_Builder {
     }
 
     private final GameContext gameContext;
-    private final Stage stage;
-    private final double width;
-    private final double height;
     private final Map<String, GameModel> models = new HashMap<>();
     private final Map<String, Class<? extends PacManGames_UIConfig>> uiConfigClasses = new HashMap<>();
     private StartPage[] startPages;
@@ -65,9 +63,16 @@ public class PacManGames_UI_Builder {
 
     PacManGames_UI_Builder(GameContext gameContext, Stage stage, double width, double height) {
         this.gameContext = requireNonNull(gameContext);
-        this.stage = stage;
-        this.width = width;
-        this.height = height;
+        if (stage == null) {
+            error("Stage is null");
+        }
+        if (width <= 0) {
+            error("Stage width (%.2f) must be a positive number".formatted(width));
+        }
+        if (height <= 0) {
+            error("Stage height (%.2f) must be a positive number".formatted(height));
+        }
+        THE_ONE = new PacManGames_UI_Impl(gameContext, stage, width, height);
     }
 
     public PacManGames_UI_Builder game(String variant, GameModel model, Class<? extends PacManGames_UIConfig> configClass) {
@@ -91,34 +96,23 @@ public class PacManGames_UI_Builder {
         return this;
     }
 
-    public PacManGames_UI build() {
-        validate();
-        final var ui = new PacManGames_UI_Impl(gameContext, stage, width, height);
-        ui.configure(uiConfigClasses);
+    public GameUI build() {
+        validateConfiguration();
+        THE_ONE.theWatchdog = new DirectoryWatchdog(gameContext.theCustomMapDir());
+        checkUserDirsExistingAndWritable(gameContext);
+        THE_ONE.configure(uiConfigClasses);
         models.forEach((variant, model) -> gameContext.theGameController().registerGame(variant, model));
         gameContext.theGameController().setEventsEnabled(true);
-        ui.gameView().dashboard().configure(dashboardIDs);
-        for (StartPage startPage : startPages) ui.startPagesView().addStartPage(startPage);
-        ui.startPagesView().selectStartPage(selectedStartPageIndex);
-        ui.startPagesView().currentStartPage()
+        THE_ONE.gameView().dashboard().configure(dashboardIDs);
+        for (StartPage startPage : startPages) THE_ONE.startPagesView().addStartPage(startPage);
+        THE_ONE.startPagesView().selectStartPage(selectedStartPageIndex);
+        THE_ONE.startPagesView().currentStartPage()
             .map(StartPage::currentGameVariant)
             .ifPresent(gameContext.theGameController()::selectGameVariant);
-        PacManGames_UI_Impl.THE_ONE = ui;
-        return PacManGames_UI_Impl.THE_ONE;
+        return THE_ONE;
     }
 
-    private void validate() {
-        checkUserDirsExistingAndWritable(gameContext);
-        PacManGames_UI_Impl.WATCHDOG = new DirectoryWatchdog(gameContext.theCustomMapDir());
-        if (stage == null) {
-            error("Stage is null");
-        }
-        if (width <= 0) {
-            error("Stage width (%.2f) must be a positive number".formatted(width));
-        }
-        if (height <= 0) {
-            error("Stage height (%.2f) must be a positive number".formatted(height));
-        }
+    private void validateConfiguration() {
         if (models.isEmpty()) {
             error("No game models specified");
         }

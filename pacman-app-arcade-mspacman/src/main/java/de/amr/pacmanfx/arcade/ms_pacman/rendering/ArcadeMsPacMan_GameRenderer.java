@@ -27,7 +27,7 @@ import javafx.scene.text.FontWeight;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
-import static de.amr.pacmanfx.ui.GameUIContext.theAssets;
+import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_WHITE;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_YELLOW;
 import static java.util.Objects.requireNonNull;
@@ -80,7 +80,7 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
         if (!hud.isVisible()) return;
 
         if (hud.isScoreVisible()) {
-            ctx.setFont(theAssets().arcadeFont(scaled(8)));
+            ctx.setFont(theUI().theAssets().arcadeFont(scaled(8)));
             ctx.setFill(ARCADE_WHITE);
             drawScore(gameContext.theGame().score(), "SCORE", tiles_to_px(1), tiles_to_px(1));
             drawScore(gameContext.theGame().highScore(), "HIGH SCORE", tiles_to_px(14), tiles_to_px(1));
@@ -113,7 +113,7 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
 
         if (hud.isCreditVisible()) {
             String text = "CREDIT %2d".formatted(gameContext.theCoinMechanism().numCoins());
-            fillTextAtScaledPosition(text, ARCADE_WHITE, theAssets().arcadeFont(scaled(8)), 2 * TS, sceneSize.y() - 2);
+            fillTextAtScaledPosition(text, ARCADE_WHITE, theUI().theAssets().arcadeFont(scaled(8)), 2 * TS, sceneSize.y() - 2);
         }
     }
 
@@ -246,7 +246,7 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
     }
 
     public void drawMidwayCopyright(MidwayCopyright copyright) {
-        Image image = theAssets().get("ms_pacman.logo.midway");
+        Image image = theUI().theAssets().get("ms_pacman.logo.midway");
         float x = scaled(copyright.x()), y = scaled(copyright.y());
         ctx.drawImage(image, x, y + 2, scaled(TS * 4 - 2), scaled(TS * 4));
         ctx.setFont(copyright.font());

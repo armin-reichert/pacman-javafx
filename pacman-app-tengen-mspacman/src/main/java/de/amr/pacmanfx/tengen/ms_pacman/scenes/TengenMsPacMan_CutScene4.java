@@ -16,7 +16,7 @@ import org.tinylog.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
@@ -24,8 +24,7 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.createMsPacMan;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.createPacMan;
 import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PacAnimationMap.*;
-import static de.amr.pacmanfx.ui.GameUIContext.theSound;
-import static de.amr.pacmanfx.ui.GameUIContext.theUI;
+import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.ui._2d.GameRenderer.fillCanvas;
 
 public class TengenMsPacMan_CutScene4 extends GameScene2D {
@@ -72,7 +71,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        theSound().stop(MUSIC_ID);
+        theUI().theSound().stop(MUSIC_ID);
     }
 
     @Override
@@ -81,7 +80,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         if (t == 0) {
             clapperboard.setVisible(true);
             clapperboard.startAnimation();
-            theSound().play(MUSIC_ID);
+            theUI().theSound().play(MUSIC_ID);
         }
         else if (t == 130) {
             pacMan.setMoveDir(Direction.RIGHT);
@@ -167,7 +166,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         juniorCreationTime.add(t);
 
         String id = "audio.intermission.4.junior." + randomInt(1, 3); // 1 or 2
-        theSound().loop(id);
+        theUI().theSound().loop(id);
 
         Logger.info("Junior spawned at tick {}", t);
     }

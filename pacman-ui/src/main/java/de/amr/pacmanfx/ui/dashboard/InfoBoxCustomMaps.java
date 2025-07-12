@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 
-import static de.amr.pacmanfx.ui.GameUIContext.theWatchdog;
+import static de.amr.pacmanfx.ui.GameUI.theUI;
 
 public class InfoBoxCustomMaps extends InfoBox {
 
@@ -65,7 +65,7 @@ public class InfoBoxCustomMaps extends InfoBox {
         addRow(mapsTableView);
         updateCustomMapList();
 
-        theWatchdog().addEventListener(eventList -> {
+        theUI().theWatchdog().addEventListener(eventList -> {
             Logger.info("Custom map change(s) detected: {}",
                 eventList.stream()
                     .map(watchEvent -> String.format("%s: '%s'", watchEvent.kind(), watchEvent.context()))

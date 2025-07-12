@@ -47,8 +47,7 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
-import static de.amr.pacmanfx.ui.GameUIContext.*;
-import static de.amr.pacmanfx.ui.PacManGames_UI.*;
+import static de.amr.pacmanfx.ui.GameUI.*;
 import static de.amr.pacmanfx.uilib.Ufx.*;
 import static java.util.Objects.requireNonNull;
 
@@ -187,14 +186,14 @@ public class GameLevel3D extends Group implements Destroyable {
         final String ans = theUI().configuration().assetNamespace();
         ghosts3D = gameLevel.ghosts().map(ghost -> {
             var ghostColoring = new GhostColoring(
-                theAssets().color("%s.ghost.%d.color.normal.dress".formatted(ans, ghost.personality())),
-                theAssets().color("%s.ghost.%d.color.normal.pupils".formatted(ans, ghost.personality())),
-                theAssets().color("%s.ghost.%d.color.normal.eyeballs".formatted(ans, ghost.personality())),
-                theAssets().color("%s.ghost.color.frightened.dress".formatted(ans)),
-                theAssets().color("%s.ghost.color.frightened.pupils".formatted(ans)),
-                theAssets().color("%s.ghost.color.frightened.eyeballs".formatted(ans)),
-                theAssets().color("%s.ghost.color.flashing.dress".formatted(ans)),
-                theAssets().color("%s.ghost.color.flashing.pupils".formatted(ans))
+                    theUI().theAssets().color("%s.ghost.%d.color.normal.dress".formatted(ans, ghost.personality())),
+                    theUI().theAssets().color("%s.ghost.%d.color.normal.pupils".formatted(ans, ghost.personality())),
+                    theUI().theAssets().color("%s.ghost.%d.color.normal.eyeballs".formatted(ans, ghost.personality())),
+                    theUI().theAssets().color("%s.ghost.color.frightened.dress".formatted(ans)),
+                    theUI().theAssets().color("%s.ghost.color.frightened.pupils".formatted(ans)),
+                    theUI().theAssets().color("%s.ghost.color.frightened.eyeballs".formatted(ans)),
+                    theUI().theAssets().color("%s.ghost.color.flashing.dress".formatted(ans)),
+                    theUI().theAssets().color("%s.ghost.color.flashing.pupils".formatted(ans))
             );
             return new MutatingGhost3D(
                 animationManager,
@@ -358,7 +357,7 @@ public class GameLevel3D extends Group implements Destroyable {
     }
 
     public void onLevelComplete() {
-        theSound().stopAll();
+        theUI().theSound().stopAll();
         animationManager.stopAllAnimations();
         // hide explicitly because level might have been completed using cheat!
         pellets3D.forEach(pellet3D -> pellet3D.shape3D().setVisible(false));
@@ -447,7 +446,7 @@ public class GameLevel3D extends Group implements Destroyable {
         }
         messageView = MessageView.builder()
                 .text(text)
-                .font(theAssets().arcadeFont(6))
+                .font(theUI().theAssets().arcadeFont(6))
                 .borderColor(Color.WHITE)
                 .displaySeconds(displaySeconds)
                 .textColor(Color.YELLOW)

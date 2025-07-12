@@ -33,8 +33,8 @@ import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PacAnimationMap.ANIM_MS_PAC_MAN_BOOSTER;
-import static de.amr.pacmanfx.ui.PacManGames_UI.PY_IMMUNITY;
-import static de.amr.pacmanfx.ui.PacManGames_UI.PY_USING_AUTOPILOT;
+import static de.amr.pacmanfx.ui.GameUI.PY_IMMUNITY;
+import static de.amr.pacmanfx.ui.GameUI.PY_USING_AUTOPILOT;
 import static java.util.Objects.requireNonNull;
 
 /**

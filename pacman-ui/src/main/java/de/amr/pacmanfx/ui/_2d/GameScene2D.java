@@ -18,9 +18,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.GameUIContext.*;
-import static de.amr.pacmanfx.ui.PacManGames_UI.DEBUG_TEXT_FILL;
-import static de.amr.pacmanfx.ui.PacManGames_UI.DEBUG_TEXT_FONT;
+import static de.amr.pacmanfx.ui.GameUI.*;
 import static de.amr.pacmanfx.ui._2d.GameRenderer.fillCanvas;
 import static java.util.Objects.requireNonNull;
 
@@ -37,7 +35,7 @@ public abstract class GameScene2D implements GameScene {
     protected final BooleanProperty debugInfoVisibleProperty      = new SimpleBooleanProperty(false);
     protected final FloatProperty scalingProperty                 = new SimpleFloatProperty(1.0f);
 
-    protected final ActionBindingMap actionBindings = new ActionBindingMap(theKeyboard());
+    protected final ActionBindingMap actionBindings = new ActionBindingMap(theUI().theKeyboard());
     protected final AnimationManager animationManager = new AnimationManager();
     protected GameRenderer gameRenderer;
     protected Canvas canvas;
@@ -59,16 +57,16 @@ public abstract class GameScene2D implements GameScene {
 
     @Override
     public final void init() {
-        arcadeFont8Property.bind(scalingProperty.map(s -> theAssets().arcadeFont(s.floatValue() * 8)));
-        arcadeFont6Property.bind(scalingProperty.map(s -> theAssets().arcadeFont(s.floatValue() * 6)));
+        arcadeFont8Property.bind(scalingProperty.map(s -> theUI().theAssets().arcadeFont(s.floatValue() * 8)));
+        arcadeFont6Property.bind(scalingProperty.map(s -> theUI().theAssets().arcadeFont(s.floatValue() * 6)));
         doInit();
         actionBindings.update();
-        theKeyboard().logCurrentBindings();
+        theUI().theKeyboard().logCurrentBindings();
     }
 
     @Override
     public final void end() {
-        theSound().stopAll();
+        theUI().theSound().stopAll();
         doEnd();
         destroy();
     }
@@ -80,7 +78,7 @@ public abstract class GameScene2D implements GameScene {
     public ActionBindingMap actionBindings() { return actionBindings; }
 
     @Override
-    public void onStopAllSounds(GameEvent event) { theSound().stopAll(); }
+    public void onStopAllSounds(GameEvent event) { theUI().theSound().stopAll(); }
 
     @Override
     public void onUnspecifiedChange(GameEvent event) {

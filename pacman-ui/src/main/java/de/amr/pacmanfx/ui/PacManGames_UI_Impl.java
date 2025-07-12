@@ -16,6 +16,7 @@ import de.amr.pacmanfx.ui.layout.EditorView;
 import de.amr.pacmanfx.ui.layout.GameView;
 import de.amr.pacmanfx.ui.layout.PacManGames_View;
 import de.amr.pacmanfx.ui.layout.StartPagesView;
+import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import javafx.application.Platform;
@@ -41,7 +42,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static de.amr.pacmanfx.ui.GameUIContext.*;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_ENTER_FULLSCREEN;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_TOGGLE_MUTED;
 import static java.util.Objects.requireNonNull;
@@ -49,14 +49,15 @@ import static java.util.Objects.requireNonNull;
 /**
  * User interface for all Pac-Man game variants.
  */
-public class PacManGames_UI_Impl implements PacManGames_UI {
+public class PacManGames_UI_Impl implements GameUI {
 
-    static final PacManGames_Assets ASSETS = new PacManGames_Assets();
-    static final GameClock          GAME_CLOCK = new GameClock();
-    static final Keyboard           KEYBOARD = new Keyboard();
-    static final Joypad             JOYPAD = new Joypad(KEYBOARD);
-    static       DirectoryWatchdog  WATCHDOG;
-    static       PacManGames_UI_Impl THE_ONE;
+    static PacManGames_UI_Impl THE_ONE;
+
+    final PacManGames_Assets theAssets = new PacManGames_Assets();
+    final GameClock theGameClock = new GameClock();
+    final Keyboard theKeyboard = new Keyboard();
+    final Joypad theJoypad = new Joypad(theKeyboard);
+    DirectoryWatchdog theWatchdog;
 
     private final Map<String, PacManGames_UIConfig> configByGameVariant = new HashMap<>();
 
@@ -93,8 +94,8 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         // "paused" icon appears on center of game view
         iconPaused = FontIcon.of(FontAwesomeSolid.PAUSE, 80, STATUS_ICON_COLOR);
         iconPaused.visibleProperty().bind(Bindings.createBooleanBinding(
-            () -> currentView() == gameView && GAME_CLOCK.isPaused(),
-            currentViewProperty, GAME_CLOCK.pausedProperty()));
+            () -> currentView() == gameView && theGameClock.isPaused(),
+            currentViewProperty, theGameClock.pausedProperty()));
         StackPane.setAlignment(iconPaused, Pos.CENTER);
 
         // status icon box appears at bottom-left corner of any view except editor
@@ -103,8 +104,8 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
         rootPane.getChildren().addAll(iconPaused, iconBox);
 
-        GAME_CLOCK.setPausableAction(this::doSimulationStepAndUpdateGameScene);
-        GAME_CLOCK.setPermanentAction(this::drawGameView);
+        theGameClock.setPausableAction(this::doSimulationStepAndUpdateGameScene);
+        theGameClock.setPermanentAction(this::drawGameView);
 
         mainScene.addEventFilter(KeyEvent.KEY_PRESSED, theKeyboard()::onKeyPressed);
         mainScene.addEventFilter(KeyEvent.KEY_RELEASED, theKeyboard()::onKeyReleased);
@@ -181,7 +182,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
     private void doSimulationStepAndUpdateGameScene() {
         try {
-            gameContext.theSimulationStep().start(GAME_CLOCK.tickCount());
+            gameContext.theSimulationStep().start(theGameClock.tickCount());
             gameContext.theGameController().updateGameState();
             gameContext.theSimulationStep().log();
             currentGameScene().ifPresent(GameScene::update);
@@ -254,10 +255,10 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
     @Override
     public void restart() {
-        GAME_CLOCK.stop();
-        GAME_CLOCK.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
-        GAME_CLOCK.pausedProperty().set(false);
-        GAME_CLOCK.start();
+        theGameClock.stop();
+        theGameClock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
+        theGameClock.pausedProperty().set(false);
+        theGameClock.start();
         gameContext.theGameController().restart(GameState.BOOT);
     }
 
@@ -288,7 +289,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         ));
         newConfig.soundManager().mutedProperty().bind(mutedProperty);
 
-        Image appIcon = ASSETS.image(newConfig.assetNamespace() + ".app_icon");
+        Image appIcon = theAssets.image(newConfig.assetNamespace() + ".app_icon");
         if (appIcon != null) {
             stage.getIcons().setAll(appIcon);
         } else {
@@ -314,15 +315,15 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
         stage.centerOnScreen();
         stage.show();
-        WATCHDOG.startWatching();
+        theWatchdog.startWatching();
     }
 
     @Override
     public void showEditorView() {
-        if (!gameContext.theGame().isPlaying() || GAME_CLOCK.isPaused()) {
+        if (!gameContext.theGame().isPlaying() || theGameClock.isPaused()) {
             currentGameScene().ifPresent(GameScene::end);
             theSound().stopAll();
-            GAME_CLOCK.stop();
+            theGameClock.stop();
             getEditorViewCreateIfNeeded().editor().start(stage);
             currentViewProperty.set(getEditorViewCreateIfNeeded());
         } else {
@@ -342,8 +343,8 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
     @Override
     public void showStartView() {
-        GAME_CLOCK.stop();
-        GAME_CLOCK.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
+        theGameClock.stop();
+        theGameClock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
         theSound().stopAll();
         gameView.dashboard().setVisible(false);
         currentViewProperty.set(startPagesView);
@@ -361,6 +362,35 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     @Override
     public void terminateApp() {
         Platform.exit();
+    }
+
+    @Override
+    public PacManGames_Assets theAssets() {
+        return theAssets;
+    }
+
+    public GameClock theGameClock() {
+        return theGameClock;
+    }
+
+    @Override
+    public Keyboard theKeyboard() {
+        return theKeyboard;
+    }
+
+    @Override
+    public Joypad theJoypad() {
+        return theJoypad;
+    }
+
+    @Override
+    public SoundManager theSound() {
+        return configuration().soundManager();
+    }
+
+    @Override
+    public DirectoryWatchdog theWatchdog() {
+        return theWatchdog;
     }
 
     @Override

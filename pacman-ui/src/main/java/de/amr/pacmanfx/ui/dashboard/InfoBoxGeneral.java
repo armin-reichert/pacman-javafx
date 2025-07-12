@@ -5,8 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.dashboard;
 
 import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.PacManGames_GameActions;
-import de.amr.pacmanfx.ui.PacManGames_UI;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
@@ -14,8 +14,7 @@ import javafx.scene.image.ImageView;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.ui.GameUIContext.theClock;
-import static de.amr.pacmanfx.ui.PacManGames_UI.*;
+import static de.amr.pacmanfx.ui.GameUI.*;
 
 /**
  * General settings and simulation control.
@@ -35,7 +34,7 @@ public class InfoBoxGeneral extends InfoBox {
 
         // Simulation control
 
-        ResourceManager rm = () -> PacManGames_UI.class;
+        ResourceManager rm = () -> GameUI.class;
         var iconPlay = new ImageView(rm.loadImage("graphics/icons/play.png"));
         var iconStop = new ImageView(rm.loadImage("graphics/icons/stop.png"));
         var iconStep = new ImageView(rm.loadImage("graphics/icons/step.png"));
@@ -47,8 +46,8 @@ public class InfoBoxGeneral extends InfoBox {
         Button btnPlayPause = buttonsSimulationControl[0];
         btnPlayPause.setText(null);
         btnPlayPause.setStyle("-fx-background-color: transparent");
-        btnPlayPause.graphicProperty().bind(theClock().pausedProperty().map(paused -> paused ? iconPlay : iconStop));
-        btnPlayPause.tooltipProperty().bind(theClock().pausedProperty().map(paused -> paused ? tooltipPlay : tooltipStop));
+        btnPlayPause.graphicProperty().bind(theUI().theGameClock().pausedProperty().map(paused -> paused ? iconPlay : iconStop));
+        btnPlayPause.tooltipProperty().bind(theUI().theGameClock().pausedProperty().map(paused -> paused ? tooltipPlay : tooltipStop));
         setAction(btnPlayPause, PacManGames_GameActions.ACTION_TOGGLE_PAUSED);
 
         Button btnStep = buttonsSimulationControl[1];
@@ -56,20 +55,20 @@ public class InfoBoxGeneral extends InfoBox {
         btnStep.setStyle("-fx-background-color: transparent");
         btnStep.setText(null);
         btnStep.setTooltip(new Tooltip("Single Step Mode"));
-        btnStep.disableProperty().bind(theClock().pausedProperty().not());
-        setAction(btnStep, () -> theClock().makeSteps(PY_SIMULATION_STEPS.get(), true));
+        btnStep.disableProperty().bind(theUI().theGameClock().pausedProperty().not());
+        setAction(btnStep, () -> theUI().theGameClock().makeSteps(PY_SIMULATION_STEPS.get(), true));
 
         addIntSpinner("Num Steps", 1, 50, PY_SIMULATION_STEPS);
         var sliderTargetFPS = addSlider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60, false, false);
-        setEditor(sliderTargetFPS, theClock().targetFrameRateProperty());
+        setEditor(sliderTargetFPS, theUI().theGameClock().targetFrameRateProperty());
 
-        addLabeledValue("", () -> "Framerate: %.1f (Target: %.1f)".formatted(theClock().lastTicksPerSecond(), theClock().targetFrameRate()));
-        addLabeledValue("Total Updates",  theClock()::updateCount);
+        addLabeledValue("", () -> "Framerate: %.1f (Target: %.1f)".formatted(theUI().theGameClock().lastTicksPerSecond(), theUI().theGameClock().targetFrameRate()));
+        addLabeledValue("Total Updates",  theUI().theGameClock()::updateCount);
 
         addColorPicker("Canvas Color", PY_CANVAS_BG_COLOR);
         addCheckBox("Image Smoothing", PY_CANVAS_IMAGE_SMOOTHING);
         addCheckBox("Font Smoothing", PY_CANVAS_FONT_SMOOTHING);
         addCheckBox("Show Debug Info", PY_DEBUG_INFO_VISIBLE);
-        addCheckBox("Time Measured", theClock().timeMeasuredProperty());
+        addCheckBox("Time Measured", theUI().theGameClock().timeMeasuredProperty());
     }
 }

@@ -10,7 +10,7 @@ import de.amr.pacmanfx.ui.ActionBindingMap;
 import javafx.beans.value.ObservableStringValue;
 import javafx.scene.Node;
 
-import static de.amr.pacmanfx.ui.GameUIContext.theUI;
+import static de.amr.pacmanfx.ui.GameUI.theUI;
 
 public interface PacManGames_View extends GameEventListener {
     Node rootNode();

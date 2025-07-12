@@ -32,7 +32,7 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.createGhost;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.createMsPacMan;
 import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer.blueShadedColor;
-import static de.amr.pacmanfx.ui.GameUIContext.*;
+import static de.amr.pacmanfx.ui.GameUI.theUI;
 
 /**
  * @author Armin Reichert
@@ -90,7 +90,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void update() {
-        if (!theClock().isPaused()) {
+        if (!theUI().theGameClock().isPaused()) {
             sceneController.update();
         }
     }
@@ -133,7 +133,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                     gr().fillTextAtScaledPosition("WITH", nesPaletteColor(0x20), MARQUEE_X + 12, MARQUEE_Y + 23);
                 }
                 Ghost currentGhost = ghosts[ghostIndex];
-                Color ghostColor = theAssets().color("tengen.ghost.%d.color.normal.dress".formatted(currentGhost.personality()));
+                Color ghostColor = theUI().theAssets().color("tengen.ghost.%d.color.normal.dress".formatted(currentGhost.personality()));
                 gr().fillTextAtScaledPosition(currentGhost.name().toUpperCase(), ghostColor, MARQUEE_X + 44, MARQUEE_Y + 41);
                 for (Ghost ghost : ghosts) { gr().drawActor(ghost); }
             }
@@ -148,7 +148,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         }
 
         if (PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED.get()) {
-            gr().drawJoypadKeyBinding(theJoypad().currentKeyBinding());
+            gr().drawJoypadKeyBinding(theUI().theJoypad().currentKeyBinding());
         }
     }
 
@@ -268,7 +268,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
             boolean letGhostMarchIn(TengenMsPacMan_IntroScene scene) {
                 Ghost ghost = scene.ghosts[scene.ghostIndex];
-                Logger.debug("Tick {}: {} marching in", theClock().tickCount(), ghost.name());
+                Logger.debug("Tick {}: {} marching in", theUI().theGameClock().tickCount(), ghost.name());
                 if (ghost.moveDir() == Direction.LEFT) {
                     if (ghost.x() <= GHOST_STOP_X) {
                         ghost.setX(GHOST_STOP_X);
@@ -307,7 +307,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
                 scene.updateMarqueeState();
-                Logger.debug("Tick {}: {} marching in", theClock().tickCount(), scene.msPacMan.name());
+                Logger.debug("Tick {}: {} marching in", theUI().theGameClock().tickCount(), scene.msPacMan.name());
                 scene.msPacMan.move();
                 if (scene.msPacMan.x() <= MS_PAC_MAN_STOP_X) {
                     scene.msPacMan.setSpeed(0);

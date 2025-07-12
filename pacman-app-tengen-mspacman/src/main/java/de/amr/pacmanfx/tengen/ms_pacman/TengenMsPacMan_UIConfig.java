@@ -22,7 +22,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.rendering.*;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.*;
 import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.GameScene;
-import de.amr.pacmanfx.ui.PacManGames_UI;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui.sound.DefaultSoundManager;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -53,10 +53,8 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.ActionBindingMap.createActionBinding;
-import static de.amr.pacmanfx.ui.GameUIContext.*;
+import static de.amr.pacmanfx.ui.GameUI.*;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
-import static de.amr.pacmanfx.ui.PacManGames_UI.PY_3D_ENABLED;
-import static de.amr.pacmanfx.ui.PacManGames_UI.PY_CANVAS_BG_COLOR;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
 import static de.amr.pacmanfx.uilib.Ufx.toggle;
 import static java.util.Objects.requireNonNull;
@@ -153,7 +151,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         storeInMyNamespace(assets, "ghost.color.flashing.eyeballs",    nesPaletteColor(0x20));
         storeInMyNamespace(assets, "ghost.color.flashing.pupils",      nesPaletteColor(0x20));
 
-        ResourceManager uiResMgr = () -> PacManGames_UI.class;
+        ResourceManager uiResMgr = () -> GameUI.class;
         soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_OFF,       uiResMgr.url("sound/voice/autopilot-off.mp3"));
         soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_ON,        uiResMgr.url("sound/voice/autopilot-on.mp3"));
         soundManager.registerVoice(SoundID.VOICE_IMMUNITY_OFF,        uiResMgr.url("sound/voice/immunity-off.mp3"));
@@ -193,7 +191,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
 
     @Override
     public void destroy() {
-        theAssets().removeAll(NAMESPACE + ".");
+        theUI().theAssets().removeAll(NAMESPACE + ".");
         soundManager.destroy();
     }
 
@@ -215,12 +213,12 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
 
     @Override
     public Image killedGhostPointsImage(Ghost ghost, int killedIndex) {
-        return theAssets().image(NAMESPACE + ".ghost_points_" + killedIndex);
+        return theUI().theAssets().image(NAMESPACE + ".ghost_points_" + killedIndex);
     }
 
     @Override
     public Image bonusSymbolImage(byte symbol) {
-        return theAssets().image(NAMESPACE + ".bonus_symbol_" + symbol);
+        return theUI().theAssets().image(NAMESPACE + ".bonus_symbol_" + symbol);
     }
 
     @Override
@@ -233,7 +231,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
             case TengenMsPacMan_GameModel.BONUS_ICE_CREAM -> 7; // 4000!
             default -> symbol;
         };
-        return theAssets().image(NAMESPACE + ".bonus_value_" + usedSymbol);
+        return theUI().theAssets().image(NAMESPACE + ".bonus_value_" + usedSymbol);
     }
 
     @Override
@@ -256,26 +254,26 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     @Override
     public MsPacManBody createLivesCounterShape3D(Model3DRepository model3DRepository) {
         return model3DRepository.createMsPacManBody(
-            PacManGames_UI.LIVES_COUNTER_3D_SHAPE_SIZE,
-            theAssets().color(NAMESPACE + ".pac.color.head"),
-            theAssets().color(NAMESPACE + ".pac.color.eyes"),
-            theAssets().color(NAMESPACE + ".pac.color.palate"),
-            theAssets().color(NAMESPACE + ".pac.color.hairbow"),
-            theAssets().color(NAMESPACE + ".pac.color.hairbow.pearls"),
-            theAssets().color(NAMESPACE + ".pac.color.boobs")
+            GameUI.LIVES_COUNTER_3D_SHAPE_SIZE,
+            theUI().theAssets().color(NAMESPACE + ".pac.color.head"),
+            theUI().theAssets().color(NAMESPACE + ".pac.color.eyes"),
+            theUI().theAssets().color(NAMESPACE + ".pac.color.palate"),
+            theUI().theAssets().color(NAMESPACE + ".pac.color.hairbow"),
+            theUI().theAssets().color(NAMESPACE + ".pac.color.hairbow.pearls"),
+            theUI().theAssets().color(NAMESPACE + ".pac.color.boobs")
         );
     }
 
     @Override
     public MsPacMan3D createPac3D(Model3DRepository model3DRepository, AnimationManager animationManager, Pac pac) {
-        var pac3D = new MsPacMan3D(model3DRepository, animationManager, pac, PacManGames_UI.PAC_3D_SIZE,
-            theAssets().color(NAMESPACE + ".pac.color.head"),
-            theAssets().color(NAMESPACE + ".pac.color.eyes"),
-            theAssets().color(NAMESPACE + ".pac.color.palate"),
-            theAssets().color(NAMESPACE + ".pac.color.hairbow"),
-            theAssets().color(NAMESPACE + ".pac.color.hairbow.pearls"),
-            theAssets().color(NAMESPACE + ".pac.color.boobs"));
-        pac3D.light().setColor(theAssets().color(NAMESPACE + ".pac.color.head").desaturate());
+        var pac3D = new MsPacMan3D(model3DRepository, animationManager, pac, GameUI.PAC_3D_SIZE,
+            theUI().theAssets().color(NAMESPACE + ".pac.color.head"),
+            theUI().theAssets().color(NAMESPACE + ".pac.color.eyes"),
+            theUI().theAssets().color(NAMESPACE + ".pac.color.palate"),
+            theUI().theAssets().color(NAMESPACE + ".pac.color.hairbow"),
+            theUI().theAssets().color(NAMESPACE + ".pac.color.hairbow.pearls"),
+            theUI().theAssets().color(NAMESPACE + ".pac.color.boobs"));
+        pac3D.light().setColor(theUI().theAssets().color(NAMESPACE + ".pac.color.head").desaturate());
         return pac3D;
     }
 
@@ -338,12 +336,12 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
 
     public static final GameAction ACTION_QUIT_DEMO_LEVEL = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui, GameContext gameContext) {
+        public void execute(GameUI ui, GameContext gameContext) {
             gameContext.theGameController().changeGameState(GameState.SETTING_OPTIONS);
         }
 
         @Override
-        public boolean isEnabled(PacManGames_UI ui, GameContext gameContext) {
+        public boolean isEnabled(GameUI ui, GameContext gameContext) {
             return gameContext.optGameLevel().isPresent() && gameContext.optGameLevel().get().isDemoLevel();
         }
 
@@ -355,7 +353,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
 
     public static final GameAction ACTION_START_GAME = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui, GameContext gameContext) {
+        public void execute(GameUI ui, GameContext gameContext) {
             gameContext.theGameController().changeGameState(GameState.SETTING_OPTIONS);
         }
 
@@ -367,8 +365,8 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
 
     public static final GameAction ACTION_START_PLAYING = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui, GameContext gameContext) {
-            theSound().stopAll();
+        public void execute(GameUI ui, GameContext gameContext) {
+            theUI().theSound().stopAll();
             gameContext.theGame().playingProperty().set(false);
             gameContext.theGameController().changeGameState(GameState.STARTING_GAME);
         }
@@ -381,14 +379,14 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
 
     public static final GameAction ACTION_TOGGLE_DISPLAY_MODE = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui, GameContext gameContext) {
+        public void execute(GameUI ui, GameContext gameContext) {
             SceneDisplayMode mode = PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.get();
             PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.set(mode == SceneDisplayMode.SCROLLING
                     ? SceneDisplayMode.SCALED_TO_FIT : SceneDisplayMode.SCROLLING);
         }
 
         @Override
-        public boolean isEnabled(PacManGames_UI ui, GameContext gameContext) {
+        public boolean isEnabled(GameUI ui, GameContext gameContext) {
             return ui.currentGameSceneIsPlayScene2D();
         }
 
@@ -400,7 +398,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
 
     public static final  GameAction ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui, GameContext gameContext) {
+        public void execute(GameUI ui, GameContext gameContext) {
             toggle(PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED);
         }
 
@@ -412,13 +410,13 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
 
     public static final GameAction ACTION_TOGGLE_PAC_BOOSTER = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui, GameContext gameContext) {
+        public void execute(GameUI ui, GameContext gameContext) {
             var tengenGame = (TengenMsPacMan_GameModel) gameContext.theGame();
             tengenGame.activatePacBooster(!tengenGame.isBoosterActive());
         }
 
         @Override
-        public boolean isEnabled(PacManGames_UI ui, GameContext gameContext) {
+        public boolean isEnabled(GameUI ui, GameContext gameContext) {
             var tengenGame = (TengenMsPacMan_GameModel) gameContext.theGame();
             return tengenGame.pacBooster() == PacBooster.USE_A_OR_B;
         }
@@ -432,14 +430,14 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     // Key bindings
 
     public static final Map<GameAction, Set<KeyCombination>> TENGEN_ACTION_BINDINGS = Map.ofEntries(
-        createActionBinding(ACTION_STEER_UP,            theJoypad().key(JoypadButton.UP),    control(KeyCode.UP)),
-        createActionBinding(ACTION_STEER_DOWN,          theJoypad().key(JoypadButton.DOWN),  control(KeyCode.DOWN)),
-        createActionBinding(ACTION_STEER_LEFT,          theJoypad().key(JoypadButton.LEFT),  control(KeyCode.LEFT)),
-        createActionBinding(ACTION_STEER_RIGHT,         theJoypad().key(JoypadButton.RIGHT), control(KeyCode.RIGHT)),
-        createActionBinding(ACTION_QUIT_DEMO_LEVEL,     theJoypad().key(JoypadButton.START)),
-        createActionBinding(ACTION_START_GAME,          theJoypad().key(JoypadButton.START)),
-        createActionBinding(ACTION_START_PLAYING,       theJoypad().key(JoypadButton.START)),
-        createActionBinding(ACTION_TOGGLE_PAC_BOOSTER,  theJoypad().key(JoypadButton.A), theJoypad().key(JoypadButton.B)),
+        createActionBinding(ACTION_STEER_UP,            theUI().theJoypad().key(JoypadButton.UP),    control(KeyCode.UP)),
+        createActionBinding(ACTION_STEER_DOWN,          theUI().theJoypad().key(JoypadButton.DOWN),  control(KeyCode.DOWN)),
+        createActionBinding(ACTION_STEER_LEFT,          theUI().theJoypad().key(JoypadButton.LEFT),  control(KeyCode.LEFT)),
+        createActionBinding(ACTION_STEER_RIGHT,         theUI().theJoypad().key(JoypadButton.RIGHT), control(KeyCode.RIGHT)),
+        createActionBinding(ACTION_QUIT_DEMO_LEVEL,     theUI().theJoypad().key(JoypadButton.START)),
+        createActionBinding(ACTION_START_GAME,          theUI().theJoypad().key(JoypadButton.START)),
+        createActionBinding(ACTION_START_PLAYING,       theUI().theJoypad().key(JoypadButton.START)),
+        createActionBinding(ACTION_TOGGLE_PAC_BOOSTER,  theUI().theJoypad().key(JoypadButton.A), theUI().theJoypad().key(JoypadButton.B)),
         createActionBinding(ACTION_TOGGLE_DISPLAY_MODE, alt(KeyCode.C)),
         createActionBinding(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, nude(KeyCode.SPACE))
     );

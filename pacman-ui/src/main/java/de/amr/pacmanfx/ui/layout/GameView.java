@@ -39,9 +39,8 @@ import org.tinylog.Logger;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.GameUIContext.*;
+import static de.amr.pacmanfx.ui.GameUI.*;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
-import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 import static de.amr.pacmanfx.ui._2d.GameRenderer.fillCanvas;
 import static de.amr.pacmanfx.uilib.Ufx.*;
 import static java.util.Objects.requireNonNull;
@@ -68,9 +67,9 @@ public class GameView implements PacManGames_View {
         };
     }
 
-    private final ActionBindingMap actionBindings = new ActionBindingMap(theKeyboard());
+    private final ActionBindingMap actionBindings;
 
-    private final PacManGames_UI ui;
+    private final GameUI ui;
     private final GameContext gameContext;
     private final StackPane root = new StackPane();
     private final Scene parentScene;
@@ -87,13 +86,15 @@ public class GameView implements PacManGames_View {
     private final ContextMenu contextMenu = new ContextMenu();
     private final StringBinding titleBinding;
 
-    public GameView(PacManGames_UI ui, GameContext gameContext, Scene parentScene) {
+    public GameView(GameUI ui, GameContext gameContext, Scene parentScene) {
         this.ui = requireNonNull(ui);
         this.gameContext = requireNonNull(gameContext);
         this.parentScene = requireNonNull(parentScene);
         this.miniGameView = new MiniGameView();
         this.dashboard = new Dashboard(gameContext);
         
+        this.actionBindings = new ActionBindingMap(ui.theKeyboard());
+
         configureMiniGameView();
         configureCanvasContainer();
         createLayers();
@@ -120,7 +121,7 @@ public class GameView implements PacManGames_View {
             () -> computeTitleText(PY_3D_ENABLED.get(), PY_DEBUG_INFO_VISIBLE.get()),
             PY_3D_ENABLED,
             PY_DEBUG_INFO_VISIBLE,
-            theClock().pausedProperty(),
+            ui.theGameClock().pausedProperty(),
             parentScene.heightProperty(),
             ui.currentGameSceneProperty()
         );
@@ -153,9 +154,9 @@ public class GameView implements PacManGames_View {
         contextMenu.getItems().clear();
         ui.currentGameScene().ifPresent(gameScene -> {
             if (ui.currentGameSceneIsPlayScene2D()) {
-                var miSwitchTo3D = new MenuItem(theAssets().text("use_3D_scene"));
+                var miSwitchTo3D = new MenuItem(ui.theAssets().text("use_3D_scene"));
                 miSwitchTo3D.setOnAction(actionEvent -> GameAction.executeIfEnabled(ui, gameContext, ACTION_TOGGLE_PLAY_SCENE_2D_3D));
-                contextMenu.getItems().add(menuTitleItem(theAssets().text("scene_display")));
+                contextMenu.getItems().add(menuTitleItem(ui.theAssets().text("scene_display")));
                 contextMenu.getItems().add(miSwitchTo3D);
             }
             List<MenuItem> gameSceneItems = gameScene.supplyContextMenuItems(contextMenuEvent, contextMenu);
@@ -179,20 +180,20 @@ public class GameView implements PacManGames_View {
     // Asset key regex: app.title.(ms_pacman|ms_pacman_xxl|pacman,pacman_xxl|tengen)(.paused)?
     private String computeTitleText(boolean threeDModeEnabled, boolean modeDebug) {
         String ans = ui.configuration().assetNamespace();
-        String paused = theClock().isPaused() ? ".paused" : "";
+        String paused = ui.theGameClock().isPaused() ? ".paused" : "";
         String key = "app.title." + ans + paused;
-        String modeText = theAssets().text(threeDModeEnabled ? "threeD" : "twoD");
+        String modeText = ui.theAssets().text(threeDModeEnabled ? "threeD" : "twoD");
         GameScene currentGameScene = ui.currentGameScene().orElse(null);
         if (currentGameScene == null || !modeDebug) {
-            return theAssets().text(key, modeText);
+            return ui.theAssets().text(key, modeText);
         }
         String sceneClassName = currentGameScene.getClass().getSimpleName();
         if (currentGameScene instanceof GameScene2D gameScene2D) {
-            return theAssets().text(key, modeText)
+            return ui.theAssets().text(key, modeText)
                 + " [%s]".formatted(sceneClassName)
                 + " (%.2fx)".formatted(gameScene2D.scaling());
         }
-        return theAssets().text(key, modeText) + " [%s]".formatted(sceneClassName);
+        return ui.theAssets().text(key, modeText) + " [%s]".formatted(sceneClassName);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -222,7 +223,7 @@ public class GameView implements PacManGames_View {
             }
         });
 
-        if (miniGameView.isVisible() && theUI().currentGameSceneIsPlayScene3D() && gameContext.optGameLevel().isPresent()) {
+        if (miniGameView.isVisible() && ui.currentGameSceneIsPlayScene3D() && gameContext.optGameLevel().isPresent()) {
             miniGameView.draw(gameContext, gameContext.theGameLevel());
         }
         flashMessageLayer.update();

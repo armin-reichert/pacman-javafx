@@ -26,9 +26,8 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createGhost;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createPac;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
-import static de.amr.pacmanfx.ui.GameUIContext.theAssets;
-import static de.amr.pacmanfx.ui.GameUIContext.theUI;
-import static de.amr.pacmanfx.ui.PacManGames_UI.PY_3D_ENABLED;
+import static de.amr.pacmanfx.ui.GameUI.PY_3D_ENABLED;
+import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.ui.input.Keyboard.nude;
 import static de.amr.pacmanfx.uilib.widgets.OptionMenuStyle.DEFAULT_OPTION_MENU_STYLE;
 import static java.util.Objects.requireNonNull;
@@ -241,8 +240,8 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         state.mapOrder = MapSelectionMode.CUSTOM_MAPS_FIRST;
 
         var style = new OptionMenuStyle(
-            theAssets().font("font.pacfontgood", 32),
-            theAssets().arcadeFont(8),
+            theUI().theAssets().font("font.pacfontgood", 32),
+            theUI().theAssets().arcadeFont(8),
             DEFAULT_OPTION_MENU_STYLE.backgroundFill(),
             DEFAULT_OPTION_MENU_STYLE.borderStroke(),
             ArcadePalette.ARCADE_RED,

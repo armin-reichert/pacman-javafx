@@ -49,9 +49,8 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_MEDIUM;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_SHORT;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
-import static de.amr.pacmanfx.ui.GameUIContext.*;
+import static de.amr.pacmanfx.ui.GameUI.*;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
-import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 import static de.amr.pacmanfx.ui._2d.GameRenderer.fillCanvas;
 import static de.amr.pacmanfx.uilib.Ufx.menuTitleItem;
 
@@ -106,11 +105,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent, ContextMenu menu) {
         SceneDisplayMode displayMode = PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.get();
 
-        var miScaledToFit = new RadioMenuItem(theAssets().text("scaled_to_fit"));
+        var miScaledToFit = new RadioMenuItem(theUI().theAssets().text("scaled_to_fit"));
         miScaledToFit.setSelected(displayMode == SceneDisplayMode.SCALED_TO_FIT);
         miScaledToFit.setOnAction(e -> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.set(SceneDisplayMode.SCALED_TO_FIT));
 
-        var miScrolling = new RadioMenuItem(theAssets().text("scrolling"));
+        var miScrolling = new RadioMenuItem(theUI().theAssets().text("scrolling"));
         miScrolling.setSelected(displayMode == SceneDisplayMode.SCROLLING);
         miScrolling.setOnAction(e -> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.set(SceneDisplayMode.SCROLLING));
 
@@ -120,22 +119,22 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.addListener((py, ov, newMode) ->
             radio.selectToggle(newMode == SceneDisplayMode.SCROLLING ? miScrolling : miScaledToFit));
 
-        var miAutopilot = new CheckMenuItem(theAssets().text("autopilot"));
+        var miAutopilot = new CheckMenuItem(theUI().theAssets().text("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(PY_USING_AUTOPILOT);
 
-        var miImmunity = new CheckMenuItem(theAssets().text("immunity"));
+        var miImmunity = new CheckMenuItem(theUI().theAssets().text("immunity"));
         miImmunity.selectedProperty().bindBidirectional(PY_IMMUNITY);
 
-        var miMuted = new CheckMenuItem(theAssets().text("muted"));
+        var miMuted = new CheckMenuItem(theUI().theAssets().text("muted"));
         miMuted.selectedProperty().bindBidirectional(theUI().mutedProperty());
 
-        var miQuit = new MenuItem(theAssets().text("quit"));
+        var miQuit = new MenuItem(theUI().theAssets().text("quit"));
         miQuit.setOnAction(e -> GameAction.executeIfEnabled(theUI(), gameContext, ACTION_QUIT_GAME_SCENE));
 
         return List.of(
             miScaledToFit,
             miScrolling,
-            menuTitleItem(theAssets().text("pacman")),
+            menuTitleItem(theUI().theAssets().text("pacman")),
             miAutopilot,
             miImmunity,
             new SeparatorMenuItem(),
@@ -190,10 +189,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     public void update() {
         gameContext.optGameLevel().ifPresent(level -> {
             if (level.isDemoLevel()) {
-                theSound().setEnabled(false);
+                theUI().theSound().setEnabled(false);
             } else {
                 messageMovement.update();
-                theSound().setEnabled(true);
+                theUI().theSound().setEnabled(true);
                 updateSound();
             }
             if (fxSubScene.getCamera() == dynamicCamera) {
@@ -236,7 +235,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     public void onGameStarted(GameEvent e) {
         boolean silent = gameContext.theGameLevel().isDemoLevel() || gameContext.theGameState() == TESTING_LEVELS_SHORT || gameContext.theGameState() == TESTING_LEVELS_MEDIUM;
         if (!silent) {
-            theSound().play(SoundID.GAME_READY);
+            theUI().theSound().play(SoundID.GAME_READY);
         }
     }
 
@@ -274,7 +273,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         switch (state) {
             case HUNTING -> dynamicCamera.setFocussingActor(true);
             case LEVEL_COMPLETE -> {
-                theSound().stopAll();
+                theUI().theSound().stopAll();
                 levelCompletedAnimation.setGameLevel(gameContext.theGameLevel());
                 levelCompletedAnimation.setSingleFlashMillis(333);
                 levelCompletedAnimation.getOrCreateAnimation().setOnFinished(e -> gameContext.theGameController().letCurrentGameStateExpire());
@@ -296,25 +295,25 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void onBonusActivated(GameEvent e) {
-        theSound().loop(SoundID.BONUS_ACTIVE);
+        theUI().theSound().loop(SoundID.BONUS_ACTIVE);
     }
 
     @Override
     public void onBonusEaten(GameEvent e) {
-        theSound().stop(SoundID.BONUS_ACTIVE);
-        theSound().play(SoundID.BONUS_EATEN);
+        theUI().theSound().stop(SoundID.BONUS_ACTIVE);
+        theUI().theSound().play(SoundID.BONUS_EATEN);
     }
 
     @Override
     public void onBonusExpired(GameEvent e) {
-        theSound().stop(SoundID.BONUS_ACTIVE);
+        theUI().theSound().stop(SoundID.BONUS_ACTIVE);
     }
 
     @Override
     public void onSpecialScoreReached(GameEvent e) {
         int score = e.payload("score");
         Logger.info("Extra life won for reaching score of {}", score);
-        theSound().play(SoundID.EXTRA_LIFE);
+        theUI().theSound().play(SoundID.EXTRA_LIFE);
     }
 
     @Override
@@ -324,7 +323,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void onGhostEaten(GameEvent e) {
-        theSound().play(SoundID.GHOST_EATEN);
+        theUI().theSound().play(SoundID.GHOST_EATEN);
     }
 
     @Override
@@ -335,23 +334,23 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void onPacDying(GameEvent e) {
-        theSound().play(SoundID.PAC_MAN_DEATH);
+        theUI().theSound().play(SoundID.PAC_MAN_DEATH);
     }
 
     @Override
     public void onPacFoundFood(GameEvent e) {
-        theSound().loop(SoundID.PAC_MAN_MUNCHING);
+        theUI().theSound().loop(SoundID.PAC_MAN_MUNCHING);
     }
 
     @Override
     public void onPacGetsPower(GameEvent e) {
-        theSound().pauseSiren();
-        theSound().loop(SoundID.PAC_MAN_POWER);
+        theUI().theSound().pauseSiren();
+        theUI().theSound().loop(SoundID.PAC_MAN_POWER);
     }
 
     @Override
     public void onPacLostPower(GameEvent e) {
-        theSound().stop(SoundID.PAC_MAN_POWER);
+        theUI().theSound().stop(SoundID.PAC_MAN_POWER);
     }
 
     private void updateSound() {
@@ -364,17 +363,17 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             int huntingPhase = gameContext.theGame().huntingTimer().phaseIndex();
             int sirenNumber = 1 + huntingPhase / 2;
             switch (sirenNumber) {
-                case 1 -> theSound().playSiren(SoundID.SIREN_1, 1.0);
-                case 2 -> theSound().playSiren(SoundID.SIREN_2, 1.0);
-                case 3 -> theSound().playSiren(SoundID.SIREN_3, 1.0);
-                case 4 -> theSound().playSiren(SoundID.SIREN_4, 1.0);
+                case 1 -> theUI().theSound().playSiren(SoundID.SIREN_1, 1.0);
+                case 2 -> theUI().theSound().playSiren(SoundID.SIREN_2, 1.0);
+                case 3 -> theUI().theSound().playSiren(SoundID.SIREN_3, 1.0);
+                case 4 -> theUI().theSound().playSiren(SoundID.SIREN_4, 1.0);
                 default -> throw new IllegalArgumentException("Illegal siren number " + sirenNumber);
             }
         }
 
         // TODO: how exactly is the munching sound created in the original game?
         if (pac.starvingTicks() > 10) {
-            theSound().pause(SoundID.PAC_MAN_MUNCHING);
+            theUI().theSound().pause(SoundID.PAC_MAN_MUNCHING);
         }
 
         //TODO check in simulator when exactly this sound is played
@@ -383,9 +382,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             .findAny();
         if (ghostReturningToHouse.isPresent()
             && (gameContext.theGameState() == GameState.HUNTING || gameContext.theGameState() == GameState.GHOST_DYING)) {
-            theSound().loop(SoundID.GHOST_RETURNS);
+            theUI().theSound().loop(SoundID.GHOST_RETURNS);
         } else {
-            theSound().stop(SoundID.GHOST_RETURNS);
+            theUI().theSound().stop(SoundID.GHOST_RETURNS);
         }
     }
 

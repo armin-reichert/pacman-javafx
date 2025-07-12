@@ -21,7 +21,7 @@ import java.util.Map;
 import static de.amr.pacmanfx.Globals.PINK_GHOST_SPEEDY;
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 import static de.amr.pacmanfx.lib.timer.TickTimer.ticksToString;
-import static de.amr.pacmanfx.ui.GameUIContext.theUI;
+import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.uilib.Ufx.formatColorHex;
 
 /**

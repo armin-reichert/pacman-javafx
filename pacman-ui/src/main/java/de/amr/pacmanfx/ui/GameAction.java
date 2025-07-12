@@ -12,7 +12,7 @@ import org.tinylog.Logger;
  */
 public interface GameAction {
 
-    static void executeIfEnabled(PacManGames_UI ui, GameContext gameContext, GameAction action) {
+    static void executeIfEnabled(GameUI ui, GameContext gameContext, GameAction action) {
         if (action.isEnabled(ui, gameContext)) {
             action.execute(ui, gameContext);
             Logger.trace("Action '{}' executed", action.name());
@@ -21,9 +21,9 @@ public interface GameAction {
         }
     }
 
-    void execute(PacManGames_UI ui, GameContext gameContext);
+    void execute(GameUI ui, GameContext gameContext);
 
-    default boolean isEnabled(PacManGames_UI ui, GameContext gameContext) { return true; }
+    default boolean isEnabled(GameUI ui, GameContext gameContext) { return true; }
 
     default String name() { return toString(); }
 }

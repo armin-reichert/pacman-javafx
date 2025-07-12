@@ -20,9 +20,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
-import static de.amr.pacmanfx.ui.GameUIContext.theAssets;
+import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_WHITE;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_YELLOW;
 import static java.util.Objects.requireNonNull;
@@ -65,7 +65,7 @@ public class ArcadePacMan_GameRenderer implements SpriteGameRenderer {
         if (!hud.isVisible()) return;
 
         if (hud.isScoreVisible()) {
-            ctx.setFont(theAssets().arcadeFont(scaled(8)));
+            ctx.setFont(theUI().theAssets().arcadeFont(scaled(8)));
             ctx.setFill((ARCADE_WHITE));
             drawScore(gameContext.theGame().score(), "SCORE", tiles_to_px(1), tiles_to_px(1));
             drawScore(gameContext.theGame().highScore(), "HIGH SCORE", tiles_to_px(14), tiles_to_px(1));
@@ -97,7 +97,7 @@ public class ArcadePacMan_GameRenderer implements SpriteGameRenderer {
 
         if (hud.isCreditVisible()) {
             String text = "CREDIT %2d".formatted(gameContext.theCoinMechanism().numCoins());
-            fillTextAtScaledPosition(text, ARCADE_WHITE, theAssets().arcadeFont(scaled(8)), 2 * TS, sceneSize.y() - 2);
+            fillTextAtScaledPosition(text, ARCADE_WHITE, theUI().theAssets().arcadeFont(scaled(8)), 2 * TS, sceneSize.y() - 2);
         }
     }
 
@@ -114,7 +114,7 @@ public class ArcadePacMan_GameRenderer implements SpriteGameRenderer {
         ctx.save();
         ctx.scale(scaling(), scaling());
         if (mazeHighlighted) {
-            ctx.drawImage(theAssets().image("pacman.flashing_maze"), 0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);
+            ctx.drawImage(theUI().theAssets().image("pacman.flashing_maze"), 0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);
         }
         else if (level.uneatenFoodCount() == 0) {
             drawSprite(spriteSheet.sprite(SpriteID.MAP_EMPTY), 0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);

@@ -30,7 +30,7 @@ import org.tinylog.Logger;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.ui.GameUIContext.theUI;
+import static de.amr.pacmanfx.ui.GameUI.theUI;
 
 public class MiniGameView extends VBox {
 

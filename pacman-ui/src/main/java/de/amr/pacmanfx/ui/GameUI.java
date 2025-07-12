@@ -5,10 +5,15 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.ui._3d.Perspective;
+import de.amr.pacmanfx.ui.input.Joypad;
+import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.layout.GameView;
 import de.amr.pacmanfx.ui.layout.PacManGames_View;
 import de.amr.pacmanfx.ui.layout.StartPagesView;
+import de.amr.pacmanfx.ui.sound.SoundManager;
+import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import javafx.beans.property.*;
 import javafx.scene.input.KeyCode;
@@ -28,7 +33,9 @@ import static de.amr.pacmanfx.ui.ActionBindingMap.createActionBinding;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
 
-public interface PacManGames_UI {
+public interface GameUI {
+
+    static GameUI theUI()       { return PacManGames_UI_Impl.THE_ONE; }
 
     static PacManGames_UI_Builder build(GameContext gameContext, Stage stage, double width, double height) {
         return new PacManGames_UI_Builder(gameContext, stage, width, height);
@@ -132,6 +139,13 @@ public interface PacManGames_UI {
     ObjectProperty<Perspective.ID> PY_3D_PERSPECTIVE         = new SimpleObjectProperty<>(Perspective.ID.TRACK_PLAYER);
     DoubleProperty                 PY_3D_WALL_HEIGHT         = new SimpleDoubleProperty(OBSTACLE_3D_BASE_HEIGHT);
     DoubleProperty                 PY_3D_WALL_OPACITY        = new SimpleDoubleProperty(1.0);
+
+    PacManGames_Assets theAssets();
+    GameClock theGameClock();
+    DirectoryWatchdog theWatchdog();
+    Keyboard theKeyboard();
+    Joypad theJoypad();
+    SoundManager theSound();
 
     Stage stage();
     void restart();

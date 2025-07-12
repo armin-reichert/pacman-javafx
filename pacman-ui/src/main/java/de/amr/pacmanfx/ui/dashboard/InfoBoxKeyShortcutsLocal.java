@@ -11,8 +11,7 @@ import javafx.scene.input.KeyCombination;
 
 import java.util.Comparator;
 
-import static de.amr.pacmanfx.ui.GameUIContext.theAssets;
-import static de.amr.pacmanfx.ui.GameUIContext.theUI;
+import static de.amr.pacmanfx.ui.GameUI.theUI;
 
 /**
  * Displays context-sensitive the keyboard shortcuts.
@@ -37,7 +36,7 @@ public class InfoBoxKeyShortcutsLocal extends InfoBox {
             actionBindingMap.entrySet().stream().sorted(Comparator.comparing(e -> e.getKey().getDisplayText())).forEach(entry -> {
                 KeyCombination keyCombination = entry.getKey();
                 GameAction action = entry.getValue();
-                String localizedActionText = theAssets().text(action.name());
+                String localizedActionText = theUI().theAssets().text(action.name());
                 addRow(keyCombination.getDisplayText(), createLabel(localizedActionText, action.isEnabled(theUI(), gameContext)));
             });
         }

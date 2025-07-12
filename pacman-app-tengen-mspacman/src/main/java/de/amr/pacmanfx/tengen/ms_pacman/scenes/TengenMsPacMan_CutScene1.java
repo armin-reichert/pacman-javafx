@@ -25,7 +25,7 @@ import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PacAnimationMap.ANIM_PAC_MAN_MUNCHING;
-import static de.amr.pacmanfx.ui.GameUIContext.*;
+import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_LET_GAME_STATE_EXPIRE;
 import static de.amr.pacmanfx.ui._2d.GameRenderer.fillCanvas;
 
@@ -72,7 +72,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         gameContext.theGame().hud().showLevelCounter(true);
         gameContext.theGame().hud().showLivesCounter(false);
 
-        actionBindings.bind(ACTION_LET_GAME_STATE_EXPIRE, theJoypad().key(JoypadButton.START));
+        actionBindings.bind(ACTION_LET_GAME_STATE_EXPIRE, theUI().theJoypad().key(JoypadButton.START));
 
         PacManGames_UIConfig config = theUI().configuration();
         var spriteSheet = (TengenMsPacMan_SpriteSheet) config.spriteSheet();
@@ -93,7 +93,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        theSound().stop(MUSIC_ID);
+        theUI().theSound().stop(MUSIC_ID);
     }
 
     @Override
@@ -102,7 +102,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         if (t == 0) {
             clapperboard.show();
             clapperboard.startAnimation();
-            theSound().play(MUSIC_ID);
+            theUI().theSound().play(MUSIC_ID);
         }
         else if (t == 130) {
             pacMan.setMoveDir(Direction.RIGHT);

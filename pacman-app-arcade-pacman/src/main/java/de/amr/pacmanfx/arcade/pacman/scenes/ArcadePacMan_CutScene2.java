@@ -16,17 +16,14 @@ import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createGhost;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createPac;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
-import static de.amr.pacmanfx.ui.GameUIContext.theSound;
-import static de.amr.pacmanfx.ui.GameUIContext.theUI;
-import static de.amr.pacmanfx.ui.PacManGames_UI.DEBUG_TEXT_FILL;
-import static de.amr.pacmanfx.ui.PacManGames_UI.DEBUG_TEXT_FONT;
+import static de.amr.pacmanfx.ui.GameUI.*;
 
 /**
  * Second cut scene in Arcade Pac-Man game:<br>
@@ -80,7 +77,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        theSound().stop(MUSIC_ID);
+        theUI().theSound().stop(MUSIC_ID);
         Logger.info("{} ends", getClass().getSimpleName());
     }
 
@@ -91,7 +88,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
             return;
         }
         switch (frame) {
-            case ANIMATION_START -> theSound().play(MUSIC_ID);
+            case ANIMATION_START -> theUI().theSound().play(MUSIC_ID);
             case ANIMATION_START + 1 -> nailDressRaptureAnimation.setFrameIndex(NAIL);
             case ANIMATION_START + 25 -> {
                 pac.placeAtTile(28, 20);
