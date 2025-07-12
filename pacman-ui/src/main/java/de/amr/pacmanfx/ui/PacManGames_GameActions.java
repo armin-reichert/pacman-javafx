@@ -481,7 +481,7 @@ public interface PacManGames_GameActions {
     GameAction ACTION_SHOW_HELP = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui, GameContext gameContext) {
-            ui.gameView().showHelp();
+            ui.gameView().showHelp(gameContext);
         }
 
         @Override

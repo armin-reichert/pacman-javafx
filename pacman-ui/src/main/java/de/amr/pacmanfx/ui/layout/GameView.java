@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.layout;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
@@ -169,8 +170,8 @@ public class GameView implements PacManGames_View {
         contextMenu.show(root, contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY());
     }
 
-    public void showHelp() {
-        popupLayer.showHelp(canvasContainer.scaling());
+    public void showHelp(GameContext gameContext) {
+        popupLayer.showHelp(gameContext, canvasContainer.scaling());
     }
 
     // Asset key regex: app.title.(ms_pacman|ms_pacman_xxl|pacman,pacman_xxl|tengen)(.paused)?

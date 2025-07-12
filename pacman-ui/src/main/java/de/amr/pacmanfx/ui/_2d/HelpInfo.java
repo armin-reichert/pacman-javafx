@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._2d;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
@@ -17,7 +18,6 @@ import javafx.scene.text.Text;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.GameUIContext.theAssets;
 import static de.amr.pacmanfx.ui.PacManGames_UI.PY_IMMUNITY;
 import static de.amr.pacmanfx.ui.PacManGames_UI.PY_USING_AUTOPILOT;
@@ -28,13 +28,13 @@ import static de.amr.pacmanfx.ui.PacManGames_UI.PY_USING_AUTOPILOT;
  */
 public class HelpInfo {
 
-    public static HelpInfo build() {
+    public static HelpInfo build(GameContext gameContext) {
         HelpInfo help = new HelpInfo();
-        switch (theGameContext().theGameState()) {
-            case INTRO -> help.addInfoForIntroScene();
-            case SETTING_OPTIONS -> help.addInfoForCreditScene();
+        switch (gameContext.theGameState()) {
+            case INTRO -> help.addInfoForIntroScene(gameContext);
+            case SETTING_OPTIONS -> help.addInfoForCreditScene(gameContext);
             case STARTING_GAME, HUNTING, PACMAN_DYING, GHOST_DYING -> {
-                if (theGameContext().optGameLevel().isPresent() && theGameContext().optGameLevel().get().isDemoLevel()) {
+                if (gameContext.optGameLevel().isPresent() && gameContext.optGameLevel().get().isDemoLevel()) {
                     help.addInfoForDemoLevelPlayScene();
                 } else {
                     help.addInfoForPlayScene();
@@ -108,16 +108,16 @@ public class HelpInfo {
         addRow("help.show_intro", "Q");
     }
 
-    private void addInfoForIntroScene() {
-        if (theGameContext().theGame().canStartNewGame()) {
+    private void addInfoForIntroScene(GameContext gameContext) {
+        if (gameContext.theGame().canStartNewGame()) {
             addRow("help.start_game", "1");
         }
         addRow("help.add_credit", "5");
         addQuitEntry();
     }
 
-    private void addInfoForCreditScene() {
-        if (theGameContext().theGame().canStartNewGame()) {
+    private void addInfoForCreditScene(GameContext gameContext) {
+        if (gameContext.theGame().canStartNewGame()) {
             addRow("help.start_game", "1");
         }
         addRow("help.add_credit", "5");
