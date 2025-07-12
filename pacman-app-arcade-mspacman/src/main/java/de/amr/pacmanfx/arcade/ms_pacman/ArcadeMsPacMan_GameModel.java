@@ -213,7 +213,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
             }
         });
 
-        gateKeeper = new GateKeeper();
+        gateKeeper = new GateKeeper(gameContext);
         gateKeeper.setOnGhostReleased(prisoner -> {
             if (prisoner.personality() == ORANGE_GHOST_POKEY && !isCruiseElroyModeActive()) {
                 Logger.trace("Re-enable 'Cruise Elroy' mode because {} exits house:", prisoner.name());
