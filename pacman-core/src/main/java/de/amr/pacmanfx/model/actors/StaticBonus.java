@@ -10,8 +10,6 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.GameModel;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.Globals.theGameContext;
-
 /**
  * Bonus that appears for some time at a fixed position before it gets eaten or vanishes.
  */

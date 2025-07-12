@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.layout.StartPage;
 import de.amr.pacmanfx.ui.layout.StartPagesView;
@@ -14,14 +15,13 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 
-import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.ui.GameUIContext.theUI;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_BOOT_SHOW_GAME_VIEW;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_StartPage extends StackPane implements StartPage {
 
-    public TengenMsPacMan_StartPage(String gameVariant) {
+    public TengenMsPacMan_StartPage(GameContext gameContext, String gameVariant) {
         setUserData(requireNonNull(gameVariant));
 
         ResourceManager rm = () -> TengenMsPacMan_StartPage.class;
@@ -35,7 +35,7 @@ public class TengenMsPacMan_StartPage extends StackPane implements StartPage {
         flyer.selectPage(0);
 
         var startButton = StartPagesView.createStartButton(Pos.BOTTOM_CENTER);
-        startButton.setAction(() -> GameAction.executeIfEnabled(theUI(), theGameContext(), ACTION_BOOT_SHOW_GAME_VIEW));
+        startButton.setAction(() -> GameAction.executeIfEnabled(theUI(), gameContext, ACTION_BOOT_SHOW_GAME_VIEW));
         startButton.setTranslateY(-50);
         getChildren().addAll(flyer, startButton);
     }
