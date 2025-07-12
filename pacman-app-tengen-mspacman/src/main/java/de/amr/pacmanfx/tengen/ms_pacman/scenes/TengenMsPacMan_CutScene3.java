@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
@@ -15,7 +16,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.createMsPacMan;
@@ -51,14 +52,18 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
     private boolean darkness;
     private int t;
 
+    public TengenMsPacMan_CutScene3(GameContext gameContext) {
+        super(gameContext);
+    }
+    
     @Override
     public void doInit() {
         t = -1;
         darkness = false;
 
-        theGame().hud().showScore(false);
-        theGame().hud().showLevelCounter(true);
-        theGame().hud().showLivesCounter(false);
+        gameContext.theGame().hud().showScore(false);
+        gameContext.theGame().hud().showLevelCounter(true);
+        gameContext.theGame().hud().showLivesCounter(false);
 
         actionBindings.bind(ACTION_LET_GAME_STATE_EXPIRE, theJoypad().key(JoypadButton.START));
 
@@ -68,9 +73,9 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         clapperboard = new Clapperboard(spriteSheet, 3, "JUNIOR");
         clapperboard.setPosition(3 * TS, 10 * TS);
         clapperboard.setFont(scaledArcadeFont8());
-        msPacMan = createMsPacMan();
+        msPacMan = createMsPacMan(null);
         msPacMan.setAnimations(config.createPacAnimations(msPacMan));
-        pacMan = createPacMan();
+        pacMan = createPacMan(null);
         pacMan.setAnimations(config.createPacAnimations(pacMan));
         stork = new Stork(spriteSheet);
         flyingBag = new Bag(spriteSheet);
@@ -130,7 +135,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
             darkness = true;
         }
         else if (t == 660) {
-            theGameController().letCurrentGameStateExpire();
+            gameContext.theGameController().letCurrentGameStateExpire();
             return;
         }
 
@@ -166,9 +171,9 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
             drawDebugInfo();
         }
         // draw HUD only for non-Arcade map mode
-        if (theGame() instanceof TengenMsPacMan_GameModel tengenGame) {
+        if (gameContext.theGame() instanceof TengenMsPacMan_GameModel tengenGame) {
             if (tengenGame.mapCategory() != MapCategory.ARCADE) {
-                gameRenderer.drawHUD(theGame().hud(), sizeInPx().minus(0, 2 * TS));
+                gameRenderer.drawHUD(gameContext.theGame().hud(), sizeInPx().minus(0, 2 * TS));
             }
         }
     }

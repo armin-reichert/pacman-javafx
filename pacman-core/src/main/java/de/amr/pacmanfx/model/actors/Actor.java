@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model.actors;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import javafx.beans.property.BooleanProperty;
@@ -24,10 +25,16 @@ import static java.util.Objects.requireNonNull;
  */
 public class Actor {
 
+    protected GameContext gameContext;
+
     private final ObjectProperty<Vector2f> positionProperty = new SimpleObjectProperty<>(Vector2f.ZERO);
     private final ObjectProperty<Vector2f> velocityProperty = new SimpleObjectProperty<>(Vector2f.ZERO);
     private final ObjectProperty<Vector2f> accelerationProperty = new SimpleObjectProperty<>(Vector2f.ZERO);
     private final BooleanProperty visibleProperty = new SimpleBooleanProperty(false);
+
+    public Actor(GameContext gameContext) {
+        this.gameContext = gameContext;
+    }
 
     @Override
     public String toString() {

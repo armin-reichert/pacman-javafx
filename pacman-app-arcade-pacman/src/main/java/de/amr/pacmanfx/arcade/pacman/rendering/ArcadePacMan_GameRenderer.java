@@ -66,8 +66,8 @@ public class ArcadePacMan_GameRenderer implements SpriteGameRenderer {
         if (hud.isScoreVisible()) {
             ctx.setFont(theAssets().arcadeFont(scaled(8)));
             ctx.setFill((ARCADE_WHITE));
-            drawScore(theGame().score(), "SCORE", tiles_to_px(1), tiles_to_px(1));
-            drawScore(theGame().highScore(), "HIGH SCORE", tiles_to_px(14), tiles_to_px(1));
+            drawScore(theGameContext().theGame().score(), "SCORE", tiles_to_px(1), tiles_to_px(1));
+            drawScore(theGameContext().theGame().highScore(), "HIGH SCORE", tiles_to_px(14), tiles_to_px(1));
         }
 
         if (hud.isLevelCounterVisible()) {
@@ -87,15 +87,15 @@ public class ArcadePacMan_GameRenderer implements SpriteGameRenderer {
             for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
                 drawSpriteScaled(sprite, x + TS * (2 * i), y);
             }
-            if (theGame().lifeCount() > livesCounter.maxLivesDisplayed()) {
+            if (theGameContext().theGame().lifeCount() > livesCounter.maxLivesDisplayed()) {
                 // show text indicating that more lives are available than symbols displayed (cheating may cause this)
                 Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
-                fillTextAtScaledPosition("(%d)".formatted(theGame().lifeCount()), ARCADE_YELLOW, font, x + TS * 10, y + TS);
+                fillTextAtScaledPosition("(%d)".formatted(theGameContext().theGame().lifeCount()), ARCADE_YELLOW, font, x + TS * 10, y + TS);
             }
         }
 
         if (hud.isCreditVisible()) {
-            String text = "CREDIT %2d".formatted(theCoinMechanism().numCoins());
+            String text = "CREDIT %2d".formatted(theGameContext().theCoinMechanism().numCoins());
             fillTextAtScaledPosition(text, ARCADE_WHITE, theAssets().arcadeFont(scaled(8)), 2 * TS, sceneSize.y() - 2);
         }
     }

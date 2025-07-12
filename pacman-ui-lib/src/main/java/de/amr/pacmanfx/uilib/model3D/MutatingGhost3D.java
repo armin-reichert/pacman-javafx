@@ -150,7 +150,7 @@ public class MutatingGhost3D extends Group implements Destroyable {
         ghost.wishDirProperty().addListener(this::handleGhostWishDirChange);
 
         visibleProperty().bind(Bindings.createBooleanBinding(
-                () -> ghost.isVisible() && !isPositionOutsideWorld(theGameLevel(), ghost.center()),
+                () -> ghost.isVisible() && !isPositionOutsideWorld(theGameContext().theGameLevel(), ghost.center()),
                 ghost.visibleProperty(), ghost.positionProperty()
         ));
 

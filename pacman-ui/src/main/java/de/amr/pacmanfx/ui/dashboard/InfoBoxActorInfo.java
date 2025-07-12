@@ -48,7 +48,7 @@ public class InfoBoxActorInfo extends InfoBox {
 
     private Supplier<String> pacInfo(BiFunction<GameModel, Pac, String> fnPacInfo) {
         return ifLevelPresent(level -> level.pac() != null
-            ? fnPacInfo.apply(theGame(), level.pac())
+            ? fnPacInfo.apply(theGameContext().theGame(), level.pac())
             : NO_INFO);
     }
 
@@ -81,7 +81,7 @@ public class InfoBoxActorInfo extends InfoBox {
         BiFunction<GameModel, Ghost, String> fnGhostInfo, byte personality) {
         return ifLevelPresent(level -> {
             if (level.ghosts().findAny().isPresent()) {
-                return fnGhostInfo.apply(theGame(), level.ghost(personality));
+                return fnGhostInfo.apply(theGameContext().theGame(), level.ghost(personality));
             }
             return NO_INFO;
         });
@@ -112,7 +112,7 @@ public class InfoBoxActorInfo extends InfoBox {
     private String ghostState(Ghost ghost) {
         var stateText = ghost.state() != null ? ghost.state().name() : "undefined";
         if (ghost.state() == GhostState.HUNTING_PAC) {
-            stateText = theGame().huntingTimer().phase().name();
+            stateText = theGameContext().theGame().huntingTimer().phase().name();
         }
         return stateText;
     }

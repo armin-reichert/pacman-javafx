@@ -1,5 +1,6 @@
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
@@ -45,20 +46,24 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
     private int t;
 
+    public TengenMsPacMan_CutScene4(GameContext gameContext) {
+        super(gameContext);
+    }
+    
     @Override
     protected void doInit() {
         t = -1;
 
-        theGame().hud().showScore(false);
-        theGame().hud().showLevelCounter(true);
-        theGame().hud().showLivesCounter(false);
+        gameContext.theGame().hud().showScore(false);
+        gameContext.theGame().hud().showLevelCounter(true);
+        gameContext.theGame().hud().showLivesCounter(false);
 
         var spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
         clapperboard = new Clapperboard(spriteSheet, 4, "THE END");
         clapperboard.setPosition(3*TS, 10*TS);
         clapperboard.setFont(scaledArcadeFont8());
-        msPacMan = createMsPacMan();
-        pacMan = createPacMan();
+        msPacMan = createMsPacMan(null);
+        pacMan = createPacMan(null);
         msPacMan.setAnimations(theUI().configuration().createPacAnimations(msPacMan));
         pacMan  .setAnimations(theUI().configuration().createPacAnimations(pacMan));
         juniors = new ArrayList<>();
@@ -129,7 +134,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
             spawnJunior();
         }
         else if (t == 1512) {
-            theGameController().changeGameState(GameState.SETTING_OPTIONS);
+            gameContext.theGameController().changeGameState(GameState.SETTING_OPTIONS);
         }
 
         pacMan.move();
@@ -150,7 +155,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     }
 
     private void spawnJunior() {
-        var junior = createPacMan();
+        var junior = createPacMan(null);
         double randomX = 8 * TS + (8 * TS) * Math.random();
         junior.setPosition((float) randomX, sizeInPx().y() - 4 * TS);
         junior.setMoveDir(Direction.UP);
@@ -220,9 +225,9 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
             drawDebugInfo();
         }
         // draw HUD only for non-Arcade map mode
-        if (theGame() instanceof TengenMsPacMan_GameModel tengenGame) {
+        if (gameContext.theGame() instanceof TengenMsPacMan_GameModel tengenGame) {
             if (tengenGame.mapCategory() != MapCategory.ARCADE) {
-                gameRenderer.drawHUD(theGame().hud(), sizeInPx().minus(0, 2 * TS));
+                gameRenderer.drawHUD(gameContext.theGame().hud(), sizeInPx().minus(0, 2 * TS));
             }
         }
     }

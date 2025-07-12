@@ -22,6 +22,7 @@ class Bag extends Actor implements Animated {
     private boolean open;
 
     public Bag(ArcadeMsPacMan_SpriteSheet spriteSheet) {
+        super(null); // no game context
         animationMap = new SpriteAnimationMap<>(spriteSheet);
         animationMap.setAnimation("junior", SpriteAnimation.build().ofSprite(spriteSheet.sprite(JUNIOR_PAC)).once());
         animationMap.setAnimation("bag", SpriteAnimation.build().ofSprite(spriteSheet.sprite(BLUE_BAG)).once());

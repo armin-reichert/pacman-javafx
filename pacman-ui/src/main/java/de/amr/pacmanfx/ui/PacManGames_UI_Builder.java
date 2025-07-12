@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static de.amr.pacmanfx.Globals.CUSTOM_MAP_DIR;
-import static de.amr.pacmanfx.Globals.theGameController;
+import static de.amr.pacmanfx.Globals.theGameContext;
 import static java.util.Objects.requireNonNull;
 
 public class PacManGames_UI_Builder {
@@ -93,14 +93,14 @@ public class PacManGames_UI_Builder {
         validate();
         final var ui = new PacManGames_UI_Impl(stage, width, height);
         ui.configure(uiConfigClasses);
-        models.forEach((variant, model) -> theGameController().registerGame(variant, model));
-        theGameController().setEventsEnabled(true);
+        models.forEach((variant, model) -> theGameContext().theGameController().registerGame(variant, model));
+        theGameContext().theGameController().setEventsEnabled(true);
         ui.gameView().dashboard().configure(dashboardIDs);
         for (StartPage startPage : startPages) ui.startPagesView().addStartPage(startPage);
         ui.startPagesView().selectStartPage(selectedStartPageIndex);
         ui.startPagesView().currentStartPage()
             .map(StartPage::currentGameVariant)
-            .ifPresent(theGameController()::selectGameVariant);
+            .ifPresent(theGameContext().theGameController()::selectGameVariant);
         PacManGames_UI_Impl.THE_ONE = ui;
         return PacManGames_UI_Impl.THE_ONE;
     }

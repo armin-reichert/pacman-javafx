@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
@@ -49,22 +50,22 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
 
-    public static Pac createPac() {
-        var pac = new Pac("Pac-Man");
+    public static Pac createPac(GameContext gameContext) {
+        var pac = new Pac(gameContext, "Pac-Man");
         pac.reset();
         return pac;
     }
 
-    public static Ghost createGhost(byte personality) {
+    public static Ghost createGhost(GameContext gameContext, byte personality) {
         requireValidGhostPersonality(personality);
         return switch (personality) {
-            case RED_GHOST_SHADOW -> new Ghost(RED_GHOST_SHADOW, "Blinky") {
+            case RED_GHOST_SHADOW -> new Ghost(gameContext, RED_GHOST_SHADOW, "Blinky") {
                 @Override
                 public void hunt(GameLevel level) {
-                    var arcadeGame = (ArcadeCommon_GameModel) theGame();
+                    var arcadeGame = (ArcadeCommon_GameModel) gameContext.theGame();
                     boolean chase = arcadeGame.huntingTimer.phase() == HuntingPhase.CHASING || arcadeGame.cruiseElroy() > 0;
                     Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
-                    setSpeed(theGame().actorSpeedControl().ghostAttackSpeed(level, this));
+                    setSpeed(gameContext.theGame().actorSpeedControl().ghostAttackSpeed(level, this));
                     tryMovingTowardsTargetTile(level, targetTile);
                 }
                 @Override
@@ -73,12 +74,12 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
                     return level.pac().tile();
                 }
             };
-            case PINK_GHOST_SPEEDY -> new Ghost(PINK_GHOST_SPEEDY, "Pinky") {
+            case PINK_GHOST_SPEEDY -> new Ghost(gameContext, PINK_GHOST_SPEEDY, "Pinky") {
                 @Override
                 public void hunt(GameLevel level) {
-                    boolean chase = theGame().huntingTimer().phase() == HuntingPhase.CHASING;
+                    boolean chase = gameContext.theGame().huntingTimer().phase() == HuntingPhase.CHASING;
                     Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
-                    setSpeed(theGame().actorSpeedControl().ghostAttackSpeed(level, this));
+                    setSpeed(gameContext.theGame().actorSpeedControl().ghostAttackSpeed(level, this));
                     tryMovingTowardsTargetTile(level, targetTile);
                 }
                 @Override
@@ -87,12 +88,12 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
                     return level.pac().tilesAheadWithOverflowBug(4);
                 }
             };
-            case CYAN_GHOST_BASHFUL -> new Ghost(CYAN_GHOST_BASHFUL, "Inky") {
+            case CYAN_GHOST_BASHFUL -> new Ghost(gameContext, CYAN_GHOST_BASHFUL, "Inky") {
                 @Override
                 public void hunt(GameLevel level) {
-                    boolean chase = theGame().huntingTimer().phase() == HuntingPhase.CHASING;
+                    boolean chase = gameContext.theGame().huntingTimer().phase() == HuntingPhase.CHASING;
                     Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
-                    setSpeed(theGame().actorSpeedControl().ghostAttackSpeed(level, this));
+                    setSpeed(gameContext.theGame().actorSpeedControl().ghostAttackSpeed(level, this));
                     tryMovingTowardsTargetTile(level, targetTile);
                 }
                 @Override
@@ -101,12 +102,12 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
                     return level.pac().tilesAheadWithOverflowBug(2).scaled(2).minus(level.ghost(RED_GHOST_SHADOW).tile());
                 }
             };
-            case ORANGE_GHOST_POKEY -> new Ghost(ORANGE_GHOST_POKEY, "Clyde") {
+            case ORANGE_GHOST_POKEY -> new Ghost(gameContext, ORANGE_GHOST_POKEY, "Clyde") {
                 @Override
                 public void hunt(GameLevel level) {
-                    boolean chase = theGame().huntingTimer().phase() == HuntingPhase.CHASING;
+                    boolean chase = gameContext.theGame().huntingTimer().phase() == HuntingPhase.CHASING;
                     Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
-                    setSpeed(theGame().actorSpeedControl().ghostAttackSpeed(level, this));
+                    setSpeed(gameContext.theGame().actorSpeedControl().ghostAttackSpeed(level, this));
                     tryMovingTowardsTargetTile(level, targetTile);
                 }
                 @Override
@@ -156,16 +157,18 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
     // bonus points = multiplier * 100
     private static final byte[] BONUS_VALUE_MULTIPLIERS = { 1, 3, 5, 7, 10, 20, 30, 50 };
 
-    public static ArcadePacMan_GameModel arcadeVersion() {
-        return new ArcadePacMan_GameModel(new ArcadePacMan_MapSelector());
+    public static ArcadePacMan_GameModel arcadeVersion(GameContext gameContext) {
+        return new ArcadePacMan_GameModel(gameContext, new ArcadePacMan_MapSelector());
     }
 
     private final HUD hud = new ArcadePacMan_HUD();
 
     /**
+     * @param gameContext the game context
      * @param mapSelector e.g. selector that selects custom maps before standard maps
      */
-    public ArcadePacMan_GameModel(MapSelector mapSelector) {
+    public ArcadePacMan_GameModel(GameContext gameContext, MapSelector mapSelector) {
+        super(gameContext);
         this.mapSelector = requireNonNull(mapSelector);
         setHighScoreFile(new File(HOME_DIR, "highscore-pacman.xml"));
         setExtraLifeScores(EXTRA_LIFE_SCORE);
@@ -241,7 +244,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
         addHouse(level);
         level.setGameOverStateTicks(90);
 
-        Pac pacMan = createPac();
+        Pac pacMan = createPac(gameContext);
         pacMan.setAutopilotSteering(autopilot);
         level.setPac(pacMan);
 
@@ -250,10 +253,10 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
             .filter(tile -> worldMap.content(LayerID.TERRAIN, tile) == TerrainTile.ONE_WAY_DOWN.code())
             .toList();
         level.setGhosts(
-            createGhost(RED_GHOST_SHADOW),
-            createGhost(PINK_GHOST_SPEEDY),
-            createGhost(CYAN_GHOST_BASHFUL),
-            createGhost(ORANGE_GHOST_POKEY));
+            createGhost(gameContext, RED_GHOST_SHADOW),
+            createGhost(gameContext, PINK_GHOST_SPEEDY),
+            createGhost(gameContext, CYAN_GHOST_BASHFUL),
+            createGhost(gameContext, ORANGE_GHOST_POKEY));
         level.ghosts().forEach(ghost -> {
             ghost.reset();
             ghost.setRevivalPosition(ghost.personality() == RED_GHOST_SHADOW
@@ -291,11 +294,11 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
     public void activateNextBonus() {
         level.selectNextBonus();
         byte symbol = level.bonusSymbol(level.currentBonusIndex());
-        var bonus = new StaticBonus(symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100);
+        var bonus = new StaticBonus(gameContext, symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100);
         Vector2i bonusTile = level.worldMap().getTerrainTileProperty(WorldMapProperty.POS_BONUS, new Vector2i(13, 20));
         bonus.setPosition(halfTileRightOf(bonusTile));
         bonus.setEdibleTicks(randomInt(9 * NUM_TICKS_PER_SEC, 10 * NUM_TICKS_PER_SEC));
         level.setBonus(bonus);
-        theGameEventManager().publishEvent(this, GameEventType.BONUS_ACTIVATED, bonus.actor().tile());
+        gameContext.theGameEventManager().publishEvent(this, GameEventType.BONUS_ACTIVATED, bonus.actor().tile());
     }
 }

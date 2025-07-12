@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._2d;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
@@ -16,7 +17,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.PacManGames.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.DEBUG_TEXT_FILL;
 import static de.amr.pacmanfx.ui.PacManGames_UI.DEBUG_TEXT_FONT;
@@ -27,6 +28,9 @@ import static java.util.Objects.requireNonNull;
  * Base class of all 2D scenes.
  */
 public abstract class GameScene2D implements GameScene {
+
+    protected final GameContext gameContext;
+
     protected final ObjectProperty<Font> arcadeFont8Property      = new SimpleObjectProperty<>();
     protected final ObjectProperty<Font> arcadeFont6Property      = new SimpleObjectProperty<>();
     protected final ObjectProperty<Color> backgroundColorProperty = new SimpleObjectProperty<>(Color.BLACK);
@@ -38,12 +42,19 @@ public abstract class GameScene2D implements GameScene {
     protected GameRenderer gameRenderer;
     protected Canvas canvas;
 
-    protected GameScene2D() {}
+    protected GameScene2D(GameContext gameContext) {
+        this.gameContext = requireNonNull(gameContext);
+    }
 
     @Override
     public void destroy() {
         actionBindings.clear();
         animationManager.destroyAllAnimations();
+    }
+
+    @Override
+    public GameContext gameContext() {
+        return gameContext;
     }
 
     @Override
@@ -117,7 +128,7 @@ public abstract class GameScene2D implements GameScene {
         if (debugInfoVisibleProperty.get()) {
             drawDebugInfo();
         }
-        gameRenderer.drawHUD(theGame().hud(), sizeInPx());
+        gameRenderer.drawHUD(gameContext.theGame().hud(), sizeInPx());
     }
 
     /**
@@ -133,9 +144,9 @@ public abstract class GameScene2D implements GameScene {
         gameRenderer.drawTileGrid(sizePx.x(), sizePx.y(), Color.LIGHTGRAY);
         ctx().setFill(DEBUG_TEXT_FILL);
         ctx().setFont(DEBUG_TEXT_FONT);
-        TickTimer stateTimer = theGameState().timer();
+        TickTimer stateTimer = gameContext.theGameState().timer();
         String stateText = "Game State: '%s' (Tick %d of %s)".formatted(
-            theGameState(),
+            gameContext.theGameState(),
             stateTimer.tickCount(),
             stateTimer.durationTicks() == TickTimer.INDEFINITE ? "∞" : String.valueOf(stateTimer.tickCount())
             );

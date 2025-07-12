@@ -7,7 +7,6 @@ package de.amr.pacmanfx.ui.dashboard;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.GameScene;
-import de.amr.pacmanfx.ui.PacManGames_GameActions;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._3d.Perspective;
 import de.amr.pacmanfx.uilib.CameraControlledView;
@@ -17,8 +16,11 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
 import javafx.scene.shape.DrawMode;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
+import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_TOGGLE_DRAW_MODE;
+import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_TOGGLE_PLAY_SCENE_2D_3D;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
 
 /**
@@ -73,8 +75,8 @@ public class InfoBox3DSettings extends InfoBox {
         setEditor(comboPerspectives, PY_3D_PERSPECTIVE);
 
         //TODO check these
-        cbUsePlayScene3D.setOnAction(e -> GameAction.executeIfEnabled(theUI(), PacManGames_GameActions.ACTION_TOGGLE_PLAY_SCENE_2D_3D));
-        cbWireframeMode.setOnAction(e -> GameAction.executeIfEnabled(theUI(), PacManGames_GameActions.ACTION_TOGGLE_DRAW_MODE));
+        cbUsePlayScene3D.setOnAction(e -> GameAction.executeIfEnabled(theUI(), theGameContext(), ACTION_TOGGLE_PLAY_SCENE_2D_3D));
+        cbWireframeMode.setOnAction(e -> GameAction.executeIfEnabled(theUI(), theGameContext(), ACTION_TOGGLE_DRAW_MODE));
     }
 
     private void updateControlsFromProperties() {
@@ -119,9 +121,9 @@ public class InfoBox3DSettings extends InfoBox {
                 return "%.0fx%.0f (scaled: %.0fx%.0f)".formatted(
                         size.x(), size.y(), size.x() * scaling, size.y() * scaling);
             } else {
-                if (optGameLevel().isPresent()) {
-                    int width = theGameLevel().worldMap().numCols() * TS;
-                    int height = theGameLevel().worldMap().numRows() * TS;
+                if (theGameContext().optGameLevel().isPresent()) {
+                    int width = theGameContext().theGameLevel().worldMap().numCols() * TS;
+                    int height = theGameContext().theGameLevel().worldMap().numRows() * TS;
                     return "%dx%d (unscaled)".formatted(width, height);
 
                 }

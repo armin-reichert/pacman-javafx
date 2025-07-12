@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import javafx.scene.input.KeyCombination;
 import org.tinylog.Logger;
@@ -94,11 +95,11 @@ public class ActionBindingMap {
             .findFirst();
     }
 
-    public void runMatchingAction(PacManGames_UI ui) {
-        matchingAction().ifPresent(action -> GameAction.executeIfEnabled(ui, action));
+    public void runMatchingAction(PacManGames_UI ui, GameContext gameContext) {
+        matchingAction().ifPresent(action -> GameAction.executeIfEnabled(ui, gameContext, action));
     }
 
-    public void runMatchingActionOrElse(PacManGames_UI ui, Runnable defaultAction) {
-        matchingAction().ifPresentOrElse(action -> GameAction.executeIfEnabled(ui, action), defaultAction);
+    public void runMatchingActionOrElse(PacManGames_UI ui, GameContext gameContext, Runnable defaultAction) {
+        matchingAction().ifPresentOrElse(action -> GameAction.executeIfEnabled(ui, gameContext, action), defaultAction);
     }
 }

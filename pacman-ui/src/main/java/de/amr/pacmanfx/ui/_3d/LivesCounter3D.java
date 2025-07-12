@@ -23,7 +23,7 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.Globals.theRNG;
+import static de.amr.pacmanfx.Globals.theGameContext;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -112,7 +112,7 @@ public class LivesCounter3D extends Group implements Destroyable  {
                     rotation.setInterpolator(Interpolator.LINEAR);
                     rotation.setCycleCount(Animation.INDEFINITE);
                     rotation.setAutoReverse(true);
-                    rotation.setRate(theRNG().nextDouble(1, 6));
+                    rotation.setRate(theGameContext().theRNG().nextDouble(1, 6));
                     animation.getChildren().add(rotation);
                 }
                 resetShapes();

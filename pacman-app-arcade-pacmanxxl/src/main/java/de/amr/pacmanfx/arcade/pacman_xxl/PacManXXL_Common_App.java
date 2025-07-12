@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
+import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.ui.PacManGames_UI;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.application.Application;
@@ -11,12 +12,18 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import static de.amr.pacmanfx.Globals.CUSTOM_MAP_DIR;
+import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.ui.PacManGames.theClock;
 import static de.amr.pacmanfx.ui.PacManGames.theWatchdog;
 import static de.amr.pacmanfx.ui.PacManGames_UI.GameVariant.MS_PACMAN_XXL;
 import static de.amr.pacmanfx.ui.PacManGames_UI.GameVariant.PACMAN_XXL;
 
 public class PacManXXL_Common_App extends Application {
+
+    @Override
+    public void init() {
+        Globals.initGameContext();
+    }
 
     @Override
     public void start(Stage primaryStage) {
@@ -27,12 +34,12 @@ public class PacManXXL_Common_App extends Application {
         PacManGames_UI.build(primaryStage, width, height)
                 .game(
                     PACMAN_XXL.name(),
-                    new PacManXXL_PacMan_GameModel(xxlMapSelector),
+                    new PacManXXL_PacMan_GameModel(theGameContext(), xxlMapSelector),
                     PacManXXL_PacMan_UIConfig.class
                 )
                 .game(
                     MS_PACMAN_XXL.name(),
-                    new PacManXXL_MsPacMan_GameModel(xxlMapSelector),
+                    new PacManXXL_MsPacMan_GameModel(theGameContext(), xxlMapSelector),
                     PacManXXL_MsPacMan_UIConfig.class
                 )
                 .startPages(

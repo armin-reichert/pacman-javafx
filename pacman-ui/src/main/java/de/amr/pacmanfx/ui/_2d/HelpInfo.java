@@ -30,11 +30,11 @@ public class HelpInfo {
 
     public static HelpInfo build() {
         HelpInfo help = new HelpInfo();
-        switch (theGameState()) {
+        switch (theGameContext().theGameState()) {
             case INTRO -> help.addInfoForIntroScene();
             case SETTING_OPTIONS -> help.addInfoForCreditScene();
             case STARTING_GAME, HUNTING, PACMAN_DYING, GHOST_DYING -> {
-                if (optGameLevel().isPresent() && optGameLevel().get().isDemoLevel()) {
+                if (theGameContext().optGameLevel().isPresent() && theGameContext().optGameLevel().get().isDemoLevel()) {
                     help.addInfoForDemoLevelPlayScene();
                 } else {
                     help.addInfoForPlayScene();
@@ -109,7 +109,7 @@ public class HelpInfo {
     }
 
     private void addInfoForIntroScene() {
-        if (theGame().canStartNewGame()) {
+        if (theGameContext().theGame().canStartNewGame()) {
             addRow("help.start_game", "1");
         }
         addRow("help.add_credit", "5");
@@ -117,7 +117,7 @@ public class HelpInfo {
     }
 
     private void addInfoForCreditScene() {
-        if (theGame().canStartNewGame()) {
+        if (theGameContext().theGame().canStartNewGame()) {
             addRow("help.start_game", "1");
         }
         addRow("help.add_credit", "5");

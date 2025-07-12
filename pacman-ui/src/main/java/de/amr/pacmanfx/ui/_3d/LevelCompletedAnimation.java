@@ -13,7 +13,7 @@ import javafx.animation.*;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import static de.amr.pacmanfx.Globals.theRNG;
+import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.ui.PacManGames.*;
 import static de.amr.pacmanfx.uilib.Ufx.doNow;
@@ -90,7 +90,7 @@ public class LevelCompletedAnimation extends ManagedAnimation {
 
     private Animation createSpinningAnimation() {
         var spin360 = new RotateTransition(Duration.seconds(1.5), gameLevel3D);
-        spin360.setAxis(theRNG().nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
+        spin360.setAxis(theGameContext().theRNG().nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
         spin360.setFromAngle(0);
         spin360.setToAngle(360);
         spin360.setInterpolator(Interpolator.LINEAR);

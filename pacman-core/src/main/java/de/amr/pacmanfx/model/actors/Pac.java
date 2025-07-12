@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model.actors;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.timer.TickTimer;
@@ -14,7 +15,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.Globals.theGame;
+import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static java.util.Objects.requireNonNull;
 
@@ -36,7 +37,8 @@ public class Pac extends MovingActor implements Animated {
     private Steering autopilotSteering;
     private ActorAnimationMap animationMap;
 
-    public Pac(String name) {
+    public Pac(GameContext gameContext, String name) {
+        super(gameContext);
         this.name = requireNonNull(name);
     }
 
@@ -102,12 +104,12 @@ public class Pac extends MovingActor implements Animated {
     }
 
     public boolean isPowerFading(GameLevel level) {
-        return powerTimer.isRunning() && powerTimer.remainingTicks() <= theGame().pacPowerFadingTicks(level);
+        return powerTimer.isRunning() && powerTimer.remainingTicks() <= gameContext.theGame().pacPowerFadingTicks(level);
     }
 
     public boolean isPowerFadingStarting(GameLevel level) {
-        return powerTimer.isRunning() && powerTimer.remainingTicks() == theGame().pacPowerFadingTicks(level)
-            || powerTimer.durationTicks() < theGame().pacPowerFadingTicks(level) && powerTimer.tickCount() == 1;
+        return powerTimer.isRunning() && powerTimer.remainingTicks() == gameContext.theGame().pacPowerFadingTicks(level)
+            || powerTimer.durationTicks() < gameContext.theGame().pacPowerFadingTicks(level) && powerTimer.tickCount() == 1;
     }
 
     public void update(GameLevel level) {
@@ -122,8 +124,8 @@ public class Pac extends MovingActor implements Animated {
             autopilotSteering.steer(this, level);
         }
         setSpeed(powerTimer.isRunning()
-            ? theGame().actorSpeedControl().pacPowerSpeed(level)
-            : theGame().actorSpeedControl().pacNormalSpeed(level));
+            ? gameContext.theGame().actorSpeedControl().pacPowerSpeed(level)
+            : gameContext.theGame().actorSpeedControl().pacNormalSpeed(level));
         tryMoving(level);
 
         if (moveInfo.moved) {

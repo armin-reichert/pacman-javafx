@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman.app;
 
+import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
@@ -13,12 +14,18 @@ import javafx.application.Application;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_ASPECT;
 import static de.amr.pacmanfx.ui.PacManGames.theClock;
 import static de.amr.pacmanfx.ui.PacManGames.theWatchdog;
-import static de.amr.pacmanfx.ui.PacManGames_UI.GameVariant.*;
+import static de.amr.pacmanfx.ui.PacManGames_UI.GameVariant.MS_PACMAN_TENGEN;
 
 public class TengenMsPacMan_App extends Application {
+
+    @Override
+    public void init() {
+        Globals.initGameContext();
+    }
 
     @Override
     public void start(Stage primaryStage) {
@@ -28,7 +35,7 @@ public class TengenMsPacMan_App extends Application {
         PacManGames_UI.build(primaryStage, width, height)
             .game(
                 MS_PACMAN_TENGEN.name(),
-                new TengenMsPacMan_GameModel(),
+                new TengenMsPacMan_GameModel(theGameContext()),
                 TengenMsPacMan_UIConfig.class
             )
             .startPages(

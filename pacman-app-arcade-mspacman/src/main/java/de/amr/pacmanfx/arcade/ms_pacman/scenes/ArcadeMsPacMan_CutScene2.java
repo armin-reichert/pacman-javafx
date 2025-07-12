@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
@@ -41,10 +42,14 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
     private Clapperboard clapperboard;
 
+    public ArcadeMsPacMan_CutScene2(GameContext gameContext) {
+        super(gameContext);
+    }
+    
     @Override
     public void doInit() {
-        pacMan = createPacMan();
-        msPacMan = createMsPacMan();
+        pacMan = createPacMan(null);
+        msPacMan = createMsPacMan(null);
 
         msPacMan.setAnimations(theUI().configuration().createPacAnimations(msPacMan));
         pacMan.setAnimations(theUI().configuration().createPacAnimations(pacMan));
@@ -54,9 +59,9 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
         clapperboard.setFont(scaledArcadeFont8());
         clapperboard.startAnimation();
 
-        theGame().hud().showScore(true);
-        theGame().hud().showLevelCounter(true);
-        theGame().hud().showLivesCounter(false);
+        gameContext.theGame().hud().showScore(true);
+        gameContext.theGame().hud().showLevelCounter(true);
+        gameContext.theGame().hud().showLivesCounter(false);
 
         setSceneState(STATE_CLAPPERBOARD, 120);
     }
@@ -169,7 +174,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
             msPacMan.setSpeed(4.0f);
         }
         else if (sceneTimer.atSecond(23)) {
-            theGameController().letCurrentGameStateExpire();
+            gameContext.theGameController().letCurrentGameStateExpire();
         }
         else {
             pacMan.move();

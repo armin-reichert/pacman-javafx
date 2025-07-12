@@ -13,6 +13,8 @@ public class MidwayCopyright extends Actor {
     private Font font;
     private Color color;
 
+    public MidwayCopyright() { super(null); }
+
     public Font font() {
         return font;
     }

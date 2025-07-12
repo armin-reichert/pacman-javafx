@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
@@ -12,7 +13,6 @@ import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.lib.nes.NES_Palette;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
-import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengen.ms_pacman.model.PacBooster;
@@ -51,7 +51,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.ActionBindingMap.createActionBinding;
 import static de.amr.pacmanfx.ui.PacManGames.*;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
@@ -282,17 +282,17 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     // Game scenes
 
     @Override
-    public void createGameScenes() {
-        scenesByID.put("BootScene",      new TengenMsPacMan_BootScene());
-        scenesByID.put("IntroScene",     new TengenMsPacMan_IntroScene());
-        scenesByID.put("StartScene",     new TengenMsPacMan_OptionsScene());
-        scenesByID.put("ShowingCredits", new TengenMsPacMan_CreditsScene());
-        scenesByID.put("PlayScene2D",    new TengenMsPacMan_PlayScene2D());
-        scenesByID.put("PlayScene3D",    new TengenMsPacMan_PlayScene3D());
-        scenesByID.put("CutScene1",      new TengenMsPacMan_CutScene1());
-        scenesByID.put("CutScene2",      new TengenMsPacMan_CutScene2());
-        scenesByID.put("CutScene3",      new TengenMsPacMan_CutScene3());
-        scenesByID.put("CutScene4",      new TengenMsPacMan_CutScene4());
+    public void createGameScenes(GameContext gameContext) {
+        scenesByID.put("BootScene",      new TengenMsPacMan_BootScene(gameContext));
+        scenesByID.put("IntroScene",     new TengenMsPacMan_IntroScene(gameContext));
+        scenesByID.put("StartScene",     new TengenMsPacMan_OptionsScene(gameContext));
+        scenesByID.put("ShowingCredits", new TengenMsPacMan_CreditsScene(gameContext));
+        scenesByID.put("PlayScene2D",    new TengenMsPacMan_PlayScene2D(gameContext));
+        scenesByID.put("PlayScene3D",    new TengenMsPacMan_PlayScene3D(gameContext));
+        scenesByID.put("CutScene1",      new TengenMsPacMan_CutScene1(gameContext));
+        scenesByID.put("CutScene2",      new TengenMsPacMan_CutScene2(gameContext));
+        scenesByID.put("CutScene3",      new TengenMsPacMan_CutScene3(gameContext));
+        scenesByID.put("CutScene4",      new TengenMsPacMan_CutScene4(gameContext));
 
         //TODO where is the best place to do that?
         var playScene2D = (TengenMsPacMan_PlayScene2D) scenesByID.get("PlayScene2D");
@@ -300,23 +300,23 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     }
 
     @Override
-    public GameScene selectGameScene(GameModel game, GameState gameState) {
-        String sceneID = switch (gameState) {
+    public GameScene selectGameScene(GameContext gameContext) {
+        String sceneID = switch (gameContext.theGameState()) {
             case BOOT               -> "BootScene";
             case SETTING_OPTIONS    -> "StartScene";
             case SHOWING_CREDITS    -> "ShowingCredits";
             case INTRO              -> "IntroScene";
             case GameState.INTERMISSION       -> {
-                if (optGameLevel().isEmpty()) {
+                if (gameContext.optGameLevel().isEmpty()) {
                     throw new IllegalStateException("Cannot determine cut scene, no game level available");
                 }
-                int levelNumber = theGameLevel().number();
-                if (game.cutSceneNumber(levelNumber).isEmpty()) {
+                int levelNumber = gameContext.theGameLevel().number();
+                if (gameContext.theGame().cutSceneNumber(levelNumber).isEmpty()) {
                     throw new IllegalStateException("Cannot determine cut scene after level %d".formatted(levelNumber));
                 }
-                yield "CutScene" + game.cutSceneNumber(levelNumber).getAsInt();
+                yield "CutScene" + gameContext.theGame().cutSceneNumber(levelNumber).getAsInt();
             }
-            case GameState.TESTING_CUT_SCENES -> "CutScene" + game.<Integer>getProperty("intermissionTestNumber");
+            case GameState.TESTING_CUT_SCENES -> "CutScene" + gameContext.theGame().<Integer>getProperty("intermissionTestNumber");
             default -> PY_3D_ENABLED.get() ? "PlayScene3D" : "PlayScene2D";
         };
         return scenesByID.get(sceneID);
@@ -338,13 +338,13 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
 
     public static final GameAction ACTION_QUIT_DEMO_LEVEL = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui) {
-            theGameController().changeGameState(GameState.SETTING_OPTIONS);
+        public void execute(PacManGames_UI ui, GameContext gameContext) {
+            gameContext.theGameController().changeGameState(GameState.SETTING_OPTIONS);
         }
 
         @Override
-        public boolean isEnabled(PacManGames_UI ui) {
-            return optGameLevel().isPresent() && optGameLevel().get().isDemoLevel();
+        public boolean isEnabled(PacManGames_UI ui, GameContext gameContext) {
+            return gameContext.optGameLevel().isPresent() && gameContext.optGameLevel().get().isDemoLevel();
         }
 
         @Override
@@ -355,8 +355,8 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
 
     public static final GameAction ACTION_START_GAME = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui) {
-            theGameController().changeGameState(GameState.SETTING_OPTIONS);
+        public void execute(PacManGames_UI ui, GameContext gameContext) {
+            gameContext.theGameController().changeGameState(GameState.SETTING_OPTIONS);
         }
 
         @Override
@@ -367,10 +367,10 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
 
     public static final GameAction ACTION_START_PLAYING = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui) {
+        public void execute(PacManGames_UI ui, GameContext gameContext) {
             theSound().stopAll();
-            theGame().playingProperty().set(false);
-            theGameController().changeGameState(GameState.STARTING_GAME);
+            gameContext.theGame().playingProperty().set(false);
+            gameContext.theGameController().changeGameState(GameState.STARTING_GAME);
         }
 
         @Override
@@ -381,14 +381,14 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
 
     public static final GameAction ACTION_TOGGLE_DISPLAY_MODE = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui) {
+        public void execute(PacManGames_UI ui, GameContext gameContext) {
             SceneDisplayMode mode = PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.get();
             PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.set(mode == SceneDisplayMode.SCROLLING
                     ? SceneDisplayMode.SCALED_TO_FIT : SceneDisplayMode.SCROLLING);
         }
 
         @Override
-        public boolean isEnabled(PacManGames_UI ui) {
+        public boolean isEnabled(PacManGames_UI ui, GameContext gameContext) {
             return ui.currentGameSceneIsPlayScene2D();
         }
 
@@ -400,7 +400,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
 
     public static final  GameAction ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui) {
+        public void execute(PacManGames_UI ui, GameContext gameContext) {
             toggle(PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED);
         }
 
@@ -412,14 +412,14 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
 
     public static final GameAction ACTION_TOGGLE_PAC_BOOSTER = new GameAction() {
         @Override
-        public void execute(PacManGames_UI ui) {
-            var tengenGame = (TengenMsPacMan_GameModel) theGame();
+        public void execute(PacManGames_UI ui, GameContext gameContext) {
+            var tengenGame = (TengenMsPacMan_GameModel) gameContext.theGame();
             tengenGame.activatePacBooster(!tengenGame.isBoosterActive());
         }
 
         @Override
-        public boolean isEnabled(PacManGames_UI ui) {
-            var tengenGame = (TengenMsPacMan_GameModel) theGame();
+        public boolean isEnabled(PacManGames_UI ui, GameContext gameContext) {
+            var tengenGame = (TengenMsPacMan_GameModel) gameContext.theGame();
             return tengenGame.pacBooster() == PacBooster.USE_A_OR_B;
         }
 

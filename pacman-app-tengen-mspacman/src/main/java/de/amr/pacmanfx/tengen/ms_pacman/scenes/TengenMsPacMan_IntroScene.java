@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
@@ -58,7 +59,8 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     private int waitBeforeRising;
     private boolean dark;
 
-    public TengenMsPacMan_IntroScene() {
+    public TengenMsPacMan_IntroScene(GameContext gameContext) {
+        super(gameContext);
         sceneController = new StateMachine<>(SceneState.values()) {
             @Override
             public TengenMsPacMan_IntroScene context() {
@@ -69,15 +71,15 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        theGame().hud().showScore(false);
-        theGame().hud().showLevelCounter(false);
-        theGame().hud().showLivesCounter(false);
+        theGameContext().theGame().hud().showScore(false);
+        theGameContext().theGame().hud().showLevelCounter(false);
+        theGameContext().theGame().hud().showLivesCounter(false);
 
         spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
 
         actionBindings.bind(ACTION_START_GAME, TENGEN_ACTION_BINDINGS);
         actionBindings.bind(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, TENGEN_ACTION_BINDINGS);
-        presentsText = new Actor();
+        presentsText = new Actor(null);
         presentsText.setPosition(9 * TS, MARQUEE_Y - TS);
         sceneController.restart(SceneState.WAITING_FOR_START);
     }
@@ -207,17 +209,17 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
             public void onEnter(TengenMsPacMan_IntroScene scene) {
                 timer.restartTicks(TickTimer.INDEFINITE);
 
-                scene.msPacMan = createMsPacMan();
+                scene.msPacMan = createMsPacMan(null);
                 scene.msPacMan.setPosition(TS * 33, ACTOR_Y);
                 scene.msPacMan.setMoveDir(Direction.LEFT);
                 scene.msPacMan.setSpeed(SPEED);
                 scene.msPacMan.setVisible(true);
 
                 scene.ghosts = new Ghost[] {
-                    createGhost(RED_GHOST_SHADOW),
-                    createGhost(CYAN_GHOST_BASHFUL),
-                    createGhost(PINK_GHOST_SPEEDY),
-                    createGhost(ORANGE_GHOST_POKEY)
+                    createGhost(null, RED_GHOST_SHADOW),
+                    createGhost(null, CYAN_GHOST_BASHFUL),
+                    createGhost(null, PINK_GHOST_SPEEDY),
+                    createGhost(null, ORANGE_GHOST_POKEY)
                 };
                 for (Ghost ghost : scene.ghosts) {
                     ghost.setPosition(TS * 33, ACTOR_Y);
@@ -313,12 +315,12 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 }
                 if (timer.atSecond(8)) {
                     // start demo level or show options
-                    var tengenGame = (TengenMsPacMan_GameModel) theGame();
+                    var tengenGame = (TengenMsPacMan_GameModel) theGameContext().theGame();
                     if (tengenGame.optionsAreInitial()) {
                         tengenGame.setCanStartNewGame(false); // TODO check this
-                        theGameController().restart(GameState.STARTING_GAME);
+                        theGameContext().theGameController().restart(GameState.STARTING_GAME);
                     } else {
-                        theGameController().changeGameState(GameState.SETTING_OPTIONS);
+                        theGameContext().theGameController().changeGameState(GameState.SETTING_OPTIONS);
                     }
                 }
             }

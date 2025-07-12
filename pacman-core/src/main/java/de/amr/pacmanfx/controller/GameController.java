@@ -15,7 +15,7 @@ import org.tinylog.Logger;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.amr.pacmanfx.Globals.theGameEventManager;
+import static de.amr.pacmanfx.Globals.theGameContext;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -42,13 +42,13 @@ public class GameController  {
             @Override public GameModel context() { return currentGame(); }
         };
         stateMachine.addStateChangeListener((oldState, newState) ->
-            theGameEventManager().publishEvent(new GameStateChangeEvent(currentGame(), oldState, newState)));
+            theGameContext().theGameEventManager().publishEvent(new GameStateChangeEvent(currentGame(), oldState, newState)));
 
         gameVariantPy.addListener((py, ov, newGameVariant) -> {
             if (eventsEnabled) {
                 GameModel newGame = game(newGameVariant);
                 newGame.init();
-                theGameEventManager().publishEvent(newGame, GameEventType.GAME_VARIANT_CHANGED);
+                theGameContext().theGameEventManager().publishEvent(newGame, GameEventType.GAME_VARIANT_CHANGED);
             }
         });
     }

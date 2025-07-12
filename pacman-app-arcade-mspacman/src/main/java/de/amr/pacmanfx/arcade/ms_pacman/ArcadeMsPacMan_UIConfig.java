@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.*;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.*;
 import de.amr.pacmanfx.arcade.pacman.scenes.ArcadeCommon_BootScene2D;
@@ -11,7 +12,6 @@ import de.amr.pacmanfx.arcade.pacman.scenes.ArcadeCommon_PlayScene2D;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
-import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameScene;
@@ -38,8 +38,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.Globals.optGameLevel;
-import static de.amr.pacmanfx.Globals.theGameLevel;
 import static de.amr.pacmanfx.ui.PacManGames.theAssets;
 import static de.amr.pacmanfx.ui.PacManGames_UI.PY_3D_ENABLED;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
@@ -228,15 +226,15 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig {
     // Game scenes
 
     @Override
-    public void createGameScenes() {
-        scenesByID.put("BootScene",   new ArcadeCommon_BootScene2D());
-        scenesByID.put("IntroScene",  new ArcadeMsPacMan_IntroScene());
-        scenesByID.put("StartScene",  new ArcadeMsPacMan_StartScene());
-        scenesByID.put("PlayScene2D", new ArcadeCommon_PlayScene2D());
-        scenesByID.put("PlayScene3D", new PlayScene3D());
-        scenesByID.put("CutScene1",   new ArcadeMsPacMan_CutScene1());
-        scenesByID.put("CutScene2",   new ArcadeMsPacMan_CutScene2());
-        scenesByID.put("CutScene3",   new ArcadeMsPacMan_CutScene3());
+    public void createGameScenes(GameContext gameContext) {
+        scenesByID.put("BootScene",   new ArcadeCommon_BootScene2D(gameContext));
+        scenesByID.put("IntroScene",  new ArcadeMsPacMan_IntroScene(gameContext));
+        scenesByID.put("StartScene",  new ArcadeMsPacMan_StartScene(gameContext));
+        scenesByID.put("PlayScene2D", new ArcadeCommon_PlayScene2D(gameContext));
+        scenesByID.put("PlayScene3D", new PlayScene3D(gameContext));
+        scenesByID.put("CutScene1",   new ArcadeMsPacMan_CutScene1(gameContext));
+        scenesByID.put("CutScene2",   new ArcadeMsPacMan_CutScene2(gameContext));
+        scenesByID.put("CutScene3",   new ArcadeMsPacMan_CutScene3(gameContext));
     }
 
     @Override
@@ -252,22 +250,22 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig {
     }
 
     @Override
-    public GameScene selectGameScene(GameModel game, GameState gameState) {
-        String sceneID = switch (gameState) {
+    public GameScene selectGameScene(GameContext gameContext) {
+        String sceneID = switch (gameContext.theGameState()) {
             case GameState.BOOT               -> "BootScene";
             case GameState.SETTING_OPTIONS    -> "StartScene";
             case GameState.INTRO              -> "IntroScene";
             case GameState.INTERMISSION       -> {
-                if (optGameLevel().isEmpty()) {
+                if (gameContext.optGameLevel().isEmpty()) {
                     throw new IllegalStateException("Cannot determine cut scene, no game level available");
                 }
-                int levelNumber = theGameLevel().number();
-                if (game.cutSceneNumber(levelNumber).isEmpty()) {
+                int levelNumber = gameContext.theGameLevel().number();
+                if (gameContext.theGame().cutSceneNumber(levelNumber).isEmpty()) {
                     throw new IllegalStateException("Cannot determine cut scene after level %d".formatted(levelNumber));
                 }
-                yield "CutScene" + game.cutSceneNumber(levelNumber).getAsInt();
+                yield "CutScene" + gameContext.theGame().cutSceneNumber(levelNumber).getAsInt();
             }
-            case GameState.TESTING_CUT_SCENES -> "CutScene" + game.<Integer>getProperty("intermissionTestNumber");
+            case GameState.TESTING_CUT_SCENES -> "CutScene" + gameContext.theGame().<Integer>getProperty("intermissionTestNumber");
             default -> PY_3D_ENABLED.get() ?  "PlayScene3D" : "PlayScene2D";
         };
         return scenesByID.get(sceneID);

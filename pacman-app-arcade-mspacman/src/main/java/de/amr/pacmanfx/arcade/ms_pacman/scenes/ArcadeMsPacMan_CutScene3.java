@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
@@ -46,12 +47,16 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
     private Clapperboard clapperboard;
 
+    public ArcadeMsPacMan_CutScene3(GameContext gameContext) {
+        super(gameContext);
+    }
+    
     @Override
     public void doInit() {
         var spriteSheet = (ArcadeMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
 
-        pacMan = createPacMan();
-        msPacMan = createMsPacMan();
+        pacMan = createPacMan(null);
+        msPacMan = createMsPacMan(null);
         stork = new Stork(spriteSheet);
         bag = new Bag(spriteSheet);
         bag.setOpen(false);
@@ -65,9 +70,9 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         clapperboard.setFont(scaledArcadeFont8());
         clapperboard.startAnimation();
 
-        theGame().hud().showScore(true);
-        theGame().hud().showLevelCounter(true);
-        theGame().hud().showLivesCounter(false);
+        gameContext.theGame().hud().showScore(true);
+        gameContext.theGame().hud().showLevelCounter(true);
+        gameContext.theGame().hud().showLivesCounter(false);
 
         setSceneState(STATE_CLAPPERBOARD, TickTimer.INDEFINITE);
     }
@@ -179,7 +184,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     private void updateStateStorkLeavesScene() {
         stork.move();
         if (sceneTimer.hasExpired()) {
-            theGameController().letCurrentGameStateExpire();
+            gameContext.theGameController().letCurrentGameStateExpire();
         }
     }
 }

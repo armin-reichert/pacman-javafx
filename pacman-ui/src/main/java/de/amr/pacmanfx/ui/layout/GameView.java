@@ -37,7 +37,8 @@ import org.tinylog.Logger;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.ui.PacManGames.*;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
@@ -150,7 +151,7 @@ public class GameView implements PacManGames_View {
         ui.currentGameScene().ifPresent(gameScene -> {
             if (ui.currentGameSceneIsPlayScene2D()) {
                 var miSwitchTo3D = new MenuItem(theAssets().text("use_3D_scene"));
-                miSwitchTo3D.setOnAction(actionEvent -> GameAction.executeIfEnabled(ui, ACTION_TOGGLE_PLAY_SCENE_2D_3D));
+                miSwitchTo3D.setOnAction(actionEvent -> GameAction.executeIfEnabled(ui, theGameContext(), ACTION_TOGGLE_PLAY_SCENE_2D_3D));
                 contextMenu.getItems().add(menuTitleItem(theAssets().text("scene_display")));
                 contextMenu.getItems().add(miSwitchTo3D);
             }
@@ -218,8 +219,8 @@ public class GameView implements PacManGames_View {
             }
         });
 
-        if (miniGameView.isVisible() && theUI().currentGameSceneIsPlayScene3D() && optGameLevel().isPresent()) {
-            miniGameView.draw(theGameLevel());
+        if (miniGameView.isVisible() && theUI().currentGameSceneIsPlayScene3D() && theGameContext().optGameLevel().isPresent()) {
+            miniGameView.draw(theGameContext().theGameLevel());
         }
         flashMessageLayer.update();
 
@@ -231,7 +232,7 @@ public class GameView implements PacManGames_View {
 
     @Override
     public void handleKeyboardInput() {
-        actionBindings.runMatchingActionOrElse(ui,
+        actionBindings.runMatchingActionOrElse(ui, theGameContext(),
             () -> ui.currentGameScene().ifPresent(GameScene::handleKeyboardInput));
     }
 
@@ -245,20 +246,20 @@ public class GameView implements PacManGames_View {
         switch (gameEvent.type()) {
             case LEVEL_CREATED -> {
                 PacManGames_UIConfig config = ui.configuration();
-                ActorAnimationMap pacAnimationMap = config.createPacAnimations(theGameLevel().pac());
-                theGameLevel().pac().setAnimations(pacAnimationMap);
-                theGameLevel().ghosts().forEach(ghost -> {
+                ActorAnimationMap pacAnimationMap = config.createPacAnimations(theGameContext().theGameLevel().pac());
+                theGameContext().theGameLevel().pac().setAnimations(pacAnimationMap);
+                theGameContext().theGameLevel().ghosts().forEach(ghost -> {
                     ActorAnimationMap ghostAnimationMap = config.createGhostAnimations(ghost);
                     ghost.setAnimations(ghostAnimationMap);
                 });
-                miniGameView.onLevelCreated(theGameLevel());
+                miniGameView.onLevelCreated(theGameContext().theGameLevel());
 
                 // size of game scene might have changed, so re-embed
                 ui.currentGameScene().ifPresent(this::embedGameScene);
             }
             case GAME_STATE_CHANGED -> {
-                if (theGameState() == GameState.LEVEL_COMPLETE) {
-                    miniGameView.onLevelCompleted(theGameLevel());
+                if (theGameContext().theGameState() == GameState.LEVEL_COMPLETE) {
+                    miniGameView.onLevelCompleted(theGameContext().theGameLevel());
                 }
             }
         }
@@ -281,7 +282,7 @@ public class GameView implements PacManGames_View {
     }
 
     public void updateGameScene(boolean reloadCurrent) {
-        final GameScene nextGameScene = ui.configuration().selectGameScene(theGame(), theGameState());
+        final GameScene nextGameScene = ui.configuration().selectGameScene(theGameContext());
         if (nextGameScene == null) {
             String errorMessage = " Katastrophe! Could not determine game scene!";
             ui.showFlashMessageSec(60, errorMessage);
@@ -316,9 +317,9 @@ public class GameView implements PacManGames_View {
     public void quitCurrentGameScene() {
         ui.currentGameScene().ifPresent(gameScene -> {
             gameScene.end();
-            theGameController().changeGameState(GameState.BOOT);
-            theGame().resetEverything();
-            if (!theCoinMechanism().isEmpty()) theCoinMechanism().consumeCoin();
+            theGameContext().theGameController().changeGameState(GameState.BOOT);
+            theGameContext().theGame().resetEverything();
+            if (!theGameContext().theCoinMechanism().isEmpty()) theGameContext().theCoinMechanism().consumeCoin();
             ui.showStartView();
             Logger.info("Current game scene ({}) has been quit", gameScene.getClass().getSimpleName());
         });

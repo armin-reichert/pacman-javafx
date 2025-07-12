@@ -9,11 +9,12 @@ import de.amr.pacmanfx.ui.ActionBindingMap;
 import javafx.beans.value.ObservableStringValue;
 import javafx.scene.Node;
 
+import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
 
 public interface PacManGames_View extends GameEventListener {
     Node rootNode();
     ObservableStringValue title();
     ActionBindingMap actionBindingMap();
-    default void handleKeyboardInput() { actionBindingMap().runMatchingAction(theUI()); }
+    default void handleKeyboardInput() { actionBindingMap().runMatchingAction(theUI(), theGameContext()); }
 }

@@ -16,7 +16,7 @@ import static de.amr.pacmanfx.Validations.inClosedRange;
 public class TengenActorSpeedControl implements ActorSpeedControl {
 
     private TengenMsPacMan_GameModel game() {
-        return (TengenMsPacMan_GameModel) theGame();
+        return (TengenMsPacMan_GameModel) theGameContext().theGame();
     }
 
     public float speedUnitsToPixels(float units) {

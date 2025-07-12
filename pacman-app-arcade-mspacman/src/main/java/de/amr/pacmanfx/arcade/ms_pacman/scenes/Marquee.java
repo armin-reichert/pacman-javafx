@@ -19,6 +19,7 @@ public class Marquee extends Actor {
     private Color bulbOffColor = Color.GREEN;
 
     public Marquee(float width, float height, int totalBulbCount, int brightBulbsCount, int brightBulbsDistance) {
+        super(null); // no game context
         this.size = new Dimension2D(width, height);
         this.totalBulbCount = totalBulbCount;
         this.brightBulbsCount = brightBulbsCount;

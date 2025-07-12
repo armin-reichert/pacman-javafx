@@ -133,7 +133,7 @@ public class Bonus3D extends Box {
         setTranslateX(center.x());
         setTranslateY(center.y());
         setTranslateZ(-HTS);
-        optGameLevel().ifPresent(edibleAnimation::update);
+        theGameContext().optGameLevel().ifPresent(edibleAnimation::update);
     }
 
     public void showEdible() {

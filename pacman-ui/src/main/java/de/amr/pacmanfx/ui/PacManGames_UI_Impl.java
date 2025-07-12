@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
@@ -111,10 +112,10 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         //TODO should I use key binding for global actions too?
         mainScene.setOnKeyPressed(e -> {
             if (KEY_FULLSCREEN.match(e)) {
-                ACTION_ENTER_FULLSCREEN.execute(this);
+                ACTION_ENTER_FULLSCREEN.execute(this, theGameContext());
             }
             else if (KEY_MUTE.match(e)) {
-                ACTION_TOGGLE_MUTED.execute(this);
+                ACTION_TOGGLE_MUTED.execute(this, theGameContext());
             }
             else if (KEY_OPEN_EDITOR.match(e)) {
                 showEditorView();
@@ -143,7 +144,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
             }
         });
         configByGameVariant.forEach((gameVariant, config) -> {
-            config.createGameScenes();
+            config.createGameScenes(theGameContext());
             config.gameScenes().forEach(scene -> {
                 if (scene instanceof GameScene2D gameScene2D) {
                     gameScene2D.debugInfoVisibleProperty().bind(PY_DEBUG_INFO_VISIBLE);
@@ -157,12 +158,12 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         requireNonNull(newView);
         if (oldView != null) {
             oldView.actionBindingMap().clear();
-            theGameEventManager().removeEventListener(oldView);
+            theGameContext().theGameEventManager().removeEventListener(oldView);
         }
         newView.actionBindingMap().update();
         newView.rootNode().requestFocus();
         stage.titleProperty().bind(newView.title());
-        theGameEventManager().addEventListener(newView);
+        theGameContext().theGameEventManager().addEventListener(newView);
 
         rootPane.getChildren().set(0, newView.rootNode());
     }
@@ -180,9 +181,9 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
     private void doSimulationStepAndUpdateGameScene() {
         try {
-            theSimulationStep().start(GAME_CLOCK.tickCount());
-            theGameController().updateGameState();
-            theSimulationStep().log();
+            theGameContext().theSimulationStep().start(GAME_CLOCK.tickCount());
+            theGameContext().theGameController().updateGameState();
+            theGameContext().theSimulationStep().log();
             currentGameScene().ifPresent(GameScene::update);
         } catch (Throwable x) {
             ka_tas_trooo_phe(x);
@@ -257,7 +258,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         GAME_CLOCK.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
         GAME_CLOCK.pausedProperty().set(false);
         GAME_CLOCK.start();
-        theGameController().restart(GameState.BOOT);
+        theGameContext().theGameController().restart(GameState.BOOT);
     }
 
     @Override
@@ -266,7 +267,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
             Logger.error("Cannot select game variant (NULL)");
             return;
         }
-        String previousVariant = theGameController().selectedGameVariant();
+        String previousVariant = theGameContext().theGameController().selectedGameVariant();
         if (previousVariant != null && !previousVariant.equals(gameVariant)) {
             PacManGames_UIConfig previousConfig = configuration(previousVariant);
             Logger.info("Unloading assets for game variant {}", previousVariant);
@@ -297,7 +298,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         gameView.canvasContainer().roundedBorderProperty().set(newConfig.hasGameCanvasRoundedBorder());
 
         // this triggers a game event and the event handlers:
-        theGameController().selectGameVariant(gameVariant);
+        theGameContext().theGameController().selectGameVariant(gameVariant);
     }
 
     @Override
@@ -318,7 +319,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
     @Override
     public void showEditorView() {
-        if (!theGame().isPlaying() || GAME_CLOCK.isPaused()) {
+        if (!theGameContext().theGame().isPlaying() || GAME_CLOCK.isPaused()) {
             currentGameScene().ifPresent(GameScene::end);
             theSound().stopAll();
             GAME_CLOCK.stop();
@@ -389,7 +390,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
     @Override
     public PacManGames_UIConfig configuration() {
-        return configByGameVariant.get(theGameController().selectedGameVariant());
+        return configByGameVariant.get(theGameContext().theGameController().selectedGameVariant());
     }
 
     @Override

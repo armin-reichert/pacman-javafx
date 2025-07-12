@@ -50,12 +50,12 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
 
         ChaseAnimation(Canvas canvas) {
             ctx = canvas.getGraphicsContext2D();
-            pac = createPac();
+            pac = createPac(null);
             ghosts = new Ghost[] {
-                createGhost(RED_GHOST_SHADOW),
-                createGhost(PINK_GHOST_SPEEDY),
-                createGhost(CYAN_GHOST_BASHFUL),
-                createGhost(ORANGE_GHOST_POKEY)
+                createGhost(null, RED_GHOST_SHADOW),
+                createGhost(null, PINK_GHOST_SPEEDY),
+                createGhost(null, CYAN_GHOST_BASHFUL),
+                createGhost(null, ORANGE_GHOST_POKEY)
             };
         }
 
@@ -267,7 +267,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
     }
 
     public void syncMenuState() {
-        final GameModel game = theGameController().game(state.gameVariant);
+        final GameModel game = theGameContext().theGameController().game(state.gameVariant);
         final var mapSelector = (PacManXXL_Common_MapSelector) game.mapSelector();
         mapSelector.loadAllMaps();
         final boolean customMapsExist = !mapSelector.customMaps().isEmpty();
@@ -317,7 +317,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
     }
 
     private void startGame() {
-        GameModel game = theGameController().game(state.gameVariant);
+        GameModel game = theGameContext().theGameController().game(state.gameVariant);
         game.setCutScenesEnabled(state.cutScenesEnabled);
         var mapSelector = (PacManXXL_Common_MapSelector) game.mapSelector();
         mapSelector.setMapSelectionMode(state.mapOrder);

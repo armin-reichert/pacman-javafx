@@ -4,20 +4,26 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.app;
 
+import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.ui.PacManGames_UI;
-import de.amr.pacmanfx.ui.PacManGames_UI_Impl;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.application.Application;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.ui.PacManGames.theClock;
 import static de.amr.pacmanfx.ui.PacManGames.theWatchdog;
 
 public class ArcadePacMan_App extends Application {
+
+    @Override
+    public void init() throws Exception {
+        Globals.initGameContext();
+    }
 
     @Override
     public void start(Stage primaryStage) {
@@ -28,7 +34,7 @@ public class ArcadePacMan_App extends Application {
         PacManGames_UI.build(primaryStage, width, height)
             .game(
                 gameVariant,
-                ArcadePacMan_GameModel.arcadeVersion(),
+                ArcadePacMan_GameModel.arcadeVersion(theGameContext()),
                 ArcadePacMan_UIConfig.class
             )
             .startPages(

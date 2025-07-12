@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
@@ -46,6 +47,10 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     private SpriteAnimation blinkyDamaged;
     private SpriteAnimation nailDressRaptureAnimation;
 
+    public ArcadePacMan_CutScene2(GameContext gameContext) {
+        super(gameContext);
+    }
+
     @Override
     public SpriteGameRenderer gr() {
         return (SpriteGameRenderer) super.gr();
@@ -55,8 +60,8 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     public void doInit() {
         frame = -1;
 
-        pac = createPac();
-        blinky = createGhost(RED_GHOST_SHADOW);
+        pac = createPac(null);
+        blinky = createGhost(null, RED_GHOST_SHADOW);
         blinky.setSpeed(0);
         blinky.hide();
 
@@ -68,9 +73,9 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         nailDressRaptureAnimation = (SpriteAnimation) blinkyAnimations.animation(ANIM_BLINKY_NAIL_DRESS_RAPTURE);
         blinkyDamaged = (SpriteAnimation) blinkyAnimations.animation(ANIM_BLINKY_DAMAGED);
 
-        theGame().hud().showScore(true);
-        theGame().hud().showLevelCounter(true);
-        theGame().hud().showLivesCounter(false);
+        gameContext.theGame().hud().showScore(true);
+        gameContext.theGame().hud().showLevelCounter(true);
+        gameContext.theGame().hud().showLivesCounter(false);
     }
 
     @Override
@@ -121,7 +126,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
             case ANIMATION_START + 420 -> blinkyDamaged.nextFrame(); // Eyes right-down
             case ANIMATION_START + 508 -> {
                 blinky.setVisible(false);
-                theGameController().letCurrentGameStateExpire();
+                gameContext.theGameController().letCurrentGameStateExpire();
             }
             default -> {}
         }

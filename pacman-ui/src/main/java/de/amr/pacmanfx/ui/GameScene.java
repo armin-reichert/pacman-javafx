@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.DefaultGameEventListener;
 import de.amr.pacmanfx.uilib.model3D.Destroyable;
 import javafx.scene.control.ContextMenu;
@@ -12,7 +13,7 @@ import javafx.scene.input.ContextMenuEvent;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.Globals.theGameController;
+import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
 
 /**
@@ -22,12 +23,14 @@ import static de.amr.pacmanfx.ui.PacManGames.theUI;
  */
 public interface GameScene extends DefaultGameEventListener, Destroyable {
 
+    GameContext gameContext();
+
     ActionBindingMap actionBindings();
 
     /**
      * By default, the first matching game action is executed.
      */
-    default void handleKeyboardInput() { actionBindings().runMatchingAction(theUI()); }
+    default void handleKeyboardInput() { actionBindings().runMatchingAction(theUI(), gameContext()); }
 
     /**
      * Called when the scene becomes the current one.
@@ -69,6 +72,6 @@ public interface GameScene extends DefaultGameEventListener, Destroyable {
      * @return scene name as used by logging output
      */
     default String displayName() {
-        return "%s (%s)".formatted(getClass().getSimpleName(), theGameController().selectedGameVariant());
+        return "%s (%s)".formatted(getClass().getSimpleName(), theGameContext().theGameController().selectedGameVariant());
     }
 }

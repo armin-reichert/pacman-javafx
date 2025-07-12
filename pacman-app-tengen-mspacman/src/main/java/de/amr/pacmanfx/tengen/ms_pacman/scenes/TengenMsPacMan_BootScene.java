@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
@@ -37,20 +38,24 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     private Actor movingText;
     private Ghost ghost;
 
+    public TengenMsPacMan_BootScene(GameContext gameContext) {
+        super(gameContext);
+    }
+
     @Override
     public void doInit() {
         tick = 0;
         grayScreen = false;
 
-        movingText = new Actor();
-        ghost = createGhost(RED_GHOST_SHADOW);
+        movingText = new Actor(null);
+        ghost = createGhost(null, RED_GHOST_SHADOW);
         ghost.setSpeed(0);
         ghost.setAnimations(theUI().configuration().createGhostAnimations(ghost));
         ghost.selectAnimation(ANIM_GHOST_NORMAL);
 
-        theGame().hud().showScore(false);
-        theGame().hud().showLivesCounter(false);
-        theGame().hud().showLevelCounter(false);
+        gameContext.theGame().hud().showScore(false);
+        gameContext.theGame().hud().showLivesCounter(false);
+        gameContext.theGame().hud().showLevelCounter(false);
     }
 
     @Override
@@ -93,7 +98,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
             grayScreen = false;
         }
         else if (tick == 220) {
-            theGameController().changeGameState(GameState.INTRO);
+            gameContext.theGameController().changeGameState(GameState.INTRO);
         }
     }
 

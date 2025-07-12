@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
@@ -59,7 +60,8 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     private byte presentedGhostCharacter;
     private int numTicksBeforeRising;
 
-    public ArcadeMsPacMan_IntroScene() {
+    public ArcadeMsPacMan_IntroScene(GameContext gameContext) {
+        super(gameContext);
         sceneController = new StateMachine<>(SceneState.values()) {
             @Override
             public ArcadeMsPacMan_IntroScene context() {
@@ -70,10 +72,10 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        theGame().hud().showCredit(true);
-        theGame().hud().showScore(true);
-        theGame().hud().showLevelCounter(true);
-        theGame().hud().showLivesCounter(false);
+        gameContext.theGame().hud().showCredit(true);
+        gameContext.theGame().hud().showScore(true);
+        gameContext.theGame().hud().showLevelCounter(true);
+        gameContext.theGame().hud().showLivesCounter(false);
 
         actionBindings.bind(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDINGS);
         actionBindings.bind(ACTION_ARCADE_START_GAME, GLOBAL_ACTION_BINDINGS);
@@ -93,12 +95,12 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         marquee.setBulbOnColor(ARCADE_WHITE);
         marquee.show();
 
-        msPacMan = createMsPacMan();
+        msPacMan = createMsPacMan(null);
         ghosts = new Ghost[] {
-            createGhost(RED_GHOST_SHADOW),
-            createGhost(PINK_GHOST_SPEEDY),
-            createGhost(CYAN_GHOST_BASHFUL),
-            createGhost(ORANGE_GHOST_POKEY)
+            createGhost(null, RED_GHOST_SHADOW),
+            createGhost(null, PINK_GHOST_SPEEDY),
+            createGhost(null, CYAN_GHOST_BASHFUL),
+            createGhost(null, ORANGE_GHOST_POKEY)
         };
         presentedGhostCharacter = RED_GHOST_SHADOW;
         numTicksBeforeRising = 0;
@@ -251,10 +253,10 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
                 scene.marquee.timer().doTick();
-                if (sceneTimer.atSecond(2.0) && !theGame().canStartNewGame()) {
-                    theGameController().changeGameState(GameState.STARTING_GAME); // demo level
+                if (sceneTimer.atSecond(2.0) && !scene.gameContext.theGame().canStartNewGame()) {
+                    scene.gameContext.theGameController().changeGameState(GameState.STARTING_GAME); // demo level
                 } else if (sceneTimer.atSecond(5)) {
-                    theGameController().changeGameState(GameState.SETTING_OPTIONS);
+                    scene.gameContext.theGameController().changeGameState(GameState.SETTING_OPTIONS);
                 }
             }
         };

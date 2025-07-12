@@ -30,7 +30,7 @@ public class InfoBoxGameInfo extends InfoBox {
     public void init() {
 
         addLabeledValue("Game Scene", ifGameScenePresent(gameScene -> gameScene.getClass().getSimpleName()));
-        addLabeledValue("Game State", () -> "%s".formatted(theGameState()));
+        addLabeledValue("Game State", () -> "%s".formatted(theGameContext().theGameState()));
         addLabeledValue("State Timer", this::stateTimerInfo);
         addLabeledValue("Level Number", ifLevelPresent(level -> "%d".formatted(level.number())));
         addLabeledValue("Demo Level", ifLevelPresent(level -> level.isDemoLevel() ? "Yes" : "No"));
@@ -69,11 +69,11 @@ public class InfoBoxGameInfo extends InfoBox {
             return InfoText.NO_INFO;
         });
 
-        addLabeledValue("Lives",           ifLevelPresent(level -> "%d".formatted(theGame().lifeCount())));
+        addLabeledValue("Lives",           ifLevelPresent(level -> "%d".formatted(theGameContext().theGame().lifeCount())));
 
-        addLabeledValue("Hunting Phase",   () -> fmtHuntingPhase(theGame().huntingTimer()));
-        addLabeledValue("",                () -> fmtHuntingTicksRunning(theGame().huntingTimer()));
-        addLabeledValue("",                () -> fmtHuntingTicksRemaining(theGame().huntingTimer()));
+        addLabeledValue("Hunting Phase",   () -> fmtHuntingPhase(theGameContext().theGame().huntingTimer()));
+        addLabeledValue("",                () -> fmtHuntingTicksRunning(theGameContext().theGame().huntingTimer()));
+        addLabeledValue("",                () -> fmtHuntingTicksRemaining(theGameContext().theGame().huntingTimer()));
 
         addLabeledValue("Pac-Man speed",   ifLevelPresent(this::fmtPacNormalSpeed));
         addLabeledValue("- empowered",     ifLevelPresent(this::fmtPacSpeedPowered));
@@ -86,7 +86,7 @@ public class InfoBoxGameInfo extends InfoBox {
     }
 
     private String stateTimerInfo() {
-        TickTimer t = theGameState().timer();
+        TickTimer t = theGameContext().theGameState().timer();
         boolean indefinite = t.durationTicks() == TickTimer.INDEFINITE;
         if (t.isStopped()) {
             return "Stopped at tick %s of %s".formatted(t.tickCount(), indefinite ? "∞" : t.durationTicks());
@@ -126,36 +126,36 @@ public class InfoBoxGameInfo extends InfoBox {
         // use Pinky because Blinky could be in Elroy mode
         Ghost pinky = level.ghost(PINK_GHOST_SPEEDY);
         return (pinky != null)
-            ? "%.4f px/s".formatted(theGame().actorSpeedControl().ghostAttackSpeed(level, pinky) * 60)
+            ? "%.4f px/s".formatted(theGameContext().theGame().actorSpeedControl().ghostAttackSpeed(level, pinky) * 60)
             : InfoText.NO_INFO;
     }
 
     private String fmtGhostSpeedFrightened(GameLevel level) {
         Ghost blinky = level.ghost(RED_GHOST_SHADOW);
         return (blinky != null)
-            ? "%.4f px/s".formatted(theGame().actorSpeedControl().ghostFrightenedSpeed(level, blinky) * 60)
+            ? "%.4f px/s".formatted(theGameContext().theGame().actorSpeedControl().ghostFrightenedSpeed(level, blinky) * 60)
             : InfoText.NO_INFO;
     }
 
     private String fmtGhostSpeedTunnel(GameLevel level) {
         Ghost blinky = level.ghost(RED_GHOST_SHADOW);
         return (blinky != null)
-            ? "%.4f px/s".formatted(theGame().actorSpeedControl().ghostTunnelSpeed(level, blinky) * 60)
+            ? "%.4f px/s".formatted(theGameContext().theGame().actorSpeedControl().ghostTunnelSpeed(level, blinky) * 60)
             : InfoText.NO_INFO;
     }
 
     private String fmtPacNormalSpeed(GameLevel level) {
-        return "%.4f px/s".formatted(theGame().actorSpeedControl().pacNormalSpeed(level) * 60);
+        return "%.4f px/s".formatted(theGameContext().theGame().actorSpeedControl().pacNormalSpeed(level) * 60);
     }
 
     private String fmtPacSpeedPowered(GameLevel level) {
-        return "%.4f px/s".formatted(theGame().actorSpeedControl().pacPowerSpeed(level) * 60);
+        return "%.4f px/s".formatted(theGameContext().theGame().actorSpeedControl().pacPowerSpeed(level) * 60);
     }
 
     private String fmtPacPowerTime(GameLevel level) {
         return "%.2f sec (%d ticks)".formatted(
-            theGame().pacPowerTicks(level) / 60f,
-            theGame().pacPowerTicks(level));
+            theGameContext().theGame().pacPowerTicks(level) / 60f,
+            theGameContext().theGame().pacPowerTicks(level));
     }
 
     private String fmtNumFlashes(GameLevel level) {

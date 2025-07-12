@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.ArcadeCommon_GameModel;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2i;
@@ -45,14 +46,14 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
 
     private static final byte[] BONUS_VALUE_MULTIPLIERS = {1, 2, 5, 7, 10, 20, 50}; // points = value * 100
 
-    public static Pac createMsPacMan() {
-        var pac = new Pac("Ms. Pac-Man");
+    public static Pac createMsPacMan(GameContext gameContext) {
+        var pac = new Pac(gameContext, "Ms. Pac-Man");
         pac.reset();
         return pac;
     }
 
-    public static Pac createPacMan() {
-        var pac = new Pac("Pac-Man");
+    public static Pac createPacMan(GameContext gameContext) {
+        var pac = new Pac(gameContext, "Pac-Man");
         pac.reset();
         return pac;
     }
@@ -64,13 +65,13 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
      *
      * @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>.
      * */
-    public static Ghost createGhost(byte personality) {
+    public static Ghost createGhost(GameContext gameContext, byte personality) {
         requireValidGhostPersonality(personality);
         return switch (personality) {
-            case RED_GHOST_SHADOW -> new Ghost(RED_GHOST_SHADOW, "Blinky") {
+            case RED_GHOST_SHADOW -> new Ghost(gameContext, RED_GHOST_SHADOW, "Blinky") {
                 @Override
                 public void hunt(GameLevel level) {
-                    final var game = (ArcadeCommon_GameModel) theGame();
+                    final var game = (ArcadeCommon_GameModel) gameContext.theGame();
                     float speed = game.actorSpeedControl().ghostAttackSpeed(level, this);
                     setSpeed(speed);
                     if (game.huntingTimer().phaseIndex() == 0) {
@@ -87,15 +88,15 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
                     return level.pac().tile();
                 }
             };
-            case PINK_GHOST_SPEEDY -> new Ghost(PINK_GHOST_SPEEDY, "Pinky") {
+            case PINK_GHOST_SPEEDY -> new Ghost(gameContext, PINK_GHOST_SPEEDY, "Pinky") {
                     @Override
                     public void hunt(GameLevel level) {
-                        float speed = theGame().actorSpeedControl().ghostAttackSpeed(level, this);
+                        float speed = gameContext.theGame().actorSpeedControl().ghostAttackSpeed(level, this);
                         setSpeed(speed);
-                        if (theGame().huntingTimer().phaseIndex() == 0) {
+                        if (gameContext.theGame().huntingTimer().phaseIndex() == 0) {
                             roam(level);
                         } else {
-                            boolean chase = theGame().huntingTimer().phase() == HuntingPhase.CHASING;
+                            boolean chase = gameContext.theGame().huntingTimer().phase() == HuntingPhase.CHASING;
                             Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
                             tryMovingTowardsTargetTile(level, targetTile);
                         }
@@ -106,11 +107,11 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
                         return level.pac().tilesAheadWithOverflowBug(4);
                     }
                 };
-            case CYAN_GHOST_BASHFUL -> new Ghost(CYAN_GHOST_BASHFUL, "Inky") {
+            case CYAN_GHOST_BASHFUL -> new Ghost(gameContext, CYAN_GHOST_BASHFUL, "Inky") {
                 @Override
                 public void hunt(GameLevel level) {
-                    float speed = theGame().actorSpeedControl().ghostAttackSpeed(level, this);
-                    boolean chase = theGame().huntingTimer().phase() == HuntingPhase.CHASING;
+                    float speed = gameContext.theGame().actorSpeedControl().ghostAttackSpeed(level, this);
+                    boolean chase = gameContext.theGame().huntingTimer().phase() == HuntingPhase.CHASING;
                     Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
                     setSpeed(speed);
                     tryMovingTowardsTargetTile(level, targetTile);
@@ -121,11 +122,11 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
                     return level.pac().tilesAheadWithOverflowBug(2).scaled(2).minus(level.ghost(RED_GHOST_SHADOW).tile());
                 }
             };
-            case ORANGE_GHOST_POKEY -> new Ghost(ORANGE_GHOST_POKEY, "Sue") {
+            case ORANGE_GHOST_POKEY -> new Ghost(gameContext, ORANGE_GHOST_POKEY, "Sue") {
                 @Override
                 public void hunt(GameLevel level) {
-                    float speed = theGame().actorSpeedControl().ghostAttackSpeed(level, this);
-                    boolean chase = theGame().huntingTimer().phase() == HuntingPhase.CHASING;
+                    float speed = gameContext.theGame().actorSpeedControl().ghostAttackSpeed(level, this);
+                    boolean chase = gameContext.theGame().huntingTimer().phase() == HuntingPhase.CHASING;
                     Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
                     setSpeed(speed);
                     tryMovingTowardsTargetTile(level, targetTile);
@@ -174,8 +175,8 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
 
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
-    public static ArcadeMsPacMan_GameModel arcadeVersion() {
-        return new ArcadeMsPacMan_GameModel(new ArcadeMsPacMan_MapSelector());
+    public static ArcadeMsPacMan_GameModel arcadeVersion(GameContext gameContext) {
+        return new ArcadeMsPacMan_GameModel(gameContext, new ArcadeMsPacMan_MapSelector());
     }
 
     private final ArcadeMsPacMan_HUD hud = new ArcadeMsPacMan_HUD();
@@ -183,7 +184,8 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
     /**
      * @param mapSelector map selector e.g. selector that selects custom maps before standard maps
      */
-    public ArcadeMsPacMan_GameModel(MapSelector mapSelector) {
+    public ArcadeMsPacMan_GameModel(GameContext gameContext, MapSelector mapSelector) {
+        super(gameContext);
         this.mapSelector = requireNonNull(mapSelector);
         setHighScoreFile(new File(HOME_DIR, "highscore-ms_pacman.xml"));
         setExtraLifeScores(EXTRA_LIFE_SCORE);
@@ -245,14 +247,14 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
         level.setGameOverStateTicks(150);
         addHouse(level);
 
-        level.setPac(createMsPacMan());
+        level.setPac(createMsPacMan(gameContext));
         level.pac().setAutopilotSteering(autopilot);
 
         level.setGhosts(
-            createGhost(RED_GHOST_SHADOW),
-            createGhost(PINK_GHOST_SPEEDY),
-            createGhost(CYAN_GHOST_BASHFUL),
-            createGhost(ORANGE_GHOST_POKEY)
+            createGhost(gameContext, RED_GHOST_SHADOW),
+            createGhost(gameContext, PINK_GHOST_SPEEDY),
+            createGhost(gameContext, CYAN_GHOST_BASHFUL),
+            createGhost(gameContext, ORANGE_GHOST_POKEY)
         );
         level.ghosts().forEach(ghost -> {
             ghost.reset();
@@ -359,7 +361,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
         Vector2i exitTile;
         boolean crossingLeftToRight;
         if (entryTile != null) {
-            int exitPortalIndex = theRNG().nextInt(level.portals().size());
+            int exitPortalIndex = gameContext.theRNG().nextInt(level.portals().size());
             if (entryTile.x() == 0) { // enter maze at left border
                 exitTile = level.portals().get(exitPortalIndex).rightTunnelEnd().plus(1, 0);
                 crossingLeftToRight = true;
@@ -369,7 +371,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
             }
         }
         else { // choose random crossing direction and random entry and exit portals
-            crossingLeftToRight = theRNG().nextBoolean();
+            crossingLeftToRight = gameContext.theRNG().nextBoolean();
             if (crossingLeftToRight) {
                 entryTile = randomPortal(level).leftTunnelEnd();
                 exitTile  = randomPortal(level).rightTunnelEnd().plus(1, 0);
@@ -385,17 +387,17 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
             .map(Waypoint::new).toList();
 
         byte symbol = level.bonusSymbol(level.currentBonusIndex());
-        var bonus = new MovingBonus(symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100);
+        var bonus = new MovingBonus(gameContext, symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100);
         bonus.setEdibleTicks(TickTimer.INDEFINITE);
         bonus.setRoute(route, crossingLeftToRight);
         Logger.info("Moving bonus created, route: {} (crossing {})", route,
             crossingLeftToRight ? "left to right" : "right to left");
 
         level.setBonus(bonus);
-        theGameEventManager().publishEvent(this, GameEventType.BONUS_ACTIVATED, bonus.actor().tile());
+        gameContext.theGameEventManager().publishEvent(this, GameEventType.BONUS_ACTIVATED, bonus.actor().tile());
     }
 
     private Portal randomPortal(GameLevel level) {
-        return level.portals().get(theRNG().nextInt(level.portals().size()));
+        return level.portals().get(gameContext.theRNG().nextInt(level.portals().size()));
     }
 }

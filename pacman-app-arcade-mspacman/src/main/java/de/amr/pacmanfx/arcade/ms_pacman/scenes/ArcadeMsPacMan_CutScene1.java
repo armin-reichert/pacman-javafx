@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.lib.Direction;
@@ -54,15 +55,19 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     private SingleSpriteActor heart;
     private Clapperboard clapperboard;
 
+    public ArcadeMsPacMan_CutScene1(GameContext gameContext) {
+        super(gameContext);
+    }
+    
     @Override
     public void doInit() {
         var spriteSheet = (ArcadeMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
 
-        pacMan = createPacMan();
-        msPacMan = createMsPacMan();
-        inky = createGhost(CYAN_GHOST_BASHFUL);
-        pinky = createGhost(PINK_GHOST_SPEEDY);
-        heart = new SingleSpriteActor(spriteSheet.sprite(SpriteID.HEART));
+        pacMan = createPacMan(null);
+        msPacMan = createMsPacMan(null);
+        inky = createGhost(null, CYAN_GHOST_BASHFUL);
+        pinky = createGhost(null, PINK_GHOST_SPEEDY);
+        heart = new SingleSpriteActor(null, spriteSheet.sprite(SpriteID.HEART));
 
         final PacManGames_UIConfig config = theUI().configuration();
         msPacMan.setAnimations(config.createPacAnimations(msPacMan));
@@ -75,9 +80,9 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         clapperboard.setFont(scaledArcadeFont8());
         clapperboard.startAnimation();
 
-        theGame().hud().showScore(true);
-        theGame().hud().showLevelCounter(true);
-        theGame().hud().showLivesCounter(false);
+        gameContext.theGame().hud().showScore(true);
+        gameContext.theGame().hud().showLevelCounter(true);
+        gameContext.theGame().hud().showLivesCounter(false);
 
         setState(STATE_CLAPPERBOARD, 120);
     }
@@ -262,7 +267,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
     private void updateStateInHeaven() {
         if (sceneTimer.hasExpired()) {
-            theGameController().letCurrentGameStateExpire();
+            gameContext.theGameController().letCurrentGameStateExpire();
         }
     }
 }

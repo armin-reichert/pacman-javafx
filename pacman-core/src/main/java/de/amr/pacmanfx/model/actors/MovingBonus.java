@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model.actors;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
@@ -18,7 +19,7 @@ import org.tinylog.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.pacmanfx.Globals.theGameEventManager;
+import static de.amr.pacmanfx.Globals.theGameContext;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -39,7 +40,8 @@ public class MovingBonus extends MovingActor implements Bonus {
     private long countdown;
     private RouteBasedSteering steering;
 
-    public MovingBonus(byte symbol, int points) {
+    public MovingBonus(GameContext gameContext, byte symbol, int points) {
+        super(gameContext);
         this.symbol = symbol;
         this.points = points;
         reset();
@@ -128,7 +130,7 @@ public class MovingBonus extends MovingActor implements Bonus {
         if (steering.isComplete()) {
             Logger.trace("Moving bonus reached target: {}", this);
             setInactive();
-            theGameEventManager().publishEvent(game, GameEventType.BONUS_EXPIRED, tile());
+            gameContext.theGameEventManager().publishEvent(game, GameEventType.BONUS_EXPIRED, tile());
         } else {
             navigateTowardsTarget(level);
             tryMoving(level);
@@ -148,7 +150,7 @@ public class MovingBonus extends MovingActor implements Bonus {
         if (countdown == 0) {
             Logger.trace("Bonus expired: {}", this);
             setInactive();
-            theGameEventManager().publishEvent(game, GameEventType.BONUS_EXPIRED, tile());
+            gameContext.theGameEventManager().publishEvent(game, GameEventType.BONUS_EXPIRED, tile());
         } else if (countdown != TickTimer.INDEFINITE) {
             --countdown;
         }

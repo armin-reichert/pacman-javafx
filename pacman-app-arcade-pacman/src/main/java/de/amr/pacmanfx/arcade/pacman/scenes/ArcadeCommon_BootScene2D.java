@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
@@ -12,7 +13,8 @@ import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
@@ -31,11 +33,15 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
 
     private Vector2f minPoint, maxPoint;
 
+    public ArcadeCommon_BootScene2D(GameContext gameContext) {
+        super(gameContext);
+    }
+
     @Override
     public void doInit() {
-        theGame().hud().showScore(false);
-        theGame().hud().showLevelCounter(false);
-        theGame().hud().showLivesCounter(false);
+        gameContext.theGame().hud().showScore(false);
+        gameContext.theGame().hud().showLevelCounter(false);
+        gameContext.theGame().hud().showLivesCounter(false);
 
         SpriteSheet<?> spriteSheet = theUI().configuration().spriteSheet();
         double width = spriteSheet.sourceImage().getWidth(), height = spriteSheet.sourceImage().getHeight();
@@ -50,8 +56,8 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
 
     @Override
     public void update() {
-        if (theGameState().timer().atSecond(4)) {
-            theGameController().letCurrentGameStateExpire();
+        if (gameContext.theGameState().timer().atSecond(4)) {
+            gameContext.theGameController().letCurrentGameStateExpire();
         }
     }
 
@@ -66,7 +72,7 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
     @Override
     public void draw() {
         gr().setScaling(scaling());
-        if (theGameState().timer().tickCount() == 1) {
+        if (gameContext.theGameState().timer().tickCount() == 1) {
             fillCanvas(canvas, backgroundColor());
         } else {
             drawSceneContent();
@@ -75,7 +81,7 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        TickTimer timer = theGameState().timer();
+        TickTimer timer = gameContext.theGameState().timer();
         if (timer.betweenSeconds(1, 2) && timer.tickCount() % 4 == 0) {
             fillCanvas(canvas, backgroundColor());
             drawRandomHexDigits();
@@ -96,7 +102,7 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
         for (int row = 0; row < numRows; ++row) {
             double y = scaled(tiles_to_px(row + 1));
             for (int col = 0; col < numCols; ++col) {
-                int hexDigit = theRNG().nextInt(16);
+                int hexDigit = gameContext.theRNG().nextInt(16);
                 ctx().fillText(Integer.toHexString(hexDigit), scaled(tiles_to_px(col)), y);
             }
         }
@@ -106,9 +112,9 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
         int numRows = (int) (ARCADE_MAP_SIZE_IN_PIXELS.y() / FRAGMENT_SIZE);
         int numCols = (int) (ARCADE_MAP_SIZE_IN_PIXELS.x() / FRAGMENT_SIZE);
         for (int row = 0; row < numRows; ++row) {
-            if (theRNG().nextInt(100) < 20) continue;
+            if (gameContext.theRNG().nextInt(100) < 20) continue;
             RectShort fragment1 = randomSpriteFragment(), fragment2 = randomSpriteFragment();
-            int split = numCols / 8 + theRNG().nextInt(numCols / 4);
+            int split = numCols / 8 + gameContext.theRNG().nextInt(numCols / 4);
             for (int col = 0; col < numCols; ++col) {
                 gr().drawSpriteScaled(col < split ? fragment1 : fragment2, FRAGMENT_SIZE * col, FRAGMENT_SIZE * row);
             }
@@ -117,8 +123,8 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
 
     private RectShort randomSpriteFragment() {
         return new RectShort(
-            (int) lerp(minPoint.x(), maxPoint.x(), theRNG().nextDouble()),
-            (int) lerp(minPoint.y(), maxPoint.y(), theRNG().nextDouble()),
+            (int) lerp(minPoint.x(), maxPoint.x(), gameContext.theRNG().nextDouble()),
+            (int) lerp(minPoint.y(), maxPoint.y(), gameContext.theRNG().nextDouble()),
             FRAGMENT_SIZE, FRAGMENT_SIZE);
     }
 

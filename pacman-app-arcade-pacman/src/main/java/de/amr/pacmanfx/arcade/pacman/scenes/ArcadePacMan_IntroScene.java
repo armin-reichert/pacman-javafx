@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
@@ -70,6 +71,10 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     private int ghostIndex;
     private long ghostKilledTime;
 
+    public ArcadePacMan_IntroScene(GameContext gameContext) {
+        super(gameContext);
+    }
+    
     @Override
     public SpriteGameRenderer gr() {
         return (SpriteGameRenderer) super.gr();
@@ -77,10 +82,10 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        theGame().hud().showCredit(true);
-        theGame().hud().showScore(true);
-        theGame().hud().showLivesCounter(false);
-        theGame().hud().showLevelCounter(true);
+        gameContext.theGame().hud().showCredit(true);
+        gameContext.theGame().hud().showScore(true);
+        gameContext.theGame().hud().showLivesCounter(false);
+        gameContext.theGame().hud().showLevelCounter(true);
 
         actionBindings.bind(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDINGS);
         actionBindings.bind(ACTION_ARCADE_START_GAME, GLOBAL_ACTION_BINDINGS);
@@ -89,13 +94,13 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         actionBindings.bind(ACTION_TEST_LEVELS_TEASERS, GLOBAL_ACTION_BINDINGS);
 
         blinking = new Pulse(10, true);
-        pacMan = createPac();
+        pacMan = createPac(null);
         pacMan.setAnimations(theUI().configuration().createPacAnimations(pacMan));
         ghosts = List.of(
-            createGhost(RED_GHOST_SHADOW),
-            createGhost(PINK_GHOST_SPEEDY),
-            createGhost(CYAN_GHOST_BASHFUL),
-            createGhost(ORANGE_GHOST_POKEY));
+            createGhost(null, RED_GHOST_SHADOW),
+            createGhost(null, PINK_GHOST_SPEEDY),
+            createGhost(null, CYAN_GHOST_BASHFUL),
+            createGhost(null, ORANGE_GHOST_POKEY));
         ghosts.forEach(ghost -> ghost.setAnimations(theUI().configuration().createGhostAnimations(ghost)));
         ghostImageVisible     = new boolean[4];
         ghostNicknameVisible  = new boolean[4];
@@ -373,11 +378,11 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
             public void onUpdate(ArcadePacMan_IntroScene scene) {
                 if (sceneTimer.atSecond(0.75)) {
                     scene.ghosts.get(ORANGE_GHOST_POKEY).hide();
-                    if (!theGame().canStartNewGame()) {
-                        theGameController().changeGameState(GameState.STARTING_GAME);
+                    if (!scene.gameContext.theGame().canStartNewGame()) {
+                        scene.gameContext.theGameController().changeGameState(GameState.STARTING_GAME);
                     }
                 } else if (sceneTimer.atSecond(5)) {
-                    theGameController().changeGameState(GameState.SETTING_OPTIONS);
+                    scene.gameContext.theGameController().changeGameState(GameState.SETTING_OPTIONS);
                 }
             }
         };

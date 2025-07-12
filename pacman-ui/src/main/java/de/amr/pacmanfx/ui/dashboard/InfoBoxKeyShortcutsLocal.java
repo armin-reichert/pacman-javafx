@@ -10,6 +10,7 @@ import javafx.scene.input.KeyCombination;
 
 import java.util.Comparator;
 
+import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.ui.PacManGames.theAssets;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
 
@@ -33,7 +34,7 @@ public class InfoBoxKeyShortcutsLocal extends InfoBox {
                 KeyCombination keyCombination = entry.getKey();
                 GameAction action = entry.getValue();
                 String localizedActionText = theAssets().text(action.name());
-                addRow(keyCombination.getDisplayText(), createLabel(localizedActionText, action.isEnabled(theUI())));
+                addRow(keyCombination.getDisplayText(), createLabel(localizedActionText, action.isEnabled(theUI(), theGameContext())));
             });
         }
     }

@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.allgames.app;
 
+import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
@@ -21,6 +22,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import static de.amr.pacmanfx.Globals.CUSTOM_MAP_DIR;
+import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.ui.PacManGames.theClock;
 import static de.amr.pacmanfx.ui.PacManGames.theWatchdog;
 import static de.amr.pacmanfx.ui.PacManGames_UI_Impl.GameVariant;
@@ -31,6 +33,11 @@ import static de.amr.pacmanfx.ui.PacManGames_UI_Impl.GameVariant;
 public class PacManGames3dApp extends Application {
 
     @Override
+    public void init() {
+        Globals.initGameContext();
+    }
+
+    @Override
     public void start(Stage primaryStage) {
         // UI size: 80% of available screen height, aspect 16:10
         final double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
@@ -39,27 +46,27 @@ public class PacManGames3dApp extends Application {
         PacManGames_UI.build(primaryStage, width, height)
             .game(
                 GameVariant.PACMAN.name(),
-                ArcadePacMan_GameModel.arcadeVersion(),
+                ArcadePacMan_GameModel.arcadeVersion(theGameContext()),
                 ArcadePacMan_UIConfig.class
             )
             .game(
                 GameVariant.MS_PACMAN.name(),
-                ArcadeMsPacMan_GameModel.arcadeVersion(),
+                ArcadeMsPacMan_GameModel.arcadeVersion(theGameContext()),
                 ArcadeMsPacMan_UIConfig.class
             )
             .game(
                 GameVariant.MS_PACMAN_TENGEN.name(),
-                new TengenMsPacMan_GameModel(),
+                new TengenMsPacMan_GameModel(theGameContext()),
                 TengenMsPacMan_UIConfig.class
             )
             .game(
                 GameVariant.PACMAN_XXL.name(),
-                new PacManXXL_PacMan_GameModel(xxlSelector),
+                new PacManXXL_PacMan_GameModel(theGameContext(), xxlSelector),
                 PacManXXL_PacMan_UIConfig.class
             )
             .game(
                 GameVariant.MS_PACMAN_XXL.name(),
-                new PacManXXL_MsPacMan_GameModel(xxlSelector),
+                new PacManXXL_MsPacMan_GameModel(theGameContext(), xxlSelector),
                 PacManXXL_MsPacMan_UIConfig.class
             )
             .startPages(

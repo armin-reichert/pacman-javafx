@@ -19,6 +19,7 @@ public class Bag extends Actor implements Animated {
     private boolean open;
 
     public Bag(TengenMsPacMan_SpriteSheet spriteSheet) {
+        super(null);
         animationMap = new SpriteAnimationMap<>(spriteSheet);
         animationMap.setAnimation("junior", SpriteAnimation.build().ofSprite(spriteSheet.sprite(SpriteID.JUNIOR_PAC)).once());
         animationMap.setAnimation("bag", SpriteAnimation.build().ofSprite(spriteSheet.sprite(SpriteID.BLUE_BAG)).once());

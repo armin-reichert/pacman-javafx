@@ -16,11 +16,8 @@ import java.io.File;
 import java.util.Optional;
 import java.util.Random;
 
-/**
- * Global is not evil.
- *
- * @see <a href="https://www.youtube.com/watch?v=ogHl_OwcZWE">this video</a>
- */
+import static java.util.Objects.requireNonNull;
+
 public class Globals {
 
     // Ghost personalities
@@ -42,19 +39,67 @@ public class Globals {
      */
     public static final File CUSTOM_MAP_DIR = new File(HOME_DIR, "maps");
 
-    public static CoinMechanism           theCoinMechanism()    { return COIN_MECHANISM; }
-    public static GameModel               theGame()             { return GAME_CONTROLLER.currentGame(); }
-    public static GameController          theGameController()   { return GAME_CONTROLLER; }
-    public static GameEventManager        theGameEventManager() { return GAME_EVENT_MANAGER; }
-    public static Optional<GameLevel>     optGameLevel()        { return theGame().level(); }
-    public static GameLevel               theGameLevel()        { return optGameLevel().orElse(null); }
-    public static GameState               theGameState()        { return GAME_CONTROLLER.gameState(); }
-    public static Random                  theRNG()              { return RANDOM; }
-    public static SimulationStep          theSimulationStep()   { return SIMULATION_STEP; }
+    private static class GameContextImpl implements GameContext {
+        private final CoinMechanism coinMechanism = new CoinMechanism();
+        private final GameController gameController = new GameController();
+        private final GameEventManager gameEventManager = new GameEventManager();
+        private final Random random = new Random();
+        private final SimulationStep simulationStep = new SimulationStep();
 
-    private static final CoinMechanism    COIN_MECHANISM     = new CoinMechanism();
-    private static final GameController   GAME_CONTROLLER    = new GameController();
-    private static final GameEventManager GAME_EVENT_MANAGER = new GameEventManager();
-    private static final Random           RANDOM             = new Random();
-    private static final SimulationStep   SIMULATION_STEP    = new SimulationStep();
+        @Override
+        public CoinMechanism theCoinMechanism() {
+            return coinMechanism;
+        }
+
+        @Override
+        public GameModel theGame() {
+            return gameController.currentGame();
+        }
+
+        @Override
+        public GameController theGameController() {
+            return gameController;
+        }
+
+        @Override
+        public GameEventManager theGameEventManager() {
+            return gameEventManager;
+        }
+
+        @Override
+        public Optional<GameLevel> optGameLevel() {
+            return theGame().level();
+        }
+
+        @Override
+        public GameLevel theGameLevel() {
+            return theGame().level().orElse(null);
+        }
+
+        @Override
+        public GameState theGameState() {
+            return gameController.gameState();
+        }
+
+        @Override
+        public Random theRNG() {
+            return random;
+        }
+
+        @Override
+        public SimulationStep theSimulationStep() {
+            return simulationStep;
+        }
+    }
+
+    public static void initGameContext() {
+        context = new GameContextImpl();
+    }
+
+    public static GameContext theGameContext() {
+        requireNonNull(context, "Game context not initialized!");
+        return context;
+    }
+
+    private static GameContextImpl context;
 }

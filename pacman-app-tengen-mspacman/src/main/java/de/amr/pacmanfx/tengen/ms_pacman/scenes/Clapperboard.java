@@ -31,6 +31,7 @@ public class Clapperboard extends Actor {
     private Font font = Font.font(8);
 
     public Clapperboard(TengenMsPacMan_SpriteSheet spriteSheet, int number, String text) {
+        super(null); // no game context
         this.spriteSheet = requireNonNull(spriteSheet);
         this.number = (byte) number;
         this.text = requireNonNull(text);

@@ -6,7 +6,8 @@ package de.amr.pacmanfx.lib;
 
 import de.amr.pacmanfx.Globals;
 
-import static de.amr.pacmanfx.Globals.theRNG;
+import java.util.Random;
+
 import static java.util.Objects.requireNonNull;
 
 public interface UsefulFunctions {
@@ -61,7 +62,7 @@ public interface UsefulFunctions {
             min = maxExclusive;
             maxExclusive = tmp;
         }
-        return min + theRNG().nextInt(maxExclusive - min);
+        return min + new Random().nextInt(maxExclusive - min);
     }
 
     /**
@@ -76,7 +77,7 @@ public interface UsefulFunctions {
             min = maxExclusive;
             maxExclusive = tmp;
         }
-        return min + (maxExclusive - min) * theRNG().nextFloat();
+        return min + (maxExclusive - min) * new Random().nextFloat();
     }
 
     static boolean isEven(int n) {

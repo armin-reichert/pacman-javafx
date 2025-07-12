@@ -155,7 +155,7 @@ public class GameLevel3D extends Group implements Destroyable {
         ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
         getChildren().add(ambientLight);
 
-        levelCounter3D = new LevelCounter3D(animationManager, theGame().hud().levelCounter());
+        levelCounter3D = new LevelCounter3D(animationManager, theGameContext().theGame().hud().levelCounter());
         levelCounter3D.setTranslateX(gameLevel.worldMap().numCols() * TS - 2 * TS);
         levelCounter3D.setTranslateY(2 * TS);
         levelCounter3D.spinningAnimation().playFromStart();
@@ -339,13 +339,13 @@ public class GameLevel3D extends Group implements Destroyable {
             houseOpenProperty.set(ghostNearHouseEntry);
         });
 
-        int livesCounterSize = theGame().lifeCount() - 1;
+        int livesCounterSize = theGameContext().theGame().lifeCount() - 1;
         // when the game starts and Pac-Man is not yet visible, show one more
-        boolean oneMore = theGameState() == GameState.STARTING_GAME && !gameLevel.pac().isVisible();
+        boolean oneMore = theGameContext().theGameState() == GameState.STARTING_GAME && !gameLevel.pac().isVisible();
         if (oneMore) livesCounterSize += 1;
         livesCountProperty.set(livesCounterSize);
 
-        boolean visible = theGame().canStartNewGame();
+        boolean visible = theGameContext().theGame().canStartNewGame();
         livesCounter3D.setVisible(visible);
         livesCounter3D.light().setLightOn(visible);
     }

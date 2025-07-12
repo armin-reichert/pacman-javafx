@@ -8,7 +8,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.ActorSpeedControl;
 import de.amr.pacmanfx.model.actors.Ghost;
 
-import static de.amr.pacmanfx.Globals.theGame;
+import static de.amr.pacmanfx.Globals.theGameContext;
 
 public class ArcadeCommon_ActorSpeedControl implements ActorSpeedControl {
 
@@ -32,7 +32,7 @@ public class ArcadeCommon_ActorSpeedControl implements ActorSpeedControl {
         if (level.isTunnel(ghost.tile())) {
             return ghostTunnelSpeed(level, ghost);
         }
-        var arcadeGame = (ArcadeCommon_GameModel) theGame();
+        var arcadeGame = (ArcadeCommon_GameModel) theGameContext().theGame();
         if (arcadeGame.cruiseElroy() == 1) {
             return level.data().elroy1SpeedPercentage() * 0.01f * BASE_SPEED;
         }

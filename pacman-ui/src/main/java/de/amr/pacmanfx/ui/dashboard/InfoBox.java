@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static de.amr.pacmanfx.Globals.optGameLevel;
+import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
 
 /**
@@ -120,7 +120,7 @@ public abstract class InfoBox extends TitledPane {
     }
 
     protected Supplier<String> ifLevelPresent(Function<GameLevel, String> fnInfo) {
-        return () -> optGameLevel().map(fnInfo).orElse(InfoText.NO_INFO);
+        return () -> theGameContext().optGameLevel().map(fnInfo).orElse(InfoText.NO_INFO);
     }
 
     protected void clearGrid() {
@@ -255,7 +255,7 @@ public abstract class InfoBox extends TitledPane {
     }
 
     protected void setAction(Button button, GameAction gameAction) {
-        button.setOnAction(e -> GameAction.executeIfEnabled(theUI(), gameAction));
+        button.setOnAction(e -> GameAction.executeIfEnabled(theUI(), theGameContext(), gameAction));
         //TODO add boolean property for enabled-state to game action and bind against it
     }
 

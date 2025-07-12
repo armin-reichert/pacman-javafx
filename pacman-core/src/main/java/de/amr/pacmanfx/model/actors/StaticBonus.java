@@ -4,12 +4,13 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model.actors;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.GameModel;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.Globals.theGameEventManager;
+import static de.amr.pacmanfx.Globals.theGameContext;
 
 /**
  * Bonus that appears for some time at a fixed position before it gets eaten or vanishes.
@@ -21,7 +22,8 @@ public class StaticBonus extends Actor implements Bonus {
     private long countdown;
     private byte state;
 
-    public StaticBonus(byte symbol, int points) {
+    public StaticBonus(GameContext gameContext, byte symbol, int points) {
+        super(gameContext);
         this.symbol = symbol;
         this.points = points;
         this.countdown = 0;
@@ -94,7 +96,7 @@ public class StaticBonus extends Actor implements Bonus {
             case STATE_EDIBLE, STATE_EATEN -> {
                 if (countdown == 0) {
                     setInactive();
-                    theGameEventManager().publishEvent(game, GameEventType.BONUS_EXPIRED, tile());
+                    gameContext.theGameEventManager().publishEvent(game, GameEventType.BONUS_EXPIRED, tile());
                 } else if (countdown != TickTimer.INDEFINITE) {
                     --countdown;
                 }
