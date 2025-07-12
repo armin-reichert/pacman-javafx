@@ -16,7 +16,6 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.amr.pacmanfx.Globals.theGameContext;
 import static java.util.Objects.requireNonNull;
 
 public class PacManGames_UI_Builder {
@@ -54,6 +53,7 @@ public class PacManGames_UI_Builder {
         return true;
     }
 
+    private final GameContext gameContext;
     private final Stage stage;
     private final double width;
     private final double height;
@@ -63,7 +63,8 @@ public class PacManGames_UI_Builder {
     private int selectedStartPageIndex;
     private DashboardID[] dashboardIDs = new DashboardID[0];
 
-    PacManGames_UI_Builder(Stage stage, double width, double height) {
+    PacManGames_UI_Builder(GameContext gameContext, Stage stage, double width, double height) {
+        this.gameContext = requireNonNull(gameContext);
         this.stage = stage;
         this.width = width;
         this.height = height;
@@ -92,23 +93,23 @@ public class PacManGames_UI_Builder {
 
     public PacManGames_UI build() {
         validate();
-        final var ui = new PacManGames_UI_Impl(stage, width, height);
+        final var ui = new PacManGames_UI_Impl(gameContext, stage, width, height);
         ui.configure(uiConfigClasses);
-        models.forEach((variant, model) -> theGameContext().theGameController().registerGame(variant, model));
-        theGameContext().theGameController().setEventsEnabled(true);
+        models.forEach((variant, model) -> gameContext.theGameController().registerGame(variant, model));
+        gameContext.theGameController().setEventsEnabled(true);
         ui.gameView().dashboard().configure(dashboardIDs);
         for (StartPage startPage : startPages) ui.startPagesView().addStartPage(startPage);
         ui.startPagesView().selectStartPage(selectedStartPageIndex);
         ui.startPagesView().currentStartPage()
             .map(StartPage::currentGameVariant)
-            .ifPresent(theGameContext().theGameController()::selectGameVariant);
+            .ifPresent(gameContext.theGameController()::selectGameVariant);
         PacManGames_UI_Impl.THE_ONE = ui;
         return PacManGames_UI_Impl.THE_ONE;
     }
 
     private void validate() {
-        checkUserDirsExistingAndWritable(theGameContext());
-        PacManGames_UI_Impl.WATCHDOG = new DirectoryWatchdog(theGameContext().theCustomMapDir());
+        checkUserDirsExistingAndWritable(gameContext);
+        PacManGames_UI_Impl.WATCHDOG = new DirectoryWatchdog(gameContext.theCustomMapDir());
         if (stage == null) {
             error("Stage is null");
         }

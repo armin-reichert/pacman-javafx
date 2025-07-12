@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
@@ -64,8 +65,8 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     private final ObjectProperty<GameScene> currentGameSceneProperty   = new SimpleObjectProperty<>();
     private final BooleanProperty mutedProperty                        = new SimpleBooleanProperty(false);
 
+    private final GameContext gameContext;
     private final Model3DRepository model3DRepository = new Model3DRepository();
-
     private final StackPane rootPane = new StackPane();
     private final Stage stage;
     private final StartPagesView startPagesView;
@@ -74,7 +75,8 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
     private final StatusIconBox iconBox;
     private final FontIcon iconPaused;
 
-    public PacManGames_UI_Impl(Stage stage, double width, double height) {
+    public PacManGames_UI_Impl(GameContext gameContext, Stage stage, double width, double height) {
+        this.gameContext = requireNonNull(gameContext);
         this.stage = requireNonNull(stage);
 
         Scene mainScene = new Scene(rootPane, width, height);
@@ -111,10 +113,10 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         //TODO should I use key binding for global actions too?
         mainScene.setOnKeyPressed(e -> {
             if (KEY_FULLSCREEN.match(e)) {
-                ACTION_ENTER_FULLSCREEN.execute(this, theGameContext());
+                ACTION_ENTER_FULLSCREEN.execute(this, gameContext);
             }
             else if (KEY_MUTE.match(e)) {
-                ACTION_TOGGLE_MUTED.execute(this, theGameContext());
+                ACTION_TOGGLE_MUTED.execute(this, gameContext);
             }
             else if (KEY_OPEN_EDITOR.match(e)) {
                 showEditorView();
@@ -143,7 +145,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
             }
         });
         configByGameVariant.forEach((gameVariant, config) -> {
-            config.createGameScenes(theGameContext());
+            config.createGameScenes(gameContext);
             config.gameScenes().forEach(scene -> {
                 if (scene instanceof GameScene2D gameScene2D) {
                     gameScene2D.debugInfoVisibleProperty().bind(PY_DEBUG_INFO_VISIBLE);
@@ -157,12 +159,12 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         requireNonNull(newView);
         if (oldView != null) {
             oldView.actionBindingMap().clear();
-            theGameContext().theGameEventManager().removeEventListener(oldView);
+            gameContext.theGameEventManager().removeEventListener(oldView);
         }
         newView.actionBindingMap().update();
         newView.rootNode().requestFocus();
         stage.titleProperty().bind(newView.title());
-        theGameContext().theGameEventManager().addEventListener(newView);
+        gameContext.theGameEventManager().addEventListener(newView);
 
         rootPane.getChildren().set(0, newView.rootNode());
     }
@@ -180,9 +182,9 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
     private void doSimulationStepAndUpdateGameScene() {
         try {
-            theGameContext().theSimulationStep().start(GAME_CLOCK.tickCount());
-            theGameContext().theGameController().updateGameState();
-            theGameContext().theSimulationStep().log();
+            gameContext.theSimulationStep().start(GAME_CLOCK.tickCount());
+            gameContext.theGameController().updateGameState();
+            gameContext.theSimulationStep().log();
             currentGameScene().ifPresent(GameScene::update);
         } catch (Throwable x) {
             ka_tas_trooo_phe(x);
@@ -206,7 +208,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
                 editor.executeWithCheckForUnsavedChanges(this::showStartView);
             });
             editor.getFileMenu().getItems().addAll(new SeparatorMenuItem(), miReturnToGame);
-            editor.init(theGameContext().theCustomMapDir());
+            editor.init(gameContext.theCustomMapDir());
             editorView = new EditorView(editor);
         }
         return editorView;
@@ -257,7 +259,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         GAME_CLOCK.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
         GAME_CLOCK.pausedProperty().set(false);
         GAME_CLOCK.start();
-        theGameContext().theGameController().restart(GameState.BOOT);
+        gameContext.theGameController().restart(GameState.BOOT);
     }
 
     @Override
@@ -266,7 +268,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
             Logger.error("Cannot select game variant (NULL)");
             return;
         }
-        String previousVariant = theGameContext().theGameController().selectedGameVariant();
+        String previousVariant = gameContext.theGameController().selectedGameVariant();
         if (previousVariant != null && !previousVariant.equals(gameVariant)) {
             PacManGames_UIConfig previousConfig = configuration(previousVariant);
             Logger.info("Unloading assets for game variant {}", previousVariant);
@@ -297,7 +299,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
         gameView.canvasContainer().roundedBorderProperty().set(newConfig.hasGameCanvasRoundedBorder());
 
         // this triggers a game event and the event handlers:
-        theGameContext().theGameController().selectGameVariant(gameVariant);
+        gameContext.theGameController().selectGameVariant(gameVariant);
     }
 
     @Override
@@ -318,7 +320,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
     @Override
     public void showEditorView() {
-        if (!theGameContext().theGame().isPlaying() || GAME_CLOCK.isPaused()) {
+        if (!gameContext.theGame().isPlaying() || GAME_CLOCK.isPaused()) {
             currentGameScene().ifPresent(GameScene::end);
             theSound().stopAll();
             GAME_CLOCK.stop();
@@ -389,7 +391,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
     @Override
     public PacManGames_UIConfig configuration() {
-        return configByGameVariant.get(theGameContext().theGameController().selectedGameVariant());
+        return configByGameVariant.get(gameContext.theGameController().selectedGameVariant());
     }
 
     @Override

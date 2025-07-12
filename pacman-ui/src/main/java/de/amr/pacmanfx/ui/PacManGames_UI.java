@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.ui._3d.Perspective;
 import de.amr.pacmanfx.ui.layout.GameView;
 import de.amr.pacmanfx.ui.layout.PacManGames_View;
@@ -29,8 +30,8 @@ import static de.amr.pacmanfx.ui.input.Keyboard.*;
 
 public interface PacManGames_UI {
 
-    static PacManGames_UI_Builder build(Stage stage, double width, double height) {
-        return new PacManGames_UI_Builder(stage, width, height);
+    static PacManGames_UI_Builder build(GameContext gameContext, Stage stage, double width, double height) {
+        return new PacManGames_UI_Builder(gameContext, stage, width, height);
     }
 
     /** Predefined game variants */

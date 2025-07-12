@@ -28,7 +28,7 @@ public class ArcadeMsPacMan_App extends Application {
         // UI size: 80% of available screen height, aspect 12:10
         final double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
         final double width  = 1.2 * height;
-        PacManGames_UI.build(primaryStage, width, height)
+        PacManGames_UI.build(theGameContext(), primaryStage, width, height)
                 .game(
                     MS_PACMAN.name(),
                     ArcadeMsPacMan_GameModel.arcadeVersion(theGameContext()),

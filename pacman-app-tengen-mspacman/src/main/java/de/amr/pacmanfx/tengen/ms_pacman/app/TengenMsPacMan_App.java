@@ -32,7 +32,7 @@ public class TengenMsPacMan_App extends Application {
         // UI size: 80% of available screen height, aspect NES screen aspect 32:30
         final double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
         final double width  = NES_ASPECT * height;
-        PacManGames_UI.build(primaryStage, width, height)
+        PacManGames_UI.build(theGameContext(), primaryStage, width, height)
             .game(
                 MS_PACMAN_TENGEN.name(),
                 new TengenMsPacMan_GameModel(theGameContext()),

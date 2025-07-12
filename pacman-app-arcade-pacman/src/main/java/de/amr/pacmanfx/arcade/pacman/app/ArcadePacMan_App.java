@@ -31,7 +31,7 @@ public class ArcadePacMan_App extends Application {
         final double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
         final double width  = 1.2 * height;
         var gameVariant = PacManGames_UI.GameVariant.PACMAN.name();
-        PacManGames_UI.build(primaryStage, width, height)
+        PacManGames_UI.build(theGameContext(), primaryStage, width, height)
             .game(
                 gameVariant,
                 ArcadePacMan_GameModel.arcadeVersion(theGameContext()),
