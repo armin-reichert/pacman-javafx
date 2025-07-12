@@ -327,7 +327,7 @@ public class GameLevel3D extends Group implements Destroyable {
     public void tick() {
         pac3D.update(gameLevel);
         ghosts3D.forEach(ghost3D -> ghost3D.update(gameLevel));
-        bonus3D().ifPresent(Bonus3D::update);
+        bonus3D().ifPresent(bonus3D -> bonus3D.update(theGameContext()));
         boolean houseAccessRequired = gameLevel.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
             .anyMatch(Ghost::isVisible);
         houseLightOnProperty.set(houseAccessRequired);

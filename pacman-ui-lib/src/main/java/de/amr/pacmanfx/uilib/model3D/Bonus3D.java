@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.model3D;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
@@ -23,7 +24,8 @@ import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.HTS;
+import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static java.util.Objects.requireNonNull;
 
@@ -128,12 +130,12 @@ public class Bonus3D extends Box {
         eatenAnimation = null;
     }
 
-    public void update() {
+    public void update(GameContext gameContext) {
         Vector2f center = bonus.actor().center();
         setTranslateX(center.x());
         setTranslateY(center.y());
         setTranslateZ(-HTS);
-        theGameContext().optGameLevel().ifPresent(edibleAnimation::update);
+        gameContext.optGameLevel().ifPresent(edibleAnimation::update);
     }
 
     public void showEdible() {

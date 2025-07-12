@@ -10,7 +10,6 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.sound.SoundID;
 
-import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.ui.PacManGames.theSound;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_ARCADE_INSERT_COIN;
@@ -29,10 +28,10 @@ public class ArcadePacMan_StartScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        theGameContext().theGame().hud().showCredit(true);
-        theGameContext().theGame().hud().showScore(true);
-        theGameContext().theGame().hud().showLevelCounter(true);
-        theGameContext().theGame().hud().showLivesCounter(false);
+        gameContext.theGame().hud().showCredit(true);
+        gameContext.theGame().hud().showScore(true);
+        gameContext.theGame().hud().showLevelCounter(true);
+        gameContext.theGame().hud().showLivesCounter(false);
         actionBindings.bind(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDINGS);
         actionBindings.bind(ACTION_ARCADE_START_GAME, GLOBAL_ACTION_BINDINGS);
     }
