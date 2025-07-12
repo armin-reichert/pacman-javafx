@@ -13,7 +13,6 @@ import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.PacManGames_UI;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.CrudeCanvasContainer;
-import de.amr.pacmanfx.ui._2d.GameRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.PopupLayer;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
@@ -87,8 +86,8 @@ public class GameView implements PacManGames_View {
     private BorderPane dashboardLayer;
 
     private final Dashboard dashboard = new Dashboard();
-    private final Canvas canvas = new Canvas();
-    private final CrudeCanvasContainer canvasContainer = new CrudeCanvasContainer(canvas);
+    private final Canvas commonCanvas = new Canvas();
+    private final CrudeCanvasContainer canvasContainer = new CrudeCanvasContainer(commonCanvas);
     private final MiniGameView miniGameView;
     private final ContextMenu contextMenu = new ContextMenu();
     private final StringBinding titleBinding;
@@ -352,15 +351,7 @@ public class GameView implements PacManGames_View {
                 embedCameraControlledScene(cameraControlledScene);
             }
             else {
-                gameScene2D.setCanvas(canvas);
-                gameScene2D.setGameRenderer(ui.configuration().createGameRenderer(canvas));
-                gameScene2D.scalingProperty().bind(canvasContainer.scalingProperty().map(
-                    scaling -> Math.min(scaling.doubleValue(), MAX_SCENE_2D_SCALING)));
-                Vector2f sceneSize = gameScene2D.sizeInPx();
-                canvasContainer.setUnscaledCanvasSize(sceneSize.x(), sceneSize.y());
-                canvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
-                canvasContainer.backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Ufx::coloredBackground));
-                root.getChildren().set(0, canvasLayer);
+                embedScene2DWithoutCamera(gameScene2D);
             }
             gameScene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
             fillCanvas(gameScene2D.canvas(), gameScene2D.backgroundColor());
@@ -373,10 +364,23 @@ public class GameView implements PacManGames_View {
         }
     }
 
-    private void embedCameraControlledScene(CameraControlledView cameraControlledView) {
-        cameraControlledView.viewPortWidthProperty().bind(parentScene.widthProperty());
-        cameraControlledView.viewPortHeightProperty().bind(parentScene.heightProperty());
-        root.getChildren().set(0, cameraControlledView.viewPort());
+    // 2D game scenes without camera are drawn into the common canvas provided by this game view
+    private void embedScene2DWithoutCamera(GameScene2D gameScene2D) {
+        gameScene2D.setCanvas(commonCanvas);
+        gameScene2D.setGameRenderer(ui.configuration().createGameRenderer(commonCanvas));
+        gameScene2D.scalingProperty().bind(canvasContainer.scalingProperty().map(
+            scaling -> Math.min(scaling.doubleValue(), MAX_SCENE_2D_SCALING)));
+        Vector2f sceneSize = gameScene2D.sizeInPx();
+        canvasContainer.setUnscaledCanvasSize(sceneSize.x(), sceneSize.y());
+        canvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
+        canvasContainer.backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Ufx::coloredBackground));
+        root.getChildren().set(0, canvasLayer);
+    }
+
+    private void embedCameraControlledScene(CameraControlledView cameraControlledScene) {
+        cameraControlledScene.viewPortWidthProperty().bind(parentScene.widthProperty());
+        cameraControlledScene.viewPortHeightProperty().bind(parentScene.heightProperty());
+        root.getChildren().set(0, cameraControlledScene.viewPort());
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -401,7 +405,7 @@ public class GameView implements PacManGames_View {
     }
 
     private void configurePropertyBindings() {
-        GraphicsContext ctx = canvas.getGraphicsContext2D();
+        GraphicsContext ctx = commonCanvas.getGraphicsContext2D();
         PY_CANVAS_FONT_SMOOTHING.addListener((py, ov, on) -> ctx.setFontSmoothingType(on ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
         PY_CANVAS_IMAGE_SMOOTHING.addListener((py, ov, on) -> ctx.setImageSmoothing(on));
         PY_DEBUG_INFO_VISIBLE.addListener((py, ov, debug) -> {
