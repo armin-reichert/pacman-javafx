@@ -39,7 +39,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.HTS;
+import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.Validations.isOneOf;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_MEDIUM;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_SHORT;
@@ -234,7 +235,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             Logger.error("Tick #{}: 3D game level is being destroyed, terminating app", theClock().tickCount());
             theUI().terminateApp();
         }
-        gameLevel3D.tick();
+        gameLevel3D.tick(gameContext);
         updateScores(gameContext.theGameLevel());
         if (gameContext.theGameLevel().isDemoLevel()) {
             theSound().setEnabled(false);
@@ -517,7 +518,8 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         }
         gameLevel3D = new GameLevel3D(
                 theUI().model3DRepository(),
-            gameContext.theGameLevel(),
+                gameContext,
+                gameContext.theGameLevel(),
                 theUI().configuration().worldMapColorScheme(gameContext.theGameLevel().worldMap())
         );
         gameLevel3D.pac3D().init();

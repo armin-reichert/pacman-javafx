@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._3d;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.Obstacle;
@@ -43,7 +44,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.HTS;
+import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static de.amr.pacmanfx.ui.PacManGames.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
@@ -119,7 +121,11 @@ public class GameLevel3D extends Group implements Destroyable {
 
     // Note: The order in which children are added to the root matters!
     // Walls and house must be added *after* the actors, otherwise the transparency is not working correctly.
-    public GameLevel3D(Model3DRepository model3DRepository, GameLevel gameLevel, WorldMapColorScheme proposedColorScheme)
+    public GameLevel3D(
+        Model3DRepository model3DRepository,
+        GameContext gameContext,
+        GameLevel gameLevel,
+        WorldMapColorScheme proposedColorScheme)
     {
         requireNonNull(model3DRepository);
         this.gameLevel = requireNonNull(gameLevel);
@@ -155,7 +161,7 @@ public class GameLevel3D extends Group implements Destroyable {
         ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
         getChildren().add(ambientLight);
 
-        levelCounter3D = new LevelCounter3D(animationManager, theGameContext().theGame().hud().levelCounter());
+        levelCounter3D = new LevelCounter3D(animationManager, gameContext.theGame().hud().levelCounter());
         levelCounter3D.setTranslateX(gameLevel.worldMap().numCols() * TS - 2 * TS);
         levelCounter3D.setTranslateY(2 * TS);
         levelCounter3D.spinningAnimation().playFromStart();
@@ -324,10 +330,10 @@ public class GameLevel3D extends Group implements Destroyable {
     /**
      * Called on each clock tick (frame).
      */
-    public void tick() {
+    public void tick(GameContext gameContext) {
         pac3D.update(gameLevel);
         ghosts3D.forEach(ghost3D -> ghost3D.update(gameLevel));
-        bonus3D().ifPresent(bonus3D -> bonus3D.update(theGameContext()));
+        bonus3D().ifPresent(bonus3D -> bonus3D.update(gameContext));
         boolean houseAccessRequired = gameLevel.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
             .anyMatch(Ghost::isVisible);
         houseLightOnProperty.set(houseAccessRequired);
@@ -339,13 +345,13 @@ public class GameLevel3D extends Group implements Destroyable {
             houseOpenProperty.set(ghostNearHouseEntry);
         });
 
-        int livesCounterSize = theGameContext().theGame().lifeCount() - 1;
+        int livesCounterSize = gameContext.theGame().lifeCount() - 1;
         // when the game starts and Pac-Man is not yet visible, show one more
-        boolean oneMore = theGameContext().theGameState() == GameState.STARTING_GAME && !gameLevel.pac().isVisible();
+        boolean oneMore = gameContext.theGameState() == GameState.STARTING_GAME && !gameLevel.pac().isVisible();
         if (oneMore) livesCounterSize += 1;
         livesCountProperty.set(livesCounterSize);
 
-        boolean visible = theGameContext().theGame().canStartNewGame();
+        boolean visible = gameContext.theGame().canStartNewGame();
         livesCounter3D.setVisible(visible);
         livesCounter3D.light().setLightOn(visible);
     }
