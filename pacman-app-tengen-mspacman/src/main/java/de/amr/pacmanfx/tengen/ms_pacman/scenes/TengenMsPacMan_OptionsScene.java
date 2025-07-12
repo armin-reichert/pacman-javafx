@@ -24,7 +24,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.PacManGames.*;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
@@ -87,9 +86,9 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     @Override
     public void doInit() {
 
-        theGameContext().theGame().hud().showScore(false);
-        theGameContext().theGame().hud().showLevelCounter(false);
-        theGameContext().theGame().hud().showLivesCounter(false);
+        gameContext.theGame().hud().showScore(false);
+        gameContext.theGame().hud().showLevelCounter(false);
+        gameContext.theGame().hud().showLivesCounter(false);
 
         actionBindings.bind(ACTION_START_PLAYING, TENGEN_ACTION_BINDINGS);
         actionBindings.bind(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, TENGEN_ACTION_BINDINGS);
@@ -118,7 +117,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
             return;
         }
         if (idleTicks == IDLE_TIMEOUT) {
-            theGameContext().theGameController().changeGameState(GameState.INTRO);
+            gameContext.theGameController().changeGameState(GameState.INTRO);
             return;
         }
         idleTicks += 1;
@@ -127,7 +126,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     @Override
     public Vector2f sizeInPx() { return NES_SIZE_PX; }
 
-    private TengenMsPacMan_GameModel theTengenGame() { return (TengenMsPacMan_GameModel) theGameContext().theGame(); }
+    private TengenMsPacMan_GameModel theTengenGame() { return (TengenMsPacMan_GameModel) gameContext.theGame(); }
     
     private void resetIdleTimer() {
         idleTicks = 0;

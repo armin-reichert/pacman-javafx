@@ -18,7 +18,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.HTS;
+import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.PacManGames.*;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
@@ -38,7 +39,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     @Override
     protected void setActionBindings() {
         // if demo level is running, allow going back to options screen
-        if (theGameContext().optGameLevel().isPresent() && theGameContext().theGameLevel().isDemoLevel()) {
+        if (gameContext.optGameLevel().isPresent() && gameContext.theGameLevel().isDemoLevel()) {
             actionBindings.bind(ACTION_QUIT_DEMO_LEVEL, TENGEN_ACTION_BINDINGS);
         } else {
             setPlayerSteeringActionBindings();
@@ -66,9 +67,9 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     @Override
     protected void replaceGameLevel3D() {
         super.replaceGameLevel3D();
-        var tengenGame = (TengenMsPacMan_GameModel) theGameContext().theGame();
+        var tengenGame = (TengenMsPacMan_GameModel) gameContext.theGame();
         if (!tengenGame.optionsAreInitial()) {
-            ImageView infoView = createGameInfoView(tengenGame, theGameContext().theGameLevel());
+            ImageView infoView = createGameInfoView(tengenGame, gameContext.theGameLevel());
             gameLevel3D.getChildren().add(infoView);
         }
     }
@@ -97,7 +98,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     protected void updateScores(GameLevel gameLevel) {
-        final Score score = theGameContext().theGame().score(), highScore = theGameContext().theGame().highScore();
+        final Score score = gameContext.theGame().score(), highScore = gameContext.theGame().highScore();
         if (score.isEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());
         }
@@ -113,7 +114,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     public void onBonusActivated(GameEvent event) {
-        theGameContext().optGameLevel().flatMap(GameLevel::bonus).ifPresent(bonus -> gameLevel3D.updateBonus3D(bonus));
+        gameContext.optGameLevel().flatMap(GameLevel::bonus).ifPresent(bonus -> gameLevel3D.updateBonus3D(bonus));
         theSound().loop(SoundID.BONUS_ACTIVE);
     }
 
