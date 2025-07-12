@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.controller;
 
+import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.event.GameStateChangeEvent;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
@@ -15,7 +16,6 @@ import org.tinylog.Logger;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.amr.pacmanfx.Globals.theGameContext;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -37,18 +37,19 @@ public class GameController  {
     private final StateMachine<GameState, GameModel> stateMachine;
     private boolean eventsEnabled;
 
-    public GameController() {
+    public GameController(GameEventManager gameEventManager) {
+        requireNonNull(gameEventManager);
         stateMachine = new StateMachine<>(GameState.values()) {
             @Override public GameModel context() { return currentGame(); }
         };
         stateMachine.addStateChangeListener((oldState, newState) ->
-            theGameContext().theGameEventManager().publishEvent(new GameStateChangeEvent(currentGame(), oldState, newState)));
+            gameEventManager.publishEvent(new GameStateChangeEvent(currentGame(), oldState, newState)));
 
         gameVariantPy.addListener((py, ov, newGameVariant) -> {
             if (eventsEnabled) {
                 GameModel newGame = game(newGameVariant);
                 newGame.init();
-                theGameContext().theGameEventManager().publishEvent(newGame, GameEventType.GAME_VARIANT_CHANGED);
+                gameEventManager.publishEvent(newGame, GameEventType.GAME_VARIANT_CHANGED);
             }
         });
     }
