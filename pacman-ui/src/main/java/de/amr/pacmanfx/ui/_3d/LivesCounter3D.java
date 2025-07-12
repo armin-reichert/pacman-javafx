@@ -22,8 +22,9 @@ import javafx.scene.shape.Cylinder;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
+import java.util.Random;
+
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.Globals.theGameContext;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -112,7 +113,7 @@ public class LivesCounter3D extends Group implements Destroyable  {
                     rotation.setInterpolator(Interpolator.LINEAR);
                     rotation.setCycleCount(Animation.INDEFINITE);
                     rotation.setAutoReverse(true);
-                    rotation.setRate(theGameContext().theRNG().nextDouble(1, 6));
+                    rotation.setRate(new Random().nextDouble(1, 6));
                     animation.getChildren().add(rotation);
                 }
                 resetShapes();
@@ -148,9 +149,12 @@ public class LivesCounter3D extends Group implements Destroyable  {
     @Override
     public void destroy() {
         livesCountProperty.unbind();
+        pillarHeightProperty.unbind();
         pillarMaterialProperty.unbind();
         pillarColorProperty.unbind();
         plateColorProperty.unbind();
+        plateThicknessProperty.unbind();
+        plateRadiusProperty.unbind();
         plateMaterialProperty.unbind();
         light.translateZProperty().unbind();
     }
