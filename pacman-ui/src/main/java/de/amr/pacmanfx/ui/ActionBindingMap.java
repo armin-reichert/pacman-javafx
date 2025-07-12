@@ -1,3 +1,7 @@
+/*
+Copyright (c) 2021-2025 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.ui.input.Keyboard;
@@ -44,7 +48,7 @@ public class ActionBindingMap {
         return actionBindings.entrySet();
     }
 
-    public void updateActionBindings() {
+    public void update() {
         for (KeyCombination combination : actionBindings.keySet()) {
             keyboard.setBinding(combination, this);
         }
@@ -55,20 +59,20 @@ public class ActionBindingMap {
             .forEach(entry -> Logger.debug("%-20s: %s".formatted(entry.getKey(), entry.getValue().name())));
     }
 
-    public void clearActionBindings() {
+    public void clear() {
         for (KeyCombination combination : actionBindings.keySet()) {
             keyboard.removeBinding(combination, this);
         }
         Logger.info("Key bindings cleared for {}", getClass().getSimpleName());
     }
 
-    public void bindActionToKeyCombination(GameAction action, KeyCombination combination) {
+    public void bind(GameAction action, KeyCombination combination) {
         requireNonNull(action);
         requireNonNull(combination);
         actionBindings.put(combination, action);
     }
 
-    public void bindAction(GameAction gameAction, Map<GameAction, Set<KeyCombination>> bindings) {
+    public void bind(GameAction gameAction, Map<GameAction, Set<KeyCombination>> bindings) {
         requireNonNull(gameAction);
         requireNonNull(bindings);
         if (bindings.values().stream().anyMatch(Objects::isNull)) {

@@ -121,23 +121,23 @@ public class GameView implements PacManGames_View {
             ui.currentGameSceneProperty()
         );
 
-        actionBindings.bindAction(ACTION_BOOT_SHOW_GAME_VIEW, GLOBAL_ACTION_BINDING_MAP);
-        actionBindings.bindAction(ACTION_ENTER_FULLSCREEN, GLOBAL_ACTION_BINDING_MAP);
-        actionBindings.bindAction(ACTION_QUIT_GAME_SCENE, GLOBAL_ACTION_BINDING_MAP);
-        actionBindings.bindAction(ACTION_SHOW_HELP, GLOBAL_ACTION_BINDING_MAP);
-        actionBindings.bindAction(ACTION_SIMULATION_SLOWER, GLOBAL_ACTION_BINDING_MAP);
-        actionBindings.bindAction(ACTION_SIMULATION_FASTER, GLOBAL_ACTION_BINDING_MAP);
-        actionBindings.bindAction(ACTION_SIMULATION_RESET, GLOBAL_ACTION_BINDING_MAP);
-        actionBindings.bindAction(ACTION_SIMULATION_ONE_STEP, GLOBAL_ACTION_BINDING_MAP);
-        actionBindings.bindAction(ACTION_SIMULATION_TEN_STEPS, GLOBAL_ACTION_BINDING_MAP);
-        actionBindings.bindAction(ACTION_TOGGLE_AUTOPILOT, GLOBAL_ACTION_BINDING_MAP);
-        actionBindings.bindAction(ACTION_TOGGLE_DEBUG_INFO, GLOBAL_ACTION_BINDING_MAP);
-        actionBindings.bindAction(ACTION_TOGGLE_MUTED, GLOBAL_ACTION_BINDING_MAP);
-        actionBindings.bindAction(ACTION_TOGGLE_PAUSED, GLOBAL_ACTION_BINDING_MAP);
-        actionBindings.bindAction(ACTION_TOGGLE_DASHBOARD, GLOBAL_ACTION_BINDING_MAP);
-        actionBindings.bindAction(ACTION_TOGGLE_IMMUNITY, GLOBAL_ACTION_BINDING_MAP);
-        actionBindings.bindAction(ACTION_TOGGLE_PIP_VISIBILITY, GLOBAL_ACTION_BINDING_MAP);
-        actionBindings.bindAction(ACTION_TOGGLE_PLAY_SCENE_2D_3D, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bind(ACTION_BOOT_SHOW_GAME_VIEW, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bind(ACTION_ENTER_FULLSCREEN, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bind(ACTION_QUIT_GAME_SCENE, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bind(ACTION_SHOW_HELP, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bind(ACTION_SIMULATION_SLOWER, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bind(ACTION_SIMULATION_FASTER, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bind(ACTION_SIMULATION_RESET, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bind(ACTION_SIMULATION_ONE_STEP, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bind(ACTION_SIMULATION_TEN_STEPS, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bind(ACTION_TOGGLE_AUTOPILOT, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bind(ACTION_TOGGLE_DEBUG_INFO, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bind(ACTION_TOGGLE_MUTED, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bind(ACTION_TOGGLE_PAUSED, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bind(ACTION_TOGGLE_DASHBOARD, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bind(ACTION_TOGGLE_IMMUNITY, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bind(ACTION_TOGGLE_PIP_VISIBILITY, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bind(ACTION_TOGGLE_PLAY_SCENE_2D_3D, GLOBAL_ACTION_BINDING_MAP);
     }
 
     private void handleGameSceneChange(ObservableValue<? extends GameScene> obs, GameScene oldScene, GameScene newScene) {

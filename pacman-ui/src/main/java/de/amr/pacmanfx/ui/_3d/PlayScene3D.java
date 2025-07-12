@@ -93,7 +93,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void destroy() {
-        actionBindings.clearActionBindings();
+        actionBindings.clear();
         perspectiveManager.perspectiveIDProperty().unbind();
         if (gameLevel3D != null) {
             gameLevel3D.destroy();
@@ -171,32 +171,32 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     }
 
     protected void setActionBindings() {
-        actionBindings.clearActionBindings();
-        actionBindings.bindAction(ACTION_PERSPECTIVE_PREVIOUS, GLOBAL_ACTION_BINDING_MAP);
-        actionBindings.bindAction(ACTION_PERSPECTIVE_NEXT, GLOBAL_ACTION_BINDING_MAP);
-        actionBindings.bindAction(ACTION_TOGGLE_DRAW_MODE, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.clear();
+        actionBindings.bind(ACTION_PERSPECTIVE_PREVIOUS, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bind(ACTION_PERSPECTIVE_NEXT, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bind(ACTION_TOGGLE_DRAW_MODE, GLOBAL_ACTION_BINDING_MAP);
         if (optGameLevel().isPresent()) {
             if (theGameLevel().isDemoLevel()) {
-                actionBindings.bindAction(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDING_MAP);
+                actionBindings.bind(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDING_MAP);
             } else {
                 setPlayerSteeringActionBindings();
-                actionBindings.bindAction(ACTION_CHEAT_EAT_ALL_PELLETS, GLOBAL_ACTION_BINDING_MAP);
-                actionBindings.bindAction(ACTION_CHEAT_ADD_LIVES, GLOBAL_ACTION_BINDING_MAP);
-                actionBindings.bindAction(ACTION_CHEAT_ENTER_NEXT_LEVEL, GLOBAL_ACTION_BINDING_MAP);
-                actionBindings.bindAction(ACTION_CHEAT_KILL_GHOSTS, GLOBAL_ACTION_BINDING_MAP);
+                actionBindings.bind(ACTION_CHEAT_EAT_ALL_PELLETS, GLOBAL_ACTION_BINDING_MAP);
+                actionBindings.bind(ACTION_CHEAT_ADD_LIVES, GLOBAL_ACTION_BINDING_MAP);
+                actionBindings.bind(ACTION_CHEAT_ENTER_NEXT_LEVEL, GLOBAL_ACTION_BINDING_MAP);
+                actionBindings.bind(ACTION_CHEAT_KILL_GHOSTS, GLOBAL_ACTION_BINDING_MAP);
             }
         }
-        actionBindings.updateActionBindings();
+        actionBindings.update();
     }
 
     /**
      * Overridden by Tengen play scene 3D to use keys corresponding to "Joypad" buttons
      */
     protected void setPlayerSteeringActionBindings() {
-        actionBindings.bindAction(ACTION_STEER_UP, GLOBAL_ACTION_BINDING_MAP);
-        actionBindings.bindAction(ACTION_STEER_DOWN, GLOBAL_ACTION_BINDING_MAP);
-        actionBindings.bindAction(ACTION_STEER_LEFT, GLOBAL_ACTION_BINDING_MAP);
-        actionBindings.bindAction(ACTION_STEER_RIGHT, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bind(ACTION_STEER_UP, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bind(ACTION_STEER_DOWN, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bind(ACTION_STEER_LEFT, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bind(ACTION_STEER_RIGHT, GLOBAL_ACTION_BINDING_MAP);
     }
 
     @Override

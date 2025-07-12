@@ -50,8 +50,8 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
         @SuppressWarnings("unchecked") var spriteSheet = (SpriteSheet<SpriteID>) theUI().configuration().spriteSheet();
         livesCounterSprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
 
-        actionBindings.bindAction(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDING_MAP);
-        actionBindings.bindAction(ACTION_ARCADE_START_GAME, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bind(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bind(ACTION_ARCADE_START_GAME, GLOBAL_ACTION_BINDING_MAP);
     }
 
     @Override

@@ -85,12 +85,12 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         theGame().hud().showLevelCounter(false);
         theGame().hud().showLivesCounter(false);
 
-        actionBindings.bindAction(ACTION_START_PLAYING, TENGEN_ACTION_BINDINGS);
-        actionBindings.bindAction(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, TENGEN_ACTION_BINDINGS);
-        actionBindings.bindAction(ACTION_TEST_CUT_SCENES, GLOBAL_ACTION_BINDING_MAP);
-        actionBindings.bindAction(ACTION_TEST_LEVELS_BONI, GLOBAL_ACTION_BINDING_MAP);
-        actionBindings.bindAction(ACTION_TEST_LEVELS_TEASERS, GLOBAL_ACTION_BINDING_MAP);
-        actionBindings.bindActionToKeyCombination(actionSelectNextJoypadBinding, alt(KeyCode.J));
+        actionBindings.bind(ACTION_START_PLAYING, TENGEN_ACTION_BINDINGS);
+        actionBindings.bind(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, TENGEN_ACTION_BINDINGS);
+        actionBindings.bind(ACTION_TEST_CUT_SCENES, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bind(ACTION_TEST_LEVELS_BONI, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bind(ACTION_TEST_LEVELS_TEASERS, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bind(actionSelectNextJoypadBinding, alt(KeyCode.J));
 
         spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
         selectedOption = OPTION_PAC_BOOSTER;

@@ -75,11 +75,11 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         theGame().hud().showLevelCounter(true);
         theGame().hud().showLivesCounter(false);
 
-        actionBindings.bindAction(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDING_MAP);
-        actionBindings.bindAction(ACTION_ARCADE_START_GAME, GLOBAL_ACTION_BINDING_MAP);
-        actionBindings.bindAction(ACTION_TEST_CUT_SCENES, GLOBAL_ACTION_BINDING_MAP);
-        actionBindings.bindAction(ACTION_TEST_LEVELS_BONI, GLOBAL_ACTION_BINDING_MAP);
-        actionBindings.bindAction(ACTION_TEST_LEVELS_TEASERS, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bind(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bind(ACTION_ARCADE_START_GAME, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bind(ACTION_TEST_CUT_SCENES, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bind(ACTION_TEST_LEVELS_BONI, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bind(ACTION_TEST_LEVELS_TEASERS, GLOBAL_ACTION_BINDING_MAP);
 
         copyright = new MidwayCopyright();
         copyright.setPosition(TS * 6, TS * 28);

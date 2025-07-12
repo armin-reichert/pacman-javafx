@@ -117,10 +117,10 @@ public class StartPagesView implements PacManGames_View {
                 return "SHOW_NEXT_SLIDE";
             }
         };
-        actionBindings.bindActionToKeyCombination(actionPrevSlide,            nude(KeyCode.LEFT));
-        actionBindings.bindActionToKeyCombination(actionNextSlide,            nude(KeyCode.RIGHT));
-        actionBindings.bindActionToKeyCombination(ACTION_BOOT_SHOW_GAME_VIEW, nude(KeyCode.ENTER));
-        actionBindings.bindActionToKeyCombination(ACTION_TOGGLE_PAUSED,       nude(KeyCode.P));
+        actionBindings.bind(actionPrevSlide,            nude(KeyCode.LEFT));
+        actionBindings.bind(actionNextSlide,            nude(KeyCode.RIGHT));
+        actionBindings.bind(ACTION_BOOT_SHOW_GAME_VIEW, nude(KeyCode.ENTER));
+        actionBindings.bind(ACTION_TOGGLE_PAUSED,       nude(KeyCode.P));
     }
 
     @Override

@@ -28,8 +28,8 @@ public class ArcadePacMan_StartScene extends GameScene2D {
         theGame().hud().showScore(true);
         theGame().hud().showLevelCounter(true);
         theGame().hud().showLivesCounter(false);
-        actionBindings.bindAction(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDING_MAP);
-        actionBindings.bindAction(ACTION_ARCADE_START_GAME, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bind(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bind(ACTION_ARCADE_START_GAME, GLOBAL_ACTION_BINDING_MAP);
     }
 
     @Override

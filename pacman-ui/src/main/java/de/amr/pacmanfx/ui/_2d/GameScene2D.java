@@ -42,7 +42,7 @@ public abstract class GameScene2D implements GameScene {
 
     @Override
     public void destroy() {
-        actionBindings.clearActionBindings();
+        actionBindings.clear();
         animationManager.destroyAllAnimations();
     }
 
@@ -51,7 +51,7 @@ public abstract class GameScene2D implements GameScene {
         arcadeFont8Property.bind(scalingProperty.map(s -> theAssets().arcadeFont(s.floatValue() * 8)));
         arcadeFont6Property.bind(scalingProperty.map(s -> theAssets().arcadeFont(s.floatValue() * 6)));
         doInit();
-        actionBindings.updateActionBindings();
+        actionBindings.update();
         theKeyboard().logCurrentBindings();
     }
 

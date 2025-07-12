@@ -34,28 +34,28 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     protected void setActionBindings() {
         // if demo level is running, allow going back to options screen
         if (optGameLevel().isPresent() && theGameLevel().isDemoLevel()) {
-            actionBindings.bindAction(ACTION_QUIT_DEMO_LEVEL, TENGEN_ACTION_BINDINGS);
+            actionBindings.bind(ACTION_QUIT_DEMO_LEVEL, TENGEN_ACTION_BINDINGS);
         } else {
             setPlayerSteeringActionBindings();
-            actionBindings.bindAction(ACTION_CHEAT_EAT_ALL_PELLETS, GLOBAL_ACTION_BINDING_MAP);
-            actionBindings.bindAction(ACTION_CHEAT_ADD_LIVES, GLOBAL_ACTION_BINDING_MAP);
-            actionBindings.bindAction(ACTION_CHEAT_ENTER_NEXT_LEVEL, GLOBAL_ACTION_BINDING_MAP);
-            actionBindings.bindAction(ACTION_CHEAT_KILL_GHOSTS, GLOBAL_ACTION_BINDING_MAP);
-            actionBindings.bindAction(ACTION_TOGGLE_PAC_BOOSTER, TENGEN_ACTION_BINDINGS);
+            actionBindings.bind(ACTION_CHEAT_EAT_ALL_PELLETS, GLOBAL_ACTION_BINDING_MAP);
+            actionBindings.bind(ACTION_CHEAT_ADD_LIVES, GLOBAL_ACTION_BINDING_MAP);
+            actionBindings.bind(ACTION_CHEAT_ENTER_NEXT_LEVEL, GLOBAL_ACTION_BINDING_MAP);
+            actionBindings.bind(ACTION_CHEAT_KILL_GHOSTS, GLOBAL_ACTION_BINDING_MAP);
+            actionBindings.bind(ACTION_TOGGLE_PAC_BOOSTER, TENGEN_ACTION_BINDINGS);
         }
-        actionBindings.bindAction(ACTION_PERSPECTIVE_PREVIOUS, GLOBAL_ACTION_BINDING_MAP);
-        actionBindings.bindAction(ACTION_PERSPECTIVE_NEXT, GLOBAL_ACTION_BINDING_MAP);
-        actionBindings.bindAction(ACTION_TOGGLE_DRAW_MODE, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bind(ACTION_PERSPECTIVE_PREVIOUS, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bind(ACTION_PERSPECTIVE_NEXT, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bind(ACTION_TOGGLE_DRAW_MODE, GLOBAL_ACTION_BINDING_MAP);
 
-        actionBindings.updateActionBindings();
+        actionBindings.update();
     }
 
     @Override
     protected void setPlayerSteeringActionBindings() {
-        actionBindings.bindAction(ACTION_STEER_UP, TENGEN_ACTION_BINDINGS);
-        actionBindings.bindAction(ACTION_STEER_DOWN, TENGEN_ACTION_BINDINGS);
-        actionBindings.bindAction(ACTION_STEER_LEFT, TENGEN_ACTION_BINDINGS);
-        actionBindings.bindAction(ACTION_STEER_RIGHT, TENGEN_ACTION_BINDINGS);
+        actionBindings.bind(ACTION_STEER_UP, TENGEN_ACTION_BINDINGS);
+        actionBindings.bind(ACTION_STEER_DOWN, TENGEN_ACTION_BINDINGS);
+        actionBindings.bind(ACTION_STEER_LEFT, TENGEN_ACTION_BINDINGS);
+        actionBindings.bind(ACTION_STEER_RIGHT, TENGEN_ACTION_BINDINGS);
     }
 
     @Override
