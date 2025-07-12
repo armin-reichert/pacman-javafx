@@ -12,7 +12,10 @@ import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.PacManGames_UI;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
-import de.amr.pacmanfx.ui._2d.*;
+import de.amr.pacmanfx.ui._2d.CrudeCanvasContainer;
+import de.amr.pacmanfx.ui._2d.GameRenderer;
+import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._2d.PopupLayer;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.InfoBox;
@@ -350,22 +353,17 @@ public class GameView implements PacManGames_View {
                 root.getChildren().set(0, gameSceneWithCamera.viewPort());
             }
             case GameScene2D gameScene2D -> {
+                gameScene2D.setCanvas(canvas);
+                gameScene2D.setGameRenderer(ui.configuration().createGameRenderer(canvas));
+                gameScene2D.scalingProperty().bind(canvasContainer.scalingProperty().map(
+                    scaling -> Math.min(scaling.doubleValue(), MAX_SCENE_2D_SCALING)));
+
+                fillCanvas(gameScene2D.canvas(), gameScene2D.backgroundColor());
+
                 Vector2f sceneSize = gameScene2D.sizeInPx();
-                canvasContainer.backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Ufx::coloredBackground));
                 canvasContainer.setUnscaledCanvasSize(sceneSize.x(), sceneSize.y());
                 canvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
-
-                gameScene2D.scalingProperty().bind(canvasContainer.scalingProperty()
-                        .map(scaling -> Math.min(scaling.doubleValue(), MAX_SCENE_2D_SCALING)));
-                gameScene2D.setCanvas(canvas);
-
-                GameRenderer gameRenderer = ui.configuration().createGameRenderer(canvas);
-                if (gameRenderer instanceof SpriteGameRenderer spriteGameRenderer) {
-                    gameScene2D.setGameRenderer(spriteGameRenderer);
-                } else {
-                    Logger.error("Currently, only sprite game renderers are supported for 2D game scenes");
-                }
-                fillCanvas(gameScene2D.canvas(), gameScene2D.backgroundColor());
+                canvasContainer.backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Ufx::coloredBackground));
 
                 root.getChildren().set(0, canvasLayer);
             }

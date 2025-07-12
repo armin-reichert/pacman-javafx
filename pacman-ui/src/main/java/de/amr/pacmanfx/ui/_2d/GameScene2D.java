@@ -96,7 +96,7 @@ public abstract class GameScene2D implements GameScene {
     public void setBackgroundColor(Color color) { backgroundColorProperty.set(color); }
 
     public GameRenderer gr() { return gameRenderer; }
-    public void setGameRenderer(SpriteGameRenderer renderer) { gameRenderer = requireNonNull(renderer); }
+    public void setGameRenderer(GameRenderer renderer) { gameRenderer = requireNonNull(renderer); }
     public GraphicsContext ctx() { return gameRenderer.ctx(); }
 
     public Canvas canvas() { return canvas; }
