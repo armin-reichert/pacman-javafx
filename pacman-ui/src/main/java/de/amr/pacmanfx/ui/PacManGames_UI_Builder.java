@@ -9,7 +9,6 @@ import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.layout.StartPage;
-import javafx.stage.Stage;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -61,18 +60,8 @@ public class PacManGames_UI_Builder {
     private int selectedStartPageIndex;
     private DashboardID[] dashboardIDs = new DashboardID[0];
 
-    PacManGames_UI_Builder(GameContext gameContext, Stage stage, double width, double height) {
+    PacManGames_UI_Builder(GameContext gameContext) {
         this.gameContext = requireNonNull(gameContext);
-        if (stage == null) {
-            error("Stage is null");
-        }
-        if (width <= 0) {
-            error("Stage width (%.2f) must be a positive number".formatted(width));
-        }
-        if (height <= 0) {
-            error("Stage height (%.2f) must be a positive number".formatted(height));
-        }
-        THE_ONE = new PacManGames_UI_Impl(gameContext, stage, width, height);
     }
 
     public PacManGames_UI_Builder game(String variant, GameModel model, Class<? extends PacManGames_UIConfig> configClass) {

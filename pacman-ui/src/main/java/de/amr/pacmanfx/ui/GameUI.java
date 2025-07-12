@@ -31,14 +31,16 @@ import java.util.Set;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.ActionBindingMap.createActionBinding;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
+import static de.amr.pacmanfx.ui.PacManGames_UI_Impl.THE_ONE;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
 
 public interface GameUI {
 
-    static GameUI theUI()       { return PacManGames_UI_Impl.THE_ONE; }
+    static GameUI theUI() { return PacManGames_UI_Impl.THE_ONE; }
 
     static PacManGames_UI_Builder build(GameContext gameContext, Stage stage, double width, double height) {
-        return new PacManGames_UI_Builder(gameContext, stage, width, height);
+        THE_ONE = new PacManGames_UI_Impl(gameContext, stage, width, height);
+        return new PacManGames_UI_Builder(gameContext);
     }
 
     /** Predefined game variants */
