@@ -63,14 +63,14 @@ public class Dashboard extends VBox {
             case ACTOR_INFO                -> addInfoBox(id, "infobox.actor_info.title", new InfoBoxActorInfo(gameContext));
             case ANIMATION_INFO            -> addInfoBox(id, "infobox.animation_info.title", new InfoBoxGameLevelAnimations(gameContext));
             case CUSTOM_MAPS               -> addInfoBox(id, "infobox.custom_maps.title", new InfoBoxCustomMaps(gameContext));
-            case GENERAL                   -> addInfoBox(id, "infobox.general.title", new InfoBoxGeneral());
+            case GENERAL                   -> addInfoBox(id, "infobox.general.title", new InfoBoxGeneral(gameContext));
             case GAME_CONTROL              -> addInfoBox(id, "infobox.game_control.title", new InfoBoxGameControl(gameContext));
             case GAME_INFO                 -> addInfoBox(id, "infobox.game_info.title", new InfoBoxGameInfo(gameContext));
-            case JOYPAD                    -> addInfoBox(id, "infobox.joypad.title", new InfoBoxJoypad());
+            case JOYPAD                    -> addInfoBox(id, "infobox.joypad.title", new InfoBoxJoypad(gameContext));
             case KEYBOARD_SHORTCUTS_GLOBAL -> addInfoBox(id, "infobox.keyboard_shortcuts_global.title", new InfoBoxKeyShortcutsGlobal(gameContext));
             case KEYBOARD_SHORTCUTS_LOCAL  ->  addInfoBox(id, "infobox.keyboard_shortcuts_local.title", new InfoBoxKeyShortcutsLocal(gameContext));
             case README -> {
-                InfoBox infoBox = new InfoBoxReadmeFirst();
+                InfoBox infoBox = new InfoBoxReadmeFirst(gameContext);
                 infoBox.setExpanded(true);
                 addInfoBox(id, "infobox.readme.title", infoBox);
             }

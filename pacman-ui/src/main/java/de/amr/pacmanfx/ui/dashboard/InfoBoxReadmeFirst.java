@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.dashboard;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -17,6 +18,10 @@ import javafx.scene.text.Text;
 import static de.amr.pacmanfx.ui.GameUIContext.theAssets;
 
 public class InfoBoxReadmeFirst extends InfoBox {
+
+    public InfoBoxReadmeFirst(GameContext gameContext) {
+        super(gameContext);
+    }
 
     @Override
     public void init() {

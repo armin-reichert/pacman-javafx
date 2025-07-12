@@ -41,7 +41,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.ui.GameUIContext.*;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_ENTER_FULLSCREEN;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_TOGGLE_MUTED;
@@ -87,7 +86,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
 
         startPagesView = new StartPagesView(this);
         startPagesView.setBackground(theAssets().background("background.scene"));
-        gameView = new GameView(this, mainScene);
+        gameView = new GameView(this, gameContext, mainScene);
 
         rootPane.getChildren().add(startPagesView.rootNode());
 
@@ -122,7 +121,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
                 showEditorView();
             }
             else {
-                currentView().handleKeyboardInput();
+                currentView().handleKeyboardInput(gameContext);
             }
         });
         currentViewProperty.addListener((py, oldView, newView) -> handleViewChange(oldView, newView));

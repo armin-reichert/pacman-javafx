@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.dashboard;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.ui.PacManGames_GameActions;
 import de.amr.pacmanfx.ui.PacManGames_UI;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
@@ -23,6 +24,10 @@ public class InfoBoxGeneral extends InfoBox {
 
     private static final int MIN_FRAME_RATE = 5;
     private static final int MAX_FRAME_RATE = 120;
+
+    public InfoBoxGeneral(GameContext gameContext) {
+        super(gameContext);
+    }
 
     public void init() {
         addLabeledValue("Java Version",   Runtime.version().toString());
