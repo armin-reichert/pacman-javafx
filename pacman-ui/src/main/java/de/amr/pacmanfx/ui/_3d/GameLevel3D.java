@@ -198,6 +198,7 @@ public class GameLevel3D extends Group implements Destroyable {
             );
             return new MutatingGhost3D(
                 animationManager,
+                gameLevel,
                 ghost,
                 ghostColoring,
                 dressMeshViews[ghost.personality()],

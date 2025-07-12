@@ -29,7 +29,8 @@ import org.tinylog.Logger;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.HTS;
+import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static de.amr.pacmanfx.Validations.requireNonNegativeInt;
 import static java.util.Objects.requireNonNull;
@@ -68,6 +69,7 @@ public class MutatingGhost3D extends Group implements Destroyable {
 
     public MutatingGhost3D(
         AnimationManager animationManager,
+        GameLevel gameLevel,
         Ghost ghost,
         GhostColoring coloring,
         MeshView dressShape,
@@ -150,7 +152,7 @@ public class MutatingGhost3D extends Group implements Destroyable {
         ghost.wishDirProperty().addListener(this::handleGhostWishDirChange);
 
         visibleProperty().bind(Bindings.createBooleanBinding(
-                () -> ghost.isVisible() && !isPositionOutsideWorld(theGameContext().theGameLevel(), ghost.center()),
+                () -> ghost.isVisible() && !isPositionOutsideWorld(gameLevel, ghost.center()),
                 ghost.visibleProperty(), ghost.positionProperty()
         ));
 
