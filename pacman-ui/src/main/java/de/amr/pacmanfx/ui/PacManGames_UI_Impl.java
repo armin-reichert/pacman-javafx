@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
@@ -41,7 +40,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.ui.PacManGames.*;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_ENTER_FULLSCREEN;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_TOGGLE_MUTED;
@@ -207,7 +206,7 @@ public class PacManGames_UI_Impl implements PacManGames_UI {
                 editor.executeWithCheckForUnsavedChanges(this::showStartView);
             });
             editor.getFileMenu().getItems().addAll(new SeparatorMenuItem(), miReturnToGame);
-            editor.init(CUSTOM_MAP_DIR);
+            editor.init(theGameContext().theCustomMapDir());
             editorView = new EditorView(editor);
         }
         return editorView;

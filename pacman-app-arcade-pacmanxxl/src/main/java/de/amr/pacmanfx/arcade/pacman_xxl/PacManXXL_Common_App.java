@@ -11,7 +11,6 @@ import javafx.application.Application;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import static de.amr.pacmanfx.Globals.CUSTOM_MAP_DIR;
 import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.ui.PacManGames.theClock;
 import static de.amr.pacmanfx.ui.PacManGames.theWatchdog;
@@ -30,7 +29,7 @@ public class PacManXXL_Common_App extends Application {
         // UI size: 80% of available screen height, aspect 16:10
         final double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
         final double width  = 1.6 * height;
-        var xxlMapSelector = new PacManXXL_Common_MapSelector(CUSTOM_MAP_DIR);
+        var xxlMapSelector = new PacManXXL_Common_MapSelector(theGameContext().theCustomMapDir());
         PacManGames_UI.build(primaryStage, width, height)
                 .game(
                     PACMAN_XXL.name(),

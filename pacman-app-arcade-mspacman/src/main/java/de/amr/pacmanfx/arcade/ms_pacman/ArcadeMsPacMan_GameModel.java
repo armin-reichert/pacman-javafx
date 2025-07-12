@@ -187,7 +187,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
     public ArcadeMsPacMan_GameModel(GameContext gameContext, MapSelector mapSelector) {
         super(gameContext);
         this.mapSelector = requireNonNull(mapSelector);
-        setHighScoreFile(new File(HOME_DIR, "highscore-ms_pacman.xml"));
+        setHighScoreFile(new File(gameContext.theHomeDir(), "highscore-ms_pacman.xml"));
         setExtraLifeScores(EXTRA_LIFE_SCORE);
 
         /*

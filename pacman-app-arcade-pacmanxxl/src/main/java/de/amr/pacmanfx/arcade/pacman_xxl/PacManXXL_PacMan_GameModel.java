@@ -5,15 +5,12 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.model.MapSelectionMode;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 
 import java.io.File;
-
-import static de.amr.pacmanfx.Globals.theGameContext;
 
 /**
  * Extension of Arcade Pac-Man with 8 new builtin mazes (thanks to the one and only
@@ -24,7 +21,7 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
 
     public PacManXXL_PacMan_GameModel(GameContext gameContext, PacManXXL_Common_MapSelector mapSelector) {
         super(gameContext, mapSelector);
-        setHighScoreFile(new File(Globals.HOME_DIR, "highscore-pacman_xxl.xml"));
+        setHighScoreFile(new File(gameContext.theHomeDir(), "highscore-pacman_xxl.xml"));
         // Demo level map could be custom map, so use generic automatic steering
         demoLevelSteering = new RuleBasedPacSteering(this);
     }

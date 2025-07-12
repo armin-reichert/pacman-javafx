@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.Globals;
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
@@ -16,21 +16,22 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.amr.pacmanfx.Globals.CUSTOM_MAP_DIR;
 import static de.amr.pacmanfx.Globals.theGameContext;
 import static java.util.Objects.requireNonNull;
 
 public class PacManGames_UI_Builder {
 
-    private static void checkUserDirsExistingAndWritable() {
+    private static void checkUserDirsExistingAndWritable(GameContext gameContext) {
+        File homeDir = gameContext.theHomeDir();
+        File customMapDir = gameContext.theCustomMapDir();
         String homeDirDesc = "Pac-Man FX home directory";
         String customMapDirDesc = "Pac-Man FX custom map directory";
-        boolean success = checkDirExistingAndWritable(Globals.HOME_DIR, homeDirDesc);
+        boolean success = checkDirExistingAndWritable(homeDir, homeDirDesc);
         if (success) {
-            Logger.info(homeDirDesc + " is " + Globals.HOME_DIR);
-            success = checkDirExistingAndWritable(Globals.CUSTOM_MAP_DIR, customMapDirDesc);
+            Logger.info(homeDirDesc + " is " + homeDir);
+            success = checkDirExistingAndWritable(customMapDir, customMapDirDesc);
             if (success) {
-                Logger.info(customMapDirDesc + " is " + Globals.CUSTOM_MAP_DIR);
+                Logger.info(customMapDirDesc + " is " + customMapDir);
             }
             Logger.info("User directories exist and are writable!");
         }
@@ -106,8 +107,8 @@ public class PacManGames_UI_Builder {
     }
 
     private void validate() {
-        checkUserDirsExistingAndWritable();
-        PacManGames_UI_Impl.WATCHDOG = new DirectoryWatchdog(CUSTOM_MAP_DIR);
+        checkUserDirsExistingAndWritable(theGameContext());
+        PacManGames_UI_Impl.WATCHDOG = new DirectoryWatchdog(theGameContext().theCustomMapDir());
         if (stage == null) {
             error("Stage is null");
         }

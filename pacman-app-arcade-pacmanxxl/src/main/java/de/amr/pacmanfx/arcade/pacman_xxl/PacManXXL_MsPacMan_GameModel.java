@@ -5,20 +5,17 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.model.MapSelectionMode;
 
 import java.io.File;
 
-import static de.amr.pacmanfx.Globals.theGameContext;
-
 public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
 
     public PacManXXL_MsPacMan_GameModel(GameContext gameContext, PacManXXL_Common_MapSelector mapSelector) {
         super(gameContext, mapSelector);
-        setHighScoreFile(new File(Globals.HOME_DIR, "highscore-mspacman_xxl.xml"));
+        setHighScoreFile(new File(gameContext.theHomeDir(), "highscore-mspacman_xxl.xml"));
     }
 
     @Override

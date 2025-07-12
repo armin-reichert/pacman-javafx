@@ -28,18 +28,11 @@ public class Globals {
     /** Tile size=8px, half tile size=4px. */
     public static final int TS = 8, HTS = 4;
 
-    /**
-     * Directory under which high scores, maps etc. are stored.
-     * <p>Default: <code>&lt;user_home&gt;/.pacmanfx</code></p>
-     */
-    public static final File HOME_DIR = new File(System.getProperty("user.home"), ".pacmanfx");
-
-    /**
-     * Directory where custom maps are stored (default: <code>&lt;pacmanfx_home_dir&gt;/maps</code>).
-     */
-    public static final File CUSTOM_MAP_DIR = new File(HOME_DIR, "maps");
+    private static GameContextImpl context;
 
     private static class GameContextImpl implements GameContext {
+        private final File homeDir = new File(System.getProperty("user.home"), ".pacmanfx");
+        private final File customMapDir = new File(homeDir, "maps");
         private final CoinMechanism coinMechanism = new CoinMechanism();
         private final GameController gameController = new GameController();
         private final GameEventManager gameEventManager = new GameEventManager();
@@ -49,6 +42,11 @@ public class Globals {
         @Override
         public CoinMechanism theCoinMechanism() {
             return coinMechanism;
+        }
+
+        @Override
+        public File theCustomMapDir() {
+            return customMapDir;
         }
 
         @Override
@@ -64,6 +62,11 @@ public class Globals {
         @Override
         public GameEventManager theGameEventManager() {
             return gameEventManager;
+        }
+
+        @Override
+        public File theHomeDir() {
+            return homeDir;
         }
 
         @Override
@@ -100,6 +103,4 @@ public class Globals {
         requireNonNull(context, "Game context not initialized!");
         return context;
     }
-
-    private static GameContextImpl context;
 }

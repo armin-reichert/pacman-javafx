@@ -170,7 +170,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
     public ArcadePacMan_GameModel(GameContext gameContext, MapSelector mapSelector) {
         super(gameContext);
         this.mapSelector = requireNonNull(mapSelector);
-        setHighScoreFile(new File(HOME_DIR, "highscore-pacman.xml"));
+        setHighScoreFile(new File(gameContext.theHomeDir(), "highscore-pacman.xml"));
         setExtraLifeScores(EXTRA_LIFE_SCORE);
 
         huntingTimer = new HuntingTimer("ArcadePacMan-HuntingTimer", 8) {

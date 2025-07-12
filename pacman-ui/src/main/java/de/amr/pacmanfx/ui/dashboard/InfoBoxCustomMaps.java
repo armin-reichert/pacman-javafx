@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 
-import static de.amr.pacmanfx.Globals.CUSTOM_MAP_DIR;
+import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.ui.PacManGames.theWatchdog;
 
 public class InfoBoxCustomMaps extends InfoBox {
@@ -75,9 +75,9 @@ public class InfoBoxCustomMaps extends InfoBox {
 
     private void updateCustomMapList() {
         customMaps.clear();
-        File[] mapFiles = CUSTOM_MAP_DIR.listFiles((dir, name) -> name.endsWith(".world"));
+        File[] mapFiles = theGameContext().theCustomMapDir().listFiles((dir, name) -> name.endsWith(".world"));
         if (mapFiles == null) {
-            Logger.error("An error occurred accessing custom map directory {}", CUSTOM_MAP_DIR);
+            Logger.error("An error occurred accessing custom map directory {}", theGameContext().theCustomMapDir());
             return;
         }
         if (mapFiles.length == 0) {
