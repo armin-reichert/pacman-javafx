@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.MapSelectionMode;
@@ -30,6 +31,7 @@ import static de.amr.pacmanfx.ui.PacManGames.theUI;
 import static de.amr.pacmanfx.ui.PacManGames_UI.PY_3D_ENABLED;
 import static de.amr.pacmanfx.ui.input.Keyboard.nude;
 import static de.amr.pacmanfx.uilib.widgets.OptionMenuStyle.DEFAULT_OPTION_MENU_STYLE;
+import static java.util.Objects.requireNonNull;
 
 public class PacManXXL_Common_StartPageMenu extends OptionMenu {
 
@@ -225,11 +227,13 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         }
     };
 
+    private final GameContext gameContext;
     private final MenuState state = new MenuState();
     private final ChaseAnimation chaseAnimation;
 
-    public PacManXXL_Common_StartPageMenu() {
+    public PacManXXL_Common_StartPageMenu(GameContext gameContext) {
         super(42, 36, 6, 20);
+        this.gameContext = requireNonNull(gameContext);
 
         state.gameVariant = "PACMAN_XXL";
         state.play3D = false;
@@ -267,7 +271,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
     }
 
     public void syncMenuState() {
-        final GameModel game = theGameContext().theGameController().game(state.gameVariant);
+        final GameModel game = gameContext.theGameController().game(state.gameVariant);
         final var mapSelector = (PacManXXL_Common_MapSelector) game.mapSelector();
         mapSelector.loadAllMaps();
         final boolean customMapsExist = !mapSelector.customMaps().isEmpty();
@@ -317,7 +321,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
     }
 
     private void startGame() {
-        GameModel game = theGameContext().theGameController().game(state.gameVariant);
+        GameModel game = gameContext.theGameController().game(state.gameVariant);
         game.setCutScenesEnabled(state.cutScenesEnabled);
         var mapSelector = (PacManXXL_Common_MapSelector) game.mapSelector();
         mapSelector.setMapSelectionMode(state.mapOrder);

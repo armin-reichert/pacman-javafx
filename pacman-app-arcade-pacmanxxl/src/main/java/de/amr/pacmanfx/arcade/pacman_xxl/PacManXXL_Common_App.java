@@ -42,7 +42,7 @@ public class PacManXXL_Common_App extends Application {
                     PacManXXL_MsPacMan_UIConfig.class
                 )
                 .startPages(
-                    new PacManXXL_Common_StartPage()
+                    new PacManXXL_Common_StartPage(theGameContext())
                 )
                 .dashboardEntries(
                     DashboardID.README, DashboardID.GENERAL,
