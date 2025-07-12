@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.allgames.app;
 
-import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
@@ -21,6 +20,7 @@ import javafx.application.Application;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import static de.amr.pacmanfx.Globals.initGameContext;
 import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.ui.PacManGames.theClock;
 import static de.amr.pacmanfx.ui.PacManGames.theWatchdog;
@@ -33,7 +33,7 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void init() {
-        Globals.initGameContext();
+        initGameContext();
     }
 
     @Override
@@ -69,7 +69,7 @@ public class PacManGames3dApp extends Application {
                 PacManXXL_MsPacMan_UIConfig.class
             )
             .startPages(
-                new ArcadePacMan_StartPage(GameVariant.PACMAN.name()),
+                new ArcadePacMan_StartPage(theGameContext(), GameVariant.PACMAN.name()),
                 new ArcadeMsPacMan_StartPage(theGameContext(), GameVariant.MS_PACMAN.name()),
                 new TengenMsPacMan_StartPage(GameVariant.MS_PACMAN_TENGEN.name()),
                 new PacManXXL_Common_StartPage()

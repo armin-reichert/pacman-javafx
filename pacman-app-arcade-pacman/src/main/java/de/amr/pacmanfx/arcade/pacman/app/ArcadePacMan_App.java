@@ -14,6 +14,7 @@ import javafx.application.Application;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import static de.amr.pacmanfx.Globals.initGameContext;
 import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.ui.PacManGames.theClock;
 import static de.amr.pacmanfx.ui.PacManGames.theWatchdog;
@@ -21,8 +22,8 @@ import static de.amr.pacmanfx.ui.PacManGames.theWatchdog;
 public class ArcadePacMan_App extends Application {
 
     @Override
-    public void init() throws Exception {
-        Globals.initGameContext();
+    public void init() {
+        initGameContext();
     }
 
     @Override
@@ -38,7 +39,7 @@ public class ArcadePacMan_App extends Application {
                 ArcadePacMan_UIConfig.class
             )
             .startPages(
-                new ArcadePacMan_StartPage(gameVariant)
+                new ArcadePacMan_StartPage(theGameContext(), gameVariant)
             )
             .dashboardEntries(
                 DashboardID.GENERAL, DashboardID.GAME_CONTROL,

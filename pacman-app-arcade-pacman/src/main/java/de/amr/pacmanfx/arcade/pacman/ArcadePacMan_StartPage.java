@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.layout.StartPage;
 import de.amr.pacmanfx.ui.layout.StartPagesView;
@@ -21,7 +22,8 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_StartPage extends StackPane implements StartPage {
 
-    public ArcadePacMan_StartPage(String gameVariant) {
+    public ArcadePacMan_StartPage(GameContext gameContext, String gameVariant) {
+        requireNonNull(gameContext);
         setUserData(requireNonNull(gameVariant));
 
         ResourceManager rm = () -> ArcadePacMan_StartPage.class;
@@ -35,7 +37,7 @@ public class ArcadePacMan_StartPage extends StackPane implements StartPage {
         flyer.selectPage(0);
 
         var startButton = StartPagesView.createStartButton(Pos.BOTTOM_CENTER);
-        startButton.setAction(() -> GameAction.executeIfEnabled(theUI(), theGameContext(), ACTION_BOOT_SHOW_GAME_VIEW));
+        startButton.setAction(() -> GameAction.executeIfEnabled(theUI(), gameContext, ACTION_BOOT_SHOW_GAME_VIEW));
         startButton.setTranslateY(-50);
         getChildren().addAll(flyer, startButton);
     }
