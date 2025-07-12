@@ -72,7 +72,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
                 @Override
                 public void hunt(GameLevel level) {
                     final var game = (ArcadeCommon_GameModel) gameContext.theGame();
-                    float speed = game.actorSpeedControl().ghostAttackSpeed(level, this);
+                    float speed = game.actorSpeedControl().ghostAttackSpeed(gameContext, level, this);
                     setSpeed(speed);
                     if (game.huntingTimer().phaseIndex() == 0) {
                         roam(level);
@@ -91,7 +91,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
             case PINK_GHOST_SPEEDY -> new Ghost(gameContext, PINK_GHOST_SPEEDY, "Pinky") {
                     @Override
                     public void hunt(GameLevel level) {
-                        float speed = gameContext.theGame().actorSpeedControl().ghostAttackSpeed(level, this);
+                        float speed = gameContext.theGame().actorSpeedControl().ghostAttackSpeed(gameContext, level, this);
                         setSpeed(speed);
                         if (gameContext.theGame().huntingTimer().phaseIndex() == 0) {
                             roam(level);
@@ -110,7 +110,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
             case CYAN_GHOST_BASHFUL -> new Ghost(gameContext, CYAN_GHOST_BASHFUL, "Inky") {
                 @Override
                 public void hunt(GameLevel level) {
-                    float speed = gameContext.theGame().actorSpeedControl().ghostAttackSpeed(level, this);
+                    float speed = gameContext.theGame().actorSpeedControl().ghostAttackSpeed(gameContext, level, this);
                     boolean chase = gameContext.theGame().huntingTimer().phase() == HuntingPhase.CHASING;
                     Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
                     setSpeed(speed);
@@ -125,7 +125,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
             case ORANGE_GHOST_POKEY -> new Ghost(gameContext, ORANGE_GHOST_POKEY, "Sue") {
                 @Override
                 public void hunt(GameLevel level) {
-                    float speed = gameContext.theGame().actorSpeedControl().ghostAttackSpeed(level, this);
+                    float speed = gameContext.theGame().actorSpeedControl().ghostAttackSpeed(gameContext, level, this);
                     boolean chase = gameContext.theGame().huntingTimer().phase() == HuntingPhase.CHASING;
                     Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
                     setSpeed(speed);

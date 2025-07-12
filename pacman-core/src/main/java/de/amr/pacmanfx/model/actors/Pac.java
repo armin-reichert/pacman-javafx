@@ -15,7 +15,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static java.util.Objects.requireNonNull;
 
@@ -124,8 +123,8 @@ public class Pac extends MovingActor implements Animated {
             autopilotSteering.steer(this, level);
         }
         setSpeed(powerTimer.isRunning()
-            ? gameContext.theGame().actorSpeedControl().pacPowerSpeed(level)
-            : gameContext.theGame().actorSpeedControl().pacNormalSpeed(level));
+            ? gameContext.theGame().actorSpeedControl().pacPowerSpeed(gameContext, level)
+            : gameContext.theGame().actorSpeedControl().pacNormalSpeed(gameContext, level));
         tryMoving(level);
 
         if (moveInfo.moved) {
@@ -156,8 +155,8 @@ public class Pac extends MovingActor implements Animated {
         return !dead;
     }
 
-
     public int restingTicks() { return restingTicks; }
+
     public void setRestingTicks(int ticks) {
         if (ticks != INDEFINITELY && (ticks < 0 || ticks > 127)) {
             throw new IllegalArgumentException("Resting ticks must be INDEFINITE or 0..127, but is " + ticks);
