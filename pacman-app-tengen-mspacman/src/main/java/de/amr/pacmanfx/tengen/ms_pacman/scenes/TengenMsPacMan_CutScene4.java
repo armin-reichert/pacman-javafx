@@ -25,6 +25,7 @@ import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.cr
 import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PacAnimationMap.*;
 import static de.amr.pacmanfx.ui.PacManGames.theSound;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
+import static de.amr.pacmanfx.ui._2d.GameRenderer.fillCanvas;
 
 public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
@@ -212,7 +213,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     @Override
     public void draw() {
         //TODO avoid overwriting, fix HUD drawing instead
-        gameRenderer.fillCanvas(backgroundColor());
+        fillCanvas(canvas, backgroundColor());
         gameRenderer.setScaling(scaling());
         drawSceneContent();
         if (debugInfoVisibleProperty.get()) {

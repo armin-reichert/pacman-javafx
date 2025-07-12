@@ -82,7 +82,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
 
     @Override
     public SpriteGameRenderer gr() {
-        return (SpriteGameRenderer) super.gr();
+        return (SpriteGameRenderer) gameRenderer;
     }
 
     /*

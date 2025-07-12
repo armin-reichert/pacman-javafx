@@ -19,6 +19,7 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.ui.PacManGames.theSound;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_WHITE;
+import static de.amr.pacmanfx.ui._2d.GameRenderer.fillCanvas;
 
 /**
  * The boot screen is showing some strange screen patterns and eventually  a grid.
@@ -66,7 +67,7 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
     public void draw() {
         gr().setScaling(scaling());
         if (theGameState().timer().tickCount() == 1) {
-            gr().fillCanvas(backgroundColor());
+            fillCanvas(canvas, backgroundColor());
         } else {
             drawSceneContent();
         }
@@ -76,13 +77,13 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
     public void drawSceneContent() {
         TickTimer timer = theGameState().timer();
         if (timer.betweenSeconds(1, 2) && timer.tickCount() % 4 == 0) {
-            gr().fillCanvas(backgroundColor());
+            fillCanvas(canvas, backgroundColor());
             drawRandomHexDigits();
         } else if (timer.betweenSeconds(2, 3.5) && timer.tickCount() % 4 == 0) {
-            gr().fillCanvas(backgroundColor());
+            fillCanvas(canvas, backgroundColor());
             drawRandomSpriteFragments();
         } else if (timer.atSecond(3.5)) {
-            gr().fillCanvas(backgroundColor());
+            fillCanvas(canvas, backgroundColor());
             drawGridLines();
         }
     }

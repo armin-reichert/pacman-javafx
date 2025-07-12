@@ -52,6 +52,7 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.PacManGames.*;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
+import static de.amr.pacmanfx.ui._2d.GameRenderer.fillCanvas;
 import static de.amr.pacmanfx.uilib.Ufx.menuTitleItem;
 
 /**
@@ -395,12 +396,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
 
     @Override
     public void draw() {
-        gr().fillCanvas(backgroundColor());
+        fillCanvas(canvas, backgroundColor());
         if (optGameLevel().isEmpty()) {
             return;
         }
-
-        // game level exists from here
         gr().ensureRenderingHintsAreApplied(theGameLevel());
 
         // compute current scene scaling

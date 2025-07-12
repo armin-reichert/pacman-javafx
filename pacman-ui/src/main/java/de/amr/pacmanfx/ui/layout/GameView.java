@@ -46,6 +46,7 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.PacManGames.*;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
+import static de.amr.pacmanfx.ui._2d.GameRenderer.fillCanvas;
 import static de.amr.pacmanfx.uilib.Ufx.*;
 import static java.util.Objects.requireNonNull;
 
@@ -364,7 +365,7 @@ public class GameView implements PacManGames_View {
                 } else {
                     Logger.error("Currently, only sprite game renderers are supported for 2D game scenes");
                 }
-                gameRenderer.fillCanvas(gameScene2D.backgroundColor());
+                fillCanvas(gameScene2D.canvas(), gameScene2D.backgroundColor());
 
                 root.getChildren().set(0, canvasLayer);
             }

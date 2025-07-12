@@ -23,6 +23,7 @@ import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.cr
 import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PacAnimationMap.ANIM_PAC_MAN_MUNCHING;
 import static de.amr.pacmanfx.ui.PacManGames.*;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_LET_GAME_STATE_EXPIRE;
+import static de.amr.pacmanfx.ui._2d.GameRenderer.fillCanvas;
 
 /**
  * Intermission scene 3: "Junior".
@@ -158,7 +159,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
     @Override
     public void draw() {
         //TODO avoid overwriting, fix HUD drawing instead
-        gameRenderer.fillCanvas(backgroundColor());
+        fillCanvas(canvas, backgroundColor());
         gameRenderer.setScaling(scaling());
         drawSceneContent();
         if (debugInfoVisibleProperty.get()) {

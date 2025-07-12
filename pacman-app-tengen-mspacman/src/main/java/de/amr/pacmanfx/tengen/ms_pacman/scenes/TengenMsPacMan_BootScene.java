@@ -21,6 +21,7 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPalett
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.createGhost;
 import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer.blueShadedColor;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
+import static de.amr.pacmanfx.ui._2d.GameRenderer.fillCanvas;
 
 /**
  * Shows moving and color changing "TENGEN PRESENTS" text and ghost running through scene.
@@ -104,7 +105,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
         var r = (TengenMsPacMan_GameRenderer) gr();
         r.drawVerticalSceneBorders();
         if (grayScreen) {
-            r.fillCanvas(nesPaletteColor(0x10));
+            fillCanvas(canvas, nesPaletteColor(0x10));
         } else {
             r.fillTextAtScaledPosition(TENGEN_PRESENTS, blueShadedColor(tick), scaledArcadeFont8(),
                 movingText.x(), movingText.y());

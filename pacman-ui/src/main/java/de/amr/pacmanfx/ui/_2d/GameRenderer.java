@@ -11,6 +11,7 @@ import de.amr.pacmanfx.model.HUD;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.uilib.model3D.Destroyable;
 import javafx.beans.property.FloatProperty;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -25,6 +26,14 @@ import static java.util.Objects.requireNonNull;
  * Common interface of all 2D game renderers.
  */
 public interface GameRenderer extends Destroyable {
+
+    static void fillCanvas(Canvas canvas, Color color) {
+        requireNonNull(canvas);
+        requireNonNull(color);
+        GraphicsContext ctx = canvas.getGraphicsContext2D();
+        ctx.setFill(color);
+        ctx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+    }
 
     GraphicsContext ctx();
 
@@ -71,14 +80,6 @@ public interface GameRenderer extends Destroyable {
      * @param actor any actor
      */
     void drawActor(Actor actor);
-
-    // Utility methods
-
-    default void fillCanvas(Color color) {
-        requireNonNull(color);
-        ctx().setFill(color);
-        ctx().fillRect(0, 0, ctx().getCanvas().getWidth(), ctx().getCanvas().getHeight());
-    }
 
     /**
      * Fills a square at the center of the given tile with the current fill color. Used to hide pellets, energizers

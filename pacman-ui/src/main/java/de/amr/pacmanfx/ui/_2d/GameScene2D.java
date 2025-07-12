@@ -25,30 +25,30 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.PacManGames.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.DEBUG_TEXT_FILL;
 import static de.amr.pacmanfx.ui.PacManGames_UI.DEBUG_TEXT_FONT;
+import static de.amr.pacmanfx.ui._2d.GameRenderer.fillCanvas;
 import static java.util.Objects.requireNonNull;
 
 /**
  * Base class of all 2D scenes.
  */
 public abstract class GameScene2D implements GameScene {
-    protected final ObjectProperty<Font> arcadeFont8Property = new SimpleObjectProperty<>();
-    protected final ObjectProperty<Font> arcadeFont6Property = new SimpleObjectProperty<>();
+    protected final ObjectProperty<Font> arcadeFont8Property      = new SimpleObjectProperty<>();
+    protected final ObjectProperty<Font> arcadeFont6Property      = new SimpleObjectProperty<>();
     protected final ObjectProperty<Color> backgroundColorProperty = new SimpleObjectProperty<>(Color.BLACK);
-    protected final BooleanProperty debugInfoVisibleProperty = new SimpleBooleanProperty(false);
-    protected final FloatProperty scalingProperty = new SimpleFloatProperty(1.0f);
+    protected final BooleanProperty debugInfoVisibleProperty      = new SimpleBooleanProperty(false);
+    protected final FloatProperty scalingProperty                 = new SimpleFloatProperty(1.0f);
 
     protected final Map<KeyCombination, GameAction> actionBindings = new HashMap<>();
+    protected final AnimationManager animationManager = new AnimationManager();
     protected GameRenderer gameRenderer;
     protected Canvas canvas;
 
-    protected AnimationManager animationManager = new AnimationManager();
-
-    protected GameScene2D() {
-    }
+    protected GameScene2D() {}
 
     @Override
     public void destroy() {
         clearActionBindings();
+        animationManager.destroyAllAnimations();
     }
 
     @Override
@@ -119,7 +119,7 @@ public abstract class GameScene2D implements GameScene {
         if (gameRenderer == null) {
             gameRenderer = theUI().configuration().createGameRenderer(canvas);
         }
-        gameRenderer.fillCanvas(backgroundColor());
+        fillCanvas(canvas, backgroundColor());
         gameRenderer.setScaling(scaling());
         drawSceneContent();
         if (debugInfoVisibleProperty.get()) {

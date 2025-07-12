@@ -22,6 +22,7 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.PacManGames.*;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.GLOBAL_ACTION_BINDING_MAP;
+import static de.amr.pacmanfx.ui._2d.GameRenderer.fillCanvas;
 
 /**
  * The 3D play scene of Tengen Ms. Pac-Man. Differs slightly from the Arcade version, e.g. the
@@ -73,10 +74,10 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
         var canvas = new Canvas(quality * infoWidth, quality * infoHeight);
         canvas.getGraphicsContext2D().setImageSmoothing(false); // important!
+        fillCanvas(canvas, gameLevel3D.floorColor());
 
         var r = (TengenMsPacMan_GameRenderer) theUI().configuration().createGameRenderer(canvas);
         r.setScaling(quality);
-        r.fillCanvas(gameLevel3D.floorColor());
         r.drawGameOptions(game.mapCategory(), game.difficulty(), game.pacBooster(), 0.5 * infoWidth, TS + HTS);
         r.drawLevelNumberBox(level.number(), 0, 0);
         r.drawLevelNumberBox(level.number(), infoWidth - 2 * TS, 0);
