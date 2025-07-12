@@ -32,7 +32,6 @@ import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
-import javafx.scene.media.AudioClip;
 import javafx.stage.Stage;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -273,20 +272,12 @@ public class PacManGames_UI_Impl implements GameUI {
             PacManGames_UIConfig previousConfig = configuration(previousVariant);
             Logger.info("Unloading assets for game variant {}", previousVariant);
             previousConfig.destroy();
-            Logger.info(theAssets().summary(Map.of(
-                Image.class, "Images",
-                AudioClip.class, "Sounds")
-            ));
             previousConfig.soundManager().mutedProperty().unbind();
         }
 
         PacManGames_UIConfig newConfig = configuration(gameVariant);
         Logger.info("Loading assets for game variant {}", gameVariant);
         newConfig.loadAssets(theAssets());
-        Logger.info(theAssets().summary(Map.of(
-            Image.class, "Images",
-            AudioClip.class, "Sounds")
-        ));
         newConfig.soundManager().mutedProperty().bind(mutedProperty);
 
         Image appIcon = theAssets.image(newConfig.assetNamespace() + ".app_icon");
