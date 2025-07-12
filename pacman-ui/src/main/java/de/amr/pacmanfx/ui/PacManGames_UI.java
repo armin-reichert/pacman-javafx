@@ -64,7 +64,7 @@ public interface PacManGames_UI {
     KeyCombination KEY_MUTE        = alt(KeyCode.M);
     KeyCombination KEY_OPEN_EDITOR = alt_shift(KeyCode.E);
 
-    Map<GameAction, Set<KeyCombination>> GLOBAL_ACTION_BINDING_MAP = Map.ofEntries(
+    Map<GameAction, Set<KeyCombination>> GLOBAL_ACTION_BINDINGS = Map.ofEntries(
         createActionBinding(ACTION_ARCADE_INSERT_COIN,      nude(KeyCode.DIGIT5), nude(KeyCode.NUMPAD5)),
         createActionBinding(ACTION_ARCADE_START_GAME,       nude(KeyCode.DIGIT1), nude(KeyCode.NUMPAD1)),
         createActionBinding(ACTION_BOOT_SHOW_GAME_VIEW,     nude(KeyCode.F3)),
