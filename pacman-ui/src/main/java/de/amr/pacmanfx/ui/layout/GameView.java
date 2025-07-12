@@ -339,36 +339,44 @@ public class GameView implements PacManGames_View {
         });
     }
 
+    /* 3 different cases currently may occur:
+       - 2D scene
+         - with camera (e.g. Tengen play scene)
+         - without camera (e.g. Arcade scenes)
+       - 3D scene (always with camera)
+    */
     private void embedGameScene(GameScene gameScene) {
         requireNonNull(gameScene);
-        // a camera controlled game scene can also be a 2D game scene!
         if (gameScene instanceof GameScene2D gameScene2D) {
-            gameScene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
-        }
-        switch (gameScene) {
-            case CameraControlledView gameSceneWithCamera -> {
-                gameSceneWithCamera.viewPortWidthProperty().bind(parentScene.widthProperty());
-                gameSceneWithCamera.viewPortHeightProperty().bind(parentScene.heightProperty());
-
-                root.getChildren().set(0, gameSceneWithCamera.viewPort());
+            if (gameScene instanceof CameraControlledView cameraControlledScene) {
+                embedCameraControlledScene(cameraControlledScene);
             }
-            case GameScene2D gameScene2D -> {
+            else {
                 gameScene2D.setCanvas(canvas);
                 gameScene2D.setGameRenderer(ui.configuration().createGameRenderer(canvas));
                 gameScene2D.scalingProperty().bind(canvasContainer.scalingProperty().map(
                     scaling -> Math.min(scaling.doubleValue(), MAX_SCENE_2D_SCALING)));
-
-                fillCanvas(gameScene2D.canvas(), gameScene2D.backgroundColor());
-
                 Vector2f sceneSize = gameScene2D.sizeInPx();
                 canvasContainer.setUnscaledCanvasSize(sceneSize.x(), sceneSize.y());
                 canvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
                 canvasContainer.backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Ufx::coloredBackground));
-
                 root.getChildren().set(0, canvasLayer);
             }
-            default -> Logger.error("Cannot embed game scene of class {}", gameScene.getClass().getName());
+            gameScene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
+            fillCanvas(gameScene2D.canvas(), gameScene2D.backgroundColor());
         }
+        else if (gameScene instanceof CameraControlledView cameraControlledScene) {
+            embedCameraControlledScene(cameraControlledScene);
+        }
+        else {
+            Logger.error("Cannot embed game scene of class {}", gameScene.getClass().getName());
+        }
+    }
+
+    private void embedCameraControlledScene(CameraControlledView cameraControlledView) {
+        cameraControlledView.viewPortWidthProperty().bind(parentScene.widthProperty());
+        cameraControlledView.viewPortHeightProperty().bind(parentScene.heightProperty());
+        root.getChildren().set(0, cameraControlledView.viewPort());
     }
 
     // -----------------------------------------------------------------------------------------------------------------
