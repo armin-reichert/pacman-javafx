@@ -13,7 +13,6 @@ import javafx.scene.input.ContextMenuEvent;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.ui.PacManGames.theUI;
 
 /**
@@ -72,6 +71,6 @@ public interface GameScene extends DefaultGameEventListener, Destroyable {
      * @return scene name as used by logging output
      */
     default String displayName() {
-        return "%s (%s)".formatted(getClass().getSimpleName(), theGameContext().theGameController().selectedGameVariant());
+        return getClass().getSimpleName();
     }
 }
