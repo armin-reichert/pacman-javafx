@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.dashboard;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.timer.TickTimer;
@@ -25,6 +26,10 @@ import static de.amr.pacmanfx.ui.dashboard.InfoText.NO_INFO;
  * @author Armin Reichert
  */
 public class InfoBoxActorInfo extends InfoBox {
+
+    public InfoBoxActorInfo(GameContext gameContext) {
+        super(gameContext);
+    }
 
     public void init() {
         addLabeledValue("Pac Name", pacInfo((game, pac) -> pac.name()));
@@ -48,7 +53,7 @@ public class InfoBoxActorInfo extends InfoBox {
 
     private Supplier<String> pacInfo(BiFunction<GameModel, Pac, String> fnPacInfo) {
         return ifLevelPresent(level -> level.pac() != null
-            ? fnPacInfo.apply(theGameContext().theGame(), level.pac())
+            ? fnPacInfo.apply(gameContext.theGame(), level.pac())
             : NO_INFO);
     }
 
@@ -81,7 +86,7 @@ public class InfoBoxActorInfo extends InfoBox {
         BiFunction<GameModel, Ghost, String> fnGhostInfo, byte personality) {
         return ifLevelPresent(level -> {
             if (level.ghosts().findAny().isPresent()) {
-                return fnGhostInfo.apply(theGameContext().theGame(), level.ghost(personality));
+                return fnGhostInfo.apply(gameContext.theGame(), level.ghost(personality));
             }
             return NO_INFO;
         });
@@ -105,14 +110,14 @@ public class InfoBoxActorInfo extends InfoBox {
         if (ghost.animationMap().isEmpty()) {
             return NO_INFO;
         }
-        SpriteAnimationMap sa = (SpriteAnimationMap) ghost.animationMap().get();
-        return sa.selectedAnimationID() != null ? sa.selectedAnimationID() : NO_INFO;
+        var animationMap = (SpriteAnimationMap<?>) ghost.animationMap().get();
+        return animationMap.selectedAnimationID() != null ? animationMap.selectedAnimationID() : NO_INFO;
     }
 
     private String ghostState(Ghost ghost) {
         var stateText = ghost.state() != null ? ghost.state().name() : "undefined";
         if (ghost.state() == GhostState.HUNTING_PAC) {
-            stateText = theGameContext().theGame().huntingTimer().phase().name();
+            stateText = gameContext.theGame().huntingTimer().phase().name();
         }
         return stateText;
     }

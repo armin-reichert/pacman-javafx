@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.dashboard;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.ui.PacManGames_UI_Impl;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.geometry.Insets;
@@ -19,8 +20,11 @@ import javafx.scene.text.TextFlow;
  */
 public class InfoBoxAbout extends InfoBox {
 
-    public void init() {
+    public InfoBoxAbout(GameContext gameContext) {
+        super(gameContext);
+    }
 
+    public void init() {
         ResourceManager rm = () -> PacManGames_UI_Impl.class;
         Image armin1970 = rm.loadImage("graphics/armin1970.jpg");
         Font handwriting = rm.loadFont("fonts/Molle-Italic.ttf", 20);

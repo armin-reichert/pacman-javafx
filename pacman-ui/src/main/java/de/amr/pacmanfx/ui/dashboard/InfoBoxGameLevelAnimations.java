@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.dashboard;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -51,7 +52,9 @@ public class InfoBoxGameLevelAnimations extends InfoBox {
     // References the animation timer of the current 3D game level (if present)
     private final ObjectProperty<AnimationManager> animationManagerProperty = new SimpleObjectProperty<>();
 
-    public InfoBoxGameLevelAnimations() {
+    public InfoBoxGameLevelAnimations(GameContext gameContext) {
+        super(gameContext);
+
         tableView.setItems(tableModel);
         tableView.setPlaceholder(new Text("No 3D animations"));
         tableView.setFocusTraversable(false);

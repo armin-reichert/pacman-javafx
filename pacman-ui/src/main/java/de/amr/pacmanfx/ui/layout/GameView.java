@@ -39,7 +39,6 @@ import org.tinylog.Logger;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.ui.GameUIContext.*;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.*;
@@ -72,6 +71,7 @@ public class GameView implements PacManGames_View {
     private final ActionBindingMap actionBindings = new ActionBindingMap(theKeyboard());
 
     private final PacManGames_UI ui;
+    private final GameContext gameContext;
     private final StackPane root = new StackPane();
     private final Scene parentScene;
 
@@ -80,18 +80,20 @@ public class GameView implements PacManGames_View {
     private PopupLayer popupLayer; // help, signature
     private BorderPane dashboardLayer;
 
-    private final Dashboard dashboard = new Dashboard();
+    private final Dashboard dashboard;
     private final Canvas commonCanvas = new Canvas();
     private final CrudeCanvasContainer canvasContainer = new CrudeCanvasContainer(commonCanvas);
     private final MiniGameView miniGameView;
     private final ContextMenu contextMenu = new ContextMenu();
     private final StringBinding titleBinding;
 
-    public GameView(PacManGames_UI ui, Scene parentScene) {
+    public GameView(PacManGames_UI ui, GameContext gameContext, Scene parentScene) {
         this.ui = requireNonNull(ui);
+        this.gameContext = requireNonNull(gameContext);
         this.parentScene = requireNonNull(parentScene);
         this.miniGameView = new MiniGameView();
-
+        this.dashboard = new Dashboard(gameContext);
+        
         configureMiniGameView();
         configureCanvasContainer();
         createLayers();
@@ -152,7 +154,7 @@ public class GameView implements PacManGames_View {
         ui.currentGameScene().ifPresent(gameScene -> {
             if (ui.currentGameSceneIsPlayScene2D()) {
                 var miSwitchTo3D = new MenuItem(theAssets().text("use_3D_scene"));
-                miSwitchTo3D.setOnAction(actionEvent -> GameAction.executeIfEnabled(ui, theGameContext(), ACTION_TOGGLE_PLAY_SCENE_2D_3D));
+                miSwitchTo3D.setOnAction(actionEvent -> GameAction.executeIfEnabled(ui, gameContext, ACTION_TOGGLE_PLAY_SCENE_2D_3D));
                 contextMenu.getItems().add(menuTitleItem(theAssets().text("scene_display")));
                 contextMenu.getItems().add(miSwitchTo3D);
             }
@@ -220,8 +222,8 @@ public class GameView implements PacManGames_View {
             }
         });
 
-        if (miniGameView.isVisible() && theUI().currentGameSceneIsPlayScene3D() && theGameContext().optGameLevel().isPresent()) {
-            miniGameView.draw(theGameContext(), theGameContext().theGameLevel());
+        if (miniGameView.isVisible() && theUI().currentGameSceneIsPlayScene3D() && gameContext.optGameLevel().isPresent()) {
+            miniGameView.draw(gameContext, gameContext.theGameLevel());
         }
         flashMessageLayer.update();
 
@@ -233,7 +235,7 @@ public class GameView implements PacManGames_View {
 
     @Override
     public void handleKeyboardInput() {
-        actionBindings.runMatchingActionOrElse(ui, theGameContext(),
+        actionBindings.runMatchingActionOrElse(ui, gameContext,
             () -> ui.currentGameScene().ifPresent(GameScene::handleKeyboardInput));
     }
 
@@ -247,20 +249,20 @@ public class GameView implements PacManGames_View {
         switch (gameEvent.type()) {
             case LEVEL_CREATED -> {
                 PacManGames_UIConfig config = ui.configuration();
-                ActorAnimationMap pacAnimationMap = config.createPacAnimations(theGameContext().theGameLevel().pac());
-                theGameContext().theGameLevel().pac().setAnimations(pacAnimationMap);
-                theGameContext().theGameLevel().ghosts().forEach(ghost -> {
+                ActorAnimationMap pacAnimationMap = config.createPacAnimations(gameContext.theGameLevel().pac());
+                gameContext.theGameLevel().pac().setAnimations(pacAnimationMap);
+                gameContext.theGameLevel().ghosts().forEach(ghost -> {
                     ActorAnimationMap ghostAnimationMap = config.createGhostAnimations(ghost);
                     ghost.setAnimations(ghostAnimationMap);
                 });
-                miniGameView.onLevelCreated(theGameContext().theGameLevel());
+                miniGameView.onLevelCreated(gameContext.theGameLevel());
 
                 // size of game scene might have changed, so re-embed
                 ui.currentGameScene().ifPresent(this::embedGameScene);
             }
             case GAME_STATE_CHANGED -> {
-                if (theGameContext().theGameState() == GameState.LEVEL_COMPLETE) {
-                    miniGameView.onLevelCompleted(theGameContext().theGameLevel());
+                if (gameContext.theGameState() == GameState.LEVEL_COMPLETE) {
+                    miniGameView.onLevelCompleted(gameContext.theGameLevel());
                 }
             }
         }
@@ -283,7 +285,7 @@ public class GameView implements PacManGames_View {
     }
 
     public void updateGameScene(boolean reloadCurrent) {
-        final GameScene nextGameScene = ui.configuration().selectGameScene(theGameContext());
+        final GameScene nextGameScene = ui.configuration().selectGameScene(gameContext);
         if (nextGameScene == null) {
             String errorMessage = " Katastrophe! Could not determine game scene!";
             ui.showFlashMessageSec(60, errorMessage);
@@ -318,9 +320,9 @@ public class GameView implements PacManGames_View {
     public void quitCurrentGameScene() {
         ui.currentGameScene().ifPresent(gameScene -> {
             gameScene.end();
-            theGameContext().theGameController().changeGameState(GameState.BOOT);
-            theGameContext().theGame().resetEverything();
-            if (!theGameContext().theCoinMechanism().isEmpty()) theGameContext().theCoinMechanism().consumeCoin();
+            gameContext.theGameController().changeGameState(GameState.BOOT);
+            gameContext.theGame().resetEverything();
+            if (!gameContext.theCoinMechanism().isEmpty()) gameContext.theCoinMechanism().consumeCoin();
             ui.showStartView();
             Logger.info("Current game scene ({}) has been quit", gameScene.getClass().getSimpleName());
         });

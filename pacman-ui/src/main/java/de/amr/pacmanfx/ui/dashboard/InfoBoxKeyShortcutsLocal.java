@@ -4,13 +4,13 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.dashboard;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.ui.ActionBindingMap;
 import de.amr.pacmanfx.ui.GameAction;
 import javafx.scene.input.KeyCombination;
 
 import java.util.Comparator;
 
-import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.ui.GameUIContext.theAssets;
 import static de.amr.pacmanfx.ui.GameUIContext.theUI;
 
@@ -18,6 +18,10 @@ import static de.amr.pacmanfx.ui.GameUIContext.theUI;
  * Displays context-sensitive the keyboard shortcuts.
  */
 public class InfoBoxKeyShortcutsLocal extends InfoBox {
+
+    public InfoBoxKeyShortcutsLocal(GameContext gameContext) {
+        super(gameContext);
+    }
 
     @Override
     public void update() {
@@ -34,7 +38,7 @@ public class InfoBoxKeyShortcutsLocal extends InfoBox {
                 KeyCombination keyCombination = entry.getKey();
                 GameAction action = entry.getValue();
                 String localizedActionText = theAssets().text(action.name());
-                addRow(keyCombination.getDisplayText(), createLabel(localizedActionText, action.isEnabled(theUI(), theGameContext())));
+                addRow(keyCombination.getDisplayText(), createLabel(localizedActionText, action.isEnabled(theUI(), gameContext)));
             });
         }
     }

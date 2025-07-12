@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.dashboard;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.GameScene;
@@ -45,6 +46,10 @@ public class InfoBox3DSettings extends InfoBox {
     private CheckBox cbAxesVisible;
     private CheckBox cbWireframeMode;
 
+    public InfoBox3DSettings(GameContext gameContext) {
+        super(gameContext);
+    }
+
     public void init() {
         super.init();
 
@@ -75,8 +80,8 @@ public class InfoBox3DSettings extends InfoBox {
         setEditor(comboPerspectives, PY_3D_PERSPECTIVE);
 
         //TODO check these
-        cbUsePlayScene3D.setOnAction(e -> GameAction.executeIfEnabled(theUI(), theGameContext(), ACTION_TOGGLE_PLAY_SCENE_2D_3D));
-        cbWireframeMode.setOnAction(e -> GameAction.executeIfEnabled(theUI(), theGameContext(), ACTION_TOGGLE_DRAW_MODE));
+        cbUsePlayScene3D.setOnAction(e -> GameAction.executeIfEnabled(theUI(), gameContext, ACTION_TOGGLE_PLAY_SCENE_2D_3D));
+        cbWireframeMode.setOnAction(e -> GameAction.executeIfEnabled(theUI(), gameContext, ACTION_TOGGLE_DRAW_MODE));
     }
 
     private void updateControlsFromProperties() {
@@ -121,9 +126,9 @@ public class InfoBox3DSettings extends InfoBox {
                 return "%.0fx%.0f (scaled: %.0fx%.0f)".formatted(
                         size.x(), size.y(), size.x() * scaling, size.y() * scaling);
             } else {
-                if (theGameContext().optGameLevel().isPresent()) {
-                    int width = theGameContext().theGameLevel().worldMap().numCols() * TS;
-                    int height = theGameContext().theGameLevel().worldMap().numRows() * TS;
+                if (gameContext.optGameLevel().isPresent()) {
+                    int width = gameContext.theGameLevel().worldMap().numCols() * TS;
+                    int height = gameContext.theGameLevel().worldMap().numRows() * TS;
                     return "%dx%d (unscaled)".formatted(width, height);
 
                 }

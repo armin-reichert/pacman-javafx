@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.dashboard;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.GameScene;
@@ -28,8 +29,8 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.ui.GameUIContext.theUI;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Base class for area displaying UI info/editors.
@@ -40,6 +41,7 @@ public abstract class InfoBox extends TitledPane {
         return String.format("-fx-font: %.0fpx \"%s\";", font.getSize(), font.getFamily());
     }
 
+    protected final GameContext gameContext;
     protected Dashboard dashboard;
     protected final List<InfoText> infoTexts = new ArrayList<>();
     protected final GridPane grid = new GridPane();
@@ -50,7 +52,8 @@ public abstract class InfoBox extends TitledPane {
     protected int rowIndex;
     protected boolean showMaximized;
 
-    public InfoBox() {
+    public InfoBox(GameContext gameContext) {
+        this.gameContext = requireNonNull(gameContext);
         grid.setVgap(2);
         grid.setHgap(3);
         setContent(grid);
@@ -120,7 +123,7 @@ public abstract class InfoBox extends TitledPane {
     }
 
     protected Supplier<String> ifLevelPresent(Function<GameLevel, String> fnInfo) {
-        return () -> theGameContext().optGameLevel().map(fnInfo).orElse(InfoText.NO_INFO);
+        return () -> gameContext.optGameLevel().map(fnInfo).orElse(InfoText.NO_INFO);
     }
 
     protected void clearGrid() {
@@ -255,7 +258,7 @@ public abstract class InfoBox extends TitledPane {
     }
 
     protected void setAction(Button button, GameAction gameAction) {
-        button.setOnAction(e -> GameAction.executeIfEnabled(theUI(), theGameContext(), gameAction));
+        button.setOnAction(e -> GameAction.executeIfEnabled(theUI(), gameContext, gameAction));
         //TODO add boolean property for enabled-state to game action and bind against it
     }
 

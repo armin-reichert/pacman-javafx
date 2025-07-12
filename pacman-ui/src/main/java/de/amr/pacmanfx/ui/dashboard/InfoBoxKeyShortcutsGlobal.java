@@ -1,16 +1,20 @@
 package de.amr.pacmanfx.ui.dashboard;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.ui.ActionBindingMap;
 import de.amr.pacmanfx.ui.GameAction;
 import javafx.scene.input.KeyCombination;
 
 import java.util.Comparator;
 
-import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.ui.GameUIContext.theAssets;
 import static de.amr.pacmanfx.ui.GameUIContext.theUI;
 
 public class InfoBoxKeyShortcutsGlobal extends InfoBox {
+
+    public InfoBoxKeyShortcutsGlobal(GameContext gameContext) {
+        super(gameContext);
+    }
 
     @Override
     public void update() {
@@ -27,7 +31,7 @@ public class InfoBoxKeyShortcutsGlobal extends InfoBox {
                 KeyCombination keyCombination = entry.getKey();
                 GameAction action = entry.getValue();
                 String localizedActionText = theAssets().text(action.name());
-                addRow(keyCombination.getDisplayText(), createLabel(localizedActionText, action.isEnabled(theUI(), theGameContext())));
+                addRow(keyCombination.getDisplayText(), createLabel(localizedActionText, action.isEnabled(theUI(), gameContext)));
             });
         }
     }

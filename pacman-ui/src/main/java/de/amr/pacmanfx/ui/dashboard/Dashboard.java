@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.dashboard;
 
+import de.amr.pacmanfx.GameContext;
 import javafx.scene.Node;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
@@ -24,9 +25,11 @@ public class Dashboard extends VBox {
     public static final Color INFO_BOX_TEXT_COLOR = Color.WHITE;
     public static final Font INFO_BOX_FONT = Font.font("Sans", 12);
 
+    private final GameContext gameContext;
     private final Map<DashboardID, InfoBox> infoBoxMap = new LinkedHashMap<>();
 
-    public Dashboard() {
+    public Dashboard(GameContext gameContext) {
+        this.gameContext = gameContext;
         visibleProperty().addListener((py, ov, visible) -> {
             if (visible) {
                 update();
@@ -56,22 +59,22 @@ public class Dashboard extends VBox {
 
     public void addInfoBox(DashboardID id) {
         switch (id) {
-            case ABOUT                     -> addInfoBox(id, "infobox.about.title", new InfoBoxAbout());
-            case ACTOR_INFO                -> addInfoBox(id, "infobox.actor_info.title", new InfoBoxActorInfo());
-            case ANIMATION_INFO            -> addInfoBox(id, "infobox.animation_info.title", new InfoBoxGameLevelAnimations());
-            case CUSTOM_MAPS               -> addInfoBox(id, "infobox.custom_maps.title", new InfoBoxCustomMaps());
+            case ABOUT                     -> addInfoBox(id, "infobox.about.title", new InfoBoxAbout(gameContext));
+            case ACTOR_INFO                -> addInfoBox(id, "infobox.actor_info.title", new InfoBoxActorInfo(gameContext));
+            case ANIMATION_INFO            -> addInfoBox(id, "infobox.animation_info.title", new InfoBoxGameLevelAnimations(gameContext));
+            case CUSTOM_MAPS               -> addInfoBox(id, "infobox.custom_maps.title", new InfoBoxCustomMaps(gameContext));
             case GENERAL                   -> addInfoBox(id, "infobox.general.title", new InfoBoxGeneral());
-            case GAME_CONTROL              -> addInfoBox(id, "infobox.game_control.title", new InfoBoxGameControl());
-            case GAME_INFO                 -> addInfoBox(id, "infobox.game_info.title", new InfoBoxGameInfo());
+            case GAME_CONTROL              -> addInfoBox(id, "infobox.game_control.title", new InfoBoxGameControl(gameContext));
+            case GAME_INFO                 -> addInfoBox(id, "infobox.game_info.title", new InfoBoxGameInfo(gameContext));
             case JOYPAD                    -> addInfoBox(id, "infobox.joypad.title", new InfoBoxJoypad());
-            case KEYBOARD_SHORTCUTS_GLOBAL -> addInfoBox(id, "infobox.keyboard_shortcuts_global.title", new InfoBoxKeyShortcutsGlobal());
-            case KEYBOARD_SHORTCUTS_LOCAL  ->  addInfoBox(id, "infobox.keyboard_shortcuts_local.title", new InfoBoxKeyShortcutsLocal());
+            case KEYBOARD_SHORTCUTS_GLOBAL -> addInfoBox(id, "infobox.keyboard_shortcuts_global.title", new InfoBoxKeyShortcutsGlobal(gameContext));
+            case KEYBOARD_SHORTCUTS_LOCAL  ->  addInfoBox(id, "infobox.keyboard_shortcuts_local.title", new InfoBoxKeyShortcutsLocal(gameContext));
             case README -> {
                 InfoBox infoBox = new InfoBoxReadmeFirst();
                 infoBox.setExpanded(true);
                 addInfoBox(id, "infobox.readme.title", infoBox);
             }
-            case SETTINGS_3D -> addInfoBox(id, "infobox.3D_settings.title", new InfoBox3DSettings());
+            case SETTINGS_3D -> addInfoBox(id, "infobox.3D_settings.title", new InfoBox3DSettings(gameContext));
         }
     }
 

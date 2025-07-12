@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.dashboard;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -18,7 +19,6 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 
-import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.ui.GameUIContext.theWatchdog;
 
 public class InfoBoxCustomMaps extends InfoBox {
@@ -36,7 +36,8 @@ public class InfoBoxCustomMaps extends InfoBox {
 
     private final ObservableList<WorldMap> customMaps = FXCollections.observableArrayList();
 
-    public InfoBoxCustomMaps() {
+    public InfoBoxCustomMaps(GameContext gameContext) {
+        super(gameContext);
         TableView<WorldMap> mapsTableView = new TableView<>();
         mapsTableView.setItems(customMaps);
 
@@ -75,9 +76,9 @@ public class InfoBoxCustomMaps extends InfoBox {
 
     private void updateCustomMapList() {
         customMaps.clear();
-        File[] mapFiles = theGameContext().theCustomMapDir().listFiles((dir, name) -> name.endsWith(".world"));
+        File[] mapFiles = gameContext.theCustomMapDir().listFiles((dir, name) -> name.endsWith(".world"));
         if (mapFiles == null) {
-            Logger.error("An error occurred accessing custom map directory {}", theGameContext().theCustomMapDir());
+            Logger.error("An error occurred accessing custom map directory {}", gameContext.theCustomMapDir());
             return;
         }
         if (mapFiles.length == 0) {
