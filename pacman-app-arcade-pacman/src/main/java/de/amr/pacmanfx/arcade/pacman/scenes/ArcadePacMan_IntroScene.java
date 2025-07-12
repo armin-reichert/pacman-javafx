@@ -16,7 +16,6 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui.ActionBindingSupport;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -44,7 +43,7 @@ import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
 /**
  * The ghosts are presented one by one, Pac-Man is chased by the ghosts, turns the cards and hunts the ghosts himself.
  */
-public class ArcadePacMan_IntroScene extends GameScene2D implements ActionBindingSupport {
+public class ArcadePacMan_IntroScene extends GameScene2D {
 
     private static final String MIDWAY_MFG_CO = "© 1980 MIDWAY MFG.CO.";
 
@@ -83,11 +82,11 @@ public class ArcadePacMan_IntroScene extends GameScene2D implements ActionBindin
         theGame().hud().showLivesCounter(false);
         theGame().hud().showLevelCounter(true);
 
-        bindAction(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDING_MAP);
-        bindAction(ACTION_ARCADE_START_GAME, GLOBAL_ACTION_BINDING_MAP);
-        bindAction(ACTION_TEST_CUT_SCENES, GLOBAL_ACTION_BINDING_MAP);
-        bindAction(ACTION_TEST_LEVELS_BONI, GLOBAL_ACTION_BINDING_MAP);
-        bindAction(ACTION_TEST_LEVELS_TEASERS, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bindAction(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bindAction(ACTION_ARCADE_START_GAME, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bindAction(ACTION_TEST_CUT_SCENES, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bindAction(ACTION_TEST_LEVELS_BONI, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bindAction(ACTION_TEST_LEVELS_TEASERS, GLOBAL_ACTION_BINDING_MAP);
 
         blinking = new Pulse(10, true);
         pacMan = createPac();

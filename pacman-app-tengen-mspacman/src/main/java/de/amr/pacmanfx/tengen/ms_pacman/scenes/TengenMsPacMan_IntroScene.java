@@ -18,7 +18,6 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
-import de.amr.pacmanfx.ui.ActionBindingSupport;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
@@ -37,7 +36,7 @@ import static de.amr.pacmanfx.ui.PacManGames.*;
 /**
  * @author Armin Reichert
  */
-public class TengenMsPacMan_IntroScene extends GameScene2D implements ActionBindingSupport {
+public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     // Anchor point for everything
     private static final int MARQUEE_X = 60, MARQUEE_Y = 64;
@@ -76,8 +75,8 @@ public class TengenMsPacMan_IntroScene extends GameScene2D implements ActionBind
 
         spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
 
-        bindAction(ACTION_START_GAME, TENGEN_ACTION_BINDINGS);
-        bindAction(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, TENGEN_ACTION_BINDINGS);
+        actionBindings.bindAction(ACTION_START_GAME, TENGEN_ACTION_BINDINGS);
+        actionBindings.bindAction(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, TENGEN_ACTION_BINDINGS);
         presentsText = new Actor();
         presentsText.setPosition(9 * TS, MARQUEE_Y - TS);
         sceneController.restart(SceneState.WAITING_FOR_START);

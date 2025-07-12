@@ -15,7 +15,6 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
-import de.amr.pacmanfx.ui.ActionBindingSupport;
 import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.PacManGames_UI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
@@ -38,7 +37,7 @@ import static de.amr.pacmanfx.ui.input.Keyboard.alt;
  *
  * @author Armin Reichert
  */
-public class TengenMsPacMan_OptionsScene extends GameScene2D implements ActionBindingSupport {
+public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     private static final int COL_ARROW = 2 * TS;
     private static final int COL_LABEL = 4 * TS;
@@ -70,7 +69,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D implements ActionBi
     private final GameAction actionSelectNextJoypadBinding = new GameAction() {
         @Override
         public void execute(PacManGames_UI ui) {
-            theJoypad().selectNextKeyBinding(TengenMsPacMan_OptionsScene.this);
+            theJoypad().selectNextKeyBinding(actionBindings);
         }
 
         @Override
@@ -86,24 +85,24 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D implements ActionBi
         theGame().hud().showLevelCounter(false);
         theGame().hud().showLivesCounter(false);
 
-        bindAction(ACTION_START_PLAYING, TENGEN_ACTION_BINDINGS);
-        bindAction(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, TENGEN_ACTION_BINDINGS);
-        bindAction(ACTION_TEST_CUT_SCENES, GLOBAL_ACTION_BINDING_MAP);
-        bindAction(ACTION_TEST_LEVELS_BONI, GLOBAL_ACTION_BINDING_MAP);
-        bindAction(ACTION_TEST_LEVELS_TEASERS, GLOBAL_ACTION_BINDING_MAP);
-        bindActionToKeyCombination(actionSelectNextJoypadBinding, alt(KeyCode.J));
+        actionBindings.bindAction(ACTION_START_PLAYING, TENGEN_ACTION_BINDINGS);
+        actionBindings.bindAction(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, TENGEN_ACTION_BINDINGS);
+        actionBindings.bindAction(ACTION_TEST_CUT_SCENES, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bindAction(ACTION_TEST_LEVELS_BONI, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bindAction(ACTION_TEST_LEVELS_TEASERS, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bindActionToKeyCombination(actionSelectNextJoypadBinding, alt(KeyCode.J));
 
         spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
         selectedOption = OPTION_PAC_BOOSTER;
         theTengenGame().setCanStartNewGame(true);
         resetIdleTimer();
         initialDelay = INITIAL_DELAY;
-        theJoypad().registerCurrentBinding(this);
+        theJoypad().registerCurrentBinding(actionBindings);
     }
 
     @Override
     protected void doEnd() {
-        theJoypad().unregisterCurrentBinding(this);
+        theJoypad().unregisterCurrentBinding(actionBindings);
     }
 
     @Override

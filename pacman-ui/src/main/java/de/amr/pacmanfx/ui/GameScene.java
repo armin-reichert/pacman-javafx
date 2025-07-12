@@ -20,12 +20,14 @@ import static de.amr.pacmanfx.ui.PacManGames.theUI;
  *
  * @author Armin Reichert
  */
-public interface GameScene extends DefaultGameEventListener, ActionBindingSupport, Destroyable {
+public interface GameScene extends DefaultGameEventListener, Destroyable {
+
+    ActionBindingMap actionBindings();
 
     /**
      * By default, the first matching game action is executed.
      */
-    default void handleKeyboardInput() { runMatchingAction(theUI()); }
+    default void handleKeyboardInput() { actionBindings().runMatchingAction(theUI()); }
 
     /**
      * Called when the scene becomes the current one.

@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.input;
 
 import de.amr.pacmanfx.lib.nes.JoypadButton;
-import de.amr.pacmanfx.ui.ActionBindingSupport;
+import de.amr.pacmanfx.ui.ActionBindingMap;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import org.tinylog.Logger;
@@ -67,23 +67,23 @@ public class Joypad {
         return currentKeyBinding().key(buttonID);
     }
 
-    public void registerCurrentBinding(ActionBindingSupport actionBindingSupport) {
-        currentKeys().forEach(combination -> keyboard.setBinding(combination, actionBindingSupport));
+    public void registerCurrentBinding(ActionBindingMap actionBindingMap) {
+        currentKeys().forEach(combination -> keyboard.setBinding(combination, actionBindingMap));
     }
 
-    public void unregisterCurrentBinding(ActionBindingSupport actionBindingSupport) {
-        currentKeys().forEach(combination -> keyboard.removeBinding(combination, actionBindingSupport));
+    public void unregisterCurrentBinding(ActionBindingMap actionBindingMap) {
+        currentKeys().forEach(combination -> keyboard.removeBinding(combination, actionBindingMap));
     }
 
-    public void selectNextKeyBinding(ActionBindingSupport actionBindingSupport) {
+    public void selectNextKeyBinding(ActionBindingMap actionBindingMap) {
         selectedIndex = (selectedIndex + 1) % bindings.length;
-        setBinding(selectedIndex, actionBindingSupport);
+        setBinding(selectedIndex, actionBindingMap);
         Logger.info("Joypad keys: {}", currentKeyBinding());
     }
 
-    private void setBinding(int index, ActionBindingSupport actionBindingSupport) {
-        unregisterCurrentBinding(actionBindingSupport);
+    private void setBinding(int index, ActionBindingMap actionBindingMap) {
+        unregisterCurrentBinding(actionBindingMap);
         selectedIndex = index;
-        registerCurrentBinding(actionBindingSupport);
+        registerCurrentBinding(actionBindingMap);
     }
 }

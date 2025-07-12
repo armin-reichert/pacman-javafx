@@ -14,9 +14,9 @@ import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.MovingBonus;
+import de.amr.pacmanfx.ui.ActionBindingMap;
 import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.GameScene;
-import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.CameraControlledView;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -30,12 +30,13 @@ import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.isOneOf;
@@ -62,7 +63,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     protected final SubScene subScene3D;
     protected final PerspectiveCamera camera = new PerspectiveCamera(true);
     protected final PerspectiveManager perspectiveManager;
-    protected final Map<KeyCombination, GameAction> actionBindingMap = new HashMap<>();
+    protected final ActionBindingMap actionBindings = new ActionBindingMap(theKeyboard());
     protected final Scores3D scores3D;
 
     protected GameLevel3D gameLevel3D;
@@ -92,13 +93,18 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void destroy() {
-        clearActionBindings();
+        actionBindings.clearActionBindings();
         perspectiveManager.perspectiveIDProperty().unbind();
         if (gameLevel3D != null) {
             gameLevel3D.destroy();
             gameLevel3D = null;
             Logger.info("GameLevel3D has been destroyed");
         }
+    }
+
+    @Override
+    public ActionBindingMap actionBindings() {
+        return actionBindings;
     }
 
     public Optional<GameLevel3D> level3D() {
@@ -165,37 +171,32 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     }
 
     protected void setActionBindings() {
-        clearActionBindings();
-        bindAction(ACTION_PERSPECTIVE_PREVIOUS, GLOBAL_ACTION_BINDING_MAP);
-        bindAction(ACTION_PERSPECTIVE_NEXT, GLOBAL_ACTION_BINDING_MAP);
-        bindAction(ACTION_TOGGLE_DRAW_MODE, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.clearActionBindings();
+        actionBindings.bindAction(ACTION_PERSPECTIVE_PREVIOUS, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bindAction(ACTION_PERSPECTIVE_NEXT, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bindAction(ACTION_TOGGLE_DRAW_MODE, GLOBAL_ACTION_BINDING_MAP);
         if (optGameLevel().isPresent()) {
             if (theGameLevel().isDemoLevel()) {
-                bindAction(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDING_MAP);
+                actionBindings.bindAction(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDING_MAP);
             } else {
                 setPlayerSteeringActionBindings();
-                bindAction(ACTION_CHEAT_EAT_ALL_PELLETS, GLOBAL_ACTION_BINDING_MAP);
-                bindAction(ACTION_CHEAT_ADD_LIVES, GLOBAL_ACTION_BINDING_MAP);
-                bindAction(ACTION_CHEAT_ENTER_NEXT_LEVEL, GLOBAL_ACTION_BINDING_MAP);
-                bindAction(ACTION_CHEAT_KILL_GHOSTS, GLOBAL_ACTION_BINDING_MAP);
+                actionBindings.bindAction(ACTION_CHEAT_EAT_ALL_PELLETS, GLOBAL_ACTION_BINDING_MAP);
+                actionBindings.bindAction(ACTION_CHEAT_ADD_LIVES, GLOBAL_ACTION_BINDING_MAP);
+                actionBindings.bindAction(ACTION_CHEAT_ENTER_NEXT_LEVEL, GLOBAL_ACTION_BINDING_MAP);
+                actionBindings.bindAction(ACTION_CHEAT_KILL_GHOSTS, GLOBAL_ACTION_BINDING_MAP);
             }
         }
-        updateActionBindings();
+        actionBindings.updateActionBindings();
     }
 
     /**
      * Overridden by Tengen play scene 3D to use keys corresponding to "Joypad" buttons
      */
     protected void setPlayerSteeringActionBindings() {
-        bindAction(ACTION_STEER_UP, GLOBAL_ACTION_BINDING_MAP);
-        bindAction(ACTION_STEER_DOWN, GLOBAL_ACTION_BINDING_MAP);
-        bindAction(ACTION_STEER_LEFT, GLOBAL_ACTION_BINDING_MAP);
-        bindAction(ACTION_STEER_RIGHT, GLOBAL_ACTION_BINDING_MAP);
-    }
-
-    @Override
-    public Map<KeyCombination, GameAction> actionBindings() {
-        return actionBindingMap;
+        actionBindings.bindAction(ACTION_STEER_UP, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bindAction(ACTION_STEER_DOWN, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bindAction(ACTION_STEER_LEFT, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bindAction(ACTION_STEER_RIGHT, GLOBAL_ACTION_BINDING_MAP);
     }
 
     @Override
@@ -209,9 +210,6 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         theSound().stopAll();
         destroy();
     }
-
-    @Override
-    public Keyboard keyboard() { return theKeyboard(); }
 
     @Override
     public final void update() {

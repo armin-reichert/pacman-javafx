@@ -60,7 +60,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         theGame().hud().showLevelCounter(true);
         theGame().hud().showLivesCounter(false);
 
-        bindActionToKeyCombination(ACTION_LET_GAME_STATE_EXPIRE, theJoypad().key(JoypadButton.START));
+        actionBindings.bindActionToKeyCombination(ACTION_LET_GAME_STATE_EXPIRE, theJoypad().key(JoypadButton.START));
 
         PacManGames_UIConfig config = theUI().configuration();
         var spriteSheet = (TengenMsPacMan_SpriteSheet) config.spriteSheet();

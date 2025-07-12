@@ -6,7 +6,6 @@ package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
-import de.amr.pacmanfx.ui.ActionBindingSupport;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -15,7 +14,7 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 /**
  * Gives credit to the people that helped in making the game, original and remake authors.
  */
-public class TengenMsPacMan_CreditsScene extends GameScene2D implements ActionBindingSupport {
+public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     static final float DISPLAY_SECONDS = 12;
 
@@ -24,7 +23,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D implements ActionBi
         theGame().hud().showScore(false);
         theGame().hud().showLevelCounter(false);
         theGame().hud().showLivesCounter(false);
-        bindAction(ACTION_START_GAME, TENGEN_ACTION_BINDINGS);
+        actionBindings.bindAction(ACTION_START_GAME, TENGEN_ACTION_BINDINGS);
     }
 
     @Override

@@ -6,8 +6,8 @@ package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
+import de.amr.pacmanfx.ui.ActionBindingMap;
 import de.amr.pacmanfx.ui.GameAction;
-import de.amr.pacmanfx.ui.input.Keyboard;
 import javafx.beans.property.StringProperty;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
@@ -16,7 +16,6 @@ import javafx.scene.paint.Color;
 
 import java.util.Map;
 
-import static de.amr.pacmanfx.ui.PacManGames.theKeyboard;
 import static de.amr.pacmanfx.uilib.Ufx.coloredBackground;
 import static java.util.Objects.requireNonNull;
 
@@ -36,12 +35,12 @@ public class EditorView implements PacManGames_View {
     @Override
     public void onGameEvent(GameEvent event) {}
 
-    @Override
-    public Keyboard keyboard() {
-        return theKeyboard();
-    }
-
     public TileMapEditor editor() { return editor; }
+
+    @Override
+    public ActionBindingMap actionBindingMap() {
+        return ActionBindingMap.EMPTY_MAP;
+    }
 
     @Override
     public Region rootNode() {
@@ -51,10 +50,5 @@ public class EditorView implements PacManGames_View {
     @Override
     public StringProperty title() {
         return editor.titleProperty();
-    }
-
-    @Override
-    public Map<KeyCombination, GameAction> actionBindings() {
-        return Map.of();
     }
 }

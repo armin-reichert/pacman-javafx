@@ -7,19 +7,14 @@ package de.amr.pacmanfx.ui._2d;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.ui.GameAction;
+import de.amr.pacmanfx.ui.ActionBindingMap;
 import de.amr.pacmanfx.ui.GameScene;
-import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.PacManGames.*;
@@ -38,7 +33,7 @@ public abstract class GameScene2D implements GameScene {
     protected final BooleanProperty debugInfoVisibleProperty      = new SimpleBooleanProperty(false);
     protected final FloatProperty scalingProperty                 = new SimpleFloatProperty(1.0f);
 
-    protected final Map<KeyCombination, GameAction> actionBindings = new HashMap<>();
+    protected final ActionBindingMap actionBindings = new ActionBindingMap(theKeyboard());
     protected final AnimationManager animationManager = new AnimationManager();
     protected GameRenderer gameRenderer;
     protected Canvas canvas;
@@ -47,7 +42,7 @@ public abstract class GameScene2D implements GameScene {
 
     @Override
     public void destroy() {
-        clearActionBindings();
+        actionBindings.clearActionBindings();
         animationManager.destroyAllAnimations();
     }
 
@@ -56,7 +51,7 @@ public abstract class GameScene2D implements GameScene {
         arcadeFont8Property.bind(scalingProperty.map(s -> theAssets().arcadeFont(s.floatValue() * 8)));
         arcadeFont6Property.bind(scalingProperty.map(s -> theAssets().arcadeFont(s.floatValue() * 6)));
         doInit();
-        updateActionBindings();
+        actionBindings.updateActionBindings();
         theKeyboard().logCurrentBindings();
     }
 
@@ -71,7 +66,7 @@ public abstract class GameScene2D implements GameScene {
     protected abstract void doEnd();
 
     @Override
-    public Map<KeyCombination, GameAction> actionBindings() { return actionBindings; }
+    public ActionBindingMap actionBindings() { return actionBindings; }
 
     @Override
     public void onStopAllSounds(GameEvent event) { theSound().stopAll(); }
@@ -81,9 +76,6 @@ public abstract class GameScene2D implements GameScene {
         // TODO: remove (this is only used by game state GameState.TESTING_CUT_SCENES)
         theUI().updateGameScene(true);
     }
-
-    @Override
-    public Keyboard keyboard() { return theKeyboard(); }
 
     public void  setScaling(double scaling) { scalingProperty.set((float) scaling); }
     public float scaling() { return scalingProperty.get(); }

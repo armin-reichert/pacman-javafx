@@ -8,7 +8,6 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.ui.ActionBindingSupport;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -25,7 +24,7 @@ import static de.amr.pacmanfx.ui.PacManGames_UI.GLOBAL_ACTION_BINDING_MAP;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_ORANGE;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_RED;
 
-public class ArcadeMsPacMan_StartScene extends GameScene2D implements ActionBindingSupport {
+public class ArcadeMsPacMan_StartScene extends GameScene2D {
 
     private RectShort livesCounterSprite;
     private MidwayCopyright copyright;
@@ -51,8 +50,8 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D implements ActionBind
         @SuppressWarnings("unchecked") var spriteSheet = (SpriteSheet<SpriteID>) theUI().configuration().spriteSheet();
         livesCounterSprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
 
-        bindAction(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDING_MAP);
-        bindAction(ACTION_ARCADE_START_GAME, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bindAction(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bindAction(ACTION_ARCADE_START_GAME, GLOBAL_ACTION_BINDING_MAP);
     }
 
     @Override

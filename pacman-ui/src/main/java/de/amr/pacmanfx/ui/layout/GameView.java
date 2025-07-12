@@ -8,17 +8,13 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.actors.ActorAnimationMap;
-import de.amr.pacmanfx.ui.GameAction;
-import de.amr.pacmanfx.ui.GameScene;
-import de.amr.pacmanfx.ui.PacManGames_UI;
-import de.amr.pacmanfx.ui.PacManGames_UIConfig;
+import de.amr.pacmanfx.ui.*;
 import de.amr.pacmanfx.ui._2d.CrudeCanvasContainer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.PopupLayer;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.InfoBox;
-import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.uilib.CameraControlledView;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
@@ -31,7 +27,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -40,9 +35,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.FontSmoothingType;
 import org.tinylog.Logger;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.PacManGames.*;
@@ -74,7 +67,7 @@ public class GameView implements PacManGames_View {
         };
     }
 
-    private final Map<KeyCombination, GameAction> actionBindings = new HashMap<>();
+    private final ActionBindingMap actionBindings = new ActionBindingMap(theKeyboard());
 
     private final PacManGames_UI ui;
     private final StackPane root = new StackPane();
@@ -128,23 +121,23 @@ public class GameView implements PacManGames_View {
             ui.currentGameSceneProperty()
         );
 
-        bindAction(ACTION_BOOT_SHOW_GAME_VIEW, GLOBAL_ACTION_BINDING_MAP);
-        bindAction(ACTION_ENTER_FULLSCREEN, GLOBAL_ACTION_BINDING_MAP);
-        bindAction(ACTION_QUIT_GAME_SCENE, GLOBAL_ACTION_BINDING_MAP);
-        bindAction(ACTION_SHOW_HELP, GLOBAL_ACTION_BINDING_MAP);
-        bindAction(ACTION_SIMULATION_SLOWER, GLOBAL_ACTION_BINDING_MAP);
-        bindAction(ACTION_SIMULATION_FASTER, GLOBAL_ACTION_BINDING_MAP);
-        bindAction(ACTION_SIMULATION_RESET, GLOBAL_ACTION_BINDING_MAP);
-        bindAction(ACTION_SIMULATION_ONE_STEP, GLOBAL_ACTION_BINDING_MAP);
-        bindAction(ACTION_SIMULATION_TEN_STEPS, GLOBAL_ACTION_BINDING_MAP);
-        bindAction(ACTION_TOGGLE_AUTOPILOT, GLOBAL_ACTION_BINDING_MAP);
-        bindAction(ACTION_TOGGLE_DEBUG_INFO, GLOBAL_ACTION_BINDING_MAP);
-        bindAction(ACTION_TOGGLE_MUTED, GLOBAL_ACTION_BINDING_MAP);
-        bindAction(ACTION_TOGGLE_PAUSED, GLOBAL_ACTION_BINDING_MAP);
-        bindAction(ACTION_TOGGLE_DASHBOARD, GLOBAL_ACTION_BINDING_MAP);
-        bindAction(ACTION_TOGGLE_IMMUNITY, GLOBAL_ACTION_BINDING_MAP);
-        bindAction(ACTION_TOGGLE_PIP_VISIBILITY, GLOBAL_ACTION_BINDING_MAP);
-        bindAction(ACTION_TOGGLE_PLAY_SCENE_2D_3D, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bindAction(ACTION_BOOT_SHOW_GAME_VIEW, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bindAction(ACTION_ENTER_FULLSCREEN, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bindAction(ACTION_QUIT_GAME_SCENE, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bindAction(ACTION_SHOW_HELP, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bindAction(ACTION_SIMULATION_SLOWER, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bindAction(ACTION_SIMULATION_FASTER, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bindAction(ACTION_SIMULATION_RESET, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bindAction(ACTION_SIMULATION_ONE_STEP, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bindAction(ACTION_SIMULATION_TEN_STEPS, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bindAction(ACTION_TOGGLE_AUTOPILOT, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bindAction(ACTION_TOGGLE_DEBUG_INFO, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bindAction(ACTION_TOGGLE_MUTED, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bindAction(ACTION_TOGGLE_PAUSED, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bindAction(ACTION_TOGGLE_DASHBOARD, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bindAction(ACTION_TOGGLE_IMMUNITY, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bindAction(ACTION_TOGGLE_PIP_VISIBILITY, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bindAction(ACTION_TOGGLE_PLAY_SCENE_2D_3D, GLOBAL_ACTION_BINDING_MAP);
     }
 
     private void handleGameSceneChange(ObservableValue<? extends GameScene> obs, GameScene oldScene, GameScene newScene) {
@@ -198,14 +191,15 @@ public class GameView implements PacManGames_View {
         return theAssets().text(key, modeText) + " [%s]".formatted(sceneClassName);
     }
 
-    @Override
-    public Keyboard keyboard() {
-        return theKeyboard();
-    }
+    // -----------------------------------------------------------------------------------------------------------------
+    // PacManGames_View interface implementation
+    // -----------------------------------------------------------------------------------------------------------------
 
-    // -----------------------------------------------------------------------------------------------------------------
-    // View interface implementation
-    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public ActionBindingMap actionBindingMap() {
+        return actionBindings;
+    }
 
     @Override
     public StackPane rootNode() {
@@ -235,18 +229,10 @@ public class GameView implements PacManGames_View {
         }
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-    // ActionProvider interface implementation
-    // -----------------------------------------------------------------------------------------------------------------
-
-    @Override
-    public Map<KeyCombination, GameAction> actionBindings() {
-        return actionBindings;
-    }
-
     @Override
     public void handleKeyboardInput() {
-        runMatchingActionOrElse(ui, () -> ui.currentGameScene().ifPresent(GameScene::handleKeyboardInput));
+        actionBindings.runMatchingActionOrElse(ui,
+            () -> ui.currentGameScene().ifPresent(GameScene::handleKeyboardInput));
     }
 
     // -----------------------------------------------------------------------------------------------------------------

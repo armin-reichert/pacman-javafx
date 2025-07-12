@@ -6,7 +6,6 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.ui.ActionBindingSupport;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.sound.SoundID;
 
@@ -21,7 +20,7 @@ import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
 /**
  * Scene shown after credit has been added and where game can be started.
  */
-public class ArcadePacMan_StartScene extends GameScene2D implements ActionBindingSupport {
+public class ArcadePacMan_StartScene extends GameScene2D {
 
     @Override
     public void doInit() {
@@ -29,8 +28,8 @@ public class ArcadePacMan_StartScene extends GameScene2D implements ActionBindin
         theGame().hud().showScore(true);
         theGame().hud().showLevelCounter(true);
         theGame().hud().showLivesCounter(false);
-        bindAction(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDING_MAP);
-        bindAction(ACTION_ARCADE_START_GAME, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bindAction(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bindAction(ACTION_ARCADE_START_GAME, GLOBAL_ACTION_BINDING_MAP);
     }
 
     @Override

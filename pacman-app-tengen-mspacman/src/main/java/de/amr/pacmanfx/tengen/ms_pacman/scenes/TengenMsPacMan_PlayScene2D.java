@@ -18,7 +18,6 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_HUD;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_LevelCounter;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.ColorSchemedSprite;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
-import de.amr.pacmanfx.ui.ActionBindingSupport;
 import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
@@ -58,7 +57,7 @@ import static de.amr.pacmanfx.uilib.Ufx.menuTitleItem;
 /**
  * Tengen play scene, uses vertical scrolling.
  */
-public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBindingSupport, CameraControlledView {
+public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraControlledView {
 
     // Width: 32 tiles (NES screen width), height: 42 tiles (BIG maps height) + 2 extra rows
     private static final int UNSCALED_CANVAS_WIDTH  = 32 * TS;
@@ -148,20 +147,20 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements ActionBin
 
     private void bindActionsToKeys() {
         if (theGameLevel().isDemoLevel()) {
-            bindAction(ACTION_QUIT_DEMO_LEVEL, TENGEN_ACTION_BINDINGS);
+            actionBindings.bindAction(ACTION_QUIT_DEMO_LEVEL, TENGEN_ACTION_BINDINGS);
         } else {
-            bindAction(ACTION_STEER_UP,               TENGEN_ACTION_BINDINGS);
-            bindAction(ACTION_STEER_DOWN,             TENGEN_ACTION_BINDINGS);
-            bindAction(ACTION_STEER_LEFT,             TENGEN_ACTION_BINDINGS);
-            bindAction(ACTION_STEER_RIGHT,            TENGEN_ACTION_BINDINGS);
-            bindAction(ACTION_TOGGLE_DISPLAY_MODE,    TENGEN_ACTION_BINDINGS);
-            bindAction(ACTION_TOGGLE_PAC_BOOSTER,     TENGEN_ACTION_BINDINGS);
-            bindAction(ACTION_CHEAT_EAT_ALL_PELLETS, GLOBAL_ACTION_BINDING_MAP);
-            bindAction(ACTION_CHEAT_ADD_LIVES, GLOBAL_ACTION_BINDING_MAP);
-            bindAction(ACTION_CHEAT_ENTER_NEXT_LEVEL, GLOBAL_ACTION_BINDING_MAP);
-            bindAction(ACTION_CHEAT_KILL_GHOSTS, GLOBAL_ACTION_BINDING_MAP);
+            actionBindings.bindAction(ACTION_STEER_UP,               TENGEN_ACTION_BINDINGS);
+            actionBindings.bindAction(ACTION_STEER_DOWN,             TENGEN_ACTION_BINDINGS);
+            actionBindings.bindAction(ACTION_STEER_LEFT,             TENGEN_ACTION_BINDINGS);
+            actionBindings.bindAction(ACTION_STEER_RIGHT,            TENGEN_ACTION_BINDINGS);
+            actionBindings.bindAction(ACTION_TOGGLE_DISPLAY_MODE,    TENGEN_ACTION_BINDINGS);
+            actionBindings.bindAction(ACTION_TOGGLE_PAC_BOOSTER,     TENGEN_ACTION_BINDINGS);
+            actionBindings.bindAction(ACTION_CHEAT_EAT_ALL_PELLETS,  GLOBAL_ACTION_BINDING_MAP);
+            actionBindings.bindAction(ACTION_CHEAT_ADD_LIVES,        GLOBAL_ACTION_BINDING_MAP);
+            actionBindings.bindAction(ACTION_CHEAT_ENTER_NEXT_LEVEL, GLOBAL_ACTION_BINDING_MAP);
+            actionBindings.bindAction(ACTION_CHEAT_KILL_GHOSTS,      GLOBAL_ACTION_BINDING_MAP);
         }
-        updateActionBindings();
+        actionBindings.updateActionBindings();
     }
 
     @Override

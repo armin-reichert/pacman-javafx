@@ -14,7 +14,6 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui.ActionBindingSupport;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.paint.Color;
@@ -37,7 +36,7 @@ import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
  * <p>
  * The ghosts and Ms. Pac-Man are introduced on a billboard and are marching in one after another.
  */
-public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBindingSupport {
+public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     private static final int TITLE_X          = TS * 10;
     private static final int TITLE_Y          = TS * 8;
@@ -76,11 +75,11 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D implements ActionBind
         theGame().hud().showLevelCounter(true);
         theGame().hud().showLivesCounter(false);
 
-        bindAction(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDING_MAP);
-        bindAction(ACTION_ARCADE_START_GAME, GLOBAL_ACTION_BINDING_MAP);
-        bindAction(ACTION_TEST_CUT_SCENES, GLOBAL_ACTION_BINDING_MAP);
-        bindAction(ACTION_TEST_LEVELS_BONI, GLOBAL_ACTION_BINDING_MAP);
-        bindAction(ACTION_TEST_LEVELS_TEASERS, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bindAction(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bindAction(ACTION_ARCADE_START_GAME, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bindAction(ACTION_TEST_CUT_SCENES, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bindAction(ACTION_TEST_LEVELS_BONI, GLOBAL_ACTION_BINDING_MAP);
+        actionBindings.bindAction(ACTION_TEST_LEVELS_TEASERS, GLOBAL_ACTION_BINDING_MAP);
 
         copyright = new MidwayCopyright();
         copyright.setPosition(TS * 6, TS * 28);

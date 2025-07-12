@@ -23,7 +23,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.ActionBindingSupport.binding;
+import static de.amr.pacmanfx.ui.ActionBindingMap.createActionBinding;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
 
@@ -65,39 +65,39 @@ public interface PacManGames_UI {
     KeyCombination KEY_OPEN_EDITOR = alt_shift(KeyCode.E);
 
     Map<GameAction, Set<KeyCombination>> GLOBAL_ACTION_BINDING_MAP = Map.ofEntries(
-        binding(ACTION_ARCADE_INSERT_COIN,      nude(KeyCode.DIGIT5), nude(KeyCode.NUMPAD5)),
-        binding(ACTION_ARCADE_START_GAME,       nude(KeyCode.DIGIT1), nude(KeyCode.NUMPAD1)),
-        binding(ACTION_BOOT_SHOW_GAME_VIEW,     nude(KeyCode.F3)),
-        binding(ACTION_CHEAT_EAT_ALL_PELLETS,   alt(KeyCode.E)),
-        binding(ACTION_CHEAT_ADD_LIVES,         alt(KeyCode.L)),
-        binding(ACTION_CHEAT_ENTER_NEXT_LEVEL,  alt(KeyCode.N)),
-        binding(ACTION_CHEAT_KILL_GHOSTS,       alt(KeyCode.X)),
-        binding(ACTION_ENTER_FULLSCREEN,        nude(KeyCode.F11)),
-        binding(ACTION_PERSPECTIVE_PREVIOUS,    alt(KeyCode.LEFT)),
-        binding(ACTION_PERSPECTIVE_NEXT,        alt(KeyCode.RIGHT)),
-        binding(ACTION_SHOW_HELP,               nude(KeyCode.H)),
-        binding(ACTION_STEER_UP,                nude(KeyCode.UP), control(KeyCode.UP)),
-        binding(ACTION_STEER_DOWN,              nude(KeyCode.DOWN), control(KeyCode.DOWN)),
-        binding(ACTION_STEER_LEFT,              nude(KeyCode.LEFT), control(KeyCode.LEFT)),
-        binding(ACTION_STEER_RIGHT,             nude(KeyCode.RIGHT), control(KeyCode.RIGHT)),
-        binding(ACTION_QUIT_GAME_SCENE,         nude(KeyCode.Q)),
-        binding(ACTION_SIMULATION_SLOWER,       alt(KeyCode.MINUS)),
-        binding(ACTION_SIMULATION_FASTER,       alt(KeyCode.PLUS)),
-        binding(ACTION_SIMULATION_RESET,        alt(KeyCode.DIGIT0)),
-        binding(ACTION_SIMULATION_ONE_STEP,     shift(KeyCode.P), shift(KeyCode.F5)),
-        binding(ACTION_SIMULATION_TEN_STEPS,    shift(KeyCode.SPACE)),
-        binding(ACTION_TEST_CUT_SCENES,         alt(KeyCode.C)),
-        binding(ACTION_TEST_LEVELS_BONI,        alt(KeyCode.T)),
-        binding(ACTION_TEST_LEVELS_TEASERS,     alt_shift(KeyCode.T)),
-        binding(ACTION_TOGGLE_AUTOPILOT,        alt(KeyCode.A)),
-        binding(ACTION_TOGGLE_DEBUG_INFO,       alt(KeyCode.D)),
-        binding(ACTION_TOGGLE_MUTED,            alt(KeyCode.M)),
-        binding(ACTION_TOGGLE_PAUSED,           nude(KeyCode.P), nude(KeyCode.F5)),
-        binding(ACTION_TOGGLE_DASHBOARD,        nude(KeyCode.F1), alt(KeyCode.B)),
-        binding(ACTION_TOGGLE_IMMUNITY,         alt(KeyCode.I)),
-        binding(ACTION_TOGGLE_PIP_VISIBILITY,   nude(KeyCode.F2)),
-        binding(ACTION_TOGGLE_PLAY_SCENE_2D_3D, alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3)),
-        binding(ACTION_TOGGLE_DRAW_MODE,        alt(KeyCode.W))
+        createActionBinding(ACTION_ARCADE_INSERT_COIN,      nude(KeyCode.DIGIT5), nude(KeyCode.NUMPAD5)),
+        createActionBinding(ACTION_ARCADE_START_GAME,       nude(KeyCode.DIGIT1), nude(KeyCode.NUMPAD1)),
+        createActionBinding(ACTION_BOOT_SHOW_GAME_VIEW,     nude(KeyCode.F3)),
+        createActionBinding(ACTION_CHEAT_EAT_ALL_PELLETS,   alt(KeyCode.E)),
+        createActionBinding(ACTION_CHEAT_ADD_LIVES,         alt(KeyCode.L)),
+        createActionBinding(ACTION_CHEAT_ENTER_NEXT_LEVEL,  alt(KeyCode.N)),
+        createActionBinding(ACTION_CHEAT_KILL_GHOSTS,       alt(KeyCode.X)),
+        createActionBinding(ACTION_ENTER_FULLSCREEN,        nude(KeyCode.F11)),
+        createActionBinding(ACTION_PERSPECTIVE_PREVIOUS,    alt(KeyCode.LEFT)),
+        createActionBinding(ACTION_PERSPECTIVE_NEXT,        alt(KeyCode.RIGHT)),
+        createActionBinding(ACTION_SHOW_HELP,               nude(KeyCode.H)),
+        createActionBinding(ACTION_STEER_UP,                nude(KeyCode.UP), control(KeyCode.UP)),
+        createActionBinding(ACTION_STEER_DOWN,              nude(KeyCode.DOWN), control(KeyCode.DOWN)),
+        createActionBinding(ACTION_STEER_LEFT,              nude(KeyCode.LEFT), control(KeyCode.LEFT)),
+        createActionBinding(ACTION_STEER_RIGHT,             nude(KeyCode.RIGHT), control(KeyCode.RIGHT)),
+        createActionBinding(ACTION_QUIT_GAME_SCENE,         nude(KeyCode.Q)),
+        createActionBinding(ACTION_SIMULATION_SLOWER,       alt(KeyCode.MINUS)),
+        createActionBinding(ACTION_SIMULATION_FASTER,       alt(KeyCode.PLUS)),
+        createActionBinding(ACTION_SIMULATION_RESET,        alt(KeyCode.DIGIT0)),
+        createActionBinding(ACTION_SIMULATION_ONE_STEP,     shift(KeyCode.P), shift(KeyCode.F5)),
+        createActionBinding(ACTION_SIMULATION_TEN_STEPS,    shift(KeyCode.SPACE)),
+        createActionBinding(ACTION_TEST_CUT_SCENES,         alt(KeyCode.C)),
+        createActionBinding(ACTION_TEST_LEVELS_BONI,        alt(KeyCode.T)),
+        createActionBinding(ACTION_TEST_LEVELS_TEASERS,     alt_shift(KeyCode.T)),
+        createActionBinding(ACTION_TOGGLE_AUTOPILOT,        alt(KeyCode.A)),
+        createActionBinding(ACTION_TOGGLE_DEBUG_INFO,       alt(KeyCode.D)),
+        createActionBinding(ACTION_TOGGLE_MUTED,            alt(KeyCode.M)),
+        createActionBinding(ACTION_TOGGLE_PAUSED,           nude(KeyCode.P), nude(KeyCode.F5)),
+        createActionBinding(ACTION_TOGGLE_DASHBOARD,        nude(KeyCode.F1), alt(KeyCode.B)),
+        createActionBinding(ACTION_TOGGLE_IMMUNITY,         alt(KeyCode.I)),
+        createActionBinding(ACTION_TOGGLE_PIP_VISIBILITY,   nude(KeyCode.F2)),
+        createActionBinding(ACTION_TOGGLE_PLAY_SCENE_2D_3D, alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3)),
+        createActionBinding(ACTION_TOGGLE_DRAW_MODE,        alt(KeyCode.W))
     );
 
     Color DEBUG_TEXT_FILL          = Color.YELLOW;

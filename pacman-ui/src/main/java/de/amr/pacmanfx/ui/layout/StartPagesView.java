@@ -6,9 +6,9 @@ package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.ui.ActionBindingMap;
 import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.PacManGames_UI;
-import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.uilib.widgets.Carousel;
 import de.amr.pacmanfx.uilib.widgets.FancyButton;
 import javafx.beans.binding.Bindings;
@@ -17,7 +17,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
@@ -27,7 +26,9 @@ import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.tinylog.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static de.amr.pacmanfx.ui.PacManGames.theAssets;
 import static de.amr.pacmanfx.ui.PacManGames.theKeyboard;
@@ -73,7 +74,7 @@ public class StartPagesView implements PacManGames_View {
     }
 
     private final List<StartPage> startPageList = new ArrayList<>();
-    private final Map<KeyCombination, GameAction> actionBindings = new HashMap<>();
+    private final ActionBindingMap actionBindings = new ActionBindingMap(theKeyboard());
     private final Carousel carousel;
     private StringBinding titleBinding;
 
@@ -116,19 +117,19 @@ public class StartPagesView implements PacManGames_View {
                 return "SHOW_NEXT_SLIDE";
             }
         };
-        bindActionToKeyCombination(actionPrevSlide,            nude(KeyCode.LEFT));
-        bindActionToKeyCombination(actionNextSlide,            nude(KeyCode.RIGHT));
-        bindActionToKeyCombination(ACTION_BOOT_SHOW_GAME_VIEW, nude(KeyCode.ENTER));
-        bindActionToKeyCombination(ACTION_TOGGLE_PAUSED,       nude(KeyCode.P));
+        actionBindings.bindActionToKeyCombination(actionPrevSlide,            nude(KeyCode.LEFT));
+        actionBindings.bindActionToKeyCombination(actionNextSlide,            nude(KeyCode.RIGHT));
+        actionBindings.bindActionToKeyCombination(ACTION_BOOT_SHOW_GAME_VIEW, nude(KeyCode.ENTER));
+        actionBindings.bindActionToKeyCombination(ACTION_TOGGLE_PAUSED,       nude(KeyCode.P));
+    }
+
+    @Override
+    public ActionBindingMap actionBindingMap() {
+        return actionBindings;
     }
 
     @Override
     public void onGameEvent(GameEvent event) {}
-
-    @Override
-    public Keyboard keyboard() {
-        return theKeyboard();
-    }
 
     @Override
     public Region rootNode() { return carousel; }
@@ -136,11 +137,6 @@ public class StartPagesView implements PacManGames_View {
     @Override
     public StringBinding title() {
         return titleBinding;
-    }
-
-    @Override
-    public Map<KeyCombination, GameAction> actionBindings() {
-        return actionBindings;
     }
 
     public void setTitleBinding(StringBinding binding) {
