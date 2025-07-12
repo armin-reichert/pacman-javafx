@@ -18,7 +18,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.PacManGames.*;
+import static de.amr.pacmanfx.ui.GameUIContext.*;
 import static de.amr.pacmanfx.ui.PacManGames_UI.DEBUG_TEXT_FILL;
 import static de.amr.pacmanfx.ui.PacManGames_UI.DEBUG_TEXT_FONT;
 import static de.amr.pacmanfx.ui._2d.GameRenderer.fillCanvas;

@@ -22,8 +22,8 @@ import javafx.stage.Stage;
 
 import static de.amr.pacmanfx.Globals.initGameContext;
 import static de.amr.pacmanfx.Globals.theGameContext;
-import static de.amr.pacmanfx.ui.PacManGames.theClock;
-import static de.amr.pacmanfx.ui.PacManGames.theWatchdog;
+import static de.amr.pacmanfx.ui.GameUIContext.theClock;
+import static de.amr.pacmanfx.ui.GameUIContext.theWatchdog;
 import static de.amr.pacmanfx.ui.PacManGames_UI_Impl.GameVariant;
 
 /**

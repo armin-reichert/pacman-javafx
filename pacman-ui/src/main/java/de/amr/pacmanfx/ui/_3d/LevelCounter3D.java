@@ -23,7 +23,7 @@ import java.util.List;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.PacManGames.theUI;
+import static de.amr.pacmanfx.ui.GameUIContext.theUI;
 import static java.util.Objects.requireNonNull;
 
 public class LevelCounter3D extends Group {

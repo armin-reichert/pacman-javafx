@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import static de.amr.pacmanfx.Globals.theGameContext;
-import static de.amr.pacmanfx.ui.PacManGames.theAssets;
+import static de.amr.pacmanfx.ui.GameUIContext.theAssets;
 import static de.amr.pacmanfx.uilib.Ufx.opaqueColor;
 
 /**

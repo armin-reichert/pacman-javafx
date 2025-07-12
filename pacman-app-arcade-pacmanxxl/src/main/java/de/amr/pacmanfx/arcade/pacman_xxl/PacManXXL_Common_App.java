@@ -12,8 +12,8 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import static de.amr.pacmanfx.Globals.theGameContext;
-import static de.amr.pacmanfx.ui.PacManGames.theClock;
-import static de.amr.pacmanfx.ui.PacManGames.theWatchdog;
+import static de.amr.pacmanfx.ui.GameUIContext.theClock;
+import static de.amr.pacmanfx.ui.GameUIContext.theWatchdog;
 import static de.amr.pacmanfx.ui.PacManGames_UI.GameVariant.MS_PACMAN_XXL;
 import static de.amr.pacmanfx.ui.PacManGames_UI.GameVariant.PACMAN_XXL;
 

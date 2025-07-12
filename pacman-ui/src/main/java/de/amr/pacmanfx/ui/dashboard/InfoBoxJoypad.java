@@ -10,7 +10,7 @@ import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Font;
 
-import static de.amr.pacmanfx.ui.PacManGames.theJoypad;
+import static de.amr.pacmanfx.ui.GameUIContext.theJoypad;
 
 public class InfoBoxJoypad extends InfoBox {
 

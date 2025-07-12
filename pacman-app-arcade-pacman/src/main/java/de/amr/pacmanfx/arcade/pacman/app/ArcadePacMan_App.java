@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.app;
 
-import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
@@ -16,8 +15,8 @@ import javafx.stage.Stage;
 
 import static de.amr.pacmanfx.Globals.initGameContext;
 import static de.amr.pacmanfx.Globals.theGameContext;
-import static de.amr.pacmanfx.ui.PacManGames.theClock;
-import static de.amr.pacmanfx.ui.PacManGames.theWatchdog;
+import static de.amr.pacmanfx.ui.GameUIContext.theClock;
+import static de.amr.pacmanfx.ui.GameUIContext.theWatchdog;
 
 public class ArcadePacMan_App extends Application {
 

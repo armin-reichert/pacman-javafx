@@ -14,12 +14,11 @@ import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
-import static de.amr.pacmanfx.ui.PacManGames.theSound;
-import static de.amr.pacmanfx.ui.PacManGames.theUI;
+import static de.amr.pacmanfx.ui.GameUIContext.theSound;
+import static de.amr.pacmanfx.ui.GameUIContext.theUI;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_WHITE;
 import static de.amr.pacmanfx.ui._2d.GameRenderer.fillCanvas;
 

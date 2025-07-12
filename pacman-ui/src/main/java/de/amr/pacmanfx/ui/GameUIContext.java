@@ -10,7 +10,7 @@ import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.GameClock;
 
-public interface PacManGames {
+public interface GameUIContext {
     static PacManGames_Assets theAssets()   { return PacManGames_UI_Impl.ASSETS; }
     static GameClock          theClock()    { return PacManGames_UI_Impl.GAME_CLOCK; }
     static Joypad             theJoypad()   { return PacManGames_UI_Impl.JOYPAD; }

@@ -11,8 +11,8 @@ import javafx.scene.input.KeyCombination;
 import java.util.Comparator;
 
 import static de.amr.pacmanfx.Globals.theGameContext;
-import static de.amr.pacmanfx.ui.PacManGames.theAssets;
-import static de.amr.pacmanfx.ui.PacManGames.theUI;
+import static de.amr.pacmanfx.ui.GameUIContext.theAssets;
+import static de.amr.pacmanfx.ui.GameUIContext.theUI;
 
 /**
  * Displays context-sensitive the keyboard shortcuts.

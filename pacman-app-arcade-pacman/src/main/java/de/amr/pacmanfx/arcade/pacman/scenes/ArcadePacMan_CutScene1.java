@@ -19,8 +19,8 @@ import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ANIM_BIG_PAC_M
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
-import static de.amr.pacmanfx.ui.PacManGames.theSound;
-import static de.amr.pacmanfx.ui.PacManGames.theUI;
+import static de.amr.pacmanfx.ui.GameUIContext.theSound;
+import static de.amr.pacmanfx.ui.GameUIContext.theUI;
 import static de.amr.pacmanfx.ui.PacManGames_UI.DEBUG_TEXT_FILL;
 import static de.amr.pacmanfx.ui.PacManGames_UI.DEBUG_TEXT_FONT;
 

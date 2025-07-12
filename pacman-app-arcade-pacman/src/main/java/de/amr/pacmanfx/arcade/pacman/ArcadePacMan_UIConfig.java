@@ -38,7 +38,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.ui.PacManGames.theAssets;
+import static de.amr.pacmanfx.ui.GameUIContext.theAssets;
 import static de.amr.pacmanfx.ui.PacManGames_UI.PY_3D_ENABLED;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
 import static java.util.Objects.requireNonNull;

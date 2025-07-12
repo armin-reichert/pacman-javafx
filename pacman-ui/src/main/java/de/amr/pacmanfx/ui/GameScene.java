@@ -13,7 +13,7 @@ import javafx.scene.input.ContextMenuEvent;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.ui.PacManGames.theUI;
+import static de.amr.pacmanfx.ui.GameUIContext.theUI;
 
 /**
  * Common interface of all game scenes (2D and 3D).

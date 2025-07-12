@@ -19,7 +19,7 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 
 import static de.amr.pacmanfx.Globals.theGameContext;
-import static de.amr.pacmanfx.ui.PacManGames.theWatchdog;
+import static de.amr.pacmanfx.ui.GameUIContext.theWatchdog;
 
 public class InfoBoxCustomMaps extends InfoBox {
 

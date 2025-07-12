@@ -15,7 +15,7 @@ import javafx.util.Duration;
 
 import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
-import static de.amr.pacmanfx.ui.PacManGames.*;
+import static de.amr.pacmanfx.ui.GameUIContext.*;
 import static de.amr.pacmanfx.uilib.Ufx.doNow;
 import static de.amr.pacmanfx.uilib.Ufx.pauseSec;
 import static java.util.Objects.requireNonNull;
