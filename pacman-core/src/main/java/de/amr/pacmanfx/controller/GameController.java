@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.controller;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.event.GameStateChangeEvent;
@@ -34,13 +35,13 @@ public class GameController  {
 
     private final Map<String, GameModel> knownGames = new HashMap<>();
     private final StringProperty gameVariantPy = new SimpleStringProperty();
-    private final StateMachine<GameState, GameModel> stateMachine;
+    private final StateMachine<GameState, GameContext> stateMachine;
     private final GameEventManager gameEventManager = new GameEventManager();
     private boolean eventsEnabled;
 
-    public GameController() {
+    public GameController(GameContext gameContext) {
         stateMachine = new StateMachine<>(GameState.values()) {
-            @Override public GameModel context() { return currentGame(); }
+            @Override public GameContext context() { return gameContext; }
         };
         stateMachine.addStateChangeListener((oldState, newState) ->
             gameEventManager.publishEvent(new GameStateChangeEvent(currentGame(), oldState, newState)));

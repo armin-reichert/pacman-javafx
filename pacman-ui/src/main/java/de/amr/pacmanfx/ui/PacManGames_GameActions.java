@@ -244,7 +244,7 @@ public interface PacManGames_GameActions {
             theSound().stopAll();
             ui.currentGameScene().ifPresent(GameScene::end);
             if (gameContext.theGameState() == GameState.TESTING_LEVELS_SHORT) {
-                gameContext.theGameState().onExit(gameContext.theGame()); //TODO exit other states too?
+                gameContext.theGameState().onExit(gameContext); //TODO exit other states too?
             }
             theClock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
             gameContext.theGameController().restart(INTRO);
