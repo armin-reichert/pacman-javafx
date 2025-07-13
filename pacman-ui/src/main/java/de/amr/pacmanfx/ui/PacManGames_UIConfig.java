@@ -21,6 +21,8 @@ import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
+import static de.amr.pacmanfx.ui.GameUI.theUI;
+
 public interface PacManGames_UIConfig extends PacManGames_GameSceneConfig, Destroyable {
 
     String assetNamespace();
@@ -48,6 +50,15 @@ public interface PacManGames_UIConfig extends PacManGames_GameSceneConfig, Destr
      */
     default <T> T getAssetNS(AssetStorage assetStorage, String localKey) {
         return assetStorage.get(toGlobalKey(localKey));
+    }
+
+    /**
+     * @param localKey the local asset key, absolute key is {@code asset_namespace + "." + key}
+     * @return the asset value from the global asset storage of the UI
+     * @param <T> expected asset value type
+     */
+    default <T> T getAssetNS(String localKey) {
+        return getAssetNS(theUI().theAssets(), localKey);
     }
 
     Image bonusSymbolImage(byte symbol);

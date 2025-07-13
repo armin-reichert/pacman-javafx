@@ -28,7 +28,6 @@ import de.amr.pacmanfx.ui.sound.DefaultSoundManager;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
@@ -212,7 +211,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
 
     @Override
     public TengenMsPacMan_SpriteSheet spriteSheet() {
-        return getAssetNS(theUI().theAssets(), "spritesheet");
+        return getAssetNS("spritesheet");
     }
 
     @Override
@@ -224,12 +223,12 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
 
     @Override
     public Image killedGhostPointsImage(Ghost ghost, int killedIndex) {
-        return theUI().theAssets().image(NAMESPACE + ".ghost_points_" + killedIndex);
+        return getAssetNS("ghost_points_" + killedIndex);
     }
 
     @Override
     public Image bonusSymbolImage(byte symbol) {
-        return theUI().theAssets().image(NAMESPACE + ".bonus_symbol_" + symbol);
+        return getAssetNS("bonus_symbol_" + symbol);
     }
 
     @Override
@@ -242,23 +241,27 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
             case TengenMsPacMan_GameModel.BONUS_ICE_CREAM -> 7; // 4000!
             default -> symbol;
         };
-        return theUI().theAssets().image(NAMESPACE + ".bonus_value_" + usedSymbol);
+        return getAssetNS("bonus_value_" + usedSymbol);
     }
 
     @Override
     public WorldMapColorScheme colorScheme(WorldMap worldMap) {
-        NES_ColorScheme colorScheme = worldMap.getConfigValue("nesColorScheme");
+        NES_ColorScheme nesColorScheme = worldMap.getConfigValue("nesColorScheme");
         return new WorldMapColorScheme(
-            colorScheme.fillColorRGB(), colorScheme.strokeColorRGB(), colorScheme.strokeColorRGB(), colorScheme.pelletColorRGB());
+            nesColorScheme.fillColorRGB(),
+            nesColorScheme.strokeColorRGB(),
+            nesColorScheme.strokeColorRGB(),
+            nesColorScheme.pelletColorRGB()
+        );
     }
 
     @Override
-    public SpriteAnimationMap<SpriteID> createGhostAnimations(Ghost ghost) {
+    public TengenMsPacMan_GhostAnimationMap createGhostAnimations(Ghost ghost) {
         return new TengenMsPacMan_GhostAnimationMap(spriteSheet(), ghost.personality());
     }
 
     @Override
-    public SpriteAnimationMap<SpriteID> createPacAnimations(Pac pac) {
+    public TengenMsPacMan_PacAnimationMap createPacAnimations(Pac pac) {
         return new TengenMsPacMan_PacAnimationMap(spriteSheet());
     }
 
@@ -266,25 +269,25 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
     public MsPacManBody createLivesCounterShape3D(Model3DRepository model3DRepository) {
         return model3DRepository.createMsPacManBody(
             GameUI.LIVES_COUNTER_3D_SHAPE_SIZE,
-            theUI().theAssets().color(NAMESPACE + ".pac.color.head"),
-            theUI().theAssets().color(NAMESPACE + ".pac.color.eyes"),
-            theUI().theAssets().color(NAMESPACE + ".pac.color.palate"),
-            theUI().theAssets().color(NAMESPACE + ".pac.color.hairbow"),
-            theUI().theAssets().color(NAMESPACE + ".pac.color.hairbow.pearls"),
-            theUI().theAssets().color(NAMESPACE + ".pac.color.boobs")
+            getAssetNS("pac.color.head"),
+            getAssetNS("pac.color.eyes"),
+            getAssetNS("pac.color.palate"),
+            getAssetNS("pac.color.hairbow"),
+            getAssetNS("pac.color.hairbow.pearls"),
+            getAssetNS("pac.color.boobs")
         );
     }
 
     @Override
     public MsPacMan3D createPac3D(Model3DRepository model3DRepository, AnimationManager animationManager, Pac pac) {
         var pac3D = new MsPacMan3D(model3DRepository, animationManager, pac, GameUI.PAC_3D_SIZE,
-            theUI().theAssets().color(NAMESPACE + ".pac.color.head"),
-            theUI().theAssets().color(NAMESPACE + ".pac.color.eyes"),
-            theUI().theAssets().color(NAMESPACE + ".pac.color.palate"),
-            theUI().theAssets().color(NAMESPACE + ".pac.color.hairbow"),
-            theUI().theAssets().color(NAMESPACE + ".pac.color.hairbow.pearls"),
-            theUI().theAssets().color(NAMESPACE + ".pac.color.boobs"));
-        pac3D.light().setColor(theUI().theAssets().color(NAMESPACE + ".pac.color.head").desaturate());
+            getAssetNS("pac.color.head"),
+            getAssetNS("pac.color.eyes"),
+            getAssetNS("pac.color.palate"),
+            getAssetNS("pac.color.hairbow"),
+            getAssetNS("pac.color.hairbow.pearls"),
+            getAssetNS("pac.color.boobs"));
+        pac3D.light().setColor(((Color)getAssetNS("pac.color.head")).desaturate());
         return pac3D;
     }
 
