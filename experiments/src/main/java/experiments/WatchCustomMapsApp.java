@@ -18,13 +18,20 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.pacmanfx.Globals.CUSTOM_MAP_DIR;
+import static de.amr.pacmanfx.Globals.initGame;
+import static de.amr.pacmanfx.Globals.theGameContext;
 import static java.nio.file.StandardWatchEventKinds.*;
 
 public class WatchCustomMapsApp extends Application {
 
-    private final File watchedDirectory = CUSTOM_MAP_DIR;
     private final ObservableList<String> eventsDescriptions = FXCollections.observableList(new ArrayList<>());
+    private File watchedDirectory;
+
+    @Override
+    public void init() {
+        initGame();
+        watchedDirectory = theGameContext().theCustomMapDir();
+    }
 
     @Override
     public void start(Stage stage) {
@@ -38,7 +45,7 @@ public class WatchCustomMapsApp extends Application {
         stage.setTitle("Watch " + watchedDirectory);
         stage.show();
 
-        DirectoryWatchdog dog = new DirectoryWatchdog(CUSTOM_MAP_DIR);
+        DirectoryWatchdog dog = new DirectoryWatchdog(theGameContext().theCustomMapDir());
         dog.addEventListener(this::showEventsInList);
         dog.startWatching();
     }

@@ -89,7 +89,7 @@ public class ModelViewer extends Application {
         if (selectedFile != null) {
             Logger.info("File {} selected", selectedFile);
             try {
-                Node shape = model3DRepository.createPacMan(16, Color.YELLOW, Color.BLACK, Color.PINK);
+                Node shape = model3DRepository.createPacBody(16, Color.YELLOW, Color.BLACK, Color.PINK);
                 //allMeshViewsUnder(shape).forEach(meshView -> meshView.setDrawMode(DrawMode.LINE));
                 setCurrentNode(new Group(shape));
             } catch (Exception x) {
