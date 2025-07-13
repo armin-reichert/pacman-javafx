@@ -13,6 +13,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
 import java.util.function.BiFunction;
@@ -31,7 +32,7 @@ public class InfoBoxActorInfo extends InfoBox {
         super(gameContext);
     }
 
-    public void init() {
+    public void init(GameUI ui) {
         addLabeledValue("Pac Name", pacInfo((game, pac) -> pac.name()));
         addLabeledValue("Movement", pacInfo(this::movementInfo));
         addLabeledValue("Tile",     pacInfo(this::locationInfo));

@@ -12,6 +12,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingPhase;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import javafx.scene.paint.Color;
@@ -33,7 +34,8 @@ public class InfoBoxGameInfo extends InfoBox {
         super(gameContext);
     }
 
-    public void init() {
+    @Override
+    public void init(GameUI ui) {
         addLabeledValue("Game Scene", ifGameScenePresent(gameScene -> gameScene.getClass().getSimpleName()));
         addLabeledValue("Game State", () -> "%s".formatted(gameContext.theGameState()));
         addLabeledValue("State Timer", this::stateTimerInfo);
