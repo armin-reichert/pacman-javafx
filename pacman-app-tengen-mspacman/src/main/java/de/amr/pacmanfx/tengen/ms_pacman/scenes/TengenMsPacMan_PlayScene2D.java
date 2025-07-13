@@ -119,10 +119,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             radio.selectToggle(newMode == SceneDisplayMode.SCROLLING ? miScrolling : miScaledToFit));
 
         var miAutopilot = new CheckMenuItem(theUI().theAssets().text("autopilot"));
-        miAutopilot.selectedProperty().bindBidirectional(PY_USING_AUTOPILOT);
+        miAutopilot.selectedProperty().bindBidirectional(theGameContext().propertyUsingAutopilot());
 
         var miImmunity = new CheckMenuItem(theUI().theAssets().text("immunity"));
-        miImmunity.selectedProperty().bindBidirectional(PY_IMMUNITY);
+        miImmunity.selectedProperty().bindBidirectional(theGameContext().propertyImmunity());
 
         var miMuted = new CheckMenuItem(theUI().theAssets().text("muted"));
         miMuted.selectedProperty().bindBidirectional(theUI().mutedProperty());

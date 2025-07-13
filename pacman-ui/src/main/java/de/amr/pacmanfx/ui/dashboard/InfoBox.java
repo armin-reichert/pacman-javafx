@@ -8,6 +8,7 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.GameScene;
+import de.amr.pacmanfx.ui.GameUI;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -92,7 +93,7 @@ public abstract class InfoBox extends TitledPane {
         return showMaximized;
     }
 
-    public void init() {}
+    public void init(GameUI ui) {}
 
     public void update() {
         infoTexts.forEach(InfoText::update);

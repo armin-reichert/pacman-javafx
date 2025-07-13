@@ -133,10 +133,10 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
     @Override
     public List<MenuItem> supplyContextMenuItems(ContextMenuEvent contextMenuEvent, ContextMenu contextMenu) {
         var miAutopilot = new CheckMenuItem(theUI().theAssets().text("autopilot"));
-        miAutopilot.selectedProperty().bindBidirectional(PY_USING_AUTOPILOT);
+        miAutopilot.selectedProperty().bindBidirectional(theGameContext().propertyUsingAutopilot());
 
         var miImmunity = new CheckMenuItem(theUI().theAssets().text("immunity"));
-        miImmunity.selectedProperty().bindBidirectional(PY_IMMUNITY);
+        miImmunity.selectedProperty().bindBidirectional(theGameContext().propertyImmunity());
 
         var miMuted = new CheckMenuItem(theUI().theAssets().text("muted"));
         miMuted.selectedProperty().bindBidirectional(theUI().mutedProperty());

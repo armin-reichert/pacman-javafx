@@ -10,6 +10,7 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui._3d.Perspective;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.layout.EditorView;
@@ -21,10 +22,7 @@ import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
@@ -32,6 +30,8 @@ import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -53,14 +53,33 @@ public class PacManGames_UI_Impl implements GameUI {
     // package-visible to allow access to GameUI interface
     static PacManGames_UI_Impl THE_ONE;
 
+    ObjectProperty<Color>           PY_CANVAS_BG_COLOR        = new SimpleObjectProperty<>(Color.BLACK);
+    BooleanProperty                 PY_CANVAS_FONT_SMOOTHING  = new SimpleBooleanProperty(false);
+    BooleanProperty                 PY_CANVAS_IMAGE_SMOOTHING = new SimpleBooleanProperty(false);
+    BooleanProperty                 PY_DEBUG_INFO_VISIBLE     = new SimpleBooleanProperty(false);
+    IntegerProperty                 PY_PIP_HEIGHT             = new SimpleIntegerProperty(400);
+    BooleanProperty                 PY_MINI_VIEW_ON           = new SimpleBooleanProperty(false);
+    IntegerProperty                 PY_PIP_OPACITY_PERCENT    = new SimpleIntegerProperty(69);
+    IntegerProperty                 PY_SIMULATION_STEPS       = new SimpleIntegerProperty(1);
+    BooleanProperty                 PY_3D_AXES_VISIBLE        = new SimpleBooleanProperty(false);
+    ObjectProperty<DrawMode>        PY_3D_DRAW_MODE           = new SimpleObjectProperty<>(DrawMode.FILL);
+    BooleanProperty                 PY_3D_ENABLED             = new SimpleBooleanProperty(false);
+    BooleanProperty                 PY_3D_ENERGIZER_EXPLODES  = new SimpleBooleanProperty(true);
+    ObjectProperty<Color>           PY_3D_FLOOR_COLOR         = new SimpleObjectProperty<>(Color.rgb(20,20,20));
+    ObjectProperty<Color>           PY_3D_LIGHT_COLOR         = new SimpleObjectProperty<>(Color.WHITE);
+    BooleanProperty                 PY_3D_PAC_LIGHT_ENABLED   = new SimpleBooleanProperty(true);
+    ObjectProperty<Perspective.ID>  PY_3D_PERSPECTIVE         = new SimpleObjectProperty<>(Perspective.ID.TRACK_PLAYER);
+    DoubleProperty                  PY_3D_WALL_HEIGHT         = new SimpleDoubleProperty(Settings3D.OBSTACLE_3D_BASE_HEIGHT);
+    DoubleProperty                  PY_3D_WALL_OPACITY        = new SimpleDoubleProperty(1.0);
+
     private final PacManGames_Assets theAssets;
-    private final GameClock theGameClock;
-    private final GameContext theGameContext;
-    private final Keyboard theKeyboard;
-    private final Model3DRepository theModel3DRepository;
-    private final Joypad theJoypad;
-    private final Stage theStage;
-    private final DirectoryWatchdog theWatchdog;
+    private final GameClock          theGameClock;
+    private final GameContext        theGameContext;
+    private final Keyboard           theKeyboard;
+    private final Model3DRepository  theModel3DRepository;
+    private final Joypad             theJoypad;
+    private final Stage              theStage;
+    private final DirectoryWatchdog  theWatchdog;
 
     private final Map<String, PacManGames_UIConfig> configByGameVariant = new HashMap<>();
 
@@ -223,7 +242,25 @@ public class PacManGames_UI_Impl implements GameUI {
 
     // -----------------------------------------------------------------------------------------------------------------
     // GameUI interface implementation
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------------------------------
+    public ObjectProperty<Color>    propertyCanvasBackgroundColor() { return PY_CANVAS_BG_COLOR; };
+    public BooleanProperty          PY_CANVAS_FONT_SMOOTHING() { return PY_CANVAS_FONT_SMOOTHING; };
+    public BooleanProperty          PY_CANVAS_IMAGE_SMOOTHING(){ return PY_CANVAS_IMAGE_SMOOTHING; }
+    public BooleanProperty          PY_DEBUG_INFO_VISIBLE(){ return PY_DEBUG_INFO_VISIBLE; }
+    public IntegerProperty          PY_PIP_HEIGHT(){ return PY_PIP_HEIGHT; }
+    public BooleanProperty          PY_MINI_VIEW_ON(){ return PY_MINI_VIEW_ON; }
+    public IntegerProperty          PY_PIP_OPACITY_PERCENT(){ return PY_PIP_OPACITY_PERCENT; }
+    public IntegerProperty          PY_SIMULATION_STEPS(){ return PY_SIMULATION_STEPS; }
+    public BooleanProperty          PY_3D_AXES_VISIBLE(){ return PY_3D_AXES_VISIBLE; }
+    public ObjectProperty<DrawMode> PY_3D_DRAW_MODE(){ return PY_3D_DRAW_MODE; }
+    public BooleanProperty          PY_3D_ENABLED(){ return PY_3D_ENABLED; }
+    public BooleanProperty          PY_3D_ENERGIZER_EXPLODES(){ return PY_3D_ENERGIZER_EXPLODES; }
+    public ObjectProperty<Color>    PY_3D_FLOOR_COLOR(){ return PY_3D_FLOOR_COLOR; }
+    public ObjectProperty<Color>    PY_3D_LIGHT_COLOR(){ return PY_3D_LIGHT_COLOR; }
+    public BooleanProperty          PY_3D_PAC_LIGHT_ENABLED(){ return PY_3D_PAC_LIGHT_ENABLED; }
+    public ObjectProperty<Perspective.ID> PY_3D_PERSPECTIVE(){ return PY_3D_PERSPECTIVE; }
+    public DoubleProperty           PY_3D_WALL_HEIGHT(){ return PY_3D_WALL_HEIGHT; }
+    public DoubleProperty           PY_3D_WALL_OPACITY(){ return PY_3D_WALL_OPACITY; }
 
     @Override
     public ObjectProperty<GameScene> currentGameSceneProperty() {
@@ -305,12 +342,12 @@ public class PacManGames_UI_Impl implements GameUI {
     public void show() {
         currentViewProperty.set(startPagesView);
         startPagesView.currentStartPage().ifPresent(startPage -> startPage.layoutRoot().requestFocus());
-        gameView.dashboard().init();
+        gameView.dashboard().init(this);
 
         iconBox.iconMuted().visibleProperty().bind(mutedProperty());
         iconBox.icon3D().visibleProperty().bind(PY_3D_ENABLED);
-        iconBox.iconAutopilot().visibleProperty().bind(PY_USING_AUTOPILOT);
-        iconBox.iconImmune().visibleProperty().bind(PY_IMMUNITY);
+        iconBox.iconAutopilot().visibleProperty().bind(theGameContext().propertyUsingAutopilot());
+        iconBox.iconImmune().visibleProperty().bind(theGameContext.propertyImmunity());
 
         theStage.centerOnScreen();
         theStage.show();

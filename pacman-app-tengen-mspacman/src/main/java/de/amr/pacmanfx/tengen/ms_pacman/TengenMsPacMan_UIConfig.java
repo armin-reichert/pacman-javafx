@@ -52,7 +52,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.ActionBindingMap.createActionBinding;
-import static de.amr.pacmanfx.ui.GameUI.*;
+import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
 import static de.amr.pacmanfx.uilib.Ufx.toggle;
@@ -217,7 +217,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
     @Override
     public TengenMsPacMan_GameRenderer createGameRenderer(Canvas canvas) {
         var renderer = new TengenMsPacMan_GameRenderer(spriteSheet(), mapRepository, canvas);
-        renderer.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
+        renderer.backgroundColorProperty().bind(theUI().propertyCanvasBackgroundColor());
         return renderer;
     }
 
@@ -305,7 +305,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
         scenesByID.put("StartScene",     new TengenMsPacMan_OptionsScene(gameContext));
         scenesByID.put("ShowingCredits", new TengenMsPacMan_CreditsScene(gameContext));
         scenesByID.put("PlayScene2D",    new TengenMsPacMan_PlayScene2D(gameContext));
-        scenesByID.put("PlayScene3D",    new TengenMsPacMan_PlayScene3D(gameContext));
+        scenesByID.put("PlayScene3D",    new TengenMsPacMan_PlayScene3D(theUI()));
         scenesByID.put("CutScene1",      new TengenMsPacMan_CutScene1(gameContext));
         scenesByID.put("CutScene2",      new TengenMsPacMan_CutScene2(gameContext));
         scenesByID.put("CutScene3",      new TengenMsPacMan_CutScene3(gameContext));
@@ -334,7 +334,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
                 yield "CutScene" + gameContext.theGame().cutSceneNumber(levelNumber).getAsInt();
             }
             case GameState.TESTING_CUT_SCENES -> "CutScene" + gameContext.theGame().<Integer>getProperty("intermissionTestNumber");
-            default -> PY_3D_ENABLED.get() ? "PlayScene3D" : "PlayScene2D";
+            default -> theUI().PY_3D_ENABLED().get() ? "PlayScene3D" : "PlayScene2D";
         };
         return scenesByID.get(sceneID);
     }

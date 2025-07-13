@@ -33,8 +33,6 @@ import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PacAnimationMap.ANIM_MS_PAC_MAN_BOOSTER;
-import static de.amr.pacmanfx.ui.GameUI.PY_IMMUNITY;
-import static de.amr.pacmanfx.ui.GameUI.PY_USING_AUTOPILOT;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -529,8 +527,8 @@ public class TengenMsPacMan_GameModel extends GameModel {
     public void buildNormalLevel(int levelNumber) {
         createLevel(levelNumber);
         level.setDemoLevel(false);
-        level.pac().immuneProperty().bind(PY_IMMUNITY);
-        level.pac().usingAutopilotProperty().bind(PY_USING_AUTOPILOT);
+        level.pac().immuneProperty().bind(theGameContext().propertyImmunity());
+        level.pac().usingAutopilotProperty().bind(theGameContext().propertyUsingAutopilot());
         huntingTimer().reset();
         setScoreLevelNumber(levelNumber);
         gateKeeper().ifPresent(gateKeeper -> {

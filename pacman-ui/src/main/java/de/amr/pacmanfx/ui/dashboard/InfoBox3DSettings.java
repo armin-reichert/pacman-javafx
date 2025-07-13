@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui.dashboard;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.ui.GameScene;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._3d.Perspective;
 import de.amr.pacmanfx.uilib.CameraControlledView;
@@ -17,7 +18,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.shape.DrawMode;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.GameUI.*;
+import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_TOGGLE_DRAW_MODE;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_TOGGLE_PLAY_SCENE_2D_3D;
 
@@ -47,60 +48,59 @@ public class InfoBox3DSettings extends InfoBox {
         super(gameContext);
     }
 
-    public void init() {
-        super.init();
-
+    @Override
+    public void init(GameUI ui) {
         cbUsePlayScene3D     = addCheckBox("3D Play Scene");
-        pickerLightColor     = addColorPicker("Light Color", PY_3D_LIGHT_COLOR);
-        pickerFloorColor     = addColorPicker("Floor Color", PY_3D_FLOOR_COLOR);
+        pickerLightColor     = addColorPicker("Light Color", ui.PY_3D_LIGHT_COLOR());
+        pickerFloorColor     = addColorPicker("Floor Color", ui.PY_3D_FLOOR_COLOR());
         comboPerspectives    = addChoiceBox("Perspective", Perspective.ID.values());
         addLabeledValue("Camera",        this::sceneCameraInfo);
         addLabeledValue("Viewport Size", this::sceneViewportSizeInfo);
         addLabeledValue("Scene Size",    this::sceneSizeInfo);
-        cbPiPOn              = addCheckBox("Picture-In-Picture", PY_MINI_VIEW_ON);
-        sliderPiPSceneHeight = addSlider("- Height", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, PY_PIP_HEIGHT.get(), false, false);
-        sliderPiPOpacity     = addSlider("- Opacity", 0, 100, PY_PIP_OPACITY_PERCENT.get(), false, false);
-        sliderWallHeight     = addSlider("Obstacle Height", 0, 16, PY_3D_WALL_HEIGHT.get(), false, false);
-        sliderWallOpacity    = addSlider("Wall Opacity", 0, 1, PY_3D_WALL_OPACITY.get(), false, false);
-        cbEnergizerExplodes  = addCheckBox("Energizer Explosion", PY_3D_ENERGIZER_EXPLODES);
-        cbPacLighted         = addCheckBox("Pac-Man Lighted", PY_3D_PAC_LIGHT_ENABLED);
-        cbAxesVisible        = addCheckBox("Show Axes", PY_3D_AXES_VISIBLE);
+        cbPiPOn              = addCheckBox("Picture-In-Picture", ui.PY_MINI_VIEW_ON());
+        sliderPiPSceneHeight = addSlider("- Height", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, ui.PY_PIP_HEIGHT().get(), false, false);
+        sliderPiPOpacity     = addSlider("- Opacity", 0, 100, ui.PY_PIP_OPACITY_PERCENT().get(), false, false);
+        sliderWallHeight     = addSlider("Obstacle Height", 0, 16, ui.PY_3D_WALL_HEIGHT().get(), false, false);
+        sliderWallOpacity    = addSlider("Wall Opacity", 0, 1, ui.PY_3D_WALL_OPACITY().get(), false, false);
+        cbEnergizerExplodes  = addCheckBox("Energizer Explosion", ui.PY_3D_ENERGIZER_EXPLODES());
+        cbPacLighted         = addCheckBox("Pac-Man Lighted", ui.PY_3D_PAC_LIGHT_ENABLED());
+        cbAxesVisible        = addCheckBox("Show Axes", ui.PY_3D_AXES_VISIBLE());
         cbWireframeMode      = addCheckBox("Wireframe Mode");
 
         setTooltip(sliderPiPSceneHeight, sliderPiPSceneHeight.valueProperty(), "%.0f px");
         setTooltip(sliderPiPOpacity, sliderPiPOpacity.valueProperty(), "%.0f %%");
 
-        setEditor(sliderPiPSceneHeight, PY_PIP_HEIGHT);
-        setEditor(sliderPiPOpacity, PY_PIP_OPACITY_PERCENT);
-        setEditor(sliderWallHeight, PY_3D_WALL_HEIGHT);
-        setEditor(sliderWallOpacity, PY_3D_WALL_OPACITY);
-        setEditor(comboPerspectives, PY_3D_PERSPECTIVE);
+        setEditor(sliderPiPSceneHeight, ui.PY_PIP_HEIGHT());
+        setEditor(sliderPiPOpacity, ui.PY_PIP_OPACITY_PERCENT());
+        setEditor(sliderWallHeight, ui.PY_3D_WALL_HEIGHT());
+        setEditor(sliderWallOpacity, ui.PY_3D_WALL_OPACITY());
+        setEditor(comboPerspectives, ui.PY_3D_PERSPECTIVE());
 
         //TODO check these
         cbUsePlayScene3D.setOnAction(e -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(theUI()));
         cbWireframeMode.setOnAction(e -> ACTION_TOGGLE_DRAW_MODE.executeIfEnabled(theUI()));
     }
 
-    private void updateControlsFromProperties() {
-        comboPerspectives.setValue(PY_3D_PERSPECTIVE.get());
-        sliderPiPSceneHeight.setValue(PY_PIP_HEIGHT.get());
-        sliderPiPOpacity.setValue(PY_PIP_OPACITY_PERCENT.get());
-        sliderWallHeight.setValue(PY_3D_WALL_HEIGHT.get());
-        sliderWallOpacity.setValue(PY_3D_WALL_OPACITY.get());
-        cbUsePlayScene3D.setSelected(PY_3D_ENABLED.get());
-        cbPiPOn.setSelected(PY_MINI_VIEW_ON.getValue());
-        comboPerspectives.setValue(PY_3D_PERSPECTIVE.get());
-        cbEnergizerExplodes.setSelected(PY_3D_ENERGIZER_EXPLODES.get());
-        cbPacLighted.setSelected(PY_3D_PAC_LIGHT_ENABLED.get());
-        cbAxesVisible.setSelected(PY_3D_AXES_VISIBLE.get());
-        cbWireframeMode.setSelected(PY_3D_DRAW_MODE.get() == DrawMode.LINE);
+    private void updateControlsFromProperties(GameUI ui) {
+        comboPerspectives.setValue(ui.PY_3D_PERSPECTIVE().get());
+        sliderPiPSceneHeight.setValue(ui.PY_PIP_HEIGHT().get());
+        sliderPiPOpacity.setValue(ui.PY_PIP_OPACITY_PERCENT().get());
+        sliderWallHeight.setValue(ui.PY_3D_WALL_HEIGHT().get());
+        sliderWallOpacity.setValue(ui.PY_3D_WALL_OPACITY().get());
+        cbUsePlayScene3D.setSelected(ui.PY_3D_ENABLED().get());
+        cbPiPOn.setSelected(ui.PY_MINI_VIEW_ON().getValue());
+        comboPerspectives.setValue(ui.PY_3D_PERSPECTIVE().get());
+        cbEnergizerExplodes.setSelected(ui.PY_3D_ENERGIZER_EXPLODES().get());
+        cbPacLighted.setSelected(ui.PY_3D_PAC_LIGHT_ENABLED().get());
+        cbAxesVisible.setSelected(ui.PY_3D_AXES_VISIBLE().get());
+        cbWireframeMode.setSelected(ui.PY_3D_DRAW_MODE().get() == DrawMode.LINE);
     }
 
     @Override
     public void update() {
         super.update();
         //TODO this should not be necessary on every update, when to initialize controls?
-        updateControlsFromProperties();
+        updateControlsFromProperties(theUI());
     }
 
     private String sceneViewportSizeInfo() {

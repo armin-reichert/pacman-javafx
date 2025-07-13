@@ -11,6 +11,8 @@ import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.SimulationStep;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 
 import java.io.File;
 import java.util.Optional;
@@ -28,6 +30,7 @@ public class Globals {
     /** Tile size=8px, half tile size=4px. */
     public static final int TS = 8, HTS = 4;
 
+
     private static GameContextImpl context;
 
     private static class GameContextImpl implements GameContext {
@@ -37,6 +40,9 @@ public class Globals {
         private final GameController gameController = new GameController(this);
         private final Random random = new Random();
         private final SimulationStep simulationStep = new SimulationStep();
+
+        private final BooleanProperty propertyImmunity = new SimpleBooleanProperty(false);
+        private final BooleanProperty propertyUsingAutopilot = new SimpleBooleanProperty(false);
 
         @Override
         public CoinMechanism theCoinMechanism() {
@@ -91,6 +97,16 @@ public class Globals {
         @Override
         public SimulationStep theSimulationStep() {
             return simulationStep;
+        }
+
+        @Override
+        public BooleanProperty propertyImmunity() {
+            return propertyImmunity;
+        }
+
+        @Override
+        public BooleanProperty propertyUsingAutopilot() {
+            return propertyUsingAutopilot;
         }
     }
 

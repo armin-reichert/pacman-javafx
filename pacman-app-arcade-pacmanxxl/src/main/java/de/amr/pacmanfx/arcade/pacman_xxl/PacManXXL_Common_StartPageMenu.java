@@ -27,7 +27,6 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createGhost;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createPac;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
-import static de.amr.pacmanfx.ui.GameUI.PY_3D_ENABLED;
 import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.ui.input.Keyboard.nude;
 import static de.amr.pacmanfx.uilib.widgets.OptionMenuStyle.DEFAULT_OPTION_MENU_STYLE;
@@ -188,7 +187,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         @Override
         protected void onValueChanged(int index) {
             state.play3D = selectedValue();
-            PY_3D_ENABLED.set(state.play3D);
+            theUI().PY_3D_ENABLED().set(state.play3D);
             logState();
         }
 
@@ -285,7 +284,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         mapSelector.loadAllMaps();
         final boolean customMapsExist = !mapSelector.customMaps().isEmpty();
 
-        state.play3D = PY_3D_ENABLED.get();
+        state.play3D = theUI().PY_3D_ENABLED().get();
         state.cutScenesEnabled = game.cutScenesEnabled();
         state.mapOrder = mapSelector.mapSelectionMode();
         logState();

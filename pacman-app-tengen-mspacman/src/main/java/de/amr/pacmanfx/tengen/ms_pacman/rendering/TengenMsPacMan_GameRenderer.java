@@ -39,7 +39,6 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_MapRepository.strangeMap15Sprite;
-import static de.amr.pacmanfx.ui.GameUI.PY_CANVAS_BG_COLOR;
 import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
@@ -471,7 +470,7 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
     private void drawStork(Stork stork) {
         SpriteGameRenderer.super.drawAnimatedActor(stork);
         if (stork.isBagReleasedFromBeak()) { // over-paint bag still hanging at beak
-            ctx.setFill(PY_CANVAS_BG_COLOR.get());
+            ctx.setFill(theUI().propertyCanvasBackgroundColor().get());
             //TODO: clarify coordinate values
             ctx.fillRect(scaled(stork.x() - 13), scaled(stork.y() + 3), scaled(8), scaled(10));
         }

@@ -4,13 +4,13 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.model3D.Bonus3D;
@@ -32,8 +32,8 @@ import static de.amr.pacmanfx.ui._2d.GameRenderer.fillCanvas;
  */
 public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
-    public TengenMsPacMan_PlayScene3D(GameContext gameContext) {
-        super(gameContext);
+    public TengenMsPacMan_PlayScene3D(GameUI ui) {
+        super(ui);
     }
 
     @Override
@@ -80,7 +80,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
         var canvas = new Canvas(quality * infoWidth, quality * infoHeight);
         canvas.getGraphicsContext2D().setImageSmoothing(false); // important!
-        fillCanvas(canvas, gameLevel3D.floorColor());
+        fillCanvas(canvas, theUI().PY_3D_FLOOR_COLOR().get());
 
         var r = (TengenMsPacMan_GameRenderer) theUI().theUIConfiguration().createGameRenderer(canvas);
         r.setScaling(quality);

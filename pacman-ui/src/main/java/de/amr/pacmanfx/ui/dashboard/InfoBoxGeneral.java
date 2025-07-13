@@ -14,8 +14,6 @@ import javafx.scene.image.ImageView;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.ui.GameUI.*;
-
 /**
  * General settings and simulation control.
  */
@@ -28,7 +26,8 @@ public class InfoBoxGeneral extends InfoBox {
         super(gameContext);
     }
 
-    public void init() {
+    @Override
+    public void init(GameUI ui) {
         addLabeledValue("Java Version",   Runtime.version().toString());
         addLabeledValue("JavaFX Version", System.getProperty("javafx.runtime.version"));
 
@@ -46,8 +45,8 @@ public class InfoBoxGeneral extends InfoBox {
         Button btnPlayPause = buttonsSimulationControl[0];
         btnPlayPause.setText(null);
         btnPlayPause.setStyle("-fx-background-color: transparent");
-        btnPlayPause.graphicProperty().bind(theUI().theGameClock().pausedProperty().map(paused -> paused ? iconPlay : iconStop));
-        btnPlayPause.tooltipProperty().bind(theUI().theGameClock().pausedProperty().map(paused -> paused ? tooltipPlay : tooltipStop));
+        btnPlayPause.graphicProperty().bind(ui.theGameClock().pausedProperty().map(paused -> paused ? iconPlay : iconStop));
+        btnPlayPause.tooltipProperty().bind(ui.theGameClock().pausedProperty().map(paused -> paused ? tooltipPlay : tooltipStop));
         setAction(btnPlayPause, PacManGames_GameActions.ACTION_TOGGLE_PAUSED);
 
         Button btnStep = buttonsSimulationControl[1];
@@ -55,20 +54,20 @@ public class InfoBoxGeneral extends InfoBox {
         btnStep.setStyle("-fx-background-color: transparent");
         btnStep.setText(null);
         btnStep.setTooltip(new Tooltip("Single Step Mode"));
-        btnStep.disableProperty().bind(theUI().theGameClock().pausedProperty().not());
-        setAction(btnStep, () -> theUI().theGameClock().makeSteps(PY_SIMULATION_STEPS.get(), true));
+        btnStep.disableProperty().bind(ui.theGameClock().pausedProperty().not());
+        setAction(btnStep, () -> ui.theGameClock().makeSteps(ui.PY_SIMULATION_STEPS().get(), true));
 
-        addIntSpinner("Num Steps", 1, 50, PY_SIMULATION_STEPS);
+        addIntSpinner("Num Steps", 1, 50, ui.PY_SIMULATION_STEPS());
         var sliderTargetFPS = addSlider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60, false, false);
-        setEditor(sliderTargetFPS, theUI().theGameClock().targetFrameRateProperty());
+        setEditor(sliderTargetFPS, ui.theGameClock().targetFrameRateProperty());
 
-        addLabeledValue("", () -> "Framerate: %.1f (Target: %.1f)".formatted(theUI().theGameClock().lastTicksPerSecond(), theUI().theGameClock().targetFrameRate()));
-        addLabeledValue("Total Updates",  theUI().theGameClock()::updateCount);
+        addLabeledValue("", () -> "Framerate: %.1f (Target: %.1f)".formatted(ui.theGameClock().lastTicksPerSecond(), ui.theGameClock().targetFrameRate()));
+        addLabeledValue("Total Updates",  ui.theGameClock()::updateCount);
 
-        addColorPicker("Canvas Color", PY_CANVAS_BG_COLOR);
-        addCheckBox("Image Smoothing", PY_CANVAS_IMAGE_SMOOTHING);
-        addCheckBox("Font Smoothing", PY_CANVAS_FONT_SMOOTHING);
-        addCheckBox("Show Debug Info", PY_DEBUG_INFO_VISIBLE);
-        addCheckBox("Time Measured", theUI().theGameClock().timeMeasuredProperty());
+        addColorPicker("Canvas Color", ui.propertyCanvasBackgroundColor());
+        addCheckBox("Image Smoothing", ui.PY_CANVAS_IMAGE_SMOOTHING());
+        addCheckBox("Font Smoothing", ui.PY_CANVAS_FONT_SMOOTHING());
+        addCheckBox("Show Debug Info", ui.PY_DEBUG_INFO_VISIBLE());
+        addCheckBox("Time Measured", ui.theGameClock().timeMeasuredProperty());
     }
 }

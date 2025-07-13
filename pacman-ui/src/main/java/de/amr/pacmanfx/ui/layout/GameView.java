@@ -42,7 +42,8 @@ import org.tinylog.Logger;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.GameUI.*;
+import static de.amr.pacmanfx.ui.GameUI.GLOBAL_ACTION_BINDINGS;
+import static de.amr.pacmanfx.ui.GameUI.MAX_SCENE_2D_SCALING;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.ui._2d.GameRenderer.fillCanvas;
 import static de.amr.pacmanfx.uilib.Ufx.*;
@@ -121,9 +122,9 @@ public class GameView implements PacManGames_View {
         parentScene.heightProperty().addListener((py, ov, height) -> canvasContainer.resizeTo(parentScene.getWidth(), height.doubleValue()));
 
         titleBinding = Bindings.createStringBinding(
-            () -> computeTitleText(PY_3D_ENABLED.get(), PY_DEBUG_INFO_VISIBLE.get()),
-            PY_3D_ENABLED,
-            PY_DEBUG_INFO_VISIBLE,
+            () -> computeTitleText(ui.PY_3D_ENABLED().get(), ui.PY_DEBUG_INFO_VISIBLE().get()),
+            ui.PY_3D_ENABLED(),
+            ui.PY_DEBUG_INFO_VISIBLE(),
             ui.theGameClock().pausedProperty(),
             parentScene.heightProperty(),
             ui.currentGameSceneProperty()
@@ -176,8 +177,8 @@ public class GameView implements PacManGames_View {
         contextMenu.show(root, contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY());
     }
 
-    public void showHelp(GameContext gameContext) {
-        popupLayer.showHelp(gameContext, canvasContainer.scaling());
+    public void showHelp(GameUI ui) {
+        popupLayer.showHelp(ui, canvasContainer.scaling());
     }
 
     // Asset key regex: app.title.(ms_pacman|ms_pacman_xxl|pacman,pacman_xxl|tengen)(.paused)?
@@ -347,7 +348,7 @@ public class GameView implements PacManGames_View {
             else {
                 embedScene2DWithoutCamera(gameScene2D);
             }
-            gameScene2D.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
+            gameScene2D.backgroundColorProperty().bind(ui.propertyCanvasBackgroundColor());
             fillCanvas(gameScene2D.canvas(), gameScene2D.backgroundColor());
         }
         else if (gameScene instanceof CameraControlledView cameraControlledScene) {
@@ -367,7 +368,7 @@ public class GameView implements PacManGames_View {
         Vector2f sceneSize = gameScene2D.sizeInPx();
         canvasContainer.setUnscaledCanvasSize(sceneSize.x(), sceneSize.y());
         canvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
-        canvasContainer.backgroundProperty().bind(PY_CANVAS_BG_COLOR.map(Ufx::coloredBackground));
+        canvasContainer.backgroundProperty().bind(ui.propertyCanvasBackgroundColor().map(Ufx::coloredBackground));
         root.getChildren().set(0, canvasLayer);
     }
 
@@ -380,13 +381,13 @@ public class GameView implements PacManGames_View {
     // -----------------------------------------------------------------------------------------------------------------
 
     private void configureMiniGameView() {
-        miniGameView.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
-        miniGameView.debugProperty().bind(PY_DEBUG_INFO_VISIBLE);
-        miniGameView.canvasHeightProperty().bind(PY_PIP_HEIGHT);
-        miniGameView.opacityProperty().bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
+        miniGameView.backgroundColorProperty().bind(ui.propertyCanvasBackgroundColor());
+        miniGameView.debugProperty().bind(ui.PY_DEBUG_INFO_VISIBLE());
+        miniGameView.canvasHeightProperty().bind(ui.PY_PIP_HEIGHT());
+        miniGameView.opacityProperty().bind(ui.PY_PIP_OPACITY_PERCENT().divide(100.0));
         miniGameView.visibleProperty().bind(Bindings.createObjectBinding(
-            () -> PY_MINI_VIEW_ON.get() && ui.currentGameSceneIsPlayScene3D(),
-            PY_MINI_VIEW_ON, ui.currentGameSceneProperty()
+            () -> ui.PY_MINI_VIEW_ON().get() && ui.currentGameSceneIsPlayScene3D(),
+                ui.PY_MINI_VIEW_ON(), ui.currentGameSceneProperty()
         ));
     }
 
@@ -400,9 +401,9 @@ public class GameView implements PacManGames_View {
 
     private void configurePropertyBindings() {
         GraphicsContext ctx = commonCanvas.getGraphicsContext2D();
-        PY_CANVAS_FONT_SMOOTHING.addListener((py, ov, on) -> ctx.setFontSmoothingType(on ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
-        PY_CANVAS_IMAGE_SMOOTHING.addListener((py, ov, on) -> ctx.setImageSmoothing(on));
-        PY_DEBUG_INFO_VISIBLE.addListener((py, ov, debug) -> {
+        ui.PY_CANVAS_FONT_SMOOTHING().addListener((py, ov, on) -> ctx.setFontSmoothingType(on ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
+        ui.PY_CANVAS_IMAGE_SMOOTHING().addListener((py, ov, on) -> ctx.setImageSmoothing(on));
+        ui.PY_DEBUG_INFO_VISIBLE().addListener((py, ov, debug) -> {
             canvasLayer.setBackground(debug? coloredBackground(Color.TEAL) : null);
             canvasLayer.setBorder(debug? border(Color.LIGHTGREEN, 1) : null);
         });
@@ -413,8 +414,8 @@ public class GameView implements PacManGames_View {
 
         dashboardLayer = new BorderPane();
         dashboardLayer.visibleProperty().bind(Bindings.createObjectBinding(
-            () -> dashboard.isVisible() || PY_MINI_VIEW_ON.get(),
-            dashboard.visibleProperty(), PY_MINI_VIEW_ON
+            () -> dashboard.isVisible() || ui.PY_MINI_VIEW_ON().get(),
+            dashboard.visibleProperty(), ui.PY_MINI_VIEW_ON()
         ));
         dashboardLayer.setLeft(dashboard);
         dashboardLayer.setRight(miniGameView);

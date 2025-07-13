@@ -13,6 +13,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -47,7 +48,8 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
-import static de.amr.pacmanfx.ui.GameUI.*;
+import static de.amr.pacmanfx.ui.GameUI.Settings3D;
+import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.uilib.Ufx.*;
 import static java.util.Objects.requireNonNull;
 
@@ -121,6 +123,7 @@ public class GameLevel3D extends Group implements Destroyable {
     // Note: The order in which children are added to the root matters!
     // Walls and house must be added *after* the actors, otherwise the transparency is not working correctly.
     public GameLevel3D(
+        GameUI ui,
         Model3DRepository model3DRepository,
         GameContext gameContext,
         GameLevel gameLevel,
@@ -157,7 +160,7 @@ public class GameLevel3D extends Group implements Destroyable {
         };
 
         ambientLight = new AmbientLight();
-        ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
+        ambientLight.colorProperty().bind(ui.PY_3D_LIGHT_COLOR());
         getChildren().add(ambientLight);
 
         levelCounter3D = new LevelCounter3D(animationManager, gameContext.theGame().hud().levelCounter());
@@ -221,7 +224,7 @@ public class GameLevel3D extends Group implements Destroyable {
                 Settings3D.FLOOR_3D_THICKNESS,
                 Settings3D.FLOOR_3D_PADDING
             );
-            floor3D.materialProperty().bind(PY_3D_FLOOR_COLOR.map(Ufx::coloredPhongMaterial));
+            floor3D.materialProperty().bind(ui.PY_3D_FLOOR_COLOR().map(Ufx::coloredPhongMaterial));
 
             wallBaseMaterial = new PhongMaterial();
             wallBaseMaterial.diffuseColorProperty().bind(Bindings.createObjectBinding(
@@ -242,7 +245,7 @@ public class GameLevel3D extends Group implements Destroyable {
             cornerTopMaterial.setDiffuseColor(colorScheme.fill());
             cornerTopMaterial.specularColorProperty().bind(cornerTopMaterial.diffuseColorProperty().map(Color::brighter));
 
-            wallOpacityProperty.bind(PY_3D_WALL_OPACITY);
+            wallOpacityProperty.bind(ui.PY_3D_WALL_OPACITY());
 
             r3D = new TerrainRenderer3D();
             r3D.setOnWallCreated(wall3D -> wall3D.baseHeightProperty().bind(obstacleBaseHeightProperty));
@@ -283,8 +286,8 @@ public class GameLevel3D extends Group implements Destroyable {
         energizers3D.stream().map(Eatable3D::shape3D).forEach(getChildren()::add);
         pellets3D   .stream().map(Eatable3D::shape3D).forEach(getChildren()::add);
 
-        PY_3D_WALL_HEIGHT.addListener(this::handleWallHeightChange);
-        PY_3D_DRAW_MODE.addListener(this::handleDrawModeChange);
+        ui.PY_3D_WALL_HEIGHT().addListener(this::handleWallHeightChange);
+        ui.PY_3D_DRAW_MODE().addListener(this::handleDrawModeChange);
 
         setMouseTransparent(true); // this increases performance, they say...
 
@@ -319,7 +322,6 @@ public class GameLevel3D extends Group implements Destroyable {
     public LivesCounter3D livesCounter3D() { return livesCounter3D; }
     public Stream<Pellet3D> pellets3D() { return pellets3D.stream(); }
     public Stream<Energizer3D> energizers3D() { return energizers3D.stream(); }
-    public Color floorColor() { return PY_3D_FLOOR_COLOR.get(); }
     public double floorThickness() { return floor3D.getDepth(); }
 
     public AnimationManager animationManager() { return animationManager; }
@@ -511,10 +513,11 @@ public class GameLevel3D extends Group implements Destroyable {
         destroyed = true;
         Logger.info("Destroying game level 3D, clearing resources...");
 
-        PY_3D_DRAW_MODE.removeListener(this::handleDrawModeChange);
+        //TODO avoid access to global UI here?
+        theUI().PY_3D_DRAW_MODE().removeListener(this::handleDrawModeChange);
         Logger.info("Removed 'draw mode' listener");
 
-        PY_3D_WALL_HEIGHT.removeListener(this::handleWallHeightChange);
+        theUI().PY_3D_WALL_HEIGHT().removeListener(this::handleWallHeightChange);
         Logger.info("Removed 'wall height' listener");
 
         if (wallBaseMaterial != null) {

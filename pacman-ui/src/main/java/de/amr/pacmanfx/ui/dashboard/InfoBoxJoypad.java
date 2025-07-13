@@ -6,12 +6,11 @@ package de.amr.pacmanfx.ui.dashboard;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.PacManGames_UI_Impl;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Font;
-
-import static de.amr.pacmanfx.ui.GameUI.theUI;
 
 public class InfoBoxJoypad extends InfoBox {
 
@@ -19,15 +18,13 @@ public class InfoBoxJoypad extends InfoBox {
         super(gameContext);
     }
 
-    public void init() {
-        super.init();
-
+    public void init(GameUI ui) {
         ResourceManager rm = () -> PacManGames_UI_Impl.class;
         var imageNesController = new ImageView(rm.loadImage("graphics/nes-controller.jpg"));
 
         setContentTextFont(Font.font("Monospace", 16));
 
-        var joypadKeyBinding = theUI().theJoypad().currentKeyBinding();
+        var joypadKeyBinding = ui.theJoypad().currentKeyBinding();
         String indent = "  "; // Urgh
         addLabeledValue("[SELECT]   [START]", () -> "%s%s  %s".formatted(
             indent,

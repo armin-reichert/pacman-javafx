@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.dashboard;
 
 import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.ui.GameUI;
 import javafx.scene.Node;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
@@ -37,8 +38,8 @@ public class Dashboard extends VBox {
         });
     }
 
-    public void init() {
-        infoBoxes().forEach(InfoBox::init);
+    public void init(GameUI ui) {
+        infoBoxes().forEach(infoBox -> infoBox.init(ui));
     }
 
     public void toggleVisibility() {

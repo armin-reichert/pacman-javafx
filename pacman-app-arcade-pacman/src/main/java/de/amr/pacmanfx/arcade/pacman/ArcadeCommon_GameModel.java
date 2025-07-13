@@ -23,8 +23,6 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
-import static de.amr.pacmanfx.ui.GameUI.PY_IMMUNITY;
-import static de.amr.pacmanfx.ui.GameUI.PY_USING_AUTOPILOT;
 
 /**
  * Common data and functionality of Pac-Man and Ms. Pac-Man Arcade games.
@@ -239,8 +237,8 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
     public void buildNormalLevel(int levelNumber) {
         createLevel(levelNumber);
         level.setDemoLevel(false);
-        level.pac().immuneProperty().bind(PY_IMMUNITY);
-        level.pac().usingAutopilotProperty().bind(PY_USING_AUTOPILOT);
+        level.pac().immuneProperty().bind(theGameContext().propertyImmunity());
+        level.pac().usingAutopilotProperty().bind(theGameContext().propertyUsingAutopilot());
         hud().levelCounter().setEnabled(true);
         huntingTimer.reset();
         setScoreLevelNumber(levelNumber);

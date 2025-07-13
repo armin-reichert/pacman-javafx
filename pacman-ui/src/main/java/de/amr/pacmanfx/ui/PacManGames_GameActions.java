@@ -25,7 +25,6 @@ import static de.amr.pacmanfx.Validations.isOneOf;
 import static de.amr.pacmanfx.controller.GameState.INTRO;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
-import static de.amr.pacmanfx.ui.GameUI.*;
 import static de.amr.pacmanfx.uilib.Ufx.toggle;
 
 public interface PacManGames_GameActions {
@@ -379,8 +378,8 @@ public interface PacManGames_GameActions {
     GameAction ACTION_TOGGLE_AUTOPILOT = new GameAction() {
         @Override
         public void execute(GameUI ui) {
-            toggle(PY_USING_AUTOPILOT);
-            boolean autoPilotOn = PY_USING_AUTOPILOT.get();
+            toggle(ui.theGameContext().propertyUsingAutopilot());
+            boolean autoPilotOn = ui.theGameContext().propertyUsingAutopilot().get();
             ui.showFlashMessage(ui.theAssets().text(autoPilotOn ? "autopilot_on" : "autopilot_off"));
             ui.theSound().playVoice(autoPilotOn ? SoundID.VOICE_AUTOPILOT_ON : SoundID.VOICE_AUTOPILOT_OFF, 0);
         }
@@ -394,7 +393,7 @@ public interface PacManGames_GameActions {
     GameAction ACTION_TOGGLE_DEBUG_INFO = new GameAction() {
         @Override
         public void execute(GameUI ui) {
-            toggle(PY_DEBUG_INFO_VISIBLE);
+            toggle(ui.PY_DEBUG_INFO_VISIBLE());
         }
 
         @Override
@@ -406,8 +405,8 @@ public interface PacManGames_GameActions {
     GameAction ACTION_TOGGLE_IMMUNITY = new GameAction() {
         @Override
         public void execute(GameUI ui) {
-            toggle(PY_IMMUNITY);
-            boolean immunityOn = PY_IMMUNITY.get();
+            toggle(ui.theGameContext().propertyImmunity());
+            boolean immunityOn = ui.theGameContext().propertyImmunity().get();
             ui.showFlashMessage(ui.theAssets().text(immunityOn ? "player_immunity_on" : "player_immunity_off"));
             ui.theSound().playVoice(immunityOn ? SoundID.VOICE_IMMUNITY_ON : SoundID.VOICE_IMMUNITY_OFF, 0);
         }
@@ -449,8 +448,8 @@ public interface PacManGames_GameActions {
     GameAction ACTION_PERSPECTIVE_NEXT = new GameAction() {
         @Override
         public void execute(GameUI ui) {
-            Perspective.ID id = GameUI.PY_3D_PERSPECTIVE.get().next();
-            GameUI.PY_3D_PERSPECTIVE.set(id);
+            Perspective.ID id = ui.PY_3D_PERSPECTIVE().get().next();
+            ui.PY_3D_PERSPECTIVE().set(id);
             String msgKey = ui.theAssets().text("camera_perspective", ui.theAssets().text("perspective_id_" + id.name()));
             ui.showFlashMessage(msgKey);
         }
@@ -464,8 +463,8 @@ public interface PacManGames_GameActions {
     GameAction ACTION_PERSPECTIVE_PREVIOUS = new GameAction() {
         @Override
         public void execute(GameUI ui) {
-            Perspective.ID id = GameUI.PY_3D_PERSPECTIVE.get().prev();
-            GameUI.PY_3D_PERSPECTIVE.set(id);
+            Perspective.ID id = ui.PY_3D_PERSPECTIVE().get().prev();
+            ui.PY_3D_PERSPECTIVE().set(id);
             String msgKey = ui.theAssets().text("camera_perspective", ui.theAssets().text("perspective_id_" + id.name()));
             ui.showFlashMessage(msgKey);
         }
@@ -479,7 +478,7 @@ public interface PacManGames_GameActions {
     GameAction ACTION_SHOW_HELP = new GameAction() {
         @Override
         public void execute(GameUI ui) {
-            ui.gameView().showHelp(ui.theGameContext());
+            ui.gameView().showHelp(ui);
         }
 
         @Override
@@ -519,7 +518,7 @@ public interface PacManGames_GameActions {
     GameAction ACTION_TOGGLE_DRAW_MODE = new GameAction() {
         @Override
         public void execute(GameUI ui) {
-            GameUI.PY_3D_DRAW_MODE.set(GameUI.PY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+            ui.PY_3D_DRAW_MODE().set(ui.PY_3D_DRAW_MODE().get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
         }
 
         @Override
@@ -532,13 +531,13 @@ public interface PacManGames_GameActions {
         @Override
         public void execute(GameUI ui) {
             ui.currentGameScene().ifPresent(gameScene -> {
-                toggle(GameUI.PY_3D_ENABLED);
+                toggle(ui.PY_3D_ENABLED());
                 if (ui.currentGameSceneIsPlayScene2D() || ui.currentGameSceneIsPlayScene3D()) {
                     ui.updateGameScene(true);
                     ui.theGameContext().theGameController().updateGameState(); //TODO needed?
                 }
                 if (!ui.theGameContext().theGame().isPlaying()) {
-                    ui.showFlashMessage(ui.theAssets().text(GameUI.PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
+                    ui.showFlashMessage(ui.theAssets().text(ui.PY_3D_ENABLED().get() ? "use_3D_scene" : "use_2D_scene"));
                 }
             });
         }
@@ -560,9 +559,9 @@ public interface PacManGames_GameActions {
     GameAction ACTION_TOGGLE_PIP_VISIBILITY = new GameAction() {
         @Override
         public void execute(GameUI ui) {
-            toggle(GameUI.PY_MINI_VIEW_ON);
+            toggle(ui.PY_MINI_VIEW_ON());
             if (!ui.currentGameSceneIsPlayScene3D()) {
-                ui.showFlashMessage(ui.theAssets().text(GameUI.PY_MINI_VIEW_ON.get() ? "pip_on" : "pip_off"));
+                ui.showFlashMessage(ui.theAssets().text(ui.PY_MINI_VIEW_ON().get() ? "pip_on" : "pip_off"));
             }
         }
 

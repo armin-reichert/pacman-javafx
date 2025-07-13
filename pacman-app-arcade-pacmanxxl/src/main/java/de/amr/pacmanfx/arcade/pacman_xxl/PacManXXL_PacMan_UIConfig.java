@@ -39,7 +39,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.ui.GameUI.PY_3D_ENABLED;
 import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
 import static java.util.Objects.requireNonNull;
@@ -222,7 +221,7 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
         scenesByID.put("IntroScene",  new ArcadePacMan_IntroScene(gameContext));
         scenesByID.put("StartScene",  new ArcadePacMan_StartScene(gameContext));
         scenesByID.put("PlayScene2D", new ArcadeCommon_PlayScene2D(gameContext));
-        scenesByID.put("PlayScene3D", new PlayScene3D(gameContext));
+        scenesByID.put("PlayScene3D", new PlayScene3D(theUI()));
         scenesByID.put("CutScene1",   new ArcadePacMan_CutScene1(gameContext));
         scenesByID.put("CutScene2",   new ArcadePacMan_CutScene2(gameContext));
         scenesByID.put("CutScene3",   new ArcadePacMan_CutScene3(gameContext));
@@ -257,7 +256,7 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
                 yield "CutScene" + gameContext.theGame().cutSceneNumber(levelNumber).getAsInt();
             }
             case GameState.TESTING_CUT_SCENES -> "CutScene" + gameContext.theGame().<Integer>getProperty("intermissionTestNumber");
-            default -> PY_3D_ENABLED.get() ?  "PlayScene3D" : "PlayScene2D";
+            default -> theUI().PY_3D_ENABLED().get() ?  "PlayScene3D" : "PlayScene2D";
         };
         return scenesByID.get(sceneID);
     }

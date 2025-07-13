@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui.dashboard;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.controller.CoinMechanism;
 import de.amr.pacmanfx.controller.GameState;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.PacManGames_GameActions;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -16,8 +17,6 @@ import javafx.scene.control.Spinner;
 import java.util.List;
 
 import static de.amr.pacmanfx.Validations.isOneOf;
-import static de.amr.pacmanfx.ui.GameUI.PY_IMMUNITY;
-import static de.amr.pacmanfx.ui.GameUI.PY_USING_AUTOPILOT;
 
 /**
  * Game related settings.
@@ -44,13 +43,14 @@ public class InfoBoxGameControl extends InfoBox {
         super(gameContext);
     }
 
-    public void init() {
+    @Override
+    public void init(GameUI ui) {
         spinnerCredit            = addIntSpinner("Credit", 0, CoinMechanism.MAX_COINS, gameContext.theCoinMechanism().numCoinsProperty());
         choiceBoxInitialLives    = addChoiceBox("Initial Lives", new Integer[] {3, 5});
         buttonGroupLevelActions  = addButtonList("Game Level", List.of("Start", "Quit", "Next"));
         buttonGroupCutScenesTest = addButtonList("Cut Scenes Test", List.of("Start", "Quit"));
-        cbAutopilot              = addCheckBox("Autopilot", PY_USING_AUTOPILOT);
-        cbImmunity               = addCheckBox("Pac-Man Immune", PY_IMMUNITY);
+        cbAutopilot              = addCheckBox("Autopilot", ui.theGameContext().propertyUsingAutopilot());
+        cbImmunity               = addCheckBox("Pac-Man Immune", ui.theGameContext().propertyImmunity());
 
         setAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_START], PacManGames_GameActions.ACTION_TEST_CUT_SCENES);
         setAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT], PacManGames_GameActions.ACTION_RESTART_INTRO);

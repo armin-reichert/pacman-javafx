@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui._2d;
 
 import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
@@ -18,7 +19,7 @@ import javafx.scene.text.Text;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.pacmanfx.ui.GameUI.*;
+import static de.amr.pacmanfx.ui.GameUI.theUI;
 
 
 /**
@@ -46,10 +47,9 @@ public class HelpInfo {
     private final List<Label> column0 = new ArrayList<>();
     private final List<Text> column1 = new ArrayList<>();
 
-    public HelpInfo() {
-    }
+    public HelpInfo() {}
 
-    public Pane createPane(Color backgroundColor, Font font) {
+    public Pane createPane(GameUI ui, Color backgroundColor, Font font) {
         var grid = new GridPane();
         grid.setHgap(20);
         grid.setVgap(10);
@@ -66,13 +66,13 @@ public class HelpInfo {
         pane.setBackground(Ufx.coloredRoundedBackground(backgroundColor, 10));
 
         // add default entries:
-        if (PY_USING_AUTOPILOT.get()) {
+        if (ui.theGameContext().propertyUsingAutopilot().get()) {
             var autoPilotEntry = text(theUI().theAssets().text("help.autopilot_on"), Color.ORANGE);
             autoPilotEntry.setFont(font);
             GridPane.setColumnSpan(autoPilotEntry, 2);
             grid.add(autoPilotEntry, 0, grid.getRowCount());
         }
-        if (PY_IMMUNITY.get()) {
+        if (ui.theGameContext().propertyImmunity().get()) {
             var immunityEntry = text(theUI().theAssets().text("help.immunity_on"), Color.ORANGE);
             immunityEntry.setFont(font);
             GridPane.setColumnSpan(immunityEntry, 2);

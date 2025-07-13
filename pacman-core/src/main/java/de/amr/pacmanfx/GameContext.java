@@ -11,6 +11,7 @@ import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.SimulationStep;
+import javafx.beans.property.BooleanProperty;
 
 import java.io.File;
 import java.util.Optional;
@@ -35,4 +36,7 @@ public interface GameContext {
     File                theHomeDir();
     Random              theRNG();
     SimulationStep      theSimulationStep();
+
+    BooleanProperty     propertyImmunity();
+    BooleanProperty     propertyUsingAutopilot();
 }
