@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.dashboard;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.GameScene;
@@ -30,7 +29,6 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -42,7 +40,7 @@ public abstract class InfoBox extends TitledPane {
         return String.format("-fx-font: %.0fpx \"%s\";", font.getSize(), font.getFamily());
     }
 
-    protected final GameContext gameContext;
+    protected final GameUI ui;
     protected Dashboard dashboard;
     protected final List<InfoText> infoTexts = new ArrayList<>();
     protected final GridPane grid = new GridPane();
@@ -53,8 +51,8 @@ public abstract class InfoBox extends TitledPane {
     protected int rowIndex;
     protected boolean showMaximized;
 
-    public InfoBox(GameContext gameContext) {
-        this.gameContext = requireNonNull(gameContext);
+    public InfoBox(GameUI ui) {
+        this.ui = requireNonNull(ui);
         grid.setVgap(2);
         grid.setHgap(3);
         setContent(grid);
@@ -120,11 +118,11 @@ public abstract class InfoBox extends TitledPane {
     }
 
     protected Supplier<String> ifGameScenePresent(Function<GameScene, String> fnInfo) {
-        return () -> theUI().currentGameScene().map(fnInfo).orElse(InfoText.NO_INFO);
+        return () -> ui.currentGameScene().map(fnInfo).orElse(InfoText.NO_INFO);
     }
 
     protected Supplier<String> ifLevelPresent(Function<GameLevel, String> fnInfo) {
-        return () -> gameContext.optGameLevel().map(fnInfo).orElse(InfoText.NO_INFO);
+        return () -> ui.theGameContext().optGameLevel().map(fnInfo).orElse(InfoText.NO_INFO);
     }
 
     protected void clearGrid() {
@@ -259,7 +257,7 @@ public abstract class InfoBox extends TitledPane {
     }
 
     protected void setAction(Button button, GameAction gameAction) {
-        button.setOnAction(e -> gameAction.executeIfEnabled(theUI()));
+        button.setOnAction(e -> gameAction.executeIfEnabled(ui));
         //TODO add boolean property for enabled-state to game action and bind against it
     }
 

@@ -95,7 +95,7 @@ public class GameView implements PacManGames_View {
         this.gameContext = requireNonNull(gameContext);
         this.parentScene = requireNonNull(parentScene);
         this.miniGameView = new MiniGameView();
-        this.dashboard = new Dashboard(gameContext);
+        this.dashboard = new Dashboard(ui);
         
         this.actionBindings = new ActionBindingMap(ui.theKeyboard());
 

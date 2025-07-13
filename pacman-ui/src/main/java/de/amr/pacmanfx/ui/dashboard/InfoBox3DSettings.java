@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.dashboard;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
@@ -44,8 +43,8 @@ public class InfoBox3DSettings extends InfoBox {
     private CheckBox cbAxesVisible;
     private CheckBox cbWireframeMode;
 
-    public InfoBox3DSettings(GameContext gameContext) {
-        super(gameContext);
+    public InfoBox3DSettings(GameUI ui) {
+        super(ui);
     }
 
     @Override
@@ -123,9 +122,9 @@ public class InfoBox3DSettings extends InfoBox {
                 return "%.0fx%.0f (scaled: %.0fx%.0f)".formatted(
                         size.x(), size.y(), size.x() * scaling, size.y() * scaling);
             } else {
-                if (gameContext.optGameLevel().isPresent()) {
-                    int width = gameContext.theGameLevel().worldMap().numCols() * TS;
-                    int height = gameContext.theGameLevel().worldMap().numRows() * TS;
+                if (ui.theGameContext().optGameLevel().isPresent()) {
+                    int width = ui.theGameContext().theGameLevel().worldMap().numCols() * TS;
+                    int height = ui.theGameContext().theGameLevel().worldMap().numRows() * TS;
                     return "%dx%d (unscaled)".formatted(width, height);
 
                 }

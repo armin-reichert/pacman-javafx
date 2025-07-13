@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.dashboard;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.PacManGames_UI_Impl;
@@ -14,8 +13,8 @@ import javafx.scene.text.Font;
 
 public class InfoBoxJoypad extends InfoBox {
 
-    public InfoBoxJoypad(GameContext gameContext) {
-        super(gameContext);
+    public InfoBoxJoypad(GameUI ui) {
+        super(ui);
     }
 
     public void init(GameUI ui) {

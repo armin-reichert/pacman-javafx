@@ -1,8 +1,8 @@
 package de.amr.pacmanfx.ui.dashboard;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.ui.ActionBindingMap;
 import de.amr.pacmanfx.ui.GameAction;
+import de.amr.pacmanfx.ui.GameUI;
 import javafx.scene.input.KeyCombination;
 
 import java.util.Comparator;
@@ -11,8 +11,8 @@ import static de.amr.pacmanfx.ui.GameUI.theUI;
 
 public class InfoBoxKeyShortcutsGlobal extends InfoBox {
 
-    public InfoBoxKeyShortcutsGlobal(GameContext gameContext) {
-        super(gameContext);
+    public InfoBoxKeyShortcutsGlobal(GameUI ui) {
+        super(ui);
     }
 
     @Override

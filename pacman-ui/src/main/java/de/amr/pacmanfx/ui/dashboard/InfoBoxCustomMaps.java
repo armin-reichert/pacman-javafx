@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.dashboard;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
+import de.amr.pacmanfx.ui.GameUI;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -18,8 +18,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-
-import static de.amr.pacmanfx.ui.GameUI.theUI;
 
 public class InfoBoxCustomMaps extends InfoBox {
 
@@ -36,8 +34,9 @@ public class InfoBoxCustomMaps extends InfoBox {
 
     private final ObservableList<WorldMap> customMaps = FXCollections.observableArrayList();
 
-    public InfoBoxCustomMaps(GameContext gameContext) {
-        super(gameContext);
+    public InfoBoxCustomMaps(GameUI ui) {
+        super(ui);
+        
         TableView<WorldMap> mapsTableView = new TableView<>();
         mapsTableView.setItems(customMaps);
 
@@ -65,7 +64,7 @@ public class InfoBoxCustomMaps extends InfoBox {
         addRow(mapsTableView);
         updateCustomMapList();
 
-        theUI().theWatchdog().addEventListener(eventList -> {
+        ui.theWatchdog().addEventListener(eventList -> {
             Logger.info("Custom map change(s) detected: {}",
                 eventList.stream()
                     .map(watchEvent -> String.format("%s: '%s'", watchEvent.kind(), watchEvent.context()))
@@ -76,9 +75,9 @@ public class InfoBoxCustomMaps extends InfoBox {
 
     private void updateCustomMapList() {
         customMaps.clear();
-        File[] mapFiles = gameContext.theCustomMapDir().listFiles((dir, name) -> name.endsWith(".world"));
+        File[] mapFiles = ui.theGameContext().theCustomMapDir().listFiles((dir, name) -> name.endsWith(".world"));
         if (mapFiles == null) {
-            Logger.error("An error occurred accessing custom map directory {}", gameContext.theCustomMapDir());
+            Logger.error("An error occurred accessing custom map directory {}", ui.theGameContext().theCustomMapDir());
             return;
         }
         if (mapFiles.length == 0) {
