@@ -250,7 +250,8 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
         Image image = theUI().theAssets().get(assetNameSpace + ".logo.midway");
         float x = scaled(copyright.x()), y = scaled(copyright.y());
         ctx.drawImage(image, x, y + 2, scaled(TS * 4 - 2), scaled(TS * 4));
-        ctx.setFont(copyright.font());
+        Font font = theUI().theAssets().arcadeFont(scaled(8));
+        ctx.setFont(font);
         ctx.setFill(copyright.color());
         ctx.fillText("©", x + scaled(TS * 5), y + scaled(TS * 2 + 2));
         ctx.fillText("MIDWAY MFG CO", x + scaled(TS * 7), y + scaled(TS * 2));

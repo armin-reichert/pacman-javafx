@@ -85,7 +85,6 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         copyright = new MidwayCopyright();
         copyright.setPosition(TS * 6, TS * 28);
         copyright.setColor(ARCADE_RED);
-        copyright.setFont(scaledArcadeFont8());
         copyright.show();
 
         marquee = new Marquee(132, 60, 96, 6, 16);

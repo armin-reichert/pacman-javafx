@@ -6,22 +6,12 @@ package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.pacmanfx.model.actors.Actor;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 public class MidwayCopyright extends Actor {
 
-    private Font font;
     private Color color;
 
     public MidwayCopyright() { super(null); }
-
-    public Font font() {
-        return font;
-    }
-
-    public void setFont(Font font) {
-        this.font = font;
-    }
 
     public Color color() {
         return color;

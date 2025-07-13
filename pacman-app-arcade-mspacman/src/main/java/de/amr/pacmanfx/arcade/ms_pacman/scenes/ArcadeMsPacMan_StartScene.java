@@ -47,7 +47,6 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
         copyright = new MidwayCopyright();
         copyright.setPosition(TS * 6, TS * 28);
         copyright.setColor(ARCADE_RED);
-        copyright.setFont(scaledArcadeFont8());
         copyright.show();
 
         @SuppressWarnings("unchecked") var spriteSheet = (SpriteSheet<SpriteID>) theUI().theUIConfiguration().spriteSheet();
