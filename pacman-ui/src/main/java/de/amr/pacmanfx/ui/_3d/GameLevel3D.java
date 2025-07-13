@@ -79,9 +79,9 @@ public class GameLevel3D extends Group implements Destroyable {
     };
 
     private final IntegerProperty livesCountProperty = new SimpleIntegerProperty(0);
-    private final DoubleProperty  obstacleBaseHeightProperty = new SimpleDoubleProperty(OBSTACLE_3D_BASE_HEIGHT);
+    private final DoubleProperty  obstacleBaseHeightProperty = new SimpleDoubleProperty(Settings3D.OBSTACLE_3D_BASE_HEIGHT);
     private final DoubleProperty  wallOpacityProperty = new SimpleDoubleProperty(1);
-    private final DoubleProperty  houseBaseHeightProperty = new SimpleDoubleProperty(HOUSE_3D_BASE_HEIGHT);
+    private final DoubleProperty  houseBaseHeightProperty = new SimpleDoubleProperty(Settings3D.HOUSE_3D_BASE_HEIGHT);
     private final BooleanProperty houseLightOnProperty = new SimpleBooleanProperty(false);
 
     private final GameLevel gameLevel;
@@ -109,7 +109,7 @@ public class GameLevel3D extends Group implements Destroyable {
     private ArcadeHouse3D house3D;
     private Floor3D floor3D;
     private LevelCounter3D levelCounter3D;
-    private Node[] livesCounterShapes = new Node[LIVES_COUNTER_3D_CAPACITY];
+    private Node[] livesCounterShapes = new Node[Settings3D.LIVES_COUNTER_3D_CAPACITY];
     private LivesCounter3D livesCounter3D;
     private PacBase3D pac3D;
     private List<MutatingGhost3D> ghosts3D;
@@ -173,8 +173,8 @@ public class GameLevel3D extends Group implements Destroyable {
         livesCounter3D.setTranslateX(2 * TS);
         livesCounter3D.setTranslateY(2 * TS);
         livesCounter3D.livesCountProperty().bind(livesCountProperty);
-        livesCounter3D.pillarColorProperty().set(LIVES_COUNTER_PILLAR_COLOR);
-        livesCounter3D.plateColorProperty().set(LIVES_COUNTER_PLATE_COLOR);
+        livesCounter3D.pillarColorProperty().set(Settings3D.LIVES_COUNTER_PILLAR_COLOR);
+        livesCounter3D.plateColorProperty().set(Settings3D.LIVES_COUNTER_PLATE_COLOR);
         livesCounter3D.light().colorProperty().set(Color.CORNFLOWERBLUE);
         livesCounter3D.lookingAroundAnimation().playFromStart();
         getChildren().add(livesCounter3D);
@@ -203,7 +203,7 @@ public class GameLevel3D extends Group implements Destroyable {
                 dressMeshViews[ghost.personality()],
                 pupilsMeshViews[ghost.personality()],
                 eyesMeshViews[ghost.personality()],
-                GHOST_3D_SIZE,
+                Settings3D.GHOST_3D_SIZE,
                 gameLevel.data().numFlashes()
             );
         }).toList();
@@ -218,8 +218,8 @@ public class GameLevel3D extends Group implements Destroyable {
             floor3D = new Floor3D(
                 gameLevel.worldMap().numCols() * TS,
                 gameLevel.worldMap().numRows() * TS,
-                FLOOR_3D_THICKNESS,
-                FLOOR_3D_PADDING
+                Settings3D.FLOOR_3D_THICKNESS,
+                Settings3D.FLOOR_3D_PADDING
             );
             floor3D.materialProperty().bind(PY_3D_FLOOR_COLOR.map(Ufx::coloredPhongMaterial));
 
@@ -253,7 +253,7 @@ public class GameLevel3D extends Group implements Destroyable {
                     r3D.renderObstacle3D(
                         maze3D,
                         obstacle, isObstacleTheWorldBorder(gameLevel.worldMap(), obstacle),
-                        OBSTACLE_3D_WALL_THICKNESS,
+                        Settings3D.OBSTACLE_3D_WALL_THICKNESS,
                         wallBaseMaterial, wallTopMaterial);
                 }
             }
@@ -262,14 +262,14 @@ public class GameLevel3D extends Group implements Destroyable {
                 Logger.error("There is no house in this game level!");
             } else {
                 house3D = new ArcadeHouse3D(
-                        animationManager,
-                        gameLevel.house().get(),
-                        HOUSE_3D_BASE_HEIGHT,
-                        HOUSE_3D_WALL_THICKNESS,
-                        HOUSE_3D_OPACITY,
-                        colorScheme.fill(),
-                        colorScheme.stroke(),
-                        colorScheme.door()
+                    animationManager,
+                    gameLevel.house().get(),
+                    Settings3D.HOUSE_3D_BASE_HEIGHT,
+                    Settings3D.HOUSE_3D_WALL_THICKNESS,
+                    Settings3D.HOUSE_3D_OPACITY,
+                    colorScheme.fill(),
+                    colorScheme.stroke(),
+                    colorScheme.door()
                 );
                 house3D.wallBaseHeightProperty().bind(houseBaseHeightProperty);
                 house3D.light().lightOnProperty().bind(houseLightOnProperty);
@@ -340,7 +340,7 @@ public class GameLevel3D extends Group implements Destroyable {
 
         gameLevel.house().ifPresent(house -> {
             boolean ghostNearHouseEntry = gameLevel.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
-                .filter(ghost -> ghost.position().euclideanDist(house.entryPosition()) <= HOUSE_3D_SENSITIVITY)
+                .filter(ghost -> ghost.position().euclideanDist(house.entryPosition()) <= Settings3D.HOUSE_3D_SENSITIVITY)
                 .anyMatch(Ghost::isVisible);
             houseOpenProperty.set(ghostNearHouseEntry);
         });
@@ -379,9 +379,13 @@ public class GameLevel3D extends Group implements Destroyable {
                 var center = new Point3D(
                     tile.x() * TS + HTS,
                     tile.y() * TS + HTS,
-                    -2 * ENERGIZER_3D_RADIUS - 0.5 * FLOOR_3D_THICKNESS  // sitting just on floor
+                    -2 * Settings3D.ENERGIZER_3D_RADIUS - 0.5 * Settings3D.FLOOR_3D_THICKNESS  // sitting just on floor
                 );
-                var energizer3D = new Energizer3D(animationManager, ENERGIZER_3D_RADIUS, ENERGIZER_3D_MIN_SCALING, ENERGIZER_3D_MAX_SCALING);
+                var energizer3D = new Energizer3D(
+                    animationManager,
+                    Settings3D.ENERGIZER_3D_RADIUS,
+                    Settings3D.ENERGIZER_3D_MIN_SCALING,
+                    Settings3D.ENERGIZER_3D_MAX_SCALING);
                 energizer3D.setMaterial(pelletMaterial);
                 energizer3D.setTile(tile);
                 energizer3D.setTranslateX(center.getX());
@@ -425,7 +429,7 @@ public class GameLevel3D extends Group implements Destroyable {
                 pelletShape.setTranslateY(center.getY());
                 pelletShape.setTranslateZ(center.getZ());
                 pelletShape.setMaterial(pelletMaterial);
-                var pellet3D = new Pellet3D(pelletShape, PELLET_3D_RADIUS);
+                var pellet3D = new Pellet3D(pelletShape, Settings3D.PELLET_3D_RADIUS);
                 pellet3D.setTile(tile);
                 pellets3D.add(pellet3D);
             }
@@ -467,8 +471,8 @@ public class GameLevel3D extends Group implements Destroyable {
             bonus3D.destroy();
         }
         bonus3D = new Bonus3D(animationManager, bonus,
-            theUI().theUIConfiguration().bonusSymbolImage(bonus.symbol()), BONUS_3D_SYMBOL_WIDTH,
-            theUI().theUIConfiguration().bonusValueImage(bonus.symbol()), BONUS_3D_POINTS_WIDTH);
+            theUI().theUIConfiguration().bonusSymbolImage(bonus.symbol()), Settings3D.BONUS_3D_SYMBOL_WIDTH,
+            theUI().theUIConfiguration().bonusValueImage(bonus.symbol()), Settings3D.BONUS_3D_POINTS_WIDTH);
         mazeGroup.getChildren().add(bonus3D);
         bonus3D.showEdible();
     }

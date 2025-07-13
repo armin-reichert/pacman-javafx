@@ -118,7 +118,7 @@ public class MessageView extends ImageView {
                 double halfHeight = 0.5 * getBoundsInLocal().getHeight();
 
                 var moveUpAnimation = new TranslateTransition(Duration.seconds(1), MessageView.this);
-                moveUpAnimation.setToZ(-(halfHeight + 0.5 * GameUI.OBSTACLE_3D_BASE_HEIGHT));
+                moveUpAnimation.setToZ(-(halfHeight + 0.5 * GameUI.Settings3D.OBSTACLE_3D_BASE_HEIGHT));
 
                 var moveDownAnimation = new TranslateTransition(Duration.seconds(1), MessageView.this);
                 moveDownAnimation.setToZ(halfHeight);

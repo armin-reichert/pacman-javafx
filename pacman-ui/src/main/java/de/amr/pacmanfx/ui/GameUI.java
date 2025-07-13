@@ -42,26 +42,28 @@ public interface GameUI {
         return new GameUI_Builder(PacManGames_UI_Impl.THE_ONE);
     }
 
-    float BONUS_3D_SYMBOL_WIDTH       = TS;
-    float BONUS_3D_POINTS_WIDTH       = 1.8f * TS;
-    float ENERGIZER_3D_MIN_SCALING    = 0.2f;
-    float ENERGIZER_3D_MAX_SCALING    = 1.0f;
-    float ENERGIZER_3D_RADIUS         = 3.5f;
-    float FLOOR_3D_PADDING            = 5.0f;
-    float FLOOR_3D_THICKNESS          = 0.5f;
-    float GHOST_3D_SIZE               = 16.0f;
-    float HOUSE_3D_BASE_HEIGHT        = 12.0f;
-    float HOUSE_3D_OPACITY            = 0.4f;
-    float HOUSE_3D_SENSITIVITY        = 1.5f * TS;
-    float HOUSE_3D_WALL_THICKNESS     = 2.5f;
-    byte  LIVES_COUNTER_3D_CAPACITY   = 5;
-    float LIVES_COUNTER_3D_SHAPE_SIZE = 12f;
-    Color LIVES_COUNTER_PILLAR_COLOR  = Color.grayRgb(120);
-    Color LIVES_COUNTER_PLATE_COLOR   = Color.grayRgb(180);
-    float OBSTACLE_3D_BASE_HEIGHT     = 4.0f;
-    float OBSTACLE_3D_WALL_THICKNESS  = 2.25f;
-    float PAC_3D_SIZE                 = 17.0f;
-    float PELLET_3D_RADIUS            = 1.0f;
+    interface Settings3D {
+        float BONUS_3D_SYMBOL_WIDTH       = TS;
+        float BONUS_3D_POINTS_WIDTH       = 1.8f * TS;
+        float ENERGIZER_3D_MIN_SCALING    = 0.2f;
+        float ENERGIZER_3D_MAX_SCALING    = 1.0f;
+        float ENERGIZER_3D_RADIUS         = 3.5f;
+        float FLOOR_3D_PADDING            = 5.0f;
+        float FLOOR_3D_THICKNESS          = 0.5f;
+        float GHOST_3D_SIZE               = 16.0f;
+        float HOUSE_3D_BASE_HEIGHT        = 12.0f;
+        float HOUSE_3D_OPACITY            = 0.4f;
+        float HOUSE_3D_SENSITIVITY        = 1.5f * TS;
+        float HOUSE_3D_WALL_THICKNESS     = 2.5f;
+        byte  LIVES_COUNTER_3D_CAPACITY   = 5;
+        float LIVES_COUNTER_3D_SHAPE_SIZE = 12f;
+        Color LIVES_COUNTER_PILLAR_COLOR  = Color.grayRgb(120);
+        Color LIVES_COUNTER_PLATE_COLOR   = Color.grayRgb(180);
+        float OBSTACLE_3D_BASE_HEIGHT     = 4.0f;
+        float OBSTACLE_3D_WALL_THICKNESS  = 2.25f;
+        float PAC_3D_SIZE                 = 17.0f;
+        float PELLET_3D_RADIUS            = 1.0f;
+    }
 
     // Global key combinations and action bindings
     KeyCombination KEY_FULLSCREEN  = nude(KeyCode.F11);
@@ -132,9 +134,9 @@ public interface GameUI {
     ObjectProperty<Color>           PY_3D_FLOOR_COLOR         = new SimpleObjectProperty<>(Color.rgb(20,20,20));
     ObjectProperty<Color>           PY_3D_LIGHT_COLOR         = new SimpleObjectProperty<>(Color.WHITE);
     BooleanProperty                 PY_3D_PAC_LIGHT_ENABLED   = new SimpleBooleanProperty(true);
-    ObjectProperty<Perspective.ID> PY_3D_PERSPECTIVE         = new SimpleObjectProperty<>(Perspective.ID.TRACK_PLAYER);
-    DoubleProperty                 PY_3D_WALL_HEIGHT         = new SimpleDoubleProperty(OBSTACLE_3D_BASE_HEIGHT);
-    DoubleProperty                 PY_3D_WALL_OPACITY        = new SimpleDoubleProperty(1.0);
+    ObjectProperty<Perspective.ID>  PY_3D_PERSPECTIVE         = new SimpleObjectProperty<>(Perspective.ID.TRACK_PLAYER);
+    DoubleProperty                  PY_3D_WALL_HEIGHT         = new SimpleDoubleProperty(Settings3D.OBSTACLE_3D_BASE_HEIGHT);
+    DoubleProperty                  PY_3D_WALL_OPACITY        = new SimpleDoubleProperty(1.0);
 
     PacManGames_Assets theAssets();
     GameClock theGameClock();

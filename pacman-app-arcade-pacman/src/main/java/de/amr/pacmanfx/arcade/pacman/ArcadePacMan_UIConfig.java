@@ -196,7 +196,7 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig {
     @Override
     public PacBody createLivesCounterShape3D(Model3DRepository model3DRepository) {
         return model3DRepository.createPacBody(
-                GameUI.LIVES_COUNTER_3D_SHAPE_SIZE,
+                GameUI.Settings3D.LIVES_COUNTER_3D_SHAPE_SIZE,
                 getAssetNS("pac.color.head"),
                 getAssetNS("pac.color.eyes"),
                 getAssetNS("pac.color.palate")
@@ -205,12 +205,14 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig {
 
     @Override
     public PacMan3D createPac3D(Model3DRepository model3DRepository, AnimationManager animationManager, Pac pac) {
-        var pac3D = new PacMan3D(model3DRepository, animationManager, pac, GameUI.PAC_3D_SIZE,
+        var pac3D = new PacMan3D(model3DRepository,
+            animationManager,
+            pac,
+            GameUI.Settings3D.PAC_3D_SIZE,
             getAssetNS("pac.color.head"),
             getAssetNS("pac.color.eyes"),
             getAssetNS("pac.color.palate"));
-        Color headColor = getAssetNS("pac.color.head");
-        pac3D.light().setColor(headColor.desaturate());
+        pac3D.light().setColor(this.<Color>getAssetNS("pac.color.head").desaturate());
         return pac3D;
     }
 

@@ -268,7 +268,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
     @Override
     public MsPacManBody createLivesCounterShape3D(Model3DRepository model3DRepository) {
         return model3DRepository.createMsPacManBody(
-            GameUI.LIVES_COUNTER_3D_SHAPE_SIZE,
+            GameUI.Settings3D.LIVES_COUNTER_3D_SHAPE_SIZE,
             getAssetNS("pac.color.head"),
             getAssetNS("pac.color.eyes"),
             getAssetNS("pac.color.palate"),
@@ -280,14 +280,19 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
 
     @Override
     public MsPacMan3D createPac3D(Model3DRepository model3DRepository, AnimationManager animationManager, Pac pac) {
-        var pac3D = new MsPacMan3D(model3DRepository, animationManager, pac, GameUI.PAC_3D_SIZE,
+        var pac3D = new MsPacMan3D(
+            model3DRepository,
+            animationManager,
+            pac,
+            GameUI.Settings3D.PAC_3D_SIZE,
             getAssetNS("pac.color.head"),
             getAssetNS("pac.color.eyes"),
             getAssetNS("pac.color.palate"),
             getAssetNS("pac.color.hairbow"),
             getAssetNS("pac.color.hairbow.pearls"),
-            getAssetNS("pac.color.boobs"));
-        pac3D.light().setColor(((Color)getAssetNS("pac.color.head")).desaturate());
+            getAssetNS("pac.color.boobs")
+        );
+        pac3D.light().setColor(this.<Color>getAssetNS("pac.color.head").desaturate());
         return pac3D;
     }
 

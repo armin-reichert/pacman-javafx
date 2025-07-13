@@ -24,7 +24,6 @@ import de.amr.pacmanfx.ui.sound.DefaultSoundManager;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
@@ -55,7 +54,6 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
 
     private final DefaultSoundManager soundManager = new DefaultSoundManager();
     private final Map<String, GameScene> scenesByID = new HashMap<>();
-    private ArcadePacMan_SpriteSheet spriteSheet;
 
     public void storeAssets(AssetStorage assets) {
         storeAssetNS(assets, "app_icon", RES_ARCADE_PAC_MAN.loadImage("graphics/icons/pacman.png"));
@@ -63,7 +61,8 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
         storeAssetNS(assets, "audio.option.selection_changed",  RES_PAC_MAN_XXL.loadAudioClip("sound/ms-select1.wav"));
         storeAssetNS(assets, "audio.option.value_changed",      RES_PAC_MAN_XXL.loadAudioClip("sound/ms-select2.wav"));
 
-        spriteSheet = new ArcadePacMan_SpriteSheet(RES_ARCADE_PAC_MAN.loadImage("graphics/pacman_spritesheet.png"));
+        var spriteSheet = new ArcadePacMan_SpriteSheet(RES_ARCADE_PAC_MAN.loadImage("graphics/pacman_spritesheet.png"));
+        storeAssetNS(assets, "spritesheet", spriteSheet);
         storeAssetNS(assets, "color.game_over_message", ARCADE_RED);
 
         RectShort[] symbolSprites = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS);
@@ -150,22 +149,22 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
 
     @Override
     public PacManXXL_PacMan_GameRenderer createGameRenderer(Canvas canvas) {
-        return new PacManXXL_PacMan_GameRenderer(spriteSheet, canvas);
+        return new PacManXXL_PacMan_GameRenderer(spriteSheet(), canvas);
     }
 
     @Override
     public Image killedGhostPointsImage(Ghost ghost, int killedIndex) {
-        return theUI().theAssets().image(NAMESPACE + ".ghost_points_" + killedIndex);
+        return getAssetNS("ghost_points_" + killedIndex);
     }
 
     @Override
     public Image bonusSymbolImage(byte symbol) {
-        return theUI().theAssets().image(NAMESPACE + ".bonus_symbol_" + symbol);
+        return getAssetNS("bonus_symbol_" + symbol);
     }
 
     @Override
     public Image bonusValueImage(byte symbol) {
-        return theUI().theAssets().image(NAMESPACE + ".bonus_value_" + symbol);
+        return getAssetNS("bonus_value_" + symbol);
     }
 
     @Override
@@ -176,36 +175,42 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
     }
 
     @Override
-    public ArcadePacMan_SpriteSheet spriteSheet() {return spriteSheet;}
-
-    @Override
-    public SpriteAnimationMap<SpriteID> createGhostAnimations(Ghost ghost) {
-        return new ArcadePacMan_GhostAnimationMap(spriteSheet, ghost.personality());
+    public ArcadePacMan_SpriteSheet spriteSheet() {
+        return getAssetNS("spritesheet");
     }
 
     @Override
-    public SpriteAnimationMap<SpriteID> createPacAnimations(Pac pac) {
-        return new ArcadePacMan_PacAnimationMap(spriteSheet);
+    public ArcadePacMan_GhostAnimationMap createGhostAnimations(Ghost ghost) {
+        return new ArcadePacMan_GhostAnimationMap(spriteSheet(), ghost.personality());
+    }
+
+    @Override
+    public ArcadePacMan_PacAnimationMap createPacAnimations(Pac pac) {
+        return new ArcadePacMan_PacAnimationMap(spriteSheet());
     }
 
     @Override
     public PacBody createLivesCounterShape3D(Model3DRepository model3DRepository) {
-        String namespace = assetNamespace();
         return model3DRepository.createPacBody(
-                GameUI.LIVES_COUNTER_3D_SHAPE_SIZE,
-                theUI().theAssets().color(namespace + ".pac.color.head"),
-                theUI().theAssets().color(namespace + ".pac.color.eyes"),
-                theUI().theAssets().color(namespace + ".pac.color.palate")
+                GameUI.Settings3D.LIVES_COUNTER_3D_SHAPE_SIZE,
+                getAssetNS("pac.color.head"),
+                getAssetNS("pac.color.eyes"),
+                getAssetNS("pac.color.palate")
         );
     }
 
     @Override
     public PacBase3D createPac3D(Model3DRepository model3DRepository, AnimationManager animationManager, Pac pac) {
-        var pac3D = new PacMan3D(model3DRepository, animationManager, pac, GameUI.PAC_3D_SIZE,
-            theUI().theAssets().color(NAMESPACE + ".pac.color.head"),
-            theUI().theAssets().color(NAMESPACE + ".pac.color.eyes"),
-            theUI().theAssets().color(NAMESPACE + ".pac.color.palate"));
-        pac3D.light().setColor(theUI().theAssets().color(NAMESPACE + ".pac.color.head").desaturate());
+        var pac3D = new PacMan3D(
+            model3DRepository,
+            animationManager,
+            pac,
+            GameUI.Settings3D.PAC_3D_SIZE,
+            getAssetNS("pac.color.head"),
+            getAssetNS("pac.color.eyes"),
+            getAssetNS("pac.color.palate")
+        );
+        pac3D.light().setColor(this.<Color>getAssetNS("pac.color.head").desaturate());
         return pac3D;
     }
 

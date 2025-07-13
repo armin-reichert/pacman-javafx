@@ -205,7 +205,7 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
     @Override
     public MsPacManBody createLivesCounterShape3D(Model3DRepository model3DRepository) {
         return model3DRepository.createMsPacManBody(
-            GameUI.LIVES_COUNTER_3D_SHAPE_SIZE,
+            GameUI.Settings3D.LIVES_COUNTER_3D_SHAPE_SIZE,
             getAssetNS("pac.color.head"),
             getAssetNS("pac.color.eyes"),
             getAssetNS("pac.color.palate"),
@@ -221,7 +221,7 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
             model3DRepository,
             animationManager,
             pac,
-            GameUI.PAC_3D_SIZE,
+            GameUI.Settings3D.PAC_3D_SIZE,
             getAssetNS("pac.color.head"),
             getAssetNS("pac.color.eyes"),
             getAssetNS("pac.color.palate"),
