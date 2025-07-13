@@ -158,7 +158,9 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
     private static final byte[] BONUS_VALUE_MULTIPLIERS = { 1, 3, 5, 7, 10, 20, 30, 50 };
 
     public static ArcadePacMan_GameModel arcadeVersion(GameContext gameContext) {
-        return new ArcadePacMan_GameModel(gameContext, new ArcadePacMan_MapSelector());
+        var gameModel = new ArcadePacMan_GameModel(gameContext, new ArcadePacMan_MapSelector());
+        gameModel.mapSelector.loadAllMaps();
+        return gameModel;
     }
 
     private final HUD hud = new ArcadePacMan_HUD();

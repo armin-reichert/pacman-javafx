@@ -176,7 +176,9 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
     public static ArcadeMsPacMan_GameModel arcadeVersion(GameContext gameContext) {
-        return new ArcadeMsPacMan_GameModel(gameContext, new ArcadeMsPacMan_MapSelector());
+        var gameModel = new ArcadeMsPacMan_GameModel(gameContext, new ArcadeMsPacMan_MapSelector());
+        gameModel.mapSelector.loadAllMaps();
+        return gameModel;
     }
 
     private final ArcadeMsPacMan_HUD hud = new ArcadeMsPacMan_HUD();

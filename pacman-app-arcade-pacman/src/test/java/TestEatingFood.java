@@ -1,10 +1,12 @@
+import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel;
+import de.amr.pacmanfx.model.GameLevel;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.theGameContext;
 import static java.util.function.Predicate.not;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -12,32 +14,35 @@ public class TestEatingFood {
 
     @BeforeAll
     static void setup() {
-        theGameController().registerGame("PACMAN", ArcadePacMan_GameModel.arcadeVersion());
-        theGameController().selectGameVariant("PACMAN");
+        Globals.initGame();
+        theGameContext().theGameController().registerGame("PACMAN", ArcadePacMan_GameModel.arcadeVersion(theGameContext()));
+        theGameContext().theGameController().selectGameVariant("PACMAN");
     }
 
     @BeforeEach
-    public void prepareLevel() {
-        theGame().buildNormalLevel(1);
+    public void createGameLevel() {
+        theGameContext().theGame().buildNormalLevel(1);
     }
 
-    private ArcadePacMan_GameModel pacManGame() { return (ArcadePacMan_GameModel) theGame(); }
+    private GameLevel gameLevel() { return theGameContext().theGameLevel(); }
 
-    private void eatNextPellet() {
-        theGameLevel().worldMap().tiles()
-            .filter(theGameLevel()::tileContainsFood)
-            .filter(not(theGameLevel()::isEnergizerPosition))
+    private ArcadePacMan_GameModel pacManGame() { return (ArcadePacMan_GameModel) theGameContext().theGame(); }
+
+    private void eatNextPellet(GameLevel gameLevel) {
+        gameLevel.worldMap().tiles()
+            .filter(gameLevel::tileContainsFood)
+            .filter(not(gameLevel::isEnergizerPosition))
             .findFirst().ifPresent(tile -> {
-                theGameLevel().registerFoodEatenAt(tile);
+                    gameLevel.registerFoodEatenAt(tile);
                 pacManGame().onPelletEaten();
             });
     }
 
-    private void eatNextEnergizer() {
-        theGameLevel().energizerTiles()
-            .filter(theGameLevel()::tileContainsFood)
+    private void eatNextEnergizer(GameLevel gameLevel) {
+        gameLevel.energizerTiles()
+            .filter(gameLevel::tileContainsFood)
             .findFirst().ifPresent(tile -> {
-                theGameLevel().registerFoodEatenAt(tile);
+                gameLevel.registerFoodEatenAt(tile);
                 pacManGame().onEnergizerEaten(tile);
             });
     }
@@ -45,50 +50,53 @@ public class TestEatingFood {
     @Test
     @DisplayName("Test Food Counting")
     public void testFoodCounting() {
-        int eaten = theGameLevel().eatenFoodCount(), uneaten = theGameLevel().uneatenFoodCount();
-        eatNextPellet();
-        assertEquals(eaten + 1, theGameLevel().eatenFoodCount());
-        assertEquals(uneaten - 1, theGameLevel().uneatenFoodCount());
+        GameLevel gameLevel = gameLevel();
+        int eaten = gameLevel.eatenFoodCount(), uneaten = gameLevel.uneatenFoodCount();
+        eatNextPellet(gameLevel);
+        assertEquals(eaten + 1, gameLevel.eatenFoodCount());
+        assertEquals(uneaten - 1, gameLevel.uneatenFoodCount());
 
-        eaten = theGameLevel().eatenFoodCount();
-        uneaten = theGameLevel().uneatenFoodCount();
-        eatNextEnergizer();
-        assertEquals(eaten + 1, theGameLevel().eatenFoodCount());
-        assertEquals(uneaten - 1, theGameLevel().uneatenFoodCount());
+        eaten = gameLevel.eatenFoodCount();
+        uneaten = gameLevel.uneatenFoodCount();
+        eatNextEnergizer(gameLevel);
+        assertEquals(eaten + 1, gameLevel.eatenFoodCount());
+        assertEquals(uneaten - 1, gameLevel.uneatenFoodCount());
     }
 
     @Test
     @DisplayName("Test Level Completion")
     public void testLevelCompletion() {
-        while (theGameLevel().uneatenFoodCount() > 0) {
-            assertFalse(theGame().isLevelCompleted());
-            eatNextPellet();
-            eatNextEnergizer();
+        GameLevel gameLevel = gameLevel();
+        while (gameLevel.uneatenFoodCount() > 0) {
+            assertFalse(pacManGame().isLevelCompleted());
+            eatNextPellet(gameLevel);
+            eatNextEnergizer(gameLevel);
         }
-        assertTrue(theGame().isLevelCompleted());
+        assertTrue(pacManGame().isLevelCompleted());
     }
 
     @Test
     @DisplayName("Test Cruise Elroy Mode")
     public void testCruiseElroyMode() {
-        while (theGameLevel().uneatenFoodCount() > theGameLevel().data().elroy1DotsLeft()) {
+        GameLevel gameLevel = gameLevel();
+        while (gameLevel.uneatenFoodCount() > gameLevel.data().elroy1DotsLeft()) {
             assertEquals(0, pacManGame().cruiseElroy());
-            eatNextPellet();
+            eatNextPellet(gameLevel);
         }
         assertEquals(1, pacManGame().cruiseElroy());
-        while (theGameLevel().uneatenFoodCount() > theGameLevel().data().elroy2DotsLeft()) {
+        while (gameLevel.uneatenFoodCount() > gameLevel.data().elroy2DotsLeft()) {
             assertEquals(1, pacManGame().cruiseElroy());
-            eatNextPellet();
+            eatNextPellet(gameLevel);
         }
         assertEquals(2, pacManGame().cruiseElroy());
-        while (theGameLevel().uneatenFoodCount() > theGameLevel().energizerTiles().count()) {
+        while (gameLevel.uneatenFoodCount() > gameLevel.energizerTiles().count()) {
             assertEquals(2, pacManGame().cruiseElroy());
-            eatNextPellet();
+            eatNextPellet(gameLevel);
         }
         assertEquals(2, pacManGame().cruiseElroy());
-        while (theGameLevel().uneatenFoodCount() > 0) {
+        while (gameLevel.uneatenFoodCount() > 0) {
             assertEquals(2, pacManGame().cruiseElroy());
-            eatNextEnergizer();
+            eatNextEnergizer(gameLevel);
         }
         assertEquals(2, pacManGame().cruiseElroy());
     }
@@ -96,10 +104,11 @@ public class TestEatingFood {
     @Test
     @DisplayName("Test Resting")
     public void testResting() {
-        eatNextPellet();
-        assertEquals(1, theGameLevel().pac().restingTicks());
-        eatNextEnergizer();
-        assertEquals(3, theGameLevel().pac().restingTicks());
+        GameLevel gameLevel = gameLevel();
+        eatNextPellet(gameLevel);
+        assertEquals(1, gameLevel.pac().restingTicks());
+        eatNextEnergizer(gameLevel);
+        assertEquals(3, gameLevel.pac().restingTicks());
     }
 
 }
