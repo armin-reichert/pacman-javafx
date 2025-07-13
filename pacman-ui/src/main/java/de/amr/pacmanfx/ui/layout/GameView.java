@@ -158,7 +158,7 @@ public class GameView implements PacManGames_View {
         ui.currentGameScene().ifPresent(gameScene -> {
             if (ui.currentGameSceneIsPlayScene2D()) {
                 var miSwitchTo3D = new MenuItem(ui.theAssets().text("use_3D_scene"));
-                miSwitchTo3D.setOnAction(e -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(ui, gameContext));
+                miSwitchTo3D.setOnAction(e -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(ui));
                 contextMenu.getItems().add(menuTitleItem(ui.theAssets().text("scene_display")));
                 contextMenu.getItems().add(miSwitchTo3D);
             }
@@ -239,7 +239,7 @@ public class GameView implements PacManGames_View {
 
     @Override
     public void handleKeyboardInput(GameContext gameContext) {
-        actionBindings.runMatchingActionOrElse(ui, gameContext,
+        actionBindings.runMatchingActionOrElse(ui,
             () -> ui.currentGameScene().ifPresent(GameScene::handleKeyboardInput));
     }
 

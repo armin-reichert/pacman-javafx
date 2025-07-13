@@ -16,5 +16,5 @@ public interface PacManGames_View extends GameEventListener {
     Node rootNode();
     ObservableStringValue title();
     ActionBindingMap actionBindingMap();
-    default void handleKeyboardInput(GameContext gameContext) { actionBindingMap().runMatchingAction(theUI(), gameContext); }
+    default void handleKeyboardInput(GameContext gameContext) { actionBindingMap().runMatchingAction(theUI()); }
 }

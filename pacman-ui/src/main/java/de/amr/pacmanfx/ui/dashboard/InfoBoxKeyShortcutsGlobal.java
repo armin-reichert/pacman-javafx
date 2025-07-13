@@ -30,7 +30,7 @@ public class InfoBoxKeyShortcutsGlobal extends InfoBox {
                 KeyCombination keyCombination = entry.getKey();
                 GameAction action = entry.getValue();
                 String localizedActionText = theUI().theAssets().text(action.name());
-                addRow(keyCombination.getDisplayText(), createLabel(localizedActionText, action.isEnabled(theUI(), gameContext)));
+                addRow(keyCombination.getDisplayText(), createLabel(localizedActionText, action.isEnabled(theUI())));
             });
         }
     }

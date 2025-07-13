@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.GameContext;
 import org.tinylog.Logger;
 
 /**
@@ -12,18 +11,18 @@ import org.tinylog.Logger;
  */
 public interface GameAction {
 
-    default void executeIfEnabled(GameUI ui, GameContext gameContext) {
-        if (isEnabled(ui, gameContext)) {
-            execute(ui, gameContext);
+    default void executeIfEnabled(GameUI ui) {
+        if (isEnabled(ui)) {
+            execute(ui);
             Logger.trace("Action '{}' executed", name());
         } else {
             Logger.warn("Disabled action '{}' not executed", name());
         }
     }
 
-    void execute(GameUI ui, GameContext gameContext);
+    void execute(GameUI ui);
 
-    default boolean isEnabled(GameUI ui, GameContext gameContext) { return true; }
+    default boolean isEnabled(GameUI ui) { return true; }
 
     default String name() { return toString(); }
 }

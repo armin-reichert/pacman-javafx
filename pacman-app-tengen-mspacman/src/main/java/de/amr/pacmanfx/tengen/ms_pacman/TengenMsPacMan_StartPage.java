@@ -34,7 +34,7 @@ public class TengenMsPacMan_StartPage extends StackPane implements StartPage {
         flyer.selectPage(0);
 
         var startButton = StartPagesView.createStartButton(theUI().theAssets(), Pos.BOTTOM_CENTER);
-        startButton.setAction(() -> ACTION_BOOT_SHOW_GAME_VIEW.executeIfEnabled(theUI(), gameContext));
+        startButton.setAction(() -> ACTION_BOOT_SHOW_GAME_VIEW.executeIfEnabled(theUI()));
         startButton.setTranslateY(-50);
         getChildren().addAll(flyer, startButton);
     }

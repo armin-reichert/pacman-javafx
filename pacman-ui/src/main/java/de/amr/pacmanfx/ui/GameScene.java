@@ -29,7 +29,7 @@ public interface GameScene extends DefaultGameEventListener, Destroyable {
     /**
      * By default, the first matching game action is executed.
      */
-    default void handleKeyboardInput() { actionBindings().runMatchingAction(theUI(), gameContext()); }
+    default void handleKeyboardInput() { actionBindings().runMatchingAction(theUI()); }
 
     /**
      * Called when the scene becomes the current one.

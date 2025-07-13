@@ -121,7 +121,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     @Override
     public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent, ContextMenu menu) {
         var miUse2DScene = new MenuItem(theUI().theAssets().text("use_2D_scene"));
-        miUse2DScene.setOnAction(e -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(theUI(), gameContext));
+        miUse2DScene.setOnAction(e -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(theUI()));
 
         var miToggleMiniView = new CheckMenuItem(theUI().theAssets().text("pip"));
         miToggleMiniView.selectedProperty().bindBidirectional(PY_MINI_VIEW_ON);
@@ -136,7 +136,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         miMuted.selectedProperty().bindBidirectional(theUI().mutedProperty());
 
         var miQuit = new MenuItem(theUI().theAssets().text("quit"));
-        miQuit.setOnAction(e -> ACTION_QUIT_GAME_SCENE.executeIfEnabled(theUI(), gameContext));
+        miQuit.setOnAction(e -> ACTION_QUIT_GAME_SCENE.executeIfEnabled(theUI()));
 
         var items = new ArrayList<MenuItem>();
         items.add(menuTitleItem(theUI().theAssets().text("scene_display")));

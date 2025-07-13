@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.layout;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.ui.ActionBindingMap;
@@ -99,7 +98,7 @@ public class StartPagesView implements PacManGames_View {
 
         GameAction actionPrevSlide = new GameAction() {
             @Override
-            public void execute(GameUI ui, GameContext gameContext) {
+            public void execute(GameUI ui) {
                 carousel.showPreviousSlide();
             }
 
@@ -110,7 +109,7 @@ public class StartPagesView implements PacManGames_View {
         };
         GameAction actionNextSlide = new GameAction() {
             @Override
-            public void execute(GameUI ui, GameContext gameContext) {
+            public void execute(GameUI ui) {
                 carousel.showNextSlide();
             }
 

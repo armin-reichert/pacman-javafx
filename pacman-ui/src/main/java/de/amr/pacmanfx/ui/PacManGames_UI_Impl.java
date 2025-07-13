@@ -120,10 +120,10 @@ public class PacManGames_UI_Impl implements GameUI {
         //TODO should I use key binding for global actions too?
         mainScene.setOnKeyPressed(e -> {
             if (KEY_FULLSCREEN.match(e)) {
-                ACTION_ENTER_FULLSCREEN.execute(this, gameContext);
+                ACTION_ENTER_FULLSCREEN.execute(this);
             }
             else if (KEY_MUTE.match(e)) {
-                ACTION_TOGGLE_MUTED.execute(this, gameContext);
+                ACTION_TOGGLE_MUTED.execute(this);
             }
             else if (KEY_OPEN_EDITOR.match(e)) {
                 showEditorView();

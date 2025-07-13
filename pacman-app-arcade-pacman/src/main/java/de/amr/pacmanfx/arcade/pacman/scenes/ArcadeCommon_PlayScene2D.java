@@ -142,7 +142,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
         miMuted.selectedProperty().bindBidirectional(theUI().mutedProperty());
 
         var miQuit = new MenuItem(theUI().theAssets().text("quit"));
-        miQuit.setOnAction(e -> ACTION_QUIT_GAME_SCENE.executeIfEnabled(theUI(), gameContext));
+        miQuit.setOnAction(e -> ACTION_QUIT_GAME_SCENE.executeIfEnabled(theUI()));
 
         return List.of(
             menuTitleItem(theUI().theAssets().text("pacman")),

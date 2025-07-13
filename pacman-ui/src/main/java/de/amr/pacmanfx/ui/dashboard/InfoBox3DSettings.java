@@ -77,8 +77,8 @@ public class InfoBox3DSettings extends InfoBox {
         setEditor(comboPerspectives, PY_3D_PERSPECTIVE);
 
         //TODO check these
-        cbUsePlayScene3D.setOnAction(e -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(theUI(), gameContext));
-        cbWireframeMode.setOnAction(e -> ACTION_TOGGLE_DRAW_MODE.executeIfEnabled(theUI(), gameContext));
+        cbUsePlayScene3D.setOnAction(e -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(theUI()));
+        cbWireframeMode.setOnAction(e -> ACTION_TOGGLE_DRAW_MODE.executeIfEnabled(theUI()));
     }
 
     private void updateControlsFromProperties() {

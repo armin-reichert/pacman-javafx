@@ -355,13 +355,13 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
 
     public static final GameAction ACTION_QUIT_DEMO_LEVEL = new GameAction() {
         @Override
-        public void execute(GameUI ui, GameContext gameContext) {
-            gameContext.theGameController().changeGameState(GameState.SETTING_OPTIONS);
+        public void execute(GameUI ui) {
+            ui.theGameContext().theGameController().changeGameState(GameState.SETTING_OPTIONS);
         }
 
         @Override
-        public boolean isEnabled(GameUI ui, GameContext gameContext) {
-            return gameContext.optGameLevel().isPresent() && gameContext.optGameLevel().get().isDemoLevel();
+        public boolean isEnabled(GameUI ui) {
+            return ui.theGameContext().optGameLevel().isPresent() && ui.theGameContext().optGameLevel().get().isDemoLevel();
         }
 
         @Override
@@ -372,8 +372,8 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
 
     public static final GameAction ACTION_START_GAME = new GameAction() {
         @Override
-        public void execute(GameUI ui, GameContext gameContext) {
-            gameContext.theGameController().changeGameState(GameState.SETTING_OPTIONS);
+        public void execute(GameUI ui) {
+            ui.theGameContext().theGameController().changeGameState(GameState.SETTING_OPTIONS);
         }
 
         @Override
@@ -384,10 +384,10 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
 
     public static final GameAction ACTION_START_PLAYING = new GameAction() {
         @Override
-        public void execute(GameUI ui, GameContext gameContext) {
+        public void execute(GameUI ui) {
             theUI().theSound().stopAll();
-            gameContext.theGame().playingProperty().set(false);
-            gameContext.theGameController().changeGameState(GameState.STARTING_GAME);
+            ui.theGameContext().theGame().playingProperty().set(false);
+            ui.theGameContext().theGameController().changeGameState(GameState.STARTING_GAME);
         }
 
         @Override
@@ -398,14 +398,14 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
 
     public static final GameAction ACTION_TOGGLE_DISPLAY_MODE = new GameAction() {
         @Override
-        public void execute(GameUI ui, GameContext gameContext) {
+        public void execute(GameUI ui) {
             SceneDisplayMode mode = PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.get();
             PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.set(mode == SceneDisplayMode.SCROLLING
                     ? SceneDisplayMode.SCALED_TO_FIT : SceneDisplayMode.SCROLLING);
         }
 
         @Override
-        public boolean isEnabled(GameUI ui, GameContext gameContext) {
+        public boolean isEnabled(GameUI ui) {
             return ui.currentGameSceneIsPlayScene2D();
         }
 
@@ -419,7 +419,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
 
     public static final GameAction ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED = new GameAction() {
         @Override
-        public void execute(GameUI ui, GameContext gameContext) {
+        public void execute(GameUI ui) {
             toggle(PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED);
         }
 
@@ -431,14 +431,14 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
 
     public static final GameAction ACTION_TOGGLE_PAC_BOOSTER = new GameAction() {
         @Override
-        public void execute(GameUI ui, GameContext gameContext) {
-            var tengenGame = (TengenMsPacMan_GameModel) gameContext.theGame();
+        public void execute(GameUI ui) {
+            var tengenGame = (TengenMsPacMan_GameModel) ui.theGameContext().theGame();
             tengenGame.activatePacBooster(!tengenGame.isBoosterActive());
         }
 
         @Override
-        public boolean isEnabled(GameUI ui, GameContext gameContext) {
-            var tengenGame = (TengenMsPacMan_GameModel) gameContext.theGame();
+        public boolean isEnabled(GameUI ui) {
+            var tengenGame = (TengenMsPacMan_GameModel) ui.theGameContext().theGame();
             return tengenGame.pacBooster() == PacBooster.USE_A_OR_B;
         }
 
