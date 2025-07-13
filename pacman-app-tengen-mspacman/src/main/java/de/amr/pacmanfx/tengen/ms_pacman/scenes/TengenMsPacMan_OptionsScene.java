@@ -97,7 +97,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         actionBindings.bind(ACTION_TEST_LEVELS_TEASERS, GLOBAL_ACTION_BINDINGS);
         actionBindings.bind(actionSelectNextJoypadBinding, alt(KeyCode.J));
 
-        spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
+        spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().theUIConfiguration().spriteSheet();
         selectedOption = OPTION_PAC_BOOSTER;
         theTengenGame().setCanStartNewGame(true);
         resetIdleTimer();

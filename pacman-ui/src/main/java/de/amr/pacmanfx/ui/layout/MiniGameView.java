@@ -89,7 +89,7 @@ public class MiniGameView extends VBox {
 
     public void onLevelCreated(GameLevel gameLevel) {
         worldSizeProperty.set(gameLevel.worldSizePx());
-        gr = theUI().configuration().createGameRenderer(canvas);
+        gr = theUI().theUIConfiguration().createGameRenderer(canvas);
         gr.applyRenderingHints(gameLevel);
         gr.setScaling(scalingProperty.floatValue());
         moveIntoScreenAnimation.play();

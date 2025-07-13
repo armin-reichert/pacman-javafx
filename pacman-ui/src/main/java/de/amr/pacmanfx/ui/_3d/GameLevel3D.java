@@ -167,7 +167,7 @@ public class GameLevel3D extends Group implements Destroyable {
         getChildren().add(levelCounter3D);
 
         for (int i = 0; i < livesCounterShapes.length; ++i) {
-            livesCounterShapes[i] = theUI().configuration().createLivesCounterShape3D(model3DRepository);
+            livesCounterShapes[i] = theUI().theUIConfiguration().createLivesCounterShape3D(model3DRepository);
         }
         livesCounter3D = new LivesCounter3D(animationManager, livesCounterShapes);
         livesCounter3D.setTranslateX(2 * TS);
@@ -179,11 +179,11 @@ public class GameLevel3D extends Group implements Destroyable {
         livesCounter3D.lookingAroundAnimation().playFromStart();
         getChildren().add(livesCounter3D);
 
-        pac3D = theUI().configuration().createPac3D(model3DRepository, animationManager, gameLevel.pac());
+        pac3D = theUI().theUIConfiguration().createPac3D(model3DRepository, animationManager, gameLevel.pac());
         pac3D.init();
         getChildren().addAll(pac3D, pac3D.light());
 
-        final String ans = theUI().configuration().assetNamespace();
+        final String ans = theUI().theUIConfiguration().assetNamespace();
         ghosts3D = gameLevel.ghosts().map(ghost -> {
             var ghostColoring = new GhostColoring(
                     theUI().theAssets().color("%s.ghost.%d.color.normal.dress".formatted(ans, ghost.personality())),
@@ -467,8 +467,8 @@ public class GameLevel3D extends Group implements Destroyable {
             bonus3D.destroy();
         }
         bonus3D = new Bonus3D(animationManager, bonus,
-            theUI().configuration().bonusSymbolImage(bonus.symbol()), BONUS_3D_SYMBOL_WIDTH,
-            theUI().configuration().bonusValueImage(bonus.symbol()), BONUS_3D_POINTS_WIDTH);
+            theUI().theUIConfiguration().bonusSymbolImage(bonus.symbol()), BONUS_3D_SYMBOL_WIDTH,
+            theUI().theUIConfiguration().bonusValueImage(bonus.symbol()), BONUS_3D_POINTS_WIDTH);
         mazeGroup.getChildren().add(bonus3D);
         bonus3D.showEdible();
     }

@@ -88,7 +88,7 @@ public class InfoBoxGameLevelAnimations extends InfoBox {
     @Override
     public void update() {
         super.update();
-        tableView.setPrefHeight(theUI().stage().getHeight() * RELATIVE_TABLE_HEIGHT);
+        tableView.setPrefHeight(theUI().theStage().getHeight() * RELATIVE_TABLE_HEIGHT);
         boolean refresh = false;
         if (theUI().currentGameScene().isPresent() && theUI().currentGameScene().get() instanceof PlayScene3D scene3D) {
             scene3D.level3D().ifPresent(gameLevel3D -> animationManagerProperty.set(gameLevel3D.animationManager()));

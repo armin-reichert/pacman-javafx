@@ -41,7 +41,7 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
         gameContext.theGame().hud().showLevelCounter(false);
         gameContext.theGame().hud().showLivesCounter(false);
 
-        SpriteSheet<?> spriteSheet = theUI().configuration().spriteSheet();
+        SpriteSheet<?> spriteSheet = theUI().theUIConfiguration().spriteSheet();
         double width = spriteSheet.sourceImage().getWidth(), height = spriteSheet.sourceImage().getHeight();
         // ignore left half of sprite sheet image containing maze images
         minPoint = Vector2f.of(width / 2, 0);

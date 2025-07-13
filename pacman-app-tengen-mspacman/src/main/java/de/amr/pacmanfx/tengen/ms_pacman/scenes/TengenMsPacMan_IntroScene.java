@@ -75,7 +75,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         gameContext.theGame().hud().showLevelCounter(false);
         gameContext.theGame().hud().showLivesCounter(false);
 
-        spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
+        spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().theUIConfiguration().spriteSheet();
 
         actionBindings.bind(ACTION_START_GAME, TENGEN_ACTION_BINDINGS);
         actionBindings.bind(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, TENGEN_ACTION_BINDINGS);
@@ -229,10 +229,10 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                     ghost.setVisible(true);
                 }
                 scene.ghostIndex = 0;
-                scene.msPacMan.setAnimations(theUI().configuration().createPacAnimations(scene.msPacMan));
+                scene.msPacMan.setAnimations(theUI().theUIConfiguration().createPacAnimations(scene.msPacMan));
                 scene.msPacMan.playAnimation(ANIM_PAC_MUNCHING);
                 for (Ghost ghost : scene.ghosts) {
-                    ghost.setAnimations(theUI().configuration().createGhostAnimations(ghost));
+                    ghost.setAnimations(theUI().theUIConfiguration().createGhostAnimations(ghost));
                     ghost.playAnimation(ANIM_GHOST_NORMAL);
                 }
             }

@@ -62,9 +62,9 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         blinky.setSpeed(0);
         blinky.hide();
 
-        pac.setAnimations(theUI().configuration().createPacAnimations(pac));
+        pac.setAnimations(theUI().theUIConfiguration().createPacAnimations(pac));
 
-        ActorAnimationMap blinkyAnimations = theUI().configuration().createGhostAnimations(blinky);
+        ActorAnimationMap blinkyAnimations = theUI().theUIConfiguration().createGhostAnimations(blinky);
         blinky.setAnimations(blinkyAnimations);
         blinkyNormal = (SpriteAnimation) blinkyAnimations.animation(ANIM_GHOST_NORMAL);
         nailDressRaptureAnimation = (SpriteAnimation) blinkyAnimations.animation(ANIM_BLINKY_NAIL_DRESS_RAPTURE);

@@ -52,7 +52,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     
     @Override
     public void doInit() {
-        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
+        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) theUI().theUIConfiguration().spriteSheet();
 
         pacMan = createPacMan(null);
         msPacMan = createMsPacMan(null);
@@ -60,7 +60,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         bag = new Bag(spriteSheet);
         bag.setOpen(false);
 
-        PacManGames_UIConfig config = theUI().configuration();
+        PacManGames_UIConfig config = theUI().theUIConfiguration();
         msPacMan.setAnimations(config.createPacAnimations(msPacMan));
         pacMan.setAnimations(config.createPacAnimations(pacMan));
 

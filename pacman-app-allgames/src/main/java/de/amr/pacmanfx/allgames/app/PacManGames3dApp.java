@@ -20,27 +20,27 @@ import javafx.application.Application;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import static de.amr.pacmanfx.Globals.initGameContext;
+import static de.amr.pacmanfx.Globals.initGame;
 import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.ui.PacManGames_UI_Impl.GameVariant;
 
 /**
- * Application containing all game variants and 3D play scenes.
+ * Application containing all game variants, the 3D play scenes, the map editor etc. ("all you can play").
  */
 public class PacManGames3dApp extends Application {
 
     @Override
     public void init() {
-        initGameContext();
+        initGame();
     }
 
     @Override
     public void start(Stage primaryStage) {
         // UI size: 80% of available screen height, aspect 16:10
-        final double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
-        final double width  = 1.6 * height;
-        final var xxlSelector = new PacManXXL_Common_MapSelector(theGameContext().theCustomMapDir());
+        long height = Math.round(0.8 * Screen.getPrimary().getBounds().getHeight());
+        long width  = Math.round(1.6 * height);
+        var mapSelectorXXL = new PacManXXL_Common_MapSelector(theGameContext().theCustomMapDir());
         GameUI.build(theGameContext(), primaryStage, width, height)
             .game(
                 GameVariant.PACMAN.name(),
@@ -59,12 +59,12 @@ public class PacManGames3dApp extends Application {
             )
             .game(
                 GameVariant.PACMAN_XXL.name(),
-                new PacManXXL_PacMan_GameModel(theGameContext(), xxlSelector),
+                new PacManXXL_PacMan_GameModel(theGameContext(), mapSelectorXXL),
                 PacManXXL_PacMan_UIConfig.class
             )
             .game(
                 GameVariant.MS_PACMAN_XXL.name(),
-                new PacManXXL_MsPacMan_GameModel(theGameContext(), xxlSelector),
+                new PacManXXL_MsPacMan_GameModel(theGameContext(), mapSelectorXXL),
                 PacManXXL_MsPacMan_UIConfig.class
             )
             .startPages(
@@ -85,7 +85,7 @@ public class PacManGames3dApp extends Application {
             .build()
             .show();
 
-        theUI().theWatchdog().addEventListener(watchEvents -> xxlSelector.loadCustomMaps());
+        theUI().theWatchdog().addEventListener(watchEvents -> mapSelectorXXL.loadCustomMaps());
     }
 
     @Override

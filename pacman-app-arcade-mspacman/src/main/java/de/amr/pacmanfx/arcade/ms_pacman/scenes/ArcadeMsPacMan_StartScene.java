@@ -50,7 +50,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
         copyright.setFont(scaledArcadeFont8());
         copyright.show();
 
-        @SuppressWarnings("unchecked") var spriteSheet = (SpriteSheet<SpriteID>) theUI().configuration().spriteSheet();
+        @SuppressWarnings("unchecked") var spriteSheet = (SpriteSheet<SpriteID>) theUI().theUIConfiguration().spriteSheet();
         livesCounterSprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
 
         actionBindings.bind(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDINGS);

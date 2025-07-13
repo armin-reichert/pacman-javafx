@@ -64,7 +64,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
 
         actionBindings.bind(ACTION_LET_GAME_STATE_EXPIRE, theUI().theJoypad().key(JoypadButton.START));
 
-        PacManGames_UIConfig config = theUI().configuration();
+        PacManGames_UIConfig config = theUI().theUIConfiguration();
         var spriteSheet = (TengenMsPacMan_SpriteSheet) config.spriteSheet();
 
         clapperboard = new Clapperboard(spriteSheet, 2, "THE CHASE");

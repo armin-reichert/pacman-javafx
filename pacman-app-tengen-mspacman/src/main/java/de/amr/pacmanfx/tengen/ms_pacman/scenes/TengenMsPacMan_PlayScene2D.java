@@ -171,7 +171,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         gameContext.theGame().hud().showLevelCounter(true);
         gameContext.theGame().hud().showLivesCounter(true);
 
-        TengenMsPacMan_UIConfig config = (TengenMsPacMan_UIConfig) theUI().configuration();
+        TengenMsPacMan_UIConfig config = (TengenMsPacMan_UIConfig) theUI().theUIConfiguration();
         setGameRenderer(config.createGameRenderer(canvas()));
         dynamicCamera.moveTop();
         messageMovement = new MessageMovement();
@@ -245,7 +245,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         gameContext.theGame().hud().showLivesCounter(true); // is also visible in demo level!
 
         bindActionsToKeys();
-        TengenMsPacMan_UIConfig config = (TengenMsPacMan_UIConfig) theUI().configuration();
+        TengenMsPacMan_UIConfig config = (TengenMsPacMan_UIConfig) theUI().theUIConfiguration();
         setGameRenderer(config.createGameRenderer(canvas()));
         gr().ensureRenderingHintsAreApplied(gameContext.theGameLevel());
     }
@@ -256,7 +256,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         gameContext.theGame().hud().showLivesCounter(true); // is also visible in demo level!
 
         bindActionsToKeys();
-        TengenMsPacMan_UIConfig config = (TengenMsPacMan_UIConfig) theUI().configuration();
+        TengenMsPacMan_UIConfig config = (TengenMsPacMan_UIConfig) theUI().theUIConfiguration();
         setGameRenderer(config.createGameRenderer(canvas()));
         gr().ensureRenderingHintsAreApplied(gameContext.theGameLevel());
     }

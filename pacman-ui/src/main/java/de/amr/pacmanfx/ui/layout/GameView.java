@@ -179,7 +179,7 @@ public class GameView implements PacManGames_View {
 
     // Asset key regex: app.title.(ms_pacman|ms_pacman_xxl|pacman,pacman_xxl|tengen)(.paused)?
     private String computeTitleText(boolean threeDModeEnabled, boolean modeDebug) {
-        String ans = ui.configuration().assetNamespace();
+        String ans = ui.theUIConfiguration().assetNamespace();
         String paused = ui.theGameClock().isPaused() ? ".paused" : "";
         String key = "app.title." + ans + paused;
         String modeText = ui.theAssets().text(threeDModeEnabled ? "threeD" : "twoD");
@@ -249,7 +249,7 @@ public class GameView implements PacManGames_View {
         Logger.trace("Handle {}", gameEvent);
         switch (gameEvent.type()) {
             case LEVEL_CREATED -> {
-                PacManGames_UIConfig config = ui.configuration();
+                PacManGames_UIConfig config = ui.theUIConfiguration();
                 ActorAnimationMap pacAnimationMap = config.createPacAnimations(gameContext.theGameLevel().pac());
                 gameContext.theGameLevel().pac().setAnimations(pacAnimationMap);
                 gameContext.theGameLevel().ghosts().forEach(ghost -> {
@@ -286,7 +286,7 @@ public class GameView implements PacManGames_View {
     }
 
     public void updateGameScene(boolean reloadCurrent) {
-        final GameScene nextGameScene = ui.configuration().selectGameScene(gameContext);
+        final GameScene nextGameScene = ui.theUIConfiguration().selectGameScene(gameContext);
         if (nextGameScene == null) {
             String errorMessage = " Katastrophe! Could not determine game scene!";
             ui.showFlashMessageSec(60, errorMessage);
@@ -358,7 +358,7 @@ public class GameView implements PacManGames_View {
     // 2D game scenes without camera are drawn into the common canvas provided by this game view
     private void embedScene2DWithoutCamera(GameScene2D gameScene2D) {
         gameScene2D.setCanvas(commonCanvas);
-        gameScene2D.setGameRenderer(ui.configuration().createGameRenderer(commonCanvas));
+        gameScene2D.setGameRenderer(ui.theUIConfiguration().createGameRenderer(commonCanvas));
         gameScene2D.scalingProperty().bind(canvasContainer.scalingProperty().map(
             scaling -> Math.min(scaling.doubleValue(), MAX_SCENE_2D_SCALING)));
         Vector2f sceneSize = gameScene2D.sizeInPx();

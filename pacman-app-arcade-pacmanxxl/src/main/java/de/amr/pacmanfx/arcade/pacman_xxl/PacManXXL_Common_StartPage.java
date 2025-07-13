@@ -51,10 +51,10 @@ public class PacManXXL_Common_StartPage implements StartPage {
     }
 
     private void init() {
-        theUI().configuration(GameVariant.PACMAN.name()).loadAssets(theUI().theAssets());
-        theUI().configuration(GameVariant.PACMAN_XXL.name()).loadAssets(theUI().theAssets());
-        theUI().configuration(GameVariant.MS_PACMAN.name()).loadAssets(theUI().theAssets());
-        theUI().configuration(GameVariant.MS_PACMAN_XXL.name()).loadAssets(theUI().theAssets());
+        theUI().uiConfig(GameVariant.PACMAN.name()).loadAssets(theUI().theAssets());
+        theUI().uiConfig(GameVariant.PACMAN_XXL.name()).loadAssets(theUI().theAssets());
+        theUI().uiConfig(GameVariant.MS_PACMAN.name()).loadAssets(theUI().theAssets());
+        theUI().uiConfig(GameVariant.MS_PACMAN_XXL.name()).loadAssets(theUI().theAssets());
         menu.soundEnabledProperty().bind(theUI().theSound().mutedProperty().not());
     }
 

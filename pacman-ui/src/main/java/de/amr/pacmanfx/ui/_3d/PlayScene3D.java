@@ -299,7 +299,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 gameContext.theSimulationStep().killedGhosts.forEach(killedGhost -> {
                     byte personality = killedGhost.personality();
                     int killedIndex = gameContext.theGameLevel().victims().indexOf(killedGhost);
-                    Image pointsImage = theUI().configuration().killedGhostPointsImage(killedGhost, killedIndex);
+                    Image pointsImage = theUI().theUIConfiguration().killedGhostPointsImage(killedGhost, killedIndex);
                     gameLevel3D.ghost3D(personality).setNumberImage(pointsImage);
                 });
             case LEVEL_COMPLETE -> {
@@ -516,10 +516,10 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             gameLevel3D.destroy();
         }
         gameLevel3D = new GameLevel3D(
-                theUI().model3DRepository(),
+                theUI().theModel3DRepository(),
                 gameContext,
                 gameContext.theGameLevel(),
-                theUI().configuration().worldMapColorScheme(gameContext.theGameLevel().worldMap())
+                theUI().theUIConfiguration().worldMapColorScheme(gameContext.theGameLevel().worldMap())
         );
         gameLevel3D.pac3D().init();
         gameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(gameContext.theGameLevel()));
@@ -560,7 +560,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             scores3D.showScore(score.points(), score.levelNumber());
         }
         else { // disabled, show text "GAME OVER"
-            String ans = theUI().configuration().assetNamespace();
+            String ans = theUI().theUIConfiguration().assetNamespace();
             Color color = theUI().theAssets().color(ans + ".color.game_over_message");
             scores3D.showTextAsScore(theUI().theAssets().text("score.game_over"), color);
         }

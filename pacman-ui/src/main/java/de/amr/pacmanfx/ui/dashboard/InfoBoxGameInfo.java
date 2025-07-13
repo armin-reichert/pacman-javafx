@@ -61,7 +61,7 @@ public class InfoBoxGameInfo extends InfoBox {
                 return "%s / %s / %s".formatted(formatColorHex(fillColor), formatColorHex(strokeColor), formatColorHex(pelletColor));
             } else if (worldMap.hasConfigValue("colorMapIndex")) {
                 // Arcade games
-                WorldMapColorScheme coloring = theUI().configuration().worldMapColorScheme(worldMap);
+                WorldMapColorScheme coloring = theUI().theUIConfiguration().worldMapColorScheme(worldMap);
                 return "%s / %s / %s".formatted(formatColorHex(coloring.fill()), formatColorHex(coloring.stroke()), formatColorHex(coloring.pellet()));
             } else {
                 return InfoText.NO_INFO;

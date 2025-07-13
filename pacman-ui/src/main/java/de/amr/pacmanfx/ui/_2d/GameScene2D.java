@@ -118,7 +118,7 @@ public abstract class GameScene2D implements GameScene {
      */
     public void draw() {
         if (gameRenderer == null) {
-            gameRenderer = theUI().configuration().createGameRenderer(canvas);
+            gameRenderer = theUI().theUIConfiguration().createGameRenderer(canvas);
         }
         fillCanvas(canvas, backgroundColor());
         gameRenderer.setScaling(scaling());

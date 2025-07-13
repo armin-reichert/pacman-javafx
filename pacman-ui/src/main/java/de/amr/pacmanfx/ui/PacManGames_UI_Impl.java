@@ -46,17 +46,21 @@ import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_TOGGLE_MUTED;
 import static java.util.Objects.requireNonNull;
 
 /**
- * User interface for all Pac-Man game variants.
+ * User interface for the Pac-Man game suite. Shows a carousel with a start page for each game variant.
  */
 public class PacManGames_UI_Impl implements GameUI {
 
+    // package-visible to allow access to GameUI interface
     static PacManGames_UI_Impl THE_ONE;
 
-    final PacManGames_Assets theAssets = new PacManGames_Assets();
-    final GameClock theGameClock = new GameClock();
-    final Keyboard theKeyboard = new Keyboard();
-    final Joypad theJoypad = new Joypad(theKeyboard);
-    DirectoryWatchdog theWatchdog;
+    private final PacManGames_Assets theAssets;
+    private final GameClock theGameClock;
+    private final GameContext theGameContext;
+    private final Keyboard theKeyboard;
+    private final Model3DRepository theModel3DRepository;
+    private final Joypad theJoypad;
+    private final Stage theStage;
+    private final DirectoryWatchdog theWatchdog;
 
     private final Map<String, PacManGames_UIConfig> configByGameVariant = new HashMap<>();
 
@@ -64,19 +68,23 @@ public class PacManGames_UI_Impl implements GameUI {
     private final ObjectProperty<GameScene> currentGameSceneProperty   = new SimpleObjectProperty<>();
     private final BooleanProperty mutedProperty                        = new SimpleBooleanProperty(false);
 
-    private final GameContext gameContext;
-    private final Model3DRepository model3DRepository = new Model3DRepository();
     private final StackPane rootPane = new StackPane();
-    private final Stage stage;
     private final StartPagesView startPagesView;
     private final GameView gameView;
     private       EditorView editorView; // created on first access
     private final StatusIconBox iconBox;
-    private final FontIcon iconPaused;
 
     public PacManGames_UI_Impl(GameContext gameContext, Stage stage, double width, double height) {
-        this.gameContext = requireNonNull(gameContext);
-        this.stage = requireNonNull(stage);
+        this.theGameContext = requireNonNull(gameContext);
+
+        theAssets = new PacManGames_Assets();
+        theGameClock = new GameClock();
+        theKeyboard = new Keyboard();
+        theJoypad = new Joypad(theKeyboard);
+        theModel3DRepository = new Model3DRepository();
+        theWatchdog = new DirectoryWatchdog(gameContext.theCustomMapDir());
+
+        this.theStage = requireNonNull(stage);
 
         Scene mainScene = new Scene(rootPane, width, height);
         stage.setScene(mainScene);
@@ -91,7 +99,7 @@ public class PacManGames_UI_Impl implements GameUI {
         rootPane.getChildren().add(startPagesView.rootNode());
 
         // "paused" icon appears on center of game view
-        iconPaused = FontIcon.of(FontAwesomeSolid.PAUSE, 80, STATUS_ICON_COLOR);
+        FontIcon iconPaused = FontIcon.of(FontAwesomeSolid.PAUSE, 80, STATUS_ICON_COLOR);
         iconPaused.visibleProperty().bind(Bindings.createBooleanBinding(
             () -> currentView() == gameView && theGameClock.isPaused(),
             currentViewProperty, theGameClock.pausedProperty()));
@@ -137,14 +145,14 @@ public class PacManGames_UI_Impl implements GameUI {
         configClassesMap.forEach((gameVariant, configClass) -> {
             try {
                 PacManGames_UIConfig config = configClass.getDeclaredConstructor().newInstance();
-                setConfiguration(gameVariant, config);
+                setUIConfig(gameVariant, config);
             } catch (Exception x) {
                 Logger.error("Could not create UI configuration of class {}", configClass);
                 throw new IllegalStateException(x);
             }
         });
         configByGameVariant.forEach((gameVariant, config) -> {
-            config.createGameScenes(gameContext);
+            config.createGameScenes(theGameContext);
             config.gameScenes().forEach(scene -> {
                 if (scene instanceof GameScene2D gameScene2D) {
                     gameScene2D.debugInfoVisibleProperty().bind(PY_DEBUG_INFO_VISIBLE);
@@ -158,12 +166,12 @@ public class PacManGames_UI_Impl implements GameUI {
         requireNonNull(newView);
         if (oldView != null) {
             oldView.actionBindingMap().clear();
-            gameContext.theGameEventManager().removeEventListener(oldView);
+            theGameContext.theGameEventManager().removeEventListener(oldView);
         }
         newView.actionBindingMap().update();
         newView.rootNode().requestFocus();
-        stage.titleProperty().bind(newView.title());
-        gameContext.theGameEventManager().addEventListener(newView);
+        theStage.titleProperty().bind(newView.title());
+        theGameContext.theGameEventManager().addEventListener(newView);
 
         rootPane.getChildren().set(0, newView.rootNode());
     }
@@ -181,9 +189,9 @@ public class PacManGames_UI_Impl implements GameUI {
 
     private void doSimulationStepAndUpdateGameScene() {
         try {
-            gameContext.theSimulationStep().start(theGameClock.tickCount());
-            gameContext.theGameController().updateGameState();
-            gameContext.theSimulationStep().log();
+            theGameContext.theSimulationStep().start(theGameClock.tickCount());
+            theGameContext.theGameController().updateGameState();
+            theGameContext.theSimulationStep().log();
             currentGameScene().ifPresent(GameScene::update);
         } catch (Throwable x) {
             ka_tas_trooo_phe(x);
@@ -200,14 +208,14 @@ public class PacManGames_UI_Impl implements GameUI {
 
     private EditorView getEditorViewCreateIfNeeded() {
         if (editorView == null) {
-            var editor = new TileMapEditor(stage, model3DRepository);
+            var editor = new TileMapEditor(theStage, theModel3DRepository);
             var miReturnToGame = new MenuItem(theAssets().text("back_to_game"));
             miReturnToGame.setOnAction(e -> {
                 editor.stop();
                 editor.executeWithCheckForUnsavedChanges(this::showStartView);
             });
             editor.getFileMenu().getItems().addAll(new SeparatorMenuItem(), miReturnToGame);
-            editor.init(gameContext.theCustomMapDir());
+            editor.init(theGameContext.theCustomMapDir());
             editorView = new EditorView(editor);
         }
         return editorView;
@@ -243,8 +251,8 @@ public class PacManGames_UI_Impl implements GameUI {
     }
 
     @Override
-    public Model3DRepository model3DRepository() {
-        return model3DRepository;
+    public Model3DRepository theModel3DRepository() {
+        return theModel3DRepository;
     }
 
     @Override
@@ -258,7 +266,7 @@ public class PacManGames_UI_Impl implements GameUI {
         theGameClock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
         theGameClock.pausedProperty().set(false);
         theGameClock.start();
-        gameContext.theGameController().restart(GameState.BOOT);
+        theGameContext.theGameController().restart(GameState.BOOT);
     }
 
     @Override
@@ -267,22 +275,22 @@ public class PacManGames_UI_Impl implements GameUI {
             Logger.error("Cannot select game variant (NULL)");
             return;
         }
-        String previousVariant = gameContext.theGameController().selectedGameVariant();
+        String previousVariant = theGameContext.theGameController().selectedGameVariant();
         if (previousVariant != null && !previousVariant.equals(gameVariant)) {
-            PacManGames_UIConfig previousConfig = configuration(previousVariant);
+            PacManGames_UIConfig previousConfig = uiConfig(previousVariant);
             Logger.info("Unloading assets for game variant {}", previousVariant);
             previousConfig.destroy();
             previousConfig.soundManager().mutedProperty().unbind();
         }
 
-        PacManGames_UIConfig newConfig = configuration(gameVariant);
+        PacManGames_UIConfig newConfig = uiConfig(gameVariant);
         Logger.info("Loading assets for game variant {}", gameVariant);
         newConfig.loadAssets(theAssets());
         newConfig.soundManager().mutedProperty().bind(mutedProperty);
 
         Image appIcon = theAssets.image(newConfig.assetNamespace() + ".app_icon");
         if (appIcon != null) {
-            stage.getIcons().setAll(appIcon);
+            theStage.getIcons().setAll(appIcon);
         } else {
             Logger.error("Could not find app icon for current game variant {}", gameVariant);
         }
@@ -290,7 +298,7 @@ public class PacManGames_UI_Impl implements GameUI {
         gameView.canvasContainer().roundedBorderProperty().set(newConfig.hasGameCanvasRoundedBorder());
 
         // this triggers a game event and the event handlers:
-        gameContext.theGameController().selectGameVariant(gameVariant);
+        theGameContext.theGameController().selectGameVariant(gameVariant);
     }
 
     @Override
@@ -304,18 +312,18 @@ public class PacManGames_UI_Impl implements GameUI {
         iconBox.iconAutopilot().visibleProperty().bind(PY_USING_AUTOPILOT);
         iconBox.iconImmune().visibleProperty().bind(PY_IMMUNITY);
 
-        stage.centerOnScreen();
-        stage.show();
+        theStage.centerOnScreen();
+        theStage.show();
         theWatchdog.startWatching();
     }
 
     @Override
     public void showEditorView() {
-        if (!gameContext.theGame().isPlaying() || theGameClock.isPaused()) {
+        if (!theGameContext.theGame().isPlaying() || theGameClock.isPaused()) {
             currentGameScene().ifPresent(GameScene::end);
             theSound().stopAll();
             theGameClock.stop();
-            getEditorViewCreateIfNeeded().editor().start(stage);
+            getEditorViewCreateIfNeeded().editor().start(theStage);
             currentViewProperty.set(getEditorViewCreateIfNeeded());
         } else {
             Logger.info("Editor view cannot be opened, game is playing");
@@ -343,8 +351,8 @@ public class PacManGames_UI_Impl implements GameUI {
     }
 
     @Override
-    public Stage stage() {
-        return stage;
+    public Stage theStage() {
+        return theStage;
     }
 
     @Override
@@ -360,8 +368,14 @@ public class PacManGames_UI_Impl implements GameUI {
         return theAssets;
     }
 
+    @Override
     public GameClock theGameClock() {
         return theGameClock;
+    }
+
+    @Override
+    public GameContext theGameContext() {
+        return theGameContext;
     }
 
     @Override
@@ -376,7 +390,7 @@ public class PacManGames_UI_Impl implements GameUI {
 
     @Override
     public SoundManager theSound() {
-        return configuration().soundManager();
+        return theUIConfiguration().soundManager();
     }
 
     @Override
@@ -398,31 +412,31 @@ public class PacManGames_UI_Impl implements GameUI {
      * @param configuration the UI configuration for this variant
      */
     @Override
-    public void setConfiguration(String variant, PacManGames_UIConfig configuration) {
+    public void setUIConfig(String variant, PacManGames_UIConfig configuration) {
         requireNonNull(variant);
         requireNonNull(configuration);
         configByGameVariant.put(variant, configuration);
     }
 
     @Override
-    public PacManGames_UIConfig configuration(String gameVariant) {
+    public PacManGames_UIConfig uiConfig(String gameVariant) {
         return configByGameVariant.get(gameVariant);
     }
 
     @Override
-    public PacManGames_UIConfig configuration() {
-        return configByGameVariant.get(gameContext.theGameController().selectedGameVariant());
+    public PacManGames_UIConfig theUIConfiguration() {
+        return configByGameVariant.get(theGameContext.theGameController().selectedGameVariant());
     }
 
     @Override
     public boolean currentGameSceneIsPlayScene2D() {
         GameScene currentGameScene = currentGameScene().orElse(null);
-        return currentGameScene != null && configuration().gameSceneHasID(currentGameScene, "PlayScene2D");
+        return currentGameScene != null && theUIConfiguration().gameSceneHasID(currentGameScene, "PlayScene2D");
     }
 
     @Override
     public boolean currentGameSceneIsPlayScene3D() {
         GameScene currentGameScene = currentGameScene().orElse(null);
-        return currentGameScene != null && configuration().gameSceneHasID(currentGameScene, "PlayScene3D");
+        return currentGameScene != null && theUIConfiguration().gameSceneHasID(currentGameScene, "PlayScene3D");
     }
 }

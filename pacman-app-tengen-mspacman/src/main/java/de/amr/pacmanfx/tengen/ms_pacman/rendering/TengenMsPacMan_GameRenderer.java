@@ -356,7 +356,7 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
         if (level.messageType() == GameLevel.MESSAGE_NONE) return;
 
         float x = position.x(), y = position.y() + TS;
-        String ans = theUI().configuration().assetNamespace();
+        String ans = theUI().theUIConfiguration().assetNamespace();
         switch (level.messageType()) {
             case GameLevel.MESSAGE_READY
                 -> fillTextAtScaledCenter("READY!", theUI().theAssets().color(ans + ".color.ready_message"), font, x, y);

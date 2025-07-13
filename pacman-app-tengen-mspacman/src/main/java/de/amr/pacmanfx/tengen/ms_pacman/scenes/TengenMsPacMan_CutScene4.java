@@ -57,14 +57,14 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         gameContext.theGame().hud().showLevelCounter(true);
         gameContext.theGame().hud().showLivesCounter(false);
 
-        var spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().configuration().spriteSheet();
+        var spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().theUIConfiguration().spriteSheet();
         clapperboard = new Clapperboard(spriteSheet, 4, "THE END");
         clapperboard.setPosition(3*TS, 10*TS);
         clapperboard.setFont(scaledArcadeFont8());
         msPacMan = createMsPacMan(null);
         pacMan = createPacMan(null);
-        msPacMan.setAnimations(theUI().configuration().createPacAnimations(msPacMan));
-        pacMan  .setAnimations(theUI().configuration().createPacAnimations(pacMan));
+        msPacMan.setAnimations(theUI().theUIConfiguration().createPacAnimations(msPacMan));
+        pacMan  .setAnimations(theUI().theUIConfiguration().createPacAnimations(pacMan));
         juniors = new ArrayList<>();
         juniorCreationTime = new ArrayList<>();
     }
@@ -159,7 +159,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         junior.setPosition((float) randomX, sizeInPx().y() - 4 * TS);
         junior.setMoveDir(Direction.UP);
         junior.setSpeed(2);
-        junior.setAnimations(theUI().configuration().createPacAnimations(junior));
+        junior.setAnimations(theUI().theUIConfiguration().createPacAnimations(junior));
         junior.selectAnimation(TengenMsPacMan_PacAnimationMap.ANIM_JUNIOR);
         junior.show();
         juniors.add(junior);

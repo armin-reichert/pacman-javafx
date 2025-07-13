@@ -31,16 +31,15 @@ import java.util.Set;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.ActionBindingMap.createActionBinding;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
-import static de.amr.pacmanfx.ui.PacManGames_UI_Impl.THE_ONE;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
 
 public interface GameUI {
 
     static GameUI theUI() { return PacManGames_UI_Impl.THE_ONE; }
 
-    static PacManGames_UI_Builder build(GameContext gameContext, Stage stage, double width, double height) {
-        THE_ONE = new PacManGames_UI_Impl(gameContext, stage, width, height);
-        return new PacManGames_UI_Builder(gameContext);
+    static GameUI_Builder build(GameContext gameContext, Stage stage, double width, double height) {
+        PacManGames_UI_Impl.THE_ONE = new PacManGames_UI_Impl(gameContext, stage, width, height);
+        return new GameUI_Builder(PacManGames_UI_Impl.THE_ONE);
     }
 
     /** Predefined game variants */
@@ -144,24 +143,23 @@ public interface GameUI {
 
     PacManGames_Assets theAssets();
     GameClock theGameClock();
+    GameContext theGameContext();
     DirectoryWatchdog theWatchdog();
     Keyboard theKeyboard();
+    Model3DRepository theModel3DRepository();
     Joypad theJoypad();
     SoundManager theSound();
+    Stage theStage();
+    PacManGames_UIConfig theUIConfiguration();
 
-    Stage stage();
     void restart();
     void selectGameVariant(String variant);
     void show();
 
-    // UI configuration
-    PacManGames_UIConfig configuration(String gameVariant);
-    PacManGames_UIConfig configuration();
-    void setConfiguration(String variant, PacManGames_UIConfig configuration);
+    PacManGames_UIConfig uiConfig(String gameVariant);
+    void setUIConfig(String variant, PacManGames_UIConfig configuration);
 
     BooleanProperty mutedProperty();
-
-    Model3DRepository model3DRepository();
 
     // Game scenes
     ObjectProperty<GameScene> currentGameSceneProperty();

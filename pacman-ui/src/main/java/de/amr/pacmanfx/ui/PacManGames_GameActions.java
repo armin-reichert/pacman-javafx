@@ -85,7 +85,7 @@ public interface PacManGames_GameActions {
     GameAction ACTION_ENTER_FULLSCREEN = new GameAction() {
         @Override
         public void execute(GameUI ui, GameContext gameContext) {
-            ui.stage().setFullScreen(true);
+            ui.theStage().setFullScreen(true);
         }
 
         @Override

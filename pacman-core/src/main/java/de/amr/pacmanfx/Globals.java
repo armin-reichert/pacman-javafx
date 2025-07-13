@@ -94,7 +94,7 @@ public class Globals {
         }
     }
 
-    public static void initGameContext() {
+    public static void initGame() {
         context = new GameContextImpl();
     }
 
