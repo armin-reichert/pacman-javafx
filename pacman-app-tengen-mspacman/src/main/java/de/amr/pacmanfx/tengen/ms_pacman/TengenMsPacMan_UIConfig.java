@@ -91,71 +91,71 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
 
     private final DefaultSoundManager soundManager = new DefaultSoundManager();
     private final Map<String, GameScene> scenesByID = new HashMap<>();
-    private TengenMsPacMan_SpriteSheet spriteSheet;
     private TengenMsPacMan_MapRepository mapRepository;
 
     public void storeAssets(AssetStorage assets) {
-        spriteSheet = new TengenMsPacMan_SpriteSheet(RES_TENGEN_MS_PAC_MAN.loadImage("graphics/spritesheet.png"));
-
         mapRepository = new TengenMsPacMan_MapRepository(
             RES_TENGEN_MS_PAC_MAN.loadImage("graphics/arcade_mazes.png"),
             RES_TENGEN_MS_PAC_MAN.loadImage("graphics/non_arcade_mazes.png")
         );
 
-        storeAssetMyNS(assets, "app_icon",         RES_TENGEN_MS_PAC_MAN.loadImage("graphics/icons/mspacman.png"));
-        storeAssetMyNS(assets, "startpage.image1", RES_TENGEN_MS_PAC_MAN.loadImage("graphics/f1.png"));
-        storeAssetMyNS(assets, "startpage.image2", RES_TENGEN_MS_PAC_MAN.loadImage("graphics/f2.png"));
+        var spriteSheet = new TengenMsPacMan_SpriteSheet(RES_TENGEN_MS_PAC_MAN.loadImage("graphics/spritesheet.png"));
+        storeAssetNS(assets, "spritesheet", spriteSheet);
+
+        storeAssetNS(assets, "app_icon",         RES_TENGEN_MS_PAC_MAN.loadImage("graphics/icons/mspacman.png"));
+        storeAssetNS(assets, "startpage.image1", RES_TENGEN_MS_PAC_MAN.loadImage("graphics/f1.png"));
+        storeAssetNS(assets, "startpage.image2", RES_TENGEN_MS_PAC_MAN.loadImage("graphics/f2.png"));
 
         soundManager.registerAudioClip("audio.option.selection_changed", RES_TENGEN_MS_PAC_MAN.url("sound/ms-select1.wav"));
         soundManager.registerAudioClip("audio.option.value_changed",     RES_TENGEN_MS_PAC_MAN.url("sound/ms-select2.wav"));
 
-        storeAssetMyNS(assets, "color.game_over_message", nesPaletteColor(0x11));
-        storeAssetMyNS(assets, "color.ready_message",     nesPaletteColor(0x28));
+        storeAssetNS(assets, "color.game_over_message", nesPaletteColor(0x11));
+        storeAssetNS(assets, "color.ready_message",     nesPaletteColor(0x28));
 
         RectShort[] symbolSprites = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS);
         RectShort[] valueSprites  = spriteSheet.spriteSeq(SpriteID.BONUS_VALUES);
         for (byte symbol = 0; symbol <= 13; ++symbol) {
-            storeAssetMyNS(assets, "bonus_symbol_" + symbol, spriteSheet.image(symbolSprites[symbol]));
-            storeAssetMyNS(assets, "bonus_value_"  + symbol, spriteSheet.image(valueSprites[symbol]));
+            storeAssetNS(assets, "bonus_symbol_" + symbol, spriteSheet.image(symbolSprites[symbol]));
+            storeAssetNS(assets, "bonus_value_"  + symbol, spriteSheet.image(valueSprites[symbol]));
         }
 
-        storeAssetMyNS(assets, "pac.color.head",                   nesPaletteColor(0x28));
-        storeAssetMyNS(assets, "pac.color.eyes",                   nesPaletteColor(0x02));
-        storeAssetMyNS(assets, "pac.color.palate",                 nesPaletteColor(0x2d));
-        storeAssetMyNS(assets, "pac.color.boobs",                  nesPaletteColor(0x28).deriveColor(0, 1.0, 0.96, 1.0));
-        storeAssetMyNS(assets, "pac.color.hairbow",                nesPaletteColor(0x05));
-        storeAssetMyNS(assets, "pac.color.hairbow.pearls",         nesPaletteColor(0x02));
+        storeAssetNS(assets, "pac.color.head",                   nesPaletteColor(0x28));
+        storeAssetNS(assets, "pac.color.eyes",                   nesPaletteColor(0x02));
+        storeAssetNS(assets, "pac.color.palate",                 nesPaletteColor(0x2d));
+        storeAssetNS(assets, "pac.color.boobs",                  nesPaletteColor(0x28).deriveColor(0, 1.0, 0.96, 1.0));
+        storeAssetNS(assets, "pac.color.hairbow",                nesPaletteColor(0x05));
+        storeAssetNS(assets, "pac.color.hairbow.pearls",         nesPaletteColor(0x02));
 
         RectShort[] numberSprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
-        storeAssetMyNS(assets, "ghost_points_0",                   spriteSheet.image(numberSprites[0]));
-        storeAssetMyNS(assets, "ghost_points_1",                   spriteSheet.image(numberSprites[1]));
-        storeAssetMyNS(assets, "ghost_points_2",                   spriteSheet.image(numberSprites[2]));
-        storeAssetMyNS(assets, "ghost_points_3",                   spriteSheet.image(numberSprites[3]));
+        storeAssetNS(assets, "ghost_points_0",                   spriteSheet.image(numberSprites[0]));
+        storeAssetNS(assets, "ghost_points_1",                   spriteSheet.image(numberSprites[1]));
+        storeAssetNS(assets, "ghost_points_2",                   spriteSheet.image(numberSprites[2]));
+        storeAssetNS(assets, "ghost_points_3",                   spriteSheet.image(numberSprites[3]));
 
-        storeAssetMyNS(assets, "ghost.0.color.normal.dress",       nesPaletteColor(0x05));
-        storeAssetMyNS(assets, "ghost.0.color.normal.eyeballs",    nesPaletteColor(0x20));
-        storeAssetMyNS(assets, "ghost.0.color.normal.pupils",      nesPaletteColor(0x16));
+        storeAssetNS(assets, "ghost.0.color.normal.dress",       nesPaletteColor(0x05));
+        storeAssetNS(assets, "ghost.0.color.normal.eyeballs",    nesPaletteColor(0x20));
+        storeAssetNS(assets, "ghost.0.color.normal.pupils",      nesPaletteColor(0x16));
 
-        storeAssetMyNS(assets, "ghost.1.color.normal.dress",       nesPaletteColor(0x25));
-        storeAssetMyNS(assets, "ghost.1.color.normal.eyeballs",    nesPaletteColor(0x20));
-        storeAssetMyNS(assets, "ghost.1.color.normal.pupils",      nesPaletteColor(0x11));
+        storeAssetNS(assets, "ghost.1.color.normal.dress",       nesPaletteColor(0x25));
+        storeAssetNS(assets, "ghost.1.color.normal.eyeballs",    nesPaletteColor(0x20));
+        storeAssetNS(assets, "ghost.1.color.normal.pupils",      nesPaletteColor(0x11));
 
-        storeAssetMyNS(assets, "ghost.2.color.normal.dress",       nesPaletteColor(0x11));
-        storeAssetMyNS(assets, "ghost.2.color.normal.eyeballs",    nesPaletteColor(0x20));
-        storeAssetMyNS(assets, "ghost.2.color.normal.pupils",      nesPaletteColor(0x11));
+        storeAssetNS(assets, "ghost.2.color.normal.dress",       nesPaletteColor(0x11));
+        storeAssetNS(assets, "ghost.2.color.normal.eyeballs",    nesPaletteColor(0x20));
+        storeAssetNS(assets, "ghost.2.color.normal.pupils",      nesPaletteColor(0x11));
 
-        storeAssetMyNS(assets, "ghost.3.color.normal.dress",       nesPaletteColor(0x16));
-        storeAssetMyNS(assets, "ghost.3.color.normal.eyeballs",    nesPaletteColor(0x20));
-        storeAssetMyNS(assets, "ghost.3.color.normal.pupils",      nesPaletteColor(0x05));
+        storeAssetNS(assets, "ghost.3.color.normal.dress",       nesPaletteColor(0x16));
+        storeAssetNS(assets, "ghost.3.color.normal.eyeballs",    nesPaletteColor(0x20));
+        storeAssetNS(assets, "ghost.3.color.normal.pupils",      nesPaletteColor(0x05));
 
-        storeAssetMyNS(assets, "ghost.color.frightened.dress",     nesPaletteColor(0x01));
-        storeAssetMyNS(assets, "ghost.color.frightened.eyeballs",  nesPaletteColor(0x20));
-        storeAssetMyNS(assets, "ghost.color.frightened.pupils",    nesPaletteColor(0x20));
+        storeAssetNS(assets, "ghost.color.frightened.dress",     nesPaletteColor(0x01));
+        storeAssetNS(assets, "ghost.color.frightened.eyeballs",  nesPaletteColor(0x20));
+        storeAssetNS(assets, "ghost.color.frightened.pupils",    nesPaletteColor(0x20));
 
         //TODO sprite sheet provides two flashing colors, when to use which?
-        storeAssetMyNS(assets, "ghost.color.flashing.dress",       nesPaletteColor(0x20));
-        storeAssetMyNS(assets, "ghost.color.flashing.eyeballs",    nesPaletteColor(0x20));
-        storeAssetMyNS(assets, "ghost.color.flashing.pupils",      nesPaletteColor(0x20));
+        storeAssetNS(assets, "ghost.color.flashing.dress",       nesPaletteColor(0x20));
+        storeAssetNS(assets, "ghost.color.flashing.eyeballs",    nesPaletteColor(0x20));
+        storeAssetNS(assets, "ghost.color.flashing.pupils",      nesPaletteColor(0x20));
 
         soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_OFF,           RES_GAME_UI.url("sound/voice/autopilot-off.mp3"));
         soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_ON,            RES_GAME_UI.url("sound/voice/autopilot-on.mp3"));
@@ -211,11 +211,13 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
     }
 
     @Override
-    public TengenMsPacMan_SpriteSheet spriteSheet() {return spriteSheet;}
+    public TengenMsPacMan_SpriteSheet spriteSheet() {
+        return getAssetNS(theUI().theAssets(), "spritesheet");
+    }
 
     @Override
     public TengenMsPacMan_GameRenderer createGameRenderer(Canvas canvas) {
-        var renderer = new TengenMsPacMan_GameRenderer(spriteSheet, mapRepository, canvas);
+        var renderer = new TengenMsPacMan_GameRenderer(spriteSheet(), mapRepository, canvas);
         renderer.backgroundColorProperty().bind(PY_CANVAS_BG_COLOR);
         return renderer;
     }
@@ -252,12 +254,12 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
 
     @Override
     public SpriteAnimationMap<SpriteID> createGhostAnimations(Ghost ghost) {
-        return new TengenMsPacMan_GhostAnimationMap(spriteSheet, ghost.personality());
+        return new TengenMsPacMan_GhostAnimationMap(spriteSheet(), ghost.personality());
     }
 
     @Override
     public SpriteAnimationMap<SpriteID> createPacAnimations(Pac pac) {
-        return new TengenMsPacMan_PacAnimationMap(spriteSheet);
+        return new TengenMsPacMan_PacAnimationMap(spriteSheet());
     }
 
     @Override

@@ -22,9 +22,12 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
 public interface PacManGames_UIConfig extends PacManGames_GameSceneConfig, Destroyable {
+
     String assetNamespace();
 
     void storeAssets(AssetStorage assetStorage);
+
+    default String toGlobalKey(String localKey) { return assetNamespace() + "." + localKey; }
 
     /**
      * Stores key-value pair in the namespace of this configuration.
@@ -33,8 +36,18 @@ public interface PacManGames_UIConfig extends PacManGames_GameSceneConfig, Destr
      * @param localKey the local asset key, absolute key is {@code asset_namespace + "." + key}
      * @param value the asset value
      */
-    default void storeAssetMyNS(AssetStorage assetStorage, String localKey, Object value) {
-        assetStorage.store(assetNamespace() + "." + localKey, value);
+    default void storeAssetNS(AssetStorage assetStorage, String localKey, Object value) {
+        assetStorage.store(toGlobalKey(localKey), value);
+    }
+
+    /**
+     * @param assetStorage the asset storage
+     * @param localKey the local asset key, absolute key is {@code asset_namespace + "." + key}
+     * @return the asset value
+     * @param <T> expected asset value type
+     */
+    default <T> T getAssetNS(AssetStorage assetStorage, String localKey) {
+        return assetStorage.get(toGlobalKey(localKey));
     }
 
     Image bonusSymbolImage(byte symbol);

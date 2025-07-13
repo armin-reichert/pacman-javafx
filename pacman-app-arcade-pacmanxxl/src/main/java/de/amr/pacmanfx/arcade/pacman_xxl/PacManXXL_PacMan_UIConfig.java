@@ -58,54 +58,54 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
     private ArcadePacMan_SpriteSheet spriteSheet;
 
     public void storeAssets(AssetStorage assets) {
-        storeAssetMyNS(assets, "app_icon", RES_ARCADE_PAC_MAN.loadImage("graphics/icons/pacman.png"));
+        storeAssetNS(assets, "app_icon", RES_ARCADE_PAC_MAN.loadImage("graphics/icons/pacman.png"));
 
-        storeAssetMyNS(assets, "audio.option.selection_changed",  RES_PAC_MAN_XXL.loadAudioClip("sound/ms-select1.wav"));
-        storeAssetMyNS(assets, "audio.option.value_changed",      RES_PAC_MAN_XXL.loadAudioClip("sound/ms-select2.wav"));
+        storeAssetNS(assets, "audio.option.selection_changed",  RES_PAC_MAN_XXL.loadAudioClip("sound/ms-select1.wav"));
+        storeAssetNS(assets, "audio.option.value_changed",      RES_PAC_MAN_XXL.loadAudioClip("sound/ms-select2.wav"));
 
         spriteSheet = new ArcadePacMan_SpriteSheet(RES_ARCADE_PAC_MAN.loadImage("graphics/pacman_spritesheet.png"));
-        storeAssetMyNS(assets, "color.game_over_message", ARCADE_RED);
+        storeAssetNS(assets, "color.game_over_message", ARCADE_RED);
 
         RectShort[] symbolSprites = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS);
         RectShort[] valueSprites  = spriteSheet.spriteSeq(SpriteID.BONUS_VALUES);
         for (byte symbol = 0; symbol <= 7; ++symbol) {
-            storeAssetMyNS(assets, "bonus_symbol_" + symbol, spriteSheet.image(symbolSprites[symbol]));
-            storeAssetMyNS(assets, "bonus_value_"  + symbol, spriteSheet.image(valueSprites[symbol]));
+            storeAssetNS(assets, "bonus_symbol_" + symbol, spriteSheet.image(symbolSprites[symbol]));
+            storeAssetNS(assets, "bonus_value_"  + symbol, spriteSheet.image(valueSprites[symbol]));
         }
 
-        storeAssetMyNS(assets, "pac.color.head",   ARCADE_YELLOW);
-        storeAssetMyNS(assets, "pac.color.eyes",   Color.grayRgb(33));
-        storeAssetMyNS(assets, "pac.color.palate", ARCADE_BROWN);
+        storeAssetNS(assets, "pac.color.head",   ARCADE_YELLOW);
+        storeAssetNS(assets, "pac.color.eyes",   Color.grayRgb(33));
+        storeAssetNS(assets, "pac.color.palate", ARCADE_BROWN);
 
         RectShort[] numberSprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
-        storeAssetMyNS(assets, "ghost_points_0", spriteSheet.image(numberSprites[0]));
-        storeAssetMyNS(assets, "ghost_points_1", spriteSheet.image(numberSprites[1]));
-        storeAssetMyNS(assets, "ghost_points_2", spriteSheet.image(numberSprites[2]));
-        storeAssetMyNS(assets, "ghost_points_3", spriteSheet.image(numberSprites[3]));
+        storeAssetNS(assets, "ghost_points_0", spriteSheet.image(numberSprites[0]));
+        storeAssetNS(assets, "ghost_points_1", spriteSheet.image(numberSprites[1]));
+        storeAssetNS(assets, "ghost_points_2", spriteSheet.image(numberSprites[2]));
+        storeAssetNS(assets, "ghost_points_3", spriteSheet.image(numberSprites[3]));
 
-        storeAssetMyNS(assets, "ghost.0.color.normal.dress",      ARCADE_RED);
-        storeAssetMyNS(assets, "ghost.0.color.normal.eyeballs",   ARCADE_WHITE);
-        storeAssetMyNS(assets, "ghost.0.color.normal.pupils",     ARCADE_BLUE);
+        storeAssetNS(assets, "ghost.0.color.normal.dress",      ARCADE_RED);
+        storeAssetNS(assets, "ghost.0.color.normal.eyeballs",   ARCADE_WHITE);
+        storeAssetNS(assets, "ghost.0.color.normal.pupils",     ARCADE_BLUE);
 
-        storeAssetMyNS(assets, "ghost.1.color.normal.dress",      ARCADE_PINK);
-        storeAssetMyNS(assets, "ghost.1.color.normal.eyeballs",   ARCADE_WHITE);
-        storeAssetMyNS(assets, "ghost.1.color.normal.pupils",     ARCADE_BLUE);
+        storeAssetNS(assets, "ghost.1.color.normal.dress",      ARCADE_PINK);
+        storeAssetNS(assets, "ghost.1.color.normal.eyeballs",   ARCADE_WHITE);
+        storeAssetNS(assets, "ghost.1.color.normal.pupils",     ARCADE_BLUE);
 
-        storeAssetMyNS(assets, "ghost.2.color.normal.dress",      ARCADE_CYAN);
-        storeAssetMyNS(assets, "ghost.2.color.normal.eyeballs",   ARCADE_WHITE);
-        storeAssetMyNS(assets, "ghost.2.color.normal.pupils",     ARCADE_BLUE);
+        storeAssetNS(assets, "ghost.2.color.normal.dress",      ARCADE_CYAN);
+        storeAssetNS(assets, "ghost.2.color.normal.eyeballs",   ARCADE_WHITE);
+        storeAssetNS(assets, "ghost.2.color.normal.pupils",     ARCADE_BLUE);
 
-        storeAssetMyNS(assets, "ghost.3.color.normal.dress",      ARCADE_ORANGE);
-        storeAssetMyNS(assets, "ghost.3.color.normal.eyeballs",   ARCADE_WHITE);
-        storeAssetMyNS(assets, "ghost.3.color.normal.pupils",     ARCADE_BLUE);
+        storeAssetNS(assets, "ghost.3.color.normal.dress",      ARCADE_ORANGE);
+        storeAssetNS(assets, "ghost.3.color.normal.eyeballs",   ARCADE_WHITE);
+        storeAssetNS(assets, "ghost.3.color.normal.pupils",     ARCADE_BLUE);
 
-        storeAssetMyNS(assets, "ghost.color.frightened.dress",    ARCADE_BLUE);
-        storeAssetMyNS(assets, "ghost.color.frightened.eyeballs", ARCADE_ROSE);
-        storeAssetMyNS(assets, "ghost.color.frightened.pupils",   ARCADE_ROSE);
+        storeAssetNS(assets, "ghost.color.frightened.dress",    ARCADE_BLUE);
+        storeAssetNS(assets, "ghost.color.frightened.eyeballs", ARCADE_ROSE);
+        storeAssetNS(assets, "ghost.color.frightened.pupils",   ARCADE_ROSE);
 
-        storeAssetMyNS(assets, "ghost.color.flashing.dress",      ARCADE_WHITE);
-        storeAssetMyNS(assets, "ghost.color.flashing.eyeballs",   ARCADE_ROSE);
-        storeAssetMyNS(assets, "ghost.color.flashing.pupils",     ARCADE_RED);
+        storeAssetNS(assets, "ghost.color.flashing.dress",      ARCADE_WHITE);
+        storeAssetNS(assets, "ghost.color.flashing.eyeballs",   ARCADE_ROSE);
+        storeAssetNS(assets, "ghost.color.flashing.pupils",     ARCADE_RED);
 
         soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_OFF,       RES_PACMAN_UI.url("sound/voice/autopilot-off.mp3"));
         soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_ON,        RES_PACMAN_UI.url("sound/voice/autopilot-on.mp3"));

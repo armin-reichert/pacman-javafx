@@ -61,64 +61,64 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig {
 
     private final DefaultSoundManager soundManager = new DefaultSoundManager();
     private final Map<String, GameScene> scenesByID = new HashMap<>();
-    private ArcadeMsPacMan_SpriteSheet spriteSheet;
     private BrightMazesSpriteSheet spriteSheetBrightMazes;
 
     public void storeAssets(AssetStorage assets) {
-        spriteSheet            = new ArcadeMsPacMan_SpriteSheet(RES_ARCADE_MS_PAC_MAN.loadImage("graphics/mspacman_spritesheet.png"));
+        var spriteSheet = new ArcadeMsPacMan_SpriteSheet(RES_ARCADE_MS_PAC_MAN.loadImage("graphics/mspacman_spritesheet.png"));
+        storeAssetNS(assets, "spritesheet", spriteSheet);
         spriteSheetBrightMazes = new BrightMazesSpriteSheet(RES_ARCADE_MS_PAC_MAN.loadImage("graphics/mazes_flashing.png"));
 
-        storeAssetMyNS(assets, "app_icon",                        RES_ARCADE_MS_PAC_MAN.loadImage("graphics/icons/mspacman.png"));
+        storeAssetNS(assets, "app_icon",                        RES_ARCADE_MS_PAC_MAN.loadImage("graphics/icons/mspacman.png"));
 
-        storeAssetMyNS(assets, "startpage.image1",                RES_ARCADE_MS_PAC_MAN.loadImage("graphics/f1.jpg"));
-        storeAssetMyNS(assets, "startpage.image2",                RES_ARCADE_MS_PAC_MAN.loadImage("graphics/f2.jpg"));
+        storeAssetNS(assets, "startpage.image1",                RES_ARCADE_MS_PAC_MAN.loadImage("graphics/f1.jpg"));
+        storeAssetNS(assets, "startpage.image2",                RES_ARCADE_MS_PAC_MAN.loadImage("graphics/f2.jpg"));
 
-        storeAssetMyNS(assets, "logo.midway",                     RES_ARCADE_MS_PAC_MAN.loadImage("graphics/midway_logo.png"));
+        storeAssetNS(assets, "logo.midway",                     RES_ARCADE_MS_PAC_MAN.loadImage("graphics/midway_logo.png"));
 
-        storeAssetMyNS(assets, "color.game_over_message",         ARCADE_RED);
+        storeAssetNS(assets, "color.game_over_message",         ARCADE_RED);
 
         RectShort[] symbolSprites = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS);
         RectShort[] valueSprites  = spriteSheet.spriteSeq(SpriteID.BONUS_VALUES);
         for (byte symbol = 0; symbol <= 6; ++symbol) {
-            storeAssetMyNS(assets, "bonus_symbol_" + symbol, spriteSheet.image(symbolSprites[symbol]));
-            storeAssetMyNS(assets, "bonus_value_" + symbol,  spriteSheet.image(valueSprites[symbol]));
+            storeAssetNS(assets, "bonus_symbol_" + symbol, spriteSheet.image(symbolSprites[symbol]));
+            storeAssetNS(assets, "bonus_value_" + symbol,  spriteSheet.image(valueSprites[symbol]));
         }
 
-        storeAssetMyNS(assets, "pac.color.head",                  ARCADE_YELLOW);
-        storeAssetMyNS(assets, "pac.color.eyes",                  Color.grayRgb(33));
-        storeAssetMyNS(assets, "pac.color.palate",                ARCADE_BROWN);
-        storeAssetMyNS(assets, "pac.color.boobs",                 ARCADE_YELLOW.deriveColor(0, 1.0, 0.96, 1.0));
-        storeAssetMyNS(assets, "pac.color.hairbow",               ARCADE_RED);
-        storeAssetMyNS(assets, "pac.color.hairbow.pearls",        ARCADE_BLUE);
+        storeAssetNS(assets, "pac.color.head",                  ARCADE_YELLOW);
+        storeAssetNS(assets, "pac.color.eyes",                  Color.grayRgb(33));
+        storeAssetNS(assets, "pac.color.palate",                ARCADE_BROWN);
+        storeAssetNS(assets, "pac.color.boobs",                 ARCADE_YELLOW.deriveColor(0, 1.0, 0.96, 1.0));
+        storeAssetNS(assets, "pac.color.hairbow",               ARCADE_RED);
+        storeAssetNS(assets, "pac.color.hairbow.pearls",        ARCADE_BLUE);
 
         RectShort[] numberSprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
-        storeAssetMyNS(assets, "ghost_points_0",                  spriteSheet.image(numberSprites[0]));
-        storeAssetMyNS(assets, "ghost_points_1",                  spriteSheet.image(numberSprites[1]));
-        storeAssetMyNS(assets, "ghost_points_2",                  spriteSheet.image(numberSprites[2]));
-        storeAssetMyNS(assets, "ghost_points_3",                  spriteSheet.image(numberSprites[3]));
+        storeAssetNS(assets, "ghost_points_0",                  spriteSheet.image(numberSprites[0]));
+        storeAssetNS(assets, "ghost_points_1",                  spriteSheet.image(numberSprites[1]));
+        storeAssetNS(assets, "ghost_points_2",                  spriteSheet.image(numberSprites[2]));
+        storeAssetNS(assets, "ghost_points_3",                  spriteSheet.image(numberSprites[3]));
 
-        storeAssetMyNS(assets, "ghost.0.color.normal.dress",      ARCADE_RED);
-        storeAssetMyNS(assets, "ghost.0.color.normal.eyeballs",   ARCADE_WHITE);
-        storeAssetMyNS(assets, "ghost.0.color.normal.pupils",     ARCADE_BLUE);
+        storeAssetNS(assets, "ghost.0.color.normal.dress",      ARCADE_RED);
+        storeAssetNS(assets, "ghost.0.color.normal.eyeballs",   ARCADE_WHITE);
+        storeAssetNS(assets, "ghost.0.color.normal.pupils",     ARCADE_BLUE);
 
-        storeAssetMyNS(assets, "ghost.1.color.normal.dress",      ARCADE_PINK);
-        storeAssetMyNS(assets, "ghost.1.color.normal.eyeballs",   ARCADE_WHITE);
-        storeAssetMyNS(assets, "ghost.1.color.normal.pupils",     ARCADE_BLUE);
+        storeAssetNS(assets, "ghost.1.color.normal.dress",      ARCADE_PINK);
+        storeAssetNS(assets, "ghost.1.color.normal.eyeballs",   ARCADE_WHITE);
+        storeAssetNS(assets, "ghost.1.color.normal.pupils",     ARCADE_BLUE);
 
-        storeAssetMyNS(assets, "ghost.2.color.normal.dress",      ARCADE_CYAN);
-        storeAssetMyNS(assets, "ghost.2.color.normal.eyeballs",   ARCADE_WHITE);
-        storeAssetMyNS(assets, "ghost.2.color.normal.pupils",     ARCADE_BLUE);
+        storeAssetNS(assets, "ghost.2.color.normal.dress",      ARCADE_CYAN);
+        storeAssetNS(assets, "ghost.2.color.normal.eyeballs",   ARCADE_WHITE);
+        storeAssetNS(assets, "ghost.2.color.normal.pupils",     ARCADE_BLUE);
 
-        storeAssetMyNS(assets, "ghost.3.color.normal.dress",      ARCADE_ORANGE);
-        storeAssetMyNS(assets, "ghost.3.color.normal.eyeballs",   ARCADE_WHITE);
-        storeAssetMyNS(assets, "ghost.3.color.normal.pupils",     ARCADE_BLUE);
+        storeAssetNS(assets, "ghost.3.color.normal.dress",      ARCADE_ORANGE);
+        storeAssetNS(assets, "ghost.3.color.normal.eyeballs",   ARCADE_WHITE);
+        storeAssetNS(assets, "ghost.3.color.normal.pupils",     ARCADE_BLUE);
 
-        storeAssetMyNS(assets, "ghost.color.frightened.dress",    ARCADE_BLUE);
-        storeAssetMyNS(assets, "ghost.color.frightened.eyeballs", ARCADE_ROSE);
-        storeAssetMyNS(assets, "ghost.color.frightened.pupils",   ARCADE_ROSE);
-        storeAssetMyNS(assets, "ghost.color.flashing.dress",      ARCADE_WHITE);
-        storeAssetMyNS(assets, "ghost.color.flashing.eyeballs",   ARCADE_ROSE);
-        storeAssetMyNS(assets, "ghost.color.flashing.pupils",     ARCADE_RED);
+        storeAssetNS(assets, "ghost.color.frightened.dress",    ARCADE_BLUE);
+        storeAssetNS(assets, "ghost.color.frightened.eyeballs", ARCADE_ROSE);
+        storeAssetNS(assets, "ghost.color.frightened.pupils",   ARCADE_ROSE);
+        storeAssetNS(assets, "ghost.color.flashing.dress",      ARCADE_WHITE);
+        storeAssetNS(assets, "ghost.color.flashing.eyeballs",   ARCADE_ROSE);
+        storeAssetNS(assets, "ghost.color.flashing.pupils",     ARCADE_RED);
 
         soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_OFF,       RES_PACMAN_UI.url("sound/voice/autopilot-off.mp3"));
         soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_ON,        RES_PACMAN_UI.url("sound/voice/autopilot-on.mp3"));
@@ -165,7 +165,9 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig {
     }
 
     @Override
-    public ArcadeMsPacMan_SpriteSheet spriteSheet() {return spriteSheet;}
+    public ArcadeMsPacMan_SpriteSheet spriteSheet() {
+        return getAssetNS(theUI().theAssets(), "spritesheet");
+    }
 
     @Override
     public WorldMapColorScheme colorScheme(WorldMap worldMap) {
@@ -174,17 +176,17 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig {
 
     @Override
     public ArcadeMsPacMan_GameRenderer createGameRenderer(Canvas canvas) {
-        return new ArcadeMsPacMan_GameRenderer(spriteSheet, spriteSheetBrightMazes, canvas);
+        return new ArcadeMsPacMan_GameRenderer(spriteSheet(), spriteSheetBrightMazes, canvas);
     }
 
     @Override
     public SpriteAnimationMap<SpriteID> createGhostAnimations(Ghost ghost) {
-        return new ArcadeMsPacMan_GhostAnimationMap(spriteSheet, ghost.personality());
+        return new ArcadeMsPacMan_GhostAnimationMap(spriteSheet(), ghost.personality());
     }
 
     @Override
     public SpriteAnimationMap<SpriteID> createPacAnimations(Pac pac) {
-        return new ArcadeMsPacMan_PacAnimationMap(spriteSheet);
+        return new ArcadeMsPacMan_PacAnimationMap(spriteSheet());
     }
 
     @Override
