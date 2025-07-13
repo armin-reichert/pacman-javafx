@@ -12,12 +12,12 @@ import org.tinylog.Logger;
  */
 public interface GameAction {
 
-    static void executeIfEnabled(GameUI ui, GameContext gameContext, GameAction action) {
-        if (action.isEnabled(ui, gameContext)) {
-            action.execute(ui, gameContext);
-            Logger.trace("Action '{}' executed", action.name());
+    default void executeIfEnabled(GameUI ui, GameContext gameContext) {
+        if (isEnabled(ui, gameContext)) {
+            execute(ui, gameContext);
+            Logger.trace("Action '{}' executed", name());
         } else {
-            Logger.warn("Disabled action '{}' not executed", action.name());
+            Logger.warn("Disabled action '{}' not executed", name());
         }
     }
 

@@ -9,7 +9,10 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.actors.ActorAnimationMap;
-import de.amr.pacmanfx.ui.*;
+import de.amr.pacmanfx.ui.ActionBindingMap;
+import de.amr.pacmanfx.ui.GameScene;
+import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.CrudeCanvasContainer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.PopupLayer;
@@ -155,7 +158,7 @@ public class GameView implements PacManGames_View {
         ui.currentGameScene().ifPresent(gameScene -> {
             if (ui.currentGameSceneIsPlayScene2D()) {
                 var miSwitchTo3D = new MenuItem(ui.theAssets().text("use_3D_scene"));
-                miSwitchTo3D.setOnAction(actionEvent -> GameAction.executeIfEnabled(ui, gameContext, ACTION_TOGGLE_PLAY_SCENE_2D_3D));
+                miSwitchTo3D.setOnAction(e -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(ui, gameContext));
                 contextMenu.getItems().add(menuTitleItem(ui.theAssets().text("scene_display")));
                 contextMenu.getItems().add(miSwitchTo3D);
             }

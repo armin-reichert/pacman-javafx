@@ -96,10 +96,10 @@ public class ActionBindingMap {
     }
 
     public void runMatchingAction(GameUI ui, GameContext gameContext) {
-        matchingAction().ifPresent(action -> GameAction.executeIfEnabled(ui, gameContext, action));
+        matchingAction().ifPresent(action -> action.executeIfEnabled(ui, gameContext));
     }
 
     public void runMatchingActionOrElse(GameUI ui, GameContext gameContext, Runnable defaultAction) {
-        matchingAction().ifPresentOrElse(action -> GameAction.executeIfEnabled(ui, gameContext, action), defaultAction);
+        matchingAction().ifPresentOrElse(action -> action.executeIfEnabled(ui, gameContext), defaultAction);
     }
 }

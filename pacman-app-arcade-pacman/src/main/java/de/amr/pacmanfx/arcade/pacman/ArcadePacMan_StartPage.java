@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.layout.StartPage;
 import de.amr.pacmanfx.ui.layout.StartPagesView;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
@@ -36,7 +35,7 @@ public class ArcadePacMan_StartPage extends StackPane implements StartPage {
         flyer.selectPage(0);
 
         var startButton = StartPagesView.createStartButton(theUI().theAssets(), Pos.BOTTOM_CENTER);
-        startButton.setAction(() -> GameAction.executeIfEnabled(theUI(), gameContext, ACTION_BOOT_SHOW_GAME_VIEW));
+        startButton.setAction(() -> ACTION_BOOT_SHOW_GAME_VIEW.executeIfEnabled(theUI(), gameContext));
         startButton.setTranslateY(-50);
         getChildren().addAll(flyer, startButton);
     }

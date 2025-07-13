@@ -14,7 +14,6 @@ import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.LivesCounter;
 import de.amr.pacmanfx.model.actors.*;
-import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
@@ -132,7 +131,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent e, ContextMenu menu) {
+    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent contextMenuEvent, ContextMenu contextMenu) {
         var miAutopilot = new CheckMenuItem(theUI().theAssets().text("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(PY_USING_AUTOPILOT);
 
@@ -143,7 +142,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
         miMuted.selectedProperty().bindBidirectional(theUI().mutedProperty());
 
         var miQuit = new MenuItem(theUI().theAssets().text("quit"));
-        miQuit.setOnAction(ae -> GameAction.executeIfEnabled(theUI(), gameContext, ACTION_QUIT_GAME_SCENE));
+        miQuit.setOnAction(e -> ACTION_QUIT_GAME_SCENE.executeIfEnabled(theUI(), gameContext));
 
         return List.of(
             menuTitleItem(theUI().theAssets().text("pacman")),
