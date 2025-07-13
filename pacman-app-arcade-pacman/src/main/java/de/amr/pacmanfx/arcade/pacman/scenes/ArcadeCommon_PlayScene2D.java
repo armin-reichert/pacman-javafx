@@ -133,10 +133,10 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
     @Override
     public List<MenuItem> supplyContextMenuItems(ContextMenuEvent contextMenuEvent, ContextMenu contextMenu) {
         var miAutopilot = new CheckMenuItem(theUI().theAssets().text("autopilot"));
-        miAutopilot.selectedProperty().bindBidirectional(theGameContext().propertyUsingAutopilot());
+        miAutopilot.selectedProperty().bindBidirectional(gameContext.propertyUsingAutopilot());
 
         var miImmunity = new CheckMenuItem(theUI().theAssets().text("immunity"));
-        miImmunity.selectedProperty().bindBidirectional(theGameContext().propertyImmunity());
+        miImmunity.selectedProperty().bindBidirectional(gameContext.propertyImmunity());
 
         var miMuted = new CheckMenuItem(theUI().theAssets().text("muted"));
         miMuted.selectedProperty().bindBidirectional(theUI().mutedProperty());
