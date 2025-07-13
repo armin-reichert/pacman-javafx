@@ -224,7 +224,7 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
 
     private void drawMarqueeBulb(Marquee marquee, int bulbIndex) {
         final double minX = marquee.x(), minY = marquee.y();
-        final double maxX = marquee.x() + marquee.size().getWidth(), maxY = marquee.y() + marquee.size().getHeight();
+        final double maxX = marquee.x() + marquee.width(), maxY = marquee.y() + marquee.height();
         double x, y;
         if (bulbIndex <= 33) { // lower edge left-to-right
             x = minX + 4 * bulbIndex;
