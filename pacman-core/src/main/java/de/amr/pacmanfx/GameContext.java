@@ -15,7 +15,6 @@ import javafx.beans.property.BooleanProperty;
 
 import java.io.File;
 import java.util.Optional;
-import java.util.Random;
 
 public interface GameContext {
     CoinMechanism       theCoinMechanism();
@@ -34,7 +33,6 @@ public interface GameContext {
      * <p>Default: <code>&lt;user_home&gt;/.pacmanfx</code></p>
      */
     File                theHomeDir();
-    Random              theRNG();
     SimulationStep      theSimulationStep();
 
     BooleanProperty     propertyImmunity();

@@ -16,7 +16,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 
 import java.io.File;
 import java.util.Optional;
-import java.util.Random;
 
 import static java.util.Objects.requireNonNull;
 
@@ -38,7 +37,6 @@ public class Globals {
         private final File customMapDir = new File(homeDir, "maps");
         private final CoinMechanism coinMechanism = new CoinMechanism();
         private final GameController gameController = new GameController(this);
-        private final Random random = new Random();
         private final SimulationStep simulationStep = new SimulationStep();
 
         private final BooleanProperty propertyImmunity = new SimpleBooleanProperty(false);
@@ -87,11 +85,6 @@ public class Globals {
         @Override
         public GameState theGameState() {
             return gameController.gameState();
-        }
-
-        @Override
-        public Random theRNG() {
-            return random;
         }
 
         @Override

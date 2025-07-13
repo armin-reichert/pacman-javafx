@@ -10,6 +10,7 @@ import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.model.MapSelectionMode;
 
 import java.io.File;
+import java.util.Random;
 
 public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
 
@@ -25,7 +26,7 @@ public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
     public void buildDemoLevel() {
         // Select random (standard) level with different map and map color scheme for each choice
         int[] levelNumbers = { 1, 3, 6, 10, 14, 18 };
-        int levelNumber = levelNumbers[gameContext.theRNG().nextInt(levelNumbers.length)];
+        int levelNumber = levelNumbers[new Random().nextInt(levelNumbers.length)];
         mapSelector().setMapSelectionMode(MapSelectionMode.NO_CUSTOM_MAPS);
         createLevel(levelNumber);
         level.setData(createLevelData(1)); // use settings (speed etc.) of first level

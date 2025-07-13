@@ -23,6 +23,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
+import java.util.Random;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -602,11 +603,11 @@ public class TengenMsPacMan_GameModel extends GameModel {
             return;
         }
 
-        boolean leftToRight = gameContext.theRNG().nextBoolean();
+        boolean leftToRight = new Random().nextBoolean();
         Vector2i houseEntry = tileAt(house.entryPosition());
         Vector2i houseEntryOpposite = houseEntry.plus(0, house.sizeInTiles().y() + 1);
-        Portal entryPortal = level.portals().get(gameContext.theRNG().nextInt(level.portals().size()));
-        Portal exitPortal  = level.portals().get(gameContext.theRNG().nextInt(level.portals().size()));
+        Portal entryPortal = level.portals().get(new Random().nextInt(level.portals().size()));
+        Portal exitPortal  = level.portals().get(new Random().nextInt(level.portals().size()));
         List<Waypoint> route = Stream.of(
                 leftToRight ? entryPortal.leftTunnelEnd() : entryPortal.rightTunnelEnd(),
                 houseEntry,

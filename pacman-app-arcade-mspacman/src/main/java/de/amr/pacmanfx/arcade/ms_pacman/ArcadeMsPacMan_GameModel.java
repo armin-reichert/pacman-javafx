@@ -22,6 +22,7 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.util.List;
 import java.util.OptionalInt;
+import java.util.Random;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -363,7 +364,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
         Vector2i exitTile;
         boolean crossingLeftToRight;
         if (entryTile != null) {
-            int exitPortalIndex = gameContext.theRNG().nextInt(level.portals().size());
+                int exitPortalIndex = new Random().nextInt(level.portals().size());
             if (entryTile.x() == 0) { // enter maze at left border
                 exitTile = level.portals().get(exitPortalIndex).rightTunnelEnd().plus(1, 0);
                 crossingLeftToRight = true;
@@ -373,7 +374,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
             }
         }
         else { // choose random crossing direction and random entry and exit portals
-            crossingLeftToRight = gameContext.theRNG().nextBoolean();
+            crossingLeftToRight = new Random().nextBoolean();
             if (crossingLeftToRight) {
                 entryTile = randomPortal(level).leftTunnelEnd();
                 exitTile  = randomPortal(level).rightTunnelEnd().plus(1, 0);
@@ -400,6 +401,6 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
     }
 
     private Portal randomPortal(GameLevel level) {
-        return level.portals().get(gameContext.theRNG().nextInt(level.portals().size()));
+        return level.portals().get(new Random().nextInt(level.portals().size()));
     }
 }

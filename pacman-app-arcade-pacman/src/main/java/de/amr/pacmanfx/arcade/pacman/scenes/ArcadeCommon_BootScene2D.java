@@ -13,6 +13,8 @@ import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
+import java.util.Random;
+
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
@@ -93,6 +95,7 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
     }
 
     private void drawRandomHexDigits() {
+        var random = new Random();
         int numRows = (int) (ARCADE_MAP_SIZE_IN_PIXELS.y() / TS);
         int numCols = (int) (ARCADE_MAP_SIZE_IN_PIXELS.x() / TS);
         ctx().setFill(ARCADE_WHITE);
@@ -100,19 +103,20 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
         for (int row = 0; row < numRows; ++row) {
             double y = scaled(tiles_to_px(row + 1));
             for (int col = 0; col < numCols; ++col) {
-                int hexDigit = gameContext.theRNG().nextInt(16);
+                int hexDigit = random.nextInt(16);
                 ctx().fillText(Integer.toHexString(hexDigit), scaled(tiles_to_px(col)), y);
             }
         }
     }
 
     private void drawRandomSpriteFragments() {
+        var random = new Random();
         int numRows = (int) (ARCADE_MAP_SIZE_IN_PIXELS.y() / FRAGMENT_SIZE);
         int numCols = (int) (ARCADE_MAP_SIZE_IN_PIXELS.x() / FRAGMENT_SIZE);
         for (int row = 0; row < numRows; ++row) {
-            if (gameContext.theRNG().nextInt(100) < 20) continue;
+            if (random.nextInt(100) < 20) continue;
             RectShort fragment1 = randomSpriteFragment(), fragment2 = randomSpriteFragment();
-            int split = numCols / 8 + gameContext.theRNG().nextInt(numCols / 4);
+            int split = numCols / 8 + random.nextInt(numCols / 4);
             for (int col = 0; col < numCols; ++col) {
                 gr().drawSpriteScaled(col < split ? fragment1 : fragment2, FRAGMENT_SIZE * col, FRAGMENT_SIZE * row);
             }
@@ -120,9 +124,10 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
     }
 
     private RectShort randomSpriteFragment() {
+        var random = new Random();
         return new RectShort(
-            (int) lerp(minPoint.x(), maxPoint.x(), gameContext.theRNG().nextDouble()),
-            (int) lerp(minPoint.y(), maxPoint.y(), gameContext.theRNG().nextDouble()),
+            (int) lerp(minPoint.x(), maxPoint.x(), random.nextDouble()),
+            (int) lerp(minPoint.y(), maxPoint.y(), random.nextDouble()),
             FRAGMENT_SIZE, FRAGMENT_SIZE);
     }
 
