@@ -85,7 +85,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         scores3D.rotateProperty().bind(camera.rotateProperty());
 
         var coordinateSystem = new CoordinateSystem();
-        coordinateSystem.visibleProperty().bind(ui.PY_3D_AXES_VISIBLE());
+        coordinateSystem.visibleProperty().bind(ui.property3DAxesVisible());
 
         // last child is placeholder for level 3D
         var root = new Group(scores3D, coordinateSystem, new Group());
@@ -129,7 +129,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         miUse2DScene.setOnAction(e -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(ui));
 
         var miToggleMiniView = new CheckMenuItem(ui.theAssets().text("pip"));
-        miToggleMiniView.selectedProperty().bindBidirectional(ui.PY_MINI_VIEW_ON());
+        miToggleMiniView.selectedProperty().bindBidirectional(ui.propertyMiniViewOn());
 
         var miAutopilot = new CheckMenuItem(ui.theAssets().text("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(ui.theGameContext().propertyUsingAutopilot());
@@ -165,15 +165,15 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         for (var perspectiveID : Perspective.ID.values()) {
             var radioItem = new RadioMenuItem(ui.theAssets().text("perspective_id_" + perspectiveID.name()));
             radioItem.setToggleGroup(toggleGroup);
-            radioItem.setOnAction(e -> ui.PY_3D_PERSPECTIVE().set(perspectiveID));
+            radioItem.setOnAction(e -> ui.property3DPerspective().set(perspectiveID));
             radioItem.setUserData(perspectiveID);
-            if (perspectiveID == ui.PY_3D_PERSPECTIVE().get())  {
+            if (perspectiveID == ui.property3DPerspective().get())  {
                 radioItem.setSelected(true);
             }
             items.add(radioItem);
         }
         //TODO remove this again!
-        ui.PY_3D_PERSPECTIVE().addListener((py, ov, newPerspectiveID) -> {
+        ui.property3DPerspective().addListener((py, ov, newPerspectiveID) -> {
             for (MenuItem item : items) {
                 if (item.getUserData() == newPerspectiveID) {
                     toggleGroup.selectToggle((Toggle) item);
@@ -215,7 +215,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     @Override
     public void init() {
         gameContext.theGame().hud().showScore(true);
-        perspectiveManager.perspectiveIDProperty().bind(ui.PY_3D_PERSPECTIVE());
+        perspectiveManager.perspectiveIDProperty().bind(ui.property3DPerspective());
     }
 
     @Override
@@ -324,7 +324,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                     pauseSec(1)
                 );
                 animation.setOnFinished(e -> {
-                    perspectiveManager.perspectiveIDProperty().bind(ui.PY_3D_PERSPECTIVE());
+                    perspectiveManager.perspectiveIDProperty().bind(ui.property3DPerspective());
                     gameContext.theGameController().letCurrentGameStateExpire();
                 });
                 animation.play();
@@ -349,7 +349,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             case TESTING_LEVELS_SHORT, TESTING_LEVELS_MEDIUM -> {
                 replaceGameLevel3D();
                 showLevelTestMessage(gameContext.theGameLevel().number());
-                ui.PY_3D_PERSPECTIVE().set(Perspective.ID.TOTAL);
+                ui.property3DPerspective().set(Perspective.ID.TOTAL);
             }
         }
     }

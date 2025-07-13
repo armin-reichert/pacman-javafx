@@ -121,23 +121,23 @@ public interface GameUI {
 
     // Global properties
     ObjectProperty<Color> propertyCanvasBackgroundColor();
-    BooleanProperty                 PY_CANVAS_FONT_SMOOTHING();
-    BooleanProperty                 PY_CANVAS_IMAGE_SMOOTHING();
-    BooleanProperty                 PY_DEBUG_INFO_VISIBLE();
-    IntegerProperty                 PY_PIP_HEIGHT();
-    BooleanProperty                 PY_MINI_VIEW_ON();
-    IntegerProperty                 PY_PIP_OPACITY_PERCENT();
-    IntegerProperty                 PY_SIMULATION_STEPS();
-    BooleanProperty                 PY_3D_AXES_VISIBLE();
-    ObjectProperty<DrawMode>        PY_3D_DRAW_MODE();
-    BooleanProperty                 PY_3D_ENABLED();
-    BooleanProperty                 PY_3D_ENERGIZER_EXPLODES();
-    ObjectProperty<Color>           PY_3D_FLOOR_COLOR();
-    ObjectProperty<Color>           PY_3D_LIGHT_COLOR();
-    BooleanProperty                 PY_3D_PAC_LIGHT_ENABLED();
-    ObjectProperty<Perspective.ID>  PY_3D_PERSPECTIVE();
-    DoubleProperty                  PY_3D_WALL_HEIGHT();
-    DoubleProperty                  PY_3D_WALL_OPACITY();
+    BooleanProperty propertyCanvasFontSmoothing();
+    BooleanProperty propertyCanvasImageSmoothing();
+    BooleanProperty propertyDebugInfoVisible();
+    IntegerProperty propertyPipHeight();
+    BooleanProperty propertyMiniViewOn();
+    IntegerProperty propertyPipOpacityPercent();
+    IntegerProperty propertySimulationSteps();
+    BooleanProperty property3DAxesVisible();
+    ObjectProperty<DrawMode> property3DDrawMode();
+    BooleanProperty property3DEnabled();
+    BooleanProperty property3DEnergizerExplodes();
+    ObjectProperty<Color> property3DFloorColor();
+    ObjectProperty<Color> property3DLightColor();
+    BooleanProperty property3DPacLightEnabled();
+    ObjectProperty<Perspective.ID> property3DPerspective();
+    DoubleProperty property3DWallHeight();
+    DoubleProperty property3DWallOpacity();
 
     PacManGames_Assets theAssets();
     GameClock theGameClock();

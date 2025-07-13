@@ -187,7 +187,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         @Override
         protected void onValueChanged(int index) {
             state.play3D = selectedValue();
-            theUI().PY_3D_ENABLED().set(state.play3D);
+            theUI().property3DEnabled().set(state.play3D);
             logState();
         }
 
@@ -284,7 +284,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         mapSelector.loadAllMaps();
         final boolean customMapsExist = !mapSelector.customMaps().isEmpty();
 
-        state.play3D = theUI().PY_3D_ENABLED().get();
+        state.play3D = theUI().property3DEnabled().get();
         state.cutScenesEnabled = game.cutScenesEnabled();
         state.mapOrder = mapSelector.mapSelectionMode();
         logState();

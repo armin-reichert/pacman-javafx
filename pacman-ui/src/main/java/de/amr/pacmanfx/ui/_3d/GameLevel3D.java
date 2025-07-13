@@ -160,7 +160,7 @@ public class GameLevel3D extends Group implements Destroyable {
         };
 
         ambientLight = new AmbientLight();
-        ambientLight.colorProperty().bind(ui.PY_3D_LIGHT_COLOR());
+        ambientLight.colorProperty().bind(ui.property3DLightColor());
         getChildren().add(ambientLight);
 
         levelCounter3D = new LevelCounter3D(animationManager, gameContext.theGame().hud().levelCounter());
@@ -224,7 +224,7 @@ public class GameLevel3D extends Group implements Destroyable {
                 Settings3D.FLOOR_3D_THICKNESS,
                 Settings3D.FLOOR_3D_PADDING
             );
-            floor3D.materialProperty().bind(ui.PY_3D_FLOOR_COLOR().map(Ufx::coloredPhongMaterial));
+            floor3D.materialProperty().bind(ui.property3DFloorColor().map(Ufx::coloredPhongMaterial));
 
             wallBaseMaterial = new PhongMaterial();
             wallBaseMaterial.diffuseColorProperty().bind(Bindings.createObjectBinding(
@@ -245,7 +245,7 @@ public class GameLevel3D extends Group implements Destroyable {
             cornerTopMaterial.setDiffuseColor(colorScheme.fill());
             cornerTopMaterial.specularColorProperty().bind(cornerTopMaterial.diffuseColorProperty().map(Color::brighter));
 
-            wallOpacityProperty.bind(ui.PY_3D_WALL_OPACITY());
+            wallOpacityProperty.bind(ui.property3DWallOpacity());
 
             r3D = new TerrainRenderer3D();
             r3D.setOnWallCreated(wall3D -> wall3D.baseHeightProperty().bind(obstacleBaseHeightProperty));
@@ -286,8 +286,8 @@ public class GameLevel3D extends Group implements Destroyable {
         energizers3D.stream().map(Eatable3D::shape3D).forEach(getChildren()::add);
         pellets3D   .stream().map(Eatable3D::shape3D).forEach(getChildren()::add);
 
-        ui.PY_3D_WALL_HEIGHT().addListener(this::handleWallHeightChange);
-        ui.PY_3D_DRAW_MODE().addListener(this::handleDrawModeChange);
+        ui.property3DWallHeight().addListener(this::handleWallHeightChange);
+        ui.property3DDrawMode().addListener(this::handleDrawModeChange);
 
         setMouseTransparent(true); // this increases performance, they say...
 
@@ -514,10 +514,10 @@ public class GameLevel3D extends Group implements Destroyable {
         Logger.info("Destroying game level 3D, clearing resources...");
 
         //TODO avoid access to global UI here?
-        theUI().PY_3D_DRAW_MODE().removeListener(this::handleDrawModeChange);
+        theUI().property3DDrawMode().removeListener(this::handleDrawModeChange);
         Logger.info("Removed 'draw mode' listener");
 
-        theUI().PY_3D_WALL_HEIGHT().removeListener(this::handleWallHeightChange);
+        theUI().property3DWallHeight().removeListener(this::handleWallHeightChange);
         Logger.info("Removed 'wall height' listener");
 
         if (wallBaseMaterial != null) {

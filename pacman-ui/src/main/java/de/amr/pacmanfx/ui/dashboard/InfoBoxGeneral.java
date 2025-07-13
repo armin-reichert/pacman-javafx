@@ -55,9 +55,9 @@ public class InfoBoxGeneral extends InfoBox {
         btnStep.setText(null);
         btnStep.setTooltip(new Tooltip("Single Step Mode"));
         btnStep.disableProperty().bind(ui.theGameClock().pausedProperty().not());
-        setAction(btnStep, () -> ui.theGameClock().makeSteps(ui.PY_SIMULATION_STEPS().get(), true));
+        setAction(btnStep, () -> ui.theGameClock().makeSteps(ui.propertySimulationSteps().get(), true));
 
-        addIntSpinner("Num Steps", 1, 50, ui.PY_SIMULATION_STEPS());
+        addIntSpinner("Num Steps", 1, 50, ui.propertySimulationSteps());
         var sliderTargetFPS = addSlider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60, false, false);
         setEditor(sliderTargetFPS, ui.theGameClock().targetFrameRateProperty());
 
@@ -65,9 +65,9 @@ public class InfoBoxGeneral extends InfoBox {
         addLabeledValue("Total Updates",  ui.theGameClock()::updateCount);
 
         addColorPicker("Canvas Color", ui.propertyCanvasBackgroundColor());
-        addCheckBox("Image Smoothing", ui.PY_CANVAS_IMAGE_SMOOTHING());
-        addCheckBox("Font Smoothing", ui.PY_CANVAS_FONT_SMOOTHING());
-        addCheckBox("Show Debug Info", ui.PY_DEBUG_INFO_VISIBLE());
+        addCheckBox("Image Smoothing", ui.propertyCanvasImageSmoothing());
+        addCheckBox("Font Smoothing", ui.propertyCanvasFontSmoothing());
+        addCheckBox("Show Debug Info", ui.propertyDebugInfoVisible());
         addCheckBox("Time Measured", ui.theGameClock().timeMeasuredProperty());
     }
 }

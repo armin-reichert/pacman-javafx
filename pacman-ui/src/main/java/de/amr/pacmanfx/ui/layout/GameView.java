@@ -122,9 +122,9 @@ public class GameView implements PacManGames_View {
         parentScene.heightProperty().addListener((py, ov, height) -> canvasContainer.resizeTo(parentScene.getWidth(), height.doubleValue()));
 
         titleBinding = Bindings.createStringBinding(
-            () -> computeTitleText(ui.PY_3D_ENABLED().get(), ui.PY_DEBUG_INFO_VISIBLE().get()),
-            ui.PY_3D_ENABLED(),
-            ui.PY_DEBUG_INFO_VISIBLE(),
+            () -> computeTitleText(ui.property3DEnabled().get(), ui.propertyDebugInfoVisible().get()),
+            ui.property3DEnabled(),
+            ui.propertyDebugInfoVisible(),
             ui.theGameClock().pausedProperty(),
             parentScene.heightProperty(),
             ui.currentGameSceneProperty()
@@ -382,12 +382,12 @@ public class GameView implements PacManGames_View {
 
     private void configureMiniGameView() {
         miniGameView.backgroundColorProperty().bind(ui.propertyCanvasBackgroundColor());
-        miniGameView.debugProperty().bind(ui.PY_DEBUG_INFO_VISIBLE());
-        miniGameView.canvasHeightProperty().bind(ui.PY_PIP_HEIGHT());
-        miniGameView.opacityProperty().bind(ui.PY_PIP_OPACITY_PERCENT().divide(100.0));
+        miniGameView.debugProperty().bind(ui.propertyDebugInfoVisible());
+        miniGameView.canvasHeightProperty().bind(ui.propertyPipHeight());
+        miniGameView.opacityProperty().bind(ui.propertyPipOpacityPercent().divide(100.0));
         miniGameView.visibleProperty().bind(Bindings.createObjectBinding(
-            () -> ui.PY_MINI_VIEW_ON().get() && ui.currentGameSceneIsPlayScene3D(),
-                ui.PY_MINI_VIEW_ON(), ui.currentGameSceneProperty()
+            () -> ui.propertyMiniViewOn().get() && ui.currentGameSceneIsPlayScene3D(),
+                ui.propertyMiniViewOn(), ui.currentGameSceneProperty()
         ));
     }
 
@@ -401,9 +401,9 @@ public class GameView implements PacManGames_View {
 
     private void configurePropertyBindings() {
         GraphicsContext ctx = commonCanvas.getGraphicsContext2D();
-        ui.PY_CANVAS_FONT_SMOOTHING().addListener((py, ov, on) -> ctx.setFontSmoothingType(on ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
-        ui.PY_CANVAS_IMAGE_SMOOTHING().addListener((py, ov, on) -> ctx.setImageSmoothing(on));
-        ui.PY_DEBUG_INFO_VISIBLE().addListener((py, ov, debug) -> {
+        ui.propertyCanvasFontSmoothing().addListener((py, ov, on) -> ctx.setFontSmoothingType(on ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
+        ui.propertyCanvasImageSmoothing().addListener((py, ov, on) -> ctx.setImageSmoothing(on));
+        ui.propertyDebugInfoVisible().addListener((py, ov, debug) -> {
             canvasLayer.setBackground(debug? coloredBackground(Color.TEAL) : null);
             canvasLayer.setBorder(debug? border(Color.LIGHTGREEN, 1) : null);
         });
@@ -414,8 +414,8 @@ public class GameView implements PacManGames_View {
 
         dashboardLayer = new BorderPane();
         dashboardLayer.visibleProperty().bind(Bindings.createObjectBinding(
-            () -> dashboard.isVisible() || ui.PY_MINI_VIEW_ON().get(),
-            dashboard.visibleProperty(), ui.PY_MINI_VIEW_ON()
+            () -> dashboard.isVisible() || ui.propertyMiniViewOn().get(),
+            dashboard.visibleProperty(), ui.propertyMiniViewOn()
         ));
         dashboardLayer.setLeft(dashboard);
         dashboardLayer.setRight(miniGameView);

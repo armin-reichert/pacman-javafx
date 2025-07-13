@@ -275,7 +275,7 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig {
                 yield "CutScene" + gameContext.theGame().cutSceneNumber(levelNumber).getAsInt();
             }
             case GameState.TESTING_CUT_SCENES -> "CutScene" + gameContext.theGame().<Integer>getProperty("intermissionTestNumber");
-            default -> theUI().PY_3D_ENABLED().get() ?  "PlayScene3D" : "PlayScene2D";
+            default -> theUI().property3DEnabled().get() ?  "PlayScene3D" : "PlayScene2D";
         };
         return scenesByID.get(sceneID);
     }

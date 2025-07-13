@@ -244,23 +244,23 @@ public class PacManGames_UI_Impl implements GameUI {
     // GameUI interface implementation
     // ----------------------------------------------------------------------------------------------------
     public ObjectProperty<Color>    propertyCanvasBackgroundColor() { return PY_CANVAS_BG_COLOR; };
-    public BooleanProperty          PY_CANVAS_FONT_SMOOTHING() { return PY_CANVAS_FONT_SMOOTHING; };
-    public BooleanProperty          PY_CANVAS_IMAGE_SMOOTHING(){ return PY_CANVAS_IMAGE_SMOOTHING; }
-    public BooleanProperty          PY_DEBUG_INFO_VISIBLE(){ return PY_DEBUG_INFO_VISIBLE; }
-    public IntegerProperty          PY_PIP_HEIGHT(){ return PY_PIP_HEIGHT; }
-    public BooleanProperty          PY_MINI_VIEW_ON(){ return PY_MINI_VIEW_ON; }
-    public IntegerProperty          PY_PIP_OPACITY_PERCENT(){ return PY_PIP_OPACITY_PERCENT; }
-    public IntegerProperty          PY_SIMULATION_STEPS(){ return PY_SIMULATION_STEPS; }
-    public BooleanProperty          PY_3D_AXES_VISIBLE(){ return PY_3D_AXES_VISIBLE; }
-    public ObjectProperty<DrawMode> PY_3D_DRAW_MODE(){ return PY_3D_DRAW_MODE; }
-    public BooleanProperty          PY_3D_ENABLED(){ return PY_3D_ENABLED; }
-    public BooleanProperty          PY_3D_ENERGIZER_EXPLODES(){ return PY_3D_ENERGIZER_EXPLODES; }
-    public ObjectProperty<Color>    PY_3D_FLOOR_COLOR(){ return PY_3D_FLOOR_COLOR; }
-    public ObjectProperty<Color>    PY_3D_LIGHT_COLOR(){ return PY_3D_LIGHT_COLOR; }
-    public BooleanProperty          PY_3D_PAC_LIGHT_ENABLED(){ return PY_3D_PAC_LIGHT_ENABLED; }
-    public ObjectProperty<Perspective.ID> PY_3D_PERSPECTIVE(){ return PY_3D_PERSPECTIVE; }
-    public DoubleProperty           PY_3D_WALL_HEIGHT(){ return PY_3D_WALL_HEIGHT; }
-    public DoubleProperty           PY_3D_WALL_OPACITY(){ return PY_3D_WALL_OPACITY; }
+    public BooleanProperty propertyCanvasFontSmoothing() { return PY_CANVAS_FONT_SMOOTHING; };
+    public BooleanProperty propertyCanvasImageSmoothing(){ return PY_CANVAS_IMAGE_SMOOTHING; }
+    public BooleanProperty propertyDebugInfoVisible(){ return PY_DEBUG_INFO_VISIBLE; }
+    public IntegerProperty propertyPipHeight(){ return PY_PIP_HEIGHT; }
+    public BooleanProperty propertyMiniViewOn(){ return PY_MINI_VIEW_ON; }
+    public IntegerProperty propertyPipOpacityPercent(){ return PY_PIP_OPACITY_PERCENT; }
+    public IntegerProperty propertySimulationSteps(){ return PY_SIMULATION_STEPS; }
+    public BooleanProperty property3DAxesVisible(){ return PY_3D_AXES_VISIBLE; }
+    public ObjectProperty<DrawMode> property3DDrawMode(){ return PY_3D_DRAW_MODE; }
+    public BooleanProperty property3DEnabled(){ return PY_3D_ENABLED; }
+    public BooleanProperty property3DEnergizerExplodes(){ return PY_3D_ENERGIZER_EXPLODES; }
+    public ObjectProperty<Color> property3DFloorColor(){ return PY_3D_FLOOR_COLOR; }
+    public ObjectProperty<Color> property3DLightColor(){ return PY_3D_LIGHT_COLOR; }
+    public BooleanProperty property3DPacLightEnabled(){ return PY_3D_PAC_LIGHT_ENABLED; }
+    public ObjectProperty<Perspective.ID> property3DPerspective(){ return PY_3D_PERSPECTIVE; }
+    public DoubleProperty property3DWallHeight(){ return PY_3D_WALL_HEIGHT; }
+    public DoubleProperty property3DWallOpacity(){ return PY_3D_WALL_OPACITY; }
 
     @Override
     public ObjectProperty<GameScene> currentGameSceneProperty() {

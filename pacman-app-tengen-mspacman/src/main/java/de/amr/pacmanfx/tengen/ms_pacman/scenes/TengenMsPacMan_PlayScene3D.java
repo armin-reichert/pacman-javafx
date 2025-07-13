@@ -80,7 +80,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
         var canvas = new Canvas(quality * infoWidth, quality * infoHeight);
         canvas.getGraphicsContext2D().setImageSmoothing(false); // important!
-        fillCanvas(canvas, theUI().PY_3D_FLOOR_COLOR().get());
+        fillCanvas(canvas, theUI().property3DFloorColor().get());
 
         var r = (TengenMsPacMan_GameRenderer) theUI().theUIConfiguration().createGameRenderer(canvas);
         r.setScaling(quality);
