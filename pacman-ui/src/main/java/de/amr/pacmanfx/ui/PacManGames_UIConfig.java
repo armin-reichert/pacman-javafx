@@ -22,25 +22,31 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
 public interface PacManGames_UIConfig extends PacManGames_GameSceneConfig, Destroyable {
-    void loadAssets(AssetStorage assetStorage);
-    void destroy();
     String assetNamespace();
-    default void storeInMyNamespace(AssetStorage assetStorage, String key, Object value) {
-        store(assetStorage, assetNamespace(), key, value);
+
+    void storeAssets(AssetStorage assetStorage);
+
+    /**
+     * Stores key-value pair in the namespace of this configuration.
+     *
+     * @param assetStorage the asset storage
+     * @param localKey the local asset key, absolute key is {@code asset_namespace + "." + key}
+     * @param value the asset value
+     */
+    default void storeAssetMyNS(AssetStorage assetStorage, String localKey, Object value) {
+        assetStorage.store(assetNamespace() + "." + localKey, value);
     }
-    default void store(AssetStorage assetStorage, String namespace, String key, Object value) {
-        assetStorage.store(namespace + "." + key, value);
-    }
-    SpriteSheet<?> spriteSheet();
-    GameRenderer createGameRenderer(Canvas canvas);
-    ActorAnimationMap createPacAnimations(Pac pac);
-    ActorAnimationMap createGhostAnimations(Ghost ghost);
-    Node createLivesCounterShape3D(Model3DRepository model3DRepository);
-    PacBase3D createPac3D(Model3DRepository model3DRepository, AnimationManager animationMgr, Pac pac);
+
     Image bonusSymbolImage(byte symbol);
     Image bonusValueImage(byte symbol);
+    WorldMapColorScheme colorScheme(WorldMap worldMap);
+    GameRenderer createGameRenderer(Canvas canvas);
+    ActorAnimationMap createGhostAnimations(Ghost ghost);
+    Node createLivesCounterShape3D(Model3DRepository model3DRepository);
+    ActorAnimationMap createPacAnimations(Pac pac);
+    PacBase3D createPac3D(Model3DRepository model3DRepository, AnimationManager animationMgr, Pac pac);
     default boolean hasGameCanvasRoundedBorder() { return true; }
     Image killedGhostPointsImage(Ghost ghost, int killedIndex);
-    WorldMapColorScheme worldMapColorScheme(WorldMap worldMap);
+    SpriteSheet<?> spriteSheet();
     SoundManager soundManager();
 }

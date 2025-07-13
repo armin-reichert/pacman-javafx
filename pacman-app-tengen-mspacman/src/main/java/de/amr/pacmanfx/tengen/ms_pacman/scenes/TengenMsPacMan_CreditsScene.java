@@ -28,7 +28,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
         gameContext.theGame().hud().showScore(false);
         gameContext.theGame().hud().showLevelCounter(false);
         gameContext.theGame().hud().showLivesCounter(false);
-        actionBindings.bind(ACTION_START_GAME, TENGEN_ACTION_BINDINGS);
+        actionBindings.bind(ACTION_START_GAME, TENGEN_MS_PACMAN_ACTION_BINDINGS);
     }
 
     @Override

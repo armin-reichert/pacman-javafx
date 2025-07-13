@@ -208,7 +208,7 @@ public class TengenMsPacMan_MapSelector implements MapSelector {
     }
 
     private WorldMap randomlyRecoloredMap(MapCategory category, int number) {
-        WorldMap worldMap = recoloredMap(category, number, NES_ColorScheme.random());
+        WorldMap worldMap = recoloredMap(category, number, NES_ColorScheme.randomScheme());
         worldMap.setConfigValue("multipleFlashColors", true);
         return worldMap;
     }

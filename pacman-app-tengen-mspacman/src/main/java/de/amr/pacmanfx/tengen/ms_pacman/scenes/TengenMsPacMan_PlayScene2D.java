@@ -149,14 +149,14 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     private void bindActionsToKeys() {
         if (gameContext.theGameLevel().isDemoLevel()) {
-            actionBindings.bind(ACTION_QUIT_DEMO_LEVEL, TENGEN_ACTION_BINDINGS);
+            actionBindings.bind(ACTION_QUIT_DEMO_LEVEL, TENGEN_MS_PACMAN_ACTION_BINDINGS);
         } else {
-            actionBindings.bind(ACTION_STEER_UP,               TENGEN_ACTION_BINDINGS);
-            actionBindings.bind(ACTION_STEER_DOWN,             TENGEN_ACTION_BINDINGS);
-            actionBindings.bind(ACTION_STEER_LEFT,             TENGEN_ACTION_BINDINGS);
-            actionBindings.bind(ACTION_STEER_RIGHT,            TENGEN_ACTION_BINDINGS);
-            actionBindings.bind(ACTION_TOGGLE_DISPLAY_MODE,    TENGEN_ACTION_BINDINGS);
-            actionBindings.bind(ACTION_TOGGLE_PAC_BOOSTER,     TENGEN_ACTION_BINDINGS);
+            actionBindings.bind(ACTION_STEER_UP, TENGEN_MS_PACMAN_ACTION_BINDINGS);
+            actionBindings.bind(ACTION_STEER_DOWN, TENGEN_MS_PACMAN_ACTION_BINDINGS);
+            actionBindings.bind(ACTION_STEER_LEFT, TENGEN_MS_PACMAN_ACTION_BINDINGS);
+            actionBindings.bind(ACTION_STEER_RIGHT, TENGEN_MS_PACMAN_ACTION_BINDINGS);
+            actionBindings.bind(ACTION_TOGGLE_DISPLAY_MODE, TENGEN_MS_PACMAN_ACTION_BINDINGS);
+            actionBindings.bind(ACTION_TOGGLE_PAC_BOOSTER, TENGEN_MS_PACMAN_ACTION_BINDINGS);
             actionBindings.bind(ACTION_CHEAT_EAT_ALL_PELLETS, GLOBAL_ACTION_BINDINGS);
             actionBindings.bind(ACTION_CHEAT_ADD_LIVES, GLOBAL_ACTION_BINDINGS);
             actionBindings.bind(ACTION_CHEAT_ENTER_NEXT_LEVEL, GLOBAL_ACTION_BINDINGS);

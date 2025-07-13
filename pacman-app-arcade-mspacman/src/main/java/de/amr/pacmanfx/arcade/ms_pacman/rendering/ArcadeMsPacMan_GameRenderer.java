@@ -246,7 +246,8 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
     }
 
     public void drawMidwayCopyright(MidwayCopyright copyright) {
-        Image image = theUI().theAssets().get("ms_pacman.logo.midway");
+        String assetNameSpace = theUI().theUIConfiguration().assetNamespace();
+        Image image = theUI().theAssets().get(assetNameSpace + ".logo.midway");
         float x = scaled(copyright.x()), y = scaled(copyright.y());
         ctx.drawImage(image, x, y + 2, scaled(TS * 4 - 2), scaled(TS * 4));
         ctx.setFont(copyright.font());

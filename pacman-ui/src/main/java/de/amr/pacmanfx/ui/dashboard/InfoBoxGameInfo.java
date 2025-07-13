@@ -48,9 +48,9 @@ public class InfoBoxGameInfo extends InfoBox {
             if (worldMap.hasConfigValue("nesColorScheme")) {
                 // Tengen Ms. Pac-Man
                 var nesColors = (NES_ColorScheme) worldMap.getConfigValue("nesColorScheme");
-                Color fillColor = Color.web(nesColors.fillColor());
-                Color strokeColor = Color.web(nesColors.strokeColor());
-                Color pelletColor = Color.web(nesColors.pelletColor());
+                Color fillColor = Color.web(nesColors.fillColorRGB());
+                Color strokeColor = Color.web(nesColors.strokeColorRGB());
+                Color pelletColor = Color.web(nesColors.pelletColorRGB());
                 return "%s / %s / %s".formatted(formatColorHex(fillColor), formatColorHex(strokeColor), formatColorHex(pelletColor));
             } else if (worldMap.hasConfigValue("colorMap")) {
                 // Pac-Man XXL game
@@ -61,7 +61,7 @@ public class InfoBoxGameInfo extends InfoBox {
                 return "%s / %s / %s".formatted(formatColorHex(fillColor), formatColorHex(strokeColor), formatColorHex(pelletColor));
             } else if (worldMap.hasConfigValue("colorMapIndex")) {
                 // Arcade games
-                WorldMapColorScheme coloring = theUI().theUIConfiguration().worldMapColorScheme(worldMap);
+                WorldMapColorScheme coloring = theUI().theUIConfiguration().colorScheme(worldMap);
                 return "%s / %s / %s".formatted(formatColorHex(coloring.fill()), formatColorHex(coloring.stroke()), formatColorHex(coloring.pellet()));
             } else {
                 return InfoText.NO_INFO;

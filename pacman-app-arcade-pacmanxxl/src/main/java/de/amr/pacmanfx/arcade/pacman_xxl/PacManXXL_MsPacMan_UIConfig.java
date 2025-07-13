@@ -37,7 +37,6 @@ import de.amr.pacmanfx.uilib.model3D.PacBase3D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import org.tinylog.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,76 +51,77 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
 
     private static final String NAMESPACE = "ms_pacman_xxl";
 
-    public static final ResourceManager RES_PACMAN_UI = () -> GameUI.class;
-    public static final ResourceManager RES_ARCADE_MS_PAC_MAN = () -> ArcadeMsPacMan_UIConfig.class;
-    public static final ResourceManager RES_MS_PAC_MAN_XXL = () -> PacManXXL_MsPacMan_UIConfig.class;
-    
-    private boolean assetsLoaded;
-    private ArcadeMsPacMan_SpriteSheet spriteSheet;
-    private final DefaultSoundManager soundManager = new DefaultSoundManager();
+    private static final ResourceManager RES_GAME_UI = () -> GameUI.class;
+    private static final ResourceManager RES_ARCADE_MS_PAC_MAN = () -> ArcadeMsPacMan_UIConfig.class;
+    private static final ResourceManager RES_MS_PAC_MAN_XXL = () -> PacManXXL_MsPacMan_UIConfig.class;
 
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
-    public void loadAssets(AssetStorage assets) {
-        if (assetsLoaded) {
-            Logger.warn("Assets are already loaded");
-            return;
-        }
-        assetsLoaded = true;
+    private final DefaultSoundManager soundManager = new DefaultSoundManager();
+    private ArcadeMsPacMan_SpriteSheet spriteSheet;
+
+    public void storeAssets(AssetStorage assets) {
+        storeAssetMyNS(assets, "app_icon", RES_ARCADE_MS_PAC_MAN.loadImage("graphics/icons/mspacman.png"));
+
+        storeAssetMyNS(assets, "audio.option.selection_changed", RES_MS_PAC_MAN_XXL.loadAudioClip("sound/ms-select1.wav"));
+        storeAssetMyNS(assets, "audio.option.value_changed",     RES_MS_PAC_MAN_XXL.loadAudioClip("sound/ms-select2.wav"));
+
+        storeAssetMyNS(assets, "startpage.image1", RES_ARCADE_MS_PAC_MAN.loadImage("graphics/f1.jpg"));
+        storeAssetMyNS(assets, "startpage.image2", RES_ARCADE_MS_PAC_MAN.loadImage("graphics/f2.jpg"));
 
         spriteSheet = new ArcadeMsPacMan_SpriteSheet(RES_ARCADE_MS_PAC_MAN.loadImage("graphics/mspacman_spritesheet.png"));
-
-        storeInMyNamespace(assets, "app_icon",                RES_ARCADE_MS_PAC_MAN.loadImage("graphics/icons/mspacman.png"));
-        storeInMyNamespace(assets, "flashing_mazes",          RES_ARCADE_MS_PAC_MAN.loadImage("graphics/mazes_flashing.png"));
-        storeInMyNamespace(assets, "startpage.image1",        RES_ARCADE_MS_PAC_MAN.loadImage("graphics/f1.jpg"));
-        storeInMyNamespace(assets, "startpage.image2",        RES_ARCADE_MS_PAC_MAN.loadImage("graphics/f2.jpg"));
-        storeInMyNamespace(assets, "logo.midway",             RES_ARCADE_MS_PAC_MAN.loadImage("graphics/midway_logo.png"));
-        storeInMyNamespace(assets, "color.game_over_message", ARCADE_RED);
+        storeAssetMyNS(assets, "flashing_mazes", RES_ARCADE_MS_PAC_MAN.loadImage("graphics/mazes_flashing.png"));
+        storeAssetMyNS(assets, "logo.midway", RES_ARCADE_MS_PAC_MAN.loadImage("graphics/midway_logo.png"));
+        storeAssetMyNS(assets, "color.game_over_message", ARCADE_RED);
 
         RectShort[] symbolSprites = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS);
         RectShort[] valueSprites  = spriteSheet.spriteSeq(SpriteID.BONUS_VALUES);
         for (byte symbol = 0; symbol <= 6; ++symbol) {
-            storeInMyNamespace(assets, "bonus_symbol_" + symbol, spriteSheet.image(symbolSprites[symbol]));
-            storeInMyNamespace(assets, "bonus_value_"  + symbol, spriteSheet.image(valueSprites[symbol]));
+            storeAssetMyNS(assets, "bonus_symbol_" + symbol, spriteSheet.image(symbolSprites[symbol]));
+            storeAssetMyNS(assets, "bonus_value_"  + symbol, spriteSheet.image(valueSprites[symbol]));
         }
 
-        storeInMyNamespace(assets, "pac.color.head",           ARCADE_YELLOW);
-        storeInMyNamespace(assets, "pac.color.eyes",           Color.grayRgb(33));
-        storeInMyNamespace(assets, "pac.color.palate",         ARCADE_BROWN);
-        storeInMyNamespace(assets, "pac.color.boobs",          ARCADE_YELLOW.deriveColor(0, 1.0, 0.96, 1.0));
-        storeInMyNamespace(assets, "pac.color.hairbow",        ARCADE_RED);
-        storeInMyNamespace(assets, "pac.color.hairbow.pearls", ARCADE_BLUE);
+        storeAssetMyNS(assets, "pac.color.head",           ARCADE_YELLOW);
+        storeAssetMyNS(assets, "pac.color.eyes",           Color.grayRgb(33));
+        storeAssetMyNS(assets, "pac.color.palate",         ARCADE_BROWN);
+        storeAssetMyNS(assets, "pac.color.boobs",          ARCADE_YELLOW.deriveColor(0, 1.0, 0.96, 1.0));
+        storeAssetMyNS(assets, "pac.color.hairbow",        ARCADE_RED);
+        storeAssetMyNS(assets, "pac.color.hairbow.pearls", ARCADE_BLUE);
 
         RectShort[] numberSprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
-        storeInMyNamespace(assets, "ghost_points_0", spriteSheet.image(numberSprites[0]));
-        storeInMyNamespace(assets, "ghost_points_1", spriteSheet.image(numberSprites[1]));
-        storeInMyNamespace(assets, "ghost_points_2", spriteSheet.image(numberSprites[2]));
-        storeInMyNamespace(assets, "ghost_points_3", spriteSheet.image(numberSprites[3]));
+        storeAssetMyNS(assets, "ghost_points_0", spriteSheet.image(numberSprites[0]));
+        storeAssetMyNS(assets, "ghost_points_1", spriteSheet.image(numberSprites[1]));
+        storeAssetMyNS(assets, "ghost_points_2", spriteSheet.image(numberSprites[2]));
+        storeAssetMyNS(assets, "ghost_points_3", spriteSheet.image(numberSprites[3]));
 
-        storeInMyNamespace(assets, "ghost.0.color.normal.dress",      ARCADE_RED);
-        storeInMyNamespace(assets, "ghost.0.color.normal.eyeballs",   ARCADE_WHITE);
-        storeInMyNamespace(assets, "ghost.0.color.normal.pupils",     ARCADE_BLUE);
-        storeInMyNamespace(assets, "ghost.1.color.normal.dress",      ARCADE_PINK);
-        storeInMyNamespace(assets, "ghost.1.color.normal.eyeballs",   ARCADE_WHITE);
-        storeInMyNamespace(assets, "ghost.1.color.normal.pupils",     ARCADE_BLUE);
-        storeInMyNamespace(assets, "ghost.2.color.normal.dress",      ARCADE_CYAN);
-        storeInMyNamespace(assets, "ghost.2.color.normal.eyeballs",   ARCADE_WHITE);
-        storeInMyNamespace(assets, "ghost.2.color.normal.pupils",     ARCADE_BLUE);
-        storeInMyNamespace(assets, "ghost.3.color.normal.dress",      ARCADE_ORANGE);
-        storeInMyNamespace(assets, "ghost.3.color.normal.eyeballs",   ARCADE_WHITE);
-        storeInMyNamespace(assets, "ghost.3.color.normal.pupils",     ARCADE_BLUE);
-        storeInMyNamespace(assets, "ghost.color.frightened.dress",    ARCADE_BLUE);
-        storeInMyNamespace(assets, "ghost.color.frightened.eyeballs", ARCADE_ROSE);
-        storeInMyNamespace(assets, "ghost.color.frightened.pupils",   ARCADE_ROSE);
-        storeInMyNamespace(assets, "ghost.color.flashing.dress",      ARCADE_WHITE);
-        storeInMyNamespace(assets, "ghost.color.flashing.eyeballs",   ARCADE_ROSE);
-        storeInMyNamespace(assets, "ghost.color.flashing.pupils",     ARCADE_RED);
+        storeAssetMyNS(assets, "ghost.0.color.normal.dress",      ARCADE_RED);
+        storeAssetMyNS(assets, "ghost.0.color.normal.eyeballs",   ARCADE_WHITE);
+        storeAssetMyNS(assets, "ghost.0.color.normal.pupils",     ARCADE_BLUE);
 
-        soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_OFF,       RES_PACMAN_UI.url("sound/voice/autopilot-off.mp3"));
-        soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_ON,        RES_PACMAN_UI.url("sound/voice/autopilot-on.mp3"));
-        soundManager.registerVoice(SoundID.VOICE_IMMUNITY_OFF,        RES_PACMAN_UI.url("sound/voice/immunity-off.mp3"));
-        soundManager.registerVoice(SoundID.VOICE_IMMUNITY_ON,         RES_PACMAN_UI.url("sound/voice/immunity-on.mp3"));
-        soundManager.registerVoice(SoundID.VOICE_EXPLAIN,             RES_PACMAN_UI.url("sound/voice/press-key.mp3"));
+        storeAssetMyNS(assets, "ghost.1.color.normal.dress",      ARCADE_PINK);
+        storeAssetMyNS(assets, "ghost.1.color.normal.eyeballs",   ARCADE_WHITE);
+        storeAssetMyNS(assets, "ghost.1.color.normal.pupils",     ARCADE_BLUE);
+
+        storeAssetMyNS(assets, "ghost.2.color.normal.dress",      ARCADE_CYAN);
+        storeAssetMyNS(assets, "ghost.2.color.normal.eyeballs",   ARCADE_WHITE);
+        storeAssetMyNS(assets, "ghost.2.color.normal.pupils",     ARCADE_BLUE);
+
+        storeAssetMyNS(assets, "ghost.3.color.normal.dress",      ARCADE_ORANGE);
+        storeAssetMyNS(assets, "ghost.3.color.normal.eyeballs",   ARCADE_WHITE);
+        storeAssetMyNS(assets, "ghost.3.color.normal.pupils",     ARCADE_BLUE);
+
+        storeAssetMyNS(assets, "ghost.color.frightened.dress",    ARCADE_BLUE);
+        storeAssetMyNS(assets, "ghost.color.frightened.eyeballs", ARCADE_ROSE);
+        storeAssetMyNS(assets, "ghost.color.frightened.pupils",   ARCADE_ROSE);
+        storeAssetMyNS(assets, "ghost.color.flashing.dress",      ARCADE_WHITE);
+        storeAssetMyNS(assets, "ghost.color.flashing.eyeballs",   ARCADE_ROSE);
+        storeAssetMyNS(assets, "ghost.color.flashing.pupils",     ARCADE_RED);
+
+        soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_OFF,       RES_GAME_UI.url("sound/voice/autopilot-off.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_ON,        RES_GAME_UI.url("sound/voice/autopilot-on.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_IMMUNITY_OFF,        RES_GAME_UI.url("sound/voice/immunity-off.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_IMMUNITY_ON,         RES_GAME_UI.url("sound/voice/immunity-on.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_EXPLAIN,             RES_GAME_UI.url("sound/voice/press-key.mp3"));
 
         soundManager.registerAudioClip(SoundID.BONUS_ACTIVE,          RES_ARCADE_MS_PAC_MAN.url("sound/Fruit_Bounce.mp3"));
         soundManager.registerAudioClip(SoundID.BONUS_EATEN,           RES_ARCADE_MS_PAC_MAN.url("sound/Fruit.mp3"));
@@ -143,9 +143,6 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
         soundManager.registerMediaPlayer(SoundID.SIREN_2,             RES_ARCADE_MS_PAC_MAN.url("sound/GhostNoise1.wav"));// TODO
         soundManager.registerMediaPlayer(SoundID.SIREN_3,             RES_ARCADE_MS_PAC_MAN.url("sound/GhostNoise1.wav"));// TODO
         soundManager.registerMediaPlayer(SoundID.SIREN_4,             RES_ARCADE_MS_PAC_MAN.url("sound/GhostNoise1.wav"));// TODO
-
-        storeInMyNamespace(assets, "audio.option.selection_changed",  RES_MS_PAC_MAN_XXL.loadAudioClip("sound/ms-select1.wav"));
-        storeInMyNamespace(assets, "audio.option.value_changed",      RES_MS_PAC_MAN_XXL.loadAudioClip("sound/ms-select2.wav"));
     }
 
     @Override
@@ -168,7 +165,7 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
     public ArcadeMsPacMan_SpriteSheet spriteSheet() { return spriteSheet; }
 
     @Override
-    public WorldMapColorScheme worldMapColorScheme(WorldMap worldMap) {
+    public WorldMapColorScheme colorScheme(WorldMap worldMap) {
         Map<String, String> colorMap = worldMap.getConfigValue("colorMap");
         return new WorldMapColorScheme(
             colorMap.get("fill"), colorMap.get("stroke"), colorMap.get("door"), colorMap.get("pellet"));

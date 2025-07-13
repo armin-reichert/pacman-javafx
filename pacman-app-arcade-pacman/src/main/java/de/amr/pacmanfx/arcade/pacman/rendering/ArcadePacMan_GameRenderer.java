@@ -114,7 +114,8 @@ public class ArcadePacMan_GameRenderer implements SpriteGameRenderer {
         ctx.save();
         ctx.scale(scaling(), scaling());
         if (mazeHighlighted) {
-            ctx.drawImage(theUI().theAssets().image("pacman.flashing_maze"), 0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);
+            String assetNamespace = theUI().theUIConfiguration().assetNamespace();
+            ctx.drawImage(theUI().theAssets().image(assetNamespace + ".flashing_maze"), 0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);
         }
         else if (level.uneatenFoodCount() == 0) {
             drawSprite(spriteSheet.sprite(SpriteID.MAP_EMPTY), 0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);

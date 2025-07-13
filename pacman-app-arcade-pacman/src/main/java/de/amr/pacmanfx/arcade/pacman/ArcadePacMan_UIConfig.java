@@ -10,7 +10,6 @@ import de.amr.pacmanfx.arcade.pacman.scenes.*;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -47,11 +46,10 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig {
 
     private static final String NAMESPACE = "pacman";
 
-    public static final ResourceManager RES_PACMAN_UI = () -> GameUI.class;
-    public static final ResourceManager RES_ARCADE_PAC_MAN = () -> ArcadePacMan_UIConfig.class;
+    private static final ResourceManager RES_PACMAN_UI = () -> GameUI.class;
+    private static final ResourceManager RES_ARCADE_PAC_MAN = () -> ArcadePacMan_UIConfig.class;
 
-    public static final Vector2i ARCADE_MAP_SIZE_IN_TILES  = new Vector2i(28, 36);
-    public static final Vector2f ARCADE_MAP_SIZE_IN_PIXELS = new Vector2f(224, 288);
+    public static final Vector2f ARCADE_MAP_SIZE_IN_PIXELS = new Vector2f(224, 288); // 28x36 tiles
 
     public static final String ANIM_BIG_PAC_MAN               = "big_pac_man";
     public static final String ANIM_BLINKY_DAMAGED            = "blinky_damaged";
@@ -61,58 +59,60 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig {
 
     private static final WorldMapColorScheme MAP_COLORING = new WorldMapColorScheme("#000000", "#2121ff", "#fcb5ff", "#febdb4");
 
-    private ArcadePacMan_SpriteSheet spriteSheet;
     private final DefaultSoundManager soundManager = new DefaultSoundManager();
-
     private final Map<String, GameScene> scenesByID = new HashMap<>();
+    private ArcadePacMan_SpriteSheet spriteSheet;
 
-    public void loadAssets(AssetStorage assets) {
+    public void storeAssets(AssetStorage assets) {
+        storeAssetMyNS(assets, "app_icon", RES_ARCADE_PAC_MAN.loadImage("graphics/icons/pacman.png"));
+
+        storeAssetMyNS(assets, "startpage.image1", RES_ARCADE_PAC_MAN.loadImage("graphics/f1.jpg"));
+        storeAssetMyNS(assets, "startpage.image2", RES_ARCADE_PAC_MAN.loadImage("graphics/f2.jpg"));
+        storeAssetMyNS(assets, "startpage.image3", RES_ARCADE_PAC_MAN.loadImage("graphics/f3.jpg"));
+
         spriteSheet = new ArcadePacMan_SpriteSheet(RES_ARCADE_PAC_MAN.loadImage("graphics/pacman_spritesheet.png"));
-
-        storeInMyNamespace(assets, "app_icon",                        RES_ARCADE_PAC_MAN.loadImage("graphics/icons/pacman.png"));
-        storeInMyNamespace(assets, "flashing_maze",                   RES_ARCADE_PAC_MAN.loadImage("graphics/maze_flashing.png"));
-
-        storeInMyNamespace(assets, "startpage.image1",                RES_ARCADE_PAC_MAN.loadImage("graphics/f1.jpg"));
-        storeInMyNamespace(assets, "startpage.image2",                RES_ARCADE_PAC_MAN.loadImage("graphics/f2.jpg"));
-        storeInMyNamespace(assets, "startpage.image3",                RES_ARCADE_PAC_MAN.loadImage("graphics/f3.jpg"));
-
-        storeInMyNamespace(assets, "color.game_over_message",         ARCADE_RED);
+        storeAssetMyNS(assets, "flashing_maze", RES_ARCADE_PAC_MAN.loadImage("graphics/maze_flashing.png"));
+        storeAssetMyNS(assets, "color.game_over_message", ARCADE_RED);
 
         RectShort[] symbolSprites = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS);
-        RectShort[] valueSprites = spriteSheet.spriteSeq(SpriteID.BONUS_VALUES);
+        RectShort[] valueSprites  = spriteSheet.spriteSeq(SpriteID.BONUS_VALUES);
         for (byte symbol = 0; symbol <= 7; ++symbol) {
-            storeInMyNamespace(assets, "bonus_symbol_" + symbol, spriteSheet.image(symbolSprites[symbol]));
-            storeInMyNamespace(assets, "bonus_value_" + symbol,  spriteSheet.image(valueSprites[symbol]));
+            storeAssetMyNS(assets, "bonus_symbol_" + symbol, spriteSheet.image(symbolSprites[symbol]));
+            storeAssetMyNS(assets, "bonus_value_" + symbol,  spriteSheet.image(valueSprites[symbol]));
         }
 
-        storeInMyNamespace(assets, "pac.color.head",                  ARCADE_YELLOW);
-        storeInMyNamespace(assets, "pac.color.eyes",                  Color.grayRgb(33));
-        storeInMyNamespace(assets, "pac.color.palate",                ARCADE_BROWN);
+        storeAssetMyNS(assets, "pac.color.head",   ARCADE_YELLOW);
+        storeAssetMyNS(assets, "pac.color.eyes",   Color.grayRgb(33));
+        storeAssetMyNS(assets, "pac.color.palate", ARCADE_BROWN);
 
         RectShort[] numberSprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
-        storeInMyNamespace(assets, "ghost_points_0",                  spriteSheet.image(numberSprites[0]));
-        storeInMyNamespace(assets, "ghost_points_1",                  spriteSheet.image(numberSprites[1]));
-        storeInMyNamespace(assets, "ghost_points_2",                  spriteSheet.image(numberSprites[2]));
-        storeInMyNamespace(assets, "ghost_points_3",                  spriteSheet.image(numberSprites[3]));
+        storeAssetMyNS(assets, "ghost_points_0", spriteSheet.image(numberSprites[0]));
+        storeAssetMyNS(assets, "ghost_points_1", spriteSheet.image(numberSprites[1]));
+        storeAssetMyNS(assets, "ghost_points_2", spriteSheet.image(numberSprites[2]));
+        storeAssetMyNS(assets, "ghost_points_3", spriteSheet.image(numberSprites[3]));
 
-        storeInMyNamespace(assets, "ghost.0.color.normal.dress",      ARCADE_RED);
-        storeInMyNamespace(assets, "ghost.0.color.normal.eyeballs",   ARCADE_WHITE);
-        storeInMyNamespace(assets, "ghost.0.color.normal.pupils",     ARCADE_BLUE);
-        storeInMyNamespace(assets, "ghost.1.color.normal.dress",      ARCADE_PINK);
-        storeInMyNamespace(assets, "ghost.1.color.normal.eyeballs",   ARCADE_WHITE);
-        storeInMyNamespace(assets, "ghost.1.color.normal.pupils",     ARCADE_BLUE);
-        storeInMyNamespace(assets, "ghost.2.color.normal.dress",      ARCADE_CYAN);
-        storeInMyNamespace(assets, "ghost.2.color.normal.eyeballs",   ARCADE_WHITE);
-        storeInMyNamespace(assets, "ghost.2.color.normal.pupils",     ARCADE_BLUE);
-        storeInMyNamespace(assets, "ghost.3.color.normal.dress",      ARCADE_ORANGE);
-        storeInMyNamespace(assets, "ghost.3.color.normal.eyeballs",   ARCADE_WHITE);
-        storeInMyNamespace(assets, "ghost.3.color.normal.pupils",     ARCADE_BLUE);
-        storeInMyNamespace(assets, "ghost.color.frightened.dress",    ARCADE_BLUE);
-        storeInMyNamespace(assets, "ghost.color.frightened.eyeballs", ARCADE_ROSE);
-        storeInMyNamespace(assets, "ghost.color.frightened.pupils",   ARCADE_ROSE);
-        storeInMyNamespace(assets, "ghost.color.flashing.dress",      ARCADE_WHITE);
-        storeInMyNamespace(assets, "ghost.color.flashing.eyeballs",   ARCADE_ROSE);
-        storeInMyNamespace(assets, "ghost.color.flashing.pupils",     ARCADE_RED);
+        storeAssetMyNS(assets, "ghost.0.color.normal.dress",      ARCADE_RED);
+        storeAssetMyNS(assets, "ghost.0.color.normal.eyeballs",   ARCADE_WHITE);
+        storeAssetMyNS(assets, "ghost.0.color.normal.pupils",     ARCADE_BLUE);
+
+        storeAssetMyNS(assets, "ghost.1.color.normal.dress",      ARCADE_PINK);
+        storeAssetMyNS(assets, "ghost.1.color.normal.eyeballs",   ARCADE_WHITE);
+        storeAssetMyNS(assets, "ghost.1.color.normal.pupils",     ARCADE_BLUE);
+
+        storeAssetMyNS(assets, "ghost.2.color.normal.dress",      ARCADE_CYAN);
+        storeAssetMyNS(assets, "ghost.2.color.normal.eyeballs",   ARCADE_WHITE);
+        storeAssetMyNS(assets, "ghost.2.color.normal.pupils",     ARCADE_BLUE);
+
+        storeAssetMyNS(assets, "ghost.3.color.normal.dress",      ARCADE_ORANGE);
+        storeAssetMyNS(assets, "ghost.3.color.normal.eyeballs",   ARCADE_WHITE);
+        storeAssetMyNS(assets, "ghost.3.color.normal.pupils",     ARCADE_BLUE);
+
+        storeAssetMyNS(assets, "ghost.color.frightened.dress",    ARCADE_BLUE);
+        storeAssetMyNS(assets, "ghost.color.frightened.eyeballs", ARCADE_ROSE);
+        storeAssetMyNS(assets, "ghost.color.frightened.pupils",   ARCADE_ROSE);
+        storeAssetMyNS(assets, "ghost.color.flashing.dress",      ARCADE_WHITE);
+        storeAssetMyNS(assets, "ghost.color.flashing.eyeballs",   ARCADE_ROSE);
+        storeAssetMyNS(assets, "ghost.color.flashing.pupils",     ARCADE_RED);
 
         soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_OFF,       RES_PACMAN_UI.url("sound/voice/autopilot-off.mp3"));
         soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_ON,        RES_PACMAN_UI.url("sound/voice/autopilot-on.mp3"));
@@ -146,6 +146,11 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig {
     }
 
     @Override
+    public SoundManager soundManager() {
+        return soundManager;
+    }
+
+    @Override
     public String assetNamespace() {
         return NAMESPACE;
     }
@@ -156,7 +161,7 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig {
     }
 
     @Override
-    public WorldMapColorScheme worldMapColorScheme(WorldMap worldMap) {
+    public WorldMapColorScheme colorScheme(WorldMap worldMap) {
         return MAP_COLORING;
     }
 
@@ -254,10 +259,5 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig {
         requireNonNull(gameScene);
         requireNonNull(sceneID);
         return scenesByID.get(sceneID) == gameScene;
-    }
-
-    @Override
-    public SoundManager soundManager() {
-        return soundManager;
     }
 }

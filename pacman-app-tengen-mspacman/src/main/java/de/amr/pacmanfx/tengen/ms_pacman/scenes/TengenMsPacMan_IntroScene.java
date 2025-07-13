@@ -77,8 +77,8 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
         spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().theUIConfiguration().spriteSheet();
 
-        actionBindings.bind(ACTION_START_GAME, TENGEN_ACTION_BINDINGS);
-        actionBindings.bind(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, TENGEN_ACTION_BINDINGS);
+        actionBindings.bind(ACTION_START_GAME, TENGEN_MS_PACMAN_ACTION_BINDINGS);
+        actionBindings.bind(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, TENGEN_MS_PACMAN_ACTION_BINDINGS);
         presentsText = new Actor(null);
         presentsText.setPosition(9 * TS, MARQUEE_Y - TS);
         sceneController.restart(SceneState.WAITING_FOR_START);

@@ -12,8 +12,8 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import static de.amr.pacmanfx.Globals.theGameContext;
-import static de.amr.pacmanfx.ui.GameUI.GameVariant.MS_PACMAN_XXL;
-import static de.amr.pacmanfx.ui.GameUI.GameVariant.PACMAN_XXL;
+import static de.amr.pacmanfx.ui.GameVariant.MS_PACMAN_XXL;
+import static de.amr.pacmanfx.ui.GameVariant.PACMAN_XXL;
 import static de.amr.pacmanfx.ui.GameUI.theUI;
 
 public class PacManXXL_Common_App extends Application {

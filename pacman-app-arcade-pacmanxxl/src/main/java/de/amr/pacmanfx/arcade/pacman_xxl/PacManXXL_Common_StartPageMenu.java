@@ -10,6 +10,7 @@ import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.MapSelectionMode;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.ui.GameVariant;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.ArcadePalette;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
@@ -158,8 +159,17 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
 
         @Override
         protected void onValueChanged(int index) {
-            state.gameVariant = selectedValue();
-            chaseAnimation.setGameVariant(state.gameVariant);
+            String gameVariant = selectedValue();
+            if (GameVariant.PACMAN_XXL.name().equals(gameVariant)) {
+                Logger.info("Loading assets for game variant {}", gameVariant);
+                theUI().uiConfig(gameVariant).storeAssets(theUI().theAssets());
+            }
+            else if (GameVariant.MS_PACMAN_XXL.name().equals(gameVariant)) {
+                Logger.info("Loading assets for game variant {}", gameVariant);
+                theUI().uiConfig(gameVariant).storeAssets(theUI().theAssets());
+            }
+            chaseAnimation.setGameVariant(gameVariant);
+            state.gameVariant = gameVariant;
             logState();
         }
 

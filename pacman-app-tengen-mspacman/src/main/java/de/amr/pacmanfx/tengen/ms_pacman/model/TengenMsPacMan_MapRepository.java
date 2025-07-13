@@ -102,7 +102,7 @@ public class TengenMsPacMan_MapRepository {
     private static List<NES_ColorScheme> randomColorSchemes(int count, NES_ColorScheme colorScheme) {
         var randomColorSchemes = new HashSet<NES_ColorScheme>();
         while (randomColorSchemes.size() < count) {
-            NES_ColorScheme randomColorScheme = NES_ColorScheme.random();
+            NES_ColorScheme randomColorScheme = NES_ColorScheme.randomScheme();
             if (!randomColorScheme.equals(colorScheme)) {
                 randomColorSchemes.add(randomColorScheme);
             }

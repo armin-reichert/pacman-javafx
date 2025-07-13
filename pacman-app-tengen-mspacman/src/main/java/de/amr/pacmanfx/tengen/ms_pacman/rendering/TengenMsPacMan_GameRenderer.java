@@ -314,7 +314,7 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
         requireNonNull(level);
         ctx.save();
         ctx.scale(scaling(), scaling());
-        Color pelletColor = Color.web(mazeSpriteSet.colorSchemedMazeSprite().colorScheme().pelletColor());
+        Color pelletColor = Color.web(mazeSpriteSet.colorSchemedMazeSprite().colorScheme().pelletColorRGB());
         drawPellets(level, pelletColor);
         drawEnergizers(level, pelletColor);
         ctx.restore();
@@ -364,7 +364,7 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
                 Color color = theUI().theAssets().color(ans + ".color.game_over_message");
                 if (level.isDemoLevel()) {
                     NES_ColorScheme nesColorScheme = level.worldMap().getConfigValue("nesColorScheme");
-                    color = Color.web(nesColorScheme.strokeColor());
+                    color = Color.web(nesColorScheme.strokeColorRGB());
                 }
                 fillTextAtScaledCenter("GAME OVER", color, font, x, y);
             }

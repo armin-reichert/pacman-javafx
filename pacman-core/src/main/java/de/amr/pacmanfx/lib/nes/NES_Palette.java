@@ -1,7 +1,12 @@
+/*
+Copyright (c) 2021-2025 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.pacmanfx.lib.nes;
 
-import static de.amr.pacmanfx.Validations.inClosedRange;
-
+/**
+ * Got this info from the <a href="https://www.mesen.ca/">Mesen NES emulator</a>.
+ */
 public interface NES_Palette {
 
     String[] COLORS = {
@@ -30,10 +35,20 @@ public interface NES_Palette {
         "e4e594", "cfef96", "bdf4ab", "b3f3cc", "b5ebf2", "b8b8b8", "000000", "000000",
     };
 
+    /**
+     * Returns the RGB color value for the NES palette entry at the given index.
+     *
+     * @param index byte number from range {@code 00} to {@code 3F}
+     * @return color in RGB hex string notation e.g. "bcbe00"
+     */
     static String color(int index) {
-        if (inClosedRange(index, 0, COLORS.length)) {
+        if (isValidIndex(index)) {
             return COLORS[index];
         }
         throw new IllegalArgumentException("Illegal NES palette index: " + index);
+    }
+
+    static boolean isValidIndex(int index) {
+        return 0 <= index && index < COLORS.length;
     }
 }

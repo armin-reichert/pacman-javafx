@@ -59,18 +59,18 @@ import static de.amr.pacmanfx.ui.input.Keyboard.*;
 import static de.amr.pacmanfx.uilib.Ufx.toggle;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceManager {
+public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
 
     private static final String NAMESPACE = "tengen";
 
+    private static final ResourceManager RES_GAME_UI = () -> GameUI.class;
+    private static final ResourceManager RES_TENGEN_MS_PAC_MAN = () -> TengenMsPacMan_UIConfig.class;
+
     public static final String MAP_PATH = "/de/amr/pacmanfx/tengen/ms_pacman/maps/";
 
+    //TODO not sure this belongs here
     public static final BooleanProperty PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED = new SimpleBooleanProperty(false);
     public static final ObjectProperty<SceneDisplayMode> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING);
-
-    public static Color nesPaletteColor(int index) {
-        return Color.web(NES_Palette.color(index));
-    }
 
     /** 32x30 */
     public static final Vector2i NES_TILES = new Vector2i(32, 30);
@@ -81,111 +81,115 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     /** 32/30 */
     public static final float NES_ASPECT = NES_SIZE_PX.x() / NES_SIZE_PX.y();
 
-    private TengenMsPacMan_SpriteSheet spriteSheet;
-    private TengenMsPacMan_MapRepository mapRepository;
-    private final DefaultSoundManager soundManager = new DefaultSoundManager();
-
-    private final Map<String, GameScene> scenesByID = new HashMap<>();
-
-    @Override
-    public Class<?> resourceRootClass() {
-        return TengenMsPacMan_UIConfig.class;
+    /**
+     * @param index NES color palette index
+     * @return RGB color for palette entry
+     */
+    public static Color nesPaletteColor(int index) {
+        return Color.web(NES_Palette.color(index));
     }
 
-    public void loadAssets(AssetStorage assets) {
-        spriteSheet = new TengenMsPacMan_SpriteSheet(loadImage("graphics/spritesheet.png"));
+    private final DefaultSoundManager soundManager = new DefaultSoundManager();
+    private final Map<String, GameScene> scenesByID = new HashMap<>();
+    private TengenMsPacMan_SpriteSheet spriteSheet;
+    private TengenMsPacMan_MapRepository mapRepository;
+
+    public void storeAssets(AssetStorage assets) {
+        spriteSheet = new TengenMsPacMan_SpriteSheet(RES_TENGEN_MS_PAC_MAN.loadImage("graphics/spritesheet.png"));
+
         mapRepository = new TengenMsPacMan_MapRepository(
-            loadImage("graphics/arcade_mazes.png"),
-            loadImage("graphics/non_arcade_mazes.png")
+            RES_TENGEN_MS_PAC_MAN.loadImage("graphics/arcade_mazes.png"),
+            RES_TENGEN_MS_PAC_MAN.loadImage("graphics/non_arcade_mazes.png")
         );
 
-        storeInMyNamespace(assets, "app_icon",                         loadImage("graphics/icons/mspacman.png"));
-        storeInMyNamespace(assets, "startpage.image1",                 loadImage("graphics/f1.png"));
-        storeInMyNamespace(assets, "startpage.image2",                 loadImage("graphics/f2.png"));
+        storeAssetMyNS(assets, "app_icon",         RES_TENGEN_MS_PAC_MAN.loadImage("graphics/icons/mspacman.png"));
+        storeAssetMyNS(assets, "startpage.image1", RES_TENGEN_MS_PAC_MAN.loadImage("graphics/f1.png"));
+        storeAssetMyNS(assets, "startpage.image2", RES_TENGEN_MS_PAC_MAN.loadImage("graphics/f2.png"));
 
-        storeInMyNamespace(assets, "color.game_over_message",          nesPaletteColor(0x11));
-        storeInMyNamespace(assets, "color.ready_message",              nesPaletteColor(0x28));
+        soundManager.registerAudioClip("audio.option.selection_changed", RES_TENGEN_MS_PAC_MAN.url("sound/ms-select1.wav"));
+        soundManager.registerAudioClip("audio.option.value_changed",     RES_TENGEN_MS_PAC_MAN.url("sound/ms-select2.wav"));
+
+        storeAssetMyNS(assets, "color.game_over_message", nesPaletteColor(0x11));
+        storeAssetMyNS(assets, "color.ready_message",     nesPaletteColor(0x28));
 
         RectShort[] symbolSprites = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS);
         RectShort[] valueSprites  = spriteSheet.spriteSeq(SpriteID.BONUS_VALUES);
         for (byte symbol = 0; symbol <= 13; ++symbol) {
-            storeInMyNamespace(assets, "bonus_symbol_" + symbol, spriteSheet.image(symbolSprites[symbol]));
-            storeInMyNamespace(assets, "bonus_value_"  + symbol, spriteSheet.image(valueSprites[symbol]));
+            storeAssetMyNS(assets, "bonus_symbol_" + symbol, spriteSheet.image(symbolSprites[symbol]));
+            storeAssetMyNS(assets, "bonus_value_"  + symbol, spriteSheet.image(valueSprites[symbol]));
         }
 
-        storeInMyNamespace(assets, "pac.color.head",                   nesPaletteColor(0x28));
-        storeInMyNamespace(assets, "pac.color.eyes",                   nesPaletteColor(0x02));
-        storeInMyNamespace(assets, "pac.color.palate",                 nesPaletteColor(0x2d));
-        storeInMyNamespace(assets, "pac.color.boobs",                  nesPaletteColor(0x28).deriveColor(0, 1.0, 0.96, 1.0));
-        storeInMyNamespace(assets, "pac.color.hairbow",                nesPaletteColor(0x05));
-        storeInMyNamespace(assets, "pac.color.hairbow.pearls",         nesPaletteColor(0x02));
+        storeAssetMyNS(assets, "pac.color.head",                   nesPaletteColor(0x28));
+        storeAssetMyNS(assets, "pac.color.eyes",                   nesPaletteColor(0x02));
+        storeAssetMyNS(assets, "pac.color.palate",                 nesPaletteColor(0x2d));
+        storeAssetMyNS(assets, "pac.color.boobs",                  nesPaletteColor(0x28).deriveColor(0, 1.0, 0.96, 1.0));
+        storeAssetMyNS(assets, "pac.color.hairbow",                nesPaletteColor(0x05));
+        storeAssetMyNS(assets, "pac.color.hairbow.pearls",         nesPaletteColor(0x02));
 
         RectShort[] numberSprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
-        storeInMyNamespace(assets, "ghost_points_0",                   spriteSheet.image(numberSprites[0]));
-        storeInMyNamespace(assets, "ghost_points_1",                   spriteSheet.image(numberSprites[1]));
-        storeInMyNamespace(assets, "ghost_points_2",                   spriteSheet.image(numberSprites[2]));
-        storeInMyNamespace(assets, "ghost_points_3",                   spriteSheet.image(numberSprites[3]));
+        storeAssetMyNS(assets, "ghost_points_0",                   spriteSheet.image(numberSprites[0]));
+        storeAssetMyNS(assets, "ghost_points_1",                   spriteSheet.image(numberSprites[1]));
+        storeAssetMyNS(assets, "ghost_points_2",                   spriteSheet.image(numberSprites[2]));
+        storeAssetMyNS(assets, "ghost_points_3",                   spriteSheet.image(numberSprites[3]));
 
-        storeInMyNamespace(assets, "ghost.0.color.normal.dress",       nesPaletteColor(0x05));
-        storeInMyNamespace(assets, "ghost.0.color.normal.eyeballs",    nesPaletteColor(0x20));
-        storeInMyNamespace(assets, "ghost.0.color.normal.pupils",      nesPaletteColor(0x16));
+        storeAssetMyNS(assets, "ghost.0.color.normal.dress",       nesPaletteColor(0x05));
+        storeAssetMyNS(assets, "ghost.0.color.normal.eyeballs",    nesPaletteColor(0x20));
+        storeAssetMyNS(assets, "ghost.0.color.normal.pupils",      nesPaletteColor(0x16));
 
-        storeInMyNamespace(assets, "ghost.1.color.normal.dress",       nesPaletteColor(0x25));
-        storeInMyNamespace(assets, "ghost.1.color.normal.eyeballs",    nesPaletteColor(0x20));
-        storeInMyNamespace(assets, "ghost.1.color.normal.pupils",      nesPaletteColor(0x11));
+        storeAssetMyNS(assets, "ghost.1.color.normal.dress",       nesPaletteColor(0x25));
+        storeAssetMyNS(assets, "ghost.1.color.normal.eyeballs",    nesPaletteColor(0x20));
+        storeAssetMyNS(assets, "ghost.1.color.normal.pupils",      nesPaletteColor(0x11));
 
-        storeInMyNamespace(assets, "ghost.2.color.normal.dress",       nesPaletteColor(0x11));
-        storeInMyNamespace(assets, "ghost.2.color.normal.eyeballs",    nesPaletteColor(0x20));
-        storeInMyNamespace(assets, "ghost.2.color.normal.pupils",      nesPaletteColor(0x11));
+        storeAssetMyNS(assets, "ghost.2.color.normal.dress",       nesPaletteColor(0x11));
+        storeAssetMyNS(assets, "ghost.2.color.normal.eyeballs",    nesPaletteColor(0x20));
+        storeAssetMyNS(assets, "ghost.2.color.normal.pupils",      nesPaletteColor(0x11));
 
-        storeInMyNamespace(assets, "ghost.3.color.normal.dress",       nesPaletteColor(0x16));
-        storeInMyNamespace(assets, "ghost.3.color.normal.eyeballs",    nesPaletteColor(0x20));
-        storeInMyNamespace(assets, "ghost.3.color.normal.pupils",      nesPaletteColor(0x05));
+        storeAssetMyNS(assets, "ghost.3.color.normal.dress",       nesPaletteColor(0x16));
+        storeAssetMyNS(assets, "ghost.3.color.normal.eyeballs",    nesPaletteColor(0x20));
+        storeAssetMyNS(assets, "ghost.3.color.normal.pupils",      nesPaletteColor(0x05));
 
-        storeInMyNamespace(assets, "ghost.color.frightened.dress",     nesPaletteColor(0x01));
-        storeInMyNamespace(assets, "ghost.color.frightened.eyeballs",  nesPaletteColor(0x20));
-        storeInMyNamespace(assets, "ghost.color.frightened.pupils",    nesPaletteColor(0x20));
+        storeAssetMyNS(assets, "ghost.color.frightened.dress",     nesPaletteColor(0x01));
+        storeAssetMyNS(assets, "ghost.color.frightened.eyeballs",  nesPaletteColor(0x20));
+        storeAssetMyNS(assets, "ghost.color.frightened.pupils",    nesPaletteColor(0x20));
 
-        //TODO has two flashing colors, when to use which?
-        storeInMyNamespace(assets, "ghost.color.flashing.dress",       nesPaletteColor(0x20));
-        storeInMyNamespace(assets, "ghost.color.flashing.eyeballs",    nesPaletteColor(0x20));
-        storeInMyNamespace(assets, "ghost.color.flashing.pupils",      nesPaletteColor(0x20));
+        //TODO sprite sheet provides two flashing colors, when to use which?
+        storeAssetMyNS(assets, "ghost.color.flashing.dress",       nesPaletteColor(0x20));
+        storeAssetMyNS(assets, "ghost.color.flashing.eyeballs",    nesPaletteColor(0x20));
+        storeAssetMyNS(assets, "ghost.color.flashing.pupils",      nesPaletteColor(0x20));
 
-        ResourceManager uiResMgr = () -> GameUI.class;
-        soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_OFF,       uiResMgr.url("sound/voice/autopilot-off.mp3"));
-        soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_ON,        uiResMgr.url("sound/voice/autopilot-on.mp3"));
-        soundManager.registerVoice(SoundID.VOICE_IMMUNITY_OFF,        uiResMgr.url("sound/voice/immunity-off.mp3"));
-        soundManager.registerVoice(SoundID.VOICE_IMMUNITY_ON,         uiResMgr.url("sound/voice/immunity-on.mp3"));
-        soundManager.registerVoice(SoundID.VOICE_EXPLAIN,             uiResMgr.url("sound/voice/press-key.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_OFF,           RES_GAME_UI.url("sound/voice/autopilot-off.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_ON,            RES_GAME_UI.url("sound/voice/autopilot-on.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_IMMUNITY_OFF,            RES_GAME_UI.url("sound/voice/immunity-off.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_IMMUNITY_ON,             RES_GAME_UI.url("sound/voice/immunity-on.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_EXPLAIN,                 RES_GAME_UI.url("sound/voice/press-key.mp3"));
 
-        soundManager.registerMediaPlayer(SoundID.BONUS_ACTIVE,            url("sound/fruitbounce.wav"));
-        soundManager.registerAudioClip(SoundID.BONUS_EATEN,               url("sound/ms-fruit.wav"));
-        soundManager.registerAudioClip(SoundID.EXTRA_LIFE,                url("sound/ms-extralife.wav"));
-        soundManager.registerMediaPlayer(SoundID.GAME_OVER,               url("sound/common/game-over.mp3"));
-        soundManager.registerMediaPlayer(SoundID.GAME_READY,              url("sound/ms-start.wav"));
-        soundManager.registerAudioClip(SoundID.GHOST_EATEN,               url("sound/ms-ghosteat.wav"));
-        soundManager.registerMediaPlayer(SoundID.GHOST_RETURNS,           url("sound/ms-eyes.wav"));
-        soundManager.registerMediaPlayer("audio.intermission.1",          url("sound/theymeet.wav"));
-        soundManager.registerMediaPlayer("audio.intermission.2",          url("sound/thechase.wav"));
-        soundManager.registerMediaPlayer("audio.intermission.3",          url("sound/junior.wav"));
-        soundManager.registerMediaPlayer("audio.intermission.4",          url("sound/theend.wav"));
-        soundManager.registerMediaPlayer("audio.intermission.4.junior.1", url("sound/ms-theend1.wav"));
-        soundManager.registerMediaPlayer("audio.intermission.4.junior.2", url("sound/ms-theend2.wav"));
-        soundManager.registerAudioClip("audio.option.selection_changed",  url("sound/ms-select1.wav"));
-        soundManager.registerAudioClip("audio.option.value_changed",      url("sound/ms-select2.wav"));
-        soundManager.registerAudioClip(SoundID.LEVEL_CHANGED,             url("sound/common/sweep.mp3"));
-        soundManager.registerMediaPlayer(SoundID.LEVEL_COMPLETE,          url("sound/common/level-complete.mp3"));
-        soundManager.registerMediaPlayer(SoundID.PAC_MAN_DEATH,           url("sound/ms-death.wav"));
-        soundManager.registerMediaPlayer(SoundID.PAC_MAN_MUNCHING,        url("sound/ms-dot.wav"));
-        soundManager.registerMediaPlayer(SoundID.PAC_MAN_POWER,           url("sound/ms-power.wav"));
-        soundManager.registerMediaPlayer(SoundID.SIREN_1,                 url("sound/ms-siren1.wav"));
-        soundManager.registerMediaPlayer(SoundID.SIREN_2,                 url("sound/ms-siren2.wav"));// TODO
-        soundManager.registerMediaPlayer(SoundID.SIREN_3,                 url("sound/ms-siren2.wav"));// TODO
-        soundManager.registerMediaPlayer(SoundID.SIREN_4,                 url("sound/ms-siren2.wav"));// TODO
+        soundManager.registerMediaPlayer(SoundID.BONUS_ACTIVE,            RES_TENGEN_MS_PAC_MAN.url("sound/fruitbounce.wav"));
+        soundManager.registerAudioClip(SoundID.BONUS_EATEN,               RES_TENGEN_MS_PAC_MAN.url("sound/ms-fruit.wav"));
+        soundManager.registerAudioClip(SoundID.EXTRA_LIFE,                RES_TENGEN_MS_PAC_MAN.url("sound/ms-extralife.wav"));
+        soundManager.registerMediaPlayer(SoundID.GAME_OVER,               RES_TENGEN_MS_PAC_MAN.url("sound/common/game-over.mp3"));
+        soundManager.registerMediaPlayer(SoundID.GAME_READY,              RES_TENGEN_MS_PAC_MAN.url("sound/ms-start.wav"));
+        soundManager.registerAudioClip(SoundID.GHOST_EATEN,               RES_TENGEN_MS_PAC_MAN.url("sound/ms-ghosteat.wav"));
+        soundManager.registerMediaPlayer(SoundID.GHOST_RETURNS,           RES_TENGEN_MS_PAC_MAN.url("sound/ms-eyes.wav"));
+        soundManager.registerMediaPlayer("audio.intermission.1",          RES_TENGEN_MS_PAC_MAN.url("sound/theymeet.wav"));
+        soundManager.registerMediaPlayer("audio.intermission.2",          RES_TENGEN_MS_PAC_MAN.url("sound/thechase.wav"));
+        soundManager.registerMediaPlayer("audio.intermission.3",          RES_TENGEN_MS_PAC_MAN.url("sound/junior.wav"));
+        soundManager.registerMediaPlayer("audio.intermission.4",          RES_TENGEN_MS_PAC_MAN.url("sound/theend.wav"));
+        soundManager.registerMediaPlayer("audio.intermission.4.junior.1", RES_TENGEN_MS_PAC_MAN.url("sound/ms-theend1.wav"));
+        soundManager.registerMediaPlayer("audio.intermission.4.junior.2", RES_TENGEN_MS_PAC_MAN.url("sound/ms-theend2.wav"));
+        soundManager.registerAudioClip(SoundID.LEVEL_CHANGED,             RES_TENGEN_MS_PAC_MAN.url("sound/common/sweep.mp3"));
+        soundManager.registerMediaPlayer(SoundID.LEVEL_COMPLETE,          RES_TENGEN_MS_PAC_MAN.url("sound/common/level-complete.mp3"));
+        soundManager.registerMediaPlayer(SoundID.PAC_MAN_DEATH,           RES_TENGEN_MS_PAC_MAN.url("sound/ms-death.wav"));
+        soundManager.registerMediaPlayer(SoundID.PAC_MAN_MUNCHING,        RES_TENGEN_MS_PAC_MAN.url("sound/ms-dot.wav"));
+        soundManager.registerMediaPlayer(SoundID.PAC_MAN_POWER,           RES_TENGEN_MS_PAC_MAN.url("sound/ms-power.wav"));
+        soundManager.registerMediaPlayer(SoundID.SIREN_1,                 RES_TENGEN_MS_PAC_MAN.url("sound/ms-siren1.wav"));
+        soundManager.registerMediaPlayer(SoundID.SIREN_2,                 RES_TENGEN_MS_PAC_MAN.url("sound/ms-siren2.wav"));// TODO
+        soundManager.registerMediaPlayer(SoundID.SIREN_3,                 RES_TENGEN_MS_PAC_MAN.url("sound/ms-siren2.wav"));// TODO
+        soundManager.registerMediaPlayer(SoundID.SIREN_4,                 RES_TENGEN_MS_PAC_MAN.url("sound/ms-siren2.wav"));// TODO
 
+        //TODO fix this in the sound file
         MediaPlayer bounceSound = soundManager.mediaPlayer(SoundID.BONUS_ACTIVE);
         if (bounceSound != null) {
-            bounceSound.setRate(0.25); // TODO ugly!
+            bounceSound.setRate(0.25);
         }
     }
 
@@ -200,6 +204,11 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
 
     @Override
     public boolean hasGameCanvasRoundedBorder() { return false; }
+
+    @Override
+    public SoundManager soundManager() {
+        return soundManager;
+    }
 
     @Override
     public TengenMsPacMan_SpriteSheet spriteSheet() {return spriteSheet;}
@@ -235,10 +244,10 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
     }
 
     @Override
-    public WorldMapColorScheme worldMapColorScheme(WorldMap worldMap) {
+    public WorldMapColorScheme colorScheme(WorldMap worldMap) {
         NES_ColorScheme colorScheme = worldMap.getConfigValue("nesColorScheme");
         return new WorldMapColorScheme(
-            colorScheme.fillColor(), colorScheme.strokeColor(), colorScheme.strokeColor(), colorScheme.pelletColor());
+            colorScheme.fillColorRGB(), colorScheme.strokeColorRGB(), colorScheme.strokeColorRGB(), colorScheme.pelletColorRGB());
     }
 
     @Override
@@ -396,7 +405,9 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         }
     };
 
-    public static final  GameAction ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED = new GameAction() {
+    //TODO  not sure this belongs here
+
+    public static final GameAction ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED = new GameAction() {
         @Override
         public void execute(GameUI ui, GameContext gameContext) {
             toggle(PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED);
@@ -427,9 +438,9 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         }
     };
 
-    // Key bindings
+    // Action bindings
 
-    public static final Map<GameAction, Set<KeyCombination>> TENGEN_ACTION_BINDINGS = Map.ofEntries(
+    public static final Map<GameAction, Set<KeyCombination>> TENGEN_MS_PACMAN_ACTION_BINDINGS = Map.ofEntries(
         createActionBinding(ACTION_STEER_UP,            theUI().theJoypad().key(JoypadButton.UP),    control(KeyCode.UP)),
         createActionBinding(ACTION_STEER_DOWN,          theUI().theJoypad().key(JoypadButton.DOWN),  control(KeyCode.DOWN)),
         createActionBinding(ACTION_STEER_LEFT,          theUI().theJoypad().key(JoypadButton.LEFT),  control(KeyCode.LEFT)),
@@ -441,10 +452,4 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig, ResourceMa
         createActionBinding(ACTION_TOGGLE_DISPLAY_MODE, alt(KeyCode.C)),
         createActionBinding(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, nude(KeyCode.SPACE))
     );
-
-    @Override
-    public SoundManager soundManager() {
-        return soundManager;
-    }
-
 }

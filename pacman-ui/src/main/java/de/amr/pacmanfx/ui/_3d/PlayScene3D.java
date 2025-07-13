@@ -519,7 +519,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 theUI().theModel3DRepository(),
                 gameContext,
                 gameContext.theGameLevel(),
-                theUI().theUIConfiguration().worldMapColorScheme(gameContext.theGameLevel().worldMap())
+                theUI().theUIConfiguration().colorScheme(gameContext.theGameLevel().worldMap())
         );
         gameLevel3D.pac3D().init();
         gameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(gameContext.theGameLevel()));

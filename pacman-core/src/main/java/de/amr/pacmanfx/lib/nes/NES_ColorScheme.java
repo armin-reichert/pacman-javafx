@@ -7,7 +7,7 @@ package de.amr.pacmanfx.lib.nes;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 
 /**
- * The color schemes used in the Tengen Ms. Pac-Man maps.
+ * The color schemes used in the Tengen Ms. Pac-Man maps. That was quite some work to fiddle them out.
  */
 public enum NES_ColorScheme {
     /** This scheme is used for highlighted maze in flashing animation. */
@@ -45,19 +45,19 @@ public enum NES_ColorScheme {
     _28_20_2A_YELLOW_WHITE_GREEN  (0x28, 0x20, 0x2a);
 
     NES_ColorScheme(int fillIndex, int strokeIndex, int pelletIndex) {
-        fillColor   = NES_Palette.color(fillIndex);
-        strokeColor = NES_Palette.color(strokeIndex);
-        pelletColor = NES_Palette.color(pelletIndex);
+        fillColor   = NES_Palette.color((byte) fillIndex);
+        strokeColor = NES_Palette.color((byte) strokeIndex);
+        pelletColor = NES_Palette.color((byte) pelletIndex);
     }
 
-    public static NES_ColorScheme random() {
-        // ignore first entry
+    public static NES_ColorScheme randomScheme() {
+        // ignore first entry (black white)
         return values()[randomInt(1, values().length)];
     }
 
-    public String fillColor() { return fillColor; }
-    public String strokeColor() { return strokeColor; }
-    public String pelletColor() { return pelletColor; }
+    public String fillColorRGB() { return fillColor; }
+    public String strokeColorRGB() { return strokeColor; }
+    public String pelletColorRGB() { return pelletColor; }
 
     private final String fillColor;
     private final String strokeColor;

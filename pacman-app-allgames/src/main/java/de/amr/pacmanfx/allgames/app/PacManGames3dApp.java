@@ -23,7 +23,8 @@ import javafx.stage.Stage;
 import static de.amr.pacmanfx.Globals.initGame;
 import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.ui.GameUI.theUI;
-import static de.amr.pacmanfx.ui.PacManGames_UI_Impl.GameVariant;
+
+import de.amr.pacmanfx.ui.GameVariant;
 
 /**
  * Application containing all game variants, the 3D play scenes, the map editor etc. ("all you can play").

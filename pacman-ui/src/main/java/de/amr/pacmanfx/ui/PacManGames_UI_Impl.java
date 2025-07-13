@@ -285,7 +285,7 @@ public class PacManGames_UI_Impl implements GameUI {
 
         PacManGames_UIConfig newConfig = uiConfig(gameVariant);
         Logger.info("Loading assets for game variant {}", gameVariant);
-        newConfig.loadAssets(theAssets());
+        newConfig.storeAssets(theAssets());
         newConfig.soundManager().mutedProperty().bind(mutedProperty);
 
         Image appIcon = theAssets.image(newConfig.assetNamespace() + ".app_icon");

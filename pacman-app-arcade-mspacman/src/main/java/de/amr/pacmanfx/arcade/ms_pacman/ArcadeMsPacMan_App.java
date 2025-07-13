@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 
 import static de.amr.pacmanfx.Globals.initGame;
 import static de.amr.pacmanfx.Globals.theGameContext;
-import static de.amr.pacmanfx.ui.GameUI.GameVariant.MS_PACMAN;
+import static de.amr.pacmanfx.ui.GameVariant.MS_PACMAN;
 import static de.amr.pacmanfx.ui.GameUI.theUI;
 
 public class ArcadeMsPacMan_App extends Application {

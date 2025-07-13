@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.ui.GameUI.GameVariant;
+import de.amr.pacmanfx.ui.GameVariant;
 import de.amr.pacmanfx.ui.layout.StartPage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
@@ -50,17 +50,21 @@ public class PacManXXL_Common_StartPage implements StartPage {
         });
     }
 
-    private void init() {
-        theUI().uiConfig(GameVariant.PACMAN.name()).loadAssets(theUI().theAssets());
-        theUI().uiConfig(GameVariant.PACMAN_XXL.name()).loadAssets(theUI().theAssets());
-        theUI().uiConfig(GameVariant.MS_PACMAN.name()).loadAssets(theUI().theAssets());
-        theUI().uiConfig(GameVariant.MS_PACMAN_XXL.name()).loadAssets(theUI().theAssets());
-        menu.soundEnabledProperty().bind(theUI().theSound().mutedProperty().not());
-    }
-
     @Override
     public void onEnter() {
-        init();
+        String gameVariant = currentGameVariant();
+        if (GameVariant.PACMAN_XXL.name().equals(gameVariant)) {
+            Logger.info("Loading assets for game variant {}", gameVariant);
+            theUI().uiConfig(gameVariant).storeAssets(theUI().theAssets());
+        }
+        else if (GameVariant.MS_PACMAN_XXL.name().equals(gameVariant)) {
+            Logger.info("Loading assets for game variant {}", gameVariant);
+            theUI().uiConfig(gameVariant).storeAssets(theUI().theAssets());
+        }
+        else {
+            Logger.error("Invalid game variant: {}", gameVariant);
+        }
+        menu.soundEnabledProperty().bind(theUI().theSound().mutedProperty().not());
         menu.syncMenuState();
         menu.startAnimation();
     }

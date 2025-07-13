@@ -42,11 +42,6 @@ public interface GameUI {
         return new GameUI_Builder(PacManGames_UI_Impl.THE_ONE);
     }
 
-    /** Predefined game variants */
-    enum GameVariant {
-        MS_PACMAN, MS_PACMAN_TENGEN, MS_PACMAN_XXL, PACMAN, PACMAN_XXL
-    }
-
     float BONUS_3D_SYMBOL_WIDTH       = TS;
     float BONUS_3D_POINTS_WIDTH       = 1.8f * TS;
     float ENERGIZER_3D_MIN_SCALING    = 0.2f;

@@ -8,6 +8,7 @@ import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameVariant;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.application.Application;
 import javafx.stage.Screen;
@@ -29,7 +30,7 @@ public class ArcadePacMan_App extends Application {
         // UI size: 80% of available screen height, aspect 12:10
         final double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
         final double width  = 1.2 * height;
-        var gameVariant = GameUI.GameVariant.PACMAN.name();
+        var gameVariant = GameVariant.PACMAN.name();
         GameUI.build(theGameContext(), primaryStage, width, height)
             .game(
                 gameVariant,

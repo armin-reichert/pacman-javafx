@@ -16,7 +16,7 @@ import javafx.stage.Stage;
 import static de.amr.pacmanfx.Globals.initGame;
 import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_ASPECT;
-import static de.amr.pacmanfx.ui.GameUI.GameVariant.MS_PACMAN_TENGEN;
+import static de.amr.pacmanfx.ui.GameVariant.MS_PACMAN_TENGEN;
 import static de.amr.pacmanfx.ui.GameUI.theUI;
 
 public class TengenMsPacMan_App extends Application {
