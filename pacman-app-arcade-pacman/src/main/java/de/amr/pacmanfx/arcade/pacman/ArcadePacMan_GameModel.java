@@ -243,7 +243,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
     public void createLevel(int levelNumber) {
         WorldMap worldMap = mapSelector.getWorldMap(levelNumber);
         level = new GameLevel(levelNumber, worldMap, createLevelData(levelNumber));
-        addHouse(level);
+        level.addHouse();
         level.setGameOverStateTicks(90);
 
         Pac pacMan = createPac(gameContext);

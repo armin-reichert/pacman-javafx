@@ -248,7 +248,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
         WorldMap worldMap = mapSelector.getWorldMap(levelNumber);
         level = new GameLevel(levelNumber, worldMap, createLevelData(levelNumber));
         level.setGameOverStateTicks(150);
-        addHouse(level);
+        level.addHouse();
 
         level.setPac(createMsPacMan(gameContext));
         level.pac().setAutopilotSteering(autopilot);

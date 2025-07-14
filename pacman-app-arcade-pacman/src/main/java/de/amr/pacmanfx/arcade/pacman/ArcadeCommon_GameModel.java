@@ -6,11 +6,7 @@ package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEventType;
-import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.lib.tilemap.LayerID;
-import de.amr.pacmanfx.lib.tilemap.WorldMap;
-import de.amr.pacmanfx.lib.tilemap.WorldMapFormatter;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.ActorSpeedControl;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -19,8 +15,8 @@ import org.tinylog.Logger;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
+import static de.amr.pacmanfx.Globals.NUM_TICKS_PER_SEC;
+import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
 
@@ -28,16 +24,6 @@ import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
  * Common data and functionality of Pac-Man and Ms. Pac-Man Arcade games.
  */
 public abstract class ArcadeCommon_GameModel extends GameModel {
-
-    private static final byte[][] DEFAULT_HOUSE = {
-        { ARC_NW.code(), WALL_H.code(), WALL_H.code(), DOOR.code(), DOOR.code(), WALL_H.code(), WALL_H.code(), ARC_NE.code() },
-        { WALL_V.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), WALL_V.code()   },
-        { WALL_V.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), WALL_V.code()   },
-        { ARC_SW.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), ARC_SE.code() }
-    };
-
-    private static final Vector2i DEFAULT_HOUSE_MIN_TILE = Vector2i.of(10, 15);
-    private static final Vector2i DEFAULT_HOUSE_MAX_TILE = Vector2i.of(17, 19);
 
     public static final byte PELLET_VALUE = 10;
     public static final byte ENERGIZER_VALUE = 50;
@@ -297,34 +283,4 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
     }
 
 
-    /**
-     * The ghost house is not explicitly stored in the world map, only its position. Therefore, we have to create an
-     * obstacle representing the house walls such that collision detection works.
-     *
-     * @param level the game level
-     */
-    protected void addHouse(GameLevel level) {
-        WorldMap worldMap = level.worldMap();
-        if (!worldMap.properties(LayerID.TERRAIN).containsKey(WorldMapProperty.POS_HOUSE_MIN_TILE)) {
-            Logger.warn("No house min tile found in map!");
-            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_HOUSE_MIN_TILE,
-                    WorldMapFormatter.formatTile(DEFAULT_HOUSE_MIN_TILE));
-        }
-        if (!worldMap.properties(LayerID.TERRAIN).containsKey(WorldMapProperty.POS_HOUSE_MAX_TILE)) {
-            Logger.warn("No house max tile found in map!");
-            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_HOUSE_MAX_TILE,
-                    WorldMapFormatter.formatTile(DEFAULT_HOUSE_MAX_TILE));
-        }
-        Vector2i houseMinTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE);
-        for (int y = 0; y < DEFAULT_HOUSE.length; ++y) {
-            for (int x = 0; x < DEFAULT_HOUSE[y].length; ++x) {
-                level.worldMap().setContent(LayerID.TERRAIN, houseMinTile.y() + y, houseMinTile.x() + x, DEFAULT_HOUSE[y][x]);
-            }
-        }
-
-        level.setGhostStartDirection(RED_GHOST_SHADOW, Direction.LEFT);
-        level.setGhostStartDirection(PINK_GHOST_SPEEDY, Direction.DOWN);
-        level.setGhostStartDirection(CYAN_GHOST_BASHFUL, Direction.UP);
-        level.setGhostStartDirection(ORANGE_GHOST_POKEY, Direction.UP);
-    }
 }
