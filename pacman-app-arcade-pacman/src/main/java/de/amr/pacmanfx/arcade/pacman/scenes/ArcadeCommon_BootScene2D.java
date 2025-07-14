@@ -73,7 +73,7 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
     public void draw() {
         gr().setScaling(scaling());
         if (gameContext.theGameState().timer().tickCount() == 1) {
-            fillCanvas(canvas, backgroundColor());
+            clear();
         } else {
             drawSceneContent();
         }
@@ -83,13 +83,13 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
     public void drawSceneContent() {
         TickTimer timer = gameContext.theGameState().timer();
         if (timer.betweenSeconds(1, 2) && timer.tickCount() % 4 == 0) {
-            fillCanvas(canvas, backgroundColor());
+            clear();
             drawRandomHexDigits();
         } else if (timer.betweenSeconds(2, 3.5) && timer.tickCount() % 4 == 0) {
-            fillCanvas(canvas, backgroundColor());
+            clear();
             drawRandomSpriteFragments();
         } else if (timer.atSecond(3.5)) {
-            fillCanvas(canvas, backgroundColor());
+            clear();
             drawGridLines();
         }
     }

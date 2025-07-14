@@ -25,7 +25,6 @@ import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.cr
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.createPacMan;
 import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PacAnimationMap.*;
 import static de.amr.pacmanfx.ui.GameUI.theUI;
-import static de.amr.pacmanfx.ui._2d.GameRenderer.fillCanvas;
 
 public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
@@ -216,18 +215,15 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
     @Override
     public void draw() {
-        //TODO avoid overwriting, fix HUD drawing instead
-        fillCanvas(canvas, backgroundColor());
         gameRenderer.setScaling(scaling());
+        clear();
         drawSceneContent();
         if (debugInfoVisibleProperty.get()) {
             drawDebugInfo();
         }
-        // draw HUD only for non-Arcade map mode
-        if (gameContext.theGame() instanceof TengenMsPacMan_GameModel tengenGame) {
-            if (tengenGame.mapCategory() != MapCategory.ARCADE) {
-                gameRenderer.drawHUD(gameContext, gameContext.theGame().hud(), sizeInPx().minus(0, 2 * TS));
-            }
+        var game = gameContext.<TengenMsPacMan_GameModel>theGame();
+        if (game.mapCategory() != MapCategory.ARCADE) {
+            gameRenderer.drawHUD(gameContext, game.hud(), sizeInPx().minus(0, 2 * TS));
         }
     }
 

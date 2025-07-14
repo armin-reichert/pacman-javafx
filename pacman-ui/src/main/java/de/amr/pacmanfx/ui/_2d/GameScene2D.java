@@ -16,6 +16,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.GameUI.*;
@@ -112,6 +113,14 @@ public abstract class GameScene2D implements GameScene {
      */
     public abstract Vector2f sizeInPx();
 
+    public void clear() {
+        if (canvas != null) {
+            fillCanvas(canvas, backgroundColor());
+        } else {
+            Logger.error("Cannot clear scene, canvas not available");
+        }
+    }
+
     /**
      * Default implementation: scales the renderer to the current scene scaling,
      * clears the canvas and draws the scores (if on), scene content and debug information (if on).
@@ -120,7 +129,7 @@ public abstract class GameScene2D implements GameScene {
         if (gameRenderer == null) {
             gameRenderer = theUI().theUIConfiguration().createGameRenderer(canvas);
         }
-        fillCanvas(canvas, backgroundColor());
+        clear();
         gameRenderer.setScaling(scaling());
         drawSceneContent();
         if (debugInfoVisibleProperty.get()) {

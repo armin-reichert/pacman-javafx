@@ -27,7 +27,6 @@ import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PacAnimationMap.ANIM_PAC_MAN_MUNCHING;
 import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_LET_GAME_STATE_EXPIRE;
-import static de.amr.pacmanfx.ui._2d.GameRenderer.fillCanvas;
 
 /**
  * Intermission scene 1: "They meet".
@@ -219,18 +218,16 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void draw() {
-        //TODO avoid overwriting, fix HUD drawing instead
-        fillCanvas(canvas, backgroundColor());
         gameRenderer.setScaling(scaling());
+        clear();
         drawSceneContent();
         if (debugInfoVisibleProperty.get()) {
             drawDebugInfo();
         }
         // draw HUD only for non-Arcade map mode
-        if (gameContext.theGame() instanceof TengenMsPacMan_GameModel tengenGame) {
-            if (tengenGame.mapCategory() != MapCategory.ARCADE) {
-                gameRenderer.drawHUD(gameContext, gameContext.theGame().hud(), sizeInPx().minus(0, 2 * TS));
-            }
+        var game = gameContext.<TengenMsPacMan_GameModel>theGame();
+        if (game.mapCategory() != MapCategory.ARCADE) {
+            gameRenderer.drawHUD(gameContext, game.hud(), sizeInPx().minus(0, 2 * TS));
         }
     }
 
