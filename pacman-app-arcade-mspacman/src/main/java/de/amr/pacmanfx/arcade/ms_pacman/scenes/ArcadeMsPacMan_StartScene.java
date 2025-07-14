@@ -20,12 +20,11 @@ import static de.amr.pacmanfx.ui.GameUI.GLOBAL_ACTION_BINDINGS;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_ARCADE_INSERT_COIN;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_ARCADE_START_GAME;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_ORANGE;
-import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_RED;
 
 public class ArcadeMsPacMan_StartScene extends GameScene2D {
 
     private RectShort livesCounterSprite;
-    private MidwayCopyright copyright;
+    private MidwayCopyright midwayCopyright;
 
     public ArcadeMsPacMan_StartScene(GameUI ui) {
         super(ui);
@@ -43,10 +42,9 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
         gameContext().theGame().hud().showLevelCounter(true);
         gameContext().theGame().hud().showLivesCounter(false);
 
-        copyright = new MidwayCopyright();
-        copyright.setPosition(TS * 6, TS * 28);
-        copyright.setColor(ARCADE_RED);
-        copyright.show();
+        midwayCopyright = new MidwayCopyright(ui.theUIConfiguration().getAssetNS("logo.midway"));
+        midwayCopyright.setPosition(TS * 6, TS * 28);
+        midwayCopyright.show();
 
         @SuppressWarnings("unchecked") var spriteSheet = (SpriteSheet<SpriteID>) ui.theUIConfiguration().spriteSheet();
         livesCounterSprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
@@ -79,6 +77,6 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
         gr().fillTextAtScaledPosition("ADDITIONAL    AT 10000", TS*2, TS*25);
         gr().drawSpriteScaled(livesCounterSprite, TS*13, TS*23 + 1);
         gr().fillTextAtScaledPosition("PTS", scaledArcadeFont6(), TS*25, TS*25);
-        gr().drawActor(copyright);
+        gr().drawActor(midwayCopyright);
     }
 }

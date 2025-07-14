@@ -5,19 +5,19 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.pacmanfx.model.actors.Actor;
-import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
+
+import static java.util.Objects.requireNonNull;
 
 public class MidwayCopyright extends Actor {
+    private final Image logo;
 
-    private Color color;
-
-    public MidwayCopyright() { super(null); }
-
-    public Color color() {
-        return color;
+    public MidwayCopyright(Image logo) {
+        super(null);
+        this.logo = requireNonNull(logo);
     }
 
-    public void setColor(Color color) {
-        this.color = color;
+    public Image logo() {
+        return logo;
     }
 }

@@ -51,7 +51,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     private final StateMachine<SceneState, ArcadeMsPacMan_IntroScene> sceneController;
 
-    private MidwayCopyright copyright;
+    private MidwayCopyright midwayCopyright;
     private Marquee marquee;
     private Pac msPacMan;
     private Ghost[] ghosts;
@@ -81,10 +81,9 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         actionBindings.bind(ACTION_TEST_LEVELS_BONI, GLOBAL_ACTION_BINDINGS);
         actionBindings.bind(ACTION_TEST_LEVELS_TEASERS, GLOBAL_ACTION_BINDINGS);
 
-        copyright = new MidwayCopyright();
-        copyright.setPosition(TS * 6, TS * 28);
-        copyright.setColor(ARCADE_RED);
-        copyright.show();
+        midwayCopyright = new MidwayCopyright(ui.theUIConfiguration().getAssetNS("logo.midway"));
+        midwayCopyright.setPosition(TS * 6, TS * 28);
+        midwayCopyright.show();
 
         marquee = new Marquee(132, 60, 96, 6, 16);
         marquee.setPosition(60, 88);
@@ -153,7 +152,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                 gr().fillTextAtScaledPosition("MS PAC-MAN", ARCADE_YELLOW, TITLE_X, TOP_Y + tiles_to_px(6));
             }
         }
-        gr().drawActor(copyright);
+        gr().drawActor(midwayCopyright);
     }
 
     // Scene controller FSM
