@@ -20,7 +20,6 @@ import javafx.scene.paint.Color;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.GameUI.GLOBAL_ACTION_BINDINGS;
-import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 
 /**
@@ -72,7 +71,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         TengenMsPacMan_GameModel game = gameContext().theGame();
         if (!game.optionsAreInitial()) {
             // show info about category, difficulty, booster etc
-            ImageView infoView = createGameInfoView(game, gameContext().theGameLevel());
+            ImageView infoView = createGameInfoView(gameContext().theGameLevel(), ui.property3DFloorColor().get());
             infoView.setTranslateX(0);
             infoView.setTranslateY((gameContext().theGameLevel().worldMap().numRows() - 2) * TS);
             infoView.setTranslateZ(-gameLevel3D.floorThickness());
@@ -80,15 +79,17 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         }
     }
 
-    private static ImageView createGameInfoView(TengenMsPacMan_GameModel game, GameLevel gameLevel) {
+    private ImageView createGameInfoView(GameLevel gameLevel, Color floorColor) {
+        var game = gameContext().<TengenMsPacMan_GameModel>theGame();
+
         final int infoWidth = gameLevel.worldMap().numCols() * TS, infoHeight = 2 * TS;
         final float quality = 5; // scale for better snapshot resolution
 
         var canvas = new Canvas(quality * infoWidth, quality * infoHeight);
         canvas.getGraphicsContext2D().setImageSmoothing(false); // important!
-        GameRenderer.fillCanvas(canvas, theUI().property3DFloorColor().get());
+        GameRenderer.fillCanvas(canvas, floorColor);
 
-        var r = (TengenMsPacMan_GameRenderer) theUI().theUIConfiguration().createGameRenderer(canvas);
+        var r = (TengenMsPacMan_GameRenderer) ui.theUIConfiguration().createGameRenderer(canvas);
         r.setScaling(quality);
         r.drawGameOptions(game.mapCategory(), game.difficulty(), game.pacBooster(), 0.5 * infoWidth, TS + HTS);
         r.drawLevelNumberBox(gameLevel.number(), 0, 0);
@@ -111,7 +112,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
             // if score is disabled, display "GAME OVER" using maze-specific color
             NES_ColorScheme nesColorScheme = gameLevel.worldMap().getConfigValue("nesColorScheme");
             Color color = Color.web(nesColorScheme.strokeColorRGB());
-            scores3D.showTextForScore(theUI().theAssets().text("score.game_over"), color);
+            scores3D.showTextForScore(ui.theAssets().text("score.game_over"), color);
         }
         // Always show high score
         scores3D.showHighScore(highScore.points(), highScore.levelNumber());

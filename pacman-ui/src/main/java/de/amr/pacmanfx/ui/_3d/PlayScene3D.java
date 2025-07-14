@@ -39,7 +39,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.HTS;
+import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.Validations.isOneOf;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_MEDIUM;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_SHORT;
@@ -61,7 +62,6 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     private static final Color SUBSCENE_FILL_BRIGHT = Color.TRANSPARENT;
 
     protected final GameUI ui;
-    protected final GameContext gameContext;
     protected final SubScene subScene3D;
     protected final PerspectiveCamera camera = new PerspectiveCamera(true);
     protected final PerspectiveManager perspectiveManager;
@@ -72,7 +72,6 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     public PlayScene3D(GameUI ui) {
         this.ui = requireNonNull(ui);
-        this.gameContext = ui.theGameContext();
         this.actionBindings = new ActionBindingMap(ui.theKeyboard());
 
         scores3D = new Scores3D(
@@ -110,7 +109,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public GameContext gameContext() {
-        return gameContext;
+        return ui.theGameContext();
     }
 
     @Override
@@ -187,8 +186,8 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         actionBindings.bind(ACTION_PERSPECTIVE_PREVIOUS, GLOBAL_ACTION_BINDINGS);
         actionBindings.bind(ACTION_PERSPECTIVE_NEXT, GLOBAL_ACTION_BINDINGS);
         actionBindings.bind(ACTION_TOGGLE_DRAW_MODE, GLOBAL_ACTION_BINDINGS);
-        if (gameContext.optGameLevel().isPresent()) {
-            if (gameContext.theGameLevel().isDemoLevel()) {
+        if (gameContext().optGameLevel().isPresent()) {
+            if (gameContext().theGameLevel().isDemoLevel()) {
                 actionBindings.bind(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDINGS);
             } else {
                 setPlayerSteeringActionBindings();
@@ -213,7 +212,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void init() {
-        gameContext.theGame().hud().showScore(true);
+        gameContext().theGame().hud().showScore(true);
         perspectiveManager.perspectiveIDProperty().bind(ui.property3DPerspective());
     }
 
@@ -225,7 +224,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public final void update() {
-        if (gameContext.optGameLevel().isEmpty()) {
+        if (gameContext().optGameLevel().isEmpty()) {
             // Scene gets already update 2 ticks before level has been created!
             Logger.info("Tick #{}: Game level not yet created, update ignored", ui.theGameClock().tickCount());
             return;
@@ -238,15 +237,15 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             Logger.error("Tick #{}: 3D game level is being destroyed, terminating app", ui.theGameClock().tickCount());
             ui.terminateApp();
         }
-        gameLevel3D.tick(gameContext);
-        updateScores(gameContext.theGameLevel());
-        if (gameContext.theGameLevel().isDemoLevel()) {
+        gameLevel3D.tick(gameContext());
+        updateScores(gameContext().theGameLevel());
+        if (gameContext().theGameLevel().isDemoLevel()) {
             ui.theSound().setEnabled(false);
         } else {
             ui.theSound().setEnabled(true);
-            updateSound(gameContext.theGameLevel());
+            updateSound(gameContext().theGameLevel());
         }
-        perspectiveManager.updatePerspective(gameContext.theGameLevel());
+        perspectiveManager.updatePerspective(gameContext().theGameLevel());
     }
 
     @Override
@@ -276,15 +275,15 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         switch (state) {
             case HUNTING -> {
                 gameLevel3D.pac3D().init();
-                gameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(gameContext.theGameLevel()));
+                gameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(gameContext().theGameLevel()));
                 gameLevel3D.energizers3D().forEach(energizer3D -> energizer3D.pumpingAnimation().playFromStart());
                 gameLevel3D.livesCounter3D().lookingAroundAnimation().playFromStart();
             }
             case PACMAN_DYING -> {
-                gameContext.theGameState().timer().resetIndefiniteTime(); // expires when animation ends
+                gameContext().theGameState().timer().resetIndefiniteTime(); // expires when animation ends
                 ui.theSound().stopAll();
                 // do one last update before dying animation starts
-                gameLevel3D.pac3D().update(gameContext.theGameLevel());
+                gameLevel3D.pac3D().update(gameContext().theGameLevel());
                 gameLevel3D.livesCounter3D().lookingAroundAnimation().stop();
                 gameLevel3D.livesCounter3D().lookingAroundAnimation().invalidate();
                 gameLevel3D.ghosts3D().forEach(MutatingGhost3D::stopAllAnimations);
@@ -296,20 +295,20 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                     pauseSec(1)
                 );
                 // Note: adding this inside the animation as last action does not work!
-                animation.setOnFinished(e -> gameContext.theGameController().letCurrentGameStateExpire());
+                animation.setOnFinished(e -> gameContext().theGameController().letCurrentGameStateExpire());
                 animation.play();
             }
             case GHOST_DYING ->
-                gameContext.theSimulationStep().killedGhosts.forEach(killedGhost -> {
+                gameContext().theSimulationStep().killedGhosts.forEach(killedGhost -> {
                     byte personality = killedGhost.personality();
-                    int killedIndex = gameContext.theGameLevel().victims().indexOf(killedGhost);
+                    int killedIndex = gameContext().theGameLevel().victims().indexOf(killedGhost);
                     Image pointsImage = ui.theUIConfiguration().killedGhostPointsImage(killedGhost, killedIndex);
                     gameLevel3D.ghost3D(personality).setNumberImage(pointsImage);
                 });
             case LEVEL_COMPLETE -> {
-                gameContext.theGameState().timer().resetIndefiniteTime(); // expires when animation ends
+                gameContext().theGameState().timer().resetIndefiniteTime(); // expires when animation ends
                 gameLevel3D.onLevelComplete();
-                boolean cutSceneFollows = gameContext.theGame().cutSceneNumber(gameContext.theGameLevel().number()).isPresent();
+                boolean cutSceneFollows = gameContext().theGame().cutSceneNumber(gameContext().theGameLevel().number()).isPresent();
                 ManagedAnimation levelCompletedAnimation = cutSceneFollows
                     ? gameLevel3D.levelCompletedAnimationBeforeCutScene()
                     : gameLevel3D.levelCompletedAnimation();
@@ -324,30 +323,30 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 );
                 animation.setOnFinished(e -> {
                     perspectiveManager.perspectiveIDProperty().bind(ui.property3DPerspective());
-                    gameContext.theGameController().letCurrentGameStateExpire();
+                    gameContext().theGameController().letCurrentGameStateExpire();
                 });
                 animation.play();
             }
             case LEVEL_TRANSITION -> {
-                gameContext.theGameState().timer().resetIndefiniteTime();
+                gameContext().theGameState().timer().resetIndefiniteTime();
                 replaceGameLevel3D();
                 perspectiveManager.initPerspective();
-                gameContext.theGameState().timer().expire();
+                gameContext().theGameState().timer().expire();
             }
             case GAME_OVER -> {
-                gameContext.theGameState().timer().restartSeconds(3);
+                gameContext().theGameState().timer().restartSeconds(3);
                 gameLevel3D.energizers3D().forEach(energizer3D -> energizer3D.shape3D().setVisible(false));
                 gameLevel3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
                 ui.theSound().stopAll();
                 ui.theSound().play(SoundID.GAME_OVER);
                 boolean inOneOf4Cases = randomInt(0, 1000) < 250;
-                if (!gameContext.theGameLevel().isDemoLevel() && inOneOf4Cases) {
+                if (!gameContext().theGameLevel().isDemoLevel() && inOneOf4Cases) {
                     ui.showFlashMessageSec(2.5, ui.theAssets().localizedGameOverMessage());
                 }
             }
             case TESTING_LEVELS_SHORT, TESTING_LEVELS_MEDIUM -> {
                 replaceGameLevel3D();
-                showLevelTestMessage(gameContext.theGameLevel().number());
+                showLevelTestMessage(gameContext().theGameLevel().number());
                 ui.property3DPerspective().set(Perspective.ID.TOTAL);
             }
         }
@@ -355,16 +354,16 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void onLevelStarted(GameEvent event) {
-        requireNonNull(gameContext.theGameLevel()); // just to be sure nothing bad happened
+        requireNonNull(gameContext().theGameLevel()); // just to be sure nothing bad happened
         setActionBindings();
         if (gameLevel3D == null) {
             replaceGameLevel3D();
         }
-        switch (gameContext.theGameState()) {
+        switch (gameContext().theGameState()) {
             case STARTING_GAME -> {
-                if (!gameContext.theGameLevel().isDemoLevel()) {
+                if (!gameContext().theGameLevel().isDemoLevel()) {
                     //TODO default position if no house
-                    Vector2f position = gameContext.theGameLevel().house().map(House::centerPositionUnderHouse).orElse(Vector2f.ZERO);
+                    Vector2f position = gameContext().theGameLevel().house().map(House::centerPositionUnderHouse).orElse(Vector2f.ZERO);
                     gameLevel3D.showAnimatedMessage("READY!", 2.5f, position.x(), position.y());
                     setPlayerSteeringActionBindings();
                 }
@@ -373,9 +372,9 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 replaceGameLevel3D(); //TODO check when to destroy previous level
                 gameLevel3D.livesCounter3D().lookingAroundAnimation().playFromStart();
                 gameLevel3D.energizers3D().forEach(energizer3D -> energizer3D.pumpingAnimation().playFromStart());
-                showLevelTestMessage(gameContext.theGameLevel().number());
+                showLevelTestMessage(gameContext().theGameLevel().number());
             }
-            default -> Logger.error("Unexpected game state '{}' on level start", gameContext.theGameState());
+            default -> Logger.error("Unexpected game state '{}' on level start", gameContext().theGameState());
         }
         perspectiveManager.initPerspective();
         fadeInSubScene();
@@ -383,38 +382,38 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void onSwitch_2D_3D(GameScene scene2D) {
-        if (gameContext.optGameLevel().isEmpty()) {
+        if (gameContext().optGameLevel().isEmpty()) {
             return;
         }
         if (gameLevel3D == null) {
             replaceGameLevel3D();
         }
-        gameContext.theGameLevel().pac().show();
-        gameContext.theGameLevel().ghosts().forEach(Ghost::show);
+        gameContext().theGameLevel().pac().show();
+        gameContext().theGameLevel().ghosts().forEach(Ghost::show);
         gameLevel3D.pac3D().init();
-        gameLevel3D.pac3D().update(gameContext.theGameLevel());
-        gameLevel3D.pellets3D().forEach(pellet -> pellet.shape3D().setVisible(!gameContext.theGameLevel().tileContainsEatenFood(pellet.tile())));
-        gameLevel3D.energizers3D().forEach(energizer -> energizer.shape3D().setVisible(!gameContext.theGameLevel().tileContainsEatenFood(energizer.tile())));
-        if (isOneOf(gameContext.theGameState(), GameState.HUNTING, GameState.GHOST_DYING)) { //TODO check this
+        gameLevel3D.pac3D().update(gameContext().theGameLevel());
+        gameLevel3D.pellets3D().forEach(pellet -> pellet.shape3D().setVisible(!gameContext().theGameLevel().tileContainsEatenFood(pellet.tile())));
+        gameLevel3D.energizers3D().forEach(energizer -> energizer.shape3D().setVisible(!gameContext().theGameLevel().tileContainsEatenFood(energizer.tile())));
+        if (isOneOf(gameContext().theGameState(), GameState.HUNTING, GameState.GHOST_DYING)) { //TODO check this
             gameLevel3D.energizers3D()
                 .filter(energizer3D -> energizer3D.shape3D().isVisible())
                 .forEach(energizer3D -> energizer3D.pumpingAnimation().playFromStart());
         }
 
-        if (gameContext.theGameState() == GameState.HUNTING) {
-            if (gameContext.theGameLevel().pac().powerTimer().isRunning()) {
+        if (gameContext().theGameState() == GameState.HUNTING) {
+            if (gameContext().theGameLevel().pac().powerTimer().isRunning()) {
                 ui.theSound().loop(SoundID.PAC_MAN_POWER);
             }
             gameLevel3D.livesCounter3D().lookingAroundAnimation().playFromStart();
         }
-        updateScores(gameContext.theGameLevel());
+        updateScores(gameContext().theGameLevel());
         setActionBindings();
         fadeInSubScene();
     }
 
     @Override
     public void onBonusActivated(GameEvent event) {
-        gameContext.theGameLevel().bonus().ifPresent(bonus -> {
+        gameContext().theGameLevel().bonus().ifPresent(bonus -> {
             gameLevel3D.updateBonus3D(bonus);
             if (bonus instanceof MovingBonus) {
                 ui.theSound().loop(SoundID.BONUS_ACTIVE);
@@ -424,7 +423,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void onBonusEaten(GameEvent event) {
-        gameContext.theGameLevel().bonus().ifPresent(bonus -> {
+        gameContext().theGameLevel().bonus().ifPresent(bonus -> {
             gameLevel3D.bonus3D().ifPresent(Bonus3D::showEaten);
             if (bonus instanceof MovingBonus) {
                 ui.theSound().stop(SoundID.BONUS_ACTIVE);
@@ -435,7 +434,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void onBonusExpired(GameEvent event) {
-        gameContext.theGameLevel().bonus().ifPresent(bonus -> {
+        gameContext().theGameLevel().bonus().ifPresent(bonus -> {
             gameLevel3D.bonus3D().ifPresent(Bonus3D::expire);
             if (bonus instanceof MovingBonus) {
                 ui.theSound().stop(SoundID.BONUS_ACTIVE);
@@ -451,15 +450,15 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     @Override
     public void onGameContinued(GameEvent e) {
         if (gameLevel3D != null && !gameLevel3D.isDestroyed()) {
-            Vector2f position = gameContext.theGameLevel().house().map(House::centerPositionUnderHouse).orElse(Vector2f.ZERO);
+            Vector2f position = gameContext().theGameLevel().house().map(House::centerPositionUnderHouse).orElse(Vector2f.ZERO);
             gameLevel3D.showAnimatedMessage("READY!", 0.5f, position.x(), position.y());
         }
     }
 
     @Override
     public void onGameStarted(GameEvent e) {
-        boolean silent = gameContext.theGameLevel().isDemoLevel()
-                || gameContext.theGameState() == TESTING_LEVELS_SHORT || gameContext.theGameState() == TESTING_LEVELS_MEDIUM;
+        boolean silent = gameContext().theGameLevel().isDemoLevel()
+                || gameContext().theGameState() == TESTING_LEVELS_SHORT || gameContext().theGameState() == TESTING_LEVELS_MEDIUM;
         if (!silent) {
             ui.theSound().play(SoundID.GAME_READY);
         }
@@ -524,12 +523,12 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         gameLevel3D = new GameLevel3D(
                 ui,
                 ui.theModel3DRepository(),
-                gameContext,
-                gameContext.theGameLevel(),
-                ui.theUIConfiguration().colorScheme(gameContext.theGameLevel().worldMap())
+                gameContext(),
+                gameContext().theGameLevel(),
+                ui.theUIConfiguration().colorScheme(gameContext().theGameLevel().worldMap())
         );
         gameLevel3D.pac3D().init();
-        gameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(gameContext.theGameLevel()));
+        gameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(gameContext().theGameLevel()));
         Group root = (Group) subScene3D.getRoot();
         root.getChildren().set(root.getChildren().size() - 1, gameLevel3D);
 
@@ -539,8 +538,8 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     }
 
     protected void updateSound(GameLevel gameLevel) {
-        if (gameContext.theGameState() == GameState.HUNTING && !gameLevel.pac().powerTimer().isRunning()) {
-            int sirenNumber = 1 + gameContext.theGame().huntingTimer().phaseIndex() / 2;
+        if (gameContext().theGameState() == GameState.HUNTING && !gameLevel.pac().powerTimer().isRunning()) {
+            int sirenNumber = 1 + gameContext().theGame().huntingTimer().phaseIndex() / 2;
             SoundID sirenID = switch (sirenNumber) {
                 case 1 -> SoundID.SIREN_1;
                 case 2 -> SoundID.SIREN_2;
@@ -562,7 +561,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     }
 
     protected void updateScores(GameLevel gameLevel) {
-        final Score score = gameContext.theGame().score(), highScore = gameContext.theGame().highScore();
+        final Score score = gameContext().theGame().score(), highScore = gameContext().theGame().highScore();
         if (score.isEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());
         }
@@ -575,7 +574,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     }
 
     protected void showLevelTestMessage(int levelNumber) {
-        WorldMap worldMap = gameContext.theGameLevel().worldMap();
+        WorldMap worldMap = gameContext().theGameLevel().worldMap();
         double x = worldMap.numCols() * HTS;
         double y = (worldMap.numRows() - 2) * TS;
         gameLevel3D.showAnimatedMessage("LEVEL %d (TEST)".formatted(levelNumber), 5, x, y);
