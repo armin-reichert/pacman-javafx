@@ -24,8 +24,6 @@ import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
  * <p>
  * Pac-Man and Ms. Pac-Man chase each other across the screen over and over. After three turns, they both rapidly run
  * from left to right and right to left. (Played after round 5)
- *
- * @author Armin Reichert
  */
 public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
