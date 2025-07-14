@@ -177,11 +177,11 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
         requireNonNull(actor);
         if (actor.isVisible()) {
             switch (actor) {
-                case MovingBonus movingBonus   -> drawMovingBonus(movingBonus);
-                case MidwayCopyright copyright -> drawMidwayCopyright(copyright);
                 case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
-                case Marquee marquee -> drawMarquee(marquee);
-                default -> SpriteGameRenderer.super.drawActor(actor);
+                case Marquee marquee           -> drawMarquee(marquee);
+                case MidwayCopyright copyright -> drawMidwayCopyright(copyright);
+                case MovingBonus movingBonus   -> drawMovingBonus(movingBonus);
+                default                        -> SpriteGameRenderer.super.drawActor(actor);
             }
         }
     }

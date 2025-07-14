@@ -48,7 +48,7 @@ import static de.amr.pacmanfx.uilib.Ufx.menuTitleItem;
  */
 public class ArcadeCommon_PlayScene2D extends GameScene2D {
 
-    private final List<Actor> actorsInDrawingOrder = new ArrayList<>();
+    private final List<Actor> actorsByZ = new ArrayList<>();
     private LevelCompletedAnimation levelCompletedAnimation;
 
     public ArcadeCommon_PlayScene2D(GameUI ui) {
@@ -61,7 +61,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
             animationManager.destroyAnimation(levelCompletedAnimation);
             levelCompletedAnimation = null;
         }
-        actorsInDrawingOrder.clear();
+        actorsByZ.clear();
         if (gameRenderer != null) {
             gameRenderer.destroy();
             gameRenderer = null;
@@ -251,18 +251,20 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
         gameContext().theGameLevel().house().ifPresent(house -> drawLevelMessageCenteredUnderHouse(house, gameContext().theGameLevel().messageType()));
 
         // Collect and draw actors in drawing z-order: bonus < Pac-Man < ghosts.
-        actorsInDrawingOrder.clear();
-        gameContext().theGameLevel().bonus().map(Bonus::actor).ifPresent(actorsInDrawingOrder::add);
-        actorsInDrawingOrder.add(gameContext().theGameLevel().pac());
+        actorsByZ.clear();
+        gameContext().theGameLevel().bonus().map(Bonus::actor).ifPresent(actorsByZ::add);
+        actorsByZ.add(gameContext().theGameLevel().pac());
         Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW).map(gameContext().theGameLevel()::ghost)
-                .forEach(actorsInDrawingOrder::add);
-        actorsInDrawingOrder.forEach(actor -> {
-            gr().drawActor(actor);
-            if (debugInfoVisibleProperty().get() && actor instanceof MovingActor movingActor) {
-                gr().drawMovingActorInfo(movingActor);
-            }
-        });
-        actorsInDrawingOrder.clear();
+                .forEach(actorsByZ::add);
+        gr().drawActors(actorsByZ);
+        if (debugInfoVisibleProperty().get()) {
+            actorsByZ.forEach(actor -> {
+                if (actor instanceof MovingActor movingActor) {
+                    gr().drawMovingActorInfo(movingActor);
+                }
+            });
+        }
+        actorsByZ.clear();
     }
 
     private void drawLevelMessageCenteredUnderHouse(House house, byte messageType) {

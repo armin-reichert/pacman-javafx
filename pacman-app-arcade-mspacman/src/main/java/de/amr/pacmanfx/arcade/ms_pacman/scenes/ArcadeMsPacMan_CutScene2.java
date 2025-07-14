@@ -84,9 +84,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        gr().drawActor(clapperboard);
-        gr().drawActor(msPacMan);
-        gr().drawActor(pacMan);
+        gr().drawActors(clapperboard, msPacMan, pacMan);
     }
 
     // Scene controller state machine

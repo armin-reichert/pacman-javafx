@@ -219,11 +219,11 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
         requireNonNull(actor);
         if (actor.isVisible()) {
             switch (actor) {
-                case MovingBonus movingBonus -> drawMovingBonus(movingBonus);
-                case Pac pac -> drawAnyKindOfPac(pac);
                 case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
-                case Stork stork -> drawStork(stork, backgroundColor());
-                default -> SpriteGameRenderer.super.drawActor(actor);
+                case MovingBonus movingBonus   -> drawMovingBonus(movingBonus);
+                case Pac pac                   -> drawAnyKindOfPac(pac);
+                case Stork stork               -> drawStork(stork, backgroundColor());
+                default                        -> SpriteGameRenderer.super.drawActor(actor);
             }
         }
     }

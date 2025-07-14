@@ -140,7 +140,8 @@ public class MiniGameView extends VBox {
         gameLevel.bonus().map(Bonus::actor).ifPresent(gr::drawActor);
         gr.drawActor(gameLevel.pac());
         Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)
-            .map(gameLevel::ghost).forEach(gr::drawActor);
+                .map(gameLevel::ghost)
+                .forEach(gr::drawActor);
         if (debugProperty().get()) {
             ctx.save();
             ctx.setTextAlign(TextAlignment.CENTER);

@@ -177,14 +177,12 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         long tick = sceneController.state().timer().tickCount();
         int shakingAmount = shaking ? (tick % 5 < 2 ? 0 : -1) : 0;
         if (shakingAmount == 0) {
-            ghosts.forEach(ghost -> gr().drawActor(ghost));
+            gr().drawActors(ghosts);
         } else {
-            gr().drawActor(ghosts.get(RED_GHOST_SHADOW));
-            gr().drawActor(ghosts.get(ORANGE_GHOST_POKEY));
+            gr().drawActors(ghosts.get(RED_GHOST_SHADOW), ghosts.get(ORANGE_GHOST_POKEY));
             ctx().save();
             ctx().translate(shakingAmount, 0);
-            gr().drawActor(ghosts.get(PINK_GHOST_SPEEDY));
-            gr().drawActor(ghosts.get(CYAN_GHOST_BASHFUL));
+            gr().drawActors(ghosts.get(PINK_GHOST_SPEEDY), ghosts.get(CYAN_GHOST_BASHFUL));
             ctx().restore();
         }
         gr().drawActor(pacMan);

@@ -22,7 +22,6 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.createMsPacMan;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.createPacMan;
 import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PacAnimationMap.ANIM_PAC_MAN_MUNCHING;
-import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_LET_GAME_STATE_EXPIRE;
 
 /**
@@ -178,8 +177,6 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     @Override
     public void drawSceneContent() {
         gr().drawVerticalSceneBorders();
-        gr().drawActor(clapperboard);
-        gr().drawActor(msPacMan);
-        gr().drawActor(pacMan);
+        gr().drawActors(clapperboard, msPacMan, pacMan);
     }
 }

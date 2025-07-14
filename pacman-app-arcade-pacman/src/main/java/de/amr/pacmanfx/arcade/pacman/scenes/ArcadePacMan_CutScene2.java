@@ -139,8 +139,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     public void drawSceneContent() {
         gr().drawSpriteScaled((RectShort) nailDressRaptureAnimation.currentSprite(),
                 tiles_to_px(14), tiles_to_px(19) + 3);
-        gr().drawActor(blinky);
-        gr().drawActor(pac);
+        gr().drawActors(blinky, pac);
     }
 
     @Override

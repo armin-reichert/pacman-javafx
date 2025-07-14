@@ -138,14 +138,14 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 Ghost currentGhost = ghosts[ghostIndex];
                 Color ghostColor = ui.theAssets().color("tengen.ghost.%d.color.normal.dress".formatted(currentGhost.personality()));
                 gr().fillTextAtScaledPosition(currentGhost.name().toUpperCase(), ghostColor, MARQUEE_X + 44, MARQUEE_Y + 41);
-                for (Ghost ghost : ghosts) { gr().drawActor(ghost); }
+                gr().drawActors(ghosts);
             }
             case MS_PACMAN_MARCHING_IN -> {
                 drawMarquee();
                 gr().fillTextAtScaledPosition("\"MS PAC-MAN\"", nesPaletteColor(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
                 gr().fillTextAtScaledPosition("STARRING", nesPaletteColor(0x20), MARQUEE_X + 12, MARQUEE_Y + 22);
                 gr().fillTextAtScaledPosition("MS PAC-MAN", nesPaletteColor(0x28), MARQUEE_X + 28, MARQUEE_Y + 38);
-                for (Ghost ghost : ghosts) { gr().drawActor(ghost); }
+                gr().drawActors(ghosts);
                 gr().drawActor(msPacMan);
             }
         }

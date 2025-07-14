@@ -75,6 +75,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     private MessageMovement messageMovement;
     private LevelCompletedAnimation levelCompletedAnimation;
 
+    private final List<Actor> actorsByZ = new ArrayList<>();
+
     public TengenMsPacMan_PlayScene2D(GameUI ui) {
         super(ui);
 
@@ -465,13 +467,12 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             gr().drawLevel(gameContext(), gameContext().theGameLevel(), null, false, false, ui.theGameClock().tickCount());
         }
 
-        var actorsByZ = new ArrayList<Actor>();
+        actorsByZ.clear();
         gameContext().theGameLevel().bonus().map(Bonus::actor).ifPresent(actorsByZ::add);
         actorsByZ.add(gameContext().theGameLevel().pac());
         ghostsByZ().forEach(actorsByZ::add);
-
-        actorsByZ.forEach(gr()::drawActor);
-
+        gr().drawActors(actorsByZ);
+        actorsByZ.clear();
         ctx().restore();
     }
 

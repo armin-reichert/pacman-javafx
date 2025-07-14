@@ -19,6 +19,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 
+import java.util.List;
+
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
@@ -93,6 +95,29 @@ public interface GameRenderer extends Destroyable {
      * @param actor any actor
      */
     void drawActor(Actor actor);
+
+    /**
+     * Draws the specified actors in sequence.
+     *
+     * @param actors list of actors
+     */
+    @SuppressWarnings("unchecked")
+    default <T extends Actor> void drawActors(T... actors) {
+        for (Actor actor : actors) {
+            drawActor(actor);
+        }
+    }
+
+    /**
+     * Draws the specified actors in sequence.
+     *
+     * @param actors list of actors
+     */
+    default <T extends Actor> void drawActors(List<T> actors) {
+        for (Actor actor : actors) {
+            drawActor(actor);
+        }
+    }
 
     /**
      * Fills a square at the center of the given tile with the current fill color. Used to hide pellets, energizers

@@ -131,7 +131,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
             ctx.translate(0, 23.5 * TS * scaling);
             ctx.setImageSmoothing(false);
             renderer.setScaling(scaling);
-            for (Ghost ghost : ghosts) { renderer.drawActor(ghost); }
+            renderer.drawActors(ghosts);
             renderer.drawActor(pac);
             ctx.restore();
         }
