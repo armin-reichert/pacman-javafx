@@ -304,11 +304,11 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                         ghost.setMoveAndWishDir(Direction.RIGHT);
                         ghost.setSpeed(GHOST_FRIGHTENED_SPEED);
                     });
-                } else if (sceneTimer.tickCount() == 240) {
+                } else if (sceneTimer.tickCount() == 236) {
                     // Pac-Man moves again a bit
                     scene.pacMan.playAnimation(ANIM_PAC_MUNCHING);
                     scene.pacMan.setSpeed(CHASING_SPEED);
-                } else if (sceneTimer.tickCount() == 244) {
+                } else if (sceneTimer.tickCount() == 240) {
                     scene.sceneController.changeState(CHASING_GHOSTS);
                 }
                 scene.blinking.tick();
