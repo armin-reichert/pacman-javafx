@@ -10,7 +10,6 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.House;
-import de.amr.pacmanfx.model.LivesCounter;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
@@ -54,15 +53,17 @@ import static de.amr.pacmanfx.ui._2d.GameRenderer.fillCanvas;
 import static de.amr.pacmanfx.uilib.Ufx.menuTitleItem;
 
 /**
- * Tengen play scene, uses vertical scrolling.
+ * Tengen Ms. Pac-Man play scene, uses vertical scrolling by default.
  */
 public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraControlledView {
 
-    // Width: 32 tiles (NES screen width), height: 42 tiles (BIG maps height) + 2 extra rows
-    private static final int UNSCALED_CANVAS_WIDTH  = 32 * TS;
+    // 32 tiles (NES screen width)
+    private static final int UNSCALED_CANVAS_WIDTH = NES_TILES.x() * TS;
+
+    // 42 tiles (BIG maps height) + 2 extra rows
     private static final int UNSCALED_CANVAS_HEIGHT = 44 * TS;
 
-    private static final int MOVING_MESSAGE_DELAY = 120;
+    private static final int MESSAGE_MOVEMENT_DELAY = 120;
 
     private final ObjectProperty<SceneDisplayMode> displayModeProperty = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING);
 
@@ -77,15 +78,13 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     public TengenMsPacMan_PlayScene2D(GameContext gameContext) {
         super(gameContext);
 
-        dynamicCamera.scalingProperty().bind(scalingProperty());
-
-        // use own canvas, not shared canvas
-        setCanvas(new Canvas());
+        // use own canvas, not the shared canvas from the game view
+        canvas = new Canvas();
         canvas.widthProperty() .bind(scalingProperty().multiply(UNSCALED_CANVAS_WIDTH));
         canvas.heightProperty().bind(scalingProperty().multiply(UNSCALED_CANVAS_HEIGHT));
 
-        // The maps are only 28 tiles wide. To avoid drawing the actors outside the map when going through portals,
-        // 2 tiles wide vertical stripes are clipped at the left and right map border.
+        // The maps are only 28 tiles wide. To avoid seeing the actors outside the map e.g. when going through portals,
+        // 2 tiles on each side of the canvas are clipped. and not drawn.
         canvasClipRect.xProperty().bind(canvas.translateXProperty().add(scalingProperty().multiply(2 * TS)));
         canvasClipRect.yProperty().bind(canvas.translateYProperty());
         canvasClipRect.widthProperty().bind(canvas.widthProperty().subtract(scalingProperty().multiply(4 * TS)));
@@ -98,66 +97,29 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         fxSubScene.setFill(backgroundColor());
         fxSubScene.cameraProperty().bind(displayModeProperty()
             .map(displayMode -> displayMode == SceneDisplayMode.SCROLLING ? dynamicCamera : fixedCamera));
-    }
 
-    @Override
-    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent, ContextMenu menu) {
-        SceneDisplayMode displayMode = PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.get();
-
-        var miScaledToFit = new RadioMenuItem(theUI().theAssets().text("scaled_to_fit"));
-        miScaledToFit.setSelected(displayMode == SceneDisplayMode.SCALED_TO_FIT);
-        miScaledToFit.setOnAction(e -> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.set(SceneDisplayMode.SCALED_TO_FIT));
-
-        var miScrolling = new RadioMenuItem(theUI().theAssets().text("scrolling"));
-        miScrolling.setSelected(displayMode == SceneDisplayMode.SCROLLING);
-        miScrolling.setOnAction(e -> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.set(SceneDisplayMode.SCROLLING));
-
-        var radio = new ToggleGroup();
-        miScaledToFit.setToggleGroup(radio);
-        miScrolling.setToggleGroup(radio);
-        PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.addListener((py, ov, newMode) ->
-            radio.selectToggle(newMode == SceneDisplayMode.SCROLLING ? miScrolling : miScaledToFit));
-
-        var miAutopilot = new CheckMenuItem(theUI().theAssets().text("autopilot"));
-        miAutopilot.selectedProperty().bindBidirectional(theGameContext().propertyUsingAutopilot());
-
-        var miImmunity = new CheckMenuItem(theUI().theAssets().text("immunity"));
-        miImmunity.selectedProperty().bindBidirectional(theGameContext().propertyImmunity());
-
-        var miMuted = new CheckMenuItem(theUI().theAssets().text("muted"));
-        miMuted.selectedProperty().bindBidirectional(theUI().mutedProperty());
-
-        var miQuit = new MenuItem(theUI().theAssets().text("quit"));
-        miQuit.setOnAction(e -> ACTION_QUIT_GAME_SCENE.executeIfEnabled(theUI()));
-
-        return List.of(
-            miScaledToFit,
-            miScrolling,
-            menuTitleItem(theUI().theAssets().text("pacman")),
-            miAutopilot,
-            miImmunity,
-            new SeparatorMenuItem(),
-            miMuted,
-            miQuit
-        );
+        dynamicCamera.scalingProperty().bind(scalingProperty());
     }
 
     public ObjectProperty<SceneDisplayMode> displayModeProperty() {
         return displayModeProperty;
     }
 
-    private void bindActionsToKeys() {
+    private void setActionsBindings() {
         if (gameContext.theGameLevel().isDemoLevel()) {
             actionBindings.bind(ACTION_QUIT_DEMO_LEVEL, TENGEN_MS_PACMAN_ACTION_BINDINGS);
         } else {
+            // Steer Pac-Man using current "Joypad" settings
             actionBindings.bind(ACTION_STEER_UP, TENGEN_MS_PACMAN_ACTION_BINDINGS);
             actionBindings.bind(ACTION_STEER_DOWN, TENGEN_MS_PACMAN_ACTION_BINDINGS);
             actionBindings.bind(ACTION_STEER_LEFT, TENGEN_MS_PACMAN_ACTION_BINDINGS);
             actionBindings.bind(ACTION_STEER_RIGHT, TENGEN_MS_PACMAN_ACTION_BINDINGS);
-            actionBindings.bind(ACTION_TOGGLE_DISPLAY_MODE, TENGEN_MS_PACMAN_ACTION_BINDINGS);
+
+            actionBindings.bind(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, TENGEN_MS_PACMAN_ACTION_BINDINGS);
             actionBindings.bind(ACTION_TOGGLE_PAC_BOOSTER, TENGEN_MS_PACMAN_ACTION_BINDINGS);
-            actionBindings.bind(ACTION_CHEAT_EAT_ALL_PELLETS, GLOBAL_ACTION_BINDINGS);
+
             actionBindings.bind(ACTION_CHEAT_ADD_LIVES, GLOBAL_ACTION_BINDINGS);
+            actionBindings.bind(ACTION_CHEAT_EAT_ALL_PELLETS, GLOBAL_ACTION_BINDINGS);
             actionBindings.bind(ACTION_CHEAT_ENTER_NEXT_LEVEL, GLOBAL_ACTION_BINDINGS);
             actionBindings.bind(ACTION_CHEAT_KILL_GHOSTS, GLOBAL_ACTION_BINDINGS);
         }
@@ -166,15 +128,16 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void doInit() {
+        setGameRenderer(theUI().theUIConfiguration().createGameRenderer(canvas));
+
+        messageMovement = new MessageMovement();
+        levelCompletedAnimation = new LevelCompletedAnimation(animationManager);
+
         gameContext.theGame().hud().showScore(true);
         gameContext.theGame().hud().showLevelCounter(true);
         gameContext.theGame().hud().showLivesCounter(true);
 
-        TengenMsPacMan_UIConfig config = (TengenMsPacMan_UIConfig) theUI().theUIConfiguration();
-        setGameRenderer(config.createGameRenderer(canvas()));
         dynamicCamera.moveTop();
-        messageMovement = new MessageMovement();
-        levelCompletedAnimation = new LevelCompletedAnimation(animationManager);
     }
 
     @Override
@@ -206,6 +169,51 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     }
 
     @Override
+    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent, ContextMenu menu) {
+        var config = (TengenMsPacMan_UIConfig) theUI().theUIConfiguration();
+        SceneDisplayMode displayMode = config.propertyPlaySceneDisplayMode.get();
+
+        var miScaledToFit = new RadioMenuItem(theUI().theAssets().text("scaled_to_fit"));
+        miScaledToFit.setSelected(displayMode == SceneDisplayMode.SCALED_TO_FIT);
+        miScaledToFit.setOnAction(e -> config.propertyPlaySceneDisplayMode.set(SceneDisplayMode.SCALED_TO_FIT));
+
+        var miScrolling = new RadioMenuItem(theUI().theAssets().text("scrolling"));
+        miScrolling.setSelected(displayMode == SceneDisplayMode.SCROLLING);
+        miScrolling.setOnAction(e -> config.propertyPlaySceneDisplayMode.set(SceneDisplayMode.SCROLLING));
+
+        var radio = new ToggleGroup();
+        miScaledToFit.setToggleGroup(radio);
+        miScrolling.setToggleGroup(radio);
+
+        //TODO remove this listener again when context menu closes!
+        config.propertyPlaySceneDisplayMode.addListener((py, ov, newMode) ->
+            radio.selectToggle(newMode == SceneDisplayMode.SCROLLING ? miScrolling : miScaledToFit));
+
+        var miAutopilot = new CheckMenuItem(theUI().theAssets().text("autopilot"));
+        miAutopilot.selectedProperty().bindBidirectional(theGameContext().propertyUsingAutopilot());
+
+        var miImmunity = new CheckMenuItem(theUI().theAssets().text("immunity"));
+        miImmunity.selectedProperty().bindBidirectional(theGameContext().propertyImmunity());
+
+        var miMuted = new CheckMenuItem(theUI().theAssets().text("muted"));
+        miMuted.selectedProperty().bindBidirectional(theUI().mutedProperty());
+
+        var miQuit = new MenuItem(theUI().theAssets().text("quit"));
+        miQuit.setOnAction(e -> ACTION_QUIT_GAME_SCENE.executeIfEnabled(theUI()));
+
+        return List.of(
+            miScaledToFit,
+            miScrolling,
+            menuTitleItem(theUI().theAssets().text("pacman")),
+            miAutopilot,
+            miImmunity,
+            new SeparatorMenuItem(),
+            miMuted,
+            miQuit
+        );
+    }
+
+    @Override
     public DoubleProperty viewPortWidthProperty() {
         return fxSubScene.widthProperty();
     }
@@ -232,39 +240,41 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void onGameStarted(GameEvent e) {
-        boolean silent = gameContext.theGameLevel().isDemoLevel() || gameContext.theGameState() == TESTING_LEVELS_SHORT || gameContext.theGameState() == TESTING_LEVELS_MEDIUM;
-        if (!silent) {
+        boolean shutUp = gameContext.theGameLevel().isDemoLevel()
+            || gameContext.theGameState() == TESTING_LEVELS_SHORT
+            || gameContext.theGameState() == TESTING_LEVELS_MEDIUM;
+        if (!shutUp) {
             theUI().theSound().play(SoundID.GAME_READY);
         }
     }
 
-    @Override
-    public void onLevelCreated(GameEvent e) {
+    private void initForGameLevel(GameLevel gameLevel) {
         gameContext.theGame().hud().showLevelCounter(true);
         gameContext.theGame().hud().showLivesCounter(true); // is also visible in demo level!
+        setActionsBindings();
+        //TODO needed?
+        setGameRenderer(theUI().theUIConfiguration().createGameRenderer(canvas));
+        gr().ensureRenderingHintsAreApplied(gameLevel);
+    }
 
-        bindActionsToKeys();
-        TengenMsPacMan_UIConfig config = (TengenMsPacMan_UIConfig) theUI().theUIConfiguration();
-        setGameRenderer(config.createGameRenderer(canvas()));
-        gr().ensureRenderingHintsAreApplied(gameContext.theGameLevel());
+    @Override
+    public void onLevelCreated(GameEvent e) {
+        initForGameLevel(theGameContext().theGameLevel());
     }
 
     @Override
     public void onSwitch_3D_2D(GameScene scene3D) {
-        gameContext.theGame().hud().showLevelCounter(true);
-        gameContext.theGame().hud().showLivesCounter(true); // is also visible in demo level!
-
-        bindActionsToKeys();
-        TengenMsPacMan_UIConfig config = (TengenMsPacMan_UIConfig) theUI().theUIConfiguration();
-        setGameRenderer(config.createGameRenderer(canvas()));
-        gr().ensureRenderingHintsAreApplied(gameContext.theGameLevel());
+        // Switch might occur just during the few ticks when level is not yet available!
+        if (gameContext.optGameLevel().isPresent()) {
+            initForGameLevel(gameContext.theGameLevel());
+        }
     }
 
     @Override
     public void onLevelStarted(GameEvent e) {
-        dynamicCamera.setCameraToTopOfScene();
-        dynamicCamera.moveBottom();
         dynamicCamera.setIdleTime(90);
+        dynamicCamera.setCameraTopOfScene();
+        dynamicCamera.moveBottom();
     }
 
     @Override
@@ -279,16 +289,17 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
                 levelCompletedAnimation.playFromStart();
             }
             case GAME_OVER -> {
-                var theGame = (TengenMsPacMan_GameModel) gameContext.theGame();
-                if (theGame.mapCategory() != MapCategory.ARCADE) {
+                // After some delay, the "game over" message moves from the center to the right border, wraps around,
+                // appears at the left border and moves to the center again (for non-Arcade maps)
+                if (theTengenGame().mapCategory() != MapCategory.ARCADE) {
                     gameContext.theGameLevel().house().ifPresent(house -> {
-                        float belowHouse = house.centerPositionUnderHouse().x();
-                        messageMovement.start(MOVING_MESSAGE_DELAY, belowHouse, sizeInPx().x());
+                        float startX = house.centerPositionUnderHouse().x();
+                        float wrappingX = sizeInPx().x();
+                        messageMovement.start(MESSAGE_MOVEMENT_DELAY, startX, wrappingX);
                     });
                 }
                 dynamicCamera.moveTop();
             }
-            default -> {}
         }
     }
 
@@ -400,6 +411,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         if (gameContext.optGameLevel().isEmpty()) {
             return;
         }
+        gr().setScaling(scaling());
         gr().ensureRenderingHintsAreApplied(gameContext.theGameLevel());
 
         // compute current scene scaling
@@ -412,7 +424,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             }
             case SCROLLING -> setScaling(fxSubScene.getHeight() / NES_SIZE_PX.y());
         }
-        gr().setScaling(scaling());
 
         ctx().save();
         if (debugInfoVisibleProperty.get()) {
@@ -426,7 +437,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         ctx().restore();
 
         ctx().save();
-        // NES screen is 32 tiles wide but mazes are only 28 tiles wide
+        // NES screen is 32 tiles wide but mazes are only 28 tiles wide, so shift HUD right:
         ctx().translate(scaled(2 * TS), 0);
         gr().drawHUD(gameContext, gameContext.theGame().hud(), sizeInPx());
         ctx().restore();
@@ -478,6 +489,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         ctx().restore();
     }
 
+    private TengenMsPacMan_GameModel theTengenGame() { return gameContext.theGame(); }
+
     // NES screen is 32 tiles wide but mazes are only 28 tiles wide, so indent by 2 tiles to center on available width
     private void centerOnScreen() {
         ctx().translate(scaled(2 * TS), 0);
@@ -500,23 +513,23 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     }
 
     private void updateHUD() {
-        TengenMsPacMan_GameModel theGame = (TengenMsPacMan_GameModel) gameContext.theGame();
-        TengenMsPacMan_HUD hud = theGame.hud();
-
+        TengenMsPacMan_HUD hud = theTengenGame().hud();
         TengenMsPacMan_LevelCounter levelCounter = hud.levelCounter();
         //TODO check demo level behavior in emulator. Are there demo levels for non-ARCADE maps at all?
-        if (theGame.mapCategory() == MapCategory.ARCADE || gameContext.optGameLevel().isEmpty() || gameContext.theGameLevel().isDemoLevel()) {
+        if (theTengenGame().mapCategory() == MapCategory.ARCADE
+            || gameContext.optGameLevel().isEmpty()
+            || gameContext.theGameLevel().isDemoLevel()) {
             levelCounter.setDisplayedLevelNumber(0); // no level number boxes for ARCADE maps or when level not yet created
         } else {
             levelCounter.setDisplayedLevelNumber(gameContext.theGameLevel().number());
         }
 
-        LivesCounter livesCounter = hud.livesCounter();
-        int numLivesDisplayed = gameContext.theGame().lifeCount() - 1;
-        // As long as Pac-Man is still initially hidden in the maze, he is shown as an entry in the lives counter
+        int numLives = gameContext.theGame().lifeCount() - 1;
+        // As long as Pac-Man is still invisible on start, he is shown as an additional entry in the lives counter
         if (gameContext.theGameState() == GameState.STARTING_GAME && !gameContext.theGameLevel().pac().isVisible()) {
-            numLivesDisplayed += 1;
+            numLives += 1;
         }
-        livesCounter.setVisibleLifeCount(Math.min(numLivesDisplayed, livesCounter.maxLivesDisplayed()));
+        numLives = Math.min(numLives, hud.livesCounter().maxLivesDisplayed());
+        hud.livesCounter().setVisibleLifeCount(numLives);
     }
 }

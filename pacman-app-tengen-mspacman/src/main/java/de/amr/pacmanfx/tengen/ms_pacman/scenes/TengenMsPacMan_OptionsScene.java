@@ -9,6 +9,7 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
+import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.Difficulty;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.PacBooster;
@@ -35,8 +36,6 @@ import static de.amr.pacmanfx.ui.input.Keyboard.alt;
  *
  * <p></p>The highscore is cleared if player type (1 player, 2 players etc.), map category or difficulty are
  * changed, see <a href="https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly/blob/main/MsPacManTENGENDis.asm:9545">disassembly</a>.
- *
- * @author Armin Reichert
  */
 public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
@@ -62,7 +61,6 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     private static final int INITIAL_DELAY = 20; //TODO verify
     private static final int IDLE_TIMEOUT = 1530; // 25,5 sec TODO verify
 
-    private TengenMsPacMan_SpriteSheet spriteSheet;
     private int selectedOption;
     private long idleTicks;
     private int initialDelay;
@@ -97,7 +95,6 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         actionBindings.bind(ACTION_TEST_LEVELS_TEASERS, GLOBAL_ACTION_BINDINGS);
         actionBindings.bind(actionSelectNextJoypadBinding, alt(KeyCode.J));
 
-        spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().theUIConfiguration().spriteSheet();
         selectedOption = OPTION_PAC_BOOSTER;
         theTengenGame().setCanStartNewGame(true);
         resetIdleTimer();
@@ -126,7 +123,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     @Override
     public Vector2f sizeInPx() { return NES_SIZE_PX; }
 
-    private TengenMsPacMan_GameModel theTengenGame() { return (TengenMsPacMan_GameModel) gameContext.theGame(); }
+    private TengenMsPacMan_GameModel theTengenGame() { return gameContext.theGame(); }
     
     private void resetIdleTimer() {
         idleTicks = 0;
@@ -268,7 +265,9 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         }
 
         gr().drawVerticalSceneBorders();
-        if (PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED.get()) {
+
+        var config = (TengenMsPacMan_UIConfig) theUI().theUIConfiguration();
+        if (config.propertyJoypadBindingsDisplayed.get()) {
             gr().drawJoypadKeyBinding(theUI().theJoypad().currentKeyBinding());
         }
 
@@ -314,6 +313,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         gr().fillTextAtScaledPosition(":", NES_YELLOW, COL_COLON, 168);
         gr().fillTextAtScaledPosition(String.valueOf(theTengenGame().startLevelNumber()), NES_WHITE, COL_VALUE, 168);
         if (theTengenGame().numContinues() < 4) {
+            var spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().theUIConfiguration().spriteSheet();
             RectShort continuesSprite = spriteSheet.sprite(switch (theTengenGame().numContinues()) {
                 case 0 -> SpriteID.CONTINUES_0;
                 case 1 -> SpriteID.CONTINUES_1;

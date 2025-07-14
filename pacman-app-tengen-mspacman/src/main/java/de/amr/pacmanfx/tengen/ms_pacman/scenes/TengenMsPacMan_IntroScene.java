@@ -15,6 +15,7 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
@@ -147,7 +148,8 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
             }
         }
 
-        if (PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED.get()) {
+        var config = (TengenMsPacMan_UIConfig) theUI().theUIConfiguration();
+        if (config.propertyJoypadBindingsDisplayed.get()) {
             gr().drawJoypadKeyBinding(theUI().theJoypad().currentKeyBinding());
         }
     }

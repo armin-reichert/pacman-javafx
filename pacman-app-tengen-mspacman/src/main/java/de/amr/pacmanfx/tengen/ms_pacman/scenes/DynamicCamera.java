@@ -40,7 +40,7 @@ public class DynamicCamera extends ParallelCamera {
         focussingActor = focus;
     }
 
-    public void setCameraToTopOfScene() {
+    public void setCameraTopOfScene() {
         setTranslateY(camMinY());
     }
 

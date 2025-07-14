@@ -67,10 +67,6 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
 
     public static final String MAP_PATH = "/de/amr/pacmanfx/tengen/ms_pacman/maps/";
 
-    //TODO not sure this belongs here
-    public static final BooleanProperty PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED = new SimpleBooleanProperty(false);
-    public static final ObjectProperty<SceneDisplayMode> PY_TENGEN_PLAY_SCENE_DISPLAY_MODE = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING);
-
     /** 32x30 */
     public static final Vector2i NES_TILES = new Vector2i(32, 30);
 
@@ -87,6 +83,10 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
     public static Color nesPaletteColor(int index) {
         return Color.web(NES_Palette.color(index));
     }
+
+    //TODO not sure these belong here
+    public final BooleanProperty propertyJoypadBindingsDisplayed = new SimpleBooleanProperty(false);
+    public final ObjectProperty<SceneDisplayMode> propertyPlaySceneDisplayMode = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING);
 
     private final DefaultSoundManager soundManager = new DefaultSoundManager();
     private final Map<String, GameScene> scenesByID = new HashMap<>();
@@ -313,7 +313,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
 
         //TODO where is the best place to do that?
         var playScene2D = (TengenMsPacMan_PlayScene2D) scenesByID.get("PlayScene2D");
-        playScene2D.displayModeProperty().bind(PY_TENGEN_PLAY_SCENE_DISPLAY_MODE);
+        playScene2D.displayModeProperty().bind(propertyPlaySceneDisplayMode);
     }
 
     @Override
@@ -396,12 +396,14 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
         }
     };
 
-    public static final GameAction ACTION_TOGGLE_DISPLAY_MODE = new GameAction() {
+    public static final GameAction ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE = new GameAction() {
         @Override
         public void execute(GameUI ui) {
-            SceneDisplayMode mode = PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.get();
-            PY_TENGEN_PLAY_SCENE_DISPLAY_MODE.set(mode == SceneDisplayMode.SCROLLING
-                    ? SceneDisplayMode.SCALED_TO_FIT : SceneDisplayMode.SCROLLING);
+            var config = (TengenMsPacMan_UIConfig) theUI().theUIConfiguration();
+            SceneDisplayMode mode = config.propertyPlaySceneDisplayMode.get();
+            config.propertyPlaySceneDisplayMode.set(mode == SceneDisplayMode.SCROLLING
+                ? SceneDisplayMode.SCALED_TO_FIT
+                : SceneDisplayMode.SCROLLING);
         }
 
         @Override
@@ -415,12 +417,11 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
         }
     };
 
-    //TODO  not sure this belongs here
-
     public static final GameAction ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED = new GameAction() {
         @Override
         public void execute(GameUI ui) {
-            toggle(PY_TENGEN_JOYPAD_BINDINGS_DISPLAYED);
+            var config = (TengenMsPacMan_UIConfig) ui.theUIConfiguration();
+            toggle(config.propertyJoypadBindingsDisplayed);
         }
 
         @Override
@@ -459,7 +460,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
         createActionBinding(ACTION_START_GAME,          theUI().theJoypad().key(JoypadButton.START)),
         createActionBinding(ACTION_START_PLAYING,       theUI().theJoypad().key(JoypadButton.START)),
         createActionBinding(ACTION_TOGGLE_PAC_BOOSTER,  theUI().theJoypad().key(JoypadButton.A), theUI().theJoypad().key(JoypadButton.B)),
-        createActionBinding(ACTION_TOGGLE_DISPLAY_MODE, alt(KeyCode.C)),
+        createActionBinding(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, alt(KeyCode.C)),
         createActionBinding(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, nude(KeyCode.SPACE))
     );
 }
