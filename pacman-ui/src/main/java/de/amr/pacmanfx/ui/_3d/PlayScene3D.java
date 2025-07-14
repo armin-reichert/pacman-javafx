@@ -566,9 +566,8 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             scores3D.showScore(score.points(), score.levelNumber());
         }
         else { // disabled, show text "GAME OVER"
-            String ans = ui.theUIConfiguration().assetNamespace();
-            Color color = ui.theAssets().color(ans + ".color.game_over_message");
-            scores3D.showTextAsScore(ui.theAssets().text("score.game_over"), color);
+            Color color = ui.theUIConfiguration().getAssetNS("color.game_over_message");
+            scores3D.showTextForScore(ui.theAssets().text("score.game_over"), color);
         }
         // Always show high score
         scores3D.showHighScore(highScore.points(), highScore.levelNumber());

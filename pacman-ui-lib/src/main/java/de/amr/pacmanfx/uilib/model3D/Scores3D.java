@@ -36,10 +36,10 @@ public class Scores3D extends GridPane {
         textDisplayRight.setFont(font);
 
         setHgap(5 * TS);
-        add(titleDisplayLeft,  0,0);
-        add(textDisplayLeft,       0,1);
+        add(titleDisplayLeft, 0,0);
+        add(textDisplayLeft, 0,1);
         add(titleDisplayRight,1,0);
-        add(textDisplayRight,     1,1);
+        add(textDisplayRight, 1,1);
     }
 
     public void showScore(int score, int levelNumber) {
@@ -48,12 +48,12 @@ public class Scores3D extends GridPane {
     }
 
     public void showHighScore(int highScore, int highScoreLevelNumber) {
-        textDisplayLeft.setFill(Color.YELLOW);
+        textDisplayRight.setFill(Color.YELLOW);
         textDisplayRight.setText(String.format("%7d L%d", highScore, highScoreLevelNumber));
     }
 
-    public void showTextAsScore(String text, Color color) {
-        textDisplayLeft.setText(text);
+    public void showTextForScore(String text, Color color) {
         textDisplayLeft.setFill(color);
+        textDisplayLeft.setText(text);
     }
 }
