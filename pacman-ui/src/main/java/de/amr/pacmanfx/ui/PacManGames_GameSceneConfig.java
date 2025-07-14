@@ -5,13 +5,11 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.controller.GameState;
-import de.amr.pacmanfx.model.GameModel;
 
 import java.util.stream.Stream;
 
 public interface PacManGames_GameSceneConfig {
-    void createGameScenes(GameContext gameContext);
+    void createGameScenes(GameUI ui);
     Stream<GameScene> gameScenes();
     boolean gameSceneHasID(GameScene gameScene, String sceneID);
     GameScene selectGameScene(GameContext gameContext);

@@ -4,13 +4,13 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.paint.Color;
@@ -38,8 +38,8 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     private Actor movingText;
     private Ghost ghost;
 
-    public TengenMsPacMan_BootScene(GameContext gameContext) {
-        super(gameContext);
+    public TengenMsPacMan_BootScene(GameUI ui) {
+        super(ui);
     }
 
     @Override
@@ -53,9 +53,9 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
         ghost.setAnimations(theUI().theUIConfiguration().createGhostAnimations(ghost));
         ghost.selectAnimation(ANIM_GHOST_NORMAL);
 
-        gameContext.theGame().hud().showScore(false);
-        gameContext.theGame().hud().showLivesCounter(false);
-        gameContext.theGame().hud().showLevelCounter(false);
+        gameContext().theGame().hud().showScore(false);
+        gameContext().theGame().hud().showLivesCounter(false);
+        gameContext().theGame().hud().showLevelCounter(false);
     }
 
     @Override
@@ -98,7 +98,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
             grayScreen = false;
         }
         else if (tick == 220) {
-            gameContext.theGameController().changeGameState(GameState.INTRO);
+            gameContext().theGameController().changeGameState(GameState.INTRO);
         }
     }
 

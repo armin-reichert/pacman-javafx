@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.lib.Direction;
@@ -12,6 +11,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.animation.SingleSpriteActor;
@@ -54,8 +54,8 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     private SingleSpriteActor heart;
     private Clapperboard clapperboard;
 
-    public ArcadeMsPacMan_CutScene1(GameContext gameContext) {
-        super(gameContext);
+    public ArcadeMsPacMan_CutScene1(GameUI ui) {
+        super(ui);
     }
     
     @Override
@@ -79,9 +79,9 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         clapperboard.setFont(scaledArcadeFont8());
         clapperboard.startAnimation();
 
-        gameContext.theGame().hud().showScore(true);
-        gameContext.theGame().hud().showLevelCounter(true);
-        gameContext.theGame().hud().showLivesCounter(false);
+        gameContext().theGame().hud().showScore(true);
+        gameContext().theGame().hud().showLevelCounter(true);
+        gameContext().theGame().hud().showLivesCounter(false);
 
         setState(STATE_CLAPPERBOARD, 120);
     }
@@ -266,7 +266,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
     private void updateStateInHeaven() {
         if (sceneTimer.hasExpired()) {
-            gameContext.theGameController().letCurrentGameStateExpire();
+            gameContext().theGameController().letCurrentGameStateExpire();
         }
     }
 }

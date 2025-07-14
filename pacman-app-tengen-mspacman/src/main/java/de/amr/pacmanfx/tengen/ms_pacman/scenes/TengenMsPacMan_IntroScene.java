@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
@@ -20,6 +19,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
@@ -60,8 +60,8 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     private int waitBeforeRising;
     private boolean dark;
 
-    public TengenMsPacMan_IntroScene(GameContext gameContext) {
-        super(gameContext);
+    public TengenMsPacMan_IntroScene(GameUI ui) {
+        super(ui);
         sceneController = new StateMachine<>(SceneState.values()) {
             @Override
             public TengenMsPacMan_IntroScene context() {
@@ -72,9 +72,9 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        gameContext.theGame().hud().showScore(false);
-        gameContext.theGame().hud().showLevelCounter(false);
-        gameContext.theGame().hud().showLivesCounter(false);
+        gameContext().theGame().hud().showScore(false);
+        gameContext().theGame().hud().showLevelCounter(false);
+        gameContext().theGame().hud().showLivesCounter(false);
 
         spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().theUIConfiguration().spriteSheet();
 
@@ -317,12 +317,12 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 }
                 if (timer.atSecond(8)) {
                     // start demo level or show options
-                    var tengenGame = (TengenMsPacMan_GameModel) scene.gameContext.theGame();
+                    var tengenGame = (TengenMsPacMan_GameModel) scene.gameContext().theGame();
                     if (tengenGame.optionsAreInitial()) {
                         tengenGame.setCanStartNewGame(false); // TODO check this
-                        scene.gameContext.theGameController().restart(GameState.STARTING_GAME);
+                        scene.gameContext().theGameController().restart(GameState.STARTING_GAME);
                     } else {
-                        scene.gameContext.theGameController().changeGameState(GameState.SETTING_OPTIONS);
+                        scene.gameContext().theGameController().changeGameState(GameState.SETTING_OPTIONS);
                     }
                 }
             }

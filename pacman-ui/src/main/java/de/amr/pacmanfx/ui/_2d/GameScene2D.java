@@ -10,6 +10,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.ui.ActionBindingMap;
 import de.amr.pacmanfx.ui.GameScene;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
@@ -19,7 +20,8 @@ import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.GameUI.*;
+import static de.amr.pacmanfx.ui.GameUI.DEBUG_TEXT_FILL;
+import static de.amr.pacmanfx.ui.GameUI.DEBUG_TEXT_FONT;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -27,7 +29,7 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class GameScene2D implements GameScene {
 
-    protected final GameContext gameContext;
+    protected final GameUI ui;
 
     protected final ObjectProperty<Font> arcadeFont8Property      = new SimpleObjectProperty<>();
     protected final ObjectProperty<Font> arcadeFont6Property      = new SimpleObjectProperty<>();
@@ -35,13 +37,14 @@ public abstract class GameScene2D implements GameScene {
     protected final BooleanProperty debugInfoVisibleProperty      = new SimpleBooleanProperty(false);
     protected final FloatProperty scalingProperty                 = new SimpleFloatProperty(1.0f);
 
-    protected final ActionBindingMap actionBindings = new ActionBindingMap(theUI().theKeyboard());
+    protected final ActionBindingMap actionBindings;
     protected final AnimationManager animationManager = new AnimationManager();
     protected GameRenderer gameRenderer;
     protected Canvas canvas;
 
-    protected GameScene2D(GameContext gameContext) {
-        this.gameContext = requireNonNull(gameContext);
+    protected GameScene2D(GameUI ui) {
+        this.ui = requireNonNull(ui);
+        actionBindings = new ActionBindingMap(ui.theKeyboard());
     }
 
     @Override
@@ -52,21 +55,21 @@ public abstract class GameScene2D implements GameScene {
 
     @Override
     public GameContext gameContext() {
-        return gameContext;
+        return ui.theGameContext();
     }
 
     @Override
     public final void init() {
-        arcadeFont8Property.bind(scalingProperty.map(s -> theUI().theAssets().arcadeFont(s.floatValue() * 8)));
-        arcadeFont6Property.bind(scalingProperty.map(s -> theUI().theAssets().arcadeFont(s.floatValue() * 6)));
+        arcadeFont8Property.bind(scalingProperty.map(s -> ui.theAssets().arcadeFont(s.floatValue() * 8)));
+        arcadeFont6Property.bind(scalingProperty.map(s -> ui.theAssets().arcadeFont(s.floatValue() * 6)));
         doInit();
         actionBindings.updateKeyboard();
-        theUI().theKeyboard().logCurrentBindings();
+        ui.theKeyboard().logCurrentBindings();
     }
 
     @Override
     public final void end() {
-        theUI().theSound().stopAll();
+        ui.theSound().stopAll();
         doEnd();
         destroy();
     }
@@ -78,12 +81,12 @@ public abstract class GameScene2D implements GameScene {
     public ActionBindingMap actionBindings() { return actionBindings; }
 
     @Override
-    public void onStopAllSounds(GameEvent event) { theUI().theSound().stopAll(); }
+    public void onStopAllSounds(GameEvent event) { ui.theSound().stopAll(); }
 
     @Override
     public void onUnspecifiedChange(GameEvent event) {
         // TODO: remove (this is only used by game state GameState.TESTING_CUT_SCENES)
-        theUI().updateGameScene(true);
+        ui.updateGameScene(true);
     }
 
     public void  setScaling(double scaling) { scalingProperty.set((float) scaling); }
@@ -126,7 +129,7 @@ public abstract class GameScene2D implements GameScene {
      */
     public void draw() {
         if (gameRenderer == null) {
-            gameRenderer = theUI().theUIConfiguration().createGameRenderer(canvas);
+            gameRenderer = ui.theUIConfiguration().createGameRenderer(canvas);
         }
         clear();
         gameRenderer.setScaling(scaling());
@@ -134,7 +137,7 @@ public abstract class GameScene2D implements GameScene {
         if (debugInfoVisibleProperty.get()) {
             drawDebugInfo();
         }
-        gameRenderer.drawHUD(gameContext, gameContext.theGame().hud(), sizeInPx());
+        gameRenderer.drawHUD(gameContext(), gameContext().theGame().hud(), sizeInPx());
     }
 
     /**
@@ -150,9 +153,9 @@ public abstract class GameScene2D implements GameScene {
         gameRenderer.drawTileGrid(sizePx.x(), sizePx.y(), Color.LIGHTGRAY);
         ctx().setFill(DEBUG_TEXT_FILL);
         ctx().setFont(DEBUG_TEXT_FONT);
-        TickTimer stateTimer = gameContext.theGameState().timer();
+        TickTimer stateTimer = gameContext().theGameState().timer();
         String stateText = "Game State: '%s' (Tick %d of %s)".formatted(
-            gameContext.theGameState(),
+            gameContext().theGameState(),
             stateTimer.tickCount(),
             stateTimer.durationTicks() == TickTimer.INDEFINITE ? "∞" : String.valueOf(stateTimer.tickCount())
             );

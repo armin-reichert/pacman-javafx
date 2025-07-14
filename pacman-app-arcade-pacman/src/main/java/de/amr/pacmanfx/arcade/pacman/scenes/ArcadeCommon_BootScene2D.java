@@ -4,10 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -32,15 +32,15 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
 
     private Vector2f minPoint, maxPoint;
 
-    public ArcadeCommon_BootScene2D(GameContext gameContext) {
-        super(gameContext);
+    public ArcadeCommon_BootScene2D(GameUI ui) {
+        super(ui);
     }
 
     @Override
     public void doInit() {
-        gameContext.theGame().hud().showScore(false);
-        gameContext.theGame().hud().showLevelCounter(false);
-        gameContext.theGame().hud().showLivesCounter(false);
+        gameContext().theGame().hud().showScore(false);
+        gameContext().theGame().hud().showLevelCounter(false);
+        gameContext().theGame().hud().showLivesCounter(false);
 
         SpriteSheet<?> spriteSheet = theUI().theUIConfiguration().spriteSheet();
         double width = spriteSheet.sourceImage().getWidth(), height = spriteSheet.sourceImage().getHeight();
@@ -55,8 +55,8 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
 
     @Override
     public void update() {
-        if (gameContext.theGameState().timer().atSecond(4)) {
-            gameContext.theGameController().letCurrentGameStateExpire();
+        if (gameContext().theGameState().timer().atSecond(4)) {
+            gameContext().theGameController().letCurrentGameStateExpire();
         }
     }
 
@@ -71,7 +71,7 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
     @Override
     public void draw() {
         gr().setScaling(scaling());
-        if (gameContext.theGameState().timer().tickCount() == 1) {
+        if (gameContext().theGameState().timer().tickCount() == 1) {
             clear();
         } else {
             drawSceneContent();
@@ -80,7 +80,7 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        TickTimer timer = gameContext.theGameState().timer();
+        TickTimer timer = gameContext().theGameState().timer();
         if (timer.betweenSeconds(1, 2) && timer.tickCount() % 4 == 0) {
             clear();
             drawRandomHexDigits();

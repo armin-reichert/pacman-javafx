@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
@@ -77,16 +76,16 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         }
     };
 
-    public TengenMsPacMan_OptionsScene(GameContext gameContext) {
-        super(gameContext);
+    public TengenMsPacMan_OptionsScene(GameUI ui) {
+        super(ui);
     }
 
     @Override
     public void doInit() {
 
-        gameContext.theGame().hud().showScore(false);
-        gameContext.theGame().hud().showLevelCounter(false);
-        gameContext.theGame().hud().showLivesCounter(false);
+        gameContext().theGame().hud().showScore(false);
+        gameContext().theGame().hud().showLevelCounter(false);
+        gameContext().theGame().hud().showLivesCounter(false);
 
         actionBindings.bind(ACTION_START_PLAYING, TENGEN_MS_PACMAN_ACTION_BINDINGS);
         actionBindings.bind(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, TENGEN_MS_PACMAN_ACTION_BINDINGS);
@@ -114,7 +113,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
             return;
         }
         if (idleTicks == IDLE_TIMEOUT) {
-            gameContext.theGameController().changeGameState(GameState.INTRO);
+            gameContext().theGameController().changeGameState(GameState.INTRO);
             return;
         }
         idleTicks += 1;
@@ -123,7 +122,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     @Override
     public Vector2f sizeInPx() { return NES_SIZE_PX; }
 
-    private TengenMsPacMan_GameModel theTengenGame() { return gameContext.theGame(); }
+    private TengenMsPacMan_GameModel theTengenGame() { return gameContext().theGame(); }
     
     private void resetIdleTimer() {
         idleTicks = 0;

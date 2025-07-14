@@ -4,13 +4,13 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.actors.ActorAnimationMap;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
@@ -44,8 +44,8 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     private SpriteAnimation blinkyDamaged;
     private SpriteAnimation nailDressRaptureAnimation;
 
-    public ArcadePacMan_CutScene2(GameContext gameContext) {
-        super(gameContext);
+    public ArcadePacMan_CutScene2(GameUI ui) {
+        super(ui);
     }
 
     @Override
@@ -70,9 +70,9 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         nailDressRaptureAnimation = (SpriteAnimation) blinkyAnimations.animation(ANIM_BLINKY_NAIL_DRESS_RAPTURE);
         blinkyDamaged = (SpriteAnimation) blinkyAnimations.animation(ANIM_BLINKY_DAMAGED);
 
-        gameContext.theGame().hud().showScore(true);
-        gameContext.theGame().hud().showLevelCounter(true);
-        gameContext.theGame().hud().showLivesCounter(false);
+        gameContext().theGame().hud().showScore(true);
+        gameContext().theGame().hud().showLevelCounter(true);
+        gameContext().theGame().hud().showLivesCounter(false);
     }
 
     @Override
@@ -123,7 +123,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
             case ANIMATION_START + 420 -> blinkyDamaged.nextFrame(); // Eyes right-down
             case ANIMATION_START + 508 -> {
                 blinky.setVisible(false);
-                gameContext.theGameController().letCurrentGameStateExpire();
+                gameContext().theGameController().letCurrentGameStateExpire();
             }
             default -> {}
         }

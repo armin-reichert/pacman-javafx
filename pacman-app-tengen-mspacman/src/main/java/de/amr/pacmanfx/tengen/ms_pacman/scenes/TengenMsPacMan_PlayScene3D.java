@@ -38,7 +38,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     @Override
     protected void setActionBindings() {
         // if demo level, allow going back to options screen
-        if (gameContext.optGameLevel().isPresent() && gameContext.theGameLevel().isDemoLevel()) {
+        if (gameContext().optGameLevel().isPresent() && gameContext().theGameLevel().isDemoLevel()) {
             actionBindings.bind(ACTION_QUIT_DEMO_LEVEL, TENGEN_MS_PACMAN_ACTION_BINDINGS);
         } else {
             setPlayerSteeringActionBindings();
@@ -67,12 +67,12 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     @Override
     protected void replaceGameLevel3D() {
         super.replaceGameLevel3D();
-        TengenMsPacMan_GameModel game = gameContext.theGame();
+        TengenMsPacMan_GameModel game = gameContext().theGame();
         if (!game.optionsAreInitial()) {
             // show info about category, difficulty, booster etc
-            ImageView infoView = createGameInfoView(game, gameContext.theGameLevel());
+            ImageView infoView = createGameInfoView(game, gameContext().theGameLevel());
             infoView.setTranslateX(0);
-            infoView.setTranslateY((gameContext.theGameLevel().worldMap().numRows() - 2) * TS);
+            infoView.setTranslateY((gameContext().theGameLevel().worldMap().numRows() - 2) * TS);
             infoView.setTranslateZ(-gameLevel3D.floorThickness());
             gameLevel3D.getChildren().add(infoView);
         }
@@ -101,7 +101,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     protected void updateScores(GameLevel gameLevel) {
-        final Score score = gameContext.theGame().score(), highScore = gameContext.theGame().highScore();
+        final Score score = gameContext().theGame().score(), highScore = gameContext().theGame().highScore();
         if (score.isEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());
         }

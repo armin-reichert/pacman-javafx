@@ -4,11 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import org.tinylog.Logger;
 
@@ -35,8 +35,8 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     private Pac pac;
     private Ghost blinky;
 
-    public ArcadePacMan_CutScene1(GameContext gameContext) {
-        super(gameContext);
+    public ArcadePacMan_CutScene1(GameUI ui) {
+        super(ui);
     }
     
     @Override
@@ -48,9 +48,9 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
         pac.setAnimations(theUI().theUIConfiguration().createPacAnimations(pac));
         blinky.setAnimations(theUI().theUIConfiguration().createGhostAnimations(blinky));
 
-        gameContext.theGame().hud().showScore(true);
-        gameContext.theGame().hud().showLevelCounter(true);
-        gameContext.theGame().hud().showLivesCounter(false);
+        gameContext().theGame().hud().showScore(true);
+        gameContext().theGame().hud().showLevelCounter(true);
+        gameContext().theGame().hud().showLivesCounter(false);
     }
 
     @Override
@@ -89,7 +89,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
             pac.playAnimation(ANIM_BIG_PAC_MAN);
         }
         else if (frame == ANIMATION_START + 632) {
-            gameContext.theGameController().letCurrentGameStateExpire();
+            gameContext().theGameController().letCurrentGameStateExpire();
         }
         if (frame >= ANIMATION_START) {
             pac.move();

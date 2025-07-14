@@ -235,15 +235,15 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig {
     // Game scenes
 
     @Override
-    public void createGameScenes(GameContext gameContext) {
-        scenesByID.put("BootScene",   new ArcadeCommon_BootScene2D(gameContext));
-        scenesByID.put("IntroScene",  new ArcadeMsPacMan_IntroScene(gameContext));
-        scenesByID.put("StartScene",  new ArcadeMsPacMan_StartScene(gameContext));
-        scenesByID.put("PlayScene2D", new ArcadeCommon_PlayScene2D(gameContext));
-        scenesByID.put("PlayScene3D", new PlayScene3D(theUI()));
-        scenesByID.put("CutScene1",   new ArcadeMsPacMan_CutScene1(gameContext));
-        scenesByID.put("CutScene2",   new ArcadeMsPacMan_CutScene2(gameContext));
-        scenesByID.put("CutScene3",   new ArcadeMsPacMan_CutScene3(gameContext));
+    public void createGameScenes(GameUI ui) {
+        scenesByID.put("BootScene",   new ArcadeCommon_BootScene2D(ui));
+        scenesByID.put("IntroScene",  new ArcadeMsPacMan_IntroScene(ui));
+        scenesByID.put("StartScene",  new ArcadeMsPacMan_StartScene(ui));
+        scenesByID.put("PlayScene2D", new ArcadeCommon_PlayScene2D(ui));
+        scenesByID.put("PlayScene3D", new PlayScene3D(ui));
+        scenesByID.put("CutScene1",   new ArcadeMsPacMan_CutScene1(ui));
+        scenesByID.put("CutScene2",   new ArcadeMsPacMan_CutScene2(ui));
+        scenesByID.put("CutScene3",   new ArcadeMsPacMan_CutScene3(ui));
     }
 
     @Override

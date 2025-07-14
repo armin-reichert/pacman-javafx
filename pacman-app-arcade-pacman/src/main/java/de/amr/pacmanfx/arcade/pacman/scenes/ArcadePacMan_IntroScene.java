@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
@@ -17,6 +16,7 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -70,8 +70,8 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     private int ghostIndex;
     private long ghostKilledTime;
 
-    public ArcadePacMan_IntroScene(GameContext gameContext) {
-        super(gameContext);
+    public ArcadePacMan_IntroScene(GameUI ui) {
+        super(ui);
     }
     
     @Override
@@ -81,10 +81,10 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        gameContext.theGame().hud().showCredit(true);
-        gameContext.theGame().hud().showScore(true);
-        gameContext.theGame().hud().showLivesCounter(false);
-        gameContext.theGame().hud().showLevelCounter(true);
+        gameContext().theGame().hud().showCredit(true);
+        gameContext().theGame().hud().showScore(true);
+        gameContext().theGame().hud().showLivesCounter(false);
+        gameContext().theGame().hud().showLevelCounter(true);
 
         actionBindings.bind(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDINGS);
         actionBindings.bind(ACTION_ARCADE_START_GAME, GLOBAL_ACTION_BINDINGS);
@@ -377,11 +377,11 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
             public void onUpdate(ArcadePacMan_IntroScene scene) {
                 if (sceneTimer.atSecond(0.75)) {
                     scene.ghosts.get(ORANGE_GHOST_POKEY).hide();
-                    if (!scene.gameContext.theGame().canStartNewGame()) {
-                        scene.gameContext.theGameController().changeGameState(GameState.STARTING_GAME);
+                    if (!scene.gameContext().theGame().canStartNewGame()) {
+                        scene.gameContext().theGameController().changeGameState(GameState.STARTING_GAME);
                     }
                 } else if (sceneTimer.atSecond(5)) {
-                    scene.gameContext.theGameController().changeGameState(GameState.SETTING_OPTIONS);
+                    scene.gameContext().theGameController().changeGameState(GameState.SETTING_OPTIONS);
                 }
             }
         };

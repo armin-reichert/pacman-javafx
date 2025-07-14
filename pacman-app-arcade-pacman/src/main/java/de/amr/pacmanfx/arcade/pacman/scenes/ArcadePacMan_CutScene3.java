@@ -4,11 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import org.tinylog.Logger;
 
@@ -34,8 +34,8 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
     private Pac pac;
     private Ghost blinky;
 
-    public ArcadePacMan_CutScene3(GameContext gameContext) {
-        super(gameContext);
+    public ArcadePacMan_CutScene3(GameUI ui) {
+        super(ui);
     }
     
     @Override
@@ -47,9 +47,9 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
         blinky = createGhost(null, RED_GHOST_SHADOW);
         blinky.setAnimations(theUI().theUIConfiguration().createGhostAnimations(blinky));
 
-        gameContext.theGame().hud().showScore(true);
-        gameContext.theGame().hud().showLevelCounter(true);
-        gameContext.theGame().hud().showLivesCounter(false);
+        gameContext().theGame().hud().showScore(true);
+        gameContext().theGame().hud().showLevelCounter(true);
+        gameContext().theGame().hud().showLivesCounter(false);
     }
 
     @Override
@@ -84,7 +84,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
                 blinky.setMoveAndWishDir(Direction.RIGHT);
                 blinky.playAnimation(ANIM_BLINKY_NAKED);
             }
-            case ANIMATION_START + 700 -> gameContext.theGameController().letCurrentGameStateExpire();
+            case ANIMATION_START + 700 -> gameContext().theGameController().letCurrentGameStateExpire();
             default -> {}
         }
     }

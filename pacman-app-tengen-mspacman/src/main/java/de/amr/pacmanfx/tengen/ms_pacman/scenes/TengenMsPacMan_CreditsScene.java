@@ -4,9 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 
 import static de.amr.pacmanfx.Globals.TS;
@@ -19,15 +19,15 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     static final float DISPLAY_SECONDS = 12;
 
-    public TengenMsPacMan_CreditsScene(GameContext gameContext) {
-        super(gameContext);
+    public TengenMsPacMan_CreditsScene(GameUI ui) {
+        super(ui);
     }
 
     @Override
     protected void doInit() {
-        gameContext.theGame().hud().showScore(false);
-        gameContext.theGame().hud().showLevelCounter(false);
-        gameContext.theGame().hud().showLivesCounter(false);
+        gameContext().theGame().hud().showScore(false);
+        gameContext().theGame().hud().showLevelCounter(false);
+        gameContext().theGame().hud().showLivesCounter(false);
         actionBindings.bind(ACTION_START_GAME, TENGEN_MS_PACMAN_ACTION_BINDINGS);
     }
 
@@ -37,8 +37,8 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     @Override
     public void update() {
-        if (gameContext.theGameState().timer().atSecond(DISPLAY_SECONDS)) {
-            gameContext.theGameController().letCurrentGameStateExpire();
+        if (gameContext().theGameState().timer().atSecond(DISPLAY_SECONDS)) {
+            gameContext().theGameController().letCurrentGameStateExpire();
         }
     }
 
@@ -57,7 +57,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
         gr().drawBar(nesPaletteColor(0x20), nesPaletteColor(0x13), barWidth, 212);
         ctx().setFont(scaledArcadeFont8());
         int y = 7 * TS;
-        if (gameContext.theGameState().timer().betweenSeconds(0.5 * DISPLAY_SECONDS, DISPLAY_SECONDS)) {
+        if (gameContext().theGameState().timer().betweenSeconds(0.5 * DISPLAY_SECONDS, DISPLAY_SECONDS)) {
             gr().fillTextAtScaledPosition("CREDITS FOR JAVAFX REMAKE", nesPaletteColor(0x20), 3 * TS, y);
             y += 4 * TS;
             gr().fillTextAtScaledPosition("GAME PROGRAMMER:", nesPaletteColor(0x23), 4 * TS, y);

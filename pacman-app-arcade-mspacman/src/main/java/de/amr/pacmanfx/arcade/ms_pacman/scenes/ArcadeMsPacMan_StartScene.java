@@ -4,11 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -28,8 +28,8 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
     private RectShort livesCounterSprite;
     private MidwayCopyright copyright;
 
-    public ArcadeMsPacMan_StartScene(GameContext gameContext) {
-        super(gameContext);
+    public ArcadeMsPacMan_StartScene(GameUI ui) {
+        super(ui);
     }
     
     @Override
@@ -39,10 +39,10 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        gameContext.theGame().hud().showCredit(true);
-        gameContext.theGame().hud().showScore(true);
-        gameContext.theGame().hud().showLevelCounter(true);
-        gameContext.theGame().hud().showLivesCounter(false);
+        gameContext().theGame().hud().showCredit(true);
+        gameContext().theGame().hud().showScore(true);
+        gameContext().theGame().hud().showLevelCounter(true);
+        gameContext().theGame().hud().showLivesCounter(false);
 
         copyright = new MidwayCopyright();
         copyright.setPosition(TS * 6, TS * 28);

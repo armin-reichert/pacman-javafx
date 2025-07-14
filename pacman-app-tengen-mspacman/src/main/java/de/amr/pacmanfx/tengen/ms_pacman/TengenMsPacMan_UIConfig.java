@@ -299,17 +299,17 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
     // Game scenes
 
     @Override
-    public void createGameScenes(GameContext gameContext) {
-        scenesByID.put("BootScene",      new TengenMsPacMan_BootScene(gameContext));
-        scenesByID.put("IntroScene",     new TengenMsPacMan_IntroScene(gameContext));
-        scenesByID.put("StartScene",     new TengenMsPacMan_OptionsScene(gameContext));
-        scenesByID.put("ShowingCredits", new TengenMsPacMan_CreditsScene(gameContext));
-        scenesByID.put("PlayScene2D",    new TengenMsPacMan_PlayScene2D(gameContext));
-        scenesByID.put("PlayScene3D",    new TengenMsPacMan_PlayScene3D(theUI()));
-        scenesByID.put("CutScene1",      new TengenMsPacMan_CutScene1(gameContext));
-        scenesByID.put("CutScene2",      new TengenMsPacMan_CutScene2(gameContext));
-        scenesByID.put("CutScene3",      new TengenMsPacMan_CutScene3(gameContext));
-        scenesByID.put("CutScene4",      new TengenMsPacMan_CutScene4(gameContext));
+    public void createGameScenes(GameUI ui) {
+        scenesByID.put("BootScene",      new TengenMsPacMan_BootScene(ui));
+        scenesByID.put("IntroScene",     new TengenMsPacMan_IntroScene(ui));
+        scenesByID.put("StartScene",     new TengenMsPacMan_OptionsScene(ui));
+        scenesByID.put("ShowingCredits", new TengenMsPacMan_CreditsScene(ui));
+        scenesByID.put("PlayScene2D",    new TengenMsPacMan_PlayScene2D(ui));
+        scenesByID.put("PlayScene3D",    new TengenMsPacMan_PlayScene3D(ui));
+        scenesByID.put("CutScene1",      new TengenMsPacMan_CutScene1(ui));
+        scenesByID.put("CutScene2",      new TengenMsPacMan_CutScene2(ui));
+        scenesByID.put("CutScene3",      new TengenMsPacMan_CutScene3(ui));
+        scenesByID.put("CutScene4",      new TengenMsPacMan_CutScene4(ui));
 
         //TODO where is the best place to do that?
         var playScene2D = (TengenMsPacMan_PlayScene2D) scenesByID.get("PlayScene2D");

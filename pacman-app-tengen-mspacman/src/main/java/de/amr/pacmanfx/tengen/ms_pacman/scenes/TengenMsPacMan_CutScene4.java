@@ -1,6 +1,5 @@
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
@@ -10,6 +9,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PacAnimationMap;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import org.tinylog.Logger;
 
@@ -44,17 +44,17 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
     private int t;
 
-    public TengenMsPacMan_CutScene4(GameContext gameContext) {
-        super(gameContext);
+    public TengenMsPacMan_CutScene4(GameUI ui) {
+        super(ui);
     }
     
     @Override
     protected void doInit() {
         t = -1;
 
-        gameContext.theGame().hud().showScore(false);
-        gameContext.theGame().hud().showLevelCounter(true);
-        gameContext.theGame().hud().showLivesCounter(false);
+        gameContext().theGame().hud().showScore(false);
+        gameContext().theGame().hud().showLevelCounter(true);
+        gameContext().theGame().hud().showLivesCounter(false);
 
         var spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().theUIConfiguration().spriteSheet();
         clapperboard = new Clapperboard(spriteSheet, 4, "THE END");
@@ -132,7 +132,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
             spawnJunior();
         }
         else if (t == 1512) {
-            gameContext.theGameController().changeGameState(GameState.SETTING_OPTIONS);
+            gameContext().theGameController().changeGameState(GameState.SETTING_OPTIONS);
         }
 
         pacMan.move();
@@ -221,9 +221,9 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         if (debugInfoVisibleProperty.get()) {
             drawDebugInfo();
         }
-        var game = gameContext.<TengenMsPacMan_GameModel>theGame();
+        var game = gameContext().<TengenMsPacMan_GameModel>theGame();
         if (game.mapCategory() != MapCategory.ARCADE) {
-            gameRenderer.drawHUD(gameContext, game.hud(), sizeInPx().minus(0, 2 * TS));
+            gameRenderer.drawHUD(gameContext(), game.hud(), sizeInPx().minus(0, 2 * TS));
         }
     }
 

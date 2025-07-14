@@ -4,9 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.sound.SoundID;
 
@@ -22,16 +22,16 @@ import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
  */
 public class ArcadePacMan_StartScene extends GameScene2D {
 
-    public ArcadePacMan_StartScene(GameContext gameContext) {
-        super(gameContext);
+    public ArcadePacMan_StartScene(GameUI ui) {
+        super(ui);
     }
 
     @Override
     public void doInit() {
-        gameContext.theGame().hud().showCredit(true);
-        gameContext.theGame().hud().showScore(true);
-        gameContext.theGame().hud().showLevelCounter(true);
-        gameContext.theGame().hud().showLivesCounter(false);
+        gameContext().theGame().hud().showCredit(true);
+        gameContext().theGame().hud().showScore(true);
+        gameContext().theGame().hud().showLevelCounter(true);
+        gameContext().theGame().hud().showLivesCounter(false);
         actionBindings.bind(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDINGS);
         actionBindings.bind(ACTION_ARCADE_START_GAME, GLOBAL_ACTION_BINDINGS);
     }

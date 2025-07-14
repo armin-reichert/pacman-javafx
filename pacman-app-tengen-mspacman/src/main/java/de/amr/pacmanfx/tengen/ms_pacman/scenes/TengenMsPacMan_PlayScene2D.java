@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
@@ -19,6 +18,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_LevelCounter;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.ColorSchemedSprite;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
 import de.amr.pacmanfx.ui.GameScene;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -74,8 +74,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     private MessageMovement messageMovement;
     private LevelCompletedAnimation levelCompletedAnimation;
 
-    public TengenMsPacMan_PlayScene2D(GameContext gameContext) {
-        super(gameContext);
+    public TengenMsPacMan_PlayScene2D(GameUI ui) {
+        super(ui);
 
         // use own canvas, not the shared canvas from the game view
         canvas = new Canvas();
@@ -105,7 +105,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     }
 
     private void setActionsBindings() {
-        if (gameContext.theGameLevel().isDemoLevel()) {
+        if (gameContext().theGameLevel().isDemoLevel()) {
             actionBindings.bind(ACTION_QUIT_DEMO_LEVEL, TENGEN_MS_PACMAN_ACTION_BINDINGS);
         } else {
             // Steer Pac-Man using current "Joypad" settings
@@ -132,9 +132,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         messageMovement = new MessageMovement();
         levelCompletedAnimation = new LevelCompletedAnimation(animationManager);
 
-        gameContext.theGame().hud().showScore(true);
-        gameContext.theGame().hud().showLevelCounter(true);
-        gameContext.theGame().hud().showLivesCounter(true);
+        gameContext().theGame().hud().showScore(true);
+        gameContext().theGame().hud().showLevelCounter(true);
+        gameContext().theGame().hud().showLivesCounter(true);
 
         dynamicCamera.moveTop();
     }
@@ -148,7 +148,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void update() {
-        gameContext.optGameLevel().ifPresent(level -> {
+        gameContext().optGameLevel().ifPresent(level -> {
             if (level.isDemoLevel()) {
                 theUI().theSound().setEnabled(false);
             } else {
@@ -157,7 +157,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
                 updateSound();
             }
             if (fxSubScene.getCamera() == dynamicCamera) {
-                if (gameContext.theGameState() == GameState.HUNTING) {
+                if (gameContext().theGameState() == GameState.HUNTING) {
                     dynamicCamera.setFocussingActor(true);
                 }
                 dynamicCamera.setVerticalRangeInTiles(level.worldMap().numRows());
@@ -234,22 +234,22 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public Vector2f sizeInPx() {
-        return gameContext.optGameLevel().map(GameLevel::worldSizePx).orElse(NES_SIZE_PX);
+        return gameContext().optGameLevel().map(GameLevel::worldSizePx).orElse(NES_SIZE_PX);
     }
 
     @Override
     public void onGameStarted(GameEvent e) {
-        boolean shutUp = gameContext.theGameLevel().isDemoLevel()
-            || gameContext.theGameState() == TESTING_LEVELS_SHORT
-            || gameContext.theGameState() == TESTING_LEVELS_MEDIUM;
+        boolean shutUp = gameContext().theGameLevel().isDemoLevel()
+            || gameContext().theGameState() == TESTING_LEVELS_SHORT
+            || gameContext().theGameState() == TESTING_LEVELS_MEDIUM;
         if (!shutUp) {
             theUI().theSound().play(SoundID.GAME_READY);
         }
     }
 
     private void initForGameLevel(GameLevel gameLevel) {
-        gameContext.theGame().hud().showLevelCounter(true);
-        gameContext.theGame().hud().showLivesCounter(true); // is also visible in demo level!
+        gameContext().theGame().hud().showLevelCounter(true);
+        gameContext().theGame().hud().showLivesCounter(true); // is also visible in demo level!
         setActionsBindings();
         //TODO needed?
         setGameRenderer(theUI().theUIConfiguration().createGameRenderer(canvas));
@@ -264,8 +264,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     public void onSwitch_3D_2D(GameScene scene3D) {
         // Switch might occur just during the few ticks when level is not yet available!
-        if (gameContext.optGameLevel().isPresent()) {
-            initForGameLevel(gameContext.theGameLevel());
+        if (gameContext().optGameLevel().isPresent()) {
+            initForGameLevel(gameContext().theGameLevel());
         }
     }
 
@@ -282,16 +282,16 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             case HUNTING -> dynamicCamera.setFocussingActor(true);
             case LEVEL_COMPLETE -> {
                 theUI().theSound().stopAll();
-                levelCompletedAnimation.setGameLevel(gameContext.theGameLevel());
+                levelCompletedAnimation.setGameLevel(gameContext().theGameLevel());
                 levelCompletedAnimation.setSingleFlashMillis(333);
-                levelCompletedAnimation.getOrCreateAnimation().setOnFinished(e -> gameContext.theGameController().letCurrentGameStateExpire());
+                levelCompletedAnimation.getOrCreateAnimation().setOnFinished(e -> gameContext().theGameController().letCurrentGameStateExpire());
                 levelCompletedAnimation.playFromStart();
             }
             case GAME_OVER -> {
                 // After some delay, the "game over" message moves from the center to the right border, wraps around,
                 // appears at the left border and moves to the center again (for non-Arcade maps)
                 if (theTengenGame().mapCategory() != MapCategory.ARCADE) {
-                    gameContext.theGameLevel().house().ifPresent(house -> {
+                    gameContext().theGameLevel().house().ifPresent(house -> {
                         float startX = house.centerPositionUnderHouse().x();
                         float wrappingX = sizeInPx().x();
                         messageMovement.start(MESSAGE_MOVEMENT_DELAY, startX, wrappingX);
@@ -327,7 +327,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void onGameContinued(GameEvent e) {
-        gameContext.optGameLevel().ifPresent(level -> level.showMessage(GameLevel.MESSAGE_READY));
+        gameContext().optGameLevel().ifPresent(level -> level.showMessage(GameLevel.MESSAGE_READY));
     }
 
     @Override
@@ -338,7 +338,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     public void onPacDead(GameEvent e) {
         dynamicCamera.moveTop();
-        gameContext.theGameController().letCurrentGameStateExpire();
+        gameContext().theGameController().letCurrentGameStateExpire();
     }
 
     @Override
@@ -363,13 +363,13 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     }
 
     private void updateSound() {
-        final Pac pac = gameContext.theGameLevel().pac();
+        final Pac pac = gameContext().theGameLevel().pac();
 
         //TODO check in simulator when exactly which siren plays
-        boolean pacChased = gameContext.theGameState() == GameState.HUNTING && !pac.powerTimer().isRunning();
+        boolean pacChased = gameContext().theGameState() == GameState.HUNTING && !pac.powerTimer().isRunning();
         if (pacChased) {
             // siren numbers are 1..4, hunting phase index = 0..7
-            int huntingPhase = gameContext.theGame().huntingTimer().phaseIndex();
+            int huntingPhase = gameContext().theGame().huntingTimer().phaseIndex();
             int sirenNumber = 1 + huntingPhase / 2;
             switch (sirenNumber) {
                 case 1 -> theUI().theSound().playSiren(SoundID.SIREN_1, 1.0);
@@ -386,11 +386,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         }
 
         //TODO check in simulator when exactly this sound is played
-        var ghostReturningToHouse = gameContext.theGameLevel()
+        var ghostReturningToHouse = gameContext().theGameLevel()
             .ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
             .findAny();
         if (ghostReturningToHouse.isPresent()
-            && (gameContext.theGameState() == GameState.HUNTING || gameContext.theGameState() == GameState.GHOST_DYING)) {
+            && (gameContext().theGameState() == GameState.HUNTING || gameContext().theGameState() == GameState.GHOST_DYING)) {
             theUI().theSound().loop(SoundID.GHOST_RETURNS);
         } else {
             theUI().theSound().stop(SoundID.GHOST_RETURNS);
@@ -407,14 +407,14 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     @Override
     public void draw() {
         clear();
-        if (gameContext.optGameLevel().isEmpty()) {
+        if (gameContext().optGameLevel().isEmpty()) {
             return;
         }
 
         // compute current scene scaling
         switch (displayModeProperty.get()) {
             case SCALED_TO_FIT -> { //TODO this code smells
-                int tilesY = gameContext.theGameLevel().worldMap().numRows() + 3;
+                int tilesY = gameContext().theGameLevel().worldMap().numRows() + 3;
                 double camY = scaled((tilesY - 46) * HTS);
                 fixedCamera.setTranslateY(camY);
                 setScaling(fxSubScene.getHeight() / (tilesY * TS));
@@ -422,7 +422,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             case SCROLLING -> setScaling(fxSubScene.getHeight() / NES_SIZE_PX.y());
         }
         gameRenderer.setScaling(scaling());
-        gr().ensureRenderingHintsAreApplied(gameContext.theGameLevel());
+        gr().ensureRenderingHintsAreApplied(gameContext().theGameLevel());
 
         ctx().save();
         if (debugInfoVisibleProperty.get()) {
@@ -438,7 +438,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         ctx().save();
         // NES screen is 32 tiles wide but mazes are only 28 tiles wide, so shift HUD right:
         ctx().translate(scaled(2 * TS), 0);
-        gr().drawHUD(gameContext, gameContext.theGame().hud(), sizeInPx());
+        gr().drawHUD(gameContext(), gameContext().theGame().hud(), sizeInPx());
         ctx().restore();
     }
 
@@ -452,20 +452,20 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
                 // get the current flashing maze "animation frame"
                 int frameIndex = levelCompletedAnimation.flashingIndex();
                 ColorSchemedSprite flashingMazeSprite = gr().mazeConfig().flashingMazeSprites().get(frameIndex);
-                gr().drawLevelWithMaze(gameContext, gameContext.theGameLevel(), flashingMazeSprite.image(), flashingMazeSprite.sprite());
+                gr().drawLevelWithMaze(gameContext(), gameContext().theGameLevel(), flashingMazeSprite.image(), flashingMazeSprite.sprite());
             } else {
-                gr().drawLevel(gameContext, gameContext.theGameLevel(), null, false, false);
+                gr().drawLevel(gameContext(), gameContext().theGameLevel(), null, false, false);
             }
         }
         else {
             //TODO in the original game, the message is drawn under the maze image but *over* the pellets!
-            gr().drawLevelMessage(gameContext.theGameLevel(), currentMessagePosition(), scaledArcadeFont8());
-            gr().drawLevel(gameContext, gameContext.theGameLevel(), null, false, false);
+            gr().drawLevelMessage(gameContext().theGameLevel(), currentMessagePosition(), scaledArcadeFont8());
+            gr().drawLevel(gameContext(), gameContext().theGameLevel(), null, false, false);
         }
 
         var actorsByZ = new ArrayList<Actor>();
-        gameContext.theGameLevel().bonus().map(Bonus::actor).ifPresent(actorsByZ::add);
-        actorsByZ.add(gameContext.theGameLevel().pac());
+        gameContext().theGameLevel().bonus().map(Bonus::actor).ifPresent(actorsByZ::add);
+        actorsByZ.add(gameContext().theGameLevel().pac());
         ghostsByZ().forEach(actorsByZ::add);
 
         actorsByZ.forEach(gr()::drawActor);
@@ -477,18 +477,18 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     protected void drawDebugInfo() {
         ctx().save();
         gr().drawTileGrid(UNSCALED_CANVAS_WIDTH, UNSCALED_CANVAS_HEIGHT, Color.LIGHTGRAY);
-        if (gameContext.optGameLevel().isPresent()) {
+        if (gameContext().optGameLevel().isPresent()) {
             centerOnScreen();
             ctx().setFill(DEBUG_TEXT_FILL);
             ctx().setFont(DEBUG_TEXT_FONT);
-            ctx().fillText("%s %d".formatted(gameContext.theGameState(), gameContext.theGameState().timer().tickCount()), 0, scaled(3 * TS));
-            gr().drawMovingActorInfo(gameContext.theGameLevel().pac());
+            ctx().fillText("%s %d".formatted(gameContext().theGameState(), gameContext().theGameState().timer().tickCount()), 0, scaled(3 * TS));
+            gr().drawMovingActorInfo(gameContext().theGameLevel().pac());
             ghostsByZ().forEach(gr()::drawMovingActorInfo);
         }
         ctx().restore();
     }
 
-    private TengenMsPacMan_GameModel theTengenGame() { return gameContext.theGame(); }
+    private TengenMsPacMan_GameModel theTengenGame() { return gameContext().theGame(); }
 
     // NES screen is 32 tiles wide but mazes are only 28 tiles wide, so indent by 2 tiles to center on available width
     private void centerOnScreen() {
@@ -496,11 +496,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     }
 
     private Stream<Ghost> ghostsByZ() {
-        return Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW).map(gameContext.theGameLevel()::ghost);
+        return Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW).map(gameContext().theGameLevel()::ghost);
     }
 
     private Vector2f currentMessagePosition() {
-        House house = gameContext.theGameLevel().house().orElse(null);
+        House house = gameContext().theGameLevel().house().orElse(null);
         if (house == null) {
             Logger.error("No house in game level!");
             return Vector2f.ZERO; //TODO
@@ -516,16 +516,16 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         TengenMsPacMan_LevelCounter levelCounter = hud.levelCounter();
         //TODO check demo level behavior in emulator. Are there demo levels for non-ARCADE maps at all?
         if (theTengenGame().mapCategory() == MapCategory.ARCADE
-            || gameContext.optGameLevel().isEmpty()
-            || gameContext.theGameLevel().isDemoLevel()) {
+            || gameContext().optGameLevel().isEmpty()
+            || gameContext().theGameLevel().isDemoLevel()) {
             levelCounter.setDisplayedLevelNumber(0); // no level number boxes for ARCADE maps or when level not yet created
         } else {
-            levelCounter.setDisplayedLevelNumber(gameContext.theGameLevel().number());
+            levelCounter.setDisplayedLevelNumber(gameContext().theGameLevel().number());
         }
 
-        int numLives = gameContext.theGame().lifeCount() - 1;
+        int numLives = gameContext().theGame().lifeCount() - 1;
         // As long as Pac-Man is still invisible on start, he is shown as an additional entry in the lives counter
-        if (gameContext.theGameState() == GameState.STARTING_GAME && !gameContext.theGameLevel().pac().isVisible()) {
+        if (gameContext().theGameState() == GameState.STARTING_GAME && !gameContext().theGameLevel().pac().isVisible()) {
             numLives += 1;
         }
         numLives = Math.min(numLives, hud.livesCounter().maxLivesDisplayed());

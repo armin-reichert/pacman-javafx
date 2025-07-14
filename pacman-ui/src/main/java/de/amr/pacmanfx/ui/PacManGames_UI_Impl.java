@@ -171,7 +171,7 @@ public class PacManGames_UI_Impl implements GameUI {
             }
         });
         configByGameVariant.forEach((gameVariant, config) -> {
-            config.createGameScenes(theGameContext);
+            config.createGameScenes(this);
             config.gameScenes().forEach(scene -> {
                 if (scene instanceof GameScene2D gameScene2D) {
                     gameScene2D.debugInfoVisibleProperty().bind(pyDebugInfoVisible);
@@ -244,8 +244,8 @@ public class PacManGames_UI_Impl implements GameUI {
     // GameUI interface implementation
     // ----------------------------------------------------------------------------------------------------
 
-    public ObjectProperty<Color>          propertyCanvasBackgroundColor() { return pyCanvasBgColor; };
-    public BooleanProperty                propertyCanvasFontSmoothing() { return pyCanvasFontSmoothing; };
+    public ObjectProperty<Color>          propertyCanvasBackgroundColor() { return pyCanvasBgColor; }
+    public BooleanProperty                propertyCanvasFontSmoothing() { return pyCanvasFontSmoothing; }
     public BooleanProperty                propertyCanvasImageSmoothing(){ return pyCanvasImageSmoothing; }
     public BooleanProperty                propertyDebugInfoVisible(){ return pyDebugInfoVisible; }
     public IntegerProperty                propertyPipHeight(){ return pyPipHeight; }
