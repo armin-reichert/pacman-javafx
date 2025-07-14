@@ -118,9 +118,10 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
         if (!hud.isVisible()) return;
 
         var theGame = (TengenMsPacMan_GameModel) gameContext.theGame();
+        long tick = theUI().theGameClock().tickCount(); //TODO pass as parameter?
 
         if (hud.isScoreVisible()) {
-            drawScores(theGame, nesPaletteColor(0x20), theUI().theAssets().arcadeFont(8));
+            drawScores(theGame, tick, nesPaletteColor(0x20), theUI().theAssets().arcadeFont(8));
         }
 
         if (hud.isLivesCounterVisible()) {
@@ -136,12 +137,12 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
         }
     }
 
-    public void drawScores(TengenMsPacMan_GameModel game, Color color, Font font) {
+    public void drawScores(TengenMsPacMan_GameModel game, long tick, Color color, Font font) {
         ctx.save();
         ctx.scale(scaling(), scaling());
         ctx.setFill(color);
         ctx.setFont(font);
-        if (theUI().theGameClock().tickCount() % 60 < 30) {
+        if (tick % 60 < 30) {
             ctx.fillText("1UP", tiles_to_px(4), tiles_to_px(1));
         }
         ctx.fillText("HIGH SCORE", tiles_to_px(11), tiles_to_px(1));

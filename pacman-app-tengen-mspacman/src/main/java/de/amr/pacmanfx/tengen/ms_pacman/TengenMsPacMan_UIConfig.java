@@ -52,7 +52,6 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.ActionBindingMap.createActionBinding;
-import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
 import static de.amr.pacmanfx.uilib.Ufx.toggle;
@@ -127,7 +126,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
     public final GameAction ACTION_START_PLAYING = new GameAction() {
         @Override
         public void execute(GameUI ui) {
-            theUI().theSound().stopAll();
+            ui.theSound().stopAll();
             ui.theGameContext().theGame().playingProperty().set(false);
             ui.theGameContext().theGameController().changeGameState(GameState.STARTING_GAME);
         }
@@ -141,7 +140,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
     public final GameAction ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE = new GameAction() {
         @Override
         public void execute(GameUI ui) {
-            var config = theUI().<TengenMsPacMan_UIConfig>theUIConfiguration();
+            var config = ui.<TengenMsPacMan_UIConfig>theUIConfiguration();
             SceneDisplayMode mode = config.propertyPlaySceneDisplayMode.get();
             config.propertyPlaySceneDisplayMode.set(mode == SceneDisplayMode.SCROLLING
                 ? SceneDisplayMode.SCALED_TO_FIT

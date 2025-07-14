@@ -23,7 +23,8 @@ import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
-import static de.amr.pacmanfx.ui.GameUI.*;
+import static de.amr.pacmanfx.ui.GameUI.DEBUG_TEXT_FILL;
+import static de.amr.pacmanfx.ui.GameUI.DEBUG_TEXT_FONT;
 
 /**
  * Second cut scene in Arcade Pac-Man game:<br>
@@ -62,9 +63,9 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         blinky.setSpeed(0);
         blinky.hide();
 
-        pac.setAnimations(theUI().theUIConfiguration().createPacAnimations(pac));
+        pac.setAnimations(ui.theUIConfiguration().createPacAnimations(pac));
 
-        ActorAnimationMap blinkyAnimations = theUI().theUIConfiguration().createGhostAnimations(blinky);
+        ActorAnimationMap blinkyAnimations = ui.theUIConfiguration().createGhostAnimations(blinky);
         blinky.setAnimations(blinkyAnimations);
         blinkyNormal = (SpriteAnimation) blinkyAnimations.animation(ANIM_GHOST_NORMAL);
         nailDressRaptureAnimation = (SpriteAnimation) blinkyAnimations.animation(ANIM_BLINKY_NAIL_DRESS_RAPTURE);
@@ -77,7 +78,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        theUI().theSound().stop(MUSIC_ID);
+        ui.theSound().stop(MUSIC_ID);
         Logger.info("{} ends", getClass().getSimpleName());
     }
 
@@ -88,7 +89,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
             return;
         }
         switch (frame) {
-            case ANIMATION_START -> theUI().theSound().play(MUSIC_ID);
+            case ANIMATION_START -> ui.theSound().play(MUSIC_ID);
             case ANIMATION_START + 1 -> nailDressRaptureAnimation.setFrameIndex(NAIL);
             case ANIMATION_START + 25 -> {
                 pac.placeAtTile(28, 20);

@@ -17,7 +17,6 @@ import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.ui.GameUI.GLOBAL_ACTION_BINDINGS;
-import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_ARCADE_INSERT_COIN;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_ARCADE_START_GAME;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_ORANGE;
@@ -49,7 +48,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
         copyright.setColor(ARCADE_RED);
         copyright.show();
 
-        @SuppressWarnings("unchecked") var spriteSheet = (SpriteSheet<SpriteID>) theUI().theUIConfiguration().spriteSheet();
+        @SuppressWarnings("unchecked") var spriteSheet = (SpriteSheet<SpriteID>) ui.theUIConfiguration().spriteSheet();
         livesCounterSprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
 
         actionBindings.bind(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDINGS);
@@ -65,7 +64,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
 
     @Override
     public void onCreditAdded(GameEvent e) {
-        theUI().theSound().play(SoundID.COIN_INSERTED);
+        ui.theSound().play(SoundID.COIN_INSERTED);
     }
 
     @Override

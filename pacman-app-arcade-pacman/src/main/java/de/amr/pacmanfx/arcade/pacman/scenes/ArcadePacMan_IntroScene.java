@@ -36,7 +36,6 @@ import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static de.amr.pacmanfx.model.actors.GhostState.EATEN;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.ui.GameUI.GLOBAL_ACTION_BINDINGS;
-import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
 
@@ -94,13 +93,13 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
         blinking = new Pulse(10, true);
         pacMan = createPac(null);
-        pacMan.setAnimations(theUI().theUIConfiguration().createPacAnimations(pacMan));
+        pacMan.setAnimations(ui.theUIConfiguration().createPacAnimations(pacMan));
         ghosts = List.of(
             createGhost(null, RED_GHOST_SHADOW),
             createGhost(null, PINK_GHOST_SPEEDY),
             createGhost(null, CYAN_GHOST_BASHFUL),
             createGhost(null, ORANGE_GHOST_POKEY));
-        ghosts.forEach(ghost -> ghost.setAnimations(theUI().theUIConfiguration().createGhostAnimations(ghost)));
+        ghosts.forEach(ghost -> ghost.setAnimations(ui.theUIConfiguration().createGhostAnimations(ghost)));
         ghostImageVisible     = new boolean[4];
         ghostNicknameVisible  = new boolean[4];
         ghostCharacterVisible = new boolean[4];
@@ -124,7 +123,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     @Override
     public void onCreditAdded(GameEvent e) {
-        theUI().theSound().play(SoundID.COIN_INSERTED);
+        ui.theSound().play(SoundID.COIN_INSERTED);
     }
 
     @Override
@@ -151,7 +150,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     }
 
     private void drawGallery() {
-        @SuppressWarnings("unchecked") SpriteSheet<SpriteID> spriteSheet = (SpriteSheet<SpriteID>) theUI().theUIConfiguration().spriteSheet();
+        @SuppressWarnings("unchecked") SpriteSheet<SpriteID> spriteSheet = (SpriteSheet<SpriteID>) ui.theUIConfiguration().spriteSheet();
         ctx().setFont(scaledArcadeFont8());
         if (titleVisible) {
             gr().fillTextAtScaledPosition("CHARACTER / NICKNAME", ARCADE_WHITE,

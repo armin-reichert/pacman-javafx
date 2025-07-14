@@ -18,7 +18,6 @@ import static de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_PacAnima
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
-import static de.amr.pacmanfx.ui.GameUI.theUI;
 
 /**
  * Intermission scene 2: "The chase".
@@ -50,8 +49,8 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
         pacMan = createPacMan(null);
         msPacMan = createMsPacMan(null);
 
-        msPacMan.setAnimations(theUI().theUIConfiguration().createPacAnimations(msPacMan));
-        pacMan.setAnimations(theUI().theUIConfiguration().createPacAnimations(pacMan));
+        msPacMan.setAnimations(ui.theUIConfiguration().createPacAnimations(msPacMan));
+        pacMan.setAnimations(ui.theUIConfiguration().createPacAnimations(pacMan));
 
         clapperboard = new Clapperboard("2", "THE CHASE");
         clapperboard.setPosition(tiles_to_px(3), tiles_to_px(10));
@@ -67,7 +66,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        theUI().theSound().stop(MUSIC_ID);
+        ui.theSound().stop(MUSIC_ID);
     }
 
     @Override
@@ -109,7 +108,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     private void updateStateClapperboard() {
         clapperboard.tick();
         if (sceneTimer.hasExpired()) {
-            theUI().theSound().play(MUSIC_ID);
+            ui.theSound().play(MUSIC_ID);
             enterStateChasing();
         }
     }

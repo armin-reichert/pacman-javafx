@@ -19,7 +19,8 @@ import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ANIM_BIG_PAC_M
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
-import static de.amr.pacmanfx.ui.GameUI.*;
+import static de.amr.pacmanfx.ui.GameUI.DEBUG_TEXT_FILL;
+import static de.amr.pacmanfx.ui.GameUI.DEBUG_TEXT_FONT;
 
 /**
  * First cut scene in Arcade Pac-Man game:<br>
@@ -45,8 +46,8 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
 
         pac = createPac(null);
         blinky = createGhost(null, RED_GHOST_SHADOW);
-        pac.setAnimations(theUI().theUIConfiguration().createPacAnimations(pac));
-        blinky.setAnimations(theUI().theUIConfiguration().createGhostAnimations(blinky));
+        pac.setAnimations(ui.theUIConfiguration().createPacAnimations(pac));
+        blinky.setAnimations(ui.theUIConfiguration().createGhostAnimations(blinky));
 
         gameContext().theGame().hud().showScore(true);
         gameContext().theGame().hud().showLevelCounter(true);
@@ -55,7 +56,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        theUI().theSound().stop(MUSIC_ID);
+        ui.theSound().stop(MUSIC_ID);
         Logger.info("{} ends", getClass().getSimpleName());
     }
 
@@ -63,7 +64,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     public void update() {
         ++frame;
         if (frame == ANIMATION_START) {
-            theUI().theSound().play(MUSIC_ID, 2);
+            ui.theSound().play(MUSIC_ID, 2);
 
             pac.placeAtTile(29, 20);
             pac.setMoveDir(Direction.LEFT);

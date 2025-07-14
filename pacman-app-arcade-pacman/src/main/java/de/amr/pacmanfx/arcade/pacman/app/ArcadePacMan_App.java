@@ -38,7 +38,7 @@ public class ArcadePacMan_App extends Application {
                 ArcadePacMan_UIConfig.class
             )
             .startPages(
-                new ArcadePacMan_StartPage(theGameContext(), gameVariant)
+                new ArcadePacMan_StartPage(theUI(), gameVariant)
             )
             .dashboardEntries(
                 DashboardID.GENERAL, DashboardID.GAME_CONTROL,

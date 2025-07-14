@@ -15,6 +15,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameVariant;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.application.Application;
 import javafx.stage.Screen;
@@ -23,8 +24,6 @@ import javafx.stage.Stage;
 import static de.amr.pacmanfx.Globals.initGame;
 import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.ui.GameUI.theUI;
-
-import de.amr.pacmanfx.ui.GameVariant;
 
 /**
  * Application containing all game variants, the 3D play scenes, the map editor etc. ("all you can play").
@@ -69,9 +68,9 @@ public class PacManGames3dApp extends Application {
                 PacManXXL_MsPacMan_UIConfig.class
             )
             .startPages(
-                new ArcadePacMan_StartPage(theGameContext(), GameVariant.PACMAN.name()),
-                new ArcadeMsPacMan_StartPage(theGameContext(), GameVariant.MS_PACMAN.name()),
-                new TengenMsPacMan_StartPage(theGameContext(), GameVariant.MS_PACMAN_TENGEN.name()),
+                new ArcadePacMan_StartPage(theUI(), GameVariant.PACMAN.name()),
+                new ArcadeMsPacMan_StartPage(theUI(), GameVariant.MS_PACMAN.name()),
+                new TengenMsPacMan_StartPage(theUI(), GameVariant.MS_PACMAN_TENGEN.name()),
                 new PacManXXL_Common_StartPage(theGameContext())
             )
             .dashboardEntries(

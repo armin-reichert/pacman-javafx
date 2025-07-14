@@ -12,8 +12,8 @@ import javafx.stage.Stage;
 
 import static de.amr.pacmanfx.Globals.initGame;
 import static de.amr.pacmanfx.Globals.theGameContext;
-import static de.amr.pacmanfx.ui.GameVariant.MS_PACMAN;
 import static de.amr.pacmanfx.ui.GameUI.theUI;
+import static de.amr.pacmanfx.ui.GameVariant.MS_PACMAN;
 
 public class ArcadeMsPacMan_App extends Application {
 
@@ -34,7 +34,7 @@ public class ArcadeMsPacMan_App extends Application {
                     ArcadeMsPacMan_UIConfig.class
                 )
                 .startPages(
-                    new ArcadeMsPacMan_StartPage(theGameContext(), MS_PACMAN.name())
+                    new ArcadeMsPacMan_StartPage(theUI(), MS_PACMAN.name())
                 )
                 .dashboardEntries(
                     DashboardID.GENERAL, DashboardID.GAME_CONTROL,

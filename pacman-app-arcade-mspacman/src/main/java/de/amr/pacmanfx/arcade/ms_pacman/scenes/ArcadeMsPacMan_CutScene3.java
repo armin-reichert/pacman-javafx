@@ -20,7 +20,6 @@ import static de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_PacAnima
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
-import static de.amr.pacmanfx.ui.GameUI.theUI;
 
 /**
  * Intermission scene 3: "Junior".
@@ -52,7 +51,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     
     @Override
     public void doInit() {
-        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) theUI().theUIConfiguration().spriteSheet();
+        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) ui.theUIConfiguration().spriteSheet();
 
         pacMan = createPacMan(null);
         msPacMan = createMsPacMan(null);
@@ -60,7 +59,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         bag = new Bag(spriteSheet);
         bag.setOpen(false);
 
-        PacManGames_UIConfig config = theUI().theUIConfiguration();
+        PacManGames_UIConfig config = ui.theUIConfiguration();
         msPacMan.setAnimations(config.createPacAnimations(msPacMan));
         pacMan.setAnimations(config.createPacAnimations(pacMan));
 
@@ -78,7 +77,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        theUI().theSound().stop(MUSIC_ID);
+        ui.theSound().stop(MUSIC_ID);
     }
 
     @Override
@@ -124,7 +123,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     private void updateStateClapperboard() {
         clapperboard.tick();
         if (sceneTimer.atSecond(1)) {
-            theUI().theSound().play(MUSIC_ID);
+            ui.theSound().play(MUSIC_ID);
         } else if (sceneTimer.atSecond(3)) {
             enterStateDeliverJunior();
         }

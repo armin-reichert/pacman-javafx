@@ -27,7 +27,6 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.ui.GameUI.GLOBAL_ACTION_BINDINGS;
-import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
 
@@ -103,10 +102,10 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         presentedGhostCharacter = RED_GHOST_SHADOW;
         numTicksBeforeRising = 0;
 
-        msPacMan.setAnimations(theUI().theUIConfiguration().createPacAnimations(msPacMan));
+        msPacMan.setAnimations(ui.theUIConfiguration().createPacAnimations(msPacMan));
         msPacMan.selectAnimation(ANIM_PAC_MUNCHING);
         for (Ghost ghost : ghosts) {
-            ghost.setAnimations(theUI().theUIConfiguration().createGhostAnimations(ghost));
+            ghost.setAnimations(ui.theUIConfiguration().createGhostAnimations(ghost));
             ghost.selectAnimation(ANIM_GHOST_NORMAL);
         }
         sceneController.restart(SceneState.STARTING);
@@ -128,7 +127,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void onCreditAdded(GameEvent e) {
-        theUI().theSound().play(SoundID.COIN_INSERTED);
+        ui.theSound().play(SoundID.COIN_INSERTED);
     }
 
     @Override
