@@ -54,6 +54,7 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
+import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
 import static de.amr.pacmanfx.tilemap.editor.ArcadeMap.*;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.*;
 import static java.util.Objects.requireNonNull;
@@ -84,6 +85,15 @@ public class TileMapEditor {
             return "[%s]".formatted(key);
         }
     }
+
+    private static final byte[][] DEFAULT_HOUSE_ROWS = {
+        { ARC_NW.code(), WALL_H.code(), WALL_H.code(), DOOR.code(),   DOOR.code(),   WALL_H.code(), WALL_H.code(), ARC_NE.code() },
+        { WALL_V.code(), EMPTY.code(),  EMPTY.code(),  EMPTY.code(),  EMPTY.code(),  EMPTY.code(),  EMPTY.code(),  WALL_V.code() },
+        { WALL_V.code(), EMPTY.code(),  EMPTY.code(),  EMPTY.code(),  EMPTY.code(),  EMPTY.code(),  EMPTY.code(),  WALL_V.code() },
+        { WALL_V.code(), EMPTY.code(),  EMPTY.code(),  EMPTY.code(),  EMPTY.code(),  EMPTY.code(),  EMPTY.code(),  WALL_V.code() },
+        { ARC_SW.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), ARC_SE.code() },
+    };
+
 
     private static boolean isSupportedImageFile(File file) {
         return Stream.of(".bmp", ".gif", ".jpg", ".png").anyMatch(ext -> file.getName().toLowerCase().endsWith(ext));
@@ -1469,23 +1479,33 @@ public class TileMapEditor {
         clearTerrainAreaOneSided(worldMap, houseMinTile, houseMaxTile);
         clearFoodAreaOneSided(worldMap, houseMinTile, houseMaxTile);
 
+        // place house tile content
+        Vector2i houseSize = houseMaxTile.minus(houseMinTile).plus(1,1);
+        for (int y = 0; y < houseSize.y(); ++y) {
+            for (int x = 0; x < houseSize.x(); ++x) {
+                worldMap.setContent(LayerID.TERRAIN, houseMinTile.y() + y, houseMinTile.x() + x, DEFAULT_HOUSE_ROWS[y][x]);
+            }
+        }
+
         worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_RED_GHOST,      WorldMapFormatter.formatTile(houseMinTile.plus(3, -1)));
         worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_CYAN_GHOST,     WorldMapFormatter.formatTile(houseMinTile.plus(1, 2)));
         worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_PINK_GHOST,     WorldMapFormatter.formatTile(houseMinTile.plus(3, 2)));
         worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_ORANGE_GHOST,   WorldMapFormatter.formatTile(houseMinTile.plus(5, 2)));
 
         // clear pellets around house
-        Vector2i min = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE).minus(1, 1);
-        Vector2i max = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE).plus(1, 1);
-        for (int x = min.x(); x <= max.x(); ++x) {
+        Vector2i minAround = houseMinTile.minus(1,1);
+        Vector2i maxAround = houseMaxTile.plus(1,1);
+        for (int x = minAround.x(); x <= maxAround.x(); ++x) {
             // Note: parameters are row and col (y and x)
-            worldMap.setContent(LayerID.FOOD, min.y(), x, FoodTile.EMPTY.code());
-            worldMap.setContent(LayerID.FOOD, max.y(), x, FoodTile.EMPTY.code());
+            if (x >= 0) {
+                worldMap.setContent(LayerID.FOOD, minAround.y(), x, FoodTile.EMPTY.code());
+                worldMap.setContent(LayerID.FOOD, maxAround.y(), x, FoodTile.EMPTY.code());
+            }
         }
-        for (int y = min.y(); y <= max.y(); ++y) {
+        for (int y = minAround.y(); y <= maxAround.y(); ++y) {
             // Note: parameters are row and col (y and x)
-            worldMap.setContent(LayerID.FOOD, y, min.x(), FoodTile.EMPTY.code());
-            worldMap.setContent(LayerID.FOOD, y, max.x(), FoodTile.EMPTY.code());
+            worldMap.setContent(LayerID.FOOD, y, minAround.x(), FoodTile.EMPTY.code());
+            worldMap.setContent(LayerID.FOOD, y, maxAround.x(), FoodTile.EMPTY.code());
         }
 
         changeManager.setWorldMapChanged();
