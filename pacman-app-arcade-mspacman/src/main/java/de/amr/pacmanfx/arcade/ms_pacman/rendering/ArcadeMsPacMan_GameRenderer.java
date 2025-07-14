@@ -14,6 +14,7 @@ import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.MovingBonus;
+import de.amr.pacmanfx.ui.PacManGames_Assets;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import javafx.beans.property.FloatProperty;
@@ -71,8 +72,8 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
     }
 
     @Override
-    public AssetStorage assets() {
-        return assets;
+    public PacManGames_Assets assets() {
+        return (PacManGames_Assets) assets;
     }
 
     @Override
@@ -93,7 +94,7 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
         if (!hud.isVisible()) return;
 
         if (hud.isScoreVisible()) {
-            ctx.setFont(theUI().theAssets().arcadeFont(scaled(8)));
+            ctx.setFont(assets().arcadeFont(scaled(8)));
             ctx.setFill(ARCADE_WHITE);
             drawScore(gameContext.theGame().score(), "SCORE", tiles_to_px(1), tiles_to_px(1));
             drawScore(gameContext.theGame().highScore(), "HIGH SCORE", tiles_to_px(14), tiles_to_px(1));
@@ -126,7 +127,7 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
 
         if (hud.isCreditVisible()) {
             String text = "CREDIT %2d".formatted(gameContext.theCoinMechanism().numCoins());
-            fillTextAtScaledPosition(text, ARCADE_WHITE, theUI().theAssets().arcadeFont(scaled(8)), 2 * TS, sceneSize.y() - 2);
+            fillTextAtScaledPosition(text, ARCADE_WHITE, assets().arcadeFont(scaled(8)), 2 * TS, sceneSize.y() - 2);
         }
     }
 
@@ -260,10 +261,10 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
 
     public void drawMidwayCopyright(MidwayCopyright copyright) {
         String assetNameSpace = theUI().theUIConfiguration().assetNamespace();
-        Image image = theUI().theAssets().get(assetNameSpace + ".logo.midway");
+        Image image = assets.get(assetNameSpace + ".logo.midway");
         float x = scaled(copyright.x()), y = scaled(copyright.y());
         ctx.drawImage(image, x, y + 2, scaled(TS * 4 - 2), scaled(TS * 4));
-        Font font = theUI().theAssets().arcadeFont(scaled(8));
+        Font font = assets().arcadeFont(scaled(8));
         ctx.setFont(font);
         ctx.setFill(copyright.color());
         ctx.fillText("©", x + scaled(TS * 5), y + scaled(TS * 2 + 2));

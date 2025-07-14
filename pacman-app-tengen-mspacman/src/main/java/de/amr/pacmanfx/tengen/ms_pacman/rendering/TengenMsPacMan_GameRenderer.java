@@ -16,6 +16,7 @@ import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.tengen.ms_pacman.model.*;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.Clapperboard;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.Stork;
+import de.amr.pacmanfx.ui.PacManGames_Assets;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.ui.input.JoypadKeyBinding;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
@@ -84,8 +85,8 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
     }
 
     @Override
-    public AssetStorage assets() {
-        return assets;
+    public PacManGames_Assets assets() {
+        return (PacManGames_Assets) assets;
     }
 
     @Override
@@ -133,7 +134,7 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
         long tick = theUI().theGameClock().tickCount(); //TODO pass as parameter?
 
         if (hud.isScoreVisible()) {
-            drawScores(theGame, tick, nesPaletteColor(0x20), theUI().theAssets().arcadeFont(8));
+            drawScores(theGame, tick, nesPaletteColor(0x20), assets().arcadeFont(8));
         }
 
         if (hud.isLivesCounterVisible()) {
@@ -370,9 +371,9 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
         String ans = theUI().theUIConfiguration().assetNamespace();
         switch (level.messageType()) {
             case GameLevel.MESSAGE_READY
-                -> fillTextAtScaledCenter("READY!", theUI().theAssets().color(ans + ".color.ready_message"), font, x, y);
+                -> fillTextAtScaledCenter("READY!", assets.color(ans + ".color.ready_message"), font, x, y);
             case GameLevel.MESSAGE_GAME_OVER -> {
-                Color color = theUI().theAssets().color(ans + ".color.game_over_message");
+                Color color = assets.color(ans + ".color.game_over_message");
                 if (level.isDemoLevel()) {
                     NES_ColorScheme nesColorScheme = level.worldMap().getConfigValue("nesColorScheme");
                     color = Color.web(nesColorScheme.strokeColorRGB());
