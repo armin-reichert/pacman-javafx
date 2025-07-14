@@ -21,7 +21,6 @@ import java.util.Map;
 import static de.amr.pacmanfx.Globals.PINK_GHOST_SPEEDY;
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 import static de.amr.pacmanfx.lib.timer.TickTimer.ticksToString;
-import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.uilib.Ufx.formatColorHex;
 
 /**
@@ -62,14 +61,14 @@ public class InfoBoxGameInfo extends InfoBox {
                 return "%s / %s / %s".formatted(formatColorHex(fillColor), formatColorHex(strokeColor), formatColorHex(pelletColor));
             } else if (worldMap.hasConfigValue("colorMapIndex")) {
                 // Arcade games
-                WorldMapColorScheme coloring = theUI().theUIConfiguration().colorScheme(worldMap);
+                WorldMapColorScheme coloring = ui.theUIConfiguration().colorScheme(worldMap);
                 return "%s / %s / %s".formatted(formatColorHex(coloring.fill()), formatColorHex(coloring.stroke()), formatColorHex(coloring.pellet()));
             } else {
                 return InfoText.NO_INFO;
             }
         }));
         addLabeledValue("Renderer class", () -> {
-            if (theUI().currentGameScene().isPresent() && theUI().currentGameScene().get() instanceof GameScene2D gameScene2D) {
+            if (ui.currentGameScene().isPresent() && ui.currentGameScene().get() instanceof GameScene2D gameScene2D) {
                 return gameScene2D.gr().getClass().getSimpleName();
             }
             return InfoText.NO_INFO;

@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.model.LevelCounter;
+import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
@@ -23,7 +24,6 @@ import java.util.List;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static java.util.Objects.requireNonNull;
 
 public class LevelCounter3D extends Group {
@@ -32,13 +32,13 @@ public class LevelCounter3D extends Group {
 
     private final ManagedAnimation spinningAnimation;
 
-    public LevelCounter3D(AnimationManager animationManager, LevelCounter levelCounter) {
+    public LevelCounter3D(PacManGames_UIConfig config, AnimationManager animationManager, LevelCounter levelCounter) {
         requireNonNull(animationManager);
         setTranslateZ(-ELEVATION);
         List<Byte> symbols = levelCounter.symbols();
         for (int i = 0; i < symbols.size(); ++i) {
             var material = new PhongMaterial(Color.WHITE);
-            material.setDiffuseMap(theUI().theUIConfiguration().bonusSymbolImage(symbols.get(i)));
+            material.setDiffuseMap(config.bonusSymbolImage(symbols.get(i)));
             Box cube = new Box(TS, TS, TS);
             cube.setMaterial(material);
             cube.setTranslateX(-i * 16);

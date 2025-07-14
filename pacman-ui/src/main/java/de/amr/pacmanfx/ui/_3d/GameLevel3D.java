@@ -164,7 +164,7 @@ public class GameLevel3D extends Group implements Destroyable {
         ambientLight.colorProperty().bind(ui.property3DLightColor());
         getChildren().add(ambientLight);
 
-        levelCounter3D = new LevelCounter3D(animationManager, gameContext.theGame().hud().levelCounter());
+        levelCounter3D = new LevelCounter3D(ui.theUIConfiguration(), animationManager, gameContext.theGame().hud().levelCounter());
         levelCounter3D.setTranslateX(gameLevel.worldMap().numCols() * TS - 2 * TS);
         levelCounter3D.setTranslateY(2 * TS);
         levelCounter3D.spinningAnimation().playFromStart();
@@ -299,7 +299,7 @@ public class GameLevel3D extends Group implements Destroyable {
             }
         };
 
-        levelCompletedAnimation = new LevelCompletedAnimation(animationManager, this);
+        levelCompletedAnimation = new LevelCompletedAnimation(ui, animationManager, this);
         levelCompletedAnimationBeforeCutScene = new LevelCompletedAnimationBeforeCutScene(animationManager, this);
     }
 

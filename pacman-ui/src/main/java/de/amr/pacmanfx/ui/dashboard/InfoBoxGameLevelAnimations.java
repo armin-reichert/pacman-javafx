@@ -25,8 +25,6 @@ import javafx.util.Duration;
 import java.util.List;
 import java.util.Map;
 
-import static de.amr.pacmanfx.ui.GameUI.theUI;
-
 public class InfoBoxGameLevelAnimations extends InfoBox {
 
     private static final float RELATIVE_TABLE_HEIGHT = 0.80f;
@@ -88,9 +86,9 @@ public class InfoBoxGameLevelAnimations extends InfoBox {
     @Override
     public void update() {
         super.update();
-        tableView.setPrefHeight(theUI().theStage().getHeight() * RELATIVE_TABLE_HEIGHT);
+        tableView.setPrefHeight(ui.theStage().getHeight() * RELATIVE_TABLE_HEIGHT);
         boolean refresh = false;
-        if (theUI().currentGameScene().isPresent() && theUI().currentGameScene().get() instanceof PlayScene3D scene3D) {
+        if (ui.currentGameScene().isPresent() && ui.currentGameScene().get() instanceof PlayScene3D scene3D) {
             scene3D.level3D().ifPresent(gameLevel3D -> animationManagerProperty.set(gameLevel3D.animationManager()));
             refresh = true;
         }

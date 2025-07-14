@@ -7,8 +7,6 @@ import javafx.scene.input.KeyCombination;
 
 import java.util.Comparator;
 
-import static de.amr.pacmanfx.ui.GameUI.theUI;
-
 public class InfoBoxKeyShortcutsGlobal extends InfoBox {
 
     public InfoBoxKeyShortcutsGlobal(GameUI ui) {
@@ -18,7 +16,7 @@ public class InfoBoxKeyShortcutsGlobal extends InfoBox {
     @Override
     public void update() {
         clearGrid();
-        addEntries(theUI().currentView().actionBindingMap());
+        addEntries(ui.currentView().actionBindingMap());
     }
 
     private void addEntries(ActionBindingMap actionBindingMap) {
@@ -29,8 +27,8 @@ public class InfoBoxKeyShortcutsGlobal extends InfoBox {
             actionBindingMap.entrySet().stream().sorted(Comparator.comparing(e -> e.getKey().getDisplayText())).forEach(entry -> {
                 KeyCombination keyCombination = entry.getKey();
                 GameAction action = entry.getValue();
-                String localizedActionText = theUI().theAssets().text(action.name());
-                addRow(keyCombination.getDisplayText(), createLabel(localizedActionText, action.isEnabled(theUI())));
+                String localizedActionText = ui.theAssets().text(action.name());
+                addRow(keyCombination.getDisplayText(), createLabel(localizedActionText, action.isEnabled(ui)));
             });
         }
     }

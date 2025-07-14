@@ -15,8 +15,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.ui.GameUI.theUI;
-
 public class Dashboard extends VBox {
 
     public static final int INFOBOX_MIN_LABEL_WIDTH = 110;
@@ -48,7 +46,7 @@ public class Dashboard extends VBox {
     public Stream<InfoBox> infoBoxes() { return infoBoxMap.values().stream(); }
 
     @SuppressWarnings("unchecked")
-    public <I extends InfoBox> I getInfoBox(DashboardID id) {
+    public <I extends InfoBox> I infoBox(DashboardID id) {
         return (I) infoBoxMap.get(id);
     }
 
@@ -101,7 +99,7 @@ public class Dashboard extends VBox {
     }
 
     private void addInfoBox(DashboardID id, String titleKey, InfoBox infoBox) {
-        infoBoxMap.put(id, preconfiguredInfoBox(theUI().theAssets().text(titleKey), infoBox));
+        infoBoxMap.put(id, preconfiguredInfoBox(ui.theAssets().text(titleKey), infoBox));
         infoBox.setDashboard(this);
         infoBox.setShowMaximized(id == DashboardID.ANIMATION_INFO); //TODO just a test
     }

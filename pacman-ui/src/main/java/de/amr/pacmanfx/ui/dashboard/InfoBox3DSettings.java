@@ -17,7 +17,6 @@ import javafx.scene.control.Slider;
 import javafx.scene.shape.DrawMode;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_TOGGLE_DRAW_MODE;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_TOGGLE_PLAY_SCENE_2D_3D;
 
@@ -76,8 +75,8 @@ public class InfoBox3DSettings extends InfoBox {
         setEditor(comboPerspectives, ui.property3DPerspective());
 
         //TODO check these
-        cbUsePlayScene3D.setOnAction(e -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(theUI()));
-        cbWireframeMode.setOnAction(e -> ACTION_TOGGLE_DRAW_MODE.executeIfEnabled(theUI()));
+        cbUsePlayScene3D.setOnAction(e -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(ui));
+        cbWireframeMode.setOnAction(e -> ACTION_TOGGLE_DRAW_MODE.executeIfEnabled(ui));
     }
 
     private void updateControlsFromProperties(GameUI ui) {
@@ -99,12 +98,12 @@ public class InfoBox3DSettings extends InfoBox {
     public void update() {
         super.update();
         //TODO this should not be necessary on every update, when to initialize controls?
-        updateControlsFromProperties(theUI());
+        updateControlsFromProperties(ui);
     }
 
     private String sceneViewportSizeInfo() {
-        if (theUI().currentGameScene().isPresent()
-            && theUI().currentGameScene().get() instanceof CameraControlledView sgs) {
+        if (ui.currentGameScene().isPresent()
+            && ui.currentGameScene().get() instanceof CameraControlledView sgs) {
             return "%.0fx%.0f".formatted(
                 sgs.viewPortWidthProperty().get(),
                 sgs.viewPortHeightProperty().get()
@@ -114,8 +113,8 @@ public class InfoBox3DSettings extends InfoBox {
     }
 
     private String sceneSizeInfo() {
-        if (theUI().currentGameScene().isPresent()) {
-            GameScene gameScene = theUI().currentGameScene().get();
+        if (ui.currentGameScene().isPresent()) {
+            GameScene gameScene = ui.currentGameScene().get();
             if (gameScene instanceof GameScene2D gameScene2D) {
                 Vector2f size = gameScene2D.sizeInPx();
                 double scaling = gameScene2D.scaling();
@@ -134,8 +133,8 @@ public class InfoBox3DSettings extends InfoBox {
     }
 
     private String sceneCameraInfo() {
-        if (theUI().currentGameScene().isPresent()
-            && theUI().currentGameScene().get() instanceof CameraControlledView scrollableGameScene) {
+        if (ui.currentGameScene().isPresent()
+            && ui.currentGameScene().get() instanceof CameraControlledView scrollableGameScene) {
             var cam = scrollableGameScene.camera();
             return String.format("rot=%.0f x=%.0f y=%.0f z=%.0f",
                 cam.getRotate(), cam.getTranslateX(), cam.getTranslateY(), cam.getTranslateZ());

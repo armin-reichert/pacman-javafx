@@ -19,21 +19,17 @@ import javafx.scene.text.Text;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.pacmanfx.ui.GameUI.theUI;
+import static java.util.Objects.requireNonNull;
 
-
-/**
- * @author Armin Reichert
- */
 public class HelpInfo {
 
-    public static HelpInfo build(GameContext gameContext) {
-        HelpInfo help = new HelpInfo();
-        switch (gameContext.theGameState()) {
-            case INTRO -> help.addInfoForIntroScene(gameContext);
-            case SETTING_OPTIONS_FOR_START -> help.addInfoForCreditScene(gameContext);
+    public static HelpInfo build(GameUI ui) {
+        HelpInfo help = new HelpInfo(ui);
+        switch (ui.theGameContext().theGameState()) {
+            case INTRO -> help.addInfoForIntroScene(ui.theGameContext());
+            case SETTING_OPTIONS_FOR_START -> help.addInfoForCreditScene(ui.theGameContext());
             case STARTING_GAME, HUNTING, PACMAN_DYING, GHOST_DYING -> {
-                if (gameContext.optGameLevel().isPresent() && gameContext.optGameLevel().get().isDemoLevel()) {
+                if (ui.theGameContext().optGameLevel().isPresent() && ui.theGameContext().theGameLevel().isDemoLevel()) {
                     help.addInfoForDemoLevelPlayScene();
                 } else {
                     help.addInfoForPlayScene();
@@ -44,10 +40,13 @@ public class HelpInfo {
         return help;
     }
 
+    private final GameUI ui;
     private final List<Label> column0 = new ArrayList<>();
     private final List<Text> column1 = new ArrayList<>();
 
-    public HelpInfo() {}
+    public HelpInfo(GameUI ui) {
+        this.ui = requireNonNull(ui);
+    }
 
     public Pane createPane(GameUI ui, Color backgroundColor, Font font) {
         var grid = new GridPane();
@@ -67,13 +66,13 @@ public class HelpInfo {
 
         // add default entries:
         if (ui.theGameContext().propertyUsingAutopilot().get()) {
-            var autoPilotEntry = text(theUI().theAssets().text("help.autopilot_on"), Color.ORANGE);
+            var autoPilotEntry = text(ui.theAssets().text("help.autopilot_on"), Color.ORANGE);
             autoPilotEntry.setFont(font);
             GridPane.setColumnSpan(autoPilotEntry, 2);
             grid.add(autoPilotEntry, 0, grid.getRowCount());
         }
         if (ui.theGameContext().propertyImmunity().get()) {
-            var immunityEntry = text(theUI().theAssets().text("help.immunity_on"), Color.ORANGE);
+            var immunityEntry = text(ui.theAssets().text("help.immunity_on"), Color.ORANGE);
             immunityEntry.setFont(font);
             GridPane.setColumnSpan(immunityEntry, 2);
             grid.add(immunityEntry, 0, grid.getRowCount() + 1);
@@ -99,7 +98,7 @@ public class HelpInfo {
     }
 
     private void addRow(String lhsKey, String keyboardKey) {
-        addRow(label(theUI().theAssets().text(lhsKey), Color.gray(0.9)), text("[" + keyboardKey + "]", Color.YELLOW));
+        addRow(label(ui.theAssets().text(lhsKey), Color.gray(0.9)), text("[" + keyboardKey + "]", Color.YELLOW));
     }
 
     private void addQuitEntry() {
@@ -123,10 +122,10 @@ public class HelpInfo {
     }
 
     private void addInfoForPlayScene() {
-        addRow("help.move_left", theUI().theAssets().text("help.cursor_left"));
-        addRow("help.move_right", theUI().theAssets().text("help.cursor_right"));
-        addRow("help.move_up", theUI().theAssets().text("help.cursor_up"));
-        addRow("help.move_down", theUI().theAssets().text("help.cursor_down"));
+        addRow("help.move_left", ui.theAssets().text("help.cursor_left"));
+        addRow("help.move_right", ui.theAssets().text("help.cursor_right"));
+        addRow("help.move_up", ui.theAssets().text("help.cursor_up"));
+        addRow("help.move_down", ui.theAssets().text("help.cursor_down"));
         addQuitEntry();
     }
 
