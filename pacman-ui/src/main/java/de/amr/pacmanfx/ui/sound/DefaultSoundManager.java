@@ -121,7 +121,7 @@ public class DefaultSoundManager implements SoundManager {
             mediaPlayer.play();
         }
         else if (value instanceof URL url) {
-            Logger.info("Create and play audio clip ({} times) with ID '{}'",
+            Logger.trace("Create and play audio clip ({} times) with ID '{}'",
                 repetitions == MediaPlayer.INDEFINITE ? "indefinite" : repetitions, id);
             AudioClip audioClip = new AudioClip(url.toExternalForm());
             audioClip.setCycleCount(repetitions);
@@ -200,7 +200,7 @@ public class DefaultSoundManager implements SoundManager {
         if (siren.getStatus() != MediaPlayer.Status.PLAYING) {
             siren.setVolume(volume);
             siren.setCycleCount(MediaPlayer.INDEFINITE);
-            Logger.info("Play siren with ID '{}' (indefinite times) at volume {}", sirenID, siren.getVolume());
+            Logger.trace("Play siren with ID '{}' (indefinite times) at volume {}", sirenID, siren.getVolume());
             siren.play();
         }
     }
@@ -218,7 +218,7 @@ public class DefaultSoundManager implements SoundManager {
     public void stopSiren() {
         if (currentSirenID != null) {
             MediaPlayer siren = (MediaPlayer) soundMap.get(currentSirenID);
-            Logger.info("Stop siren with ID '{}'", currentSirenID);
+            Logger.trace("Stop siren with ID '{}'", currentSirenID);
             siren.stop();
         }
     }
