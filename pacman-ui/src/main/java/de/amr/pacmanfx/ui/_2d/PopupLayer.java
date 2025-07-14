@@ -10,7 +10,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
-import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.uilib.Ufx.opaqueColor;
 
 /**
@@ -33,7 +32,7 @@ public class PopupLayer extends Pane {
 
     public void showHelp(GameUI ui, double scaling) {
         Color bgColor = ui.theGameContext().theGameController().isSelected("MS_PACMAN") ? Color.RED : Color.BLUE;
-        var font = theUI().theAssets().font("font.monospaced", Math.max(6, 14 * scaling));
+        var font = ui.theAssets().font("font.monospaced", Math.max(6, 14 * scaling));
         var helpPane = HelpInfo.build(ui).createPane(ui, opaqueColor(bgColor, 0.8), font);
         helpPopUp.setTranslateX(10 * scaling);
         helpPopUp.setTranslateY(30 * scaling);
