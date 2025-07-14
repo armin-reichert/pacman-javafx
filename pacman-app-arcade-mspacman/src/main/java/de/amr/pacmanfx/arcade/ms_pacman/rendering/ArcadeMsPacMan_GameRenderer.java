@@ -93,7 +93,7 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
     public FloatProperty scalingProperty() { return scalingPy; }
 
     @Override
-    public void drawHUD(GameContext gameContext, HUD hud, Vector2f sceneSize) {
+    public void drawHUD(GameContext gameContext, HUD hud, Vector2f sceneSize, long tick) {
         requireNonNull(hud);
 
         if (!hud.isVisible()) return;
@@ -145,7 +145,14 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
     }
 
     @Override
-    public void drawLevel(GameContext gameContext, GameLevel level, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted) {
+    public void drawLevel(
+        GameContext gameContext,
+        GameLevel level,
+        Color backgroundColor,
+        boolean mazeHighlighted,
+        boolean energizerHighlighted,
+        long tick)
+    {
         final int colorMapIndex = level.worldMap().getConfigValue("colorMapIndex");
         if (mazeHighlighted) {
             RectShort maze = brightMazesSpriteSheet.spriteSeq(BrightMazesSpriteSheet.BRIGHT_MAZES_ID)[colorMapIndex];

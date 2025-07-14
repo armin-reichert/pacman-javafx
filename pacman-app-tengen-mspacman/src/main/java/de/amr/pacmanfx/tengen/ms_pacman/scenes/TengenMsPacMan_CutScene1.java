@@ -227,7 +227,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         // draw HUD only for non-Arcade map mode
         var game = gameContext().<TengenMsPacMan_GameModel>theGame();
         if (game.mapCategory() != MapCategory.ARCADE) {
-            gameRenderer.drawHUD(gameContext(), game.hud(), sizeInPx().minus(0, 2 * TS));
+            gameRenderer.drawHUD(gameContext(), game.hud(), sizeInPx().minus(0, 2 * TS), ui.theGameClock().tickCount());
         }
     }
 

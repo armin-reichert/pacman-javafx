@@ -17,6 +17,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.*;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.Clapperboard;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.Stork;
 import de.amr.pacmanfx.ui.PacManGames_Assets;
+import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.ui.input.JoypadKeyBinding;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
@@ -41,7 +42,6 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_MapRepository.strangeMap15Sprite;
-import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
@@ -125,13 +125,12 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
     }
 
     @Override
-    public void drawHUD(GameContext gameContext, HUD hud, Vector2f sceneSize) {
+    public void drawHUD(GameContext gameContext, HUD hud, Vector2f sceneSize, long tick) {
         requireNonNull(hud);
 
         if (!hud.isVisible()) return;
 
         var theGame = (TengenMsPacMan_GameModel) gameContext.theGame();
-        long tick = theUI().theGameClock().tickCount(); //TODO pass as parameter?
 
         if (hud.isScoreVisible()) {
             drawScores(theGame, tick, nesPaletteColor(0x20), assets().arcadeFont(8));
@@ -223,7 +222,7 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
                 case MovingBonus movingBonus -> drawMovingBonus(movingBonus);
                 case Pac pac -> drawAnyKindOfPac(pac);
                 case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
-                case Stork stork -> drawStork(stork);
+                case Stork stork -> drawStork(stork, backgroundColor());
                 default -> SpriteGameRenderer.super.drawActor(actor);
             }
         }
@@ -297,11 +296,18 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
     }
 
     @Override
-    public void drawLevel(GameContext gameContext, GameLevel level, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted) {
+    public void drawLevel(
+        GameContext gameContext,
+        GameLevel level,
+        Color backgroundColor,
+        boolean mazeHighlighted,
+        boolean energizerHighlighted,
+        long tick)
+    {
         var tengenGame = (TengenMsPacMan_GameModel) gameContext.theGame();
         int mapNumber = level.worldMap().getConfigValue("mapNumber");
         RectShort mazeSprite = tengenGame.mapCategory() == MapCategory.STRANGE && mapNumber == 15
-            ? strangeMap15Sprite(theUI().theGameClock().tickCount()) // Strange map #15: psychedelic animation
+            ? strangeMap15Sprite(tick) // Strange map #15: psychedelic animation
             : mazeSpriteSet.colorSchemedMazeSprite().sprite();
         drawLevelWithMaze(gameContext, level, mazeSpriteSet.colorSchemedMazeSprite().image(), mazeSprite);
     }
@@ -361,14 +367,14 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
         });
     }
 
-    public void drawLevelMessage(GameLevel level, Vector2f position, Font font) {
+    public void drawLevelMessage(PacManGames_UIConfig config, GameLevel level, Vector2f position, Font font) {
         requireNonNull(level);
         requireNonNull(position);
         requireNonNull(font);
         if (level.messageType() == GameLevel.MESSAGE_NONE) return;
 
         float x = position.x(), y = position.y() + TS;
-        String ans = theUI().theUIConfiguration().assetNamespace();
+        String ans = config.assetNamespace();
         switch (level.messageType()) {
             case GameLevel.MESSAGE_READY
                 -> fillTextAtScaledCenter("READY!", assets.color(ans + ".color.ready_message"), font, x, y);
@@ -480,10 +486,10 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
     }
 
     //TODO maybe just extend sprite sheet to include stork without bag?
-    private void drawStork(Stork stork) {
+    private void drawStork(Stork stork, Color backgroundColor) {
         SpriteGameRenderer.super.drawAnimatedActor(stork);
         if (stork.isBagReleasedFromBeak()) { // over-paint bag still hanging at beak
-            ctx.setFill(theUI().propertyCanvasBackgroundColor().get());
+            ctx.setFill(backgroundColor);
             //TODO: clarify coordinate values
             ctx.fillRect(scaled(stork.x() - 13), scaled(stork.y() + 3), scaled(8), scaled(10));
         }

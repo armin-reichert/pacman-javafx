@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.layout;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Bonus;
@@ -118,7 +117,7 @@ public class MiniGameView extends VBox {
         return transition;
     }
 
-    public void draw(GameContext gameContext, GameLevel gameLevel) {
+    public void draw(GameUI ui, GameLevel gameLevel) {
         GraphicsContext ctx = canvas.getGraphicsContext2D();
         float scaling = scalingProperty.floatValue();
         ctx.setFill(backgroundColorProperty().get());
@@ -132,7 +131,12 @@ public class MiniGameView extends VBox {
             return;
         }
         gr.setScaling(scaling);
-        gr.drawLevel(gameContext, gameLevel, backgroundColorProperty().get(), false, gameLevel.blinking().isOn());
+        gr.drawLevel(ui.theGameContext(),
+            gameLevel,
+            backgroundColorProperty().get(),
+            false,
+            gameLevel.blinking().isOn(),
+            ui.theGameClock().tickCount());
         gameLevel.bonus().map(Bonus::actor).ifPresent(gr::drawActor);
         gr.drawActor(gameLevel.pac());
         Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)

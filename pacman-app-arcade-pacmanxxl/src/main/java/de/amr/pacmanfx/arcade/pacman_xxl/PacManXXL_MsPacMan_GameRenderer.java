@@ -24,7 +24,14 @@ public class PacManXXL_MsPacMan_GameRenderer extends ArcadeMsPacMan_GameRenderer
     }
 
     @Override
-    public void drawLevel(GameContext gameContext, GameLevel level, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted) {
+    public void drawLevel(
+        GameContext gameContext,
+        GameLevel level,
+        Color backgroundColor,
+        boolean mazeHighlighted,
+        boolean energizerHighlighted,
+        long tick)
+    {
         mapRenderer.drawLevel(level, mazeHighlighted, energizerHighlighted);
     }
 }

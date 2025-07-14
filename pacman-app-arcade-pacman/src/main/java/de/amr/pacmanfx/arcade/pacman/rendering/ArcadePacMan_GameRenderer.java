@@ -69,7 +69,7 @@ public class ArcadePacMan_GameRenderer implements SpriteGameRenderer {
     public FloatProperty scalingProperty() { return scalingPy; }
 
     @Override
-    public void drawHUD(GameContext gameContext, HUD hud, Vector2f sceneSize) {
+    public void drawHUD(GameContext gameContext, HUD hud, Vector2f sceneSize, long tick) {
         requireNonNull(hud);
         if (!hud.isVisible()) return;
 
@@ -119,7 +119,14 @@ public class ArcadePacMan_GameRenderer implements SpriteGameRenderer {
     }
 
     @Override
-    public void drawLevel(GameContext gameContext, GameLevel level, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted) {
+    public void drawLevel(
+        GameContext gameContext,
+        GameLevel level,
+        Color backgroundColor,
+        boolean mazeHighlighted,
+        boolean energizerHighlighted,
+        long tick)
+    {
         ctx.save();
         ctx.scale(scaling(), scaling());
         if (mazeHighlighted) {

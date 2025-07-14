@@ -67,18 +67,25 @@ public interface GameRenderer extends Destroyable {
      * @param gameContext the game context
      * @param hud the Head-Up Display
      * @param sceneSize scene size in pixels
+     * @param tick current clock tick
      */
-    void drawHUD(GameContext gameContext, HUD hud, Vector2f sceneSize);
+    void drawHUD(GameContext gameContext, HUD hud, Vector2f sceneSize, long tick);
 
     /**
-     *
      * @param gameContext the game context
      * @param level the game level to be drawn
      * @param backgroundColor level background color
      * @param mazeHighlighted if the maze is drawn as highlighted (flashing)
      * @param energizerHighlighted if the blinking energizers are in their highlighted state
+     * @param tick current clock tick
      */
-    void drawLevel(GameContext gameContext, GameLevel level, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted);
+    void drawLevel(
+        GameContext gameContext,
+        GameLevel level,
+        Color backgroundColor,
+        boolean mazeHighlighted,
+        boolean energizerHighlighted,
+        long tick);
 
     /**
      * Draws the specified actor.

@@ -440,7 +440,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         ctx().save();
         // NES screen is 32 tiles wide but mazes are only 28 tiles wide, so shift HUD right:
         ctx().translate(scaled(2 * TS), 0);
-        gr().drawHUD(gameContext(), gameContext().theGame().hud(), sizeInPx());
+        gr().drawHUD(gameContext(), gameContext().theGame().hud(), sizeInPx(), ui.theGameClock().tickCount());
         ctx().restore();
     }
 
@@ -456,13 +456,13 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
                 ColorSchemedSprite flashingMazeSprite = gr().mazeConfig().flashingMazeSprites().get(frameIndex);
                 gr().drawLevelWithMaze(gameContext(), gameContext().theGameLevel(), flashingMazeSprite.image(), flashingMazeSprite.sprite());
             } else {
-                gr().drawLevel(gameContext(), gameContext().theGameLevel(), null, false, false);
+                gr().drawLevel(gameContext(), gameContext().theGameLevel(), null, false, false, ui.theGameClock().tickCount());
             }
         }
         else {
             //TODO in the original game, the message is drawn under the maze image but *over* the pellets!
-            gr().drawLevelMessage(gameContext().theGameLevel(), currentMessagePosition(), scaledArcadeFont8());
-            gr().drawLevel(gameContext(), gameContext().theGameLevel(), null, false, false);
+            gr().drawLevelMessage(ui.theUIConfiguration(), gameContext().theGameLevel(), currentMessagePosition(), scaledArcadeFont8());
+            gr().drawLevel(gameContext(), gameContext().theGameLevel(), null, false, false, ui.theGameClock().tickCount());
         }
 
         var actorsByZ = new ArrayList<Actor>();
