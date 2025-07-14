@@ -53,7 +53,7 @@ public enum GameState implements FsmState<GameContext> {
     },
 
 
-    SETTING_OPTIONS {
+    SETTING_OPTIONS_FOR_START {
         @Override
         public void onUpdate(GameContext gameContext) {
             // wait for user interaction to leave state
@@ -320,12 +320,12 @@ public enum GameState implements FsmState<GameContext> {
                         gameContext.theGameController().changeGameState(SHOWING_CREDITS);
                     } else {
                         boolean canContinue = gameContext.theGame().continueOnGameOver();
-                        gameContext.theGameController().changeGameState(canContinue ? SETTING_OPTIONS : INTRO);
+                        gameContext.theGameController().changeGameState(canContinue ? SETTING_OPTIONS_FOR_START : INTRO);
                     }
                 } else {
                     gameContext.theGame().prepareForNewGame();
                     if (gameContext.theGame().canStartNewGame()) {
-                        gameContext.theGameController().changeGameState(SETTING_OPTIONS);
+                        gameContext.theGameController().changeGameState(SETTING_OPTIONS_FOR_START);
                     } else {
                         gameContext.theGameController().changeGameState(INTRO);
                     }

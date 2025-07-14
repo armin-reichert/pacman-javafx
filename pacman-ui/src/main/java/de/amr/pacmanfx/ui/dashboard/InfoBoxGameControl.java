@@ -66,7 +66,7 @@ public class InfoBoxGameControl extends InfoBox {
         //TODO use binding
         choiceBoxInitialLives.setValue(ui.theGameContext().theGame().initialLifeCount());
 
-        spinnerCredit.setDisable(!(isOneOf(ui.theGameContext().theGameState(), GameState.INTRO, GameState.SETTING_OPTIONS)));
+        spinnerCredit.setDisable(!(isOneOf(ui.theGameContext().theGameState(), GameState.INTRO, GameState.SETTING_OPTIONS_FOR_START)));
         choiceBoxInitialLives.setDisable(ui.theGameContext().theGameState() != GameState.INTRO);
 
         buttonGroupLevelActions[GAME_LEVEL_START].setDisable(isBooting() || !canStartLevel());
@@ -85,7 +85,7 @@ public class InfoBoxGameControl extends InfoBox {
     }
 
     private boolean canStartLevel() {
-        return ui.theGameContext().theGame().canStartNewGame() && isOneOf(ui.theGameContext().theGameState(), GameState.INTRO, GameState.SETTING_OPTIONS);
+        return ui.theGameContext().theGame().canStartNewGame() && isOneOf(ui.theGameContext().theGameState(), GameState.INTRO, GameState.SETTING_OPTIONS_FOR_START);
     }
 
     private boolean canEnterNextLevel() {

@@ -51,8 +51,13 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
     private static final ResourceManager RES_ARCADE_PAC_MAN = () -> ArcadePacMan_UIConfig.class;
     private static final ResourceManager RES_PAC_MAN_XXL = () -> PacManXXL_PacMan_UIConfig.class;
 
+    private final GameUI ui;
     private final DefaultSoundManager soundManager = new DefaultSoundManager();
     private final Map<String, GameScene> scenesByID = new HashMap<>();
+
+    public PacManXXL_PacMan_UIConfig(GameUI ui) {
+        this.ui = requireNonNull(ui);
+    }
 
     public void storeAssets(AssetStorage assets) {
         storeAssetNS(assets, "app_icon", RES_ARCADE_PAC_MAN.loadImage("graphics/icons/pacman.png"));
@@ -132,7 +137,7 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
 
     @Override
     public void destroy() {
-        theUI().theAssets().removeAll(NAMESPACE + ".");
+        ui.theAssets().removeAll(NAMESPACE + ".");
         soundManager.destroy();
     }
 
@@ -243,7 +248,7 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
     public GameScene selectGameScene(GameContext gameContext) {
         String sceneID = switch (gameContext.theGameState()) {
             case GameState.BOOT               -> "BootScene";
-            case GameState.SETTING_OPTIONS    -> "StartScene";
+            case GameState.SETTING_OPTIONS_FOR_START -> "StartScene";
             case GameState.INTRO              -> "IntroScene";
             case GameState.INTERMISSION       -> {
                 if (gameContext.optGameLevel().isEmpty()) {
@@ -256,7 +261,7 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
                 yield "CutScene" + gameContext.theGame().cutSceneNumber(levelNumber).getAsInt();
             }
             case GameState.TESTING_CUT_SCENES -> "CutScene" + gameContext.theGame().<Integer>getProperty("intermissionTestNumber");
-            default -> theUI().property3DEnabled().get() ?  "PlayScene3D" : "PlayScene2D";
+            default -> ui.property3DEnabled().get() ?  "PlayScene3D" : "PlayScene2D";
         };
         return scenesByID.get(sceneID);
     }

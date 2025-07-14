@@ -132,7 +132,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
             spawnJunior();
         }
         else if (t == 1512) {
-            gameContext().theGameController().changeGameState(GameState.SETTING_OPTIONS);
+            gameContext().theGameController().changeGameState(GameState.SETTING_OPTIONS_FOR_START);
         }
 
         pacMan.move();

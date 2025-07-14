@@ -79,7 +79,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().theUIConfiguration().spriteSheet();
 
         var config = ui.<TengenMsPacMan_UIConfig>theUIConfiguration();
-        actionBindings.bind(config.ACTION_START_GAME, config.TENGEN_MS_PACMAN_ACTION_BINDINGS);
+        actionBindings.bind(config.ACTION_ENTER_START_SCREEN, config.TENGEN_MS_PACMAN_ACTION_BINDINGS);
         actionBindings.bind(config.ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, config.TENGEN_MS_PACMAN_ACTION_BINDINGS);
 
         presentsText = new Actor(null);
@@ -324,7 +324,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                         tengenGame.setCanStartNewGame(false); // TODO check this
                         scene.gameContext().theGameController().restart(GameState.STARTING_GAME);
                     } else {
-                        scene.gameContext().theGameController().changeGameState(GameState.SETTING_OPTIONS);
+                        scene.gameContext().theGameController().changeGameState(GameState.SETTING_OPTIONS_FOR_START);
                     }
                 }
             }

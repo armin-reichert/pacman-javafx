@@ -381,7 +381,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                         scene.gameContext().theGameController().changeGameState(GameState.STARTING_GAME);
                     }
                 } else if (sceneTimer.atSecond(5)) {
-                    scene.gameContext().theGameController().changeGameState(GameState.SETTING_OPTIONS);
+                    scene.gameContext().theGameController().changeGameState(GameState.SETTING_OPTIONS_FOR_START);
                 }
             }
         };

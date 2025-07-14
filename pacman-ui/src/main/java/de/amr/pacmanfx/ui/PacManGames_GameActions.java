@@ -195,7 +195,7 @@ public interface PacManGames_GameActions {
                 ui.theGameContext().theCoinMechanism().insertCoin();
                 ui.theGameContext().theGameEventManager().publishEvent(ui.theGameContext().theGame(), GameEventType.CREDIT_ADDED);
             }
-            ui.theGameContext().theGameController().changeGameState(GameState.SETTING_OPTIONS);
+            ui.theGameContext().theGameController().changeGameState(GameState.SETTING_OPTIONS_FOR_START);
         }
 
         @Override
@@ -203,7 +203,7 @@ public interface PacManGames_GameActions {
             if (ui.theGameContext().theGame().isPlaying()) {
                 return false;
             }
-            return ui.theGameContext().theGameState() == GameState.SETTING_OPTIONS
+            return ui.theGameContext().theGameState() == GameState.SETTING_OPTIONS_FOR_START
                     || ui.theGameContext().theGameState() == INTRO
                     || ui.theGameContext().optGameLevel().isPresent() && ui.theGameContext().optGameLevel().get().isDemoLevel()
                     || ui.theGameContext().theCoinMechanism().isEmpty();
@@ -326,7 +326,7 @@ public interface PacManGames_GameActions {
         public boolean isEnabled(GameUI ui) {
             return  Set.of("PACMAN", "MS_PACMAN", "PACMAN_XXL", "MS_PACMAN_XXL").contains(ui.theGameContext().theGameController().selectedGameVariant())
                     && !ui.theGameContext().theCoinMechanism().isEmpty()
-                    && (ui.theGameContext().theGameState() == GameState.INTRO || ui.theGameContext().theGameState() == GameState.SETTING_OPTIONS)
+                    && (ui.theGameContext().theGameState() == GameState.INTRO || ui.theGameContext().theGameState() == GameState.SETTING_OPTIONS_FOR_START)
                     && ui.theGameContext().theGame().canStartNewGame();
         }
 
@@ -545,7 +545,7 @@ public interface PacManGames_GameActions {
         @Override
         public boolean isEnabled(GameUI ui) {
             return isOneOf(ui.theGameContext().theGameState(),
-                    GameState.BOOT, GameState.INTRO, GameState.SETTING_OPTIONS, GameState.HUNTING,
+                    GameState.BOOT, GameState.INTRO, GameState.SETTING_OPTIONS_FOR_START, GameState.HUNTING,
                     GameState.TESTING_LEVELS_MEDIUM, GameState.TESTING_LEVELS_SHORT
             );
         }

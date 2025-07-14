@@ -35,7 +35,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
 import static java.util.Objects.requireNonNull;
 
@@ -56,9 +55,14 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig {
 
     private static final WorldMapColorScheme MAP_COLORING = new WorldMapColorScheme("#000000", "#2121ff", "#fcb5ff", "#febdb4");
 
+    private final GameUI ui;
     private final DefaultSoundManager soundManager = new DefaultSoundManager();
     private final Map<String, GameScene> scenesByID = new HashMap<>();
 
+    public ArcadePacMan_UIConfig(GameUI ui) {
+        this.ui = requireNonNull(ui);
+    }
+    
     public void storeAssets(AssetStorage assets) {
         storeAssetNS(assets, "app_icon", RES_ARCADE_PAC_MAN.loadImage("graphics/icons/pacman.png"));
 
@@ -138,7 +142,7 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig {
 
     @Override
     public void destroy() {
-        theUI().theAssets().removeAll(NAMESPACE + ".");
+        ui.theAssets().removeAll(NAMESPACE + ".");
         soundManager.destroy();
     }
 
@@ -238,7 +242,7 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig {
     public GameScene selectGameScene(GameContext gameContext) {
         String sceneID = switch (gameContext.theGameState()) {
             case GameState.BOOT               -> "BootScene";
-            case GameState.SETTING_OPTIONS    -> "StartScene";
+            case GameState.SETTING_OPTIONS_FOR_START -> "StartScene";
             case GameState.INTRO              -> "IntroScene";
             case GameState.INTERMISSION       -> {
                 if (gameContext.optGameLevel().isEmpty()) {
@@ -251,7 +255,7 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig {
                 yield "CutScene" + gameContext.theGame().cutSceneNumber(levelNumber).getAsInt();
             }
             case GameState.TESTING_CUT_SCENES -> "CutScene" + gameContext.theGame().<Integer>getProperty("intermissionTestNumber");
-            default -> theUI().property3DEnabled().get() ?  "PlayScene3D" : "PlayScene2D";
+            default -> ui.property3DEnabled().get() ?  "PlayScene3D" : "PlayScene2D";
         };
         return scenesByID.get(sceneID);
     }

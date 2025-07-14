@@ -163,7 +163,7 @@ public class PacManGames_UI_Impl implements GameUI {
     public void configure(Map<String, Class<? extends PacManGames_UIConfig>> configClassesMap) {
         configClassesMap.forEach((gameVariant, configClass) -> {
             try {
-                PacManGames_UIConfig config = configClass.getDeclaredConstructor().newInstance();
+                PacManGames_UIConfig config = configClass.getDeclaredConstructor(GameUI.class).newInstance(this);
                 setUIConfig(gameVariant, config);
             } catch (Exception x) {
                 Logger.error("Could not create UI configuration of class {}", configClass);

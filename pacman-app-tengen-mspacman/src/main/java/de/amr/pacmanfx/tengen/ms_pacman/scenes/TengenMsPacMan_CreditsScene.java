@@ -32,7 +32,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
         gameContext().theGame().hud().showLivesCounter(false);
 
         var config = ui.<TengenMsPacMan_UIConfig>theUIConfiguration();
-        actionBindings.bind(config.ACTION_START_GAME, config.TENGEN_MS_PACMAN_ACTION_BINDINGS);
+        actionBindings.bind(config.ACTION_ENTER_START_SCREEN, config.TENGEN_MS_PACMAN_ACTION_BINDINGS);
     }
 
     @Override

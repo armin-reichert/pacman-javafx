@@ -88,9 +88,125 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
     public final BooleanProperty propertyJoypadBindingsDisplayed = new SimpleBooleanProperty(false);
     public final ObjectProperty<SceneDisplayMode> propertyPlaySceneDisplayMode = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING);
 
+    private final GameUI ui;
     private final DefaultSoundManager soundManager = new DefaultSoundManager();
     private final Map<String, GameScene> scenesByID = new HashMap<>();
     private TengenMsPacMan_MapRepository mapRepository;
+
+    // Actions specific to Tengen Ms. Pac-Man
+
+    public final GameAction ACTION_QUIT_DEMO_LEVEL = new GameAction() {
+        @Override
+        public void execute(GameUI ui) {
+            ui.theGameContext().theGameController().changeGameState(GameState.SETTING_OPTIONS_FOR_START);
+        }
+
+        @Override
+        public boolean isEnabled(GameUI ui) {
+            return ui.theGameContext().optGameLevel().isPresent() && ui.theGameContext().theGameLevel().isDemoLevel();
+        }
+
+        @Override
+        public String name() {
+            return "QUIT_DEMO_LEVEL";
+        }
+    };
+
+    public final GameAction ACTION_ENTER_START_SCREEN = new GameAction() {
+        @Override
+        public void execute(GameUI ui) {
+            ui.theGameContext().theGameController().changeGameState(GameState.SETTING_OPTIONS_FOR_START);
+        }
+
+        @Override
+        public String name() {
+            return "ENTER_START_SCREEN";
+        }
+    };
+
+    public final GameAction ACTION_START_PLAYING = new GameAction() {
+        @Override
+        public void execute(GameUI ui) {
+            theUI().theSound().stopAll();
+            ui.theGameContext().theGame().playingProperty().set(false);
+            ui.theGameContext().theGameController().changeGameState(GameState.STARTING_GAME);
+        }
+
+        @Override
+        public String name() {
+            return "START_PLAYING";
+        }
+    };
+
+    public final GameAction ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE = new GameAction() {
+        @Override
+        public void execute(GameUI ui) {
+            var config = theUI().<TengenMsPacMan_UIConfig>theUIConfiguration();
+            SceneDisplayMode mode = config.propertyPlaySceneDisplayMode.get();
+            config.propertyPlaySceneDisplayMode.set(mode == SceneDisplayMode.SCROLLING
+                ? SceneDisplayMode.SCALED_TO_FIT
+                : SceneDisplayMode.SCROLLING);
+        }
+
+        @Override
+        public boolean isEnabled(GameUI ui) {
+            return ui.currentGameSceneIsPlayScene2D();
+        }
+
+        @Override
+        public String name() {
+            return "TOGGLE_DISPLAY_MODE";
+        }
+    };
+
+    public final GameAction ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED = new GameAction() {
+        @Override
+        public void execute(GameUI ui) {
+            toggle(ui.<TengenMsPacMan_UIConfig>theUIConfiguration().propertyJoypadBindingsDisplayed);
+        }
+
+        @Override
+        public String name() {
+            return "TOGGLE_JOYPAD_BINDINGS_DISPLAYED";
+        }
+    };
+
+    public final GameAction ACTION_TOGGLE_PAC_BOOSTER = new GameAction() {
+        @Override
+        public void execute(GameUI ui) {
+            var tengenGame = ui.theGameContext().<TengenMsPacMan_GameModel>theGame();
+            tengenGame.activatePacBooster(!tengenGame.isBoosterActive());
+        }
+
+        @Override
+        public boolean isEnabled(GameUI ui) {
+            var tengenGame = ui.theGameContext().<TengenMsPacMan_GameModel>theGame();
+            return tengenGame.pacBooster() == PacBooster.USE_A_OR_B;
+        }
+
+        @Override
+        public String name() {
+            return "TOGGLE_PAC_BOOSTER";
+        }
+    };
+
+    public final Map<GameAction, Set<KeyCombination>> TENGEN_MS_PACMAN_ACTION_BINDINGS;
+
+    public TengenMsPacMan_UIConfig(GameUI ui) {
+        this.ui = requireNonNull(ui);
+        TENGEN_MS_PACMAN_ACTION_BINDINGS = Map.ofEntries(
+            createActionBinding(ACTION_STEER_UP,            ui.theJoypad().key(JoypadButton.UP),    control(KeyCode.UP)),
+            createActionBinding(ACTION_STEER_DOWN,          ui.theJoypad().key(JoypadButton.DOWN),  control(KeyCode.DOWN)),
+            createActionBinding(ACTION_STEER_LEFT,          ui.theJoypad().key(JoypadButton.LEFT),  control(KeyCode.LEFT)),
+            createActionBinding(ACTION_STEER_RIGHT,         ui.theJoypad().key(JoypadButton.RIGHT), control(KeyCode.RIGHT)),
+            createActionBinding(ACTION_QUIT_DEMO_LEVEL,     ui.theJoypad().key(JoypadButton.START)),
+            createActionBinding(ACTION_ENTER_START_SCREEN,  ui.theJoypad().key(JoypadButton.START)),
+            createActionBinding(ACTION_START_PLAYING,       ui.theJoypad().key(JoypadButton.START)),
+            createActionBinding(ACTION_TOGGLE_PAC_BOOSTER,  ui.theJoypad().key(JoypadButton.A), ui.theJoypad().key(JoypadButton.B)),
+            createActionBinding(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, alt(KeyCode.C)),
+            createActionBinding(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, nude(KeyCode.SPACE))
+        );
+    }
 
     public void storeAssets(AssetStorage assets) {
         mapRepository = new TengenMsPacMan_MapRepository(
@@ -194,7 +310,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
 
     @Override
     public void destroy() {
-        theUI().theAssets().removeAll(NAMESPACE + ".");
+        ui.theAssets().removeAll(NAMESPACE + ".");
         soundManager.destroy();
     }
 
@@ -217,7 +333,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
     @Override
     public TengenMsPacMan_GameRenderer createGameRenderer(Canvas canvas) {
         var renderer = new TengenMsPacMan_GameRenderer(spriteSheet(), mapRepository, canvas);
-        renderer.backgroundColorProperty().bind(theUI().propertyCanvasBackgroundColor());
+        renderer.backgroundColorProperty().bind(ui.propertyCanvasBackgroundColor());
         return renderer;
     }
 
@@ -320,7 +436,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
     public GameScene selectGameScene(GameContext gameContext) {
         String sceneID = switch (gameContext.theGameState()) {
             case BOOT               -> "BootScene";
-            case SETTING_OPTIONS    -> "StartScene";
+            case SETTING_OPTIONS_FOR_START -> "StartScene";
             case SHOWING_CREDITS    -> "ShowingCredits";
             case INTRO              -> "IntroScene";
             case GameState.INTERMISSION       -> {
@@ -334,7 +450,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
                 yield "CutScene" + gameContext.theGame().cutSceneNumber(levelNumber).getAsInt();
             }
             case GameState.TESTING_CUT_SCENES -> "CutScene" + gameContext.theGame().<Integer>getProperty("intermissionTestNumber");
-            default -> theUI().property3DEnabled().get() ? "PlayScene3D" : "PlayScene2D";
+            default -> ui.property3DEnabled().get() ? "PlayScene3D" : "PlayScene2D";
         };
         return scenesByID.get(sceneID);
     }
@@ -350,117 +466,4 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
     public Stream<GameScene> gameScenes() {
         return scenesByID.values().stream();
     }
-
-    // Actions
-
-    public final GameAction ACTION_QUIT_DEMO_LEVEL = new GameAction() {
-        @Override
-        public void execute(GameUI ui) {
-            ui.theGameContext().theGameController().changeGameState(GameState.SETTING_OPTIONS);
-        }
-
-        @Override
-        public boolean isEnabled(GameUI ui) {
-            return ui.theGameContext().optGameLevel().isPresent() && ui.theGameContext().optGameLevel().get().isDemoLevel();
-        }
-
-        @Override
-        public String name() {
-            return "QUIT_DEMO_LEVEL";
-        }
-    };
-
-    public final GameAction ACTION_START_GAME = new GameAction() {
-        @Override
-        public void execute(GameUI ui) {
-            ui.theGameContext().theGameController().changeGameState(GameState.SETTING_OPTIONS);
-        }
-
-        @Override
-        public String name() {
-            return "START_GAME";
-        }
-    };
-
-    public final GameAction ACTION_START_PLAYING = new GameAction() {
-        @Override
-        public void execute(GameUI ui) {
-            theUI().theSound().stopAll();
-            ui.theGameContext().theGame().playingProperty().set(false);
-            ui.theGameContext().theGameController().changeGameState(GameState.STARTING_GAME);
-        }
-
-        @Override
-        public String name() {
-            return "START_PLAYING";
-        }
-    };
-
-    public final GameAction ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE = new GameAction() {
-        @Override
-        public void execute(GameUI ui) {
-            var config = (TengenMsPacMan_UIConfig) theUI().theUIConfiguration();
-            SceneDisplayMode mode = config.propertyPlaySceneDisplayMode.get();
-            config.propertyPlaySceneDisplayMode.set(mode == SceneDisplayMode.SCROLLING
-                ? SceneDisplayMode.SCALED_TO_FIT
-                : SceneDisplayMode.SCROLLING);
-        }
-
-        @Override
-        public boolean isEnabled(GameUI ui) {
-            return ui.currentGameSceneIsPlayScene2D();
-        }
-
-        @Override
-        public String name() {
-            return "TOGGLE_DISPLAY_MODE";
-        }
-    };
-
-    public final GameAction ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED = new GameAction() {
-        @Override
-        public void execute(GameUI ui) {
-            var config = (TengenMsPacMan_UIConfig) ui.theUIConfiguration();
-            toggle(config.propertyJoypadBindingsDisplayed);
-        }
-
-        @Override
-        public String name() {
-            return "TOGGLE_JOYPAD_BINDINGS_DISPLAYED";
-        }
-    };
-
-    public final GameAction ACTION_TOGGLE_PAC_BOOSTER = new GameAction() {
-        @Override
-        public void execute(GameUI ui) {
-            var tengenGame = (TengenMsPacMan_GameModel) ui.theGameContext().theGame();
-            tengenGame.activatePacBooster(!tengenGame.isBoosterActive());
-        }
-
-        @Override
-        public boolean isEnabled(GameUI ui) {
-            var tengenGame = (TengenMsPacMan_GameModel) ui.theGameContext().theGame();
-            return tengenGame.pacBooster() == PacBooster.USE_A_OR_B;
-        }
-
-        @Override
-        public String name() {
-            return "TOGGLE_PAC_BOOSTER";
-        }
-    };
-
-    // Action bindings
-
-    public final Map<GameAction, Set<KeyCombination>> TENGEN_MS_PACMAN_ACTION_BINDINGS = Map.ofEntries(
-        createActionBinding(ACTION_STEER_UP,            theUI().theJoypad().key(JoypadButton.UP),    control(KeyCode.UP)),
-        createActionBinding(ACTION_STEER_DOWN,          theUI().theJoypad().key(JoypadButton.DOWN),  control(KeyCode.DOWN)),
-        createActionBinding(ACTION_STEER_LEFT,          theUI().theJoypad().key(JoypadButton.LEFT),  control(KeyCode.LEFT)),
-        createActionBinding(ACTION_STEER_RIGHT,         theUI().theJoypad().key(JoypadButton.RIGHT), control(KeyCode.RIGHT)),
-        createActionBinding(ACTION_QUIT_DEMO_LEVEL,     theUI().theJoypad().key(JoypadButton.START)),
-        createActionBinding(ACTION_START_GAME,          theUI().theJoypad().key(JoypadButton.START)),
-        createActionBinding(ACTION_START_PLAYING,       theUI().theJoypad().key(JoypadButton.START)),
-        createActionBinding(ACTION_TOGGLE_PAC_BOOSTER,  theUI().theJoypad().key(JoypadButton.A), theUI().theJoypad().key(JoypadButton.B)),
-        createActionBinding(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, alt(KeyCode.C)),
-        createActionBinding(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, nude(KeyCode.SPACE))
-    );
 }
