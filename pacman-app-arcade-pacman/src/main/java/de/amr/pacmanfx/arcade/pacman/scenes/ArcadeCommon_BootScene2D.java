@@ -21,7 +21,6 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_WHITE;
-import static de.amr.pacmanfx.ui._2d.GameRenderer.fillCanvas;
 
 /**
  * The boot screen is showing some strange screen patterns and eventually  a grid.

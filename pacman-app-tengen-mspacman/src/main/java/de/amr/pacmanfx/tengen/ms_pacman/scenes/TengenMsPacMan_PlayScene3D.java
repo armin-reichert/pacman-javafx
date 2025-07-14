@@ -10,6 +10,7 @@ import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui._2d.GameRenderer;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.ImageView;
@@ -21,7 +22,6 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.GameUI.GLOBAL_ACTION_BINDINGS;
 import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
-import static de.amr.pacmanfx.ui._2d.GameRenderer.fillCanvas;
 
 /**
  * The 3D play scene of Tengen Ms. Pac-Man.
@@ -84,7 +84,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
         var canvas = new Canvas(quality * infoWidth, quality * infoHeight);
         canvas.getGraphicsContext2D().setImageSmoothing(false); // important!
-        fillCanvas(canvas, theUI().property3DFloorColor().get());
+        GameRenderer.fillCanvas(canvas, theUI().property3DFloorColor().get());
 
         var r = (TengenMsPacMan_GameRenderer) theUI().theUIConfiguration().createGameRenderer(canvas);
         r.setScaling(quality);

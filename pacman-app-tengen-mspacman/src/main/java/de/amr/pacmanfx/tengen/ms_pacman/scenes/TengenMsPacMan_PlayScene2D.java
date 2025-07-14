@@ -49,7 +49,6 @@ import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_SHORT;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.GameUI.*;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
-import static de.amr.pacmanfx.ui._2d.GameRenderer.fillCanvas;
 import static de.amr.pacmanfx.uilib.Ufx.menuTitleItem;
 
 /**
@@ -407,12 +406,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void draw() {
-        fillCanvas(canvas, backgroundColor());
+        clear();
         if (gameContext.optGameLevel().isEmpty()) {
             return;
         }
-        gr().setScaling(scaling());
-        gr().ensureRenderingHintsAreApplied(gameContext.theGameLevel());
 
         // compute current scene scaling
         switch (displayModeProperty.get()) {
@@ -424,6 +421,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             }
             case SCROLLING -> setScaling(fxSubScene.getHeight() / NES_SIZE_PX.y());
         }
+        gameRenderer.setScaling(scaling());
+        gr().ensureRenderingHintsAreApplied(gameContext.theGameLevel());
 
         ctx().save();
         if (debugInfoVisibleProperty.get()) {

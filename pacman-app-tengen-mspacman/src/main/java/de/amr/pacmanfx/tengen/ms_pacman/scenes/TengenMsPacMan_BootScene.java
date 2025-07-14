@@ -11,6 +11,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
+import de.amr.pacmanfx.ui._2d.GameRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -22,7 +23,6 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPalett
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.createGhost;
 import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer.blueShadedColor;
 import static de.amr.pacmanfx.ui.GameUI.theUI;
-import static de.amr.pacmanfx.ui._2d.GameRenderer.fillCanvas;
 
 /**
  * Shows moving and color changing "TENGEN PRESENTS" text and ghost running through scene.
@@ -110,7 +110,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
         var r = (TengenMsPacMan_GameRenderer) gr();
         r.drawVerticalSceneBorders();
         if (grayScreen) {
-            fillCanvas(canvas, nesPaletteColor(0x10));
+            GameRenderer.fillCanvas(canvas, nesPaletteColor(0x10));
         } else {
             r.fillTextAtScaledPosition(TENGEN_PRESENTS, blueShadedColor(tick), scaledArcadeFont8(),
                 movingText.x(), movingText.y());

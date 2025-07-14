@@ -45,7 +45,6 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.GameUI.GLOBAL_ACTION_BINDINGS;
 import static de.amr.pacmanfx.ui.GameUI.MAX_SCENE_2D_SCALING;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
-import static de.amr.pacmanfx.ui._2d.GameRenderer.fillCanvas;
 import static de.amr.pacmanfx.uilib.Ufx.*;
 import static java.util.Objects.requireNonNull;
 
@@ -349,7 +348,7 @@ public class GameView implements PacManGames_View {
                 embedScene2DWithoutCamera(gameScene2D);
             }
             gameScene2D.backgroundColorProperty().bind(ui.propertyCanvasBackgroundColor());
-            fillCanvas(gameScene2D.canvas(), gameScene2D.backgroundColor());
+            gameScene2D.clear();
         }
         else if (gameScene instanceof CameraControlledView cameraControlledScene) {
             embedCameraControlledScene(cameraControlledScene);

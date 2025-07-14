@@ -20,7 +20,6 @@ import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.GameUI.*;
-import static de.amr.pacmanfx.ui._2d.GameRenderer.fillCanvas;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -115,7 +114,7 @@ public abstract class GameScene2D implements GameScene {
 
     public void clear() {
         if (canvas != null) {
-            fillCanvas(canvas, backgroundColor());
+            GameRenderer.fillCanvas(canvas, backgroundColor());
         } else {
             Logger.error("Cannot clear scene, canvas not available");
         }
