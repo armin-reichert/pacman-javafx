@@ -15,6 +15,7 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.MovingBonus;
 import de.amr.pacmanfx.ui.PacManGames_Assets;
+import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import javafx.beans.property.FloatProperty;
@@ -29,7 +30,6 @@ import javafx.scene.text.FontWeight;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
-import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_WHITE;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_YELLOW;
 import static java.util.Objects.requireNonNull;
@@ -42,9 +42,11 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
     protected ArcadeMsPacMan_SpriteSheet spriteSheet;
     protected BrightMazesSpriteSheet brightMazesSpriteSheet;
     protected final FloatProperty scalingPy = new SimpleFloatProperty(1);
+    protected final Image midwayLogo;
 
     public ArcadeMsPacMan_GameRenderer(
         AssetStorage assets,
+        PacManGames_UIConfig config,
         ArcadeMsPacMan_SpriteSheet spriteSheet,
         BrightMazesSpriteSheet brightMazesSpriteSheet,
         Canvas canvas)
@@ -53,16 +55,19 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
         this.ctx = requireNonNull(canvas).getGraphicsContext2D();
         this.spriteSheet = requireNonNull(spriteSheet);
         this.brightMazesSpriteSheet = requireNonNull(brightMazesSpriteSheet);
+        this.midwayLogo = config.getAssetNS("logo.midway");
     }
 
     protected ArcadeMsPacMan_GameRenderer(
         AssetStorage assets,
+        PacManGames_UIConfig config,
         ArcadeMsPacMan_SpriteSheet spriteSheet,
         Canvas canvas)
     {
         this.assets = requireNonNull(assets);
         this.ctx = requireNonNull(canvas).getGraphicsContext2D();
         this.spriteSheet = requireNonNull(spriteSheet);
+        this.midwayLogo = config.getAssetNS("logo.midway");
     }
 
     @Override
@@ -171,7 +176,7 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
         if (actor.isVisible()) {
             switch (actor) {
                 case MovingBonus movingBonus   -> drawMovingBonus(movingBonus);
-                case MidwayCopyright copyright -> drawMidwayCopyright(copyright);
+                case MidwayCopyright copyright -> drawMidwayCopyright(copyright, midwayLogo);
                 case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
                 case Marquee marquee -> drawMarquee(marquee);
                 default -> SpriteGameRenderer.super.drawActor(actor);
@@ -259,11 +264,9 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
         ctx.fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
     }
 
-    public void drawMidwayCopyright(MidwayCopyright copyright) {
-        String assetNameSpace = theUI().theUIConfiguration().assetNamespace();
-        Image image = assets.get(assetNameSpace + ".logo.midway");
+    public void drawMidwayCopyright(MidwayCopyright copyright, Image midwayLogo) {
         float x = scaled(copyright.x()), y = scaled(copyright.y());
-        ctx.drawImage(image, x, y + 2, scaled(TS * 4 - 2), scaled(TS * 4));
+        ctx.drawImage(midwayLogo, x, y + 2, scaled(TS * 4 - 2), scaled(TS * 4));
         Font font = assets().arcadeFont(scaled(8));
         ctx.setFont(font);
         ctx.setFill(copyright.color());
