@@ -282,7 +282,8 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         drawArrowAtSelectedOption(OPTION_PLAYERS, 72, scaledArcadeFont8());
         gr().fillTextAtScaledPosition("TYPE", NES_YELLOW, COL_LABEL, 72);
         gr().fillTextAtScaledPosition(":", NES_YELLOW, COL_LABEL + 4 * TS + 4, 72);
-        gr().fillTextAtScaledPosition("1 PLAYER", NES_WHITE, COL_LABEL + 6 * TS  , 72);
+        // grey this out, not supported yet
+        gr().fillTextAtScaledPosition("1 PLAYER", nesPaletteColor(0x10), COL_LABEL + 6 * TS  , 72);
 
         // Pac-Booster
         drawArrowAtSelectedOption(OPTION_PAC_BOOSTER, 96, scaledArcadeFont8());

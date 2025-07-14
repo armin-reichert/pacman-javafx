@@ -184,10 +184,10 @@ public class PacManGames_UI_Impl implements GameUI {
     private void handleViewChange(PacManGames_View oldView, PacManGames_View newView) {
         requireNonNull(newView);
         if (oldView != null) {
-            oldView.actionBindingMap().clear();
+            oldView.actionBindingMap().removeFromKeyboard();
             theGameContext.theGameEventManager().removeEventListener(oldView);
         }
-        newView.actionBindingMap().update();
+        newView.actionBindingMap().updateKeyboard();
         newView.rootNode().requestFocus();
         theStage.titleProperty().bind(newView.title());
         theGameContext.theGameEventManager().addEventListener(newView);

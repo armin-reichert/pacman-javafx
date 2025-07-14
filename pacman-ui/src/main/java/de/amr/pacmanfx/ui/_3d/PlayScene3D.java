@@ -99,7 +99,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
 
     @Override
     public void destroy() {
-        actionBindings.clear();
+        actionBindings.removeFromKeyboard();
         perspectiveManager.perspectiveIDProperty().unbind();
         if (gameLevel3D != null) {
             gameLevel3D.destroy();
@@ -183,7 +183,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     }
 
     protected void setActionBindings() {
-        actionBindings.clear();
+        actionBindings.removeFromKeyboard();
         actionBindings.bind(ACTION_PERSPECTIVE_PREVIOUS, GLOBAL_ACTION_BINDINGS);
         actionBindings.bind(ACTION_PERSPECTIVE_NEXT, GLOBAL_ACTION_BINDINGS);
         actionBindings.bind(ACTION_TOGGLE_DRAW_MODE, GLOBAL_ACTION_BINDINGS);
@@ -198,7 +198,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 actionBindings.bind(ACTION_CHEAT_KILL_GHOSTS, GLOBAL_ACTION_BINDINGS);
             }
         }
-        actionBindings.update();
+        actionBindings.updateKeyboard();
     }
 
     /**

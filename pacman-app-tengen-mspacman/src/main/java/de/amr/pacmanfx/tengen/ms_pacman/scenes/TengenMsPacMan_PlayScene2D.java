@@ -161,7 +161,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
             actionBindings.bind(ACTION_CHEAT_ENTER_NEXT_LEVEL, GLOBAL_ACTION_BINDINGS);
             actionBindings.bind(ACTION_CHEAT_KILL_GHOSTS, GLOBAL_ACTION_BINDINGS);
         }
-        actionBindings.update();
+        actionBindings.updateKeyboard();
     }
 
     @Override

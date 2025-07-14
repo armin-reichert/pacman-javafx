@@ -53,7 +53,7 @@ public class Globals {
         }
 
         @Override
-        public GameModel theGame() {
+        public <T extends GameModel> T theGame() {
             return gameController.currentGame();
         }
 

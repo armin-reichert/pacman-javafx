@@ -17,24 +17,31 @@ import java.io.File;
 import java.util.Optional;
 
 public interface GameContext {
-    CoinMechanism       theCoinMechanism();
-    /**
-     * Directory where custom maps are stored (default: <code>&lt;pacmanfx_home_dir&gt;/maps</code>).
-     */
-    File                theCustomMapDir();
-    GameModel           theGame();
-    GameController      theGameController();
-    GameEventManager    theGameEventManager();
-    Optional<GameLevel> optGameLevel();
-    GameLevel           theGameLevel();
-    GameState           theGameState();
     /**
      * Directory under which high scores, maps etc. are stored.
      * <p>Default: <code>&lt;user_home&gt;/.pacmanfx</code></p>
      */
-    File                theHomeDir();
-    SimulationStep      theSimulationStep();
+    File theHomeDir();
 
-    BooleanProperty     propertyImmunity();
-    BooleanProperty     propertyUsingAutopilot();
+    /**
+     * Directory where custom maps are stored (default: <code>&lt;home_dir&gt;/maps</code>).
+     */
+    File theCustomMapDir();
+
+    CoinMechanism           theCoinMechanism();
+    <T extends GameModel> T theGame();
+    GameController          theGameController();
+    GameEventManager        theGameEventManager();
+    Optional<GameLevel>     optGameLevel();
+    GameLevel               theGameLevel();
+    GameState               theGameState();
+
+    /**
+     * @return what happened in the current simulation step ("frame state")
+     */
+    SimulationStep          theSimulationStep();
+
+    // Global properties
+    BooleanProperty         propertyImmunity();
+    BooleanProperty         propertyUsingAutopilot();
 }

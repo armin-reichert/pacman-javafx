@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import javafx.scene.input.KeyCombination;
 import org.tinylog.Logger;
@@ -49,22 +48,22 @@ public class ActionBindingMap {
         return actionBindings.entrySet();
     }
 
-    public void update() {
+    public void updateKeyboard() {
         for (KeyCombination combination : actionBindings.keySet()) {
             keyboard.setBinding(combination, this);
         }
-        Logger.info("Key bindings updated for {}", getClass().getSimpleName());
         actionBindings.entrySet().stream()
             // sort by string representation of key combination
             .sorted(Comparator.comparing(entry -> entry.getKey().toString()))
             .forEach(entry -> Logger.debug("%-20s: %s".formatted(entry.getKey(), entry.getValue().name())));
+        Logger.info("Key bindings updated");
     }
 
-    public void clear() {
+    public void removeFromKeyboard() {
         for (KeyCombination combination : actionBindings.keySet()) {
             keyboard.removeBinding(combination, this);
         }
-        Logger.info("Key bindings cleared for {}", getClass().getSimpleName());
+        Logger.info("Key bindings removed");
     }
 
     public void bind(GameAction action, KeyCombination combination) {

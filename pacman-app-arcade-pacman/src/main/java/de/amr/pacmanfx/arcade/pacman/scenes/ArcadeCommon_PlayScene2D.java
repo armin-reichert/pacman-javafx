@@ -96,7 +96,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
             gameContext.theGame().hud().showLevelCounter(true);
             gameContext.theGame().hud().showLivesCounter(false);
             actionBindings.bind(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDINGS);
-            actionBindings.update();
+            actionBindings.updateKeyboard();
         } else {
             gameContext.theGame().hud().showLevelCounter(true);
             gameContext.theGame().hud().showLivesCounter(true);
@@ -108,7 +108,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
             actionBindings.bind(ACTION_CHEAT_ADD_LIVES, GLOBAL_ACTION_BINDINGS);
             actionBindings.bind(ACTION_CHEAT_ENTER_NEXT_LEVEL, GLOBAL_ACTION_BINDINGS);
             actionBindings.bind(ACTION_CHEAT_KILL_GHOSTS, GLOBAL_ACTION_BINDINGS);
-            actionBindings.update();
+            actionBindings.updateKeyboard();
         }
         if (gameRenderer == null) { //TODO can this happen at all?
             gameRenderer = theUI().theUIConfiguration().createGameRenderer(canvas);
