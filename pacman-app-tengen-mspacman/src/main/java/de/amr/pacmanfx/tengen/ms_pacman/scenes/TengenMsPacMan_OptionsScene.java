@@ -87,12 +87,14 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         gameContext().theGame().hud().showLevelCounter(false);
         gameContext().theGame().hud().showLivesCounter(false);
 
-        actionBindings.bind(ACTION_START_PLAYING, TENGEN_MS_PACMAN_ACTION_BINDINGS);
-        actionBindings.bind(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, TENGEN_MS_PACMAN_ACTION_BINDINGS);
+        var config = ui.<TengenMsPacMan_UIConfig>theUIConfiguration();
+        actionBindings.bind(config.ACTION_START_PLAYING, config.TENGEN_MS_PACMAN_ACTION_BINDINGS);
+        actionBindings.bind(config.ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, config.TENGEN_MS_PACMAN_ACTION_BINDINGS);
+        actionBindings.bind(actionSelectNextJoypadBinding, alt(KeyCode.J));
+
         actionBindings.bind(ACTION_TEST_CUT_SCENES, GLOBAL_ACTION_BINDINGS);
         actionBindings.bind(ACTION_TEST_LEVELS_BONI, GLOBAL_ACTION_BINDINGS);
         actionBindings.bind(ACTION_TEST_LEVELS_TEASERS, GLOBAL_ACTION_BINDINGS);
-        actionBindings.bind(actionSelectNextJoypadBinding, alt(KeyCode.J));
 
         selectedOption = OPTION_PAC_BOOSTER;
         theTengenGame().setCanStartNewGame(true);

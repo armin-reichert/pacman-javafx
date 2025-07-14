@@ -461,9 +461,10 @@ public class PacManGames_UI_Impl implements GameUI {
         return configByGameVariant.get(gameVariant);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public PacManGames_UIConfig theUIConfiguration() {
-        return configByGameVariant.get(theGameContext.theGameController().selectedGameVariant());
+    public <T extends PacManGames_UIConfig> T theUIConfiguration() {
+        return (T) configByGameVariant.get(theGameContext.theGameController().selectedGameVariant());
     }
 
     @Override

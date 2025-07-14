@@ -148,7 +148,7 @@ public interface GameUI {
     Joypad theJoypad();
     SoundManager theSound();
     Stage theStage();
-    PacManGames_UIConfig theUIConfiguration();
+    <T extends PacManGames_UIConfig> T theUIConfiguration();
 
     void restart();
     void selectGameVariant(String variant);

@@ -353,7 +353,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
 
     // Actions
 
-    public static final GameAction ACTION_QUIT_DEMO_LEVEL = new GameAction() {
+    public final GameAction ACTION_QUIT_DEMO_LEVEL = new GameAction() {
         @Override
         public void execute(GameUI ui) {
             ui.theGameContext().theGameController().changeGameState(GameState.SETTING_OPTIONS);
@@ -370,7 +370,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
         }
     };
 
-    public static final GameAction ACTION_START_GAME = new GameAction() {
+    public final GameAction ACTION_START_GAME = new GameAction() {
         @Override
         public void execute(GameUI ui) {
             ui.theGameContext().theGameController().changeGameState(GameState.SETTING_OPTIONS);
@@ -382,7 +382,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
         }
     };
 
-    public static final GameAction ACTION_START_PLAYING = new GameAction() {
+    public final GameAction ACTION_START_PLAYING = new GameAction() {
         @Override
         public void execute(GameUI ui) {
             theUI().theSound().stopAll();
@@ -396,7 +396,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
         }
     };
 
-    public static final GameAction ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE = new GameAction() {
+    public final GameAction ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE = new GameAction() {
         @Override
         public void execute(GameUI ui) {
             var config = (TengenMsPacMan_UIConfig) theUI().theUIConfiguration();
@@ -417,7 +417,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
         }
     };
 
-    public static final GameAction ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED = new GameAction() {
+    public final GameAction ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED = new GameAction() {
         @Override
         public void execute(GameUI ui) {
             var config = (TengenMsPacMan_UIConfig) ui.theUIConfiguration();
@@ -430,7 +430,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
         }
     };
 
-    public static final GameAction ACTION_TOGGLE_PAC_BOOSTER = new GameAction() {
+    public final GameAction ACTION_TOGGLE_PAC_BOOSTER = new GameAction() {
         @Override
         public void execute(GameUI ui) {
             var tengenGame = (TengenMsPacMan_GameModel) ui.theGameContext().theGame();
@@ -451,7 +451,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
 
     // Action bindings
 
-    public static final Map<GameAction, Set<KeyCombination>> TENGEN_MS_PACMAN_ACTION_BINDINGS = Map.ofEntries(
+    public final Map<GameAction, Set<KeyCombination>> TENGEN_MS_PACMAN_ACTION_BINDINGS = Map.ofEntries(
         createActionBinding(ACTION_STEER_UP,            theUI().theJoypad().key(JoypadButton.UP),    control(KeyCode.UP)),
         createActionBinding(ACTION_STEER_DOWN,          theUI().theJoypad().key(JoypadButton.DOWN),  control(KeyCode.DOWN)),
         createActionBinding(ACTION_STEER_LEFT,          theUI().theJoypad().key(JoypadButton.LEFT),  control(KeyCode.LEFT)),

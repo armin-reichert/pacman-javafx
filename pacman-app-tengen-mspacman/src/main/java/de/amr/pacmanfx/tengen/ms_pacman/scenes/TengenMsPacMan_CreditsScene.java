@@ -5,12 +5,14 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
 import de.amr.pacmanfx.lib.Vector2f;
+import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
 
 /**
  * Gives credit to the people that helped in making the game, original and remake authors.
@@ -28,7 +30,9 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
         gameContext().theGame().hud().showScore(false);
         gameContext().theGame().hud().showLevelCounter(false);
         gameContext().theGame().hud().showLivesCounter(false);
-        actionBindings.bind(ACTION_START_GAME, TENGEN_MS_PACMAN_ACTION_BINDINGS);
+
+        var config = ui.<TengenMsPacMan_UIConfig>theUIConfiguration();
+        actionBindings.bind(config.ACTION_START_GAME, config.TENGEN_MS_PACMAN_ACTION_BINDINGS);
     }
 
     @Override
