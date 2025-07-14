@@ -39,8 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.isOneOf;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_MEDIUM;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_SHORT;
@@ -363,10 +362,12 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         }
         switch (gameContext.theGameState()) {
             case STARTING_GAME -> {
-                //TODO default position if no house
-                Vector2f position = gameContext.theGameLevel().house().map(House::centerPositionUnderHouse).orElse(Vector2f.ZERO);
-                gameLevel3D.showAnimatedMessage("READY!", 2.5f, position.x(), position.y());
-                setPlayerSteeringActionBindings();
+                if (!gameContext.theGameLevel().isDemoLevel()) {
+                    //TODO default position if no house
+                    Vector2f position = gameContext.theGameLevel().house().map(House::centerPositionUnderHouse).orElse(Vector2f.ZERO);
+                    gameLevel3D.showAnimatedMessage("READY!", 2.5f, position.x(), position.y());
+                    setPlayerSteeringActionBindings();
+                }
             }
             case TESTING_LEVELS_SHORT, TESTING_LEVELS_MEDIUM -> {
                 replaceGameLevel3D(); //TODO check when to destroy previous level
