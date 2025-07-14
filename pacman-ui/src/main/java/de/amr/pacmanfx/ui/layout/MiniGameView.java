@@ -8,6 +8,7 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Bonus;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -30,7 +31,6 @@ import org.tinylog.Logger;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.ui.GameUI.theUI;
 
 public class MiniGameView extends VBox {
 
@@ -87,15 +87,15 @@ public class MiniGameView extends VBox {
         return canvasHeightProperty;
     }
 
-    public void onLevelCreated(GameLevel gameLevel) {
+    public void onLevelCreated(GameUI ui, GameLevel gameLevel) {
         worldSizeProperty.set(gameLevel.worldSizePx());
-        gr = theUI().theUIConfiguration().createGameRenderer(canvas);
+        gr = ui.theUIConfiguration().createGameRenderer(canvas);
         gr.applyRenderingHints(gameLevel);
         gr.setScaling(scalingProperty.floatValue());
         moveIntoScreenAnimation.play();
     }
 
-    public void onLevelCompleted(GameLevel level) {
+    public void onLevelCompleted() {
         Animation moveOffAnimation = createMoveOffScreenAnimation();
         moveOffAnimation.play();
     }

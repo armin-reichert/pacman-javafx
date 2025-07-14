@@ -65,6 +65,11 @@ public class ArcadeMsPacMan_UIConfig implements PacManGames_UIConfig {
         this.ui = requireNonNull(ui);
     }
 
+    @Override
+    public GameUI theUI() {
+        return ui;
+    }
+
     public void storeAssets(AssetStorage assets) {
         var spriteSheet = new ArcadeMsPacMan_SpriteSheet(RES_ARCADE_MS_PAC_MAN.loadImage("graphics/mspacman_spritesheet.png"));
         storeAssetNS(assets, "spritesheet", spriteSheet);

@@ -259,14 +259,14 @@ public class GameView implements PacManGames_View {
                     ActorAnimationMap ghostAnimationMap = config.createGhostAnimations(ghost);
                     ghost.setAnimations(ghostAnimationMap);
                 });
-                miniGameView.onLevelCreated(gameContext.theGameLevel());
+                miniGameView.onLevelCreated(ui, gameContext.theGameLevel());
 
                 // size of game scene might have changed, so re-embed
                 ui.currentGameScene().ifPresent(this::embedGameScene);
             }
             case GAME_STATE_CHANGED -> {
                 if (gameContext.theGameState() == GameState.LEVEL_COMPLETE) {
-                    miniGameView.onLevelCompleted(gameContext.theGameLevel());
+                    miniGameView.onLevelCompleted();
                 }
             }
         }

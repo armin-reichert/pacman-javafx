@@ -21,9 +21,10 @@ import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
-import static de.amr.pacmanfx.ui.GameUI.theUI;
 
 public interface PacManGames_UIConfig extends PacManGames_GameSceneConfig, Destroyable {
+
+    GameUI theUI();
 
     String assetNamespace();
 

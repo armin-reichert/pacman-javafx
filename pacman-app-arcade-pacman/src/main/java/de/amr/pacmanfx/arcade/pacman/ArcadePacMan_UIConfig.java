@@ -62,7 +62,12 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig {
     public ArcadePacMan_UIConfig(GameUI ui) {
         this.ui = requireNonNull(ui);
     }
-    
+
+    @Override
+    public GameUI theUI() {
+        return ui;
+    }
+
     public void storeAssets(AssetStorage assets) {
         storeAssetNS(assets, "app_icon", RES_ARCADE_PAC_MAN.loadImage("graphics/icons/pacman.png"));
 

@@ -207,6 +207,11 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
         );
     }
 
+    @Override
+    public GameUI theUI() {
+        return ui;
+    }
+
     public void storeAssets(AssetStorage assets) {
         mapRepository = new TengenMsPacMan_MapRepository(
             RES_TENGEN_MS_PAC_MAN.loadImage("graphics/arcade_mazes.png"),
