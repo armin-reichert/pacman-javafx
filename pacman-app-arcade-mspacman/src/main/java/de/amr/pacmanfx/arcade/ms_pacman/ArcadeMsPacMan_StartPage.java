@@ -14,7 +14,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 
-import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_BOOT_SHOW_GAME_VIEW;
+import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_BOOT_SHOW_PLAY_VIEW;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_StartPage extends StackPane implements StartPage {
@@ -35,7 +35,7 @@ public class ArcadeMsPacMan_StartPage extends StackPane implements StartPage {
 
         var startButton = StartPagesView.createStartButton(ui.theAssets(), Pos.BOTTOM_CENTER);
         startButton.setTranslateY(-50);
-        startButton.setAction(() -> ACTION_BOOT_SHOW_GAME_VIEW.executeIfEnabled(ui));
+        startButton.setAction(() -> ACTION_BOOT_SHOW_PLAY_VIEW.executeIfEnabled(ui));
         getChildren().addAll(flyer, startButton);
     }
 

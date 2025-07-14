@@ -9,8 +9,8 @@ import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.ui._3d.Perspective;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.Keyboard;
-import de.amr.pacmanfx.ui.layout.GameView;
 import de.amr.pacmanfx.ui.layout.PacManGames_View;
+import de.amr.pacmanfx.ui.layout.PlayView;
 import de.amr.pacmanfx.ui.layout.StartPagesView;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.GameClock;
@@ -77,7 +77,7 @@ public interface GameUI {
     Map<GameAction, Set<KeyCombination>> GLOBAL_ACTION_BINDINGS = Map.ofEntries(
         createActionBinding(ACTION_ARCADE_INSERT_COIN,      nude(KeyCode.DIGIT5), nude(KeyCode.NUMPAD5)),
         createActionBinding(ACTION_ARCADE_START_GAME,       nude(KeyCode.DIGIT1), nude(KeyCode.NUMPAD1)),
-        createActionBinding(ACTION_BOOT_SHOW_GAME_VIEW,     nude(KeyCode.F3)),
+        createActionBinding(ACTION_BOOT_SHOW_PLAY_VIEW,     nude(KeyCode.F3)),
         createActionBinding(ACTION_CHEAT_EAT_ALL_PELLETS,   alt(KeyCode.E)),
         createActionBinding(ACTION_CHEAT_ADD_LIVES,         alt(KeyCode.L)),
         createActionBinding(ACTION_CHEAT_ENTER_NEXT_LEVEL,  alt(KeyCode.N)),
@@ -121,35 +121,38 @@ public interface GameUI {
     byte STATUS_ICON_SPACING       = 5;
 
     // Global properties
-    ObjectProperty<Color> propertyCanvasBackgroundColor();
-    BooleanProperty propertyCanvasFontSmoothing();
-    BooleanProperty propertyCanvasImageSmoothing();
-    BooleanProperty propertyDebugInfoVisible();
-    IntegerProperty propertyPipHeight();
-    BooleanProperty propertyMiniViewOn();
-    IntegerProperty propertyPipOpacityPercent();
-    IntegerProperty propertySimulationSteps();
-    BooleanProperty property3DAxesVisible();
-    ObjectProperty<DrawMode> property3DDrawMode();
-    BooleanProperty property3DEnabled();
-    BooleanProperty property3DEnergizerExplodes();
-    ObjectProperty<Color> property3DFloorColor();
-    ObjectProperty<Color> property3DLightColor();
-    BooleanProperty property3DPacLightEnabled();
-    ObjectProperty<Perspective.ID> property3DPerspective();
-    DoubleProperty property3DWallHeight();
-    DoubleProperty property3DWallOpacity();
+    ObjectProperty<Color>            propertyCanvasBackgroundColor();
+    BooleanProperty                  propertyCanvasFontSmoothing();
+    BooleanProperty                  propertyCanvasImageSmoothing();
+    ObjectProperty<GameScene>        propertyCurrentGameScene();
+    ObjectProperty<PacManGames_View> propertyCurrentView();
+    BooleanProperty                  propertyDebugInfoVisible();
+    IntegerProperty                  propertyMiniViewHeight();
+    BooleanProperty                  propertyMiniViewOn();
+    IntegerProperty                  propertyMiniViewOpacityPercent();
+    BooleanProperty                  propertyMuted();
+    IntegerProperty                  propertySimulationSteps();
+    BooleanProperty                  property3DAxesVisible();
+    ObjectProperty<DrawMode>         property3DDrawMode();
+    BooleanProperty                  property3DEnabled();
+    BooleanProperty                  property3DEnergizerExplodes();
+    ObjectProperty<Color>            property3DFloorColor();
+    ObjectProperty<Color>            property3DLightColor();
+    BooleanProperty                  property3DPacLightEnabled();
+    ObjectProperty<Perspective.ID>   property3DPerspective();
+    DoubleProperty                   property3DWallHeight();
+    DoubleProperty                   property3DWallOpacity();
 
-    PacManGames_Assets theAssets();
-    GameClock theGameClock();
-    GameContext theGameContext();
-    DirectoryWatchdog theWatchdog();
-    Keyboard theKeyboard();
-    Model3DRepository theModel3DRepository();
-    Joypad theJoypad();
-    SoundManager theSound();
-    Stage theStage();
+    PacManGames_Assets               theAssets();
+    GameClock                        theGameClock();
+    GameContext                      theGameContext();
+    Joypad                           theJoypad();
+    Keyboard                         theKeyboard();
+    Model3DRepository                theModel3DRepository();
+    SoundManager                     theSound();
+    Stage                            theStage();
     <T extends PacManGames_UIConfig> T theUIConfiguration();
+    DirectoryWatchdog                theWatchdog();
 
     void restart();
     void selectGameVariant(String variant);
@@ -158,22 +161,20 @@ public interface GameUI {
     PacManGames_UIConfig uiConfig(String gameVariant);
     void setUIConfig(String variant, PacManGames_UIConfig configuration);
 
-    BooleanProperty mutedProperty();
 
     // Game scenes
-    ObjectProperty<GameScene> currentGameSceneProperty();
     Optional<GameScene> currentGameScene();
     boolean currentGameSceneIsPlayScene2D();
     boolean currentGameSceneIsPlayScene3D();
     void updateGameScene(boolean reload);
 
     // Views
-    ObjectProperty<PacManGames_View> currentViewProperty();
     PacManGames_View currentView();
-    GameView gameView();
-    StartPagesView startPagesView();
+    PlayView thePlayView();
+    StartPagesView theStartPagesView();
+
     void showEditorView();
-    void showGameView();
+    void showPlayView();
     void showStartView();
 
     // Flash messages

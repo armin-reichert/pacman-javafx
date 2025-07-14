@@ -18,14 +18,14 @@ import static java.util.Objects.requireNonNull;
 
 public class GameUI_Builder {
 
-    private final PacManGames_UI_Impl workPiece;
+    private final PacManGames_UI_Impl uiUnderConstruction;
     private final Map<String, GameModel> gameModelByVariantName = new HashMap<>();
     private final Map<String, Class<? extends PacManGames_UIConfig>> uiConfigClassByVariantName = new HashMap<>();
     private StartPage[] startPages;
     private DashboardID[] dashboardIDs = new DashboardID[0];
 
-    public GameUI_Builder(PacManGames_UI_Impl workPiece) {
-        this.workPiece = requireNonNull(workPiece);
+    public GameUI_Builder(PacManGames_UI_Impl uiUnderConstruction) {
+        this.uiUnderConstruction = requireNonNull(uiUnderConstruction);
     }
 
     public GameUI_Builder game(String variant, GameModel model, Class<? extends PacManGames_UIConfig> configClass) {
@@ -61,18 +61,18 @@ public class GameUI_Builder {
     }
 
     public GameUI build() {
-        GameContext gameContext = workPiece.theGameContext();
+        GameContext gameContext = uiUnderConstruction.theGameContext();
         validateConfiguration(gameContext);
-        workPiece.configure(uiConfigClassByVariantName);
+        uiUnderConstruction.configure(uiConfigClassByVariantName);
         gameModelByVariantName.forEach((variant, model) -> gameContext.theGameController().registerGame(variant, model));
         gameContext.theGameController().setEventsEnabled(true);
-        workPiece.gameView().dashboard().configure(dashboardIDs);
-        for (StartPage startPage : startPages) workPiece.startPagesView().addStartPage(startPage);
-        workPiece.startPagesView().selectStartPage(0);
-        workPiece.startPagesView().currentStartPage()
+        uiUnderConstruction.thePlayView().dashboard().configure(dashboardIDs);
+        for (StartPage startPage : startPages) uiUnderConstruction.theStartPagesView().addStartPage(startPage);
+        uiUnderConstruction.theStartPagesView().selectStartPage(0);
+        uiUnderConstruction.theStartPagesView().currentStartPage()
             .map(StartPage::currentGameVariant)
             .ifPresent(gameContext.theGameController()::selectGameVariant);
-        return workPiece;
+        return uiUnderConstruction;
     }
 
     private void validateConfiguration(GameContext gameContext) {

@@ -31,8 +31,8 @@ public class StatusIconBox extends HBox {
         setPadding(new Insets(STATUS_ICON_PADDING));
         setSpacing(STATUS_ICON_SPACING);
         visibleProperty().bind(Bindings.createBooleanBinding
-            (() -> (ui.currentView() == ui.startPagesView() || ui.currentView() == ui.gameView()),
-                ui.currentViewProperty()));
+            (() -> (ui.currentView() == ui.theStartPagesView() || ui.currentView() == ui.thePlayView()),
+                ui.propertyCurrentView()));
         // keep box compact, show visible items only
         ChangeListener<? super Boolean> iconVisibilityChangeHandler = (py, ov, nv) ->
             getChildren().setAll(icons.stream().filter(Node::isVisible).toList());

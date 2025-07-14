@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_BOOT_SHOW_GAME_VIEW;
+import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_BOOT_SHOW_PLAY_VIEW;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_TOGGLE_PAUSED;
 import static de.amr.pacmanfx.ui.input.Keyboard.nude;
 import static java.util.Objects.requireNonNull;
@@ -120,7 +120,7 @@ public class StartPagesView implements PacManGames_View {
         };
         actionBindings.bind(actionPrevSlide,            nude(KeyCode.LEFT));
         actionBindings.bind(actionNextSlide,            nude(KeyCode.RIGHT));
-        actionBindings.bind(ACTION_BOOT_SHOW_GAME_VIEW, nude(KeyCode.ENTER));
+        actionBindings.bind(ACTION_BOOT_SHOW_PLAY_VIEW, nude(KeyCode.ENTER));
         actionBindings.bind(ACTION_TOGGLE_PAUSED,       nude(KeyCode.P));
     }
 

@@ -51,7 +51,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * This view shows the game play and the overlays like dashboard and picture-in-picture view of the running play scene.
  */
-public class GameView implements PacManGames_View {
+public class PlayView implements PacManGames_View {
 
     /**
      * @param sceneBefore scene displayed before switching
@@ -89,7 +89,7 @@ public class GameView implements PacManGames_View {
     private final ContextMenu contextMenu = new ContextMenu();
     private final StringBinding titleBinding;
 
-    public GameView(GameUI ui, GameContext gameContext, Scene parentScene) {
+    public PlayView(GameUI ui, GameContext gameContext, Scene parentScene) {
         this.ui = requireNonNull(ui);
         this.gameContext = requireNonNull(gameContext);
         this.parentScene = requireNonNull(parentScene);
@@ -108,7 +108,7 @@ public class GameView implements PacManGames_View {
         //TODO what is the cleanest solution to hide the context menu in all needed cases?
 
         // game scene changes: hide it
-        ui.currentGameSceneProperty().addListener(this::handleGameSceneChange);
+        ui.propertyCurrentGameScene().addListener(this::handleGameSceneChange);
 
         // any other mouse button clicked: hide it
         parentScene.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
@@ -126,10 +126,10 @@ public class GameView implements PacManGames_View {
             ui.propertyDebugInfoVisible(),
             ui.theGameClock().pausedProperty(),
             parentScene.heightProperty(),
-            ui.currentGameSceneProperty()
+            ui.propertyCurrentGameScene()
         );
 
-        actionBindings.bind(ACTION_BOOT_SHOW_GAME_VIEW, GLOBAL_ACTION_BINDINGS);
+        actionBindings.bind(ACTION_BOOT_SHOW_PLAY_VIEW, GLOBAL_ACTION_BINDINGS);
         actionBindings.bind(ACTION_ENTER_FULLSCREEN, GLOBAL_ACTION_BINDINGS);
         actionBindings.bind(ACTION_QUIT_GAME_SCENE, GLOBAL_ACTION_BINDINGS);
         actionBindings.bind(ACTION_SHOW_HELP, GLOBAL_ACTION_BINDINGS);
@@ -317,7 +317,7 @@ public class GameView implements PacManGames_View {
         }
 
         if (changing) {
-            ui.currentGameSceneProperty().set(nextGameScene);
+            ui.propertyCurrentGameScene().set(nextGameScene);
         }
     }
 
@@ -382,11 +382,11 @@ public class GameView implements PacManGames_View {
     private void configureMiniGameView() {
         miniGameView.backgroundColorProperty().bind(ui.propertyCanvasBackgroundColor());
         miniGameView.debugProperty().bind(ui.propertyDebugInfoVisible());
-        miniGameView.canvasHeightProperty().bind(ui.propertyPipHeight());
-        miniGameView.opacityProperty().bind(ui.propertyPipOpacityPercent().divide(100.0));
+        miniGameView.canvasHeightProperty().bind(ui.propertyMiniViewHeight());
+        miniGameView.opacityProperty().bind(ui.propertyMiniViewOpacityPercent().divide(100.0));
         miniGameView.visibleProperty().bind(Bindings.createObjectBinding(
             () -> ui.propertyMiniViewOn().get() && ui.currentGameSceneIsPlayScene3D(),
-                ui.propertyMiniViewOn(), ui.currentGameSceneProperty()
+                ui.propertyMiniViewOn(), ui.propertyCurrentGameScene()
         ));
     }
 

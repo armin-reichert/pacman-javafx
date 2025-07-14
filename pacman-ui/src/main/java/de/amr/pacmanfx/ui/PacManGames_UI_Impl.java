@@ -14,8 +14,8 @@ import de.amr.pacmanfx.ui._3d.Perspective;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.layout.EditorView;
-import de.amr.pacmanfx.ui.layout.GameView;
 import de.amr.pacmanfx.ui.layout.PacManGames_View;
+import de.amr.pacmanfx.ui.layout.PlayView;
 import de.amr.pacmanfx.ui.layout.StartPagesView;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.GameClock;
@@ -53,24 +53,29 @@ public class PacManGames_UI_Impl implements GameUI {
     // package-visible to allow access to GameUI interface
     static PacManGames_UI_Impl THE_ONE;
 
-    ObjectProperty<Color> pyCanvasBgColor = new SimpleObjectProperty<>(Color.BLACK);
-    BooleanProperty pyCanvasFontSmoothing = new SimpleBooleanProperty(false);
-    BooleanProperty pyCanvasImageSmoothing = new SimpleBooleanProperty(false);
-    BooleanProperty pyDebugInfoVisible = new SimpleBooleanProperty(false);
-    IntegerProperty pyPipHeight = new SimpleIntegerProperty(400);
-    BooleanProperty pyMiniViewOn = new SimpleBooleanProperty(false);
-    IntegerProperty pyPipOpacityPercent = new SimpleIntegerProperty(69);
-    IntegerProperty pySimulationSteps = new SimpleIntegerProperty(1);
-    BooleanProperty py3DAxesVisible = new SimpleBooleanProperty(false);
-    ObjectProperty<DrawMode> py3DDrawMode = new SimpleObjectProperty<>(DrawMode.FILL);
-    BooleanProperty py3DEnabled = new SimpleBooleanProperty(false);
-    BooleanProperty py3DEnergizerExplodes = new SimpleBooleanProperty(true);
-    ObjectProperty<Color> py3DFloorColor = new SimpleObjectProperty<>(Color.rgb(20,20,20));
-    ObjectProperty<Color> py3DLightColor = new SimpleObjectProperty<>(Color.WHITE);
-    BooleanProperty py3DPacLightEnabled = new SimpleBooleanProperty(true);
-    ObjectProperty<Perspective.ID> py3DPerspective = new SimpleObjectProperty<>(Perspective.ID.TRACK_PLAYER);
-    DoubleProperty py3DWallHeight = new SimpleDoubleProperty(Settings3D.OBSTACLE_3D_BASE_HEIGHT);
-    DoubleProperty py3DWallOpacity = new SimpleDoubleProperty(1.0);
+    final ObjectProperty<Color> propertyCanvasBgColor          = new SimpleObjectProperty<>(Color.BLACK);
+    final BooleanProperty propertyCanvasFontSmoothing          = new SimpleBooleanProperty(false);
+    final BooleanProperty propertyCanvasImageSmoothing         = new SimpleBooleanProperty(false);
+    final BooleanProperty propertyDebugInfoVisible             = new SimpleBooleanProperty(false);
+    final IntegerProperty propertyMiniViewHeight               = new SimpleIntegerProperty(400);
+    final BooleanProperty propertyMiniViewOn                   = new SimpleBooleanProperty(false);
+    final IntegerProperty propertyPipOpacityPercent            = new SimpleIntegerProperty(69);
+    final IntegerProperty propertySimulationSteps              = new SimpleIntegerProperty(1);
+    final BooleanProperty property3DAxesVisible                = new SimpleBooleanProperty(false);
+    final ObjectProperty<DrawMode> property3DDrawMode          = new SimpleObjectProperty<>(DrawMode.FILL);
+    final BooleanProperty property3DEnabled                    = new SimpleBooleanProperty(false);
+    final BooleanProperty property3DEnergizerExplodes          = new SimpleBooleanProperty(true);
+    final ObjectProperty<Color> property3DFloorColor           = new SimpleObjectProperty<>(Color.rgb(20,20,20));
+    final ObjectProperty<Color> property3DLightColor           = new SimpleObjectProperty<>(Color.WHITE);
+    final BooleanProperty property3DPacLightEnabled            = new SimpleBooleanProperty(true);
+    final ObjectProperty<Perspective.ID> property3DPerspective = new SimpleObjectProperty<>(Perspective.ID.TRACK_PLAYER);
+    final DoubleProperty property3DWallHeight                  = new SimpleDoubleProperty(Settings3D.OBSTACLE_3D_BASE_HEIGHT);
+    final DoubleProperty property3DWallOpacity                 = new SimpleDoubleProperty(1.0);
+
+    // private properties
+    private final ObjectProperty<PacManGames_View> propertyCurrentView = new SimpleObjectProperty<>();
+    private final ObjectProperty<GameScene> propertyCurrentGameScene = new SimpleObjectProperty<>();
+    private final BooleanProperty propertyMuted = new SimpleBooleanProperty(false);
 
     private final PacManGames_Assets theAssets;
     private final GameClock          theGameClock;
@@ -83,13 +88,10 @@ public class PacManGames_UI_Impl implements GameUI {
 
     private final Map<String, PacManGames_UIConfig> configByGameVariant = new HashMap<>();
 
-    private final ObjectProperty<PacManGames_View> currentViewProperty = new SimpleObjectProperty<>();
-    private final ObjectProperty<GameScene> currentGameSceneProperty   = new SimpleObjectProperty<>();
-    private final BooleanProperty mutedProperty                        = new SimpleBooleanProperty(false);
 
     private final StackPane rootPane = new StackPane();
     private final StartPagesView startPagesView;
-    private final GameView gameView;
+    private final PlayView playView;
     private       EditorView editorView; // created on first access
     private final StatusIconBox iconBox;
 
@@ -113,15 +115,15 @@ public class PacManGames_UI_Impl implements GameUI {
 
         startPagesView = new StartPagesView(this);
         startPagesView.setBackground(theAssets().background("background.scene"));
-        gameView = new GameView(this, gameContext, mainScene);
+        playView = new PlayView(this, gameContext, mainScene);
 
         rootPane.getChildren().add(startPagesView.rootNode());
 
         // "paused" icon appears on center of game view
         FontIcon iconPaused = FontIcon.of(FontAwesomeSolid.PAUSE, 80, STATUS_ICON_COLOR);
         iconPaused.visibleProperty().bind(Bindings.createBooleanBinding(
-            () -> currentView() == gameView && theGameClock.isPaused(),
-            currentViewProperty, theGameClock.pausedProperty()));
+            () -> currentView() == playView && theGameClock.isPaused(),
+                propertyCurrentView, theGameClock.pausedProperty()));
         StackPane.setAlignment(iconPaused, Pos.CENTER);
 
         // status icon box appears at bottom-left corner of any view except editor
@@ -151,9 +153,9 @@ public class PacManGames_UI_Impl implements GameUI {
                 currentView().handleKeyboardInput(gameContext);
             }
         });
-        currentViewProperty.addListener((py, oldView, newView) -> handleViewChange(oldView, newView));
+        propertyCurrentView.addListener((py, oldView, newView) -> handleViewChange(oldView, newView));
 
-        rootPane.backgroundProperty().bind(currentGameSceneProperty().map(gameScene ->
+        rootPane.backgroundProperty().bind(propertyCurrentGameScene().map(gameScene ->
             currentGameSceneIsPlayScene3D()
                 ? theAssets().get("background.play_scene3d")
                 : theAssets().get("background.scene"))
@@ -174,7 +176,7 @@ public class PacManGames_UI_Impl implements GameUI {
             config.createGameScenes(this);
             config.gameScenes().forEach(scene -> {
                 if (scene instanceof GameScene2D gameScene2D) {
-                    gameScene2D.debugInfoVisibleProperty().bind(pyDebugInfoVisible);
+                    gameScene2D.debugInfoVisibleProperty().bind(propertyDebugInfoVisible);
                 }
             });
             Logger.info("Game scenes for game variant {} created", gameVariant);
@@ -219,7 +221,7 @@ public class PacManGames_UI_Impl implements GameUI {
 
     private void drawGameView() {
         try {
-            gameView.draw();
+            playView.draw();
         } catch (Throwable x) {
             ka_tas_trooo_phe(x);
         }
@@ -244,58 +246,41 @@ public class PacManGames_UI_Impl implements GameUI {
     // GameUI interface implementation
     // ----------------------------------------------------------------------------------------------------
 
-    public ObjectProperty<Color>          propertyCanvasBackgroundColor() { return pyCanvasBgColor; }
-    public BooleanProperty                propertyCanvasFontSmoothing() { return pyCanvasFontSmoothing; }
-    public BooleanProperty                propertyCanvasImageSmoothing(){ return pyCanvasImageSmoothing; }
-    public BooleanProperty                propertyDebugInfoVisible(){ return pyDebugInfoVisible; }
-    public IntegerProperty                propertyPipHeight(){ return pyPipHeight; }
-    public BooleanProperty                propertyMiniViewOn(){ return pyMiniViewOn; }
-    public IntegerProperty                propertyPipOpacityPercent(){ return pyPipOpacityPercent; }
-    public IntegerProperty                propertySimulationSteps(){ return pySimulationSteps; }
-    public BooleanProperty                property3DAxesVisible(){ return py3DAxesVisible; }
-    public ObjectProperty<DrawMode>       property3DDrawMode(){ return py3DDrawMode; }
-    public BooleanProperty                property3DEnabled(){ return py3DEnabled; }
-    public BooleanProperty                property3DEnergizerExplodes(){ return py3DEnergizerExplodes; }
-    public ObjectProperty<Color>          property3DFloorColor(){ return py3DFloorColor; }
-    public ObjectProperty<Color>          property3DLightColor(){ return py3DLightColor; }
-    public BooleanProperty                property3DPacLightEnabled(){ return py3DPacLightEnabled; }
-    public ObjectProperty<Perspective.ID> property3DPerspective(){ return py3DPerspective; }
-    public DoubleProperty                 property3DWallHeight(){ return py3DWallHeight; }
-    public DoubleProperty                 property3DWallOpacity(){ return py3DWallOpacity; }
-
-    @Override
-    public ObjectProperty<GameScene> currentGameSceneProperty() {
-        return currentGameSceneProperty;
+    @Override public ObjectProperty<Color>            propertyCanvasBackgroundColor() { return propertyCanvasBgColor; }
+    @Override public BooleanProperty                  propertyCanvasFontSmoothing() { return propertyCanvasFontSmoothing; }
+    @Override public BooleanProperty                  propertyCanvasImageSmoothing(){ return propertyCanvasImageSmoothing; }
+    @Override public ObjectProperty<GameScene>        propertyCurrentGameScene() {
+        return propertyCurrentGameScene;
     }
-
-    @Override
-    public Optional<GameScene> currentGameScene() {
-        return Optional.ofNullable(currentGameSceneProperty.get());
+    @Override public ObjectProperty<PacManGames_View> propertyCurrentView() {
+        return propertyCurrentView;
     }
+    @Override public BooleanProperty                  propertyDebugInfoVisible(){ return propertyDebugInfoVisible; }
+    @Override public IntegerProperty                  propertyMiniViewHeight(){ return propertyMiniViewHeight; }
+    @Override public BooleanProperty                  propertyMiniViewOn(){ return propertyMiniViewOn; }
+    @Override public IntegerProperty                  propertyMiniViewOpacityPercent(){ return propertyPipOpacityPercent; }
+    @Override public BooleanProperty                  propertyMuted() { return propertyMuted; }
+    @Override public IntegerProperty                  propertySimulationSteps(){ return propertySimulationSteps; }
+    @Override public BooleanProperty                  property3DAxesVisible(){ return property3DAxesVisible; }
+    @Override public ObjectProperty<DrawMode>         property3DDrawMode(){ return property3DDrawMode; }
+    @Override public BooleanProperty                  property3DEnabled(){ return property3DEnabled; }
+    @Override public BooleanProperty                  property3DEnergizerExplodes(){ return property3DEnergizerExplodes; }
+    @Override public ObjectProperty<Color>            property3DFloorColor(){ return property3DFloorColor; }
+    @Override public ObjectProperty<Color>            property3DLightColor(){ return property3DLightColor; }
+    @Override public BooleanProperty                  property3DPacLightEnabled(){ return property3DPacLightEnabled; }
+    @Override public ObjectProperty<Perspective.ID>   property3DPerspective(){ return property3DPerspective; }
+    @Override public DoubleProperty                   property3DWallHeight(){ return property3DWallHeight; }
+    @Override public DoubleProperty                   property3DWallOpacity(){ return property3DWallOpacity; }
 
-    @Override
-    public ObjectProperty<PacManGames_View> currentViewProperty() {
-        return currentViewProperty;
+    @Override public Optional<GameScene> currentGameScene() { return Optional.ofNullable(propertyCurrentGameScene.get()); }
+    @Override public PacManGames_View    currentView() {
+        return propertyCurrentView.get();
     }
-
-    @Override
-    public PacManGames_View currentView() {
-        return currentViewProperty.get();
+    @Override public PlayView thePlayView() {
+        return playView;
     }
-
-    @Override
-    public GameView gameView() {
-        return gameView;
-    }
-
-    @Override
-    public Model3DRepository theModel3DRepository() {
+    @Override public Model3DRepository   theModel3DRepository() {
         return theModel3DRepository;
-    }
-
-    @Override
-    public BooleanProperty mutedProperty() {
-        return mutedProperty;
     }
 
     @Override
@@ -324,7 +309,7 @@ public class PacManGames_UI_Impl implements GameUI {
         PacManGames_UIConfig newConfig = uiConfig(gameVariant);
         Logger.info("Loading assets for game variant {}", gameVariant);
         newConfig.storeAssets(theAssets());
-        newConfig.soundManager().mutedProperty().bind(mutedProperty);
+        newConfig.soundManager().mutedProperty().bind(propertyMuted);
 
         Image appIcon = theAssets.image(newConfig.assetNamespace() + ".app_icon");
         if (appIcon != null) {
@@ -333,7 +318,7 @@ public class PacManGames_UI_Impl implements GameUI {
             Logger.error("Could not find app icon for current game variant {}", gameVariant);
         }
 
-        gameView.canvasContainer().roundedBorderProperty().set(newConfig.hasGameCanvasRoundedBorder());
+        playView.canvasContainer().roundedBorderProperty().set(newConfig.hasGameCanvasRoundedBorder());
 
         // this triggers a game event and the event handlers:
         theGameContext.theGameController().selectGameVariant(gameVariant);
@@ -341,12 +326,12 @@ public class PacManGames_UI_Impl implements GameUI {
 
     @Override
     public void show() {
-        currentViewProperty.set(startPagesView);
+        propertyCurrentView.set(startPagesView);
         startPagesView.currentStartPage().ifPresent(startPage -> startPage.layoutRoot().requestFocus());
-        gameView.dashboard().init(this);
+        playView.dashboard().init(this);
 
-        iconBox.iconMuted().visibleProperty().bind(mutedProperty());
-        iconBox.icon3D().visibleProperty().bind(py3DEnabled);
+        iconBox.iconMuted().visibleProperty().bind(propertyMuted());
+        iconBox.icon3D().visibleProperty().bind(property3DEnabled);
         iconBox.iconAutopilot().visibleProperty().bind(theGameContext().propertyUsingAutopilot());
         iconBox.iconImmune().visibleProperty().bind(theGameContext.propertyImmunity());
 
@@ -362,7 +347,7 @@ public class PacManGames_UI_Impl implements GameUI {
             theSound().stopAll();
             theGameClock.stop();
             getEditorViewCreateIfNeeded().editor().start(theStage);
-            currentViewProperty.set(getEditorViewCreateIfNeeded());
+            propertyCurrentView.set(getEditorViewCreateIfNeeded());
         } else {
             Logger.info("Editor view cannot be opened, game is playing");
         }
@@ -370,12 +355,12 @@ public class PacManGames_UI_Impl implements GameUI {
 
     @Override
     public void showFlashMessageSec(double seconds, String message, Object... args) {
-        gameView.flashMessageLayer().showMessage(String.format(message, args), seconds);
+        playView.flashMessageLayer().showMessage(String.format(message, args), seconds);
     }
 
     @Override
-    public void showGameView() {
-        currentViewProperty.set(gameView);
+    public void showPlayView() {
+        propertyCurrentView.set(playView);
     }
 
     @Override
@@ -383,8 +368,8 @@ public class PacManGames_UI_Impl implements GameUI {
         theGameClock.stop();
         theGameClock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
         theSound().stopAll();
-        gameView.dashboard().setVisible(false);
-        currentViewProperty.set(startPagesView);
+        playView.dashboard().setVisible(false);
+        propertyCurrentView.set(startPagesView);
         startPagesView.currentStartPage().ifPresent(startPage -> startPage.layoutRoot().requestFocus());
     }
 
@@ -394,7 +379,7 @@ public class PacManGames_UI_Impl implements GameUI {
     }
 
     @Override
-    public StartPagesView startPagesView() { return startPagesView; }
+    public StartPagesView theStartPagesView() { return startPagesView; }
 
     @Override
     public void terminateApp() {
@@ -438,7 +423,7 @@ public class PacManGames_UI_Impl implements GameUI {
 
     @Override
     public void updateGameScene(boolean reloadCurrent) {
-        gameView.updateGameScene(reloadCurrent);
+        playView.updateGameScene(reloadCurrent);
     }
 
     // UI configuration

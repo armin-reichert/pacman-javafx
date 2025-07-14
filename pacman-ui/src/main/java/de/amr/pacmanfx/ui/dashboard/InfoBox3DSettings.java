@@ -56,8 +56,8 @@ public class InfoBox3DSettings extends InfoBox {
         addLabeledValue("Viewport Size", this::sceneViewportSizeInfo);
         addLabeledValue("Scene Size",    this::sceneSizeInfo);
         cbPiPOn              = addCheckBox("Picture-In-Picture", ui.propertyMiniViewOn());
-        sliderPiPSceneHeight = addSlider("- Height", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, ui.propertyPipHeight().get(), false, false);
-        sliderPiPOpacity     = addSlider("- Opacity", 0, 100, ui.propertyPipOpacityPercent().get(), false, false);
+        sliderPiPSceneHeight = addSlider("- Height", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, ui.propertyMiniViewHeight().get(), false, false);
+        sliderPiPOpacity     = addSlider("- Opacity", 0, 100, ui.propertyMiniViewOpacityPercent().get(), false, false);
         sliderWallHeight     = addSlider("Obstacle Height", 0, 16, ui.property3DWallHeight().get(), false, false);
         sliderWallOpacity    = addSlider("Wall Opacity", 0, 1, ui.property3DWallOpacity().get(), false, false);
         cbEnergizerExplodes  = addCheckBox("Energizer Explosion", ui.property3DEnergizerExplodes());
@@ -68,8 +68,8 @@ public class InfoBox3DSettings extends InfoBox {
         setTooltip(sliderPiPSceneHeight, sliderPiPSceneHeight.valueProperty(), "%.0f px");
         setTooltip(sliderPiPOpacity, sliderPiPOpacity.valueProperty(), "%.0f %%");
 
-        setEditor(sliderPiPSceneHeight, ui.propertyPipHeight());
-        setEditor(sliderPiPOpacity, ui.propertyPipOpacityPercent());
+        setEditor(sliderPiPSceneHeight, ui.propertyMiniViewHeight());
+        setEditor(sliderPiPOpacity, ui.propertyMiniViewOpacityPercent());
         setEditor(sliderWallHeight, ui.property3DWallHeight());
         setEditor(sliderWallOpacity, ui.property3DWallOpacity());
         setEditor(comboPerspectives, ui.property3DPerspective());
@@ -81,8 +81,8 @@ public class InfoBox3DSettings extends InfoBox {
 
     private void updateControlsFromProperties(GameUI ui) {
         comboPerspectives.setValue(ui.property3DPerspective().get());
-        sliderPiPSceneHeight.setValue(ui.propertyPipHeight().get());
-        sliderPiPOpacity.setValue(ui.propertyPipOpacityPercent().get());
+        sliderPiPSceneHeight.setValue(ui.propertyMiniViewHeight().get());
+        sliderPiPOpacity.setValue(ui.propertyMiniViewOpacityPercent().get());
         sliderWallHeight.setValue(ui.property3DWallHeight().get());
         sliderWallOpacity.setValue(ui.property3DWallOpacity().get());
         cbUsePlayScene3D.setSelected(ui.property3DEnabled().get());

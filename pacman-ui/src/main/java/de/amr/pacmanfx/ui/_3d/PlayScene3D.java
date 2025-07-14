@@ -141,7 +141,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         miImmunity.selectedProperty().bindBidirectional(ui.theGameContext().propertyImmunity());
 
         var miMuted = new CheckMenuItem(ui.theAssets().text("muted"));
-        miMuted.selectedProperty().bindBidirectional(ui.mutedProperty());
+        miMuted.selectedProperty().bindBidirectional(ui.propertyMuted());
 
         var miQuit = new MenuItem(ui.theAssets().text("quit"));
         miQuit.setOnAction(e -> ACTION_QUIT_GAME_SCENE.executeIfEnabled(ui));
