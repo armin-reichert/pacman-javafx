@@ -37,7 +37,7 @@ import static java.util.function.Predicate.not;
  */
 public class GameLevel {
 
-    private static final byte[][] DEFAULT_HOUSE = {
+    private static final byte[][] DEFAULT_HOUSE_ROWS = {
         { ARC_NW.code(), WALL_H.code(), WALL_H.code(), DOOR.code(), DOOR.code(), WALL_H.code(), WALL_H.code(), ARC_NE.code() },
         { WALL_V.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), WALL_V.code()   },
         { WALL_V.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), WALL_V.code()   },
@@ -165,8 +165,8 @@ public class GameLevel {
     }
 
     private void findHouse() {
-        Vector2i minTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE);
-        Vector2i maxTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE);
+        Vector2i minTile = worldMap.getTerrainTileProperty(POS_HOUSE_MIN_TILE);
+        Vector2i maxTile = worldMap.getTerrainTileProperty(POS_HOUSE_MAX_TILE);
         if (minTile != null && maxTile != null) {
             Vector2i leftDoorTile = minTile.plus(3, 0);
             Vector2i rightDoorTile = minTile.plus(4, 0);
@@ -175,24 +175,33 @@ public class GameLevel {
     }
 
     /**
-     * The ghost house is not explicitly stored in the world map, only its position. Therefore, we have to create an
-     * obstacle representing the house walls such that collision detection works.
+     * The ghost house is stored in the world map using properties "pos_house_min" (left upper tile) and "pos_house_max"
+     * (right lower tile). We add the corresponding map content here such that collision of actors with house walls
+     * and doors is working. The obstacle detection algorithm will then also detect the house and create a closed obstacle.
      */
     public void addHouse() {
-        if (!worldMap.properties(LayerID.TERRAIN).containsKey(WorldMapProperty.POS_HOUSE_MIN_TILE)) {
+        if (!worldMap.properties(LayerID.TERRAIN).containsKey(POS_HOUSE_MIN_TILE)) {
             Logger.warn("No house min tile found in map!");
-            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_HOUSE_MIN_TILE,
-                    WorldMapFormatter.formatTile(DEFAULT_HOUSE_MIN_TILE));
+            worldMap.properties(LayerID.TERRAIN).put(
+                    POS_HOUSE_MIN_TILE,
+                    WorldMapFormatter.formatTile(DEFAULT_HOUSE_MIN_TILE)
+            );
         }
-        if (!worldMap.properties(LayerID.TERRAIN).containsKey(WorldMapProperty.POS_HOUSE_MAX_TILE)) {
+        if (!worldMap.properties(LayerID.TERRAIN).containsKey(POS_HOUSE_MAX_TILE)) {
             Logger.warn("No house max tile found in map!");
-            worldMap.properties(LayerID.TERRAIN).put(WorldMapProperty.POS_HOUSE_MAX_TILE,
-                    WorldMapFormatter.formatTile(DEFAULT_HOUSE_MAX_TILE));
+            worldMap.properties(LayerID.TERRAIN).put(
+                    POS_HOUSE_MAX_TILE,
+                    WorldMapFormatter.formatTile(DEFAULT_HOUSE_MAX_TILE)
+            );
         }
-        Vector2i houseMinTile = worldMap.getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE);
-        for (int y = 0; y < DEFAULT_HOUSE.length; ++y) {
-            for (int x = 0; x < DEFAULT_HOUSE[y].length; ++x) {
-                worldMap.setContent(LayerID.TERRAIN, houseMinTile.y() + y, houseMinTile.x() + x, DEFAULT_HOUSE[y][x]);
+        Vector2i minTile = worldMap.getTerrainTileProperty(POS_HOUSE_MIN_TILE);
+        Vector2i maxTile = worldMap.getTerrainTileProperty(POS_HOUSE_MAX_TILE);
+        Vector2i size = maxTile.minus(minTile).plus(1, 1);
+
+        for (int y = 0; y < size.y(); ++y) {
+            for (int x = 0; x < size.x(); ++x) {
+                byte content = DEFAULT_HOUSE_ROWS[y][x];
+                worldMap.setContent(LayerID.TERRAIN, minTile.y() + y, minTile.x() + x, content);
             }
         }
 
