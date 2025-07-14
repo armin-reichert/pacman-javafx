@@ -47,13 +47,13 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
     public ArcadeMsPacMan_GameRenderer(
         AssetStorage assets,
         PacManGames_UIConfig config,
-        ArcadeMsPacMan_SpriteSheet spriteSheet,
         BrightMazesSpriteSheet brightMazesSpriteSheet,
         Canvas canvas)
     {
         this.assets = requireNonNull(assets);
+        requireNonNull(config);
         this.ctx = requireNonNull(canvas).getGraphicsContext2D();
-        this.spriteSheet = requireNonNull(spriteSheet);
+        this.spriteSheet = (ArcadeMsPacMan_SpriteSheet) config.spriteSheet();
         this.brightMazesSpriteSheet = requireNonNull(brightMazesSpriteSheet);
         this.midwayLogo = config.getAssetNS("logo.midway");
     }
@@ -61,12 +61,12 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
     protected ArcadeMsPacMan_GameRenderer(
         AssetStorage assets,
         PacManGames_UIConfig config,
-        ArcadeMsPacMan_SpriteSheet spriteSheet,
         Canvas canvas)
     {
         this.assets = requireNonNull(assets);
+        requireNonNull(config);
         this.ctx = requireNonNull(canvas).getGraphicsContext2D();
-        this.spriteSheet = requireNonNull(spriteSheet);
+        this.spriteSheet = (ArcadeMsPacMan_SpriteSheet) config.spriteSheet();
         this.midwayLogo = config.getAssetNS("logo.midway");
     }
 
