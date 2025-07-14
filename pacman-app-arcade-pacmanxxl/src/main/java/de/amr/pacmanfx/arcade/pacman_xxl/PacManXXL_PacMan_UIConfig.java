@@ -39,7 +39,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
 import static java.util.Objects.requireNonNull;
 
@@ -153,7 +152,7 @@ public class PacManXXL_PacMan_UIConfig implements PacManGames_UIConfig {
 
     @Override
     public PacManXXL_PacMan_GameRenderer createGameRenderer(Canvas canvas) {
-        return new PacManXXL_PacMan_GameRenderer(spriteSheet(), canvas);
+        return new PacManXXL_PacMan_GameRenderer(ui.theAssets(), spriteSheet(), canvas);
     }
 
     @Override

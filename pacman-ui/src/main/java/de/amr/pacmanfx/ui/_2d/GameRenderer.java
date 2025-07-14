@@ -10,6 +10,7 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HUD;
 import de.amr.pacmanfx.model.actors.Actor;
+import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.model3D.Destroyable;
 import javafx.beans.property.FloatProperty;
 import javafx.scene.canvas.Canvas;
@@ -35,6 +36,8 @@ public interface GameRenderer extends Destroyable {
         ctx.setFill(color);
         ctx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
+
+    AssetStorage assets();
 
     GraphicsContext ctx();
 

@@ -15,6 +15,7 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.MovingBonus;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
+import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
@@ -35,31 +36,43 @@ import static java.util.function.Predicate.not;
 
 public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
 
-    private GraphicsContext ctx;
-    private ArcadeMsPacMan_SpriteSheet spriteSheet;
-    private BrightMazesSpriteSheet brightMazesSpriteSheet;
-    private final FloatProperty scalingPy = new SimpleFloatProperty(1);
+    protected final AssetStorage assets;
+    protected final GraphicsContext ctx;
+    protected ArcadeMsPacMan_SpriteSheet spriteSheet;
+    protected BrightMazesSpriteSheet brightMazesSpriteSheet;
+    protected final FloatProperty scalingPy = new SimpleFloatProperty(1);
 
     public ArcadeMsPacMan_GameRenderer(
+        AssetStorage assets,
         ArcadeMsPacMan_SpriteSheet spriteSheet,
         BrightMazesSpriteSheet brightMazesSpriteSheet,
         Canvas canvas)
     {
-        ctx = requireNonNull(canvas).getGraphicsContext2D();
+        this.assets = requireNonNull(assets);
+        this.ctx = requireNonNull(canvas).getGraphicsContext2D();
         this.spriteSheet = requireNonNull(spriteSheet);
         this.brightMazesSpriteSheet = requireNonNull(brightMazesSpriteSheet);
     }
 
+    protected ArcadeMsPacMan_GameRenderer(
+        AssetStorage assets,
+        ArcadeMsPacMan_SpriteSheet spriteSheet,
+        Canvas canvas)
+    {
+        this.assets = requireNonNull(assets);
+        this.ctx = requireNonNull(canvas).getGraphicsContext2D();
+        this.spriteSheet = requireNonNull(spriteSheet);
+    }
+
     @Override
     public void destroy() {
-        ctx = null;
         spriteSheet = null;
         brightMazesSpriteSheet = null;
     }
 
-    protected ArcadeMsPacMan_GameRenderer(ArcadeMsPacMan_SpriteSheet spriteSheet, Canvas canvas) {
-        this.ctx = requireNonNull(canvas).getGraphicsContext2D();
-        this.spriteSheet = requireNonNull(spriteSheet);
+    @Override
+    public AssetStorage assets() {
+        return assets;
     }
 
     @Override

@@ -158,7 +158,7 @@ public class ArcadePacMan_UIConfig implements PacManGames_UIConfig {
 
     @Override
     public ArcadePacMan_GameRenderer createGameRenderer(Canvas canvas) {
-        return new ArcadePacMan_GameRenderer(spriteSheet(), canvas);
+        return new ArcadePacMan_GameRenderer(ui.theAssets(), spriteSheet(), canvas);
     }
 
     @Override

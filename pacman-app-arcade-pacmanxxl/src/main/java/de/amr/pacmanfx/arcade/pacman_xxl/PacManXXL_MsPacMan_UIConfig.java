@@ -176,7 +176,7 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
 
     @Override
     public PacManXXL_MsPacMan_GameRenderer createGameRenderer(Canvas canvas) {
-        return new PacManXXL_MsPacMan_GameRenderer(spriteSheet(), canvas);
+        return new PacManXXL_MsPacMan_GameRenderer(ui.theAssets(), spriteSheet(), canvas);
     }
 
     @Override

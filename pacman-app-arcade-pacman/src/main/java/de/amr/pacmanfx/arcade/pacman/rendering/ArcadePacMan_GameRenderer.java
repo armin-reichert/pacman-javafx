@@ -12,6 +12,7 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.StaticBonus;
 import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
+import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
@@ -30,13 +31,20 @@ import static java.util.function.Predicate.not;
 
 public class ArcadePacMan_GameRenderer implements SpriteGameRenderer {
 
-    private GraphicsContext ctx;
-    private ArcadePacMan_SpriteSheet spriteSheet;
-    private final FloatProperty scalingPy = new SimpleFloatProperty(1);
+    protected final AssetStorage assets;
+    protected GraphicsContext ctx;
+    protected ArcadePacMan_SpriteSheet spriteSheet;
+    protected final FloatProperty scalingPy = new SimpleFloatProperty(1);
 
-    public ArcadePacMan_GameRenderer(ArcadePacMan_SpriteSheet spriteSheet, Canvas canvas) {
+    public ArcadePacMan_GameRenderer(AssetStorage assets, ArcadePacMan_SpriteSheet spriteSheet, Canvas canvas) {
+        this.assets = requireNonNull(assets);
         this.ctx = requireNonNull(canvas).getGraphicsContext2D();
         this.spriteSheet = requireNonNull(spriteSheet);
+    }
+
+    @Override
+    public AssetStorage assets() {
+        return assets;
     }
 
     @Override

@@ -20,6 +20,7 @@ import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.ui.input.JoypadKeyBinding;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleFloatProperty;
@@ -55,25 +56,36 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
     private final ObjectProperty<Color> backgroundColorProperty = new SimpleObjectProperty<>(Color.BLACK);
     private final FloatProperty scalingProperty = new SimpleFloatProperty(1);
 
-    private GraphicsContext ctx;
+    private final AssetStorage assets;
+    private final GraphicsContext ctx;
     private TengenMsPacMan_SpriteSheet spriteSheet;
     private TengenMsPacMan_MapRepository mapRepository;
     private ColoredMazeSpriteSet mazeSpriteSet;
 
-    public TengenMsPacMan_GameRenderer(TengenMsPacMan_SpriteSheet spriteSheet, TengenMsPacMan_MapRepository mapRepository, Canvas canvas) {
-        ctx = requireNonNull(canvas).getGraphicsContext2D();
-        ctx.setImageSmoothing(false);
+    public TengenMsPacMan_GameRenderer(
+        AssetStorage assets,
+        TengenMsPacMan_SpriteSheet spriteSheet,
+        TengenMsPacMan_MapRepository mapRepository,
+        Canvas canvas)
+    {
+        this.assets = requireNonNull(assets);
+        this.ctx = requireNonNull(canvas).getGraphicsContext2D();
+        this.ctx.setImageSmoothing(false);
         this.spriteSheet = requireNonNull(spriteSheet);
         this.mapRepository = requireNonNull(mapRepository);
     }
 
     @Override
     public void destroy() {
-        ctx = null;
         spriteSheet = null;
         mapRepository = null;
         backgroundColorProperty.unbind();
         scalingProperty.unbind();
+    }
+
+    @Override
+    public AssetStorage assets() {
+        return assets;
     }
 
     @Override

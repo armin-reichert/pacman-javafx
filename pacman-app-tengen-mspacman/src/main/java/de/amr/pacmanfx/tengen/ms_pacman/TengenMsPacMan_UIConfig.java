@@ -331,7 +331,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
 
     @Override
     public TengenMsPacMan_GameRenderer createGameRenderer(Canvas canvas) {
-        var renderer = new TengenMsPacMan_GameRenderer(spriteSheet(), mapRepository, canvas);
+        var renderer = new TengenMsPacMan_GameRenderer(ui.theAssets(), spriteSheet(), mapRepository, canvas);
         renderer.backgroundColorProperty().bind(ui.propertyCanvasBackgroundColor());
         return renderer;
     }
