@@ -29,11 +29,11 @@ import java.util.BitSet;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.createGhost;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.createMsPacMan;
 import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer.blueShadedColor;
-import static de.amr.pacmanfx.ui.GameUI.theUI;
 
 /**
  * @author Armin Reichert
@@ -76,7 +76,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         gameContext().theGame().hud().showLevelCounter(false);
         gameContext().theGame().hud().showLivesCounter(false);
 
-        spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().theUIConfiguration().spriteSheet();
+        spriteSheet = (TengenMsPacMan_SpriteSheet) ui.theUIConfiguration().spriteSheet();
 
         var config = ui.<TengenMsPacMan_UIConfig>theUIConfiguration();
         actionBindings.bind(config.ACTION_ENTER_START_SCREEN, config.TENGEN_MS_PACMAN_ACTION_BINDINGS);
@@ -93,7 +93,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void update() {
-        if (!theUI().theGameClock().isPaused()) {
+        if (!ui.theGameClock().isPaused()) {
             sceneController.update();
         }
     }
@@ -136,7 +136,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                     gr().fillTextAtScaledPosition("WITH", nesPaletteColor(0x20), MARQUEE_X + 12, MARQUEE_Y + 23);
                 }
                 Ghost currentGhost = ghosts[ghostIndex];
-                Color ghostColor = theUI().theAssets().color("tengen.ghost.%d.color.normal.dress".formatted(currentGhost.personality()));
+                Color ghostColor = ui.theAssets().color("tengen.ghost.%d.color.normal.dress".formatted(currentGhost.personality()));
                 gr().fillTextAtScaledPosition(currentGhost.name().toUpperCase(), ghostColor, MARQUEE_X + 44, MARQUEE_Y + 41);
                 for (Ghost ghost : ghosts) { gr().drawActor(ghost); }
             }
@@ -150,9 +150,9 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
             }
         }
 
-        var config = (TengenMsPacMan_UIConfig) theUI().theUIConfiguration();
+        var config = (TengenMsPacMan_UIConfig) ui.theUIConfiguration();
         if (config.propertyJoypadBindingsDisplayed.get()) {
-            gr().drawJoypadKeyBinding(theUI().theJoypad().currentKeyBinding());
+            gr().drawJoypadKeyBinding(ui.theJoypad().currentKeyBinding());
         }
     }
 
@@ -233,10 +233,10 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                     ghost.setVisible(true);
                 }
                 scene.ghostIndex = 0;
-                scene.msPacMan.setAnimations(theUI().theUIConfiguration().createPacAnimations(scene.msPacMan));
+                scene.msPacMan.setAnimations(scene.ui.theUIConfiguration().createPacAnimations(scene.msPacMan));
                 scene.msPacMan.playAnimation(ANIM_PAC_MUNCHING);
                 for (Ghost ghost : scene.ghosts) {
-                    ghost.setAnimations(theUI().theUIConfiguration().createGhostAnimations(ghost));
+                    ghost.setAnimations(scene.ui.theUIConfiguration().createGhostAnimations(ghost));
                     ghost.playAnimation(ANIM_GHOST_NORMAL);
                 }
             }
@@ -272,7 +272,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
             boolean letGhostMarchIn(TengenMsPacMan_IntroScene scene) {
                 Ghost ghost = scene.ghosts[scene.ghostIndex];
-                Logger.debug("Tick {}: {} marching in", theUI().theGameClock().tickCount(), ghost.name());
+                Logger.debug("Tick {}: {} marching in", scene.ui.theGameClock().tickCount(), ghost.name());
                 if (ghost.moveDir() == Direction.LEFT) {
                     if (ghost.x() <= GHOST_STOP_X) {
                         ghost.setX(GHOST_STOP_X);
@@ -311,7 +311,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
                 scene.updateMarqueeState();
-                Logger.debug("Tick {}: {} marching in", theUI().theGameClock().tickCount(), scene.msPacMan.name());
+                Logger.debug("Tick {}: {} marching in", scene.ui.theGameClock().tickCount(), scene.msPacMan.name());
                 scene.msPacMan.move();
                 if (scene.msPacMan.x() <= MS_PAC_MAN_STOP_X) {
                     scene.msPacMan.setSpeed(0);
@@ -319,9 +319,9 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 }
                 if (timer.atSecond(8)) {
                     // start demo level or show options
-                    var tengenGame = (TengenMsPacMan_GameModel) scene.gameContext().theGame();
-                    if (tengenGame.optionsAreInitial()) {
-                        tengenGame.setCanStartNewGame(false); // TODO check this
+                    var game = scene.gameContext().<TengenMsPacMan_GameModel>theGame();
+                    if (game.optionsAreInitial()) {
+                        game.setCanStartNewGame(false); // TODO check this
                         scene.gameContext().theGameController().restart(GameState.STARTING_GAME);
                     } else {
                         scene.gameContext().theGameController().changeGameState(GameState.SETTING_OPTIONS_FOR_START);

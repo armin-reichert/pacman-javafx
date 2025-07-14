@@ -108,6 +108,11 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     }
 
     @Override
+    public GameUI theUI() {
+        return ui;
+    }
+
+    @Override
     public GameContext gameContext() {
         return ui.theGameContext();
     }

@@ -45,6 +45,7 @@ public interface GameUI {
         return new GameUI_Builder(PacManGames_UI_Impl.THE_ONE);
     }
 
+    //TODO property or configuration file?
     interface Settings3D {
         float BONUS_3D_SYMBOL_WIDTH       = TS;
         float BONUS_3D_POINTS_WIDTH       = 1.8f * TS;

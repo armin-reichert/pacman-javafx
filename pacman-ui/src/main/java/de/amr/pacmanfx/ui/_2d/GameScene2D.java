@@ -54,6 +54,11 @@ public abstract class GameScene2D implements GameScene {
     }
 
     @Override
+    public GameUI theUI() {
+        return ui;
+    }
+
+    @Override
     public GameContext gameContext() {
         return ui.theGameContext();
     }

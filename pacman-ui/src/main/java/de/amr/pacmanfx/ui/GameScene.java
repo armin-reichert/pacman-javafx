@@ -13,14 +13,14 @@ import javafx.scene.input.ContextMenuEvent;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.ui.GameUI.theUI;
-
 /**
  * Common interface of all game scenes (2D and 3D).
  *
  * @author Armin Reichert
  */
 public interface GameScene extends DefaultGameEventListener, Destroyable {
+
+    GameUI theUI();
 
     GameContext gameContext();
 
