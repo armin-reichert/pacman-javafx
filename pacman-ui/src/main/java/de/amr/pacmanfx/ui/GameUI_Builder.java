@@ -18,14 +18,14 @@ import static java.util.Objects.requireNonNull;
 
 public class GameUI_Builder {
 
-    private final PacManGames_UI_Impl product;
+    private final PacManGames_UI_Impl workPiece;
     private final Map<String, GameModel> gameModelByVariantName = new HashMap<>();
     private final Map<String, Class<? extends PacManGames_UIConfig>> uiConfigClassByVariantName = new HashMap<>();
     private StartPage[] startPages;
     private DashboardID[] dashboardIDs = new DashboardID[0];
 
-    public GameUI_Builder(PacManGames_UI_Impl product) {
-        this.product = requireNonNull(product);
+    public GameUI_Builder(PacManGames_UI_Impl workPiece) {
+        this.workPiece = requireNonNull(workPiece);
     }
 
     public GameUI_Builder game(String variant, GameModel model, Class<? extends PacManGames_UIConfig> configClass) {
@@ -61,18 +61,18 @@ public class GameUI_Builder {
     }
 
     public GameUI build() {
-        GameContext gameContext = product.theGameContext();
+        GameContext gameContext = workPiece.theGameContext();
         validateConfiguration(gameContext);
-        product.configure(uiConfigClassByVariantName);
+        workPiece.configure(uiConfigClassByVariantName);
         gameModelByVariantName.forEach((variant, model) -> gameContext.theGameController().registerGame(variant, model));
         gameContext.theGameController().setEventsEnabled(true);
-        product.gameView().dashboard().configure(dashboardIDs);
-        for (StartPage startPage : startPages) product.startPagesView().addStartPage(startPage);
-        product.startPagesView().selectStartPage(0);
-        product.startPagesView().currentStartPage()
+        workPiece.gameView().dashboard().configure(dashboardIDs);
+        for (StartPage startPage : startPages) workPiece.startPagesView().addStartPage(startPage);
+        workPiece.startPagesView().selectStartPage(0);
+        workPiece.startPagesView().currentStartPage()
             .map(StartPage::currentGameVariant)
             .ifPresent(gameContext.theGameController()::selectGameVariant);
-        return product;
+        return workPiece;
     }
 
     private void validateConfiguration(GameContext gameContext) {

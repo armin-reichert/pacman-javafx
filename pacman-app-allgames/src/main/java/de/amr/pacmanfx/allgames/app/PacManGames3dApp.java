@@ -68,6 +68,7 @@ public class PacManGames3dApp extends Application {
                 PacManXXL_MsPacMan_UIConfig.class
             )
             .startPages(
+                //TODO accessing the "workpiece" while getting constructed is dubious!
                 new ArcadePacMan_StartPage(theUI(), GameVariant.PACMAN.name()),
                 new ArcadeMsPacMan_StartPage(theUI(), GameVariant.MS_PACMAN.name()),
                 new TengenMsPacMan_StartPage(theUI(), GameVariant.MS_PACMAN_TENGEN.name()),

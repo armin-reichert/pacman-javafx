@@ -243,21 +243,20 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
                 Logger.error("No animation found for {}", pac);
                 return;
             }
-            switch (spriteAnimations.selectedAnimationID()) {
-                case ANIM_PAC_DYING -> {
-                    //TODO: reconsider this
-                    Direction dir = Direction.UP;
-                    if (animation.frameIndex() < 11) {
-                        dir = switch (animation.frameIndex() % 4) {
-                            default -> Direction.DOWN; // start with DOWN
-                            case 1 -> Direction.LEFT;
-                            case 2 -> Direction.UP;
-                            case 3 -> Direction.RIGHT;
-                        };
-                    }
-                    drawMovingActor(pac, dir, (RectShort) animation.currentSprite());
+            if (spriteAnimations.selectedAnimationID().equals(ANIM_PAC_DYING)) {
+                //TODO: reconsider this
+                Direction dir = Direction.UP;
+                if (animation.frameIndex() < 11) {
+                    dir = switch (animation.frameIndex() % 4) {
+                        default -> Direction.DOWN; // start with DOWN
+                        case 1 -> Direction.LEFT;
+                        case 2 -> Direction.UP;
+                        case 3 -> Direction.RIGHT;
+                    };
                 }
-                default -> drawMovingActor(pac, pac.moveDir(), (RectShort) animation.currentSprite());
+                drawMovingActor(pac, dir, (RectShort) animation.currentSprite());
+            } else {
+                drawMovingActor(pac, pac.moveDir(), (RectShort) animation.currentSprite());
             }
         });
     }
