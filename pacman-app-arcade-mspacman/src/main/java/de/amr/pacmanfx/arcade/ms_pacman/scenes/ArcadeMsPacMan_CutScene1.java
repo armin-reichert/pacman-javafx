@@ -16,6 +16,8 @@ import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.animation.SingleSpriteActor;
 
+import java.util.List;
+
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.*;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_PacAnimationMap.PAC_MAN_MUNCHING;
@@ -107,7 +109,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        gr().drawActors(clapperboard, msPacMan, pacMan, inky, pinky, heart);
+        gr().drawActors(List.of(clapperboard, msPacMan, pacMan, inky, pinky, heart));
     }
 
     // Scene controller state machine

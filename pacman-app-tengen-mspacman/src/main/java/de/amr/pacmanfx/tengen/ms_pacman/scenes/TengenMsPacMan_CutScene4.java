@@ -229,7 +229,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     @Override
     public void drawSceneContent() {
         gr().drawVerticalSceneBorders();
-        gr().drawActors(clapperboard, msPacMan, pacMan);
+        gr().drawActors(List.of(clapperboard, msPacMan, pacMan));
         gr().drawActors(juniors);
     }
 }

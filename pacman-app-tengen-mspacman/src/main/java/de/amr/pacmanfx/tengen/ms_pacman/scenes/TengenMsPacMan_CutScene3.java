@@ -16,6 +16,8 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 
+import java.util.List;
+
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
@@ -178,7 +180,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
     public void drawSceneContent() {
         if (!darkness) {
             gr().drawVerticalSceneBorders();
-            gr().drawActors(clapperboard, stork, flyingBag, msPacMan, pacMan);
+            gr().drawActors(List.of(clapperboard, stork, flyingBag, msPacMan, pacMan));
         }
     }
 }

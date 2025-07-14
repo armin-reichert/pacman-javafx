@@ -101,18 +101,6 @@ public interface GameRenderer extends Destroyable {
      *
      * @param actors list of actors
      */
-    @SuppressWarnings("unchecked")
-    default <T extends Actor> void drawActors(T... actors) {
-        for (Actor actor : actors) {
-            drawActor(actor);
-        }
-    }
-
-    /**
-     * Draws the specified actors in sequence.
-     *
-     * @param actors list of actors
-     */
     default <T extends Actor> void drawActors(List<T> actors) {
         for (Actor actor : actors) {
             drawActor(actor);

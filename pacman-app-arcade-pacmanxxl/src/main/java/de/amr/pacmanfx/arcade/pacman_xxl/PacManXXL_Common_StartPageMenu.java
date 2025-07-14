@@ -23,6 +23,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import org.tinylog.Logger;
 
+import java.util.List;
+
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createGhost;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createPac;
@@ -44,7 +46,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
     private static class ChaseAnimation {
         private final GraphicsContext ctx;
         private final Pac pac;
-        private final Ghost[] ghosts;
+        private final List<Ghost> ghosts;
         private SpriteGameRenderer renderer;
         private boolean chasingGhosts;
         private boolean running;
@@ -52,12 +54,12 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         ChaseAnimation(Canvas canvas) {
             ctx = canvas.getGraphicsContext2D();
             pac = createPac(null);
-            ghosts = new Ghost[] {
+            ghosts = List.of(
                 createGhost(null, RED_GHOST_SHADOW),
                 createGhost(null, PINK_GHOST_SPEEDY),
                 createGhost(null, CYAN_GHOST_BASHFUL),
                 createGhost(null, ORANGE_GHOST_POKEY)
-            };
+            );
         }
 
         void start() {
@@ -83,7 +85,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         void update() {
             if (!running) return;
 
-            if (ghosts[3].x() < -4 * TS && !chasingGhosts) {
+            if (ghosts.get(3).x() < -4 * TS && !chasingGhosts) {
                 chasingGhosts = true;
                 pac.setMoveAndWishDir(pac.moveDir().opposite());
                 pac.setX(-36 * TS);
@@ -109,10 +111,10 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
             }
             else if (chasingGhosts) {
                 for (int i = 0; i < 4; ++i) {
-                    if (Math.abs(pac.x() - ghosts[i].x()) < 1) {
-                        ghosts[i].selectAnimation(ANIM_GHOST_NUMBER, i);
+                    if (Math.abs(pac.x() - ghosts.get(i).x()) < 1) {
+                        ghosts.get(i).selectAnimation(ANIM_GHOST_NUMBER, i);
                         if (i > 0) {
-                            ghosts[i-1].setVisible(false);
+                            ghosts.get(i-1).setVisible(false);
                         }
                     }
                 }

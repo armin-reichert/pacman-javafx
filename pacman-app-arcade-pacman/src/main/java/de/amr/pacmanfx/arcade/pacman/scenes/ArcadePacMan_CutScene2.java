@@ -16,6 +16,8 @@ import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import org.tinylog.Logger;
 
+import java.util.List;
+
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createGhost;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createPac;
@@ -139,7 +141,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     public void drawSceneContent() {
         gr().drawSpriteScaled((RectShort) nailDressRaptureAnimation.currentSprite(),
                 tiles_to_px(14), tiles_to_px(19) + 3);
-        gr().drawActors(blinky, pac);
+        gr().drawActors(List.of(blinky, pac));
     }
 
     @Override

@@ -25,6 +25,7 @@ import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import java.util.BitSet;
+import java.util.List;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
@@ -55,7 +56,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     private final BitSet marqueeState = new BitSet(NUM_BULBS);
     private Actor presentsText;
     private Pac msPacMan;
-    private Ghost[] ghosts;
+    private List<Ghost> ghosts;
     private int ghostIndex;
     private int waitBeforeRising;
     private boolean dark;
@@ -135,7 +136,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 if (ghostIndex == 0) {
                     gr().fillTextAtScaledPosition("WITH", nesPaletteColor(0x20), MARQUEE_X + 12, MARQUEE_Y + 23);
                 }
-                Ghost currentGhost = ghosts[ghostIndex];
+                Ghost currentGhost = ghosts.get(ghostIndex);
                 Color ghostColor = ui.theAssets().color("tengen.ghost.%d.color.normal.dress".formatted(currentGhost.personality()));
                 gr().fillTextAtScaledPosition(currentGhost.name().toUpperCase(), ghostColor, MARQUEE_X + 44, MARQUEE_Y + 41);
                 gr().drawActors(ghosts);
@@ -219,12 +220,12 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 scene.msPacMan.setSpeed(SPEED);
                 scene.msPacMan.setVisible(true);
 
-                scene.ghosts = new Ghost[] {
+                scene.ghosts = List.of(
                     createGhost(null, RED_GHOST_SHADOW),
                     createGhost(null, CYAN_GHOST_BASHFUL),
                     createGhost(null, PINK_GHOST_SPEEDY),
                     createGhost(null, ORANGE_GHOST_POKEY)
-                };
+                );
                 for (Ghost ghost : scene.ghosts) {
                     ghost.setPosition(TS * 33, ACTOR_Y);
                     ghost.setMoveAndWishDir(Direction.LEFT);
@@ -271,7 +272,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
             }
 
             boolean letGhostMarchIn(TengenMsPacMan_IntroScene scene) {
-                Ghost ghost = scene.ghosts[scene.ghostIndex];
+                Ghost ghost = scene.ghosts.get(scene.ghostIndex);
                 Logger.debug("Tick {}: {} marching in", scene.ui.theGameClock().tickCount(), ghost.name());
                 if (ghost.moveDir() == Direction.LEFT) {
                     if (ghost.x() <= GHOST_STOP_X) {

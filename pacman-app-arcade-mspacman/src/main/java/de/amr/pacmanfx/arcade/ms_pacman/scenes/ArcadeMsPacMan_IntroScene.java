@@ -19,6 +19,8 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.paint.Color;
 
+import java.util.List;
+
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createGhost;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createMsPacMan;
@@ -54,7 +56,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     private MidwayCopyright midwayCopyright;
     private Marquee marquee;
     private Pac msPacMan;
-    private Ghost[] ghosts;
+    private List<Ghost> ghosts;
     private byte presentedGhostCharacter;
     private int numTicksBeforeRising;
 
@@ -92,12 +94,12 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         marquee.show();
 
         msPacMan = createMsPacMan(null);
-        ghosts = new Ghost[] {
+        ghosts = List.of(
             createGhost(null, RED_GHOST_SHADOW),
             createGhost(null, PINK_GHOST_SPEEDY),
             createGhost(null, CYAN_GHOST_BASHFUL),
             createGhost(null, ORANGE_GHOST_POKEY)
-        };
+        );
         presentedGhostCharacter = RED_GHOST_SHADOW;
         numTicksBeforeRising = 0;
 
@@ -203,7 +205,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
             }
 
             boolean letGhostWalkIn(ArcadeMsPacMan_IntroScene scene) {
-                Ghost ghost = scene.ghosts[scene.presentedGhostCharacter];
+                Ghost ghost = scene.ghosts.get(scene.presentedGhostCharacter);
                 if (ghost.moveDir() == Direction.LEFT) {
                     if (ghost.x() <= STOP_X_GHOST) {
                         ghost.setX(STOP_X_GHOST);

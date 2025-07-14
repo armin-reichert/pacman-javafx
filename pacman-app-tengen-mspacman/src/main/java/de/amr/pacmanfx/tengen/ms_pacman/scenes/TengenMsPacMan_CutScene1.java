@@ -19,6 +19,8 @@ import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.animation.SingleSpriteActor;
 
+import java.util.List;
+
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
@@ -233,6 +235,6 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     @Override
     public void drawSceneContent() {
         gr().drawVerticalSceneBorders();
-        gr().drawActors(clapperboard, msPacMan, pacMan, inky, pinky, heart);
+        gr().drawActors(List.of(clapperboard, msPacMan, pacMan, inky, pinky, heart));
     }
 }
