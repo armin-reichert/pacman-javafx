@@ -175,6 +175,9 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
         public void execute(GameUI ui) {
             var tengenGame = ui.theGameContext().<TengenMsPacMan_GameModel>theGame();
             tengenGame.activatePacBooster(!tengenGame.isBoosterActive());
+            if (tengenGame.isBoosterActive()) {
+                ui.showFlashMessage("Booster!");
+            }
         }
 
         @Override
