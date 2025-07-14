@@ -49,7 +49,6 @@ import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static de.amr.pacmanfx.ui.GameUI.Settings3D;
-import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.uilib.Ufx.*;
 import static java.util.Objects.requireNonNull;
 
@@ -86,6 +85,7 @@ public class GameLevel3D extends Group implements Destroyable {
     private final DoubleProperty  houseBaseHeightProperty = new SimpleDoubleProperty(Settings3D.HOUSE_3D_BASE_HEIGHT);
     private final BooleanProperty houseLightOnProperty = new SimpleBooleanProperty(false);
 
+    private final GameUI ui;
     private final GameLevel gameLevel;
 
     private final AnimationManager animationManager = new AnimationManager();
@@ -129,6 +129,7 @@ public class GameLevel3D extends Group implements Destroyable {
         GameLevel gameLevel,
         WorldMapColorScheme proposedColorScheme)
     {
+        this.ui = requireNonNull(ui);
         requireNonNull(model3DRepository);
         this.gameLevel = requireNonNull(gameLevel);
         requireNonNull(proposedColorScheme);
@@ -170,7 +171,7 @@ public class GameLevel3D extends Group implements Destroyable {
         getChildren().add(levelCounter3D);
 
         for (int i = 0; i < livesCounterShapes.length; ++i) {
-            livesCounterShapes[i] = theUI().theUIConfiguration().createLivesCounterShape3D(model3DRepository);
+            livesCounterShapes[i] = ui.theUIConfiguration().createLivesCounterShape3D(model3DRepository);
         }
         livesCounter3D = new LivesCounter3D(animationManager, livesCounterShapes);
         livesCounter3D.setTranslateX(2 * TS);
@@ -182,21 +183,21 @@ public class GameLevel3D extends Group implements Destroyable {
         livesCounter3D.lookingAroundAnimation().playFromStart();
         getChildren().add(livesCounter3D);
 
-        pac3D = theUI().theUIConfiguration().createPac3D(model3DRepository, animationManager, gameLevel.pac());
+        pac3D = ui.theUIConfiguration().createPac3D(model3DRepository, animationManager, gameLevel.pac());
         pac3D.init();
         getChildren().addAll(pac3D, pac3D.light());
 
-        final String ans = theUI().theUIConfiguration().assetNamespace();
+        final String ans = ui.theUIConfiguration().assetNamespace();
         ghosts3D = gameLevel.ghosts().map(ghost -> {
             var ghostColoring = new GhostColoring(
-                    theUI().theAssets().color("%s.ghost.%d.color.normal.dress".formatted(ans, ghost.personality())),
-                    theUI().theAssets().color("%s.ghost.%d.color.normal.pupils".formatted(ans, ghost.personality())),
-                    theUI().theAssets().color("%s.ghost.%d.color.normal.eyeballs".formatted(ans, ghost.personality())),
-                    theUI().theAssets().color("%s.ghost.color.frightened.dress".formatted(ans)),
-                    theUI().theAssets().color("%s.ghost.color.frightened.pupils".formatted(ans)),
-                    theUI().theAssets().color("%s.ghost.color.frightened.eyeballs".formatted(ans)),
-                    theUI().theAssets().color("%s.ghost.color.flashing.dress".formatted(ans)),
-                    theUI().theAssets().color("%s.ghost.color.flashing.pupils".formatted(ans))
+                    ui.theAssets().color("%s.ghost.%d.color.normal.dress".formatted(ans, ghost.personality())),
+                    ui.theAssets().color("%s.ghost.%d.color.normal.pupils".formatted(ans, ghost.personality())),
+                    ui.theAssets().color("%s.ghost.%d.color.normal.eyeballs".formatted(ans, ghost.personality())),
+                    ui.theAssets().color("%s.ghost.color.frightened.dress".formatted(ans)),
+                    ui.theAssets().color("%s.ghost.color.frightened.pupils".formatted(ans)),
+                    ui.theAssets().color("%s.ghost.color.frightened.eyeballs".formatted(ans)),
+                    ui.theAssets().color("%s.ghost.color.flashing.dress".formatted(ans)),
+                    ui.theAssets().color("%s.ghost.color.flashing.pupils".formatted(ans))
             );
             return new MutatingGhost3D(
                 animationManager,
@@ -359,7 +360,7 @@ public class GameLevel3D extends Group implements Destroyable {
     }
 
     public void onLevelComplete() {
-        theUI().theSound().stopAll();
+        ui.theSound().stopAll();
         animationManager.stopAllAnimations();
         // hide explicitly because level might have been completed using cheat!
         pellets3D.forEach(pellet3D -> pellet3D.shape3D().setVisible(false));
@@ -452,7 +453,7 @@ public class GameLevel3D extends Group implements Destroyable {
         }
         messageView = MessageView.builder()
                 .text(text)
-                .font(theUI().theAssets().arcadeFont(6))
+                .font(ui.theAssets().arcadeFont(6))
                 .borderColor(Color.WHITE)
                 .displaySeconds(displaySeconds)
                 .textColor(Color.YELLOW)
@@ -473,8 +474,8 @@ public class GameLevel3D extends Group implements Destroyable {
             bonus3D.destroy();
         }
         bonus3D = new Bonus3D(animationManager, bonus,
-            theUI().theUIConfiguration().bonusSymbolImage(bonus.symbol()), Settings3D.BONUS_3D_SYMBOL_WIDTH,
-            theUI().theUIConfiguration().bonusValueImage(bonus.symbol()), Settings3D.BONUS_3D_POINTS_WIDTH);
+            ui.theUIConfiguration().bonusSymbolImage(bonus.symbol()), Settings3D.BONUS_3D_SYMBOL_WIDTH,
+            ui.theUIConfiguration().bonusValueImage(bonus.symbol()), Settings3D.BONUS_3D_POINTS_WIDTH);
         mazeGroup.getChildren().add(bonus3D);
         bonus3D.showEdible();
     }
@@ -514,10 +515,10 @@ public class GameLevel3D extends Group implements Destroyable {
         Logger.info("Destroying game level 3D, clearing resources...");
 
         //TODO avoid access to global UI here?
-        theUI().property3DDrawMode().removeListener(this::handleDrawModeChange);
+        ui.property3DDrawMode().removeListener(this::handleDrawModeChange);
         Logger.info("Removed 'draw mode' listener");
 
-        theUI().property3DWallHeight().removeListener(this::handleWallHeightChange);
+        ui.property3DWallHeight().removeListener(this::handleWallHeightChange);
         Logger.info("Removed 'wall height' listener");
 
         if (wallBaseMaterial != null) {
