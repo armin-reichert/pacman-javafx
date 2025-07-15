@@ -290,7 +290,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             case GAME_OVER -> {
                 // After some delay, the "game over" message moves from the center to the right border, wraps around,
                 // appears at the left border and moves to the center again (for non-Arcade maps)
-                if (theTengenGame().mapCategory() != MapCategory.ARCADE) {
+                if (gameContext().<TengenMsPacMan_GameModel>theGame().mapCategory() != MapCategory.ARCADE) {
                     gameContext().theGameLevel().house().ifPresent(house -> {
                         float startX = house.centerPositionUnderHouse().x();
                         float wrappingX = sizeInPx().x();
@@ -469,32 +469,29 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         actorsByZ.clear();
         gameContext().theGameLevel().bonus().map(BonusEntity::actor).ifPresent(actorsByZ::add);
         actorsByZ.add(gameContext().theGameLevel().pac());
-        ghostsByZ().forEach(actorsByZ::add);
+        ghostsByZ(gameContext().theGameLevel()).forEach(actorsByZ::add);
         renderer().drawActors(actorsByZ);
-        actorsByZ.clear();
 
         ctx().restore();
     }
 
     @Override
     protected void drawDebugInfo() {
-        ctx().save();
         renderer().drawTileGrid(UNSCALED_CANVAS_WIDTH, UNSCALED_CANVAS_HEIGHT, Color.LIGHTGRAY);
+        ctx().save();
+        ctx().translate(scaled(2 * TS), 0);
+        ctx().setFill(DEBUG_TEXT_FILL);
+        ctx().setFont(DEBUG_TEXT_FONT);
+        ctx().fillText("%s %d".formatted(gameContext().theGameState(), gameContext().theGameState().timer().tickCount()), 0, scaled(3 * TS));
         if (gameContext().optGameLevel().isPresent()) {
-            ctx().translate(scaled(2 * TS), 0);
-            ctx().setFill(DEBUG_TEXT_FILL);
-            ctx().setFont(DEBUG_TEXT_FONT);
-            ctx().fillText("%s %d".formatted(gameContext().theGameState(), gameContext().theGameState().timer().tickCount()), 0, scaled(3 * TS));
             renderer().drawMovingActorInfo(gameContext().theGameLevel().pac());
-            ghostsByZ().forEach(renderer()::drawMovingActorInfo);
+            ghostsByZ(gameContext().theGameLevel()).forEach(renderer()::drawMovingActorInfo);
         }
         ctx().restore();
     }
 
-    private TengenMsPacMan_GameModel theTengenGame() { return gameContext().theGame(); }
-
-    private Stream<Ghost> ghostsByZ() {
-        return Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW).map(gameContext().theGameLevel()::ghost);
+    private Stream<Ghost> ghostsByZ(GameLevel gameLevel) {
+        return Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW).map(gameLevel::ghost);
     }
 
     private Vector2f currentMessagePosition() {
@@ -510,7 +507,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     private void updateHUD() {
-        TengenMsPacMan_HUD hud = theTengenGame().theHUD();
+        TengenMsPacMan_HUD hud = gameContext().<TengenMsPacMan_GameModel>theGame().theHUD();
         int numLives = gameContext().theGame().lifeCount() - 1;
         // As long as Pac-Man is still invisible on start, he is shown as an additional entry in the lives counter
         if (gameContext().theGameState() == GameState.STARTING_GAME && !gameContext().theGameLevel().pac().isVisible()) {
@@ -521,7 +518,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
         //TODO check demo level behavior in emulator. Are there demo levels for non-ARCADE maps at all?
         TengenMsPacMan_LevelCounter levelCounter = hud.theLevelCounter();
-        if (theTengenGame().mapCategory() == MapCategory.ARCADE
+        if (gameContext().<TengenMsPacMan_GameModel>theGame().mapCategory() == MapCategory.ARCADE
             || gameContext().optGameLevel().isEmpty()
             || gameContext().theGameLevel().isDemoLevel()) {
             levelCounter.setDisplayedLevelNumber(0); // no level number boxes for ARCADE maps or when level not yet created
