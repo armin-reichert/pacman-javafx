@@ -10,7 +10,6 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
@@ -42,8 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.isOneOf;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_MEDIUM;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_SHORT;
@@ -359,23 +357,23 @@ public class PlayScene3D implements GameScene, SubSceneContent {
 
     @Override
     public void onLevelStarted(GameEvent event) {
-        requireNonNull(gameContext().theGameLevel()); // just to be sure nothing bad happened
-        setActionBindings();
+        if (theGameContext().optGameLevel().isEmpty()) {
+            Logger.error("No game level exists on level start! WTF?");
+            return;
+        }
+        final GameLevel gameLevel = gameContext().theGameLevel();
         if (gameLevel3D == null) {
             replaceGameLevel3D();
         }
-        perspectiveManager.initPerspective();
-        fadeInSubScene();
         switch (gameContext().theGameState()) {
             case STARTING_GAME -> {
-                if (!gameContext().theGameLevel().isDemoLevel()) {
-                    if (gameContext().theGameLevel().house().isEmpty()) {
+                if (!gameLevel.isDemoLevel()) {
+                    if (gameLevel.house().isEmpty()) {
                         Logger.error("No house found in this game level! WTF?");
-                    }
-                    gameContext().theGameLevel().house().ifPresent(house -> {
-                        Vector2f messageCenter = house.centerPositionUnderHouse();
+                    } else {
+                        Vector2f messageCenter = gameLevel.house().get().centerPositionUnderHouse();
                         gameLevel3D.showAnimatedMessage("READY!", 2.5f, messageCenter.x(), messageCenter.y());
-                    });
+                    }
                     setPlayerSteeringActionBindings();
                 }
             }
@@ -383,10 +381,13 @@ public class PlayScene3D implements GameScene, SubSceneContent {
                 replaceGameLevel3D(); //TODO check when to destroy previous level
                 gameLevel3D.livesCounter3D().lookingAroundAnimation().playFromStart();
                 gameLevel3D.energizers3D().forEach(energizer3D -> energizer3D.pumpingAnimation().playFromStart());
-                showLevelTestMessage(gameContext().theGameLevel().number());
+                showLevelTestMessage(gameLevel.number());
             }
             default -> Logger.error("Unexpected game state '{}' on level start", gameContext().theGameState());
         }
+        perspectiveManager.initPerspective();
+        setActionBindings();
+        fadeInSubScene();
     }
 
     @Override
@@ -394,15 +395,17 @@ public class PlayScene3D implements GameScene, SubSceneContent {
         if (gameContext().optGameLevel().isEmpty()) {
             return;
         }
+        final GameLevel gameLevel = gameContext().theGameLevel();
         if (gameLevel3D == null) {
             replaceGameLevel3D();
         }
-        gameContext().theGameLevel().pac().show();
-        gameContext().theGameLevel().ghosts().forEach(Ghost::show);
+        gameLevel.pac().show();
+        gameLevel.ghosts().forEach(Ghost::show);
+
         gameLevel3D.pac3D().init();
-        gameLevel3D.pac3D().update(gameContext().theGameLevel());
-        gameLevel3D.pellets3D().forEach(pellet -> pellet.shape3D().setVisible(!gameContext().theGameLevel().tileContainsEatenFood(pellet.tile())));
-        gameLevel3D.energizers3D().forEach(energizer -> energizer.shape3D().setVisible(!gameContext().theGameLevel().tileContainsEatenFood(energizer.tile())));
+        gameLevel3D.pac3D().update(gameLevel);
+        gameLevel3D.pellets3D().forEach(pellet -> pellet.shape3D().setVisible(!gameLevel.tileContainsEatenFood(pellet.tile())));
+        gameLevel3D.energizers3D().forEach(energizer -> energizer.shape3D().setVisible(!gameLevel.tileContainsEatenFood(energizer.tile())));
         if (isOneOf(gameContext().theGameState(), GameState.HUNTING, GameState.GHOST_DYING)) { //TODO check this
             gameLevel3D.energizers3D()
                 .filter(energizer3D -> energizer3D.shape3D().isVisible())
@@ -410,12 +413,12 @@ public class PlayScene3D implements GameScene, SubSceneContent {
         }
 
         if (gameContext().theGameState() == GameState.HUNTING) {
-            if (gameContext().theGameLevel().pac().powerTimer().isRunning()) {
+            if (gameLevel.pac().powerTimer().isRunning()) {
                 ui.theSound().loop(SoundID.PAC_MAN_POWER);
             }
             gameLevel3D.livesCounter3D().lookingAroundAnimation().playFromStart();
         }
-        updateScores(gameContext().theGameLevel());
+        updateScores(gameLevel);
         setActionBindings();
         fadeInSubScene();
     }
@@ -459,15 +462,20 @@ public class PlayScene3D implements GameScene, SubSceneContent {
     @Override
     public void onGameContinued(GameEvent e) {
         if (gameLevel3D != null && !gameLevel3D.isDestroyed()) {
-            Vector2f position = gameContext().theGameLevel().house().map(House::centerPositionUnderHouse).orElse(Vector2f.ZERO);
-            gameLevel3D.showAnimatedMessage("READY!", 0.5f, position.x(), position.y());
+            if (gameContext().theGameLevel().house().isEmpty()) {
+                Logger.error("No house found in this game level! WTF?");
+            } else {
+                Vector2f messageCenter = gameContext().theGameLevel().house().get().centerPositionUnderHouse();
+                gameLevel3D.showAnimatedMessage("READY!", 2.5f, messageCenter.x(), messageCenter.y());
+            }
         }
     }
 
     @Override
     public void onGameStarted(GameEvent e) {
         boolean silent = gameContext().theGameLevel().isDemoLevel()
-                || gameContext().theGameState() == TESTING_LEVELS_SHORT || gameContext().theGameState() == TESTING_LEVELS_MEDIUM;
+            || gameContext().theGameState() == TESTING_LEVELS_SHORT
+            || gameContext().theGameState() == TESTING_LEVELS_MEDIUM;
         if (!silent) {
             ui.theSound().play(SoundID.GAME_READY);
         }
@@ -479,9 +487,7 @@ public class PlayScene3D implements GameScene, SubSceneContent {
             // When cheat "eat all pellets" has been used, no tile is present in the event.
             gameLevel3D.pellets3D().forEach(Pellet3D::onEaten);
         } else {
-            Energizer3D energizer3D = gameLevel3D.energizers3D()
-                .filter(e3D -> event.tile().equals(e3D.tile()))
-                .findFirst().orElse(null);
+            Energizer3D energizer3D = gameLevel3D.energizers3D().filter(e3D -> event.tile().equals(e3D.tile())).findFirst().orElse(null);
             if (energizer3D != null) {
                 energizer3D.onEaten();
             } else {
