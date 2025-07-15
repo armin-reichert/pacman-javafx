@@ -140,7 +140,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
     public final GameAction ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE = new GameAction() {
         @Override
         public void execute(GameUI ui) {
-            var config = ui.<TengenMsPacMan_UIConfig>theUIConfiguration();
+            var config = ui.<TengenMsPacMan_UIConfig>theConfiguration();
             SceneDisplayMode mode = config.propertyPlaySceneDisplayMode.get();
             config.propertyPlaySceneDisplayMode.set(mode == SceneDisplayMode.SCROLLING
                 ? SceneDisplayMode.SCALED_TO_FIT
@@ -161,7 +161,7 @@ public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
     public final GameAction ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED = new GameAction() {
         @Override
         public void execute(GameUI ui) {
-            toggle(ui.<TengenMsPacMan_UIConfig>theUIConfiguration().propertyJoypadBindingsDisplayed);
+            toggle(ui.<TengenMsPacMan_UIConfig>theConfiguration().propertyJoypadBindingsDisplayed);
         }
 
         @Override

@@ -36,7 +36,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     protected void setActionBindings() {
-        var config = ui.<TengenMsPacMan_UIConfig>theUIConfiguration();
+        var config = ui.<TengenMsPacMan_UIConfig>theConfiguration();
         // if demo level, allow going back to options screen
         if (gameContext().optGameLevel().isPresent() && gameContext().theGameLevel().isDemoLevel()) {
             actionBindings.bind(config.ACTION_QUIT_DEMO_LEVEL, config.TENGEN_MS_PACMAN_ACTION_BINDINGS);
@@ -58,7 +58,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     protected void setPlayerSteeringActionBindings() {
-        var config = ui.<TengenMsPacMan_UIConfig>theUIConfiguration();
+        var config = ui.<TengenMsPacMan_UIConfig>theConfiguration();
         actionBindings.bind(ACTION_STEER_UP,    config.TENGEN_MS_PACMAN_ACTION_BINDINGS);
         actionBindings.bind(ACTION_STEER_DOWN,  config.TENGEN_MS_PACMAN_ACTION_BINDINGS);
         actionBindings.bind(ACTION_STEER_LEFT,  config.TENGEN_MS_PACMAN_ACTION_BINDINGS);
@@ -89,7 +89,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         canvas.getGraphicsContext2D().setImageSmoothing(false); // important!
         GameRenderer.fillCanvas(canvas, floorColor);
 
-        var r = (TengenMsPacMan_GameRenderer) ui.theUIConfiguration().createGameRenderer(canvas);
+        var r = (TengenMsPacMan_GameRenderer) ui.theConfiguration().createGameRenderer(canvas);
         r.setScaling(quality);
         r.drawGameOptions(game.mapCategory(), game.difficulty(), game.pacBooster(), 0.5 * infoWidth, TS + HTS);
         r.drawLevelNumberBox(gameLevel.number(), 0, 0);

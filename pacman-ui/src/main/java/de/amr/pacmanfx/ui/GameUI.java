@@ -151,7 +151,7 @@ public interface GameUI {
     Model3DRepository                theModel3DRepository();
     SoundManager                     theSound();
     Stage                            theStage();
-    <T extends PacManGames_UIConfig> T theUIConfiguration();
+    <T extends PacManGames_UIConfig> T theConfiguration();
     DirectoryWatchdog                theWatchdog();
 
     void restart();

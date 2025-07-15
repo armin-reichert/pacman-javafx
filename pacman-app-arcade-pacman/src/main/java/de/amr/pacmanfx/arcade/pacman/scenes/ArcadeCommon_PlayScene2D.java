@@ -74,7 +74,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
         gameContext().theGame().hud().showLevelCounter(true);
         gameContext().theGame().hud().showLivesCounter(true);
         levelCompletedAnimation = new LevelCompletedAnimation(animationManager);
-        gameRenderer = ui.theUIConfiguration().createGameRenderer(canvas);
+        gameRenderer = ui.theConfiguration().createGameRenderer(canvas);
     }
 
     @Override
@@ -111,7 +111,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
             actionBindings.updateKeyboard();
         }
         if (gameRenderer == null) { //TODO can this happen at all?
-            gameRenderer = ui.theUIConfiguration().createGameRenderer(canvas);
+            gameRenderer = ui.theConfiguration().createGameRenderer(canvas);
             Logger.warn("No game renderer existed for 2D play scene, created one...");
         }
         Logger.info("Scene {} initialized with game level", getClass().getSimpleName());

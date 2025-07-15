@@ -31,7 +31,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
         gameContext().theGame().hud().showLevelCounter(false);
         gameContext().theGame().hud().showLivesCounter(false);
 
-        var config = ui.<TengenMsPacMan_UIConfig>theUIConfiguration();
+        var config = ui.<TengenMsPacMan_UIConfig>theConfiguration();
         actionBindings.bind(config.ACTION_ENTER_START_SCREEN, config.TENGEN_MS_PACMAN_ACTION_BINDINGS);
     }
 

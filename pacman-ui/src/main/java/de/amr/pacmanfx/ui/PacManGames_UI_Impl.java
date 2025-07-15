@@ -413,7 +413,7 @@ public class PacManGames_UI_Impl implements GameUI {
 
     @Override
     public SoundManager theSound() {
-        return theUIConfiguration().soundManager();
+        return theConfiguration().soundManager();
     }
 
     @Override
@@ -448,19 +448,19 @@ public class PacManGames_UI_Impl implements GameUI {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T extends PacManGames_UIConfig> T theUIConfiguration() {
+    public <T extends PacManGames_UIConfig> T theConfiguration() {
         return (T) configByGameVariant.get(theGameContext.theGameController().selectedGameVariant());
     }
 
     @Override
     public boolean currentGameSceneIsPlayScene2D() {
         GameScene currentGameScene = currentGameScene().orElse(null);
-        return currentGameScene != null && theUIConfiguration().gameSceneHasID(currentGameScene, "PlayScene2D");
+        return currentGameScene != null && theConfiguration().gameSceneHasID(currentGameScene, "PlayScene2D");
     }
 
     @Override
     public boolean currentGameSceneIsPlayScene3D() {
         GameScene currentGameScene = currentGameScene().orElse(null);
-        return currentGameScene != null && theUIConfiguration().gameSceneHasID(currentGameScene, "PlayScene3D");
+        return currentGameScene != null && theConfiguration().gameSceneHasID(currentGameScene, "PlayScene3D");
     }
 }

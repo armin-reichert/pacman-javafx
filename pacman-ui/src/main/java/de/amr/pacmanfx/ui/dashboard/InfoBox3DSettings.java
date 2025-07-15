@@ -9,7 +9,7 @@ import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._3d.Perspective;
-import de.amr.pacmanfx.uilib.CameraControlledView;
+import de.amr.pacmanfx.uilib.SubSceneContent;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
@@ -52,8 +52,8 @@ public class InfoBox3DSettings extends InfoBox {
         pickerLightColor     = addColorPicker("Light Color", ui.property3DLightColor());
         pickerFloorColor     = addColorPicker("Floor Color", ui.property3DFloorColor());
         comboPerspectives    = addChoiceBox("Perspective", Perspective.ID.values());
-        addLabeledValue("Camera",        this::sceneCameraInfo);
-        addLabeledValue("Viewport Size", this::sceneViewportSizeInfo);
+        addLabeledValue("Camera",        this::subSceneCameraInfo);
+        addLabeledValue("Subscene Size", this::subSceneSizeInfo);
         addLabeledValue("Scene Size",    this::sceneSizeInfo);
         cbPiPOn              = addCheckBox("Picture-In-Picture", ui.propertyMiniViewOn());
         sliderPiPSceneHeight = addSlider("- Height", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, ui.propertyMiniViewHeight().get(), false, false);
@@ -101,13 +101,9 @@ public class InfoBox3DSettings extends InfoBox {
         updateControlsFromProperties(ui);
     }
 
-    private String sceneViewportSizeInfo() {
-        if (ui.currentGameScene().isPresent()
-            && ui.currentGameScene().get() instanceof CameraControlledView sgs) {
-            return "%.0fx%.0f".formatted(
-                sgs.viewPortWidthProperty().get(),
-                sgs.viewPortHeightProperty().get()
-            );
+    private String subSceneSizeInfo() {
+        if (ui.currentGameScene().isPresent() && ui.currentGameScene().get() instanceof SubSceneContent subSceneContent) {
+            return "%.0fx%.0f".formatted(subSceneContent.subScene().getWidth(), subSceneContent.subScene().getHeight());
         }
         return InfoText.NO_INFO;
     }
@@ -124,18 +120,16 @@ public class InfoBox3DSettings extends InfoBox {
                 if (ui.theGameContext().optGameLevel().isPresent()) {
                     int width = ui.theGameContext().theGameLevel().worldMap().numCols() * TS;
                     int height = ui.theGameContext().theGameLevel().worldMap().numRows() * TS;
-                    return "%dx%d (unscaled)".formatted(width, height);
-
+                    return "%dx%d (map size px)".formatted(width, height);
                 }
             }
         }
         return InfoText.NO_INFO;
     }
 
-    private String sceneCameraInfo() {
-        if (ui.currentGameScene().isPresent()
-            && ui.currentGameScene().get() instanceof CameraControlledView scrollableGameScene) {
-            var cam = scrollableGameScene.camera();
+    private String subSceneCameraInfo() {
+        if (ui.currentGameScene().isPresent() && ui.currentGameScene().get() instanceof SubSceneContent subSceneContent) {
+            var cam = subSceneContent.subScene().getCamera();
             return String.format("rot=%.0f x=%.0f y=%.0f z=%.0f",
                 cam.getRotate(), cam.getTranslateX(), cam.getTranslateY(), cam.getTranslateZ());
         }

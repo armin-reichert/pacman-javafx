@@ -42,11 +42,11 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
         gameContext().theGame().hud().showLevelCounter(true);
         gameContext().theGame().hud().showLivesCounter(false);
 
-        midwayCopyright = new MidwayCopyright(ui.theUIConfiguration().getAssetNS("logo.midway"));
+        midwayCopyright = new MidwayCopyright(ui.theConfiguration().getAssetNS("logo.midway"));
         midwayCopyright.setPosition(TS * 6, TS * 28);
         midwayCopyright.show();
 
-        @SuppressWarnings("unchecked") var spriteSheet = (SpriteSheet<SpriteID>) ui.theUIConfiguration().spriteSheet();
+        @SuppressWarnings("unchecked") var spriteSheet = (SpriteSheet<SpriteID>) ui.theConfiguration().spriteSheet();
         livesCounterSprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
 
         actionBindings.bind(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDINGS);

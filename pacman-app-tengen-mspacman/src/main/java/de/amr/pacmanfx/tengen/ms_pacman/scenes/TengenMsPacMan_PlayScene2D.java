@@ -22,12 +22,9 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.pacmanfx.uilib.CameraControlledView;
-import javafx.beans.property.DoubleProperty;
+import de.amr.pacmanfx.uilib.SubSceneContent;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.Camera;
-import javafx.scene.Node;
 import javafx.scene.ParallelCamera;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
@@ -55,7 +52,7 @@ import static de.amr.pacmanfx.uilib.Ufx.menuTitleItem;
 /**
  * Tengen Ms. Pac-Man play scene, uses vertical scrolling by default.
  */
-public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraControlledView {
+public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneContent {
 
     // 32 tiles (NES screen width)
     private static final int UNSCALED_CANVAS_WIDTH = NES_TILES.x() * TS;
@@ -67,7 +64,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     private final ObjectProperty<SceneDisplayMode> displayModeProperty = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING);
 
-    private final SubScene fxSubScene;
+    private final SubScene subScene;
     private final DynamicCamera dynamicCamera = new DynamicCamera();
     private final ParallelCamera fixedCamera  = new ParallelCamera();
     private final Rectangle canvasClipRect = new Rectangle();
@@ -95,9 +92,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         var root = new StackPane(canvas);
         root.setBackground(Background.EMPTY);
 
-        fxSubScene = new SubScene(root, 88, 88); // size gets bound to parent scene size when embedded in game view
-        fxSubScene.setFill(backgroundColor());
-        fxSubScene.cameraProperty().bind(displayModeProperty()
+        subScene = new SubScene(root, 88, 88); // size gets bound to parent scene size when embedded in game view
+        subScene.setFill(backgroundColor());
+        subScene.cameraProperty().bind(displayModeProperty()
             .map(displayMode -> displayMode == SceneDisplayMode.SCROLLING ? dynamicCamera : fixedCamera));
 
         dynamicCamera.scalingProperty().bind(scalingProperty());
@@ -108,7 +105,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     }
 
     private void setActionsBindings() {
-        var config = ui.<TengenMsPacMan_UIConfig>theUIConfiguration();
+        var config = ui.<TengenMsPacMan_UIConfig>theConfiguration();
         if (gameContext().theGameLevel().isDemoLevel()) {
             actionBindings.bind(config.ACTION_QUIT_DEMO_LEVEL, config.TENGEN_MS_PACMAN_ACTION_BINDINGS);
         } else {
@@ -131,7 +128,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public void doInit() {
-        setGameRenderer(ui.theUIConfiguration().createGameRenderer(canvas));
+        setGameRenderer(ui.theConfiguration().createGameRenderer(canvas));
 
         messageMovement = new MessageMovement();
         levelCompletedAnimation = new LevelCompletedAnimation(animationManager);
@@ -160,7 +157,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
                 ui.theSound().setEnabled(true);
                 updateSound();
             }
-            if (fxSubScene.getCamera() == dynamicCamera) {
+            if (subScene.getCamera() == dynamicCamera) {
                 if (gameContext().theGameState() == GameState.HUNTING) {
                     dynamicCamera.setFocussingActor(true);
                 }
@@ -173,7 +170,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
 
     @Override
     public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent, ContextMenu menu) {
-        var config = (TengenMsPacMan_UIConfig) ui.theUIConfiguration();
+        var config = (TengenMsPacMan_UIConfig) ui.theConfiguration();
         SceneDisplayMode displayMode = config.propertyPlaySceneDisplayMode.get();
 
         var miScaledToFit = new RadioMenuItem(ui.theAssets().text("scaled_to_fit"));
@@ -217,23 +214,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
     }
 
     @Override
-    public DoubleProperty viewPortWidthProperty() {
-        return fxSubScene.widthProperty();
-    }
-
-    @Override
-    public DoubleProperty viewPortHeightProperty() {
-        return fxSubScene.heightProperty();
-    }
-
-    @Override
-    public Node viewPort() {
-        return fxSubScene;
-    }
-
-    @Override
-    public Camera camera() {
-        return fxSubScene.getCamera();
+    public SubScene subScene() {
+        return subScene;
     }
 
     @Override
@@ -256,7 +238,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         gameContext().theGame().hud().showLivesCounter(true); // is also visible in demo level!
         setActionsBindings();
         //TODO needed?
-        setGameRenderer(ui.theUIConfiguration().createGameRenderer(canvas));
+        setGameRenderer(ui.theConfiguration().createGameRenderer(canvas));
         gr().ensureRenderingHintsAreApplied(gameLevel);
     }
 
@@ -421,9 +403,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
                 int tilesY = gameContext().theGameLevel().worldMap().numRows() + 3;
                 double camY = scaled((tilesY - 46) * HTS);
                 fixedCamera.setTranslateY(camY);
-                setScaling(fxSubScene.getHeight() / (tilesY * TS));
+                setScaling(subScene.getHeight() / (tilesY * TS));
             }
-            case SCROLLING -> setScaling(fxSubScene.getHeight() / NES_SIZE_PX.y());
+            case SCROLLING -> setScaling(subScene.getHeight() / NES_SIZE_PX.y());
         }
         gameRenderer.setScaling(scaling());
         gr().ensureRenderingHintsAreApplied(gameContext().theGameLevel());
@@ -463,7 +445,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements CameraCon
         }
         else {
             //TODO in the original game, the message is drawn under the maze image but *over* the pellets!
-            gr().drawLevelMessage(ui.theUIConfiguration(), gameContext().theGameLevel(), currentMessagePosition(), scaledArcadeFont8());
+            gr().drawLevelMessage(ui.theConfiguration(), gameContext().theGameLevel(), currentMessagePosition(), scaledArcadeFont8());
             gr().drawLevel(gameContext(), gameContext().theGameLevel(), null, false, false, ui.theGameClock().tickCount());
         }
 

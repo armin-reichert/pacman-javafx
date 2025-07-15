@@ -46,9 +46,9 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
         frame = -1;
 
         pac = createPac(null);
-        pac.setAnimations(ui.theUIConfiguration().createPacAnimations(pac));
+        pac.setAnimations(ui.theConfiguration().createPacAnimations(pac));
         blinky = createGhost(null, RED_GHOST_SHADOW);
-        blinky.setAnimations(ui.theUIConfiguration().createGhostAnimations(blinky));
+        blinky.setAnimations(ui.theConfiguration().createGhostAnimations(blinky));
 
         gameContext().theGame().hud().showScore(true);
         gameContext().theGame().hud().showLevelCounter(true);

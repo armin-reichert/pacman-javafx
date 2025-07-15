@@ -19,15 +19,17 @@ import de.amr.pacmanfx.ui.ActionBindingMap;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.pacmanfx.uilib.CameraControlledView;
+import de.amr.pacmanfx.uilib.SubSceneContent;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.*;
 import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
 import javafx.animation.Interpolator;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
-import javafx.beans.property.DoubleProperty;
-import javafx.scene.*;
+import javafx.scene.Group;
+import javafx.scene.PerspectiveCamera;
+import javafx.scene.SceneAntialiasing;
+import javafx.scene.SubScene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.ContextMenuEvent;
@@ -56,13 +58,13 @@ import static java.util.Objects.requireNonNull;
  * <p>Provides different camera perspectives that can be stepped through using key combinations
  * <code>Alt+LEFT</code> and <code>Alt+RIGHT</code> (Did he really said Alt-Right?).
  */
-public class PlayScene3D implements GameScene, CameraControlledView {
+public class PlayScene3D implements GameScene, SubSceneContent {
 
     private static final Color SUBSCENE_FILL_DARK = Color.BLACK;
     private static final Color SUBSCENE_FILL_BRIGHT = Color.TRANSPARENT;
 
     protected final GameUI ui;
-    protected final SubScene subScene3D;
+    protected final SubScene subScene;
     protected final PerspectiveCamera camera = new PerspectiveCamera(true);
     protected final PerspectiveManager perspectiveManager;
     protected final ActionBindingMap actionBindings;
@@ -89,11 +91,11 @@ public class PlayScene3D implements GameScene, CameraControlledView {
         var root = new Group(scores3D, coordinateSystem, new Group());
 
         // initial size is irrelevant because size gets bound to parent scene size anyway
-        subScene3D = new SubScene(root, 88, 88, true, SceneAntialiasing.BALANCED);
-        subScene3D.setCamera(camera);
-        subScene3D.setFill(SUBSCENE_FILL_DARK);
+        subScene = new SubScene(root, 88, 88, true, SceneAntialiasing.BALANCED);
+        subScene.setCamera(camera);
+        subScene.setFill(SUBSCENE_FILL_DARK);
 
-        perspectiveManager = new PerspectiveManager(subScene3D);
+        perspectiveManager = new PerspectiveManager(subScene);
     }
 
     @Override
@@ -254,23 +256,8 @@ public class PlayScene3D implements GameScene, CameraControlledView {
     }
 
     @Override
-    public DoubleProperty viewPortWidthProperty() {
-        return subScene3D.widthProperty();
-    }
-
-    @Override
-    public DoubleProperty viewPortHeightProperty() {
-        return subScene3D.heightProperty();
-    }
-
-    @Override
-    public SubScene viewPort() {
-        return subScene3D;
-    }
-
-    @Override
-    public Camera camera() {
-        return subScene3D.getCamera();
+    public SubScene subScene() {
+        return subScene;
     }
 
     @Override
@@ -307,7 +294,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 gameContext().theSimulationStep().killedGhosts.forEach(killedGhost -> {
                     byte personality = killedGhost.personality();
                     int killedIndex = gameContext().theGameLevel().victims().indexOf(killedGhost);
-                    Image pointsImage = ui.theUIConfiguration().killedGhostPointsImage(killedGhost, killedIndex);
+                    Image pointsImage = ui.theConfiguration().killedGhostPointsImage(killedGhost, killedIndex);
                     gameLevel3D.ghost3D(personality).setNumberImage(pointsImage);
                 });
             case LEVEL_COMPLETE -> {
@@ -530,11 +517,11 @@ public class PlayScene3D implements GameScene, CameraControlledView {
                 ui.theModel3DRepository(),
                 gameContext(),
                 gameContext().theGameLevel(),
-                ui.theUIConfiguration().colorScheme(gameContext().theGameLevel().worldMap())
+                ui.theConfiguration().colorScheme(gameContext().theGameLevel().worldMap())
         );
         gameLevel3D.pac3D().init();
         gameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(gameContext().theGameLevel()));
-        Group root = (Group) subScene3D.getRoot();
+        Group root = (Group) subScene.getRoot();
         root.getChildren().set(root.getChildren().size() - 1, gameLevel3D);
 
         scores3D.translateXProperty().bind(gameLevel3D.translateXProperty().add(TS));
@@ -571,7 +558,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             scores3D.showScore(score.points(), score.levelNumber());
         }
         else { // disabled, show text "GAME OVER"
-            Color color = ui.theUIConfiguration().getAssetNS("color.game_over_message");
+            Color color = ui.theConfiguration().getAssetNS("color.game_over_message");
             scores3D.showTextForScore(ui.theAssets().text("score.game_over"), color);
         }
         // Always show high score
@@ -593,7 +580,7 @@ public class PlayScene3D implements GameScene, CameraControlledView {
             }
             @Override
             protected void interpolate(double t) {
-                subScene3D.setFill(SUBSCENE_FILL_DARK.interpolate(SUBSCENE_FILL_BRIGHT, t));
+                subScene.setFill(SUBSCENE_FILL_DARK.interpolate(SUBSCENE_FILL_BRIGHT, t));
             }
         }.play();
     }

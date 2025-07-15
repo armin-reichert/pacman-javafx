@@ -93,13 +93,13 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
         blinking = new Pulse(10, true);
         pacMan = createPac(null);
-        pacMan.setAnimations(ui.theUIConfiguration().createPacAnimations(pacMan));
+        pacMan.setAnimations(ui.theConfiguration().createPacAnimations(pacMan));
         ghosts = List.of(
             createGhost(null, RED_GHOST_SHADOW),
             createGhost(null, PINK_GHOST_SPEEDY),
             createGhost(null, CYAN_GHOST_BASHFUL),
             createGhost(null, ORANGE_GHOST_POKEY));
-        ghosts.forEach(ghost -> ghost.setAnimations(ui.theUIConfiguration().createGhostAnimations(ghost)));
+        ghosts.forEach(ghost -> ghost.setAnimations(ui.theConfiguration().createGhostAnimations(ghost)));
         ghostImageVisible     = new boolean[4];
         ghostNicknameVisible  = new boolean[4];
         ghostCharacterVisible = new boolean[4];
@@ -150,7 +150,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     }
 
     private void drawGallery() {
-        @SuppressWarnings("unchecked") SpriteSheet<SpriteID> spriteSheet = (SpriteSheet<SpriteID>) ui.theUIConfiguration().spriteSheet();
+        @SuppressWarnings("unchecked") SpriteSheet<SpriteID> spriteSheet = (SpriteSheet<SpriteID>) ui.theConfiguration().spriteSheet();
         ctx().setFont(scaledArcadeFont8());
         if (titleVisible) {
             gr().fillTextAtScaledPosition("CHARACTER / NICKNAME", ARCADE_WHITE,

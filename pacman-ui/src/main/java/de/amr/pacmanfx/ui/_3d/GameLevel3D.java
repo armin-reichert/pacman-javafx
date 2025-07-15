@@ -164,14 +164,14 @@ public class GameLevel3D extends Group implements Destroyable {
         ambientLight.colorProperty().bind(ui.property3DLightColor());
         getChildren().add(ambientLight);
 
-        levelCounter3D = new LevelCounter3D(ui.theUIConfiguration(), animationManager, gameContext.theGame().hud().levelCounter());
+        levelCounter3D = new LevelCounter3D(ui.theConfiguration(), animationManager, gameContext.theGame().hud().levelCounter());
         levelCounter3D.setTranslateX(gameLevel.worldMap().numCols() * TS - 2 * TS);
         levelCounter3D.setTranslateY(2 * TS);
         levelCounter3D.spinningAnimation().playFromStart();
         getChildren().add(levelCounter3D);
 
         for (int i = 0; i < livesCounterShapes.length; ++i) {
-            livesCounterShapes[i] = ui.theUIConfiguration().createLivesCounterShape3D(model3DRepository);
+            livesCounterShapes[i] = ui.theConfiguration().createLivesCounterShape3D(model3DRepository);
         }
         livesCounter3D = new LivesCounter3D(animationManager, livesCounterShapes);
         livesCounter3D.setTranslateX(2 * TS);
@@ -183,11 +183,11 @@ public class GameLevel3D extends Group implements Destroyable {
         livesCounter3D.lookingAroundAnimation().playFromStart();
         getChildren().add(livesCounter3D);
 
-        pac3D = ui.theUIConfiguration().createPac3D(model3DRepository, animationManager, gameLevel.pac());
+        pac3D = ui.theConfiguration().createPac3D(model3DRepository, animationManager, gameLevel.pac());
         pac3D.init();
         getChildren().addAll(pac3D, pac3D.light());
 
-        final String ans = ui.theUIConfiguration().assetNamespace();
+        final String ans = ui.theConfiguration().assetNamespace();
         ghosts3D = gameLevel.ghosts().map(ghost -> {
             var ghostColoring = new GhostColoring(
                     ui.theAssets().color("%s.ghost.%d.color.normal.dress".formatted(ans, ghost.personality())),
@@ -474,8 +474,8 @@ public class GameLevel3D extends Group implements Destroyable {
             bonus3D.destroy();
         }
         bonus3D = new Bonus3D(animationManager, bonus,
-            ui.theUIConfiguration().bonusSymbolImage(bonus.symbol()), Settings3D.BONUS_3D_SYMBOL_WIDTH,
-            ui.theUIConfiguration().bonusValueImage(bonus.symbol()), Settings3D.BONUS_3D_POINTS_WIDTH);
+            ui.theConfiguration().bonusSymbolImage(bonus.symbol()), Settings3D.BONUS_3D_SYMBOL_WIDTH,
+            ui.theConfiguration().bonusValueImage(bonus.symbol()), Settings3D.BONUS_3D_POINTS_WIDTH);
         mazeGroup.getChildren().add(bonus3D);
         bonus3D.showEdible();
     }

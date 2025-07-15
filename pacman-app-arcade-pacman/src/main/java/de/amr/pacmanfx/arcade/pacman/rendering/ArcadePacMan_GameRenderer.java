@@ -130,7 +130,7 @@ public class ArcadePacMan_GameRenderer implements SpriteGameRenderer {
         ctx.save();
         ctx.scale(scaling(), scaling());
         if (mazeHighlighted) {
-            String assetNamespace = theUI().theUIConfiguration().assetNamespace();
+            String assetNamespace = theUI().theConfiguration().assetNamespace();
             ctx.drawImage(assets.image(assetNamespace + ".flashing_maze"), 0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);
         }
         else if (level.uneatenFoodCount() == 0) {

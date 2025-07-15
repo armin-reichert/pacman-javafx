@@ -77,9 +77,9 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         gameContext().theGame().hud().showLevelCounter(false);
         gameContext().theGame().hud().showLivesCounter(false);
 
-        spriteSheet = (TengenMsPacMan_SpriteSheet) ui.theUIConfiguration().spriteSheet();
+        spriteSheet = (TengenMsPacMan_SpriteSheet) ui.theConfiguration().spriteSheet();
 
-        var config = ui.<TengenMsPacMan_UIConfig>theUIConfiguration();
+        var config = ui.<TengenMsPacMan_UIConfig>theConfiguration();
         actionBindings.bind(config.ACTION_ENTER_START_SCREEN, config.TENGEN_MS_PACMAN_ACTION_BINDINGS);
         actionBindings.bind(config.ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, config.TENGEN_MS_PACMAN_ACTION_BINDINGS);
 
@@ -151,7 +151,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
             }
         }
 
-        var config = (TengenMsPacMan_UIConfig) ui.theUIConfiguration();
+        var config = (TengenMsPacMan_UIConfig) ui.theConfiguration();
         if (config.propertyJoypadBindingsDisplayed.get()) {
             gr().drawJoypadKeyBinding(ui.theJoypad().currentKeyBinding());
         }
@@ -234,10 +234,10 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                     ghost.setVisible(true);
                 }
                 scene.ghostIndex = 0;
-                scene.msPacMan.setAnimations(scene.ui.theUIConfiguration().createPacAnimations(scene.msPacMan));
+                scene.msPacMan.setAnimations(scene.ui.theConfiguration().createPacAnimations(scene.msPacMan));
                 scene.msPacMan.playAnimation(ANIM_PAC_MUNCHING);
                 for (Ghost ghost : scene.ghosts) {
-                    ghost.setAnimations(scene.ui.theUIConfiguration().createGhostAnimations(ghost));
+                    ghost.setAnimations(scene.ui.theConfiguration().createGhostAnimations(ghost));
                     ghost.playAnimation(ANIM_GHOST_NORMAL);
                 }
             }

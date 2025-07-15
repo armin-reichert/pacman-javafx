@@ -19,13 +19,14 @@ import de.amr.pacmanfx.ui._2d.PopupLayer;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.InfoBox;
-import de.amr.pacmanfx.uilib.CameraControlledView;
+import de.amr.pacmanfx.uilib.SubSceneContent;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
+import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ContextMenu;
@@ -182,7 +183,7 @@ public class PlayView implements PacManGames_View {
 
     // Asset key regex: app.title.(ms_pacman|ms_pacman_xxl|pacman,pacman_xxl|tengen)(.paused)?
     private String computeTitleText(boolean threeDModeEnabled, boolean modeDebug) {
-        String ans = ui.theUIConfiguration().assetNamespace();
+        String ans = ui.theConfiguration().assetNamespace();
         String paused = ui.theGameClock().isPaused() ? ".paused" : "";
         String key = "app.title." + ans + paused;
         String modeText = ui.theAssets().text(threeDModeEnabled ? "threeD" : "twoD");
@@ -252,7 +253,7 @@ public class PlayView implements PacManGames_View {
         Logger.trace("Handle {}", gameEvent);
         switch (gameEvent.type()) {
             case LEVEL_CREATED -> {
-                PacManGames_UIConfig config = ui.theUIConfiguration();
+                PacManGames_UIConfig config = ui.theConfiguration();
                 ActorAnimationMap pacAnimationMap = config.createPacAnimations(gameContext.theGameLevel().pac());
                 gameContext.theGameLevel().pac().setAnimations(pacAnimationMap);
                 gameContext.theGameLevel().ghosts().forEach(ghost -> {
@@ -289,7 +290,7 @@ public class PlayView implements PacManGames_View {
     }
 
     public void updateGameScene(boolean reloadCurrent) {
-        final GameScene nextGameScene = ui.theUIConfiguration().selectGameScene(gameContext);
+        final GameScene nextGameScene = ui.theConfiguration().selectGameScene(gameContext);
         if (nextGameScene == null) {
             String errorMessage = " Katastrophe! Could not determine game scene!";
             ui.showFlashMessageSec(60, errorMessage);
@@ -332,49 +333,49 @@ public class PlayView implements PacManGames_View {
         });
     }
 
-    /* 3 different cases currently may occur:
-       - 2D scene
-         - with camera (e.g. Tengen play scene)
-         - without camera (e.g. Arcade scenes)
-       - 3D scene (always with camera)
+    /*
+       Three different cases currently occur:
+       2D game scenes without camera (Arcade scenes)
+       2D game scenes with camera(s) and JavaFX subscene (Tengen Ms. Pac-Man play scene)
+       3D game scenes (always with camera and JavaFX subscene)
     */
     private void embedGameScene(GameScene gameScene) {
         requireNonNull(gameScene);
         if (gameScene instanceof GameScene2D gameScene2D) {
-            if (gameScene instanceof CameraControlledView cameraControlledScene) {
-                embedCameraControlledScene(cameraControlledScene);
+            if (gameScene2D instanceof SubSceneContent content) {
+                embedSubScene(content.subScene());
             }
             else {
-                embedScene2DWithoutCamera(gameScene2D);
+                embedGameScene2DWithoutSubScene(gameScene2D);
             }
             gameScene2D.backgroundColorProperty().bind(ui.propertyCanvasBackgroundColor());
             gameScene2D.clear();
         }
-        else if (gameScene instanceof CameraControlledView cameraControlledScene) {
-            embedCameraControlledScene(cameraControlledScene);
+        else if (gameScene instanceof SubSceneContent gameScene3D) {
+            embedSubScene(gameScene3D.subScene());
         }
         else {
-            Logger.error("Cannot embed game scene of class {}", gameScene.getClass().getName());
+            Logger.error("Cannot embed play scene of class {}", gameScene.getClass().getName());
         }
     }
 
-    // 2D game scenes without camera are drawn into the common canvas provided by this game view
-    private void embedScene2DWithoutCamera(GameScene2D gameScene2D) {
+    // Game scenes without camera are drawn into the canvas provided by this play view
+    private void embedGameScene2DWithoutSubScene(GameScene2D gameScene2D) {
         gameScene2D.setCanvas(commonCanvas);
-        gameScene2D.setGameRenderer(ui.theUIConfiguration().createGameRenderer(commonCanvas));
+        gameScene2D.setGameRenderer(ui.theConfiguration().createGameRenderer(commonCanvas));
         gameScene2D.scalingProperty().bind(canvasContainer.scalingProperty().map(
             scaling -> Math.min(scaling.doubleValue(), MAX_SCENE_2D_SCALING)));
-        Vector2f sceneSize = gameScene2D.sizeInPx();
-        canvasContainer.setUnscaledCanvasSize(sceneSize.x(), sceneSize.y());
+        Vector2f sizePx = gameScene2D.sizeInPx();
+        canvasContainer.setUnscaledCanvasSize(sizePx.x(), sizePx.y());
         canvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
         canvasContainer.backgroundProperty().bind(ui.propertyCanvasBackgroundColor().map(Ufx::coloredBackground));
         root.getChildren().set(0, canvasLayer);
     }
 
-    private void embedCameraControlledScene(CameraControlledView cameraControlledScene) {
-        cameraControlledScene.viewPortWidthProperty().bind(parentScene.widthProperty());
-        cameraControlledScene.viewPortHeightProperty().bind(parentScene.heightProperty());
-        root.getChildren().set(0, cameraControlledScene.viewPort());
+    private void embedSubScene(SubScene subScene) {
+        subScene.widthProperty().bind(parentScene.widthProperty());
+        subScene.heightProperty().bind(parentScene.heightProperty());
+        root.getChildren().set(0, subScene);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

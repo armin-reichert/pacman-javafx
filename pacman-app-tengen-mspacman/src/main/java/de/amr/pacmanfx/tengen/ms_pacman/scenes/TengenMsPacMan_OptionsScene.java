@@ -26,7 +26,6 @@ import javafx.scene.text.Font;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.GameUI.GLOBAL_ACTION_BINDINGS;
-import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.alt;
 
@@ -87,7 +86,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         gameContext().theGame().hud().showLevelCounter(false);
         gameContext().theGame().hud().showLivesCounter(false);
 
-        var config = ui.<TengenMsPacMan_UIConfig>theUIConfiguration();
+        var config = ui.<TengenMsPacMan_UIConfig>theConfiguration();
         actionBindings.bind(config.ACTION_START_PLAYING, config.TENGEN_MS_PACMAN_ACTION_BINDINGS);
         actionBindings.bind(config.ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, config.TENGEN_MS_PACMAN_ACTION_BINDINGS);
         actionBindings.bind(actionSelectNextJoypadBinding, alt(KeyCode.J));
@@ -267,7 +266,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
         gr().drawVerticalSceneBorders();
 
-        var config = (TengenMsPacMan_UIConfig) theUI().theUIConfiguration();
+        var config = (TengenMsPacMan_UIConfig) theUI().theConfiguration();
         if (config.propertyJoypadBindingsDisplayed.get()) {
             gr().drawJoypadKeyBinding(theUI().theJoypad().currentKeyBinding());
         }
@@ -314,7 +313,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         gr().fillTextAtScaledPosition(":", NES_YELLOW, COL_COLON, 168);
         gr().fillTextAtScaledPosition(String.valueOf(theTengenGame().startLevelNumber()), NES_WHITE, COL_VALUE, 168);
         if (theTengenGame().numContinues() < 4) {
-            var spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().theUIConfiguration().spriteSheet();
+            var spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().theConfiguration().spriteSheet();
             RectShort continuesSprite = spriteSheet.sprite(switch (theTengenGame().numContinues()) {
                 case 0 -> SpriteID.CONTINUES_0;
                 case 1 -> SpriteID.CONTINUES_1;

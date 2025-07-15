@@ -83,7 +83,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         actionBindings.bind(ACTION_TEST_LEVELS_BONI, GLOBAL_ACTION_BINDINGS);
         actionBindings.bind(ACTION_TEST_LEVELS_TEASERS, GLOBAL_ACTION_BINDINGS);
 
-        midwayCopyright = new MidwayCopyright(ui.theUIConfiguration().getAssetNS("logo.midway"));
+        midwayCopyright = new MidwayCopyright(ui.theConfiguration().getAssetNS("logo.midway"));
         midwayCopyright.setPosition(TS * 6, TS * 28);
         midwayCopyright.show();
 
@@ -103,10 +103,10 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         presentedGhostCharacter = RED_GHOST_SHADOW;
         numTicksBeforeRising = 0;
 
-        msPacMan.setAnimations(ui.theUIConfiguration().createPacAnimations(msPacMan));
+        msPacMan.setAnimations(ui.theConfiguration().createPacAnimations(msPacMan));
         msPacMan.selectAnimation(ANIM_PAC_MUNCHING);
         for (Ghost ghost : ghosts) {
-            ghost.setAnimations(ui.theUIConfiguration().createGhostAnimations(ghost));
+            ghost.setAnimations(ui.theConfiguration().createGhostAnimations(ghost));
             ghost.selectAnimation(ANIM_GHOST_NORMAL);
         }
         sceneController.restart(SceneState.STARTING);
