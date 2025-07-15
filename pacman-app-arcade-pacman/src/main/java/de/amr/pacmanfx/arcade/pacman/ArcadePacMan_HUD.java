@@ -56,12 +56,12 @@ public class ArcadePacMan_HUD implements HUD {
     }
 
     @Override
-    public ArcadePacMan_LevelCounter levelCounter() {
+    public ArcadePacMan_LevelCounter theLevelCounter() {
         return levelCounter;
     }
 
     @Override
-    public LivesCounter livesCounter() {
+    public LivesCounter theLivesCounter() {
         return livesCounter;
     }
 }

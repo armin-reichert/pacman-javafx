@@ -163,7 +163,7 @@ public class GameLevel3D extends Group implements Destroyable {
         ambientLight.colorProperty().bind(ui.property3DLightColor());
         getChildren().add(ambientLight);
 
-        levelCounter3D = new LevelCounter3D(ui.theConfiguration(), animationManager, ui.theGameContext().theGame().hud().levelCounter());
+        levelCounter3D = new LevelCounter3D(ui.theConfiguration(), animationManager, ui.theGameContext().theGame().theHUD().theLevelCounter());
         levelCounter3D.setTranslateX(ui.theGameContext().theGameLevel().worldMap().numCols() * TS - 2 * TS);
         levelCounter3D.setTranslateY(2 * TS);
         levelCounter3D.spinningAnimation().playFromStart();

@@ -55,7 +55,7 @@ public abstract class GameModel implements ScoreManager {
     public abstract MapSelector mapSelector();
     public abstract OptionalInt cutSceneNumber(int levelNumber);
 
-    public abstract HUD hud();
+    public abstract HUD theHUD();
     public Optional<GateKeeper> gateKeeper() { return Optional.empty(); }
     public Optional<GameLevel> level() { return Optional.ofNullable(level); }
 

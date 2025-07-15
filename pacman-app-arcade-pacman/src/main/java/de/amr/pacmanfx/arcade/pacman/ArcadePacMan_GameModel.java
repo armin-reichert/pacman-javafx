@@ -225,7 +225,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
     }
 
     @Override
-    public HUD hud() {
+    public HUD theHUD() {
         return hud;
     }
 
@@ -273,7 +273,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
         level.setBonusSymbol(0, symbol);
         level.setBonusSymbol(1, symbol);
 
-        hud.levelCounter().setEnabled(true);
+        hud.theLevelCounter().setEnabled(true);
     }
 
     @Override

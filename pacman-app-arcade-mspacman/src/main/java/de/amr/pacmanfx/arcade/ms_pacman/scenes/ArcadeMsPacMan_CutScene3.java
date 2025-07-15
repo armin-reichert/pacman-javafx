@@ -68,9 +68,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         clapperboard.setFont(scaledArcadeFont8());
         clapperboard.startAnimation();
 
-        gameContext().theGame().hud().showScore(true);
-        gameContext().theGame().hud().showLevelCounter(true);
-        gameContext().theGame().hud().showLivesCounter(false);
+        gameContext().theGame().theHUD().score(true).levelCounter(true).livesCounter(false);
 
         setSceneState(STATE_CLAPPERBOARD, TickTimer.INDEFINITE);
     }

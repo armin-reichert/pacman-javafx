@@ -132,9 +132,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         messageMovement = new MessageMovement();
         levelCompletedAnimation = new LevelCompletedAnimation(animationManager);
 
-        gameContext().theGame().hud().showScore(true);
-        gameContext().theGame().hud().showLevelCounter(true);
-        gameContext().theGame().hud().showLivesCounter(true);
+        gameContext().theGame().theHUD().showScore(true);
+        gameContext().theGame().theHUD().showLevelCounter(true);
+        gameContext().theGame().theHUD().showLivesCounter(true);
 
         dynamicCamera.moveTop();
     }
@@ -248,8 +248,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     private void initForGameLevel(GameLevel gameLevel) {
-        gameContext().theGame().hud().showLevelCounter(true);
-        gameContext().theGame().hud().showLivesCounter(true); // is also visible in demo level!
+        gameContext().theGame().theHUD().showLevelCounter(true);
+        gameContext().theGame().theHUD().showLivesCounter(true); // is also visible in demo level!
         setActionsBindings();
         //TODO needed?
         setGameRenderer(ui.theConfiguration().createGameRenderer(canvas));
@@ -439,7 +439,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         // NES screen is 32 tiles wide but mazes are only 28 tiles wide, so shift HUD right:
         ctx().save();
         ctx().translate(scaled(2 * TS), 0);
-        renderer().drawHUD(gameContext(), gameContext().theGame().hud(), sizeInPx(), ui.theGameClock().tickCount());
+        renderer().drawHUD(gameContext(), gameContext().theGame().theHUD(), sizeInPx(), ui.theGameClock().tickCount());
         ctx().restore();
     }
 
@@ -508,17 +508,17 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     private void updateHUD() {
-        TengenMsPacMan_HUD hud = theTengenGame().hud();
+        TengenMsPacMan_HUD hud = theTengenGame().theHUD();
         int numLives = gameContext().theGame().lifeCount() - 1;
         // As long as Pac-Man is still invisible on start, he is shown as an additional entry in the lives counter
         if (gameContext().theGameState() == GameState.STARTING_GAME && !gameContext().theGameLevel().pac().isVisible()) {
             numLives += 1;
         }
-        numLives = Math.min(numLives, hud.livesCounter().maxLivesDisplayed());
-        hud.livesCounter().setVisibleLifeCount(numLives);
+        numLives = Math.min(numLives, hud.theLivesCounter().maxLivesDisplayed());
+        hud.theLivesCounter().setVisibleLifeCount(numLives);
 
         //TODO check demo level behavior in emulator. Are there demo levels for non-ARCADE maps at all?
-        TengenMsPacMan_LevelCounter levelCounter = hud.levelCounter();
+        TengenMsPacMan_LevelCounter levelCounter = hud.theLevelCounter();
         if (theTengenGame().mapCategory() == MapCategory.ARCADE
             || gameContext().optGameLevel().isEmpty()
             || gameContext().theGameLevel().isDemoLevel()) {

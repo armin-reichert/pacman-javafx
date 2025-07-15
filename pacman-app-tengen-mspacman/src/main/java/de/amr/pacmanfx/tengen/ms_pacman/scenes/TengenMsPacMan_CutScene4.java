@@ -51,9 +51,9 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     protected void doInit() {
         t = -1;
 
-        gameContext().theGame().hud().showScore(false);
-        gameContext().theGame().hud().showLevelCounter(true);
-        gameContext().theGame().hud().showLivesCounter(false);
+        gameContext().theGame().theHUD().showScore(false);
+        gameContext().theGame().theHUD().showLevelCounter(true);
+        gameContext().theGame().theHUD().showLivesCounter(false);
 
         var spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().theConfiguration().spriteSheet();
         clapperboard = new Clapperboard(spriteSheet, 4, "THE END");
@@ -223,7 +223,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         }
         var game = gameContext().<TengenMsPacMan_GameModel>theGame();
         if (game.mapCategory() != MapCategory.ARCADE) {
-            gameRenderer.drawHUD(gameContext(), game.hud(), sizeInPx().minus(0, 2 * TS), ui.theGameClock().tickCount());
+            gameRenderer.drawHUD(gameContext(), game.theHUD(), sizeInPx().minus(0, 2 * TS), ui.theGameClock().tickCount());
         }
     }
 

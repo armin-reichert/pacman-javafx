@@ -84,7 +84,7 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
         }
 
         if (hud.isLevelCounterVisible()) {
-            LevelCounter levelCounter = hud.levelCounter();
+            LevelCounter levelCounter = hud.theLevelCounter();
             float x = sceneSize.x() - 4 * TS, y = sceneSize.y() - 2 * TS;
             for (byte symbol : levelCounter.symbols()) {
                 RectShort sprite = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS)[symbol];
@@ -95,7 +95,7 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
 
         if (hud.isLivesCounterVisible()) {
             float x = 2 * TS, y = sceneSize.y() - 2 * TS;
-            LivesCounter livesCounter = hud.livesCounter();
+            LivesCounter livesCounter = hud.theLivesCounter();
             RectShort sprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
             for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
                 drawSpriteScaled(sprite, x + TS * (2 * i), y);

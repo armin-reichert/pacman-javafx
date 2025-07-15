@@ -54,12 +54,12 @@ public class TengenMsPacMan_HUD implements HUD {
     }
 
     @Override
-    public TengenMsPacMan_LevelCounter levelCounter() {
+    public TengenMsPacMan_LevelCounter theLevelCounter() {
         return levelCounter;
     }
 
     @Override
-    public LivesCounter livesCounter() {
+    public LivesCounter theLivesCounter() {
         return livesCounter;
     }
 }

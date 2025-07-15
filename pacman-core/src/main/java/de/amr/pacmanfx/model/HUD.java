@@ -12,8 +12,8 @@ public interface HUD {
     boolean isVisible();
     void show(boolean b);
 
-    LevelCounter levelCounter();
-    LivesCounter livesCounter();
+    LevelCounter theLevelCounter();
+    LivesCounter theLivesCounter();
 
     boolean isLevelCounterVisible();
     void showLevelCounter(boolean b);
@@ -26,4 +26,11 @@ public interface HUD {
 
     boolean isCreditVisible();
     void showCredit(boolean b);
+
+    // Fluent API
+    default HUD allOff() { return credit(false).score(false).levelCounter(false).livesCounter(false); }
+    default HUD credit(boolean on) { showCredit(on); return this; }
+    default HUD levelCounter(boolean on) { showLevelCounter(on); return this; }
+    default HUD livesCounter(boolean on) { showLivesCounter(on); return this; }
+    default HUD score(boolean on) { showScore(on); return this; }
 }

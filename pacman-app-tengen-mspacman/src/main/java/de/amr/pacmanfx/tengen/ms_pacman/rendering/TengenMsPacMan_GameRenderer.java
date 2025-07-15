@@ -120,12 +120,12 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
         }
 
         if (hud.isLivesCounterVisible()) {
-            drawLivesCounter(hud.livesCounter(), theGame.lifeCount(), 2 * TS, sceneSize.y() - TS);
+            drawLivesCounter(hud.theLivesCounter(), theGame.lifeCount(), 2 * TS, sceneSize.y() - TS);
         }
 
         if (hud.isLevelCounterVisible()) {
             if (hud instanceof TengenMsPacMan_HUD tengenHUD) {
-                TengenMsPacMan_LevelCounter levelCounter = tengenHUD.levelCounter();
+                TengenMsPacMan_LevelCounter levelCounter = tengenHUD.theLevelCounter();
                 float x = sceneSize.x() - 2 * TS, y = sceneSize.y() - TS;
                 drawLevelCounter(levelCounter.displayedLevelNumber(), levelCounter, x, y);
             }

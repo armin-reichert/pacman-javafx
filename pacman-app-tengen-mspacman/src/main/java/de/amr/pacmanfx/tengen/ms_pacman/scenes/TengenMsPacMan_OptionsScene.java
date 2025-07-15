@@ -83,9 +83,9 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     @Override
     public void doInit() {
 
-        gameContext().theGame().hud().showScore(false);
-        gameContext().theGame().hud().showLevelCounter(false);
-        gameContext().theGame().hud().showLivesCounter(false);
+        gameContext().theGame().theHUD().showScore(false);
+        gameContext().theGame().theHUD().showLevelCounter(false);
+        gameContext().theGame().theHUD().showLivesCounter(false);
 
         var config = ui.<TengenMsPacMan_UIConfig>theConfiguration();
         actionBindings.bind(config.ACTION_START_PLAYING, config.TENGEN_MS_PACMAN_ACTION_BINDINGS);

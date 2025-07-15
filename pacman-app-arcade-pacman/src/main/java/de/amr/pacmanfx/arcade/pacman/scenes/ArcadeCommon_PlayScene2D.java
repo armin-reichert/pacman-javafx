@@ -70,16 +70,13 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
 
     @Override
     protected void doInit() {
-        gameContext().theGame().hud().showScore(true);
-        gameContext().theGame().hud().showLevelCounter(true);
-        gameContext().theGame().hud().showLivesCounter(true);
+        gameContext().theGame().theHUD().score(true).levelCounter(true).livesCounter(true);
         levelCompletedAnimation = new LevelCompletedAnimation(animationManager);
         gameRenderer = ui.theConfiguration().createGameRenderer(canvas);
     }
 
     @Override
-    protected void doEnd() {
-    }
+    protected void doEnd() {}
 
     /*
       Note: If the corresponding 3D scene is displayed when the game level gets created,
@@ -88,13 +85,11 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
      */
     private void initWithGameLevel(GameLevel gameLevel) {
         if (gameLevel.isDemoLevel()) {
-            gameContext().theGame().hud().showLevelCounter(true);
-            gameContext().theGame().hud().showLivesCounter(false);
+            gameContext().theGame().theHUD().credit(false).levelCounter(true).livesCounter(false);
             actionBindings.bind(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDINGS);
             actionBindings.updateKeyboard();
         } else {
-            gameContext().theGame().hud().showLevelCounter(true);
-            gameContext().theGame().hud().showLivesCounter(true);
+            gameContext().theGame().theHUD().credit(false).levelCounter(true).livesCounter(true);
             actionBindings.bind(ACTION_STEER_UP, GLOBAL_ACTION_BINDINGS);
             actionBindings.bind(ACTION_STEER_DOWN, GLOBAL_ACTION_BINDINGS);
             actionBindings.bind(ACTION_STEER_LEFT, GLOBAL_ACTION_BINDINGS);
@@ -178,14 +173,14 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
     }
 
     private void updateHUD() {
-        LivesCounter livesCounter = gameContext().theGame().hud().livesCounter();
+        LivesCounter livesCounter = gameContext().theGame().theHUD().theLivesCounter();
         int numLivesDisplayed = gameContext().theGame().lifeCount() - 1;
         // As long as Pac-Man is still initially hidden in the maze, he is shown as an entry in the lives counter
         if (gameContext().theGameState() == GameState.STARTING_GAME && !gameContext().theGameLevel().pac().isVisible()) {
             numLivesDisplayed += 1;
         }
         livesCounter.setVisibleLifeCount(Math.min(numLivesDisplayed, livesCounter.maxLivesDisplayed()));
-        gameContext().theGame().hud().showCredit(gameContext().theCoinMechanism().isEmpty());
+        gameContext().theGame().theHUD().showCredit(gameContext().theCoinMechanism().isEmpty());
     }
 
     private void updateSound(GameLevel gameLevel) {

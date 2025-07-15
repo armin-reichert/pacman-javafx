@@ -53,7 +53,7 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
     @Override
     public void resetEverything() {
         prepareForNewGame();
-        hud().levelCounter().clear();
+        theHUD().theLevelCounter().clear();
     }
 
     @Override
@@ -71,7 +71,7 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
     @Override
     public void startNewGame() {
         prepareForNewGame();
-        hud().levelCounter().clear();
+        theHUD().theLevelCounter().clear();
         buildNormalLevel(1);
         gameContext.theGameEventManager().publishEvent(this, GameEventType.GAME_STARTED);
     }
@@ -225,7 +225,7 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
         level.setDemoLevel(false);
         level.pac().immuneProperty().bind(theGameContext().propertyImmunity());
         level.pac().usingAutopilotProperty().bind(theGameContext().propertyUsingAutopilot());
-        hud().levelCounter().setEnabled(true);
+        theHUD().theLevelCounter().setEnabled(true);
         huntingTimer.reset();
         setScoreLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
@@ -242,7 +242,7 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
         level.pac().setUsingAutopilot(true);
         level.pac().setAutopilotSteering(demoLevelSteering);
         demoLevelSteering.init();
-        hud().levelCounter().setEnabled(true);
+        theHUD().theLevelCounter().setEnabled(true);
         huntingTimer.reset();
         setScoreLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
@@ -261,7 +261,7 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
             highScore().setEnabled(false);
             Logger.info("Demo level {} started", level.number());
         } else {
-            hud().levelCounter().update(level.number(), level.bonusSymbol(0));
+            theHUD().theLevelCounter().update(level.number(), level.bonusSymbol(0));
             level.showMessage(GameLevel.MESSAGE_READY);
             score().setEnabled(true);
             highScore().setEnabled(true);

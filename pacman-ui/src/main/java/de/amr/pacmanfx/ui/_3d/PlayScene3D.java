@@ -229,7 +229,7 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void init() {
-        gameContext().theGame().hud().showScore(true);
+        gameContext().theGame().theHUD().showScore(true);
         perspectiveManager.perspectiveIDProperty().bind(ui.property3DPerspective());
     }
 
