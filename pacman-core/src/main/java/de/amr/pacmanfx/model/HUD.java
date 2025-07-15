@@ -28,7 +28,7 @@ public interface HUD {
     void showCredit(boolean b);
 
     // Fluent API
-    default HUD allOff() { return credit(false).score(false).levelCounter(false).livesCounter(false); }
+    default HUD all(boolean state) { return credit(state).score(state).levelCounter(state).livesCounter(state); }
     default HUD credit(boolean on) { showCredit(on); return this; }
     default HUD levelCounter(boolean on) { showLevelCounter(on); return this; }
     default HUD livesCounter(boolean on) { showLivesCounter(on); return this; }
