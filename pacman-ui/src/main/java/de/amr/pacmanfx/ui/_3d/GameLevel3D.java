@@ -125,13 +125,12 @@ public class GameLevel3D extends Group implements Destroyable {
     public GameLevel3D(
         GameUI ui,
         Model3DRepository model3DRepository,
-        GameContext gameContext,
-        GameLevel gameLevel,
         WorldMapColorScheme proposedColorScheme)
     {
         this.ui = requireNonNull(ui);
+        this.gameLevel = requireNonNull(ui.theGameContext().theGameLevel());
+
         requireNonNull(model3DRepository);
-        this.gameLevel = requireNonNull(gameLevel);
         requireNonNull(proposedColorScheme);
 
         // Add some contrast with floor if wall fill color is black
@@ -164,8 +163,8 @@ public class GameLevel3D extends Group implements Destroyable {
         ambientLight.colorProperty().bind(ui.property3DLightColor());
         getChildren().add(ambientLight);
 
-        levelCounter3D = new LevelCounter3D(ui.theConfiguration(), animationManager, gameContext.theGame().hud().levelCounter());
-        levelCounter3D.setTranslateX(gameLevel.worldMap().numCols() * TS - 2 * TS);
+        levelCounter3D = new LevelCounter3D(ui.theConfiguration(), animationManager, ui.theGameContext().theGame().hud().levelCounter());
+        levelCounter3D.setTranslateX(ui.theGameContext().theGameLevel().worldMap().numCols() * TS - 2 * TS);
         levelCounter3D.setTranslateY(2 * TS);
         levelCounter3D.spinningAnimation().playFromStart();
         getChildren().add(levelCounter3D);

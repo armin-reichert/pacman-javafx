@@ -538,8 +538,6 @@ public class PlayScene3D implements GameScene, SubSceneContent {
         gameLevel3D = new GameLevel3D(
                 ui,
                 ui.theModel3DRepository(),
-                gameContext(),
-                gameContext().theGameLevel(),
                 ui.theConfiguration().colorScheme(gameContext().theGameLevel().worldMap())
         );
         gameLevel3D.pac3D().init();
