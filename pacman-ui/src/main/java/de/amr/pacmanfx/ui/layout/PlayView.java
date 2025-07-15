@@ -19,7 +19,6 @@ import de.amr.pacmanfx.ui._2d.PopupLayer;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.InfoBox;
-import de.amr.pacmanfx.uilib.SubSceneContent;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
 import javafx.beans.binding.Bindings;
@@ -333,26 +332,17 @@ public class PlayView implements PacManGames_View {
         });
     }
 
-    /*
-       Three different cases currently occur:
-       2D game scenes without camera (Arcade scenes)
-       2D game scenes with camera(s) and JavaFX subscene (Tengen Ms. Pac-Man play scene)
-       3D game scenes (always with camera and JavaFX subscene)
-    */
     private void embedGameScene(GameScene gameScene) {
-        requireNonNull(gameScene);
-        if (gameScene instanceof GameScene2D gameScene2D) {
-            if (gameScene2D instanceof SubSceneContent content) {
-                embedSubScene(content.subScene());
-            }
-            else {
-                embedGameScene2DWithoutSubScene(gameScene2D);
-            }
+        if (gameScene.optSubScene().isPresent()) {
+            SubScene subScene = gameScene.optSubScene().get();
+            subScene.widthProperty().bind(parentScene.widthProperty());
+            subScene.heightProperty().bind(parentScene.heightProperty());
+            root.getChildren().set(0, subScene);
+        }
+        else if (gameScene instanceof GameScene2D gameScene2D) {
+            embedGameScene2DDirectly(gameScene2D);
             gameScene2D.backgroundColorProperty().bind(ui.propertyCanvasBackgroundColor());
             gameScene2D.clear();
-        }
-        else if (gameScene instanceof SubSceneContent gameScene3D) {
-            embedSubScene(gameScene3D.subScene());
         }
         else {
             Logger.error("Cannot embed play scene of class {}", gameScene.getClass().getName());
@@ -360,7 +350,7 @@ public class PlayView implements PacManGames_View {
     }
 
     // Game scenes without camera are drawn into the canvas provided by this play view
-    private void embedGameScene2DWithoutSubScene(GameScene2D gameScene2D) {
+    private void embedGameScene2DDirectly(GameScene2D gameScene2D) {
         gameScene2D.setCanvas(commonCanvas);
         gameScene2D.setGameRenderer(ui.theConfiguration().createGameRenderer(commonCanvas));
         gameScene2D.scalingProperty().bind(canvasContainer.scalingProperty().map(
@@ -370,12 +360,6 @@ public class PlayView implements PacManGames_View {
         canvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
         canvasContainer.backgroundProperty().bind(ui.propertyCanvasBackgroundColor().map(Ufx::coloredBackground));
         root.getChildren().set(0, canvasLayer);
-    }
-
-    private void embedSubScene(SubScene subScene) {
-        subScene.widthProperty().bind(parentScene.widthProperty());
-        subScene.heightProperty().bind(parentScene.heightProperty());
-        root.getChildren().set(0, subScene);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

@@ -9,7 +9,7 @@ import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._3d.Perspective;
-import de.amr.pacmanfx.uilib.SubSceneContent;
+import javafx.scene.SubScene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
@@ -102,8 +102,19 @@ public class InfoBox3DSettings extends InfoBox {
     }
 
     private String subSceneSizeInfo() {
-        if (ui.currentGameScene().isPresent() && ui.currentGameScene().get() instanceof SubSceneContent subSceneContent) {
-            return "%.0fx%.0f".formatted(subSceneContent.subScene().getWidth(), subSceneContent.subScene().getHeight());
+        if (ui.currentGameScene().isPresent() && ui.currentGameScene().get().optSubScene().isPresent()) {
+            SubScene subScene = ui.currentGameScene().get().optSubScene().get();
+            return "%.0fx%.0f".formatted(subScene.getWidth(), subScene.getHeight());
+        }
+        return InfoText.NO_INFO;
+    }
+
+    private String subSceneCameraInfo() {
+        if (ui.currentGameScene().isPresent() && ui.currentGameScene().get().optSubScene().isPresent()) {
+            SubScene subScene = ui.currentGameScene().get().optSubScene().get();
+            var camera = subScene.getCamera();
+            return String.format("rot=%.0f x=%.0f y=%.0f z=%.0f",
+                    camera.getRotate(), camera.getTranslateX(), camera.getTranslateY(), camera.getTranslateZ());
         }
         return InfoText.NO_INFO;
     }
@@ -123,15 +134,6 @@ public class InfoBox3DSettings extends InfoBox {
                     return "%dx%d (map size px)".formatted(width, height);
                 }
             }
-        }
-        return InfoText.NO_INFO;
-    }
-
-    private String subSceneCameraInfo() {
-        if (ui.currentGameScene().isPresent() && ui.currentGameScene().get() instanceof SubSceneContent subSceneContent) {
-            var cam = subSceneContent.subScene().getCamera();
-            return String.format("rot=%.0f x=%.0f y=%.0f z=%.0f",
-                cam.getRotate(), cam.getTranslateX(), cam.getTranslateY(), cam.getTranslateZ());
         }
         return InfoText.NO_INFO;
     }

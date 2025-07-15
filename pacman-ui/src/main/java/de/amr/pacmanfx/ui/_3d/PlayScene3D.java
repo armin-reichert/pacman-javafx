@@ -18,7 +18,6 @@ import de.amr.pacmanfx.ui.ActionBindingMap;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.pacmanfx.uilib.SubSceneContent;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.*;
 import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
@@ -57,7 +56,7 @@ import static java.util.Objects.requireNonNull;
  * <p>Provides different camera perspectives that can be stepped through using key combinations
  * <code>Alt+LEFT</code> and <code>Alt+RIGHT</code> (Did he really said Alt-Right?).
  */
-public class PlayScene3D implements GameScene, SubSceneContent {
+public class PlayScene3D implements GameScene {
 
     private static final Color SUBSCENE_FILL_DARK = Color.BLACK;
     private static final Color SUBSCENE_FILL_BRIGHT = Color.TRANSPARENT;
@@ -267,8 +266,8 @@ public class PlayScene3D implements GameScene, SubSceneContent {
     }
 
     @Override
-    public SubScene subScene() {
-        return subScene;
+    public Optional<SubScene> optSubScene() {
+        return Optional.of(subScene);
     }
 
     @Override

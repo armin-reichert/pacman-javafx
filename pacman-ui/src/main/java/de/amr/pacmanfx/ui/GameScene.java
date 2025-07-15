@@ -7,11 +7,13 @@ package de.amr.pacmanfx.ui;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.DefaultGameEventListener;
 import de.amr.pacmanfx.uilib.model3D.Destroyable;
+import javafx.scene.SubScene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.ContextMenuEvent;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Common interface of all game scenes (2D and 3D).
@@ -21,6 +23,8 @@ import java.util.List;
 public interface GameScene extends DefaultGameEventListener, Destroyable {
 
     GameUI theUI();
+
+    default Optional<SubScene> optSubScene() { return Optional.empty(); }
 
     GameContext gameContext();
 

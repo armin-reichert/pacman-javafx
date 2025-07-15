@@ -22,7 +22,6 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.pacmanfx.uilib.SubSceneContent;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
@@ -39,6 +38,7 @@ import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -53,7 +53,7 @@ import static de.amr.pacmanfx.uilib.Ufx.menuTitleItem;
 /**
  * Tengen Ms. Pac-Man play scene, uses vertical scrolling by default.
  */
-public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneContent {
+public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     // 32 tiles (NES screen width)
     private static final int UNSCALED_CANVAS_WIDTH = NES_TILES.x() * TS;
     // 42 tiles (BIG maps height) + 2 extra rows
@@ -228,8 +228,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneC
     }
 
     @Override
-    public SubScene subScene() {
-        return subScene;
+    public Optional<SubScene> optSubScene() {
+        return Optional.of(subScene);
     }
 
     @Override
