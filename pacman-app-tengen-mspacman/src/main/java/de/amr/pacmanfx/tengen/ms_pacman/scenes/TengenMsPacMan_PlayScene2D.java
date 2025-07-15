@@ -409,23 +409,27 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     public void draw() {
         clear();
         if (gameContext().optGameLevel().isEmpty()) {
-            return;
+            return; // Scene is drawn already 2 ticks before level has been created
         }
+        final GameLevel gameLevel = gameContext().theGameLevel();
 
         // compute current scene scaling
-        switch (displayModeProperty.get()) {
+        double scaling = switch (displayModeProperty.get()) {
             case SCALED_TO_FIT -> { //TODO this code smells
-                int tilesY = gameContext().theGameLevel().worldMap().numRows() + 3;
+                int tilesY = gameLevel.worldMap().numRows() + 3;
                 double camY = scaled((tilesY - 46) * HTS);
                 fixedCamera.setTranslateY(camY);
-                setScaling(subScene.getHeight() / (tilesY * TS));
+                yield (subScene.getHeight() / (tilesY * TS));
             }
-            case SCROLLING -> setScaling(subScene.getHeight() / NES_SIZE_PX.y());
-        }
-        gameRenderer.setScaling(scaling());
+            case SCROLLING -> (subScene.getHeight() / NES_SIZE_PX.y());
+        };
+        setScaling(scaling);
+
+        renderer().setScaling(scaling);
         renderer().ensureRenderingHintsAreApplied(gameContext().theGameLevel());
 
         ctx().save();
+
         if (debugInfoVisibleProperty.get()) {
             canvas.setClip(null);
             drawSceneContent();
@@ -434,12 +438,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             canvas.setClip(canvasClipArea);
             drawSceneContent();
         }
-        ctx().restore();
-
         // NES screen is 32 tiles wide but mazes are only 28 tiles wide, so shift HUD right:
-        ctx().save();
         ctx().translate(scaled(2 * TS), 0);
         renderer().drawHUD(gameContext(), gameContext().theGame().theHUD(), sizeInPx(), ui.theGameClock().tickCount());
+
         ctx().restore();
     }
 
