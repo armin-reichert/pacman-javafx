@@ -205,7 +205,12 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
                 case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
                 case MovingBonus movingBonus   -> drawMovingBonus(movingBonus);
                 case Pac pac                   -> drawAnyKindOfPac(pac);
-                case Stork stork               -> drawStork(stork, backgroundColor());
+                case Stork stork -> {
+                    drawAnimatedActor(stork);
+                    if (stork.isBagReleasedFromBeak()) {
+                        hideStorkBag(stork);
+                    }
+                }
                 default                        -> super.drawActor(actor);
             }
         }
@@ -268,6 +273,12 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
         }
         drawSpriteScaledCenteredAt(spriteLookingLeft, 0, 0);
         ctx.restore();
+    }
+
+    //TODO change sprite sheet to include stork without bag in beak?
+    private void hideStorkBag(Stork stork) {
+        ctx.setFill(backgroundColor());
+        ctx.fillRect(scaled(stork.x() - 13), scaled(stork.y() + 3), scaled(8), scaled(10));
     }
 
     public void drawVerticalSceneBorders() {
@@ -466,16 +477,6 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
                 ctx.fillText(clapperboard.text(), scaled(textX), scaled(textY));
             }
         });
-    }
-
-    //TODO maybe just extend sprite sheet to include stork without bag?
-    private void drawStork(Stork stork, Color backgroundColor) {
-        drawAnimatedActor(stork);
-        if (stork.isBagReleasedFromBeak()) { // over-paint bag still hanging at beak
-            ctx.setFill(backgroundColor);
-            //TODO: clarify coordinate values
-            ctx.fillRect(scaled(stork.x() - 13), scaled(stork.y() + 3), scaled(8), scaled(10));
-        }
     }
 
     public void drawJoypadKeyBinding(JoypadKeyBinding binding) {

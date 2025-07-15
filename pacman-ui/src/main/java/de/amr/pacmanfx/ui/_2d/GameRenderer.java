@@ -137,6 +137,25 @@ public abstract class GameRenderer implements Destroyable {
         }
     }
 
+    public void drawAnimatedActor(Animated animated) {
+        animated.animationMap().ifPresent(animationMap -> {
+            // assume interface is only implemented by Actor (sub-)classes
+            Actor actor = (Actor) animated;
+            switch (animationMap) {
+                case SingleSpriteWithoutAnimation singleSpriteWithoutAnimation ->
+                        drawActorSpriteCentered(actor, singleSpriteWithoutAnimation.singleSprite());
+                case SpriteAnimationMap<?> spriteAnimationMap -> {
+                    if (spriteAnimationMap.currentAnimation() != null) {
+                        drawActorSpriteCentered(actor, spriteAnimationMap.currentSprite(actor));
+                    } else {
+                        Logger.error("No current animation for actor {}", actor);
+                    }
+                }
+                default -> Logger.error("Cannot render animated actor with animation map of type {}", animationMap.getClass().getSimpleName());
+            }
+        });
+    }
+
     /**
      * Fills a square at the center of the given tile with the current fill color. Used to hide pellets, energizers
      * or sprites that are part of a map image.
@@ -319,25 +338,6 @@ public abstract class GameRenderer implements Destroyable {
     public void drawActorSpriteCentered(Actor actor, RectShort sprite) {
         float centerX = actor.x() + HTS, centerY = actor.y() + HTS;
         drawSpriteScaledCenteredAt(sprite, centerX, centerY);
-    }
-
-    public void drawAnimatedActor(Animated animated) {
-        animated.animationMap().ifPresent(animationMap -> {
-            // assume interface is only implemented by Actor (sub-)classes
-            Actor actor = (Actor) animated;
-            switch (animationMap) {
-                case SingleSpriteWithoutAnimation singleSpriteWithoutAnimation ->
-                        drawActorSpriteCentered(actor, singleSpriteWithoutAnimation.singleSprite());
-                case SpriteAnimationMap<?> spriteAnimationMap -> {
-                    if (spriteAnimationMap.currentAnimation() != null) {
-                        drawActorSpriteCentered(actor, spriteAnimationMap.currentSprite(actor));
-                    } else {
-                        Logger.error("No current animation for actor {}", actor);
-                    }
-                }
-                default -> Logger.error("Cannot render animated actor with animation map of type {}", animationMap.getClass().getSimpleName());
-            }
-        });
     }
 
     public void drawMovingActorInfo(MovingActor movingActor) {

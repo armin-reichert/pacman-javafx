@@ -15,8 +15,6 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import org.tinylog.Logger;
 
-import java.util.List;
-
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createGhost;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createPac;
@@ -55,17 +53,20 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         frame = -1;
 
         pac = createPac(null);
+        pac.setAnimations(ui.theConfiguration().createPacAnimations(pac));
+
         blinky = createGhost(null, RED_GHOST_SHADOW);
         blinky.setSpeed(0);
         blinky.hide();
-
-        pac.setAnimations(ui.theConfiguration().createPacAnimations(pac));
 
         ActorAnimationMap blinkyAnimations = ui.theConfiguration().createGhostAnimations(blinky);
         blinky.setAnimations(blinkyAnimations);
         blinkyNormal = (SpriteAnimation) blinkyAnimations.animation(ANIM_GHOST_NORMAL);
         nailDressRaptureAnimation = (SpriteAnimation) blinkyAnimations.animation(ANIM_BLINKY_NAIL_DRESS_RAPTURE);
         blinkyDamaged = (SpriteAnimation) blinkyAnimations.animation(ANIM_BLINKY_DAMAGED);
+
+        actorsInZOrder.add(pac);
+        actorsInZOrder.add(blinky);
 
         gameContext().theGame().hud().showScore(true);
         gameContext().theGame().hud().showLevelCounter(true);
@@ -135,7 +136,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     public void drawSceneContent() {
         gameRenderer.drawSpriteScaled((RectShort) nailDressRaptureAnimation.currentSprite(),
                 tiles_to_px(14), tiles_to_px(19) + 3);
-        gameRenderer.drawActors(List.of(blinky, pac));
+        gameRenderer.drawActors(actorsInZOrder);
     }
 
     @Override

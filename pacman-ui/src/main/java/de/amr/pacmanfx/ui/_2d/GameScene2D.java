@@ -8,6 +8,7 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
+import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.ui.ActionBindingMap;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
@@ -18,6 +19,9 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.GameUI.DEBUG_TEXT_FILL;
@@ -41,6 +45,7 @@ public abstract class GameScene2D implements GameScene {
     protected final AnimationManager animationManager = new AnimationManager();
     protected GameRenderer gameRenderer;
     protected Canvas canvas;
+    protected final List<Actor> actorsInZOrder = new ArrayList<>();
 
     protected GameScene2D(GameUI ui) {
         this.ui = requireNonNull(ui);
@@ -115,7 +120,10 @@ public abstract class GameScene2D implements GameScene {
     public void setCanvas(Canvas canvas) { this.canvas = canvas; }
 
     public ObjectProperty<Color> backgroundColorProperty() { return backgroundColorProperty; }
+
     public BooleanProperty debugInfoVisibleProperty() { return debugInfoVisibleProperty; }
+    public boolean isDebugInfoVisible() { return debugInfoVisibleProperty.get(); }
+
     public FloatProperty scalingProperty() { return scalingProperty; }
 
     /**

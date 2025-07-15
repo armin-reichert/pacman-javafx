@@ -12,8 +12,6 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import org.tinylog.Logger;
 
-import java.util.List;
-
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createGhost;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createPac;
@@ -47,8 +45,12 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
 
         pac = createPac(null);
         pac.setAnimations(ui.theConfiguration().createPacAnimations(pac));
+
         blinky = createGhost(null, RED_GHOST_SHADOW);
         blinky.setAnimations(ui.theConfiguration().createGhostAnimations(blinky));
+
+        actorsInZOrder.add(pac);
+        actorsInZOrder.add(blinky);
 
         gameContext().theGame().hud().showScore(true);
         gameContext().theGame().hud().showLevelCounter(true);
@@ -97,7 +99,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        gameRenderer.drawActors(List.of(pac, blinky));
+        gameRenderer.drawActors(actorsInZOrder);
     }
 
     @Override
