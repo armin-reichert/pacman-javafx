@@ -285,7 +285,7 @@ public class PlayScene3D implements GameScene, SubSceneContent {
                 gameLevel3D.livesCounter3D().lookingAroundAnimation().playFromStart();
             }
             case PACMAN_DYING -> {
-                gameContext().theGameState().timer().resetIndefiniteTime(); // expires when animation ends
+                state.timer().resetIndefiniteTime(); // expires when animation ends
                 ui.theSound().stopAll();
                 // do one last update before dying animation starts
                 gameLevel3D.pac3D().update(gameContext().theGameLevel());
@@ -311,7 +311,7 @@ public class PlayScene3D implements GameScene, SubSceneContent {
                     gameLevel3D.ghost3D(personality).setNumberImage(pointsImage);
                 });
             case LEVEL_COMPLETE -> {
-                gameContext().theGameState().timer().resetIndefiniteTime(); // expires when animation ends
+                state.timer().resetIndefiniteTime(); // expires when animation ends
                 gameLevel3D.onLevelComplete();
                 boolean cutSceneFollows = gameContext().theGame().cutSceneNumber(gameContext().theGameLevel().number()).isPresent();
                 ManagedAnimation levelCompletedAnimation = cutSceneFollows
@@ -333,13 +333,13 @@ public class PlayScene3D implements GameScene, SubSceneContent {
                 animation.play();
             }
             case LEVEL_TRANSITION -> {
-                gameContext().theGameState().timer().resetIndefiniteTime();
+                state.timer().resetIndefiniteTime();
                 replaceGameLevel3D();
                 perspectiveManager.initPerspective();
-                gameContext().theGameState().timer().expire();
+                state.timer().expire();
             }
             case GAME_OVER -> {
-                gameContext().theGameState().timer().restartSeconds(3);
+                state.timer().restartSeconds(3);
                 gameLevel3D.energizers3D().forEach(energizer3D -> energizer3D.shape3D().setVisible(false));
                 gameLevel3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
                 ui.theSound().stopAll();
@@ -364,12 +364,18 @@ public class PlayScene3D implements GameScene, SubSceneContent {
         if (gameLevel3D == null) {
             replaceGameLevel3D();
         }
+        perspectiveManager.initPerspective();
+        fadeInSubScene();
         switch (gameContext().theGameState()) {
             case STARTING_GAME -> {
                 if (!gameContext().theGameLevel().isDemoLevel()) {
-                    //TODO default position if no house
-                    Vector2f position = gameContext().theGameLevel().house().map(House::centerPositionUnderHouse).orElse(Vector2f.ZERO);
-                    gameLevel3D.showAnimatedMessage("READY!", 2.5f, position.x(), position.y());
+                    if (gameContext().theGameLevel().house().isEmpty()) {
+                        Logger.error("No house found in this game level! WTF?");
+                    }
+                    gameContext().theGameLevel().house().ifPresent(house -> {
+                        Vector2f messageCenter = house.centerPositionUnderHouse();
+                        gameLevel3D.showAnimatedMessage("READY!", 2.5f, messageCenter.x(), messageCenter.y());
+                    });
                     setPlayerSteeringActionBindings();
                 }
             }
@@ -381,8 +387,6 @@ public class PlayScene3D implements GameScene, SubSceneContent {
             }
             default -> Logger.error("Unexpected game state '{}' on level start", gameContext().theGameState());
         }
-        perspectiveManager.initPerspective();
-        fadeInSubScene();
     }
 
     @Override
