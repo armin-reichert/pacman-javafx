@@ -131,7 +131,7 @@ public class PlayScene3D implements GameScene, SubSceneContent {
 
     // Context menu
 
-    private final ToggleGroup toggleGroup = new ToggleGroup();
+    private final ToggleGroup perspectiveToggleGroup = new ToggleGroup();
 
     @Override
     public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent, ContextMenu menu) {
@@ -174,7 +174,7 @@ public class PlayScene3D implements GameScene, SubSceneContent {
         for (Perspective.ID id : Perspective.ID.values()) {
             var item = new RadioMenuItem(ui.theAssets().text("perspective_id_" + id.name()));
             item.setUserData(id);
-            item.setToggleGroup(toggleGroup);
+            item.setToggleGroup(perspectiveToggleGroup);
             if (id == ui.property3DPerspective().get())  {
                 item.setSelected(true);
             }
@@ -194,9 +194,9 @@ public class PlayScene3D implements GameScene, SubSceneContent {
         ObservableValue<? extends Perspective.ID> property,
         Perspective.ID oldPerspectiveID,
         Perspective.ID newPerspectiveID) {
-        for (Toggle toggle : toggleGroup.getToggles()) {
+        for (Toggle toggle : perspectiveToggleGroup.getToggles()) {
             if (toggle.getUserData() == newPerspectiveID) {
-                toggleGroup.selectToggle(toggle);
+                perspectiveToggleGroup.selectToggle(toggle);
             }
         }
     }
