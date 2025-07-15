@@ -90,8 +90,8 @@ public class GameLevel3D extends Group implements Destroyable {
 
     private final AnimationManager animationManager = new AnimationManager();
     private ManagedAnimation wallColorFlashingAnimation;
-    private ManagedAnimation levelCompletedAnimation;
-    private ManagedAnimation levelCompletedAnimationBeforeCutScene;
+    private ManagedAnimation levelCompletedFullAnimation;
+    private ManagedAnimation levelCompletedShortAnimation;
 
     private MeshView[] dressMeshViews;
     private MeshView[] pupilsMeshViews;
@@ -299,8 +299,8 @@ public class GameLevel3D extends Group implements Destroyable {
             }
         };
 
-        levelCompletedAnimation = new LevelCompletedAnimation(ui, animationManager, this);
-        levelCompletedAnimationBeforeCutScene = new LevelCompletedAnimationBeforeCutScene(animationManager, this);
+        levelCompletedFullAnimation = new LevelCompletedAnimation(ui, animationManager, this);
+        levelCompletedShortAnimation = new LevelCompletedAnimationShort(animationManager, this);
     }
 
     public GameLevel gameLevel() {
@@ -326,8 +326,8 @@ public class GameLevel3D extends Group implements Destroyable {
     public double floorThickness() { return floor3D.getDepth(); }
 
     public AnimationManager animationManager() { return animationManager; }
-    public ManagedAnimation levelCompletedAnimation() { return levelCompletedAnimation; }
-    public ManagedAnimation levelCompletedAnimationBeforeCutScene() { return levelCompletedAnimationBeforeCutScene; }
+    public ManagedAnimation levelCompletedAnimation() { return levelCompletedFullAnimation; }
+    public ManagedAnimation levelCompletedAnimationBeforeCutScene() { return levelCompletedShortAnimation; }
     public ManagedAnimation wallColorFlashingAnimation() { return wallColorFlashingAnimation; }
 
     /**
@@ -440,7 +440,7 @@ public class GameLevel3D extends Group implements Destroyable {
         energizers3D.trimToSize();
     }
 
-    private void setDrawModeForTree(Node root, DrawMode drawMode) {
+    private void setDrawModeForAllDescendantShapes(Node root, DrawMode drawMode) {
         root.lookupAll("*").stream()
             .filter(Shape3D.class::isInstance)
             .map(Shape3D.class::cast)
@@ -482,11 +482,11 @@ public class GameLevel3D extends Group implements Destroyable {
 
     private void handleDrawModeChange(ObservableValue<? extends DrawMode> py, DrawMode ov, DrawMode drawMode) {
         if (isDestroyed()) return; //TODO how can that be?
-        setDrawModeForTree(mazeGroup, drawMode);
-        setDrawModeForTree(levelCounter3D, drawMode);
-        setDrawModeForTree(livesCounter3D, drawMode);
-        setDrawModeForTree(pac3D, drawMode);
-        ghosts3D.forEach(ghost3D -> setDrawModeForTree(ghost3D, drawMode));
+        setDrawModeForAllDescendantShapes(mazeGroup, drawMode);
+        setDrawModeForAllDescendantShapes(levelCounter3D, drawMode);
+        setDrawModeForAllDescendantShapes(livesCounter3D, drawMode);
+        setDrawModeForAllDescendantShapes(pac3D, drawMode);
+        ghosts3D.forEach(ghost3D -> setDrawModeForAllDescendantShapes(ghost3D, drawMode));
         Logger.info("Draw mode set to {}", drawMode);
     }
 
@@ -495,7 +495,7 @@ public class GameLevel3D extends Group implements Destroyable {
         obstacleBaseHeightProperty.set(newHeight.doubleValue());
     }
 
-    // experimental
+    // still work in progress...
 
     private boolean destroyed;
 
@@ -553,8 +553,8 @@ public class GameLevel3D extends Group implements Destroyable {
 
         animationManager.destroyAllAnimations();
         wallColorFlashingAnimation = null;
-        levelCompletedAnimation = null;
-        levelCompletedAnimationBeforeCutScene = null;
+        levelCompletedFullAnimation = null;
+        levelCompletedShortAnimation = null;
         Logger.info("Destroyed and removed all managed animations");
 
         if (dressMeshViews != null) {

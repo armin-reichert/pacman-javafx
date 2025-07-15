@@ -10,13 +10,13 @@ import javafx.util.Duration;
 import static de.amr.pacmanfx.uilib.Ufx.pauseSec;
 import static java.util.Objects.requireNonNull;
 
-public class LevelCompletedAnimationBeforeCutScene extends ManagedAnimation {
+public class LevelCompletedAnimationShort extends ManagedAnimation {
 
     public static final int FLASH_DURATION_MILLIS = 250;
     private GameLevel3D gameLevel3D;
 
-    public LevelCompletedAnimationBeforeCutScene(AnimationManager animationManager, GameLevel3D gameLevel3D) {
-        super(animationManager, "Level_Complete_Before_CutScene");
+    public LevelCompletedAnimationShort(AnimationManager animationManager, GameLevel3D gameLevel3D) {
+        super(animationManager, "Level_Complete_Short_Animation");
         this.gameLevel3D = requireNonNull(gameLevel3D);
     }
 
