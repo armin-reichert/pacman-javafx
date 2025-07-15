@@ -212,8 +212,9 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     @Override
     public Vector2f sizeInPx() { return NES_SIZE_PX; }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public TengenMsPacMan_GameRenderer gr() {
+    public TengenMsPacMan_GameRenderer renderer() {
         return (TengenMsPacMan_GameRenderer) gameRenderer;
     }
 
@@ -234,7 +235,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        gr().drawVerticalSceneBorders();
-        gr().drawActors(List.of(clapperboard, msPacMan, pacMan, inky, pinky, heart));
+        renderer().drawVerticalSceneBorders();
+        renderer().drawActors(List.of(clapperboard, msPacMan, pacMan, inky, pinky, heart));
     }
 }

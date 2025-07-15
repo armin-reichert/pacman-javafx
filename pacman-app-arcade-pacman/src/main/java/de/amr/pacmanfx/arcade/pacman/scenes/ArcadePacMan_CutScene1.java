@@ -105,13 +105,13 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        gr().drawActors(List.of(pac, blinky));
+        gameRenderer.drawActors(List.of(pac, blinky));
     }
 
     @Override
     protected void drawDebugInfo() {
         super.drawDebugInfo();
         String text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
-        gr().fillTextAtScaledPosition(text, DEBUG_TEXT_FILL, DEBUG_TEXT_FONT, tiles_to_px(1), tiles_to_px(5));
+        gameRenderer.fillTextAtScaledPosition(text, DEBUG_TEXT_FILL, DEBUG_TEXT_FONT, tiles_to_px(1), tiles_to_px(5));
     }
 }

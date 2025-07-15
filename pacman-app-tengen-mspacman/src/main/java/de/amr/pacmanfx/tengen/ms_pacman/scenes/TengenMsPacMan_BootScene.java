@@ -41,6 +41,12 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
         super(ui);
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public TengenMsPacMan_GameRenderer renderer() {
+        return (TengenMsPacMan_GameRenderer) gameRenderer;
+    }
+
     @Override
     public void doInit() {
         tick = 0;
@@ -106,14 +112,13 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        var r = (TengenMsPacMan_GameRenderer) gr();
-        r.drawVerticalSceneBorders();
+        renderer().drawVerticalSceneBorders();
         if (grayScreen) {
             GameRenderer.fillCanvas(canvas, nesPaletteColor(0x10));
         } else {
-            r.fillTextAtScaledPosition(TENGEN_PRESENTS, blueShadedColor(tick), scaledArcadeFont8(),
+            renderer().fillTextAtScaledPosition(TENGEN_PRESENTS, blueShadedColor(tick), scaledArcadeFont8(),
                 movingText.x(), movingText.y());
-            r.drawActor(ghost);
+            renderer().drawActor(ghost);
         }
     }
 

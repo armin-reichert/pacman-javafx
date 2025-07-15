@@ -133,12 +133,12 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 drawPoints();
                 drawBlinkingEnergizer(tiles_to_px(LEFT_TILE_X), tiles_to_px(20));
                 drawGuys(true);
-                gr().fillTextAtScaledTilePosition(MIDWAY_MFG_CO, ARCADE_PINK, scaledArcadeFont8(), 4, 32);
+                gameRenderer.fillTextAtScaledTilePosition(MIDWAY_MFG_CO, ARCADE_PINK, scaledArcadeFont8(), 4, 32);
             }
             case CHASING_GHOSTS, READY_TO_PLAY -> {
                 drawPoints();
                 drawGuys(false);
-                gr().fillTextAtScaledTilePosition(MIDWAY_MFG_CO, ARCADE_PINK, scaledArcadeFont8(), 4, 32);
+                gameRenderer.fillTextAtScaledTilePosition(MIDWAY_MFG_CO, ARCADE_PINK, scaledArcadeFont8(), 4, 32);
             }
         }
     }
@@ -147,20 +147,20 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         @SuppressWarnings("unchecked") SpriteSheet<SpriteID> spriteSheet = (SpriteSheet<SpriteID>) ui.theConfiguration().spriteSheet();
         ctx().setFont(scaledArcadeFont8());
         if (titleVisible) {
-            gr().fillTextAtScaledPosition("CHARACTER / NICKNAME", ARCADE_WHITE,
+            gameRenderer.fillTextAtScaledPosition("CHARACTER / NICKNAME", ARCADE_WHITE,
                 tiles_to_px(LEFT_TILE_X + 3), tiles_to_px(6));
         }
         for (byte personality = RED_GHOST_SHADOW; personality <= ORANGE_GHOST_POKEY; ++personality) {
             if (ghostImageVisible[personality]) {
-                gr().drawSpriteScaledCenteredAt(spriteSheet.spriteSeq(GALLERY_GHOSTS)[personality],
+                gameRenderer.drawSpriteScaledCenteredAt(spriteSheet.spriteSeq(GALLERY_GHOSTS)[personality],
                     tiles_to_px(LEFT_TILE_X) + TS, tiles_to_px(7 + 3 * personality) + HTS);
             }
             if (ghostCharacterVisible[personality]) {
-                gr().fillTextAtScaledPosition("-" + GHOST_CHARACTERS[personality], GHOST_COLORS[personality],
+                gameRenderer.fillTextAtScaledPosition("-" + GHOST_CHARACTERS[personality], GHOST_COLORS[personality],
                     tiles_to_px(LEFT_TILE_X + 3), tiles_to_px(8 + 3 * personality));
             }
             if (ghostNicknameVisible[personality]) {
-                gr().fillTextAtScaledPosition(GHOST_NICKNAMES[personality], GHOST_COLORS[personality],
+                gameRenderer.fillTextAtScaledPosition(GHOST_NICKNAMES[personality], GHOST_COLORS[personality],
                     tiles_to_px(LEFT_TILE_X + 14), tiles_to_px(8 + 3 * personality));
             }
         }
@@ -171,29 +171,29 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         long tick = sceneController.state().timer().tickCount();
         int shakingAmount = shaking ? (tick % 5 < 2 ? 0 : -1) : 0;
         if (shakingAmount == 0) {
-            gr().drawActors(ghosts);
+            gameRenderer.drawActors(ghosts);
         } else {
-            gr().drawActor(ghosts.get(RED_GHOST_SHADOW));
-            gr().drawActor(ghosts.get(ORANGE_GHOST_POKEY));
+            gameRenderer.drawActor(ghosts.get(RED_GHOST_SHADOW));
+            gameRenderer.drawActor(ghosts.get(ORANGE_GHOST_POKEY));
             ctx().save();
             ctx().translate(shakingAmount, 0);
-            gr().drawActor(ghosts.get(PINK_GHOST_SPEEDY));
-            gr().drawActor(ghosts.get(CYAN_GHOST_BASHFUL));
+            gameRenderer.drawActor(ghosts.get(PINK_GHOST_SPEEDY));
+            gameRenderer.drawActor(ghosts.get(CYAN_GHOST_BASHFUL));
             ctx().restore();
         }
-        gr().drawActor(pacMan);
+        gameRenderer.drawActor(pacMan);
     }
 
     private void drawPoints() {
         ctx().setFill(ARCADE_ROSE);
         // normal pellet
         ctx().fillRect(scaled(tiles_to_px(LEFT_TILE_X + 6) + 4), scaled(tiles_to_px(24) + 4), scaled(2), scaled(2));
-        gr().fillTextAtScaledTilePosition("10",  ARCADE_WHITE, scaledArcadeFont8(), LEFT_TILE_X + 8, 25);
-        gr().fillTextAtScaledTilePosition("PTS", ARCADE_WHITE, scaledArcadeFont6(), LEFT_TILE_X + 11, 25);
+        gameRenderer.fillTextAtScaledTilePosition("10",  ARCADE_WHITE, scaledArcadeFont8(), LEFT_TILE_X + 8, 25);
+        gameRenderer.fillTextAtScaledTilePosition("PTS", ARCADE_WHITE, scaledArcadeFont6(), LEFT_TILE_X + 11, 25);
         // energizer
         drawBlinkingEnergizer(tiles_to_px(LEFT_TILE_X + 6), tiles_to_px(26));
-        gr().fillTextAtScaledTilePosition("50",  ARCADE_WHITE, scaledArcadeFont8(), LEFT_TILE_X + 8, 27);
-        gr().fillTextAtScaledTilePosition("PTS", ARCADE_WHITE, scaledArcadeFont6(), LEFT_TILE_X + 11, 27);
+        gameRenderer.fillTextAtScaledTilePosition("50",  ARCADE_WHITE, scaledArcadeFont8(), LEFT_TILE_X + 8, 27);
+        gameRenderer.fillTextAtScaledTilePosition("PTS", ARCADE_WHITE, scaledArcadeFont6(), LEFT_TILE_X + 11, 27);
     }
 
     private void drawBlinkingEnergizer(double x, double y) {

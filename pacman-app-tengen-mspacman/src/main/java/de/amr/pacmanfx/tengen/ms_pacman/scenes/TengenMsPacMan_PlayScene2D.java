@@ -253,7 +253,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         setActionsBindings();
         //TODO needed?
         setGameRenderer(ui.theConfiguration().createGameRenderer(canvas));
-        gr().ensureRenderingHintsAreApplied(gameLevel);
+        renderer().ensureRenderingHintsAreApplied(gameLevel);
     }
 
     @Override
@@ -399,8 +399,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     // drawing
 
+    @SuppressWarnings("unchecked")
     @Override
-    public TengenMsPacMan_GameRenderer gr() {
+    public TengenMsPacMan_GameRenderer renderer() {
         return (TengenMsPacMan_GameRenderer) gameRenderer;
     }
 
@@ -422,7 +423,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             case SCROLLING -> setScaling(subScene.getHeight() / NES_SIZE_PX.y());
         }
         gameRenderer.setScaling(scaling());
-        gr().ensureRenderingHintsAreApplied(gameContext().theGameLevel());
+        renderer().ensureRenderingHintsAreApplied(gameContext().theGameLevel());
 
         ctx().save();
         if (debugInfoVisibleProperty.get()) {
@@ -438,7 +439,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         // NES screen is 32 tiles wide but mazes are only 28 tiles wide, so shift HUD right:
         ctx().save();
         ctx().translate(scaled(2 * TS), 0);
-        gr().drawHUD(gameContext(), gameContext().theGame().hud(), sizeInPx(), ui.theGameClock().tickCount());
+        renderer().drawHUD(gameContext(), gameContext().theGame().hud(), sizeInPx(), ui.theGameClock().tickCount());
         ctx().restore();
     }
 
@@ -451,23 +452,23 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             if (levelCompletedAnimation.isHighlighted()) {
                 // get the current flashing maze "animation frame"
                 int frameIndex = levelCompletedAnimation.flashingIndex();
-                ColorSchemedSprite flashingMazeSprite = gr().mazeConfig().flashingMazeSprites().get(frameIndex);
-                gr().drawLevelWithMaze(gameContext(), gameContext().theGameLevel(), flashingMazeSprite.image(), flashingMazeSprite.sprite());
+                ColorSchemedSprite flashingMazeSprite = renderer().mazeConfig().flashingMazeSprites().get(frameIndex);
+                renderer().drawLevelWithMaze(gameContext(), gameContext().theGameLevel(), flashingMazeSprite.image(), flashingMazeSprite.sprite());
             } else {
-                gr().drawLevel(gameContext(), gameContext().theGameLevel(), null, false, false, ui.theGameClock().tickCount());
+                renderer().drawLevel(gameContext(), gameContext().theGameLevel(), null, false, false, ui.theGameClock().tickCount());
             }
         }
         else {
             //TODO in the original game, the message is drawn under the maze image but *over* the pellets!
-            gr().drawLevelMessage(ui.theConfiguration(), gameContext().theGameLevel(), currentMessagePosition(), scaledArcadeFont8());
-            gr().drawLevel(gameContext(), gameContext().theGameLevel(), null, false, false, ui.theGameClock().tickCount());
+            renderer().drawLevelMessage(ui.theConfiguration(), gameContext().theGameLevel(), currentMessagePosition(), scaledArcadeFont8());
+            renderer().drawLevel(gameContext(), gameContext().theGameLevel(), null, false, false, ui.theGameClock().tickCount());
         }
 
         actorsByZ.clear();
         gameContext().theGameLevel().bonus().map(BonusEntity::actor).ifPresent(actorsByZ::add);
         actorsByZ.add(gameContext().theGameLevel().pac());
         ghostsByZ().forEach(actorsByZ::add);
-        gr().drawActors(actorsByZ);
+        renderer().drawActors(actorsByZ);
         actorsByZ.clear();
 
         ctx().restore();
@@ -476,14 +477,14 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     @Override
     protected void drawDebugInfo() {
         ctx().save();
-        gr().drawTileGrid(UNSCALED_CANVAS_WIDTH, UNSCALED_CANVAS_HEIGHT, Color.LIGHTGRAY);
+        renderer().drawTileGrid(UNSCALED_CANVAS_WIDTH, UNSCALED_CANVAS_HEIGHT, Color.LIGHTGRAY);
         if (gameContext().optGameLevel().isPresent()) {
             ctx().translate(scaled(2 * TS), 0);
             ctx().setFill(DEBUG_TEXT_FILL);
             ctx().setFont(DEBUG_TEXT_FONT);
             ctx().fillText("%s %d".formatted(gameContext().theGameState(), gameContext().theGameState().timer().tickCount()), 0, scaled(3 * TS));
-            gr().drawMovingActorInfo(gameContext().theGameLevel().pac());
-            ghostsByZ().forEach(gr()::drawMovingActorInfo);
+            renderer().drawMovingActorInfo(gameContext().theGameLevel().pac());
+            ghostsByZ().forEach(renderer()::drawMovingActorInfo);
         }
         ctx().restore();
     }

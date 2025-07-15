@@ -52,10 +52,10 @@ public class ArcadePacMan_StartScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        gr().fillTextAtScaledTilePosition("PUSH START BUTTON", ARCADE_ORANGE, scaledArcadeFont8(), 6, 17);
-        gr().fillTextAtScaledTilePosition("1 PLAYER ONLY", ARCADE_CYAN, scaledArcadeFont8(), 8, 21);
-        gr().fillTextAtScaledTilePosition("BONUS PAC-MAN FOR 10000", ARCADE_ROSE, scaledArcadeFont8(), 1, 25);
-        gr().fillTextAtScaledTilePosition("PTS", ARCADE_ROSE, scaledArcadeFont6(), 25, 25);
-        gr().fillTextAtScaledTilePosition("© 1980 MIDWAY MFG.CO.", ARCADE_PINK, scaledArcadeFont8(), 4, 29);
+        gameRenderer.fillTextAtScaledTilePosition("PUSH START BUTTON", ARCADE_ORANGE, scaledArcadeFont8(), 6, 17);
+        gameRenderer.fillTextAtScaledTilePosition("1 PLAYER ONLY", ARCADE_CYAN, scaledArcadeFont8(), 8, 21);
+        gameRenderer.fillTextAtScaledTilePosition("BONUS PAC-MAN FOR 10000", ARCADE_ROSE, scaledArcadeFont8(), 1, 25);
+        gameRenderer.fillTextAtScaledTilePosition("PTS", ARCADE_ROSE, scaledArcadeFont6(), 25, 25);
+        gameRenderer.fillTextAtScaledTilePosition("© 1980 MIDWAY MFG.CO.", ARCADE_PINK, scaledArcadeFont8(), 4, 29);
     }
 }

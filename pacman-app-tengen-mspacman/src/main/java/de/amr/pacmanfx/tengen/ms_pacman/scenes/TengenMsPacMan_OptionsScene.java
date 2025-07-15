@@ -24,7 +24,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
 import static de.amr.pacmanfx.ui.GameUI.GLOBAL_ACTION_BINDINGS;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.alt;
@@ -253,8 +254,9 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     // Drawing
 
+    @SuppressWarnings("unchecked")
     @Override
-    public TengenMsPacMan_GameRenderer gr() {
+    public TengenMsPacMan_GameRenderer renderer() {
         return (TengenMsPacMan_GameRenderer) gameRenderer;
     }
 
@@ -264,54 +266,54 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
             return;
         }
 
-        gr().drawVerticalSceneBorders();
+        renderer().drawVerticalSceneBorders();
 
         var config = (TengenMsPacMan_UIConfig) theUI().theConfiguration();
         if (config.propertyJoypadBindingsDisplayed.get()) {
-            gr().drawJoypadKeyBinding(theUI().theJoypad().currentKeyBinding());
+            renderer().drawJoypadKeyBinding(theUI().theJoypad().currentKeyBinding());
         }
 
-        gr().ctx().setFont(scaledArcadeFont8());
+        renderer().ctx().setFont(scaledArcadeFont8());
 
-        gr().drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), sizeInPx().x(), 20);
-        gr().drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), sizeInPx().x(), 212);
-        gr().fillTextAtScaledPosition("MS PAC-MAN OPTIONS", NES_YELLOW, COL_LABEL + 3 * TS, 48);
+        renderer().drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), sizeInPx().x(), 20);
+        renderer().drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), sizeInPx().x(), 212);
+        renderer().fillTextAtScaledPosition("MS PAC-MAN OPTIONS", NES_YELLOW, COL_LABEL + 3 * TS, 48);
 
         // Players (not implemented)
         drawArrowAtSelectedOption(OPTION_PLAYERS, 72, scaledArcadeFont8());
-        gr().fillTextAtScaledPosition("TYPE", NES_YELLOW, COL_LABEL, 72);
-        gr().fillTextAtScaledPosition(":", NES_YELLOW, COL_LABEL + 4 * TS + 4, 72);
+        renderer().fillTextAtScaledPosition("TYPE", NES_YELLOW, COL_LABEL, 72);
+        renderer().fillTextAtScaledPosition(":", NES_YELLOW, COL_LABEL + 4 * TS + 4, 72);
         // grey this out, not supported yet
-        gr().fillTextAtScaledPosition("1 PLAYER", nesPaletteColor(0x10), COL_LABEL + 6 * TS  , 72);
+        renderer().fillTextAtScaledPosition("1 PLAYER", nesPaletteColor(0x10), COL_LABEL + 6 * TS  , 72);
 
         // Pac-Booster
         drawArrowAtSelectedOption(OPTION_PAC_BOOSTER, 96, scaledArcadeFont8());
-        gr().fillTextAtScaledPosition("PAC BOOSTER", NES_YELLOW, COL_LABEL, 96);
-        gr().fillTextAtScaledPosition(":", NES_YELLOW, COL_COLON, 96);
+        renderer().fillTextAtScaledPosition("PAC BOOSTER", NES_YELLOW, COL_LABEL, 96);
+        renderer().fillTextAtScaledPosition(":", NES_YELLOW, COL_COLON, 96);
         String pacBoosterText = switch (theTengenGame().pacBooster()) {
             case OFF -> "OFF";
             case ALWAYS_ON -> "ALWAYS ON";
             case USE_A_OR_B -> "USE A OR B";
         };
-        gr().fillTextAtScaledPosition(pacBoosterText, NES_WHITE, COL_VALUE, 96);
+        renderer().fillTextAtScaledPosition(pacBoosterText, NES_WHITE, COL_VALUE, 96);
 
         // Game difficulty
         drawArrowAtSelectedOption(OPTION_DIFFICULTY, 120, scaledArcadeFont8());
-        gr().fillTextAtScaledPosition("GAME DIFFICULTY", NES_YELLOW, COL_LABEL, 120);
-        gr().fillTextAtScaledPosition(":", NES_YELLOW, COL_COLON, 120);
-        gr().fillTextAtScaledPosition(theTengenGame().difficulty().name(), NES_WHITE, COL_VALUE, 120);
+        renderer().fillTextAtScaledPosition("GAME DIFFICULTY", NES_YELLOW, COL_LABEL, 120);
+        renderer().fillTextAtScaledPosition(":", NES_YELLOW, COL_COLON, 120);
+        renderer().fillTextAtScaledPosition(theTengenGame().difficulty().name(), NES_WHITE, COL_VALUE, 120);
 
         // Maze (type) selection
         drawArrowAtSelectedOption(OPTION_MAZE_SELECTION, 144, scaledArcadeFont8());
-        gr().fillTextAtScaledPosition("MAZE SELECTION", NES_YELLOW, COL_LABEL, 144);
-        gr().fillTextAtScaledPosition(":", NES_YELLOW, COL_COLON, 144);
-        gr().fillTextAtScaledPosition(theTengenGame().mapCategory().name(), NES_WHITE, COL_VALUE, 144);
+        renderer().fillTextAtScaledPosition("MAZE SELECTION", NES_YELLOW, COL_LABEL, 144);
+        renderer().fillTextAtScaledPosition(":", NES_YELLOW, COL_COLON, 144);
+        renderer().fillTextAtScaledPosition(theTengenGame().mapCategory().name(), NES_WHITE, COL_VALUE, 144);
 
         // Starting level number
         drawArrowAtSelectedOption(OPTION_STARTING_LEVEL, 168, scaledArcadeFont8());
-        gr().fillTextAtScaledPosition("STARTING LEVEL", NES_YELLOW, COL_LABEL, 168);
-        gr().fillTextAtScaledPosition(":", NES_YELLOW, COL_COLON, 168);
-        gr().fillTextAtScaledPosition(String.valueOf(theTengenGame().startLevelNumber()), NES_WHITE, COL_VALUE, 168);
+        renderer().fillTextAtScaledPosition("STARTING LEVEL", NES_YELLOW, COL_LABEL, 168);
+        renderer().fillTextAtScaledPosition(":", NES_YELLOW, COL_COLON, 168);
+        renderer().fillTextAtScaledPosition(String.valueOf(theTengenGame().startLevelNumber()), NES_WHITE, COL_VALUE, 168);
         if (theTengenGame().numContinues() < 4) {
             var spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().theConfiguration().spriteSheet();
             RectShort continuesSprite = spriteSheet.sprite(switch (theTengenGame().numContinues()) {
@@ -321,19 +323,19 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
                 case 3 -> SpriteID.CONTINUES_3;
                 default -> throw new IllegalArgumentException("Illegal number of continues: " + theTengenGame().numContinues());
             });
-            gr().drawSpriteScaled(continuesSprite, COL_VALUE + 3 * TS, 160);
+            renderer().drawSpriteScaled(continuesSprite, COL_VALUE + 3 * TS, 160);
         }
 
-        gr().fillTextAtScaledPosition("MOVE ARROW WITH JOYPAD", NES_YELLOW, 4 * TS,  192);
-        gr().fillTextAtScaledPosition("CHOOSE OPTIONS WITH A AND B", NES_YELLOW, 2 * TS,  200);
-        gr().fillTextAtScaledPosition("PRESS START TO START GAME", NES_YELLOW, 3 * TS,  208);
+        renderer().fillTextAtScaledPosition("MOVE ARROW WITH JOYPAD", NES_YELLOW, 4 * TS,  192);
+        renderer().fillTextAtScaledPosition("CHOOSE OPTIONS WITH A AND B", NES_YELLOW, 2 * TS,  200);
+        renderer().fillTextAtScaledPosition("PRESS START TO START GAME", NES_YELLOW, 3 * TS,  208);
     }
 
     private void drawArrowAtSelectedOption(int option, double y, Font font) {
         if (selectedOption == option) {
             ctx().setFill(NES_YELLOW);
             ctx().fillRect(scaled(COL_ARROW + 2.25), scaled(y - 4.5), scaled(7.5), scaled(1.75));
-            gr().fillTextAtScaledPosition(">", NES_YELLOW, font, COL_ARROW + 3, y);
+            renderer().fillTextAtScaledPosition(">", NES_YELLOW, font, COL_ARROW + 3, y);
         }
     }
 }

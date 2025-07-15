@@ -230,11 +230,11 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
         if (gameContext().optGameLevel().isEmpty())
             return; // Scene is drawn already 2 ticks before level has been created
 
-        gr().applyRenderingHints(gameContext().theGameLevel());
+        gameRenderer.applyRenderingHints(gameContext().theGameLevel());
 
         // Level < Level message
         boolean highlighted = levelCompletedAnimation != null && levelCompletedAnimation.isHighlighted();
-        gr().drawLevel(
+        gameRenderer.drawLevel(
             gameContext(),
             gameContext().theGameLevel(),
             backgroundColor(),
@@ -250,11 +250,11 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
         actorsByZ.add(gameContext().theGameLevel().pac());
         Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW).map(gameContext().theGameLevel()::ghost)
                 .forEach(actorsByZ::add);
-        gr().drawActors(actorsByZ);
+        gameRenderer.drawActors(actorsByZ);
         if (debugInfoVisibleProperty().get()) {
             actorsByZ.forEach(actor -> {
                 if (actor instanceof MovingActor movingActor) {
-                    gr().drawMovingActorInfo(movingActor);
+                    gameRenderer.drawMovingActorInfo(movingActor);
                 }
             });
         }
@@ -266,18 +266,18 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
         float cx = TS * (house.minTile().x() + houseSize.x() * 0.5f);
         float cy = TS * (house.minTile().y() + houseSize.y() + 1);
         switch (messageType) {
-            case GameLevel.MESSAGE_GAME_OVER -> gr().fillTextAtScaledCenter(
+            case GameLevel.MESSAGE_GAME_OVER -> gameRenderer.fillTextAtScaledCenter(
                 "GAME  OVER", ARCADE_RED, scaledArcadeFont8(), cx, cy);
-            case GameLevel.MESSAGE_READY -> gr().fillTextAtScaledCenter(
+            case GameLevel.MESSAGE_READY -> gameRenderer.fillTextAtScaledCenter(
                 "READY!", ARCADE_YELLOW, scaledArcadeFont8(), cx, cy);
-            case GameLevel.MESSAGE_TEST -> gr().fillTextAtScaledCenter(
+            case GameLevel.MESSAGE_TEST -> gameRenderer.fillTextAtScaledCenter(
                 "TEST    L%02d".formatted(gameContext().theGameLevel().number()), ARCADE_WHITE, scaledArcadeFont8(), cx, cy);
         }
     }
 
     @Override
     protected void drawDebugInfo() {
-        gr().drawTileGrid(sizeInPx().x(), sizeInPx().y(), Color.LIGHTGRAY);
+        gameRenderer.drawTileGrid(sizeInPx().x(), sizeInPx().y(), Color.LIGHTGRAY);
         if (gameContext().optGameLevel().isPresent()) {
             // assuming all ghosts have the same set of special terrain tiles
             gameContext().theGameLevel().ghost(RED_GHOST_SHADOW).specialTerrainTiles().forEach(tile -> {

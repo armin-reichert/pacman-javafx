@@ -69,7 +69,7 @@ public class InfoBoxGameInfo extends InfoBox {
         }));
         addLabeledValue("Renderer class", () -> {
             if (ui.currentGameScene().isPresent() && ui.currentGameScene().get() instanceof GameScene2D gameScene2D) {
-                return gameScene2D.gr().getClass().getSimpleName();
+                return gameScene2D.renderer().getClass().getSimpleName();
             }
             return InfoText.NO_INFO;
         });

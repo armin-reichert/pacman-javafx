@@ -63,7 +63,7 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
 
     @Override
     public void draw() {
-        gr().setScaling(scaling());
+        gameRenderer.setScaling(scaling());
         if (gameContext().theGameState().timer().tickCount() == 1) {
             clear();
         } else {
@@ -110,7 +110,7 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
             RectShort fragment1 = randomSpriteFragment(), fragment2 = randomSpriteFragment();
             int split = numCols / 8 + random.nextInt(numCols / 4);
             for (int col = 0; col < numCols; ++col) {
-                gr().drawSpriteScaled(col < split ? fragment1 : fragment2, FRAGMENT_SIZE * col, FRAGMENT_SIZE * row);
+                gameRenderer.drawSpriteScaled(col < split ? fragment1 : fragment2, FRAGMENT_SIZE * col, FRAGMENT_SIZE * row);
             }
         }
     }
