@@ -132,7 +132,6 @@ public class PlayScene3D implements GameScene, SubSceneContent {
     // Context menu
 
     private final ToggleGroup toggleGroup = new ToggleGroup();
-    private final List<RadioMenuItem> perspectiveRadioItems = new ArrayList<>();
 
     @Override
     public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent, ContextMenu menu) {
@@ -159,8 +158,7 @@ public class PlayScene3D implements GameScene, SubSceneContent {
         items.add(miUse2DScene);
         items.add(miToggleMiniView);
         items.add(menuTitleItem(ui.theAssets().text("select_perspective")));
-        createPerspectiveRadioItems(menu);
-        items.addAll(perspectiveRadioItems);
+        items.addAll(createPerspectiveRadioItems(menu));
         items.add(menuTitleItem(ui.theAssets().text("pacman")));
         items.add(miAutopilot);
         items.add(miImmunity);
@@ -171,17 +169,17 @@ public class PlayScene3D implements GameScene, SubSceneContent {
         return items;
     }
 
-    private void createPerspectiveRadioItems(ContextMenu menu) {
-        perspectiveRadioItems.clear();
+    private List<RadioMenuItem> createPerspectiveRadioItems(ContextMenu menu) {
+        var items = new ArrayList<RadioMenuItem>();
         for (Perspective.ID id : Perspective.ID.values()) {
-            var radioItem = new RadioMenuItem(ui.theAssets().text("perspective_id_" + id.name()));
-            radioItem.setToggleGroup(toggleGroup);
-            radioItem.setOnAction(e -> ui.property3DPerspective().set(id));
-            radioItem.setUserData(id);
+            var item = new RadioMenuItem(ui.theAssets().text("perspective_id_" + id.name()));
+            item.setUserData(id);
+            item.setToggleGroup(toggleGroup);
             if (id == ui.property3DPerspective().get())  {
-                radioItem.setSelected(true);
+                item.setSelected(true);
             }
-            perspectiveRadioItems.add(radioItem);
+            item.setOnAction(e -> ui.property3DPerspective().set(id));
+            items.add(item);
         }
         Logger.info("Added listener to UI property3DPerspective property");
         ui.property3DPerspective().addListener(this::handle3DPerspectiveChange);
@@ -189,15 +187,16 @@ public class PlayScene3D implements GameScene, SubSceneContent {
             ui.property3DPerspective().removeListener(this::handle3DPerspectiveChange);
             Logger.info("Removed listener from UI property3DPerspective property");
         });
+        return items;
     }
 
     private void handle3DPerspectiveChange(
         ObservableValue<? extends Perspective.ID> property,
         Perspective.ID oldPerspectiveID,
         Perspective.ID newPerspectiveID) {
-        for (MenuItem item : perspectiveRadioItems) {
-            if (item.getUserData() == newPerspectiveID) {
-                toggleGroup.selectToggle((Toggle) item);
+        for (Toggle toggle : toggleGroup.getToggles()) {
+            if (toggle.getUserData() == newPerspectiveID) {
+                toggleGroup.selectToggle(toggle);
             }
         }
     }
