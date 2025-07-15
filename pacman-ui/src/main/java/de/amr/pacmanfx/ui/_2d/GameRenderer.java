@@ -14,12 +14,13 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Animated;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.ui.PacManGames_Assets;
 import de.amr.pacmanfx.uilib.animation.SingleSpriteWithoutAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
-import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.model3D.Destroyable;
 import javafx.beans.property.FloatProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -37,11 +38,11 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Common interface of all 2D game renderers.
+ * Common base class of all 2D game renderers.
  */
-public interface GameRenderer extends Destroyable {
+public abstract class GameRenderer implements Destroyable {
 
-    static void fillCanvas(Canvas canvas, Color color) {
+    public static void fillCanvas(Canvas canvas, Color color) {
         requireNonNull(canvas);
         requireNonNull(color);
         GraphicsContext ctx = canvas.getGraphicsContext2D();
@@ -49,31 +50,39 @@ public interface GameRenderer extends Destroyable {
         ctx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
 
-    AssetStorage assets();
+    protected final PacManGames_Assets assets;
+    protected final FloatProperty scalingProperty = new SimpleFloatProperty(1);
+    protected GraphicsContext ctx;
 
-    Optional<SpriteSheet<?>> optSpriteSheet();
+    protected GameRenderer(PacManGames_Assets assets) {
+        this.assets = requireNonNull(assets);
+    }
 
-    GraphicsContext ctx();
+    public PacManGames_Assets assets() { return assets; }
 
-    FloatProperty scalingProperty();
+    public abstract Optional<SpriteSheet<?>> optSpriteSheet();
 
-    default void setScaling(double value) {
+    public GraphicsContext ctx() { return ctx; }
+
+    public FloatProperty scalingProperty() { return scalingProperty; }
+
+    public void setScaling(double value) {
         if (value <= 0) {
             throw new IllegalArgumentException("Scaling value must be positive but is %.2f".formatted(value));
         }
         scalingProperty().set((float)value);
     }
 
-    default float scaling() { return scalingProperty().get(); }
+    public float scaling() { return scalingProperty().get(); }
 
-    default float scaled(double value) { return scaling() * (float) value; }
+    public float scaled(double value) { return scaling() * (float) value; }
 
     /**
      * Applies rendering hints for the given game level to this renderer.
      *
      * @param level the game level that is rendered
      */
-    default void applyRenderingHints(GameLevel level) {}
+    public void applyRenderingHints(GameLevel level) {}
 
     /**
      * Draws the Head-Up Display (score, live counter, level counter, coins inserted)
@@ -83,7 +92,7 @@ public interface GameRenderer extends Destroyable {
      * @param sceneSize scene size in pixels
      * @param tick current clock tick
      */
-    void drawHUD(GameContext gameContext, HUD hud, Vector2f sceneSize, long tick);
+    public abstract void drawHUD(GameContext gameContext, HUD hud, Vector2f sceneSize, long tick);
 
     /**
      * @param gameContext the game context
@@ -93,7 +102,7 @@ public interface GameRenderer extends Destroyable {
      * @param energizerHighlighted if the blinking energizers are in their highlighted state
      * @param tick current clock tick
      */
-    void drawLevel(
+    public abstract void drawLevel(
         GameContext gameContext,
         GameLevel level,
         Color backgroundColor,
@@ -106,7 +115,7 @@ public interface GameRenderer extends Destroyable {
      *
      * @param actors list of actors
      */
-    default <T extends Actor> void drawActors(List<T> actors) {
+    public <T extends Actor> void drawActors(List<T> actors) {
         for (Actor actor : actors) {
             drawActor(actor);
         }
@@ -117,7 +126,7 @@ public interface GameRenderer extends Destroyable {
      *
      * @param actor the actor to draw
      */
-    default void drawActor(Actor actor) {
+    public void drawActor(Actor actor) {
         requireNonNull(actor);
         if (actor.isVisible()) {
             if (actor instanceof Animated animated) {
@@ -135,7 +144,7 @@ public interface GameRenderer extends Destroyable {
      * @param tile a tile
      * @param sideLength side length of the square
      */
-    default void fillSquareAtTileCenter(Vector2i tile, int sideLength) {
+    public void fillSquareAtTileCenter(Vector2i tile, int sideLength) {
         requireNonNull(tile);
         double centerX = tile.x() * TS + HTS, centerY = tile.y() * TS + HTS;
         float halfSideLength = 0.5f * sideLength;
@@ -151,7 +160,7 @@ public interface GameRenderer extends Destroyable {
      * @param tileX unscaled tile x-position
      * @param tileY unscaled tile y-position (baseline)
      */
-    default void fillTextAtScaledTilePosition(String text, Color color, Font font, int tileX, int tileY) {
+    public void fillTextAtScaledTilePosition(String text, Color color, Font font, int tileX, int tileY) {
         fillTextAtScaledPosition(text, color, font, tiles_to_px(tileX), tiles_to_px(tileY));
     }
 
@@ -164,7 +173,7 @@ public interface GameRenderer extends Destroyable {
      * @param x     unscaled x-position
      * @param y     unscaled y-position (baseline)
      */
-    default void fillTextAtScaledPosition(String text, Color color, Font font, double x, double y) {
+    public void fillTextAtScaledPosition(String text, Color color, Font font, double x, double y) {
         ctx().setFont(font);
         ctx().setFill(color);
         ctx().fillText(text, scaled(x), scaled(y));
@@ -178,7 +187,7 @@ public interface GameRenderer extends Destroyable {
      * @param x     unscaled x-position
      * @param y     unscaled y-position (baseline)
      */
-    default void fillTextAtScaledPosition(String text, Color color, double x, double y) {
+    public void fillTextAtScaledPosition(String text, Color color, double x, double y) {
         ctx().setFill(color);
         ctx().fillText(text, scaled(x), scaled(y));
     }
@@ -191,7 +200,7 @@ public interface GameRenderer extends Destroyable {
      * @param x     unscaled x-position
      * @param y     unscaled y-position (baseline)
      */
-    default void fillTextAtScaledPosition(String text, Font font, double x, double y) {
+    public void fillTextAtScaledPosition(String text, Font font, double x, double y) {
         ctx().setFont(font);
         ctx().fillText(text, scaled(x), scaled(y));
     }
@@ -203,7 +212,7 @@ public interface GameRenderer extends Destroyable {
      * @param x     unscaled x-position
      * @param y     unscaled y-position (baseline)
      */
-    default void fillTextAtScaledPosition(String text, double x, double y) {
+    public void fillTextAtScaledPosition(String text, double x, double y) {
         ctx().fillText(text, scaled(x), scaled(y));
     }
 
@@ -216,14 +225,14 @@ public interface GameRenderer extends Destroyable {
      * @param x     unscaled x-position
      * @param y     unscaled y-position (baseline)
      */
-    default void fillTextAtScaledCenter(String text, Color color, Font font, double x, double y) {
+    public void fillTextAtScaledCenter(String text, Color color, Font font, double x, double y) {
         ctx().save();
         ctx().setTextAlign(TextAlignment.CENTER);
         fillTextAtScaledPosition(text, color, font, x, y);
         ctx().restore();
     }
 
-    default void drawTileGrid(double sizeX, double sizeY, Color gridColor) {
+    public void drawTileGrid(double sizeX, double sizeY, Color gridColor) {
         double thin = 0.2, medium = 0.4, thick = 0.8;
         int numCols = (int) (sizeX / TS), numRows = (int) (sizeY / TS);
         double width = scaled(numCols * TS), height = scaled(numRows * TS);
@@ -251,13 +260,12 @@ public interface GameRenderer extends Destroyable {
      * @param x           x-coordinate of left-upper corner
      * @param y           y-coordinate of left-upper corner
      */
-    default void drawSprite(RectShort sprite, double x, double y) {
+    public void drawSprite(RectShort sprite, double x, double y) {
         requireNonNull(sprite);
-        optSpriteSheet().ifPresent(spriteSheet -> {
-            ctx().drawImage(spriteSheet.sourceImage(),
-                    sprite.x(), sprite.y(), sprite.width(), sprite.height(),
-                    x, y, sprite.width(), sprite.height());
-        });
+        optSpriteSheet().ifPresent(spriteSheet -> ctx().drawImage(
+                spriteSheet.sourceImage(),
+                sprite.x(), sprite.y(), sprite.width(), sprite.height(),
+                x, y, sprite.width(), sprite.height()));
     }
 
     /**
@@ -268,11 +276,9 @@ public interface GameRenderer extends Destroyable {
      * @param x             x-coordinate of left-upper corner (unscaled)
      * @param y             y-coordinate of left-upper corner (unscaled)
      */
-    default void drawSpriteScaled(RectShort sprite, double x, double y) {
+    public void drawSpriteScaled(RectShort sprite, double x, double y) {
         requireNonNull(sprite);
-        optSpriteSheet().ifPresent(spriteSheet -> {
-            drawSpriteScaled(spriteSheet.sourceImage(), sprite, x, y);
-        });
+        optSpriteSheet().ifPresent(spriteSheet -> drawSpriteScaled(spriteSheet.sourceImage(), sprite, x, y));
     }
 
     /**
@@ -284,7 +290,7 @@ public interface GameRenderer extends Destroyable {
      * @param x unscaled x-coordinate of left-upper corner
      * @param y unscaled y-coordinate of left-upper corner
      */
-    default void drawSpriteScaled(Image image, RectShort sprite, double x, double y) {
+    public void drawSpriteScaled(Image image, RectShort sprite, double x, double y) {
         requireNonNull(image);
         requireNonNull(sprite);
         ctx().drawImage(image,
@@ -299,7 +305,7 @@ public interface GameRenderer extends Destroyable {
      * @param cx  x-coordinate of the center position
      * @param cy  y-coordinate of the center position
      */
-    default void drawSpriteScaledCenteredAt(RectShort sprite, double cx, double cy) {
+    public void drawSpriteScaledCenteredAt(RectShort sprite, double cx, double cy) {
         requireNonNull(sprite);
         drawSpriteScaled(sprite, cx - 0.5 * sprite.width(), cy - 0.5 * sprite.height());
     }
@@ -310,12 +316,12 @@ public interface GameRenderer extends Destroyable {
      * @param actor an actor
      * @param sprite actor sprite
      */
-    default void drawActorSpriteCentered(Actor actor, RectShort sprite) {
+    public void drawActorSpriteCentered(Actor actor, RectShort sprite) {
         float centerX = actor.x() + HTS, centerY = actor.y() + HTS;
         drawSpriteScaledCenteredAt(sprite, centerX, centerY);
     }
 
-    default void drawAnimatedActor(Animated animated) {
+    public void drawAnimatedActor(Animated animated) {
         animated.animationMap().ifPresent(animationMap -> {
             // assume interface is only implemented by Actor (sub-)classes
             Actor actor = (Actor) animated;
@@ -329,12 +335,12 @@ public interface GameRenderer extends Destroyable {
                         Logger.error("No current animation for actor {}", actor);
                     }
                 }
-                default -> Logger.error("Cannot render animated actor with animation map of type {}", animationMap.getClass());
+                default -> Logger.error("Cannot render animated actor with animation map of type {}", animationMap.getClass().getSimpleName());
             }
         });
     }
 
-    default void drawMovingActorInfo(MovingActor movingActor) {
+    public void drawMovingActorInfo(MovingActor movingActor) {
         if (!movingActor.isVisible()) {
             return;
         }
@@ -349,11 +355,11 @@ public interface GameRenderer extends Destroyable {
                 ctx().fillText(text, scaled(pac.x() - 4), scaled(pac.y() + 16));
             }
             case Animated animated -> drawAnimatedMovingActorInfo(animated);
-            default -> {}
+            default -> Logger.error("Cannot render moving actor of class {}", movingActor.getClass().getSimpleName());
         }
     }
 
-    default void drawAnimatedMovingActorInfo(Animated animated) {
+    public void drawAnimatedMovingActorInfo(Animated animated) {
         if (!(animated instanceof MovingActor movingActor)) return;
 
         animated.animationMap()

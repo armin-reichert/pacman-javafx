@@ -22,15 +22,11 @@ import de.amr.pacmanfx.ui._2d.GameRenderer;
 import de.amr.pacmanfx.ui.input.JoypadKeyBinding;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
-import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
-import javafx.beans.property.FloatProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -48,7 +44,7 @@ import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_MapRepositor
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
-public class TengenMsPacMan_GameRenderer implements GameRenderer {
+public class TengenMsPacMan_GameRenderer extends GameRenderer {
 
     public static Color blueShadedColor(long tick) {
         // Blue color, changing from dark blue to brighter blue.
@@ -58,21 +54,18 @@ public class TengenMsPacMan_GameRenderer implements GameRenderer {
     }
 
     private final ObjectProperty<Color> backgroundColorProperty = new SimpleObjectProperty<>(Color.BLACK);
-    private final FloatProperty scalingProperty = new SimpleFloatProperty(1);
 
-    private final AssetStorage assets;
-    private final GraphicsContext ctx;
     private TengenMsPacMan_SpriteSheet spriteSheet;
     private TengenMsPacMan_MapRepository mapRepository;
     private ColoredMazeSpriteSet mazeSpriteSet;
 
     public TengenMsPacMan_GameRenderer(
-        AssetStorage assets,
+        PacManGames_Assets assets,
         TengenMsPacMan_SpriteSheet spriteSheet,
         TengenMsPacMan_MapRepository mapRepository,
         Canvas canvas)
     {
-        this.assets = requireNonNull(assets);
+        super(assets);
         this.ctx = requireNonNull(canvas).getGraphicsContext2D();
         this.ctx.setImageSmoothing(false);
         this.spriteSheet = requireNonNull(spriteSheet);
@@ -86,19 +79,6 @@ public class TengenMsPacMan_GameRenderer implements GameRenderer {
         backgroundColorProperty.unbind();
         scalingProperty.unbind();
     }
-
-    @Override
-    public PacManGames_Assets assets() {
-        return (PacManGames_Assets) assets;
-    }
-
-    @Override
-    public GraphicsContext ctx() {
-        return ctx;
-    }
-
-    @Override
-    public FloatProperty scalingProperty() { return scalingProperty; }
 
     @Override
     public Optional<SpriteSheet<?>> optSpriteSheet() {
@@ -226,7 +206,7 @@ public class TengenMsPacMan_GameRenderer implements GameRenderer {
                 case MovingBonus movingBonus   -> drawMovingBonus(movingBonus);
                 case Pac pac                   -> drawAnyKindOfPac(pac);
                 case Stork stork               -> drawStork(stork, backgroundColor());
-                default                        -> GameRenderer.super.drawActor(actor);
+                default                        -> super.drawActor(actor);
             }
         }
     }

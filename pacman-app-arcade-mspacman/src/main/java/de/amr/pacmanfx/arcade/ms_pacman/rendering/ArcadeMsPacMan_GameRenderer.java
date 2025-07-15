@@ -17,12 +17,8 @@ import de.amr.pacmanfx.model.actors.MovingBonus;
 import de.amr.pacmanfx.ui.PacManGames_Assets;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
-import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
-import javafx.beans.property.FloatProperty;
-import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -36,21 +32,18 @@ import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
-public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
+public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
 
-    protected final AssetStorage assets;
-    protected final GraphicsContext ctx;
     protected ArcadeMsPacMan_SpriteSheet spriteSheet;
     protected BrightMazesSpriteSheet brightMazesSpriteSheet;
-    protected final FloatProperty scalingPy = new SimpleFloatProperty(1);
 
     public ArcadeMsPacMan_GameRenderer(
-        AssetStorage assets,
+        PacManGames_Assets assets,
         PacManGames_UIConfig config,
         BrightMazesSpriteSheet brightMazesSpriteSheet,
         Canvas canvas)
     {
-        this.assets = requireNonNull(assets);
+        super(assets);
         requireNonNull(config);
         this.ctx = requireNonNull(canvas).getGraphicsContext2D();
         this.spriteSheet = (ArcadeMsPacMan_SpriteSheet) config.spriteSheet();
@@ -58,11 +51,11 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     }
 
     protected ArcadeMsPacMan_GameRenderer(
-        AssetStorage assets,
+        PacManGames_Assets assets,
         PacManGames_UIConfig config,
         Canvas canvas)
     {
-        this.assets = requireNonNull(assets);
+        super(assets);
         requireNonNull(config);
         this.ctx = requireNonNull(canvas).getGraphicsContext2D();
         this.spriteSheet = (ArcadeMsPacMan_SpriteSheet) config.spriteSheet();
@@ -75,22 +68,10 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
     }
 
     @Override
-    public PacManGames_Assets assets() {
-        return (PacManGames_Assets) assets;
-    }
+    public PacManGames_Assets assets() { return (PacManGames_Assets) assets; }
 
     @Override
-    public GraphicsContext ctx() {
-        return ctx;
-    }
-
-    @Override
-    public Optional<SpriteSheet<?>> optSpriteSheet() {
-        return Optional.of(spriteSheet);
-    }
-
-    @Override
-    public FloatProperty scalingProperty() { return scalingPy; }
+    public Optional<SpriteSheet<?>> optSpriteSheet() { return Optional.of(spriteSheet); }
 
     @Override
     public void drawHUD(GameContext gameContext, HUD hud, Vector2f sceneSize, long tick) {
@@ -186,7 +167,7 @@ public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
                 case Marquee marquee           -> drawMarquee(marquee);
                 case MidwayCopyright copyright -> drawMidwayCopyright(copyright);
                 case MovingBonus movingBonus   -> drawMovingBonus(movingBonus);
-                default -> GameRenderer.super.drawActor(actor);
+                default -> super.drawActor(actor);
             }
         }
     }
