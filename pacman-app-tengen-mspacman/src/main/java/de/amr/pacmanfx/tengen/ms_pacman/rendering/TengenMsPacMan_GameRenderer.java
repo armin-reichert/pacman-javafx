@@ -18,11 +18,12 @@ import de.amr.pacmanfx.tengen.ms_pacman.scenes.Clapperboard;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.Stork;
 import de.amr.pacmanfx.ui.PacManGames_Assets;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
-import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
+import de.amr.pacmanfx.ui._2d.GameRenderer;
 import de.amr.pacmanfx.ui.input.JoypadKeyBinding;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleFloatProperty;
@@ -36,6 +37,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import org.tinylog.Logger;
 
+import java.util.Optional;
+
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
@@ -45,7 +48,7 @@ import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_MapRepositor
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
-public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
+public class TengenMsPacMan_GameRenderer implements GameRenderer {
 
     public static Color blueShadedColor(long tick) {
         // Blue color, changing from dark blue to brighter blue.
@@ -98,8 +101,8 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
     public FloatProperty scalingProperty() { return scalingProperty; }
 
     @Override
-    public TengenMsPacMan_SpriteSheet spriteSheet() {
-        return spriteSheet;
+    public Optional<SpriteSheet<?>> optSpriteSheet() {
+        return Optional.of(spriteSheet);
     }
 
     public ObjectProperty<Color> backgroundColorProperty() { return backgroundColorProperty; }
@@ -223,7 +226,7 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
                 case MovingBonus movingBonus   -> drawMovingBonus(movingBonus);
                 case Pac pac                   -> drawAnyKindOfPac(pac);
                 case Stork stork               -> drawStork(stork, backgroundColor());
-                default                        -> SpriteGameRenderer.super.drawActor(actor);
+                default                        -> GameRenderer.super.drawActor(actor);
             }
         }
     }
@@ -487,7 +490,7 @@ public class TengenMsPacMan_GameRenderer implements SpriteGameRenderer {
 
     //TODO maybe just extend sprite sheet to include stork without bag?
     private void drawStork(Stork stork, Color backgroundColor) {
-        SpriteGameRenderer.super.drawAnimatedActor(stork);
+        drawAnimatedActor(stork);
         if (stork.isBagReleasedFromBeak()) { // over-paint bag still hanging at beak
             ctx.setFill(backgroundColor);
             //TODO: clarify coordinate values

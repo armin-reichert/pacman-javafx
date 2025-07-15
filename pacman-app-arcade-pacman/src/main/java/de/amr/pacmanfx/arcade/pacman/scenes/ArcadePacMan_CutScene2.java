@@ -12,7 +12,6 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import org.tinylog.Logger;
 
@@ -49,11 +48,6 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     public ArcadePacMan_CutScene2(GameUI ui) {
         super(ui);
-    }
-
-    @Override
-    public SpriteGameRenderer gr() {
-        return (SpriteGameRenderer) super.gr();
     }
 
     @Override

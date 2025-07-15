@@ -12,8 +12,9 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.StaticBonus;
 import de.amr.pacmanfx.ui.PacManGames_Assets;
-import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
+import de.amr.pacmanfx.ui._2d.GameRenderer;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
@@ -21,6 +22,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+
+import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
@@ -30,7 +33,7 @@ import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_YELLOW;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
-public class ArcadePacMan_GameRenderer implements SpriteGameRenderer {
+public class ArcadePacMan_GameRenderer implements GameRenderer {
 
     protected final AssetStorage assets;
     protected GraphicsContext ctx;
@@ -49,6 +52,11 @@ public class ArcadePacMan_GameRenderer implements SpriteGameRenderer {
     }
 
     @Override
+    public Optional<SpriteSheet<?>> optSpriteSheet() {
+        return Optional.of(spriteSheet);
+    }
+
+    @Override
     public void destroy() {
         ctx = null;
         spriteSheet = null;
@@ -58,11 +66,6 @@ public class ArcadePacMan_GameRenderer implements SpriteGameRenderer {
     @Override
     public GraphicsContext ctx() {
         return ctx;
-    }
-
-    @Override
-    public ArcadePacMan_SpriteSheet spriteSheet() {
-        return spriteSheet;
     }
 
     @Override
@@ -155,7 +158,7 @@ public class ArcadePacMan_GameRenderer implements SpriteGameRenderer {
         if (actor instanceof StaticBonus staticBonus) {
             drawStaticBonus(staticBonus);
         }
-        else SpriteGameRenderer.super.drawActor(actor);
+        else GameRenderer.super.drawActor(actor);
     }
 
     public void drawStaticBonus(StaticBonus bonus) {

@@ -10,7 +10,6 @@ import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
@@ -30,11 +29,6 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
         super(ui);
     }
     
-    @Override
-    public SpriteGameRenderer gr() {
-        return (SpriteGameRenderer) super.gr();
-    }
-
     @Override
     public void doInit() {
         gameContext().theGame().hud().showCredit(true);

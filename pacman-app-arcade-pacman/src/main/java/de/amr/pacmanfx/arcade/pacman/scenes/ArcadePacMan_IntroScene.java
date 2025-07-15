@@ -18,7 +18,6 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.paint.Color;
@@ -73,11 +72,6 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         super(ui);
     }
     
-    @Override
-    public SpriteGameRenderer gr() {
-        return (SpriteGameRenderer) super.gr();
-    }
-
     @Override
     public void doInit() {
         gameContext().theGame().hud().showCredit(true);

@@ -17,7 +17,6 @@ import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
-import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
@@ -79,11 +78,6 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
 
     @Override
     protected void doEnd() {
-    }
-
-    @Override
-    public SpriteGameRenderer gr() {
-        return (SpriteGameRenderer) gameRenderer;
     }
 
     /*

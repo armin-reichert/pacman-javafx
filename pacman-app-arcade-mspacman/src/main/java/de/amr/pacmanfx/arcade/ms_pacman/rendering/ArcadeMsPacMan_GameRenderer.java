@@ -16,8 +16,9 @@ import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.MovingBonus;
 import de.amr.pacmanfx.ui.PacManGames_Assets;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
-import de.amr.pacmanfx.ui._2d.SpriteGameRenderer;
+import de.amr.pacmanfx.ui._2d.GameRenderer;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
@@ -26,6 +27,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
+import java.util.Optional;
+
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
@@ -33,7 +36,7 @@ import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
-public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
+public class ArcadeMsPacMan_GameRenderer implements GameRenderer {
 
     protected final AssetStorage assets;
     protected final GraphicsContext ctx;
@@ -82,7 +85,9 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
     }
 
     @Override
-    public ArcadeMsPacMan_SpriteSheet spriteSheet() { return spriteSheet; }
+    public Optional<SpriteSheet<?>> optSpriteSheet() {
+        return Optional.of(spriteSheet);
+    }
 
     @Override
     public FloatProperty scalingProperty() { return scalingPy; }
@@ -181,7 +186,7 @@ public class ArcadeMsPacMan_GameRenderer implements SpriteGameRenderer {
                 case Marquee marquee           -> drawMarquee(marquee);
                 case MidwayCopyright copyright -> drawMidwayCopyright(copyright);
                 case MovingBonus movingBonus   -> drawMovingBonus(movingBonus);
-                default                        -> SpriteGameRenderer.super.drawActor(actor);
+                default -> GameRenderer.super.drawActor(actor);
             }
         }
     }
