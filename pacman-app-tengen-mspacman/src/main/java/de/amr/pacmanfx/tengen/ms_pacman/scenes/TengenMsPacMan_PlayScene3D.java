@@ -71,7 +71,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         TengenMsPacMan_GameModel game = gameContext().theGame();
         if (!game.optionsAreInitial()) {
             // show info about category, difficulty, booster etc
-            ImageView infoView = createGameInfoView(gameContext().theGameLevel(), ui.property3DFloorColor().get());
+            ImageView infoView = createGameInfoView(game, gameContext().theGameLevel(), ui.property3DFloorColor().get());
             infoView.setTranslateX(0);
             infoView.setTranslateY((gameContext().theGameLevel().worldMap().numRows() - 2) * TS);
             infoView.setTranslateZ(-gameLevel3D.floorThickness());
@@ -79,25 +79,23 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         }
     }
 
-    private ImageView createGameInfoView(GameLevel gameLevel, Color floorColor) {
-        var game = gameContext().<TengenMsPacMan_GameModel>theGame();
-
-        final int infoWidth = gameLevel.worldMap().numCols() * TS, infoHeight = 2 * TS;
-        final float quality = 5; // scale for better snapshot resolution
-
-        var canvas = new Canvas(quality * infoWidth, quality * infoHeight);
+    private ImageView createGameInfoView(TengenMsPacMan_GameModel game, GameLevel gameLevel, Color floorColor) {
+        int width = gameLevel.worldMap().numCols() * TS;
+        int height = 2 * TS;
+        int scaling = 5; // for better snapshot resolution
+        var canvas = new Canvas(scaling * width, scaling * height);
         canvas.getGraphicsContext2D().setImageSmoothing(false); // important!
         GameRenderer.fillCanvas(canvas, floorColor);
 
-        var r = (TengenMsPacMan_GameRenderer) ui.theConfiguration().createGameRenderer(canvas);
-        r.setScaling(quality);
-        r.drawGameOptions(game.mapCategory(), game.difficulty(), game.pacBooster(), 0.5 * infoWidth, TS + HTS);
-        r.drawLevelNumberBox(gameLevel.number(), 0, 0);
-        r.drawLevelNumberBox(gameLevel.number(), infoWidth - 2 * TS, 0);
+        var renderer = (TengenMsPacMan_GameRenderer) ui.theConfiguration().createGameRenderer(canvas);
+        renderer.setScaling(scaling);
+        renderer.drawGameOptions(game.mapCategory(), game.difficulty(), game.pacBooster(), 0.5 * width, TS + HTS);
+        renderer.drawLevelNumberBox(gameLevel.number(), 0, 0);
+        renderer.drawLevelNumberBox(gameLevel.number(), width - 2 * TS, 0);
 
         ImageView infoView = new ImageView(canvas.snapshot(null, null));
-        infoView.setFitWidth(infoWidth);
-        infoView.setFitHeight(infoHeight);
+        infoView.setFitWidth(width);
+        infoView.setFitHeight(height);
 
         return infoView;
     }
