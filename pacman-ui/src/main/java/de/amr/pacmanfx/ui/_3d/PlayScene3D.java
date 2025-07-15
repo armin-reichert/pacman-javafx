@@ -67,8 +67,9 @@ public class PlayScene3D implements GameScene, SubSceneContent {
     protected final PerspectiveCamera camera = new PerspectiveCamera(true);
     protected final PerspectiveManager perspectiveManager;
     protected final ActionBindingMap actionBindings;
-    protected final Scores3D scores3D;
 
+    protected final Group level3DPlaceHolder = new Group();
+    protected Scores3D scores3D;
     protected GameLevel3D gameLevel3D;
 
     public PlayScene3D(GameUI ui) {
@@ -86,8 +87,7 @@ public class PlayScene3D implements GameScene, SubSceneContent {
         var coordinateSystem = new CoordinateSystem();
         coordinateSystem.visibleProperty().bind(ui.property3DAxesVisible());
 
-        // last child is placeholder for level 3D
-        var root = new Group(scores3D, coordinateSystem, new Group());
+        var root = new Group(level3DPlaceHolder, scores3D, coordinateSystem);
 
         // initial size is irrelevant because size gets bound to parent scene size anyway
         subScene = new SubScene(root, 88, 88, true, SceneAntialiasing.BALANCED);
@@ -544,8 +544,8 @@ public class PlayScene3D implements GameScene, SubSceneContent {
         );
         gameLevel3D.pac3D().init();
         gameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(gameContext().theGameLevel()));
-        Group root = (Group) subScene.getRoot();
-        root.getChildren().set(root.getChildren().size() - 1, gameLevel3D);
+
+        level3DPlaceHolder.getChildren().setAll(gameLevel3D);
 
         scores3D.translateXProperty().bind(gameLevel3D.translateXProperty().add(TS));
         scores3D.translateYProperty().bind(gameLevel3D.translateYProperty().subtract(4.5 * TS));
