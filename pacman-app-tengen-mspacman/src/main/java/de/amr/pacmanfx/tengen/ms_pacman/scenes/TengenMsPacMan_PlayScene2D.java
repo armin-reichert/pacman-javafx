@@ -25,6 +25,7 @@ import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.SubSceneContent;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.ParallelCamera;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
@@ -53,10 +54,8 @@ import static de.amr.pacmanfx.uilib.Ufx.menuTitleItem;
  * Tengen Ms. Pac-Man play scene, uses vertical scrolling by default.
  */
 public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneContent {
-
     // 32 tiles (NES screen width)
     private static final int UNSCALED_CANVAS_WIDTH = NES_TILES.x() * TS;
-
     // 42 tiles (BIG maps height) + 2 extra rows
     private static final int UNSCALED_CANVAS_HEIGHT = 44 * TS;
 
@@ -67,7 +66,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneC
     private final SubScene subScene;
     private final DynamicCamera dynamicCamera = new DynamicCamera();
     private final ParallelCamera fixedCamera  = new ParallelCamera();
-    private final Rectangle canvasClipRect = new Rectangle();
+    private final Rectangle canvasClipArea = new Rectangle();
 
     private MessageMovement messageMovement;
     private LevelCompletedAnimation levelCompletedAnimation;
@@ -84,10 +83,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneC
 
         // The maps are only 28 tiles wide. To avoid seeing the actors outside the map e.g. when going through portals,
         // 2 tiles on each side of the canvas are clipped. and not drawn.
-        canvasClipRect.xProperty().bind(canvas.translateXProperty().add(scalingProperty().multiply(2 * TS)));
-        canvasClipRect.yProperty().bind(canvas.translateYProperty());
-        canvasClipRect.widthProperty().bind(canvas.widthProperty().subtract(scalingProperty().multiply(4 * TS)));
-        canvasClipRect.heightProperty().bind(canvas.heightProperty());
+        canvasClipArea.xProperty().bind(canvas.translateXProperty().add(scalingProperty().multiply(2 * TS)));
+        canvasClipArea.yProperty().bind(canvas.translateYProperty());
+        canvasClipArea.widthProperty().bind(canvas.widthProperty().subtract(scalingProperty().multiply(4 * TS)));
+        canvasClipArea.heightProperty().bind(canvas.heightProperty());
 
         var root = new StackPane(canvas);
         root.setBackground(Background.EMPTY);
@@ -168,26 +167,39 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneC
         });
     }
 
+    private ToggleGroup toggleGroup;
+    private RadioMenuItem miScrolling;
+    private RadioMenuItem miScaledToFit;
+
+    private void handlePlaySceneDisplayModeChange(
+        ObservableValue<? extends SceneDisplayMode> property, SceneDisplayMode oldMode, SceneDisplayMode newMode) {
+        toggleGroup.selectToggle(newMode == SceneDisplayMode.SCROLLING ? miScrolling : miScaledToFit);
+    }
+
     @Override
     public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent, ContextMenu menu) {
-        var config = (TengenMsPacMan_UIConfig) ui.theConfiguration();
+        var config = ui.<TengenMsPacMan_UIConfig>theConfiguration();
         SceneDisplayMode displayMode = config.propertyPlaySceneDisplayMode.get();
 
-        var miScaledToFit = new RadioMenuItem(ui.theAssets().text("scaled_to_fit"));
+        miScaledToFit = new RadioMenuItem(ui.theAssets().text("scaled_to_fit"));
         miScaledToFit.setSelected(displayMode == SceneDisplayMode.SCALED_TO_FIT);
         miScaledToFit.setOnAction(e -> config.propertyPlaySceneDisplayMode.set(SceneDisplayMode.SCALED_TO_FIT));
 
-        var miScrolling = new RadioMenuItem(ui.theAssets().text("scrolling"));
+        miScrolling = new RadioMenuItem(ui.theAssets().text("scrolling"));
         miScrolling.setSelected(displayMode == SceneDisplayMode.SCROLLING);
         miScrolling.setOnAction(e -> config.propertyPlaySceneDisplayMode.set(SceneDisplayMode.SCROLLING));
 
-        var radio = new ToggleGroup();
-        miScaledToFit.setToggleGroup(radio);
-        miScrolling.setToggleGroup(radio);
+        toggleGroup = new ToggleGroup();
+        miScaledToFit.setToggleGroup(toggleGroup);
+        miScrolling.setToggleGroup(toggleGroup);
 
-        //TODO remove this listener again when context menu closes!
-        config.propertyPlaySceneDisplayMode.addListener((py, ov, newMode) ->
-            radio.selectToggle(newMode == SceneDisplayMode.SCROLLING ? miScrolling : miScaledToFit));
+        config.propertyPlaySceneDisplayMode.addListener(this::handlePlaySceneDisplayModeChange);
+        Logger.info("Added listener to config propertyPlaySceneDisplayMode property");
+        //TODO might interfere with onHidden event handler set elsewhere on this menu
+        menu.setOnHidden(e -> {
+            config.propertyPlaySceneDisplayMode.removeListener(this::handlePlaySceneDisplayModeChange);
+            Logger.info("Removed listener from config propertyPlaySceneDisplayMode property");
+        });
 
         var miAutopilot = new CheckMenuItem(ui.theAssets().text("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(theGameContext().propertyUsingAutopilot());
@@ -416,13 +428,13 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneC
             drawSceneContent();
             drawDebugInfo();
         } else {
-            canvas.setClip(canvasClipRect);
+            canvas.setClip(canvasClipArea);
             drawSceneContent();
         }
         ctx().restore();
 
-        ctx().save();
         // NES screen is 32 tiles wide but mazes are only 28 tiles wide, so shift HUD right:
+        ctx().save();
         ctx().translate(scaled(2 * TS), 0);
         gr().drawHUD(gameContext(), gameContext().theGame().hud(), sizeInPx(), ui.theGameClock().tickCount());
         ctx().restore();
@@ -431,7 +443,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneC
     @Override
     public void drawSceneContent() {
         ctx().save();
-        centerOnScreen();
+        ctx().translate(scaled(2 * TS), 0);
 
         if (levelCompletedAnimation.isRunning()) {
             if (levelCompletedAnimation.isHighlighted()) {
@@ -455,6 +467,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneC
         ghostsByZ().forEach(actorsByZ::add);
         gr().drawActors(actorsByZ);
         actorsByZ.clear();
+
         ctx().restore();
     }
 
@@ -463,7 +476,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneC
         ctx().save();
         gr().drawTileGrid(UNSCALED_CANVAS_WIDTH, UNSCALED_CANVAS_HEIGHT, Color.LIGHTGRAY);
         if (gameContext().optGameLevel().isPresent()) {
-            centerOnScreen();
+            ctx().translate(scaled(2 * TS), 0);
             ctx().setFill(DEBUG_TEXT_FILL);
             ctx().setFont(DEBUG_TEXT_FONT);
             ctx().fillText("%s %d".formatted(gameContext().theGameState(), gameContext().theGameState().timer().tickCount()), 0, scaled(3 * TS));
@@ -474,11 +487,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneC
     }
 
     private TengenMsPacMan_GameModel theTengenGame() { return gameContext().theGame(); }
-
-    // NES screen is 32 tiles wide but mazes are only 28 tiles wide, so indent by 2 tiles to center on available width
-    private void centerOnScreen() {
-        ctx().translate(scaled(2 * TS), 0);
-    }
 
     private Stream<Ghost> ghostsByZ() {
         return Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW).map(gameContext().theGameLevel()::ghost);
@@ -498,16 +506,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneC
 
     private void updateHUD() {
         TengenMsPacMan_HUD hud = theTengenGame().hud();
-        TengenMsPacMan_LevelCounter levelCounter = hud.levelCounter();
-        //TODO check demo level behavior in emulator. Are there demo levels for non-ARCADE maps at all?
-        if (theTengenGame().mapCategory() == MapCategory.ARCADE
-            || gameContext().optGameLevel().isEmpty()
-            || gameContext().theGameLevel().isDemoLevel()) {
-            levelCounter.setDisplayedLevelNumber(0); // no level number boxes for ARCADE maps or when level not yet created
-        } else {
-            levelCounter.setDisplayedLevelNumber(gameContext().theGameLevel().number());
-        }
-
         int numLives = gameContext().theGame().lifeCount() - 1;
         // As long as Pac-Man is still invisible on start, he is shown as an additional entry in the lives counter
         if (gameContext().theGameState() == GameState.STARTING_GAME && !gameContext().theGameLevel().pac().isVisible()) {
@@ -515,5 +513,15 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneC
         }
         numLives = Math.min(numLives, hud.livesCounter().maxLivesDisplayed());
         hud.livesCounter().setVisibleLifeCount(numLives);
+
+        //TODO check demo level behavior in emulator. Are there demo levels for non-ARCADE maps at all?
+        TengenMsPacMan_LevelCounter levelCounter = hud.levelCounter();
+        if (theTengenGame().mapCategory() == MapCategory.ARCADE
+            || gameContext().optGameLevel().isEmpty()
+            || gameContext().theGameLevel().isDemoLevel()) {
+            levelCounter.setDisplayedLevelNumber(0); // no level number boxes for ARCADE maps or when level not yet created
+        } else {
+            levelCounter.setDisplayedLevelNumber(gameContext().theGameLevel().number());
+        }
     }
 }
