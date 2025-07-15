@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.actors.Bonus;
+import de.amr.pacmanfx.model.actors.BonusEntity;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
 import javafx.animation.Animation;
@@ -137,7 +137,7 @@ public class MiniGameView extends VBox {
             false,
             gameLevel.blinking().isOn(),
             ui.theGameClock().tickCount());
-        gameLevel.bonus().map(Bonus::actor).ifPresent(gr::drawActor);
+        gameLevel.bonus().map(BonusEntity::actor).ifPresent(gr::drawActor);
         gr.drawActor(gameLevel.pac());
         Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)
                 .map(gameLevel::ghost)

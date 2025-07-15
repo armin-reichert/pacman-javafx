@@ -12,10 +12,10 @@ import de.amr.pacmanfx.lib.tilemap.TerrainTile;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.*;
+import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.model.actors.StaticBonus;
 import de.amr.pacmanfx.steering.RouteBasedSteering;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
@@ -296,7 +296,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
     public void activateNextBonus() {
         level.selectNextBonus();
         byte symbol = level.bonusSymbol(level.currentBonusIndex());
-        var bonus = new StaticBonus(gameContext, symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100);
+        var bonus = new Bonus(gameContext, symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100);
         Vector2i bonusTile = level.worldMap().getTerrainTileProperty(WorldMapProperty.POS_BONUS, new Vector2i(13, 20));
         bonus.setPosition(halfTileRightOf(bonusTile));
         bonus.setEdibleTicks(randomInt(9 * NUM_TICKS_PER_SEC, 10 * NUM_TICKS_PER_SEC));

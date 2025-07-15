@@ -11,7 +11,7 @@ import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.actors.Bonus;
+import de.amr.pacmanfx.model.actors.BonusEntity;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 
@@ -299,7 +299,7 @@ public enum GameState implements FsmState<GameContext> {
 
         @Override
         public void onExit(GameContext gameContext) {
-            gameContext.theGameLevel().bonus().ifPresent(Bonus::setInactive);
+            gameContext.theGameLevel().bonus().ifPresent(BonusEntity::setInactive);
         }
     },
 
@@ -397,7 +397,7 @@ public enum GameState implements FsmState<GameContext> {
                 gameContext.theGameEventManager().publishEvent(gameContext.theGame(), GameEventType.BONUS_EATEN);
             }
             else if (timer().atSecond(6.5)) {
-                gameContext.theGameLevel().bonus().ifPresent(Bonus::setInactive); // needed?
+                gameContext.theGameLevel().bonus().ifPresent(BonusEntity::setInactive); // needed?
                 gameContext.theGame().activateNextBonus();
             }
             else if (timer().atSecond(8.5)) {

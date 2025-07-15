@@ -122,7 +122,7 @@ public abstract class GameModel implements ScoreManager {
         level.pac().powerTimer().stop();
         level.pac().powerTimer().reset(0);
         Logger.info("Power timer stopped and reset to zero");
-        level.bonus().ifPresent(Bonus::setInactive);
+        level.bonus().ifPresent(BonusEntity::setInactive);
         // when cheating to end level, there might still be food
         level.eatAllFood();
         Logger.trace("Game level {} completed.", level.number());
@@ -235,8 +235,9 @@ public abstract class GameModel implements ScoreManager {
     public abstract boolean isBonusReached();
     public abstract void activateNextBonus();
 
-    protected void checkIfBonusEaten(Bonus bonus) {
-        if (bonus.state() != Bonus.STATE_EDIBLE) return;
+    protected void checkIfBonusEaten(BonusEntity bonus) {
+        if (bonus.state() != BonusEntity.BonusState.EDIBLE)
+            return;
         if (actorsCollide(level.pac(), bonus.actor())) {
             bonus.setEaten(120); //TODO is 2 seconds correct?
             scorePoints(bonus.points());

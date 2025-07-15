@@ -8,7 +8,7 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.actors.Bonus;
+import de.amr.pacmanfx.model.actors.BonusEntity;
 import de.amr.pacmanfx.model.actors.MovingBonus;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -38,7 +38,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class Bonus3D extends Box {
 
-    private final Bonus bonus;
+    private final BonusEntity bonus;
 
     private final double symbolWidth;
     private final double pointsWidth;
@@ -72,7 +72,7 @@ public class Bonus3D extends Box {
                 RotateTransition rotateTransition = (RotateTransition) animation;
                 Vector2f center = bonus.actor().center();
                 boolean outsideWorld = center.x() < HTS || center.x() > level.worldMap().numCols() * TS - HTS;
-                setVisible(bonus.state() == Bonus.STATE_EDIBLE && !outsideWorld);
+                setVisible(bonus.state() == BonusEntity.BonusState.EDIBLE && !outsideWorld);
                 Direction moveDir = movingBonus.actor().moveDir();
                 Point3D axis = moveDir.isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
                 rotateTransition.setRate(moveDir == Direction.DOWN || moveDir == Direction.LEFT ? 1 : -1);
@@ -85,7 +85,7 @@ public class Bonus3D extends Box {
         }
     }
 
-    public Bonus3D(AnimationManager animationManager, Bonus bonus, Image symbolImage, double symbolWidth, Image pointsImage, double pointsWidth) {
+    public Bonus3D(AnimationManager animationManager, BonusEntity bonus, Image symbolImage, double symbolWidth, Image pointsImage, double pointsWidth) {
         requireNonNull(animationManager);
         this.bonus = requireNonNull(bonus);
         this.symbolWidth = requireNonNegative(symbolWidth);

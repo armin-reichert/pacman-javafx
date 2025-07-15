@@ -10,7 +10,6 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
-import de.amr.pacmanfx.model.actors.StaticBonus;
 import de.amr.pacmanfx.ui.PacManGames_Assets;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -133,23 +132,17 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
 
     @Override
     public void drawActor(Actor actor) {
-        if (actor instanceof StaticBonus staticBonus) {
+        if (actor instanceof Bonus staticBonus) {
             drawStaticBonus(staticBonus);
         }
         else super.drawActor(actor);
     }
 
-    public void drawStaticBonus(StaticBonus bonus) {
+    private void drawStaticBonus(Bonus bonus) {
         switch (bonus.state()) {
-            case Bonus.STATE_INACTIVE -> {}
-            case Bonus.STATE_EDIBLE -> {
-                RectShort sprite = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS)[bonus.symbol()];
-                drawActorSpriteCentered(bonus, sprite);
-            }
-            case Bonus.STATE_EATEN  -> {
-                RectShort sprite = spriteSheet.spriteSeq(SpriteID.BONUS_VALUES)[bonus.symbol()];
-                drawActorSpriteCentered(bonus, sprite);
-            }
+            case EDIBLE -> drawActorSpriteCentered(bonus, spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS)[bonus.symbol()]);
+            case EATEN  -> drawActorSpriteCentered(bonus, spriteSheet.spriteSeq(SpriteID.BONUS_VALUES)[bonus.symbol()]);
+            case INACTIVE -> {}
         }
     }
 }

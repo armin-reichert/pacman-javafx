@@ -246,7 +246,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
 
         // Collect and draw actors in drawing z-order: bonus < Pac-Man < ghosts.
         actorsByZ.clear();
-        gameContext().theGameLevel().bonus().map(Bonus::actor).ifPresent(actorsByZ::add);
+        gameContext().theGameLevel().bonus().map(BonusEntity::actor).ifPresent(actorsByZ::add);
         actorsByZ.add(gameContext().theGameLevel().pac());
         Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW).map(gameContext().theGameLevel()::ghost)
                 .forEach(actorsByZ::add);

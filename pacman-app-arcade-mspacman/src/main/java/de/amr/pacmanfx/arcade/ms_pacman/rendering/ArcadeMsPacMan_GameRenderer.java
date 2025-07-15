@@ -12,7 +12,7 @@ import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.Bonus;
+import de.amr.pacmanfx.model.actors.BonusEntity;
 import de.amr.pacmanfx.model.actors.MovingBonus;
 import de.amr.pacmanfx.ui.PacManGames_Assets;
 import de.amr.pacmanfx.ui.PacManGames_UIConfig;
@@ -66,9 +66,6 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
         spriteSheet = null;
         brightMazesSpriteSheet = null;
     }
-
-    @Override
-    public PacManGames_Assets assets() { return (PacManGames_Assets) assets; }
 
     @Override
     public Optional<SpriteSheet<?>> optSpriteSheet() { return Optional.of(spriteSheet); }
@@ -173,15 +170,15 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
     }
 
     public void drawMovingBonus(MovingBonus bonus) {
-        if (bonus.state() == Bonus.STATE_INACTIVE) return;
+        if (bonus.state() == BonusEntity.BonusState.INACTIVE) return;
         ctx.save();
         ctx.translate(0, bonus.elongationY());
         switch (bonus.state()) {
-            case Bonus.STATE_EDIBLE -> {
+            case EDIBLE-> {
                 RectShort sprite = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS)[bonus.symbol()];
                 drawActorSpriteCentered(bonus, sprite);
             }
-            case Bonus.STATE_EATEN  -> {
+            case EATEN  -> {
                 RectShort sprite = spriteSheet.spriteSeq(SpriteID.BONUS_VALUES)[bonus.symbol()];
                 drawActorSpriteCentered(bonus, sprite);
             }

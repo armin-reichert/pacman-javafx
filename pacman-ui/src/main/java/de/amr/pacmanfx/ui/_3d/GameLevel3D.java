@@ -10,7 +10,7 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.Obstacle;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.actors.Bonus;
+import de.amr.pacmanfx.model.actors.BonusEntity;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.ui.GameUI;
@@ -466,7 +466,7 @@ public class GameLevel3D extends Group implements Destroyable {
         messageView.movementAnimation().playFromStart();
     }
 
-    public void updateBonus3D(Bonus bonus) {
+    public void updateBonus3D(BonusEntity bonus) {
         requireNonNull(bonus);
         if (bonus3D != null) {
             mazeGroup.getChildren().remove(bonus3D);

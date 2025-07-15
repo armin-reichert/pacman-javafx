@@ -212,15 +212,15 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
     }
 
     public void drawMovingBonus(MovingBonus bonus) {
-        if (bonus.state() == Bonus.STATE_INACTIVE) return;
+        if (bonus.state() == BonusEntity.BonusState.INACTIVE) return;
         ctx.save();
         ctx.translate(0, bonus.elongationY());
         switch (bonus.state()) {
-            case Bonus.STATE_EDIBLE -> {
+            case EDIBLE -> {
                 RectShort sprite = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS)[bonus.symbol()];
                 drawActorSpriteCentered(bonus, sprite);
             }
-            case Bonus.STATE_EATEN  -> {
+            case EATEN  -> {
                 RectShort sprite = spriteSheet.spriteSeq(SpriteID.BONUS_VALUES)[bonus.symbol()];
                 drawActorSpriteCentered(bonus, sprite);
             }

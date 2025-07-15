@@ -27,15 +27,13 @@ import static java.util.Objects.requireNonNull;
  *
  * <p>
  * That's however not exactly the original Ms. Pac-Man behaviour with predefined "fruit paths".
- *
- * @author Armin Reichert
  */
-public class MovingBonus extends MovingActor implements Bonus {
+public class MovingBonus extends MovingActor implements BonusEntity {
 
     private final Pulse animation = new Pulse(10, false);
     private final byte symbol;
     private final int points;
-    private byte state;
+    private BonusState state;
     private long countdown;
     private RouteBasedSteering steering;
 
@@ -46,7 +44,7 @@ public class MovingBonus extends MovingActor implements Bonus {
         reset();
         canTeleport = false; // override default value
         countdown = 0;
-        state = STATE_INACTIVE;
+        state = BonusState.INACTIVE;
     }
 
     @Override
@@ -84,12 +82,12 @@ public class MovingBonus extends MovingActor implements Bonus {
             "symbol=" + symbol +
             ", points=" + points +
             ", countdown=" + countdown +
-            ", state=" + stateName() +
+            ", state=" + state +
             '}';
     }
 
     @Override
-    public byte state() {
+    public BonusState state() {
         return state;
     }
 
@@ -108,7 +106,7 @@ public class MovingBonus extends MovingActor implements Bonus {
         animation.stop();
         setSpeed(0);
         hide();
-        state = STATE_INACTIVE;
+        state = BonusState.INACTIVE;
         Logger.trace("Bonus inactive: {}", this);
     }
 
@@ -119,7 +117,7 @@ public class MovingBonus extends MovingActor implements Bonus {
         setTargetTile(null);
         show();
         countdown = ticks;
-        state = STATE_EDIBLE;
+        state = BonusState.EDIBLE;
         Logger.trace("Bonus edible: {}", this);
     }
 
@@ -141,7 +139,7 @@ public class MovingBonus extends MovingActor implements Bonus {
     public void setEaten(long ticks) {
         animation.stop();
         countdown = ticks;
-        state = STATE_EATEN;
+        state = BonusState.EATEN;
         Logger.trace("Bonus eaten: {}", this);
     }
 
@@ -158,10 +156,10 @@ public class MovingBonus extends MovingActor implements Bonus {
     @Override
     public void update(GameModel game) {
         switch (state) {
-            case STATE_INACTIVE -> {}
-            case STATE_EDIBLE   -> updateStateEdible(game);
-            case STATE_EATEN    -> updateStateEaten(game);
-            default             -> throw new IllegalStateException("Unknown bonus state: " + state);
+            case INACTIVE -> {}
+            case EDIBLE   -> updateStateEdible(game);
+            case EATEN    -> updateStateEaten(game);
+            default       -> throw new IllegalStateException("Unknown bonus state: " + state);
         }
     }
 

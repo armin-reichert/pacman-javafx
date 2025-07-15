@@ -152,7 +152,7 @@ public class RuleBasedPacSteering implements Steering {
         if (level.bonus().isPresent()) {
             var bonus = level.bonus().get();
             var tile = tileAt(bonus.actor().position());
-            return bonus.state() == Bonus.STATE_EDIBLE
+            return bonus.state() == BonusEntity.BonusState.EDIBLE
                 && tile.manhattanDist(pac.tile()) <= CollectedData.MAX_BONUS_HARVEST_DIST;
         }
         return false;

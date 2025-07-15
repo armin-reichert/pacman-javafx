@@ -4,67 +4,102 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model.actors;
 
+import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.event.GameEventType;
+import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.GameModel;
+import org.tinylog.Logger;
 
 /**
- * @author Armin Reichert
+ * Bonus that appears for some time at a fixed position before it gets eaten or vanishes.
  */
-public interface Bonus {
+public class Bonus extends Actor implements BonusEntity {
 
-    byte STATE_INACTIVE = 0, STATE_EDIBLE = 1, STATE_EATEN = 2;
+    private final byte symbol;
+    private final int points;
+    private long countdown;
+    private BonusState state;
 
-    default String stateName() {
-        return switch (state()) {
-            case STATE_EATEN -> "eaten";
-            case STATE_EDIBLE -> "edible";
-            case STATE_INACTIVE -> "inactive";
-            default -> throw new IllegalStateException("Unknown bonus state: " + state());
-        };
+    public Bonus(GameContext gameContext, byte symbol, int points) {
+        super(gameContext);
+        this.symbol = symbol;
+        this.points = points;
+        this.countdown = 0;
+        this.state = BonusState.INACTIVE;
     }
 
-    /**
-     * @return actor representing this bonus.
-     */
-    Actor actor();
+    @Override
+    public Bonus actor() {
+        return this;
+    }
 
-    /**
-     * @return the symbol of this bonus.
-     */
-    byte symbol();
+    @Override
+    public String toString() {
+        return "StaticBonus{" +
+            "symbol=" + symbol +
+            ", points=" + points +
+            ", countdown=" + countdown +
+            ", state=" + state +
+            '}';
+    }
 
-    /**
-     * @return points earned for eating this bonus
-     */
-    int points();
+    @Override
+    public BonusState state() {
+        return state;
+    }
 
-    /**
-     * @return state of the bonus
-     */
-    byte state();
+    @Override
+    public byte symbol() {
+        return symbol;
+    }
 
-    /**
-     * Updates the bonus state.
-     *
-     * @param game current game variant
-     */
-    void update(GameModel game);
+    @Override
+    public int points() {
+        return points;
+    }
 
-    /**
-     * Changes the bonus state to STATE_INACTIVE.
-     */
-    void setInactive();
+    @Override
+    public void setInactive() {
+        countdown = 0;
+        hide();
+        state = BonusState.INACTIVE;
+        Logger.trace("Bonus inactive: {}", this);
+    }
 
-    /**
-     * Changes the bonus state to STATE_EATEN.
-     *
-     * @param ticks how long the bonus stays in eaten state
-     */
-    void setEaten(long ticks);
+    @Override
+    public void setEdibleTicks(long ticks) {
+        if (ticks <= 0) {
+            throw new IllegalArgumentException("Bonus edible time must be larger than zero");
+        }
+        countdown = ticks;
+        show();
+        state = BonusState.EDIBLE;
+        Logger.trace("Bonus edible: {}", this);
+    }
 
-    /**
-     * Changes the bonus state to STATE_EDIBLE.
-     *
-     * @param ticks how long the bonus stays in edible state
-     */
-    void setEdibleTicks(long ticks);
+    @Override
+    public void setEaten(long ticks) {
+        if (ticks <= 0) {
+            throw new IllegalArgumentException("Bonus edible time must be larger than zero");
+        }
+        countdown = ticks;
+        state = BonusState.EATEN;
+        Logger.trace("Bonus eaten: {}", this);
+    }
+
+    @Override
+    public void update(GameModel game) {
+        switch (state) {
+            case INACTIVE -> {}
+            case EDIBLE, EATEN -> {
+                if (countdown == 0) {
+                    setInactive();
+                    gameContext.theGameEventManager().publishEvent(game, GameEventType.BONUS_EXPIRED, tile());
+                } else if (countdown != TickTimer.INDEFINITE) {
+                    --countdown;
+                }
+            }
+            default -> throw new IllegalStateException("Unknown bonus state: " + state);
+        }
+    }
 }

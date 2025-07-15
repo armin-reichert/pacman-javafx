@@ -12,7 +12,7 @@ import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.lib.tilemap.WorldMapFormatter;
 import de.amr.pacmanfx.lib.timer.Pulse;
-import de.amr.pacmanfx.model.actors.Bonus;
+import de.amr.pacmanfx.model.actors.BonusEntity;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -82,7 +82,7 @@ public class GameLevel {
     private Pac pac;
     private Ghost[] ghosts;
     private final List<Ghost> victims = new ArrayList<>();
-    private Bonus bonus;
+    private BonusEntity bonus;
     private final byte[] bonusSymbols = new byte[2];
     private int currentBonusIndex; // -1=no bonus, 0=first, 1=second
     private byte messageType = MESSAGE_NONE;
@@ -271,9 +271,9 @@ public class GameLevel {
     public void registerGhostKilled() { numGhostsKilled++; }
     public int numGhostsKilled() { return numGhostsKilled; }
 
-    public Optional<Bonus> bonus() { return Optional.ofNullable(bonus); }
-    public void setBonus(Bonus bonus) { this.bonus = bonus; }
-    public boolean isBonusEdible() { return bonus != null && bonus.state() == Bonus.STATE_EDIBLE; }
+    public Optional<BonusEntity> bonus() { return Optional.ofNullable(bonus); }
+    public void setBonus(BonusEntity bonus) { this.bonus = bonus; }
+    public boolean isBonusEdible() { return bonus != null && bonus.state() == BonusEntity.BonusState.EDIBLE; }
     public int currentBonusIndex() { return currentBonusIndex; }
     public void selectNextBonus() { currentBonusIndex += 1; }
     public byte bonusSymbol(int i) { return bonusSymbols[i]; }
