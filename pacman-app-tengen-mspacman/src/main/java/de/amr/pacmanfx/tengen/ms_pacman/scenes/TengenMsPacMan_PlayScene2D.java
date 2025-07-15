@@ -167,6 +167,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D implements SubSceneC
         });
     }
 
+    // Context menu
+
     private ToggleGroup toggleGroup;
     private RadioMenuItem miScrolling;
     private RadioMenuItem miScaledToFit;

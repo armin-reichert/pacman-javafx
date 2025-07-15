@@ -26,6 +26,7 @@ import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
 import javafx.animation.Interpolator;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SceneAntialiasing;
@@ -128,6 +129,11 @@ public class PlayScene3D implements GameScene, SubSceneContent {
         return Optional.ofNullable(gameLevel3D);
     }
 
+    // Context menu
+
+    private final ToggleGroup toggleGroup = new ToggleGroup();
+    private final List<RadioMenuItem> perspectiveRadioItems = new ArrayList<>();
+
     @Override
     public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent, ContextMenu menu) {
         var miUse2DScene = new MenuItem(ui.theAssets().text("use_2D_scene"));
@@ -153,7 +159,8 @@ public class PlayScene3D implements GameScene, SubSceneContent {
         items.add(miUse2DScene);
         items.add(miToggleMiniView);
         items.add(menuTitleItem(ui.theAssets().text("select_perspective")));
-        items.addAll(createPerspectiveRadioItems());
+        createPerspectiveRadioItems(menu);
+        items.addAll(perspectiveRadioItems);
         items.add(menuTitleItem(ui.theAssets().text("pacman")));
         items.add(miAutopilot);
         items.add(miImmunity);
@@ -164,28 +171,35 @@ public class PlayScene3D implements GameScene, SubSceneContent {
         return items;
     }
 
-    private List<MenuItem> createPerspectiveRadioItems() {
-        List<MenuItem> items = new ArrayList<>();
-        var toggleGroup = new ToggleGroup();
-        for (var perspectiveID : Perspective.ID.values()) {
-            var radioItem = new RadioMenuItem(ui.theAssets().text("perspective_id_" + perspectiveID.name()));
+    private void createPerspectiveRadioItems(ContextMenu menu) {
+        perspectiveRadioItems.clear();
+        for (Perspective.ID id : Perspective.ID.values()) {
+            var radioItem = new RadioMenuItem(ui.theAssets().text("perspective_id_" + id.name()));
             radioItem.setToggleGroup(toggleGroup);
-            radioItem.setOnAction(e -> ui.property3DPerspective().set(perspectiveID));
-            radioItem.setUserData(perspectiveID);
-            if (perspectiveID == ui.property3DPerspective().get())  {
+            radioItem.setOnAction(e -> ui.property3DPerspective().set(id));
+            radioItem.setUserData(id);
+            if (id == ui.property3DPerspective().get())  {
                 radioItem.setSelected(true);
             }
-            items.add(radioItem);
+            perspectiveRadioItems.add(radioItem);
         }
-        //TODO remove this again!
-        ui.property3DPerspective().addListener((py, ov, newPerspectiveID) -> {
-            for (MenuItem item : items) {
-                if (item.getUserData() == newPerspectiveID) {
-                    toggleGroup.selectToggle((Toggle) item);
-                }
-            }
+        Logger.info("Added listener to UI property3DPerspective property");
+        ui.property3DPerspective().addListener(this::handle3DPerspectiveChange);
+        menu.setOnHidden(e -> {
+            ui.property3DPerspective().removeListener(this::handle3DPerspectiveChange);
+            Logger.info("Removed listener from UI property3DPerspective property");
         });
-        return items;
+    }
+
+    private void handle3DPerspectiveChange(
+        ObservableValue<? extends Perspective.ID> property,
+        Perspective.ID oldPerspectiveID,
+        Perspective.ID newPerspectiveID) {
+        for (MenuItem item : perspectiveRadioItems) {
+            if (item.getUserData() == newPerspectiveID) {
+                toggleGroup.selectToggle((Toggle) item);
+            }
+        }
     }
 
     protected void setActionBindings() {
