@@ -4,8 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model.actors;
 
-import de.amr.pacmanfx.model.GameModel;
-
 public interface BonusEntity {
 
     enum BonusState { INACTIVE, EDIBLE, EATEN }
@@ -32,10 +30,8 @@ public interface BonusEntity {
 
     /**
      * Updates the bonus state.
-     *
-     * @param game current game variant
      */
-    void update(GameModel game);
+    void update();
 
     /**
      * Changes the bonus state to STATE_INACTIVE.

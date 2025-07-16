@@ -12,7 +12,6 @@ import de.amr.pacmanfx.lib.Waypoint;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.steering.RouteBasedSteering;
 import org.tinylog.Logger;
 
@@ -121,20 +120,6 @@ public class MovingBonus extends MovingActor implements BonusEntity {
         Logger.trace("Bonus edible: {}", this);
     }
 
-    private void updateStateEdible(GameModel game) {
-        GameLevel level = game.level().orElseThrow();
-        steering.steer(this, level);
-        if (steering.isComplete()) {
-            Logger.trace("Moving bonus reached target: {}", this);
-            setInactive();
-            gameContext.theGameEventManager().publishEvent(game, GameEventType.BONUS_EXPIRED, tile());
-        } else {
-            navigateTowardsTarget(level);
-            tryMoving(level);
-            animation.tick();
-        }
-    }
-
     @Override
     public void setEaten(long ticks) {
         animation.stop();
@@ -143,23 +128,34 @@ public class MovingBonus extends MovingActor implements BonusEntity {
         Logger.trace("Bonus eaten: {}", this);
     }
 
-    private void updateStateEaten(GameModel game) {
+    private void updateStateEaten() {
         if (countdown == 0) {
             Logger.trace("Bonus expired: {}", this);
             setInactive();
-            gameContext.theGameEventManager().publishEvent(game, GameEventType.BONUS_EXPIRED, tile());
+            gameContext.theGameEventManager().publishEvent(gameContext.theGame(), GameEventType.BONUS_EXPIRED, tile());
         } else if (countdown != TickTimer.INDEFINITE) {
             --countdown;
         }
     }
 
     @Override
-    public void update(GameModel game) {
+    public void update() {
         switch (state) {
             case INACTIVE -> {}
-            case EDIBLE   -> updateStateEdible(game);
-            case EATEN    -> updateStateEaten(game);
-            default       -> throw new IllegalStateException("Unknown bonus state: " + state);
+            case EDIBLE -> gameContext.optGameLevel().ifPresent(gameLevel -> {
+                steering.steer(this, gameLevel);
+                if (steering.isComplete()) {
+                    Logger.trace("Moving bonus reached target: {}", this);
+                    setInactive();
+                    gameContext.theGameEventManager().publishEvent(gameContext.theGame(), GameEventType.BONUS_EXPIRED, tile());
+                } else {
+                    navigateTowardsTarget(gameLevel);
+                    tryMoving(gameLevel);
+                    animation.tick();
+                }
+            });
+            case EATEN -> updateStateEaten();
+            default -> throw new IllegalStateException("Unknown bonus state: " + state);
         }
     }
 

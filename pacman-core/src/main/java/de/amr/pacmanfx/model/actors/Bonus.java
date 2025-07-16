@@ -7,7 +7,6 @@ package de.amr.pacmanfx.model.actors;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.model.GameModel;
 import org.tinylog.Logger;
 
 /**
@@ -88,13 +87,13 @@ public class Bonus extends Actor implements BonusEntity {
     }
 
     @Override
-    public void update(GameModel game) {
+    public void update() {
         switch (state) {
             case INACTIVE -> {}
             case EDIBLE, EATEN -> {
                 if (countdown == 0) {
                     setInactive();
-                    gameContext.theGameEventManager().publishEvent(game, GameEventType.BONUS_EXPIRED, tile());
+                    gameContext.theGameEventManager().publishEvent(gameContext.theGame(), GameEventType.BONUS_EXPIRED, tile());
                 } else if (countdown != TickTimer.INDEFINITE) {
                     --countdown;
                 }

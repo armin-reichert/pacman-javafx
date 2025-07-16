@@ -379,7 +379,7 @@ public enum GameState implements FsmState<GameContext> {
             if (timer().tickCount() > 2 * Globals.NUM_TICKS_PER_SEC) {
                 gameLevel.blinking().tick();
                 gameLevel.ghosts().forEach(ghost -> ghost.update(gameLevel));
-                gameLevel.bonus().ifPresent(bonus -> bonus.update(gameContext.theGame()));
+                gameLevel.bonus().ifPresent(BonusEntity::update);
             }
             if (timer().atSecond(1.0)) {
                 gameContext.theGame().initAnimationOfPacManAndGhosts();
