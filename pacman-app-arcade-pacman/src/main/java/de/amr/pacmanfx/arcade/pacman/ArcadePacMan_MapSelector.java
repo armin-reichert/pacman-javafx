@@ -16,12 +16,10 @@ public class ArcadePacMan_MapSelector implements MapSelector {
 
     private static final String MAP_PATH = "/de/amr/pacmanfx/arcade/pacman/maps/pacman.world";
 
-    private WorldMap theMap;
+    private List<WorldMap> maps;
 
     @Override
-    public List<WorldMap> builtinMaps() {
-        return List.of(theMap);
-    }
+    public List<WorldMap> builtinMaps() { return maps; }
 
     @Override
     public List<WorldMap> customMaps() {
@@ -29,22 +27,22 @@ public class ArcadePacMan_MapSelector implements MapSelector {
     }
 
     @Override
-    public void loadCustomMaps() {
-    }
+    public void loadCustomMaps() {}
 
     @Override
     public void loadAllMaps() {
-        if (theMap == null) {
+        if (maps == null) {
             URL mapURL = getClass().getResource(MAP_PATH);
             if (mapURL == null) {
                 Logger.error("Could not locate Pac-Man Arcade map, path='{}'", MAP_PATH);
                 throw new IllegalStateException();
             }
             try {
-                theMap = WorldMap.fromURL(mapURL);
-                theMap.setConfigValue("mapNumber", 1);
-                theMap.setConfigValue("colorMapIndex", 0);
-                Logger.info("Pac-Man Arcade map loaded, URL='{}'", theMap.url());
+                var map = WorldMap.fromURL(mapURL);
+                map.setConfigValue("mapNumber", 1);
+                map.setConfigValue("colorMapIndex", 0);
+                Logger.info("Pac-Man Arcade map loaded, URL='{}'", map.url());
+                maps = List.of(map);
             } catch (IOException x) {
                 Logger.error("Could not load Pac-Man Arcade map, path={}", MAP_PATH);
                 throw new IllegalStateException(x);
@@ -54,6 +52,6 @@ public class ArcadePacMan_MapSelector implements MapSelector {
 
     @Override
     public WorldMap getWorldMap(int levelNumber) {
-        return theMap;
+        return maps.getFirst();
     }
 }
