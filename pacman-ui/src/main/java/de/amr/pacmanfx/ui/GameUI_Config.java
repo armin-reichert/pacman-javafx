@@ -43,7 +43,7 @@ public interface GameUI_Config extends Destroyable {
      * Stores key-value pair in the namespace of this configuration.
      *
      * @param assetStorage the asset storage
-     * @param partialKey the partial asset key, absolute key is {@code asset_namespace + "." + key}
+     * @param partialKey the partial asset key, full key is {@code asset_namespace + "." + key}
      * @param value the asset value
      */
     default void storeAssetNS(AssetStorage assetStorage, String partialKey, Object value) {
@@ -52,7 +52,7 @@ public interface GameUI_Config extends Destroyable {
 
     /**
      * @param assetStorage the asset storage
-     * @param localKey the partial asset key, absolute key is {@code asset_namespace + "." + key}
+     * @param localKey the partial asset key, full key is {@code asset_namespace + "." + key}
      * @return the asset value
      * @param <T> expected asset value type
      */
@@ -61,7 +61,7 @@ public interface GameUI_Config extends Destroyable {
     }
 
     /**
-     * @param partialKey the partial asset key, absolute key is {@code asset_namespace + "." + key}
+     * @param partialKey the partial asset key, full key is {@code asset_namespace + "." + key}
      * @return the asset value from the global asset storage of the UI
      * @param <T> expected asset value type
      */
