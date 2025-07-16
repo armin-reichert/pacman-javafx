@@ -187,17 +187,16 @@ public class GameLevel3D extends Group implements Destroyable {
         pac3D.init();
         getChildren().addAll(pac3D, pac3D.light());
 
-        final String ans = ui.theConfiguration().assetNamespace();
         ghosts3D = gameLevel().ghosts().map(ghost -> {
             var ghostColoring = new GhostColoring(
-                    ui.theAssets().color("%s.ghost.%d.color.normal.dress".formatted(ans, ghost.personality())),
-                    ui.theAssets().color("%s.ghost.%d.color.normal.pupils".formatted(ans, ghost.personality())),
-                    ui.theAssets().color("%s.ghost.%d.color.normal.eyeballs".formatted(ans, ghost.personality())),
-                    ui.theAssets().color("%s.ghost.color.frightened.dress".formatted(ans)),
-                    ui.theAssets().color("%s.ghost.color.frightened.pupils".formatted(ans)),
-                    ui.theAssets().color("%s.ghost.color.frightened.eyeballs".formatted(ans)),
-                    ui.theAssets().color("%s.ghost.color.flashing.dress".formatted(ans)),
-                    ui.theAssets().color("%s.ghost.color.flashing.pupils".formatted(ans))
+                ui.theConfiguration().getAssetNS("ghost.%d.color.normal.dress".formatted(ghost.personality())),
+                ui.theConfiguration().getAssetNS("ghost.%d.color.normal.pupils".formatted(ghost.personality())),
+                ui.theConfiguration().getAssetNS("ghost.%d.color.normal.eyeballs".formatted(ghost.personality())),
+                ui.theConfiguration().getAssetNS("ghost.color.frightened.dress"),
+                ui.theConfiguration().getAssetNS("ghost.color.frightened.pupils"),
+                ui.theConfiguration().getAssetNS("ghost.color.frightened.eyeballs"),
+                ui.theConfiguration().getAssetNS("ghost.color.flashing.dress"),
+                ui.theConfiguration().getAssetNS("ghost.color.flashing.pupils")
             );
             return new MutatingGhost3D(
                 animationManager,
@@ -214,74 +213,71 @@ public class GameLevel3D extends Group implements Destroyable {
         getChildren().addAll(ghosts3D);
         ghosts3D.forEach(ghost3D -> ghost3D.init(gameLevel()));
 
+        Logger.info("Build 3D maze for map (URL '{}') and color scheme {}", gameLevel().worldMap().url(), colorScheme);
         getChildren().add(mazeGroup);
 
-        Logger.info("Build 3D maze for map (URL '{}') and color scheme {}", gameLevel().worldMap().url(), colorScheme);
+        floor3D = new Floor3D(
+            gameLevel().worldMap().numCols() * TS,
+            gameLevel().worldMap().numRows() * TS,
+            Settings3D.FLOOR_3D_THICKNESS,
+            Settings3D.FLOOR_3D_PADDING
+        );
+        floor3D.materialProperty().bind(ui.property3DFloorColor().map(Ufx::coloredPhongMaterial));
 
-        {
-            floor3D = new Floor3D(
-                gameLevel().worldMap().numCols() * TS,
-                gameLevel().worldMap().numRows() * TS,
-                Settings3D.FLOOR_3D_THICKNESS,
-                Settings3D.FLOOR_3D_PADDING
-            );
-            floor3D.materialProperty().bind(ui.property3DFloorColor().map(Ufx::coloredPhongMaterial));
+        wallBaseMaterial = new PhongMaterial();
+        wallBaseMaterial.diffuseColorProperty().bind(Bindings.createObjectBinding(
+                () -> opaqueColor(colorScheme.stroke(), wallOpacityProperty.get()),
+            wallOpacityProperty
+        ));
+        wallBaseMaterial.specularColorProperty().bind(wallBaseMaterial.diffuseColorProperty().map(Color::brighter));
 
-            wallBaseMaterial = new PhongMaterial();
-            wallBaseMaterial.diffuseColorProperty().bind(Bindings.createObjectBinding(
-                    () -> opaqueColor(colorScheme.stroke(), wallOpacityProperty.get()),
-                wallOpacityProperty
-            ));
-            wallBaseMaterial.specularColorProperty().bind(wallBaseMaterial.diffuseColorProperty().map(Color::brighter));
+        wallTopMaterial = new PhongMaterial();
+        wallTopMaterial.setDiffuseColor(colorScheme.fill());
+        wallTopMaterial.setSpecularColor(colorScheme.fill().brighter());
 
-            wallTopMaterial = new PhongMaterial();
-            wallTopMaterial.setDiffuseColor(colorScheme.fill());
-            wallTopMaterial.setSpecularColor(colorScheme.fill().brighter());
+        cornerBaseMaterial = new PhongMaterial();
+        cornerBaseMaterial.setDiffuseColor(colorScheme.stroke());
+        cornerBaseMaterial.specularColorProperty().bind(cornerBaseMaterial.diffuseColorProperty().map(Color::brighter));
 
-            cornerBaseMaterial = new PhongMaterial();
-            cornerBaseMaterial.setDiffuseColor(colorScheme.stroke());
-            cornerBaseMaterial.specularColorProperty().bind(cornerBaseMaterial.diffuseColorProperty().map(Color::brighter));
+        cornerTopMaterial = new PhongMaterial();
+        cornerTopMaterial.setDiffuseColor(colorScheme.fill());
+        cornerTopMaterial.specularColorProperty().bind(cornerTopMaterial.diffuseColorProperty().map(Color::brighter));
 
-            cornerTopMaterial = new PhongMaterial();
-            cornerTopMaterial.setDiffuseColor(colorScheme.fill());
-            cornerTopMaterial.specularColorProperty().bind(cornerTopMaterial.diffuseColorProperty().map(Color::brighter));
+        wallOpacityProperty.bind(ui.property3DWallOpacity());
 
-            wallOpacityProperty.bind(ui.property3DWallOpacity());
-
-            r3D = new TerrainRenderer3D();
-            r3D.setOnWallCreated(wall3D -> wall3D.baseHeightProperty().bind(obstacleBaseHeightProperty));
-            r3D.setCylinderDivisions(24);
-            for (Obstacle obstacle : gameLevel().worldMap().obstacles()) {
-                Vector2i tile = tileAt(obstacle.startPoint().toVector2f());
-                if (gameLevel().house().isEmpty() || !gameLevel().house().get().isTileInHouseArea(tile)) {
-                    r3D.renderObstacle3D(
-                        maze3D,
-                        obstacle, isObstacleTheWorldBorder(gameLevel().worldMap(), obstacle),
-                        Settings3D.OBSTACLE_3D_WALL_THICKNESS,
-                        wallBaseMaterial, wallTopMaterial);
-                }
+        r3D = new TerrainRenderer3D();
+        r3D.setOnWallCreated(wall3D -> wall3D.baseHeightProperty().bind(obstacleBaseHeightProperty));
+        r3D.setCylinderDivisions(24);
+        for (Obstacle obstacle : gameLevel().worldMap().obstacles()) {
+            // exclude house obstacle, house is built separately
+            Vector2i startTile = tileAt(obstacle.startPoint().toVector2f());
+            if (gameLevel().house().isPresent() && !gameLevel().house().get().isTileInHouseArea(startTile)) {
+                r3D.renderObstacle3D(
+                    maze3D,
+                    obstacle,
+                    isObstacleTheWorldBorder(gameLevel().worldMap(), obstacle),
+                    Settings3D.OBSTACLE_3D_WALL_THICKNESS,
+                    wallBaseMaterial, wallTopMaterial);
             }
-
-            if (gameLevel().house().isEmpty()) {
-                Logger.error("There is no house in this game level!");
-            } else {
-                house3D = new ArcadeHouse3D(
-                    animationManager,
-                    gameLevel().house().get(),
-                    Settings3D.HOUSE_3D_BASE_HEIGHT,
-                    Settings3D.HOUSE_3D_WALL_THICKNESS,
-                    Settings3D.HOUSE_3D_OPACITY,
-                    colorScheme.fill(),
-                    colorScheme.stroke(),
-                    colorScheme.door()
-                );
-                house3D.wallBaseHeightProperty().bind(houseBaseHeightProperty);
-                house3D.light().lightOnProperty().bind(houseLightOnProperty);
-                maze3D.getChildren().add(house3D);
-            }
-
-            mazeGroup.getChildren().addAll(floor3D, maze3D);
         }
+
+        gameLevel().house().ifPresent(house -> {
+            house3D = new ArcadeHouse3D(
+                animationManager,
+                house,
+                Settings3D.HOUSE_3D_BASE_HEIGHT,
+                Settings3D.HOUSE_3D_WALL_THICKNESS,
+                Settings3D.HOUSE_3D_OPACITY,
+                colorScheme.fill(),
+                colorScheme.stroke(),
+                colorScheme.door()
+            );
+            house3D.wallBaseHeightProperty().bind(houseBaseHeightProperty);
+            house3D.light().lightOnProperty().bind(houseLightOnProperty);
+            maze3D.getChildren().add(house3D);
+        });
+
+        mazeGroup.getChildren().addAll(floor3D, maze3D);
 
         createPelletsAndEnergizers3D(colorScheme, ui.theModel3DRepository().pelletMesh());
         energizers3D.stream().map(Eatable3D::shape3D).forEach(getChildren()::add);
