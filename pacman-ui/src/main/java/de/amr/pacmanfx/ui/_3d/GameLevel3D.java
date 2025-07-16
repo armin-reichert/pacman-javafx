@@ -398,11 +398,9 @@ public class GameLevel3D extends Group implements Destroyable {
     private void createPelletsAndEnergizers3D(Mesh pelletMesh, PhongMaterial pelletMaterial) {
         gameLevel().tilesContainingFood().forEach(tile -> {
             if (gameLevel().isEnergizerPosition(tile)) {
-                var center = new Point3D(
-                    tile.x() * TS + HTS,
-                    tile.y() * TS + HTS,
-                    -2 * Settings3D.ENERGIZER_3D_RADIUS - 0.5 * Settings3D.FLOOR_3D_THICKNESS  // sitting just on floor
-                );
+                double x = tile.x() * TS + HTS;
+                double y = tile.y() * TS + HTS;
+                double z = -2 * Settings3D.ENERGIZER_3D_RADIUS - 0.5 * Settings3D.FLOOR_3D_THICKNESS;
                 var energizer3D = new Energizer3D(
                     animationManager,
                     Settings3D.ENERGIZER_3D_RADIUS,
@@ -410,9 +408,9 @@ public class GameLevel3D extends Group implements Destroyable {
                     Settings3D.ENERGIZER_3D_MAX_SCALING);
                 energizer3D.setMaterial(pelletMaterial);
                 energizer3D.setTile(tile);
-                energizer3D.setTranslateX(center.getX());
-                energizer3D.setTranslateY(center.getY());
-                energizer3D.setTranslateZ(center.getZ());
+                energizer3D.setTranslateX(x);
+                energizer3D.setTranslateY(y);
+                energizer3D.setTranslateZ(z);
                 energizers3D.add(energizer3D);
 
                 var hideAndExplodeAnimation = new ManagedAnimation(animationManager, "Energizer_Explosion") {
@@ -420,7 +418,13 @@ public class GameLevel3D extends Group implements Destroyable {
 
                     @Override
                     protected Animation createAnimation() {
-                        squirtingAnimation = new SquirtingAnimation(GameLevel3D.this, Duration.seconds(2), 23, 69, pelletMaterial, center) {
+                        squirtingAnimation = new SquirtingAnimation(
+                            GameLevel3D.this,
+                            Duration.seconds(2),
+                            23, 69,
+                            pelletMaterial,
+                            new Point3D(x, y, z))
+                        {
                             @Override
                             public boolean particleShouldVanish(Particle particle) {
                                 return particle.getTranslateZ() >= -1
@@ -442,16 +446,19 @@ public class GameLevel3D extends Group implements Destroyable {
                     }
                 };
                 energizer3D.setHideAndEatAnimation(hideAndExplodeAnimation);
-            } else {
-                var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
-                var pelletShape = new MeshView(pelletMesh);
-                pelletShape.setRotationAxis(Rotate.Z_AXIS);
-                pelletShape.setRotate(90);
-                pelletShape.setTranslateX(center.getX());
-                pelletShape.setTranslateY(center.getY());
-                pelletShape.setTranslateZ(center.getZ());
-                pelletShape.setMaterial(pelletMaterial);
-                var pellet3D = new Pellet3D(pelletShape, Settings3D.PELLET_3D_RADIUS);
+            }
+            else {
+                double x = tile.x() * TS + HTS;
+                double y = tile.y() * TS + HTS;
+                double z = -6;
+                var pelletMeshView = new MeshView(pelletMesh);
+                pelletMeshView.setMaterial(pelletMaterial);
+                pelletMeshView.setRotationAxis(Rotate.Z_AXIS);
+                pelletMeshView.setRotate(90);
+                pelletMeshView.setTranslateX(x);
+                pelletMeshView.setTranslateY(y);
+                pelletMeshView.setTranslateZ(z);
+                var pellet3D = new Pellet3D(pelletMeshView, Settings3D.PELLET_3D_RADIUS);
                 pellet3D.setTile(tile);
                 pellets3D.add(pellet3D);
             }
