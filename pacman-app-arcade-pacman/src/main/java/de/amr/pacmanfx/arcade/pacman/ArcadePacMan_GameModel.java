@@ -157,13 +157,11 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
     // bonus points = multiplier * 100
     private static final byte[] BONUS_VALUE_MULTIPLIERS = { 1, 3, 5, 7, 10, 20, 30, 50 };
 
-    public static ArcadePacMan_GameModel arcadeVersion(GameContext gameContext) {
-        var gameModel = new ArcadePacMan_GameModel(gameContext, new ArcadePacMan_MapSelector());
-        gameModel.mapSelector.loadAllMaps();
-        return gameModel;
-    }
-
     private final HUD hud = new ArcadePacMan_HUD();
+
+    public ArcadePacMan_GameModel(GameContext gameContext) {
+        this(gameContext, new ArcadePacMan_MapSelector());
+    }
 
     /**
      * @param gameContext the game context
@@ -222,6 +220,8 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
             wp(6,23) /* eaten at 3,23 in original game */
         ));
         autopilot = new RuleBasedPacSteering(this);
+
+        mapSelector.loadAllMaps();
     }
 
     @Override

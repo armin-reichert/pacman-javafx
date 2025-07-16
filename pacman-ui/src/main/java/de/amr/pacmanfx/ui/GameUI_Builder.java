@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.model.MapSelector;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.layout.StartPage;
 import org.tinylog.Logger;
@@ -19,8 +20,9 @@ import static java.util.Objects.requireNonNull;
 public class GameUI_Builder {
 
     private final PacManGames_UI_Impl uiUnderConstruction;
-    private final Map<String, GameModel> gameModelByVariantName = new HashMap<>();
-    private final Map<String, Class<? extends PacManGames_UIConfig>> uiConfigClassByVariantName = new HashMap<>();
+    private final Map<String, Class<?>> gameModelClassByVariantName = new HashMap<>();
+    private final Map<String, MapSelector> mapSelectorByVariantName = new HashMap<>();
+    private final Map<String, Class<? extends PacManGames_UIConfig>> configClassByVariantName = new HashMap<>();
     private StartPage[] startPages;
     private DashboardID[] dashboardIDs = new DashboardID[0];
 
@@ -28,16 +30,38 @@ public class GameUI_Builder {
         this.uiUnderConstruction = requireNonNull(uiUnderConstruction);
     }
 
-    public GameUI_Builder game(String variant, GameModel model, Class<? extends PacManGames_UIConfig> configClass) {
+    public GameUI_Builder game(String variant, Class<? extends GameModel> gameModelClass, Class<? extends PacManGames_UIConfig> configClass) {
         validateGameVariant(variant);
-        if (model == null) {
-            error("Game model for variant %s may not be null".formatted(variant));
+        if (gameModelClass == null) {
+            error("Game model class for variant %s may not be null".formatted(variant));
         }
         if (configClass == null) {
             error("Game UI configuration class for variant %s may not be null".formatted(variant));
         }
-        gameModelByVariantName.put(variant, model);
-        uiConfigClassByVariantName.put(variant, configClass);
+        gameModelClassByVariantName.put(variant, gameModelClass);
+        configClassByVariantName.put(variant, configClass);
+        return this;
+    }
+
+    public GameUI_Builder game(
+            String variant,
+            Class<? extends GameModel> gameModelClass,
+            MapSelector mapSelector,
+            Class<? extends PacManGames_UIConfig> configClass)
+    {
+        validateGameVariant(variant);
+        if (gameModelClass == null) {
+            error("Game model class for variant %s may not be null".formatted(variant));
+        }
+        if (configClass == null) {
+            error("Game UI configuration class for variant %s may not be null".formatted(variant));
+        }
+        if (mapSelector == null) {
+            error("Map selector for variant %s may not be null".formatted(variant));
+        }
+        gameModelClassByVariantName.put(variant, gameModelClass);
+        mapSelectorByVariantName.put(variant, mapSelector);
+        configClassByVariantName.put(variant, configClass);
         return this;
     }
 
@@ -63,8 +87,14 @@ public class GameUI_Builder {
     public GameUI build() {
         GameContext gameContext = uiUnderConstruction.theGameContext();
         validateConfiguration(gameContext);
-        uiUnderConstruction.configure(uiConfigClassByVariantName);
-        gameModelByVariantName.forEach((variant, model) -> gameContext.theGameController().registerGame(variant, model));
+        uiUnderConstruction.configure(configClassByVariantName);
+        gameModelClassByVariantName.keySet().forEach(variant -> {
+            Class<?> gameModelClass = gameModelClassByVariantName.get(variant);
+            MapSelector mapSelector = mapSelectorByVariantName.get(variant);
+            GameModel gameModel =  createGameModel(gameModelClass, mapSelector, gameContext);
+            gameContext.theGameController().registerGame(variant, gameModel);
+
+        });
         gameContext.theGameController().setEventsEnabled(true);
         uiUnderConstruction.thePlayView().dashboard().configure(dashboardIDs);
         for (StartPage startPage : startPages) uiUnderConstruction.theStartPagesView().addStartPage(startPage);
@@ -75,12 +105,26 @@ public class GameUI_Builder {
         return uiUnderConstruction;
     }
 
+    private GameModel createGameModel(Class<?> modelClass, MapSelector mapSelector, GameContext gameContext) {
+        try {
+            if (mapSelector != null) {
+                return (GameModel) modelClass.getDeclaredConstructor(GameContext.class, MapSelector.class).newInstance(gameContext, mapSelector);
+            }
+            else {
+                return (GameModel) modelClass.getDeclaredConstructor(GameContext.class).newInstance(gameContext);
+            }
+        } catch (Exception e) {
+            error("Could not create game model from class %s".formatted(modelClass.getSimpleName()));
+            throw new RuntimeException(e);
+        }
+    }
+
     private void validateConfiguration(GameContext gameContext) {
         if (gameContext == null) {
             error("The game context must not be null");
         }
         checkDirsExistingAndWritable(gameContext);
-        if (gameModelByVariantName.isEmpty()) {
+        if (gameModelClassByVariantName.isEmpty()) {
             error("No game models specified");
         }
     }

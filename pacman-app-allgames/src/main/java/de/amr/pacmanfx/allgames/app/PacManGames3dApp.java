@@ -44,27 +44,27 @@ public class PacManGames3dApp extends Application {
         GameUI.build(theGameContext(), primaryStage, width, height)
             .game(
                 GameVariant.PACMAN.name(),
-                ArcadePacMan_GameModel.arcadeVersion(theGameContext()),
+                ArcadePacMan_GameModel.class,
                 ArcadePacMan_UIConfig.class
             )
             .game(
                 GameVariant.MS_PACMAN.name(),
-                ArcadeMsPacMan_GameModel.arcadeVersion(theGameContext()),
+                ArcadeMsPacMan_GameModel.class,
                 ArcadeMsPacMan_UIConfig.class
             )
             .game(
                 GameVariant.MS_PACMAN_TENGEN.name(),
-                new TengenMsPacMan_GameModel(theGameContext()),
+                TengenMsPacMan_GameModel.class,
                 TengenMsPacMan_UIConfig.class
             )
             .game(
                 GameVariant.PACMAN_XXL.name(),
-                new PacManXXL_PacMan_GameModel(theGameContext(), mapSelectorXXL),
+                PacManXXL_PacMan_GameModel.class, mapSelectorXXL,
                 PacManXXL_PacMan_UIConfig.class
             )
             .game(
                 GameVariant.MS_PACMAN_XXL.name(),
-                new PacManXXL_MsPacMan_GameModel(theGameContext(), mapSelectorXXL),
+                PacManXXL_MsPacMan_GameModel.class, mapSelectorXXL,
                 PacManXXL_MsPacMan_UIConfig.class
             )
             .startPages(

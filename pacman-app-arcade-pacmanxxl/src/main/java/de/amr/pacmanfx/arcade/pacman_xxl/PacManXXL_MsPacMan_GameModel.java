@@ -8,13 +8,14 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.model.MapSelectionMode;
+import de.amr.pacmanfx.model.MapSelector;
 
 import java.io.File;
 import java.util.Random;
 
 public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
 
-    public PacManXXL_MsPacMan_GameModel(GameContext gameContext, PacManXXL_Common_MapSelector mapSelector) {
+    public PacManXXL_MsPacMan_GameModel(GameContext gameContext, MapSelector mapSelector) {
         super(gameContext, mapSelector);
         setHighScoreFile(new File(gameContext.theHomeDir(), "highscore-mspacman_xxl.xml"));
     }

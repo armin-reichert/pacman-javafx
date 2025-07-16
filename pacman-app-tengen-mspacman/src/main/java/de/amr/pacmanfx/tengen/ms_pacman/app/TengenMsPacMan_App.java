@@ -34,7 +34,7 @@ public class TengenMsPacMan_App extends Application {
         GameUI.build(theGameContext(), primaryStage, width, height)
             .game(
                 MS_PACMAN_TENGEN.name(),
-                new TengenMsPacMan_GameModel(theGameContext()),
+                TengenMsPacMan_GameModel.class,
                 TengenMsPacMan_UIConfig.class
             )
             .startPages(

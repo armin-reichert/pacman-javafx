@@ -184,6 +184,10 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
 
     private final ArcadeMsPacMan_HUD hud = new ArcadeMsPacMan_HUD();
 
+    public ArcadeMsPacMan_GameModel(GameContext gameContext) {
+        this(gameContext, new ArcadeMsPacMan_MapSelector());
+    }
+
     /**
      * @param mapSelector map selector e.g. selector that selects custom maps before standard maps
      */
@@ -226,6 +230,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
 
         demoLevelSteering = new RuleBasedPacSteering(this);
         autopilot = new RuleBasedPacSteering(this);
+        mapSelector.loadAllMaps();
     }
 
     @Override

@@ -28,23 +28,23 @@ public class ArcadeMsPacMan_App extends Application {
         final double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
         final double width  = 1.2 * height;
         GameUI.build(theGameContext(), primaryStage, width, height)
-                .game(
-                    MS_PACMAN.name(),
-                    ArcadeMsPacMan_GameModel.arcadeVersion(theGameContext()),
-                    ArcadeMsPacMan_UIConfig.class
-                )
-                .startPages(
-                    new ArcadeMsPacMan_StartPage(theUI(), MS_PACMAN.name())
-                )
-                .dashboardEntries(
-                    DashboardID.GENERAL, DashboardID.GAME_CONTROL,
-                    DashboardID.SETTINGS_3D,
-                    DashboardID.GAME_INFO, DashboardID.ACTOR_INFO,
-                    DashboardID.KEYBOARD_SHORTCUTS_GLOBAL, DashboardID.KEYBOARD_SHORTCUTS_LOCAL,
-                    DashboardID.ABOUT
-                )
-            .build()
-            .show();
+            .game(
+                MS_PACMAN.name(),
+                ArcadeMsPacMan_GameModel.class,
+                ArcadeMsPacMan_UIConfig.class
+            )
+            .startPages(
+                new ArcadeMsPacMan_StartPage(theUI(), MS_PACMAN.name())
+            )
+            .dashboardEntries(
+                DashboardID.GENERAL, DashboardID.GAME_CONTROL,
+                DashboardID.SETTINGS_3D,
+                DashboardID.GAME_INFO, DashboardID.ACTOR_INFO,
+                DashboardID.KEYBOARD_SHORTCUTS_GLOBAL, DashboardID.KEYBOARD_SHORTCUTS_LOCAL,
+                DashboardID.ABOUT
+            )
+        .build()
+        .show();
     }
 
     @Override

@@ -12,9 +12,9 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import static de.amr.pacmanfx.Globals.theGameContext;
+import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.ui.GameVariant.MS_PACMAN_XXL;
 import static de.amr.pacmanfx.ui.GameVariant.PACMAN_XXL;
-import static de.amr.pacmanfx.ui.GameUI.theUI;
 
 public class PacManXXL_Common_App extends Application {
 
@@ -32,12 +32,14 @@ public class PacManXXL_Common_App extends Application {
         GameUI.build(theGameContext(), primaryStage, width, height)
                 .game(
                     PACMAN_XXL.name(),
-                    new PacManXXL_PacMan_GameModel(theGameContext(), xxlMapSelector),
+                    PacManXXL_PacMan_GameModel.class,
+                    xxlMapSelector,
                     PacManXXL_PacMan_UIConfig.class
                 )
                 .game(
                     MS_PACMAN_XXL.name(),
-                    new PacManXXL_MsPacMan_GameModel(theGameContext(), xxlMapSelector),
+                    PacManXXL_MsPacMan_GameModel.class,
+                    xxlMapSelector,
                     PacManXXL_MsPacMan_UIConfig.class
                 )
                 .startPages(

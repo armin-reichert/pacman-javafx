@@ -34,7 +34,7 @@ public class ArcadePacMan_App extends Application {
         GameUI.build(theGameContext(), primaryStage, width, height)
             .game(
                 gameVariant,
-                ArcadePacMan_GameModel.arcadeVersion(theGameContext()),
+                ArcadePacMan_GameModel.class,
                 ArcadePacMan_UIConfig.class
             )
             .startPages(
