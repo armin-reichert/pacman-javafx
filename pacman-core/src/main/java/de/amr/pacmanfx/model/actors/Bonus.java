@@ -44,14 +44,14 @@ public class Bonus extends MovingActor {
     private long ticksRemaining;
     private BonusState state;
 
-    private final Pulse moveAnimation;
+    private final Pulse jumpAnimation;
     private RouteBasedSteering steering;
 
-    private Bonus(GameContext gameContext, byte symbol, int points, Pulse moveAnimation) {
+    private Bonus(GameContext gameContext, byte symbol, int points, Pulse jumpAnimation) {
         super(gameContext);
         this.symbol = symbol;
         this.points = points;
-        this.moveAnimation = moveAnimation;
+        this.jumpAnimation = jumpAnimation;
         reset();
         canTeleport = false; // override default value
         ticksRemaining = 0;
@@ -70,12 +70,12 @@ public class Bonus extends MovingActor {
 
     @Override
     public String toString() {
-        return "Bonus{symbol=%s, points=%d, countdown=%d, state=%s, animation=%s}".formatted(symbol, points, ticksRemaining, state, moveAnimation);
+        return "Bonus{symbol=%s, points=%d, countdown=%d, state=%s, animation=%s}".formatted(symbol, points, ticksRemaining, state, jumpAnimation);
     }
 
     @Override
     public String name() {
-        return "%sBonus_symbol=%s_points=%s".formatted((moveAnimation != null ? "Moving" : "Static"), symbol, points);
+        return "%sBonus_symbol=%s_points=%s".formatted((jumpAnimation != null ? "Moving" : "Static"), symbol, points);
     }
 
     @Override
@@ -110,8 +110,8 @@ public class Bonus extends MovingActor {
     }
 
     public void setInactive() {
-        if (moveAnimation != null) {
-            moveAnimation.stop();
+        if (jumpAnimation != null) {
+            jumpAnimation.stop();
             setSpeed(0);
         }
         hide();
@@ -120,8 +120,8 @@ public class Bonus extends MovingActor {
     }
 
     public void setEdibleTicks(long edibleTicks) {
-        if (moveAnimation != null) {
-            moveAnimation.restart();
+        if (jumpAnimation != null) {
+            jumpAnimation.restart();
             setSpeed(0.5f); // how fast in the original game?
             setTargetTile(null);
         }
@@ -132,8 +132,8 @@ public class Bonus extends MovingActor {
     }
 
     public void setEaten(long eatenDurationTicks) {
-        if (moveAnimation != null) {
-            moveAnimation.stop();
+        if (jumpAnimation != null) {
+            jumpAnimation.stop();
         }
         ticksRemaining = eatenDurationTicks;
         state = BonusState.EATEN;
@@ -144,7 +144,7 @@ public class Bonus extends MovingActor {
         switch (state) {
             case INACTIVE -> {}
             case EDIBLE -> {
-                if (moveAnimation != null) {
+                if (jumpAnimation != null) {
                     updateMovingBonusEdibleState();
                 } else {
                     waitForExpiration();
@@ -175,15 +175,15 @@ public class Bonus extends MovingActor {
             } else {
                 navigateTowardsTarget(gameLevel);
                 tryMoving(gameLevel);
-                moveAnimation.tick();
+                jumpAnimation.tick();
             }
         });
     }
 
-    public float elongationY() {
-        if (moveAnimation == null || !moveAnimation.isRunning()) {
+    public float jumpHeight() {
+        if (jumpAnimation == null || !jumpAnimation.isRunning()) {
             return 0;
         }
-        return moveAnimation.isOn() ? -3f : 3f;
+        return jumpAnimation.isOn() ? -3f : 3f;
     }
 }
