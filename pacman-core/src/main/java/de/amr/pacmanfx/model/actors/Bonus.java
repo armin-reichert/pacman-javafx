@@ -29,8 +29,10 @@ import static java.util.Objects.requireNonNull;
  */
 public class Bonus extends MovingActor {
 
-    public static Bonus createMovingBonus(GameContext gameContext, byte symbol, int points) {
-        return new Bonus(gameContext, symbol, points, new Pulse(10, false));
+    public static Bonus createMovingBonus(GameContext gameContext, byte symbol, int points, List<Waypoint> route, boolean leftToRight) {
+        var bonus = new Bonus(gameContext, symbol, points, new Pulse(10, false));
+        bonus.setRoute(route, leftToRight);
+        return bonus;
     }
 
     public static Bonus createStaticBonus(GameContext gameContext, byte symbol, int points) {
@@ -55,6 +57,16 @@ public class Bonus extends MovingActor {
         ticksRemaining = 0;
         state = BonusState.INACTIVE;
     }
+
+    private void setRoute(List<Waypoint> route, boolean leftToRight) {
+        requireNonNull(route);
+        var mutableRoute = new ArrayList<>(route);
+        placeAtTile(mutableRoute.getFirst().tile());
+        setMoveAndWishDir(leftToRight ? Direction.RIGHT : Direction.LEFT);
+        mutableRoute.removeFirst();
+        steering = new RouteBasedSteering(mutableRoute);
+    }
+
 
     @Override
     public String toString() {
@@ -166,15 +178,6 @@ public class Bonus extends MovingActor {
                 moveAnimation.tick();
             }
         });
-    }
-
-    public void setRoute(List<Waypoint> route, boolean leftToRight) {
-        requireNonNull(route);
-        var mutableRoute = new ArrayList<>(route);
-        placeAtTile(mutableRoute.getFirst().tile());
-        setMoveAndWishDir(leftToRight ? Direction.RIGHT : Direction.LEFT);
-        mutableRoute.removeFirst();
-        steering = new RouteBasedSteering(mutableRoute);
     }
 
     public float elongationY() {
