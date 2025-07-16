@@ -13,18 +13,12 @@ import javafx.application.Application;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import static de.amr.pacmanfx.Globals.initGameContext;
 import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_ASPECT;
 import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.ui.GameVariant.MS_PACMAN_TENGEN;
 
 public class TengenMsPacMan_App extends Application {
-
-    @Override
-    public void init() {
-        initGameContext();
-    }
 
     @Override
     public void start(Stage primaryStage) {

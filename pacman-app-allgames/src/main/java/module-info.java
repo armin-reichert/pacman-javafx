@@ -8,6 +8,7 @@ module x.de.amr.pacmanfx.allgames {
     requires de.amr.pacmanfx.core;
     requires de.amr.pacmanfx.uilib;
     requires de.amr.pacmanfx.ui;
+
     requires arcade.ms_pacman;
     requires x.arcade.pacman;
     requires arcade.pacman_xxl;

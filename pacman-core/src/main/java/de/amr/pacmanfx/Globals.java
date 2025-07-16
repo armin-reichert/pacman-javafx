@@ -13,11 +13,10 @@ import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.SimulationStep;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.Optional;
-
-import static java.util.Objects.requireNonNull;
 
 public class Globals {
 
@@ -28,9 +27,6 @@ public class Globals {
 
     /** Tile size=8px, half tile size=4px. */
     public static final int TS = 8, HTS = 4;
-
-
-    private static GameContextImpl context;
 
     private static class GameContextImpl implements GameContext {
         private final File homeDir = new File(System.getProperty("user.home"), ".pacmanfx");
@@ -103,12 +99,13 @@ public class Globals {
         }
     }
 
-    public static void initGameContext() {
-        context = new GameContextImpl();
-    }
+    private static GameContextImpl THE_GAME_CONTEXT;
 
     public static GameContext theGameContext() {
-        requireNonNull(context, "Game context not initialized!");
-        return context;
+        if (THE_GAME_CONTEXT == null) {
+            THE_GAME_CONTEXT = new GameContextImpl();
+            Logger.info("Global game context created!");
+        }
+        return THE_GAME_CONTEXT;
     }
 }

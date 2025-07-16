@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
-import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.application.Application;
@@ -17,11 +16,6 @@ import static de.amr.pacmanfx.ui.GameVariant.MS_PACMAN_XXL;
 import static de.amr.pacmanfx.ui.GameVariant.PACMAN_XXL;
 
 public class PacManXXL_Common_App extends Application {
-
-    @Override
-    public void init() {
-        Globals.initGameContext();
-    }
 
     @Override
     public void start(Stage primaryStage) {

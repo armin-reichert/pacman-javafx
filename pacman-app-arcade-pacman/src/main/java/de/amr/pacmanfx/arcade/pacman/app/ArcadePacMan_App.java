@@ -14,16 +14,10 @@ import javafx.application.Application;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import static de.amr.pacmanfx.Globals.initGameContext;
 import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.ui.GameUI.theUI;
 
 public class ArcadePacMan_App extends Application {
-
-    @Override
-    public void init() {
-        initGameContext();
-    }
 
     @Override
     public void start(Stage primaryStage) {

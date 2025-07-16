@@ -21,7 +21,6 @@ import javafx.application.Application;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import static de.amr.pacmanfx.Globals.initGameContext;
 import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.ui.GameUI.theUI;
 
@@ -29,11 +28,6 @@ import static de.amr.pacmanfx.ui.GameUI.theUI;
  * Application containing all game variants, the 3D play scenes, the map editor etc. ("all you can play").
  */
 public class PacManGames3dApp extends Application {
-
-    @Override
-    public void init() {
-        initGameContext();
-    }
 
     @Override
     public void start(Stage primaryStage) {
