@@ -37,36 +37,36 @@ public interface GameUI_Config extends Destroyable {
 
     void storeAssets(AssetStorage assetStorage);
 
-    default String toGlobalKey(String localKey) { return assetNamespace() + "." + localKey; }
+    default String fullAssetKey(String partialKey) { return assetNamespace() + "." + partialKey; }
 
     /**
      * Stores key-value pair in the namespace of this configuration.
      *
      * @param assetStorage the asset storage
-     * @param localKey the local asset key, absolute key is {@code asset_namespace + "." + key}
+     * @param partialKey the partial asset key, absolute key is {@code asset_namespace + "." + key}
      * @param value the asset value
      */
-    default void storeAssetNS(AssetStorage assetStorage, String localKey, Object value) {
-        assetStorage.store(toGlobalKey(localKey), value);
+    default void storeAssetNS(AssetStorage assetStorage, String partialKey, Object value) {
+        assetStorage.store(fullAssetKey(partialKey), value);
     }
 
     /**
      * @param assetStorage the asset storage
-     * @param localKey the local asset key, absolute key is {@code asset_namespace + "." + key}
+     * @param localKey the partial asset key, absolute key is {@code asset_namespace + "." + key}
      * @return the asset value
      * @param <T> expected asset value type
      */
     default <T> T getAssetNS(AssetStorage assetStorage, String localKey) {
-        return assetStorage.get(toGlobalKey(localKey));
+        return assetStorage.get(fullAssetKey(localKey));
     }
 
     /**
-     * @param localKey the local asset key, absolute key is {@code asset_namespace + "." + key}
+     * @param partialKey the partial asset key, absolute key is {@code asset_namespace + "." + key}
      * @return the asset value from the global asset storage of the UI
      * @param <T> expected asset value type
      */
-    default <T> T getAssetNS(String localKey) {
-        return getAssetNS(theUI().theAssets(), localKey);
+    default <T> T getAssetNS(String partialKey) {
+        return getAssetNS(theUI().theAssets(), partialKey);
     }
 
     Image bonusSymbolImage(byte symbol);
