@@ -301,6 +301,6 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
         bonus.setPosition(halfTileRightOf(bonusTile));
         bonus.setEdibleTicks(randomInt(9 * NUM_TICKS_PER_SEC, 10 * NUM_TICKS_PER_SEC));
         level.setBonus(bonus);
-        gameContext.theGameEventManager().publishEvent(this, GameEventType.BONUS_ACTIVATED, bonus.actor().tile());
+        gameContext.theGameEventManager().publishEvent(GameEventType.BONUS_ACTIVATED, bonus.actor().tile());
     }
 }

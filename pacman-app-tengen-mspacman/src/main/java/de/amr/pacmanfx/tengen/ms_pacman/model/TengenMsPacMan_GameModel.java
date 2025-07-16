@@ -258,7 +258,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         playingProperty().set(false);
         updateHighScore();
         level.showMessage(GameLevel.MESSAGE_GAME_OVER);
-        gameContext.theGameEventManager().publishEvent(this, GameEventType.STOP_ALL_SOUNDS);
+        gameContext.theGameEventManager().publishEvent(GameEventType.STOP_ALL_SOUNDS);
     }
 
     @Override
@@ -377,7 +377,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
             Logger.info("Level {} started", level.number());
         }
         // Note: This event is very important because it triggers the creation of the actor animations!
-        gameContext.theGameEventManager().publishEvent(this, GameEventType.LEVEL_STARTED);
+        gameContext.theGameEventManager().publishEvent(GameEventType.LEVEL_STARTED);
     }
 
     public void startNextLevel() {
@@ -408,7 +408,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         prepareForNewGame();
         hud.theLevelCounter().setStartLevel(startLevelNumber);
         buildNormalLevel(startLevelNumber);
-        gameContext.theGameEventManager().publishEvent(this, GameEventType.GAME_STARTED);
+        gameContext.theGameEventManager().publishEvent(GameEventType.GAME_STARTED);
     }
 
     @Override
@@ -533,7 +533,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
             gateKeeper.setLevelNumber(levelNumber);
             level.house().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
         });
-        gameContext.theGameEventManager().publishEvent(this, GameEventType.LEVEL_CREATED);
+        gameContext.theGameEventManager().publishEvent(GameEventType.LEVEL_CREATED);
     }
 
     @Override
@@ -551,7 +551,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
             gateKeeper.setLevelNumber(1);
             level.house().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
         });
-        gameContext.theGameEventManager().publishEvent(this, GameEventType.LEVEL_CREATED);
+        gameContext.theGameEventManager().publishEvent(GameEventType.LEVEL_CREATED);
     }
 
     @Override
@@ -622,7 +622,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
 
         level.setBonus(bonus);
-        gameContext.theGameEventManager().publishEvent(this, GameEventType.BONUS_ACTIVATED, bonus.actor().tile());
+        gameContext.theGameEventManager().publishEvent(GameEventType.BONUS_ACTIVATED, bonus.actor().tile());
     }
 
     @Override
@@ -642,7 +642,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
                 activateNextBonus();
                 gameContext.theSimulationStep().bonusIndex = level.currentBonusIndex();
             }
-            gameContext.theGameEventManager().publishEvent(this, GameEventType.PAC_FOUND_FOOD, tile);
+            gameContext.theGameEventManager().publishEvent(GameEventType.PAC_FOUND_FOOD, tile);
         } else {
             level.pac().starve();
         }
@@ -661,7 +661,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
             level.ghosts(GhostState.HUNTING_PAC).forEach(ghost -> ghost.setState(GhostState.FRIGHTENED));
             level.ghosts(GhostState.FRIGHTENED).forEach(Ghost::reverseAtNextOccasion);
             gameContext.theSimulationStep().pacGotPower = true;
-            gameContext.theGameEventManager().publishEvent(this, GameEventType.PAC_GETS_POWER);
+            gameContext.theGameEventManager().publishEvent(GameEventType.PAC_GETS_POWER);
         } else {
             level.ghosts(GhostState.FRIGHTENED, GhostState.HUNTING_PAC).forEach(Ghost::reverseAtNextOccasion);
         }

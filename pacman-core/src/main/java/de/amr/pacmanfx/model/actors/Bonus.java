@@ -93,7 +93,7 @@ public class Bonus extends Actor implements BonusEntity {
             case EDIBLE, EATEN -> {
                 if (countdown == 0) {
                     setInactive();
-                    gameContext.theGameEventManager().publishEvent(gameContext.theGame(), GameEventType.BONUS_EXPIRED, tile());
+                    gameContext.theGameEventManager().publishEvent(GameEventType.BONUS_EXPIRED, tile());
                 } else if (countdown != TickTimer.INDEFINITE) {
                     --countdown;
                 }

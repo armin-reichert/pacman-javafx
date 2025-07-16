@@ -36,10 +36,11 @@ public class GameController  {
     private final Map<String, GameModel> knownGames = new HashMap<>();
     private final StringProperty gameVariantPy = new SimpleStringProperty();
     private final StateMachine<GameState, GameContext> stateMachine;
-    private final GameEventManager gameEventManager = new GameEventManager();
+    private final GameEventManager gameEventManager;
     private boolean eventsEnabled;
 
     public GameController(GameContext gameContext) {
+        gameEventManager = new GameEventManager(gameContext);
         stateMachine = new StateMachine<>(GameState.values()) {
             @Override public GameContext context() { return gameContext; }
         };
@@ -50,7 +51,7 @@ public class GameController  {
             if (eventsEnabled) {
                 GameModel newGame = game(newGameVariant);
                 newGame.init();
-                gameEventManager.publishEvent(newGame, GameEventType.GAME_VARIANT_CHANGED);
+                gameEventManager.publishEvent(GameEventType.GAME_VARIANT_CHANGED);
             }
         });
     }

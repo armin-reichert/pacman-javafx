@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.event;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.model.GameModel;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -15,7 +15,12 @@ import static java.util.Objects.requireNonNull;
 
 public class GameEventManager {
 
+    private final GameContext gameContext;
     private final List<GameEventListener> eventListeners = new ArrayList<>();
+
+    public GameEventManager(GameContext gameContext) {
+        this.gameContext = gameContext;
+    }
 
     public void addEventListener(GameEventListener listener) {
         requireNonNull(listener);
@@ -41,15 +46,13 @@ public class GameEventManager {
         Logger.trace("Published game event: {}", event);
     }
 
-    public void publishEvent(GameModel game, GameEventType type) {
-        requireNonNull(game);
+    public void publishEvent(GameEventType type) {
         requireNonNull(type);
-        publishEvent(new GameEvent(game, type));
+        publishEvent(new GameEvent(gameContext.theGame(), type));
     }
 
-    public void publishEvent(GameModel game, GameEventType type, Vector2i tile) {
-        requireNonNull(game);
+    public void publishEvent(GameEventType type, Vector2i tile) {
         requireNonNull(type);
-        publishEvent(new GameEvent(game, type, tile));
+        publishEvent(new GameEvent(gameContext.theGame(), type, tile));
     }
 }

@@ -128,16 +128,6 @@ public class MovingBonus extends MovingActor implements BonusEntity {
         Logger.trace("Bonus eaten: {}", this);
     }
 
-    private void updateStateEaten() {
-        if (countdown == 0) {
-            Logger.trace("Bonus expired: {}", this);
-            setInactive();
-            gameContext.theGameEventManager().publishEvent(gameContext.theGame(), GameEventType.BONUS_EXPIRED, tile());
-        } else if (countdown != TickTimer.INDEFINITE) {
-            --countdown;
-        }
-    }
-
     @Override
     public void update() {
         switch (state) {
@@ -145,16 +135,22 @@ public class MovingBonus extends MovingActor implements BonusEntity {
             case EDIBLE -> gameContext.optGameLevel().ifPresent(gameLevel -> {
                 steering.steer(this, gameLevel);
                 if (steering.isComplete()) {
-                    Logger.trace("Moving bonus reached target: {}", this);
                     setInactive();
-                    gameContext.theGameEventManager().publishEvent(gameContext.theGame(), GameEventType.BONUS_EXPIRED, tile());
+                    gameContext.theGameEventManager().publishEvent(GameEventType.BONUS_EXPIRED, tile());
                 } else {
                     navigateTowardsTarget(gameLevel);
                     tryMoving(gameLevel);
                     animation.tick();
                 }
             });
-            case EATEN -> updateStateEaten();
+            case EATEN -> {
+                if (countdown == 0) {
+                    setInactive();
+                    gameContext.theGameEventManager().publishEvent(GameEventType.BONUS_EXPIRED, tile());
+                } else if (countdown != TickTimer.INDEFINITE) {
+                    --countdown;
+                }
+            }
             default -> throw new IllegalStateException("Unknown bonus state: " + state);
         }
     }

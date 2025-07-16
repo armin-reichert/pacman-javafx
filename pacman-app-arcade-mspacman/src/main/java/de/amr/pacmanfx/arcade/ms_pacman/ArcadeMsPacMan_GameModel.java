@@ -176,12 +176,6 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
 
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
-    public static ArcadeMsPacMan_GameModel arcadeVersion(GameContext gameContext) {
-        var gameModel = new ArcadeMsPacMan_GameModel(gameContext, new ArcadeMsPacMan_MapSelector());
-        gameModel.mapSelector.loadAllMaps();
-        return gameModel;
-    }
-
     private final ArcadeMsPacMan_HUD hud = new ArcadeMsPacMan_HUD();
 
     public ArcadeMsPacMan_GameModel(GameContext gameContext) {
@@ -402,7 +396,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
             crossingLeftToRight ? "left to right" : "right to left");
 
         level.setBonus(bonus);
-        gameContext.theGameEventManager().publishEvent(this, GameEventType.BONUS_ACTIVATED, bonus.actor().tile());
+        gameContext.theGameEventManager().publishEvent(GameEventType.BONUS_ACTIVATED, bonus.actor().tile());
     }
 
     private Portal randomPortal(GameLevel level) {

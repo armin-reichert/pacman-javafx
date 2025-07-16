@@ -87,7 +87,7 @@ public abstract class GameModel implements ScoreManager {
         level.blinking().setStartPhase(Pulse.ON);
         level.blinking().restart(Integer.MAX_VALUE);
         huntingTimer().startFirstHuntingPhase(level.number());
-        gameContext.theGameEventManager().publishEvent(this, GameEventType.HUNTING_PHASE_STARTED);
+        gameContext.theGameEventManager().publishEvent(GameEventType.HUNTING_PHASE_STARTED);
     }
 
     public void doHuntingStep() {
@@ -201,7 +201,7 @@ public abstract class GameModel implements ScoreManager {
         powerTimer.doTick();
         if (level.pac().isPowerFadingStarting(level)) {
             gameContext.theSimulationStep().pacStartsLosingPower = true;
-            gameContext.theGameEventManager().publishEvent(this, GameEventType.PAC_STARTS_LOSING_POWER);
+            gameContext.theGameEventManager().publishEvent(GameEventType.PAC_STARTS_LOSING_POWER);
         } else if (powerTimer.hasExpired()) {
             powerTimer.stop();
             powerTimer.reset(0);
@@ -211,7 +211,7 @@ public abstract class GameModel implements ScoreManager {
             Logger.info("Hunting timer restarted because Pac-Man lost power");
             level.ghosts(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
             gameContext.theSimulationStep().pacLostPower = true;
-            gameContext.theGameEventManager().publishEvent(this, GameEventType.PAC_LOST_POWER);
+            gameContext.theGameEventManager().publishEvent(GameEventType.PAC_LOST_POWER);
         }
     }
 
@@ -242,7 +242,7 @@ public abstract class GameModel implements ScoreManager {
             scorePoints(bonus.points());
             Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
             gameContext.theSimulationStep().bonusEatenTile = bonus.actor().tile();
-            gameContext.theGameEventManager().publishEvent(this, GameEventType.BONUS_EATEN);
+            gameContext.theGameEventManager().publishEvent(GameEventType.BONUS_EATEN);
         }
     }
 

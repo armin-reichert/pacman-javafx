@@ -125,7 +125,7 @@ public interface PacManGames_GameActions {
         public void execute(GameUI ui) {
             ui.theGameContext().theGameLevel().eatAllPellets();
             ui.theSound().pause(SoundID.PAC_MAN_MUNCHING);
-            ui.theGameContext().theGameEventManager().publishEvent(ui.theGameContext().theGame(), GameEventType.PAC_FOUND_FOOD);
+            ui.theGameContext().theGameEventManager().publishEvent(GameEventType.PAC_FOUND_FOOD);
         }
 
         @Override
@@ -193,7 +193,7 @@ public interface PacManGames_GameActions {
             if (ui.theGameContext().theCoinMechanism().numCoins() < CoinMechanism.MAX_COINS) {
                 ui.theSound().setEnabled(true);
                 ui.theGameContext().theCoinMechanism().insertCoin();
-                ui.theGameContext().theGameEventManager().publishEvent(ui.theGameContext().theGame(), GameEventType.CREDIT_ADDED);
+                ui.theGameContext().theGameEventManager().publishEvent(GameEventType.CREDIT_ADDED);
             }
             ui.theGameContext().theGameController().changeGameState(GameState.SETTING_OPTIONS_FOR_START);
         }

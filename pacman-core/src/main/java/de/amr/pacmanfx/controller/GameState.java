@@ -84,7 +84,7 @@ public enum GameState implements FsmState<GameContext> {
 
         @Override
         public void onEnter(GameContext gameContext) {
-            gameContext.theGameEventManager().publishEvent(gameContext.theGame(), GameEventType.STOP_ALL_SOUNDS);
+            gameContext.theGameEventManager().publishEvent(GameEventType.STOP_ALL_SOUNDS);
         }
 
         @Override
@@ -95,7 +95,7 @@ public enum GameState implements FsmState<GameContext> {
                     gameContext.theGame().initAnimationOfPacManAndGhosts();
                     gameContext.theGameLevel().getReadyToPlay();
                     gameContext.theGameLevel().showPacAndGhosts();
-                    gameContext.theGameEventManager().publishEvent(gameContext.theGame(), GameEventType.GAME_CONTINUED);
+                    gameContext.theGameEventManager().publishEvent(GameEventType.GAME_CONTINUED);
                 } else if (timer.tickCount() == TICK_RESUME_GAME) {
                     gameContext.theGameController().changeGameState(GameState.HUNTING);
                 }
@@ -118,7 +118,7 @@ public enum GameState implements FsmState<GameContext> {
             else { // start demo level
                 if (timer.tickCount() == 1) {
                     gameContext.theGame().buildDemoLevel();
-                    gameContext.theGameEventManager().publishEvent(gameContext.theGame(), GameEventType.LEVEL_CREATED);
+                    gameContext.theGameEventManager().publishEvent(GameEventType.LEVEL_CREATED);
                 }
                 else if (timer.tickCount() == 2) {
                     gameContext.theGame().startLevel();
@@ -229,7 +229,7 @@ public enum GameState implements FsmState<GameContext> {
             timer.restartSeconds(1);
             gameContext.theGameLevel().pac().hide();
             gameContext.theGameLevel().ghosts().forEach(Ghost::stopAnimation);
-            gameContext.theGameEventManager().publishEvent(gameContext.theGame(), GameEventType.GHOST_EATEN);
+            gameContext.theGameEventManager().publishEvent(GameEventType.GHOST_EATEN);
         }
 
         @Override
@@ -262,7 +262,7 @@ public enum GameState implements FsmState<GameContext> {
         public void onEnter(GameContext gameContext) {
             timer.restartIndefinitely();
             gameContext.theGame().onPacKilled();
-            gameContext.theGameEventManager().publishEvent(gameContext.theGame(), GameEventType.STOP_ALL_SOUNDS);
+            gameContext.theGameEventManager().publishEvent(GameEventType.STOP_ALL_SOUNDS);
         }
 
         @Override
@@ -284,13 +284,13 @@ public enum GameState implements FsmState<GameContext> {
             }
             else if (timer.tickCount() == TICK_START_PAC_ANIMATION) {
                 gameContext.theGameLevel().pac().playAnimation();
-                gameContext.theGameEventManager().publishEvent(gameContext.theGame(), GameEventType.PAC_DYING, gameContext.theGameLevel().pac().tile());
+                gameContext.theGameEventManager().publishEvent(GameEventType.PAC_DYING, gameContext.theGameLevel().pac().tile());
             }
             else if (timer.tickCount() == TICK_HIDE_PAC) {
                 gameContext.theGameLevel().pac().hide();
             }
             else if (timer.tickCount() == TICK_PAC_DEAD) {
-                gameContext.theGameEventManager().publishEvent(gameContext.theGame(), GameEventType.PAC_DEAD);
+                gameContext.theGameEventManager().publishEvent(GameEventType.PAC_DEAD);
             }
             else {
                 gameContext.theGameLevel().blinking().tick();
@@ -396,7 +396,7 @@ public enum GameState implements FsmState<GameContext> {
             }
             else if (timer().atSecond(4.5)) {
                 gameLevel.bonus().ifPresent(bonus -> bonus.setEaten(Globals.NUM_TICKS_PER_SEC));
-                gameContext.theGameEventManager().publishEvent(gameContext.theGame(), GameEventType.BONUS_EATEN);
+                gameContext.theGameEventManager().publishEvent(GameEventType.BONUS_EATEN);
             }
             else if (timer().atSecond(6.5)) {
                 gameLevel.bonus().ifPresent(BonusEntity::setInactive); // needed?
@@ -404,7 +404,7 @@ public enum GameState implements FsmState<GameContext> {
             }
             else if (timer().atSecond(8.5)) {
                 gameLevel.bonus().ifPresent(bonus -> bonus.setEaten(Globals.NUM_TICKS_PER_SEC));
-                gameContext.theGameEventManager().publishEvent(gameContext.theGame(), GameEventType.BONUS_EATEN);
+                gameContext.theGameEventManager().publishEvent(GameEventType.BONUS_EATEN);
             }
             else if (timer().atSecond(10.0)) {
                 gameLevel.hidePacAndGhosts();
@@ -448,7 +448,7 @@ public enum GameState implements FsmState<GameContext> {
             gameLevel.ghosts().forEach(Ghost::playAnimation);
             gameLevel.showPacAndGhosts();
             gameLevel.showMessage(GameLevel.MESSAGE_TEST);
-            gameContext.theGameEventManager().publishEvent(gameContext.theGame(), GameEventType.STOP_ALL_SOUNDS);
+            gameContext.theGameEventManager().publishEvent(GameEventType.STOP_ALL_SOUNDS);
         }
 
         @Override
@@ -466,7 +466,7 @@ public enum GameState implements FsmState<GameContext> {
             gameContext.theGame().doHuntingStep();
             if (timer().hasExpired()) {
                 if (gameContext.theGameLevel().number() == lastTestedLevelNumber) {
-                    gameContext.theGameEventManager().publishEvent(gameContext.theGame(), GameEventType.STOP_ALL_SOUNDS);
+                    gameContext.theGameEventManager().publishEvent(GameEventType.STOP_ALL_SOUNDS);
                     gameContext.theGameController().changeGameState(INTRO);
                 } else {
                     timer().restartSeconds(TEST_DURATION_SEC);
@@ -505,7 +505,7 @@ public enum GameState implements FsmState<GameContext> {
                     gameContext.theGame().setProperty("intermissionTestNumber", number + 1);
                     timer.restartIndefinitely();
                     //TODO find another solution and get rid of this event type
-                    gameContext.theGameEventManager().publishEvent(gameContext.theGame(), GameEventType.UNSPECIFIED_CHANGE);
+                    gameContext.theGameEventManager().publishEvent(GameEventType.UNSPECIFIED_CHANGE);
                 } else {
                     gameContext.theGameController().changeGameState(INTRO);
                 }
