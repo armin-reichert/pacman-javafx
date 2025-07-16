@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.model3D;
 
+import de.amr.pacmanfx.lib.Destroyable;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
@@ -11,7 +12,7 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Translate;
 
-public class MsPacManFemaleParts extends Group implements Destroyable{
+public class MsPacManFemaleParts extends Group implements Destroyable {
 
     private Sphere bowLeft;
     private Sphere bowRight;

@@ -1,6 +1,6 @@
 package de.amr.pacmanfx.ui.sound;
 
-import de.amr.pacmanfx.uilib.model3D.Destroyable;
+import de.amr.pacmanfx.lib.Destroyable;
 import javafx.beans.property.BooleanProperty;
 import javafx.scene.media.MediaPlayer;
 

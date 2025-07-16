@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.uilib.model3D;
+package de.amr.pacmanfx.lib;
 
 public interface Destroyable {
     void destroy();

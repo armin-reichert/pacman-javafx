@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.animation;
 
+import de.amr.pacmanfx.lib.Destroyable;
 import de.amr.pacmanfx.lib.Vector3f;
-import de.amr.pacmanfx.uilib.model3D.Destroyable;
 import javafx.animation.Animation;
 import javafx.animation.Transition;
 import javafx.beans.value.ObservableValue;

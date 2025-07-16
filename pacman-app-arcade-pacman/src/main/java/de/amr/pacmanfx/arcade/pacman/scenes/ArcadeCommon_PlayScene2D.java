@@ -12,7 +12,6 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.LivesCounter;
-import de.amr.pacmanfx.model.actors.BonusEntity;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -247,7 +246,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
         // Collect actors in drawing z-order: Bonus < Pac-Man < Ghosts in order
         // TODO: also take ghost state into account!
         actorsInZOrder.clear();
-        gameLevel.bonus().map(BonusEntity::actor).ifPresent(actorsInZOrder::add);
+        gameLevel.bonus().ifPresent(actorsInZOrder::add);
         actorsInZOrder.add(gameLevel.pac());
         Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW).map(gameLevel::ghost)
                 .forEach(actorsInZOrder::add);

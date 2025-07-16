@@ -203,7 +203,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
         if (actor.isVisible()) {
             switch (actor) {
                 case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
-                case MovingBonus movingBonus   -> drawMovingBonus(movingBonus);
+                case Bonus bonus -> drawMovingBonus(bonus);
                 case Pac pac                   -> drawAnyKindOfPac(pac);
                 case Stork stork -> {
                     drawAnimatedActor(stork);
@@ -216,8 +216,8 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
         }
     }
 
-    public void drawMovingBonus(MovingBonus bonus) {
-        if (bonus.state() == BonusEntity.BonusState.INACTIVE) return;
+    public void drawMovingBonus(Bonus bonus) {
+        if (bonus.state() == BonusState.INACTIVE) return;
         ctx.save();
         ctx.translate(0, bonus.elongationY());
         switch (bonus.state()) {

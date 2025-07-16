@@ -1,6 +1,6 @@
 package de.amr.pacmanfx.uilib.animation;
 
-import de.amr.pacmanfx.uilib.model3D.Destroyable;
+import de.amr.pacmanfx.lib.Destroyable;
 import javafx.animation.Animation;
 import org.tinylog.Logger;
 

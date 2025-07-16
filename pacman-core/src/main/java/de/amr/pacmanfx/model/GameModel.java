@@ -98,7 +98,7 @@ public abstract class GameModel implements ScoreManager {
 
         level.pac().update(level);
         level.ghosts().forEach(ghost -> ghost.update(level));
-        level.bonus().ifPresent(BonusEntity::update);
+        level.bonus().ifPresent(Bonus::update);
 
         checkIfPacManKilled();
         if (hasPacManBeenKilled()) return;
@@ -108,7 +108,7 @@ public abstract class GameModel implements ScoreManager {
 
         checkIfPacManFindsFood();
         updatePacPower();
-        level.bonus().ifPresent(this::checkIfBonusEaten);
+        level.bonus().ifPresent(this::checkIfPacManCanEatBonus);
     }
 
     public boolean isLevelCompleted() { return level.uneatenFoodCount() == 0; }
@@ -122,7 +122,7 @@ public abstract class GameModel implements ScoreManager {
         level.pac().powerTimer().stop();
         level.pac().powerTimer().reset(0);
         Logger.info("Power timer stopped and reset to zero");
-        level.bonus().ifPresent(BonusEntity::setInactive);
+        level.bonus().ifPresent(Bonus::setInactive);
         // when cheating to end level, there might still be food
         level.eatAllFood();
         Logger.trace("Game level {} completed.", level.number());
@@ -234,14 +234,12 @@ public abstract class GameModel implements ScoreManager {
     public abstract boolean isBonusReached();
     public abstract void activateNextBonus();
 
-    protected void checkIfBonusEaten(BonusEntity bonus) {
-        if (bonus.state() != BonusEntity.BonusState.EDIBLE)
-            return;
-        if (actorsCollide(level.pac(), bonus.actor())) {
+    protected void checkIfPacManCanEatBonus(Bonus bonus) {
+        if (bonus.state() == BonusState.EDIBLE && actorsCollide(level.pac(), bonus)) {
             bonus.setEaten(120); //TODO is 2 seconds correct?
             scorePoints(bonus.points());
             Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
-            gameContext.theSimulationStep().bonusEatenTile = bonus.actor().tile();
+            gameContext.theSimulationStep().bonusEatenTile = bonus.tile();
             gameContext.theGameEventManager().publishEvent(GameEventType.BONUS_EATEN);
         }
     }

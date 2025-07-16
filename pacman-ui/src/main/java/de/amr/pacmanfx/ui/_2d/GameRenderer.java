@@ -5,20 +5,17 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui._2d;
 
 import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.lib.Destroyable;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HUD;
-import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.Animated;
-import de.amr.pacmanfx.model.actors.MovingActor;
-import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.ui.PacManGames_Assets;
 import de.amr.pacmanfx.uilib.animation.SingleSpriteWithoutAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
-import de.amr.pacmanfx.uilib.model3D.Destroyable;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
@@ -354,8 +351,11 @@ public abstract class GameRenderer implements Destroyable {
                 ctx().setFont(Font.font("Monospaced", scaled(6)));
                 ctx().fillText(text, scaled(pac.x() - 4), scaled(pac.y() + 16));
             }
+            case Bonus bonus -> {
+                //TODO
+            }
             case Animated animated -> drawAnimatedMovingActorInfo(animated);
-            default -> Logger.error("Cannot render moving actor of class {}", movingActor.getClass().getSimpleName());
+            default -> Logger.error("Cannot render moving actor info of class {}", movingActor.getClass().getSimpleName());
         }
     }
 

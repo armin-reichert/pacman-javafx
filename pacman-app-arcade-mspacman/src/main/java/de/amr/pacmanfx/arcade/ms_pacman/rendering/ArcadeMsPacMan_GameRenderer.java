@@ -12,8 +12,8 @@ import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.BonusEntity;
-import de.amr.pacmanfx.model.actors.MovingBonus;
+import de.amr.pacmanfx.model.actors.Bonus;
+import de.amr.pacmanfx.model.actors.BonusState;
 import de.amr.pacmanfx.ui.GameUI_Config;
 import de.amr.pacmanfx.ui.PacManGames_Assets;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
@@ -163,14 +163,14 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
                 case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
                 case Marquee marquee           -> drawMarquee(marquee);
                 case MidwayCopyright copyright -> drawMidwayCopyright(copyright);
-                case MovingBonus movingBonus   -> drawMovingBonus(movingBonus);
+                case Bonus bonus -> drawMovingBonus(bonus);
                 default -> super.drawActor(actor);
             }
         }
     }
 
-    public void drawMovingBonus(MovingBonus bonus) {
-        if (bonus.state() == BonusEntity.BonusState.INACTIVE) return;
+    public void drawMovingBonus(Bonus bonus) {
+        if (bonus.state() == BonusState.INACTIVE) return;
         ctx.save();
         ctx.translate(0, bonus.elongationY());
         switch (bonus.state()) {

@@ -132,13 +132,13 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
 
     @Override
     public void drawActor(Actor actor) {
-        if (actor instanceof Bonus staticBonus) {
-            drawStaticBonus(staticBonus);
+        if (actor instanceof Bonus bonus) {
+            drawBonus(bonus);
         }
         else super.drawActor(actor);
     }
 
-    private void drawStaticBonus(Bonus bonus) {
+    private void drawBonus(Bonus bonus) {
         switch (bonus.state()) {
             case EDIBLE -> drawActorSpriteCentered(bonus, spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS)[bonus.symbol()]);
             case EATEN  -> drawActorSpriteCentered(bonus, spriteSheet.spriteSeq(SpriteID.BONUS_VALUES)[bonus.symbol()]);

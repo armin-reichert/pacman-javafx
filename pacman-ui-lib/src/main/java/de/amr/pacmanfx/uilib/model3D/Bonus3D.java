@@ -8,8 +8,8 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.actors.BonusEntity;
-import de.amr.pacmanfx.model.actors.MovingBonus;
+import de.amr.pacmanfx.model.actors.Bonus;
+import de.amr.pacmanfx.model.actors.BonusState;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
@@ -38,7 +38,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class Bonus3D extends Box {
 
-    private final BonusEntity bonus;
+    private final Bonus bonus;
 
     private final double symbolWidth;
     private final double pointsWidth;
@@ -67,13 +67,13 @@ public class Bonus3D extends Box {
 
         public void update(GameLevel level) {
             if (animation != null && animation.getStatus() == Animation.Status.RUNNING
-                && bonus instanceof MovingBonus movingBonus)
+                && Bonus3D.this.bonus instanceof Bonus bonus)
             {
                 RotateTransition rotateTransition = (RotateTransition) animation;
-                Vector2f center = bonus.actor().center();
+                Vector2f center = Bonus3D.this.bonus.center();
                 boolean outsideWorld = center.x() < HTS || center.x() > level.worldMap().numCols() * TS - HTS;
-                setVisible(bonus.state() == BonusEntity.BonusState.EDIBLE && !outsideWorld);
-                Direction moveDir = movingBonus.actor().moveDir();
+                setVisible(Bonus3D.this.bonus.state() == BonusState.EDIBLE && !outsideWorld);
+                Direction moveDir = bonus.moveDir();
                 Point3D axis = moveDir.isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
                 rotateTransition.setRate(moveDir == Direction.DOWN || moveDir == Direction.LEFT ? 1 : -1);
                 if (!rotateTransition.getAxis().equals(axis)) {
@@ -85,7 +85,7 @@ public class Bonus3D extends Box {
         }
     }
 
-    public Bonus3D(AnimationManager animationManager, BonusEntity bonus, Image symbolImage, double symbolWidth, Image pointsImage, double pointsWidth) {
+    public Bonus3D(AnimationManager animationManager, Bonus bonus, Image symbolImage, double symbolWidth, Image pointsImage, double pointsWidth) {
         requireNonNull(animationManager);
         this.bonus = requireNonNull(bonus);
         this.symbolWidth = requireNonNegative(symbolWidth);
@@ -131,7 +131,7 @@ public class Bonus3D extends Box {
     }
 
     public void update(GameContext gameContext) {
-        Vector2f center = bonus.actor().center();
+        Vector2f center = bonus.center();
         setTranslateX(center.x());
         setTranslateY(center.y());
         setTranslateZ(-HTS);

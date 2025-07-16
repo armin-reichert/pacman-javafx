@@ -9,7 +9,10 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.House;
-import de.amr.pacmanfx.model.actors.*;
+import de.amr.pacmanfx.model.actors.Actor;
+import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.model.actors.GhostState;
+import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
@@ -467,7 +470,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         }
 
         actorsByZ.clear();
-        gameContext().theGameLevel().bonus().map(BonusEntity::actor).ifPresent(actorsByZ::add);
+        gameContext().theGameLevel().bonus().ifPresent(actorsByZ::add);
         actorsByZ.add(gameContext().theGameLevel().pac());
         ghostsByZ(gameContext().theGameLevel()).forEach(actorsByZ::add);
         renderer().drawActors(actorsByZ);

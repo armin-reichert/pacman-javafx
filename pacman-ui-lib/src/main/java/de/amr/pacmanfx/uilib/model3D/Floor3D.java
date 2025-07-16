@@ -1,5 +1,6 @@
 package de.amr.pacmanfx.uilib.model3D;
 
+import de.amr.pacmanfx.lib.Destroyable;
 import javafx.scene.shape.Box;
 
 public class Floor3D extends Box implements Destroyable {

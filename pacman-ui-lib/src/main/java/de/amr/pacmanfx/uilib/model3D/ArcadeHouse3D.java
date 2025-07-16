@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.model3D;
 
+import de.amr.pacmanfx.lib.Destroyable;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;

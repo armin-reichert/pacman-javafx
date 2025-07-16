@@ -615,14 +615,14 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
         level.selectNextBonus();
         byte symbol = level.bonusSymbol(level.currentBonusIndex());
-        var bonus = new MovingBonus(gameContext, symbol, BONUS_VALUE_FACTORS[symbol] * 100);
+        var bonus = Bonus.createMovingBonus(gameContext, symbol, BONUS_VALUE_FACTORS[symbol] * 100);
         bonus.setEdibleTicks(TickTimer.INDEFINITE);
         bonus.setRoute(route, leftToRight);
         //bonus.setBaseSpeed(0.9f * level.speedControl().pacNormalSpeed(level)); // TODO how fast is the bonus really moving?
         Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
 
         level.setBonus(bonus);
-        gameContext.theGameEventManager().publishEvent(GameEventType.BONUS_ACTIVATED, bonus.actor().tile());
+        gameContext.theGameEventManager().publishEvent(GameEventType.BONUS_ACTIVATED, bonus.tile());
     }
 
     @Override

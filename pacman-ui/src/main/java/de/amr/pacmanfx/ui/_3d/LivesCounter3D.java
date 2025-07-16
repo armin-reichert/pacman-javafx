@@ -4,10 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._3d;
 
+import de.amr.pacmanfx.lib.Destroyable;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.model3D.Destroyable;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
