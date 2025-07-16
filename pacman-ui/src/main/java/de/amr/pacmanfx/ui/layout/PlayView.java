@@ -12,7 +12,7 @@ import de.amr.pacmanfx.model.actors.ActorAnimationMap;
 import de.amr.pacmanfx.ui.ActionBindingMap;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.PacManGames_UIConfig;
+import de.amr.pacmanfx.ui.GameUI_Config;
 import de.amr.pacmanfx.ui._2d.CrudeCanvasContainer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.PopupLayer;
@@ -252,7 +252,7 @@ public class PlayView implements PacManGames_View {
         Logger.trace("Handle {}", gameEvent);
         switch (gameEvent.type()) {
             case LEVEL_CREATED -> {
-                PacManGames_UIConfig config = ui.theConfiguration();
+                GameUI_Config config = ui.theConfiguration();
                 ActorAnimationMap pacAnimationMap = config.createPacAnimations(gameContext.theGameLevel().pac());
                 gameContext.theGameLevel().pac().setAnimations(pacAnimationMap);
                 gameContext.theGameLevel().ghosts().forEach(ghost -> {

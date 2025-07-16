@@ -86,7 +86,7 @@ public class PacManGames_UI_Impl implements GameUI {
     private final Stage              theStage;
     private final DirectoryWatchdog  theWatchdog;
 
-    private final Map<String, PacManGames_UIConfig> configByGameVariant = new HashMap<>();
+    private final Map<String, GameUI_Config> configByGameVariant = new HashMap<>();
 
 
     private final StackPane rootPane = new StackPane();
@@ -162,10 +162,10 @@ public class PacManGames_UI_Impl implements GameUI {
         );
     }
 
-    public void configure(Map<String, Class<? extends PacManGames_UIConfig>> configClassesMap) {
+    public void configure(Map<String, Class<? extends GameUI_Config>> configClassesMap) {
         configClassesMap.forEach((gameVariant, configClass) -> {
             try {
-                PacManGames_UIConfig config = configClass.getDeclaredConstructor(GameUI.class).newInstance(this);
+                GameUI_Config config = configClass.getDeclaredConstructor(GameUI.class).newInstance(this);
                 setUIConfig(gameVariant, config);
             } catch (Exception x) {
                 Logger.error("Could not create UI configuration of class {}", configClass);
@@ -300,13 +300,13 @@ public class PacManGames_UI_Impl implements GameUI {
         }
         String previousVariant = theGameContext.theGameController().selectedGameVariant();
         if (previousVariant != null && !previousVariant.equals(gameVariant)) {
-            PacManGames_UIConfig previousConfig = uiConfig(previousVariant);
+            GameUI_Config previousConfig = uiConfig(previousVariant);
             Logger.info("Unloading assets for game variant {}", previousVariant);
             previousConfig.destroy();
             previousConfig.soundManager().mutedProperty().unbind();
         }
 
-        PacManGames_UIConfig newConfig = uiConfig(gameVariant);
+        GameUI_Config newConfig = uiConfig(gameVariant);
         Logger.info("Loading assets for game variant {}", gameVariant);
         newConfig.storeAssets(theAssets());
         newConfig.soundManager().mutedProperty().bind(propertyMuted);
@@ -435,20 +435,20 @@ public class PacManGames_UI_Impl implements GameUI {
      * @param configuration the UI configuration for this variant
      */
     @Override
-    public void setUIConfig(String variant, PacManGames_UIConfig configuration) {
+    public void setUIConfig(String variant, GameUI_Config configuration) {
         requireNonNull(variant);
         requireNonNull(configuration);
         configByGameVariant.put(variant, configuration);
     }
 
     @Override
-    public PacManGames_UIConfig uiConfig(String gameVariant) {
+    public GameUI_Config uiConfig(String gameVariant) {
         return configByGameVariant.get(gameVariant);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T extends PacManGames_UIConfig> T theConfiguration() {
+    public <T extends GameUI_Config> T theConfiguration() {
         return (T) configByGameVariant.get(theGameContext.theGameController().selectedGameVariant());
     }
 

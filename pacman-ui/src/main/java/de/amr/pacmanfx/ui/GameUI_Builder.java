@@ -22,7 +22,7 @@ public class GameUI_Builder {
     private final PacManGames_UI_Impl uiUnderConstruction;
     private final Map<String, Class<?>> gameModelClassByVariantName = new HashMap<>();
     private final Map<String, MapSelector> mapSelectorByVariantName = new HashMap<>();
-    private final Map<String, Class<? extends PacManGames_UIConfig>> configClassByVariantName = new HashMap<>();
+    private final Map<String, Class<? extends GameUI_Config>> configClassByVariantName = new HashMap<>();
     private StartPage[] startPages;
     private DashboardID[] dashboardIDs = new DashboardID[0];
 
@@ -30,7 +30,7 @@ public class GameUI_Builder {
         this.uiUnderConstruction = requireNonNull(uiUnderConstruction);
     }
 
-    public GameUI_Builder game(String variant, Class<? extends GameModel> gameModelClass, Class<? extends PacManGames_UIConfig> configClass) {
+    public GameUI_Builder game(String variant, Class<? extends GameModel> gameModelClass, Class<? extends GameUI_Config> configClass) {
         validateGameVariant(variant);
         if (gameModelClass == null) {
             error("Game model class for variant %s may not be null".formatted(variant));
@@ -47,7 +47,7 @@ public class GameUI_Builder {
             String variant,
             Class<? extends GameModel> gameModelClass,
             MapSelector mapSelector,
-            Class<? extends PacManGames_UIConfig> configClass)
+            Class<? extends GameUI_Config> configClass)
     {
         validateGameVariant(variant);
         if (gameModelClass == null) {

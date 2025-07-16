@@ -152,15 +152,15 @@ public interface GameUI {
     Model3DRepository                theModel3DRepository();
     SoundManager                     theSound();
     Stage                            theStage();
-    <T extends PacManGames_UIConfig> T theConfiguration();
+    <T extends GameUI_Config> T theConfiguration();
     DirectoryWatchdog                theWatchdog();
 
     void restart();
     void selectGameVariant(String variant);
     void show();
 
-    PacManGames_UIConfig uiConfig(String gameVariant);
-    void setUIConfig(String variant, PacManGames_UIConfig configuration);
+    GameUI_Config uiConfig(String gameVariant);
+    void setUIConfig(String variant, GameUI_Config configuration);
 
 
     // Game scenes

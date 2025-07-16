@@ -16,8 +16,8 @@ import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.tengen.ms_pacman.model.*;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.Clapperboard;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.Stork;
+import de.amr.pacmanfx.ui.GameUI_Config;
 import de.amr.pacmanfx.ui.PacManGames_Assets;
-import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
 import de.amr.pacmanfx.ui.input.JoypadKeyBinding;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
@@ -361,7 +361,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
         });
     }
 
-    public void drawLevelMessage(PacManGames_UIConfig config, GameLevel level, Vector2f position, Font font) {
+    public void drawLevelMessage(GameUI_Config config, GameLevel level, Vector2f position, Font font) {
         requireNonNull(level);
         requireNonNull(position);
         requireNonNull(font);

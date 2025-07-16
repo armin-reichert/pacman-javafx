@@ -20,7 +20,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.PacManGames_UIConfig;
+import de.amr.pacmanfx.ui.GameUI_Config;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.sound.DefaultSoundManager;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -43,7 +43,7 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
 import static java.util.Objects.requireNonNull;
 
-public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
+public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config {
 
     private static final String NAMESPACE = "ms_pacman_xxl";
 

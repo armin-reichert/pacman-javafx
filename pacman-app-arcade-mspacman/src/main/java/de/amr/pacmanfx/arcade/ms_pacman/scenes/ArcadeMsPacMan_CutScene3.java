@@ -10,7 +10,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.PacManGames_UIConfig;
+import de.amr.pacmanfx.ui.GameUI_Config;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 
 import java.util.List;
@@ -59,7 +59,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         bag = new Bag(spriteSheet);
         bag.setOpen(false);
 
-        PacManGames_UIConfig config = ui.theConfiguration();
+        GameUI_Config config = ui.theConfiguration();
         msPacMan.setAnimations(config.createPacAnimations(msPacMan));
         pacMan.setAnimations(config.createPacAnimations(pacMan));
 

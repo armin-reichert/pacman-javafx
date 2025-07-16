@@ -23,7 +23,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.scenes.*;
 import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.PacManGames_UIConfig;
+import de.amr.pacmanfx.ui.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.DefaultSoundManager;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
@@ -56,7 +56,7 @@ import static de.amr.pacmanfx.ui.input.Keyboard.*;
 import static de.amr.pacmanfx.uilib.Ufx.toggle;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_UIConfig implements PacManGames_UIConfig {
+public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     private static final String NAMESPACE = "tengen";
 

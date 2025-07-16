@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.actors.ActorAnimationMap;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -15,14 +16,20 @@ import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.Destroyable;
-import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.model3D.PacBase3D;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
+import java.util.stream.Stream;
 
-public interface PacManGames_UIConfig extends PacManGames_GameSceneConfig, Destroyable {
+public interface GameUI_Config extends Destroyable {
+
+    // scene config
+    void createGameScenes(GameUI ui);
+    Stream<GameScene> gameScenes();
+    boolean gameSceneHasID(GameScene gameScene, String sceneID);
+    GameScene selectGameScene(GameContext gameContext);
 
     GameUI theUI();
 

@@ -12,7 +12,7 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.PacManGames_UIConfig;
+import de.amr.pacmanfx.ui.GameUI_Config;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.animation.SingleSpriteActor;
 
@@ -67,7 +67,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         pinky = createGhost(null, PINK_GHOST_SPEEDY);
         heart = new SingleSpriteActor(null, spriteSheet.sprite(SpriteID.HEART));
 
-        final PacManGames_UIConfig config = ui.theConfiguration();
+        final GameUI_Config config = ui.theConfiguration();
         msPacMan.setAnimations(config.createPacAnimations(msPacMan));
         pacMan.setAnimations(config.createPacAnimations(pacMan));
         inky.setAnimations(config.createGhostAnimations(inky));

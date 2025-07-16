@@ -14,8 +14,8 @@ import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.BonusEntity;
 import de.amr.pacmanfx.model.actors.MovingBonus;
+import de.amr.pacmanfx.ui.GameUI_Config;
 import de.amr.pacmanfx.ui.PacManGames_Assets;
-import de.amr.pacmanfx.ui.PacManGames_UIConfig;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.canvas.Canvas;
@@ -39,7 +39,7 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
 
     public ArcadeMsPacMan_GameRenderer(
         PacManGames_Assets assets,
-        PacManGames_UIConfig config,
+        GameUI_Config config,
         BrightMazesSpriteSheet brightMazesSpriteSheet,
         Canvas canvas)
     {
@@ -52,7 +52,7 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
 
     protected ArcadeMsPacMan_GameRenderer(
         PacManGames_Assets assets,
-        PacManGames_UIConfig config,
+        GameUI_Config config,
         Canvas canvas)
     {
         super(assets);
