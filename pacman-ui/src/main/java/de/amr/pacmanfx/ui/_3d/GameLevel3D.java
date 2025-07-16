@@ -126,20 +126,17 @@ public class GameLevel3D extends Group implements Destroyable {
     // Walls and house must be added *after* the actors, otherwise the transparency is not working correctly.
     public GameLevel3D(
         GameUI ui,
-        Model3DRepository model3DRepository,
         WorldMapColorScheme proposedColorScheme)
     {
         this.ui = requireNonNull(ui);
 
-        requireNonNull(model3DRepository);
         requireNonNull(proposedColorScheme);
-
         // Add some contrast with floor if wall fill color is black
         colorScheme = proposedColorScheme.fill().equals(Color.BLACK)
             ? new WorldMapColorScheme(Color.grayRgb(42), proposedColorScheme.stroke(), proposedColorScheme.door(), proposedColorScheme.pellet())
             : proposedColorScheme;
 
-        Mesh ghostDressMesh = model3DRepository.ghostDressMesh();
+        Mesh ghostDressMesh = ui.theModel3DRepository().ghostDressMesh();
         dressMeshViews = new MeshView[] {
                 new MeshView(ghostDressMesh),
                 new MeshView(ghostDressMesh),
@@ -147,7 +144,7 @@ public class GameLevel3D extends Group implements Destroyable {
                 new MeshView(ghostDressMesh),
         };
 
-        Mesh ghostPupilsMesh = model3DRepository.ghostPupilsMesh();
+        Mesh ghostPupilsMesh = ui.theModel3DRepository().ghostPupilsMesh();
         pupilsMeshViews = new MeshView[] {
                 new MeshView(ghostPupilsMesh),
                 new MeshView(ghostPupilsMesh),
@@ -155,7 +152,7 @@ public class GameLevel3D extends Group implements Destroyable {
                 new MeshView(ghostPupilsMesh),
         };
 
-        Mesh ghostEyeballsMesh = model3DRepository.ghostEyeballsMesh();
+        Mesh ghostEyeballsMesh = ui.theModel3DRepository().ghostEyeballsMesh();
         eyesMeshViews = new MeshView[] {
                 new MeshView(ghostEyeballsMesh),
                 new MeshView(ghostEyeballsMesh),
@@ -174,7 +171,7 @@ public class GameLevel3D extends Group implements Destroyable {
         getChildren().add(levelCounter3D);
 
         for (int i = 0; i < livesCounterShapes.length; ++i) {
-            livesCounterShapes[i] = ui.theConfiguration().createLivesCounterShape3D(model3DRepository);
+            livesCounterShapes[i] = ui.theConfiguration().createLivesCounterShape3D(ui.theModel3DRepository());
         }
         livesCounter3D = new LivesCounter3D(animationManager, livesCounterShapes);
         livesCounter3D.setTranslateX(2 * TS);
@@ -186,7 +183,7 @@ public class GameLevel3D extends Group implements Destroyable {
         livesCounter3D.lookingAroundAnimation().playFromStart();
         getChildren().add(livesCounter3D);
 
-        pac3D = ui.theConfiguration().createPac3D(model3DRepository, animationManager, gameLevel().pac());
+        pac3D = ui.theConfiguration().createPac3D(ui.theModel3DRepository(), animationManager, gameLevel().pac());
         pac3D.init();
         getChildren().addAll(pac3D, pac3D.light());
 
@@ -286,7 +283,7 @@ public class GameLevel3D extends Group implements Destroyable {
             mazeGroup.getChildren().addAll(floor3D, maze3D);
         }
 
-        createPelletsAndEnergizers3D(colorScheme, model3DRepository.pelletMesh());
+        createPelletsAndEnergizers3D(colorScheme, ui.theModel3DRepository().pelletMesh());
         energizers3D.stream().map(Eatable3D::shape3D).forEach(getChildren()::add);
         pellets3D   .stream().map(Eatable3D::shape3D).forEach(getChildren()::add);
 
