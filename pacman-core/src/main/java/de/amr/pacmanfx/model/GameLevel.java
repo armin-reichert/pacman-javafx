@@ -418,7 +418,7 @@ public class GameLevel {
         return isTileInsideWorld(tile) && worldMap.content(LayerID.FOOD, tile) != FoodTile.EMPTY.code();
     }
 
-    public Stream<Vector2i> energizerTiles() { return energizerTiles.stream(); }
+    public Set<Vector2i> energizerTiles() { return Collections.unmodifiableSet(energizerTiles); }
 
     public boolean isEnergizerPosition(Vector2i tile) {
         return energizerTiles.contains(tile);

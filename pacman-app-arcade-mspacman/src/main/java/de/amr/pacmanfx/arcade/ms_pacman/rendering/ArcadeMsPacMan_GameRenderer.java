@@ -148,7 +148,7 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
                     .filter(not(level::isEnergizerPosition))
                     .filter(level::tileContainsEatenFood)
                     .forEach(tile -> fillSquareAtTileCenter(tile, 4));
-            level.energizerTiles()
+            level.energizerTiles().stream()
                     .filter(tile -> !energizerHighlighted || level.tileContainsEatenFood(tile))
                     .forEach(tile -> fillSquareAtTileCenter(tile, 10));
             ctx.restore();

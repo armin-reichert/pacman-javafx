@@ -72,7 +72,7 @@ public class GenericMapRenderer {
             worldMap.tiles().filter(level::tileContainsFood).filter(not(level::isEnergizerPosition))
                 .forEach(tile -> foodRenderer.drawPellet(ctx, tile));
             if (energizerHighlighted) {
-                level.energizerTiles().filter(level::tileContainsFood).forEach(tile -> foodRenderer.drawEnergizer(ctx, tile));
+                level.energizerTiles().stream().filter(level::tileContainsFood).forEach(tile -> foodRenderer.drawEnergizer(ctx, tile));
             }
         }
     }
