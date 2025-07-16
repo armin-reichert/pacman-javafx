@@ -66,9 +66,7 @@ public class Bonus3D extends Box {
         }
 
         public void update(GameLevel level) {
-            if (animation != null && animation.getStatus() == Animation.Status.RUNNING
-                && Bonus3D.this.bonus instanceof Bonus bonus)
-            {
+            if (animation != null && animation.getStatus() == Animation.Status.RUNNING) {
                 RotateTransition rotateTransition = (RotateTransition) animation;
                 Vector2f center = Bonus3D.this.bonus.center();
                 boolean outsideWorld = center.x() < HTS || center.x() > level.worldMap().numCols() * TS - HTS;

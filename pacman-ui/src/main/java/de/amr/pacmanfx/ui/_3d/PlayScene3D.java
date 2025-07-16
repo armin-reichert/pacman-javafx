@@ -11,7 +11,6 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
-import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.ui.ActionBindingMap;
@@ -426,9 +425,7 @@ public class PlayScene3D implements GameScene {
     public void onBonusActivated(GameEvent event) {
         gameContext().theGameLevel().bonus().ifPresent(bonus -> {
             gameLevel3D.updateBonus3D(bonus);
-            if (bonus instanceof Bonus) {
-                ui.theSound().loop(SoundID.BONUS_ACTIVE);
-            }
+            ui.theSound().loop(SoundID.BONUS_ACTIVE);
         });
     }
 
@@ -436,9 +433,7 @@ public class PlayScene3D implements GameScene {
     public void onBonusEaten(GameEvent event) {
         gameContext().theGameLevel().bonus().ifPresent(bonus -> {
             gameLevel3D.bonus3D().ifPresent(Bonus3D::showEaten);
-            if (bonus instanceof Bonus) {
-                ui.theSound().stop(SoundID.BONUS_ACTIVE);
-            }
+            ui.theSound().stop(SoundID.BONUS_ACTIVE);
             ui.theSound().play(SoundID.BONUS_EATEN);
         });
     }
@@ -447,9 +442,7 @@ public class PlayScene3D implements GameScene {
     public void onBonusExpired(GameEvent event) {
         gameContext().theGameLevel().bonus().ifPresent(bonus -> {
             gameLevel3D.bonus3D().ifPresent(Bonus3D::expire);
-            if (bonus instanceof Bonus) {
-                ui.theSound().stop(SoundID.BONUS_ACTIVE);
-            }
+            ui.theSound().stop(SoundID.BONUS_ACTIVE);
         });
     }
 
