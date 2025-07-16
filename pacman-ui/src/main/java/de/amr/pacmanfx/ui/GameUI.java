@@ -59,6 +59,7 @@ public interface GameUI {
         float HOUSE_3D_OPACITY            = 0.4f;
         float HOUSE_3D_SENSITIVITY        = 1.5f * TS;
         float HOUSE_3D_WALL_THICKNESS     = 2.5f;
+        float LEVEL_COUNTER_3D_ELEVATION  = 6f;
         byte  LIVES_COUNTER_3D_CAPACITY   = 5;
         float LIVES_COUNTER_3D_SHAPE_SIZE = 12f;
         Color LIVES_COUNTER_PILLAR_COLOR  = Color.grayRgb(120);

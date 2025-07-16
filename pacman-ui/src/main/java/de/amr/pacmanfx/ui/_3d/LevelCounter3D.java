@@ -28,13 +28,10 @@ import static java.util.Objects.requireNonNull;
 
 public class LevelCounter3D extends Group {
 
-    private static final float ELEVATION = 6;
-
     private final ManagedAnimation spinningAnimation;
 
     public LevelCounter3D(PacManGames_UIConfig config, AnimationManager animationManager, LevelCounter levelCounter) {
         requireNonNull(animationManager);
-        setTranslateZ(-ELEVATION);
         List<Byte> symbols = levelCounter.symbols();
         for (int i = 0; i < symbols.size(); ++i) {
             var material = new PhongMaterial(Color.WHITE);

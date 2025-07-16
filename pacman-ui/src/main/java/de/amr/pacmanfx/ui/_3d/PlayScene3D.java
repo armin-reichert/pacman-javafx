@@ -535,14 +535,15 @@ public class PlayScene3D implements GameScene {
             gameLevel3D.destroy();
         }
         gameLevel3D = new GameLevel3D(
-                ui,
-                ui.theModel3DRepository(),
-                ui.theConfiguration().colorScheme(gameContext().theGameLevel().worldMap())
+            ui,
+            ui.theModel3DRepository(),
+            ui.theConfiguration().colorScheme(gameContext().theGameLevel().worldMap())
         );
+        level3DPlaceHolder.getChildren().setAll(gameLevel3D);
+
         gameLevel3D.pac3D().init();
         gameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(gameContext().theGameLevel()));
-
-        level3DPlaceHolder.getChildren().setAll(gameLevel3D);
+        gameLevel3D.levelCounter3D().spinningAnimation().playFromStart();
 
         scores3D.translateXProperty().bind(gameLevel3D.translateXProperty().add(TS));
         scores3D.translateYProperty().bind(gameLevel3D.translateYProperty().subtract(4.5 * TS));

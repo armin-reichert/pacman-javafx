@@ -61,6 +61,7 @@ public class GameLevel3D extends Group implements Destroyable {
         return 0 <= x && x < worldMap.numCols() * TS && 0 <= y && y < worldMap.numRows() * TS;
     }
 
+    //TODO maybe better tag the obstacles that form the world border?
     private static boolean isObstacleTheWorldBorder(WorldMap worldMap, Obstacle obstacle) {
         Vector2i start = obstacle.startPoint();
         if (obstacle.isClosed()) {
@@ -70,10 +71,13 @@ public class GameLevel3D extends Group implements Destroyable {
         }
     }
 
+    private final DoubleProperty  houseBaseHeightProperty = new SimpleDoubleProperty(Settings3D.HOUSE_3D_BASE_HEIGHT);
+    private final BooleanProperty houseLightOnProperty = new SimpleBooleanProperty(false);
+
     private final BooleanProperty houseOpenProperty = new SimpleBooleanProperty() {
         @Override
         protected void invalidated() {
-            if (houseOpenProperty.get()) {
+            if (get() && house3D != null) {
                 house3D.doorOpenCloseAnimation().playFromStart();
             }
         }
@@ -82,11 +86,8 @@ public class GameLevel3D extends Group implements Destroyable {
     private final IntegerProperty livesCountProperty = new SimpleIntegerProperty(0);
     private final DoubleProperty  obstacleBaseHeightProperty = new SimpleDoubleProperty(Settings3D.OBSTACLE_3D_BASE_HEIGHT);
     private final DoubleProperty  wallOpacityProperty = new SimpleDoubleProperty(1);
-    private final DoubleProperty  houseBaseHeightProperty = new SimpleDoubleProperty(Settings3D.HOUSE_3D_BASE_HEIGHT);
-    private final BooleanProperty houseLightOnProperty = new SimpleBooleanProperty(false);
 
     private final GameUI ui;
-    private final GameLevel gameLevel;
 
     private final AnimationManager animationManager = new AnimationManager();
     private ManagedAnimation wallColorFlashingAnimation;
@@ -97,6 +98,8 @@ public class GameLevel3D extends Group implements Destroyable {
     private MeshView[] pupilsMeshViews;
     private MeshView[] eyesMeshViews;
 
+    private Node[] livesCounterShapes = new Node[Settings3D.LIVES_COUNTER_3D_CAPACITY];
+
     private PhongMaterial wallBaseMaterial;
     private PhongMaterial wallTopMaterial;
     private PhongMaterial cornerBaseMaterial;
@@ -105,20 +108,19 @@ public class GameLevel3D extends Group implements Destroyable {
     private WorldMapColorScheme colorScheme;
     private TerrainRenderer3D r3D;
 
+    private AmbientLight ambientLight;
     private Group mazeGroup = new Group();
     private Group maze3D = new Group();
-    private AmbientLight ambientLight;
-    private ArcadeHouse3D house3D;
     private Floor3D floor3D;
+    private ArcadeHouse3D house3D;
     private LevelCounter3D levelCounter3D;
-    private Node[] livesCounterShapes = new Node[Settings3D.LIVES_COUNTER_3D_CAPACITY];
     private LivesCounter3D livesCounter3D;
     private PacBase3D pac3D;
     private List<MutatingGhost3D> ghosts3D;
-    private MessageView messageView;
     private Bonus3D bonus3D;
-    private List<Pellet3D> pellets3D = new ArrayList<>();
+    private ArrayList<Pellet3D> pellets3D = new ArrayList<>();
     private ArrayList<Energizer3D> energizers3D = new ArrayList<>();
+    private MessageView messageView;
 
     // Note: The order in which children are added to the root matters!
     // Walls and house must be added *after* the actors, otherwise the transparency is not working correctly.
@@ -128,7 +130,6 @@ public class GameLevel3D extends Group implements Destroyable {
         WorldMapColorScheme proposedColorScheme)
     {
         this.ui = requireNonNull(ui);
-        this.gameLevel = requireNonNull(ui.theGameContext().theGameLevel());
 
         requireNonNull(model3DRepository);
         requireNonNull(proposedColorScheme);
@@ -138,25 +139,28 @@ public class GameLevel3D extends Group implements Destroyable {
             ? new WorldMapColorScheme(Color.grayRgb(42), proposedColorScheme.stroke(), proposedColorScheme.door(), proposedColorScheme.pellet())
             : proposedColorScheme;
 
+        Mesh ghostDressMesh = model3DRepository.ghostDressMesh();
         dressMeshViews = new MeshView[] {
-                new MeshView(model3DRepository.ghostDressMesh()),
-                new MeshView(model3DRepository.ghostDressMesh()),
-                new MeshView(model3DRepository.ghostDressMesh()),
-                new MeshView(model3DRepository.ghostDressMesh()),
+                new MeshView(ghostDressMesh),
+                new MeshView(ghostDressMesh),
+                new MeshView(ghostDressMesh),
+                new MeshView(ghostDressMesh),
         };
 
+        Mesh ghostPupilsMesh = model3DRepository.ghostPupilsMesh();
         pupilsMeshViews = new MeshView[] {
-                new MeshView(model3DRepository.ghostPupilsMesh()),
-                new MeshView(model3DRepository.ghostPupilsMesh()),
-                new MeshView(model3DRepository.ghostPupilsMesh()),
-                new MeshView(model3DRepository.ghostPupilsMesh()),
+                new MeshView(ghostPupilsMesh),
+                new MeshView(ghostPupilsMesh),
+                new MeshView(ghostPupilsMesh),
+                new MeshView(ghostPupilsMesh),
         };
 
+        Mesh ghostEyeballsMesh = model3DRepository.ghostEyeballsMesh();
         eyesMeshViews = new MeshView[] {
-                new MeshView(model3DRepository.ghostEyeballsMesh()),
-                new MeshView(model3DRepository.ghostEyeballsMesh()),
-                new MeshView(model3DRepository.ghostEyeballsMesh()),
-                new MeshView(model3DRepository.ghostEyeballsMesh()),
+                new MeshView(ghostEyeballsMesh),
+                new MeshView(ghostEyeballsMesh),
+                new MeshView(ghostEyeballsMesh),
+                new MeshView(ghostEyeballsMesh),
         };
 
         ambientLight = new AmbientLight();
@@ -164,9 +168,9 @@ public class GameLevel3D extends Group implements Destroyable {
         getChildren().add(ambientLight);
 
         levelCounter3D = new LevelCounter3D(ui.theConfiguration(), animationManager, ui.theGameContext().theGame().theHUD().theLevelCounter());
-        levelCounter3D.setTranslateX(ui.theGameContext().theGameLevel().worldMap().numCols() * TS - 2 * TS);
+        levelCounter3D.setTranslateX(TS * (ui.theGameContext().theGameLevel().worldMap().numCols() - 2));
         levelCounter3D.setTranslateY(2 * TS);
-        levelCounter3D.spinningAnimation().playFromStart();
+        levelCounter3D.setTranslateZ(-Settings3D.LEVEL_COUNTER_3D_ELEVATION);
         getChildren().add(levelCounter3D);
 
         for (int i = 0; i < livesCounterShapes.length; ++i) {
@@ -182,12 +186,12 @@ public class GameLevel3D extends Group implements Destroyable {
         livesCounter3D.lookingAroundAnimation().playFromStart();
         getChildren().add(livesCounter3D);
 
-        pac3D = ui.theConfiguration().createPac3D(model3DRepository, animationManager, gameLevel.pac());
+        pac3D = ui.theConfiguration().createPac3D(model3DRepository, animationManager, gameLevel().pac());
         pac3D.init();
         getChildren().addAll(pac3D, pac3D.light());
 
         final String ans = ui.theConfiguration().assetNamespace();
-        ghosts3D = gameLevel.ghosts().map(ghost -> {
+        ghosts3D = gameLevel().ghosts().map(ghost -> {
             var ghostColoring = new GhostColoring(
                     ui.theAssets().color("%s.ghost.%d.color.normal.dress".formatted(ans, ghost.personality())),
                     ui.theAssets().color("%s.ghost.%d.color.normal.pupils".formatted(ans, ghost.personality())),
@@ -200,27 +204,27 @@ public class GameLevel3D extends Group implements Destroyable {
             );
             return new MutatingGhost3D(
                 animationManager,
-                gameLevel,
+                gameLevel(),
                 ghost,
                 ghostColoring,
                 dressMeshViews[ghost.personality()],
                 pupilsMeshViews[ghost.personality()],
                 eyesMeshViews[ghost.personality()],
                 Settings3D.GHOST_3D_SIZE,
-                gameLevel.data().numFlashes()
+                gameLevel().data().numFlashes()
             );
         }).toList();
         getChildren().addAll(ghosts3D);
-        ghosts3D.forEach(ghost3D -> ghost3D.init(gameLevel));
+        ghosts3D.forEach(ghost3D -> ghost3D.init(gameLevel()));
 
         getChildren().add(mazeGroup);
 
-        Logger.info("Build 3D maze for map (URL '{}') and color scheme {}", gameLevel.worldMap().url(), colorScheme);
+        Logger.info("Build 3D maze for map (URL '{}') and color scheme {}", gameLevel().worldMap().url(), colorScheme);
 
         {
             floor3D = new Floor3D(
-                gameLevel.worldMap().numCols() * TS,
-                gameLevel.worldMap().numRows() * TS,
+                gameLevel().worldMap().numCols() * TS,
+                gameLevel().worldMap().numRows() * TS,
                 Settings3D.FLOOR_3D_THICKNESS,
                 Settings3D.FLOOR_3D_PADDING
             );
@@ -250,23 +254,23 @@ public class GameLevel3D extends Group implements Destroyable {
             r3D = new TerrainRenderer3D();
             r3D.setOnWallCreated(wall3D -> wall3D.baseHeightProperty().bind(obstacleBaseHeightProperty));
             r3D.setCylinderDivisions(24);
-            for (Obstacle obstacle : gameLevel.worldMap().obstacles()) {
+            for (Obstacle obstacle : gameLevel().worldMap().obstacles()) {
                 Vector2i tile = tileAt(obstacle.startPoint().toVector2f());
-                if (gameLevel.house().isEmpty() || !gameLevel.house().get().isTileInHouseArea(tile)) {
+                if (gameLevel().house().isEmpty() || !gameLevel().house().get().isTileInHouseArea(tile)) {
                     r3D.renderObstacle3D(
                         maze3D,
-                        obstacle, isObstacleTheWorldBorder(gameLevel.worldMap(), obstacle),
+                        obstacle, isObstacleTheWorldBorder(gameLevel().worldMap(), obstacle),
                         Settings3D.OBSTACLE_3D_WALL_THICKNESS,
                         wallBaseMaterial, wallTopMaterial);
                 }
             }
 
-            if (gameLevel.house().isEmpty()) {
+            if (gameLevel().house().isEmpty()) {
                 Logger.error("There is no house in this game level!");
             } else {
                 house3D = new ArcadeHouse3D(
                     animationManager,
-                    gameLevel.house().get(),
+                    gameLevel().house().get(),
                     Settings3D.HOUSE_3D_BASE_HEIGHT,
                     Settings3D.HOUSE_3D_WALL_THICKNESS,
                     Settings3D.HOUSE_3D_OPACITY,
@@ -303,7 +307,7 @@ public class GameLevel3D extends Group implements Destroyable {
     }
 
     public GameLevel gameLevel() {
-        return gameLevel;
+        return ui.theGameContext().theGameLevel();
     }
 
     public DoubleProperty houseBaseHeightProperty() {
@@ -319,6 +323,7 @@ public class GameLevel3D extends Group implements Destroyable {
     public MutatingGhost3D ghost3D(byte id) { return ghosts3D.get(id); }
     public Optional<Bonus3D> bonus3D() { return Optional.ofNullable(bonus3D); }
     public Group maze3D() { return maze3D; }
+    public LevelCounter3D levelCounter3D() { return levelCounter3D; }
     public LivesCounter3D livesCounter3D() { return livesCounter3D; }
     public Stream<Pellet3D> pellets3D() { return pellets3D.stream(); }
     public Stream<Energizer3D> energizers3D() { return energizers3D.stream(); }
@@ -333,15 +338,15 @@ public class GameLevel3D extends Group implements Destroyable {
      * Called on each clock tick (frame).
      */
     public void tick(GameContext gameContext) {
-        pac3D.update(gameLevel);
-        ghosts3D.forEach(ghost3D -> ghost3D.update(gameLevel));
+        pac3D.update(gameLevel());
+        ghosts3D.forEach(ghost3D -> ghost3D.update(gameLevel()));
         bonus3D().ifPresent(bonus3D -> bonus3D.update(gameContext));
-        boolean houseAccessRequired = gameLevel.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+        boolean houseAccessRequired = gameLevel().ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
             .anyMatch(Ghost::isVisible);
         houseLightOnProperty.set(houseAccessRequired);
 
-        gameLevel.house().ifPresent(house -> {
-            boolean ghostNearHouseEntry = gameLevel.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+        gameLevel().house().ifPresent(house -> {
+            boolean ghostNearHouseEntry = gameLevel().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
                 .filter(ghost -> ghost.position().euclideanDist(house.entryPosition()) <= Settings3D.HOUSE_3D_SENSITIVITY)
                 .anyMatch(Ghost::isVisible);
             houseOpenProperty.set(ghostNearHouseEntry);
@@ -349,7 +354,7 @@ public class GameLevel3D extends Group implements Destroyable {
 
         int livesCounterSize = gameContext.theGame().lifeCount() - 1;
         // when the game starts and Pac-Man is not yet visible, show one more
-        boolean oneMore = gameContext.theGameState() == GameState.STARTING_GAME && !gameLevel.pac().isVisible();
+        boolean oneMore = gameContext.theGameState() == GameState.STARTING_GAME && !gameLevel().pac().isVisible();
         if (oneMore) livesCounterSize += 1;
         livesCountProperty.set(livesCounterSize);
 
@@ -376,8 +381,8 @@ public class GameLevel3D extends Group implements Destroyable {
 
     private void createPelletsAndEnergizers3D(WorldMapColorScheme colorScheme, Mesh pelletMesh) {
         final PhongMaterial pelletMaterial = coloredPhongMaterial(colorScheme.pellet());
-        gameLevel.tilesContainingFood().forEach(tile -> {
-            if (gameLevel.isEnergizerPosition(tile)) {
+        gameLevel().tilesContainingFood().forEach(tile -> {
+            if (gameLevel().isEnergizerPosition(tile)) {
                 var center = new Point3D(
                     tile.x() * TS + HTS,
                     tile.y() * TS + HTS,
@@ -404,7 +409,7 @@ public class GameLevel3D extends Group implements Destroyable {
                             @Override
                             public boolean particleShouldVanish(Particle particle) {
                                 return particle.getTranslateZ() >= -1
-                                    && isInsideWorldMap(gameLevel.worldMap(), particle.getTranslateX(), particle.getTranslateY());
+                                    && isInsideWorldMap(gameLevel().worldMap(), particle.getTranslateX(), particle.getTranslateY());
                             }
                         };
                         return new SequentialTransition(
