@@ -23,7 +23,6 @@ import de.amr.pacmanfx.uilib.model3D.*;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Point3D;
@@ -43,6 +42,7 @@ import org.tinylog.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.HTS;
@@ -71,8 +71,9 @@ public class GameLevel3D extends Group implements Destroyable {
         }
     }
 
-    private static void setDrawModeForAllDescendantShapes(Node root, DrawMode drawMode) {
+    private static void setDrawModeForAllDescendantShapes(Node root, Predicate<Node> exclusionFilter, DrawMode drawMode) {
         root.lookupAll("*").stream()
+            .filter(exclusionFilter.negate())
             .filter(Shape3D.class::isInstance)
             .map(Shape3D.class::cast)
             .forEach(shape3D -> shape3D.setDrawMode(drawMode));
@@ -456,6 +457,7 @@ public class GameLevel3D extends Group implements Destroyable {
                 double y = tile.y() * TS + HTS;
                 double z = -6;
                 var pelletMeshView = new MeshView(pelletMesh);
+                pelletMeshView.getProperties().put("pellet", true);
                 pelletMeshView.setMaterial(pelletMaterial);
                 pelletMeshView.setRotationAxis(Rotate.Z_AXIS);
                 pelletMeshView.setRotate(90);
@@ -505,17 +507,13 @@ public class GameLevel3D extends Group implements Destroyable {
     }
 
     private void handleDrawModeChange(ObservableValue<? extends DrawMode> py, DrawMode ov, DrawMode drawMode) {
-        if (isDestroyed()) return; //TODO how can that be?
-        setDrawModeForAllDescendantShapes(mazeGroup, drawMode);
-        setDrawModeForAllDescendantShapes(levelCounter3D, drawMode);
-        setDrawModeForAllDescendantShapes(livesCounter3D, drawMode);
-        setDrawModeForAllDescendantShapes(pac3D, drawMode);
-        ghosts3D.forEach(ghost3D -> setDrawModeForAllDescendantShapes(ghost3D, drawMode));
+        if (isDestroyed()) return; //TODO can that ever happen?
+        setDrawModeForAllDescendantShapes(this, shape3D -> shape3D.getProperties().containsKey("pellet"), drawMode);
         Logger.info("Draw mode set to {}", drawMode);
     }
 
     private void handleWallHeightChange(ObservableValue<? extends Number> py, Number ov, Number newHeight) {
-        if (isDestroyed()) return; //TODO how can that be?
+        if (isDestroyed()) return; //TODO can that ever happen?
         obstacleBaseHeightProperty.set(newHeight.doubleValue());
     }
 
@@ -579,6 +577,7 @@ public class GameLevel3D extends Group implements Destroyable {
         obstacleBaseHeightProperty.unbind();
         houseBaseHeightProperty.unbind();
         houseLightOnProperty.unbind();
+        wallOpacityProperty.unbind();
 
         animationManager.destroyAllAnimations();
         wallColorFlashingAnimation = null;

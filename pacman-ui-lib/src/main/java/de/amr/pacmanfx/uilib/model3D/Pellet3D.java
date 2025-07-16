@@ -37,6 +37,7 @@ public class Pellet3D implements Eatable3D {
 
     public void destroy() {
         hideAfterSmallDelay.stop();
+        hideAfterSmallDelay.setOnFinished(null);
         hideAfterSmallDelay = null;
         if (shape instanceof MeshView meshView) {
             meshView.setMesh(null);
