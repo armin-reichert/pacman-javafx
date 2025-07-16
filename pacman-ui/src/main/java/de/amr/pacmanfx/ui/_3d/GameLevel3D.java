@@ -17,12 +17,12 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.animation.MaterialColorAnimation;
 import de.amr.pacmanfx.uilib.animation.SquirtingAnimation;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.*;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
+import javafx.animation.Transition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
@@ -281,7 +281,7 @@ public class GameLevel3D extends Group implements Destroyable {
         mazeGroup.getChildren().addAll(floor3D, maze3D);
 
         pelletMaterial = coloredPhongMaterial(colorScheme.pellet());
-        createPelletsAndEnergizers3D(colorScheme, ui.theModel3DRepository().pelletMesh(), pelletMaterial);
+        createPelletsAndEnergizers3D(ui.theModel3DRepository().pelletMesh(), pelletMaterial);
         energizers3D.stream().map(Eatable3D::shape3D).forEach(getChildren()::add);
         pellets3D   .stream().map(Eatable3D::shape3D).forEach(getChildren()::add);
 
@@ -293,13 +293,26 @@ public class GameLevel3D extends Group implements Destroyable {
         wallColorFlashingAnimation = new ManagedAnimation(animationManager, "MazeWallColorFlashing") {
             @Override
             protected Animation createAnimation() {
-                return new MaterialColorAnimation(Duration.seconds(0.25), wallTopMaterial, colorScheme.fill(), colorScheme.stroke());
+                return new Transition() {
+                    {
+                        setAutoReverse(true);
+                        setCycleCount(Animation.INDEFINITE);
+                        setCycleDuration(Duration.seconds(0.25));
+                    }
+                    @Override
+                    protected void interpolate(double t) {
+                        Color color = colorScheme.fill().interpolate(colorScheme.stroke(), t);
+                        wallTopMaterial.setDiffuseColor(color);
+                        wallTopMaterial.setSpecularColor(color.brighter());
+
+                    }
+                };
             }
 
             @Override
             public void stop() {
                 super.stop();
-                // reset color
+                // reset material colors on stop
                 wallTopMaterial.setDiffuseColor(colorScheme.fill());
                 wallTopMaterial.setSpecularColor(colorScheme.fill().brighter());
             }
@@ -382,7 +395,7 @@ public class GameLevel3D extends Group implements Destroyable {
         }
     }
 
-    private void createPelletsAndEnergizers3D(WorldMapColorScheme colorScheme, Mesh pelletMesh, PhongMaterial pelletMaterial) {
+    private void createPelletsAndEnergizers3D(Mesh pelletMesh, PhongMaterial pelletMaterial) {
         gameLevel().tilesContainingFood().forEach(tile -> {
             if (gameLevel().isEnergizerPosition(tile)) {
                 var center = new Point3D(
