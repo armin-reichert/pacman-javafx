@@ -197,7 +197,7 @@ public enum GameState implements FsmState<GameContext> {
                 if (gameContext.theGameLevel().isDemoLevel()) {
                     // just in case: if demo level is complete, go back to intro scene
                     gameContext.theGameController().changeGameState(INTRO);
-                } else if (gameContext.theGame().cutScenesEnabled() && gameContext.theGame().cutSceneNumber(gameContext.theGameLevel().number()).isPresent()) {
+                } else if (gameContext.theGame().areCutScenesEnabled() && gameContext.theGame().cutSceneNumber(gameContext.theGameLevel().number()).isPresent()) {
                     gameContext.theGameController().changeGameState(INTERMISSION);
                 } else {
                     gameContext.theGameController().changeGameState(LEVEL_TRANSITION);

@@ -287,7 +287,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         final boolean customMapsExist = !mapSelector.customMaps().isEmpty();
 
         state.play3D = theUI().property3DEnabled().get();
-        state.cutScenesEnabled = game.cutScenesEnabled();
+        state.cutScenesEnabled = game.areCutScenesEnabled();
         state.mapOrder = mapSelector.mapSelectionMode();
         logState();
 

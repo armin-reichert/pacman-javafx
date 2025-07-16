@@ -32,12 +32,12 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class GameModel implements ScoreManager {
 
-    private final BooleanProperty playingPy = new SimpleBooleanProperty(false);
-    private final IntegerProperty lifeCountPy = new SimpleIntegerProperty(0);
+    private final BooleanProperty playingProperty = new SimpleBooleanProperty(false);
+    private final IntegerProperty lifeCountProperty = new SimpleIntegerProperty(0);
 
     protected final GameContext gameContext;
     protected GameLevel level;
-    protected boolean cutScenesEnabled = true;
+    protected boolean cutScenesEnabled;
 
     private final Score score = new Score();
     private final Score highScore = new Score();
@@ -47,6 +47,7 @@ public abstract class GameModel implements ScoreManager {
 
     protected GameModel(GameContext gameContext) {
         this.gameContext = requireNonNull(gameContext);
+        cutScenesEnabled = true;
         score.pointsProperty().addListener((py, ov, nv) -> onScoreChanged(this, ov.intValue(), nv.intValue()));
     }
 
@@ -59,10 +60,10 @@ public abstract class GameModel implements ScoreManager {
     public Optional<GateKeeper> gateKeeper() { return Optional.empty(); }
     public Optional<GameLevel> level() { return Optional.ofNullable(level); }
 
-    public BooleanProperty playingProperty() { return playingPy; }
+    public BooleanProperty playingProperty() { return playingProperty; }
     public boolean isPlaying() { return playingProperty().get(); }
 
-    public boolean cutScenesEnabled() { return  cutScenesEnabled; }
+    public boolean areCutScenesEnabled() { return cutScenesEnabled; }
     public void setCutScenesEnabled(boolean enabled) { cutScenesEnabled = enabled; }
 
     // Game lifecycle
@@ -140,11 +141,11 @@ public abstract class GameModel implements ScoreManager {
         this.initialLifeCount = initialLifeCount;
     }
 
-    public int lifeCount() { return lifeCountPy.get(); }
+    public int lifeCount() { return lifeCountProperty.get(); }
 
     public void setLifeCount(int n) {
         if (n >= 0) {
-            lifeCountPy.set(n);
+            lifeCountProperty.set(n);
         } else {
             Logger.error("Cannot set life count to negative number");
         }
@@ -179,7 +180,7 @@ public abstract class GameModel implements ScoreManager {
         });
     }
 
-    private void checkIfPacManKilled() {
+    protected void checkIfPacManKilled() {
         level.ghosts(GhostState.HUNTING_PAC)
             .filter(ghost -> actorsCollide(ghost, level.pac()))
             .findFirst().ifPresent(potentialKiller -> {
@@ -196,7 +197,7 @@ public abstract class GameModel implements ScoreManager {
             });
     }
 
-    private void updatePacPower() {
+    protected void updatePacPower() {
         final TickTimer powerTimer = level.pac().powerTimer();
         powerTimer.doTick();
         if (level.pac().isPowerFadingStarting(level)) {
