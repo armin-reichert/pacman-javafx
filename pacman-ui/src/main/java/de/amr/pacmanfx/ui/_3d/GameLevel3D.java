@@ -71,6 +71,13 @@ public class GameLevel3D extends Group implements Destroyable {
         }
     }
 
+    private static void setDrawModeForAllDescendantShapes(Node root, DrawMode drawMode) {
+        root.lookupAll("*").stream()
+            .filter(Shape3D.class::isInstance)
+            .map(Shape3D.class::cast)
+            .forEach(shape3D -> shape3D.setDrawMode(drawMode));
+    }
+
     private final DoubleProperty  houseBaseHeightProperty = new SimpleDoubleProperty(Settings3D.HOUSE_3D_BASE_HEIGHT);
     private final BooleanProperty houseLightOnProperty = new SimpleBooleanProperty(false);
 
@@ -465,13 +472,6 @@ public class GameLevel3D extends Group implements Destroyable {
         });
         energizers3D.trimToSize();
         pellets3D.trimToSize();
-    }
-
-    private void setDrawModeForAllDescendantShapes(Node root, DrawMode drawMode) {
-        root.lookupAll("*").stream()
-            .filter(Shape3D.class::isInstance)
-            .map(Shape3D.class::cast)
-            .forEach(shape3D -> shape3D.setDrawMode(drawMode));
     }
 
     public void showAnimatedMessage(String text, float displaySeconds, double centerX, double y) {
