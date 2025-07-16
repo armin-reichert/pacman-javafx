@@ -1,4 +1,3 @@
-import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.model.GameLevel;
 import org.junit.jupiter.api.BeforeAll;
@@ -14,8 +13,7 @@ public class TestEatingFood {
 
     @BeforeAll
     static void setup() {
-        Globals.initGameContext();
-        theGameContext().theGameController().registerGame("PACMAN", ArcadePacMan_GameModel.arcadeVersion(theGameContext()));
+        theGameContext().theGameController().registerGame("PACMAN", new ArcadePacMan_GameModel(theGameContext()));
         theGameContext().theGameController().selectGameVariant("PACMAN");
     }
 
@@ -26,7 +24,7 @@ public class TestEatingFood {
 
     private GameLevel gameLevel() { return theGameContext().theGameLevel(); }
 
-    private ArcadePacMan_GameModel pacManGame() { return (ArcadePacMan_GameModel) theGameContext().theGame(); }
+    private ArcadePacMan_GameModel pacManGame() { return theGameContext().theGame(); }
 
     private void eatNextPellet(GameLevel gameLevel) {
         gameLevel.worldMap().tiles()
