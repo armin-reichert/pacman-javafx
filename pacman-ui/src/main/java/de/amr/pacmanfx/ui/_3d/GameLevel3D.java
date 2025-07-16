@@ -171,7 +171,7 @@ public class GameLevel3D extends Group implements Destroyable {
         getChildren().add(levelCounter3D);
 
         for (int i = 0; i < livesCounterShapes.length; ++i) {
-            livesCounterShapes[i] = ui.theConfiguration().createLivesCounterShape3D(ui.theModel3DRepository());
+            livesCounterShapes[i] = ui.theConfiguration().createLivesCounterShape3D();
         }
         livesCounter3D = new LivesCounter3D(animationManager, livesCounterShapes);
         livesCounter3D.setTranslateX(2 * TS);
@@ -183,7 +183,7 @@ public class GameLevel3D extends Group implements Destroyable {
         livesCounter3D.lookingAroundAnimation().playFromStart();
         getChildren().add(livesCounter3D);
 
-        pac3D = ui.theConfiguration().createPac3D(ui.theModel3DRepository(), animationManager, gameLevel().pac());
+        pac3D = ui.theConfiguration().createPac3D(animationManager, gameLevel().pac());
         pac3D.init();
         getChildren().addAll(pac3D, pac3D.light());
 

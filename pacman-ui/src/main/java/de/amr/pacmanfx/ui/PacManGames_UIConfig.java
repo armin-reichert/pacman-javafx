@@ -67,9 +67,9 @@ public interface PacManGames_UIConfig extends PacManGames_GameSceneConfig, Destr
     WorldMapColorScheme colorScheme(WorldMap worldMap);
     GameRenderer createGameRenderer(Canvas canvas);
     ActorAnimationMap createGhostAnimations(Ghost ghost);
-    Node createLivesCounterShape3D(Model3DRepository model3DRepository);
+    Node createLivesCounterShape3D();
     ActorAnimationMap createPacAnimations(Pac pac);
-    PacBase3D createPac3D(Model3DRepository model3DRepository, AnimationManager animationMgr, Pac pac);
+    PacBase3D createPac3D(AnimationManager animationMgr, Pac pac);
     default boolean hasGameCanvasRoundedBorder() { return true; }
     Image killedGhostPointsImage(Ghost ghost, int killedIndex);
     SpriteSheet<?> spriteSheet();

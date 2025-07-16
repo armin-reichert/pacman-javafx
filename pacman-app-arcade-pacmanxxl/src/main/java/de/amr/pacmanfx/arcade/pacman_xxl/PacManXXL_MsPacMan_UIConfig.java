@@ -30,7 +30,6 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
-import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import de.amr.pacmanfx.uilib.model3D.MsPacMan3D;
 import de.amr.pacmanfx.uilib.model3D.MsPacManBody;
 import javafx.scene.canvas.Canvas;
@@ -210,8 +209,8 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
     }
 
     @Override
-    public MsPacManBody createLivesCounterShape3D(Model3DRepository model3DRepository) {
-        return model3DRepository.createMsPacManBody(
+    public MsPacManBody createLivesCounterShape3D() {
+        return ui.theModel3DRepository().createMsPacManBody(
             GameUI.Settings3D.LIVES_COUNTER_3D_SHAPE_SIZE,
             getAssetNS("pac.color.head"),
             getAssetNS("pac.color.eyes"),
@@ -223,9 +222,9 @@ public class PacManXXL_MsPacMan_UIConfig implements PacManGames_UIConfig {
     }
 
     @Override
-    public MsPacMan3D createPac3D(Model3DRepository model3DRepository, AnimationManager animationManager, Pac pac) {
+    public MsPacMan3D createPac3D(AnimationManager animationManager, Pac pac) {
         var pac3D = new MsPacMan3D(
-            model3DRepository,
+            ui.theModel3DRepository(),
             animationManager,
             pac,
             GameUI.Settings3D.PAC_3D_SIZE,
