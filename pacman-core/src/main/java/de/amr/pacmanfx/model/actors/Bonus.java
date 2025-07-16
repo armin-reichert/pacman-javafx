@@ -39,7 +39,7 @@ public class Bonus extends MovingActor {
 
     private final byte symbol;
     private final int points;
-    private long countdown;
+    private long ticksRemaining;
     private BonusState state;
 
     private final Pulse moveAnimation;
@@ -52,13 +52,13 @@ public class Bonus extends MovingActor {
         this.moveAnimation = moveAnimation;
         reset();
         canTeleport = false; // override default value
-        countdown = 0;
+        ticksRemaining = 0;
         state = BonusState.INACTIVE;
     }
 
     @Override
     public String toString() {
-        return "Bonus{symbol=%s, points=%d, countdown=%d, state=%s, animation=%s}".formatted(symbol, points, countdown, state, moveAnimation);
+        return "Bonus{symbol=%s, points=%d, countdown=%d, state=%s, animation=%s}".formatted(symbol, points, ticksRemaining, state, moveAnimation);
     }
 
     @Override
@@ -107,23 +107,23 @@ public class Bonus extends MovingActor {
         Logger.trace("Bonus inactive: {}", this);
     }
 
-    public void setEdibleTicks(long ticks) {
+    public void setEdibleTicks(long edibleTicks) {
         if (moveAnimation != null) {
             moveAnimation.restart();
             setSpeed(0.5f); // how fast in the original game?
             setTargetTile(null);
         }
-        countdown = ticks;
+        ticksRemaining = edibleTicks;
         show();
         state = BonusState.EDIBLE;
         Logger.trace("Bonus edible: {}", this);
     }
 
-    public void setEaten(long ticks) {
+    public void setEaten(long eatenDurationTicks) {
         if (moveAnimation != null) {
             moveAnimation.stop();
         }
-        countdown = ticks;
+        ticksRemaining = eatenDurationTicks;
         state = BonusState.EATEN;
         Logger.trace("Bonus eaten: {}", this);
     }
@@ -133,26 +133,28 @@ public class Bonus extends MovingActor {
             case INACTIVE -> {}
             case EDIBLE -> {
                 if (moveAnimation != null) {
-                    updateMovingEdibleState();
+                    updateMovingBonusEdibleState();
                 } else {
-                    updateStaticEdibleState();
+                    waitForExpiration();
                 }
             }
-            case EATEN -> updateEatenState();
+            case EATEN -> waitForExpiration();
             default -> throw new IllegalStateException("Unknown bonus state: " + state);
         }
     }
 
-    private void updateStaticEdibleState() {
-        if (countdown == 0) {
+    // waits for countdown to reach 0 then expires
+    private void waitForExpiration() {
+        if (ticksRemaining == 0) {
             setInactive();
             gameContext.theGameEventManager().publishEvent(GameEventType.BONUS_EXPIRED, tile());
-        } else if (countdown != TickTimer.INDEFINITE) {
-            --countdown;
+        } else if (ticksRemaining != TickTimer.INDEFINITE) {
+            --ticksRemaining;
         }
     }
 
-    private void updateMovingEdibleState() {
+    // moves, when end of route is reached, expires
+    private void updateMovingBonusEdibleState() {
         gameContext.optGameLevel().ifPresent(gameLevel -> {
             steering.steer(this, gameLevel);
             if (steering.isComplete()) {
@@ -166,26 +168,17 @@ public class Bonus extends MovingActor {
         });
     }
 
-    private void updateEatenState() {
-        if (countdown == 0) {
-            setInactive();
-            gameContext.theGameEventManager().publishEvent(GameEventType.BONUS_EXPIRED, tile());
-        } else if (countdown != TickTimer.INDEFINITE) {
-            --countdown;
-        }
-    }
-
     public void setRoute(List<Waypoint> route, boolean leftToRight) {
         requireNonNull(route);
-        var routeCopy = new ArrayList<>(route);
-        placeAtTile(routeCopy.getFirst().tile());
+        var mutableRoute = new ArrayList<>(route);
+        placeAtTile(mutableRoute.getFirst().tile());
         setMoveAndWishDir(leftToRight ? Direction.RIGHT : Direction.LEFT);
-        routeCopy.removeFirst();
-        steering = new RouteBasedSteering(routeCopy);
+        mutableRoute.removeFirst();
+        steering = new RouteBasedSteering(mutableRoute);
     }
 
     public float elongationY() {
-        if (!moveAnimation.isRunning()) {
+        if (moveAnimation == null || !moveAnimation.isRunning()) {
             return 0;
         }
         return moveAnimation.isOn() ? -3f : 3f;
