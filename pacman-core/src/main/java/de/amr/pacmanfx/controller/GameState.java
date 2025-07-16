@@ -375,49 +375,50 @@ public enum GameState implements FsmState<GameContext> {
 
         @Override
         public void onUpdate(GameContext gameContext) {
+            final GameLevel gameLevel = gameContext.theGameLevel();
             if (timer().tickCount() > 2 * Globals.NUM_TICKS_PER_SEC) {
-                gameContext.theGameLevel().blinking().tick();
-                gameContext.theGameLevel().ghosts().forEach(ghost -> ghost.update(gameContext.theGameLevel()));
-                gameContext.theGameLevel().bonus().ifPresent(bonus -> bonus.update(gameContext.theGame()));
+                gameLevel.blinking().tick();
+                gameLevel.ghosts().forEach(ghost -> ghost.update(gameLevel));
+                gameLevel.bonus().ifPresent(bonus -> bonus.update(gameContext.theGame()));
             }
             if (timer().atSecond(1.0)) {
                 gameContext.theGame().initAnimationOfPacManAndGhosts();
-                gameContext.theGameLevel().getReadyToPlay();
-                gameContext.theGameLevel().showPacAndGhosts();
+                gameLevel.getReadyToPlay();
+                gameLevel.showPacAndGhosts();
             }
             else if (timer().atSecond(2)) {
-                gameContext.theGameLevel().blinking().setStartPhase(Pulse.ON);
-                gameContext.theGameLevel().blinking().restart();
+                gameLevel.blinking().setStartPhase(Pulse.ON);
+                gameLevel.blinking().restart();
             }
             else if (timer().atSecond(2.5)) {
-                gameContext.theGameLevel().clearMessage();
+                gameLevel.clearMessage();
                 gameContext.theGame().activateNextBonus();
             }
             else if (timer().atSecond(4.5)) {
-                gameContext.theGameLevel().bonus().ifPresent(bonus -> bonus.setEaten(Globals.NUM_TICKS_PER_SEC));
+                gameLevel.bonus().ifPresent(bonus -> bonus.setEaten(Globals.NUM_TICKS_PER_SEC));
                 gameContext.theGameEventManager().publishEvent(gameContext.theGame(), GameEventType.BONUS_EATEN);
             }
             else if (timer().atSecond(6.5)) {
-                gameContext.theGameLevel().bonus().ifPresent(BonusEntity::setInactive); // needed?
+                gameLevel.bonus().ifPresent(BonusEntity::setInactive); // needed?
                 gameContext.theGame().activateNextBonus();
             }
             else if (timer().atSecond(8.5)) {
-                gameContext.theGameLevel().bonus().ifPresent(bonus -> bonus.setEaten(Globals.NUM_TICKS_PER_SEC));
+                gameLevel.bonus().ifPresent(bonus -> bonus.setEaten(Globals.NUM_TICKS_PER_SEC));
                 gameContext.theGameEventManager().publishEvent(gameContext.theGame(), GameEventType.BONUS_EATEN);
             }
             else if (timer().atSecond(10.0)) {
-                gameContext.theGameLevel().hidePacAndGhosts();
-                gameContext.theGame().onLevelCompleted(gameContext.theGameLevel());
+                gameLevel.hidePacAndGhosts();
+                gameContext.theGame().onLevelCompleted(gameLevel);
             }
             else if (timer().atSecond(11.0)) {
-                if (gameContext.theGameLevel().number() == lastTestedLevelNumber) {
+                if (gameLevel.number() == lastTestedLevelNumber) {
                     gameContext.theCoinMechanism().setNumCoins(0);
                     gameContext.theGame().resetEverything();
                     gameContext.theGameController().restart(GameState.BOOT);
                 } else {
                     timer().restartIndefinitely();
                     gameContext.theGame().startNextLevel();
-                    gameContext.theGameLevel().showMessage(GameLevel.MESSAGE_TEST);
+                    gameLevel.showMessage(GameLevel.MESSAGE_TEST);
                 }
             }
         }
@@ -440,12 +441,13 @@ public enum GameState implements FsmState<GameContext> {
         private int lastTestedLevelNumber;
 
         private void configureLevelForTest(GameContext gameContext) {
-            gameContext.theGameLevel().pac().usingAutopilotProperty().unbind();
-            gameContext.theGameLevel().pac().setUsingAutopilot(true);
-            gameContext.theGameLevel().pac().playAnimation();
-            gameContext.theGameLevel().ghosts().forEach(Ghost::playAnimation);
-            gameContext.theGameLevel().showPacAndGhosts();
-            gameContext.theGameLevel().showMessage(GameLevel.MESSAGE_TEST);
+            final GameLevel gameLevel = gameContext.theGameLevel();
+            gameLevel.pac().usingAutopilotProperty().unbind();
+            gameLevel.pac().setUsingAutopilot(true);
+            gameLevel.pac().playAnimation();
+            gameLevel.ghosts().forEach(Ghost::playAnimation);
+            gameLevel.showPacAndGhosts();
+            gameLevel.showMessage(GameLevel.MESSAGE_TEST);
             gameContext.theGameEventManager().publishEvent(gameContext.theGame(), GameEventType.STOP_ALL_SOUNDS);
         }
 

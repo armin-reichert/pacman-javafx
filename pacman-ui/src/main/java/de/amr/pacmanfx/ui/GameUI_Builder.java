@@ -107,15 +107,12 @@ public class GameUI_Builder {
 
     private GameModel createGameModel(Class<?> modelClass, MapSelector mapSelector, GameContext gameContext) {
         try {
-            if (mapSelector != null) {
-                return (GameModel) modelClass.getDeclaredConstructor(GameContext.class, MapSelector.class).newInstance(gameContext, mapSelector);
-            }
-            else {
-                return (GameModel) modelClass.getDeclaredConstructor(GameContext.class).newInstance(gameContext);
-            }
-        } catch (Exception e) {
+            return (GameModel) (mapSelector != null
+                ? modelClass.getDeclaredConstructor(GameContext.class, MapSelector.class).newInstance(gameContext, mapSelector)
+                : modelClass.getDeclaredConstructor(GameContext.class).newInstance(gameContext));
+        } catch (Exception x) {
             error("Could not create game model from class %s".formatted(modelClass.getSimpleName()));
-            throw new RuntimeException(e);
+            throw new RuntimeException(x);
         }
     }
 
