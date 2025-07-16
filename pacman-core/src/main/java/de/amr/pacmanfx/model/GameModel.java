@@ -42,7 +42,7 @@ public abstract class GameModel implements ScoreManager {
     private final Score score = new Score();
     private final Score highScore = new Score();
     private File highScoreFile;
-    private List<Integer> extraLifeScores = List.of();
+    private Set<Integer> extraLifeScores = Set.of();
     private int initialLifeCount;
 
     protected GameModel(GameContext gameContext) {
@@ -274,8 +274,8 @@ public abstract class GameModel implements ScoreManager {
     }
 
     @Override
-    public void setExtraLifeScores(Integer... scores) {
-        extraLifeScores = Arrays.stream(scores).toList();
+    public void setExtraLifeScores(Set<Integer> scores) {
+        extraLifeScores = new HashSet<>(scores);
     }
 
     @Override

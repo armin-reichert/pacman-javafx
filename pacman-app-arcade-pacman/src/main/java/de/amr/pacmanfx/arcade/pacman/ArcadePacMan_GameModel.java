@@ -23,6 +23,7 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.util.List;
 import java.util.OptionalInt;
+import java.util.Set;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
@@ -171,7 +172,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
         super(gameContext);
         this.mapSelector = requireNonNull(mapSelector);
         setHighScoreFile(new File(gameContext.theHomeDir(), "highscore-pacman.xml"));
-        setExtraLifeScores(EXTRA_LIFE_SCORE);
+        setExtraLifeScores(Set.of(EXTRA_LIFE_SCORE));
 
         huntingTimer = new HuntingTimer("ArcadePacMan-HuntingTimer", 8) {
             // Ticks of scatter and chasing phases, -1 = INFINITE

@@ -20,10 +20,7 @@ import de.amr.pacmanfx.steering.Steering;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.util.List;
-import java.util.Optional;
-import java.util.OptionalInt;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -298,9 +295,9 @@ public class TengenMsPacMan_GameModel extends GameModel {
             a score normally unachievable without cheat codes, since all maze sets end after 32 stages.
             This was most likely done to simulate the Arcade game only giving one extra life per game.
             */
-            setExtraLifeScores(10_000, 970_000, 980_000, 990_000);
+            setExtraLifeScores(Set.of(10_000, 970_000, 980_000, 990_000));
         } else {
-            setExtraLifeScores(10_000, 50_000, 100_000, 300_000);
+            setExtraLifeScores(Set.of(10_000, 50_000, 100_000, 300_000));
         }
     }
 

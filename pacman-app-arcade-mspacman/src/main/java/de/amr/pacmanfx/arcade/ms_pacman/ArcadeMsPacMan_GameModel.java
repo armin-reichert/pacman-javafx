@@ -23,6 +23,7 @@ import java.io.File;
 import java.util.List;
 import java.util.OptionalInt;
 import java.util.Random;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -189,7 +190,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
         super(gameContext);
         this.mapSelector = requireNonNull(mapSelector);
         setHighScoreFile(new File(gameContext.theHomeDir(), "highscore-ms_pacman.xml"));
-        setExtraLifeScores(EXTRA_LIFE_SCORE);
+        setExtraLifeScores(Set.of(EXTRA_LIFE_SCORE));
 
         /*
          * Details are from a conversation with user @damselindis on Reddit. I am not sure if they are correct.

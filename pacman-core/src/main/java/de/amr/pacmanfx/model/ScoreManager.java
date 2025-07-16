@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.model;
 
 import java.io.File;
+import java.util.Set;
 
 public interface ScoreManager {
     Score score();
@@ -17,5 +18,5 @@ public interface ScoreManager {
     void setScoreLevelNumber(int levelNumber);
     void onScoreChanged(GameModel game, int oldScore, int newScore);
     void setHighScoreFile(File file);
-    void setExtraLifeScores(Integer... scores);
+    void setExtraLifeScores(Set<Integer> scores);
 }
