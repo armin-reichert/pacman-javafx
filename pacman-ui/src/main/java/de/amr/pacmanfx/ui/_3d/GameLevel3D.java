@@ -104,6 +104,7 @@ public class GameLevel3D extends Group implements Destroyable {
     private PhongMaterial wallTopMaterial;
     private PhongMaterial cornerBaseMaterial;
     private PhongMaterial cornerTopMaterial;
+    private PhongMaterial pelletMaterial;
 
     private WorldMapColorScheme colorScheme;
     private TerrainRenderer3D r3D;
@@ -279,7 +280,8 @@ public class GameLevel3D extends Group implements Destroyable {
 
         mazeGroup.getChildren().addAll(floor3D, maze3D);
 
-        createPelletsAndEnergizers3D(colorScheme, ui.theModel3DRepository().pelletMesh());
+        pelletMaterial = coloredPhongMaterial(colorScheme.pellet());
+        createPelletsAndEnergizers3D(colorScheme, ui.theModel3DRepository().pelletMesh(), pelletMaterial);
         energizers3D.stream().map(Eatable3D::shape3D).forEach(getChildren()::add);
         pellets3D   .stream().map(Eatable3D::shape3D).forEach(getChildren()::add);
 
@@ -292,6 +294,14 @@ public class GameLevel3D extends Group implements Destroyable {
             @Override
             protected Animation createAnimation() {
                 return new MaterialColorAnimation(Duration.seconds(0.25), wallTopMaterial, colorScheme.fill(), colorScheme.stroke());
+            }
+
+            @Override
+            public void stop() {
+                super.stop();
+                // reset color
+                wallTopMaterial.setDiffuseColor(colorScheme.fill());
+                wallTopMaterial.setSpecularColor(colorScheme.fill().brighter());
             }
         };
 
@@ -372,8 +382,7 @@ public class GameLevel3D extends Group implements Destroyable {
         }
     }
 
-    private void createPelletsAndEnergizers3D(WorldMapColorScheme colorScheme, Mesh pelletMesh) {
-        final PhongMaterial pelletMaterial = coloredPhongMaterial(colorScheme.pellet());
+    private void createPelletsAndEnergizers3D(WorldMapColorScheme colorScheme, Mesh pelletMesh, PhongMaterial pelletMaterial) {
         gameLevel().tilesContainingFood().forEach(tile -> {
             if (gameLevel().isEnergizerPosition(tile)) {
                 var center = new Point3D(
@@ -435,6 +444,7 @@ public class GameLevel3D extends Group implements Destroyable {
             }
         });
         energizers3D.trimToSize();
+        pellets3D.trimToSize();
     }
 
     private void setDrawModeForAllDescendantShapes(Node root, DrawMode drawMode) {
@@ -537,6 +547,11 @@ public class GameLevel3D extends Group implements Destroyable {
             cornerTopMaterial.diffuseColorProperty().unbind();
             cornerTopMaterial.specularColorProperty().unbind();
             cornerTopMaterial = null;
+        }
+        if (pelletMaterial != null) {
+            pelletMaterial.diffuseColorProperty().unbind();
+            pelletMaterial.specularColorProperty().unbind();
+            pelletMaterial = null;
         }
         Logger.info("Unbound and cleared material references");
 
