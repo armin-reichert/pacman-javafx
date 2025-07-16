@@ -128,7 +128,6 @@ public abstract class GameModel implements ScoreManager {
         Logger.trace("Game level {} completed.", level.number());
     }
 
-    public abstract boolean isOver();
     public abstract void onGameEnding();
 
     // Life count management

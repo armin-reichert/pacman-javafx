@@ -365,7 +365,7 @@ public class PlayScene3D implements GameScene {
             replaceGameLevel3D();
         }
         switch (gameContext().theGameState()) {
-            case STARTING_GAME -> {
+            case STARTING_GAME, LEVEL_TRANSITION -> {
                 if (!gameLevel.isDemoLevel()) {
                     if (gameLevel.house().isEmpty()) {
                         Logger.error("No house found in this game level! WTF?");

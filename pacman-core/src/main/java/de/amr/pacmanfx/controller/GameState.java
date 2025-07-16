@@ -272,7 +272,8 @@ public enum GameState implements FsmState<GameContext> {
                     gameContext.theGameController().changeGameState(GAME_OVER);
                 } else {
                     gameContext.theGame().addLives(-1);
-                    gameContext.theGameController().changeGameState(gameContext.theGame().isOver() ? GAME_OVER : STARTING_GAME);
+                    gameContext.theGameController().changeGameState(gameContext.theGame().lifeCount() == 0
+                            ? GAME_OVER : STARTING_GAME);
                 }
             }
             else if (timer.tickCount() == TICK_HIDE_GHOSTS) {

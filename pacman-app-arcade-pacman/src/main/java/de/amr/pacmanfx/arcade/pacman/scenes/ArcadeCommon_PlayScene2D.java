@@ -150,7 +150,9 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
 
     @Override
     public void onGameStarted(GameEvent e) {
-        boolean silent = gameContext().theGameLevel().isDemoLevel() || gameContext().theGameState() == TESTING_LEVELS_SHORT || gameContext().theGameState() == TESTING_LEVELS_MEDIUM;
+        boolean silent = gameContext().theGameLevel().isDemoLevel()
+                || gameContext().theGameState() == TESTING_LEVELS_SHORT
+                || gameContext().theGameState() == TESTING_LEVELS_MEDIUM;
         if (!silent) {
             ui.theSound().play(SoundID.GAME_READY);
         }

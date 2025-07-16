@@ -404,9 +404,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     @Override
-    public boolean isOver() { return lifeCount() == 0; }
-
-    @Override
     public void startNewGame() {
         prepareForNewGame();
         hud.theLevelCounter().setStartLevel(startLevelNumber);

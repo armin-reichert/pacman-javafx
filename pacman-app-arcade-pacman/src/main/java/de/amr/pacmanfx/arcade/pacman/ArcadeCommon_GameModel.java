@@ -82,11 +82,6 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
     @Override
     public boolean continueOnGameOver() { return false; }
 
-    @Override
-    public boolean isOver() {
-        return lifeCount() == 0;
-    }
-
     // Components
 
     @Override
@@ -281,6 +276,4 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
     public int lastLevelNumber() {
         return Integer.MAX_VALUE;
     }
-
-
 }
