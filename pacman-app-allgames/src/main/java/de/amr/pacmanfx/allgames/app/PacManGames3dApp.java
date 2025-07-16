@@ -21,7 +21,7 @@ import javafx.application.Application;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import static de.amr.pacmanfx.Globals.initGame;
+import static de.amr.pacmanfx.Globals.initGameContext;
 import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.ui.GameUI.theUI;
 
@@ -32,7 +32,7 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void init() {
-        initGame();
+        initGameContext();
     }
 
     @Override

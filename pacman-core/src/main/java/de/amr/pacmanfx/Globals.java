@@ -103,7 +103,7 @@ public class Globals {
         }
     }
 
-    public static void initGame() {
+    public static void initGameContext() {
         context = new GameContextImpl();
     }
 

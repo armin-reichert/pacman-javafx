@@ -20,7 +20,7 @@ public class PacManXXL_Common_App extends Application {
 
     @Override
     public void init() {
-        Globals.initGame();
+        Globals.initGameContext();
     }
 
     @Override

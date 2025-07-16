@@ -14,7 +14,7 @@ public class TestEatingFood {
 
     @BeforeAll
     static void setup() {
-        Globals.initGame();
+        Globals.initGameContext();
         theGameContext().theGameController().registerGame("PACMAN", ArcadePacMan_GameModel.arcadeVersion(theGameContext()));
         theGameContext().theGameController().selectGameVariant("PACMAN");
     }

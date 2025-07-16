@@ -18,7 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.pacmanfx.Globals.initGame;
+import static de.amr.pacmanfx.Globals.initGameContext;
 import static de.amr.pacmanfx.Globals.theGameContext;
 import static java.nio.file.StandardWatchEventKinds.*;
 
@@ -29,7 +29,7 @@ public class WatchCustomMapsApp extends Application {
 
     @Override
     public void init() {
-        initGame();
+        initGameContext();
         watchedDirectory = theGameContext().theCustomMapDir();
     }
 
