@@ -13,10 +13,7 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.Keyboard;
-import de.amr.pacmanfx.ui.layout.EditorView;
-import de.amr.pacmanfx.ui.layout.PacManGames_View;
-import de.amr.pacmanfx.ui.layout.PlayView;
-import de.amr.pacmanfx.ui.layout.StartPagesView;
+import de.amr.pacmanfx.ui.layout.*;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.GameClock;
 import javafx.application.Platform;
@@ -374,11 +371,6 @@ public class PacManGames_UI_Impl implements GameUI {
         propertyCurrentView.set(startPagesView);
         startPagesView.currentStartPage().ifPresent(startPage -> startPage.layoutRoot().requestFocus());
         playView.dashboard().init(this);
-
-        iconBox.iconMuted().visibleProperty().bind(propertyMuted());
-        iconBox.icon3D().visibleProperty().bind(property3DEnabled);
-        iconBox.iconAutopilot().visibleProperty().bind(theGameContext().propertyUsingAutopilot());
-        iconBox.iconImmune().visibleProperty().bind(theGameContext.propertyImmunity());
 
         theStage.centerOnScreen();
         theStage.show();
