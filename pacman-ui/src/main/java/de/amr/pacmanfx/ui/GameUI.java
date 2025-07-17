@@ -156,8 +156,8 @@ public interface GameUI {
     void selectGameVariant(String variant);
     void show();
 
-    GameUI_Config uiConfig(String gameVariant);
-    void setUIConfig(String variant, GameUI_Config configuration);
+    GameUI_Config config(String gameVariant);
+    void setConfig(String variant, GameUI_Config config);
 
     // Game scenes
     Optional<GameScene> currentGameScene();

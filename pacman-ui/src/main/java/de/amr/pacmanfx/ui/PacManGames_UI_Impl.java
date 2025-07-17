@@ -205,7 +205,7 @@ public class PacManGames_UI_Impl implements GameUI {
         configClassesMap.forEach((gameVariant, configClass) -> {
             try {
                 GameUI_Config config = configClass.getDeclaredConstructor(GameUI.class).newInstance(this);
-                setUIConfig(gameVariant, config);
+                setConfig(gameVariant, config);
             } catch (Exception x) {
                 Logger.error("Could not create UI configuration of class {}", configClass);
                 throw new IllegalStateException(x);
@@ -341,13 +341,13 @@ public class PacManGames_UI_Impl implements GameUI {
         }
         String previousVariant = theGameContext.theGameController().selectedGameVariant();
         if (previousVariant != null && !previousVariant.equals(gameVariant)) {
-            GameUI_Config previousConfig = uiConfig(previousVariant);
+            GameUI_Config previousConfig = config(previousVariant);
             Logger.info("Unloading assets for game variant {}", previousVariant);
             previousConfig.destroy();
             previousConfig.soundManager().mutedProperty().unbind();
         }
 
-        GameUI_Config newConfig = uiConfig(gameVariant);
+        GameUI_Config newConfig = config(gameVariant);
         Logger.info("Loading assets for game variant {}", gameVariant);
         newConfig.storeAssets(theAssets());
         newConfig.soundManager().mutedProperty().bind(propertyMuted);
@@ -475,17 +475,17 @@ public class PacManGames_UI_Impl implements GameUI {
      * Stores the UI configuration for a game variant and initializes the game scenes (assigns the game context).
      *
      * @param variant a game variant
-     * @param configuration the UI configuration for this variant
+     * @param config the UI configuration for this variant
      */
     @Override
-    public void setUIConfig(String variant, GameUI_Config configuration) {
+    public void setConfig(String variant, GameUI_Config config) {
         requireNonNull(variant);
-        requireNonNull(configuration);
-        configByGameVariant.put(variant, configuration);
+        requireNonNull(config);
+        configByGameVariant.put(variant, config);
     }
 
     @Override
-    public GameUI_Config uiConfig(String gameVariant) {
+    public GameUI_Config config(String gameVariant) {
         return configByGameVariant.get(gameVariant);
     }
 

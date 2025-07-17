@@ -139,7 +139,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         }
 
         void setGameVariant(String gameVariant) {
-            final GameUI_Config config = theUI().uiConfig(gameVariant);
+            final GameUI_Config config = theUI().config(gameVariant);
             renderer = config.createGameRenderer(ctx.getCanvas());
             pac.setAnimations(config.createPacAnimations(pac));
             pac.playAnimation(ANIM_PAC_MUNCHING);
@@ -163,11 +163,11 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
             String gameVariant = selectedValue();
             if (GameVariant.PACMAN_XXL.name().equals(gameVariant)) {
                 Logger.info("Loading assets for game variant {}", gameVariant);
-                theUI().uiConfig(gameVariant).storeAssets(theUI().theAssets());
+                theUI().config(gameVariant).storeAssets(theUI().theAssets());
             }
             else if (GameVariant.MS_PACMAN_XXL.name().equals(gameVariant)) {
                 Logger.info("Loading assets for game variant {}", gameVariant);
-                theUI().uiConfig(gameVariant).storeAssets(theUI().theAssets());
+                theUI().config(gameVariant).storeAssets(theUI().theAssets());
             }
             chaseAnimation.setGameVariant(gameVariant);
             state.gameVariant = gameVariant;

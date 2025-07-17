@@ -55,11 +55,11 @@ public class PacManXXL_Common_StartPage implements StartPage {
         String gameVariant = currentGameVariant();
         if (GameVariant.PACMAN_XXL.name().equals(gameVariant)) {
             Logger.info("Loading assets for game variant {}", gameVariant);
-            theUI().uiConfig(gameVariant).storeAssets(theUI().theAssets());
+            theUI().config(gameVariant).storeAssets(theUI().theAssets());
         }
         else if (GameVariant.MS_PACMAN_XXL.name().equals(gameVariant)) {
             Logger.info("Loading assets for game variant {}", gameVariant);
-            theUI().uiConfig(gameVariant).storeAssets(theUI().theAssets());
+            theUI().config(gameVariant).storeAssets(theUI().theAssets());
         }
         else {
             Logger.error("Invalid game variant: {}", gameVariant);
