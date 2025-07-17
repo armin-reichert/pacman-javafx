@@ -9,6 +9,7 @@ import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
+import de.amr.pacmanfx.ui._2d.ArcadePalette;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.input.Joypad;
@@ -117,7 +118,7 @@ public class PacManGames_UI_Impl implements GameUI {
         rootPane.getChildren().add(startPagesView.rootNode());
 
         // "paused" icon appears on center of game view
-        FontIcon iconPaused = FontIcon.of(FontAwesomeSolid.PAUSE, 80, Color.LIGHTGRAY);
+        FontIcon iconPaused = FontIcon.of(FontAwesomeSolid.PAUSE, 80, ArcadePalette.ARCADE_WHITE);
         iconPaused.visibleProperty().bind(Bindings.createBooleanBinding(
             () -> currentView() == playView && theGameClock.isPaused(),
                 propertyCurrentView, theGameClock.pausedProperty()));
@@ -477,7 +478,7 @@ public class PacManGames_UI_Impl implements GameUI {
     @SuppressWarnings("unchecked")
     @Override
     public <T extends GameUI_Config> T theConfiguration() {
-        return (T) configByGameVariant.get(theGameContext.theGameController().selectedGameVariant());
+        return (T) config(theGameContext.theGameController().selectedGameVariant());
     }
 
     @Override
