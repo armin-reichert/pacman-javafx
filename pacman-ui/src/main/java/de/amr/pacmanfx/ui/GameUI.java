@@ -37,6 +37,7 @@ import java.util.prefs.Preferences;
 import static de.amr.pacmanfx.ui.ActionBindingMap.createActionBinding;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
+import static de.amr.pacmanfx.uilib.Ufx.formatColorHex;
 
 public interface GameUI {
 
@@ -90,15 +91,17 @@ public interface GameUI {
         createActionBinding(ACTION_TOGGLE_DRAW_MODE,        alt(KeyCode.W))
     );
 
-    static MenuItem createTitleMenuItem(String title) {
+    default MenuItem createContextMenuTitleItem(String title) {
+        String family = prefs().get("context_menu.title.font.family", "Dialog");
+        int weight = prefs().getInt("context_menu.title.font.weight", 850);
+        float size = prefs().getFloat("context_menu.title.font.size", 14);
+        Font font = Font.font(family, FontWeight.findByWeight(weight), size);
+        Color fillColor = Color.web(prefs().get("context_menu.title.fill", formatColorHex(Color.CORNFLOWERBLUE)));
         var text = new Text(title);
-        text.setFont(CONTEXT_MENU_TITLE_FONT);
-        text.setFill(CONTEXT_MENU_TITLE_BACKGROUND);
+        text.setFont(font);
+        text.setFill(fillColor);
         return new CustomMenuItem(text);
     }
-
-    Font  CONTEXT_MENU_TITLE_FONT = Font.font("Dialog", FontWeight.BLACK, 14);
-    Color CONTEXT_MENU_TITLE_BACKGROUND = Color.CORNFLOWERBLUE; // "Kornblumenblau, sind die Augen der Frauen beim Weine..."
 
     Color DEBUG_TEXT_FILL          = Color.YELLOW;
     Font DEBUG_TEXT_FONT           = Font.font("Sans", FontWeight.BOLD, 16);

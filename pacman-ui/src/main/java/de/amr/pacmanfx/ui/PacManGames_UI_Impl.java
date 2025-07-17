@@ -187,7 +187,11 @@ public class PacManGames_UI_Impl implements GameUI {
         prefs.putFloat("3d.pac.size", 17f);
         prefs.putFloat("3d.pellet.radius", 1);
 
-
+        // "Kornblumenblau, sind die Augen der Frauen beim Weine..."
+        prefs.put     ("context_menu.title.fill", formatColorHex(Color.CORNFLOWERBLUE));
+        prefs.put     ("context_menu.title.font.family", "Dialog");
+        prefs.putInt  ("context_menu.title.font.weight", 850);
+        prefs.putFloat("context_menu.title.font.size", 14);
     }
 
     public void configure(Map<String, Class<? extends GameUI_Config>> configClassesMap) {
