@@ -87,7 +87,6 @@ public class PacManGames_UI_Impl implements GameUI {
 
     private final Map<String, GameUI_Config> configByGameVariant = new HashMap<>();
 
-
     private final StackPane rootPane = new StackPane();
     private final StartPagesView startPagesView;
     private final PlayView playView;
@@ -321,6 +320,8 @@ public class PacManGames_UI_Impl implements GameUI {
 
     @Override
     public void show() {
+        Logger.info("JavaFX runtime: {}", System.getProperty("javafx.runtime.version"));
+
         propertyCurrentView.set(startPagesView);
         startPagesView.currentStartPage().ifPresent(startPage -> startPage.layoutRoot().requestFocus());
         playView.dashboard().init(this);
