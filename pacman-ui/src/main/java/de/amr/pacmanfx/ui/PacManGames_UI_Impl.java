@@ -92,7 +92,6 @@ public class PacManGames_UI_Impl implements GameUI {
     private final StartPagesView startPagesView;
     private final PlayView playView;
     private       EditorView editorView; // created on first access
-    private final StatusIconBox iconBox;
 
     public PacManGames_UI_Impl(GameContext gameContext, Stage stage, double width, double height) {
         theGameContext = requireNonNull(gameContext);
@@ -125,7 +124,7 @@ public class PacManGames_UI_Impl implements GameUI {
         StackPane.setAlignment(iconPaused, Pos.CENTER);
 
         // status icon box appears at bottom-left corner of any view except editor
-        iconBox = new StatusIconBox(this);
+        var iconBox = new StatusIconBox(this);
         StackPane.setAlignment(iconBox, Pos.BOTTOM_LEFT);
 
         rootPane.getChildren().addAll(iconPaused, iconBox);
