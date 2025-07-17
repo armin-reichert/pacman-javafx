@@ -63,10 +63,12 @@ public class PlayScene3D implements GameScene {
 
     private final Map<PerspectiveID, Perspective> perspectiveMap = new EnumMap<>(PerspectiveID.class);
 
-    private final ObjectProperty<PerspectiveID> perspectiveIDProperty = new SimpleObjectProperty<>(PerspectiveID.TOTAL) {
+    private final ObjectProperty<PerspectiveID> perspectiveIDProperty = new SimpleObjectProperty<>() {
         @Override
         protected void invalidated() {
-            initPerspective();
+            if (get() != null) {
+                initPerspective();
+            }
         }
     };
 
@@ -121,15 +123,6 @@ public class PlayScene3D implements GameScene {
             perspectiveMap.get(id).init(camera);
         } else {
             Logger.error("Cannot init camera perspective with ID '{}'", id);
-        }
-    }
-
-    private void updatePerspective(GameLevel gameLevel) {
-        PerspectiveID id = perspectiveIDProperty.get();
-        if (id != null && perspectiveMap.containsKey(id)) {
-            perspectiveMap.get(id).update(camera, gameLevel, gameLevel.pac());
-        } else {
-            Logger.error("Cannot update camera perspective with ID '{}'", id);
         }
     }
 
@@ -299,7 +292,10 @@ public class PlayScene3D implements GameScene {
             ui.theSound().setEnabled(true);
             updateSound(gameContext().theGameLevel());
         }
-        updatePerspective(gameContext().theGameLevel());
+        PerspectiveID id = perspectiveIDProperty.get();
+        if (id != null && perspectiveMap.containsKey(id)) {
+            perspectiveMap.get(id).update(camera, gameContext().theGameLevel(), gameContext().theGameLevel().pac());
+        }
     }
 
     @Override
