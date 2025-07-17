@@ -75,9 +75,9 @@ public class PlayScene3D implements GameScene {
         this.actionBindings = new ActionBindingMap(ui.theKeyboard());
 
         scores3D = new Scores3D(
-                ui.theAssets().text("score.score"),
-                ui.theAssets().text("score.high_score"),
-                ui.theAssets().arcadeFont(TS)
+            ui.theAssets().text("score.score"),
+            ui.theAssets().text("score.high_score"),
+            ui.theAssets().arcadeFont(TS)
         );
         scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
         scores3D.rotateProperty().bind(camera.rotateProperty());
@@ -138,10 +138,10 @@ public class PlayScene3D implements GameScene {
         miToggleMiniView.selectedProperty().bindBidirectional(ui.propertyMiniViewOn());
 
         var miAutopilot = new CheckMenuItem(ui.theAssets().text("autopilot"));
-        miAutopilot.selectedProperty().bindBidirectional(ui.theGameContext().propertyUsingAutopilot());
+        miAutopilot.selectedProperty().bindBidirectional(theGameContext().propertyUsingAutopilot());
 
         var miImmunity = new CheckMenuItem(ui.theAssets().text("immunity"));
-        miImmunity.selectedProperty().bindBidirectional(ui.theGameContext().propertyImmunity());
+        miImmunity.selectedProperty().bindBidirectional(theGameContext().propertyImmunity());
 
         var miMuted = new CheckMenuItem(ui.theAssets().text("muted"));
         miMuted.selectedProperty().bindBidirectional(ui.propertyMuted());

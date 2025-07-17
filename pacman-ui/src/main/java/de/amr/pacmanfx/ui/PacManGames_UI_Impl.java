@@ -227,7 +227,7 @@ public class PacManGames_UI_Impl implements GameUI {
         }
     }
 
-    private EditorView getEditorViewCreateIfNeeded() {
+    private EditorView editorView() {
         if (editorView == null) {
             var editor = new TileMapEditor(theStage, theModel3DRepository);
             var miReturnToGame = new MenuItem(theAssets().text("back_to_game"));
@@ -346,8 +346,8 @@ public class PacManGames_UI_Impl implements GameUI {
             currentGameScene().ifPresent(GameScene::end);
             theSound().stopAll();
             theGameClock.stop();
-            getEditorViewCreateIfNeeded().editor().start(theStage);
-            propertyCurrentView.set(getEditorViewCreateIfNeeded());
+            editorView().editor().start(theStage);
+            propertyCurrentView.set(editorView());
         } else {
             Logger.info("Editor view cannot be opened, game is playing");
         }

@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.layout;
 
-import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.ui.ActionBindingMap;
 import de.amr.pacmanfx.ui.GameAction;
@@ -128,9 +127,6 @@ public class StartPagesView implements PacManGames_View {
     public ActionBindingMap actionBindingMap() {
         return actionBindings;
     }
-
-    @Override
-    public void onGameEvent(GameEvent event) {}
 
     @Override
     public Region rootNode() { return carousel; }

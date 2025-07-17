@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.event.DefaultGameEventListener;
+import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.lib.Destroyable;
 import javafx.scene.SubScene;
 import javafx.scene.control.ContextMenu;
@@ -17,10 +17,8 @@ import java.util.Optional;
 
 /**
  * Common interface of all game scenes (2D and 3D).
- *
- * @author Armin Reichert
  */
-public interface GameScene extends DefaultGameEventListener, Destroyable {
+public interface GameScene extends GameEventListener, Destroyable {
 
     GameUI theUI();
 

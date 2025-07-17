@@ -4,17 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.layout;
 
-import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 import de.amr.pacmanfx.ui.ActionBindingMap;
-import de.amr.pacmanfx.ui.GameAction;
 import javafx.beans.property.StringProperty;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
-
-import java.util.Map;
 
 import static de.amr.pacmanfx.uilib.Ufx.coloredBackground;
 import static java.util.Objects.requireNonNull;
@@ -32,10 +27,9 @@ public class EditorView implements PacManGames_View {
         layout.setTop(editor.getMenuBar());
     }
 
-    @Override
-    public void onGameEvent(GameEvent event) {}
-
-    public TileMapEditor editor() { return editor; }
+    public TileMapEditor editor() {
+        return editor;
+    }
 
     @Override
     public ActionBindingMap actionBindingMap() {
