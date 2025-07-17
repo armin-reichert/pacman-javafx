@@ -39,9 +39,12 @@ import org.tinylog.Logger;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.prefs.Preferences;
 
+import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_ENTER_FULLSCREEN;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_TOGGLE_MUTED;
+import static de.amr.pacmanfx.uilib.Ufx.formatColorHex;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -68,7 +71,7 @@ public class PacManGames_UI_Impl implements GameUI {
     final ObjectProperty<Color> property3DLightColor           = new SimpleObjectProperty<>(Color.WHITE);
     final BooleanProperty property3DPacLightEnabled            = new SimpleBooleanProperty(true);
     final ObjectProperty<Perspective.ID> property3DPerspective = new SimpleObjectProperty<>(Perspective.ID.TRACK_PLAYER);
-    final DoubleProperty property3DWallHeight                  = new SimpleDoubleProperty(Settings3D.OBSTACLE_3D_BASE_HEIGHT);
+    final DoubleProperty property3DWallHeight                  = new SimpleDoubleProperty();
     final DoubleProperty property3DWallOpacity                 = new SimpleDoubleProperty(1.0);
 
     // private properties
@@ -76,6 +79,7 @@ public class PacManGames_UI_Impl implements GameUI {
     private final ObjectProperty<GameScene> propertyCurrentGameScene = new SimpleObjectProperty<>();
     private final BooleanProperty propertyMuted = new SimpleBooleanProperty(false);
 
+    private final Preferences prefs = Preferences.userNodeForPackage(PacManGames_UI_Impl.class);
     private final GameContext        theGameContext;
 
     private final PacManGames_Assets theAssets;
@@ -100,9 +104,10 @@ public class PacManGames_UI_Impl implements GameUI {
         theGameClock = new GameClock();
         theKeyboard = new Keyboard();
         theJoypad = new Joypad(theKeyboard);
+        theStage = requireNonNull(stage);
         theWatchdog = new DirectoryWatchdog(gameContext.theCustomMapDir());
 
-        this.theStage = requireNonNull(stage);
+        storeDefaultPrefs();
 
         Scene mainScene = new Scene(rootPane, width, height);
         stage.setScene(mainScene);
@@ -157,6 +162,30 @@ public class PacManGames_UI_Impl implements GameUI {
                 ? theAssets().get("background.play_scene3d")
                 : theAssets().get("background.scene"))
         );
+    }
+
+    private void storeDefaultPrefs() {
+        prefs.putFloat("3d.bonus.symbol.width", TS);
+        prefs.putFloat("3d.bonus.points.width", 1.8f * TS);
+        prefs.putFloat("3d.energizer.radius", 3.5f);
+        prefs.putFloat("3d.energizer.scaling.min", 0.2f);
+        prefs.putFloat("3d.energizer.scaling.max", 1.0f);
+        prefs.putFloat("3d.floor.padding", 5.0f);
+        prefs.putFloat("3d.floor.thickness", 0.5f);
+        prefs.putFloat("3d.ghost.size", 16.0f);
+        prefs.putFloat("3d.house.base_height", 12.0f);
+        prefs.putFloat("3d.house.opacity", 0.4f);
+        prefs.putFloat("3d.house.sensitivity", 1.5f * TS);
+        prefs.putFloat("3d.house.wall_thickness", 2.5f);
+        prefs.putFloat("3d.level_counter.elevation", 6f);
+        prefs.putInt  ("3d.lives_counter.capacity", 5);
+        prefs.put     ("3d.lives_counter.pillar_color", formatColorHex(Color.grayRgb(120)));
+        prefs.put     ("3d.lives_counter.plate_color",  formatColorHex(Color.grayRgb(180)));
+        prefs.putFloat("3d.lives_counter.shape_size", 12f);
+        prefs.putFloat("3d.obstacle.base_height", 4.0f);
+        prefs.putFloat("3d.obstacle.wall_thickness", 2.25f);
+        prefs.putFloat("3d.pac.size", 17f);
+        prefs.putFloat("3d.pellet.radius", 1);
     }
 
     public void configure(Map<String, Class<? extends GameUI_Config>> configClassesMap) {
@@ -275,6 +304,11 @@ public class PacManGames_UI_Impl implements GameUI {
     }
     @Override public PlayView thePlayView() {
         return playView;
+    }
+
+    @Override
+    public Preferences prefs() {
+        return prefs;
     }
 
     @Override

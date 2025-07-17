@@ -74,8 +74,17 @@ public interface Ufx {
         booleanProperty.set(!booleanProperty.get());
     }
 
+    /**
+     * @param color a color
+     * @return string representation of RGBA color that can be parsed with {@link Color#web(String)}.
+     */
     static String formatColorHex(Color color) {
-        return String.format("#%02x%02x%02x", (int)(color.getRed()*255), (int)(color.getGreen()*255), (int)(color.getBlue()*255));
+        return "#%02x%02x%02x%02x".formatted(
+            (int) Math.round(color.getRed()     * 255),
+            (int) Math.round(color.getGreen()   * 255),
+            (int) Math.round(color.getBlue()    * 255),
+            (int) Math.round(color.getOpacity() * 255)
+        );
     }
 
     static Color colorWithOpacity(Color color, double opacity) {

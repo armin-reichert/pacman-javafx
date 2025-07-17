@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 
 // module is open to allow access to non-class resources
 open module de.amr.pacmanfx.ui {
-    requires java.desktop;
+    requires transitive java.prefs;
     requires javafx.graphics;
     requires javafx.controls;
     requires javafx.media;
