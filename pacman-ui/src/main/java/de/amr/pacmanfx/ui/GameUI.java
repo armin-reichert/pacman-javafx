@@ -105,11 +105,6 @@ public interface GameUI {
 
     double MAX_SCENE_2D_SCALING    = 5;
 
-    Color STATUS_ICON_COLOR        = Color.LIGHTGRAY;
-    byte STATUS_ICON_PADDING       = 10;
-    byte STATUS_ICON_SIZE          = 24;
-    byte STATUS_ICON_SPACING       = 5;
-
     // Global properties
     ObjectProperty<Color>            propertyCanvasBackgroundColor();
     BooleanProperty                  propertyCanvasFontSmoothing();

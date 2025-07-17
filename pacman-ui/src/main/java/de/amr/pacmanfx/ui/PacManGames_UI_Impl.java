@@ -122,7 +122,7 @@ public class PacManGames_UI_Impl implements GameUI {
         rootPane.getChildren().add(startPagesView.rootNode());
 
         // "paused" icon appears on center of game view
-        FontIcon iconPaused = FontIcon.of(FontAwesomeSolid.PAUSE, 80, STATUS_ICON_COLOR);
+        FontIcon iconPaused = FontIcon.of(FontAwesomeSolid.PAUSE, 80, Color.LIGHTGRAY);
         iconPaused.visibleProperty().bind(Bindings.createBooleanBinding(
             () -> currentView() == playView && theGameClock.isPaused(),
                 propertyCurrentView, theGameClock.pausedProperty()));
@@ -186,6 +186,8 @@ public class PacManGames_UI_Impl implements GameUI {
         prefs.putFloat("3d.obstacle.wall_thickness", 2.25f);
         prefs.putFloat("3d.pac.size", 17f);
         prefs.putFloat("3d.pellet.radius", 1);
+
+
     }
 
     public void configure(Map<String, Class<? extends GameUI_Config>> configClassesMap) {
