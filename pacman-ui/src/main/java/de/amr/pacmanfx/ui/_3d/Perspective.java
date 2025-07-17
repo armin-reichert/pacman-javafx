@@ -7,7 +7,6 @@ package de.amr.pacmanfx.ui._3d;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Actor;
 import javafx.scene.PerspectiveCamera;
-import javafx.scene.SubScene;
 import javafx.scene.transform.Rotate;
 
 import static de.amr.pacmanfx.Globals.TS;
@@ -24,21 +23,20 @@ public interface Perspective {
         public ID prev() {
             return values()[ordinal() == 0 ? values().length - 1 : ordinal() - 1];
         }
-
         public ID next() {
             return values()[ordinal() < values().length - 1 ? ordinal() + 1 : 0];
         }
     }
 
-    void init(SubScene scene);
-    void update(SubScene scene, GameLevel level, Actor spottedActor);
+    void init(PerspectiveCamera camera);
+ 
+    void update(PerspectiveCamera camera, GameLevel level, Actor spottedActor);
 
     class Drone implements Perspective {
         static final int HEIGHT_OVER_GROUND = 200;
 
         @Override
-        public void init(SubScene scene) {
-            PerspectiveCamera camera = (PerspectiveCamera) scene.getCamera();
+        public void init(PerspectiveCamera camera) {
             camera.setNearClip(0.1);
             camera.setFarClip(10000.0);
             camera.setFieldOfView(40); // default: 30
@@ -50,8 +48,7 @@ public interface Perspective {
         }
 
         @Override
-        public void update(SubScene scene, GameLevel level, Actor focussedActor) {
-            PerspectiveCamera camera = (PerspectiveCamera) scene.getCamera();
+        public void update(PerspectiveCamera camera, GameLevel level, Actor focussedActor) {
             double speed = 0.02;
             double x = lerp(camera.getTranslateX(), focussedActor.x(), speed);
             double y = lerp(camera.getTranslateY(), focussedActor.y(), speed);
@@ -64,8 +61,7 @@ public interface Perspective {
     class Total implements Perspective {
 
         @Override
-        public void init(SubScene scene) {
-            PerspectiveCamera camera = (PerspectiveCamera) scene.getCamera();
+        public void init(PerspectiveCamera camera) {
             camera.setNearClip(0.1);
             camera.setFarClip(10000.0);
             camera.setFieldOfView(40); // default: 30
@@ -74,8 +70,7 @@ public interface Perspective {
         }
 
         @Override
-        public void update(SubScene scene, GameLevel level, Actor spottedActor) {
-            PerspectiveCamera camera = (PerspectiveCamera) scene.getCamera();
+        public void update(PerspectiveCamera camera, GameLevel level, Actor spottedActor) {
             int sizeX = level.worldMap().numCols() * TS;
             int sizeY = level.worldMap().numRows() * TS;
             camera.setTranslateX(sizeX * 0.5);
@@ -87,8 +82,7 @@ public interface Perspective {
     class TrackingPlayer implements Perspective {
 
         @Override
-        public void init(SubScene scene) {
-            PerspectiveCamera camera = (PerspectiveCamera) scene.getCamera();
+        public void init(PerspectiveCamera camera) {
             camera.setNearClip(0.1);
             camera.setFarClip(10000.0);
             camera.setFieldOfView(40); // default: 30
@@ -98,8 +92,7 @@ public interface Perspective {
         }
 
         @Override
-        public void update(SubScene scene, GameLevel level, Actor spottedActor) {
-            PerspectiveCamera camera = (PerspectiveCamera) scene.getCamera();
+        public void update(PerspectiveCamera camera, GameLevel level, Actor spottedActor) {
             double speedX = 0.03;
             double speedY = 0.06;
             double worldWidth = level.worldMap().numCols() * TS;
@@ -113,8 +106,7 @@ public interface Perspective {
     class StalkingPlayer implements Perspective {
 
         @Override
-        public void init(SubScene scene) {
-            PerspectiveCamera camera = (PerspectiveCamera) scene.getCamera();
+        public void init(PerspectiveCamera camera) {
             camera.setNearClip(0.1);
             camera.setFarClip(10000.0);
             camera.setFieldOfView(40); // default: 30
@@ -123,8 +115,7 @@ public interface Perspective {
         }
 
         @Override
-        public void update(SubScene scene, GameLevel level, Actor spottedActor) {
-            PerspectiveCamera camera = (PerspectiveCamera) scene.getCamera();
+        public void update(PerspectiveCamera camera, GameLevel level, Actor spottedActor) {
             double speedX = 0.04;
             double speedY = 0.04;
             double worldWidth = level.worldMap().numCols() * TS;

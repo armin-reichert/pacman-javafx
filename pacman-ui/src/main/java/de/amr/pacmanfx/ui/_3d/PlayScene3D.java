@@ -63,7 +63,6 @@ public class PlayScene3D implements GameScene {
 
     protected final GameUI ui;
     protected final SubScene subScene;
-    protected final PerspectiveCamera camera = new PerspectiveCamera(true);
     protected final PerspectiveManager perspectiveManager;
     protected final ActionBindingMap actionBindings;
 
@@ -75,6 +74,15 @@ public class PlayScene3D implements GameScene {
         this.ui = requireNonNull(ui);
         this.actionBindings = new ActionBindingMap(ui.theKeyboard());
 
+        var root = new Group();
+        var camera = new PerspectiveCamera(true);
+        perspectiveManager = new PerspectiveManager(camera);
+        // initial size is irrelevant because size gets bound to parent scene size later
+        subScene = new SubScene(root, 88, 88, true, SceneAntialiasing.BALANCED);
+        subScene.setCamera(camera);
+        subScene.setFill(SUBSCENE_FILL_DARK);
+
+        // The score is always displayed in full view, regardless which perspective is used
         scores3D = new Scores3D(
             ui.theAssets().text("score.score"),
             ui.theAssets().text("score.high_score"),
@@ -83,17 +91,12 @@ public class PlayScene3D implements GameScene {
         scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
         scores3D.rotateProperty().bind(camera.rotateProperty());
 
+        // Just for debugging and posing
         var coordinateSystem = new CoordinateSystem();
         coordinateSystem.visibleProperty().bind(ui.property3DAxesVisible());
 
-        var root = new Group(level3DPlaceHolder, scores3D, coordinateSystem);
+        root.getChildren().setAll(level3DPlaceHolder, scores3D, coordinateSystem);
 
-        // initial size is irrelevant because size gets bound to parent scene size anyway
-        subScene = new SubScene(root, 88, 88, true, SceneAntialiasing.BALANCED);
-        subScene.setCamera(camera);
-        subScene.setFill(SUBSCENE_FILL_DARK);
-
-        perspectiveManager = new PerspectiveManager(subScene);
     }
 
     @Override
@@ -318,7 +321,7 @@ public class PlayScene3D implements GameScene {
                 var animation = new SequentialTransition(
                     pauseSec(2, () -> {
                         perspectiveManager.perspectiveIDProperty().unbind();
-                        perspectiveManager.setPerspective(Perspective.ID.TOTAL);
+                        perspectiveManager.perspectiveIDProperty().set(Perspective.ID.TOTAL);
                     }),
                     levelCompletedAnimation.getOrCreateAnimation(),
                     pauseSec(1)
@@ -590,7 +593,7 @@ public class PlayScene3D implements GameScene {
         new Transition() {
             {
                 setCycleDuration(Duration.seconds(4));
-                setInterpolator(Interpolator.EASE_IN);
+                setInterpolator(Interpolator.EASE_OUT);
             }
             @Override
             protected void interpolate(double t) {

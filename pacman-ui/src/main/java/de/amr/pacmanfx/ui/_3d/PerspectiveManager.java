@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui._3d;
 import de.amr.pacmanfx.model.GameLevel;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.SubScene;
+import javafx.scene.PerspectiveCamera;
 import org.tinylog.Logger;
 
 import java.util.EnumMap;
@@ -18,17 +18,17 @@ import static java.util.Objects.requireNonNull;
 public class PerspectiveManager {
 
     private final Map<Perspective.ID, Perspective> perspectiveMap = new EnumMap<>(Perspective.ID.class);
-    private final SubScene subScene;
+    private final PerspectiveCamera camera;
 
-    private final ObjectProperty<Perspective.ID> perspectiveIDPy = new SimpleObjectProperty<>(Perspective.ID.TOTAL) {
+    private final ObjectProperty<Perspective.ID> perspectiveIDProperty = new SimpleObjectProperty<>(Perspective.ID.TOTAL) {
         @Override
         protected void invalidated() {
             initPerspective();
         }
     };
 
-    public PerspectiveManager(SubScene subScene) {
-        this.subScene = requireNonNull(subScene);
+    public PerspectiveManager(PerspectiveCamera camera) {
+        this.camera = requireNonNull(camera);
         perspectiveMap.put(Perspective.ID.DRONE, new Perspective.Drone());
         perspectiveMap.put(Perspective.ID.TOTAL, new Perspective.Total());
         perspectiveMap.put(Perspective.ID.TRACK_PLAYER, new Perspective.TrackingPlayer());
@@ -36,28 +36,22 @@ public class PerspectiveManager {
     }
 
     public ObjectProperty<Perspective.ID> perspectiveIDProperty() {
-        return perspectiveIDPy;
-    }
-
-    public void setPerspective(Perspective.ID perspectiveID) {
-        requireNonNull(perspectiveID);
-        perspectiveIDProperty().unbind();
-        perspectiveIDProperty().set(perspectiveID);
+        return perspectiveIDProperty;
     }
 
     public void initPerspective() {
-        Perspective.ID id = perspectiveIDPy.get();
+        Perspective.ID id = perspectiveIDProperty.get();
         if (id != null && perspectiveMap.containsKey(id)) {
-            perspectiveMap.get(id).init(subScene);
+            perspectiveMap.get(id).init(camera);
         } else {
             Logger.error("Cannot init camera perspective with ID '{}'", id);
         }
     }
 
     public void updatePerspective(GameLevel gameLevel) {
-        Perspective.ID id = perspectiveIDPy.get();
+        Perspective.ID id = perspectiveIDProperty.get();
         if (id != null && perspectiveMap.containsKey(id)) {
-            perspectiveMap.get(id).update(subScene, gameLevel, gameLevel.pac());
+            perspectiveMap.get(id).update(camera, gameLevel, gameLevel.pac());
         } else {
             Logger.error("Cannot update camera perspective with ID '{}'", id);
         }
