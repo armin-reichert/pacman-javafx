@@ -62,7 +62,7 @@ public class HelpInfo {
         }
         var pane = new BorderPane(grid);
         pane.setPadding(new Insets(10));
-        pane.setBackground(Ufx.coloredRoundedBackground(backgroundColor, 10));
+        pane.setBackground(Ufx.roundedBackground(backgroundColor, 10));
 
         // add default entries:
         if (ui.theGameContext().propertyUsingAutopilot().get()) {

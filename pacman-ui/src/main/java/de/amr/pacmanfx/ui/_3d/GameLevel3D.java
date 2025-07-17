@@ -235,7 +235,7 @@ public class GameLevel3D extends Group implements Destroyable {
         floor3D.materialProperty().bind(ui.property3DFloorColor().map(Ufx::coloredPhongMaterial));
 
         wallBaseMaterial = new PhongMaterial();
-        wallBaseMaterial.diffuseColorProperty().bind(wallOpacityProperty.map(opacity -> opaqueColor(colorScheme.stroke(), opacity.doubleValue())));
+        wallBaseMaterial.diffuseColorProperty().bind(wallOpacityProperty.map(opacity -> colorWithOpacity(colorScheme.stroke(), opacity.doubleValue())));
         wallBaseMaterial.specularColorProperty().bind(wallBaseMaterial.diffuseColorProperty().map(Color::brighter));
 
         wallTopMaterial = new PhongMaterial();

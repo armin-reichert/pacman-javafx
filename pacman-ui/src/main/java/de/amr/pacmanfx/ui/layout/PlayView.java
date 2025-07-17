@@ -45,7 +45,7 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.GameUI.*;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.uilib.Ufx.border;
-import static de.amr.pacmanfx.uilib.Ufx.coloredBackground;
+import static de.amr.pacmanfx.uilib.Ufx.colorBackground;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -358,7 +358,7 @@ public class PlayView implements PacManGames_View {
         Vector2f sizePx = gameScene2D.sizeInPx();
         canvasContainer.setUnscaledCanvasSize(sizePx.x(), sizePx.y());
         canvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
-        canvasContainer.backgroundProperty().bind(ui.propertyCanvasBackgroundColor().map(Ufx::coloredBackground));
+        canvasContainer.backgroundProperty().bind(ui.propertyCanvasBackgroundColor().map(Ufx::colorBackground));
         root.getChildren().set(0, canvasLayer);
     }
 
@@ -388,7 +388,7 @@ public class PlayView implements PacManGames_View {
         ui.propertyCanvasFontSmoothing().addListener((py, ov, on) -> ctx.setFontSmoothingType(on ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
         ui.propertyCanvasImageSmoothing().addListener((py, ov, on) -> ctx.setImageSmoothing(on));
         ui.propertyDebugInfoVisible().addListener((py, ov, debug) -> {
-            canvasLayer.setBackground(debug? coloredBackground(Color.TEAL) : null);
+            canvasLayer.setBackground(debug? colorBackground(Color.TEAL) : null);
             canvasLayer.setBorder(debug? border(Color.LIGHTGREEN, 1) : null);
         });
     }

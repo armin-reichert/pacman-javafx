@@ -17,7 +17,7 @@ import java.util.*;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.RectShort.rect;
-import static de.amr.pacmanfx.uilib.Ufx.recolorImage;
+import static de.amr.pacmanfx.uilib.Ufx.exchangeNES_ColorScheme;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -314,7 +314,7 @@ public class TengenMsPacMan_MapRepository {
         if (!cache.containsKey(key)) {
             Image spriteSheet = mapCategory == MapCategory.ARCADE ? arcadeMazesSpriteSheet : nonArcadeMazesSpriteSheet;
             var recoloredMazeSprite = new ColorSchemedSprite(
-                recolorImage(crop(spriteSheet, mazeSprite), existingScheme, requestedScheme),
+                exchangeNES_ColorScheme(crop(spriteSheet, mazeSprite), existingScheme, requestedScheme),
                 new RectShort(0, 0, mazeSprite.width(), mazeSprite.height()),
                 requestedScheme);
             cache.put(key, recoloredMazeSprite);

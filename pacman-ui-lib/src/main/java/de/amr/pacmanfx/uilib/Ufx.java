@@ -41,6 +41,8 @@ import static java.util.Objects.requireNonNull;
  */
 public interface Ufx {
 
+    record ColorChange(Color from, Color to) {}
+
     BackgroundSize FILL_PAGE_SIZE  = new BackgroundSize(1.0, 1.0, true, true, false, true);
     BackgroundSize FIT_HEIGHT_SIZE = new BackgroundSize(BackgroundSize.AUTO, 1.0, false, true, true, false);
 
@@ -77,17 +79,17 @@ public interface Ufx {
         return String.format("#%02x%02x%02x", (int)(color.getRed()*255), (int)(color.getGreen()*255), (int)(color.getBlue()*255));
     }
 
-    static  Color opaqueColor(Color color, double opacity) {
+    static Color colorWithOpacity(Color color, double opacity) {
         requireNonNull(color);
         return Color.color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
     }
 
-    static  Background coloredBackground(Color color) {
+    static Background colorBackground(Color color) {
         requireNonNull(color);
         return new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY));
     }
 
-    static  Background coloredRoundedBackground(Color color, int radius) {
+    static Background roundedBackground(Color color, int radius) {
         requireNonNull(color);
         return new Background(new BackgroundFill(color, new CornerRadii(radius), Insets.EMPTY));
     }
@@ -97,15 +99,8 @@ public interface Ufx {
      * @return background object with default properties, see {@link BackgroundImage}
      */
     static Background createBackground(Image image) {
+        requireNonNull(image);
         return new Background(new BackgroundImage(image, null, null, null, null));
-    }
-
-    /**
-     * @param image image shown as background
-     * @return background object with properties suitable for a wallpaper
-     */
-    static Background createWallpaper(Image image) {
-        return createBackground(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, FILL_PAGE_SIZE);
     }
 
     /**
@@ -114,7 +109,16 @@ public interface Ufx {
      */
     static Background createBackground(Image image, BackgroundRepeat repeatX, BackgroundRepeat repeatY,
                                        BackgroundPosition position, BackgroundSize size) {
+        requireNonNull(image);
         return new Background(new BackgroundImage(image, repeatX, repeatY, position, size));
+    }
+
+    /**
+     * @param image image shown as background
+     * @return background object with properties suitable for a wallpaper
+     */
+    static Background createWallpaper(Image image) {
+        return createBackground(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, FILL_PAGE_SIZE);
     }
 
     static Border roundedBorder(Color color, double cornerRadius, double width) {
@@ -183,8 +187,6 @@ public interface Ufx {
         pause.setOnFinished(e -> action.run());
         return pause;
     }
-
-    record ColorChange(Color from, Color to) {}
 
     static Image imageToGreyscale(Image source) {
         if (source == null) {
@@ -300,13 +302,14 @@ public interface Ufx {
     }
 
     static boolean checkForNonNES_PaletteColors(Image image) {
+        Set<Color> NES_colors = Stream.of(NES_Palette.COLORS).map(Color::valueOf).collect(Collectors.toSet());
         boolean found = false;
         PixelReader reader = image.getPixelReader();
         for (int y = 0; y < image.getHeight(); ++y) {
             for (int x = 0; x < image.getWidth(); ++x) {
                 Color color = reader.getColor(x, y);
                 if (color.equals(Color.TRANSPARENT)) continue;
-                if (!NES_PALETTE_COLORS.contains(color)) {
+                if (!NES_colors.contains(color)) {
                     Logger.warn("Found non-NES palette color {} at x={} y={}", color, x, y);
                     found = true;
                 }
@@ -315,13 +318,11 @@ public interface Ufx {
         return found;
     }
 
-    Set<Color> NES_PALETTE_COLORS = Stream.of(NES_Palette.COLORS).map(Color::valueOf).collect(Collectors.toSet());
-
-    static Image recolorImage(Image image, NES_ColorScheme sourceColorScheme, NES_ColorScheme targetColorScheme) {
+    static Image exchangeNES_ColorScheme(Image image, NES_ColorScheme sourceScheme, NES_ColorScheme targetScheme) {
         Map<String, ColorChange> colorChanges = Map.of(
-            "fill",   new ColorChange(Color.web(sourceColorScheme.fillColorRGB()),   Color.web(targetColorScheme.fillColorRGB())),
-            "stroke", new ColorChange(Color.web(sourceColorScheme.strokeColorRGB()), Color.web(targetColorScheme.strokeColorRGB())),
-            "pellet", new ColorChange(Color.web(sourceColorScheme.pelletColorRGB()), Color.web(targetColorScheme.pelletColorRGB()))
+            "fill",   new ColorChange(Color.web(sourceScheme.fillColorRGB()),   Color.web(targetScheme.fillColorRGB())),
+            "stroke", new ColorChange(Color.web(sourceScheme.strokeColorRGB()), Color.web(targetScheme.strokeColorRGB())),
+            "pellet", new ColorChange(Color.web(sourceScheme.pelletColorRGB()), Color.web(targetScheme.pelletColorRGB()))
         );
         return exchangeColors(colorChanges, image);
     }

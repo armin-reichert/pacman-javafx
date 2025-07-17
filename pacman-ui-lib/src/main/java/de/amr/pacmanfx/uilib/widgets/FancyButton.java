@@ -37,7 +37,7 @@ public class FancyButton extends BorderPane {
         setCursor(Cursor.HAND);
         setMaxSize(200, 60);
         setPadding(new Insets(5, 5, 5, 5));
-        setBackground(Ufx.coloredRoundedBackground(bgColor, 20));
+        setBackground(Ufx.roundedBackground(bgColor, 20));
         addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             if (action != null) action.run();
             e.consume();

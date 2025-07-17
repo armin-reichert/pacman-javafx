@@ -27,7 +27,7 @@ import javafx.util.Duration;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
-import static de.amr.pacmanfx.uilib.Ufx.opaqueColor;
+import static de.amr.pacmanfx.uilib.Ufx.colorWithOpacity;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -77,7 +77,7 @@ public class ArcadeHouse3D extends Group implements Destroyable {
         float centerX = xMin * TS + tilesX * HTS;
         float centerY = yMin * TS + tilesY * HTS;
 
-        wallBaseMaterial = coloredPhongMaterial(opaqueColor(houseBaseColor, opacity));
+        wallBaseMaterial = coloredPhongMaterial(colorWithOpacity(houseBaseColor, opacity));
         wallTopMaterial  = coloredPhongMaterial(houseTopColor);
         barMaterial      = coloredPhongMaterial(doorColor);
 

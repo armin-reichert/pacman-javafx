@@ -11,7 +11,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 
-import static de.amr.pacmanfx.uilib.Ufx.coloredBackground;
+import static de.amr.pacmanfx.uilib.Ufx.colorBackground;
 import static java.util.Objects.requireNonNull;
 
 public class EditorView implements PacManGames_View {
@@ -22,7 +22,7 @@ public class EditorView implements PacManGames_View {
     public EditorView(TileMapEditor editor) {
         this.editor = requireNonNull(editor);
         // without this, Pac-Man wallpaper shines through!
-        layout.setBackground(coloredBackground(Color.web("#dddddd"))); // JavaFX default grey
+        layout.setBackground(colorBackground(Color.web("#dddddd"))); // JavaFX default grey
         layout.setCenter(editor.getContentPane());
         layout.setTop(editor.getMenuBar());
     }

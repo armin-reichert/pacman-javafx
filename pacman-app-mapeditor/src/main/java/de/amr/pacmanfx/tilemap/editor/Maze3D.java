@@ -40,7 +40,7 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tilemap.editor.ArcadeMap.*;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.getColorFromMap;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.parseColor;
-import static de.amr.pacmanfx.uilib.Ufx.opaqueColor;
+import static de.amr.pacmanfx.uilib.Ufx.colorWithOpacity;
 import static java.util.Objects.requireNonNull;
 
 public class Maze3D extends Group {
@@ -186,7 +186,7 @@ public class Maze3D extends Group {
         Vector2i houseRightUpper = Vector2i.of(houseMaxTile.x(), houseMinTile.y());
         Vector2i houseLeftLower = Vector2i.of(houseMinTile.x(), houseMaxTile.y());
 
-        PhongMaterial wallBaseMaterial = coloredMaterial(opaqueColor(wallBaseColor, 0.4));
+        PhongMaterial wallBaseMaterial = coloredMaterial(colorWithOpacity(wallBaseColor, 0.4));
         PhongMaterial wallTopMaterial = coloredMaterial(wallTopColor);
 
         r3D.setOnWallCreated(wall3D -> wall3D.baseHeightProperty().set(HOUSE_WALL_HEIGHT));
