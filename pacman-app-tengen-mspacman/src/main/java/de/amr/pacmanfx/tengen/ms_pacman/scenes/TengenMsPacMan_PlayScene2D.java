@@ -49,7 +49,7 @@ import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_MEDIUM;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_SHORT;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;
-import static de.amr.pacmanfx.ui.GameUI.*;
+import static de.amr.pacmanfx.ui.GameUI.GLOBAL_ACTION_BINDINGS;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 
 /**
@@ -482,8 +482,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         renderer().drawTileGrid(UNSCALED_CANVAS_WIDTH, UNSCALED_CANVAS_HEIGHT, Color.LIGHTGRAY);
         ctx().save();
         ctx().translate(scaled(2 * TS), 0);
-        ctx().setFill(DEBUG_TEXT_FILL);
-        ctx().setFont(DEBUG_TEXT_FONT);
+        ctx().setFill(debugTextFill);
+        ctx().setFont(debugTextFont);
         ctx().fillText("%s %d".formatted(gameContext().theGameState(), gameContext().theGameState().timer().tickCount()), 0, scaled(3 * TS));
         if (gameContext().optGameLevel().isPresent()) {
             renderer().drawMovingActorInfo(gameContext().theGameLevel().pac());
