@@ -115,7 +115,7 @@ public class PlayScene3D implements GameScene {
         return perspectiveIDProperty;
     }
 
-    public void initPerspective() {
+    private void initPerspective() {
         PerspectiveID id = perspectiveIDProperty.get();
         if (id != null && perspectiveMap.containsKey(id)) {
             perspectiveMap.get(id).init(camera);
@@ -124,7 +124,7 @@ public class PlayScene3D implements GameScene {
         }
     }
 
-    public void updatePerspective(GameLevel gameLevel) {
+    private void updatePerspective(GameLevel gameLevel) {
         PerspectiveID id = perspectiveIDProperty.get();
         if (id != null && perspectiveMap.containsKey(id)) {
             perspectiveMap.get(id).update(camera, gameLevel, gameLevel.pac());
