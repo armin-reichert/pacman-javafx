@@ -23,6 +23,8 @@ import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
 import javafx.animation.Interpolator;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
@@ -35,9 +37,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.isOneOf;
@@ -61,9 +61,18 @@ public class PlayScene3D implements GameScene {
     private static final Color SUBSCENE_FILL_DARK = Color.BLACK;
     private static final Color SUBSCENE_FILL_BRIGHT = Color.TRANSPARENT;
 
+    private final Map<PerspectiveID, Perspective> perspectiveMap = new EnumMap<>(PerspectiveID.class);
+
+    private final ObjectProperty<PerspectiveID> perspectiveIDProperty = new SimpleObjectProperty<>(PerspectiveID.TOTAL) {
+        @Override
+        protected void invalidated() {
+            initPerspective();
+        }
+    };
+
     protected final GameUI ui;
     protected final SubScene subScene;
-    protected final PerspectiveManager perspectiveManager;
+    protected PerspectiveCamera camera = new PerspectiveCamera(true);
     protected final ActionBindingMap actionBindings;
 
     protected final Group level3DPlaceHolder = new Group();
@@ -75,8 +84,12 @@ public class PlayScene3D implements GameScene {
         this.actionBindings = new ActionBindingMap(ui.theKeyboard());
 
         var root = new Group();
-        var camera = new PerspectiveCamera(true);
-        perspectiveManager = new PerspectiveManager(camera);
+
+        perspectiveMap.put(PerspectiveID.DRONE, new DronePerspective());
+        perspectiveMap.put(PerspectiveID.TOTAL, new TotalPerspective());
+        perspectiveMap.put(PerspectiveID.TRACK_PLAYER, new TrackingPlayerPerspective());
+        perspectiveMap.put(PerspectiveID.NEAR_PLAYER, new StalkingPlayerPerspective());
+
         // initial size is irrelevant because size gets bound to parent scene size later
         subScene = new SubScene(root, 88, 88, true, SceneAntialiasing.BALANCED);
         subScene.setCamera(camera);
@@ -96,13 +109,34 @@ public class PlayScene3D implements GameScene {
         coordinateSystem.visibleProperty().bind(ui.property3DAxesVisible());
 
         root.getChildren().setAll(level3DPlaceHolder, scores3D, coordinateSystem);
+    }
 
+    public ObjectProperty<PerspectiveID> perspectiveIDProperty() {
+        return perspectiveIDProperty;
+    }
+
+    public void initPerspective() {
+        PerspectiveID id = perspectiveIDProperty.get();
+        if (id != null && perspectiveMap.containsKey(id)) {
+            perspectiveMap.get(id).init(camera);
+        } else {
+            Logger.error("Cannot init camera perspective with ID '{}'", id);
+        }
+    }
+
+    public void updatePerspective(GameLevel gameLevel) {
+        PerspectiveID id = perspectiveIDProperty.get();
+        if (id != null && perspectiveMap.containsKey(id)) {
+            perspectiveMap.get(id).update(camera, gameLevel, gameLevel.pac());
+        } else {
+            Logger.error("Cannot update camera perspective with ID '{}'", id);
+        }
     }
 
     @Override
     public void destroy() {
         actionBindings.removeFromKeyboard();
-        perspectiveManager.perspectiveIDProperty().unbind();
+        perspectiveIDProperty().unbind();
         if (gameLevel3D != null) {
             gameLevel3D.destroy();
             gameLevel3D = null;
@@ -233,7 +267,7 @@ public class PlayScene3D implements GameScene {
     @Override
     public void init() {
         gameContext().theGame().theHUD().showScore(true);
-        perspectiveManager.perspectiveIDProperty().bind(ui.property3DPerspective());
+        perspectiveIDProperty().bind(ui.property3DPerspective());
     }
 
     @Override
@@ -265,7 +299,7 @@ public class PlayScene3D implements GameScene {
             ui.theSound().setEnabled(true);
             updateSound(gameContext().theGameLevel());
         }
-        perspectiveManager.updatePerspective(gameContext().theGameLevel());
+        updatePerspective(gameContext().theGameLevel());
     }
 
     @Override
@@ -320,14 +354,14 @@ public class PlayScene3D implements GameScene {
 
                 var animation = new SequentialTransition(
                     pauseSec(2, () -> {
-                        perspectiveManager.perspectiveIDProperty().unbind();
-                        perspectiveManager.perspectiveIDProperty().set(PerspectiveID.TOTAL);
+                        perspectiveIDProperty().unbind();
+                        perspectiveIDProperty().set(PerspectiveID.TOTAL);
                     }),
                     levelCompletedAnimation.getOrCreateAnimation(),
                     pauseSec(1)
                 );
                 animation.setOnFinished(e -> {
-                    perspectiveManager.perspectiveIDProperty().bind(ui.property3DPerspective());
+                    perspectiveIDProperty().bind(ui.property3DPerspective());
                     gameContext().theGameController().letCurrentGameStateExpire();
                 });
                 animation.play();
@@ -335,7 +369,7 @@ public class PlayScene3D implements GameScene {
             case LEVEL_TRANSITION -> {
                 state.timer().resetIndefiniteTime();
                 replaceGameLevel3D();
-                perspectiveManager.initPerspective();
+                initPerspective();
                 state.timer().expire();
             }
             case GAME_OVER -> {
@@ -387,7 +421,7 @@ public class PlayScene3D implements GameScene {
             }
             default -> Logger.error("Unexpected game state '{}' on level start", gameContext().theGameState());
         }
-        perspectiveManager.initPerspective();
+        initPerspective();
         setActionBindings();
         fadeInSubScene();
     }
