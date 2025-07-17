@@ -8,7 +8,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._3d.Perspective;
+import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import javafx.scene.SubScene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -31,7 +31,7 @@ public class InfoBox3DSettings extends InfoBox {
     private CheckBox cbUsePlayScene3D;
     private ColorPicker pickerLightColor;
     private ColorPicker pickerFloorColor;
-    private ChoiceBox<Perspective.ID> comboPerspectives;
+    private ChoiceBox<PerspectiveID> comboPerspectives;
     private CheckBox cbPiPOn;
     private Slider sliderPiPSceneHeight;
     private Slider sliderPiPOpacity;
@@ -51,7 +51,7 @@ public class InfoBox3DSettings extends InfoBox {
         cbUsePlayScene3D     = addCheckBox("3D Play Scene");
         pickerLightColor     = addColorPicker("Light Color", ui.property3DLightColor());
         pickerFloorColor     = addColorPicker("Floor Color", ui.property3DFloorColor());
-        comboPerspectives    = addChoiceBox("Perspective", Perspective.ID.values());
+        comboPerspectives    = addChoiceBox("Perspective", PerspectiveID.values());
         addLabeledValue("Camera",        this::subSceneCameraInfo);
         addLabeledValue("Subscene Size", this::subSceneSizeInfo);
         addLabeledValue("Scene Size",    this::sceneSizeInfo);

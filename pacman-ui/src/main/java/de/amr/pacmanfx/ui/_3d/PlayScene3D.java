@@ -171,7 +171,7 @@ public class PlayScene3D implements GameScene {
 
     private List<RadioMenuItem> createPerspectiveRadioItems(ContextMenu menu) {
         var items = new ArrayList<RadioMenuItem>();
-        for (Perspective.ID id : Perspective.ID.values()) {
+        for (PerspectiveID id : PerspectiveID.values()) {
             var item = new RadioMenuItem(ui.theAssets().text("perspective_id_" + id.name()));
             item.setUserData(id);
             item.setToggleGroup(perspectiveToggleGroup);
@@ -191,9 +191,9 @@ public class PlayScene3D implements GameScene {
     }
 
     private void handle3DPerspectiveChange(
-        ObservableValue<? extends Perspective.ID> property,
-        Perspective.ID oldPerspectiveID,
-        Perspective.ID newPerspectiveID) {
+        ObservableValue<? extends PerspectiveID> property,
+        PerspectiveID oldPerspectiveID,
+        PerspectiveID newPerspectiveID) {
         for (Toggle toggle : perspectiveToggleGroup.getToggles()) {
             if (toggle.getUserData() == newPerspectiveID) {
                 perspectiveToggleGroup.selectToggle(toggle);
@@ -321,7 +321,7 @@ public class PlayScene3D implements GameScene {
                 var animation = new SequentialTransition(
                     pauseSec(2, () -> {
                         perspectiveManager.perspectiveIDProperty().unbind();
-                        perspectiveManager.perspectiveIDProperty().set(Perspective.ID.TOTAL);
+                        perspectiveManager.perspectiveIDProperty().set(PerspectiveID.TOTAL);
                     }),
                     levelCompletedAnimation.getOrCreateAnimation(),
                     pauseSec(1)
@@ -352,7 +352,7 @@ public class PlayScene3D implements GameScene {
             case TESTING_LEVELS_SHORT, TESTING_LEVELS_MEDIUM -> {
                 replaceGameLevel3D();
                 showLevelTestMessage(gameContext().theGameLevel().number());
-                ui.property3DPerspective().set(Perspective.ID.TOTAL);
+                ui.property3DPerspective().set(PerspectiveID.TOTAL);
             }
         }
     }

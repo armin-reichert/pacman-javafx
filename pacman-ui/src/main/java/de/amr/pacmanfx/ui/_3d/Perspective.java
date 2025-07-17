@@ -13,19 +13,7 @@ import javafx.scene.PerspectiveCamera;
  */
 public interface Perspective {
 
-    enum ID {
-        DRONE, TOTAL, TRACK_PLAYER, NEAR_PLAYER;
-
-        public ID prev() {
-            return values()[ordinal() == 0 ? values().length - 1 : ordinal() - 1];
-        }
-        public ID next() {
-            return values()[ordinal() < values().length - 1 ? ordinal() + 1 : 0];
-        }
-    }
-
     void init(PerspectiveCamera camera);
  
     void update(PerspectiveCamera camera, GameLevel level, Actor spottedActor);
-
 }

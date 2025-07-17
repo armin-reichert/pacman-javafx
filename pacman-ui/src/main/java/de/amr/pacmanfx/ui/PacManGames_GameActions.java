@@ -12,7 +12,7 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._3d.Perspective;
+import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.shape.DrawMode;
 import org.tinylog.Logger;
@@ -448,7 +448,7 @@ public interface PacManGames_GameActions {
     GameAction ACTION_PERSPECTIVE_NEXT = new GameAction() {
         @Override
         public void execute(GameUI ui) {
-            Perspective.ID id = ui.property3DPerspective().get().next();
+            PerspectiveID id = ui.property3DPerspective().get().next();
             ui.property3DPerspective().set(id);
             String msgKey = ui.theAssets().text("camera_perspective", ui.theAssets().text("perspective_id_" + id.name()));
             ui.showFlashMessage(msgKey);
@@ -463,7 +463,7 @@ public interface PacManGames_GameActions {
     GameAction ACTION_PERSPECTIVE_PREVIOUS = new GameAction() {
         @Override
         public void execute(GameUI ui) {
-            Perspective.ID id = ui.property3DPerspective().get().prev();
+            PerspectiveID id = ui.property3DPerspective().get().prev();
             ui.property3DPerspective().set(id);
             String msgKey = ui.theAssets().text("camera_perspective", ui.theAssets().text("perspective_id_" + id.name()));
             ui.showFlashMessage(msgKey);

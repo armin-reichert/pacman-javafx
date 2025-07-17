@@ -17,10 +17,10 @@ import static java.util.Objects.requireNonNull;
 
 public class PerspectiveManager {
 
-    private final Map<Perspective.ID, Perspective> perspectiveMap = new EnumMap<>(Perspective.ID.class);
+    private final Map<PerspectiveID, Perspective> perspectiveMap = new EnumMap<>(PerspectiveID.class);
     private final PerspectiveCamera camera;
 
-    private final ObjectProperty<Perspective.ID> perspectiveIDProperty = new SimpleObjectProperty<>(Perspective.ID.TOTAL) {
+    private final ObjectProperty<PerspectiveID> perspectiveIDProperty = new SimpleObjectProperty<>(PerspectiveID.TOTAL) {
         @Override
         protected void invalidated() {
             initPerspective();
@@ -29,18 +29,18 @@ public class PerspectiveManager {
 
     public PerspectiveManager(PerspectiveCamera camera) {
         this.camera = requireNonNull(camera);
-        perspectiveMap.put(Perspective.ID.DRONE, new DronePerspective());
-        perspectiveMap.put(Perspective.ID.TOTAL, new TotalPerspective());
-        perspectiveMap.put(Perspective.ID.TRACK_PLAYER, new TrackingPlayerPerspective());
-        perspectiveMap.put(Perspective.ID.NEAR_PLAYER, new StalkingPlayerPerspective());
+        perspectiveMap.put(PerspectiveID.DRONE, new DronePerspective());
+        perspectiveMap.put(PerspectiveID.TOTAL, new TotalPerspective());
+        perspectiveMap.put(PerspectiveID.TRACK_PLAYER, new TrackingPlayerPerspective());
+        perspectiveMap.put(PerspectiveID.NEAR_PLAYER, new StalkingPlayerPerspective());
     }
 
-    public ObjectProperty<Perspective.ID> perspectiveIDProperty() {
+    public ObjectProperty<PerspectiveID> perspectiveIDProperty() {
         return perspectiveIDProperty;
     }
 
     public void initPerspective() {
-        Perspective.ID id = perspectiveIDProperty.get();
+        PerspectiveID id = perspectiveIDProperty.get();
         if (id != null && perspectiveMap.containsKey(id)) {
             perspectiveMap.get(id).init(camera);
         } else {
@@ -49,7 +49,7 @@ public class PerspectiveManager {
     }
 
     public void updatePerspective(GameLevel gameLevel) {
-        Perspective.ID id = perspectiveIDProperty.get();
+        PerspectiveID id = perspectiveIDProperty.get();
         if (id != null && perspectiveMap.containsKey(id)) {
             perspectiveMap.get(id).update(camera, gameLevel, gameLevel.pac());
         } else {

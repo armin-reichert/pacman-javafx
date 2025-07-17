@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
-import de.amr.pacmanfx.ui._3d.Perspective;
+import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.layout.PacManGames_View;
@@ -138,7 +138,7 @@ public interface GameUI {
     ObjectProperty<Color>            property3DFloorColor();
     ObjectProperty<Color>            property3DLightColor();
     BooleanProperty                  property3DPacLightEnabled();
-    ObjectProperty<Perspective.ID>   property3DPerspective();
+    ObjectProperty<PerspectiveID>   property3DPerspective();
     DoubleProperty                   property3DWallHeight();
     DoubleProperty                   property3DWallOpacity();
 

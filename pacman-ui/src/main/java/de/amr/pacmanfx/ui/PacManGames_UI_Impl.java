@@ -10,7 +10,7 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._3d.Perspective;
+import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.layout.EditorView;
@@ -70,7 +70,7 @@ public class PacManGames_UI_Impl implements GameUI {
     final ObjectProperty<Color> property3DFloorColor           = new SimpleObjectProperty<>(Color.rgb(20,20,20));
     final ObjectProperty<Color> property3DLightColor           = new SimpleObjectProperty<>(Color.WHITE);
     final BooleanProperty property3DPacLightEnabled            = new SimpleBooleanProperty(true);
-    final ObjectProperty<Perspective.ID> property3DPerspective = new SimpleObjectProperty<>(Perspective.ID.TRACK_PLAYER);
+    final ObjectProperty<PerspectiveID> property3DPerspective = new SimpleObjectProperty<>(PerspectiveID.TRACK_PLAYER);
     final DoubleProperty property3DWallHeight                  = new SimpleDoubleProperty();
     final DoubleProperty property3DWallOpacity                 = new SimpleDoubleProperty(1.0);
 
@@ -306,7 +306,7 @@ public class PacManGames_UI_Impl implements GameUI {
     @Override public ObjectProperty<Color>            property3DFloorColor(){ return property3DFloorColor; }
     @Override public ObjectProperty<Color>            property3DLightColor(){ return property3DLightColor; }
     @Override public BooleanProperty                  property3DPacLightEnabled(){ return property3DPacLightEnabled; }
-    @Override public ObjectProperty<Perspective.ID>   property3DPerspective(){ return property3DPerspective; }
+    @Override public ObjectProperty<PerspectiveID>   property3DPerspective(){ return property3DPerspective; }
     @Override public DoubleProperty                   property3DWallHeight(){ return property3DWallHeight; }
     @Override public DoubleProperty                   property3DWallOpacity(){ return property3DWallOpacity; }
 
