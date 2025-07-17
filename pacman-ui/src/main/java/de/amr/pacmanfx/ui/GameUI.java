@@ -48,10 +48,10 @@ public interface GameUI {
         return new GameUI_Builder(PacManGames_UI_Impl.THE_ONE);
     }
 
-    Preferences prefs();
+    Preferences thePrefs();
 
     default Color colorFromPrefs(String colorKey, Color defaultColor) {
-        return Color.web(prefs().get(colorKey, formatColorHex(defaultColor)));
+        return Color.web(thePrefs().get(colorKey, formatColorHex(defaultColor)));
     }
 
     default Font fontFromPrefs(
@@ -59,9 +59,9 @@ public interface GameUI {
         String weightKey, int weightDefault,
         String sizeKey, float sizeDefault)
     {
-        String family = prefs().get(familyKey, familyDefault);
-        int weight = prefs().getInt(weightKey, weightDefault);
-        float size = prefs().getFloat(sizeKey, sizeDefault);
+        String family = thePrefs().get(familyKey, familyDefault);
+        int weight = thePrefs().getInt(weightKey, weightDefault);
+        float size = thePrefs().getFloat(sizeKey, sizeDefault);
         return Font.font(family, FontWeight.findByWeight(weight), size);
     }
 
@@ -167,8 +167,8 @@ public interface GameUI {
 
     // Views
     PacManGames_View currentView();
-    PlayView thePlayView();
-    StartPagesView theStartPagesView();
+    PlayView         thePlayView();
+    StartPagesView   theStartPagesView();
 
     void showEditorView();
     void showPlayView();

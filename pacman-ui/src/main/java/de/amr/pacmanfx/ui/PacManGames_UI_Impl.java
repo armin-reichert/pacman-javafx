@@ -79,11 +79,11 @@ public class PacManGames_UI_Impl implements GameUI {
     private final ObjectProperty<GameScene> propertyCurrentGameScene = new SimpleObjectProperty<>();
     private final BooleanProperty propertyMuted = new SimpleBooleanProperty(false);
 
-    private final Preferences prefs = Preferences.userNodeForPackage(PacManGames_UI_Impl.class);
-    private final GameContext        theGameContext;
+    private final Preferences        thePrefs = Preferences.userNodeForPackage(PacManGames_UI_Impl.class);
 
     private final PacManGames_Assets theAssets;
     private final GameClock          theGameClock;
+    private final GameContext        theGameContext;
     private final Keyboard           theKeyboard;
     private final Joypad             theJoypad;
     private final Stage              theStage;
@@ -98,16 +98,15 @@ public class PacManGames_UI_Impl implements GameUI {
     private final StatusIconBox iconBox;
 
     public PacManGames_UI_Impl(GameContext gameContext, Stage stage, double width, double height) {
-        this.theGameContext = requireNonNull(gameContext);
-
+        theGameContext = requireNonNull(gameContext);
+        theStage = requireNonNull(stage);
         theAssets = new PacManGames_Assets();
         theGameClock = new GameClock();
         theKeyboard = new Keyboard();
         theJoypad = new Joypad(theKeyboard);
-        theStage = requireNonNull(stage);
         theWatchdog = new DirectoryWatchdog(gameContext.theCustomMapDir());
 
-        storeDefaultPrefs();
+        storeDefaultPreferences();
 
         Scene mainScene = new Scene(rootPane, width, height);
         stage.setScene(mainScene);
@@ -164,41 +163,41 @@ public class PacManGames_UI_Impl implements GameUI {
         );
     }
 
-    private void storeDefaultPrefs() {
-        prefs.putFloat("3d.bonus.symbol.width", TS);
-        prefs.putFloat("3d.bonus.points.width", 1.8f * TS);
-        prefs.putFloat("3d.energizer.radius", 3.5f);
-        prefs.putFloat("3d.energizer.scaling.min", 0.2f);
-        prefs.putFloat("3d.energizer.scaling.max", 1.0f);
-        prefs.putFloat("3d.floor.padding", 5.0f);
-        prefs.putFloat("3d.floor.thickness", 0.5f);
-        prefs.putFloat("3d.ghost.size", 16.0f);
-        prefs.putFloat("3d.house.base_height", 12.0f);
-        prefs.putFloat("3d.house.opacity", 0.4f);
-        prefs.putFloat("3d.house.sensitivity", 1.5f * TS);
-        prefs.putFloat("3d.house.wall_thickness", 2.5f);
-        prefs.putFloat("3d.level_counter.elevation", 6f);
-        prefs.putInt  ("3d.lives_counter.capacity", 5);
-        prefs.put     ("3d.lives_counter.pillar_color", formatColorHex(Color.grayRgb(120)));
-        prefs.put     ("3d.lives_counter.plate_color",  formatColorHex(Color.grayRgb(180)));
-        prefs.putFloat("3d.lives_counter.shape_size", 12f);
-        prefs.putFloat("3d.obstacle.base_height", 4.0f);
-        prefs.putFloat("3d.obstacle.wall_thickness", 2.25f);
-        prefs.putFloat("3d.pac.size", 17f);
-        prefs.putFloat("3d.pellet.radius", 1);
+    private void storeDefaultPreferences() {
+        thePrefs.putFloat("3d.bonus.symbol.width", TS);
+        thePrefs.putFloat("3d.bonus.points.width", 1.8f * TS);
+        thePrefs.putFloat("3d.energizer.radius", 3.5f);
+        thePrefs.putFloat("3d.energizer.scaling.min", 0.2f);
+        thePrefs.putFloat("3d.energizer.scaling.max", 1.0f);
+        thePrefs.putFloat("3d.floor.padding", 5.0f);
+        thePrefs.putFloat("3d.floor.thickness", 0.5f);
+        thePrefs.putFloat("3d.ghost.size", 16.0f);
+        thePrefs.putFloat("3d.house.base_height", 12.0f);
+        thePrefs.putFloat("3d.house.opacity", 0.4f);
+        thePrefs.putFloat("3d.house.sensitivity", 1.5f * TS);
+        thePrefs.putFloat("3d.house.wall_thickness", 2.5f);
+        thePrefs.putFloat("3d.level_counter.elevation", 6f);
+        thePrefs.putInt  ("3d.lives_counter.capacity", 5);
+        thePrefs.put     ("3d.lives_counter.pillar_color", formatColorHex(Color.grayRgb(120)));
+        thePrefs.put     ("3d.lives_counter.plate_color",  formatColorHex(Color.grayRgb(180)));
+        thePrefs.putFloat("3d.lives_counter.shape_size", 12f);
+        thePrefs.putFloat("3d.obstacle.base_height", 4.0f);
+        thePrefs.putFloat("3d.obstacle.wall_thickness", 2.25f);
+        thePrefs.putFloat("3d.pac.size", 17f);
+        thePrefs.putFloat("3d.pellet.radius", 1);
 
         // "Kornblumenblau, sind die Augen der Frauen beim Weine..."
-        prefs.put     ("context_menu.title.fill", formatColorHex(Color.CORNFLOWERBLUE));
-        prefs.put     ("context_menu.title.font.family", "Dialog");
-        prefs.putInt  ("context_menu.title.font.weight", 850);
-        prefs.putFloat("context_menu.title.font.size", 14);
+        thePrefs.put     ("context_menu.title.fill", formatColorHex(Color.CORNFLOWERBLUE));
+        thePrefs.put     ("context_menu.title.font.family", "Dialog");
+        thePrefs.putInt  ("context_menu.title.font.weight", 850);
+        thePrefs.putFloat("context_menu.title.font.size", 14);
 
-        prefs.put     ("debug_text.fill", formatColorHex(Color.YELLOW));
-        prefs.put     ("debug_text.font.family", "Sans");
-        prefs.putInt  ("debug_text.font.weight", 750);
-        prefs.putFloat("debug_text.font.size", 16);
+        thePrefs.put     ("debug_text.fill", formatColorHex(Color.YELLOW));
+        thePrefs.put     ("debug_text.font.family", "Sans");
+        thePrefs.putInt  ("debug_text.font.weight", 750);
+        thePrefs.putFloat("debug_text.font.size", 16);
 
-        prefs.putFloat("scene2d.max_scaling", 5);
+        thePrefs.putFloat("scene2d.max_scaling", 5);
     }
 
     public void configure(Map<String, Class<? extends GameUI_Config>> configClassesMap) {
@@ -318,11 +317,14 @@ public class PacManGames_UI_Impl implements GameUI {
     @Override public PlayView thePlayView() {
         return playView;
     }
+    @Override public StartPagesView theStartPagesView() { return startPagesView; }
+
+    @Override public Stage theStage() {
+        return theStage;
+    }
 
     @Override
-    public Preferences prefs() {
-        return prefs;
-    }
+    public Preferences thePrefs() { return thePrefs; }
 
     @Override
     public void restart() {
@@ -415,14 +417,6 @@ public class PacManGames_UI_Impl implements GameUI {
         propertyCurrentView.set(startPagesView);
         startPagesView.currentStartPage().ifPresent(startPage -> startPage.layoutRoot().requestFocus());
     }
-
-    @Override
-    public Stage theStage() {
-        return theStage;
-    }
-
-    @Override
-    public StartPagesView theStartPagesView() { return startPagesView; }
 
     @Override
     public void terminateApp() {

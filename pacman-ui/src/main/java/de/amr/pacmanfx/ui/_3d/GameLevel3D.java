@@ -176,10 +176,10 @@ public class GameLevel3D extends Group implements Destroyable {
         levelCounter3D = new LevelCounter3D(ui.theConfiguration(), animationManager, ui.theGameContext().theGame().theHUD().theLevelCounter());
         levelCounter3D.setTranslateX(TS * (ui.theGameContext().theGameLevel().worldMap().numCols() - 2));
         levelCounter3D.setTranslateY(2 * TS);
-        levelCounter3D.setTranslateZ(-ui.prefs().getFloat("3d.level_counter.elevation", 6f));
+        levelCounter3D.setTranslateZ(-ui.thePrefs().getFloat("3d.level_counter.elevation", 6f));
         getChildren().add(levelCounter3D);
 
-        int capacity = ui.prefs().getInt("3d.lives_counter.capacity", 5);
+        int capacity = ui.thePrefs().getInt("3d.lives_counter.capacity", 5);
         Color pillarColor = ui.colorFromPrefs("3d.lives_counter.pillar_color", Color.grayRgb(120));
         Color plateColor = ui.colorFromPrefs("3d.lives_counter.plate_color", Color.grayRgb(180));
         livesCounterShapes = new Node[capacity];
@@ -219,7 +219,7 @@ public class GameLevel3D extends Group implements Destroyable {
                 dressMeshViews[ghost.personality()],
                 pupilsMeshViews[ghost.personality()],
                 eyesMeshViews[ghost.personality()],
-                ui.prefs().getFloat("3d.ghost.size", 16.0f),
+                ui.thePrefs().getFloat("3d.ghost.size", 16.0f),
                 gameLevel().data().numFlashes()
             );
         }).toList();
@@ -232,8 +232,8 @@ public class GameLevel3D extends Group implements Destroyable {
         floor3D = new Floor3D(
             gameLevel().worldMap().numCols() * TS,
             gameLevel().worldMap().numRows() * TS,
-            ui.prefs().getFloat("3d.floor.thickness", 5.0f),
-            ui.prefs().getFloat("3d.floor.padding", 5.0f)
+            ui.thePrefs().getFloat("3d.floor.thickness", 5.0f),
+            ui.thePrefs().getFloat("3d.floor.padding", 5.0f)
         );
         floor3D.materialProperty().bind(ui.property3DFloorColor().map(Ufx::coloredPhongMaterial));
 
@@ -255,7 +255,7 @@ public class GameLevel3D extends Group implements Destroyable {
 
         wallOpacityProperty.bind(ui.property3DWallOpacity());
 
-        obstacleBaseHeightProperty.set(ui.prefs().getFloat("3d.obstacle.base_height", 4.0f));
+        obstacleBaseHeightProperty.set(ui.thePrefs().getFloat("3d.obstacle.base_height", 4.0f));
         r3D = new TerrainRenderer3D();
         r3D.setOnWallCreated(wall3D -> wall3D.baseHeightProperty().bind(obstacleBaseHeightProperty));
         r3D.setCylinderDivisions(24);
@@ -267,19 +267,19 @@ public class GameLevel3D extends Group implements Destroyable {
                     maze3D,
                     obstacle,
                     isObstacleTheWorldBorder(gameLevel().worldMap(), obstacle),
-                    ui.prefs().getFloat("3d.obstacle.wall_thickness", 2.25f),
+                    ui.thePrefs().getFloat("3d.obstacle.wall_thickness", 2.25f),
                     wallBaseMaterial, wallTopMaterial);
             }
         }
 
-        houseBaseHeightProperty.set(ui.prefs().getFloat("3d.house.base_height", 12.0f));
+        houseBaseHeightProperty.set(ui.thePrefs().getFloat("3d.house.base_height", 12.0f));
         gameLevel().house().ifPresent(house -> {
             house3D = new ArcadeHouse3D(
                 animationManager,
                 house,
-                ui.prefs().getFloat("3d.house.base_height", 12.0f),
-                ui.prefs().getFloat("3d.house.wall_thickness", 2.5f),
-                ui.prefs().getFloat("3d.house.opacity", 0.4f),
+                ui.thePrefs().getFloat("3d.house.base_height", 12.0f),
+                ui.thePrefs().getFloat("3d.house.wall_thickness", 2.5f),
+                ui.thePrefs().getFloat("3d.house.opacity", 0.4f),
                 colorScheme.fill(),
                 colorScheme.stroke(),
                 colorScheme.door()
@@ -373,7 +373,7 @@ public class GameLevel3D extends Group implements Destroyable {
         houseLightOnProperty.set(houseAccessRequired);
 
         gameLevel().house().ifPresent(house -> {
-            float sensitivity = ui.prefs().getFloat("3d.house.sensitivity", 1.5f * TS);
+            float sensitivity = ui.thePrefs().getFloat("3d.house.sensitivity", 1.5f * TS);
             boolean ghostNearHouseEntry = gameLevel().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
                 .filter(ghost -> ghost.position().euclideanDist(house.entryPosition()) <= sensitivity)
                 .anyMatch(Ghost::isVisible);
@@ -410,16 +410,16 @@ public class GameLevel3D extends Group implements Destroyable {
     private void createPelletsAndEnergizers3D(Mesh pelletMesh, PhongMaterial pelletMaterial) {
         gameLevel().tilesContainingFood().forEach(tile -> {
             if (gameLevel().isEnergizerPosition(tile)) {
-                float radius = ui.prefs().getFloat("3d.energizer.radius", 3.5f);
-                float floorThickness = ui.prefs().getFloat("3d.floor.thickness", 0.5f);
+                float radius = ui.thePrefs().getFloat("3d.energizer.radius", 3.5f);
+                float floorThickness = ui.thePrefs().getFloat("3d.floor.thickness", 0.5f);
                 float x = tile.x() * TS + HTS;
                 float y = tile.y() * TS + HTS;
                 float z = -2 * radius - 0.5f * floorThickness;
                 var energizer3D = new Energizer3D(
                     animationManager,
                     radius,
-                    ui.prefs().getFloat("3d.energizer.scaling.min", 0.2f),
-                    ui.prefs().getFloat("3d.energizer.scaling.max", 1.0f)
+                    ui.thePrefs().getFloat("3d.energizer.scaling.min", 0.2f),
+                    ui.thePrefs().getFloat("3d.energizer.scaling.max", 1.0f)
                 );
                 energizer3D.setMaterial(pelletMaterial);
                 energizer3D.setTile(tile);
@@ -463,7 +463,7 @@ public class GameLevel3D extends Group implements Destroyable {
                 energizer3D.setHideAndEatAnimation(hideAndExplodeAnimation);
             }
             else {
-                float radius = ui.prefs().getFloat("3d.pellet.radius", 1);
+                float radius = ui.thePrefs().getFloat("3d.pellet.radius", 1);
                 float x = tile.x() * TS + HTS;
                 float y = tile.y() * TS + HTS;
                 float z = -6;
@@ -511,8 +511,8 @@ public class GameLevel3D extends Group implements Destroyable {
             bonus3D.destroy();
         }
         bonus3D = new Bonus3D(animationManager, bonus,
-            ui.theConfiguration().bonusSymbolImage(bonus.symbol()), ui.prefs().getFloat("3d.bonus.symbol.width", TS),
-            ui.theConfiguration().bonusValueImage(bonus.symbol()), ui.prefs().getFloat("3d.bonus.points.width", 1.8f * TS));
+            ui.theConfiguration().bonusSymbolImage(bonus.symbol()), ui.thePrefs().getFloat("3d.bonus.symbol.width", TS),
+            ui.theConfiguration().bonusValueImage(bonus.symbol()), ui.thePrefs().getFloat("3d.bonus.points.width", 1.8f * TS));
         mazeGroup.getChildren().add(bonus3D);
         bonus3D.showEdible();
     }
