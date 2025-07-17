@@ -35,7 +35,7 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_MEDIUM;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_SHORT;
-import static de.amr.pacmanfx.ui.GameUI.*;
+import static de.amr.pacmanfx.ui.GameUI.GLOBAL_ACTION_BINDINGS;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
 
@@ -296,8 +296,8 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
                 ctx().strokeRect(-0.5*size, -0.5*size, size, size);
                 ctx().restore();
             });
-            ctx().setFill(DEBUG_TEXT_FILL);
-            ctx().setFont(DEBUG_TEXT_FONT);
+            ctx().setFill(debugTextFill);
+            ctx().setFont(debugTextFont);
             String gameStateText = gameContext().theGameState().name() + " (Tick %d)".formatted(gameContext().theGameState().timer().tickCount());
             String huntingPhaseText = "";
             if (gameContext().theGameState() == GameState.HUNTING) {

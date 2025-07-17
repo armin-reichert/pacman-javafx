@@ -24,8 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.GameUI.DEBUG_TEXT_FILL;
-import static de.amr.pacmanfx.ui.GameUI.DEBUG_TEXT_FONT;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -34,6 +32,9 @@ import static java.util.Objects.requireNonNull;
 public abstract class GameScene2D implements GameScene {
 
     protected final GameUI ui;
+
+    protected final Color debugTextFill;
+    protected final Font debugTextFont;
 
     protected final ObjectProperty<Font> arcadeFont8Property      = new SimpleObjectProperty<>();
     protected final ObjectProperty<Font> arcadeFont6Property      = new SimpleObjectProperty<>();
@@ -50,6 +51,12 @@ public abstract class GameScene2D implements GameScene {
     protected GameScene2D(GameUI ui) {
         this.ui = requireNonNull(ui);
         actionBindings = new ActionBindingMap(ui.theKeyboard());
+        debugTextFill = ui.colorFromPrefs("debug_text.fill", Color.YELLOW);
+        debugTextFont = ui.fontFromPrefs(
+            "debug_text.font.family", "Sans",
+            "debug_text.font.weight", 750,
+            "debug_text.font.size", 16
+        );
     }
 
     @Override
@@ -167,8 +174,8 @@ public abstract class GameScene2D implements GameScene {
     protected void drawDebugInfo() {
         Vector2f sizePx = sizeInPx();
         gameRenderer.drawTileGrid(sizePx.x(), sizePx.y(), Color.LIGHTGRAY);
-        ctx().setFill(DEBUG_TEXT_FILL);
-        ctx().setFont(DEBUG_TEXT_FONT);
+        ctx().setFill(debugTextFill);
+        ctx().setFont(debugTextFont);
         TickTimer stateTimer = gameContext().theGameState().timer();
         String stateText = "Game State: '%s' (Tick %d of %s)".formatted(
             gameContext().theGameState(),

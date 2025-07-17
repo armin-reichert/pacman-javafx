@@ -19,8 +19,6 @@ import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ANIM_BIG_PAC_M
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
-import static de.amr.pacmanfx.ui.GameUI.DEBUG_TEXT_FILL;
-import static de.amr.pacmanfx.ui.GameUI.DEBUG_TEXT_FONT;
 
 /**
  * First cut scene in Arcade Pac-Man game:<br>
@@ -112,6 +110,6 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     protected void drawDebugInfo() {
         super.drawDebugInfo();
         String text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
-        gameRenderer.fillTextAtScaledPosition(text, DEBUG_TEXT_FILL, DEBUG_TEXT_FONT, tiles_to_px(1), tiles_to_px(5));
+        gameRenderer.fillTextAtScaledPosition(text, debugTextFill, debugTextFont, tiles_to_px(1), tiles_to_px(5));
     }
 }

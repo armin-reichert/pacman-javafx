@@ -192,6 +192,11 @@ public class PacManGames_UI_Impl implements GameUI {
         prefs.put     ("context_menu.title.font.family", "Dialog");
         prefs.putInt  ("context_menu.title.font.weight", 850);
         prefs.putFloat("context_menu.title.font.size", 14);
+
+        prefs.put     ("debug_text.fill", formatColorHex(Color.YELLOW));
+        prefs.put     ("debug_text.font.family", "Sans");
+        prefs.putInt  ("debug_text.font.weight", 750);
+        prefs.putFloat("debug_text.font.size", 16);
     }
 
     public void configure(Map<String, Class<? extends GameUI_Config>> configClassesMap) {

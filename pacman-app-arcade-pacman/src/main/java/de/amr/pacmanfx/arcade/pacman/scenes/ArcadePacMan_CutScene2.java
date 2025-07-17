@@ -22,8 +22,6 @@ import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
-import static de.amr.pacmanfx.ui.GameUI.DEBUG_TEXT_FILL;
-import static de.amr.pacmanfx.ui.GameUI.DEBUG_TEXT_FONT;
 
 /**
  * Second cut scene in Arcade Pac-Man game:<br>
@@ -141,6 +139,6 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     protected void drawDebugInfo() {
         super.drawDebugInfo();
         String text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
-        gameRenderer.fillTextAtScaledPosition(text, DEBUG_TEXT_FILL, DEBUG_TEXT_FONT, tiles_to_px(1), tiles_to_px(5));
+        gameRenderer.fillTextAtScaledPosition(text, debugTextFill, debugTextFont, tiles_to_px(1), tiles_to_px(5));
     }
 }

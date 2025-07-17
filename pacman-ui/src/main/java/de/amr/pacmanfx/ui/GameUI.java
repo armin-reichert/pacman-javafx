@@ -50,6 +50,21 @@ public interface GameUI {
 
     Preferences prefs();
 
+    default Color colorFromPrefs(String colorKey, Color defaultColor) {
+        return Color.web(prefs().get(colorKey, formatColorHex(defaultColor)));
+    }
+
+    default Font fontFromPrefs(
+        String familyKey, String familyDefault,
+        String weightKey, int weightDefault,
+        String sizeKey, float sizeDefault)
+    {
+        String family = prefs().get(familyKey, familyDefault);
+        int weight = prefs().getInt(weightKey, weightDefault);
+        float size = prefs().getFloat(sizeKey, sizeDefault);
+        return Font.font(family, FontWeight.findByWeight(weight), size);
+    }
+
     // Global key combinations and action bindings
     KeyCombination KEY_FULLSCREEN  = nude(KeyCode.F11);
     KeyCombination KEY_MUTE        = alt(KeyCode.M);
@@ -92,19 +107,17 @@ public interface GameUI {
     );
 
     default MenuItem createContextMenuTitleItem(String title) {
-        String family = prefs().get("context_menu.title.font.family", "Dialog");
-        int weight = prefs().getInt("context_menu.title.font.weight", 850);
-        float size = prefs().getFloat("context_menu.title.font.size", 14);
-        Font font = Font.font(family, FontWeight.findByWeight(weight), size);
-        Color fillColor = Color.web(prefs().get("context_menu.title.fill", formatColorHex(Color.CORNFLOWERBLUE)));
+        Font font = fontFromPrefs(
+            "context_menu.title.font.family", "Dialog",
+            "context_menu.title.font.weight", 850,
+            "context_menu.title.font.size", 14
+        );
+        Color fillColor = colorFromPrefs("context_menu.title.fill", Color.CORNFLOWERBLUE);
         var text = new Text(title);
         text.setFont(font);
         text.setFill(fillColor);
         return new CustomMenuItem(text);
     }
-
-    Color DEBUG_TEXT_FILL          = Color.YELLOW;
-    Font DEBUG_TEXT_FONT           = Font.font("Sans", FontWeight.BOLD, 16);
 
     double MAX_SCENE_2D_SCALING    = 5;
 
