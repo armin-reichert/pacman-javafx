@@ -1,0 +1,37 @@
+/*
+Copyright (c) 2021-2025 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
+package de.amr.pacmanfx.ui._3d;
+
+import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.actors.Actor;
+import javafx.scene.PerspectiveCamera;
+import javafx.scene.transform.Rotate;
+
+import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
+
+public class TrackingPlayerPerspective implements Perspective {
+
+    @Override
+    public void init(PerspectiveCamera camera) {
+        camera.setNearClip(0.1);
+        camera.setFarClip(10000.0);
+        camera.setFieldOfView(40); // default: 30
+        camera.setRotationAxis(Rotate.X_AXIS);
+        camera.setRotate(70);
+        camera.setTranslateZ(-60);
+    }
+
+    @Override
+    public void update(PerspectiveCamera camera, GameLevel level, Actor spottedActor) {
+        double speedX = 0.03;
+        double speedY = 0.06;
+        double worldWidth = level.worldMap().numCols() * TS;
+        double targetX = Math.clamp(spottedActor.x(), 80, worldWidth - 80);
+        double targetY = spottedActor.y() + 150;
+        camera.setTranslateX(lerp(camera.getTranslateX(), targetX, speedX));
+        camera.setTranslateY(lerp(camera.getTranslateY(), targetY, speedY));
+    }
+}

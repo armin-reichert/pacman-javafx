@@ -29,10 +29,10 @@ public class PerspectiveManager {
 
     public PerspectiveManager(PerspectiveCamera camera) {
         this.camera = requireNonNull(camera);
-        perspectiveMap.put(Perspective.ID.DRONE, new Perspective.Drone());
-        perspectiveMap.put(Perspective.ID.TOTAL, new Perspective.Total());
-        perspectiveMap.put(Perspective.ID.TRACK_PLAYER, new Perspective.TrackingPlayer());
-        perspectiveMap.put(Perspective.ID.NEAR_PLAYER, new Perspective.StalkingPlayer());
+        perspectiveMap.put(Perspective.ID.DRONE, new DronePerspective());
+        perspectiveMap.put(Perspective.ID.TOTAL, new TotalPerspective());
+        perspectiveMap.put(Perspective.ID.TRACK_PLAYER, new TrackingPlayerPerspective());
+        perspectiveMap.put(Perspective.ID.NEAR_PLAYER, new StalkingPlayerPerspective());
     }
 
     public ObjectProperty<Perspective.ID> perspectiveIDProperty() {
