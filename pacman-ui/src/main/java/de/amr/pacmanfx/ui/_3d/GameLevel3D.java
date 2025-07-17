@@ -180,8 +180,8 @@ public class GameLevel3D extends Group implements Destroyable {
         getChildren().add(levelCounter3D);
 
         int capacity = ui.prefs().getInt("3d.lives_counter.capacity", 5);
-        String pillarColor = ui.prefs().get("3d.lives_counter.pillar_color", formatColorHex(Color.grayRgb(120)));
-        String plateColor = ui.prefs().get("3d.lives_counter.plate_color", formatColorHex(Color.grayRgb(180)));
+        Color pillarColor = ui.colorFromPrefs("3d.lives_counter.pillar_color", Color.grayRgb(120));
+        Color plateColor = ui.colorFromPrefs("3d.lives_counter.plate_color", Color.grayRgb(180));
         livesCounterShapes = new Node[capacity];
         for (int i = 0; i < livesCounterShapes.length; ++i) {
             livesCounterShapes[i] = ui.theConfiguration().createLivesCounterShape3D();
@@ -190,8 +190,8 @@ public class GameLevel3D extends Group implements Destroyable {
         livesCounter3D.setTranslateX(2 * TS);
         livesCounter3D.setTranslateY(2 * TS);
         livesCounter3D.livesCountProperty().bind(livesCountProperty);
-        livesCounter3D.pillarColorProperty().set(Color.web(pillarColor));
-        livesCounter3D.plateColorProperty().set(Color.web(plateColor));
+        livesCounter3D.pillarColorProperty().set(pillarColor);
+        livesCounter3D.plateColorProperty().set(plateColor);
         livesCounter3D.light().colorProperty().set(Color.CORNFLOWERBLUE);
         livesCounter3D.lookingAroundAnimation().playFromStart();
         getChildren().add(livesCounter3D);
