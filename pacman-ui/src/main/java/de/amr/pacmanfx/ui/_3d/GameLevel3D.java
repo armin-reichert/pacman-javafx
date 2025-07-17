@@ -146,7 +146,7 @@ public class GameLevel3D extends Group implements Destroyable {
             ? new WorldMapColorScheme(Color.grayRgb(42), proposedColorScheme.stroke(), proposedColorScheme.door(), proposedColorScheme.pellet())
             : proposedColorScheme;
 
-        Mesh ghostDressMesh = ui.theModel3DRepository().ghostDressMesh();
+        Mesh ghostDressMesh = ui.theAssets().theModel3DRepository().ghostDressMesh();
         dressMeshViews = new MeshView[] {
                 new MeshView(ghostDressMesh),
                 new MeshView(ghostDressMesh),
@@ -154,7 +154,7 @@ public class GameLevel3D extends Group implements Destroyable {
                 new MeshView(ghostDressMesh),
         };
 
-        Mesh ghostPupilsMesh = ui.theModel3DRepository().ghostPupilsMesh();
+        Mesh ghostPupilsMesh = ui.theAssets().theModel3DRepository().ghostPupilsMesh();
         pupilsMeshViews = new MeshView[] {
                 new MeshView(ghostPupilsMesh),
                 new MeshView(ghostPupilsMesh),
@@ -162,7 +162,7 @@ public class GameLevel3D extends Group implements Destroyable {
                 new MeshView(ghostPupilsMesh),
         };
 
-        Mesh ghostEyeballsMesh = ui.theModel3DRepository().ghostEyeballsMesh();
+        Mesh ghostEyeballsMesh = ui.theAssets().theModel3DRepository().ghostEyeballsMesh();
         eyesMeshViews = new MeshView[] {
                 new MeshView(ghostEyeballsMesh),
                 new MeshView(ghostEyeballsMesh),
@@ -287,7 +287,7 @@ public class GameLevel3D extends Group implements Destroyable {
         mazeGroup.getChildren().addAll(floor3D, maze3D);
 
         pelletMaterial = coloredPhongMaterial(colorScheme.pellet());
-        createPelletsAndEnergizers3D(ui.theModel3DRepository().pelletMesh(), pelletMaterial);
+        createPelletsAndEnergizers3D(ui.theAssets().theModel3DRepository().pelletMesh(), pelletMaterial);
         energizers3D.stream().map(Eatable3D::shape3D).forEach(getChildren()::add);
         pellets3D   .stream().map(Eatable3D::shape3D).forEach(getChildren()::add);
 

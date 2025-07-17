@@ -389,7 +389,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public MsPacManBody createLivesCounterShape3D() {
-        return ui.theModel3DRepository().createMsPacManBody(
+        return ui.theAssets().theModel3DRepository().createMsPacManBody(
             GameUI.Settings3D.LIVES_COUNTER_3D_SHAPE_SIZE,
             getAssetNS("pac.color.head"),
             getAssetNS("pac.color.eyes"),
@@ -403,7 +403,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     @Override
     public MsPacMan3D createPac3D(AnimationManager animationManager, Pac pac) {
         var pac3D = new MsPacMan3D(
-            ui.theModel3DRepository(),
+            ui.theAssets().theModel3DRepository(),
             animationManager,
             pac,
             GameUI.Settings3D.PAC_3D_SIZE,

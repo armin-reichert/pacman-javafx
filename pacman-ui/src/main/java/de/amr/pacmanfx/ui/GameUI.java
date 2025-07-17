@@ -14,7 +14,6 @@ import de.amr.pacmanfx.ui.layout.PlayView;
 import de.amr.pacmanfx.ui.layout.StartPagesView;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.GameClock;
-import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -145,14 +144,13 @@ public interface GameUI {
     DoubleProperty                   property3DWallOpacity();
 
     PacManGames_Assets               theAssets();
+    <T extends GameUI_Config> T      theConfiguration();
     GameClock                        theGameClock();
     GameContext                      theGameContext();
     Joypad                           theJoypad();
     Keyboard                         theKeyboard();
-    Model3DRepository                theModel3DRepository();
     SoundManager                     theSound();
     Stage                            theStage();
-    <T extends GameUI_Config> T theConfiguration();
     DirectoryWatchdog                theWatchdog();
 
     void restart();
@@ -161,7 +159,6 @@ public interface GameUI {
 
     GameUI_Config uiConfig(String gameVariant);
     void setUIConfig(String variant, GameUI_Config configuration);
-
 
     // Game scenes
     Optional<GameScene> currentGameScene();

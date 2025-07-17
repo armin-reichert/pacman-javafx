@@ -202,7 +202,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
 
     @Override
     public PacBody createLivesCounterShape3D() {
-        return ui.theModel3DRepository().createPacBody(
+        return ui.theAssets().theModel3DRepository().createPacBody(
                 GameUI.Settings3D.LIVES_COUNTER_3D_SHAPE_SIZE,
                 getAssetNS("pac.color.head"),
                 getAssetNS("pac.color.eyes"),
@@ -212,7 +212,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
 
     @Override
     public PacMan3D createPac3D(AnimationManager animationManager, Pac pac) {
-        var pac3D = new PacMan3D(ui.theModel3DRepository(),
+        var pac3D = new PacMan3D(ui.theAssets().theModel3DRepository(),
             animationManager,
             pac,
             GameUI.Settings3D.PAC_3D_SIZE,

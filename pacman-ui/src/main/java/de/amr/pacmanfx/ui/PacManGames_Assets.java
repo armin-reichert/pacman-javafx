@@ -8,20 +8,24 @@ import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.assets.Picker;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
+import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import javafx.scene.text.Font;
 
 /**
- * Common assets used in the Pac-Man games UI.
+ * Stores assets used in the Pac-Man games UI.
  */
 public class PacManGames_Assets extends AssetStorage implements ResourceManager {
 
-    protected Picker<String> pickerForGameOverTexts;
-    protected Picker<String> pickerForLevelCompleteTexts;
+    private final Picker<String> pickerForGameOverTexts;
+    private final Picker<String> pickerForLevelCompleteTexts;
+    private final Model3DRepository model3DRepository;
 
     @Override
     public Class<?> resourceRootClass() { return PacManGames_Assets.class; }
 
     public PacManGames_Assets() {
+        model3DRepository = new Model3DRepository();
+
         localizedTextBundle = getModuleBundle("de.amr.pacmanfx.ui.localized_texts");
 
         pickerForGameOverTexts = Picker.fromBundle(localizedTextBundle, "game.over");
@@ -41,6 +45,10 @@ public class PacManGames_Assets extends AssetStorage implements ResourceManager 
         store("voice.autopilot.on",      url("sound/voice/autopilot-on.mp3"));
         store("voice.immunity.off",      url("sound/voice/immunity-off.mp3"));
         store("voice.immunity.on",       url("sound/voice/immunity-on.mp3"));
+    }
+
+    public Model3DRepository theModel3DRepository() {
+        return model3DRepository;
     }
 
     public Font arcadeFont(float size) { return font("font.arcade", size); }

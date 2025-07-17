@@ -19,7 +19,6 @@ import de.amr.pacmanfx.ui.layout.PlayView;
 import de.amr.pacmanfx.ui.layout.StartPagesView;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.GameClock;
-import de.amr.pacmanfx.uilib.model3D.Model3DRepository;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
@@ -77,11 +76,11 @@ public class PacManGames_UI_Impl implements GameUI {
     private final ObjectProperty<GameScene> propertyCurrentGameScene = new SimpleObjectProperty<>();
     private final BooleanProperty propertyMuted = new SimpleBooleanProperty(false);
 
+    private final GameContext        theGameContext;
+
     private final PacManGames_Assets theAssets;
     private final GameClock          theGameClock;
-    private final GameContext        theGameContext;
     private final Keyboard           theKeyboard;
-    private final Model3DRepository  theModel3DRepository;
     private final Joypad             theJoypad;
     private final Stage              theStage;
     private final DirectoryWatchdog  theWatchdog;
@@ -102,7 +101,6 @@ public class PacManGames_UI_Impl implements GameUI {
         theGameClock = new GameClock();
         theKeyboard = new Keyboard();
         theJoypad = new Joypad(theKeyboard);
-        theModel3DRepository = new Model3DRepository();
         theWatchdog = new DirectoryWatchdog(gameContext.theCustomMapDir());
 
         this.theStage = requireNonNull(stage);
@@ -229,7 +227,7 @@ public class PacManGames_UI_Impl implements GameUI {
 
     private EditorView editorView() {
         if (editorView == null) {
-            var editor = new TileMapEditor(theStage, theModel3DRepository);
+            var editor = new TileMapEditor(theStage, theAssets().theModel3DRepository());
             var miReturnToGame = new MenuItem(theAssets().text("back_to_game"));
             miReturnToGame.setOnAction(e -> {
                 editor.stop();
@@ -278,9 +276,6 @@ public class PacManGames_UI_Impl implements GameUI {
     }
     @Override public PlayView thePlayView() {
         return playView;
-    }
-    @Override public Model3DRepository   theModel3DRepository() {
-        return theModel3DRepository;
     }
 
     @Override
