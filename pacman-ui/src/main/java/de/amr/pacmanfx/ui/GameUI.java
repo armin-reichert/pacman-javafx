@@ -119,8 +119,6 @@ public interface GameUI {
         return new CustomMenuItem(text);
     }
 
-    double MAX_SCENE_2D_SCALING    = 5;
-
     // Global properties
     ObjectProperty<Color>            propertyCanvasBackgroundColor();
     BooleanProperty                  propertyCanvasFontSmoothing();

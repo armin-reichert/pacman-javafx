@@ -197,6 +197,8 @@ public class PacManGames_UI_Impl implements GameUI {
         prefs.put     ("debug_text.font.family", "Sans");
         prefs.putInt  ("debug_text.font.weight", 750);
         prefs.putFloat("debug_text.font.size", 16);
+
+        prefs.putFloat("scene2d.max_scaling", 5);
     }
 
     public void configure(Map<String, Class<? extends GameUI_Config>> configClassesMap) {

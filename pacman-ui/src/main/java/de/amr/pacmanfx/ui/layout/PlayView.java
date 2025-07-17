@@ -43,7 +43,6 @@ import java.util.List;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.GameUI.GLOBAL_ACTION_BINDINGS;
-import static de.amr.pacmanfx.ui.GameUI.MAX_SCENE_2D_SCALING;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.uilib.Ufx.border;
 import static de.amr.pacmanfx.uilib.Ufx.colorBackground;
@@ -355,7 +354,7 @@ public class PlayView implements PacManGames_View {
         gameScene2D.setCanvas(commonCanvas);
         gameScene2D.setGameRenderer(ui.theConfiguration().createGameRenderer(commonCanvas));
         gameScene2D.scalingProperty().bind(canvasContainer.scalingProperty().map(
-            scaling -> Math.min(scaling.doubleValue(), MAX_SCENE_2D_SCALING)));
+            scaling -> Math.min(scaling.doubleValue(), ui.prefs().getFloat("scene2d.max_scaling", 5))));
         Vector2f sizePx = gameScene2D.sizeInPx();
         canvasContainer.setUnscaledCanvasSize(sizePx.x(), sizePx.y());
         canvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
