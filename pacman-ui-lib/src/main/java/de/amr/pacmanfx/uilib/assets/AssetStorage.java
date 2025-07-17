@@ -11,7 +11,10 @@ import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 import static java.util.Objects.requireNonNull;
 
@@ -30,12 +33,8 @@ public class AssetStorage {
     }
 
     public void removeAll(String keyPrefix) {
-        for (Iterator<String> it = assetMap.keySet().iterator(); it.hasNext(); ) {
-            String key = it.next();
-            if (key.startsWith(keyPrefix)) {
-                it.remove();
-            }
-        }
+        requireNonNull(keyPrefix);
+        assetMap.keySet().removeIf(key -> key.startsWith(keyPrefix));
     }
 
     public void remove(String key) {
@@ -84,30 +83,4 @@ public class AssetStorage {
     public Image image(String key) { return get(key); }
 
     public Background background(String key) { return get(key); }
-
-    public long countAssetsOfClass(Class<?> assetClass) {
-        long count = assetMap.values().stream()
-            .filter(asset -> asset.getClass().isAssignableFrom(assetClass)).count();
-        for (var mapValue : assetMap.values()) {
-            if (mapValue instanceof List<?> assetList) {
-                count += assetList.stream()
-                    .filter(asset -> asset.getClass().isAssignableFrom(assetClass)).count();
-            }
-        }
-        return count;
-    }
-
-    public String summary(Map<Class<?>, String> assetTypesByClass) {
-        StringBuilder sb = new StringBuilder();
-        int i = 0;
-        for (Class<?> assetClass : assetTypesByClass.keySet()) {
-            long count = countAssetsOfClass(assetClass);
-            sb.append(assetTypesByClass.get(assetClass)).append(" (").append(count).append(")");
-            if (i < assetTypesByClass.size() - 1) {
-                sb.append(", ");
-            }
-            i += 1;
-        }
-        return sb.toString();
-    }
 }

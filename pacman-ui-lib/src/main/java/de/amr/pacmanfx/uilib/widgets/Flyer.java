@@ -29,15 +29,15 @@ public class Flyer extends StackPane {
     }
 
     private void fill(Image image) {
-        setBackground(Ufx.imageBackground(image,
+        setBackground(Ufx.createBackground(image,
             BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
-            BackgroundPosition.CENTER, Ufx.FILL_PAGE));
+            BackgroundPosition.CENTER, Ufx.FILL_PAGE_SIZE));
     }
 
     private void fitHeight(Image image) {
         setBackground(new Background(new BackgroundImage(image,
             BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
-            BackgroundPosition.CENTER, Ufx.FIT_HEIGHT)));
+            BackgroundPosition.CENTER, Ufx.FIT_HEIGHT_SIZE)));
     }
 
     public void selectPage(int index) {

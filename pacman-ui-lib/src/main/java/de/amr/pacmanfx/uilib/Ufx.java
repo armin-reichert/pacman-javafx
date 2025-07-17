@@ -14,8 +14,6 @@ import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.geometry.Insets;
-import javafx.scene.control.CustomMenuItem;
-import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
@@ -24,8 +22,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -39,27 +35,14 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
-import static javafx.scene.layout.BackgroundSize.AUTO;
 
 /**
  * Useful JavaFX helper methods.
- *
- * @author Armin Reichert
  */
 public interface Ufx {
 
-    BackgroundSize FILL_PAGE = new BackgroundSize(1, 1, true, true, false, true);
-    BackgroundSize FIT_HEIGHT = new BackgroundSize(AUTO, 1, false, true, true, false);
-
-    Font  CONTEXT_MENU_TITLE_FONT = Font.font("Dialog", FontWeight.BLACK, 14);
-    Color CONTEXT_MENU_TITLE_BACKGROUND = Color.CORNFLOWERBLUE; // "Kornblumenblau, sind die Augen der Frauen beim Weine..."
-
-    static MenuItem menuTitleItem(String title) {
-        var text = new Text(title);
-        text.setFont(CONTEXT_MENU_TITLE_FONT);
-        text.setFill(CONTEXT_MENU_TITLE_BACKGROUND);
-        return new CustomMenuItem(text);
-    }
+    BackgroundSize FILL_PAGE_SIZE  = new BackgroundSize(1.0, 1.0, true, true, false, true);
+    BackgroundSize FIT_HEIGHT_SIZE = new BackgroundSize(BackgroundSize.AUTO, 1.0, false, true, true, false);
 
     /**
      * Starts the JavaFX application specified by the given class. In case an exception is thrown,
@@ -110,22 +93,26 @@ public interface Ufx {
     }
 
     /**
-     * @param image some source
-     * @return source background with default properties, see {@link BackgroundImage}
+     * @param image image shown as background
+     * @return background object with default properties, see {@link BackgroundImage}
      */
-    static Background imageBackground(Image image) {
+    static Background createBackground(Image image) {
         return new Background(new BackgroundImage(image, null, null, null, null));
     }
 
-    static Background wallpaperBackground(Image image) {
-        return imageBackground(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, FILL_PAGE);
+    /**
+     * @param image image shown as background
+     * @return background object with properties suitable for a wallpaper
+     */
+    static Background createWallpaper(Image image) {
+        return createBackground(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, FILL_PAGE_SIZE);
     }
 
     /**
      * @param image some source
      * @return source background with specified attributes
      */
-    static Background imageBackground(Image image, BackgroundRepeat repeatX, BackgroundRepeat repeatY,
+    static Background createBackground(Image image, BackgroundRepeat repeatX, BackgroundRepeat repeatY,
                                        BackgroundPosition position, BackgroundSize size) {
         return new Background(new BackgroundImage(image, repeatX, repeatY, position, size));
     }

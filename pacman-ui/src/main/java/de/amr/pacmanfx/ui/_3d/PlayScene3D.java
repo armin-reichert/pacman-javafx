@@ -45,8 +45,10 @@ import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_MEDIUM;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_SHORT;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.ui.GameUI.GLOBAL_ACTION_BINDINGS;
+import static de.amr.pacmanfx.ui.GameUI.createTitleMenuItem;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
-import static de.amr.pacmanfx.uilib.Ufx.*;
+import static de.amr.pacmanfx.uilib.Ufx.doNow;
+import static de.amr.pacmanfx.uilib.Ufx.pauseSec;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -150,12 +152,12 @@ public class PlayScene3D implements GameScene {
         miQuit.setOnAction(e -> ACTION_QUIT_GAME_SCENE.executeIfEnabled(ui));
 
         var items = new ArrayList<MenuItem>();
-        items.add(menuTitleItem(ui.theAssets().text("scene_display")));
+        items.add(createTitleMenuItem(ui.theAssets().text("scene_display")));
         items.add(miUse2DScene);
         items.add(miToggleMiniView);
-        items.add(menuTitleItem(ui.theAssets().text("select_perspective")));
+        items.add(createTitleMenuItem(ui.theAssets().text("select_perspective")));
         items.addAll(createPerspectiveRadioItems(menu));
-        items.add(menuTitleItem(ui.theAssets().text("pacman")));
+        items.add(createTitleMenuItem(ui.theAssets().text("pacman")));
         items.add(miAutopilot);
         items.add(miImmunity);
         items.add(new SeparatorMenuItem());

@@ -38,7 +38,6 @@ import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_SHORT;
 import static de.amr.pacmanfx.ui.GameUI.*;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
-import static de.amr.pacmanfx.uilib.Ufx.menuTitleItem;
 
 /**
  * 2D play scene for Arcade game variants.
@@ -134,7 +133,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
         miQuit.setOnAction(e -> ACTION_QUIT_GAME_SCENE.executeIfEnabled(ui));
 
         return List.of(
-            menuTitleItem(ui.theAssets().text("pacman")),
+            createTitleMenuItem(ui.theAssets().text("pacman")),
             miAutopilot,
             miImmunity,
             new SeparatorMenuItem(),

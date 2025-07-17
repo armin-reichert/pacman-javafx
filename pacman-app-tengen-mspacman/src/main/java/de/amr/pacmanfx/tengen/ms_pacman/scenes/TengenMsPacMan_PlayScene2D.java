@@ -51,7 +51,6 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;
 import static de.amr.pacmanfx.ui.GameUI.*;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
-import static de.amr.pacmanfx.uilib.Ufx.menuTitleItem;
 
 /**
  * Tengen Ms. Pac-Man play scene, uses vertical scrolling by default.
@@ -221,7 +220,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         return List.of(
             miScaledToFit,
             miScrolling,
-            menuTitleItem(ui.theAssets().text("pacman")),
+            createTitleMenuItem(ui.theAssets().text("pacman")),
             miAutopilot,
             miImmunity,
             new SeparatorMenuItem(),

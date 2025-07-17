@@ -18,12 +18,15 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.scene.control.CustomMenuItem;
+import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.Map;
@@ -109,6 +112,16 @@ public interface GameUI {
         createActionBinding(ACTION_TOGGLE_PLAY_SCENE_2D_3D, alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3)),
         createActionBinding(ACTION_TOGGLE_DRAW_MODE,        alt(KeyCode.W))
     );
+
+    static MenuItem createTitleMenuItem(String title) {
+        var text = new Text(title);
+        text.setFont(CONTEXT_MENU_TITLE_FONT);
+        text.setFill(CONTEXT_MENU_TITLE_BACKGROUND);
+        return new CustomMenuItem(text);
+    }
+
+    Font  CONTEXT_MENU_TITLE_FONT = Font.font("Dialog", FontWeight.BLACK, 14);
+    Color CONTEXT_MENU_TITLE_BACKGROUND = Color.CORNFLOWERBLUE; // "Kornblumenblau, sind die Augen der Frauen beim Weine..."
 
     Color DEBUG_TEXT_FILL          = Color.YELLOW;
     Font DEBUG_TEXT_FONT           = Font.font("Sans", FontWeight.BOLD, 16);
