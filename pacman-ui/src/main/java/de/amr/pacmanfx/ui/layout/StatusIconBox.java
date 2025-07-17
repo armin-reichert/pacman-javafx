@@ -15,7 +15,7 @@ import javafx.scene.paint.Color;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 
-import java.util.List;
+import java.util.stream.Stream;
 
 public class StatusIconBox extends HBox implements Destroyable {
 
@@ -75,8 +75,7 @@ public class StatusIconBox extends HBox implements Destroyable {
     }
 
     private void handleIconVisibilityChange(ObservableValue<? extends Boolean> property, boolean oldVisible, boolean newVisible) {
-        var icons = List.of(iconMuted, icon3D, iconAutopilot, iconImmune);
         // keep box compact, show visible items only
-        getChildren().setAll(icons.stream().filter(Node::isVisible).toList());
+        getChildren().setAll(Stream.of(iconMuted, icon3D, iconAutopilot, iconImmune).filter(Node::isVisible).toList());
     }
 }
