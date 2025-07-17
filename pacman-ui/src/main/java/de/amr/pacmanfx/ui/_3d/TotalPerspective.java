@@ -4,8 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._3d;
 
-import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.actors.Actor;
+import de.amr.pacmanfx.GameContext;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.transform.Rotate;
 
@@ -23,11 +22,13 @@ public class TotalPerspective implements Perspective {
     }
 
     @Override
-    public void update(PerspectiveCamera camera, GameLevel level, Actor spottedActor) {
-        int sizeX = level.worldMap().numCols() * TS;
-        int sizeY = level.worldMap().numRows() * TS;
-        camera.setTranslateX(sizeX * 0.5);
-        camera.setTranslateY(sizeY * 1.5);
-        camera.setTranslateZ(-100);
+    public void update(PerspectiveCamera camera, GameContext gameContext) {
+        gameContext.optGameLevel().ifPresent(gameLevel -> {
+            int sizeX = gameLevel.worldMap().numCols() * TS;
+            int sizeY = gameLevel.worldMap().numRows() * TS;
+            camera.setTranslateX(sizeX * 0.5);
+            camera.setTranslateY(sizeY * 1.5);
+            camera.setTranslateZ(-100);
+        });
     }
 }

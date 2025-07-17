@@ -4,8 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._3d;
 
-import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.actors.Actor;
+import de.amr.pacmanfx.GameContext;
 import javafx.scene.PerspectiveCamera;
 
 /**
@@ -15,5 +14,5 @@ public interface Perspective {
 
     void init(PerspectiveCamera camera);
  
-    void update(PerspectiveCamera camera, GameLevel level, Actor spottedActor);
+    void update(PerspectiveCamera camera, GameContext gameContext);
 }

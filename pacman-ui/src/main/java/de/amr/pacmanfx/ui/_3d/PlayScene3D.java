@@ -292,9 +292,11 @@ public class PlayScene3D implements GameScene {
             ui.theSound().setEnabled(true);
             updateSound(gameContext().theGameLevel());
         }
+
+        // Update camera
         PerspectiveID id = perspectiveIDProperty.get();
         if (id != null && perspectiveMap.containsKey(id)) {
-            perspectiveMap.get(id).update(camera, gameContext().theGameLevel(), gameContext().theGameLevel().pac());
+            perspectiveMap.get(id).update(camera, gameContext());
         }
     }
 

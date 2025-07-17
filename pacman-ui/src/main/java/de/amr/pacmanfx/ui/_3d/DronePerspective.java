@@ -4,8 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._3d;
 
-import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.actors.Actor;
+import de.amr.pacmanfx.GameContext;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.transform.Rotate;
 
@@ -27,12 +26,14 @@ public class DronePerspective implements Perspective {
     }
 
     @Override
-    public void update(PerspectiveCamera camera, GameLevel level, Actor focussedActor) {
-        double speed = 0.02;
-        double x = lerp(camera.getTranslateX(), focussedActor.x(), speed);
-        double y = lerp(camera.getTranslateY(), focussedActor.y(), speed);
-        camera.setTranslateZ(-HEIGHT_OVER_GROUND);
-        camera.setTranslateX(x);
-        camera.setTranslateY(y);
+    public void update(PerspectiveCamera camera, GameContext gameContext) {
+        gameContext.optGameLevel().ifPresent(gameLevel -> {
+            double speed = 0.02;
+            double x = lerp(camera.getTranslateX(), gameLevel.pac().x(), speed);
+            double y = lerp(camera.getTranslateY(), gameLevel.pac().y(), speed);
+            camera.setTranslateZ(-HEIGHT_OVER_GROUND);
+            camera.setTranslateX(x);
+            camera.setTranslateY(y);
+        });
     }
 }

@@ -4,8 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._3d;
 
-import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.actors.Actor;
+import de.amr.pacmanfx.GameContext;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.transform.Rotate;
 
@@ -24,14 +23,16 @@ public class StalkingPlayerPerspective implements Perspective {
     }
 
     @Override
-    public void update(PerspectiveCamera camera, GameLevel level, Actor spottedActor) {
-        double speedX = 0.04;
-        double speedY = 0.04;
-        double worldWidth = level.worldMap().numCols() * TS;
-        double targetX = Math.clamp(spottedActor.x(), 40, worldWidth - 40);
-        double targetY = spottedActor.y() + 100;
-        camera.setTranslateX(lerp(camera.getTranslateX(), targetX, speedX));
-        camera.setTranslateY(lerp(camera.getTranslateY(), targetY, speedY));
-        camera.setTranslateZ(-40);
+    public void update(PerspectiveCamera camera, GameContext gameContext) {
+        gameContext.optGameLevel().ifPresent(gameLevel -> {
+            double speedX = 0.04;
+            double speedY = 0.04;
+            double worldWidth = gameLevel.worldMap().numCols() * TS;
+            double targetX = Math.clamp(gameLevel.pac().x(), 40, worldWidth - 40);
+            double targetY = gameLevel.pac().y() + 100;
+            camera.setTranslateX(lerp(camera.getTranslateX(), targetX, speedX));
+            camera.setTranslateY(lerp(camera.getTranslateY(), targetY, speedY));
+            camera.setTranslateZ(-40);
+        });
     }
 }
