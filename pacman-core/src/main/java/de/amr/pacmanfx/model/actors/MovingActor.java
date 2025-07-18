@@ -131,7 +131,7 @@ public abstract class MovingActor extends Actor {
      * @return (Optional) target tile. Can be inaccessible or outside the world.
      */
     public Optional<Vector2i> optTargetTile() {
-        return Optional.ofNullable(targetTile.get());
+        return Optional.ofNullable(targetTile());
     }
 
     /**
@@ -267,7 +267,7 @@ public abstract class MovingActor extends Actor {
 
         GameLevel level = gameContext.theGameLevel();
 
-        if (!newTileEntered && moveInfo.moved || targetTile.get() == null) {
+        if (!newTileEntered && moveInfo.moved || targetTile() == null) {
             return; // we don't need no navigation, dim dit didit didit...
         }
 
@@ -284,7 +284,7 @@ public abstract class MovingActor extends Actor {
             }
             final Vector2i neighborTile = currentTile.plus(dir.vector());
             if (canAccessTile(neighborTile)) {
-                double dist = neighborTile.euclideanDist(targetTile.get());
+                double dist = neighborTile.euclideanDist(targetTile());
                 if (dist < minDistToTarget) {
                     minDistToTarget = dist;
                     candidateDir = dir;

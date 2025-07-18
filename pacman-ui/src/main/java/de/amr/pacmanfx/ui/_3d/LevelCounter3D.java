@@ -33,14 +33,15 @@ public class LevelCounter3D extends Group {
     public LevelCounter3D(GameUI_Config config, AnimationManager animationManager, LevelCounter levelCounter) {
         requireNonNull(animationManager);
         List<Byte> symbols = levelCounter.symbols();
+        float cubeSize = 1.25f * TS;
         for (int i = 0; i < symbols.size(); ++i) {
             var material = new PhongMaterial(Color.WHITE);
             material.setDiffuseMap(config.bonusSymbolImage(symbols.get(i)));
-            Box cube = new Box(TS, TS, TS);
-            cube.setMaterial(material);
-            cube.setTranslateX(-i * 16);
-            cube.setTranslateZ(-HTS);
-            getChildren().add(cube);
+            var shape = new Box(cubeSize, cubeSize, cubeSize);
+            shape.setMaterial(material);
+            shape.setTranslateX(-i * 16);
+            shape.setTranslateZ(-HTS);
+            getChildren().add(shape);
         }
 
         spinningAnimation = new ManagedAnimation(animationManager, "LevelCounter_Spinning") {
@@ -48,8 +49,8 @@ public class LevelCounter3D extends Group {
             protected Animation createAnimation() {
                 var cubesAnimation = new ParallelTransition();
                 for (int i = 0; i < getChildren().size(); ++i) {
-                    Node cube = getChildren().get(i);
-                    var spinning = new RotateTransition(Duration.seconds(6), cube);
+                    Node shape = getChildren().get(i);
+                    var spinning = new RotateTransition(Duration.seconds(6), shape);
                     spinning.setCycleCount(Animation.INDEFINITE);
                     spinning.setInterpolator(Interpolator.LINEAR);
                     spinning.setAxis(Rotate.X_AXIS);
