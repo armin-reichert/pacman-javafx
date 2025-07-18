@@ -223,8 +223,8 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
     public void buildNormalLevel(GameContext gameContext, int levelNumber) {
         createLevel(gameContext, levelNumber);
         level.setDemoLevel(false);
-        level.pac().immuneProperty().bind(theGameContext().theGameController().propertyImmunity());
-        level.pac().usingAutopilotProperty().bind(theGameContext().theGameController().propertyUsingAutopilot());
+        level.pac().immuneProperty().bind(gameContext.theGameController().propertyImmunity());
+        level.pac().usingAutopilotProperty().bind(gameContext.theGameController().propertyUsingAutopilot());
         theHUD().theLevelCounter().setEnabled(true);
         huntingTimer.reset();
         setScoreLevelNumber(levelNumber);

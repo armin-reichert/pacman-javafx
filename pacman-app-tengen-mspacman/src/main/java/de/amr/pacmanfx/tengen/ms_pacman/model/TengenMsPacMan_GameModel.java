@@ -95,6 +95,13 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     private static final byte[] KILLED_GHOST_VALUE_FACTORS = {2, 4, 8, 16}; // points = factor * 100
 
+    private static final byte[][] HOUSE = {
+        { ARC_NW.code(), WALL_H.code(), WALL_H.code(), DOOR.code(), DOOR.code(), WALL_H.code(), WALL_H.code(), ARC_NE.code() },
+        { WALL_V.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), WALL_V.code()   },
+        { WALL_V.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), WALL_V.code()   },
+        { ARC_SW.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), ARC_SE.code() }
+    };
+
     public static Pac createMsPacMan(GameContext gameContext) {
         var msPacMan = new Pac(gameContext, "Ms. Pac-Man");
         msPacMan.reset();
@@ -489,13 +496,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
         activatePacBooster(pacBooster == PacBooster.ALWAYS_ON);
     }
 
-    private static final byte[][] HOUSE = {
-        { ARC_NW.code(), WALL_H.code(), WALL_H.code(), DOOR.code(), DOOR.code(), WALL_H.code(), WALL_H.code(), ARC_NE.code() },
-        { WALL_V.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), WALL_V.code()   },
-        { WALL_V.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), WALL_V.code()   },
-        { ARC_SW.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), ARC_SE.code() }
-    };
-
     protected void addHouse(GameLevel level) {
         WorldMap worldMap = level.worldMap();
         if (!worldMap.properties(LayerID.TERRAIN).containsKey(WorldMapProperty.POS_HOUSE_MIN_TILE)) {
@@ -540,8 +540,8 @@ public class TengenMsPacMan_GameModel extends GameModel {
     public void buildNormalLevel(GameContext gameContext, int levelNumber) {
         createLevel(gameContext, levelNumber);
         level.setDemoLevel(false);
-        level.pac().immuneProperty().bind(theGameContext().theGameController().propertyImmunity());
-        level.pac().usingAutopilotProperty().bind(theGameContext().theGameController().propertyUsingAutopilot());
+        level.pac().immuneProperty().bind(gameContext.theGameController().propertyImmunity());
+        level.pac().usingAutopilotProperty().bind(gameContext.theGameController().propertyUsingAutopilot());
         huntingTimer().reset();
         setScoreLevelNumber(levelNumber);
         gateKeeper().ifPresent(gateKeeper -> {
