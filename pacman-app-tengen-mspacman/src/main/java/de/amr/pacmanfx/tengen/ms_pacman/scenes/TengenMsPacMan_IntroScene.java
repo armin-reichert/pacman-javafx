@@ -36,9 +36,6 @@ import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.cr
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.createMsPacMan;
 import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer.blueShadedColor;
 
-/**
- * @author Armin Reichert
- */
 public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     // Anchor point for everything

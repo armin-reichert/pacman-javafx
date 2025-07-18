@@ -44,8 +44,6 @@ import static java.util.Objects.requireNonNull;
  *     </ul>
  * </p>
  *
- * @author Armin Reichert
- *
  * @see <a href="https://pacman.holenet.info/">The Pac-Man Dossier by Jamey Pittman</a>
  */
 public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {

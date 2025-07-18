@@ -4,9 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model;
 
-/**
- * @author Armin Reichert
- */
 public class GameException extends RuntimeException {
 
     public static GameException invalidGhostPersonality(byte id) {

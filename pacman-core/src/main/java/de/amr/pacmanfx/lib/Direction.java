@@ -11,8 +11,6 @@ import java.util.stream.Stream;
 
 /**
  * The move directions inside the world.
- *
- * @author Armin Reichert
  */
 public enum Direction {
 

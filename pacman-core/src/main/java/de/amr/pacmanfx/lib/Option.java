@@ -8,9 +8,6 @@ import org.tinylog.Logger;
 
 import java.util.function.Function;
 
-/**
- * @author Armin Reichert
- */
 public class Option<T> {
 
     public static Option<Boolean> booleanOption(String name, boolean defaultValue) {

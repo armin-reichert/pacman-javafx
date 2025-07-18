@@ -18,9 +18,6 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tilemap.editor.ArcadeMap.PAC_SPRITE;
 import static de.amr.pacmanfx.tilemap.editor.ArcadeMap.SPRITE_SHEET;
 
-/**
- * @author Armin Reichert
- */
 public class PropertyValueEditorTool implements Tool {
     private final TileMapRenderer renderer;
     private final double size;

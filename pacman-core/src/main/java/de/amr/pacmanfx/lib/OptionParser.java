@@ -11,9 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author Armin Reichert
- */
 public class OptionParser {
 
     private final Map<String, Option<?>> optionMap = new HashMap<>();

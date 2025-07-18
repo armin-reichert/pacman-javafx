@@ -31,8 +31,6 @@ import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_LET_GAME_STATE_E
  * <p>
  * Pac-Man and Ms. Pac-Man chase each other across the screen over and over. After three turns, they both rapidly run
  * from left to right and right to left. (Played after round 5)
- *
- * @author Armin Reichert
  */
 public class TengenMsPacMan_CutScene2 extends GameScene2D {
 

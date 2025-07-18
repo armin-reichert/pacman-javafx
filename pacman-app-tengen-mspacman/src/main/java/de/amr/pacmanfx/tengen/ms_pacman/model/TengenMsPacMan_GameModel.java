@@ -35,7 +35,6 @@ import static java.util.Objects.requireNonNull;
 /**
  * Ms. Pac-Man (Tengen).
  *
- * @author Armin Reichert
  * @see <a href="https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly">Ms.Pac-Man-NES-Tengen-Disassembly</a>
  */
 public class TengenMsPacMan_GameModel extends GameModel {

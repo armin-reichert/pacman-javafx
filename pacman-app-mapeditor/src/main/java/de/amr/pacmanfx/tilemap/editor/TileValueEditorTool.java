@@ -11,9 +11,6 @@ import de.amr.pacmanfx.uilib.tilemap.TileMapRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-/**
- * @author Armin Reichert
- */
 public class TileValueEditorTool implements Tool {
     private final TileMapEditor editor;
     private final TileMapRenderer renderer;

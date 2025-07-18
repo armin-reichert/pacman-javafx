@@ -17,9 +17,6 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Armin Reichert
- */
 public class Palette {
 
     public static final Color BG_COLOR = Color.WHITE;

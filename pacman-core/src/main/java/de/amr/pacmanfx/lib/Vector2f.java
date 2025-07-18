@@ -6,8 +6,6 @@ package de.amr.pacmanfx.lib;
 
 /**
  * Immutable 2D vector with float precision.
- *
- * @author Armin Reichert
  */
 public record Vector2f(float x, float y) {
 

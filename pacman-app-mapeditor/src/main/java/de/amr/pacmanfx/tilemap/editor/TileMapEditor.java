@@ -60,9 +60,6 @@ import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.*;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.IntStream.rangeClosed;
 
-/**
- * @author Armin Reichert
- */
 public class TileMapEditor {
 
     public static final short TOOL_SIZE = 32;

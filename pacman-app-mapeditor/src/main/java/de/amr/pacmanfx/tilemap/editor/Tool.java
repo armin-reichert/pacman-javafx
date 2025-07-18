@@ -10,9 +10,6 @@ import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.uilib.tilemap.TileMapRenderer;
 import javafx.scene.canvas.GraphicsContext;
 
-/**
- * @author Armin Reichert
- */
 public interface Tool {
 
     String description();
