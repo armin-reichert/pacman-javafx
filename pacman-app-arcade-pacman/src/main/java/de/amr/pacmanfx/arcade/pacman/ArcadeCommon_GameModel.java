@@ -211,7 +211,6 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
         }
         updateHighScore();
         level.showMessage(GameLevel.MESSAGE_GAME_OVER);
-        gameContext.theGameEventManager().publishEvent(GameEventType.STOP_ALL_SOUNDS);
     }
 
     @Override

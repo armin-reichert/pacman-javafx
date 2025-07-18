@@ -290,6 +290,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
                 levelCompletedAnimation.playFromStart();
             }
             case GAME_OVER -> {
+                ui.theSound().stopAll();
                 // After some delay, the "game over" message moves from the center to the right border, wraps around,
                 // appears at the left border and moves to the center again (for non-Arcade maps)
                 if (gameContext().<TengenMsPacMan_GameModel>theGame().mapCategory() != MapCategory.ARCADE) {

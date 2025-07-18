@@ -344,6 +344,7 @@ public class PlayScene3D implements GameScene {
                 });
             case LEVEL_COMPLETE -> {
                 state.timer().resetIndefiniteTime(); // expires when animation ends
+                ui.theSound().stopAll();
                 gameLevel3D.onLevelComplete();
                 boolean cutSceneFollows = gameContext().theGame().cutSceneNumber(gameContext().theGameLevel().number()).isPresent();
                 ManagedAnimation levelCompletedAnimation = cutSceneFollows
