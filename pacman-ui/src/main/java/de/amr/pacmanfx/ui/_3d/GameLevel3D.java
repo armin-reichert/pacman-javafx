@@ -15,6 +15,7 @@ import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -30,6 +31,7 @@ import javafx.geometry.Point3D;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
@@ -48,6 +50,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static de.amr.pacmanfx.uilib.Ufx.*;
 import static java.util.Objects.requireNonNull;
@@ -391,7 +394,45 @@ public class GameLevel3D extends Group implements Destroyable {
         livesCounter3D.light().setLightOn(visible);
     }
 
-    public void onLevelComplete() {
+    public void onHuntingStart() {
+        pac3D.init();
+        ghosts3D.forEach(ghost3D -> ghost3D.init(ui.theGameContext().theGameLevel()));
+        energizers3D().forEach(energizer3D -> energizer3D.pumpingAnimation().playFromStart());
+        livesCounter3D.lookingAroundAnimation().playFromStart();
+    }
+
+    public void onPacManDying(GameState state) {
+        state.timer().resetIndefiniteTime(); // expires when level animation ends
+        ui.theSound().stopAll();
+        // do one last update before dying animation starts
+        pac3D.update(ui.theGameContext().theGameLevel());
+        livesCounter3D.lookingAroundAnimation().stop();
+        livesCounter3D.lookingAroundAnimation().invalidate();
+        ghosts3D.forEach(MutatingGhost3D::stopAllAnimations);
+        bonus3D().ifPresent(Bonus3D::expire);
+        var animation = new SequentialTransition(
+                pauseSec(2),
+                doNow(() -> ui.theSound().play(SoundID.PAC_MAN_DEATH)),
+                pac3D.dyingAnimation().getOrCreateAnimation(),
+                pauseSec(1)
+        );
+        // Note: adding this inside the animation as last action does not work!
+        animation.setOnFinished(e -> ui.theGameContext().theGameController().letCurrentGameStateExpire());
+        animation.play();
+    }
+
+    public void onGhostDying() {
+        ui.theGameContext().theGame().simulationStep().killedGhosts.forEach(killedGhost -> {
+            byte personality = killedGhost.personality();
+            int killedIndex = ui.theGameContext().theGameLevel().victims().indexOf(killedGhost);
+            Image pointsImage = ui.theConfiguration().killedGhostPointsImage(killedGhost, killedIndex);
+            ghost3D(personality).setNumberImage(pointsImage);
+        });
+    }
+
+    public void onLevelComplete(GameState state, ObjectProperty<PerspectiveID> perspectiveIDProperty) {
+        state.timer().resetIndefiniteTime(); // expires when animation ends
+        ui.theSound().stopAll();
         ui.theSound().stopAll();
         animationManager.stopAllAnimations();
         // hide explicitly because level might have been completed using cheat!
@@ -404,6 +445,36 @@ public class GameLevel3D extends Group implements Destroyable {
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
         if (messageView != null) {
             messageView.setVisible(false);
+        }
+        boolean cutSceneFollows = ui.theGameContext().theGame().cutSceneNumber(ui.theGameContext().theGameLevel().number()).isPresent();
+        ManagedAnimation levelCompletedAnimation = cutSceneFollows
+                ? levelCompletedAnimationBeforeCutScene()
+                : levelCompletedAnimation();
+
+        var animation = new SequentialTransition(
+                pauseSec(2, () -> {
+                    perspectiveIDProperty.unbind();
+                    perspectiveIDProperty.set(PerspectiveID.TOTAL);
+                }),
+                levelCompletedAnimation.getOrCreateAnimation(),
+                pauseSec(1)
+        );
+        animation.setOnFinished(e -> {
+            perspectiveIDProperty.bind(ui.property3DPerspective());
+            ui.theGameContext().theGameController().letCurrentGameStateExpire();
+        });
+        animation.play();
+    }
+
+    public void onGameOver(GameState state) {
+        state.timer().restartSeconds(3);
+        energizers3D().forEach(energizer3D -> energizer3D.shape3D().setVisible(false));
+        bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
+        ui.theSound().stopAll();
+        ui.theSound().play(SoundID.GAME_OVER);
+        boolean inOneOf4Cases = randomInt(0, 1000) < 250;
+        if (!ui.theGameContext().theGameLevel().isDemoLevel() && inOneOf4Cases) {
+            ui.showFlashMessageSec(2.5, ui.theAssets().localizedGameOverMessage());
         }
     }
 

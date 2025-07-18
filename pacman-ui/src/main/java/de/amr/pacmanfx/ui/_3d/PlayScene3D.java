@@ -17,11 +17,12 @@ import de.amr.pacmanfx.ui.ActionBindingMap;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.model3D.*;
+import de.amr.pacmanfx.uilib.model3D.Bonus3D;
+import de.amr.pacmanfx.uilib.model3D.Energizer3D;
+import de.amr.pacmanfx.uilib.model3D.Pellet3D;
+import de.amr.pacmanfx.uilib.model3D.Scores3D;
 import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
 import javafx.animation.Interpolator;
-import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -31,7 +32,6 @@ import javafx.scene.PerspectiveCamera;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
@@ -43,11 +43,8 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.isOneOf;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_MEDIUM;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_SHORT;
-import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.ui.GameUI.GLOBAL_ACTION_BINDINGS;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
-import static de.amr.pacmanfx.uilib.Ufx.doNow;
-import static de.amr.pacmanfx.uilib.Ufx.pauseSec;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -308,80 +305,18 @@ public class PlayScene3D implements GameScene {
     @Override
     public void onEnterGameState(GameState state) {
         requireNonNull(state);
-        Logger.trace("Entering game state {}", state);
         switch (state) {
-            case HUNTING -> {
-                gameLevel3D.pac3D().init();
-                gameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(gameContext().theGameLevel()));
-                gameLevel3D.energizers3D().forEach(energizer3D -> energizer3D.pumpingAnimation().playFromStart());
-                gameLevel3D.livesCounter3D().lookingAroundAnimation().playFromStart();
-            }
-            case PACMAN_DYING -> {
-                state.timer().resetIndefiniteTime(); // expires when animation ends
-                ui.theSound().stopAll();
-                // do one last update before dying animation starts
-                gameLevel3D.pac3D().update(gameContext().theGameLevel());
-                gameLevel3D.livesCounter3D().lookingAroundAnimation().stop();
-                gameLevel3D.livesCounter3D().lookingAroundAnimation().invalidate();
-                gameLevel3D.ghosts3D().forEach(MutatingGhost3D::stopAllAnimations);
-                gameLevel3D.bonus3D().ifPresent(Bonus3D::expire);
-                var animation = new SequentialTransition(
-                    pauseSec(2),
-                    doNow(() -> ui.theSound().play(SoundID.PAC_MAN_DEATH)),
-                    gameLevel3D.pac3D().dyingAnimation().getOrCreateAnimation(),
-                    pauseSec(1)
-                );
-                // Note: adding this inside the animation as last action does not work!
-                animation.setOnFinished(e -> gameContext().theGameController().letCurrentGameStateExpire());
-                animation.play();
-            }
-            case GHOST_DYING ->
-                gameContext().theGame().simulationStep().killedGhosts.forEach(killedGhost -> {
-                    byte personality = killedGhost.personality();
-                    int killedIndex = gameContext().theGameLevel().victims().indexOf(killedGhost);
-                    Image pointsImage = ui.theConfiguration().killedGhostPointsImage(killedGhost, killedIndex);
-                    gameLevel3D.ghost3D(personality).setNumberImage(pointsImage);
-                });
-            case LEVEL_COMPLETE -> {
-                state.timer().resetIndefiniteTime(); // expires when animation ends
-                ui.theSound().stopAll();
-                gameLevel3D.onLevelComplete();
-                boolean cutSceneFollows = gameContext().theGame().cutSceneNumber(gameContext().theGameLevel().number()).isPresent();
-                ManagedAnimation levelCompletedAnimation = cutSceneFollows
-                    ? gameLevel3D.levelCompletedAnimationBeforeCutScene()
-                    : gameLevel3D.levelCompletedAnimation();
-
-                var animation = new SequentialTransition(
-                    pauseSec(2, () -> {
-                        perspectiveIDProperty().unbind();
-                        perspectiveIDProperty().set(PerspectiveID.TOTAL);
-                    }),
-                    levelCompletedAnimation.getOrCreateAnimation(),
-                    pauseSec(1)
-                );
-                animation.setOnFinished(e -> {
-                    perspectiveIDProperty().bind(ui.property3DPerspective());
-                    gameContext().theGameController().letCurrentGameStateExpire();
-                });
-                animation.play();
-            }
+            case HUNTING          -> gameLevel3D.onHuntingStart();
+            case PACMAN_DYING     -> gameLevel3D.onPacManDying(state);
+            case GHOST_DYING      -> gameLevel3D.onGhostDying();
+            case LEVEL_COMPLETE   -> gameLevel3D.onLevelComplete(state, perspectiveIDProperty);
             case LEVEL_TRANSITION -> {
                 state.timer().resetIndefiniteTime();
                 replaceGameLevel3D();
                 initPerspective();
                 state.timer().expire();
             }
-            case GAME_OVER -> {
-                state.timer().restartSeconds(3);
-                gameLevel3D.energizers3D().forEach(energizer3D -> energizer3D.shape3D().setVisible(false));
-                gameLevel3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
-                ui.theSound().stopAll();
-                ui.theSound().play(SoundID.GAME_OVER);
-                boolean inOneOf4Cases = randomInt(0, 1000) < 250;
-                if (!gameContext().theGameLevel().isDemoLevel() && inOneOf4Cases) {
-                    ui.showFlashMessageSec(2.5, ui.theAssets().localizedGameOverMessage());
-                }
-            }
+            case GAME_OVER -> gameLevel3D.onGameOver(state);
             case TESTING_LEVELS_SHORT, TESTING_LEVELS_MEDIUM -> {
                 replaceGameLevel3D();
                 showLevelTestMessage(gameContext().theGameLevel().number());
