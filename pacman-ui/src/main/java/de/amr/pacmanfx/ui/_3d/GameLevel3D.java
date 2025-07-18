@@ -136,12 +136,11 @@ public class GameLevel3D extends Group implements Destroyable {
 
     // Note: The order in which children are added to the root matters!
     // Walls and house must be added *after* the actors, otherwise the transparency is not working correctly.
-    public GameLevel3D(
-        GameUI ui,
-        WorldMapColorScheme proposedColorScheme)
-    {
+    public GameLevel3D(GameUI ui) {
         this.ui = requireNonNull(ui);
 
+        WorldMap worldMap = gameLevel().worldMap();
+        WorldMapColorScheme proposedColorScheme = ui.theConfiguration().colorScheme(worldMap);
         requireNonNull(proposedColorScheme);
         // Add some contrast with floor if wall fill color is black
         colorScheme = proposedColorScheme.fill().equals(Color.BLACK)
@@ -177,7 +176,7 @@ public class GameLevel3D extends Group implements Destroyable {
         getChildren().add(ambientLight);
 
         levelCounter3D = new LevelCounter3D(ui.theConfiguration(), animationManager, ui.theGameContext().theGame().theHUD().theLevelCounter());
-        levelCounter3D.setTranslateX(TS * (ui.theGameContext().theGameLevel().worldMap().numCols() - 2));
+        levelCounter3D.setTranslateX(TS * (worldMap.numCols() - 2));
         levelCounter3D.setTranslateY(2 * TS);
         levelCounter3D.setTranslateZ(-ui.thePrefs().getFloat("3d.level_counter.elevation", 6f));
         getChildren().add(levelCounter3D);
@@ -233,15 +232,16 @@ public class GameLevel3D extends Group implements Destroyable {
         getChildren().add(mazeGroup);
 
         floor3D = new Floor3D(
-            gameLevel().worldMap().numCols() * TS,
-            gameLevel().worldMap().numRows() * TS,
+            worldMap.numCols() * TS,
+            worldMap.numRows() * TS,
             ui.thePrefs().getFloat("3d.floor.thickness", 5.0f),
             ui.thePrefs().getFloat("3d.floor.padding", 5.0f)
         );
         floor3D.materialProperty().bind(ui.property3DFloorColor().map(Ufx::coloredPhongMaterial));
 
         wallBaseMaterial = new PhongMaterial();
-        wallBaseMaterial.diffuseColorProperty().bind(wallOpacityProperty.map(opacity -> colorWithOpacity(colorScheme.stroke(), opacity.doubleValue())));
+        wallBaseMaterial.diffuseColorProperty().bind(wallOpacityProperty
+                .map(opacity -> colorWithOpacity(colorScheme.stroke(), opacity.doubleValue())));
         wallBaseMaterial.specularColorProperty().bind(wallBaseMaterial.diffuseColorProperty().map(Color::brighter));
 
         wallTopMaterial = new PhongMaterial();
@@ -262,14 +262,14 @@ public class GameLevel3D extends Group implements Destroyable {
         r3D = new TerrainRenderer3D();
         r3D.setOnWallCreated(wall3D -> wall3D.baseHeightProperty().bind(obstacleBaseHeightProperty));
         r3D.setCylinderDivisions(24);
-        for (Obstacle obstacle : gameLevel().worldMap().obstacles()) {
+        for (Obstacle obstacle : worldMap.obstacles()) {
             // exclude house obstacle, house is built separately
             Vector2i startTile = tileAt(obstacle.startPoint().toVector2f());
             if (gameLevel().house().isPresent() && !gameLevel().house().get().isTileInHouseArea(startTile)) {
                 r3D.renderObstacle3D(
                     maze3D,
                     obstacle,
-                    isObstacleTheWorldBorder(gameLevel().worldMap(), obstacle),
+                    isObstacleTheWorldBorder(worldMap, obstacle),
                     ui.thePrefs().getFloat("3d.obstacle.wall_thickness", 2.25f),
                     wallBaseMaterial, wallTopMaterial);
             }

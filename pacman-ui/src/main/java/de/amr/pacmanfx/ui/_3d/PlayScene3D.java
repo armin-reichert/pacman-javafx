@@ -499,10 +499,7 @@ public class PlayScene3D implements GameScene {
         if (gameLevel3D != null) {
             gameLevel3D.destroy();
         }
-        gameLevel3D = new GameLevel3D(
-            ui,
-            ui.theConfiguration().colorScheme(gameContext().theGameLevel().worldMap())
-        );
+        gameLevel3D = new GameLevel3D(ui);
         level3DPlaceHolder.getChildren().setAll(gameLevel3D);
 
         gameLevel3D.pac3D().init();
