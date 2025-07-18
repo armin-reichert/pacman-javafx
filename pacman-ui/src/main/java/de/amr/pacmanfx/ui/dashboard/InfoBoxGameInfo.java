@@ -10,6 +10,7 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HuntingPhase;
 import de.amr.pacmanfx.model.HuntingTimer;
+import de.amr.pacmanfx.model.actors.ActorSpeedControl;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
@@ -18,8 +19,7 @@ import javafx.scene.paint.Color;
 
 import java.util.Map;
 
-import static de.amr.pacmanfx.Globals.PINK_GHOST_SPEEDY;
-import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
+import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.timer.TickTimer.ticksToString;
 import static de.amr.pacmanfx.uilib.Ufx.formatColorHex;
 
@@ -127,39 +127,41 @@ public class InfoBoxGameInfo extends InfoBox {
         );
     }
 
+    private ActorSpeedControl actorSpeedControl() { return ui.theGameContext().theGame().actorSpeedControl(); }
+
     private String fmtGhostAttackSpeed(GameLevel level) {
         // use Pinky because Blinky could be in Elroy mode
         Ghost pinky = level.ghost(PINK_GHOST_SPEEDY);
         return (pinky != null)
-            ? "%.4f px/s".formatted(ui.theGameContext().theGame().actorSpeedControl().ghostAttackSpeed(ui.theGameContext(), level, pinky) * 60)
+            ? "%.4f px/s".formatted(actorSpeedControl().ghostAttackSpeed(ui.theGameContext(), level, pinky) * NUM_TICKS_PER_SEC)
             : InfoText.NO_INFO;
     }
 
     private String fmtGhostSpeedFrightened(GameLevel level) {
         Ghost blinky = level.ghost(RED_GHOST_SHADOW);
         return (blinky != null)
-            ? "%.4f px/s".formatted(ui.theGameContext().theGame().actorSpeedControl().ghostFrightenedSpeed(ui.theGameContext(), level, blinky) * 60)
+            ? "%.4f px/s".formatted(actorSpeedControl().ghostFrightenedSpeed(ui.theGameContext(), level, blinky) * NUM_TICKS_PER_SEC)
             : InfoText.NO_INFO;
     }
 
     private String fmtGhostSpeedTunnel(GameLevel level) {
         Ghost blinky = level.ghost(RED_GHOST_SHADOW);
         return (blinky != null)
-            ? "%.4f px/s".formatted(ui.theGameContext().theGame().actorSpeedControl().ghostTunnelSpeed(ui.theGameContext(), level, blinky) * 60)
+            ? "%.4f px/s".formatted(actorSpeedControl().ghostTunnelSpeed(ui.theGameContext(), level, blinky) * NUM_TICKS_PER_SEC)
             : InfoText.NO_INFO;
     }
 
     private String fmtPacNormalSpeed(GameLevel level) {
-        return "%.4f px/s".formatted(ui.theGameContext().theGame().actorSpeedControl().pacNormalSpeed(ui.theGameContext(), level) * 60);
+        return "%.4f px/s".formatted(actorSpeedControl().pacNormalSpeed(ui.theGameContext(), level) * NUM_TICKS_PER_SEC);
     }
 
     private String fmtPacSpeedPowered(GameLevel level) {
-        return "%.4f px/s".formatted(ui.theGameContext().theGame().actorSpeedControl().pacPowerSpeed(ui.theGameContext(), level) * 60);
+        return "%.4f px/s".formatted(actorSpeedControl().pacPowerSpeed(ui.theGameContext(), level) * NUM_TICKS_PER_SEC);
     }
 
     private String fmtPacPowerTime(GameLevel level) {
         return "%.2f sec (%d ticks)".formatted(
-            ui.theGameContext().theGame().pacPowerTicks(level) / 60f,
+            ui.theGameContext().theGame().pacPowerTicks(level) / (float) NUM_TICKS_PER_SEC,
             ui.theGameContext().theGame().pacPowerTicks(level));
     }
 

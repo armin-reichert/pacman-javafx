@@ -238,7 +238,7 @@ public class RuleBasedPacSteering implements Steering {
                 if (!level.isFoodPosition(tile) || level.tileContainsEatenFood(tile)) {
                     continue;
                 }
-                if (level.isEnergizerPosition(tile) && level.pac().powerTimer().remainingTicks() > 2 * 60
+                if (level.isEnergizerPosition(tile) && level.pac().powerTimer().remainingTicks() > 2 * Globals.NUM_TICKS_PER_SEC
                     && level.uneatenFoodCount() > 1) {
                     continue;
                 }

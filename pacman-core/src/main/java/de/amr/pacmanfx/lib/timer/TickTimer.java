@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.lib.timer;
 
+import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.lib.timer.TickTimerEvent.Type;
 import org.tinylog.Logger;
 
@@ -32,7 +33,7 @@ public class TickTimer {
      * @return number of ticks corresponding to given seconds at 60Hz
      */
     public static long secToTicks(double seconds) {
-        return Math.round(seconds * 60);
+        return Math.round(seconds * Globals.NUM_TICKS_PER_SEC);
     }
 
     /**

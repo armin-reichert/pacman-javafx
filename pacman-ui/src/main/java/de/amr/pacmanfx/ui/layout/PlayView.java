@@ -292,7 +292,7 @@ public class PlayView implements PacManGames_View {
         final GameScene nextGameScene = ui.theConfiguration().selectGameScene(gameContext);
         if (nextGameScene == null) {
             String errorMessage = " Katastrophe! Could not determine game scene!";
-            ui.showFlashMessageSec(60, errorMessage);
+            ui.showFlashMessageSec(30, errorMessage);
             return;
         }
         final GameScene currentGameScene = ui.currentGameScene().orElse(null);

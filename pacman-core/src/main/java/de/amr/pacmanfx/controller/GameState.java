@@ -141,7 +141,7 @@ public enum GameState implements FsmState<GameContext> {
         @Override
         public void onEnter(GameContext gameContext) {
             //TODO reconsider this
-            delay = gameContext.theGameController().isSelected("MS_PACMAN_TENGEN") ? 60 : 0;
+            delay = gameContext.theGameController().isSelected("MS_PACMAN_TENGEN") ? Globals.NUM_TICKS_PER_SEC : 0;
         }
 
         @Override

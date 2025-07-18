@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
+import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
@@ -168,7 +169,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
             } else {
                 bag.setOpen(true);
                 bag.setVelocity(Vector2f.ZERO);
-                setSceneState(STATE_STORK_LEAVES_SCENE, 3 * 60);
+                setSceneState(STATE_STORK_LEAVES_SCENE, 3 * Globals.NUM_TICKS_PER_SEC);
             }
         }
     }
