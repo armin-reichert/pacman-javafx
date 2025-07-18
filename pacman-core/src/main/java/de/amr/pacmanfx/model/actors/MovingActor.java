@@ -31,16 +31,19 @@ public abstract class MovingActor extends Actor {
     public static final Direction DEFAULT_MOVE_DIR = RIGHT;
     public static final Direction DEFAULT_WISH_DIR = RIGHT;
     public static final Vector2i DEFAULT_TARGET_TILE = null;
+    public static final boolean DEFAULT_CAN_TELEPORT = true;
 
     protected final MoveResult moveInfo = new MoveResult();
 
-    protected ObjectProperty<Direction> moveDirProperty;
-    protected ObjectProperty<Direction> wishDirProperty;
-    protected ObjectProperty<Vector2i> targetTileProperty;
+    protected ObjectProperty<Direction> moveDir;
+    protected ObjectProperty<Direction> wishDir;
+    protected ObjectProperty<Vector2i> targetTile;
 
     protected boolean newTileEntered;
     protected boolean gotReverseCommand;
-    protected boolean canTeleport;
+    protected boolean canTeleport = DEFAULT_CAN_TELEPORT;
+
+    //TODO this is just a cheap method to provide cornering speed differences
     protected float corneringSpeedUp;
 
     public MovingActor(GameContext gameContext) {
@@ -54,9 +57,9 @@ public abstract class MovingActor extends Actor {
                 ", position=" + position() +
                 ", velocity=" + (velocity != null ? velocity() : DEFAULT_VELOCITY) +
                 ", acceleration=" + (acceleration != null ? acceleration() : DEFAULT_ACCELERATION) +
-                ", moveDir=" + (moveDirProperty != null ? moveDir() : DEFAULT_MOVE_DIR) +
-                ", wishDir=" + (wishDirProperty != null ? wishDir() : DEFAULT_WISH_DIR) +
-                ", targetTile=" + (targetTileProperty != null ? targetTile() : DEFAULT_TARGET_TILE) +
+                ", moveDir=" + (moveDir != null ? moveDir() : DEFAULT_MOVE_DIR) +
+                ", wishDir=" + (wishDir != null ? wishDir() : DEFAULT_WISH_DIR) +
+                ", targetTile=" + (targetTile != null ? targetTile() : DEFAULT_TARGET_TILE) +
                 ", newTileEntered=" + newTileEntered +
                 ", gotReverseCommand=" + gotReverseCommand +
                 ", canTeleport=" + canTeleport +
@@ -67,11 +70,18 @@ public abstract class MovingActor extends Actor {
     public void reset() {
         super.reset();
         moveInfo.clear();
-        setMoveAndWishDir(RIGHT); // updates velocity vector!
-        setTargetTile(null);
+        if (moveDir != null) {
+            setMoveDir(DEFAULT_MOVE_DIR);  // updates velocity vector!
+        }
+        if (wishDir != null) {
+            setWishDir(DEFAULT_WISH_DIR);
+        }
+        if (targetTile != null) {
+            setTargetTile(DEFAULT_TARGET_TILE);
+        }
+        canTeleport = DEFAULT_CAN_TELEPORT;
         newTileEntered = true;
         gotReverseCommand = false;
-        canTeleport = true;
     }
 
     public MoveResult moveInfo() {
@@ -96,10 +106,10 @@ public abstract class MovingActor extends Actor {
     public abstract boolean canAccessTile(GameLevel level, Vector2i tile);
 
     public final ObjectProperty<Vector2i> targetTileProperty() {
-        if (targetTileProperty == null) {
-            targetTileProperty = new SimpleObjectProperty<>(DEFAULT_TARGET_TILE);
+        if (targetTile == null) {
+            targetTile = new SimpleObjectProperty<>(DEFAULT_TARGET_TILE);
         }
-        return targetTileProperty;
+        return targetTile;
     }
 
     /**
@@ -120,7 +130,7 @@ public abstract class MovingActor extends Actor {
      * @return (Optional) target tile. Can be inaccessible or outside the world.
      */
     public Optional<Vector2i> optTargetTile() {
-        return Optional.ofNullable(targetTileProperty.get());
+        return Optional.ofNullable(targetTile.get());
     }
 
     /**
@@ -156,10 +166,10 @@ public abstract class MovingActor extends Actor {
     }
 
     public final ObjectProperty<Direction> moveDirProperty() {
-        if (moveDirProperty == null) {
-            moveDirProperty = new SimpleObjectProperty<>(DEFAULT_MOVE_DIR);
+        if (moveDir == null) {
+            moveDir = new SimpleObjectProperty<>(DEFAULT_MOVE_DIR);
         }
-        return moveDirProperty;
+        return moveDir;
     }
 
     /**
@@ -180,10 +190,10 @@ public abstract class MovingActor extends Actor {
     }
 
     public final ObjectProperty<Direction> wishDirProperty() {
-        if (wishDirProperty == null) {
-            wishDirProperty = new SimpleObjectProperty<>(DEFAULT_WISH_DIR);
+        if (wishDir == null) {
+            wishDir = new SimpleObjectProperty<>(DEFAULT_WISH_DIR);
         }
-        return wishDirProperty;
+        return wishDir;
     }
 
     /**
@@ -263,7 +273,7 @@ public abstract class MovingActor extends Actor {
 
     public void navigateTowardsTarget(GameLevel level) {
         requireNonNull(level);
-        if (!newTileEntered && moveInfo.moved || targetTileProperty.get() == null) {
+        if (!newTileEntered && moveInfo.moved || targetTile.get() == null) {
             return; // we don't need no navigation, dim dit didit didit...
         }
         final Vector2i currentTile = tile();
@@ -279,7 +289,7 @@ public abstract class MovingActor extends Actor {
             }
             final Vector2i neighborTile = currentTile.plus(dir.vector());
             if (canAccessTile(level, neighborTile)) {
-                double dist = neighborTile.euclideanDist(targetTileProperty.get());
+                double dist = neighborTile.euclideanDist(targetTile.get());
                 if (dist < minDistToTarget) {
                     minDistToTarget = dist;
                     candidateDir = dir;
