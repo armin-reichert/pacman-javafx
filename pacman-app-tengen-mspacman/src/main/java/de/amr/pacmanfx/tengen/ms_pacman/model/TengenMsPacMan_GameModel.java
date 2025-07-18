@@ -230,7 +230,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         super(gameContext.theGameEventManager(), gameContext.theHighScoreFile());
         actorSpeedControl = new TengenActorSpeedControl();
         mapSelector = new TengenMsPacMan_MapSelector();
-        gateKeeper = new GateKeeper(gameContext); //TODO implement Tengen logic
+        gateKeeper = new GateKeeper(this); //TODO implement Tengen logic instead
         huntingTimer = new TengenMsPacMan_HuntingTimer();
         huntingTimer.phaseIndexProperty().addListener((py, ov, nv) -> {
             if (nv.intValue() > 0) {

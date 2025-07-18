@@ -245,9 +245,9 @@ public class PacManGames_UI_Impl implements GameUI {
 
     private void doSimulationStepAndUpdateGameScene() {
         try {
-            theGameContext.theSimulationStep().start(theGameClock.tickCount());
+            theGameContext.theGame().simulationStep().start(theGameClock.tickCount());
             theGameContext.theGameController().updateGameState();
-            theGameContext.theSimulationStep().log();
+            theGameContext.theGame().simulationStep().logState();
             currentGameScene().ifPresent(GameScene::update);
         } catch (Throwable x) {
             ka_tas_trooo_phe(x);

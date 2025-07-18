@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
@@ -106,7 +105,7 @@ public class GateKeeper {
     private static final byte NO_LIMIT = -1;
     private static final byte[] GLOBAL_LIMITS = new byte[] {NO_LIMIT, 7, 17, NO_LIMIT};
 
-    private final GameContext gameContext;
+    private final GameModel gameModel;
     private House house;
     private Consumer<Ghost> onGhostReleasedAction = ghost -> Logger.info("Ghost {} released from house", ghost.name());
     
@@ -116,8 +115,8 @@ public class GateKeeper {
     private int          globalCounter;
     private boolean      globalCounterEnabled;
 
-    public GateKeeper(GameContext gameContext) {
-        this.gameContext = requireNonNull(gameContext);
+    public GateKeeper(GameModel gameModel) {
+        this.gameModel = requireNonNull(gameModel);
     }
     
     public void setHouse(House house) {
@@ -217,8 +216,8 @@ public class GateKeeper {
             .findFirst().ifPresent(prisoner -> {
                 String releaseReason = checkReleaseOf(level, prisoner);
                 if (releaseReason != null) {
-                    gameContext.theSimulationStep().releasedGhost = prisoner;
-                    gameContext.theSimulationStep().ghostReleaseInfo = releaseReason;
+                    gameModel.simulationStep.releasedGhost = prisoner;
+                    gameModel.simulationStep.ghostReleaseInfo = releaseReason;
                     prisoner.setMoveAndWishDir(Direction.UP);
                     prisoner.setState(GhostState.LEAVING_HOUSE);
                     onGhostReleasedAction.accept(prisoner);

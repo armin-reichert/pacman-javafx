@@ -336,7 +336,7 @@ public class PlayScene3D implements GameScene {
                 animation.play();
             }
             case GHOST_DYING ->
-                gameContext().theSimulationStep().killedGhosts.forEach(killedGhost -> {
+                gameContext().theGame().simulationStep().killedGhosts.forEach(killedGhost -> {
                     byte personality = killedGhost.personality();
                     int killedIndex = gameContext().theGameLevel().victims().indexOf(killedGhost);
                     Image pointsImage = ui.theConfiguration().killedGhostPointsImage(killedGhost, killedIndex);

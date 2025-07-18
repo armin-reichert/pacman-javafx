@@ -86,7 +86,7 @@ public class SimulationStep {
         return messages;
     }
 
-    public void log() {
+    public void logState() {
         var report = createReport();
         if (!report.isEmpty()) {
             Logger.info("Simulation step #{}:", tick);

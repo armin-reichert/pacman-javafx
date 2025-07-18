@@ -46,9 +46,4 @@ public interface GameContext {
     GameLevel               theGameLevel();
 
     GameState               theGameState();
-
-    /**
-     * @return what happened in the current simulation step ("frame state")
-     */
-    SimulationStep          theSimulationStep();
 }

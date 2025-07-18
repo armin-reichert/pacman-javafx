@@ -10,7 +10,6 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.SimulationStep;
 
 import java.io.File;
 import java.util.Optional;
@@ -69,10 +68,5 @@ class GameContextImpl implements GameContext {
     @Override
     public GameState theGameState() {
         return gameController.gameState();
-    }
-
-    @Override
-    public SimulationStep theSimulationStep() {
-        return theGameController().currentGame().simulationStep();
     }
 }
