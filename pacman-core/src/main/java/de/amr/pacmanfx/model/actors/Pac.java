@@ -165,7 +165,7 @@ public class Pac extends MovingActor implements Animated {
         setSpeed(powerTimer.isRunning()
             ? gameContext.theGame().actorSpeedControl().pacPowerSpeed(gameContext, gameContext.theGameLevel())
             : gameContext.theGame().actorSpeedControl().pacNormalSpeed(gameContext, gameContext.theGameLevel()));
-        tryMoving(gameContext.theGameLevel());
+        findMyWayThroughThisCruelWorld();
 
         if (moveInfo.moved) {
             playAnimation();

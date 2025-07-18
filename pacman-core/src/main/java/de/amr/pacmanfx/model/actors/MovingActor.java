@@ -272,11 +272,15 @@ public abstract class MovingActor extends Actor {
         return newTileEntered;
     }
 
-    public void navigateTowardsTarget(GameLevel level) {
-        requireNonNull(level);
+    public void navigateTowardsTarget() {
+        if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
+
+        GameLevel level = gameContext.theGameLevel();
+
         if (!newTileEntered && moveInfo.moved || targetTile.get() == null) {
             return; // we don't need no navigation, dim dit didit didit...
         }
+
         final Vector2i currentTile = tile();
         if (level.isTileInPortalSpace(currentTile)) {
             return;
@@ -304,13 +308,13 @@ public abstract class MovingActor extends Actor {
     /**
      * Lets an actor move towards the given target tile.
      *
-     * @param level game level
      * @param targetTile target tile this actor tries to reach
      */
-    public void tryMovingTowardsTargetTile(GameLevel level, Vector2i targetTile) {
+    public void tryMovingTowardsTargetTile(Vector2i targetTile) {
+        if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
         setTargetTile(targetTile);
-        navigateTowardsTarget(level);
-        tryMoving(level);
+        navigateTowardsTarget();
+        findMyWayThroughThisCruelWorld();
     }
 
     private void tryTeleport(Vector2i currentTile, Portal portal) {
@@ -327,14 +331,15 @@ public abstract class MovingActor extends Actor {
     }
 
     /**
-     * Tries moving through the level's world.
+     * Tries moving through the current level's world.
      * <p>
      * First checks if the actor can be teleported, then if the actor can move to its wish direction. If this is not
      * possible, it keeps moving to its current move direction.
-     *
-     * @param level the game level
      */
-    public void tryMoving(GameLevel level) {
+    public void findMyWayThroughThisCruelWorld() {
+        if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
+
+        GameLevel level = gameContext.theGameLevel();
         final Vector2i currentTile = tile();
         moveInfo.clear();
         if (canTeleport) {

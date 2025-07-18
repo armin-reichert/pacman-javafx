@@ -177,8 +177,8 @@ public class Bonus extends MovingActor {
                 setInactive();
                 gameContext.theGameEventManager().publishEvent(GameEventType.BONUS_EXPIRED, tile());
             } else {
-                navigateTowardsTarget(gameLevel);
-                tryMoving(gameLevel);
+                navigateTowardsTarget();
+                findMyWayThroughThisCruelWorld();
                 jumpAnimation.tick();
             }
         });

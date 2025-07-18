@@ -110,37 +110,42 @@ public abstract class Ghost extends MovingActor implements Animated {
 
     /**
      * Subclasses implement this method to define the behavior of the ghost when hunting Pac-Man through
-     * the given game level.
-     *
-     * @param level the game level
+     * the current game level.
      */
-    public abstract void hunt(GameLevel level);
+    public abstract void hunt();
 
     /**
      * Subclasses implement this method to define the target tile of the ghost when hunting Pac-Man through
-     * the given game level.
+     * the current game level.
      *
-     * @param level the game level
      * @return the current target tile when chasing Pac-Man
      */
-    public abstract Vector2i chasingTargetTile(GameLevel level);
+    public abstract Vector2i chasingTargetTile();
 
     /**
-     * Lets the ghost randomly roam through the world.
-     *
-     * @param level the game level
+     * Lets the ghost roam through the current level's world.
+     * <p></p>
+     * <cite>
+     Roam if you want to, roam around the world!<br>
+     Roam if you want to, without wings without wheels!<br>
+     Roam if you want to, roam around the world!<br>
+     Roam if you want to, without anything but the love we feel!
+     </cite>
      */
-    public void roam(GameLevel level) {
+    public void roam() {
+        if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
+
+        GameLevel level = gameContext.theGameLevel();
         Vector2i currentTile = tile();
         if (!level.isTileInPortalSpace(currentTile) && (isNewTileEntered() || !moveInfo.moved)) {
-            Direction dir = computeRoamingDirection(level, currentTile);
+            Direction dir = computeRoamingDirection(currentTile);
             setWishDir(dir);
         }
-        tryMoving(level);
+        findMyWayThroughThisCruelWorld();
     }
 
     // try a random direction towards an accessible tile, do not turn back unless there is no other way
-    private Direction computeRoamingDirection(GameLevel level, Vector2i currentTile) {
+    private Direction computeRoamingDirection(Vector2i currentTile) {
         Direction dir = pseudoRandomDirection();
         int turns = 0;
         while (dir == moveDir().opposite() || !canAccessTile(currentTile.plus(dir.vector()))) {
@@ -369,7 +374,7 @@ public abstract class Ghost extends MovingActor implements Animated {
             GameLevel level = gameContext.theGameLevel();
             // The specific hunting behaviour is defined by the game variant. For example, in Ms. Pac-Man,
             // the red and pink ghosts are not chasing Pac-Man during the first scatter phase, but roam the maze randomly.
-            hunt(level);
+            hunt();
         }
     }
 
@@ -399,7 +404,7 @@ public abstract class Ghost extends MovingActor implements Animated {
                 ? gameContext.theGame().actorSpeedControl().ghostTunnelSpeed(gameContext, level, this)
                 : gameContext.theGame().actorSpeedControl().ghostFrightenedSpeed(gameContext, level, this);
             setSpeed(speed);
-            roam(level);
+            roam();
             updateFrightenedAnimation();
         }
     }
@@ -452,8 +457,8 @@ public abstract class Ghost extends MovingActor implements Animated {
             } else {
                 setSpeed(speed);
                 setTargetTile(house.leftDoorTile());
-                navigateTowardsTarget(level);
-                tryMoving(level);
+                navigateTowardsTarget();
+                findMyWayThroughThisCruelWorld();
             }
         }
     }

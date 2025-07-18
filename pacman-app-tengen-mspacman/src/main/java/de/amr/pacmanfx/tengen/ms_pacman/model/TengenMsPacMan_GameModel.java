@@ -111,71 +111,92 @@ public class TengenMsPacMan_GameModel extends GameModel {
     public static Ghost createGhost(GameContext gameContext, byte personality) {
         requireValidGhostPersonality(personality);
         return switch (personality) {
+
             case RED_GHOST_SHADOW -> new Ghost(gameContext, RED_GHOST_SHADOW, "Blinky") {
                 @Override
-                public void hunt(GameLevel level) {
+                public void hunt() {
+                    if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
+                    GameLevel level = gameContext.theGameLevel();
+
                     float speed = gameContext.theGame().actorSpeedControl().ghostAttackSpeed(gameContext, level, this);
                     setSpeed(speed);
                     if (gameContext.theGame().huntingTimer().phaseIndex() == 0) {
-                        roam(level);
+                        roam();
                     } else {
                         boolean chase = gameContext.theGame().huntingTimer().phase() == HuntingPhase.CHASING;
-                        Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
-                        tryMovingTowardsTargetTile(level, targetTile);
+                        Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(personality());
+                        tryMovingTowardsTargetTile(targetTile);
                     }
                 }
 
                 @Override
-                public Vector2i chasingTargetTile(GameLevel level) {
-                    return level.pac().tile();
+                public Vector2i chasingTargetTile() {
+                    if (gameContext == null || gameContext.optGameLevel().isEmpty()) return null;
+                    return gameContext.theGameLevel().pac().tile();
                 }
             };
+
             case PINK_GHOST_SPEEDY -> new Ghost(gameContext, PINK_GHOST_SPEEDY, "Pinky") {
                 @Override
-                public void hunt(GameLevel level) {
+                public void hunt() {
+                    if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
+                    GameLevel level = gameContext.theGameLevel();
+
                     float speed = gameContext.theGame().actorSpeedControl().ghostAttackSpeed(gameContext, level, this);
                     setSpeed(speed);
                     if (gameContext.theGame().huntingTimer().phaseIndex() == 0) {
-                        roam(level);
+                        roam();
                     } else {
                         boolean chase = gameContext.theGame().huntingTimer().phase() == HuntingPhase.CHASING;
-                        Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
-                        tryMovingTowardsTargetTile(level, targetTile);
+                        Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(personality());
+                        tryMovingTowardsTargetTile(targetTile);
                     }
                 }
 
                 @Override
-                public Vector2i chasingTargetTile(GameLevel level) {
-                    return level.pac().tilesAhead(4);
+                public Vector2i chasingTargetTile() {
+                    if (gameContext == null || gameContext.optGameLevel().isEmpty()) return null;
+                    return gameContext.theGameLevel().pac().tilesAhead(4);
                 }
             };
+
             case CYAN_GHOST_BASHFUL -> new Ghost(gameContext, CYAN_GHOST_BASHFUL, "Inky") {
                 @Override
-                public void hunt(GameLevel level) {
+                public void hunt() {
+                    if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
+                    GameLevel level = gameContext.theGameLevel();
+
                     float speed = gameContext.theGame().actorSpeedControl().ghostAttackSpeed(gameContext, level, this);
                     boolean chase = gameContext.theGame().huntingTimer().phase() == HuntingPhase.CHASING;
-                    Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
+                    Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(personality());
                     setSpeed(speed);
-                    tryMovingTowardsTargetTile(level, targetTile);
+                    tryMovingTowardsTargetTile(targetTile);
                 }
 
                 @Override
-                public Vector2i chasingTargetTile(GameLevel level) {
+                public Vector2i chasingTargetTile() {
+                    if (gameContext == null || gameContext.optGameLevel().isEmpty()) return null;
+                    GameLevel level = gameContext.theGameLevel();
                     return level.pac().tilesAhead(2).scaled(2).minus(level.ghost(RED_GHOST_SHADOW).tile());
                 }
             };
+
             case ORANGE_GHOST_POKEY -> new Ghost(gameContext, ORANGE_GHOST_POKEY, "Sue") {
                 @Override
-                public void hunt(GameLevel level) {
+                public void hunt() {
+                    if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
+                    GameLevel level = gameContext.theGameLevel();
                     float speed = gameContext.theGame().actorSpeedControl().ghostAttackSpeed(gameContext, level, this);
                     boolean chase = gameContext.theGame().huntingTimer().phase() == HuntingPhase.CHASING;
-                    Vector2i targetTile = chase ? chasingTargetTile(level) : level.ghostScatterTile(personality());
+                    Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(personality());
                     setSpeed(speed);
-                    tryMovingTowardsTargetTile(level, targetTile);
+                    tryMovingTowardsTargetTile(targetTile);
                 }
 
                 @Override
-                public Vector2i chasingTargetTile(GameLevel level) {
+                public Vector2i chasingTargetTile() {
+                    if (gameContext == null || gameContext.optGameLevel().isEmpty()) return null;
+                    GameLevel level = gameContext.theGameLevel();
                     return tile().euclideanDist(level.pac().tile()) < 8 ? level.ghostScatterTile(personality()) : level.pac().tile();
                 }
             };

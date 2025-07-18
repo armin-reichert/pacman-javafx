@@ -39,24 +39,24 @@ public class RouteBasedSteering implements Steering {
 
     @Override
     public void steer(MovingActor movingActor, GameLevel level) {
-        movingActor.navigateTowardsTarget(level);
+        movingActor.navigateTowardsTarget();
         if (targetIndex == route.size()) {
             complete = true;
         } else if (movingActor.optTargetTile().isEmpty()) {
             movingActor.setTargetTile(currentTarget().tile());
-            movingActor.navigateTowardsTarget(level);
+            movingActor.navigateTowardsTarget();
             Logger.trace("New target tile for {}={}s", movingActor.name(), movingActor.targetTile());
         } else if (movingActor.tile().equals(currentTarget().tile())) {
-            nextTarget(level, movingActor);
+            nextTarget(movingActor);
             Logger.trace("New target tile for {}={}", movingActor.name(), movingActor.targetTile());
         }
     }
 
-    private void nextTarget(GameLevel level, MovingActor movingActor) {
+    private void nextTarget(MovingActor movingActor) {
         ++targetIndex;
         if (targetIndex < route.size()) {
             movingActor.setTargetTile(currentTarget().tile());
-            movingActor.navigateTowardsTarget(level);
+            movingActor.navigateTowardsTarget();
         }
     }
 

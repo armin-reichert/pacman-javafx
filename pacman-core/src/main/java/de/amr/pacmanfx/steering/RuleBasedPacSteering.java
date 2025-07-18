@@ -142,7 +142,7 @@ public class RuleBasedPacSteering implements Steering {
             pac.setTargetTile(findTileFarthestFromGhosts(pac, findNearestFoodTiles(level)));
         }
         pac.optTargetTile().ifPresent(target -> {
-            pac.navigateTowardsTarget(level);
+            pac.navigateTowardsTarget();
             Logger.trace("Navigated towards {}, moveDir={} wishDir={}", pac.targetTile(), pac.moveDir(), pac.wishDir());
         });
     }
