@@ -101,7 +101,7 @@ public abstract class GameModel implements ScoreManager {
         level.ghosts().forEach(Ghost::update);
         level.bonus().ifPresent(Bonus::update);
 
-        checkIfPacManKilled();
+        checkIfPacManGetsKilled(level.pac());
         if (hasPacManBeenKilled()) return;
 
         checkIfGhostsKilled();
@@ -180,15 +180,15 @@ public abstract class GameModel implements ScoreManager {
         });
     }
 
-    protected void checkIfPacManKilled() {
+    protected void checkIfPacManGetsKilled(Pac pac) {
         level.ghosts(GhostState.HUNTING_PAC)
-            .filter(ghost -> actorsCollide(ghost, level.pac()))
+            .filter(ghost -> actorsCollide(ghost, pac))
             .findFirst().ifPresent(potentialKiller -> {
                 boolean killed;
                 if (level.isDemoLevel()) {
                     killed = !isPacManSafeInDemoLevel();
                 } else {
-                    killed = !level.pac().isImmune();
+                    killed = !pac.isImmune();
                 }
                 if (killed) {
                     gameContext.theSimulationStep().pacKiller = potentialKiller;
