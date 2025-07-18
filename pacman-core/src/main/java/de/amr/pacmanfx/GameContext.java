@@ -18,8 +18,8 @@ import java.util.Optional;
 
 public interface GameContext {
     /**
-     * Directory under which high scores, maps etc. are stored.
-     * <p>Default: <code>&lt;user_home&gt;/.pacmanfx</code></p>
+     * Root directory under which user specific files are stored.
+     * <p>Default: <code>$HOME/.pacmanfx</code> (Unix) or <code>%USERPROFILE%\.pacmanfx</code> (MS Windows)</p>
      */
     File theHomeDir();
 
@@ -29,19 +29,21 @@ public interface GameContext {
     File theCustomMapDir();
 
     CoinMechanism           theCoinMechanism();
+
     <T extends GameModel> T theGame();
+
     GameController          theGameController();
+
     GameEventManager        theGameEventManager();
+
     Optional<GameLevel>     optGameLevel();
+
     GameLevel               theGameLevel();
+
     GameState               theGameState();
 
     /**
      * @return what happened in the current simulation step ("frame state")
      */
     SimulationStep          theSimulationStep();
-
-    // Global properties
-    BooleanProperty         propertyImmunity();
-    BooleanProperty         propertyUsingAutopilot();
 }

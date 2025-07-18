@@ -44,8 +44,8 @@ public class StatusIconBox extends HBox implements Destroyable {
 
         iconMuted.visibleProperty().bind(ui.propertyMuted());
         icon3D.visibleProperty().bind(ui.property3DEnabled());
-        iconAutopilot.visibleProperty().bind(ui.theGameContext().propertyUsingAutopilot());
-        iconImmune.visibleProperty().bind(ui.theGameContext().propertyImmunity());
+        iconAutopilot.visibleProperty().bind(ui.theGameContext().theGameController().propertyUsingAutopilot());
+        iconImmune.visibleProperty().bind(ui.theGameContext().theGameController().propertyImmunity());
 
         getChildren().addAll(iconMuted, icon3D, iconAutopilot, iconImmune);
 

@@ -10,6 +10,8 @@ import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.event.GameStateChangeEvent;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.model.GameModel;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.tinylog.Logger;
@@ -38,6 +40,9 @@ public class GameController  {
     private final StateMachine<GameState, GameContext> stateMachine;
     private final GameEventManager gameEventManager;
     private boolean eventsEnabled;
+
+    private final BooleanProperty propertyImmunity = new SimpleBooleanProperty(false);
+    private final BooleanProperty propertyUsingAutopilot = new SimpleBooleanProperty(false);
 
     public GameController(GameContext gameContext) {
         gameEventManager = new GameEventManager(gameContext);
@@ -125,5 +130,13 @@ public class GameController  {
 
     public boolean isSelected(String gameVariant) {
         return requireNonNull(gameVariant).equals(gameVariantPy.get());
+    }
+
+    public BooleanProperty propertyImmunity() {
+        return propertyImmunity;
+    }
+
+    public BooleanProperty propertyUsingAutopilot() {
+        return propertyUsingAutopilot;
     }
 }

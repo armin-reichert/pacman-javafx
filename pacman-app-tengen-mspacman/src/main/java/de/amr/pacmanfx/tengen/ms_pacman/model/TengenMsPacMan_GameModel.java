@@ -522,8 +522,8 @@ public class TengenMsPacMan_GameModel extends GameModel {
     public void buildNormalLevel(int levelNumber) {
         createLevel(levelNumber);
         level.setDemoLevel(false);
-        level.pac().immuneProperty().bind(theGameContext().propertyImmunity());
-        level.pac().usingAutopilotProperty().bind(theGameContext().propertyUsingAutopilot());
+        level.pac().immuneProperty().bind(theGameContext().theGameController().propertyImmunity());
+        level.pac().usingAutopilotProperty().bind(theGameContext().theGameController().propertyUsingAutopilot());
         huntingTimer().reset();
         setScoreLevelNumber(levelNumber);
         gateKeeper().ifPresent(gateKeeper -> {

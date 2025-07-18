@@ -169,10 +169,10 @@ public class PlayScene3D implements GameScene {
         miToggleMiniView.selectedProperty().bindBidirectional(ui.propertyMiniViewOn());
 
         var miAutopilot = new CheckMenuItem(ui.theAssets().text("autopilot"));
-        miAutopilot.selectedProperty().bindBidirectional(theGameContext().propertyUsingAutopilot());
+        miAutopilot.selectedProperty().bindBidirectional(theGameContext().theGameController().propertyUsingAutopilot());
 
         var miImmunity = new CheckMenuItem(ui.theAssets().text("immunity"));
-        miImmunity.selectedProperty().bindBidirectional(theGameContext().propertyImmunity());
+        miImmunity.selectedProperty().bindBidirectional(theGameContext().theGameController().propertyImmunity());
 
         var miMuted = new CheckMenuItem(ui.theAssets().text("muted"));
         miMuted.selectedProperty().bindBidirectional(ui.propertyMuted());

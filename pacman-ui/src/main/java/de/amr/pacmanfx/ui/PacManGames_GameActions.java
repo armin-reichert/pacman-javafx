@@ -378,8 +378,8 @@ public interface PacManGames_GameActions {
     GameAction ACTION_TOGGLE_AUTOPILOT = new GameAction() {
         @Override
         public void execute(GameUI ui) {
-            toggle(ui.theGameContext().propertyUsingAutopilot());
-            boolean autoPilotOn = ui.theGameContext().propertyUsingAutopilot().get();
+            toggle(ui.theGameContext().theGameController().propertyUsingAutopilot());
+            boolean autoPilotOn = ui.theGameContext().theGameController().propertyUsingAutopilot().get();
             ui.showFlashMessage(ui.theAssets().text(autoPilotOn ? "autopilot_on" : "autopilot_off"));
             ui.theSound().playVoice(autoPilotOn ? SoundID.VOICE_AUTOPILOT_ON : SoundID.VOICE_AUTOPILOT_OFF, 0);
         }
@@ -405,8 +405,8 @@ public interface PacManGames_GameActions {
     GameAction ACTION_TOGGLE_IMMUNITY = new GameAction() {
         @Override
         public void execute(GameUI ui) {
-            toggle(ui.theGameContext().propertyImmunity());
-            boolean immunityOn = ui.theGameContext().propertyImmunity().get();
+            toggle(ui.theGameContext().theGameController().propertyImmunity());
+            boolean immunityOn = ui.theGameContext().theGameController().propertyImmunity().get();
             ui.showFlashMessage(ui.theAssets().text(immunityOn ? "player_immunity_on" : "player_immunity_off"));
             ui.theSound().playVoice(immunityOn ? SoundID.VOICE_IMMUNITY_ON : SoundID.VOICE_IMMUNITY_OFF, 0);
         }

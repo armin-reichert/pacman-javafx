@@ -24,9 +24,6 @@ class GameContextImpl implements GameContext {
     private final GameController gameController = new GameController(this);
     private final SimulationStep simulationStep = new SimulationStep();
 
-    private final BooleanProperty propertyImmunity = new SimpleBooleanProperty(false);
-    private final BooleanProperty propertyUsingAutopilot = new SimpleBooleanProperty(false);
-
     @Override
     public CoinMechanism theCoinMechanism() {
         return coinMechanism;
@@ -75,15 +72,5 @@ class GameContextImpl implements GameContext {
     @Override
     public SimulationStep theSimulationStep() {
         return simulationStep;
-    }
-
-    @Override
-    public BooleanProperty propertyImmunity() {
-        return propertyImmunity;
-    }
-
-    @Override
-    public BooleanProperty propertyUsingAutopilot() {
-        return propertyUsingAutopilot;
     }
 }
