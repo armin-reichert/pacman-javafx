@@ -21,6 +21,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 import static java.util.Objects.requireNonNull;
 
@@ -38,6 +39,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameController implements GameContext {
 
+    public static final Pattern GAME_VARIANT_PATTERN = Pattern.compile("[a-zA-Z][a-zA-Z_0-9]*");
+
     private final File homeDir = new File(System.getProperty("user.home"), ".pacmanfx");
     private final File customMapDir = new File(homeDir, "maps");
 
@@ -47,7 +50,7 @@ public class GameController implements GameContext {
     private final CoinMechanism coinMechanism = new CoinMechanism();
 
     private final Map<String, GameModel> knownGames = new HashMap<>();
-    private final StringProperty gameVariantPy = new SimpleStringProperty();
+    private final StringProperty gameVariantProperty = new SimpleStringProperty();
 
     private final StateMachine<GameState, GameContext> gameStateMachine;
 
@@ -62,7 +65,7 @@ public class GameController implements GameContext {
         gameStateMachine.addStateChangeListener((oldState, newState) ->
             gameEventManager.publishEvent(new GameStateChangeEvent(theGame(), oldState, newState)));
 
-        gameVariantPy.addListener((py, ov, newGameVariant) -> {
+        gameVariantProperty.addListener((py, ov, newGameVariant) -> {
             if (eventsEnabled) {
                 GameModel newGame = game(newGameVariant);
                 newGame.init();
@@ -111,6 +114,10 @@ public class GameController implements GameContext {
      */
     public void registerGame(String variant, GameModel gameModel) {
         requireNonNull(variant);
+        if (!GAME_VARIANT_PATTERN.matcher(variant).matches()) {
+            throw new IllegalArgumentException("Game variant name '%s' does not match required syntax '%s'"
+                .formatted(variant, GAME_VARIANT_PATTERN));
+        }
         requireNonNull(gameModel);
         if (knownGames.containsKey(variant)) {
             Logger.warn("Game model ({}) is already registered for game variant {}", gameModel.getClass().getName(), variant);
@@ -118,15 +125,15 @@ public class GameController implements GameContext {
         knownGames.put(variant, gameModel);
     }
 
-    public String selectedGameVariant() { return gameVariantPy.get(); }
+    public String selectedGameVariant() { return gameVariantProperty.get(); }
 
     public void selectGameVariant(String gameVariant) {
         requireNonNull(gameVariant);
-        gameVariantPy.set(gameVariant);
+        gameVariantProperty.set(gameVariant);
     }
 
     public boolean isSelected(String gameVariant) {
-        return requireNonNull(gameVariant).equals(gameVariantPy.get());
+        return requireNonNull(gameVariant).equals(gameVariantProperty.get());
     }
 
     public BooleanProperty propertyImmunity() {
@@ -164,7 +171,7 @@ public class GameController implements GameContext {
      * @return The game (model) registered for the currently selected game variant.
      */
     public <GAME extends GameModel> GAME theGame() {
-        return game(gameVariantPy.get());
+        return game(gameVariantProperty.get());
     }
 
     @Override

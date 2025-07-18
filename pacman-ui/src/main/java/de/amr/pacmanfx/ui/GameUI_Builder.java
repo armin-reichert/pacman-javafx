@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.controller.GameController;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.MapSelector;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
@@ -31,7 +32,7 @@ public class GameUI_Builder {
     }
 
     public GameUI_Builder game(String variant, Class<? extends GameModel> gameModelClass, Class<? extends GameUI_Config> configClass) {
-        validateGameVariant(variant);
+        validateGameVariantKey(variant);
         if (gameModelClass == null) {
             error("Game model class for variant %s may not be null".formatted(variant));
         }
@@ -49,7 +50,7 @@ public class GameUI_Builder {
             MapSelector mapSelector,
             Class<? extends GameUI_Config> configClass)
     {
-        validateGameVariant(variant);
+        validateGameVariantKey(variant);
         if (gameModelClass == null) {
             error("Game model class for variant %s may not be null".formatted(variant));
         }
@@ -126,15 +127,16 @@ public class GameUI_Builder {
         }
     }
 
-    private void validateGameVariant(String variant) {
-        if (variant == null) {
-            error("Game variant must not be null");
+    private void validateGameVariantKey(String gameVariantKey) {
+        if (gameVariantKey == null) {
+            error("Game variant key must not be null");
         }
-        if (variant.isBlank()) {
-            error("Game variant must not be a blank string");
+        if (gameVariantKey.isBlank()) {
+            error("Game variant key must not be a blank string");
         }
-        if (!variant.matches("[a-zA-Z_$][a-zA-Z_$0-9]*")) {
-            error("Game variant ('%s') is not a valid identifier".formatted(variant));
+        if (!GameController.GAME_VARIANT_PATTERN.matcher(gameVariantKey).matches()) {
+            error("Game variant key '%s' does not match required syntax '%s'"
+                .formatted(gameVariantKey, GameController.GAME_VARIANT_PATTERN));
         }
     }
 
