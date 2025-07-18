@@ -9,6 +9,7 @@ import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.event.GameStateChangeEvent;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameModel;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -16,8 +17,10 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.tinylog.Logger;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
@@ -33,25 +36,31 @@ import static java.util.Objects.requireNonNull;
  * behavior</a>
  * @see <a href="http://superpacman.com/mspacman/">Ms. Pac-Man</a>
  */
-public class GameController  {
+public class GameController implements GameContext {
 
-    private final CoinMechanism coinMechanism = new CoinMechanism();
-    private final Map<String, GameModel> knownGames = new HashMap<>();
-    private final StringProperty gameVariantPy = new SimpleStringProperty();
-    private final StateMachine<GameState, GameContext> stateMachine;
+    private final File homeDir = new File(System.getProperty("user.home"), ".pacmanfx");
+    private final File customMapDir = new File(homeDir, "maps");
+
     private final GameEventManager gameEventManager;
     private boolean eventsEnabled;
+
+    private final CoinMechanism coinMechanism = new CoinMechanism();
+
+    private final Map<String, GameModel> knownGames = new HashMap<>();
+    private final StringProperty gameVariantPy = new SimpleStringProperty();
+
+    private final StateMachine<GameState, GameContext> gameStateMachine;
 
     private final BooleanProperty propertyImmunity = new SimpleBooleanProperty(false);
     private final BooleanProperty propertyUsingAutopilot = new SimpleBooleanProperty(false);
 
-    public GameController(GameContext gameContext) {
-        gameEventManager = new GameEventManager(gameContext);
-        stateMachine = new StateMachine<>(GameState.values()) {
-            @Override public GameContext context() { return gameContext; }
+    public GameController() {
+        gameEventManager = new GameEventManager(this);
+        gameStateMachine = new StateMachine<>(GameState.values()) {
+            @Override public GameContext context() { return GameController.this; }
         };
-        stateMachine.addStateChangeListener((oldState, newState) ->
-            gameEventManager.publishEvent(new GameStateChangeEvent(currentGame(), oldState, newState)));
+        gameStateMachine.addStateChangeListener((oldState, newState) ->
+            gameEventManager.publishEvent(new GameStateChangeEvent(theGame(), oldState, newState)));
 
         gameVariantPy.addListener((py, ov, newGameVariant) -> {
             if (eventsEnabled) {
@@ -62,40 +71,30 @@ public class GameController  {
         });
     }
 
-    public GameEventManager gameEventManager() {
-        return gameEventManager;
-    }
-
-    public CoinMechanism coinMechanism() {
-        return coinMechanism;
-    }
-
     public void setEventsEnabled(boolean enabled) {
         eventsEnabled = enabled;
     }
 
     public void changeGameState(GameState state) {
         requireNonNull(state);
-        stateMachine.changeState(state);
+        gameStateMachine.changeState(state);
     }
 
     public void letCurrentGameStateExpire() {
-        stateMachine.letCurrentStateExpire();
+        gameStateMachine.letCurrentStateExpire();
     }
 
     public void updateGameState() {
-        stateMachine.update();
+        gameStateMachine.update();
     }
 
     public void resumePreviousGameState() {
-        stateMachine.resumePreviousState();
+        gameStateMachine.resumePreviousState();
     }
 
     public void restart(GameState state) {
-        stateMachine.restart(state);
+        gameStateMachine.restart(state);
     }
-
-    public GameState gameState() { return stateMachine.state(); }
 
     @SuppressWarnings("unchecked")
     public <T extends GameModel> T game(String variant) {
@@ -119,13 +118,6 @@ public class GameController  {
         knownGames.put(variant, gameModel);
     }
 
-    /**
-     * @return The game (model) registered for the currently selected game variant.
-     */
-    public <GAME extends GameModel> GAME currentGame() {
-        return game(gameVariantPy.get());
-    }
-
     public String selectedGameVariant() { return gameVariantPy.get(); }
 
     public void selectGameVariant(String gameVariant) {
@@ -143,5 +135,60 @@ public class GameController  {
 
     public BooleanProperty propertyUsingAutopilot() {
         return propertyUsingAutopilot;
+    }
+
+    // GameContext implementation
+
+    @Override
+    public CoinMechanism theCoinMechanism() {
+        return coinMechanism;
+    }
+
+    @Override
+    public File theHomeDir() {
+        return homeDir;
+    }
+
+    @Override
+    public File theCustomMapDir() {
+        return customMapDir;
+    }
+
+    @Override
+    public File theHighScoreFile() {
+        String gameVariant = theGameController().selectedGameVariant();
+        return new File(homeDir, "highscore-%s.xml".formatted(gameVariant).toLowerCase());
+    }
+
+    /**
+     * @return The game (model) registered for the currently selected game variant.
+     */
+    public <GAME extends GameModel> GAME theGame() {
+        return game(gameVariantPy.get());
+    }
+
+    @Override
+    public GameController theGameController() {
+        return this;
+    }
+
+    @Override
+    public GameEventManager theGameEventManager() {
+        return gameEventManager;
+    }
+
+    @Override
+    public Optional<GameLevel> optGameLevel() {
+        return theGame().level();
+    }
+
+    @Override
+    public GameLevel theGameLevel() {
+        return theGame().level().orElse(null);
+    }
+
+    @Override
+    public GameState theGameState() {
+        return gameStateMachine.state();
     }
 }
