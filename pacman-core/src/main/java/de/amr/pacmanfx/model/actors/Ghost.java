@@ -33,14 +33,18 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class Ghost extends MovingActor implements Animated {
 
+    public static final GhostState DEFAULT_STATE = GhostState.LOCKED;
+
     private final byte personality;
     private final String name;
-    private final ObjectProperty<GhostState> stateProperty = new SimpleObjectProperty<>(GhostState.LOCKED);
+    private ObjectProperty<GhostState> state;
+
     private Vector2f revivalPosition;
     private List<Vector2i> specialTerrainTiles = List.of();
     private ActorAnimationMap animationMap;
 
     /**
+     * @param gameContext the game context for this ghost, may be null for example in cut scenes
      * @param personality ghost personality, allowed values are
      *          {@link de.amr.pacmanfx.Globals#RED_GHOST_SHADOW},
      *          {@link de.amr.pacmanfx.Globals#PINK_GHOST_SPEEDY},
@@ -68,7 +72,7 @@ public abstract class Ghost extends MovingActor implements Animated {
     public String toString() {
         return "Ghost{" +
                 "name='" + name + '\'' +
-                ", state=" + state() +
+                ", state=" + (state != null ? state() : DEFAULT_STATE) +
                 ", visible=" + isVisible() +
                 ", position=" + position() +
                 ", velocity=" + (velocity != null ? velocity() : DEFAULT_VELOCITY) +
@@ -187,11 +191,18 @@ public abstract class Ghost extends MovingActor implements Animated {
 
     // Here begins the state machine part
 
+    public final ObjectProperty<GhostState> stateProperty() {
+        if (state == null) {
+            state = new SimpleObjectProperty<>(DEFAULT_STATE);
+        }
+        return state;
+    }
+
     /**
      * The current state of this ghost.
      */
     public GhostState state() {
-        return stateProperty.get();
+        return stateProperty().get();
     }
 
     /**
@@ -201,7 +212,7 @@ public abstract class Ghost extends MovingActor implements Animated {
      * <code>false</code>
      */
     public boolean inAnyOfStates(GhostState... states) {
-        return state() != null && isOneOf(state(), states);
+        return state != null && isOneOf(state(), states);
     }
 
     /**
@@ -214,8 +225,9 @@ public abstract class Ghost extends MovingActor implements Animated {
         if (state() == newState) {
             Logger.warn("{} is already in state {}", name, newState);
         }
-        stateProperty.set(newState);
-        // onEntry action:
+        stateProperty().set(newState);
+
+        // "onEntry" action:
         switch (newState) {
             case LOCKED, HUNTING_PAC -> selectAnimation(ANIM_GHOST_NORMAL);
             case ENTERING_HOUSE, RETURNING_HOME -> selectAnimation(ANIM_GHOST_EYES);
@@ -225,19 +237,23 @@ public abstract class Ghost extends MovingActor implements Animated {
     }
 
     /**
-     * Executes a single simulation step for this ghost in the current game level.
+     * Updates the state of this ghost in the current game context.
      */
-    public void update(GameLevel level) {
-        requireNonNull(level);
-        switch (state()) {
-            case LOCKED             -> updateStateLocked(level);
-            case LEAVING_HOUSE      -> updateStateLeavingHouse(level);
-            case HUNTING_PAC        -> updateStateHuntingPac(level);
-            case FRIGHTENED         -> updateStateFrightened(level);
-            case EATEN              -> updateStateEaten();
-            case RETURNING_HOME     -> updateStateReturningToHouse(level);
-            case ENTERING_HOUSE     -> updateStateEnteringHouse(level);
+    public void update() {
+        if (gameContext == null) {
+            return; // might happen for ghosts in cut scenes
         }
+        gameContext.optGameLevel().ifPresent(level -> {
+            switch (state()) {
+                case LOCKED             -> updateStateLocked();
+                case LEAVING_HOUSE      -> updateStateLeavingHouse();
+                case HUNTING_PAC        -> updateStateHuntingPac();
+                case FRIGHTENED         -> updateStateFrightened();
+                case EATEN              -> updateStateEaten();
+                case RETURNING_HOME     -> updateStateReturningToHouse();
+                case ENTERING_HOUSE     -> updateStateEnteringHouse();
+            }
+        });
     }
 
     public void eaten(int index) {
@@ -251,31 +267,34 @@ public abstract class Ghost extends MovingActor implements Animated {
      * In locked state, ghosts inside the house are bouncing up and down. They become blue when Pac-Man gets power
      * and start blinking when Pac-Man's power starts fading. After that, they return to their normal color.
      */
-    private void updateStateLocked(GameLevel level) {
-        if (level.house().isEmpty()) {
-            Logger.error("No ghosthouse in level?");
-            return;
-        }
-        House house = level.house().get();
-        if (house.isActorInsideHouse(this)) {
-            float minY = (house.minTile().y() + 1) * TS + HTS;
-            float maxY = (house.maxTile().y() - 1) * TS - HTS;
-            setSpeed(gameContext.theGame().actorSpeedControl().ghostSpeedInsideHouse(gameContext, level, this));
-            move();
-            float y = position().y();
-            if (y <= minY) {
-                setMoveAndWishDir(DOWN);
-            } else if (y >= maxY) {
-                setMoveAndWishDir(UP);
+    private void updateStateLocked() {
+        if (gameContext.optGameLevel().isPresent()) {
+            GameLevel level = gameContext.theGameLevel();
+            House house = level.house().orElse(null);
+            if (house == null) {
+                Logger.error("No ghost house in level? WTF!");
+                return;
             }
-            setPosition(position().x(), Math.clamp(y, minY, maxY));
-        } else {
-            setSpeed(0);
-        }
-        if (level.pac().powerTimer().isRunning() && !level.victims().contains(this)) {
-            updateFrightenedAnimation(level);
-        } else {
-            selectAnimation(ANIM_GHOST_NORMAL);
+            if (house.isVisitedBy(this)) {
+                float minY = (house.minTile().y() + 1) * TS + HTS;
+                float maxY = (house.maxTile().y() - 1) * TS - HTS;
+                setSpeed(gameContext.theGame().actorSpeedControl().ghostSpeedInsideHouse(gameContext, level, this));
+                move();
+                float y = position().y();
+                if (y <= minY) {
+                    setMoveAndWishDir(DOWN);
+                } else if (y >= maxY) {
+                    setMoveAndWishDir(UP);
+                }
+                setPosition(position().x(), Math.clamp(y, minY, maxY));
+            } else {
+                setSpeed(0);
+            }
+            if (level.pac().powerTimer().isRunning() && !level.victims().contains(this)) {
+                updateFrightenedAnimation();
+            } else {
+                selectAnimation(ANIM_GHOST_NORMAL);
+            }
         }
     }
 
@@ -288,44 +307,47 @@ public abstract class Ghost extends MovingActor implements Animated {
      * <p>
      * The ghost speed is slower than outside, but I do not know the exact value.
      */
-    private void updateStateLeavingHouse(GameLevel level) {
-        if (level.house().isEmpty()) {
-            Logger.error("No ghost house in level?");
-            return;
-        }
-        House house = level.house().get();
-        float speedInsideHouse = gameContext.theGame().actorSpeedControl().ghostSpeedInsideHouse(gameContext, level, this);
-        Vector2f houseEntryPosition = house.entryPosition();
-        Vector2f position = position();
-        if (position.y() <= houseEntryPosition.y()) {
-            // has raised and is outside house
-            setPosition(houseEntryPosition);
-            setMoveAndWishDir(LEFT);
-            newTileEntered = false; // force moving left until new tile is entered
-            if (level.pac().powerTimer().isRunning() && !level.victims().contains(this)) {
-                setState(GhostState.FRIGHTENED);
-            } else {
-                setState(GhostState.HUNTING_PAC);
+    private void updateStateLeavingHouse() {
+        if (gameContext.optGameLevel().isPresent()) {
+            GameLevel level = gameContext.theGameLevel();
+            House house = level.house().orElse(null);
+            if (house == null) {
+                Logger.error("No ghost house in level? WTF!");
+                return;
             }
-            return;
-        }
-        // move inside house
-        float centerX = position.x() + HTS;
-        float houseCenterX = house.center().x();
-        if (differsAtMost(0.5f * speedInsideHouse, centerX, houseCenterX)) {
-            // align horizontally and raise
-            setX(houseCenterX - HTS);
-            setMoveAndWishDir(UP);
-        } else {
-            // move sidewards until center axis is reached
-            setMoveAndWishDir(centerX < houseCenterX ? RIGHT : LEFT);
-        }
-        setSpeed(speedInsideHouse);
-        move();
-        if (level.pac().powerTimer().isRunning() && !level.victims().contains(this)) {
-            updateFrightenedAnimation(level);
-        } else {
-            selectAnimation(ANIM_GHOST_NORMAL);
+            float speedInsideHouse = gameContext.theGame().actorSpeedControl().ghostSpeedInsideHouse(gameContext, level, this);
+            Vector2f houseEntryPosition = house.entryPosition();
+            Vector2f position = position();
+            if (position.y() <= houseEntryPosition.y()) {
+                // has raised and is outside house
+                setPosition(houseEntryPosition);
+                setMoveAndWishDir(LEFT);
+                newTileEntered = false; // force moving left until new tile is entered
+                if (level.pac().powerTimer().isRunning() && !level.victims().contains(this)) {
+                    setState(GhostState.FRIGHTENED);
+                } else {
+                    setState(GhostState.HUNTING_PAC);
+                }
+                return;
+            }
+            // move inside house
+            float centerX = position.x() + HTS;
+            float houseCenterX = house.center().x();
+            if (differsAtMost(0.5f * speedInsideHouse, centerX, houseCenterX)) {
+                // align horizontally and raise
+                setX(houseCenterX - HTS);
+                setMoveAndWishDir(UP);
+            } else {
+                // move sidewards until center axis is reached
+                setMoveAndWishDir(centerX < houseCenterX ? RIGHT : LEFT);
+            }
+            setSpeed(speedInsideHouse);
+            move();
+            if (level.pac().powerTimer().isRunning() && !level.victims().contains(this)) {
+                updateFrightenedAnimation();
+            } else {
+                selectAnimation(ANIM_GHOST_NORMAL);
+            }
         }
     }
 
@@ -338,10 +360,13 @@ public abstract class Ghost extends MovingActor implements Animated {
      * is an "infinite" chasing phase.
      * <p>
      */
-    private void updateStateHuntingPac(GameLevel level) {
-        // The specific hunting behaviour is defined by the game variant. For example, in Ms. Pac-Man,
-        // the red and pink ghosts are not chasing Pac-Man during the first scatter phase, but roam the maze randomly.
-        hunt(level);
+    private void updateStateHuntingPac() {
+        if (gameContext.optGameLevel().isPresent()) {
+            GameLevel level = gameContext.theGameLevel();
+            // The specific hunting behaviour is defined by the game variant. For example, in Ms. Pac-Man,
+            // the red and pink ghosts are not chasing Pac-Man during the first scatter phase, but roam the maze randomly.
+            hunt(level);
+        }
     }
 
     // --- FRIGHTENED ---
@@ -358,20 +383,36 @@ public abstract class Ghost extends MovingActor implements Animated {
      *
      * @see <a href="https://www.youtube.com/watch?v=eFP0_rkjwlY">YouTube: How Frightened Ghosts Decide Where to Go</a>
      */
-    private void updateStateFrightened(GameLevel level) {
-        float speed = level.isTunnel(tile())
-            ? gameContext.theGame().actorSpeedControl().ghostTunnelSpeed(gameContext, level, this)
-            : gameContext.theGame().actorSpeedControl().ghostFrightenedSpeed(gameContext, level, this);
-        setSpeed(speed);
-        roam(level);
-        updateFrightenedAnimation(level);
+    private void updateStateFrightened() {
+        if (gameContext.optGameLevel().isPresent()) {
+            GameLevel level = gameContext.theGameLevel();
+            House house = level.house().orElse(null);
+            if (house == null) {
+                Logger.error("No ghost house in level? WTF!");
+                return;
+            }
+            float speed = level.isTunnel(tile())
+                ? gameContext.theGame().actorSpeedControl().ghostTunnelSpeed(gameContext, level, this)
+                : gameContext.theGame().actorSpeedControl().ghostFrightenedSpeed(gameContext, level, this);
+            setSpeed(speed);
+            roam(level);
+            updateFrightenedAnimation();
+        }
     }
 
-    private void updateFrightenedAnimation(GameLevel level) {
-        if (level.pac().isPowerFadingStarting(level)) {
-            playAnimation(ANIM_GHOST_FLASHING);
-        } else if (!level.pac().isPowerFading(level)) {
-            playAnimation(ANIM_GHOST_FRIGHTENED);
+    private void updateFrightenedAnimation() {
+        if (gameContext.optGameLevel().isPresent()) {
+            GameLevel level = gameContext.theGameLevel();
+            House house = level.house().orElse(null);
+            if (house == null) {
+                Logger.error("No ghost house in level? WTF!");
+                return;
+            }
+            if (level.pac().isPowerFadingStarting(level)) {
+                playAnimation(ANIM_GHOST_FLASHING);
+            } else if (!level.pac().isPowerFading(level)) {
+                playAnimation(ANIM_GHOST_FRIGHTENED);
+            }
         }
     }
 
@@ -390,23 +431,26 @@ public abstract class Ghost extends MovingActor implements Animated {
      * After the short time being displayed by his value, the eaten ghost is displayed by his eyes only and returns
      * to the ghost house to be revived. Hallelujah!
      */
-    private void updateStateReturningToHouse(GameLevel level) {
-        if (level.house().isEmpty()) {
-            Logger.error("No ghost house in level?");
-            return;
-        }
-        House house = level.house().get();
-        float speed = gameContext.theGame().actorSpeedControl().ghostSpeedReturningToHouse(gameContext, level, this);
-        Vector2f houseEntry = house.entryPosition();
-        if (position().roughlyEquals(houseEntry, speed, 0)) {
-            setPosition(houseEntry);
-            setMoveAndWishDir(DOWN);
-            setState(GhostState.ENTERING_HOUSE);
-        } else {
-            setSpeed(speed);
-            setTargetTile(house.leftDoorTile());
-            navigateTowardsTarget(level);
-            tryMoving(level);
+    private void updateStateReturningToHouse() {
+        if (gameContext.optGameLevel().isPresent()) {
+            GameLevel level = gameContext.theGameLevel();
+            House house = level.house().orElse(null);
+            if (house == null) {
+                Logger.error("No ghost house in level? WTF!");
+                return;
+            }
+            float speed = gameContext.theGame().actorSpeedControl().ghostSpeedReturningToHouse(gameContext, level, this);
+            Vector2f houseEntry = house.entryPosition();
+            if (position().roughlyEquals(houseEntry, speed, 0)) {
+                setPosition(houseEntry);
+                setMoveAndWishDir(DOWN);
+                setState(GhostState.ENTERING_HOUSE);
+            } else {
+                setSpeed(speed);
+                setTargetTile(house.leftDoorTile());
+                navigateTowardsTarget(level);
+                tryMoving(level);
+            }
         }
     }
 
@@ -416,23 +460,31 @@ public abstract class Ghost extends MovingActor implements Animated {
      * When an eaten ghost has arrived at the ghost house door, he falls down to the center of the house,
      * then moves up again (if the house center is his revival position), or moves sidewards towards his revival position.
      */
-    private void updateStateEnteringHouse(GameLevel level) {
-        float speed = gameContext.theGame().actorSpeedControl().ghostSpeedReturningToHouse(gameContext, level, this);
-        Vector2f position = position();
-        if (position.roughlyEquals(revivalPosition, 0.5f * speed, 0.5f * speed)) {
-            setPosition(revivalPosition);
-            setMoveAndWishDir(UP);
-            setState(GhostState.LOCKED);
-            return;
+    private void updateStateEnteringHouse() {
+        if (gameContext.optGameLevel().isPresent()) {
+            GameLevel level = gameContext.theGameLevel();
+            House house = level.house().orElse(null);
+            if (house == null) {
+                Logger.error("No ghost house in level? WTF!");
+                return;
+            }
+            float speed = gameContext.theGame().actorSpeedControl().ghostSpeedReturningToHouse(gameContext, level, this);
+            Vector2f position = position();
+            if (position.roughlyEquals(revivalPosition, 0.5f * speed, 0.5f * speed)) {
+                setPosition(revivalPosition);
+                setMoveAndWishDir(UP);
+                setState(GhostState.LOCKED);
+                return;
+            }
+            if (position.y() < revivalPosition.y()) {
+                setMoveAndWishDir(DOWN);
+            } else if (position.x() > revivalPosition.x()) {
+                setMoveAndWishDir(LEFT);
+            } else if (position.x() < revivalPosition.x()) {
+                setMoveAndWishDir(RIGHT);
+            }
+            setSpeed(speed);
+            move();
         }
-        if (position.y() < revivalPosition.y()) {
-            setMoveAndWishDir(DOWN);
-        } else if (position.x() > revivalPosition.x()) {
-            setMoveAndWishDir(LEFT);
-        } else if (position.x() < revivalPosition.x()) {
-            setMoveAndWishDir(RIGHT);
-        }
-        setSpeed(speed);
-        move();
     }
 }

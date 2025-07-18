@@ -40,7 +40,7 @@ public record House(Vector2i minTile, Vector2i maxTile, Vector2i leftDoorTile, V
      * @param actor some actor
      * @return tells if the given actor is located inside the house
      */
-    public boolean isActorInsideHouse(Actor actor) {
+    public boolean isVisitedBy(Actor actor) {
         return isTileInHouseArea(requireNonNull(actor).tile());
     }
 

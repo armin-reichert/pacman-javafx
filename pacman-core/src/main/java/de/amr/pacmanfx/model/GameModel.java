@@ -98,7 +98,7 @@ public abstract class GameModel implements ScoreManager {
         level.blinking().tick();
 
         level.pac().update(level);
-        level.ghosts().forEach(ghost -> ghost.update(level));
+        level.ghosts().forEach(Ghost::update);
         level.bonus().ifPresent(Bonus::update);
 
         checkIfPacManKilled();

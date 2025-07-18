@@ -238,7 +238,7 @@ public enum GameState implements FsmState<GameContext> {
                 gameContext.theGameController().resumePreviousGameState();
             } else {
                 gameContext.theGameLevel().ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
-                    .forEach(ghost -> ghost.update(gameContext.theGameLevel()));
+                    .forEach(Ghost::update);
                 gameContext.theGameLevel().blinking().tick();
             }
         }
@@ -378,7 +378,7 @@ public enum GameState implements FsmState<GameContext> {
             final GameLevel gameLevel = gameContext.theGameLevel();
             if (timer().tickCount() > 2 * Globals.NUM_TICKS_PER_SEC) {
                 gameLevel.blinking().tick();
-                gameLevel.ghosts().forEach(ghost -> ghost.update(gameLevel));
+                gameLevel.ghosts().forEach(Ghost::update);
                 gameLevel.bonus().ifPresent(Bonus::update);
             }
             if (timer().atSecond(1.0)) {

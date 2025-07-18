@@ -192,7 +192,7 @@ public class GateKeeper {
             }
         } else {
             requireNonNull(house);
-            level.ghosts(GhostState.LOCKED).filter(house::isActorInsideHouse).findFirst().ifPresent(ghost -> {
+            level.ghosts(GhostState.LOCKED).filter(house::isVisitedBy).findFirst().ifPresent(ghost -> {
                 countersByGhost[ghost.personality()]++;
                 Logger.trace("{} dot counter = {}", ghost.name(), countersByGhost[ghost.personality()]);
             });
@@ -203,7 +203,7 @@ public class GateKeeper {
         requireNonNull(house);
         Ghost blinky = level.ghost(RED_GHOST_SHADOW);
         if (blinky.inAnyOfStates(GhostState.LOCKED)) {
-            if (house.isActorInsideHouse(blinky)) {
+            if (house.isVisitedBy(blinky)) {
                 blinky.setMoveAndWishDir(Direction.UP);
                 blinky.setState(GhostState.LEAVING_HOUSE);
             } else {
