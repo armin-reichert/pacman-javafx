@@ -172,7 +172,7 @@ public class Pac extends MovingActor implements Animated {
     }
 
     /**
-     * Pac-Man is displayed in its full beauty and does not move anymore.
+     * Pac-Man is displayed in its full beauty and does not move anymore as it does at the end of each level.
      */
     public void stopAndShowInFullBeauty() {
         setSpeed(0);
@@ -189,7 +189,7 @@ public class Pac extends MovingActor implements Animated {
     }
 
     public boolean isAlive() {
-        return !dead;
+        return !dead; // Not sure if the opposite of being dead is being alive ;-)
     }
 
     public int restingTicks() { return restingTicks; }
@@ -212,11 +212,16 @@ public class Pac extends MovingActor implements Animated {
      * @return {@code true} if Pac-Man has run against a wall and could not move, its speed is zero
      * or if he is resting for an indefinite time.
      */
-    public boolean isStandingStill() {
+    public boolean isParalyzed() {
+        if (velocity == null) {
+            return true;
+        }
         return velocity().equals(Vector2f.ZERO) || !moveInfo.moved || restingTicks == INDEFINITELY;
     }
 
-    public void setAutopilotSteering(Steering steering) { autopilotSteering = steering; }
+    public void setAutopilotSteering(Steering steering) {
+        autopilotSteering = requireNonNull(steering);
+    }
 
     public void setAnimations(ActorAnimationMap animationMap) {
         this.animationMap = requireNonNull(animationMap);

@@ -51,7 +51,7 @@ public class HeadBangingAnimation extends ManagedAnimation {
 
     public void update(Pac pac) {
         var rotateTransition = (RotateTransition) getOrCreateAnimation();
-        if (pac.isStandingStill()) {
+        if (pac.isParalyzed()) {
             pause();
         } else {
             Point3D axis = pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;

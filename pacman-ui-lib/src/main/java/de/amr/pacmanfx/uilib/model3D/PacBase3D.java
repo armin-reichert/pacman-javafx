@@ -164,7 +164,7 @@ public class PacBase3D extends Group implements Destroyable {
             updateMovementAnimation();
             updateLight();
         }
-        if (pac.isAlive() && !pac.isStandingStill()) {
+        if (pac.isAlive() && !pac.isParalyzed()) {
             movementAnimation.playOrContinue();
             chewingAnimation.playOrContinue();
         } else {
