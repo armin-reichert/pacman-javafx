@@ -312,7 +312,11 @@ public abstract class GameModel implements ScoreManager {
     }
 
     @Override
-    public void loadHighScore(File highScoreFile) {
+    public void loadHighScore() {
+        if (highScoreFile == null) {
+            Logger.error("High Score file could not be opened: game variant not set?");
+            return;
+        }
         try {
             highScore.read(highScoreFile);
             Logger.info("High Score loaded from file '{}': points={}, level={}", highScoreFile, highScore.points(), highScore.levelNumber());
@@ -322,7 +326,11 @@ public abstract class GameModel implements ScoreManager {
     }
 
     @Override
-    public void updateHighScore(File highScoreFile) {
+    public void updateHighScore() {
+        if (highScoreFile == null) {
+            Logger.error("High Score file could not be opened: game variant not set?");
+            return;
+        }
         var oldHighScore = Score.fromFile(highScoreFile);
         if (highScore.points() > oldHighScore.points()) {
             try {
@@ -339,7 +347,11 @@ public abstract class GameModel implements ScoreManager {
     }
 
     @Override
-    public void saveHighScore(File highScoreFile) {
+    public void saveHighScore() {
+        if (highScoreFile == null) {
+            Logger.error("High Score file could not be opened: game variant not set?");
+            return;
+        }
         try {
             new Score().save(highScoreFile, "High Score, %s".formatted(LocalDateTime.now()));
         } catch (IOException x) {

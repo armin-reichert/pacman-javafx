@@ -19,6 +19,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
+import java.io.File;
 import java.util.List;
 import java.util.OptionalInt;
 import java.util.Random;
@@ -200,15 +201,15 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
 
     private final ArcadeMsPacMan_HUD hud = new ArcadeMsPacMan_HUD();
 
-    public ArcadeMsPacMan_GameModel(GameContext gameContext) {
-        this(gameContext, new ArcadeMsPacMan_MapSelector());
+    public ArcadeMsPacMan_GameModel(GameContext gameContext, File highScoreFile) {
+        this(gameContext, new ArcadeMsPacMan_MapSelector(), highScoreFile);
     }
 
     /**
      * @param mapSelector map selector e.g. selector that selects custom maps before standard maps
      */
-    public ArcadeMsPacMan_GameModel(GameContext gameContext, MapSelector mapSelector) {
-        super(gameContext.theGameEventManager(), gameContext.theHighScoreFile(), gameContext.theCoinMechanism());
+    public ArcadeMsPacMan_GameModel(GameContext gameContext, MapSelector mapSelector, File highScoreFile) {
+        super(gameContext.theGameEventManager(), highScoreFile, gameContext.theCoinMechanism());
         this.mapSelector = requireNonNull(mapSelector);
         setExtraLifeScores(Set.of(EXTRA_LIFE_SCORE));
 

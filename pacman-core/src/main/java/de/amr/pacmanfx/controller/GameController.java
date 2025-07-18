@@ -161,12 +161,6 @@ public class GameController implements GameContext {
         return customMapDir;
     }
 
-    @Override
-    public File theHighScoreFile() {
-        String gameVariant = theGameController().selectedGameVariant();
-        return new File(homeDir, "highscore-%s.xml".formatted(gameVariant).toLowerCase());
-    }
-
     /**
      * @return The game (model) registered for the currently selected game variant.
      */

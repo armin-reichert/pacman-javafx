@@ -92,7 +92,8 @@ public class GameUI_Builder {
         gameModelClassByVariantName.keySet().forEach(variant -> {
             Class<?> gameModelClass = gameModelClassByVariantName.get(variant);
             MapSelector mapSelector = mapSelectorByVariantName.get(variant);
-            GameModel gameModel =  createGameModel(gameModelClass, mapSelector, gameContext);
+            File highScoreFile = new File(gameContext.theHomeDir(), "highscore-%s.xml".formatted(variant).toLowerCase());
+            GameModel gameModel =  createGameModel(gameModelClass, mapSelector, gameContext, highScoreFile);
             gameContext.theGameController().registerGame(variant, gameModel);
 
         });
@@ -106,11 +107,11 @@ public class GameUI_Builder {
         return uiUnderConstruction;
     }
 
-    private GameModel createGameModel(Class<?> modelClass, MapSelector mapSelector, GameContext gameContext) {
+    private GameModel createGameModel(Class<?> modelClass, MapSelector mapSelector, GameContext gameContext, File highScoreFile) {
         try {
             return (GameModel) (mapSelector != null
-                ? modelClass.getDeclaredConstructor(GameContext.class, MapSelector.class).newInstance(gameContext, mapSelector)
-                : modelClass.getDeclaredConstructor(GameContext.class).newInstance(gameContext));
+                ? modelClass.getDeclaredConstructor(GameContext.class, MapSelector.class, File.class).newInstance(gameContext, mapSelector, highScoreFile)
+                : modelClass.getDeclaredConstructor(GameContext.class, File.class).newInstance(gameContext, highScoreFile));
         } catch (Exception x) {
             error("Could not create game model from class %s".formatted(modelClass.getSimpleName()));
             throw new RuntimeException(x);

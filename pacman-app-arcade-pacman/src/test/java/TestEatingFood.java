@@ -5,6 +5,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
+
 import static de.amr.pacmanfx.Globals.theGameContext;
 import static java.util.function.Predicate.not;
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,7 +15,7 @@ public class TestEatingFood {
 
     @BeforeAll
     static void setup() {
-        theGameContext().theGameController().registerGame("PACMAN", new ArcadePacMan_GameModel(theGameContext()));
+        theGameContext().theGameController().registerGame("PACMAN", new ArcadePacMan_GameModel(theGameContext(), new File("")));
         theGameContext().theGameController().selectGameVariant("PACMAN");
     }
 

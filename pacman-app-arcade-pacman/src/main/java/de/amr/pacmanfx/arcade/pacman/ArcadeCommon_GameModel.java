@@ -19,7 +19,6 @@ import java.io.File;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.NUM_TICKS_PER_SEC;
-import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
 
@@ -67,7 +66,7 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
         setLifeCount(initialLifeCount());
         level = null;
         propertyMap().clear();
-        loadHighScore(highScoreFile);
+        loadHighScore();
         resetScore();
         gateKeeper.reset();
         huntingTimer.reset();
@@ -215,7 +214,7 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
         if (!coinMechanism.isEmpty()) {
             coinMechanism.consumeCoin();
         }
-        updateHighScore(highScoreFile);
+        updateHighScore();
         level.showMessage(GameLevel.MESSAGE_GAME_OVER);
     }
 

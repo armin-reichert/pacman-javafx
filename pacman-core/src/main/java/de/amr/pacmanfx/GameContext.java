@@ -10,8 +10,6 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameModel;
-import de.amr.pacmanfx.model.SimulationStep;
-import javafx.beans.property.BooleanProperty;
 
 import java.io.File;
 import java.util.Optional;
@@ -27,11 +25,6 @@ public interface GameContext {
      * Directory where custom maps are stored (default: <code>&lt;home_dir&gt;/maps</code>).
      */
     File theCustomMapDir();
-
-    /**
-     * @return the high score file for the currently selected game
-     */
-    File theHighScoreFile();
 
     CoinMechanism           theCoinMechanism();
 

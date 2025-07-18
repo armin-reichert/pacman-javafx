@@ -19,6 +19,7 @@ import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import de.amr.pacmanfx.steering.Steering;
 import org.tinylog.Logger;
 
+import java.io.File;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -225,8 +226,8 @@ public class TengenMsPacMan_GameModel extends GameModel {
     private boolean canStartNewGame;
     private int numContinues;
 
-    public TengenMsPacMan_GameModel(GameContext gameContext) {
-        super(gameContext.theGameEventManager(), gameContext.theHighScoreFile());
+    public TengenMsPacMan_GameModel(GameContext gameContext, File highScoreFile) {
+        super(gameContext.theGameEventManager(), highScoreFile);
         actorSpeedControl = new TengenActorSpeedControl();
         mapSelector = new TengenMsPacMan_MapSelector();
         gateKeeper = new GateKeeper(this); //TODO implement Tengen logic instead
@@ -270,7 +271,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         hud.theLevelCounter().clear();
         playingProperty().set(false);
         boosterActive = false;
-        loadHighScore(highScoreFile);
+        loadHighScore();
         resetScore();
         gateKeeper.reset();
     }
@@ -278,7 +279,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     @Override
     public void onGameEnding() {
         playingProperty().set(false);
-        updateHighScore(highScoreFile);
+        updateHighScore();
         level.showMessage(GameLevel.MESSAGE_GAME_OVER);
     }
 

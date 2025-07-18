@@ -20,6 +20,7 @@ import de.amr.pacmanfx.steering.RouteBasedSteering;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
+import java.io.File;
 import java.util.List;
 import java.util.OptionalInt;
 import java.util.Set;
@@ -176,16 +177,16 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
 
     private final HUD hud = new ArcadePacMan_HUD();
 
-    public ArcadePacMan_GameModel(GameContext gameContext) {
-        this(gameContext, new ArcadePacMan_MapSelector());
+    public ArcadePacMan_GameModel(GameContext gameContext, File highScoreFile) {
+        this(gameContext, new ArcadePacMan_MapSelector(), highScoreFile);
     }
 
     /**
      * @param gameContext the game context
      * @param mapSelector e.g. selector that selects custom maps before standard maps
      */
-    public ArcadePacMan_GameModel(GameContext gameContext, MapSelector mapSelector) {
-        super(gameContext.theGameEventManager(), gameContext.theHighScoreFile(), gameContext.theCoinMechanism());
+    public ArcadePacMan_GameModel(GameContext gameContext, MapSelector mapSelector, File highScoreFile) {
+        super(gameContext.theGameEventManager(), highScoreFile, gameContext.theCoinMechanism());
         this.mapSelector = requireNonNull(mapSelector);
         setExtraLifeScores(Set.of(EXTRA_LIFE_SCORE));
 

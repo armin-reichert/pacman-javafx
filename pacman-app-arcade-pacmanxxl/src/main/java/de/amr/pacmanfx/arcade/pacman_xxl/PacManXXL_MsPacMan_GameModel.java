@@ -10,12 +10,13 @@ import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.model.MapSelectionMode;
 import de.amr.pacmanfx.model.MapSelector;
 
+import java.io.File;
 import java.util.Random;
 
 public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
 
-    public PacManXXL_MsPacMan_GameModel(GameContext gameContext, MapSelector mapSelector) {
-        super(gameContext, mapSelector);
+    public PacManXXL_MsPacMan_GameModel(GameContext gameContext, MapSelector mapSelector, File higScoreFile) {
+        super(gameContext, mapSelector, higScoreFile);
     }
 
     @Override
