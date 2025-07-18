@@ -187,7 +187,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
      * @param mapSelector e.g. selector that selects custom maps before standard maps
      */
     public ArcadePacMan_GameModel(GameContext gameContext, MapSelector mapSelector) {
-        super(gameContext);
+        super(gameContext.theGameEventManager(), gameContext.theHighScoreFile(), gameContext.theCoinMechanism());
         this.mapSelector = requireNonNull(mapSelector);
         setExtraLifeScores(Set.of(EXTRA_LIFE_SCORE));
 
@@ -258,7 +258,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
     }
 
     @Override
-    public void createLevel(int levelNumber) {
+    public void createLevel(GameContext gameContext, int levelNumber) {
         WorldMap worldMap = mapSelector.getWorldMap(levelNumber);
         level = new GameLevel(levelNumber, worldMap, createLevelData(levelNumber));
         level.addHouse();
@@ -311,7 +311,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
     }
 
     @Override
-    public void activateNextBonus() {
+    public void activateNextBonus(GameContext gameContext) {
         level.selectNextBonus();
         byte symbol = level.bonusSymbol(level.currentBonusIndex());
         var bonus = Bonus.createStaticBonus(gameContext, symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100);
@@ -319,6 +319,6 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
         bonus.setPosition(halfTileRightOf(bonusTile));
         bonus.setEdibleTicks(randomInt(9 * NUM_TICKS_PER_SEC, 10 * NUM_TICKS_PER_SEC));
         level.setBonus(bonus);
-        gameContext.theGameEventManager().publishEvent(GameEventType.BONUS_ACTIVATED, bonus.tile());
+        gameEventManager.publishEvent(GameEventType.BONUS_ACTIVATED, bonus.tile());
     }
 }

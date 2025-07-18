@@ -5,6 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.controller.CoinMechanism;
+import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.*;
@@ -13,6 +15,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.steering.Steering;
 import org.tinylog.Logger;
 
+import java.io.File;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.NUM_TICKS_PER_SEC;
@@ -31,6 +34,7 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
     public static final int EXTRA_LIFE_SCORE = 10_000;
     public static final byte[] KILLED_GHOST_VALUE_FACTORS = {2, 4, 8, 16}; // points = factor * 100
 
+    protected final CoinMechanism coinMechanism;
     protected final ActorSpeedControl actorSpeedControl;
     protected MapSelector mapSelector;
     protected HuntingTimer huntingTimer;
@@ -39,8 +43,9 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
     protected Steering demoLevelSteering;
     protected int cruiseElroy;
 
-    protected ArcadeCommon_GameModel(GameContext gameContext) {
-        super(gameContext);
+    protected ArcadeCommon_GameModel(GameEventManager gameEventManager, File highScoreFile, CoinMechanism coinMechanism) {
+        super(gameEventManager, highScoreFile);
+        this.coinMechanism = coinMechanism;
         actorSpeedControl = new ArcadeCommon_ActorSpeedControl();
     }
 
@@ -62,22 +67,22 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
         setLifeCount(initialLifeCount());
         level = null;
         propertyMap().clear();
-        loadHighScore(gameContext.theHighScoreFile());
+        loadHighScore(highScoreFile);
         resetScore();
         gateKeeper.reset();
         huntingTimer.reset();
     }
 
     @Override
-    public void startNewGame() {
+    public void startNewGame(GameContext gameContext) {
         prepareForNewGame();
         theHUD().theLevelCounter().clear();
-        buildNormalLevel(1);
-        gameContext.theGameEventManager().publishEvent(GameEventType.GAME_STARTED);
+        buildNormalLevel(gameContext, 1);
+        gameEventManager.publishEvent(GameEventType.GAME_STARTED);
     }
 
     @Override
-    public boolean canStartNewGame() { return !gameContext.theCoinMechanism().isEmpty(); }
+    public boolean canStartNewGame() { return !coinMechanism.isEmpty(); }
 
     @Override
     public boolean continueOnGameOver() { return false; }
@@ -117,7 +122,7 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
 
     @Override
     public void onGhostKilled(Ghost ghost) {
-        gameContext.theSimulationStep().killedGhosts.add(ghost);
+        simulationStep.killedGhosts.add(ghost);
         int killedSoFar = level.victims().size();
         int points = 100 * KILLED_GHOST_VALUE_FACTORS[killedSoFar];
         level.victims().add(ghost);
@@ -147,7 +152,8 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
 
     // Food handling
 
-    protected void checkIfPacManFindsFood() {
+    @Override
+    protected void checkIfPacManFindsFood(GameContext gameContext) {
         Vector2i tile = level.pac().tile();
         if (level.tileContainsFood(tile)) {
             level.pac().starvingIsOver();
@@ -159,10 +165,10 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
             }
             gateKeeper.registerFoodEaten(level);
             if (isBonusReached()) {
-                activateNextBonus();
-                gameContext.theSimulationStep().bonusIndex = level.currentBonusIndex();
+                activateNextBonus(gameContext);
+                simulationStep.bonusIndex = level.currentBonusIndex();
             }
-            gameContext.theGameEventManager().publishEvent(GameEventType.PAC_FOUND_FOOD, tile);
+            gameEventManager.publishEvent(GameEventType.PAC_FOUND_FOOD, tile);
         } else {
             level.pac().starve();
         }
@@ -183,7 +189,7 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
     }
 
     public void onEnergizerEaten(Vector2i tile) {
-        gameContext.theSimulationStep().foundEnergizerAtTile = tile;
+        simulationStep.foundEnergizerAtTile = tile;
         scorePoints(ENERGIZER_VALUE);
         level.pac().setRestingTicks(3);
         updateCruiseElroyMode();
@@ -198,24 +204,24 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
             level.pac().powerTimer().restartTicks(powerTicks);
             Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", powerTicks, (float) powerTicks / NUM_TICKS_PER_SEC);
             level.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
-            gameContext.theSimulationStep().pacGotPower = true;
-            gameContext.theGameEventManager().publishEvent(GameEventType.PAC_GETS_POWER);
+            simulationStep.pacGotPower = true;
+            gameEventManager.publishEvent(GameEventType.PAC_GETS_POWER);
         }
     }
 
     @Override
     public void onGameEnding() {
         playingProperty().set(false);
-        if (!gameContext.theCoinMechanism().isEmpty()) {
-            gameContext.theCoinMechanism().consumeCoin();
+        if (!coinMechanism.isEmpty()) {
+            coinMechanism.consumeCoin();
         }
-        updateHighScore(gameContext.theHighScoreFile());
+        updateHighScore(highScoreFile);
         level.showMessage(GameLevel.MESSAGE_GAME_OVER);
     }
 
     @Override
-    public void buildNormalLevel(int levelNumber) {
-        createLevel(levelNumber);
+    public void buildNormalLevel(GameContext gameContext, int levelNumber) {
+        createLevel(gameContext, levelNumber);
         level.setDemoLevel(false);
         level.pac().immuneProperty().bind(theGameContext().theGameController().propertyImmunity());
         level.pac().usingAutopilotProperty().bind(theGameContext().theGameController().propertyUsingAutopilot());
@@ -224,13 +230,13 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
         setScoreLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
         level.house().ifPresent(house -> gateKeeper.setHouse(house)); //TODO what if no house exists?
-        gameContext.theGameEventManager().publishEvent(GameEventType.LEVEL_CREATED);
+        gameEventManager.publishEvent(GameEventType.LEVEL_CREATED);
     }
 
     @Override
-    public void buildDemoLevel() {
+    public void buildDemoLevel(GameContext gameContext) {
         int levelNumber = 1;
-        createLevel(levelNumber);
+        createLevel(gameContext, levelNumber);
         level.setDemoLevel(true);
         level.pac().setImmune(false);
         level.pac().setUsingAutopilot(true);
@@ -241,7 +247,7 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
         setScoreLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
         level.house().ifPresent(house -> gateKeeper.setHouse(house)); //TODO what if no house exists?
-        gameContext.theGameEventManager().publishEvent(GameEventType.LEVEL_CREATED);
+        gameEventManager.publishEvent(GameEventType.LEVEL_CREATED);
     }
 
     @Override
@@ -262,12 +268,12 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
             Logger.info("Level {} started", level.number());
         }
         // Note: This event is very important because it triggers the creation of the actor animations!
-        gameContext.theGameEventManager().publishEvent(GameEventType.LEVEL_STARTED);
+        gameEventManager.publishEvent(GameEventType.LEVEL_STARTED);
     }
 
     @Override
-    public void startNextLevel() {
-        buildNormalLevel(level.number() + 1);
+    public void startNextLevel(GameContext gameContext) {
+        buildNormalLevel(gameContext, level.number() + 1);
         startLevel();
     }
 

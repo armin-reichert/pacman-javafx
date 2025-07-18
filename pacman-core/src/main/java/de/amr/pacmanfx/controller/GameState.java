@@ -102,7 +102,7 @@ public enum GameState implements FsmState<GameContext> {
             }
             else if (gameContext.theGame().canStartNewGame()) {
                 if (timer.tickCount() == 1) {
-                    gameContext.theGame().startNewGame();
+                    gameContext.theGame().startNewGame(gameContext);
                 }
                 else if (timer.tickCount() == 2) {
                     gameContext.theGame().startLevel();
@@ -117,7 +117,7 @@ public enum GameState implements FsmState<GameContext> {
             }
             else { // start demo level
                 if (timer.tickCount() == 1) {
-                    gameContext.theGame().buildDemoLevel();
+                    gameContext.theGame().buildDemoLevel(gameContext);
                     gameContext.theGameEventManager().publishEvent(GameEventType.LEVEL_CREATED);
                 }
                 else if (timer.tickCount() == 2) {
@@ -155,7 +155,7 @@ public enum GameState implements FsmState<GameContext> {
                     gameContext.theGameLevel().clearMessage();
                 }
             }
-            gameContext.theGame().doHuntingStep();
+            gameContext.theGame().doHuntingStep(gameContext);
             if (gameContext.theGame().isLevelCompleted()) {
                 gameContext.theGameController().changeGameState(LEVEL_COMPLETE);
             } else if (gameContext.theGame().hasPacManBeenKilled()) {
@@ -211,7 +211,7 @@ public enum GameState implements FsmState<GameContext> {
         @Override
         public void onEnter(GameContext gameContext) {
             timer.restartSeconds(1);
-            gameContext.theGame().startNextLevel();
+            gameContext.theGame().startNextLevel(gameContext);
         }
 
         @Override
@@ -367,7 +367,7 @@ public enum GameState implements FsmState<GameContext> {
             lastTestedLevelNumber = gameContext.theGame().lastLevelNumber() == Integer.MAX_VALUE ? 25 : gameContext.theGame().lastLevelNumber();
             timer.restartIndefinitely();
             gameContext.theGame().prepareForNewGame();
-            gameContext.theGame().buildNormalLevel(1);
+            gameContext.theGame().buildNormalLevel(gameContext, 1);
             gameContext.theGame().startLevel();
             gameContext.theGameLevel().showPacAndGhosts();
             gameContext.theGameLevel().showMessage(GameLevel.MESSAGE_TEST);
@@ -392,7 +392,7 @@ public enum GameState implements FsmState<GameContext> {
             }
             else if (timer().atSecond(2.5)) {
                 gameLevel.clearMessage();
-                gameContext.theGame().activateNextBonus();
+                gameContext.theGame().activateNextBonus(gameContext);
             }
             else if (timer().atSecond(4.5)) {
                 gameLevel.bonus().ifPresent(bonus -> bonus.setEaten(Globals.NUM_TICKS_PER_SEC));
@@ -400,7 +400,7 @@ public enum GameState implements FsmState<GameContext> {
             }
             else if (timer().atSecond(6.5)) {
                 gameLevel.bonus().ifPresent(Bonus::setInactive); // needed?
-                gameContext.theGame().activateNextBonus();
+                gameContext.theGame().activateNextBonus(gameContext);
             }
             else if (timer().atSecond(8.5)) {
                 gameLevel.bonus().ifPresent(bonus -> bonus.setEaten(Globals.NUM_TICKS_PER_SEC));
@@ -417,7 +417,7 @@ public enum GameState implements FsmState<GameContext> {
                     gameContext.theGameController().restart(GameState.BOOT);
                 } else {
                     timer().restartIndefinitely();
-                    gameContext.theGame().startNextLevel();
+                    gameContext.theGame().startNextLevel(gameContext);
                     gameLevel.showMessage(GameLevel.MESSAGE_TEST);
                 }
             }
@@ -456,21 +456,21 @@ public enum GameState implements FsmState<GameContext> {
             lastTestedLevelNumber = gameContext.theGame().lastLevelNumber() == Integer.MAX_VALUE ? 25 : gameContext.theGame().lastLevelNumber();
             timer.restartSeconds(TEST_DURATION_SEC);
             gameContext.theGame().prepareForNewGame();
-            gameContext.theGame().buildNormalLevel(1);
+            gameContext.theGame().buildNormalLevel(gameContext, 1);
             gameContext.theGame().startLevel();
             configureLevelForTest(gameContext);
         }
 
         @Override
         public void onUpdate(GameContext gameContext) {
-            gameContext.theGame().doHuntingStep();
+            gameContext.theGame().doHuntingStep(gameContext);
             if (timer().hasExpired()) {
                 if (gameContext.theGameLevel().number() == lastTestedLevelNumber) {
                     gameContext.theGameEventManager().publishEvent(GameEventType.STOP_ALL_SOUNDS);
                     gameContext.theGameController().changeGameState(INTRO);
                 } else {
                     timer().restartSeconds(TEST_DURATION_SEC);
-                    gameContext.theGame().startNextLevel();
+                    gameContext.theGame().startNextLevel(gameContext);
                     configureLevelForTest(gameContext);
                 }
             }

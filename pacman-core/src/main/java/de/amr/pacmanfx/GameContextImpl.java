@@ -18,13 +18,11 @@ import java.util.Optional;
 class GameContextImpl implements GameContext {
     private final File homeDir = new File(System.getProperty("user.home"), ".pacmanfx");
     private final File customMapDir = new File(homeDir, "maps");
-    private final CoinMechanism coinMechanism = new CoinMechanism();
     private final GameController gameController = new GameController(this);
-    private final SimulationStep simulationStep = new SimulationStep();
 
     @Override
     public CoinMechanism theCoinMechanism() {
-        return coinMechanism;
+        return theGameController().coinMechanism();
     }
 
     @Override
@@ -75,6 +73,6 @@ class GameContextImpl implements GameContext {
 
     @Override
     public SimulationStep theSimulationStep() {
-        return simulationStep;
+        return theGameController().currentGame().simulationStep();
     }
 }

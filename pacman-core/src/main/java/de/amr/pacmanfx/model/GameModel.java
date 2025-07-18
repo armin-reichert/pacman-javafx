@@ -6,6 +6,7 @@ package de.amr.pacmanfx.model;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
@@ -35,7 +36,6 @@ public abstract class GameModel implements ScoreManager {
     private final BooleanProperty playingProperty = new SimpleBooleanProperty(false);
     private final IntegerProperty lifeCountProperty = new SimpleIntegerProperty(0);
 
-    protected final GameContext gameContext;
     protected GameLevel level;
     protected boolean cutScenesEnabled;
 
@@ -44,10 +44,19 @@ public abstract class GameModel implements ScoreManager {
     private Set<Integer> extraLifeScores = Set.of();
     private int initialLifeCount;
 
-    protected GameModel(GameContext gameContext) {
-        this.gameContext = requireNonNull(gameContext);
+    protected final File highScoreFile;
+    protected final GameEventManager gameEventManager;
+    protected final SimulationStep simulationStep = new SimulationStep();
+
+    protected GameModel(GameEventManager gameEventManager, File highScoreFile) {
+        this.gameEventManager = requireNonNull(gameEventManager);
+        this.highScoreFile = requireNonNull(highScoreFile);
         cutScenesEnabled = true;
         score.pointsProperty().addListener((py, ov, nv) -> onScoreChanged(this, ov.intValue(), nv.intValue()));
+    }
+
+    public SimulationStep simulationStep() {
+        return simulationStep;
     }
 
     public abstract ActorSpeedControl actorSpeedControl();
@@ -71,13 +80,13 @@ public abstract class GameModel implements ScoreManager {
     public abstract void    resetEverything();
     public abstract void    prepareForNewGame();
     public abstract boolean canStartNewGame();
-    public abstract void    startNewGame();
-    public abstract void    createLevel(int levelNumber);
-    public abstract void    buildNormalLevel(int levelNumber);
-    public abstract void    buildDemoLevel();
+    public abstract void    startNewGame(GameContext gameContext);
+    public abstract void    createLevel(GameContext gameContext, int levelNumber);
+    public abstract void    buildNormalLevel(GameContext gameContext, int levelNumber);
+    public abstract void    buildDemoLevel(GameContext gameContext);
     public abstract boolean isPacManSafeInDemoLevel();
     public abstract void    startLevel();
-    public abstract void    startNextLevel();
+    public abstract void    startNextLevel(GameContext gameContext);
     public abstract int     lastLevelNumber();
     public abstract boolean continueOnGameOver();
 
@@ -87,10 +96,10 @@ public abstract class GameModel implements ScoreManager {
         level.blinking().setStartPhase(Pulse.ON);
         level.blinking().restart(Integer.MAX_VALUE);
         huntingTimer().startFirstHuntingPhase(level.number());
-        gameContext.theGameEventManager().publishEvent(GameEventType.HUNTING_PHASE_STARTED);
+        gameEventManager.publishEvent(GameEventType.HUNTING_PHASE_STARTED);
     }
 
-    public void doHuntingStep() {
+    public void doHuntingStep(GameContext gameContext) {
         gateKeeper().ifPresent(gateKeeper -> gateKeeper.unlockGhosts(level));
 
         huntingTimer().update(level.number());
@@ -106,7 +115,7 @@ public abstract class GameModel implements ScoreManager {
         checkIfGhostsKilled();
         if (haveGhostsBeenKilled()) return;
 
-        checkIfPacManFindsFood();
+        checkIfPacManFindsFood(gameContext);
         updatePacPower();
         level.bonus().ifPresent(this::checkIfPacManCanEatBonus);
     }
@@ -190,8 +199,8 @@ public abstract class GameModel implements ScoreManager {
                     killed = !pac.isImmune();
                 }
                 if (killed) {
-                    gameContext.theSimulationStep().pacKiller = potentialKiller;
-                    gameContext.theSimulationStep().pacKilledTile = potentialKiller.tile();
+                    simulationStep.pacKiller = potentialKiller;
+                    simulationStep.pacKilledTile = potentialKiller.tile();
                 }
             });
     }
@@ -200,8 +209,8 @@ public abstract class GameModel implements ScoreManager {
         final TickTimer powerTimer = level.pac().powerTimer();
         powerTimer.doTick();
         if (level.pac().isPowerFadingStarting()) {
-            gameContext.theSimulationStep().pacStartsLosingPower = true;
-            gameContext.theGameEventManager().publishEvent(GameEventType.PAC_STARTS_LOSING_POWER);
+            simulationStep.pacStartsLosingPower = true;
+            gameEventManager.publishEvent(GameEventType.PAC_STARTS_LOSING_POWER);
         } else if (powerTimer.hasExpired()) {
             powerTimer.stop();
             powerTimer.reset(0);
@@ -210,15 +219,15 @@ public abstract class GameModel implements ScoreManager {
             huntingTimer().start();
             Logger.info("Hunting timer restarted because Pac-Man lost power");
             level.ghosts(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
-            gameContext.theSimulationStep().pacLostPower = true;
-            gameContext.theGameEventManager().publishEvent(GameEventType.PAC_LOST_POWER);
+            simulationStep.pacLostPower = true;
+            gameEventManager.publishEvent(GameEventType.PAC_LOST_POWER);
         }
     }
 
-    public boolean hasPacManBeenKilled() { return gameContext.theSimulationStep().pacKilledTile != null; }
+    public boolean hasPacManBeenKilled() { return simulationStep.pacKilledTile != null; }
     public abstract void onPacKilled();
 
-    public boolean haveGhostsBeenKilled() { return !gameContext.theSimulationStep().killedGhosts.isEmpty(); }
+    public boolean haveGhostsBeenKilled() { return !simulationStep.killedGhosts.isEmpty(); }
     public abstract void onGhostKilled(Ghost ghost);
 
     protected void checkIfGhostsKilled() {
@@ -227,20 +236,20 @@ public abstract class GameModel implements ScoreManager {
 
     // Food handling
 
-    protected abstract void checkIfPacManFindsFood();
+    protected abstract void checkIfPacManFindsFood(GameContext gameContext);
 
     // Bonus handling
 
     public abstract boolean isBonusReached();
-    public abstract void activateNextBonus();
+    public abstract void activateNextBonus(GameContext gameContext);
 
     protected void checkIfPacManCanEatBonus(Bonus bonus) {
         if (bonus.state() == BonusState.EDIBLE && actorsCollide(level.pac(), bonus)) {
             bonus.setEaten(120); //TODO is 2 seconds correct?
             scorePoints(bonus.points());
             Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
-            gameContext.theSimulationStep().bonusEatenTile = bonus.tile();
-            gameContext.theGameEventManager().publishEvent(GameEventType.BONUS_EATEN);
+            simulationStep.bonusEatenTile = bonus.tile();
+            gameEventManager.publishEvent(GameEventType.BONUS_EATEN);
         }
     }
 
@@ -291,12 +300,12 @@ public abstract class GameModel implements ScoreManager {
         for (int extraLifeScore : extraLifeScores) {
             // has extra life score been crossed?
             if (oldScore < extraLifeScore && newScore >= extraLifeScore) {
-                gameContext.theSimulationStep().extraLifeWon = true;
-                gameContext.theSimulationStep().extraLifeScore = extraLifeScore;
+                simulationStep.extraLifeWon = true;
+                simulationStep.extraLifeScore = extraLifeScore;
                 addLives(1);
                 GameEvent event = new GameEvent(game, GameEventType.SPECIAL_SCORE_REACHED);
                 event.setPayload("score", extraLifeScore); // just for testing payload implementation
-                gameContext.theGameEventManager().publishEvent(event);
+                gameEventManager.publishEvent(event);
                 break;
             }
         }

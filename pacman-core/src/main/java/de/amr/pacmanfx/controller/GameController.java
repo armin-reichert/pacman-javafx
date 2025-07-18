@@ -35,6 +35,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameController  {
 
+    private final CoinMechanism coinMechanism = new CoinMechanism();
     private final Map<String, GameModel> knownGames = new HashMap<>();
     private final StringProperty gameVariantPy = new SimpleStringProperty();
     private final StateMachine<GameState, GameContext> stateMachine;
@@ -63,6 +64,10 @@ public class GameController  {
 
     public GameEventManager gameEventManager() {
         return gameEventManager;
+    }
+
+    public CoinMechanism coinMechanism() {
+        return coinMechanism;
     }
 
     public void setEventsEnabled(boolean enabled) {

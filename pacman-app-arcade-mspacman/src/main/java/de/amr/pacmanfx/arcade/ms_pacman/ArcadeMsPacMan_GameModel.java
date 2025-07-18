@@ -19,7 +19,6 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
-import java.io.File;
 import java.util.List;
 import java.util.OptionalInt;
 import java.util.Random;
@@ -209,7 +208,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
      * @param mapSelector map selector e.g. selector that selects custom maps before standard maps
      */
     public ArcadeMsPacMan_GameModel(GameContext gameContext, MapSelector mapSelector) {
-        super(gameContext);
+        super(gameContext.theGameEventManager(), gameContext.theHighScoreFile(), gameContext.theCoinMechanism());
         this.mapSelector = requireNonNull(mapSelector);
         setExtraLifeScores(Set.of(EXTRA_LIFE_SCORE));
 
@@ -265,7 +264,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
     }
 
     @Override
-    public void createLevel(int levelNumber) {
+    public void createLevel(GameContext gameContext, int levelNumber) {
         WorldMap worldMap = mapSelector.getWorldMap(levelNumber);
         level = new GameLevel(levelNumber, worldMap, createLevelData(levelNumber));
         level.setGameOverStateTicks(150);
@@ -365,7 +364,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
      *
      **/
     @Override
-    public void activateNextBonus() {
+    public void activateNextBonus(GameContext gameContext) {
         if (level.isBonusEdible()) {
             Logger.info("Previous bonus is still active, skip this one");
             return;
