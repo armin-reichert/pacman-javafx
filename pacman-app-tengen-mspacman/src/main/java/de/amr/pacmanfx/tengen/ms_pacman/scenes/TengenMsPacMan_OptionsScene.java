@@ -150,7 +150,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         }
 
         // Button "A" is right of "B": select next value
-        else if (theUI().theJoypad().isButtonPressed(JoypadButton.A)) {
+        else if (theUI().theJoypad().isButtonPressed(JoypadButton.A) || theUI().theKeyboard().isPressed(KeyCode.RIGHT)) {
             switch (selectedOption) {
                 case OPTION_PAC_BOOSTER    -> setNextPacBoosterValue();
                 case OPTION_DIFFICULTY     -> setNextDifficultyValue();
@@ -161,7 +161,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         }
 
         // Button "B" is left of "A": select previous value
-        else if (theUI().theJoypad().isButtonPressed(JoypadButton.B)) {
+        else if (theUI().theJoypad().isButtonPressed(JoypadButton.B) || theUI().theKeyboard().isPressed(KeyCode.LEFT)) {
             switch (selectedOption) {
                 case OPTION_PAC_BOOSTER    -> setPrevPacBoosterValue();
                 case OPTION_DIFFICULTY     -> setPrevDifficultyValue();
