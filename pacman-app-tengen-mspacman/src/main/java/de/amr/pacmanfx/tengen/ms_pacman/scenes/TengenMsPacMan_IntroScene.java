@@ -226,7 +226,8 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 );
                 for (Ghost ghost : scene.ghosts) {
                     ghost.setPosition(TS * 33, ACTOR_Y);
-                    ghost.setMoveAndWishDir(Direction.LEFT);
+                    ghost.setMoveDir(Direction.LEFT);
+                    ghost.setWishDir(Direction.LEFT);
                     ghost.setSpeed(SPEED);
                     ghost.setState(GhostState.HUNTING_PAC);
                     ghost.setVisible(true);
@@ -275,7 +276,8 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 if (ghost.moveDir() == Direction.LEFT) {
                     if (ghost.x() <= GHOST_STOP_X) {
                         ghost.setX(GHOST_STOP_X);
-                        ghost.setMoveAndWishDir(Direction.UP);
+                        ghost.setMoveDir(Direction.UP);
+                        ghost.setWishDir(Direction.UP);
                         scene.waitBeforeRising = 2;
                     } else {
                         ghost.move();
@@ -289,7 +291,8 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                     }
                     else if (ghost.y() <= endPositionY) {
                         ghost.setSpeed(0);
-                        ghost.setMoveAndWishDir(Direction.RIGHT);
+                        ghost.setMoveDir(Direction.RIGHT);
+                        ghost.setWishDir(Direction.RIGHT);
                         return true;
                     }
                     else {

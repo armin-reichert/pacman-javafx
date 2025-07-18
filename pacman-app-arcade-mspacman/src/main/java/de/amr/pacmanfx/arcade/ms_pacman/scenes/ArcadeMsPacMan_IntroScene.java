@@ -169,7 +169,8 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                 scene.msPacMan.playAnimation(ANIM_PAC_MUNCHING);
                 for (Ghost ghost : scene.ghosts) {
                     ghost.setPosition(TS * 33.5f, TS * 20);
-                    ghost.setMoveAndWishDir(Direction.LEFT);
+                    ghost.setMoveDir(Direction.LEFT);
+                    ghost.setWishDir(Direction.LEFT);
                     ghost.setSpeed(ACTOR_SPEED);
                     ghost.setState(GhostState.HUNTING_PAC);
                     ghost.setVisible(true);
@@ -206,7 +207,8 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                 if (ghost.moveDir() == Direction.LEFT) {
                     if (ghost.x() <= STOP_X_GHOST) {
                         ghost.setX(STOP_X_GHOST);
-                        ghost.setMoveAndWishDir(Direction.UP);
+                        ghost.setMoveDir(Direction.UP);
+                        ghost.setWishDir(Direction.UP);
                         scene.numTicksBeforeRising = 2;
                     } else {
                         ghost.move();

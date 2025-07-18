@@ -93,7 +93,8 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
             }
             case ANIMATION_START + 111 -> {
                 blinky.placeAtTile(28, 20, -3, 0);
-                blinky.setMoveAndWishDir(Direction.LEFT);
+                blinky.setMoveDir(Direction.LEFT);
+                blinky.setWishDir(Direction.LEFT);
                 blinky.setSpeed(1.25f);
                 blinky.playAnimation(ANIM_GHOST_NORMAL);
                 blinky.show();

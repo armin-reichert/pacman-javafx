@@ -116,13 +116,15 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
             msPacMan.show();
         }
         else if (t == 160) {
-            inky.setMoveAndWishDir(Direction.RIGHT);
+            inky.setMoveDir(Direction.RIGHT);
+            inky.setWishDir(Direction.RIGHT);
             inky.setPosition(LEFT_BORDER, UPPER_LANE);
             inky.setSpeed(SPEED_CHASING);
             inky.playAnimation(ANIM_GHOST_NORMAL);
             inky.show();
 
-            pinky.setMoveAndWishDir(Direction.LEFT);
+            pinky.setMoveDir(Direction.LEFT);
+            pinky.setWishDir(Direction.LEFT);
             pinky.setPosition(RIGHT_BORDER, LOWER_LANE);
             pinky.setSpeed(SPEED_CHASING);
             pinky.playAnimation(ANIM_GHOST_NORMAL);
@@ -138,10 +140,12 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
             pacMan.setMoveDir(Direction.LEFT);
 
             pinky.setPosition(msPacMan.x() - TS * 11, msPacMan.y());
-            pinky.setMoveAndWishDir(Direction.RIGHT);
+            pinky.setMoveDir(Direction.RIGHT);
+            pinky.setWishDir(Direction.RIGHT);
 
             inky.setPosition(pacMan.x() + TS * 11, pacMan.y());
-            inky.setMoveAndWishDir(Direction.LEFT);
+            inky.setMoveDir(Direction.LEFT);
+            inky.setWishDir(Direction.LEFT);
         }
         else if (t == 454) {
             pacMan.setMoveDir(Direction.UP);
@@ -152,12 +156,14 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         else if (t == 498) {
             collided = true;
 
-            inky.setMoveAndWishDir(Direction.RIGHT);
+            inky.setMoveDir(Direction.RIGHT);
+            inky.setWishDir(Direction.RIGHT);
             inky.setSpeed(SPEED_GHOST_AFTER_COLLISION);
             inky.setVelocity(inky.velocity().minus(0, 2.0f));
             inky.setAcceleration(0, 0.4f);
 
-            pinky.setMoveAndWishDir(Direction.LEFT);
+            pinky.setMoveDir(Direction.LEFT);
+            pinky.setWishDir(Direction.LEFT);
             pinky.setSpeed(SPEED_GHOST_AFTER_COLLISION);
             pinky.setVelocity(pinky.velocity().minus(0, 2.0f));
             pinky.setAcceleration(0, 0.4f);

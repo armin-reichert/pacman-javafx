@@ -70,13 +70,15 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
             chasingGhosts = false;
 
             pac.setX(42 * TS);
-            pac.setMoveAndWishDir(Direction.LEFT);
+            pac.setMoveDir(Direction.LEFT);
+            pac.setWishDir(Direction.LEFT);
             pac.setSpeed(1.0f);
             pac.setVisible(true);
 
             for (Ghost ghost : ghosts) {
                 ghost.setX(46 * TS + ghost.personality() * 18);
-                ghost.setMoveAndWishDir(Direction.LEFT);
+                ghost.setMoveDir(Direction.LEFT);
+                ghost.setWishDir(Direction.LEFT);
                 ghost.setSpeed(1.05f);
                 ghost.setVisible(true);
             }
@@ -87,23 +89,27 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
 
             if (ghosts.get(3).x() < -4 * TS && !chasingGhosts) {
                 chasingGhosts = true;
-                pac.setMoveAndWishDir(pac.moveDir().opposite());
+                pac.setMoveDir(pac.moveDir().opposite());
+                pac.setWishDir(pac.moveDir().opposite());
                 pac.setX(-36 * TS);
                 for (Ghost ghost : ghosts) {
                     ghost.setVisible(true);
                     ghost.setX(pac.x() + 22 * TS + ghost.personality() * 18);
-                    ghost.setMoveAndWishDir(ghost.moveDir().opposite());
+                    ghost.setMoveDir(ghost.moveDir().opposite());
+                    ghost.setWishDir(ghost.moveDir().opposite());
                     ghost.setSpeed(0.58f);
                     ghost.playAnimation(ANIM_GHOST_FRIGHTENED);
                 }
             }
             else if (pac.x() > 56 * TS && chasingGhosts) {
                 chasingGhosts = false;
-                pac.setMoveAndWishDir(Direction.LEFT);
+                pac.setMoveDir(Direction.LEFT);
+                pac.setWishDir(Direction.LEFT);
                 pac.setX(42 * TS);
                 for (Ghost ghost : ghosts) {
                     ghost.setVisible(true);
-                    ghost.setMoveAndWishDir(Direction.LEFT);
+                    ghost.setMoveDir(Direction.LEFT);
+                    ghost.setWishDir(Direction.LEFT);
                     ghost.setX(46 * TS + ghost.personality() * 2 * TS);
                     ghost.setSpeed(1.05f);
                     ghost.playAnimation(ANIM_GHOST_NORMAL);

@@ -87,7 +87,8 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
         }
         else if (tick == 113) {
             ghost.setPosition(sizeInPx().x() - TS, GHOST_Y);
-            ghost.setMoveAndWishDir(Direction.LEFT);
+            ghost.setMoveDir(Direction.LEFT);
+            ghost.setWishDir(Direction.LEFT);
             ghost.setSpeed(TS);
             ghost.show();
         }

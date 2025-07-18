@@ -272,7 +272,8 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 scene.ghosts.forEach(ghost -> {
                     ghost.setState(GhostState.HUNTING_PAC);
                     ghost.setPosition(scene.pacMan.x() + 16 * (ghost.personality() + 1), scene.pacMan.y());
-                    ghost.setMoveAndWishDir(Direction.LEFT);
+                    ghost.setMoveDir(Direction.LEFT);
+                    ghost.setWishDir(Direction.LEFT);
                     ghost.setSpeed(CHASING_SPEED);
                     ghost.show();
                     ghost.playAnimation(ANIM_GHOST_NORMAL);
@@ -291,7 +292,8 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                     // Ghosts get frightened and reverse direction
                     scene.ghosts.forEach(ghost -> {
                         ghost.setState(FRIGHTENED);
-                        ghost.setMoveAndWishDir(Direction.RIGHT);
+                        ghost.setMoveDir(Direction.RIGHT);
+                        ghost.setWishDir(Direction.RIGHT);
                         ghost.setSpeed(GHOST_FRIGHTENED_SPEED);
                     });
                 } else if (sceneTimer.tickCount() == 236) {

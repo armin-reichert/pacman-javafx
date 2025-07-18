@@ -211,12 +211,14 @@ public class GameLevel {
     public void getReadyToPlay() {
         pac.reset(); // initially invisible!
         pac.setPosition(pacStartPosition());
-        pac.setMoveAndWishDir(Direction.LEFT);
+        pac.setMoveDir(Direction.LEFT);
+        pac.setWishDir(Direction.LEFT);
         pac.powerTimer().resetIndefiniteTime();
         ghosts().forEach(ghost -> {
             ghost.reset(); // initially invisible!
             ghost.setPosition(ghostStartPosition(ghost.personality()));
-            ghost.setMoveAndWishDir(ghostStartDirection(ghost.personality()));
+            ghost.setMoveDir(ghostStartDirection(ghost.personality()));
+            ghost.setWishDir(ghostStartDirection(ghost.personality()));
             ghost.setState(GhostState.LOCKED);
         });
         blinking.setStartPhase(Pulse.ON); // Energizers are visible when ON

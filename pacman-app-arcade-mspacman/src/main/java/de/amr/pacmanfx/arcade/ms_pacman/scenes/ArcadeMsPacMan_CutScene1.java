@@ -142,7 +142,8 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         pacMan.playAnimation(PAC_MAN_MUNCHING);
         pacMan.show();
 
-        inky.setMoveAndWishDir(Direction.RIGHT);
+        inky.setMoveDir(Direction.RIGHT);
+        inky.setWishDir(Direction.RIGHT);
         inky.setPosition(pacMan.x() - 6 * TS, pacMan.y());
         inky.setSpeed(SPEED_GHOST_CHASING);
         inky.playAnimation(ANIM_GHOST_NORMAL);
@@ -154,7 +155,8 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         msPacMan.playAnimation(ANIM_PAC_MUNCHING);
         msPacMan.show();
 
-        pinky.setMoveAndWishDir(Direction.LEFT);
+        pinky.setMoveDir(Direction.LEFT);
+        pinky.setWishDir(Direction.LEFT);
         pinky.setPosition(msPacMan.x() + 6 * TS, msPacMan.y());
         pinky.setSpeed(SPEED_GHOST_CHASING);
         pinky.playAnimation(ANIM_GHOST_NORMAL);
@@ -180,13 +182,15 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         msPacMan.setMoveDir(Direction.RIGHT);
 
         pinky.setPosition(msPacMan.x() - 5 * TS, msPacMan.y());
-        pinky.setMoveAndWishDir(Direction.RIGHT);
+        pinky.setMoveDir(Direction.RIGHT);
+        pinky.setWishDir(Direction.RIGHT);
 
         pacMan.setPosition(TS * 31, MIDDLE_LANE_Y);
         pacMan.setMoveDir(Direction.LEFT);
 
         inky.setPosition(pacMan.x() + 5 * TS, pacMan.y());
-        inky.setMoveAndWishDir(Direction.LEFT);
+        inky.setMoveDir(Direction.LEFT);
+        inky.setWishDir(Direction.LEFT);
 
         setState(STATE_COMING_TOGETHER, TickTimer.INDEFINITE);
     }
@@ -207,12 +211,14 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
         // Inky and Pinky collide?
         else if (inky.moveDir() == Direction.LEFT && inky.x() - pinky.x() < TS * 2) {
-            inky.setMoveAndWishDir(Direction.RIGHT);
+            inky.setMoveDir(Direction.RIGHT);
+            inky.setWishDir(Direction.RIGHT);
             inky.setSpeed(SPEED_GHOST_AFTER_COLLISION);
             inky.setVelocity(inky.velocity().minus(0, 2.0f));
             inky.setAcceleration(0, 0.4f);
 
-            pinky.setMoveAndWishDir(Direction.LEFT);
+            pinky.setMoveDir(Direction.LEFT);
+            pinky.setWishDir(Direction.LEFT);
             pinky.setSpeed(SPEED_GHOST_AFTER_COLLISION);
             pinky.setVelocity(pinky.velocity().minus(0, 2.0f));
             pinky.setAcceleration(0, 0.4f);

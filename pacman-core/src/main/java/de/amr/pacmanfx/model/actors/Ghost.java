@@ -291,9 +291,11 @@ public abstract class Ghost extends MovingActor implements Animated {
                 move();
                 float y = position().y();
                 if (y <= minY) {
-                    setMoveAndWishDir(DOWN);
+                    setMoveDir(DOWN);
+                    setWishDir(DOWN);
                 } else if (y >= maxY) {
-                    setMoveAndWishDir(UP);
+                    setMoveDir(UP);
+                    setWishDir(DOWN);
                 }
                 setPosition(position().x(), Math.clamp(y, minY, maxY));
             } else {
@@ -330,7 +332,8 @@ public abstract class Ghost extends MovingActor implements Animated {
             if (position.y() <= houseEntryPosition.y()) {
                 // has raised and is outside house
                 setPosition(houseEntryPosition);
-                setMoveAndWishDir(LEFT);
+                setMoveDir(LEFT);
+                setWishDir(LEFT);
                 newTileEntered = false; // force moving left until new tile is entered
                 if (level.pac().powerTimer().isRunning() && !level.victims().contains(this)) {
                     setState(GhostState.FRIGHTENED);
@@ -345,10 +348,12 @@ public abstract class Ghost extends MovingActor implements Animated {
             if (differsAtMost(0.5f * speedInsideHouse, centerX, houseCenterX)) {
                 // align horizontally and raise
                 setX(houseCenterX - HTS);
-                setMoveAndWishDir(UP);
+                setMoveDir(UP);
+                setWishDir(UP);
             } else {
                 // move sidewards until center axis is reached
-                setMoveAndWishDir(centerX < houseCenterX ? RIGHT : LEFT);
+                setMoveDir(centerX < houseCenterX ? RIGHT : LEFT);
+                setWishDir(centerX < houseCenterX ? RIGHT : LEFT);
             }
             setSpeed(speedInsideHouse);
             move();
@@ -451,7 +456,8 @@ public abstract class Ghost extends MovingActor implements Animated {
             Vector2f houseEntry = house.entryPosition();
             if (position().roughlyEquals(houseEntry, speed, 0)) {
                 setPosition(houseEntry);
-                setMoveAndWishDir(DOWN);
+                setMoveDir(DOWN);
+                setWishDir(DOWN);
                 setState(GhostState.ENTERING_HOUSE);
             } else {
                 setSpeed(speed);
@@ -480,16 +486,20 @@ public abstract class Ghost extends MovingActor implements Animated {
             Vector2f position = position();
             if (position.roughlyEquals(revivalPosition, 0.5f * speed, 0.5f * speed)) {
                 setPosition(revivalPosition);
-                setMoveAndWishDir(UP);
+                setMoveDir(UP);
+                setWishDir(UP);
                 setState(GhostState.LOCKED);
                 return;
             }
             if (position.y() < revivalPosition.y()) {
-                setMoveAndWishDir(DOWN);
+                setMoveDir(DOWN);
+                setWishDir(DOWN);
             } else if (position.x() > revivalPosition.x()) {
-                setMoveAndWishDir(LEFT);
+                setMoveDir(LEFT);
+                setWishDir(LEFT);
             } else if (position.x() < revivalPosition.x()) {
-                setMoveAndWishDir(RIGHT);
+                setMoveDir(RIGHT);
+                setWishDir(RIGHT);
             }
             setSpeed(speed);
             move();

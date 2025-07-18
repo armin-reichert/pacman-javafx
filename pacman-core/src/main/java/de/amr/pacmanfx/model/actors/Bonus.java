@@ -62,7 +62,8 @@ public class Bonus extends MovingActor {
         requireNonNull(route);
         var mutableRoute = new ArrayList<>(route);
         placeAtTile(mutableRoute.getFirst().tile());
-        setMoveAndWishDir(leftToRight ? Direction.RIGHT : Direction.LEFT);
+        setMoveDir(leftToRight ? Direction.RIGHT : Direction.LEFT);
+        setWishDir(leftToRight ? Direction.RIGHT : Direction.LEFT);
         mutableRoute.removeFirst();
         steering = new RouteBasedSteering(mutableRoute);
     }

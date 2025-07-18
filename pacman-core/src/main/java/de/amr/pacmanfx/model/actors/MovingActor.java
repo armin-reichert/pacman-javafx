@@ -214,16 +214,6 @@ public abstract class MovingActor extends Actor {
     }
 
     /**
-     * Sets both directions at once.
-     *
-     * @param dir the new wish and move direction
-     */
-    public void setMoveAndWishDir(Direction dir) {
-        setWishDir(dir);
-        setMoveDir(dir);
-    }
-
-    /**
      * @param numTiles number of tiles
      * @return the tile located the given number of tiles towards the current move direction of the actor.
      */

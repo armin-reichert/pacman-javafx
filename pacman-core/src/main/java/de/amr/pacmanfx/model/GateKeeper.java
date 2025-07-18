@@ -203,10 +203,12 @@ public class GateKeeper {
         Ghost blinky = level.ghost(RED_GHOST_SHADOW);
         if (blinky.inAnyOfStates(GhostState.LOCKED)) {
             if (house.isVisitedBy(blinky)) {
-                blinky.setMoveAndWishDir(Direction.UP);
+                blinky.setMoveDir(Direction.UP);
+                blinky.setWishDir(Direction.UP);
                 blinky.setState(GhostState.LEAVING_HOUSE);
             } else {
-                blinky.setMoveAndWishDir(LEFT);
+                blinky.setMoveDir(LEFT);
+                blinky.setWishDir(LEFT);
                 blinky.setState(GhostState.HUNTING_PAC);
             }
         }
@@ -218,7 +220,8 @@ public class GateKeeper {
                 if (releaseReason != null) {
                     gameModel.simulationStep.releasedGhost = prisoner;
                     gameModel.simulationStep.ghostReleaseInfo = releaseReason;
-                    prisoner.setMoveAndWishDir(Direction.UP);
+                    prisoner.setMoveDir(Direction.UP);
+                    prisoner.setWishDir(Direction.UP);
                     prisoner.setState(GhostState.LEAVING_HOUSE);
                     onGhostReleasedAction.accept(prisoner);
                 }
