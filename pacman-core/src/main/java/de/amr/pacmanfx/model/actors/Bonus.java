@@ -135,29 +135,37 @@ public class Bonus extends MovingActor {
         Logger.trace("Bonus eaten: {}", this);
     }
 
-    public void update() {
+    public void tick() {
         switch (state) {
             case INACTIVE -> {}
             case EDIBLE -> {
                 if (jumpAnimation != null) {
                     updateMovingBonusEdibleState();
                 } else {
-                    waitForExpiration();
+                    boolean expired = countdown();
+                    if (expired) {
+                        gameContext.theGameEventManager().publishEvent(GameEventType.BONUS_EXPIRED, tile());
+                    }
                 }
             }
-            case EATEN -> waitForExpiration();
-            default -> throw new IllegalStateException("Unknown bonus state: " + state);
+            case EATEN -> {
+                boolean expired = countdown();
+                if (expired) {
+                    gameContext.theGameEventManager().publishEvent(GameEventType.BONUS_EXPIRED, tile());
+                }
+            }
         }
     }
 
-    // waits for countdown to reach 0 then expires
-    private void waitForExpiration() {
+    // Waits for countdown to reach 0 then expires
+    private boolean countdown() {
         if (ticksRemaining == 0) {
             setInactive();
-            gameContext.theGameEventManager().publishEvent(GameEventType.BONUS_EXPIRED, tile());
+            return true;
         } else if (ticksRemaining != TickTimer.INDEFINITE) {
             --ticksRemaining;
         }
+        return false;
     }
 
     // moves, when end of route is reached, expires

@@ -149,7 +149,7 @@ public class Pac extends MovingActor implements Animated {
             || powerTimer.durationTicks() < gameContext.theGame().pacPowerFadingTicks(gameContext.theGameLevel()) && powerTimer.tickCount() == 1;
     }
 
-    public void update() {
+    public void tick() {
         if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
 
         if (dead || restingTicks == INDEFINITELY) {

@@ -238,7 +238,7 @@ public enum GameState implements FsmState<GameContext> {
                 gameContext.theGameController().resumePreviousGameState();
             } else {
                 gameContext.theGameLevel().ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
-                    .forEach(Ghost::update);
+                    .forEach(Ghost::tick);
                 gameContext.theGameLevel().blinking().tick();
             }
         }
@@ -294,7 +294,7 @@ public enum GameState implements FsmState<GameContext> {
             }
             else {
                 gameContext.theGameLevel().blinking().tick();
-                gameContext.theGameLevel().pac().update();
+                gameContext.theGameLevel().pac().tick();
             }
         }
 
@@ -378,8 +378,8 @@ public enum GameState implements FsmState<GameContext> {
             final GameLevel gameLevel = gameContext.theGameLevel();
             if (timer().tickCount() > 2 * Globals.NUM_TICKS_PER_SEC) {
                 gameLevel.blinking().tick();
-                gameLevel.ghosts().forEach(Ghost::update);
-                gameLevel.bonus().ifPresent(Bonus::update);
+                gameLevel.ghosts().forEach(Ghost::tick);
+                gameLevel.bonus().ifPresent(Bonus::tick);
             }
             if (timer().atSecond(1.0)) {
                 gameContext.theGame().initAnimationOfPacManAndGhosts();
