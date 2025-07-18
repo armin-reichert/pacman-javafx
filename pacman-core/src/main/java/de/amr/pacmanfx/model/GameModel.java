@@ -114,7 +114,7 @@ public abstract class GameModel implements ScoreManager {
 
     public boolean isLevelCompleted() { return level.uneatenFoodCount() == 0; }
 
-    public void onLevelCompleted(GameLevel level) {
+    public void onLevelCompleted() {
         Logger.info("Level complete, stop hunting timer");
         huntingTimer().stop();
         level.blinking().setStartPhase(Pulse.OFF);

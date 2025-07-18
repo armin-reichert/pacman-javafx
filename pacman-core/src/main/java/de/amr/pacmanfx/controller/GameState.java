@@ -184,7 +184,7 @@ public enum GameState implements FsmState<GameContext> {
         @Override
         public void onUpdate(GameContext gameContext) {
             if (timer.tickCount() == 1) {
-                gameContext.theGame().onLevelCompleted(gameContext.theGameLevel());
+                gameContext.theGame().onLevelCompleted();
             }
 
             //TODO this is crap. Maybe Tengen Ms. Pac-Man needs its own state machine?
@@ -408,7 +408,7 @@ public enum GameState implements FsmState<GameContext> {
             }
             else if (timer().atSecond(10.0)) {
                 gameLevel.hidePacAndGhosts();
-                gameContext.theGame().onLevelCompleted(gameLevel);
+                gameContext.theGame().onLevelCompleted();
             }
             else if (timer().atSecond(11.0)) {
                 if (gameLevel.number() == lastTestedLevelNumber) {
