@@ -11,8 +11,6 @@ import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.SimulationStep;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 
 import java.io.File;
 import java.util.Optional;
@@ -52,6 +50,12 @@ class GameContextImpl implements GameContext {
     @Override
     public File theHomeDir() {
         return homeDir;
+    }
+
+    @Override
+    public File theHighScoreFile() {
+        String gameVariant = theGameController().selectedGameVariant();
+        return new File(homeDir, "highscore-%s.xml".formatted(gameVariant).toLowerCase());
     }
 
     @Override

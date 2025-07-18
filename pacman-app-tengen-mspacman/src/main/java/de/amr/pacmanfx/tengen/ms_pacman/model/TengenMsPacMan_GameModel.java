@@ -222,7 +222,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     public TengenMsPacMan_GameModel(GameContext gameContext) {
         super(gameContext);
-        setHighScoreFile(new File(gameContext.theHomeDir(), "highscore-ms_pacman_tengen.xml"));
         actorSpeedControl = new TengenActorSpeedControl();
         mapSelector = new TengenMsPacMan_MapSelector();
         gateKeeper = new GateKeeper(gameContext); //TODO implement Tengen logic
@@ -266,7 +265,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         hud.theLevelCounter().clear();
         playingProperty().set(false);
         boosterActive = false;
-        loadHighScore();
+        loadHighScore(gameContext.theHighScoreFile());
         resetScore();
         gateKeeper.reset();
     }
@@ -274,7 +273,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
     @Override
     public void onGameEnding() {
         playingProperty().set(false);
-        updateHighScore();
+        updateHighScore(gameContext.theHighScoreFile());
         level.showMessage(GameLevel.MESSAGE_GAME_OVER);
     }
 

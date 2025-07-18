@@ -20,7 +20,6 @@ import de.amr.pacmanfx.steering.RouteBasedSteering;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
-import java.io.File;
 import java.util.List;
 import java.util.OptionalInt;
 import java.util.Set;
@@ -190,7 +189,6 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
     public ArcadePacMan_GameModel(GameContext gameContext, MapSelector mapSelector) {
         super(gameContext);
         this.mapSelector = requireNonNull(mapSelector);
-        setHighScoreFile(new File(gameContext.theHomeDir(), "highscore-pacman.xml"));
         setExtraLifeScores(Set.of(EXTRA_LIFE_SCORE));
 
         huntingTimer = new HuntingTimer("ArcadePacMan-HuntingTimer", 8) {

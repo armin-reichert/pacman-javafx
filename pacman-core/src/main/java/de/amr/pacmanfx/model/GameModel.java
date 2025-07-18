@@ -41,7 +41,6 @@ public abstract class GameModel implements ScoreManager {
 
     private final Score score = new Score();
     private final Score highScore = new Score();
-    private File highScoreFile;
     private Set<Integer> extraLifeScores = Set.of();
     private int initialLifeCount;
 
@@ -269,11 +268,6 @@ public abstract class GameModel implements ScoreManager {
     // ScoreManager implementation
 
     @Override
-    public void setHighScoreFile(File highScoreFile) {
-        this.highScoreFile = requireNonNull(highScoreFile);
-    }
-
-    @Override
     public void setExtraLifeScores(Set<Integer> scores) {
         extraLifeScores = new HashSet<>(scores);
     }
@@ -309,7 +303,7 @@ public abstract class GameModel implements ScoreManager {
     }
 
     @Override
-    public void loadHighScore() {
+    public void loadHighScore(File highScoreFile) {
         try {
             highScore.read(highScoreFile);
             Logger.info("High Score loaded from file '{}': points={}, level={}", highScoreFile, highScore.points(), highScore.levelNumber());
@@ -319,7 +313,7 @@ public abstract class GameModel implements ScoreManager {
     }
 
     @Override
-    public void updateHighScore() {
+    public void updateHighScore(File highScoreFile) {
         var oldHighScore = Score.fromFile(highScoreFile);
         if (highScore.points() > oldHighScore.points()) {
             try {
@@ -336,7 +330,7 @@ public abstract class GameModel implements ScoreManager {
     }
 
     @Override
-    public void saveHighScore() {
+    public void saveHighScore(File highScoreFile) {
         try {
             new Score().save(highScoreFile, "High Score, %s".formatted(LocalDateTime.now()));
         } catch (IOException x) {

@@ -62,7 +62,7 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
         setLifeCount(initialLifeCount());
         level = null;
         propertyMap().clear();
-        loadHighScore();
+        loadHighScore(gameContext.theHighScoreFile());
         resetScore();
         gateKeeper.reset();
         huntingTimer.reset();
@@ -209,7 +209,7 @@ public abstract class ArcadeCommon_GameModel extends GameModel {
         if (!gameContext.theCoinMechanism().isEmpty()) {
             gameContext.theCoinMechanism().consumeCoin();
         }
-        updateHighScore();
+        updateHighScore(gameContext.theHighScoreFile());
         level.showMessage(GameLevel.MESSAGE_GAME_OVER);
     }
 

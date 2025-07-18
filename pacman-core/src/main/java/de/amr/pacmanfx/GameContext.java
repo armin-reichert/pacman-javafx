@@ -28,6 +28,11 @@ public interface GameContext {
      */
     File theCustomMapDir();
 
+    /**
+     * @return the high score file for the currently selected game
+     */
+    File theHighScoreFile();
+
     CoinMechanism           theCoinMechanism();
 
     <T extends GameModel> T theGame();

@@ -12,11 +12,10 @@ public interface ScoreManager {
     Score highScore();
     void scorePoints(int points);
     void resetScore();
-    void loadHighScore();
-    void saveHighScore();
-    void updateHighScore();
+    void loadHighScore(File file);
+    void saveHighScore(File file);
+    void updateHighScore(File file);
     void setScoreLevelNumber(int levelNumber);
     void onScoreChanged(GameModel game, int oldScore, int newScore);
-    void setHighScoreFile(File file);
     void setExtraLifeScores(Set<Integer> scores);
 }
