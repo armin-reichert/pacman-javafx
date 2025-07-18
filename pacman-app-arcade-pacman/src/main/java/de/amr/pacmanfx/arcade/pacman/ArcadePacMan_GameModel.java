@@ -313,7 +313,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
     public void activateNextBonus(GameContext gameContext) {
         level.selectNextBonus();
         byte symbol = level.bonusSymbol(level.currentBonusIndex());
-        var bonus = Bonus.createStaticBonus(gameContext, symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100);
+        var bonus = new Bonus(gameContext, symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100, null);
         Vector2i bonusTile = level.worldMap().getTerrainTileProperty(WorldMapProperty.POS_BONUS, new Vector2i(13, 20));
         bonus.setPosition(halfTileRightOf(bonusTile));
         bonus.setEdibleTicks(randomInt(9 * NUM_TICKS_PER_SEC, 10 * NUM_TICKS_PER_SEC));

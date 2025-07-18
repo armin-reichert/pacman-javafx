@@ -10,6 +10,7 @@ import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.Waypoint;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
+import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Bonus;
@@ -411,13 +412,14 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
             .map(Waypoint::new).toList();
 
         byte symbol = level.bonusSymbol(level.currentBonusIndex());
-        var bonus = Bonus.createMovingBonus(gameContext, symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100, route, crossingLeftToRight);
+        var bonus = new Bonus(gameContext, symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100, new Pulse(10, false));
         bonus.setEdibleTicks(TickTimer.INDEFINITE);
+        bonus.setRoute(route, crossingLeftToRight);
         Logger.info("Moving bonus created, route: {} (crossing {})", route,
             crossingLeftToRight ? "left to right" : "right to left");
 
         level.setBonus(bonus);
-        gameContext.theGameEventManager().publishEvent(GameEventType.BONUS_ACTIVATED, bonus.tile());
+        gameEventManager.publishEvent(GameEventType.BONUS_ACTIVATED, bonus.tile());
     }
 
     private Portal randomPortal(GameLevel level) {

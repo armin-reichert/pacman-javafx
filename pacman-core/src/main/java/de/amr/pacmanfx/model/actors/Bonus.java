@@ -29,16 +29,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class Bonus extends MovingActor {
 
-    public static Bonus createMovingBonus(GameContext gameContext, byte symbol, int points, List<Waypoint> route, boolean leftToRight) {
-        var bonus = new Bonus(gameContext, symbol, points, new Pulse(10, false));
-        bonus.setRoute(route, leftToRight);
-        return bonus;
-    }
-
-    public static Bonus createStaticBonus(GameContext gameContext, byte symbol, int points) {
-        return new Bonus(gameContext, symbol, points, null);
-    }
-
     private final byte symbol;
     private final int points;
     private long ticksRemaining;
@@ -47,7 +37,7 @@ public class Bonus extends MovingActor {
     private final Pulse jumpAnimation;
     private RouteBasedSteering steering;
 
-    private Bonus(GameContext gameContext, byte symbol, int points, Pulse jumpAnimation) {
+    public Bonus(GameContext gameContext, byte symbol, int points, Pulse jumpAnimation) {
         super(gameContext);
         this.symbol = symbol;
         this.points = points;
@@ -58,7 +48,7 @@ public class Bonus extends MovingActor {
         state = BonusState.INACTIVE;
     }
 
-    private void setRoute(List<Waypoint> route, boolean leftToRight) {
+    public void setRoute(List<Waypoint> route, boolean leftToRight) {
         requireNonNull(route);
         var mutableRoute = new ArrayList<>(route);
         placeAtTile(mutableRoute.getFirst().tile());
