@@ -140,13 +140,14 @@ public class Bonus extends MovingActor {
         switch (state) {
             case INACTIVE -> {}
             case EDIBLE -> {
+                boolean expired;
                 if (jumpAnimation != null) {
-                    updateMovingBonusEdibleState();
+                    expired = jumpThroughWorldAndLeaveThroughPortal();
                 } else {
-                    boolean expired = countdown();
-                    if (expired) {
-                        gameContext.theGameEventManager().publishEvent(GameEventType.BONUS_EXPIRED, tile());
-                    }
+                    expired = countdown();
+                }
+                if (expired) {
+                    gameContext.theGameEventManager().publishEvent(GameEventType.BONUS_EXPIRED, tile());
                 }
             }
             case EATEN -> {
@@ -170,18 +171,19 @@ public class Bonus extends MovingActor {
     }
 
     // moves, when end of route is reached, expires
-    private void updateMovingBonusEdibleState() {
-        gameContext.optGameLevel().ifPresent(gameLevel -> {
-            steering.steer(this, gameLevel);
+    private boolean jumpThroughWorldAndLeaveThroughPortal() {
+        if (gameContext.optGameLevel().isPresent()) {
+            steering.steer(this, gameContext.theGameLevel());
             if (steering.isComplete()) {
                 setInactive();
-                gameContext.theGameEventManager().publishEvent(GameEventType.BONUS_EXPIRED, tile());
+                return true;
             } else {
                 navigateTowardsTarget();
                 findMyWayThroughThisCruelWorld();
                 jumpAnimation.tick();
             }
-        });
+        }
+        return false;
     }
 
     public float jumpHeight() {
