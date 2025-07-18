@@ -20,52 +20,54 @@ import static java.util.Objects.requireNonNull;
 /**
  * Base class for all game actors like Pac-Man. ghosts and bonus entities.
  * <p>
- * Each actor has a position, velocity, acceleration and visibility.
+ * Each actor has a position, velocity, acceleration and visibility property.
  * </p>
  */
 public class Actor {
 
-    protected GameContext gameContext;
+    public static final Vector2f DEFAULT_ACCELERATION = Vector2f.ZERO;
+    public static final Vector2f DEFAULT_POSITION = Vector2f.ZERO;
+    public static final Vector2f DEFAULT_VELOCITY = Vector2f.ZERO;
+    public static final boolean DEFAULT_VISIBILITY = false;
 
-    private final ObjectProperty<Vector2f> positionProperty = new SimpleObjectProperty<>(Vector2f.ZERO);
-    private final ObjectProperty<Vector2f> velocityProperty = new SimpleObjectProperty<>(Vector2f.ZERO);
-    private final ObjectProperty<Vector2f> accelerationProperty = new SimpleObjectProperty<>(Vector2f.ZERO);
-    private final BooleanProperty visibleProperty = new SimpleBooleanProperty(false);
+    protected final GameContext gameContext;
 
+    private final ObjectProperty<Vector2f> position = new SimpleObjectProperty<>(DEFAULT_POSITION);
+    private final BooleanProperty visible = new SimpleBooleanProperty(DEFAULT_VISIBILITY);
+    private ObjectProperty<Vector2f> velocity;
+    private ObjectProperty<Vector2f> acceleration;
+
+    /**
+     * @param gameContext the game context for this actor, may be null
+     */
     public Actor(GameContext gameContext) {
         this.gameContext = gameContext;
     }
 
-    @Override
-    public String toString() {
-        return "Actor{" +
-               "visible=" + isVisible() +
-                ", position=" + position() +
-                ", velocity=" + velocity() +
-                ", acceleration=" + acceleration() +
-                '}';
-    }
-
     /**
-     * Resets this actor thingy to its initial state, not that it is invisible by default!
+     * Resets all properties of this actor thingy to their default state. Note: actor is invisible by default!
      */
     public void reset() {
-        setVisible(false);
-        setPosition(Vector2f.ZERO);
-        setVelocity(Vector2f.ZERO);
-        setAcceleration(Vector2f.ZERO);
+        setVisible(DEFAULT_VISIBILITY);
+        setPosition(DEFAULT_POSITION);
+        if (velocity != null) {
+            setVelocity(DEFAULT_VELOCITY);
+        }
+        if (acceleration != null) {
+            setAcceleration(DEFAULT_ACCELERATION);
+        }
     }
 
     public BooleanProperty visibleProperty() {
-        return visibleProperty;
+        return visible;
     }
 
     public boolean isVisible() {
-        return visibleProperty.get();
+        return visible.get();
     }
 
     public void setVisible(boolean visible) {
-        visibleProperty.set(visible);
+        this.visible.set(visible);
     }
 
     public void show() {
@@ -93,13 +95,13 @@ public class Actor {
     }
 
     public ObjectProperty<Vector2f> positionProperty() {
-        return positionProperty;
+        return position;
     }
 
     /**
      * @return upper left corner of the entity collision box which is a square of size 1 tile.
      */
-    public Vector2f position() { return positionProperty.get(); }
+    public Vector2f position() { return position.get(); }
 
     /**
      * @return center of the entity collision box which is a square of size 1 tile.
@@ -112,37 +114,47 @@ public class Actor {
 
     public void setPosition(Vector2f position) {
         requireNonNull(position, "Position of actor must not be null");
-        positionProperty.set(position);
+        this.position.set(position);
+    }
+
+    public final ObjectProperty<Vector2f> velocityProperty() {
+        if (velocity == null) {
+            velocity = new SimpleObjectProperty<>(DEFAULT_VELOCITY);
+        }
+        return velocity;
     }
 
     public Vector2f velocity() {
-        return velocityProperty.get();
+        return velocityProperty().get();
     }
 
     public void setVelocity(Vector2f velocity) {
-        requireNonNull(velocity, "Velocity of actor must not be null");
-        velocityProperty.set(velocity);
+        requireNonNull(velocity, "Velocity vector must not be null");
+        velocityProperty().set(velocity);
     }
 
     public void setVelocity(float vx, float vy) {
         setVelocity(new Vector2f(vx, vy));
     }
 
+    public final ObjectProperty<Vector2f> accelerationProperty() {
+        if (acceleration == null) {
+            acceleration = new SimpleObjectProperty<>(DEFAULT_ACCELERATION);
+        }
+        return acceleration;
+    }
+
     public Vector2f acceleration() {
-        return accelerationProperty.get();
+        return accelerationProperty().get();
     }
 
     public void setAcceleration(Vector2f acceleration) {
         requireNonNull(acceleration, "Acceleration vector must not be null");
-        accelerationProperty.set(acceleration);
+        accelerationProperty().set(acceleration);
     }
 
     public void setAcceleration(float ax, float ay) {
         setAcceleration(new Vector2f(ax, ay));
-    }
-
-    public ObjectProperty<Vector2f> accelerationProperty() {
-        return accelerationProperty;
     }
 
     /**
@@ -154,7 +166,8 @@ public class Actor {
     }
 
     /**
-     * @return Tile containing the center of the actor collision box.
+     * @return Tile containing the center of the actor's one-size-square "collision box". Actor position denotes
+     *         the left-upper corner of that box
      */
     public Vector2i tile() {
         Vector2f position = position();
@@ -170,9 +183,9 @@ public class Actor {
 
     /**
      * @param other some actor
-     * @return <code>true</code> if both entities occupy same tile
+     * @return <code>true</code> if both entities have the same tile coordinate
      */
-    public boolean sameTile(Actor other) {
+    public boolean atSameTileAs(Actor other) {
         requireNonNull(other, "Actor to check for same tile must not be null");
         return tile().equals(other.tile());
     }

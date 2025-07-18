@@ -165,7 +165,7 @@ public abstract class GameModel implements ScoreManager {
      * @return if both actors collide
      */
     public boolean actorsCollide(Actor either, Actor other) {
-        return either.sameTile(other);
+        return either.atSameTileAs(other);
     }
 
     public abstract long pacPowerTicks(GameLevel level);
