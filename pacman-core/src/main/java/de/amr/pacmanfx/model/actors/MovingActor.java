@@ -25,16 +25,18 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * Base class for all actors which know how to move through a level's world.
- *
- * @author Armin Reichert
  */
 public abstract class MovingActor extends Actor {
 
+    public static final Direction DEFAULT_MOVE_DIR = RIGHT;
+    public static final Direction DEFAULT_WISH_DIR = RIGHT;
+    public static final Vector2i DEFAULT_TARGET_TILE = null;
+
     protected final MoveResult moveInfo = new MoveResult();
 
-    private final ObjectProperty<Direction> moveDirProperty = new SimpleObjectProperty<>();
-    private final ObjectProperty<Direction> wishDirProperty = new SimpleObjectProperty<>();
-    private final ObjectProperty<Vector2i> targetTileProperty = new SimpleObjectProperty<>();
+    protected ObjectProperty<Direction> moveDirProperty;
+    protected ObjectProperty<Direction> wishDirProperty;
+    protected ObjectProperty<Vector2i> targetTileProperty;
 
     protected boolean newTileEntered;
     protected boolean gotReverseCommand;
@@ -52,9 +54,9 @@ public abstract class MovingActor extends Actor {
                 ", position=" + position() +
                 ", velocity=" + (velocity != null ? velocity() : DEFAULT_VELOCITY) +
                 ", acceleration=" + (acceleration != null ? acceleration() : DEFAULT_ACCELERATION) +
-                ", moveDir=" + moveDir() +
-                ", wishDir=" + wishDir() +
-                ", targetTile=" + targetTile() +
+                ", moveDir=" + (moveDirProperty != null ? moveDir() : DEFAULT_MOVE_DIR) +
+                ", wishDir=" + (wishDirProperty != null ? wishDir() : DEFAULT_WISH_DIR) +
+                ", targetTile=" + (targetTileProperty != null ? targetTile() : DEFAULT_TARGET_TILE) +
                 ", newTileEntered=" + newTileEntered +
                 ", gotReverseCommand=" + gotReverseCommand +
                 ", canTeleport=" + canTeleport +
@@ -93,7 +95,10 @@ public abstract class MovingActor extends Actor {
      */
     public abstract boolean canAccessTile(GameLevel level, Vector2i tile);
 
-    public ObjectProperty<Vector2i> targetTileProperty() {
+    public final ObjectProperty<Vector2i> targetTileProperty() {
+        if (targetTileProperty == null) {
+            targetTileProperty = new SimpleObjectProperty<>(DEFAULT_TARGET_TILE);
+        }
         return targetTileProperty;
     }
 
@@ -103,13 +108,13 @@ public abstract class MovingActor extends Actor {
      * @param tile some tile or <code>null</code>
      */
     public void setTargetTile(Vector2i tile) {
-        targetTileProperty.set(tile);
+        targetTileProperty().set(tile);
     }
 
     /**
      * @return current target tile. Can be null, an inaccessible tile or a tile outside the world.
      */
-    public Vector2i targetTile() { return targetTileProperty.get(); }
+    public Vector2i targetTile() { return targetTileProperty().get(); }
 
     /**
      * @return (Optional) target tile. Can be inaccessible or outside the world.
@@ -150,7 +155,10 @@ public abstract class MovingActor extends Actor {
         placeAtTile(tile.x(), tile.y());
     }
 
-    public ObjectProperty<Direction> moveDirProperty() {
+    public final ObjectProperty<Direction> moveDirProperty() {
+        if (moveDirProperty == null) {
+            moveDirProperty = new SimpleObjectProperty<>(DEFAULT_MOVE_DIR);
+        }
         return moveDirProperty;
     }
 
@@ -160,7 +168,7 @@ public abstract class MovingActor extends Actor {
      * @param dir the move direction (must not be null)
      */
     public void setMoveDir(Direction dir) {
-        moveDirProperty.set(requireNonNull(dir));
+        moveDirProperty().set(requireNonNull(dir));
         setVelocity(dir.vector().scaled(velocity().length()));
     }
 
@@ -168,10 +176,13 @@ public abstract class MovingActor extends Actor {
      * @return The current move direction.
      */
     public Direction moveDir() {
-        return moveDirProperty.get();
+        return moveDirProperty().get();
     }
 
-    public ObjectProperty<Direction> wishDirProperty() {
+    public final ObjectProperty<Direction> wishDirProperty() {
+        if (wishDirProperty == null) {
+            wishDirProperty = new SimpleObjectProperty<>(DEFAULT_WISH_DIR);
+        }
         return wishDirProperty;
     }
 
@@ -181,14 +192,14 @@ public abstract class MovingActor extends Actor {
      * @param dir the wish direction (must not be null)
      */
     public void setWishDir(Direction dir) {
-        wishDirProperty.set(requireNonNull(dir));
+        wishDirProperty().set(requireNonNull(dir));
     }
 
     /**
      * @return The wish direction. Will be taken as soon as possible.
      */
     public Direction wishDir() {
-        return wishDirProperty.get();
+        return wishDirProperty().get();
     }
 
     /**
