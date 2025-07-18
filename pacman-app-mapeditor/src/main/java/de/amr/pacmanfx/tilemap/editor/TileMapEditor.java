@@ -762,6 +762,7 @@ public class TileMapEditor {
             case EDIT    -> Color.FORESTGREEN;
             case ERASE   -> Color.RED;
         }));
+        lblEditMode.setOnMouseClicked(e -> showEditHelpText());
 
         statusLine = new HBox(
             lblMapSize,
