@@ -23,19 +23,26 @@ import static java.util.Objects.requireNonNull;
  */
 public class Pac extends MovingActor implements Animated {
 
+    public static final boolean DEFAULT_USING_AUTOPILOT = false;
+    public static final boolean DEFAULT_IMMUNITY = false;
+
     private static final byte INDEFINITELY = -1;
 
-    private final BooleanProperty immunePy = new SimpleBooleanProperty(false);
-    private final BooleanProperty usingAutopilotPy = new SimpleBooleanProperty(false);
     private final TickTimer powerTimer = new TickTimer("PacPowerTimer");
 
     private final String name;
+    private BooleanProperty immune;
+    private BooleanProperty usingAutopilot;
     private boolean dead;
     private byte restingTicks;
     private long starvingTicks;
     private Steering autopilotSteering;
     private ActorAnimationMap animationMap;
 
+    /**
+     * @param gameContext the game context for this Pac-thingy, may be null for example in cut scene
+     * @param name a readable name. Any honest Pac-Man and Pac-Woman should have a name! Period.
+     */
     public Pac(GameContext gameContext, String name) {
         super(gameContext);
         this.name = requireNonNull(name);
@@ -48,7 +55,8 @@ public class Pac extends MovingActor implements Animated {
     @Override
     public String toString() {
         return "Pac{" +
-                "immune=" + immunePy.get() +
+                "immune=" + (immune != null ? isImmune() : DEFAULT_IMMUNITY) +
+                ", autopilot=" + (usingAutopilot != null ? isUsingAutopilot() : DEFAULT_USING_AUTOPILOT) +
                 ", dead=" + dead +
                 ", restingTicks=" + restingTicks +
                 ", starvingTicks=" + starvingTicks +
@@ -88,30 +96,59 @@ public class Pac extends MovingActor implements Animated {
         selectAnimation(ANIM_PAC_MUNCHING);
     }
 
+    public BooleanProperty immuneProperty() {
+        if (immune == null) {
+            immune = new SimpleBooleanProperty(DEFAULT_IMMUNITY);
+        }
+        return immune;
+    }
+
     public boolean isImmune() {
-        return immunePy.get();
+        return immune != null ? immune.get() : DEFAULT_IMMUNITY;
     }
 
-    public void setImmune(boolean immune) {
-        immunePy.set(immune);
+    public void setImmune(boolean value) {
+        if (immune == null && value == DEFAULT_IMMUNITY) return;
+        immuneProperty().set(value);
     }
 
-    public BooleanProperty immuneProperty() { return immunePy; }
+    public BooleanProperty usingAutopilotProperty() {
+        if (usingAutopilot == null) {
+            usingAutopilot = new SimpleBooleanProperty(DEFAULT_USING_AUTOPILOT);
+        }
+        return usingAutopilot;
+    }
+
+    public boolean isUsingAutopilot() {
+        return usingAutopilot != null ? usingAutopilot.get() : DEFAULT_USING_AUTOPILOT;
+    }
+
+    public void setUsingAutopilot(boolean value) {
+        if (usingAutopilot == null && value == DEFAULT_USING_AUTOPILOT) return;
+        usingAutopilotProperty().set(value);
+    }
 
     public TickTimer powerTimer() {
         return powerTimer;
     }
 
-    public boolean isPowerFading(GameLevel level) {
-        return powerTimer.isRunning() && powerTimer.remainingTicks() <= gameContext.theGame().pacPowerFadingTicks(level);
+    public boolean isPowerFading() {
+        if (gameContext == null || gameContext.optGameLevel().isEmpty()) return false;
+
+        return powerTimer.isRunning()
+            && powerTimer.remainingTicks() <= gameContext.theGame().pacPowerFadingTicks(gameContext.theGameLevel());
     }
 
-    public boolean isPowerFadingStarting(GameLevel level) {
-        return powerTimer.isRunning() && powerTimer.remainingTicks() == gameContext.theGame().pacPowerFadingTicks(level)
-            || powerTimer.durationTicks() < gameContext.theGame().pacPowerFadingTicks(level) && powerTimer.tickCount() == 1;
+    public boolean isPowerFadingStarting() {
+        if (gameContext == null || gameContext.optGameLevel().isEmpty()) return false;
+
+        return powerTimer.isRunning() && powerTimer.remainingTicks() == gameContext.theGame().pacPowerFadingTicks(gameContext.theGameLevel())
+            || powerTimer.durationTicks() < gameContext.theGame().pacPowerFadingTicks(gameContext.theGameLevel()) && powerTimer.tickCount() == 1;
     }
 
-    public void update(GameLevel level) {
+    public void update() {
+        if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
+
         if (dead || restingTicks == INDEFINITELY) {
             return;
         }
@@ -120,12 +157,12 @@ public class Pac extends MovingActor implements Animated {
             return;
         }
         if (isUsingAutopilot()) {
-            autopilotSteering.steer(this, level);
+            autopilotSteering.steer(this, gameContext.theGameLevel());
         }
         setSpeed(powerTimer.isRunning()
-            ? gameContext.theGame().actorSpeedControl().pacPowerSpeed(gameContext, level)
-            : gameContext.theGame().actorSpeedControl().pacNormalSpeed(gameContext, level));
-        tryMoving(level);
+            ? gameContext.theGame().actorSpeedControl().pacPowerSpeed(gameContext, gameContext.theGameLevel())
+            : gameContext.theGame().actorSpeedControl().pacNormalSpeed(gameContext, gameContext.theGameLevel()));
+        tryMoving(gameContext.theGameLevel());
 
         if (moveInfo.moved) {
             playAnimation();
@@ -180,9 +217,6 @@ public class Pac extends MovingActor implements Animated {
     }
 
     public void setAutopilotSteering(Steering steering) { autopilotSteering = steering; }
-    public boolean isUsingAutopilot() { return usingAutopilotPy.get(); }
-    public void setUsingAutopilot(boolean value) { usingAutopilotPy.set(value); }
-    public BooleanProperty usingAutopilotProperty() { return usingAutopilotPy; }
 
     public void setAnimations(ActorAnimationMap animationMap) {
         this.animationMap = requireNonNull(animationMap);

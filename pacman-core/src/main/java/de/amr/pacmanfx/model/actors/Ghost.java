@@ -202,7 +202,7 @@ public abstract class Ghost extends MovingActor implements Animated {
      * The current state of this ghost.
      */
     public GhostState state() {
-        return stateProperty().get();
+        return state != null ? stateProperty().get() : DEFAULT_STATE;
     }
 
     /**
@@ -408,9 +408,9 @@ public abstract class Ghost extends MovingActor implements Animated {
                 Logger.error("No ghost house in level? WTF!");
                 return;
             }
-            if (level.pac().isPowerFadingStarting(level)) {
+            if (level.pac().isPowerFadingStarting()) {
                 playAnimation(ANIM_GHOST_FLASHING);
-            } else if (!level.pac().isPowerFading(level)) {
+            } else if (!level.pac().isPowerFading()) {
                 playAnimation(ANIM_GHOST_FRIGHTENED);
             }
         }

@@ -97,7 +97,7 @@ public abstract class GameModel implements ScoreManager {
         huntingTimer().update(level.number());
         level.blinking().tick();
 
-        level.pac().update(level);
+        level.pac().update();
         level.ghosts().forEach(Ghost::update);
         level.bonus().ifPresent(Bonus::update);
 
@@ -200,7 +200,7 @@ public abstract class GameModel implements ScoreManager {
     protected void updatePacPower() {
         final TickTimer powerTimer = level.pac().powerTimer();
         powerTimer.doTick();
-        if (level.pac().isPowerFadingStarting(level)) {
+        if (level.pac().isPowerFadingStarting()) {
             gameContext.theSimulationStep().pacStartsLosingPower = true;
             gameContext.theGameEventManager().publishEvent(GameEventType.PAC_STARTS_LOSING_POWER);
         } else if (powerTimer.hasExpired()) {

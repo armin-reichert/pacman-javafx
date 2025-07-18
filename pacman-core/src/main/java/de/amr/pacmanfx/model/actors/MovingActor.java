@@ -124,7 +124,9 @@ public abstract class MovingActor extends Actor {
     /**
      * @return current target tile. Can be null, an inaccessible tile or a tile outside the world.
      */
-    public Vector2i targetTile() { return targetTileProperty().get(); }
+    public Vector2i targetTile() {
+        return targetTile != null ? targetTileProperty().get() : DEFAULT_TARGET_TILE;
+    }
 
     /**
      * @return (Optional) target tile. Can be inaccessible or outside the world.
@@ -186,7 +188,7 @@ public abstract class MovingActor extends Actor {
      * @return The current move direction.
      */
     public Direction moveDir() {
-        return moveDirProperty().get();
+        return moveDir != null ? moveDirProperty().get() : DEFAULT_MOVE_DIR;
     }
 
     public final ObjectProperty<Direction> wishDirProperty() {
@@ -209,7 +211,7 @@ public abstract class MovingActor extends Actor {
      * @return The wish direction. Will be taken as soon as possible.
      */
     public Direction wishDir() {
-        return wishDirProperty().get();
+        return wishDir != null ? wishDirProperty().get() : DEFAULT_WISH_DIR;
     }
 
     /**

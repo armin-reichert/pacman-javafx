@@ -294,7 +294,7 @@ public enum GameState implements FsmState<GameContext> {
             }
             else {
                 gameContext.theGameLevel().blinking().tick();
-                gameContext.theGameLevel().pac().update(gameContext.theGameLevel());
+                gameContext.theGameLevel().pac().update();
             }
         }
 

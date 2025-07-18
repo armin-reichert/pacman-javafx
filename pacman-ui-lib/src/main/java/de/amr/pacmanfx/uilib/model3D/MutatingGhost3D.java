@@ -289,7 +289,7 @@ public class MutatingGhost3D extends Group implements Destroyable {
     }
 
     private void selectAppearance(GameLevel level) {
-        boolean powerFading = level.pac().isPowerFading(level);
+        boolean powerFading = level.pac().isPowerFading();
         boolean powerActive = level.pac().powerTimer().isRunning();
         // ghost that got killed already during the current power phase do not look frightened anymore
         boolean killedDuringCurrentPhase = level.victims().contains(ghost);
