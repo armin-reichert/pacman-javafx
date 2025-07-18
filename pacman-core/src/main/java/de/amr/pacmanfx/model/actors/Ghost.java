@@ -248,6 +248,7 @@ public abstract class Ghost extends MovingActor implements Animated {
     /**
      * Updates the state of this ghost in the current game context.
      */
+    @Override
     public void tick() {
         if (gameContext == null) {
             return; // might happen for ghosts in cut scenes

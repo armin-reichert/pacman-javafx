@@ -135,6 +135,7 @@ public class Bonus extends MovingActor {
         Logger.trace("Bonus eaten: {}", this);
     }
 
+    @Override
     public void tick() {
         switch (state) {
             case INACTIVE -> {}

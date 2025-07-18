@@ -50,6 +50,8 @@ public abstract class MovingActor extends Actor {
         super(gameContext);
     }
 
+    public abstract void tick();
+
     @Override
     public String toString() {
         return "WorldMovingActor{" +
