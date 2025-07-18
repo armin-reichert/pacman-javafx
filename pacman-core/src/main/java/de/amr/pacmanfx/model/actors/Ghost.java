@@ -371,7 +371,6 @@ public abstract class Ghost extends MovingActor implements Animated {
      */
     private void updateStateHuntingPac() {
         if (gameContext.optGameLevel().isPresent()) {
-            GameLevel level = gameContext.theGameLevel();
             // The specific hunting behaviour is defined by the game variant. For example, in Ms. Pac-Man,
             // the red and pink ghosts are not chasing Pac-Man during the first scatter phase, but roam the maze randomly.
             hunt();
