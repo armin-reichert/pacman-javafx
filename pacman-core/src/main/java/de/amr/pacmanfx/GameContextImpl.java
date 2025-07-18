@@ -1,0 +1,89 @@
+/*
+Copyright (c) 2021-2025 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
+package de.amr.pacmanfx;
+
+import de.amr.pacmanfx.controller.CoinMechanism;
+import de.amr.pacmanfx.controller.GameController;
+import de.amr.pacmanfx.controller.GameState;
+import de.amr.pacmanfx.event.GameEventManager;
+import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.model.SimulationStep;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+
+import java.io.File;
+import java.util.Optional;
+
+class GameContextImpl implements GameContext {
+    private final File homeDir = new File(System.getProperty("user.home"), ".pacmanfx");
+    private final File customMapDir = new File(homeDir, "maps");
+    private final CoinMechanism coinMechanism = new CoinMechanism();
+    private final GameController gameController = new GameController(this);
+    private final SimulationStep simulationStep = new SimulationStep();
+
+    private final BooleanProperty propertyImmunity = new SimpleBooleanProperty(false);
+    private final BooleanProperty propertyUsingAutopilot = new SimpleBooleanProperty(false);
+
+    @Override
+    public CoinMechanism theCoinMechanism() {
+        return coinMechanism;
+    }
+
+    @Override
+    public File theCustomMapDir() {
+        return customMapDir;
+    }
+
+    @Override
+    public <T extends GameModel> T theGame() {
+        return gameController.currentGame();
+    }
+
+    @Override
+    public GameController theGameController() {
+        return gameController;
+    }
+
+    @Override
+    public GameEventManager theGameEventManager() {
+        return gameController.gameEventManager();
+    }
+
+    @Override
+    public File theHomeDir() {
+        return homeDir;
+    }
+
+    @Override
+    public Optional<GameLevel> optGameLevel() {
+        return theGame().level();
+    }
+
+    @Override
+    public GameLevel theGameLevel() {
+        return theGame().level().orElse(null);
+    }
+
+    @Override
+    public GameState theGameState() {
+        return gameController.gameState();
+    }
+
+    @Override
+    public SimulationStep theSimulationStep() {
+        return simulationStep;
+    }
+
+    @Override
+    public BooleanProperty propertyImmunity() {
+        return propertyImmunity;
+    }
+
+    @Override
+    public BooleanProperty propertyUsingAutopilot() {
+        return propertyUsingAutopilot;
+    }
+}
