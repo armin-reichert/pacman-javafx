@@ -32,18 +32,19 @@ public class StatusIconBox extends HBox implements Destroyable {
     public StatusIconBox(GameUI ui) {
         iconMuted = FontIcon.of(FontAwesomeSolid.DEAF, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
         iconMuted.visibleProperty().addListener(this::handleIconVisibilityChange);
-        iconMuted.visibleProperty().bind(ui.propertyMuted());
 
         icon3D = FontIcon.of(FontAwesomeSolid.CUBES, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
         icon3D.visibleProperty().addListener(this::handleIconVisibilityChange);
-        icon3D.visibleProperty().bind(ui.property3DEnabled());
 
         iconAutopilot = FontIcon.of(FontAwesomeSolid.TAXI, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
         iconAutopilot.visibleProperty().addListener(this::handleIconVisibilityChange);
-        iconAutopilot.visibleProperty().bind(ui.theGameContext().propertyUsingAutopilot());
 
         iconImmune = FontIcon.of(FontAwesomeSolid.USER_SECRET, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
         iconImmune.visibleProperty().addListener(this::handleIconVisibilityChange);
+
+        iconMuted.visibleProperty().bind(ui.propertyMuted());
+        icon3D.visibleProperty().bind(ui.property3DEnabled());
+        iconAutopilot.visibleProperty().bind(ui.theGameContext().propertyUsingAutopilot());
         iconImmune.visibleProperty().bind(ui.theGameContext().propertyImmunity());
 
         getChildren().addAll(iconMuted, icon3D, iconAutopilot, iconImmune);
