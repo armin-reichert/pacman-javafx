@@ -84,9 +84,13 @@ public class Bonus extends MovingActor {
     }
 
     @Override
-    public boolean canAccessTile(GameLevel level, Vector2i tile) {
-        requireNonNull(level);
+    public boolean canAccessTile(Vector2i tile) {
         requireNonNull(tile);
+
+        if (gameContext == null || gameContext.optGameLevel().isEmpty()) return true;
+
+        GameLevel level = gameContext.theGameLevel();
+
         // Portal tiles are the only tiles outside the world map that can be accessed
         if (!level.isTileInsideWorld(tile)) {
             return level.isTileInPortalSpace(tile);

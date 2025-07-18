@@ -143,7 +143,7 @@ public abstract class Ghost extends MovingActor implements Animated {
     private Direction computeRoamingDirection(GameLevel level, Vector2i currentTile) {
         Direction dir = pseudoRandomDirection();
         int turns = 0;
-        while (dir == moveDir().opposite() || !canAccessTile(level, currentTile.plus(dir.vector()))) {
+        while (dir == moveDir().opposite() || !canAccessTile(currentTile.plus(dir.vector()))) {
             dir = dir.nextClockwise();
             if (++turns > 4) {
                 return moveDir().opposite();  // avoid endless loop
@@ -161,9 +161,13 @@ public abstract class Ghost extends MovingActor implements Animated {
     }
 
     @Override
-    public boolean canAccessTile(GameLevel level, Vector2i tile) {
-        requireNonNull(level);
+    public boolean canAccessTile(Vector2i tile) {
         requireNonNull(tile);
+
+        if (gameContext == null || gameContext.optGameLevel().isEmpty()) return true;
+
+        GameLevel level = gameContext.theGameLevel();
+
         // Portal tiles are the only tiles outside the world map that can be accessed
         if (!level.isTileInsideWorld(tile)) {
             return level.isTileInPortalSpace(tile);

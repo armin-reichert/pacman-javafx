@@ -99,11 +99,10 @@ public abstract class MovingActor extends Actor {
     public abstract boolean canReverse();
 
     /**
-     * @param level game level
      * @param tile some tile inside or outside the world
-     * @return if this actor can access the given tile
+     * @return if this actor can access the given tile in its game context
      */
-    public abstract boolean canAccessTile(GameLevel level, Vector2i tile);
+    public abstract boolean canAccessTile(Vector2i tile);
 
     public final ObjectProperty<Vector2i> targetTileProperty() {
         if (targetTile == null) {
@@ -290,7 +289,7 @@ public abstract class MovingActor extends Actor {
                 continue; // reversing the move direction is not allowed  (except to get out of dead-ends, see below)
             }
             final Vector2i neighborTile = currentTile.plus(dir.vector());
-            if (canAccessTile(level, neighborTile)) {
+            if (canAccessTile(neighborTile)) {
                 double dist = neighborTile.euclideanDist(targetTile.get());
                 if (dist < minDistToTarget) {
                     minDistToTarget = dist;
@@ -367,7 +366,7 @@ public abstract class MovingActor extends Actor {
         final Vector2i touchedTile = tileAt(touchPosition);
         final boolean turn = dir.vector().isOrthogonalTo(moveDir().vector());
 
-        if (!canAccessTile(level, touchedTile)) {
+        if (!canAccessTile(touchedTile)) {
             if (!turn) {
                 placeAtTile(tile()); // adjust over tile (would move forward against wall)
             }
