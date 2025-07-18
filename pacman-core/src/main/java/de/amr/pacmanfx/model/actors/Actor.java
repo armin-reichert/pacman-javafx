@@ -32,10 +32,10 @@ public class Actor {
 
     protected final GameContext gameContext;
 
-    private final ObjectProperty<Vector2f> position = new SimpleObjectProperty<>(DEFAULT_POSITION);
-    private final BooleanProperty visible = new SimpleBooleanProperty(DEFAULT_VISIBILITY);
-    private ObjectProperty<Vector2f> velocity;
-    private ObjectProperty<Vector2f> acceleration;
+    protected final ObjectProperty<Vector2f> position = new SimpleObjectProperty<>(DEFAULT_POSITION);
+    protected final BooleanProperty visible = new SimpleBooleanProperty(DEFAULT_VISIBILITY);
+    protected ObjectProperty<Vector2f> velocity;
+    protected ObjectProperty<Vector2f> acceleration;
 
     /**
      * @param gameContext the game context for this actor, may be null
@@ -161,8 +161,12 @@ public class Actor {
      * Moves this actor by its current velocity and increases its velocity by its current acceleration.
      */
     public void move() {
-        setPosition(position().plus(velocity()));
-        setVelocity(velocity().plus(acceleration()));
+        if (velocity != null) {
+            setPosition(position().plus(velocity()));
+        }
+        if (acceleration != null) {
+            setVelocity(velocity().plus(acceleration()));
+        }
     }
 
     /**

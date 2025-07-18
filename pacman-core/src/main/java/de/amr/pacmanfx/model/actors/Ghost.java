@@ -71,8 +71,8 @@ public abstract class Ghost extends MovingActor implements Animated {
                 ", state=" + state() +
                 ", visible=" + isVisible() +
                 ", position=" + position() +
-                ", velocity=" + velocity() +
-                ", acceleration=" + acceleration() +
+                ", velocity=" + (velocity != null ? velocity() : DEFAULT_VELOCITY) +
+                ", acceleration=" + (acceleration != null ? acceleration() : DEFAULT_ACCELERATION) +
                 ", moveDir=" + moveDir() +
                 ", wishDir=" + wishDir() +
                 ", targetTile=" + optTargetTile() +

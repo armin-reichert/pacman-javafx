@@ -50,8 +50,8 @@ public abstract class MovingActor extends Actor {
         return "WorldMovingActor{" +
                 "visible=" + isVisible() +
                 ", position=" + position() +
-                ", velocity=" + velocity() +
-                ", acceleration=" + acceleration() +
+                ", velocity=" + (velocity != null ? velocity() : DEFAULT_VELOCITY) +
+                ", acceleration=" + (acceleration != null ? acceleration() : DEFAULT_ACCELERATION) +
                 ", moveDir=" + moveDir() +
                 ", wishDir=" + wishDir() +
                 ", targetTile=" + targetTile() +
