@@ -261,6 +261,11 @@ public class PlayScene3D implements GameScene {
     @Override
     public void end() {
         ui.theSound().stopAll();
+        if (gameLevel3D != null) {
+            gameLevel3DParent.getChildren().clear();
+            gameLevel3D.destroy();
+            gameLevel3D = null;
+        }
     }
 
     @Override
@@ -304,10 +309,8 @@ public class PlayScene3D implements GameScene {
             case GHOST_DYING      -> gameLevel3D.onGhostDying();
             case LEVEL_COMPLETE   -> gameLevel3D.onLevelComplete(state, perspectiveIDProperty);
             case LEVEL_TRANSITION -> {
-                state.timer().resetIndefiniteTime();
-                replaceGameLevel3D();
-                initPerspective();
-                state.timer().expire();
+                //replaceGameLevel3D();
+                //initPerspective();
             }
             case GAME_OVER -> gameLevel3D.onGameOver(state);
             case TESTING_LEVELS_SHORT, TESTING_LEVELS_MEDIUM -> {
@@ -319,15 +322,17 @@ public class PlayScene3D implements GameScene {
     }
 
     @Override
+    public void onLevelCreated(GameEvent e) {
+        replaceGameLevel3D();
+    }
+
+    @Override
     public void onLevelStarted(GameEvent event) {
         if (theGameContext().optGameLevel().isEmpty()) {
             Logger.error("No game level exists on level start! WTF?");
             return;
         }
         final GameLevel gameLevel = gameContext().theGameLevel();
-        if (gameLevel3D == null) {
-            replaceGameLevel3D();
-        }
         switch (gameContext().theGameState()) {
             case STARTING_GAME, LEVEL_TRANSITION -> {
                 if (!gameLevel.isDemoLevel()) {
@@ -489,15 +494,20 @@ public class PlayScene3D implements GameScene {
     }
 
     protected void replaceGameLevel3D() {
+        Logger.info("Replacing game level 3D");
         if (gameLevel3D != null) {
+            gameLevel3DParent.getChildren().clear();
             gameLevel3D.destroy();
+            Logger.info("Destroyed old game level 3D");
         }
         gameLevel3D = new GameLevel3D(ui);
         gameLevel3DParent.getChildren().setAll(gameLevel3D);
+        Logger.info("Created new game level 3D");
 
         gameLevel3D.pac3D().init();
         gameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(gameContext().theGameLevel()));
         gameLevel3D.levelCounter3D().spinningAnimation().playFromStart();
+        Logger.info("Initialized actors of game level 3D");
 
         scores3D.translateXProperty().bind(gameLevel3D.translateXProperty().add(TS));
         scores3D.translateYProperty().bind(gameLevel3D.translateYProperty().subtract(4.5 * TS));

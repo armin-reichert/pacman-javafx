@@ -210,7 +210,7 @@ public enum GameState implements FsmState<GameContext> {
     LEVEL_TRANSITION {
         @Override
         public void onEnter(GameContext gameContext) {
-            timer.restartSeconds(1);
+            timer.restartSeconds(2);
             gameContext.theGame().startNextLevel(gameContext);
         }
 
