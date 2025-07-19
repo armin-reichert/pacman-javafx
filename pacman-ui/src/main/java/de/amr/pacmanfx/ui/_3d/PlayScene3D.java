@@ -308,10 +308,10 @@ public class PlayScene3D implements GameScene {
             case PACMAN_DYING     -> gameLevel3D.onPacManDying(state);
             case GHOST_DYING      -> gameLevel3D.onGhostDying();
             case LEVEL_COMPLETE   -> gameLevel3D.onLevelComplete(state, perspectiveIDProperty);
-            case GAME_OVER -> gameLevel3D.onGameOver(state);
+            case GAME_OVER        -> gameLevel3D.onGameOver(state);
             case TESTING_LEVELS_SHORT, TESTING_LEVELS_MEDIUM -> {
                 replaceGameLevel3D();
-                showLevelTestMessage(gameContext().theGameLevel().number());
+                showLevelTestMessage();
                 ui.property3DPerspective().set(PerspectiveID.TOTAL);
             }
         }
@@ -345,7 +345,7 @@ public class PlayScene3D implements GameScene {
                 replaceGameLevel3D(); //TODO check when to destroy previous level
                 gameLevel3D.livesCounter3D().lookingAroundAnimation().playFromStart();
                 gameLevel3D.energizers3D().forEach(energizer3D -> energizer3D.pumpingAnimation().playFromStart());
-                showLevelTestMessage(gameLevel.number());
+                showLevelTestMessage();
             }
             default -> Logger.error("Unexpected game state '{}' on level start", gameContext().theGameState());
         }
@@ -546,8 +546,9 @@ public class PlayScene3D implements GameScene {
         scores3D.showHighScore(highScore.points(), highScore.levelNumber());
     }
 
-    protected void showLevelTestMessage(int levelNumber) {
+    protected void showLevelTestMessage() {
         WorldMap worldMap = gameContext().theGameLevel().worldMap();
+        int levelNumber = gameContext().theGameLevel().number();
         double x = worldMap.numCols() * HTS;
         double y = (worldMap.numRows() - 2) * TS;
         gameLevel3D.showAnimatedMessage("LEVEL %d (TEST)".formatted(levelNumber), 5, x, y);
