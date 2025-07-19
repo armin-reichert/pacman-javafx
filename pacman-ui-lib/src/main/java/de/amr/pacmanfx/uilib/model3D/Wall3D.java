@@ -6,7 +6,6 @@ package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.lib.Destroyable;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.shape.Box;
@@ -25,37 +24,49 @@ public class Wall3D extends Group implements Destroyable {
     public static final double DEFAULT_TOP_HEIGHT = 0.2;
     public static final double DEFAULT_WALL_THICKNESS = 2;
 
-    private final DoubleProperty baseHeightProperty = new SimpleDoubleProperty(DEFAULT_BASE_HEIGHT);
-    private boolean cornerWall;
-
     public Wall3D(Node base, Node top) {
-        requireNonNull(base);
-        requireNonNull(top);
-        getChildren().setAll(base, top);
-        if (base instanceof Box box) {
-            cornerWall = false;
-            box.depthProperty().bind(baseHeightProperty);
-            base.translateZProperty().bind(baseHeightProperty.multiply(-0.5));
-            top.translateZProperty().bind(baseHeightProperty.add(0.5 * DEFAULT_TOP_HEIGHT).negate());
-        } else if (base instanceof Cylinder cylinder) {
-            cornerWall = true;
-            cylinder.heightProperty().bind(baseHeightProperty);
-            base.translateZProperty().bind(baseHeightProperty.multiply(-0.5));
-            top.translateZProperty().bind(baseHeightProperty.add(0.5 * DEFAULT_TOP_HEIGHT).negate());
+        super(requireNonNull(base), requireNonNull(top));
+    }
+
+    public Node wallBase() { return getChildren().getFirst(); }
+    public Node wallTop() { return getChildren().getLast(); }
+
+    public void setBaseHeight(double baseHeight) {
+        if (wallBase() instanceof Box base) {
+            base.depthProperty().unbind();
+            base.translateZProperty().unbind();
+            wallTop().translateZProperty().unbind();
+            base.setDepth(baseHeight);
+            base.setTranslateZ(baseHeight * (-0.5));
+            wallTop().setTranslateZ(-(baseHeight + 0.5 * DEFAULT_TOP_HEIGHT));
+        } else if (wallBase() instanceof Cylinder base) {
+            base.heightProperty().unbind();
+            base.translateZProperty().unbind();
+            wallTop().translateZProperty().unbind();
+            base.setHeight(baseHeight);
+            base.setTranslateZ(baseHeight * (-0.5));
+            wallTop().setTranslateZ(-(baseHeight + 0.5 * DEFAULT_TOP_HEIGHT));
         } else {
             Logger.warn("The base of a 3D wall should either be a box or a cylinder");
         }
     }
 
-    public boolean isCornerWall() { return cornerWall; }
-
-    public DoubleProperty baseHeightProperty() {
-        return baseHeightProperty;
+    public void bindBaseHeight(DoubleProperty baseHeightProperty) {
+        if (wallBase() instanceof Box box) {
+            box.depthProperty().bind(baseHeightProperty);
+            wallBase().translateZProperty().bind(baseHeightProperty.multiply(-0.5));
+            wallTop().translateZProperty().bind(baseHeightProperty.add(0.5 * DEFAULT_TOP_HEIGHT).negate());
+        } else if (wallBase() instanceof Cylinder cylinder) {
+            cylinder.heightProperty().bind(baseHeightProperty);
+            wallBase().translateZProperty().bind(baseHeightProperty.multiply(-0.5));
+            wallTop().translateZProperty().bind(baseHeightProperty.add(0.5 * DEFAULT_TOP_HEIGHT).negate());
+        } else {
+            Logger.warn("The base of a 3D wall should either be a box or a cylinder");
+        }
     }
 
     @Override
     public void destroy() {
-        baseHeightProperty.unbind();
         getChildren().forEach(child -> {
             switch (child) {
                 case Box box -> {

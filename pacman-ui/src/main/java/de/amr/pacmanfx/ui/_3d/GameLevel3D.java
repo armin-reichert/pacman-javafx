@@ -327,7 +327,7 @@ public class GameLevel3D extends Group implements Destroyable {
         var r3D = new TerrainRenderer3D();
         wall3DCount = 0;
         r3D.setOnWallCreated(wall3D -> {
-            wall3D.baseHeightProperty().bind(obstacleBaseHeightProperty);
+            wall3D.bindBaseHeight(obstacleBaseHeightProperty);
             ++wall3DCount;
         });
         r3D.setCylinderDivisions(24);

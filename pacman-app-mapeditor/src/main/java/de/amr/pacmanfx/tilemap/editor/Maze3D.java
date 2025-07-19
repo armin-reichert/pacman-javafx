@@ -155,7 +155,7 @@ public class Maze3D extends Group {
         PhongMaterial wallBaseMaterial = coloredMaterial(wallBaseColor);
         PhongMaterial wallTopMaterial = coloredMaterial(wallTopColor);
 
-        r3D.setOnWallCreated(wall3D -> wall3D.baseHeightProperty().set(OBSTACLE_HEIGHT));
+        r3D.setOnWallCreated(wall3D -> wall3D.setBaseHeight(OBSTACLE_HEIGHT));
         for (Obstacle obstacle : worldMap.obstacles()) {
             r3D.renderObstacle3D(mazeGroup, obstacle, isWorldBorder(worldMap, obstacle), Wall3D.DEFAULT_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial);
         }
@@ -189,7 +189,7 @@ public class Maze3D extends Group {
         PhongMaterial wallBaseMaterial = coloredMaterial(colorWithOpacity(wallBaseColor, 0.4));
         PhongMaterial wallTopMaterial = coloredMaterial(wallTopColor);
 
-        r3D.setOnWallCreated(wall3D -> wall3D.baseHeightProperty().set(HOUSE_WALL_HEIGHT));
+        r3D.setOnWallCreated(wall3D -> wall3D.setBaseHeight(HOUSE_WALL_HEIGHT));
         mazeGroup.getChildren().addAll(
             r3D.createWallBetweenTiles(houseMinTile, houseMinTile.plus(2, 0), Wall3D.DEFAULT_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial),
             r3D.createWallBetweenTiles(houseRightUpper.minus(2, 0), houseRightUpper, Wall3D.DEFAULT_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial),
