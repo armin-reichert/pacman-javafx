@@ -180,7 +180,7 @@ public class PacManGames_UI_Impl implements GameUI {
         thePrefs.putFloat("3d.lives_counter.shape_size", 12f);
         thePrefs.putFloat("3d.obstacle.base_height", 4.0f);
         thePrefs.putFloat("3d.obstacle.wall_thickness", 2.25f);
-        thePrefs.putFloat("3d.pac.size", 17f);
+        thePrefs.putFloat("3d.pac.size", 15f);
         thePrefs.putFloat("3d.pellet.radius", 1);
 
         // "Kornblumenblau, sind die Augen der Frauen beim Weine..."

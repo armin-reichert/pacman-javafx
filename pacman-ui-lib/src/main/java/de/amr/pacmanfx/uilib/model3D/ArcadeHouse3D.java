@@ -105,11 +105,17 @@ public class ArcadeHouse3D extends Group implements Destroyable {
         light.setTranslateY(centerY - 6);
         light.translateZProperty().bind(wallBaseHeightProperty.multiply(-1));
 
-        r3D.createWallBetweenTiles(Vector2i.of(xMin, yMin), Vector2i.of(house.leftDoorTile().x() - 1, yMin), wallThickness).addTo(this);
-        r3D.createWallBetweenTiles(Vector2i.of(house.rightDoorTile().x() + 1, yMin), Vector2i.of(xMax, yMin), wallThickness).addTo(this);
-        r3D.createWallBetweenTiles(Vector2i.of(xMin, yMin), Vector2i.of(xMin, yMax), wallThickness).addTo(this);
-        r3D.createWallBetweenTiles(Vector2i.of(xMax, yMin), Vector2i.of(xMax, yMax), wallThickness).addTo(this);
-        r3D.createWallBetweenTiles(Vector2i.of(xMin, yMax), Vector2i.of(xMax, yMax), wallThickness).addTo(this);
+        Vector2i topLeft = Vector2i.of(xMin, yMin);
+        Vector2i bottomLeft = Vector2i.of(xMin, yMax);
+        Vector2i topRight = Vector2i.of(xMax, yMin);
+        Vector2i bottomRight = Vector2i.of(xMax, yMax);
+        Vector2i doorLeft = Vector2i.of(house.leftDoorTile().x() - 1, yMin);
+        Vector2i doorRight = Vector2i.of(house.rightDoorTile().x() + 1, yMin);
+        r3D.createWallBetweenTiles(topLeft, doorLeft, wallThickness).addTo(this);
+        r3D.createWallBetweenTiles(doorRight, topRight, wallThickness).addTo(this);
+        r3D.createWallBetweenTiles(topRight, bottomRight, wallThickness).addTo(this);
+        r3D.createWallBetweenTiles(topLeft, bottomLeft, wallThickness).addTo(this);
+        r3D.createWallBetweenTiles(bottomLeft, bottomRight, wallThickness).addTo(this);
 
         getChildren().addAll(light, door);
     }
