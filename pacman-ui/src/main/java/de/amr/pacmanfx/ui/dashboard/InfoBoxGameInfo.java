@@ -43,13 +43,13 @@ public class InfoBoxGameInfo extends InfoBox {
                 : DynamicInfoText.NO_INFO
         ));
 
-        addDynamicLabeledValue("Level Number", ifLevelPresent(level ->
+        addDynamicLabeledValue("Level Number", ifGameLevelPresent(level ->
             (level.isDemoLevel() ? "%d (Demo Level)" : "%d").formatted(level.number())));
-        addDynamicLabeledValue("World Map", ifLevelPresent(level -> {
+        addDynamicLabeledValue("World Map", ifGameLevelPresent(level -> {
             String url = level.worldMap().url();
             return url == null ? DynamicInfoText.NO_INFO : url.substring(url.lastIndexOf("/") + 1);
         }));
-        addDynamicLabeledValue("Fill/Stroke/Pellet", ifLevelPresent(level -> {
+        addDynamicLabeledValue("Fill/Stroke/Pellet", ifGameLevelPresent(level -> {
             WorldMap worldMap = level.worldMap();
             if (worldMap.hasConfigValue("nesColorScheme")) {
                 // Tengen Ms. Pac-Man
@@ -74,18 +74,18 @@ public class InfoBoxGameInfo extends InfoBox {
             }
         }));
 
-        addDynamicLabeledValue("Hunting Phase",   ifLevelPresent(gameLevel -> fmtHuntingPhase()));
-        addDynamicLabeledValue("",                ifLevelPresent(gameLevel -> fmtHuntingTicksRunning()));
-        addDynamicLabeledValue("",                ifLevelPresent(gameLevel -> fmtHuntingTicksRemaining()));
+        addDynamicLabeledValue("Hunting Phase",   ifGameLevelPresent(gameLevel -> fmtHuntingPhase()));
+        addDynamicLabeledValue("",                ifGameLevelPresent(gameLevel -> fmtHuntingTicksRunning()));
+        addDynamicLabeledValue("",                ifGameLevelPresent(gameLevel -> fmtHuntingTicksRemaining()));
 
-        addDynamicLabeledValue("Pac-Man speed",   ifLevelPresent(this::fmtPacNormalSpeed));
-        addDynamicLabeledValue("- empowered",     ifLevelPresent(this::fmtPacSpeedPowered));
-        addDynamicLabeledValue("Power Duration",  ifLevelPresent(this::fmtPacPowerTime));
-        addDynamicLabeledValue("Pellets",         ifLevelPresent(this::fmtPelletCount));
-        addDynamicLabeledValue("Ghost speed",     ifLevelPresent(this::fmtGhostAttackSpeed));
-        addDynamicLabeledValue("- frightened",    ifLevelPresent(this::fmtGhostSpeedFrightened));
-        addDynamicLabeledValue("- in tunnel",     ifLevelPresent(this::fmtGhostSpeedTunnel));
-        addDynamicLabeledValue("Maze flashings",  ifLevelPresent(this::fmtNumFlashes));
+        addDynamicLabeledValue("Pac-Man speed",   ifGameLevelPresent(this::fmtPacNormalSpeed));
+        addDynamicLabeledValue("- empowered",     ifGameLevelPresent(this::fmtPacSpeedPowered));
+        addDynamicLabeledValue("Power Duration",  ifGameLevelPresent(this::fmtPacPowerTime));
+        addDynamicLabeledValue("Pellets",         ifGameLevelPresent(this::fmtPelletCount));
+        addDynamicLabeledValue("Ghost speed",     ifGameLevelPresent(this::fmtGhostAttackSpeed));
+        addDynamicLabeledValue("- frightened",    ifGameLevelPresent(this::fmtGhostSpeedFrightened));
+        addDynamicLabeledValue("- in tunnel",     ifGameLevelPresent(this::fmtGhostSpeedTunnel));
+        addDynamicLabeledValue("Maze flashings",  ifGameLevelPresent(this::fmtNumFlashes));
     }
 
     private String stateTimerInfo() {

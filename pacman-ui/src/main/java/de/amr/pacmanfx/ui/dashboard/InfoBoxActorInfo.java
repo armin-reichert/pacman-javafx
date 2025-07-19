@@ -22,9 +22,6 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.timer.TickTimer.ticksToString;
 import static de.amr.pacmanfx.ui.dashboard.DynamicInfoText.NO_INFO;
 
-/**
- * @author Armin Reichert
- */
 public class InfoBoxActorInfo extends InfoBox {
 
     public InfoBoxActorInfo(GameUI ui) {
@@ -32,11 +29,11 @@ public class InfoBoxActorInfo extends InfoBox {
     }
 
     public void init(GameUI ui) {
-        addDynamicLabeledValue("Pac Name", pacInfo((game, pac) -> pac.name()));
-        addDynamicLabeledValue("Lives",    ifLevelPresent(level -> "%d".formatted(ui.theGameContext().theGame().lifeCount())));
-        addDynamicLabeledValue("Movement", pacInfo(this::movementInfo));
-        addDynamicLabeledValue("Tile",     pacInfo(this::locationInfo));
-        addDynamicLabeledValue("Power",    ifLevelPresent(level -> {
+        addDynamicLabeledValue("Pac Name", supplyPacInfo((game, pac) -> pac.name()));
+        addDynamicLabeledValue("Lives",    ifGameLevelPresent(level -> "%d".formatted(ui.theGameContext().theGame().lifeCount())));
+        addDynamicLabeledValue("Movement", supplyPacInfo(InfoBoxActorInfo::actorMovementInfo));
+        addDynamicLabeledValue("Tile",     supplyPacInfo(InfoBoxActorInfo::actorLocationInfo));
+        addDynamicLabeledValue("Power",    ifGameLevelPresent(level -> {
             TickTimer powerTimer = level.pac().powerTimer();
             return powerTimer.isRunning()
                 ? "Remaining: %s".formatted(ticksToString(powerTimer.remainingTicks()))
@@ -52,13 +49,13 @@ public class InfoBoxActorInfo extends InfoBox {
         ghostInfo(ORANGE_GHOST_POKEY);
     }
 
-    private Supplier<String> pacInfo(BiFunction<GameModel, Pac, String> fnPacInfo) {
-        return ifLevelPresent(level -> level.pac() != null
-            ? fnPacInfo.apply(ui.theGameContext().theGame(), level.pac())
+    private Supplier<String> supplyPacInfo(BiFunction<GameModel, Pac, String> detailInfoSupplier) {
+        return ifGameLevelPresent(gameLevel -> gameLevel.pac() != null
+            ? detailInfoSupplier.apply(ui.theGameContext().theGame(), gameLevel.pac())
             : NO_INFO);
     }
 
-    private String locationInfo(GameModel game, MovingActor movingActor) {
+    private static String actorLocationInfo(GameModel game, MovingActor movingActor) {
         Vector2i tile = movingActor.tile();
         Vector2f offset = movingActor.offset();
         return "(%2d,%2d)+(%2.0f,%2.0f)%s".formatted(
@@ -67,7 +64,7 @@ public class InfoBoxActorInfo extends InfoBox {
             movingActor.isNewTileEntered() ? " NEW" : "");
     }
 
-    private String movementInfo(GameModel game, MovingActor movingActor) {
+    private static String actorMovementInfo(GameModel game, MovingActor movingActor) {
         var speed = movingActor.velocity().length() * 60f;
         var blocked = !movingActor.moveInfo().moved;
         var reverseText = movingActor.gotReverseCommand() ? "REV!" : "";
@@ -77,23 +74,22 @@ public class InfoBoxActorInfo extends InfoBox {
     }
 
     private void ghostInfo(byte personality) {
-        addDynamicLabeledValue(ghostColorName(personality) + " Ghost", fnGhostInfo(this::ghostNameAndState, personality));
-        addDynamicLabeledValue("Animation",      fnGhostInfo(this::ghostAnimation, personality));
-        addDynamicLabeledValue("Movement",       fnGhostInfo(this::movementInfo, personality));
-        addDynamicLabeledValue("Tile",           fnGhostInfo(this::locationInfo, personality));
+        addDynamicLabeledValue(ghostColorName(personality) + " Ghost", supplyGhostInfo(this::ghostNameAndState, personality));
+        addDynamicLabeledValue("Animation",      supplyGhostInfo(this::ghostAnimation, personality));
+        addDynamicLabeledValue("Movement",       supplyGhostInfo(InfoBoxActorInfo::actorMovementInfo, personality));
+        addDynamicLabeledValue("Tile",           supplyGhostInfo(InfoBoxActorInfo::actorLocationInfo, personality));
     }
 
-    private Supplier<String> fnGhostInfo(
-        BiFunction<GameModel, Ghost, String> fnGhostInfo, byte personality) {
-        return ifLevelPresent(level -> {
+    private Supplier<String> supplyGhostInfo(BiFunction<GameModel, Ghost, String> detailInfoSupplier, byte personality) {
+        return ifGameLevelPresent(level -> {
             if (level.ghosts().findAny().isPresent()) {
-                return fnGhostInfo.apply(ui.theGameContext().theGame(), level.ghost(personality));
+                return detailInfoSupplier.apply(ui.theGameContext().theGame(), level.ghost(personality));
             }
             return NO_INFO;
         });
     }
 
-    private String ghostColorName(byte personality) {
+    private static String ghostColorName(byte personality) {
         return switch (personality) {
             case RED_GHOST_SHADOW -> "Red";
             case PINK_GHOST_SPEEDY -> "Pink";
@@ -103,7 +99,7 @@ public class InfoBoxActorInfo extends InfoBox {
         };
     }
 
-    protected String ghostNameAndState(GameModel game, Ghost ghost) {
+    private String ghostNameAndState(GameModel game, Ghost ghost) {
         return String.format("%s (%s)", ghost.name(), ghostState(ghost));
     }
 
