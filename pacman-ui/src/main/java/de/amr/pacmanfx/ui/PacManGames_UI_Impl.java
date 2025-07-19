@@ -160,41 +160,53 @@ public class PacManGames_UI_Impl implements GameUI {
         );
     }
 
+    private void putFloatPref(String key, float value) {
+        thePrefs.putFloat(key, value);
+    }
+
+    private void putIntPref(String key, int value) {
+        thePrefs.putInt(key, value);
+    }
+
+    private void putStringPref(String key, String value) {
+        thePrefs.put(key, value);
+    }
+
     private void storeDefaultPreferences() {
-        thePrefs.putFloat("3d.bonus.symbol.width", TS);
-        thePrefs.putFloat("3d.bonus.points.width", 1.8f * TS);
-        thePrefs.putFloat("3d.energizer.radius", 3.5f);
-        thePrefs.putFloat("3d.energizer.scaling.min", 0.2f);
-        thePrefs.putFloat("3d.energizer.scaling.max", 1.0f);
-        thePrefs.putFloat("3d.floor.padding", 5.0f);
-        thePrefs.putFloat("3d.floor.thickness", 0.5f);
-        thePrefs.putFloat("3d.ghost.size", 16.0f);
-        thePrefs.putFloat("3d.house.base_height", 12.0f);
-        thePrefs.putFloat("3d.house.opacity", 0.4f);
-        thePrefs.putFloat("3d.house.sensitivity", 1.5f * TS);
-        thePrefs.putFloat("3d.house.wall_thickness", 2.5f);
-        thePrefs.putFloat("3d.level_counter.elevation", 6f);
-        thePrefs.putInt  ("3d.lives_counter.capacity", 5);
-        thePrefs.put     ("3d.lives_counter.pillar_color", formatColorHex(Color.grayRgb(120)));
-        thePrefs.put     ("3d.lives_counter.plate_color",  formatColorHex(Color.grayRgb(180)));
-        thePrefs.putFloat("3d.lives_counter.shape_size", 12f);
-        thePrefs.putFloat("3d.obstacle.base_height", 4.0f);
-        thePrefs.putFloat("3d.obstacle.wall_thickness", 2.25f);
-        thePrefs.putFloat("3d.pac.size", 15f);
-        thePrefs.putFloat("3d.pellet.radius", 1);
+        putFloatPref("3d.bonus.symbol.width", TS);
+        putFloatPref("3d.bonus.points.width", 1.8f * TS);
+        putFloatPref("3d.energizer.radius", 3.5f);
+        putFloatPref("3d.energizer.scaling.min", 0.2f);
+        putFloatPref("3d.energizer.scaling.max", 1.0f);
+        putFloatPref("3d.floor.padding", 5.0f);
+        putFloatPref("3d.floor.thickness", 0.5f);
+        putFloatPref("3d.ghost.size", 16.0f);
+        putFloatPref("3d.house.base_height", 12.0f);
+        putFloatPref("3d.house.opacity", 0.4f);
+        putFloatPref("3d.house.sensitivity", 1.5f * TS);
+        putFloatPref("3d.house.wall_thickness", 2.5f);
+        putFloatPref("3d.level_counter.elevation", 6f);
+        putIntPref("3d.lives_counter.capacity", 5);
+        putStringPref("3d.lives_counter.pillar_color", formatColorHex(Color.grayRgb(120)));
+        putStringPref("3d.lives_counter.plate_color",  formatColorHex(Color.grayRgb(180)));
+        putFloatPref("3d.lives_counter.shape_size", 12f);
+        putFloatPref("3d.obstacle.base_height", 4.0f);
+        putFloatPref("3d.obstacle.wall_thickness", 2.25f);
+        putFloatPref("3d.pac.size", 15f);
+        putFloatPref("3d.pellet.radius", 1);
 
         // "Kornblumenblau, sind die Augen der Frauen beim Weine..."
-        thePrefs.put     ("context_menu.title.fill", formatColorHex(Color.CORNFLOWERBLUE));
-        thePrefs.put     ("context_menu.title.font.family", "Dialog");
-        thePrefs.putInt  ("context_menu.title.font.weight", 850);
-        thePrefs.putFloat("context_menu.title.font.size", 14);
+        putStringPref("context_menu.title.fill", formatColorHex(Color.CORNFLOWERBLUE));
+        putStringPref("context_menu.title.font.family", "Dialog");
+        putIntPref("context_menu.title.font.weight", 850);
+        putFloatPref("context_menu.title.font.size", 14);
 
-        thePrefs.put     ("debug_text.fill", formatColorHex(Color.YELLOW));
-        thePrefs.put     ("debug_text.font.family", "Sans");
-        thePrefs.putInt  ("debug_text.font.weight", 750);
-        thePrefs.putFloat("debug_text.font.size", 16);
+        putStringPref("debug_text.fill", formatColorHex(Color.YELLOW));
+        putStringPref("debug_text.font.family", "Sans");
+        putIntPref("debug_text.font.weight", 750);
+        putFloatPref("debug_text.font.size", 16);
 
-        thePrefs.putFloat("scene2d.max_scaling", 5);
+        putFloatPref("scene2d.max_scaling", 5);
     }
 
     public void configure(Map<String, Class<? extends GameUI_Config>> configClassesMap) {
