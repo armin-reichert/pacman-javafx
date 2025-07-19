@@ -33,6 +33,7 @@ public class InfoBoxActorInfo extends InfoBox {
 
     public void init(GameUI ui) {
         addLabeledValue("Pac Name", pacInfo((game, pac) -> pac.name()));
+        addLabeledValue("Lives",    ifLevelPresent(level -> "%d".formatted(ui.theGameContext().theGame().lifeCount())));
         addLabeledValue("Movement", pacInfo(this::movementInfo));
         addLabeledValue("Tile",     pacInfo(this::locationInfo));
         addLabeledValue("Power",    ifLevelPresent(level -> {

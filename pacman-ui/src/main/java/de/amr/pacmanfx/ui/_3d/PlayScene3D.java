@@ -308,10 +308,6 @@ public class PlayScene3D implements GameScene {
             case PACMAN_DYING     -> gameLevel3D.onPacManDying(state);
             case GHOST_DYING      -> gameLevel3D.onGhostDying();
             case LEVEL_COMPLETE   -> gameLevel3D.onLevelComplete(state, perspectiveIDProperty);
-            case LEVEL_TRANSITION -> {
-                //replaceGameLevel3D();
-                //initPerspective();
-            }
             case GAME_OVER -> gameLevel3D.onGameOver(state);
             case TESTING_LEVELS_SHORT, TESTING_LEVELS_MEDIUM -> {
                 replaceGameLevel3D();

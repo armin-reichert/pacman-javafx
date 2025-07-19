@@ -34,11 +34,15 @@ public class InfoBoxGameInfo extends InfoBox {
 
     @Override
     public void init(GameUI ui) {
-        addLabeledValue("Game Scene", ifGameScenePresent(gameScene -> gameScene.getClass().getSimpleName()));
         addLabeledValue("Game State", () -> "%s".formatted(ui.theGameContext().theGameState()));
         addLabeledValue("State Timer", this::stateTimerInfo);
-        addLabeledValue("Level Number", ifLevelPresent(level -> "%d".formatted(level.number())));
-        addLabeledValue("Demo Level", ifLevelPresent(level -> level.isDemoLevel() ? "Yes" : "No"));
+        addLabeledValue("Game Scene", ifGameScenePresent(gameScene -> gameScene.getClass().getSimpleName()));
+
+        addLabeledValue("Level Number", ifLevelPresent(level -> "%d%s".formatted(
+            level.number(),
+            level.isDemoLevel() ? " (Demo Level)" : ""
+        )));
+
         addLabeledValue("World Map", ifLevelPresent(level -> {
             String url = level.worldMap().url();
             return url == null ? InfoText.NO_INFO : url.substring(url.lastIndexOf("/") + 1);
@@ -73,8 +77,6 @@ public class InfoBoxGameInfo extends InfoBox {
             }
             return InfoText.NO_INFO;
         });
-
-        addLabeledValue("Lives",           ifLevelPresent(level -> "%d".formatted(ui.theGameContext().theGame().lifeCount())));
 
         addLabeledValue("Hunting Phase",   () -> fmtHuntingPhase(ui.theGameContext().theGame().huntingTimer()));
         addLabeledValue("",                () -> fmtHuntingTicksRunning(ui.theGameContext().theGame().huntingTimer()));
