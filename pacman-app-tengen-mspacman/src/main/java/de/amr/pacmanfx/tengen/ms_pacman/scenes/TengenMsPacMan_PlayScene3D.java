@@ -101,15 +101,17 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     }
 
     @Override
-    protected void updateScores(GameLevel gameLevel) {
+    protected void updateScores() {
         final Score score = gameContext().theGame().score(), highScore = gameContext().theGame().highScore();
         if (score.isEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());
         }
         else {
-            // if score is disabled, display "GAME OVER" using maze-specific color
-            NES_ColorScheme nesColorScheme = gameLevel.worldMap().getConfigValue("nesColorScheme");
-            Color color = Color.web(nesColorScheme.strokeColorRGB());
+            // if score is disabled, display "GAME OVER" text using maze-specific color
+            Color color = gameContext().optGameLevel()
+                .map(gameLevel -> gameLevel.worldMap().<NES_ColorScheme>getConfigValue("nesColorScheme"))
+                .map(colorScheme -> Color.web(colorScheme.strokeColorRGB()))
+                .orElse(Color.WHITE);
             scores3D.showTextForScore(ui.theAssets().text("score.game_over"), color);
         }
         // Always show high score

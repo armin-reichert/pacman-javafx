@@ -71,24 +71,22 @@ public class PlayScene3D implements GameScene {
 
     protected final GameUI ui;
     protected final SubScene subScene;
-    protected PerspectiveCamera camera = new PerspectiveCamera(true);
+    protected final PerspectiveCamera camera = new PerspectiveCamera(true);
     protected final ActionBindingMap actionBindings;
-
-    protected final Group level3DPlaceHolder = new Group();
-    protected Scores3D scores3D;
+    protected final Group gameLevel3DParent = new Group();
     protected GameLevel3D gameLevel3D;
+    protected Scores3D scores3D;
 
     public PlayScene3D(GameUI ui) {
         this.ui = requireNonNull(ui);
         this.actionBindings = new ActionBindingMap(ui.theKeyboard());
-
-        var root = new Group();
 
         perspectiveMap.put(PerspectiveID.DRONE, new DronePerspective());
         perspectiveMap.put(PerspectiveID.TOTAL, new TotalPerspective());
         perspectiveMap.put(PerspectiveID.TRACK_PLAYER, new TrackingPlayerPerspective());
         perspectiveMap.put(PerspectiveID.NEAR_PLAYER, new StalkingPlayerPerspective());
 
+        var root = new Group();
         // initial size is irrelevant because size gets bound to parent scene size later
         subScene = new SubScene(root, 88, 88, true, SceneAntialiasing.BALANCED);
         subScene.setCamera(camera);
@@ -107,7 +105,7 @@ public class PlayScene3D implements GameScene {
         var coordinateSystem = new CoordinateSystem();
         coordinateSystem.visibleProperty().bind(ui.property3DAxesVisible());
 
-        root.getChildren().setAll(level3DPlaceHolder, scores3D, coordinateSystem);
+        root.getChildren().setAll(gameLevel3DParent, scores3D, coordinateSystem);
     }
 
     public ObjectProperty<PerspectiveID> perspectiveIDProperty() {
@@ -261,13 +259,12 @@ public class PlayScene3D implements GameScene {
     }
 
     @Override
-    public final void end() {
+    public void end() {
         ui.theSound().stopAll();
-        destroy();
     }
 
     @Override
-    public final void update() {
+    public void update() {
         if (gameContext().optGameLevel().isEmpty()) {
             // Scene gets already update 2 ticks before level has been created!
             Logger.info("Tick #{}: Game level not yet created, update ignored", ui.theGameClock().tickCount());
@@ -277,12 +274,8 @@ public class PlayScene3D implements GameScene {
             Logger.warn("Tick #{}: 3D game level not yet created", ui.theGameClock().tickCount());
             return;
         }
-        if (gameLevel3D.isDestroyed()) {
-            Logger.error("Tick #{}: 3D game level is being destroyed, terminating app", ui.theGameClock().tickCount());
-            ui.terminateApp();
-        }
         gameLevel3D.tick(gameContext());
-        updateScores(gameContext().theGameLevel());
+        updateScores();
         if (gameContext().theGameLevel().isDemoLevel()) {
             ui.theSound().setEnabled(false);
         } else {
@@ -388,7 +381,7 @@ public class PlayScene3D implements GameScene {
             }
             gameLevel3D.livesCounter3D().lookingAroundAnimation().playFromStart();
         }
-        updateScores(gameLevel);
+        updateScores();
         setActionBindings();
         fadeInSubScene();
     }
@@ -500,7 +493,7 @@ public class PlayScene3D implements GameScene {
             gameLevel3D.destroy();
         }
         gameLevel3D = new GameLevel3D(ui);
-        level3DPlaceHolder.getChildren().setAll(gameLevel3D);
+        gameLevel3DParent.getChildren().setAll(gameLevel3D);
 
         gameLevel3D.pac3D().init();
         gameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(gameContext().theGameLevel()));
@@ -534,7 +527,7 @@ public class PlayScene3D implements GameScene {
         }
     }
 
-    protected void updateScores(GameLevel gameLevel) {
+    protected void updateScores() {
         final Score score = gameContext().theGame().score(), highScore = gameContext().theGame().highScore();
         if (score.isEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());
