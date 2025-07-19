@@ -58,6 +58,10 @@ public class GameController implements GameContext {
     private final BooleanProperty propertyUsingAutopilot = new SimpleBooleanProperty(false);
 
     public GameController() {
+        boolean success = createUserDirectories();
+        if (!success) {
+            throw new IllegalStateException("User directories could not be created");
+        }
         gameEventManager = new GameEventManager(this);
         gameStateMachine = new StateMachine<>(GameState.values()) {
             @Override public GameContext context() { return GameController.this; }
@@ -72,6 +76,24 @@ public class GameController implements GameContext {
                 gameEventManager.publishEvent(GameEventType.GAME_VARIANT_CHANGED);
             }
         });
+    }
+
+    private boolean createUserDirectories() {
+        if (!homeDir.isDirectory()) {
+            boolean created = homeDir.mkdirs();
+            if (!created) {
+                Logger.error("Home directory '{}' could not be created");
+                return false;
+            }
+        }
+        if (!customMapDir.isDirectory()) {
+            boolean created = customMapDir.mkdirs();
+            if (!created) {
+                Logger.error("Custom map directory '{}' could not be created");
+                return false;
+            }
+        }
+        return true;
     }
 
     public void setEventsEnabled(boolean enabled) {
