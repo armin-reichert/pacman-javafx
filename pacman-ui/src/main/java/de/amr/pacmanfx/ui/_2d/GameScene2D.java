@@ -63,6 +63,11 @@ public abstract class GameScene2D implements GameScene {
     public void destroy() {
         actionBindings.removeFromKeyboard();
         animationManager.destroyAllAnimations();
+        actorsInZOrder.clear();
+        if (gameRenderer != null) {
+            gameRenderer.destroy();
+            gameRenderer = null;
+        }
     }
 
     @Override

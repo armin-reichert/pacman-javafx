@@ -54,27 +54,17 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void destroy() {
-        if (levelCompletedAnimation != null) {
-            animationManager.destroyAnimation(levelCompletedAnimation);
-            levelCompletedAnimation = null;
-        }
-        actorsInZOrder.clear();
-        if (gameRenderer != null) {
-            gameRenderer.destroy();
-            gameRenderer = null;
-        }
-    }
-
-    @Override
     protected void doInit() {
-        gameContext().theGame().theHUD().score(true).levelCounter(true).livesCounter(true);
+        gameContext().theGame().theHUD().credit(false).score(true).levelCounter(true).livesCounter(true);
         levelCompletedAnimation = new LevelCompletedAnimation(animationManager);
         gameRenderer = ui.theConfiguration().createGameRenderer(canvas);
     }
 
     @Override
-    protected void doEnd() {}
+    protected void doEnd() {
+        animationManager.destroyAnimation(levelCompletedAnimation);
+        levelCompletedAnimation = null;
+    }
 
     /*
       Note: If the corresponding 3D scene is displayed when the game level gets created,
