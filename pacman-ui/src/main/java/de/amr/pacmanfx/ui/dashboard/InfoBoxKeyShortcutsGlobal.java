@@ -21,7 +21,7 @@ public class InfoBoxKeyShortcutsGlobal extends InfoBox {
 
     private void addEntries(ActionBindingMap actionBindingMap) {
         if (actionBindingMap.isEmpty()) {
-            addRow(createLabel(InfoText.NO_INFO, false));
+            addRow(createLabel(DynamicInfoText.NO_INFO, false));
         }
         else {
             actionBindingMap.entrySet().stream().sorted(Comparator.comparing(e -> e.getKey().getDisplayText())).forEach(entry -> {

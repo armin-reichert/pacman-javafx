@@ -22,6 +22,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public abstract class InfoBox extends TitledPane {
 
     protected final GameUI ui;
     protected Dashboard dashboard;
-    protected final List<InfoText> infoTexts = new ArrayList<>();
+    protected final List<DynamicInfoText> infoTexts = new ArrayList<>();
     protected final GridPane grid = new GridPane();
     protected int minLabelWidth;
     protected Color textColor;
@@ -94,7 +95,7 @@ public abstract class InfoBox extends TitledPane {
     public void init(GameUI ui) {}
 
     public void update() {
-        infoTexts.forEach(InfoText::update);
+        infoTexts.forEach(DynamicInfoText::update);
     }
 
     public void setContentBackground(Background background) {
@@ -118,11 +119,11 @@ public abstract class InfoBox extends TitledPane {
     }
 
     protected Supplier<String> ifGameScenePresent(Function<GameScene, String> fnInfo) {
-        return () -> ui.currentGameScene().map(fnInfo).orElse(InfoText.NO_INFO);
+        return () -> ui.currentGameScene().map(fnInfo).orElse(DynamicInfoText.NO_INFO);
     }
 
     protected Supplier<String> ifLevelPresent(Function<GameLevel, String> fnInfo) {
-        return () -> ui.theGameContext().optGameLevel().map(fnInfo).orElse(InfoText.NO_INFO);
+        return () -> ui.theGameContext().optGameLevel().map(fnInfo).orElse(DynamicInfoText.NO_INFO);
     }
 
     protected void clearGrid() {
@@ -151,12 +152,19 @@ public abstract class InfoBox extends TitledPane {
         addRow(createLabel(labelText, true), right);
     }
 
-    protected void addLabeledValue(String labelText, Supplier<?> fnValue) {
-        var info = new InfoText(fnValue);
-        info.setFill(textColor);
-        info.setFont(textFont);
-        infoTexts.add(info);
-        addRow(labelText, info);
+    protected void addDynamicLabeledValue(String label, Supplier<?> infoSupplier) {
+        var dynamicInfoText = new DynamicInfoText(infoSupplier);
+        dynamicInfoText.setFill(textColor);
+        dynamicInfoText.setFont(textFont);
+        infoTexts.add(dynamicInfoText);
+        addRow(label, dynamicInfoText);
+    }
+
+    protected void addStaticLabeledValue(String label, String value) {
+        var staticText = new Text(value);
+        staticText.setFill(textColor);
+        staticText.setFont(textFont);
+        addRow(label, staticText);
     }
 
     protected Label createLabel(String text, boolean enabled) {
@@ -167,12 +175,8 @@ public abstract class InfoBox extends TitledPane {
         return label;
     }
 
-    protected void addLabeledValue(String labelText, String value) {
-        addLabeledValue(labelText, () -> value);
-    }
-
     protected void addEmptyRow() {
-        addLabeledValue("", "");
+        addStaticLabeledValue("", "");
     }
 
     protected Button[] addButtonList(String labelText, List<String> buttonTexts) {

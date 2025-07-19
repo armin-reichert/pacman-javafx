@@ -52,9 +52,9 @@ public class InfoBox3DSettings extends InfoBox {
         pickerLightColor     = addColorPicker("Light Color", ui.property3DLightColor());
         pickerFloorColor     = addColorPicker("Floor Color", ui.property3DFloorColor());
         comboPerspectives    = addChoiceBox("Perspective", PerspectiveID.values());
-        addLabeledValue("Camera",        this::subSceneCameraInfo);
-        addLabeledValue("Subscene Size", this::subSceneSizeInfo);
-        addLabeledValue("Scene Size",    this::sceneSizeInfo);
+        addDynamicLabeledValue("Camera",        this::subSceneCameraInfo);
+        addDynamicLabeledValue("Subscene Size", this::subSceneSizeInfo);
+        addDynamicLabeledValue("Scene Size",    this::sceneSizeInfo);
         cbPiPOn              = addCheckBox("Picture-In-Picture", ui.propertyMiniViewOn());
         sliderPiPSceneHeight = addSlider("- Height", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, ui.propertyMiniViewHeight().get(), false, false);
         sliderPiPOpacity     = addSlider("- Opacity", 0, 100, ui.propertyMiniViewOpacityPercent().get(), false, false);
@@ -106,7 +106,7 @@ public class InfoBox3DSettings extends InfoBox {
             SubScene subScene = ui.currentGameScene().get().optSubScene().get();
             return "%.0fx%.0f".formatted(subScene.getWidth(), subScene.getHeight());
         }
-        return InfoText.NO_INFO;
+        return DynamicInfoText.NO_INFO;
     }
 
     private String subSceneCameraInfo() {
@@ -116,7 +116,7 @@ public class InfoBox3DSettings extends InfoBox {
             return String.format("rot=%.0f x=%.0f y=%.0f z=%.0f",
                     camera.getRotate(), camera.getTranslateX(), camera.getTranslateY(), camera.getTranslateZ());
         }
-        return InfoText.NO_INFO;
+        return DynamicInfoText.NO_INFO;
     }
 
     private String sceneSizeInfo() {
@@ -135,6 +135,6 @@ public class InfoBox3DSettings extends InfoBox {
                 }
             }
         }
-        return InfoText.NO_INFO;
+        return DynamicInfoText.NO_INFO;
     }
 }

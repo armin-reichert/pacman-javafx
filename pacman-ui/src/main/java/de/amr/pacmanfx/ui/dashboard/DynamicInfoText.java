@@ -10,17 +10,20 @@ import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
 
-public class InfoText extends Text {
+/**
+ * Text that is dynamically updated by the dashboard
+ */
+public class DynamicInfoText extends Text {
 
     public static final String NO_INFO = "n/a";
 
-    private final Supplier<?> fnSupplyText;
+    private final Supplier<?> infoSupplier;
 
-    public InfoText(Supplier<?> fnSupplyText) {
-        this.fnSupplyText = requireNonNull(fnSupplyText);
+    public DynamicInfoText(Supplier<?> infoSupplier) {
+        this.infoSupplier = requireNonNull(infoSupplier);
     }
 
     public void update() {
-        setText(String.valueOf(fnSupplyText.get()));
+        setText(String.valueOf(infoSupplier.get()));
     }
 }

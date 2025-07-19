@@ -27,8 +27,8 @@ public class InfoBoxGeneral extends InfoBox {
 
     @Override
     public void init(GameUI ui) {
-        addLabeledValue("Java Version",   Runtime.version().toString());
-        addLabeledValue("JavaFX Version", System.getProperty("javafx.runtime.version"));
+        addStaticLabeledValue("Java Version",   Runtime.version().toString());
+        addStaticLabeledValue("JavaFX Version", System.getProperty("javafx.runtime.version"));
 
         // Simulation control
 
@@ -60,8 +60,8 @@ public class InfoBoxGeneral extends InfoBox {
         var sliderTargetFPS = addSlider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60, false, false);
         setEditor(sliderTargetFPS, ui.theGameClock().targetFrameRateProperty());
 
-        addLabeledValue("", () -> "Framerate: %.1f (Target: %.1f)".formatted(ui.theGameClock().lastTicksPerSecond(), ui.theGameClock().targetFrameRate()));
-        addLabeledValue("Total Updates",  ui.theGameClock()::updateCount);
+        addDynamicLabeledValue("", () -> "Framerate: %.1f (Target: %.1f)".formatted(ui.theGameClock().lastTicksPerSecond(), ui.theGameClock().targetFrameRate()));
+        addDynamicLabeledValue("Total Updates",  ui.theGameClock()::updateCount);
 
         addColorPicker("Canvas Color", ui.propertyCanvasBackgroundColor());
         addCheckBox("Image Smoothing", ui.propertyCanvasImageSmoothing());

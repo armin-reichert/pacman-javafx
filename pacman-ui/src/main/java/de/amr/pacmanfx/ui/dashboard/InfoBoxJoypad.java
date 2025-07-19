@@ -25,17 +25,17 @@ public class InfoBoxJoypad extends InfoBox {
 
         var joypadKeyBinding = ui.theJoypad().currentKeyBinding();
         String indent = "  "; // Urgh
-        addLabeledValue("[SELECT]   [START]", () -> "%s%s  %s".formatted(
+        addDynamicLabeledValue("[SELECT]   [START]", () -> "%s%s  %s".formatted(
             indent,
             joypadKeyBinding.key(JoypadButton.SELECT).getDisplayText(),
             joypadKeyBinding.key(JoypadButton.START).getDisplayText())
         );
-        addLabeledValue("[B]  [A]", () -> "%s%s   %s".formatted(
+        addDynamicLabeledValue("[B]  [A]", () -> "%s%s   %s".formatted(
             indent,
             joypadKeyBinding.key(JoypadButton.B).getDisplayText(),
             joypadKeyBinding.key(JoypadButton.A).getDisplayText())
         );
-        addLabeledValue("UP/DOWN/LEFT/RIGHT", () -> "%s%s  %s  %s  %s".formatted(
+        addDynamicLabeledValue("UP/DOWN/LEFT/RIGHT", () -> "%s%s  %s  %s  %s".formatted(
             indent,
             joypadKeyBinding.key(JoypadButton.UP).getDisplayText(),
             joypadKeyBinding.key(JoypadButton.DOWN).getDisplayText(),

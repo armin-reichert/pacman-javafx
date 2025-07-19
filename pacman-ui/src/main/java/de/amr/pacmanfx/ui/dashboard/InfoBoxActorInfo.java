@@ -20,7 +20,7 @@ import java.util.function.Supplier;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.timer.TickTimer.ticksToString;
-import static de.amr.pacmanfx.ui.dashboard.InfoText.NO_INFO;
+import static de.amr.pacmanfx.ui.dashboard.DynamicInfoText.NO_INFO;
 
 /**
  * @author Armin Reichert
@@ -32,11 +32,11 @@ public class InfoBoxActorInfo extends InfoBox {
     }
 
     public void init(GameUI ui) {
-        addLabeledValue("Pac Name", pacInfo((game, pac) -> pac.name()));
-        addLabeledValue("Lives",    ifLevelPresent(level -> "%d".formatted(ui.theGameContext().theGame().lifeCount())));
-        addLabeledValue("Movement", pacInfo(this::movementInfo));
-        addLabeledValue("Tile",     pacInfo(this::locationInfo));
-        addLabeledValue("Power",    ifLevelPresent(level -> {
+        addDynamicLabeledValue("Pac Name", pacInfo((game, pac) -> pac.name()));
+        addDynamicLabeledValue("Lives",    ifLevelPresent(level -> "%d".formatted(ui.theGameContext().theGame().lifeCount())));
+        addDynamicLabeledValue("Movement", pacInfo(this::movementInfo));
+        addDynamicLabeledValue("Tile",     pacInfo(this::locationInfo));
+        addDynamicLabeledValue("Power",    ifLevelPresent(level -> {
             TickTimer powerTimer = level.pac().powerTimer();
             return powerTimer.isRunning()
                 ? "Remaining: %s".formatted(ticksToString(powerTimer.remainingTicks()))
@@ -77,10 +77,10 @@ public class InfoBoxActorInfo extends InfoBox {
     }
 
     private void ghostInfo(byte personality) {
-        addLabeledValue(ghostColorName(personality) + " Ghost", fnGhostInfo(this::ghostNameAndState, personality));
-        addLabeledValue("Animation",      fnGhostInfo(this::ghostAnimation, personality));
-        addLabeledValue("Movement",       fnGhostInfo(this::movementInfo, personality));
-        addLabeledValue("Tile",           fnGhostInfo(this::locationInfo, personality));
+        addDynamicLabeledValue(ghostColorName(personality) + " Ghost", fnGhostInfo(this::ghostNameAndState, personality));
+        addDynamicLabeledValue("Animation",      fnGhostInfo(this::ghostAnimation, personality));
+        addDynamicLabeledValue("Movement",       fnGhostInfo(this::movementInfo, personality));
+        addDynamicLabeledValue("Tile",           fnGhostInfo(this::locationInfo, personality));
     }
 
     private Supplier<String> fnGhostInfo(
