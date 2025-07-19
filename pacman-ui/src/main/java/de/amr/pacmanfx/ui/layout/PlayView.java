@@ -306,6 +306,7 @@ public class PlayView implements PacManGames_View {
         }
         embedGameScene(nextGameScene);
         nextGameScene.init();
+        Logger.info("Game scene initialized: {}", nextGameScene.displayName());
 
         // Handle switching between 2D and 3D game variants
         byte sceneSwitchType = identifySceneSwitchType(currentGameScene, nextGameScene);

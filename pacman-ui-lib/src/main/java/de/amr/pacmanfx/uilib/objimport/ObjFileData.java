@@ -173,7 +173,7 @@ public class ObjFileData {
             else if (currentLine.startsWith("usemtl ")) {
                 commitCurrentMesh();
                 // unsupported yet
-                Logger.warn("usemtl '{}' command not supported", currentLineSkip(7));
+                Logger.trace("usemtl '{}' command not supported", currentLineSkip(7));
             }
             else if (currentLine.startsWith("v ")) {
                 parseVertex(currentLineSkip(2));

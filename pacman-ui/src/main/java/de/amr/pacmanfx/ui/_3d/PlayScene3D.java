@@ -272,15 +272,15 @@ public class PlayScene3D implements GameScene {
     @Override
     public void update() {
         if (gameContext().optGameLevel().isEmpty()) {
-            // Scene gets already update 2 ticks before level has been created!
+            // update gets called already 2 times before game level has been created!
             Logger.info("Tick #{}: Game level not yet created, update ignored", ui.theGameClock().tickCount());
             return;
         }
         if (gameLevel3D == null) {
-            Logger.warn("Tick #{}: 3D game level not yet created", ui.theGameClock().tickCount());
+            Logger.info("Tick #{}: 3D game level not yet created", ui.theGameClock().tickCount());
             return;
         }
-        gameLevel3D.tick(gameContext());
+        gameLevel3D.tick();
         updateScores();
         updateSound();
 

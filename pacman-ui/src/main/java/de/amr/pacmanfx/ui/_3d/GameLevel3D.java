@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._3d;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.Destroyable;
 import de.amr.pacmanfx.lib.Vector2i;
@@ -367,10 +366,10 @@ public class GameLevel3D extends Group implements Destroyable {
     /**
      * Called on each clock tick (frame).
      */
-    public void tick(GameContext gameContext) {
+    public void tick() {
         pac3D.update(gameLevel());
         ghosts3D.forEach(ghost3D -> ghost3D.update(gameLevel()));
-        bonus3D().ifPresent(bonus3D -> bonus3D.update(gameContext));
+        bonus3D().ifPresent(bonus3D -> bonus3D.update(ui.theGameContext()));
         boolean houseAccessRequired = gameLevel().ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
             .anyMatch(Ghost::isVisible);
         houseLightOnProperty.set(houseAccessRequired);
@@ -383,13 +382,13 @@ public class GameLevel3D extends Group implements Destroyable {
             houseOpenProperty.set(ghostNearHouseEntry);
         });
 
-        int livesCounterSize = gameContext.theGame().lifeCount() - 1;
+        int livesCounterSize = ui.theGameContext().theGame().lifeCount() - 1;
         // when the game starts and Pac-Man is not yet visible, show one more
-        boolean oneMore = gameContext.theGameState() == GameState.STARTING_GAME && !gameLevel().pac().isVisible();
+        boolean oneMore = ui.theGameContext().theGameState() == GameState.STARTING_GAME && !gameLevel().pac().isVisible();
         if (oneMore) livesCounterSize += 1;
         livesCountProperty.set(livesCounterSize);
 
-        boolean visible = gameContext.theGame().canStartNewGame();
+        boolean visible = ui.theGameContext().theGame().canStartNewGame();
         livesCounter3D.setVisible(visible);
         livesCounter3D.light().setLightOn(visible);
     }
