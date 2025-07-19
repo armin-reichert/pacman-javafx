@@ -24,9 +24,6 @@ import javafx.scene.shape.Cylinder;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.uilib.Ufx.colorWithOpacity;
@@ -106,23 +103,31 @@ public class ArcadeHouse3D extends Group implements Destroyable {
         light.setTranslateY(centerY - 6);
         light.translateZProperty().bind(wallBaseHeightProperty.multiply(-1));
 
-        List<Wall3D> walls = new ArrayList<>();
-        walls.add(r3D.createWallBetweenTiles(
+        r3D.createWallBetweenTiles(
                 Vector2i.of(xMin, yMin), Vector2i.of(house.leftDoorTile().x() - 1, yMin),
-                wallThickness, wallBaseMaterial, wallTopMaterial));
-        walls.add(r3D.createWallBetweenTiles(
+                wallThickness, wallBaseMaterial, wallTopMaterial)
+                .addTo(this);
+
+        r3D.createWallBetweenTiles(
                 Vector2i.of(house.rightDoorTile().x() + 1, yMin), Vector2i.of(xMax, yMin),
-                wallThickness, wallBaseMaterial, wallTopMaterial));
-        walls.add(r3D.createWallBetweenTiles(
+                wallThickness, wallBaseMaterial, wallTopMaterial)
+                .addTo(this);
+
+        r3D.createWallBetweenTiles(
                 Vector2i.of(xMin, yMin), Vector2i.of(xMin, yMax),
-                wallThickness, wallBaseMaterial, wallTopMaterial));
-        walls.add(r3D.createWallBetweenTiles(
+                wallThickness, wallBaseMaterial, wallTopMaterial)
+                .addTo(this);
+
+        r3D.createWallBetweenTiles(
                 Vector2i.of(xMax, yMin), Vector2i.of(xMax, yMax),
-                wallThickness, wallBaseMaterial, wallTopMaterial));
-        walls.add(r3D.createWallBetweenTiles(
+                wallThickness, wallBaseMaterial, wallTopMaterial)
+                .addTo(this);
+
+        r3D.createWallBetweenTiles(
                 Vector2i.of(xMin, yMax), Vector2i.of(xMax, yMax),
-                wallThickness, wallBaseMaterial, wallTopMaterial));
-        walls.forEach(wall3D -> getChildren().addAll(wall3D.base(), wall3D.top()));
+                wallThickness, wallBaseMaterial, wallTopMaterial)
+                .addTo(this);
+
         getChildren().addAll(light, door);
     }
 
