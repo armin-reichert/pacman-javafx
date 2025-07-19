@@ -32,7 +32,12 @@ public abstract class ManagedAnimation implements Destroyable {
 
     public Animation getOrCreateAnimation() {
         if (animation == null) {
-            animation = createAnimation();
+            try {
+                animation = createAnimation();
+            } catch (Exception x) {
+                Logger.error("Exception occured when creating animation '{}'", label);
+                Logger.error(x);
+            }
         }
         return animation;
     }
@@ -43,7 +48,7 @@ public abstract class ManagedAnimation implements Destroyable {
         if (animation != null) {
             animation.setOnFinished(null);
             animation = null;
-            Logger.info("Destroyed managed animation with label '{}'", label);
+            Logger.info("Destroyed managed animation '{}'", label);
         }
         animationManager = null;
     }
