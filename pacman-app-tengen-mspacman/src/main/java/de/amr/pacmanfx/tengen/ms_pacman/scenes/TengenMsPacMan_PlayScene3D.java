@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
-import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
+import de.amr.pacmanfx.lib.nes.NES_Palette;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
@@ -107,16 +107,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
             scores3D.showScore(score.points(), score.levelNumber());
         }
         else {
-            Color color = Color.WHITE;
-            /*
-            // if score is disabled, display "GAME OVER" text using maze-specific color
-            Color color = gameContext().optGameLevel()
-                .map(gameLevel -> gameLevel.worldMap().<NES_ColorScheme>getConfigValue("nesColorScheme"))
-                .map(colorScheme -> Color.web(colorScheme.strokeColorRGB()))
-                .orElse(Color.WHITE);
-
-             */
-            scores3D.showTextForScore(ui.theAssets().text("score.game_over"), color);
+            scores3D.showTextForScore(ui.theAssets().text("score.game_over"), Color.web(NES_Palette.color(0x16)));
         }
         // Always show high score
         scores3D.showHighScore(highScore.points(), highScore.levelNumber());
