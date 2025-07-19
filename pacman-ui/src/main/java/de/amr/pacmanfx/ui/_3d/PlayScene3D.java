@@ -13,6 +13,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
+import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.ActionBindingMap;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
@@ -281,12 +282,7 @@ public class PlayScene3D implements GameScene {
         }
         gameLevel3D.tick(gameContext());
         updateScores();
-        if (gameContext().theGameLevel().isDemoLevel()) {
-            ui.theSound().setEnabled(false);
-        } else {
-            ui.theSound().setEnabled(true);
-            updateSound(gameContext().theGameLevel());
-        }
+        updateSound();
 
         // Update camera
         PerspectiveID id = perspectiveIDProperty.get();
@@ -508,10 +504,24 @@ public class PlayScene3D implements GameScene {
         scores3D.translateXProperty().bind(gameLevel3D.translateXProperty().add(TS));
         scores3D.translateYProperty().bind(gameLevel3D.translateYProperty().subtract(4.5 * TS));
         scores3D.translateZProperty().bind(gameLevel3D.translateZProperty().subtract(4.5 * TS));
+        Logger.info("Positioned scores 3D");
     }
 
-    protected void updateSound(GameLevel gameLevel) {
-        if (gameContext().theGameState() == GameState.HUNTING && !gameLevel.pac().powerTimer().isRunning()) {
+    protected void updateSound() {
+        if (gameContext().optGameLevel().isEmpty()) return;
+
+        if (gameContext().theGameLevel().isDemoLevel()) {
+            ui.theSound().setEnabled(false);
+            return;
+        }
+
+        ui.theSound().setEnabled(true);
+
+        Pac pac = gameContext().theGameLevel().pac();
+
+        // Play siren if Pac has no power and is chased by the ghosts
+        if (gameContext().theGameState() == GameState.HUNTING && !pac.powerTimer().isRunning()) {
+            //TODO clarify which siren plays when
             int sirenNumber = 1 + gameContext().theGame().huntingTimer().phaseIndex() / 2;
             SoundID sirenID = switch (sirenNumber) {
                 case 1 -> SoundID.SIREN_1;
@@ -522,11 +532,15 @@ public class PlayScene3D implements GameScene {
             };
             ui.theSound().playSiren(sirenID, 1.0);
         }
-        if (gameLevel.pac().starvingTicks() > 10) { // TODO not sure how to do this right
+
+        // TODO Still not sure how to do this right
+        if (pac.starvingTicks() > 10) {
             ui.theSound().pause(SoundID.PAC_MAN_MUNCHING);
         }
-        boolean ghostsReturning = gameLevel.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
-        if (gameLevel.pac().isAlive() && ghostsReturning) {
+
+        boolean isGhostReturningHome = gameContext().theGameLevel().pac().isAlive()
+            && gameContext().theGameLevel().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).findAny().isPresent();
+        if (isGhostReturningHome) {
             ui.theSound().loop(SoundID.GHOST_RETURNS);
         } else {
             ui.theSound().stop(SoundID.GHOST_RETURNS);
@@ -554,7 +568,7 @@ public class PlayScene3D implements GameScene {
         gameLevel3D.showAnimatedMessage("LEVEL %d (TEST)".formatted(levelNumber), 5, x, y);
     }
 
-    private void fadeInSubScene() {
+    protected void fadeInSubScene() {
         new Transition() {
             {
                 setCycleDuration(Duration.seconds(4));
