@@ -41,8 +41,7 @@ public class ArcadeHouse3D extends Group implements Destroyable {
     private final DoubleProperty barThicknessProperty = new SimpleDoubleProperty(BAR_THICKNESS);
     private final DoubleProperty wallBaseHeightProperty = new SimpleDoubleProperty();
 
-    private PhongMaterial wallBaseMaterial;
-    private PhongMaterial wallTopMaterial;
+    private TerrainRenderer3D r3D;
     private PhongMaterial barMaterial;
 
     private Group door;
@@ -77,11 +76,11 @@ public class ArcadeHouse3D extends Group implements Destroyable {
         float centerX = xMin * TS + tilesX * HTS;
         float centerY = yMin * TS + tilesY * HTS;
 
-        wallBaseMaterial = coloredPhongMaterial(colorWithOpacity(houseBaseColor, opacity));
-        wallTopMaterial  = coloredPhongMaterial(houseTopColor);
+        PhongMaterial wallBaseMaterial = coloredPhongMaterial(colorWithOpacity(houseBaseColor, opacity));
+        PhongMaterial wallTopMaterial  = coloredPhongMaterial(houseTopColor);
         barMaterial      = coloredPhongMaterial(doorColor);
 
-        var r3D = new TerrainRenderer3D();
+        r3D = new TerrainRenderer3D();
         r3D.setBaseMaterial(wallBaseMaterial);
         r3D.setTopMaterial(wallTopMaterial);
         r3D.setOnWallCreated(wall3D -> wall3D.bindBaseHeight(wallBaseHeightProperty));
@@ -186,12 +185,12 @@ public class ArcadeHouse3D extends Group implements Destroyable {
 
     @Override
     public void destroy() {
-        getChildren().clear();
-        wallBaseMaterial = null;
-        wallTopMaterial = null;
 
+        doorOpenCloseAnimation.stop();
         doorOpenCloseAnimation.destroy();
         doorOpenCloseAnimation = null;
+
+        getChildren().clear();
 
         destroyDoorWing(leftWing);
         leftWing = null;
@@ -206,5 +205,9 @@ public class ArcadeHouse3D extends Group implements Destroyable {
 
         light.translateZProperty().unbind();
         light = null;
+
+        r3D.setTopMaterial(null);
+        r3D.setBaseMaterial(null);
+        r3D.setOnWallCreated(null);
     }
 }
