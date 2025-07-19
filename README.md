@@ -38,8 +38,10 @@ Prerequisites: You need to have [JDK 21](https://www.oracle.com/java/technologie
 - `cd pacman-javafx`
 - `./gradlew jpackage` or just `make` (Windows) or `./make.sh` (Unix)
 
-(On Ubuntu, I had to install binutils first: `sudo apt-get install binutils`)
-
+On Ubuntu, I first had to install also
+- binutils: `sudo apt-get install binutils`
+- fakeroot: `sudo apt-get install fakeroot`
+  
 This will create
 - an installer (.msi, .deb, or .dmg, depending on your platform) for the app containing all game variants (subdirectory `pacman-ui-3d-app-allgames/build/jpackage`)
 - an installer for the map editor (subdirectory `pacman-app-mapeditor/build/jpackage`)
