@@ -67,23 +67,23 @@ public class Joypad {
         return currentKeyBinding().key(buttonID);
     }
 
-    public void registerCurrentBinding(ActionBindingMap actionBindingMap) {
+    public void setBindings(ActionBindingMap actionBindingMap) {
         currentKeys().forEach(combination -> keyboard.setBinding(combination, actionBindingMap));
     }
 
-    public void unregisterCurrentBinding(ActionBindingMap actionBindingMap) {
+    public void removeBindings(ActionBindingMap actionBindingMap) {
         currentKeys().forEach(combination -> keyboard.removeBinding(combination, actionBindingMap));
     }
 
-    public void selectNextKeyBinding(ActionBindingMap actionBindingMap) {
+    public void selectNextBinding(ActionBindingMap actionBindingMap) {
         selectedIndex = (selectedIndex + 1) % bindings.length;
         setBinding(selectedIndex, actionBindingMap);
         Logger.info("Joypad keys: {}", currentKeyBinding());
     }
 
     private void setBinding(int index, ActionBindingMap actionBindingMap) {
-        unregisterCurrentBinding(actionBindingMap);
+        removeBindings(actionBindingMap);
         selectedIndex = index;
-        registerCurrentBinding(actionBindingMap);
+        setBindings(actionBindingMap);
     }
 }
