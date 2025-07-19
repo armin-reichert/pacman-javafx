@@ -39,13 +39,18 @@ public class TerrainRenderer3D {
         this.cylinderDivisions = cylinderDivisions;
     }
 
-    public void addWallBetween(Group parent, Vector2i p1, Vector2i p2, double wallThickness, PhongMaterial wallBaseMaterial, PhongMaterial wallTopMaterial) {
+    public void addWallBetween(
+            Group parent, 
+            Vector2i p1, 
+            Vector2i p2, 
+            double wallThickness, 
+            PhongMaterial wallBaseMaterial, 
+            PhongMaterial wallTopMaterial) 
+    {
         if (p1.x() == p2.x()) { // vertical wall
-            Wall3D wall3D = createBoxWall(p1.midpoint(p2), wallThickness, Math.abs(p1.y() - p2.y()), wallBaseMaterial, wallTopMaterial);
-            wall3D.addTo(parent);
+            createBoxWall(p1.midpoint(p2), wallThickness, Math.abs(p1.y() - p2.y()), wallBaseMaterial, wallTopMaterial).addTo(parent);
         } else if (p1.y() == p2.y()) { // horizontal wall
-            Wall3D wall3D = createBoxWall(p1.midpoint(p2), Math.abs(p1.x() - p2.x()), wallThickness, wallBaseMaterial, wallTopMaterial);
-            wall3D.addTo(parent);
+            createBoxWall(p1.midpoint(p2), Math.abs(p1.x() - p2.x()), wallThickness, wallBaseMaterial, wallTopMaterial).addTo(parent);
         } else {
             Logger.error("Cannot add horizontal/vertical wall between {} and {}", p1, p2);
         }
@@ -90,8 +95,7 @@ public class TerrainRenderer3D {
             if ("dcgbfceb".equals(obstacle.encoding())) { // O-shape with hole
                 Vector2i[] cornerCenters = obstacle.cornerCenters();
                 for (Vector2i center : cornerCenters) {
-                    Wall3D wall3D = createCylinderWall(center, HTS, baseMaterial, topMaterial);
-                    wall3D.addTo(obstacleGroup);
+                    createCylinderWall(center, HTS, baseMaterial, topMaterial).addTo(obstacleGroup);
                 }
                 addWallBetween(obstacleGroup, cornerCenters[0], cornerCenters[1], TS, baseMaterial, topMaterial);
                 addWallBetween(obstacleGroup, cornerCenters[1], cornerCenters[2], TS, baseMaterial, topMaterial);
@@ -167,84 +171,51 @@ public class TerrainRenderer3D {
         }
     }
 
-    private void addCorner(
-        Group parent,
-        Vector2i cornerCenter,
-        Vector2i horizontalEndPoint,
-        Vector2i verticalEndPoint,
-        double wallThickness,
-        PhongMaterial baseMaterial,
-        PhongMaterial topMaterial)
-    {
-        Wall3D horizontalWall = createBoxWall(
-            cornerCenter.midpoint(horizontalEndPoint),
-            cornerCenter.manhattanDist(horizontalEndPoint),
-            wallThickness,
-            baseMaterial, topMaterial);
-
-        Wall3D verticalWall = createBoxWall(
-            cornerCenter.midpoint(verticalEndPoint),
-            wallThickness,
-            cornerCenter.manhattanDist(verticalEndPoint),
-            baseMaterial, topMaterial);
-
-        Wall3D cornerWall = createCylinderWall(cornerCenter, 0.5 * wallThickness, baseMaterial, topMaterial);
-        horizontalWall.addTo(parent);
-        cornerWall.addTo(parent);
-        verticalWall.addTo(parent);
+    private void addCorner(Group parent, Vector2i center, Vector2i endPointH, Vector2i endPointV, double wallThickness,
+                           PhongMaterial baseMaterial, PhongMaterial topMaterial) {
+        createBoxWall(center.midpoint(endPointH), center.manhattanDist(endPointH), wallThickness, baseMaterial, topMaterial).addTo(parent);
+        createBoxWall(center.midpoint(endPointV), wallThickness, center.manhattanDist(endPointV), baseMaterial, topMaterial).addTo(parent);
+        createCylinderWall(center, 0.5 * wallThickness, baseMaterial, topMaterial).addTo(parent);
     }
 
-    public Wall3D createCylinderWall(
-        Vector2i center,
-        double radius,
-        PhongMaterial baseMaterial,
-        PhongMaterial topMaterial)
-    {
-        Cylinder base = new Cylinder(radius, Wall3D.DEFAULT_BASE_HEIGHT, cylinderDivisions);
+    public Wall3D createCylinderWall(Vector2i center, double radius, PhongMaterial baseMaterial, PhongMaterial topMaterial) {
+        var base = new Cylinder(radius, Wall3D.DEFAULT_BASE_HEIGHT, cylinderDivisions);
         base.setMaterial(baseMaterial);
         base.setRotationAxis(Rotate.X_AXIS);
         base.setRotate(90);
+        base.setTranslateX(center.x());
+        base.setTranslateY(center.y());
+        base.setMouseTransparent(true);
 
-        Cylinder top = new Cylinder(radius, Wall3D.DEFAULT_TOP_HEIGHT, cylinderDivisions);
+        var top = new Cylinder(radius, Wall3D.DEFAULT_TOP_HEIGHT, cylinderDivisions);
         top.setMaterial(topMaterial);
         top.setRotationAxis(Rotate.X_AXIS);
         top.setRotate(90);
+        top.setTranslateX(center.x());
+        top.setTranslateY(center.y());
+        top.setMouseTransparent(true);
 
-        Wall3D wall3D = new Wall3D(base, top);
-        wall3D.base().setTranslateX(center.x());
-        wall3D.base().setTranslateY(center.y());
-        wall3D.base().setMouseTransparent(true);
-        wall3D.top().setTranslateX(center.x());
-        wall3D.top().setTranslateY(center.y());
-        wall3D.top().setMouseTransparent(true);
-
+        var wall3D = new Wall3D(base, top);
         if (onWallCreated != null) {
             onWallCreated.accept(wall3D);
         }
         return wall3D;
     }
 
-    public Wall3D createBoxWall(
-        Vector2f center,
-        double sizeX,
-        double sizeY,
-        PhongMaterial baseMaterial,
-        PhongMaterial topMaterial)
-    {
+    public Wall3D createBoxWall(Vector2f center, double sizeX, double sizeY, PhongMaterial baseMaterial, PhongMaterial topMaterial) {
         var base = new Box(sizeX, sizeY, Wall3D.DEFAULT_BASE_HEIGHT);
         base.setMaterial(baseMaterial);
+        base.setTranslateX(center.x());
+        base.setTranslateY(center.y());
+        base.setMouseTransparent(true);
 
         var top = new Box(sizeX, sizeY, Wall3D.DEFAULT_TOP_HEIGHT);
         top.setMaterial(topMaterial);
+        top.setTranslateX(center.x());
+        top.setTranslateY(center.y());
+        top.setMouseTransparent(true);
 
-        Wall3D wall3D = new Wall3D(base, top);
-        wall3D.base().setTranslateX(center.x());
-        wall3D.base().setTranslateY(center.y());
-        wall3D.base().setMouseTransparent(true);
-        wall3D.top().setTranslateX(center.x());
-        wall3D.top().setTranslateY(center.y());
-        wall3D.top().setMouseTransparent(true);
-
+        var wall3D = new Wall3D(base, top);
         if (onWallCreated != null) {
             onWallCreated.accept(wall3D);
         }
