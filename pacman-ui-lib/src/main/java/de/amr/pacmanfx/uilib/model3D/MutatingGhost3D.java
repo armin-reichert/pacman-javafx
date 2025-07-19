@@ -168,7 +168,7 @@ public class MutatingGhost3D extends Group implements Destroyable {
             GhostAppearance oldAppearance,
             GhostAppearance newAppearance)
     {
-        Logger.info("Ghost {} now has appearance {}", ghost.name(), newAppearance);
+        Logger.debug("Ghost {} now has appearance {}", ghost.name(), newAppearance);
         if (newAppearance == GhostAppearance.VALUE) {
             numberBox.setVisible(true);
             ghost3D.setVisible(false);
