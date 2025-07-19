@@ -37,6 +37,8 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class InfoBox extends TitledPane {
 
+    public static final String NO_INFO = "n/a";
+
     protected static String fontCSS(Font font) {
         return String.format("-fx-font: %.0fpx \"%s\";", font.getSize(), font.getFamily());
     }
@@ -119,11 +121,11 @@ public abstract class InfoBox extends TitledPane {
     }
 
     protected Supplier<String> ifGameScenePresent(Function<GameScene, String> fnInfo) {
-        return () -> ui.currentGameScene().map(fnInfo).orElse(DynamicInfoText.NO_INFO);
+        return () -> ui.currentGameScene().map(fnInfo).orElse(NO_INFO);
     }
 
     protected Supplier<String> ifGameLevelPresent(Function<GameLevel, String> fnInfo) {
-        return () -> ui.theGameContext().optGameLevel().map(fnInfo).orElse(DynamicInfoText.NO_INFO);
+        return () -> ui.theGameContext().optGameLevel().map(fnInfo).orElse(NO_INFO);
     }
 
     protected void clearGrid() {

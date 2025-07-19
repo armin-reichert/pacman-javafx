@@ -19,7 +19,6 @@ import java.util.function.Supplier;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.timer.TickTimer.ticksToString;
-import static de.amr.pacmanfx.ui.dashboard.DynamicInfoText.NO_INFO;
 
 public class InfoBoxActorInfo extends InfoBox {
 

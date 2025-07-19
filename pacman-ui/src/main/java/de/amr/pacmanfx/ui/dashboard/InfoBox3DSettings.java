@@ -106,7 +106,7 @@ public class InfoBox3DSettings extends InfoBox {
             SubScene subScene = ui.currentGameScene().get().optSubScene().get();
             return "%.0fx%.0f".formatted(subScene.getWidth(), subScene.getHeight());
         }
-        return DynamicInfoText.NO_INFO;
+        return NO_INFO;
     }
 
     private String subSceneCameraInfo() {
@@ -116,7 +116,7 @@ public class InfoBox3DSettings extends InfoBox {
             return String.format("rot=%.0f x=%.0f y=%.0f z=%.0f",
                     camera.getRotate(), camera.getTranslateX(), camera.getTranslateY(), camera.getTranslateZ());
         }
-        return DynamicInfoText.NO_INFO;
+        return NO_INFO;
     }
 
     private String sceneSizeInfo() {
@@ -135,6 +135,6 @@ public class InfoBox3DSettings extends InfoBox {
                 }
             }
         }
-        return DynamicInfoText.NO_INFO;
+        return NO_INFO;
     }
 }

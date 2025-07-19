@@ -40,14 +40,14 @@ public class InfoBoxGameInfo extends InfoBox {
         addDynamicLabeledValue("Renderer", ifGameScenePresent(gameScene ->
             gameScene instanceof GameScene2D gameScene2D
                 ? gameScene2D.renderer().getClass().getSimpleName()
-                : DynamicInfoText.NO_INFO
+                : NO_INFO
         ));
 
         addDynamicLabeledValue("Level Number", ifGameLevelPresent(level ->
             (level.isDemoLevel() ? "%d (Demo Level)" : "%d").formatted(level.number())));
         addDynamicLabeledValue("World Map", ifGameLevelPresent(level -> {
             String url = level.worldMap().url();
-            return url == null ? DynamicInfoText.NO_INFO : url.substring(url.lastIndexOf("/") + 1);
+            return url == null ? NO_INFO : url.substring(url.lastIndexOf("/") + 1);
         }));
         addDynamicLabeledValue("Fill/Stroke/Pellet", ifGameLevelPresent(level -> {
             WorldMap worldMap = level.worldMap();
@@ -70,7 +70,7 @@ public class InfoBoxGameInfo extends InfoBox {
                 WorldMapColorScheme coloring = ui.theConfiguration().colorScheme(worldMap);
                 return "%s / %s / %s".formatted(formatColorHex(coloring.fill()), formatColorHex(coloring.stroke()), formatColorHex(coloring.pellet()));
             } else {
-                return DynamicInfoText.NO_INFO;
+                return NO_INFO;
             }
         }));
 
@@ -135,21 +135,21 @@ public class InfoBoxGameInfo extends InfoBox {
         Ghost pinky = level.ghost(PINK_GHOST_SPEEDY);
         return (pinky != null)
             ? "%.4f px/s".formatted(actorSpeedControl().ghostAttackSpeed(ui.theGameContext(), level, pinky) * NUM_TICKS_PER_SEC)
-            : DynamicInfoText.NO_INFO;
+            : NO_INFO;
     }
 
     private String fmtGhostSpeedFrightened(GameLevel level) {
         Ghost blinky = level.ghost(RED_GHOST_SHADOW);
         return (blinky != null)
             ? "%.4f px/s".formatted(actorSpeedControl().ghostFrightenedSpeed(ui.theGameContext(), level, blinky) * NUM_TICKS_PER_SEC)
-            : DynamicInfoText.NO_INFO;
+            : NO_INFO;
     }
 
     private String fmtGhostSpeedTunnel(GameLevel level) {
         Ghost blinky = level.ghost(RED_GHOST_SHADOW);
         return (blinky != null)
             ? "%.4f px/s".formatted(actorSpeedControl().ghostTunnelSpeed(ui.theGameContext(), level, blinky) * NUM_TICKS_PER_SEC)
-            : DynamicInfoText.NO_INFO;
+            : NO_INFO;
     }
 
     private String fmtPacNormalSpeed(GameLevel level) {

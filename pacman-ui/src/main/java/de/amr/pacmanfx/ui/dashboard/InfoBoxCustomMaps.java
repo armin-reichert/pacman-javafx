@@ -22,7 +22,7 @@ import java.nio.charset.StandardCharsets;
 public class InfoBoxCustomMaps extends InfoBox {
 
     private static String trimURL(String url) {
-        if (url == null) return DynamicInfoText.NO_INFO;
+        if (url == null) return NO_INFO;
         url = URLDecoder.decode(url, StandardCharsets.UTF_8);
         int lastSlash = url.lastIndexOf('/');
         if (lastSlash != -1) {

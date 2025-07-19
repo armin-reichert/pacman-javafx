@@ -15,8 +15,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class DynamicInfoText extends Text {
 
-    public static final String NO_INFO = "n/a";
-
     private final Supplier<?> infoSupplier;
 
     public DynamicInfoText(Supplier<?> infoSupplier) {
