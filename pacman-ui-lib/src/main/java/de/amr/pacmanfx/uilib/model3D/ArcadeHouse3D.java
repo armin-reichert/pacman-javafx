@@ -82,6 +82,8 @@ public class ArcadeHouse3D extends Group implements Destroyable {
         barMaterial      = coloredPhongMaterial(doorColor);
 
         var r3D = new TerrainRenderer3D();
+        r3D.setBaseMaterial(wallBaseMaterial);
+        r3D.setTopMaterial(wallTopMaterial);
         r3D.setOnWallCreated(wall3D -> wall3D.bindBaseHeight(wallBaseHeightProperty));
 
         door = createDoor(house.leftDoorTile(), house.rightDoorTile(), wallBaseHeightProperty.get());
@@ -103,30 +105,11 @@ public class ArcadeHouse3D extends Group implements Destroyable {
         light.setTranslateY(centerY - 6);
         light.translateZProperty().bind(wallBaseHeightProperty.multiply(-1));
 
-        r3D.createWallBetweenTiles(
-                Vector2i.of(xMin, yMin), Vector2i.of(house.leftDoorTile().x() - 1, yMin),
-                wallThickness, wallBaseMaterial, wallTopMaterial)
-                .addTo(this);
-
-        r3D.createWallBetweenTiles(
-                Vector2i.of(house.rightDoorTile().x() + 1, yMin), Vector2i.of(xMax, yMin),
-                wallThickness, wallBaseMaterial, wallTopMaterial)
-                .addTo(this);
-
-        r3D.createWallBetweenTiles(
-                Vector2i.of(xMin, yMin), Vector2i.of(xMin, yMax),
-                wallThickness, wallBaseMaterial, wallTopMaterial)
-                .addTo(this);
-
-        r3D.createWallBetweenTiles(
-                Vector2i.of(xMax, yMin), Vector2i.of(xMax, yMax),
-                wallThickness, wallBaseMaterial, wallTopMaterial)
-                .addTo(this);
-
-        r3D.createWallBetweenTiles(
-                Vector2i.of(xMin, yMax), Vector2i.of(xMax, yMax),
-                wallThickness, wallBaseMaterial, wallTopMaterial)
-                .addTo(this);
+        r3D.createWallBetweenTiles(Vector2i.of(xMin, yMin), Vector2i.of(house.leftDoorTile().x() - 1, yMin), wallThickness).addTo(this);
+        r3D.createWallBetweenTiles(Vector2i.of(house.rightDoorTile().x() + 1, yMin), Vector2i.of(xMax, yMin), wallThickness).addTo(this);
+        r3D.createWallBetweenTiles(Vector2i.of(xMin, yMin), Vector2i.of(xMin, yMax), wallThickness).addTo(this);
+        r3D.createWallBetweenTiles(Vector2i.of(xMax, yMin), Vector2i.of(xMax, yMax), wallThickness).addTo(this);
+        r3D.createWallBetweenTiles(Vector2i.of(xMin, yMax), Vector2i.of(xMax, yMax), wallThickness).addTo(this);
 
         getChildren().addAll(light, door);
     }

@@ -325,23 +325,25 @@ public class GameLevel3D extends Group implements Destroyable {
     private void buildMaze3D(Group parent, WorldMap worldMap) {
         Logger.info("Building 3D maze for map (URL '{}') and color scheme {}...", gameLevel().worldMap().url(), colorScheme);
         var r3D = new TerrainRenderer3D();
-        wall3DCount = 0;
+        r3D.setBaseMaterial(wallBaseMaterial);
+        r3D.setTopMaterial(wallTopMaterial);
         r3D.setOnWallCreated(wall3D -> {
             wall3D.bindBaseHeight(obstacleBaseHeightProperty);
             ++wall3DCount;
         });
         r3D.setCylinderDivisions(24);
+
+        wall3DCount = 0;
         Instant start = Instant.now();
         for (Obstacle obstacle : worldMap.obstacles()) {
             // exclude house obstacle, house is built separately
             Vector2i startTile = tileAt(obstacle.startPoint().toVector2f());
             if (gameLevel().house().isPresent() && !gameLevel().house().get().isTileInHouseArea(startTile)) {
                 r3D.renderObstacle3D(
-                        parent,
-                        obstacle,
-                        isObstacleTheWorldBorder(worldMap, obstacle),
-                        ui.thePrefs().getFloat("3d.obstacle.wall_thickness", 2.25f),
-                        wallBaseMaterial, wallTopMaterial);
+                    parent,
+                    obstacle,
+                    isObstacleTheWorldBorder(worldMap, obstacle),
+                    ui.thePrefs().getFloat("3d.obstacle.wall_thickness", 2.25f));
             }
         }
         java.time.Duration duration = java.time.Duration.between(start, Instant.now());
