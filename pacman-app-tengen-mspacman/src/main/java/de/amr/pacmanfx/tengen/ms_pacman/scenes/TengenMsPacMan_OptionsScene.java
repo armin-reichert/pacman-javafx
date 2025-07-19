@@ -19,6 +19,8 @@ import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -60,7 +62,14 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     private static final int INITIAL_DELAY = 20; //TODO verify
     private static final int IDLE_TIMEOUT = 1530; // 25,5 sec TODO verify
 
-    private int selectedOption;
+    private final IntegerProperty selectedOption = new SimpleIntegerProperty() {
+        @Override
+        protected void invalidated() {
+            ui.theSound().play("audio.option.selection_changed");
+            resetIdleTimer();
+        }
+    };
+
     private long idleTicks;
     private int initialDelay;
 
@@ -96,7 +105,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         actionBindings.bind(ACTION_TEST_LEVELS_BONI, GLOBAL_ACTION_BINDINGS);
         actionBindings.bind(ACTION_TEST_LEVELS_TEASERS, GLOBAL_ACTION_BINDINGS);
 
-        selectedOption = OPTION_PAC_BOOSTER;
+        selectedOption.set(OPTION_PAC_BOOSTER);
         theTengenGame().setCanStartNewGame(true);
         resetIdleTimer();
         initialDelay = INITIAL_DELAY;
@@ -130,60 +139,42 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         idleTicks = 0;
     }
 
-    private void optionSelectionChanged() {
-        ui.theSound().play("audio.option.selection_changed");
-        resetIdleTimer();
-    }
-
     private void optionValueChanged() {
         ui.theSound().play("audio.option.value_changed");
         resetIdleTimer();
     }
 
+    private int selectedOption() {
+        return selectedOption.get();
+    }
+
     @Override
     public void handleKeyboardInput() {
         if (ui.theJoypad().isButtonPressed(JoypadButton.DOWN)) {
-            selectNextOption();
+            selectedOption.set(selectedOption() + 1 < NUM_OPTIONS ? selectedOption() + 1 : 0);
         }
         else if (ui.theJoypad().isButtonPressed(JoypadButton.UP)) {
-            selectPrevOption();
+            selectedOption.set(selectedOption() == 0 ? NUM_OPTIONS - 1 : selectedOption() - 1);
         }
-
-        // Button "A" is right of "B": select next value
+        // Button "A" on the joypad is located right of "B": select next value
         else if (ui.theJoypad().isButtonPressed(JoypadButton.A) || ui.theKeyboard().isPressed(KeyCode.RIGHT)) {
-            switch (selectedOption) {
+            switch (selectedOption()) {
                 case OPTION_PAC_BOOSTER    -> setNextPacBoosterValue();
                 case OPTION_DIFFICULTY     -> setNextDifficultyValue();
                 case OPTION_MAZE_SELECTION -> setNextMapCategoryValue();
                 case OPTION_STARTING_LEVEL -> setNextStartLevelValue();
-                default -> {}
             }
         }
-
         // Button "B" is left of "A": select previous value
         else if (ui.theJoypad().isButtonPressed(JoypadButton.B) || ui.theKeyboard().isPressed(KeyCode.LEFT)) {
-            switch (selectedOption) {
+            switch (selectedOption()) {
                 case OPTION_PAC_BOOSTER    -> setPrevPacBoosterValue();
                 case OPTION_DIFFICULTY     -> setPrevDifficultyValue();
                 case OPTION_MAZE_SELECTION -> setPrevMapCategoryValue();
                 case OPTION_STARTING_LEVEL -> setPrevStartLevelValue();
-                default -> {}
             }
         }
-
-        else {
-            super.handleKeyboardInput();
-        }
-    }
-
-    private void selectPrevOption() {
-        selectedOption = selectedOption == 0 ? NUM_OPTIONS - 1 : selectedOption - 1;
-        optionSelectionChanged();
-    }
-
-    private void selectNextOption() {
-        selectedOption = (selectedOption < NUM_OPTIONS - 1) ? selectedOption + 1 : 0;
-        optionSelectionChanged();
+        else super.handleKeyboardInput();
     }
 
     private void setPrevStartLevelValue() {
@@ -280,14 +271,14 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         renderer().fillTextAtScaledPosition("MS PAC-MAN OPTIONS", NES_YELLOW, COL_LABEL + 3 * TS, 48);
 
         // Players (not implemented)
-        drawArrowAtSelectedOption(OPTION_PLAYERS, 72, scaledArcadeFont8());
+        drawMarkerIfSelected(OPTION_PLAYERS, 72, scaledArcadeFont8());
         renderer().fillTextAtScaledPosition("TYPE", NES_YELLOW, COL_LABEL, 72);
         renderer().fillTextAtScaledPosition(":", NES_YELLOW, COL_LABEL + 4 * TS + 4, 72);
         // grey this out, not supported yet
         renderer().fillTextAtScaledPosition("1 PLAYER", nesPaletteColor(0x10), COL_LABEL + 6 * TS  , 72);
 
         // Pac-Booster
-        drawArrowAtSelectedOption(OPTION_PAC_BOOSTER, 96, scaledArcadeFont8());
+        drawMarkerIfSelected(OPTION_PAC_BOOSTER, 96, scaledArcadeFont8());
         renderer().fillTextAtScaledPosition("PAC BOOSTER", NES_YELLOW, COL_LABEL, 96);
         renderer().fillTextAtScaledPosition(":", NES_YELLOW, COL_COLON, 96);
         String pacBoosterText = switch (theTengenGame().pacBooster()) {
@@ -298,19 +289,19 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         renderer().fillTextAtScaledPosition(pacBoosterText, NES_WHITE, COL_VALUE, 96);
 
         // Game difficulty
-        drawArrowAtSelectedOption(OPTION_DIFFICULTY, 120, scaledArcadeFont8());
+        drawMarkerIfSelected(OPTION_DIFFICULTY, 120, scaledArcadeFont8());
         renderer().fillTextAtScaledPosition("GAME DIFFICULTY", NES_YELLOW, COL_LABEL, 120);
         renderer().fillTextAtScaledPosition(":", NES_YELLOW, COL_COLON, 120);
         renderer().fillTextAtScaledPosition(theTengenGame().difficulty().name(), NES_WHITE, COL_VALUE, 120);
 
         // Maze (type) selection
-        drawArrowAtSelectedOption(OPTION_MAZE_SELECTION, 144, scaledArcadeFont8());
+        drawMarkerIfSelected(OPTION_MAZE_SELECTION, 144, scaledArcadeFont8());
         renderer().fillTextAtScaledPosition("MAZE SELECTION", NES_YELLOW, COL_LABEL, 144);
         renderer().fillTextAtScaledPosition(":", NES_YELLOW, COL_COLON, 144);
         renderer().fillTextAtScaledPosition(theTengenGame().mapCategory().name(), NES_WHITE, COL_VALUE, 144);
 
         // Starting level number
-        drawArrowAtSelectedOption(OPTION_STARTING_LEVEL, 168, scaledArcadeFont8());
+        drawMarkerIfSelected(OPTION_STARTING_LEVEL, 168, scaledArcadeFont8());
         renderer().fillTextAtScaledPosition("STARTING LEVEL", NES_YELLOW, COL_LABEL, 168);
         renderer().fillTextAtScaledPosition(":", NES_YELLOW, COL_COLON, 168);
         renderer().fillTextAtScaledPosition(String.valueOf(theTengenGame().startLevelNumber()), NES_WHITE, COL_VALUE, 168);
@@ -331,8 +322,8 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         renderer().fillTextAtScaledPosition("PRESS START TO START GAME", NES_YELLOW, 3 * TS,  208);
     }
 
-    private void drawArrowAtSelectedOption(int option, double y, Font font) {
-        if (selectedOption == option) {
+    private void drawMarkerIfSelected(int optionIndex, double y, Font font) {
+        if (selectedOption() == optionIndex) {
             ctx().setFill(NES_YELLOW);
             ctx().fillRect(scaled(COL_ARROW + 2.25), scaled(y - 4.5), scaled(7.5), scaled(1.75));
             renderer().fillTextAtScaledPosition(">", NES_YELLOW, font, COL_ARROW + 3, y);
