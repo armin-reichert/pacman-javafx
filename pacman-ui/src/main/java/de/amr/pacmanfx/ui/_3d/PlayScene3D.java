@@ -135,8 +135,8 @@ public class PlayScene3D implements GameScene {
     }
 
     @Override
-    public GameUI theUI() {
-        return ui;
+    public void handleKeyboardInput() {
+        actionBindings().runMatchingAction(ui);
     }
 
     @Override

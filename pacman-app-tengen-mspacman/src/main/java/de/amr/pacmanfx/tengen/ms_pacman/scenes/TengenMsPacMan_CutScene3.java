@@ -61,9 +61,9 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
         gameContext().theGame().theHUD().credit(false).score(false).levelCounter(true).livesCounter(false);
 
-        actionBindings.bind(ACTION_LET_GAME_STATE_EXPIRE, theUI().theJoypad().key(JoypadButton.START));
+        actionBindings.bind(ACTION_LET_GAME_STATE_EXPIRE, ui.theJoypad().key(JoypadButton.START));
 
-        GameUI_Config config = theUI().theConfiguration();
+        GameUI_Config config = ui.theConfiguration();
         var spriteSheet = (TengenMsPacMan_SpriteSheet) config.spriteSheet();
 
         clapperboard = new Clapperboard(spriteSheet, 3, "JUNIOR");
@@ -79,7 +79,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        theUI().theSound().stop(MUSIC_ID);
+        ui.theSound().stop(MUSIC_ID);
     }
 
     @Override
@@ -88,7 +88,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         if (t == 0) {
             clapperboard.show();
             clapperboard.startAnimation();
-            theUI().theSound().play(MUSIC_ID);
+            ui.theSound().play(MUSIC_ID);
         }
         else if (t == 130) {
             pacMan.setMoveDir(Direction.RIGHT);

@@ -71,11 +71,6 @@ public abstract class GameScene2D implements GameScene {
     }
 
     @Override
-    public GameUI theUI() {
-        return ui;
-    }
-
-    @Override
     public GameContext gameContext() {
         return ui.theGameContext();
     }
@@ -94,6 +89,11 @@ public abstract class GameScene2D implements GameScene {
         ui.theSound().stopAll();
         doEnd();
         destroy();
+    }
+
+    @Override
+    public void handleKeyboardInput() {
+        actionBindings().runMatchingAction(ui);
     }
 
     protected abstract void doInit();

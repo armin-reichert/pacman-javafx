@@ -67,7 +67,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     private final GameAction actionSelectNextJoypadBinding = new GameAction() {
         @Override
         public void execute(GameUI ui) {
-            theUI().theJoypad().selectNextKeyBinding(actionBindings);
+            ui.theJoypad().selectNextKeyBinding(actionBindings);
         }
 
         @Override
@@ -100,12 +100,12 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         theTengenGame().setCanStartNewGame(true);
         resetIdleTimer();
         initialDelay = INITIAL_DELAY;
-        theUI().theJoypad().registerCurrentBinding(actionBindings);
+        ui.theJoypad().registerCurrentBinding(actionBindings);
     }
 
     @Override
     protected void doEnd() {
-        theUI().theJoypad().unregisterCurrentBinding(actionBindings);
+        ui.theJoypad().unregisterCurrentBinding(actionBindings);
     }
 
     @Override
@@ -131,26 +131,26 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     }
 
     private void optionSelectionChanged() {
-        theUI().theSound().play("audio.option.selection_changed");
+        ui.theSound().play("audio.option.selection_changed");
         resetIdleTimer();
     }
 
     private void optionValueChanged() {
-        theUI().theSound().play("audio.option.value_changed");
+        ui.theSound().play("audio.option.value_changed");
         resetIdleTimer();
     }
 
     @Override
     public void handleKeyboardInput() {
-        if (theUI().theJoypad().isButtonPressed(JoypadButton.DOWN)) {
+        if (ui.theJoypad().isButtonPressed(JoypadButton.DOWN)) {
             selectNextOption();
         }
-        else if (theUI().theJoypad().isButtonPressed(JoypadButton.UP)) {
+        else if (ui.theJoypad().isButtonPressed(JoypadButton.UP)) {
             selectPrevOption();
         }
 
         // Button "A" is right of "B": select next value
-        else if (theUI().theJoypad().isButtonPressed(JoypadButton.A) || theUI().theKeyboard().isPressed(KeyCode.RIGHT)) {
+        else if (ui.theJoypad().isButtonPressed(JoypadButton.A) || ui.theKeyboard().isPressed(KeyCode.RIGHT)) {
             switch (selectedOption) {
                 case OPTION_PAC_BOOSTER    -> setNextPacBoosterValue();
                 case OPTION_DIFFICULTY     -> setNextDifficultyValue();
@@ -161,7 +161,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         }
 
         // Button "B" is left of "A": select previous value
-        else if (theUI().theJoypad().isButtonPressed(JoypadButton.B) || theUI().theKeyboard().isPressed(KeyCode.LEFT)) {
+        else if (ui.theJoypad().isButtonPressed(JoypadButton.B) || ui.theKeyboard().isPressed(KeyCode.LEFT)) {
             switch (selectedOption) {
                 case OPTION_PAC_BOOSTER    -> setPrevPacBoosterValue();
                 case OPTION_DIFFICULTY     -> setPrevDifficultyValue();
@@ -268,9 +268,9 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
         renderer().drawVerticalSceneBorders();
 
-        var config = (TengenMsPacMan_UIConfig) theUI().theConfiguration();
+        var config = (TengenMsPacMan_UIConfig) ui.theConfiguration();
         if (config.propertyJoypadBindingsDisplayed.get()) {
-            renderer().drawJoypadKeyBinding(theUI().theJoypad().currentKeyBinding());
+            renderer().drawJoypadKeyBinding(ui.theJoypad().currentKeyBinding());
         }
 
         renderer().ctx().setFont(scaledArcadeFont8());
@@ -315,7 +315,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         renderer().fillTextAtScaledPosition(":", NES_YELLOW, COL_COLON, 168);
         renderer().fillTextAtScaledPosition(String.valueOf(theTengenGame().startLevelNumber()), NES_WHITE, COL_VALUE, 168);
         if (theTengenGame().numContinues() < 4) {
-            var spriteSheet = (TengenMsPacMan_SpriteSheet) theUI().theConfiguration().spriteSheet();
+            var spriteSheet = (TengenMsPacMan_SpriteSheet) ui.theConfiguration().spriteSheet();
             RectShort continuesSprite = spriteSheet.sprite(switch (theTengenGame().numContinues()) {
                 case 0 -> SpriteID.CONTINUES_0;
                 case 1 -> SpriteID.CONTINUES_1;

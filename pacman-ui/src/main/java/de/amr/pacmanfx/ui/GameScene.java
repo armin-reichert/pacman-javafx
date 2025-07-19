@@ -20,18 +20,13 @@ import java.util.Optional;
  */
 public interface GameScene extends GameEventListener, Destroyable {
 
-    GameUI theUI();
-
     default Optional<SubScene> optSubScene() { return Optional.empty(); }
 
     GameContext gameContext();
 
     ActionBindingMap actionBindings();
 
-    /**
-     * By default, the first matching game action is executed.
-     */
-    default void handleKeyboardInput() { actionBindings().runMatchingAction(theUI()); }
+    void handleKeyboardInput();
 
     /**
      * Called when the scene becomes the current one.
