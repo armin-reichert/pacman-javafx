@@ -41,6 +41,7 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -98,6 +99,7 @@ public class GameLevel3D extends Group implements Destroyable {
     private final DoubleProperty  wallOpacityProperty = new SimpleDoubleProperty(1);
 
     private final GameUI ui;
+    private final WorldMapColorScheme colorScheme;
 
     private final AnimationManager animationManager = new AnimationManager();
     private ManagedAnimation wallColorFlashingAnimation;
@@ -116,9 +118,6 @@ public class GameLevel3D extends Group implements Destroyable {
     private PhongMaterial cornerTopMaterial;
     private PhongMaterial pelletMaterial;
 
-    private WorldMapColorScheme colorScheme;
-    private TerrainRenderer3D r3D;
-
     private AmbientLight ambientLight;
     private Group mazeGroup = new Group();
     private Group maze3D = new Group();
@@ -132,6 +131,8 @@ public class GameLevel3D extends Group implements Destroyable {
     private ArrayList<Pellet3D> pellets3D = new ArrayList<>();
     private ArrayList<Energizer3D> energizers3D = new ArrayList<>();
     private MessageView messageView;
+
+    private int wall3DCount;
 
     // Note: The order in which children are added to the root matters!
     // Walls and house must be added *after* the actors, otherwise the transparency is not working correctly.
@@ -227,7 +228,6 @@ public class GameLevel3D extends Group implements Destroyable {
         getChildren().addAll(ghosts3D);
         ghosts3D.forEach(ghost3D -> ghost3D.init(gameLevel()));
 
-        Logger.info("Build 3D maze for map (URL '{}') and color scheme {}", gameLevel().worldMap().url(), colorScheme);
         getChildren().add(mazeGroup);
 
         floor3D = new Floor3D(
@@ -258,23 +258,10 @@ public class GameLevel3D extends Group implements Destroyable {
         wallOpacityProperty.bind(ui.property3DWallOpacity());
 
         obstacleBaseHeightProperty.set(ui.thePrefs().getFloat("3d.obstacle.base_height", 4.0f));
-        r3D = new TerrainRenderer3D();
-        r3D.setOnWallCreated(wall3D -> wall3D.baseHeightProperty().bind(obstacleBaseHeightProperty));
-        r3D.setCylinderDivisions(24);
-        for (Obstacle obstacle : worldMap.obstacles()) {
-            // exclude house obstacle, house is built separately
-            Vector2i startTile = tileAt(obstacle.startPoint().toVector2f());
-            if (gameLevel().house().isPresent() && !gameLevel().house().get().isTileInHouseArea(startTile)) {
-                r3D.renderObstacle3D(
-                    maze3D,
-                    obstacle,
-                    isObstacleTheWorldBorder(worldMap, obstacle),
-                    ui.thePrefs().getFloat("3d.obstacle.wall_thickness", 2.25f),
-                    wallBaseMaterial, wallTopMaterial);
-            }
-        }
-
         houseBaseHeightProperty.set(ui.thePrefs().getFloat("3d.house.base_height", 12.0f));
+
+        buildMaze3D(maze3D, gameLevel().worldMap());
+
         gameLevel().house().ifPresent(house -> {
             house3D = new ArcadeHouse3D(
                 animationManager,
@@ -333,6 +320,32 @@ public class GameLevel3D extends Group implements Destroyable {
 
         levelCompletedFullAnimation = new LevelCompletedAnimation(ui, animationManager, this);
         levelCompletedShortAnimation = new LevelCompletedAnimationShort(animationManager, this);
+    }
+
+    private void buildMaze3D(Group parent, WorldMap worldMap) {
+        Logger.info("Building 3D maze for map (URL '{}') and color scheme {}...", gameLevel().worldMap().url(), colorScheme);
+        var r3D = new TerrainRenderer3D();
+        wall3DCount = 0;
+        r3D.setOnWallCreated(wall3D -> {
+            wall3D.baseHeightProperty().bind(obstacleBaseHeightProperty);
+            ++wall3DCount;
+        });
+        r3D.setCylinderDivisions(24);
+        Instant start = Instant.now();
+        for (Obstacle obstacle : worldMap.obstacles()) {
+            // exclude house obstacle, house is built separately
+            Vector2i startTile = tileAt(obstacle.startPoint().toVector2f());
+            if (gameLevel().house().isPresent() && !gameLevel().house().get().isTileInHouseArea(startTile)) {
+                r3D.renderObstacle3D(
+                        parent,
+                        obstacle,
+                        isObstacleTheWorldBorder(worldMap, obstacle),
+                        ui.thePrefs().getFloat("3d.obstacle.wall_thickness", 2.25f),
+                        wallBaseMaterial, wallTopMaterial);
+            }
+        }
+        java.time.Duration duration = java.time.Duration.between(start, Instant.now());
+        Logger.info("Built 3D maze with {} composite walls in {} milliseconds", wall3DCount, duration.toMillis());
     }
 
     public GameLevel gameLevel() {
@@ -617,6 +630,13 @@ public class GameLevel3D extends Group implements Destroyable {
         destroyed = true;
         Logger.info("Destroying game level 3D, clearing resources...");
 
+        animationManager.stopAllAnimations();
+        animationManager.destroyAllAnimations();
+        wallColorFlashingAnimation = null;
+        levelCompletedFullAnimation = null;
+        levelCompletedShortAnimation = null;
+        Logger.info("Destroyed and removed all managed animations");
+
         //TODO avoid access to global UI here?
         ui.property3DDrawMode().removeListener(this::handleDrawModeChange);
         Logger.info("Removed 'draw mode' listener");
@@ -651,20 +671,12 @@ public class GameLevel3D extends Group implements Destroyable {
         }
         Logger.info("Unbound and cleared material references");
 
-        colorScheme = null;
-
         livesCountProperty.unbind();
         houseOpenProperty.unbind();
         obstacleBaseHeightProperty.unbind();
         houseBaseHeightProperty.unbind();
         houseLightOnProperty.unbind();
         wallOpacityProperty.unbind();
-
-        animationManager.destroyAllAnimations();
-        wallColorFlashingAnimation = null;
-        levelCompletedFullAnimation = null;
-        levelCompletedShortAnimation = null;
-        Logger.info("Destroyed and removed all managed animations");
 
         if (dressMeshViews != null) {
             for (MeshView meshView : dressMeshViews) {
@@ -693,8 +705,7 @@ public class GameLevel3D extends Group implements Destroyable {
             eyesMeshViews = null;
             Logger.info("Cleared eyes mesh views");
         }
-        r3D = null;
-        Logger.info("Removed 3D renderer");
+
         getChildren().clear();
         Logger.info("Removed all nodes under game level");
 

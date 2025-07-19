@@ -9,7 +9,6 @@ import de.amr.pacmanfx.lib.Vector2i;
 import org.tinylog.Logger;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
@@ -43,8 +42,8 @@ public class Obstacle {
         }
     }
 
-    public Stream<RectShort> innerAreaRectangles() {
-        return innerAreaRectangles.stream();
+    public List<RectShort> innerAreaRectangles() {
+        return Collections.unmodifiableList(innerAreaRectangles);
     }
 
     public Vector2i[] points() {
