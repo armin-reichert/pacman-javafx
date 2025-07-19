@@ -53,6 +53,7 @@ public class ActionBindingMap {
     }
 
     public void updateKeyboard() {
+        if (keyboard == null) return;
         for (KeyCombination combination : bindings.keySet()) {
             keyboard.setBinding(combination, this);
         }
@@ -64,6 +65,7 @@ public class ActionBindingMap {
     }
 
     public void removeFromKeyboard() {
+        if (keyboard == null) return;
         for (KeyCombination combination : bindings.keySet()) {
             keyboard.removeBinding(combination, this);
         }
@@ -92,6 +94,7 @@ public class ActionBindingMap {
     }
 
     public Optional<GameAction> matchingAction() {
+        if (keyboard == null) return Optional.empty();
         return bindings.keySet().stream()
             .filter(keyboard::isMatching)
             .map(bindings::get)
