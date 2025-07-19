@@ -283,12 +283,7 @@ public class PlayScene3D implements GameScene {
         gameLevel3D.tick();
         updateScores();
         updateSound();
-
-        // Update camera
-        PerspectiveID id = perspectiveIDProperty.get();
-        if (id != null && perspectiveMap.containsKey(id)) {
-            perspectiveMap.get(id).update(camera, gameContext());
-        }
+        updateCamera();
     }
 
     @Override
@@ -505,6 +500,16 @@ public class PlayScene3D implements GameScene {
         scores3D.translateYProperty().bind(gameLevel3D.translateYProperty().subtract(4.5 * TS));
         scores3D.translateZProperty().bind(gameLevel3D.translateZProperty().subtract(4.5 * TS));
         Logger.info("Positioned scores 3D");
+    }
+
+    protected void updateCamera() {
+        PerspectiveID id = perspectiveIDProperty.get();
+        if (id != null && perspectiveMap.containsKey(id)) {
+            perspectiveMap.get(id).update(camera, gameContext());
+        }
+        else {
+            Logger.error("No perspective with ID '{}' exists", id);
+        }
     }
 
     protected void updateSound() {
