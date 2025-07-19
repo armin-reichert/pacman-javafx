@@ -190,13 +190,11 @@ public class Maze3D extends Group {
         PhongMaterial wallTopMaterial = coloredMaterial(wallTopColor);
 
         r3D.setOnWallCreated(wall3D -> wall3D.setBaseHeight(HOUSE_WALL_HEIGHT));
-        mazeGroup.getChildren().addAll(
-            r3D.createWallBetweenTiles(houseMinTile, houseMinTile.plus(2, 0), Wall3D.DEFAULT_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial),
-            r3D.createWallBetweenTiles(houseRightUpper.minus(2, 0), houseRightUpper, Wall3D.DEFAULT_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial),
-            r3D.createWallBetweenTiles(houseMinTile, houseLeftLower, Wall3D.DEFAULT_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial),
-            r3D.createWallBetweenTiles(houseLeftLower, houseMaxTile, Wall3D.DEFAULT_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial),
-            r3D.createWallBetweenTiles(houseMaxTile, houseRightUpper, Wall3D.DEFAULT_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial)
-        );
+        r3D.createWallBetweenTiles(houseMinTile, houseMinTile.plus(2, 0), Wall3D.DEFAULT_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial).addTo(mazeGroup);
+        r3D.createWallBetweenTiles(houseRightUpper.minus(2, 0), houseRightUpper, Wall3D.DEFAULT_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial).addTo(mazeGroup);
+        r3D.createWallBetweenTiles(houseMinTile, houseLeftLower, Wall3D.DEFAULT_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial).addTo(mazeGroup);
+        r3D.createWallBetweenTiles(houseLeftLower, houseMaxTile, Wall3D.DEFAULT_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial).addTo(mazeGroup);
+        r3D.createWallBetweenTiles(houseMaxTile, houseRightUpper, Wall3D.DEFAULT_WALL_THICKNESS, wallBaseMaterial, wallTopMaterial).addTo(mazeGroup);
         r3D.setOnWallCreated(null);
 
         Color doorColor = getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR));

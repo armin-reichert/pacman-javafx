@@ -13,53 +13,50 @@ import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.Shape3D;
 import org.tinylog.Logger;
 
-import static java.util.Objects.requireNonNull;
+import java.util.List;
 
 /**
- * 3D wall composed of a base and a top part. Expects the base part to be either a box or a cylinder.
+ * 3D wall composed of a base and a top node.
  */
-public class Wall3D extends Group implements Destroyable {
+public record Wall3D(Node base, Node top) implements Destroyable {
 
     public static final double DEFAULT_BASE_HEIGHT = 4;
     public static final double DEFAULT_TOP_HEIGHT = 0.2;
     public static final double DEFAULT_WALL_THICKNESS = 2;
 
-    public Wall3D(Node base, Node top) {
-        super(requireNonNull(base), requireNonNull(top));
+    public void addTo(Group group) {
+        group.getChildren().addAll(base, top);
     }
 
-    public Node wallBase() { return getChildren().getFirst(); }
-    public Node wallTop() { return getChildren().getLast(); }
-
     public void setBaseHeight(double baseHeight) {
-        if (wallBase() instanceof Box base) {
-            base.depthProperty().unbind();
-            base.translateZProperty().unbind();
-            wallTop().translateZProperty().unbind();
-            base.setDepth(baseHeight);
-            base.setTranslateZ(baseHeight * (-0.5));
-            wallTop().setTranslateZ(-(baseHeight + 0.5 * DEFAULT_TOP_HEIGHT));
-        } else if (wallBase() instanceof Cylinder base) {
-            base.heightProperty().unbind();
-            base.translateZProperty().unbind();
-            wallTop().translateZProperty().unbind();
-            base.setHeight(baseHeight);
-            base.setTranslateZ(baseHeight * (-0.5));
-            wallTop().setTranslateZ(-(baseHeight + 0.5 * DEFAULT_TOP_HEIGHT));
+        if (base instanceof Box box) {
+            box.depthProperty().unbind();
+            box.translateZProperty().unbind();
+            top.translateZProperty().unbind();
+            box.setDepth(baseHeight);
+            box.setTranslateZ(baseHeight * (-0.5));
+            top.setTranslateZ(-(baseHeight + 0.5 * DEFAULT_TOP_HEIGHT));
+        } else if (base instanceof Cylinder cylinder) {
+            cylinder.heightProperty().unbind();
+            cylinder.translateZProperty().unbind();
+            top.translateZProperty().unbind();
+            cylinder.setHeight(baseHeight);
+            cylinder.setTranslateZ(baseHeight * (-0.5));
+            top.setTranslateZ(-(baseHeight + 0.5 * DEFAULT_TOP_HEIGHT));
         } else {
             Logger.warn("The base of a 3D wall should either be a box or a cylinder");
         }
     }
 
     public void bindBaseHeight(DoubleProperty baseHeightProperty) {
-        if (wallBase() instanceof Box box) {
+        if (base instanceof Box box) {
             box.depthProperty().bind(baseHeightProperty);
-            wallBase().translateZProperty().bind(baseHeightProperty.multiply(-0.5));
-            wallTop().translateZProperty().bind(baseHeightProperty.add(0.5 * DEFAULT_TOP_HEIGHT).negate());
-        } else if (wallBase() instanceof Cylinder cylinder) {
+            base.translateZProperty().bind(baseHeightProperty.multiply(-0.5));
+            top.translateZProperty().bind(baseHeightProperty.add(0.5 * DEFAULT_TOP_HEIGHT).negate());
+        } else if (base instanceof Cylinder cylinder) {
             cylinder.heightProperty().bind(baseHeightProperty);
-            wallBase().translateZProperty().bind(baseHeightProperty.multiply(-0.5));
-            wallTop().translateZProperty().bind(baseHeightProperty.add(0.5 * DEFAULT_TOP_HEIGHT).negate());
+            base.translateZProperty().bind(baseHeightProperty.multiply(-0.5));
+            top.translateZProperty().bind(baseHeightProperty.add(0.5 * DEFAULT_TOP_HEIGHT).negate());
         } else {
             Logger.warn("The base of a 3D wall should either be a box or a cylinder");
         }
@@ -67,7 +64,7 @@ public class Wall3D extends Group implements Destroyable {
 
     @Override
     public void destroy() {
-        getChildren().forEach(child -> {
+        List.of(base, top).forEach(child -> {
             switch (child) {
                 case Box box -> {
                     box.depthProperty().unbind();
@@ -92,6 +89,5 @@ public class Wall3D extends Group implements Destroyable {
                 default -> {}
             }
         });
-        getChildren().clear();
     }
 }

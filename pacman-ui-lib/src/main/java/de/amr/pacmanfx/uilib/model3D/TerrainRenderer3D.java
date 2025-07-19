@@ -41,12 +41,11 @@ public class TerrainRenderer3D {
 
     public void addWallBetween(Group parent, Vector2i p1, Vector2i p2, double wallThickness, PhongMaterial wallBaseMaterial, PhongMaterial wallTopMaterial) {
         if (p1.x() == p2.x()) { // vertical wall
-            parent.getChildren().add(
-                createBoxWall(p1.midpoint(p2), wallThickness, Math.abs(p1.y() - p2.y()), wallBaseMaterial, wallTopMaterial)
-            );
+            Wall3D wall3D = createBoxWall(p1.midpoint(p2), wallThickness, Math.abs(p1.y() - p2.y()), wallBaseMaterial, wallTopMaterial);
+            wall3D.addTo(parent);
         } else if (p1.y() == p2.y()) { // horizontal wall
-            parent.getChildren().add(
-                createBoxWall(p1.midpoint(p2), Math.abs(p1.x() - p2.x()), wallThickness, wallBaseMaterial, wallTopMaterial));
+            Wall3D wall3D = createBoxWall(p1.midpoint(p2), Math.abs(p1.x() - p2.x()), wallThickness, wallBaseMaterial, wallTopMaterial);
+            wall3D.addTo(parent);
         } else {
             Logger.error("Cannot add horizontal/vertical wall between {} and {}", p1, p2);
         }
@@ -91,8 +90,8 @@ public class TerrainRenderer3D {
             if ("dcgbfceb".equals(obstacle.encoding())) { // O-shape with hole
                 Vector2i[] cornerCenters = obstacle.cornerCenters();
                 for (Vector2i center : cornerCenters) {
-                    obstacleGroup.getChildren().add(
-                        createCylinderWall(center, HTS, baseMaterial, topMaterial));
+                    Wall3D wall3D = createCylinderWall(center, HTS, baseMaterial, topMaterial);
+                    wall3D.addTo(obstacleGroup);
                 }
                 addWallBetween(obstacleGroup, cornerCenters[0], cornerCenters[1], TS, baseMaterial, topMaterial);
                 addWallBetween(obstacleGroup, cornerCenters[1], cornerCenters[2], TS, baseMaterial, topMaterial);
@@ -115,14 +114,11 @@ public class TerrainRenderer3D {
     {
         // Place a cylinder at each corner
         for (Vector2i center : obstacle.cornerCenters()) {
-            parent.getChildren().add(
-                createCylinderWall(center, HTS, baseMaterial, topMaterial));
+            createCylinderWall(center, HTS, baseMaterial, topMaterial).addTo(parent);
         }
         // Fill area with boxes
         obstacle.innerAreaRectangles().forEach(rect ->
-            parent.getChildren().add(
-                createBoxWall(rect.center(), rect.width(), rect.height(), baseMaterial, topMaterial)
-            )
+            createBoxWall(rect.center(), rect.width(), rect.height(), baseMaterial, topMaterial).addTo(parent)
         );
     }
 
@@ -193,7 +189,9 @@ public class TerrainRenderer3D {
             baseMaterial, topMaterial);
 
         Wall3D cornerWall = createCylinderWall(cornerCenter, 0.5 * wallThickness, baseMaterial, topMaterial);
-        parent.getChildren().addAll(horizontalWall, cornerWall, verticalWall);
+        horizontalWall.addTo(parent);
+        cornerWall.addTo(parent);
+        verticalWall.addTo(parent);
     }
 
     public Wall3D createCylinderWall(
@@ -213,9 +211,12 @@ public class TerrainRenderer3D {
         top.setRotate(90);
 
         Wall3D wall3D = new Wall3D(base, top);
-        wall3D.setTranslateX(center.x());
-        wall3D.setTranslateY(center.y());
-        wall3D.setMouseTransparent(true);
+        wall3D.base().setTranslateX(center.x());
+        wall3D.base().setTranslateY(center.y());
+        wall3D.base().setMouseTransparent(true);
+        wall3D.top().setTranslateX(center.x());
+        wall3D.top().setTranslateY(center.y());
+        wall3D.top().setMouseTransparent(true);
 
         if (onWallCreated != null) {
             onWallCreated.accept(wall3D);
@@ -237,9 +238,12 @@ public class TerrainRenderer3D {
         top.setMaterial(topMaterial);
 
         Wall3D wall3D = new Wall3D(base, top);
-        wall3D.setTranslateX(center.x());
-        wall3D.setTranslateY(center.y());
-        wall3D.setMouseTransparent(true);
+        wall3D.base().setTranslateX(center.x());
+        wall3D.base().setTranslateY(center.y());
+        wall3D.base().setMouseTransparent(true);
+        wall3D.top().setTranslateX(center.x());
+        wall3D.top().setTranslateY(center.y());
+        wall3D.top().setMouseTransparent(true);
 
         if (onWallCreated != null) {
             onWallCreated.accept(wall3D);

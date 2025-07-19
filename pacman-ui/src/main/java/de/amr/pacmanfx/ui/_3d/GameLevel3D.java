@@ -741,11 +741,12 @@ public class GameLevel3D extends Group implements Destroyable {
             Logger.info("Destroyed and cleared 3D house");
         }
         if (maze3D != null) {
-            maze3D.getChildren().forEach(child -> {
+
+          /*  maze3D.getChildren().forEach(child -> {
                 if (child instanceof Wall3D wall3D) {
                     wall3D.destroy();
                 }
-            });
+            });*/
             maze3D.getChildren().clear();
             maze3D = null;
             Logger.info("3D maze destroyed");
