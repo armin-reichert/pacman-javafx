@@ -7,7 +7,6 @@ package de.amr.pacmanfx.ui.dashboard;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.MovingActor;
@@ -15,7 +14,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 
-import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -29,33 +28,28 @@ public class InfoBoxActorInfo extends InfoBox {
     }
 
     public void init(GameUI ui) {
-        addDynamicLabeledValue("Pac Name", supplyPacInfo((game, pac) -> pac.name()));
-        addDynamicLabeledValue("Lives",    ifGameLevelPresent(level -> "%d".formatted(ui.theGameContext().theGame().lifeCount())));
-        addDynamicLabeledValue("Movement", supplyPacInfo(InfoBoxActorInfo::actorMovementInfo));
-        addDynamicLabeledValue("Tile",     supplyPacInfo(InfoBoxActorInfo::actorLocationInfo));
-        addDynamicLabeledValue("Power",    ifGameLevelPresent(level -> {
-            TickTimer powerTimer = level.pac().powerTimer();
+        addDynamicLabeledValue("Pac Name", supplyPacInfo(Pac::name));
+        addDynamicLabeledValue("Lives",    ifGameLevelPresent(gameLevel -> "%d".formatted(ui.theGameContext().theGame().lifeCount())));
+        addDynamicLabeledValue("Movement", supplyPacInfo(this::actorMovementInfo));
+        addDynamicLabeledValue("Tile",     supplyPacInfo(this::actorLocationInfo));
+        addDynamicLabeledValue("Power",    ifGameLevelPresent(gameLevel -> {
+            TickTimer powerTimer = gameLevel.pac().powerTimer();
             return powerTimer.isRunning()
                 ? "Remaining: %s".formatted(ticksToString(powerTimer.remainingTicks()))
                 : "No Power";
         }));
         addEmptyRow();
-        ghostInfo(RED_GHOST_SHADOW);
+        addGhostInfo(RED_GHOST_SHADOW);
         addEmptyRow();
-        ghostInfo(PINK_GHOST_SPEEDY);
+        addGhostInfo(PINK_GHOST_SPEEDY);
         addEmptyRow();
-        ghostInfo(CYAN_GHOST_BASHFUL);
+        addGhostInfo(CYAN_GHOST_BASHFUL);
         addEmptyRow();
-        ghostInfo(ORANGE_GHOST_POKEY);
+        addGhostInfo(ORANGE_GHOST_POKEY);
     }
 
-    private Supplier<String> supplyPacInfo(BiFunction<GameModel, Pac, String> detailInfoSupplier) {
-        return ifGameLevelPresent(gameLevel -> gameLevel.pac() != null
-            ? detailInfoSupplier.apply(ui.theGameContext().theGame(), gameLevel.pac())
-            : NO_INFO);
-    }
-
-    private static String actorLocationInfo(GameModel game, MovingActor movingActor) {
+    private String actorLocationInfo(MovingActor movingActor) {
+        if (movingActor == null) return NO_INFO;
         Vector2i tile = movingActor.tile();
         Vector2f offset = movingActor.offset();
         return "(%2d,%2d)+(%2.0f,%2.0f)%s".formatted(
@@ -64,7 +58,8 @@ public class InfoBoxActorInfo extends InfoBox {
             movingActor.isNewTileEntered() ? " NEW" : "");
     }
 
-    private static String actorMovementInfo(GameModel game, MovingActor movingActor) {
+    private String actorMovementInfo(MovingActor movingActor) {
+        if (movingActor == null) return NO_INFO;
         var speed = movingActor.velocity().length() * 60f;
         var blocked = !movingActor.moveInfo().moved;
         var reverseText = movingActor.gotReverseCommand() ? "REV!" : "";
@@ -73,37 +68,38 @@ public class InfoBoxActorInfo extends InfoBox {
             : "%.2fpx/s %s (%s)%s".formatted(speed, movingActor.moveDir(), movingActor.wishDir(), reverseText);
     }
 
-    private void ghostInfo(byte personality) {
-        addDynamicLabeledValue(ghostColorName(personality) + " Ghost", supplyGhostInfo(this::ghostNameAndState, personality));
-        addDynamicLabeledValue("Animation",      supplyGhostInfo(this::ghostAnimation, personality));
-        addDynamicLabeledValue("Movement",       supplyGhostInfo(InfoBoxActorInfo::actorMovementInfo, personality));
-        addDynamicLabeledValue("Tile",           supplyGhostInfo(InfoBoxActorInfo::actorLocationInfo, personality));
+    private Supplier<String> supplyPacInfo(Function<Pac, String> detailInfoSupplier) {
+        return ifGameLevelPresent(gameLevel -> detailInfoSupplier.apply(gameLevel.pac()));
     }
 
-    private Supplier<String> supplyGhostInfo(BiFunction<GameModel, Ghost, String> detailInfoSupplier, byte personality) {
-        return ifGameLevelPresent(level -> {
-            if (level.ghosts().findAny().isPresent()) {
-                return detailInfoSupplier.apply(ui.theGameContext().theGame(), level.ghost(personality));
+    private void addGhostInfo(byte personality) {
+        String name = switch (personality) {
+            case RED_GHOST_SHADOW   -> "Red Ghost";
+            case PINK_GHOST_SPEEDY  -> "Pink Ghost";
+            case CYAN_GHOST_BASHFUL -> "Cyan Ghost";
+            case ORANGE_GHOST_POKEY -> "Orange Ghost";
+            default -> "Unknown Ghost";
+        };
+        addDynamicLabeledValue(name,        supplyGhostInfo(this::ghostNameAndState, personality));
+        addDynamicLabeledValue("Movement",  supplyGhostInfo(this::actorMovementInfo, personality));
+        addDynamicLabeledValue("Tile",      supplyGhostInfo(this::actorLocationInfo, personality));
+        addDynamicLabeledValue("Animation", supplyGhostInfo(this::ghostAnimationInfo, personality));
+    }
+
+    private Supplier<String> supplyGhostInfo(Function<Ghost, String> detailInfoSupplier, byte personality) {
+        return ifGameLevelPresent(gameLevel -> {
+            if (gameLevel.ghosts().findAny().isPresent()) {
+                return detailInfoSupplier.apply(gameLevel.ghost(personality));
             }
             return NO_INFO;
         });
     }
 
-    private static String ghostColorName(byte personality) {
-        return switch (personality) {
-            case RED_GHOST_SHADOW -> "Red";
-            case PINK_GHOST_SPEEDY -> "Pink";
-            case CYAN_GHOST_BASHFUL -> "Cyan";
-            case ORANGE_GHOST_POKEY -> "Orange";
-            default -> "";
-        };
-    }
-
-    private String ghostNameAndState(GameModel game, Ghost ghost) {
+    private String ghostNameAndState(Ghost ghost) {
         return String.format("%s (%s)", ghost.name(), ghostState(ghost));
     }
 
-    private String ghostAnimation(GameModel game, Ghost ghost) {
+    private String ghostAnimationInfo(Ghost ghost) {
         if (ghost.animationMap().isEmpty()) {
             return NO_INFO;
         }
