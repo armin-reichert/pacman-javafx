@@ -181,7 +181,9 @@ public abstract class MovingActor extends Actor {
      * @param dir the move direction (must not be null)
      */
     public void setMoveDir(Direction dir) {
-        moveDirProperty().set(requireNonNull(dir));
+        requireNonNull(dir);
+        if (moveDir == null && dir.equals(DEFAULT_MOVE_DIR)) return;
+        moveDirProperty().set(dir);
         setVelocity(dir.vector().scaled(velocity().length()));
     }
 
@@ -205,7 +207,9 @@ public abstract class MovingActor extends Actor {
      * @param dir the wish direction (must not be null)
      */
     public void setWishDir(Direction dir) {
-        wishDirProperty().set(requireNonNull(dir));
+        requireNonNull(dir);
+        if (wishDir == null && dir.equals(DEFAULT_WISH_DIR)) return;
+        wishDirProperty().set(dir);
     }
 
     /**

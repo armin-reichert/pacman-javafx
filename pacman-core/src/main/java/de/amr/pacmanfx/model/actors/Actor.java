@@ -60,12 +60,8 @@ public class Actor {
     public void reset() {
         setVisible(DEFAULT_VISIBILITY);
         setPosition(DEFAULT_POSITION);
-        if (velocity != null) {
-            setVelocity(DEFAULT_VELOCITY);
-        }
-        if (acceleration != null) {
-            setAcceleration(DEFAULT_ACCELERATION);
-        }
+        setVelocity(DEFAULT_VELOCITY);
+        setAcceleration(DEFAULT_ACCELERATION);
     }
 
     public BooleanProperty visibleProperty() {
