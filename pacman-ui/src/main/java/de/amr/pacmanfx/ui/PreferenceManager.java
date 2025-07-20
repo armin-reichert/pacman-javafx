@@ -3,6 +3,7 @@ package de.amr.pacmanfx.ui;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import org.tinylog.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +20,19 @@ public class PreferenceManager {
         prefs = Preferences.userNodeForPackage(_class);
     }
 
-    public void store(String key, Object defaultValue) {
+    public boolean checkAccess() {
+        try {
+            for (String key : prefs.keys()) {
+                prefs.get(key, null);
+                Logger.info("Prefs key '{}' accessed");
+            }
+            return true;
+        } catch (Exception x) {
+            return false;
+        }
+    }
+
+    public void storeValue(String key, Object defaultValue) {
         switch (defaultValue) {
             case Float floatValue -> prefs.putFloat(key, floatValue);
             case Integer intValue -> prefs.putInt(key, intValue);
@@ -28,9 +41,18 @@ public class PreferenceManager {
         defaultValueMap.put(key, defaultValue);
     }
 
+    public void storeDefaultValue(String key, Object defaultValue) {
+        defaultValueMap.put(key, defaultValue);
+    }
+
     public void storeColor(String key, Color color) {
         String colorSpec = formatColorHex(color);
         prefs.put(key, colorSpec);
+        defaultValueMap.put(key, colorSpec);
+    }
+
+    public void storeDefaultColor(String key, Color color) {
+        String colorSpec = formatColorHex(color);
         defaultValueMap.put(key, colorSpec);
     }
 
@@ -53,6 +75,17 @@ public class PreferenceManager {
         defaultValueMap.put(sizeKey, (float) font.getSize());
     }
 
+    public void storeDefaultFont(String key, Font font) {
+        String familyKey = key + ".family";
+        defaultValueMap.put(familyKey, font.getFamily());
+
+        String styleKey = key + ".style";
+        defaultValueMap.put(styleKey, font.getStyle());
+
+        String sizeKey = key + ".size";
+        defaultValueMap.put(sizeKey, (float) font.getSize());
+    }
+
     public Font getFont(String key) {
         String familyKey = key + ".family";
         String family = prefs.get(familyKey, getDefaultValue(familyKey));
@@ -61,7 +94,8 @@ public class PreferenceManager {
         String style = prefs.get(styleKey, getDefaultValue(styleKey));
 
         String sizeKey = key + ".size";
-        float size = prefs.getFloat(sizeKey, getDefaultValue(sizeKey));
+        Object defaultSize = getDefaultValue(sizeKey);
+        float size = prefs.getFloat(sizeKey, defaultSize instanceof Float ? ((Float) defaultSize) : 8);
 
         return Font.font(family, FontWeight.findByName(style), size);
     }

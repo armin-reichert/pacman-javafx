@@ -43,7 +43,6 @@ import java.util.Optional;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_ENTER_FULLSCREEN;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_TOGGLE_MUTED;
-import static de.amr.pacmanfx.uilib.Ufx.formatColorHex;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -104,6 +103,9 @@ public class PacManGames_UI_Impl implements GameUI {
         theJoypad = new Joypad(theKeyboard);
         theWatchdog = new DirectoryWatchdog(gameContext.theCustomMapDir());
 
+        if (!thePrefs.checkAccess()) {
+            Logger.error("Preferences could not be accessed!");
+        }
         storeDefaultPreferences();
 
         Scene mainScene = new Scene(rootPane, width, height);
@@ -162,36 +164,36 @@ public class PacManGames_UI_Impl implements GameUI {
     }
 
     private void storeDefaultPreferences() {
-        thePrefs.store("3d.bonus.symbol.width", 8.0f);
-        thePrefs.store("3d.bonus.points.width", 1.8f * 8.0f);
-        thePrefs.store("3d.energizer.radius", 3.5f);
-        thePrefs.store("3d.energizer.scaling.min", 0.2f);
-        thePrefs.store("3d.energizer.scaling.max", 1.0f);
-        thePrefs.store("3d.floor.padding", 5.0f);
-        thePrefs.store("3d.floor.thickness", 0.5f);
-        thePrefs.store("3d.ghost.size", 15.5f);
-        thePrefs.store("3d.house.base_height", 12.0f);
-        thePrefs.store("3d.house.opacity", 0.4f);
-        thePrefs.store("3d.house.sensitivity", 1.5f * TS);
-        thePrefs.store("3d.house.wall_thickness", 2.5f);
-        thePrefs.store("3d.level_counter.elevation", 6f);
-        thePrefs.store("3d.lives_counter.capacity", 5);
-        thePrefs.storeColor("3d.lives_counter.pillar_color", Color.grayRgb(120));
-        thePrefs.storeColor("3d.lives_counter.plate_color",  Color.grayRgb(180));
-        thePrefs.store("3d.lives_counter.shape_size", 12.0f);
-        thePrefs.store("3d.obstacle.base_height", 4.0f);
-        thePrefs.store("3d.obstacle.wall_thickness", 2.25f);
-        thePrefs.store("3d.pac.size", 16.0f);
-        thePrefs.store("3d.pellet.radius", 1.0f);
+        thePrefs.storeDefaultValue("3d.bonus.symbol.width", 8.0f);
+        thePrefs.storeDefaultValue("3d.bonus.points.width", 1.8f * 8.0f);
+        thePrefs.storeDefaultValue("3d.energizer.radius", 3.5f);
+        thePrefs.storeDefaultValue("3d.energizer.scaling.min", 0.2f);
+        thePrefs.storeDefaultValue("3d.energizer.scaling.max", 1.0f);
+        thePrefs.storeDefaultValue("3d.floor.padding", 5.0f);
+        thePrefs.storeDefaultValue("3d.floor.thickness", 0.5f);
+        thePrefs.storeDefaultValue("3d.ghost.size", 15.5f);
+        thePrefs.storeDefaultValue("3d.house.base_height", 12.0f);
+        thePrefs.storeDefaultValue("3d.house.opacity", 0.4f);
+        thePrefs.storeDefaultValue("3d.house.sensitivity", 1.5f * TS);
+        thePrefs.storeDefaultValue("3d.house.wall_thickness", 2.5f);
+        thePrefs.storeDefaultValue("3d.level_counter.elevation", 6f);
+        thePrefs.storeDefaultValue("3d.lives_counter.capacity", 5);
+        thePrefs.storeDefaultColor("3d.lives_counter.pillar_color", Color.grayRgb(120));
+        thePrefs.storeDefaultColor("3d.lives_counter.plate_color",  Color.grayRgb(180));
+        thePrefs.storeDefaultValue("3d.lives_counter.shape_size", 12.0f);
+        thePrefs.storeDefaultValue("3d.obstacle.base_height", 4.0f);
+        thePrefs.storeDefaultValue("3d.obstacle.wall_thickness", 2.25f);
+        thePrefs.storeDefaultValue("3d.pac.size", 16.0f);
+        thePrefs.storeDefaultValue("3d.pellet.radius", 1.0f);
 
         // "Kornblumenblau, sind die Augen der Frauen beim Weine..."
-        thePrefs.storeColor("context_menu.title.fill", Color.CORNFLOWERBLUE);
-        thePrefs.storeFont("context_menu.title.font", Font.font("Dialog", FontWeight.BLACK, 14.0f));
+        thePrefs.storeDefaultColor("context_menu.title.fill", Color.CORNFLOWERBLUE);
+        thePrefs.storeDefaultFont("context_menu.title.font", Font.font("Dialog", FontWeight.BLACK, 14.0f));
 
-        thePrefs.storeColor("debug_text.fill", Color.YELLOW);
-        thePrefs.storeFont("debug_text.font", Font.font("Sans", FontWeight.BOLD, 16.0f));
+        thePrefs.storeDefaultColor("debug_text.fill", Color.YELLOW);
+        thePrefs.storeDefaultFont("debug_text.font", Font.font("Sans", FontWeight.BOLD, 16.0f));
 
-        thePrefs.store("scene2d.max_scaling", 5.0f);
+        thePrefs.storeDefaultValue("scene2d.max_scaling", 5.0f);
     }
 
     public void configure(Map<String, Class<? extends GameUI_Config>> configClassesMap) {
