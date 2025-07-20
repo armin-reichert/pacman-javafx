@@ -54,6 +54,7 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static de.amr.pacmanfx.uilib.Ufx.*;
+import static java.time.Duration.between;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -138,7 +139,6 @@ public class GameLevel3D extends Group implements Destroyable {
 
     private int wall3DCount;
 
-    
     public GameLevel3D(GameUI ui) {
         this.ui = requireNonNull(ui);
         this.gameLevel = requireNonNull(ui.theGameContext().theGameLevel());
@@ -352,32 +352,32 @@ public class GameLevel3D extends Group implements Destroyable {
     }
 
     private void createMaze3D() {
+        Logger.info("Building 3D maze for map (URL '{}'), color scheme: {}...", gameLevel.worldMap().url(), colorScheme);
+
         wallOpacityProperty.bind(ui.property3DWallOpacity());
         obstacleBaseHeightProperty.set(ui.thePrefs().getFloat("3d.obstacle.base_height"));
         houseBaseHeightProperty.set(ui.thePrefs().getFloat("3d.house.base_height"));
 
-        WorldMap worldMap = ui.theGameContext().theGameLevel().worldMap();
-        Logger.info("Building 3D maze for map (URL '{}') and color scheme {}...", worldMap.url(), colorScheme);
         var r3D = new TerrainRenderer3D();
         r3D.setBaseMaterial(wallBaseMaterial);
         r3D.setTopMaterial(wallTopMaterial);
+        r3D.setCylinderDivisions(24);
         r3D.setOnWallCreated(wall3D -> {
             wall3D.bindBaseHeight(obstacleBaseHeightProperty);
             ++wall3DCount;
         });
-        r3D.setCylinderDivisions(24);
 
+        float wallThickness = ui.thePrefs().getFloat("3d.obstacle.wall_thickness");
         wall3DCount = 0;
-        Instant start = Instant.now();
-        for (Obstacle obstacle : worldMap.obstacles()) {
+        var start = Instant.now();
+        for (Obstacle obstacle : gameLevel.worldMap().obstacles()) {
             // exclude house obstacle, house is built separately
             Vector2i startTile = tileAt(obstacle.startPoint().toVector2f());
-            float wallThickness = ui.thePrefs().getFloat("3d.obstacle.wall_thickness");
             if (gameLevel.house().isPresent() && !gameLevel.house().get().isTileInHouseArea(startTile)) {
-                r3D.renderObstacle3D(maze3D, obstacle, isObstacleTheWorldBorder(worldMap, obstacle), wallThickness);
+                r3D.renderObstacle3D(maze3D, obstacle, isObstacleTheWorldBorder(gameLevel.worldMap(), obstacle), wallThickness);
             }
         }
-        java.time.Duration duration = java.time.Duration.between(start, Instant.now());
+        var duration = between(start, Instant.now());
         Logger.info("Built 3D maze with {} composite walls in {} milliseconds", wall3DCount, duration.toMillis());
     }
 
@@ -437,7 +437,7 @@ public class GameLevel3D extends Group implements Destroyable {
 
     public void onHuntingStart() {
         pac3D.init();
-        ghosts3D.forEach(ghost3D -> ghost3D.init(ui.theGameContext().theGameLevel()));
+        ghosts3D.forEach(ghost3D -> ghost3D.init(gameLevel));
         energizers3D().forEach(energizer3D -> energizer3D.pumpingAnimation().playFromStart());
         livesCounter3D.lookingAroundAnimation().playFromStart();
     }
@@ -465,7 +465,7 @@ public class GameLevel3D extends Group implements Destroyable {
     public void onGhostDying() {
         ui.theGameContext().theGame().simulationStep().killedGhosts.forEach(killedGhost -> {
             byte personality = killedGhost.personality();
-            int killedIndex = ui.theGameContext().theGameLevel().victims().indexOf(killedGhost);
+            int killedIndex = gameLevel.victims().indexOf(killedGhost);
             Image pointsImage = ui.theConfiguration().killedGhostPointsImage(killedGhost, killedIndex);
             ghost3D(personality).setNumberImage(pointsImage);
         });
@@ -486,7 +486,7 @@ public class GameLevel3D extends Group implements Destroyable {
         if (messageView != null) {
             messageView.setVisible(false);
         }
-        boolean cutSceneFollows = ui.theGameContext().theGame().cutSceneNumber(ui.theGameContext().theGameLevel().number()).isPresent();
+        boolean cutSceneFollows = ui.theGameContext().theGame().cutSceneNumber(gameLevel.number()).isPresent();
         ManagedAnimation levelCompletedAnimation = cutSceneFollows
                 ? levelCompletedAnimationBeforeCutScene()
                 : levelCompletedAnimation();
@@ -513,7 +513,7 @@ public class GameLevel3D extends Group implements Destroyable {
         ui.theSound().stopAll();
         ui.theSound().play(SoundID.GAME_OVER);
         boolean inOneOf4Cases = randomInt(0, 1000) < 250;
-        if (!ui.theGameContext().theGameLevel().isDemoLevel() && inOneOf4Cases) {
+        if (!gameLevel.isDemoLevel() && inOneOf4Cases) {
             ui.showFlashMessageSec(2.5, ui.theAssets().localizedGameOverMessage());
         }
     }

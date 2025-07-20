@@ -55,15 +55,15 @@ public class Pac extends MovingActor implements Animated {
     @Override
     public String toString() {
         return "Pac{" +
-                "immune=" + (immune != null ? isImmune() : DEFAULT_IMMUNITY) +
-                ", autopilot=" + (usingAutopilot != null ? isUsingAutopilot() : DEFAULT_USING_AUTOPILOT) +
+                "immune=" + isImmune() +
+                ", autopilot=" + isUsingAutopilot() +
                 ", dead=" + dead +
                 ", restingTicks=" + restingTicks +
                 ", starvingTicks=" + starvingTicks +
                 ", visible=" + isVisible() +
                 ", position=" + position() +
-                ", velocity=" + (velocity != null ? velocity() : DEFAULT_VELOCITY) +
-                ", acceleration=" + (acceleration != null ? acceleration() : DEFAULT_ACCELERATION) +
+                ", velocity=" + velocity() +
+                ", acceleration=" + acceleration() +
                 '}';
     }
 

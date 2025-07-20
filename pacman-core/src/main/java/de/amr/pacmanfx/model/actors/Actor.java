@@ -152,7 +152,7 @@ public class Actor {
     }
 
     public Vector2f acceleration() {
-        return accelerationProperty().get();
+        return acceleration != null ? accelerationProperty().get() : DEFAULT_ACCELERATION;
     }
 
     public void setAcceleration(Vector2f vector) {
