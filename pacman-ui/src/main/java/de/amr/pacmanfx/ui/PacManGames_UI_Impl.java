@@ -176,8 +176,8 @@ public class PacManGames_UI_Impl implements GameUI {
         thePrefs.store("3d.house.wall_thickness", 2.5f);
         thePrefs.store("3d.level_counter.elevation", 6f);
         thePrefs.store("3d.lives_counter.capacity", 5);
-        thePrefs.store("3d.lives_counter.pillar_color", formatColorHex(Color.grayRgb(120)));
-        thePrefs.store("3d.lives_counter.plate_color",  formatColorHex(Color.grayRgb(180)));
+        thePrefs.storeColor("3d.lives_counter.pillar_color", Color.grayRgb(120));
+        thePrefs.storeColor("3d.lives_counter.plate_color",  Color.grayRgb(180));
         thePrefs.store("3d.lives_counter.shape_size", 12.0f);
         thePrefs.store("3d.obstacle.base_height", 4.0f);
         thePrefs.store("3d.obstacle.wall_thickness", 2.25f);
