@@ -764,11 +764,12 @@ public class GameLevel3D extends Group implements Destroyable {
         if (livesCounter3D != null) {
             livesCounter3D.destroy();
             livesCounter3D = null;
-            Logger.info("Removed lives counter 3D");
+            Logger.info("Destroyed and removed lives counter 3D");
         }
         if (levelCounter3D != null) {
+            levelCounter3D.destroy();
             levelCounter3D = null;
-            Logger.info("Removed level counter 3D");
+            Logger.info("Destroyed and r level counter 3D");
         }
         if (pac3D != null) {
             pac3D.destroy();
