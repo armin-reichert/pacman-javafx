@@ -44,6 +44,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
 
 import static java.util.Objects.requireNonNull;
@@ -58,12 +60,15 @@ import static java.util.Objects.requireNonNull;
 public class ObjFileData {
 
     public static ObjFileData fromFile(URL objFileURL, Charset charset) {
+        Instant start = Instant.now();
         ObjFileData data = new ObjFileData(objFileURL);
         try (InputStream is = objFileURL.openStream()) {
             data.parse(new BufferedReader(new InputStreamReader(is, charset)));
             for (TriangleMesh mesh : data.meshMap.values()) {
                 validateTriangleMesh(mesh);
             }
+            Duration duration = Duration.between(start, Instant.now());
+            Logger.info("OBJ file parsed in {} milliseconds; '{}'", duration.toMillis(), objFileURL);
         }
         catch (IOException x) {
             Logger.error(x);
