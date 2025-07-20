@@ -540,83 +540,87 @@ public class GameLevel3D implements Destroyable {
     }
 
     private void createPelletsAndEnergizers3D() {
-        pelletMesh = ui.theAssets().theModel3DRepository().pelletMesh();
         pelletMaterial = coloredPhongMaterial(colorScheme.pellet());
-        var pelletScale = computePelletScale();
+        pelletMesh = ui.theAssets().theModel3DRepository().pelletMesh();
+        Scale pelletScale = computePelletScale();
+
+        float energizerRadius     = ui.thePrefs().getFloat("3d.energizer.radius");
+        float floorThickness      = ui.thePrefs().getFloat("3d.floor.thickness");
+        float energizerMinScaling = ui.thePrefs().getFloat("3d.energizer.scaling.min");
+        float energizerMaxScaling = ui.thePrefs().getFloat("3d.energizer.scaling.max");
 
         gameLevel.tilesContainingFood().forEach(tile -> {
             if (gameLevel.isEnergizerPosition(tile)) {
-                float energizerRadius = ui.thePrefs().getFloat("3d.energizer.radius");
-                float floorThickness = ui.thePrefs().getFloat("3d.floor.thickness");
-                float x = tile.x() * TS + HTS;
-                float y = tile.y() * TS + HTS;
-                float z = -2 * energizerRadius - 0.5f * floorThickness;
-                var energizer3D = new Energizer3D(
-                    animationManager,
-                    energizerRadius,
-                    ui.thePrefs().getFloat("3d.energizer.scaling.min"),
-                    ui.thePrefs().getFloat("3d.energizer.scaling.max")
-                );
-                energizer3D.setTile(tile);
-                energizer3D.shape3D().setMaterial(pelletMaterial);
-                energizer3D.shape3D().setTranslateX(x);
-                energizer3D.shape3D().setTranslateY(y);
-                energizer3D.shape3D().setTranslateZ(z);
+                Energizer3D energizer3D = createEnergizer3D(tile, energizerRadius, floorThickness, energizerMinScaling, energizerMaxScaling);
                 energizers3D.add(energizer3D);
-
-                var hideAndExplodeAnimation = new ManagedAnimation(animationManager, "Energizer_Explosion") {
-                    private SquirtingAnimation squirtingAnimation;
-
-                    @Override
-                    protected Animation createAnimation() {
-                        squirtingAnimation = new SquirtingAnimation(
-                                root,
-                            Duration.seconds(2),
-                            23, 69,
-                            pelletMaterial,
-                            new Point3D(x, y, z))
-                        {
-                            @Override
-                            public boolean particleShouldVanish(Particle particle) {
-                                return particle.getTranslateZ() >= -1
-                                    && isInsideWorldMap(gameLevel.worldMap(), particle.getTranslateX(), particle.getTranslateY());
-                            }
-                        };
-                        return new SequentialTransition(
-                            pauseSec(0.5, () -> energizer3D.shape3D().setVisible(false)),
-                            squirtingAnimation
-                        );
-                    }
-
-                    @Override
-                    public void destroy() {
-                        super.destroy();
-                        if (squirtingAnimation != null) {
-                            squirtingAnimation.destroy();
-                        }
-                    }
-                };
-                energizer3D.setHideAndEatAnimation(hideAndExplodeAnimation);
             }
             else {
-                float x = tile.x() * TS + HTS;
-                float y = tile.y() * TS + HTS;
-                float z = -6;
-                var pelletMeshView = new MeshView(pelletMesh);
-                pelletMeshView.getProperties().put("pellet", true);
-                pelletMeshView.setMaterial(pelletMaterial);
-                pelletMeshView.setRotationAxis(Rotate.Z_AXIS);
-                pelletMeshView.setRotate(90);
-                pelletMeshView.setTranslateX(x);
-                pelletMeshView.setTranslateY(y);
-                pelletMeshView.setTranslateZ(z);
-                var pellet3D = new Pellet3D(pelletMeshView, pelletScale);
-                pellet3D.setTile(tile);
+                Pellet3D pellet3D = createPellet3D(tile, pelletScale);
                 pellets3D.add(pellet3D);
             }
         });
         energizers3D.trimToSize();
         pellets3D.trimToSize();
+    }
+
+    private Pellet3D createPellet3D(Vector2i tile, Scale pelletScale) {
+        var meshView = new MeshView(pelletMesh);
+        meshView.getProperties().put("pellet", true);
+        meshView.setMaterial(pelletMaterial);
+        meshView.setRotationAxis(Rotate.Z_AXIS);
+        meshView.setRotate(90);
+        meshView.setTranslateX(tile.x() * TS + HTS);
+        meshView.setTranslateY(tile.y() * TS + HTS);
+        meshView.setTranslateZ(-6);
+        var pellet3D = new Pellet3D(meshView, pelletScale);
+        pellet3D.setTile(tile);
+        return pellet3D;
+    }
+
+    private Energizer3D createEnergizer3D(Vector2i tile, float energizerRadius, float floorThickness, float minScaling, float maxScaling) {
+        float x = tile.x() * TS + HTS;
+        float y = tile.y() * TS + HTS;
+        float z = -2 * energizerRadius - 0.5f * floorThickness;
+        var energizer3D = new Energizer3D(animationManager, energizerRadius, minScaling, maxScaling);
+        energizer3D.setTile(tile);
+        energizer3D.shape3D().setMaterial(pelletMaterial);
+        energizer3D.shape3D().setTranslateX(x);
+        energizer3D.shape3D().setTranslateY(y);
+        energizer3D.shape3D().setTranslateZ(z);
+        ManagedAnimation hideAndExplodeAnimation = createHideAndExplodeAnimation(x, y, z, energizer3D);
+        energizer3D.setHideAndEatAnimation(hideAndExplodeAnimation);
+        return energizer3D;
+    }
+
+    private ManagedAnimation createHideAndExplodeAnimation(float x, float y, float z, Energizer3D energizer3D) {
+        return new ManagedAnimation(animationManager, "Energizer_Explosion") {
+            private SquirtingAnimation squirtingAnimation;
+
+            @Override
+            protected Animation createAnimation() {
+                squirtingAnimation = new SquirtingAnimation(root, Duration.seconds(2), 23, 69,
+                        pelletMaterial, new Point3D(x, y, z))
+                {
+                    @Override
+                    public boolean particleShouldVanish(Particle particle) {
+                        return particle.getTranslateZ() >= -1
+                                && isInsideWorldMap(gameLevel.worldMap(), particle.getTranslateX(), particle.getTranslateY());
+                    }
+                };
+                return new SequentialTransition(
+                        pauseSec(0.5, () -> energizer3D.shape3D().setVisible(false)),
+                        squirtingAnimation
+                );
+            }
+
+            @Override
+            public void destroy() {
+                super.destroy();
+                if (squirtingAnimation != null) {
+                    squirtingAnimation.destroy();
+                }
+            }
+        };
     }
 
     public void showAnimatedMessage(String text, float displaySeconds, double centerX, double y) {

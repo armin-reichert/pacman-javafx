@@ -20,6 +20,7 @@ public class Pellet3D implements Eatable3D {
 
     public Pellet3D(Shape3D shape, Scale scale) {
         this.shape = requireNonNull(shape);
+        requireNonNull(scale);
         shape.getTransforms().add(scale);
     }
 
