@@ -141,6 +141,10 @@ public class GameLevel3D implements Destroyable {
 
     private int wall3DCount;
 
+    /**
+     * @param ui the game UI
+     * @param root a group provided by the play scene serving as the root of the tree representing the 3D game level
+     */
     public GameLevel3D(GameUI ui, Group root) {
         this.ui = requireNonNull(ui);
         this.root = requireNonNull(root);
@@ -541,11 +545,11 @@ public class GameLevel3D implements Destroyable {
                     ui.thePrefs().getFloat("3d.energizer.scaling.min"),
                     ui.thePrefs().getFloat("3d.energizer.scaling.max")
                 );
-                energizer3D.setMaterial(pelletMaterial);
                 energizer3D.setTile(tile);
-                energizer3D.setTranslateX(x);
-                energizer3D.setTranslateY(y);
-                energizer3D.setTranslateZ(z);
+                energizer3D.shape3D().setMaterial(pelletMaterial);
+                energizer3D.shape3D().setTranslateX(x);
+                energizer3D.shape3D().setTranslateY(y);
+                energizer3D.shape3D().setTranslateZ(z);
                 energizers3D.add(energizer3D);
 
                 var hideAndExplodeAnimation = new ManagedAnimation(animationManager, "Energizer_Explosion") {
