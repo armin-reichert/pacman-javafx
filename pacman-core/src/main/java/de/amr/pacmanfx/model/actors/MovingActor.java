@@ -57,11 +57,11 @@ public abstract class MovingActor extends Actor {
         return "WorldMovingActor{" +
                 "visible=" + isVisible() +
                 ", position=" + position() +
-                ", velocity=" + (velocity != null ? velocity() : DEFAULT_VELOCITY) +
-                ", acceleration=" + (acceleration != null ? acceleration() : DEFAULT_ACCELERATION) +
-                ", moveDir=" + (moveDir != null ? moveDir() : DEFAULT_MOVE_DIR) +
-                ", wishDir=" + (wishDir != null ? wishDir() : DEFAULT_WISH_DIR) +
-                ", targetTile=" + (targetTile != null ? targetTile() : DEFAULT_TARGET_TILE) +
+                ", velocity=" + velocity() +
+                ", acceleration=" + acceleration() +
+                ", moveDir=" + moveDir() +
+                ", wishDir=" + wishDir() +
+                ", targetTile=" + targetTile() +
                 ", newTileEntered=" + newTileEntered +
                 ", gotReverseCommand=" + gotReverseCommand +
                 ", canTeleport=" + canTeleport +
@@ -184,7 +184,8 @@ public abstract class MovingActor extends Actor {
         requireNonNull(dir);
         if (moveDir == null && dir.equals(DEFAULT_MOVE_DIR)) return;
         moveDirProperty().set(dir);
-        setVelocity(dir.vector().scaled(velocity().length()));
+        double speed = velocity().length();
+        setVelocity(speed == 0 ? Vector2f.ZERO : dir.vector().scaled(speed));
     }
 
     /**

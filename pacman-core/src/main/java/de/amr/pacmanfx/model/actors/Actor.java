@@ -109,11 +109,6 @@ public class Actor {
      */
     public Vector2f position() { return position.get(); }
 
-    /**
-     * @return center of the entity collision box which is a square of size 1 tile.
-     */
-    public Vector2f center() { return position().plus(HTS, HTS); }
-
     public void setPosition(float x, float y) {
         setPosition(new Vector2f(x, y));
     }
@@ -123,6 +118,11 @@ public class Actor {
         this.position.set(position);
     }
 
+    /**
+     * @return center of the entity collision box which is a square of size 1 tile.
+     */
+    public Vector2f center() { return position().plus(HTS, HTS); }
+
     public final ObjectProperty<Vector2f> velocityProperty() {
         if (velocity == null) {
             velocity = new SimpleObjectProperty<>(DEFAULT_VELOCITY);
@@ -131,7 +131,7 @@ public class Actor {
     }
 
     public Vector2f velocity() {
-        return velocityProperty().get();
+        return velocity != null ? velocityProperty().get() : DEFAULT_VELOCITY;
     }
 
     public void setVelocity(Vector2f vector) {
