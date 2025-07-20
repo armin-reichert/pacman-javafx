@@ -97,7 +97,7 @@ public class LevelCompletedAnimation extends ManagedAnimation {
     }
 
     private Animation createSpinningAnimation() {
-        var spin360 = new RotateTransition(Duration.seconds(1.5), gameLevel3D);
+        var spin360 = new RotateTransition(Duration.seconds(1.5), gameLevel3D.root());
         spin360.setAxis(new Random().nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
         spin360.setFromAngle(0);
         spin360.setToAngle(360);

@@ -75,7 +75,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
             infoView.setTranslateX(0);
             infoView.setTranslateY((gameContext().theGameLevel().worldMap().numRows() - 2) * TS);
             infoView.setTranslateZ(-gameLevel3D.floorThickness());
-            gameLevel3D.getChildren().add(infoView);
+            gameLevel3D.root().getChildren().add(infoView);
         }
     }
 

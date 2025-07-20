@@ -60,7 +60,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * 3D representation of game level.
  */
-public class GameLevel3D extends Group implements Destroyable {
+public class GameLevel3D implements Destroyable {
 
     private static boolean isInsideWorldMap(WorldMap worldMap, double x, double y) {
         return 0 <= x && x < worldMap.numCols() * TS && 0 <= y && y < worldMap.numRows() * TS;
@@ -101,6 +101,8 @@ public class GameLevel3D extends Group implements Destroyable {
     private final DoubleProperty  wallOpacityProperty = new SimpleDoubleProperty(1);
 
     private final GameUI ui;
+    private final Group root;
+
     private final GameLevel gameLevel;
     private WorldMapColorScheme colorScheme;
 
@@ -139,11 +141,12 @@ public class GameLevel3D extends Group implements Destroyable {
 
     private int wall3DCount;
 
-    public GameLevel3D(GameUI ui) {
+    public GameLevel3D(GameUI ui, Group root) {
         this.ui = requireNonNull(ui);
+        this.root = requireNonNull(root);
         this.gameLevel = requireNonNull(ui.theGameContext().theGameLevel());
         
-        setMouseTransparent(true); // this increases performance, they say...
+        root.setMouseTransparent(true); // this increases performance, they say...
 
         createWorldMapColorScheme();
         createMazeMaterials();
@@ -161,17 +164,17 @@ public class GameLevel3D extends Group implements Destroyable {
         });
         createPelletsAndEnergizers3D();
 
-        getChildren().add(levelCounter3D);
-        getChildren().add(ambientLight);
-        getChildren().add(livesCounter3D);
-        getChildren().addAll(pac3D, pac3D.light());
-        getChildren().addAll(ghosts3D);
-        energizers3D.stream().map(Eatable3D::shape3D).forEach(getChildren()::add);
-        pellets3D   .stream().map(Eatable3D::shape3D).forEach(getChildren()::add);
+        root.getChildren().add(levelCounter3D);
+        root.getChildren().add(ambientLight);
+        root.getChildren().add(livesCounter3D);
+        root.getChildren().addAll(pac3D, pac3D.light());
+        root.getChildren().addAll(ghosts3D);
+        energizers3D.stream().map(Eatable3D::shape3D).forEach(root.getChildren()::add);
+        pellets3D   .stream().map(Eatable3D::shape3D).forEach(root.getChildren()::add);
 
         // Note: The order in which children are added to the root matters!
         // Walls and house must be added *after* the actors, otherwise the transparency is not working correctly.
-        getChildren().add(mazeGroup);
+        root.getChildren().add(mazeGroup);
         mazeGroup.getChildren().addAll(floor3D, maze3D);
 
         ui.property3DWallHeight().addListener(this::handleWallHeightChange);
@@ -208,6 +211,10 @@ public class GameLevel3D extends Group implements Destroyable {
 
         levelCompletedFullAnimation = new LevelCompletedAnimation(ui, animationManager, this);
         levelCompletedShortAnimation = new LevelCompletedAnimationShort(animationManager, this, gameLevel);
+    }
+
+    public Group root() {
+        return root;
     }
 
     private void createMazeMaterials() {
@@ -547,7 +554,7 @@ public class GameLevel3D extends Group implements Destroyable {
                     @Override
                     protected Animation createAnimation() {
                         squirtingAnimation = new SquirtingAnimation(
-                            GameLevel3D.this,
+                                root,
                             Duration.seconds(2),
                             23, 69,
                             pelletMaterial,
@@ -599,7 +606,7 @@ public class GameLevel3D extends Group implements Destroyable {
 
     public void showAnimatedMessage(String text, float displaySeconds, double centerX, double y) {
         if (messageView != null) {
-            getChildren().remove(messageView);
+            root.getChildren().remove(messageView);
         }
         messageView = MessageView.builder()
                 .text(text)
@@ -613,7 +620,7 @@ public class GameLevel3D extends Group implements Destroyable {
         messageView.setTranslateX(centerX - 0.5 * messageView.getFitWidth());
         messageView.setTranslateY(y);
         messageView.setTranslateZ(halfHeight); // just under floor
-        getChildren().add(messageView);
+        root.getChildren().add(messageView);
         messageView.movementAnimation().playFromStart();
     }
 
@@ -632,7 +639,7 @@ public class GameLevel3D extends Group implements Destroyable {
 
     private void handleDrawModeChange(ObservableValue<? extends DrawMode> py, DrawMode ov, DrawMode drawMode) {
         if (isDestroyed()) return; //TODO can that ever happen?
-        setDrawModeForAllDescendantShapes(this, shape3D -> shape3D.getProperties().containsKey("pellet"), drawMode);
+        setDrawModeForAllDescendantShapes(root, shape3D -> shape3D.getProperties().containsKey("pellet"), drawMode);
         Logger.info("Draw mode set to {}", drawMode);
     }
 
@@ -739,7 +746,7 @@ public class GameLevel3D extends Group implements Destroyable {
             pelletMesh = null;
         }
 
-        getChildren().clear();
+        root.getChildren().clear();
         Logger.info("Removed all nodes under game level");
 
         if (ambientLight != null) {

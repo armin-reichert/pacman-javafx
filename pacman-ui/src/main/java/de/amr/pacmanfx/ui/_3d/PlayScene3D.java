@@ -74,7 +74,7 @@ public class PlayScene3D implements GameScene {
     protected final SubScene subScene;
     protected final PerspectiveCamera camera = new PerspectiveCamera(true);
     protected final ActionBindingMap actionBindings;
-    protected final Group gameLevel3DParent = new Group();
+    protected final Group gameLevel3DRoot = new Group();
     protected GameLevel3D gameLevel3D;
     protected Scores3D scores3D;
 
@@ -106,7 +106,7 @@ public class PlayScene3D implements GameScene {
         var coordinateSystem = new CoordinateSystem();
         coordinateSystem.visibleProperty().bind(ui.property3DAxesVisible());
 
-        root.getChildren().setAll(gameLevel3DParent, scores3D, coordinateSystem);
+        root.getChildren().setAll(gameLevel3DRoot, scores3D, coordinateSystem);
     }
 
     public ObjectProperty<PerspectiveID> perspectiveIDProperty() {
@@ -263,7 +263,7 @@ public class PlayScene3D implements GameScene {
     public void end() {
         ui.theSound().stopAll();
         if (gameLevel3D != null) {
-            gameLevel3DParent.getChildren().clear();
+            gameLevel3DRoot.getChildren().clear();
             gameLevel3D.destroy();
             gameLevel3D = null;
         }
@@ -483,12 +483,11 @@ public class PlayScene3D implements GameScene {
     protected void replaceGameLevel3D() {
         Logger.info("Replacing game level 3D");
         if (gameLevel3D != null) {
-            gameLevel3DParent.getChildren().clear();
+            gameLevel3DRoot.getChildren().clear();
             gameLevel3D.destroy();
             Logger.info("Destroyed old game level 3D");
         }
-        gameLevel3D = new GameLevel3D(ui);
-        gameLevel3DParent.getChildren().setAll(gameLevel3D);
+        gameLevel3D = new GameLevel3D(ui, gameLevel3DRoot);
         Logger.info("Created new game level 3D");
 
         gameLevel3D.pac3D().init();
@@ -496,9 +495,9 @@ public class PlayScene3D implements GameScene {
         gameLevel3D.levelCounter3D().spinningAnimation().playFromStart();
         Logger.info("Initialized actors of game level 3D");
 
-        scores3D.translateXProperty().bind(gameLevel3D.translateXProperty().add(TS));
-        scores3D.translateYProperty().bind(gameLevel3D.translateYProperty().subtract(4.5 * TS));
-        scores3D.translateZProperty().bind(gameLevel3D.translateZProperty().subtract(4.5 * TS));
+        scores3D.translateXProperty().bind(gameLevel3DRoot.translateXProperty().add(TS));
+        scores3D.translateYProperty().bind(gameLevel3DRoot.translateYProperty().subtract(4.5 * TS));
+        scores3D.translateZProperty().bind(gameLevel3DRoot.translateZProperty().subtract(4.5 * TS));
         Logger.info("Positioned scores 3D");
     }
 
