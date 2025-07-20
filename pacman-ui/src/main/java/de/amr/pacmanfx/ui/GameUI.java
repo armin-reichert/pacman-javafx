@@ -89,11 +89,7 @@ public interface GameUI {
     );
 
     default MenuItem createContextMenuTitleItem(String title) {
-        Font font = thePrefs().font(
-            "context_menu.title.font.family",
-            "context_menu.title.font.weight",
-            "context_menu.title.font.size"
-        );
+        Font font = thePrefs().getFont("context_menu.title.font");
         Color fillColor = thePrefs().getColor("context_menu.title.fill");
         var text = new Text(title);
         text.setFont(font);

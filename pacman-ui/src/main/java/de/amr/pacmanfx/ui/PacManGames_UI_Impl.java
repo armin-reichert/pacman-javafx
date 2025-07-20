@@ -29,6 +29,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -183,15 +185,11 @@ public class PacManGames_UI_Impl implements GameUI {
         thePrefs.store("3d.pellet.radius", 1.0f);
 
         // "Kornblumenblau, sind die Augen der Frauen beim Weine..."
-        thePrefs.store("context_menu.title.fill", formatColorHex(Color.CORNFLOWERBLUE));
-        thePrefs.store("context_menu.title.font.family", "Dialog");
-        thePrefs.store("context_menu.title.font.weight", 850);
-        thePrefs.store("context_menu.title.font.size", 14.0f);
+        thePrefs.storeColor("context_menu.title.fill", Color.CORNFLOWERBLUE);
+        thePrefs.storeFont("context_menu.title.font", Font.font("Dialog", FontWeight.BLACK, 14.0f));
 
-        thePrefs.store("debug_text.fill", formatColorHex(Color.YELLOW));
-        thePrefs.store("debug_text.font.family", "Sans");
-        thePrefs.store("debug_text.font.weight", 750);
-        thePrefs.store("debug_text.font.size", 16.0f);
+        thePrefs.storeColor("debug_text.fill", Color.YELLOW);
+        thePrefs.storeFont("debug_text.font", Font.font("Sans", FontWeight.BOLD, 16.0f));
 
         thePrefs.store("scene2d.max_scaling", 5.0f);
     }

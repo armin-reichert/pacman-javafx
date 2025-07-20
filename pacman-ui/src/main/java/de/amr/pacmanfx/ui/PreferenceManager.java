@@ -2,11 +2,14 @@ package de.amr.pacmanfx.ui;
 
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.prefs.Preferences;
+
+import static de.amr.pacmanfx.uilib.Ufx.formatColorHex;
 
 public class PreferenceManager {
 
@@ -38,6 +41,10 @@ public class PreferenceManager {
         return (String) getValue(key);
     }
 
+    public void storeColor(String key, Color color) {
+        prefs.put(key, formatColorHex(color));
+    }
+
     public Color getColor(String colorKey) {
         String colorValue = prefs.get(colorKey, getDefaultValue(colorKey));
         return Color.web(colorValue);
@@ -57,26 +64,16 @@ public class PreferenceManager {
         defaultValueMap.put(key, defaultValue);
     }
 
-    public Font font(
-        String familyKey,
-        String weightKey,
-        String sizeKey)
-    {
-        return font(
-            familyKey, getDefaultValue(familyKey),
-            weightKey, getDefaultValue(weightKey),
-            sizeKey, getDefaultValue(sizeKey)
-        );
+    public void storeFont(String key, Font font) {
+        defaultValueMap.put(key + ".family", font.getFamily());
+        defaultValueMap.put(key + ".style", font.getStyle());
+        defaultValueMap.put(key + ".size", (float) font.getSize());
     }
 
-    private Font font(
-        String familyKey, String familyDefault,
-        String weightKey, int weightDefault,
-        String sizeKey, float sizeDefault)
-    {
-        String family = prefs.get(familyKey, familyDefault);
-        int weight = prefs.getInt(weightKey, weightDefault);
-        float size = prefs.getFloat(sizeKey, sizeDefault);
-        return Font.font(family, FontWeight.findByWeight(weight), size);
+    public Font getFont(String key) {
+        String family = (String) defaultValueMap.get(key + ".family");
+        String style = (String) defaultValueMap.get(key + ".style");
+        float size = (float) defaultValueMap.get(key + ".size");
+        return Font.font(family, FontWeight.findByName(style), size);
     }
 }
