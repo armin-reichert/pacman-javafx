@@ -161,7 +161,6 @@ public class GameLevel3D extends Group implements Destroyable {
         });
         createPelletsAndEnergizers3D();
 
-        mazeGroup.getChildren().addAll(floor3D, maze3D);
         getChildren().add(levelCounter3D);
         getChildren().add(ambientLight);
         getChildren().add(livesCounter3D);
@@ -173,6 +172,7 @@ public class GameLevel3D extends Group implements Destroyable {
         // Note: The order in which children are added to the root matters!
         // Walls and house must be added *after* the actors, otherwise the transparency is not working correctly.
         getChildren().add(mazeGroup);
+        mazeGroup.getChildren().addAll(floor3D, maze3D);
 
         ui.property3DWallHeight().addListener(this::handleWallHeightChange);
         ui.property3DDrawMode().addListener(this::handleDrawModeChange);
