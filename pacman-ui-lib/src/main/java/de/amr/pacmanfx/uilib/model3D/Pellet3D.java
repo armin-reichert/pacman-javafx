@@ -4,12 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.model3D;
 
-import javafx.geometry.Bounds;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Scale;
 
-import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static de.amr.pacmanfx.uilib.Ufx.pauseSec;
 import static java.util.Objects.requireNonNull;
 
@@ -20,13 +18,9 @@ public class Pellet3D implements Eatable3D {
 
     private Shape3D shape;
 
-    public Pellet3D(Shape3D shape, double radius) {
+    public Pellet3D(Shape3D shape, Scale scale) {
         this.shape = requireNonNull(shape);
-        requireNonNegative(radius, "Pellet3D radius must be positive but is %f");
-        Bounds bounds = shape.getBoundsInLocal();
-        double diameter = 2 * radius;
-        double maxExtent = Math.max(Math.max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());
-        shape.getTransforms().add(new Scale(diameter / maxExtent, diameter / maxExtent, diameter / maxExtent));
+        shape.getTransforms().add(scale);
     }
 
     public void destroy() {

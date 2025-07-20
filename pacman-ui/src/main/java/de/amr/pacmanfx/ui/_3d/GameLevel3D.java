@@ -27,6 +27,7 @@ import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
+import javafx.geometry.Bounds;
 import javafx.geometry.Point3D;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
@@ -36,6 +37,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Scale;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -528,19 +530,30 @@ public class GameLevel3D implements Destroyable {
         }
     }
 
+    private Scale computePelletScale() {
+        var pelletMeshView = new MeshView(pelletMesh);
+        Bounds bounds = pelletMeshView.getBoundsInLocal();
+        double maxExtent = Math.max(Math.max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());
+        float pelletRadius = ui.thePrefs().getFloat("3d.pellet.radius");
+        double scaling = (2 * pelletRadius) / maxExtent;
+        return new Scale(scaling, scaling, scaling);
+    }
+
     private void createPelletsAndEnergizers3D() {
         pelletMesh = ui.theAssets().theModel3DRepository().pelletMesh();
         pelletMaterial = coloredPhongMaterial(colorScheme.pellet());
+        var pelletScale = computePelletScale();
+
         gameLevel.tilesContainingFood().forEach(tile -> {
             if (gameLevel.isEnergizerPosition(tile)) {
-                float radius = ui.thePrefs().getFloat("3d.energizer.radius");
+                float energizerRadius = ui.thePrefs().getFloat("3d.energizer.radius");
                 float floorThickness = ui.thePrefs().getFloat("3d.floor.thickness");
                 float x = tile.x() * TS + HTS;
                 float y = tile.y() * TS + HTS;
-                float z = -2 * radius - 0.5f * floorThickness;
+                float z = -2 * energizerRadius - 0.5f * floorThickness;
                 var energizer3D = new Energizer3D(
                     animationManager,
-                    radius,
+                    energizerRadius,
                     ui.thePrefs().getFloat("3d.energizer.scaling.min"),
                     ui.thePrefs().getFloat("3d.energizer.scaling.max")
                 );
@@ -586,7 +599,6 @@ public class GameLevel3D implements Destroyable {
                 energizer3D.setHideAndEatAnimation(hideAndExplodeAnimation);
             }
             else {
-                float radius = ui.thePrefs().getFloat("3d.pellet.radius");
                 float x = tile.x() * TS + HTS;
                 float y = tile.y() * TS + HTS;
                 float z = -6;
@@ -598,7 +610,7 @@ public class GameLevel3D implements Destroyable {
                 pelletMeshView.setTranslateX(x);
                 pelletMeshView.setTranslateY(y);
                 pelletMeshView.setTranslateZ(z);
-                var pellet3D = new Pellet3D(pelletMeshView, radius);
+                var pellet3D = new Pellet3D(pelletMeshView, pelletScale);
                 pellet3D.setTile(tile);
                 pellets3D.add(pellet3D);
             }
