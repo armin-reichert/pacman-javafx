@@ -138,9 +138,10 @@ public class Actor {
         return velocityProperty().get();
     }
 
-    public void setVelocity(Vector2f velocity) {
-        requireNonNull(velocity, "Velocity vector must not be null");
-        velocityProperty().set(velocity);
+    public void setVelocity(Vector2f vector) {
+        requireNonNull(vector, "Velocity vector must not be null");
+        if (velocity == null && vector.equals(DEFAULT_VELOCITY)) return;
+        velocityProperty().set(vector);
     }
 
     public void setVelocity(float vx, float vy) {
@@ -158,9 +159,10 @@ public class Actor {
         return accelerationProperty().get();
     }
 
-    public void setAcceleration(Vector2f acceleration) {
-        requireNonNull(acceleration, "Acceleration vector must not be null");
-        accelerationProperty().set(acceleration);
+    public void setAcceleration(Vector2f vector) {
+        requireNonNull(vector, "Acceleration vector must not be null");
+        if (acceleration == null && vector.equals(DEFAULT_ACCELERATION)) return;
+        accelerationProperty().set(vector);
     }
 
     public void setAcceleration(float ax, float ay) {
