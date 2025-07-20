@@ -4,15 +4,13 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.model3D;
 
-import javafx.animation.Animation;
-import javafx.animation.PauseTransition;
 import javafx.geometry.Bounds;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Scale;
-import javafx.util.Duration;
 
 import static de.amr.pacmanfx.Validations.requireNonNegative;
+import static de.amr.pacmanfx.uilib.Ufx.pauseSec;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -21,7 +19,6 @@ import static java.util.Objects.requireNonNull;
 public class Pellet3D implements Eatable3D {
 
     private Shape3D shape;
-    private Animation hideAfterSmallDelay;
 
     public Pellet3D(Shape3D shape, double radius) {
         this.shape = requireNonNull(shape);
@@ -30,15 +27,9 @@ public class Pellet3D implements Eatable3D {
         double diameter = 2 * radius;
         double maxExtent = Math.max(Math.max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());
         shape.getTransforms().add(new Scale(diameter / maxExtent, diameter / maxExtent, diameter / maxExtent));
-
-        hideAfterSmallDelay = new PauseTransition(Duration.seconds(0.05));
-        hideAfterSmallDelay.setOnFinished(e -> shape.setVisible(false));
     }
 
     public void destroy() {
-        hideAfterSmallDelay.stop();
-        hideAfterSmallDelay.setOnFinished(null);
-        hideAfterSmallDelay = null;
         if (shape instanceof MeshView meshView) {
             meshView.setMesh(null);
             shape = null;
@@ -52,7 +43,8 @@ public class Pellet3D implements Eatable3D {
 
     @Override
     public void onEaten() {
-        hideAfterSmallDelay.play();
+        // small delay for better visualization
+        pauseSec(0.05, () -> shape.setVisible(false)).play();
     }
 
     @Override

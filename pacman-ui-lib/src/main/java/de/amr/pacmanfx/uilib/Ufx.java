@@ -189,7 +189,7 @@ public interface Ufx {
      * @param action       code to run
      * @return pause transition
      */
-    static Transition pauseSec(double seconds, Runnable action) {
+    static PauseTransition pauseSec(double seconds, Runnable action) {
         requireNonNull(action);
         var pause = new PauseTransition(Duration.seconds(seconds));
         pause.setOnFinished(e -> action.run());
