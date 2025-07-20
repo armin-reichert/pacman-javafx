@@ -10,6 +10,7 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.Obstacle;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
@@ -99,7 +100,8 @@ public class GameLevel3D extends Group implements Destroyable {
     private final DoubleProperty  wallOpacityProperty = new SimpleDoubleProperty(1);
 
     private final GameUI ui;
-    private final WorldMapColorScheme colorScheme;
+
+    private WorldMapColorScheme colorScheme;
 
     private final AnimationManager animationManager = new AnimationManager();
     private ManagedAnimation wallColorFlashingAnimation;
@@ -139,14 +141,6 @@ public class GameLevel3D extends Group implements Destroyable {
     public GameLevel3D(GameUI ui) {
         this.ui = requireNonNull(ui);
 
-        WorldMap worldMap = gameLevel().worldMap();
-        WorldMapColorScheme proposedColorScheme = ui.theConfiguration().colorScheme(worldMap);
-        requireNonNull(proposedColorScheme);
-        // Add some contrast with floor if wall fill color is black
-        colorScheme = proposedColorScheme.fill().equals(Color.BLACK)
-            ? new WorldMapColorScheme(Color.grayRgb(42), proposedColorScheme.stroke(), proposedColorScheme.door(), proposedColorScheme.pellet())
-            : proposedColorScheme;
-
         createAmbientLight();
         createLevelCounter3D();
         createLivesCounter3D();
@@ -161,44 +155,15 @@ public class GameLevel3D extends Group implements Destroyable {
         getChildren().addAll(ghosts3D);
         getChildren().add(mazeGroup);
 
-
-        wallBaseMaterial = new PhongMaterial();
-        wallBaseMaterial.diffuseColorProperty().bind(wallOpacityProperty
-                .map(opacity -> colorWithOpacity(colorScheme.stroke(), opacity.doubleValue())));
-        wallBaseMaterial.specularColorProperty().bind(wallBaseMaterial.diffuseColorProperty().map(Color::brighter));
-
-        wallTopMaterial = new PhongMaterial();
-        wallTopMaterial.setDiffuseColor(colorScheme.fill());
-        wallTopMaterial.setSpecularColor(colorScheme.fill().brighter());
-
-        cornerBaseMaterial = new PhongMaterial();
-        cornerBaseMaterial.setDiffuseColor(colorScheme.stroke());
-        cornerBaseMaterial.specularColorProperty().bind(cornerBaseMaterial.diffuseColorProperty().map(Color::brighter));
-
-        cornerTopMaterial = new PhongMaterial();
-        cornerTopMaterial.setDiffuseColor(colorScheme.fill());
-        cornerTopMaterial.specularColorProperty().bind(cornerTopMaterial.diffuseColorProperty().map(Color::brighter));
-
         wallOpacityProperty.bind(ui.property3DWallOpacity());
-
         obstacleBaseHeightProperty.set(ui.thePrefs().getFloat("3d.obstacle.base_height"));
         houseBaseHeightProperty.set(ui.thePrefs().getFloat("3d.house.base_height"));
-
-        buildMaze3D(maze3D, gameLevel().worldMap());
+        createWorldMapColorScheme();
+        createMazeMaterials();
+        buildMaze3D();
 
         gameLevel().house().ifPresent(house -> {
-            house3D = new ArcadeHouse3D(
-                animationManager,
-                house,
-                ui.thePrefs().getFloat("3d.house.base_height"),
-                ui.thePrefs().getFloat("3d.house.wall_thickness"),
-                ui.thePrefs().getFloat("3d.house.opacity"),
-                colorScheme.fill(),
-                colorScheme.stroke(),
-                colorScheme.door()
-            );
-            house3D.wallBaseHeightProperty().bind(houseBaseHeightProperty);
-            house3D.light().lightOnProperty().bind(houseLightOnProperty);
+            createHouse3D(house);
             maze3D.getChildren().add(house3D);
         });
 
@@ -244,6 +209,50 @@ public class GameLevel3D extends Group implements Destroyable {
 
         levelCompletedFullAnimation = new LevelCompletedAnimation(ui, animationManager, this);
         levelCompletedShortAnimation = new LevelCompletedAnimationShort(animationManager, this);
+    }
+
+    private void createHouse3D(House house) {
+        house3D = new ArcadeHouse3D(
+            animationManager,
+            house,
+            ui.thePrefs().getFloat("3d.house.base_height"),
+            ui.thePrefs().getFloat("3d.house.wall_thickness"),
+            ui.thePrefs().getFloat("3d.house.opacity"),
+            colorScheme.fill(),
+            colorScheme.stroke(),
+            colorScheme.door()
+        );
+        house3D.wallBaseHeightProperty().bind(houseBaseHeightProperty);
+        house3D.light().lightOnProperty().bind(houseLightOnProperty);
+    }
+
+    private void createMazeMaterials() {
+        wallBaseMaterial = new PhongMaterial();
+        wallBaseMaterial.diffuseColorProperty().bind(wallOpacityProperty
+                .map(opacity -> colorWithOpacity(colorScheme.stroke(), opacity.doubleValue())));
+        wallBaseMaterial.specularColorProperty().bind(wallBaseMaterial.diffuseColorProperty().map(Color::brighter));
+
+        wallTopMaterial = new PhongMaterial();
+        wallTopMaterial.setDiffuseColor(colorScheme.fill());
+        wallTopMaterial.setSpecularColor(colorScheme.fill().brighter());
+
+        cornerBaseMaterial = new PhongMaterial();
+        cornerBaseMaterial.setDiffuseColor(colorScheme.stroke());
+        cornerBaseMaterial.specularColorProperty().bind(cornerBaseMaterial.diffuseColorProperty().map(Color::brighter));
+
+        cornerTopMaterial = new PhongMaterial();
+        cornerTopMaterial.setDiffuseColor(colorScheme.fill());
+        cornerTopMaterial.specularColorProperty().bind(cornerTopMaterial.diffuseColorProperty().map(Color::brighter));
+    }
+
+    private void createWorldMapColorScheme() {
+        WorldMap worldMap = gameLevel().worldMap();
+        WorldMapColorScheme proposedColorScheme = ui.theConfiguration().colorScheme(worldMap);
+        requireNonNull(proposedColorScheme);
+        // Add some contrast with floor if wall fill color is black
+        colorScheme = proposedColorScheme.fill().equals(Color.BLACK)
+            ? new WorldMapColorScheme(Color.grayRgb(42), proposedColorScheme.stroke(), proposedColorScheme.door(), proposedColorScheme.pellet())
+            : proposedColorScheme;
     }
 
     private void createFloor3D() {
@@ -343,8 +352,9 @@ public class GameLevel3D extends Group implements Destroyable {
         ambientLight.colorProperty().bind(ui.property3DLightColor());
     }
 
-    private void buildMaze3D(Group parent, WorldMap worldMap) {
-        Logger.info("Building 3D maze for map (URL '{}') and color scheme {}...", gameLevel().worldMap().url(), colorScheme);
+    private void buildMaze3D() {
+        WorldMap worldMap = ui.theGameContext().theGameLevel().worldMap();
+        Logger.info("Building 3D maze for map (URL '{}') and color scheme {}...", worldMap.url(), colorScheme);
         var r3D = new TerrainRenderer3D();
         r3D.setBaseMaterial(wallBaseMaterial);
         r3D.setTopMaterial(wallTopMaterial);
@@ -359,12 +369,9 @@ public class GameLevel3D extends Group implements Destroyable {
         for (Obstacle obstacle : worldMap.obstacles()) {
             // exclude house obstacle, house is built separately
             Vector2i startTile = tileAt(obstacle.startPoint().toVector2f());
+            float wallThickness = ui.thePrefs().getFloat("3d.obstacle.wall_thickness");
             if (gameLevel().house().isPresent() && !gameLevel().house().get().isTileInHouseArea(startTile)) {
-                r3D.renderObstacle3D(
-                    parent,
-                    obstacle,
-                    isObstacleTheWorldBorder(worldMap, obstacle),
-                    ui.thePrefs().getFloat("3d.obstacle.wall_thickness"));
+                r3D.renderObstacle3D(maze3D, obstacle, isObstacleTheWorldBorder(worldMap, obstacle), wallThickness);
             }
         }
         java.time.Duration duration = java.time.Duration.between(start, Instant.now());
@@ -764,12 +771,7 @@ public class GameLevel3D extends Group implements Destroyable {
             Logger.info("Destroyed and cleared 3D house");
         }
         if (maze3D != null) {
-
-          /*  maze3D.getChildren().forEach(child -> {
-                if (child instanceof Wall3D wall3D) {
-                    wall3D.destroy();
-                }
-            });*/
+            //TODO call destroy for wall3D components
             maze3D.getChildren().clear();
             maze3D = null;
             Logger.info("3D maze destroyed");
