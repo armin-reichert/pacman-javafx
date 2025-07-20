@@ -25,19 +25,16 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.prefs.Preferences;
 
 import static de.amr.pacmanfx.ui.ActionBindingMap.createActionBinding;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
-import static de.amr.pacmanfx.uilib.Ufx.formatColorHex;
 
 public interface GameUI {
 
@@ -48,22 +45,7 @@ public interface GameUI {
         return new GameUI_Builder(PacManGames_UI_Impl.THE_ONE);
     }
 
-    Preferences thePrefs();
-
-    default Color colorFromPrefs(String colorKey, Color defaultColor) {
-        return Color.web(thePrefs().get(colorKey, formatColorHex(defaultColor)));
-    }
-
-    default Font fontFromPrefs(
-        String familyKey, String familyDefault,
-        String weightKey, int weightDefault,
-        String sizeKey, float sizeDefault)
-    {
-        String family = thePrefs().get(familyKey, familyDefault);
-        int weight = thePrefs().getInt(weightKey, weightDefault);
-        float size = thePrefs().getFloat(sizeKey, sizeDefault);
-        return Font.font(family, FontWeight.findByWeight(weight), size);
-    }
+    PreferenceManager thePrefs();
 
     // Global key combinations and action bindings
     KeyCombination KEY_FULLSCREEN  = nude(KeyCode.F11);
@@ -107,12 +89,12 @@ public interface GameUI {
     );
 
     default MenuItem createContextMenuTitleItem(String title) {
-        Font font = fontFromPrefs(
-            "context_menu.title.font.family", "Dialog",
-            "context_menu.title.font.weight", 850,
-            "context_menu.title.font.size", 14
+        Font font = thePrefs().font(
+            "context_menu.title.font.family",
+            "context_menu.title.font.weight",
+            "context_menu.title.font.size"
         );
-        Color fillColor = colorFromPrefs("context_menu.title.fill", Color.CORNFLOWERBLUE);
+        Color fillColor = thePrefs().getColor("context_menu.title.fill");
         var text = new Text(title);
         text.setFont(font);
         text.setFill(fillColor);

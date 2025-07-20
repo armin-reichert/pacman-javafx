@@ -51,12 +51,8 @@ public abstract class GameScene2D implements GameScene {
     protected GameScene2D(GameUI ui) {
         this.ui = requireNonNull(ui);
         actionBindings = new ActionBindingMap(ui.theKeyboard());
-        debugTextFill = ui.colorFromPrefs("debug_text.fill", Color.YELLOW);
-        debugTextFont = ui.fontFromPrefs(
-            "debug_text.font.family", "Sans",
-            "debug_text.font.weight", 750,
-            "debug_text.font.size", 16
-        );
+        debugTextFill = ui.thePrefs().getColor("debug_text.fill");
+        debugTextFont = ui.thePrefs().font("debug_text.font.family", "debug_text.font.weight", "debug_text.font.size");
     }
 
     @Override
