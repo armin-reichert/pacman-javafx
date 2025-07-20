@@ -7,7 +7,6 @@ package de.amr.pacmanfx.uilib.model3D;
 import de.amr.pacmanfx.lib.Destroyable;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.Shape3D;
@@ -18,7 +17,7 @@ import java.util.List;
 /**
  * 3D wall composed of a base and a top node.
  */
-public record Wall3D(Node base, Node top) implements Destroyable {
+public record Wall3D(Shape3D base, Shape3D top) implements Destroyable {
 
     public static final double DEFAULT_BASE_HEIGHT = 4;
     public static final double DEFAULT_TOP_HEIGHT = 0.2;
@@ -80,13 +79,12 @@ public record Wall3D(Node base, Node top) implements Destroyable {
                     cylinder.translateYProperty().unbind();
                     cylinder.translateZProperty().unbind();
                 }
-                case Shape3D shape3D -> {
-                    shape3D.setMaterial(null);
-                    shape3D.translateXProperty().unbind();
-                    shape3D.translateYProperty().unbind();
-                    shape3D.translateZProperty().unbind();
+                default -> {
+                    child.setMaterial(null);
+                    child.translateXProperty().unbind();
+                    child.translateYProperty().unbind();
+                    child.translateZProperty().unbind();
                 }
-                default -> {}
             }
         });
     }
