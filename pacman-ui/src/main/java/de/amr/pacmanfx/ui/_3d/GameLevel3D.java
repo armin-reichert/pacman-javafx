@@ -112,6 +112,8 @@ public class GameLevel3D extends Group implements Destroyable {
     private MeshView[] pupilsMeshViews;
     private MeshView[] eyesMeshViews;
 
+    private Mesh pelletMesh;
+
     private Node[] livesCounterShapes;
 
     private PhongMaterial wallBaseMaterial;
@@ -136,10 +138,9 @@ public class GameLevel3D extends Group implements Destroyable {
 
     private int wall3DCount;
 
-    // Note: The order in which children are added to the root matters!
-    // Walls and house must be added *after* the actors, otherwise the transparency is not working correctly.
     public GameLevel3D(GameUI ui) {
         this.ui = requireNonNull(ui);
+        setMouseTransparent(true); // this increases performance, they say...
 
         createAmbientLight();
         createLevelCounter3D();
@@ -147,38 +148,32 @@ public class GameLevel3D extends Group implements Destroyable {
         createPac3D();
         createGhosts3D();
         createFloor3D();
+        createWorldMapColorScheme();
+        createMazeMaterials();
+        createMaze3D();
+        gameLevel().house().ifPresent(house -> {
+            createHouse3D(house);
+            maze3D.getChildren().add(house3D);
+        });
+        createPelletsAndEnergizers3D();
 
+        mazeGroup.getChildren().addAll(floor3D, maze3D);
         getChildren().add(levelCounter3D);
         getChildren().add(ambientLight);
         getChildren().add(livesCounter3D);
         getChildren().addAll(pac3D, pac3D.light());
         getChildren().addAll(ghosts3D);
-        getChildren().add(mazeGroup);
-
-        wallOpacityProperty.bind(ui.property3DWallOpacity());
-        obstacleBaseHeightProperty.set(ui.thePrefs().getFloat("3d.obstacle.base_height"));
-        houseBaseHeightProperty.set(ui.thePrefs().getFloat("3d.house.base_height"));
-        createWorldMapColorScheme();
-        createMazeMaterials();
-        buildMaze3D();
-
-        gameLevel().house().ifPresent(house -> {
-            createHouse3D(house);
-            maze3D.getChildren().add(house3D);
-        });
-
-        mazeGroup.getChildren().addAll(floor3D, maze3D);
-
-        pelletMaterial = coloredPhongMaterial(colorScheme.pellet());
-        createPelletsAndEnergizers3D(ui.theAssets().theModel3DRepository().pelletMesh(), pelletMaterial);
         energizers3D.stream().map(Eatable3D::shape3D).forEach(getChildren()::add);
         pellets3D   .stream().map(Eatable3D::shape3D).forEach(getChildren()::add);
+
+        // Note: The order in which children are added to the root matters!
+        // Walls and house must be added *after* the actors, otherwise the transparency is not working correctly.
+        getChildren().add(mazeGroup);
 
         ui.property3DWallHeight().addListener(this::handleWallHeightChange);
         ui.property3DDrawMode().addListener(this::handleDrawModeChange);
 
-        setMouseTransparent(true); // this increases performance, they say...
-
+        // Animations
         wallColorFlashingAnimation = new ManagedAnimation(animationManager, "MazeWallColorFlashing") {
             @Override
             protected Animation createAnimation() {
@@ -209,21 +204,6 @@ public class GameLevel3D extends Group implements Destroyable {
 
         levelCompletedFullAnimation = new LevelCompletedAnimation(ui, animationManager, this);
         levelCompletedShortAnimation = new LevelCompletedAnimationShort(animationManager, this);
-    }
-
-    private void createHouse3D(House house) {
-        house3D = new ArcadeHouse3D(
-            animationManager,
-            house,
-            ui.thePrefs().getFloat("3d.house.base_height"),
-            ui.thePrefs().getFloat("3d.house.wall_thickness"),
-            ui.thePrefs().getFloat("3d.house.opacity"),
-            colorScheme.fill(),
-            colorScheme.stroke(),
-            colorScheme.door()
-        );
-        house3D.wallBaseHeightProperty().bind(houseBaseHeightProperty);
-        house3D.light().lightOnProperty().bind(houseLightOnProperty);
     }
 
     private void createMazeMaterials() {
@@ -264,6 +244,21 @@ public class GameLevel3D extends Group implements Destroyable {
             ui.thePrefs().getFloat("3d.floor.padding")
         );
         floor3D.materialProperty().bind(ui.property3DFloorColor().map(Ufx::coloredPhongMaterial));
+    }
+
+    private void createHouse3D(House house) {
+        house3D = new ArcadeHouse3D(
+                animationManager,
+                house,
+                ui.thePrefs().getFloat("3d.house.base_height"),
+                ui.thePrefs().getFloat("3d.house.wall_thickness"),
+                ui.thePrefs().getFloat("3d.house.opacity"),
+                colorScheme.fill(),
+                colorScheme.stroke(),
+                colorScheme.door()
+        );
+        house3D.wallBaseHeightProperty().bind(houseBaseHeightProperty);
+        house3D.light().lightOnProperty().bind(houseLightOnProperty);
     }
 
     private void createGhosts3D() {
@@ -352,7 +347,11 @@ public class GameLevel3D extends Group implements Destroyable {
         ambientLight.colorProperty().bind(ui.property3DLightColor());
     }
 
-    private void buildMaze3D() {
+    private void createMaze3D() {
+        wallOpacityProperty.bind(ui.property3DWallOpacity());
+        obstacleBaseHeightProperty.set(ui.thePrefs().getFloat("3d.obstacle.base_height"));
+        houseBaseHeightProperty.set(ui.thePrefs().getFloat("3d.house.base_height"));
+
         WorldMap worldMap = ui.theGameContext().theGameLevel().worldMap();
         Logger.info("Building 3D maze for map (URL '{}') and color scheme {}...", worldMap.url(), colorScheme);
         var r3D = new TerrainRenderer3D();
@@ -520,7 +519,9 @@ public class GameLevel3D extends Group implements Destroyable {
         }
     }
 
-    private void createPelletsAndEnergizers3D(Mesh pelletMesh, PhongMaterial pelletMaterial) {
+    private void createPelletsAndEnergizers3D() {
+        pelletMesh = ui.theAssets().theModel3DRepository().pelletMesh();
+        pelletMaterial = coloredPhongMaterial(colorScheme.pellet());
         gameLevel().tilesContainingFood().forEach(tile -> {
             if (gameLevel().isEnergizerPosition(tile)) {
                 float radius = ui.thePrefs().getFloat("3d.energizer.radius");
@@ -734,6 +735,9 @@ public class GameLevel3D extends Group implements Destroyable {
             }
             eyesMeshViews = null;
             Logger.info("Cleared eyes mesh views");
+        }
+        if (pelletMesh != null) {
+            pelletMesh = null;
         }
 
         getChildren().clear();
