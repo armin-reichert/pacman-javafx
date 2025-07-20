@@ -253,17 +253,15 @@ public abstract class Ghost extends MovingActor implements Animated {
         if (gameContext == null) {
             return; // might happen for ghosts in cut scenes
         }
-        gameContext.optGameLevel().ifPresent(level -> {
-            switch (state()) {
-                case LOCKED             -> updateStateLocked();
-                case LEAVING_HOUSE      -> updateStateLeavingHouse();
-                case HUNTING_PAC        -> updateStateHuntingPac();
-                case FRIGHTENED         -> updateStateFrightened();
-                case EATEN              -> updateStateEaten();
-                case RETURNING_HOME     -> updateStateReturningToHouse();
-                case ENTERING_HOUSE     -> updateStateEnteringHouse();
-            }
-        });
+        switch (state()) {
+            case LOCKED         -> updateStateLocked();
+            case LEAVING_HOUSE  -> updateStateLeavingHouse();
+            case HUNTING_PAC    -> updateStateHuntingPac();
+            case FRIGHTENED     -> updateStateFrightened();
+            case EATEN          -> updateStateEaten();
+            case RETURNING_HOME -> updateStateReturningToHouse();
+            case ENTERING_HOUSE -> updateStateEnteringHouse();
+        }
     }
 
     public void eaten(int index) {
