@@ -474,7 +474,6 @@ public class GameLevel3D extends Group implements Destroyable {
     public void onLevelComplete(GameState state, ObjectProperty<PerspectiveID> perspectiveIDProperty) {
         state.timer().resetIndefiniteTime(); // expires when animation ends
         ui.theSound().stopAll();
-        ui.theSound().stopAll();
         animationManager.stopAllAnimations();
         // hide explicitly because level might have been completed using cheat!
         pellets3D.forEach(pellet3D -> pellet3D.shape3D().setVisible(false));
