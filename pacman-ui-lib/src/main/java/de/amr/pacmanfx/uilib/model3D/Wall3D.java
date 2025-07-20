@@ -4,24 +4,68 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.model3D;
 
-import de.amr.pacmanfx.lib.Destroyable;
 import javafx.beans.property.DoubleProperty;
+import javafx.css.PseudoClass;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.Shape3D;
 import org.tinylog.Logger;
 
-import java.util.List;
+import static java.util.Objects.requireNonNull;
 
 /**
  * 3D wall composed of a base and a top node.
  */
-public record Wall3D(Shape3D base, Shape3D top) implements Destroyable {
+public record Wall3D(Shape3D base, Shape3D top) {
+
+    private static final PseudoClass WALL3D_BASE = PseudoClass.getPseudoClass("wall3d-base");
+    private static final PseudoClass WALL3D_TOP = PseudoClass.getPseudoClass("wall3d-top");
 
     public static final double DEFAULT_BASE_HEIGHT = 4;
     public static final double DEFAULT_TOP_HEIGHT = 0.2;
     public static final double DEFAULT_WALL_THICKNESS = 2;
+
+    public Wall3D {
+        requireNonNull(base);
+        base.pseudoClassStateChanged(WALL3D_BASE, true);
+        top.pseudoClassStateChanged(WALL3D_TOP, true);
+    }
+
+    public static boolean isBase(Node node) {
+        return node.getPseudoClassStates().contains(WALL3D_BASE);
+    }
+
+    public static boolean isTop(Node node) {
+        return node.getPseudoClassStates().contains(WALL3D_TOP);
+    }
+
+    public static void destroyPart(Node part) {
+        if (isBase(part) || isTop(part)) {
+            switch (part) {
+                case Box box -> destroyBox(box);
+                case Cylinder cylinder -> destroyCylinder(cylinder);
+                default -> Logger.error("Only Box and Cylinder are allowed as parts of 3D wall");
+            }
+        }
+    }
+
+    private static void destroyBox(Box box) {
+        box.depthProperty().unbind();
+        box.translateXProperty().unbind();
+        box.translateYProperty().unbind();
+        box.translateZProperty().unbind();
+        box.setMaterial(null);
+    }
+
+    private static void destroyCylinder(Cylinder cylinder) {
+        cylinder.heightProperty().unbind();
+        cylinder.translateXProperty().unbind();
+        cylinder.translateYProperty().unbind();
+        cylinder.translateZProperty().unbind();
+        cylinder.setMaterial(null);
+    }
 
     public void addTo(Group group) {
         group.getChildren().addAll(base, top);
@@ -59,33 +103,5 @@ public record Wall3D(Shape3D base, Shape3D top) implements Destroyable {
         } else {
             Logger.warn("The base of a 3D wall should either be a box or a cylinder");
         }
-    }
-
-    @Override
-    public void destroy() {
-        List.of(base, top).forEach(child -> {
-            switch (child) {
-                case Box box -> {
-                    box.depthProperty().unbind();
-                    box.setMaterial(null);
-                    box.translateXProperty().unbind();
-                    box.translateYProperty().unbind();
-                    box.translateZProperty().unbind();
-                }
-                case Cylinder cylinder -> {
-                    cylinder.heightProperty().unbind();
-                    cylinder.setMaterial(null);
-                    cylinder.translateXProperty().unbind();
-                    cylinder.translateYProperty().unbind();
-                    cylinder.translateZProperty().unbind();
-                }
-                default -> {
-                    child.setMaterial(null);
-                    child.translateXProperty().unbind();
-                    child.translateYProperty().unbind();
-                    child.translateZProperty().unbind();
-                }
-            }
-        });
     }
 }

@@ -800,7 +800,8 @@ public class GameLevel3D implements Destroyable {
             Logger.info("Destroyed and cleared 3D house");
         }
         if (maze3D != null) {
-            //TODO call destroy for wall3D components
+            // destroy wall 3D bottom and top nodes
+            maze3D.getChildren().stream().filter(node -> Wall3D.isTop(node) || Wall3D.isBase(node)).forEach(Wall3D::destroyPart);
             maze3D.getChildren().clear();
             maze3D = null;
             Logger.info("3D maze destroyed");
