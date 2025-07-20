@@ -103,10 +103,12 @@ public class PacManGames_UI_Impl implements GameUI {
         theJoypad = new Joypad(theKeyboard);
         theWatchdog = new DirectoryWatchdog(gameContext.theCustomMapDir());
 
+        storeDefaultPreferences();
         if (!thePrefs.checkAccess()) {
             Logger.error("Preferences could not be accessed!");
+        } else {
+            thePrefs.addMissingValues();
         }
-        storeDefaultPreferences();
 
         Scene mainScene = new Scene(rootPane, width, height);
         stage.setScene(mainScene);
@@ -176,6 +178,7 @@ public class PacManGames_UI_Impl implements GameUI {
         thePrefs.storeDefaultValue("3d.house.opacity", 0.4f);
         thePrefs.storeDefaultValue("3d.house.sensitivity", 1.5f * TS);
         thePrefs.storeDefaultValue("3d.house.wall_thickness", 2.5f);
+        thePrefs.storeDefaultValue("3d.level_counter.symbol_size", 10.0f);
         thePrefs.storeDefaultValue("3d.level_counter.elevation", 6f);
         thePrefs.storeDefaultValue("3d.lives_counter.capacity", 5);
         thePrefs.storeDefaultColor("3d.lives_counter.pillar_color", Color.grayRgb(120));

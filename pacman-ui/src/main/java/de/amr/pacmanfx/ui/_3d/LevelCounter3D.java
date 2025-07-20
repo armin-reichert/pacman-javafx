@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.model.LevelCounter;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Config;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -30,18 +31,18 @@ public class LevelCounter3D extends Group {
 
     private final ManagedAnimation spinningAnimation;
 
-    public LevelCounter3D(GameUI_Config config, AnimationManager animationManager, LevelCounter levelCounter) {
+    public LevelCounter3D(GameUI ui, AnimationManager animationManager, LevelCounter levelCounter) {
         requireNonNull(animationManager);
         List<Byte> symbols = levelCounter.symbols();
-        float cubeSize = 1.25f * TS;
+        float cubeSize = ui.thePrefs().getFloat("3d.level_counter.symbol_size");
         for (int i = 0; i < symbols.size(); ++i) {
             var material = new PhongMaterial(Color.WHITE);
-            material.setDiffuseMap(config.bonusSymbolImage(symbols.get(i)));
-            var shape = new Box(cubeSize, cubeSize, cubeSize);
-            shape.setMaterial(material);
-            shape.setTranslateX(-i * 16);
-            shape.setTranslateZ(-HTS);
-            getChildren().add(shape);
+            material.setDiffuseMap(ui.theConfiguration().bonusSymbolImage(symbols.get(i)));
+            var cube = new Box(cubeSize, cubeSize, cubeSize);
+            cube.setMaterial(material);
+            cube.setTranslateX(-i * 16);
+            cube.setTranslateZ(-HTS);
+            getChildren().add(cube);
         }
 
         spinningAnimation = new ManagedAnimation(animationManager, "LevelCounter_Spinning") {

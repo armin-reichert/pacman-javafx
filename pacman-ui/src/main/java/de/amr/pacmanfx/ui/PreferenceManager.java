@@ -1,3 +1,7 @@
+/*
+Copyright (c) 2021-2025 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.pacmanfx.ui;
 
 import javafx.scene.paint.Color;
@@ -5,8 +9,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import org.tinylog.Logger;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 import static de.amr.pacmanfx.uilib.Ufx.formatColorHex;
@@ -24,11 +28,28 @@ public class PreferenceManager {
         try {
             for (String key : prefs.keys()) {
                 prefs.get(key, null);
-                Logger.info("Prefs key '{}' accessed");
+                Logger.debug("Prefs key '{}' could be accessed");
             }
             return true;
         } catch (Exception x) {
             return false;
+        }
+    }
+
+    public void addMissingValues() {
+        try {
+            Set<String> prefKeys = new HashSet<>(Arrays.asList(prefs.keys()));
+            List<String> allKeys = defaultValueMap.keySet().stream().sorted().toList();
+            for (String key : allKeys) {
+                if (!prefKeys.contains(key)) {
+                    Object defaultValue = defaultValueMap.get(key);
+                    storeValue(key, defaultValue);
+                    Logger.info("Added missing entry '{}'='{}'", key, defaultValue);
+                }
+            }
+        } catch (BackingStoreException x) {
+            Logger.error("Could not access preferences to add missing keys");
+            Logger.error(x);
         }
     }
 
@@ -125,5 +146,4 @@ public class PreferenceManager {
     public String getString(String key) {
         return (String) getValue(key);
     }
-
 }
