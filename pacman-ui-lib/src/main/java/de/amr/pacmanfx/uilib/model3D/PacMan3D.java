@@ -69,11 +69,15 @@ public class PacMan3D extends PacBase3D {
 
     @Override
     public void updateMovementAnimation() {
-        ((HeadBangingAnimation) movementAnimation).update(pac);
+        if (movementAnimation instanceof HeadBangingAnimation headBangingAnimation) {
+            headBangingAnimation.update(pac);
+        }
     }
 
     @Override
     public void setMovementPowerMode(boolean power) {
-        ((HeadBangingAnimation) movementAnimation).setPowerMode(power);
+        if (movementAnimation instanceof HeadBangingAnimation headBangingAnimation) {
+            headBangingAnimation.setPowerMode(power);
+        }
     }
 }

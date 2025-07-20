@@ -58,11 +58,15 @@ public class MsPacMan3D extends PacBase3D {
 
     @Override
     public void setMovementPowerMode(boolean power) {
-        ((HipSwayingAnimation) movementAnimation).setPowerMode(power);
+        if (movementAnimation instanceof HipSwayingAnimation hipSwayingAnimation) {
+            hipSwayingAnimation.setPowerMode(power);
+        }
     }
 
     @Override
     public void updateMovementAnimation() {
-        ((HipSwayingAnimation) movementAnimation).update(pac);
+        if (movementAnimation instanceof HipSwayingAnimation hipSwayingAnimation) {
+            hipSwayingAnimation.update(pac);
+        }
     }
 }
