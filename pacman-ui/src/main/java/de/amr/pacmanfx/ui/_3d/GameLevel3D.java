@@ -100,7 +100,7 @@ public class GameLevel3D extends Group implements Destroyable {
     private final DoubleProperty  wallOpacityProperty = new SimpleDoubleProperty(1);
 
     private final GameUI ui;
-
+    private final GameLevel gameLevel;
     private WorldMapColorScheme colorScheme;
 
     private final AnimationManager animationManager = new AnimationManager();
@@ -138,20 +138,24 @@ public class GameLevel3D extends Group implements Destroyable {
 
     private int wall3DCount;
 
+    
     public GameLevel3D(GameUI ui) {
         this.ui = requireNonNull(ui);
+        this.gameLevel = requireNonNull(ui.theGameContext().theGameLevel());
+        
         setMouseTransparent(true); // this increases performance, they say...
 
+        createWorldMapColorScheme();
+        createMazeMaterials();
+        
         createAmbientLight();
         createLevelCounter3D();
         createLivesCounter3D();
         createPac3D();
         createGhosts3D();
         createFloor3D();
-        createWorldMapColorScheme();
-        createMazeMaterials();
         createMaze3D();
-        gameLevel().house().ifPresent(house -> {
+        gameLevel.house().ifPresent(house -> {
             createHouse3D(house);
             maze3D.getChildren().add(house3D);
         });
@@ -203,7 +207,7 @@ public class GameLevel3D extends Group implements Destroyable {
         };
 
         levelCompletedFullAnimation = new LevelCompletedAnimation(ui, animationManager, this);
-        levelCompletedShortAnimation = new LevelCompletedAnimationShort(animationManager, this);
+        levelCompletedShortAnimation = new LevelCompletedAnimationShort(animationManager, this, gameLevel);
     }
 
     private void createMazeMaterials() {
@@ -226,7 +230,7 @@ public class GameLevel3D extends Group implements Destroyable {
     }
 
     private void createWorldMapColorScheme() {
-        WorldMap worldMap = gameLevel().worldMap();
+        WorldMap worldMap = gameLevel.worldMap();
         WorldMapColorScheme proposedColorScheme = ui.theConfiguration().colorScheme(worldMap);
         requireNonNull(proposedColorScheme);
         // Add some contrast with floor if wall fill color is black
@@ -285,7 +289,7 @@ public class GameLevel3D extends Group implements Destroyable {
                 new MeshView(ghostEyeballsMesh),
                 new MeshView(ghostEyeballsMesh),
         };
-        ghosts3D = gameLevel().ghosts().map(ghost -> {
+        ghosts3D = gameLevel.ghosts().map(ghost -> {
             var ghostColoring = new GhostColoring(
                 ui.theConfiguration().getAssetNS("ghost.%d.color.normal.dress".formatted(ghost.personality())),
                 ui.theConfiguration().getAssetNS("ghost.%d.color.normal.pupils".formatted(ghost.personality())),
@@ -298,21 +302,21 @@ public class GameLevel3D extends Group implements Destroyable {
             );
             return new MutatingGhost3D(
                 animationManager,
-                gameLevel(),
+                gameLevel,
                 ghost,
                 ghostColoring,
                 dressMeshViews[ghost.personality()],
                 pupilsMeshViews[ghost.personality()],
                 eyesMeshViews[ghost.personality()],
                 ui.thePrefs().getFloat("3d.ghost.size"),
-                gameLevel().data().numFlashes()
+                gameLevel.data().numFlashes()
             );
         }).toList();
-        ghosts3D.forEach(ghost3D -> ghost3D.init(gameLevel()));
+        ghosts3D.forEach(ghost3D -> ghost3D.init(gameLevel));
     }
 
     private void createPac3D() {
-        pac3D = ui.theConfiguration().createPac3D(animationManager, gameLevel().pac());
+        pac3D = ui.theConfiguration().createPac3D(animationManager, gameLevel.pac());
         pac3D.init();
     }
 
@@ -369,16 +373,12 @@ public class GameLevel3D extends Group implements Destroyable {
             // exclude house obstacle, house is built separately
             Vector2i startTile = tileAt(obstacle.startPoint().toVector2f());
             float wallThickness = ui.thePrefs().getFloat("3d.obstacle.wall_thickness");
-            if (gameLevel().house().isPresent() && !gameLevel().house().get().isTileInHouseArea(startTile)) {
+            if (gameLevel.house().isPresent() && !gameLevel.house().get().isTileInHouseArea(startTile)) {
                 r3D.renderObstacle3D(maze3D, obstacle, isObstacleTheWorldBorder(worldMap, obstacle), wallThickness);
             }
         }
         java.time.Duration duration = java.time.Duration.between(start, Instant.now());
         Logger.info("Built 3D maze with {} composite walls in {} milliseconds", wall3DCount, duration.toMillis());
-    }
-
-    public GameLevel gameLevel() {
-        return ui.theGameContext().theGameLevel();
     }
 
     public DoubleProperty houseBaseHeightProperty() {
@@ -410,15 +410,15 @@ public class GameLevel3D extends Group implements Destroyable {
      */
     public void tick() {
         pac3D.update();
-        ghosts3D.forEach(ghost3D -> ghost3D.update(gameLevel()));
+        ghosts3D.forEach(ghost3D -> ghost3D.update(gameLevel));
         bonus3D().ifPresent(bonus3D -> bonus3D.update(ui.theGameContext()));
-        boolean houseAccessRequired = gameLevel().ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+        boolean houseAccessRequired = gameLevel.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
             .anyMatch(Ghost::isVisible);
         houseLightOnProperty.set(houseAccessRequired);
 
-        gameLevel().house().ifPresent(house -> {
+        gameLevel.house().ifPresent(house -> {
             float sensitivity = ui.thePrefs().getFloat("3d.house.sensitivity");
-            boolean ghostNearHouseEntry = gameLevel().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+            boolean ghostNearHouseEntry = gameLevel.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
                 .filter(ghost -> ghost.position().euclideanDist(house.entryPosition()) <= sensitivity)
                 .anyMatch(Ghost::isVisible);
             houseOpenProperty.set(ghostNearHouseEntry);
@@ -426,7 +426,7 @@ public class GameLevel3D extends Group implements Destroyable {
 
         int livesCounterSize = ui.theGameContext().theGame().lifeCount() - 1;
         // when the game starts and Pac-Man is not yet visible, show one more
-        boolean oneMore = ui.theGameContext().theGameState() == GameState.STARTING_GAME && !gameLevel().pac().isVisible();
+        boolean oneMore = ui.theGameContext().theGameState() == GameState.STARTING_GAME && !gameLevel.pac().isVisible();
         if (oneMore) livesCounterSize += 1;
         livesCountProperty.set(livesCounterSize);
 
@@ -522,8 +522,8 @@ public class GameLevel3D extends Group implements Destroyable {
     private void createPelletsAndEnergizers3D() {
         pelletMesh = ui.theAssets().theModel3DRepository().pelletMesh();
         pelletMaterial = coloredPhongMaterial(colorScheme.pellet());
-        gameLevel().tilesContainingFood().forEach(tile -> {
-            if (gameLevel().isEnergizerPosition(tile)) {
+        gameLevel.tilesContainingFood().forEach(tile -> {
+            if (gameLevel.isEnergizerPosition(tile)) {
                 float radius = ui.thePrefs().getFloat("3d.energizer.radius");
                 float floorThickness = ui.thePrefs().getFloat("3d.floor.thickness");
                 float x = tile.x() * TS + HTS;
@@ -557,7 +557,7 @@ public class GameLevel3D extends Group implements Destroyable {
                             @Override
                             public boolean particleShouldVanish(Particle particle) {
                                 return particle.getTranslateZ() >= -1
-                                    && isInsideWorldMap(gameLevel().worldMap(), particle.getTranslateX(), particle.getTranslateY());
+                                    && isInsideWorldMap(gameLevel.worldMap(), particle.getTranslateX(), particle.getTranslateY());
                             }
                         };
                         return new SequentialTransition(

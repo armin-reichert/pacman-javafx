@@ -17,16 +17,18 @@ import static java.util.Objects.requireNonNull;
 public class LevelCompletedAnimationShort extends ManagedAnimation {
 
     public static final int FLASH_DURATION_MILLIS = 250;
+
+    private final GameLevel gameLevel;
     private GameLevel3D gameLevel3D;
 
-    public LevelCompletedAnimationShort(AnimationManager animationManager, GameLevel3D gameLevel3D) {
+    public LevelCompletedAnimationShort(AnimationManager animationManager, GameLevel3D gameLevel3D, GameLevel gameLevel) {
         super(animationManager, "Level_Complete_Short_Animation");
         this.gameLevel3D = requireNonNull(gameLevel3D);
+        this.gameLevel = requireNonNull(gameLevel);
     }
 
     @Override
     protected Animation createAnimation() {
-        GameLevel gameLevel = gameLevel3D.gameLevel();
         return new SequentialTransition(
             pauseSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
             pauseSec(0.5),
@@ -37,6 +39,8 @@ public class LevelCompletedAnimationShort extends ManagedAnimation {
 
     @Override
     public void destroy() {
+        animationManager.stopAnimation(this);
+        animationManager.destroyAnimation(this);
         gameLevel3D = null;
     }
 

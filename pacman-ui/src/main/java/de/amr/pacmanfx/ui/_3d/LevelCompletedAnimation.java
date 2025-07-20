@@ -13,6 +13,7 @@ import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.*;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
+import org.tinylog.Logger;
 
 import java.util.Random;
 
@@ -54,23 +55,28 @@ public class LevelCompletedAnimation extends ManagedAnimation {
 
     @Override
     protected Animation createAnimation() {
-        GameLevel gameLevel = gameLevel3D.gameLevel();
-        return new SequentialTransition(
-                doNow(() -> {
-                    gameLevel3D.livesCounter3D().light().setLightOn(false);
-                    sometimesShowLevelCompleteFlashMessage();
-                }),
-                pauseSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
-                pauseSec(0.5),
-                createWallsFlashAnimation(),
-                pauseSec(0.5, () -> gameLevel.pac().hide()),
-                pauseSec(0.5),
-                createSpinningAnimation(),
-                pauseSec(0.5, () -> ui.theSound().play(SoundID.LEVEL_COMPLETE)),
-                pauseSec(0.5),
-                wallsDisappearingAnimation.getOrCreateAnimation(),
-                pauseSec(1.0, () -> ui.theSound().play(SoundID.LEVEL_CHANGED))
-        );
+        if (ui.theGameContext().optGameLevel().isPresent()) {
+            GameLevel gameLevel = ui.theGameContext().theGameLevel();
+            return new SequentialTransition(
+                    doNow(() -> {
+                        gameLevel3D.livesCounter3D().light().setLightOn(false);
+                        sometimesShowLevelCompleteFlashMessage(gameLevel.number());
+                    }),
+                    pauseSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
+                    pauseSec(0.5),
+                    createWallsFlashAnimation(),
+                    pauseSec(0.5, () -> gameLevel.pac().hide()),
+                    pauseSec(0.5),
+                    createSpinningAnimation(),
+                    pauseSec(0.5, () -> ui.theSound().play(SoundID.LEVEL_COMPLETE)),
+                    pauseSec(0.5),
+                    wallsDisappearingAnimation.getOrCreateAnimation(),
+                    pauseSec(1.0, () -> ui.theSound().play(SoundID.LEVEL_CHANGED))
+            );
+        } else {
+            Logger.error("Could not create animation '{}', no game level exists!", label);
+            return null;
+        }
     }
 
     @Override
@@ -82,10 +88,9 @@ public class LevelCompletedAnimation extends ManagedAnimation {
         }
     }
 
-    private void sometimesShowLevelCompleteFlashMessage() {
+    private void sometimesShowLevelCompleteFlashMessage(int levelNumber) {
         boolean showFlashMessage = randomInt(1, 1000) < 250; // every 4th time also show a message
         if (showFlashMessage) {
-            int levelNumber = gameLevel3D.gameLevel().number();
             String message = ui.theAssets().localizedLevelCompleteMessage(levelNumber);
             ui.showFlashMessageSec(3, message);
         }
@@ -101,17 +106,22 @@ public class LevelCompletedAnimation extends ManagedAnimation {
     }
 
     private Animation createWallsFlashAnimation() {
-        int numFlashes = gameLevel3D.gameLevel().data().numFlashes();
-        if (numFlashes == 0) {
-            return pauseSec(1.0);
+        if (ui.theGameContext().optGameLevel().isPresent()) {
+            int numFlashes = ui.theGameContext().theGameLevel().data().numFlashes();
+            if (numFlashes == 0) {
+                return pauseSec(1.0);
+            }
+            var flashingTimeline = new Timeline(
+                    new KeyFrame(Duration.millis(0.5 * FLASH_DURATION_MILLIS),
+                            new KeyValue(gameLevel3D.obstacleBaseHeightProperty(), 0, Interpolator.EASE_BOTH)
+                    )
+            );
+            flashingTimeline.setAutoReverse(true);
+            flashingTimeline.setCycleCount(2 * numFlashes);
+            return flashingTimeline;
+        } else {
+            Logger.error("Could not create animation '{}', no game level exists!", label);
+            return null;
         }
-        var flashingTimeline = new Timeline(
-            new KeyFrame(Duration.millis(0.5 * FLASH_DURATION_MILLIS),
-                new KeyValue(gameLevel3D.obstacleBaseHeightProperty(), 0, Interpolator.EASE_BOTH)
-            )
-        );
-        flashingTimeline.setAutoReverse(true);
-        flashingTimeline.setCycleCount(2 * numFlashes);
-        return flashingTimeline;
     }
 }
