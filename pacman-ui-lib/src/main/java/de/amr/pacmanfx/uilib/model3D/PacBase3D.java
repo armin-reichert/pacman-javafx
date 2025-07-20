@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.model3D;
 
-import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.lib.Destroyable;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
@@ -21,13 +20,14 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.HTS;
+import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
 /**
  * Common base class for (Ms.) Pac-Man 3D representations.
  */
-public class PacBase3D extends Group implements Destroyable {
+public abstract class PacBase3D extends Group implements Destroyable {
 
     protected final Pac pac;
     protected final double size;
@@ -112,7 +112,7 @@ public class PacBase3D extends Group implements Destroyable {
 
     public void setMovementPowerMode(boolean power) {}
 
-    public void updateMovementAnimation() {}
+    public abstract void updateMovementAnimation();
 
     public void init() {
         if (chewingAnimation != null) {

@@ -37,6 +37,11 @@ public abstract class ManagedAnimation implements Destroyable {
             } catch (Exception x) {
                 Logger.error("Exception occured when creating animation '{}'", label);
                 Logger.error(x);
+                throw new IllegalStateException(x);
+            }
+            if (animation == null) {
+                Logger.error("Creating animation '{}' returned no result", label);
+                throw new IllegalStateException();
             }
         }
         return animation;
