@@ -49,6 +49,14 @@ public class HeadBangingAnimation extends ManagedAnimation {
         node.setRotate(0);
     }
 
+    @Override
+    public void pause() {
+        super.pause();
+        var rotateTransition = (RotateTransition) animation;
+        node.setRotationAxis(rotateTransition.getAxis());
+        node.setRotate(0);
+    }
+
     public void update(Pac pac) {
         var rotateTransition = (RotateTransition) getOrCreateAnimation();
         if (pac.isParalyzed()) {
