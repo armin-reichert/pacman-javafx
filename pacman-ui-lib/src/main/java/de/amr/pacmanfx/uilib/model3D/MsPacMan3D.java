@@ -49,15 +49,20 @@ public class MsPacMan3D extends PacBase3D {
 
     @Override
     public void destroy() {
+        super.destroy();
         if (femaleBodyParts != null) {
             femaleBodyParts.destroy();
             femaleBodyParts = null;
         }
-        super.destroy();
     }
 
     @Override
     public void setMovementPowerMode(boolean power) {
         ((HipSwayingAnimation) movementAnimation).setPowerMode(power);
+    }
+
+    @Override
+    public void updateMovementAnimation() {
+        ((HipSwayingAnimation) movementAnimation).update(pac);
     }
 }

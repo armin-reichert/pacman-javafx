@@ -27,7 +27,7 @@ public class HeadBangingAnimation extends ManagedAnimation {
     private final Node node;
 
     public HeadBangingAnimation(AnimationManager animationManager, Node node) {
-        super(animationManager, "Pac_Man_Movement");
+        super(animationManager, "Pac_Man_Head_Banging");
         this.node = requireNonNull(node);
     }
 

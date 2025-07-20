@@ -358,7 +358,7 @@ public class PlayScene3D implements GameScene {
         gameLevel.ghosts().forEach(Ghost::show);
 
         gameLevel3D.pac3D().init();
-        gameLevel3D.pac3D().update(gameLevel);
+        gameLevel3D.pac3D().update();
         gameLevel3D.pellets3D().forEach(pellet -> pellet.shape3D().setVisible(!gameLevel.tileContainsEatenFood(pellet.tile())));
         gameLevel3D.energizers3D().forEach(energizer -> energizer.shape3D().setVisible(!gameLevel.tileContainsEatenFood(energizer.tile())));
         if (isOneOf(gameContext().theGameState(), GameState.HUNTING, GameState.GHOST_DYING)) { //TODO check this

@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.model3D;
 
+import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
@@ -30,7 +31,7 @@ public class HipSwayingAnimation extends ManagedAnimation {
     }
 
     @Override
-    protected Animation createAnimation() {
+    protected RotateTransition createAnimation() {
         var rotateTransition = new RotateTransition(SWING_TIME, node);
         rotateTransition.setAxis(Rotate.Z_AXIS);
         rotateTransition.setCycleCount(Animation.INDEFINITE);
@@ -41,22 +42,44 @@ public class HipSwayingAnimation extends ManagedAnimation {
 
     @Override
     public void stop() {
-        var rotateTransition = (RotateTransition) getOrCreateAnimation();
-        super.stop();
-        node.setRotationAxis(rotateTransition.getAxis());
-        node.setRotate(0);
+        if (animation != null) {
+            animation.stop();
+            var rotateTransition = (RotateTransition) animation;
+            node.setRotationAxis(rotateTransition.getAxis());
+            node.setRotate(0);
+        }
+    }
+
+    @Override
+    public void pause() {
+        if (animation != null) {
+            animation.pause();
+            var rotateTransition = (RotateTransition) animation;
+            node.setRotationAxis(rotateTransition.getAxis());
+            node.setRotate(0);
+        }
     }
 
     public void setPowerMode(boolean power) {
-        var rotateTransition = (RotateTransition) getOrCreateAnimation();
-        boolean running = rotateTransition.getStatus() == Animation.Status.RUNNING;
-        double amplification = power ? POWER_ANGLE_AMPLIFICATION : 1;
-        rotateTransition.stop();
-        rotateTransition.setFromAngle(HIP_ANGLE_FROM * amplification);
-        rotateTransition.setToAngle(HIP_ANGLE_TO * amplification);
-        rotateTransition.setRate(power ? POWER_RATE : 1);
-        if (running) {
-            rotateTransition.play();
+        if (animation != null) {
+            boolean wasRunning = animation.getStatus() == Animation.Status.RUNNING;
+            animation.stop();
+            animation.setRate(power ? POWER_RATE : 1);
+            var rotateTransition = (RotateTransition) animation;
+            double amplification = power ? POWER_ANGLE_AMPLIFICATION : 1;
+            rotateTransition.setFromAngle(HIP_ANGLE_FROM * amplification);
+            rotateTransition.setToAngle(HIP_ANGLE_TO * amplification);
+            if (wasRunning) {
+                animation.play();
+            }
+        }
+    }
+
+    public void update(Pac pac) {
+        if (pac.isParalyzed()) {
+            pause();
+        } else {
+            playOrContinue();
         }
     }
 }

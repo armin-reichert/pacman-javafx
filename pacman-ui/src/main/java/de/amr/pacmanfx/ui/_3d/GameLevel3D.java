@@ -382,7 +382,7 @@ public class GameLevel3D extends Group implements Destroyable {
      * Called on each clock tick (frame).
      */
     public void tick() {
-        pac3D.update(gameLevel());
+        pac3D.update();
         ghosts3D.forEach(ghost3D -> ghost3D.update(gameLevel()));
         bonus3D().ifPresent(bonus3D -> bonus3D.update(ui.theGameContext()));
         boolean houseAccessRequired = gameLevel().ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
@@ -419,7 +419,7 @@ public class GameLevel3D extends Group implements Destroyable {
         state.timer().resetIndefiniteTime(); // expires when level animation ends
         ui.theSound().stopAll();
         // do one last update before dying animation starts
-        pac3D.update(ui.theGameContext().theGameLevel());
+        pac3D.update();
         livesCounter3D.lookingAroundAnimation().stop();
         livesCounter3D.lookingAroundAnimation().invalidate();
         ghosts3D.forEach(MutatingGhost3D::stopAllAnimations);

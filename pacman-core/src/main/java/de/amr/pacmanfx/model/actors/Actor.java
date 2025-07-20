@@ -12,6 +12,8 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
+import java.util.Optional;
+
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
@@ -42,6 +44,14 @@ public class Actor {
      */
     public Actor(GameContext gameContext) {
         this.gameContext = gameContext;
+    }
+
+    public GameContext gameContext() {
+        return gameContext;
+    }
+
+    public Optional<GameContext> optGameContext() {
+        return Optional.ofNullable(gameContext);
     }
 
     /**

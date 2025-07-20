@@ -4,11 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.model3D;
 
+import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.lib.Destroyable;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -21,26 +21,27 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.Globals.*;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Common base class for Pac-Man and Ms. Pac-Man 3D representations.
+ * Common base class for (Ms.) Pac-Man 3D representations.
  */
 public class PacBase3D extends Group implements Destroyable {
 
-    protected double size;
-    protected Pac pac;
-    protected PointLight light = new PointLight();
+    protected final Pac pac;
+    protected final double size;
+    protected final AnimationManager animationManager;
+
     protected PacBody body;
     protected PacBodyNoEyes jaw;
     protected Rotate moveRotation = new Rotate();
 
-    protected AnimationManager animationManager;
+    protected PointLight light = new PointLight();
+
     protected ManagedAnimation chewingAnimation;
-    protected ManagedAnimation movementAnimation;
     protected ManagedAnimation dyingAnimation;
+    protected ManagedAnimation movementAnimation;
 
     protected PacBase3D(
         Model3DRepository model3DRepository,
@@ -49,38 +50,39 @@ public class PacBase3D extends Group implements Destroyable {
         double size,
         Color headColor, Color eyesColor, Color palateColor)
     {
-        requireNonNull(model3DRepository);
-        this.animationManager = requireNonNull(animationManager);
         this.pac = requireNonNull(pac);
         this.size = size;
+        this.animationManager = requireNonNull(animationManager);
+
+        requireNonNull(model3DRepository);
 
         body = model3DRepository.createPacBody(size, headColor, eyesColor, palateColor);
         jaw = model3DRepository.createBlindPacBody(size, headColor, palateColor);
 
-        getChildren().addAll(jaw, body);
+        getChildren().setAll(jaw, body);
         getTransforms().add(moveRotation);
         setTranslateZ(-0.5 * size);
 
         chewingAnimation = new ManagedAnimation(animationManager, "PacMan_Chewing") {
             @Override
             protected Animation createAnimation() {
-                var closed = new KeyValue[] {
+                var mouthClosed = new KeyValue[] {
                         new KeyValue(jaw.rotationAxisProperty(), Rotate.Y_AXIS),
                         new KeyValue(jaw.rotateProperty(), -54, Interpolator.LINEAR)
                 };
-                var open = new KeyValue[] {
+                var mouthOpen = new KeyValue[] {
                         new KeyValue(jaw.rotationAxisProperty(), Rotate.Y_AXIS),
                         new KeyValue(jaw.rotateProperty(), 0, Interpolator.LINEAR)
                 };
-                var timeline = new Timeline(
-                        new KeyFrame(Duration.ZERO,        "Open on Start", open),
-                        new KeyFrame(Duration.millis(100), "Start Closing", open),
-                        new KeyFrame(Duration.millis(130), "Closed",        closed),
-                        new KeyFrame(Duration.millis(200), "Start Opening", closed),
-                        new KeyFrame(Duration.millis(280), "Open",          open)
+                var animation = new Timeline(
+                        new KeyFrame(Duration.ZERO,        "Open on Start", mouthOpen),
+                        new KeyFrame(Duration.millis(100), "Start Closing", mouthOpen),
+                        new KeyFrame(Duration.millis(130), "Closed",        mouthClosed),
+                        new KeyFrame(Duration.millis(200), "Start Opening", mouthClosed),
+                        new KeyFrame(Duration.millis(280), "Open",          mouthOpen)
                 );
-                timeline.setCycleCount(Animation.INDEFINITE);
-                return timeline;
+                animation.setCycleCount(Animation.INDEFINITE);
+                return animation;
             }
 
             @Override
@@ -112,86 +114,74 @@ public class PacBase3D extends Group implements Destroyable {
 
     public void updateMovementAnimation() {}
 
-    @Override
-    public void destroy() {
-        light.translateXProperty().unbind();
-        light.translateYProperty().unbind();
-        getChildren().clear();
-        if (body != null) {
-            body.destroy();
-            body = null;
-        }
-        if (jaw != null) {
-            jaw.destroy();
-            jaw = null;
-        }
+    public void init() {
         if (chewingAnimation != null) {
-            animationManager.destroyAnimation(chewingAnimation);
-            chewingAnimation = null;
+            animationManager.stopAnimation(chewingAnimation);
         }
         if (movementAnimation != null) {
-            animationManager.destroyAnimation(movementAnimation);
-            movementAnimation = null;
+            animationManager.stopAnimation(movementAnimation);
         }
         if (dyingAnimation != null) {
-            animationManager.destroyAnimation(dyingAnimation);
-            dyingAnimation = null;
+            animationManager.stopAnimation(dyingAnimation);
         }
-    }
-
-    public void init() {
-        requireNonNull(movementAnimation);
-        requireNonNull(chewingAnimation);
-
-        setVisible(pac.isVisible());
         setScaleX(1.0);
         setScaleY(1.0);
         setScaleZ(1.0);
-
-        updatePosition();
-        chewingAnimation.stop();
-        movementAnimation.stop();
+        updatePositionAndRotation();
+        updateVisibility();
         setMovementPowerMode(false);
     }
 
-    public void update(GameLevel level) {
-        requireNonNull(movementAnimation);
-        requireNonNull(chewingAnimation);
-
+    public void update() {
         if (pac.isAlive()) {
-            updatePosition();
-            updateVisibility(level);
-            updateMovementAnimation();
+            updatePositionAndRotation();
+            updateVisibility();
             updateLight();
-        }
-        if (pac.isAlive() && !pac.isParalyzed()) {
-            movementAnimation.playOrContinue();
-            chewingAnimation.playOrContinue();
+            if (movementAnimation != null) {
+                animationManager.playAnimation(movementAnimation);
+                updateMovementAnimation();
+            }
+            if (chewingAnimation != null) {
+                if (pac.isParalyzed()) {
+                    animationManager.stopAnimation(chewingAnimation);
+                } else {
+                    animationManager.playAnimation(chewingAnimation);
+                }
+            }
         } else {
-            movementAnimation.stop();
-            chewingAnimation.stop();
+            if (movementAnimation != null) {
+                animationManager.stopAnimation(movementAnimation);
+            }
+            if (chewingAnimation != null) {
+                animationManager.stopAnimation(chewingAnimation);
+            }
         }
     }
 
-    protected void updatePosition() {
+    protected void updatePositionAndRotation() {
         Vector2f center = pac.center();
         setTranslateX(center.x());
         setTranslateY(center.y());
         setTranslateZ(-0.5 * size);
-        moveRotation.setAxis(Rotate.Z_AXIS);
         double angle = switch (pac.moveDir()) {
             case LEFT  -> 0;
             case UP    -> 90;
             case RIGHT -> 180;
             case DOWN  -> 270;
         };
+        moveRotation.setAxis(Rotate.Z_AXIS);
         moveRotation.setAngle(angle);
     }
 
-    protected void updateVisibility(GameLevel level) {
-        WorldMap worldMap = level.worldMap();
-        boolean outsideWorld = getTranslateX() < HTS || getTranslateX() > TS * worldMap.numCols() - HTS;
-        setVisible(pac.isVisible() && !outsideWorld);
+    protected void updateVisibility() {
+        if (pac.optGameContext().isPresent() && pac.gameContext().optGameLevel().isPresent()) {
+            WorldMap worldMap = pac.gameContext().theGameLevel().worldMap();
+            boolean outsideWorld = getTranslateX() < HTS || getTranslateX() > TS * worldMap.numCols() - HTS;
+            setVisible(pac.isVisible() && !outsideWorld);
+        }
+        else {
+            setVisible(pac.isVisible());
+        }
     }
 
     /**
@@ -201,12 +191,45 @@ public class PacBase3D extends Group implements Destroyable {
         TickTimer powerTimer = pac.powerTimer();
         if (powerTimer.isRunning() && pac.isVisible()) {
             light.setLightOn(true);
-            double remaining = powerTimer.remainingTicks();
-            double maxRange = (remaining / powerTimer.durationTicks()) * 60 + 30;
+            long remainingTicks = powerTimer.remainingTicks();
+            float maxRange = (remainingTicks / (float) powerTimer.durationTicks()) * 60 + 30;
             light.setMaxRange(maxRange);
-            Logger.debug("Power remaining: {}, light max range: {0.00}", remaining, maxRange);
+            Logger.debug("Power remaining: {}, light max range: {0.00}", remainingTicks, maxRange);
         } else {
             light.setLightOn(false);
+        }
+    }
+
+    // Experimental:
+
+    @Override
+    public void destroy() {
+        if (chewingAnimation != null) {
+            animationManager.stopAnimation(chewingAnimation);
+            animationManager.destroyAnimation(chewingAnimation);
+            chewingAnimation = null;
+        }
+        if (movementAnimation != null) {
+            animationManager.stopAnimation(movementAnimation);
+            animationManager.destroyAnimation(movementAnimation);
+            movementAnimation = null;
+        }
+        if (dyingAnimation != null) {
+            animationManager.stopAnimation(dyingAnimation);
+            animationManager.destroyAnimation(dyingAnimation);
+            dyingAnimation = null;
+        }
+        light.translateXProperty().unbind();
+        light.translateYProperty().unbind();
+        light.translateZProperty().unbind();
+        getChildren().clear();
+        if (body != null) {
+            body.destroy();
+            body = null;
+        }
+        if (jaw != null) {
+            jaw.destroy();
+            jaw = null;
         }
     }
 }
