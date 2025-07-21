@@ -9,6 +9,7 @@ import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.ScaleTransition;
+import javafx.scene.Group;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
@@ -74,5 +75,8 @@ public class Energizer3D implements Eatable3D {
     public void onEaten() {
         pumpingAnimation.stop();
         hideAndEatAnimation.playFromStart();
+        if (sphere.getParent() instanceof Group group) {
+            group.getChildren().remove(sphere);
+        }
     }
 }

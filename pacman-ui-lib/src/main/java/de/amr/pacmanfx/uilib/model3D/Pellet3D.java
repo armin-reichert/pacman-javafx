@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.model3D;
 
+import javafx.scene.Group;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Scale;
@@ -39,7 +40,12 @@ public class Pellet3D implements Eatable3D {
     @Override
     public void onEaten() {
         // small delay for better visualization
-        pauseSec(0.05, () -> shape.setVisible(false)).play();
+        pauseSec(0.05, () -> {
+            shape.setVisible(false);
+            if (shape.getParent() instanceof Group group) {
+                group.getChildren().remove(shape);
+            }
+        }).play();
     }
 
     @Override
