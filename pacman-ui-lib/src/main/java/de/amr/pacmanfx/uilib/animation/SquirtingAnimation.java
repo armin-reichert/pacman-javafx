@@ -6,9 +6,7 @@ package de.amr.pacmanfx.uilib.animation;
 
 import de.amr.pacmanfx.lib.Destroyable;
 import de.amr.pacmanfx.lib.Vector3f;
-import javafx.animation.Animation;
 import javafx.animation.Transition;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -56,19 +54,19 @@ public abstract class SquirtingAnimation extends Transition implements Destroyab
         }
     }
 
-    private Group embeddingParent;
-    private Group particleGroup = new Group();
+    private final Group parentGroup;
+    private final Group particleGroup = new Group();
 
     public abstract boolean particleShouldVanish(Particle particle);
 
     public SquirtingAnimation(
-        Group embeddingParent,
+        Group parentGroup,
         Duration duration,
         int minParticleCount, int maxParticleCount,
         Material particleMaterial,
         Point3D origin)
     {
-        this.embeddingParent = requireNonNull(embeddingParent);
+        this.parentGroup = requireNonNull(parentGroup);
         requireNonNull(duration);
         requireNonNegativeInt(minParticleCount);
         requireNonNegativeInt(maxParticleCount);
@@ -76,8 +74,7 @@ public abstract class SquirtingAnimation extends Transition implements Destroyab
         requireNonNull(origin);
 
         setCycleDuration(duration);
-        setOnFinished(e -> embeddingParent.getChildren().remove(particleGroup));
-        statusProperty().addListener(this::handleStatusChange);
+        setOnFinished(e -> removeFromParent());
 
         int numParticles = randomInt(minParticleCount, maxParticleCount + 1);
         for (int i = 0; i < numParticles; ++i) {
@@ -90,28 +87,24 @@ public abstract class SquirtingAnimation extends Transition implements Destroyab
                 randomFloat(MIN_PARTICLE_VELOCITY.z(), MAX_PARTICLE_VELOCITY.z()));
             particleGroup.getChildren().add(particle);
         }
-        embeddingParent.getChildren().add(particleGroup);
+        parentGroup.getChildren().add(particleGroup);
         Logger.info("{} particles created", particleGroup.getChildren().size());
     }
 
-    private void handleStatusChange(ObservableValue<? extends Animation.Status> property, Animation.Status oldStatus, Animation.Status newStatus) {
-        if (oldStatus == Animation.Status.RUNNING) {
-            embeddingParent.getChildren().remove(particleGroup);
-        }
+    private void removeFromParent() {
+        parentGroup.getChildren().remove(particleGroup);
     }
 
     @Override
     public void destroy() {
         setOnFinished(null);
-        statusProperty().removeListener(this::handleStatusChange);
         for (Node child : particleGroup.getChildren()) {
-            if (child instanceof Sphere sphere) {
-                sphere.setMaterial(null);
+            if (child instanceof Particle particle) {
+                particle.setMaterial(null);
             }
         }
+        removeFromParent();
         particleGroup.getChildren().clear();
-        particleGroup = null;
-        embeddingParent = null;
     }
 
     @Override

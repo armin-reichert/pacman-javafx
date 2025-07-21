@@ -56,10 +56,14 @@ public class Energizer3D implements Eatable3D {
     }
 
     public void destroy() {
-        pumpingAnimation.destroy();
-        pumpingAnimation = null;
-        hideAndEatAnimation.destroy();
-        hideAndEatAnimation = null;
+        if (pumpingAnimation != null) {
+            pumpingAnimation.destroy();
+            pumpingAnimation = null;
+        }
+        if (hideAndEatAnimation != null) {
+            hideAndEatAnimation.destroy();
+            hideAndEatAnimation = null;
+        }
     }
 
     public ManagedAnimation pumpingAnimation() {
@@ -74,7 +78,9 @@ public class Energizer3D implements Eatable3D {
     @Override
     public void onEaten() {
         pumpingAnimation.stop();
-        hideAndEatAnimation.playFromStart();
+        if (hideAndEatAnimation != null) {
+            hideAndEatAnimation.playFromStart();
+        }
         if (sphere.getParent() instanceof Group group) {
             group.getChildren().remove(sphere);
         }

@@ -10,7 +10,6 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.Obstacle;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
@@ -151,24 +150,27 @@ public class GameLevel3D implements Destroyable {
         this.ui = requireNonNull(ui);
         this.root = requireNonNull(root);
         this.gameLevel = requireNonNull(ui.theGameContext().theGameLevel());
-        
+
+        wallOpacityProperty.bind(ui.property3DWallOpacity());
+        obstacleBaseHeightProperty.set(ui.thePrefs().getFloat("3d.obstacle.base_height"));
+        houseBaseHeightProperty.set(ui.thePrefs().getFloat("3d.house.base_height"));
+
+
         root.setMouseTransparent(true); // this increases performance, they say...
 
         createWorldMapColorScheme();
         createMazeMaterials();
         
         createAmbientLight();
-        //createLevelCounter3D();
-        //createLivesCounter3D();
+        createLevelCounter3D();
+        createLivesCounter3D();
         createPac3D();
         createGhosts3D();
         createFloor3D();
-        //createMaze3D();
-        gameLevel.house().ifPresent(house -> {
-            createHouse3D(house);
-            maze3D.getChildren().add(house3D);
-        });
-        createPelletsAndEnergizers3D();
+        createMaze3D();
+        createHouse3D();
+        createPellets3D();
+        createEnergizers3D();
 
         root.getChildren().add(ambientLight);
         if (levelCounter3D != null) {
@@ -228,6 +230,9 @@ public class GameLevel3D implements Destroyable {
     }
 
     private void createMazeMaterials() {
+        pelletMaterial = coloredPhongMaterial(colorScheme.pellet());
+        pelletMesh = ui.theAssets().theModel3DRepository().pelletMesh();
+
         wallBaseMaterial = new PhongMaterial();
         wallBaseMaterial.diffuseColorProperty().bind(wallOpacityProperty
                 .map(opacity -> colorWithOpacity(colorScheme.stroke(), opacity.doubleValue())));
@@ -267,19 +272,22 @@ public class GameLevel3D implements Destroyable {
         floor3D.materialProperty().bind(ui.property3DFloorColor().map(Ufx::coloredPhongMaterial));
     }
 
-    private void createHouse3D(House house) {
-        house3D = new ArcadeHouse3D(
-                animationManager,
-                house,
-                ui.thePrefs().getFloat("3d.house.base_height"),
-                ui.thePrefs().getFloat("3d.house.wall_thickness"),
-                ui.thePrefs().getFloat("3d.house.opacity"),
-                colorScheme.fill(),
-                colorScheme.stroke(),
-                colorScheme.door()
-        );
-        house3D.wallBaseHeightProperty().bind(houseBaseHeightProperty);
-        house3D.light().lightOnProperty().bind(houseLightOnProperty);
+    private void createHouse3D() {
+        gameLevel.house().ifPresent(house -> {
+            house3D = new ArcadeHouse3D(
+                    animationManager,
+                    house,
+                    ui.thePrefs().getFloat("3d.house.base_height"),
+                    ui.thePrefs().getFloat("3d.house.wall_thickness"),
+                    ui.thePrefs().getFloat("3d.house.opacity"),
+                    colorScheme.fill(),
+                    colorScheme.stroke(),
+                    colorScheme.door()
+            );
+            house3D.wallBaseHeightProperty().bind(houseBaseHeightProperty);
+            house3D.light().lightOnProperty().bind(houseLightOnProperty);
+            maze3D.getChildren().add(house3D);
+        });
     }
 
     private void createGhosts3D() {
@@ -371,10 +379,6 @@ public class GameLevel3D implements Destroyable {
     private void createMaze3D() {
         Logger.info("Building 3D maze for map (URL '{}'), color scheme: {}...", gameLevel.worldMap().url(), colorScheme);
 
-        wallOpacityProperty.bind(ui.property3DWallOpacity());
-        obstacleBaseHeightProperty.set(ui.thePrefs().getFloat("3d.obstacle.base_height"));
-        houseBaseHeightProperty.set(ui.thePrefs().getFloat("3d.house.base_height"));
-
         var r3D = new TerrainRenderer3D();
         r3D.setOnWallCreated(wall3D -> {
             wall3D.bindBaseHeight(obstacleBaseHeightProperty);
@@ -413,8 +417,8 @@ public class GameLevel3D implements Destroyable {
     public Group maze3D() { return maze3D; }
     public Optional<LevelCounter3D> levelCounter3D() { return Optional.ofNullable(levelCounter3D); }
     public Optional<LivesCounter3D> livesCounter3D() { return Optional.ofNullable(livesCounter3D); }
-    public Stream<Pellet3D> pellets3D() { return pellets3D.stream(); }
-    public Stream<Energizer3D> energizers3D() { return energizers3D.stream(); }
+    public Stream<Pellet3D> pellets3D() { return pellets3D != null ? pellets3D.stream() : Stream.empty(); }
+    public Stream<Energizer3D> energizers3D() { return energizers3D != null ? energizers3D.stream() : Stream.empty(); }
     public double floorThickness() { return floor3D.getDepth(); }
 
     public AnimationManager animationManager() { return animationManager; }
@@ -546,28 +550,29 @@ public class GameLevel3D implements Destroyable {
         return new Scale(scaling, scaling, scaling);
     }
 
-    private void createPelletsAndEnergizers3D() {
-        pelletMaterial = coloredPhongMaterial(colorScheme.pellet());
-        pelletMesh = ui.theAssets().theModel3DRepository().pelletMesh();
+    private void createPellets3D() {
         Scale pelletScale = computePelletScale();
+        gameLevel.tilesContainingFood().forEach(tile -> {
+            if (!gameLevel.isEnergizerPosition(tile)) {
+                Pellet3D pellet3D = createPellet3D(tile, pelletScale);
+                pellets3D.add(pellet3D);
+            }
+        });
+        pellets3D.trimToSize();
+    }
 
+    private void createEnergizers3D() {
         float energizerRadius     = ui.thePrefs().getFloat("3d.energizer.radius");
         float floorThickness      = ui.thePrefs().getFloat("3d.floor.thickness");
         float energizerMinScaling = ui.thePrefs().getFloat("3d.energizer.scaling.min");
         float energizerMaxScaling = ui.thePrefs().getFloat("3d.energizer.scaling.max");
-
         gameLevel.tilesContainingFood().forEach(tile -> {
             if (gameLevel.isEnergizerPosition(tile)) {
                 Energizer3D energizer3D = createEnergizer3D(tile, energizerRadius, floorThickness, energizerMinScaling, energizerMaxScaling);
                 energizers3D.add(energizer3D);
             }
-            else {
-                Pellet3D pellet3D = createPellet3D(tile, pelletScale);
-                pellets3D.add(pellet3D);
-            }
         });
         energizers3D.trimToSize();
-        pellets3D.trimToSize();
     }
 
     private Pellet3D createPellet3D(Vector2i tile, Scale pelletScale) {
@@ -594,8 +599,8 @@ public class GameLevel3D implements Destroyable {
         energizer3D.shape3D().setTranslateX(x);
         energizer3D.shape3D().setTranslateY(y);
         energizer3D.shape3D().setTranslateZ(z);
-        ManagedAnimation hideAndExplodeAnimation = createHideAndExplodeAnimation(x, y, z, energizer3D);
-        energizer3D.setHideAndEatAnimation(hideAndExplodeAnimation);
+        //TODO: fixme: animation creates memory leak
+//        energizer3D.setHideAndEatAnimation(createHideAndExplodeAnimation(x, y, z, energizer3D));
         return energizer3D;
     }
 
