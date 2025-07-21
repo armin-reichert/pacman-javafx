@@ -11,6 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.Shape3D;
+import javafx.scene.transform.Rotate;
 import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
@@ -18,19 +19,53 @@ import static java.util.Objects.requireNonNull;
 /**
  * 3D wall composed of a base and a top node.
  */
-public record Wall3D(Shape3D base, Shape3D top) {
+public class Wall3D {
+
+    public enum WallType { BOX, CYLINDER }
 
     private static final PseudoClass WALL3D_BASE = PseudoClass.getPseudoClass("wall3d-base");
     private static final PseudoClass WALL3D_TOP = PseudoClass.getPseudoClass("wall3d-top");
+
+    private static final int CYLINDER_DIVISIONS = 32; // default=64
 
     public static final double DEFAULT_BASE_HEIGHT = 4;
     public static final double DEFAULT_TOP_HEIGHT = 0.2;
     public static final double DEFAULT_WALL_THICKNESS = 2;
 
-    public Wall3D {
-        requireNonNull(base);
+    private Shape3D base;
+    private Shape3D top;
+
+    public Wall3D(WallType type) {
+        requireNonNull(type);
+        switch (type) {
+            case BOX -> {
+                base = new Box(4, 4, DEFAULT_BASE_HEIGHT);
+                top = new Box(4, 4, DEFAULT_TOP_HEIGHT);
+            }
+            case CYLINDER -> {
+                base = new Cylinder(1, DEFAULT_BASE_HEIGHT, CYLINDER_DIVISIONS);
+                base.setRotationAxis(Rotate.X_AXIS);
+                base.setRotate(90);
+                top = new Cylinder(1, DEFAULT_TOP_HEIGHT, CYLINDER_DIVISIONS);
+                top.setRotationAxis(Rotate.X_AXIS);
+                top.setRotate(90);
+            }
+        }
         base.pseudoClassStateChanged(WALL3D_BASE, true);
+        base.setMouseTransparent(true);
+
         top.pseudoClassStateChanged(WALL3D_TOP, true);
+        top.setMouseTransparent(true);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends Shape3D> T base() {
+        return (T) base;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends Shape3D> T top() {
+        return (T) top;
     }
 
     public static boolean isBase(Node node) {

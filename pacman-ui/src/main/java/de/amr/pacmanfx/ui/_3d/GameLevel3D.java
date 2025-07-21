@@ -371,7 +371,6 @@ public class GameLevel3D implements Destroyable {
         var r3D = new TerrainRenderer3D();
         r3D.setBaseMaterial(wallBaseMaterial);
         r3D.setTopMaterial(wallTopMaterial);
-        r3D.setCylinderDivisions(24);
         r3D.setOnWallCreated(wall3D -> {
             wall3D.bindBaseHeight(obstacleBaseHeightProperty);
             wall3D.base().setCullFace(CullFace.BACK);

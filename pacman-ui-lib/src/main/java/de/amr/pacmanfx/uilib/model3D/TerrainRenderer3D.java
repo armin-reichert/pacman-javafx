@@ -13,7 +13,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.Cylinder;
-import javafx.scene.transform.Rotate;
 import org.tinylog.Logger;
 
 import java.util.function.Consumer;
@@ -26,8 +25,6 @@ import static de.amr.pacmanfx.Globals.TS;
  */
 public class TerrainRenderer3D {
 
-    private int cylinderDivisions = 32; // default=64
-
     private PhongMaterial baseMaterial;
     private PhongMaterial topMaterial;
     private Consumer<Wall3D> onWallCreated = wall3D -> Logger.debug(() -> "Wall created: " + wall3D);
@@ -39,10 +36,6 @@ public class TerrainRenderer3D {
 
     public void setOnWallCreated(Consumer<Wall3D> callback) {
         onWallCreated = callback;
-    }
-
-    public void setCylinderDivisions(int cylinderDivisions) {
-        this.cylinderDivisions = cylinderDivisions;
     }
 
     public void setBaseMaterial(PhongMaterial baseMaterial) {
@@ -171,23 +164,20 @@ public class TerrainRenderer3D {
     }
 
     public Wall3D createCylinderWall(Vector2i center, double radius) {
-        var base = new Cylinder(radius, Wall3D.DEFAULT_BASE_HEIGHT, cylinderDivisions);
+        var wall3D = new Wall3D(Wall3D.WallType.CYLINDER);
+
+        var base = wall3D.<Cylinder>base();
+        base.setRadius(radius);
         base.setMaterial(baseMaterial);
-        base.setRotationAxis(Rotate.X_AXIS);
-        base.setRotate(90);
         base.setTranslateX(center.x());
         base.setTranslateY(center.y());
-        base.setMouseTransparent(true);
 
-        var top = new Cylinder(radius, Wall3D.DEFAULT_TOP_HEIGHT, cylinderDivisions);
+        var top = wall3D.<Cylinder>top();
+        top.setRadius(radius);
         top.setMaterial(topMaterial);
-        top.setRotationAxis(Rotate.X_AXIS);
-        top.setRotate(90);
         top.setTranslateX(center.x());
         top.setTranslateY(center.y());
-        top.setMouseTransparent(true);
 
-        var wall3D = new Wall3D(base, top);
         if (onWallCreated != null) {
             onWallCreated.accept(wall3D);
         }
@@ -195,19 +185,22 @@ public class TerrainRenderer3D {
     }
 
     public Wall3D createBoxWall(Vector2f center, double sizeX, double sizeY) {
-        var base = new Box(sizeX, sizeY, Wall3D.DEFAULT_BASE_HEIGHT);
+        var wall3D = new Wall3D(Wall3D.WallType.BOX);
+
+        var base = wall3D.<Box>base();
+        base.setWidth(sizeX);
+        base.setHeight(sizeY);
         base.setMaterial(baseMaterial);
         base.setTranslateX(center.x());
         base.setTranslateY(center.y());
-        base.setMouseTransparent(true);
 
-        var top = new Box(sizeX, sizeY, Wall3D.DEFAULT_TOP_HEIGHT);
+        var top = wall3D.<Box>top();
+        top.setWidth(sizeX);
+        top.setHeight(sizeY);
         top.setMaterial(topMaterial);
         top.setTranslateX(center.x());
         top.setTranslateY(center.y());
-        top.setMouseTransparent(true);
 
-        var wall3D = new Wall3D(base, top);
         if (onWallCreated != null) {
             onWallCreated.accept(wall3D);
         }
