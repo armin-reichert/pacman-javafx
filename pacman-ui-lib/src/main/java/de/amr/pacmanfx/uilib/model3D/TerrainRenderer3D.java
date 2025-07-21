@@ -9,8 +9,6 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.Obstacle;
 import de.amr.pacmanfx.lib.tilemap.ObstacleSegment;
 import javafx.scene.Group;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
 import org.tinylog.Logger;
 
 import java.util.function.Consumer;
@@ -23,25 +21,13 @@ import static de.amr.pacmanfx.Globals.TS;
  */
 public class TerrainRenderer3D {
 
-    private PhongMaterial baseMaterial;
-    private PhongMaterial topMaterial;
     private Consumer<Wall3D> onWallCreated = wall3D -> Logger.debug(() -> "Wall created: " + wall3D);
 
     public TerrainRenderer3D() {
-        baseMaterial = new PhongMaterial(Color.BLUE);
-        topMaterial = new PhongMaterial(Color.WHITE);
     }
 
     public void setOnWallCreated(Consumer<Wall3D> callback) {
         onWallCreated = callback;
-    }
-
-    public void setBaseMaterial(PhongMaterial baseMaterial) {
-        this.baseMaterial = baseMaterial;
-    }
-
-    public void setTopMaterial(PhongMaterial topMaterial) {
-        this.topMaterial = topMaterial;
     }
 
     public void addWallBetween(
@@ -163,8 +149,6 @@ public class TerrainRenderer3D {
 
     public Wall3D createCylinderWall(Vector2i center, double radius) {
         var wall3D = Wall3D.createCylinderWall(center, radius);
-        wall3D.setBaseMaterial(baseMaterial);
-        wall3D.setTopMaterial(topMaterial);
         if (onWallCreated != null) {
             onWallCreated.accept(wall3D);
         }
@@ -173,8 +157,6 @@ public class TerrainRenderer3D {
 
     public Wall3D createBoxWall(Vector2f center, double sizeX, double sizeY) {
         var wall3D = Wall3D.createBoxWall(center, sizeX, sizeY);
-        wall3D.setBaseMaterial(baseMaterial);
-        wall3D.setTopMaterial(topMaterial);
         if (onWallCreated != null) {
             onWallCreated.accept(wall3D);
         }

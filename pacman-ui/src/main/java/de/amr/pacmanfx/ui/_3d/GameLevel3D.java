@@ -372,10 +372,10 @@ public class GameLevel3D implements Destroyable {
         houseBaseHeightProperty.set(ui.thePrefs().getFloat("3d.house.base_height"));
 
         var r3D = new TerrainRenderer3D();
-        r3D.setBaseMaterial(wallBaseMaterial);
-        r3D.setTopMaterial(wallTopMaterial);
         r3D.setOnWallCreated(wall3D -> {
             wall3D.bindBaseHeight(obstacleBaseHeightProperty);
+            wall3D.setBaseMaterial(wallBaseMaterial);
+            wall3D.setTopMaterial(wallTopMaterial);
             ++wall3DCount;
         });
 
