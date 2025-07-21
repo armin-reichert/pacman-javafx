@@ -4,11 +4,15 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.model3D;
 
+import de.amr.pacmanfx.lib.Vector2f;
+import de.amr.pacmanfx.lib.Vector2i;
 import javafx.beans.property.DoubleProperty;
 import javafx.css.PseudoClass;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.paint.Material;
 import javafx.scene.shape.Box;
+import javafx.scene.shape.CullFace;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
@@ -32,6 +36,37 @@ public class Wall3D {
     public static final double DEFAULT_TOP_HEIGHT = 0.2;
     public static final double DEFAULT_WALL_THICKNESS = 2;
 
+    public static Wall3D createBoxWall(Vector2f center, double sizeX, double sizeY) {
+        var wall3D = new Wall3D(WallType.BOX);
+        var base = wall3D.<Box>base();
+        base.setWidth(sizeX);
+        base.setHeight(sizeY);
+        base.setTranslateX(center.x());
+        base.setTranslateY(center.y());
+
+        var top = wall3D.<Box>top();
+        top.setWidth(sizeX);
+        top.setHeight(sizeY);
+        top.setTranslateX(center.x());
+        top.setTranslateY(center.y());
+        return wall3D;
+    }
+
+    public static Wall3D createCylinderWall(Vector2i center, double radius) {
+        var wall3D = new Wall3D(WallType.CYLINDER);
+        var base = wall3D.<Cylinder>base();
+        base.setRadius(radius);
+        base.setTranslateX(center.x());
+        base.setTranslateY(center.y());
+
+        var top = wall3D.<Cylinder>top();
+        top.setRadius(radius);
+        top.setTranslateX(center.x());
+        top.setTranslateY(center.y());
+
+        return wall3D;
+    }
+
     private Shape3D base;
     private Shape3D top;
 
@@ -53,9 +88,19 @@ public class Wall3D {
         }
         base.pseudoClassStateChanged(WALL3D_BASE, true);
         base.setMouseTransparent(true);
+        base.setCullFace(CullFace.BACK);
 
         top.pseudoClassStateChanged(WALL3D_TOP, true);
         top.setMouseTransparent(true);
+        top.setCullFace(CullFace.BACK);
+    }
+
+    public void setBaseMaterial(Material material) {
+        base.setMaterial(material);
+    }
+
+    public void setTopMaterial(Material material) {
+        top.setMaterial(material);
     }
 
     @SuppressWarnings("unchecked")

@@ -11,8 +11,6 @@ import de.amr.pacmanfx.lib.tilemap.ObstacleSegment;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Box;
-import javafx.scene.shape.Cylinder;
 import org.tinylog.Logger;
 
 import java.util.function.Consumer;
@@ -164,20 +162,9 @@ public class TerrainRenderer3D {
     }
 
     public Wall3D createCylinderWall(Vector2i center, double radius) {
-        var wall3D = new Wall3D(Wall3D.WallType.CYLINDER);
-
-        var base = wall3D.<Cylinder>base();
-        base.setRadius(radius);
-        base.setMaterial(baseMaterial);
-        base.setTranslateX(center.x());
-        base.setTranslateY(center.y());
-
-        var top = wall3D.<Cylinder>top();
-        top.setRadius(radius);
-        top.setMaterial(topMaterial);
-        top.setTranslateX(center.x());
-        top.setTranslateY(center.y());
-
+        var wall3D = Wall3D.createCylinderWall(center, radius);
+        wall3D.setBaseMaterial(baseMaterial);
+        wall3D.setTopMaterial(topMaterial);
         if (onWallCreated != null) {
             onWallCreated.accept(wall3D);
         }
@@ -185,22 +172,9 @@ public class TerrainRenderer3D {
     }
 
     public Wall3D createBoxWall(Vector2f center, double sizeX, double sizeY) {
-        var wall3D = new Wall3D(Wall3D.WallType.BOX);
-
-        var base = wall3D.<Box>base();
-        base.setWidth(sizeX);
-        base.setHeight(sizeY);
-        base.setMaterial(baseMaterial);
-        base.setTranslateX(center.x());
-        base.setTranslateY(center.y());
-
-        var top = wall3D.<Box>top();
-        top.setWidth(sizeX);
-        top.setHeight(sizeY);
-        top.setMaterial(topMaterial);
-        top.setTranslateX(center.x());
-        top.setTranslateY(center.y());
-
+        var wall3D = Wall3D.createBoxWall(center, sizeX, sizeY);
+        wall3D.setBaseMaterial(baseMaterial);
+        wall3D.setTopMaterial(topMaterial);
         if (onWallCreated != null) {
             onWallCreated.accept(wall3D);
         }

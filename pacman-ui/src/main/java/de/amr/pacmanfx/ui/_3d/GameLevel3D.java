@@ -35,7 +35,10 @@ import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.*;
+import javafx.scene.shape.DrawMode;
+import javafx.scene.shape.Mesh;
+import javafx.scene.shape.MeshView;
+import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.util.Duration;
@@ -373,8 +376,6 @@ public class GameLevel3D implements Destroyable {
         r3D.setTopMaterial(wallTopMaterial);
         r3D.setOnWallCreated(wall3D -> {
             wall3D.bindBaseHeight(obstacleBaseHeightProperty);
-            wall3D.base().setCullFace(CullFace.BACK);
-            wall3D.top().setCullFace(CullFace.BACK);
             ++wall3DCount;
         });
 
