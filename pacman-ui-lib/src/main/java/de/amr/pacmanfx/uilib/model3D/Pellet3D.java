@@ -23,6 +23,7 @@ public class Pellet3D implements Eatable3D {
         this.shape = requireNonNull(shape);
         requireNonNull(scale);
         shape.getTransforms().add(scale);
+        shape.setCache(true); // TODO does this bring an advantage at all?
     }
 
     public void destroy() {
