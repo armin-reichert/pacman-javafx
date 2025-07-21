@@ -77,13 +77,13 @@ public class PacManGames_UI_Impl implements GameUI {
     private final ObjectProperty<GameScene> propertyCurrentGameScene = new SimpleObjectProperty<>();
     private final BooleanProperty propertyMuted = new SimpleBooleanProperty(false);
 
-    private final PreferenceManager thePrefs = new PreferenceManager(PacManGames_UI_Impl.class);
 
     private final PacManGames_Assets theAssets;
     private final GameClock          theGameClock;
     private final GameContext        theGameContext;
     private final Keyboard           theKeyboard;
     private final Joypad             theJoypad;
+    private final PreferenceManager  thePreferenceManager;
     private final Stage              theStage;
     private final DirectoryWatchdog  theWatchdog;
 
@@ -101,13 +101,14 @@ public class PacManGames_UI_Impl implements GameUI {
         theGameClock = new GameClock();
         theKeyboard = new Keyboard();
         theJoypad = new Joypad(theKeyboard);
+        thePreferenceManager = new PreferenceManager(PacManGames_UI_Impl.class);
         theWatchdog = new DirectoryWatchdog(gameContext.theCustomMapDir());
 
-        storeDefaultPreferences();
-        if (!thePrefs.checkAccess()) {
-            Logger.error("Preferences could not be accessed!");
+        storePreferenceDefaultValues();
+        if (!thePreferenceManager.isAccessible()) {
+            Logger.error("User preferences could not be accessed, using default values!");
         } else {
-            thePrefs.addMissingValues();
+            thePreferenceManager.addMissingValues();
         }
 
         Scene mainScene = new Scene(rootPane, width, height);
@@ -117,7 +118,6 @@ public class PacManGames_UI_Impl implements GameUI {
         stage.setMinHeight(360);
 
         startPagesView = new StartPagesView(this);
-        startPagesView.setBackground(theAssets().background("background.scene"));
         playView = new PlayView(this, gameContext, mainScene);
 
         rootPane.getChildren().add(startPagesView.rootNode());
@@ -165,38 +165,38 @@ public class PacManGames_UI_Impl implements GameUI {
         );
     }
 
-    private void storeDefaultPreferences() {
-        thePrefs.storeDefaultValue("3d.bonus.symbol.width", 8.0f);
-        thePrefs.storeDefaultValue("3d.bonus.points.width", 1.8f * 8.0f);
-        thePrefs.storeDefaultValue("3d.energizer.radius", 3.5f);
-        thePrefs.storeDefaultValue("3d.energizer.scaling.min", 0.2f);
-        thePrefs.storeDefaultValue("3d.energizer.scaling.max", 1.0f);
-        thePrefs.storeDefaultValue("3d.floor.padding", 5.0f);
-        thePrefs.storeDefaultValue("3d.floor.thickness", 0.5f);
-        thePrefs.storeDefaultValue("3d.ghost.size", 15.5f);
-        thePrefs.storeDefaultValue("3d.house.base_height", 12.0f);
-        thePrefs.storeDefaultValue("3d.house.opacity", 0.4f);
-        thePrefs.storeDefaultValue("3d.house.sensitivity", 1.5f * TS);
-        thePrefs.storeDefaultValue("3d.house.wall_thickness", 2.5f);
-        thePrefs.storeDefaultValue("3d.level_counter.symbol_size", 10.0f);
-        thePrefs.storeDefaultValue("3d.level_counter.elevation", 6f);
-        thePrefs.storeDefaultValue("3d.lives_counter.capacity", 5);
-        thePrefs.storeDefaultColor("3d.lives_counter.pillar_color", Color.grayRgb(120));
-        thePrefs.storeDefaultColor("3d.lives_counter.plate_color",  Color.grayRgb(180));
-        thePrefs.storeDefaultValue("3d.lives_counter.shape_size", 12.0f);
-        thePrefs.storeDefaultValue("3d.obstacle.base_height", 4.0f);
-        thePrefs.storeDefaultValue("3d.obstacle.wall_thickness", 2.25f);
-        thePrefs.storeDefaultValue("3d.pac.size", 16.5f);
-        thePrefs.storeDefaultValue("3d.pellet.radius", 1.0f);
+    private void storePreferenceDefaultValues() {
+        thePreferenceManager.storeDefaultValue("3d.bonus.symbol.width", 8.0f);
+        thePreferenceManager.storeDefaultValue("3d.bonus.points.width", 1.8f * 8.0f);
+        thePreferenceManager.storeDefaultValue("3d.energizer.radius", 3.5f);
+        thePreferenceManager.storeDefaultValue("3d.energizer.scaling.min", 0.2f);
+        thePreferenceManager.storeDefaultValue("3d.energizer.scaling.max", 1.0f);
+        thePreferenceManager.storeDefaultValue("3d.floor.padding", 5.0f);
+        thePreferenceManager.storeDefaultValue("3d.floor.thickness", 0.5f);
+        thePreferenceManager.storeDefaultValue("3d.ghost.size", 15.5f);
+        thePreferenceManager.storeDefaultValue("3d.house.base_height", 12.0f);
+        thePreferenceManager.storeDefaultValue("3d.house.opacity", 0.4f);
+        thePreferenceManager.storeDefaultValue("3d.house.sensitivity", 1.5f * TS);
+        thePreferenceManager.storeDefaultValue("3d.house.wall_thickness", 2.5f);
+        thePreferenceManager.storeDefaultValue("3d.level_counter.symbol_size", 10.0f);
+        thePreferenceManager.storeDefaultValue("3d.level_counter.elevation", 6f);
+        thePreferenceManager.storeDefaultValue("3d.lives_counter.capacity", 5);
+        thePreferenceManager.storeDefaultColor("3d.lives_counter.pillar_color", Color.grayRgb(120));
+        thePreferenceManager.storeDefaultColor("3d.lives_counter.plate_color",  Color.grayRgb(180));
+        thePreferenceManager.storeDefaultValue("3d.lives_counter.shape_size", 12.0f);
+        thePreferenceManager.storeDefaultValue("3d.obstacle.base_height", 4.0f);
+        thePreferenceManager.storeDefaultValue("3d.obstacle.wall_thickness", 2.25f);
+        thePreferenceManager.storeDefaultValue("3d.pac.size", 16.5f);
+        thePreferenceManager.storeDefaultValue("3d.pellet.radius", 1.0f);
 
         // "Kornblumenblau, sind die Augen der Frauen beim Weine..."
-        thePrefs.storeDefaultColor("context_menu.title.fill", Color.CORNFLOWERBLUE);
-        thePrefs.storeDefaultFont("context_menu.title.font", Font.font("Dialog", FontWeight.BLACK, 14.0f));
+        thePreferenceManager.storeDefaultColor("context_menu.title.fill", Color.CORNFLOWERBLUE);
+        thePreferenceManager.storeDefaultFont("context_menu.title.font", Font.font("Dialog", FontWeight.BLACK, 14.0f));
 
-        thePrefs.storeDefaultColor("debug_text.fill", Color.YELLOW);
-        thePrefs.storeDefaultFont("debug_text.font", Font.font("Sans", FontWeight.BOLD, 16.0f));
+        thePreferenceManager.storeDefaultColor("debug_text.fill", Color.YELLOW);
+        thePreferenceManager.storeDefaultFont("debug_text.font", Font.font("Sans", FontWeight.BOLD, 16.0f));
 
-        thePrefs.storeDefaultValue("scene2d.max_scaling", 5.0f);
+        thePreferenceManager.storeDefaultValue("scene2d.max_scaling", 5.0f);
     }
 
     public void configure(Map<String, Class<? extends GameUI_Config>> configClassesMap) {
@@ -323,7 +323,7 @@ public class PacManGames_UI_Impl implements GameUI {
     }
 
     @Override
-    public PreferenceManager thePrefs() { return thePrefs; }
+    public PreferenceManager thePrefs() { return thePreferenceManager; }
 
     @Override
     public void restart() {

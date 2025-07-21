@@ -10,7 +10,6 @@ import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.MapSelector;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.layout.StartPage;
-import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.HashMap;
@@ -99,11 +98,13 @@ public class GameUI_Builder {
         });
         gameContext.theGameController().setEventsEnabled(true);
         uiUnderConstruction.thePlayView().dashboard().configure(dashboardIDs);
+
         for (StartPage startPage : startPages) uiUnderConstruction.theStartPagesView().addStartPage(startPage);
         uiUnderConstruction.theStartPagesView().selectStartPage(0);
         uiUnderConstruction.theStartPagesView().currentStartPage()
             .map(StartPage::currentGameVariant)
             .ifPresent(gameContext.theGameController()::selectGameVariant);
+
         return uiUnderConstruction;
     }
 
@@ -122,7 +123,6 @@ public class GameUI_Builder {
         if (gameContext == null) {
             error("The game context must not be null");
         }
-        checkDirsExistingAndWritable(gameContext);
         if (gameModelClassByVariantName.isEmpty()) {
             error("No game models specified");
         }
@@ -139,43 +139,6 @@ public class GameUI_Builder {
             error("Game variant key '%s' does not match required syntax '%s'"
                 .formatted(gameVariantKey, GameController.GAME_VARIANT_PATTERN));
         }
-    }
-
-    private void checkDirsExistingAndWritable(GameContext gameContext) {
-        File homeDir = gameContext.theHomeDir();
-        if (homeDir == null) {
-            error("Home directory must not be null");
-        }
-        String homeDirDesc = "Pac-Man JavaFX home directory";
-        File customMapDir = gameContext.theCustomMapDir();
-        if (customMapDir == null) {
-            error("Custom map directory must not be null");
-        }
-        String customMapDirDesc = "Pac-Man JavaFX custom map directory";
-        boolean homeDirOK = ensureDirExistingAndWritable(homeDir, homeDirDesc);
-        if (homeDirOK) {
-            Logger.info("{} exists and is writable: {}", homeDirDesc, homeDir);
-            boolean customMapDirOK = ensureDirExistingAndWritable(customMapDir, customMapDirDesc);
-            if (customMapDirOK) {
-                Logger.info("{} exists and is writable: {}", customMapDirDesc, customMapDir);
-            }
-        }
-    }
-
-    private boolean ensureDirExistingAndWritable(File dir, String description) {
-        if (!dir.exists()) {
-            Logger.info(description + " does not exist, create it...");
-            if (!dir.mkdirs()) {
-                Logger.error(description + " could not be created");
-                return false;
-            }
-            Logger.info(description + " has been created");
-            if (!dir.canWrite()) {
-                Logger.error(description + " is not writable");
-                return false;
-            }
-        }
-        return true;
     }
 
     private void error(String message) {

@@ -58,7 +58,7 @@ public class GameController implements GameContext {
     private final BooleanProperty propertyUsingAutopilot = new SimpleBooleanProperty(false);
 
     public GameController() {
-        boolean success = createUserDirectories();
+        boolean success = initUserDirectories();
         if (!success) {
             throw new IllegalStateException("User directories could not be created");
         }
@@ -76,24 +76,6 @@ public class GameController implements GameContext {
                 gameEventManager.publishEvent(GameEventType.GAME_VARIANT_CHANGED);
             }
         });
-    }
-
-    private boolean createUserDirectories() {
-        if (!homeDir.isDirectory()) {
-            boolean created = homeDir.mkdirs();
-            if (!created) {
-                Logger.error("Home directory '{}' could not be created");
-                return false;
-            }
-        }
-        if (!customMapDir.isDirectory()) {
-            boolean created = customMapDir.mkdirs();
-            if (!created) {
-                Logger.error("Custom map directory '{}' could not be created");
-                return false;
-            }
-        }
-        return true;
     }
 
     public void setEventsEnabled(boolean enabled) {
@@ -213,5 +195,37 @@ public class GameController implements GameContext {
     @Override
     public GameState theGameState() {
         return gameStateMachine.state();
+    }
+
+
+    private boolean initUserDirectories() {
+        String homeDirDesc = "Pac-Man JavaFX home directory";
+        String customMapDirDesc = "Pac-Man JavaFX custom map directory";
+        boolean success = ensureDirExistsAndWritable(homeDir, homeDirDesc);
+        if (success) {
+            Logger.info("{} exists and is writable: {}", homeDirDesc, homeDir);
+            success = ensureDirExistsAndWritable(customMapDir, customMapDirDesc);
+            if (success) {
+                Logger.info("{} exists and is writable: {}", customMapDirDesc, customMapDir);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private boolean ensureDirExistsAndWritable(File dir, String description) {
+        if (!dir.exists()) {
+            Logger.info(description + " does not exist, create it...");
+            if (!dir.mkdirs()) {
+                Logger.error(description + " could not be created");
+                return false;
+            }
+            Logger.info(description + " has been created");
+            if (!dir.canWrite()) {
+                Logger.error(description + " is not writable");
+                return false;
+            }
+        }
+        return true;
     }
 }

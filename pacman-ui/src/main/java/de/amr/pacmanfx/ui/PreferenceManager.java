@@ -24,7 +24,7 @@ public class PreferenceManager {
         prefs = Preferences.userNodeForPackage(_class);
     }
 
-    public boolean checkAccess() {
+    public boolean isAccessible() {
         try {
             for (String key : prefs.keys()) {
                 prefs.get(key, null);

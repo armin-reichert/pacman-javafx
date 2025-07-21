@@ -93,6 +93,7 @@ public class StartPagesView implements PacManGames_View {
                 startPage.layoutRoot().requestFocus();
             }
         });
+        setBackground(ui.theAssets().background("background.scene"));
         setTitleBinding(Bindings.createStringBinding(() -> "JavaFX Pac-Man Games"));
 
         GameAction actionPrevSlide = new GameAction() {
