@@ -380,7 +380,7 @@ public class GameLevel3D implements Destroyable {
         });
 
         float wallThickness = ui.thePrefs().getFloat("3d.obstacle.wall_thickness");
-        float cornerRadius = 1.5f * HTS;
+        float cornerRadius = ui.thePrefs().getFloat("3d.obstacle.corner_radius");
         wall3DCount = 0;
         var start = Instant.now();
         for (Obstacle obstacle : gameLevel.worldMap().obstacles()) {
