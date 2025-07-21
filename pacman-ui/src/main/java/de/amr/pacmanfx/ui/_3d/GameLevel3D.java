@@ -158,21 +158,25 @@ public class GameLevel3D implements Destroyable {
         createMazeMaterials();
         
         createAmbientLight();
-        createLevelCounter3D();
-        createLivesCounter3D();
+        //createLevelCounter3D();
+        //createLivesCounter3D();
         createPac3D();
         createGhosts3D();
         createFloor3D();
-        createMaze3D();
+        //createMaze3D();
         gameLevel.house().ifPresent(house -> {
             createHouse3D(house);
             maze3D.getChildren().add(house3D);
         });
         createPelletsAndEnergizers3D();
 
-        root.getChildren().add(levelCounter3D);
         root.getChildren().add(ambientLight);
-        root.getChildren().add(livesCounter3D);
+        if (levelCounter3D != null) {
+            root.getChildren().add(levelCounter3D);
+        }
+        if (livesCounter3D != null) {
+            root.getChildren().add(livesCounter3D);
+        }
         root.getChildren().addAll(pac3D, pac3D.light());
         root.getChildren().addAll(ghosts3D);
         energizers3D.stream().map(Eatable3D::shape3D).forEach(root.getChildren()::add);
@@ -407,8 +411,8 @@ public class GameLevel3D implements Destroyable {
     public MutatingGhost3D ghost3D(byte id) { return ghosts3D.get(id); }
     public Optional<Bonus3D> bonus3D() { return Optional.ofNullable(bonus3D); }
     public Group maze3D() { return maze3D; }
-    public LevelCounter3D levelCounter3D() { return levelCounter3D; }
-    public LivesCounter3D livesCounter3D() { return livesCounter3D; }
+    public Optional<LevelCounter3D> levelCounter3D() { return Optional.ofNullable(levelCounter3D); }
+    public Optional<LivesCounter3D> livesCounter3D() { return Optional.ofNullable(livesCounter3D); }
     public Stream<Pellet3D> pellets3D() { return pellets3D.stream(); }
     public Stream<Energizer3D> energizers3D() { return energizers3D.stream(); }
     public double floorThickness() { return floor3D.getDepth(); }
@@ -444,15 +448,17 @@ public class GameLevel3D implements Destroyable {
         livesCountProperty.set(livesCounterSize);
 
         boolean visible = ui.theGameContext().theGame().canStartNewGame();
-        livesCounter3D.setVisible(visible);
-        livesCounter3D.light().setLightOn(visible);
+        if (livesCounter3D != null) {
+            livesCounter3D.setVisible(visible);
+            livesCounter3D.light().setLightOn(visible);
+        }
     }
 
     public void onHuntingStart() {
         pac3D.init();
         ghosts3D.forEach(ghost3D -> ghost3D.init(gameLevel));
         energizers3D().forEach(energizer3D -> energizer3D.pumpingAnimation().playFromStart());
-        livesCounter3D.lookingAroundAnimation().playFromStart();
+        livesCounter3D().map(LivesCounter3D::lookingAroundAnimation).ifPresent(ManagedAnimation::playFromStart);
     }
 
     public void onPacManDying(GameState state) {
@@ -460,8 +466,8 @@ public class GameLevel3D implements Destroyable {
         ui.theSound().stopAll();
         // do one last update before dying animation starts
         pac3D.update();
-        livesCounter3D.lookingAroundAnimation().stop();
-        livesCounter3D.lookingAroundAnimation().invalidate();
+        livesCounter3D().map(LivesCounter3D::lookingAroundAnimation).ifPresent(ManagedAnimation::stop);
+        livesCounter3D().map(LivesCounter3D::lookingAroundAnimation).ifPresent(ManagedAnimation::invalidate); //TODO
         ghosts3D.forEach(MutatingGhost3D::stopAllAnimations);
         bonus3D().ifPresent(Bonus3D::expire);
         var animation = new SequentialTransition(

@@ -59,7 +59,7 @@ public class LevelCompletedAnimation extends ManagedAnimation {
             GameLevel gameLevel = ui.theGameContext().theGameLevel();
             return new SequentialTransition(
                     doNow(() -> {
-                        gameLevel3D.livesCounter3D().light().setLightOn(false);
+                        gameLevel3D.livesCounter3D().map(LivesCounter3D::light).ifPresent(light -> light.setLightOn(false));
                         sometimesShowLevelCompleteFlashMessage(gameLevel.number());
                     }),
                     pauseSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
