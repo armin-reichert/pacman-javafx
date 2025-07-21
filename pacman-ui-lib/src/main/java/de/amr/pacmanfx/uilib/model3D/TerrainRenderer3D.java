@@ -72,7 +72,8 @@ public class TerrainRenderer3D {
         Group parent,
         Obstacle obstacle,
         boolean worldBorder,
-        double wallThickness)
+        double wallThickness,
+        double cornerRadius)
     {
         if (obstacle.isClosed() && !worldBorder) {
             var obstacleGroup = new Group();
@@ -87,7 +88,7 @@ public class TerrainRenderer3D {
                 addWallBetween(obstacleGroup, cornerCenters[2], cornerCenters[3], TS);
                 addWallBetween(obstacleGroup, cornerCenters[3], cornerCenters[0], TS);
             } else {
-                renderFilledObstacle(parent, obstacle);
+                renderFilledObstacle(parent, obstacle, cornerRadius);
             }
             parent.getChildren().add(obstacleGroup);
         } else {
@@ -95,9 +96,9 @@ public class TerrainRenderer3D {
         }
     }
 
-    private void renderFilledObstacle(Group parent, Obstacle obstacle) {
+    private void renderFilledObstacle(Group parent, Obstacle obstacle, double cornerRadius) {
         for (Vector2i cornerCenter : obstacle.cornerCenters()) {
-            createCylinderWall(cornerCenter, HTS).addTo(parent);
+            createCylinderWall(cornerCenter, cornerRadius).addTo(parent);
         }
         obstacle.innerAreaRectangles().forEach(r -> createBoxWall(r.center(), r.width(), r.height()).addTo(parent));
     }

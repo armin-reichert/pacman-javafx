@@ -159,7 +159,8 @@ public class Maze3D extends Group {
             wall3D.setTopMaterial(wallTopMaterial);
         });
         for (Obstacle obstacle : worldMap.obstacles()) {
-            r3D.renderObstacle3D(mazeGroup, obstacle, isWorldBorder(worldMap, obstacle), Wall3D.DEFAULT_WALL_THICKNESS);
+            boolean worldBorder = isWorldBorder(worldMap, obstacle);
+            r3D.renderObstacle3D(mazeGroup, obstacle, worldBorder, 2, HTS);
         }
         r3D.setOnWallCreated(null);
 

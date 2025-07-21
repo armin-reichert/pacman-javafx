@@ -380,13 +380,14 @@ public class GameLevel3D implements Destroyable {
         });
 
         float wallThickness = ui.thePrefs().getFloat("3d.obstacle.wall_thickness");
+        float cornerRadius = HTS;
         wall3DCount = 0;
         var start = Instant.now();
         for (Obstacle obstacle : gameLevel.worldMap().obstacles()) {
             // exclude house obstacle, house is built separately
             Vector2i startTile = tileAt(obstacle.startPoint().toVector2f());
             if (gameLevel.house().isPresent() && !gameLevel.house().get().isTileInHouseArea(startTile)) {
-                r3D.renderObstacle3D(maze3D, obstacle, isObstacleTheWorldBorder(gameLevel.worldMap(), obstacle), wallThickness);
+                r3D.renderObstacle3D(maze3D, obstacle, isObstacleTheWorldBorder(gameLevel.worldMap(), obstacle), wallThickness, cornerRadius);
             }
         }
         var duration = between(start, Instant.now());
