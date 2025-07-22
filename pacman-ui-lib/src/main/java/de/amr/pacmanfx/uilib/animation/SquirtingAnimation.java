@@ -9,7 +9,6 @@ import de.amr.pacmanfx.lib.Vector3f;
 import javafx.animation.Transition;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.paint.Material;
 import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
@@ -20,16 +19,14 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.randomFloat;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static java.util.Objects.requireNonNull;
 
-/**
- * Animation played when energizer explodes.
- */
 public abstract class SquirtingAnimation extends Transition implements Destroyable {
 
     private static final float MIN_PARTICLE_RADIUS = 0.1f;
-    private static final float MAX_PARTICLE_RADIUS =  1.0f;
+    private static final float MAX_PARTICLE_RADIUS = 1.0f;
+
     private static final Vector3f MIN_PARTICLE_VELOCITY = new Vector3f(-0.25f, -0.25f, -4.0f);
     private static final Vector3f MAX_PARTICLE_VELOCITY = new Vector3f(0.25f, 0.25f, -1.0f);
-    private static final Vector3f GRAVITY = new Vector3f(0, 0, 0.1f);
+    private static final Vector3f GRAVITY               = new Vector3f(0, 0, 0.1f);
 
     public static class Particle extends Sphere {
         private Vector3f velocity = Vector3f.ZERO;
@@ -54,19 +51,16 @@ public abstract class SquirtingAnimation extends Transition implements Destroyab
         }
     }
 
-    private final Group parentGroup;
-    private final Group particleGroup = new Group();
+    private final Group particlesGroup = new Group();
 
-    public abstract boolean particleShouldVanish(Particle particle);
+    public abstract boolean particleReachedEndPosition(Particle particle);
 
     public SquirtingAnimation(
-        Group parentGroup,
         Duration duration,
         int minParticleCount, int maxParticleCount,
         Material particleMaterial,
         Point3D origin)
     {
-        this.parentGroup = requireNonNull(parentGroup);
         requireNonNull(duration);
         requireNonNegativeInt(minParticleCount);
         requireNonNegativeInt(maxParticleCount);
@@ -74,51 +68,47 @@ public abstract class SquirtingAnimation extends Transition implements Destroyab
         requireNonNull(origin);
 
         setCycleDuration(duration);
-        setOnFinished(e -> removeFromParent());
-
         int numParticles = randomInt(minParticleCount, maxParticleCount + 1);
         for (int i = 0; i < numParticles; ++i) {
             float radius = randomFloat(MIN_PARTICLE_RADIUS, MAX_PARTICLE_RADIUS);
             var particle = new Particle(particleMaterial, radius, origin);
-            particle.setVisible(false);
             particle.setVelocity(
                 randomFloat(MIN_PARTICLE_VELOCITY.x(), MAX_PARTICLE_VELOCITY.x()),
                 randomFloat(MIN_PARTICLE_VELOCITY.y(), MAX_PARTICLE_VELOCITY.y()),
                 randomFloat(MIN_PARTICLE_VELOCITY.z(), MAX_PARTICLE_VELOCITY.z()));
-            particleGroup.getChildren().add(particle);
+            particle.setVisible(false);
+            particlesGroup.getChildren().add(particle);
         }
-        parentGroup.getChildren().add(particleGroup);
-        Logger.info("{} particles created", particleGroup.getChildren().size());
+        Logger.info("{} particles created", particlesGroup.getChildren().size());
     }
 
-    private void removeFromParent() {
-        parentGroup.getChildren().remove(particleGroup);
+    public Group particlesGroup() {
+        return particlesGroup;
     }
 
     @Override
     public void destroy() {
-        setOnFinished(null);
-        for (Node child : particleGroup.getChildren()) {
-            if (child instanceof Particle particle) {
-                particle.setMaterial(null);
-            }
+        particlesGroup.getChildren().forEach(p -> ((Particle)p).setMaterial(null));
+        particlesGroup.getChildren().clear();
+    }
+
+    @Override
+    public void play() {
+        for (var particle : particlesGroup.getChildren()) {
+            particle.setVisible(true);
         }
-        removeFromParent();
-        particleGroup.getChildren().clear();
+        super.play();
     }
 
     @Override
     protected void interpolate(double t) {
-        if (particleGroup != null) {
-            for (Node child : particleGroup.getChildren()) {
-                var particle = (Particle) child;
-                particle.setVisible(true);
-                if (particleShouldVanish(particle)) {
-                    particle.setVelocity(0, 0, 0);
-                    particle.setScaleZ(0.1);
-                } else {
-                    particle.move();
-                }
+        for (var child : particlesGroup.getChildren()) {
+            Particle particle = (Particle) child;
+            if (particleReachedEndPosition(particle)) {
+                particle.setVelocity(0, 0, 0);
+                particle.setScaleZ(0.1); // flat
+            } else {
+                particle.move();
             }
         }
     }

@@ -31,31 +31,49 @@ public class Energizer3D implements Eatable3D, Destroyable {
 
         private static final byte MIN_PARTICLE_COUNT = 23;
         private static final byte MAX_PARTICLE_COUNT = 69;
-        private static final Duration DURATION = Duration.seconds(2);
+        private static final Duration DURATION = Duration.seconds(5);
 
-        private final Group parentGroup;
-        private final Predicate<SquirtingAnimation.Particle> particleShouldVanish;
+        private final Group particlesGroupContainer;
+        private final Predicate<SquirtingAnimation.Particle> particleReachedEndPosition;
 
-        public Explosion(AnimationManager animationManager, Group parentGroup, Predicate<SquirtingAnimation.Particle> particleShouldVanish) {
+        public Explosion(AnimationManager animationManager, Group particlesGroupContainer,
+                         Predicate<SquirtingAnimation.Particle> particleReachedEndPosition) {
             super(animationManager, "Energizer_Explosion");
-            this.parentGroup = parentGroup;
-            this.particleShouldVanish = particleShouldVanish;
+            this.particlesGroupContainer = requireNonNull(particlesGroupContainer);
+            this.particleReachedEndPosition = requireNonNull(particleReachedEndPosition);
         }
 
         @Override
         protected Animation createAnimation() {
-            return new SquirtingAnimation(parentGroup, DURATION, MIN_PARTICLE_COUNT, MAX_PARTICLE_COUNT, sphere.getMaterial(), location()) {
+            return new SquirtingAnimation(DURATION, MIN_PARTICLE_COUNT, MAX_PARTICLE_COUNT, sphere.getMaterial(), location()) {
                 @Override
-                public boolean particleShouldVanish(Particle p) { return particleShouldVanish.test(p); }
+                public boolean particleReachedEndPosition(Particle p) { return particleReachedEndPosition.test(p); }
             };
         }
 
         @Override
-        public void destroy() {
-            super.destroy();
+        public void playFromStart() {
+            super.playFromStart();
             if (animation instanceof SquirtingAnimation squirtingAnimation) {
+                particlesGroupContainer.getChildren().add(squirtingAnimation.particlesGroup());
+            }
+        }
+
+        @Override
+        public void stop() {
+            super.stop();
+            if (animation instanceof SquirtingAnimation squirtingAnimation) {
+                particlesGroupContainer.getChildren().remove(squirtingAnimation.particlesGroup());
+            }
+        }
+
+        @Override
+        public void destroy() {
+            if (animation instanceof SquirtingAnimation squirtingAnimation) {
+                particlesGroupContainer.getChildren().remove(squirtingAnimation.particlesGroup());
                 squirtingAnimation.destroy();
             }
+            super.destroy();
         }
     }
 

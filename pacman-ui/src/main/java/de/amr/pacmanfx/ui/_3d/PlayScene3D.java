@@ -301,7 +301,11 @@ public class PlayScene3D implements GameScene {
             case GHOST_DYING      -> gameLevel3D.onGhostDying();
             case LEVEL_COMPLETE   -> gameLevel3D.onLevelComplete(state, perspectiveIDProperty);
             case GAME_OVER        -> gameLevel3D.onGameOver(state);
-            case STARTING_GAME    -> gameLevel3D.onStartingGame();
+            case STARTING_GAME    -> {
+                if (gameLevel3D != null) {
+                    gameLevel3D.onStartingGame();
+                }
+            }
             case TESTING_LEVELS_SHORT, TESTING_LEVELS_MEDIUM -> {
                 replaceGameLevel3D();
                 showLevelTestMessage();
