@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.Destroyable;
+import de.amr.pacmanfx.lib.StopWatch;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.Obstacle;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
@@ -39,7 +40,6 @@ import javafx.scene.transform.Scale;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -52,7 +52,6 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static de.amr.pacmanfx.uilib.Ufx.*;
-import static java.time.Duration.between;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -494,16 +493,16 @@ public class GameLevel3D implements Destroyable {
         float wallThickness = ui.thePrefs().getFloat("3d.obstacle.wall_thickness");
         float cornerRadius = ui.thePrefs().getFloat("3d.obstacle.corner_radius");
         wall3DCount = 0;
-        var start = Instant.now();
+        var stopWatch = StopWatch.create();
         for (Obstacle obstacle : gameLevel.worldMap().obstacles()) {
-            // exclude house obstacle, house is built separately
+            // exclude house placeholder
             Vector2i startTile = tileAt(obstacle.startPoint().toVector2f());
             if (gameLevel.house().isPresent() && !gameLevel.house().get().isTileInHouseArea(startTile)) {
                 r3D.renderObstacle3D(maze3D, obstacle, obstacle.isBorder(), wallThickness, cornerRadius);
             }
         }
-        var duration = between(start, Instant.now());
-        Logger.info("Built 3D maze with {} composite walls in {} milliseconds", wall3DCount, duration.toMillis());
+        var passedTimeMillis = stopWatch.passedTime().toMillis();
+        Logger.info("Built 3D maze with {} composite walls in {} milliseconds", wall3DCount, passedTimeMillis);
     }
 
     public PacBase3D pac3D() { return pac3D; }
