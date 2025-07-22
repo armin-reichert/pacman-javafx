@@ -4,7 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.model3D;
 
+import javafx.css.PseudoClass;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
 
@@ -16,10 +18,17 @@ import static java.util.Objects.requireNonNull;
  */
 public class Pellet3D implements Eatable3D {
 
+    private static final PseudoClass PELLET3D_CLASS = PseudoClass.getPseudoClass("pellet3d");
+
+    public static boolean isPellet3D(Node node) {
+        return node.getPseudoClassStates().contains(PELLET3D_CLASS);
+    }
+
     private Shape3D shape;
 
     public Pellet3D(Shape3D shape) {
         this.shape = requireNonNull(shape);
+        shape.pseudoClassStateChanged(PELLET3D_CLASS, true);
         shape.setCache(true); // TODO does this bring an advantage at all?
     }
 

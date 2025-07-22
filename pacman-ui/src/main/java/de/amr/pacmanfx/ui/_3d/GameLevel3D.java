@@ -76,7 +76,7 @@ public class GameLevel3D implements Destroyable {
         }
     }
 
-    private static void setDrawModeForAllDescendantShapes(Node root, Predicate<Node> exclusionFilter, DrawMode drawMode) {
+    private static void setDrawModeForAllDescendantShapesExcept(Node root, Predicate<Node> exclusionFilter, DrawMode drawMode) {
         root.lookupAll("*").stream()
             .filter(exclusionFilter.negate())
             .filter(Shape3D.class::isInstance)
@@ -561,7 +561,6 @@ public class GameLevel3D implements Destroyable {
             meshView.setTranslateY(tile.y() * TS + HTS);
             meshView.setTranslateZ(-6);
             meshView.getTransforms().add(scale);
-            meshView.getProperties().put("pellet", true); //TODO what for?
             Pellet3D pellet3D = new Pellet3D(meshView);
             pellet3D.setTile(tile);
             pellets3D.add(pellet3D);
@@ -632,9 +631,7 @@ public class GameLevel3D implements Destroyable {
     }
 
     private void handleDrawModeChange(ObservableValue<? extends DrawMode> py, DrawMode ov, DrawMode drawMode) {
-        if (isDestroyed()) return; //TODO can that ever happen?
-        setDrawModeForAllDescendantShapes(root, shape3D -> shape3D.getProperties().containsKey("pellet"), drawMode);
-        Logger.info("Draw mode set to {}", drawMode);
+        setDrawModeForAllDescendantShapesExcept(root, Pellet3D::isPellet3D, drawMode);
     }
 
     private void handleWallHeightChange(ObservableValue<? extends Number> py, Number ov, Number newHeight) {

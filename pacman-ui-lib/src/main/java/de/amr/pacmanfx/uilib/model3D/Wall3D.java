@@ -36,6 +36,14 @@ public class Wall3D {
     public static final double DEFAULT_TOP_HEIGHT = 0.2;
     public static final double DEFAULT_WALL_THICKNESS = 2;
 
+    public static boolean isBase(Node node) {
+        return node.getPseudoClassStates().contains(WALL3D_BASE);
+    }
+
+    public static boolean isTop(Node node) {
+        return node.getPseudoClassStates().contains(WALL3D_TOP);
+    }
+
     public static Wall3D createBoxWall(Vector2f center, double sizeX, double sizeY) {
         var wall3D = new Wall3D(WallType.BOX);
         var base = wall3D.<Box>base();
@@ -111,14 +119,6 @@ public class Wall3D {
     @SuppressWarnings("unchecked")
     public <T extends Shape3D> T top() {
         return (T) top;
-    }
-
-    public static boolean isBase(Node node) {
-        return node.getPseudoClassStates().contains(WALL3D_BASE);
-    }
-
-    public static boolean isTop(Node node) {
-        return node.getPseudoClassStates().contains(WALL3D_TOP);
     }
 
     public static void destroyPart(Node part) {
