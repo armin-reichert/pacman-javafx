@@ -480,6 +480,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
     }
 
     public void drawJoypadKeyBinding(JoypadKeyBinding binding) {
+        ctx.save();
         requireNonNull(binding);
         ctx.setFont(Font.font("Sans", scaled(TS)));
         ctx.setStroke(Color.WHITE);
@@ -495,5 +496,6 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
                 binding.key(JoypadButton.LEFT),
                 binding.key(JoypadButton.RIGHT)
         ), 0, scaled(2*TS));
+        ctx.restore();
     }
 }
