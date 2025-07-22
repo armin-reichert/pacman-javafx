@@ -71,11 +71,11 @@ public class TerrainRenderer3D {
     public void renderObstacle3D(
         Group parent,
         Obstacle obstacle,
-        boolean worldBorder,
+        boolean border,
         double wallThickness,
         double cornerRadius)
     {
-        if (obstacle.isClosed() && !worldBorder) {
+        if (obstacle.isClosed() && !border) {
             var obstacleGroup = new Group();
             //TODO provide general solution for obstacles with holes
             if ("dcgbfceb".equals(obstacle.encoding())) { // O-shape with hole

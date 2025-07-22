@@ -65,7 +65,7 @@ public class ObstacleBuilder {
         this.worldMap = worldMap;
     }
 
-    private boolean isExplored(Vector2i tile) {
+    private boolean isTileExplored(Vector2i tile) {
         return exploredTiles.get(worldMap.indexInRowWiseOrder(tile));
     }
 
@@ -84,18 +84,18 @@ public class ObstacleBuilder {
         // Note: order of detection matters! Otherwise, when searching for closed
         // obstacles first, each failed attempt must set its visited tile set to unvisited!
         worldMap.tiles()
-            .filter(not(this::isExplored))
+            .filter(not(this::isTileExplored))
             .filter(tile -> tile.x() == 0 || tile.x() == worldMap.numCols() - 1)
-            .map(borderTile -> buildOpenObstacle(borderTile, borderTile.x() == 0, tilesWithErrors))
+            .map(borderTile -> buildBorderObstacle(borderTile, borderTile.x() == 0, tilesWithErrors))
             .filter(Objects::nonNull)
             .forEach(obstacles::add);
 
         worldMap.tiles()
-            .filter(not(this::isExplored))
+            .filter(not(this::isTileExplored))
             .filter(tile ->
                     worldMap.content(LayerID.TERRAIN, tile) == ARC_NW.code() ||
                     worldMap.content(LayerID.TERRAIN, tile) == DARC_NW.code()) // house top-left corner
-            .map(cornerNW -> buildClosedObstacle(cornerNW, tilesWithErrors))
+            .map(cornerNW -> buildInsideObstacle(cornerNW, tilesWithErrors))
             .forEach(obstacles::add);
 
         Logger.debug("Found {} obstacles", obstacles.size());
@@ -103,7 +103,7 @@ public class ObstacleBuilder {
         return optimize(obstacles);
     }
 
-    private Obstacle buildClosedObstacle(Vector2i cornerNW, List<Vector2i> tilesWithErrors) {
+    private Obstacle buildInsideObstacle(Vector2i cornerNW, List<Vector2i> tilesWithErrors) {
         Vector2i startPoint = cornerNW.scaled(TS).plus(TS, HTS);
         byte startTileContent = worldMap.content(LayerID.TERRAIN, cornerNW);
         Obstacle obstacle = new Obstacle(startPoint);
@@ -119,10 +119,11 @@ public class ObstacleBuilder {
         return obstacle;
     }
 
-    private Obstacle buildOpenObstacle(Vector2i startTile, boolean startsAtLeftBorder, List<Vector2i> tilesWithErrors) {
+    private Obstacle buildBorderObstacle(Vector2i startTile, boolean startsAtLeftBorder, List<Vector2i> tilesWithErrors) {
         Vector2i startPoint = startTile.scaled(TS).plus(startsAtLeftBorder ? 0 : TS, HTS);
         byte startTileContent = worldMap.content(LayerID.TERRAIN, startTile);
         var obstacle = new Obstacle(startPoint);
+        obstacle.setBorder(true);
         cursor = new Cursor(startTile);
         if (startTileContent == WALL_H.code()) {
             Direction startDir = startsAtLeftBorder ? Direction.RIGHT : Direction.LEFT;
@@ -146,7 +147,7 @@ public class ObstacleBuilder {
             cursor.move(Direction.DOWN);
         }
         else {
-            return null;
+            return null; //TODO check this
         }
         setExplored(startTile);
         buildRestOfObstacle(obstacle, startTile, obstacle.segment(0).ccw(), tilesWithErrors);
@@ -166,7 +167,7 @@ public class ObstacleBuilder {
         int bailout = 0;
         while (bailout < 1000) {
             ++bailout;
-            if (isExplored(cursor.currentTile)) {
+            if (isTileExplored(cursor.currentTile)) {
                 break;
             }
             setExplored(cursor.currentTile);

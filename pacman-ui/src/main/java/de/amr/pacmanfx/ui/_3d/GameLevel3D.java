@@ -60,16 +60,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameLevel3D implements Destroyable {
 
-    //TODO maybe better tag the obstacles that form the world border?
-    private static boolean isObstacleTheWorldBorder(WorldMap worldMap, Obstacle obstacle) {
-        Vector2i start = obstacle.startPoint();
-        if (obstacle.isClosed()) {
-            return start.x() == TS || start.y() == GameLevel.EMPTY_ROWS_OVER_MAZE * TS + HTS;
-        } else {
-            return start.x() == 0 || start.x() == worldMap.numCols() * TS;
-        }
-    }
-
     private static void setDrawModeForAllDescendantShapesExcept(Node root, Predicate<Node> exclusionFilter, DrawMode drawMode) {
         root.lookupAll("*").stream()
             .filter(exclusionFilter.negate())
@@ -509,7 +499,7 @@ public class GameLevel3D implements Destroyable {
             // exclude house obstacle, house is built separately
             Vector2i startTile = tileAt(obstacle.startPoint().toVector2f());
             if (gameLevel.house().isPresent() && !gameLevel.house().get().isTileInHouseArea(startTile)) {
-                r3D.renderObstacle3D(maze3D, obstacle, isObstacleTheWorldBorder(gameLevel.worldMap(), obstacle), wallThickness, cornerRadius);
+                r3D.renderObstacle3D(maze3D, obstacle, obstacle.isBorder(), wallThickness, cornerRadius);
             }
         }
         var duration = between(start, Instant.now());
