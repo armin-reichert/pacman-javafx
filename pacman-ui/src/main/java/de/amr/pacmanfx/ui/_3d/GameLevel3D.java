@@ -155,7 +155,6 @@ public class GameLevel3D implements Destroyable {
         obstacleBaseHeightProperty.set(ui.thePrefs().getFloat("3d.obstacle.base_height"));
         houseBaseHeightProperty.set(ui.thePrefs().getFloat("3d.house.base_height"));
 
-
         root.setMouseTransparent(true); // this increases performance, they say...
 
         createWorldMapColorScheme();
@@ -498,12 +497,9 @@ public class GameLevel3D implements Destroyable {
         state.timer().resetIndefiniteTime(); // expires when animation ends
         ui.theSound().stopAll();
         animationManager.stopAllAnimations();
-        // hide explicitly because level might have been completed using cheat!
+        // hide 3d food explicitly because level might have been completed using cheat!
         pellets3D.forEach(pellet3D -> pellet3D.shape3D().setVisible(false));
-        energizers3D.forEach(energizer3D -> {
-            energizer3D.pumpingAnimation().stop();
-            energizer3D.shape3D().setVisible(false);
-        });
+        energizers3D.forEach(energizer3D -> energizer3D.shape3D().setVisible(false));
         house3D.setDoorVisible(false);
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
         if (messageView != null) {
@@ -511,16 +507,16 @@ public class GameLevel3D implements Destroyable {
         }
         boolean cutSceneFollows = ui.theGameContext().theGame().cutSceneNumber(gameLevel.number()).isPresent();
         ManagedAnimation levelCompletedAnimation = cutSceneFollows
-                ? levelCompletedAnimationBeforeCutScene()
-                : levelCompletedAnimation();
+            ? levelCompletedAnimationBeforeCutScene()
+            : levelCompletedAnimation();
 
         var animation = new SequentialTransition(
-                pauseSec(2, () -> {
-                    perspectiveIDProperty.unbind();
-                    perspectiveIDProperty.set(PerspectiveID.TOTAL);
-                }),
-                levelCompletedAnimation.getOrCreateAnimation(),
-                pauseSec(1)
+            pauseSec(2, () -> {
+                perspectiveIDProperty.unbind();
+                perspectiveIDProperty.set(PerspectiveID.TOTAL);
+            }),
+            levelCompletedAnimation.getOrCreateAnimation(),
+            pauseSec(1)
         );
         animation.setOnFinished(e -> {
             perspectiveIDProperty.bind(ui.property3DPerspective());
@@ -541,52 +537,42 @@ public class GameLevel3D implements Destroyable {
         }
     }
 
-    private Scale computePelletScale() {
-        var pelletMeshView = new MeshView(pelletMesh);
-        Bounds bounds = pelletMeshView.getBoundsInLocal();
-        double maxExtent = Math.max(Math.max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());
-        float pelletRadius = ui.thePrefs().getFloat("3d.pellet.radius");
-        double scaling = (2 * pelletRadius) / maxExtent;
-        return new Scale(scaling, scaling, scaling);
-    }
-
     private void createPellets3D() {
-        Scale pelletScale = computePelletScale();
-        gameLevel.tilesContainingFood().forEach(tile -> {
-            if (!gameLevel.isEnergizerPosition(tile)) {
-                Pellet3D pellet3D = createPellet3D(tile, pelletScale);
-                pellets3D.add(pellet3D);
-            }
+        float radius = ui.thePrefs().getFloat("3d.pellet.radius");
+        var protoMeshView = new MeshView(pelletMesh);
+        Bounds bounds = protoMeshView.getBoundsInLocal();
+        double meshExtent = Math.max(Math.max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());
+        double scaling = (2 * radius) / meshExtent;
+        var scale = new Scale(scaling, scaling, scaling);
+        gameLevel.tilesContainingFood().filter(tile -> !gameLevel.isEnergizerPosition(tile)).forEach(tile -> {
+            var meshView = new MeshView(pelletMesh);
+            meshView.setMaterial(pelletMaterial);
+            meshView.setRotationAxis(Rotate.Z_AXIS);
+            meshView.setRotate(90);
+            meshView.setTranslateX(tile.x() * TS + HTS);
+            meshView.setTranslateY(tile.y() * TS + HTS);
+            meshView.setTranslateZ(-6);
+            meshView.getTransforms().add(scale);
+            meshView.getProperties().put("pellet", true); //TODO what for?
+            Pellet3D pellet3D = new Pellet3D(meshView);
+            pellet3D.setTile(tile);
+            pellets3D.add(pellet3D);
         });
         pellets3D.trimToSize();
     }
 
     private void createEnergizers3D() {
-        float energizerRadius     = ui.thePrefs().getFloat("3d.energizer.radius");
-        float floorThickness      = ui.thePrefs().getFloat("3d.floor.thickness");
-        float energizerMinScaling = ui.thePrefs().getFloat("3d.energizer.scaling.min");
-        float energizerMaxScaling = ui.thePrefs().getFloat("3d.energizer.scaling.max");
-        gameLevel.tilesContainingFood().forEach(tile -> {
-            if (gameLevel.isEnergizerPosition(tile)) {
-                Energizer3D energizer3D = createEnergizer3D(tile, energizerRadius, floorThickness, energizerMinScaling, energizerMaxScaling);
-                energizers3D.add(energizer3D);
-            }
+        float radius         = ui.thePrefs().getFloat("3d.energizer.radius");
+        float floorThickness = ui.thePrefs().getFloat("3d.floor.thickness");
+        float minScaling     = ui.thePrefs().getFloat("3d.energizer.scaling.min");
+        float maxScaling     = ui.thePrefs().getFloat("3d.energizer.scaling.max");
+        gameLevel.tilesContainingFood().filter(gameLevel::isEnergizerPosition).forEach(tile -> {
+            Energizer3D energizer3D = createEnergizer3D(tile, radius, floorThickness, minScaling, maxScaling);
+            var explosion = new EnergizerHideAndExplode(energizer3D);
+            energizer3D.setEatenAnimation(explosion);
+            energizers3D.add(energizer3D);
         });
         energizers3D.trimToSize();
-    }
-
-    private Pellet3D createPellet3D(Vector2i tile, Scale pelletScale) {
-        var meshView = new MeshView(pelletMesh);
-        meshView.getProperties().put("pellet", true);
-        meshView.setMaterial(pelletMaterial);
-        meshView.setRotationAxis(Rotate.Z_AXIS);
-        meshView.setRotate(90);
-        meshView.setTranslateX(tile.x() * TS + HTS);
-        meshView.setTranslateY(tile.y() * TS + HTS);
-        meshView.setTranslateZ(-6);
-        var pellet3D = new Pellet3D(meshView, pelletScale);
-        pellet3D.setTile(tile);
-        return pellet3D;
     }
 
     private Energizer3D createEnergizer3D(Vector2i tile, float energizerRadius, float floorThickness, float minScaling, float maxScaling) {
@@ -599,40 +585,41 @@ public class GameLevel3D implements Destroyable {
         energizer3D.shape3D().setTranslateX(x);
         energizer3D.shape3D().setTranslateY(y);
         energizer3D.shape3D().setTranslateZ(z);
-        //TODO: fixme: animation creates memory leak
-//        energizer3D.setHideAndEatAnimation(createHideAndExplodeAnimation(x, y, z, energizer3D));
         return energizer3D;
     }
 
-    private ManagedAnimation createHideAndExplodeAnimation(float x, float y, float z, Energizer3D energizer3D) {
-        return new ManagedAnimation(animationManager, "Energizer_Explosion") {
-            private SquirtingAnimation squirtingAnimation;
+    private class EnergizerHideAndExplode extends ManagedAnimation {
+        private Energizer3D energizer3D;
 
-            @Override
-            protected Animation createAnimation() {
-                squirtingAnimation = new SquirtingAnimation(root, Duration.seconds(2), 23, 69,
-                        pelletMaterial, new Point3D(x, y, z))
-                {
-                    @Override
-                    public boolean particleShouldVanish(Particle particle) {
-                        return particle.getTranslateZ() >= -1
-                                && isInsideWorldMap(gameLevel.worldMap(), particle.getTranslateX(), particle.getTranslateY());
-                    }
-                };
-                return new SequentialTransition(
-                        pauseSec(0.5, () -> energizer3D.shape3D().setVisible(false)),
-                        squirtingAnimation
-                );
-            }
+        public EnergizerHideAndExplode(Energizer3D energizer3D) {
+            super(GameLevel3D.this.animationManager, "Energizer_HideAndExplode");
+            this.energizer3D = energizer3D;
+        }
 
-            @Override
-            public void destroy() {
-                super.destroy();
-                if (squirtingAnimation != null) {
-                    squirtingAnimation.destroy();
+        @Override
+        protected Animation createAnimation() {
+            Point3D location = new Point3D(
+                energizer3D.shape3D().getTranslateX(),
+                energizer3D.shape3D().getTranslateY(),
+                energizer3D.shape3D().getTranslateZ());
+
+            return new SquirtingAnimation(root, Duration.seconds(2), 23, 69, pelletMaterial, location) {
+                @Override
+                public boolean particleShouldVanish(Particle particle) {
+                    return particle.getTranslateZ() >= -1
+                        && isInsideWorldMap(gameLevel.worldMap(), particle.getTranslateX(), particle.getTranslateY());
                 }
+            };
+        }
+
+        @Override
+        public void destroy() {
+            super.destroy();
+            if (animation instanceof SquirtingAnimation squirtingAnimation) {
+                squirtingAnimation.destroy();
             }
-        };
+            energizer3D = null;
+        }
     }
 
     public void showAnimatedMessage(String text, float displaySeconds, double centerX, double y) {

@@ -7,7 +7,6 @@ package de.amr.pacmanfx.uilib.model3D;
 import javafx.scene.Group;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
-import javafx.scene.transform.Scale;
 
 import static de.amr.pacmanfx.uilib.Ufx.pauseSec;
 import static java.util.Objects.requireNonNull;
@@ -19,10 +18,8 @@ public class Pellet3D implements Eatable3D {
 
     private Shape3D shape;
 
-    public Pellet3D(Shape3D shape, Scale scale) {
+    public Pellet3D(Shape3D shape) {
         this.shape = requireNonNull(shape);
-        requireNonNull(scale);
-        shape.getTransforms().add(scale);
         shape.setCache(true); // TODO does this bring an advantage at all?
     }
 

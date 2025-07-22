@@ -1,3 +1,7 @@
+/*
+Copyright (c) 2021-2025 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.pacmanfx.uilib.animation;
 
 import de.amr.pacmanfx.lib.Destroyable;
@@ -35,12 +39,11 @@ public abstract class ManagedAnimation implements Destroyable {
             try {
                 animation = createAnimation();
             } catch (Exception x) {
-                Logger.error("Exception occured when creating animation '{}'", label);
-                Logger.error(x);
+                Logger.error("Creating animation '{}' failed", label);
                 throw new IllegalStateException(x);
             }
             if (animation == null) {
-                Logger.error("Creating animation '{}' returned no result", label);
+                Logger.error("Creating animation '{}' returned null", label);
                 throw new IllegalStateException();
             }
         }
@@ -53,7 +56,7 @@ public abstract class ManagedAnimation implements Destroyable {
         if (animation != null) {
             animation.setOnFinished(null);
             animation = null;
-            Logger.info("Destroyed managed animation '{}'", label);
+            Logger.info("Destroyed animation '{}'", label);
         }
         animationManager = null;
     }

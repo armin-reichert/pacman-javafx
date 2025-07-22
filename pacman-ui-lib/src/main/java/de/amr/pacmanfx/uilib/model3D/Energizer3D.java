@@ -4,12 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.model3D;
 
+import de.amr.pacmanfx.lib.Destroyable;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.ScaleTransition;
-import javafx.scene.Group;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
@@ -20,11 +20,12 @@ import static java.util.Objects.requireNonNull;
 /**
  * 3D energizer pellet.
  */
-public class Energizer3D implements Eatable3D {
+public class Energizer3D implements Eatable3D, Destroyable {
 
     private final Sphere sphere;
+
     private ManagedAnimation pumpingAnimation;
-    private ManagedAnimation hideAndEatAnimation;
+    private ManagedAnimation eatenAnimation;
 
     public Energizer3D(AnimationManager animationManager, double radius, double minScaling, double maxScaling) {
         requireNonNegative(radius, "Energizer radius must be positive but is %f");
@@ -51,18 +52,21 @@ public class Energizer3D implements Eatable3D {
         };
     }
 
-    public void setHideAndEatAnimation(ManagedAnimation hideAndEatAnimation) {
-        this.hideAndEatAnimation = requireNonNull(hideAndEatAnimation);
+    public void setEatenAnimation(ManagedAnimation animation) {
+        eatenAnimation = requireNonNull(animation);
     }
 
+    @Override
     public void destroy() {
         if (pumpingAnimation != null) {
+            pumpingAnimation.stop();
             pumpingAnimation.destroy();
             pumpingAnimation = null;
         }
-        if (hideAndEatAnimation != null) {
-            hideAndEatAnimation.destroy();
-            hideAndEatAnimation = null;
+        if (eatenAnimation != null) {
+            eatenAnimation.stop();
+            eatenAnimation.destroy();
+            eatenAnimation = null;
         }
     }
 
@@ -78,11 +82,9 @@ public class Energizer3D implements Eatable3D {
     @Override
     public void onEaten() {
         pumpingAnimation.stop();
-        if (hideAndEatAnimation != null) {
-            hideAndEatAnimation.playFromStart();
-        }
-        if (sphere.getParent() instanceof Group group) {
-            group.getChildren().remove(sphere);
+        sphere.setVisible(false);
+        if (eatenAnimation != null) {
+            eatenAnimation.playFromStart();
         }
     }
 }
