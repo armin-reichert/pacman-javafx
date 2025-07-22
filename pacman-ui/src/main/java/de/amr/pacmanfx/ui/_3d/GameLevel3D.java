@@ -60,10 +60,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameLevel3D implements Destroyable {
 
-    private static boolean isInsideWorldMap(WorldMap worldMap, double x, double y) {
-        return 0 <= x && x < worldMap.numCols() * TS && 0 <= y && y < worldMap.numRows() * TS;
-    }
-
     //TODO maybe better tag the obstacles that form the world border?
     private static boolean isObstacleTheWorldBorder(WorldMap worldMap, Obstacle obstacle) {
         Vector2i start = obstacle.startPoint();
@@ -227,6 +223,39 @@ public class GameLevel3D implements Destroyable {
         }
     }
 
+    private class LevelCompletedAnimationShort extends ManagedAnimation {
+
+        public static final int FLASH_DURATION_MILLIS = 250;
+
+        public LevelCompletedAnimationShort(AnimationManager animationManager) {
+            super(animationManager, "Level_Complete_Short_Animation");
+        }
+
+        @Override
+        protected Animation createAnimation() {
+            return new SequentialTransition(
+                pauseSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
+                pauseSec(0.5),
+                mazeFlashAnimation(gameLevel.data().numFlashes()),
+                pauseSec(0.5, () -> gameLevel.pac().hide())
+            );
+        }
+
+        private Animation mazeFlashAnimation(int numFlashes) {
+            if (numFlashes == 0) {
+                return pauseSec(1.0);
+            }
+            var flashing = new Timeline(
+                new KeyFrame(Duration.millis(0.5 * FLASH_DURATION_MILLIS),
+                        new KeyValue(obstacleBaseHeightProperty, 0, Interpolator.EASE_BOTH)
+                )
+            );
+            flashing.setAutoReverse(true);
+            flashing.setCycleCount(2 * numFlashes);
+            return flashing;
+        }
+    }
+
     /**
      * @param ui the game UI
      * @param root a group provided by the play scene serving as the root of the tree representing the 3D game level
@@ -307,7 +336,7 @@ public class GameLevel3D implements Destroyable {
         };
 
         levelCompletedFullAnimation = new LevelCompletedAnimation(animationManager);
-        levelCompletedShortAnimation = new LevelCompletedAnimationShort(animationManager, this, gameLevel);
+        levelCompletedShortAnimation = new LevelCompletedAnimationShort(animationManager);
     }
 
     public Group root() {
@@ -487,19 +516,10 @@ public class GameLevel3D implements Destroyable {
         Logger.info("Built 3D maze with {} composite walls in {} milliseconds", wall3DCount, duration.toMillis());
     }
 
-    public DoubleProperty houseBaseHeightProperty() {
-        return houseBaseHeightProperty;
-    }
-
-    public DoubleProperty obstacleBaseHeightProperty() {
-        return obstacleBaseHeightProperty;
-    }
-
     public PacBase3D pac3D() { return pac3D; }
     public Stream<MutatingGhost3D> ghosts3D() { return ghosts3D.stream(); }
     public MutatingGhost3D ghost3D(byte id) { return ghosts3D.get(id); }
     public Optional<Bonus3D> bonus3D() { return Optional.ofNullable(bonus3D); }
-    public Group maze3D() { return maze3D; }
     public Optional<LevelCounter3D> levelCounter3D() { return Optional.ofNullable(levelCounter3D); }
     public Optional<LivesCounter3D> livesCounter3D() { return Optional.ofNullable(livesCounter3D); }
     public Stream<Pellet3D> pellets3D() { return pellets3D != null ? pellets3D.stream() : Stream.empty(); }
