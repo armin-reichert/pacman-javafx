@@ -10,7 +10,6 @@ import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.ScaleTransition;
-import javafx.geometry.Point3D;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
@@ -77,10 +76,6 @@ public class Energizer3D implements Eatable3D, Destroyable {
 
     public void setEatenAnimation(ManagedAnimation animation) {
         eatenAnimation = requireNonNull(animation);
-    }
-
-    public Point3D location() {
-        return new Point3D(sphere.getTranslateX(), sphere.getTranslateY(), sphere.getTranslateZ());
     }
 
     @Override
