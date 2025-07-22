@@ -153,6 +153,7 @@ public class Explosion extends ManagedAnimation {
     public void destroy() {
         particlesGroupContainer.getChildren().remove(particlesGroup);
         particlesGroup.getChildren().forEach(p -> ((Particle) p).setMaterial(null));
+        Logger.info("Removing {} particles", particlesGroup.getChildren().size());
         particlesGroup.getChildren().clear();
         particleMaterial = null;
     }
