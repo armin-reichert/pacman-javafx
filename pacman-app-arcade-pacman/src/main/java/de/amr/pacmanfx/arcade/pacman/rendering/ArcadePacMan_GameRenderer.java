@@ -80,7 +80,8 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
             if (gameContext.theGame().lifeCount() > livesCounter.maxLivesDisplayed()) {
                 // show text indicating that more lives are available than symbols displayed (cheating may cause this)
                 Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
-                fillTextAtScaledPosition("(%d)".formatted(gameContext.theGame().lifeCount()), ARCADE_YELLOW, font, x + TS * 10, y + TS);
+                fillTextAtScaledPosition("%d".formatted(gameContext.theGame().lifeCount()), ARCADE_YELLOW, font,
+                    x - 14, y + TS);
             }
         }
 
