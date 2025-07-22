@@ -17,13 +17,10 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
-import de.amr.pacmanfx.uilib.animation.Explosion;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.*;
-import javafx.animation.Animation;
-import javafx.animation.SequentialTransition;
-import javafx.animation.Transition;
+import javafx.animation.*;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Bounds;
@@ -46,6 +43,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -142,6 +140,93 @@ public class GameLevel3D implements Destroyable {
 
     private int wall3DCount;
 
+    private class LevelCompletedAnimation extends ManagedAnimation {
+
+        public static final int FLASH_DURATION_MILLIS = 250;
+
+        private ManagedAnimation wallsDisappearingAnimation;
+
+        public LevelCompletedAnimation(AnimationManager animationManager) {
+            super(animationManager, "Level_Complete");
+
+            wallsDisappearingAnimation = new ManagedAnimation(animationManager, "Maze_WallsDisappearing") {
+                @Override
+                protected Animation createAnimation() {
+                    var totalDuration = Duration.seconds(1);
+                    var houseDisappears = new Timeline(
+                        new KeyFrame(totalDuration.multiply(0.33),
+                            new KeyValue(houseBaseHeightProperty, 0, Interpolator.EASE_IN)));
+                    var obstaclesDisappear = new Timeline(
+                        new KeyFrame(totalDuration.multiply(0.33),
+                            new KeyValue(obstacleBaseHeightProperty, 0, Interpolator.EASE_IN)));
+                    var animation = new SequentialTransition(houseDisappears, obstaclesDisappear);
+                    animation.setOnFinished(e -> maze3D.setVisible(false));
+                    return animation;
+                }
+            };
+        }
+
+        @Override
+        protected Animation createAnimation() {
+            return new SequentialTransition(
+                doNow(() -> {
+                    livesCounter3D().map(LivesCounter3D::light).ifPresent(light -> light.setLightOn(false));
+                    sometimesShowLevelCompleteFlashMessage(gameLevel.number());
+                }),
+                pauseSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
+                pauseSec(0.5),
+                createWallsFlashAnimation(),
+                pauseSec(0.5, () -> gameLevel.pac().hide()),
+                pauseSec(0.5),
+                createSpinningAnimation(),
+                pauseSec(0.5, () -> ui.theSound().play(SoundID.LEVEL_COMPLETE)),
+                pauseSec(0.5),
+                wallsDisappearingAnimation.getOrCreateAnimation(),
+                pauseSec(1.0, () -> ui.theSound().play(SoundID.LEVEL_CHANGED))
+            );
+        }
+
+        @Override
+        public void destroy() {
+            if (wallsDisappearingAnimation != null) {
+                animationManager.destroyAnimation(wallsDisappearingAnimation);
+                wallsDisappearingAnimation = null;
+            }
+        }
+
+        private void sometimesShowLevelCompleteFlashMessage(int levelNumber) {
+            boolean showFlashMessage = randomInt(1, 1000) < 250; // every 4th time also show a message
+            if (showFlashMessage) {
+                String message = ui.theAssets().localizedLevelCompleteMessage(levelNumber);
+                ui.showFlashMessageSec(3, message);
+            }
+        }
+
+        private Animation createSpinningAnimation() {
+            var spin360 = new RotateTransition(Duration.seconds(1.5), root);
+            spin360.setAxis(new Random().nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
+            spin360.setFromAngle(0);
+            spin360.setToAngle(360);
+            spin360.setInterpolator(Interpolator.LINEAR);
+            return spin360;
+        }
+
+        private Animation createWallsFlashAnimation() {
+            int numFlashes = gameLevel.data().numFlashes();
+            if (numFlashes == 0) {
+                return pauseSec(1.0);
+            }
+            var flashingTimeline = new Timeline(
+                    new KeyFrame(Duration.millis(0.5 * FLASH_DURATION_MILLIS),
+                            new KeyValue(obstacleBaseHeightProperty, 0, Interpolator.EASE_BOTH)
+                    )
+            );
+            flashingTimeline.setAutoReverse(true);
+            flashingTimeline.setCycleCount(2 * numFlashes);
+            return flashingTimeline;
+        }
+    }
+
     /**
      * @param ui the game UI
      * @param root a group provided by the play scene serving as the root of the tree representing the 3D game level
@@ -221,7 +306,7 @@ public class GameLevel3D implements Destroyable {
             }
         };
 
-        levelCompletedFullAnimation = new LevelCompletedAnimation(ui, animationManager, this);
+        levelCompletedFullAnimation = new LevelCompletedAnimation(animationManager);
         levelCompletedShortAnimation = new LevelCompletedAnimationShort(animationManager, this, gameLevel);
     }
 
@@ -575,10 +660,14 @@ public class GameLevel3D implements Destroyable {
         float maxScaling     = ui.thePrefs().getFloat("3d.energizer.scaling.max");
         gameLevel.tilesContainingFood().filter(gameLevel::isEnergizerPosition).forEach(tile -> {
             Energizer3D energizer3D = createEnergizer3D(tile, radius, floorThickness, minScaling, maxScaling);
+            /*
+
             var explosion = new Explosion(animationManager, energizer3D.shape3D(), particlesGroupContainer, pelletMaterial,
                 particle -> particle.getTranslateZ() >= -1
                     && isInsideWorldMap(gameLevel.worldMap(), particle.getTranslateX(), particle.getTranslateY()));
             energizer3D.setEatenAnimation(explosion);
+
+             */
             energizers3D.add(energizer3D);
         });
         energizers3D.trimToSize();
