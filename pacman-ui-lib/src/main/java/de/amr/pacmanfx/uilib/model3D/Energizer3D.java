@@ -7,17 +7,13 @@ package de.amr.pacmanfx.uilib.model3D;
 import de.amr.pacmanfx.lib.Destroyable;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.animation.SquirtingAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.ScaleTransition;
 import javafx.geometry.Point3D;
-import javafx.scene.Group;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
-
-import java.util.function.Predicate;
 
 import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static java.util.Objects.requireNonNull;
@@ -26,56 +22,6 @@ import static java.util.Objects.requireNonNull;
  * 3D energizer pellet.
  */
 public class Energizer3D implements Eatable3D, Destroyable {
-
-    public class Explosion extends ManagedAnimation {
-
-        private static final byte MIN_PARTICLE_COUNT = 42;
-        private static final byte MAX_PARTICLE_COUNT = 100;
-        private static final Duration DURATION = Duration.seconds(6);
-
-        private final Group particlesGroupContainer;
-        private final Predicate<SquirtingAnimation.Particle> particleReachedEndPosition;
-
-        public Explosion(AnimationManager animationManager, Group particlesGroupContainer,
-                         Predicate<SquirtingAnimation.Particle> particleReachedEndPosition) {
-            super(animationManager, "Energizer_Explosion");
-            this.particlesGroupContainer = requireNonNull(particlesGroupContainer);
-            this.particleReachedEndPosition = requireNonNull(particleReachedEndPosition);
-        }
-
-        @Override
-        protected Animation createAnimation() {
-            return new SquirtingAnimation(DURATION, MIN_PARTICLE_COUNT, MAX_PARTICLE_COUNT, sphere.getMaterial(), location()) {
-                @Override
-                public boolean particleReachedEndPosition(Particle p) { return particleReachedEndPosition.test(p); }
-            };
-        }
-
-        @Override
-        public void playFromStart() {
-            super.playFromStart();
-            if (animation instanceof SquirtingAnimation squirtingAnimation) {
-                particlesGroupContainer.getChildren().add(squirtingAnimation.particlesGroup());
-            }
-        }
-
-        @Override
-        public void stop() {
-            super.stop();
-            if (animation instanceof SquirtingAnimation squirtingAnimation) {
-                particlesGroupContainer.getChildren().remove(squirtingAnimation.particlesGroup());
-            }
-        }
-
-        @Override
-        public void destroy() {
-            if (animation instanceof SquirtingAnimation squirtingAnimation) {
-                particlesGroupContainer.getChildren().remove(squirtingAnimation.particlesGroup());
-                squirtingAnimation.destroy();
-            }
-            super.destroy();
-        }
-    }
 
     private final Sphere sphere;
 

@@ -17,6 +17,7 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
+import de.amr.pacmanfx.uilib.animation.Explosion;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.*;
@@ -126,7 +127,7 @@ public class GameLevel3D implements Destroyable {
 
     private AmbientLight ambientLight;
     private Group mazeGroup = new Group();
-    private Group particlesGroup = new Group();
+    private Group particlesGroupContainer = new Group();
     private Group maze3D = new Group();
     private Floor3D floor3D;
     private ArcadeHouse3D house3D;
@@ -185,7 +186,7 @@ public class GameLevel3D implements Destroyable {
         // Note: The order in which children are added to the root matters!
         // Walls and house must be added *after* the actors, otherwise the transparency is not working correctly.
         root.getChildren().add(mazeGroup);
-        root.getChildren().add(particlesGroup);
+        root.getChildren().add(particlesGroupContainer);
         mazeGroup.getChildren().addAll(floor3D, maze3D);
 
         ui.property3DWallHeight().addListener(this::handleWallHeightChange);
@@ -506,7 +507,7 @@ public class GameLevel3D implements Destroyable {
         pellets3D.forEach(pellet3D -> pellet3D.shape3D().setVisible(false));
         energizers3D.forEach(Energizer3D::noPumping);
         energizers3D.forEach(energizer3D -> energizer3D.shape3D().setVisible(false));
-        particlesGroup.getChildren().clear();
+        particlesGroupContainer.getChildren().clear();
         house3D.setDoorVisible(false);
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
         if (messageView != null) {
@@ -575,7 +576,7 @@ public class GameLevel3D implements Destroyable {
         float maxScaling     = ui.thePrefs().getFloat("3d.energizer.scaling.max");
         gameLevel.tilesContainingFood().filter(gameLevel::isEnergizerPosition).forEach(tile -> {
             Energizer3D energizer3D = createEnergizer3D(tile, radius, floorThickness, minScaling, maxScaling);
-            var explosion = energizer3D.new Explosion(animationManager, particlesGroup,
+            var explosion = new Explosion(animationManager, energizer3D.shape3D(), particlesGroupContainer, pelletMaterial,
                 particle -> particle.getTranslateZ() >= -1
                     && isInsideWorldMap(gameLevel.worldMap(), particle.getTranslateX(), particle.getTranslateY()));
             energizer3D.setEatenAnimation(explosion);
@@ -762,9 +763,9 @@ public class GameLevel3D implements Destroyable {
             mazeGroup = null;
             Logger.info("Removed all nodes under maze group");
         }
-        if (particlesGroup != null) {
-            particlesGroup.getChildren().clear();
-            particlesGroup = null;
+        if (particlesGroupContainer != null) {
+            particlesGroupContainer.getChildren().clear();
+            particlesGroupContainer = null;
             Logger.info("Removed all particles");
         }
         if (floor3D != null) {
