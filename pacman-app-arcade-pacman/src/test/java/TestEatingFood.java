@@ -39,7 +39,7 @@ public class TestEatingFood {
     }
 
     private void eatNextEnergizer(GameLevel gameLevel) {
-        gameLevel.energizerTiles().stream()
+        gameLevel.energizerPositions().stream()
             .filter(gameLevel::tileContainsFood)
             .findFirst().ifPresent(tile -> {
                 gameLevel.registerFoodEatenAt(tile);
@@ -89,7 +89,7 @@ public class TestEatingFood {
             eatNextPellet(gameLevel);
         }
         assertEquals(2, pacManGame().cruiseElroy());
-        while (gameLevel.uneatenFoodCount() > gameLevel.energizerTiles().size()) {
+        while (gameLevel.uneatenFoodCount() > gameLevel.energizerPositions().size()) {
             assertEquals(2, pacManGame().cruiseElroy());
             eatNextPellet(gameLevel);
         }

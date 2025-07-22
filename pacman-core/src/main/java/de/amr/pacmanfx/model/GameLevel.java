@@ -64,7 +64,7 @@ public class GameLevel {
     private final Vector2f[] ghostStartPositions = new Vector2f[4];
     private final Vector2i[] ghostScatterTiles = new Vector2i[4];
     private final Direction[] ghostStartDirections = new Direction[4];
-    private final Set<Vector2i> energizerTiles;
+    private final Set<Vector2i> energizerPositions;
     private final Portal[] portals;
 
     private House house;
@@ -100,8 +100,8 @@ public class GameLevel {
         findHouse();
 
         currentBonusIndex = -1;
-        energizerTiles = worldMap.tilesContaining(LayerID.FOOD, ENERGIZER.code()).collect(Collectors.toSet());
-        totalFoodCount = (int) worldMap.tilesContaining(LayerID.FOOD, PELLET.code()).count() + energizerTiles.size();
+        energizerPositions = worldMap.tilesContaining(LayerID.FOOD, ENERGIZER.code()).collect(Collectors.toSet());
+        totalFoodCount = (int) worldMap.tilesContaining(LayerID.FOOD, PELLET.code()).count() + energizerPositions.size();
         uneatenFoodCount = totalFoodCount;
         eatenFoodBits = new BitSet(worldMap.numCols() * worldMap.numRows());
 
@@ -417,10 +417,10 @@ public class GameLevel {
         return isTileInsideWorld(tile) && worldMap.content(LayerID.FOOD, tile) != FoodTile.EMPTY.code();
     }
 
-    public Set<Vector2i> energizerTiles() { return Collections.unmodifiableSet(energizerTiles); }
+    public Set<Vector2i> energizerPositions() { return Collections.unmodifiableSet(energizerPositions); }
 
     public boolean isEnergizerPosition(Vector2i tile) {
-        return energizerTiles.contains(tile);
+        return energizerPositions.contains(tile);
     }
 
     public boolean tileContainsFood(Vector2i tile) {
