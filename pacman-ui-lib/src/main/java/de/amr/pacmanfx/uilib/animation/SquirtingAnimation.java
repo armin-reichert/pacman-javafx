@@ -14,6 +14,8 @@ import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import java.util.Random;
+
 import static de.amr.pacmanfx.Validations.requireNonNegativeInt;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomFloat;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
@@ -21,12 +23,14 @@ import static java.util.Objects.requireNonNull;
 
 public abstract class SquirtingAnimation extends Transition implements Destroyable {
 
-    private static final float MIN_PARTICLE_RADIUS = 0.1f;
-    private static final float MAX_PARTICLE_RADIUS = 1.0f;
+    record Range(float from, float to) {}
 
-    private static final Vector3f MIN_PARTICLE_VELOCITY = new Vector3f(-0.25f, -0.25f, -4.0f);
-    private static final Vector3f MAX_PARTICLE_VELOCITY = new Vector3f(0.25f, 0.25f, -1.0f);
-    private static final Vector3f GRAVITY               = new Vector3f(0, 0, 0.1f);
+    private static final float MEAN_PARTICLE_RADIUS = 0.3f;
+
+    private static final Range PARTICLE_VELOCITY_XY = new Range(-0.2f, 0.2f);
+    private static final Range PARTICLE_VELOCITY_Z  = new Range(-3f, -0.5f);
+
+    private static final Vector3f GRAVITY = new Vector3f(0, 0, 0.1f);
 
     public static class Particle extends Sphere {
         private Vector3f velocity = Vector3f.ZERO;
@@ -69,13 +73,14 @@ public abstract class SquirtingAnimation extends Transition implements Destroyab
 
         setCycleDuration(duration);
         int numParticles = randomInt(minParticleCount, maxParticleCount + 1);
+        Random rnd = new Random();
         for (int i = 0; i < numParticles; ++i) {
-            float radius = randomFloat(MIN_PARTICLE_RADIUS, MAX_PARTICLE_RADIUS);
+            double radius = rnd.nextGaussian(MEAN_PARTICLE_RADIUS, 0.25);
             var particle = new Particle(particleMaterial, radius, origin);
             particle.setVelocity(
-                randomFloat(MIN_PARTICLE_VELOCITY.x(), MAX_PARTICLE_VELOCITY.x()),
-                randomFloat(MIN_PARTICLE_VELOCITY.y(), MAX_PARTICLE_VELOCITY.y()),
-                randomFloat(MIN_PARTICLE_VELOCITY.z(), MAX_PARTICLE_VELOCITY.z()));
+                randomFloat(PARTICLE_VELOCITY_XY.from(), PARTICLE_VELOCITY_XY.to()),
+                randomFloat(PARTICLE_VELOCITY_XY.from(), PARTICLE_VELOCITY_XY.to()),
+                randomFloat(PARTICLE_VELOCITY_Z.from(), PARTICLE_VELOCITY_Z.to()));
             particle.setVisible(false);
             particlesGroup.getChildren().add(particle);
         }
@@ -105,8 +110,7 @@ public abstract class SquirtingAnimation extends Transition implements Destroyab
         for (var child : particlesGroup.getChildren()) {
             Particle particle = (Particle) child;
             if (particleReachedEndPosition(particle)) {
-                particle.setVelocity(0, 0, 0);
-                particle.setScaleZ(0.1); // flat
+                particle.setScaleZ(0.02); // flat
             } else {
                 particle.move();
             }

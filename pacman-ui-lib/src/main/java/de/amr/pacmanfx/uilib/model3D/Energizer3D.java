@@ -29,9 +29,9 @@ public class Energizer3D implements Eatable3D, Destroyable {
 
     public class Explosion extends ManagedAnimation {
 
-        private static final byte MIN_PARTICLE_COUNT = 23;
-        private static final byte MAX_PARTICLE_COUNT = 69;
-        private static final Duration DURATION = Duration.seconds(5);
+        private static final byte MIN_PARTICLE_COUNT = 42;
+        private static final byte MAX_PARTICLE_COUNT = 100;
+        private static final Duration DURATION = Duration.seconds(6);
 
         private final Group particlesGroupContainer;
         private final Predicate<SquirtingAnimation.Particle> particleReachedEndPosition;
