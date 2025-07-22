@@ -12,7 +12,6 @@ import javafx.animation.PauseTransition;
 import javafx.animation.Transition;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
@@ -148,14 +147,6 @@ public interface Ufx {
         requireNonNull(color);
         var material = new PhongMaterial(color);
         material.setSpecularColor(color.brighter());
-        return material;
-    }
-
-    static PhongMaterial coloredPhongMaterial(ObjectProperty<Color> colorProperty) {
-        requireNonNull(colorProperty);
-        var material = new PhongMaterial();
-        material.diffuseColorProperty().bind(colorProperty);
-        material.specularColorProperty().bind(colorProperty.map(Color::brighter));
         return material;
     }
 

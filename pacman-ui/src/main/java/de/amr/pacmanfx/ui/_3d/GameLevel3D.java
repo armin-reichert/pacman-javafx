@@ -246,6 +246,38 @@ public class GameLevel3D implements Destroyable {
         }
     }
 
+    private class WallColorFlashingAnimation extends ManagedAnimation {
+
+        public WallColorFlashingAnimation(AnimationManager animationManager) {
+            super(animationManager, "MazeWallColorFlashing");
+        }
+
+        @Override
+        protected Animation createAnimation() {
+            return new Transition() {
+                {
+                    setAutoReverse(true);
+                    setCycleCount(Animation.INDEFINITE);
+                    setCycleDuration(Duration.seconds(0.25));
+                }
+                @Override
+                protected void interpolate(double t) {
+                    Color color = colorScheme.fill().interpolate(colorScheme.stroke(), t);
+                    wallTopMaterial.setDiffuseColor(color);
+                    wallTopMaterial.setSpecularColor(color.brighter());
+                }
+            };
+        }
+
+        @Override
+        public void stop() {
+            super.stop();
+            // reset wall colors when stopped
+            wallTopMaterial.setDiffuseColor(colorScheme.fill());
+            wallTopMaterial.setSpecularColor(colorScheme.fill().brighter());
+        }
+    }
+
     /**
      * @param ui the game UI
      * @param root a group provided by the play scene serving as the root of the tree representing the 3D game level
@@ -263,7 +295,8 @@ public class GameLevel3D implements Destroyable {
 
         createWorldMapColorScheme();
         createMazeMaterials();
-        
+        createGhostMeshView();
+
         createAmbientLight();
         createLevelCounter3D();
         createLivesCounter3D();
@@ -297,34 +330,7 @@ public class GameLevel3D implements Destroyable {
         ui.property3DDrawMode().addListener(this::handleDrawModeChange);
 
         // Animations
-        wallColorFlashingAnimation = new ManagedAnimation(animationManager, "MazeWallColorFlashing") {
-            @Override
-            protected Animation createAnimation() {
-                return new Transition() {
-                    {
-                        setAutoReverse(true);
-                        setCycleCount(Animation.INDEFINITE);
-                        setCycleDuration(Duration.seconds(0.25));
-                    }
-                    @Override
-                    protected void interpolate(double t) {
-                        Color color = colorScheme.fill().interpolate(colorScheme.stroke(), t);
-                        wallTopMaterial.setDiffuseColor(color);
-                        wallTopMaterial.setSpecularColor(color.brighter());
-
-                    }
-                };
-            }
-
-            @Override
-            public void stop() {
-                super.stop();
-                // reset material colors on stop
-                wallTopMaterial.setDiffuseColor(colorScheme.fill());
-                wallTopMaterial.setSpecularColor(colorScheme.fill().brighter());
-            }
-        };
-
+        wallColorFlashingAnimation = new WallColorFlashingAnimation(animationManager);
         levelCompletedFullAnimation = new LevelCompletedAnimation(animationManager);
         levelCompletedShortAnimation = new LevelCompletedAnimationShort(animationManager);
     }
@@ -334,8 +340,8 @@ public class GameLevel3D implements Destroyable {
     }
 
     private void createMazeMaterials() {
-        pelletMaterial = coloredPhongMaterial(colorScheme.pellet());
-        pelletMesh = ui.theAssets().theModel3DRepository().pelletMesh();
+        pelletMaterial = new PhongMaterial(colorScheme.pellet());
+        pelletMaterial.setSpecularColor(colorScheme.pellet().brighter());
 
         wallBaseMaterial = new PhongMaterial();
         wallBaseMaterial.diffuseColorProperty().bind(wallOpacityProperty
@@ -353,6 +359,35 @@ public class GameLevel3D implements Destroyable {
         cornerTopMaterial = new PhongMaterial();
         cornerTopMaterial.setDiffuseColor(colorScheme.fill());
         cornerTopMaterial.specularColorProperty().bind(cornerTopMaterial.diffuseColorProperty().map(Color::brighter));
+    }
+
+    private void destroyMazeMaterials() {
+        if (pelletMaterial != null) {
+            pelletMaterial.diffuseColorProperty().unbind();
+            pelletMaterial.specularColorProperty().unbind();
+            pelletMaterial = null;
+        }
+        if (wallBaseMaterial != null) {
+            wallBaseMaterial.diffuseColorProperty().unbind();
+            wallBaseMaterial.specularColorProperty().unbind();
+            wallBaseMaterial = null;
+        }
+        if (wallTopMaterial != null) {
+            wallTopMaterial.diffuseColorProperty().unbind();
+            wallTopMaterial.specularColorProperty().unbind();
+            wallTopMaterial = null;
+        }
+        if (cornerBaseMaterial != null) {
+            cornerBaseMaterial.diffuseColorProperty().unbind();
+            cornerBaseMaterial.specularColorProperty().unbind();
+            cornerBaseMaterial = null;
+        }
+        if (cornerTopMaterial != null) {
+            cornerTopMaterial.diffuseColorProperty().unbind();
+            cornerTopMaterial.specularColorProperty().unbind();
+            cornerTopMaterial = null;
+        }
+        Logger.info("Unbound material references");
     }
 
     private void createWorldMapColorScheme() {
@@ -394,7 +429,7 @@ public class GameLevel3D implements Destroyable {
         });
     }
 
-    private void createGhosts3D() {
+    private void createGhostMeshView() {
         Mesh ghostDressMesh = ui.theAssets().theModel3DRepository().ghostDressMesh();
         dressMeshViews = new MeshView[] {
                 new MeshView(ghostDressMesh),
@@ -418,6 +453,39 @@ public class GameLevel3D implements Destroyable {
                 new MeshView(ghostEyeballsMesh),
                 new MeshView(ghostEyeballsMesh),
         };
+    }
+
+    private void destroyGhostMeshViews() {
+        if (dressMeshViews != null) {
+            for (MeshView meshView : dressMeshViews) {
+                meshView.setMesh(null);
+                meshView.materialProperty().unbind();
+                meshView.setMaterial(null);
+            }
+            dressMeshViews = null;
+            Logger.info("Cleared dress mesh views");
+        }
+        if (pupilsMeshViews != null) {
+            for (MeshView meshView : pupilsMeshViews) {
+                meshView.setMesh(null);
+                meshView.materialProperty().unbind();
+                meshView.setMaterial(null);
+            }
+            pupilsMeshViews = null;
+            Logger.info("Cleared pupils mesh views");
+        }
+        if (eyesMeshViews != null) {
+            for (MeshView meshView : eyesMeshViews) {
+                meshView.setMesh(null);
+                meshView.materialProperty().unbind();
+                meshView.setMaterial(null);
+            }
+            eyesMeshViews = null;
+            Logger.info("Cleared eyes mesh views");
+        }
+    }
+
+    private void createGhosts3D() {
         ghosts3D = gameLevel.ghosts().map(ghost -> {
             var ghostColoring = new GhostColoring(
                 ui.theConfiguration().getAssetNS("ghost.%d.color.normal.dress".formatted(ghost.personality())),
@@ -640,6 +708,7 @@ public class GameLevel3D implements Destroyable {
     }
 
     private void createPellets3D() {
+        pelletMesh = ui.theAssets().theModel3DRepository().pelletMesh();
         float radius = ui.thePrefs().getFloat("3d.pellet.radius");
         var protoMeshView = new MeshView(pelletMesh);
         Bounds bounds = protoMeshView.getBoundsInLocal();
@@ -774,32 +843,7 @@ public class GameLevel3D implements Destroyable {
         ui.property3DWallHeight().removeListener(this::handleWallHeightChange);
         Logger.info("Removed 'wall height' listener");
 
-        if (wallBaseMaterial != null) {
-            wallBaseMaterial.diffuseColorProperty().unbind();
-            wallBaseMaterial.specularColorProperty().unbind();
-            wallBaseMaterial = null;
-        }
-        if (wallTopMaterial != null) {
-            wallTopMaterial.diffuseColorProperty().unbind();
-            wallTopMaterial.specularColorProperty().unbind();
-            wallTopMaterial = null;
-        }
-        if (cornerBaseMaterial != null) {
-            cornerBaseMaterial.diffuseColorProperty().unbind();
-            cornerBaseMaterial.specularColorProperty().unbind();
-            cornerBaseMaterial = null;
-        }
-        if (cornerTopMaterial != null) {
-            cornerTopMaterial.diffuseColorProperty().unbind();
-            cornerTopMaterial.specularColorProperty().unbind();
-            cornerTopMaterial = null;
-        }
-        if (pelletMaterial != null) {
-            pelletMaterial.diffuseColorProperty().unbind();
-            pelletMaterial.specularColorProperty().unbind();
-            pelletMaterial = null;
-        }
-        Logger.info("Unbound and cleared material references");
+        destroyMazeMaterials();
 
         livesCountProperty.unbind();
         houseOpenProperty.unbind();
@@ -807,37 +851,6 @@ public class GameLevel3D implements Destroyable {
         houseBaseHeightProperty.unbind();
         houseLightOnProperty.unbind();
         wallOpacityProperty.unbind();
-
-        if (dressMeshViews != null) {
-            for (MeshView meshView : dressMeshViews) {
-                meshView.setMesh(null);
-                meshView.materialProperty().unbind();
-                meshView.setMaterial(null);
-            }
-            dressMeshViews = null;
-            Logger.info("Cleared dress mesh views");
-        }
-        if (pupilsMeshViews != null) {
-            for (MeshView meshView : pupilsMeshViews) {
-                meshView.setMesh(null);
-                meshView.materialProperty().unbind();
-                meshView.setMaterial(null);
-            }
-            pupilsMeshViews = null;
-            Logger.info("Cleared pupils mesh views");
-        }
-        if (eyesMeshViews != null) {
-            for (MeshView meshView : eyesMeshViews) {
-                meshView.setMesh(null);
-                meshView.materialProperty().unbind();
-                meshView.setMaterial(null);
-            }
-            eyesMeshViews = null;
-            Logger.info("Cleared eyes mesh views");
-        }
-        if (pelletMesh != null) {
-            pelletMesh = null;
-        }
 
         root.getChildren().clear();
         Logger.info("Removed all nodes under game level");
@@ -913,6 +926,8 @@ public class GameLevel3D implements Destroyable {
             ghosts3D = null;
             Logger.info("Destroyed and cleared 3D ghosts");
         }
+        destroyGhostMeshViews();
+
         if (bonus3D != null) {
             bonus3D.destroy();
             bonus3D = null;
