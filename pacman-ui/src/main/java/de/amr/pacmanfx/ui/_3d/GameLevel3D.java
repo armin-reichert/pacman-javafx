@@ -18,6 +18,7 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
+import de.amr.pacmanfx.uilib.animation.Explosion;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.*;
@@ -552,7 +553,6 @@ public class GameLevel3D implements Destroyable {
         }
     }
 
-
     public void onStartingGame() {
         energizers3D().forEach(Energizer3D::noPumping);
     }
@@ -669,17 +669,21 @@ public class GameLevel3D implements Destroyable {
         float maxScaling     = ui.thePrefs().getFloat("3d.energizer.scaling.max");
         gameLevel.tilesContainingFood().filter(gameLevel::isEnergizerPosition).forEach(tile -> {
             Energizer3D energizer3D = createEnergizer3D(tile, radius, floorThickness, minScaling, maxScaling);
-            /*
-
+            //TODO this still has a memory leak
             var explosion = new Explosion(animationManager, energizer3D.shape3D(), particlesGroupContainer, pelletMaterial,
-                particle -> particle.getTranslateZ() >= -1
-                    && isInsideWorldMap(gameLevel.worldMap(), particle.getTranslateX(), particle.getTranslateY()));
+                particle -> particle.getTranslateZ() >= -1 && insideWorldMapArea(particle));
             energizer3D.setEatenAnimation(explosion);
 
-             */
             energizers3D.add(energizer3D);
         });
         energizers3D.trimToSize();
+    }
+
+    private boolean insideWorldMapArea(Explosion.Particle p) {
+        WorldMap worldMap = gameLevel.worldMap();
+        int width = worldMap.numCols() * TS;
+        int height = worldMap.numRows() * TS;
+        return 0 <= p.getTranslateX() && p.getTranslateX() < width && 0 <= p.getTranslateY() && p.getTranslateY() < height;
     }
 
     private Energizer3D createEnergizer3D(Vector2i tile, float energizerRadius, float floorThickness, float minScaling, float maxScaling) {
