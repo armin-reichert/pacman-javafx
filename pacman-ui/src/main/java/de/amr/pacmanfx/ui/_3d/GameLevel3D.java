@@ -18,7 +18,6 @@ import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.animation.SquirtingAnimation;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.*;
 import javafx.animation.Animation;
@@ -27,7 +26,6 @@ import javafx.animation.Transition;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Bounds;
-import javafx.geometry.Point3D;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -457,10 +455,15 @@ public class GameLevel3D implements Destroyable {
         }
     }
 
+
+    public void onStartingGame() {
+        energizers3D().forEach(Energizer3D::noPumping);
+    }
+
     public void onHuntingStart() {
         pac3D.init();
         ghosts3D.forEach(ghost3D -> ghost3D.init(gameLevel));
-        energizers3D().forEach(energizer3D -> energizer3D.pumpingAnimation().playFromStart());
+        energizers3D().forEach(Energizer3D::pump);
         livesCounter3D().map(LivesCounter3D::lookingAroundAnimation).ifPresent(ManagedAnimation::playFromStart);
     }
 
@@ -499,6 +502,7 @@ public class GameLevel3D implements Destroyable {
         animationManager.stopAllAnimations();
         // hide 3d food explicitly because level might have been completed using cheat!
         pellets3D.forEach(pellet3D -> pellet3D.shape3D().setVisible(false));
+        energizers3D.forEach(Energizer3D::noPumping);
         energizers3D.forEach(energizer3D -> energizer3D.shape3D().setVisible(false));
         house3D.setDoorVisible(false);
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
@@ -568,7 +572,8 @@ public class GameLevel3D implements Destroyable {
         float maxScaling     = ui.thePrefs().getFloat("3d.energizer.scaling.max");
         gameLevel.tilesContainingFood().filter(gameLevel::isEnergizerPosition).forEach(tile -> {
             Energizer3D energizer3D = createEnergizer3D(tile, radius, floorThickness, minScaling, maxScaling);
-            var explosion = new EnergizerHideAndExplode(energizer3D);
+            var explosion = energizer3D.new Explosion(animationManager, root, particle -> particle.getTranslateZ() >= -1
+                    && isInsideWorldMap(gameLevel.worldMap(), particle.getTranslateX(), particle.getTranslateY()));
             energizer3D.setEatenAnimation(explosion);
             energizers3D.add(energizer3D);
         });
@@ -586,40 +591,6 @@ public class GameLevel3D implements Destroyable {
         energizer3D.shape3D().setTranslateY(y);
         energizer3D.shape3D().setTranslateZ(z);
         return energizer3D;
-    }
-
-    private class EnergizerHideAndExplode extends ManagedAnimation {
-        private Energizer3D energizer3D;
-
-        public EnergizerHideAndExplode(Energizer3D energizer3D) {
-            super(GameLevel3D.this.animationManager, "Energizer_HideAndExplode");
-            this.energizer3D = energizer3D;
-        }
-
-        @Override
-        protected Animation createAnimation() {
-            Point3D location = new Point3D(
-                energizer3D.shape3D().getTranslateX(),
-                energizer3D.shape3D().getTranslateY(),
-                energizer3D.shape3D().getTranslateZ());
-
-            return new SquirtingAnimation(root, Duration.seconds(2), 23, 69, pelletMaterial, location) {
-                @Override
-                public boolean particleShouldVanish(Particle particle) {
-                    return particle.getTranslateZ() >= -1
-                        && isInsideWorldMap(gameLevel.worldMap(), particle.getTranslateX(), particle.getTranslateY());
-                }
-            };
-        }
-
-        @Override
-        public void destroy() {
-            super.destroy();
-            if (animation instanceof SquirtingAnimation squirtingAnimation) {
-                squirtingAnimation.destroy();
-            }
-            energizer3D = null;
-        }
     }
 
     public void showAnimatedMessage(String text, float displaySeconds, double centerX, double y) {

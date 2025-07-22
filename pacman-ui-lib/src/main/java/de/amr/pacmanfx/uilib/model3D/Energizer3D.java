@@ -7,12 +7,17 @@ package de.amr.pacmanfx.uilib.model3D;
 import de.amr.pacmanfx.lib.Destroyable;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
+import de.amr.pacmanfx.uilib.animation.SquirtingAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.ScaleTransition;
+import javafx.geometry.Point3D;
+import javafx.scene.Group;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
+
+import java.util.function.Predicate;
 
 import static de.amr.pacmanfx.Validations.requireNonNegative;
 import static java.util.Objects.requireNonNull;
@@ -21,6 +26,38 @@ import static java.util.Objects.requireNonNull;
  * 3D energizer pellet.
  */
 public class Energizer3D implements Eatable3D, Destroyable {
+
+    public class Explosion extends ManagedAnimation {
+
+        private static final byte MIN_PARTICLE_COUNT = 23;
+        private static final byte MAX_PARTICLE_COUNT = 69;
+        private static final Duration DURATION = Duration.seconds(2);
+
+        private final Group parentGroup;
+        private final Predicate<SquirtingAnimation.Particle> particleShouldVanish;
+
+        public Explosion(AnimationManager animationManager, Group parentGroup, Predicate<SquirtingAnimation.Particle> particleShouldVanish) {
+            super(animationManager, "Energizer_Explosion");
+            this.parentGroup = parentGroup;
+            this.particleShouldVanish = particleShouldVanish;
+        }
+
+        @Override
+        protected Animation createAnimation() {
+            return new SquirtingAnimation(parentGroup, DURATION, MIN_PARTICLE_COUNT, MAX_PARTICLE_COUNT, sphere.getMaterial(), location()) {
+                @Override
+                public boolean particleShouldVanish(Particle p) { return particleShouldVanish.test(p); }
+            };
+        }
+
+        @Override
+        public void destroy() {
+            super.destroy();
+            if (animation instanceof SquirtingAnimation squirtingAnimation) {
+                squirtingAnimation.destroy();
+            }
+        }
+    }
 
     private final Sphere sphere;
 
@@ -52,10 +89,6 @@ public class Energizer3D implements Eatable3D, Destroyable {
         };
     }
 
-    public void setEatenAnimation(ManagedAnimation animation) {
-        eatenAnimation = requireNonNull(animation);
-    }
-
     @Override
     public void destroy() {
         if (pumpingAnimation != null) {
@@ -70,8 +103,20 @@ public class Energizer3D implements Eatable3D, Destroyable {
         }
     }
 
-    public ManagedAnimation pumpingAnimation() {
-        return pumpingAnimation;
+    public void pump() {
+        pumpingAnimation.playOrContinue();
+    }
+
+    public void noPumping() {
+        pumpingAnimation.pause();
+    }
+
+    public void setEatenAnimation(ManagedAnimation animation) {
+        eatenAnimation = requireNonNull(animation);
+    }
+
+    public Point3D location() {
+        return new Point3D(sphere.getTranslateX(), sphere.getTranslateY(), sphere.getTranslateZ());
     }
 
     @Override

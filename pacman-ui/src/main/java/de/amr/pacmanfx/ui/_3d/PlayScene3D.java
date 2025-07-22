@@ -57,8 +57,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class PlayScene3D implements GameScene {
 
-    private static final Color SUBSCENE_FILL_DARK = Color.BLACK;
-    private static final Color SUBSCENE_FILL_BRIGHT = Color.TRANSPARENT;
+    private static final Color SUB_SCENE_FILL_DARK = Color.BLACK;
+    private static final Color SUB_SCENE_FILL_BRIGHT = Color.TRANSPARENT;
 
     private final Map<PerspectiveID, Perspective> perspectiveMap = new EnumMap<>(PerspectiveID.class);
 
@@ -92,7 +92,7 @@ public class PlayScene3D implements GameScene {
         // initial size is irrelevant because size gets bound to parent scene size later
         subScene = new SubScene(root, 88, 88, true, SceneAntialiasing.BALANCED);
         subScene.setCamera(camera);
-        subScene.setFill(SUBSCENE_FILL_DARK);
+        subScene.setFill(SUB_SCENE_FILL_DARK);
 
         // The score is always displayed in full view, regardless which perspective is used
         scores3D = new Scores3D(
@@ -245,7 +245,7 @@ public class PlayScene3D implements GameScene {
     }
 
     /**
-     * Overridden by Tengen play scene 3D to use keys corresponding to "Joypad" buttons
+     * Overridden by Tengen Ms. Pac-Man play scene 3D to use keys representing "Joypad" buttons.
      */
     protected void setPlayerSteeringActionBindings() {
         actionBindings.bind(ACTION_STEER_UP, GLOBAL_ACTION_BINDINGS);
@@ -301,6 +301,7 @@ public class PlayScene3D implements GameScene {
             case GHOST_DYING      -> gameLevel3D.onGhostDying();
             case LEVEL_COMPLETE   -> gameLevel3D.onLevelComplete(state, perspectiveIDProperty);
             case GAME_OVER        -> gameLevel3D.onGameOver(state);
+            case STARTING_GAME    -> gameLevel3D.onStartingGame();
             case TESTING_LEVELS_SHORT, TESTING_LEVELS_MEDIUM -> {
                 replaceGameLevel3D();
                 showLevelTestMessage();
@@ -336,7 +337,7 @@ public class PlayScene3D implements GameScene {
             case TESTING_LEVELS_SHORT, TESTING_LEVELS_MEDIUM -> {
                 replaceGameLevel3D(); //TODO check when to destroy previous level
                 gameLevel3D.livesCounter3D().map(LivesCounter3D::lookingAroundAnimation).ifPresent(ManagedAnimation::playFromStart);
-                gameLevel3D.energizers3D().forEach(energizer3D -> energizer3D.pumpingAnimation().playFromStart());
+                gameLevel3D.energizers3D().forEach(Energizer3D::pump);
                 showLevelTestMessage();
             }
             default -> Logger.error("Unexpected game state '{}' on level start", gameContext().theGameState());
@@ -365,7 +366,7 @@ public class PlayScene3D implements GameScene {
         if (isOneOf(gameContext().theGameState(), GameState.HUNTING, GameState.GHOST_DYING)) { //TODO check this
             gameLevel3D.energizers3D()
                 .filter(energizer3D -> energizer3D.shape3D().isVisible())
-                .forEach(energizer3D -> energizer3D.pumpingAnimation().playFromStart());
+                .forEach(Energizer3D::pump);
         }
 
         if (gameContext().theGameState() == GameState.HUNTING) {
@@ -581,7 +582,7 @@ public class PlayScene3D implements GameScene {
             }
             @Override
             protected void interpolate(double t) {
-                subScene.setFill(SUBSCENE_FILL_DARK.interpolate(SUBSCENE_FILL_BRIGHT, t));
+                subScene.setFill(SUB_SCENE_FILL_DARK.interpolate(SUB_SCENE_FILL_BRIGHT, t));
             }
         }.play();
     }
