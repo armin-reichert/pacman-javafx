@@ -116,7 +116,7 @@ public class GameLevel3D implements Destroyable {
     private Bonus3D bonus3D;
     private ArrayList<Pellet3D> pellets3D = new ArrayList<>();
     private ArrayList<Energizer3D> energizers3D = new ArrayList<>();
-    private Group particlesGroupContainer;
+    private final Group particlesGroupContainer = new Group();
     private MessageView messageView;
 
     private int wall3DCount;
@@ -294,8 +294,6 @@ public class GameLevel3D implements Destroyable {
         createWorldMapColorScheme();
         createMazeMaterials();
         createGhostMeshView();
-
-        particlesGroupContainer = new Group();
 
         createAmbientLight();
         createLevelCounter3D();
@@ -868,11 +866,8 @@ public class GameLevel3D implements Destroyable {
             energizers3D = null;
             Logger.info("Destroyed 3D energizers");
         }
-        if (particlesGroupContainer != null) {
-            particlesGroupContainer.getChildren().clear();
-            particlesGroupContainer = null;
-            Logger.info("Removed all particles");
-        }
+        particlesGroupContainer.getChildren().clear();
+        Logger.info("Removed all particles");
         if (floor3D != null) {
             floor3D.destroy();
             floor3D = null;
