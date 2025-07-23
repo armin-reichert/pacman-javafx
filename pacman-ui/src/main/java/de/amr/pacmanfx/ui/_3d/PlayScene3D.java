@@ -124,17 +124,6 @@ public class PlayScene3D implements GameScene {
     }
 
     @Override
-    public void dispose() {
-        actionBindings.removeFromKeyboard();
-        perspectiveIDProperty().unbind();
-        if (gameLevel3D != null) {
-            gameLevel3D.dispose();
-            gameLevel3D = null;
-            Logger.info("GameLevel3D has been destroyed");
-        }
-    }
-
-    @Override
     public void handleKeyboardInput() {
         actionBindings.runMatchingAction(ui);
     }
