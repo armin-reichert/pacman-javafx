@@ -41,10 +41,7 @@ import javafx.scene.transform.Scale;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -401,7 +398,7 @@ public class GameLevel3D implements Destroyable {
     }
 
     private void createFloor3D() {
-        WorldMap worldMap = ui.theGameContext().theGameLevel().worldMap();
+        WorldMap worldMap = gameLevel.worldMap();
         floor3D = new Floor3D(
             worldMap.numCols() * TS,
             worldMap.numRows() * TS,
@@ -536,7 +533,7 @@ public class GameLevel3D implements Destroyable {
     }
 
     private void createLevelCounter3D() {
-        WorldMap worldMap = ui.theGameContext().theGameLevel().worldMap();
+        WorldMap worldMap = gameLevel.worldMap();
         levelCounter3D = new LevelCounter3D(ui, animationManager, ui.theGameContext().theGame().theHUD().theLevelCounter());
         levelCounter3D.setTranslateX(TS * (worldMap.numCols() - 2));
         levelCounter3D.setTranslateY(2 * TS);
@@ -575,7 +572,7 @@ public class GameLevel3D implements Destroyable {
     }
 
     public PacBase3D pac3D() { return pac3D; }
-    public Stream<MutatingGhost3D> ghosts3D() { return ghosts3D.stream(); }
+    public List<MutatingGhost3D> ghosts3D() { return Collections.unmodifiableList(ghosts3D); }
     public MutatingGhost3D ghost3D(byte id) { return ghosts3D.get(id); }
     public Optional<Bonus3D> bonus3D() { return Optional.ofNullable(bonus3D); }
     public Optional<LevelCounter3D> levelCounter3D() { return Optional.ofNullable(levelCounter3D); }
