@@ -556,7 +556,6 @@ public class GameLevel3D implements Disposable {
     public List<MutatingGhost3D> ghosts3D() { return Collections.unmodifiableList(ghosts3D); }
     public MutatingGhost3D ghost3D(byte id) { return ghosts3D.get(id); }
     public Optional<Bonus3D> bonus3D() { return Optional.ofNullable(bonus3D); }
-    public Optional<LevelCounter3D> levelCounter3D() { return Optional.ofNullable(levelCounter3D); }
     public Optional<LivesCounter3D> livesCounter3D() { return Optional.ofNullable(livesCounter3D); }
     public Stream<Pellet3D> pellets3D() { return pellets3D != null ? pellets3D.stream() : Stream.empty(); }
     public Stream<Energizer3D> energizers3D() { return energizers3D != null ? energizers3D.stream() : Stream.empty(); }
@@ -782,6 +781,12 @@ public class GameLevel3D implements Disposable {
         bonus3D.showEdible();
     }
 
+    public void updateLevelCounter3D() {
+        if (levelCounter3D != null) {
+            levelCounter3D.update(ui, ui.theGameContext().theGame().theHUD().theLevelCounter());
+        }
+    }
+
     private void handleHouseOpenChange(ObservableValue<? extends Boolean> obs,  boolean wasOpen, boolean isOpen) {
         if (isOpen && house3D != null) {
             house3D.doorOpenCloseAnimation().playFromStart();
@@ -798,21 +803,10 @@ public class GameLevel3D implements Disposable {
 
     // still work in progress...
 
-    private boolean disposed;
-
-    public boolean isDisposed() {
-        return disposed;
-    }
-
     /**
      * Attempt to help objects getting garbage-collected.
      */
     public void dispose() {
-        if (disposed) {
-            Logger.warn("Game level has already been disposed");
-            return;
-        }
-        disposed = true;
         Logger.info("Disposing game level 3D, clearing resources...");
 
         animationManager.stopAllAnimations();

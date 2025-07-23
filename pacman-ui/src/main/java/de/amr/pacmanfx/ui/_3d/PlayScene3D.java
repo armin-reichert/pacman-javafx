@@ -253,10 +253,10 @@ public class PlayScene3D implements GameScene {
     public void end() {
         ui.theSound().stopAll();
         if (gameLevel3D != null) {
-            gameLevel3DRoot.getChildren().clear();
             gameLevel3D.dispose();
             gameLevel3D = null;
         }
+        gameLevel3DRoot.getChildren().clear();
     }
 
     @Override
@@ -335,7 +335,7 @@ public class PlayScene3D implements GameScene {
             }
             default -> Logger.error("Unexpected game state '{}' on level start", gameContext().theGameState());
         }
-        gameLevel3D.levelCounter3D().ifPresent(levelCounter3D -> levelCounter3D.update(ui, gameContext().theGame().theHUD().theLevelCounter()));
+        gameLevel3D.updateLevelCounter3D();
         initPerspective();
         setActionBindings();
         fadeInSubScene();
@@ -369,7 +369,7 @@ public class PlayScene3D implements GameScene {
             }
             gameLevel3D.livesCounter3D().map(LivesCounter3D::lookingAroundAnimation).ifPresent(ManagedAnimation::playFromStart);
         }
-        gameLevel3D.levelCounter3D().ifPresent(levelCounter3D -> levelCounter3D.update(ui, gameContext().theGame().theHUD().theLevelCounter()));
+        gameLevel3D.updateLevelCounter3D();
         updateScores();
         setActionBindings();
         fadeInSubScene();
@@ -407,7 +407,7 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onGameContinued(GameEvent e) {
-        if (gameLevel3D != null && !gameLevel3D.isDisposed()) {
+        if (gameLevel3D != null) {
             if (gameContext().theGameLevel().house().isEmpty()) {
                 Logger.error("No house found in this game level! WTF?");
             } else {
