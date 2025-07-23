@@ -60,19 +60,14 @@ public class GameLevel3D implements Destroyable {
 
     private final DoubleProperty  houseBaseHeightProperty = new SimpleDoubleProperty();
     private final BooleanProperty houseLightOnProperty = new SimpleBooleanProperty(false);
-
-    private final BooleanProperty houseOpenProperty = new SimpleBooleanProperty() {
-        @Override
-        protected void invalidated() {
-            if (get() && house3D != null) {
-                house3D.doorOpenCloseAnimation().playFromStart();
-            }
-        }
-    };
-
+    private final BooleanProperty houseOpenProperty = new SimpleBooleanProperty();
     private final IntegerProperty livesCountProperty = new SimpleIntegerProperty(0);
     private final DoubleProperty  obstacleBaseHeightProperty = new SimpleDoubleProperty();
     private final DoubleProperty  wallOpacityProperty = new SimpleDoubleProperty(1);
+
+    private WeakChangeListener<Number>   handleWallHeightChange = new WeakChangeListener<Number>(this::handleWallHeightChange);
+    private WeakChangeListener<DrawMode> handleDrawModeChange   = new WeakChangeListener<DrawMode>(this::handleDrawModeChange);
+    private WeakChangeListener<Boolean>  handleHouseOpenChange  = new WeakChangeListener<Boolean>(this::handleHouseOpenChange);
 
     protected final GameUI ui;
     protected final Group root;
@@ -277,8 +272,9 @@ public class GameLevel3D implements Destroyable {
         obstacleBaseHeightProperty.set(ui.thePrefs().getFloat("3d.obstacle.base_height"));
         houseBaseHeightProperty.set(ui.thePrefs().getFloat("3d.house.base_height"));
 
-        ui.property3DWallHeight().addListener(new WeakChangeListener<Number>(this::handleWallHeightChange));
-        ui.property3DDrawMode().addListener(new WeakChangeListener<DrawMode>(this::handleDrawModeChange));
+        ui.property3DWallHeight().addListener(handleWallHeightChange);
+        ui.property3DDrawMode().addListener(handleDrawModeChange);
+        houseOpenProperty.addListener(handleHouseOpenChange);
 
         root.setMouseTransparent(true); // this increases performance, they say...
 
@@ -786,6 +782,12 @@ public class GameLevel3D implements Destroyable {
         bonus3D.showEdible();
     }
 
+    private void handleHouseOpenChange(ObservableValue<? extends Boolean> obs,  boolean wasOpen, boolean isOpen) {
+        if (isOpen && house3D != null) {
+            house3D.doorOpenCloseAnimation().playFromStart();
+        }
+    }
+
     private void handleDrawModeChange(ObservableValue<? extends DrawMode> obs, DrawMode oldDrawMode, DrawMode newDrawMode) {
         setDrawModeForAllShapesExcept(root, Pellet3D::isPellet3D, newDrawMode);
     }
@@ -821,11 +823,17 @@ public class GameLevel3D implements Destroyable {
         Logger.info("Destroyed and removed all managed animations");
 
         //TODO avoid access to global UI here?
-        ui.property3DDrawMode().removeListener(this::handleDrawModeChange);
+        ui.property3DDrawMode().removeListener(handleDrawModeChange);
+        handleDrawModeChange = null;
         Logger.info("Removed 'draw mode' listener");
 
-        ui.property3DWallHeight().removeListener(this::handleWallHeightChange);
+        ui.property3DWallHeight().removeListener(handleWallHeightChange);
+        handleWallHeightChange = null;
         Logger.info("Removed 'wall height' listener");
+
+        houseOpenProperty.removeListener(handleHouseOpenChange);
+        handleHouseOpenChange = null;
+        Logger.info("Removed 'house open' listener");
 
         releaseMaterials();
 
