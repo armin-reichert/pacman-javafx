@@ -13,6 +13,7 @@ import javafx.animation.Transition;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
@@ -20,6 +21,8 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.DrawMode;
+import javafx.scene.shape.Shape3D;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -30,6 +33,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -324,5 +328,13 @@ public interface Ufx {
             "pellet", new ColorChange(Color.web(sourceScheme.pelletColorRGB()), Color.web(targetScheme.pelletColorRGB()))
         );
         return exchangeColors(colorChanges, image);
+    }
+
+    static void setDrawModeForAllShapesExcept(Node root, Predicate<Node> exclusionFilter, DrawMode drawMode) {
+        root.lookupAll("*").stream()
+            .filter(exclusionFilter.negate())
+            .filter(Shape3D.class::isInstance)
+            .map(Shape3D.class::cast)
+            .forEach(shape3D -> shape3D.setDrawMode(drawMode));
     }
 }

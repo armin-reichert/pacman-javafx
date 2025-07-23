@@ -37,14 +37,12 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
-import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.HTS;
@@ -58,14 +56,6 @@ import static java.util.Objects.requireNonNull;
  * 3D representation of game level.
  */
 public class GameLevel3D implements Destroyable {
-
-    private static void setDrawModeForAllShapesExcept(Node root, Predicate<Node> exclusionFilter, DrawMode drawMode) {
-        root.lookupAll("*").stream()
-            .filter(exclusionFilter.negate())
-            .filter(Shape3D.class::isInstance)
-            .map(Shape3D.class::cast)
-            .forEach(shape3D -> shape3D.setDrawMode(drawMode));
-    }
 
     private final DoubleProperty  houseBaseHeightProperty = new SimpleDoubleProperty();
     private final BooleanProperty houseLightOnProperty = new SimpleBooleanProperty(false);
