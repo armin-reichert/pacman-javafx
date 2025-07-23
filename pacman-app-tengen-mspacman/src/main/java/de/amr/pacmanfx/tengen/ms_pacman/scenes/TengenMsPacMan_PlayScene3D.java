@@ -5,21 +5,14 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
 import de.amr.pacmanfx.lib.nes.NES_Palette;
-import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
-import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui._2d.GameRenderer;
 import de.amr.pacmanfx.ui._3d.GameLevel3D;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.image.ImageView;
+import javafx.scene.Group;
 import javafx.scene.paint.Color;
 
-import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.GameUI.GLOBAL_ACTION_BINDINGS;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 
@@ -33,6 +26,11 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     public TengenMsPacMan_PlayScene3D(GameUI ui) {
         super(ui);
+    }
+
+    @Override
+    protected GameLevel3D createGameLevel3D(Group root) {
+        return new TengenMsPacMan_GameLevel3D(ui, root);
     }
 
     @Override
@@ -64,11 +62,6 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         actionBindings.bind(ACTION_STEER_DOWN,  config.TENGEN_MS_PACMAN_ACTION_BINDINGS);
         actionBindings.bind(ACTION_STEER_LEFT,  config.TENGEN_MS_PACMAN_ACTION_BINDINGS);
         actionBindings.bind(ACTION_STEER_RIGHT, config.TENGEN_MS_PACMAN_ACTION_BINDINGS);
-    }
-
-    @Override
-    protected GameLevel3D createGameLevel3D() {
-        return new TengenMsPacMan_GameLevel3D(ui, gameLevel3DRoot);
     }
 
     @Override
