@@ -15,12 +15,28 @@ import static java.util.Objects.requireNonNull;
 
 public class ActionBindingMap {
 
-    private static final ActionBindingMap EMPTY_MAP = new ActionBindingMap();
+    public static final ActionBindingMap EMPTY_ACTION_BINDING_MAP = new ActionBindingMap() {
+        @Override
+        public boolean isEmpty() { return true; }
 
-    public static ActionBindingMap empty() { return EMPTY_MAP; }
+        @Override
+        public Set<Map.Entry<KeyCombination, GameAction>> entrySet() { return  Set.of(); }
 
-    private final Keyboard keyboard;
-    private final Map<KeyCombination, GameAction> bindings = new HashMap<>();
+        @Override
+        public void updateKeyboard() {}
+
+        @Override
+        public void removeFromKeyboard() {}
+
+        @Override
+        public void bind(GameAction gameAction, Map<GameAction, Set<KeyCombination>> bindings) {}
+
+        @Override
+        public void bind(GameAction action, KeyCombination combination) {}
+
+        @Override
+        public Optional<GameAction> matchingAction() { return Optional.empty(); }
+    };
 
     public static Map.Entry<GameAction, Set<KeyCombination>> createActionBinding(GameAction action, KeyCombination... combinations) {
         requireNonNull(combinations);
@@ -36,13 +52,14 @@ public class ActionBindingMap {
         return entry(action, combinationSet);
     }
 
-    private ActionBindingMap() {
-        keyboard = null;
-    }
+    private Keyboard keyboard;
+    private Map<KeyCombination, GameAction> bindings;
+
+    private ActionBindingMap() {}
 
     public ActionBindingMap(Keyboard keyboard) {
         this.keyboard = requireNonNull(keyboard);
-    }
+        bindings = new HashMap<>();    }
 
     public boolean isEmpty() {
         return bindings.isEmpty();
@@ -53,7 +70,6 @@ public class ActionBindingMap {
     }
 
     public void updateKeyboard() {
-        if (keyboard == null) return;
         for (KeyCombination combination : bindings.keySet()) {
             keyboard.setBinding(combination, this);
         }
@@ -65,7 +81,6 @@ public class ActionBindingMap {
     }
 
     public void removeFromKeyboard() {
-        if (keyboard == null) return;
         for (KeyCombination combination : bindings.keySet()) {
             keyboard.removeBinding(combination, this);
         }
@@ -94,7 +109,6 @@ public class ActionBindingMap {
     }
 
     public Optional<GameAction> matchingAction() {
-        if (keyboard == null) return Optional.empty();
         return bindings.keySet().stream()
             .filter(keyboard::isMatching)
             .map(bindings::get)
