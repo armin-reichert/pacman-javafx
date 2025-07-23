@@ -120,14 +120,11 @@ public class GameLevel3D implements Destroyable {
 
         @Override
         protected Animation createAnimation() {
-            var totalDuration = Duration.seconds(1);
-            var houseDisappears = new Timeline(
-                new KeyFrame(totalDuration.multiply(0.33), new KeyValue(houseBaseHeightProperty, 0, Interpolator.EASE_IN)));
-            var obstaclesDisappear = new Timeline(
-                new KeyFrame(totalDuration.multiply(0.33), new KeyValue(obstacleBaseHeightProperty, 0, Interpolator.EASE_IN)));
-            var animation = new SequentialTransition(houseDisappears, obstaclesDisappear);
-            animation.setOnFinished(e -> maze3D.setVisible(false));
-            return animation;
+            return new Timeline(
+                new KeyFrame(Duration.seconds(0.5), new KeyValue(houseBaseHeightProperty, 0, Interpolator.EASE_IN)),
+                new KeyFrame(Duration.seconds(1.5), new KeyValue(obstacleBaseHeightProperty, 0, Interpolator.EASE_IN)),
+                new KeyFrame(Duration.seconds(2.5), e -> maze3D.setVisible(false))
+            );
         }
     }
 
