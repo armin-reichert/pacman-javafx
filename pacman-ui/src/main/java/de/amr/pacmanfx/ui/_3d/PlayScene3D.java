@@ -491,11 +491,13 @@ public class PlayScene3D implements GameScene {
     }
 
     protected void replaceGameLevel3D() {
-        Logger.info("Replacing game level 3D");
         if (gameLevel3D != null) {
+            Logger.info("Replacing game level 3D");
             gameLevel3DRoot.getChildren().clear();
             gameLevel3D.destroy();
             Logger.info("Destroyed old game level 3D");
+        } else {
+            Logger.info("Creating game level 3D");
         }
         gameLevel3D = createGameLevel3D(gameLevel3DRoot);
         Logger.info("Created new game level 3D");

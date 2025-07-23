@@ -86,7 +86,7 @@ public class GameLevel3D implements Destroyable {
     protected final Group root;
 
     protected final GameLevel gameLevel;
-    private WorldMapColorScheme colorScheme;
+    protected WorldMapColorScheme colorScheme;
 
     private final AnimationManager animationManager = new AnimationManager();
     private ManagedAnimation wallColorFlashingAnimation;
@@ -97,8 +97,6 @@ public class GameLevel3D implements Destroyable {
     private MeshView[] pupilsMeshViews;
     private MeshView[] eyesMeshViews;
 
-    private Mesh pelletMesh;
-
     private Node[] livesCounterShapes;
 
     private PhongMaterial wallBaseMaterial;
@@ -108,9 +106,8 @@ public class GameLevel3D implements Destroyable {
     private PhongMaterial pelletMaterial;
 
     private AmbientLight ambientLight;
-    private Group mazeGroup = new Group();
-    private Group particlesGroupContainer = new Group();
-    private Group maze3D = new Group();
+    private Group mazeGroup;
+    private Group maze3D;
     private Floor3D floor3D;
     private ArcadeHouse3D house3D;
     private LevelCounter3D levelCounter3D;
@@ -120,6 +117,7 @@ public class GameLevel3D implements Destroyable {
     private Bonus3D bonus3D;
     private ArrayList<Pellet3D> pellets3D = new ArrayList<>();
     private ArrayList<Energizer3D> energizers3D = new ArrayList<>();
+    private Group particlesGroupContainer;
     private MessageView messageView;
 
     private int wall3DCount;
@@ -297,6 +295,9 @@ public class GameLevel3D implements Destroyable {
         createWorldMapColorScheme();
         createMazeMaterials();
         createGhostMeshView();
+
+        mazeGroup = new Group();
+        particlesGroupContainer = new Group();
 
         createAmbientLight();
         createLevelCounter3D();
@@ -549,6 +550,8 @@ public class GameLevel3D implements Destroyable {
     private void createMaze3D() {
         Logger.info("Building 3D maze for map (URL '{}'), color scheme: {}...", gameLevel.worldMap().url(), colorScheme);
 
+        maze3D = new Group();
+
         var r3D = new TerrainRenderer3D();
         r3D.setOnWallCreated(wall3D -> {
             wall3D.bindBaseHeight(obstacleBaseHeightProperty);
@@ -706,7 +709,7 @@ public class GameLevel3D implements Destroyable {
     }
 
     private void createPellets3D() {
-        pelletMesh = ui.theAssets().theModel3DRepository().pelletMesh();
+        Mesh pelletMesh = ui.theAssets().theModel3DRepository().pelletMesh();
         float radius = ui.thePrefs().getFloat("3d.pellet.radius");
         var protoMeshView = new MeshView(pelletMesh);
         Bounds bounds = protoMeshView.getBoundsInLocal();
