@@ -32,6 +32,7 @@ public class Pellet3D implements Eatable3D {
         shape.setCache(true); // TODO does this bring an advantage at all?
     }
 
+    @Override
     public void dispose() {
         if (shape instanceof MeshView meshView) {
             meshView.setMesh(null);
@@ -46,13 +47,10 @@ public class Pellet3D implements Eatable3D {
 
     @Override
     public void onEaten() {
-        // small delay for better visualization
-        pauseSec(0.05, () -> {
-            shape.setVisible(false);
-            if (shape.getParent() instanceof Group group) {
-                group.getChildren().remove(shape);
-            }
-        }).play();
+        // remove after small delay for better visualization
+        if (shape != null && shape.getParent() instanceof Group group) {
+            pauseSec(0.05, () -> group.getChildren().remove(shape)).play();
+        }
     }
 
     @Override
