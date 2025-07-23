@@ -34,6 +34,7 @@ import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Box;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
@@ -98,7 +99,7 @@ public class GameLevel3D implements Destroyable {
 
     private AmbientLight ambientLight;
     private Group maze3D;
-    private Floor3D floor3D;
+    private Box floor3D;
     private ArcadeHouse3D house3D;
     private LevelCounter3D levelCounter3D;
     private LivesCounter3D livesCounter3D;
@@ -282,7 +283,7 @@ public class GameLevel3D implements Destroyable {
         root.setMouseTransparent(true); // this increases performance, they say...
 
         createWorldMapColorScheme();
-        createMazeMaterials();
+        createMaterials();
         createGhostMeshView();
 
         createAmbientLight();
@@ -321,7 +322,7 @@ public class GameLevel3D implements Destroyable {
         return root;
     }
 
-    private void createMazeMaterials() {
+    private void createMaterials() {
         pelletMaterial = new PhongMaterial(colorScheme.pellet());
         pelletMaterial.setSpecularColor(colorScheme.pellet().brighter());
 
@@ -343,7 +344,7 @@ public class GameLevel3D implements Destroyable {
         cornerTopMaterial.specularColorProperty().bind(cornerTopMaterial.diffuseColorProperty().map(Color::brighter));
     }
 
-    private void destroyMazeMaterials() {
+    private void releaseMaterials() {
         if (pelletMaterial != null) {
             pelletMaterial.diffuseColorProperty().unbind();
             pelletMaterial.specularColorProperty().unbind();
@@ -514,12 +515,14 @@ public class GameLevel3D implements Destroyable {
             ++wall3DCount;
         });
 
-        floor3D = new Floor3D(
-            gameLevel.worldMap().numCols() * TS,
-            gameLevel.worldMap().numRows() * TS,
-            ui.thePrefs().getFloat("3d.floor.thickness"),
-            ui.thePrefs().getFloat("3d.floor.padding")
-        );
+        float floorPadding = ui.thePrefs().getFloat("3d.floor.padding");
+        float floorThickness = ui.thePrefs().getFloat("3d.floor.thickness");
+        double floorWidth = gameLevel.worldMap().numCols() * TS + 2 * floorPadding;
+        double floorHeight = gameLevel.worldMap().numRows() * TS;
+        floor3D = new Box(floorWidth, floorHeight, floorThickness);
+        floor3D.translateXProperty().bind(floor3D.widthProperty().divide(2).subtract(floorPadding));
+        floor3D.translateYProperty().bind(floor3D.heightProperty().divide(2));
+        floor3D.translateZProperty().bind(floor3D.depthProperty().divide(2));
         floor3D.materialProperty().bind(ui.property3DFloorColor().map(Ufx::coloredPhongMaterial));
 
         float wallThickness = ui.thePrefs().getFloat("3d.obstacle.wall_thickness");
@@ -824,7 +827,7 @@ public class GameLevel3D implements Destroyable {
         ui.property3DWallHeight().removeListener(this::handleWallHeightChange);
         Logger.info("Removed 'wall height' listener");
 
-        destroyMazeMaterials();
+        releaseMaterials();
 
         livesCountProperty.unbind();
         houseOpenProperty.unbind();
@@ -854,7 +857,10 @@ public class GameLevel3D implements Destroyable {
         particlesGroupContainer.getChildren().clear();
         Logger.info("Removed all particles");
         if (floor3D != null) {
-            floor3D.destroy();
+            floor3D.translateXProperty().unbind();
+            floor3D.translateYProperty().unbind();
+            floor3D.translateZProperty().unbind();
+            floor3D.materialProperty().unbind();
             floor3D = null;
             Logger.info("Unbound and cleared 3D floor");
         }
