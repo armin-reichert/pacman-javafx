@@ -35,6 +35,7 @@ public class LevelCounter3D extends Group implements Destroyable {
     }
 
     public void update(GameUI ui, LevelCounter levelCounter) {
+        getChildren().clear();
         float cubeSize = ui.thePrefs().getFloat("3d.level_counter.symbol_size");
         for (int i = 0; i < levelCounter.symbols().size(); ++i) {
             Image symbolImage = ui.theConfiguration().bonusSymbolImage(levelCounter.symbols().get(i));
