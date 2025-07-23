@@ -22,9 +22,6 @@ import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static de.amr.pacmanfx.Globals.HTS;
 import static java.util.Objects.requireNonNull;
 
@@ -33,8 +30,11 @@ public class LevelCounter3D extends Group implements Destroyable {
     private final AnimationManager animationManager;
     private ManagedAnimation spinningAnimation;
 
-    public LevelCounter3D(GameUI ui, AnimationManager animationManager, LevelCounter levelCounter) {
+    public LevelCounter3D(AnimationManager animationManager) {
         this.animationManager = requireNonNull(animationManager);
+    }
+
+    public void update(GameUI ui, LevelCounter levelCounter) {
         float cubeSize = ui.thePrefs().getFloat("3d.level_counter.symbol_size");
         for (int i = 0; i < levelCounter.symbols().size(); ++i) {
             Image symbolImage = ui.theConfiguration().bonusSymbolImage(levelCounter.symbols().get(i));
@@ -64,17 +64,14 @@ public class LevelCounter3D extends Group implements Destroyable {
                 return cubesAnimation;
             }
         };
-    }
-
-    public ManagedAnimation spinningAnimation() {
-        return spinningAnimation;
+        spinningAnimation.playFromStart();
     }
 
     @Override
     public void destroy() {
         if (spinningAnimation != null) {
-            animationManager.stopAnimation(spinningAnimation);
-            animationManager.destroyAnimation(spinningAnimation);
+            spinningAnimation.stop();
+            spinningAnimation.destroy();
             spinningAnimation = null;
         }
         for (Node child : getChildren()) {

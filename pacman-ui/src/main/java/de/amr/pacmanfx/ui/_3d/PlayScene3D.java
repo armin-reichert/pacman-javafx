@@ -346,6 +346,7 @@ public class PlayScene3D implements GameScene {
             }
             default -> Logger.error("Unexpected game state '{}' on level start", gameContext().theGameState());
         }
+        gameLevel3D.levelCounter3D().ifPresent(levelCounter3D -> levelCounter3D.update(ui, gameContext().theGame().theHUD().theLevelCounter()));
         initPerspective();
         setActionBindings();
         fadeInSubScene();
@@ -379,6 +380,7 @@ public class PlayScene3D implements GameScene {
             }
             gameLevel3D.livesCounter3D().map(LivesCounter3D::lookingAroundAnimation).ifPresent(ManagedAnimation::playFromStart);
         }
+        gameLevel3D.levelCounter3D().ifPresent(levelCounter3D -> levelCounter3D.update(ui, gameContext().theGame().theHUD().theLevelCounter()));
         updateScores();
         setActionBindings();
         fadeInSubScene();
@@ -504,7 +506,6 @@ public class PlayScene3D implements GameScene {
 
         gameLevel3D.pac3D().init();
         gameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(gameContext().theGameLevel()));
-        gameLevel3D.levelCounter3D().map(LevelCounter3D::spinningAnimation).ifPresent(ManagedAnimation::playFromStart);
         Logger.info("Initialized actors of game level 3D");
 
         scores3D.translateXProperty().bind(gameLevel3DRoot.translateXProperty().add(TS));

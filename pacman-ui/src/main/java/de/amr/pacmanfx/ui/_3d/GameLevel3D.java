@@ -500,7 +500,7 @@ public class GameLevel3D implements Destroyable {
 
     private void createLevelCounter3D() {
         WorldMap worldMap = gameLevel.worldMap();
-        levelCounter3D = new LevelCounter3D(ui, animationManager, ui.theGameContext().theGame().theHUD().theLevelCounter());
+        levelCounter3D = new LevelCounter3D(animationManager);
         levelCounter3D.setTranslateX(TS * (worldMap.numCols() - 2));
         levelCounter3D.setTranslateY(2 * TS);
         levelCounter3D.setTranslateZ(-ui.thePrefs().getFloat("3d.level_counter.elevation"));
@@ -612,6 +612,9 @@ public class GameLevel3D implements Destroyable {
 
     public void onStartingGame() {
         energizers3D().forEach(Energizer3D::noPumping);
+        if (levelCounter3D != null) {
+            levelCounter3D.update(ui, ui.theGameContext().theGame().theHUD().theLevelCounter());
+        }
     }
 
     public void onHuntingStart() {
