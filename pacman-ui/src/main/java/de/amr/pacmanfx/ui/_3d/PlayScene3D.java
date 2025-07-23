@@ -407,7 +407,7 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onGameContinued(GameEvent e) {
-        if (gameLevel3D != null && !gameLevel3D.isDestroyed()) {
+        if (gameLevel3D != null && !gameLevel3D.isDisposed()) {
             if (gameContext().theGameLevel().house().isEmpty()) {
                 Logger.error("No house found in this game level! WTF?");
             } else {

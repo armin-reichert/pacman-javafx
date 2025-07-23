@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.model3D;
 
+import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.Vector2i;
 import javafx.geometry.Point3D;
 import javafx.scene.Node;
@@ -11,7 +12,7 @@ import javafx.scene.Node;
 /**
  * Implemented by eatable 3D shapes.
  */
-public interface Eatable3D {
+public interface Eatable3D extends Disposable {
     Node shape3D();
     void onEaten();
     default Point3D position() {

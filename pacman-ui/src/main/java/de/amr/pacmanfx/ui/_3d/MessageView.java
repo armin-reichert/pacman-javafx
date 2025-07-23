@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._3d;
 
+import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
@@ -23,7 +24,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Message view.
  */
-public class MessageView extends ImageView {
+public class MessageView extends ImageView implements Disposable {
 
     public static class Builder {
         private Font font;
@@ -121,7 +122,8 @@ public class MessageView extends ImageView {
         };
     }
 
-    public void destroy() {
+    @Override
+    public void dispose() {
         if (movementAnimation != null) {
             movementAnimation.stop();
             movementAnimation.dispose();

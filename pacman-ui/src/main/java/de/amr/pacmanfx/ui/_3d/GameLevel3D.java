@@ -773,7 +773,7 @@ public class GameLevel3D implements Disposable {
         requireNonNull(bonus);
         if (bonus3D != null) {
             root.getChildren().remove(bonus3D);
-            bonus3D.destroy();
+            bonus3D.dispose();
         }
         bonus3D = new Bonus3D(animationManager, bonus,
             ui.theConfiguration().bonusSymbolImage(bonus.symbol()), ui.thePrefs().getFloat("3d.bonus.symbol.width"),
@@ -798,22 +798,22 @@ public class GameLevel3D implements Disposable {
 
     // still work in progress...
 
-    private boolean destroyed;
+    private boolean disposed;
 
-    public boolean isDestroyed() {
-        return destroyed;
+    public boolean isDisposed() {
+        return disposed;
     }
 
     /**
      * Attempt to help objects getting garbage-collected.
      */
     public void dispose() {
-        if (destroyed) {
-            Logger.warn("Game level has already been destroyed");
+        if (disposed) {
+            Logger.warn("Game level has already been disposed");
             return;
         }
-        destroyed = true;
-        Logger.info("Destroying game level 3D, clearing resources...");
+        disposed = true;
+        Logger.info("Disposing game level 3D, clearing resources...");
 
         animationManager.stopAllAnimations();
         animationManager.destroyAllAnimations();
@@ -853,14 +853,14 @@ public class GameLevel3D implements Disposable {
             Logger.info("Unbound and cleared ambient light");
         }
         if (pellets3D != null) {
-            pellets3D.forEach(Pellet3D::destroy);
+            pellets3D.forEach(Pellet3D::dispose);
             pellets3D = null;
-            Logger.info("Destroyed 3D pellets");
+            Logger.info("Disposed 3D pellets");
         }
         if (energizers3D != null) {
             energizers3D.forEach(Energizer3D::dispose);
             energizers3D = null;
-            Logger.info("Destroyed 3D energizers");
+            Logger.info("Disposed 3D energizers");
         }
         particlesGroupContainer.getChildren().clear();
         Logger.info("Removed all particles");
@@ -876,7 +876,7 @@ public class GameLevel3D implements Disposable {
             house3D.light().lightOnProperty().unbind();
             house3D.dispose();
             house3D = null;
-            Logger.info("Destroyed and cleared 3D house");
+            Logger.info("Disposed and cleared 3D house");
         }
         if (maze3D != null) {
             // destroy wall 3D bottom and top nodes
@@ -896,12 +896,12 @@ public class GameLevel3D implements Disposable {
         if (livesCounter3D != null) {
             livesCounter3D.dispose();
             livesCounter3D = null;
-            Logger.info("Destroyed and removed lives counter 3D");
+            Logger.info("Disposed and removed lives counter 3D");
         }
         if (levelCounter3D != null) {
             levelCounter3D.dispose();
             levelCounter3D = null;
-            Logger.info("Destroyed and r level counter 3D");
+            Logger.info("Disposed and r level counter 3D");
         }
         if (pac3D != null) {
             pac3D.dispose();
@@ -911,19 +911,19 @@ public class GameLevel3D implements Disposable {
         if (ghosts3D != null) {
             ghosts3D.forEach(MutatingGhost3D::dispose);
             ghosts3D = null;
-            Logger.info("Destroyed and cleared 3D ghosts");
+            Logger.info("Disposed and cleared 3D ghosts");
         }
         destroyGhostMeshViews();
 
         if (bonus3D != null) {
-            bonus3D.destroy();
+            bonus3D.dispose();
             bonus3D = null;
-            Logger.info("Destroyed and cleared 3D bonus");
+            Logger.info("Disposed and cleared 3D bonus");
         }
         if (messageView != null) {
-            messageView.destroy();
+            messageView.dispose();
             messageView = null;
-            Logger.info("Destroyed and cleared message view");
+            Logger.info("Disposed and cleared message view");
         }
     }
 }

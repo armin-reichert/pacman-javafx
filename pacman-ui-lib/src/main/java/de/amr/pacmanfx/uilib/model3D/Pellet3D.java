@@ -32,7 +32,7 @@ public class Pellet3D implements Eatable3D {
         shape.setCache(true); // TODO does this bring an advantage at all?
     }
 
-    public void destroy() {
+    public void dispose() {
         if (shape instanceof MeshView meshView) {
             meshView.setMesh(null);
             shape = null;

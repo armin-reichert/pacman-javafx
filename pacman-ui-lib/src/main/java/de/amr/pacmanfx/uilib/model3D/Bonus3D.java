@@ -6,6 +6,7 @@ package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Bonus;
@@ -36,7 +37,7 @@ import static java.util.Objects.requireNonNull;
  * on each of its faces. When eaten, the bonus symbol is replaced by the points earned for eating the bonus.
  * For a moving bonus, the rotating cube moves through the world and rotates towards its current move direction.</p>
  */
-public class Bonus3D extends Box {
+public class Bonus3D extends Box implements Disposable {
 
     private final Bonus bonus;
 
@@ -119,7 +120,8 @@ public class Bonus3D extends Box {
         };
     }
 
-    public void destroy() {
+    @Override
+    public void dispose() {
         symbolTexture = null;
         pointsTexture = null;
         edibleAnimation.stop();
