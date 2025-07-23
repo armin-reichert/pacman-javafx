@@ -124,7 +124,7 @@ public class MessageView extends ImageView {
     public void destroy() {
         if (movementAnimation != null) {
             movementAnimation.stop();
-            movementAnimation.destroy();
+            movementAnimation.dispose();
             movementAnimation = null;
         }
         animationManager = null;

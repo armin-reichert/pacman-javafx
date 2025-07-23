@@ -32,7 +32,7 @@ public class DefaultSoundManager implements SoundManager {
     public DefaultSoundManager() {}
 
     @Override
-    public void destroy() {
+    public void dispose() {
         stopAll();
         enabledProperty.unbind();
         mutedProperty.unbind();

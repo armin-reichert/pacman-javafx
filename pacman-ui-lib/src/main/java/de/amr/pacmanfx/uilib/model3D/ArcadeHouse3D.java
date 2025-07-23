@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.model3D;
 
-import de.amr.pacmanfx.lib.Destroyable;
+import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
@@ -33,7 +33,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * 3D house in Arcade style.
  */
-public class ArcadeHouse3D extends Group implements Destroyable {
+public class ArcadeHouse3D extends Group implements Disposable {
 
     private static final int NUM_VERTICAL_BARS = 2;
     private static final float BAR_THICKNESS = 0.75f;
@@ -186,10 +186,10 @@ public class ArcadeHouse3D extends Group implements Destroyable {
     }
 
     @Override
-    public void destroy() {
+    public void dispose() {
 
         doorOpenCloseAnimation.stop();
-        doorOpenCloseAnimation.destroy();
+        doorOpenCloseAnimation.dispose();
         doorOpenCloseAnimation = null;
 
         getChildren().clear();

@@ -1,10 +1,10 @@
 package de.amr.pacmanfx.uilib.model3D;
 
-import de.amr.pacmanfx.lib.Destroyable;
+import de.amr.pacmanfx.lib.Disposable;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 
-public class MsPacManBody extends Group implements Destroyable {
+public class MsPacManBody extends Group implements Disposable {
 
     private PacBody body;
     private MsPacManFemaleParts femaleParts;
@@ -20,11 +20,11 @@ public class MsPacManBody extends Group implements Destroyable {
     }
 
     @Override
-    public void destroy() {
+    public void dispose() {
         getChildren().clear();
-        body.destroy();
+        body.dispose();
         body = null;
-        femaleParts.destroy();
+        femaleParts.dispose();
         femaleParts = null;
     }
 }

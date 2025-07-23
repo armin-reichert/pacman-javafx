@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.model3D;
 
-import de.amr.pacmanfx.lib.Destroyable;
+import de.amr.pacmanfx.lib.Disposable;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 
-public class PacBodyNoEyes extends Group implements Destroyable {
+public class PacBodyNoEyes extends Group implements Disposable {
 
     private MeshView headMeshView;
     private MeshView palateMeshView;
@@ -49,7 +49,7 @@ public class PacBodyNoEyes extends Group implements Destroyable {
     }
 
     @Override
-    public void destroy() {
+    public void dispose() {
         getChildren().clear();
         if (headMeshView != null) {
             headMeshView.setMaterial(null);

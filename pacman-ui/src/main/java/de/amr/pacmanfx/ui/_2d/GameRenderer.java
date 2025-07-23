@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui._2d;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.lib.Destroyable;
+import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
@@ -37,7 +37,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Common base class of all 2D game renderers.
  */
-public abstract class GameRenderer implements Destroyable {
+public abstract class GameRenderer implements Disposable {
 
     public static void fillCanvas(Canvas canvas, Color color) {
         requireNonNull(canvas);

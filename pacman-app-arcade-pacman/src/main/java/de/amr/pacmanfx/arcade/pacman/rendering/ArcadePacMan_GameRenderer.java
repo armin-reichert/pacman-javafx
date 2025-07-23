@@ -42,7 +42,7 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
     public Optional<SpriteSheet<?>> optSpriteSheet() { return Optional.of(spriteSheet); }
 
     @Override
-    public void destroy() {
+    public void dispose() {
         ctx = null;
         spriteSheet = null;
         scalingProperty.unbind();

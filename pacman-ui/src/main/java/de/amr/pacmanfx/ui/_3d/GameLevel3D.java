@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.controller.GameState;
-import de.amr.pacmanfx.lib.Destroyable;
+import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.StopWatch;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.Obstacle;
@@ -56,7 +56,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * 3D representation of game level.
  */
-public class GameLevel3D implements Destroyable {
+public class GameLevel3D implements Disposable {
 
     private final DoubleProperty  houseBaseHeightProperty = new SimpleDoubleProperty();
     private final BooleanProperty houseLightOnProperty = new SimpleBooleanProperty(false);
@@ -157,9 +157,9 @@ public class GameLevel3D implements Destroyable {
         }
 
         @Override
-        public void destroy() {
+        public void dispose() {
             mazeDisappearingAnimation.stop();
-            mazeDisappearingAnimation.destroy();
+            mazeDisappearingAnimation.dispose();
             mazeDisappearingAnimation = null;
         }
 
@@ -807,7 +807,7 @@ public class GameLevel3D implements Destroyable {
     /**
      * Attempt to help objects getting garbage-collected.
      */
-    public void destroy() {
+    public void dispose() {
         if (destroyed) {
             Logger.warn("Game level has already been destroyed");
             return;
@@ -858,7 +858,7 @@ public class GameLevel3D implements Destroyable {
             Logger.info("Destroyed 3D pellets");
         }
         if (energizers3D != null) {
-            energizers3D.forEach(Energizer3D::destroy);
+            energizers3D.forEach(Energizer3D::dispose);
             energizers3D = null;
             Logger.info("Destroyed 3D energizers");
         }
@@ -874,7 +874,7 @@ public class GameLevel3D implements Destroyable {
         }
         if (house3D != null) {
             house3D.light().lightOnProperty().unbind();
-            house3D.destroy();
+            house3D.dispose();
             house3D = null;
             Logger.info("Destroyed and cleared 3D house");
         }
@@ -887,29 +887,29 @@ public class GameLevel3D implements Destroyable {
         }
         if (livesCounterShapes != null) {
             for (var shape : livesCounterShapes) {
-                if (shape instanceof Destroyable destroyable) {
-                    destroyable.destroy();
+                if (shape instanceof Disposable disposable) {
+                    disposable.dispose();
                 }
             }
             livesCounterShapes = null;
         }
         if (livesCounter3D != null) {
-            livesCounter3D.destroy();
+            livesCounter3D.dispose();
             livesCounter3D = null;
             Logger.info("Destroyed and removed lives counter 3D");
         }
         if (levelCounter3D != null) {
-            levelCounter3D.destroy();
+            levelCounter3D.dispose();
             levelCounter3D = null;
             Logger.info("Destroyed and r level counter 3D");
         }
         if (pac3D != null) {
-            pac3D.destroy();
+            pac3D.dispose();
             pac3D = null;
             Logger.info("Removed Pac 3D");
         }
         if (ghosts3D != null) {
-            ghosts3D.forEach(MutatingGhost3D::destroy);
+            ghosts3D.forEach(MutatingGhost3D::dispose);
             ghosts3D = null;
             Logger.info("Destroyed and cleared 3D ghosts");
         }

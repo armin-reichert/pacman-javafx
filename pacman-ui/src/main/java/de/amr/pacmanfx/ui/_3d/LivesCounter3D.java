@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._3d;
 
-import de.amr.pacmanfx.lib.Destroyable;
+import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -30,7 +30,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Displays a Pac-Man shape for each live remaining.
  */
-public class LivesCounter3D extends Group implements Destroyable  {
+public class LivesCounter3D extends Group implements Disposable {
 
     private static final int SHAPES_ROTATION_ZERO = 240;
 
@@ -147,7 +147,7 @@ public class LivesCounter3D extends Group implements Destroyable  {
     }
 
     @Override
-    public void destroy() {
+    public void dispose() {
         livesCountProperty.unbind();
         pillarHeightProperty.unbind();
         pillarMaterialProperty.unbind();

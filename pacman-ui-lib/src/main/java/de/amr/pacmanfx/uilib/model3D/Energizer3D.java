@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.model3D;
 
-import de.amr.pacmanfx.lib.Destroyable;
+import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
@@ -20,7 +20,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * 3D energizer pellet.
  */
-public class Energizer3D implements Eatable3D, Destroyable {
+public class Energizer3D implements Eatable3D, Disposable {
 
     private final Sphere sphere;
 
@@ -53,15 +53,15 @@ public class Energizer3D implements Eatable3D, Destroyable {
     }
 
     @Override
-    public void destroy() {
+    public void dispose() {
         if (pumpingAnimation != null) {
             pumpingAnimation.stop();
-            pumpingAnimation.destroy();
+            pumpingAnimation.dispose();
             pumpingAnimation = null;
         }
         if (eatenAnimation != null) {
             eatenAnimation.stop();
-            eatenAnimation.destroy();
+            eatenAnimation.dispose();
             eatenAnimation = null;
         }
     }

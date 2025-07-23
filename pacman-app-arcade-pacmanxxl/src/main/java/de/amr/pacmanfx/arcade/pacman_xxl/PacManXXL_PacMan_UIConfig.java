@@ -139,9 +139,9 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config {
     }
 
     @Override
-    public void destroy() {
+    public void dispose() {
         ui.theAssets().removeAll(NAMESPACE + ".");
-        soundManager.destroy();
+        soundManager.dispose();
     }
 
     @Override

@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.model3D;
 
-import de.amr.pacmanfx.lib.Destroyable;
+import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.lib.timer.TickTimer;
@@ -27,7 +27,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Common base class for (Ms.) Pac-Man 3D representations.
  */
-public abstract class PacBase3D extends Group implements Destroyable {
+public abstract class PacBase3D extends Group implements Disposable {
 
     protected final Pac pac;
     protected final double size;
@@ -203,7 +203,7 @@ public abstract class PacBase3D extends Group implements Destroyable {
     // Experimental:
 
     @Override
-    public void destroy() {
+    public void dispose() {
         if (chewingAnimation != null) {
             animationManager.stopAnimation(chewingAnimation);
             animationManager.destroyAnimation(chewingAnimation);
@@ -224,11 +224,11 @@ public abstract class PacBase3D extends Group implements Destroyable {
         light.translateZProperty().unbind();
         getChildren().clear();
         if (body != null) {
-            body.destroy();
+            body.dispose();
             body = null;
         }
         if (jaw != null) {
-            jaw.destroy();
+            jaw.dispose();
             jaw = null;
         }
     }

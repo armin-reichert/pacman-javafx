@@ -48,10 +48,10 @@ public class MsPacMan3D extends PacBase3D {
     }
 
     @Override
-    public void destroy() {
-        super.destroy();
+    public void dispose() {
+        super.dispose();
         if (femaleBodyParts != null) {
-            femaleBodyParts.destroy();
+            femaleBodyParts.dispose();
             femaleBodyParts = null;
         }
     }

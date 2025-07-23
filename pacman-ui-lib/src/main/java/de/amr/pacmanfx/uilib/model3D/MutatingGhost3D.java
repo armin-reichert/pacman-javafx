@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.model3D;
 
-import de.amr.pacmanfx.lib.Destroyable;
+import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
@@ -46,7 +46,7 @@ import static java.util.Objects.requireNonNull;
  * <li>{@link GhostAppearance#VALUE}: showing eaten ghost's value.
  * </ul>
  */
-public class MutatingGhost3D extends Group implements Destroyable {
+public class MutatingGhost3D extends Group implements Disposable {
 
     private static final double GHOST_OVER_FLOOR_DIST = 2.0;
 
@@ -191,7 +191,7 @@ public class MutatingGhost3D extends Group implements Destroyable {
     }
 
     @Override
-    public void destroy() {
+    public void dispose() {
         if (ghost != null) {
             ghost.positionProperty().removeListener(this::handleGhostPositionChange);
             ghost.wishDirProperty().removeListener(this::handleGhostWishDirChange);
@@ -211,7 +211,7 @@ public class MutatingGhost3D extends Group implements Destroyable {
         }
         getChildren().clear();
         if (ghost3D != null) {
-            ghost3D.destroy();
+            ghost3D.dispose();
             ghost3D = null;
         }
         numberBox = null;

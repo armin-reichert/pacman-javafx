@@ -73,7 +73,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
     }
 
     @Override
-    public void destroy() {
+    public void dispose() {
         spriteSheet = null;
         mapRepository = null;
         backgroundColorProperty.unbind();

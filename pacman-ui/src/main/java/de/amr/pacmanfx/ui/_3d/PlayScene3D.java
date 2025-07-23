@@ -124,11 +124,11 @@ public class PlayScene3D implements GameScene {
     }
 
     @Override
-    public void destroy() {
+    public void dispose() {
         actionBindings.removeFromKeyboard();
         perspectiveIDProperty().unbind();
         if (gameLevel3D != null) {
-            gameLevel3D.destroy();
+            gameLevel3D.dispose();
             gameLevel3D = null;
             Logger.info("GameLevel3D has been destroyed");
         }
@@ -265,7 +265,7 @@ public class PlayScene3D implements GameScene {
         ui.theSound().stopAll();
         if (gameLevel3D != null) {
             gameLevel3DRoot.getChildren().clear();
-            gameLevel3D.destroy();
+            gameLevel3D.dispose();
             gameLevel3D = null;
         }
     }
@@ -496,7 +496,7 @@ public class PlayScene3D implements GameScene {
         if (gameLevel3D != null) {
             Logger.info("Replacing game level 3D");
             gameLevel3DRoot.getChildren().clear();
-            gameLevel3D.destroy();
+            gameLevel3D.dispose();
             Logger.info("Destroyed old game level 3D");
         } else {
             Logger.info("Creating game level 3D");

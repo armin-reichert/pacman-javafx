@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.animation;
 
-import de.amr.pacmanfx.lib.Destroyable;
+import de.amr.pacmanfx.lib.Disposable;
 import javafx.animation.Animation;
 import org.tinylog.Logger;
 
@@ -12,7 +12,7 @@ import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
-public abstract class ManagedAnimation implements Destroyable {
+public abstract class ManagedAnimation implements Disposable {
 
     protected AnimationManager animationManager;
     protected String label;
@@ -51,7 +51,7 @@ public abstract class ManagedAnimation implements Destroyable {
     }
 
     @Override
-    public void destroy() {
+    public void dispose() {
         animationManager.stopAnimation(this); // handles "embedded animation cannot be stopped" issue!
         if (animation != null) {
             animation.setOnFinished(null);

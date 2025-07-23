@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.lib.Destroyable;
+import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.actors.ActorAnimationMap;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -23,7 +23,7 @@ import javafx.scene.image.Image;
 
 import java.util.stream.Stream;
 
-public interface GameUI_Config extends Destroyable {
+public interface GameUI_Config extends Disposable {
 
     // scene config
     void createGameScenes(GameUI ui);

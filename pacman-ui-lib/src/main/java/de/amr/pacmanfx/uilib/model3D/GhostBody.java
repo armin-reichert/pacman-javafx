@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.model3D;
 
-import de.amr.pacmanfx.lib.Destroyable;
+import de.amr.pacmanfx.lib.Disposable;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
@@ -16,7 +16,7 @@ import javafx.scene.transform.Translate;
 
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 
-public class GhostBody extends Group implements Destroyable {
+public class GhostBody extends Group implements Disposable {
     private PhongMaterial dressMaterial;
     private PhongMaterial pupilsMaterial;
     private PhongMaterial eyeballsMaterial;
@@ -52,7 +52,7 @@ public class GhostBody extends Group implements Destroyable {
     }
 
     @Override
-    public void destroy() {
+    public void dispose() {
         getChildren().clear();
         if (dressMeshView != null) {
             dressMeshView.setMesh(null);

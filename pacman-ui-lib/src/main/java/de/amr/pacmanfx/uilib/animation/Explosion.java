@@ -150,7 +150,7 @@ public class Explosion extends ManagedAnimation {
     }
 
     @Override
-    public void destroy() {
+    public void dispose() {
         particlesGroupContainer.getChildren().remove(particlesGroup);
         particlesGroup.getChildren().forEach(p -> ((Particle) p).setMaterial(null));
         Logger.info("Removing {} particles", particlesGroup.getChildren().size());

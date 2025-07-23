@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.Validations;
-import de.amr.pacmanfx.lib.Destroyable;
+import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -29,7 +29,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * 3D representation of a ghost.
  */
-public class Ghost3D extends Group implements Destroyable {
+public class Ghost3D extends Group implements Disposable {
 
     public class FlashingAnimation extends ManagedAnimation {
         private Duration totalDuration = Duration.seconds(3);
@@ -148,7 +148,7 @@ public class Ghost3D extends Group implements Destroyable {
     }
 
     @Override
-    public void destroy() {
+    public void dispose() {
         dressColorPy.unbind();
         eyeballsColorPy.unbind();
         pupilsColorPy.unbind();

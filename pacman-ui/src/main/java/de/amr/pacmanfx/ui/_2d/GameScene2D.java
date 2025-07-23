@@ -56,12 +56,12 @@ public abstract class GameScene2D implements GameScene {
     }
 
     @Override
-    public void destroy() {
+    public void dispose() {
         actionBindings.removeFromKeyboard();
         animationManager.destroyAllAnimations();
         actorsInZOrder.clear();
         if (gameRenderer != null) {
-            gameRenderer.destroy();
+            gameRenderer.dispose();
             gameRenderer = null;
         }
     }
@@ -84,7 +84,7 @@ public abstract class GameScene2D implements GameScene {
     public final void end() {
         ui.theSound().stopAll();
         doEnd();
-        destroy();
+        dispose();
     }
 
     @Override

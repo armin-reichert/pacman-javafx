@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.model3D;
 
-import de.amr.pacmanfx.lib.Destroyable;
+import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.uilib.objimport.ObjFileData;
 import javafx.scene.paint.Material;
 import javafx.scene.shape.TriangleMesh;
@@ -19,7 +19,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * A 3D-model imported from a Wavefront .obj file.
  */
-public class Model3D implements Destroyable {
+public class Model3D implements Disposable {
 
     private ObjFileData data;
 
@@ -29,7 +29,7 @@ public class Model3D implements Destroyable {
     }
 
     @Override
-    public void destroy() {
+    public void dispose() {
         data.meshMap().clear();
         data.materialLibsList().clear();
         data = null;

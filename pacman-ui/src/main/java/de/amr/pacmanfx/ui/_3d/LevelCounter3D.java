@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._3d;
 
-import de.amr.pacmanfx.lib.Destroyable;
+import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
@@ -25,7 +25,7 @@ import javafx.util.Duration;
 import static de.amr.pacmanfx.Globals.HTS;
 import static java.util.Objects.requireNonNull;
 
-public class LevelCounter3D extends Group implements Destroyable {
+public class LevelCounter3D extends Group implements Disposable {
 
     private final AnimationManager animationManager;
     private ManagedAnimation spinningAnimation;
@@ -69,10 +69,10 @@ public class LevelCounter3D extends Group implements Destroyable {
     }
 
     @Override
-    public void destroy() {
+    public void dispose() {
         if (spinningAnimation != null) {
             spinningAnimation.stop();
-            spinningAnimation.destroy();
+            spinningAnimation.dispose();
             spinningAnimation = null;
         }
         for (Node child : getChildren()) {

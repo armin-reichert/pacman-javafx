@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.layout;
 
-import de.amr.pacmanfx.lib.Destroyable;
+import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.ArcadePalette;
 import javafx.beans.value.ObservableValue;
@@ -17,7 +17,7 @@ import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.util.stream.Stream;
 
-public class StatusIconBox extends HBox implements Destroyable {
+public class StatusIconBox extends HBox implements Disposable {
 
     private static final Color STATUS_ICON_COLOR = ArcadePalette.ARCADE_WHITE;
     private static final int STATUS_ICON_PADDING = 10;
@@ -59,7 +59,7 @@ public class StatusIconBox extends HBox implements Destroyable {
     }
 
     @Override
-    public void destroy() {
+    public void dispose() {
         visibleProperty().unbind();
 
         iconMuted.visibleProperty().unbind();

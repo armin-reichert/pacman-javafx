@@ -345,7 +345,7 @@ public class PacManGames_UI_Impl implements GameUI {
         if (previousVariant != null && !previousVariant.equals(gameVariant)) {
             GameUI_Config previousConfig = config(previousVariant);
             Logger.info("Unloading assets for game variant {}", previousVariant);
-            previousConfig.destroy();
+            previousConfig.dispose();
             previousConfig.soundManager().mutedProperty().unbind();
         }
 
