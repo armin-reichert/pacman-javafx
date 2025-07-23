@@ -27,6 +27,7 @@ import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import javafx.beans.value.WeakChangeListener;
 import javafx.geometry.Bounds;
+import javafx.geometry.Point3D;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -121,30 +122,35 @@ public class GameLevel3D implements Destroyable {
 
     private int wall3DCount;
 
+    private class MazeDisappearingAnimation extends ManagedAnimation {
+
+        public MazeDisappearingAnimation(AnimationManager animationManager) {
+            super(animationManager, "Maze_Disappearing");
+        }
+
+        @Override
+        protected Animation createAnimation() {
+            var totalDuration = Duration.seconds(1);
+            var houseDisappears = new Timeline(
+                new KeyFrame(totalDuration.multiply(0.33), new KeyValue(houseBaseHeightProperty, 0, Interpolator.EASE_IN)));
+            var obstaclesDisappear = new Timeline(
+                new KeyFrame(totalDuration.multiply(0.33), new KeyValue(obstacleBaseHeightProperty, 0, Interpolator.EASE_IN)));
+            var animation = new SequentialTransition(houseDisappears, obstaclesDisappear);
+            animation.setOnFinished(e -> maze3D.setVisible(false));
+            return animation;
+        }
+    }
+
     private class LevelCompletedAnimation extends ManagedAnimation {
+        private static final int FLASH_DURATION_MILLIS = 250;
+        private static final int MESSAGE_FREQUENCY = 20; // 20% of cases
+        private static final float SPINNING_SECONDS = 1.5f;
 
-        public static final int FLASH_DURATION_MILLIS = 250;
-
-        private ManagedAnimation wallsDisappearingAnimation;
+        private ManagedAnimation mazeDisappearingAnimation;
 
         public LevelCompletedAnimation(AnimationManager animationManager) {
             super(animationManager, "Level_Complete");
-
-            wallsDisappearingAnimation = new ManagedAnimation(animationManager, "Maze_WallsDisappearing") {
-                @Override
-                protected Animation createAnimation() {
-                    var totalDuration = Duration.seconds(1);
-                    var houseDisappears = new Timeline(
-                        new KeyFrame(totalDuration.multiply(0.33),
-                            new KeyValue(houseBaseHeightProperty, 0, Interpolator.EASE_IN)));
-                    var obstaclesDisappear = new Timeline(
-                        new KeyFrame(totalDuration.multiply(0.33),
-                            new KeyValue(obstacleBaseHeightProperty, 0, Interpolator.EASE_IN)));
-                    var animation = new SequentialTransition(houseDisappears, obstaclesDisappear);
-                    animation.setOnFinished(e -> maze3D.setVisible(false));
-                    return animation;
-                }
-            };
+            mazeDisappearingAnimation = new MazeDisappearingAnimation(animationManager);
         }
 
         @Override
@@ -152,48 +158,45 @@ public class GameLevel3D implements Destroyable {
             return new SequentialTransition(
                 doNow(() -> {
                     livesCounter3D().map(LivesCounter3D::light).ifPresent(light -> light.setLightOn(false));
-                    sometimesShowLevelCompleteFlashMessage(gameLevel.number());
+                    showLevelCompleteFlashMessage(gameLevel.number());
                 }),
                 pauseSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
                 pauseSec(0.5),
-                createWallsFlashAnimation(),
+                createWallsFlashAnimation(gameLevel.data().numFlashes()),
                 pauseSec(0.5, () -> gameLevel.pac().hide()),
                 pauseSec(0.5),
-                createSpinningAnimation(),
+                createSpinningAnimation(new Random().nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS),
                 pauseSec(0.5, () -> ui.theSound().play(SoundID.LEVEL_COMPLETE)),
                 pauseSec(0.5),
-                wallsDisappearingAnimation.getOrCreateAnimation(),
+                mazeDisappearingAnimation.getOrCreateAnimation(),
                 pauseSec(1.0, () -> ui.theSound().play(SoundID.LEVEL_CHANGED))
             );
         }
 
         @Override
         public void destroy() {
-            if (wallsDisappearingAnimation != null) {
-                animationManager.destroyAnimation(wallsDisappearingAnimation);
-                wallsDisappearingAnimation = null;
-            }
+            mazeDisappearingAnimation.stop();
+            mazeDisappearingAnimation.destroy();
+            mazeDisappearingAnimation = null;
         }
 
-        private void sometimesShowLevelCompleteFlashMessage(int levelNumber) {
-            boolean showFlashMessage = randomInt(1, 1000) < 250; // every 4th time also show a message
-            if (showFlashMessage) {
+        private void showLevelCompleteFlashMessage(int levelNumber) {
+            if (randomInt(0, 100) < MESSAGE_FREQUENCY) {
                 String message = ui.theAssets().localizedLevelCompleteMessage(levelNumber);
                 ui.showFlashMessageSec(3, message);
             }
         }
 
-        private Animation createSpinningAnimation() {
-            var spin360 = new RotateTransition(Duration.seconds(1.5), root);
-            spin360.setAxis(new Random().nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
+        private Animation createSpinningAnimation(Point3D axis) {
+            var spin360 = new RotateTransition(Duration.seconds(SPINNING_SECONDS), root);
+            spin360.setAxis(axis);
             spin360.setFromAngle(0);
             spin360.setToAngle(360);
             spin360.setInterpolator(Interpolator.LINEAR);
             return spin360;
         }
 
-        private Animation createWallsFlashAnimation() {
-            int numFlashes = gameLevel.data().numFlashes();
+        private Animation createWallsFlashAnimation(int numFlashes) {
             if (numFlashes == 0) {
                 return pauseSec(1.0);
             }
