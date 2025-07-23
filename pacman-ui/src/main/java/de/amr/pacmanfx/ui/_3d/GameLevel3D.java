@@ -106,7 +106,6 @@ public class GameLevel3D implements Destroyable {
     private PhongMaterial pelletMaterial;
 
     private AmbientLight ambientLight;
-    private Group mazeGroup;
     private Group maze3D;
     private Floor3D floor3D;
     private ArcadeHouse3D house3D;
@@ -296,7 +295,6 @@ public class GameLevel3D implements Destroyable {
         createMazeMaterials();
         createGhostMeshView();
 
-        mazeGroup = new Group();
         particlesGroupContainer = new Group();
 
         createAmbientLight();
@@ -326,8 +324,7 @@ public class GameLevel3D implements Destroyable {
 
         // Note: The order in which children are added to the root matters!
         // Walls and house must be added *after* the actors, otherwise the transparency is not working correctly.
-        root.getChildren().add(mazeGroup);
-        mazeGroup.getChildren().addAll(floor3D, maze3D);
+        root.getChildren().addAll(floor3D, maze3D);
 
         energizers3D.stream().map(Eatable3D::shape3D).forEach(root.getChildren()::add);
         pellets3D   .stream().map(Eatable3D::shape3D).forEach(root.getChildren()::add);
@@ -792,13 +789,13 @@ public class GameLevel3D implements Destroyable {
     public void updateBonus3D(Bonus bonus) {
         requireNonNull(bonus);
         if (bonus3D != null) {
-            mazeGroup.getChildren().remove(bonus3D);
+            root.getChildren().remove(bonus3D);
             bonus3D.destroy();
         }
         bonus3D = new Bonus3D(animationManager, bonus,
             ui.theConfiguration().bonusSymbolImage(bonus.symbol()), ui.thePrefs().getFloat("3d.bonus.symbol.width"),
             ui.theConfiguration().bonusValueImage(bonus.symbol()), ui.thePrefs().getFloat("3d.bonus.points.width"));
-        mazeGroup.getChildren().add(bonus3D);
+        root.getChildren().add(bonus3D);
         bonus3D.showEdible();
     }
 
@@ -870,11 +867,6 @@ public class GameLevel3D implements Destroyable {
             energizers3D.forEach(Energizer3D::destroy);
             energizers3D = null;
             Logger.info("Destroyed 3D energizers");
-        }
-        if (mazeGroup != null) {
-            mazeGroup.getChildren().clear();
-            mazeGroup = null;
-            Logger.info("Removed all nodes under maze group");
         }
         if (particlesGroupContainer != null) {
             particlesGroupContainer.getChildren().clear();
