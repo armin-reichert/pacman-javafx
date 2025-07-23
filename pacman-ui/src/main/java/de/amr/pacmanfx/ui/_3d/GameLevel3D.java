@@ -25,7 +25,6 @@ import de.amr.pacmanfx.uilib.model3D.*;
 import javafx.animation.*;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
-import javafx.beans.value.WeakChangeListener;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point3D;
 import javafx.scene.AmbientLight;
@@ -64,10 +63,6 @@ public class GameLevel3D implements Disposable {
     private final IntegerProperty livesCountProperty = new SimpleIntegerProperty(0);
     private final DoubleProperty  obstacleBaseHeightProperty = new SimpleDoubleProperty();
     private final DoubleProperty  wallOpacityProperty = new SimpleDoubleProperty(1);
-
-    private WeakChangeListener<Number>   handleWallHeightChange = new WeakChangeListener<Number>(this::handleWallHeightChange);
-    private WeakChangeListener<DrawMode> handleDrawModeChange   = new WeakChangeListener<DrawMode>(this::handleDrawModeChange);
-    private WeakChangeListener<Boolean>  handleHouseOpenChange  = new WeakChangeListener<Boolean>(this::handleHouseOpenChange);
 
     protected final GameUI ui;
     protected final Group root;
@@ -272,9 +267,9 @@ public class GameLevel3D implements Disposable {
         obstacleBaseHeightProperty.set(ui.thePrefs().getFloat("3d.obstacle.base_height"));
         houseBaseHeightProperty.set(ui.thePrefs().getFloat("3d.house.base_height"));
 
-        ui.property3DWallHeight().addListener(handleWallHeightChange);
-        ui.property3DDrawMode().addListener(handleDrawModeChange);
-        houseOpenProperty.addListener(handleHouseOpenChange);
+        ui.property3DWallHeight().addListener(this::handleWallHeightChange);
+        ui.property3DDrawMode().addListener(this::handleDrawModeChange);
+        houseOpenProperty.addListener(this::handleHouseOpenChange);
 
         root.setMouseTransparent(true); // this increases performance, they say...
 
@@ -816,16 +811,13 @@ public class GameLevel3D implements Disposable {
         levelCompletedShortAnimation = null;
         Logger.info("Destroyed and removed all managed animations");
 
-        ui.property3DDrawMode().removeListener(handleDrawModeChange);
-        handleDrawModeChange = null;
+        ui.property3DDrawMode().removeListener(this::handleDrawModeChange);
         Logger.info("Removed 'draw mode' listener");
 
-        ui.property3DWallHeight().removeListener(handleWallHeightChange);
-        handleWallHeightChange = null;
+        ui.property3DWallHeight().removeListener(this::handleWallHeightChange);
         Logger.info("Removed 'wall height' listener");
 
-        houseOpenProperty.removeListener(handleHouseOpenChange);
-        handleHouseOpenChange = null;
+        houseOpenProperty.removeListener(this::handleHouseOpenChange);
         Logger.info("Removed 'house open' listener");
 
         livesCountProperty.unbind();
