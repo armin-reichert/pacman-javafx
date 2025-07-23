@@ -18,14 +18,14 @@ import de.amr.pacmanfx.ui.ActionBindingMap;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
+import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.Pellet3D;
 import de.amr.pacmanfx.uilib.model3D.Scores3D;
 import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
-import javafx.animation.Interpolator;
-import javafx.animation.Transition;
+import javafx.animation.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
@@ -102,6 +102,11 @@ public class PlayScene3D implements GameScene {
         );
         scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
         scores3D.rotateProperty().bind(camera.rotateProperty());
+
+        scores3D.translateXProperty().bind(gameLevel3DRoot.translateXProperty().add(TS));
+        scores3D.translateYProperty().bind(gameLevel3DRoot.translateYProperty().subtract(4.5 * TS));
+        scores3D.translateZProperty().bind(gameLevel3DRoot.translateZProperty().subtract(4.5 * TS));
+        scores3D.setVisible(false);
 
         // Just for debugging and posing
         var coordinateSystem = new CoordinateSystem();
@@ -483,12 +488,12 @@ public class PlayScene3D implements GameScene {
 
     protected void replaceGameLevel3D() {
         if (gameLevel3D != null) {
-            Logger.info("Replacing game level 3D");
+            Logger.info("Replacing existing game level 3D");
             gameLevel3DRoot.getChildren().clear();
             gameLevel3D.dispose();
-            Logger.info("Destroyed old game level 3D");
+            Logger.info("Disposed old game level 3D");
         } else {
-            Logger.info("Creating game level 3D");
+            Logger.info("Creating new game level 3D");
         }
         gameLevel3D = createGameLevel3D(gameLevel3DRoot);
         Logger.info("Created new game level 3D");
@@ -496,11 +501,6 @@ public class PlayScene3D implements GameScene {
         gameLevel3D.pac3D().init();
         gameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(gameContext().theGameLevel()));
         Logger.info("Initialized actors of game level 3D");
-
-        scores3D.translateXProperty().bind(gameLevel3DRoot.translateXProperty().add(TS));
-        scores3D.translateYProperty().bind(gameLevel3DRoot.translateYProperty().subtract(4.5 * TS));
-        scores3D.translateZProperty().bind(gameLevel3DRoot.translateZProperty().subtract(4.5 * TS));
-        Logger.info("Positioned scores 3D");
     }
 
     protected void updateCamera() {
@@ -575,15 +575,16 @@ public class PlayScene3D implements GameScene {
     }
 
     protected void fadeInSubScene() {
-        new Transition() {
-            {
-                setCycleDuration(Duration.seconds(4));
-                setInterpolator(Interpolator.EASE_OUT);
-            }
-            @Override
-            protected void interpolate(double t) {
-                subScene.setFill(SUB_SCENE_FILL_DARK.interpolate(SUB_SCENE_FILL_BRIGHT, t));
-            }
-        }.play();
+        gameLevel3D.root().setVisible(false);
+        scores3D.setVisible(false);
+        subScene.setFill(SUB_SCENE_FILL_DARK);
+        var makeVisibleAfterDelay = Ufx.pauseSec(0.5, () -> {
+            gameLevel3D.root().setVisible(true);
+            scores3D.setVisible(true);
+        });
+        var fadeFillColorIn = new Timeline(
+            new KeyFrame(Duration.seconds(3),
+                new KeyValue(subScene.fillProperty(), SUB_SCENE_FILL_BRIGHT, Interpolator.EASE_OUT)));
+        new SequentialTransition(makeVisibleAfterDelay, fadeFillColorIn).play();
     }
 }
