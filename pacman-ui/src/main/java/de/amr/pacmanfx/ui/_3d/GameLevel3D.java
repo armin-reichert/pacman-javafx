@@ -25,6 +25,7 @@ import de.amr.pacmanfx.uilib.model3D.*;
 import javafx.animation.*;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
+import javafx.beans.value.WeakChangeListener;
 import javafx.geometry.Bounds;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
@@ -81,10 +82,10 @@ public class GameLevel3D implements Destroyable {
     private final DoubleProperty  obstacleBaseHeightProperty = new SimpleDoubleProperty();
     private final DoubleProperty  wallOpacityProperty = new SimpleDoubleProperty(1);
 
-    private final GameUI ui;
-    private final Group root;
+    protected final GameUI ui;
+    protected final Group root;
 
-    private final GameLevel gameLevel;
+    protected final GameLevel gameLevel;
     private WorldMapColorScheme colorScheme;
 
     private final AnimationManager animationManager = new AnimationManager();
@@ -288,6 +289,9 @@ public class GameLevel3D implements Destroyable {
         obstacleBaseHeightProperty.set(ui.thePrefs().getFloat("3d.obstacle.base_height"));
         houseBaseHeightProperty.set(ui.thePrefs().getFloat("3d.house.base_height"));
 
+        ui.property3DWallHeight().addListener(new WeakChangeListener<Number>(this::handleWallHeightChange));
+        ui.property3DDrawMode().addListener(new WeakChangeListener<DrawMode>(this::handleDrawModeChange));
+
         root.setMouseTransparent(true); // this increases performance, they say...
 
         createWorldMapColorScheme();
@@ -305,6 +309,10 @@ public class GameLevel3D implements Destroyable {
         createPellets3D();
         createEnergizers3D();
 
+        wallColorFlashingAnimation = new WallColorFlashingAnimation(animationManager);
+        levelCompletedFullAnimation = new LevelCompletedAnimation(animationManager);
+        levelCompletedShortAnimation = new LevelCompletedAnimationShort(animationManager);
+
         root.getChildren().add(ambientLight);
         if (levelCounter3D != null) {
             root.getChildren().add(levelCounter3D);
@@ -314,22 +322,15 @@ public class GameLevel3D implements Destroyable {
         }
         root.getChildren().addAll(pac3D, pac3D.light());
         root.getChildren().addAll(ghosts3D);
-        energizers3D.stream().map(Eatable3D::shape3D).forEach(root.getChildren()::add);
-        pellets3D   .stream().map(Eatable3D::shape3D).forEach(root.getChildren()::add);
 
         // Note: The order in which children are added to the root matters!
         // Walls and house must be added *after* the actors, otherwise the transparency is not working correctly.
         root.getChildren().add(mazeGroup);
-        root.getChildren().add(particlesGroupContainer);
         mazeGroup.getChildren().addAll(floor3D, maze3D);
 
-        ui.property3DWallHeight().addListener(this::handleWallHeightChange);
-        ui.property3DDrawMode().addListener(this::handleDrawModeChange);
-
-        // Animations
-        wallColorFlashingAnimation = new WallColorFlashingAnimation(animationManager);
-        levelCompletedFullAnimation = new LevelCompletedAnimation(animationManager);
-        levelCompletedShortAnimation = new LevelCompletedAnimationShort(animationManager);
+        energizers3D.stream().map(Eatable3D::shape3D).forEach(root.getChildren()::add);
+        pellets3D   .stream().map(Eatable3D::shape3D).forEach(root.getChildren()::add);
+        root.getChildren().add(particlesGroupContainer);
     }
 
     public Group root() {

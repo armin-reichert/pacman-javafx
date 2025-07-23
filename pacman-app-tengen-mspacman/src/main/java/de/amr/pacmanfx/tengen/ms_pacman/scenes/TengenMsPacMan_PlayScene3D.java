@@ -12,6 +12,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
+import de.amr.pacmanfx.ui._3d.GameLevel3D;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.ImageView;
@@ -66,38 +67,8 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     }
 
     @Override
-    protected void replaceGameLevel3D() {
-        super.replaceGameLevel3D();
-        TengenMsPacMan_GameModel game = gameContext().theGame();
-        if (!game.optionsAreInitial()) {
-            // show info about category, difficulty, booster etc
-            ImageView infoView = createGameInfoView(game, gameContext().theGameLevel(), ui.property3DFloorColor().get());
-            infoView.setTranslateX(0);
-            infoView.setTranslateY((gameContext().theGameLevel().worldMap().numRows() - 2) * TS);
-            infoView.setTranslateZ(-gameLevel3D.floorThickness());
-            gameLevel3D.root().getChildren().add(infoView);
-        }
-    }
-
-    private ImageView createGameInfoView(TengenMsPacMan_GameModel game, GameLevel gameLevel, Color floorColor) {
-        int width = gameLevel.worldMap().numCols() * TS;
-        int height = 2 * TS;
-        int scaling = 5; // for better snapshot resolution
-        var canvas = new Canvas(scaling * width, scaling * height);
-        canvas.getGraphicsContext2D().setImageSmoothing(false); // important!
-        GameRenderer.fillCanvas(canvas, floorColor);
-
-        var renderer = (TengenMsPacMan_GameRenderer) ui.theConfiguration().createGameRenderer(canvas);
-        renderer.setScaling(scaling);
-        renderer.drawGameOptions(game.mapCategory(), game.difficulty(), game.pacBooster(), 0.5 * width, TS + HTS);
-        renderer.drawLevelNumberBox(gameLevel.number(), 0, 0);
-        renderer.drawLevelNumberBox(gameLevel.number(), width - 2 * TS, 0);
-
-        ImageView infoView = new ImageView(canvas.snapshot(null, null));
-        infoView.setFitWidth(width);
-        infoView.setFitHeight(height);
-
-        return infoView;
+    protected GameLevel3D createGameLevel3D() {
+        return new TengenMsPacMan_GameLevel3D(ui, gameLevel3DRoot);
     }
 
     @Override

@@ -486,6 +486,10 @@ public class PlayScene3D implements GameScene {
         ui.updateGameScene(true);
     }
 
+    protected GameLevel3D createGameLevel3D() {
+        return new GameLevel3D(ui, gameLevel3DRoot);
+    }
+
     protected void replaceGameLevel3D() {
         Logger.info("Replacing game level 3D");
         if (gameLevel3D != null) {
@@ -493,7 +497,7 @@ public class PlayScene3D implements GameScene {
             gameLevel3D.destroy();
             Logger.info("Destroyed old game level 3D");
         }
-        gameLevel3D = new GameLevel3D(ui, gameLevel3DRoot);
+        gameLevel3D = createGameLevel3D();
         Logger.info("Created new game level 3D");
 
         gameLevel3D.pac3D().init();
