@@ -280,7 +280,7 @@ public class GameLevel3D implements Disposable {
 
         createWorldMapColorScheme();
         createMaterials();
-        createGhostMeshView();
+        createGhostMeshViews();
 
         createAmbientLight();
         createLevelCounter3D();
@@ -379,7 +379,7 @@ public class GameLevel3D implements Disposable {
             : proposedColorScheme;
     }
 
-    private void createGhostMeshView() {
+    private void createGhostMeshViews() {
         Mesh ghostDressMesh = ui.theAssets().theModel3DRepository().ghostDressMesh();
         dressMeshViews = new MeshView[] {
                 new MeshView(ghostDressMesh),
@@ -405,7 +405,7 @@ public class GameLevel3D implements Disposable {
         };
     }
 
-    private void destroyGhostMeshViews() {
+    private void disposeGhostMeshViews() {
         if (dressMeshViews != null) {
             for (MeshView meshView : dressMeshViews) {
                 meshView.setMesh(null);
@@ -816,7 +816,6 @@ public class GameLevel3D implements Disposable {
         levelCompletedShortAnimation = null;
         Logger.info("Destroyed and removed all managed animations");
 
-        //TODO avoid access to global UI here?
         ui.property3DDrawMode().removeListener(handleDrawModeChange);
         handleDrawModeChange = null;
         Logger.info("Removed 'draw mode' listener");
@@ -828,8 +827,6 @@ public class GameLevel3D implements Disposable {
         houseOpenProperty.removeListener(handleHouseOpenChange);
         handleHouseOpenChange = null;
         Logger.info("Removed 'house open' listener");
-
-        releaseMaterials();
 
         livesCountProperty.unbind();
         houseOpenProperty.unbind();
@@ -907,7 +904,6 @@ public class GameLevel3D implements Disposable {
             ghosts3D = null;
             Logger.info("Disposed and cleared 3D ghosts");
         }
-        destroyGhostMeshViews();
 
         if (bonus3D != null) {
             bonus3D.dispose();
@@ -919,5 +915,8 @@ public class GameLevel3D implements Disposable {
             messageView = null;
             Logger.info("Disposed and cleared message view");
         }
+
+        disposeGhostMeshViews();
+        releaseMaterials();
     }
 }
