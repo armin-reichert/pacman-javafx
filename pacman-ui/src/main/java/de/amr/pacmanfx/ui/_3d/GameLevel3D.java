@@ -58,7 +58,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameLevel3D implements Destroyable {
 
-    private static void setDrawModeForAllDescendantShapesExcept(Node root, Predicate<Node> exclusionFilter, DrawMode drawMode) {
+    private static void setDrawModeForAllShapesExcept(Node root, Predicate<Node> exclusionFilter, DrawMode drawMode) {
         root.lookupAll("*").stream()
             .filter(exclusionFilter.negate())
             .filter(Shape3D.class::isInstance)
@@ -300,9 +300,7 @@ public class GameLevel3D implements Destroyable {
         createLivesCounter3D();
         createPac3D();
         createGhosts3D();
-        createFloor3D();
         createMaze3D();
-        createHouse3D();
         createPellets3D();
         createEnergizers3D();
 
@@ -392,35 +390,6 @@ public class GameLevel3D implements Destroyable {
         colorScheme = proposedColorScheme.fill().equals(Color.BLACK)
             ? new WorldMapColorScheme(Color.grayRgb(42), proposedColorScheme.stroke(), proposedColorScheme.door(), proposedColorScheme.pellet())
             : proposedColorScheme;
-    }
-
-    private void createFloor3D() {
-        WorldMap worldMap = gameLevel.worldMap();
-        floor3D = new Floor3D(
-            worldMap.numCols() * TS,
-            worldMap.numRows() * TS,
-            ui.thePrefs().getFloat("3d.floor.thickness"),
-            ui.thePrefs().getFloat("3d.floor.padding")
-        );
-        floor3D.materialProperty().bind(ui.property3DFloorColor().map(Ufx::coloredPhongMaterial));
-    }
-
-    private void createHouse3D() {
-        gameLevel.house().ifPresent(house -> {
-            house3D = new ArcadeHouse3D(
-                    animationManager,
-                    house,
-                    ui.thePrefs().getFloat("3d.house.base_height"),
-                    ui.thePrefs().getFloat("3d.house.wall_thickness"),
-                    ui.thePrefs().getFloat("3d.house.opacity"),
-                    colorScheme.fill(),
-                    colorScheme.stroke(),
-                    colorScheme.door()
-            );
-            house3D.wallBaseHeightProperty().bind(houseBaseHeightProperty);
-            house3D.light().lightOnProperty().bind(houseLightOnProperty);
-            maze3D.getChildren().add(house3D);
-        });
     }
 
     private void createGhostMeshView() {
@@ -555,6 +524,14 @@ public class GameLevel3D implements Destroyable {
             ++wall3DCount;
         });
 
+        floor3D = new Floor3D(
+            gameLevel.worldMap().numCols() * TS,
+            gameLevel.worldMap().numRows() * TS,
+            ui.thePrefs().getFloat("3d.floor.thickness"),
+            ui.thePrefs().getFloat("3d.floor.padding")
+        );
+        floor3D.materialProperty().bind(ui.property3DFloorColor().map(Ufx::coloredPhongMaterial));
+
         float wallThickness = ui.thePrefs().getFloat("3d.obstacle.wall_thickness");
         float cornerRadius = ui.thePrefs().getFloat("3d.obstacle.corner_radius");
         wall3DCount = 0;
@@ -568,6 +545,22 @@ public class GameLevel3D implements Destroyable {
         }
         var passedTimeMillis = stopWatch.passedTime().toMillis();
         Logger.info("Built 3D maze with {} composite walls in {} milliseconds", wall3DCount, passedTimeMillis);
+
+        gameLevel.house().ifPresent(house -> {
+            house3D = new ArcadeHouse3D(
+                animationManager,
+                house,
+                ui.thePrefs().getFloat("3d.house.base_height"),
+                ui.thePrefs().getFloat("3d.house.wall_thickness"),
+                ui.thePrefs().getFloat("3d.house.opacity"),
+                colorScheme.fill(),
+                colorScheme.stroke(),
+                colorScheme.door()
+            );
+            house3D.wallBaseHeightProperty().bind(houseBaseHeightProperty);
+            house3D.light().lightOnProperty().bind(houseLightOnProperty);
+            maze3D.getChildren().add(house3D);
+        });
     }
 
     public PacBase3D pac3D() { return pac3D; }
@@ -797,12 +790,11 @@ public class GameLevel3D implements Destroyable {
         bonus3D.showEdible();
     }
 
-    private void handleDrawModeChange(ObservableValue<? extends DrawMode> py, DrawMode ov, DrawMode drawMode) {
-        setDrawModeForAllDescendantShapesExcept(root, Pellet3D::isPellet3D, drawMode);
+    private void handleDrawModeChange(ObservableValue<? extends DrawMode> obs, DrawMode oldDrawMode, DrawMode newDrawMode) {
+        setDrawModeForAllShapesExcept(root, Pellet3D::isPellet3D, newDrawMode);
     }
 
-    private void handleWallHeightChange(ObservableValue<? extends Number> py, Number ov, Number newHeight) {
-        if (isDestroyed()) return; //TODO can that ever happen?
+    private void handleWallHeightChange(ObservableValue<? extends Number> obs, Number oldHeight, Number newHeight) {
         obstacleBaseHeightProperty.set(newHeight.doubleValue());
     }
 
