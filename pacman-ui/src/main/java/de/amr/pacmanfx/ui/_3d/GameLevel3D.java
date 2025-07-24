@@ -57,6 +57,9 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameLevel3D implements Disposable {
 
+    // memory leak still exists
+    static boolean EXPLOSIONS = true;
+
     private final DoubleProperty  houseBaseHeightProperty = new SimpleDoubleProperty();
     private final BooleanProperty houseLightOnProperty = new SimpleBooleanProperty(false);
     private final BooleanProperty houseOpenProperty = new SimpleBooleanProperty();
@@ -713,11 +716,6 @@ public class GameLevel3D implements Disposable {
         float maxScaling     = ui.thePrefs().getFloat("3d.energizer.scaling.max");
         gameLevel.tilesContainingFood().filter(gameLevel::isEnergizerPosition).forEach(tile -> {
             Energizer3D energizer3D = createEnergizer3D(tile, radius, floorThickness, minScaling, maxScaling);
-            //TODO this still has a memory leak
-            var explosion = new Explosion(animationManager, energizer3D.shape3D(), particlesGroupContainer, pelletMaterial,
-                particle -> particle.getTranslateZ() >= -1 && insideWorldMapArea(particle));
-            energizer3D.setEatenAnimation(explosion);
-
             energizers3D.add(energizer3D);
         });
         energizers3D.trimToSize();
@@ -740,6 +738,14 @@ public class GameLevel3D implements Disposable {
         energizer3D.shape3D().setTranslateX(x);
         energizer3D.shape3D().setTranslateY(y);
         energizer3D.shape3D().setTranslateZ(z);
+
+        if (EXPLOSIONS) {
+            //TODO this still has a memory leak :-(
+            var explosion = new Explosion(animationManager, energizer3D.shape3D(), particlesGroupContainer, pelletMaterial,
+                    particle -> particle.getTranslateZ() >= -1 && insideWorldMapArea(particle));
+            energizer3D.setEatenAnimation(explosion);
+        }
+
         return energizer3D;
     }
 
