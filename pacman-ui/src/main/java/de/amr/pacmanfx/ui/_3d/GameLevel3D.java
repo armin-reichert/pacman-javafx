@@ -805,7 +805,7 @@ public class GameLevel3D implements Disposable {
         Logger.info("Disposing game level 3D, clearing resources...");
 
         animationManager.stopAllAnimations();
-        animationManager.destroyAllAnimations();
+        animationManager.disposeAllAnimations();
         wallColorFlashingAnimation = null;
         levelCompletedFullAnimation = null;
         levelCompletedShortAnimation = null;

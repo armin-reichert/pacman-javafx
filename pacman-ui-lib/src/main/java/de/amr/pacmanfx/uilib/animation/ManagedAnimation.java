@@ -26,6 +26,10 @@ public abstract class ManagedAnimation implements Disposable {
         animationManager.register(label, this);
     }
 
+    public AnimationManager animationManager() {
+        return animationManager;
+    }
+
     public String label() {
         return label;
     }

@@ -116,13 +116,13 @@ public abstract class PacBase3D extends Group implements Disposable {
 
     public void init() {
         if (chewingAnimation != null) {
-            animationManager.stopAnimation(chewingAnimation);
+            chewingAnimation.stop();
         }
         if (movementAnimation != null) {
-            animationManager.stopAnimation(movementAnimation);
+            movementAnimation.stop();
         }
         if (dyingAnimation != null) {
-            animationManager.stopAnimation(dyingAnimation);
+            dyingAnimation.stop();
         }
         setScaleX(1.0);
         setScaleY(1.0);
@@ -138,22 +138,22 @@ public abstract class PacBase3D extends Group implements Disposable {
             updateVisibility();
             updateLight();
             if (movementAnimation != null) {
-                animationManager.playAnimation(movementAnimation);
+                movementAnimation.playOrContinue();
                 updateMovementAnimation();
             }
             if (chewingAnimation != null) {
                 if (pac.isParalyzed()) {
-                    animationManager.stopAnimation(chewingAnimation);
+                    chewingAnimation.stop();
                 } else {
-                    animationManager.playAnimation(chewingAnimation);
+                    chewingAnimation.playOrContinue();
                 }
             }
         } else {
             if (movementAnimation != null) {
-                animationManager.stopAnimation(movementAnimation);
+                movementAnimation.stop();
             }
             if (chewingAnimation != null) {
-                animationManager.stopAnimation(chewingAnimation);
+                chewingAnimation.stop();
             }
         }
     }
@@ -205,18 +205,15 @@ public abstract class PacBase3D extends Group implements Disposable {
     @Override
     public void dispose() {
         if (chewingAnimation != null) {
-            animationManager.stopAnimation(chewingAnimation);
-            animationManager.destroyAnimation(chewingAnimation);
+            chewingAnimation.dispose();
             chewingAnimation = null;
         }
         if (movementAnimation != null) {
-            animationManager.stopAnimation(movementAnimation);
-            animationManager.destroyAnimation(movementAnimation);
+            movementAnimation.dispose();
             movementAnimation = null;
         }
         if (dyingAnimation != null) {
-            animationManager.stopAnimation(dyingAnimation);
-            animationManager.destroyAnimation(dyingAnimation);
+            dyingAnimation.dispose();
             dyingAnimation = null;
         }
         light.translateXProperty().unbind();

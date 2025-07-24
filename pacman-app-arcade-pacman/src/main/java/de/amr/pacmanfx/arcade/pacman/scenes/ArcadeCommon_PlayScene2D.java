@@ -63,8 +63,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
     @Override
     protected void doEnd() {
         if (levelCompletedAnimation != null) {
-            levelCompletedAnimation.stop();
-            animationManager.destroyAnimation(levelCompletedAnimation);
+            levelCompletedAnimation.dispose();
             levelCompletedAnimation = null;
         }
     }

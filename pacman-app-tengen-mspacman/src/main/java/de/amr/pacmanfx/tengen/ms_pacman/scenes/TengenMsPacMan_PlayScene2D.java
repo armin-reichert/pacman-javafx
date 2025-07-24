@@ -144,7 +144,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     @Override
     protected void doEnd() {
         if (levelCompletedAnimation != null) {
-            animationManager.destroyAnimation(levelCompletedAnimation);
+            levelCompletedAnimation.dispose();
         }
     }
 

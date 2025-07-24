@@ -5,8 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.Validations;
-import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
@@ -172,9 +172,9 @@ public class Ghost3D extends Group implements Disposable {
         dressGroup.getChildren().clear();
         dressGroup = null;
 
-        animationManager.destroyAnimation(dressAnimation);
+        dressAnimation.dispose();
         dressAnimation = null;
-        animationManager.destroyAnimation(flashingAnimation);
+        flashingAnimation.dispose();
         flashingAnimation = null;
     }
 

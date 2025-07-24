@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.model3D;
 
-import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -202,11 +202,11 @@ public class MutatingGhost3D extends Group implements Disposable {
 
         stopAllAnimations();
         if (brakeAnimation != null) {
-            animationManager.destroyAnimation(brakeAnimation);
+            brakeAnimation.dispose();
             brakeAnimation = null;
         }
         if (pointsAnimation != null) {
-            animationManager.destroyAnimation(pointsAnimation);
+            pointsAnimation.dispose();
             pointsAnimation = null;
         }
         getChildren().clear();

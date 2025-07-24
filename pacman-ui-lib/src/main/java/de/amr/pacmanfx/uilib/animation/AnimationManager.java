@@ -21,7 +21,7 @@ public class AnimationManager {
 
     private final Map<String, ManagedAnimation> animationMap = new HashMap<>();
 
-    public void register(String label, ManagedAnimation managedAnimation) {
+    void register(String label, ManagedAnimation managedAnimation) {
         requireNonNull(label);
         requireNonNull(managedAnimation);
         if (animationMap.containsValue(managedAnimation)) {
@@ -33,7 +33,7 @@ public class AnimationManager {
         }
     }
 
-    public void playAnimation(ManagedAnimation managedAnimation) {
+    void playAnimation(ManagedAnimation managedAnimation) {
         requireNonNull(managedAnimation);
         Animation animation = managedAnimation.getOrCreateAnimation();
         requireNonNull(animation);
@@ -43,7 +43,7 @@ public class AnimationManager {
         }
     }
 
-    public void playAnimationFromStart(ManagedAnimation managedAnimation) {
+    void playAnimationFromStart(ManagedAnimation managedAnimation) {
         requireNonNull(managedAnimation);
         Animation animation = managedAnimation.getOrCreateAnimation();
         requireNonNull(animation);
@@ -53,7 +53,7 @@ public class AnimationManager {
         }
     }
 
-    public void pauseAnimation(ManagedAnimation managedAnimation) {
+    void pauseAnimation(ManagedAnimation managedAnimation) {
         requireNonNull(managedAnimation);
         managedAnimation.animation().ifPresent(animation -> {
             try {
@@ -67,7 +67,7 @@ public class AnimationManager {
         });
     }
 
-    public void stopAnimation(ManagedAnimation managedAnimation) {
+    void stopAnimation(ManagedAnimation managedAnimation) {
         requireNonNull(managedAnimation);
         managedAnimation.animation().ifPresent(animation -> {
             try {
@@ -81,6 +81,17 @@ public class AnimationManager {
         });
     }
 
+    void disposeAnimation(ManagedAnimation managedAnimation) {
+        requireNonNull(managedAnimation);
+        stopAnimation(managedAnimation);
+        if (managedAnimation.animation != null) {
+            managedAnimation.animation.setOnFinished(null);
+        }
+        Logger.info("Disposed managed animation '{}'", managedAnimation.label);
+    }
+
+    // public API
+
     public void stopAllAnimations() {
         animationMap.values().forEach(this::stopAnimation);
     }
@@ -90,18 +101,10 @@ public class AnimationManager {
         Logger.info("Animation map cleared");
     }
 
-    public void destroyAnimation(ManagedAnimation managedAnimation) {
-        requireNonNull(managedAnimation);
-        stopAnimation(managedAnimation);
-        if (managedAnimation.animation != null) {
-            managedAnimation.animation.setOnFinished(null);
-        }
-        Logger.info("Destroyed managed animation '{}'", managedAnimation.label);
-    }
-
-    public void destroyAllAnimations() {
-        animationMap.values().forEach(this::destroyAnimation);
+    public void disposeAllAnimations() {
+        animationMap.values().forEach(this::disposeAnimation);
         removeAllAnimations();
+        Logger.info("All animations disposed and removed from map");
     }
 
     public Map<String, ManagedAnimation> animationMap() {
