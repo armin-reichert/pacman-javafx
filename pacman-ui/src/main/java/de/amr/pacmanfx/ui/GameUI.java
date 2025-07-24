@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.input.Joypad;
@@ -149,7 +148,7 @@ public interface GameUI {
     default void showFlashMessage(String message, Object... args) { showFlashMessageSec(1.5, message, args); }
     void showFlashMessageSec(double seconds, String message, Object... args);
 
-    void terminateApp();
+    void terminate();
 
     default MenuItem createContextMenuTitleItem(String title) {
         Font font = thePrefs().getFont("context_menu.title.font");

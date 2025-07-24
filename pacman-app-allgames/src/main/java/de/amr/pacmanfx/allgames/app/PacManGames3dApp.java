@@ -85,7 +85,6 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void stop() {
-        theUI().theGameClock().stop();
-        theUI().theCustomDirWatchdog().dispose();
+        theUI().terminate();
     }
 }

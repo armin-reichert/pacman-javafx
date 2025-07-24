@@ -17,7 +17,6 @@ import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.layout.*;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.GameClock;
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.geometry.Pos;
@@ -410,9 +409,10 @@ public class PacManGames_UI_Impl implements GameUI {
     }
 
     @Override
-    public void terminateApp() {
+    public void terminate() {
         Logger.info("Application is terminated now. There is no way back!");
-        Platform.exit();
+        theGameClock.stop();
+        theCustomDirWatchdog.dispose();
     }
 
     @Override

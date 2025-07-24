@@ -133,8 +133,8 @@ public class GameClock {
     private void createClockWork(double frameRate) {
         clockWork = new Timeline(frameRate, new KeyFrame(Duration.seconds(1.0 / frameRate), e -> makeOneStep(!isPaused())));
         clockWork.setCycleCount(Animation.INDEFINITE);
-        clockWork.statusProperty().addListener(
-                (py, ov, nv) -> Logger.info("Clock status: {} -> {}, target frame rate: {}", ov, nv, targetFrameRate()));
+        clockWork.statusProperty().addListener((py, oldStatus, newStatus) ->
+            Logger.info("{} -> {}, target freq: {} Hz", oldStatus, newStatus, targetFrameRate()));
     }
 
     private void handleTargetFrameRateChanged() {

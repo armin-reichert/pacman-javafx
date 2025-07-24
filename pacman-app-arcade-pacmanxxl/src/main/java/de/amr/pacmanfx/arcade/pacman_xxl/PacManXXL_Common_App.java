@@ -54,7 +54,6 @@ public class PacManXXL_Common_App extends Application {
 
     @Override
     public void stop() {
-        theUI().theGameClock().stop();
-        theUI().theCustomDirWatchdog().dispose();
+        theUI().terminate();
     }
 }
