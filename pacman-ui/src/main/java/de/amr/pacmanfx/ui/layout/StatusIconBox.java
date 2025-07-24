@@ -7,6 +7,8 @@ package de.amr.pacmanfx.ui.layout;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.ArcadePalette;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -53,9 +55,6 @@ public class StatusIconBox extends HBox implements Disposable {
         setMaxWidth(STATUS_ICON_SIZE * 4);
         setPadding(new Insets(STATUS_ICON_PADDING));
         setSpacing(STATUS_ICON_SPACING);
-
-        visibleProperty().bind(ui.propertyCurrentView()
-                .map(view -> view == ui.theStartPagesView() || view == ui.thePlayView()));
     }
 
     @Override

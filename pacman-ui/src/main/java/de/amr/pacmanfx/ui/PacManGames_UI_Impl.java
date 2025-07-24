@@ -77,15 +77,14 @@ public class PacManGames_UI_Impl implements GameUI {
     private final ObjectProperty<GameScene> propertyCurrentGameScene = new SimpleObjectProperty<>();
     private final BooleanProperty propertyMuted = new SimpleBooleanProperty(false);
 
-
     private final PacManGames_Assets theAssets;
+    private final DirectoryWatchdog  theCustomDirWatchdog;
     private final GameClock          theGameClock;
     private final GameContext        theGameContext;
     private final Keyboard           theKeyboard;
     private final Joypad             theJoypad;
-    private final PreferenceManager  thePreferenceManager;
+    private final PreferenceManager  thePrefs;
     private final Stage              theStage;
-    private final DirectoryWatchdog theCustomDirWatchdog;
 
     private final Map<String, GameUI_Config> configByGameVariant = new HashMap<>();
 
@@ -101,14 +100,14 @@ public class PacManGames_UI_Impl implements GameUI {
         theGameClock = new GameClock();
         theKeyboard = new Keyboard();
         theJoypad = new Joypad(theKeyboard);
-        thePreferenceManager = new PreferenceManager(PacManGames_UI_Impl.class);
+        thePrefs = new PreferenceManager(PacManGames_UI_Impl.class);
         theCustomDirWatchdog = new DirectoryWatchdog(gameContext.theCustomMapDir());
 
         storePreferenceDefaultValues();
-        if (!thePreferenceManager.isAccessible()) {
+        if (!thePrefs.isAccessible()) {
             Logger.error("User preferences could not be accessed, using default values!");
         } else {
-            thePreferenceManager.addMissingValues();
+            thePrefs.addMissingValues();
         }
 
         Scene mainScene = new Scene(rootPane, width, height);
@@ -122,18 +121,19 @@ public class PacManGames_UI_Impl implements GameUI {
 
         rootPane.getChildren().add(startPagesView.rootNode());
 
-        // "paused" icon appears on center of game view
-        FontIcon iconPaused = FontIcon.of(FontAwesomeSolid.PAUSE, 80, ArcadePalette.ARCADE_WHITE);
-        iconPaused.visibleProperty().bind(Bindings.createBooleanBinding(
+        // "paused" icon appears at center of UI
+        FontIcon pausedIcon = FontIcon.of(FontAwesomeSolid.PAUSE, 80, ArcadePalette.ARCADE_WHITE);
+        StackPane.setAlignment(pausedIcon, Pos.CENTER);
+        pausedIcon.visibleProperty().bind(Bindings.createBooleanBinding(
             () -> currentView() == playView && theGameClock.isPaused(),
                 propertyCurrentView, theGameClock.pausedProperty()));
-        StackPane.setAlignment(iconPaused, Pos.CENTER);
 
         // status icon box appears at bottom-left corner of any view except editor
         var iconBox = new StatusIconBox(this);
         StackPane.setAlignment(iconBox, Pos.BOTTOM_LEFT);
+        iconBox.visibleProperty().bind(propertyCurrentView.map(view -> view != editorView));
 
-        rootPane.getChildren().addAll(iconPaused, iconBox);
+        rootPane.getChildren().addAll(pausedIcon, iconBox);
 
         theGameClock.setPausableAction(this::doSimulationStepAndUpdateGameScene);
         theGameClock.setPermanentAction(this::drawGameView);
@@ -166,38 +166,38 @@ public class PacManGames_UI_Impl implements GameUI {
     }
 
     private void storePreferenceDefaultValues() {
-        thePreferenceManager.storeDefaultValue("3d.bonus.symbol.width", 8.0f);
-        thePreferenceManager.storeDefaultValue("3d.bonus.points.width", 1.8f * 8.0f);
-        thePreferenceManager.storeDefaultValue("3d.energizer.radius", 3.5f);
-        thePreferenceManager.storeDefaultValue("3d.energizer.scaling.min", 0.2f);
-        thePreferenceManager.storeDefaultValue("3d.energizer.scaling.max", 1.0f);
-        thePreferenceManager.storeDefaultValue("3d.floor.padding", 5.0f);
-        thePreferenceManager.storeDefaultValue("3d.floor.thickness", 0.5f);
-        thePreferenceManager.storeDefaultValue("3d.ghost.size", 15.5f);
-        thePreferenceManager.storeDefaultValue("3d.house.base_height", 12.0f);
-        thePreferenceManager.storeDefaultValue("3d.house.opacity", 0.4f);
-        thePreferenceManager.storeDefaultValue("3d.house.sensitivity", 1.5f * TS);
-        thePreferenceManager.storeDefaultValue("3d.house.wall_thickness", 2.5f);
-        thePreferenceManager.storeDefaultValue("3d.level_counter.symbol_size", 10.0f);
-        thePreferenceManager.storeDefaultValue("3d.level_counter.elevation", 6f);
-        thePreferenceManager.storeDefaultValue("3d.lives_counter.capacity", 5);
-        thePreferenceManager.storeDefaultColor("3d.lives_counter.pillar_color", Color.grayRgb(120));
-        thePreferenceManager.storeDefaultColor("3d.lives_counter.plate_color",  Color.grayRgb(180));
-        thePreferenceManager.storeDefaultValue("3d.lives_counter.shape_size", 12.0f);
-        thePreferenceManager.storeDefaultValue("3d.obstacle.base_height", 4.0f);
-        thePreferenceManager.storeDefaultValue("3d.obstacle.corner_radius", 5f);
-        thePreferenceManager.storeDefaultValue("3d.obstacle.wall_thickness", 2.25f);
-        thePreferenceManager.storeDefaultValue("3d.pac.size", 16.5f);
-        thePreferenceManager.storeDefaultValue("3d.pellet.radius", 1.0f);
+        thePrefs.storeDefaultValue("3d.bonus.symbol.width", 8.0f);
+        thePrefs.storeDefaultValue("3d.bonus.points.width", 1.8f * 8.0f);
+        thePrefs.storeDefaultValue("3d.energizer.radius", 3.5f);
+        thePrefs.storeDefaultValue("3d.energizer.scaling.min", 0.2f);
+        thePrefs.storeDefaultValue("3d.energizer.scaling.max", 1.0f);
+        thePrefs.storeDefaultValue("3d.floor.padding", 5.0f);
+        thePrefs.storeDefaultValue("3d.floor.thickness", 0.5f);
+        thePrefs.storeDefaultValue("3d.ghost.size", 15.5f);
+        thePrefs.storeDefaultValue("3d.house.base_height", 12.0f);
+        thePrefs.storeDefaultValue("3d.house.opacity", 0.4f);
+        thePrefs.storeDefaultValue("3d.house.sensitivity", 1.5f * TS);
+        thePrefs.storeDefaultValue("3d.house.wall_thickness", 2.5f);
+        thePrefs.storeDefaultValue("3d.level_counter.symbol_size", 10.0f);
+        thePrefs.storeDefaultValue("3d.level_counter.elevation", 6f);
+        thePrefs.storeDefaultValue("3d.lives_counter.capacity", 5);
+        thePrefs.storeDefaultColor("3d.lives_counter.pillar_color", Color.grayRgb(120));
+        thePrefs.storeDefaultColor("3d.lives_counter.plate_color",  Color.grayRgb(180));
+        thePrefs.storeDefaultValue("3d.lives_counter.shape_size", 12.0f);
+        thePrefs.storeDefaultValue("3d.obstacle.base_height", 4.0f);
+        thePrefs.storeDefaultValue("3d.obstacle.corner_radius", 5f);
+        thePrefs.storeDefaultValue("3d.obstacle.wall_thickness", 2.25f);
+        thePrefs.storeDefaultValue("3d.pac.size", 16.5f);
+        thePrefs.storeDefaultValue("3d.pellet.radius", 1.0f);
 
         // "Kornblumenblau, sind die Augen der Frauen beim Weine..."
-        thePreferenceManager.storeDefaultColor("context_menu.title.fill", Color.CORNFLOWERBLUE);
-        thePreferenceManager.storeDefaultFont("context_menu.title.font", Font.font("Dialog", FontWeight.BLACK, 14.0f));
+        thePrefs.storeDefaultColor("context_menu.title.fill", Color.CORNFLOWERBLUE);
+        thePrefs.storeDefaultFont("context_menu.title.font", Font.font("Dialog", FontWeight.BLACK, 14.0f));
 
-        thePreferenceManager.storeDefaultColor("debug_text.fill", Color.YELLOW);
-        thePreferenceManager.storeDefaultFont("debug_text.font", Font.font("Sans", FontWeight.BOLD, 16.0f));
+        thePrefs.storeDefaultColor("debug_text.fill", Color.YELLOW);
+        thePrefs.storeDefaultFont("debug_text.font", Font.font("Sans", FontWeight.BOLD, 16.0f));
 
-        thePreferenceManager.storeDefaultValue("scene2d.max_scaling", 5.0f);
+        thePrefs.storeDefaultValue("scene2d.max_scaling", 5.0f);
     }
 
     public void configure(Map<String, Class<? extends GameUI_Config>> configClassesMap) {
@@ -236,13 +236,13 @@ public class PacManGames_UI_Impl implements GameUI {
     }
 
     /**
-     * @param x what caused this catastrophe
+     * @param reason what caused this catastrophe
      *
      * @see <a href="https://de.wikipedia.org/wiki/Steel_Buddies_%E2%80%93_Stahlharte_Gesch%C3%A4fte">Here.</a>
      */
-    private void ka_tas_trooo_phe(Throwable x) {
-        Logger.error(x);
-        Logger.error("SOMETHING VERY BAD HAPPENED DURING SIMULATION STEP!");
+    private void ka_tas_trooo_phe(Throwable reason) {
+        Logger.error(reason);
+        Logger.error("SOMETHING VERY BAD HAPPENED!");
         showFlashMessageSec(10, "KA-TA-STROOO-PHE!\nSOMEONE CALL AN AMBULANCE!");
     }
 
@@ -324,7 +324,7 @@ public class PacManGames_UI_Impl implements GameUI {
     }
 
     @Override
-    public PreferenceManager thePrefs() { return thePreferenceManager; }
+    public PreferenceManager thePrefs() { return thePrefs; }
 
     @Override
     public void restart() {
