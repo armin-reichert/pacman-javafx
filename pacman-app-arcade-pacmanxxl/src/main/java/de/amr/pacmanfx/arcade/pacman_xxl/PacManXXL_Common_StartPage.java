@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
-import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameVariant;
 import de.amr.pacmanfx.ui.layout.StartPage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
@@ -26,13 +26,13 @@ public class PacManXXL_Common_StartPage implements StartPage {
     private final StackPane root = new StackPane();
     private final PacManXXL_Common_StartPageMenu menu;
 
-    public PacManXXL_Common_StartPage(GameContext gameContext) {
+    public PacManXXL_Common_StartPage(GameUI ui) {
         ResourceManager rm = () -> PacManXXL_Common_StartPage.class;
         Flyer flyer = new Flyer(rm.loadImage("graphics/pacman_xxl_startpage.jpg"));
         flyer.setPageLayout(0, Flyer.LayoutMode.FILL);
         flyer.selectPage(0);
 
-        menu = new PacManXXL_Common_StartPageMenu(gameContext);
+        menu = new PacManXXL_Common_StartPageMenu(ui.theGameContext());
         // scale menu to take 90% of start page height
         menu.scalingProperty().bind(root.heightProperty().multiply(0.9).divide(menu.numTilesY() * TS));
 

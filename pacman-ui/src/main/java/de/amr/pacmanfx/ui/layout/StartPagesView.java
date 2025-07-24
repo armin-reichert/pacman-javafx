@@ -151,7 +151,11 @@ public class StartPagesView implements PacManGames_View {
         startPageList.add(startPage);
         carousel.addSlide(startPage.layoutRoot());
         carousel.setNavigationVisible(carousel.numSlides() >= 2);
-        Logger.debug("Start page {} added", startPage.getClass().getSimpleName());
+        Logger.info("Start page {} added", startPage.getClass().getSimpleName());
+    }
+
+    public boolean containsPage(StartPage page) {
+        return startPageList.contains(page);
     }
 
     public void selectStartPage(int index) {

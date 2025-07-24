@@ -36,9 +36,6 @@ public class PacManXXL_Common_App extends Application {
                     xxlMapSelector,
                     PacManXXL_MsPacMan_UIConfig.class
                 )
-                .startPages(
-                    new PacManXXL_Common_StartPage(theGameContext())
-                )
                 .dashboard(
                     DashboardID.README, DashboardID.GENERAL,
                     DashboardID.GAME_CONTROL, DashboardID.SETTINGS_3D,
@@ -46,6 +43,7 @@ public class PacManXXL_Common_App extends Application {
                     DashboardID.KEYBOARD_SHORTCUTS_GLOBAL, DashboardID.KEYBOARD_SHORTCUTS_LOCAL,
                     DashboardID.ABOUT
                 )
+            .startPage(PACMAN_XXL.name(),PacManXXL_Common_StartPage.class)
             .build()
             .show();
 

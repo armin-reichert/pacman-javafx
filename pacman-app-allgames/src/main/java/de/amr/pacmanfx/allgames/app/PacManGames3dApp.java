@@ -61,13 +61,10 @@ public class PacManGames3dApp extends Application {
                 PacManXXL_MsPacMan_GameModel.class, mapSelectorXXL,
                 PacManXXL_MsPacMan_UIConfig.class
             )
-            .startPages(
-                //TODO accessing the "workpiece" while getting constructed is dubious!
-                new ArcadePacMan_StartPage(theUI(), GameVariant.PACMAN.name()),
-                new ArcadeMsPacMan_StartPage(theUI(), GameVariant.MS_PACMAN.name()),
-                new TengenMsPacMan_StartPage(theUI(), GameVariant.MS_PACMAN_TENGEN.name()),
-                new PacManXXL_Common_StartPage(theGameContext())
-            )
+            .startPage(GameVariant.PACMAN.name(), ArcadePacMan_StartPage.class)
+            .startPage(GameVariant.MS_PACMAN.name(), ArcadeMsPacMan_StartPage.class)
+            .startPage(GameVariant.MS_PACMAN_TENGEN.name(), TengenMsPacMan_StartPage.class)
+            .startPage(GameVariant.PACMAN_XXL.name(), PacManXXL_Common_StartPage.class)
             .dashboard(
                 DashboardID.GENERAL, DashboardID.GAME_CONTROL,
                 DashboardID.SETTINGS_3D,

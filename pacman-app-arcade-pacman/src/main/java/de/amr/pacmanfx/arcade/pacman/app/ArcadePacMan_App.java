@@ -15,24 +15,24 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import static de.amr.pacmanfx.ui.GameUI.theUI;
+import static de.amr.pacmanfx.ui.GameVariant.MS_PACMAN;
 
 public class ArcadePacMan_App extends Application {
+
+    private static final String GAME_VARIANT = GameVariant.PACMAN.name();
 
     @Override
     public void start(Stage primaryStage) {
         // UI size: 80% of available screen height, aspect 12:10
         final double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
         final double width  = 1.2 * height;
-        var gameVariant = GameVariant.PACMAN.name();
         GameUI_Builder.createUI(primaryStage, width, height)
             .game(
-                gameVariant,
+                GAME_VARIANT,
                 ArcadePacMan_GameModel.class,
                 ArcadePacMan_UIConfig.class
             )
-            .startPages(
-                new ArcadePacMan_StartPage(theUI(), gameVariant)
-            )
+            .startPage(GAME_VARIANT, ArcadePacMan_StartPage.class)
             .dashboard(
                 DashboardID.GENERAL, DashboardID.GAME_CONTROL,
                 DashboardID.SETTINGS_3D,

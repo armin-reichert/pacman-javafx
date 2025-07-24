@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +25,7 @@ public class GameUI_Builder {
         Class<?> gameModelClass;
         MapSelector mapSelector;
         Class<?> uiConfigClass;
+        Class<?> startPageClass;
     }
 
     public static GameUI_Builder createUI(Stage stage, double width, double height) {
@@ -33,8 +34,7 @@ public class GameUI_Builder {
     }
 
     private final PacManGames_UI_Impl ui;
-    private final Map<String, Configuration> configurationByGameVariant = new HashMap<>();
-    private List<StartPage> startPages = List.of();
+    private final Map<String, Configuration> configurationByGameVariant = new LinkedHashMap<>();
     private List<DashboardID> dashboardIDs = List.of();
 
     private GameUI_Builder(PacManGames_UI_Impl ui) {
@@ -87,14 +87,21 @@ public class GameUI_Builder {
         return this;
     }
 
-    public GameUI_Builder startPages(StartPage... startPages) {
-        if (startPages == null) {
-            error("Start pages list must not be null");
+    public GameUI_Builder startPage(String gameVariant, Class<?> startPageClass) {
+        if (startPageClass == null) {
+            error("Start page class must not be null");
         }
-        if (startPages.length == 0) {
-            error("Start pages list must not be empty");
+        configuration(gameVariant).startPageClass = startPageClass;
+        return this;
+    }
+
+    public GameUI_Builder startPageShared(String gameVariant, String otherGameVariant) {
+        Class<?> sharedStartPageClass = configuration(otherGameVariant).startPageClass;
+        if (sharedStartPageClass == null) {
+            error("Shared start page not found. Must define start page of shared game variant first!");
+            throw new IllegalStateException();
         }
-        this.startPages = Arrays.asList(startPages);
+        configuration(gameVariant).startPageClass = sharedStartPageClass;
         return this;
     }
 
@@ -116,11 +123,15 @@ public class GameUI_Builder {
                 ui.theGameContext(),
                 highScoreFile(ui.theGameContext().theHomeDir(), gameVariant)
             );
-            ui.applyConfiguration(gameVariant, configuration.uiConfigClass);
             ui.theGameContext().theGameController().registerGame(gameVariant, gameModel);
+            ui.applyConfiguration(gameVariant, configuration.uiConfigClass);
+            if (configuration.startPageClass != null) {
+                StartPage startPage = createStartPage(gameVariant, configuration.startPageClass);
+                ui.theStartPagesView().addStartPage(startPage);
+            }
         });
         ui.thePlayView().dashboard().configure(dashboardIDs);
-        startPages.forEach(startPage -> ui.theStartPagesView().addStartPage(startPage));
+
         ui.theStartPagesView().selectStartPage(0);
         ui.theStartPagesView().currentStartPage()
             .map(StartPage::currentGameVariant)
@@ -128,6 +139,26 @@ public class GameUI_Builder {
 
         ui.theGameContext().theGameController().setEventsEnabled(true);
         return ui;
+    }
+
+    private StartPage createStartPage(String gameVariant, Class<?> startPageClass) {
+        // first try constructor(GameUI, String)
+        try {
+            var constructor = startPageClass.getDeclaredConstructor(GameUI.class, String.class);
+            return (StartPage) constructor.newInstance(ui, gameVariant);
+        } catch (NoSuchMethodException x) {
+            // then try constructor(GameUI)
+            try {
+                var constructor = startPageClass.getDeclaredConstructor(GameUI.class);
+                return (StartPage) constructor.newInstance(ui);
+            } catch (Exception xx) {
+                error("Could not create start page from class '%s'".formatted(startPageClass.getSimpleName()));
+                throw new IllegalStateException();
+            }
+        } catch (Exception x) {
+            error("Could not create start page from class '%s'".formatted(startPageClass.getSimpleName()));
+            throw new IllegalStateException();
+        }
     }
 
     private File highScoreFile(File dir, String gameVariant) {

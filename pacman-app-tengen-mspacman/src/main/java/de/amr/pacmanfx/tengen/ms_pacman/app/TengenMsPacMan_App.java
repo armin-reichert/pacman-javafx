@@ -19,6 +19,8 @@ import static de.amr.pacmanfx.ui.GameVariant.MS_PACMAN_TENGEN;
 
 public class TengenMsPacMan_App extends Application {
 
+    private static final String GAME_VARIANT = MS_PACMAN_TENGEN.name();
+
     @Override
     public void start(Stage primaryStage) {
         // UI size: 80% of available screen height, aspect NES screen aspect 32:30
@@ -26,13 +28,11 @@ public class TengenMsPacMan_App extends Application {
         final double width  = NES_ASPECT * height;
         GameUI_Builder.createUI(primaryStage, width, height)
             .game(
-                MS_PACMAN_TENGEN.name(),
+                GAME_VARIANT,
                 TengenMsPacMan_GameModel.class,
                 TengenMsPacMan_UIConfig.class
             )
-            .startPages(
-                new TengenMsPacMan_StartPage(theUI(), MS_PACMAN_TENGEN.name())
-            )
+            .startPage(GAME_VARIANT, TengenMsPacMan_StartPage.class)
             .dashboard(
                 DashboardID.GENERAL, DashboardID.GAME_CONTROL,
                 DashboardID.SETTINGS_3D,
