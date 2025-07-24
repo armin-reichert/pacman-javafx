@@ -14,6 +14,9 @@ import de.amr.pacmanfx.model.GameModel;
 import java.io.File;
 import java.util.Optional;
 
+/**
+ * Facade to give access to the main game components.
+ */
 public interface GameContext {
     /**
      * Root directory under which user specific files are stored.
@@ -26,17 +29,39 @@ public interface GameContext {
      */
     File theCustomMapDir();
 
+    /**
+     * @return the coin mechanism used in the Arcade games.
+     */
     CoinMechanism           theCoinMechanism();
 
+    /**
+     * @return the model (in MVC sense) of the currently selected game variant.
+     * @param <T> specific game model type
+     */
     <T extends GameModel> T theGame();
 
+    /**
+     * @return the controller (in MVC sense) used by all game variants. Implemented as a FSM.
+     */
     GameController          theGameController();
 
+    /**
+     * @return the event manager that is used to publish/subscribe to game events created by the model layer.
+     */
     GameEventManager        theGameEventManager();
 
+    /**
+     * @return the current game level if present.
+     */
     Optional<GameLevel>     optGameLevel();
 
+    /**
+     * @return the current game level if present or {@code null} if no game level currently exists.
+     */
     GameLevel               theGameLevel();
 
+    /**
+     * @return the current game state (the state of the game controller FSM).
+     */
     GameState               theGameState();
 }
