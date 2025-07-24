@@ -29,7 +29,7 @@ public class Explosion extends ManagedAnimation {
     private static final Duration DURATION = Duration.seconds(4);
 
     private static final short PARTICLE_COUNT_MIN = 33;
-    private static final short PARTICLE_COUNT_MAX = 100;
+    private static final short PARTICLE_COUNT_MAX = 33;
     private static final float PARTICLE_MEAN_RADIUS = 0.25f;
     private static final FloatRange PARTICLE_VELOCITY_XY = new FloatRange(-0.2f, 0.2f);
     private static final FloatRange PARTICLE_VELOCITY_Z  = new FloatRange(-3f, -0.5f);
@@ -166,9 +166,6 @@ public class Explosion extends ManagedAnimation {
     @Override
     public void dispose() {
         super.dispose();
-        if (particlesGroupContainer.getParent() instanceof Group group) {
-            group.getChildren().remove(particlesGroupContainer);
-        }
         particlesGroup.getChildren().stream().filter(Particle.class::isInstance).map(Particle.class::cast).forEach(Particle::dispose);
         Logger.info("Disposed {} particles", particlesGroup.getChildren().size());
         particlesGroup.getChildren().clear();

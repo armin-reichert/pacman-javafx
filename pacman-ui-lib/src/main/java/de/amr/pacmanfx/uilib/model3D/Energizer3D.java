@@ -54,12 +54,10 @@ public class Energizer3D implements Eatable3D {
     @Override
     public void dispose() {
         if (pumpingAnimation != null) {
-            pumpingAnimation.stop();
             pumpingAnimation.dispose();
             pumpingAnimation = null;
         }
         if (eatenAnimation != null) {
-            eatenAnimation.stop();
             eatenAnimation.dispose();
             eatenAnimation = null;
         }
