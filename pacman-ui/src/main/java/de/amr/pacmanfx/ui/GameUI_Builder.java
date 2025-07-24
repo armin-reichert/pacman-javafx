@@ -123,6 +123,7 @@ public class GameUI_Builder {
                 ui.theGameContext(),
                 highScoreFile(ui.theGameContext().theHomeDir(), gameVariant)
             );
+            gameModel.init();
             ui.theGameContext().theGameController().registerGame(gameVariant, gameModel);
             ui.applyConfiguration(gameVariant, configuration.uiConfigClass);
             if (configuration.startPageClass != null) {
