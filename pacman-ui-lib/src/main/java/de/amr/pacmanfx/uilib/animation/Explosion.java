@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.animation;
 
+import de.amr.pacmanfx.lib.Disposable;
 import javafx.animation.Animation;
 import javafx.animation.Transition;
 import javafx.scene.Group;
@@ -27,42 +28,47 @@ public class Explosion extends ManagedAnimation {
 
     private static final Duration DURATION = Duration.seconds(4);
 
-    private static final short PARTICLE_COUNT_MIN = 42;
-    private static final short PARTICLE_COUNT_MAX = 88;
+    private static final short PARTICLE_COUNT_MIN = 33;
+    private static final short PARTICLE_COUNT_MAX = 100;
     private static final float PARTICLE_MEAN_RADIUS = 0.25f;
     private static final FloatRange PARTICLE_VELOCITY_XY = new FloatRange(-0.2f, 0.2f);
     private static final FloatRange PARTICLE_VELOCITY_Z  = new FloatRange(-3f, -0.5f);
     private static final float PARTICLE_GRAVITY = 0.1f;
 
-    public static class Particle extends Sphere {
+    public static class Particle extends Sphere implements Disposable {
         private float vx, vy, vz;
 
-        Particle(Material material, double radius) {
+        public Particle(Material material, double radius) {
             super(radius);
             setMaterial(material);
         }
 
-        void setVelocity(float x, float y, float z) {
+        public void setVelocity(float x, float y, float z) {
             vx = x;
             vy = y;
             vz = z;
         }
 
-        void move() {
+        public void move() {
             setTranslateX(getTranslateX() + vx);
             setTranslateY(getTranslateY() + vy);
             setTranslateZ(getTranslateZ() + vz);
             vz += PARTICLE_GRAVITY;
         }
+
+        @Override
+        public void dispose() {
+            setMaterial(null);
+        }
     }
 
-    private final Node origin;
     private final Group particlesGroupContainer;
-    private final Group particlesGroup = new Group();
-    private final Predicate<Particle> particleReachedEndPosition;
+    private Group particlesGroup = new Group();
+    private Predicate<Particle> particleReachedEndPosition;
+    private Node origin;
     private Material particleMaterial;
 
-    private class ParticlesTransition extends Transition {
+    private class ParticlesTransition extends Transition implements Disposable{
 
         ParticlesTransition(
             Duration duration,
@@ -94,6 +100,14 @@ public class Explosion extends ManagedAnimation {
                 particlesGroup.getChildren().add(particle);
             }
             Logger.info("{} particles created", particlesGroup.getChildren().size());
+        }
+
+        @Override
+        public void dispose() {
+            particlesGroup.getChildren().stream()
+                .filter(Particle.class::isInstance)
+                .map(Particle.class::cast)
+                .forEach(Particle::dispose);
         }
 
         @Override
@@ -151,10 +165,17 @@ public class Explosion extends ManagedAnimation {
 
     @Override
     public void dispose() {
-        particlesGroupContainer.getChildren().remove(particlesGroup);
-        particlesGroup.getChildren().forEach(p -> ((Particle) p).setMaterial(null));
-        Logger.info("Removing {} particles", particlesGroup.getChildren().size());
+        super.dispose();
+        if (particlesGroupContainer.getParent() instanceof Group group) {
+            group.getChildren().remove(particlesGroupContainer);
+        }
+        particlesGroup.getChildren().stream().filter(Particle.class::isInstance).map(Particle.class::cast).forEach(Particle::dispose);
+        Logger.info("Disposed {} particles", particlesGroup.getChildren().size());
         particlesGroup.getChildren().clear();
+        particlesGroup = null;
+        particlesGroupContainer.getChildren().remove(particlesGroup);
         particleMaterial = null;
+        origin = null;
+        particleReachedEndPosition = null;
     }
 }

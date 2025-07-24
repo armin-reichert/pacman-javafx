@@ -56,11 +56,11 @@ public abstract class ManagedAnimation implements Disposable {
 
     @Override
     public void dispose() {
-        animationManager.stopAnimation(this); // handles "embedded animation cannot be stopped" issue!
+        stop();
         if (animation != null) {
             animation.setOnFinished(null);
             animation = null;
-            Logger.info("Destroyed animation '{}'", label);
+            Logger.info("Disposed animation '{}'", label);
         }
         animationManager = null;
     }
