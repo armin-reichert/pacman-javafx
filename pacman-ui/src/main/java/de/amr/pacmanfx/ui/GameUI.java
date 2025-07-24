@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.input.Joypad;
@@ -40,8 +41,8 @@ public interface GameUI {
 
     static GameUI theUI() { return PacManGames_UI_Impl.THE_ONE; }
 
-    static GameUI_Builder build(GameContext gameContext, Stage stage, double width, double height) {
-        PacManGames_UI_Impl.THE_ONE = new PacManGames_UI_Impl(gameContext, stage, width, height);
+    static GameUI_Builder build(Stage stage, double width, double height) {
+        PacManGames_UI_Impl.THE_ONE = new PacManGames_UI_Impl(Globals.theGameContext(), stage, width, height);
         return new GameUI_Builder(PacManGames_UI_Impl.THE_ONE);
     }
 
@@ -154,7 +155,6 @@ public interface GameUI {
     void showFlashMessageSec(double seconds, String message, Object... args);
 
     void terminateApp();
-
 
     default MenuItem createContextMenuTitleItem(String title) {
         Font font = thePrefs().getFont("context_menu.title.font");

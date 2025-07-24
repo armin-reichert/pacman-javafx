@@ -14,7 +14,6 @@ import javafx.application.Application;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.ui.GameUI.theUI;
 
 public class ArcadePacMan_App extends Application {
@@ -25,7 +24,7 @@ public class ArcadePacMan_App extends Application {
         final double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
         final double width  = 1.2 * height;
         var gameVariant = GameVariant.PACMAN.name();
-        GameUI.build(theGameContext(), primaryStage, width, height)
+        GameUI.build(primaryStage, width, height)
             .game(
                 gameVariant,
                 ArcadePacMan_GameModel.class,
