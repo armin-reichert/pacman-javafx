@@ -25,46 +25,35 @@ import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.ui.GameUI.theUI;
 
 /**
- * Application containing all game variants, the 3D play scenes, the map editor etc. ("all you can play").
+ * Application containing all game variants, the 3D play scenes, the map editor etc. ("all you can f*** ähm play").
  */
 public class PacManGames3dApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        // UI size: 80% of available screen height, aspect 16:10
-        long height = Math.round(0.8 * Screen.getPrimary().getBounds().getHeight());
-        long width  = Math.round(1.6 * height);
+        // Use 80% of available screen height, aspect 16:10
+        int height = (int) Math.round(0.8 * Screen.getPrimary().getBounds().getHeight());
+        int width  = (int) Math.round(1.6 * height);
+
+        //TODO create this too by reflection inside builder?
         var mapSelectorXXL = new PacManXXL_Common_MapSelector(theGameContext().theCustomMapDir());
+
         GameUI_Builder.createUI(primaryStage, width, height)
-            .game(
-                GameVariant.PACMAN.name(),
-                ArcadePacMan_GameModel.class,
-                ArcadePacMan_UIConfig.class
-            )
-            .game(
-                GameVariant.MS_PACMAN.name(),
-                ArcadeMsPacMan_GameModel.class,
-                ArcadeMsPacMan_UIConfig.class
-            )
-            .game(
-                GameVariant.MS_PACMAN_TENGEN.name(),
-                TengenMsPacMan_GameModel.class,
-                TengenMsPacMan_UIConfig.class
-            )
-            .game(
-                GameVariant.PACMAN_XXL.name(),
-                PacManXXL_PacMan_GameModel.class, mapSelectorXXL,
-                PacManXXL_PacMan_UIConfig.class
-            )
-            .game(
-                GameVariant.MS_PACMAN_XXL.name(),
-                PacManXXL_MsPacMan_GameModel.class, mapSelectorXXL,
-                PacManXXL_MsPacMan_UIConfig.class
-            )
+            .game(GameVariant.PACMAN.name(),
+                ArcadePacMan_GameModel.class, ArcadePacMan_UIConfig.class)
+            .game(GameVariant.MS_PACMAN.name(),
+                ArcadeMsPacMan_GameModel.class, ArcadeMsPacMan_UIConfig.class)
+            .game(GameVariant.MS_PACMAN_TENGEN.name(),
+                TengenMsPacMan_GameModel.class, TengenMsPacMan_UIConfig.class)
+            .game(GameVariant.PACMAN_XXL.name(),
+                PacManXXL_PacMan_GameModel.class, mapSelectorXXL, PacManXXL_PacMan_UIConfig.class)
+            .game(GameVariant.MS_PACMAN_XXL.name(),
+                PacManXXL_MsPacMan_GameModel.class, mapSelectorXXL, PacManXXL_MsPacMan_UIConfig.class)
+            // start pages are added to carousel in this order:
             .startPage(GameVariant.PACMAN.name(), ArcadePacMan_StartPage.class)
             .startPage(GameVariant.MS_PACMAN.name(), ArcadeMsPacMan_StartPage.class)
             .startPage(GameVariant.MS_PACMAN_TENGEN.name(), TengenMsPacMan_StartPage.class)
-            .startPage(GameVariant.PACMAN_XXL.name(), PacManXXL_Common_StartPage.class)
+            .startPage(GameVariant.PACMAN_XXL.name(), PacManXXL_Common_StartPage.class) // MS_PACMAN_XXL uses this too
             .dashboard(
                 DashboardID.GENERAL, DashboardID.GAME_CONTROL,
                 DashboardID.SETTINGS_3D,
