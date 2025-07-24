@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.app;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.GameVariant;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.application.Application;
@@ -24,7 +24,7 @@ public class ArcadePacMan_App extends Application {
         final double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
         final double width  = 1.2 * height;
         var gameVariant = GameVariant.PACMAN.name();
-        GameUI.build(primaryStage, width, height)
+        GameUI_Builder.createUI(primaryStage, width, height)
             .game(
                 gameVariant,
                 ArcadePacMan_GameModel.class,
@@ -33,7 +33,7 @@ public class ArcadePacMan_App extends Application {
             .startPages(
                 new ArcadePacMan_StartPage(theUI(), gameVariant)
             )
-            .dashboardEntries(
+            .dashboard(
                 DashboardID.GENERAL, DashboardID.GAME_CONTROL,
                 DashboardID.SETTINGS_3D,
                 DashboardID.GAME_INFO, DashboardID.ACTOR_INFO,

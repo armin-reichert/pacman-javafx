@@ -14,7 +14,7 @@ import de.amr.pacmanfx.arcade.pacman_xxl.*;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.GameVariant;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.application.Application;
@@ -35,7 +35,7 @@ public class PacManGames3dApp extends Application {
         long height = Math.round(0.8 * Screen.getPrimary().getBounds().getHeight());
         long width  = Math.round(1.6 * height);
         var mapSelectorXXL = new PacManXXL_Common_MapSelector(theGameContext().theCustomMapDir());
-        GameUI.build(primaryStage, width, height)
+        GameUI_Builder.createUI(primaryStage, width, height)
             .game(
                 GameVariant.PACMAN.name(),
                 ArcadePacMan_GameModel.class,
@@ -68,7 +68,7 @@ public class PacManGames3dApp extends Application {
                 new TengenMsPacMan_StartPage(theUI(), GameVariant.MS_PACMAN_TENGEN.name()),
                 new PacManXXL_Common_StartPage(theGameContext())
             )
-            .dashboardEntries(
+            .dashboard(
                 DashboardID.GENERAL, DashboardID.GAME_CONTROL,
                 DashboardID.SETTINGS_3D,
                 DashboardID.ANIMATION_INFO,

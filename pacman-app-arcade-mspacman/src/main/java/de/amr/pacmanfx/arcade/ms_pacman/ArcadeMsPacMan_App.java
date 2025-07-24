@@ -4,13 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman;
 
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.application.Application;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import static de.amr.pacmanfx.Globals.theGameContext;
 import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.ui.GameVariant.MS_PACMAN;
 
@@ -21,7 +20,7 @@ public class ArcadeMsPacMan_App extends Application {
         // UI size: 80% of available screen height, aspect 12:10
         final double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
         final double width  = 1.2 * height;
-        GameUI.build(primaryStage, width, height)
+        GameUI_Builder.createUI(primaryStage, width, height)
             .game(
                 MS_PACMAN.name(),
                 ArcadeMsPacMan_GameModel.class,
@@ -30,7 +29,7 @@ public class ArcadeMsPacMan_App extends Application {
             .startPages(
                 new ArcadeMsPacMan_StartPage(theUI(), MS_PACMAN.name())
             )
-            .dashboardEntries(
+            .dashboard(
                 DashboardID.GENERAL, DashboardID.GAME_CONTROL,
                 DashboardID.SETTINGS_3D,
                 DashboardID.GAME_INFO, DashboardID.ACTOR_INFO,

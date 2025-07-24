@@ -12,6 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -76,7 +77,7 @@ public class Dashboard extends VBox {
         }
     }
 
-    public void configure(DashboardID... dashboardIDS) {
+    public void configure(List<DashboardID> dashboardIDS) {
         addInfoBox(DashboardID.README);
         for (DashboardID id : dashboardIDS) {
             if (id == DashboardID.README) continue;

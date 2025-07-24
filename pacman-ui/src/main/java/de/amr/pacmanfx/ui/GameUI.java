@@ -41,11 +41,6 @@ public interface GameUI {
 
     static GameUI theUI() { return PacManGames_UI_Impl.THE_ONE; }
 
-    static GameUI_Builder build(Stage stage, double width, double height) {
-        PacManGames_UI_Impl.THE_ONE = new PacManGames_UI_Impl(Globals.theGameContext(), stage, width, height);
-        return new GameUI_Builder(PacManGames_UI_Impl.THE_ONE);
-    }
-
     // Global key combinations and action bindings
     KeyCombination KEY_FULLSCREEN  = nude(KeyCode.F11);
     KeyCombination KEY_MUTE        = alt(KeyCode.M);

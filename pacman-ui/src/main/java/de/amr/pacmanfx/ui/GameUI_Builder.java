@@ -5,32 +5,40 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.controller.GameController;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.MapSelector;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.layout.StartPage;
+import javafx.stage.Stage;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-
-import static java.util.Objects.requireNonNull;
+import java.util.*;
 
 public class GameUI_Builder {
 
-    private final PacManGames_UI_Impl uiUnderConstruction;
-    private final Map<String, Class<?>> gameModelClassByVariantName = new HashMap<>();
-    private final Map<String, MapSelector> mapSelectorByVariantName = new HashMap<>();
-    private final Map<String, Class<? extends GameUI_Config>> configClassByVariantName = new HashMap<>();
-    private StartPage[] startPages;
-    private DashboardID[] dashboardIDs = new DashboardID[0];
-
-    public GameUI_Builder(PacManGames_UI_Impl uiUnderConstruction) {
-        this.uiUnderConstruction = requireNonNull(uiUnderConstruction);
+    public static GameUI_Builder createUI(Stage stage, double width, double height) {
+        PacManGames_UI_Impl.THE_ONE = new PacManGames_UI_Impl(Globals.theGameContext(), stage, width, height);
+        return new GameUI_Builder(PacManGames_UI_Impl.THE_ONE);
     }
 
-    public GameUI_Builder game(String variant, Class<? extends GameModel> gameModelClass, Class<? extends GameUI_Config> configClass) {
+    private final PacManGames_UI_Impl ui;
+    private final Map<String, Class<?>> gameModelClassByVariant = new HashMap<>();
+    private final Map<String, MapSelector> mapSelectorByVariant = new HashMap<>();
+    private final Map<String, Class<? extends GameUI_Config>> uiConfigClassByVariant = new HashMap<>();
+    private List<StartPage> startPages = new ArrayList<>();
+    private List<DashboardID> dashboardIDs = new ArrayList<>();
+
+    private GameUI_Builder(PacManGames_UI_Impl ui) {
+        this.ui = ui;
+    }
+
+    public GameUI_Builder game(
+        String variant,
+        Class<? extends GameModel> gameModelClass,
+        Class<? extends GameUI_Config> configClass)
+    {
         validateGameVariantKey(variant);
         if (gameModelClass == null) {
             error("Game model class for variant %s may not be null".formatted(variant));
@@ -38,8 +46,8 @@ public class GameUI_Builder {
         if (configClass == null) {
             error("Game UI configuration class for variant %s may not be null".formatted(variant));
         }
-        gameModelClassByVariantName.put(variant, gameModelClass);
-        configClassByVariantName.put(variant, configClass);
+        gameModelClassByVariant.put(variant, gameModelClass);
+        uiConfigClassByVariant.put(variant, configClass);
         return this;
     }
 
@@ -59,9 +67,9 @@ public class GameUI_Builder {
         if (mapSelector == null) {
             error("Map selector for variant %s may not be null".formatted(variant));
         }
-        gameModelClassByVariantName.put(variant, gameModelClass);
-        mapSelectorByVariantName.put(variant, mapSelector);
-        configClassByVariantName.put(variant, configClass);
+        gameModelClassByVariant.put(variant, gameModelClass);
+        mapSelectorByVariant.put(variant, mapSelector);
+        uiConfigClassByVariant.put(variant, configClass);
         return this;
     }
 
@@ -72,40 +80,44 @@ public class GameUI_Builder {
         if (startPages.length == 0) {
             error("Start pages list must not be empty");
         }
-        this.startPages = startPages;
+        this.startPages = Arrays.asList(startPages);
         return this;
     }
 
-    public GameUI_Builder dashboardEntries(DashboardID... dashboardIDs) {
+    public GameUI_Builder dashboard(DashboardID... dashboardIDs) {
         if (dashboardIDs == null) {
             error("Dashboard entry list must not be null");
         }
-        this.dashboardIDs = dashboardIDs;
+        this.dashboardIDs = Arrays.asList(dashboardIDs);
         return this;
     }
 
     public GameUI build() {
-        GameContext gameContext = uiUnderConstruction.theGameContext();
-        validateConfiguration(gameContext);
-        uiUnderConstruction.configure(configClassByVariantName);
-        gameModelClassByVariantName.keySet().forEach(variant -> {
-            Class<?> gameModelClass = gameModelClassByVariantName.get(variant);
-            MapSelector mapSelector = mapSelectorByVariantName.get(variant);
-            File highScoreFile = new File(gameContext.theHomeDir(), "highscore-%s.xml".formatted(variant).toLowerCase());
-            GameModel gameModel =  createGameModel(gameModelClass, mapSelector, gameContext, highScoreFile);
-            gameContext.theGameController().registerGame(variant, gameModel);
-
+        validateConfiguration();
+        ui.configure(uiConfigClassByVariant);
+        gameModelClassByVariant.keySet().forEach(gameVariant -> {
+            Class<?> gameModelClass = gameModelClassByVariant.get(gameVariant);
+            MapSelector mapSelector = mapSelectorByVariant.get(gameVariant);
+            GameModel gameModel = createGameModel(
+                gameModelClass,
+                mapSelector,
+                ui.theGameContext(),
+                highScoreFile(ui.theGameContext().theHomeDir(), gameVariant));
+            ui.theGameContext().theGameController().registerGame(gameVariant, gameModel);
         });
-        gameContext.theGameController().setEventsEnabled(true);
-        uiUnderConstruction.thePlayView().dashboard().configure(dashboardIDs);
-
-        for (StartPage startPage : startPages) uiUnderConstruction.theStartPagesView().addStartPage(startPage);
-        uiUnderConstruction.theStartPagesView().selectStartPage(0);
-        uiUnderConstruction.theStartPagesView().currentStartPage()
+        ui.thePlayView().dashboard().configure(dashboardIDs);
+        startPages.forEach(startPage -> ui.theStartPagesView().addStartPage(startPage));
+        ui.theStartPagesView().selectStartPage(0);
+        ui.theStartPagesView().currentStartPage()
             .map(StartPage::currentGameVariant)
-            .ifPresent(gameContext.theGameController()::selectGameVariant);
+            .ifPresent(ui.theGameContext().theGameController()::selectGameVariant);
 
-        return uiUnderConstruction;
+        ui.theGameContext().theGameController().setEventsEnabled(true);
+        return ui;
+    }
+
+    private File highScoreFile(File dir, String gameVariant) {
+        return new File(dir, "highscore-%s.xml".formatted(gameVariant).toLowerCase());
     }
 
     private GameModel createGameModel(Class<?> modelClass, MapSelector mapSelector, GameContext gameContext, File highScoreFile) {
@@ -119,11 +131,8 @@ public class GameUI_Builder {
         }
     }
 
-    private void validateConfiguration(GameContext gameContext) {
-        if (gameContext == null) {
-            error("The game context must not be null");
-        }
-        if (gameModelClassByVariantName.isEmpty()) {
+    private void validateConfiguration() {
+        if (gameModelClassByVariant.isEmpty()) {
             error("No game models specified");
         }
     }
