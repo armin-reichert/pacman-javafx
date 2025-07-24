@@ -45,8 +45,6 @@ public interface GameUI {
         return new GameUI_Builder(PacManGames_UI_Impl.THE_ONE);
     }
 
-    PreferenceManager thePrefs();
-
     // Global key combinations and action bindings
     KeyCombination KEY_FULLSCREEN  = nude(KeyCode.F11);
     KeyCombination KEY_MUTE        = alt(KeyCode.M);
@@ -88,15 +86,6 @@ public interface GameUI {
         createActionBinding(ACTION_TOGGLE_DRAW_MODE,        alt(KeyCode.W))
     );
 
-    default MenuItem createContextMenuTitleItem(String title) {
-        Font font = thePrefs().getFont("context_menu.title.font");
-        Color fillColor = thePrefs().getColor("context_menu.title.fill");
-        var text = new Text(title);
-        text.setFont(font);
-        text.setFill(fillColor);
-        return new CustomMenuItem(text);
-    }
-
     // Global properties
     ObjectProperty<Color>            propertyCanvasBackgroundColor();
     BooleanProperty                  propertyCanvasFontSmoothing();
@@ -122,19 +111,27 @@ public interface GameUI {
 
     PacManGames_Assets               theAssets();
     <T extends GameUI_Config> T      theConfiguration();
+    DirectoryWatchdog                theCustomDirWatchdog();
     GameClock                        theGameClock();
     GameContext                      theGameContext();
     Joypad                           theJoypad();
     Keyboard                         theKeyboard();
+    PreferenceManager                thePrefs();
     SoundManager                     theSound();
     Stage                            theStage();
-    DirectoryWatchdog                theWatchdog();
 
     void restart();
     void selectGameVariant(String variant);
     void show();
 
     GameUI_Config config(String gameVariant);
+
+    /**
+     * Stores the UI configuration for a game variant and initializes the game scenes (assigns the game context).
+     *
+     * @param variant a game variant
+     * @param config the UI configuration for this variant
+     */
     void setConfig(String variant, GameUI_Config config);
 
     // Game scenes
@@ -157,4 +154,14 @@ public interface GameUI {
     void showFlashMessageSec(double seconds, String message, Object... args);
 
     void terminateApp();
+
+
+    default MenuItem createContextMenuTitleItem(String title) {
+        Font font = thePrefs().getFont("context_menu.title.font");
+        Color fillColor = thePrefs().getColor("context_menu.title.fill");
+        var text = new Text(title);
+        text.setFont(font);
+        text.setFill(fillColor);
+        return new CustomMenuItem(text);
+    }
 }

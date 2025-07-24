@@ -4,17 +4,15 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.layout;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.ui.ActionBindingMap;
+import de.amr.pacmanfx.ui.GameUI;
 import javafx.beans.value.ObservableStringValue;
 import javafx.scene.Node;
-
-import static de.amr.pacmanfx.ui.GameUI.theUI;
 
 public interface PacManGames_View extends GameEventListener {
     Node rootNode();
     ObservableStringValue title();
     ActionBindingMap actionBindingMap();
-    default void handleKeyboardInput(GameContext gameContext) { actionBindingMap().runMatchingAction(theUI()); }
+    default void handleKeyboardInput(GameUI ui) { actionBindingMap().runMatchingAction(ui); }
 }

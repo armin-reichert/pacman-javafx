@@ -341,9 +341,8 @@ public class PlayScene3D implements GameScene {
             default -> Logger.error("Unexpected game state '{}' on level start", gameContext().theGameState());
         }
         gameLevel3D.updateLevelCounter3D();
-        initPerspective();
         setActionBindings();
-        fadeInSubScene();
+        fadeInGameLevel3D();
     }
 
     @Override
@@ -377,7 +376,7 @@ public class PlayScene3D implements GameScene {
         gameLevel3D.updateLevelCounter3D();
         updateScores();
         setActionBindings();
-        fadeInSubScene();
+        fadeInGameLevel3D();
     }
 
     @Override
@@ -574,7 +573,8 @@ public class PlayScene3D implements GameScene {
         gameLevel3D.showAnimatedMessage("LEVEL %d (TEST)".formatted(levelNumber), 5, x, y);
     }
 
-    protected void fadeInSubScene() {
+    protected void fadeInGameLevel3D() {
+        initPerspective();
         gameLevel3D.root().setVisible(false);
         scores3D.setVisible(false);
         subScene.setFill(SUB_SCENE_FILL_DARK);

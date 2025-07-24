@@ -49,12 +49,12 @@ public class PacManXXL_Common_App extends Application {
             .build()
             .show();
 
-        theUI().theWatchdog().addEventListener(watchEvents -> xxlMapSelector.loadCustomMaps());
+        theUI().theCustomDirWatchdog().addEventListener(watchEvents -> xxlMapSelector.loadCustomMaps());
     }
 
     @Override
     public void stop() {
         theUI().theGameClock().stop();
-        theUI().theWatchdog().dispose();
+        theUI().theCustomDirWatchdog().dispose();
     }
 }

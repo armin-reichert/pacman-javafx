@@ -85,7 +85,7 @@ public class PacManGames_UI_Impl implements GameUI {
     private final Joypad             theJoypad;
     private final PreferenceManager  thePreferenceManager;
     private final Stage              theStage;
-    private final DirectoryWatchdog  theWatchdog;
+    private final DirectoryWatchdog theCustomDirWatchdog;
 
     private final Map<String, GameUI_Config> configByGameVariant = new HashMap<>();
 
@@ -102,7 +102,7 @@ public class PacManGames_UI_Impl implements GameUI {
         theKeyboard = new Keyboard();
         theJoypad = new Joypad(theKeyboard);
         thePreferenceManager = new PreferenceManager(PacManGames_UI_Impl.class);
-        theWatchdog = new DirectoryWatchdog(gameContext.theCustomMapDir());
+        theCustomDirWatchdog = new DirectoryWatchdog(gameContext.theCustomMapDir());
 
         storePreferenceDefaultValues();
         if (!thePreferenceManager.isAccessible()) {
@@ -153,7 +153,7 @@ public class PacManGames_UI_Impl implements GameUI {
                 showEditorView();
             }
             else {
-                currentView().handleKeyboardInput(gameContext);
+                currentView().handleKeyboardInput(this);
             }
         });
         propertyCurrentView.addListener((py, oldView, newView) -> handleViewChange(oldView, newView));
@@ -377,7 +377,7 @@ public class PacManGames_UI_Impl implements GameUI {
 
         theStage.centerOnScreen();
         theStage.show();
-        theWatchdog.startWatching();
+        theCustomDirWatchdog.startWatching();
     }
 
     @Override
@@ -415,12 +415,19 @@ public class PacManGames_UI_Impl implements GameUI {
 
     @Override
     public void terminateApp() {
+        Logger.info("Application is terminated now. There is no way back!");
         Platform.exit();
     }
 
     @Override
     public PacManGames_Assets theAssets() {
         return theAssets;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T extends GameUI_Config> T theConfiguration() {
+        return (T) config(theGameContext.theGameController().selectedGameVariant());
     }
 
     @Override
@@ -434,9 +441,7 @@ public class PacManGames_UI_Impl implements GameUI {
     }
 
     @Override
-    public Keyboard theKeyboard() {
-        return theKeyboard;
-    }
+    public Keyboard theKeyboard() { return theKeyboard; }
 
     @Override
     public Joypad theJoypad() {
@@ -449,8 +454,8 @@ public class PacManGames_UI_Impl implements GameUI {
     }
 
     @Override
-    public DirectoryWatchdog theWatchdog() {
-        return theWatchdog;
+    public DirectoryWatchdog theCustomDirWatchdog() {
+        return theCustomDirWatchdog;
     }
 
     @Override
@@ -458,14 +463,6 @@ public class PacManGames_UI_Impl implements GameUI {
         playView.updateGameScene(reloadCurrent);
     }
 
-    // UI configuration
-
-    /**
-     * Stores the UI configuration for a game variant and initializes the game scenes (assigns the game context).
-     *
-     * @param variant a game variant
-     * @param config the UI configuration for this variant
-     */
     @Override
     public void setConfig(String variant, GameUI_Config config) {
         requireNonNull(variant);
@@ -476,12 +473,6 @@ public class PacManGames_UI_Impl implements GameUI {
     @Override
     public GameUI_Config config(String gameVariant) {
         return configByGameVariant.get(gameVariant);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public <T extends GameUI_Config> T theConfiguration() {
-        return (T) config(theGameContext.theGameController().selectedGameVariant());
     }
 
     @Override

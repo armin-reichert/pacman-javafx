@@ -64,7 +64,7 @@ public class InfoBoxCustomMaps extends InfoBox {
         addRow(mapsTableView);
         updateCustomMapList();
 
-        ui.theWatchdog().addEventListener(eventList -> {
+        ui.theCustomDirWatchdog().addEventListener(eventList -> {
             Logger.info("Custom map change(s) detected: {}",
                 eventList.stream()
                     .map(watchEvent -> String.format("%s: '%s'", watchEvent.kind(), watchEvent.context()))

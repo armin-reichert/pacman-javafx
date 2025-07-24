@@ -80,12 +80,12 @@ public class PacManGames3dApp extends Application {
             .build()
             .show();
 
-        theUI().theWatchdog().addEventListener(watchEvents -> mapSelectorXXL.loadCustomMaps());
+        theUI().theCustomDirWatchdog().addEventListener(watchEvents -> mapSelectorXXL.loadCustomMaps());
     }
 
     @Override
     public void stop() {
         theUI().theGameClock().stop();
-        theUI().theWatchdog().dispose();
+        theUI().theCustomDirWatchdog().dispose();
     }
 }

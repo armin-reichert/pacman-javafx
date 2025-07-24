@@ -44,6 +44,6 @@ public class ArcadeMsPacMan_App extends Application {
     @Override
     public void stop() {
         theUI().theGameClock().stop();
-        theUI().theWatchdog().dispose();
+        theUI().theCustomDirWatchdog().dispose();
     }
 }

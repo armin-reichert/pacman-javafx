@@ -238,9 +238,8 @@ public class PlayView implements PacManGames_View {
     }
 
     @Override
-    public void handleKeyboardInput(GameContext gameContext) {
-        actionBindings.runMatchingActionOrElse(ui,
-            () -> ui.currentGameScene().ifPresent(GameScene::handleKeyboardInput));
+    public void handleKeyboardInput(GameUI ui) {
+        actionBindings.runMatchingActionOrElse(ui, () -> ui.currentGameScene().ifPresent(GameScene::handleKeyboardInput));
     }
 
     // -----------------------------------------------------------------------------------------------------------------
