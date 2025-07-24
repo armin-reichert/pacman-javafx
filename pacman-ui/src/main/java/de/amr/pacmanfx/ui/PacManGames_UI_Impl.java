@@ -200,25 +200,21 @@ public class PacManGames_UI_Impl implements GameUI {
         thePrefs.storeDefaultValue("scene2d.max_scaling", 5.0f);
     }
 
-    public void configure(Map<String, Class<? extends GameUI_Config>> configClassesMap) {
-        configClassesMap.forEach((gameVariant, configClass) -> {
-            try {
-                GameUI_Config config = configClass.getDeclaredConstructor(GameUI.class).newInstance(this);
-                setConfig(gameVariant, config);
-            } catch (Exception x) {
-                Logger.error("Could not create UI configuration of class {}", configClass);
-                throw new IllegalStateException(x);
-            }
-        });
-        configByGameVariant.forEach((gameVariant, config) -> {
+    public void applyConfiguration(String gameVariant, Class<?> configClass) {
+        try {
+            GameUI_Config config = (GameUI_Config) configClass.getDeclaredConstructor(GameUI.class).newInstance(this);
             config.createGameScenes(this);
+            Logger.info("Game scenes for game variant '{}' created", gameVariant);
             config.gameScenes().forEach(scene -> {
                 if (scene instanceof GameScene2D gameScene2D) {
                     gameScene2D.debugInfoVisibleProperty().bind(propertyDebugInfoVisible);
                 }
             });
-            Logger.info("Game scenes for game variant {} created", gameVariant);
-        });
+            setConfig(gameVariant, config);
+        } catch (Exception x) {
+            Logger.error("Could not apply UI configuration of class {}", configClass);
+            throw new IllegalStateException(x);
+        }
     }
 
     private void handleViewChange(PacManGames_View oldView, PacManGames_View newView) {

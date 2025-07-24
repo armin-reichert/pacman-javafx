@@ -14,9 +14,18 @@ import de.amr.pacmanfx.ui.layout.StartPage;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class GameUI_Builder {
+
+    private static class Configuration {
+        Class<?> gameModelClass;
+        MapSelector mapSelector;
+        Class<?> uiConfigClass;
+    }
 
     public static GameUI_Builder createUI(Stage stage, double width, double height) {
         PacManGames_UI_Impl.THE_ONE = new PacManGames_UI_Impl(Globals.theGameContext(), stage, width, height);
@@ -24,30 +33,35 @@ public class GameUI_Builder {
     }
 
     private final PacManGames_UI_Impl ui;
-    private final Map<String, Class<?>> gameModelClassByVariant = new HashMap<>();
-    private final Map<String, MapSelector> mapSelectorByVariant = new HashMap<>();
-    private final Map<String, Class<? extends GameUI_Config>> uiConfigClassByVariant = new HashMap<>();
-    private List<StartPage> startPages = new ArrayList<>();
-    private List<DashboardID> dashboardIDs = new ArrayList<>();
+    private final Map<String, Configuration> configurationByGameVariant = new HashMap<>();
+    private List<StartPage> startPages = List.of();
+    private List<DashboardID> dashboardIDs = List.of();
 
     private GameUI_Builder(PacManGames_UI_Impl ui) {
         this.ui = ui;
     }
 
+    private Configuration configuration(String gameVariant) {
+        if (!configurationByGameVariant.containsKey(gameVariant)) {
+            configurationByGameVariant.put(gameVariant, new Configuration());
+        }
+        return configurationByGameVariant.get(gameVariant);
+    }
+
     public GameUI_Builder game(
         String variant,
         Class<? extends GameModel> gameModelClass,
-        Class<? extends GameUI_Config> configClass)
+        Class<? extends GameUI_Config> uiConfigClass)
     {
         validateGameVariantKey(variant);
         if (gameModelClass == null) {
             error("Game model class for variant %s may not be null".formatted(variant));
         }
-        if (configClass == null) {
+        if (uiConfigClass == null) {
             error("Game UI configuration class for variant %s may not be null".formatted(variant));
         }
-        gameModelClassByVariant.put(variant, gameModelClass);
-        uiConfigClassByVariant.put(variant, configClass);
+        configuration(variant).gameModelClass = gameModelClass;
+        configuration(variant).uiConfigClass = uiConfigClass;
         return this;
     }
 
@@ -55,21 +69,21 @@ public class GameUI_Builder {
             String variant,
             Class<? extends GameModel> gameModelClass,
             MapSelector mapSelector,
-            Class<? extends GameUI_Config> configClass)
+            Class<? extends GameUI_Config> uiConfigClass)
     {
         validateGameVariantKey(variant);
         if (gameModelClass == null) {
             error("Game model class for variant %s may not be null".formatted(variant));
         }
-        if (configClass == null) {
+        if (uiConfigClass == null) {
             error("Game UI configuration class for variant %s may not be null".formatted(variant));
         }
         if (mapSelector == null) {
             error("Map selector for variant %s may not be null".formatted(variant));
         }
-        gameModelClassByVariant.put(variant, gameModelClass);
-        mapSelectorByVariant.put(variant, mapSelector);
-        uiConfigClassByVariant.put(variant, configClass);
+        configuration(variant).gameModelClass = gameModelClass;
+        configuration(variant).uiConfigClass = uiConfigClass;
+        configuration(variant).mapSelector = mapSelector;
         return this;
     }
 
@@ -94,15 +108,15 @@ public class GameUI_Builder {
 
     public GameUI build() {
         validateConfiguration();
-        ui.configure(uiConfigClassByVariant);
-        gameModelClassByVariant.keySet().forEach(gameVariant -> {
-            Class<?> gameModelClass = gameModelClassByVariant.get(gameVariant);
-            MapSelector mapSelector = mapSelectorByVariant.get(gameVariant);
+        configurationByGameVariant.keySet().forEach(gameVariant -> {
+            Configuration configuration = configuration(gameVariant);
             GameModel gameModel = createGameModel(
-                gameModelClass,
-                mapSelector,
+                configuration.gameModelClass,
+                configuration.mapSelector,
                 ui.theGameContext(),
-                highScoreFile(ui.theGameContext().theHomeDir(), gameVariant));
+                highScoreFile(ui.theGameContext().theHomeDir(), gameVariant)
+            );
+            ui.applyConfiguration(gameVariant, configuration.uiConfigClass);
             ui.theGameContext().theGameController().registerGame(gameVariant, gameModel);
         });
         ui.thePlayView().dashboard().configure(dashboardIDs);
@@ -132,25 +146,24 @@ public class GameUI_Builder {
     }
 
     private void validateConfiguration() {
-        if (gameModelClassByVariant.isEmpty()) {
-            error("No game models specified");
+        if (configurationByGameVariant.keySet().isEmpty()) {
+            error("No game configuration specified");
         }
     }
 
-    private void validateGameVariantKey(String gameVariantKey) {
-        if (gameVariantKey == null) {
+    private void validateGameVariantKey(String key) {
+        if (key == null) {
             error("Game variant key must not be null");
         }
-        if (gameVariantKey.isBlank()) {
+        if (key.isBlank()) {
             error("Game variant key must not be a blank string");
         }
-        if (!GameController.GAME_VARIANT_PATTERN.matcher(gameVariantKey).matches()) {
-            error("Game variant key '%s' does not match required syntax '%s'"
-                .formatted(gameVariantKey, GameController.GAME_VARIANT_PATTERN));
+        if (!GameController.GAME_VARIANT_PATTERN.matcher(key).matches()) {
+            error("Game variant key '%s' does not match pattern '%s'".formatted(key, GameController.GAME_VARIANT_PATTERN));
         }
     }
 
     private void error(String message) {
-        throw new RuntimeException("Application building failed: %s".formatted(message));
+        throw new RuntimeException("UI building failed: %s".formatted(message));
     }
 }
