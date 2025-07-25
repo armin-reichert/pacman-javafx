@@ -49,6 +49,10 @@ public class LevelCounter3D extends Group implements Disposable {
             getChildren().add(cube);
         }
 
+        if (spinningAnimation != null) {
+            spinningAnimation.stop();
+            spinningAnimation.dispose();
+        }
         spinningAnimation = new ManagedAnimation(animationManager, "LevelCounter_Spinning") {
             @Override
             protected Animation createAnimation() {
