@@ -24,7 +24,6 @@ import javafx.util.Duration;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public class InfoBoxGameLevelAnimations extends InfoBox {
@@ -32,11 +31,11 @@ public class InfoBoxGameLevelAnimations extends InfoBox {
     private static final float RELATIVE_TABLE_HEIGHT = 0.80f;
     private static final float REFRESH_PERIOD_SECONDS = 0.5f;
 
-    public static class TableData {
+    public static class TableRow {
         private final StringProperty labelProperty;
         private final ObjectProperty<Animation> animationProperty;
 
-        TableData(ManagedAnimation managedAnimation) {
+        TableRow(ManagedAnimation managedAnimation) {
             labelProperty = new SimpleStringProperty(managedAnimation.label());
             animationProperty = new SimpleObjectProperty<>(managedAnimation.animation().orElse(null));
         }
@@ -45,30 +44,28 @@ public class InfoBoxGameLevelAnimations extends InfoBox {
         public ObjectProperty<Animation> animationProperty() { return animationProperty; }
     }
 
-    private final TableView<TableData> tableView = new TableView<>();
-    private final ObservableList<TableData> tableModel = FXCollections.observableArrayList();
+    private final TableView<TableRow> tableView = new TableView<>();
+    private final ObservableList<TableRow> tableRows = FXCollections.observableArrayList();
     private final Timeline refreshTimer;
-
-    // References the animation timer of the current 3D game level (if present)
-    private final ObjectProperty<AnimationManager> animationManagerProperty = new SimpleObjectProperty<>();
+    private AnimationManager animationManager;
 
     public InfoBoxGameLevelAnimations(GameUI ui) {
         super(ui);
 
-        tableView.setItems(tableModel);
+        tableView.setItems(tableRows);
         tableView.setPlaceholder(new Text("No 3D animations"));
         tableView.setFocusTraversable(false);
         tableView.setPrefWidth(300);
         tableView.setPrefHeight(300);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 
-        TableColumn<TableData, String> labelColumn = new TableColumn<>("Animation Name");
+        TableColumn<TableRow, String> labelColumn = new TableColumn<>("Animation Name");
         labelColumn.setCellValueFactory(data -> data.getValue().labelProperty());
         labelColumn.setSortable(false);
         labelColumn.setMinWidth(180);
         tableView.getColumns().add(labelColumn);
 
-        TableColumn<TableData, String> statusColumn = new TableColumn<>("Status");
+        TableColumn<TableRow, String> statusColumn = new TableColumn<>("Status");
         statusColumn.setCellValueFactory(data -> data.getValue().animationProperty()
                 .map(animation -> animation == null ? "unknown" : animation.getStatus().name()));
         statusColumn.setSortable(false);
@@ -89,34 +86,30 @@ public class InfoBoxGameLevelAnimations extends InfoBox {
     public void update() {
         super.update();
         tableView.setPrefHeight(ui.theStage().getHeight() * RELATIVE_TABLE_HEIGHT);
-        boolean refresh = false;
         if (ui.currentGameScene().isPresent() && ui.currentGameScene().get() instanceof PlayScene3D scene3D) {
-            scene3D.level3D().ifPresent(gameLevel3D -> animationManagerProperty.set(gameLevel3D.animationManager()));
-            refresh = true;
-        }
-        if (refresh) {
+            scene3D.level3D().ifPresent(gameLevel3D -> animationManager = gameLevel3D.animationManager());
             refreshTimer.play();
         } else {
             refreshTimer.pause();
-            tableModel.clear();
+            tableRows.clear();
         }
     }
 
     private void updateTableData() {
-        tableModel.clear();
-        if (animationManagerProperty.get() != null) {
-            Set<ManagedAnimation> animations = animationManagerProperty.get().animations();
-            tableModel.addAll(tableDataSortedByAnimationLabel(animations, Animation.Status.RUNNING));
-            tableModel.addAll(tableDataSortedByAnimationLabel(animations, Animation.Status.PAUSED));
-            tableModel.addAll(tableDataSortedByAnimationLabel(animations, Animation.Status.STOPPED));
+        tableRows.clear();
+        if (animationManager != null) {
+            Set<ManagedAnimation> animations = animationManager.animations();
+            tableRows.addAll(tableDataSortedByAnimationLabel(animations, Animation.Status.RUNNING));
+            tableRows.addAll(tableDataSortedByAnimationLabel(animations, Animation.Status.PAUSED));
+            tableRows.addAll(tableDataSortedByAnimationLabel(animations, Animation.Status.STOPPED));
         }
     }
 
-    private List<TableData> tableDataSortedByAnimationLabel(Set<ManagedAnimation> animations, Animation.Status status) {
+    private List<TableRow> tableDataSortedByAnimationLabel(Set<ManagedAnimation> animations, Animation.Status status) {
         return animations.stream()
             .filter(animation -> hasStatus(animation, status))
             .sorted(Comparator.comparing(ManagedAnimation::label))
-            .map(TableData::new)
+            .map(TableRow::new)
             .toList();
     }
 
