@@ -162,7 +162,8 @@ public class ObstacleBuilder {
         tilesWithErrors.add(cursor.currentTile);
     }
 
-    private void buildRestOfObstacle(Obstacle obstacle, Vector2i startTile, boolean ccw, List<Vector2i> tilesWithErrors) {
+    private void buildRestOfObstacle(Obstacle obstacle, Vector2i startTile, boolean counterClockwise, List<Vector2i> tilesWithErrors) {
+        boolean ccw = counterClockwise;
         int bailout = 0;
         while (bailout < 1000) {
             ++bailout;
