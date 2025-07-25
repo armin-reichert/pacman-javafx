@@ -63,11 +63,11 @@ public class Energizer3D implements Eatable3D {
         }
     }
 
-    public void pump() {
+    public void playPumping() {
         pumpingAnimation.playOrContinue();
     }
 
-    public void noPumping() {
+    public void pausePumping() {
         pumpingAnimation.pause();
     }
 

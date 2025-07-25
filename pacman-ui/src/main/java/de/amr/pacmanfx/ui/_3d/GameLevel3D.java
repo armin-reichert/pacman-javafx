@@ -597,7 +597,7 @@ public class GameLevel3D implements Disposable {
     }
 
     public void onStartingGame() {
-        energizers3D().forEach(Energizer3D::noPumping);
+        energizers3D().forEach(Energizer3D::pausePumping);
         if (levelCounter3D != null) {
             levelCounter3D.update(ui, ui.theGameContext().theGame().theHUD().theLevelCounter());
         }
@@ -606,7 +606,7 @@ public class GameLevel3D implements Disposable {
     public void onHuntingStart() {
         pac3D.init();
         ghosts3D.forEach(ghost3D -> ghost3D.init(gameLevel));
-        energizers3D().forEach(Energizer3D::pump);
+        energizers3D().forEach(Energizer3D::playPumping);
         livesCounter3D().map(LivesCounter3D::lookingAroundAnimation).ifPresent(ManagedAnimation::playFromStart);
     }
 
@@ -645,7 +645,7 @@ public class GameLevel3D implements Disposable {
         animationManager.stopAllAnimations();
         // hide 3d food explicitly because level might have been completed using cheat!
         pellets3D.forEach(pellet3D -> pellet3D.shape3D().setVisible(false));
-        energizers3D.forEach(Energizer3D::noPumping);
+        energizers3D.forEach(Energizer3D::pausePumping);
         energizers3D.forEach(energizer3D -> energizer3D.shape3D().setVisible(false));
         particlesGroupContainer.getChildren().clear();
         house3D.setDoorVisible(false);
