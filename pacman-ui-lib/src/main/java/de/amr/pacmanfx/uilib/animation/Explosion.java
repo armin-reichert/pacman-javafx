@@ -30,7 +30,7 @@ public class Explosion extends ManagedAnimation {
 
     private static final short PARTICLE_COUNT_MIN = 33;
     private static final short PARTICLE_COUNT_MAX = 33;
-    private static final float PARTICLE_MEAN_RADIUS = 0.25f;
+    private static final float PARTICLE_MEAN_RADIUS = .25f;
     private static final FloatRange PARTICLE_VELOCITY_XY = new FloatRange(-0.2f, 0.2f);
     private static final FloatRange PARTICLE_VELOCITY_Z  = new FloatRange(-3f, -0.5f);
     private static final float PARTICLE_GRAVITY = 0.1f;
@@ -39,7 +39,7 @@ public class Explosion extends ManagedAnimation {
         private float vx, vy, vz;
 
         public Particle(Material material, double radius) {
-            super(radius);
+            super(radius, 10);
             setMaterial(material);
         }
 
@@ -87,7 +87,8 @@ public class Explosion extends ManagedAnimation {
             int numParticles = randomInt(minParticleCount, maxParticleCount + 1);
             Random rnd = new Random();
             for (int i = 0; i < numParticles; ++i) {
-                double radius = rnd.nextGaussian(PARTICLE_MEAN_RADIUS, 0.25);
+                double scaling = Math.clamp(rnd.nextGaussian(1, 0.2), 0.5, 2);
+                double radius = scaling * PARTICLE_MEAN_RADIUS;
                 var particle = new Particle(particleMaterial, radius);
                 particle.setVelocity(
                     randomFloat(PARTICLE_VELOCITY_XY.from(), PARTICLE_VELOCITY_XY.to()),
