@@ -4,6 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.dashboard;
 
+import de.amr.pacmanfx.event.GameEvent;
+import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.uilib.animation.AnimationManager;
@@ -15,6 +17,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
@@ -47,7 +50,8 @@ public class InfoBoxGameLevelAnimations extends InfoBox {
     private final TableView<TableRow> tableView = new TableView<>();
     private final ObservableList<TableRow> tableRows = FXCollections.observableArrayList();
     private final Timeline refreshTimer;
-    private AnimationManager animationManager;
+
+    private final ObjectProperty<AnimationManager> currentAnimationManager = new SimpleObjectProperty<>();
 
     public InfoBoxGameLevelAnimations(GameUI ui) {
         super(ui);
@@ -55,9 +59,8 @@ public class InfoBoxGameLevelAnimations extends InfoBox {
         tableView.setItems(tableRows);
         tableView.setPlaceholder(new Text("No 3D animations"));
         tableView.setFocusTraversable(false);
-        tableView.setPrefWidth(300);
-        tableView.setPrefHeight(300);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
+        tableView.prefHeightProperty().bind(ui.theStage().heightProperty().map(height -> height.doubleValue() * RELATIVE_TABLE_HEIGHT));
 
         TableColumn<TableRow, String> labelColumn = new TableColumn<>("Animation Name");
         labelColumn.setCellValueFactory(data -> data.getValue().labelProperty());
@@ -85,20 +88,29 @@ public class InfoBoxGameLevelAnimations extends InfoBox {
     @Override
     public void update() {
         super.update();
-        tableView.setPrefHeight(ui.theStage().getHeight() * RELATIVE_TABLE_HEIGHT);
-        if (ui.currentGameScene().isPresent() && ui.currentGameScene().get() instanceof PlayScene3D scene3D) {
-            scene3D.level3D().ifPresent(gameLevel3D -> animationManager = gameLevel3D.animationManager());
-            refreshTimer.play();
-        } else {
-            refreshTimer.pause();
+        //TODO use data binding
+        currentAnimationManager.set(observedAnimationManager());
+        if (currentAnimationManager.get() == null) {
             tableRows.clear();
+            refreshTimer.pause();
+        } else {
+            refreshTimer.play();
         }
+    }
+
+    private AnimationManager observedAnimationManager() {
+        if (ui.currentGameScene().isPresent()
+            && ui.currentGameScene().get() instanceof PlayScene3D playScene3D
+            && playScene3D.level3D().isPresent()) {
+            return playScene3D.level3D().get().animationManager();
+        }
+        return null;
     }
 
     private void updateTableData() {
         tableRows.clear();
-        if (animationManager != null) {
-            Set<ManagedAnimation> animations = animationManager.animations();
+        if (currentAnimationManager.get() != null) {
+            Set<ManagedAnimation> animations = currentAnimationManager.get().animations();
             tableRows.addAll(tableDataSortedByAnimationLabel(animations, Animation.Status.RUNNING));
             tableRows.addAll(tableDataSortedByAnimationLabel(animations, Animation.Status.PAUSED));
             tableRows.addAll(tableDataSortedByAnimationLabel(animations, Animation.Status.STOPPED));
