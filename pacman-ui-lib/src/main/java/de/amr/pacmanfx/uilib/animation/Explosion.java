@@ -28,18 +28,19 @@ public class Explosion extends ManagedAnimation {
 
     private static final Duration DURATION = Duration.seconds(4);
 
-    private static final short PARTICLE_COUNT_MIN = 33;
-    private static final short PARTICLE_COUNT_MAX = 33;
-    private static final float PARTICLE_MEAN_RADIUS = .25f;
+    private static final byte PARTICLE_DIVISIONS = 8;
+    private static final short PARTICLE_COUNT_MIN = 128;
+    private static final short PARTICLE_COUNT_MAX = 512;
+    private static final float PARTICLE_MEAN_RADIUS = .4f;
     private static final FloatRange PARTICLE_VELOCITY_XY = new FloatRange(-0.2f, 0.2f);
-    private static final FloatRange PARTICLE_VELOCITY_Z  = new FloatRange(-3f, -0.5f);
-    private static final float PARTICLE_GRAVITY = 0.1f;
+    private static final FloatRange PARTICLE_VELOCITY_Z  = new FloatRange(-4.5f, -1.5f);
+    private static final float GRAVITY_Z = 0.1f;
 
     public static class Particle extends Sphere implements Disposable {
         private float vx, vy, vz;
 
         public Particle(Material material, double radius) {
-            super(radius, 10);
+            super(radius, PARTICLE_DIVISIONS);
             setMaterial(material);
         }
 
@@ -53,7 +54,7 @@ public class Explosion extends ManagedAnimation {
             setTranslateX(getTranslateX() + vx);
             setTranslateY(getTranslateY() + vy);
             setTranslateZ(getTranslateZ() + vz);
-            vz += PARTICLE_GRAVITY;
+            vz += GRAVITY_Z;
         }
 
         @Override
