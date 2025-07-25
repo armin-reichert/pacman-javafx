@@ -338,7 +338,7 @@ public class GameLevel3D implements Disposable {
         cornerTopMaterial.specularColorProperty().bind(cornerTopMaterial.diffuseColorProperty().map(Color::brighter));
     }
 
-    private void releaseMaterials() {
+    private void disposeMaterials() {
         if (pelletMaterial != null) {
             pelletMaterial.diffuseColorProperty().unbind();
             pelletMaterial.specularColorProperty().unbind();
@@ -804,18 +804,15 @@ public class GameLevel3D implements Disposable {
 
     // still work in progress...
 
-    /**
-     * Attempt to help objects getting garbage-collected.
-     */
     public void dispose() {
-        Logger.info("Disposing game level 3D, clearing resources...");
+        Logger.info("Disposing game level 3D...");
 
         animationManager.stopAllAnimations();
         animationManager.disposeAllAnimations();
         wallColorFlashingAnimation = null;
         levelCompletedFullAnimation = null;
         levelCompletedShortAnimation = null;
-        Logger.info("Destroyed and removed all managed animations");
+        Logger.info("Stopped, disposed and removed all managed animations");
 
         ui.property3DDrawMode().removeListener(this::handleDrawModeChange);
         Logger.info("Removed 'draw mode' listener");
@@ -852,7 +849,7 @@ public class GameLevel3D implements Disposable {
             Logger.info("Disposed 3D energizers");
         }
         particlesGroupContainer.getChildren().clear();
-        Logger.info("Removed all particles");
+        Logger.info("Removed all particle groups");
         if (floor3D != null) {
             floor3D.translateXProperty().unbind();
             floor3D.translateYProperty().unbind();
@@ -862,17 +859,15 @@ public class GameLevel3D implements Disposable {
             Logger.info("Unbound and cleared 3D floor");
         }
         if (house3D != null) {
-            house3D.light().lightOnProperty().unbind();
             house3D.dispose();
             house3D = null;
-            Logger.info("Disposed and cleared 3D house");
+            Logger.info("Disposed 3D house");
         }
         if (maze3D != null) {
-            // destroy wall 3D bottom and top nodes
-            maze3D.getChildren().stream().filter(node -> Wall3D.isTop(node) || Wall3D.isBase(node)).forEach(Wall3D::destroyPart);
+            maze3D.getChildren().forEach(Wall3D::dispose);
             maze3D.getChildren().clear();
             maze3D = null;
-            Logger.info("3D maze destroyed");
+            Logger.info("Disposed 3D maze");
         }
         if (livesCounterShapes != null) {
             for (var shape : livesCounterShapes) {
@@ -885,36 +880,34 @@ public class GameLevel3D implements Disposable {
         if (livesCounter3D != null) {
             livesCounter3D.dispose();
             livesCounter3D = null;
-            Logger.info("Disposed and removed lives counter 3D");
+            Logger.info("Disposed lives counter 3D");
         }
         if (levelCounter3D != null) {
             levelCounter3D.dispose();
             levelCounter3D = null;
-            Logger.info("Disposed and r level counter 3D");
+            Logger.info("Disposed level counter 3D");
         }
         if (pac3D != null) {
             pac3D.dispose();
             pac3D = null;
-            Logger.info("Removed Pac 3D");
+            Logger.info("Disposed Pac 3D");
         }
         if (ghosts3D != null) {
             ghosts3D.forEach(MutatingGhost3D::dispose);
             ghosts3D = null;
-            Logger.info("Disposed and cleared 3D ghosts");
+            Logger.info("Disposed 3D ghosts");
         }
-
         if (bonus3D != null) {
             bonus3D.dispose();
             bonus3D = null;
-            Logger.info("Disposed and cleared 3D bonus");
+            Logger.info("Disposed 3D bonus");
         }
         if (messageView != null) {
             messageView.dispose();
             messageView = null;
-            Logger.info("Disposed and cleared message view");
+            Logger.info("Disposed message view");
         }
-
         disposeGhostMeshViews();
-        releaseMaterials();
+        disposeMaterials();
     }
 }

@@ -37,9 +37,9 @@ public class TerrainRenderer3D {
         double wallThickness)
     {
         if (p1.x() == p2.x()) { // vertical wall
-            createBoxWall(p1.midpoint(p2), wallThickness, Math.abs(p1.y() - p2.y())).addTo(parent);
+            createBoxWall(p1.midpoint(p2), wallThickness, Math.abs(p1.y() - p2.y())).addToGroup(parent);
         } else if (p1.y() == p2.y()) { // horizontal wall
-            createBoxWall(p1.midpoint(p2), Math.abs(p1.x() - p2.x()), wallThickness).addTo(parent);
+            createBoxWall(p1.midpoint(p2), Math.abs(p1.x() - p2.x()), wallThickness).addToGroup(parent);
         } else {
             Logger.error("Cannot add horizontal/vertical wall between {} and {}", p1, p2);
         }
@@ -81,7 +81,7 @@ public class TerrainRenderer3D {
             if ("dcgbfceb".equals(obstacle.encoding())) { // O-shape with hole
                 Vector2i[] cornerCenters = obstacle.cornerCenters();
                 for (Vector2i center : cornerCenters) {
-                    createCylinderWall(center, HTS).addTo(obstacleGroup);
+                    createCylinderWall(center, HTS).addToGroup(obstacleGroup);
                 }
                 addWallBetween(obstacleGroup, cornerCenters[0], cornerCenters[1], TS);
                 addWallBetween(obstacleGroup, cornerCenters[1], cornerCenters[2], TS);
@@ -98,9 +98,9 @@ public class TerrainRenderer3D {
 
     private void renderFilledObstacle(Group parent, Obstacle obstacle, double cornerRadius) {
         for (Vector2i cornerCenter : obstacle.cornerCenters()) {
-            createCylinderWall(cornerCenter, cornerRadius).addTo(parent);
+            createCylinderWall(cornerCenter, cornerRadius).addToGroup(parent);
         }
-        obstacle.innerAreaRectangles().forEach(r -> createBoxWall(r.center(), r.width(), r.height()).addTo(parent));
+        obstacle.innerAreaRectangles().forEach(r -> createBoxWall(r.center(), r.width(), r.height()).addToGroup(parent));
     }
 
     private void renderSegmentPath(Group parent, Obstacle obstacle, double wallThickness) {
@@ -143,9 +143,9 @@ public class TerrainRenderer3D {
     }
 
     private void addCorner(Group parent, Vector2i center, Vector2i endPointH, Vector2i endPointV, double wallThickness) {
-        createBoxWall(center.midpoint(endPointH), center.manhattanDist(endPointH), wallThickness).addTo(parent);
-        createBoxWall(center.midpoint(endPointV), wallThickness, center.manhattanDist(endPointV)).addTo(parent);
-        createCylinderWall(center, 0.5 * wallThickness).addTo(parent);
+        createBoxWall(center.midpoint(endPointH), center.manhattanDist(endPointH), wallThickness).addToGroup(parent);
+        createBoxWall(center.midpoint(endPointV), wallThickness, center.manhattanDist(endPointV)).addToGroup(parent);
+        createCylinderWall(center, 0.5 * wallThickness).addToGroup(parent);
     }
 
     public Wall3D createCylinderWall(Vector2i center, double radius) {

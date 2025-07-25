@@ -121,17 +121,17 @@ public class Wall3D {
         return (T) top;
     }
 
-    public static void destroyPart(Node part) {
+    public static void dispose(Node part) {
         if (isBase(part) || isTop(part)) {
             switch (part) {
-                case Box box -> destroyBox(box);
-                case Cylinder cylinder -> destroyCylinder(cylinder);
+                case Box box -> disposeBox(box);
+                case Cylinder cylinder -> disposeCylinder(cylinder);
                 default -> Logger.error("Only Box and Cylinder are allowed as parts of 3D wall");
             }
         }
     }
 
-    private static void destroyBox(Box box) {
+    private static void disposeBox(Box box) {
         box.depthProperty().unbind();
         box.translateXProperty().unbind();
         box.translateYProperty().unbind();
@@ -139,7 +139,7 @@ public class Wall3D {
         box.setMaterial(null);
     }
 
-    private static void destroyCylinder(Cylinder cylinder) {
+    private static void disposeCylinder(Cylinder cylinder) {
         cylinder.heightProperty().unbind();
         cylinder.translateXProperty().unbind();
         cylinder.translateYProperty().unbind();
@@ -147,7 +147,7 @@ public class Wall3D {
         cylinder.setMaterial(null);
     }
 
-    public void addTo(Group group) {
+    public void addToGroup(Group group) {
         group.getChildren().addAll(base, top);
     }
 

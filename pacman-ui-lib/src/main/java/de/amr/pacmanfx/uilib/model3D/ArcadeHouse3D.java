@@ -42,7 +42,10 @@ public class ArcadeHouse3D extends Group implements Disposable {
     private final DoubleProperty wallBaseHeightProperty = new SimpleDoubleProperty();
 
     private TerrainRenderer3D r3D;
+
     private PhongMaterial barMaterial;
+    private PhongMaterial wallBaseMaterial;
+    private PhongMaterial wallTopMaterial;
 
     private Group door;
     private Group leftWing;
@@ -67,6 +70,12 @@ public class ArcadeHouse3D extends Group implements Disposable {
         requireNonNull(houseTopColor);
         requireNonNull(doorColor);
 
+        r3D = new TerrainRenderer3D();
+
+        barMaterial      = coloredPhongMaterial(doorColor);
+        wallBaseMaterial = coloredPhongMaterial(colorWithOpacity(houseBaseColor, opacity));
+        wallTopMaterial  = coloredPhongMaterial(houseTopColor);
+
         wallBaseHeightProperty.set(baseHeight);
 
         Vector2i houseSize = house.sizeInTiles();
@@ -75,17 +84,6 @@ public class ArcadeHouse3D extends Group implements Disposable {
         int yMin = house.minTile().y(), yMax = yMin + tilesY - 1;
         float centerX = xMin * TS + tilesX * HTS;
         float centerY = yMin * TS + tilesY * HTS;
-
-        PhongMaterial wallBaseMaterial = coloredPhongMaterial(colorWithOpacity(houseBaseColor, opacity));
-        PhongMaterial wallTopMaterial  = coloredPhongMaterial(houseTopColor);
-        barMaterial      = coloredPhongMaterial(doorColor);
-
-        r3D = new TerrainRenderer3D();
-        r3D.setOnWallCreated(wall3D -> {
-            wall3D.bindBaseHeight(wallBaseHeightProperty);
-            wall3D.setBaseMaterial(wallBaseMaterial);
-            wall3D.setTopMaterial(wallTopMaterial);
-        });
 
         door = createDoor(house.leftDoorTile(), house.rightDoorTile(), wallBaseHeightProperty.get());
 
@@ -112,11 +110,17 @@ public class ArcadeHouse3D extends Group implements Disposable {
         Vector2i bottomRight = Vector2i.of(xMax, yMax);
         Vector2i doorLeft = Vector2i.of(house.leftDoorTile().x() - 1, yMin);
         Vector2i doorRight = Vector2i.of(house.rightDoorTile().x() + 1, yMin);
-        r3D.createWallBetweenTiles(topLeft, doorLeft, wallThickness).addTo(this);
-        r3D.createWallBetweenTiles(doorRight, topRight, wallThickness).addTo(this);
-        r3D.createWallBetweenTiles(topRight, bottomRight, wallThickness).addTo(this);
-        r3D.createWallBetweenTiles(topLeft, bottomLeft, wallThickness).addTo(this);
-        r3D.createWallBetweenTiles(bottomLeft, bottomRight, wallThickness).addTo(this);
+
+        r3D.setOnWallCreated(wall3D -> {
+            wall3D.bindBaseHeight(wallBaseHeightProperty);
+            wall3D.setBaseMaterial(wallBaseMaterial);
+            wall3D.setTopMaterial(wallTopMaterial);
+        });
+        r3D.createWallBetweenTiles(topLeft, doorLeft, wallThickness).addToGroup(this);
+        r3D.createWallBetweenTiles(doorRight, topRight, wallThickness).addToGroup(this);
+        r3D.createWallBetweenTiles(topRight, bottomRight, wallThickness).addToGroup(this);
+        r3D.createWallBetweenTiles(topLeft, bottomLeft, wallThickness).addToGroup(this);
+        r3D.createWallBetweenTiles(bottomLeft, bottomRight, wallThickness).addToGroup(this);
 
         getChildren().addAll(light, door);
     }
@@ -192,6 +196,9 @@ public class ArcadeHouse3D extends Group implements Disposable {
         doorOpenCloseAnimation.dispose();
         doorOpenCloseAnimation = null;
 
+        for (Node child : getChildren()) {
+            Wall3D.dispose(child); // does nothing if child is not part of 3D wall
+        }
         getChildren().clear();
 
         destroyDoorWing(leftWing);
@@ -204,8 +211,11 @@ public class ArcadeHouse3D extends Group implements Disposable {
         door = null;
 
         barMaterial = null;
+        wallBaseMaterial = null;
+        wallTopMaterial = null;
 
         light.translateZProperty().unbind();
+        light.lightOnProperty().unbind();
         light = null;
 
         r3D.setOnWallCreated(null);

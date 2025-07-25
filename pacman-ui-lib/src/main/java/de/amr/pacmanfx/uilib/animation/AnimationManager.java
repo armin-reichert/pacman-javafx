@@ -96,15 +96,10 @@ public class AnimationManager {
         animationMap.values().forEach(this::stopAnimation);
     }
 
-    public void removeAllAnimations() {
-        animationMap.clear();
-        Logger.info("Animation map cleared");
-    }
-
     public void disposeAllAnimations() {
         animationMap.values().forEach(this::disposeAnimation);
-        removeAllAnimations();
-        Logger.info("All animations disposed and removed from map");
+        animationMap.clear();
+        Logger.info("All animations disposed and removed");
     }
 
     public Map<String, ManagedAnimation> animationMap() {
