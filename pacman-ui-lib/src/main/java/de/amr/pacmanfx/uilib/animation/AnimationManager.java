@@ -8,9 +8,8 @@ import javafx.animation.Animation;
 import org.tinylog.Logger;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.HashSet;
+import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 
@@ -19,17 +18,15 @@ import static java.util.Objects.requireNonNull;
  */
 public class AnimationManager {
 
-    private final Map<String, ManagedAnimation> animationMap = new HashMap<>();
+    private final Set<ManagedAnimation> animations = new HashSet<>();
 
-    void register(String label, ManagedAnimation managedAnimation) {
-        requireNonNull(label);
+    void register(ManagedAnimation managedAnimation) {
         requireNonNull(managedAnimation);
-        if (animationMap.containsValue(managedAnimation)) {
-            Logger.warn("Animation '{}' is already registered", label);
+        if (animations.contains(managedAnimation)) {
+            Logger.warn("Animation '{}' is already registered", managedAnimation.label);
         } else {
-            String id = label + "_" + UUID.randomUUID();
-            animationMap.put(id, managedAnimation);
-            Logger.trace("Animation '{}' registered with ID '{}'", label, id);
+            animations.add(managedAnimation);
+            Logger.trace("Animation '{}' registered", managedAnimation.label);
         }
     }
 
@@ -93,16 +90,16 @@ public class AnimationManager {
     // public API
 
     public void stopAllAnimations() {
-        animationMap.values().forEach(this::stopAnimation);
+        animations.forEach(this::stopAnimation);
     }
 
     public void disposeAllAnimations() {
-        animationMap.values().forEach(this::disposeAnimation);
-        animationMap.clear();
+        animations.forEach(this::disposeAnimation);
+        animations.clear();
         Logger.info("All animations disposed and removed");
     }
 
-    public Map<String, ManagedAnimation> animationMap() {
-        return Collections.unmodifiableMap(animationMap);
+    public Set<ManagedAnimation> animations() {
+        return Collections.unmodifiableSet(animations);
     }
 }

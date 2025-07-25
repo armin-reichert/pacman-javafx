@@ -22,8 +22,10 @@ import javafx.scene.control.TableView;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class InfoBoxGameLevelAnimations extends InfoBox {
 
@@ -103,18 +105,18 @@ public class InfoBoxGameLevelAnimations extends InfoBox {
     private void updateTableData() {
         tableModel.clear();
         if (animationManagerProperty.get() != null) {
-            Map<String, ManagedAnimation> animationMap = animationManagerProperty.get().animationMap();
-            tableModel.addAll(dataSortedByMapKey(animationMap, Animation.Status.RUNNING));
-            tableModel.addAll(dataSortedByMapKey(animationMap, Animation.Status.PAUSED));
-            tableModel.addAll(dataSortedByMapKey(animationMap, Animation.Status.STOPPED));
+            Set<ManagedAnimation> animations = animationManagerProperty.get().animations();
+            tableModel.addAll(tableDataSortedByAnimationLabel(animations, Animation.Status.RUNNING));
+            tableModel.addAll(tableDataSortedByAnimationLabel(animations, Animation.Status.PAUSED));
+            tableModel.addAll(tableDataSortedByAnimationLabel(animations, Animation.Status.STOPPED));
         }
     }
 
-    private List<TableData> dataSortedByMapKey(Map<String, ManagedAnimation> animationMap, Animation.Status status) {
-        return animationMap.entrySet().stream()
-            .filter(entry -> hasStatus(entry.getValue(), status))
-            .sorted(Map.Entry.comparingByKey())
-            .map(entry -> new TableData(entry.getValue()))
+    private List<TableData> tableDataSortedByAnimationLabel(Set<ManagedAnimation> animations, Animation.Status status) {
+        return animations.stream()
+            .filter(animation -> hasStatus(animation, status))
+            .sorted(Comparator.comparing(ManagedAnimation::label))
+            .map(TableData::new)
             .toList();
     }
 

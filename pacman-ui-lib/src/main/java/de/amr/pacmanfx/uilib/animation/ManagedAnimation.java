@@ -23,7 +23,7 @@ public abstract class ManagedAnimation implements Disposable {
     protected ManagedAnimation(AnimationManager animationManager, String label) {
         this.animationManager = requireNonNull(animationManager);
         this.label = requireNonNull(label);
-        animationManager.register(label, this);
+        animationManager.register(this);
     }
 
     public AnimationManager animationManager() {
