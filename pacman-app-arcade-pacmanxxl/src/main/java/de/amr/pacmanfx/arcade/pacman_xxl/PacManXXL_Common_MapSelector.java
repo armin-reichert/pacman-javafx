@@ -20,7 +20,7 @@ import static java.util.Objects.requireNonNull;
 
 public class PacManXXL_Common_MapSelector implements MapSelector {
 
-    private static final List<Map<String, String>> MAP_COLORINGS = List.of(
+    private static final List<Map<String, String>> MAP_COLOR_SCHEMES = List.of(
             Map.of("fill", "#359c9c", "stroke", "#85e2ff", "door", "#fcb5ff", "pellet", "#feb8ae"),
             Map.of("fill", "#c2b853", "stroke", "#ffeace", "door", "#fcb5ff", "pellet", "#feb8ae"),
             Map.of("fill", "#86669c", "stroke", "#f6c4e0", "door", "#fcb5ff", "pellet", "#feb8ae"),
@@ -32,8 +32,8 @@ public class PacManXXL_Common_MapSelector implements MapSelector {
     );
 
     private final File customMapDir;
-    private List<WorldMap> builtinMaps = new ArrayList<>();
     private final ObservableList<WorldMap> customMapsByFile = FXCollections.observableList(new ArrayList<>());
+    private final List<WorldMap> builtinMaps = new ArrayList<>();
     private MapSelectionMode mapSelectionMode;
 
     public PacManXXL_Common_MapSelector(File customMapDir) {
@@ -45,8 +45,8 @@ public class PacManXXL_Common_MapSelector implements MapSelector {
         return mapSelectionMode;
     }
 
-    public void setMapSelectionMode(MapSelectionMode mapSelectionMode) {
-        this.mapSelectionMode = requireNonNull(mapSelectionMode);
+    public void setMapSelectionMode(MapSelectionMode mode) {
+        this.mapSelectionMode = requireNonNull(mode);
     }
 
     @Override
@@ -87,49 +87,49 @@ public class PacManXXL_Common_MapSelector implements MapSelector {
     @Override
     public void loadAllMaps() {
         if (builtinMaps.isEmpty()) {
-            builtinMaps = WorldMap.loadMapsFromModule(getClass(), "maps/masonic_%d.world", 8);
+            List<WorldMap> maps = WorldMap.loadMapsFromModule(getClass(), "maps/masonic_%d.world", 8);
+            builtinMaps.addAll(maps);
         }
         loadCustomMaps();
     }
 
     @Override
     public WorldMap getWorldMap(int levelNumber) {
-        WorldMap template = switch (mapSelectionMode) {
-            case NO_CUSTOM_MAPS ->
-                    levelNumber <= builtinMaps.size()
-                            ? builtinMaps.get(levelNumber - 1)
-                            : builtinMaps.get(randomInt(0, builtinMaps.size()));
+        WorldMap selectedMap = switch (mapSelectionMode) {
+            case NO_CUSTOM_MAPS -> {
+                int index = levelNumber <= builtinMaps.size() ? levelNumber - 1: randomInt(0, builtinMaps.size());
+                yield builtinMaps.get(index);
+            }
             case CUSTOM_MAPS_FIRST -> {
-                List<WorldMap> maps = new ArrayList<>(customMaps());
+                List<WorldMap> maps = new ArrayList<>();
+                maps.addAll(customMaps());
                 maps.addAll(builtinMaps);
-                yield levelNumber <= maps.size()
-                        ? maps.get(levelNumber - 1)
-                        : maps.get(randomInt(0, maps.size()));
+                int index = levelNumber <= maps.size() ? levelNumber - 1 : randomInt(0, maps.size());
+                yield maps.get(index);
             }
             case ALL_RANDOM -> {
-                List<WorldMap> maps = new ArrayList<>(customMaps());
+                List<WorldMap> maps = new ArrayList<>();
+                maps.addAll(customMaps());
                 maps.addAll(builtinMaps);
                 yield maps.get(randomInt(0, maps.size()));
             }
         };
-
-        WorldMap worldMap = WorldMap.copyMap(template);
-        Map<String, String> mapColoring = builtinMaps.contains(template) ? randomMapColoring() : coloringFromMap(template);
-        worldMap.setConfigValue("colorMap", mapColoring);
-
+        WorldMap worldMap = WorldMap.copyMap(selectedMap);
+        // if selected map is a built-in map, use a random color scheme to make it not so boring
+        Map<String, String> colorScheme = builtinMaps.contains(selectedMap)
+                ? MAP_COLOR_SCHEMES.get(randomInt(0, MAP_COLOR_SCHEMES.size()))
+                : colorSchemeFromMap(selectedMap);
+        worldMap.setConfigValue("colorMap", colorScheme);
         Logger.info("Map selected (Mode {}): {}", mapSelectionMode, worldMap.url());
         return worldMap;
     }
 
-    private Map<String, String> randomMapColoring() {
-        return MAP_COLORINGS.get(randomInt(0, MAP_COLORINGS.size()));
-    }
-
-    private Map<String, String> coloringFromMap(WorldMap template) {
+    private Map<String, String> colorSchemeFromMap(WorldMap worldMap) {
         return Map.of(
-            "fill",   template.properties(LayerID.TERRAIN).getOrDefault(WorldMapProperty.COLOR_WALL_FILL,   "000000"),
-            "stroke", template.properties(LayerID.TERRAIN).getOrDefault(WorldMapProperty.COLOR_WALL_STROKE, "0000ff"),
-            "door",   template.properties(LayerID.TERRAIN).getOrDefault(WorldMapProperty.COLOR_DOOR,        "00ffff"),
-            "pellet", template.properties(LayerID.FOOD).getOrDefault(WorldMapProperty.COLOR_FOOD,           "ffffff"));
+            "fill",   worldMap.properties(LayerID.TERRAIN).getOrDefault(WorldMapProperty.COLOR_WALL_FILL,   "000000"),
+            "stroke", worldMap.properties(LayerID.TERRAIN).getOrDefault(WorldMapProperty.COLOR_WALL_STROKE, "0000ff"),
+            "door",   worldMap.properties(LayerID.TERRAIN).getOrDefault(WorldMapProperty.COLOR_DOOR,        "00ffff"),
+            "pellet", worldMap.properties(LayerID.FOOD).getOrDefault(WorldMapProperty.COLOR_FOOD,           "ffffff")
+        );
     }
 }
