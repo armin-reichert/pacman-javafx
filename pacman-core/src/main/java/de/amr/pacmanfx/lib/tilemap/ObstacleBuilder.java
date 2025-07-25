@@ -86,7 +86,7 @@ public class ObstacleBuilder {
         worldMap.tiles()
             .filter(not(this::isTileExplored))
             .filter(tile -> tile.x() == 0 || tile.x() == worldMap.numCols() - 1)
-            .map(borderTile -> buildBorderObstacle(borderTile, borderTile.x() == 0, tilesWithErrors))
+            .map(tile -> buildBorderObstacle(tile, tile.x() == 0, tilesWithErrors))
             .filter(Objects::nonNull)
             .forEach(obstacles::add);
 
@@ -123,7 +123,6 @@ public class ObstacleBuilder {
         Vector2i startPoint = startTile.scaled(TS).plus(startsAtLeftBorder ? 0 : TS, HTS);
         byte startTileContent = worldMap.content(LayerID.TERRAIN, startTile);
         var obstacle = new Obstacle(startPoint);
-        obstacle.setBorder(true);
         cursor = new Cursor(startTile);
         if (startTileContent == WALL_H.code()) {
             Direction startDir = startsAtLeftBorder ? Direction.RIGHT : Direction.LEFT;

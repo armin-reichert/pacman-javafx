@@ -21,7 +21,6 @@ public class Obstacle {
     private final Vector2i startPoint;
     private final List<ObstacleSegment> segments = new ArrayList<>();
     private List<RectShort> innerAreaRectangles = List.of();
-    private boolean border;
 
     public Obstacle(Vector2i startPoint) {
         this.startPoint = Objects.requireNonNull(startPoint);
@@ -40,14 +39,6 @@ public class Obstacle {
                 Logger.error(x);
             }
         }
-    }
-
-    public void setBorder(boolean b) {
-        border = b;
-    }
-
-    public boolean isBorder() {
-        return border;
     }
 
     public List<RectShort> innerAreaRectangles() {

@@ -527,7 +527,7 @@ public class GameLevel3D implements Disposable {
             // exclude house placeholder
             Vector2i startTile = tileAt(obstacle.startPoint().toVector2f());
             if (gameLevel.house().isPresent() && !gameLevel.house().get().isTileInHouseArea(startTile)) {
-                r3D.renderObstacle3D(maze3D, obstacle, obstacle.isBorder(), wallThickness, cornerRadius);
+                r3D.renderObstacle3D(maze3D, obstacle, isWorldBorder(gameLevel.worldMap(), obstacle), wallThickness, cornerRadius);
             }
         }
         var passedTimeMillis = stopWatch.passedTime().toMillis();
@@ -549,6 +549,15 @@ public class GameLevel3D implements Disposable {
             maze3D.getChildren().add(house3D);
         });
     }
+    private boolean isWorldBorder(WorldMap worldMap, Obstacle obstacle) {
+        Vector2i start = obstacle.startPoint();
+        if (obstacle.isClosed()) {
+            return start.x() == TS || start.y() == GameLevel.EMPTY_ROWS_OVER_MAZE * TS + HTS;
+        } else {
+            return start.x() == 0 || start.x() == worldMap.numCols() * TS;
+        }
+    }
+
 
     public PacBase3D pac3D() { return pac3D; }
     public List<MutatingGhost3D> ghosts3D() { return Collections.unmodifiableList(ghosts3D); }
