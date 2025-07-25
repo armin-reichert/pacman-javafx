@@ -749,24 +749,20 @@ public class GameLevel3D implements Disposable {
         return energizer3D;
     }
 
-    public void showAnimatedMessage(String text, float displaySeconds, double centerX, double y) {
+    public void showAnimatedMessage(String message, float displaySeconds, double centerX, double centerY) {
         if (messageView != null) {
+            messageView.dispose();
             root.getChildren().remove(messageView);
         }
         messageView = MessageView.builder()
-                .text(text)
-                .font(ui.theAssets().arcadeFont(6))
-                .borderColor(Color.WHITE)
-                .displaySeconds(displaySeconds)
-                .textColor(Color.YELLOW)
-                .build(animationManager);
-
-        double halfHeight = 0.5 * messageView.getBoundsInLocal().getHeight();
-        messageView.setTranslateX(centerX - 0.5 * messageView.getFitWidth());
-        messageView.setTranslateY(y);
-        messageView.setTranslateZ(halfHeight); // just under floor
+            .displaySeconds(displaySeconds)
+            .borderColor(Color.WHITE)
+            .textColor(Color.YELLOW)
+            .font(ui.theAssets().arcadeFont(6))
+            .text(message)
+            .build(animationManager);
         root.getChildren().add(messageView);
-        messageView.movementAnimation().playFromStart();
+        messageView.showCenteredAt(centerX, centerY);
     }
 
     public void updateBonus3D(Bonus bonus) {

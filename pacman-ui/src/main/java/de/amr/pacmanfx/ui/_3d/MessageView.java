@@ -95,31 +95,48 @@ public class MessageView extends ImageView implements Disposable {
         return canvas.snapshot(null, null);
     }
 
-    private AnimationManager animationManager;
+    private static class MovementAnimation extends ManagedAnimation {
+
+        private MessageView messageView;
+
+        public MovementAnimation(AnimationManager animationManager, MessageView messageView) {
+            super(animationManager, "Message_Movement");
+            this.messageView = messageView;
+        }
+
+        @Override
+        public void dispose() {
+            super.dispose();
+            messageView = null;
+        }
+
+        @Override
+        protected Animation createAnimation() {
+            double hiddenZ = messageView.hiddenZPosition();
+            double visibleZ = -(hiddenZ + 2);
+            var moveUp = new TranslateTransition(Duration.seconds(1), messageView);
+            moveUp.setToZ(visibleZ);
+            var moveDown = new TranslateTransition(Duration.seconds(1), messageView);
+            moveDown.setToZ(hiddenZ);
+            var movement = new SequentialTransition(
+                moveUp,
+                new PauseTransition(Duration.seconds(messageView.displaySeconds())),
+                moveDown
+            );
+            movement.setOnFinished(e -> messageView.setVisible(false));
+            return movement;
+        }
+    }
+
+    private double hiddenZPosition() {
+        return 0.5 * getBoundsInLocal().getHeight();
+    }
+
     private ManagedAnimation movementAnimation;
     private float displaySeconds = 2;
 
     private MessageView(AnimationManager animationManager) {
-        this.animationManager = requireNonNull(animationManager);
-        movementAnimation = new ManagedAnimation(animationManager, "Message_Movement") {
-            @Override
-            protected Animation createAnimation() {
-                double halfHeight = 0.5 * getBoundsInLocal().getHeight();
-
-                var moveUpAnimation = new TranslateTransition(Duration.seconds(1), MessageView.this);
-                moveUpAnimation.setToZ(-(halfHeight + 2));
-
-                var moveDownAnimation = new TranslateTransition(Duration.seconds(1), MessageView.this);
-                moveDownAnimation.setToZ(halfHeight);
-                moveDownAnimation.setOnFinished(e -> setVisible(false));
-
-                return new SequentialTransition(
-                    moveUpAnimation,
-                    new PauseTransition(Duration.seconds(displaySeconds)),
-                    moveDownAnimation
-                );
-            }
-        };
+        movementAnimation = new MovementAnimation(animationManager, this);
     }
 
     @Override
@@ -129,7 +146,6 @@ public class MessageView extends ImageView implements Disposable {
             movementAnimation.dispose();
             movementAnimation = null;
         }
-        animationManager = null;
     }
 
     public void setDisplaySeconds(float sec) {
@@ -140,7 +156,10 @@ public class MessageView extends ImageView implements Disposable {
         return displaySeconds;
     }
 
-    public ManagedAnimation movementAnimation() {
-        return movementAnimation;
+    public void showCenteredAt(double centerX, double centerY) {
+        setTranslateX(centerX - 0.5 * getFitWidth());
+        setTranslateY(centerY);
+        setTranslateZ(hiddenZPosition());
+        movementAnimation.playFromStart();
     }
 }
