@@ -48,7 +48,7 @@ public class TengenMsPacMan_GameLevel3D extends GameLevel3D {
         imageView.setFitHeight(height);
         imageView.setTranslateX(0);
         imageView.setTranslateY((gameLevel.worldMap().numRows() - 2) * TS);
-        imageView.setTranslateZ(-floorThickness());
+        imageView.setTranslateZ(-floor3D.getDepth());
 
         root.getChildren().add(imageView);
     }

@@ -85,19 +85,19 @@ public class GameLevel3D implements Disposable {
     private PhongMaterial cornerTopMaterial;
     private PhongMaterial pelletMaterial;
 
-    private AmbientLight ambientLight;
-    private Group maze3D;
-    private Box floor3D;
-    private ArcadeHouse3D house3D;
-    private LevelCounter3D levelCounter3D;
-    private LivesCounter3D livesCounter3D;
-    private PacBase3D pac3D;
-    private List<MutatingGhost3D> ghosts3D;
-    private Bonus3D bonus3D;
-    private final ArrayList<Pellet3D> pellets3D = new ArrayList<>();
-    private final ArrayList<Energizer3D> energizers3D = new ArrayList<>();
-    private final Group particleGroupsContainer = new Group();
-    private MessageView messageView;
+    protected AmbientLight ambientLight;
+    protected Group maze3D;
+    protected Box floor3D;
+    protected ArcadeHouse3D house3D;
+    protected LevelCounter3D levelCounter3D;
+    protected LivesCounter3D livesCounter3D;
+    protected PacBase3D pac3D;
+    protected List<MutatingGhost3D> ghosts3D;
+    protected Bonus3D bonus3D;
+    protected final ArrayList<Pellet3D> pellets3D = new ArrayList<>();
+    protected final ArrayList<Energizer3D> energizers3D = new ArrayList<>();
+    protected final Group particleGroupsContainer = new Group();
+    protected MessageView messageView;
 
     private int wall3DCount;
 
@@ -523,15 +523,12 @@ public class GameLevel3D implements Disposable {
         }
     }
 
-
     public PacBase3D pac3D() { return pac3D; }
     public List<MutatingGhost3D> ghosts3D() { return Collections.unmodifiableList(ghosts3D); }
-    public MutatingGhost3D ghost3D(byte id) { return ghosts3D.get(id); }
     public Optional<Bonus3D> bonus3D() { return Optional.ofNullable(bonus3D); }
     public Optional<LivesCounter3D> livesCounter3D() { return Optional.ofNullable(livesCounter3D); }
     public List<Pellet3D> pellets3D() { return Collections.unmodifiableList(pellets3D); }
     public List<Energizer3D> energizers3D() { return Collections.unmodifiableList(energizers3D); }
-    public double floorThickness() { return floor3D.getDepth(); }
 
     public AnimationRegistry animationManager() { return animationRegistry; }
     public ManagedAnimation levelCompletedAnimation() { return levelCompletedFullAnimation; }
@@ -609,7 +606,7 @@ public class GameLevel3D implements Disposable {
             byte personality = killedGhost.personality();
             int killedIndex = gameLevel.victims().indexOf(killedGhost);
             Image pointsImage = ui.theConfiguration().killedGhostPointsImage(killedGhost, killedIndex);
-            ghost3D(personality).setNumberImage(pointsImage);
+            ghosts3D.get(personality).setNumberImage(pointsImage);
         });
     }
 
