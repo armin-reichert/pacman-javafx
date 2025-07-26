@@ -57,9 +57,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameLevel3D implements Disposable {
 
-    // memory leak still exists
-    static boolean EXPLOSIONS = true;
-
     private final DoubleProperty  houseBaseHeightProperty = new SimpleDoubleProperty();
     private final BooleanProperty houseLightOnProperty = new SimpleBooleanProperty(false);
     private final BooleanProperty houseOpenProperty = new SimpleBooleanProperty();
@@ -730,12 +727,9 @@ public class GameLevel3D implements Disposable {
         energizer3D.shape3D().setTranslateY(y);
         energizer3D.shape3D().setTranslateZ(z);
 
-        if (EXPLOSIONS) {
-            //TODO this still has a memory leak :-(
-            var explosion = new Explosion(animationRegistry, energizer3D.shape3D(), particlesGroupContainer, pelletMaterial,
-                    particle -> particle.getTranslateZ() >= -1 && insideWorldMapArea(particle));
-            energizer3D.setEatenAnimation(explosion);
-        }
+        var explosion = new Explosion(animationRegistry, energizer3D.shape3D(), particlesGroupContainer, pelletMaterial,
+                particle -> particle.getTranslateZ() >= -1 && insideWorldMapArea(particle));
+        energizer3D.setEatenAnimation(explosion);
 
         return energizer3D;
     }
@@ -900,7 +894,9 @@ public class GameLevel3D implements Disposable {
         disposeGhostMeshViews();
         disposeMaterials();
 
+        //TODO this does not work yet
 //        animationRegistry.disposeAllAnimations();
+
         wallColorFlashingAnimation = null;
         levelCompletedFullAnimation = null;
         levelCompletedShortAnimation = null;
