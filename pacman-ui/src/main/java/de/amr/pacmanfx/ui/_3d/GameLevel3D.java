@@ -116,23 +116,27 @@ public class GameLevel3D implements Disposable {
         protected Animation createAnimation() {
             return new SequentialTransition(
                 doNow(() -> {
-                    livesCounter3D().map(LivesCounter3D::light).ifPresent(light -> light.setLightOn(false));
-                    showLevelCompleteFlashMessage(gameLevel.number());
+                    turnLivesCounterLightOff();
+                    sometimesLevelCompleteMessage(gameLevel.number());
                 }),
                 pauseSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
                 pauseSec(0.5),
-                createWallsFlashAnimation(gameLevel.data().numFlashes()),
+                wallsMovingUpAndDown(gameLevel.data().numFlashes()),
                 pauseSec(0.5, () -> gameLevel.pac().hide()),
                 pauseSec(0.5),
-                createSpinningAnimation(new Random().nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS),
+                levelSpinningAroundAxis(new Random().nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS),
                 pauseSec(0.5, () -> ui.theSound().play(SoundID.LEVEL_COMPLETE)),
                 pauseSec(0.5),
-                createMazeDisappearingAnimation(),
+                wallsAndHouseDisappearing(),
                 pauseSec(1.0, () -> ui.theSound().play(SoundID.LEVEL_CHANGED))
             );
         }
 
-        private Animation createMazeDisappearingAnimation() {
+        private void turnLivesCounterLightOff() {
+            livesCounter3D().map(LivesCounter3D::light).ifPresent(light -> light.setLightOn(false));
+        }
+
+        private Animation wallsAndHouseDisappearing() {
             return new Timeline(
                 new KeyFrame(Duration.seconds(0.5), new KeyValue(houseBaseHeightProperty, 0, Interpolator.EASE_IN)),
                 new KeyFrame(Duration.seconds(1.5), new KeyValue(obstacleBaseHeightProperty, 0, Interpolator.EASE_IN)),
@@ -140,14 +144,14 @@ public class GameLevel3D implements Disposable {
             );
         }
 
-        private void showLevelCompleteFlashMessage(int levelNumber) {
+        private void sometimesLevelCompleteMessage(int levelNumber) {
             if (randomInt(0, 100) < MESSAGE_FREQUENCY) {
                 String message = ui.theAssets().localizedLevelCompleteMessage(levelNumber);
                 ui.showFlashMessageSec(3, message);
             }
         }
 
-        private Animation createSpinningAnimation(Point3D axis) {
+        private Animation levelSpinningAroundAxis(Point3D axis) {
             var spin360 = new RotateTransition(Duration.seconds(SPINNING_SECONDS), root);
             spin360.setAxis(axis);
             spin360.setFromAngle(0);
@@ -156,18 +160,18 @@ public class GameLevel3D implements Disposable {
             return spin360;
         }
 
-        private Animation createWallsFlashAnimation(int numFlashes) {
+        private Animation wallsMovingUpAndDown(int numFlashes) {
             if (numFlashes == 0) {
                 return pauseSec(1.0);
             }
-            var flashingTimeline = new Timeline(
+            var flashing = new Timeline(
                     new KeyFrame(Duration.millis(0.5 * FLASH_DURATION_MILLIS),
                             new KeyValue(obstacleBaseHeightProperty, 0, Interpolator.EASE_BOTH)
                     )
             );
-            flashingTimeline.setAutoReverse(true);
-            flashingTimeline.setCycleCount(2 * numFlashes);
-            return flashingTimeline;
+            flashing.setAutoReverse(true);
+            flashing.setCycleCount(2 * numFlashes);
+            return flashing;
         }
     }
 
@@ -184,12 +188,12 @@ public class GameLevel3D implements Disposable {
             return new SequentialTransition(
                 pauseSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
                 pauseSec(0.5),
-                mazeFlashAnimation(gameLevel.data().numFlashes()),
+                wallsMovingUpAndDown(gameLevel.data().numFlashes()),
                 pauseSec(0.5, () -> gameLevel.pac().hide())
             );
         }
 
-        private Animation mazeFlashAnimation(int numFlashes) {
+        private Animation wallsMovingUpAndDown(int numFlashes) {
             if (numFlashes == 0) {
                 return pauseSec(1.0);
             }
