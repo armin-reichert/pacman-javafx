@@ -161,7 +161,7 @@ public class Explosion extends ManagedAnimation {
     @Override
     public void stop() {
         super.stop();
-        particlesGroupContainer.getChildren().remove(particlesGroup);
+        disposeParticles();
     }
 
     @Override
@@ -171,13 +171,19 @@ public class Explosion extends ManagedAnimation {
             return;
         }
         super.dispose();
-        particlesGroup.getChildren().stream().filter(Particle.class::isInstance).map(Particle.class::cast).forEach(Particle::dispose);
-        Logger.info("Disposed {} particles", particlesGroup.getChildren().size());
-        particlesGroup.getChildren().clear();
+        disposeParticles();
         particlesGroupContainer.getChildren().remove(particlesGroup);
         particlesGroup = null;
         particleMaterial = null;
         origin = null;
         particleReachedEndPosition = null;
+    }
+
+    private void disposeParticles() {
+        if (particlesGroup.getChildren().isEmpty()) return;
+        long count = particlesGroup.getChildren().stream().filter(Particle.class::isInstance).count();
+        particlesGroup.getChildren().stream().filter(Particle.class::isInstance).map(Particle.class::cast).forEach(Particle::dispose);
+        Logger.info("Disposed {} particles", count);
+        particlesGroup.getChildren().clear();
     }
 }
