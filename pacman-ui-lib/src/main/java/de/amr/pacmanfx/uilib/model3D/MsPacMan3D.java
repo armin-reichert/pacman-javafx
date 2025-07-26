@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.uilib.animation.AnimationManager;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -20,17 +20,17 @@ public class MsPacMan3D extends PacBase3D {
 
     public MsPacMan3D(
         Model3DRepository model3DRepository,
-        AnimationManager animationManager,
+        AnimationRegistry animationRegistry,
         Pac msPacMan,
         double size,
         Color headColor, Color eyesColor, Color palateColor,
         Color hairBowColor, Color hairBowPearlsColor, Color boobsColor)
     {
-        super(model3DRepository, animationManager, msPacMan, size, headColor, eyesColor, palateColor);
+        super(model3DRepository, animationRegistry, msPacMan, size, headColor, eyesColor, palateColor);
         femaleBodyParts = model3DRepository.createFemaleBodyParts(size, hairBowColor, hairBowPearlsColor, boobsColor);
         getChildren().add(femaleBodyParts);
 
-        dyingAnimation = new ManagedAnimation(animationManager, "Ms_PacMan_Dying") {
+        dyingAnimation = new ManagedAnimation(animationRegistry, "Ms_PacMan_Dying") {
             @Override
             protected Animation createAnimation() {
                 var spinning = new RotateTransition(Duration.seconds(0.25), MsPacMan3D.this);
@@ -43,7 +43,7 @@ public class MsPacMan3D extends PacBase3D {
             }
         };
 
-        movementAnimation = new HipSwayingAnimation(animationManager, this);
+        movementAnimation = new HipSwayingAnimation(animationRegistry, this);
         setMovementPowerMode(false);
     }
 

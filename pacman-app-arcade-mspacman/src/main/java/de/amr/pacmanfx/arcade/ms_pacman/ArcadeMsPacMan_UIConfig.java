@@ -21,7 +21,7 @@ import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.sound.DefaultSoundManager;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
-import de.amr.pacmanfx.uilib.animation.AnimationManager;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
@@ -224,10 +224,10 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config {
     }
 
     @Override
-    public MsPacMan3D createPac3D(AnimationManager animationManager, Pac pac) {
+    public MsPacMan3D createPac3D(AnimationRegistry animationRegistry, Pac pac) {
         var pac3D = new MsPacMan3D(
             ui.theAssets().theModel3DRepository(),
-            animationManager,
+            animationRegistry,
             pac,
             ui.thePrefs().getFloat("3d.pac.size"),
             getAssetNS("pac.color.head"),

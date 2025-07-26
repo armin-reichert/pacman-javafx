@@ -12,7 +12,7 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.ui.ActionBindingMap;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.uilib.animation.AnimationManager;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -43,7 +43,7 @@ public abstract class GameScene2D implements GameScene {
     protected final FloatProperty scalingProperty                 = new SimpleFloatProperty(1.0f);
 
     protected final ActionBindingMap actionBindings;
-    protected final AnimationManager animationManager = new AnimationManager();
+    protected final AnimationRegistry animationRegistry = new AnimationRegistry();
     protected GameRenderer gameRenderer;
     protected Canvas canvas;
     protected final List<Actor> actorsInZOrder = new ArrayList<>();

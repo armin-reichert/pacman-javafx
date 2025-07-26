@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.uilib.animation.AnimationManager;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.*;
 import javafx.scene.paint.Color;
@@ -19,14 +19,14 @@ public class PacMan3D extends PacBase3D {
 
     public PacMan3D(
         Model3DRepository model3DRepository,
-        AnimationManager animationManager,
+        AnimationRegistry animationRegistry,
         Pac pac,
         double size,
         Color headColor, Color eyesColor, Color palateColor)
     {
-        super(model3DRepository, animationManager, pac, size, headColor, eyesColor, palateColor);
+        super(model3DRepository, animationRegistry, pac, size, headColor, eyesColor, palateColor);
 
-        dyingAnimation = new ManagedAnimation(animationManager, "PacMan_Dying") {
+        dyingAnimation = new ManagedAnimation(animationRegistry, "PacMan_Dying") {
             @Override
             protected Animation createAnimation() {
                 Duration duration = Duration.seconds(1.5);
@@ -63,7 +63,7 @@ public class PacMan3D extends PacBase3D {
             }
         };
 
-        movementAnimation = new HeadBangingAnimation(animationManager, PacMan3D.this);
+        movementAnimation = new HeadBangingAnimation(animationRegistry, PacMan3D.this);
         setMovementPowerMode(false);
     }
 

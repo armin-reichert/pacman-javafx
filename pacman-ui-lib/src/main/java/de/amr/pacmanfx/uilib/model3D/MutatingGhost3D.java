@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.uilib.animation.AnimationManager;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -64,12 +64,12 @@ public class MutatingGhost3D extends Group implements Disposable {
     private Ghost3D ghost3D;
     private Box numberBox;
 
-    private final AnimationManager animationManager;
+    private final AnimationRegistry animationRegistry;
     private ManagedAnimation brakeAnimation;
     private ManagedAnimation pointsAnimation;
 
     public MutatingGhost3D(
-        AnimationManager animationManager,
+        AnimationRegistry animationRegistry,
         GameLevel gameLevel,
         Ghost ghost,
         GhostColoring coloring,
@@ -79,7 +79,7 @@ public class MutatingGhost3D extends Group implements Disposable {
         double size,
         int numFlashes)
     {
-        this.animationManager = requireNonNull(animationManager);
+        this.animationRegistry = requireNonNull(animationRegistry);
         this.ghost = requireNonNull(ghost);
         requireNonNull(coloring);
         requireNonNull(dressShape);
@@ -89,7 +89,7 @@ public class MutatingGhost3D extends Group implements Disposable {
         this.numFlashes = requireNonNegativeInt(numFlashes);
 
         ghost3D = new Ghost3D(
-            animationManager,
+            animationRegistry,
             ghost,
             coloring,
             dressShape,
@@ -101,7 +101,7 @@ public class MutatingGhost3D extends Group implements Disposable {
 
         getChildren().setAll(ghost3D, numberBox);
 
-        pointsAnimation = new ManagedAnimation(animationManager, "Ghost_Points_%s".formatted(ghost.name())) {
+        pointsAnimation = new ManagedAnimation(animationRegistry, "Ghost_Points_%s".formatted(ghost.name())) {
             @Override
             protected Animation createAnimation() {
                 var numberBoxRotation = new RotateTransition(Duration.seconds(1), numberBox);
@@ -114,7 +114,7 @@ public class MutatingGhost3D extends Group implements Disposable {
             }
         };
 
-        brakeAnimation = new ManagedAnimation(animationManager, "Ghost_Braking_%s".formatted(ghost.name())) {
+        brakeAnimation = new ManagedAnimation(animationRegistry, "Ghost_Braking_%s".formatted(ghost.name())) {
             @Override
             protected Animation createAnimation() {
                 var rotateTransition = new RotateTransition(Duration.seconds(0.5), MutatingGhost3D.this);

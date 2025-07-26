@@ -128,7 +128,6 @@ public class PlayView implements PacManGames_View {
             parentScene.heightProperty(),
             ui.propertyCurrentGameScene()
         );
-
         actionBindings.bind(ACTION_BOOT_SHOW_PLAY_VIEW, GLOBAL_ACTION_BINDINGS);
         actionBindings.bind(ACTION_ENTER_FULLSCREEN, GLOBAL_ACTION_BINDINGS);
         actionBindings.bind(ACTION_QUIT_GAME_SCENE, GLOBAL_ACTION_BINDINGS);

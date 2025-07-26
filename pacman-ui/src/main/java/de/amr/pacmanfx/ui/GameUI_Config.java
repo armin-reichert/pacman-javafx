@@ -12,7 +12,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
 import de.amr.pacmanfx.ui.sound.SoundManager;
-import de.amr.pacmanfx.uilib.animation.AnimationManager;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
@@ -76,7 +76,7 @@ public interface GameUI_Config extends Disposable {
     ActorAnimationMap createGhostAnimations(Ghost ghost);
     Node createLivesCounterShape3D();
     ActorAnimationMap createPacAnimations(Pac pac);
-    PacBase3D createPac3D(AnimationManager animationMgr, Pac pac);
+    PacBase3D createPac3D(AnimationRegistry animationMgr, Pac pac);
     default boolean hasGameCanvasRoundedBorder() { return true; }
     Image killedGhostPointsImage(Ghost ghost, int killedIndex);
     SpriteSheet<?> spriteSheet();

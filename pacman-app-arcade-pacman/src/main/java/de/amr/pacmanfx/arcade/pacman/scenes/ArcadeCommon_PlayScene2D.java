@@ -56,7 +56,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
     @Override
     protected void doInit() {
         gameContext().theGame().theHUD().credit(false).score(true).levelCounter(true).livesCounter(true);
-        levelCompletedAnimation = new LevelCompletedAnimation(animationManager);
+        levelCompletedAnimation = new LevelCompletedAnimation(animationRegistry);
         gameRenderer = ui.theConfiguration().createGameRenderer(canvas);
     }
 

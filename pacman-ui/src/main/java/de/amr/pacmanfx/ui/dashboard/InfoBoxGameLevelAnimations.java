@@ -4,11 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.dashboard;
 
-import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
-import de.amr.pacmanfx.uilib.animation.AnimationManager;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -17,7 +15,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
@@ -51,7 +48,7 @@ public class InfoBoxGameLevelAnimations extends InfoBox {
     private final ObservableList<TableRow> tableRows = FXCollections.observableArrayList();
     private final Timeline refreshTimer;
 
-    private final ObjectProperty<AnimationManager> currentAnimationManager = new SimpleObjectProperty<>();
+    private final ObjectProperty<AnimationRegistry> currentAnimationManager = new SimpleObjectProperty<>();
 
     public InfoBoxGameLevelAnimations(GameUI ui) {
         super(ui);
@@ -98,7 +95,7 @@ public class InfoBoxGameLevelAnimations extends InfoBox {
         }
     }
 
-    private AnimationManager observedAnimationManager() {
+    private AnimationRegistry observedAnimationManager() {
         if (ui.currentGameScene().isPresent()
             && ui.currentGameScene().get() instanceof PlayScene3D playScene3D
             && playScene3D.level3D().isPresent()) {

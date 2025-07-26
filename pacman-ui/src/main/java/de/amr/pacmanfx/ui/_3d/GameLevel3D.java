@@ -17,7 +17,7 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.Ufx;
-import de.amr.pacmanfx.uilib.animation.AnimationManager;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.Explosion;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
@@ -73,7 +73,7 @@ public class GameLevel3D implements Disposable {
     protected final GameLevel gameLevel;
     protected WorldMapColorScheme colorScheme;
 
-    private final AnimationManager animationManager = new AnimationManager();
+    private final AnimationRegistry animationRegistry = new AnimationRegistry();
     private ManagedAnimation wallColorFlashingAnimation;
     private ManagedAnimation levelCompletedFullAnimation;
     private ManagedAnimation levelCompletedShortAnimation;
@@ -108,8 +108,8 @@ public class GameLevel3D implements Disposable {
 
     private class MazeDisappearingAnimation extends ManagedAnimation {
 
-        public MazeDisappearingAnimation(AnimationManager animationManager) {
-            super(animationManager, "Maze_Disappearing");
+        public MazeDisappearingAnimation(AnimationRegistry animationRegistry) {
+            super(animationRegistry, "Maze_Disappearing");
         }
 
         @Override
@@ -129,9 +129,9 @@ public class GameLevel3D implements Disposable {
 
         private ManagedAnimation mazeDisappearingAnimation;
 
-        public LevelCompletedAnimation(AnimationManager animationManager) {
-            super(animationManager, "Level_Complete");
-            mazeDisappearingAnimation = new MazeDisappearingAnimation(animationManager);
+        public LevelCompletedAnimation(AnimationRegistry animationRegistry) {
+            super(animationRegistry, "Level_Complete");
+            mazeDisappearingAnimation = new MazeDisappearingAnimation(animationRegistry);
         }
 
         @Override
@@ -196,8 +196,8 @@ public class GameLevel3D implements Disposable {
 
         public static final int FLASH_DURATION_MILLIS = 250;
 
-        public LevelCompletedAnimationShort(AnimationManager animationManager) {
-            super(animationManager, "Level_Complete_Short_Animation");
+        public LevelCompletedAnimationShort(AnimationRegistry animationRegistry) {
+            super(animationRegistry, "Level_Complete_Short_Animation");
         }
 
         @Override
@@ -227,8 +227,8 @@ public class GameLevel3D implements Disposable {
 
     private class WallColorFlashingAnimation extends ManagedAnimation {
 
-        public WallColorFlashingAnimation(AnimationManager animationManager) {
-            super(animationManager, "MazeWallColorFlashing");
+        public WallColorFlashingAnimation(AnimationRegistry animationRegistry) {
+            super(animationRegistry, "MazeWallColorFlashing");
         }
 
         @Override
@@ -289,9 +289,9 @@ public class GameLevel3D implements Disposable {
         createPellets3D();
         createEnergizers3D();
 
-        wallColorFlashingAnimation = new WallColorFlashingAnimation(animationManager);
-        levelCompletedFullAnimation = new LevelCompletedAnimation(animationManager);
-        levelCompletedShortAnimation = new LevelCompletedAnimationShort(animationManager);
+        wallColorFlashingAnimation = new WallColorFlashingAnimation(animationRegistry);
+        levelCompletedFullAnimation = new LevelCompletedAnimation(animationRegistry);
+        levelCompletedShortAnimation = new LevelCompletedAnimationShort(animationRegistry);
 
         root.getChildren().add(ambientLight);
         if (levelCounter3D != null) {
@@ -446,7 +446,7 @@ public class GameLevel3D implements Disposable {
                 ui.theConfiguration().getAssetNS("ghost.color.flashing.pupils")
             );
             return new MutatingGhost3D(
-                animationManager,
+                animationRegistry,
                 gameLevel,
                 ghost,
                 ghostColoring,
@@ -461,7 +461,7 @@ public class GameLevel3D implements Disposable {
     }
 
     private void createPac3D() {
-        pac3D = ui.theConfiguration().createPac3D(animationManager, gameLevel.pac());
+        pac3D = ui.theConfiguration().createPac3D(animationRegistry, gameLevel.pac());
         pac3D.init();
     }
 
@@ -473,7 +473,7 @@ public class GameLevel3D implements Disposable {
         for (int i = 0; i < livesCounterShapes.length; ++i) {
             livesCounterShapes[i] = ui.theConfiguration().createLivesCounterShape3D();
         }
-        livesCounter3D = new LivesCounter3D(animationManager, livesCounterShapes);
+        livesCounter3D = new LivesCounter3D(animationRegistry, livesCounterShapes);
         livesCounter3D.setTranslateX(2 * TS);
         livesCounter3D.setTranslateY(2 * TS);
         livesCounter3D.livesCountProperty().bind(livesCountProperty);
@@ -485,7 +485,7 @@ public class GameLevel3D implements Disposable {
 
     private void createLevelCounter3D() {
         WorldMap worldMap = gameLevel.worldMap();
-        levelCounter3D = new LevelCounter3D(animationManager);
+        levelCounter3D = new LevelCounter3D(animationRegistry);
         levelCounter3D.setTranslateX(TS * (worldMap.numCols() - 2));
         levelCounter3D.setTranslateY(2 * TS);
         levelCounter3D.setTranslateZ(-ui.thePrefs().getFloat("3d.level_counter.elevation"));
@@ -535,7 +535,7 @@ public class GameLevel3D implements Disposable {
 
         gameLevel.house().ifPresent(house -> {
             house3D = new ArcadeHouse3D(
-                animationManager,
+                animationRegistry,
                 house,
                 ui.thePrefs().getFloat("3d.house.base_height"),
                 ui.thePrefs().getFloat("3d.house.wall_thickness"),
@@ -568,7 +568,7 @@ public class GameLevel3D implements Disposable {
     public Stream<Energizer3D> energizers3D() { return energizers3D != null ? energizers3D.stream() : Stream.empty(); }
     public double floorThickness() { return floor3D.getDepth(); }
 
-    public AnimationManager animationManager() { return animationManager; }
+    public AnimationRegistry animationManager() { return animationRegistry; }
     public ManagedAnimation levelCompletedAnimation() { return levelCompletedFullAnimation; }
     public ManagedAnimation levelCompletedAnimationBeforeCutScene() { return levelCompletedShortAnimation; }
     public ManagedAnimation wallColorFlashingAnimation() { return wallColorFlashingAnimation; }
@@ -651,7 +651,7 @@ public class GameLevel3D implements Disposable {
     public void onLevelComplete(GameState state, ObjectProperty<PerspectiveID> perspectiveIDProperty) {
         state.timer().resetIndefiniteTime(); // expires when animation ends
         ui.theSound().stopAll();
-        animationManager.stopAllAnimations();
+        animationRegistry.stopAllAnimations();
         // hide 3d food explicitly because level might have been completed using cheat!
         pellets3D.forEach(pellet3D -> pellet3D.shape3D().setVisible(false));
         energizers3D.forEach(Energizer3D::pausePumping);
@@ -741,7 +741,7 @@ public class GameLevel3D implements Disposable {
         float x = tile.x() * TS + HTS;
         float y = tile.y() * TS + HTS;
         float z = -2 * energizerRadius - 0.5f * floorThickness;
-        var energizer3D = new Energizer3D(animationManager, energizerRadius, minScaling, maxScaling);
+        var energizer3D = new Energizer3D(animationRegistry, energizerRadius, minScaling, maxScaling);
         energizer3D.setTile(tile);
         energizer3D.shape3D().setMaterial(pelletMaterial);
         energizer3D.shape3D().setTranslateX(x);
@@ -750,7 +750,7 @@ public class GameLevel3D implements Disposable {
 
         if (EXPLOSIONS) {
             //TODO this still has a memory leak :-(
-            var explosion = new Explosion(animationManager, energizer3D.shape3D(), particlesGroupContainer, pelletMaterial,
+            var explosion = new Explosion(animationRegistry, energizer3D.shape3D(), particlesGroupContainer, pelletMaterial,
                     particle -> particle.getTranslateZ() >= -1 && insideWorldMapArea(particle));
             energizer3D.setEatenAnimation(explosion);
         }
@@ -769,7 +769,7 @@ public class GameLevel3D implements Disposable {
             .textColor(Color.YELLOW)
             .font(ui.theAssets().arcadeFont(6))
             .text(message)
-            .build(animationManager);
+            .build(animationRegistry);
         root.getChildren().add(messageView);
         messageView.showCenteredAt(centerX, centerY);
     }
@@ -780,7 +780,7 @@ public class GameLevel3D implements Disposable {
             root.getChildren().remove(bonus3D);
             bonus3D.dispose();
         }
-        bonus3D = new Bonus3D(animationManager, bonus,
+        bonus3D = new Bonus3D(animationRegistry, bonus,
             ui.theConfiguration().bonusSymbolImage(bonus.symbol()), ui.thePrefs().getFloat("3d.bonus.symbol.width"),
             ui.theConfiguration().bonusValueImage(bonus.symbol()), ui.thePrefs().getFloat("3d.bonus.points.width"));
         root.getChildren().add(bonus3D);
@@ -809,15 +809,18 @@ public class GameLevel3D implements Disposable {
 
     // still work in progress...
 
-    public void dispose() {
-        Logger.info("Disposing game level 3D...");
+    private boolean disposed = false;
 
-        animationManager.stopAllAnimations();
-        animationManager.disposeAllAnimations();
-        wallColorFlashingAnimation = null;
-        levelCompletedFullAnimation = null;
-        levelCompletedShortAnimation = null;
-        Logger.info("Stopped, disposed and removed all managed animations");
+    public void dispose() {
+        if (disposed) {
+            Logger.warn("Game level 3D already has been disposed!");
+            return;
+        }
+        Logger.info("Disposing game level 3D...");
+        disposed = true;
+
+        animationRegistry.stopAllAnimations();
+        Logger.info("Stopped all managed animations");
 
         ui.property3DDrawMode().removeListener(this::handleDrawModeChange);
         Logger.info("Removed 'draw mode' listener");
@@ -914,5 +917,11 @@ public class GameLevel3D implements Disposable {
         }
         disposeGhostMeshViews();
         disposeMaterials();
+
+//        animationRegistry.disposeAllAnimations();
+        wallColorFlashingAnimation = null;
+        levelCompletedFullAnimation = null;
+        levelCompletedShortAnimation = null;
+
     }
 }

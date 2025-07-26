@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.uilib.animation.AnimationManager;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -26,8 +26,8 @@ public class HeadBangingAnimation extends ManagedAnimation {
 
     private final Node node;
 
-    public HeadBangingAnimation(AnimationManager animationManager, Node node) {
-        super(animationManager, "Pac_Man_Head_Banging");
+    public HeadBangingAnimation(AnimationRegistry animationRegistry, Node node) {
+        super(animationRegistry, "Pac_Man_Head_Banging");
         this.node = requireNonNull(node);
     }
 
@@ -44,17 +44,21 @@ public class HeadBangingAnimation extends ManagedAnimation {
     @Override
     public void stop() {
         super.stop();
-        var rotateTransition = (RotateTransition) animation;
-        node.setRotationAxis(rotateTransition.getAxis());
-        node.setRotate(0);
+        if (animation != null) {
+            var rotateTransition = (RotateTransition) animation;
+            node.setRotationAxis(rotateTransition.getAxis());
+            node.setRotate(0);
+        }
     }
 
     @Override
     public void pause() {
         super.pause();
-        var rotateTransition = (RotateTransition) animation;
-        node.setRotationAxis(rotateTransition.getAxis());
-        node.setRotate(0);
+        if (animation != null) {
+            var rotateTransition = (RotateTransition) animation;
+            node.setRotationAxis(rotateTransition.getAxis());
+            node.setRotate(0);
+        }
     }
 
     public void update(Pac pac) {

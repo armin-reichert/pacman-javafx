@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.Ufx;
-import de.amr.pacmanfx.uilib.animation.AnimationManager;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.*;
 import javafx.beans.property.ObjectProperty;
@@ -35,8 +35,8 @@ public class Ghost3D extends Group implements Disposable {
         private Duration totalDuration = Duration.seconds(3);
         private int numFlashes = 5;
 
-        public FlashingAnimation(AnimationManager animationManager, String ghostName) {
-            super(animationManager, "Ghost_Flashing_%s".formatted(ghostName));
+        public FlashingAnimation(AnimationRegistry animationRegistry, String ghostName) {
+            super(animationRegistry, "Ghost_Flashing_%s".formatted(ghostName));
         }
 
         public void setTotalDuration(Duration totalDuration) {
@@ -81,14 +81,14 @@ public class Ghost3D extends Group implements Disposable {
 
     private Group dressGroup;
 
-    private final AnimationManager animationManager;
+    private final AnimationRegistry animationRegistry;
     private ManagedAnimation dressAnimation;
     private FlashingAnimation flashingAnimation;
 
     private final GhostColoring coloring;
 
     public Ghost3D(
-        AnimationManager animationManager,
+        AnimationRegistry animationRegistry,
         Ghost ghost,
         GhostColoring coloring,
         MeshView dressShape,
@@ -96,7 +96,7 @@ public class Ghost3D extends Group implements Disposable {
         MeshView eyeballsShape,
         double size)
     {
-        this.animationManager = requireNonNull(animationManager);
+        this.animationRegistry = requireNonNull(animationRegistry);
         requireNonNull(ghost);
 
         this.dressShape = requireNonNull(dressShape);
@@ -131,7 +131,7 @@ public class Ghost3D extends Group implements Disposable {
         Scale scale = new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
         getTransforms().add(scale);
 
-        dressAnimation = new ManagedAnimation(animationManager, "Ghost_DressMoving_%s".formatted(ghost.name())) {
+        dressAnimation = new ManagedAnimation(animationRegistry, "Ghost_DressMoving_%s".formatted(ghost.name())) {
             @Override
             protected Animation createAnimation() {
                 var animation = new RotateTransition(Duration.seconds(0.3), dressGroup);
@@ -144,7 +144,7 @@ public class Ghost3D extends Group implements Disposable {
             }
         };
 
-        flashingAnimation = new FlashingAnimation(animationManager, ghost.name());
+        flashingAnimation = new FlashingAnimation(animationRegistry, ghost.name());
     }
 
     @Override

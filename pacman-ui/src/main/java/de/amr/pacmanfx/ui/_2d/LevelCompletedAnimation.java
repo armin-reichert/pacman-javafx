@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui._2d;
 
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.uilib.animation.AnimationManager;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -36,8 +36,8 @@ public class LevelCompletedAnimation extends ManagedAnimation {
     private int flashingIndex;
     private boolean highlighted;
 
-    public LevelCompletedAnimation(AnimationManager animationManager) {
-        super(animationManager, "Level_Completed");
+    public LevelCompletedAnimation(AnimationRegistry animationRegistry) {
+        super(animationRegistry, "Level_Completed");
     }
 
     @Override

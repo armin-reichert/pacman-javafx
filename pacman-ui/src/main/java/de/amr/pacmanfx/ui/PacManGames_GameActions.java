@@ -27,6 +27,12 @@ import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
 import static de.amr.pacmanfx.uilib.Ufx.toggle;
 
+/**
+ * Global game actions.
+ * <p>
+ * For each action there must exist an entry in the {@code localized_texts} resource bundle
+ * of the form {@code key=localized_action_name} where {@code key=action.name()} !
+ */
 public interface PacManGames_GameActions {
 
     int SIMULATION_SPEED_DELTA = 2;

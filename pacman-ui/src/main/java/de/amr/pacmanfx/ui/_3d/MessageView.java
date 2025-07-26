@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.lib.Disposable;
-import de.amr.pacmanfx.uilib.animation.AnimationManager;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
@@ -58,8 +58,8 @@ public class MessageView extends ImageView implements Disposable {
             return this;
         }
 
-        public MessageView build(AnimationManager animationManager) {
-            MessageView message = new MessageView(animationManager);
+        public MessageView build(AnimationRegistry animationRegistry) {
+            MessageView message = new MessageView(animationRegistry);
             double width = text.length() * font.getSize() + MARGIN;
             double height = font.getSize() + MARGIN;
             message.setDisplaySeconds(displaySeconds);
@@ -99,8 +99,8 @@ public class MessageView extends ImageView implements Disposable {
 
         private MessageView messageView;
 
-        public MovementAnimation(AnimationManager animationManager, MessageView messageView) {
-            super(animationManager, "Message_Movement");
+        public MovementAnimation(AnimationRegistry animationRegistry, MessageView messageView) {
+            super(animationRegistry, "Message_Movement");
             this.messageView = messageView;
         }
 
@@ -135,8 +135,8 @@ public class MessageView extends ImageView implements Disposable {
     private ManagedAnimation movementAnimation;
     private float displaySeconds = 2;
 
-    private MessageView(AnimationManager animationManager) {
-        movementAnimation = new MovementAnimation(animationManager, this);
+    private MessageView(AnimationRegistry animationRegistry) {
+        movementAnimation = new MovementAnimation(animationRegistry, this);
     }
 
     @Override

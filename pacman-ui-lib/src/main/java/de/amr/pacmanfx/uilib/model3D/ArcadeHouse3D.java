@@ -7,7 +7,7 @@ package de.amr.pacmanfx.uilib.model3D;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.House;
-import de.amr.pacmanfx.uilib.animation.AnimationManager;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -55,7 +55,7 @@ public class ArcadeHouse3D extends Group implements Disposable {
     private ManagedAnimation doorOpenCloseAnimation;
 
     public ArcadeHouse3D(
-        AnimationManager animationManager,
+        AnimationRegistry animationRegistry,
         House house,
         double baseHeight,
         double wallThickness,
@@ -64,7 +64,7 @@ public class ArcadeHouse3D extends Group implements Disposable {
         Color houseTopColor,
         Color doorColor)
     {
-        requireNonNull(animationManager);
+        requireNonNull(animationRegistry);
         requireNonNull(house);
         requireNonNull(houseBaseColor);
         requireNonNull(houseTopColor);
@@ -87,7 +87,7 @@ public class ArcadeHouse3D extends Group implements Disposable {
 
         door = createDoor(house.leftDoorTile(), house.rightDoorTile(), wallBaseHeightProperty.get());
 
-        doorOpenCloseAnimation = new ManagedAnimation(animationManager, "Door_OpenClose") {
+        doorOpenCloseAnimation = new ManagedAnimation(animationRegistry, "Door_OpenClose") {
             @Override
             protected Animation createAnimation() {
                 return new Timeline(

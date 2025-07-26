@@ -11,7 +11,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.BonusState;
-import de.amr.pacmanfx.uilib.animation.AnimationManager;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -51,8 +51,8 @@ public class Bonus3D extends Box implements Disposable {
 
     private class EdibleAnimation extends ManagedAnimation {
 
-        public EdibleAnimation(AnimationManager animationManager) {
-            super(animationManager, "Bonus_Edible");
+        public EdibleAnimation(AnimationRegistry animationRegistry) {
+            super(animationRegistry, "Bonus_Edible");
         }
 
         @Override
@@ -84,8 +84,8 @@ public class Bonus3D extends Box implements Disposable {
         }
     }
 
-    public Bonus3D(AnimationManager animationManager, Bonus bonus, Image symbolImage, double symbolWidth, Image pointsImage, double pointsWidth) {
-        requireNonNull(animationManager);
+    public Bonus3D(AnimationRegistry animationRegistry, Bonus bonus, Image symbolImage, double symbolWidth, Image pointsImage, double pointsWidth) {
+        requireNonNull(animationRegistry);
         this.bonus = requireNonNull(bonus);
         this.symbolWidth = requireNonNegative(symbolWidth);
         this.pointsWidth = requireNonNegative(pointsWidth);
@@ -104,9 +104,9 @@ public class Bonus3D extends Box implements Disposable {
         pointsImageView.setFitWidth(pointsWidth);
         pointsTexture = new PhongMaterial(Color.GHOSTWHITE, pointsImageView.getImage(), null, null, null);
 
-        edibleAnimation = new EdibleAnimation(animationManager);
+        edibleAnimation = new EdibleAnimation(animationRegistry);
 
-        eatenAnimation = new ManagedAnimation(animationManager, "Bonus_Eaten") {
+        eatenAnimation = new ManagedAnimation(animationRegistry, "Bonus_Eaten") {
             @Override
             protected Animation createAnimation() {
                 var animation = new RotateTransition(Duration.seconds(1), Bonus3D.this);

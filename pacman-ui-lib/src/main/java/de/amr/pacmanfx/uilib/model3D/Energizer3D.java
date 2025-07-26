@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.model3D;
 
-import de.amr.pacmanfx.uilib.animation.AnimationManager;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -26,13 +26,13 @@ public class Energizer3D implements Eatable3D {
     private ManagedAnimation pumpingAnimation;
     private ManagedAnimation eatenAnimation;
 
-    public Energizer3D(AnimationManager animationManager, double radius, double minScaling, double maxScaling) {
+    public Energizer3D(AnimationRegistry animationRegistry, double radius, double minScaling, double maxScaling) {
         requireNonNegative(radius, "Energizer radius must be positive but is %f");
-        requireNonNull(animationManager);
+        requireNonNull(animationRegistry);
 
         sphere = new Sphere(radius);
 
-        pumpingAnimation = new ManagedAnimation(animationManager, "Energizer_Pumping") {
+        pumpingAnimation = new ManagedAnimation(animationRegistry, "Energizer_Pumping") {
             @Override
             protected Animation createAnimation() {
                 // 3 full blinks per second

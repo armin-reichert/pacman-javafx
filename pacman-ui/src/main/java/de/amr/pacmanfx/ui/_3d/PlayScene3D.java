@@ -452,10 +452,12 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onPacGetsPower(GameEvent event) {
-        gameLevel3D.pac3D().setMovementPowerMode(true);
-        gameLevel3D.wallColorFlashingAnimation().playFromStart();
         ui.theSound().stopSiren();
-        ui.theSound().loop(SoundID.PAC_MAN_POWER);
+        if (!theGameContext().theGame().isLevelCompleted()) {
+            gameLevel3D.pac3D().setMovementPowerMode(true);
+            ui.theSound().loop(SoundID.PAC_MAN_POWER);
+            gameLevel3D.wallColorFlashingAnimation().playFromStart();
+        }
     }
 
     @Override

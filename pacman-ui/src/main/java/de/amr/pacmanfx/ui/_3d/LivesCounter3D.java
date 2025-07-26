@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.uilib.Ufx;
-import de.amr.pacmanfx.uilib.animation.AnimationManager;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -50,8 +50,8 @@ public class LivesCounter3D extends Group implements Disposable {
 
     private final ManagedAnimation lookingAroundAnimation;
 
-    public LivesCounter3D(AnimationManager animationManager, Node[] pacShapes) {
-        requireNonNull(animationManager);
+    public LivesCounter3D(AnimationRegistry animationRegistry, Node[] pacShapes) {
+        requireNonNull(animationRegistry);
         this.pacShapes = pacShapes;
 
         pillarMaterialProperty.bind(pillarColorProperty.map(Ufx::coloredPhongMaterial));
@@ -101,7 +101,7 @@ public class LivesCounter3D extends Group implements Disposable {
         resetShapes();
         getChildren().addAll(standsGroup, light);
 
-        lookingAroundAnimation = new ManagedAnimation(animationManager, "LivesCounter_LookingAround") {
+        lookingAroundAnimation = new ManagedAnimation(animationRegistry, "LivesCounter_LookingAround") {
             @Override
             protected Animation createAnimation() {
                 var animation = new ParallelTransition();

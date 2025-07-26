@@ -132,7 +132,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         setGameRenderer(ui.theConfiguration().createGameRenderer(canvas));
 
         messageMovement = new MessageMovement();
-        levelCompletedAnimation = new LevelCompletedAnimation(animationManager);
+        levelCompletedAnimation = new LevelCompletedAnimation(animationRegistry);
 
         gameContext().theGame().theHUD().showScore(true);
         gameContext().theGame().theHUD().showLevelCounter(true);

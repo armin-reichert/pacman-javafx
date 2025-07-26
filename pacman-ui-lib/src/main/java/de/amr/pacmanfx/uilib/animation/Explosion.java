@@ -131,17 +131,16 @@ public class Explosion extends ManagedAnimation {
             }
             super.play();
         }
-
     }
 
     public Explosion(
-        AnimationManager animationManager,
+        AnimationRegistry animationRegistry,
         Node origin,
         Group particlesGroupContainer,
         Material particleMaterial,
         Predicate<Particle> particleReachedEndPosition)
     {
-        super(animationManager, "Energizer_Explosion");
+        super(animationRegistry, "Energizer_Explosion");
         this.origin = requireNonNull(origin);
         this.particlesGroupContainer = requireNonNull(particlesGroupContainer);
         this.particleMaterial = requireNonNull(particleMaterial);
@@ -167,12 +166,16 @@ public class Explosion extends ManagedAnimation {
 
     @Override
     public void dispose() {
+        if (particlesGroup == null) {
+            Logger.error("Dispose already called?");
+            return;
+        }
         super.dispose();
         particlesGroup.getChildren().stream().filter(Particle.class::isInstance).map(Particle.class::cast).forEach(Particle::dispose);
         Logger.info("Disposed {} particles", particlesGroup.getChildren().size());
         particlesGroup.getChildren().clear();
-        particlesGroup = null;
         particlesGroupContainer.getChildren().remove(particlesGroup);
+        particlesGroup = null;
         particleMaterial = null;
         origin = null;
         particleReachedEndPosition = null;

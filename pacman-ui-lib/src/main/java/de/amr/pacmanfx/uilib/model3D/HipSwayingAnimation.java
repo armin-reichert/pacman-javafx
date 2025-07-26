@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.uilib.animation.AnimationManager;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -25,8 +25,8 @@ public class HipSwayingAnimation extends ManagedAnimation {
 
     private final Node node;
 
-    public HipSwayingAnimation(AnimationManager animationManager, Node node) {
-        super(animationManager, "MsPacMan_HipSwaying");
+    public HipSwayingAnimation(AnimationRegistry animationRegistry, Node node) {
+        super(animationRegistry, "MsPacMan_HipSwaying");
         this.node = requireNonNull(node);
     }
 

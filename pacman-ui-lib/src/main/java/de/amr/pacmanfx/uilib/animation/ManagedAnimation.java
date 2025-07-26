@@ -14,20 +14,20 @@ import static java.util.Objects.requireNonNull;
 
 public abstract class ManagedAnimation implements Disposable {
 
-    protected AnimationManager animationManager;
-    protected String label;
+    private final String label;
+    private AnimationRegistry animationRegistry;
     protected Animation animation;
 
     protected abstract Animation createAnimation();
 
-    protected ManagedAnimation(AnimationManager animationManager, String label) {
-        this.animationManager = requireNonNull(animationManager);
+    protected ManagedAnimation(AnimationRegistry animationRegistry, String label) {
+        this.animationRegistry = requireNonNull(animationRegistry);
         this.label = requireNonNull(label);
-        animationManager.register(this);
+        animationRegistry.register(this);
     }
 
-    public AnimationManager animationManager() {
-        return animationManager;
+    public AnimationRegistry animationRegistry() {
+        return animationRegistry;
     }
 
     public String label() {
@@ -62,7 +62,6 @@ public abstract class ManagedAnimation implements Disposable {
             animation = null;
             Logger.info("Disposed animation '{}'", label);
         }
-        animationManager = null;
     }
 
     public void invalidate() {
@@ -70,17 +69,47 @@ public abstract class ManagedAnimation implements Disposable {
     }
 
     public void playFromStart() {
-        animationManager.playAnimationFromStart(this);
+        Animation animation = getOrCreateAnimation();
+        requireNonNull(animation);
+        if (animation.getStatus() != Animation.Status.RUNNING) {
+            Logger.trace("Play animation '{}' from start", label);
+            animation.playFromStart();
+        }
     }
 
-    public void playOrContinue() { animationManager.playAnimation(this); }
+    public void playOrContinue() {
+        Animation animation = getOrCreateAnimation();
+        requireNonNull(animation);
+        if (animation.getStatus() != Animation.Status.RUNNING) {
+            Logger.trace("Continue/play animation '{}'", label);
+            animation.play();
+        }
+    }
 
     public void pause() {
-        animationManager.pauseAnimation(this);
+        if (animation != null) {
+            try {
+                if (animation.getStatus() != Animation.Status.PAUSED) {
+                    animation.pause();
+                    Logger.debug("Paused animation '{}'", label);
+                }
+            } catch (IllegalStateException x) {
+                Logger.warn("Could not pause (embedded?) animation '{}'", label);
+            }
+        }
     }
 
     public void stop() {
-        animationManager.stopAnimation(this);
+        if (animation != null) {
+            try {
+                if (animation.getStatus() != Animation.Status.STOPPED) {
+                    Logger.debug("Stop animation '{}'", label);
+                    animation.stop();
+                }
+            } catch (IllegalStateException x) {
+                Logger.warn("Could not stop (embedded?) animation '{}'", label);
+            }
+        }
     }
 
     public boolean isRunning() {

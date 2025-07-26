@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui._3d;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.uilib.animation.AnimationManager;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -27,11 +27,11 @@ import static java.util.Objects.requireNonNull;
 
 public class LevelCounter3D extends Group implements Disposable {
 
-    private final AnimationManager animationManager;
+    private final AnimationRegistry animationRegistry;
     private ManagedAnimation spinningAnimation;
 
-    public LevelCounter3D(AnimationManager animationManager) {
-        this.animationManager = requireNonNull(animationManager);
+    public LevelCounter3D(AnimationRegistry animationRegistry) {
+        this.animationRegistry = requireNonNull(animationRegistry);
     }
 
     public void update(GameUI ui, LevelCounter levelCounter) {
@@ -53,7 +53,7 @@ public class LevelCounter3D extends Group implements Disposable {
             spinningAnimation.stop();
             spinningAnimation.dispose();
         }
-        spinningAnimation = new ManagedAnimation(animationManager, "LevelCounter_Spinning") {
+        spinningAnimation = new ManagedAnimation(animationRegistry, "LevelCounter_Spinning") {
             @Override
             protected Animation createAnimation() {
                 var cubesAnimation = new ParallelTransition();

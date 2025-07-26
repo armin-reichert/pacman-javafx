@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.uilib.animation.AnimationManager;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.*;
 import javafx.scene.Group;
@@ -31,7 +31,7 @@ public abstract class PacBase3D extends Group implements Disposable {
 
     protected final Pac pac;
     protected final double size;
-    protected final AnimationManager animationManager;
+    protected final AnimationRegistry animationRegistry;
 
     protected PacBody body;
     protected PacBodyNoEyes jaw;
@@ -45,14 +45,14 @@ public abstract class PacBase3D extends Group implements Disposable {
 
     protected PacBase3D(
         Model3DRepository model3DRepository,
-        AnimationManager animationManager,
+        AnimationRegistry animationRegistry,
         Pac pac,
         double size,
         Color headColor, Color eyesColor, Color palateColor)
     {
         this.pac = requireNonNull(pac);
         this.size = size;
-        this.animationManager = requireNonNull(animationManager);
+        this.animationRegistry = requireNonNull(animationRegistry);
 
         requireNonNull(model3DRepository);
 
@@ -63,7 +63,7 @@ public abstract class PacBase3D extends Group implements Disposable {
         getTransforms().add(moveRotation);
         setTranslateZ(-0.5 * size);
 
-        chewingAnimation = new ManagedAnimation(animationManager, "PacMan_Chewing") {
+        chewingAnimation = new ManagedAnimation(animationRegistry, "PacMan_Chewing") {
             @Override
             protected Animation createAnimation() {
                 var mouthClosed = new KeyValue[] {
