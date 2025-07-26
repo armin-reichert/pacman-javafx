@@ -362,7 +362,7 @@ public class PlayScene3D implements GameScene {
         gameLevel3D.pellets3D().forEach(pellet -> pellet.shape3D().setVisible(!gameLevel.tileContainsEatenFood(pellet.tile())));
         gameLevel3D.energizers3D().forEach(energizer -> energizer.shape3D().setVisible(!gameLevel.tileContainsEatenFood(energizer.tile())));
         if (isOneOf(gameContext().theGameState(), GameState.HUNTING, GameState.GHOST_DYING)) { //TODO check this
-            gameLevel3D.energizers3D()
+            gameLevel3D.energizers3D().stream()
                 .filter(energizer3D -> energizer3D.shape3D().isVisible())
                 .forEach(Energizer3D::playPumping);
         }
@@ -437,11 +437,12 @@ public class PlayScene3D implements GameScene {
             // When cheat "eat all pellets" has been used, no tile is present in the event.
             gameLevel3D.pellets3D().forEach(Pellet3D::onEaten);
         } else {
-            Energizer3D energizer3D = gameLevel3D.energizers3D().filter(e3D -> event.tile().equals(e3D.tile())).findFirst().orElse(null);
+            Energizer3D energizer3D = gameLevel3D.energizers3D().stream()
+                .filter(e3D -> event.tile().equals(e3D.tile())).findFirst().orElse(null);
             if (energizer3D != null) {
                 energizer3D.onEaten();
             } else {
-                gameLevel3D.pellets3D()
+                gameLevel3D.pellets3D().stream()
                     .filter(pellet3D -> event.tile().equals(pellet3D.tile()))
                     .findFirst()
                     .ifPresent(Pellet3D::onEaten);

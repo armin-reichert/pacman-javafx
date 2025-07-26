@@ -43,7 +43,6 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
@@ -57,18 +56,17 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameLevel3D implements Disposable {
 
-    private final DoubleProperty  houseBaseHeightProperty = new SimpleDoubleProperty();
-    private final BooleanProperty houseLightOnProperty = new SimpleBooleanProperty(false);
-    private final BooleanProperty houseOpenProperty = new SimpleBooleanProperty();
-    private final IntegerProperty livesCountProperty = new SimpleIntegerProperty(0);
-    private final DoubleProperty  obstacleBaseHeightProperty = new SimpleDoubleProperty();
-    private final DoubleProperty  wallOpacityProperty = new SimpleDoubleProperty(1);
+    private final DoubleProperty  houseBaseHeightProperty    = new SimpleDoubleProperty(Wall3D.DEFAULT_BASE_HEIGHT);
+    private final BooleanProperty houseLightOnProperty       = new SimpleBooleanProperty(false);
+    private final BooleanProperty houseOpenProperty          = new SimpleBooleanProperty(false);
+    private final IntegerProperty livesCountProperty         = new SimpleIntegerProperty(0);
+    private final DoubleProperty  obstacleBaseHeightProperty = new SimpleDoubleProperty(Wall3D.DEFAULT_BASE_HEIGHT);
+    private final DoubleProperty  wallOpacityProperty        = new SimpleDoubleProperty(1);
 
     protected final GameUI ui;
     protected final Group root;
-
     protected final GameLevel gameLevel;
-    protected WorldMapColorScheme colorScheme;
+    protected final WorldMapColorScheme colorScheme;
 
     private final AnimationRegistry animationRegistry = new AnimationRegistry();
     private ManagedAnimation wallColorFlashingAnimation;
@@ -96,20 +94,33 @@ public class GameLevel3D implements Disposable {
     private PacBase3D pac3D;
     private List<MutatingGhost3D> ghosts3D;
     private Bonus3D bonus3D;
-    private ArrayList<Pellet3D> pellets3D = new ArrayList<>();
-    private ArrayList<Energizer3D> energizers3D = new ArrayList<>();
-    private final Group particlesGroupContainer = new Group();
+    private final ArrayList<Pellet3D> pellets3D = new ArrayList<>();
+    private final ArrayList<Energizer3D> energizers3D = new ArrayList<>();
+    private final Group particleGroupsContainer = new Group();
     private MessageView messageView;
 
     private int wall3DCount;
 
+    private Animation wallsMovingUpAndDown(int numFlashes, int fullCycleDurationMillis) {
+        if (numFlashes == 0) {
+            return pauseSec(1.0);
+        }
+        var timeline = new Timeline(
+            new KeyFrame(Duration.millis(0.5 * fullCycleDurationMillis),
+                new KeyValue(obstacleBaseHeightProperty, 0, Interpolator.EASE_BOTH)
+            )
+        );
+        timeline.setAutoReverse(true);
+        timeline.setCycleCount(2 * numFlashes);
+        return timeline;
+    }
+
     private class LevelCompletedAnimation extends ManagedAnimation {
-        private static final int FLASH_DURATION_MILLIS = 250;
         private static final int MESSAGE_FREQUENCY = 20; // 20% of cases
         private static final float SPINNING_SECONDS = 1.5f;
 
         public LevelCompletedAnimation(AnimationRegistry animationRegistry) {
-            super(animationRegistry, "Level_Complete");
+            super(animationRegistry, "Level_Completed");
         }
 
         @Override
@@ -121,7 +132,7 @@ public class GameLevel3D implements Disposable {
                 }),
                 pauseSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
                 pauseSec(0.5),
-                wallsMovingUpAndDown(gameLevel.data().numFlashes()),
+                wallsMovingUpAndDown(gameLevel.data().numFlashes(), 250),
                 pauseSec(0.5, () -> gameLevel.pac().hide()),
                 pauseSec(0.5),
                 levelSpinningAroundAxis(new Random().nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS),
@@ -160,24 +171,9 @@ public class GameLevel3D implements Disposable {
             return spin360;
         }
 
-        private Animation wallsMovingUpAndDown(int numFlashes) {
-            if (numFlashes == 0) {
-                return pauseSec(1.0);
-            }
-            var flashing = new Timeline(
-                    new KeyFrame(Duration.millis(0.5 * FLASH_DURATION_MILLIS),
-                            new KeyValue(obstacleBaseHeightProperty, 0, Interpolator.EASE_BOTH)
-                    )
-            );
-            flashing.setAutoReverse(true);
-            flashing.setCycleCount(2 * numFlashes);
-            return flashing;
-        }
     }
 
     private class LevelCompletedAnimationShort extends ManagedAnimation {
-
-        public static final int FLASH_DURATION_MILLIS = 250;
 
         public LevelCompletedAnimationShort(AnimationRegistry animationRegistry) {
             super(animationRegistry, "Level_Complete_Short_Animation");
@@ -188,23 +184,9 @@ public class GameLevel3D implements Disposable {
             return new SequentialTransition(
                 pauseSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
                 pauseSec(0.5),
-                wallsMovingUpAndDown(gameLevel.data().numFlashes()),
+                wallsMovingUpAndDown(gameLevel.data().numFlashes(), 250),
                 pauseSec(0.5, () -> gameLevel.pac().hide())
             );
-        }
-
-        private Animation wallsMovingUpAndDown(int numFlashes) {
-            if (numFlashes == 0) {
-                return pauseSec(1.0);
-            }
-            var flashing = new Timeline(
-                new KeyFrame(Duration.millis(0.5 * FLASH_DURATION_MILLIS),
-                        new KeyValue(obstacleBaseHeightProperty, 0, Interpolator.EASE_BOTH)
-                )
-            );
-            flashing.setAutoReverse(true);
-            flashing.setCycleCount(2 * numFlashes);
-            return flashing;
         }
     }
 
@@ -259,7 +241,7 @@ public class GameLevel3D implements Disposable {
 
         root.setMouseTransparent(true); // this increases performance, they say...
 
-        createWorldMapColorScheme();
+        colorScheme = createWorldMapColorScheme();
         createMaterials();
         createGhostMeshViews();
 
@@ -292,7 +274,7 @@ public class GameLevel3D implements Disposable {
 
         energizers3D.stream().map(Eatable3D::shape3D).forEach(root.getChildren()::add);
         pellets3D   .stream().map(Eatable3D::shape3D).forEach(root.getChildren()::add);
-        root.getChildren().add(particlesGroupContainer);
+        root.getChildren().add(particleGroupsContainer);
     }
 
     public Group root() {
@@ -350,12 +332,12 @@ public class GameLevel3D implements Disposable {
         Logger.info("Unbound material references");
     }
 
-    private void createWorldMapColorScheme() {
+    private WorldMapColorScheme createWorldMapColorScheme() {
         WorldMap worldMap = gameLevel.worldMap();
         WorldMapColorScheme proposedColorScheme = ui.theConfiguration().colorScheme(worldMap);
         requireNonNull(proposedColorScheme);
         // Add some contrast with floor if wall fill color is black
-        colorScheme = proposedColorScheme.fill().equals(Color.BLACK)
+        return proposedColorScheme.fill().equals(Color.BLACK)
             ? new WorldMapColorScheme(Color.grayRgb(42), proposedColorScheme.stroke(), proposedColorScheme.door(), proposedColorScheme.pellet())
             : proposedColorScheme;
     }
@@ -547,8 +529,8 @@ public class GameLevel3D implements Disposable {
     public MutatingGhost3D ghost3D(byte id) { return ghosts3D.get(id); }
     public Optional<Bonus3D> bonus3D() { return Optional.ofNullable(bonus3D); }
     public Optional<LivesCounter3D> livesCounter3D() { return Optional.ofNullable(livesCounter3D); }
-    public Stream<Pellet3D> pellets3D() { return pellets3D != null ? pellets3D.stream() : Stream.empty(); }
-    public Stream<Energizer3D> energizers3D() { return energizers3D != null ? energizers3D.stream() : Stream.empty(); }
+    public List<Pellet3D> pellets3D() { return Collections.unmodifiableList(pellets3D); }
+    public List<Energizer3D> energizers3D() { return Collections.unmodifiableList(energizers3D); }
     public double floorThickness() { return floor3D.getDepth(); }
 
     public AnimationRegistry animationManager() { return animationRegistry; }
@@ -639,7 +621,7 @@ public class GameLevel3D implements Disposable {
         pellets3D.forEach(pellet3D -> pellet3D.shape3D().setVisible(false));
         energizers3D.forEach(Energizer3D::pausePumping);
         energizers3D.forEach(energizer3D -> energizer3D.shape3D().setVisible(false));
-        particlesGroupContainer.getChildren().clear();
+        particleGroupsContainer.getChildren().clear();
         house3D.setDoorVisible(false);
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
         if (messageView != null) {
@@ -731,7 +713,7 @@ public class GameLevel3D implements Disposable {
         energizer3D.shape3D().setTranslateY(y);
         energizer3D.shape3D().setTranslateZ(z);
 
-        var explosion = new Explosion(animationRegistry, energizer3D.shape3D(), particlesGroupContainer, pelletMaterial,
+        var explosion = new Explosion(animationRegistry, energizer3D.shape3D(), particleGroupsContainer, pelletMaterial,
                 particle -> particle.getTranslateZ() >= -1 && insideWorldMapArea(particle));
         energizer3D.setEatenAnimation(explosion);
 
@@ -838,17 +820,11 @@ public class GameLevel3D implements Disposable {
             ambientLight = null;
             Logger.info("Unbound and cleared ambient light");
         }
-        if (pellets3D != null) {
-            pellets3D.forEach(Pellet3D::dispose);
-            pellets3D = null;
-            Logger.info("Disposed 3D pellets");
-        }
-        if (energizers3D != null) {
-            energizers3D.forEach(Energizer3D::dispose);
-            energizers3D = null;
-            Logger.info("Disposed 3D energizers");
-        }
-        particlesGroupContainer.getChildren().clear();
+        pellets3D.forEach(Pellet3D::dispose);
+        Logger.info("Disposed 3D pellets");
+        energizers3D.forEach(Energizer3D::dispose);
+        Logger.info("Disposed 3D energizers");
+        particleGroupsContainer.getChildren().clear();
         Logger.info("Removed all particle groups");
         if (floor3D != null) {
             floor3D.translateXProperty().unbind();
