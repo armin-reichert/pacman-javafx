@@ -103,14 +103,6 @@ public class GameLevel3D implements Disposable {
 
     private int wall3DCount;
 
-    private Animation createMazeDisappearingAnimation() {
-        return new Timeline(
-            new KeyFrame(Duration.seconds(0.5), new KeyValue(houseBaseHeightProperty, 0, Interpolator.EASE_IN)),
-            new KeyFrame(Duration.seconds(1.5), new KeyValue(obstacleBaseHeightProperty, 0, Interpolator.EASE_IN)),
-            new KeyFrame(Duration.seconds(2.5), e -> maze3D.setVisible(false))
-        );
-    }
-
     private class LevelCompletedAnimation extends ManagedAnimation {
         private static final int FLASH_DURATION_MILLIS = 250;
         private static final int MESSAGE_FREQUENCY = 20; // 20% of cases
@@ -137,6 +129,14 @@ public class GameLevel3D implements Disposable {
                 pauseSec(0.5),
                 createMazeDisappearingAnimation(),
                 pauseSec(1.0, () -> ui.theSound().play(SoundID.LEVEL_CHANGED))
+            );
+        }
+
+        private Animation createMazeDisappearingAnimation() {
+            return new Timeline(
+                new KeyFrame(Duration.seconds(0.5), new KeyValue(houseBaseHeightProperty, 0, Interpolator.EASE_IN)),
+                new KeyFrame(Duration.seconds(1.5), new KeyValue(obstacleBaseHeightProperty, 0, Interpolator.EASE_IN)),
+                new KeyFrame(Duration.seconds(2.5), e -> maze3D.setVisible(false))
             );
         }
 
