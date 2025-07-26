@@ -165,12 +165,7 @@ public class Explosion extends ManagedAnimation {
     }
 
     @Override
-    public void dispose() {
-        if (particlesGroup == null) {
-            Logger.error("Dispose already called?");
-            return;
-        }
-        super.dispose();
+    protected void freeResources() {
         disposeParticles();
         particlesGroupContainer.getChildren().remove(particlesGroup);
         particlesGroup = null;

@@ -106,20 +106,12 @@ public class GameLevel3D implements Disposable {
 
     private int wall3DCount;
 
-    private class MazeDisappearingAnimation extends ManagedAnimation {
-
-        public MazeDisappearingAnimation(AnimationRegistry animationRegistry) {
-            super(animationRegistry, "Maze_Disappearing");
-        }
-
-        @Override
-        protected Animation createAnimation() {
-            return new Timeline(
-                new KeyFrame(Duration.seconds(0.5), new KeyValue(houseBaseHeightProperty, 0, Interpolator.EASE_IN)),
-                new KeyFrame(Duration.seconds(1.5), new KeyValue(obstacleBaseHeightProperty, 0, Interpolator.EASE_IN)),
-                new KeyFrame(Duration.seconds(2.5), e -> maze3D.setVisible(false))
-            );
-        }
+    private Animation createMazeDisappearingAnimation() {
+        return new Timeline(
+            new KeyFrame(Duration.seconds(0.5), new KeyValue(houseBaseHeightProperty, 0, Interpolator.EASE_IN)),
+            new KeyFrame(Duration.seconds(1.5), new KeyValue(obstacleBaseHeightProperty, 0, Interpolator.EASE_IN)),
+            new KeyFrame(Duration.seconds(2.5), e -> maze3D.setVisible(false))
+        );
     }
 
     private class LevelCompletedAnimation extends ManagedAnimation {
@@ -127,11 +119,8 @@ public class GameLevel3D implements Disposable {
         private static final int MESSAGE_FREQUENCY = 20; // 20% of cases
         private static final float SPINNING_SECONDS = 1.5f;
 
-        private ManagedAnimation mazeDisappearingAnimation;
-
         public LevelCompletedAnimation(AnimationRegistry animationRegistry) {
             super(animationRegistry, "Level_Complete");
-            mazeDisappearingAnimation = new MazeDisappearingAnimation(animationRegistry);
         }
 
         @Override
@@ -149,16 +138,9 @@ public class GameLevel3D implements Disposable {
                 createSpinningAnimation(new Random().nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS),
                 pauseSec(0.5, () -> ui.theSound().play(SoundID.LEVEL_COMPLETE)),
                 pauseSec(0.5),
-                mazeDisappearingAnimation.getOrCreateAnimation(),
+                createMazeDisappearingAnimation(),
                 pauseSec(1.0, () -> ui.theSound().play(SoundID.LEVEL_CHANGED))
             );
-        }
-
-        @Override
-        public void dispose() {
-            mazeDisappearingAnimation.stop();
-            mazeDisappearingAnimation.dispose();
-            mazeDisappearingAnimation = null;
         }
 
         private void showLevelCompleteFlashMessage(int levelNumber) {
@@ -922,6 +904,5 @@ public class GameLevel3D implements Disposable {
         wallColorFlashingAnimation = null;
         levelCompletedFullAnimation = null;
         levelCompletedShortAnimation = null;
-
     }
 }

@@ -15,7 +15,7 @@ import static java.util.Objects.requireNonNull;
 public abstract class ManagedAnimation implements Disposable {
 
     private final String label;
-    private AnimationRegistry animationRegistry;
+    private final AnimationRegistry animationRegistry;
     protected Animation animation;
 
     protected abstract Animation createAnimation();
@@ -54,10 +54,16 @@ public abstract class ManagedAnimation implements Disposable {
         return animation;
     }
 
+    /**
+     * Called by {@link #dispose()}.
+     */
+    protected void freeResources() {}
+
     @Override
-    public void dispose() {
+    public final void dispose() {
         stop();
         if (animation != null) {
+            freeResources();
             animation.setOnFinished(null);
             animation = null;
             Logger.info("Disposed animation '{}'", label);

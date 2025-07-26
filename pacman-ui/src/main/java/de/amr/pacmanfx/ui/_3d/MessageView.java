@@ -105,12 +105,6 @@ public class MessageView extends ImageView implements Disposable {
         }
 
         @Override
-        public void dispose() {
-            super.dispose();
-            messageView = null;
-        }
-
-        @Override
         protected Animation createAnimation() {
             double hiddenZ = messageView.hiddenZPosition();
             double visibleZ = -(hiddenZ + 2);
