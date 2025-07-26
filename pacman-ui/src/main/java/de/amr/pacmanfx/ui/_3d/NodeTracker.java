@@ -17,6 +17,7 @@ public class NodeTracker {
     private final AnimationTimer timer;
     private final Node observer;
     private Node target;
+    private double currentAngle;
 
     public NodeTracker(Node observer) {
         this.observer = requireNonNull(observer);
@@ -43,8 +44,10 @@ public class NodeTracker {
         Point2D observerPos = observer.localToScene(Point2D.ZERO);
         Point2D arrow = (targetPos.subtract(observerPos)).normalize();
         double phi = Math.toDegrees(Math.atan2(arrow.getX(), arrow.getY()));
-        double rotate = ANGLE_TOWARDS_VIEWER - phi;
+        double angle = ANGLE_TOWARDS_VIEWER - phi;
         observer.setRotationAxis(Rotate.Z_AXIS);
-        observer.setRotate(rotate);
+
+        currentAngle += (angle - currentAngle) * 0.2; // smoothing
+        observer.setRotate(angle);
     }
 }
