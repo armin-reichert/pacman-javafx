@@ -7,8 +7,7 @@ package de.amr.pacmanfx.ui._3d;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import javafx.animation.*;
+import javafx.animation.AnimationTimer;
 import javafx.beans.property.*;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
@@ -18,13 +17,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.transform.Rotate;
-import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.Random;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
@@ -49,8 +45,6 @@ public class LivesCounter3D extends Group implements Disposable {
 
     private final List<ShapeRotator> rotators;
     private final PointLight light = new PointLight();
-
-    private ManagedAnimation lookingAroundAnimation;
 
     private static class ShapeRotator {
         private final Node shape;
@@ -96,6 +90,12 @@ public class LivesCounter3D extends Group implements Disposable {
     public void startTracking(Node target) {
         for (ShapeRotator rotator : rotators) {
             rotator.startTracking(target);
+        }
+    }
+
+    public void stopTracking() {
+        for (ShapeRotator rotator : rotators) {
+            rotator.stopTracking();
         }
     }
 
@@ -149,51 +149,10 @@ public class LivesCounter3D extends Group implements Disposable {
         getChildren().addAll(standsGroup, light);
 
         rotators = new ArrayList<>();
-        for (int i = 0; i < pacShapeArray.length; ++i) {
-            Node shape = pacShapeArray[i];
+        for (Node shape : pacShapeArray) {
             ShapeRotator rotator = new ShapeRotator(shape);
             rotators.add(rotator);
         }
-
-        //lookingAroundAnimation = createLookingAroundAnimation(animationRegistry, pacShapeArray);
-    }
-
-    private ManagedAnimation createLookingAroundAnimation(AnimationRegistry animationRegistry, Node[] pacShapeArray) {
-        final ManagedAnimation lookingAroundAnimation;
-        lookingAroundAnimation = new ManagedAnimation(animationRegistry, "LivesCounter_LookingAround") {
-            @Override
-            protected Animation createAnimation() {
-                var animation = new ParallelTransition();
-                for (Node pacShape : pacShapeArray) {
-                    var rotation = new RotateTransition(Duration.seconds(10.0), pacShape);
-                    rotation.setAxis(Rotate.Z_AXIS);
-                    rotation.setFromAngle(SHAPE_ROTATION_TOWARDS_HOUSE - 30);
-                    rotation.setToAngle(SHAPE_ROTATION_TOWARDS_HOUSE + 30);
-                    rotation.setInterpolator(Interpolator.LINEAR);
-                    rotation.setCycleCount(Animation.INDEFINITE);
-                    rotation.setAutoReverse(true);
-                    rotation.setRate(new Random().nextDouble(1, 6));
-                    animation.getChildren().add(rotation);
-                }
-                resetShapes(pacShapeArray);
-                animation.setCycleCount(Animation.INDEFINITE);
-                return animation;
-            }
-
-            @Override
-            public void playFromStart() {
-                ParallelTransition parallelTransition = (ParallelTransition) getOrCreateAnimation();
-                parallelTransition.stop();
-                var childAnimationsCopy = parallelTransition.getChildren().toArray(Animation[]::new);
-                parallelTransition.getChildren().clear();
-                for (Animation childAnimation : childAnimationsCopy) {
-                    childAnimation.jumpTo(Duration.ZERO); //TODO needed?
-                }
-                parallelTransition.getChildren().setAll(childAnimationsCopy);
-                parallelTransition.playFromStart();
-            }
-        };
-        return lookingAroundAnimation;
     }
 
     public IntegerProperty livesCountProperty() { return livesCountProperty; }
@@ -203,12 +162,9 @@ public class LivesCounter3D extends Group implements Disposable {
         return light;
     }
 
-    public Optional<ManagedAnimation> lookingAroundAnimation() {
-        return Optional.ofNullable(lookingAroundAnimation);
-    }
-
     @Override
     public void dispose() {
+        stopTracking();
         livesCountProperty.unbind();
         pillarHeightProperty.unbind();
         pillarMaterialProperty.unbind();
