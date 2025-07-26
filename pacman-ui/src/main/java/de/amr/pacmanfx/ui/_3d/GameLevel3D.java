@@ -445,7 +445,7 @@ public class GameLevel3D implements Disposable {
         livesCounter3D.pillarColorProperty().set(pillarColor);
         livesCounter3D.plateColorProperty().set(plateColor);
         livesCounter3D.light().colorProperty().set(Color.CORNFLOWERBLUE);
-        livesCounter3D.lookingAroundAnimation().playFromStart();
+        //livesCounter3D.lookingAroundAnimation().playFromStart();
     }
 
     private void createLevelCounter3D() {
@@ -578,7 +578,8 @@ public class GameLevel3D implements Disposable {
         pac3D.init();
         ghosts3D.forEach(ghost3D -> ghost3D.init(gameLevel));
         energizers3D().forEach(Energizer3D::playPumping);
-        livesCounter3D().map(LivesCounter3D::lookingAroundAnimation).ifPresent(ManagedAnimation::playFromStart);
+
+        livesCounter3D().flatMap(LivesCounter3D::lookingAroundAnimation).ifPresent(ManagedAnimation::playFromStart);
     }
 
     public void onPacManDying(GameState state) {
@@ -586,8 +587,8 @@ public class GameLevel3D implements Disposable {
         ui.theSound().stopAll();
         // do one last update before dying animation starts
         pac3D.update();
-        livesCounter3D().map(LivesCounter3D::lookingAroundAnimation).ifPresent(ManagedAnimation::stop);
-        livesCounter3D().map(LivesCounter3D::lookingAroundAnimation).ifPresent(ManagedAnimation::invalidate); //TODO
+        livesCounter3D().flatMap(LivesCounter3D::lookingAroundAnimation).ifPresent(ManagedAnimation::stop);
+        livesCounter3D().flatMap(LivesCounter3D::lookingAroundAnimation).ifPresent(ManagedAnimation::invalidate); //TODO
         ghosts3D.forEach(MutatingGhost3D::stopAllAnimations);
         bonus3D().ifPresent(Bonus3D::expire);
         var animation = new SequentialTransition(

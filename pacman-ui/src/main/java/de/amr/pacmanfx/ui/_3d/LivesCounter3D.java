@@ -8,11 +8,9 @@ import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import javafx.animation.Animation;
-import javafx.animation.Interpolator;
-import javafx.animation.ParallelTransition;
-import javafx.animation.RotateTransition;
+import javafx.animation.*;
 import javafx.beans.property.*;
+import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PointLight;
@@ -21,7 +19,11 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
+import org.tinylog.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 import static de.amr.pacmanfx.Globals.TS;
@@ -32,7 +34,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class LivesCounter3D extends Group implements Disposable {
 
-    private static final int SHAPES_ROTATION_ZERO = 240;
+    private static final int SHAPE_ROTATION_TOWARDS_HOUSE = 240;
 
     private final ObjectProperty<Color>         pillarColorProperty = new SimpleObjectProperty<>(Color.grayRgb(120));
     private final ObjectProperty<PhongMaterial> pillarMaterialProperty = new SimpleObjectProperty<>(new PhongMaterial());
@@ -45,26 +47,71 @@ public class LivesCounter3D extends Group implements Disposable {
 
     private final IntegerProperty               livesCountProperty = new SimpleIntegerProperty(0);
 
-    private final Node[] pacShapes;
+    private final List<ShapeRotator> rotators;
     private final PointLight light = new PointLight();
 
-    private final ManagedAnimation lookingAroundAnimation;
+    private ManagedAnimation lookingAroundAnimation;
 
-    public LivesCounter3D(AnimationRegistry animationRegistry, Node[] pacShapes) {
+    private static class ShapeRotator {
+        private final Node shape;
+        private final AnimationTimer timer;
+        private Node target;
+
+        public ShapeRotator(Node shape) {
+            this.shape = requireNonNull(shape);
+            timer = new AnimationTimer() {
+                @Override
+                public void handle(long now) {
+                    updateAngle();
+                }
+            };
+        }
+
+        public void startTracking(Node target) {
+            this.target = requireNonNull(target);
+            timer.start();
+        }
+
+        public void stopTracking() {
+            timer.stop();
+        }
+
+        private void updateAngle() {
+            Point2D targetPos = positionXY(target);
+            Point2D shapePos = positionXY(shape);
+            Point2D v = (targetPos.subtract(shapePos)).normalize();
+            double phi = Math.toDegrees(Math.atan2(v.getX(), v.getY()));
+            double rotate = -90 - phi;
+            Logger.debug("Direction towards Pac-Man: {}", v);
+            Logger.debug("phi={} rotate={}", phi, rotate);
+            shape.setRotationAxis(Rotate.Z_AXIS);
+            shape.setRotate(rotate);
+        }
+
+        private Point2D positionXY(Node node) {
+            return node.localToScene(Point2D.ZERO);
+        }
+    }
+
+    public void startTracking(Node target) {
+        for (ShapeRotator rotator : rotators) {
+            rotator.startTracking(target);
+        }
+    }
+
+    public LivesCounter3D(AnimationRegistry animationRegistry, Node[] pacShapeArray) {
         requireNonNull(animationRegistry);
-        this.pacShapes = pacShapes;
-
         pillarMaterialProperty.bind(pillarColorProperty.map(Ufx::coloredPhongMaterial));
         plateMaterialProperty.bind((plateColorProperty.map(Ufx::coloredPhongMaterial)));
 
-        light.setMaxRange  (TS * (pacShapes.length + 1));
-        light.setTranslateX(TS * (pacShapes.length - 1));
+        light.setMaxRange  (TS * (pacShapeArray.length + 1));
+        light.setTranslateX(TS * (pacShapeArray.length - 1));
         light.setTranslateY(TS * (-1));
         light.translateZProperty().bind(pillarHeightProperty.add(20).multiply(-1));
 
         var standsGroup = new Group();
-        for (int i = 0; i < pacShapes.length; ++i) {
-            final Node pacShape = pacShapes[i];
+        for (int i = 0; i < pacShapeArray.length; ++i) {
+            final Node pacShape = pacShapeArray[i];
             final int x = i * 2 * TS;
             final double shapeRadius = 0.5 * pacShape.getBoundsInParent().getHeight(); // take scale transform into account!
 
@@ -98,25 +145,37 @@ public class LivesCounter3D extends Group implements Disposable {
 
             getChildren().add(pacShape);
         }
-        resetShapes();
+        resetShapes(pacShapeArray);
         getChildren().addAll(standsGroup, light);
 
+        rotators = new ArrayList<>();
+        for (int i = 0; i < pacShapeArray.length; ++i) {
+            Node shape = pacShapeArray[i];
+            ShapeRotator rotator = new ShapeRotator(shape);
+            rotators.add(rotator);
+        }
+
+        //lookingAroundAnimation = createLookingAroundAnimation(animationRegistry, pacShapeArray);
+    }
+
+    private ManagedAnimation createLookingAroundAnimation(AnimationRegistry animationRegistry, Node[] pacShapeArray) {
+        final ManagedAnimation lookingAroundAnimation;
         lookingAroundAnimation = new ManagedAnimation(animationRegistry, "LivesCounter_LookingAround") {
             @Override
             protected Animation createAnimation() {
                 var animation = new ParallelTransition();
-                for (Node pacShape : pacShapes) {
+                for (Node pacShape : pacShapeArray) {
                     var rotation = new RotateTransition(Duration.seconds(10.0), pacShape);
                     rotation.setAxis(Rotate.Z_AXIS);
-                    rotation.setFromAngle(SHAPES_ROTATION_ZERO- 30);
-                    rotation.setToAngle(SHAPES_ROTATION_ZERO + 30);
+                    rotation.setFromAngle(SHAPE_ROTATION_TOWARDS_HOUSE - 30);
+                    rotation.setToAngle(SHAPE_ROTATION_TOWARDS_HOUSE + 30);
                     rotation.setInterpolator(Interpolator.LINEAR);
                     rotation.setCycleCount(Animation.INDEFINITE);
                     rotation.setAutoReverse(true);
                     rotation.setRate(new Random().nextDouble(1, 6));
                     animation.getChildren().add(rotation);
                 }
-                resetShapes();
+                resetShapes(pacShapeArray);
                 animation.setCycleCount(Animation.INDEFINITE);
                 return animation;
             }
@@ -134,6 +193,7 @@ public class LivesCounter3D extends Group implements Disposable {
                 parallelTransition.playFromStart();
             }
         };
+        return lookingAroundAnimation;
     }
 
     public IntegerProperty livesCountProperty() { return livesCountProperty; }
@@ -142,8 +202,9 @@ public class LivesCounter3D extends Group implements Disposable {
     public PointLight light() {
         return light;
     }
-    public ManagedAnimation lookingAroundAnimation() {
-        return lookingAroundAnimation;
+
+    public Optional<ManagedAnimation> lookingAroundAnimation() {
+        return Optional.ofNullable(lookingAroundAnimation);
     }
 
     @Override
@@ -159,10 +220,10 @@ public class LivesCounter3D extends Group implements Disposable {
         light.translateZProperty().unbind();
     }
 
-    private void resetShapes() {
-        for (Node shape : pacShapes) {
+    private void resetShapes(Node[] shapes) {
+        for (Node shape : shapes) {
             shape.setRotationAxis(Rotate.Z_AXIS);
-            shape.setRotate(SHAPES_ROTATION_ZERO);
+            shape.setRotate(SHAPE_ROTATION_TOWARDS_HOUSE);
         }
     }
 }

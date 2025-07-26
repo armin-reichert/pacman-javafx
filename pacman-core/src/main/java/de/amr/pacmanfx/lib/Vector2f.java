@@ -45,7 +45,7 @@ public record Vector2f(float x, float y) {
         return (float) Math.hypot(x, y);
     }
 
-    public Vector2f normalized() {
+    public Vector2f normalize() {
         if (equals(ZERO)) {
             throw new IllegalArgumentException("Null vector cannot be normalized");
         }

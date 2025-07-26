@@ -19,7 +19,6 @@ import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.Ufx;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.model3D.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.Pellet3D;
@@ -334,7 +333,7 @@ public class PlayScene3D implements GameScene {
             }
             case TESTING_LEVELS_SHORT, TESTING_LEVELS_MEDIUM -> {
                 replaceGameLevel3D(); //TODO check when to destroy previous level
-                gameLevel3D.livesCounter3D().map(LivesCounter3D::lookingAroundAnimation).ifPresent(ManagedAnimation::playFromStart);
+//                gameLevel3D.livesCounter3D().flatMap(LivesCounter3D::lookingAroundAnimation).ifPresent(ManagedAnimation::playFromStart);
                 gameLevel3D.energizers3D().forEach(Energizer3D::playPumping);
                 showLevelTestMessage();
             }
@@ -371,7 +370,8 @@ public class PlayScene3D implements GameScene {
             if (gameLevel.pac().powerTimer().isRunning()) {
                 ui.theSound().loop(SoundID.PAC_MAN_POWER);
             }
-            gameLevel3D.livesCounter3D().map(LivesCounter3D::lookingAroundAnimation).ifPresent(ManagedAnimation::playFromStart);
+            //gameLevel3D.livesCounter3D().flatMap(LivesCounter3D::lookingAroundAnimation).ifPresent(ManagedAnimation::playFromStart);
+            gameLevel3D.livesCounter3D.startTracking(gameLevel3D.pac3D);
         }
         gameLevel3D.updateLevelCounter3D();
         updateScores();
@@ -503,6 +503,9 @@ public class PlayScene3D implements GameScene {
         gameLevel3D.pac3D().init();
         gameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(gameContext().theGameLevel()));
         Logger.info("Initialized actors of game level 3D");
+
+
+        gameLevel3D.livesCounter3D.startTracking(gameLevel3D.pac3D);
     }
 
     protected void updateCamera() {
