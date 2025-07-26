@@ -7,9 +7,7 @@ package de.amr.pacmanfx.ui._3d;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import javafx.animation.AnimationTimer;
 import javafx.beans.property.*;
-import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PointLight;
@@ -42,45 +40,6 @@ public class LivesCounter3D extends Group implements Disposable {
 
     private final List<NodeTracker> trackers;
     private final PointLight light = new PointLight();
-
-    private static class NodeTracker {
-        private final AnimationTimer timer;
-        private final Node observer;
-        private Node target;
-
-        public NodeTracker(Node observer) {
-            this.observer = requireNonNull(observer);
-            timer = new AnimationTimer() {
-                @Override
-                public void handle(long now) {
-                    updateAngle();
-                }
-            };
-        }
-
-        public void startTracking(Node target) {
-            this.target = requireNonNull(target);
-            timer.start();
-        }
-
-        public void stopTracking() {
-            timer.stop();
-        }
-
-        private void updateAngle() {
-            Point2D targetPos = positionXY(target);
-            Point2D shapePos = positionXY(observer);
-            Point2D arrow = (targetPos.subtract(shapePos)).normalize();
-            double phi = Math.toDegrees(Math.atan2(arrow.getX(), arrow.getY()));
-            double rotate = -90 - phi;
-            observer.setRotationAxis(Rotate.Z_AXIS);
-            observer.setRotate(rotate);
-        }
-
-        private Point2D positionXY(Node node) {
-            return node.localToScene(Point2D.ZERO);
-        }
-    }
 
     public void startTracking(Node target) {
         for (NodeTracker tracker : trackers) {
