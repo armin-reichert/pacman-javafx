@@ -12,6 +12,8 @@ import javafx.scene.transform.Rotate;
 import static java.util.Objects.requireNonNull;
 
 public class NodeTracker {
+    private static final int ANGLE_TOWARDS_VIEWER = -90;
+
     private final AnimationTimer timer;
     private final Node observer;
     private Node target;
@@ -21,7 +23,7 @@ public class NodeTracker {
         timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                updateAngle();
+                updateObserverRotation();
             }
         };
     }
@@ -35,17 +37,14 @@ public class NodeTracker {
         timer.stop();
     }
 
-    private void updateAngle() {
-        Point2D targetPos = positionXY(target);
-        Point2D shapePos = positionXY(observer);
-        Point2D arrow = (targetPos.subtract(shapePos)).normalize();
+    private void updateObserverRotation() {
+        if (target == null) return;
+        Point2D targetPos = target.localToScene(Point2D.ZERO);
+        Point2D observerPos = observer.localToScene(Point2D.ZERO);
+        Point2D arrow = (targetPos.subtract(observerPos)).normalize();
         double phi = Math.toDegrees(Math.atan2(arrow.getX(), arrow.getY()));
-        double rotate = -90 - phi;
+        double rotate = ANGLE_TOWARDS_VIEWER - phi;
         observer.setRotationAxis(Rotate.Z_AXIS);
         observer.setRotate(rotate);
-    }
-
-    private Point2D positionXY(Node node) {
-        return node.localToScene(Point2D.ZERO);
     }
 }
