@@ -17,7 +17,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.transform.Rotate;
-import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,8 +29,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class LivesCounter3D extends Group implements Disposable {
 
-    private static final int SHAPE_ROTATION_TOWARDS_HOUSE = 240;
-
     private final ObjectProperty<Color>         pillarColorProperty = new SimpleObjectProperty<>(Color.grayRgb(120));
     private final ObjectProperty<PhongMaterial> pillarMaterialProperty = new SimpleObjectProperty<>(new PhongMaterial());
     private final DoubleProperty                pillarHeightProperty = new SimpleDoubleProperty(8);
@@ -43,16 +40,16 @@ public class LivesCounter3D extends Group implements Disposable {
 
     private final IntegerProperty               livesCountProperty = new SimpleIntegerProperty(0);
 
-    private final List<ShapeRotator> rotators;
+    private final List<NodeTracker> trackers;
     private final PointLight light = new PointLight();
 
-    private static class ShapeRotator {
-        private final Node shape;
+    private static class NodeTracker {
         private final AnimationTimer timer;
+        private final Node observer;
         private Node target;
 
-        public ShapeRotator(Node shape) {
-            this.shape = requireNonNull(shape);
+        public NodeTracker(Node observer) {
+            this.observer = requireNonNull(observer);
             timer = new AnimationTimer() {
                 @Override
                 public void handle(long now) {
@@ -72,14 +69,12 @@ public class LivesCounter3D extends Group implements Disposable {
 
         private void updateAngle() {
             Point2D targetPos = positionXY(target);
-            Point2D shapePos = positionXY(shape);
-            Point2D v = (targetPos.subtract(shapePos)).normalize();
-            double phi = Math.toDegrees(Math.atan2(v.getX(), v.getY()));
+            Point2D shapePos = positionXY(observer);
+            Point2D arrow = (targetPos.subtract(shapePos)).normalize();
+            double phi = Math.toDegrees(Math.atan2(arrow.getX(), arrow.getY()));
             double rotate = -90 - phi;
-            Logger.debug("Direction towards Pac-Man: {}", v);
-            Logger.debug("phi={} rotate={}", phi, rotate);
-            shape.setRotationAxis(Rotate.Z_AXIS);
-            shape.setRotate(rotate);
+            observer.setRotationAxis(Rotate.Z_AXIS);
+            observer.setRotate(rotate);
         }
 
         private Point2D positionXY(Node node) {
@@ -88,14 +83,14 @@ public class LivesCounter3D extends Group implements Disposable {
     }
 
     public void startTracking(Node target) {
-        for (ShapeRotator rotator : rotators) {
-            rotator.startTracking(target);
+        for (NodeTracker tracker : trackers) {
+            tracker.startTracking(target);
         }
     }
 
     public void stopTracking() {
-        for (ShapeRotator rotator : rotators) {
-            rotator.stopTracking();
+        for (NodeTracker tracker : trackers) {
+            tracker.stopTracking();
         }
     }
 
@@ -145,13 +140,12 @@ public class LivesCounter3D extends Group implements Disposable {
 
             getChildren().add(pacShape);
         }
-        resetShapes(pacShapeArray);
         getChildren().addAll(standsGroup, light);
 
-        rotators = new ArrayList<>();
+        trackers = new ArrayList<>();
         for (Node shape : pacShapeArray) {
-            ShapeRotator rotator = new ShapeRotator(shape);
-            rotators.add(rotator);
+            NodeTracker rotator = new NodeTracker(shape);
+            trackers.add(rotator);
         }
     }
 
@@ -176,10 +170,4 @@ public class LivesCounter3D extends Group implements Disposable {
         light.translateZProperty().unbind();
     }
 
-    private void resetShapes(Node[] shapes) {
-        for (Node shape : shapes) {
-            shape.setRotationAxis(Rotate.Z_AXIS);
-            shape.setRotate(SHAPE_ROTATION_TOWARDS_HOUSE);
-        }
-    }
 }
