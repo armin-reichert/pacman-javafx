@@ -802,6 +802,18 @@ public class GameLevel3D implements Disposable {
         animationRegistry.stopAllAnimations();
         Logger.info("Stopped all managed animations");
 
+        if (!animationRegistry.animations().isEmpty()) {
+            Logger.info("There are {} un-disposed animations left:", animationRegistry.animations().size());
+            // create a copy to avoid CME
+            for (ManagedAnimation animation : animationRegistry.animations().stream().toList()) {
+                Logger.info("\t" + animation.label());
+                animation.dispose();
+            }
+        }
+        wallColorFlashingAnimation = null;
+        levelCompletedFullAnimation = null;
+        levelCompletedShortAnimation = null;
+
         ui.property3DDrawMode().removeListener(this::handleDrawModeChange);
         Logger.info("Removed 'draw mode' listener");
 
@@ -895,14 +907,8 @@ public class GameLevel3D implements Disposable {
             messageView = null;
             Logger.info("Disposed message view");
         }
+
         disposeGhostMeshViews();
         disposeMaterials();
-
-        //TODO this does not work yet
-//        animationRegistry.disposeAllAnimations();
-
-        wallColorFlashingAnimation = null;
-        levelCompletedFullAnimation = null;
-        levelCompletedShortAnimation = null;
     }
 }

@@ -18,6 +18,7 @@ import static java.util.Objects.requireNonNull;
 public class AnimationRegistry {
 
     private final Set<ManagedAnimation> registeredAnimations = new HashSet<>();
+    private final Set<ManagedAnimation> disposedAnimations = new HashSet<>();
 
     void register(ManagedAnimation managedAnimation) {
         requireNonNull(managedAnimation);
@@ -29,6 +30,19 @@ public class AnimationRegistry {
         }
     }
 
+    void markDisposed(ManagedAnimation managedAnimation) {
+        if (disposedAnimations.contains(managedAnimation)) {
+            Logger.warn("Animation '{}' has already been disposed", managedAnimation.label());
+            return;
+        }
+        if (!registeredAnimations.contains(managedAnimation)) {
+            Logger.error("Animation '{}' is not registered, cannot be marked as disposed", managedAnimation.label());
+            return;
+        }
+        registeredAnimations.remove(managedAnimation);
+        disposedAnimations.add(managedAnimation);
+    }
+
     public void stopAllAnimations() {
         registeredAnimations.forEach(ManagedAnimation::stop);
     }
@@ -37,6 +51,10 @@ public class AnimationRegistry {
         registeredAnimations.forEach(ManagedAnimation::dispose);
         registeredAnimations.clear();
         Logger.info("All animations disposed and removed");
+    }
+
+    public Set<ManagedAnimation> disposedAnimations() {
+        return Collections.unmodifiableSet(disposedAnimations);
     }
 
     public Set<ManagedAnimation> animations() {

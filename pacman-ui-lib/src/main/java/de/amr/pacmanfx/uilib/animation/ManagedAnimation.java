@@ -68,6 +68,7 @@ public abstract class ManagedAnimation implements Disposable {
             animation = null;
             Logger.info("Disposed animation '{}'", label);
         }
+        animationRegistry.markDisposed(this);
     }
 
     public void invalidate() {

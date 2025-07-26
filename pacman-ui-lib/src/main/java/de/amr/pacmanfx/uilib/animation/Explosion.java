@@ -159,12 +159,6 @@ public class Explosion extends ManagedAnimation {
     }
 
     @Override
-    public void stop() {
-        super.stop();
-        disposeParticles();
-    }
-
-    @Override
     protected void freeResources() {
         disposeParticles();
         particlesGroupContainer.getChildren().remove(particlesGroup);
