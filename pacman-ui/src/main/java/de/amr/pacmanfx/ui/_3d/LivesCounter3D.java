@@ -103,8 +103,7 @@ public class LivesCounter3D extends Group implements Disposable {
 
         trackers = new ArrayList<>();
         for (Node shape : pacShapeArray) {
-            NodeTracker rotator = new NodeTracker(shape);
-            trackers.add(rotator);
+            trackers.add(new NodeTracker(shape));
         }
     }
 
