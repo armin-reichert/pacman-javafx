@@ -23,7 +23,6 @@ import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.*;
 import javafx.animation.*;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Bounds;
@@ -100,12 +99,12 @@ public class GameLevel3D implements Disposable {
 
     private int wall3DCount;
 
-    private Animation wallsMovingUpAndDown(int numFlashes, int fullCycleDurationMillis) {
+    private Animation wallsMovingUpAndDown(int numFlashes, int fullMoveDurationMillis) {
         if (numFlashes == 0) {
             return pauseSec(1.0);
         }
         var timeline = new Timeline(
-            new KeyFrame(Duration.millis(0.5 * fullCycleDurationMillis),
+            new KeyFrame(Duration.millis(0.5 * fullMoveDurationMillis),
                 new KeyValue(wallBaseHeightProperty, 0, Interpolator.EASE_BOTH)
             )
         );
@@ -124,16 +123,14 @@ public class GameLevel3D implements Disposable {
 
         @Override
         protected Animation createAnimation() {
-            var animation = new SequentialTransition(
+            return new SequentialTransition(
                 doNow(() -> {
                     turnLivesCounterLightOff();
                     sometimesLevelCompleteMessage(gameLevel.number());
                 }),
                 pauseSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
                 wallsMovingUpAndDown(gameLevel.data().numFlashes(), 250),
-                pauseSec(0.5, () -> {
-                    gameLevel.pac().hide();
-                }),
+                pauseSec(0.5, () -> gameLevel.pac().hide()),
                 pauseSec(0.5),
                 levelSpinningAroundAxis(new Random().nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS),
                 pauseSec(0.5, () -> ui.theSound().play(SoundID.LEVEL_COMPLETE)),
@@ -141,7 +138,6 @@ public class GameLevel3D implements Disposable {
                 wallsAndHouseDisappearing(),
                 pauseSec(1.0, () -> ui.theSound().play(SoundID.LEVEL_CHANGED))
             );
-            return animation;
         }
 
         private void turnLivesCounterLightOff() {
@@ -181,15 +177,12 @@ public class GameLevel3D implements Disposable {
 
         @Override
         protected Animation createAnimation() {
-            var animation = new SequentialTransition(
-                pauseSec(0.5, () -> {
-                    gameLevel.ghosts().forEach(Ghost::hide);
-                }),
+            return new SequentialTransition(
+                pauseSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
                 pauseSec(0.5),
                 wallsMovingUpAndDown(gameLevel.data().numFlashes(), 250),
                 pauseSec(0.5, () -> gameLevel.pac().hide())
             );
-            return animation;
         }
     }
 
