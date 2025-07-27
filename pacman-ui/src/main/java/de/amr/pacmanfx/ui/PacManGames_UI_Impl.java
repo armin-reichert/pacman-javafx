@@ -67,7 +67,7 @@ public class PacManGames_UI_Impl implements GameUI {
     final ObjectProperty<Color> property3DFloorColor           = new SimpleObjectProperty<>(Color.rgb(20,20,20));
     final ObjectProperty<Color> property3DLightColor           = new SimpleObjectProperty<>(Color.WHITE);
     final BooleanProperty property3DPacLightEnabled            = new SimpleBooleanProperty(true);
-    final ObjectProperty<PerspectiveID> property3DPerspective = new SimpleObjectProperty<>(PerspectiveID.TRACK_PLAYER);
+    final ObjectProperty<PerspectiveID> property3DPerspective  = new SimpleObjectProperty<>(PerspectiveID.TRACK_PLAYER);
     final DoubleProperty property3DWallHeight                  = new SimpleDoubleProperty();
     final DoubleProperty property3DWallOpacity                 = new SimpleDoubleProperty(1.0);
 
@@ -108,6 +108,8 @@ public class PacManGames_UI_Impl implements GameUI {
         } else {
             thePrefs.addMissingValues();
         }
+        property3DWallHeight.set(thePrefs.getFloat("3d.obstacle.base_height"));
+        property3DWallOpacity.set(thePrefs.getFloat("3d.obstacle.opacity"));
 
         Scene mainScene = new Scene(rootPane, width, height);
         stage.setScene(mainScene);
@@ -185,6 +187,7 @@ public class PacManGames_UI_Impl implements GameUI {
         thePrefs.storeDefaultValue("3d.lives_counter.shape_size", 12.0f);
         thePrefs.storeDefaultValue("3d.obstacle.base_height", 4.0f);
         thePrefs.storeDefaultValue("3d.obstacle.corner_radius", 4.0f);
+        thePrefs.storeDefaultValue("3d.obstacle.opacity", 1.0f);
         thePrefs.storeDefaultValue("3d.obstacle.wall_thickness", 2.25f);
         thePrefs.storeDefaultValue("3d.pac.size", 16.5f);
         thePrefs.storeDefaultValue("3d.pellet.radius", 1.0f);
@@ -301,7 +304,7 @@ public class PacManGames_UI_Impl implements GameUI {
     @Override public ObjectProperty<Color>            property3DFloorColor(){ return property3DFloorColor; }
     @Override public ObjectProperty<Color>            property3DLightColor(){ return property3DLightColor; }
     @Override public BooleanProperty                  property3DPacLightEnabled(){ return property3DPacLightEnabled; }
-    @Override public ObjectProperty<PerspectiveID>   property3DPerspective(){ return property3DPerspective; }
+    @Override public ObjectProperty<PerspectiveID>    property3DPerspective(){ return property3DPerspective; }
     @Override public DoubleProperty                   property3DWallHeight(){ return property3DWallHeight; }
     @Override public DoubleProperty                   property3DWallOpacity(){ return property3DWallOpacity; }
 

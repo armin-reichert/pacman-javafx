@@ -56,12 +56,12 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameLevel3D implements Disposable {
 
-    private final DoubleProperty  houseBaseHeightProperty    = new SimpleDoubleProperty(Wall3D.DEFAULT_BASE_HEIGHT);
-    private final BooleanProperty houseLightOnProperty       = new SimpleBooleanProperty(false);
-    private final BooleanProperty houseOpenProperty          = new SimpleBooleanProperty(false);
-    private final IntegerProperty livesCountProperty         = new SimpleIntegerProperty(0);
-    private final DoubleProperty  obstacleBaseHeightProperty = new SimpleDoubleProperty(Wall3D.DEFAULT_BASE_HEIGHT);
-    private final DoubleProperty  wallOpacityProperty        = new SimpleDoubleProperty(1);
+    private final DoubleProperty  houseBaseHeightProperty = new SimpleDoubleProperty(Wall3D.DEFAULT_BASE_HEIGHT);
+    private final BooleanProperty houseLightOnProperty    = new SimpleBooleanProperty(false);
+    private final BooleanProperty houseOpenProperty       = new SimpleBooleanProperty(false);
+    private final IntegerProperty livesCountProperty      = new SimpleIntegerProperty(0);
+    private final DoubleProperty  wallBaseHeightProperty  = new SimpleDoubleProperty(Wall3D.DEFAULT_BASE_HEIGHT);
+    private final DoubleProperty  wallOpacityProperty     = new SimpleDoubleProperty(1);
 
     protected final GameUI ui;
     protected final Group root;
@@ -73,16 +73,14 @@ public class GameLevel3D implements Disposable {
     private ManagedAnimation levelCompletedFullAnimation;
     private ManagedAnimation levelCompletedShortAnimation;
 
-    private MeshView[] dressMeshViews;
-    private MeshView[] pupilsMeshViews;
-    private MeshView[] eyesMeshViews;
+    private MeshView[] ghostDressMeshViews;
+    private MeshView[] ghostPupilsMeshViews;
+    private MeshView[] ghostEyesMeshViews;
 
     private Node[] livesCounterShapes;
 
     private PhongMaterial wallBaseMaterial;
     private PhongMaterial wallTopMaterial;
-    private PhongMaterial cornerBaseMaterial;
-    private PhongMaterial cornerTopMaterial;
     private PhongMaterial pelletMaterial;
 
     protected AmbientLight ambientLight;
@@ -107,7 +105,7 @@ public class GameLevel3D implements Disposable {
         }
         var timeline = new Timeline(
             new KeyFrame(Duration.millis(0.5 * fullCycleDurationMillis),
-                new KeyValue(obstacleBaseHeightProperty, 0, Interpolator.EASE_BOTH)
+                new KeyValue(wallBaseHeightProperty, 0, Interpolator.EASE_BOTH)
             )
         );
         timeline.setAutoReverse(true);
@@ -150,7 +148,7 @@ public class GameLevel3D implements Disposable {
         private Animation wallsAndHouseDisappearing() {
             return new Timeline(
                 new KeyFrame(Duration.seconds(0.5), new KeyValue(houseBaseHeightProperty, 0, Interpolator.EASE_IN)),
-                new KeyFrame(Duration.seconds(1.5), new KeyValue(obstacleBaseHeightProperty, 0, Interpolator.EASE_IN)),
+                new KeyFrame(Duration.seconds(1.5), new KeyValue(wallBaseHeightProperty, 0, Interpolator.EASE_IN)),
                 new KeyFrame(Duration.seconds(2.5), e -> maze3D.setVisible(false))
             );
         }
@@ -232,12 +230,12 @@ public class GameLevel3D implements Disposable {
         this.gameLevel = requireNonNull(ui.theGameContext().theGameLevel());
 
         wallOpacityProperty.bind(ui.property3DWallOpacity());
-        obstacleBaseHeightProperty.set(ui.thePrefs().getFloat("3d.obstacle.base_height"));
+        wallBaseHeightProperty.bind(ui.property3DWallHeight());
+
         houseBaseHeightProperty.set(ui.thePrefs().getFloat("3d.house.base_height"));
 
-        ui.property3DWallHeight().addListener(this::handleWallHeightChange);
-        ui.property3DDrawMode().addListener(this::handleDrawModeChange);
         houseOpenProperty.addListener(this::handleHouseOpenChange);
+        ui.property3DDrawMode().addListener(this::handleDrawModeChange);
 
         root.setMouseTransparent(true); // this increases performance, they say...
 
@@ -293,14 +291,6 @@ public class GameLevel3D implements Disposable {
         wallTopMaterial = new PhongMaterial();
         wallTopMaterial.setDiffuseColor(colorScheme.fill());
         wallTopMaterial.setSpecularColor(colorScheme.fill().brighter());
-
-        cornerBaseMaterial = new PhongMaterial();
-        cornerBaseMaterial.setDiffuseColor(colorScheme.stroke());
-        cornerBaseMaterial.specularColorProperty().bind(cornerBaseMaterial.diffuseColorProperty().map(Color::brighter));
-
-        cornerTopMaterial = new PhongMaterial();
-        cornerTopMaterial.setDiffuseColor(colorScheme.fill());
-        cornerTopMaterial.specularColorProperty().bind(cornerTopMaterial.diffuseColorProperty().map(Color::brighter));
     }
 
     private void disposeMaterials() {
@@ -319,16 +309,6 @@ public class GameLevel3D implements Disposable {
             wallTopMaterial.specularColorProperty().unbind();
             wallTopMaterial = null;
         }
-        if (cornerBaseMaterial != null) {
-            cornerBaseMaterial.diffuseColorProperty().unbind();
-            cornerBaseMaterial.specularColorProperty().unbind();
-            cornerBaseMaterial = null;
-        }
-        if (cornerTopMaterial != null) {
-            cornerTopMaterial.diffuseColorProperty().unbind();
-            cornerTopMaterial.specularColorProperty().unbind();
-            cornerTopMaterial = null;
-        }
         Logger.info("Unbound material references");
     }
 
@@ -344,7 +324,7 @@ public class GameLevel3D implements Disposable {
 
     private void createGhostMeshViews() {
         Mesh ghostDressMesh = ui.theAssets().theModel3DRepository().ghostDressMesh();
-        dressMeshViews = new MeshView[] {
+        ghostDressMeshViews = new MeshView[] {
                 new MeshView(ghostDressMesh),
                 new MeshView(ghostDressMesh),
                 new MeshView(ghostDressMesh),
@@ -352,7 +332,7 @@ public class GameLevel3D implements Disposable {
         };
 
         Mesh ghostPupilsMesh = ui.theAssets().theModel3DRepository().ghostPupilsMesh();
-        pupilsMeshViews = new MeshView[] {
+        ghostPupilsMeshViews = new MeshView[] {
                 new MeshView(ghostPupilsMesh),
                 new MeshView(ghostPupilsMesh),
                 new MeshView(ghostPupilsMesh),
@@ -360,7 +340,7 @@ public class GameLevel3D implements Disposable {
         };
 
         Mesh ghostEyeballsMesh = ui.theAssets().theModel3DRepository().ghostEyeballsMesh();
-        eyesMeshViews = new MeshView[] {
+        ghostEyesMeshViews = new MeshView[] {
                 new MeshView(ghostEyeballsMesh),
                 new MeshView(ghostEyeballsMesh),
                 new MeshView(ghostEyeballsMesh),
@@ -369,31 +349,31 @@ public class GameLevel3D implements Disposable {
     }
 
     private void disposeGhostMeshViews() {
-        if (dressMeshViews != null) {
-            for (MeshView meshView : dressMeshViews) {
+        if (ghostDressMeshViews != null) {
+            for (MeshView meshView : ghostDressMeshViews) {
                 meshView.setMesh(null);
                 meshView.materialProperty().unbind();
                 meshView.setMaterial(null);
             }
-            dressMeshViews = null;
+            ghostDressMeshViews = null;
             Logger.info("Cleared dress mesh views");
         }
-        if (pupilsMeshViews != null) {
-            for (MeshView meshView : pupilsMeshViews) {
+        if (ghostPupilsMeshViews != null) {
+            for (MeshView meshView : ghostPupilsMeshViews) {
                 meshView.setMesh(null);
                 meshView.materialProperty().unbind();
                 meshView.setMaterial(null);
             }
-            pupilsMeshViews = null;
+            ghostPupilsMeshViews = null;
             Logger.info("Cleared pupils mesh views");
         }
-        if (eyesMeshViews != null) {
-            for (MeshView meshView : eyesMeshViews) {
+        if (ghostEyesMeshViews != null) {
+            for (MeshView meshView : ghostEyesMeshViews) {
                 meshView.setMesh(null);
                 meshView.materialProperty().unbind();
                 meshView.setMaterial(null);
             }
-            eyesMeshViews = null;
+            ghostEyesMeshViews = null;
             Logger.info("Cleared eyes mesh views");
         }
     }
@@ -415,9 +395,9 @@ public class GameLevel3D implements Disposable {
                 gameLevel,
                 ghost,
                 ghostColoring,
-                dressMeshViews[ghost.personality()],
-                pupilsMeshViews[ghost.personality()],
-                eyesMeshViews[ghost.personality()],
+                ghostDressMeshViews[ghost.personality()],
+                ghostPupilsMeshViews[ghost.personality()],
+                ghostEyesMeshViews[ghost.personality()],
                 ui.thePrefs().getFloat("3d.ghost.size"),
                 gameLevel.data().numFlashes()
             );
@@ -467,7 +447,7 @@ public class GameLevel3D implements Disposable {
 
         var r3D = new TerrainRenderer3D();
         r3D.setOnWallCreated(wall3D -> {
-            wall3D.bindBaseHeight(obstacleBaseHeightProperty);
+            wall3D.bindBaseHeight(wallBaseHeightProperty);
             wall3D.setBaseMaterial(wallBaseMaterial);
             wall3D.setTopMaterial(wallTopMaterial);
             ++wall3DCount;
@@ -758,10 +738,6 @@ public class GameLevel3D implements Disposable {
         setDrawModeForAllShapesExcept(root, Pellet3D::isPellet3D, newDrawMode);
     }
 
-    private void handleWallHeightChange(ObservableValue<? extends Number> obs, Number oldHeight, Number newHeight) {
-        obstacleBaseHeightProperty.set(newHeight.doubleValue());
-    }
-
     // still work in progress...
 
     private boolean disposed = false;
@@ -792,15 +768,12 @@ public class GameLevel3D implements Disposable {
         ui.property3DDrawMode().removeListener(this::handleDrawModeChange);
         Logger.info("Removed 'draw mode' listener");
 
-        ui.property3DWallHeight().removeListener(this::handleWallHeightChange);
-        Logger.info("Removed 'wall height' listener");
-
         houseOpenProperty.removeListener(this::handleHouseOpenChange);
         Logger.info("Removed 'house open' listener");
 
         livesCountProperty.unbind();
         houseOpenProperty.unbind();
-        obstacleBaseHeightProperty.unbind();
+        wallBaseHeightProperty.unbind();
         houseBaseHeightProperty.unbind();
         houseLightOnProperty.unbind();
         wallOpacityProperty.unbind();
