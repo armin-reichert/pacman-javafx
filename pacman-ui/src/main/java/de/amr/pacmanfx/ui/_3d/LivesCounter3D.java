@@ -127,5 +127,4 @@ public class LivesCounter3D extends Group implements Disposable {
         plateMaterialProperty.unbind();
         light.translateZProperty().unbind();
     }
-
 }

@@ -69,7 +69,7 @@ public class Explosion extends ManagedAnimation {
     private Node origin;
     private Material particleMaterial;
 
-    private class ParticlesTransition extends Transition implements Disposable{
+    private class ParticlesTransition extends Transition {
 
         ParticlesTransition(
             Duration duration,
@@ -101,15 +101,8 @@ public class Explosion extends ManagedAnimation {
                 particle.setVisible(false);
                 particlesGroup.getChildren().add(particle);
             }
+            setOnFinished(e -> disposeParticles());
             Logger.info("{} particles created", particlesGroup.getChildren().size());
-        }
-
-        @Override
-        public void dispose() {
-            particlesGroup.getChildren().stream()
-                .filter(Particle.class::isInstance)
-                .map(Particle.class::cast)
-                .forEach(Particle::dispose);
         }
 
         @Override
@@ -118,6 +111,8 @@ public class Explosion extends ManagedAnimation {
                 Particle particle = (Particle) child;
                 if (particleReachedEndPosition.test(particle)) {
                     particle.setScaleZ(0.02); // flat
+                    particle.setScaleX(1-t);
+                    particle.setScaleY(1-t);
                 } else {
                     particle.move();
                 }
