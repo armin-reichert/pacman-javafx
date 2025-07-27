@@ -36,6 +36,7 @@ import javafx.scene.SubScene;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -123,8 +124,11 @@ public class PlayScene3D implements GameScene {
         perspectiveMap.put(PerspectiveID.TRACK_PLAYER, new TrackingPlayerPerspective());
         perspectiveMap.put(PerspectiveID.NEAR_PLAYER, new StalkingPlayerPerspective());
 
-        // TODO move to global properties?
         GameAction droneUp = new GameAction() {
+            @Override
+            public String name() {
+                return "DroneMoveUp";
+            }
             @Override
             public void execute(GameUI ui) {
                 if (perspectiveMap.get(PerspectiveID.DRONE) instanceof DronePerspective dronePerspective) {
@@ -140,6 +144,10 @@ public class PlayScene3D implements GameScene {
 
         GameAction droneDown = new GameAction() {
             @Override
+            public String name() {
+                return "DroneMoveDown";
+            }
+            @Override
             public void execute(GameUI ui) {
                 if (perspectiveMap.get(PerspectiveID.DRONE) instanceof DronePerspective dronePerspective) {
                     dronePerspective.moveDown();
@@ -153,6 +161,17 @@ public class PlayScene3D implements GameScene {
         actionBindings.bind(droneDown, control(KeyCode.PLUS));
 
         actionBindings.updateKeyboard();
+
+        // TODO: integrate into input framework?
+        ui.theStage().getScene().addEventHandler(ScrollEvent.SCROLL, e -> {
+            if (ui.currentGameScene().isPresent() && ui.currentGameScene().get() == this) {
+                if (e.getDeltaY() < 0) {
+                    droneUp.executeIfEnabled(ui);
+                } else if (e.getDeltaY() > 0) {
+                    droneDown.executeIfEnabled(ui);
+                }
+            }
+        });
     }
 
     private void initPerspective() {
