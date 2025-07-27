@@ -28,11 +28,11 @@ public class Explosion extends ManagedAnimation {
 
     private static final Duration DURATION = Duration.seconds(4);
 
-    private static final byte PARTICLE_DIVISIONS = 8;
-    private static final short PARTICLE_COUNT_MIN = 128;
+    private static final byte PARTICLE_DIVISIONS = 4;
+    private static final short PARTICLE_COUNT_MIN = 256;
     private static final short PARTICLE_COUNT_MAX = 512;
-    private static final float PARTICLE_MEAN_RADIUS = .4f;
-    private static final FloatRange PARTICLE_VELOCITY_XY = new FloatRange(-0.2f, 0.2f);
+    private static final float PARTICLE_MEAN_RADIUS_UNSCALED = .2f;
+    private static final FloatRange PARTICLE_VELOCITY_XY = new FloatRange(-0.4f, 0.4f);
     private static final FloatRange PARTICLE_VELOCITY_Z  = new FloatRange(-4.5f, -1.5f);
     private static final float GRAVITY_Z = 0.1f;
 
@@ -88,8 +88,8 @@ public class Explosion extends ManagedAnimation {
             int numParticles = randomInt(minParticleCount, maxParticleCount + 1);
             Random rnd = new Random();
             for (int i = 0; i < numParticles; ++i) {
-                double scaling = Math.clamp(rnd.nextGaussian(1, 0.2), 0.5, 2);
-                double radius = scaling * PARTICLE_MEAN_RADIUS;
+                double scaling = Math.clamp(rnd.nextGaussian(2, 0.1), 0.5, 4);
+                double radius = scaling * PARTICLE_MEAN_RADIUS_UNSCALED;
                 var particle = new Particle(particleMaterial, radius);
                 particle.setVelocity(
                     randomFloat(PARTICLE_VELOCITY_XY.from(), PARTICLE_VELOCITY_XY.to()),
