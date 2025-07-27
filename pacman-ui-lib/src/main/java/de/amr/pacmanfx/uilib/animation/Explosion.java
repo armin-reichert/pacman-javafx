@@ -28,11 +28,11 @@ public class Explosion extends ManagedAnimation {
 
     private static final Duration DURATION = Duration.seconds(4);
 
-    private static final byte PARTICLE_DIVISIONS = 4;
-    private static final short PARTICLE_COUNT_MIN = 256;
-    private static final short PARTICLE_COUNT_MAX = 512;
-    private static final float PARTICLE_MEAN_RADIUS_UNSCALED = .2f;
-    private static final FloatRange PARTICLE_VELOCITY_XY = new FloatRange(-0.4f, 0.4f);
+    private static final byte PARTICLE_DIVISIONS = 10;
+    private static final short PARTICLE_COUNT_MIN = 250;
+    private static final short PARTICLE_COUNT_MAX = 500;
+    private static final float PARTICLE_MEAN_RADIUS_UNSCALED = .15f;
+    private static final FloatRange PARTICLE_VELOCITY_XY = new FloatRange(-0.6f, 0.6f);
     private static final FloatRange PARTICLE_VELOCITY_Z  = new FloatRange(-4.5f, -1.5f);
     private static final float GRAVITY_Z = 0.1f;
 
