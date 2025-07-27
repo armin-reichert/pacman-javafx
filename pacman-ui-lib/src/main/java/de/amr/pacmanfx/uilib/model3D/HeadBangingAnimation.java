@@ -32,7 +32,7 @@ public class HeadBangingAnimation extends ManagedAnimation {
     }
 
     @Override
-    protected Animation createAnimation() {
+    protected Animation createAnimationFX() {
         var rotateTransition = new RotateTransition(BANG_TIME, node);
         rotateTransition.setAxis(Rotate.X_AXIS);
         rotateTransition.setCycleCount(Animation.INDEFINITE);
@@ -44,8 +44,8 @@ public class HeadBangingAnimation extends ManagedAnimation {
     @Override
     public void stop() {
         super.stop();
-        if (animation != null) {
-            var rotateTransition = (RotateTransition) animation;
+        if (animationFX != null) {
+            var rotateTransition = (RotateTransition) animationFX;
             node.setRotationAxis(rotateTransition.getAxis());
             node.setRotate(0);
         }
@@ -54,15 +54,15 @@ public class HeadBangingAnimation extends ManagedAnimation {
     @Override
     public void pause() {
         super.pause();
-        if (animation != null) {
-            var rotateTransition = (RotateTransition) animation;
+        if (animationFX != null) {
+            var rotateTransition = (RotateTransition) animationFX;
             node.setRotationAxis(rotateTransition.getAxis());
             node.setRotate(0);
         }
     }
 
     public void update(Pac pac) {
-        var rotateTransition = (RotateTransition) getOrCreateAnimation();
+        var rotateTransition = (RotateTransition) getOrCreateAnimationFX();
         if (pac.isParalyzed()) {
             pause();
         } else {
@@ -76,7 +76,7 @@ public class HeadBangingAnimation extends ManagedAnimation {
     }
 
     public void setPowerMode(boolean power) {
-        var rotateTransition = (RotateTransition) getOrCreateAnimation();
+        var rotateTransition = (RotateTransition) getOrCreateAnimationFX();
         boolean running = rotateTransition.getStatus() == Animation.Status.RUNNING;
         rotateTransition.stop();
         rotateTransition.setFromAngle(BANG_ANGLE_FROM * POWER_ANGLE_AMPLIFICATION);

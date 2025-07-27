@@ -56,7 +56,7 @@ public class Bonus3D extends Box implements Disposable {
         }
 
         @Override
-        protected Animation createAnimation() {
+        protected Animation createAnimationFX() {
             var animation = new RotateTransition(Duration.seconds(1), Bonus3D.this);
             animation.setAxis(Rotate.X_AXIS);
             animation.setFromAngle(0);
@@ -67,8 +67,8 @@ public class Bonus3D extends Box implements Disposable {
         }
 
         public void update(GameLevel level) {
-            if (animation != null && animation.getStatus() == Animation.Status.RUNNING) {
-                RotateTransition rotateTransition = (RotateTransition) animation;
+            if (animationFX != null && animationFX.getStatus() == Animation.Status.RUNNING) {
+                RotateTransition rotateTransition = (RotateTransition) animationFX;
                 Vector2f center = Bonus3D.this.bonus.center();
                 boolean outsideWorld = center.x() < HTS || center.x() > level.worldMap().numCols() * TS - HTS;
                 setVisible(Bonus3D.this.bonus.state() == BonusState.EDIBLE && !outsideWorld);
@@ -108,7 +108,7 @@ public class Bonus3D extends Box implements Disposable {
 
         eatenAnimation = new ManagedAnimation(animationRegistry, "Bonus_Eaten") {
             @Override
-            protected Animation createAnimation() {
+            protected Animation createAnimationFX() {
                 var animation = new RotateTransition(Duration.seconds(1), Bonus3D.this);
                 animation.setAxis(Rotate.X_AXIS);
                 animation.setByAngle(360);

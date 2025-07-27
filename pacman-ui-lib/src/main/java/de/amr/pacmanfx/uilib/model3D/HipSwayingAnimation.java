@@ -31,7 +31,7 @@ public class HipSwayingAnimation extends ManagedAnimation {
     }
 
     @Override
-    protected RotateTransition createAnimation() {
+    protected RotateTransition createAnimationFX() {
         var rotateTransition = new RotateTransition(SWING_TIME, node);
         rotateTransition.setAxis(Rotate.Z_AXIS);
         rotateTransition.setCycleCount(Animation.INDEFINITE);
@@ -42,9 +42,9 @@ public class HipSwayingAnimation extends ManagedAnimation {
 
     @Override
     public void stop() {
-        if (animation != null) {
-            animation.stop();
-            var rotateTransition = (RotateTransition) animation;
+        if (animationFX != null) {
+            animationFX.stop();
+            var rotateTransition = (RotateTransition) animationFX;
             node.setRotationAxis(rotateTransition.getAxis());
             node.setRotate(0);
         }
@@ -52,25 +52,25 @@ public class HipSwayingAnimation extends ManagedAnimation {
 
     @Override
     public void pause() {
-        if (animation != null) {
-            animation.pause();
-            var rotateTransition = (RotateTransition) animation;
+        if (animationFX != null) {
+            animationFX.pause();
+            var rotateTransition = (RotateTransition) animationFX;
             node.setRotationAxis(rotateTransition.getAxis());
             node.setRotate(0);
         }
     }
 
     public void setPowerMode(boolean power) {
-        if (animation != null) {
-            boolean wasRunning = animation.getStatus() == Animation.Status.RUNNING;
-            animation.stop();
-            animation.setRate(power ? POWER_RATE : 1);
-            var rotateTransition = (RotateTransition) animation;
+        if (animationFX != null) {
+            boolean wasRunning = animationFX.getStatus() == Animation.Status.RUNNING;
+            animationFX.stop();
+            animationFX.setRate(power ? POWER_RATE : 1);
+            var rotateTransition = (RotateTransition) animationFX;
             double amplification = power ? POWER_ANGLE_AMPLIFICATION : 1;
             rotateTransition.setFromAngle(HIP_ANGLE_FROM * amplification);
             rotateTransition.setToAngle(HIP_ANGLE_TO * amplification);
             if (wasRunning) {
-                animation.play();
+                animationFX.play();
             }
         }
     }

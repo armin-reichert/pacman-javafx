@@ -41,7 +41,7 @@ public class LevelCompletedAnimation extends ManagedAnimation {
     }
 
     @Override
-    protected Animation createAnimation() {
+    protected Animation createAnimationFX() {
         requireNonNull(gameLevel);
         int numFlashes = gameLevel.data().numFlashes();
         var flashingTimeline = new Timeline(

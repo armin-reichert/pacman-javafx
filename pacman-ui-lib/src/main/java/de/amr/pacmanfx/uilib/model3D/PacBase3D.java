@@ -65,7 +65,7 @@ public abstract class PacBase3D extends Group implements Disposable {
 
         chewingAnimation = new ManagedAnimation(animationRegistry, "PacMan_Chewing") {
             @Override
-            protected Animation createAnimation() {
+            protected Animation createAnimationFX() {
                 var mouthClosed = new KeyValue[] {
                         new KeyValue(jaw.rotationAxisProperty(), Rotate.Y_AXIS),
                         new KeyValue(jaw.rotateProperty(), -54, Interpolator.LINEAR)
@@ -87,7 +87,7 @@ public abstract class PacBase3D extends Group implements Disposable {
 
             @Override
             public void stop() {
-                Animation animation = getOrCreateAnimation();
+                Animation animation = getOrCreateAnimationFX();
                 animation.stop();
                 if (jaw != null) {
                     // open mouth when stopped

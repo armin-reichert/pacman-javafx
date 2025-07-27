@@ -34,7 +34,7 @@ public class Energizer3D implements Eatable3D {
 
         pumpingAnimation = new ManagedAnimation(animationRegistry, "Energizer_Pumping") {
             @Override
-            protected Animation createAnimation() {
+            protected Animation createAnimationFX() {
                 // 3 full blinks per second
                 var scaleTransition = new ScaleTransition(Duration.millis(166.6), sphere);
                 scaleTransition.setAutoReverse(true);

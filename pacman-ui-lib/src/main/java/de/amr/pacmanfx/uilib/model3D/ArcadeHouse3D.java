@@ -89,7 +89,7 @@ public class ArcadeHouse3D extends Group implements Disposable {
 
         doorOpenCloseAnimation = new ManagedAnimation(animationRegistry, "Door_OpenClose") {
             @Override
-            protected Animation createAnimation() {
+            protected Animation createAnimationFX() {
                 return new Timeline(
                     new KeyFrame(Duration.seconds(0.75), new KeyValue(barThicknessProperty, 0)),
                     new KeyFrame(Duration.seconds(1.5),  new KeyValue(barThicknessProperty, 0.75))

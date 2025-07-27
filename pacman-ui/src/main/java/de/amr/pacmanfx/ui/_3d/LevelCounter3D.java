@@ -55,7 +55,7 @@ public class LevelCounter3D extends Group implements Disposable {
         }
         spinningAnimation = new ManagedAnimation(animationRegistry, "LevelCounter_Spinning") {
             @Override
-            protected Animation createAnimation() {
+            protected Animation createAnimationFX() {
                 var cubesAnimation = new ParallelTransition();
                 for (int i = 0; i < getChildren().size(); ++i) {
                     Node shape = getChildren().get(i);

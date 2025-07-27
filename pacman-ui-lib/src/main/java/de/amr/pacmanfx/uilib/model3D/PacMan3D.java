@@ -28,7 +28,7 @@ public class PacMan3D extends PacBase3D {
 
         dyingAnimation = new ManagedAnimation(animationRegistry, "PacMan_Dying") {
             @Override
-            protected Animation createAnimation() {
+            protected Animation createAnimationFX() {
                 Duration duration = Duration.seconds(1.5);
                 byte numSpins = 5;
 

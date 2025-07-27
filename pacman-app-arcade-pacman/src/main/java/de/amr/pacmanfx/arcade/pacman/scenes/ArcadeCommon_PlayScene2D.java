@@ -306,7 +306,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
             ui.theSound().stopAll();
             levelCompletedAnimation.setGameLevel(gameContext().theGameLevel());
             levelCompletedAnimation.setSingleFlashMillis(333);
-            levelCompletedAnimation.getOrCreateAnimation().setOnFinished(e -> gameContext().theGameController().letCurrentGameStateExpire());
+            levelCompletedAnimation.getOrCreateAnimationFX().setOnFinished(e -> gameContext().theGameController().letCurrentGameStateExpire());
             levelCompletedAnimation.playFromStart();
         }
         else if (state == GameState.GAME_OVER) {

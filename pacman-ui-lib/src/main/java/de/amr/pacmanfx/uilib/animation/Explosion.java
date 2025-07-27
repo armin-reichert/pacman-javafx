@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib.animation;
 
 import de.amr.pacmanfx.lib.Disposable;
+import de.amr.pacmanfx.lib.StopWatch;
 import javafx.animation.Animation;
 import javafx.animation.Transition;
 import javafx.scene.Group;
@@ -28,9 +29,9 @@ public class Explosion extends ManagedAnimation {
 
     private static final Duration DURATION = Duration.seconds(4);
 
-    private static final byte PARTICLE_DIVISIONS = 10;
-    private static final short PARTICLE_COUNT_MIN = 250;
-    private static final short PARTICLE_COUNT_MAX = 500;
+    private static final byte PARTICLE_DIVISIONS = 8;
+    private static final short PARTICLE_COUNT_MIN = 150;
+    private static final short PARTICLE_COUNT_MAX = 300;
     private static final float PARTICLE_MEAN_RADIUS_UNSCALED = .15f;
     private static final FloatRange PARTICLE_VELOCITY_XY = new FloatRange(-0.6f, 0.6f);
     private static final FloatRange PARTICLE_VELOCITY_Z  = new FloatRange(-4.5f, -1.5f);
@@ -71,7 +72,7 @@ public class Explosion extends ManagedAnimation {
 
     private class ParticlesTransition extends Transition {
 
-        ParticlesTransition(
+        public ParticlesTransition(
             Duration duration,
             int minParticleCount,
             int maxParticleCount,
@@ -101,6 +102,7 @@ public class Explosion extends ManagedAnimation {
                 particle.setVisible(false);
                 particlesGroup.getChildren().add(particle);
             }
+            setDelay(Duration.millis(rnd.nextInt(200)));
             setOnFinished(e -> disposeParticles());
             Logger.info("{} particles created", particlesGroup.getChildren().size());
         }
@@ -140,11 +142,16 @@ public class Explosion extends ManagedAnimation {
         this.particlesGroupContainer = requireNonNull(particlesGroupContainer);
         this.particleMaterial = requireNonNull(particleMaterial);
         this.particleReachedEndPosition = requireNonNull(particleReachedEndPosition);
+
+
+        var stopWatch = new StopWatch();
+        animationFX = new ParticlesTransition(DURATION, PARTICLE_COUNT_MIN, PARTICLE_COUNT_MAX, particleMaterial, origin);
+        Logger.info("Particles transition created in {} milliseconds", stopWatch.passedTime().toMillis());
     }
 
     @Override
-    protected Animation createAnimation() {
-        return new ParticlesTransition(DURATION, PARTICLE_COUNT_MIN, PARTICLE_COUNT_MAX, particleMaterial, origin);
+    protected Animation createAnimationFX() {
+        return animationFX;
     }
 
     @Override

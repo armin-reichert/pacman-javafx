@@ -123,7 +123,7 @@ public class GameLevel3D implements Disposable {
         }
 
         @Override
-        protected Animation createAnimation() {
+        protected Animation createAnimationFX() {
             return new SequentialTransition(
                 doNow(() -> {
                     turnLivesCounterLightOff();
@@ -177,7 +177,7 @@ public class GameLevel3D implements Disposable {
         }
 
         @Override
-        protected Animation createAnimation() {
+        protected Animation createAnimationFX() {
             return new SequentialTransition(
                 pauseSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
                 pauseSec(0.5),
@@ -194,7 +194,7 @@ public class GameLevel3D implements Disposable {
         }
 
         @Override
-        protected Animation createAnimation() {
+        protected Animation createAnimationFX() {
             return new Transition() {
                 {
                     setAutoReverse(true);
@@ -476,7 +476,7 @@ public class GameLevel3D implements Disposable {
         float wallThickness = ui.thePrefs().getFloat("3d.obstacle.wall_thickness");
         float cornerRadius = ui.thePrefs().getFloat("3d.obstacle.corner_radius");
         wall3DCount = 0;
-        var stopWatch = StopWatch.create();
+        var stopWatch = new StopWatch();
         for (Obstacle obstacle : gameLevel.worldMap().obstacles()) {
             // exclude house placeholder
             Vector2i startTile = tileAt(obstacle.startPoint().toVector2f());
@@ -579,7 +579,7 @@ public class GameLevel3D implements Disposable {
         var animation = new SequentialTransition(
                 pauseSec(2),
                 doNow(() -> ui.theSound().play(SoundID.PAC_MAN_DEATH)),
-                pac3D.dyingAnimation().getOrCreateAnimation(),
+                pac3D.dyingAnimation().getOrCreateAnimationFX(),
                 pauseSec(1)
         );
         // Note: adding this inside the animation as last action does not work!
@@ -621,7 +621,7 @@ public class GameLevel3D implements Disposable {
                 perspectiveIDProperty.set(PerspectiveID.TOTAL);
                 wallBaseHeightProperty.unbind();
             }),
-            levelCompletedAnimation.getOrCreateAnimation(),
+            levelCompletedAnimation.getOrCreateAnimationFX(),
             pauseSec(1)
         );
         animation.setOnFinished(e -> {

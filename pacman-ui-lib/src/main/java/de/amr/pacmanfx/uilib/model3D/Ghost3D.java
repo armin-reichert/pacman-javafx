@@ -50,7 +50,7 @@ public class Ghost3D extends Group implements Disposable {
         }
 
         @Override
-        protected Animation createAnimation() {
+        protected Animation createAnimationFX() {
             Duration flashEndTime = totalDuration.divide(numFlashes), highlightTime = flashEndTime.divide(3);
             var flashingTimeline = new Timeline(
                 new KeyFrame(highlightTime,
@@ -133,7 +133,7 @@ public class Ghost3D extends Group implements Disposable {
 
         dressAnimation = new ManagedAnimation(animationRegistry, "Ghost_DressMoving_%s".formatted(ghost.name())) {
             @Override
-            protected Animation createAnimation() {
+            protected Animation createAnimationFX() {
                 var animation = new RotateTransition(Duration.seconds(0.3), dressGroup);
                 // TODO I expected this should be the z-axis but... (transforms messed-up?)
                 animation.setAxis(Rotate.Y_AXIS);

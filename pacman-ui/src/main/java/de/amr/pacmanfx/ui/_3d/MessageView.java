@@ -105,7 +105,7 @@ public class MessageView extends ImageView implements Disposable {
         }
 
         @Override
-        protected Animation createAnimation() {
+        protected Animation createAnimationFX() {
             double hiddenZ = messageView.hiddenZPosition();
             double visibleZ = -(hiddenZ + 2);
             var moveUp = new TranslateTransition(Duration.seconds(1), messageView);

@@ -37,7 +37,7 @@ public class InfoBoxGameLevelAnimations extends InfoBox {
 
         TableRow(ManagedAnimation managedAnimation) {
             labelProperty = new SimpleStringProperty(managedAnimation.label());
-            animationProperty = new SimpleObjectProperty<>(managedAnimation.animation().orElse(null));
+            animationProperty = new SimpleObjectProperty<>(managedAnimation.animationFX().orElse(null));
         }
 
         public StringProperty labelProperty() { return labelProperty; }
@@ -123,6 +123,6 @@ public class InfoBoxGameLevelAnimations extends InfoBox {
     }
 
     private boolean hasStatus(ManagedAnimation ma, Animation.Status status) {
-        return ma.animation().map(animation -> animation.getStatus() == status).orElse(false);
+        return ma.animationFX().map(animation -> animation.getStatus() == status).orElse(false);
     }
 }

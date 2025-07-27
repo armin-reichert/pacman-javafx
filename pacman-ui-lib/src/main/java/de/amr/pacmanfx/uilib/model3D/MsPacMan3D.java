@@ -32,7 +32,7 @@ public class MsPacMan3D extends PacBase3D {
 
         dyingAnimation = new ManagedAnimation(animationRegistry, "Ms_PacMan_Dying") {
             @Override
-            protected Animation createAnimation() {
+            protected Animation createAnimationFX() {
                 var spinning = new RotateTransition(Duration.seconds(0.25), MsPacMan3D.this);
                 spinning.setAxis(Rotate.Z_AXIS);
                 spinning.setFromAngle(0);

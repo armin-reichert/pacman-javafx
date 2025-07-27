@@ -11,10 +11,8 @@ public class StopWatch {
 
     private Instant startTime;
 
-    public static StopWatch create() {
-        StopWatch watch = new StopWatch();
-        watch.reset();
-        return watch;
+    public StopWatch() {
+        reset();
     }
 
     public void reset() {

@@ -103,7 +103,7 @@ public class MutatingGhost3D extends Group implements Disposable {
 
         pointsAnimation = new ManagedAnimation(animationRegistry, "Ghost_Points_%s".formatted(ghost.name())) {
             @Override
-            protected Animation createAnimation() {
+            protected Animation createAnimationFX() {
                 var numberBoxRotation = new RotateTransition(Duration.seconds(1), numberBox);
                 numberBoxRotation.setAxis(Rotate.X_AXIS);
                 numberBoxRotation.setFromAngle(0);
@@ -116,7 +116,7 @@ public class MutatingGhost3D extends Group implements Disposable {
 
         brakeAnimation = new ManagedAnimation(animationRegistry, "Ghost_Braking_%s".formatted(ghost.name())) {
             @Override
-            protected Animation createAnimation() {
+            protected Animation createAnimationFX() {
                 var rotateTransition = new RotateTransition(Duration.seconds(0.5), MutatingGhost3D.this);
                 rotateTransition.setAxis(Rotate.Y_AXIS);
                 rotateTransition.setAutoReverse(true);
@@ -127,7 +127,7 @@ public class MutatingGhost3D extends Group implements Disposable {
 
             @Override
             public void playFromStart() {
-                var rotateTransition = (RotateTransition) getOrCreateAnimation();
+                var rotateTransition = (RotateTransition) getOrCreateAnimationFX();
                 rotateTransition.stop();
                 rotateTransition.setByAngle(ghost.moveDir() == Direction.LEFT ? -35 : 35);
                 rotateTransition.playFromStart();
@@ -135,7 +135,7 @@ public class MutatingGhost3D extends Group implements Disposable {
 
             @Override
             public void playOrContinue() {
-                var rotateTransition = (RotateTransition) getOrCreateAnimation();
+                var rotateTransition = (RotateTransition) getOrCreateAnimationFX();
                 rotateTransition.stop();
                 rotateTransition.setByAngle(ghost.moveDir() == Direction.LEFT ? -35 : 35);
                 rotateTransition.play();
