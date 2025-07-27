@@ -74,6 +74,40 @@ public class PlayScene3D implements GameScene {
         }
     };
 
+    private final GameAction droneUp = new GameAction() {
+        @Override
+        public String name() {
+            return "DroneUp";
+        }
+        @Override
+        public void execute(GameUI ui) {
+            if (perspectiveMap.get(PerspectiveID.DRONE) instanceof DronePerspective dronePerspective) {
+                dronePerspective.moveUp();
+            }
+        }
+        @Override
+        public boolean isEnabled(GameUI ui) {
+            return perspectiveIDProperty.get() == PerspectiveID.DRONE;
+        }
+    };
+
+    private final GameAction droneDown = new GameAction() {
+        @Override
+        public String name() {
+            return "DroneDown";
+        }
+        @Override
+        public void execute(GameUI ui) {
+            if (perspectiveMap.get(PerspectiveID.DRONE) instanceof DronePerspective dronePerspective) {
+                dronePerspective.moveDown();
+            }
+        }
+        @Override
+        public boolean isEnabled(GameUI ui) {
+            return perspectiveIDProperty.get() == PerspectiveID.DRONE;
+        }
+    };
+
     protected final GameUI ui;
     protected final SubScene subScene;
     protected final PerspectiveCamera camera = new PerspectiveCamera(true);
@@ -87,6 +121,7 @@ public class PlayScene3D implements GameScene {
         this.actionBindings = new ActionBindingMap(ui.theKeyboard());
 
         createPerspectives();
+
         var root = new Group();
         // initial size is irrelevant because size gets bound to parent scene size later
         subScene = new SubScene(root, 88, 88, true, SceneAntialiasing.BALANCED);
@@ -123,55 +158,16 @@ public class PlayScene3D implements GameScene {
         perspectiveMap.put(PerspectiveID.TOTAL, new TotalPerspective());
         perspectiveMap.put(PerspectiveID.TRACK_PLAYER, new TrackingPlayerPerspective());
         perspectiveMap.put(PerspectiveID.NEAR_PLAYER, new StalkingPlayerPerspective());
+    }
 
-        GameAction droneUp = new GameAction() {
-            @Override
-            public String name() {
-                return "DroneMoveUp";
+    private void handleScrollEvent(ScrollEvent e) {
+        if (ui.currentGameScene().isPresent() && ui.currentGameScene().get() == this) {
+            if (e.getDeltaY() < 0) {
+                droneUp.executeIfEnabled(ui);
+            } else if (e.getDeltaY() > 0) {
+                droneDown.executeIfEnabled(ui);
             }
-            @Override
-            public void execute(GameUI ui) {
-                if (perspectiveMap.get(PerspectiveID.DRONE) instanceof DronePerspective dronePerspective) {
-                    dronePerspective.moveUp();
-                }
-            }
-            @Override
-            public boolean isEnabled(GameUI ui) {
-                return perspectiveIDProperty.get() == PerspectiveID.DRONE;
-            }
-        };
-        actionBindings.bind(droneUp, control(KeyCode.MINUS));
-
-        GameAction droneDown = new GameAction() {
-            @Override
-            public String name() {
-                return "DroneMoveDown";
-            }
-            @Override
-            public void execute(GameUI ui) {
-                if (perspectiveMap.get(PerspectiveID.DRONE) instanceof DronePerspective dronePerspective) {
-                    dronePerspective.moveDown();
-                }
-            }
-            @Override
-            public boolean isEnabled(GameUI ui) {
-                return perspectiveIDProperty.get() == PerspectiveID.DRONE;
-            }
-        };
-        actionBindings.bind(droneDown, control(KeyCode.PLUS));
-
-        actionBindings.updateKeyboard();
-
-        // TODO: integrate into input framework?
-        ui.theStage().getScene().addEventHandler(ScrollEvent.SCROLL, e -> {
-            if (ui.currentGameScene().isPresent() && ui.currentGameScene().get() == this) {
-                if (e.getDeltaY() < 0) {
-                    droneUp.executeIfEnabled(ui);
-                } else if (e.getDeltaY() > 0) {
-                    droneDown.executeIfEnabled(ui);
-                }
-            }
-        });
+        }
     }
 
     private void initPerspective() {
@@ -307,10 +303,16 @@ public class PlayScene3D implements GameScene {
     public void init() {
         gameContext().theGame().theHUD().showScore(true);
         perspectiveIDProperty().bind(ui.property3DPerspective());
+        actionBindings.bind(droneUp, control(KeyCode.MINUS));
+        actionBindings.bind(droneDown, control(KeyCode.PLUS));
+        actionBindings.updateKeyboard();
+        // TODO: integrate into input framework?
+        ui.theStage().getScene().addEventHandler(ScrollEvent.SCROLL, this::handleScrollEvent);
     }
 
     @Override
     public void end() {
+        ui.theStage().removeEventHandler(ScrollEvent.SCROLL, this::handleScrollEvent);
         ui.theSound().stopAll();
         if (gameLevel3D != null) {
             gameLevel3D.dispose();
