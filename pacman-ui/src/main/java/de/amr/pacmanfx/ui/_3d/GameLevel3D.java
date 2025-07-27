@@ -123,15 +123,16 @@ public class GameLevel3D implements Disposable {
 
         @Override
         protected Animation createAnimation() {
-            return new SequentialTransition(
+            var animation = new SequentialTransition(
                 doNow(() -> {
                     turnLivesCounterLightOff();
                     sometimesLevelCompleteMessage(gameLevel.number());
                 }),
                 pauseSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
-                pauseSec(0.5),
                 wallsMovingUpAndDown(gameLevel.data().numFlashes(), 250),
-                pauseSec(0.5, () -> gameLevel.pac().hide()),
+                pauseSec(0.5, () -> {
+                    gameLevel.pac().hide();
+                }),
                 pauseSec(0.5),
                 levelSpinningAroundAxis(new Random().nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS),
                 pauseSec(0.5, () -> ui.theSound().play(SoundID.LEVEL_COMPLETE)),
@@ -139,6 +140,7 @@ public class GameLevel3D implements Disposable {
                 wallsAndHouseDisappearing(),
                 pauseSec(1.0, () -> ui.theSound().play(SoundID.LEVEL_CHANGED))
             );
+            return animation;
         }
 
         private void turnLivesCounterLightOff() {
@@ -168,7 +170,6 @@ public class GameLevel3D implements Disposable {
             spin360.setInterpolator(Interpolator.LINEAR);
             return spin360;
         }
-
     }
 
     private class LevelCompletedAnimationShort extends ManagedAnimation {
@@ -179,12 +180,15 @@ public class GameLevel3D implements Disposable {
 
         @Override
         protected Animation createAnimation() {
-            return new SequentialTransition(
-                pauseSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
+            var animation = new SequentialTransition(
+                pauseSec(0.5, () -> {
+                    gameLevel.ghosts().forEach(Ghost::hide);
+                }),
                 pauseSec(0.5),
                 wallsMovingUpAndDown(gameLevel.data().numFlashes(), 250),
                 pauseSec(0.5, () -> gameLevel.pac().hide())
             );
+            return animation;
         }
     }
 
@@ -231,7 +235,6 @@ public class GameLevel3D implements Disposable {
 
         wallOpacityProperty.bind(ui.property3DWallOpacity());
         wallBaseHeightProperty.bind(ui.property3DWallHeight());
-
         houseBaseHeightProperty.set(ui.thePrefs().getFloat("3d.house.base_height"));
 
         houseOpenProperty.addListener(this::handleHouseOpenChange);
@@ -285,8 +288,9 @@ public class GameLevel3D implements Disposable {
 
         wallBaseMaterial = new PhongMaterial();
         wallBaseMaterial.diffuseColorProperty().bind(wallOpacityProperty
-                .map(opacity -> colorWithOpacity(colorScheme.stroke(), opacity.doubleValue())));
-        wallBaseMaterial.specularColorProperty().bind(wallBaseMaterial.diffuseColorProperty().map(Color::brighter));
+            .map(opacity -> colorWithOpacity(colorScheme.stroke(), opacity.doubleValue())));
+        wallBaseMaterial.specularColorProperty().bind(wallBaseMaterial.diffuseColorProperty()
+            .map(Color::brighter));
 
         wallTopMaterial = new PhongMaterial();
         wallTopMaterial.setDiffuseColor(colorScheme.fill());
@@ -609,11 +613,13 @@ public class GameLevel3D implements Disposable {
             pauseSec(2, () -> {
                 perspectiveIDProperty.unbind();
                 perspectiveIDProperty.set(PerspectiveID.TOTAL);
+                wallBaseHeightProperty.unbind();
             }),
             levelCompletedAnimation.getOrCreateAnimation(),
             pauseSec(1)
         );
         animation.setOnFinished(e -> {
+            wallBaseHeightProperty.bind(ui.property3DWallHeight());
             perspectiveIDProperty.bind(ui.property3DPerspective());
             ui.theGameContext().theGameController().letCurrentGameStateExpire();
         });
