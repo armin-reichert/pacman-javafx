@@ -15,6 +15,7 @@ import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import java.util.List;
 import java.util.Random;
 import java.util.function.Predicate;
 
@@ -172,9 +173,11 @@ public class Explosion extends ManagedAnimation {
 
     private void disposeParticles() {
         if (particlesGroup.getChildren().isEmpty()) return;
-        long count = particlesGroup.getChildren().stream().filter(Particle.class::isInstance).count();
-        particlesGroup.getChildren().stream().filter(Particle.class::isInstance).map(Particle.class::cast).forEach(Particle::dispose);
-        Logger.info("Disposed {} particles", count);
+        List<Particle> particles = particlesGroup.getChildren().stream()
+                .filter(Particle.class::isInstance).map(Particle.class::cast)
+                .toList();
+        particles.forEach(Particle::dispose);
+        Logger.info("Disposed {} particles", particles.size());
         particlesGroup.getChildren().clear();
     }
 }
