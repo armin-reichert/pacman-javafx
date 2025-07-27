@@ -23,6 +23,7 @@ import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.*;
 import javafx.animation.*;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Bounds;
@@ -234,6 +235,8 @@ public class GameLevel3D implements Disposable {
         this.gameLevel = requireNonNull(ui.theGameContext().theGameLevel());
 
         wallOpacityProperty.bind(ui.property3DWallOpacity());
+//        wallOpacityProperty.addListener((p,o,n) -> Logger.info("Wall opacity: {}", wallOpacityProperty.get()));
+
         wallBaseHeightProperty.bind(ui.property3DWallHeight());
         houseBaseHeightProperty.set(ui.thePrefs().getFloat("3d.house.base_height"));
 
@@ -287,10 +290,11 @@ public class GameLevel3D implements Disposable {
         pelletMaterial.setSpecularColor(colorScheme.pellet().brighter());
 
         wallBaseMaterial = new PhongMaterial();
-        wallBaseMaterial.diffuseColorProperty().bind(wallOpacityProperty
-            .map(opacity -> colorWithOpacity(colorScheme.stroke(), opacity.doubleValue())));
-        wallBaseMaterial.specularColorProperty().bind(wallBaseMaterial.diffuseColorProperty()
-            .map(Color::brighter));
+
+        //TODO the opacity change does not work as expected. Why?
+        var diffuseColor = wallOpacityProperty.map(opacity -> colorWithOpacity(colorScheme.stroke(), opacity.doubleValue()));
+        wallBaseMaterial.diffuseColorProperty().bind(diffuseColor);
+        wallBaseMaterial.specularColorProperty().bind(diffuseColor.map(Color::brighter));
 
         wallTopMaterial = new PhongMaterial();
         wallTopMaterial.setDiffuseColor(colorScheme.fill());
