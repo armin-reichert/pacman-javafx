@@ -15,6 +15,7 @@ public class StalkingPlayerPerspective implements Perspective {
 
     @Override
     public void init(PerspectiveCamera camera) {
+        unbindProperties(camera);
         camera.setNearClip(0.1);
         camera.setFarClip(10000.0);
         camera.setFieldOfView(40); // default: 30

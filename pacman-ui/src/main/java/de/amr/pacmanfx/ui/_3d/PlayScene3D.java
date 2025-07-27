@@ -15,8 +15,10 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.ActionBindingMap;
+import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.model3D.Bonus3D;
@@ -34,6 +36,9 @@ import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.KeyCharacterCombination;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -46,6 +51,7 @@ import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_MEDIUM;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_SHORT;
 import static de.amr.pacmanfx.ui.GameUI.GLOBAL_ACTION_BINDINGS;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
+import static de.amr.pacmanfx.ui.input.Keyboard.control;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -82,11 +88,7 @@ public class PlayScene3D implements GameScene {
         this.ui = requireNonNull(ui);
         this.actionBindings = new ActionBindingMap(ui.theKeyboard());
 
-        perspectiveMap.put(PerspectiveID.DRONE, new DronePerspective());
-        perspectiveMap.put(PerspectiveID.TOTAL, new TotalPerspective());
-        perspectiveMap.put(PerspectiveID.TRACK_PLAYER, new TrackingPlayerPerspective());
-        perspectiveMap.put(PerspectiveID.NEAR_PLAYER, new StalkingPlayerPerspective());
-
+        createPerspectives();
         var root = new Group();
         // initial size is irrelevant because size gets bound to parent scene size later
         subScene = new SubScene(root, 88, 88, true, SceneAntialiasing.BALANCED);
@@ -116,6 +118,44 @@ public class PlayScene3D implements GameScene {
 
     public ObjectProperty<PerspectiveID> perspectiveIDProperty() {
         return perspectiveIDProperty;
+    }
+
+    private void createPerspectives() {
+        perspectiveMap.put(PerspectiveID.DRONE, new DronePerspective());
+        perspectiveMap.put(PerspectiveID.TOTAL, new TotalPerspective());
+        perspectiveMap.put(PerspectiveID.TRACK_PLAYER, new TrackingPlayerPerspective());
+        perspectiveMap.put(PerspectiveID.NEAR_PLAYER, new StalkingPlayerPerspective());
+
+        // TODO move to global properties?
+        GameAction droneUp = new GameAction() {
+            @Override
+            public void execute(GameUI ui) {
+                if (perspectiveMap.get(PerspectiveID.DRONE) instanceof DronePerspective dronePerspective) {
+                    dronePerspective.moveUp();
+                }
+            }
+            @Override
+            public boolean isEnabled(GameUI ui) {
+                return perspectiveIDProperty.get() == PerspectiveID.DRONE;
+            }
+        };
+        actionBindings.bind(droneUp, control(KeyCode.MINUS));
+
+        GameAction droneDown = new GameAction() {
+            @Override
+            public void execute(GameUI ui) {
+                if (perspectiveMap.get(PerspectiveID.DRONE) instanceof DronePerspective dronePerspective) {
+                    dronePerspective.moveDown();
+                }
+            }
+            @Override
+            public boolean isEnabled(GameUI ui) {
+                return perspectiveIDProperty.get() == PerspectiveID.DRONE;
+            }
+        };
+        actionBindings.bind(droneDown, control(KeyCode.PLUS));
+
+        actionBindings.updateKeyboard();
     }
 
     private void initPerspective() {

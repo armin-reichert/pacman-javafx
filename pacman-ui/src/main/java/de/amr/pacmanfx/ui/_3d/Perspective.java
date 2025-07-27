@@ -15,4 +15,12 @@ public interface Perspective {
     void init(PerspectiveCamera camera);
  
     void update(PerspectiveCamera camera, GameContext gameContext);
+
+    default void unbindProperties(PerspectiveCamera camera) {
+        camera.rotateProperty().unbind();
+        camera.rotationAxisProperty().unbind();
+        camera.translateXProperty().unbind();
+        camera.translateYProperty().unbind();
+        camera.translateZProperty().unbind();
+    }
 }
