@@ -82,6 +82,7 @@ public class GameLevel3D implements Disposable {
     private PhongMaterial wallBaseMaterial;
     private PhongMaterial wallTopMaterial;
     private PhongMaterial pelletMaterial;
+    private PhongMaterial particleMaterial;
 
     protected AmbientLight ambientLight;
     protected Group maze3D;
@@ -282,6 +283,9 @@ public class GameLevel3D implements Disposable {
         pelletMaterial = new PhongMaterial(colorScheme.pellet());
         pelletMaterial.setSpecularColor(colorScheme.pellet().brighter());
 
+        particleMaterial = new PhongMaterial(colorScheme.pellet().deriveColor(0, 0.5, 1.5, 0.5));
+        particleMaterial.setSpecularColor(particleMaterial.getDiffuseColor().brighter());
+
         wallBaseMaterial = new PhongMaterial();
 
         //TODO the opacity change does not work as expected. Why?
@@ -299,6 +303,11 @@ public class GameLevel3D implements Disposable {
             pelletMaterial.diffuseColorProperty().unbind();
             pelletMaterial.specularColorProperty().unbind();
             pelletMaterial = null;
+        }
+        if (particleMaterial != null) {
+            particleMaterial.diffuseColorProperty().unbind();
+            particleMaterial.specularColorProperty().unbind();
+            particleMaterial = null;
         }
         if (wallBaseMaterial != null) {
             wallBaseMaterial.diffuseColorProperty().unbind();
@@ -689,7 +698,7 @@ public class GameLevel3D implements Disposable {
         energizer3D.shape3D().setTranslateY(y);
         energizer3D.shape3D().setTranslateZ(z);
 
-        var explosion = new Explosion(animationRegistry, energizer3D.shape3D(), particleGroupsContainer, pelletMaterial,
+        var explosion = new Explosion(animationRegistry, energizer3D.shape3D(), particleGroupsContainer, particleMaterial,
                 particle -> particle.getTranslateZ() >= -1 && insideWorldMapArea(particle));
         energizer3D.setEatenAnimation(explosion);
 
