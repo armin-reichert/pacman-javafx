@@ -49,6 +49,9 @@ import static java.util.Objects.requireNonNull;
  */
 public class PacManGames_UI_Impl implements GameUI {
 
+    private static final int MIN_STAGE_WIDTH  = 280;
+    private static final int MIN_STAGE_HEIGHT = 360;
+
     // package-visible to allow access to GameUI interface
     static PacManGames_UI_Impl THE_ONE;
 
@@ -87,61 +90,64 @@ public class PacManGames_UI_Impl implements GameUI {
 
     private final Map<String, GameUI_Config> configByGameVariant = new HashMap<>();
 
-    private final StackPane rootPane = new StackPane();
+    private final StackPane rootPane;
+    private Scene mainScene;
+
     private final StartPagesView startPagesView;
     private final PlayView playView;
     private       EditorView editorView; // created on first access
 
     public PacManGames_UI_Impl(GameContext gameContext, Stage stage, double width, double height) {
-        theGameContext = requireNonNull(gameContext);
-        theStage = requireNonNull(stage);
+        requireNonNull(gameContext);
+        requireNonNull(stage);
+
         theAssets = new PacManGames_Assets();
+        theCustomDirWatchdog = new DirectoryWatchdog(gameContext.theCustomMapDir());
         theGameClock = new GameClock();
+        theGameContext = gameContext;
         theKeyboard = new Keyboard();
         theJoypad = new Joypad(theKeyboard);
         thePrefs = new PreferenceManager(PacManGames_UI_Impl.class);
-        theCustomDirWatchdog = new DirectoryWatchdog(gameContext.theCustomMapDir());
+        theStage = stage;
 
+        initPreferences();
+
+        rootPane = new StackPane();
+        rootPane.backgroundProperty().bind(propertyCurrentGameScene().map(gameScene ->
+            currentGameSceneIsPlayScene3D() ? theAssets().get("background.play_scene3d") : theAssets().get("background.scene"))
+        );
+
+        createMainScene(width, height);
+        createStatusIcons();
+
+        stage.setScene(mainScene);
+        stage.setMinWidth(MIN_STAGE_WIDTH);
+        stage.setMinHeight(MIN_STAGE_HEIGHT);
+
+        startPagesView = new StartPagesView(this);
+        playView = new PlayView(this, gameContext, mainScene);
+
+        theGameClock.setPausableAction(this::doSimulationStepAndUpdateGameScene);
+        theGameClock.setPermanentAction(this::drawGameView);
+
+        property3DWallHeight.set(thePrefs.getFloat("3d.obstacle.base_height"));
+        property3DWallOpacity.set(thePrefs.getFloat("3d.obstacle.opacity"));
+        propertyCurrentView.addListener((py, oldView, newView) -> handleViewChange(oldView, newView));
+    }
+
+    private void initPreferences() {
         storePreferenceDefaultValues();
         if (!thePrefs.isAccessible()) {
             Logger.error("User preferences could not be accessed, using default values!");
         } else {
             thePrefs.addMissingValues();
         }
-        property3DWallHeight.set(thePrefs.getFloat("3d.obstacle.base_height"));
-        property3DWallOpacity.set(thePrefs.getFloat("3d.obstacle.opacity"));
+    }
 
-        Scene mainScene = new Scene(rootPane, width, height);
-        stage.setScene(mainScene);
-
-        stage.setMinWidth(280);
-        stage.setMinHeight(360);
-
-        startPagesView = new StartPagesView(this);
-        playView = new PlayView(this, gameContext, mainScene);
-
-        rootPane.getChildren().add(startPagesView.rootNode());
-
-        // "paused" icon appears at center of UI
-        FontIcon pausedIcon = FontIcon.of(FontAwesomeSolid.PAUSE, 80, ArcadePalette.ARCADE_WHITE);
-        StackPane.setAlignment(pausedIcon, Pos.CENTER);
-        pausedIcon.visibleProperty().bind(Bindings.createBooleanBinding(
-            () -> currentView() == playView && theGameClock.isPaused(),
-                propertyCurrentView, theGameClock.pausedProperty()));
-
-        // status icon box appears at bottom-left corner of any view except editor
-        var iconBox = new StatusIconBox(this);
-        StackPane.setAlignment(iconBox, Pos.BOTTOM_LEFT);
-        iconBox.visibleProperty().bind(propertyCurrentView.map(view -> view != editorView));
-
-        rootPane.getChildren().addAll(pausedIcon, iconBox);
-
-        theGameClock.setPausableAction(this::doSimulationStepAndUpdateGameScene);
-        theGameClock.setPermanentAction(this::drawGameView);
-
+    private void createMainScene(double width, double height) {
+        mainScene = new Scene(rootPane, width, height);
         mainScene.addEventFilter(KeyEvent.KEY_PRESSED, theKeyboard()::onKeyPressed);
         mainScene.addEventFilter(KeyEvent.KEY_RELEASED, theKeyboard()::onKeyReleased);
-
         //TODO should I use key binding for global actions too?
         mainScene.setOnKeyPressed(e -> {
             if (KEY_FULLSCREEN.match(e)) {
@@ -157,13 +163,21 @@ public class PacManGames_UI_Impl implements GameUI {
                 currentView().handleKeyboardInput(this);
             }
         });
-        propertyCurrentView.addListener((py, oldView, newView) -> handleViewChange(oldView, newView));
+    }
 
-        rootPane.backgroundProperty().bind(propertyCurrentGameScene().map(gameScene ->
-            currentGameSceneIsPlayScene3D()
-                ? theAssets().get("background.play_scene3d")
-                : theAssets().get("background.scene"))
-        );
+    private void createStatusIcons() {
+        // "paused" icon appears at center of UI
+        FontIcon pausedIcon = FontIcon.of(FontAwesomeSolid.PAUSE, 80, ArcadePalette.ARCADE_WHITE);
+        StackPane.setAlignment(pausedIcon, Pos.CENTER);
+        pausedIcon.visibleProperty().bind(Bindings.createBooleanBinding(
+                () -> currentView() == playView && theGameClock.isPaused(),
+                propertyCurrentView, theGameClock.pausedProperty()));
+
+        // status icon box appears at bottom-left corner of any view except editor
+        var iconBox = new StatusIconBox(this);
+        StackPane.setAlignment(iconBox, Pos.BOTTOM_LEFT);
+        iconBox.visibleProperty().bind(propertyCurrentView.map(view -> view != editorView));
+        rootPane.getChildren().addAll(pausedIcon, iconBox);
     }
 
     private void storePreferenceDefaultValues() {
