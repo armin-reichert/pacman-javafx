@@ -6,18 +6,14 @@ package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.Vector2i;
-import javafx.geometry.Point3D;
 import javafx.scene.Node;
 
 /**
  * Implemented by eatable 3D shapes.
  */
 public interface Eatable3D extends Disposable {
-    Node shape3D();
+    Node node();
+    default Vector2i tile() { return (Vector2i) node().getProperties().get("tile"); }
+    default void setTile(Vector2i tile) { node().getProperties().put("tile", tile); }
     void onEaten();
-    default Point3D position() {
-        return new Point3D(shape3D().getTranslateX(), shape3D().getTranslateY(), shape3D().getTranslateZ());
-    }
-    default Vector2i tile() { return (Vector2i) shape3D().getProperties().get("tile"); }
-    default void setTile(Vector2i tile) { shape3D().getProperties().put("tile", tile); }
 }

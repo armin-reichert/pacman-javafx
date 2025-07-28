@@ -9,6 +9,7 @@ import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.ScaleTransition;
+import javafx.scene.paint.Material;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
@@ -19,34 +20,33 @@ import static java.util.Objects.requireNonNull;
 /**
  * 3D energizer pellet.
  */
-public class Energizer3D implements Eatable3D {
-
-    private final Sphere sphere;
-
+public class Energizer3D extends Sphere implements Eatable3D {
     private ManagedAnimation pumpingAnimation;
     private ManagedAnimation eatenAnimation;
 
-    public Energizer3D(AnimationRegistry animationRegistry, double radius, double minScaling, double maxScaling) {
+    public Energizer3D(AnimationRegistry animationRegistry, double radius, double minScaling, double maxScaling, Material material) {
         requireNonNegative(radius, "Energizer radius must be positive but is %f");
         requireNonNull(animationRegistry);
 
-        sphere = new Sphere(radius);
+        setRadius(radius);
+        setMaterial(material);
 
         pumpingAnimation = new ManagedAnimation(animationRegistry, "Energizer_Pumping") {
             @Override
             protected Animation createAnimationFX() {
-                // 3 full blinks per second
-                var scaleTransition = new ScaleTransition(Duration.millis(166.6), sphere);
-                scaleTransition.setAutoReverse(true);
-                scaleTransition.setCycleCount(Animation.INDEFINITE);
-                scaleTransition.setInterpolator(Interpolator.EASE_BOTH);
-                scaleTransition.setFromX(maxScaling);
-                scaleTransition.setFromY(maxScaling);
-                scaleTransition.setFromZ(maxScaling);
-                scaleTransition.setToX(minScaling);
-                scaleTransition.setToY(minScaling);
-                scaleTransition.setToZ(minScaling);
-                return scaleTransition;
+                // 3 full pumping cycles per second = 6 compress/expand cycles
+                Duration duration = Duration.seconds(1 / 6f);
+                var transition = new ScaleTransition(duration, Energizer3D.this);
+                transition.setAutoReverse(true);
+                transition.setCycleCount(Animation.INDEFINITE);
+                transition.setInterpolator(Interpolator.EASE_BOTH);
+                transition.setFromX(maxScaling);
+                transition.setFromY(maxScaling);
+                transition.setFromZ(maxScaling);
+                transition.setToX(minScaling);
+                transition.setToY(minScaling);
+                transition.setToZ(minScaling);
+                return transition;
             }
         };
     }
@@ -76,14 +76,14 @@ public class Energizer3D implements Eatable3D {
     }
 
     @Override
-    public Shape3D shape3D() {
-        return sphere;
+    public Shape3D node() {
+        return this;
     }
 
     @Override
     public void onEaten() {
         pumpingAnimation.stop();
-        sphere.setVisible(false);
+        setVisible(false);
         if (eatenAnimation != null) {
             eatenAnimation.playFromStart();
         }

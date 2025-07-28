@@ -270,8 +270,8 @@ public class GameLevel3D implements Disposable {
         // Walls and house must be added *after* the actors, otherwise the transparency is not working correctly.
         root.getChildren().addAll(floor3D, maze3D);
 
-        energizers3D.stream().map(Eatable3D::shape3D).forEach(root.getChildren()::add);
-        pellets3D   .stream().map(Eatable3D::shape3D).forEach(root.getChildren()::add);
+        energizers3D.stream().map(Eatable3D::node).forEach(root.getChildren()::add);
+        pellets3D   .stream().map(Eatable3D::node).forEach(root.getChildren()::add);
         root.getChildren().add(particleGroupsContainer);
     }
 
@@ -601,9 +601,9 @@ public class GameLevel3D implements Disposable {
         ui.theSound().stopAll();
         animationRegistry.stopAllAnimations();
         // hide 3d food explicitly because level might have been completed using cheat!
-        pellets3D.forEach(pellet3D -> pellet3D.shape3D().setVisible(false));
+        pellets3D.forEach(pellet3D -> pellet3D.node().setVisible(false));
         energizers3D.forEach(Energizer3D::pausePumping);
-        energizers3D.forEach(energizer3D -> energizer3D.shape3D().setVisible(false));
+        energizers3D.forEach(energizer3D -> energizer3D.node().setVisible(false));
         particleGroupsContainer.getChildren().clear();
         house3D.setDoorVisible(false);
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
@@ -634,7 +634,7 @@ public class GameLevel3D implements Disposable {
 
     public void onGameOver(GameState state) {
         state.timer().restartSeconds(3);
-        energizers3D().forEach(energizer3D -> energizer3D.shape3D().setVisible(false));
+        energizers3D().forEach(energizer3D -> energizer3D.node().setVisible(false));
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
         ui.theSound().stopAll();
         ui.theSound().play(SoundID.GAME_OVER);
@@ -690,15 +690,14 @@ public class GameLevel3D implements Disposable {
     private Energizer3D createEnergizer3D(Vector2i tile, float energizerRadius, float floorThickness, float minScaling, float maxScaling) {
         float x = tile.x() * TS + HTS;
         float y = tile.y() * TS + HTS;
-        float z = -2 * energizerRadius - 0.5f * floorThickness;
-        var energizer3D = new Energizer3D(animationRegistry, energizerRadius, minScaling, maxScaling);
+        float z = -0.5f * floorThickness - 2 * energizerRadius ;
+        Point3D center = new Point3D(x, y, z);
+        var energizer3D = new Energizer3D(animationRegistry, energizerRadius, minScaling, maxScaling, pelletMaterial);
         energizer3D.setTile(tile);
-        energizer3D.shape3D().setMaterial(pelletMaterial);
-        energizer3D.shape3D().setTranslateX(x);
-        energizer3D.shape3D().setTranslateY(y);
-        energizer3D.shape3D().setTranslateZ(z);
-
-        var explosion = new Explosion(animationRegistry, energizer3D.shape3D(), particleGroupsContainer, particleMaterial,
+        energizer3D.node().setTranslateX(x);
+        energizer3D.node().setTranslateY(y);
+        energizer3D.node().setTranslateZ(z);
+        var explosion = new Explosion(animationRegistry, center, particleGroupsContainer, particleMaterial,
                 particle -> particle.getTranslateZ() >= -1 && insideWorldMapArea(particle));
         energizer3D.setEatenAnimation(explosion);
 

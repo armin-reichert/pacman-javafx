@@ -8,6 +8,7 @@ import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.StopWatch;
 import javafx.animation.Animation;
 import javafx.animation.Transition;
+import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Material;
@@ -70,9 +71,9 @@ public class Explosion extends ManagedAnimation {
                     randomFloat(PARTICLE_VELOCITY_XY_MIN, PARTICLE_VELOCITY_XY_MAX),
                     randomFloat(PARTICLE_VELOCITY_XY_MIN, PARTICLE_VELOCITY_XY_MAX),
                     randomFloat(PARTICLE_VELOCITY_Z_MIN, PARTICLE_VELOCITY_Z_MAX));
-                particle.setTranslateX(origin.getTranslateX());
-                particle.setTranslateY(origin.getTranslateY());
-                particle.setTranslateZ(origin.getTranslateZ());
+                particle.setTranslateX(origin.getX());
+                particle.setTranslateY(origin.getY());
+                particle.setTranslateZ(origin.getZ());
                 particle.setVisible(false);
                 particlesGroup.getChildren().add(particle);
             }
@@ -110,12 +111,12 @@ public class Explosion extends ManagedAnimation {
     private final Group particlesGroupContainer;
     private Group particlesGroup = new Group();
     private Predicate<Explosion.Particle> particleReachedEndPosition;
-    private Node origin;
+    private Point3D origin;
     private Material particleMaterial;
 
     public Explosion(
         AnimationRegistry animationRegistry,
-        Node origin,
+        Point3D origin,
         Group particlesGroupContainer,
         Material particleMaterial,
         Predicate<Explosion.Particle> particleReachedEndPosition)
@@ -129,6 +130,7 @@ public class Explosion extends ManagedAnimation {
         var stopWatch = new StopWatch();
         animationFX = new Explosion.ParticlesMovement();
         Logger.info("Particles transition created in {} milliseconds", stopWatch.passedTime().toMillis());
+        animationFX.setDelay(Duration.millis(200));
     }
 
     @Override

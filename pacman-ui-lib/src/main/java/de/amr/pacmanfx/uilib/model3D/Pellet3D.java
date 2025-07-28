@@ -41,7 +41,7 @@ public class Pellet3D implements Eatable3D {
     }
 
     @Override
-    public Shape3D shape3D() {
+    public Shape3D node() {
         return shape;
     }
 
