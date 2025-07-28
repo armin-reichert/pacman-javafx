@@ -680,11 +680,10 @@ public class GameLevel3D implements Disposable {
         energizers3D.trimToSize();
     }
 
-    private boolean insideWorldMapArea(Explosion.Particle p) {
-        WorldMap worldMap = gameLevel.worldMap();
-        int width = worldMap.numCols() * TS;
-        int height = worldMap.numRows() * TS;
-        return 0 <= p.getTranslateX() && p.getTranslateX() < width && 0 <= p.getTranslateY() && p.getTranslateY() < height;
+    private boolean insideWorldMapArea(Point3D position) {
+        int width  = gameLevel.worldMap().numCols() * TS;
+        int height = gameLevel.worldMap().numRows() * TS;
+        return 0 <= position.getX() && position.getX() < width && 0 <= position.getY() && position.getY() < height;
     }
 
     private Energizer3D createEnergizer3D(Vector2i tile, float energizerRadius, float floorThickness, float minScaling, float maxScaling) {
@@ -698,7 +697,7 @@ public class GameLevel3D implements Disposable {
         energizer3D.node().setTranslateY(y);
         energizer3D.node().setTranslateZ(z);
         var explosion = new Explosion(animationRegistry, center, particleGroupsContainer, particleMaterial,
-                particle -> particle.getTranslateZ() >= -1 && insideWorldMapArea(particle));
+            (Point3D position) -> position.getZ() >= -1 && insideWorldMapArea(position));
         energizer3D.setEatenAnimation(explosion);
 
         return energizer3D;

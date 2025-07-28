@@ -22,4 +22,8 @@ public class StopWatch {
     public Duration passedTime() {
         return Duration.between(startTime, Instant.now());
     }
+
+    public double passedMillis() { return passedTime().toNanos() / 1e6; }
+
+    public long passedNanos() { return passedTime().toNanos(); }
 }
