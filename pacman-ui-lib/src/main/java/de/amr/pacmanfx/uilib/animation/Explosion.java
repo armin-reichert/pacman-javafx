@@ -25,8 +25,6 @@ import static java.util.Objects.requireNonNull;
 
 public class Explosion extends ManagedAnimation {
 
-    private static final Duration DURATION = Duration.seconds(4);
-
     private static final short PARTICLE_DIVISIONS = 8;
     private static final short PARTICLE_COUNT_MIN = 150;
     private static final short PARTICLE_COUNT_MAX = 300;
@@ -59,10 +57,10 @@ public class Explosion extends ManagedAnimation {
 
     private class ParticlesMovement extends Transition {
 
-        public ParticlesMovement(Duration duration) {
+        public ParticlesMovement() {
             Random rnd = new Random();
             setOnFinished(e -> disposeParticles());
-            setCycleDuration(duration);
+            setCycleDuration(Duration.seconds(5));
             int numParticles = randomInt(PARTICLE_COUNT_MIN, PARTICLE_COUNT_MAX + 1);
             for (int i = 0; i < numParticles; ++i) {
                 double scaling = Math.clamp(rnd.nextGaussian(2, 0.1), 0.5, 4);
@@ -128,9 +126,8 @@ public class Explosion extends ManagedAnimation {
         this.particleMaterial = requireNonNull(particleMaterial);
         this.particleReachedEndPosition = requireNonNull(particleReachedEndPosition);
 
-
         var stopWatch = new StopWatch();
-        animationFX = new Explosion.ParticlesMovement(DURATION);
+        animationFX = new Explosion.ParticlesMovement();
         Logger.info("Particles transition created in {} milliseconds", stopWatch.passedTime().toMillis());
     }
 
