@@ -24,14 +24,12 @@ public class PreferenceManager {
         prefs = Preferences.userNodeForPackage(_class);
     }
 
-    public boolean isAccessible() {
+    public boolean isBackingStoreAccessible() {
         try {
-            for (String key : prefs.keys()) {
-                prefs.get(key, null);
-                Logger.debug("Prefs key '{}' could be accessed");
-            }
+            prefs.keys();
+            Logger.info("Preferences backing store accessible");
             return true;
-        } catch (Exception x) {
+        } catch (BackingStoreException x) {
             return false;
         }
     }

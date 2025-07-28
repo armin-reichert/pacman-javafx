@@ -136,51 +136,6 @@ public class PacManGames_UI_Impl implements GameUI {
     }
 
     private void initPreferences() {
-        storePreferenceDefaultValues();
-        if (!thePrefs.isAccessible()) {
-            Logger.error("User preferences could not be accessed, using default values!");
-        } else {
-            thePrefs.addMissingValues();
-        }
-    }
-
-    private void createMainScene(double width, double height) {
-        mainScene = new Scene(rootPane, width, height);
-        mainScene.addEventFilter(KeyEvent.KEY_PRESSED, theKeyboard()::onKeyPressed);
-        mainScene.addEventFilter(KeyEvent.KEY_RELEASED, theKeyboard()::onKeyReleased);
-        //TODO should I use key binding for global actions too?
-        mainScene.setOnKeyPressed(e -> {
-            if (KEY_FULLSCREEN.match(e)) {
-                ACTION_ENTER_FULLSCREEN.execute(this);
-            }
-            else if (KEY_MUTE.match(e)) {
-                ACTION_TOGGLE_MUTED.execute(this);
-            }
-            else if (KEY_OPEN_EDITOR.match(e)) {
-                showEditorView();
-            }
-            else {
-                currentView().handleKeyboardInput(this);
-            }
-        });
-    }
-
-    private void createStatusIcons() {
-        // "paused" icon appears at center of UI
-        FontIcon pausedIcon = FontIcon.of(FontAwesomeSolid.PAUSE, 80, ArcadePalette.ARCADE_WHITE);
-        StackPane.setAlignment(pausedIcon, Pos.CENTER);
-        pausedIcon.visibleProperty().bind(Bindings.createBooleanBinding(
-                () -> currentView() == playView && theGameClock.isPaused(),
-                propertyCurrentView, theGameClock.pausedProperty()));
-
-        // status icon box appears at bottom-left corner of any view except editor
-        var iconBox = new StatusIconBox(this);
-        StackPane.setAlignment(iconBox, Pos.BOTTOM_LEFT);
-        iconBox.visibleProperty().bind(propertyCurrentView.map(view -> view != editorView));
-        rootPane.getChildren().addAll(pausedIcon, iconBox);
-    }
-
-    private void storePreferenceDefaultValues() {
         thePrefs.storeDefaultValue("3d.bonus.symbol.width", 8.0f);
         thePrefs.storeDefaultValue("3d.bonus.points.width", 1.8f * 8.0f);
         thePrefs.storeDefaultValue("3d.energizer.radius", 3.5f);
@@ -214,6 +169,48 @@ public class PacManGames_UI_Impl implements GameUI {
         thePrefs.storeDefaultFont("debug_text.font", Font.font("Sans", FontWeight.BOLD, 16.0f));
 
         thePrefs.storeDefaultValue("scene2d.max_scaling", 5.0f);
+
+        if (!thePrefs.isBackingStoreAccessible()) {
+            Logger.error("User preferences could not be accessed, using default values!");
+        } else {
+            thePrefs.addMissingValues();
+        }
+    }
+
+    private void createMainScene(double width, double height) {
+        mainScene = new Scene(rootPane, width, height);
+        mainScene.addEventFilter(KeyEvent.KEY_PRESSED, theKeyboard::onKeyPressed);
+        mainScene.addEventFilter(KeyEvent.KEY_RELEASED, theKeyboard::onKeyReleased);
+        //TODO should I use key binding for global actions too?
+        mainScene.setOnKeyPressed(e -> {
+            if (KEY_FULLSCREEN.match(e)) {
+                ACTION_ENTER_FULLSCREEN.execute(this);
+            }
+            else if (KEY_MUTE.match(e)) {
+                ACTION_TOGGLE_MUTED.execute(this);
+            }
+            else if (KEY_OPEN_EDITOR.match(e)) {
+                showEditorView();
+            }
+            else {
+                currentView().handleKeyboardInput(this);
+            }
+        });
+    }
+
+    private void createStatusIcons() {
+        // "paused" icon appears at center of UI
+        FontIcon pausedIcon = FontIcon.of(FontAwesomeSolid.PAUSE, 80, ArcadePalette.ARCADE_WHITE);
+        StackPane.setAlignment(pausedIcon, Pos.CENTER);
+        pausedIcon.visibleProperty().bind(Bindings.createBooleanBinding(
+                () -> currentView() == playView && theGameClock.isPaused(),
+                propertyCurrentView, theGameClock.pausedProperty()));
+
+        // status icon box appears at bottom-left corner of any view except editor
+        var iconBox = new StatusIconBox(this);
+        StackPane.setAlignment(iconBox, Pos.BOTTOM_LEFT);
+        iconBox.visibleProperty().bind(propertyCurrentView.map(view -> view != editorView));
+        rootPane.getChildren().addAll(pausedIcon, iconBox);
     }
 
     public void applyConfiguration(String gameVariant, Class<?> configClass) {
