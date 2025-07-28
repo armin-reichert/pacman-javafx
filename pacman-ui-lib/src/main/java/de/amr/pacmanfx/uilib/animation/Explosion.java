@@ -18,7 +18,6 @@ import org.tinylog.Logger;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.function.Predicate;
-import java.util.random.RandomGenerator;
 
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomFloat;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
@@ -36,6 +35,44 @@ public class Explosion extends ManagedAnimation {
     private static final float PARTICLE_VELOCITY_Z_MAX  = -1.5f;
     private static final float GRAVITY_Z = 0.1f;
 
+    private static class MutableVec3f {
+        public float x, y, z;
+
+        public MutableVec3f(float x, float y, float z) {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+    }
+
+    private class Particle extends Sphere {
+
+        private MutableVec3f velocity;
+
+        public Particle(double radius, Material material, MutableVec3f velocity, Point3D origin) {
+            super(radius, PARTICLE_DIVISIONS);
+            this.velocity = velocity;
+            setMaterial(material);
+            Translate position = new Translate(origin.getX(), origin.getY(), origin.getZ());
+            getTransforms().setAll(position);
+        }
+
+        public void move() {
+            Translate position = (Translate) getTransforms().getFirst();
+            position.setX(position.getX() + velocity.x);
+            position.setY(position.getY() + velocity.y);
+            position.setZ(position.getZ() + velocity.z);
+            velocity.z += GRAVITY_Z;
+        }
+
+        public void vanish(double t) {
+            setScaleZ(0.02);
+            setScaleX(1-t);
+            setScaleY(1-t);
+
+        }
+    }
+
     private class ParticlesMovement extends Transition {
         public ParticlesMovement() {
             setCycleDuration(Duration.seconds(5));
@@ -46,16 +83,10 @@ public class Explosion extends ManagedAnimation {
             for (int i = 0; i < particleCount; ++i) {
                 Translate translate = (Translate) particles[i].getTransforms().getFirst();
                 Point3D position = new Point3D(translate.getX(), translate.getY(), translate.getZ());
-                Point3D velocity = particlesVelocity[i];
                 if (particleAtEndPosition.test(position)) {
-                    particles[i].setScaleZ(0.02);
-                    particles[i].setScaleX(1-t);
-                    particles[i].setScaleY(1-t);
+                    particles[i].vanish(t);
                 } else {
-                    translate.setX(position.getX() + velocity.getX());
-                    translate.setY(position.getY() + velocity.getY());
-                    translate.setZ(position.getZ() + velocity.getZ());
-                    particlesVelocity[i] = velocity.add(0, 0, GRAVITY_Z);
+                    particles[i].move();
                 }
             }
         }
@@ -74,8 +105,7 @@ public class Explosion extends ManagedAnimation {
     private Predicate<Point3D> particleAtEndPosition;
 
     private int particleCount;
-    private Sphere[] particles;
-    private Point3D[] particlesVelocity;
+    private Particle[] particles;
 
     public Explosion(
         AnimationRegistry animationRegistry,
@@ -93,19 +123,16 @@ public class Explosion extends ManagedAnimation {
         var stopWatch = new StopWatch();
 
         particleCount = randomInt(PARTICLE_COUNT_MIN, PARTICLE_COUNT_MAX + 1);
-        particles = new Sphere[particleCount];
-        particlesVelocity = new Point3D[particleCount];
+        particles = new Particle[particleCount];
         for (int i = 0; i < particleCount; ++i) {
             double radius = randomRadius(rnd);
-            particles[i] = new Sphere(radius, PARTICLE_DIVISIONS);
-            particles[i].setMaterial(particleMaterial);
-            particles[i].setVisible(false);
-            particlesVelocity[i] = new Point3D(
+            var velocity = new MutableVec3f(
                 randomFloat(PARTICLE_VELOCITY_XY_MIN, PARTICLE_VELOCITY_XY_MAX),
                 randomFloat(PARTICLE_VELOCITY_XY_MIN, PARTICLE_VELOCITY_XY_MAX),
                 randomFloat(PARTICLE_VELOCITY_Z_MIN, PARTICLE_VELOCITY_Z_MAX)
             );
-            particles[i].getTransforms().setAll(new Translate(origin.getX(), origin.getY(), origin.getZ()));
+            particles[i] = new Particle(radius, particleMaterial, velocity, origin);
+            particles[i].setVisible(false);
         }
         Logger.info("{} particles created in {0.000} milliseconds", particleCount, stopWatch.passedMillis());
 
@@ -148,9 +175,8 @@ public class Explosion extends ManagedAnimation {
             for (int i = 0; i < particleCount; ++i) {
                 particles[i].setMaterial(null);
             }
-            particles = new Sphere[0];
-            particlesVelocity = new Point3D[0];
             Logger.info("Disposed {} particles", particleCount);
+            particles = null;
             particleCount = 0;
             particlesGroup.getChildren().clear();
         }
