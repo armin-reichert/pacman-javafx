@@ -15,7 +15,6 @@ import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.util.Arrays;
 import java.util.Random;
 import java.util.function.Predicate;
 
@@ -45,67 +44,92 @@ public class Explosion extends ManagedAnimation {
         }
     }
 
-    private class Particle extends Sphere {
+    private static class Particle extends Sphere {
 
-        private MutableVec3f velocity;
+        private final MutableVec3f velocity;
 
         public Particle(double radius, Material material, MutableVec3f velocity, Point3D origin) {
             super(radius, PARTICLE_DIVISIONS);
             this.velocity = velocity;
             setMaterial(material);
-            Translate position = new Translate(origin.getX(), origin.getY(), origin.getZ());
-            getTransforms().setAll(position);
+            Translate translate = new Translate(origin.getX(), origin.getY(), origin.getZ());
+            getTransforms().add(translate);
+        }
+
+        public Point3D position() {
+            Translate translate = (Translate) getTransforms().getFirst();
+            return new Point3D(translate.getX(), translate.getY(), translate.getZ());
         }
 
         public void move() {
-            Translate position = (Translate) getTransforms().getFirst();
-            position.setX(position.getX() + velocity.x);
-            position.setY(position.getY() + velocity.y);
-            position.setZ(position.getZ() + velocity.z);
+            Translate translate = (Translate) getTransforms().getFirst();
+            translate.setX(translate.getX() + velocity.x);
+            translate.setY(translate.getY() + velocity.y);
+            translate.setZ(translate.getZ() + velocity.z);
             velocity.z += GRAVITY_Z;
-        }
-
-        public void vanish(double t) {
-            setScaleZ(0.02);
-            setScaleX(1-t);
-            setScaleY(1-t);
-
         }
     }
 
+    private final Material particleMaterial;
+    private final Point3D origin;
+    private final Group particlesGroupContainer;
+    private final Group particlesGroup = new Group();
+    private Particle[] particles;
+    private final Predicate<Point3D> particleAtEndPosition;
+
     private class ParticlesMovement extends Transition {
+
         public ParticlesMovement() {
             setCycleDuration(Duration.seconds(5));
         }
 
         @Override
         protected void interpolate(double t) {
-            for (int i = 0; i < particleCount; ++i) {
-                Translate translate = (Translate) particles[i].getTransforms().getFirst();
-                Point3D position = new Point3D(translate.getX(), translate.getY(), translate.getZ());
-                if (particleAtEndPosition.test(position)) {
-                    particles[i].vanish(t);
+            for (Particle particle : particles) {
+                if (particleAtEndPosition.test(particle.position())) {
+                    particle.setRadius(0.1); //TODO make something more intelligent
                 } else {
-                    particles[i].move();
+                    particle.move();
                 }
             }
         }
 
         @Override
         public void play() {
-            for (int i = 0; i < particleCount; ++i) {
-                particles[i].setVisible(true);
-            }
+            replaceParticles(particleMaterial, origin);
             super.play();
         }
+
+        private void replaceParticles(Material particleMaterial, Point3D origin) {
+            Random rnd = new Random();
+            var stopWatch = new StopWatch();
+            int particleCount = randomInt(PARTICLE_COUNT_MIN, PARTICLE_COUNT_MAX + 1);
+            particles = new Particle[particleCount];
+            for (int i = 0; i < particleCount; ++i) {
+                double radius = randomParticleRadius(rnd);
+                var velocity = randomParticleVelocity();
+                Particle particle = new Particle(radius, particleMaterial, velocity, origin);
+                particle.setVisible(true);
+                particles[i] = particle;
+            }
+            particlesGroup.getChildren().setAll(particles);
+            Logger.info("{} particles created in {0.000} milliseconds", particleCount, stopWatch.passedMillis());
+        }
+
+        private double randomParticleRadius(Random rnd) {
+            double scaling = rnd.nextGaussian(2, 0.1);
+            scaling = Math.clamp(scaling, 0.5, 4);
+            return scaling * PARTICLE_MEAN_RADIUS_UNSCALED;
+        }
+
+        private MutableVec3f randomParticleVelocity() {
+            return new MutableVec3f(
+                randomFloat(PARTICLE_VELOCITY_XY_MIN, PARTICLE_VELOCITY_XY_MAX),
+                randomFloat(PARTICLE_VELOCITY_XY_MIN, PARTICLE_VELOCITY_XY_MAX),
+                randomFloat(PARTICLE_VELOCITY_Z_MIN, PARTICLE_VELOCITY_Z_MAX)
+            );
+        }
     }
-
-    private final Group particlesGroupContainer;
-    private Group particlesGroup = new Group();
-    private Predicate<Point3D> particleAtEndPosition;
-
-    private int particleCount;
-    private Particle[] particles;
 
     public Explosion(
         AnimationRegistry animationRegistry,
@@ -115,70 +139,29 @@ public class Explosion extends ManagedAnimation {
         Predicate<Point3D> particleAtEndPosition) {
 
         super(animationRegistry, "Energizer_Explosion");
-
+        this.origin = requireNonNull(origin);
         this.particlesGroupContainer = requireNonNull(particlesGroupContainer);
+        this.particleMaterial = requireNonNull(particleMaterial);
         this.particleAtEndPosition = requireNonNull(particleAtEndPosition);
-
-        Random rnd = new Random();
-        var stopWatch = new StopWatch();
-
-        particleCount = randomInt(PARTICLE_COUNT_MIN, PARTICLE_COUNT_MAX + 1);
-        particles = new Particle[particleCount];
-        for (int i = 0; i < particleCount; ++i) {
-            double radius = randomRadius(rnd);
-            var velocity = new MutableVec3f(
-                randomFloat(PARTICLE_VELOCITY_XY_MIN, PARTICLE_VELOCITY_XY_MAX),
-                randomFloat(PARTICLE_VELOCITY_XY_MIN, PARTICLE_VELOCITY_XY_MAX),
-                randomFloat(PARTICLE_VELOCITY_Z_MIN, PARTICLE_VELOCITY_Z_MAX)
-            );
-            particles[i] = new Particle(radius, particleMaterial, velocity, origin);
-            particles[i].setVisible(false);
-        }
-        Logger.info("{} particles created in {0.000} milliseconds", particleCount, stopWatch.passedMillis());
-
-        stopWatch.reset();
-        particlesGroup.getChildren().addAll(Arrays.copyOfRange(particles, 0, particleCount));
-        Logger.info("Adding {} particles to the scene graph took {0.000} milliseconds", particleCount, stopWatch.passedMillis());
-
-        animationFX = new Explosion.ParticlesMovement();
-        animationFX.setDelay(Duration.millis(200));
-        animationFX.setOnFinished(e -> disposeParticles());
-    }
-
-    private double randomRadius(Random rnd) {
-        double scaling = rnd.nextGaussian(2, 0.1);
-        scaling = Math.clamp(scaling, 0.5, 4);
-        return scaling * PARTICLE_MEAN_RADIUS_UNSCALED;
-    }
-
-    @Override
-    protected Animation createAnimationFX() {
-        return animationFX;
-    }
-
-    @Override
-    public void playFromStart() {
-        super.playFromStart();
         particlesGroupContainer.getChildren().add(particlesGroup);
     }
 
     @Override
-    protected void freeResources() {
-        disposeParticles();
-        particlesGroupContainer.getChildren().remove(particlesGroup);
-        particlesGroup = null;
-        particleAtEndPosition = null;
+    protected Animation createAnimationFX() {
+        var particlesMovement = new Explosion.ParticlesMovement();
+        particlesMovement.setDelay(Duration.millis(200));
+        return particlesMovement;
     }
 
-    private void disposeParticles() {
-        if (particleCount != 0) {
-            for (int i = 0; i < particleCount; ++i) {
-                particles[i].setMaterial(null);
-            }
-            Logger.info("Disposed {} particles", particleCount);
-            particles = null;
-            particleCount = 0;
-            particlesGroup.getChildren().clear();
+    @Override
+    protected void freeResources() {
+        if (particles == null) return;
+        for (Particle particle : particles) {
+            particle.setMaterial(null);
         }
+        Logger.info("Disposed {} particles", particles.length);
+        particles = null;
+        particlesGroup.getChildren().clear();
+        particlesGroupContainer.getChildren().remove(particlesGroup);
     }
 }
