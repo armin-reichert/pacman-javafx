@@ -107,10 +107,9 @@ public class Explosion extends ManagedAnimation {
             particles = new Particle[particleCount];
             for (int i = 0; i < particleCount; ++i) {
                 double radius = randomParticleRadius(rnd);
-                var velocity = randomParticleVelocity();
-                Particle particle = new Particle(radius, particleMaterial, velocity, origin);
-                particle.setVisible(true);
-                particles[i] = particle;
+                MutableVec3f velocity = randomParticleVelocity();
+                particles[i] = new Particle(radius, particleMaterial, velocity, origin);
+                particles[i].setVisible(true);
             }
             particlesGroup.getChildren().setAll(particles);
             Logger.info("{} particles created in {0.000} milliseconds", particleCount, stopWatch.passedMillis());
