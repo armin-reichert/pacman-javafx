@@ -101,6 +101,8 @@ public class PacManGames_UI_Impl implements GameUI {
         requireNonNull(gameContext);
         requireNonNull(stage);
 
+        Logger.info("JavaFX runtime: {}", System.getProperty("javafx.runtime.version"));
+
         theAssets = new PacManGames_Assets();
         theCustomDirWatchdog = new DirectoryWatchdog(gameContext.theCustomMapDir());
         theGameClock = new GameClock();
@@ -296,12 +298,8 @@ public class PacManGames_UI_Impl implements GameUI {
     @Override public ObjectProperty<Color>            propertyCanvasBackgroundColor() { return propertyCanvasBgColor; }
     @Override public BooleanProperty                  propertyCanvasFontSmoothing() { return propertyCanvasFontSmoothing; }
     @Override public BooleanProperty                  propertyCanvasImageSmoothing(){ return propertyCanvasImageSmoothing; }
-    @Override public ObjectProperty<GameScene>        propertyCurrentGameScene() {
-        return propertyCurrentGameScene;
-    }
-    @Override public ObjectProperty<PacManGames_View> propertyCurrentView() {
-        return propertyCurrentView;
-    }
+    @Override public ObjectProperty<GameScene>        propertyCurrentGameScene() { return propertyCurrentGameScene;}
+    @Override public ObjectProperty<PacManGames_View> propertyCurrentView() { return propertyCurrentView; }
     @Override public BooleanProperty                  propertyDebugInfoVisible(){ return propertyDebugInfoVisible; }
     @Override public IntegerProperty                  propertyMiniViewHeight(){ return propertyMiniViewHeight; }
     @Override public BooleanProperty                  propertyMiniViewOn(){ return propertyMiniViewOn; }
@@ -320,17 +318,12 @@ public class PacManGames_UI_Impl implements GameUI {
     @Override public DoubleProperty                   property3DWallOpacity(){ return property3DWallOpacity; }
 
     @Override public Optional<GameScene> currentGameScene() { return Optional.ofNullable(propertyCurrentGameScene.get()); }
-    @Override public PacManGames_View    currentView() {
-        return propertyCurrentView.get();
-    }
-    @Override public PlayView thePlayView() {
-        return playView;
-    }
+
+    @Override public PacManGames_View currentView() { return propertyCurrentView.get(); }
+    @Override public PlayView thePlayView() { return playView; }
     @Override public StartPagesView theStartPagesView() { return startPagesView; }
 
-    @Override public Stage theStage() {
-        return theStage;
-    }
+    @Override public Stage theStage() { return theStage; }
 
     @Override
     public PreferenceManager thePrefs() { return thePrefs; }
@@ -378,8 +371,6 @@ public class PacManGames_UI_Impl implements GameUI {
 
     @Override
     public void show() {
-        Logger.info("JavaFX runtime: {}", System.getProperty("javafx.runtime.version"));
-
         propertyCurrentView.set(startPagesView);
         startPagesView.currentStartPage().ifPresent(startPage -> startPage.layoutRoot().requestFocus());
         playView.dashboard().init(this);
