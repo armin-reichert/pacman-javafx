@@ -18,6 +18,7 @@ import org.tinylog.Logger;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.function.Predicate;
+import java.util.random.RandomGenerator;
 
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomFloat;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
@@ -88,14 +89,15 @@ public class Explosion extends ManagedAnimation {
         this.particlesGroupContainer = requireNonNull(particlesGroupContainer);
         this.particleAtEndPosition = requireNonNull(particleAtEndPosition);
 
+        Random rnd = new Random();
         var stopWatch = new StopWatch();
 
         particleCount = randomInt(PARTICLE_COUNT_MIN, PARTICLE_COUNT_MAX + 1);
         particles = new Sphere[particleCount];
         particlesVelocity = new Point3D[particleCount];
         for (int i = 0; i < particleCount; ++i) {
-            double r = randomRadius();
-            particles[i] = new Sphere(r, PARTICLE_DIVISIONS);
+            double radius = randomRadius(rnd);
+            particles[i] = new Sphere(radius, PARTICLE_DIVISIONS);
             particles[i].setMaterial(particleMaterial);
             particles[i].setVisible(false);
             particlesVelocity[i] = new Point3D(
@@ -116,9 +118,9 @@ public class Explosion extends ManagedAnimation {
         animationFX.setOnFinished(e -> disposeParticles());
     }
 
-    private double randomRadius() {
-        var rnd = new Random();
-        double scaling = Math.clamp(rnd.nextGaussian(2, 0.1), 0.5, 4);
+    private double randomRadius(Random rnd) {
+        double scaling = rnd.nextGaussian(2, 0.1);
+        scaling = Math.clamp(scaling, 0.5, 4);
         return scaling * PARTICLE_MEAN_RADIUS_UNSCALED;
     }
 
