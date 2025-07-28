@@ -19,6 +19,7 @@ import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.GameClock;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
@@ -134,7 +135,7 @@ public class PacManGames_UI_Impl implements GameUI {
 
         property3DWallHeight.set(thePrefs.getFloat("3d.obstacle.base_height"));
         property3DWallOpacity.set(thePrefs.getFloat("3d.obstacle.opacity"));
-        propertyCurrentView.addListener((py, oldView, newView) -> handleViewChange(oldView, newView));
+        propertyCurrentView.addListener(this::handleViewChange);
     }
 
     private void initPreferences() {
@@ -232,7 +233,7 @@ public class PacManGames_UI_Impl implements GameUI {
         }
     }
 
-    private void handleViewChange(PacManGames_View oldView, PacManGames_View newView) {
+    private void handleViewChange(ObservableValue<? extends PacManGames_View> obs, PacManGames_View oldView, PacManGames_View newView) {
         requireNonNull(newView);
         if (oldView != null) {
             oldView.actionBindingMap().removeFromKeyboard();
