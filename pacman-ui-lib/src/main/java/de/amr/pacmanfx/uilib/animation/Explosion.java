@@ -19,31 +19,30 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Predicate;
 
-import static de.amr.pacmanfx.Validations.requireNonNegativeInt;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomFloat;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static java.util.Objects.requireNonNull;
 
 public class Explosion extends ManagedAnimation {
 
-    private record FloatRange(float from, float to) {}
-
     private static final Duration DURATION = Duration.seconds(4);
 
-    private static final byte PARTICLE_DIVISIONS = 8;
+    private static final short PARTICLE_DIVISIONS = 8;
     private static final short PARTICLE_COUNT_MIN = 150;
     private static final short PARTICLE_COUNT_MAX = 300;
     private static final float PARTICLE_MEAN_RADIUS_UNSCALED = .15f;
-    private static final FloatRange PARTICLE_VELOCITY_XY = new FloatRange(-0.6f, 0.6f);
-    private static final FloatRange PARTICLE_VELOCITY_Z  = new FloatRange(-4.5f, -1.5f);
+    private static final float PARTICLE_VELOCITY_XY_MIN = -0.6f;
+    private static final float PARTICLE_VELOCITY_XY_MAX = 0.6f;
+    private static final float PARTICLE_VELOCITY_Z_MIN  = -4.5f;
+    private static final float PARTICLE_VELOCITY_Z_MAX  = -1.5f;
     private static final float GRAVITY_Z = 0.1f;
 
-    public static class Particle extends Sphere implements Disposable {
+    public class Particle extends Sphere implements Disposable {
         private float vx, vy, vz;
 
-        public Particle(Material material, double radius) {
+        public Particle(double radius) {
             super(radius, PARTICLE_DIVISIONS);
-            setMaterial(material);
+            setMaterial(particleMaterial);
         }
 
         public void setVelocity(float x, float y, float z) {
@@ -52,72 +51,51 @@ public class Explosion extends ManagedAnimation {
             vz = z;
         }
 
-        public void move() {
-            setTranslateX(getTranslateX() + vx);
-            setTranslateY(getTranslateY() + vy);
-            setTranslateZ(getTranslateZ() + vz);
-            vz += GRAVITY_Z;
-        }
-
         @Override
         public void dispose() {
             setMaterial(null);
         }
     }
 
-    private final Group particlesGroupContainer;
-    private Group particlesGroup = new Group();
-    private Predicate<Particle> particleReachedEndPosition;
-    private Node origin;
-    private Material particleMaterial;
+    private class ParticlesMovement extends Transition {
 
-    private class ParticlesTransition extends Transition {
-
-        public ParticlesTransition(
-            Duration duration,
-            int minParticleCount,
-            int maxParticleCount,
-            Material particleMaterial,
-            Node origin)
-        {
-            requireNonNull(duration);
-            requireNonNegativeInt(minParticleCount);
-            requireNonNegativeInt(maxParticleCount);
-            requireNonNull(particleMaterial);
-            requireNonNull(origin);
-
-            setCycleDuration(duration);
-            int numParticles = randomInt(minParticleCount, maxParticleCount + 1);
+        public ParticlesMovement(Duration duration) {
             Random rnd = new Random();
+            setOnFinished(e -> disposeParticles());
+            setCycleDuration(duration);
+            int numParticles = randomInt(PARTICLE_COUNT_MIN, PARTICLE_COUNT_MAX + 1);
             for (int i = 0; i < numParticles; ++i) {
                 double scaling = Math.clamp(rnd.nextGaussian(2, 0.1), 0.5, 4);
                 double radius = scaling * PARTICLE_MEAN_RADIUS_UNSCALED;
-                var particle = new Particle(particleMaterial, radius);
+                var particle = new Particle(radius);
                 particle.setVelocity(
-                    randomFloat(PARTICLE_VELOCITY_XY.from(), PARTICLE_VELOCITY_XY.to()),
-                    randomFloat(PARTICLE_VELOCITY_XY.from(), PARTICLE_VELOCITY_XY.to()),
-                    randomFloat(PARTICLE_VELOCITY_Z.from(), PARTICLE_VELOCITY_Z.to()));
+                    randomFloat(PARTICLE_VELOCITY_XY_MIN, PARTICLE_VELOCITY_XY_MAX),
+                    randomFloat(PARTICLE_VELOCITY_XY_MIN, PARTICLE_VELOCITY_XY_MAX),
+                    randomFloat(PARTICLE_VELOCITY_Z_MIN, PARTICLE_VELOCITY_Z_MAX));
                 particle.setTranslateX(origin.getTranslateX());
                 particle.setTranslateY(origin.getTranslateY());
                 particle.setTranslateZ(origin.getTranslateZ());
                 particle.setVisible(false);
                 particlesGroup.getChildren().add(particle);
             }
-            setDelay(Duration.millis(rnd.nextInt(200)));
-            setOnFinished(e -> disposeParticles());
             Logger.info("{} particles created", particlesGroup.getChildren().size());
         }
 
         @Override
         protected void interpolate(double t) {
-            for (var child : particlesGroup.getChildren()) {
+            for (Node child : particlesGroup.getChildren()) {
                 Particle particle = (Particle) child;
                 if (particleReachedEndPosition.test(particle)) {
-                    particle.setScaleZ(0.02); // flat
+                    // show flat and shrink over time
+                    particle.setScaleZ(0.02);
                     particle.setScaleX(1-t);
                     particle.setScaleY(1-t);
                 } else {
-                    particle.move();
+                    // move and fall to floor
+                    particle.setTranslateX(particle.getTranslateX() + particle.vx);
+                    particle.setTranslateY(particle.getTranslateY() + particle.vy);
+                    particle.setTranslateZ(particle.getTranslateZ() + particle.vz);
+                    particle.vz += GRAVITY_Z;
                 }
             }
         }
@@ -131,12 +109,18 @@ public class Explosion extends ManagedAnimation {
         }
     }
 
+    private final Group particlesGroupContainer;
+    private Group particlesGroup = new Group();
+    private Predicate<Explosion.Particle> particleReachedEndPosition;
+    private Node origin;
+    private Material particleMaterial;
+
     public Explosion(
         AnimationRegistry animationRegistry,
         Node origin,
         Group particlesGroupContainer,
         Material particleMaterial,
-        Predicate<Particle> particleReachedEndPosition)
+        Predicate<Explosion.Particle> particleReachedEndPosition)
     {
         super(animationRegistry, "Energizer_Explosion");
         this.origin = requireNonNull(origin);
@@ -146,7 +130,7 @@ public class Explosion extends ManagedAnimation {
 
 
         var stopWatch = new StopWatch();
-        animationFX = new ParticlesTransition(DURATION, PARTICLE_COUNT_MIN, PARTICLE_COUNT_MAX, particleMaterial, origin);
+        animationFX = new Explosion.ParticlesMovement(DURATION);
         Logger.info("Particles transition created in {} milliseconds", stopWatch.passedTime().toMillis());
     }
 
