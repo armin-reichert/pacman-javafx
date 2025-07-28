@@ -27,11 +27,11 @@ import static java.util.Objects.requireNonNull;
 public class Explosion extends ManagedAnimation {
 
     private static final short PARTICLE_DIVISIONS = 8;
-    private static final short PARTICLE_COUNT_MIN = 150;
-    private static final short PARTICLE_COUNT_MAX = 300;
+    private static final short PARTICLE_COUNT_MIN = 200;
+    private static final short PARTICLE_COUNT_MAX = 400;
     private static final float PARTICLE_MEAN_RADIUS_UNSCALED = .15f;
     private static final float PARTICLE_VELOCITY_XY_MIN = -0.6f;
-    private static final float PARTICLE_VELOCITY_XY_MAX = 0.6f;
+    private static final float PARTICLE_VELOCITY_XY_MAX =  0.6f;
     private static final float PARTICLE_VELOCITY_Z_MIN  = -4.5f;
     private static final float PARTICLE_VELOCITY_Z_MAX  = -1.5f;
     private static final float GRAVITY_Z = 0.1f;
