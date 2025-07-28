@@ -272,18 +272,18 @@ public class PlayScene3D implements GameScene {
 
     protected void setActionBindings() {
         actionBindings.removeFromKeyboard();
-        actionBindings.bind(ACTION_PERSPECTIVE_PREVIOUS, GLOBAL_ACTION_BINDINGS);
-        actionBindings.bind(ACTION_PERSPECTIVE_NEXT, GLOBAL_ACTION_BINDINGS);
-        actionBindings.bind(ACTION_TOGGLE_DRAW_MODE, GLOBAL_ACTION_BINDINGS);
+        actionBindings.use(ACTION_PERSPECTIVE_PREVIOUS, GLOBAL_ACTION_BINDINGS);
+        actionBindings.use(ACTION_PERSPECTIVE_NEXT, GLOBAL_ACTION_BINDINGS);
+        actionBindings.use(ACTION_TOGGLE_DRAW_MODE, GLOBAL_ACTION_BINDINGS);
         if (gameContext().optGameLevel().isPresent()) {
             if (gameContext().theGameLevel().isDemoLevel()) {
-                actionBindings.bind(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDINGS);
+                actionBindings.use(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDINGS);
             } else {
                 setPlayerSteeringActionBindings();
-                actionBindings.bind(ACTION_CHEAT_EAT_ALL_PELLETS, GLOBAL_ACTION_BINDINGS);
-                actionBindings.bind(ACTION_CHEAT_ADD_LIVES, GLOBAL_ACTION_BINDINGS);
-                actionBindings.bind(ACTION_CHEAT_ENTER_NEXT_LEVEL, GLOBAL_ACTION_BINDINGS);
-                actionBindings.bind(ACTION_CHEAT_KILL_GHOSTS, GLOBAL_ACTION_BINDINGS);
+                actionBindings.use(ACTION_CHEAT_EAT_ALL_PELLETS, GLOBAL_ACTION_BINDINGS);
+                actionBindings.use(ACTION_CHEAT_ADD_LIVES, GLOBAL_ACTION_BINDINGS);
+                actionBindings.use(ACTION_CHEAT_ENTER_NEXT_LEVEL, GLOBAL_ACTION_BINDINGS);
+                actionBindings.use(ACTION_CHEAT_KILL_GHOSTS, GLOBAL_ACTION_BINDINGS);
             }
         }
         actionBindings.updateKeyboard();
@@ -293,10 +293,10 @@ public class PlayScene3D implements GameScene {
      * Overridden by Tengen Ms. Pac-Man play scene 3D to use keys representing "Joypad" buttons.
      */
     protected void setPlayerSteeringActionBindings() {
-        actionBindings.bind(ACTION_STEER_UP, GLOBAL_ACTION_BINDINGS);
-        actionBindings.bind(ACTION_STEER_DOWN, GLOBAL_ACTION_BINDINGS);
-        actionBindings.bind(ACTION_STEER_LEFT, GLOBAL_ACTION_BINDINGS);
-        actionBindings.bind(ACTION_STEER_RIGHT, GLOBAL_ACTION_BINDINGS);
+        actionBindings.use(ACTION_STEER_UP, GLOBAL_ACTION_BINDINGS);
+        actionBindings.use(ACTION_STEER_DOWN, GLOBAL_ACTION_BINDINGS);
+        actionBindings.use(ACTION_STEER_LEFT, GLOBAL_ACTION_BINDINGS);
+        actionBindings.use(ACTION_STEER_RIGHT, GLOBAL_ACTION_BINDINGS);
     }
 
     @Override

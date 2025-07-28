@@ -32,7 +32,7 @@ public class EditorView implements PacManGames_View {
     }
 
     @Override
-    public ActionBindingMap actionBindingMap() { return ActionBindingMap.EMPTY_ACTION_BINDING_MAP; }
+    public ActionBindingMap actionBindingMap() { return ActionBindingMap.EMPTY_MAP; }
 
     @Override
     public Region rootNode() {

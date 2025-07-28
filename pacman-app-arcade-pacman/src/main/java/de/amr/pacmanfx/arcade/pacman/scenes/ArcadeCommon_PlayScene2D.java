@@ -76,18 +76,18 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
     private void initWithGameLevel(GameLevel gameLevel) {
         if (gameLevel.isDemoLevel()) {
             gameContext().theGame().theHUD().credit(false).levelCounter(true).livesCounter(false);
-            actionBindings.bind(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDINGS);
+            actionBindings.use(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDINGS);
             actionBindings.updateKeyboard();
         } else {
             gameContext().theGame().theHUD().credit(false).levelCounter(true).livesCounter(true);
-            actionBindings.bind(ACTION_STEER_UP, GLOBAL_ACTION_BINDINGS);
-            actionBindings.bind(ACTION_STEER_DOWN, GLOBAL_ACTION_BINDINGS);
-            actionBindings.bind(ACTION_STEER_LEFT, GLOBAL_ACTION_BINDINGS);
-            actionBindings.bind(ACTION_STEER_RIGHT, GLOBAL_ACTION_BINDINGS);
-            actionBindings.bind(ACTION_CHEAT_EAT_ALL_PELLETS, GLOBAL_ACTION_BINDINGS);
-            actionBindings.bind(ACTION_CHEAT_ADD_LIVES, GLOBAL_ACTION_BINDINGS);
-            actionBindings.bind(ACTION_CHEAT_ENTER_NEXT_LEVEL, GLOBAL_ACTION_BINDINGS);
-            actionBindings.bind(ACTION_CHEAT_KILL_GHOSTS, GLOBAL_ACTION_BINDINGS);
+            actionBindings.use(ACTION_STEER_UP, GLOBAL_ACTION_BINDINGS);
+            actionBindings.use(ACTION_STEER_DOWN, GLOBAL_ACTION_BINDINGS);
+            actionBindings.use(ACTION_STEER_LEFT, GLOBAL_ACTION_BINDINGS);
+            actionBindings.use(ACTION_STEER_RIGHT, GLOBAL_ACTION_BINDINGS);
+            actionBindings.use(ACTION_CHEAT_EAT_ALL_PELLETS, GLOBAL_ACTION_BINDINGS);
+            actionBindings.use(ACTION_CHEAT_ADD_LIVES, GLOBAL_ACTION_BINDINGS);
+            actionBindings.use(ACTION_CHEAT_ENTER_NEXT_LEVEL, GLOBAL_ACTION_BINDINGS);
+            actionBindings.use(ACTION_CHEAT_KILL_GHOSTS, GLOBAL_ACTION_BINDINGS);
             actionBindings.updateKeyboard();
         }
         if (gameRenderer == null) { //TODO can this happen at all?

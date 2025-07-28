@@ -20,10 +20,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_MapRepository;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.*;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.*;
-import de.amr.pacmanfx.ui.GameAction;
-import de.amr.pacmanfx.ui.GameScene;
-import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GameUI_Config;
+import de.amr.pacmanfx.ui.*;
 import de.amr.pacmanfx.ui.sound.DefaultSoundManager;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
@@ -40,17 +37,15 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.ActionBindingMap.createActionBinding;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
 import static de.amr.pacmanfx.uilib.Ufx.toggle;
@@ -191,21 +186,21 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         }
     };
 
-    public final Map<GameAction, Set<KeyCombination>> TENGEN_MS_PACMAN_ACTION_BINDINGS;
+    public final List<ActionBinding> TENGEN_MS_PACMAN_ACTION_BINDINGS;
 
     public TengenMsPacMan_UIConfig(GameUI ui) {
         this.ui = requireNonNull(ui);
-        TENGEN_MS_PACMAN_ACTION_BINDINGS = Map.ofEntries(
-            createActionBinding(ACTION_STEER_UP,            ui.theJoypad().key(JoypadButton.UP),    control(KeyCode.UP)),
-            createActionBinding(ACTION_STEER_DOWN,          ui.theJoypad().key(JoypadButton.DOWN),  control(KeyCode.DOWN)),
-            createActionBinding(ACTION_STEER_LEFT,          ui.theJoypad().key(JoypadButton.LEFT),  control(KeyCode.LEFT)),
-            createActionBinding(ACTION_STEER_RIGHT,         ui.theJoypad().key(JoypadButton.RIGHT), control(KeyCode.RIGHT)),
-            createActionBinding(ACTION_QUIT_DEMO_LEVEL,     ui.theJoypad().key(JoypadButton.START)),
-            createActionBinding(ACTION_ENTER_START_SCREEN,  ui.theJoypad().key(JoypadButton.START)),
-            createActionBinding(ACTION_START_PLAYING,       ui.theJoypad().key(JoypadButton.START)),
-            createActionBinding(ACTION_TOGGLE_PAC_BOOSTER,  ui.theJoypad().key(JoypadButton.A), ui.theJoypad().key(JoypadButton.B)),
-            createActionBinding(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, alt(KeyCode.C)),
-            createActionBinding(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, nude(KeyCode.SPACE))
+        TENGEN_MS_PACMAN_ACTION_BINDINGS = List.of(
+            new ActionBinding(ACTION_STEER_UP,            ui.theJoypad().key(JoypadButton.UP),    control(KeyCode.UP)),
+            new ActionBinding(ACTION_STEER_DOWN,          ui.theJoypad().key(JoypadButton.DOWN),  control(KeyCode.DOWN)),
+            new ActionBinding(ACTION_STEER_LEFT,          ui.theJoypad().key(JoypadButton.LEFT),  control(KeyCode.LEFT)),
+            new ActionBinding(ACTION_STEER_RIGHT,         ui.theJoypad().key(JoypadButton.RIGHT), control(KeyCode.RIGHT)),
+            new ActionBinding(ACTION_QUIT_DEMO_LEVEL,     ui.theJoypad().key(JoypadButton.START)),
+            new ActionBinding(ACTION_ENTER_START_SCREEN,  ui.theJoypad().key(JoypadButton.START)),
+            new ActionBinding(ACTION_START_PLAYING,       ui.theJoypad().key(JoypadButton.START)),
+            new ActionBinding(ACTION_TOGGLE_PAC_BOOSTER,  ui.theJoypad().key(JoypadButton.A), ui.theJoypad().key(JoypadButton.B)),
+            new ActionBinding(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, alt(KeyCode.C)),
+            new ActionBinding(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, nude(KeyCode.SPACE))
         );
     }
 

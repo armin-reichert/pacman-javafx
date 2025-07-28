@@ -76,11 +76,11 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     public void doInit() {
         gameContext().theGame().theHUD().credit(true).score(true).livesCounter(false).levelCounter(true);
 
-        actionBindings.bind(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDINGS);
-        actionBindings.bind(ACTION_ARCADE_START_GAME, GLOBAL_ACTION_BINDINGS);
-        actionBindings.bind(ACTION_TEST_CUT_SCENES, GLOBAL_ACTION_BINDINGS);
-        actionBindings.bind(ACTION_TEST_LEVELS_BONI, GLOBAL_ACTION_BINDINGS);
-        actionBindings.bind(ACTION_TEST_LEVELS_TEASERS, GLOBAL_ACTION_BINDINGS);
+        actionBindings.use(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDINGS);
+        actionBindings.use(ACTION_ARCADE_START_GAME, GLOBAL_ACTION_BINDINGS);
+        actionBindings.use(ACTION_TEST_CUT_SCENES, GLOBAL_ACTION_BINDINGS);
+        actionBindings.use(ACTION_TEST_LEVELS_BONI, GLOBAL_ACTION_BINDINGS);
+        actionBindings.use(ACTION_TEST_LEVELS_TEASERS, GLOBAL_ACTION_BINDINGS);
 
         blinking = new Pulse(10, true);
         pacMan = createPac(null);

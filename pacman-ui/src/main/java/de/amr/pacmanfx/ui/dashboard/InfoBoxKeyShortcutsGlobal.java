@@ -1,3 +1,7 @@
+/*
+Copyright (c) 2021-2025 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.pacmanfx.ui.dashboard;
 
 import de.amr.pacmanfx.ui.ActionBindingMap;
@@ -24,7 +28,9 @@ public class InfoBoxKeyShortcutsGlobal extends InfoBox {
             addRow(createLabel(NO_INFO, false));
         }
         else {
-            actionBindingMap.entrySet().stream().sorted(Comparator.comparing(e -> e.getKey().getDisplayText())).forEach(entry -> {
+            actionBindingMap.actionByCombination().entrySet().stream()
+                    .sorted(Comparator.comparing(e -> e.getKey().getDisplayText()))
+                    .forEach(entry -> {
                 KeyCombination keyCombination = entry.getKey();
                 GameAction action = entry.getValue();
                 String localizedActionText = ui.theAssets().text(action.name());
