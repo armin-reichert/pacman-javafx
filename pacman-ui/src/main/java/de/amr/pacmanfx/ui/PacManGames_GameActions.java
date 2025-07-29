@@ -25,6 +25,8 @@ import static de.amr.pacmanfx.Validations.isOneOf;
 import static de.amr.pacmanfx.controller.GameState.INTRO;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
+import static de.amr.pacmanfx.ui.GameUI_Config.SCENE_ID_PLAY_SCENE_2D;
+import static de.amr.pacmanfx.ui.GameUI_Config.SCENE_ID_PLAY_SCENE_3D;
 import static de.amr.pacmanfx.uilib.Ufx.toggle;
 
 /**
@@ -550,7 +552,7 @@ public interface PacManGames_GameActions {
         public void execute(GameUI ui) {
             ui.currentGameScene().ifPresent(gameScene -> {
                 toggle(ui.property3DEnabled());
-                if (ui.isCurrentGameSceneID("PlayScene2D") || ui.isCurrentGameSceneID("PlayScene3D")) {
+                if (ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_2D) || ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)) {
                     ui.updateGameScene(true);
                     ui.theGameContext().theGameController().updateGameState(); //TODO needed?
                 }
@@ -578,7 +580,7 @@ public interface PacManGames_GameActions {
         @Override
         public void execute(GameUI ui) {
             toggle(ui.propertyMiniViewOn());
-            if (!ui.isCurrentGameSceneID("PlayScene3D")) {
+            if (!ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)) {
                 ui.showFlashMessage(ui.theAssets().text(ui.propertyMiniViewOn().get() ? "pip_on" : "pip_off"));
             }
         }

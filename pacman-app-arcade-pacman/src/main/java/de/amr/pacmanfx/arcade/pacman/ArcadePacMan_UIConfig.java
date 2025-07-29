@@ -232,22 +232,22 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
 
     @Override
     public void createGameScenes(GameUI ui) {
-        scenesByID.put("BootScene",   new ArcadeCommon_BootScene2D(ui));
-        scenesByID.put("IntroScene",  new ArcadePacMan_IntroScene(ui));
-        scenesByID.put("StartScene",  new ArcadePacMan_StartScene(ui));
-        scenesByID.put("PlayScene2D", new ArcadeCommon_PlayScene2D(ui));
-        scenesByID.put("PlayScene3D", new PlayScene3D(ui));
-        scenesByID.put("CutScene1",   new ArcadePacMan_CutScene1(ui));
-        scenesByID.put("CutScene2",   new ArcadePacMan_CutScene2(ui));
-        scenesByID.put("CutScene3",   new ArcadePacMan_CutScene3(ui));
+        scenesByID.put(SCENE_ID_BOOT_SCENE_2D,   new ArcadeCommon_BootScene2D(ui));
+        scenesByID.put(SCENE_ID_INTRO_SCENE_2D,  new ArcadePacMan_IntroScene(ui));
+        scenesByID.put(SCENE_ID_START_SCENE_2D,  new ArcadePacMan_StartScene(ui));
+        scenesByID.put(SCENE_ID_PLAY_SCENE_2D, new ArcadeCommon_PlayScene2D(ui));
+        scenesByID.put(SCENE_ID_PLAY_SCENE_3D, new PlayScene3D(ui));
+        scenesByID.put(SCENE_ID_CUT_SCENE_1_2D,   new ArcadePacMan_CutScene1(ui));
+        scenesByID.put(SCENE_ID_CUT_SCENE_2_2D,   new ArcadePacMan_CutScene2(ui));
+        scenesByID.put(SCENE_ID_CUT_SCENE_3_2D,   new ArcadePacMan_CutScene3(ui));
     }
 
     @Override
     public GameScene selectGameScene(GameContext gameContext) {
         String sceneID = switch (gameContext.theGameState()) {
-            case GameState.BOOT               -> "BootScene";
-            case GameState.SETTING_OPTIONS_FOR_START -> "StartScene";
-            case GameState.INTRO              -> "IntroScene";
+            case GameState.BOOT               -> SCENE_ID_BOOT_SCENE_2D;
+            case GameState.SETTING_OPTIONS_FOR_START -> SCENE_ID_START_SCENE_2D;
+            case GameState.INTRO              -> SCENE_ID_INTRO_SCENE_2D;
             case GameState.INTERMISSION       -> {
                 if (gameContext.optGameLevel().isEmpty()) {
                     throw new IllegalStateException("Cannot determine cut scene, no game level available");
@@ -259,7 +259,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
                 yield "CutScene" + gameContext.theGame().cutSceneNumber(levelNumber).getAsInt();
             }
             case GameState.TESTING_CUT_SCENES -> "CutScene" + gameContext.theGame().<Integer>getProperty("intermissionTestNumber");
-            default -> ui.property3DEnabled().get() ?  "PlayScene3D" : "PlayScene2D";
+            default -> ui.property3DEnabled().get() ?  SCENE_ID_PLAY_SCENE_3D : SCENE_ID_PLAY_SCENE_2D;
         };
         return scenesByID.get(sceneID);
     }

@@ -43,6 +43,8 @@ import java.util.List;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.GameUI.DEFAULT_ACTION_BINDINGS;
+import static de.amr.pacmanfx.ui.GameUI_Config.SCENE_ID_PLAY_SCENE_2D;
+import static de.amr.pacmanfx.ui.GameUI_Config.SCENE_ID_PLAY_SCENE_3D;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.uilib.Ufx.border;
 import static de.amr.pacmanfx.uilib.Ufx.colorBackground;
@@ -155,7 +157,7 @@ public class PlayView implements PacManGames_View {
     private void handleContextMenuRequest(ContextMenuEvent contextMenuEvent) {
         contextMenu.getItems().clear();
         ui.currentGameScene().ifPresent(gameScene -> {
-            if (ui.isCurrentGameSceneID("PlayScene2D")) {
+            if (ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_2D)) {
                 var miSwitchTo3D = new MenuItem(ui.theAssets().text("use_3D_scene"));
                 miSwitchTo3D.setOnAction(e -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(ui));
                 contextMenu.getItems().add(ui.createContextMenuTitle("scene_display"));
@@ -224,7 +226,7 @@ public class PlayView implements PacManGames_View {
             }
         });
 
-        if (miniGameView.isVisible() && ui.isCurrentGameSceneID("PlayScene3D") && gameContext.optGameLevel().isPresent()) {
+        if (miniGameView.isVisible() && ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D) && gameContext.optGameLevel().isPresent()) {
             miniGameView.draw(ui, gameContext.theGameLevel());
         }
         flashMessageLayer.update();
@@ -368,7 +370,7 @@ public class PlayView implements PacManGames_View {
         miniGameView.canvasHeightProperty().bind(ui.propertyMiniViewHeight());
         miniGameView.opacityProperty().bind(ui.propertyMiniViewOpacityPercent().divide(100.0));
         miniGameView.visibleProperty().bind(Bindings.createObjectBinding(
-            () -> ui.propertyMiniViewOn().get() && ui.isCurrentGameSceneID("PlayScene3D"),
+            () -> ui.propertyMiniViewOn().get() && ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D),
                 ui.propertyMiniViewOn(), ui.propertyCurrentGameScene()
         ));
     }

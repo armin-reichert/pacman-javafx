@@ -41,6 +41,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.ui.GameUI_Config.SCENE_ID_PLAY_SCENE_3D;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -120,7 +121,7 @@ public class PacManGames_UI_Impl implements GameUI {
 
         rootPane = new StackPane();
         rootPane.backgroundProperty().bind(propertyCurrentGameScene().map(gameScene ->
-            isCurrentGameSceneID("PlayScene3D") ? theAssets().get("background.play_scene3d") : theAssets().get("background.scene"))
+            isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D) ? theAssets().get("background.play_scene3d") : theAssets().get("background.scene"))
         );
 
         createMainScene(width, height);
