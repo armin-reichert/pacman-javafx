@@ -42,7 +42,7 @@ import org.tinylog.Logger;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.GameUI.GLOBAL_ACTION_BINDINGS;
+import static de.amr.pacmanfx.ui.GameUI.GAME_ACTION_KEY_COMBINATIONS;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.uilib.Ufx.border;
 import static de.amr.pacmanfx.uilib.Ufx.colorBackground;
@@ -128,23 +128,23 @@ public class PlayView implements PacManGames_View {
             parentScene.heightProperty(),
             ui.propertyCurrentGameScene()
         );
-        actionBindings.use(ACTION_BOOT_SHOW_PLAY_VIEW, GLOBAL_ACTION_BINDINGS);
-        actionBindings.use(ACTION_ENTER_FULLSCREEN, GLOBAL_ACTION_BINDINGS);
-        actionBindings.use(ACTION_QUIT_GAME_SCENE, GLOBAL_ACTION_BINDINGS);
-        actionBindings.use(ACTION_SHOW_HELP, GLOBAL_ACTION_BINDINGS);
-        actionBindings.use(ACTION_SIMULATION_SLOWER, GLOBAL_ACTION_BINDINGS);
-        actionBindings.use(ACTION_SIMULATION_FASTER, GLOBAL_ACTION_BINDINGS);
-        actionBindings.use(ACTION_SIMULATION_RESET, GLOBAL_ACTION_BINDINGS);
-        actionBindings.use(ACTION_SIMULATION_ONE_STEP, GLOBAL_ACTION_BINDINGS);
-        actionBindings.use(ACTION_SIMULATION_TEN_STEPS, GLOBAL_ACTION_BINDINGS);
-        actionBindings.use(ACTION_TOGGLE_AUTOPILOT, GLOBAL_ACTION_BINDINGS);
-        actionBindings.use(ACTION_TOGGLE_DEBUG_INFO, GLOBAL_ACTION_BINDINGS);
-        actionBindings.use(ACTION_TOGGLE_MUTED, GLOBAL_ACTION_BINDINGS);
-        actionBindings.use(ACTION_TOGGLE_PAUSED, GLOBAL_ACTION_BINDINGS);
-        actionBindings.use(ACTION_TOGGLE_DASHBOARD, GLOBAL_ACTION_BINDINGS);
-        actionBindings.use(ACTION_TOGGLE_IMMUNITY, GLOBAL_ACTION_BINDINGS);
-        actionBindings.use(ACTION_TOGGLE_PIP_VISIBILITY, GLOBAL_ACTION_BINDINGS);
-        actionBindings.use(ACTION_TOGGLE_PLAY_SCENE_2D_3D, GLOBAL_ACTION_BINDINGS);
+        actionBindings.use(ACTION_BOOT_SHOW_PLAY_VIEW, GAME_ACTION_KEY_COMBINATIONS);
+        actionBindings.use(ACTION_ENTER_FULLSCREEN, GAME_ACTION_KEY_COMBINATIONS);
+        actionBindings.use(ACTION_QUIT_GAME_SCENE, GAME_ACTION_KEY_COMBINATIONS);
+        actionBindings.use(ACTION_SHOW_HELP, GAME_ACTION_KEY_COMBINATIONS);
+        actionBindings.use(ACTION_SIMULATION_SLOWER, GAME_ACTION_KEY_COMBINATIONS);
+        actionBindings.use(ACTION_SIMULATION_FASTER, GAME_ACTION_KEY_COMBINATIONS);
+        actionBindings.use(ACTION_SIMULATION_RESET, GAME_ACTION_KEY_COMBINATIONS);
+        actionBindings.use(ACTION_SIMULATION_ONE_STEP, GAME_ACTION_KEY_COMBINATIONS);
+        actionBindings.use(ACTION_SIMULATION_TEN_STEPS, GAME_ACTION_KEY_COMBINATIONS);
+        actionBindings.use(ACTION_TOGGLE_AUTOPILOT, GAME_ACTION_KEY_COMBINATIONS);
+        actionBindings.use(ACTION_TOGGLE_DEBUG_INFO, GAME_ACTION_KEY_COMBINATIONS);
+        actionBindings.use(ACTION_TOGGLE_MUTED, GAME_ACTION_KEY_COMBINATIONS);
+        actionBindings.use(ACTION_TOGGLE_PAUSED, GAME_ACTION_KEY_COMBINATIONS);
+        actionBindings.use(ACTION_TOGGLE_DASHBOARD, GAME_ACTION_KEY_COMBINATIONS);
+        actionBindings.use(ACTION_TOGGLE_IMMUNITY, GAME_ACTION_KEY_COMBINATIONS);
+        actionBindings.use(ACTION_TOGGLE_PIP_VISIBILITY, GAME_ACTION_KEY_COMBINATIONS);
+        actionBindings.use(ACTION_TOGGLE_PLAY_SCENE_2D_3D, GAME_ACTION_KEY_COMBINATIONS);
     }
 
     private void handleGameSceneChange(ObservableValue<? extends GameScene> obs, GameScene oldScene, GameScene newScene) {
@@ -201,7 +201,6 @@ public class PlayView implements PacManGames_View {
     // -----------------------------------------------------------------------------------------------------------------
     // PacManGames_View interface implementation
     // -----------------------------------------------------------------------------------------------------------------
-
 
     @Override
     public ActionBindingMap actionBindingMap() {

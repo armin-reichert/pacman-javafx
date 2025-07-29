@@ -41,8 +41,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_ENTER_FULLSCREEN;
-import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_TOGGLE_MUTED;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -97,6 +95,8 @@ public class PacManGames_UI_Impl implements GameUI {
     private final PlayView playView;
     private       EditorView editorView; // created on first access
 
+    private final ActionBindingMap globalActionBindings;
+
     public PacManGames_UI_Impl(GameContext gameContext, Stage stage, double width, double height) {
         requireNonNull(gameContext);
         requireNonNull(stage);
@@ -111,6 +111,10 @@ public class PacManGames_UI_Impl implements GameUI {
         theJoypad = new Joypad(theKeyboard);
         thePrefs = new PreferenceManager(PacManGames_UI_Impl.class);
         theStage = stage;
+
+        globalActionBindings = new ActionBindingMap(theKeyboard);
+        GAME_ACTION_KEY_COMBINATIONS.forEach(globalActionBindings::addBinding);
+        globalActionBindings.updateKeyboard();
 
         initPreferences();
 
@@ -183,21 +187,8 @@ public class PacManGames_UI_Impl implements GameUI {
         mainScene = new Scene(rootPane, width, height);
         mainScene.addEventFilter(KeyEvent.KEY_PRESSED, theKeyboard::onKeyPressed);
         mainScene.addEventFilter(KeyEvent.KEY_RELEASED, theKeyboard::onKeyReleased);
-        //TODO should I use key binding for global actions too?
-        mainScene.setOnKeyPressed(e -> {
-            if (KEY_FULLSCREEN.match(e)) {
-                ACTION_ENTER_FULLSCREEN.execute(this);
-            }
-            else if (KEY_MUTE.match(e)) {
-                ACTION_TOGGLE_MUTED.execute(this);
-            }
-            else if (KEY_OPEN_EDITOR.match(e)) {
-                showEditorView();
-            }
-            else {
-                currentView().handleKeyboardInput(this);
-            }
-        });
+        mainScene.setOnKeyPressed(e -> globalActionBindings.runMatchingActionOrElse(this,
+                () -> currentView().handleKeyboardInput(this)));
     }
 
     private void createStatusIcons() {

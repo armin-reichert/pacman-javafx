@@ -34,7 +34,7 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static de.amr.pacmanfx.model.actors.GhostState.EATEN;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
-import static de.amr.pacmanfx.ui.GameUI.GLOBAL_ACTION_BINDINGS;
+import static de.amr.pacmanfx.ui.GameUI.GAME_ACTION_KEY_COMBINATIONS;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
 
@@ -76,11 +76,11 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     public void doInit() {
         gameContext().theGame().theHUD().credit(true).score(true).livesCounter(false).levelCounter(true);
 
-        actionBindings.use(ACTION_ARCADE_INSERT_COIN, GLOBAL_ACTION_BINDINGS);
-        actionBindings.use(ACTION_ARCADE_START_GAME, GLOBAL_ACTION_BINDINGS);
-        actionBindings.use(ACTION_TEST_CUT_SCENES, GLOBAL_ACTION_BINDINGS);
-        actionBindings.use(ACTION_TEST_LEVELS_BONI, GLOBAL_ACTION_BINDINGS);
-        actionBindings.use(ACTION_TEST_LEVELS_TEASERS, GLOBAL_ACTION_BINDINGS);
+        actionBindings.use(ACTION_ARCADE_INSERT_COIN, GAME_ACTION_KEY_COMBINATIONS);
+        actionBindings.use(ACTION_ARCADE_START_GAME, GAME_ACTION_KEY_COMBINATIONS);
+        actionBindings.use(ACTION_TEST_CUT_SCENES, GAME_ACTION_KEY_COMBINATIONS);
+        actionBindings.use(ACTION_TEST_LEVELS_BONI, GAME_ACTION_KEY_COMBINATIONS);
+        actionBindings.use(ACTION_TEST_LEVELS_TEASERS, GAME_ACTION_KEY_COMBINATIONS);
 
         blinking = new Pulse(10, true);
         pacMan = createPac(null);

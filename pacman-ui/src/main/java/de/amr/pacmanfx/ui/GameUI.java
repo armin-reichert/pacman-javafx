@@ -21,7 +21,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.text.Font;
@@ -38,12 +37,7 @@ public interface GameUI {
 
     static GameUI theUI() { return PacManGames_UI_Impl.THE_ONE; }
 
-    // Global key combinations and action bindings
-    KeyCombination KEY_FULLSCREEN  = nude(KeyCode.F11);
-    KeyCombination KEY_MUTE        = alt(KeyCode.M);
-    KeyCombination KEY_OPEN_EDITOR = alt_shift(KeyCode.E);
-
-    List<ActionBinding> GLOBAL_ACTION_BINDINGS = List.of(
+    List<ActionBinding> GAME_ACTION_KEY_COMBINATIONS = List.of(
         new ActionBinding(ACTION_ARCADE_INSERT_COIN,      nude(KeyCode.DIGIT5), nude(KeyCode.NUMPAD5)),
         new ActionBinding(ACTION_ARCADE_START_GAME,       nude(KeyCode.DIGIT1), nude(KeyCode.NUMPAD1)),
         new ActionBinding(ACTION_BOOT_SHOW_PLAY_VIEW,     nude(KeyCode.F3)),
@@ -52,6 +46,7 @@ public interface GameUI {
         new ActionBinding(ACTION_CHEAT_ENTER_NEXT_LEVEL,  alt(KeyCode.N)),
         new ActionBinding(ACTION_CHEAT_KILL_GHOSTS,       alt(KeyCode.X)),
         new ActionBinding(ACTION_ENTER_FULLSCREEN,        nude(KeyCode.F11)),
+        new ActionBinding(ACTION_OPEN_EDITOR,             alt_shift(KeyCode.E)),
         new ActionBinding(ACTION_PERSPECTIVE_PREVIOUS,    alt(KeyCode.LEFT)),
         new ActionBinding(ACTION_PERSPECTIVE_NEXT,        alt(KeyCode.RIGHT)),
         new ActionBinding(ACTION_SHOW_HELP,               nude(KeyCode.H)),

@@ -73,6 +73,12 @@ public class ActionBindingMap {
         Logger.info("Key bindings removed");
     }
 
+    public void addBinding(ActionBinding actionBinding) {
+        for (KeyCombination combination : actionBinding.keyCombinations()) {
+            bind(actionBinding.gameAction(), combination);
+        }
+    }
+
     public void bind(GameAction action, KeyCombination combination) {
         requireNonNull(action);
         requireNonNull(combination);

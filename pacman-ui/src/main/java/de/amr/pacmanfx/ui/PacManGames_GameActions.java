@@ -98,6 +98,18 @@ public interface PacManGames_GameActions {
         }
     };
 
+    GameAction ACTION_OPEN_EDITOR = new GameAction() {
+        @Override
+        public void execute(GameUI ui) {
+            ui.showEditorView();
+        }
+
+        @Override
+        public boolean isEnabled(GameUI ui) {
+            return ui.currentView() == ui.thePlayView() || ui.currentView() == ui.theStartPagesView();
+        }
+    };
+
     GameAction ACTION_LET_GAME_STATE_EXPIRE = new GameAction() {
         @Override
         public void execute(GameUI ui) {
