@@ -230,7 +230,6 @@ public class GameLevel3D implements Disposable {
         this.gameLevel = requireNonNull(ui.theGameContext().theGameLevel());
 
         wallOpacityProperty.bind(ui.property3DWallOpacity());
-//        wallOpacityProperty.addListener((p,o,n) -> Logger.info("Wall opacity: {}", wallOpacityProperty.get()));
 
         wallBaseHeightProperty.bind(ui.property3DWallHeight());
         houseBaseHeightProperty.set(ui.thePrefs().getFloat("3d.house.base_height"));
@@ -504,6 +503,10 @@ public class GameLevel3D implements Disposable {
             maze3D.getChildren().add(house3D);
         });
     }
+
+    private float floorTopZ() {
+        return (float) (floor3D.getTranslateZ() - 0.5 * floor3D.getDepth());
+    }
     private boolean isWorldBorder(WorldMap worldMap, Obstacle obstacle) {
         Vector2i start = obstacle.startPoint();
         if (obstacle.isClosed()) {
@@ -511,6 +514,68 @@ public class GameLevel3D implements Disposable {
         } else {
             return start.x() == 0 || start.x() == worldMap.numCols() * TS;
         }
+    }
+
+    private void createPellets3D() {
+        Mesh pelletMesh = ui.theAssets().theModel3DRepository().pelletMesh();
+        float radius = ui.thePrefs().getFloat("3d.pellet.radius");
+        var protoMeshView = new MeshView(pelletMesh);
+        Bounds bounds = protoMeshView.getBoundsInLocal();
+        double meshExtent = Math.max(Math.max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());
+        double scaling = (2 * radius) / meshExtent;
+        var scale = new Scale(scaling, scaling, scaling);
+        gameLevel.tilesContainingFood().filter(tile -> !gameLevel.isEnergizerPosition(tile)).forEach(tile -> {
+            var meshView = new MeshView(pelletMesh);
+            meshView.setMaterial(pelletMaterial);
+            meshView.setRotationAxis(Rotate.Z_AXIS);
+            meshView.setRotate(90);
+            meshView.setTranslateX(tile.x() * TS + HTS);
+            meshView.setTranslateY(tile.y() * TS + HTS);
+            meshView.setTranslateZ(-(floorTopZ() + 6));
+            meshView.getTransforms().add(scale);
+            Pellet3D pellet3D = new Pellet3D(meshView);
+            pellet3D.setTile(tile);
+            pellets3D.add(pellet3D);
+        });
+        pellets3D.trimToSize();
+    }
+
+    private void createEnergizers3D() {
+        float radius         = ui.thePrefs().getFloat("3d.energizer.radius");
+        float floorThickness = ui.thePrefs().getFloat("3d.floor.thickness");
+        float minScaling     = ui.thePrefs().getFloat("3d.energizer.scaling.min");
+        float maxScaling     = ui.thePrefs().getFloat("3d.energizer.scaling.max");
+        gameLevel.tilesContainingFood().filter(gameLevel::isEnergizerPosition).forEach(tile -> {
+            Energizer3D energizer3D = createEnergizer3D(tile, radius, floorThickness, minScaling, maxScaling);
+            energizers3D.add(energizer3D);
+        });
+        energizers3D.trimToSize();
+    }
+
+    private Energizer3D createEnergizer3D(Vector2i tile, float energizerRadius, float floorThickness, float minScaling, float maxScaling) {
+        float x = tile.x() * TS + HTS;
+        float y = tile.y() * TS + HTS;
+        float z = floorTopZ() - 2 * energizerRadius;
+        Point3D center = new Point3D(x, y, z);
+        var energizer3D = new Energizer3D(animationRegistry, energizerRadius, minScaling, maxScaling, pelletMaterial);
+        energizer3D.setTile(tile);
+        energizer3D.node().setTranslateX(x);
+        energizer3D.node().setTranslateY(y);
+        energizer3D.node().setTranslateZ(z);
+        var explosion = new Explosion(animationRegistry, center, particleGroupsContainer, particleMaterial,
+            particle -> particleReachedFloor(particle, floorThickness));
+        energizer3D.setEatenAnimation(explosion);
+
+        return energizer3D;
+    }
+
+    private boolean particleReachedFloor(Explosion.Particle particle, float floorThickness) {
+        Point3D pos = particle.position();
+        double particleBottomZ = pos.getZ() + particle.getRadius();
+        boolean onFloorZ = particleBottomZ + 1 >= floorTopZ();
+        double width  = gameLevel.worldMap().numCols() * TS;
+        double height = (gameLevel.worldMap().numRows() - 1) * TS; //TODO if 1 is not subtracted, some particles look wrong
+        return onFloorZ && 0 <= pos.getX() && pos.getX() < width && 0 <= pos.getY() && pos.getY() < height;
     }
 
     public PacBase3D pac3D() { return pac3D; }
@@ -643,67 +708,6 @@ public class GameLevel3D implements Disposable {
         if (!gameLevel.isDemoLevel() && inOneOf4Cases) {
             ui.showFlashMessageSec(2.5, ui.theAssets().localizedGameOverMessage());
         }
-    }
-
-    private void createPellets3D() {
-        Mesh pelletMesh = ui.theAssets().theModel3DRepository().pelletMesh();
-        float radius = ui.thePrefs().getFloat("3d.pellet.radius");
-        var protoMeshView = new MeshView(pelletMesh);
-        Bounds bounds = protoMeshView.getBoundsInLocal();
-        double meshExtent = Math.max(Math.max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());
-        double scaling = (2 * radius) / meshExtent;
-        var scale = new Scale(scaling, scaling, scaling);
-        gameLevel.tilesContainingFood().filter(tile -> !gameLevel.isEnergizerPosition(tile)).forEach(tile -> {
-            var meshView = new MeshView(pelletMesh);
-            meshView.setMaterial(pelletMaterial);
-            meshView.setRotationAxis(Rotate.Z_AXIS);
-            meshView.setRotate(90);
-            meshView.setTranslateX(tile.x() * TS + HTS);
-            meshView.setTranslateY(tile.y() * TS + HTS);
-            meshView.setTranslateZ(-6);
-            meshView.getTransforms().add(scale);
-            Pellet3D pellet3D = new Pellet3D(meshView);
-            pellet3D.setTile(tile);
-            pellets3D.add(pellet3D);
-        });
-        pellets3D.trimToSize();
-    }
-
-    private void createEnergizers3D() {
-        float radius         = ui.thePrefs().getFloat("3d.energizer.radius");
-        float floorThickness = ui.thePrefs().getFloat("3d.floor.thickness");
-        float minScaling     = ui.thePrefs().getFloat("3d.energizer.scaling.min");
-        float maxScaling     = ui.thePrefs().getFloat("3d.energizer.scaling.max");
-        gameLevel.tilesContainingFood().filter(gameLevel::isEnergizerPosition).forEach(tile -> {
-            Energizer3D energizer3D = createEnergizer3D(tile, radius, floorThickness, minScaling, maxScaling);
-            energizers3D.add(energizer3D);
-        });
-        energizers3D.trimToSize();
-    }
-
-    private Energizer3D createEnergizer3D(Vector2i tile, float energizerRadius, float floorThickness, float minScaling, float maxScaling) {
-        float x = tile.x() * TS + HTS;
-        float y = tile.y() * TS + HTS;
-        float z = -0.5f * floorThickness - 2 * energizerRadius ;
-        Point3D center = new Point3D(x, y, z);
-        var energizer3D = new Energizer3D(animationRegistry, energizerRadius, minScaling, maxScaling, pelletMaterial);
-        energizer3D.setTile(tile);
-        energizer3D.node().setTranslateX(x);
-        energizer3D.node().setTranslateY(y);
-        energizer3D.node().setTranslateZ(z);
-        var explosion = new Explosion(animationRegistry, center, particleGroupsContainer, particleMaterial,
-            particle -> particleReachedFloor(particle, floorThickness));
-        energizer3D.setEatenAnimation(explosion);
-
-        return energizer3D;
-    }
-
-    private boolean particleReachedFloor(Explosion.Particle particle, float floorThickness) {
-        Point3D pos = particle.position();
-        boolean onFloorZ = pos.getZ() >= (-0.5 * floorThickness - particle.getRadius());
-        double width  = gameLevel.worldMap().numCols() * TS;
-        double height = (gameLevel.worldMap().numRows() - 1) * TS; //TODO if 1 is not subtracted, some particles look wrong
-        return onFloorZ && 0 <= pos.getX() && pos.getX() < width && 0 <= pos.getY() && pos.getY() < height;
     }
 
     public void showAnimatedMessage(String messageText, float displaySeconds, double centerX, double centerY) {

@@ -89,7 +89,7 @@ public class Explosion extends ManagedAnimation {
         protected void interpolate(double t) {
             for (Particle particle : particles) {
                 if (particleAtEndPosition.test(particle)) {
-                    particle.setRadius(0.1); //TODO make something more intelligent
+                    particle.setRadius(0.2); //TODO make something more intelligent
                 } else {
                     particle.move();
                 }
