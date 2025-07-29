@@ -158,7 +158,7 @@ public class PlayView implements PacManGames_View {
             if (ui.currentGameSceneIsPlayScene2D()) {
                 var miSwitchTo3D = new MenuItem(ui.theAssets().text("use_3D_scene"));
                 miSwitchTo3D.setOnAction(e -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(ui));
-                contextMenu.getItems().add(ui.createContextMenuTitleItem(ui.theAssets().text("scene_display")));
+                contextMenu.getItems().add(ui.createContextMenuTitle("scene_display"));
                 contextMenu.getItems().add(miSwitchTo3D);
             }
             List<MenuItem> gameSceneItems = gameScene.supplyContextMenuItems(contextMenuEvent, contextMenu);

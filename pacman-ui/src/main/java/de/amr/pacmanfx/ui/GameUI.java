@@ -142,10 +142,14 @@ public interface GameUI {
 
     void terminate();
 
-    default MenuItem createContextMenuTitleItem(String title) {
+    /**
+     * @param titleKey resource bundle key of title text
+     * @return CustomMenuItem representing a context menu title item
+     */
+    default MenuItem createContextMenuTitle(String titleKey) {
         Font font = thePrefs().getFont("context_menu.title.font");
         Color fillColor = thePrefs().getColor("context_menu.title.fill");
-        var text = new Text(title);
+        var text = new Text(theAssets().text(titleKey));
         text.setFont(font);
         text.setFill(fillColor);
         return new CustomMenuItem(text);

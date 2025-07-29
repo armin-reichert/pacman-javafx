@@ -125,7 +125,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
         miQuit.setOnAction(e -> ACTION_QUIT_GAME_SCENE.executeIfEnabled(ui));
 
         return List.of(
-            ui.createContextMenuTitleItem(ui.theAssets().text("pacman")),
+            ui.createContextMenuTitle("pacman"),
             miAutopilot,
             miImmunity,
             new SeparatorMenuItem(),
