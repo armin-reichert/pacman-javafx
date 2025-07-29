@@ -711,11 +711,11 @@ public class GameLevel3D implements Disposable {
             root.getChildren().remove(messageView);
         }
         messageView = MessageView.builder()
-            .displaySeconds(displaySeconds)
             .borderColor(Color.WHITE)
-            .textColor(Color.YELLOW)
+            .displaySeconds(displaySeconds)
             .font(ui.theAssets().arcadeFont(6))
             .text(messageText)
+            .textColor(Color.YELLOW)
             .build(animationRegistry);
         root.getChildren().add(messageView);
         messageView.showCenteredAt(centerX, centerY);

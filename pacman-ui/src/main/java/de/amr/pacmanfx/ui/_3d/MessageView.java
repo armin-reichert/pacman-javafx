@@ -16,6 +16,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
@@ -26,10 +27,16 @@ public class MessageView extends ImageView implements Disposable {
 
     public static class Builder {
         private Color borderColor = Color.BLUE;
+        private Color backgroundColor = Color.grayRgb(88);
         private float displaySeconds = 2;
-        private Font font = Font.font(16);
+        private Font font = Font.font("SansSerif", FontWeight.BOLD, 10);
         private Color textColor = Color.WHITE;
         private String text = "Hello, World!";
+
+        public Builder backgroundColor(Color color) {
+            backgroundColor = requireNonNull(color);
+            return this;
+        }
 
         public Builder borderColor(Color color) {
             borderColor = requireNonNull(color);
@@ -68,12 +75,13 @@ public class MessageView extends ImageView implements Disposable {
     private static final int MARGIN = 3;
     private static final int QUALITY = 3;
 
-    private static Image createImage(double width, double height, String text, Font font, Color textColor, Color borderColor) {
+    private static Image createImage(double width, double height, String text, Font font,
+                                     Color backgroundColor, Color textColor, Color borderColor) {
         var canvas = new Canvas(width * QUALITY, height * QUALITY);
         double canvasFontSize = font.getSize() * QUALITY;
         var g = canvas.getGraphicsContext2D();
         g.setImageSmoothing(false);
-        g.setFill(Color.BLACK);
+        g.setFill(backgroundColor);
         g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         g.setStroke(borderColor);
         g.setLineWidth(5);
@@ -120,7 +128,8 @@ public class MessageView extends ImageView implements Disposable {
         dummy.setFont(builder.font);
         double width = dummy.getLayoutBounds().getWidth() + MARGIN;
         double height = dummy.getLayoutBounds().getHeight() + MARGIN;
-        Image image = createImage(width, height, builder.text, builder.font, builder.textColor, builder.borderColor);
+        Image image = createImage(width, height, builder.text, builder.font,
+            builder.backgroundColor, builder.textColor, builder.borderColor);
         setImage(image);
         setFitWidth(width);
         setFitHeight(height);
