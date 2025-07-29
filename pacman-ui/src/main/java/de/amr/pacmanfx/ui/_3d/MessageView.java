@@ -19,6 +19,8 @@ import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
+import javax.swing.*;
+
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -59,16 +61,7 @@ public class MessageView extends ImageView implements Disposable {
         }
 
         public MessageView build(AnimationRegistry animationRegistry) {
-            MessageView message = new MessageView(animationRegistry);
-            double width = text.length() * font.getSize() + MARGIN;
-            double height = font.getSize() + MARGIN;
-            message.setDisplaySeconds(displaySeconds);
-            message.setImage(createImage(width, height, text, font, textColor, borderColor));
-            message.setFitWidth(width);
-            message.setFitHeight(height);
-            message.setRotationAxis(Rotate.X_AXIS);
-            message.setRotate(90);
-            return message;
+            return new MessageView(animationRegistry, this);
         }
     }
 
@@ -105,6 +98,11 @@ public class MessageView extends ImageView implements Disposable {
         }
 
         @Override
+        protected void freeResources() {
+            messageView = null;
+        }
+
+        @Override
         protected Animation createAnimationFX() {
             double hiddenZ = messageView.hiddenZPosition();
             double visibleZ = -(hiddenZ + 2);
@@ -126,20 +124,34 @@ public class MessageView extends ImageView implements Disposable {
         return 0.5 * getBoundsInLocal().getHeight();
     }
 
-    private ManagedAnimation movementAnimation;
-    private float displaySeconds = 2;
+    private ManagedAnimation moveInOutAnimation;
+    private float displaySeconds;
 
-    private MessageView(AnimationRegistry animationRegistry) {
-        movementAnimation = new MovementAnimation(animationRegistry, this);
+    private MessageView(AnimationRegistry animationRegistry, Builder builder) {
+        double width = builder.text.length() * builder.font.getSize() + MARGIN;
+        double height = builder.font.getSize() + MARGIN;
+        displaySeconds = builder.displaySeconds;
+        setImage(createImage(width, height, builder.text, builder.font, builder.textColor, builder.borderColor));
+        setFitWidth(width);
+        setFitHeight(height);
+        setRotationAxis(Rotate.X_AXIS);
+        setRotate(90);
+        moveInOutAnimation = new MovementAnimation(animationRegistry, this);
     }
 
     @Override
     public void dispose() {
-        if (movementAnimation != null) {
-            movementAnimation.stop();
-            movementAnimation.dispose();
-            movementAnimation = null;
+        if (moveInOutAnimation != null) {
+            moveInOutAnimation.dispose();
+            moveInOutAnimation = null;
         }
+    }
+
+    public void showCenteredAt(double centerX, double centerY) {
+        setTranslateX(centerX - 0.5 * getFitWidth());
+        setTranslateY(centerY);
+        setTranslateZ(hiddenZPosition());
+        moveInOutAnimation.playFromStart();
     }
 
     public void setDisplaySeconds(float sec) {
@@ -148,12 +160,5 @@ public class MessageView extends ImageView implements Disposable {
 
     public float displaySeconds() {
         return displaySeconds;
-    }
-
-    public void showCenteredAt(double centerX, double centerY) {
-        setTranslateX(centerX - 0.5 * getFitWidth());
-        setTranslateY(centerY);
-        setTranslateZ(hiddenZPosition());
-        movementAnimation.playFromStart();
     }
 }
