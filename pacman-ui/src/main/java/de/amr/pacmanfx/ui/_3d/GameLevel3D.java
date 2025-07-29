@@ -680,12 +680,6 @@ public class GameLevel3D implements Disposable {
         energizers3D.trimToSize();
     }
 
-    private boolean insideWorldMapArea(Point3D position) {
-        int width  = gameLevel.worldMap().numCols() * TS;
-        int height = gameLevel.worldMap().numRows() * TS;
-        return 0 <= position.getX() && position.getX() < width && 0 <= position.getY() && position.getY() < height;
-    }
-
     private Energizer3D createEnergizer3D(Vector2i tile, float energizerRadius, float floorThickness, float minScaling, float maxScaling) {
         float x = tile.x() * TS + HTS;
         float y = tile.y() * TS + HTS;
@@ -697,10 +691,18 @@ public class GameLevel3D implements Disposable {
         energizer3D.node().setTranslateY(y);
         energizer3D.node().setTranslateZ(z);
         var explosion = new Explosion(animationRegistry, center, particleGroupsContainer, particleMaterial,
-            (Point3D position) -> position.getZ() >= -1 && insideWorldMapArea(position));
+            particle -> particleReachedFloor(particle, floorThickness));
         energizer3D.setEatenAnimation(explosion);
 
         return energizer3D;
+    }
+
+    private boolean particleReachedFloor(Explosion.Particle particle, float floorThickness) {
+        Point3D pos = particle.position();
+        boolean onFloorZ = pos.getZ() >= (-0.5 * floorThickness - particle.getRadius());
+        double width  = gameLevel.worldMap().numCols() * TS;
+        double height = (gameLevel.worldMap().numRows() - 1) * TS; //TODO if 1 is not subtracted, some particles look wrong
+        return onFloorZ && 0 <= pos.getX() && pos.getX() < width && 0 <= pos.getY() && pos.getY() < height;
     }
 
     public void showAnimatedMessage(String message, float displaySeconds, double centerX, double centerY) {

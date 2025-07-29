@@ -24,31 +24,33 @@ import static java.util.Objects.requireNonNull;
 
 public class Explosion extends ManagedAnimation {
 
+    private static final Duration DURATION = Duration.seconds(10);
+
     private static final short PARTICLE_DIVISIONS = 8;
     private static final short PARTICLE_COUNT_MIN = 200;
     private static final short PARTICLE_COUNT_MAX = 400;
     private static final float PARTICLE_MEAN_RADIUS_UNSCALED = .15f;
-    private static final float PARTICLE_VELOCITY_XY_MIN = -0.6f;
-    private static final float PARTICLE_VELOCITY_XY_MAX =  0.6f;
-    private static final float PARTICLE_VELOCITY_Z_MIN  = -4.5f;
-    private static final float PARTICLE_VELOCITY_Z_MAX  = -1.5f;
-    private static final float GRAVITY_Z = 0.1f;
+    private static final float PARTICLE_VELOCITY_XY_MIN = -1f;
+    private static final float PARTICLE_VELOCITY_XY_MAX =  1f;
+    private static final float PARTICLE_VELOCITY_Z_MIN  = -6f;
+    private static final float PARTICLE_VELOCITY_Z_MAX  = -2f;
+    private static final float GRAVITY_Z = 0.2f;
 
-    private static class MutableVec3f {
+    public static class Velocity {
         public float x, y, z;
 
-        public MutableVec3f(float x, float y, float z) {
+        public Velocity(float x, float y, float z) {
             this.x = x;
             this.y = y;
             this.z = z;
         }
     }
 
-    private static class Particle extends Sphere {
+    public static class Particle extends Sphere {
 
-        private final MutableVec3f velocity;
+        private final Velocity velocity;
 
-        public Particle(double radius, Material material, MutableVec3f velocity, Point3D origin) {
+        public Particle(double radius, Material material, Velocity velocity, Point3D origin) {
             super(radius, PARTICLE_DIVISIONS);
             this.velocity = velocity;
             setMaterial(material);
@@ -75,18 +77,18 @@ public class Explosion extends ManagedAnimation {
     private final Group particlesGroupContainer;
     private final Group particlesGroup = new Group();
     private Particle[] particles;
-    private final Predicate<Point3D> particleAtEndPosition;
+    private final Predicate<Particle> particleAtEndPosition;
 
     private class ParticlesMovement extends Transition {
 
         public ParticlesMovement() {
-            setCycleDuration(Duration.seconds(5));
+            setCycleDuration(DURATION);
         }
 
         @Override
         protected void interpolate(double t) {
             for (Particle particle : particles) {
-                if (particleAtEndPosition.test(particle.position())) {
+                if (particleAtEndPosition.test(particle)) {
                     particle.setRadius(0.1); //TODO make something more intelligent
                 } else {
                     particle.move();
@@ -107,7 +109,7 @@ public class Explosion extends ManagedAnimation {
             particles = new Particle[particleCount];
             for (int i = 0; i < particleCount; ++i) {
                 double radius = randomParticleRadius(rnd);
-                MutableVec3f velocity = randomParticleVelocity();
+                Velocity velocity = randomParticleVelocity();
                 particles[i] = new Particle(radius, particleMaterial, velocity, origin);
                 particles[i].setVisible(true);
             }
@@ -121,8 +123,8 @@ public class Explosion extends ManagedAnimation {
             return scaling * PARTICLE_MEAN_RADIUS_UNSCALED;
         }
 
-        private MutableVec3f randomParticleVelocity() {
-            return new MutableVec3f(
+        private Velocity randomParticleVelocity() {
+            return new Velocity(
                 randomFloat(PARTICLE_VELOCITY_XY_MIN, PARTICLE_VELOCITY_XY_MAX),
                 randomFloat(PARTICLE_VELOCITY_XY_MIN, PARTICLE_VELOCITY_XY_MAX),
                 randomFloat(PARTICLE_VELOCITY_Z_MIN, PARTICLE_VELOCITY_Z_MAX)
@@ -135,7 +137,7 @@ public class Explosion extends ManagedAnimation {
         Point3D origin,
         Group particlesGroupContainer,
         Material particleMaterial,
-        Predicate<Point3D> particleAtEndPosition) {
+        Predicate<Particle> particleAtEndPosition) {
 
         super(animationRegistry, "Energizer_Explosion");
         this.origin = requireNonNull(origin);
