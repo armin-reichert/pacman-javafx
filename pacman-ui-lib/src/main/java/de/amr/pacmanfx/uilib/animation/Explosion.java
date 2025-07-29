@@ -24,7 +24,7 @@ import static java.util.Objects.requireNonNull;
 
 public class Explosion extends ManagedAnimation {
 
-    private static final Duration DURATION = Duration.seconds(10);
+    private static final Duration EXPLOSION_DURATION = Duration.seconds(10);
 
     private static final short PARTICLE_DIVISIONS = 8;
     private static final short PARTICLE_COUNT_MIN = 200;
@@ -76,13 +76,13 @@ public class Explosion extends ManagedAnimation {
     private final Point3D origin;
     private final Group particlesGroupContainer;
     private final Group particlesGroup = new Group();
-    private Particle[] particles;
     private final Predicate<Particle> particleAtEndPosition;
+    private Particle[] particles;
 
     private class ParticlesMovement extends Transition {
 
         public ParticlesMovement() {
-            setCycleDuration(DURATION);
+            setCycleDuration(EXPLOSION_DURATION);
         }
 
         @Override
