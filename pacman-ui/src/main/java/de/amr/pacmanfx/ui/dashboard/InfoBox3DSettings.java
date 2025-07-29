@@ -38,7 +38,6 @@ public class InfoBox3DSettings extends InfoBox {
     private CheckBox cbEnergizerExplodes;
     private Slider sliderWallHeight;
     private Slider sliderWallOpacity;
-    private CheckBox cbPacLighted;
     private CheckBox cbAxesVisible;
     private CheckBox cbWireframeMode;
 
@@ -61,7 +60,6 @@ public class InfoBox3DSettings extends InfoBox {
         sliderWallHeight     = addSlider("Obstacle Height", 0, 16, ui.property3DWallHeight().get(), false, false);
         sliderWallOpacity    = addSlider("Wall Opacity", 0, 1, ui.property3DWallOpacity().get(), false, false);
         cbEnergizerExplodes  = addCheckBox("Energizer Explosion", ui.property3DEnergizerExplodes());
-        cbPacLighted         = addCheckBox("Pac-Man Lighted", ui.property3DPacLightEnabled());
         cbAxesVisible        = addCheckBox("Show Axes", ui.property3DAxesVisible());
         cbWireframeMode      = addCheckBox("Wireframe Mode");
 
@@ -89,7 +87,6 @@ public class InfoBox3DSettings extends InfoBox {
         cbPiPOn.setSelected(ui.propertyMiniViewOn().getValue());
         comboPerspectives.setValue(ui.property3DPerspective().get());
         cbEnergizerExplodes.setSelected(ui.property3DEnergizerExplodes().get());
-        cbPacLighted.setSelected(ui.property3DPacLightEnabled().get());
         cbAxesVisible.setSelected(ui.property3DAxesVisible().get());
         cbWireframeMode.setSelected(ui.property3DDrawMode().get() == DrawMode.LINE);
     }

@@ -70,7 +70,6 @@ public class PacManGames_UI_Impl implements GameUI {
     final BooleanProperty property3DEnergizerExplodes          = new SimpleBooleanProperty(true);
     final ObjectProperty<Color> property3DFloorColor           = new SimpleObjectProperty<>(Color.rgb(20,20,20));
     final ObjectProperty<Color> property3DLightColor           = new SimpleObjectProperty<>(Color.WHITE);
-    final BooleanProperty property3DPacLightEnabled            = new SimpleBooleanProperty(true);
     final ObjectProperty<PerspectiveID> property3DPerspective  = new SimpleObjectProperty<>(PerspectiveID.TRACK_PLAYER);
     final DoubleProperty property3DWallHeight                  = new SimpleDoubleProperty();
     final DoubleProperty property3DWallOpacity                 = new SimpleDoubleProperty(1.0);
@@ -313,7 +312,6 @@ public class PacManGames_UI_Impl implements GameUI {
     @Override public BooleanProperty                  property3DEnergizerExplodes(){ return property3DEnergizerExplodes; }
     @Override public ObjectProperty<Color>            property3DFloorColor(){ return property3DFloorColor; }
     @Override public ObjectProperty<Color>            property3DLightColor(){ return property3DLightColor; }
-    @Override public BooleanProperty                  property3DPacLightEnabled(){ return property3DPacLightEnabled; }
     @Override public ObjectProperty<PerspectiveID>    property3DPerspective(){ return property3DPerspective; }
     @Override public DoubleProperty                   property3DWallHeight(){ return property3DWallHeight; }
     @Override public DoubleProperty                   property3DWallOpacity(){ return property3DWallOpacity; }

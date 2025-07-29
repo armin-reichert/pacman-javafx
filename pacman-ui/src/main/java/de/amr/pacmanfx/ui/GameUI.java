@@ -97,7 +97,6 @@ public interface GameUI {
     BooleanProperty                  property3DEnergizerExplodes();
     ObjectProperty<Color>            property3DFloorColor();
     ObjectProperty<Color>            property3DLightColor();
-    BooleanProperty                  property3DPacLightEnabled();
     ObjectProperty<PerspectiveID>    property3DPerspective();
     DoubleProperty                   property3DWallHeight();
     DoubleProperty                   property3DWallOpacity();

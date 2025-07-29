@@ -178,7 +178,7 @@ public class GameUI_Builder {
     }
 
     private void validateConfiguration() {
-        if (configurationByGameVariant.keySet().isEmpty()) {
+        if (configurationByGameVariant.isEmpty()) {
             error("No game configuration specified");
         }
     }

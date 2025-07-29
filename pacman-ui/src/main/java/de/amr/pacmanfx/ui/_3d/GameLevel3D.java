@@ -716,6 +716,7 @@ public class GameLevel3D implements Disposable {
             root.getChildren().remove(messageView);
         }
         messageView = MessageView.builder()
+            .backgroundColor(Color.BLACK)
             .borderColor(Color.WHITE)
             .displaySeconds(displaySeconds)
             .font(ui.theAssets().arcadeFont(6))
