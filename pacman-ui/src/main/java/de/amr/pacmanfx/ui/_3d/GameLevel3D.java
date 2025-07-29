@@ -22,6 +22,7 @@ import de.amr.pacmanfx.uilib.animation.Explosion;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.*;
+import de.amr.pacmanfx.uilib.widgets.MessageView;
 import javafx.animation.*;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
