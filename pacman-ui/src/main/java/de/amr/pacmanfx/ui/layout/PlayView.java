@@ -155,7 +155,7 @@ public class PlayView implements PacManGames_View {
     private void handleContextMenuRequest(ContextMenuEvent contextMenuEvent) {
         contextMenu.getItems().clear();
         ui.currentGameScene().ifPresent(gameScene -> {
-            if (ui.currentGameSceneIsPlayScene2D()) {
+            if (ui.isCurrentGameSceneID("PlayScene2D")) {
                 var miSwitchTo3D = new MenuItem(ui.theAssets().text("use_3D_scene"));
                 miSwitchTo3D.setOnAction(e -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(ui));
                 contextMenu.getItems().add(ui.createContextMenuTitle("scene_display"));
@@ -224,7 +224,7 @@ public class PlayView implements PacManGames_View {
             }
         });
 
-        if (miniGameView.isVisible() && ui.currentGameSceneIsPlayScene3D() && gameContext.optGameLevel().isPresent()) {
+        if (miniGameView.isVisible() && ui.isCurrentGameSceneID("PlayScene3D") && gameContext.optGameLevel().isPresent()) {
             miniGameView.draw(ui, gameContext.theGameLevel());
         }
         flashMessageLayer.update();
@@ -368,7 +368,7 @@ public class PlayView implements PacManGames_View {
         miniGameView.canvasHeightProperty().bind(ui.propertyMiniViewHeight());
         miniGameView.opacityProperty().bind(ui.propertyMiniViewOpacityPercent().divide(100.0));
         miniGameView.visibleProperty().bind(Bindings.createObjectBinding(
-            () -> ui.propertyMiniViewOn().get() && ui.currentGameSceneIsPlayScene3D(),
+            () -> ui.propertyMiniViewOn().get() && ui.isCurrentGameSceneID("PlayScene3D"),
                 ui.propertyMiniViewOn(), ui.propertyCurrentGameScene()
         ));
     }

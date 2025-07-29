@@ -123,8 +123,7 @@ public interface GameUI {
 
     // Game scenes
     Optional<GameScene> currentGameScene();
-    boolean currentGameSceneIsPlayScene2D();
-    boolean currentGameSceneIsPlayScene3D();
+    boolean isCurrentGameSceneID(String id);
     void updateGameScene(boolean reload);
 
     // Views

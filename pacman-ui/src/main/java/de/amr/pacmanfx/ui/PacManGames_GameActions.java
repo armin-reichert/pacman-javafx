@@ -550,7 +550,7 @@ public interface PacManGames_GameActions {
         public void execute(GameUI ui) {
             ui.currentGameScene().ifPresent(gameScene -> {
                 toggle(ui.property3DEnabled());
-                if (ui.currentGameSceneIsPlayScene2D() || ui.currentGameSceneIsPlayScene3D()) {
+                if (ui.isCurrentGameSceneID("PlayScene2D") || ui.isCurrentGameSceneID("PlayScene3D")) {
                     ui.updateGameScene(true);
                     ui.theGameContext().theGameController().updateGameState(); //TODO needed?
                 }
@@ -578,7 +578,7 @@ public interface PacManGames_GameActions {
         @Override
         public void execute(GameUI ui) {
             toggle(ui.propertyMiniViewOn());
-            if (!ui.currentGameSceneIsPlayScene3D()) {
+            if (!ui.isCurrentGameSceneID("PlayScene3D")) {
                 ui.showFlashMessage(ui.theAssets().text(ui.propertyMiniViewOn().get() ? "pip_on" : "pip_off"));
             }
         }

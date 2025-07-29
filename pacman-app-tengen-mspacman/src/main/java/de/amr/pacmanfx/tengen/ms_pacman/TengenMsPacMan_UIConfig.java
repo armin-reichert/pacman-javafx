@@ -143,7 +143,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.currentGameSceneIsPlayScene2D();
+            return ui.isCurrentGameSceneID("PlayScene2D");
         }
 
         @Override

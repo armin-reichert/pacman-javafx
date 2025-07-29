@@ -120,7 +120,7 @@ public class PacManGames_UI_Impl implements GameUI {
 
         rootPane = new StackPane();
         rootPane.backgroundProperty().bind(propertyCurrentGameScene().map(gameScene ->
-            currentGameSceneIsPlayScene3D() ? theAssets().get("background.play_scene3d") : theAssets().get("background.scene"))
+            isCurrentGameSceneID("PlayScene3D") ? theAssets().get("background.play_scene3d") : theAssets().get("background.scene"))
         );
 
         createMainScene(width, height);
@@ -192,14 +192,14 @@ public class PacManGames_UI_Impl implements GameUI {
     }
 
     private void createStatusIcons() {
-        // "paused" icon appears at center of UI
+        // Large "paused" icon appears at center of UI
         FontIcon pausedIcon = FontIcon.of(FontAwesomeSolid.PAUSE, 80, ArcadePalette.ARCADE_WHITE);
         StackPane.setAlignment(pausedIcon, Pos.CENTER);
         pausedIcon.visibleProperty().bind(Bindings.createBooleanBinding(
                 () -> currentView() == playView && theGameClock.isPaused(),
                 propertyCurrentView, theGameClock.pausedProperty()));
 
-        // status icon box appears at bottom-left corner of any view except editor
+        // Status icon box appears at bottom-left corner of any view except editor
         var iconBox = new StatusIconBox(this);
         StackPane.setAlignment(iconBox, Pos.BOTTOM_LEFT);
         iconBox.visibleProperty().bind(propertyCurrentView.map(view -> view != editorView));
@@ -467,14 +467,8 @@ public class PacManGames_UI_Impl implements GameUI {
     }
 
     @Override
-    public boolean currentGameSceneIsPlayScene2D() {
+    public boolean isCurrentGameSceneID(String id) {
         GameScene currentGameScene = currentGameScene().orElse(null);
-        return currentGameScene != null && theConfiguration().gameSceneHasID(currentGameScene, "PlayScene2D");
-    }
-
-    @Override
-    public boolean currentGameSceneIsPlayScene3D() {
-        GameScene currentGameScene = currentGameScene().orElse(null);
-        return currentGameScene != null && theConfiguration().gameSceneHasID(currentGameScene, "PlayScene3D");
+        return currentGameScene != null && theConfiguration().gameSceneHasID(currentGameScene, id);
     }
 }
