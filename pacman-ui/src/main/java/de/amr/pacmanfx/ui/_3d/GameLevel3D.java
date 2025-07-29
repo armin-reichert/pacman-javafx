@@ -705,7 +705,7 @@ public class GameLevel3D implements Disposable {
         return onFloorZ && 0 <= pos.getX() && pos.getX() < width && 0 <= pos.getY() && pos.getY() < height;
     }
 
-    public void showAnimatedMessage(String message, float displaySeconds, double centerX, double centerY) {
+    public void showAnimatedMessage(String messageText, float displaySeconds, double centerX, double centerY) {
         if (messageView != null) {
             messageView.dispose();
             root.getChildren().remove(messageView);
@@ -715,7 +715,7 @@ public class GameLevel3D implements Disposable {
             .borderColor(Color.WHITE)
             .textColor(Color.YELLOW)
             .font(ui.theAssets().arcadeFont(6))
-            .text(message)
+            .text(messageText)
             .build(animationRegistry);
         root.getChildren().add(messageView);
         messageView.showCenteredAt(centerX, centerY);

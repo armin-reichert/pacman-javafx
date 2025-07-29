@@ -16,24 +16,20 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import javax.swing.*;
-
 import static java.util.Objects.requireNonNull;
 
-/**
- * Message view.
- */
 public class MessageView extends ImageView implements Disposable {
 
     public static class Builder {
-        private Font font;
-        private Color borderColor;
-        private float displaySeconds;
-        private Color textColor;
-        private String text;
+        private Color borderColor = Color.BLUE;
+        private float displaySeconds = 2;
+        private Font font = Font.font(16);
+        private Color textColor = Color.WHITE;
+        private String text = "Hello, World!";
 
         public Builder borderColor(Color color) {
             borderColor = requireNonNull(color);
@@ -88,34 +84,26 @@ public class MessageView extends ImageView implements Disposable {
         return canvas.snapshot(null, null);
     }
 
-    private static class MovementAnimation extends ManagedAnimation {
+    private class MoveInOutAnimation extends ManagedAnimation {
 
-        private MessageView messageView;
-
-        public MovementAnimation(AnimationRegistry animationRegistry, MessageView messageView) {
+        public MoveInOutAnimation(AnimationRegistry animationRegistry) {
             super(animationRegistry, "Message_Movement");
-            this.messageView = messageView;
-        }
-
-        @Override
-        protected void freeResources() {
-            messageView = null;
         }
 
         @Override
         protected Animation createAnimationFX() {
-            double hiddenZ = messageView.hiddenZPosition();
+            double hiddenZ = hiddenZPosition();
             double visibleZ = -(hiddenZ + 2);
-            var moveUp = new TranslateTransition(Duration.seconds(1), messageView);
+            var moveUp = new TranslateTransition(Duration.seconds(1), MessageView.this);
             moveUp.setToZ(visibleZ);
-            var moveDown = new TranslateTransition(Duration.seconds(1), messageView);
+            var moveDown = new TranslateTransition(Duration.seconds(1), MessageView.this);
             moveDown.setToZ(hiddenZ);
             var movement = new SequentialTransition(
                 moveUp,
-                new PauseTransition(Duration.seconds(messageView.displaySeconds())),
+                new PauseTransition(Duration.seconds(displaySeconds)),
                 moveDown
             );
-            movement.setOnFinished(e -> messageView.setVisible(false));
+            movement.setOnFinished(e -> setVisible(false));
             return movement;
         }
     }
@@ -125,18 +113,21 @@ public class MessageView extends ImageView implements Disposable {
     }
 
     private ManagedAnimation moveInOutAnimation;
-    private float displaySeconds;
+    private final float displaySeconds;
 
     private MessageView(AnimationRegistry animationRegistry, Builder builder) {
-        double width = builder.text.length() * builder.font.getSize() + MARGIN;
-        double height = builder.font.getSize() + MARGIN;
-        displaySeconds = builder.displaySeconds;
-        setImage(createImage(width, height, builder.text, builder.font, builder.textColor, builder.borderColor));
+        Text dummy = new Text(builder.text);
+        dummy.setFont(builder.font);
+        double width = dummy.getLayoutBounds().getWidth() + MARGIN;
+        double height = dummy.getLayoutBounds().getHeight() + MARGIN;
+        Image image = createImage(width, height, builder.text, builder.font, builder.textColor, builder.borderColor);
+        setImage(image);
         setFitWidth(width);
         setFitHeight(height);
         setRotationAxis(Rotate.X_AXIS);
         setRotate(90);
-        moveInOutAnimation = new MovementAnimation(animationRegistry, this);
+        displaySeconds = builder.displaySeconds;
+        moveInOutAnimation = new MoveInOutAnimation(animationRegistry);
     }
 
     @Override
@@ -152,13 +143,5 @@ public class MessageView extends ImageView implements Disposable {
         setTranslateY(centerY);
         setTranslateZ(hiddenZPosition());
         moveInOutAnimation.playFromStart();
-    }
-
-    public void setDisplaySeconds(float sec) {
-        displaySeconds = sec;
-    }
-
-    public float displaySeconds() {
-        return displaySeconds;
     }
 }
