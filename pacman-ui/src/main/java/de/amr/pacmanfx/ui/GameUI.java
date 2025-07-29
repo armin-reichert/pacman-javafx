@@ -37,7 +37,7 @@ public interface GameUI {
 
     static GameUI theUI() { return PacManGames_UI_Impl.THE_ONE; }
 
-    List<ActionBinding> GAME_ACTION_KEY_COMBINATIONS = List.of(
+    List<ActionBinding> DEFAULT_ACTION_BINDINGS = List.of(
         new ActionBinding(ACTION_ARCADE_INSERT_COIN,      nude(KeyCode.DIGIT5), nude(KeyCode.NUMPAD5)),
         new ActionBinding(ACTION_ARCADE_START_GAME,       nude(KeyCode.DIGIT1), nude(KeyCode.NUMPAD1)),
         new ActionBinding(ACTION_BOOT_SHOW_PLAY_VIEW,     nude(KeyCode.F3)),

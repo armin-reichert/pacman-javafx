@@ -113,7 +113,7 @@ public class PacManGames_UI_Impl implements GameUI {
         theStage = stage;
 
         globalActionBindings = new ActionBindingMap(theKeyboard);
-        GAME_ACTION_KEY_COMBINATIONS.forEach(globalActionBindings::addBinding);
+        DEFAULT_ACTION_BINDINGS.forEach(globalActionBindings::addBinding);
         globalActionBindings.updateKeyboard();
 
         initPreferences();

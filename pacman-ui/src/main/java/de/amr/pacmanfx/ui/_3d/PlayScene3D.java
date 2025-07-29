@@ -47,7 +47,7 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.isOneOf;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_MEDIUM;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_SHORT;
-import static de.amr.pacmanfx.ui.GameUI.GAME_ACTION_KEY_COMBINATIONS;
+import static de.amr.pacmanfx.ui.GameUI.DEFAULT_ACTION_BINDINGS;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.control;
 import static java.util.Objects.requireNonNull;
@@ -272,18 +272,18 @@ public class PlayScene3D implements GameScene {
 
     protected void setActionBindings() {
         actionBindings.removeFromKeyboard();
-        actionBindings.use(ACTION_PERSPECTIVE_PREVIOUS, GAME_ACTION_KEY_COMBINATIONS);
-        actionBindings.use(ACTION_PERSPECTIVE_NEXT, GAME_ACTION_KEY_COMBINATIONS);
-        actionBindings.use(ACTION_TOGGLE_DRAW_MODE, GAME_ACTION_KEY_COMBINATIONS);
+        actionBindings.use(ACTION_PERSPECTIVE_PREVIOUS, DEFAULT_ACTION_BINDINGS);
+        actionBindings.use(ACTION_PERSPECTIVE_NEXT, DEFAULT_ACTION_BINDINGS);
+        actionBindings.use(ACTION_TOGGLE_DRAW_MODE, DEFAULT_ACTION_BINDINGS);
         if (gameContext().optGameLevel().isPresent()) {
             if (gameContext().theGameLevel().isDemoLevel()) {
-                actionBindings.use(ACTION_ARCADE_INSERT_COIN, GAME_ACTION_KEY_COMBINATIONS);
+                actionBindings.use(ACTION_ARCADE_INSERT_COIN, DEFAULT_ACTION_BINDINGS);
             } else {
                 setPlayerSteeringActionBindings();
-                actionBindings.use(ACTION_CHEAT_EAT_ALL_PELLETS, GAME_ACTION_KEY_COMBINATIONS);
-                actionBindings.use(ACTION_CHEAT_ADD_LIVES, GAME_ACTION_KEY_COMBINATIONS);
-                actionBindings.use(ACTION_CHEAT_ENTER_NEXT_LEVEL, GAME_ACTION_KEY_COMBINATIONS);
-                actionBindings.use(ACTION_CHEAT_KILL_GHOSTS, GAME_ACTION_KEY_COMBINATIONS);
+                actionBindings.use(ACTION_CHEAT_EAT_ALL_PELLETS, DEFAULT_ACTION_BINDINGS);
+                actionBindings.use(ACTION_CHEAT_ADD_LIVES, DEFAULT_ACTION_BINDINGS);
+                actionBindings.use(ACTION_CHEAT_ENTER_NEXT_LEVEL, DEFAULT_ACTION_BINDINGS);
+                actionBindings.use(ACTION_CHEAT_KILL_GHOSTS, DEFAULT_ACTION_BINDINGS);
             }
         }
         actionBindings.updateKeyboard();
@@ -293,10 +293,10 @@ public class PlayScene3D implements GameScene {
      * Overridden by Tengen Ms. Pac-Man play scene 3D to use keys representing "Joypad" buttons.
      */
     protected void setPlayerSteeringActionBindings() {
-        actionBindings.use(ACTION_STEER_UP, GAME_ACTION_KEY_COMBINATIONS);
-        actionBindings.use(ACTION_STEER_DOWN, GAME_ACTION_KEY_COMBINATIONS);
-        actionBindings.use(ACTION_STEER_LEFT, GAME_ACTION_KEY_COMBINATIONS);
-        actionBindings.use(ACTION_STEER_RIGHT, GAME_ACTION_KEY_COMBINATIONS);
+        actionBindings.use(ACTION_STEER_UP, DEFAULT_ACTION_BINDINGS);
+        actionBindings.use(ACTION_STEER_DOWN, DEFAULT_ACTION_BINDINGS);
+        actionBindings.use(ACTION_STEER_LEFT, DEFAULT_ACTION_BINDINGS);
+        actionBindings.use(ACTION_STEER_RIGHT, DEFAULT_ACTION_BINDINGS);
     }
 
     @Override

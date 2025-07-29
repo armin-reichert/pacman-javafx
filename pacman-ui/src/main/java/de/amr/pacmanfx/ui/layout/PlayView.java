@@ -42,7 +42,7 @@ import org.tinylog.Logger;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.GameUI.GAME_ACTION_KEY_COMBINATIONS;
+import static de.amr.pacmanfx.ui.GameUI.DEFAULT_ACTION_BINDINGS;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.uilib.Ufx.border;
 import static de.amr.pacmanfx.uilib.Ufx.colorBackground;
@@ -128,23 +128,23 @@ public class PlayView implements PacManGames_View {
             parentScene.heightProperty(),
             ui.propertyCurrentGameScene()
         );
-        actionBindings.use(ACTION_BOOT_SHOW_PLAY_VIEW, GAME_ACTION_KEY_COMBINATIONS);
-        actionBindings.use(ACTION_ENTER_FULLSCREEN, GAME_ACTION_KEY_COMBINATIONS);
-        actionBindings.use(ACTION_QUIT_GAME_SCENE, GAME_ACTION_KEY_COMBINATIONS);
-        actionBindings.use(ACTION_SHOW_HELP, GAME_ACTION_KEY_COMBINATIONS);
-        actionBindings.use(ACTION_SIMULATION_SLOWER, GAME_ACTION_KEY_COMBINATIONS);
-        actionBindings.use(ACTION_SIMULATION_FASTER, GAME_ACTION_KEY_COMBINATIONS);
-        actionBindings.use(ACTION_SIMULATION_RESET, GAME_ACTION_KEY_COMBINATIONS);
-        actionBindings.use(ACTION_SIMULATION_ONE_STEP, GAME_ACTION_KEY_COMBINATIONS);
-        actionBindings.use(ACTION_SIMULATION_TEN_STEPS, GAME_ACTION_KEY_COMBINATIONS);
-        actionBindings.use(ACTION_TOGGLE_AUTOPILOT, GAME_ACTION_KEY_COMBINATIONS);
-        actionBindings.use(ACTION_TOGGLE_DEBUG_INFO, GAME_ACTION_KEY_COMBINATIONS);
-        actionBindings.use(ACTION_TOGGLE_MUTED, GAME_ACTION_KEY_COMBINATIONS);
-        actionBindings.use(ACTION_TOGGLE_PAUSED, GAME_ACTION_KEY_COMBINATIONS);
-        actionBindings.use(ACTION_TOGGLE_DASHBOARD, GAME_ACTION_KEY_COMBINATIONS);
-        actionBindings.use(ACTION_TOGGLE_IMMUNITY, GAME_ACTION_KEY_COMBINATIONS);
-        actionBindings.use(ACTION_TOGGLE_PIP_VISIBILITY, GAME_ACTION_KEY_COMBINATIONS);
-        actionBindings.use(ACTION_TOGGLE_PLAY_SCENE_2D_3D, GAME_ACTION_KEY_COMBINATIONS);
+        actionBindings.use(ACTION_BOOT_SHOW_PLAY_VIEW, DEFAULT_ACTION_BINDINGS);
+        actionBindings.use(ACTION_ENTER_FULLSCREEN, DEFAULT_ACTION_BINDINGS);
+        actionBindings.use(ACTION_QUIT_GAME_SCENE, DEFAULT_ACTION_BINDINGS);
+        actionBindings.use(ACTION_SHOW_HELP, DEFAULT_ACTION_BINDINGS);
+        actionBindings.use(ACTION_SIMULATION_SLOWER, DEFAULT_ACTION_BINDINGS);
+        actionBindings.use(ACTION_SIMULATION_FASTER, DEFAULT_ACTION_BINDINGS);
+        actionBindings.use(ACTION_SIMULATION_RESET, DEFAULT_ACTION_BINDINGS);
+        actionBindings.use(ACTION_SIMULATION_ONE_STEP, DEFAULT_ACTION_BINDINGS);
+        actionBindings.use(ACTION_SIMULATION_TEN_STEPS, DEFAULT_ACTION_BINDINGS);
+        actionBindings.use(ACTION_TOGGLE_AUTOPILOT, DEFAULT_ACTION_BINDINGS);
+        actionBindings.use(ACTION_TOGGLE_DEBUG_INFO, DEFAULT_ACTION_BINDINGS);
+        actionBindings.use(ACTION_TOGGLE_MUTED, DEFAULT_ACTION_BINDINGS);
+        actionBindings.use(ACTION_TOGGLE_PAUSED, DEFAULT_ACTION_BINDINGS);
+        actionBindings.use(ACTION_TOGGLE_DASHBOARD, DEFAULT_ACTION_BINDINGS);
+        actionBindings.use(ACTION_TOGGLE_IMMUNITY, DEFAULT_ACTION_BINDINGS);
+        actionBindings.use(ACTION_TOGGLE_PIP_VISIBILITY, DEFAULT_ACTION_BINDINGS);
+        actionBindings.use(ACTION_TOGGLE_PLAY_SCENE_2D_3D, DEFAULT_ACTION_BINDINGS);
     }
 
     private void handleGameSceneChange(ObservableValue<? extends GameScene> obs, GameScene oldScene, GameScene newScene) {
