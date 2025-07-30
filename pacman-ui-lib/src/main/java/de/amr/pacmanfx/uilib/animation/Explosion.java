@@ -166,16 +166,16 @@ public class Explosion extends ManagedAnimation {
 
         private void moveIntoHouse(Particle particle) {
             if (!particle.movingIntoHouse) {
+                Point3D position = particle.position();
                 int personality = rnd.nextInt(4);
                 Vector2f revivalPosition = ghostRevivalPositions[personality];
-                float minX = revivalPosition.x() + 2, maxX = revivalPosition.x() + TS - 2;
-                float minY = revivalPosition.y() + 2, maxY = revivalPosition.y() + TS - 2;
+                float minX = revivalPosition.x() + 1, maxX = revivalPosition.x() + TS - 1;
+                float minY = revivalPosition.y() + 1, maxY = revivalPosition.y() + TS - 1;
                 particle.targetPosition = new Point3D(
                         minX + rnd.nextDouble(maxX - minX),
                         minY + rnd.nextDouble(maxY - minY),
-                        particle.position().getZ()
+                        position.getZ()
                 );
-                Point3D position = particle.position();
                 float speed = rnd.nextFloat(PARTICLE_SPEED_MOVING_HOME_MIN, PARTICLE_SPEED_MOVING_HOME_MAX);
                 particle.velocity = new Vec3f(
                     (float) (particle.targetPosition.getX() - position.getX()),

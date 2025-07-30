@@ -85,9 +85,9 @@ public class Ghost3D extends Group implements Disposable {
     private ManagedAnimation dressAnimation;
     private FlashingAnimation flashingAnimation;
 
-    private final ObjectProperty<PhongMaterial> dressMaterial = new SimpleObjectProperty<>();
-    private final ObjectProperty<PhongMaterial> pupilsMaterial = new SimpleObjectProperty<>();
-    private final ObjectProperty<PhongMaterial> eyeballsMaterial = new SimpleObjectProperty<>();
+    private PhongMaterial dressMaterial;
+    private PhongMaterial pupilsMaterial;
+    private PhongMaterial eyeballsMaterial;
 
     private final GhostColoring coloring;
 
@@ -113,16 +113,16 @@ public class Ghost3D extends Group implements Disposable {
 
 
         dressColorProperty.set(coloring.normalDressColor());
-        dressMaterial.bind(dressColorProperty.map(Ufx::coloredPhongMaterial));
-        dressShape.materialProperty().bind(dressMaterial);
+        dressMaterial = Ufx.coloredPhongMaterial(coloring.normalDressColor());
+        dressShape.setMaterial(dressMaterial);
 
         pupilsColorProperty.set(coloring.normalPupilsColor());
-        pupilsMaterial.bind(pupilsColorProperty.map(Ufx::coloredPhongMaterial));
-        pupilsShape.materialProperty().bind(pupilsMaterial);
+        pupilsMaterial = Ufx.coloredPhongMaterial(coloring.normalPupilsColor());
+        pupilsShape.setMaterial(pupilsMaterial);
 
         eyeballsColorProperty.set(coloring.normalEyeballsColor());
-        eyeballsMaterial.bind(eyeballsColorProperty.map(Ufx::coloredPhongMaterial));
-        eyeballsShape.materialProperty().bind(eyeballsMaterial);
+        eyeballsMaterial = Ufx.coloredPhongMaterial(coloring.normalEyeballsColor());
+        eyeballsShape.setMaterial(eyeballsMaterial);
 
         var eyesGroup = new Group(pupilsShape, eyeballsShape);
         dressGroup = new Group(dressShape);
@@ -186,15 +186,15 @@ public class Ghost3D extends Group implements Disposable {
         flashingAnimation = null;
     }
 
-    public ObjectProperty<PhongMaterial> dressMaterialProperty() {
+    public PhongMaterial dressMaterial() {
         return dressMaterial;
     }
 
-    public ObjectProperty<PhongMaterial> eyeballsMaterialProperty() {
+    public PhongMaterial eyeballsMaterial() {
         return eyeballsMaterial;
     }
 
-    public ObjectProperty<PhongMaterial> pupilsMaterialProperty() {
+    public PhongMaterial pupilsMaterial() {
         return pupilsMaterial;
     }
 
