@@ -5,10 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.ui.ActionBindingMap;
-import de.amr.pacmanfx.ui.GameAction;
-import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.PacManGames_Assets;
+import de.amr.pacmanfx.ui.*;
 import de.amr.pacmanfx.uilib.widgets.Carousel;
 import de.amr.pacmanfx.uilib.widgets.FancyButton;
 import javafx.beans.binding.Bindings;
@@ -78,7 +75,7 @@ public class StartPagesView implements PacManGames_View {
 
     public StartPagesView(GameUI ui) {
         requireNonNull(ui);
-        this.actionBindings = new ActionBindingMap(ui.theKeyboard());
+        this.actionBindings = new DefaultActionBindingMap();
         carousel = new StartPagesCarousel();
         carousel.selectedIndexProperty().addListener((py,ov,nv) -> {
             Logger.info("Carousel selection changed from {} to {}", ov, nv);

@@ -114,7 +114,7 @@ public class PacManGames_UI_Impl implements GameUI {
         thePrefs = new PreferenceManager(PacManGames_UI_Impl.class);
         theStage = stage;
 
-        globalActionBindings = new ActionBindingMap(theKeyboard);
+        globalActionBindings = new DefaultActionBindingMap();
         initGlobalActionBindings();
 
         initPreferences();
@@ -146,7 +146,7 @@ public class PacManGames_UI_Impl implements GameUI {
         globalActionBindings.use(ACTION_ENTER_FULLSCREEN, DEFAULT_ACTION_BINDINGS);
         globalActionBindings.use(ACTION_OPEN_EDITOR,      DEFAULT_ACTION_BINDINGS);
         globalActionBindings.use(ACTION_TOGGLE_MUTED,     DEFAULT_ACTION_BINDINGS);
-        globalActionBindings.updateKeyboard();
+        globalActionBindings.updateKeyboard(theKeyboard);
     }
 
     private void initPreferences() {
@@ -196,7 +196,7 @@ public class PacManGames_UI_Impl implements GameUI {
         mainScene.addEventFilter(KeyEvent.KEY_PRESSED, theKeyboard::onKeyPressed);
         mainScene.addEventFilter(KeyEvent.KEY_RELEASED, theKeyboard::onKeyReleased);
         mainScene.setOnKeyPressed(e -> runActionOrElse(
-            globalActionBindings.matchingAction().orElse(null),
+            globalActionBindings.matchingAction(theKeyboard).orElse(null),
             () -> currentView().handleKeyboardInput(this)));
     }
 
@@ -235,10 +235,10 @@ public class PacManGames_UI_Impl implements GameUI {
     private void handleViewChange(ObservableValue<? extends PacManGames_View> obs, PacManGames_View oldView, PacManGames_View newView) {
         requireNonNull(newView);
         if (oldView != null) {
-            oldView.actionBindingMap().removeFromKeyboard();
+            oldView.actionBindingMap().removeFromKeyboard(theKeyboard);
             theGameContext.theGameEventManager().removeEventListener(oldView);
         }
-        newView.actionBindingMap().updateKeyboard();
+        newView.actionBindingMap().updateKeyboard(theKeyboard);
         newView.rootNode().requestFocus();
         theStage.titleProperty().bind(newView.title());
         theGameContext.theGameEventManager().addEventListener(newView);

@@ -18,6 +18,6 @@ public interface PacManGames_View extends GameEventListener {
     ActionBindingMap actionBindingMap();
 
     default void handleKeyboardInput(GameUI ui) {
-        actionBindingMap().matchingAction().ifPresent(ui::runAction);
+        actionBindingMap().matchingAction(ui.theKeyboard()).ifPresent(ui::runAction);
     }
 }

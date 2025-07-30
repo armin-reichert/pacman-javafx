@@ -77,7 +77,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
         if (gameLevel.isDemoLevel()) {
             gameContext().theGame().theHUD().credit(false).levelCounter(true).livesCounter(false);
             actionBindings.use(ACTION_ARCADE_INSERT_COIN, DEFAULT_ACTION_BINDINGS);
-            actionBindings.updateKeyboard();
+            actionBindings.updateKeyboard(ui.theKeyboard());
         } else {
             gameContext().theGame().theHUD().credit(false).levelCounter(true).livesCounter(true);
             actionBindings.use(ACTION_STEER_UP, DEFAULT_ACTION_BINDINGS);
@@ -88,7 +88,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
             actionBindings.use(ACTION_CHEAT_ADD_LIVES, DEFAULT_ACTION_BINDINGS);
             actionBindings.use(ACTION_CHEAT_ENTER_NEXT_LEVEL, DEFAULT_ACTION_BINDINGS);
             actionBindings.use(ACTION_CHEAT_KILL_GHOSTS, DEFAULT_ACTION_BINDINGS);
-            actionBindings.updateKeyboard();
+            actionBindings.updateKeyboard(ui.theKeyboard());
         }
         if (gameRenderer == null) { //TODO can this happen at all?
             gameRenderer = ui.theConfiguration().createGameRenderer(canvas);

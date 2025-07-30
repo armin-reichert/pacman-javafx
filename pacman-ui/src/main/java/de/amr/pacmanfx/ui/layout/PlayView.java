@@ -95,7 +95,7 @@ public class PlayView implements PacManGames_View {
         this.miniGameView = new MiniGameView();
         this.dashboard = new Dashboard(ui);
         
-        this.actionBindings = new ActionBindingMap(ui.theKeyboard());
+        this.actionBindings = new DefaultActionBindingMap();
 
         configureMiniGameView();
         configureCanvasContainer();
@@ -236,7 +236,7 @@ public class PlayView implements PacManGames_View {
 
     @Override
     public void handleKeyboardInput(GameUI ui) {
-        GameAction matchingAction = actionBindings.matchingAction().orElse(null);
+        GameAction matchingAction = actionBindings.matchingAction(ui.theKeyboard()).orElse(null);
         ui.runActionOrElse(matchingAction,
             () -> ui.currentGameScene().ifPresent(GameScene::handleKeyboardInput)
         );

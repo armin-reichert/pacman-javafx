@@ -10,6 +10,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.ui.ActionBindingMap;
+import de.amr.pacmanfx.ui.DefaultActionBindingMap;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -50,7 +51,7 @@ public abstract class GameScene2D implements GameScene {
 
     protected GameScene2D(GameUI ui) {
         this.ui = requireNonNull(ui);
-        actionBindings = new ActionBindingMap(ui.theKeyboard());
+        actionBindings = new DefaultActionBindingMap();
         debugTextFill = ui.thePrefs().getColor("debug_text.fill");
         debugTextFont = ui.thePrefs().getFont("debug_text.font");
     }
@@ -65,7 +66,7 @@ public abstract class GameScene2D implements GameScene {
         arcadeFont8Property.bind(scalingProperty.map(s -> ui.theAssets().arcadeFont(s.floatValue() * 8)));
         arcadeFont6Property.bind(scalingProperty.map(s -> ui.theAssets().arcadeFont(s.floatValue() * 6)));
         doInit();
-        actionBindings.updateKeyboard();
+        actionBindings.updateKeyboard(ui.theKeyboard());
         ui.theKeyboard().logCurrentBindings();
     }
 
@@ -77,7 +78,7 @@ public abstract class GameScene2D implements GameScene {
 
     @Override
     public void handleKeyboardInput() {
-        actionBindings.matchingAction().ifPresent(ui::runAction);
+        actionBindings.matchingAction(ui.theKeyboard()).ifPresent(ui::runAction);
     }
 
     protected abstract void doInit();

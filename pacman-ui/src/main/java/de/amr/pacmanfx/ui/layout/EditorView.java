@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 import de.amr.pacmanfx.ui.ActionBindingMap;
+import de.amr.pacmanfx.ui.DefaultActionBindingMap;
 import javafx.beans.property.StringProperty;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
@@ -32,7 +33,7 @@ public class EditorView implements PacManGames_View {
     }
 
     @Override
-    public ActionBindingMap actionBindingMap() { return ActionBindingMap.EMPTY_MAP; }
+    public ActionBindingMap actionBindingMap() { return DefaultActionBindingMap.EMPTY_MAP; }
 
     @Override
     public Region rootNode() {

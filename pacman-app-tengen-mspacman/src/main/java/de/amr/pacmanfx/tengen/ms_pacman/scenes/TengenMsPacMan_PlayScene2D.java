@@ -124,7 +124,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             actionBindings.use(ACTION_CHEAT_ENTER_NEXT_LEVEL, DEFAULT_ACTION_BINDINGS);
             actionBindings.use(ACTION_CHEAT_KILL_GHOSTS, DEFAULT_ACTION_BINDINGS);
         }
-        actionBindings.updateKeyboard();
+        actionBindings.updateKeyboard(ui.theKeyboard());
     }
 
     @Override

@@ -14,10 +14,7 @@ import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui.ActionBindingMap;
-import de.amr.pacmanfx.ui.GameAction;
-import de.amr.pacmanfx.ui.GameScene;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.*;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.model3D.Bonus3D;
@@ -118,7 +115,7 @@ public class PlayScene3D implements GameScene {
 
     public PlayScene3D(GameUI ui) {
         this.ui = requireNonNull(ui);
-        this.actionBindings = new ActionBindingMap(ui.theKeyboard());
+        this.actionBindings = new DefaultActionBindingMap();
 
         createPerspectives();
 
@@ -181,7 +178,7 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void handleKeyboardInput() {
-        actionBindings.matchingAction().ifPresent(ui::runAction);
+        actionBindings.matchingAction(ui.theKeyboard()).ifPresent(ui::runAction);
     }
 
     @Override
@@ -271,7 +268,7 @@ public class PlayScene3D implements GameScene {
     }
 
     protected void setActionBindings() {
-        actionBindings.removeFromKeyboard();
+        actionBindings.removeFromKeyboard(ui.theKeyboard());
         actionBindings.use(ACTION_PERSPECTIVE_PREVIOUS, DEFAULT_ACTION_BINDINGS);
         actionBindings.use(ACTION_PERSPECTIVE_NEXT, DEFAULT_ACTION_BINDINGS);
         actionBindings.use(ACTION_TOGGLE_DRAW_MODE, DEFAULT_ACTION_BINDINGS);
@@ -286,7 +283,7 @@ public class PlayScene3D implements GameScene {
                 actionBindings.use(ACTION_CHEAT_KILL_GHOSTS, DEFAULT_ACTION_BINDINGS);
             }
         }
-        actionBindings.updateKeyboard();
+        actionBindings.updateKeyboard(ui.theKeyboard());
     }
 
     /**
@@ -305,7 +302,7 @@ public class PlayScene3D implements GameScene {
         perspectiveIDProperty().bind(ui.property3DPerspective());
         actionBindings.bind(droneUp, control(KeyCode.MINUS));
         actionBindings.bind(droneDown, control(KeyCode.PLUS));
-        actionBindings.updateKeyboard();
+        actionBindings.updateKeyboard(ui.theKeyboard());
         // TODO: integrate into input framework?
         ui.theStage().getScene().addEventHandler(ScrollEvent.SCROLL, this::handleScrollEvent);
     }

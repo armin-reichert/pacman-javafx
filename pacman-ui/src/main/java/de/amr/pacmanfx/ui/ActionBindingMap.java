@@ -6,84 +6,24 @@ package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.ui.input.Keyboard;
 import javafx.scene.input.KeyCombination;
-import org.tinylog.Logger;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
-import static java.util.Objects.requireNonNull;
+public interface ActionBindingMap {
 
-public class ActionBindingMap {
+    Map<KeyCombination, GameAction> actionByCombination();
 
-    public static final ActionBindingMap EMPTY_MAP = new ActionBindingMap() {
-        @Override
-        public boolean isEmpty() { return true; }
+    boolean isEmpty();
 
-        @Override
-        public Map<KeyCombination, GameAction> actionByCombination() { return Map.of(); }
+    void updateKeyboard(Keyboard keyboard);
 
-        @Override
-        public void updateKeyboard() {}
+    void removeFromKeyboard(Keyboard keyboard);
 
-        @Override
-        public void removeFromKeyboard() {}
+    void addBinding(ActionBinding actionBinding);
 
-        @Override
-        public void use(GameAction action, List<ActionBinding> actionBindings) {}
-
-        @Override
-        public void bind(GameAction action, KeyCombination combination) {}
-
-        @Override
-        public Optional<GameAction> matchingAction() { return Optional.empty(); }
-    };
-
-    private Keyboard keyboard;
-    private Map<KeyCombination, GameAction> actionByCombination;
-
-    private ActionBindingMap() {}
-
-    public ActionBindingMap(Keyboard keyboard) {
-        this.keyboard = requireNonNull(keyboard);
-        actionByCombination = new HashMap<>();
-    }
-
-    public Map<KeyCombination, GameAction> actionByCombination() {
-        return actionByCombination;
-    }
-
-    public boolean isEmpty() {
-        return actionByCombination.isEmpty();
-    }
-
-    public void updateKeyboard() {
-        for (KeyCombination combination : actionByCombination.keySet()) {
-            keyboard.setBinding(combination, this);
-        }
-        actionByCombination.entrySet().stream()
-            // sort by string representation of key combination
-            .sorted(Comparator.comparing(entry -> entry.getKey().toString()))
-            .forEach(entry -> Logger.debug("%-20s: %s".formatted(entry.getKey(), entry.getValue().name())));
-        Logger.info("Key bindings updated");
-    }
-
-    public void removeFromKeyboard() {
-        for (KeyCombination combination : actionByCombination.keySet()) {
-            keyboard.removeBinding(combination, this);
-        }
-        Logger.info("Key bindings removed");
-    }
-
-    public void addBinding(ActionBinding actionBinding) {
-        for (KeyCombination combination : actionBinding.keyCombinations()) {
-            actionByCombination.put(combination, actionBinding.gameAction());
-        }
-    }
-
-    public void bind(GameAction action, KeyCombination combination) {
-        requireNonNull(action);
-        requireNonNull(combination);
-        actionByCombination.put(combination, action);
-    }
+    void bind(GameAction action, KeyCombination combination);
 
     /**
      * Finds the first binding in the given list matching the given action and adds it to this map.
@@ -91,19 +31,7 @@ public class ActionBindingMap {
      * @param gameAction a game action
      * @param actionBindings an action bindings list
      */
-    public void use(GameAction gameAction, List<ActionBinding> actionBindings) {
-        requireNonNull(gameAction);
-        requireNonNull(actionBindings);
-        actionBindings.stream()
-            .filter(actionBinding -> actionBinding.gameAction() == gameAction)
-            .findFirst()
-            .ifPresent(this::addBinding);
-    }
+    void use(GameAction gameAction, List<ActionBinding> actionBindings);
 
-    public Optional<GameAction> matchingAction() {
-        return actionByCombination.keySet().stream()
-            .filter(keyboard::isMatching)
-            .map(actionByCombination::get)
-            .findFirst();
-    }
+    Optional<GameAction> matchingAction(Keyboard keyboard);
 }
