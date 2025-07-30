@@ -552,10 +552,10 @@ public class GameLevel3D implements Disposable {
         float minScaling = ui.thePrefs().getFloat("3d.energizer.scaling.min");
         float maxScaling = ui.thePrefs().getFloat("3d.energizer.scaling.max");
         Material[] ghostDressMaterials = {
-            ghosts3D.get(RED_GHOST_SHADOW).ghost3D().dressMaterialNormalColor(),
-            ghosts3D.get(PINK_GHOST_SPEEDY).ghost3D().dressMaterialNormalColor(),
-            ghosts3D.get(CYAN_GHOST_BASHFUL).ghost3D().dressMaterialNormalColor(),
-            ghosts3D.get(ORANGE_GHOST_POKEY).ghost3D().dressMaterialNormalColor(),
+            ghosts3D.get(RED_GHOST_SHADOW).ghost3D().dressMaterialNormal(),
+            ghosts3D.get(PINK_GHOST_SPEEDY).ghost3D().dressMaterialNormal(),
+            ghosts3D.get(CYAN_GHOST_BASHFUL).ghost3D().dressMaterialNormal(),
+            ghosts3D.get(ORANGE_GHOST_POKEY).ghost3D().dressMaterialNormal(),
         };
         energizers3D.addAll(gameLevel.tilesContainingFood()
             .filter(gameLevel::isEnergizerPosition)
@@ -787,7 +787,7 @@ public class GameLevel3D implements Disposable {
         for (Node child : particlesGroup.getChildren()) {
             if (child instanceof Explosion.Particle particle) {
                 Point3D particlePosition = particle.position();
-                Material ghostDressMaterial = ghosts3D.get(ghost.personality()).ghost3D().dressMaterialNormalColor();
+                Material ghostDressMaterial = ghosts3D.get(ghost.personality()).ghost3D().dressMaterialNormal();
                 boolean colorsMatch = particle.getMaterial() == ghostDressMaterial; // assumes no change in dress material!
                 if (colorsMatch
                     && ghostPosition.x() <= particlePosition.getX() && particlePosition.getX() <= ghostPosition.x() + TS
