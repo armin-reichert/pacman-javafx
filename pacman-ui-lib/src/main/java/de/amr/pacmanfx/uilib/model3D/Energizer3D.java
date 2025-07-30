@@ -9,6 +9,7 @@ import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.ScaleTransition;
+import javafx.geometry.Point3D;
 import javafx.scene.paint.Material;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
@@ -24,12 +25,15 @@ public class Energizer3D extends Sphere implements Eatable3D {
     private ManagedAnimation pumpingAnimation;
     private ManagedAnimation eatenAnimation;
 
-    public Energizer3D(AnimationRegistry animationRegistry, double radius, double minScaling, double maxScaling, Material material) {
+    public Energizer3D(AnimationRegistry animationRegistry, double radius, Point3D center, double minScaling, double maxScaling, Material material) {
         requireNonNegative(radius, "Energizer radius must be positive but is %f");
         requireNonNull(animationRegistry);
 
         setRadius(radius);
         setMaterial(material);
+        setTranslateX(center.getX());
+        setTranslateY(center.getY());
+        setTranslateZ(center.getZ());
 
         pumpingAnimation = new ManagedAnimation(animationRegistry, "Energizer_Pumping") {
             @Override

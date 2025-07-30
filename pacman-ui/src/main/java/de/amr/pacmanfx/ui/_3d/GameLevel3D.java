@@ -101,12 +101,12 @@ public class GameLevel3D implements Disposable {
 
     private int wall3DCount;
 
-    private Animation wallsMovingUpAndDown(int numFlashes, int fullMoveDurationMillis) {
+    private Animation wallsMovingUpAndDown(int numFlashes) {
         if (numFlashes == 0) {
             return pauseSec(1.0);
         }
         var timeline = new Timeline(
-            new KeyFrame(Duration.millis(0.5 * fullMoveDurationMillis),
+            new KeyFrame(Duration.millis(0.5 * 250),
                 new KeyValue(wallBaseHeightProperty, 0, Interpolator.EASE_BOTH)
             )
         );
@@ -131,7 +131,7 @@ public class GameLevel3D implements Disposable {
                     sometimesLevelCompleteMessage(gameLevel.number());
                 }),
                 pauseSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
-                wallsMovingUpAndDown(gameLevel.data().numFlashes(), 250),
+                wallsMovingUpAndDown(gameLevel.data().numFlashes()),
                 pauseSec(0.5, () -> gameLevel.pac().hide()),
                 pauseSec(0.5),
                 levelSpinningAroundAxis(new Random().nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS),
@@ -182,7 +182,7 @@ public class GameLevel3D implements Disposable {
             return new SequentialTransition(
                 pauseSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
                 pauseSec(0.5),
-                wallsMovingUpAndDown(gameLevel.data().numFlashes(), 250),
+                wallsMovingUpAndDown(gameLevel.data().numFlashes()),
                 pauseSec(0.5, () -> gameLevel.pac().hide())
             );
         }
@@ -517,47 +517,49 @@ public class GameLevel3D implements Disposable {
     }
 
     private void createPellets3D() {
-        Mesh pelletMesh = ui.theAssets().theModel3DRepository().pelletMesh();
         float radius = ui.thePrefs().getFloat("3d.pellet.radius");
-        var protoMeshView = new MeshView(pelletMesh);
-        Bounds bounds = protoMeshView.getBoundsInLocal();
-        double meshExtent = Math.max(Math.max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());
-        double scaling = (2 * radius) / meshExtent;
+        Mesh mesh = ui.theAssets().theModel3DRepository().pelletMesh();
+        var prototype = new MeshView(mesh);
+        Bounds bounds = prototype.getBoundsInLocal();
+        double maxExtent = Math.max(Math.max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());
+        double scaling = (2 * radius) / maxExtent;
         var scale = new Scale(scaling, scaling, scaling);
-        gameLevel.tilesContainingFood().filter(tile -> !gameLevel.isEnergizerPosition(tile)).forEach(tile -> {
-            var meshView = new MeshView(pelletMesh);
-            meshView.setMaterial(pelletMaterial);
-            meshView.setRotationAxis(Rotate.Z_AXIS);
-            meshView.setRotate(90);
-            meshView.setTranslateX(tile.x() * TS + HTS);
-            meshView.setTranslateY(tile.y() * TS + HTS);
-            meshView.setTranslateZ(-floorTopZ() - 6);
-            meshView.getTransforms().add(scale);
-            Pellet3D pellet3D = new Pellet3D(meshView);
-            pellet3D.setTile(tile);
-            pellets3D.add(pellet3D);
-        });
+        pellets3D.addAll(gameLevel.tilesContainingFood()
+            .filter(tile -> !gameLevel.isEnergizerPosition(tile))
+            .map(tile -> createPellet3D(mesh, scale, tile))
+            .toList());
         pellets3D.trimToSize();
+    }
+
+    private Pellet3D createPellet3D(Mesh mesh, Scale scale, Vector2i tile) {
+        var meshView = new MeshView(mesh);
+        meshView.setMaterial(pelletMaterial);
+        meshView.setRotationAxis(Rotate.Z_AXIS);
+        meshView.setRotate(90);
+        meshView.setTranslateX(tile.x() * TS + HTS);
+        meshView.setTranslateY(tile.y() * TS + HTS);
+        meshView.setTranslateZ(-floorTopZ() - 6);
+        meshView.getTransforms().add(scale);
+        Pellet3D pellet3D = new Pellet3D(meshView);
+        pellet3D.setTile(tile);
+        return pellet3D;
     }
 
     private void createEnergizers3D() {
         float radius     = ui.thePrefs().getFloat("3d.energizer.radius");
         float minScaling = ui.thePrefs().getFloat("3d.energizer.scaling.min");
         float maxScaling = ui.thePrefs().getFloat("3d.energizer.scaling.max");
-        gameLevel.tilesContainingFood().filter(gameLevel::isEnergizerPosition).forEach(tile -> {
-            Energizer3D energizer3D = createEnergizer3D(tile, radius, minScaling, maxScaling);
-            energizers3D.add(energizer3D);
-        });
+        energizers3D.addAll(gameLevel.tilesContainingFood()
+            .filter(gameLevel::isEnergizerPosition)
+            .map(tile -> createEnergizer3D(tile, radius, minScaling, maxScaling))
+            .toList());
         energizers3D.trimToSize();
     }
 
     private Energizer3D createEnergizer3D(Vector2i tile, float energizerRadius, float minScaling, float maxScaling) {
         var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, floorTopZ() - 6);
-        var energizer3D = new Energizer3D(animationRegistry, energizerRadius, minScaling, maxScaling, pelletMaterial);
+        var energizer3D = new Energizer3D(animationRegistry, energizerRadius, center, minScaling, maxScaling, pelletMaterial);
         energizer3D.setTile(tile);
-        energizer3D.node().setTranslateX(center.getX());
-        energizer3D.node().setTranslateY(center.getY());
-        energizer3D.node().setTranslateZ(center.getZ());
         var explosion = new Explosion(animationRegistry, center, particleGroupsContainer, particleMaterial, this::particleReachedFloor);
         energizer3D.setEatenAnimation(explosion);
         return energizer3D;
