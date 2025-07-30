@@ -531,7 +531,7 @@ public class GameLevel3D implements Disposable {
             meshView.setRotate(90);
             meshView.setTranslateX(tile.x() * TS + HTS);
             meshView.setTranslateY(tile.y() * TS + HTS);
-            meshView.setTranslateZ(-(floorTopZ() + 6));
+            meshView.setTranslateZ(-floorTopZ() - 6);
             meshView.getTransforms().add(scale);
             Pellet3D pellet3D = new Pellet3D(meshView);
             pellet3D.setTile(tile);
@@ -541,35 +541,29 @@ public class GameLevel3D implements Disposable {
     }
 
     private void createEnergizers3D() {
-        float radius         = ui.thePrefs().getFloat("3d.energizer.radius");
-        float floorThickness = ui.thePrefs().getFloat("3d.floor.thickness");
-        float minScaling     = ui.thePrefs().getFloat("3d.energizer.scaling.min");
-        float maxScaling     = ui.thePrefs().getFloat("3d.energizer.scaling.max");
+        float radius     = ui.thePrefs().getFloat("3d.energizer.radius");
+        float minScaling = ui.thePrefs().getFloat("3d.energizer.scaling.min");
+        float maxScaling = ui.thePrefs().getFloat("3d.energizer.scaling.max");
         gameLevel.tilesContainingFood().filter(gameLevel::isEnergizerPosition).forEach(tile -> {
-            Energizer3D energizer3D = createEnergizer3D(tile, radius, floorThickness, minScaling, maxScaling);
+            Energizer3D energizer3D = createEnergizer3D(tile, radius, minScaling, maxScaling);
             energizers3D.add(energizer3D);
         });
         energizers3D.trimToSize();
     }
 
-    private Energizer3D createEnergizer3D(Vector2i tile, float energizerRadius, float floorThickness, float minScaling, float maxScaling) {
-        float x = tile.x() * TS + HTS;
-        float y = tile.y() * TS + HTS;
-        float z = floorTopZ() - 2 * energizerRadius;
-        Point3D center = new Point3D(x, y, z);
+    private Energizer3D createEnergizer3D(Vector2i tile, float energizerRadius, float minScaling, float maxScaling) {
+        var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, floorTopZ() - 6);
         var energizer3D = new Energizer3D(animationRegistry, energizerRadius, minScaling, maxScaling, pelletMaterial);
         energizer3D.setTile(tile);
-        energizer3D.node().setTranslateX(x);
-        energizer3D.node().setTranslateY(y);
-        energizer3D.node().setTranslateZ(z);
-        var explosion = new Explosion(animationRegistry, center, particleGroupsContainer, particleMaterial,
-            particle -> particleReachedFloor(particle, floorThickness));
+        energizer3D.node().setTranslateX(center.getX());
+        energizer3D.node().setTranslateY(center.getY());
+        energizer3D.node().setTranslateZ(center.getZ());
+        var explosion = new Explosion(animationRegistry, center, particleGroupsContainer, particleMaterial, this::particleReachedFloor);
         energizer3D.setEatenAnimation(explosion);
-
         return energizer3D;
     }
 
-    private boolean particleReachedFloor(Explosion.Particle particle, float floorThickness) {
+    private boolean particleReachedFloor(Explosion.Particle particle) {
         Point3D pos = particle.position();
         double particleBottomZ = pos.getZ() + particle.getRadius();
         boolean onFloorZ = particleBottomZ + 1 >= floorTopZ();
