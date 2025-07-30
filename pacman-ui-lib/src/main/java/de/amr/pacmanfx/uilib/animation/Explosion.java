@@ -118,6 +118,7 @@ public class Explosion extends ManagedAnimation {
             if (!particle.glowing) {
                 Bloom bloom = new Bloom();
                 particle.setEffect(bloom);
+                particle.glowing = true;
             }
         }
 
