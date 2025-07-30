@@ -95,6 +95,10 @@ public abstract class Ghost extends MovingActor implements Animated {
         return name;
     }
 
+    public Vector2f revivalPosition() {
+        return revivalPosition;
+    }
+
     public void setRevivalPosition(Vector2f position) {
         requireNonNull(position);
         revivalPosition = position;

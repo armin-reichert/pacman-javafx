@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui._3d;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.StopWatch;
+import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.Obstacle;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
@@ -46,8 +47,7 @@ import org.tinylog.Logger;
 
 import java.util.*;
 
-import static de.amr.pacmanfx.Globals.HTS;
-import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static de.amr.pacmanfx.uilib.Ufx.*;
@@ -562,8 +562,13 @@ public class GameLevel3D implements Disposable {
         var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, floorTopZ() - 6);
         var energizer3D = new Energizer3D(animationRegistry, energizerRadius, center, minScaling, maxScaling, pelletMaterial);
         energizer3D.setTile(tile);
-        House house = gameLevel.house().orElseThrow(); //TODO
-        var explosion = new Explosion(animationRegistry, center, house, particleGroupsContainer, particleMaterial, this::particleReachedFloor);
+        Vector2f[] ghostRevivalPositions = {
+            // red ghost uses same as pink ghost
+            gameLevel.ghost(PINK_GHOST_SPEEDY).revivalPosition(),
+            gameLevel.ghost(CYAN_GHOST_BASHFUL).revivalPosition(),
+            gameLevel.ghost(ORANGE_GHOST_POKEY).revivalPosition(),
+        };
+        var explosion = new Explosion(animationRegistry, center, ghostRevivalPositions, particleGroupsContainer, particleMaterial, this::particleReachedFloor);
         energizer3D.setEatenAnimation(explosion);
         return energizer3D;
     }

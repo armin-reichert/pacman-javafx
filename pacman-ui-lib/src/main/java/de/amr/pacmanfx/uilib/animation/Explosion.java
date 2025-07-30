@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib.animation;
 
 import de.amr.pacmanfx.lib.StopWatch;
+import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.House;
 import javafx.animation.Animation;
 import javafx.animation.Transition;
@@ -44,26 +45,29 @@ public class Explosion extends ManagedAnimation {
 
     private static final float GRAVITY_Z = 0.18f;
 
-    public static class Velocity {
+    // As there is no *mutable* 3d vector class in standard JDK or JavaFX...
+    public static class Vec3f {
         public float x, y, z;
 
-        static Velocity ZERO = new Velocity(0, 0, 0);
+        static Vec3f ZERO = new Vec3f(0, 0, 0);
 
-        public Velocity(float x, float y, float z) {
+        public Vec3f(float x, float y, float z) {
             this.x = x;
             this.y = y;
             this.z = z;
         }
 
-        public Velocity normalize() {
-            float len = (float) Math.sqrt(x*x + y*y + z*z);
-            if (len != 0) {
-                return multiply(1f / len);
+        public Vec3f normalize() {
+            float maga = (float) Math.sqrt(x * x + y * y + z * z);
+            if (maga > 0) {
+                return multiply(1f / maga);
+            } else {
+                x = y = z = 0; // Point3D.normalized() also return zero vector, so be it
             }
             return this;
         }
 
-        public Velocity multiply(float s) {
+        public Vec3f multiply(float s) {
             x *= s;
             y *= s;
             z *= s;
@@ -78,9 +82,9 @@ public class Explosion extends ManagedAnimation {
         private boolean movingIntoHouse = false;
         private Point3D houseTarget;
 
-        private Velocity velocity;
+        private Vec3f velocity;
 
-        public Particle(double radius, Material material, Velocity velocity, Point3D origin) {
+        public Particle(double radius, Material material, Vec3f velocity, Point3D origin) {
             super(radius, PARTICLE_DIVISIONS);
             this.velocity = velocity;
             setMaterial(material);
@@ -110,7 +114,7 @@ public class Explosion extends ManagedAnimation {
     private Material particleMaterial;
     private Material[] debrisMaterial = new Material[5];
     private final Point3D origin;
-    private final House house;
+    private final Vector2f[] ghostRevivalPositions;
     private final Group particlesGroupContainer;
     private final Group particlesGroup = new Group();
     private final Predicate<Particle> particleAtEndPosition;
@@ -162,7 +166,7 @@ public class Explosion extends ManagedAnimation {
                 particle.houseTarget = randomHousePosition(particle);
                 Point3D position = particle.position();
                 float speed = rnd.nextFloat(PARTICLE_SPEED_MOVING_HOME_MIN, PARTICLE_SPEED_MOVING_HOME_MAX);
-                particle.velocity = new Velocity(
+                particle.velocity = new Vec3f(
                     (float) (particle.houseTarget.getX() - position.getX()),
                     (float) (particle.houseTarget.getY() - position.getY()),
                     0
@@ -170,15 +174,16 @@ public class Explosion extends ManagedAnimation {
                 particle.movingIntoHouse = true;
             }
             if (particle.position().distance(particle.houseTarget) < PARTICLE_SPEED_MOVING_HOME_MAX) {
-                particle.velocity = Velocity.ZERO;
+                particle.velocity = Vec3f.ZERO;
             } else {
                 particle.move();
             }
         }
 
         private Point3D randomHousePosition(Particle particle) {
-            float minX = (house.minTile().x() + 1) * TS, maxX = (house.maxTile().x()) * TS;
-            float minY = (house.minTile().y() + 1) * TS, maxY = (house.maxTile().y()) * TS;
+            Vector2f randomRevivalPosition = ghostRevivalPositions[rnd.nextInt(ghostRevivalPositions.length)];
+            float minX = randomRevivalPosition.x(), maxX = randomRevivalPosition.x() + TS;
+            float minY = randomRevivalPosition.y(), maxY = randomRevivalPosition.y() + TS;
             return new Point3D(
                 minX + rnd.nextDouble(maxX - minX),
                 minY + rnd.nextDouble(maxY - minY),
@@ -199,7 +204,7 @@ public class Explosion extends ManagedAnimation {
             particles = new Particle[particleCount];
             for (int i = 0; i < particleCount; ++i) {
                 double radius = randomParticleRadius(rnd);
-                Velocity velocity = randomParticleVelocity();
+                Vec3f velocity = randomParticleVelocity();
                 particles[i] = new Particle(radius, particleMaterial, velocity, origin);
                 particles[i].setVisible(true);
             }
@@ -213,11 +218,11 @@ public class Explosion extends ManagedAnimation {
             return scaling * PARTICLE_MEAN_RADIUS_UNSCALED;
         }
 
-        private Velocity randomParticleVelocity() {
+        private Vec3f randomParticleVelocity() {
             Random rnd = new Random();
             int xDir = rnd.nextBoolean() ? -1 : 1;
             int yDir = rnd.nextBoolean() ? -1 : 1;
-            return new Velocity(
+            return new Vec3f(
                 xDir * randomFloat(PARTICLE_SPEED_XY_MIN, PARTICLE_SPEED_XY_MAX),
                 yDir * randomFloat(PARTICLE_SPEED_XY_MIN, PARTICLE_SPEED_XY_MAX),
                 -randomFloat(PARTICLE_SPEED_Z_MIN, PARTICLE_SPEED_Z_MAX)
@@ -228,14 +233,14 @@ public class Explosion extends ManagedAnimation {
     public Explosion(
         AnimationRegistry animationRegistry,
         Point3D origin,
-        House house,
+        Vector2f[] ghostRevivalPositions,
         Group particlesGroupContainer,
         Material particleMaterial,
         Predicate<Particle> particleAtEndPosition) {
 
         super(animationRegistry, "Energizer_Explosion");
         this.origin = requireNonNull(origin);
-        this.house = requireNonNull(house);
+        this.ghostRevivalPositions = requireNonNull(ghostRevivalPositions);
         this.particlesGroupContainer = requireNonNull(particlesGroupContainer);
         this.particleMaterial = requireNonNull(particleMaterial);
         this.particleAtEndPosition = requireNonNull(particleAtEndPosition);
