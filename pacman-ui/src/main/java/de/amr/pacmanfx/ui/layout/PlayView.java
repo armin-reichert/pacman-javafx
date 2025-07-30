@@ -9,10 +9,7 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.actors.ActorAnimationMap;
-import de.amr.pacmanfx.ui.ActionBindingMap;
-import de.amr.pacmanfx.ui.GameScene;
-import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GameUI_Config;
+import de.amr.pacmanfx.ui.*;
 import de.amr.pacmanfx.ui._2d.CrudeCanvasContainer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.PopupLayer;
@@ -239,7 +236,10 @@ public class PlayView implements PacManGames_View {
 
     @Override
     public void handleKeyboardInput(GameUI ui) {
-        actionBindings.runMatchingActionOrElse(ui, () -> ui.currentGameScene().ifPresent(GameScene::handleKeyboardInput));
+        GameAction matchingAction = actionBindings.matchingAction().orElse(null);
+        ui.runActionOrElse(matchingAction,
+            () -> ui.currentGameScene().ifPresent(GameScene::handleKeyboardInput)
+        );
     }
 
     // -----------------------------------------------------------------------------------------------------------------

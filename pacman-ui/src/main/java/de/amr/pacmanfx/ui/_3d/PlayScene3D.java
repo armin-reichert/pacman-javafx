@@ -181,7 +181,7 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void handleKeyboardInput() {
-        actionBindings.runMatchingAction(ui);
+        actionBindings.matchingAction().ifPresent(ui::runAction);
     }
 
     @Override

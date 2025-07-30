@@ -109,12 +109,4 @@ public class ActionBindingMap {
             .map(actionByCombination::get)
             .findFirst();
     }
-
-    public void runMatchingAction(GameUI ui) {
-        matchingAction().ifPresent(action -> action.executeIfEnabled(ui));
-    }
-
-    public void runMatchingActionOrElse(GameUI ui, Runnable defaultAction) {
-        matchingAction().ifPresentOrElse(action -> action.executeIfEnabled(ui), defaultAction);
-    }
 }

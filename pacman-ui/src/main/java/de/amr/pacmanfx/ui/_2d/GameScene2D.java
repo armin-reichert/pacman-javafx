@@ -77,7 +77,7 @@ public abstract class GameScene2D implements GameScene {
 
     @Override
     public void handleKeyboardInput() {
-        actionBindings.runMatchingAction(ui);
+        actionBindings.matchingAction().ifPresent(ui::runAction);
     }
 
     protected abstract void doInit();

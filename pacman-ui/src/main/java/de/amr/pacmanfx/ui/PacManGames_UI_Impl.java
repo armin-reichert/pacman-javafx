@@ -195,8 +195,9 @@ public class PacManGames_UI_Impl implements GameUI {
         mainScene = new Scene(rootPane, width, height);
         mainScene.addEventFilter(KeyEvent.KEY_PRESSED, theKeyboard::onKeyPressed);
         mainScene.addEventFilter(KeyEvent.KEY_RELEASED, theKeyboard::onKeyReleased);
-        mainScene.setOnKeyPressed(e -> globalActionBindings.runMatchingActionOrElse(this,
-                () -> currentView().handleKeyboardInput(this)));
+        mainScene.setOnKeyPressed(e -> runActionOrElse(
+            globalActionBindings.matchingAction().orElse(null),
+            () -> currentView().handleKeyboardInput(this)));
     }
 
     private void createStatusIcons() {

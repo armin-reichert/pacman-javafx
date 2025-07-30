@@ -32,6 +32,7 @@ import java.util.Optional;
 
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
+import static java.util.Objects.requireNonNull;
 
 public interface GameUI {
 
@@ -140,6 +141,19 @@ public interface GameUI {
     void showFlashMessageSec(double seconds, String message, Object... args);
 
     void terminate();
+
+    default void runAction(GameAction action) {
+        action.executeIfEnabled(this);
+    }
+
+    default void runActionOrElse(GameAction optAction, Runnable defaultCode) {
+        requireNonNull(defaultCode);
+        if (optAction != null) {
+            runAction(optAction);
+        } else {
+            defaultCode.run();
+        }
+    }
 
     /**
      * @param titleKey resource bundle key of title text

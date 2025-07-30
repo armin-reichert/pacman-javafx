@@ -12,7 +12,12 @@ import javafx.scene.Node;
 
 public interface PacManGames_View extends GameEventListener {
     Node rootNode();
+
     ObservableStringValue title();
+
     ActionBindingMap actionBindingMap();
-    default void handleKeyboardInput(GameUI ui) { actionBindingMap().runMatchingAction(ui); }
+
+    default void handleKeyboardInput(GameUI ui) {
+        actionBindingMap().matchingAction().ifPresent(ui::runAction);
+    }
 }
