@@ -97,7 +97,7 @@ public class PacManGames_UI_Impl implements GameUI {
     private final PlayView playView;
     private       EditorView editorView; // created on first access
 
-    private final ActionBindingMap globalActionBindings;
+    private final ActionBindingManager globalActionBindings;
 
     public PacManGames_UI_Impl(GameContext gameContext, Stage stage, double width, double height) {
         requireNonNull(gameContext);
@@ -114,7 +114,7 @@ public class PacManGames_UI_Impl implements GameUI {
         thePrefs = new PreferenceManager(PacManGames_UI_Impl.class);
         theStage = stage;
 
-        globalActionBindings = new DefaultActionBindingMap();
+        globalActionBindings = new DefaultActionBindingManager();
         initGlobalActionBindings();
 
         initPreferences();

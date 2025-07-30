@@ -108,14 +108,14 @@ public class PlayScene3D implements GameScene {
     protected final GameUI ui;
     protected final SubScene subScene;
     protected final PerspectiveCamera camera = new PerspectiveCamera(true);
-    protected final ActionBindingMap actionBindings;
+    protected final ActionBindingManager actionBindings;
     protected final Group gameLevel3DRoot = new Group();
     protected GameLevel3D gameLevel3D;
     protected Scores3D scores3D;
 
     public PlayScene3D(GameUI ui) {
         this.ui = requireNonNull(ui);
-        this.actionBindings = new DefaultActionBindingMap();
+        this.actionBindings = new DefaultActionBindingManager();
 
         createPerspectives();
 
@@ -187,7 +187,7 @@ public class PlayScene3D implements GameScene {
     }
 
     @Override
-    public ActionBindingMap actionBindings() {
+    public ActionBindingManager actionBindings() {
         return actionBindings;
     }
 

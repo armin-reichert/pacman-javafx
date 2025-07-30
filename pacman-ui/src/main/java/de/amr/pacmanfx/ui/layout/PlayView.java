@@ -69,7 +69,7 @@ public class PlayView implements PacManGames_View {
         };
     }
 
-    private final ActionBindingMap actionBindings;
+    private final ActionBindingManager actionBindings;
 
     private final GameUI ui;
     private final GameContext gameContext;
@@ -95,7 +95,7 @@ public class PlayView implements PacManGames_View {
         this.miniGameView = new MiniGameView();
         this.dashboard = new Dashboard(ui);
         
-        this.actionBindings = new DefaultActionBindingMap();
+        this.actionBindings = new DefaultActionBindingManager();
 
         configureMiniGameView();
         configureCanvasContainer();
@@ -202,7 +202,7 @@ public class PlayView implements PacManGames_View {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public ActionBindingMap actionBindingMap() {
+    public ActionBindingManager actionBindingMap() {
         return actionBindings;
     }
 

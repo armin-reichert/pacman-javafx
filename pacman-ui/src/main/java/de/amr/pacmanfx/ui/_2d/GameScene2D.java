@@ -9,8 +9,8 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.ui.ActionBindingMap;
-import de.amr.pacmanfx.ui.DefaultActionBindingMap;
+import de.amr.pacmanfx.ui.ActionBindingManager;
+import de.amr.pacmanfx.ui.DefaultActionBindingManager;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -43,7 +43,7 @@ public abstract class GameScene2D implements GameScene {
     protected final BooleanProperty debugInfoVisibleProperty      = new SimpleBooleanProperty(false);
     protected final FloatProperty scalingProperty                 = new SimpleFloatProperty(1.0f);
 
-    protected final ActionBindingMap actionBindings;
+    protected final ActionBindingManager actionBindings;
     protected final AnimationRegistry animationRegistry = new AnimationRegistry();
     protected GameRenderer gameRenderer;
     protected Canvas canvas;
@@ -51,7 +51,7 @@ public abstract class GameScene2D implements GameScene {
 
     protected GameScene2D(GameUI ui) {
         this.ui = requireNonNull(ui);
-        actionBindings = new DefaultActionBindingMap();
+        actionBindings = new DefaultActionBindingManager();
         debugTextFill = ui.thePrefs().getColor("debug_text.fill");
         debugTextFont = ui.thePrefs().getFont("debug_text.font");
     }
@@ -85,7 +85,7 @@ public abstract class GameScene2D implements GameScene {
     protected abstract void doEnd();
 
     @Override
-    public ActionBindingMap actionBindings() { return actionBindings; }
+    public ActionBindingManager actionBindings() { return actionBindings; }
 
     @Override
     public void onStopAllSounds(GameEvent event) { ui.theSound().stopAll(); }

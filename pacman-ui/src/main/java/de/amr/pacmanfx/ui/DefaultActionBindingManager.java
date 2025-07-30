@@ -12,9 +12,9 @@ import java.util.*;
 
 import static java.util.Objects.requireNonNull;
 
-public class DefaultActionBindingMap implements ActionBindingMap {
+public class DefaultActionBindingManager implements ActionBindingManager {
 
-    public static class EmptyMap implements ActionBindingMap {
+    public static class EmptyManager implements ActionBindingManager {
 
         @Override
         public Map<KeyCombination, GameAction> actionByCombination() {
@@ -43,11 +43,11 @@ public class DefaultActionBindingMap implements ActionBindingMap {
         public Optional<GameAction> matchingAction(Keyboard keyboard) { return Optional.empty(); }
     }
 
-    public static final ActionBindingMap EMPTY_MAP = new EmptyMap();
+    public static final ActionBindingManager EMPTY_MAP = new EmptyManager();
 
     protected Map<KeyCombination, GameAction> actionByCombination;
 
-    public DefaultActionBindingMap() {
+    public DefaultActionBindingManager() {
         this.actionByCombination = new HashMap<>();
     }
 

@@ -69,13 +69,13 @@ public class StartPagesView implements PacManGames_View {
     }
 
     private final List<StartPage> startPageList = new ArrayList<>();
-    private final ActionBindingMap actionBindings;
+    private final ActionBindingManager actionBindings;
     private final Carousel carousel;
     private StringBinding titleBinding;
 
     public StartPagesView(GameUI ui) {
         requireNonNull(ui);
-        this.actionBindings = new DefaultActionBindingMap();
+        this.actionBindings = new DefaultActionBindingManager();
         carousel = new StartPagesCarousel();
         carousel.selectedIndexProperty().addListener((py,ov,nv) -> {
             Logger.info("Carousel selection changed from {} to {}", ov, nv);
@@ -121,7 +121,7 @@ public class StartPagesView implements PacManGames_View {
     }
 
     @Override
-    public ActionBindingMap actionBindingMap() {
+    public ActionBindingManager actionBindingMap() {
         return actionBindings;
     }
 

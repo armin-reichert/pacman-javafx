@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.dashboard;
 
-import de.amr.pacmanfx.ui.ActionBindingMap;
+import de.amr.pacmanfx.ui.ActionBindingManager;
 import de.amr.pacmanfx.ui.GameAction;
 import de.amr.pacmanfx.ui.GameUI;
 import javafx.scene.input.KeyCombination;
@@ -26,12 +26,12 @@ public class InfoBoxKeyShortcutsLocal extends InfoBox {
         ui.currentGameScene().ifPresent(gameScene -> addEntries(gameScene.actionBindings()));
     }
 
-    private void addEntries(ActionBindingMap actionBindingMap) {
-        if (actionBindingMap.isEmpty()) {
+    private void addEntries(ActionBindingManager actionBindingManager) {
+        if (actionBindingManager.isEmpty()) {
             addRow(createLabel(NO_INFO, false));
         }
         else {
-            actionBindingMap.actionByCombination().entrySet().stream()
+            actionBindingManager.actionByCombination().entrySet().stream()
                     .sorted(Comparator.comparing(e -> e.getKey().getDisplayText()))
                     .forEach(entry -> {
                 KeyCombination keyCombination = entry.getKey();
