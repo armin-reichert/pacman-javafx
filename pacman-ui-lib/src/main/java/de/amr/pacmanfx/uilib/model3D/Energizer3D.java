@@ -39,7 +39,7 @@ public class Energizer3D extends Sphere implements Eatable3D {
             @Override
             protected Animation createAnimationFX() {
                 // 3 full pumping cycles per second = 6 compress/expand cycles
-                Duration duration = Duration.seconds(1 / 6f);
+                Duration duration = Duration.millis(166.6);
                 var transition = new ScaleTransition(duration, Energizer3D.this);
                 transition.setAutoReverse(true);
                 transition.setCycleCount(Animation.INDEFINITE);

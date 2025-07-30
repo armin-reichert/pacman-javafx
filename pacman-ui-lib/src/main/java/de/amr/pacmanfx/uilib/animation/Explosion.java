@@ -9,7 +9,10 @@ import javafx.animation.Animation;
 import javafx.animation.Transition;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
+import javafx.scene.effect.Bloom;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Translate;
 import javafx.util.Duration;
@@ -24,17 +27,17 @@ import static java.util.Objects.requireNonNull;
 
 public class Explosion extends ManagedAnimation {
 
-    private static final Duration EXPLOSION_DURATION = Duration.seconds(10);
+    private static final Duration EXPLOSION_DURATION = Duration.seconds(30);
 
     private static final short PARTICLE_DIVISIONS = 8;
     private static final short PARTICLE_COUNT_MIN = 200;
     private static final short PARTICLE_COUNT_MAX = 400;
     private static final float PARTICLE_MEAN_RADIUS_UNSCALED = .15f;
-    private static final float PARTICLE_VELOCITY_XY_MIN = -1f;
-    private static final float PARTICLE_VELOCITY_XY_MAX =  1f;
-    private static final float PARTICLE_VELOCITY_Z_MIN  = -6f;
+    private static final float PARTICLE_VELOCITY_XY_MIN = -2f;
+    private static final float PARTICLE_VELOCITY_XY_MAX =  2f;
+    private static final float PARTICLE_VELOCITY_Z_MIN  = -8f;
     private static final float PARTICLE_VELOCITY_Z_MAX  = -2f;
-    private static final float GRAVITY_Z = 0.2f;
+    private static final float GRAVITY_Z = 0.18f;
 
     public static class Velocity {
         public float x, y, z;
@@ -47,6 +50,9 @@ public class Explosion extends ManagedAnimation {
     }
 
     public static class Particle extends Sphere {
+
+        private boolean flying = true;
+        private boolean glowing = false;
 
         private final Velocity velocity;
 
@@ -72,7 +78,8 @@ public class Explosion extends ManagedAnimation {
         }
     }
 
-    private final Material particleMaterial;
+    private Material particleMaterial;
+    private Material[] debrisMaterial = new Material[5];
     private final Point3D origin;
     private final Group particlesGroupContainer;
     private final Group particlesGroup = new Group();
@@ -88,12 +95,34 @@ public class Explosion extends ManagedAnimation {
         @Override
         protected void interpolate(double t) {
             for (Particle particle : particles) {
-                if (particleAtEndPosition.test(particle)) {
-                    particle.setRadius(0.2); //TODO make something more intelligent
-                } else {
+                if (particle.flying) {
+                    if (particleAtEndPosition.test(particle)) {
+                        particle.flying = false;
+                        particle.setRadius(0.2); //TODO make something more intelligent
+                    }
+                }
+                if (particle.flying) {
                     particle.move();
+                    // if falling under certain height, start glowing etc.
+                    if (particle.velocity.z > 0 && particle.position().getZ() > -20) {
+                        startGlowing(particle);
+                        setRandomDebrisMaterial(particle);
+                    }
+                } else {
+                    setRandomDebrisMaterial(particle);
                 }
             }
+        }
+
+        private void startGlowing(Particle particle) {
+            if (!particle.glowing) {
+                Bloom bloom = new Bloom();
+                particle.setEffect(bloom);
+            }
+        }
+
+        private void setRandomDebrisMaterial(Particle particle) {
+            particle.setMaterial(debrisMaterial[randomInt(0, debrisMaterial.length)]);
         }
 
         @Override
@@ -145,6 +174,14 @@ public class Explosion extends ManagedAnimation {
         this.particleMaterial = requireNonNull(particleMaterial);
         this.particleAtEndPosition = requireNonNull(particleAtEndPosition);
         particlesGroupContainer.getChildren().add(particlesGroup);
+
+        for (int i = 0; i < debrisMaterial.length; ++i) {
+            PhongMaterial material = new PhongMaterial();
+            double hue = (360.0 * i) / debrisMaterial.length;
+            material.setDiffuseColor(Color.hsb(hue, 1, 1));
+            material.setSpecularColor(Color.hsb(hue, 0.5, 1));
+            debrisMaterial[i] = material;
+        }
     }
 
     @Override
@@ -164,5 +201,7 @@ public class Explosion extends ManagedAnimation {
         particles = null;
         particlesGroup.getChildren().clear();
         particlesGroupContainer.getChildren().remove(particlesGroup);
+        particleMaterial = null;
+        debrisMaterial = null;
     }
 }
