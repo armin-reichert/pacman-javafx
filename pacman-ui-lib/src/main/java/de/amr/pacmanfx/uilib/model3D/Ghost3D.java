@@ -84,6 +84,9 @@ public class Ghost3D extends Group implements Disposable {
     private PhongMaterial pupilsMaterialFrightened;
     private PhongMaterial eyeballsMaterialFrightened;
 
+    private PhongMaterial dressMaterialFlashing;
+    private PhongMaterial pupilsMaterialFlashing;
+
     private final ObjectProperty<PhongMaterial> dressMaterial = new SimpleObjectProperty<>();
     private final ObjectProperty<PhongMaterial> pupilsMaterial = new SimpleObjectProperty<>();
     private final ObjectProperty<PhongMaterial> eyeballsMaterial = new SimpleObjectProperty<>();
@@ -127,6 +130,11 @@ public class Ghost3D extends Group implements Disposable {
         eyeballsMaterialFrightened = Ufx.coloredPhongMaterial(coloring.frightenedEyeballsColor());
         pupilsMaterialFrightened = Ufx.coloredPhongMaterial(coloring.frightenedPupilsColor());
 
+        dressMaterialFlashing = Ufx.coloredPhongMaterial(coloring.flashingDressColor());
+        dressMaterialFlashing.diffuseColorProperty().bind(dressColorProperty);
+        pupilsMaterialFlashing = Ufx.coloredPhongMaterial(coloring.flashingPupilsColor());
+        pupilsMaterialFlashing.diffuseColorProperty().bind(pupilsColorProperty);
+
         dressColorProperty.set(coloring.normalDressColor());
         dressMaterial.bind(dressColorProperty.map(dressColor -> {
             if (dressColor.equals(coloring.normalDressColor())) {
@@ -135,8 +143,7 @@ public class Ghost3D extends Group implements Disposable {
             if (dressColor.equals(coloring.frightenedDressColor())) {
                 return dressMaterialFrightened;
             }
-            //TODO avoid creating new material or cache material?
-            return Ufx.coloredPhongMaterial(dressColor);
+            return dressMaterialFlashing;
         }));
         dressShape.materialProperty().bind(dressMaterial);
 
@@ -148,8 +155,7 @@ public class Ghost3D extends Group implements Disposable {
             if (pupilsColor.equals(coloring.frightenedPupilsColor())) {
                 return pupilsMaterialFrightened;
             }
-            //TODO avoid creating new material or cache material?
-            return Ufx.coloredPhongMaterial(pupilsColor);
+            return pupilsMaterialFlashing;
         }));
         pupilsShape.materialProperty().bind(pupilsMaterial);
 
@@ -161,8 +167,8 @@ public class Ghost3D extends Group implements Disposable {
             if (eyeballsColor.equals(coloring.frightenedEyeballsColor())) {
                 return eyeballsMaterialFrightened;
             }
-            //TODO avoid creating new material or cache material?
-            return Ufx.coloredPhongMaterial(eyeballsColor);
+            // TODO: check this
+            return eyeballsMaterialFrightened;
         }));
         eyeballsShape.materialProperty().bind(eyeballsMaterial);
 
