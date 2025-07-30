@@ -84,12 +84,11 @@ public class StartPagesView implements PacManGames_View {
             Logger.info("Carousel selection changed from {} to {}", ov, nv);
             int oldIndex = ov.intValue(), newIndex = nv.intValue();
             if (oldIndex != -1) {
-                startPageList.get(oldIndex).onExit();
+                startPageList.get(oldIndex).onExit(ui);
             }
             if (newIndex != -1) {
                 StartPage startPage = startPageList.get(newIndex);
-                ui.selectGameVariant(startPage.currentGameVariant());
-                startPage.onEnter();
+                startPage.onEnter(ui);
                 startPage.layoutRoot().requestFocus();
             }
         });

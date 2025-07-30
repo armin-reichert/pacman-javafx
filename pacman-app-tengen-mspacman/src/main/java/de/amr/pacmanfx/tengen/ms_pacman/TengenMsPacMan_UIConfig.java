@@ -43,6 +43,7 @@ import javafx.scene.paint.Color;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.OptionalInt;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.TS;
@@ -417,16 +418,16 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public void createGameScenes(GameUI ui) {
-        scenesByID.put(SCENE_ID_BOOT_SCENE_2D,      new TengenMsPacMan_BootScene(ui));
-        scenesByID.put(SCENE_ID_INTRO_SCENE_2D,     new TengenMsPacMan_IntroScene(ui));
-        scenesByID.put(SCENE_ID_START_SCENE_2D,     new TengenMsPacMan_OptionsScene(ui));
-        scenesByID.put(SCENE_ID_CREDITS_SCENE_2D, new TengenMsPacMan_CreditsScene(ui));
-        scenesByID.put(SCENE_ID_PLAY_SCENE_2D,    new TengenMsPacMan_PlayScene2D(ui));
-        scenesByID.put(SCENE_ID_PLAY_SCENE_3D,    new TengenMsPacMan_PlayScene3D(ui));
-        scenesByID.put(SCENE_ID_CUT_SCENE_1_2D,      new TengenMsPacMan_CutScene1(ui));
-        scenesByID.put(SCENE_ID_CUT_SCENE_2_2D,      new TengenMsPacMan_CutScene2(ui));
-        scenesByID.put(SCENE_ID_CUT_SCENE_3_2D,      new TengenMsPacMan_CutScene3(ui));
-        scenesByID.put(SCENE_ID_CUT_SCENE_4_2D,      new TengenMsPacMan_CutScene4(ui));
+        scenesByID.put(SCENE_ID_BOOT_SCENE_2D,               new TengenMsPacMan_BootScene(ui));
+        scenesByID.put(SCENE_ID_INTRO_SCENE_2D,              new TengenMsPacMan_IntroScene(ui));
+        scenesByID.put(SCENE_ID_START_SCENE_2D,              new TengenMsPacMan_OptionsScene(ui));
+        scenesByID.put(SCENE_ID_CREDITS_SCENE_2D,            new TengenMsPacMan_CreditsScene(ui));
+        scenesByID.put(SCENE_ID_PLAY_SCENE_2D,               new TengenMsPacMan_PlayScene2D(ui));
+        scenesByID.put(SCENE_ID_PLAY_SCENE_3D,               new TengenMsPacMan_PlayScene3D(ui));
+        scenesByID.put(SCENE_ID_CUT_SCENE_N_2D.formatted(1), new TengenMsPacMan_CutScene1(ui));
+        scenesByID.put(SCENE_ID_CUT_SCENE_N_2D.formatted(2), new TengenMsPacMan_CutScene2(ui));
+        scenesByID.put(SCENE_ID_CUT_SCENE_N_2D.formatted(3), new TengenMsPacMan_CutScene3(ui));
+        scenesByID.put(SCENE_ID_CUT_SCENE_N_2D.formatted(4), new TengenMsPacMan_CutScene4(ui));
 
         //TODO where is the best place to do that?
         var playScene2D = (TengenMsPacMan_PlayScene2D) scenesByID.get(SCENE_ID_PLAY_SCENE_2D);
@@ -436,21 +437,25 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     @Override
     public GameScene selectGameScene(GameContext gameContext) {
         String sceneID = switch (gameContext.theGameState()) {
-            case BOOT               -> SCENE_ID_BOOT_SCENE_2D;
+            case BOOT -> SCENE_ID_BOOT_SCENE_2D;
             case SETTING_OPTIONS_FOR_START -> SCENE_ID_START_SCENE_2D;
-            case SHOWING_CREDITS    -> SCENE_ID_CREDITS_SCENE_2D;
-            case INTRO              -> SCENE_ID_INTRO_SCENE_2D;
-            case GameState.INTERMISSION       -> {
+            case SHOWING_CREDITS -> SCENE_ID_CREDITS_SCENE_2D;
+            case INTRO -> SCENE_ID_INTRO_SCENE_2D;
+            case GameState.INTERMISSION -> {
                 if (gameContext.optGameLevel().isEmpty()) {
                     throw new IllegalStateException("Cannot determine cut scene, no game level available");
                 }
                 int levelNumber = gameContext.theGameLevel().number();
-                if (gameContext.theGame().cutSceneNumber(levelNumber).isEmpty()) {
+                OptionalInt optCutSceneNumber = gameContext.theGame().cutSceneNumber(levelNumber);
+                if (optCutSceneNumber.isEmpty()) {
                     throw new IllegalStateException("Cannot determine cut scene after level %d".formatted(levelNumber));
                 }
-                yield "CutScene" + gameContext.theGame().cutSceneNumber(levelNumber).getAsInt();
+                yield SCENE_ID_CUT_SCENE_N_2D.formatted(optCutSceneNumber.getAsInt());
             }
-            case GameState.TESTING_CUT_SCENES -> "CutScene" + gameContext.theGame().<Integer>getProperty("intermissionTestNumber");
+            case GameState.TESTING_CUT_SCENES -> {
+                int cutSceneNumber = gameContext.theGame().<Integer>getProperty("intermissionTestNumber");
+                yield SCENE_ID_CUT_SCENE_N_2D.formatted(cutSceneNumber);
+            }
             default -> ui.property3DEnabled().get() ? SCENE_ID_PLAY_SCENE_3D : SCENE_ID_PLAY_SCENE_2D;
         };
         return scenesByID.get(sceneID);

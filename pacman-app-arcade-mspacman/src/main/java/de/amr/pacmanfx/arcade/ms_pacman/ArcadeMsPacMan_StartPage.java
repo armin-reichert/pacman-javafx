@@ -40,6 +40,11 @@ public class ArcadeMsPacMan_StartPage extends StackPane implements StartPage {
     }
 
     @Override
+    public void onEnter(GameUI ui) {
+        ui.selectGameVariant(currentGameVariant());
+    }
+
+    @Override
     public String currentGameVariant() {
         return (String) getUserData();
     }

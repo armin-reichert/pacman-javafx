@@ -45,13 +45,13 @@ public class PacManXXL_Common_StartPage implements StartPage {
                 if (menu.canvas().isFocused()) {
                     Logger.info("Focus now on {}", menu.canvas());
                 }
-                onEnter();
+                onEnter(ui);
             }
         });
     }
 
     @Override
-    public void onEnter() {
+    public void onEnter(GameUI ui) {
         String gameVariant = currentGameVariant();
         if (GameVariant.PACMAN_XXL.name().equals(gameVariant)) {
             Logger.info("Loading assets for game variant {}", gameVariant);
@@ -64,13 +64,15 @@ public class PacManXXL_Common_StartPage implements StartPage {
         else {
             Logger.error("Invalid game variant: {}", gameVariant);
         }
+        ui.selectGameVariant(gameVariant);
         menu.soundEnabledProperty().bind(theUI().theSound().mutedProperty().not());
         menu.syncMenuState();
         menu.startAnimation();
+
     }
 
     @Override
-    public void onExit() {
+    public void onExit(GameUI ui) {
         menu.stopAnimation();
     }
 

@@ -32,6 +32,7 @@ import javafx.scene.paint.Color;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.OptionalInt;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
@@ -232,34 +233,38 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
 
     @Override
     public void createGameScenes(GameUI ui) {
-        scenesByID.put(SCENE_ID_BOOT_SCENE_2D,   new ArcadeCommon_BootScene2D(ui));
-        scenesByID.put(SCENE_ID_INTRO_SCENE_2D,  new ArcadePacMan_IntroScene(ui));
-        scenesByID.put(SCENE_ID_START_SCENE_2D,  new ArcadePacMan_StartScene(ui));
-        scenesByID.put(SCENE_ID_PLAY_SCENE_2D, new ArcadeCommon_PlayScene2D(ui));
-        scenesByID.put(SCENE_ID_PLAY_SCENE_3D, new PlayScene3D(ui));
-        scenesByID.put(SCENE_ID_CUT_SCENE_1_2D,   new ArcadePacMan_CutScene1(ui));
-        scenesByID.put(SCENE_ID_CUT_SCENE_2_2D,   new ArcadePacMan_CutScene2(ui));
-        scenesByID.put(SCENE_ID_CUT_SCENE_3_2D,   new ArcadePacMan_CutScene3(ui));
+        scenesByID.put(SCENE_ID_BOOT_SCENE_2D,               new ArcadeCommon_BootScene2D(ui));
+        scenesByID.put(SCENE_ID_INTRO_SCENE_2D,              new ArcadePacMan_IntroScene(ui));
+        scenesByID.put(SCENE_ID_START_SCENE_2D,              new ArcadePacMan_StartScene(ui));
+        scenesByID.put(SCENE_ID_PLAY_SCENE_2D,               new ArcadeCommon_PlayScene2D(ui));
+        scenesByID.put(SCENE_ID_PLAY_SCENE_3D,               new PlayScene3D(ui));
+        scenesByID.put(SCENE_ID_CUT_SCENE_N_2D.formatted(1), new ArcadePacMan_CutScene1(ui));
+        scenesByID.put(SCENE_ID_CUT_SCENE_N_2D.formatted(2), new ArcadePacMan_CutScene2(ui));
+        scenesByID.put(SCENE_ID_CUT_SCENE_N_2D.formatted(3), new ArcadePacMan_CutScene3(ui));
     }
 
     @Override
     public GameScene selectGameScene(GameContext gameContext) {
         String sceneID = switch (gameContext.theGameState()) {
-            case GameState.BOOT               -> SCENE_ID_BOOT_SCENE_2D;
+            case GameState.BOOT -> SCENE_ID_BOOT_SCENE_2D;
             case GameState.SETTING_OPTIONS_FOR_START -> SCENE_ID_START_SCENE_2D;
-            case GameState.INTRO              -> SCENE_ID_INTRO_SCENE_2D;
-            case GameState.INTERMISSION       -> {
+            case GameState.INTRO -> SCENE_ID_INTRO_SCENE_2D;
+            case GameState.INTERMISSION -> {
                 if (gameContext.optGameLevel().isEmpty()) {
                     throw new IllegalStateException("Cannot determine cut scene, no game level available");
                 }
                 int levelNumber = gameContext.theGameLevel().number();
-                if (gameContext.theGame().cutSceneNumber(levelNumber).isEmpty()) {
+                OptionalInt optCutSceneNumber = gameContext.theGame().cutSceneNumber(levelNumber);
+                if (optCutSceneNumber.isEmpty()) {
                     throw new IllegalStateException("Cannot determine cut scene after level %d".formatted(levelNumber));
                 }
-                yield "CutScene" + gameContext.theGame().cutSceneNumber(levelNumber).getAsInt();
+                yield SCENE_ID_CUT_SCENE_N_2D.formatted(optCutSceneNumber.getAsInt());
             }
-            case GameState.TESTING_CUT_SCENES -> "CutScene" + gameContext.theGame().<Integer>getProperty("intermissionTestNumber");
-            default -> ui.property3DEnabled().get() ?  SCENE_ID_PLAY_SCENE_3D : SCENE_ID_PLAY_SCENE_2D;
+            case GameState.TESTING_CUT_SCENES -> {
+                int cutSceneNumber = gameContext.theGame().<Integer>getProperty("intermissionTestNumber");
+                yield SCENE_ID_CUT_SCENE_N_2D.formatted(cutSceneNumber);
+            }
+            default -> ui.property3DEnabled().get() ? SCENE_ID_PLAY_SCENE_3D : SCENE_ID_PLAY_SCENE_2D;
         };
         return scenesByID.get(sceneID);
     }
