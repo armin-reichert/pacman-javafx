@@ -75,7 +75,7 @@ public class ActionBindingMap {
 
     public void addBinding(ActionBinding actionBinding) {
         for (KeyCombination combination : actionBinding.keyCombinations()) {
-            bind(actionBinding.gameAction(), combination);
+            actionByCombination.put(combination, actionBinding.gameAction());
         }
     }
 
@@ -87,6 +87,7 @@ public class ActionBindingMap {
 
     /**
      * Finds the first binding in the given list matching the given action and adds it to this map.
+     *
      * @param gameAction a game action
      * @param actionBindings an action bindings list
      */
@@ -94,13 +95,9 @@ public class ActionBindingMap {
         requireNonNull(gameAction);
         requireNonNull(actionBindings);
         actionBindings.stream()
-                .filter(actionBinding -> actionBinding.gameAction() == gameAction)
-                .findFirst()
-                .ifPresent(actionBinding -> {
-                    for (KeyCombination combination : actionBinding.keyCombinations()) {
-                        actionByCombination.put(combination, gameAction);
-                    }
-        });
+            .filter(actionBinding -> actionBinding.gameAction() == gameAction)
+            .findFirst()
+            .ifPresent(this::addBinding);
     }
 
     public Optional<GameAction> matchingAction() {
