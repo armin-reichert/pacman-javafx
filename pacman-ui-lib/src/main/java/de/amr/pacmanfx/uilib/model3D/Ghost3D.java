@@ -76,6 +76,14 @@ public class Ghost3D extends Group implements Disposable {
     private final ObjectProperty<Color> eyeballsColorProperty = new SimpleObjectProperty<>(Color.WHITE);
     private final ObjectProperty<Color> pupilsColorProperty = new SimpleObjectProperty<>(Color.BLUE);
 
+    private PhongMaterial dressMaterialNormalColor;
+    private PhongMaterial pupilsMaterialNormalColor;
+    private PhongMaterial eyeballsMaterialNormalColor;
+
+    private final ObjectProperty<PhongMaterial> dressMaterial = new SimpleObjectProperty<>();
+    private final ObjectProperty<PhongMaterial> pupilsMaterial = new SimpleObjectProperty<>();
+    private final ObjectProperty<PhongMaterial> eyeballsMaterial = new SimpleObjectProperty<>();
+
     private MeshView dressShape;
     private MeshView pupilsShape;
     private MeshView eyeballsShape;
@@ -84,10 +92,6 @@ public class Ghost3D extends Group implements Disposable {
 
     private ManagedAnimation dressAnimation;
     private FlashingAnimation flashingAnimation;
-
-    private PhongMaterial dressMaterial;
-    private PhongMaterial pupilsMaterial;
-    private PhongMaterial eyeballsMaterial;
 
     private final GhostColoring coloring;
 
@@ -111,18 +115,39 @@ public class Ghost3D extends Group implements Disposable {
         requireNonNull(eyeballsShape);
         requireNonNegative(size);
 
+        dressMaterialNormalColor = Ufx.coloredPhongMaterial(coloring.normalDressColor());
+        pupilsMaterialNormalColor = Ufx.coloredPhongMaterial(coloring.normalPupilsColor());
+        eyeballsMaterialNormalColor = Ufx.coloredPhongMaterial(coloring.normalEyeballsColor());
 
         dressColorProperty.set(coloring.normalDressColor());
-        dressMaterial = Ufx.coloredPhongMaterial(coloring.normalDressColor());
-        dressShape.setMaterial(dressMaterial);
+        dressMaterial.bind(dressColorProperty.map(dressColor -> {
+            if (dressColor.equals(coloring.normalDressColor())) {
+                return dressMaterialNormalColor;
+            }
+            //TODO avoid creating new material or cache material?
+            return Ufx.coloredPhongMaterial(dressColor);
+        }));
+        dressShape.materialProperty().bind(dressMaterial);
 
         pupilsColorProperty.set(coloring.normalPupilsColor());
-        pupilsMaterial = Ufx.coloredPhongMaterial(coloring.normalPupilsColor());
-        pupilsShape.setMaterial(pupilsMaterial);
+        pupilsMaterial.bind(pupilsColorProperty.map(pupilsColor -> {
+            if (pupilsColor.equals(coloring.normalPupilsColor())) {
+                return pupilsMaterialNormalColor;
+            }
+            //TODO avoid creating new material or cache material?
+            return Ufx.coloredPhongMaterial(pupilsColor);
+        }));
+        pupilsShape.materialProperty().bind(pupilsMaterial);
 
         eyeballsColorProperty.set(coloring.normalEyeballsColor());
-        eyeballsMaterial = Ufx.coloredPhongMaterial(coloring.normalEyeballsColor());
-        eyeballsShape.setMaterial(eyeballsMaterial);
+        eyeballsMaterial.bind(eyeballsColorProperty.map(eyeballsColor -> {
+            if (eyeballsColor.equals(coloring.normalEyeballsColor())) {
+                return eyeballsMaterialNormalColor;
+            }
+            //TODO avoid creating new material or cache material?
+            return Ufx.coloredPhongMaterial(eyeballsColor);
+        }));
+        eyeballsShape.materialProperty().bind(eyeballsMaterial);
 
         var eyesGroup = new Group(pupilsShape, eyeballsShape);
         dressGroup = new Group(dressShape);
@@ -186,16 +211,16 @@ public class Ghost3D extends Group implements Disposable {
         flashingAnimation = null;
     }
 
-    public PhongMaterial dressMaterial() {
-        return dressMaterial;
+    public PhongMaterial dressMaterialNormalColor() {
+        return dressMaterialNormalColor;
     }
 
-    public PhongMaterial eyeballsMaterial() {
-        return eyeballsMaterial;
+    public PhongMaterial eyeballsMaterialNormalColor() {
+        return eyeballsMaterialNormalColor;
     }
 
-    public PhongMaterial pupilsMaterial() {
-        return pupilsMaterial;
+    public PhongMaterial pupilsMaterialNormalColor() {
+        return pupilsMaterialNormalColor;
     }
 
     public ManagedAnimation dressAnimation() {
