@@ -236,6 +236,7 @@ public class Ghost3D extends Group implements Disposable {
         dressMaterial.unbind();
         dressMaterialNormal = null;
         dressMaterialFrightened = null;
+        dressMaterialFlashing = null;
 
         eyeballsMaterial.unbind();
         eyeballsMaterialNormal = null;
@@ -244,7 +245,7 @@ public class Ghost3D extends Group implements Disposable {
         pupilsMaterial.unbind();
         pupilsMaterialNormal = null;
         pupilsMaterialFrightened = null;
-
+        pupilsMaterialFlashing = null;
     }
 
     public PhongMaterial dressMaterialNormal() {
