@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib.animation;
 
 import de.amr.pacmanfx.lib.StopWatch;
+import de.amr.pacmanfx.model.House;
 import javafx.animation.Animation;
 import javafx.animation.Transition;
 import javafx.geometry.Point3D;
@@ -21,6 +22,7 @@ import org.tinylog.Logger;
 import java.util.Random;
 import java.util.function.Predicate;
 
+import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomFloat;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static java.util.Objects.requireNonNull;
@@ -33,19 +35,39 @@ public class Explosion extends ManagedAnimation {
     private static final short PARTICLE_COUNT_MIN = 200;
     private static final short PARTICLE_COUNT_MAX = 400;
     private static final float PARTICLE_MEAN_RADIUS_UNSCALED = .15f;
-    private static final float PARTICLE_VELOCITY_XY_MIN = -2f;
-    private static final float PARTICLE_VELOCITY_XY_MAX =  2f;
-    private static final float PARTICLE_VELOCITY_Z_MIN  = -8f;
-    private static final float PARTICLE_VELOCITY_Z_MAX  = -2f;
+    private static final float PARTICLE_SPEED_XY_MIN = 0.05f;
+    private static final float PARTICLE_SPEED_XY_MAX = 0.5f;
+    private static final float PARTICLE_SPEED_Z_MIN = 2;
+    private static final float PARTICLE_SPEED_Z_MAX = 8;
+    private static final float PARTICLE_SPEED_MOVING_HOME_MIN = 0.2f;
+    private static final float PARTICLE_SPEED_MOVING_HOME_MAX = 0.4f;
+
     private static final float GRAVITY_Z = 0.18f;
 
     public static class Velocity {
         public float x, y, z;
 
+        static Velocity ZERO = new Velocity(0, 0, 0);
+
         public Velocity(float x, float y, float z) {
             this.x = x;
             this.y = y;
             this.z = z;
+        }
+
+        public Velocity normalize() {
+            float len = (float) Math.sqrt(x*x + y*y + z*z);
+            if (len != 0) {
+                return multiply(1f / len);
+            }
+            return this;
+        }
+
+        public Velocity multiply(float s) {
+            x *= s;
+            y *= s;
+            z *= s;
+            return this;
         }
     }
 
@@ -53,8 +75,10 @@ public class Explosion extends ManagedAnimation {
 
         private boolean flying = true;
         private boolean glowing = false;
+        private boolean movingIntoHouse = false;
+        private Point3D houseTarget;
 
-        private final Velocity velocity;
+        private Velocity velocity;
 
         public Particle(double radius, Material material, Velocity velocity, Point3D origin) {
             super(radius, PARTICLE_DIVISIONS);
@@ -69,18 +93,24 @@ public class Explosion extends ManagedAnimation {
             return new Point3D(translate.getX(), translate.getY(), translate.getZ());
         }
 
+        public void moveWithGravity() {
+            move();
+            velocity.z += GRAVITY_Z;
+        }
+
         public void move() {
             Translate translate = (Translate) getTransforms().getFirst();
             translate.setX(translate.getX() + velocity.x);
             translate.setY(translate.getY() + velocity.y);
             translate.setZ(translate.getZ() + velocity.z);
-            velocity.z += GRAVITY_Z;
         }
     }
 
+    private final Random rnd = new Random();
     private Material particleMaterial;
     private Material[] debrisMaterial = new Material[5];
     private final Point3D origin;
+    private final House house;
     private final Group particlesGroupContainer;
     private final Group particlesGroup = new Group();
     private final Predicate<Particle> particleAtEndPosition;
@@ -102,7 +132,7 @@ public class Explosion extends ManagedAnimation {
                     }
                 }
                 if (particle.flying) {
-                    particle.move();
+                    particle.moveWithGravity();
                     // if falling under certain height, start glowing etc.
                     if (particle.velocity.z > 0 && particle.position().getZ() > -20) {
                         startGlowing(particle);
@@ -110,6 +140,7 @@ public class Explosion extends ManagedAnimation {
                     }
                 } else {
                     setRandomDebrisMaterial(particle);
+                    moveIntoHouse(particle);
                 }
             }
         }
@@ -124,6 +155,35 @@ public class Explosion extends ManagedAnimation {
 
         private void setRandomDebrisMaterial(Particle particle) {
             particle.setMaterial(debrisMaterial[randomInt(0, debrisMaterial.length)]);
+        }
+
+        private void moveIntoHouse(Particle particle) {
+            if (!particle.movingIntoHouse) {
+                particle.houseTarget = randomHousePosition(particle);
+                Point3D position = particle.position();
+                float speed = rnd.nextFloat(PARTICLE_SPEED_MOVING_HOME_MIN, PARTICLE_SPEED_MOVING_HOME_MAX);
+                particle.velocity = new Velocity(
+                    (float) (particle.houseTarget.getX() - position.getX()),
+                    (float) (particle.houseTarget.getY() - position.getY()),
+                    0
+                ).normalize().multiply(speed);
+                particle.movingIntoHouse = true;
+            }
+            if (particle.position().distance(particle.houseTarget) < PARTICLE_SPEED_MOVING_HOME_MAX) {
+                particle.velocity = Velocity.ZERO;
+            } else {
+                particle.move();
+            }
+        }
+
+        private Point3D randomHousePosition(Particle particle) {
+            float minX = (house.minTile().x() + 1) * TS, maxX = (house.maxTile().x()) * TS;
+            float minY = (house.minTile().y() + 1) * TS, maxY = (house.maxTile().y()) * TS;
+            return new Point3D(
+                minX + rnd.nextDouble(maxX - minX),
+                minY + rnd.nextDouble(maxY - minY),
+                particle.position().getZ()
+            );
         }
 
         @Override
@@ -154,10 +214,13 @@ public class Explosion extends ManagedAnimation {
         }
 
         private Velocity randomParticleVelocity() {
+            Random rnd = new Random();
+            int xDir = rnd.nextBoolean() ? -1 : 1;
+            int yDir = rnd.nextBoolean() ? -1 : 1;
             return new Velocity(
-                randomFloat(PARTICLE_VELOCITY_XY_MIN, PARTICLE_VELOCITY_XY_MAX),
-                randomFloat(PARTICLE_VELOCITY_XY_MIN, PARTICLE_VELOCITY_XY_MAX),
-                randomFloat(PARTICLE_VELOCITY_Z_MIN, PARTICLE_VELOCITY_Z_MAX)
+                xDir * randomFloat(PARTICLE_SPEED_XY_MIN, PARTICLE_SPEED_XY_MAX),
+                yDir * randomFloat(PARTICLE_SPEED_XY_MIN, PARTICLE_SPEED_XY_MAX),
+                -randomFloat(PARTICLE_SPEED_Z_MIN, PARTICLE_SPEED_Z_MAX)
             );
         }
     }
@@ -165,12 +228,14 @@ public class Explosion extends ManagedAnimation {
     public Explosion(
         AnimationRegistry animationRegistry,
         Point3D origin,
+        House house,
         Group particlesGroupContainer,
         Material particleMaterial,
         Predicate<Particle> particleAtEndPosition) {
 
         super(animationRegistry, "Energizer_Explosion");
         this.origin = requireNonNull(origin);
+        this.house = requireNonNull(house);
         this.particlesGroupContainer = requireNonNull(particlesGroupContainer);
         this.particleMaterial = requireNonNull(particleMaterial);
         this.particleAtEndPosition = requireNonNull(particleAtEndPosition);

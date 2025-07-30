@@ -11,6 +11,7 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.Obstacle;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
@@ -266,13 +267,14 @@ public class GameLevel3D implements Disposable {
         root.getChildren().addAll(pac3D, pac3D.light());
         root.getChildren().addAll(ghosts3D);
 
+        root.getChildren().add(particleGroupsContainer);
+        energizers3D.stream().map(Eatable3D::node).forEach(root.getChildren()::add);
+        pellets3D   .stream().map(Eatable3D::node).forEach(root.getChildren()::add);
+
         // Note: The order in which children are added to the root matters!
         // Walls and house must be added *after* the actors, otherwise the transparency is not working correctly.
         root.getChildren().addAll(floor3D, maze3D);
 
-        energizers3D.stream().map(Eatable3D::node).forEach(root.getChildren()::add);
-        pellets3D   .stream().map(Eatable3D::node).forEach(root.getChildren()::add);
-        root.getChildren().add(particleGroupsContainer);
     }
 
     public Group root() {
@@ -560,7 +562,8 @@ public class GameLevel3D implements Disposable {
         var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, floorTopZ() - 6);
         var energizer3D = new Energizer3D(animationRegistry, energizerRadius, center, minScaling, maxScaling, pelletMaterial);
         energizer3D.setTile(tile);
-        var explosion = new Explosion(animationRegistry, center, particleGroupsContainer, particleMaterial, this::particleReachedFloor);
+        House house = gameLevel.house().orElseThrow(); //TODO
+        var explosion = new Explosion(animationRegistry, center, house, particleGroupsContainer, particleMaterial, this::particleReachedFloor);
         energizer3D.setEatenAnimation(explosion);
         return energizer3D;
     }
