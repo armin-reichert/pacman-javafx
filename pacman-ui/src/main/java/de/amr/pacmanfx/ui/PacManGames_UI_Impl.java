@@ -25,7 +25,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -44,9 +43,6 @@ import java.util.Optional;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.GameUI_Config.SCENE_ID_PLAY_SCENE_3D;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
-import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_TOGGLE_DRAW_MODE;
-import static de.amr.pacmanfx.ui.input.Keyboard.*;
-import static de.amr.pacmanfx.ui.input.Keyboard.alt;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -147,41 +143,9 @@ public class PacManGames_UI_Impl implements GameUI {
     }
 
     private void initGlobalActionBindings() {
-//        globalActionBindings.use(ACTION_ARCADE_INSERT_COIN,      DEFAULT_ACTION_BINDINGS);
-//        globalActionBindings.use(ACTION_ARCADE_START_GAME,       DEFAULT_ACTION_BINDINGS);
-//        globalActionBindings.use(ACTION_BOOT_SHOW_PLAY_VIEW,     DEFAULT_ACTION_BINDINGS);
-//        globalActionBindings.use(ACTION_CHEAT_EAT_ALL_PELLETS,   DEFAULT_ACTION_BINDINGS);
-//        globalActionBindings.use(ACTION_CHEAT_ADD_LIVES,         DEFAULT_ACTION_BINDINGS);
-//        globalActionBindings.use(ACTION_CHEAT_ENTER_NEXT_LEVEL,  DEFAULT_ACTION_BINDINGS);
-//        globalActionBindings.use(ACTION_CHEAT_KILL_GHOSTS,       DEFAULT_ACTION_BINDINGS);
-        globalActionBindings.use(ACTION_ENTER_FULLSCREEN,        DEFAULT_ACTION_BINDINGS);
-        globalActionBindings.use(ACTION_OPEN_EDITOR,             DEFAULT_ACTION_BINDINGS);
-//        globalActionBindings.use(ACTION_PERSPECTIVE_PREVIOUS,    DEFAULT_ACTION_BINDINGS);
-//        globalActionBindings.use(ACTION_PERSPECTIVE_NEXT,        DEFAULT_ACTION_BINDINGS);
-//        globalActionBindings.use(ACTION_SHOW_HELP,               DEFAULT_ACTION_BINDINGS);
-//        globalActionBindings.use(ACTION_STEER_UP,                DEFAULT_ACTION_BINDINGS);
-//        globalActionBindings.use(ACTION_STEER_DOWN,              DEFAULT_ACTION_BINDINGS);
-//        globalActionBindings.use(ACTION_STEER_LEFT,              DEFAULT_ACTION_BINDINGS);
-//        globalActionBindings.use(ACTION_STEER_RIGHT,             DEFAULT_ACTION_BINDINGS);
-//        globalActionBindings.use(ACTION_QUIT_GAME_SCENE,         DEFAULT_ACTION_BINDINGS);
-//        globalActionBindings.use(ACTION_SIMULATION_SLOWER,       DEFAULT_ACTION_BINDINGS);
-//        globalActionBindings.use(ACTION_SIMULATION_FASTER,       DEFAULT_ACTION_BINDINGS);
-//        globalActionBindings.use(ACTION_SIMULATION_RESET,        DEFAULT_ACTION_BINDINGS);
-//        globalActionBindings.use(ACTION_SIMULATION_ONE_STEP,     DEFAULT_ACTION_BINDINGS);
-//        globalActionBindings.use(ACTION_SIMULATION_TEN_STEPS,    DEFAULT_ACTION_BINDINGS);
-//        globalActionBindings.use(ACTION_TEST_CUT_SCENES,         DEFAULT_ACTION_BINDINGS);
-//        globalActionBindings.use(ACTION_TEST_LEVELS_BONI,        DEFAULT_ACTION_BINDINGS);
-//        globalActionBindings.use(ACTION_TEST_LEVELS_TEASERS,     DEFAULT_ACTION_BINDINGS);
-//        globalActionBindings.use(ACTION_TOGGLE_AUTOPILOT,        DEFAULT_ACTION_BINDINGS);
-//        globalActionBindings.use(ACTION_TOGGLE_DEBUG_INFO,       DEFAULT_ACTION_BINDINGS);
-        globalActionBindings.use(ACTION_TOGGLE_MUTED,            DEFAULT_ACTION_BINDINGS);
-//        globalActionBindings.use(ACTION_TOGGLE_PAUSED,           DEFAULT_ACTION_BINDINGS);
-//        globalActionBindings.use(ACTION_TOGGLE_DASHBOARD,        DEFAULT_ACTION_BINDINGS);
-//        globalActionBindings.use(ACTION_TOGGLE_IMMUNITY,         DEFAULT_ACTION_BINDINGS);
-//        globalActionBindings.use(ACTION_TOGGLE_PIP_VISIBILITY,   DEFAULT_ACTION_BINDINGS);
-//        globalActionBindings.use(ACTION_TOGGLE_PLAY_SCENE_2D_3D, DEFAULT_ACTION_BINDINGS);
-//        globalActionBindings.use(ACTION_TOGGLE_DRAW_MODE,        DEFAULT_ACTION_BINDINGS);
-
+        globalActionBindings.use(ACTION_ENTER_FULLSCREEN, DEFAULT_ACTION_BINDINGS);
+        globalActionBindings.use(ACTION_OPEN_EDITOR,      DEFAULT_ACTION_BINDINGS);
+        globalActionBindings.use(ACTION_TOGGLE_MUTED,     DEFAULT_ACTION_BINDINGS);
         globalActionBindings.updateKeyboard();
     }
 
@@ -253,7 +217,7 @@ public class PacManGames_UI_Impl implements GameUI {
     public void applyConfiguration(String gameVariant, Class<?> configClass) {
         try {
             GameUI_Config config = (GameUI_Config) configClass.getDeclaredConstructor(GameUI.class).newInstance(this);
-            config.createGameScenes(this);
+            config.createGameScenes();
             Logger.info("Game scenes for game variant '{}' created", gameVariant);
             config.gameScenes().forEach(scene -> {
                 if (scene instanceof GameScene2D gameScene2D) {

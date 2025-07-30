@@ -417,7 +417,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     // Game scenes
 
     @Override
-    public void createGameScenes(GameUI ui) {
+    public void createGameScenes() {
         scenesByID.put(SCENE_ID_BOOT_SCENE_2D,               new TengenMsPacMan_BootScene(ui));
         scenesByID.put(SCENE_ID_INTRO_SCENE_2D,              new TengenMsPacMan_IntroScene(ui));
         scenesByID.put(SCENE_ID_START_SCENE_2D,              new TengenMsPacMan_OptionsScene(ui));

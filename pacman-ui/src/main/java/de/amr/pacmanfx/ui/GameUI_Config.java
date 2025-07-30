@@ -34,7 +34,7 @@ public interface GameUI_Config extends Disposable {
     String SCENE_ID_PLAY_SCENE_3D    = "PlayScene3D";
 
     // scene config
-    void createGameScenes(GameUI ui);
+    void createGameScenes();
     Stream<GameScene> gameScenes();
     boolean gameSceneHasID(GameScene gameScene, String sceneID);
     GameScene selectGameScene(GameContext gameContext);
