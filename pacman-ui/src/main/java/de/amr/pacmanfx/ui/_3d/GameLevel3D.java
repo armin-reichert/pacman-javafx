@@ -12,7 +12,6 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.Obstacle;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
@@ -33,9 +32,9 @@ import javafx.geometry.Point3D;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.ParallelCamera;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.DrawMode;
@@ -552,24 +551,31 @@ public class GameLevel3D implements Disposable {
         float radius     = ui.thePrefs().getFloat("3d.energizer.radius");
         float minScaling = ui.thePrefs().getFloat("3d.energizer.scaling.min");
         float maxScaling = ui.thePrefs().getFloat("3d.energizer.scaling.max");
+        Material[] ghostDressMaterials = {
+            ghosts3D.get(RED_GHOST_SHADOW).ghost3D().dressMaterialProperty().get(),
+            ghosts3D.get(PINK_GHOST_SPEEDY).ghost3D().dressMaterialProperty().get(),
+            ghosts3D.get(CYAN_GHOST_BASHFUL).ghost3D().dressMaterialProperty().get(),
+            ghosts3D.get(ORANGE_GHOST_POKEY).ghost3D().dressMaterialProperty().get(),
+        };
         energizers3D.addAll(gameLevel.tilesContainingFood()
             .filter(gameLevel::isEnergizerPosition)
-            .map(tile -> createEnergizer3D(tile, radius, minScaling, maxScaling))
+            .map(tile -> createEnergizer3D(tile, radius, minScaling, maxScaling, ghostDressMaterials))
             .toList());
         energizers3D.trimToSize();
     }
 
-    private Energizer3D createEnergizer3D(Vector2i tile, float energizerRadius, float minScaling, float maxScaling) {
+    private Energizer3D createEnergizer3D(Vector2i tile, float energizerRadius, float minScaling, float maxScaling, Material[] ghostDressMaterials) {
         var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, floorTopZ() - 6);
         var energizer3D = new Energizer3D(animationRegistry, energizerRadius, center, minScaling, maxScaling, pelletMaterial);
         energizer3D.setTile(tile);
         Vector2f[] ghostRevivalPositions = {
-            // red ghost uses same as pink ghost
+            gameLevel.ghost(RED_GHOST_SHADOW).revivalPosition(),
             gameLevel.ghost(PINK_GHOST_SPEEDY).revivalPosition(),
             gameLevel.ghost(CYAN_GHOST_BASHFUL).revivalPosition(),
             gameLevel.ghost(ORANGE_GHOST_POKEY).revivalPosition(),
         };
-        var explosion = new Explosion(animationRegistry, center, ghostRevivalPositions, particleGroupsContainer, particleMaterial, this::particleReachedFloor);
+        var explosion = new Explosion(animationRegistry, center, ghostRevivalPositions, particleGroupsContainer,
+                particleMaterial, ghostDressMaterials, this::particleReachedFloor);
         energizer3D.setEatenAnimation(explosion);
         return energizer3D;
     }
@@ -577,7 +583,7 @@ public class GameLevel3D implements Disposable {
     private boolean particleReachedFloor(Explosion.Particle particle) {
         Point3D pos = particle.position();
         double particleBottomZ = pos.getZ() + particle.getRadius();
-        boolean onFloorZ = particleBottomZ + 1 >= floorTopZ();
+        boolean onFloorZ = particleBottomZ >= 0;
         double width  = gameLevel.worldMap().numCols() * TS;
         double height = (gameLevel.worldMap().numRows() - 1) * TS; //TODO if 1 is not subtracted, some particles look wrong
         return onFloorZ && 0 <= pos.getX() && pos.getX() < width && 0 <= pos.getY() && pos.getY() < height;

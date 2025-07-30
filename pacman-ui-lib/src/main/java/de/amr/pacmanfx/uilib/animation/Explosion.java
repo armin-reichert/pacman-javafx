@@ -6,15 +6,12 @@ package de.amr.pacmanfx.uilib.animation;
 
 import de.amr.pacmanfx.lib.StopWatch;
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.model.House;
 import javafx.animation.Animation;
 import javafx.animation.Transition;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.effect.Bloom;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
-import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Translate;
 import javafx.util.Duration;
@@ -80,7 +77,7 @@ public class Explosion extends ManagedAnimation {
         private boolean flying = true;
         private boolean glowing = false;
         private boolean movingIntoHouse = false;
-        private Point3D houseTarget;
+        private Point3D targetPosition;
 
         private Vec3f velocity;
 
@@ -108,16 +105,21 @@ public class Explosion extends ManagedAnimation {
             translate.setY(translate.getY() + velocity.y);
             translate.setZ(translate.getZ() + velocity.z);
         }
+
+        public void setZ(double z) {
+            Translate translate = (Translate) getTransforms().getFirst();
+            translate.setZ(z);
+        }
     }
 
     private final Random rnd = new Random();
     private Material particleMaterial;
-    private Material[] debrisMaterial = new Material[5];
+    private Material[] ghostDressMaterials;
     private final Point3D origin;
     private final Vector2f[] ghostRevivalPositions;
     private final Group particlesGroupContainer;
     private final Group particlesGroup = new Group();
-    private final Predicate<Particle> particleAtEndPosition;
+    private final Predicate<Particle> particleTouchesFloor;
     private Particle[] particles;
 
     private class ParticlesMovement extends Transition {
@@ -130,8 +132,9 @@ public class Explosion extends ManagedAnimation {
         protected void interpolate(double t) {
             for (Particle particle : particles) {
                 if (particle.flying) {
-                    if (particleAtEndPosition.test(particle)) {
+                    if (particleTouchesFloor.test(particle)) {
                         particle.flying = false;
+                        particle.setZ(-particle.getRadius()); // just on floor
                         particle.setRadius(0.2); //TODO make something more intelligent
                     }
                 }
@@ -140,10 +143,9 @@ public class Explosion extends ManagedAnimation {
                     // if falling under certain height, start glowing etc.
                     if (particle.velocity.z > 0 && particle.position().getZ() > -20) {
                         startGlowing(particle);
-                        setRandomDebrisMaterial(particle);
+                        setDebrisMaterial(particle);
                     }
                 } else {
-                    setRandomDebrisMaterial(particle);
                     moveIntoHouse(particle);
                 }
             }
@@ -157,38 +159,37 @@ public class Explosion extends ManagedAnimation {
             }
         }
 
-        private void setRandomDebrisMaterial(Particle particle) {
-            particle.setMaterial(debrisMaterial[randomInt(0, debrisMaterial.length)]);
+        private void setDebrisMaterial(Particle particle) {
+            int index = randomInt(0, 4);
+            particle.setMaterial(ghostDressMaterials[index]);
         }
 
         private void moveIntoHouse(Particle particle) {
             if (!particle.movingIntoHouse) {
-                particle.houseTarget = randomHousePosition(particle);
+                int personality = rnd.nextInt(4);
+                Vector2f revivalPosition = ghostRevivalPositions[personality];
+                float minX = revivalPosition.x() + 2, maxX = revivalPosition.x() + TS - 2;
+                float minY = revivalPosition.y() + 2, maxY = revivalPosition.y() + TS - 2;
+                particle.targetPosition = new Point3D(
+                        minX + rnd.nextDouble(maxX - minX),
+                        minY + rnd.nextDouble(maxY - minY),
+                        particle.position().getZ()
+                );
                 Point3D position = particle.position();
                 float speed = rnd.nextFloat(PARTICLE_SPEED_MOVING_HOME_MIN, PARTICLE_SPEED_MOVING_HOME_MAX);
                 particle.velocity = new Vec3f(
-                    (float) (particle.houseTarget.getX() - position.getX()),
-                    (float) (particle.houseTarget.getY() - position.getY()),
+                    (float) (particle.targetPosition.getX() - position.getX()),
+                    (float) (particle.targetPosition.getY() - position.getY()),
                     0
                 ).normalize().multiply(speed);
+                particle.setMaterial(ghostDressMaterials[personality]);
                 particle.movingIntoHouse = true;
             }
-            if (particle.position().distance(particle.houseTarget) < PARTICLE_SPEED_MOVING_HOME_MAX) {
+            if (particle.position().distance(particle.targetPosition) < PARTICLE_SPEED_MOVING_HOME_MAX) {
                 particle.velocity = Vec3f.ZERO;
             } else {
                 particle.move();
             }
-        }
-
-        private Point3D randomHousePosition(Particle particle) {
-            Vector2f randomRevivalPosition = ghostRevivalPositions[rnd.nextInt(ghostRevivalPositions.length)];
-            float minX = randomRevivalPosition.x(), maxX = randomRevivalPosition.x() + TS;
-            float minY = randomRevivalPosition.y(), maxY = randomRevivalPosition.y() + TS;
-            return new Point3D(
-                minX + rnd.nextDouble(maxX - minX),
-                minY + rnd.nextDouble(maxY - minY),
-                particle.position().getZ()
-            );
         }
 
         @Override
@@ -236,23 +237,17 @@ public class Explosion extends ManagedAnimation {
         Vector2f[] ghostRevivalPositions,
         Group particlesGroupContainer,
         Material particleMaterial,
-        Predicate<Particle> particleAtEndPosition) {
+        Material[] ghostDressMaterials,
+        Predicate<Particle> particleTouchesFloor) {
 
         super(animationRegistry, "Energizer_Explosion");
         this.origin = requireNonNull(origin);
         this.ghostRevivalPositions = requireNonNull(ghostRevivalPositions);
         this.particlesGroupContainer = requireNonNull(particlesGroupContainer);
         this.particleMaterial = requireNonNull(particleMaterial);
-        this.particleAtEndPosition = requireNonNull(particleAtEndPosition);
+        this.ghostDressMaterials = requireNonNull(ghostDressMaterials);
+        this.particleTouchesFloor = requireNonNull(particleTouchesFloor);
         particlesGroupContainer.getChildren().add(particlesGroup);
-
-        for (int i = 0; i < debrisMaterial.length; ++i) {
-            PhongMaterial material = new PhongMaterial();
-            double hue = (360.0 * i) / debrisMaterial.length;
-            material.setDiffuseColor(Color.hsb(hue, 1, 1));
-            material.setSpecularColor(Color.hsb(hue, 0.5, 1));
-            debrisMaterial[i] = material;
-        }
     }
 
     @Override
@@ -273,6 +268,6 @@ public class Explosion extends ManagedAnimation {
         particlesGroup.getChildren().clear();
         particlesGroupContainer.getChildren().remove(particlesGroup);
         particleMaterial = null;
-        debrisMaterial = null;
+        ghostDressMaterials = null;
     }
 }

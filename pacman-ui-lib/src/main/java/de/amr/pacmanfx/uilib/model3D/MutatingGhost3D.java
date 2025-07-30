@@ -163,6 +163,10 @@ public class MutatingGhost3D extends Group implements Disposable {
         setAppearance(GhostAppearance.NORMAL);
     }
 
+    public Ghost3D ghost3D() {
+        return ghost3D;
+    }
+
     private void handleAppearanceChange(
             ObservableValue<? extends GhostAppearance> property,
             GhostAppearance oldAppearance,
