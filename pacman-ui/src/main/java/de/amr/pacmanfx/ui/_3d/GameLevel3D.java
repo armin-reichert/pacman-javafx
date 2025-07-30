@@ -33,6 +33,7 @@ import javafx.geometry.Point3D;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.ParallelCamera;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -605,6 +606,9 @@ public class GameLevel3D implements Disposable {
             .anyMatch(Ghost::isVisible);
         houseLightOnProperty.set(houseAccessRequired);
 
+        // experimental
+        consumeCollectedParticlesInsideHouse();
+
         gameLevel.house().ifPresent(house -> {
             float sensitivity = ui.thePrefs().getFloat("3d.house.sensitivity");
             boolean ghostNearHouseEntry = gameLevel.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
@@ -758,6 +762,31 @@ public class GameLevel3D implements Disposable {
 
     private void handleDrawModeChange(ObservableValue<? extends DrawMode> obs, DrawMode oldDrawMode, DrawMode newDrawMode) {
         setDrawModeForAllShapesExcept(root, Pellet3D::isPellet3D, newDrawMode);
+    }
+
+    private void consumeCollectedParticlesInsideHouse() {
+        for (Node child : particleGroupsContainer.getChildren()) {
+            if (child instanceof Group particlesGroup) {
+                if (!particlesGroup.getChildren().isEmpty()) {
+                    //Logger.info("There are {} particles in group", particlesGroup.getChildren().size(), particlesGroup);
+                    gameLevel.ghosts(GhostState.LOCKED, GhostState.LEAVING_HOUSE)
+                        .forEach(ghost -> consumeCollectedParticlesInsideHouse(ghost, particlesGroup));
+                }
+            }
+        }
+    }
+
+    private void consumeCollectedParticlesInsideHouse(Ghost ghost, Group particlesGroup) {
+        Vector2f ghostPosition = ghost.position();
+        for (Node child : particlesGroup.getChildren()) {
+            if (child instanceof Explosion.Particle particle) {
+                Point3D particlePosition = particle.position();
+                if (ghostPosition.x() <= particlePosition.getX() && particlePosition.getX() <= ghostPosition.x() + TS
+                    && ghostPosition.y() <= particlePosition.getY() && particlePosition.getY() <= ghostPosition.y() + TS) {
+                    particle.setVisible(false);
+                }
+            }
+        }
     }
 
     // still work in progress...
