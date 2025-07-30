@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib.animation;
 
 import de.amr.pacmanfx.lib.StopWatch;
+import de.amr.pacmanfx.lib.Vec3f;
 import de.amr.pacmanfx.lib.Vector2f;
 import javafx.animation.Animation;
 import javafx.animation.Transition;
@@ -37,40 +38,10 @@ public class Explosion extends ManagedAnimation {
     private static final float PARTICLE_SPEED_XY_MAX = 0.5f;
     private static final float PARTICLE_SPEED_Z_MIN = 2;
     private static final float PARTICLE_SPEED_Z_MAX = 8;
-    private static final float PARTICLE_SPEED_MOVING_HOME_MIN = 0.2f;
-    private static final float PARTICLE_SPEED_MOVING_HOME_MAX = 0.4f;
+    private static final float PARTICLE_SPEED_MOVING_HOME_MIN = 0.4f;
+    private static final float PARTICLE_SPEED_MOVING_HOME_MAX = 0.8f;
 
     private static final float GRAVITY_Z = 0.18f;
-
-    // As there is no *mutable* 3d vector class in standard JDK or JavaFX...
-    public static class Vec3f {
-        public float x, y, z;
-
-        static Vec3f ZERO = new Vec3f(0, 0, 0);
-
-        public Vec3f(float x, float y, float z) {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-        }
-
-        public Vec3f normalize() {
-            float maga = (float) Math.sqrt(x * x + y * y + z * z);
-            if (maga > 0) {
-                return multiply(1f / maga);
-            } else {
-                x = y = z = 0; // Point3D.normalized() also return zero vector, so be it
-            }
-            return this;
-        }
-
-        public Vec3f multiply(float s) {
-            x *= s;
-            y *= s;
-            z *= s;
-            return this;
-        }
-    }
 
     public static class Particle extends Sphere {
 
