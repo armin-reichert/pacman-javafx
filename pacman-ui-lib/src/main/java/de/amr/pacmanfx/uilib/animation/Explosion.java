@@ -157,11 +157,13 @@ public class Explosion extends ManagedAnimation {
                 particle.velocity.normalize().multiply(speed);
                 particle.movingHome = true;
             }
-            Vector2f centerXY = Vector2f.of(particleCenter.getX(), particleCenter.getY());
-            Vector2f targetXY = Vector2f.of(particle.targetPosition.getX(), particle.targetPosition.getY());
-            if (centerXY.euclideanDist(targetXY) < particle.velocity.magnitude()) {
+            // stop if distance to target in XY-plane is less than speed
+            double distXY = Math.hypot(
+                particleCenter.getX() - particle.targetPosition.getX(),
+                particleCenter.getY() - particle.targetPosition.getY());
+            if (distXY < particle.velocity.magnitude()) {
                 particle.velocity = Vec3f.ZERO;
-                particle.setZ(-rnd.nextDouble(10)); // form a column at revival position
+                particle.setZ(-rnd.nextDouble(10)); // form a column at the revival position
             } else {
                 particle.move();
             }
