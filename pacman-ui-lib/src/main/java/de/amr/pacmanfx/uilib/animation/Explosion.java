@@ -92,11 +92,12 @@ public class Explosion extends ManagedAnimation {
     }
 
     private final Random rnd = new Random();
-    private final Point3D origin;
-    private final Vector2f[] ghostRevivalPositions;
-    private final Group particlesGroupContainer;
-    private final Group particlesGroup = new Group();
-    private final Predicate<Particle> particleTouchesFloor;
+
+    private Point3D origin;
+    private Vector2f[] ghostRevivalPositions;
+    private Group particlesGroupContainer;
+    private Group particlesGroup = new Group();
+    private Predicate<Particle> particleTouchesFloor;
 
     private Material particleMaterial;
     private Material[] ghostDressMaterials;
@@ -246,15 +247,35 @@ public class Explosion extends ManagedAnimation {
 
     @Override
     protected void freeResources() {
-        if (particles == null) return;
-        for (Particle particle : particles) {
-            particle.setMaterial(null);
+        if (origin != null) {
+            origin = null;
         }
-        Logger.info("Disposed {} particles", particles.length);
-        particles = null;
-        particlesGroup.getChildren().clear();
-        particlesGroupContainer.getChildren().remove(particlesGroup);
-        particleMaterial = null;
-        ghostDressMaterials = null;
+        if (ghostRevivalPositions != null) {
+            ghostRevivalPositions = null;
+        }
+        if (particles != null) {
+            for (Particle particle : particles) {
+                particle.setMaterial(null);
+            }
+            Logger.info("Disposed {} particles", particles.length);
+            particles = null;
+        }
+        if (particlesGroup != null) {
+            particlesGroup.getChildren().clear();
+            particlesGroup = null;
+        }
+        if (particleTouchesFloor != null) {
+            particleTouchesFloor = null;
+        }
+        if (particlesGroupContainer != null) {
+            particlesGroupContainer.getChildren().remove(particlesGroup);
+            particlesGroupContainer = null;
+        }
+        if (particleMaterial != null) {
+            particleMaterial = null;
+        }
+        if (ghostDressMaterials != null) {
+            ghostDressMaterials = null;
+        }
     }
 }
