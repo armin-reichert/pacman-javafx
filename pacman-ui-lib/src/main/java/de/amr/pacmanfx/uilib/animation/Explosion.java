@@ -110,7 +110,7 @@ public class Explosion extends ManagedAnimation {
         protected void interpolate(double t) {
             for (Particle particle : particles) {
                 if (particle.landed) {
-                    moveToHouse(particle);
+                    moveHome(particle);
                 }
                 else {
                     particle.moveWithGravity();
@@ -137,11 +137,12 @@ public class Explosion extends ManagedAnimation {
             particle.debris = true;
         }
 
-        private void moveToHouse(Particle particle) {
+        private void moveHome(Particle particle) {
             Point3D particleCenter = particle.center();
             if (!particle.movingHome) {
-                // first time: compute target and velocity
                 int personality = rnd.nextInt(4);
+                particle.setMaterial(ghostDressMaterials[personality]);
+                // first time: compute target and velocity
                 Vector2f revivalPosition = ghostRevivalPositions[personality];
                 double angle = rnd.nextInt(360);
                 double r = 1;
@@ -150,12 +151,10 @@ public class Explosion extends ManagedAnimation {
                     revivalPosition.y() + HTS + r * Math.sin(angle),
                     0);
                 float speed = rnd.nextFloat(PARTICLE_SPEED_MOVING_HOME_MIN, PARTICLE_SPEED_MOVING_HOME_MAX);
-                particle.velocity = new Vec3f(
-                    (float) (particle.targetPosition.getX() - particleCenter.getX()),
-                    (float) (particle.targetPosition.getY() - particleCenter.getY()),
-                    0
-                ).normalize().multiply(speed);
-                particle.setMaterial(ghostDressMaterials[personality]);
+                particle.velocity.x = (float) (particle.targetPosition.getX() - particleCenter.getX());
+                particle.velocity.y = (float) (particle.targetPosition.getY() - particleCenter.getY());
+                particle.velocity.z = 0;
+                particle.velocity.normalize().multiply(speed);
                 particle.movingHome = true;
             }
             Vector2f centerXY = Vector2f.of(particleCenter.getX(), particleCenter.getY());
