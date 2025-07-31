@@ -51,11 +51,12 @@ public class Explosion extends ManagedAnimation {
     private static final float GRAVITY_Z = 0.18f;
 
     public static class Particle extends Sphere {
-        private boolean debris = false;
-        private boolean landed = false;
-        private boolean movingHome = false;
-        private Point3D targetPosition;
-        private Vec3f velocity;
+        boolean debris = false;
+        boolean landed = false;
+        boolean movingHome = false;
+        boolean removed = false;
+        Point3D housePosition;
+        Vec3f velocity;
 
         public Particle(double radius, Material material, Vec3f velocity, Point3D origin) {
             super(radius, PARTICLE_DIVISIONS);
@@ -73,7 +74,7 @@ public class Explosion extends ManagedAnimation {
             return new Point3D(translate.getX(), translate.getY(), translate.getZ());
         }
 
-        public void moveWithGravity() {
+        public void fly() {
             move();
             velocity.z += GRAVITY_Z;
         }
@@ -91,13 +92,14 @@ public class Explosion extends ManagedAnimation {
     }
 
     private final Random rnd = new Random();
-    private Material particleMaterial;
-    private Material[] ghostDressMaterials;
     private final Point3D origin;
     private final Vector2f[] ghostRevivalPositions;
     private final Group particlesGroupContainer;
     private final Group particlesGroup = new Group();
     private final Predicate<Particle> particleTouchesFloor;
+
+    private Material particleMaterial;
+    private Material[] ghostDressMaterials;
     private Particle[] particles;
 
     private class ParticlesMovement extends Transition {
@@ -109,11 +111,13 @@ public class Explosion extends ManagedAnimation {
         @Override
         protected void interpolate(double t) {
             for (Particle particle : particles) {
+                if (particle.removed) continue;
+
                 if (particle.landed) {
                     moveHome(particle);
                 }
                 else {
-                    particle.moveWithGravity();
+                    particle.fly();
                     // if falling under certain height, become debris, change color to one of ghost dress colors
                     // Note: falling means moving to positive z direction!
                     if (particle.velocity.z > 0 && particle.center().getZ() > -20) {
@@ -123,6 +127,14 @@ public class Explosion extends ManagedAnimation {
                         particle.setRadius(PARTICLE_RADIUS_RETURNING_HOME);
                         particle.setZ(-particle.getRadius());
                         particle.landed = true;
+                    }
+                    // if felt outside world, remove it at some level
+                    if (!particle.landed && particle.center().getZ() > 100) {
+                        particlesGroup.getChildren().remove(particle);
+                        particle.velocity = null;
+                        particle.setMaterial(null);
+                        particle.removed = true;
+                        Logger.debug(() -> "%s removed (felt outside), z=%.2f".formatted(particle, particle.translate().getZ()));
                     }
                 }
             }
@@ -146,21 +158,21 @@ public class Explosion extends ManagedAnimation {
                 Vector2f revivalPosition = ghostRevivalPositions[personality];
                 double angle = rnd.nextInt(360);
                 double r = 1;
-                particle.targetPosition = new Point3D(
+                particle.housePosition = new Point3D(
                     revivalPosition.x() + HTS + r * Math.cos(angle),
                     revivalPosition.y() + HTS + r * Math.sin(angle),
                     0);
                 float speed = rnd.nextFloat(PARTICLE_SPEED_MOVING_HOME_MIN, PARTICLE_SPEED_MOVING_HOME_MAX);
-                particle.velocity.x = (float) (particle.targetPosition.getX() - particleCenter.getX());
-                particle.velocity.y = (float) (particle.targetPosition.getY() - particleCenter.getY());
+                particle.velocity.x = (float) (particle.housePosition.getX() - particleCenter.getX());
+                particle.velocity.y = (float) (particle.housePosition.getY() - particleCenter.getY());
                 particle.velocity.z = 0;
                 particle.velocity.normalize().multiply(speed);
                 particle.movingHome = true;
             }
             // stop if distance to target in XY-plane is less than speed
             double distXY = Math.hypot(
-                particleCenter.getX() - particle.targetPosition.getX(),
-                particleCenter.getY() - particle.targetPosition.getY());
+                particleCenter.getX() - particle.housePosition.getX(),
+                particleCenter.getY() - particle.housePosition.getY());
             if (distXY < particle.velocity.magnitude()) {
                 particle.velocity = Vec3f.ZERO;
                 particle.setZ(-rnd.nextDouble(10)); // form a column at the revival position
