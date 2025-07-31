@@ -21,8 +21,10 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Box;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Shape3D;
+import javafx.scene.shape.Sphere;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -336,5 +338,39 @@ public interface Ufx {
             .filter(Shape3D.class::isInstance)
             .map(Shape3D.class::cast)
             .forEach(shape3D -> shape3D.setDrawMode(drawMode));
+    }
+
+    /**
+     * Tests whether a sphere collides with an axis-aligned box.
+     *
+     * @param cx     sphere center x
+     * @param cy     sphere center y
+     * @param cz     sphere center z
+     * @param radius sphere radius
+     * @param xmin   box minimum x
+     * @param ymin   box minimum y
+     * @param zmin   box minimum z
+     * @param xmax   box maximum x
+     * @param ymax   box maximum y
+     * @param zmax   box maximum z
+     * @return true if sphere intersects box
+     */
+    static boolean intersectsSphereBox(
+        double cx, double cy, double cz, double radius,
+        double xmin, double ymin, double zmin,
+        double xmax, double ymax, double zmax) {
+
+        // Find closest point on box to sphere center
+        double px = Math.clamp(cx, xmin, xmax);
+        double py = Math.clamp(cy, ymin, ymax);
+        double pz = Math.clamp(cz, zmin, zmax);
+
+        // Compute squared distance
+        double dx = px - cx;
+        double dy = py - cy;
+        double dz = pz - cz;
+        double dist2 = dx*dx + dy*dy + dz*dz;
+
+        return dist2 <= radius * radius;
     }
 }

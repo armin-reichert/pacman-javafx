@@ -42,6 +42,7 @@ import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
+import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -81,6 +82,7 @@ public class GameLevel3D implements Disposable {
 
     private Node[] livesCounterShapes;
 
+    private PhongMaterial floorMaterial;
     private PhongMaterial wallBaseMaterial;
     private PhongMaterial wallTopMaterial;
     private PhongMaterial pelletMaterial;
@@ -288,6 +290,10 @@ public class GameLevel3D implements Disposable {
         particleMaterial = new PhongMaterial(colorScheme.pellet().deriveColor(0, 0.5, 1.5, 0.5));
         particleMaterial.setSpecularColor(particleMaterial.getDiffuseColor().brighter());
 
+        floorMaterial = new PhongMaterial();
+        floorMaterial.diffuseColorProperty().bind(ui.property3DFloorColor());
+        floorMaterial.specularColorProperty().bind(floorMaterial.diffuseColorProperty().map(Color::brighter));
+
         wallBaseMaterial = new PhongMaterial();
 
         //TODO the opacity change does not work as expected. Why?
@@ -310,6 +316,11 @@ public class GameLevel3D implements Disposable {
             particleMaterial.diffuseColorProperty().unbind();
             particleMaterial.specularColorProperty().unbind();
             particleMaterial = null;
+        }
+        if (floorMaterial != null) {
+            floorMaterial.diffuseColorProperty().unbind();
+            floorMaterial.specularColorProperty().unbind();
+            floorMaterial = null;
         }
         if (wallBaseMaterial != null) {
             wallBaseMaterial.diffuseColorProperty().unbind();
@@ -465,15 +476,7 @@ public class GameLevel3D implements Disposable {
             ++wall3DCount;
         });
 
-        float floorPadding = ui.thePrefs().getFloat("3d.floor.padding");
-        float floorThickness = ui.thePrefs().getFloat("3d.floor.thickness");
-        double floorWidth = gameLevel.worldMap().numCols() * TS + 2 * floorPadding;
-        double floorHeight = gameLevel.worldMap().numRows() * TS;
-        floor3D = new Box(floorWidth, floorHeight, floorThickness);
-        floor3D.translateXProperty().bind(floor3D.widthProperty().divide(2).subtract(floorPadding));
-        floor3D.translateYProperty().bind(floor3D.heightProperty().divide(2));
-        floor3D.translateZProperty().bind(floor3D.depthProperty().divide(2));
-        floor3D.materialProperty().bind(ui.property3DFloorColor().map(Ufx::coloredPhongMaterial));
+        createFloor3D();
 
         float wallThickness = ui.thePrefs().getFloat("3d.obstacle.wall_thickness");
         float cornerRadius = ui.thePrefs().getFloat("3d.obstacle.corner_radius");
@@ -506,9 +509,41 @@ public class GameLevel3D implements Disposable {
         });
     }
 
-    private float floorTopZ() {
-        return (float) (floor3D.getTranslateZ() - 0.5 * floor3D.getDepth());
+    private void createFloor3D() {
+        float padding   = ui.thePrefs().getFloat("3d.floor.padding");
+        float thickness = ui.thePrefs().getFloat("3d.floor.thickness");
+        Vector2f worldSizePx = gameLevel.worldSizePx();
+        float sizeX = worldSizePx.x() + 2 * padding;
+        float sizeY = worldSizePx.y();
+        floor3D = new Box(sizeX, sizeY, thickness);
+        floor3D.setMaterial(floorMaterial);
+        // Translate: top-left corner (without padding) at origin, surface top at z=0
+        Translate translate = new Translate(0.5 * sizeX - padding, 0.5 * sizeY, 0.5 * thickness);
+        floor3D.getTransforms().add(translate);
     }
+
+    private float floorTopZ() {
+        return 0;
+    }
+
+    private boolean particleTouchesFloor(Explosion.Particle particle) {
+        Vector2f worldSizePx = gameLevel.worldSizePx();
+        Point3D particleCenter = particle.center();
+        if (particleCenter.getX() < 0 || particleCenter.getX() > worldSizePx.x()) return false;
+        if (particleCenter.getY() < 0 || particleCenter.getY() > worldSizePx.y()) return false;
+        return particleCenter.getZ() >= floorTopZ();
+        //TODO: make this work
+/*
+        Point3D center = particle.center();
+        Bounds fb = floor3D.getBoundsInParent(); //TODO correct?
+        return Ufx.intersectsSphereBox(
+            center.getX(), center.getY(), center.getZ(), particle.getRadius(),
+            fb.getMinX(), fb.getMinY(), fb.getMinZ(),
+            fb.getMaxX(), fb.getMaxY(), fb.getMaxZ()
+        );
+ */
+    }
+
     private boolean isWorldBorder(WorldMap worldMap, Obstacle obstacle) {
         Vector2i start = obstacle.startPoint();
         if (obstacle.isClosed()) {
@@ -575,18 +610,9 @@ public class GameLevel3D implements Disposable {
             gameLevel.ghost(ORANGE_GHOST_POKEY).revivalPosition(),
         };
         var explosion = new Explosion(animationRegistry, center, ghostRevivalPositions, particleGroupsContainer,
-                particleMaterial, ghostDressMaterials, this::particleReachedFloor);
+                particleMaterial, ghostDressMaterials, this::particleTouchesFloor);
         energizer3D.setEatenAnimation(explosion);
         return energizer3D;
-    }
-
-    private boolean particleReachedFloor(Explosion.Particle particle) {
-        Point3D pos = particle.position();
-        double particleBottomZ = pos.getZ() + particle.getRadius();
-        boolean onFloorZ = particleBottomZ >= 0;
-        double width  = gameLevel.worldMap().numCols() * TS;
-        double height = (gameLevel.worldMap().numRows() - 1) * TS; //TODO if 1 is not subtracted, some particles look wrong
-        return onFloorZ && 0 <= pos.getX() && pos.getX() < width && 0 <= pos.getY() && pos.getY() < height;
     }
 
     public PacBase3D pac3D() { return pac3D; }
@@ -786,7 +812,7 @@ public class GameLevel3D implements Disposable {
         Vector2f ghostPosition = ghost.position();
         for (Node child : particlesGroup.getChildren()) {
             if (child instanceof Explosion.Particle particle) {
-                Point3D particlePosition = particle.position();
+                Point3D particlePosition = particle.center();
                 Material ghostDressMaterial = ghosts3D.get(ghost.personality()).ghost3D().dressMaterialNormal();
                 boolean colorsMatch = particle.getMaterial() == ghostDressMaterial; // assumes no change in dress material!
                 if (colorsMatch

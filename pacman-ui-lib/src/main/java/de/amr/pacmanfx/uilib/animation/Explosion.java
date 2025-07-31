@@ -31,11 +31,15 @@ public class Explosion extends ManagedAnimation {
     private static final Duration EXPLOSION_DURATION = Duration.seconds(30);
 
     private static final short PARTICLE_DIVISIONS = 8;
-    private static final short PARTICLE_COUNT_MIN = 200;
-    private static final short PARTICLE_COUNT_MAX = 400;
+
+    private static final short PARTICLE_COUNT_MIN = 100;
+    private static final short PARTICLE_COUNT_MAX = 300;
+
     private static final float PARTICLE_MEAN_RADIUS_UNSCALED = .15f;
-    private static final float PARTICLE_SPEED_XY_MIN = 0.05f;
-    private static final float PARTICLE_SPEED_XY_MAX = 0.5f;
+
+    private static final float PARTICLE_SPEED_XY_MIN = 0.0f;
+    private static final float PARTICLE_SPEED_XY_MAX = 1.0f;
+
     private static final float PARTICLE_SPEED_Z_MIN = 2;
     private static final float PARTICLE_SPEED_Z_MAX = 8;
     private static final float PARTICLE_SPEED_MOVING_HOME_MIN = 0.4f;
@@ -45,8 +49,8 @@ public class Explosion extends ManagedAnimation {
 
     public static class Particle extends Sphere {
 
-        private boolean flying = true;
-        private boolean glowing = false;
+        private boolean debris = false;
+        private boolean landed = false;
         private boolean movingIntoHouse = false;
         private Point3D targetPosition;
 
@@ -60,8 +64,12 @@ public class Explosion extends ManagedAnimation {
             getTransforms().add(translate);
         }
 
-        public Point3D position() {
-            Translate translate = (Translate) getTransforms().getFirst();
+        private Translate translate() {
+            return (Translate) getTransforms().getFirst();
+        }
+
+        public Point3D center() {
+            Translate translate = translate();
             return new Point3D(translate.getX(), translate.getY(), translate.getZ());
         }
 
@@ -71,15 +79,14 @@ public class Explosion extends ManagedAnimation {
         }
 
         public void move() {
-            Translate translate = (Translate) getTransforms().getFirst();
+            Translate translate = translate();
             translate.setX(translate.getX() + velocity.x);
             translate.setY(translate.getY() + velocity.y);
             translate.setZ(translate.getZ() + velocity.z);
         }
 
         public void setZ(double z) {
-            Translate translate = (Translate) getTransforms().getFirst();
-            translate.setZ(z);
+            translate().setZ(z);
         }
     }
 
@@ -102,42 +109,37 @@ public class Explosion extends ManagedAnimation {
         @Override
         protected void interpolate(double t) {
             for (Particle particle : particles) {
-                if (particle.flying) {
-                    if (particleTouchesFloor.test(particle)) {
-                        particle.flying = false;
-                        particle.setZ(-particle.getRadius()); // just on floor
-                        particle.setRadius(0.2); //TODO make something more intelligent
-                    }
+                if (particle.landed) {
+                    moveToHouse(particle);
                 }
-                if (particle.flying) {
+                else {
                     particle.moveWithGravity();
-                    // if falling under certain height, start glowing etc.
-                    if (particle.velocity.z > 0 && particle.position().getZ() > -20) {
-                        startGlowing(particle);
-                        setDebrisMaterial(particle);
+                    // if falling under certain height, become debris, change color to one of ghost dress colors
+                    // Note: falling means moving to positive z direction!
+                    if (particle.velocity.z > 0 && particle.center().getZ() > -20) {
+                        becomeDebris(particle);
                     }
-                } else {
-                    moveIntoHouse(particle);
+                    if (particleTouchesFloor.test(particle)) {
+                        particle.setRadius(0.2);
+                        particle.setZ(-particle.getRadius());
+                        particle.landed = true;
+                    }
                 }
             }
         }
 
-        private void startGlowing(Particle particle) {
-            if (!particle.glowing) {
-                Bloom bloom = new Bloom();
-                particle.setEffect(bloom);
-                particle.glowing = true;
-            }
+        private void becomeDebris(Particle particle) {
+            if (particle.debris) return;
+            particle.setMaterial(ghostDressMaterials[randomInt(0, 4)]);
+            Bloom bloom = new Bloom();
+            bloom.setThreshold(0.5);
+            particle.setEffect(bloom);
+            particle.debris = true;
         }
 
-        private void setDebrisMaterial(Particle particle) {
-            int index = randomInt(0, 4);
-            particle.setMaterial(ghostDressMaterials[index]);
-        }
-
-        private void moveIntoHouse(Particle particle) {
+        private void moveToHouse(Particle particle) {
             if (!particle.movingIntoHouse) {
-                Point3D position = particle.position();
+                Point3D position = particle.center();
                 int personality = rnd.nextInt(4);
                 Vector2f revivalPosition = ghostRevivalPositions[personality];
                 float minX = revivalPosition.x() + 1, maxX = revivalPosition.x() + TS - 1;
@@ -156,7 +158,7 @@ public class Explosion extends ManagedAnimation {
                 particle.setMaterial(ghostDressMaterials[personality]);
                 particle.movingIntoHouse = true;
             }
-            if (particle.position().distance(particle.targetPosition) < PARTICLE_SPEED_MOVING_HOME_MAX) {
+            if (particle.center().distance(particle.targetPosition) < PARTICLE_SPEED_MOVING_HOME_MAX) {
                 particle.velocity = Vec3f.ZERO;
             } else {
                 particle.move();
