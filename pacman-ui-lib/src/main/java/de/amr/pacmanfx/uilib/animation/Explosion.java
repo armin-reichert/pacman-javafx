@@ -21,7 +21,7 @@ import org.tinylog.Logger;
 import java.util.Random;
 import java.util.function.Predicate;
 
-import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomFloat;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static java.util.Objects.requireNonNull;
@@ -32,10 +32,11 @@ public class Explosion extends ManagedAnimation {
 
     private static final short PARTICLE_DIVISIONS = 8;
 
-    private static final short PARTICLE_COUNT_MIN = 100;
-    private static final short PARTICLE_COUNT_MAX = 300;
+    private static final short PARTICLE_COUNT_MIN = 250;
+    private static final short PARTICLE_COUNT_MAX = 500;
 
-    private static final float PARTICLE_MEAN_RADIUS_UNSCALED = .15f;
+    private static final float PARTICLE_MEAN_RADIUS_UNSCALED = 0.2f;
+    private static final float PARTICLE_RETURNING_HOME_RADIUS = 0.15f;
 
     private static final float PARTICLE_SPEED_XY_MIN = 0.0f;
     private static final float PARTICLE_SPEED_XY_MAX = 1.0f;
@@ -120,7 +121,7 @@ public class Explosion extends ManagedAnimation {
                         becomeDebris(particle);
                     }
                     if (particleTouchesFloor.test(particle)) {
-                        particle.setRadius(0.2);
+                        particle.setRadius(PARTICLE_RETURNING_HOME_RADIUS);
                         particle.setZ(-particle.getRadius());
                         particle.landed = true;
                     }
@@ -138,28 +139,31 @@ public class Explosion extends ManagedAnimation {
         }
 
         private void moveToHouse(Particle particle) {
+            Point3D particleCenter = particle.center();
             if (!particle.movingIntoHouse) {
-                Point3D position = particle.center();
+                // first time: compute target and velocity
                 int personality = rnd.nextInt(4);
                 Vector2f revivalPosition = ghostRevivalPositions[personality];
-                float minX = revivalPosition.x() + 1, maxX = revivalPosition.x() + TS - 1;
-                float minY = revivalPosition.y() + 1, maxY = revivalPosition.y() + TS - 1;
+                double angle = rnd.nextInt(360);
+                double r = 1;
                 particle.targetPosition = new Point3D(
-                        minX + rnd.nextDouble(maxX - minX),
-                        minY + rnd.nextDouble(maxY - minY),
-                        position.getZ()
-                );
+                    revivalPosition.x() + HTS + r * Math.cos(angle),
+                    revivalPosition.y() + HTS + r * Math.sin(angle),
+                    0);
                 float speed = rnd.nextFloat(PARTICLE_SPEED_MOVING_HOME_MIN, PARTICLE_SPEED_MOVING_HOME_MAX);
                 particle.velocity = new Vec3f(
-                    (float) (particle.targetPosition.getX() - position.getX()),
-                    (float) (particle.targetPosition.getY() - position.getY()),
+                    (float) (particle.targetPosition.getX() - particleCenter.getX()),
+                    (float) (particle.targetPosition.getY() - particleCenter.getY()),
                     0
                 ).normalize().multiply(speed);
                 particle.setMaterial(ghostDressMaterials[personality]);
                 particle.movingIntoHouse = true;
             }
-            if (particle.center().distance(particle.targetPosition) < PARTICLE_SPEED_MOVING_HOME_MAX) {
+            Vector2f centerXY = Vector2f.of(particleCenter.getX(), particleCenter.getY());
+            Vector2f targetXY = Vector2f.of(particle.targetPosition.getX(), particle.targetPosition.getY());
+            if (centerXY.euclideanDist(targetXY) < particle.velocity.magnitude()) {
                 particle.velocity = Vec3f.ZERO;
+                particle.setZ(-rnd.nextDouble(10)); // form a column at revival position
             } else {
                 particle.move();
             }
