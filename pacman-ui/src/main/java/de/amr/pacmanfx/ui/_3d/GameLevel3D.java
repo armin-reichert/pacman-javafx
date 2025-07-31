@@ -17,7 +17,6 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.Explosion;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -603,13 +602,13 @@ public class GameLevel3D implements Disposable {
         var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, floorTopZ() - 6);
         var energizer3D = new Energizer3D(animationRegistry, energizerRadius, center, minScaling, maxScaling, pelletMaterial);
         energizer3D.setTile(tile);
-        Vector2f[] ghostRevivalPositions = {
-            gameLevel.ghost(RED_GHOST_SHADOW).revivalPosition(),
-            gameLevel.ghost(PINK_GHOST_SPEEDY).revivalPosition(),
-            gameLevel.ghost(CYAN_GHOST_BASHFUL).revivalPosition(),
-            gameLevel.ghost(ORANGE_GHOST_POKEY).revivalPosition(),
+        Vector2f[] ghostRevivalPositionCenters = {
+            gameLevel.ghost(RED_GHOST_SHADOW).revivalPosition().plus(HTS, HTS),
+            gameLevel.ghost(PINK_GHOST_SPEEDY).revivalPosition().plus(HTS, HTS),
+            gameLevel.ghost(CYAN_GHOST_BASHFUL).revivalPosition().plus(HTS, HTS),
+            gameLevel.ghost(ORANGE_GHOST_POKEY).revivalPosition().plus(HTS, HTS),
         };
-        var explosion = new Explosion(animationRegistry, center, ghostRevivalPositions, particleGroupsContainer,
+        var explosion = new Explosion(animationRegistry, center, ghostRevivalPositionCenters, particleGroupsContainer,
                 particleMaterial, ghostDressMaterials, this::particleTouchesFloor);
         energizer3D.setEatenAnimation(explosion);
         return energizer3D;

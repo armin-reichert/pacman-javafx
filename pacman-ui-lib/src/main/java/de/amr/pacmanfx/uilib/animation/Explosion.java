@@ -21,7 +21,6 @@ import org.tinylog.Logger;
 import java.util.Random;
 import java.util.function.Predicate;
 
-import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomFloat;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static java.util.Objects.requireNonNull;
@@ -94,7 +93,7 @@ public class Explosion extends ManagedAnimation {
     private final Random rnd = new Random();
 
     private Point3D origin;
-    private Vector2f[] ghostRevivalPositions;
+    private Vector2f[] ghostRevivalPositionCenters;
     private Group particlesGroupContainer;
     private Group particlesGroup = new Group();
     private Predicate<Particle> particleTouchesFloor;
@@ -156,12 +155,12 @@ public class Explosion extends ManagedAnimation {
                 int personality = rnd.nextInt(4);
                 particle.setMaterial(ghostDressMaterials[personality]);
                 // first time: compute target and velocity
-                Vector2f revivalPosition = ghostRevivalPositions[personality];
+                Vector2f columnCenter = ghostRevivalPositionCenters[personality];
                 double angle = rnd.nextInt(360);
-                double r = 1;
+                double columnRadius = 1;
                 particle.housePosition = new Point3D(
-                    revivalPosition.x() + HTS + r * Math.cos(angle),
-                    revivalPosition.y() + HTS + r * Math.sin(angle),
+                    columnCenter.x() + columnRadius * Math.cos(angle),
+                    columnCenter.y() + columnRadius * Math.sin(angle),
                     0);
                 float speed = rnd.nextFloat(PARTICLE_SPEED_MOVING_HOME_MIN, PARTICLE_SPEED_MOVING_HOME_MAX);
                 particle.velocity.x = (float) (particle.housePosition.getX() - particleCenter.getX());
@@ -222,7 +221,7 @@ public class Explosion extends ManagedAnimation {
     public Explosion(
         AnimationRegistry animationRegistry,
         Point3D origin,
-        Vector2f[] ghostRevivalPositions,
+        Vector2f[] ghostRevivalPositionCenters,
         Group particlesGroupContainer,
         Material particleMaterial,
         Material[] ghostDressMaterials,
@@ -230,7 +229,7 @@ public class Explosion extends ManagedAnimation {
 
         super(animationRegistry, "Energizer_Explosion");
         this.origin = requireNonNull(origin);
-        this.ghostRevivalPositions = requireNonNull(ghostRevivalPositions);
+        this.ghostRevivalPositionCenters = requireNonNull(ghostRevivalPositionCenters);
         this.particlesGroupContainer = requireNonNull(particlesGroupContainer);
         this.particleMaterial = requireNonNull(particleMaterial);
         this.ghostDressMaterials = requireNonNull(ghostDressMaterials);
@@ -240,7 +239,7 @@ public class Explosion extends ManagedAnimation {
 
     @Override
     protected Animation createAnimationFX() {
-        var particlesMovement = new Explosion.ParticlesMovement();
+        var particlesMovement = new ParticlesMovement();
         particlesMovement.setDelay(Duration.millis(200));
         return particlesMovement;
     }
@@ -250,8 +249,8 @@ public class Explosion extends ManagedAnimation {
         if (origin != null) {
             origin = null;
         }
-        if (ghostRevivalPositions != null) {
-            ghostRevivalPositions = null;
+        if (ghostRevivalPositionCenters != null) {
+            ghostRevivalPositionCenters = null;
         }
         if (particles != null) {
             for (Particle particle : particles) {
