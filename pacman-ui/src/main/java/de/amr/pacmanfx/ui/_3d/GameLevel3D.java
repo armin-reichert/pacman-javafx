@@ -622,9 +622,14 @@ public class GameLevel3D implements Disposable {
     public List<Energizer3D> energizers3D() { return Collections.unmodifiableList(energizers3D); }
 
     public AnimationRegistry animationManager() { return animationRegistry; }
-    public ManagedAnimation levelCompletedAnimation() { return levelCompletedFullAnimation; }
-    public ManagedAnimation levelCompletedAnimationBeforeCutScene() { return levelCompletedShortAnimation; }
-    public ManagedAnimation wallColorFlashingAnimation() { return wallColorFlashingAnimation; }
+
+    public void playWallColorFlashing() {
+        wallColorFlashingAnimation.playFromStart();
+    }
+
+    public void stopWallColorFlashing() {
+        wallColorFlashingAnimation.stop();
+    }
 
     /**
      * Called on each clock tick (frame).
@@ -717,8 +722,8 @@ public class GameLevel3D implements Disposable {
         }
         boolean cutSceneFollows = ui.theGameContext().theGame().cutSceneNumber(gameLevel.number()).isPresent();
         ManagedAnimation levelCompletedAnimation = cutSceneFollows
-            ? levelCompletedAnimationBeforeCutScene()
-            : levelCompletedAnimation();
+            ? levelCompletedShortAnimation
+            : levelCompletedFullAnimation;
 
         var animation = new SequentialTransition(
             pauseSec(2, () -> {
@@ -839,17 +844,28 @@ public class GameLevel3D implements Disposable {
         animationRegistry.stopAllAnimations();
         Logger.info("Stopped all managed animations");
 
+        if (wallColorFlashingAnimation != null) {
+            wallColorFlashingAnimation.dispose();
+            wallColorFlashingAnimation = null;
+        }
+        if (levelCompletedFullAnimation != null) {
+            levelCompletedFullAnimation.dispose();
+            levelCompletedFullAnimation = null;
+        }
+        if (levelCompletedShortAnimation != null) {
+            levelCompletedShortAnimation.dispose();
+            levelCompletedShortAnimation = null;
+        }
+
+        // Dispose all remaining animations
         if (!animationRegistry.animations().isEmpty()) {
             Logger.info("There are {} un-disposed animations left:", animationRegistry.animations().size());
             // create a copy to avoid CME
             for (ManagedAnimation animation : animationRegistry.animations().stream().toList()) {
-                Logger.info("\t" + animation.label());
+                Logger.info("\tDisposing" + animation.label());
                 animation.dispose();
             }
         }
-        wallColorFlashingAnimation = null;
-        levelCompletedFullAnimation = null;
-        levelCompletedShortAnimation = null;
 
         ui.property3DDrawMode().removeListener(this::handleDrawModeChange);
         Logger.info("Removed 'draw mode' listener");
