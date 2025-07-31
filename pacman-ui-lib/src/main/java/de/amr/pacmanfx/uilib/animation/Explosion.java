@@ -28,7 +28,8 @@ import static java.util.Objects.requireNonNull;
 
 public class Explosion extends ManagedAnimation {
 
-    private static final Duration EXPLOSION_DURATION = Duration.seconds(30);
+    // Time includes movement of particles to the ghost house after the explosion
+    private static final Duration TOTAL_DURATION = Duration.seconds(30);
 
     private static final short PARTICLE_DIVISIONS = 8;
 
@@ -36,33 +37,31 @@ public class Explosion extends ManagedAnimation {
     private static final short PARTICLE_COUNT_MAX = 500;
 
     private static final float PARTICLE_MEAN_RADIUS_UNSCALED = 0.2f;
-    private static final float PARTICLE_RETURNING_HOME_RADIUS = 0.15f;
+    private static final float PARTICLE_RADIUS_RETURNING_HOME = 0.15f;
 
-    private static final float PARTICLE_SPEED_XY_MIN = 0.0f;
-    private static final float PARTICLE_SPEED_XY_MAX = 1.0f;
+    private static final float PARTICLE_SPEED_EXPLODING_XY_MIN = 0.0f;
+    private static final float PARTICLE_SPEED_EXPLODING_XY_MAX = 1.0f;
 
-    private static final float PARTICLE_SPEED_Z_MIN = 2;
-    private static final float PARTICLE_SPEED_Z_MAX = 8;
+    private static final float PARTICLE_SPEED_EXPLODING_Z_MIN = 2;
+    private static final float PARTICLE_SPEED_EXPLODING_Z_MAX = 8;
+
     private static final float PARTICLE_SPEED_MOVING_HOME_MIN = 0.4f;
     private static final float PARTICLE_SPEED_MOVING_HOME_MAX = 0.8f;
 
     private static final float GRAVITY_Z = 0.18f;
 
     public static class Particle extends Sphere {
-
         private boolean debris = false;
         private boolean landed = false;
-        private boolean movingIntoHouse = false;
+        private boolean movingHome = false;
         private Point3D targetPosition;
-
         private Vec3f velocity;
 
         public Particle(double radius, Material material, Vec3f velocity, Point3D origin) {
             super(radius, PARTICLE_DIVISIONS);
             this.velocity = velocity;
             setMaterial(material);
-            Translate translate = new Translate(origin.getX(), origin.getY(), origin.getZ());
-            getTransforms().add(translate);
+            getTransforms().add(new Translate(origin.getX(), origin.getY(), origin.getZ()));
         }
 
         private Translate translate() {
@@ -104,7 +103,7 @@ public class Explosion extends ManagedAnimation {
     private class ParticlesMovement extends Transition {
 
         public ParticlesMovement() {
-            setCycleDuration(EXPLOSION_DURATION);
+            setCycleDuration(TOTAL_DURATION);
         }
 
         @Override
@@ -121,7 +120,7 @@ public class Explosion extends ManagedAnimation {
                         becomeDebris(particle);
                     }
                     if (particleTouchesFloor.test(particle)) {
-                        particle.setRadius(PARTICLE_RETURNING_HOME_RADIUS);
+                        particle.setRadius(PARTICLE_RADIUS_RETURNING_HOME);
                         particle.setZ(-particle.getRadius());
                         particle.landed = true;
                     }
@@ -140,7 +139,7 @@ public class Explosion extends ManagedAnimation {
 
         private void moveToHouse(Particle particle) {
             Point3D particleCenter = particle.center();
-            if (!particle.movingIntoHouse) {
+            if (!particle.movingHome) {
                 // first time: compute target and velocity
                 int personality = rnd.nextInt(4);
                 Vector2f revivalPosition = ghostRevivalPositions[personality];
@@ -157,7 +156,7 @@ public class Explosion extends ManagedAnimation {
                     0
                 ).normalize().multiply(speed);
                 particle.setMaterial(ghostDressMaterials[personality]);
-                particle.movingIntoHouse = true;
+                particle.movingHome = true;
             }
             Vector2f centerXY = Vector2f.of(particleCenter.getX(), particleCenter.getY());
             Vector2f targetXY = Vector2f.of(particle.targetPosition.getX(), particle.targetPosition.getY());
@@ -199,9 +198,9 @@ public class Explosion extends ManagedAnimation {
             int xDir = rnd.nextBoolean() ? -1 : 1;
             int yDir = rnd.nextBoolean() ? -1 : 1;
             return new Vec3f(
-                xDir * randomFloat(PARTICLE_SPEED_XY_MIN, PARTICLE_SPEED_XY_MAX),
-                yDir * randomFloat(PARTICLE_SPEED_XY_MIN, PARTICLE_SPEED_XY_MAX),
-                -randomFloat(PARTICLE_SPEED_Z_MIN, PARTICLE_SPEED_Z_MAX)
+                xDir * randomFloat(PARTICLE_SPEED_EXPLODING_XY_MIN, PARTICLE_SPEED_EXPLODING_XY_MAX),
+                yDir * randomFloat(PARTICLE_SPEED_EXPLODING_XY_MIN, PARTICLE_SPEED_EXPLODING_XY_MAX),
+                -randomFloat(PARTICLE_SPEED_EXPLODING_Z_MIN, PARTICLE_SPEED_EXPLODING_Z_MAX)
             );
         }
     }
