@@ -170,12 +170,11 @@ public class Explosion extends ManagedAnimation {
         }
 
         private void replaceParticles(Material particleMaterial, Point3D origin) {
-            Random rnd = new Random();
             var stopWatch = new StopWatch();
             int particleCount = randomInt(PARTICLE_COUNT_MIN, PARTICLE_COUNT_MAX + 1);
             particles = new Particle[particleCount];
             for (int i = 0; i < particleCount; ++i) {
-                double radius = randomParticleRadius(rnd);
+                double radius = randomParticleRadius();
                 Vec3f velocity = randomParticleVelocity();
                 particles[i] = new Particle(radius, particleMaterial, velocity, origin);
                 particles[i].setVisible(true);
@@ -184,14 +183,13 @@ public class Explosion extends ManagedAnimation {
             Logger.info("{} particles created in {0.000} milliseconds", particleCount, stopWatch.passedMillis());
         }
 
-        private double randomParticleRadius(Random rnd) {
+        private double randomParticleRadius() {
             double scaling = rnd.nextGaussian(2, 0.1);
             scaling = Math.clamp(scaling, 0.5, 4);
             return scaling * PARTICLE_MEAN_RADIUS_UNSCALED;
         }
 
         private Vec3f randomParticleVelocity() {
-            Random rnd = new Random();
             int xDir = rnd.nextBoolean() ? -1 : 1;
             int yDir = rnd.nextBoolean() ? -1 : 1;
             return new Vec3f(
