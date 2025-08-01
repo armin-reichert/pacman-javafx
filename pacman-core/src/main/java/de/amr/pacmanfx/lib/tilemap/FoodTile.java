@@ -5,13 +5,13 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.lib.tilemap;
 
 public enum FoodTile {
-    EMPTY, PELLET, ENERGIZER;
+    EMPTY     (0x00),
+    PELLET    (0x01),
+    ENERGIZER (0x02);
 
-    public byte code() {
-        return switch (this) {
-            case EMPTY -> 0;
-            case PELLET -> 1;
-            case ENERGIZER -> 2;
-        };
-    }
+    public final byte $;
+
+    FoodTile(int code) { $ = (byte) code; }
+
+    public byte code() { return $; }
 }

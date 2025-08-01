@@ -31,7 +31,7 @@ public class WorldMap {
     public static final String MARKER_BEGIN_DATA_SECTION = "!data";
 
     private static boolean isValidTerrainValue(byte value) {
-        return Stream.of(TerrainTile.values()).anyMatch(tile -> tile.code() == value);
+        return Stream.of(TerrainTile.values()).anyMatch(tile -> tile.$ == value);
     }
 
     private static boolean isValidFoodValue(byte value) {
@@ -140,7 +140,7 @@ public class WorldMap {
         newMap.foodLayer.replaceProperties(foodLayer.properties());
         for (int row = 0; row < newMap.numRows; ++row) {
             for (int col = 0; col < newMap.numCols; ++col) {
-                byte terrainValue = TerrainTile.EMPTY.code();
+                byte terrainValue = TerrainTile.EMPTY.$;
                 byte foodValue = FoodTile.EMPTY.code();
                 if (row < rowIndex) {
                     terrainValue = content(LayerID.TERRAIN, row, col);
@@ -150,8 +150,8 @@ public class WorldMap {
                     foodValue = content(LayerID.FOOD, row - 1, col);
                 } else {
                     if ((col == 0 || col == numCols - 1)
-                        && content(LayerID.TERRAIN, row, col) == TerrainTile.WALL_V.code()) {
-                        terrainValue = TerrainTile.WALL_V.code(); // keep vertical border wall
+                        && content(LayerID.TERRAIN, row, col) == TerrainTile.WALL_V.$) {
+                        terrainValue = TerrainTile.WALL_V.$; // keep vertical border wall
                     }
                 }
                 newMap.setContent(LayerID.TERRAIN, row, col, terrainValue);

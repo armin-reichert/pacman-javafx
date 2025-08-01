@@ -97,10 +97,10 @@ public class TengenMsPacMan_GameModel extends GameModel {
     private static final byte[] KILLED_GHOST_VALUE_FACTORS = {2, 4, 8, 16}; // points = factor * 100
 
     private static final byte[][] HOUSE = {
-        { ARC_NW.code(), WALL_H.code(), WALL_H.code(), DOOR.code(), DOOR.code(), WALL_H.code(), WALL_H.code(), ARC_NE.code() },
-        { WALL_V.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), WALL_V.code()   },
-        { WALL_V.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), WALL_V.code()   },
-        { ARC_SW.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), ARC_SE.code() }
+        { ARC_NW.$, WALL_H.$, WALL_H.$, DOOR.$, DOOR.$, WALL_H.$, WALL_H.$, ARC_NE.$ },
+        { WALL_V.$, EMPTY.$, EMPTY.$, EMPTY.$, EMPTY.$, EMPTY.$, EMPTY.$, WALL_V.$   },
+        { WALL_V.$, EMPTY.$, EMPTY.$, EMPTY.$, EMPTY.$, EMPTY.$, EMPTY.$, WALL_V.$   },
+        { ARC_SW.$, WALL_H.$, WALL_H.$, WALL_H.$, WALL_H.$, WALL_H.$, WALL_H.$, ARC_SE.$ }
     };
 
     public static Pac createMsPacMan(GameContext gameContext) {

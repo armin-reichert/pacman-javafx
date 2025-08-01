@@ -19,15 +19,15 @@ public record ObstacleSegment(Vector2i startPoint, Vector2i vector, boolean ccw,
         return startPoint.plus(vector);
     }
 
-    public boolean isRoundedNWCorner() { return encoding == TerrainTile.ARC_NW.code(); }
-    public boolean isRoundedSWCorner() { return encoding == TerrainTile.ARC_SW.code(); }
-    public boolean isRoundedSECorner() { return encoding == TerrainTile.ARC_SE.code(); }
-    public boolean isRoundedNECorner() { return encoding == TerrainTile.ARC_NE.code(); }
+    public boolean isRoundedNWCorner() { return encoding == TerrainTile.ARC_NW.$; }
+    public boolean isRoundedSWCorner() { return encoding == TerrainTile.ARC_SW.$; }
+    public boolean isRoundedSECorner() { return encoding == TerrainTile.ARC_SE.$; }
+    public boolean isRoundedNECorner() { return encoding == TerrainTile.ARC_NE.$; }
 
-    public boolean isAngularNWCorner() { return encoding == TerrainTile.DARC_NW.code(); }
-    public boolean isAngularSWCorner() { return encoding == TerrainTile.DARC_SW.code(); }
-    public boolean isAngularSECorner() { return encoding == TerrainTile.DARC_SE.code();}
-    public boolean isAngularNECorner() { return encoding == TerrainTile.DARC_NE.code(); }
+    public boolean isAngularNWCorner() { return encoding == TerrainTile.DARC_NW.$; }
+    public boolean isAngularSWCorner() { return encoding == TerrainTile.DARC_SW.$; }
+    public boolean isAngularSECorner() { return encoding == TerrainTile.DARC_SE.$;}
+    public boolean isAngularNECorner() { return encoding == TerrainTile.DARC_NE.$; }
 
     public boolean isNWCorner() {
         return isRoundedNWCorner() || isAngularNWCorner();
@@ -42,8 +42,8 @@ public record ObstacleSegment(Vector2i startPoint, Vector2i vector, boolean ccw,
         return isRoundedNECorner() || isAngularNECorner();
     }
 
-    public boolean isVerticalLine() { return encoding == TerrainTile.WALL_V.code(); }
-    public boolean isHorizontalLine() { return encoding == TerrainTile.WALL_H.code(); }
+    public boolean isVerticalLine() { return encoding == TerrainTile.WALL_V.$; }
+    public boolean isHorizontalLine() { return encoding == TerrainTile.WALL_H.$; }
     public boolean isStraightLine() {
         return isVerticalLine() || isHorizontalLine();
     }

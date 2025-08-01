@@ -269,7 +269,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
 
         // Special tiles where attacking ghosts cannot move up
         List<Vector2i> oneWayDownTiles = worldMap.tiles()
-            .filter(tile -> worldMap.content(LayerID.TERRAIN, tile) == TerrainTile.ONE_WAY_DOWN.code())
+            .filter(tile -> worldMap.content(LayerID.TERRAIN, tile) == TerrainTile.ONE_WAY_DOWN.$)
             .toList();
         level.setGhosts(
             createGhost(gameContext, RED_GHOST_SHADOW),

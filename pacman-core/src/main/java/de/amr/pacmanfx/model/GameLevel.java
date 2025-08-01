@@ -35,11 +35,11 @@ import static java.util.function.Predicate.not;
 public class GameLevel {
 
     private static final byte[][] DEFAULT_HOUSE_ROWS = {
-        { ARC_NW.code(), WALL_H.code(), WALL_H.code(), DOOR.code(), DOOR.code(), WALL_H.code(), WALL_H.code(), ARC_NE.code() },
-        { WALL_V.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), WALL_V.code()   },
-        { WALL_V.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), WALL_V.code()   },
-        { WALL_V.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), EMPTY.code(), WALL_V.code()   },
-        { ARC_SW.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), WALL_H.code(), ARC_SE.code() }
+        { ARC_NW.$, WALL_H.$, WALL_H.$, DOOR.$, DOOR.$, WALL_H.$, WALL_H.$, ARC_NE.$ },
+        { WALL_V.$, EMPTY.$, EMPTY.$, EMPTY.$, EMPTY.$, EMPTY.$, EMPTY.$, WALL_V.$   },
+        { WALL_V.$, EMPTY.$, EMPTY.$, EMPTY.$, EMPTY.$, EMPTY.$, EMPTY.$, WALL_V.$   },
+        { WALL_V.$, EMPTY.$, EMPTY.$, EMPTY.$, EMPTY.$, EMPTY.$, EMPTY.$, WALL_V.$   },
+        { ARC_SW.$, WALL_H.$, WALL_H.$, WALL_H.$, WALL_H.$, WALL_H.$, WALL_H.$, ARC_SE.$ }
     };
 
     private static final Vector2i DEFAULT_HOUSE_MIN_TILE = Vector2i.of(10, 15);
@@ -153,8 +153,8 @@ public class GameLevel {
         int firstColumn = 0, lastColumn = worldMap.numCols() - 1;
         for (int row = 0; row < worldMap.numRows(); ++row) {
             Vector2i leftBorderTile = Vector2i.of(firstColumn, row), rightBorderTile = Vector2i.of(lastColumn, row);
-            if (worldMap.content(LayerID.TERRAIN, row, firstColumn) == TUNNEL.code()
-                && worldMap.content(LayerID.TERRAIN, row, lastColumn) == TUNNEL.code()) {
+            if (worldMap.content(LayerID.TERRAIN, row, firstColumn) == TUNNEL.$
+                && worldMap.content(LayerID.TERRAIN, row, lastColumn) == TUNNEL.$) {
                 portals.add(new Portal(leftBorderTile, rightBorderTile, 2));
             }
         }
@@ -327,7 +327,7 @@ public class GameLevel {
     }
 
     public boolean isTunnel(Vector2i tile) {
-        return isTileInsideWorld(tile) && worldMap.content(LayerID.TERRAIN, tile) == TUNNEL.code();
+        return isTileInsideWorld(tile) && worldMap.content(LayerID.TERRAIN, tile) == TUNNEL.$;
     }
 
     public boolean isIntersection(Vector2i tile) {

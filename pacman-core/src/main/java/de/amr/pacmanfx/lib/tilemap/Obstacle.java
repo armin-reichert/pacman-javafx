@@ -103,10 +103,10 @@ public class Obstacle {
     public Vector2i cornerCenter(int segmentIndex) {
         ObstacleSegment corner = segment(segmentIndex);
         byte code = corner.encoding();
-        if (code == ARC_NW.code()) return point(segmentIndex).plus(0, HTS);
-        if (code == ARC_SW.code()) return point(segmentIndex).plus(HTS, 0);
-        if (code == ARC_SE.code()) return point(segmentIndex).plus(0, -HTS);
-        if (code == ARC_NE.code()) return point(segmentIndex).plus(-HTS, 0);
+        if (code == ARC_NW.$) return point(segmentIndex).plus(0, HTS);
+        if (code == ARC_SW.$) return point(segmentIndex).plus(HTS, 0);
+        if (code == ARC_SE.$) return point(segmentIndex).plus(0, -HTS);
+        if (code == ARC_NE.$) return point(segmentIndex).plus(-HTS, 0);
         throw new IllegalStateException("No corner tile at index " + segmentIndex);
     }
 
@@ -115,10 +115,10 @@ public class Obstacle {
         for (ObstacleSegment segment : segments) {
             boolean up = segment.vector().y() < 0, down = segment.vector().y() > 0;
             byte code = segment.encoding();
-            if (code == ARC_NW.code() && down) centers.add(segment.startPoint().plus(0, HTS));
-            if (code == ARC_SW.code() && down) centers.add(segment.startPoint().plus(HTS, 0));
-            if (code == ARC_SE.code() && up)   centers.add(segment.startPoint().plus(0, -HTS));
-            if (code == ARC_NE.code() && up)   centers.add(segment.startPoint().plus(-HTS, 0));
+            if (code == ARC_NW.$ && down) centers.add(segment.startPoint().plus(0, HTS));
+            if (code == ARC_SW.$ && down) centers.add(segment.startPoint().plus(HTS, 0));
+            if (code == ARC_SE.$ && up)   centers.add(segment.startPoint().plus(0, -HTS));
+            if (code == ARC_NE.$ && up)   centers.add(segment.startPoint().plus(-HTS, 0));
         }
         return centers.toArray(Vector2i[]::new);
     }
