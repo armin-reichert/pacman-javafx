@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.animation;
 
+import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.StopWatch;
 import de.amr.pacmanfx.lib.Vec3f;
 import de.amr.pacmanfx.lib.Vector2f;
@@ -17,6 +18,8 @@ import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.function.Predicate;
 
@@ -48,7 +51,7 @@ public class Explosion extends ManagedAnimation {
 
     private static final float GRAVITY_Z = 0.18f;
 
-    public static class Particle extends Sphere {
+    public static class Particle extends Sphere implements Disposable {
         public byte personality = -1;
         public boolean debris = false;
         public boolean landed = false;
@@ -64,6 +67,14 @@ public class Explosion extends ManagedAnimation {
             setTranslateX(origin.getX());
             setTranslateY(origin.getY());
             setTranslateZ(origin.getZ());
+        }
+
+        @Override
+        public void dispose() {
+            setMaterial(null);
+            setTranslateX(0);
+            setTranslateY(0);
+            setTranslateZ(0);
         }
 
         public Point3D center() {
@@ -102,6 +113,7 @@ public class Explosion extends ManagedAnimation {
 
         @Override
         protected void interpolate(double t) {
+            List<Particle> particlesToRemove = new ArrayList<>();
             for (Particle particle : particles) {
                 if (particle.removed) continue;
 
@@ -122,13 +134,19 @@ public class Explosion extends ManagedAnimation {
                     }
                     // if felt outside world, remove it at some level
                     if (!particle.landed && particle.center().getZ() > 100) {
-                        particlesGroup.getChildren().remove(particle);
                         particle.velocity = null;
                         particle.setMaterial(null);
                         particle.removed = true;
+                        particlesToRemove.add(particle);
                         Logger.debug(() -> "%s removed (felt outside), z=%.2f".formatted(particle, particle.getTranslateZ()));
                     }
                 }
+            }
+            if (!particlesToRemove.isEmpty()) {
+                particlesGroup.getChildren().removeAll(particlesToRemove);
+                Logger.info("{} particles removed at t={}", particlesToRemove.size(), t);
+                particlesToRemove.forEach(Particle::dispose);
+                particlesToRemove.clear();
             }
         }
 
@@ -262,7 +280,7 @@ public class Explosion extends ManagedAnimation {
         }
         if (particles != null) {
             for (Particle particle : particles) {
-                particle.setMaterial(null);
+                particle.dispose();
             }
             Logger.info("Disposed {} particles", particles.length);
             particles = null;
