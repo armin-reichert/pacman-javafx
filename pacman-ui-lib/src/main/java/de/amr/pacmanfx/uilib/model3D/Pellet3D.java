@@ -35,6 +35,7 @@ public class Pellet3D implements Eatable3D {
     @Override
     public void dispose() {
         if (shape instanceof MeshView meshView) {
+            meshView.setMaterial(null);
             meshView.setMesh(null);
             shape = null;
         }

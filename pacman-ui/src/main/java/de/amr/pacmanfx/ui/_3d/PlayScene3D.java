@@ -8,6 +8,7 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
+import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
@@ -413,7 +414,7 @@ public class PlayScene3D implements GameScene {
 
         gameLevel3D.pac3D().init();
         gameLevel3D.pac3D().update();
-        gameLevel3D.pellets3D().forEach(pellet -> pellet.node().setVisible(!gameLevel.tileContainsEatenFood(pellet.tile())));
+        gameLevel3D.pellets3D().forEach(pellet -> pellet.setVisible(!gameLevel.tileContainsEatenFood((Vector2i) pellet.getUserData())));
         gameLevel3D.energizers3D().forEach(energizer -> energizer.node().setVisible(!gameLevel.tileContainsEatenFood(energizer.tile())));
         if (isOneOf(gameContext().theGameState(), GameState.HUNTING, GameState.GHOST_DYING)) { //TODO check this
             gameLevel3D.energizers3D().stream()
@@ -498,7 +499,7 @@ public class PlayScene3D implements GameScene {
                 energizer3D.onEaten();
             } else {
                 gameLevel3D.pellets3D().stream()
-                    .filter(pellet3D -> event.tile().equals(pellet3D.tile()))
+                    .filter(pellet3D -> event.tile().equals(pellet3D.getUserData()))
                     .findFirst()
                     .ifPresent(Pellet3D::onEaten);
             }

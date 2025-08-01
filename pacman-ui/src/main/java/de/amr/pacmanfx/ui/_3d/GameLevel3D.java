@@ -36,10 +36,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Box;
-import javafx.scene.shape.DrawMode;
-import javafx.scene.shape.Mesh;
-import javafx.scene.shape.MeshView;
+import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
@@ -97,7 +94,7 @@ public class GameLevel3D implements Disposable {
     protected PacBase3D pac3D;
     protected List<MutatingGhost3D> ghosts3D;
     protected Bonus3D bonus3D;
-    protected final ArrayList<Pellet3D> pellets3D = new ArrayList<>();
+    protected final ArrayList<Shape3D> pellets3D = new ArrayList<>();
     protected final ArrayList<Energizer3D> energizers3D = new ArrayList<>();
     protected final Group particleGroupsContainer = new Group();
     protected MessageView messageView;
@@ -271,7 +268,7 @@ public class GameLevel3D implements Disposable {
 
         root.getChildren().add(particleGroupsContainer);
         energizers3D.stream().map(Eatable3D::node).forEach(root.getChildren()::add);
-        pellets3D   .stream().map(Eatable3D::node).forEach(root.getChildren()::add);
+        pellets3D.forEach(root.getChildren()::add);
 
         // Note: The order in which children are added to the root matters!
         // Walls and house must be added *after* the actors, otherwise the transparency is not working correctly.
@@ -568,7 +565,7 @@ public class GameLevel3D implements Disposable {
         pellets3D.trimToSize();
     }
 
-    private Pellet3D createPellet3D(Mesh mesh, Scale scale, Vector2i tile) {
+    private Shape3D createPellet3D(Mesh mesh, Scale scale, Vector2i tile) {
         var meshView = new MeshView(mesh);
         meshView.setMaterial(pelletMaterial);
         meshView.setRotationAxis(Rotate.Z_AXIS);
@@ -577,9 +574,8 @@ public class GameLevel3D implements Disposable {
         meshView.setTranslateY(tile.y() * TS + HTS);
         meshView.setTranslateZ(-floorTopZ() - 6);
         meshView.getTransforms().add(scale);
-        Pellet3D pellet3D = new Pellet3D(meshView);
-        pellet3D.setTile(tile);
-        return pellet3D;
+        meshView.setUserData(tile);
+        return meshView;
     }
 
     private void createEnergizers3D() {
@@ -619,7 +615,7 @@ public class GameLevel3D implements Disposable {
     public List<MutatingGhost3D> ghosts3D() { return Collections.unmodifiableList(ghosts3D); }
     public Optional<Bonus3D> bonus3D() { return Optional.ofNullable(bonus3D); }
     public Optional<LivesCounter3D> livesCounter3D() { return Optional.ofNullable(livesCounter3D); }
-    public List<Pellet3D> pellets3D() { return Collections.unmodifiableList(pellets3D); }
+    public List<Shape3D> pellets3D() { return Collections.unmodifiableList(pellets3D); }
     public List<Energizer3D> energizers3D() { return Collections.unmodifiableList(energizers3D); }
 
     public AnimationRegistry animationManager() { return animationRegistry; }
@@ -712,7 +708,7 @@ public class GameLevel3D implements Disposable {
         ui.theSound().stopAll();
         animationRegistry.stopAllAnimations();
         // hide 3d food explicitly because level might have been completed using cheat!
-        pellets3D.forEach(pellet3D -> pellet3D.node().setVisible(false));
+        pellets3D.forEach(pellet3D -> pellet3D.setVisible(false));
         energizers3D.forEach(Energizer3D::pausePumping);
         energizers3D.forEach(energizer3D -> energizer3D.node().setVisible(false));
         particleGroupsContainer.getChildren().clear();
@@ -890,7 +886,12 @@ public class GameLevel3D implements Disposable {
             ambientLight = null;
             Logger.info("Unbound and cleared ambient light");
         }
-        pellets3D.forEach(Pellet3D::dispose);
+        pellets3D.forEach(shape3D -> {
+            if (shape3D instanceof MeshView meshView) {
+                meshView.setMaterial(null);
+                meshView.setMesh(null);
+            }
+        });
         Logger.info("Disposed 3D pellets");
         energizers3D.forEach(Energizer3D::dispose);
         Logger.info("Disposed 3D energizers");
