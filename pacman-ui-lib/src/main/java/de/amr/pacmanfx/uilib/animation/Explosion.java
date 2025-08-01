@@ -61,7 +61,6 @@ public class Explosion extends ManagedAnimation {
             super(radius, PARTICLE_DIVISIONS);
             this.velocity = velocity;
             setMaterial(material);
-            //getTransforms().add(new Translate(origin.getX(), origin.getY(), origin.getZ()));
             setTranslateX(origin.getX());
             setTranslateY(origin.getY());
             setTranslateZ(origin.getZ());

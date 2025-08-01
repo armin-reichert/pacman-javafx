@@ -43,6 +43,11 @@ public class AnimationRegistry {
         disposedAnimations.add(managedAnimation);
     }
 
+    public void clear() {
+        Logger.info("Clearing {} disposed animations", disposedAnimations.size());
+        disposedAnimations.clear();
+    }
+
     public void stopAllAnimations() {
         registeredAnimations.forEach(ManagedAnimation::stop);
     }

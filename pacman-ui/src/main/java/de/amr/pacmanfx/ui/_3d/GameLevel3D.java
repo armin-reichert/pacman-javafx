@@ -279,7 +279,6 @@ public class GameLevel3D implements Disposable {
         // Note: The order in which children are added to the root matters!
         // Walls and house must be added *after* the actors, otherwise the transparency is not working correctly.
         root.getChildren().addAll(floor3D, maze3D);
-
     }
 
     public Group root() {
@@ -847,6 +846,8 @@ public class GameLevel3D implements Disposable {
                 animation.dispose();
             }
         }
+
+        animationRegistry.clear();
 
         ui.property3DDrawMode().removeListener(this::handleDrawModeChange);
         Logger.info("Removed 'draw mode' listener");
