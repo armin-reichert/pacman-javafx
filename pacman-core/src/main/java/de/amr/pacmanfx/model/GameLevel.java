@@ -301,14 +301,14 @@ public class GameLevel {
 
     public boolean isTileInsideWorld(Vector2i tile) { return !worldMap.outOfWorld(tile); }
 
-    public Stream<Vector2i> neighborsOutsideWorld(Vector2i tile) {
+    public Stream<Vector2i> neighborTilesOutsideWorld(Vector2i tile) {
         requireNonNull(tile);
         return Stream.of(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT)
             .map(dir -> tile.plus(dir.vector()))
             .filter(not(this::isTileInsideWorld));
     }
 
-    public Stream<Vector2i> neighborsInsideWorld(Vector2i tile) {
+    public Stream<Vector2i> neighborTilesInsideWorld(Vector2i tile) {
         requireNonNull(tile);
         return Stream.of(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT)
             .map(dir -> tile.plus(dir.vector()))
@@ -337,13 +337,13 @@ public class GameLevel {
         if (house != null && house.isTileInHouseArea(tile)) {
             return false;
         }
-        int freeNeighbors = 4;
-        freeNeighbors -= (int) neighborsOutsideWorld(tile).count();
-        freeNeighbors -= (int) neighborsInsideWorld(tile).filter(this::isTileBlocked).count();
+        long inaccessible = 0;
+        inaccessible += neighborTilesOutsideWorld(tile).count();
+        inaccessible += neighborTilesInsideWorld(tile).filter(this::isTileBlocked).count();
         if (house != null) {
-            freeNeighbors -= (int) neighborsInsideWorld(tile).filter(house::isDoorAt).count();
+            inaccessible += neighborTilesInsideWorld(tile).filter(house::isDoorAt).count();
         }
-        return freeNeighbors >= 3;
+        return inaccessible <= 1;
     }
 
     public Optional<House> house() {
