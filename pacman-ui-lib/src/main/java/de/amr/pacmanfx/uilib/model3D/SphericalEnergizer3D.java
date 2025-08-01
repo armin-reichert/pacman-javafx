@@ -25,13 +25,13 @@ public class SphericalEnergizer3D implements Energizer3D {
     private ManagedAnimation eatenAnimation;
 
     public SphericalEnergizer3D(
-            AnimationRegistry animationRegistry,
-            double radius,
-            Point3D center,
-            double minScaling,
-            double maxScaling,
-            Material material,
-            Vector2i tile)
+        AnimationRegistry animationRegistry,
+        double radius,
+        Point3D center,
+        double minScaling,
+        double maxScaling,
+        Material material,
+        Vector2i tile)
     {
         requireNonNegative(radius, "Energizer radius must be positive but is %f");
         requireNonNull(animationRegistry);
@@ -87,11 +87,11 @@ public class SphericalEnergizer3D implements Energizer3D {
         }
     }
 
-    public void playPumping() {
+    public void startPumping() {
         pumpingAnimation.playOrContinue();
     }
 
-    public void pausePumping() {
+    public void stopPumping() {
         pumpingAnimation.pause();
     }
 

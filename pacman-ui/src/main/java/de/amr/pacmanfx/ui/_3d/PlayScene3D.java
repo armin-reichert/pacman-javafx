@@ -391,7 +391,7 @@ public class PlayScene3D implements GameScene {
             case TESTING_LEVELS_SHORT, TESTING_LEVELS_MEDIUM -> {
                 replaceGameLevel3D(); //TODO check when to destroy previous level
 //                gameLevel3D.livesCounter3D().flatMap(LivesCounter3D::lookingAroundAnimation).ifPresent(ManagedAnimation::playFromStart);
-                gameLevel3D.energizers3D().forEach(Energizer3D::playPumping);
+                gameLevel3D.energizers3D().forEach(Energizer3D::startPumping);
                 showLevelTestMessage();
             }
             default -> Logger.error("Unexpected game state '{}' on level start", gameContext().theGameState());
@@ -421,7 +421,7 @@ public class PlayScene3D implements GameScene {
         if (isOneOf(gameContext().theGameState(), GameState.HUNTING, GameState.GHOST_DYING)) { //TODO check this
             gameLevel3D.energizers3D().stream()
                 .filter(energizer3D -> energizer3D.shape().isVisible())
-                .forEach(Energizer3D::playPumping);
+                .forEach(Energizer3D::startPumping);
         }
 
         if (gameContext().theGameState() == GameState.HUNTING) {

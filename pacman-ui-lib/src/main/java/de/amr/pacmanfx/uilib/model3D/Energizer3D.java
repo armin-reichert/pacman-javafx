@@ -15,8 +15,8 @@ import javafx.scene.Node;
 public interface Energizer3D extends Disposable {
     Node shape();
     Vector2i tile();
-    void playPumping();
-    void pausePumping();
+    void startPumping();
+    void stopPumping();
     void setEatenAnimation(ManagedAnimation animation);
     void onEaten();
     void hide();
