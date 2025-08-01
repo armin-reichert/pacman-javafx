@@ -25,7 +25,6 @@ SOFTWARE.
 package de.amr.pacmanfx.uilib.animation;
 
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.uilib.model3D.Pellet3D;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
 import javafx.scene.Group;
@@ -53,12 +52,10 @@ public class FoodOscillation extends Transition {
     @Override
     protected void interpolate(double t) {
         for (var node : foodGroup.getChildren()) {
-            if (node.getUserData() instanceof Pellet3D pellet3D) {
-                var position2D = new Vector2f((float) node.getTranslateX(), (float) node.getTranslateY());
-                var centerDistance = position2D.euclideanDist(CENTER);
-                double dz = 2 * Math.sin(2 * centerDistance) * t;
-                node.setTranslateZ(-4 + dz);
-            }
+            var position2D = new Vector2f((float) node.getTranslateX(), (float) node.getTranslateY());
+            var centerDistance = position2D.euclideanDist(CENTER);
+            double dz = 2 * Math.sin(2 * centerDistance) * t;
+            node.setTranslateZ(-4 + dz);
         }
     }
 }

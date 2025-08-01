@@ -20,22 +20,19 @@ import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.model3D.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.Energizer3D;
-import de.amr.pacmanfx.uilib.model3D.Pellet3D;
 import de.amr.pacmanfx.uilib.model3D.Scores3D;
 import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
 import javafx.animation.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.Group;
-import javafx.scene.PerspectiveCamera;
-import javafx.scene.SceneAntialiasing;
-import javafx.scene.SubScene;
+import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Shape3D;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -48,6 +45,7 @@ import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_SHORT;
 import static de.amr.pacmanfx.ui.GameUI.DEFAULT_ACTION_BINDINGS;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.control;
+import static de.amr.pacmanfx.uilib.Ufx.pauseSec;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -415,10 +413,10 @@ public class PlayScene3D implements GameScene {
         gameLevel3D.pac3D().init();
         gameLevel3D.pac3D().update();
         gameLevel3D.pellets3D().forEach(pellet -> pellet.setVisible(!gameLevel.tileContainsEatenFood((Vector2i) pellet.getUserData())));
-        gameLevel3D.energizers3D().forEach(energizer -> energizer.node().setVisible(!gameLevel.tileContainsEatenFood(energizer.tile())));
+        gameLevel3D.energizers3D().forEach(energizer -> energizer.setVisible(!gameLevel.tileContainsEatenFood((Vector2i) energizer.getUserData())));
         if (isOneOf(gameContext().theGameState(), GameState.HUNTING, GameState.GHOST_DYING)) { //TODO check this
             gameLevel3D.energizers3D().stream()
-                .filter(energizer3D -> energizer3D.node().isVisible())
+                .filter(Node::isVisible)
                 .forEach(Energizer3D::playPumping);
         }
 
@@ -491,17 +489,17 @@ public class PlayScene3D implements GameScene {
     public void onPacFoundFood(GameEvent event) {
         if (event.tile() == null) {
             // When cheat "eat all pellets" has been used, no tile is present in the event.
-            gameLevel3D.pellets3D().forEach(Pellet3D::onEaten);
+            gameLevel3D.pellets3D().forEach(this::eatPellet3D);
         } else {
             Energizer3D energizer3D = gameLevel3D.energizers3D().stream()
-                .filter(e3D -> event.tile().equals(e3D.tile())).findFirst().orElse(null);
+                .filter(e3D -> event.tile().equals(e3D.getUserData())).findFirst().orElse(null);
             if (energizer3D != null) {
                 energizer3D.onEaten();
             } else {
                 gameLevel3D.pellets3D().stream()
                     .filter(pellet3D -> event.tile().equals(pellet3D.getUserData()))
                     .findFirst()
-                    .ifPresent(Pellet3D::onEaten);
+                    .ifPresent(this::eatPellet3D);
             }
             ui.theSound().loop(SoundID.PAC_MAN_MUNCHING);
         }
@@ -648,5 +646,12 @@ public class PlayScene3D implements GameScene {
             new KeyFrame(Duration.seconds(3),
                 new KeyValue(subScene.fillProperty(), SUB_SCENE_FILL_BRIGHT, Interpolator.EASE_OUT)));
         new SequentialTransition(makeVisibleAfterDelay, fadeFillColorIn).play();
+    }
+
+    protected void eatPellet3D(Shape3D pellet3D) {
+        // remove after small delay for better visualization
+        if (pellet3D.getParent() instanceof Group group) {
+            pauseSec(0.05, () -> group.getChildren().remove(pellet3D)).play();
+        }
     }
 }

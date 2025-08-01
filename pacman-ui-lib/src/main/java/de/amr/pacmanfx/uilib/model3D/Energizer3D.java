@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.model3D;
 
+import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
@@ -11,7 +12,6 @@ import javafx.animation.Interpolator;
 import javafx.animation.ScaleTransition;
 import javafx.geometry.Point3D;
 import javafx.scene.paint.Material;
-import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
 
@@ -21,7 +21,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * 3D energizer pellet.
  */
-public class Energizer3D extends Sphere implements Eatable3D {
+public class Energizer3D extends Sphere implements Disposable {
     private ManagedAnimation pumpingAnimation;
     private ManagedAnimation eatenAnimation;
 
@@ -79,12 +79,6 @@ public class Energizer3D extends Sphere implements Eatable3D {
         eatenAnimation = requireNonNull(animation);
     }
 
-    @Override
-    public Shape3D node() {
-        return this;
-    }
-
-    @Override
     public void onEaten() {
         pumpingAnimation.stop();
         setVisible(false);
