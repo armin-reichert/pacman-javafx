@@ -26,7 +26,10 @@ import javafx.animation.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.*;
+import javafx.scene.Group;
+import javafx.scene.PerspectiveCamera;
+import javafx.scene.SceneAntialiasing;
+import javafx.scene.SubScene;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
@@ -413,10 +416,11 @@ public class PlayScene3D implements GameScene {
         gameLevel3D.pac3D().init();
         gameLevel3D.pac3D().update();
         gameLevel3D.pellets3D().forEach(pellet -> pellet.setVisible(!gameLevel.tileContainsEatenFood((Vector2i) pellet.getUserData())));
-        gameLevel3D.energizers3D().forEach(energizer -> energizer.setVisible(!gameLevel.tileContainsEatenFood((Vector2i) energizer.getUserData())));
+        gameLevel3D.energizers3D().forEach(energizer ->
+                energizer.shape().setVisible(!gameLevel.tileContainsEatenFood(energizer.tile())));
         if (isOneOf(gameContext().theGameState(), GameState.HUNTING, GameState.GHOST_DYING)) { //TODO check this
             gameLevel3D.energizers3D().stream()
-                .filter(Node::isVisible)
+                .filter(energizer3D -> energizer3D.shape().isVisible())
                 .forEach(Energizer3D::playPumping);
         }
 
@@ -424,7 +428,6 @@ public class PlayScene3D implements GameScene {
             if (gameLevel.pac().powerTimer().isRunning()) {
                 ui.theSound().loop(SoundID.PAC_MAN_POWER);
             }
-            //gameLevel3D.livesCounter3D().flatMap(LivesCounter3D::lookingAroundAnimation).ifPresent(ManagedAnimation::playFromStart);
             gameLevel3D.livesCounter3D.startTracking(gameLevel3D.pac3D);
         }
         gameLevel3D.updateLevelCounter3D();
@@ -492,7 +495,7 @@ public class PlayScene3D implements GameScene {
             gameLevel3D.pellets3D().forEach(this::eatPellet3D);
         } else {
             Energizer3D energizer3D = gameLevel3D.energizers3D().stream()
-                .filter(e3D -> event.tile().equals(e3D.getUserData())).findFirst().orElse(null);
+                .filter(e3D -> event.tile().equals(e3D.tile())).findFirst().orElse(null);
             if (energizer3D != null) {
                 energizer3D.onEaten();
             } else {

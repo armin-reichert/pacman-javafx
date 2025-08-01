@@ -267,7 +267,7 @@ public class GameLevel3D implements Disposable {
         root.getChildren().addAll(ghosts3D);
 
         root.getChildren().add(particleGroupsContainer);
-        energizers3D.forEach(root.getChildren()::add);
+        energizers3D.forEach(energizers3D -> root.getChildren().add(energizers3D.shape()));
         pellets3D.forEach(root.getChildren()::add);
 
         // Note: The order in which children are added to the root matters!
@@ -597,8 +597,7 @@ public class GameLevel3D implements Disposable {
 
     private Energizer3D createEnergizer3D(Vector2i tile, float energizerRadius, float minScaling, float maxScaling, Material[] ghostDressMaterials) {
         var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, floorTopZ() - 6);
-        var energizer3D = new Energizer3D(animationRegistry, energizerRadius, center, minScaling, maxScaling, pelletMaterial);
-        energizer3D.setUserData(tile);
+        var energizer3D = new SphericalEnergizer3D(animationRegistry, energizerRadius, center, minScaling, maxScaling, pelletMaterial, tile);
         Vector2f[] ghostRevivalPositionCenters = {
             gameLevel.ghost(RED_GHOST_SHADOW).revivalPosition().plus(HTS, HTS),
             gameLevel.ghost(PINK_GHOST_SPEEDY).revivalPosition().plus(HTS, HTS),
@@ -710,7 +709,7 @@ public class GameLevel3D implements Disposable {
         // hide 3d food explicitly because level might have been completed using cheat!
         pellets3D.forEach(pellet3D -> pellet3D.setVisible(false));
         energizers3D.forEach(Energizer3D::pausePumping);
-        energizers3D.forEach(energizer3D -> energizer3D.setVisible(false));
+        energizers3D.forEach(Energizer3D::hide);
         particleGroupsContainer.getChildren().clear();
         house3D.setDoorVisible(false);
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
@@ -741,7 +740,7 @@ public class GameLevel3D implements Disposable {
 
     public void onGameOver(GameState state) {
         state.timer().restartSeconds(3);
-        energizers3D().forEach(energizer3D -> energizer3D.setVisible(false));
+        energizers3D().forEach(Energizer3D::hide);
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
         ui.theSound().stopAll();
         ui.theSound().play(SoundID.GAME_OVER);
