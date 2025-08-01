@@ -14,7 +14,6 @@ import javafx.scene.Group;
 import javafx.scene.effect.Bloom;
 import javafx.scene.paint.Material;
 import javafx.scene.shape.Sphere;
-import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -62,16 +61,14 @@ public class Explosion extends ManagedAnimation {
             super(radius, PARTICLE_DIVISIONS);
             this.velocity = velocity;
             setMaterial(material);
-            getTransforms().add(new Translate(origin.getX(), origin.getY(), origin.getZ()));
-        }
-
-        private Translate translate() {
-            return (Translate) getTransforms().getFirst();
+            //getTransforms().add(new Translate(origin.getX(), origin.getY(), origin.getZ()));
+            setTranslateX(origin.getX());
+            setTranslateY(origin.getY());
+            setTranslateZ(origin.getZ());
         }
 
         public Point3D center() {
-            Translate translate = translate();
-            return new Point3D(translate.getX(), translate.getY(), translate.getZ());
+            return new Point3D(getTranslateX(), getTranslateY(), getTranslateZ());
         }
 
         public void fly() {
@@ -80,14 +77,9 @@ public class Explosion extends ManagedAnimation {
         }
 
         public void move() {
-            Translate translate = translate();
-            translate.setX(translate.getX() + velocity.x);
-            translate.setY(translate.getY() + velocity.y);
-            translate.setZ(translate.getZ() + velocity.z);
-        }
-
-        public void setZ(double z) {
-            translate().setZ(z);
+            setTranslateX(getTranslateX() + velocity.x);
+            setTranslateY(getTranslateY() + velocity.y);
+            setTranslateZ(getTranslateZ() + velocity.z);
         }
     }
 
@@ -126,7 +118,7 @@ public class Explosion extends ManagedAnimation {
                     }
                     if (particleTouchesFloor.test(particle)) {
                         particle.setRadius(PARTICLE_RADIUS_RETURNING_HOME);
-                        particle.setZ(-particle.getRadius());
+                        particle.setTranslateZ(-particle.getRadius());
                         particle.landed = true;
                     }
                     // if felt outside world, remove it at some level
@@ -135,7 +127,7 @@ public class Explosion extends ManagedAnimation {
                         particle.velocity = null;
                         particle.setMaterial(null);
                         particle.removed = true;
-                        Logger.debug(() -> "%s removed (felt outside), z=%.2f".formatted(particle, particle.translate().getZ()));
+                        Logger.debug(() -> "%s removed (felt outside), z=%.2f".formatted(particle, particle.getTranslateZ()));
                     }
                 }
             }
@@ -192,7 +184,7 @@ public class Explosion extends ManagedAnimation {
                 particleCenter.getY() - particle.housePosition.getY());
             if (distXY < particle.velocity.magnitude()) {
                 particle.velocity = Vec3f.ZERO;
-                particle.setZ(-rnd.nextDouble(10)); // form a column at the revival position
+                particle.setTranslateZ(-rnd.nextDouble(10)); // form a column at the revival position
             } else {
                 particle.move();
             }
