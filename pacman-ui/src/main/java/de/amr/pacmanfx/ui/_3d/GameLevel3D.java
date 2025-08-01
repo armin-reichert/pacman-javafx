@@ -44,6 +44,7 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.util.*;
+import java.util.stream.IntStream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
@@ -241,7 +242,12 @@ public class GameLevel3D implements Disposable {
 
         colorScheme = createWorldMapColorScheme();
         createMaterials();
-        createGhostMeshViews();
+        createGhostMeshViews(
+            (int) gameLevel.ghosts().count(),
+            ui.theAssets().theModel3DRepository().ghostDressMesh(),
+            ui.theAssets().theModel3DRepository().ghostPupilsMesh(),
+            ui.theAssets().theModel3DRepository().ghostEyeballsMesh()
+        );
 
         createAmbientLight();
         createLevelCounter3D();
@@ -342,30 +348,10 @@ public class GameLevel3D implements Disposable {
             : proposedColorScheme;
     }
 
-    private void createGhostMeshViews() {
-        Mesh ghostDressMesh = ui.theAssets().theModel3DRepository().ghostDressMesh();
-        ghostDressMeshViews = new MeshView[] {
-                new MeshView(ghostDressMesh),
-                new MeshView(ghostDressMesh),
-                new MeshView(ghostDressMesh),
-                new MeshView(ghostDressMesh),
-        };
-
-        Mesh ghostPupilsMesh = ui.theAssets().theModel3DRepository().ghostPupilsMesh();
-        ghostPupilsMeshViews = new MeshView[] {
-                new MeshView(ghostPupilsMesh),
-                new MeshView(ghostPupilsMesh),
-                new MeshView(ghostPupilsMesh),
-                new MeshView(ghostPupilsMesh),
-        };
-
-        Mesh ghostEyeballsMesh = ui.theAssets().theModel3DRepository().ghostEyeballsMesh();
-        ghostEyesMeshViews = new MeshView[] {
-                new MeshView(ghostEyeballsMesh),
-                new MeshView(ghostEyeballsMesh),
-                new MeshView(ghostEyeballsMesh),
-                new MeshView(ghostEyeballsMesh),
-        };
+    private void createGhostMeshViews(int numGhosts, Mesh ghostDressMesh, Mesh ghostPupilsMesh, Mesh ghostEyeballsMesh) {
+        ghostDressMeshViews = IntStream.range(0, numGhosts).mapToObj(i -> new MeshView(ghostDressMesh)).toArray(MeshView[]::new);
+        ghostPupilsMeshViews = IntStream.range(0, numGhosts).mapToObj(i -> new MeshView(ghostPupilsMesh)).toArray(MeshView[]::new);
+        ghostEyesMeshViews = IntStream.range(0, numGhosts).mapToObj(i -> new MeshView(ghostEyeballsMesh)).toArray(MeshView[]::new);
     }
 
     private void disposeGhostMeshViews() {
