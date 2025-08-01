@@ -816,14 +816,12 @@ public class GameLevel3D implements Disposable {
             .filter(Explosion.Particle.class::isInstance)
             .map(Explosion.Particle.class::cast)
             .filter(particle -> particle.personality == ghost.personality())
-            .filter(particles -> isParticleInsideRect(particles, houseInnerMin, houseInnerMax))
+            .filter(particle -> isContainedXY(particle.center(), houseInnerMin, houseInnerMax))
             .forEach(particle -> particle.setVisible(false));
     }
 
-    private boolean isParticleInsideRect(Explosion.Particle particle, Vector2f min, Vector2f max) {
-        Point3D particleCenter = particle.center();
-        return min.x() <= particleCenter.getX() && min.y() <= particleCenter.getY()
-            && particleCenter.getX() <= max.x() && particleCenter.getY() <= max.y();
+    private boolean isContainedXY(Point3D p, Vector2f min, Vector2f max) {
+        return min.x() <= p.getX() && min.y() <= p.getY() && p.getX() <= max.x() && p.getY() <= max.y();
     }
 
     // still work in progress...
