@@ -12,6 +12,7 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.Obstacle;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
@@ -643,7 +644,7 @@ public class GameLevel3D implements Disposable {
         houseLightOnProperty.set(houseAccessRequired);
 
         // experimental
-        consumeCollectedParticlesInsideHouse();
+        consumeParticlesInsideHouse();
 
         gameLevel.house().ifPresent(house -> {
             float sensitivity = ui.thePrefs().getFloat("3d.house.sensitivity");
@@ -800,33 +801,34 @@ public class GameLevel3D implements Disposable {
         setDrawModeForAllShapesExcept(root, Pellet3D::isPellet3D, newDrawMode);
     }
 
-    private void consumeCollectedParticlesInsideHouse() {
+    private void consumeParticlesInsideHouse() {
         for (Node child : particleGroupsContainer.getChildren()) {
             if (child instanceof Group particlesGroup) {
                 if (!particlesGroup.getChildren().isEmpty()) {
-                    //Logger.info("There are {} particles in group", particlesGroup.getChildren().size(), particlesGroup);
                     gameLevel.ghosts(GhostState.LOCKED, GhostState.LEAVING_HOUSE)
-                        .forEach(ghost -> consumeCollectedParticlesInsideHouse(ghost, particlesGroup));
+                        .forEach(ghost -> consumeParticlesInsideHouse(ghost, particlesGroup));
                 }
             }
         }
     }
 
-    private void consumeCollectedParticlesInsideHouse(Ghost ghost, Group particlesGroup) {
-        Vector2f ghostPosition = ghost.position();
-        for (Node child : particlesGroup.getChildren()) {
-            if (child instanceof Explosion.Particle particle) {
-                Point3D particlePosition = particle.center();
-                Material ghostDressMaterial = ghosts3D.get(ghost.personality()).ghost3D().dressMaterialNormal();
-                boolean colorsMatch = particle.getMaterial() == ghostDressMaterial; // assumes no change in dress material!
-                if (colorsMatch
-                    && ghostPosition.x() <= particlePosition.getX() && particlePosition.getX() <= ghostPosition.x() + TS
-                    && ghostPosition.y() <= particlePosition.getY() && particlePosition.getY() <= ghostPosition.y() + TS)
-                {
-                    particle.setVisible(false);
-                }
-            }
-        }
+    private void consumeParticlesInsideHouse(Ghost ghost, Group particlesGroup) {
+        House house = gameLevel.house().orElse(null);
+        if (house == null) return;
+        Vector2f houseInnerMin = house.minTile().scaled((float) TS);
+        Vector2f houseInnerMax = house.maxTile().scaled((float) TS);
+        particlesGroup.getChildren().stream()
+            .filter(Explosion.Particle.class::isInstance)
+            .map(Explosion.Particle.class::cast)
+            .filter(particle -> particle.personality == ghost.personality())
+            .filter(particles -> isParticleInsideRect(particles, houseInnerMin, houseInnerMax))
+            .forEach(particle -> particle.setVisible(false));
+    }
+
+    private boolean isParticleInsideRect(Explosion.Particle particle, Vector2f min, Vector2f max) {
+        Point3D particleCenter = particle.center();
+        return min.x() <= particleCenter.getX() && min.y() <= particleCenter.getY()
+            && particleCenter.getX() <= max.x() && particleCenter.getY() <= max.y();
     }
 
     // still work in progress...

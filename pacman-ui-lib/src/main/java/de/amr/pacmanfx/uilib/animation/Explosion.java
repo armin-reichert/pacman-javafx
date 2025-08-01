@@ -50,12 +50,13 @@ public class Explosion extends ManagedAnimation {
     private static final float GRAVITY_Z = 0.18f;
 
     public static class Particle extends Sphere {
-        boolean debris = false;
-        boolean landed = false;
-        boolean movingHome = false;
-        boolean removed = false;
-        Point3D housePosition;
-        Vec3f velocity;
+        public byte personality = -1;
+        public boolean debris = false;
+        public boolean landed = false;
+        public boolean movingHome = false;
+        public boolean removed = false;
+        public Point3D housePosition;
+        public Vec3f velocity;
 
         public Particle(double radius, Material material, Vec3f velocity, Point3D origin) {
             super(radius, PARTICLE_DIVISIONS);
@@ -167,13 +168,13 @@ public class Explosion extends ManagedAnimation {
         private void moveHome(Particle particle) {
             Point3D particleCenter = particle.center();
             if (!particle.movingHome) {
-                // first time: compute target point in house and velocity
-                int personality = rnd.nextInt(4);
-                particle.setMaterial(ghostDressMaterials[personality]);
+                // first time: compute particle "personality", target point and velocity
+                particle.personality = (byte) rnd.nextInt(4);
+                particle.setMaterial(ghostDressMaterials[particle.personality]);
 
                 Point3D baseCenter = new Point3D(
-                    ghostRevivalPositionCenters[personality].x(),
-                    ghostRevivalPositionCenters[personality].y(),
+                    ghostRevivalPositionCenters[particle.personality].x(),
+                    ghostRevivalPositionCenters[particle.personality].y(),
                     0); // floor top is at z=0!
                 particle.housePosition = randomPointOnLateralSurface(baseCenter, 6, 10);
 

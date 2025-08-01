@@ -177,14 +177,27 @@ public class Ghost3D extends Group implements Disposable {
         getChildren().setAll(dressGroup, eyesGroup);
 
         Bounds dressBounds = dressShape.getBoundsInLocal();
-        var centeredOverOrigin = new Translate(-dressBounds.getCenterX(), -dressBounds.getCenterY(), -dressBounds.getCenterZ());
+        var centeredOverOrigin = new Translate(
+            -dressBounds.getCenterX(),
+            -dressBounds.getCenterY(),
+            -dressBounds.getCenterZ()
+        );
         dressShape.getTransforms().add(centeredOverOrigin);
         eyesGroup.getTransforms().add(centeredOverOrigin);
 
-        // TODO: fix orientation in OBJ file
-        getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(180, Rotate.Y_AXIS), new Rotate(180, Rotate.Z_AXIS));
+        // TODO: change orientation in OBJ file?
+        getTransforms().addAll(
+            new Rotate(90, Rotate.X_AXIS),
+            new Rotate(180, Rotate.Y_AXIS),
+            new Rotate(180, Rotate.Z_AXIS)
+        );
+
         Bounds bounds = getBoundsInLocal();
-        Scale scale = new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
+        Scale scale = new Scale(
+            size / bounds.getWidth(),
+            size / bounds.getHeight(),
+            size / bounds.getDepth()
+        );
         getTransforms().add(scale);
 
         dressAnimation = new ManagedAnimation(animationRegistry, "Ghost_DressMoving_%s".formatted(ghost.name())) {
@@ -250,14 +263,6 @@ public class Ghost3D extends Group implements Disposable {
 
     public PhongMaterial dressMaterialNormal() {
         return dressMaterialNormal;
-    }
-
-    public PhongMaterial eyeballsMaterialNormal() {
-        return eyeballsMaterialNormal;
-    }
-
-    public PhongMaterial pupilsMaterialNormal() {
-        return pupilsMaterialNormal;
     }
 
     public ManagedAnimation dressAnimation() {
