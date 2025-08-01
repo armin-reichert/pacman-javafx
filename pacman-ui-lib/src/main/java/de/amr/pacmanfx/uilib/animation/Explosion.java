@@ -156,8 +156,8 @@ public class Explosion extends ManagedAnimation {
                 particle.setMaterial(ghostDressMaterials[personality]);
                 // first time: compute target and velocity
                 Vector2f columnCenter = ghostRevivalPositionCenters[personality];
-                double angle = rnd.nextInt(360);
-                double columnRadius = 1;
+                double angle = Math.toRadians(rnd.nextInt(360));
+                double columnRadius = 6;
                 particle.housePosition = new Point3D(
                     columnCenter.x() + columnRadius * Math.cos(angle),
                     columnCenter.y() + columnRadius * Math.sin(angle),
