@@ -149,24 +149,40 @@ public class Explosion extends ManagedAnimation {
             particle.debris = true;
         }
 
+        /**
+         * @param baseCenter center of base circle
+         * @param r radius
+         * @param h height
+         * @return random point on lateral surface of cylinder
+         */
+        public Point3D randomPointOnLateralSurface(Point3D baseCenter, double r, double h) {
+            double angle = Math.toRadians(rnd.nextInt(360));
+            return new Point3D(
+                baseCenter.getX() + r * Math.cos(angle),
+                baseCenter.getY() + r * Math.sin(angle),
+                rnd.nextDouble(h)
+            );
+        }
+
         private void moveHome(Particle particle) {
             Point3D particleCenter = particle.center();
             if (!particle.movingHome) {
+                // first time: compute target point in house and velocity
                 int personality = rnd.nextInt(4);
                 particle.setMaterial(ghostDressMaterials[personality]);
-                // first time: compute target and velocity
-                Vector2f columnCenter = ghostRevivalPositionCenters[personality];
-                double angle = Math.toRadians(rnd.nextInt(360));
-                double columnRadius = 6;
-                particle.housePosition = new Point3D(
-                    columnCenter.x() + columnRadius * Math.cos(angle),
-                    columnCenter.y() + columnRadius * Math.sin(angle),
-                    0);
+
+                Point3D baseCenter = new Point3D(
+                    ghostRevivalPositionCenters[personality].x(),
+                    ghostRevivalPositionCenters[personality].y(),
+                    0); // floor top is at z=0!
+                particle.housePosition = randomPointOnLateralSurface(baseCenter, 6, 10);
+
                 float speed = rnd.nextFloat(PARTICLE_SPEED_MOVING_HOME_MIN, PARTICLE_SPEED_MOVING_HOME_MAX);
                 particle.velocity.x = (float) (particle.housePosition.getX() - particleCenter.getX());
                 particle.velocity.y = (float) (particle.housePosition.getY() - particleCenter.getY());
                 particle.velocity.z = 0;
                 particle.velocity.normalize().multiply(speed);
+
                 particle.movingHome = true;
             }
             // stop if distance to target in XY-plane is less than speed
