@@ -29,7 +29,7 @@ import static java.util.Objects.requireNonNull;
 
 public class EnergizerExplosionAndRecycling extends ManagedAnimation {
 
-    public static final float PARTICLE_COLUMN_RADIUS = 4;
+    public static final float PARTICLE_COLUMN_RADIUS = 6;
     public static final float PARTICLE_COLUMN_HEIGHT = 12;
 
     // Time includes movement of particles to the ghost house after the explosion
@@ -124,8 +124,9 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
                         particle.velocity = Vec3f.ZERO;
                         particlesGroup.getChildren().remove(particle); //TODO collect and remove?
                         particleColumns[columnIndex(particle.ghost_personality)].getChildren().add(particle);
-                        particle.setTranslateX(PARTICLE_COLUMN_RADIUS * Math.cos(rnd.nextDouble(Math.TAU)));
-                        particle.setTranslateY(PARTICLE_COLUMN_RADIUS * Math.sin(rnd.nextDouble(Math.TAU)));
+                        double phi = rnd.nextDouble(Math.TAU);
+                        particle.setTranslateX(PARTICLE_COLUMN_RADIUS * Math.cos(phi));
+                        particle.setTranslateY(PARTICLE_COLUMN_RADIUS * Math.sin(phi));
                         particle.setTranslateZ(-rnd.nextDouble(PARTICLE_COLUMN_HEIGHT));
                     }
                 }
@@ -143,17 +144,14 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
                     }
                     // if felt outside world, remove it at some level
                     if (!particle.landed && particle.center().getZ() > 100) {
-                        particle.velocity = null;
-                        particle.setMaterial(null);
                         particlesToDispose.add(particle);
-                        Logger.debug(() -> "%s removed (felt outside), z=%.2f".formatted(particle, particle.getTranslateZ()));
                     }
                 }
             }
             if (!particlesToDispose.isEmpty()) {
                 particles.removeAll(particlesToDispose);
                 particlesGroup.getChildren().removeAll(particlesToDispose);
-                Logger.info("{} particles removed at t={}", particlesToDispose.size(), t);
+                Logger.info("{} particles disposed, t={}", particlesToDispose.size(), t);
                 particlesToDispose.forEach(Particle::dispose);
                 particlesToDispose.clear();
             }
