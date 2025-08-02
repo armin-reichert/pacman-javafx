@@ -8,6 +8,7 @@ import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.Vec3f;
 import de.amr.pacmanfx.lib.Vector2f;
+import de.amr.pacmanfx.uilib.model3D.ArcadeHouse3D;
 import javafx.animation.Animation;
 import javafx.animation.Transition;
 import javafx.geometry.Point3D;
@@ -100,6 +101,7 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
 
     private final Random rnd = new Random();
 
+    private ArcadeHouse3D house3D;
     private Point3D origin;
     private Vector2f[] ghostRevivalPositionCenters;
     private Group particlesGroupContainer;
@@ -109,7 +111,6 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
     private Material particleMaterial;
     private Material[] ghostDressMaterials;
     private List<Particle> particles;
-    private List<Group> particleSwirls;
 
     private class ParticlesMovement extends Transition {
 
@@ -125,7 +126,8 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
                     boolean homePositionReached = moveHome(particle);
                     if (homePositionReached) {
                         particlesGroup.getChildren().remove(particle); //TODO collect and remove?
-                        particleSwirls.get(columnIndex(particle.ghost_personality)).getChildren().add(particle);
+                        Group swirl = house3D.particleSwirls().get(columnIndex(particle.ghost_personality));
+                        swirl.getChildren().add(particle);
                         double phi = rnd.nextDouble(Math.TAU);
                         particle.setTranslateX(PARTICLE_SWIRL_RADIUS * Math.cos(phi));
                         particle.setTranslateY(PARTICLE_SWIRL_RADIUS * Math.sin(phi));
@@ -273,18 +275,18 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
     public EnergizerExplosionAndRecycling(
         AnimationRegistry animationRegistry,
         Point3D origin,
+        ArcadeHouse3D house3D,
         Vector2f[] ghostRevivalPositionCenters,
         Group particlesGroupContainer,
-        List<Group> particleSwirls,
         Material particleMaterial,
         Material[] ghostDressMaterials,
         Predicate<Particle> particleTouchesFloor) {
 
         super(animationRegistry, "Energizer_Explosion");
         this.origin = requireNonNull(origin);
+        this.house3D = requireNonNull(house3D);
         this.ghostRevivalPositionCenters = requireNonNull(ghostRevivalPositionCenters);
         this.particlesGroupContainer = requireNonNull(particlesGroupContainer);
-        this.particleSwirls = requireNonNull(particleSwirls);
         this.particleMaterial = requireNonNull(particleMaterial);
         this.ghostDressMaterials = requireNonNull(ghostDressMaterials);
         this.particleTouchesFloor = requireNonNull(particleTouchesFloor);
@@ -317,10 +319,6 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
         if (particlesGroup != null) {
             particlesGroup.getChildren().clear();
             particlesGroup = null;
-        }
-        if (particleSwirls != null) {
-            particleSwirls.clear();
-            particleSwirls = null;
         }
         if (particleTouchesFloor != null) {
             particleTouchesFloor = null;

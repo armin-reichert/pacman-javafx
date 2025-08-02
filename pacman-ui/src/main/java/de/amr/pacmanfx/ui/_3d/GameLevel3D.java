@@ -582,10 +582,16 @@ public class GameLevel3D implements Disposable {
             gameLevel.ghost(CYAN_GHOST_BASHFUL).revivalPosition().plus(HTS, HTS),
             gameLevel.ghost(ORANGE_GHOST_POKEY).revivalPosition().plus(HTS, HTS),
         };
-        var explosion = new EnergizerExplosionAndRecycling(animationRegistry, center, ghostRevivalPositionCenters,
-            particleGroupsContainer, house3D.particleSwirls(),
-            particleMaterial, ghostDressMaterials,
+        var explosion = new EnergizerExplosionAndRecycling(
+            animationRegistry,
+            center,
+            house3D,
+            ghostRevivalPositionCenters,
+            particleGroupsContainer,
+            particleMaterial,
+            ghostDressMaterials,
             this::particleTouchesFloor);
+
         energizer3D.setEatenAnimation(explosion);
         return energizer3D;
     }
