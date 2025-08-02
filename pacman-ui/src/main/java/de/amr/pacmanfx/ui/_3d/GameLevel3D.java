@@ -573,9 +573,22 @@ public class GameLevel3D implements Disposable {
             .collect(Collectors.toCollection(HashSet::new));
     }
 
-    private Energizer3D createEnergizer3D(Vector2i tile, float energizerRadius, float minScaling, float maxScaling, Material[] ghostDressMaterials) {
-        var center = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, floorTopZ() - 6);
-        var energizer3D = new SphericalEnergizer3D(animationRegistry, energizerRadius, center, minScaling, maxScaling, pelletMaterial, tile);
+    private Energizer3D createEnergizer3D(
+        Vector2i tile,
+        float energizerRadius,
+        float minScaling,
+        float maxScaling,
+        Material[] ghostDressMaterials)
+    {
+        var energizerCenter = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, floorTopZ() - 6);
+        var energizer3D = new SphericalEnergizer3D(
+            animationRegistry,
+            energizerRadius,
+            energizerCenter,
+            minScaling,
+            maxScaling,
+            pelletMaterial,
+            tile);
         Vector2f[] ghostRevivalPositionCenters = {
             gameLevel.ghost(RED_GHOST_SHADOW).revivalPosition().plus(HTS, HTS),
             gameLevel.ghost(PINK_GHOST_SPEEDY).revivalPosition().plus(HTS, HTS),
@@ -584,7 +597,7 @@ public class GameLevel3D implements Disposable {
         };
         var explosion = new EnergizerExplosionAndRecycling(
             animationRegistry,
-            center,
+            energizerCenter,
             house3D,
             ghostRevivalPositionCenters,
             particleGroupsContainer,

@@ -35,16 +35,19 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * 3D house in Arcade style.
+ *
+ * <p>At each ghost position inside the house, a swirl attracts the particles emitted by
+ * exploding energizers.</p>
  */
 public class ArcadeHouse3D extends Group implements Disposable {
 
-    private static final int NUM_VERTICAL_BARS = 2;
-    private static final float BAR_THICKNESS = 0.75f;
+    private static final int DOOR_VERTICAL_BAR_COUNT = 2;
+    private static final float DOOR_BAR_THICKNESS = 0.75f;
 
-    private final DoubleProperty barThicknessProperty = new SimpleDoubleProperty(BAR_THICKNESS);
+    private final DoubleProperty barThicknessProperty = new SimpleDoubleProperty(DOOR_BAR_THICKNESS);
     private final DoubleProperty wallBaseHeightProperty = new SimpleDoubleProperty();
 
-    private TerrainRenderer3D r3D;
+    private final TerrainRenderer3D r3D;
 
     private PhongMaterial barMaterial;
     private PhongMaterial wallBaseMaterial;
@@ -55,8 +58,8 @@ public class ArcadeHouse3D extends Group implements Disposable {
     private Group rightWing;
     private PointLight light;
 
-    private Group[] particleSwirls;
-    private List<ManagedAnimation> particleSwirlAnimations = new ArrayList<>(3);
+    private Group[] swirls;
+    private List<ManagedAnimation> swirlAnimations = new ArrayList<>(3);
 
     private ManagedAnimation doorOpenCloseAnimation;
 
@@ -72,6 +75,7 @@ public class ArcadeHouse3D extends Group implements Disposable {
         Color doorColor)
     {
         requireNonNull(animationRegistry);
+        requireNonNull(gameLevel);
         requireNonNull(house);
         requireNonNull(houseBaseColor);
         requireNonNull(houseTopColor);
@@ -92,6 +96,33 @@ public class ArcadeHouse3D extends Group implements Disposable {
         float centerX = xMin * TS + tilesX * HTS;
         float centerY = yMin * TS + tilesY * HTS;
 
+        // (0)-----(1)left_door-right_door(2)-----(3)
+        //  |                                      |
+        //  |                                      |
+        //  |                                      |
+        //  |                                      |
+        // (4)------------------------------------(5)
+
+        Vector2i[] p = {
+            Vector2i.of(xMin, yMin),
+            Vector2i.of(house.leftDoorTile().x() - 1, yMin),
+            Vector2i.of(house.rightDoorTile().x() + 1, yMin),
+            Vector2i.of(xMax, yMin),
+            Vector2i.of(xMin, yMax),
+            Vector2i.of(xMax, yMax)
+        };
+
+        r3D.setOnWallCreated(wall3D -> {
+            wall3D.bindBaseHeight(wallBaseHeightProperty);
+            wall3D.setBaseMaterial(wallBaseMaterial);
+            wall3D.setTopMaterial(wallTopMaterial);
+        });
+        r3D.createWallBetweenTiles(p[0], p[1], wallThickness).addToGroup(this);
+        r3D.createWallBetweenTiles(p[2], p[3], wallThickness).addToGroup(this);
+        r3D.createWallBetweenTiles(p[3], p[5], wallThickness).addToGroup(this);
+        r3D.createWallBetweenTiles(p[0], p[4], wallThickness).addToGroup(this);
+        r3D.createWallBetweenTiles(p[4], p[5], wallThickness).addToGroup(this);
+
         door = createDoor(house.leftDoorTile(), house.rightDoorTile(), wallBaseHeightProperty.get());
 
         doorOpenCloseAnimation = new ManagedAnimation(animationRegistry, "Door_OpenClose") {
@@ -111,35 +142,17 @@ public class ArcadeHouse3D extends Group implements Disposable {
         light.setTranslateY(centerY - 6);
         light.translateZProperty().bind(wallBaseHeightProperty.multiply(-1));
 
-        Vector2i topLeft = Vector2i.of(xMin, yMin);
-        Vector2i bottomLeft = Vector2i.of(xMin, yMax);
-        Vector2i topRight = Vector2i.of(xMax, yMin);
-        Vector2i bottomRight = Vector2i.of(xMax, yMax);
-        Vector2i doorLeft = Vector2i.of(house.leftDoorTile().x() - 1, yMin);
-        Vector2i doorRight = Vector2i.of(house.rightDoorTile().x() + 1, yMin);
-
-        r3D.setOnWallCreated(wall3D -> {
-            wall3D.bindBaseHeight(wallBaseHeightProperty);
-            wall3D.setBaseMaterial(wallBaseMaterial);
-            wall3D.setTopMaterial(wallTopMaterial);
-        });
-        r3D.createWallBetweenTiles(topLeft, doorLeft, wallThickness).addToGroup(this);
-        r3D.createWallBetweenTiles(doorRight, topRight, wallThickness).addToGroup(this);
-        r3D.createWallBetweenTiles(topRight, bottomRight, wallThickness).addToGroup(this);
-        r3D.createWallBetweenTiles(topLeft, bottomLeft, wallThickness).addToGroup(this);
-        r3D.createWallBetweenTiles(bottomLeft, bottomRight, wallThickness).addToGroup(this);
-
         getChildren().addAll(light, door);
 
         createParticleSwirls(gameLevel);
 
         Duration rotationTime = Duration.seconds(EnergizerExplosionAndRecycling.PARTICLE_SWIRL_ROTATION_SEC);
-        for (int i = 0; i < particleSwirls.length; ++i) {
+        for (int i = 0; i < swirls.length; ++i) {
             final int index = i;
-            particleSwirlAnimations.add(new ManagedAnimation(animationRegistry, "Swirl_%d".formatted(i)) {
+            swirlAnimations.add(new ManagedAnimation(animationRegistry, "Swirl_%d".formatted(i)) {
                 @Override
                 protected Animation createAnimationFX() {
-                    var rotation = new RotateTransition(rotationTime, particleSwirls[index]);
+                    var rotation = new RotateTransition(rotationTime, swirls[index]);
                     rotation.setAxis(Rotate.Z_AXIS);
                     rotation.setFromAngle(0);
                     rotation.setToAngle(360);
@@ -152,7 +165,7 @@ public class ArcadeHouse3D extends Group implements Disposable {
     }
 
     public List<Group> particleSwirls() {
-        return List.of(particleSwirls);
+        return List.of(swirls);
     }
 
     public DoubleProperty wallBaseHeightProperty() {
@@ -184,7 +197,7 @@ public class ArcadeHouse3D extends Group implements Disposable {
         root.setTranslateX(tile.x() * TS);
         root.setTranslateY(tile.y() * TS);
 
-        for (int i = 0; i < NUM_VERTICAL_BARS; ++i) {
+        for (int i = 0; i < DOOR_VERTICAL_BAR_COUNT; ++i) {
             var verticalBar = new Cylinder(barThicknessProperty.get(), height);
             verticalBar.radiusProperty().bind(barThicknessProperty);
             verticalBar.setMaterial(barMaterial);
@@ -216,27 +229,26 @@ public class ArcadeHouse3D extends Group implements Disposable {
                 gameLevel.ghost(PINK_GHOST_SPEEDY).revivalPosition().plus(HTS, HTS),
                 gameLevel.ghost(ORANGE_GHOST_POKEY).revivalPosition().plus(HTS, HTS),
         };
-        particleSwirls = new Group[3];
-        for (int i = 0; i < particleSwirls.length; ++i) {
-            particleSwirls[i] = new Group();
-            particleSwirls[i].setTranslateX(centers[i].x());
-            particleSwirls[i].setTranslateY(centers[i].y());
+        swirls = new Group[3];
+        for (int i = 0; i < swirls.length; ++i) {
+            swirls[i] = new Group();
+            swirls[i].setTranslateX(centers[i].x());
+            swirls[i].setTranslateY(centers[i].y());
         }
     }
 
     public void startSwirlAnimations() {
-        if (particleSwirlAnimations != null) {
-            particleSwirlAnimations.forEach(ManagedAnimation::playFromStart);
+        if (swirlAnimations != null) {
+            swirlAnimations.forEach(ManagedAnimation::playFromStart);
             Logger.info("Swirl animations started");
         }
     }
 
     public void stopSwirlAnimations() {
-        if (particleSwirlAnimations != null) {
-            particleSwirlAnimations.forEach(ManagedAnimation::stop);
+        if (swirlAnimations != null) {
+            swirlAnimations.forEach(ManagedAnimation::stop);
         }
     }
-
 
     private void destroyDoorWing(Group doorWing) {
         for (Node node : doorWing.getChildren()) {
@@ -254,27 +266,27 @@ public class ArcadeHouse3D extends Group implements Disposable {
         doorOpenCloseAnimation.dispose();
         doorOpenCloseAnimation = null;
 
-        if (particleSwirlAnimations != null) {
-            for (ManagedAnimation swirlAnimation : particleSwirlAnimations) {
+        if (swirlAnimations != null) {
+            for (ManagedAnimation swirlAnimation : swirlAnimations) {
                 swirlAnimation.dispose();
             }
-            particleSwirlAnimations.clear();
-            particleSwirlAnimations = null;
+            swirlAnimations.clear();
+            swirlAnimations = null;
             Logger.info("Disposed swirl animations");
         }
         for (Node child : getChildren()) {
             Wall3D.dispose(child); // does nothing if child is not part of 3D wall
         }
 
-        if (particleSwirls != null) {
-            for (Group swirl : particleSwirls) {
+        if (swirls != null) {
+            for (Group swirl : swirls) {
                 swirl.getChildren().forEach(child -> {
                     if (child instanceof EnergizerExplosionAndRecycling.Particle particle) {
                         particle.dispose();
                     }
                 });
                 swirl.getChildren().clear();
-                particleSwirls = null;
+                swirls = null;
             }
             Logger.info("Disposed swirls and their particles");
         }
