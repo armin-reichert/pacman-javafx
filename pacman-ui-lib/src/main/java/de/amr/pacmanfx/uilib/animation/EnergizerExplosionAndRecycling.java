@@ -58,7 +58,6 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
     private static final float GRAVITY_Z = 0.18f;
 
     public static class Particle extends Sphere implements Disposable {
-        public boolean recolored = false;
         public boolean landed = false;
         public boolean moving_home = false;
         public boolean in_swirl = false;
@@ -101,7 +100,7 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
 
     private final Random rnd = new Random();
 
-    private ArcadeHouse3D house3D;
+    private final ArcadeHouse3D house3D;
     private Point3D origin;
     private Vector2f[] ghostRevivalPositionCenters;
     private Group particlesGroupContainer;
@@ -157,17 +156,11 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
         private void landsOnFloor(Particle particle) {
             particle.setRadius(PARTICLE_RADIUS_RETURNING_HOME);
             particle.setTranslateZ(-particle.getRadius());
-            assignRandomGhostColor(particle);
-            particle.landed = true;
-        }
-
-        private void assignRandomGhostColor(Particle particle) {
-            if (particle.recolored) return;
             particle.setMaterial(ghostDressMaterials[randomInt(0, 4)]);
             Bloom bloom = new Bloom();
             bloom.setThreshold(0.5); //TODO any effect?
             particle.setEffect(bloom);
-            particle.recolored = true;
+            particle.landed = true;
         }
 
         /**
