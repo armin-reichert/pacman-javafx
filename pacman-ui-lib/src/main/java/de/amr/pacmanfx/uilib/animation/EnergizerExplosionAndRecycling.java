@@ -109,7 +109,7 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
     private Material particleMaterial;
     private Material[] ghostDressMaterials;
     private List<Particle> particles;
-    private Group[] particleSwirls;
+    private List<Group> particleSwirls;
 
     private class ParticlesMovement extends Transition {
 
@@ -125,7 +125,7 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
                     boolean homePositionReached = moveHome(particle);
                     if (homePositionReached) {
                         particlesGroup.getChildren().remove(particle); //TODO collect and remove?
-                        particleSwirls[columnIndex(particle.ghost_personality)].getChildren().add(particle);
+                        particleSwirls.get(columnIndex(particle.ghost_personality)).getChildren().add(particle);
                         double phi = rnd.nextDouble(Math.TAU);
                         particle.setTranslateX(PARTICLE_SWIRL_RADIUS * Math.cos(phi));
                         particle.setTranslateY(PARTICLE_SWIRL_RADIUS * Math.sin(phi));
@@ -275,7 +275,7 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
         Point3D origin,
         Vector2f[] ghostRevivalPositionCenters,
         Group particlesGroupContainer,
-        Group[] particleSwirls,
+        List<Group> particleSwirls,
         Material particleMaterial,
         Material[] ghostDressMaterials,
         Predicate<Particle> particleTouchesFloor) {
@@ -317,6 +317,10 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
         if (particlesGroup != null) {
             particlesGroup.getChildren().clear();
             particlesGroup = null;
+        }
+        if (particleSwirls != null) {
+            particleSwirls.clear();
+            particleSwirls = null;
         }
         if (particleTouchesFloor != null) {
             particleTouchesFloor = null;
