@@ -21,10 +21,8 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Box;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Shape3D;
-import javafx.scene.shape.Sphere;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -332,11 +330,14 @@ public interface Ufx {
         return exchangeColors(colorChanges, image);
     }
 
-    static void setDrawModeForAllShapesExcept(Node root, Predicate<Node> exclusionFilter, DrawMode drawMode) {
+    static void setShape3DDrawMode(Node root, Predicate<Shape3D> exclusionFilter, DrawMode drawMode) {
+        requireNonNull(root);
+        requireNonNull(exclusionFilter);
+        requireNonNull(drawMode);
         root.lookupAll("*").stream()
-            .filter(exclusionFilter.negate())
             .filter(Shape3D.class::isInstance)
             .map(Shape3D.class::cast)
+            .filter(exclusionFilter.negate())
             .forEach(shape3D -> shape3D.setDrawMode(drawMode));
     }
 

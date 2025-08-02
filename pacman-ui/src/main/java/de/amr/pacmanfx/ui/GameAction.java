@@ -8,7 +8,7 @@ import de.amr.pacmanfx.Validations;
 import org.tinylog.Logger;
 
 /**
- * Common interface for game actions.
+ * Common base class for game actions.
  */
 public abstract class GameAction {
 
@@ -20,12 +20,12 @@ public abstract class GameAction {
 
     public abstract void execute(GameUI ui);
 
-    public void executeIfEnabled(GameUI ui) {
+    public final void executeIfEnabled(GameUI ui) {
         if (isEnabled(ui)) {
             execute(ui);
-            Logger.trace("Action '{}' executed", name());
+            Logger.trace("Action '{}' executed", name);
         } else {
-            Logger.warn("Disabled action '{}' not executed", name());
+            Logger.warn("Action '{}' not executed (disabled)", name);
         }
     }
 

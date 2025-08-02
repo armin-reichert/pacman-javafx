@@ -95,7 +95,7 @@ public class GameLevel3D implements Disposable {
     protected PacBase3D pac3D;
     protected List<MutatingGhost3D> ghosts3D;
     protected Bonus3D bonus3D;
-    protected final ArrayList<Shape3D> pellets3D = new ArrayList<>();
+    protected final Set<Shape3D> pellets3D = new HashSet<>();
     protected final ArrayList<Energizer3D> energizers3D = new ArrayList<>();
     protected final Group particleGroupsContainer = new Group();
     protected MessageView messageView;
@@ -547,7 +547,6 @@ public class GameLevel3D implements Disposable {
             .filter(tile -> !gameLevel.isEnergizerPosition(tile))
             .map(tile -> createPellet3D(mesh, scale, tile))
             .toList());
-        pellets3D.trimToSize();
     }
 
     private Shape3D createPellet3D(Mesh mesh, Scale scale, Vector2i tile) {
@@ -599,7 +598,7 @@ public class GameLevel3D implements Disposable {
     public List<MutatingGhost3D> ghosts3D() { return Collections.unmodifiableList(ghosts3D); }
     public Optional<Bonus3D> bonus3D() { return Optional.ofNullable(bonus3D); }
     public Optional<LivesCounter3D> livesCounter3D() { return Optional.ofNullable(livesCounter3D); }
-    public List<Shape3D> pellets3D() { return Collections.unmodifiableList(pellets3D); }
+    public Set<Shape3D> pellets3D() { return Collections.unmodifiableSet(pellets3D); }
     public List<Energizer3D> energizers3D() { return Collections.unmodifiableList(energizers3D); }
 
     public AnimationRegistry animationManager() { return animationRegistry; }
@@ -778,7 +777,7 @@ public class GameLevel3D implements Disposable {
     }
 
     private void handleDrawModeChange(ObservableValue<? extends DrawMode> obs, DrawMode oldDrawMode, DrawMode newDrawMode) {
-        setDrawModeForAllShapesExcept(root, pellets3D::contains, newDrawMode);
+        setShape3DDrawMode(root, pellets3D::contains, newDrawMode);
     }
 
     private void consumeParticlesInsideHouse() {
