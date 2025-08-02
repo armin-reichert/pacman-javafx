@@ -113,13 +113,15 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
 
     private class ParticlesMovement extends Transition {
 
+        private final List<Particle> particlesToDispose = new ArrayList<>();
+
         public ParticlesMovement() {
             setCycleDuration(TOTAL_DURATION);
         }
 
         @Override
         protected void interpolate(double t) {
-            List<Particle> particlesToDispose = new ArrayList<>();
+            particlesToDispose.clear();
             for (Particle particle : particles) {
                 if (particle.landed) {
                     boolean homePositionReached = moveHome(particle);
@@ -139,7 +141,7 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
                         landsOnFloor(particle);
                     }
                     // if felt outside world, remove it at some level
-                    if (!particle.landed && particle.center().getZ() > 100) {
+                    else if (particle.center().getZ() > 50) {
                         particlesToDispose.add(particle);
                     }
                 }
