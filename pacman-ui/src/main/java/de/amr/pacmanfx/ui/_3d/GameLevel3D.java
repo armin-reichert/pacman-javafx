@@ -12,14 +12,13 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.Obstacle;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.animation.Explosion;
+import de.amr.pacmanfx.uilib.animation.EnergizerExplosionAndRecycling;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.*;
@@ -508,19 +507,6 @@ public class GameLevel3D implements Disposable {
                 particleColumns[i].setTranslateX(positions[i].x());
                 particleColumns[i].setTranslateY(positions[i].y());
 
-                var axis = new Cylinder(1, 8);
-                axis.setRotationAxis(Rotate.X_AXIS);
-                axis.setRotate(90);
-                axis.setTranslateZ(-0.5 * axis.getHeight());
-                int personality = i == 0 ? CYAN_GHOST_BASHFUL : i == 1 ? RED_GHOST_SHADOW : ORANGE_GHOST_POKEY;
-                axis.setMaterial(ghosts3D.get(personality).ghost3D().dressMaterialNormal());
-                particleColumns[i].getChildren().add(axis);
-
-                var crossBeam = new Cylinder(0.5, 8);
-                crossBeam.setMaterial(axis.getMaterial());
-                crossBeam.setTranslateZ(-0.5 * axis.getHeight());
-                particleColumns[i].getChildren().add(crossBeam);
-
                 var rotation = new RotateTransition(Duration.seconds(2), particleColumns[i]);
                 rotation.setAxis(Rotate.Z_AXIS);
                 rotation.setFromAngle(0);
@@ -549,7 +535,7 @@ public class GameLevel3D implements Disposable {
         return 0;
     }
 
-    private boolean particleTouchesFloor(Explosion.Particle particle) {
+    private boolean particleTouchesFloor(EnergizerExplosionAndRecycling.Particle particle) {
         Vector2f worldSizePx = gameLevel.worldSizePx();
         Point3D particleCenter = particle.center();
         if (particleCenter.getX() < 0 || particleCenter.getX() > worldSizePx.x()) return false;
@@ -629,7 +615,7 @@ public class GameLevel3D implements Disposable {
             gameLevel.ghost(CYAN_GHOST_BASHFUL).revivalPosition().plus(HTS, HTS),
             gameLevel.ghost(ORANGE_GHOST_POKEY).revivalPosition().plus(HTS, HTS),
         };
-        var explosion = new Explosion(animationRegistry, center, ghostRevivalPositionCenters,
+        var explosion = new EnergizerExplosionAndRecycling(animationRegistry, center, ghostRevivalPositionCenters,
             particleGroupsContainer, particleColumns,
             particleMaterial, ghostDressMaterials,
             this::particleTouchesFloor);
@@ -664,9 +650,6 @@ public class GameLevel3D implements Disposable {
         boolean houseAccessRequired = gameLevel.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
             .anyMatch(Ghost::isVisible);
         houseLightOnProperty.set(houseAccessRequired);
-
-        // experimental
-        consumeParticlesInsideHouse();
 
         gameLevel.house().ifPresent(house -> {
             float sensitivity = ui.thePrefs().getFloat("3d.house.sensitivity");
@@ -823,30 +806,6 @@ public class GameLevel3D implements Disposable {
         setShape3DDrawMode(root, pellets3D::contains, newDrawMode);
     }
 
-    private void consumeParticlesInsideHouse() {
-        for (Node child : particleGroupsContainer.getChildren()) {
-            if (child instanceof Group particlesGroup) {
-                if (!particlesGroup.getChildren().isEmpty()) {
-                    gameLevel.ghosts(GhostState.LOCKED, GhostState.LEAVING_HOUSE)
-                        .forEach(ghost -> consumeParticlesInsideHouse(ghost, particlesGroup));
-                }
-            }
-        }
-    }
-
-    private void consumeParticlesInsideHouse(Ghost ghost, Group particlesGroup) {
-        House house = gameLevel.house().orElse(null);
-        if (house == null) return;
-        Vector2f houseInnerMin = house.minTile().scaled((float) TS);
-        Vector2f houseInnerMax = house.maxTile().scaled((float) TS);
-        particlesGroup.getChildren().stream()
-            .filter(Explosion.Particle.class::isInstance)
-            .map(Explosion.Particle.class::cast)
-            .filter(particle -> particle.personality == ghost.personality())
-            .filter(particle -> isContainedXY(particle.center(), houseInnerMin, houseInnerMax))
-            .forEach(particle -> particle.setVisible(false));
-    }
-
     private boolean isContainedXY(Point3D p, Vector2f min, Vector2f max) {
         return min.x() <= p.getX() && min.y() <= p.getY() && p.getX() <= max.x() && p.getY() <= max.y();
     }
@@ -935,6 +894,16 @@ public class GameLevel3D implements Disposable {
             house3D.dispose();
             house3D = null;
             Logger.info("Disposed 3D house");
+        }
+        if (particleColumns != null) {
+            for (Group column : particleColumns) {
+                column.getChildren().forEach(child -> {
+                    if (child instanceof EnergizerExplosionAndRecycling.Particle particle) {
+                        particle.dispose();
+                    }
+                });
+                column.getChildren().clear();
+            }
         }
         if (maze3D != null) {
             maze3D.getChildren().forEach(Wall3D::dispose);

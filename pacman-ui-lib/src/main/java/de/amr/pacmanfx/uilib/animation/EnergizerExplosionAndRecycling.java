@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.animation;
 
+import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.lib.Disposable;
-import de.amr.pacmanfx.lib.StopWatch;
 import de.amr.pacmanfx.lib.Vec3f;
 import de.amr.pacmanfx.lib.Vector2f;
 import javafx.animation.Animation;
@@ -27,7 +27,10 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.randomFloat;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static java.util.Objects.requireNonNull;
 
-public class Explosion extends ManagedAnimation {
+public class EnergizerExplosionAndRecycling extends ManagedAnimation {
+
+    public static final float PARTICLE_COLUMN_RADIUS = 4;
+    public static final float PARTICLE_COLUMN_HEIGHT = 12;
 
     // Time includes movement of particles to the ghost house after the explosion
     private static final Duration TOTAL_DURATION = Duration.seconds(30);
@@ -196,26 +199,38 @@ public class Explosion extends ManagedAnimation {
 
                 particle.movingHome = true;
             }
-            // stop if distance to target in XY-plane is less than speed
+            // if target reached, move particle to its column group
             double distXY = Math.hypot(
                 particleCenter.getX() - particle.housePosition.getX(),
                 particleCenter.getY() - particle.housePosition.getY());
             if (distXY < particle.velocity.magnitude()) {
                 particle.velocity = Vec3f.ZERO;
-                particle.setTranslateZ(-rnd.nextDouble(10)); // form a column at the revival position
+                particlesGroup.getChildren().remove(particle); //TODO collect and remove?
+                particleColumns[columnIndex(particle.personality)].getChildren().add(particle);
+                particle.setTranslateX(PARTICLE_COLUMN_RADIUS * Math.cos(rnd.nextDouble(Math.TAU)));
+                particle.setTranslateY(PARTICLE_COLUMN_RADIUS * Math.sin(rnd.nextDouble(Math.TAU)));
+                particle.setTranslateZ(-rnd.nextDouble(PARTICLE_COLUMN_HEIGHT));
             } else {
                 particle.move();
             }
         }
 
+        private int columnIndex(int personality) {
+            return switch (personality) {
+                case Globals.CYAN_GHOST_BASHFUL -> 0;
+                case Globals.RED_GHOST_SHADOW, Globals.PINK_GHOST_SPEEDY -> 1;
+                case Globals.ORANGE_GHOST_POKEY -> 2;
+                default -> throw new IllegalArgumentException();
+            };
+        }
+
         @Override
         public void play() {
-            replaceParticles(particleMaterial, origin);
+            createAndAddParticles(particleMaterial, origin);
             super.play();
         }
 
-        private void replaceParticles(Material particleMaterial, Point3D origin) {
-            var stopWatch = new StopWatch();
+        private void createAndAddParticles(Material particleMaterial, Point3D origin) {
             int particleCount = randomInt(PARTICLE_COUNT_MIN, PARTICLE_COUNT_MAX + 1);
             particles = new Particle[particleCount];
             for (int i = 0; i < particleCount; ++i) {
@@ -225,7 +240,6 @@ public class Explosion extends ManagedAnimation {
                 particles[i].setVisible(true);
             }
             particlesGroup.getChildren().setAll(particles);
-            Logger.info("{} particles created in {0.000} milliseconds", particleCount, stopWatch.passedMillis());
         }
 
         private double randomParticleRadius() {
@@ -245,7 +259,7 @@ public class Explosion extends ManagedAnimation {
         }
     }
 
-    public Explosion(
+    public EnergizerExplosionAndRecycling(
         AnimationRegistry animationRegistry,
         Point3D origin,
         Vector2f[] ghostRevivalPositionCenters,
