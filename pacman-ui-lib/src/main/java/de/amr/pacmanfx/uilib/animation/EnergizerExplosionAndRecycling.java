@@ -125,17 +125,7 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
                 if (particle.landed) {
                     boolean homePositionReached = moveHome(particle);
                     if (homePositionReached) {
-                        particlesGroup.getChildren().remove(particle); //TODO collect and remove?
-                        Group swirl = house3D.particleSwirls().get(columnIndex(particle.ghost_personality));
-                        swirl.getChildren().add(particle);
-                        double phi = rnd.nextDouble(Math.TAU);
-                        particle.setTranslateX(PARTICLE_SWIRL_RADIUS * Math.cos(phi));
-                        particle.setTranslateY(PARTICLE_SWIRL_RADIUS * Math.sin(phi));
-                        particle.setTranslateZ(-rnd.nextDouble(PARTICLE_SWIRL_HEIGHT));
-                        particle.velocity.x = particle.velocity.y = 0;
-                        particle.velocity.z = -PARTICLE_SWIRL_RISING_SPEED;
-                        particle.landed = false;
-                        particle.in_swirl = true;
+                        arrivedHome(particle);
                     }
                 }
                 else if (particle.in_swirl) {
@@ -146,15 +136,8 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
                 }
                 else {
                     particle.fly();
-                    // if falling under certain height, become debris, change color to one of ghost dress colors
-                    // Note: falling means moving to positive z direction!
-                    if (particle.velocity.z > 0 && particle.center().getZ() > -20) {
-                        assignRandomGhostColor(particle);
-                    }
                     if (particleTouchesFloor.test(particle)) {
-                        particle.landed = true;
-                        particle.setRadius(PARTICLE_RADIUS_RETURNING_HOME);
-                        particle.setTranslateZ(-particle.getRadius());
+                        landsOnFloor(particle);
                     }
                     // if felt outside world, remove it at some level
                     if (!particle.landed && particle.center().getZ() > 100) {
@@ -169,6 +152,13 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
                 particlesToDispose.forEach(Particle::dispose);
                 particlesToDispose.clear();
             }
+        }
+
+        private void landsOnFloor(Particle particle) {
+            particle.setRadius(PARTICLE_RADIUS_RETURNING_HOME);
+            particle.setTranslateZ(-particle.getRadius());
+            assignRandomGhostColor(particle);
+            particle.landed = true;
         }
 
         private void assignRandomGhostColor(Particle particle) {
@@ -225,6 +215,20 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
                 particle.move();
             }
             return homePositionReached;
+        }
+
+        private void arrivedHome(Particle particle) {
+            particlesGroup.getChildren().remove(particle); //TODO collect and remove?
+            Group swirl = house3D.particleSwirls().get(columnIndex(particle.ghost_personality));
+            swirl.getChildren().add(particle);
+            double phi = rnd.nextDouble(Math.TAU);
+            particle.setTranslateX(PARTICLE_SWIRL_RADIUS * Math.cos(phi));
+            particle.setTranslateY(PARTICLE_SWIRL_RADIUS * Math.sin(phi));
+            particle.setTranslateZ(-rnd.nextDouble(PARTICLE_SWIRL_HEIGHT));
+            particle.velocity.x = particle.velocity.y = 0;
+            particle.velocity.z = -PARTICLE_SWIRL_RISING_SPEED;
+            particle.landed = false;
+            particle.in_swirl = true;
         }
 
         private int columnIndex(int personality) {

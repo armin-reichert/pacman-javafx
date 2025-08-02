@@ -144,7 +144,7 @@ public class ArcadeHouse3D extends Group implements Disposable {
 
         getChildren().addAll(light, door);
 
-        createParticleSwirls(gameLevel);
+        createSwirls(gameLevel);
 
         Duration rotationTime = Duration.seconds(EnergizerExplosionAndRecycling.PARTICLE_SWIRL_ROTATION_SEC);
         for (int i = 0; i < swirls.length; ++i) {
@@ -222,14 +222,23 @@ public class ArcadeHouse3D extends Group implements Disposable {
         return root;
     }
 
+    private void destroyDoorWing(Group doorWing) {
+        for (Node node : doorWing.getChildren()) {
+            if (node instanceof Cylinder bar) {
+                bar.radiusProperty().unbind();
+                bar.translateZProperty().unbind();
+                bar.setMaterial(null);
+            }
+        }
+    }
 
-    private void createParticleSwirls(GameLevel gameLevel) {
+    private void createSwirls(GameLevel gameLevel) {
         Vector2f[] centers = {
-                gameLevel.ghost(CYAN_GHOST_BASHFUL).revivalPosition().plus(HTS, HTS),
-                gameLevel.ghost(PINK_GHOST_SPEEDY).revivalPosition().plus(HTS, HTS),
-                gameLevel.ghost(ORANGE_GHOST_POKEY).revivalPosition().plus(HTS, HTS),
+            gameLevel.ghost(CYAN_GHOST_BASHFUL).revivalPosition().plus(HTS, HTS),
+            gameLevel.ghost(PINK_GHOST_SPEEDY) .revivalPosition().plus(HTS, HTS),
+            gameLevel.ghost(ORANGE_GHOST_POKEY).revivalPosition().plus(HTS, HTS),
         };
-        swirls = new Group[3];
+        swirls = new Group[centers.length];
         for (int i = 0; i < swirls.length; ++i) {
             swirls[i] = new Group();
             swirls[i].setTranslateX(centers[i].x());
@@ -247,16 +256,6 @@ public class ArcadeHouse3D extends Group implements Disposable {
     public void stopSwirlAnimations() {
         if (swirlAnimations != null) {
             swirlAnimations.forEach(ManagedAnimation::stop);
-        }
-    }
-
-    private void destroyDoorWing(Group doorWing) {
-        for (Node node : doorWing.getChildren()) {
-            if (node instanceof Cylinder bar) {
-                bar.radiusProperty().unbind();
-                bar.translateZProperty().unbind();
-                bar.setMaterial(null);
-            }
         }
     }
 
