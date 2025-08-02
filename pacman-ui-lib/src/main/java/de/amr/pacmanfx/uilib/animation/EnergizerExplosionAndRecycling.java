@@ -59,7 +59,6 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
     private static final float GRAVITY_Z = 0.18f;
 
     public static class Particle extends Sphere implements Disposable {
-        public boolean landed = false;
         public boolean moving_home = false;
         public boolean in_swirl = false;
         public byte ghost_personality = -1;
@@ -124,7 +123,7 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
         protected void interpolate(double t) {
             particlesToDispose.clear();
             for (Particle particle : particles) {
-                if (particle.landed) {
+                if (particle.moving_home) {
                     boolean homePositionReached = moveHome(particle);
                     if (homePositionReached) {
                         arrivedHome(particle);
@@ -161,49 +160,29 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
         private void landsOnFloor(Particle particle) {
             particle.setRadius(PARTICLE_RADIUS_RETURNING_HOME);
             particle.setTranslateZ(-particle.getRadius());
-            particle.setMaterial(ghostDressMaterials[randomInt(0, 4)]);
+            particle.ghost_personality = (byte) rnd.nextInt(4);
+            particle.setMaterial(ghostDressMaterials[particle.ghost_personality]);
             Bloom bloom = new Bloom();
             bloom.setThreshold(0.5); //TODO any effect?
             particle.setEffect(bloom);
-            particle.landed = true;
-        }
+            Point3D baseCenter = new Point3D(
+                    ghostRevivalPositionCenters[particle.ghost_personality].x(),
+                    ghostRevivalPositionCenters[particle.ghost_personality].y(),
+                    0); // floor top is at z=0!
+            particle.homePosition = randomPointOnLateralSurface(baseCenter, 6, 10);
 
-        /**
-         * @param baseCenter center of base circle
-         * @param r radius
-         * @param h height
-         * @return random point on lateral surface of cylinder
-         */
-        public Point3D randomPointOnLateralSurface(Point3D baseCenter, double r, double h) {
-            double angle = Math.toRadians(rnd.nextInt(360));
-            return new Point3D(
-                baseCenter.getX() + r * Math.cos(angle),
-                baseCenter.getY() + r * Math.sin(angle),
-                rnd.nextDouble(h)
-            );
+            float speed = rnd.nextFloat(PARTICLE_SPEED_MOVING_HOME_MIN, PARTICLE_SPEED_MOVING_HOME_MAX);
+            Point3D particleCenter = particle.center();
+            particle.velocity.x = (float) (particle.homePosition.getX() - particleCenter.getX());
+            particle.velocity.y = (float) (particle.homePosition.getY() - particleCenter.getY());
+            particle.velocity.z = 0;
+            particle.velocity.normalize().multiply(speed);
+
+            particle.moving_home = true;
         }
 
         private boolean moveHome(Particle particle) {
             Point3D particleCenter = particle.center();
-            if (!particle.moving_home) {
-                // first time: compute particle "personality", target point and velocity
-                particle.ghost_personality = (byte) rnd.nextInt(4);
-                particle.setMaterial(ghostDressMaterials[particle.ghost_personality]);
-
-                Point3D baseCenter = new Point3D(
-                    ghostRevivalPositionCenters[particle.ghost_personality].x(),
-                    ghostRevivalPositionCenters[particle.ghost_personality].y(),
-                    0); // floor top is at z=0!
-                particle.homePosition = randomPointOnLateralSurface(baseCenter, 6, 10);
-
-                float speed = rnd.nextFloat(PARTICLE_SPEED_MOVING_HOME_MIN, PARTICLE_SPEED_MOVING_HOME_MAX);
-                particle.velocity.x = (float) (particle.homePosition.getX() - particleCenter.getX());
-                particle.velocity.y = (float) (particle.homePosition.getY() - particleCenter.getY());
-                particle.velocity.z = 0;
-                particle.velocity.normalize().multiply(speed);
-
-                particle.moving_home = true;
-            }
             // if target reached, move particle to its column group
             double distXY = Math.hypot(
                 particleCenter.getX() - particle.homePosition.getX(),
@@ -213,6 +192,21 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
                 particle.move();
             }
             return homePositionReached;
+        }
+
+        /**
+         * @param baseCenter center of base circle
+         * @param r radius
+         * @param h height
+         * @return random point on lateral surface of cylinder
+         */
+        private Point3D randomPointOnLateralSurface(Point3D baseCenter, double r, double h) {
+            double angle = Math.toRadians(rnd.nextInt(360));
+            return new Point3D(
+                    baseCenter.getX() + r * Math.cos(angle),
+                    baseCenter.getY() + r * Math.sin(angle),
+                    rnd.nextDouble(h)
+            );
         }
 
         private void arrivedHome(Particle particle) {
@@ -225,7 +219,7 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
             particle.setTranslateZ(-rnd.nextDouble(PARTICLE_SWIRL_HEIGHT));
             particle.velocity.x = particle.velocity.y = 0;
             particle.velocity.z = -PARTICLE_SWIRL_RISING_SPEED;
-            particle.landed = false;
+            particle.moving_home = false;
             particle.in_swirl = true;
         }
 
