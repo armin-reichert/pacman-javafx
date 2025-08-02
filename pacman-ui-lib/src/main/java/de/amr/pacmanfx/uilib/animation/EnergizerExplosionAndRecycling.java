@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.animation;
 
-import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.Vec3f;
 import de.amr.pacmanfx.lib.Vector2f;
@@ -25,6 +24,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Predicate;
 
+import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomFloat;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static java.util.Objects.requireNonNull;
@@ -211,7 +211,7 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
 
         private void arrivedHome(Particle particle) {
             particlesGroup.getChildren().remove(particle); //TODO collect and remove?
-            Group swirl = house3D.particleSwirls().get(columnIndex(particle.ghost_personality));
+            Group swirl = house3D.particleSwirls().get(swirlIndex(particle.ghost_personality));
             swirl.getChildren().add(particle);
             double phi = rnd.nextDouble(Math.TAU);
             particle.setTranslateX(PARTICLE_SWIRL_RADIUS * Math.cos(phi));
@@ -223,12 +223,12 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
             particle.in_swirl = true;
         }
 
-        private int columnIndex(int personality) {
+        private int swirlIndex(int personality) {
             return switch (personality) {
-                case Globals.CYAN_GHOST_BASHFUL -> 0;
-                case Globals.RED_GHOST_SHADOW, Globals.PINK_GHOST_SPEEDY -> 1;
-                case Globals.ORANGE_GHOST_POKEY -> 2;
-                default -> throw new IllegalArgumentException();
+                case CYAN_GHOST_BASHFUL -> 0;
+                case RED_GHOST_SHADOW, PINK_GHOST_SPEEDY -> 1;
+                case ORANGE_GHOST_POKEY -> 2;
+                default -> throw new IllegalArgumentException("Illegal ghost personality: " + personality);
             };
         }
 
