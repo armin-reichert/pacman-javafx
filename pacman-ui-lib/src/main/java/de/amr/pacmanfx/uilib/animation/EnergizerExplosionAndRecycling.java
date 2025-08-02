@@ -29,8 +29,10 @@ import static java.util.Objects.requireNonNull;
 
 public class EnergizerExplosionAndRecycling extends ManagedAnimation {
 
-    public static final float PARTICLE_COLUMN_RADIUS = 6;
-    public static final float PARTICLE_COLUMN_HEIGHT = 12;
+    public static final float PARTICLE_SWIRL_RADIUS = 6;
+    public static final float PARTICLE_SWIRL_HEIGHT = 12;
+    public static final float PARTICLE_SWIRL_RISING_SPEED = 0.5f;
+    public static final float PARTICLE_SWIRL_ROTATION_SEC = 1.0f;
 
     // Time includes movement of particles to the ghost house after the explosion
     private static final Duration TOTAL_DURATION = Duration.seconds(30);
@@ -58,6 +60,7 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
         public boolean recolored = false;
         public boolean landed = false;
         public boolean moving_home = false;
+        public boolean in_swirl = false;
         public byte ghost_personality = -1;
         public Point3D homePosition;
         public Vec3f velocity;
@@ -106,7 +109,7 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
     private Material particleMaterial;
     private Material[] ghostDressMaterials;
     private List<Particle> particles;
-    private Group[] particleColumns;
+    private Group[] particleSwirls;
 
     private class ParticlesMovement extends Transition {
 
@@ -121,13 +124,22 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
                 if (particle.landed) {
                     boolean homePositionReached = moveHome(particle);
                     if (homePositionReached) {
-                        particle.velocity = Vec3f.ZERO;
                         particlesGroup.getChildren().remove(particle); //TODO collect and remove?
-                        particleColumns[columnIndex(particle.ghost_personality)].getChildren().add(particle);
+                        particleSwirls[columnIndex(particle.ghost_personality)].getChildren().add(particle);
                         double phi = rnd.nextDouble(Math.TAU);
-                        particle.setTranslateX(PARTICLE_COLUMN_RADIUS * Math.cos(phi));
-                        particle.setTranslateY(PARTICLE_COLUMN_RADIUS * Math.sin(phi));
-                        particle.setTranslateZ(-rnd.nextDouble(PARTICLE_COLUMN_HEIGHT));
+                        particle.setTranslateX(PARTICLE_SWIRL_RADIUS * Math.cos(phi));
+                        particle.setTranslateY(PARTICLE_SWIRL_RADIUS * Math.sin(phi));
+                        particle.setTranslateZ(-rnd.nextDouble(PARTICLE_SWIRL_HEIGHT));
+                        particle.velocity.x = particle.velocity.y = 0;
+                        particle.velocity.z = -PARTICLE_SWIRL_RISING_SPEED;
+                        particle.landed = false;
+                        particle.in_swirl = true;
+                    }
+                }
+                else if (particle.in_swirl) {
+                    particle.move();
+                    if (particle.getTranslateZ() < -PARTICLE_SWIRL_HEIGHT) {
+                        particle.setTranslateZ(0);
                     }
                 }
                 else {
@@ -263,7 +275,7 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
         Point3D origin,
         Vector2f[] ghostRevivalPositionCenters,
         Group particlesGroupContainer,
-        Group[] particleColumns,
+        Group[] particleSwirls,
         Material particleMaterial,
         Material[] ghostDressMaterials,
         Predicate<Particle> particleTouchesFloor) {
@@ -272,7 +284,7 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
         this.origin = requireNonNull(origin);
         this.ghostRevivalPositionCenters = requireNonNull(ghostRevivalPositionCenters);
         this.particlesGroupContainer = requireNonNull(particlesGroupContainer);
-        this.particleColumns = requireNonNull(particleColumns);
+        this.particleSwirls = requireNonNull(particleSwirls);
         this.particleMaterial = requireNonNull(particleMaterial);
         this.ghostDressMaterials = requireNonNull(ghostDressMaterials);
         this.particleTouchesFloor = requireNonNull(particleTouchesFloor);

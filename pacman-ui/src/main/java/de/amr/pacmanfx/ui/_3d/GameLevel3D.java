@@ -72,6 +72,7 @@ public class GameLevel3D implements Disposable {
     private ManagedAnimation wallColorFlashingAnimation;
     private ManagedAnimation levelCompletedFullAnimation;
     private ManagedAnimation levelCompletedShortAnimation;
+    private List<ManagedAnimation> particleSwirlAnimations = new ArrayList<>(3);
 
     private MeshView[] ghostDressMeshViews;
     private MeshView[] ghostPupilsMeshViews;
@@ -98,10 +99,7 @@ public class GameLevel3D implements Disposable {
     protected final ArrayList<Energizer3D> energizers3D = new ArrayList<>();
     protected final Group particleGroupsContainer = new Group();
     protected MessageView messageView;
-
-    // Experimental
-    private Group[] particleColumns;
-
+    private Group[] particleSwirls;
 
     private int wall3DCount;
 
@@ -274,8 +272,8 @@ public class GameLevel3D implements Disposable {
         }
         root.getChildren().addAll(pac3D, pac3D.light());
         root.getChildren().addAll(ghosts3D);
-        if (particleColumns != null) {
-            root.getChildren().addAll(particleColumns);
+        if (particleSwirls != null) {
+            root.getChildren().addAll(particleSwirls);
         }
 
         root.getChildren().add(particleGroupsContainer);
@@ -495,27 +493,48 @@ public class GameLevel3D implements Disposable {
             house3D.wallBaseHeightProperty().bind(houseBaseHeightProperty);
             house3D.light().lightOnProperty().bind(houseLightOnProperty);
             maze3D.getChildren().add(house3D);
-
-            particleColumns = new Group[] { new Group(), new Group(), new Group() };
-
-            Vector2f[] positions = {
-                gameLevel.ghost(CYAN_GHOST_BASHFUL).revivalPosition().plus(HTS, HTS),
-                gameLevel.ghost(PINK_GHOST_SPEEDY).revivalPosition().plus(HTS, HTS),
-                gameLevel.ghost(ORANGE_GHOST_POKEY).revivalPosition().plus(HTS, HTS),
-            };
-            for (int i = 0; i < 3; ++i) {
-                particleColumns[i].setTranslateX(positions[i].x());
-                particleColumns[i].setTranslateY(positions[i].y());
-
-                var rotation = new RotateTransition(Duration.seconds(2), particleColumns[i]);
-                rotation.setAxis(Rotate.Z_AXIS);
-                rotation.setFromAngle(0);
-                rotation.setToAngle(360);
-                rotation.setInterpolator(Interpolator.LINEAR);
-                rotation.setCycleCount(Animation.INDEFINITE);
-                rotation.play();
-            }
+            createParticleSwirls();
         });
+    }
+
+    private void createParticleSwirls() {
+        Duration rotationTime = Duration.seconds(EnergizerExplosionAndRecycling.PARTICLE_SWIRL_ROTATION_SEC);
+        Vector2f[] centers = {
+            gameLevel.ghost(CYAN_GHOST_BASHFUL).revivalPosition().plus(HTS, HTS),
+            gameLevel.ghost(PINK_GHOST_SPEEDY).revivalPosition().plus(HTS, HTS),
+            gameLevel.ghost(ORANGE_GHOST_POKEY).revivalPosition().plus(HTS, HTS),
+        };
+        particleSwirls = new Group[3];
+        for (int i = 0; i < particleSwirls.length; ++i) {
+            particleSwirls[i] = new Group();
+            particleSwirls[i].setTranslateX(centers[i].x());
+            particleSwirls[i].setTranslateY(centers[i].y());
+            final int index = i;
+            particleSwirlAnimations.add(new ManagedAnimation(animationRegistry, "Swirl_%d".formatted(i)) {
+                @Override
+                protected Animation createAnimationFX() {
+                    var rotation = new RotateTransition(rotationTime, particleSwirls[index]);
+                    rotation.setAxis(Rotate.Z_AXIS);
+                    rotation.setFromAngle(0);
+                    rotation.setToAngle(360);
+                    rotation.setInterpolator(Interpolator.LINEAR);
+                    rotation.setCycleCount(Animation.INDEFINITE);
+                    return rotation;
+                }
+            });
+        }
+    }
+
+    private void startSwirlAnimations() {
+        if (particleSwirlAnimations != null) {
+            particleSwirlAnimations.forEach(ManagedAnimation::playFromStart);
+        }
+    }
+
+    private void stopSwirlAnimations() {
+        if (particleSwirlAnimations != null) {
+            particleSwirlAnimations.forEach(ManagedAnimation::stop);
+        }
     }
 
     private void createFloor3D() {
@@ -541,16 +560,6 @@ public class GameLevel3D implements Disposable {
         if (particleCenter.getX() < 0 || particleCenter.getX() > worldSizePx.x()) return false;
         if (particleCenter.getY() < 0 || particleCenter.getY() > worldSizePx.y()) return false;
         return particleCenter.getZ() >= floorTopZ();
-        //TODO: make this work
-/*
-        Point3D center = particle.center();
-        Bounds fb = floor3D.getBoundsInParent(); //TODO correct?
-        return Ufx.intersectsSphereBox(
-            center.getX(), center.getY(), center.getZ(), particle.getRadius(),
-            fb.getMinX(), fb.getMinY(), fb.getMinZ(),
-            fb.getMaxX(), fb.getMaxY(), fb.getMaxZ()
-        );
- */
     }
 
     private boolean isWorldBorder(WorldMap worldMap, Obstacle obstacle) {
@@ -616,7 +625,7 @@ public class GameLevel3D implements Disposable {
             gameLevel.ghost(ORANGE_GHOST_POKEY).revivalPosition().plus(HTS, HTS),
         };
         var explosion = new EnergizerExplosionAndRecycling(animationRegistry, center, ghostRevivalPositionCenters,
-            particleGroupsContainer, particleColumns,
+            particleGroupsContainer, particleSwirls,
             particleMaterial, ghostDressMaterials,
             this::particleTouchesFloor);
         energizer3D.setEatenAnimation(explosion);
@@ -683,6 +692,7 @@ public class GameLevel3D implements Disposable {
         pac3D.init();
         ghosts3D.forEach(ghost3D -> ghost3D.init(gameLevel));
         energizers3D().forEach(Energizer3D::startPumping);
+        startSwirlAnimations();
     }
 
     public void onPacManDying(GameState state) {
@@ -716,11 +726,16 @@ public class GameLevel3D implements Disposable {
         state.timer().resetIndefiniteTime(); // expires when animation ends
         ui.theSound().stopAll();
         animationRegistry.stopAllAnimations();
-        // hide 3d food explicitly because level might have been completed using cheat!
+        energizers3D.forEach(Energizer3D::stopPumping); //TODO needed?
+        // hide 3D food explicitly because level might have been completed using cheat!
         pellets3D.forEach(pellet3D -> pellet3D.setVisible(false));
-        energizers3D.forEach(Energizer3D::stopPumping);
         energizers3D.forEach(Energizer3D::hide);
         particleGroupsContainer.getChildren().clear();
+        if (particleSwirls != null) {
+            for (Group swirl : particleSwirls) {
+                swirl.getChildren().clear();
+            }
+        }
         house3D.setDoorVisible(false);
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
         if (messageView != null) {
@@ -804,10 +819,6 @@ public class GameLevel3D implements Disposable {
 
     private void handleDrawModeChange(ObservableValue<? extends DrawMode> obs, DrawMode oldDrawMode, DrawMode newDrawMode) {
         setShape3DDrawMode(root, pellets3D::contains, newDrawMode);
-    }
-
-    private boolean isContainedXY(Point3D p, Vector2f min, Vector2f max) {
-        return min.x() <= p.getX() && min.y() <= p.getY() && p.getX() <= max.x() && p.getY() <= max.y();
     }
 
     // still work in progress...
@@ -895,15 +906,22 @@ public class GameLevel3D implements Disposable {
             house3D = null;
             Logger.info("Disposed 3D house");
         }
-        if (particleColumns != null) {
-            for (Group column : particleColumns) {
-                column.getChildren().forEach(child -> {
+        if (particleSwirls != null) {
+            for (Group swirl : particleSwirls) {
+                swirl.getChildren().forEach(child -> {
                     if (child instanceof EnergizerExplosionAndRecycling.Particle particle) {
                         particle.dispose();
                     }
                 });
-                column.getChildren().clear();
+                swirl.getChildren().clear();
             }
+        }
+        if (particleSwirlAnimations != null) {
+            for (ManagedAnimation swirlAnimation : particleSwirlAnimations) {
+                swirlAnimation.dispose();
+            }
+            particleSwirlAnimations.clear();
+            particleSwirlAnimations = null;
         }
         if (maze3D != null) {
             maze3D.getChildren().forEach(Wall3D::dispose);
