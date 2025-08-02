@@ -89,7 +89,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     // Actions specific to Tengen Ms. Pac-Man
 
-    public final GameAction ACTION_QUIT_DEMO_LEVEL = new GameAction() {
+    public final GameAction ACTION_QUIT_DEMO_LEVEL = new GameAction("QUIT_DEMO_LEVEL") {
         @Override
         public void execute(GameUI ui) {
             ui.theGameContext().theGameController().changeGameState(GameState.SETTING_OPTIONS_FOR_START);
@@ -99,40 +99,25 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         public boolean isEnabled(GameUI ui) {
             return ui.theGameContext().optGameLevel().isPresent() && ui.theGameContext().theGameLevel().isDemoLevel();
         }
-
-        @Override
-        public String name() {
-            return "QUIT_DEMO_LEVEL";
-        }
     };
 
-    public final GameAction ACTION_ENTER_START_SCREEN = new GameAction() {
+    public final GameAction ACTION_ENTER_START_SCREEN = new GameAction("ENTER_START_SCREEN") {
         @Override
         public void execute(GameUI ui) {
             ui.theGameContext().theGameController().changeGameState(GameState.SETTING_OPTIONS_FOR_START);
         }
-
-        @Override
-        public String name() {
-            return "ENTER_START_SCREEN";
-        }
     };
 
-    public final GameAction ACTION_START_PLAYING = new GameAction() {
+    public final GameAction ACTION_START_PLAYING = new GameAction("START_PLAYING") {
         @Override
         public void execute(GameUI ui) {
             ui.theSound().stopAll();
             ui.theGameContext().theGame().playingProperty().set(false);
             ui.theGameContext().theGameController().changeGameState(GameState.STARTING_GAME);
         }
-
-        @Override
-        public String name() {
-            return "START_PLAYING";
-        }
     };
 
-    public final GameAction ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE = new GameAction() {
+    public final GameAction ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE = new GameAction("TOGGLE_PLAY_SCENE_DISPLAY_MODE") {
         @Override
         public void execute(GameUI ui) {
             var config = ui.<TengenMsPacMan_UIConfig>theConfiguration();
@@ -146,26 +131,16 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         public boolean isEnabled(GameUI ui) {
             return ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_2D);
         }
-
-        @Override
-        public String name() {
-            return "TOGGLE_DISPLAY_MODE";
-        }
     };
 
-    public final GameAction ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED = new GameAction() {
+    public final GameAction ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED = new GameAction("TOGGLE_JOYPAD_BINDINGS_DISPLAYED") {
         @Override
         public void execute(GameUI ui) {
             toggle(ui.<TengenMsPacMan_UIConfig>theConfiguration().propertyJoypadBindingsDisplayed);
         }
-
-        @Override
-        public String name() {
-            return "TOGGLE_JOYPAD_BINDINGS_DISPLAYED";
-        }
     };
 
-    public final GameAction ACTION_TOGGLE_PAC_BOOSTER = new GameAction() {
+    public final GameAction ACTION_TOGGLE_PAC_BOOSTER = new GameAction("TOGGLE_PAC_BOOSTER") {
         @Override
         public void execute(GameUI ui) {
             var tengenGame = ui.theGameContext().<TengenMsPacMan_GameModel>theGame();
@@ -180,18 +155,13 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
             var tengenGame = ui.theGameContext().<TengenMsPacMan_GameModel>theGame();
             return tengenGame.pacBooster() == PacBooster.USE_A_OR_B;
         }
-
-        @Override
-        public String name() {
-            return "TOGGLE_PAC_BOOSTER";
-        }
     };
 
-    public final List<ActionBinding> TENGEN_MS_PACMAN_ACTION_BINDINGS;
+    public final List<ActionBinding> actionBindings;
 
     public TengenMsPacMan_UIConfig(GameUI ui) {
         this.ui = requireNonNull(ui);
-        TENGEN_MS_PACMAN_ACTION_BINDINGS = List.of(
+        actionBindings = List.of(
             new ActionBinding(ACTION_STEER_UP,            ui.theJoypad().key(JoypadButton.UP),    control(KeyCode.UP)),
             new ActionBinding(ACTION_STEER_DOWN,          ui.theJoypad().key(JoypadButton.DOWN),  control(KeyCode.DOWN)),
             new ActionBinding(ACTION_STEER_LEFT,          ui.theJoypad().key(JoypadButton.LEFT),  control(KeyCode.LEFT)),

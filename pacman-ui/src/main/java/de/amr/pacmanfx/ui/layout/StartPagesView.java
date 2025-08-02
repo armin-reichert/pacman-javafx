@@ -92,28 +92,20 @@ public class StartPagesView implements PacManGames_View {
         setBackground(ui.theAssets().background("background.scene"));
         setTitleBinding(Bindings.createStringBinding(() -> "JavaFX Pac-Man Games"));
 
-        GameAction actionPrevSlide = new GameAction() {
+        GameAction actionPrevSlide = new GameAction("SHOW_PREV_SLIDE") {
             @Override
             public void execute(GameUI ui) {
                 carousel.showPreviousSlide();
             }
-
-            @Override
-            public String name() {
-                return "SHOW_PREV_SLIDE";
-            }
         };
-        GameAction actionNextSlide = new GameAction() {
+
+        GameAction actionNextSlide = new GameAction("SHOW_NEXT_SLIDE") {
             @Override
             public void execute(GameUI ui) {
                 carousel.showNextSlide();
             }
-
-            @Override
-            public String name() {
-                return "SHOW_NEXT_SLIDE";
-            }
         };
+
         actionBindings.bind(actionPrevSlide,            nude(KeyCode.LEFT));
         actionBindings.bind(actionNextSlide,            nude(KeyCode.RIGHT));
         actionBindings.bind(ACTION_BOOT_SHOW_PLAY_VIEW, nude(KeyCode.ENTER));

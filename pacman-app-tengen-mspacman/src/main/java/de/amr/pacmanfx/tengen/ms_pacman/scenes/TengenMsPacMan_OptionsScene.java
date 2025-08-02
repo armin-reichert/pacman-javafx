@@ -70,15 +70,10 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         }
     };
 
-    private final GameAction actionSelectNextJoypadBinding = new GameAction() {
+    private final GameAction actionSelectNextJoypadBinding = new GameAction("SELECT_NEXT_JOYPAD_BINDING") {
         @Override
         public void execute(GameUI ui) {
             ui.theJoypad().selectNextBinding(actionBindings);
-        }
-
-        @Override
-        public String name() {
-            return "SELECT_NEXT_JOYPAD_BINDING";
         }
     };
 
@@ -94,8 +89,8 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         gameContext().theGame().theHUD().all(false);
 
         var config = ui.<TengenMsPacMan_UIConfig>theConfiguration();
-        actionBindings.use(config.ACTION_START_PLAYING, config.TENGEN_MS_PACMAN_ACTION_BINDINGS);
-        actionBindings.use(config.ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, config.TENGEN_MS_PACMAN_ACTION_BINDINGS);
+        actionBindings.use(config.ACTION_START_PLAYING, config.actionBindings);
+        actionBindings.use(config.ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, config.actionBindings);
         actionBindings.bind(actionSelectNextJoypadBinding, alt(KeyCode.J));
         actionBindings.use(ACTION_TEST_CUT_SCENES, DEFAULT_ACTION_BINDINGS);
         actionBindings.use(ACTION_TEST_LEVELS_BONI, DEFAULT_ACTION_BINDINGS);

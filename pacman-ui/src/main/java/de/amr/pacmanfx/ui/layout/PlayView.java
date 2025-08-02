@@ -142,7 +142,7 @@ public class PlayView implements PacManGames_View {
         actionBindings.use(ACTION_TOGGLE_PAUSED, DEFAULT_ACTION_BINDINGS);
         actionBindings.use(ACTION_TOGGLE_DASHBOARD, DEFAULT_ACTION_BINDINGS);
         actionBindings.use(ACTION_TOGGLE_IMMUNITY, DEFAULT_ACTION_BINDINGS);
-        actionBindings.use(ACTION_TOGGLE_PIP_VISIBILITY, DEFAULT_ACTION_BINDINGS);
+        actionBindings.use(ACTION_TOGGLE_MINI_VIEW_VISIBILITY, DEFAULT_ACTION_BINDINGS);
         actionBindings.use(ACTION_TOGGLE_PLAY_SCENE_2D_3D, DEFAULT_ACTION_BINDINGS);
     }
 

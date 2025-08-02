@@ -4,14 +4,23 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui;
 
+import de.amr.pacmanfx.Validations;
 import org.tinylog.Logger;
 
 /**
  * Common interface for game actions.
  */
-public interface GameAction {
+public abstract class GameAction {
 
-    default void executeIfEnabled(GameUI ui) {
+    private final String name;
+
+    protected GameAction(String name) {
+        this.name = Validations.requireValidIdentifier(name);
+    }
+
+    public abstract void execute(GameUI ui);
+
+    public void executeIfEnabled(GameUI ui) {
         if (isEnabled(ui)) {
             execute(ui);
             Logger.trace("Action '{}' executed", name());
@@ -20,9 +29,7 @@ public interface GameAction {
         }
     }
 
-    void execute(GameUI ui);
+    public boolean isEnabled(GameUI ui) { return true; }
 
-    default boolean isEnabled(GameUI ui) { return true; }
-
-    default String name() { return toString(); }
+    public String name() { return name; }
 }

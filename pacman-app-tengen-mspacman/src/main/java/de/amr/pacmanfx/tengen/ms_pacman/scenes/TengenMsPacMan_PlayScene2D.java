@@ -108,16 +108,16 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     private void setActionsBindings() {
         var config = ui.<TengenMsPacMan_UIConfig>theConfiguration();
         if (gameContext().theGameLevel().isDemoLevel()) {
-            actionBindings.use(config.ACTION_QUIT_DEMO_LEVEL, config.TENGEN_MS_PACMAN_ACTION_BINDINGS);
+            actionBindings.use(config.ACTION_QUIT_DEMO_LEVEL, config.actionBindings);
         } else {
             // Steer Pac-Man using current "Joypad" settings
-            actionBindings.use(ACTION_STEER_UP,    config.TENGEN_MS_PACMAN_ACTION_BINDINGS);
-            actionBindings.use(ACTION_STEER_DOWN,  config.TENGEN_MS_PACMAN_ACTION_BINDINGS);
-            actionBindings.use(ACTION_STEER_LEFT,  config.TENGEN_MS_PACMAN_ACTION_BINDINGS);
-            actionBindings.use(ACTION_STEER_RIGHT, config.TENGEN_MS_PACMAN_ACTION_BINDINGS);
+            actionBindings.use(ACTION_STEER_UP,    config.actionBindings);
+            actionBindings.use(ACTION_STEER_DOWN,  config.actionBindings);
+            actionBindings.use(ACTION_STEER_LEFT,  config.actionBindings);
+            actionBindings.use(ACTION_STEER_RIGHT, config.actionBindings);
 
-            actionBindings.use(config.ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, config.TENGEN_MS_PACMAN_ACTION_BINDINGS);
-            actionBindings.use(config.ACTION_TOGGLE_PAC_BOOSTER, config.TENGEN_MS_PACMAN_ACTION_BINDINGS);
+            actionBindings.use(config.ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, config.actionBindings);
+            actionBindings.use(config.ACTION_TOGGLE_PAC_BOOSTER, config.actionBindings);
 
             actionBindings.use(ACTION_CHEAT_ADD_LIVES, DEFAULT_ACTION_BINDINGS);
             actionBindings.use(ACTION_CHEAT_EAT_ALL_PELLETS, DEFAULT_ACTION_BINDINGS);

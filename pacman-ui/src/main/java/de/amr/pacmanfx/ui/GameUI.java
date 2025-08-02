@@ -70,7 +70,7 @@ public interface GameUI {
         new ActionBinding(ACTION_TOGGLE_PAUSED,           nude(KeyCode.P), nude(KeyCode.F5)),
         new ActionBinding(ACTION_TOGGLE_DASHBOARD,        nude(KeyCode.F1), alt(KeyCode.B)),
         new ActionBinding(ACTION_TOGGLE_IMMUNITY,         alt(KeyCode.I)),
-        new ActionBinding(ACTION_TOGGLE_PIP_VISIBILITY,   nude(KeyCode.F2)),
+        new ActionBinding(ACTION_TOGGLE_MINI_VIEW_VISIBILITY,   nude(KeyCode.F2)),
         new ActionBinding(ACTION_TOGGLE_PLAY_SCENE_2D_3D, alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3)),
         new ActionBinding(ACTION_TOGGLE_DRAW_MODE,        alt(KeyCode.W))
     );

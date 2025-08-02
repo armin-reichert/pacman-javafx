@@ -73,11 +73,7 @@ public class PlayScene3D implements GameScene {
         }
     };
 
-    private final GameAction droneUp = new GameAction() {
-        @Override
-        public String name() {
-            return "DroneUp";
-        }
+    private final GameAction droneUp = new GameAction("DroneUp") {
         @Override
         public void execute(GameUI ui) {
             if (perspectiveMap.get(PerspectiveID.DRONE) instanceof DronePerspective dronePerspective) {
@@ -90,17 +86,14 @@ public class PlayScene3D implements GameScene {
         }
     };
 
-    private final GameAction droneDown = new GameAction() {
-        @Override
-        public String name() {
-            return "DroneDown";
-        }
+    private final GameAction droneDown = new GameAction("DroneDown") {
         @Override
         public void execute(GameUI ui) {
             if (perspectiveMap.get(PerspectiveID.DRONE) instanceof DronePerspective dronePerspective) {
                 dronePerspective.moveDown();
             }
         }
+
         @Override
         public boolean isEnabled(GameUI ui) {
             return perspectiveIDProperty.get() == PerspectiveID.DRONE;
