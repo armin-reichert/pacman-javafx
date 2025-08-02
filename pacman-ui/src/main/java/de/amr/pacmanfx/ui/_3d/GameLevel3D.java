@@ -100,6 +100,10 @@ public class GameLevel3D implements Disposable {
     protected final Group particleGroupsContainer = new Group();
     protected MessageView messageView;
 
+    // Experimental
+    private Group[] particleColumns;
+
+
     private int wall3DCount;
 
     private Animation wallsMovingUpAndDown(int numFlashes) {
@@ -271,10 +275,14 @@ public class GameLevel3D implements Disposable {
         }
         root.getChildren().addAll(pac3D, pac3D.light());
         root.getChildren().addAll(ghosts3D);
+        if (particleColumns != null) {
+            root.getChildren().addAll(particleColumns);
+        }
 
         root.getChildren().add(particleGroupsContainer);
         energizers3D.forEach(energizers3D -> root.getChildren().add(energizers3D.shape()));
         pellets3D.forEach(root.getChildren()::add);
+
 
         // Note: The order in which children are added to the root matters!
         // Walls and house must be added *after* the actors, otherwise the transparency is not working correctly.
@@ -488,6 +496,39 @@ public class GameLevel3D implements Disposable {
             house3D.wallBaseHeightProperty().bind(houseBaseHeightProperty);
             house3D.light().lightOnProperty().bind(houseLightOnProperty);
             maze3D.getChildren().add(house3D);
+
+            particleColumns = new Group[] { new Group(), new Group(), new Group() };
+
+            Vector2f[] positions = {
+                gameLevel.ghost(CYAN_GHOST_BASHFUL).revivalPosition().plus(HTS, HTS),
+                gameLevel.ghost(PINK_GHOST_SPEEDY).revivalPosition().plus(HTS, HTS),
+                gameLevel.ghost(ORANGE_GHOST_POKEY).revivalPosition().plus(HTS, HTS),
+            };
+            for (int i = 0; i < 3; ++i) {
+                particleColumns[i].setTranslateX(positions[i].x());
+                particleColumns[i].setTranslateY(positions[i].y());
+
+                var axis = new Cylinder(1, 8);
+                axis.setRotationAxis(Rotate.X_AXIS);
+                axis.setRotate(90);
+                axis.setTranslateZ(-0.5 * axis.getHeight());
+                int personality = i == 0 ? CYAN_GHOST_BASHFUL : i == 1 ? RED_GHOST_SHADOW : ORANGE_GHOST_POKEY;
+                axis.setMaterial(ghosts3D.get(personality).ghost3D().dressMaterialNormal());
+                particleColumns[i].getChildren().add(axis);
+
+                var crossBeam = new Cylinder(0.5, 8);
+                crossBeam.setMaterial(axis.getMaterial());
+                crossBeam.setTranslateZ(-0.5 * axis.getHeight());
+                particleColumns[i].getChildren().add(crossBeam);
+
+                var rotation = new RotateTransition(Duration.seconds(2), particleColumns[i]);
+                rotation.setAxis(Rotate.Z_AXIS);
+                rotation.setFromAngle(0);
+                rotation.setToAngle(360);
+                rotation.setInterpolator(Interpolator.LINEAR);
+                rotation.setCycleCount(Animation.INDEFINITE);
+                rotation.play();
+            }
         });
     }
 
@@ -588,8 +629,10 @@ public class GameLevel3D implements Disposable {
             gameLevel.ghost(CYAN_GHOST_BASHFUL).revivalPosition().plus(HTS, HTS),
             gameLevel.ghost(ORANGE_GHOST_POKEY).revivalPosition().plus(HTS, HTS),
         };
-        var explosion = new Explosion(animationRegistry, center, ghostRevivalPositionCenters, particleGroupsContainer,
-                particleMaterial, ghostDressMaterials, this::particleTouchesFloor);
+        var explosion = new Explosion(animationRegistry, center, ghostRevivalPositionCenters,
+            particleGroupsContainer, particleColumns,
+            particleMaterial, ghostDressMaterials,
+            this::particleTouchesFloor);
         energizer3D.setEatenAnimation(explosion);
         return energizer3D;
     }

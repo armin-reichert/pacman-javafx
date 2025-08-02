@@ -100,6 +100,7 @@ public class Explosion extends ManagedAnimation {
     private Group particlesGroupContainer;
     private Group particlesGroup = new Group();
     private Predicate<Particle> particleTouchesFloor;
+    private Group[] particleColumns;
 
     private Material particleMaterial;
     private Material[] ghostDressMaterials;
@@ -249,6 +250,7 @@ public class Explosion extends ManagedAnimation {
         Point3D origin,
         Vector2f[] ghostRevivalPositionCenters,
         Group particlesGroupContainer,
+        Group[] particleColumns,
         Material particleMaterial,
         Material[] ghostDressMaterials,
         Predicate<Particle> particleTouchesFloor) {
@@ -257,6 +259,7 @@ public class Explosion extends ManagedAnimation {
         this.origin = requireNonNull(origin);
         this.ghostRevivalPositionCenters = requireNonNull(ghostRevivalPositionCenters);
         this.particlesGroupContainer = requireNonNull(particlesGroupContainer);
+        this.particleColumns = requireNonNull(particleColumns);
         this.particleMaterial = requireNonNull(particleMaterial);
         this.ghostDressMaterials = requireNonNull(ghostDressMaterials);
         this.particleTouchesFloor = requireNonNull(particleTouchesFloor);
