@@ -11,6 +11,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.uilib.model3D.ArcadeHouse3D;
 import javafx.animation.Animation;
 import javafx.animation.Transition;
+import javafx.application.Platform;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.effect.Bloom;
@@ -147,11 +148,13 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
                 }
             }
             if (!particlesToDispose.isEmpty()) {
-                particles.removeAll(particlesToDispose);
-                particlesGroup.getChildren().removeAll(particlesToDispose);
-                Logger.info("{} particles disposed, t={}", particlesToDispose.size(), t);
-                particlesToDispose.forEach(Particle::dispose);
-                particlesToDispose.clear();
+                Platform.runLater(() -> {
+                    particles.removeAll(particlesToDispose);
+                    particlesToDispose.forEach(Particle::dispose);
+                    particlesGroup.getChildren().removeAll(particlesToDispose);
+                    Logger.info("{} particles disposed, t={}", particlesToDispose.size(), t);
+                    particlesToDispose.clear();
+                });
             }
         }
 
