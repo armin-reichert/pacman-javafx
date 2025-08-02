@@ -55,12 +55,11 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
     private static final float GRAVITY_Z = 0.18f;
 
     public static class Particle extends Sphere implements Disposable {
-        public byte personality = -1;
-        public boolean debris = false;
+        public boolean recolored = false;
         public boolean landed = false;
-        public boolean movingHome = false;
-        public boolean removed = false;
-        public Point3D housePosition;
+        public boolean moving_home = false;
+        public byte ghost_personality = -1;
+        public Point3D homePosition;
         public Vec3f velocity;
 
         public Particle(double radius, Material material, Vec3f velocity, Point3D origin) {
@@ -103,11 +102,11 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
     private Group particlesGroupContainer;
     private Group particlesGroup = new Group();
     private Predicate<Particle> particleTouchesFloor;
-    private Group[] particleColumns;
 
     private Material particleMaterial;
     private Material[] ghostDressMaterials;
-    private Particle[] particles;
+    private List<Particle> particles;
+    private Group[] particleColumns;
 
     private class ParticlesMovement extends Transition {
 
@@ -117,50 +116,56 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
 
         @Override
         protected void interpolate(double t) {
-            List<Particle> particlesToRemove = new ArrayList<>();
+            List<Particle> particlesToDispose = new ArrayList<>();
             for (Particle particle : particles) {
-                if (particle.removed) continue;
-
                 if (particle.landed) {
-                    moveHome(particle);
+                    boolean homePositionReached = moveHome(particle);
+                    if (homePositionReached) {
+                        particle.velocity = Vec3f.ZERO;
+                        particlesGroup.getChildren().remove(particle); //TODO collect and remove?
+                        particleColumns[columnIndex(particle.ghost_personality)].getChildren().add(particle);
+                        particle.setTranslateX(PARTICLE_COLUMN_RADIUS * Math.cos(rnd.nextDouble(Math.TAU)));
+                        particle.setTranslateY(PARTICLE_COLUMN_RADIUS * Math.sin(rnd.nextDouble(Math.TAU)));
+                        particle.setTranslateZ(-rnd.nextDouble(PARTICLE_COLUMN_HEIGHT));
+                    }
                 }
                 else {
                     particle.fly();
                     // if falling under certain height, become debris, change color to one of ghost dress colors
                     // Note: falling means moving to positive z direction!
                     if (particle.velocity.z > 0 && particle.center().getZ() > -20) {
-                        becomeDebris(particle);
+                        assignRandomGhostColor(particle);
                     }
                     if (particleTouchesFloor.test(particle)) {
+                        particle.landed = true;
                         particle.setRadius(PARTICLE_RADIUS_RETURNING_HOME);
                         particle.setTranslateZ(-particle.getRadius());
-                        particle.landed = true;
                     }
                     // if felt outside world, remove it at some level
                     if (!particle.landed && particle.center().getZ() > 100) {
                         particle.velocity = null;
                         particle.setMaterial(null);
-                        particle.removed = true;
-                        particlesToRemove.add(particle);
+                        particlesToDispose.add(particle);
                         Logger.debug(() -> "%s removed (felt outside), z=%.2f".formatted(particle, particle.getTranslateZ()));
                     }
                 }
             }
-            if (!particlesToRemove.isEmpty()) {
-                particlesGroup.getChildren().removeAll(particlesToRemove);
-                Logger.info("{} particles removed at t={}", particlesToRemove.size(), t);
-                particlesToRemove.forEach(Particle::dispose);
-                particlesToRemove.clear();
+            if (!particlesToDispose.isEmpty()) {
+                particles.removeAll(particlesToDispose);
+                particlesGroup.getChildren().removeAll(particlesToDispose);
+                Logger.info("{} particles removed at t={}", particlesToDispose.size(), t);
+                particlesToDispose.forEach(Particle::dispose);
+                particlesToDispose.clear();
             }
         }
 
-        private void becomeDebris(Particle particle) {
-            if (particle.debris) return;
+        private void assignRandomGhostColor(Particle particle) {
+            if (particle.recolored) return;
             particle.setMaterial(ghostDressMaterials[randomInt(0, 4)]);
             Bloom bloom = new Bloom();
-            bloom.setThreshold(0.5);
+            bloom.setThreshold(0.5); //TODO any effect?
             particle.setEffect(bloom);
-            particle.debris = true;
+            particle.recolored = true;
         }
 
         /**
@@ -178,41 +183,36 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
             );
         }
 
-        private void moveHome(Particle particle) {
+        private boolean moveHome(Particle particle) {
             Point3D particleCenter = particle.center();
-            if (!particle.movingHome) {
+            if (!particle.moving_home) {
                 // first time: compute particle "personality", target point and velocity
-                particle.personality = (byte) rnd.nextInt(4);
-                particle.setMaterial(ghostDressMaterials[particle.personality]);
+                particle.ghost_personality = (byte) rnd.nextInt(4);
+                particle.setMaterial(ghostDressMaterials[particle.ghost_personality]);
 
                 Point3D baseCenter = new Point3D(
-                    ghostRevivalPositionCenters[particle.personality].x(),
-                    ghostRevivalPositionCenters[particle.personality].y(),
+                    ghostRevivalPositionCenters[particle.ghost_personality].x(),
+                    ghostRevivalPositionCenters[particle.ghost_personality].y(),
                     0); // floor top is at z=0!
-                particle.housePosition = randomPointOnLateralSurface(baseCenter, 6, 10);
+                particle.homePosition = randomPointOnLateralSurface(baseCenter, 6, 10);
 
                 float speed = rnd.nextFloat(PARTICLE_SPEED_MOVING_HOME_MIN, PARTICLE_SPEED_MOVING_HOME_MAX);
-                particle.velocity.x = (float) (particle.housePosition.getX() - particleCenter.getX());
-                particle.velocity.y = (float) (particle.housePosition.getY() - particleCenter.getY());
+                particle.velocity.x = (float) (particle.homePosition.getX() - particleCenter.getX());
+                particle.velocity.y = (float) (particle.homePosition.getY() - particleCenter.getY());
                 particle.velocity.z = 0;
                 particle.velocity.normalize().multiply(speed);
 
-                particle.movingHome = true;
+                particle.moving_home = true;
             }
             // if target reached, move particle to its column group
             double distXY = Math.hypot(
-                particleCenter.getX() - particle.housePosition.getX(),
-                particleCenter.getY() - particle.housePosition.getY());
-            if (distXY < particle.velocity.magnitude()) {
-                particle.velocity = Vec3f.ZERO;
-                particlesGroup.getChildren().remove(particle); //TODO collect and remove?
-                particleColumns[columnIndex(particle.personality)].getChildren().add(particle);
-                particle.setTranslateX(PARTICLE_COLUMN_RADIUS * Math.cos(rnd.nextDouble(Math.TAU)));
-                particle.setTranslateY(PARTICLE_COLUMN_RADIUS * Math.sin(rnd.nextDouble(Math.TAU)));
-                particle.setTranslateZ(-rnd.nextDouble(PARTICLE_COLUMN_HEIGHT));
-            } else {
+                particleCenter.getX() - particle.homePosition.getX(),
+                particleCenter.getY() - particle.homePosition.getY());
+            boolean homePositionReached = distXY < particle.velocity.magnitude();
+            if (!homePositionReached) {
                 particle.move();
             }
+            return homePositionReached;
         }
 
         private int columnIndex(int personality) {
@@ -232,12 +232,13 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
 
         private void createAndAddParticles(Material particleMaterial, Point3D origin) {
             int particleCount = randomInt(PARTICLE_COUNT_MIN, PARTICLE_COUNT_MAX + 1);
-            particles = new Particle[particleCount];
+            particles = new ArrayList<>();
             for (int i = 0; i < particleCount; ++i) {
                 double radius = randomParticleRadius();
                 Vec3f velocity = randomParticleVelocity();
-                particles[i] = new Particle(radius, particleMaterial, velocity, origin);
-                particles[i].setVisible(true);
+                Particle particle = new Particle(radius, particleMaterial, velocity, origin);
+                particle.setVisible(true);
+                particles.add(particle);
             }
             particlesGroup.getChildren().setAll(particles);
         }
@@ -299,7 +300,8 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
             for (Particle particle : particles) {
                 particle.dispose();
             }
-            Logger.info("Disposed {} particles", particles.length);
+            Logger.info("Disposed {} particles", particles.size());
+            particles.clear();
             particles = null;
         }
         if (particlesGroup != null) {
