@@ -280,6 +280,7 @@ public class GameLevel3D implements Disposable {
         energizers3D.forEach(energizers3D -> root.getChildren().add(energizers3D.shape()));
         pellets3D.forEach(root.getChildren()::add);
 
+        startSwirlAnimations();
 
         // Note: The order in which children are added to the root matters!
         // Walls and house must be added *after* the actors, otherwise the transparency is not working correctly.
@@ -528,6 +529,7 @@ public class GameLevel3D implements Disposable {
     private void startSwirlAnimations() {
         if (particleSwirlAnimations != null) {
             particleSwirlAnimations.forEach(ManagedAnimation::playFromStart);
+            Logger.info("Swirl animations started");
         }
     }
 
