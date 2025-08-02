@@ -43,6 +43,7 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -95,8 +96,8 @@ public class GameLevel3D implements Disposable {
     protected PacBase3D pac3D;
     protected List<MutatingGhost3D> ghosts3D;
     protected Bonus3D bonus3D;
-    protected final Set<Shape3D> pellets3D = new HashSet<>();
-    protected final ArrayList<Energizer3D> energizers3D = new ArrayList<>();
+    protected Set<Shape3D> pellets3D;
+    protected Set<Energizer3D> energizers3D;
     protected final Group particleGroupsContainer = new Group();
     protected MessageView messageView;
     private Group[] particleSwirls;
@@ -581,10 +582,10 @@ public class GameLevel3D implements Disposable {
         double maxExtent = Math.max(Math.max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());
         double scaling = (2 * radius) / maxExtent;
         var scale = new Scale(scaling, scaling, scaling);
-        pellets3D.addAll(gameLevel.tilesContainingFood()
+        pellets3D = gameLevel.tilesContainingFood()
             .filter(tile -> !gameLevel.isEnergizerPosition(tile))
             .map(tile -> createPellet3D(mesh, scale, tile))
-            .toList());
+            .collect(Collectors.toCollection(HashSet::new));
     }
 
     private Shape3D createPellet3D(Mesh mesh, Scale scale, Vector2i tile) {
@@ -610,11 +611,10 @@ public class GameLevel3D implements Disposable {
             ghosts3D.get(CYAN_GHOST_BASHFUL).ghost3D().dressMaterialNormal(),
             ghosts3D.get(ORANGE_GHOST_POKEY).ghost3D().dressMaterialNormal(),
         };
-        energizers3D.addAll(gameLevel.tilesContainingFood()
+        energizers3D = gameLevel.tilesContainingFood()
             .filter(gameLevel::isEnergizerPosition)
             .map(tile -> createEnergizer3D(tile, radius, minScaling, maxScaling, ghostDressMaterials))
-            .toList());
-        energizers3D.trimToSize();
+            .collect(Collectors.toCollection(HashSet::new));
     }
 
     private Energizer3D createEnergizer3D(Vector2i tile, float energizerRadius, float minScaling, float maxScaling, Material[] ghostDressMaterials) {
@@ -639,7 +639,7 @@ public class GameLevel3D implements Disposable {
     public Optional<Bonus3D> bonus3D() { return Optional.ofNullable(bonus3D); }
     public Optional<LivesCounter3D> livesCounter3D() { return Optional.ofNullable(livesCounter3D); }
     public Set<Shape3D> pellets3D() { return Collections.unmodifiableSet(pellets3D); }
-    public List<Energizer3D> energizers3D() { return Collections.unmodifiableList(energizers3D); }
+    public Set<Energizer3D> energizers3D() { return Collections.unmodifiableSet(energizers3D); }
 
     public AnimationRegistry animationManager() { return animationRegistry; }
 
