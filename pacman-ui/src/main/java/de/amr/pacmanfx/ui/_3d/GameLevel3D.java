@@ -766,6 +766,7 @@ public class GameLevel3D implements Disposable {
     public void onGameOver(GameState state) {
         state.timer().restartSeconds(3);
         energizers3D().forEach(Energizer3D::hide);
+        stopSwirlAnimations();
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
         ui.theSound().stopAll();
         ui.theSound().play(SoundID.GAME_OVER);
