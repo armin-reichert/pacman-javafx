@@ -113,7 +113,7 @@ public class Obstacle {
 
     public Vector2f[] cornerCenterPoints() {
         var centerPoints = new LinkedHashSet<Vector2f>(); //TODO ArrayList?
-        float hts = (float) HTS;
+        float hts = HTS;
         for (ObstacleSegment segment : segments) {
             boolean up = segment.vector().y() < 0, down = segment.vector().y() > 0;
             byte code = segment.encoding();
