@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.lib.tilemap;
 
 import de.amr.pacmanfx.lib.RectShort;
+import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import org.tinylog.Logger;
 
@@ -110,17 +111,18 @@ public class Obstacle {
         throw new IllegalStateException("No corner tile at index " + segmentIndex);
     }
 
-    public Vector2i[] cornerCenters() {
-        var centers = new LinkedHashSet<Vector2i>();
+    public Vector2f[] cornerCenterPoints() {
+        var centerPoints = new LinkedHashSet<Vector2f>(); //TODO ArrayList?
+        float hts = (float) HTS;
         for (ObstacleSegment segment : segments) {
             boolean up = segment.vector().y() < 0, down = segment.vector().y() > 0;
             byte code = segment.encoding();
-            if (code == ARC_NW.$ && down) centers.add(segment.startPoint().plus(0, HTS));
-            if (code == ARC_SW.$ && down) centers.add(segment.startPoint().plus(HTS, 0));
-            if (code == ARC_SE.$ && up)   centers.add(segment.startPoint().plus(0, -HTS));
-            if (code == ARC_NE.$ && up)   centers.add(segment.startPoint().plus(-HTS, 0));
+            if (code == ARC_NW.$ && down) centerPoints.add(segment.startPoint().plus(0, hts));
+            if (code == ARC_SW.$ && down) centerPoints.add(segment.startPoint().plus(hts, 0));
+            if (code == ARC_SE.$ && up)   centerPoints.add(segment.startPoint().plus(0, -hts));
+            if (code == ARC_NE.$ && up)   centerPoints.add(segment.startPoint().plus(-hts, 0));
         }
-        return centers.toArray(Vector2i[]::new);
+        return centerPoints.toArray(Vector2f[]::new);
     }
 
     public Collection<Vector2i> computeInnerPolygon() {

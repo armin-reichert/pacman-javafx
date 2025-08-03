@@ -201,11 +201,11 @@ public class Maze3D extends Group {
             mazeGroup.getChildren().addAll(wall3D.base(), wall3D.top());
             return wall3D;
         });
-        r3D.createWallBetweenTiles(houseMinTile, houseMinTile.plus(2, 0), Wall3D.DEFAULT_WALL_THICKNESS);
-        r3D.createWallBetweenTiles(houseRightUpper.minus(2, 0), houseRightUpper, Wall3D.DEFAULT_WALL_THICKNESS);
-        r3D.createWallBetweenTiles(houseMinTile, houseLeftLower, Wall3D.DEFAULT_WALL_THICKNESS);
-        r3D.createWallBetweenTiles(houseLeftLower, houseMaxTile, Wall3D.DEFAULT_WALL_THICKNESS);
-        r3D.createWallBetweenTiles(houseMaxTile, houseRightUpper, Wall3D.DEFAULT_WALL_THICKNESS);
+        r3D.createWallBetweenTileCoordinates(houseMinTile, houseMinTile.plus(2, 0), Wall3D.DEFAULT_WALL_THICKNESS);
+        r3D.createWallBetweenTileCoordinates(houseRightUpper.minus(2, 0), houseRightUpper, Wall3D.DEFAULT_WALL_THICKNESS);
+        r3D.createWallBetweenTileCoordinates(houseMinTile, houseLeftLower, Wall3D.DEFAULT_WALL_THICKNESS);
+        r3D.createWallBetweenTileCoordinates(houseLeftLower, houseMaxTile, Wall3D.DEFAULT_WALL_THICKNESS);
+        r3D.createWallBetweenTileCoordinates(houseMaxTile, houseRightUpper, Wall3D.DEFAULT_WALL_THICKNESS);
 
         Color doorColor = getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR));
         var doorMaterial = coloredMaterial(doorColor);

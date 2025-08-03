@@ -33,7 +33,12 @@ import static de.amr.pacmanfx.Globals.TS;
  */
 public class TerrainRenderer3D {
 
-    private Callback<Wall3D, Wall3D> onWallCreated = wall3D -> wall3D;
+    private static Wall3D keepUnchanged(Wall3D wall3D) {
+        Logger.trace("Wall3D created: {}", wall3D);
+        return wall3D;
+    }
+
+    private Callback<Wall3D, Wall3D> onWallCreated = TerrainRenderer3D::keepUnchanged;
 
     public TerrainRenderer3D() {}
 
@@ -42,14 +47,20 @@ public class TerrainRenderer3D {
      *                 or {@code null} if no action is required on creation
      */
     public void setOnWallCreated(Callback<Wall3D, Wall3D> callback) {
-        onWallCreated = callback;
+        onWallCreated = callback != null ? callback : TerrainRenderer3D::keepUnchanged;
     }
 
-    public void addWallBetween(
-        Vector2i p1,
-        Vector2i p2,
-        double wallThickness)
-    {
+    public Wall3D createBoxWall(Vector2f center, double sizeX, double sizeY) {
+        Wall3D wall3D = Wall3D.createBoxWall(center, sizeX, sizeY);
+        return onWallCreated.call(wall3D);
+    }
+
+    public Wall3D createCylinderWall(Vector2f center, double radius) {
+        Wall3D wall3D = Wall3D.createCylinderWall(center, radius);
+        return onWallCreated.call(wall3D);
+    }
+
+    private void createWallBetween(Vector2f p1, Vector2f p2, double wallThickness) {
         if (p1.x() == p2.x()) { // vertical wall
             createBoxWall(p1.midpoint(p2), wallThickness, p1.manhattanDist(p2));
         } else if (p1.y() == p2.y()) { // horizontal wall
@@ -59,19 +70,15 @@ public class TerrainRenderer3D {
         }
     }
 
-    public Wall3D createWallBetweenTiles(
-        Vector2i tile1,
-        Vector2i tile2,
-        double wallThickness)
-    {
-        Vector2f center = tile1.midpoint(tile2).scaled(TS).plus(HTS, HTS);
-        if (tile1.y() == tile2.y()) { // horizontal wall
-            return createBoxWall(center, TS * tile1.manhattanDist(tile2) + wallThickness, wallThickness);
+    public Wall3D createWallBetweenTileCoordinates(Vector2i t1, Vector2i t2, double wallThickness) {
+        Vector2f center = t1.midpoint(t2).scaled(TS).plus(HTS, HTS);
+        if (t1.x() == t2.x()) { // vertical wall
+            return createBoxWall(center, wallThickness, TS * t1.manhattanDist(t2));
+        } else if (t1.y() == t2.y()) { // horizontal wall
+            return createBoxWall(center, TS * t1.manhattanDist(t2) + wallThickness, wallThickness);
+        } else {
+            throw new IllegalArgumentException("Cannot build wall between tiles %s and %s".formatted(t1, t2));
         }
-        else if (tile1.x() == tile2.x()) { // vertical wall
-            return createBoxWall(center, wallThickness, TS * tile1.manhattanDist(tile2));
-        }
-        throw new IllegalArgumentException("Cannot build wall between tiles %s and %s".formatted(tile1, tile2));
     }
 
     /**
@@ -89,14 +96,14 @@ public class TerrainRenderer3D {
         if (obstacle.isClosed() && !border) {
             //TODO provide general solution for obstacles with holes
             if ("dcgbfceb".equals(obstacle.encoding())) { // O-shape with hole
-                Vector2i[] corners = obstacle.cornerCenters();
-                for (Vector2i corner : corners) {
+                Vector2f[] corners = obstacle.cornerCenterPoints();
+                for (Vector2f corner : corners) {
                     createCylinderWall(corner, HTS);
                 }
-                addWallBetween(corners[0], corners[1], TS);
-                addWallBetween(corners[1], corners[2], TS);
-                addWallBetween(corners[2], corners[3], TS);
-                addWallBetween(corners[3], corners[0], TS);
+                createWallBetween(corners[0], corners[1], TS);
+                createWallBetween(corners[1], corners[2], TS);
+                createWallBetween(corners[2], corners[3], TS);
+                createWallBetween(corners[3], corners[0], TS);
             } else {
                 renderFilledObstacle(obstacle, cornerRadius);
             }
@@ -106,19 +113,19 @@ public class TerrainRenderer3D {
     }
 
     private void renderFilledObstacle(Obstacle obstacle, double cornerRadius) {
-        for (Vector2i corner : obstacle.cornerCenters()) {
+        for (Vector2f corner : obstacle.cornerCenterPoints()) {
             createCylinderWall(corner, cornerRadius);
         }
         obstacle.innerAreaRectangles().forEach(r -> createBoxWall(r.center(), r.width(), r.height()));
     }
 
     private void renderSegmentPath(Obstacle obstacle, double wallThickness) {
-        int r = HTS;
+        float r = HTS;
         for (ObstacleSegment segment : obstacle.segments()) {
             boolean counterClockwise = segment.ccw();
-            Vector2i start = segment.startPoint(), end = segment.endPoint();
+            Vector2f start = segment.startPoint().toVector2f(), end = segment.endPoint().toVector2f();
             if (segment.isStraightLine()) {
-                addWallBetween(start, end, wallThickness);
+                createWallBetween(start, end, wallThickness);
             }
             else if (segment.isNWCorner()) {
                 if (counterClockwise) {
@@ -151,19 +158,9 @@ public class TerrainRenderer3D {
         }
     }
 
-    private void addCorner(Vector2i center, Vector2i endPointH, Vector2i endPointV, double wallThickness) {
+    private void addCorner(Vector2f center, Vector2f endPointH, Vector2f endPointV, double wallThickness) {
         createBoxWall(center.midpoint(endPointH), center.manhattanDist(endPointH), wallThickness);
         createBoxWall(center.midpoint(endPointV), wallThickness, center.manhattanDist(endPointV));
         createCylinderWall(center, 0.5 * wallThickness);
-    }
-
-    public Wall3D createCylinderWall(Vector2i center, double radius) {
-        Wall3D wall3D = Wall3D.createCylinderWall(center, radius);
-        return onWallCreated != null ? onWallCreated.call(wall3D) : wall3D;
-    }
-
-    public Wall3D createBoxWall(Vector2f center, double sizeX, double sizeY) {
-        Wall3D wall3D = Wall3D.createBoxWall(center, sizeX, sizeY);
-        return onWallCreated != null ? onWallCreated.call(wall3D) : wall3D;
     }
 }

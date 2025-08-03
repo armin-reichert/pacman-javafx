@@ -59,7 +59,7 @@ public class Wall3D {
         return wall3D;
     }
 
-    public static Wall3D createCylinderWall(Vector2i center, double radius) {
+    public static Wall3D createCylinderWall(Vector2f center, double radius) {
         var wall3D = new Wall3D(WallType.CYLINDER);
         var base = wall3D.<Cylinder>base();
         base.setRadius(radius);
