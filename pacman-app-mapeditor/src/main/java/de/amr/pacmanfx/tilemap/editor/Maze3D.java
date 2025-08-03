@@ -157,10 +157,12 @@ public class Maze3D extends Group {
             wall3D.setBaseHeight(OBSTACLE_HEIGHT);
             wall3D.setBaseMaterial(wallBaseMaterial);
             wall3D.setTopMaterial(wallTopMaterial);
+            mazeGroup.getChildren().addAll(wall3D.base(), wall3D.top());
+            return wall3D;
         });
         for (Obstacle obstacle : worldMap.obstacles()) {
             boolean worldBorder = isWorldBorder(worldMap, obstacle);
-            r3D.renderObstacle3D(mazeGroup, obstacle, worldBorder, 2, HTS);
+            r3D.renderObstacle3D(obstacle, worldBorder, 2, HTS);
         }
         r3D.setOnWallCreated(null);
 
@@ -196,12 +198,14 @@ public class Maze3D extends Group {
             wall3D.setBaseMaterial(wallBaseMaterial);
             wall3D.setTopMaterial(wallTopMaterial);
             wall3D.setBaseHeight(HOUSE_WALL_HEIGHT);
+            mazeGroup.getChildren().addAll(wall3D.base(), wall3D.top());
+            return wall3D;
         });
-        r3D.createWallBetweenTiles(houseMinTile, houseMinTile.plus(2, 0), Wall3D.DEFAULT_WALL_THICKNESS).addToGroup(mazeGroup);
-        r3D.createWallBetweenTiles(houseRightUpper.minus(2, 0), houseRightUpper, Wall3D.DEFAULT_WALL_THICKNESS).addToGroup(mazeGroup);
-        r3D.createWallBetweenTiles(houseMinTile, houseLeftLower, Wall3D.DEFAULT_WALL_THICKNESS).addToGroup(mazeGroup);
-        r3D.createWallBetweenTiles(houseLeftLower, houseMaxTile, Wall3D.DEFAULT_WALL_THICKNESS).addToGroup(mazeGroup);
-        r3D.createWallBetweenTiles(houseMaxTile, houseRightUpper, Wall3D.DEFAULT_WALL_THICKNESS).addToGroup(mazeGroup);
+        r3D.createWallBetweenTiles(houseMinTile, houseMinTile.plus(2, 0), Wall3D.DEFAULT_WALL_THICKNESS);
+        r3D.createWallBetweenTiles(houseRightUpper.minus(2, 0), houseRightUpper, Wall3D.DEFAULT_WALL_THICKNESS);
+        r3D.createWallBetweenTiles(houseMinTile, houseLeftLower, Wall3D.DEFAULT_WALL_THICKNESS);
+        r3D.createWallBetweenTiles(houseLeftLower, houseMaxTile, Wall3D.DEFAULT_WALL_THICKNESS);
+        r3D.createWallBetweenTiles(houseMaxTile, houseRightUpper, Wall3D.DEFAULT_WALL_THICKNESS);
 
         Color doorColor = getColorFromMap(worldMap, LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, parseColor(MS_PACMAN_COLOR_DOOR));
         var doorMaterial = coloredMaterial(doorColor);

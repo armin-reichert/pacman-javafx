@@ -460,6 +460,8 @@ public class GameLevel3D implements Disposable {
             wall3D.setBaseMaterial(wallBaseMaterial);
             wall3D.setTopMaterial(wallTopMaterial);
             ++wall3DCount;
+            maze3D.getChildren().addAll(wall3D.base(), wall3D.top());
+            return wall3D;
         });
 
         createFloor3D();
@@ -472,7 +474,7 @@ public class GameLevel3D implements Disposable {
             // exclude house placeholder
             Vector2i startTile = tileAt(obstacle.startPoint().toVector2f());
             if (gameLevel.house().isPresent() && !gameLevel.house().get().isTileInHouseArea(startTile)) {
-                r3D.renderObstacle3D(maze3D, obstacle, isWorldBorder(gameLevel.worldMap(), obstacle), wallThickness, cornerRadius);
+                r3D.renderObstacle3D(obstacle, isWorldBorder(gameLevel.worldMap(), obstacle), wallThickness, cornerRadius);
             }
         }
         var passedTimeMillis = stopWatch.passedTime().toMillis();

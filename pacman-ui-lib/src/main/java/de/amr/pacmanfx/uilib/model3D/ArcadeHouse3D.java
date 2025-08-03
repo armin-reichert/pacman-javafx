@@ -116,12 +116,14 @@ public class ArcadeHouse3D extends Group implements Disposable {
             wall3D.bindBaseHeight(wallBaseHeightProperty);
             wall3D.setBaseMaterial(wallBaseMaterial);
             wall3D.setTopMaterial(wallTopMaterial);
+            getChildren().addAll(wall3D.top(), wall3D.base());
+            return wall3D;
         });
-        r3D.createWallBetweenTiles(p[0], p[1], wallThickness).addToGroup(this);
-        r3D.createWallBetweenTiles(p[2], p[3], wallThickness).addToGroup(this);
-        r3D.createWallBetweenTiles(p[3], p[5], wallThickness).addToGroup(this);
-        r3D.createWallBetweenTiles(p[0], p[4], wallThickness).addToGroup(this);
-        r3D.createWallBetweenTiles(p[4], p[5], wallThickness).addToGroup(this);
+        r3D.createWallBetweenTiles(p[0], p[1], wallThickness);
+        r3D.createWallBetweenTiles(p[2], p[3], wallThickness);
+        r3D.createWallBetweenTiles(p[3], p[5], wallThickness);
+        r3D.createWallBetweenTiles(p[0], p[4], wallThickness);
+        r3D.createWallBetweenTiles(p[4], p[5], wallThickness);
 
         door = createDoor(house.leftDoorTile(), house.rightDoorTile(), wallBaseHeightProperty.get());
 

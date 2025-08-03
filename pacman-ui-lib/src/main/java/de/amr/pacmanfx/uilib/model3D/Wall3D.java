@@ -8,7 +8,6 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import javafx.beans.property.DoubleProperty;
 import javafx.css.PseudoClass;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Material;
 import javafx.scene.shape.Box;
@@ -145,10 +144,6 @@ public class Wall3D {
         cylinder.translateYProperty().unbind();
         cylinder.translateZProperty().unbind();
         cylinder.setMaterial(null);
-    }
-
-    public void addToGroup(Group group) {
-        group.getChildren().addAll(base, top);
     }
 
     public void setBaseHeight(double baseHeight) {
