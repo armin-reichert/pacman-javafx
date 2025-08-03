@@ -105,18 +105,17 @@ public class TerrainRenderer3D {
                 createWallBetween(corners[2], corners[3], TS);
                 createWallBetween(corners[3], corners[0], TS);
             } else {
-                renderFilledObstacle(obstacle, cornerRadius);
+                // My way (c) for creating closed obstacles:
+                // Create a cylindric wall at each corner, use the rectangular partition of the inner area to
+                // fill the inner area with boxes.
+                for (Vector2f corner : obstacle.cornerCenterPoints()) {
+                    createCylinderWall(corner, cornerRadius);
+                }
+                obstacle.innerAreaRectangles().forEach(r -> createBoxWall(r.center(), r.width(), r.height()));
             }
         } else {
             renderSegmentPath(obstacle, wallThickness);
         }
-    }
-
-    private void renderFilledObstacle(Obstacle obstacle, double cornerRadius) {
-        for (Vector2f corner : obstacle.cornerCenterPoints()) {
-            createCylinderWall(corner, cornerRadius);
-        }
-        obstacle.innerAreaRectangles().forEach(r -> createBoxWall(r.center(), r.width(), r.height()));
     }
 
     private void renderSegmentPath(Obstacle obstacle, double wallThickness) {
@@ -129,38 +128,38 @@ public class TerrainRenderer3D {
             }
             else if (segment.isNWCorner()) {
                 if (counterClockwise) {
-                    addCorner(start.plus(-r, 0), start, end, wallThickness);
+                    createCornerWalls(start.plus(-r, 0), start, end, wallThickness);
                 } else {
-                    addCorner(start.plus(0, -r), end, start, wallThickness);
+                    createCornerWalls(start.plus(0, -r), end, start, wallThickness);
                 }
             }
             else if (segment.isSWCorner()) {
                 if (counterClockwise) {
-                    addCorner(start.plus(0, r), end, start, wallThickness);
+                    createCornerWalls(start.plus(0, r), end, start, wallThickness);
                 } else {
-                    addCorner(start.plus(-r, 0), start, end, wallThickness);
+                    createCornerWalls(start.plus(-r, 0), start, end, wallThickness);
                 }
             }
             else if (segment.isSECorner()) {
                 if (counterClockwise) {
-                    addCorner(start.plus(r, 0), start, end, wallThickness);
+                    createCornerWalls(start.plus(r, 0), start, end, wallThickness);
                 } else {
-                    addCorner(start.plus(0, r), end, start, wallThickness);
+                    createCornerWalls(start.plus(0, r), end, start, wallThickness);
                 }
             }
             else if (segment.isNECorner()) {
                 if (counterClockwise) {
-                    addCorner(start.plus(0, -r), end, start, wallThickness);
+                    createCornerWalls(start.plus(0, -r), end, start, wallThickness);
                 } else {
-                    addCorner(start.plus(r, 0), start, end, wallThickness);
+                    createCornerWalls(start.plus(r, 0), start, end, wallThickness);
                 }
             }
         }
     }
 
-    private void addCorner(Vector2f center, Vector2f endPointH, Vector2f endPointV, double wallThickness) {
+    private void createCornerWalls(Vector2f center, Vector2f endPointH, Vector2f endPointV, double wallThickness) {
         createBoxWall(center.midpoint(endPointH), center.manhattanDist(endPointH), wallThickness);
-        createBoxWall(center.midpoint(endPointV), wallThickness, center.manhattanDist(endPointV));
         createCylinderWall(center, 0.5 * wallThickness);
+        createBoxWall(center.midpoint(endPointV), wallThickness, center.manhattanDist(endPointV));
     }
 }
