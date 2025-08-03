@@ -43,6 +43,7 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -795,8 +796,20 @@ public class GameLevel3D implements Disposable {
         }
     }
 
+    //TODO why gets rendering so slow when draw mode is LINE?
     private void handleDrawModeChange(ObservableValue<? extends DrawMode> obs, DrawMode oldDrawMode, DrawMode newDrawMode) {
-        setShape3DDrawMode(root, pellets3D::contains, newDrawMode);
+        Predicate<Node> includeAll = shape3D -> false;
+        setDrawModeUnder(maze3D, pellets3D::contains, newDrawMode);
+        setDrawModeUnder(pac3D, includeAll, newDrawMode);
+        ghosts3D.forEach(ghost3D -> setDrawModeUnder(ghost3D, includeAll, newDrawMode));
+    }
+
+    private static void setDrawModeUnder(Node root, Predicate<Node> exclusionFilter, DrawMode drawMode) {
+        root.lookupAll("*").stream()
+            .filter(exclusionFilter.negate())
+            .forEach(node -> {
+                if (node instanceof Shape3D shape3D) shape3D.setDrawMode(drawMode);
+            });
     }
 
     // still work in progress...
