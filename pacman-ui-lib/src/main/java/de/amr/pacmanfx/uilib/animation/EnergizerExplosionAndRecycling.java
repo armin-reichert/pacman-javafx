@@ -13,7 +13,6 @@ import javafx.animation.Transition;
 import javafx.application.Platform;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
-import javafx.scene.effect.Bloom;
 import javafx.scene.paint.Material;
 import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
@@ -29,12 +28,16 @@ import static de.amr.pacmanfx.lib.UsefulFunctions.randomFloat;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static java.util.Objects.requireNonNull;
 
+/**
+ * When an energizer explodes, the particles are sucked in by 3 swirls inside the ghost house where they accumulate
+ * to colored ghost shapes.
+ */
 public class EnergizerExplosionAndRecycling extends ManagedAnimation {
 
-    public static final float PARTICLE_SWIRL_RADIUS = 6;
-    public static final float PARTICLE_SWIRL_HEIGHT = 12;
-    public static final float PARTICLE_SWIRL_RISING_SPEED = 0.5f;
-    public static final float PARTICLE_SWIRL_ROTATION_SEC = 1.0f;
+    public static final float SWIRL_RADIUS = 7;
+    public static final float SWIRL_HEIGHT = 12;
+    public static final float SWIRL_RISING_SPEED = 0.5f;
+    public static final float SWIRL_ROTATION_SEC = 1.0f;
 
     // Time includes movement of particles to the ghost house after the explosion
     private static final Duration TOTAL_DURATION = Duration.seconds(30);
@@ -60,9 +63,9 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
 
     public static class Particle extends Sphere implements Disposable {
         public boolean moving_home = false;
-        public boolean in_swirl = false;
+        public boolean part_of_swirl = false;
         public byte ghost_personality = -1;
-        public Point3D homePosition;
+        public Point3D houseTargetPosition;
         public Vec3f velocity;
 
         public Particle(double radius, Material material, Vec3f velocity, Point3D origin) {
@@ -77,9 +80,6 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
         @Override
         public void dispose() {
             setMaterial(null);
-            setTranslateX(0);
-            setTranslateY(0);
-            setTranslateZ(0);
         }
 
         public Point3D center() {
@@ -99,7 +99,6 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
     }
 
     private final Random rnd = new Random();
-
     private final ArcadeHouse3D house3D;
     private Point3D origin;
     private Vector2f[] ghostRevivalPositionCenters;
@@ -113,7 +112,7 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
 
     private class ParticlesMovement extends Transition {
 
-        private final List<Particle> particlesToDispose = new ArrayList<>();
+        private final List<Particle> trash = new ArrayList<>();
 
         public ParticlesMovement() {
             setCycleDuration(TOTAL_DURATION);
@@ -121,72 +120,67 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
 
         @Override
         protected void interpolate(double t) {
-            particlesToDispose.clear();
+            trash.clear();
             for (Particle particle : particles) {
                 if (particle.moving_home) {
                     boolean homePositionReached = moveHome(particle);
                     if (homePositionReached) {
-                        arrivedHome(particle);
+                        arrivedAtTargetPosition(particle);
+                        particle.moving_home = false;
+                        particle.part_of_swirl = true;
                     }
                 }
-                else if (particle.in_swirl) {
-                    particle.move();
-                    if (particle.getTranslateZ() < -PARTICLE_SWIRL_HEIGHT) {
-                        particle.setTranslateZ(0);
-                    }
+                else if (particle.part_of_swirl) {
+                    moveInsideSwirl(particle);
                 }
                 else {
                     particle.fly();
                     if (particleTouchesFloor.test(particle)) {
-                        landsOnFloor(particle);
+                        landedOnFloor(particle);
+                        particle.moving_home = true;
                     }
-                    // if felt outside world, remove it at some level
                     else if (particle.center().getZ() > 50) {
-                        particlesToDispose.add(particle);
+                        // if particle fell over world border, remove it at some z position under floor level
+                        trash.add(particle);
                     }
                 }
             }
-            if (!particlesToDispose.isEmpty()) {
+            if (!trash.isEmpty()) {
                 Platform.runLater(() -> {
-                    particles.removeAll(particlesToDispose);
-                    particlesToDispose.forEach(Particle::dispose);
-                    particlesGroup.getChildren().removeAll(particlesToDispose);
-                    Logger.info("{} particles disposed, t={}", particlesToDispose.size(), t);
-                    particlesToDispose.clear();
+                    particles.removeAll(trash);
+                    particlesGroup.getChildren().removeAll(trash);
+                    trash.forEach(Particle::dispose);
+                    Logger.info("{} particles disposed, t={}", trash.size(), t);
+                    trash.clear();
                 });
             }
         }
 
-        private void landsOnFloor(Particle particle) {
-            particle.setRadius(PARTICLE_RADIUS_RETURNING_HOME);
-            particle.setTranslateZ(-particle.getRadius());
+        private void landedOnFloor(Particle particle) {
             particle.ghost_personality = (byte) rnd.nextInt(4);
             particle.setMaterial(ghostDressMaterials[particle.ghost_personality]);
-            Bloom bloom = new Bloom();
-            bloom.setThreshold(0.5); //TODO any effect?
-            particle.setEffect(bloom);
-            Point3D baseCenter = new Point3D(
-                    ghostRevivalPositionCenters[particle.ghost_personality].x(),
-                    ghostRevivalPositionCenters[particle.ghost_personality].y(),
-                    0); // floor top is at z=0!
-            particle.homePosition = randomPointOnLateralSurface(baseCenter, 6, 10);
+            particle.setRadius(PARTICLE_RADIUS_RETURNING_HOME);
+            particle.setTranslateZ(-particle.getRadius()); // floor top is at z=0
+            var swirlCenter = new Point3D(
+                ghostRevivalPositionCenters[particle.ghost_personality].x(),
+                ghostRevivalPositionCenters[particle.ghost_personality].y(),
+                0); // floor top is at z=0
+            particle.houseTargetPosition = randomPointOnLateralSurface(swirlCenter, SWIRL_RADIUS, SWIRL_HEIGHT);
 
             float speed = rnd.nextFloat(PARTICLE_SPEED_MOVING_HOME_MIN, PARTICLE_SPEED_MOVING_HOME_MAX);
-            Point3D particleCenter = particle.center();
-            particle.velocity.x = (float) (particle.homePosition.getX() - particleCenter.getX());
-            particle.velocity.y = (float) (particle.homePosition.getY() - particleCenter.getY());
+            Point3D center = particle.center();
+            particle.velocity.x = (float) (particle.houseTargetPosition.getX() - center.getX());
+            particle.velocity.y = (float) (particle.houseTargetPosition.getY() - center.getY());
             particle.velocity.z = 0;
             particle.velocity.normalize().multiply(speed);
-
-            particle.moving_home = true;
         }
 
         private boolean moveHome(Particle particle) {
-            Point3D particleCenter = particle.center();
+            Point3D center = particle.center();
             // if target reached, move particle to its column group
             double distXY = Math.hypot(
-                particleCenter.getX() - particle.homePosition.getX(),
-                particleCenter.getY() - particle.homePosition.getY());
+                center.getX() - particle.houseTargetPosition.getX(),
+                center.getY() - particle.houseTargetPosition.getY());
             boolean homePositionReached = distXY < particle.velocity.magnitude();
             if (!homePositionReached) {
                 particle.move();
@@ -195,32 +189,31 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
         }
 
         /**
-         * @param baseCenter center of base circle
+         * @param center center of cylinder base
          * @param r radius
          * @param h height
          * @return random point on lateral surface of cylinder
          */
-        private Point3D randomPointOnLateralSurface(Point3D baseCenter, double r, double h) {
+        private Point3D randomPointOnLateralSurface(Point3D center, double r, double h) {
             double angle = Math.toRadians(rnd.nextInt(360));
             return new Point3D(
-                    baseCenter.getX() + r * Math.cos(angle),
-                    baseCenter.getY() + r * Math.sin(angle),
-                    rnd.nextDouble(h)
+                center.getX() + r * Math.cos(angle),
+                center.getY() + r * Math.sin(angle),
+                rnd.nextDouble(h)
             );
         }
 
-        private void arrivedHome(Particle particle) {
-            particlesGroup.getChildren().remove(particle); //TODO collect and remove?
+        private void arrivedAtTargetPosition(Particle particle) {
             Group swirl = house3D.particleSwirls().get(swirlIndex(particle.ghost_personality));
-            swirl.getChildren().add(particle);
-            double phi = rnd.nextDouble(Math.TAU);
-            particle.setTranslateX(PARTICLE_SWIRL_RADIUS * Math.cos(phi));
-            particle.setTranslateY(PARTICLE_SWIRL_RADIUS * Math.sin(phi));
-            particle.setTranslateZ(-rnd.nextDouble(PARTICLE_SWIRL_HEIGHT));
+            particle.setTranslateX(particle.houseTargetPosition.getX() - swirl.getTranslateX());
+            particle.setTranslateY(particle.houseTargetPosition.getY() - swirl.getTranslateY());
+            particle.setTranslateZ(particle.houseTargetPosition.getZ());
             particle.velocity.x = particle.velocity.y = 0;
-            particle.velocity.z = -PARTICLE_SWIRL_RISING_SPEED;
-            particle.moving_home = false;
-            particle.in_swirl = true;
+            particle.velocity.z = -SWIRL_RISING_SPEED;
+            Platform.runLater(() -> {
+                particlesGroup.getChildren().remove(particle);
+                swirl.getChildren().add(particle);
+            });
         }
 
         private int swirlIndex(int personality) {
@@ -230,6 +223,13 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
                 case ORANGE_GHOST_POKEY -> 2;
                 default -> throw new IllegalArgumentException("Illegal ghost personality: " + personality);
             };
+        }
+
+        private void moveInsideSwirl(Particle particle) {
+            particle.move();
+            if (particle.getTranslateZ() < -SWIRL_HEIGHT) {
+                particle.setTranslateZ(0);
+            }
         }
 
         @Override

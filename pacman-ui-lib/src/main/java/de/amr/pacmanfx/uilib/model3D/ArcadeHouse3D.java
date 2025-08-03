@@ -148,7 +148,7 @@ public class ArcadeHouse3D extends Group implements Disposable {
 
         createSwirls(gameLevel);
 
-        Duration rotationTime = Duration.seconds(EnergizerExplosionAndRecycling.PARTICLE_SWIRL_ROTATION_SEC);
+        Duration rotationTime = Duration.seconds(EnergizerExplosionAndRecycling.SWIRL_ROTATION_SEC);
         for (int i = 0; i < swirls.length; ++i) {
             final int index = i;
             swirlAnimations.add(new ManagedAnimation(animationRegistry, "Swirl_%d".formatted(i)) {
