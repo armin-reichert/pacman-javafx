@@ -125,6 +125,18 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
 
         public ParticlesMovement() {
             setCycleDuration(TOTAL_DURATION);
+            setOnFinished(e -> {
+                trash.clear();
+                for (Particle particle : particles) {
+                    if (!particle.part_of_swirl) {
+                        trash.add(particle);
+                    }
+                }
+                Platform.runLater(() -> {
+                    trash.forEach(Particle::dispose);
+                    trash.clear();
+                });
+            });
         }
 
         @Override
