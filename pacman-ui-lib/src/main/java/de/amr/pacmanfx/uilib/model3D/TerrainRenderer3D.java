@@ -8,7 +8,6 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.Obstacle;
 import de.amr.pacmanfx.lib.tilemap.ObstacleSegment;
-import javafx.scene.Group;
 import javafx.util.Callback;
 import org.tinylog.Logger;
 
@@ -16,14 +15,32 @@ import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 
 /**
- * Renders 3D terrain.
+ * Renders 3D terrain. To add the created walls to some group, use the callback function.
+ * <p>Example:
+ * <pre>
+ *     Material baseMaterial = ...;
+ *     Material topMaterial = ...;
+ *     Group parent = new Group();
+ *     var r3D = new TerrainRenderer();
+ *     r3D.setOnWallCreated(wall -> {
+ *        wall.setBaseMaterial(baseMaterial);
+ *        wall.setTopMaterial(topMaterial;
+ *        parent.getChildren().addAll(wall.base(), wall.top());
+ *        return wall;
+ *     });
+ * </pre>
+ * </p>
  */
 public class TerrainRenderer3D {
 
-    private Callback<Wall3D, Wall3D> onWallCreated = wall3D -> null;
+    private Callback<Wall3D, Wall3D> onWallCreated = wall3D -> wall3D;
 
     public TerrainRenderer3D() {}
 
+    /**
+     * @param callback a callback function which is applied to each wall on creation
+     *                 or {@code null} if no action is required on creation
+     */
     public void setOnWallCreated(Callback<Wall3D, Wall3D> callback) {
         onWallCreated = callback;
     }
@@ -34,9 +51,9 @@ public class TerrainRenderer3D {
         double wallThickness)
     {
         if (p1.x() == p2.x()) { // vertical wall
-            createBoxWall(p1.midpoint(p2), wallThickness, Math.abs(p1.y() - p2.y()));
+            createBoxWall(p1.midpoint(p2), wallThickness, p1.manhattanDist(p2));
         } else if (p1.y() == p2.y()) { // horizontal wall
-            createBoxWall(p1.midpoint(p2), Math.abs(p1.x() - p2.x()), wallThickness);
+            createBoxWall(p1.midpoint(p2), p1.manhattanDist(p2), wallThickness);
         } else {
             Logger.error("Cannot add horizontal/vertical wall between {} and {}", p1, p2);
         }
@@ -49,12 +66,10 @@ public class TerrainRenderer3D {
     {
         Vector2f center = tile1.midpoint(tile2).scaled(TS).plus(HTS, HTS);
         if (tile1.y() == tile2.y()) { // horizontal wall
-            int length = TS * Math.abs((tile2.x() - tile1.x()));
-            return createBoxWall(center, length + wallThickness, wallThickness);
+            return createBoxWall(center, TS * tile1.manhattanDist(tile2) + wallThickness, wallThickness);
         }
         else if (tile1.x() == tile2.x()) { // vertical wall
-            int length = TS * Math.abs((tile2.y() - tile1.y()));
-            return createBoxWall(center, wallThickness, length);
+            return createBoxWall(center, wallThickness, TS * tile1.manhattanDist(tile2));
         }
         throw new IllegalArgumentException("Cannot build wall between tiles %s and %s".formatted(tile1, tile2));
     }
@@ -72,18 +87,16 @@ public class TerrainRenderer3D {
         double cornerRadius)
     {
         if (obstacle.isClosed() && !border) {
-            //var obstacleGroup = new Group();
             //TODO provide general solution for obstacles with holes
             if ("dcgbfceb".equals(obstacle.encoding())) { // O-shape with hole
-                Vector2i[] cornerCenters = obstacle.cornerCenters();
-                for (Vector2i center : cornerCenters) {
-                    Wall3D cornerWall = createCylinderWall(center, HTS);
-                    //obstacleGroup.getChildren().addAll(cornerWall.base(), cornerWall.top());
+                Vector2i[] corners = obstacle.cornerCenters();
+                for (Vector2i corner : corners) {
+                    createCylinderWall(corner, HTS);
                 }
-                addWallBetween(cornerCenters[0], cornerCenters[1], TS);
-                addWallBetween(cornerCenters[1], cornerCenters[2], TS);
-                addWallBetween(cornerCenters[2], cornerCenters[3], TS);
-                addWallBetween(cornerCenters[3], cornerCenters[0], TS);
+                addWallBetween(corners[0], corners[1], TS);
+                addWallBetween(corners[1], corners[2], TS);
+                addWallBetween(corners[2], corners[3], TS);
+                addWallBetween(corners[3], corners[0], TS);
             } else {
                 renderFilledObstacle(obstacle, cornerRadius);
             }
@@ -93,8 +106,8 @@ public class TerrainRenderer3D {
     }
 
     private void renderFilledObstacle(Obstacle obstacle, double cornerRadius) {
-        for (Vector2i cornerCenter : obstacle.cornerCenters()) {
-            createCylinderWall(cornerCenter, cornerRadius);
+        for (Vector2i corner : obstacle.cornerCenters()) {
+            createCylinderWall(corner, cornerRadius);
         }
         obstacle.innerAreaRectangles().forEach(r -> createBoxWall(r.center(), r.width(), r.height()));
     }
@@ -145,18 +158,12 @@ public class TerrainRenderer3D {
     }
 
     public Wall3D createCylinderWall(Vector2i center, double radius) {
-        var wall3D = Wall3D.createCylinderWall(center, radius);
-        if (onWallCreated != null) {
-            return onWallCreated.call(wall3D);
-        }
-        return wall3D;
+        Wall3D wall3D = Wall3D.createCylinderWall(center, radius);
+        return onWallCreated != null ? onWallCreated.call(wall3D) : wall3D;
     }
 
     public Wall3D createBoxWall(Vector2f center, double sizeX, double sizeY) {
-        var wall3D = Wall3D.createBoxWall(center, sizeX, sizeY);
-        if (onWallCreated != null) {
-            return onWallCreated.call(wall3D);
-        }
-        return wall3D;
+        Wall3D wall3D = Wall3D.createBoxWall(center, sizeX, sizeY);
+        return onWallCreated != null ? onWallCreated.call(wall3D) : wall3D;
     }
 }
