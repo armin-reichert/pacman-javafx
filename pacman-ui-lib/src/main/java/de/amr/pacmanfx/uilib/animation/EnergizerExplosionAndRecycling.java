@@ -13,6 +13,7 @@ import javafx.animation.Transition;
 import javafx.application.Platform;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
+import javafx.scene.effect.Glow;
 import javafx.scene.paint.Material;
 import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
@@ -62,6 +63,9 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
     private static final float GRAVITY_Z = 0.18f;
 
     public static class Particle extends Sphere implements Disposable {
+
+        private static final Random RND = new Random();
+
         public boolean moving_home = false;
         public boolean part_of_swirl = false;
         public byte ghost_personality = -1;
@@ -75,6 +79,11 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
             setTranslateX(origin.getX());
             setTranslateY(origin.getY());
             setTranslateZ(origin.getZ());
+            setEffect(randomGlow());
+        }
+
+        private Glow randomGlow() {
+            return new Glow(0.5 + RND.nextFloat(0.5f));
         }
 
         @Override
