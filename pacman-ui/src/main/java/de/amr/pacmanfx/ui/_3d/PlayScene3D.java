@@ -497,7 +497,10 @@ public class PlayScene3D implements GameScene {
                     .findFirst()
                     .ifPresent(this::eatPellet3D);
             }
-            ui.theSound().loop(SoundID.PAC_MAN_MUNCHING);
+            if (!ui.theSound().isPlaying(SoundID.PAC_MAN_MUNCHING)) {
+                ui.theSound().loop(SoundID.PAC_MAN_MUNCHING);
+                Logger.info("Play munching sound, starving ticks={}", theGameContext().theGameLevel().pac().starvingTicks());
+            }
         }
     }
 
@@ -597,8 +600,9 @@ public class PlayScene3D implements GameScene {
         }
 
         // TODO Still not sure how to do this right
-        if (pac.starvingTicks() > 10) {
+        if (pac.starvingTicks() >= 10 && !ui.theSound().isPaused(SoundID.PAC_MAN_MUNCHING)) {
             ui.theSound().pause(SoundID.PAC_MAN_MUNCHING);
+            Logger.info("Munching sound paused, starving ticks={}", pac.starvingTicks());
         }
 
         boolean isGhostReturningHome = gameContext().theGameLevel().pac().isAlive()

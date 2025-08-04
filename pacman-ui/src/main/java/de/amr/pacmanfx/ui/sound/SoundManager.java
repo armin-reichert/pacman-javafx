@@ -10,9 +10,12 @@ public interface SoundManager extends Disposable {
     BooleanProperty mutedProperty();
     default void play(Object id) { play(id, 1); }
     void play(Object id, int repetitions);
+    boolean isPlaying(Object id);
     default void loop(Object id) { play(id, MediaPlayer.INDEFINITE); }
     void pause(Object id);
+    boolean isPaused(Object id);
     void stop(Object id);
+    boolean isStopped(Object id);
     void stopAll();
     void stopVoice();
     void playVoice(SoundID voiceID, double delaySeconds);

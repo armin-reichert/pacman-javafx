@@ -130,6 +130,16 @@ public class DefaultSoundManager implements SoundManager {
     }
 
     @Override
+    public boolean isPlaying(Object id) {
+        requireNonNull(id);
+        Object value = soundMap.get(id);
+        if (value instanceof MediaPlayer mediaPlayer) {
+            return mediaPlayer.getStatus() ==  MediaPlayer.Status.PLAYING;
+        }
+        return false;
+    }
+
+    @Override
     public void pause(Object id) {
         requireNonNull(id);
         Object value = soundMap.get(id);
@@ -143,6 +153,16 @@ public class DefaultSoundManager implements SoundManager {
     }
 
     @Override
+    public boolean isPaused(Object id) {
+        requireNonNull(id);
+        Object value = soundMap.get(id);
+        if (value instanceof MediaPlayer mediaPlayer) {
+            return mediaPlayer.getStatus() ==  MediaPlayer.Status.PAUSED;
+        }
+        return false;
+    }
+
+    @Override
     public void stop(Object id)  {
         requireNonNull(id);
         Object value = soundMap.get(id);
@@ -153,6 +173,16 @@ public class DefaultSoundManager implements SoundManager {
         else if (value instanceof URL) {
             Logger.warn("Stopping audio clip with ID '{}' is not supported", id);
         }
+    }
+
+    @Override
+    public boolean isStopped(Object id) {
+        requireNonNull(id);
+        Object value = soundMap.get(id);
+        if (value instanceof MediaPlayer mediaPlayer) {
+            return mediaPlayer.getStatus() ==  MediaPlayer.Status.STOPPED;
+        }
+        return false;
     }
 
     @Override
