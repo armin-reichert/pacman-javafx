@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.lib.nes;
 
-import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
+import de.amr.pacmanfx.lib.RandomNumberSupport;
 
 /**
  * The color schemes used in the Tengen Ms. Pac-Man maps. That was quite some work to fiddle them out.
@@ -52,7 +52,7 @@ public enum NES_ColorScheme {
 
     public static NES_ColorScheme randomScheme() {
         // ignore first entry (black white)
-        return values()[randomInt(1, values().length)];
+        return values()[RandomNumberSupport.randomInt(1, values().length)];
     }
 
     public String fillColorRGB() { return fillColor; }

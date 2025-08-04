@@ -4,10 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tilemap.editor;
 
-import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.RectShort;
-import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.lib.*;
 import de.amr.pacmanfx.lib.tilemap.*;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer;
@@ -23,7 +20,7 @@ import java.util.Set;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
+import static de.amr.pacmanfx.lib.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
 import static de.amr.pacmanfx.tilemap.editor.ArcadeMap.SPRITE_SHEET;
 

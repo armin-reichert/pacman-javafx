@@ -6,6 +6,7 @@ package de.amr.pacmanfx.model.actors;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.Direction;
+import de.amr.pacmanfx.lib.RandomNumberSupport;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
@@ -24,7 +25,6 @@ import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.Validations.*;
 import static de.amr.pacmanfx.lib.Direction.*;
-import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static java.util.Objects.requireNonNull;
 
@@ -162,7 +162,7 @@ public abstract class Ghost extends MovingActor implements Animated {
     }
 
     private Direction pseudoRandomDirection() {
-        int rnd = randomInt(0, 1000);
+        int rnd = RandomNumberSupport.randomInt(0, 1000);
         if (rnd < 163)             return UP;
         if (rnd < 163 + 252)       return RIGHT;
         if (rnd < 163 + 252 + 285) return DOWN;

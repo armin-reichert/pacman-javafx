@@ -6,8 +6,6 @@ package de.amr.pacmanfx.lib;
 
 import de.amr.pacmanfx.Globals;
 
-import java.util.Random;
-
 import static java.util.Objects.requireNonNull;
 
 public interface UsefulFunctions {
@@ -48,36 +46,6 @@ public interface UsefulFunctions {
      */
     static float tiles_to_px(double tiles) {
         return (float) tiles * Globals.TS;
-    }
-
-    /**
-     * @param min left interval bound
-     * @param maxExclusive right (open) interval bound
-     * @return Random integer number from right-open interval <code>[a; b[</code>. Interval bounds are rearranged to
-     * guarantee <code>a<=b</code>
-     */
-    static int randomInt(int min, int maxExclusive) {
-        if (min > maxExclusive) {
-            var tmp = min;
-            min = maxExclusive;
-            maxExclusive = tmp;
-        }
-        return min + new Random().nextInt(maxExclusive - min);
-    }
-
-    /**
-     * @param min left interval bound
-     * @param maxExclusive right (open) interval bound
-     * @return Random floating-point number from right-open interval <code>[a; b[</code>. Interval bounds are rearranged
-     * to guarantee <code>a<=b</code>
-     */
-    static float randomFloat(float min, float maxExclusive) {
-        if (min > maxExclusive) {
-            var tmp = min;
-            min = maxExclusive;
-            maxExclusive = tmp;
-        }
-        return min + (maxExclusive - min) * new Random().nextFloat();
     }
 
     static boolean isEven(int n) {

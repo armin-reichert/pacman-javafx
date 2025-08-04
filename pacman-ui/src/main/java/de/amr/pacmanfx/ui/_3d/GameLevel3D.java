@@ -5,10 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.controller.GameState;
-import de.amr.pacmanfx.lib.Disposable;
-import de.amr.pacmanfx.lib.StopWatch;
-import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.lib.*;
 import de.amr.pacmanfx.lib.tilemap.Obstacle;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
@@ -48,7 +45,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
+import static de.amr.pacmanfx.lib.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static de.amr.pacmanfx.uilib.Ufx.*;
 import static java.util.Objects.requireNonNull;

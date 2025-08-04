@@ -26,7 +26,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
-import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
+import static de.amr.pacmanfx.lib.RandomNumberSupport.randomByte;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
@@ -594,7 +594,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         if (levelNumber - 1 <= maxBonus) {
             return (byte) (levelNumber - 1);
         }
-        return (byte) randomInt(0, maxBonus);
+        return randomByte(0, maxBonus + 1);
     }
 
     @Override

@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEventType;
+import de.amr.pacmanfx.lib.RandomNumberSupport;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.TerrainTile;
@@ -27,8 +28,8 @@ import java.util.Set;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
+import static de.amr.pacmanfx.lib.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.lib.UsefulFunctions.halfTileRightOf;
-import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static de.amr.pacmanfx.lib.Waypoint.wp;
 import static java.util.Objects.requireNonNull;
 

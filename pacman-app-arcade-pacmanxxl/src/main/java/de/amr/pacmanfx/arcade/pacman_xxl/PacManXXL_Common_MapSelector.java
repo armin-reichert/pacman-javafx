@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
+import static de.amr.pacmanfx.lib.RandomNumberSupport.randomInt;
 import static java.util.Objects.requireNonNull;
 
 public class PacManXXL_Common_MapSelector implements MapSelector {

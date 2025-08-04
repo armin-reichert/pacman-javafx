@@ -21,11 +21,10 @@ import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.function.Predicate;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.lib.UsefulFunctions.randomFloat;
+import static de.amr.pacmanfx.lib.RandomNumberSupport.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -62,9 +61,6 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
     private static final float GRAVITY_Z = 0.18f;
 
     public static class Particle extends Sphere implements Disposable {
-
-        private static final Random RND = new Random();
-
         public boolean moving_home = false;
         public boolean part_of_swirl = false;
         public byte ghost_personality = -1;
@@ -82,7 +78,7 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
         }
 
         private Glow randomGlow() {
-            return new Glow(0.5 + RND.nextFloat(0.5f));
+            return new Glow(0.5 + randomFloat(0, 0.5f));
         }
 
         @Override
@@ -106,7 +102,6 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
         }
     }
 
-    private final Random rnd = new Random();
     private final ArcadeHouse3D house3D;
     private Point3D origin;
     private Vector2f[] ghostRevivalPositionCenters;
@@ -177,7 +172,7 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
         }
 
         private void landedOnFloor(Particle particle) {
-            particle.ghost_personality = (byte) rnd.nextInt(4);
+            particle.ghost_personality = randomByte(0, 4);
             particle.setMaterial(ghostDressMaterials[particle.ghost_personality]);
             particle.setRadius(PARTICLE_RADIUS_RETURNING_HOME);
             particle.setTranslateZ(-particle.getRadius()); // floor top is at z=0
@@ -187,7 +182,7 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
                 0); // floor top is at z=0
             particle.houseTargetPosition = randomPointOnLateralSurface(swirlCenter, SWIRL_RADIUS, SWIRL_HEIGHT);
 
-            float speed = rnd.nextFloat(PARTICLE_SPEED_MOVING_HOME_MIN, PARTICLE_SPEED_MOVING_HOME_MAX);
+            float speed = randomFloat(PARTICLE_SPEED_MOVING_HOME_MIN, PARTICLE_SPEED_MOVING_HOME_MAX);
             Point3D center = particle.center();
             particle.velocity.x = (float) (particle.houseTargetPosition.getX() - center.getX());
             particle.velocity.y = (float) (particle.houseTargetPosition.getY() - center.getY());
@@ -215,11 +210,11 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
          * @return random point on lateral surface of cylinder
          */
         private Point3D randomPointOnLateralSurface(Point3D center, double r, double h) {
-            double angle = Math.toRadians(rnd.nextInt(360));
+            double angle = Math.toRadians(randomInt(0, 360));
             return new Point3D(
                 center.getX() + r * Math.cos(angle),
                 center.getY() + r * Math.sin(angle),
-                rnd.nextDouble(h)
+                randomFloat(0, (float) h)
             );
         }
 
@@ -271,14 +266,14 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
         }
 
         private double randomParticleRadius() {
-            double scaling = rnd.nextGaussian(2, 0.1);
+            double scaling = RND.nextGaussian(2, 0.1);
             scaling = Math.clamp(scaling, 0.5, 4);
             return scaling * PARTICLE_MEAN_RADIUS_UNSCALED;
         }
 
         private Vec3f randomParticleVelocity() {
-            int xDir = rnd.nextBoolean() ? -1 : 1;
-            int yDir = rnd.nextBoolean() ? -1 : 1;
+            int xDir = RND.nextBoolean() ? -1 : 1;
+            int yDir = RND.nextBoolean() ? -1 : 1;
             return new Vec3f(
                 xDir * randomFloat(PARTICLE_SPEED_EXPLODING_XY_MIN, PARTICLE_SPEED_EXPLODING_XY_MAX),
                 yDir * randomFloat(PARTICLE_SPEED_EXPLODING_XY_MIN, PARTICLE_SPEED_EXPLODING_XY_MAX),
