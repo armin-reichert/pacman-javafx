@@ -29,8 +29,8 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     }
 
     @Override
-    protected GameLevel3D createGameLevel3D(Group root) {
-        return new TengenMsPacMan_GameLevel3D(ui, root);
+    protected GameLevel3D createGameLevel3D() {
+        return new TengenMsPacMan_GameLevel3D(ui);
     }
 
     @Override

@@ -8,7 +8,6 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._3d.GameLevel3D;
-import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.ImageView;
 
@@ -18,8 +17,8 @@ import static de.amr.pacmanfx.ui._2d.GameRenderer.fillCanvas;
 
 public class TengenMsPacMan_GameLevel3D extends GameLevel3D {
 
-    public TengenMsPacMan_GameLevel3D(GameUI ui, Group root) {
-        super(ui, root);
+    public TengenMsPacMan_GameLevel3D(GameUI ui) {
+        super(ui);
         TengenMsPacMan_GameModel game = ui.theGameContext().theGame();
         if (!game.optionsAreInitial()) {
             addGameInfoView();
@@ -50,6 +49,6 @@ public class TengenMsPacMan_GameLevel3D extends GameLevel3D {
         imageView.setTranslateY((gameLevel.worldMap().numRows() - 2) * TS);
         imageView.setTranslateZ(-floor3D.getDepth());
 
-        root.getChildren().add(imageView);
+        getChildren().add(imageView);
     }
 }

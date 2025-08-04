@@ -104,7 +104,7 @@ public class PlayScene3D implements GameScene {
     protected final SubScene subScene;
     protected final PerspectiveCamera camera = new PerspectiveCamera(true);
     protected final ActionBindingManager actionBindings;
-    protected final Group gameLevel3DRoot = new Group();
+    protected final Group gameLevel3DParent = new Group();
     protected GameLevel3D gameLevel3D;
     protected Scores3D scores3D;
 
@@ -129,16 +129,16 @@ public class PlayScene3D implements GameScene {
         scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
         scores3D.rotateProperty().bind(camera.rotateProperty());
 
-        scores3D.translateXProperty().bind(gameLevel3DRoot.translateXProperty().add(TS));
-        scores3D.translateYProperty().bind(gameLevel3DRoot.translateYProperty().subtract(4.5 * TS));
-        scores3D.translateZProperty().bind(gameLevel3DRoot.translateZProperty().subtract(4.5 * TS));
+        scores3D.translateXProperty().bind(gameLevel3DParent.translateXProperty().add(TS));
+        scores3D.translateYProperty().bind(gameLevel3DParent.translateYProperty().subtract(4.5 * TS));
+        scores3D.translateZProperty().bind(gameLevel3DParent.translateZProperty().subtract(4.5 * TS));
         scores3D.setVisible(false);
 
         // Just for debugging and posing
         var coordinateSystem = new CoordinateSystem();
         coordinateSystem.visibleProperty().bind(ui.property3DAxesVisible());
 
-        root.getChildren().setAll(gameLevel3DRoot, scores3D, coordinateSystem);
+        root.getChildren().setAll(gameLevel3DParent, scores3D, coordinateSystem);
     }
 
     public ObjectProperty<PerspectiveID> perspectiveIDProperty() {
@@ -310,7 +310,7 @@ public class PlayScene3D implements GameScene {
             gameLevel3D.dispose();
             gameLevel3D = null;
         }
-        gameLevel3DRoot.getChildren().clear();
+        gameLevel3DParent.getChildren().clear();
     }
 
     @Override
@@ -534,21 +534,23 @@ public class PlayScene3D implements GameScene {
         ui.updateGameScene(true);
     }
 
-    protected GameLevel3D createGameLevel3D(Group root) {
-        return new GameLevel3D(ui, root);
+    protected GameLevel3D createGameLevel3D() {
+        return new GameLevel3D(ui);
     }
 
     protected void replaceGameLevel3D() {
         if (gameLevel3D != null) {
             Logger.info("Replacing existing game level 3D");
-            gameLevel3DRoot.getChildren().clear();
+            gameLevel3D.getChildren().clear();
             gameLevel3D.dispose();
             Logger.info("Disposed old game level 3D");
         } else {
             Logger.info("Creating new game level 3D");
         }
-        gameLevel3D = createGameLevel3D(gameLevel3DRoot);
+        gameLevel3D = createGameLevel3D();
         Logger.info("Created new game level 3D");
+
+        gameLevel3DParent.getChildren().setAll(gameLevel3D);
 
         gameLevel3D.pac3D().init();
         gameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(gameContext().theGameLevel()));
@@ -631,11 +633,11 @@ public class PlayScene3D implements GameScene {
 
     protected void fadeInGameLevel3D() {
         initPerspective();
-        gameLevel3D.root().setVisible(false);
+        gameLevel3D.setVisible(false);
         scores3D.setVisible(false);
         subScene.setFill(SUB_SCENE_FILL_DARK);
         var makeVisibleAfterDelay = Ufx.pauseSec(0.5, () -> {
-            gameLevel3D.root().setVisible(true);
+            gameLevel3D.setVisible(true);
             scores3D.setVisible(true);
         });
         var fadeFillColorIn = new Timeline(

@@ -5,7 +5,10 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.controller.GameState;
-import de.amr.pacmanfx.lib.*;
+import de.amr.pacmanfx.lib.Disposable;
+import de.amr.pacmanfx.lib.StopWatch;
+import de.amr.pacmanfx.lib.Vector2f;
+import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.Obstacle;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
@@ -53,7 +56,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * 3D representation of game level.
  */
-public class GameLevel3D implements Disposable {
+public class GameLevel3D extends Group implements Disposable {
 
     private final DoubleProperty  houseBaseHeightProperty = new SimpleDoubleProperty(Wall3D.DEFAULT_BASE_HEIGHT);
     private final BooleanProperty houseLightOnProperty    = new SimpleBooleanProperty(false);
@@ -63,7 +66,6 @@ public class GameLevel3D implements Disposable {
     private final DoubleProperty  wallOpacityProperty     = new SimpleDoubleProperty(1);
 
     protected final GameUI ui;
-    protected final Group root;
     protected final GameLevel gameLevel;
     protected final WorldMapColorScheme colorScheme;
 
@@ -161,7 +163,7 @@ public class GameLevel3D implements Disposable {
         }
 
         private Animation levelSpinningAroundAxis(Point3D axis) {
-            var spin360 = new RotateTransition(Duration.seconds(SPINNING_SECONDS), root);
+            var spin360 = new RotateTransition(Duration.seconds(SPINNING_SECONDS), GameLevel3D.this);
             spin360.setAxis(axis);
             spin360.setFromAngle(0);
             spin360.setToAngle(360);
@@ -221,11 +223,9 @@ public class GameLevel3D implements Disposable {
 
     /**
      * @param ui the game UI
-     * @param root a group provided by the play scene serving as the root of the tree representing the 3D game level
      */
-    public GameLevel3D(GameUI ui, Group root) {
+    public GameLevel3D(GameUI ui) {
         this.ui = requireNonNull(ui);
-        this.root = requireNonNull(root);
         this.gameLevel = requireNonNull(ui.theGameContext().theGameLevel());
 
         wallOpacityProperty.bind(ui.property3DWallOpacity());
@@ -236,7 +236,7 @@ public class GameLevel3D implements Disposable {
         houseOpenProperty.addListener(this::handleHouseOpenChange);
         ui.property3DDrawMode().addListener(this::handleDrawModeChange);
 
-        root.setMouseTransparent(true); // this increases performance, they say...
+        setMouseTransparent(true); // this increases performance, they say...
 
         colorScheme = createWorldMapColorScheme();
         createMaterials();
@@ -260,24 +260,20 @@ public class GameLevel3D implements Disposable {
         levelCompletedFullAnimation = new LevelCompletedAnimation(animationRegistry);
         levelCompletedShortAnimation = new LevelCompletedAnimationShort(animationRegistry);
 
-        root.getChildren().add(ambientLight);
-        root.getChildren().add(levelCounter3D);
-        root.getChildren().add(livesCounter3D);
-        root.getChildren().addAll(pac3D, pac3D.light());
-        root.getChildren().addAll(ghosts3D);
-        root.getChildren().addAll(house3D.particleSwirls());
-        root.getChildren().add(particleGroupsContainer);
-        root.getChildren().addAll(energizers3D.stream().map(Energizer3D::shape).toList());
-        root.getChildren().addAll(pellets3D);
+        getChildren().add(ambientLight);
+        getChildren().add(levelCounter3D);
+        getChildren().add(livesCounter3D);
+        getChildren().addAll(pac3D, pac3D.light());
+        getChildren().addAll(ghosts3D);
+        getChildren().addAll(house3D.particleSwirls());
+        getChildren().add(particleGroupsContainer);
+        getChildren().addAll(energizers3D.stream().map(Energizer3D::shape).toList());
+        getChildren().addAll(pellets3D);
         // Note: The order in which children are added to the root matters!
         // Walls and house must be added *after* the actors and swirls, otherwise the transparency is not working correctly.
-        root.getChildren().addAll(floor3D, maze3D);
+        getChildren().addAll(floor3D, maze3D);
 
         house3D.startSwirlAnimations();
-    }
-
-    public Group root() {
-        return root;
     }
 
     private void createMaterials() {
@@ -746,7 +742,7 @@ public class GameLevel3D implements Disposable {
     public void showAnimatedMessage(String messageText, float displaySeconds, double centerX, double centerY) {
         if (messageView != null) {
             messageView.dispose();
-            root.getChildren().remove(messageView);
+            getChildren().remove(messageView);
         }
         messageView = MessageView.builder()
             .backgroundColor(Color.BLACK)
@@ -756,20 +752,20 @@ public class GameLevel3D implements Disposable {
             .text(messageText)
             .textColor(Color.YELLOW)
             .build(animationRegistry);
-        root.getChildren().add(messageView);
+        getChildren().add(messageView);
         messageView.showCenteredAt(centerX, centerY);
     }
 
     public void updateBonus3D(Bonus bonus) {
         requireNonNull(bonus);
         if (bonus3D != null) {
-            root.getChildren().remove(bonus3D);
+            getChildren().remove(bonus3D);
             bonus3D.dispose();
         }
         bonus3D = new Bonus3D(animationRegistry, bonus,
             ui.theConfiguration().bonusSymbolImage(bonus.symbol()), ui.thePrefs().getFloat("3d.bonus.symbol.width"),
             ui.theConfiguration().bonusValueImage(bonus.symbol()), ui.thePrefs().getFloat("3d.bonus.points.width"));
-        root.getChildren().add(bonus3D);
+        getChildren().add(bonus3D);
         bonus3D.showEdible();
     }
 
@@ -793,11 +789,11 @@ public class GameLevel3D implements Disposable {
         ghosts3D.forEach(ghost3D -> setDrawModeUnder(ghost3D, includeAll, newDrawMode));
     }
 
-    private static void setDrawModeUnder(Node root, Predicate<Node> exclusionFilter, DrawMode drawMode) {
-        root.lookupAll("*").stream()
+    private static void setDrawModeUnder(Node node, Predicate<Node> exclusionFilter, DrawMode drawMode) {
+        node.lookupAll("*").stream()
             .filter(exclusionFilter.negate())
-            .forEach(node -> {
-                if (node instanceof Shape3D shape3D) shape3D.setDrawMode(drawMode);
+            .forEach(ancestor -> {
+                if (ancestor instanceof Shape3D shape3D) shape3D.setDrawMode(drawMode);
             });
     }
 
@@ -854,7 +850,7 @@ public class GameLevel3D implements Disposable {
         houseLightOnProperty.unbind();
         wallOpacityProperty.unbind();
 
-        root.getChildren().clear();
+        getChildren().clear();
         Logger.info("Removed all nodes under game level");
 
         if (ambientLight != null) {
