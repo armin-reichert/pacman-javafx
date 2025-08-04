@@ -217,9 +217,6 @@ public class Pac extends MovingActor implements Animated {
      * or if he is resting for an indefinite time.
      */
     public boolean isParalyzed() {
-        if (velocity == null) {
-            return true;
-        }
         return velocity().equals(Vector2f.ZERO) || !moveInfo.moved || restingTicks == INDEFINITELY;
     }
 

@@ -34,10 +34,10 @@ public class Actor {
 
     protected final GameContext gameContext;
 
-    protected final ObjectProperty<Vector2f> position = new SimpleObjectProperty<>(DEFAULT_POSITION);
-    protected final BooleanProperty visible = new SimpleBooleanProperty(DEFAULT_VISIBILITY);
-    protected ObjectProperty<Vector2f> velocity;
-    protected ObjectProperty<Vector2f> acceleration;
+    private ObjectProperty<Vector2f> position;
+    private BooleanProperty visible;
+    private ObjectProperty<Vector2f> velocity;
+    private ObjectProperty<Vector2f> acceleration;
 
     /**
      * @param gameContext the game context for this actor, may be null
@@ -65,15 +65,19 @@ public class Actor {
     }
 
     public BooleanProperty visibleProperty() {
+        if (visible == null) {
+            visible = new SimpleBooleanProperty(DEFAULT_VISIBILITY);
+        }
         return visible;
     }
 
     public boolean isVisible() {
-        return visible.get();
+        return visible == null ? DEFAULT_VISIBILITY : visibleProperty().get();
     }
 
-    public void setVisible(boolean visible) {
-        this.visible.set(visible);
+    public void setVisible(boolean value) {
+        if (visible == null && DEFAULT_VISIBILITY == value) return;
+        visibleProperty().set(value);
     }
 
     public void show() {
@@ -101,21 +105,27 @@ public class Actor {
     }
 
     public ObjectProperty<Vector2f> positionProperty() {
+        if (position == null) {
+            position = new SimpleObjectProperty<>(DEFAULT_POSITION);
+        }
         return position;
     }
 
     /**
      * @return upper left corner of the entity collision box which is a square of size 1 tile.
      */
-    public Vector2f position() { return position.get(); }
+    public Vector2f position() {
+        return position == null ? DEFAULT_POSITION : positionProperty().get();
+    }
 
     public void setPosition(float x, float y) {
         setPosition(new Vector2f(x, y));
     }
 
-    public void setPosition(Vector2f position) {
-        requireNonNull(position, "Position of actor must not be null");
-        this.position.set(position);
+    public void setPosition(Vector2f pos) {
+        requireNonNull(pos, "Position of actor must not be null");
+        if (position == null && DEFAULT_POSITION.equals(pos)) return;
+        positionProperty().set(pos);
     }
 
     /**
