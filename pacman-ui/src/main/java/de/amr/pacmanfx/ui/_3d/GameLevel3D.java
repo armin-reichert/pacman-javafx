@@ -261,26 +261,19 @@ public class GameLevel3D implements Disposable {
         levelCompletedShortAnimation = new LevelCompletedAnimationShort(animationRegistry);
 
         root.getChildren().add(ambientLight);
-        if (levelCounter3D != null) {
-            root.getChildren().add(levelCounter3D);
-        }
-        if (livesCounter3D != null) {
-            root.getChildren().add(livesCounter3D);
-        }
+        root.getChildren().add(levelCounter3D);
+        root.getChildren().add(livesCounter3D);
         root.getChildren().addAll(pac3D, pac3D.light());
         root.getChildren().addAll(ghosts3D);
-
         root.getChildren().addAll(house3D.particleSwirls());
-
         root.getChildren().add(particleGroupsContainer);
-        energizers3D.forEach(energizers3D -> root.getChildren().add(energizers3D.shape()));
-        pellets3D.forEach(root.getChildren()::add);
+        root.getChildren().addAll(energizers3D.stream().map(Energizer3D::shape).toList());
+        root.getChildren().addAll(pellets3D);
+        // Note: The order in which children are added to the root matters!
+        // Walls and house must be added *after* the actors and swirls, otherwise the transparency is not working correctly.
+        root.getChildren().addAll(floor3D, maze3D);
 
         house3D.startSwirlAnimations();
-
-        // Note: The order in which children are added to the root matters!
-        // Walls and house must be added *after* the actors, otherwise the transparency is not working correctly.
-        root.getChildren().addAll(floor3D, maze3D);
     }
 
     public Group root() {
@@ -299,7 +292,6 @@ public class GameLevel3D implements Disposable {
         floorMaterial.specularColorProperty().bind(floorMaterial.diffuseColorProperty().map(Color::brighter));
 
         wallBaseMaterial = new PhongMaterial();
-
         //TODO the opacity change does not work as expected. Why?
         var diffuseColor = wallOpacityProperty.map(opacity -> colorWithOpacity(colorScheme.stroke(), opacity.doubleValue()));
         wallBaseMaterial.diffuseColorProperty().bind(diffuseColor);
@@ -350,9 +342,9 @@ public class GameLevel3D implements Disposable {
     }
 
     private void createGhostMeshViews(int numGhosts, Mesh ghostDressMesh, Mesh ghostPupilsMesh, Mesh ghostEyeballsMesh) {
-        ghostDressMeshViews = IntStream.range(0, numGhosts).mapToObj(i -> new MeshView(ghostDressMesh)).toArray(MeshView[]::new);
+        ghostDressMeshViews  = IntStream.range(0, numGhosts).mapToObj(i -> new MeshView(ghostDressMesh)).toArray(MeshView[]::new);
         ghostPupilsMeshViews = IntStream.range(0, numGhosts).mapToObj(i -> new MeshView(ghostPupilsMesh)).toArray(MeshView[]::new);
-        ghostEyesMeshViews = IntStream.range(0, numGhosts).mapToObj(i -> new MeshView(ghostEyeballsMesh)).toArray(MeshView[]::new);
+        ghostEyesMeshViews   = IntStream.range(0, numGhosts).mapToObj(i -> new MeshView(ghostEyeballsMesh)).toArray(MeshView[]::new);
     }
 
     private void disposeGhostMeshViews() {
