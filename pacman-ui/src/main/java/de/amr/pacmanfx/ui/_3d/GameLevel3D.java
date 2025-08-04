@@ -58,9 +58,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameLevel3D extends Group implements Disposable {
 
-    private final DoubleProperty  houseBaseHeightProperty = new SimpleDoubleProperty(Wall3D.DEFAULT_BASE_HEIGHT);
-    private final BooleanProperty houseLightOnProperty    = new SimpleBooleanProperty(false);
-    private final BooleanProperty houseOpenProperty       = new SimpleBooleanProperty(false);
     private final IntegerProperty livesCountProperty      = new SimpleIntegerProperty(0);
     private final DoubleProperty  wallBaseHeightProperty  = new SimpleDoubleProperty(Wall3D.DEFAULT_BASE_HEIGHT);
     private final DoubleProperty  wallOpacityProperty     = new SimpleDoubleProperty(1);
@@ -149,7 +146,7 @@ public class GameLevel3D extends Group implements Disposable {
 
         private Animation wallsAndHouseDisappearing() {
             return new Timeline(
-                new KeyFrame(Duration.seconds(0.5), new KeyValue(houseBaseHeightProperty, 0, Interpolator.EASE_IN)),
+                new KeyFrame(Duration.seconds(0.5), new KeyValue(house3D.wallBaseHeightProperty(), 0, Interpolator.EASE_IN)),
                 new KeyFrame(Duration.seconds(1.5), new KeyValue(wallBaseHeightProperty, 0, Interpolator.EASE_IN)),
                 new KeyFrame(Duration.seconds(2.5), e -> maze3D.setVisible(false))
             );
@@ -231,9 +228,6 @@ public class GameLevel3D extends Group implements Disposable {
         wallOpacityProperty.bind(ui.property3DWallOpacity());
 
         wallBaseHeightProperty.bind(ui.property3DWallHeight());
-        houseBaseHeightProperty.set(ui.thePrefs().getFloat("3d.house.base_height"));
-
-        houseOpenProperty.addListener(this::handleHouseOpenChange);
         ui.property3DDrawMode().addListener(this::handleDrawModeChange);
 
         setMouseTransparent(true); // this increases performance, they say...
@@ -478,8 +472,8 @@ public class GameLevel3D extends Group implements Disposable {
                 colorScheme.stroke(),
                 colorScheme.door()
             );
-            house3D.wallBaseHeightProperty().bind(houseBaseHeightProperty);
-            house3D.light().lightOnProperty().bind(houseLightOnProperty);
+            house3D.wallBaseHeightProperty().set(ui.thePrefs().getFloat("3d.house.base_height"));
+            house3D.openProperty().addListener(this::handleHouseOpenChange);
             maze3D.getChildren().add(house3D);
         });
     }
@@ -623,14 +617,14 @@ public class GameLevel3D extends Group implements Disposable {
         bonus3D().ifPresent(bonus3D -> bonus3D.update(ui.theGameContext()));
         boolean houseAccessRequired = gameLevel.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
             .anyMatch(Ghost::isVisible);
-        houseLightOnProperty.set(houseAccessRequired);
+        house3D.light().lightOnProperty().set(houseAccessRequired);
 
         gameLevel.house().ifPresent(house -> {
             float sensitivity = ui.thePrefs().getFloat("3d.house.sensitivity");
             boolean ghostNearHouseEntry = gameLevel.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
                 .filter(ghost -> ghost.position().euclideanDist(house.entryPosition()) <= sensitivity)
                 .anyMatch(Ghost::isVisible);
-            houseOpenProperty.set(ghostNearHouseEntry);
+            house3D.openProperty().set(ghostNearHouseEntry);
         });
 
         int livesCounterSize = ui.theGameContext().theGame().lifeCount() - 1;
@@ -840,14 +834,15 @@ public class GameLevel3D extends Group implements Disposable {
         ui.property3DDrawMode().removeListener(this::handleDrawModeChange);
         Logger.info("Removed 'draw mode' listener");
 
-        houseOpenProperty.removeListener(this::handleHouseOpenChange);
+        house3D.openProperty().removeListener(this::handleHouseOpenChange);
         Logger.info("Removed 'house open' listener");
 
+        house3D.openProperty().unbind();
+        house3D.wallBaseHeightProperty().unbind();
+        house3D.light().lightOnProperty().unbind();
+
         livesCountProperty.unbind();
-        houseOpenProperty.unbind();
         wallBaseHeightProperty.unbind();
-        houseBaseHeightProperty.unbind();
-        houseLightOnProperty.unbind();
         wallOpacityProperty.unbind();
 
         getChildren().clear();

@@ -13,7 +13,9 @@ import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.EnergizerExplosionAndRecycling;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.*;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -44,7 +46,8 @@ public class ArcadeHouse3D extends Group implements Disposable {
     private static final int DOOR_VERTICAL_BAR_COUNT = 2;
     private static final float DOOR_BAR_THICKNESS = 0.75f;
 
-    private final DoubleProperty barThicknessProperty = new SimpleDoubleProperty(DOOR_BAR_THICKNESS);
+    private final DoubleProperty barThicknessProperty   = new SimpleDoubleProperty(DOOR_BAR_THICKNESS);
+    private final BooleanProperty openProperty          = new SimpleBooleanProperty(false);
     private final DoubleProperty wallBaseHeightProperty = new SimpleDoubleProperty();
 
     private final TerrainRenderer3D r3D;
@@ -169,6 +172,8 @@ public class ArcadeHouse3D extends Group implements Disposable {
     public List<Group> particleSwirls() {
         return List.of(swirls);
     }
+
+    public BooleanProperty openProperty() {return openProperty;}
 
     public DoubleProperty wallBaseHeightProperty() {
         return wallBaseHeightProperty;
