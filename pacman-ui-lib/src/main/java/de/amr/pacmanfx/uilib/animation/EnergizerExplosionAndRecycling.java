@@ -253,6 +253,16 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
             super.play();
         }
 
+        @Override
+        public void stop() {
+            super.stop();
+            if (particles != null) {
+                for (Particle particle : particles) {
+                    particle.velocity = Vec3f.ZERO;
+                }
+            }
+        }
+
         private void createAndAddParticles(Material particleMaterial, Point3D origin) {
             particles = new ArrayList<>();
             for (int i = 0; i < PARTICLE_COUNT; ++i) {
