@@ -112,10 +112,10 @@ public class ObjFileData {
     private final List<Map<String, Material>> materialLibsList = new ArrayList<>();
     private final ObservableFloatArray vertexArray = FXCollections.observableFloatArray();
     private final ObservableFloatArray uvArray = FXCollections.observableFloatArray();
-    private final IntegerArrayList faceList = new IntegerArrayList();
-    private final IntegerArrayList smoothingGroupList = new IntegerArrayList();
+    private final ArrayList<Integer> faceList = new ArrayList<>();
+    private final ArrayList<Integer> smoothingGroupList = new ArrayList<>();
     private final ObservableFloatArray normals = FXCollections.observableFloatArray();
-    private final IntegerArrayList faceNormals = new IntegerArrayList();
+    private final ArrayList<Integer> faceNormals = new ArrayList<>();
 
     private int facesStart = 0;
     private int facesNormalStart = 0;
@@ -412,18 +412,19 @@ public class ObjFileData {
         final var mesh = new TriangleMesh();
         mesh.getPoints().setAll(newVertexArray);
         mesh.getTexCoords().setAll(newUVArray);
-        mesh.getFaces().setAll(faceList.subList(facesStart, faceList.size()).toIntArray());
+        List<Integer> facesSublist = faceList.subList(facesStart, faceList.size());
+        mesh.getFaces().setAll(facesSublist.stream().mapToInt(Integer::intValue).toArray());
 
         // Use normals if they are provided
         if (useNormals) {
-            int[]   flatFaces = faceList.subList(facesStart, faceList.size()).toIntArray();
-            int[]   flatFaceNormals = faceNormals.subList(facesNormalStart, faceNormals.size()).toIntArray();
+            int[]   flatFaces = faceList.subList(facesStart, faceList.size()).stream().mapToInt(Integer::intValue).toArray();
+            int[]   flatFaceNormals = faceNormals.subList(facesNormalStart, faceNormals.size()).stream().mapToInt(Integer::intValue).toArray();
             float[] normals = newNormalArray.toArray(new float[0]);
             int[]   smGroups = SmoothingGroups.calcSmoothGroups(mesh, flatFaces, flatFaceNormals, normals);
             mesh.getFaceSmoothingGroups().setAll(smGroups);
         } else {
             mesh.getFaceSmoothingGroups().setAll(
-                smoothingGroupList.subList(smoothingGroupsStart, smoothingGroupList.size()).toIntArray());
+                smoothingGroupList.subList(smoothingGroupsStart, smoothingGroupList.size()).stream().mapToInt(Integer::intValue).toArray());
         }
 
         // try specified name, if already used, make unique name using serial number e.g. "my_mesh (3)"
