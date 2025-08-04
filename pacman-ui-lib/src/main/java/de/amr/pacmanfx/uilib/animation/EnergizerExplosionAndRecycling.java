@@ -26,7 +26,6 @@ import java.util.function.Predicate;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.UsefulFunctions.randomFloat;
-import static de.amr.pacmanfx.lib.UsefulFunctions.randomInt;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -43,10 +42,10 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
     // Time includes movement of particles to the ghost house after the explosion
     private static final Duration TOTAL_DURATION = Duration.seconds(30);
 
+    // Use low-resolution mesh for particle
     private static final short PARTICLE_DIVISIONS = 8;
 
-    private static final short PARTICLE_COUNT_MIN = 250;
-    private static final short PARTICLE_COUNT_MAX = 500;
+    private static final short PARTICLE_COUNT = 500;
 
     private static final float PARTICLE_MEAN_RADIUS_UNSCALED = 0.2f;
     private static final float PARTICLE_RADIUS_RETURNING_HOME = 0.15f;
@@ -260,9 +259,8 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
         }
 
         private void createAndAddParticles(Material particleMaterial, Point3D origin) {
-            int particleCount = randomInt(PARTICLE_COUNT_MIN, PARTICLE_COUNT_MAX + 1);
             particles = new ArrayList<>();
-            for (int i = 0; i < particleCount; ++i) {
+            for (int i = 0; i < PARTICLE_COUNT; ++i) {
                 double radius = randomParticleRadius();
                 Vec3f velocity = randomParticleVelocity();
                 Particle particle = new Particle(radius, particleMaterial, velocity, origin);
