@@ -9,6 +9,8 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.House;
+import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.EnergizerExplosionAndRecycling;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -60,6 +62,7 @@ public class ArcadeHouse3D extends Group implements Disposable {
     private Group leftWing;
     private Group rightWing;
     private PointLight light;
+    private float doorSensitivity = 10;
 
     private Group[] swirls;
     private List<ManagedAnimation> swirlAnimations = new ArrayList<>(3);
@@ -167,6 +170,25 @@ public class ArcadeHouse3D extends Group implements Disposable {
                 }
             });
         }
+    }
+
+    public void setDoorSensitivity(float value) {
+        this.doorSensitivity = value;
+    }
+
+    public void tick(GameLevel gameLevel) {
+        boolean accessRequested = gameLevel
+            .ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+            .anyMatch(Ghost::isVisible);
+        light.lightOnProperty().set(accessRequested);
+
+        gameLevel.house().ifPresent(house -> {
+            boolean ghostNearHouseEntry = gameLevel
+                .ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+                .filter(ghost -> ghost.position().euclideanDist(house.entryPosition()) <= doorSensitivity)
+                .anyMatch(Ghost::isVisible);
+            openProperty().set(ghostNearHouseEntry);
+        });
     }
 
     public List<Group> particleSwirls() {

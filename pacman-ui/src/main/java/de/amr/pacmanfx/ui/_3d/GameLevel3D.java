@@ -474,6 +474,7 @@ public class GameLevel3D extends Group implements Disposable {
             );
             house3D.wallBaseHeightProperty().set(ui.thePrefs().getFloat("3d.house.base_height"));
             house3D.openProperty().addListener(this::handleHouseOpenChange);
+            house3D.setDoorSensitivity(ui.thePrefs().getFloat("3d.house.sensitivity"));
             maze3D.getChildren().add(house3D);
         });
     }
@@ -615,18 +616,9 @@ public class GameLevel3D extends Group implements Disposable {
         pac3D.update();
         ghosts3D.forEach(ghost3D -> ghost3D.update(gameLevel));
         bonus3D().ifPresent(bonus3D -> bonus3D.update(ui.theGameContext()));
-        boolean houseAccessRequired = gameLevel.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
-            .anyMatch(Ghost::isVisible);
-        house3D.light().lightOnProperty().set(houseAccessRequired);
-
-        gameLevel.house().ifPresent(house -> {
-            float sensitivity = ui.thePrefs().getFloat("3d.house.sensitivity");
-            boolean ghostNearHouseEntry = gameLevel.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
-                .filter(ghost -> ghost.position().euclideanDist(house.entryPosition()) <= sensitivity)
-                .anyMatch(Ghost::isVisible);
-            house3D.openProperty().set(ghostNearHouseEntry);
-        });
-
+        if (house3D != null) {
+            house3D.tick(gameLevel);
+        }
         int livesCounterSize = ui.theGameContext().theGame().lifeCount() - 1;
         // when the game starts and Pac-Man is not yet visible, show one more
         boolean oneMore = ui.theGameContext().theGameState() == GameState.STARTING_GAME && !gameLevel.pac().isVisible();
