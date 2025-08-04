@@ -144,8 +144,11 @@ public class DefaultSoundManager implements SoundManager {
         requireNonNull(id);
         Object value = soundMap.get(id);
         if (value instanceof MediaPlayer mediaPlayer) {
-            Logger.trace("Pause media player with ID '{}'", id);
+            Logger.info("Pause media player '{}'", id);
             mediaPlayer.pause();
+            if (mediaPlayer.getStatus() != MediaPlayer.Status.PAUSED) {
+                Logger.error("WTF! Why is media player {} not paused but in state {}?", id, mediaPlayer.getStatus());
+            }
         }
         else if (value instanceof URL) {
             Logger.warn("Pausing audio clip with ID '{}' is not supported", id);
@@ -157,7 +160,7 @@ public class DefaultSoundManager implements SoundManager {
         requireNonNull(id);
         Object value = soundMap.get(id);
         if (value instanceof MediaPlayer mediaPlayer) {
-            return mediaPlayer.getStatus() ==  MediaPlayer.Status.PAUSED;
+            return mediaPlayer.getStatus() == MediaPlayer.Status.PAUSED;
         }
         return false;
     }

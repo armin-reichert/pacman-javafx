@@ -14,7 +14,6 @@ import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -498,10 +497,11 @@ public class GameLevel3D extends Group implements Disposable {
 
     private boolean particleTouchesFloor(EnergizerExplosionAndRecycling.Particle particle) {
         Vector2f worldSizePx = gameLevel.worldSizePx();
-        Point3D particleCenter = particle.center();
-        if (particleCenter.getX() < 0 || particleCenter.getX() > worldSizePx.x()) return false;
-        if (particleCenter.getY() < 0 || particleCenter.getY() > worldSizePx.y()) return false;
-        return particleCenter.getZ() >= floorTopZ();
+        Point3D center = particle.center();
+        double r = particle.getRadius(), cx = center.getX(), cy = center.getY();
+        if (cx + r < 0 || cx - r > worldSizePx.x()) return false;
+        if (cy + r < 0 || cy - r > worldSizePx.y()) return false;
+        return center.getZ() >= floorTopZ();
     }
 
     private boolean isWorldBorder(WorldMap worldMap, Obstacle obstacle) {
