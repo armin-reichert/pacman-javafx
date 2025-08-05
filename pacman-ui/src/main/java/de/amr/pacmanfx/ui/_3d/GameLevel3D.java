@@ -826,6 +826,7 @@ public class GameLevel3D extends Group implements Disposable {
         Predicate<Node> includeAll = shape3D -> false;
         setDrawModeUnder(maze3D, pellets3D::contains, newDrawMode);
         setDrawModeUnder(pac3D, includeAll, newDrawMode);
+        setDrawModeUnder(livesCounter3D, includeAll, newDrawMode);
         ghosts3D.forEach(ghost3D -> setDrawModeUnder(ghost3D, includeAll, newDrawMode));
     }
 
