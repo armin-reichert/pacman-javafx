@@ -60,7 +60,7 @@ public class TerrainRenderer3D {
         return onWallCreated.call(wall3D);
     }
 
-    private void createWallBetween(Vector2f p1, Vector2f p2, double wallThickness) {
+    public void createWallBetween(Vector2f p1, Vector2f p2, double wallThickness) {
         if (p1.x() == p2.x()) { // vertical wall
             createBoxWall(p1.midpoint(p2), wallThickness, p1.manhattanDist(p2));
         } else if (p1.y() == p2.y()) { // horizontal wall

@@ -89,7 +89,7 @@ public class ArcadeHouse3D extends Group implements Disposable {
 
         r3D = new TerrainRenderer3D();
 
-        barMaterial      = coloredPhongMaterial(doorColor);
+        barMaterial      = coloredPhongMaterial(colorWithOpacity(doorColor, 0.8));
         wallBaseMaterial = coloredPhongMaterial(colorWithOpacity(houseBaseColor, opacity));
         wallTopMaterial  = coloredPhongMaterial(houseTopColor);
 
@@ -97,12 +97,8 @@ public class ArcadeHouse3D extends Group implements Disposable {
         barThickness = 2f / doorVerticalBarCount;
         barThicknessProperty.set(barThickness);
 
-        Vector2i houseSize = house.sizeInTiles();
-        int tilesX = houseSize.x(), tilesY = houseSize.y();
-        int xMin = house.minTile().x(), xMax = xMin + tilesX - 1;
-        int yMin = house.minTile().y(), yMax = yMin + tilesY - 1;
-        float centerX = xMin * TS + tilesX * HTS;
-        float centerY = yMin * TS + tilesY * HTS;
+        float xMin = house.minTile().x() * TS + HTS, yMin = house.minTile().y() * TS + HTS;
+        float xMax = house.maxTile().x() * TS + HTS, yMax = house.maxTile().y() * TS + HTS;
 
         // (0)-----(1)left_door-right_door(2)-----(3)
         //  |                                      |
@@ -111,14 +107,12 @@ public class ArcadeHouse3D extends Group implements Disposable {
         //  |                                      |
         // (4)------------------------------------(5)
 
-        Vector2i[] p = {
-            Vector2i.of(xMin, yMin),
-            Vector2i.of(house.leftDoorTile().x() - 1, yMin),
-            Vector2i.of(house.rightDoorTile().x() + 1, yMin),
-            Vector2i.of(xMax, yMin),
-            Vector2i.of(xMin, yMax),
-            Vector2i.of(xMax, yMax)
-        };
+        Vector2f p0 = Vector2f.of(xMin, yMin);
+        Vector2f p1 = house.leftDoorTile().scaled((float)TS).plus(0, HTS);
+        Vector2f p2 = house.rightDoorTile().scaled((float)TS).plus(TS, HTS);
+        Vector2f p3 = Vector2f.of(xMax, yMin);
+        Vector2f p4 = Vector2f.of(xMin, yMax);
+        Vector2f p5 = Vector2f.of(xMax, yMax);
 
         r3D.setOnWallCreated(wall3D -> {
             wall3D.bindBaseHeight(wallBaseHeightProperty);
@@ -127,11 +121,15 @@ public class ArcadeHouse3D extends Group implements Disposable {
             getChildren().addAll(wall3D.top(), wall3D.base());
             return wall3D;
         });
-        r3D.createWallBetweenTileCoordinates(p[0], p[1], wallThickness);
-        r3D.createWallBetweenTileCoordinates(p[2], p[3], wallThickness);
-        r3D.createWallBetweenTileCoordinates(p[3], p[5], wallThickness);
-        r3D.createWallBetweenTileCoordinates(p[0], p[4], wallThickness);
-        r3D.createWallBetweenTileCoordinates(p[4], p[5], wallThickness);
+        r3D.createCylinderWall(p0, 0.5 * wallThickness);
+        r3D.createCylinderWall(p3, 0.5 * wallThickness);
+        r3D.createCylinderWall(p4, 0.5 * wallThickness);
+        r3D.createCylinderWall(p5, 0.5 * wallThickness);
+        r3D.createWallBetween(p0, p1, wallThickness);
+        r3D.createWallBetween(p2, p3, wallThickness);
+        r3D.createWallBetween(p3, p5, wallThickness);
+        r3D.createWallBetween(p0, p4, wallThickness);
+        r3D.createWallBetween(p4, p5, wallThickness);
 
         leftDoor  = createDoor(house.leftDoorTile(), wallBaseHeightProperty.get());
         rightDoor = createDoor(house.rightDoorTile(), wallBaseHeightProperty.get());
@@ -147,11 +145,12 @@ public class ArcadeHouse3D extends Group implements Disposable {
             }
         };
 
+        Vector2f houseCenter = p0.midpoint(p5);
         light = new PointLight();
         light.setColor(Color.GHOSTWHITE);
-        light.setMaxRange(3 * TS);
-        light.setTranslateX(centerX);
-        light.setTranslateY(centerY - 6);
+        light.setMaxRange(2.5 * TS);
+        light.setTranslateX(houseCenter.x());
+        light.setTranslateY(houseCenter.y());
         light.translateZProperty().bind(wallBaseHeightProperty.multiply(-1));
 
         getChildren().addAll(light, doors);
