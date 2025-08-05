@@ -841,6 +841,8 @@ public class GameLevel3D extends Group implements Disposable {
         Logger.info("Disposing game level 3D...");
         disposed = true;
 
+        stopGhostLightAnimation(); //TODO make this into managed animation?
+
         animationRegistry.stopAllAnimations();
         Logger.info("Stopped all managed animations");
 
