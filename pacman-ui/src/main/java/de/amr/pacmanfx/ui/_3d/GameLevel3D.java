@@ -128,9 +128,7 @@ public class GameLevel3D extends Group implements Disposable {
         @Override
         protected Animation createAnimationFX() {
             return new SequentialTransition(
-                doNow(() -> {
-                    sometimesLevelCompleteMessage(gameLevel.number());
-                }),
+                doNow(() -> sometimesLevelCompleteMessage(gameLevel.number())),
                 pauseSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
                 wallsMovingUpAndDown(gameLevel.data().numFlashes()),
                 pauseSec(0.5, () -> gameLevel.pac().hide()),
@@ -833,9 +831,9 @@ public class GameLevel3D extends Group implements Disposable {
     private static void setDrawModeUnder(Node node, Predicate<Node> exclusionFilter, DrawMode drawMode) {
         node.lookupAll("*").stream()
             .filter(exclusionFilter.negate())
-            .forEach(ancestor -> {
-                if (ancestor instanceof Shape3D shape3D) shape3D.setDrawMode(drawMode);
-            });
+            .filter(Shape3D.class::isInstance)
+            .map(Shape3D.class::cast)
+            .forEach(shape3D -> shape3D.setDrawMode(drawMode));
     }
 
     // still work in progress...
