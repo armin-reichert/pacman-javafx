@@ -141,7 +141,7 @@ public class ArcadeHouse3D extends Group implements Disposable {
         light.setTranslateY(houseCenter.y());
         light.translateZProperty().bind(wallBaseHeightProperty.multiply(-1));
 
-        getChildren().addAll(doors /*,light*/);
+        //getChildren().addAll(doors /*,light*/);
 
         // These groups are added to their parent in GameLevel3D to ensure correct ordering!
         swirls = new Group[ghostRevivalPositionCenters.length];
@@ -252,6 +252,10 @@ public class ArcadeHouse3D extends Group implements Disposable {
 
     public DoubleProperty wallBaseHeightProperty() {
         return wallBaseHeightProperty;
+    }
+
+    public Group doors() {
+        return doors;
     }
 
     public void setDoorsVisible(boolean visible) {

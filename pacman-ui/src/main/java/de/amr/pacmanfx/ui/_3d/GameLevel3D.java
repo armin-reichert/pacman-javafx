@@ -128,9 +128,7 @@ public class GameLevel3D extends Group implements Disposable {
         @Override
         protected Animation createAnimationFX() {
             return new SequentialTransition(
-                doNow(() -> {
-                    sometimesLevelCompleteMessage(gameLevel.number());
-                }),
+                doNow(() -> sometimesLevelCompleteMessage(gameLevel.number())),
                 pauseSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
                 wallsMovingUpAndDown(gameLevel.data().numFlashes()),
                 pauseSec(0.5, () -> gameLevel.pac().hide()),
@@ -263,6 +261,7 @@ public class GameLevel3D extends Group implements Disposable {
         getChildren().add(particleGroupsContainer);
         getChildren().addAll(energizers3D.stream().map(Energizer3D::shape).toList());
         getChildren().addAll(pellets3D);
+        getChildren().add(house3D.doors()); // !!
         // Note: The order in which children are added to the root matters!
         // Walls and house must be added *after* the actors and swirls, otherwise the transparency is not working correctly.
         getChildren().add(maze3D);
@@ -833,9 +832,9 @@ public class GameLevel3D extends Group implements Disposable {
     private static void setDrawModeUnder(Node node, Predicate<Node> exclusionFilter, DrawMode drawMode) {
         node.lookupAll("*").stream()
             .filter(exclusionFilter.negate())
-            .forEach(ancestor -> {
-                if (ancestor instanceof Shape3D shape3D) shape3D.setDrawMode(drawMode);
-            });
+            .filter(Shape3D.class::isInstance)
+            .map(Shape3D.class::cast)
+            .forEach(shape3D -> shape3D.setDrawMode(drawMode));
     }
 
     // still work in progress...
