@@ -89,6 +89,11 @@ public class DefaultSoundManager implements SoundManager {
     }
 
     @Override
+    public boolean isEnabled() {
+        return enabledProperty.get();
+    }
+
+    @Override
     public void setEnabled(boolean enabled) {
         enabledProperty.set(enabled);
     }

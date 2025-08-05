@@ -65,7 +65,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     }
 
     @Override
-    protected void updateScores() {
+    protected void updateHUD() {
         final Score score = gameContext().theGame().score(), highScore = gameContext().theGame().highScore();
         if (score.isEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());

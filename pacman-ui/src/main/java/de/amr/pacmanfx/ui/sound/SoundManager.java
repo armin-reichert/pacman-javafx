@@ -6,6 +6,7 @@ import javafx.scene.media.MediaPlayer;
 
 public interface SoundManager extends Disposable {
     BooleanProperty enabledProperty();
+    boolean isEnabled();
     void setEnabled(boolean enabled);
     BooleanProperty mutedProperty();
     default void play(Object id) { play(id, 1); }

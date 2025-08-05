@@ -316,7 +316,7 @@ public class PlayScene3D implements GameScene {
     @Override
     public void update() {
         if (gameContext().optGameLevel().isEmpty()) {
-            // update gets called already 2 times before game level has been created!
+            // Scene is already updated 2 ticks before the game level gets created!
             Logger.info("Tick #{}: Game level not yet created, update ignored", ui.theGameClock().tickCount());
             return;
         }
@@ -324,10 +324,11 @@ public class PlayScene3D implements GameScene {
             Logger.info("Tick #{}: 3D game level not yet created", ui.theGameClock().tickCount());
             return;
         }
+        ui.theSound().setEnabled(!gameContext().theGameLevel().isDemoLevel());
         gameLevel3D.tick();
-        updateScores();
-        updateSound();
         updateCamera();
+        updateHUD();
+        updateSound();
     }
 
     @Override
@@ -424,7 +425,7 @@ public class PlayScene3D implements GameScene {
             gameLevel3D.livesCounter3D.startTracking(gameLevel3D.pac3D);
         }
         gameLevel3D.updateLevelCounter3D();
-        updateScores();
+        updateHUD();
         setActionBindings();
         fadeInGameLevel3D();
     }
@@ -573,30 +574,34 @@ public class PlayScene3D implements GameScene {
         }
     }
 
-    protected void updateSound() {
-        if (gameContext().optGameLevel().isEmpty()) return;
-
-        if (gameContext().theGameLevel().isDemoLevel()) {
-            ui.theSound().setEnabled(false);
-            return;
+    protected void updateHUD() {
+        final Score score = gameContext().theGame().score(), highScore = gameContext().theGame().highScore();
+        if (score.isEnabled()) {
+            scores3D.showScore(score.points(), score.levelNumber());
         }
+        else { // disabled, show text "GAME OVER"
+            Color color = ui.theConfiguration().getAssetNS("color.game_over_message");
+            scores3D.showTextForScore(ui.theAssets().text("score.game_over"), color);
+        }
+        // Always show high score
+        scores3D.showHighScore(highScore.points(), highScore.levelNumber());
+    }
 
-        ui.theSound().setEnabled(true);
-
+    protected void updateSound() {
+        if (!ui.theSound().isEnabled()) return;
         Pac pac = gameContext().theGameLevel().pac();
-
-        // Play siren if Pac has no power and is chased by the ghosts
-        if (gameContext().theGameState() == GameState.HUNTING && !pac.powerTimer().isRunning()) {
-            //TODO clarify which siren plays when
-            int sirenNumber = 1 + gameContext().theGame().huntingTimer().phaseIndex() / 2;
-            SoundID sirenID = switch (sirenNumber) {
-                case 1 -> SoundID.SIREN_1;
-                case 2 -> SoundID.SIREN_2;
-                case 3 -> SoundID.SIREN_3;
-                case 4 -> SoundID.SIREN_4;
+        boolean pacChased = gameContext().theGameState() == GameState.HUNTING && !pac.powerTimer().isRunning();
+        if (pacChased) {
+            // siren numbers are 1..4, hunting phase index = 0..7
+            int huntingPhase = gameContext().theGame().huntingTimer().phaseIndex();
+            int sirenNumber = 1 + huntingPhase / 2;
+            switch (sirenNumber) {
+                case 1 -> ui.theSound().playSiren(SoundID.SIREN_1, 1.0);
+                case 2 -> ui.theSound().playSiren(SoundID.SIREN_2, 1.0);
+                case 3 -> ui.theSound().playSiren(SoundID.SIREN_3, 1.0);
+                case 4 -> ui.theSound().playSiren(SoundID.SIREN_4, 1.0);
                 default -> throw new IllegalArgumentException("Illegal siren number " + sirenNumber);
-            };
-            ui.theSound().playSiren(sirenID, 1.0);
+            }
         }
 
         // TODO Still not sure how to do this right
@@ -611,19 +616,6 @@ public class PlayScene3D implements GameScene {
         } else {
             ui.theSound().stop(SoundID.GHOST_RETURNS);
         }
-    }
-
-    protected void updateScores() {
-        final Score score = gameContext().theGame().score(), highScore = gameContext().theGame().highScore();
-        if (score.isEnabled()) {
-            scores3D.showScore(score.points(), score.levelNumber());
-        }
-        else { // disabled, show text "GAME OVER"
-            Color color = ui.theConfiguration().getAssetNS("color.game_over_message");
-            scores3D.showTextForScore(ui.theAssets().text("score.game_over"), color);
-        }
-        // Always show high score
-        scores3D.showHighScore(highScore.points(), highScore.levelNumber());
     }
 
     protected void showLevelTestMessage() {

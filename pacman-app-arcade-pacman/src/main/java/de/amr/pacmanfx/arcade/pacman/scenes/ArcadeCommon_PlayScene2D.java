@@ -155,13 +155,9 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
             Logger.info("Tick {}: Game level not yet created", ui.theGameClock().tickCount());
             return;
         }
-        if (gameContext().theGameLevel().isDemoLevel()) {
-            ui.theSound().setEnabled(false);
-        } else {
-            ui.theSound().setEnabled(true);
-            updateSound(gameContext().theGameLevel());
-        }
+        ui.theSound().setEnabled(!gameContext().theGameLevel().isDemoLevel());
         updateHUD();
+        updateSound();
     }
 
     private void updateHUD() {
@@ -175,9 +171,9 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
         gameContext().theGame().theHUD().showCredit(gameContext().theCoinMechanism().isEmpty());
     }
 
-    private void updateSound(GameLevel gameLevel) {
-        final Pac pac = gameLevel.pac();
-        //TODO check in simulator when exactly which siren plays
+    private void updateSound() {
+        if (!ui.theSound().isEnabled()) return;
+        Pac pac = gameContext().theGameLevel().pac();
         boolean pacChased = gameContext().theGameState() == GameState.HUNTING && !pac.powerTimer().isRunning();
         if (pacChased) {
             // siren numbers are 1..4, hunting phase index = 0..7
@@ -192,15 +188,14 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
             }
         }
 
-        // TODO: how exactly is the munching sound created in the original game?
-        if (pac.starvingTicks() > 10) {
+        // TODO Still not sure how to do this right
+        if (pac.starvingTicks() >= 10 && !ui.theSound().isPaused(SoundID.PAC_MAN_MUNCHING)) {
             ui.theSound().pause(SoundID.PAC_MAN_MUNCHING);
         }
 
-        //TODO check in simulator when exactly this sound is played
-        var ghostReturning = gameLevel.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).findAny();
-        if (ghostReturning.isPresent()
-            && (gameContext().theGameState() == GameState.HUNTING || gameContext().theGameState() == GameState.GHOST_DYING)) {
+        boolean isGhostReturningHome = gameContext().theGameLevel().pac().isAlive()
+            && gameContext().theGameLevel().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).findAny().isPresent();
+        if (isGhostReturningHome) {
             ui.theSound().loop(SoundID.GHOST_RETURNS);
         } else {
             ui.theSound().stop(SoundID.GHOST_RETURNS);
