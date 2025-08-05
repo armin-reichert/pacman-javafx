@@ -45,12 +45,12 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadeHouse3D extends Group implements Disposable {
 
-    private static final int DOOR_VERTICAL_BAR_COUNT = 2;
-    private static final float DOOR_BAR_THICKNESS = 0.75f;
-
-    private final DoubleProperty barThicknessProperty   = new SimpleDoubleProperty(DOOR_BAR_THICKNESS);
+    private final DoubleProperty barThicknessProperty   = new SimpleDoubleProperty(0.25);
     private final BooleanProperty openProperty          = new SimpleBooleanProperty(false);
     private final DoubleProperty wallBaseHeightProperty = new SimpleDoubleProperty();
+
+    private final float barThickness;
+    private int doorVerticalBarCount = 4;
 
     private final TerrainRenderer3D r3D;
 
@@ -58,16 +58,16 @@ public class ArcadeHouse3D extends Group implements Disposable {
     private PhongMaterial wallBaseMaterial;
     private PhongMaterial wallTopMaterial;
 
-    private Group door;
-    private Group leftWing;
-    private Group rightWing;
+    private Group doors;
+    private Group leftDoor;
+    private Group rightDoor;
     private PointLight light;
     private float doorSensitivity = 10;
 
     private Group[] swirls;
     private List<ManagedAnimation> swirlAnimations = new ArrayList<>(3);
 
-    private ManagedAnimation doorOpenCloseAnimation;
+    private ManagedAnimation doorsOpenCloseAnimation;
 
     public ArcadeHouse3D(
         AnimationRegistry animationRegistry,
@@ -94,6 +94,8 @@ public class ArcadeHouse3D extends Group implements Disposable {
         wallTopMaterial  = coloredPhongMaterial(houseTopColor);
 
         wallBaseHeightProperty.set(baseHeight);
+        barThickness = 2f / doorVerticalBarCount;
+        barThicknessProperty.set(barThickness);
 
         Vector2i houseSize = house.sizeInTiles();
         int tilesX = houseSize.x(), tilesY = houseSize.y();
@@ -131,14 +133,16 @@ public class ArcadeHouse3D extends Group implements Disposable {
         r3D.createWallBetweenTileCoordinates(p[0], p[4], wallThickness);
         r3D.createWallBetweenTileCoordinates(p[4], p[5], wallThickness);
 
-        door = createDoor(house.leftDoorTile(), house.rightDoorTile(), wallBaseHeightProperty.get());
+        leftDoor  = createDoor(house.leftDoorTile(), wallBaseHeightProperty.get());
+        rightDoor = createDoor(house.rightDoorTile(), wallBaseHeightProperty.get());
+        doors = new Group(leftDoor, rightDoor);
 
-        doorOpenCloseAnimation = new ManagedAnimation(animationRegistry, "Door_OpenClose") {
+        doorsOpenCloseAnimation = new ManagedAnimation(animationRegistry, "Doors_OpenClose") {
             @Override
             protected Animation createAnimationFX() {
                 return new Timeline(
                     new KeyFrame(Duration.seconds(0.75), new KeyValue(barThicknessProperty, 0)),
-                    new KeyFrame(Duration.seconds(1.5),  new KeyValue(barThicknessProperty, 0.75))
+                    new KeyFrame(Duration.seconds(1.5),  new KeyValue(barThicknessProperty, barThickness))
                 );
             }
         };
@@ -150,7 +154,7 @@ public class ArcadeHouse3D extends Group implements Disposable {
         light.setTranslateY(centerY - 6);
         light.translateZProperty().bind(wallBaseHeightProperty.multiply(-1));
 
-        getChildren().addAll(light, door);
+        getChildren().addAll(light, doors);
 
         createSwirls(gameLevel);
 
@@ -170,6 +174,36 @@ public class ArcadeHouse3D extends Group implements Disposable {
                 }
             });
         }
+    }
+
+    private Group createDoor(Vector2i tile, double height) {
+        var door = new Group();
+        door.setTranslateX(tile.x() * TS);
+        door.setTranslateY(tile.y() * TS + HTS);
+        float barDistance = (float)TS / doorVerticalBarCount;
+        for (int i = 0; i < doorVerticalBarCount; ++i) {
+            var vBar = new Cylinder(barThicknessProperty.get(), height);
+            vBar.radiusProperty().bind(barThicknessProperty);
+            vBar.setMaterial(barMaterial);
+            vBar.setRotationAxis(Rotate.X_AXIS);
+            vBar.setRotate(90);
+            vBar.setTranslateX((i + 0.5) * barDistance);
+            vBar.setTranslateY(0);
+            vBar.translateZProperty().bind(vBar.heightProperty().multiply(-0.5));
+            door.getChildren().add(vBar);
+        }
+
+        var hBar = new Cylinder(barThicknessProperty.get(), 2 * TS);
+        hBar.radiusProperty().bind(barThicknessProperty);
+        hBar.setMaterial(barMaterial);
+        hBar.setRotationAxis(Rotate.Z_AXIS);
+        hBar.setRotate(90);
+        hBar.setTranslateX(HTS);
+        hBar.setTranslateY(0);
+        hBar.setTranslateZ(-0.5 * (height + barThickness));
+        door.getChildren().add(hBar);
+
+        return door;
     }
 
     public void setDoorSensitivity(float value) {
@@ -201,64 +235,16 @@ public class ArcadeHouse3D extends Group implements Disposable {
         return wallBaseHeightProperty;
     }
 
-    public void setDoorVisible(boolean visible) {
-        door.setVisible(visible);
+    public void setDoorsVisible(boolean visible) {
+        doors.setVisible(visible);
     }
 
-    public ManagedAnimation doorOpenCloseAnimation() {
-        return doorOpenCloseAnimation;
+    public ManagedAnimation doorsOpenCloseAnimation() {
+        return doorsOpenCloseAnimation;
     }
 
     public PointLight light() {
         return light;
-    }
-
-    private Group createDoor(Vector2i leftWingTile, Vector2i rightWingTile, double height) {
-        var door = new Group();
-        leftWing = createDoorWing(leftWingTile, height);
-        rightWing = createDoorWing(rightWingTile, height);
-        door.getChildren().addAll(leftWing, rightWing);
-        return door;
-    }
-
-    private Group createDoorWing(Vector2i tile, double height) {
-        var root = new Group();
-        root.setTranslateX(tile.x() * TS);
-        root.setTranslateY(tile.y() * TS);
-
-        for (int i = 0; i < DOOR_VERTICAL_BAR_COUNT; ++i) {
-            var verticalBar = new Cylinder(barThicknessProperty.get(), height);
-            verticalBar.radiusProperty().bind(barThicknessProperty);
-            verticalBar.setMaterial(barMaterial);
-            verticalBar.setTranslateX(i * 4 + 2);
-            verticalBar.setTranslateY(4);
-            verticalBar.translateZProperty().bind(verticalBar.heightProperty().multiply(-0.5));
-            verticalBar.setRotationAxis(Rotate.X_AXIS);
-            verticalBar.setRotate(90);
-            root.getChildren().add(verticalBar);
-        }
-
-        var horizontalBar = new Cylinder(barThicknessProperty.get(), 14);
-        horizontalBar.radiusProperty().bind(barThicknessProperty);
-        horizontalBar.setMaterial(barMaterial);
-        horizontalBar.setTranslateX(4);
-        horizontalBar.setTranslateY(4);
-        horizontalBar.setTranslateZ(0.25 - horizontalBar.getHeight() * 0.5);
-        horizontalBar.setRotationAxis(Rotate.Z_AXIS);
-        horizontalBar.setRotate(90);
-        root.getChildren().add(horizontalBar);
-
-        return root;
-    }
-
-    private void destroyDoorWing(Group doorWing) {
-        for (Node node : doorWing.getChildren()) {
-            if (node instanceof Cylinder bar) {
-                bar.radiusProperty().unbind();
-                bar.translateZProperty().unbind();
-                bar.setMaterial(null);
-            }
-        }
     }
 
     private void createSwirls(GameLevel gameLevel) {
@@ -290,9 +276,9 @@ public class ArcadeHouse3D extends Group implements Disposable {
 
     @Override
     public void dispose() {
-        doorOpenCloseAnimation.stop();
-        doorOpenCloseAnimation.dispose();
-        doorOpenCloseAnimation = null;
+        doorsOpenCloseAnimation.stop();
+        doorsOpenCloseAnimation.dispose();
+        doorsOpenCloseAnimation = null;
 
         if (swirlAnimations != null) {
             for (ManagedAnimation swirlAnimation : swirlAnimations) {
@@ -321,14 +307,14 @@ public class ArcadeHouse3D extends Group implements Disposable {
 
         getChildren().clear();
 
-        destroyDoorWing(leftWing);
-        leftWing = null;
+        disposeDoor(leftDoor);
+        leftDoor = null;
 
-        destroyDoorWing(rightWing);
-        rightWing = null;
+        disposeDoor(rightDoor);
+        rightDoor = null;
 
-        door.getChildren().clear();
-        door = null;
+        doors.getChildren().clear();
+        doors = null;
 
         barMaterial = null;
         wallBaseMaterial = null;
@@ -339,5 +325,18 @@ public class ArcadeHouse3D extends Group implements Disposable {
         light = null;
 
         r3D.setOnWallCreated(null);
+    }
+
+    private void disposeDoor(Group door) {
+        for (Node node : door.getChildren()) {
+            if (node instanceof Cylinder bar) {
+                bar.radiusProperty().unbind();
+                bar.heightProperty().unbind();
+                bar.translateXProperty().unbind();
+                bar.translateYProperty().unbind();
+                bar.translateZProperty().unbind();
+                bar.setMaterial(null);
+            }
+        }
     }
 }

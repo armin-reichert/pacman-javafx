@@ -39,7 +39,7 @@ public class DefaultSoundManager implements SoundManager {
         soundMap.clear();
         currentVoice = null;
         currentSirenID = null;
-        Logger.info("Destroyed sound manager {}", this);
+        Logger.info("Disposed default sound manager {}", this);
     }
 
     public MediaPlayer mediaPlayer(Object key) {
@@ -47,14 +47,16 @@ public class DefaultSoundManager implements SoundManager {
         if (!soundMap.containsKey(key)) {
             throw new IllegalArgumentException("Unknown media player key '%s'".formatted(key));
         }
-        if (!(soundMap.get(key) instanceof MediaPlayer)) {
-            throw new IllegalArgumentException("Sound entry with key '%s' is not a media player".formatted(key));
+        if (soundMap.get(key) instanceof MediaPlayer mediaPlayer) {
+            return mediaPlayer;
         }
-        return (MediaPlayer) soundMap.get(key);
+        throw new IllegalArgumentException("Sound entry with key '%s' is not a media player".formatted(key));
     }
 
     private void setSoundMapValue(Object key, Object value) {
-        Object prevValue = soundMap.put(requireNonNull(key), requireNonNull(value));
+        requireNonNull(key);
+        requireNonNull(value);
+        Object prevValue = soundMap.put(key, value);
         if (prevValue != null) {
             Logger.warn("Replaced sound map entry with key '{}', old value was {}", key, value);
         }
@@ -149,14 +151,10 @@ public class DefaultSoundManager implements SoundManager {
         requireNonNull(id);
         Object value = soundMap.get(id);
         if (value instanceof MediaPlayer mediaPlayer) {
-            Logger.info("Pause media player '{}'", id);
             mediaPlayer.pause();
-            if (mediaPlayer.getStatus() != MediaPlayer.Status.PAUSED) {
-                Logger.error("WTF! Why is media player {} not paused but in state {}?", id, mediaPlayer.getStatus());
-            }
         }
         else if (value instanceof URL) {
-            Logger.warn("Pausing audio clip with ID '{}' is not supported", id);
+            Logger.warn("Audio clip '{}' cannot be paused", id);
         }
     }
 
@@ -175,11 +173,10 @@ public class DefaultSoundManager implements SoundManager {
         requireNonNull(id);
         Object value = soundMap.get(id);
         if (value instanceof MediaPlayer mediaPlayer) {
-            Logger.trace("Stop media player with ID '{}'", id);
             mediaPlayer.stop();
         }
         else if (value instanceof URL) {
-            Logger.warn("Stopping audio clip with ID '{}' is not supported", id);
+            Logger.warn("Audio clip '{}' cannot be stopped", id);
         }
     }
 

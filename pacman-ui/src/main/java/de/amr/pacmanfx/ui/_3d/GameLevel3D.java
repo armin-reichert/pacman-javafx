@@ -685,7 +685,7 @@ public class GameLevel3D extends Group implements Disposable {
         for (Group swirl : house3D.particleSwirls()) {
             swirl.getChildren().clear();
         }
-        house3D.setDoorVisible(false);
+        house3D.setDoorsVisible(false);
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
         if (messageView != null) {
             messageView.setVisible(false);
@@ -763,7 +763,7 @@ public class GameLevel3D extends Group implements Disposable {
 
     private void handleHouseOpenChange(ObservableValue<? extends Boolean> obs,  boolean wasOpen, boolean isOpen) {
         if (isOpen && house3D != null) {
-            house3D.doorOpenCloseAnimation().playFromStart();
+            house3D.doorsOpenCloseAnimation().playFromStart();
         }
     }
 
