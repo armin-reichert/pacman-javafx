@@ -98,7 +98,7 @@ public class ArcadeHouse3D extends Group implements Disposable {
         float xMin = house.minTile().x() * TS + HTS, yMin = house.minTile().y() * TS + HTS;
         float xMax = house.maxTile().x() * TS + HTS, yMax = house.maxTile().y() * TS + HTS;
 
-        // (0)-----(1)left_door-right_door(2)-----(3)
+        // (0)----(1) left_door right_door (2)----(3)
         //  |                                      |
         //  |                                      |
         //  |                                      |
@@ -153,29 +153,31 @@ public class ArcadeHouse3D extends Group implements Disposable {
 
         getChildren().addAll(light, doors);
 
+        // These groups are added to their parent in GameLevel3D to ensure correct ordering!
         swirls = new Group[ghostRevivalPositionCenters.length];
         for (int i = 0; i < ghostRevivalPositionCenters.length; ++i) {
             swirls[i] = new Group();
             swirls[i].setTranslateX(ghostRevivalPositionCenters[i].x());
             swirls[i].setTranslateY(ghostRevivalPositionCenters[i].y());
+            ManagedAnimation animation = createSwirlAnimation(animationRegistry, "Swirl_%d".formatted(i), swirls[i]);
+            swirlAnimations.add(animation);
         }
+    }
 
+    private ManagedAnimation createSwirlAnimation(AnimationRegistry animationRegistry, String label, Group swirl) {
         Duration rotationTime = Duration.seconds(EnergizerExplosionAndRecycling.SWIRL_ROTATION_SEC);
-        for (int i = 0; i < swirls.length; ++i) {
-            final int index = i;
-            swirlAnimations.add(new ManagedAnimation(animationRegistry, "Swirl_%d".formatted(i)) {
-                @Override
-                protected Animation createAnimationFX() {
-                    var rotation = new RotateTransition(rotationTime, swirls[index]);
-                    rotation.setAxis(Rotate.Z_AXIS);
-                    rotation.setFromAngle(0);
-                    rotation.setToAngle(360);
-                    rotation.setInterpolator(Interpolator.LINEAR);
-                    rotation.setCycleCount(Animation.INDEFINITE);
-                    return rotation;
-                }
-            });
-        }
+        return new ManagedAnimation(animationRegistry, label) {
+            @Override
+            protected Animation createAnimationFX() {
+                var rotation = new RotateTransition(rotationTime, swirl);
+                rotation.setAxis(Rotate.Z_AXIS);
+                rotation.setFromAngle(0);
+                rotation.setToAngle(360);
+                rotation.setInterpolator(Interpolator.LINEAR);
+                rotation.setCycleCount(Animation.INDEFINITE);
+                return rotation;
+            }
+        };
     }
 
     public void setWallBaseColor(Color color) {
