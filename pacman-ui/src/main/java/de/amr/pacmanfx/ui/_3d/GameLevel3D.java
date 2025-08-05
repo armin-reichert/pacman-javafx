@@ -15,6 +15,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
+import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -434,22 +435,27 @@ public class GameLevel3D extends Group implements Disposable {
     private void createGhostLight() {
         ghostLight = new PointLight(Color.WHITE);
         ghostLight.setLightOn(true);
-        ghostLight.setMaxRange(50);
+        ghostLight.setMaxRange(30);
         createGhostLightAnimation();
     }
 
     private Animation ghostLightAnimation;
-    private int currentlyLightedGhost = RED_GHOST_SHADOW;
+    private byte currentlyLightedGhost = RED_GHOST_SHADOW;
 
     private void createGhostLightAnimation() {
         ghostLightAnimation = new Timeline(
                 new KeyFrame(Duration.millis(3000), e -> {
-                    currentlyLightedGhost = (currentlyLightedGhost + 1) % 4;
+                    for (int i = 1; i <= 3; ++i) {
+                        currentlyLightedGhost = (byte) ((currentlyLightedGhost + 1) % 4);
+                        if (gameLevel.ghost(currentlyLightedGhost).state() == GhostState.HUNTING_PAC) {
+                            break;
+                        }
+                    }
                     MutatingGhost3D currentGhost3D = ghosts3D.get(currentlyLightedGhost);
                     ghostLight.setColor(currentGhost3D.coloring().normalDressColor());
                     ghostLight.translateXProperty().bind(currentGhost3D.translateXProperty());
                     ghostLight.translateYProperty().bind(currentGhost3D.translateYProperty());
-                    ghostLight.setTranslateZ(-30);
+                    ghostLight.setTranslateZ(-25);
                 })
         );
         ghostLightAnimation.setCycleCount(Animation.INDEFINITE);
