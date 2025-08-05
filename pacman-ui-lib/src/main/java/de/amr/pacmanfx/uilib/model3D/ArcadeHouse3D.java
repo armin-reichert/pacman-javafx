@@ -45,12 +45,13 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadeHouse3D extends Group implements Disposable {
 
+    private static final int DOOR_VERTICAL_BAR_COUNT = 4;
+
     private final DoubleProperty barThicknessProperty   = new SimpleDoubleProperty(0.25);
-    private final BooleanProperty openProperty          = new SimpleBooleanProperty(false);
+    private final BooleanProperty doorsOpenProperty     = new SimpleBooleanProperty(false);
     private final DoubleProperty wallBaseHeightProperty = new SimpleDoubleProperty();
 
     private final float barThickness;
-    private int doorVerticalBarCount = 4;
 
     private final TerrainRenderer3D r3D;
 
@@ -94,7 +95,7 @@ public class ArcadeHouse3D extends Group implements Disposable {
         wallTopMaterial  = coloredPhongMaterial(houseTopColor);
 
         wallBaseHeightProperty.set(baseHeight);
-        barThickness = 2f / doorVerticalBarCount;
+        barThickness = 2f / DOOR_VERTICAL_BAR_COUNT;
         barThicknessProperty.set(barThickness);
 
         float xMin = house.minTile().x() * TS + HTS, yMin = house.minTile().y() * TS + HTS;
@@ -189,8 +190,8 @@ public class ArcadeHouse3D extends Group implements Disposable {
         var door = new Group();
         door.setTranslateX(tile.x() * TS);
         door.setTranslateY(tile.y() * TS + HTS);
-        float barDistance = (float)TS / doorVerticalBarCount;
-        for (int i = 0; i < doorVerticalBarCount; ++i) {
+        float barDistance = (float)TS / DOOR_VERTICAL_BAR_COUNT;
+        for (int i = 0; i < DOOR_VERTICAL_BAR_COUNT; ++i) {
             var vBar = new Cylinder(barThicknessProperty.get(), height);
             vBar.radiusProperty().bind(barThicknessProperty);
             vBar.setMaterial(barMaterial);
@@ -230,7 +231,7 @@ public class ArcadeHouse3D extends Group implements Disposable {
                 .ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
                 .filter(ghost -> ghost.position().euclideanDist(house.entryPosition()) <= doorSensitivity)
                 .anyMatch(Ghost::isVisible);
-            openProperty().set(ghostNearHouseEntry);
+            doorsOpenProperty.set(ghostNearHouseEntry);
         });
     }
 
@@ -238,7 +239,7 @@ public class ArcadeHouse3D extends Group implements Disposable {
         return List.of(swirls);
     }
 
-    public BooleanProperty openProperty() {return openProperty;}
+    public BooleanProperty openProperty() {return doorsOpenProperty;}
 
     public DoubleProperty wallBaseHeightProperty() {
         return wallBaseHeightProperty;
