@@ -11,7 +11,6 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.model;
     exports de.amr.pacmanfx.model.actors;
     exports de.amr.pacmanfx.lib;
-    exports de.amr.pacmanfx.lib.arcade;
     exports de.amr.pacmanfx.lib.fsm;
     exports de.amr.pacmanfx.lib.graph;
     exports de.amr.pacmanfx.lib.nes;
