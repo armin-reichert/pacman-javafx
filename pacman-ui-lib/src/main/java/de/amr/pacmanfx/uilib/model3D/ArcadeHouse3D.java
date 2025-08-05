@@ -70,7 +70,7 @@ public class ArcadeHouse3D extends Group implements Disposable {
 
     private float doorSensitivity = 10;
 
-    private ManagedAnimation doorsOpenCloseAnimation;
+    private ManagedAnimation doorsMeltingAnimation;
     private List<ManagedAnimation> swirlAnimations = new ArrayList<>(3);
 
     public ArcadeHouse3D(
@@ -133,16 +133,6 @@ public class ArcadeHouse3D extends Group implements Disposable {
         rightDoor = createDoor(house.rightDoorTile(), wallBaseHeightProperty.get());
         doors = new Group(leftDoor, rightDoor);
 
-        doorsOpenCloseAnimation = new ManagedAnimation(animationRegistry, "Doors_OpenClose") {
-            @Override
-            protected Animation createAnimationFX() {
-                return new Timeline(
-                    new KeyFrame(Duration.seconds(0.75), new KeyValue(barThicknessProperty, 0)),
-                    new KeyFrame(Duration.seconds(1.5),  new KeyValue(barThicknessProperty, barThickness))
-                );
-            }
-        };
-
         Vector2f houseCenter = p0.midpoint(p5);
         light = new PointLight();
         light.setColor(Color.GHOSTWHITE);
@@ -162,6 +152,16 @@ public class ArcadeHouse3D extends Group implements Disposable {
             ManagedAnimation animation = createSwirlAnimation(animationRegistry, "Swirl_%d".formatted(i), swirls[i]);
             swirlAnimations.add(animation);
         }
+
+        doorsMeltingAnimation = new ManagedAnimation(animationRegistry, "Doors_Melting") {
+            @Override
+            protected Animation createAnimationFX() {
+                return new Timeline(
+                    new KeyFrame(Duration.seconds(0.75), new KeyValue(barThicknessProperty, 0)),
+                    new KeyFrame(Duration.seconds(1.5),  new KeyValue(barThicknessProperty, barThickness))
+                );
+            }
+        };
     }
 
     private ManagedAnimation createSwirlAnimation(AnimationRegistry animationRegistry, String label, Group swirl) {
@@ -259,7 +259,7 @@ public class ArcadeHouse3D extends Group implements Disposable {
     }
 
     public ManagedAnimation doorsOpenCloseAnimation() {
-        return doorsOpenCloseAnimation;
+        return doorsMeltingAnimation;
     }
 
     public PointLight light() {
@@ -281,9 +281,9 @@ public class ArcadeHouse3D extends Group implements Disposable {
 
     @Override
     public void dispose() {
-        doorsOpenCloseAnimation.stop();
-        doorsOpenCloseAnimation.dispose();
-        doorsOpenCloseAnimation = null;
+        doorsMeltingAnimation.stop();
+        doorsMeltingAnimation.dispose();
+        doorsMeltingAnimation = null;
 
         if (swirlAnimations != null) {
             for (ManagedAnimation swirlAnimation : swirlAnimations) {
