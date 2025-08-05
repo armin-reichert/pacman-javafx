@@ -174,6 +174,7 @@ public class Ghost3D extends Group implements Disposable {
 
         var eyesGroup = new Group(pupilsShape, eyeballsShape);
         dressGroup = new Group(dressShape);
+
         getChildren().setAll(dressGroup, eyesGroup);
 
         Bounds dressBounds = dressShape.getBoundsInLocal();

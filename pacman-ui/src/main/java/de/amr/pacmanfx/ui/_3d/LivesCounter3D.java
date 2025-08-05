@@ -10,7 +10,6 @@ import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import javafx.beans.property.*;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
@@ -39,7 +38,7 @@ public class LivesCounter3D extends Group implements Disposable {
     private final IntegerProperty               livesCountProperty = new SimpleIntegerProperty(0);
 
     private final List<NodeTracker> trackers;
-    private final PointLight light = new PointLight();
+    //private final PointLight light = new PointLight();
 
     public void startTracking(Node target) {
         for (NodeTracker tracker : trackers) {
@@ -58,10 +57,10 @@ public class LivesCounter3D extends Group implements Disposable {
         pillarMaterialProperty.bind(pillarColorProperty.map(Ufx::coloredPhongMaterial));
         plateMaterialProperty.bind((plateColorProperty.map(Ufx::coloredPhongMaterial)));
 
-        light.setMaxRange  (TS * (pacShapeArray.length + 1));
-        light.setTranslateX(TS * (pacShapeArray.length - 1));
-        light.setTranslateY(TS * (-1));
-        light.translateZProperty().bind(pillarHeightProperty.add(20).multiply(-1));
+        //light.setMaxRange  (TS * (pacShapeArray.length + 1));
+        //light.setTranslateX(TS * (pacShapeArray.length - 1));
+        //light.setTranslateY(TS * (-1));
+        //light.translateZProperty().bind(pillarHeightProperty.add(20).multiply(-1));
 
         var standsGroup = new Group();
         for (int i = 0; i < pacShapeArray.length; ++i) {
@@ -99,7 +98,7 @@ public class LivesCounter3D extends Group implements Disposable {
 
             getChildren().add(pacShape);
         }
-        getChildren().addAll(standsGroup, light);
+        getChildren().addAll(standsGroup /*, light*/);
 
         trackers = new ArrayList<>();
         for (Node shape : pacShapeArray) {
@@ -110,9 +109,6 @@ public class LivesCounter3D extends Group implements Disposable {
     public IntegerProperty livesCountProperty() { return livesCountProperty; }
     public ObjectProperty<Color> pillarColorProperty() { return pillarColorProperty; }
     public ObjectProperty<Color> plateColorProperty() { return plateColorProperty; }
-    public PointLight light() {
-        return light;
-    }
 
     @Override
     public void dispose() {
@@ -125,6 +121,5 @@ public class LivesCounter3D extends Group implements Disposable {
         plateThicknessProperty.unbind();
         plateRadiusProperty.unbind();
         plateMaterialProperty.unbind();
-        light.translateZProperty().unbind();
     }
 }

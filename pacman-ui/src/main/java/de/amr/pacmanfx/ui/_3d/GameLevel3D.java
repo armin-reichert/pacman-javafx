@@ -31,6 +31,7 @@ import javafx.geometry.Point3D;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.PointLight;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
@@ -84,6 +85,8 @@ public class GameLevel3D extends Group implements Disposable {
     private PhongMaterial particleMaterial;
 
     protected AmbientLight ambientLight;
+    protected PointLight ghostLight;
+
     protected Group maze3D;
     protected Box floor3D;
     protected ArcadeHouse3D house3D;
@@ -125,7 +128,6 @@ public class GameLevel3D extends Group implements Disposable {
         protected Animation createAnimationFX() {
             return new SequentialTransition(
                 doNow(() -> {
-                    turnLivesCounterLightOff();
                     sometimesLevelCompleteMessage(gameLevel.number());
                 }),
                 pauseSec(0.5, () -> gameLevel.ghosts().forEach(Ghost::hide)),
@@ -138,10 +140,6 @@ public class GameLevel3D extends Group implements Disposable {
                 wallsAndHouseDisappearing(),
                 pauseSec(1.0, () -> ui.theSound().play(SoundID.LEVEL_CHANGED))
             );
-        }
-
-        private void turnLivesCounterLightOff() {
-            livesCounter3D().map(LivesCounter3D::light).ifPresent(light -> light.setLightOn(false));
         }
 
         private Animation wallsAndHouseDisappearing() {
@@ -241,7 +239,6 @@ public class GameLevel3D extends Group implements Disposable {
             ui.theAssets().theModel3DRepository().ghostEyeballsMesh()
         );
 
-        createAmbientLight();
         createLevelCounter3D();
         createLivesCounter3D();
         createPac3D();
@@ -249,6 +246,8 @@ public class GameLevel3D extends Group implements Disposable {
         createMaze3D();
         createPellets3D();
         createEnergizers3D();
+        createAmbientLight();
+        createGhostLight();
 
         wallColorFlashingAnimation = new WallColorFlashingAnimation(animationRegistry);
         levelCompletedFullAnimation = new LevelCompletedAnimation(animationRegistry);
@@ -267,6 +266,7 @@ public class GameLevel3D extends Group implements Disposable {
         // Walls and house must be added *after* the actors and swirls, otherwise the transparency is not working correctly.
         getChildren().add(maze3D);
         getChildren().add(ambientLight);
+        getChildren().add(ghostLight);
 
         house3D.startSwirlAnimations();
     }
@@ -281,12 +281,14 @@ public class GameLevel3D extends Group implements Disposable {
         floorMaterial = new PhongMaterial();
         floorMaterial.diffuseColorProperty().bind(ui.property3DFloorColor());
         floorMaterial.specularColorProperty().bind(floorMaterial.diffuseColorProperty().map(Color::brighter));
+        floorMaterial.setSpecularPower(128);
 
         wallBaseMaterial = new PhongMaterial();
         //TODO the opacity change does not work as expected. Why?
         var diffuseColor = wallOpacityProperty.map(opacity -> colorWithOpacity(colorScheme.stroke(), opacity.doubleValue()));
         wallBaseMaterial.diffuseColorProperty().bind(diffuseColor);
         wallBaseMaterial.specularColorProperty().bind(diffuseColor.map(Color::brighter));
+        wallBaseMaterial.setSpecularPower(64);
 
         wallTopMaterial = new PhongMaterial();
         wallTopMaterial.setDiffuseColor(colorScheme.fill());
@@ -414,7 +416,6 @@ public class GameLevel3D extends Group implements Disposable {
         livesCounter3D.livesCountProperty().bind(livesCountProperty);
         livesCounter3D.pillarColorProperty().set(pillarColor);
         livesCounter3D.plateColorProperty().set(plateColor);
-        livesCounter3D.light().colorProperty().set(Color.CORNFLOWERBLUE);
     }
 
     private void createLevelCounter3D() {
@@ -428,6 +429,40 @@ public class GameLevel3D extends Group implements Disposable {
     private void createAmbientLight() {
         ambientLight = new AmbientLight();
         ambientLight.colorProperty().bind(ui.property3DLightColor());
+    }
+
+    private void createGhostLight() {
+        ghostLight = new PointLight(Color.WHITE);
+        ghostLight.setLightOn(true);
+        ghostLight.setMaxRange(50);
+        createGhostLightAnimation();
+    }
+
+    private Animation ghostLightAnimation;
+    private int currentlyLightedGhost = RED_GHOST_SHADOW;
+
+    private void createGhostLightAnimation() {
+        ghostLightAnimation = new Timeline(
+                new KeyFrame(Duration.millis(3000), e -> {
+                    currentlyLightedGhost = (currentlyLightedGhost + 1) % 4;
+                    MutatingGhost3D currentGhost3D = ghosts3D.get(currentlyLightedGhost);
+                    ghostLight.setColor(currentGhost3D.coloring().normalDressColor());
+                    ghostLight.translateXProperty().bind(currentGhost3D.translateXProperty());
+                    ghostLight.translateYProperty().bind(currentGhost3D.translateYProperty());
+                    ghostLight.setTranslateZ(-30);
+                })
+        );
+        ghostLightAnimation.setCycleCount(Animation.INDEFINITE);
+    }
+
+    private void startGhostLightAnimation() {
+        ghostLight.setLightOn(true);
+        ghostLightAnimation.play();
+    }
+
+    private void stopGhostLightAnimation() {
+        ghostLightAnimation.stop();
+        ghostLight.setLightOn(false);
     }
 
     private void createMaze3D() {
@@ -638,7 +673,6 @@ public class GameLevel3D extends Group implements Disposable {
         boolean visible = ui.theGameContext().theGame().canStartNewGame();
         if (livesCounter3D != null) {
             livesCounter3D.setVisible(visible);
-            livesCounter3D.light().setLightOn(visible);
         }
     }
 
@@ -654,6 +688,7 @@ public class GameLevel3D extends Group implements Disposable {
         ghosts3D.forEach(ghost3D -> ghost3D.init(gameLevel));
         energizers3D().forEach(Energizer3D::startPumping);
         house3D.startSwirlAnimations();
+        startGhostLightAnimation();
     }
 
     public void onPacManDying(GameState state) {
@@ -687,6 +722,7 @@ public class GameLevel3D extends Group implements Disposable {
         state.timer().resetIndefiniteTime(); // expires when animation ends
         ui.theSound().stopAll();
         animationRegistry.stopAllAnimations();
+        stopGhostLightAnimation();
         energizers3D.forEach(Energizer3D::stopPumping); //TODO needed?
         // hide 3D food explicitly because level might have been completed using cheat!
         pellets3D.forEach(pellet3D -> pellet3D.setVisible(false));
