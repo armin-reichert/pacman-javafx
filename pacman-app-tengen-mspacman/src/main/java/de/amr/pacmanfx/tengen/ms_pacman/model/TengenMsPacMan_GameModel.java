@@ -478,9 +478,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
         );
         level.ghosts().forEach(ghost -> {
             ghost.reset();
-            ghost.setRevivalPosition(ghost.personality() == RED_GHOST_SHADOW
-                ? level.ghostStartPosition(PINK_GHOST_SPEEDY)
-                : level.ghostStartPosition(ghost.personality()));
         });
 
         // Ghosts inside house start at bottom of house instead at middle (as marked in map)

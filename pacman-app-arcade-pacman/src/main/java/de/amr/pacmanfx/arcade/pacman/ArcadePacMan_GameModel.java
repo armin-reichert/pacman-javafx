@@ -6,7 +6,6 @@ package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEventType;
-import de.amr.pacmanfx.lib.RandomNumberSupport;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.TerrainTile;
@@ -261,7 +260,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
     public void createLevel(GameContext gameContext, int levelNumber) {
         WorldMap worldMap = mapSelector.getWorldMap(levelNumber);
         level = new GameLevel(levelNumber, worldMap, createLevelData(levelNumber));
-        level.addHouse();
+        level.addHouseContent();
         level.setGameOverStateTicks(90);
 
         Pac pacMan = createPac(gameContext);
@@ -279,9 +278,6 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
             createGhost(gameContext, ORANGE_GHOST_POKEY));
         level.ghosts().forEach(ghost -> {
             ghost.reset();
-            ghost.setRevivalPosition(ghost.personality() == RED_GHOST_SHADOW
-                ? level.ghostStartPosition(PINK_GHOST_SPEEDY)
-                : level.ghostStartPosition(ghost.personality()));
             ghost.setSpecialTerrainTiles(oneWayDownTiles);
         });
 

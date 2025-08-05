@@ -1,14 +1,47 @@
 package de.amr.pacmanfx.model;
 
+import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.actors.Actor;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
-public record House(Vector2i minTile, Vector2i maxTile, Vector2i leftDoorTile, Vector2i rightDoorTile) {
+public class House {
+
+    private final Vector2i minTile;
+    private final Vector2i maxTile;
+    private final Vector2i leftDoorTile;
+    private final Vector2i rightDoorTile;
+    private final Map<Byte, Vector2i> ghostRevivalTileMap = new HashMap<>();
+
+    public House(Vector2i minTile, Vector2i maxTile, Vector2i leftDoorTile, Vector2i rightDoorTile) {
+        this.minTile = requireNonNull(minTile);
+        this.maxTile = requireNonNull(maxTile);
+        this.leftDoorTile = requireNonNull(leftDoorTile);
+        this.rightDoorTile = requireNonNull(rightDoorTile);
+    }
+
+    public Vector2i minTile() {
+        return minTile;
+    }
+
+    public Vector2i maxTile() {
+        return maxTile;
+    }
+
+    public Vector2i leftDoorTile() {
+        return leftDoorTile;
+    }
+
+    public Vector2i rightDoorTile() {
+        return rightDoorTile;
+    }
 
     public Vector2i sizeInTiles() {
         return maxTile.minus(minTile).plus(1, 1);
@@ -17,6 +50,16 @@ public record House(Vector2i minTile, Vector2i maxTile, Vector2i leftDoorTile, V
     public boolean isDoorAt(Vector2i tile) {
         requireNonNull(tile);
         return tile.equals(leftDoorTile) || tile.equals(rightDoorTile);
+    }
+
+    public void setGhostRevivalTile(byte personality, Vector2i tile) {
+        Validations.requireValidGhostPersonality(personality);
+        requireNonNull(tile);
+        ghostRevivalTileMap.put(personality, tile);
+    }
+
+    public Vector2i ghostRevivalTile(byte personality) {
+        return ghostRevivalTileMap.get(personality);
     }
 
     /**

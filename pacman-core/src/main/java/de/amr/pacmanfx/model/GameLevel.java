@@ -135,6 +135,14 @@ public class GameLevel {
         }
         ghostStartPositions[ORANGE_GHOST_POKEY] = halfTileRightOf(orangeGhostTile);
 
+        // Revival positions
+        house.setGhostRevivalTile(RED_GHOST_SHADOW,   pinkGhostTile);
+        house.setGhostRevivalTile(PINK_GHOST_SPEEDY,  pinkGhostTile);
+        house.setGhostRevivalTile(CYAN_GHOST_BASHFUL, cyanGhostTile);
+        house.setGhostRevivalTile(ORANGE_GHOST_POKEY, orangeGhostTile);
+
+        // Scatter tiles
+
         ghostScatterTiles[RED_GHOST_SHADOW] = worldMap.getTerrainTileProperty(POS_SCATTER_RED_GHOST,
             Vector2i.of(0, worldMap.numCols() - 3));
 
@@ -146,6 +154,7 @@ public class GameLevel {
 
         ghostScatterTiles[ORANGE_GHOST_POKEY] = worldMap.getTerrainTileProperty(POS_SCATTER_ORANGE_GHOST,
             Vector2i.of(worldMap.numRows() - EMPTY_ROWS_BELOW_MAZE, 0));
+
     }
 
     private Portal[] findPortals(WorldMap worldMap) {
@@ -176,7 +185,7 @@ public class GameLevel {
      * (right lower tile). We add the corresponding map content here such that collision of actors with house walls
      * and doors is working. The obstacle detection algorithm will then also detect the house and create a closed obstacle.
      */
-    public void addHouse() {
+    public void addHouseContent() {
         if (!worldMap.properties(LayerID.TERRAIN).containsKey(POS_HOUSE_MIN_TILE)) {
             Logger.warn("No house min tile found in map!");
             worldMap.properties(LayerID.TERRAIN).put(

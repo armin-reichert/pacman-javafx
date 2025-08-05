@@ -270,7 +270,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
         WorldMap worldMap = mapSelector.getWorldMap(levelNumber);
         level = new GameLevel(levelNumber, worldMap, createLevelData(levelNumber));
         level.setGameOverStateTicks(150);
-        level.addHouse();
+        level.addHouseContent();
 
         level.setPac(createMsPacMan(gameContext));
         level.pac().setAutopilotSteering(autopilot);
@@ -283,9 +283,6 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
         );
         level.ghosts().forEach(ghost -> {
             ghost.reset();
-            ghost.setRevivalPosition(ghost.personality() == RED_GHOST_SHADOW
-                ? level.ghostStartPosition(PINK_GHOST_SPEEDY)
-                : level.ghostStartPosition(ghost.personality()));
         });
 
         level.setBonusSymbol(0, computeBonusSymbol(level.number()));

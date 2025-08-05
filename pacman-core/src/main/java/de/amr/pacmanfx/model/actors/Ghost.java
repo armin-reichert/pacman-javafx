@@ -39,7 +39,6 @@ public abstract class Ghost extends MovingActor implements Animated {
     private final String name;
     private ObjectProperty<GhostState> state;
 
-    private Vector2f revivalPosition;
     private List<Vector2i> specialTerrainTiles = List.of();
     private ActorAnimationMap animationMap;
 
@@ -93,15 +92,6 @@ public abstract class Ghost extends MovingActor implements Animated {
 
     public String name() {
         return name;
-    }
-
-    public Vector2f revivalPosition() {
-        return revivalPosition;
-    }
-
-    public void setRevivalPosition(Vector2f position) {
-        requireNonNull(position);
-        revivalPosition = position;
     }
 
     public void setSpecialTerrainTiles(List<Vector2i> tiles) {
@@ -487,6 +477,7 @@ public abstract class Ghost extends MovingActor implements Animated {
             }
             float speed = gameContext.theGame().actorSpeedControl().ghostSpeedReturningToHouse(gameContext, level, this);
             Vector2f position = position();
+            Vector2f revivalPosition = house.ghostRevivalTile(personality).scaled((float)TS).plus(HTS, 0);
             if (position.roughlyEquals(revivalPosition, 0.5f * speed, 0.5f * speed)) {
                 setPosition(revivalPosition);
                 setMoveDir(UP);

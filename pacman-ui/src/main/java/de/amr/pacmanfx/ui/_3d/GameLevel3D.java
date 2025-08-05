@@ -12,6 +12,7 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.Obstacle;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.ui.GameUI;
@@ -462,9 +463,9 @@ public class GameLevel3D extends Group implements Disposable {
 
         gameLevel.house().ifPresent(house -> {
             Vector2f[] ghostRevivalPositions = {
-                gameLevel.ghost(CYAN_GHOST_BASHFUL).revivalPosition().plus(HTS, HTS),
-                gameLevel.ghost(PINK_GHOST_SPEEDY).revivalPosition().plus(HTS, HTS),
-                gameLevel.ghost(ORANGE_GHOST_POKEY).revivalPosition().plus(HTS, HTS),
+                    house.ghostRevivalTile(CYAN_GHOST_BASHFUL).scaled((float) TS).plus(HTS, HTS),
+                    house.ghostRevivalTile(PINK_GHOST_SPEEDY) .scaled((float) TS).plus(HTS, HTS),
+                    house.ghostRevivalTile(ORANGE_GHOST_POKEY).scaled((float) TS).plus(HTS, HTS),
             };
             house3D = new ArcadeHouse3D(
                 animationRegistry,
@@ -556,9 +557,16 @@ public class GameLevel3D extends Group implements Disposable {
             ghosts3D.get(CYAN_GHOST_BASHFUL).ghost3D().dressMaterialNormal(),
             ghosts3D.get(ORANGE_GHOST_POKEY).ghost3D().dressMaterialNormal(),
         };
+        House house = gameLevel.house().orElseThrow();
+        Vector2f[] ghostRevivalPositionCenters = {
+            house.ghostRevivalTile(RED_GHOST_SHADOW)  .scaled((float) TS).plus(TS, HTS),
+            house.ghostRevivalTile(PINK_GHOST_SPEEDY) .scaled((float) TS).plus(TS, HTS),
+            house.ghostRevivalTile(CYAN_GHOST_BASHFUL).scaled((float) TS).plus(TS, HTS),
+            house.ghostRevivalTile(ORANGE_GHOST_POKEY).scaled((float) TS).plus(TS, HTS),
+        };
         energizers3D = gameLevel.tilesContainingFood()
             .filter(gameLevel::isEnergizerPosition)
-            .map(tile -> createEnergizer3D(tile, radius, minScaling, maxScaling, ghostDressMaterials))
+            .map(tile -> createEnergizer3D(tile, radius, minScaling, maxScaling, ghostDressMaterials, ghostRevivalPositionCenters))
             .collect(Collectors.toCollection(HashSet::new));
     }
 
@@ -567,7 +575,8 @@ public class GameLevel3D extends Group implements Disposable {
         float energizerRadius,
         float minScaling,
         float maxScaling,
-        Material[] ghostDressMaterials)
+        Material[] ghostDressMaterials,
+        Vector2f[] ghostRevivalPositions)
     {
         var energizerCenter = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, floorTopZ() - 6);
         var energizer3D = new SphericalEnergizer3D(
@@ -578,17 +587,12 @@ public class GameLevel3D extends Group implements Disposable {
             maxScaling,
             pelletMaterial,
             tile);
-        Vector2f[] ghostRevivalPositionCenters = {
-            gameLevel.ghost(RED_GHOST_SHADOW).revivalPosition().plus(HTS, HTS),
-            gameLevel.ghost(PINK_GHOST_SPEEDY).revivalPosition().plus(HTS, HTS),
-            gameLevel.ghost(CYAN_GHOST_BASHFUL).revivalPosition().plus(HTS, HTS),
-            gameLevel.ghost(ORANGE_GHOST_POKEY).revivalPosition().plus(HTS, HTS),
-        };
+
         var explosion = new EnergizerExplosionAndRecycling(
             animationRegistry,
             energizerCenter,
             house3D,
-            ghostRevivalPositionCenters,
+            ghostRevivalPositions,
             particleGroupsContainer,
             particleMaterial,
             ghostDressMaterials,
