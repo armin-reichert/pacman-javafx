@@ -461,10 +461,15 @@ public class GameLevel3D extends Group implements Disposable {
         Logger.info("Built 3D maze with {} composite walls in {} milliseconds", wall3DCount, passedTimeMillis);
 
         gameLevel.house().ifPresent(house -> {
+            Vector2f[] ghostRevivalPositions = {
+                gameLevel.ghost(CYAN_GHOST_BASHFUL).revivalPosition().plus(HTS, HTS),
+                gameLevel.ghost(PINK_GHOST_SPEEDY).revivalPosition().plus(HTS, HTS),
+                gameLevel.ghost(ORANGE_GHOST_POKEY).revivalPosition().plus(HTS, HTS),
+            };
             house3D = new ArcadeHouse3D(
                 animationRegistry,
-                gameLevel,
                 house,
+                ghostRevivalPositions,
                 ui.thePrefs().getFloat("3d.house.base_height"),
                 ui.thePrefs().getFloat("3d.house.wall_thickness"),
                 ui.thePrefs().getFloat("3d.house.opacity"),

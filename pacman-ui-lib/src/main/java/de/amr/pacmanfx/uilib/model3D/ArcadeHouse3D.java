@@ -32,7 +32,8 @@ import org.tinylog.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.Globals.HTS;
+import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.uilib.Ufx.colorWithOpacity;
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 import static java.util.Objects.requireNonNull;
@@ -72,8 +73,8 @@ public class ArcadeHouse3D extends Group implements Disposable {
 
     public ArcadeHouse3D(
         AnimationRegistry animationRegistry,
-        GameLevel gameLevel,
         House house,
+        Vector2f[] ghostRevivalPositionCenters,
         double baseHeight,
         double wallThickness,
         double opacity,
@@ -82,7 +83,6 @@ public class ArcadeHouse3D extends Group implements Disposable {
         Color doorColor)
     {
         requireNonNull(animationRegistry);
-        requireNonNull(gameLevel);
         requireNonNull(house);
         requireNonNull(houseBaseColor);
         requireNonNull(houseTopColor);
@@ -156,16 +156,11 @@ public class ArcadeHouse3D extends Group implements Disposable {
 
         getChildren().addAll(light, doors);
 
-        Vector2f[] centers = {
-            gameLevel.ghost(CYAN_GHOST_BASHFUL).revivalPosition().plus(HTS, HTS),
-            gameLevel.ghost(PINK_GHOST_SPEEDY) .revivalPosition().plus(HTS, HTS),
-            gameLevel.ghost(ORANGE_GHOST_POKEY).revivalPosition().plus(HTS, HTS),
-        };
-        swirls = new Group[centers.length];
-        for (int i = 0; i < swirls.length; ++i) {
+        swirls = new Group[ghostRevivalPositionCenters.length];
+        for (int i = 0; i < ghostRevivalPositionCenters.length; ++i) {
             swirls[i] = new Group();
-            swirls[i].setTranslateX(centers[i].x());
-            swirls[i].setTranslateY(centers[i].y());
+            swirls[i].setTranslateX(ghostRevivalPositionCenters[i].x());
+            swirls[i].setTranslateY(ghostRevivalPositionCenters[i].y());
         }
 
         Duration rotationTime = Duration.seconds(EnergizerExplosionAndRecycling.SWIRL_ROTATION_SEC);
