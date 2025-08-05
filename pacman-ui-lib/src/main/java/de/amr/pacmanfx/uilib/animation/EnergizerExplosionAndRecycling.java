@@ -219,7 +219,7 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
         }
 
         private void arrivedAtTargetPosition(Particle particle) {
-            Group swirl = house3D.particleSwirls().get(swirlIndex(particle.ghost_personality));
+            Group swirl = house3D.swirls().get(swirlIndex(particle.ghost_personality));
             particle.setTranslateX(particle.houseTargetPosition.getX() - swirl.getTranslateX());
             particle.setTranslateY(particle.houseTargetPosition.getY() - swirl.getTranslateY());
             particle.setTranslateZ(particle.houseTargetPosition.getZ());

@@ -253,18 +253,19 @@ public class GameLevel3D extends Group implements Disposable {
         levelCompletedFullAnimation = new LevelCompletedAnimation(animationRegistry);
         levelCompletedShortAnimation = new LevelCompletedAnimationShort(animationRegistry);
 
-        getChildren().add(ambientLight);
+        getChildren().add(floor3D);
         getChildren().add(levelCounter3D);
         getChildren().add(livesCounter3D);
         getChildren().addAll(pac3D, pac3D.light());
         getChildren().addAll(ghosts3D);
-        getChildren().addAll(house3D.particleSwirls());
+        getChildren().addAll(house3D.swirls());
         getChildren().add(particleGroupsContainer);
         getChildren().addAll(energizers3D.stream().map(Energizer3D::shape).toList());
         getChildren().addAll(pellets3D);
         // Note: The order in which children are added to the root matters!
         // Walls and house must be added *after* the actors and swirls, otherwise the transparency is not working correctly.
-        getChildren().addAll(floor3D, maze3D);
+        getChildren().add(maze3D);
+        getChildren().add(ambientLight);
 
         house3D.startSwirlAnimations();
     }
@@ -682,7 +683,7 @@ public class GameLevel3D extends Group implements Disposable {
         pellets3D.forEach(pellet3D -> pellet3D.setVisible(false));
         energizers3D.forEach(Energizer3D::hide);
         particleGroupsContainer.getChildren().clear();
-        for (Group swirl : house3D.particleSwirls()) {
+        for (Group swirl : house3D.swirls()) {
             swirl.getChildren().clear();
         }
         house3D.setDoorsVisible(false);

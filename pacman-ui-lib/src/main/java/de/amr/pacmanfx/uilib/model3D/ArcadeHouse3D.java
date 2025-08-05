@@ -155,7 +155,17 @@ public class ArcadeHouse3D extends Group implements Disposable {
 
         getChildren().addAll(light, doors);
 
-        createSwirls(gameLevel);
+        Vector2f[] centers = {
+            gameLevel.ghost(CYAN_GHOST_BASHFUL).revivalPosition().plus(HTS, HTS),
+            gameLevel.ghost(PINK_GHOST_SPEEDY) .revivalPosition().plus(HTS, HTS),
+            gameLevel.ghost(ORANGE_GHOST_POKEY).revivalPosition().plus(HTS, HTS),
+        };
+        swirls = new Group[centers.length];
+        for (int i = 0; i < swirls.length; ++i) {
+            swirls[i] = new Group();
+            swirls[i].setTranslateX(centers[i].x());
+            swirls[i].setTranslateY(centers[i].y());
+        }
 
         Duration rotationTime = Duration.seconds(EnergizerExplosionAndRecycling.SWIRL_ROTATION_SEC);
         for (int i = 0; i < swirls.length; ++i) {
@@ -224,7 +234,7 @@ public class ArcadeHouse3D extends Group implements Disposable {
         });
     }
 
-    public List<Group> particleSwirls() {
+    public List<Group> swirls() {
         return List.of(swirls);
     }
 
@@ -244,20 +254,6 @@ public class ArcadeHouse3D extends Group implements Disposable {
 
     public PointLight light() {
         return light;
-    }
-
-    private void createSwirls(GameLevel gameLevel) {
-        Vector2f[] centers = {
-            gameLevel.ghost(CYAN_GHOST_BASHFUL).revivalPosition().plus(HTS, HTS),
-            gameLevel.ghost(PINK_GHOST_SPEEDY) .revivalPosition().plus(HTS, HTS),
-            gameLevel.ghost(ORANGE_GHOST_POKEY).revivalPosition().plus(HTS, HTS),
-        };
-        swirls = new Group[centers.length];
-        for (int i = 0; i < swirls.length; ++i) {
-            swirls[i] = new Group();
-            swirls[i].setTranslateX(centers[i].x());
-            swirls[i].setTranslateY(centers[i].y());
-        }
     }
 
     public void startSwirlAnimations() {
