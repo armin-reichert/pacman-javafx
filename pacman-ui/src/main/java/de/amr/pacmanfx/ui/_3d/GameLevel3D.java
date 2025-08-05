@@ -680,6 +680,9 @@ public class GameLevel3D extends Group implements Disposable {
         if (livesCounter3D != null) {
             livesCounter3D.setVisible(visible);
         }
+        if (ghostLightAnimation.getStatus() != Animation.Status.RUNNING) {
+            startGhostLightAnimation();
+        }
     }
 
     public void onStartingGame() {
@@ -694,7 +697,6 @@ public class GameLevel3D extends Group implements Disposable {
         ghosts3D.forEach(ghost3D -> ghost3D.init(gameLevel));
         energizers3D().forEach(Energizer3D::startPumping);
         house3D.startSwirlAnimations();
-        startGhostLightAnimation();
     }
 
     public void onPacManDying(GameState state) {
