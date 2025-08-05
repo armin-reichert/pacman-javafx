@@ -11,6 +11,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
+import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.EnergizerExplosionAndRecycling;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -53,6 +54,7 @@ public class ArcadeHouse3D extends Group implements Disposable {
     private final DoubleProperty wallBaseHeightProperty = new SimpleDoubleProperty();
 
     private final float barThickness;
+    private final double wallBaseOpacity;
 
     private final TerrainRenderer3D r3D;
 
@@ -60,16 +62,16 @@ public class ArcadeHouse3D extends Group implements Disposable {
     private PhongMaterial wallBaseMaterial;
     private PhongMaterial wallTopMaterial;
 
+    private PointLight light;
     private Group doors;
     private Group leftDoor;
     private Group rightDoor;
-    private PointLight light;
+    private Group[] swirls;
+
     private float doorSensitivity = 10;
 
-    private Group[] swirls;
-    private List<ManagedAnimation> swirlAnimations = new ArrayList<>(3);
-
     private ManagedAnimation doorsOpenCloseAnimation;
+    private List<ManagedAnimation> swirlAnimations = new ArrayList<>(3);
 
     public ArcadeHouse3D(
         AnimationRegistry animationRegistry,
@@ -77,22 +79,17 @@ public class ArcadeHouse3D extends Group implements Disposable {
         Vector2f[] ghostRevivalPositionCenters,
         double baseHeight,
         double wallThickness,
-        double opacity,
-        Color houseBaseColor,
-        Color houseTopColor,
-        Color doorColor)
+        double opacity)
     {
         requireNonNull(animationRegistry);
         requireNonNull(house);
-        requireNonNull(houseBaseColor);
-        requireNonNull(houseTopColor);
-        requireNonNull(doorColor);
 
         r3D = new TerrainRenderer3D();
 
-        barMaterial      = coloredPhongMaterial(colorWithOpacity(doorColor, 0.8));
-        wallBaseMaterial = coloredPhongMaterial(colorWithOpacity(houseBaseColor, opacity));
-        wallTopMaterial  = coloredPhongMaterial(houseTopColor);
+        wallBaseOpacity = opacity;
+        wallBaseMaterial = coloredPhongMaterial(colorWithOpacity(Color.BLUE, 0.5));
+        wallTopMaterial  = coloredPhongMaterial(Color.YELLOW);
+        barMaterial      = coloredPhongMaterial(Color.PINK);
 
         wallBaseHeightProperty.set(baseHeight);
         barThickness = 2f / DOOR_VERTICAL_BAR_COUNT;
@@ -179,6 +176,21 @@ public class ArcadeHouse3D extends Group implements Disposable {
                 }
             });
         }
+    }
+
+    public void setWallBaseColor(Color color) {
+        requireNonNull(color);
+        wallBaseMaterial.setDiffuseColor(Ufx.colorWithOpacity(color, wallBaseOpacity));
+    }
+
+    public void setWallTopColor(Color color) {
+        requireNonNull(color);
+        wallTopMaterial.setDiffuseColor(color);
+    }
+
+    public void setDoorColor(Color color) {
+        requireNonNull(color);
+        barMaterial.setDiffuseColor(color);
     }
 
     private Group createDoor(Vector2i tile, double height) {

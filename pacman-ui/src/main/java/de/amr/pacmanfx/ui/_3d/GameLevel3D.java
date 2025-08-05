@@ -472,11 +472,11 @@ public class GameLevel3D extends Group implements Disposable {
                 ghostRevivalPositions,
                 ui.thePrefs().getFloat("3d.house.base_height"),
                 ui.thePrefs().getFloat("3d.house.wall_thickness"),
-                ui.thePrefs().getFloat("3d.house.opacity"),
-                colorScheme.fill(),
-                colorScheme.stroke(),
-                colorScheme.door()
+                ui.thePrefs().getFloat("3d.house.opacity")
             );
+            house3D.setWallBaseColor(colorScheme.fill());
+            house3D.setWallTopColor(colorScheme.stroke());
+            house3D.setDoorColor(colorScheme.door());
             house3D.wallBaseHeightProperty().set(ui.thePrefs().getFloat("3d.house.base_height"));
             house3D.openProperty().addListener(this::handleHouseOpenChange);
             house3D.setDoorSensitivity(ui.thePrefs().getFloat("3d.house.sensitivity"));
