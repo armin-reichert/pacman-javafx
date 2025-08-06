@@ -20,7 +20,7 @@ javafx {
 }
 
 application {
-    mainModule = "x.arcade.pacman"
+    mainModule = "de.amr.pacmanfx.arcade.pacman"
     mainClass = "de.amr.pacmanfx.arcade.pacman.app.Main"
 }
 
