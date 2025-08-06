@@ -19,7 +19,7 @@ application {
     // and an error message "module de.amr.pacmanfx.allgames not in boot Layer" appears
     mainModule = "x.de.amr.pacmanfx.allgames"
     mainClass = "de.amr.pacmanfx.allgames.app.Main"
-    if (osName == "linux") {
+    if (osdetector.os == "linux") {
         applicationDefaultJvmArgs = ["-Dprism.forceGPU=true"]
     }
 }
@@ -38,7 +38,7 @@ jlink {
         vendor = "Armin Reichert"
         installerOptions = []
         installerType = osPkg
-        if (osName == "windows") {
+        if (osdetector.os == "windows") {
             icon = "pacman.ico"
             installerOptions += ["--win-dir-chooser", "--win-menu", "--win-menu-group", "Pac-Man FX", "--win-shortcut"]
             //imageOptions = ["--win-console"]

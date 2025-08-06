@@ -1,4 +1,5 @@
 plugins {
+    id 'com.google.osdetector' version '1.7.3'
     id "org.openjfx.javafxplugin" apply false
 }
 
@@ -24,16 +25,13 @@ subprojects {
     }
 }
 
-// OS detection
-def osNameSystemProperty = System.getProperty("os.name")
 ext {
-    osName  = osNameSystemProperty.contains("Windows") ? "windows"
-            : osNameSystemProperty.contains("Mac")     ? "macosx"
-            : osNameSystemProperty.contains("Linux")   ? "linux"
-            : "unidentifiedOS"
-    osPkg   = osName == "windows" ? "msi"
-            : osName == "macosx"  ? "dmg"
-            : osName == "linux"   ? "deb"
-            : ""
+    osPkg = osdetector.os == "windows" ? "msi"
+          : osdetector.os == "mac" ? "dmg"
+          : osdetector.os == "linux" ? "deb"
+          : ""
 }
-println("System property 'os.name'='$osNameSystemProperty'. Using 'ext.osName'='$osName' and 'ext.osPkg'='$osPkg' in build files.")
+
+println "osdetector.os         = ${osdetector.os}"
+println "osdetector.arch       = ${osdetector.arch}"
+println "osdetector.classifier = ${osdetector.classifier}"
