@@ -85,7 +85,7 @@ public class PacManGames_UI_Impl implements GameUI {
     private final GameContext        theGameContext;
     private final Keyboard           theKeyboard;
     private final Joypad             theJoypad;
-    private final PreferenceManager  thePrefs;
+    private final UserUIPreferences thePrefs;
     private final Stage              theStage;
 
     private final Map<String, GameUI_Config> configByGameVariant = new HashMap<>();
@@ -111,7 +111,7 @@ public class PacManGames_UI_Impl implements GameUI {
         theGameContext = gameContext;
         theKeyboard = new Keyboard();
         theJoypad = new Joypad(theKeyboard);
-        thePrefs = new PreferenceManager(PacManGames_UI_Impl.class);
+        thePrefs = new UserUIPreferences(PacManGames_UI_Impl.class);
         theStage = stage;
 
         globalActionBindings = new DefaultActionBindingManager();
@@ -325,7 +325,7 @@ public class PacManGames_UI_Impl implements GameUI {
     @Override public Stage theStage() { return theStage; }
 
     @Override
-    public PreferenceManager thePrefs() { return thePrefs; }
+    public UserUIPreferences theUserPrefs() { return thePrefs; }
 
     @Override
     public void restart() {

@@ -104,9 +104,9 @@ public interface GameUI {
     GameContext                      theGameContext();
     Joypad                           theJoypad();
     Keyboard                         theKeyboard();
-    PreferenceManager                thePrefs();
     SoundManager                     theSound();
     Stage                            theStage();
+    UserUIPreferences                theUserPrefs();
 
     void restart();
     void selectGameVariant(String variant);
@@ -160,8 +160,8 @@ public interface GameUI {
      * @return CustomMenuItem representing a context menu title item
      */
     default MenuItem createContextMenuTitle(String titleKey) {
-        Font font = thePrefs().getFont("context_menu.title.font");
-        Color fillColor = thePrefs().getColor("context_menu.title.fill");
+        Font font = theUserPrefs().getFont("context_menu.title.font");
+        Color fillColor = theUserPrefs().getColor("context_menu.title.fill");
         var text = new Text(theAssets().text(titleKey));
         text.setFont(font);
         text.setFill(fillColor);
