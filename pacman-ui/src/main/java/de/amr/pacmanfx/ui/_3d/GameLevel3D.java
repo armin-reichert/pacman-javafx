@@ -60,9 +60,9 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameLevel3D extends Group implements Disposable {
 
-    private final IntegerProperty livesCountProperty      = new SimpleIntegerProperty(0);
-    private final DoubleProperty  wallBaseHeightProperty  = new SimpleDoubleProperty(Wall3D.DEFAULT_BASE_HEIGHT);
-    private final DoubleProperty  wallOpacityProperty     = new SimpleDoubleProperty(1);
+    private final IntegerProperty livesCountProperty     = new SimpleIntegerProperty(0);
+    private final DoubleProperty  wallBaseHeightProperty = new SimpleDoubleProperty(Wall3D.DEFAULT_BASE_HEIGHT);
+    private final DoubleProperty  wallOpacityProperty    = new SimpleDoubleProperty(1);
 
     protected final GameUI ui;
     protected final GameLevel gameLevel;
@@ -657,7 +657,6 @@ public class GameLevel3D extends Group implements Disposable {
     public PacBase3D pac3D() { return pac3D; }
     public List<MutatingGhost3D> ghosts3D() { return Collections.unmodifiableList(ghosts3D); }
     public Optional<Bonus3D> bonus3D() { return Optional.ofNullable(bonus3D); }
-    public Optional<LivesCounter3D> livesCounter3D() { return Optional.ofNullable(livesCounter3D); }
     public Set<Shape3D> pellets3D() { return Collections.unmodifiableSet(pellets3D); }
     public Set<Energizer3D> energizers3D() { return Collections.unmodifiableSet(energizers3D); }
 
@@ -708,6 +707,7 @@ public class GameLevel3D extends Group implements Disposable {
         ghosts3D.forEach(ghost3D -> ghost3D.init(gameLevel));
         energizers3D().forEach(Energizer3D::startPumping);
         house3D.startSwirlAnimations();
+        ghostLightAnimation.playFromStart();
     }
 
     public void onPacManDying(GameState state) {
@@ -778,6 +778,7 @@ public class GameLevel3D extends Group implements Disposable {
 
     public void onGameOver(GameState state) {
         state.timer().restartSeconds(3);
+        ghostLightAnimation.stop();
         energizers3D().forEach(Energizer3D::hide);
         house3D.stopSwirlAnimations();
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
@@ -831,10 +832,9 @@ public class GameLevel3D extends Group implements Disposable {
         }
     }
 
-    //TODO why gets rendering so slow when draw mode is LINE?
     private void handleDrawModeChange(ObservableValue<? extends DrawMode> obs, DrawMode oldDrawMode, DrawMode newDrawMode) {
-        Predicate<Node> includeAll = shape3D -> false;
-        setDrawModeUnder(maze3D, pellets3D::contains, newDrawMode);
+        Predicate<Node> includeAll = excludedNode -> false;
+        setDrawModeUnder(maze3D, node -> node instanceof Shape3D && pellets3D.contains(node), newDrawMode);
         setDrawModeUnder(pac3D, includeAll, newDrawMode);
         setDrawModeUnder(livesCounter3D, includeAll, newDrawMode);
         ghosts3D.forEach(ghost3D -> setDrawModeUnder(ghost3D, includeAll, newDrawMode));
@@ -884,12 +884,11 @@ public class GameLevel3D extends Group implements Disposable {
         if (!animationRegistry.animations().isEmpty()) {
             Logger.info("There are {} un-disposed animations left:", animationRegistry.animations().size());
             // create a copy to avoid CME
-            for (ManagedAnimation animation : animationRegistry.animations().stream().toList()) {
+            for (ManagedAnimation animation : new ArrayList<>(animationRegistry.animations())) {
                 Logger.info("\tDisposing" + animation.label());
                 animation.dispose();
             }
         }
-
         animationRegistry.clear();
 
         ui.property3DDrawMode().removeListener(this::handleDrawModeChange);
@@ -915,8 +914,8 @@ public class GameLevel3D extends Group implements Disposable {
             Logger.info("Unbound and cleared ambient light");
         }
         if (pellets3D != null) {
-            pellets3D.forEach(shape3D -> {
-                if (shape3D instanceof MeshView meshView) {
+            pellets3D.forEach(pellet3D -> {
+                if (pellet3D instanceof MeshView meshView) {
                     meshView.setMaterial(null);
                     meshView.setMesh(null);
                 }
@@ -925,7 +924,7 @@ public class GameLevel3D extends Group implements Disposable {
             Logger.info("Disposed 3D pellets");
         }
         if (energizers3D != null) {
-            energizers3D.forEach(Energizer3D::dispose);
+            disposeAll(energizers3D);
             energizers3D.clear();
             energizers3D = null;
             Logger.info("Disposed 3D energizers");
@@ -955,11 +954,7 @@ public class GameLevel3D extends Group implements Disposable {
             Logger.info("Disposed 3D maze");
         }
         if (livesCounterShapes != null) {
-            for (var shape : livesCounterShapes) {
-                if (shape instanceof Disposable disposable) {
-                    disposable.dispose();
-                }
-            }
+            disposeAll(List.of(livesCounterShapes));
             livesCounterShapes = null;
         }
         if (livesCounter3D != null) {
@@ -978,7 +973,7 @@ public class GameLevel3D extends Group implements Disposable {
             Logger.info("Disposed Pac 3D");
         }
         if (ghosts3D != null) {
-            ghosts3D.forEach(MutatingGhost3D::dispose);
+            disposeAll(ghosts3D);
             ghosts3D = null;
             Logger.info("Disposed 3D ghosts");
         }
