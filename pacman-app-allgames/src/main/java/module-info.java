@@ -9,10 +9,10 @@ module de.amr.pacmanfx.allgames {
     requires de.amr.pacmanfx.uilib;
     requires de.amr.pacmanfx.ui;
 
-    requires arcade.ms_pacman;
-    requires x.arcade.pacman;
-    requires arcade.pacman_xxl;
-    requires tengen.ms_pacman;
+    requires de.amr.pacmanfx.arcade.ms_pacman;
+    requires de.amr.pacmanfx.arcade.pacman;
+    requires de.amr.pacmanfx.arcade.pacman_xxl;
+    requires de.amr.pacmanfx.tengen.ms_pacman;
 
     exports de.amr.pacmanfx.allgames.app;
 }

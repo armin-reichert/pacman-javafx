@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 
 // module is open to allow access to non-class resources
-open module arcade.ms_pacman {
+open module de.amr.pacmanfx.arcade.ms_pacman {
     requires javafx.base;
     requires javafx.controls;
     requires javafx.graphics;
@@ -13,7 +13,7 @@ open module arcade.ms_pacman {
     requires de.amr.pacmanfx.core;
     requires de.amr.pacmanfx.uilib;
     requires de.amr.pacmanfx.ui;
-    requires x.arcade.pacman;
+    requires de.amr.pacmanfx.arcade.pacman;
 
     exports de.amr.pacmanfx.arcade.ms_pacman;
     exports de.amr.pacmanfx.arcade.ms_pacman.rendering;
