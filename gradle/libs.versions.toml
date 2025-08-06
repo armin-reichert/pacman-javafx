@@ -6,14 +6,17 @@ junit5  = "5.8.1"
 tinylog = "2.7.0"
 
 [libraries]
-iconli-fontawesome   = { module = "org.kordamp.ikonli:ikonli-fontawesome5-pack",     version.ref="iconli" }
-iconli-javafx        = { module = "org.kordamp.ikonli:ikonli-javafx",                version.ref="iconli" }
+iconli-fontawesome   = { module = "org.kordamp.ikonli:ikonli-fontawesome5-pack",     version.ref = "iconli" }
+iconli-javafx        = { module = "org.kordamp.ikonli:ikonli-javafx",                version.ref = "iconli" }
 junit-jupiter-api    = { group = "org.junit.jupiter", name = "junit-jupiter-api",    version.ref = "junit5" }
 junit-jupiter-engine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", version.ref = "junit5" }
 junit-jupiter-params = { group = "org.junit.jupiter", name = "junit-jupiter-params", version.ref = "junit5" }
-tinylog-api          = { module = "org.tinylog:tinylog-api",                         version.ref="tinylog"}
-tinylog-impl         = { module = "org.tinylog:tinylog-impl",                        version.ref="tinylog"}
+tinylog-api          = { module = "org.tinylog:tinylog-api",                         version.ref = "tinylog"}
+tinylog-impl         = { module = "org.tinylog:tinylog-impl",                        version.ref = "tinylog"}
 
 [bundles]
 iconli  = ["iconli-javafx", "iconli-fontawesome" ]
 tinylog = ["tinylog-api", "tinylog-impl"]
+
+[plugins]
+osdetector = { id = "com.google.osdetector", version = "1.7.3" }

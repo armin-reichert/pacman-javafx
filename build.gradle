@@ -1,5 +1,5 @@
 plugins {
-    id 'com.google.osdetector' version '1.7.3'
+    alias(libs.plugins.osdetector) // get from version catalog
     id "org.openjfx.javafxplugin" apply false
 }
 
@@ -19,9 +19,7 @@ subprojects {
     }
     tasks.withType(JavaCompile).configureEach {
         options.encoding = "UTF-8"
-        configure(options) {
-            options.compilerArgs << "-Xlint:deprecation" << "-Xlint:unchecked"
-        }
+        options.compilerArgs.addAll(["-Xlint:deprecation", "-Xlint:unchecked"])
     }
 }
 
