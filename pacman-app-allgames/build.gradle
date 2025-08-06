@@ -1,4 +1,5 @@
 plugins {
+    id "java"
     id "org.beryx.jlink" version "3.1.1"
 }
 
@@ -18,7 +19,7 @@ application {
     // and an error message "module de.amr.pacmanfx.allgames not in boot Layer" appears
     mainModule = "x.de.amr.pacmanfx.allgames"
     mainClass = "de.amr.pacmanfx.allgames.app.Main"
-    if (os.isLinux()) {
+    if (osName == "linux") {
         applicationDefaultJvmArgs = ["-Dprism.forceGPU=true"]
     }
 }
@@ -36,15 +37,11 @@ jlink {
         appVersion = "1.0"
         vendor = "Armin Reichert"
         installerOptions = []
-        if (os.isWindows()) {
+        installerType = osPkg
+        if (osName == "windows") {
             icon = "pacman.ico"
-            installerType = "msi"
             installerOptions += ["--win-dir-chooser", "--win-menu", "--win-menu-group", "Pac-Man FX", "--win-shortcut"]
             //imageOptions = ["--win-console"]
-        } else if (os.isLinux()) {
-            installerType = "deb"
-        } else if (os.isMacOsX()) {
-            installerType = "dmg"
         }
     }
 }

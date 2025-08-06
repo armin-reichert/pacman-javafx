@@ -26,13 +26,10 @@ jlink {
     jpackage {
         appVersion = "1.0"
         vendor = "Armin Reichert"
-        if (os.isWindows()) {
+        installerType = osPkg
+        if (osName == "windows") {
             icon = "mapeditor.ico"
-            installerType = "msi"
             installerOptions = ["--win-dir-chooser", "--win-menu", "--win-menu-group", "Pac-Man FX", "--win-shortcut"]
-        }
-        if (os.isLinux()) {
-            installerType = "deb"
         }
     }
 }

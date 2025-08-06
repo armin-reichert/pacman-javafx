@@ -29,15 +29,6 @@ jlink {
         name = "Arcade Pac-Man"
     }
     jpackage {
-        if (os.isWindows()) {
-            installerType = "msi"
-            //imageOptions = ["--win-console"]
-        }
-        else if (os.isLinux()) {
-            installerType = "deb"
-        }
-        else if (os.isMacOsX()) {
-            installerType = "dmg"
-        }
+        installerType = osPkg
     }
 }

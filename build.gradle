@@ -1,37 +1,39 @@
-import org.gradle.internal.os.OperatingSystem
-
-buildscript {
-    // used in application and jpackage plugin calls of subprojects
-    ext.set("os", OperatingSystem.current())
-}
-
 plugins {
-    id "java"
-    id "org.openjfx.javafxplugin" version "0.1.0"
+    id "org.openjfx.javafxplugin" apply false
 }
 
 subprojects {
     apply(plugin: "java")
     apply(plugin: "org.openjfx.javafxplugin")
-    java {
-        toolchain {
-            languageVersion = JavaLanguageVersion.of(21)
-        }
-    }
-    javafx {
-        version = "21.0.7"
-    }
     repositories {
         mavenCentral()
     }
-    tasks.withType(JavaCompile).tap {
-        configureEach {
-            options.encoding = "UTF-8"
-            configure(options) {
-                options.compilerArgs << "-Xlint:deprecation" << "-Xlint:unchecked"
-            }
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(libs.versions.java.get())
+        }
+    }
+    javafx {
+        version = libs.versions.javafx.get()
+    }
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = "UTF-8"
+        configure(options) {
+            options.compilerArgs << "-Xlint:deprecation" << "-Xlint:unchecked"
         }
     }
 }
 
-println("Operating system: '$os'")
+// OS detection
+def osNameSystemProperty = System.getProperty("os.name")
+ext {
+    osName  = osNameSystemProperty.contains("Windows") ? "windows"
+            : osNameSystemProperty.contains("Mac")     ? "macosx"
+            : osNameSystemProperty.contains("Linux")   ? "linux"
+            : "unidentifiedOS"
+    osPkg   = osName == "windows" ? "msi"
+            : osName == "macosx"  ? "dmg"
+            : osName == "linux"   ? "deb"
+            : ""
+}
+println("System property 'os.name'='$osNameSystemProperty'. Using 'ext.osName'='$osName' and 'ext.osPkg'='$osPkg' in build files.")

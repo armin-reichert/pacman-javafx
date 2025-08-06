@@ -1,12 +1,14 @@
 [versions]
-iconli-version = "12.3.1"
-tinylog-version = "2.7.0"
+iconli = "12.3.1"
+java = "21"
+javafx = "21.0.8"
+tinylog = "2.7.0"
 
 [libraries]
-iconli-fontawesome = { module="org.kordamp.ikonli:ikonli-fontawesome5-pack", version.ref="iconli-version" }
-iconli-javafx = { module="org.kordamp.ikonli:ikonli-javafx", version.ref="iconli-version" }
-tinylog-api = { module="org.tinylog:tinylog-api", version.ref="tinylog-version"}
-tinylog-impl = { module="org.tinylog:tinylog-impl", version.ref="tinylog-version"}
+iconli-fontawesome = { module="org.kordamp.ikonli:ikonli-fontawesome5-pack", version.ref="iconli" }
+iconli-javafx = { module="org.kordamp.ikonli:ikonli-javafx", version.ref="iconli" }
+tinylog-api = { module="org.tinylog:tinylog-api", version.ref="tinylog"}
+tinylog-impl = { module="org.tinylog:tinylog-impl", version.ref="tinylog"}
 
 [bundles]
 iconli = ["iconli-javafx", "iconli-fontawesome" ]

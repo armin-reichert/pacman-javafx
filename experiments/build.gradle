@@ -1,12 +1,3 @@
-plugins {
-    id "java"
-    id "org.openjfx.javafxplugin" version "0.1.0"
-}
-
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     implementation project(":pacman-core")
     implementation project(":pacman-ui-lib")
