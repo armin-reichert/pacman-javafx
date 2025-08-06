@@ -1,12 +1,14 @@
+// alias: gets plugin id and version from version catalog
 plugins {
     id "java"
-    // alias: gets plugin id and version from version catalog
     alias(libs.plugins.osdetector)
     alias(libs.plugins.javafx)
 }
 
 subprojects {
-    apply(plugin: "java")
+    apply plugin: "java"
+    pluginManager.apply(libs.plugins.javafx.get().getPluginId())
+    pluginManager.apply(libs.plugins.osdetector.get().getPluginId())
     repositories {
         mavenCentral()
     }
