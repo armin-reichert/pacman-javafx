@@ -60,18 +60,12 @@ public class GridGraphImpl implements GridGraph {
 	public int neighbor(int vertex, Dir dir) {
 		int row = row(vertex);
 		int col = col(vertex);
-		switch (dir) {
-		case N:
-			return row - 1 >= 0 ? vertex(row - 1, col) : -1;
-		case E:
-			return col + 1 < cols ? vertex(row, col + 1) : -1;
-		case S:
-			return row + 1 < rows ? vertex(row + 1, col) : -1;
-		case W:
-			return col - 1 >= 0 ? vertex(row, col - 1) : -1;
-		default:
-			throw new IllegalArgumentException();
-		}
+		return switch (dir) {
+			case N -> row - 1 >= 0 ? vertex(row - 1, col) : -1;
+			case E -> col + 1 < cols ? vertex(row, col + 1) : -1;
+			case S -> row + 1 < rows ? vertex(row + 1, col) : -1;
+			case W -> col - 1 >= 0 ? vertex(row, col - 1) : -1;
+		};
 	}
 
 	@Override

@@ -10,7 +10,6 @@ import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._3d.GameLevel3D;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
-import javafx.scene.Group;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.ui.GameUI.DEFAULT_ACTION_BINDINGS;

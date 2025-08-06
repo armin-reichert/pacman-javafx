@@ -13,10 +13,7 @@ import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.*;
-import de.amr.pacmanfx.model.actors.Bonus;
-import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.GhostState;
-import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
@@ -281,9 +278,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
             createGhost(gameContext, CYAN_GHOST_BASHFUL),
             createGhost(gameContext, ORANGE_GHOST_POKEY)
         );
-        level.ghosts().forEach(ghost -> {
-            ghost.reset();
-        });
+        level.ghosts().forEach(MovingActor::reset);
 
         level.setBonusSymbol(0, computeBonusSymbol(level.number()));
         level.setBonusSymbol(1, computeBonusSymbol(level.number()));

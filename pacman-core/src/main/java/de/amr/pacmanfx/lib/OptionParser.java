@@ -34,7 +34,7 @@ public class OptionParser {
     private <T> void parseValue(Option<T> option, List<String> arglist) {
         if (cursor < arglist.size()) {
             var arg1 = arglist.get(cursor);
-            if (!optionMap.keySet().contains(arg1)) {
+            if (!optionMap.containsKey(arg1)) {
                 Logger.error("Skip garbage '{}'", arg1);
                 ++cursor;
                 return;
@@ -43,7 +43,7 @@ public class OptionParser {
                 ++cursor;
                 if (cursor < arglist.size()) {
                     var arg2 = arglist.get(cursor);
-                    if (optionMap.keySet().contains(arg2)) {
+                    if (optionMap.containsKey(arg2)) {
                         Logger.error("Missing value for parameter '{}'.", option.getName());
                     } else {
                         ++cursor;

@@ -476,9 +476,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
             createGhost(gameContext, CYAN_GHOST_BASHFUL),
             createGhost(gameContext, ORANGE_GHOST_POKEY)
         );
-        level.ghosts().forEach(ghost -> {
-            ghost.reset();
-        });
+        level.ghosts().forEach(MovingActor::reset);
 
         // Ghosts inside house start at bottom of house instead at middle (as marked in map)
         Stream.of(PINK_GHOST_SPEEDY, CYAN_GHOST_BASHFUL, ORANGE_GHOST_POKEY)

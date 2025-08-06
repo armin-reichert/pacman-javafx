@@ -15,7 +15,6 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import static de.amr.pacmanfx.ui.GameUI.theUI;
-import static de.amr.pacmanfx.ui.GameVariant.MS_PACMAN;
 
 public class ArcadePacMan_App extends Application {
 

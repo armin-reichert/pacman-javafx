@@ -481,9 +481,8 @@ public class GameLevel3D extends Group implements Disposable {
         ghostLight = new PointLight(Color.WHITE);
         ghostLight.setLightOn(true);
         ghostLight.setMaxRange(30);
-        ghostLight.lightOnProperty().addListener((obs, wasOn, isOn) -> {
-            Logger.info("Ghost light is {}", isOn ? "on" : "off");
-        });
+        ghostLight.lightOnProperty().addListener((obs, wasOn, isOn)
+                -> Logger.info("Ghost light is {}", isOn ? "on" : "off"));
     }
 
     private void createMaze3D() {
