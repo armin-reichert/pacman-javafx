@@ -1,8 +1,8 @@
 // alias: gets plugin id and version from version catalog
 plugins {
     id "java"
-    alias(libs.plugins.osdetector)
     alias(libs.plugins.javafx)
+    alias(libs.plugins.osdetector)
 }
 
 subprojects {
