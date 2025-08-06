@@ -36,6 +36,7 @@ import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.tinylog.Logger;
 
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -140,6 +141,11 @@ public class PacManGames_UI_Impl implements GameUI {
         property3DWallHeight.set(thePrefs.getFloat("3d.obstacle.base_height"));
         property3DWallOpacity.set(thePrefs.getFloat("3d.obstacle.opacity"));
         propertyCurrentView.addListener(this::handleViewChange);
+
+        URL url = getClass().getResource("css/menu-style.css");
+        if (url != null) {
+            mainScene.getStylesheets().add(url.toExternalForm());
+        }
     }
 
     private void initGlobalActionBindings() {

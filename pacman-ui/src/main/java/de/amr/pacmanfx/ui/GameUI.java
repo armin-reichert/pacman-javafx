@@ -165,6 +165,7 @@ public interface GameUI {
         var text = new Text(theAssets().text(titleKey));
         text.setFont(font);
         text.setFill(fillColor);
+        text.getStyleClass().add("custom-menu-title");
         return new CustomMenuItem(text);
     }
 }

@@ -1,0 +1,6 @@
+.custom-menu-item:focused,
+.custom-menu-item:hover,
+.custom-menu-item:armed {
+    -fx-background-color: transparent;
+    -fx-text-fill: black; /* or your desired text color */
+}
