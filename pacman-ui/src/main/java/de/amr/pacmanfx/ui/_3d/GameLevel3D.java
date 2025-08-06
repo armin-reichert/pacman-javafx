@@ -72,6 +72,7 @@ public class GameLevel3D extends Group implements Disposable {
     private ManagedAnimation wallColorFlashingAnimation;
     private ManagedAnimation levelCompletedFullAnimation;
     private ManagedAnimation levelCompletedShortAnimation;
+    private ManagedAnimation ghostLightAnimation;
 
     private MeshView[] ghostDressMeshViews;
     private MeshView[] ghostPupilsMeshViews;
@@ -215,6 +216,49 @@ public class GameLevel3D extends Group implements Disposable {
         }
     }
 
+    private class GhostLightAnimation extends ManagedAnimation {
+
+        private byte currentlyLightedGhost;
+
+        public GhostLightAnimation(AnimationRegistry animationRegistry) {
+            super(animationRegistry, "GhostLighting");
+            currentlyLightedGhost = RED_GHOST_SHADOW;
+        }
+
+        @Override
+        protected Animation createAnimationFX() {
+            var timeline = new Timeline(
+                new KeyFrame(Duration.millis(3000), e -> {
+                    for (int i = 1; i <= 3; ++i) {
+                        currentlyLightedGhost = (byte) ((currentlyLightedGhost + 1) % 4);
+                        if (gameLevel.ghost(currentlyLightedGhost).state() == GhostState.HUNTING_PAC) {
+                            break;
+                        }
+                    }
+                    MutatingGhost3D currentGhost3D = ghosts3D.get(currentlyLightedGhost);
+                    ghostLight.setColor(currentGhost3D.coloring().normalDressColor());
+                    ghostLight.translateXProperty().bind(currentGhost3D.translateXProperty());
+                    ghostLight.translateYProperty().bind(currentGhost3D.translateYProperty());
+                    ghostLight.setTranslateZ(-25);
+                })
+            );
+            timeline.setCycleCount(Animation.INDEFINITE);
+            return timeline;
+        }
+
+        @Override
+        public void playFromStart() {
+            ghostLight.setLightOn(true);
+            super.playFromStart();
+        }
+
+        @Override
+        public void stop() {
+            super.stop();
+            ghostLight.setLightOn(false);
+        }
+    }
+
     /**
      * @param ui the game UI
      */
@@ -251,6 +295,7 @@ public class GameLevel3D extends Group implements Disposable {
         wallColorFlashingAnimation = new WallColorFlashingAnimation(animationRegistry);
         levelCompletedFullAnimation = new LevelCompletedAnimation(animationRegistry);
         levelCompletedShortAnimation = new LevelCompletedAnimationShort(animationRegistry);
+        ghostLightAnimation = new GhostLightAnimation(animationRegistry);
 
         getChildren().add(floor3D);
         getChildren().add(levelCounter3D);
@@ -435,39 +480,6 @@ public class GameLevel3D extends Group implements Disposable {
         ghostLight = new PointLight(Color.WHITE);
         ghostLight.setLightOn(true);
         ghostLight.setMaxRange(30);
-        createGhostLightAnimation();
-    }
-
-    private Animation ghostLightAnimation;
-    private byte currentlyLightedGhost = RED_GHOST_SHADOW;
-
-    private void createGhostLightAnimation() {
-        ghostLightAnimation = new Timeline(
-                new KeyFrame(Duration.millis(3000), e -> {
-                    for (int i = 1; i <= 3; ++i) {
-                        currentlyLightedGhost = (byte) ((currentlyLightedGhost + 1) % 4);
-                        if (gameLevel.ghost(currentlyLightedGhost).state() == GhostState.HUNTING_PAC) {
-                            break;
-                        }
-                    }
-                    MutatingGhost3D currentGhost3D = ghosts3D.get(currentlyLightedGhost);
-                    ghostLight.setColor(currentGhost3D.coloring().normalDressColor());
-                    ghostLight.translateXProperty().bind(currentGhost3D.translateXProperty());
-                    ghostLight.translateYProperty().bind(currentGhost3D.translateYProperty());
-                    ghostLight.setTranslateZ(-25);
-                })
-        );
-        ghostLightAnimation.setCycleCount(Animation.INDEFINITE);
-    }
-
-    private void startGhostLightAnimation() {
-        ghostLight.setLightOn(true);
-        ghostLightAnimation.play();
-    }
-
-    private void stopGhostLightAnimation() {
-        ghostLightAnimation.stop();
-        ghostLight.setLightOn(false);
     }
 
     private void createMaze3D() {
@@ -679,8 +691,8 @@ public class GameLevel3D extends Group implements Disposable {
         if (livesCounter3D != null) {
             livesCounter3D.setVisible(visible);
         }
-        if (ghostLightAnimation.getStatus() != Animation.Status.RUNNING) {
-            startGhostLightAnimation();
+        if (!ghostLightAnimation.isRunning()) {
+            ghostLightAnimation.playFromStart();
         }
     }
 
@@ -729,7 +741,6 @@ public class GameLevel3D extends Group implements Disposable {
         state.timer().resetIndefiniteTime(); // expires when animation ends
         ui.theSound().stopAll();
         animationRegistry.stopAllAnimations();
-        stopGhostLightAnimation();
         energizers3D.forEach(Energizer3D::stopPumping); //TODO needed?
         // hide 3D food explicitly because level might have been completed using cheat!
         pellets3D.forEach(pellet3D -> pellet3D.setVisible(false));
@@ -849,8 +860,6 @@ public class GameLevel3D extends Group implements Disposable {
         Logger.info("Disposing game level 3D...");
         disposed = true;
 
-        stopGhostLightAnimation(); //TODO make this into managed animation?
-
         animationRegistry.stopAllAnimations();
         Logger.info("Stopped all managed animations");
 
@@ -865,6 +874,10 @@ public class GameLevel3D extends Group implements Disposable {
         if (levelCompletedShortAnimation != null) {
             levelCompletedShortAnimation.dispose();
             levelCompletedShortAnimation = null;
+        }
+        if (ghostLightAnimation != null) {
+            ghostLightAnimation.dispose();
+            ghostLightAnimation = null;
         }
 
         // Dispose all remaining animations
