@@ -14,9 +14,7 @@ dependencies {
 }
 
 application {
-    // Do NOT ask me what is going on here! Without the "x." prefix the exe does not work
-    // and an error message "module de.amr.pacmanfx.allgames not in boot Layer" appears
-    mainModule = "x.de.amr.pacmanfx.allgames"
+    mainModule = "de.amr.pacmanfx.allgames"
     mainClass = "de.amr.pacmanfx.allgames.app.Main"
     if (osdetector.os == "linux") {
         applicationDefaultJvmArgs = ["-Dprism.forceGPU=true"]
