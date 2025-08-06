@@ -62,7 +62,7 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
 
         if (hud.isLevelCounterVisible()) {
             LevelCounter levelCounter = hud.theLevelCounter();
-            float x = sceneSize.x() - 4 * TS, y = sceneSize.y() - 2 * TS;
+            float x = sceneSize.x() - 4 * TS, y = sceneSize.y() - 2 * TS + 2;
             for (byte symbol : levelCounter.symbols()) {
                 RectShort sprite = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS)[symbol];
                 drawSpriteScaled(sprite, x, y);
@@ -87,7 +87,7 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
 
         if (hud.isCreditVisible()) {
             String text = "CREDIT %2d".formatted(gameContext.theCoinMechanism().numCoins());
-            fillTextAtScaledPosition(text, ARCADE_WHITE, assets().arcadeFont(scaled(8)), 2 * TS, sceneSize.y() - 2);
+            fillTextAtScaledPosition(text, ARCADE_WHITE, assets().arcadeFont(scaled(8)), 2 * TS, sceneSize.y());
         }
     }
 
