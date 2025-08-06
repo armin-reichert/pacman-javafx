@@ -248,10 +248,10 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
                 Direction dir = Direction.UP;
                 if (animation.frameIndex() < 11) {
                     dir = switch (animation.frameIndex() % 4) {
-                        default -> Direction.DOWN; // start with DOWN
                         case 1 -> Direction.LEFT;
                         case 2 -> Direction.UP;
                         case 3 -> Direction.RIGHT;
+                        default -> Direction.DOWN; // start with DOWN
                     };
                 }
                 drawMovingActor(pac, dir, (RectShort) animation.currentSprite());

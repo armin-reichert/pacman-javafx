@@ -28,5 +28,5 @@ public enum GameEventType {
     PAC_STARTS_LOSING_POWER,
     STOP_ALL_SOUNDS,
 
-    UNSPECIFIED_CHANGE;
+    UNSPECIFIED_CHANGE
 }

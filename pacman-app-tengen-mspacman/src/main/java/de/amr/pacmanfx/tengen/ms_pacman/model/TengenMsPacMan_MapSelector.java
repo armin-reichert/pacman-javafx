@@ -160,7 +160,7 @@ public class TengenMsPacMan_MapSelector implements MapSelector {
     }
 
     private WorldMap createStrangeMap(int levelNumber) {
-        WorldMap worldMap = switch (levelNumber) {
+        return switch (levelNumber) {
             case  1 -> recoloredMap(STRANGE,  1, _36_15_20_PINK_RED_WHITE);
             case  2 -> recoloredMap(STRANGE,  2, _21_20_28_BLUE_WHITE_YELLOW);
             case  3 -> recoloredMap(STRANGE,  3, _16_20_15_ORANGE_WHITE_RED);
@@ -195,7 +195,6 @@ public class TengenMsPacMan_MapSelector implements MapSelector {
             case 32 -> recoloredMap(STRANGE, 15, _15_25_20_RED_ROSE_WHITE);
             default -> throw new IllegalArgumentException("Illegal level number: " + levelNumber);
         };
-        return worldMap;
     }
 
     private WorldMap recoloredMap(MapCategory category, int number, NES_ColorScheme colorScheme) {

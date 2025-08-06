@@ -42,7 +42,7 @@ public class ExperimentsApp extends Application {
     private Obstacle obstacle;
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         //createBallCyclingAroundCylinder();
         createMaze(-MAZE_SIZE_X *0.5, -MAZE_SIZE_Y *0.5);
 

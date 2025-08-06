@@ -10,7 +10,7 @@ package de.amr.pacmanfx.lib.timer;
 public class TickTimerEvent {
 
     public enum Type {
-        RESET, STARTED, STOPPED, EXPIRED;
+        RESET, STARTED, STOPPED, EXPIRED
     }
 
     public TickTimerEvent(Type type, long ticks) {

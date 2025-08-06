@@ -110,9 +110,9 @@ Cheats:
 
 ## How it looks (Click to play video)
 
-<div float="left">
+<div>
     <a href="https://www.youtube.com/watch?v=I85na24MRcQ&t=132s">
-        <img src="doc/mspacman-maze.png" style="width:500px">
+        <img alt="Ms. Pac-Man maze" src="doc/mspacman-maze.png" style="width:500px">
     </a>
 </div>
 

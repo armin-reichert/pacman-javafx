@@ -15,11 +15,11 @@ public interface MazeGenerators {
 
     // Wilson
 
-    public static void createMazeByWilsonAlgorithm(GridGraph grid) {
+    static void createMazeByWilsonAlgorithm(GridGraph grid) {
         List<Integer> vertices = new ArrayList<>(IntStream.range(0, grid.numVertices()).boxed().toList());
         Collections.shuffle(vertices);
         BitSet visited = new BitSet();
-        visited.set(vertices.get(0));
+        visited.set(vertices.getFirst());
         DirMap lastWalkDir = new DirMap();
         for (int vertex : vertices) {
             loopErasedRandomWalk(grid, vertex, lastWalkDir, visited);
@@ -52,7 +52,7 @@ public interface MazeGenerators {
 
     // Recursive-Division
 
-    public static void createMazeByRecursiveDivision(GridGraph grid) {
+    static void createMazeByRecursiveDivision(GridGraph grid) {
         for (int row = 0; row < grid.numRows(); ++row) {
             for (int col = 0; col < grid.numCols(); ++col) {
                 int vertex = grid.vertex(row, col);

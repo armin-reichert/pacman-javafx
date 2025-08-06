@@ -9,7 +9,6 @@ open module de.amr.pacmanfx.arcade.pacman {
     requires javafx.base;
     requires javafx.controls;
     requires javafx.graphics;
-    requires javafx.media;
     requires de.amr.pacmanfx.core;
     requires de.amr.pacmanfx.uilib;
     requires de.amr.pacmanfx.ui;

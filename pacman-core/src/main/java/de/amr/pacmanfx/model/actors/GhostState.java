@@ -16,5 +16,5 @@ public enum GhostState {
     FRIGHTENED,
     EATEN,
     RETURNING_HOME,
-    ENTERING_HOUSE;
+    ENTERING_HOUSE
 }
