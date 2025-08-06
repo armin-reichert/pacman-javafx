@@ -249,13 +249,14 @@ public class GameLevel3D extends Group implements Disposable {
         @Override
         public void playFromStart() {
             ghostLight.setLightOn(true);
+            currentlyLightedGhost = RED_GHOST_SHADOW;
             super.playFromStart();
         }
 
         @Override
         public void stop() {
-            super.stop();
             ghostLight.setLightOn(false);
+            super.stop();
         }
     }
 
@@ -480,6 +481,9 @@ public class GameLevel3D extends Group implements Disposable {
         ghostLight = new PointLight(Color.WHITE);
         ghostLight.setLightOn(true);
         ghostLight.setMaxRange(30);
+        ghostLight.lightOnProperty().addListener((obs, wasOn, isOn) -> {
+            Logger.info("Ghost light is {}", isOn ? "on" : "off");
+        });
     }
 
     private void createMaze3D() {
@@ -690,9 +694,6 @@ public class GameLevel3D extends Group implements Disposable {
         if (livesCounter3D != null) {
             livesCounter3D.setVisible(visible);
         }
-        if (!ghostLightAnimation.isRunning()) {
-            ghostLightAnimation.playFromStart();
-        }
     }
 
     public void onStartingGame() {
@@ -713,6 +714,7 @@ public class GameLevel3D extends Group implements Disposable {
     public void onPacManDying(GameState state) {
         state.timer().resetIndefiniteTime(); // expires when level animation ends
         ui.theSound().stopAll();
+        ghostLightAnimation.stop();
         // do one last update before dying animation starts
         pac3D.update();
         ghosts3D.forEach(MutatingGhost3D::stopAllAnimations);
