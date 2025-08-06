@@ -19,4 +19,5 @@ iconli  = ["iconli-javafx", "iconli-fontawesome" ]
 tinylog = ["tinylog-api", "tinylog-impl"]
 
 [plugins]
+javafx     = { id = "org.openjfx.javafxplugin", version = "0.1.0" }
 osdetector = { id = "com.google.osdetector", version = "1.7.3" }

@@ -1,11 +1,12 @@
 plugins {
-    alias(libs.plugins.osdetector) // get from version catalog
-    id "org.openjfx.javafxplugin" apply false
+    id "java"
+    // alias: gets plugin id and version from version catalog
+    alias(libs.plugins.osdetector)
+    alias(libs.plugins.javafx)
 }
 
 subprojects {
     apply(plugin: "java")
-    apply(plugin: "org.openjfx.javafxplugin")
     repositories {
         mavenCentral()
     }
