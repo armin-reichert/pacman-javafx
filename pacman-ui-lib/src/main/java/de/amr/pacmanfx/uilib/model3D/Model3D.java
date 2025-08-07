@@ -52,16 +52,27 @@ public class Model3D implements Disposable {
         objData = null;
     }
 
+    /**
+     * @return map from mesh names to triangle meshes contained in OBJ file
+     */
     public Map<String, TriangleMesh> meshesByName() {
         return objData.meshMap();
     }
 
+    /**
+     * @return list of material maps defined in OBJ file
+     */
     public List<Map<String, Material>> materialLibs() { return objData.materialLibsList(); }
 
+    /**
+     * @param name mesh name as specified in OBJ file
+     * @return triangle mesh with given name
+     * @throws Model3DException if mesh with this name does not exist
+     */
     public TriangleMesh mesh(String name) {
         requireNonNull(name);
-        if (meshesByName().containsKey(name)) {
-            return meshesByName().get(name);
+        if (objData.meshMap().containsKey(name)) {
+            return objData.meshMap().get(name);
         }
         throw new Model3DException("No mesh with name %s found", name);
     }
