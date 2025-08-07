@@ -48,14 +48,14 @@ import java.util.Map;
 /**
  * Reader for OBJ file MTL material files.
  */
-public class MtlReader {
+public class MaterialFileReader {
 
     private final String baseUrl;
     private final Map<String, Material> materials = new HashMap<>();
     private PhongMaterial material = new PhongMaterial();
     private boolean modified = false;
 
-    public MtlReader(String filename, String parentUrl) {
+    public MaterialFileReader(String filename, String parentUrl) {
         baseUrl = parentUrl.substring(0, parentUrl.lastIndexOf('/') + 1);
         String fileUrl = baseUrl + filename;
         try {
@@ -69,7 +69,7 @@ public class MtlReader {
         }
     }
 
-    public Map<String, Material> getMaterials() {
+    public Map<String, Material> getMaterialMap() {
         return Collections.unmodifiableMap(materials);
     }
 

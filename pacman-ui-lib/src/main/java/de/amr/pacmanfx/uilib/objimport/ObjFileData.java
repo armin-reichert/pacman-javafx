@@ -16,13 +16,25 @@ public class ObjFileData {
 
     URL url;
     Map<String, TriangleMesh> triangleMeshMap = new HashMap<>();
-    List<Map<String, Material>> materialLibsList = new ArrayList<>();
+    List<Map<String, Material>> materialMapsList = new ArrayList<>();
     ObservableFloatArray vertexArray = FXCollections.observableFloatArray();
     ObservableFloatArray uvArray = FXCollections.observableFloatArray();
     ArrayList<Integer> faceList = new ArrayList<>();
     ArrayList<Integer> smoothingGroupList = new ArrayList<>();
     ObservableFloatArray normalsArray = FXCollections.observableFloatArray();
     ArrayList<Integer> faceNormalsList = new ArrayList<>();
+
+    int vertexIndex(int v) {
+        return (v < 0) ? v + vertexArray.size() / 3 : v - 1;
+    }
+
+    int uvIndex(int uv) {
+        return (uv < 0) ? uv + uvArray.size() / 2 : uv - 1;
+    }
+
+    int normalIndex(int n) {
+        return (n < 0) ? n + normalsArray.size() / 3 : n - 1;
+    }
 
     /**
      * @return map of parsed triangle meshes with mesh name from OBJ file as key
@@ -47,6 +59,6 @@ public class ObjFileData {
     }
 
     public List<Map<String, Material>> materialLibsList() {
-        return materialLibsList;
+        return materialMapsList;
     }
 }

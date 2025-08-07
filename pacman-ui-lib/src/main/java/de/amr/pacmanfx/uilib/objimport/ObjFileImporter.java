@@ -64,6 +64,10 @@ import static java.util.Objects.requireNonNull;
  */
 public class ObjFileImporter {
 
+    private static String[] splitBySpace(String line) {
+        return line.trim().split("\\s+");
+    }
+
     private static int[] toIntArray(List<Integer> list) {
         return list.stream().mapToInt(Integer::intValue).toArray();
     }
@@ -128,7 +132,7 @@ public class ObjFileImporter {
     private int smoothingGroupsStart = 0;
 
     private String meshName = "default";
-    private int currentSmoothGroup = 0;
+    private int currentSmoothingGroup = 0;
 
     private final ObjFileData data;
 
@@ -155,7 +159,7 @@ public class ObjFileImporter {
                 meshName = "default";
             }
             else if (line.startsWith("mtllib ")) {
-                parseMaterialLib(line.substring(7));
+                parseMaterialLibs(line.substring(7));
             }
             else if (line.startsWith("o ")) {
                 commitCurrentMesh();
@@ -186,26 +190,27 @@ public class ObjFileImporter {
             data.vertexArray.size() / 3, data.uvArray.size() / 2, data.faceList.size() / 6, data.smoothingGroupList.size());
     }
 
-    /*
-     * Face: "f v1/v2/v3 ...."
+    /**
+     * Face definition. Example:
+     * <pre>f 723/564/3004 731/555/3034 732/554/3037 724/563/3007</pre>
      */
     private void parseFace(String argText) {
-        String[] parts = argText.trim().split("\\s+");
-        int[][] faceData = new int[parts.length][];
+        String[] blocks = splitBySpace(argText);
+        int[][] triplets = new int[blocks.length][];
         boolean uvProvided = true;
         boolean normalProvided = true;
-        for (int i = 0; i < parts.length; i++) {
-            String[] vs = parts[i].split("/");
-            if (vs.length < 2) {
+        for (int i = 0; i < blocks.length; i++) {
+            String[] points = blocks[i].split("/");
+            if (points.length < 2) {
                 uvProvided = false;
             }
-            if (vs.length < 3) {
+            if (points.length < 3) {
                 normalProvided = false;
             }
-            faceData[i] = new int[vs.length];
-            for (int j = 0; j < vs.length; j++) {
-                if (vs[j].isEmpty()) {
-                    faceData[i][j] = 0;
+            triplets[i] = new int[points.length];
+            for (int j = 0; j < points.length; j++) {
+                if (points[j].isEmpty()) {
+                    triplets[i][j] = 0;
                     if (j == 1) {
                         uvProvided = false;
                     }
@@ -213,122 +218,110 @@ public class ObjFileImporter {
                         normalProvided = false;
                     }
                 } else {
-                    faceData[i][j] = Integer.parseInt(vs[j]);
+                    triplets[i][j] = Integer.parseInt(points[j]);
                 }
             }
         }
-        int v1 = vertexIndex(faceData[0][0]);
+        int v1 = data.vertexIndex(triplets[0][0]);
         int uv1 = -1;
         int n1 = -1;
         if (uvProvided) {
-            uv1 = uvIndex(faceData[0][1]);
+            uv1 = data.uvIndex(triplets[0][1]);
             if (uv1 < 0) {
                 uvProvided = false;
             }
         }
         if (normalProvided) {
-            n1 = normalIndex(faceData[0][2]);
+            n1 = data.normalIndex(triplets[0][2]);
             if (n1 < 0) {
                 normalProvided = false;
             }
         }
-        for (int i = 1; i < faceData.length - 1; i++) {
-            int v2 = vertexIndex(faceData[i][0]);
-            int v3 = vertexIndex(faceData[i + 1][0]);
+        for (int i = 1; i < triplets.length - 1; i++) {
+            int v2 = data.vertexIndex(triplets[i][0]);
+            int v3 = data.vertexIndex(triplets[i + 1][0]);
             int uv2 = -1;
             int uv3 = -1;
             int n2 = -1;
             int n3 = -1;
             if (uvProvided) {
-                uv2 = uvIndex(faceData[i][1]);
-                uv3 = uvIndex(faceData[i + 1][1]);
+                uv2 = data.uvIndex(triplets[i][1]);
+                uv3 = data.uvIndex(triplets[i + 1][1]);
             }
             if (normalProvided) {
-                n2 = normalIndex(faceData[i][2]);
-                n3 = normalIndex(faceData[i + 1][2]);
+                n2 = data.normalIndex(triplets[i][2]);
+                n3 = data.normalIndex(triplets[i + 1][2]);
             }
-            data.faceList.add(v1);
-            data.faceList.add(uv1);
-            data.faceList.add(v2);
-            data.faceList.add(uv2);
-            data.faceList.add(v3);
-            data.faceList.add(uv3);
-            data.faceNormalsList.add(n1);
-            data.faceNormalsList.add(n2);
-            data.faceNormalsList.add(n3);
-            data.smoothingGroupList.add(currentSmoothGroup);
+            data.faceList.addAll(List.of(v1, uv1, v2, uv2, v3, uv3));
+            data.faceNormalsList.addAll(List.of(n1, n2, n3));
+            data.smoothingGroupList.add(currentSmoothingGroup);
         }
     }
 
-    /*
-     * "v <x> <y> <z> (<w>)"
-     *
-     * List of geometric vertices, with (x, y, z, [w]) coordinates, w is optional and defaults to 1.0.
+    /**
+     * Vertex definition. List of geometric vertices, with (x, y, z, [w]) coordinates, w is optional and defaults to 1.0.
+     * <p>Example:
+     * <pre>v 3.14441400 1.97608500 -4.85138200</pre>
      */
     private void parseVertex(String argsText) {
-        String[] parts = argsText.trim().split("\\s+");
-        float x = Float.parseFloat(parts[0]);
-        float y = Float.parseFloat(parts[1]);
-        float z = Float.parseFloat(parts[2]);
+        String[] vertices = splitBySpace(argsText);
+        float x = Float.parseFloat(vertices[0]);
+        float y = Float.parseFloat(vertices[1]);
+        float z = Float.parseFloat(vertices[2]);
         data.vertexArray.addAll(x, y, z);
     }
 
-    /*
-     * "vt ..."
-     *
-     * List of texture coordinates, in (u, [v, w]) coordinates, these will vary between 0 and 1. v, w are optional
-     * and default to 0.
+    /**
+     * "vt ". Texture coordinates, u, [v], [w], floating point values between 0 and 1.
+     * v, w are optional and default to 0.
+     * <p>
+     * Example:
+     * <pre>vt 0.90625000 6.2500000e-2</pre>
      */
     private void parseTextureCoordinate(String argsText) {
-        String[] parts = argsText.trim().split("\\s+");
-        float u = Float.parseFloat(parts[0]);
-        float v = Float.parseFloat(parts[1]);
+        String[] coordinates = splitBySpace(argsText);
+        float u = Float.parseFloat(coordinates[0]);
+        float v = Float.parseFloat(coordinates[1]);
         data.uvArray.addAll(u, 1 - v);
     }
 
-    /*
-     * Smoothing group: "s <integer> ..." or "s off"
+    /**
+     * Smoothing group: "s <integer> ..." or "s off".
+     * <p>Example:
+     * <pre>s 5</pre>
      */
     private void parseSmoothingGroup(String argsText) {
         if (argsText.equals("off")) {
-            currentSmoothGroup = 0;
+            currentSmoothingGroup = 0;
         } else {
-            currentSmoothGroup = Integer.parseInt(argsText);
+            currentSmoothingGroup = Integer.parseInt(argsText);
         }
     }
 
-    /*
-     * Material lib: "mtllib filename1 filename2 ..."
+    /**
+     * Material libs: "mtllib filename.."
+     * <p>Example:
+     * <pre>mtllib pacman.mtl</pre>
      */
-    private void parseMaterialLib(String argsText) {
-        String[] parts = argsText.trim().split("\\s+");
-        for (String filename : parts) {
-            MtlReader mtlReader = new MtlReader(filename, data.url.toExternalForm());
-            data.materialLibsList.add(mtlReader.getMaterials());
+    private void parseMaterialLibs(String argsText) {
+        String[] materialFileNames = splitBySpace(argsText);
+        for (String filename : materialFileNames) {
+            MaterialFileReader materialFileReader = new MaterialFileReader(filename, data.url.toExternalForm());
+            data.materialMapsList.add(materialFileReader.getMaterialMap());
         }
     }
 
-    /*
-     * Vertex normal: "vn ..."
+    /**
+     * Vertex normal: "vn float_value1 float_value2 float_value3"
+     * <p>Example:</p>
+     * <pre>vn -0.59190005 0.53777519 0.60037669</pre>
      */
     private void parseVertexNormal(String argsText) {
-        String[] parts = argsText.trim().split("\\s+");
-        float x = Float.parseFloat(parts[0]);
-        float y = Float.parseFloat(parts[1]);
-        float z = Float.parseFloat(parts[2]);
+        String[] values = splitBySpace(argsText);
+        float x = Float.parseFloat(values[0]);
+        float y = Float.parseFloat(values[1]);
+        float z = Float.parseFloat(values[2]);
         data.normalsArray.addAll(x, y, z);
-    }
-
-    private int vertexIndex(int v) {
-        return (v < 0) ? v + data.vertexArray.size() / 3 : v - 1;
-    }
-
-    private int uvIndex(int uv) {
-        return (uv < 0) ? uv + data.uvArray.size() / 2 : uv - 1;
-    }
-
-    private int normalIndex(int n) {
-        return (n < 0) ? n + data.normalsArray.size() / 3 : n - 1;
     }
 
     private void commitCurrentMesh() {
