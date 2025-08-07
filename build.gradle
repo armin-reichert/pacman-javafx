@@ -33,6 +33,6 @@ ext {
           : ""
 }
 
-println "osdetector.os         = ${osdetector.os}"
-println "osdetector.arch       = ${osdetector.arch}"
-println "osdetector.classifier = ${osdetector.classifier}"
+logger.lifecycle("osdetector.os         = ${osdetector.os}")
+logger.lifecycle("osdetector.arch       = ${osdetector.arch}")
+logger.lifecycle("osdetector.classifier = ${osdetector.classifier}")
