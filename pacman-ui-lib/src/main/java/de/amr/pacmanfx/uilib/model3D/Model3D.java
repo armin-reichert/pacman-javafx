@@ -6,6 +6,7 @@ package de.amr.pacmanfx.uilib.model3D;
 
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.uilib.objimport.ObjFileData;
+import de.amr.pacmanfx.uilib.objimport.ObjFileImporter;
 import javafx.scene.paint.Material;
 import javafx.scene.shape.TriangleMesh;
 
@@ -21,25 +22,28 @@ import static java.util.Objects.requireNonNull;
  */
 public class Model3D implements Disposable {
 
-    private ObjFileData data;
+    private ObjFileData objData;
 
-    public Model3D(URL objFileURL) {
-        requireNonNull(objFileURL);
-        data = ObjFileData.fromFile(objFileURL, StandardCharsets.UTF_8);
+    /**
+     * @param url URL addressing an OBJ file (Wavefront .obj file format)
+     */
+    public Model3D(URL url) {
+        requireNonNull(url);
+        objData = ObjFileImporter.importObjFile(url, StandardCharsets.UTF_8);
     }
 
     @Override
     public void dispose() {
-        data.meshMap().clear();
-        data.materialLibsList().clear();
-        data = null;
+        objData.meshMap().clear();
+        objData.materialLibsList().clear();
+        objData = null;
     }
 
     public Map<String, TriangleMesh> meshesByName() {
-        return data.meshMap();
+        return objData.meshMap();
     }
 
-    public List<Map<String, Material>> materialLibs() { return data.materialLibsList(); }
+    public List<Map<String, Material>> materialLibs() { return objData.materialLibsList(); }
 
     public TriangleMesh mesh(String name) {
         requireNonNull(name);
