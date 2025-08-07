@@ -27,15 +27,8 @@ subprojects {
     }
 }
 
-def packageFormatByOS = [
-    windows: "msi",
-    mac:     "dmg",
-    linux:   "deb"
-]
-
-ext {
-    osPkg = packageFormatByOS[osdetector.os]
-}
+def packageFormatByOS = [windows: "msi", mac: "dmg", linux: "deb"]
+ext.osPkg = packageFormatByOS[osdetector.os]
 
 logger.lifecycle("osdetector.os         = ${osdetector.os}")
 logger.lifecycle("osdetector.arch       = ${osdetector.arch}")
