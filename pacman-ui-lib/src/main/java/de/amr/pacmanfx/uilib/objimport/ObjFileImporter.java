@@ -2,7 +2,6 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-
 /*
  * Copyright (c) 2010, 2014, Oracle and/or its affiliates.
  * All rights reserved. Use is subject to license terms.
@@ -48,8 +47,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.time.Duration;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,7 +55,7 @@ import static de.amr.pacmanfx.uilib.objimport.SmoothingGroups.computeSmoothingGr
 import static java.util.Objects.requireNonNull;
 
 /**
- * Derived from Oracle's OBJ importer from the 3DViewer sample project.
+ * Code is based on Oracle's OBJ importer from the 3DViewer sample project.
  *
  * @see <a href=
  * "https://github.com/teamfx/openjfx-10-dev-rt/tree/master/apps/samples/3DViewer/src/main/java/com/javafx/experiments/importers">3DViewer
@@ -117,14 +114,8 @@ public class ObjFileImporter {
         requireNonNull(charset);
         ObjFileImporter importer = new ObjFileImporter(url);
         try (InputStream is = url.openStream()) {
-            Instant start = Instant.now();
             var reader = new BufferedReader(new InputStreamReader(is, charset));
             importer.parse(reader);
-            for (TriangleMesh mesh : importer.data.triangleMeshMap.values()) {
-                validateTriangleMesh(mesh);
-            }
-            Duration duration = Duration.between(start, Instant.now());
-            Logger.info("OBJ file parsed in {} milliseconds; '{}'", duration.toMillis(), url);
         }
         catch (IOException x) {
             Logger.error(x);
@@ -400,25 +391,25 @@ public class ObjFileImporter {
         mesh.getPoints().setAll(verticesArray);
         mesh.getTexCoords().setAll(texCoordsArray);
 
-        int[] faces = toIntArray(restOf(data.facesList, facesStart));
+        final int[] faces = toIntArray(restOf(data.facesList, facesStart));
         mesh.getFaces().setAll(faces);
 
-        int[] smoothingGroups = useNormals
+        final int[] smoothingGroups = useNormals
             ? computeSmoothingGroups(mesh, faces, toIntArray(restOf(data.faceNormalsList, facesNormalStart)), toFloatArray(normalsArray))
             : toIntArray(restOf(data.smoothingGroupList, smoothingGroupsStart));
         mesh.getFaceSmoothingGroups().setAll(smoothingGroups);
 
         // try specified name, if already used, make unique name using serial number e.g. "my_mesh (3)"
         int serialNumber = 2;
-        String nextMeshName = meshName;
-        while (data.triangleMeshMap.containsKey(nextMeshName)) {
-            Logger.info("Mesh name '{}' already exists", nextMeshName);
-            nextMeshName = "%s (%d)".formatted(meshName, serialNumber);
+        String unusedMeshName = meshName;
+        while (data.triangleMeshMap.containsKey(unusedMeshName)) {
+            Logger.info("Mesh name '{}' already exists", unusedMeshName);
+            unusedMeshName = "%s (%d)".formatted(meshName, serialNumber);
             ++serialNumber;
         }
-        data.triangleMeshMap.put(nextMeshName, mesh);
+        data.triangleMeshMap.put(unusedMeshName, mesh);
 
-        Logger.trace("Mesh '{}' added, vertices: {}, uvs: {}, faces: {}, smoothing groups: {}",
+        Logger.trace("Added mesh '{}', vertices: {}, texture coordinates: {}, faces: {}, smoothing groups: {}",
             meshName,
             mesh.getPoints().size() / mesh.getPointElementSize(),
             mesh.getTexCoords().size() / mesh.getTexCoordElementSize(),

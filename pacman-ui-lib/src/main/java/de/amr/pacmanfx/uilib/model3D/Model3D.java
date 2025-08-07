@@ -9,9 +9,12 @@ import de.amr.pacmanfx.uilib.objimport.ObjFileData;
 import de.amr.pacmanfx.uilib.objimport.ObjFileImporter;
 import javafx.scene.paint.Material;
 import javafx.scene.shape.TriangleMesh;
+import org.tinylog.Logger;
 
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +32,17 @@ public class Model3D implements Disposable {
      */
     public Model3D(URL url) {
         requireNonNull(url);
+        Instant start = Instant.now();
         objData = ObjFileImporter.importObjFile(url, StandardCharsets.UTF_8);
+        Duration duration = Duration.between(start, Instant.now());
+        Logger.info("OBJ file imported ({} millis). URL: '{}'", duration.toMillis(), url);
+        for (TriangleMesh mesh : objData.meshMap().values()) {
+            try {
+                ObjFileImporter.validateTriangleMesh(mesh);
+            } catch (AssertionError error) {
+                Logger.error("Invalid OBJ file data: {}, URL: '{}'", error.getMessage(), url);
+            }
+        }
     }
 
     @Override
