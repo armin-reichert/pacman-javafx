@@ -1,38 +1,43 @@
-// alias: gets plugin id and version from version catalog
 plugins {
     id "java"
+    // alias gets plugin id and version from version catalog (gradle/libs.versions.toml)
     alias(libs.plugins.javafx)
     alias(libs.plugins.osdetector)
 }
 
 subprojects {
+    // 1. Apply plugins
     apply plugin: "java"
     pluginManager.apply(libs.plugins.javafx.get().getPluginId())
     pluginManager.apply(libs.plugins.osdetector.get().getPluginId())
-    repositories {
-        mavenCentral()
-    }
-    java {
-        toolchain {
-            languageVersion = JavaLanguageVersion.of(libs.versions.java.get())
-        }
-    }
-    javafx {
-        version = libs.versions.javafx.get()
-    }
+
+    // 2. Declare repositories
+    repositories { mavenCentral() }
+
+    // 3. Configure Java toolchain
+    java { toolchain {languageVersion = JavaLanguageVersion.of(libs.versions.java.get()) } }
+
+    // 4. Configure JavaFX
+    javafx { version = libs.versions.javafx.get() }
+
+    // 5. Configure tasks
     tasks.withType(JavaCompile).configureEach {
         options.encoding = "UTF-8"
         options.compilerArgs.addAll(["-Xlint:deprecation", "-Xlint:unchecked"])
     }
 }
 
+def packageFormatByOS = [
+    windows: "msi",
+    mac:     "dmg",
+    linux:   "deb"
+]
+
 ext {
-    osPkg = osdetector.os == "windows" ? "msi"
-          : osdetector.os == "mac" ? "dmg"
-          : osdetector.os == "linux" ? "deb"
-          : ""
+    osPkg = packageFormatByOS[osdetector.os]
 }
 
 logger.lifecycle("osdetector.os         = ${osdetector.os}")
 logger.lifecycle("osdetector.arch       = ${osdetector.arch}")
 logger.lifecycle("osdetector.classifier = ${osdetector.classifier}")
+logger.lifecycle("Package format        = ${osPkg}")
