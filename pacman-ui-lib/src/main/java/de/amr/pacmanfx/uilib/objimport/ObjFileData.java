@@ -19,7 +19,7 @@ public class ObjFileData {
     List<Map<String, Material>> materialMapsList = new ArrayList<>();
     ObservableFloatArray vertexArray = FXCollections.observableFloatArray();
     ObservableFloatArray uvArray = FXCollections.observableFloatArray();
-    ArrayList<Integer> faceList = new ArrayList<>();
+    ArrayList<Integer> facesList = new ArrayList<>();
     ArrayList<Integer> smoothingGroupList = new ArrayList<>();
     ObservableFloatArray normalsArray = FXCollections.observableFloatArray();
     ArrayList<Integer> faceNormalsList = new ArrayList<>();

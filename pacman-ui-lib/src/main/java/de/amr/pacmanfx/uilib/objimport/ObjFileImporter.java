@@ -193,7 +193,7 @@ public class ObjFileImporter {
         }
         commitCurrentMesh();
         Logger.info("OBJ file parsed: {} vertices, {} uvs, {} faces, {} smoothing groups",
-            data.vertexArray.size() / 3, data.uvArray.size() / 2, data.faceList.size() / 6, data.smoothingGroupList.size());
+            data.vertexArray.size() / 3, data.uvArray.size() / 2, data.facesList.size() / 6, data.smoothingGroupList.size());
     }
 
     /**
@@ -258,7 +258,7 @@ public class ObjFileImporter {
                 n2 = data.normalIndex(triplets[i][2]);
                 n3 = data.normalIndex(triplets[i + 1][2]);
             }
-            data.faceList.addAll(List.of(v1, uv1, v2, uv2, v3, uv3));
+            data.facesList.addAll(List.of(v1, uv1, v2, uv2, v3, uv3));
             data.faceNormalsList.addAll(List.of(n1, n2, n3));
             data.smoothingGroupList.add(currentSmoothingGroup);
         }
@@ -331,91 +331,82 @@ public class ObjFileImporter {
     }
 
     private void commitCurrentMesh() {
-        if (facesStart >= data.faceList.size()) {
+        if (facesStart >= data.facesList.size()) {
             // we're only interested in faces
             smoothingGroupsStart = data.smoothingGroupList.size();
             return;
         }
         var vertexMap      = new HashMap<Integer, Integer>(data.vertexArray.size() / 2);
         var uvMap          = new HashMap<Integer, Integer>(data.uvArray.size() / 2);
-        var normalMap      = new HashMap<Integer, Integer>(data.normalsArray.size() / 2);
+        var normalsMap      = new HashMap<Integer, Integer>(data.normalsArray.size() / 2);
 
-        var newVertexArray = FXCollections.observableFloatArray();
-        var newUVArray     = FXCollections.observableFloatArray();
-        var newNormalArray = FXCollections.observableFloatArray();
+        var verticesArray  = FXCollections.observableFloatArray();
+        var texCoordsArray = FXCollections.observableFloatArray();
+        var normalsArray   = FXCollections.observableFloatArray();
 
         boolean useNormals = true;
 
-        for (int i = facesStart; i < data.faceList.size(); i += 2) {
-            int vi = data.faceList.get(i);
-            Integer nvi = vertexMap.get(vi);
-            if (nvi == null) {
-                nvi = newVertexArray.size() / 3;
-                vertexMap.put(vi, nvi);
-                newVertexArray.addAll(
-                    data.vertexArray.get(vi * 3),
-                    data.vertexArray.get(vi * 3 + 1),
-                    data.vertexArray.get(vi * 3 + 2)
+        for (int facesIndex = facesStart; facesIndex < data.facesList.size(); facesIndex += 2) {
+
+            // First comes vertex index
+            final int vertexIndex = data.facesList.get(facesIndex);
+            if (!vertexMap.containsKey(vertexIndex)) {
+                vertexMap.put(vertexIndex, verticesArray.size() / 3);
+                verticesArray.addAll(
+                    data.vertexArray.get(vertexIndex * 3),
+                    data.vertexArray.get(vertexIndex * 3 + 1),
+                    data.vertexArray.get(vertexIndex * 3 + 2)
                 );
             }
-            data.faceList.set(i, nvi);
+            data.facesList.set(facesIndex, vertexMap.get(vertexIndex));
 
-            int uvi = data.faceList.get(i + 1);
-            Integer nuvi = uvMap.get(uvi);
-            if (nuvi == null) {
-                nuvi = newUVArray.size() / 2;
-                uvMap.put(uvi, nuvi);
-                if (uvi >= 0) {
-                    newUVArray.addAll(
-                        data.uvArray.get(uvi * 2),
-                        data.uvArray.get(uvi * 2 + 1)
+            // Second comes texture coordinate index
+            final int texCoordIndex = data.facesList.get(facesIndex + 1);
+            if (!uvMap.containsKey(texCoordIndex)) {
+                uvMap.put(texCoordIndex, texCoordsArray.size() / 2);
+                if (texCoordIndex >= 0) {
+                    texCoordsArray.addAll(
+                        data.uvArray.get(texCoordIndex * 2),
+                        data.uvArray.get(texCoordIndex * 2 + 1)
                     );
                 } else {
-                    newUVArray.addAll(0f, 0f);
+                    texCoordsArray.addAll(0f, 0f);
                 }
             }
-            data.faceList.set(i + 1, nuvi);
+            data.facesList.set(facesIndex + 1, uvMap.get(texCoordIndex));
 
             if (useNormals) {
-                int ni = data.faceNormalsList.get(i / 2);
-                Integer nni = normalMap.get(ni);
-                if (nni == null) {
-                    nni = newNormalArray.size() / 3;
-                    normalMap.put(ni, nni);
-                    if (ni >= 0 && data.normalsArray.size() >= (ni + 1) * 3) {
-                        newNormalArray.addAll(
-                            data.normalsArray.get(ni * 3),
-                            data.normalsArray.get(ni * 3 + 1),
-                            data.normalsArray.get(ni * 3 + 2)
+                int normalsIndex = data.faceNormalsList.get(facesIndex / 2);
+                if (!normalsMap.containsKey(normalsIndex)) {
+                    normalsMap.put(normalsIndex, normalsArray.size() / 3);
+                    if (normalsIndex >= 0 && data.normalsArray.size() >= (normalsIndex + 1) * 3) {
+                        normalsArray.addAll(
+                            data.normalsArray.get(normalsIndex * 3),
+                            data.normalsArray.get(normalsIndex * 3 + 1),
+                            data.normalsArray.get(normalsIndex * 3 + 2)
                         );
                     } else {
                         useNormals = false;
-                        newNormalArray.addAll(0f, 0f, 0f);
+                        normalsArray.addAll(0f, 0f, 0f);
                     }
                 }
-                data.faceNormalsList.set(i / 2, nni);
+                data.faceNormalsList.set(facesIndex / 2, normalsMap.get(normalsIndex));
             }
         }
 
-        final var mesh = new TriangleMesh();
-        mesh.getPoints().setAll(newVertexArray);
-        mesh.getTexCoords().setAll(newUVArray);
+        // Now build the triangle mesh from the parsed data:
 
-        int[] facesRest = toIntArray(restOf(data.faceList, facesStart));
-        mesh.getFaces().setAll(facesRest);
-        // Use normals if they are provided
-        if (useNormals) {
-            int[] smoothingGroups = computeSmoothingGroups(
-                mesh,
-                facesRest,
-                toIntArray(restOf(data.faceNormalsList, facesNormalStart)),
-                toFloatArray(newNormalArray)
-            );
-            mesh.getFaceSmoothingGroups().setAll(smoothingGroups);
-        } else {
-            int[] smoothingGroupsRest = toIntArray(restOf(data.smoothingGroupList, smoothingGroupsStart));
-            mesh.getFaceSmoothingGroups().setAll(smoothingGroupsRest);
-        }
+        final var mesh = new TriangleMesh();
+        mesh.getPoints().setAll(verticesArray);
+        mesh.getTexCoords().setAll(texCoordsArray);
+
+        int[] faces = toIntArray(restOf(data.facesList, facesStart));
+        mesh.getFaces().setAll(faces);
+
+        int[] smoothingGroups = useNormals
+            ? computeSmoothingGroups(mesh, faces, toIntArray(restOf(data.faceNormalsList, facesNormalStart)), toFloatArray(normalsArray))
+            : toIntArray(restOf(data.smoothingGroupList, smoothingGroupsStart));
+        mesh.getFaceSmoothingGroups().setAll(smoothingGroups);
 
         // try specified name, if already used, make unique name using serial number e.g. "my_mesh (3)"
         int serialNumber = 2;
@@ -434,7 +425,7 @@ public class ObjFileImporter {
             mesh.getFaces().size() / mesh.getFaceElementSize(),
             mesh.getFaceSmoothingGroups().size());
 
-        facesStart = data.faceList.size();
+        facesStart = data.facesList.size();
         facesNormalStart = data.faceNormalsList.size();
         smoothingGroupsStart = data.smoothingGroupList.size();
     }
