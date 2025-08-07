@@ -329,7 +329,7 @@ public class ObjFileImporter {
         }
         var vertexMap      = new HashMap<Integer, Integer>(data.vertexArray.size() / 2);
         var uvMap          = new HashMap<Integer, Integer>(data.uvArray.size() / 2);
-        var normalsMap      = new HashMap<Integer, Integer>(data.normalsArray.size() / 2);
+        var normalsMap     = new HashMap<Integer, Integer>(data.normalsArray.size() / 2);
 
         var verticesArray  = FXCollections.observableFloatArray();
         var texCoordsArray = FXCollections.observableFloatArray();
