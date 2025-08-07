@@ -37,6 +37,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib.objimport;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableFloatArray;
 import javafx.scene.shape.ObservableFaceArray;
 import javafx.scene.shape.TriangleMesh;
 import org.tinylog.Logger;
@@ -53,6 +54,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static de.amr.pacmanfx.uilib.objimport.SmoothingGroups.computeSmoothingGroups;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -70,6 +72,10 @@ public class ObjFileImporter {
 
     private static int[] toIntArray(List<Integer> list) {
         return list.stream().mapToInt(Integer::intValue).toArray();
+    }
+
+    private static float[] toFloatArray(ObservableFloatArray observableFloatArray) {
+        return observableFloatArray.toArray(new float[observableFloatArray.size()]);
     }
 
     private static List<Integer> restOf(ArrayList<Integer> list, int start) {
@@ -399,10 +405,13 @@ public class ObjFileImporter {
         mesh.getFaces().setAll(facesRest);
         // Use normals if they are provided
         if (useNormals) {
-            int[] flatFaceNormals = toIntArray(restOf(data.faceNormalsList, facesNormalStart));
-            float[] normals = newNormalArray.toArray(new float[0]);
-            int[] smGroups = SmoothingGroups.calcSmoothGroups(mesh, facesRest, flatFaceNormals, normals);
-            mesh.getFaceSmoothingGroups().setAll(smGroups);
+            int[] smoothingGroups = computeSmoothingGroups(
+                mesh,
+                facesRest,
+                toIntArray(restOf(data.faceNormalsList, facesNormalStart)),
+                toFloatArray(newNormalArray)
+            );
+            mesh.getFaceSmoothingGroups().setAll(smoothingGroups);
         } else {
             int[] smoothingGroupsRest = toIntArray(restOf(data.smoothingGroupList, smoothingGroupsStart));
             mesh.getFaceSmoothingGroups().setAll(smoothingGroupsRest);

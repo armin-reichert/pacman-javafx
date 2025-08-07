@@ -220,7 +220,7 @@ public class SmoothingGroups {
         return smGroups;
     }
 
-    private int[] calcSmoothGroups() {
+    private int[] computeSmoothingGroups() {
         computeFaceEdges();
 
         // edge -> [faces]
@@ -243,9 +243,9 @@ public class SmoothingGroups {
      * @param normals     The array of normals
      * @return An array of smooth groups, where the length of the array is the number of faces
      */
-    public static int[] calcSmoothGroups(int[][] faces, int[][] faceNormals, float[] normals) {
+    public static int[] computeSmoothingGroups(int[][] faces, int[][] faceNormals, float[] normals) {
         SmoothingGroups smoothGroups = new SmoothingGroups(faces, faceNormals, normals);
-        return smoothGroups.calcSmoothGroups();
+        return smoothGroups.computeSmoothingGroups();
     }
 
     /**
@@ -256,7 +256,7 @@ public class SmoothingGroups {
      * @param normals         The array of normals
      * @return An array of smooth groups, where the length of the array is the number of faces
      */
-    public static int[] calcSmoothGroups(TriangleMesh mesh, int[] flatFaces, int[] flatFaceNormals, float[] normals) {
+    public static int[] computeSmoothingGroups(TriangleMesh mesh, int[] flatFaces, int[] flatFaceNormals, float[] normals) {
         int faceElementSize = mesh.getFaceElementSize();
         int[][] faces = new int[flatFaces.length / faceElementSize][faceElementSize];
         for (int f = 0; f < faces.length; f++) {
@@ -272,6 +272,6 @@ public class SmoothingGroups {
             }
         }
         SmoothingGroups smoothGroups = new SmoothingGroups(faces, faceNormals, normals);
-        return smoothGroups.calcSmoothGroups();
+        return smoothGroups.computeSmoothingGroups();
     }
 }
