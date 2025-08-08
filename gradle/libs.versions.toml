@@ -1,4 +1,5 @@
 [versions]
+# To access a version from a script, use e.g. libs.versions.tinylog.get()
 iconli  = "12.3.1"
 java    = "21"
 javafx  = "21.0.8"
@@ -6,6 +7,8 @@ junit5  = "5.8.1"
 tinylog = "2.7.0"
 
 [libraries]
+# Dash-separated keys can also be accessed as dot-separated keys
+# like "libs.junit.jupiter.api"!
 iconli-fontawesome   = { module = "org.kordamp.ikonli:ikonli-fontawesome5-pack",     version.ref = "iconli" }
 iconli-javafx        = { module = "org.kordamp.ikonli:ikonli-javafx",                version.ref = "iconli" }
 junit-jupiter-api    = { group = "org.junit.jupiter", name = "junit-jupiter-api",    version.ref = "junit5" }
@@ -14,6 +17,7 @@ tinylog-api          = { module = "org.tinylog:tinylog-api",                    
 tinylog-impl         = { module = "org.tinylog:tinylog-impl",                        version.ref = "tinylog"}
 
 [bundles]
+# Access bundle like libs.bundles.iconli
 iconli  = ["iconli-javafx", "iconli-fontawesome" ]
 tinylog = ["tinylog-api", "tinylog-impl"]
 
