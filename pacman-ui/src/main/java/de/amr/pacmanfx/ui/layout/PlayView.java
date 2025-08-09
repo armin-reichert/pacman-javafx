@@ -193,9 +193,9 @@ public class PlayView extends StackPane implements PacManGames_View {
 
     @Override
     public void handleKeyboardInput(GameUI ui) {
-        GameAction matchingAction = actionBindings.matchingAction(ui.theKeyboard()).orElse(null);
+        GameAction matchingAction = actionBindings.matchingGameAction(ui.theKeyboard()).orElse(null);
         if (matchingAction != null) {
-            ui.runAction(matchingAction);
+            matchingAction.executeIfEnabled(ui);
         } else {
             ui.currentGameScene().ifPresent(GameScene::handleKeyboardInput);
         }

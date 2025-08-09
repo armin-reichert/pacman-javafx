@@ -144,10 +144,6 @@ public interface GameUI {
 
     void terminate();
 
-    default void runAction(GameAction action) {
-        action.executeIfEnabled(this);
-    }
-
     /**
      * @param titleKey resource bundle key of title text
      * @return CustomMenuItem representing a context menu title item

@@ -33,5 +33,5 @@ public interface ActionBindingManager {
      */
     void use(GameAction gameAction, List<ActionBinding> actionBindings);
 
-    Optional<GameAction> matchingAction(Keyboard keyboard);
+    Optional<GameAction> matchingGameAction(Keyboard keyboard);
 }

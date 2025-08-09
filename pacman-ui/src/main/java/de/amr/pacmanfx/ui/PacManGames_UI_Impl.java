@@ -82,9 +82,9 @@ public class PacManGames_UI_Impl implements GameUI {
         mainScene = new MainScene(this, width, height);
         // Check if a global action is defined for the key press, otherwise let the current view handle it.
         mainScene.setOnKeyPressed(e -> {
-            GameAction matchingAction = globalActionBindings.matchingAction(theKeyboard).orElse(null);
+            GameAction matchingAction = globalActionBindings.matchingGameAction(theKeyboard).orElse(null);
             if (matchingAction != null) {
-                runAction(matchingAction);
+                matchingAction.executeIfEnabled(this);
             } else {
                 currentView().handleKeyboardInput(this);
             }

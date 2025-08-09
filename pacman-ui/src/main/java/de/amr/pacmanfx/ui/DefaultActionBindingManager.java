@@ -40,7 +40,7 @@ public class DefaultActionBindingManager implements ActionBindingManager {
         public void bind(GameAction action, KeyCombination combination) {}
 
         @Override
-        public Optional<GameAction> matchingAction(Keyboard keyboard) { return Optional.empty(); }
+        public Optional<GameAction> matchingGameAction(Keyboard keyboard) { return Optional.empty(); }
     }
 
     public static final ActionBindingManager EMPTY_MAP = new EmptyManager();
@@ -104,7 +104,7 @@ public class DefaultActionBindingManager implements ActionBindingManager {
             .ifPresent(this::addBinding);
     }
 
-    public Optional<GameAction> matchingAction(Keyboard keyboard) {
+    public Optional<GameAction> matchingGameAction(Keyboard keyboard) {
         return actionByCombination.keySet().stream()
             .filter(keyboard::isMatching)
             .map(actionByCombination::get)
