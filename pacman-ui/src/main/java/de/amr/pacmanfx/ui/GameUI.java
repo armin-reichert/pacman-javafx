@@ -9,6 +9,7 @@ import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.Keyboard;
+import de.amr.pacmanfx.ui.layout.EditorView;
 import de.amr.pacmanfx.ui.layout.PacManGames_View;
 import de.amr.pacmanfx.ui.layout.PlayView;
 import de.amr.pacmanfx.ui.layout.StartPagesView;
@@ -128,9 +129,10 @@ public interface GameUI {
     void updateGameScene(boolean reload);
 
     // Views
-    PacManGames_View currentView();
-    PlayView         thePlayView();
-    StartPagesView   theStartPagesView();
+    PacManGames_View      currentView();
+    PlayView              thePlayView();
+    StartPagesView        theStartPagesView();
+    Optional<EditorView>  theEditorView();
 
     void showEditorView();
     void showPlayView();

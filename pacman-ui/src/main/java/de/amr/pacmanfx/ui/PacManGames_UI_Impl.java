@@ -9,28 +9,25 @@ import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
-import de.amr.pacmanfx.ui._2d.ArcadePalette;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.Keyboard;
-import de.amr.pacmanfx.ui.layout.*;
+import de.amr.pacmanfx.ui.layout.EditorView;
+import de.amr.pacmanfx.ui.layout.PacManGames_View;
+import de.amr.pacmanfx.ui.layout.PlayView;
+import de.amr.pacmanfx.ui.layout.StartPagesView;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.GameClock;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
-import javafx.geometry.Pos;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
-import org.kordamp.ikonli.javafx.FontIcon;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
@@ -113,7 +110,6 @@ public class PacManGames_UI_Impl implements GameUI {
         initPreferences();
 
         createMainScene(width, height);
-        createStatusIcons();
 
         stage.setScene(mainScene);
         stage.setMinWidth(MIN_STAGE_WIDTH);
@@ -180,6 +176,7 @@ public class PacManGames_UI_Impl implements GameUI {
 
     private void createMainScene(double width, double height) {
         mainScene = new GameUI_MainScene(theAssets, theKeyboard, width, height);
+        mainScene.createStatusIcons(this);
         mainScene.setOnKeyPressed(e -> runActionOrElse(
             globalActionBindings.matchingAction(theKeyboard).orElse(null),
             () -> currentView().handleKeyboardInput(this)));
@@ -203,21 +200,6 @@ public class PacManGames_UI_Impl implements GameUI {
 
         theStage.titleProperty().bind(view.title());
         mainScene.setCurrentView(view);
-    }
-
-    private void createStatusIcons() {
-        // Large "paused" icon appears at center of UI
-        FontIcon pausedIcon = FontIcon.of(FontAwesomeSolid.PAUSE, 80, ArcadePalette.ARCADE_WHITE);
-        StackPane.setAlignment(pausedIcon, Pos.CENTER);
-        pausedIcon.visibleProperty().bind(Bindings.createBooleanBinding(
-                () -> currentView() == playView && theGameClock.isPaused(),
-                mainScene.currentViewProperty(), theGameClock.pausedProperty()));
-
-        // Status icon box appears at bottom-left corner of any view except editor
-        var iconBox = new StatusIconBox(this);
-        StackPane.setAlignment(iconBox, Pos.BOTTOM_LEFT);
-        iconBox.visibleProperty().bind(mainScene.currentViewProperty().map(view -> view != editorView));
-        mainScene.rootPane().getChildren().addAll(pausedIcon, iconBox);
     }
 
     public void applyConfiguration(String gameVariant, Class<?> configClass) {
@@ -307,10 +289,12 @@ public class PacManGames_UI_Impl implements GameUI {
     @Override public DoubleProperty                   property3DWallHeight(){ return property3DWallHeight; }
     @Override public DoubleProperty                   property3DWallOpacity(){ return property3DWallOpacity; }
 
-    @Override public Optional<GameScene> currentGameScene() { return mainScene.currentGameScene(); }
-    @Override public PacManGames_View currentView() { return mainScene.currentView(); }
-    @Override public PlayView thePlayView() { return playView; }
-    @Override public StartPagesView theStartPagesView() { return startPagesView; }
+    @Override public Optional<GameScene>  currentGameScene() { return mainScene.currentGameScene(); }
+    @Override public PacManGames_View     currentView() { return mainScene.currentView(); }
+
+    @Override public Optional<EditorView> theEditorView() { return Optional.ofNullable(editorView); }
+    @Override public PlayView             thePlayView() { return playView; }
+    @Override public StartPagesView       theStartPagesView() { return startPagesView; }
 
     @Override
     public boolean isCurrentGameSceneID(String id) {

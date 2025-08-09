@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.lib.Disposable;
-import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.ArcadePalette;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
@@ -29,7 +28,7 @@ public class StatusIconBox extends HBox implements Disposable {
     private final FontIcon iconAutopilot;
     private final FontIcon iconImmune;
 
-    public StatusIconBox(GameUI ui) {
+    public StatusIconBox() {
         iconMuted = FontIcon.of(FontAwesomeSolid.DEAF, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
         iconMuted.visibleProperty().addListener(this::handleIconVisibilityChange);
 
@@ -42,17 +41,28 @@ public class StatusIconBox extends HBox implements Disposable {
         iconImmune = FontIcon.of(FontAwesomeSolid.USER_SECRET, STATUS_ICON_SIZE, STATUS_ICON_COLOR);
         iconImmune.visibleProperty().addListener(this::handleIconVisibilityChange);
 
-        iconMuted.visibleProperty().bind(ui.propertyMuted());
-        icon3D.visibleProperty().bind(ui.property3DEnabled());
-        iconAutopilot.visibleProperty().bind(ui.theGameContext().theGameController().propertyUsingAutopilot());
-        iconImmune.visibleProperty().bind(ui.theGameContext().theGameController().propertyImmunity());
-
         getChildren().addAll(iconMuted, icon3D, iconAutopilot, iconImmune);
 
         setMaxHeight(STATUS_ICON_SIZE);
         setMaxWidth(STATUS_ICON_SIZE * 4);
         setPadding(new Insets(STATUS_ICON_PADDING));
         setSpacing(STATUS_ICON_SPACING);
+    }
+
+    public FontIcon iconAutopilot() {
+        return iconAutopilot;
+    }
+
+    public FontIcon iconImmune() {
+        return iconImmune;
+    }
+
+    public FontIcon iconMuted() {
+        return iconMuted;
+    }
+
+    public FontIcon icon3D() {
+        return icon3D;
     }
 
     @Override
