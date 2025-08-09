@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GameVariant;
 import de.amr.pacmanfx.ui.layout.StartPage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.widgets.Flyer;
@@ -52,33 +51,15 @@ public class PacManXXL_Common_StartPage implements StartPage {
 
     @Override
     public void onEnter(GameUI ui) {
-        String gameVariant = currentGameVariant();
-        if (GameVariant.PACMAN_XXL.name().equals(gameVariant)) {
-            Logger.info("Loading assets for game variant {}", gameVariant);
-            theUI().config(gameVariant).storeAssets(theUI().theAssets());
-        }
-        else if (GameVariant.MS_PACMAN_XXL.name().equals(gameVariant)) {
-            Logger.info("Loading assets for game variant {}", gameVariant);
-            theUI().config(gameVariant).storeAssets(theUI().theAssets());
-        }
-        else {
-            Logger.error("Invalid game variant: {}", gameVariant);
-        }
-        ui.selectGameVariant(gameVariant);
+        ui.selectGameVariant(menu.state().gameVariant);
         menu.soundEnabledProperty().bind(theUI().theSound().mutedProperty().not());
         menu.syncMenuState();
         menu.startAnimation();
-
     }
 
     @Override
     public void onExit(GameUI ui) {
         menu.stopAnimation();
-    }
-
-    @Override
-    public String currentGameVariant() {
-        return menu.state().gameVariant;
     }
 
     @Override

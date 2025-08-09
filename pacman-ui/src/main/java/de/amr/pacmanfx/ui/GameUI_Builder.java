@@ -131,12 +131,7 @@ public class GameUI_Builder {
 
         }
         ui.thePlayView().dashboard().configure(dashboardIDs);
-
-        ui.theStartPagesView().selectStartPage(0);
-        ui.theStartPagesView().currentStartPage()
-            .map(StartPage::currentGameVariant)
-            .ifPresent(ui.theGameContext().theGameController()::selectGameVariant);
-
+        ui.theStartPagesView().selectStartPage(0); //TODO check this
         ui.theGameContext().theGameController().setEventsEnabled(true);
         return ui;
     }

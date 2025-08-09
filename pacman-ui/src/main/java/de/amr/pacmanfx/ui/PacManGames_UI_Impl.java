@@ -21,11 +21,9 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
@@ -36,13 +34,11 @@ import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.tinylog.Logger;
 
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.GameUI_Config.SCENE_ID_PLAY_SCENE_3D;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static java.util.Objects.requireNonNull;
 
@@ -77,7 +73,6 @@ public class PacManGames_UI_Impl implements GameUI {
 
     // private properties
     private final ObjectProperty<PacManGames_View> propertyCurrentView = new SimpleObjectProperty<>();
-    private final ObjectProperty<GameScene> propertyCurrentGameScene = new SimpleObjectProperty<>();
     private final BooleanProperty propertyMuted = new SimpleBooleanProperty(false);
 
     private final PacManGames_Assets theAssets;
@@ -86,13 +81,12 @@ public class PacManGames_UI_Impl implements GameUI {
     private final GameContext        theGameContext;
     private final Keyboard           theKeyboard;
     private final Joypad             theJoypad;
-    private final UserUIPreferences thePrefs;
+    private final UserUIPreferences  thePrefs;
     private final Stage              theStage;
 
     private final Map<String, GameUI_Config> configByGameVariant = new HashMap<>();
 
-    private final StackPane rootPane;
-    private Scene mainScene;
+    private GameUI_MainScene mainScene;
 
     private final StartPagesView startPagesView;
     private final PlayView playView;
@@ -120,11 +114,6 @@ public class PacManGames_UI_Impl implements GameUI {
 
         initPreferences();
 
-        rootPane = new StackPane();
-        rootPane.backgroundProperty().bind(propertyCurrentGameScene().map(gameScene ->
-            isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D) ? theAssets().get("background.play_scene3d") : theAssets().get("background.scene"))
-        );
-
         createMainScene(width, height);
         createStatusIcons();
 
@@ -142,10 +131,6 @@ public class PacManGames_UI_Impl implements GameUI {
         property3DWallOpacity.set(thePrefs.getFloat("3d.obstacle.opacity"));
         propertyCurrentView.addListener(this::handleViewChange);
 
-        URL url = getClass().getResource("css/menu-style.css");
-        if (url != null) {
-            mainScene.getStylesheets().add(url.toExternalForm());
-        }
     }
 
     private void initGlobalActionBindings() {
@@ -198,12 +183,15 @@ public class PacManGames_UI_Impl implements GameUI {
     }
 
     private void createMainScene(double width, double height) {
-        mainScene = new Scene(rootPane, width, height);
-        mainScene.addEventFilter(KeyEvent.KEY_PRESSED, theKeyboard::onKeyPressed);
-        mainScene.addEventFilter(KeyEvent.KEY_RELEASED, theKeyboard::onKeyReleased);
+        mainScene = new GameUI_MainScene(theAssets, theKeyboard, width, height);
         mainScene.setOnKeyPressed(e -> runActionOrElse(
             globalActionBindings.matchingAction(theKeyboard).orElse(null),
             () -> currentView().handleKeyboardInput(this)));
+        theGameContext.theGameController().gameVariantProperty().addListener((obs, oldGameVariant, newGameVariant) -> {
+            GameUI_Config newConfig = configByGameVariant.get(newGameVariant);
+            mainScene.setUiConfig(newConfig);
+            Logger.info("New game variant: {}, new game ui config: {}", newGameVariant, newConfig);
+        });
     }
 
     private void createStatusIcons() {
@@ -218,7 +206,7 @@ public class PacManGames_UI_Impl implements GameUI {
         var iconBox = new StatusIconBox(this);
         StackPane.setAlignment(iconBox, Pos.BOTTOM_LEFT);
         iconBox.visibleProperty().bind(propertyCurrentView.map(view -> view != editorView));
-        rootPane.getChildren().addAll(pausedIcon, iconBox);
+        mainScene.rootPane().getChildren().addAll(pausedIcon, iconBox);
     }
 
     public void applyConfiguration(String gameVariant, Class<?> configClass) {
@@ -249,7 +237,7 @@ public class PacManGames_UI_Impl implements GameUI {
         theStage.titleProperty().bind(newView.title());
         theGameContext.theGameEventManager().addEventListener(newView);
 
-        rootPane.getChildren().set(0, newView.rootNode());
+        mainScene.rootPane().getChildren().set(0, newView.rootNode());
     }
 
     /**
@@ -299,12 +287,12 @@ public class PacManGames_UI_Impl implements GameUI {
 
     // -----------------------------------------------------------------------------------------------------------------
     // GameUI interface implementation
-    // ----------------------------------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
 
     @Override public ObjectProperty<Color>            propertyCanvasBackgroundColor() { return propertyCanvasBgColor; }
     @Override public BooleanProperty                  propertyCanvasFontSmoothing() { return propertyCanvasFontSmoothing; }
     @Override public BooleanProperty                  propertyCanvasImageSmoothing(){ return propertyCanvasImageSmoothing; }
-    @Override public ObjectProperty<GameScene>        propertyCurrentGameScene() { return propertyCurrentGameScene;}
+    @Override public ObjectProperty<GameScene>        propertyCurrentGameScene() { return mainScene.currentGameSceneProperty();}
     @Override public ObjectProperty<PacManGames_View> propertyCurrentView() { return propertyCurrentView; }
     @Override public BooleanProperty                  propertyDebugInfoVisible(){ return propertyDebugInfoVisible; }
     @Override public IntegerProperty                  propertyMiniViewHeight(){ return propertyMiniViewHeight; }
@@ -322,11 +310,15 @@ public class PacManGames_UI_Impl implements GameUI {
     @Override public DoubleProperty                   property3DWallHeight(){ return property3DWallHeight; }
     @Override public DoubleProperty                   property3DWallOpacity(){ return property3DWallOpacity; }
 
-    @Override public Optional<GameScene> currentGameScene() { return Optional.ofNullable(propertyCurrentGameScene.get()); }
-
+    @Override public Optional<GameScene> currentGameScene() { return mainScene.currentGameScene(); }
     @Override public PacManGames_View currentView() { return propertyCurrentView.get(); }
     @Override public PlayView thePlayView() { return playView; }
     @Override public StartPagesView theStartPagesView() { return startPagesView; }
+
+    @Override
+    public boolean isCurrentGameSceneID(String id) {
+        return mainScene.isCurrentGameSceneID(id);
+    }
 
     @Override public Stage theStage() { return theStage; }
 
@@ -376,9 +368,13 @@ public class PacManGames_UI_Impl implements GameUI {
 
     @Override
     public void show() {
-        propertyCurrentView.set(startPagesView);
-        startPagesView.currentStartPage().ifPresent(startPage -> startPage.layoutRoot().requestFocus());
         playView.dashboard().init(this);
+
+        startPagesView.currentStartPage().ifPresent(startPage -> {
+            startPage.layoutRoot().requestFocus();
+            startPage.onEnter(this); // sets game variant!
+        });
+        propertyCurrentView.set(startPagesView);
 
         theStage.centerOnScreen();
         theStage.show();
@@ -479,11 +475,5 @@ public class PacManGames_UI_Impl implements GameUI {
     @Override
     public GameUI_Config config(String gameVariant) {
         return configByGameVariant.get(gameVariant);
-    }
-
-    @Override
-    public boolean isCurrentGameSceneID(String id) {
-        GameScene currentGameScene = currentGameScene().orElse(null);
-        return currentGameScene != null && theConfiguration().gameSceneHasID(currentGameScene, id);
     }
 }

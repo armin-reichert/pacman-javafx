@@ -9,7 +9,6 @@ import javafx.scene.layout.Region;
 
 public interface StartPage {
     Region layoutRoot();
-    String currentGameVariant();
     default void onEnter(GameUI ui) {}
     default void onExit(GameUI ui) {}
 }

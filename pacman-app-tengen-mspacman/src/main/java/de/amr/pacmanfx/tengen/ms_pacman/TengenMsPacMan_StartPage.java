@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman;
 
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameVariant;
 import de.amr.pacmanfx.ui.layout.StartPage;
 import de.amr.pacmanfx.ui.layout.StartPagesView;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
@@ -19,10 +20,8 @@ import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_StartPage extends StackPane implements StartPage {
 
-    public TengenMsPacMan_StartPage(GameUI ui, String gameVariant) {
+    public TengenMsPacMan_StartPage(GameUI ui) {
         requireNonNull(ui);
-        setUserData(requireNonNull(gameVariant));
-
         ResourceManager rm = () -> TengenMsPacMan_StartPage.class;
         var flyer = new Flyer(rm.loadImage("graphics/f1.png"), rm.loadImage("graphics/f2.png"));
         addEventHandler(KeyEvent.KEY_PRESSED, e -> {
@@ -41,12 +40,7 @@ public class TengenMsPacMan_StartPage extends StackPane implements StartPage {
 
     @Override
     public void onEnter(GameUI ui) {
-        ui.selectGameVariant(currentGameVariant());
-    }
-
-    @Override
-    public String currentGameVariant() {
-        return (String) getUserData();
+        ui.selectGameVariant(GameVariant.MS_PACMAN_TENGEN.name());
     }
 
     @Override

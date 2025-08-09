@@ -129,6 +129,10 @@ public class GameController implements GameContext {
         knownGames.put(variant, gameModel);
     }
 
+    public StringProperty gameVariantProperty() {
+        return gameVariantProperty;
+    }
+
     public String selectedGameVariant() { return gameVariantProperty.get(); }
 
     public void selectGameVariant(String gameVariant) {
