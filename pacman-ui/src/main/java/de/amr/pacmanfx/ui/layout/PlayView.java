@@ -18,8 +18,6 @@ import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.InfoBox;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.StringBinding;
-import javafx.beans.binding.StringExpression;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
@@ -37,7 +35,6 @@ import javafx.scene.text.FontSmoothingType;
 import org.tinylog.Logger;
 
 import java.util.List;
-import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.GameUI.DEFAULT_ACTION_BINDINGS;
@@ -178,11 +175,6 @@ public class PlayView implements PacManGames_View {
     @Override
     public StackPane rootNode() {
         return root;
-    }
-
-    @Override
-    public Optional<? extends StringExpression> title() {
-        return Optional.empty();
     }
 
     public void draw() {
