@@ -310,11 +310,13 @@ public class PacManGames_UI_Impl implements GameUI {
         theGameClock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
         theSound().stopAll();
         playView.dashboard().setVisible(false);
-        startPagesView.currentStartPage().ifPresent(startPage -> {
-            startPage.layoutRoot().requestFocus();
-            startPage.onEnter(this); // sets game variant!
-        });
         selectView(startPagesView);
+            startPagesView.currentStartPage().ifPresent(startPage -> {
+                Platform.runLater(() -> {
+                    startPage.onEnter(this); // sets game variant!
+                    startPage.layoutRoot().requestFocus();
+            });
+        });
     }
 
     @Override
