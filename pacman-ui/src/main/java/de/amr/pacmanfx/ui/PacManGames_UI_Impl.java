@@ -117,7 +117,7 @@ public class PacManGames_UI_Impl implements GameUI {
         configureStage(stage);
 
         startPagesView = new StartPagesView(this);
-        playView = new PlayView(this, gameContext, mainScene);
+        playView = new PlayView(this, mainScene);
 
         theGameClock.setPausableAction(this::doSimulationStepAndUpdateGameScene);
         theGameClock.setPermanentAction(this::drawCurrentView);

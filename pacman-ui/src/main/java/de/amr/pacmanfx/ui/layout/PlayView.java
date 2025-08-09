@@ -4,10 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.layout;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.ActorAnimationMap;
 import de.amr.pacmanfx.ui.*;
 import de.amr.pacmanfx.ui._2d.CrudeCanvasContainer;
@@ -70,7 +70,6 @@ public class PlayView extends StackPane implements PacManGames_View {
     private final ActionBindingManager actionBindings;
 
     private final GameUI ui;
-    private final GameContext gameContext;
     private final Scene parentScene;
 
     private BorderPane canvasLayer;
@@ -83,9 +82,8 @@ public class PlayView extends StackPane implements PacManGames_View {
     private final MiniGameView miniGameView;
     private final ContextMenu contextMenu = new ContextMenu();
 
-    public PlayView(GameUI ui, GameContext gameContext, Scene parentScene) {
+    public PlayView(GameUI ui, Scene parentScene) {
         this.ui = requireNonNull(ui);
-        this.gameContext = requireNonNull(gameContext);
         this.parentScene = requireNonNull(parentScene);
         this.miniGameView = new MiniGameView();
         this.dashboard = new Dashboard(ui);
@@ -183,8 +181,8 @@ public class PlayView extends StackPane implements PacManGames_View {
             }
         });
 
-        if (miniGameView.isVisible() && ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D) && gameContext.optGameLevel().isPresent()) {
-            miniGameView.draw(ui, gameContext.theGameLevel());
+        if (miniGameView.isVisible() && ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D) && ui.theGameContext().optGameLevel().isPresent()) {
+            miniGameView.draw(ui, ui.theGameContext().theGameLevel());
         }
 
         // Dashboard updates must be called from permanent clock task too!
@@ -210,20 +208,21 @@ public class PlayView extends StackPane implements PacManGames_View {
         Logger.trace("Handle {}", gameEvent);
         switch (gameEvent.type()) {
             case LEVEL_CREATED -> {
+                GameLevel gameLevel = ui.theGameContext().theGameLevel();
                 GameUI_Config config = ui.theConfiguration();
-                ActorAnimationMap pacAnimationMap = config.createPacAnimations(gameContext.theGameLevel().pac());
-                gameContext.theGameLevel().pac().setAnimations(pacAnimationMap);
-                gameContext.theGameLevel().ghosts().forEach(ghost -> {
+                ActorAnimationMap pacAnimationMap = config.createPacAnimations(gameLevel.pac());
+                gameLevel.pac().setAnimations(pacAnimationMap);
+                gameLevel.ghosts().forEach(ghost -> {
                     ActorAnimationMap ghostAnimationMap = config.createGhostAnimations(ghost);
                     ghost.setAnimations(ghostAnimationMap);
                 });
-                miniGameView.onLevelCreated(ui, gameContext.theGameLevel());
+                miniGameView.onLevelCreated(ui, gameLevel);
 
                 // size of game scene might have changed, so re-embed
                 ui.currentGameScene().ifPresent(this::embedGameScene);
             }
             case GAME_STATE_CHANGED -> {
-                if (gameContext.theGameState() == GameState.LEVEL_COMPLETE) {
+                if (ui.theGameContext().theGameState() == GameState.LEVEL_COMPLETE) {
                     miniGameView.onLevelCompleted();
                 }
             }
@@ -243,7 +242,7 @@ public class PlayView extends StackPane implements PacManGames_View {
     }
 
     public void updateGameScene(boolean reloadCurrent) {
-        final GameScene nextGameScene = ui.theConfiguration().selectGameScene(gameContext);
+        final GameScene nextGameScene = ui.theConfiguration().selectGameScene(ui.theGameContext());
         if (nextGameScene == null) {
             String errorMessage = " Katastrophe! Could not determine game scene!";
             ui.showFlashMessageSec(30, errorMessage);
@@ -279,9 +278,9 @@ public class PlayView extends StackPane implements PacManGames_View {
     public void quitCurrentGameScene() {
         ui.currentGameScene().ifPresent(gameScene -> {
             gameScene.end();
-            gameContext.theGameController().changeGameState(GameState.BOOT);
-            gameContext.theGame().resetEverything();
-            if (!gameContext.theCoinMechanism().isEmpty()) gameContext.theCoinMechanism().consumeCoin();
+            ui.theGameContext().theGameController().changeGameState(GameState.BOOT);
+            ui.theGameContext().theGame().resetEverything();
+            if (!ui.theGameContext().theCoinMechanism().isEmpty()) ui.theGameContext().theCoinMechanism().consumeCoin();
             ui.showStartView();
             Logger.info("Current game scene ({}) has been quit", gameScene.getClass().getSimpleName());
         });
