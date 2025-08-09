@@ -1,7 +1,12 @@
+plugins {
+    alias(libs.plugins.javafx)
+    alias(libs.plugins.osdetector)
+}
+
 javafx {
     modules = ["javafx.base"]  // for JavFX properties and data binding
 }
 
 dependencies {
-    implementation libs.bundles.tinylog
+    implementation(libs.bundles.tinylog)
 }

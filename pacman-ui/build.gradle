@@ -1,11 +1,17 @@
+plugins {
+    alias(libs.plugins.javafx)
+    alias(libs.plugins.osdetector)
+}
+
 dependencies {
-    implementation project(":pacman-core")
-    implementation project(":pacman-ui-lib")
-    implementation project(":pacman-app-mapeditor")
-    implementation libs.bundles.iconli
-    implementation libs.bundles.tinylog
-    testImplementation libs.junit.jupiter.api
-    testRuntimeOnly libs.junit.jupiter.engine
+    implementation(
+        project(":pacman-core"),
+        project(":pacman-ui-lib"),
+        project(":pacman-app-mapeditor"),
+        libs.bundles.iconli,
+        libs.bundles.tinylog)
+    testImplementation(libs.junit.jupiter.api)
+    testRuntimeOnly(libs.junit.jupiter.engine)
 }
 
 test {

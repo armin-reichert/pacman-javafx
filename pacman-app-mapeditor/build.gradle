@@ -1,11 +1,15 @@
 plugins {
+    alias(libs.plugins.javafx)
     alias(libs.plugins.jlink)
+    alias(libs.plugins.osdetector)
 }
 
 dependencies {
-    implementation project(":pacman-core")
-    implementation project(":pacman-ui-lib")
-    implementation libs.bundles.tinylog
+    implementation(
+        project(":pacman-core"),
+        project(":pacman-ui-lib"),
+        libs.bundles.tinylog
+    )
 }
 
 application {
@@ -18,13 +22,11 @@ javafx {
 }
 
 jlink {
-    imageZip = layout.buildDirectory.file("distributions/javafx-mapeditor-app-${javafx.platform.classifier}.zip")
     options = ["--strip-debug", "--compress", "zip-9", "--no-header-files", "--no-man-pages"]
     launcher {
         name = "Pac-Man-FX-Map-Editor"
     }
     jpackage {
-        appVersion = "1.0"
         vendor = "Armin Reichert"
         installerType = osPkg
         if (osdetector.os == "windows") {
@@ -32,8 +34,4 @@ jlink {
             installerOptions = ["--win-dir-chooser", "--win-menu", "--win-menu-group", "Pac-Man FX", "--win-shortcut"]
         }
     }
-}
-
-jlinkZip {
-    group = "distribution"
 }
