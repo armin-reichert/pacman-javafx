@@ -81,10 +81,14 @@ public class PacManGames_UI_Impl implements GameUI {
 
         mainScene = new MainScene(this, width, height);
         // Check if a global action is defined for the key press, otherwise let the current view handle it.
-        mainScene.setOnKeyPressed(e -> runActionOrElse(
-            globalActionBindings.matchingAction(theKeyboard).orElse(null),
-            () -> currentView().handleKeyboardInput(this))
-        );
+        mainScene.setOnKeyPressed(e -> {
+            GameAction matchingAction = globalActionBindings.matchingAction(theKeyboard).orElse(null);
+            if (matchingAction != null) {
+                runAction(matchingAction);
+            } else {
+                currentView().handleKeyboardInput(this);
+            }
+        });
         mainScene.currentGameSceneProperty().bindBidirectional(PROPERTY_CURRENT_GAME_SCENE);
         mainScene.currentViewProperty().bindBidirectional(PROPERTY_CURRENT_VIEW);
 
@@ -311,12 +315,10 @@ public class PacManGames_UI_Impl implements GameUI {
         theSound().stopAll();
         playView.dashboard().setVisible(false);
         selectView(startPagesView);
-            startPagesView.currentStartPage().ifPresent(startPage -> {
-                Platform.runLater(() -> {
-                    startPage.onEnter(this); // sets game variant!
-                    startPage.layoutRoot().requestFocus();
-            });
-        });
+            startPagesView.currentStartPage().ifPresent(startPage -> Platform.runLater(() -> {
+                startPage.onEnter(this); // sets game variant!
+                startPage.layoutRoot().requestFocus();
+        }));
     }
 
     @Override

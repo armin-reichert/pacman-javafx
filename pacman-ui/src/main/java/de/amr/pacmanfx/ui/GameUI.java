@@ -31,9 +31,10 @@ import java.util.Optional;
 
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
-import static java.util.Objects.requireNonNull;
 
 public interface GameUI {
+
+    double DEFAULT_FLASH_MESSAGE_SECONDS = 1.5;
 
     static GameUI theUI() { return PacManGames_UI_Impl.THE_ONE; }
 
@@ -136,22 +137,15 @@ public interface GameUI {
     void showStartView();
 
     // Flash messages
-    default void showFlashMessage(String message, Object... args) { showFlashMessageSec(1.5, message, args); }
     void showFlashMessageSec(double seconds, String message, Object... args);
+    default void showFlashMessage(String message, Object... args) {
+        showFlashMessageSec(DEFAULT_FLASH_MESSAGE_SECONDS, message, args);
+    }
 
     void terminate();
 
     default void runAction(GameAction action) {
         action.executeIfEnabled(this);
-    }
-
-    default void runActionOrElse(GameAction optAction, Runnable defaultCode) {
-        requireNonNull(defaultCode);
-        if (optAction != null) {
-            runAction(optAction);
-        } else {
-            defaultCode.run();
-        }
     }
 
     /**
