@@ -173,14 +173,11 @@ public class PacManGames_UI_Impl implements GameUI {
 
     private void createMainScene(double width, double height) {
         mainScene = new MainScene(this, width, height);
+        // First, check if a global action binding is defined for the key,
+        // if not, delegate the key press event to the current view
         mainScene.setOnKeyPressed(e -> runActionOrElse(
             globalActionBindings.matchingAction(theKeyboard).orElse(null),
             () -> currentView().handleKeyboardInput(this)));
-        theGameContext.theGameController().gameVariantProperty().addListener((obs, oldGameVariant, newGameVariant) -> {
-            GameUI_Config newConfig = configByGameVariant.get(newGameVariant);
-            mainScene.setUiConfig(newConfig);
-            Logger.info("New game variant: {}, new game ui config: {}", newGameVariant, newConfig);
-        });
     }
 
     private void showView(PacManGames_View view) {

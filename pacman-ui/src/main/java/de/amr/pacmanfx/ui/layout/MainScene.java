@@ -18,6 +18,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
+import org.tinylog.Logger;
 
 import java.net.URL;
 import java.util.Optional;
@@ -39,11 +40,11 @@ public class MainScene extends Scene {
     private final ObjectProperty<GameScene> propertyCurrentGameScene = new SimpleObjectProperty<>();
 
     private final GameUI ui;
-    private GameUI_Config uiConfig;
 
     public MainScene(GameUI ui, double width, double height) {
         super(new StackPane(), width, height);
         this.ui = requireNonNull(ui);
+
         addEventFilter(KeyEvent.KEY_PRESSED, ui.theKeyboard()::onKeyPressed);
         addEventFilter(KeyEvent.KEY_RELEASED, ui.theKeyboard()::onKeyReleased);
         URL url = getClass().getResource("css/menu-style.css");
@@ -74,19 +75,16 @@ public class MainScene extends Scene {
         iconBox.icon3D().visibleProperty().bind(ui.property3DEnabled());
         iconBox.iconAutopilot().visibleProperty().bind(ui.theGameContext().theGameController().propertyUsingAutopilot());
         iconBox.iconImmune().visibleProperty().bind(ui.theGameContext().theGameController().propertyImmunity());
-    }
 
-    /**
-     * Called when the game variant and therefore the current UI configuration changes.
-     * @param uiConfig the new game configuration
-     */
-    public void setUiConfig(GameUI_Config uiConfig) {
-        this.uiConfig = uiConfig;
-        rootPane().backgroundProperty().bind(propertyCurrentGameScene.map(gameScene ->
-            isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)
-                ? ui.theAssets().get("background.play_scene3d")
-                : ui.theAssets().get("background.scene"))
-        );
+        ui.theGameContext().theGameController().gameVariantProperty().addListener((obs, oldGameVariant, newGameVariant) -> {
+            GameUI_Config newConfig = ui.theConfiguration();
+            rootPane().backgroundProperty().bind(propertyCurrentGameScene.map(gameScene ->
+                isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)
+                    ? ui.theAssets().get("background.play_scene3d")
+                    : ui.theAssets().get("background.scene"))
+            );
+            Logger.info("New game variant: {}, new game ui config: {}", newGameVariant, newConfig);
+        });
     }
 
     public StackPane rootPane() {
@@ -116,6 +114,6 @@ public class MainScene extends Scene {
 
     public boolean isCurrentGameSceneID(String id) {
         GameScene currentGameScene = currentGameScene().orElse(null);
-        return currentGameScene != null && uiConfig.gameSceneHasID(currentGameScene, id);
+        return currentGameScene != null && ui.theConfiguration().gameSceneHasID(currentGameScene, id);
     }
 }
