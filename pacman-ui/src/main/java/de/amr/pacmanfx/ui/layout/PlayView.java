@@ -18,7 +18,6 @@ import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.InfoBox;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.beans.binding.Bindings;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
@@ -98,7 +97,8 @@ public class PlayView extends StackPane implements PacManGames_View {
         //TODO what is the cleanest solution to hide the context menu in all needed cases?
         setOnContextMenuRequested(this::handleContextMenuRequest);
         // game scene changes: hide it
-        ui.propertyCurrentGameScene().addListener(this::handleGameSceneChange);
+        ui.propertyCurrentGameScene().addListener(
+                (obs, oldGameScene, newGameScene) -> handleGameSceneChange(parentScene, newGameScene));
         // any other mouse button clicked: hide it
         parentScene.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
             if (e.getButton() == MouseButton.PRIMARY) {
@@ -128,8 +128,8 @@ public class PlayView extends StackPane implements PacManGames_View {
         actionBindings.use(ACTION_TOGGLE_PLAY_SCENE_2D_3D, DEFAULT_ACTION_BINDINGS);
     }
 
-    private void handleGameSceneChange(ObservableValue<? extends GameScene> obs, GameScene oldScene, GameScene newScene) {
-        if (newScene != null) embedGameScene(newScene);
+    private void handleGameSceneChange(Scene parentScene, GameScene newScene) {
+        if (newScene != null) embedGameScene(parentScene, newScene);
         contextMenu.hide();
     }
 
@@ -219,7 +219,7 @@ public class PlayView extends StackPane implements PacManGames_View {
                 miniGameView.onLevelCreated(ui, gameLevel);
 
                 // size of game scene might have changed, so re-embed
-                ui.currentGameScene().ifPresent(this::embedGameScene);
+                ui.currentGameScene().ifPresent(gameScene -> embedGameScene(parentScene, gameScene));
             }
             case GAME_STATE_CHANGED -> {
                 if (ui.theGameContext().theGameState() == GameState.LEVEL_COMPLETE) {
@@ -257,7 +257,7 @@ public class PlayView extends StackPane implements PacManGames_View {
             currentGameScene.end();
             Logger.info("Game scene ended: {}", currentGameScene.displayName());
         }
-        embedGameScene(nextGameScene);
+        embedGameScene(parentScene, nextGameScene);
         nextGameScene.init();
         Logger.info("Game scene initialized: {}", nextGameScene.displayName());
 
@@ -286,7 +286,7 @@ public class PlayView extends StackPane implements PacManGames_View {
         });
     }
 
-    private void embedGameScene(GameScene gameScene) {
+    private void embedGameScene(Scene parentScene, GameScene gameScene) {
         if (gameScene.optSubScene().isPresent()) {
             SubScene subScene = gameScene.optSubScene().get();
             subScene.widthProperty().bind(parentScene.widthProperty());
@@ -334,7 +334,8 @@ public class PlayView extends StackPane implements PacManGames_View {
         // 28*TS x 36*TS = Arcade map size in pixels
         canvasContainer.setUnscaledCanvasSize(28 *TS, 36 * TS);
         canvasContainer.setBorderColor(Color.rgb(222, 222, 255));
-        canvasContainer.roundedBorderProperty().addListener((py, ov, nv) -> ui.currentGameScene().ifPresent(this::embedGameScene));
+
+        //canvasContainer.roundedBorderProperty().addListener((py, ov, nv) -> ui.currentGameScene().ifPresent(this::embedGameScene));
     }
 
     private void configurePropertyBindings() {
