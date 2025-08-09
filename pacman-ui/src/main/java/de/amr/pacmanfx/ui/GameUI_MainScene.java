@@ -1,8 +1,10 @@
 package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.ui.input.Keyboard;
+import de.amr.pacmanfx.ui.layout.PacManGames_View;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
@@ -17,6 +19,16 @@ public class GameUI_MainScene extends Scene {
 
     private final PacManGames_Assets assets;
     private GameUI_Config uiConfig;
+
+    private final ObjectProperty<PacManGames_View> propertyCurrentView = new SimpleObjectProperty<>() {
+        @Override
+        protected void invalidated() {
+            PacManGames_View newView = get();
+            rootPane().getChildren().set(0, newView.rootNode());
+            newView.rootNode().requestFocus();
+        }
+    };
+
     private final ObjectProperty<GameScene> propertyCurrentGameScene = new SimpleObjectProperty<>();
 
     public GameUI_MainScene(PacManGames_Assets assets, Keyboard keyboard, double width, double height) {
@@ -41,6 +53,19 @@ public class GameUI_MainScene extends Scene {
 
     public StackPane rootPane() {
         return (StackPane) getRoot();
+    }
+
+    public ObjectProperty<PacManGames_View> currentViewProperty() {
+        return propertyCurrentView;
+    }
+
+    public PacManGames_View currentView() {
+        return propertyCurrentView.get();
+    }
+
+    public void setCurrentView(PacManGames_View view) {
+        requireNonNull(view);
+        propertyCurrentView.set(view);
     }
 
     public ObjectProperty<GameScene> currentGameSceneProperty() {

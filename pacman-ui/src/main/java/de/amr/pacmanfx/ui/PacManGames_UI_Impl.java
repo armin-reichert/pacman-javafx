@@ -19,7 +19,6 @@ import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.GameClock;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
@@ -72,7 +71,6 @@ public class PacManGames_UI_Impl implements GameUI {
     final DoubleProperty property3DWallOpacity                 = new SimpleDoubleProperty(1.0);
 
     // private properties
-    private final ObjectProperty<PacManGames_View> propertyCurrentView = new SimpleObjectProperty<>();
     private final BooleanProperty propertyMuted = new SimpleBooleanProperty(false);
 
     private final PacManGames_Assets theAssets;
@@ -129,8 +127,6 @@ public class PacManGames_UI_Impl implements GameUI {
 
         property3DWallHeight.set(thePrefs.getFloat("3d.obstacle.base_height"));
         property3DWallOpacity.set(thePrefs.getFloat("3d.obstacle.opacity"));
-        propertyCurrentView.addListener(this::handleViewChange);
-
     }
 
     private void initGlobalActionBindings() {
@@ -166,7 +162,7 @@ public class PacManGames_UI_Impl implements GameUI {
         thePrefs.storeDefaultValue("3d.pac.size", 16.0f);
         thePrefs.storeDefaultValue("3d.pellet.radius", 1.0f);
 
-        // "Kornblumenblau, sind die Augen der Frauen beim Weine..."
+        // "Kornblumenblau, sind die Augen der Frauen beim Weine. Hicks!"
         thePrefs.storeDefaultColor("context_menu.title.fill", Color.CORNFLOWERBLUE);
         thePrefs.storeDefaultFont("context_menu.title.font", Font.font("Dialog", FontWeight.BLACK, 14.0f));
 
@@ -194,18 +190,33 @@ public class PacManGames_UI_Impl implements GameUI {
         });
     }
 
+    private void showView(PacManGames_View view) {
+        requireNonNull(view);
+
+        final PacManGames_View oldView = mainScene.currentView();
+        if (oldView != null) {
+            oldView.actionBindingMap().removeFromKeyboard(theKeyboard);
+            theGameContext.theGameEventManager().removeEventListener(oldView);
+        }
+        view.actionBindingMap().updateKeyboard(theKeyboard);
+        theGameContext.theGameEventManager().addEventListener(view);
+
+        theStage.titleProperty().bind(view.title());
+        mainScene.setCurrentView(view);
+    }
+
     private void createStatusIcons() {
         // Large "paused" icon appears at center of UI
         FontIcon pausedIcon = FontIcon.of(FontAwesomeSolid.PAUSE, 80, ArcadePalette.ARCADE_WHITE);
         StackPane.setAlignment(pausedIcon, Pos.CENTER);
         pausedIcon.visibleProperty().bind(Bindings.createBooleanBinding(
                 () -> currentView() == playView && theGameClock.isPaused(),
-                propertyCurrentView, theGameClock.pausedProperty()));
+                mainScene.currentViewProperty(), theGameClock.pausedProperty()));
 
         // Status icon box appears at bottom-left corner of any view except editor
         var iconBox = new StatusIconBox(this);
         StackPane.setAlignment(iconBox, Pos.BOTTOM_LEFT);
-        iconBox.visibleProperty().bind(propertyCurrentView.map(view -> view != editorView));
+        iconBox.visibleProperty().bind(mainScene.currentViewProperty().map(view -> view != editorView));
         mainScene.rootPane().getChildren().addAll(pausedIcon, iconBox);
     }
 
@@ -224,20 +235,6 @@ public class PacManGames_UI_Impl implements GameUI {
             Logger.error("Could not apply UI configuration of class {}", configClass);
             throw new IllegalStateException(x);
         }
-    }
-
-    private void handleViewChange(ObservableValue<? extends PacManGames_View> obs, PacManGames_View oldView, PacManGames_View newView) {
-        requireNonNull(newView);
-        if (oldView != null) {
-            oldView.actionBindingMap().removeFromKeyboard(theKeyboard);
-            theGameContext.theGameEventManager().removeEventListener(oldView);
-        }
-        newView.actionBindingMap().updateKeyboard(theKeyboard);
-        newView.rootNode().requestFocus();
-        theStage.titleProperty().bind(newView.title());
-        theGameContext.theGameEventManager().addEventListener(newView);
-
-        mainScene.rootPane().getChildren().set(0, newView.rootNode());
     }
 
     /**
@@ -293,7 +290,7 @@ public class PacManGames_UI_Impl implements GameUI {
     @Override public BooleanProperty                  propertyCanvasFontSmoothing() { return propertyCanvasFontSmoothing; }
     @Override public BooleanProperty                  propertyCanvasImageSmoothing(){ return propertyCanvasImageSmoothing; }
     @Override public ObjectProperty<GameScene>        propertyCurrentGameScene() { return mainScene.currentGameSceneProperty();}
-    @Override public ObjectProperty<PacManGames_View> propertyCurrentView() { return propertyCurrentView; }
+    @Override public ObjectProperty<PacManGames_View> propertyCurrentView() { return mainScene.currentViewProperty(); }
     @Override public BooleanProperty                  propertyDebugInfoVisible(){ return propertyDebugInfoVisible; }
     @Override public IntegerProperty                  propertyMiniViewHeight(){ return propertyMiniViewHeight; }
     @Override public BooleanProperty                  propertyMiniViewOn(){ return propertyMiniViewOn; }
@@ -311,7 +308,7 @@ public class PacManGames_UI_Impl implements GameUI {
     @Override public DoubleProperty                   property3DWallOpacity(){ return property3DWallOpacity; }
 
     @Override public Optional<GameScene> currentGameScene() { return mainScene.currentGameScene(); }
-    @Override public PacManGames_View currentView() { return propertyCurrentView.get(); }
+    @Override public PacManGames_View currentView() { return mainScene.currentView(); }
     @Override public PlayView thePlayView() { return playView; }
     @Override public StartPagesView theStartPagesView() { return startPagesView; }
 
@@ -374,7 +371,7 @@ public class PacManGames_UI_Impl implements GameUI {
             startPage.layoutRoot().requestFocus();
             startPage.onEnter(this); // sets game variant!
         });
-        propertyCurrentView.set(startPagesView);
+        showView(startPagesView);
 
         theStage.centerOnScreen();
         theStage.show();
@@ -388,7 +385,7 @@ public class PacManGames_UI_Impl implements GameUI {
             theSound().stopAll();
             theGameClock.stop();
             editorView().editor().start(theStage);
-            propertyCurrentView.set(editorView());
+            showView(editorView());
         } else {
             Logger.info("Editor view cannot be opened, game is playing");
         }
@@ -401,7 +398,7 @@ public class PacManGames_UI_Impl implements GameUI {
 
     @Override
     public void showPlayView() {
-        propertyCurrentView.set(playView);
+        showView(playView);
     }
 
     @Override
@@ -410,7 +407,7 @@ public class PacManGames_UI_Impl implements GameUI {
         theGameClock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
         theSound().stopAll();
         playView.dashboard().setVisible(false);
-        propertyCurrentView.set(startPagesView);
+        showView(startPagesView);
         startPagesView.currentStartPage().ifPresent(startPage -> startPage.layoutRoot().requestFocus());
     }
 
