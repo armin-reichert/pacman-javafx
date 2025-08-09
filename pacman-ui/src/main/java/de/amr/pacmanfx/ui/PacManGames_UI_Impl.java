@@ -19,6 +19,7 @@ import de.amr.pacmanfx.uilib.GameClock;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
+import javafx.beans.value.ObservableObjectValue;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
@@ -78,64 +79,43 @@ public class PacManGames_UI_Impl implements GameUI {
     private final UserUIPreferences  thePrefs;
     private final Stage              theStage;
 
+    private final ActionBindingManager globalActionBindings = new DefaultActionBindingManager();
     private final Map<String, GameUI_Config> configByGameVariant = new HashMap<>();
-
     private final MainScene mainScene;
-
     private final StartPagesView startPagesView;
     private final PlayView playView;
     private       EditorView editorView; // created on first access
 
-    private final ActionBindingManager globalActionBindings;
-
     public PacManGames_UI_Impl(GameContext gameContext, Stage stage, double width, double height) {
-        requireNonNull(gameContext);
-        requireNonNull(stage);
+        requireNonNull(gameContext, "Game context is null");
+        requireNonNull(stage, "Stage is null");
 
         Logger.info("JavaFX runtime: {}", System.getProperty("javafx.runtime.version"));
 
-        theAssets = new PacManGames_Assets();
+        // Input
+        theKeyboard = new Keyboard();
+        theJoypad = new Joypad(theKeyboard);
+
+        // Game context
         theCustomDirWatchdog = new DirectoryWatchdog(gameContext.theCustomMapDir());
         theGameClock = new GameClock();
         theGameContext = gameContext;
-        theKeyboard = new Keyboard();
-        theJoypad = new Joypad(theKeyboard);
+
+        // Game UI
+        theAssets = new PacManGames_Assets();
         thePrefs = new UserUIPreferences(PacManGames_UI_Impl.class);
         theStage = stage;
 
-        globalActionBindings = new DefaultActionBindingManager();
+        initPreferences();
         initGlobalActionBindings();
 
-        initPreferences();
-
         mainScene = new MainScene(this, width, height);
-        // First, check if a global action binding is defined for the key, if not, delegate the to the current view:
+        // First, check if a global action binding is defined for the key, if not, delegate to the current view:
         mainScene.setOnKeyPressed(e -> runActionOrElse(
             globalActionBindings.matchingAction(theKeyboard).orElse(null),
             () -> currentView().handleKeyboardInput(this)));
 
-        stage.setScene(mainScene);
-        stage.setMinWidth(MIN_STAGE_WIDTH);
-        stage.setMinHeight(MIN_STAGE_HEIGHT);
-
-        var title = Bindings.createStringBinding(
-            () -> {
-                if (currentView() == null) {
-                    return "No View?";
-                }
-                if (currentView().title().isPresent()) {
-                    return currentView().title().get().get();
-                }
-                return mainScene.computeTitle(property3DEnabled().get(), propertyDebugInfoVisible().get());
-            },
-            propertyCurrentGameScene(),
-            propertyCurrentView(),
-            propertyDebugInfoVisible(),
-            property3DEnabled(),
-            theGameClock().pausedProperty(),
-            mainScene.heightProperty()
-        );
-        stage.titleProperty().bind(title);
+        configureStage(stage);
 
         startPagesView = new StartPagesView(this);
         playView = new PlayView(this, gameContext, mainScene);
@@ -145,6 +125,29 @@ public class PacManGames_UI_Impl implements GameUI {
 
         property3DWallHeight.set(thePrefs.getFloat("3d.obstacle.base_height"));
         property3DWallOpacity.set(thePrefs.getFloat("3d.obstacle.opacity"));
+    }
+
+    private void configureStage(Stage stage) {
+        stage.setScene(mainScene);
+        stage.setMinWidth(MIN_STAGE_WIDTH);
+        stage.setMinHeight(MIN_STAGE_HEIGHT);
+
+        var title = Bindings.createStringBinding(
+            () -> {
+                PacManGames_View currentView = currentView();
+                return currentView == null
+                    ? "No View?"
+                    : currentView.title().map(ObservableObjectValue::get)
+                        .orElse(mainScene.computeTitle(property3DEnabled().get(), propertyDebugInfoVisible().get()));
+            },
+            propertyCurrentGameScene(),
+            propertyCurrentView(),
+            propertyDebugInfoVisible(),
+            property3DEnabled(),
+            theGameClock().pausedProperty(),
+            mainScene.heightProperty()
+        );
+        stage.titleProperty().bind(title);
     }
 
     private void initGlobalActionBindings() {
