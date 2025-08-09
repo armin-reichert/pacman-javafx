@@ -15,7 +15,9 @@ public class PacManGames_Preferences extends UIPreferences {
 
     public PacManGames_Preferences() {
         super(PacManGames_Preferences.class);
+    }
 
+    protected void defineDefaultValues() {
         storeDefaultValue("3d.bonus.symbol.width", 8.0f);
         storeDefaultValue("3d.bonus.points.width", 1.8f * 8.0f);
         storeDefaultValue("3d.energizer.radius", 3.5f);

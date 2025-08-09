@@ -22,11 +22,15 @@ public class UIPreferences {
 
     public UIPreferences(Class<?> javaClass) {
         prefs = Preferences.userNodeForPackage(javaClass);
+        defineDefaultValues();
         if (!isBackingStoreAccessible()) {
             Logger.error("User preferences could not be accessed, using default values!");
         } else {
             addMissingValues();
         }
+    }
+
+    protected void defineDefaultValues() {
     }
 
     public boolean isBackingStoreAccessible() {
@@ -39,7 +43,7 @@ public class UIPreferences {
         }
     }
 
-    public void addMissingValues() {
+    private void addMissingValues() {
         try {
             Set<String> prefKeys = new HashSet<>(Arrays.asList(prefs.keys()));
             List<String> allKeys = defaultValueMap.keySet().stream().sorted().toList();
@@ -47,11 +51,11 @@ public class UIPreferences {
                 if (!prefKeys.contains(key)) {
                     Object defaultValue = defaultValueMap.get(key);
                     storeValue(key, defaultValue);
-                    Logger.info("Added missing entry '{}'='{}'", key, defaultValue);
+                    Logger.info("Added missing preference '{}'='{}'", key, defaultValue);
                 }
             }
         } catch (BackingStoreException x) {
-            Logger.error("Could not access preferences to add missing keys");
+            Logger.error("Could not access preferences store to add missing keys");
             Logger.error(x);
         }
     }
@@ -81,7 +85,7 @@ public class UIPreferences {
     }
 
     public Color getColor(String colorKey) {
-        String colorValue = prefs.get(colorKey, getDefaultValue(colorKey));
+        String colorValue = prefs.get(colorKey, getDefaultValue(colorKey, String.class));
         return Color.web(colorValue);
     }
 
@@ -112,21 +116,24 @@ public class UIPreferences {
 
     public Font getFont(String key) {
         String familyKey = key + ".family";
-        String family = prefs.get(familyKey, getDefaultValue(familyKey));
+        String family = prefs.get(familyKey, getDefaultValue(familyKey, String.class));
 
         String styleKey = key + ".style";
-        String style = prefs.get(styleKey, getDefaultValue(styleKey));
+        String style = prefs.get(styleKey, getDefaultValue(styleKey, String.class));
 
         String sizeKey = key + ".size";
-        Object defaultSize = getDefaultValue(sizeKey);
-        float size = prefs.getFloat(sizeKey, defaultSize instanceof Float ? ((Float) defaultSize) : 8);
+        float size = prefs.getFloat(sizeKey, getDefaultValue(sizeKey, Float.class));
 
         return Font.font(family, FontWeight.findByName(style), size);
     }
 
-    @SuppressWarnings("unchecked")
-    public <T> T getDefaultValue(String key) {
-        return (T) defaultValueMap.get(key);
+    public <T> T getDefaultValue(String key, Class<T> type) {
+        Object defaultValue = defaultValueMap.get(key);
+        if (type.isInstance(defaultValue)) {
+            return type.cast(defaultValue);
+        }
+        throw new IllegalArgumentException("There is no default preference value of type %s for key '%s'"
+                .formatted(type.getSimpleName(), defaultValue));
     }
 
     private Object getValue(String key) {
