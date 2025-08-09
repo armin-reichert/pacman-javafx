@@ -214,12 +214,12 @@ public class PacManGames_UI_Impl implements GameUI {
     // GameUI interface implementation
     // -----------------------------------------------------------------------------------------------------------------
 
-    @Override public Optional<GameScene>    currentGameScene() { return mainScene.currentGameScene(); }
-    @Override public PacManGames_View       currentView() { return mainScene.currentView(); }
+    @Override public Optional<GameScene>  currentGameScene() { return mainScene.currentGameScene(); }
+    @Override public PacManGames_View     currentView() { return mainScene.currentView(); }
 
-    @Override public Optional<EditorView>   theEditorView() { return Optional.ofNullable(editorView); }
-    @Override public PlayView               thePlayView() { return playView; }
-    @Override public StartPagesView         theStartPagesView() { return startPagesView; }
+    @Override public Optional<EditorView> theEditorView() { return Optional.ofNullable(editorView); }
+    @Override public PlayView             thePlayView() { return playView; }
+    @Override public StartPagesView       theStartPagesView() { return startPagesView; }
 
     @Override
     public boolean isCurrentGameSceneID(String id) {
