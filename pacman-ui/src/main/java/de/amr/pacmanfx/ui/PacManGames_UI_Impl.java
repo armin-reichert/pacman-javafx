@@ -86,8 +86,8 @@ public class PacManGames_UI_Impl implements GameUI {
             () -> currentView().handleKeyboardInput(this))
         );
 
-        mainScene.currentGameSceneProperty().bind(propertyCurrentGameScene);
-        mainScene.currentViewProperty().bind(propertyCurrentView);
+        mainScene.currentGameSceneProperty().bindBidirectional(propertyCurrentGameScene);
+        mainScene.currentViewProperty().bindBidirectional(propertyCurrentView);
 
         configureStage(stage);
 
