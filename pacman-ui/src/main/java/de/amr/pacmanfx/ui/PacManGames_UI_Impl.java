@@ -80,7 +80,7 @@ public class PacManGames_UI_Impl implements GameUI {
 
     private final Map<String, GameUI_Config> configByGameVariant = new HashMap<>();
 
-    private MainScene mainScene;
+    private final MainScene mainScene;
 
     private final StartPagesView startPagesView;
     private final PlayView playView;
@@ -108,7 +108,11 @@ public class PacManGames_UI_Impl implements GameUI {
 
         initPreferences();
 
-        createMainScene(width, height);
+        mainScene = new MainScene(this, width, height);
+        // First, check if a global action binding is defined for the key, if not, delegate the to the current view:
+        mainScene.setOnKeyPressed(e -> runActionOrElse(
+            globalActionBindings.matchingAction(theKeyboard).orElse(null),
+            () -> currentView().handleKeyboardInput(this)));
 
         stage.setScene(mainScene);
         stage.setMinWidth(MIN_STAGE_WIDTH);
@@ -190,15 +194,6 @@ public class PacManGames_UI_Impl implements GameUI {
         } else {
             thePrefs.addMissingValues();
         }
-    }
-
-    private void createMainScene(double width, double height) {
-        mainScene = new MainScene(this, width, height);
-        // First, check if a global action binding is defined for the key,
-        // if not, delegate the key press event to the current view
-        mainScene.setOnKeyPressed(e -> runActionOrElse(
-            globalActionBindings.matchingAction(theKeyboard).orElse(null),
-            () -> currentView().handleKeyboardInput(this)));
     }
 
     private void showView(PacManGames_View view) {
