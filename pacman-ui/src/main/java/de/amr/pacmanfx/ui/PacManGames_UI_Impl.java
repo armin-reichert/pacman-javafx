@@ -41,24 +41,24 @@ public class PacManGames_UI_Impl implements GameUI {
     private static final int MIN_STAGE_WIDTH  = 280;
     private static final int MIN_STAGE_HEIGHT = 360;
 
-    // package-visible to allow access to GameUI interface
+    // package-visible to allow access from GameUI interface
     static PacManGames_UI_Impl THE_ONE;
 
     private final PacManGames_Assets theAssets;
     private final DirectoryWatchdog  theCustomDirWatchdog;
     private final GameClock          theGameClock;
     private final GameContext        theGameContext;
-    private final Keyboard           theKeyboard;
     private final Joypad             theJoypad;
-    private final UIPreferences theUIPrefs;
+    private final Keyboard           theKeyboard;
     private final Stage              theStage;
+    private final UIPreferences      theUIPrefs;
 
     private final ActionBindingManager globalActionBindings = new DefaultActionBindingManager();
     private final Map<String, GameUI_Config> configByGameVariant = new HashMap<>();
     private final MainScene mainScene;
     private final StartPagesView startPagesView;
     private final PlayView playView;
-    private       EditorView editorView; // created on first access
+    private EditorView editorView; // created on demand
 
     public PacManGames_UI_Impl(GameContext gameContext, Stage stage, double width, double height) {
         requireNonNull(gameContext, "Game context is null");
@@ -208,7 +208,7 @@ public class PacManGames_UI_Impl implements GameUI {
         }
     }
 
-    private EditorView editorView() {
+    private EditorView getOrCreateEditorView() {
         if (editorView == null) {
             var editor = new TileMapEditor(theStage, theAssets().theModel3DRepository());
             var miReturnToGame = new MenuItem(theAssets().text("back_to_game"));
@@ -227,23 +227,29 @@ public class PacManGames_UI_Impl implements GameUI {
     // GameUI interface implementation
     // -----------------------------------------------------------------------------------------------------------------
 
-    @Override public Optional<GameScene>  currentGameScene() { return mainScene.currentGameScene(); }
-    @Override public PacManGames_View     currentView() { return mainScene.currentView(); }
+    @Override public Optional<GameScene>         currentGameScene() { return mainScene.currentGameScene(); }
+    @Override public PacManGames_View            currentView() { return mainScene.currentView(); }
 
-    @Override public Optional<EditorView> theEditorView() { return Optional.ofNullable(editorView); }
-    @Override public PlayView             thePlayView() { return playView; }
-    @Override public StartPagesView       theStartPagesView() { return startPagesView; }
+    @Override public PacManGames_Assets          theAssets() {return theAssets; }
+    @SuppressWarnings("unchecked")
+    @Override public <T extends GameUI_Config> T theConfiguration() { return (T) config(theGameContext.theGameController().selectedGameVariant()); }
+    @Override public DirectoryWatchdog           theCustomDirWatchdog() { return theCustomDirWatchdog; }
+    @Override public Optional<EditorView>        theEditorView() { return Optional.ofNullable(editorView); }
+    @Override public GameClock                   theGameClock() { return theGameClock; }
+    @Override public GameContext                 theGameContext() { return theGameContext; }
+    @Override public Joypad                      theJoypad() { return theJoypad; }
+    @Override public Keyboard                    theKeyboard() { return theKeyboard; }
+    @Override public PlayView                    thePlayView() { return playView; }
+    @Override public SoundManager                theSound() { return theConfiguration().soundManager(); }
+    @Override public Stage                       theStage() { return theStage; }
+    @Override public StartPagesView              theStartPagesView() { return startPagesView; }
+    @Override public UIPreferences               theUIPrefs() { return theUIPrefs; }
 
     @Override
     public boolean isCurrentGameSceneID(String id) {
         GameScene currentGameScene = mainScene.currentGameScene().orElse(null);
         return currentGameScene != null && theConfiguration().gameSceneHasID(currentGameScene, id);
     }
-
-    @Override public Stage theStage() { return theStage; }
-
-    @Override
-    public UIPreferences theUIPrefs() { return theUIPrefs; }
 
     @Override
     public void restart() {
@@ -306,8 +312,8 @@ public class PacManGames_UI_Impl implements GameUI {
             currentGameScene().ifPresent(GameScene::end);
             theSound().stopAll();
             theGameClock.stop();
-            editorView().editor().start(theStage);
-            selectView(editorView());
+            getOrCreateEditorView().editor().start(theStage);
+            selectView(getOrCreateEditorView());
         } else {
             Logger.info("Editor view cannot be opened, game is playing");
         }
@@ -341,45 +347,6 @@ public class PacManGames_UI_Impl implements GameUI {
         Logger.info("Application is terminated now. There is no way back!");
         theGameClock.stop();
         theCustomDirWatchdog.dispose();
-    }
-
-    @Override
-    public PacManGames_Assets theAssets() {
-        return theAssets;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public <T extends GameUI_Config> T theConfiguration() {
-        return (T) config(theGameContext.theGameController().selectedGameVariant());
-    }
-
-    @Override
-    public GameClock theGameClock() {
-        return theGameClock;
-    }
-
-    @Override
-    public GameContext theGameContext() {
-        return theGameContext;
-    }
-
-    @Override
-    public Keyboard theKeyboard() { return theKeyboard; }
-
-    @Override
-    public Joypad theJoypad() {
-        return theJoypad;
-    }
-
-    @Override
-    public SoundManager theSound() {
-        return theConfiguration().soundManager();
-    }
-
-    @Override
-    public DirectoryWatchdog theCustomDirWatchdog() {
-        return theCustomDirWatchdog;
     }
 
     @Override
