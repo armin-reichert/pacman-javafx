@@ -11,13 +11,9 @@ dependencies {
     testRuntimeOnly libs.junit.jupiter.engine
 }
 
-test {
-    useJUnitPlatform()
-}
+test { useJUnitPlatform() }
 
-javafx {
-    modules = ["javafx.base", "javafx.graphics", "javafx.controls", "javafx.media"]
-}
+javafx { modules = ["javafx.base", "javafx.graphics", "javafx.controls", "javafx.media"] }
 
 application {
     mainModule = "de.amr.pacmanfx.arcade.pacman"
@@ -25,10 +21,6 @@ application {
 }
 
 jlink {
-    launcher {
-        name = "Arcade Pac-Man"
-    }
-    jpackage {
-        installerType = osPkg
-    }
+    launcher { name = "Arcade Pac-Man" }
+    jpackage { installerType = osPkg }
 }
