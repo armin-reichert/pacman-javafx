@@ -108,10 +108,11 @@ public class PacManGames_UI_Impl implements GameUI {
         initGlobalActionBindings();
 
         mainScene = new MainScene(this, width, height);
-        // First, check if a global action binding is defined for the key, if not, delegate to the current view:
+        // Check if a global action is defined for the key press, otherwise let the current view handle it.
         mainScene.setOnKeyPressed(e -> runActionOrElse(
             globalActionBindings.matchingAction(theKeyboard).orElse(null),
-            () -> currentView().handleKeyboardInput(this)));
+            () -> currentView().handleKeyboardInput(this))
+        );
 
         configureStage(stage);
 
@@ -129,7 +130,6 @@ public class PacManGames_UI_Impl implements GameUI {
         stage.setScene(mainScene);
         stage.setMinWidth(MIN_STAGE_WIDTH);
         stage.setMinHeight(MIN_STAGE_HEIGHT);
-
         var title = Bindings.createStringBinding(
             () -> {
                 PacManGames_View currentView = currentView();
@@ -197,10 +197,12 @@ public class PacManGames_UI_Impl implements GameUI {
         }
     }
 
-    private void showView(PacManGames_View view) {
+    private void selectView(PacManGames_View view) {
         requireNonNull(view);
-
         final PacManGames_View oldView = mainScene.currentView();
+        if (oldView == view) {
+            return;
+        }
         if (oldView != null) {
             oldView.actionBindingMap().removeFromKeyboard(theKeyboard);
             theGameContext.theGameEventManager().removeEventListener(oldView);
@@ -374,7 +376,7 @@ public class PacManGames_UI_Impl implements GameUI {
             theSound().stopAll();
             theGameClock.stop();
             editorView().editor().start(theStage);
-            showView(editorView());
+            selectView(editorView());
         } else {
             Logger.info("Editor view cannot be opened, game is playing");
         }
@@ -387,7 +389,7 @@ public class PacManGames_UI_Impl implements GameUI {
 
     @Override
     public void showPlayView() {
-        showView(playView);
+        selectView(playView);
     }
 
     @Override
@@ -400,7 +402,7 @@ public class PacManGames_UI_Impl implements GameUI {
             startPage.layoutRoot().requestFocus();
             startPage.onEnter(this); // sets game variant!
         });
-        showView(startPagesView);
+        selectView(startPagesView);
     }
 
     @Override
