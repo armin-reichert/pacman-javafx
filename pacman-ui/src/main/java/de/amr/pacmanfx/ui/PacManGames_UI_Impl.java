@@ -16,6 +16,7 @@ import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.layout.*;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.GameClock;
+import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
@@ -116,7 +117,7 @@ public class PacManGames_UI_Impl implements GameUI {
         playView = new PlayView(this, gameContext, mainScene);
 
         theGameClock.setPausableAction(this::doSimulationStepAndUpdateGameScene);
-        theGameClock.setPermanentAction(this::drawGameView);
+        theGameClock.setPermanentAction(this::drawPlayView);
 
         property3DWallHeight.set(thePrefs.getFloat("3d.obstacle.base_height"));
         property3DWallOpacity.set(thePrefs.getFloat("3d.obstacle.opacity"));
@@ -234,7 +235,7 @@ public class PacManGames_UI_Impl implements GameUI {
         }
     }
 
-    private void drawGameView() {
+    private void drawPlayView() {
         try {
             playView.draw();
         } catch (Throwable x) {
@@ -282,12 +283,12 @@ public class PacManGames_UI_Impl implements GameUI {
     @Override public DoubleProperty                   property3DWallHeight(){ return property3DWallHeight; }
     @Override public DoubleProperty                   property3DWallOpacity(){ return property3DWallOpacity; }
 
-    @Override public Optional<GameScene>  currentGameScene() { return mainScene.currentGameScene(); }
-    @Override public PacManGames_View     currentView() { return mainScene.currentView(); }
+    @Override public Optional<GameScene>              currentGameScene() { return mainScene.currentGameScene(); }
+    @Override public PacManGames_View                 currentView() { return mainScene.currentView(); }
 
-    @Override public Optional<EditorView> theEditorView() { return Optional.ofNullable(editorView); }
-    @Override public PlayView             thePlayView() { return playView; }
-    @Override public StartPagesView       theStartPagesView() { return startPagesView; }
+    @Override public Optional<EditorView>             theEditorView() { return Optional.ofNullable(editorView); }
+    @Override public PlayView                         thePlayView() { return playView; }
+    @Override public StartPagesView                   theStartPagesView() { return startPagesView; }
 
     @Override
     public boolean isCurrentGameSceneID(String id) {
@@ -343,16 +344,10 @@ public class PacManGames_UI_Impl implements GameUI {
     @Override
     public void show() {
         playView.dashboard().init(this);
-
-        startPagesView.currentStartPage().ifPresent(startPage -> {
-            startPage.layoutRoot().requestFocus();
-            startPage.onEnter(this); // sets game variant!
-        });
-        showView(startPagesView);
-
+        showStartView();
         theStage.centerOnScreen();
         theStage.show();
-        theCustomDirWatchdog.startWatching();
+        Platform.runLater(theCustomDirWatchdog::startWatching);
     }
 
     @Override
@@ -384,8 +379,11 @@ public class PacManGames_UI_Impl implements GameUI {
         theGameClock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
         theSound().stopAll();
         playView.dashboard().setVisible(false);
+        startPagesView.currentStartPage().ifPresent(startPage -> {
+            startPage.layoutRoot().requestFocus();
+            startPage.onEnter(this); // sets game variant!
+        });
         showView(startPagesView);
-        startPagesView.currentStartPage().ifPresent(startPage -> startPage.layoutRoot().requestFocus());
     }
 
     @Override
