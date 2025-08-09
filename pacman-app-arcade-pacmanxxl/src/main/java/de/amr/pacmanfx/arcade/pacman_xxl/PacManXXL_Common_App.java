@@ -43,7 +43,7 @@ public class PacManXXL_Common_App extends Application {
                     DashboardID.KEYBOARD_SHORTCUTS_GLOBAL, DashboardID.KEYBOARD_SHORTCUTS_LOCAL,
                     DashboardID.ABOUT
                 )
-            .startPage(PACMAN_XXL.name(),PacManXXL_Common_StartPage.class)
+            .startPage(PacManXXL_Common_StartPage.class, PACMAN_XXL.name())
             .build()
             .show();
 

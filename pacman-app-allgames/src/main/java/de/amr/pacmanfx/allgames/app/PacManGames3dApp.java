@@ -50,10 +50,10 @@ public class PacManGames3dApp extends Application {
             .game(GameVariant.MS_PACMAN_XXL.name(),
                 PacManXXL_MsPacMan_GameModel.class, mapSelectorXXL, PacManXXL_MsPacMan_UIConfig.class)
             // start pages are added to carousel in this order:
-            .startPage(GameVariant.PACMAN.name(), ArcadePacMan_StartPage.class)
-            .startPage(GameVariant.MS_PACMAN.name(), ArcadeMsPacMan_StartPage.class)
-            .startPage(GameVariant.MS_PACMAN_TENGEN.name(), TengenMsPacMan_StartPage.class)
-            .startPage(GameVariant.PACMAN_XXL.name(), PacManXXL_Common_StartPage.class) // MS_PACMAN_XXL uses this too
+            .startPage(ArcadePacMan_StartPage.class, GameVariant.PACMAN.name())
+            .startPage(ArcadeMsPacMan_StartPage.class, GameVariant.MS_PACMAN.name())
+            .startPage(TengenMsPacMan_StartPage.class, GameVariant.MS_PACMAN_TENGEN.name())
+            .startPage(PacManXXL_Common_StartPage.class, GameVariant.PACMAN_XXL.name(), GameVariant.MS_PACMAN_XXL.name())
             .dashboard(
                 DashboardID.GENERAL, DashboardID.GAME_CONTROL,
                 DashboardID.SETTINGS_3D,

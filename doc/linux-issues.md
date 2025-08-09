@@ -166,7 +166,7 @@ Ok, so try this:
 In IntelliJ, right-click over the "Main" class of the 3d subproject and select "More Run/Debug -> Modify Run
 Configuration..."
 
-In the run configuration, add the VM parameters input field and enter `-Dprism.verbose=true -Dprism.forceGPU=true`.
+In the run gameConfiguration, add the VM parameters input field and enter `-Dprism.verbose=true -Dprism.forceGPU=true`.
 Then run the application. And, you won't believe what you see in the console:
 
 ```

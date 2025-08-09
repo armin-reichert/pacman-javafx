@@ -14,18 +14,19 @@ import de.amr.pacmanfx.ui.layout.StartPage;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class GameUI_Builder {
 
-    private static class Configuration {
+    private static class GameConfiguration {
         Class<?> gameModelClass;
-        MapSelector mapSelector;
         Class<?> uiConfigClass;
+        MapSelector mapSelector;
+    }
+
+    private static class StartPageConfiguration {
         Class<?> startPageClass;
+        List<String> gameVariants;
     }
 
     public static GameUI_Builder createUI(Stage stage, double width, double height) {
@@ -34,16 +35,17 @@ public class GameUI_Builder {
     }
 
     private final PacManGames_UI_Impl ui;
-    private final Map<String, Configuration> configurationByGameVariant = new LinkedHashMap<>();
+    private final Map<String, GameConfiguration> configurationByGameVariant = new LinkedHashMap<>();
+    private final List<StartPageConfiguration> startPageConfigs = new ArrayList<>();
     private List<DashboardID> dashboardIDs = List.of();
 
     private GameUI_Builder(PacManGames_UI_Impl ui) {
         this.ui = ui;
     }
 
-    private Configuration configuration(String gameVariant) {
+    private GameConfiguration configuration(String gameVariant) {
         if (!configurationByGameVariant.containsKey(gameVariant)) {
-            configurationByGameVariant.put(gameVariant, new Configuration());
+            configurationByGameVariant.put(gameVariant, new GameConfiguration());
         }
         return configurationByGameVariant.get(gameVariant);
     }
@@ -87,21 +89,17 @@ public class GameUI_Builder {
         return this;
     }
 
-    public GameUI_Builder startPage(String gameVariant, Class<?> startPageClass) {
+    public GameUI_Builder startPage(Class<?> startPageClass, String... gameVariants) {
         if (startPageClass == null) {
             error("Start page class must not be null");
         }
-        configuration(gameVariant).startPageClass = startPageClass;
-        return this;
-    }
-
-    public GameUI_Builder startPageShared(String gameVariant, String otherGameVariant) {
-        Class<?> sharedStartPageClass = configuration(otherGameVariant).startPageClass;
-        if (sharedStartPageClass == null) {
-            error("Shared start page not found. Must define start page of shared game variant first!");
-            throw new IllegalStateException();
+        if (gameVariants == null) {
+            error("Game variants list must not be null");
         }
-        configuration(gameVariant).startPageClass = sharedStartPageClass;
+        var config = new StartPageConfiguration();
+        config.startPageClass = startPageClass;
+        config.gameVariants = List.of(gameVariants);
+        startPageConfigs.add(config);
         return this;
     }
 
@@ -116,21 +114,22 @@ public class GameUI_Builder {
     public GameUI build() {
         validateConfiguration();
         configurationByGameVariant.keySet().forEach(gameVariant -> {
-            Configuration configuration = configuration(gameVariant);
+            GameConfiguration gameConfiguration = configuration(gameVariant);
             GameModel gameModel = createGameModel(
-                configuration.gameModelClass,
-                configuration.mapSelector,
+                gameConfiguration.gameModelClass,
+                gameConfiguration.mapSelector,
                 ui.theGameContext(),
                 highScoreFile(ui.theGameContext().theHomeDir(), gameVariant)
             );
             gameModel.init();
             ui.theGameContext().theGameController().registerGame(gameVariant, gameModel);
-            ui.applyConfiguration(gameVariant, configuration.uiConfigClass);
-            if (configuration.startPageClass != null) {
-                StartPage startPage = createStartPage(gameVariant, configuration.startPageClass);
-                ui.theStartPagesView().addStartPage(startPage);
-            }
+            ui.applyConfiguration(gameVariant, gameConfiguration.uiConfigClass);
         });
+        for (StartPageConfiguration config : startPageConfigs) {
+            StartPage startPage = createStartPage(config.gameVariants.getFirst(), config.startPageClass);
+            ui.theStartPagesView().addStartPage(startPage);
+
+        }
         ui.thePlayView().dashboard().configure(dashboardIDs);
 
         ui.theStartPagesView().selectStartPage(0);

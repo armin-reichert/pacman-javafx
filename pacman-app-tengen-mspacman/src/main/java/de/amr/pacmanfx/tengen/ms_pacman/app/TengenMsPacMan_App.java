@@ -19,7 +19,7 @@ import static de.amr.pacmanfx.ui.GameVariant.MS_PACMAN_TENGEN;
 
 public class TengenMsPacMan_App extends Application {
 
-    private static final String GAME_VARIANT = MS_PACMAN_TENGEN.name();
+    private static final String GAME_VARIANT_NAME = MS_PACMAN_TENGEN.name();
 
     @Override
     public void start(Stage primaryStage) {
@@ -28,11 +28,11 @@ public class TengenMsPacMan_App extends Application {
         final double width  = NES_ASPECT * height;
         GameUI_Builder.createUI(primaryStage, width, height)
             .game(
-                GAME_VARIANT,
+                GAME_VARIANT_NAME,
                 TengenMsPacMan_GameModel.class,
                 TengenMsPacMan_UIConfig.class
             )
-            .startPage(GAME_VARIANT, TengenMsPacMan_StartPage.class)
+            .startPage(TengenMsPacMan_StartPage.class, GAME_VARIANT_NAME)
             .dashboard(
                 DashboardID.GENERAL, DashboardID.GAME_CONTROL,
                 DashboardID.SETTINGS_3D,

@@ -18,7 +18,7 @@ import static de.amr.pacmanfx.ui.GameUI.theUI;
 
 public class ArcadePacMan_App extends Application {
 
-    private static final String GAME_VARIANT = GameVariant.PACMAN.name();
+    private static final String GAME_VARIANT_NAME = GameVariant.PACMAN.name();
 
     @Override
     public void start(Stage primaryStage) {
@@ -27,11 +27,11 @@ public class ArcadePacMan_App extends Application {
         final double width  = 1.2 * height;
         GameUI_Builder.createUI(primaryStage, width, height)
             .game(
-                GAME_VARIANT,
+                GAME_VARIANT_NAME,
                 ArcadePacMan_GameModel.class,
                 ArcadePacMan_UIConfig.class
             )
-            .startPage(GAME_VARIANT, ArcadePacMan_StartPage.class)
+            .startPage(ArcadePacMan_StartPage.class, GAME_VARIANT_NAME)
             .dashboard(
                 DashboardID.GENERAL, DashboardID.GAME_CONTROL,
                 DashboardID.SETTINGS_3D,

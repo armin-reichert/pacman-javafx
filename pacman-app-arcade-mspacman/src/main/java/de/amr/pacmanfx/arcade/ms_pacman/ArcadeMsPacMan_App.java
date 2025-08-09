@@ -28,7 +28,7 @@ public class ArcadeMsPacMan_App extends Application {
                 ArcadeMsPacMan_GameModel.class,
                 ArcadeMsPacMan_UIConfig.class
             )
-            .startPage(GAME_VARIANT, ArcadeMsPacMan_StartPage.class)
+            .startPage(ArcadeMsPacMan_StartPage.class, GAME_VARIANT)
             .dashboard(
                 DashboardID.GENERAL, DashboardID.GAME_CONTROL,
                 DashboardID.SETTINGS_3D,
