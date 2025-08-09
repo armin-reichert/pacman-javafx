@@ -1,19 +1,27 @@
 plugins {
+    alias(libs.plugins.javafx)
     alias(libs.plugins.jlink)
+    alias(libs.plugins.osdetector)
 }
 
 dependencies {
-    implementation project(":pacman-core")
-    implementation project(":pacman-ui-lib")
-    implementation project(":pacman-ui")
-    implementation libs.bundles.tinylog
-    testImplementation libs.junit.jupiter.api
-    testRuntimeOnly libs.junit.jupiter.engine
+    implementation(
+        project(":pacman-core"),
+        project(":pacman-ui-lib"),
+        project(":pacman-ui"),
+        libs.bundles.tinylog
+    )
+    testImplementation(libs.junit.jupiter.api)
+    testRuntimeOnly(libs.junit.jupiter.engine)
 }
 
-test { useJUnitPlatform() }
+test {
+    useJUnitPlatform()
+}
 
-javafx { modules = ["javafx.base", "javafx.graphics", "javafx.controls", "javafx.media"] }
+javafx {
+    modules = ["javafx.base", "javafx.graphics", "javafx.controls", "javafx.media"]
+}
 
 application {
     mainModule = "de.amr.pacmanfx.arcade.pacman"
@@ -21,6 +29,10 @@ application {
 }
 
 jlink {
-    launcher { name = "Arcade Pac-Man" }
-    jpackage { installerType = osPkg }
+    launcher {
+        name = "Arcade Pac-Man"
+    }
+    jpackage {
+        installerType = osPkg
+    }
 }
