@@ -212,7 +212,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         miImmunity.selectedProperty().bindBidirectional(theGameContext().theGameController().propertyImmunity());
 
         var miMuted = new CheckMenuItem(ui.theAssets().text("muted"));
-        miMuted.selectedProperty().bindBidirectional(ui.propertyMuted());
+        miMuted.selectedProperty().bindBidirectional(GameUI.propertyMuted);
 
         var miQuit = new MenuItem(ui.theAssets().text("quit"));
         miQuit.setOnAction(e -> ACTION_QUIT_GAME_SCENE.executeIfEnabled(ui));

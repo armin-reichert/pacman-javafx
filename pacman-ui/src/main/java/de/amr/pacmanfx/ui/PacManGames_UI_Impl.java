@@ -10,7 +10,6 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.layout.*;
@@ -19,13 +18,10 @@ import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.assets.UIPreferences;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.*;
 import javafx.beans.value.ObservableObjectValue;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
@@ -46,27 +42,6 @@ public class PacManGames_UI_Impl implements GameUI {
 
     // package-visible to allow access to GameUI interface
     static PacManGames_UI_Impl THE_ONE;
-
-    final ObjectProperty<Color> propertyCanvasBgColor          = new SimpleObjectProperty<>(Color.BLACK);
-    final BooleanProperty propertyCanvasFontSmoothing          = new SimpleBooleanProperty(false);
-    final BooleanProperty propertyCanvasImageSmoothing         = new SimpleBooleanProperty(false);
-    final BooleanProperty propertyDebugInfoVisible             = new SimpleBooleanProperty(false);
-    final IntegerProperty propertyMiniViewHeight               = new SimpleIntegerProperty(400);
-    final BooleanProperty propertyMiniViewOn                   = new SimpleBooleanProperty(false);
-    final IntegerProperty propertyPipOpacityPercent            = new SimpleIntegerProperty(69);
-    final IntegerProperty propertySimulationSteps              = new SimpleIntegerProperty(1);
-    final BooleanProperty property3DAxesVisible                = new SimpleBooleanProperty(false);
-    final ObjectProperty<DrawMode> property3DDrawMode          = new SimpleObjectProperty<>(DrawMode.FILL);
-    final BooleanProperty property3DEnabled                    = new SimpleBooleanProperty(false);
-    final BooleanProperty property3DEnergizerExplodes          = new SimpleBooleanProperty(true);
-    final ObjectProperty<Color> property3DFloorColor           = new SimpleObjectProperty<>(Color.rgb(20,20,20));
-    final ObjectProperty<Color> property3DLightColor           = new SimpleObjectProperty<>(Color.WHITE);
-    final ObjectProperty<PerspectiveID> property3DPerspective  = new SimpleObjectProperty<>(PerspectiveID.TRACK_PLAYER);
-    final DoubleProperty property3DWallHeight                  = new SimpleDoubleProperty();
-    final DoubleProperty property3DWallOpacity                 = new SimpleDoubleProperty(1.0);
-
-    // private properties
-    private final BooleanProperty propertyMuted = new SimpleBooleanProperty(false);
 
     private final PacManGames_Assets theAssets;
     private final DirectoryWatchdog  theCustomDirWatchdog;
@@ -111,6 +86,9 @@ public class PacManGames_UI_Impl implements GameUI {
             () -> currentView().handleKeyboardInput(this))
         );
 
+        mainScene.currentGameSceneProperty().bind(propertyCurrentGameScene);
+        mainScene.currentViewProperty().bind(propertyCurrentView);
+
         configureStage(stage);
 
         startPagesView = new StartPagesView(this);
@@ -133,12 +111,12 @@ public class PacManGames_UI_Impl implements GameUI {
                 return currentView == null
                     ? "No View?"
                     : currentView.title().map(ObservableObjectValue::get)
-                        .orElse(mainScene.computeTitle(property3DEnabled().get(), propertyDebugInfoVisible().get()));
+                        .orElse(mainScene.computeTitle(property3DEnabled.get(), propertyDebugInfoVisible.get()));
             },
-            propertyCurrentGameScene(),
-            propertyCurrentView(),
-            propertyDebugInfoVisible(),
-            property3DEnabled(),
+            propertyCurrentGameScene,
+            propertyCurrentView,
+            propertyDebugInfoVisible,
+            property3DEnabled,
             theGameClock().pausedProperty(),
             mainScene.heightProperty()
         );
@@ -164,7 +142,8 @@ public class PacManGames_UI_Impl implements GameUI {
         }
         view.actionBindingMap().updateKeyboard(theKeyboard);
         theGameContext.theGameEventManager().addEventListener(view);
-        mainScene.setCurrentView(view);
+
+        GameUI.propertyCurrentView.set(view);
     }
 
     public void applyConfiguration(String gameVariant, Class<?> configClass) {
@@ -236,33 +215,12 @@ public class PacManGames_UI_Impl implements GameUI {
     // GameUI interface implementation
     // -----------------------------------------------------------------------------------------------------------------
 
-    @Override public ObjectProperty<Color>            propertyCanvasBackgroundColor() { return propertyCanvasBgColor; }
-    @Override public BooleanProperty                  propertyCanvasFontSmoothing() { return propertyCanvasFontSmoothing; }
-    @Override public BooleanProperty                  propertyCanvasImageSmoothing(){ return propertyCanvasImageSmoothing; }
-    @Override public ObjectProperty<GameScene>        propertyCurrentGameScene() { return mainScene.currentGameSceneProperty();}
-    @Override public ObjectProperty<PacManGames_View> propertyCurrentView() { return mainScene.currentViewProperty(); }
-    @Override public BooleanProperty                  propertyDebugInfoVisible(){ return propertyDebugInfoVisible; }
-    @Override public IntegerProperty                  propertyMiniViewHeight(){ return propertyMiniViewHeight; }
-    @Override public BooleanProperty                  propertyMiniViewOn(){ return propertyMiniViewOn; }
-    @Override public IntegerProperty                  propertyMiniViewOpacityPercent(){ return propertyPipOpacityPercent; }
-    @Override public BooleanProperty                  propertyMuted() { return propertyMuted; }
-    @Override public IntegerProperty                  propertySimulationSteps(){ return propertySimulationSteps; }
-    @Override public BooleanProperty                  property3DAxesVisible(){ return property3DAxesVisible; }
-    @Override public ObjectProperty<DrawMode>         property3DDrawMode(){ return property3DDrawMode; }
-    @Override public BooleanProperty                  property3DEnabled(){ return property3DEnabled; }
-    @Override public BooleanProperty                  property3DEnergizerExplodes(){ return property3DEnergizerExplodes; }
-    @Override public ObjectProperty<Color>            property3DFloorColor(){ return property3DFloorColor; }
-    @Override public ObjectProperty<Color>            property3DLightColor(){ return property3DLightColor; }
-    @Override public ObjectProperty<PerspectiveID>    property3DPerspective(){ return property3DPerspective; }
-    @Override public DoubleProperty                   property3DWallHeight(){ return property3DWallHeight; }
-    @Override public DoubleProperty                   property3DWallOpacity(){ return property3DWallOpacity; }
+    @Override public Optional<GameScene>    currentGameScene() { return mainScene.currentGameScene(); }
+    @Override public PacManGames_View       currentView() { return mainScene.currentView(); }
 
-    @Override public Optional<GameScene>              currentGameScene() { return mainScene.currentGameScene(); }
-    @Override public PacManGames_View                 currentView() { return mainScene.currentView(); }
-
-    @Override public Optional<EditorView>             theEditorView() { return Optional.ofNullable(editorView); }
-    @Override public PlayView                         thePlayView() { return playView; }
-    @Override public StartPagesView                   theStartPagesView() { return startPagesView; }
+    @Override public Optional<EditorView>   theEditorView() { return Optional.ofNullable(editorView); }
+    @Override public PlayView               thePlayView() { return playView; }
+    @Override public StartPagesView         theStartPagesView() { return startPagesView; }
 
     @Override
     public boolean isCurrentGameSceneID(String id) {

@@ -16,10 +16,7 @@ import de.amr.pacmanfx.ui.layout.StartPagesView;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.assets.UIPreferences;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.*;
 import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyCode;
@@ -39,6 +36,27 @@ import static java.util.Objects.requireNonNull;
 public interface GameUI {
 
     static GameUI theUI() { return PacManGames_UI_Impl.THE_ONE; }
+
+    ObjectProperty<Color> propertyCanvasBackgroundColor  = new SimpleObjectProperty<>(Color.BLACK);
+    BooleanProperty propertyCanvasFontSmoothing          = new SimpleBooleanProperty(false);
+    ObjectProperty<GameScene> propertyCurrentGameScene   = new SimpleObjectProperty<>();
+    ObjectProperty<PacManGames_View> propertyCurrentView = new SimpleObjectProperty<>();
+    BooleanProperty propertyCanvasImageSmoothing         = new SimpleBooleanProperty(false);
+    BooleanProperty propertyDebugInfoVisible             = new SimpleBooleanProperty(false);
+    IntegerProperty propertyMiniViewHeight               = new SimpleIntegerProperty(400);
+    BooleanProperty propertyMiniViewOn                   = new SimpleBooleanProperty(false);
+    IntegerProperty propertyMiniViewOpacityPercent       = new SimpleIntegerProperty(69);
+    BooleanProperty propertyMuted                        = new SimpleBooleanProperty(false);
+    IntegerProperty propertySimulationSteps              = new SimpleIntegerProperty(1);
+    BooleanProperty property3DAxesVisible                = new SimpleBooleanProperty(false);
+    ObjectProperty<DrawMode> property3DDrawMode          = new SimpleObjectProperty<>(DrawMode.FILL);
+    BooleanProperty property3DEnabled                    = new SimpleBooleanProperty(false);
+    BooleanProperty property3DEnergizerExplodes          = new SimpleBooleanProperty(true);
+    ObjectProperty<Color> property3DFloorColor           = new SimpleObjectProperty<>(Color.rgb(20,20,20));
+    ObjectProperty<Color> property3DLightColor           = new SimpleObjectProperty<>(Color.WHITE);
+    ObjectProperty<PerspectiveID> property3DPerspective  = new SimpleObjectProperty<>(PerspectiveID.TRACK_PLAYER);
+    DoubleProperty property3DWallHeight                  = new SimpleDoubleProperty();
+    DoubleProperty property3DWallOpacity                 = new SimpleDoubleProperty(1.0);
 
     List<ActionBinding> DEFAULT_ACTION_BINDINGS = List.of(
         new ActionBinding(ACTION_ARCADE_INSERT_COIN,      nude(KeyCode.DIGIT5), nude(KeyCode.NUMPAD5)),
@@ -76,28 +94,6 @@ public interface GameUI {
         new ActionBinding(ACTION_TOGGLE_PLAY_SCENE_2D_3D, alt(KeyCode.DIGIT3), alt(KeyCode.NUMPAD3)),
         new ActionBinding(ACTION_TOGGLE_DRAW_MODE,        alt(KeyCode.W))
     );
-
-    // Global properties
-    ObjectProperty<Color>            propertyCanvasBackgroundColor();
-    BooleanProperty                  propertyCanvasFontSmoothing();
-    BooleanProperty                  propertyCanvasImageSmoothing();
-    ObjectProperty<GameScene>        propertyCurrentGameScene();
-    ObjectProperty<PacManGames_View> propertyCurrentView();
-    BooleanProperty                  propertyDebugInfoVisible();
-    IntegerProperty                  propertyMiniViewHeight();
-    BooleanProperty                  propertyMiniViewOn();
-    IntegerProperty                  propertyMiniViewOpacityPercent();
-    BooleanProperty                  propertyMuted();
-    IntegerProperty                  propertySimulationSteps();
-    BooleanProperty                  property3DAxesVisible();
-    ObjectProperty<DrawMode>         property3DDrawMode();
-    BooleanProperty                  property3DEnabled();
-    BooleanProperty                  property3DEnergizerExplodes();
-    ObjectProperty<Color>            property3DFloorColor();
-    ObjectProperty<Color>            property3DLightColor();
-    ObjectProperty<PerspectiveID>    property3DPerspective();
-    DoubleProperty                   property3DWallHeight();
-    DoubleProperty                   property3DWallOpacity();
 
     PacManGames_Assets               theAssets();
     <T extends GameUI_Config> T      theConfiguration();

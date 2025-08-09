@@ -48,54 +48,54 @@ public class InfoBox3DSettings extends InfoBox {
     @Override
     public void init(GameUI ui) {
         cbUsePlayScene3D     = addCheckBox("3D Play Scene");
-        pickerLightColor     = addColorPicker("Light Color", ui.property3DLightColor());
-        pickerFloorColor     = addColorPicker("Floor Color", ui.property3DFloorColor());
+        pickerLightColor     = addColorPicker("Light Color", GameUI.property3DLightColor);
+        pickerFloorColor     = addColorPicker("Floor Color", GameUI.property3DFloorColor);
         comboPerspectives    = addChoiceBox("Perspective", PerspectiveID.values());
         addDynamicLabeledValue("Camera",        this::subSceneCameraInfo);
         addDynamicLabeledValue("Subscene Size", this::subSceneSizeInfo);
         addDynamicLabeledValue("Scene Size",    this::sceneSizeInfo);
-        cbPiPOn              = addCheckBox("Picture-In-Picture", ui.propertyMiniViewOn());
-        sliderPiPSceneHeight = addSlider("- Height", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, ui.propertyMiniViewHeight().get(), false, false);
-        sliderPiPOpacity     = addSlider("- Opacity", 0, 100, ui.propertyMiniViewOpacityPercent().get(), false, false);
-        sliderWallHeight     = addSlider("Obstacle Height", 0, 16, ui.property3DWallHeight().get(), false, false);
-        sliderWallOpacity    = addSlider("Wall Opacity", 0, 1, ui.property3DWallOpacity().get(), false, false);
-        cbEnergizerExplodes  = addCheckBox("Energizer Explosion", ui.property3DEnergizerExplodes());
-        cbAxesVisible        = addCheckBox("Show Axes", ui.property3DAxesVisible());
+        cbPiPOn              = addCheckBox("Picture-In-Picture", GameUI.propertyMiniViewOn);
+        sliderPiPSceneHeight = addSlider("- Height", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, GameUI.propertyMiniViewHeight.get(), false, false);
+        sliderPiPOpacity     = addSlider("- Opacity", 0, 100, GameUI.propertyMiniViewOpacityPercent.get(), false, false);
+        sliderWallHeight     = addSlider("Obstacle Height", 0, 16, GameUI.property3DWallHeight.get(), false, false);
+        sliderWallOpacity    = addSlider("Wall Opacity", 0, 1, GameUI.property3DWallOpacity.get(), false, false);
+        cbEnergizerExplodes  = addCheckBox("Energizer Explosion", GameUI.property3DEnergizerExplodes);
+        cbAxesVisible        = addCheckBox("Show Axes", GameUI.property3DAxesVisible);
         cbWireframeMode      = addCheckBox("Wireframe Mode");
 
         setTooltip(sliderPiPSceneHeight, sliderPiPSceneHeight.valueProperty(), "%.0f px");
         setTooltip(sliderPiPOpacity, sliderPiPOpacity.valueProperty(), "%.0f %%");
 
-        setEditor(sliderPiPSceneHeight, ui.propertyMiniViewHeight());
-        setEditor(sliderPiPOpacity, ui.propertyMiniViewOpacityPercent());
-        setEditor(sliderWallHeight, ui.property3DWallHeight());
-        setEditor(sliderWallOpacity, ui.property3DWallOpacity());
-        setEditor(comboPerspectives, ui.property3DPerspective());
+        setEditor(sliderPiPSceneHeight, GameUI.propertyMiniViewHeight);
+        setEditor(sliderPiPOpacity, GameUI.propertyMiniViewOpacityPercent);
+        setEditor(sliderWallHeight, GameUI.property3DWallHeight);
+        setEditor(sliderWallOpacity, GameUI.property3DWallOpacity);
+        setEditor(comboPerspectives, GameUI.property3DPerspective);
 
         //TODO check these
         cbUsePlayScene3D.setOnAction(e -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(ui));
         cbWireframeMode.setOnAction(e -> ACTION_TOGGLE_DRAW_MODE.executeIfEnabled(ui));
     }
 
-    private void updateControlsFromProperties(GameUI ui) {
-        comboPerspectives.setValue(ui.property3DPerspective().get());
-        sliderPiPSceneHeight.setValue(ui.propertyMiniViewHeight().get());
-        sliderPiPOpacity.setValue(ui.propertyMiniViewOpacityPercent().get());
-        sliderWallHeight.setValue(ui.property3DWallHeight().get());
-        sliderWallOpacity.setValue(ui.property3DWallOpacity().get());
-        cbUsePlayScene3D.setSelected(ui.property3DEnabled().get());
-        cbPiPOn.setSelected(ui.propertyMiniViewOn().getValue());
-        comboPerspectives.setValue(ui.property3DPerspective().get());
-        cbEnergizerExplodes.setSelected(ui.property3DEnergizerExplodes().get());
-        cbAxesVisible.setSelected(ui.property3DAxesVisible().get());
-        cbWireframeMode.setSelected(ui.property3DDrawMode().get() == DrawMode.LINE);
+    private void updateControlsFromProperties() {
+        comboPerspectives.setValue(GameUI.property3DPerspective.get());
+        sliderPiPSceneHeight.setValue(GameUI.propertyMiniViewHeight.get());
+        sliderPiPOpacity.setValue(GameUI.propertyMiniViewOpacityPercent.get());
+        sliderWallHeight.setValue(GameUI.property3DWallHeight.get());
+        sliderWallOpacity.setValue(GameUI.property3DWallOpacity.get());
+        cbUsePlayScene3D.setSelected(GameUI.property3DEnabled.get());
+        cbPiPOn.setSelected(GameUI.propertyMiniViewOn.getValue());
+        comboPerspectives.setValue(GameUI.property3DPerspective.get());
+        cbEnergizerExplodes.setSelected(GameUI.property3DEnergizerExplodes.get());
+        cbAxesVisible.setSelected(GameUI.property3DAxesVisible.get());
+        cbWireframeMode.setSelected(GameUI.property3DDrawMode.get() == DrawMode.LINE);
     }
 
     @Override
     public void update() {
         super.update();
         //TODO this should not be necessary on every update, when to initialize controls?
-        updateControlsFromProperties(ui);
+        updateControlsFromProperties();
     }
 
     private String subSceneSizeInfo() {

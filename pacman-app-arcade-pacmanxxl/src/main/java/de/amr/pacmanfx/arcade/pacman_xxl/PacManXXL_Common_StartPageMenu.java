@@ -10,6 +10,7 @@ import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.MapSelectionMode;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Config;
 import de.amr.pacmanfx.ui.GameVariant;
 import de.amr.pacmanfx.ui._2d.ArcadePalette;
@@ -195,7 +196,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         @Override
         protected void onValueChanged(int index) {
             state.play3D = selectedValue();
-            theUI().property3DEnabled().set(state.play3D);
+            GameUI.property3DEnabled.set(state.play3D);
             logState();
         }
 
@@ -292,7 +293,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         mapSelector.loadAllMaps();
         final boolean customMapsExist = !mapSelector.customMaps().isEmpty();
 
-        state.play3D = theUI().property3DEnabled().get();
+        state.play3D = GameUI.property3DEnabled.get();
         state.cutScenesEnabled = game.areCutScenesEnabled();
         state.mapOrder = mapSelector.mapSelectionMode();
         logState();

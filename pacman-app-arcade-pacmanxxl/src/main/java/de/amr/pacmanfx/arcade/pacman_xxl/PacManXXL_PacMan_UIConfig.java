@@ -258,7 +258,7 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config {
                 int cutSceneNumber = gameContext.theGame().<Integer>getProperty("intermissionTestNumber");
                 yield SCENE_ID_CUT_SCENE_N_2D.formatted(cutSceneNumber);
             }
-            default -> ui.property3DEnabled().get() ? SCENE_ID_PLAY_SCENE_3D : SCENE_ID_PLAY_SCENE_2D;
+            default -> GameUI.property3DEnabled.get() ? SCENE_ID_PLAY_SCENE_3D : SCENE_ID_PLAY_SCENE_2D;
         };
         return scenesByID.get(sceneID);
     }

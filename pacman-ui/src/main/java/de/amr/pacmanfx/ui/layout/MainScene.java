@@ -34,8 +34,10 @@ public class MainScene extends Scene {
         @Override
         protected void invalidated() {
             PacManGames_View newView = get();
-            rootPane().getChildren().set(0, newView.rootNode());
-            newView.rootNode().requestFocus();
+            if (newView != null) {
+                rootPane().getChildren().set(0, newView.rootNode());
+                newView.rootNode().requestFocus();
+            }
         }
     };
 
@@ -70,8 +72,8 @@ public class MainScene extends Scene {
         iconBox.visibleProperty().bind(propertyCurrentView.map(
             currentView -> ui.theEditorView().isEmpty() || currentView != ui.theEditorView().get()));
 
-        iconBox.iconMuted().visibleProperty().bind(ui.propertyMuted());
-        iconBox.icon3D().visibleProperty().bind(ui.property3DEnabled());
+        iconBox.iconMuted().visibleProperty().bind(GameUI.propertyMuted);
+        iconBox.icon3D().visibleProperty().bind(GameUI.property3DEnabled);
         iconBox.iconAutopilot().visibleProperty().bind(ui.theGameContext().theGameController().propertyUsingAutopilot());
         iconBox.iconImmune().visibleProperty().bind(ui.theGameContext().theGameController().propertyImmunity());
 
@@ -106,11 +108,6 @@ public class MainScene extends Scene {
 
     public PacManGames_View currentView() {
         return propertyCurrentView.get();
-    }
-
-    public void setCurrentView(PacManGames_View view) {
-        requireNonNull(view);
-        propertyCurrentView.set(view);
     }
 
     public ObjectProperty<GameScene> currentGameSceneProperty() {

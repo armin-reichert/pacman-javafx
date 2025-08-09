@@ -197,8 +197,8 @@ public interface PacManGames_GameActions {
     GameAction ACTION_PERSPECTIVE_NEXT = new GameAction("PERSPECTIVE_NEXT") {
         @Override
         public void execute(GameUI ui) {
-            PerspectiveID id = ui.property3DPerspective().get().next();
-            ui.property3DPerspective().set(id);
+            PerspectiveID id = GameUI.property3DPerspective.get().next();
+            GameUI.property3DPerspective.set(id);
             String msgKey = ui.theAssets().text("camera_perspective", ui.theAssets().text("perspective_id_" + id.name()));
             ui.showFlashMessage(msgKey);
         }
@@ -207,8 +207,8 @@ public interface PacManGames_GameActions {
     GameAction ACTION_PERSPECTIVE_PREVIOUS = new GameAction("PERSPECTIVE_PREVIOUS") {
         @Override
         public void execute(GameUI ui) {
-            PerspectiveID id = ui.property3DPerspective().get().prev();
-            ui.property3DPerspective().set(id);
+            PerspectiveID id = GameUI.property3DPerspective.get().prev();
+            GameUI.property3DPerspective.set(id);
             String msgKey = ui.theAssets().text("camera_perspective", ui.theAssets().text("perspective_id_" + id.name()));
             ui.showFlashMessage(msgKey);
         }
@@ -367,14 +367,14 @@ public interface PacManGames_GameActions {
     GameAction ACTION_TOGGLE_DEBUG_INFO = new GameAction("TOGGLE_DEBUG_INFO") {
         @Override
         public void execute(GameUI ui) {
-            toggle(ui.propertyDebugInfoVisible());
+            toggle(GameUI.propertyDebugInfoVisible);
         }
     };
 
     GameAction ACTION_TOGGLE_DRAW_MODE = new GameAction("TOGGLE_DRAW_MODE") {
         @Override
         public void execute(GameUI ui) {
-            ui.property3DDrawMode().set(ui.property3DDrawMode().get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+            GameUI.property3DDrawMode.set(GameUI.property3DDrawMode.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
         }
 
         @Override
@@ -396,9 +396,9 @@ public interface PacManGames_GameActions {
     GameAction ACTION_TOGGLE_MINI_VIEW_VISIBILITY = new GameAction("TOGGLE_MINI_VIEW_VISIBILITY") {
         @Override
         public void execute(GameUI ui) {
-            toggle(ui.propertyMiniViewOn());
+            toggle(GameUI.propertyMiniViewOn);
             if (!ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)) {
-                ui.showFlashMessage(ui.theAssets().text(ui.propertyMiniViewOn().get() ? "pip_on" : "pip_off"));
+                ui.showFlashMessage(ui.theAssets().text(GameUI.propertyMiniViewOn.get() ? "pip_on" : "pip_off"));
             }
         }
     };
@@ -406,7 +406,7 @@ public interface PacManGames_GameActions {
     GameAction ACTION_TOGGLE_MUTED = new GameAction("TOGGLE_MUTED") {
         @Override
         public void execute(GameUI ui) {
-            ui.propertyMuted().set(!ui.propertyMuted().get());
+            GameUI.propertyMuted.set(!GameUI.propertyMuted.get());
         }
     };
 
@@ -425,13 +425,13 @@ public interface PacManGames_GameActions {
         @Override
         public void execute(GameUI ui) {
             ui.currentGameScene().ifPresent(gameScene -> {
-                toggle(ui.property3DEnabled());
+                toggle(GameUI.property3DEnabled);
                 if (ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_2D) || ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)) {
                     ui.updateGameScene(true);
                     ui.theGameContext().theGameController().updateGameState(); //TODO needed?
                 }
                 if (!ui.theGameContext().theGame().isPlaying()) {
-                    ui.showFlashMessage(ui.theAssets().text(ui.property3DEnabled().get() ? "use_3D_scene" : "use_2D_scene"));
+                    ui.showFlashMessage(ui.theAssets().text(GameUI.property3DEnabled.get() ? "use_3D_scene" : "use_2D_scene"));
                 }
             });
         }
