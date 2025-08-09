@@ -96,21 +96,25 @@ public interface GameUI {
         new ActionBinding(ACTION_TOGGLE_DRAW_MODE,            alt(KeyCode.W))
     );
 
-    PacManGames_Assets               theAssets();
-    <T extends GameUI_Config> T      theConfiguration();
-    DirectoryWatchdog                theCustomDirWatchdog();
-    GameClock                        theGameClock();
-    GameContext                      theGameContext();
-    Joypad                           theJoypad();
-    Keyboard                         theKeyboard();
-    SoundManager                     theSound();
-    Stage                            theStage();
-    UIPreferences theUIPrefs();
+    PacManGames_Assets          theAssets();
+    <T extends GameUI_Config> T theConfiguration();
+    DirectoryWatchdog           theCustomDirWatchdog();
+    GameClock                   theGameClock();
+    GameContext                 theGameContext();
+    Joypad                      theJoypad();
+    Keyboard                    theKeyboard();
+    SoundManager                theSound();
+    Stage                       theStage();
+    UIPreferences               theUIPrefs();
 
     void restart();
     void selectGameVariant(String variant);
     void show();
 
+    /**
+     * @param gameVariant name of game variant
+     * @return UI configuration for given game variant
+     */
     GameUI_Config config(String gameVariant);
 
     /**

@@ -260,8 +260,13 @@ public class PacManGames_UI_Impl implements GameUI {
             Logger.error("Cannot select game variant (NULL)");
             return;
         }
+
         String previousVariant = theGameContext.theGameController().selectedGameVariant();
-        if (previousVariant != null && !previousVariant.equals(gameVariant)) {
+        if (gameVariant.equals(previousVariant)) {
+            return;
+        }
+
+        if (previousVariant != null) {
             GameUI_Config previousConfig = config(previousVariant);
             Logger.info("Unloading assets for game variant {}", previousVariant);
             previousConfig.dispose();
