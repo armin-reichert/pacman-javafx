@@ -90,8 +90,6 @@ public class PacManGames_UI_Impl implements GameUI {
         requireNonNull(gameContext, "Game context is null");
         requireNonNull(stage, "Stage is null");
 
-        Logger.info("JavaFX runtime: {}", System.getProperty("javafx.runtime.version"));
-
         // Input
         theKeyboard = new Keyboard();
         theJoypad = new Joypad(theKeyboard);

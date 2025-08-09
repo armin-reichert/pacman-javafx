@@ -12,6 +12,7 @@ import de.amr.pacmanfx.model.MapSelector;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.layout.StartPage;
 import javafx.stage.Stage;
+import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.*;
@@ -30,6 +31,7 @@ public class GameUI_Builder {
     }
 
     public static GameUI_Builder createUI(Stage stage, double width, double height) {
+        Logger.info("JavaFX runtime: {}", System.getProperty("javafx.runtime.version"));
         PacManGames_UI_Impl.THE_ONE = new PacManGames_UI_Impl(Globals.theGameContext(), stage, width, height);
         return new GameUI_Builder(PacManGames_UI_Impl.THE_ONE);
     }
