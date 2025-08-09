@@ -308,7 +308,7 @@ public class PlayView extends StackPane implements PacManGames_View {
         gameScene2D.setCanvas(commonCanvas);
         gameScene2D.setGameRenderer(ui.theConfiguration().createGameRenderer(commonCanvas));
         gameScene2D.scalingProperty().bind(canvasContainer.scalingProperty().map(
-            scaling -> Math.min(scaling.doubleValue(), ui.theUserPrefs().getFloat("scene2d.max_scaling"))));
+            scaling -> Math.min(scaling.doubleValue(), ui.theUIPrefs().getFloat("scene2d.max_scaling"))));
         Vector2f sizePx = gameScene2D.sizeInPx();
         canvasContainer.setUnscaledCanvasSize(sizePx.x(), sizePx.y());
         canvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());

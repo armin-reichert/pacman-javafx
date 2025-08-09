@@ -2,7 +2,7 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.ui;
+package de.amr.pacmanfx.uilib.assets;
 
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -15,13 +15,18 @@ import java.util.prefs.Preferences;
 
 import static de.amr.pacmanfx.uilib.Ufx.formatColorHex;
 
-public class UserUIPreferences {
+public class UIPreferences {
 
     private final Map<String, Object> defaultValueMap = new HashMap<>();
     private final Preferences prefs;
 
-    public UserUIPreferences(Class<?> _class) {
-        prefs = Preferences.userNodeForPackage(_class);
+    public UIPreferences(Class<?> javaClass) {
+        prefs = Preferences.userNodeForPackage(javaClass);
+        if (!isBackingStoreAccessible()) {
+            Logger.error("User preferences could not be accessed, using default values!");
+        } else {
+            addMissingValues();
+        }
     }
 
     public boolean isBackingStoreAccessible() {

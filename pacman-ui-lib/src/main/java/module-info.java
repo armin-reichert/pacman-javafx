@@ -1,5 +1,6 @@
 // module is open to allow access to non-class resources
 open module de.amr.pacmanfx.uilib {
+    requires java.prefs;
     requires javafx.graphics;
     requires javafx.controls;
     requires javafx.media;

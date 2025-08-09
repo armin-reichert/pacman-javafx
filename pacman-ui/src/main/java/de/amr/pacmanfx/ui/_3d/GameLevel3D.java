@@ -436,7 +436,7 @@ public class GameLevel3D extends Group implements Disposable {
                 ghostDressMeshViews[ghost.personality()],
                 ghostPupilsMeshViews[ghost.personality()],
                 ghostEyesMeshViews[ghost.personality()],
-                ui.theUserPrefs().getFloat("3d.ghost.size"),
+                ui.theUIPrefs().getFloat("3d.ghost.size"),
                 gameLevel.data().numFlashes()
             );
         }).toList();
@@ -449,9 +449,9 @@ public class GameLevel3D extends Group implements Disposable {
     }
 
     private void createLivesCounter3D() {
-        int capacity = ui.theUserPrefs().getInt("3d.lives_counter.capacity");
-        Color pillarColor = ui.theUserPrefs().getColor("3d.lives_counter.pillar_color");
-        Color plateColor = ui.theUserPrefs().getColor("3d.lives_counter.plate_color");
+        int capacity = ui.theUIPrefs().getInt("3d.lives_counter.capacity");
+        Color pillarColor = ui.theUIPrefs().getColor("3d.lives_counter.pillar_color");
+        Color plateColor = ui.theUIPrefs().getColor("3d.lives_counter.plate_color");
         livesCounterShapes = new Node[capacity];
         for (int i = 0; i < livesCounterShapes.length; ++i) {
             livesCounterShapes[i] = ui.theConfiguration().createLivesCounterShape3D();
@@ -469,7 +469,7 @@ public class GameLevel3D extends Group implements Disposable {
         levelCounter3D = new LevelCounter3D(animationRegistry);
         levelCounter3D.setTranslateX(TS * (worldMap.numCols() - 2));
         levelCounter3D.setTranslateY(2 * TS);
-        levelCounter3D.setTranslateZ(-ui.theUserPrefs().getFloat("3d.level_counter.elevation"));
+        levelCounter3D.setTranslateZ(-ui.theUIPrefs().getFloat("3d.level_counter.elevation"));
     }
 
     private void createAmbientLight() {
@@ -502,8 +502,8 @@ public class GameLevel3D extends Group implements Disposable {
 
         createFloor3D();
 
-        float wallThickness = ui.theUserPrefs().getFloat("3d.obstacle.wall_thickness");
-        float cornerRadius = ui.theUserPrefs().getFloat("3d.obstacle.corner_radius");
+        float wallThickness = ui.theUIPrefs().getFloat("3d.obstacle.wall_thickness");
+        float cornerRadius = ui.theUIPrefs().getFloat("3d.obstacle.corner_radius");
         wall3DCount = 0;
         var stopWatch = new StopWatch();
         for (Obstacle obstacle : gameLevel.worldMap().obstacles()) {
@@ -526,23 +526,23 @@ public class GameLevel3D extends Group implements Disposable {
                 animationRegistry,
                 house,
                 ghostRevivalPositions,
-                ui.theUserPrefs().getFloat("3d.house.base_height"),
-                ui.theUserPrefs().getFloat("3d.house.wall_thickness"),
-                ui.theUserPrefs().getFloat("3d.house.opacity")
+                ui.theUIPrefs().getFloat("3d.house.base_height"),
+                ui.theUIPrefs().getFloat("3d.house.wall_thickness"),
+                ui.theUIPrefs().getFloat("3d.house.opacity")
             );
             house3D.setWallBaseColor(colorScheme.fill());
             house3D.setWallTopColor(colorScheme.stroke());
             house3D.setDoorColor(colorScheme.door());
-            house3D.wallBaseHeightProperty().set(ui.theUserPrefs().getFloat("3d.house.base_height"));
+            house3D.wallBaseHeightProperty().set(ui.theUIPrefs().getFloat("3d.house.base_height"));
             house3D.openProperty().addListener(this::handleHouseOpenChange);
-            house3D.setDoorSensitivity(ui.theUserPrefs().getFloat("3d.house.sensitivity"));
+            house3D.setDoorSensitivity(ui.theUIPrefs().getFloat("3d.house.sensitivity"));
             maze3D.getChildren().add(house3D);
         });
     }
 
     private void createFloor3D() {
-        float padding   = ui.theUserPrefs().getFloat("3d.floor.padding");
-        float thickness = ui.theUserPrefs().getFloat("3d.floor.thickness");
+        float padding   = ui.theUIPrefs().getFloat("3d.floor.padding");
+        float thickness = ui.theUIPrefs().getFloat("3d.floor.thickness");
         Vector2f worldSizePx = gameLevel.worldSizePx();
         float sizeX = worldSizePx.x() + 2 * padding;
         float sizeY = worldSizePx.y();
@@ -576,7 +576,7 @@ public class GameLevel3D extends Group implements Disposable {
     }
 
     private void createPellets3D() {
-        float radius = ui.theUserPrefs().getFloat("3d.pellet.radius");
+        float radius = ui.theUIPrefs().getFloat("3d.pellet.radius");
         Mesh mesh = ui.theAssets().theModel3DRepository().pelletMesh();
         var prototype = new MeshView(mesh);
         Bounds bounds = prototype.getBoundsInLocal();
@@ -603,9 +603,9 @@ public class GameLevel3D extends Group implements Disposable {
     }
 
     private void createEnergizers3D() {
-        float radius     = ui.theUserPrefs().getFloat("3d.energizer.radius");
-        float minScaling = ui.theUserPrefs().getFloat("3d.energizer.scaling.min");
-        float maxScaling = ui.theUserPrefs().getFloat("3d.energizer.scaling.max");
+        float radius     = ui.theUIPrefs().getFloat("3d.energizer.radius");
+        float minScaling = ui.theUIPrefs().getFloat("3d.energizer.scaling.min");
+        float maxScaling = ui.theUIPrefs().getFloat("3d.energizer.scaling.max");
         Material[] ghostDressMaterials = {
             ghosts3D.get(RED_GHOST_SHADOW).ghost3D().dressMaterialNormal(),
             ghosts3D.get(PINK_GHOST_SPEEDY).ghost3D().dressMaterialNormal(),
@@ -815,8 +815,8 @@ public class GameLevel3D extends Group implements Disposable {
             bonus3D.dispose();
         }
         bonus3D = new Bonus3D(animationRegistry, bonus,
-            ui.theConfiguration().bonusSymbolImage(bonus.symbol()), ui.theUserPrefs().getFloat("3d.bonus.symbol.width"),
-            ui.theConfiguration().bonusValueImage(bonus.symbol()), ui.theUserPrefs().getFloat("3d.bonus.points.width"));
+            ui.theConfiguration().bonusSymbolImage(bonus.symbol()), ui.theUIPrefs().getFloat("3d.bonus.symbol.width"),
+            ui.theConfiguration().bonusValueImage(bonus.symbol()), ui.theUIPrefs().getFloat("3d.bonus.points.width"));
         getChildren().add(bonus3D);
         bonus3D.showEdible();
     }

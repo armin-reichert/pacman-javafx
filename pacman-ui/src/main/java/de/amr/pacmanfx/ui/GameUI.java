@@ -15,6 +15,7 @@ import de.amr.pacmanfx.ui.layout.PlayView;
 import de.amr.pacmanfx.ui.layout.StartPagesView;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.GameClock;
+import de.amr.pacmanfx.uilib.assets.UIPreferences;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -107,7 +108,7 @@ public interface GameUI {
     Keyboard                         theKeyboard();
     SoundManager                     theSound();
     Stage                            theStage();
-    UserUIPreferences                theUserPrefs();
+    UIPreferences theUIPrefs();
 
     void restart();
     void selectGameVariant(String variant);
@@ -162,8 +163,8 @@ public interface GameUI {
      * @return CustomMenuItem representing a context menu title item
      */
     default MenuItem createContextMenuTitle(String titleKey) {
-        Font font = theUserPrefs().getFont("context_menu.title.font");
-        Color fillColor = theUserPrefs().getColor("context_menu.title.fill");
+        Font font = theUIPrefs().getFont("context_menu.title.font");
+        Color fillColor = theUIPrefs().getColor("context_menu.title.fill");
         var text = new Text(theAssets().text(titleKey));
         text.setFont(font);
         text.setFill(fillColor);

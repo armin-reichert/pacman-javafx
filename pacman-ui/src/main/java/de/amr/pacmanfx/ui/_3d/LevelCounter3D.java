@@ -36,7 +36,7 @@ public class LevelCounter3D extends Group implements Disposable {
 
     public void update(GameUI ui, LevelCounter levelCounter) {
         getChildren().clear();
-        float cubeSize = ui.theUserPrefs().getFloat("3d.level_counter.symbol_size");
+        float cubeSize = ui.theUIPrefs().getFloat("3d.level_counter.symbol_size");
         for (int i = 0; i < levelCounter.symbols().size(); ++i) {
             Image symbolImage = ui.theConfiguration().bonusSymbolImage(levelCounter.symbols().get(i));
             var material = new PhongMaterial(Color.WHITE);

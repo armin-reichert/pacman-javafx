@@ -16,6 +16,7 @@ import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.layout.*;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.GameClock;
+import de.amr.pacmanfx.uilib.assets.UIPreferences;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
@@ -25,8 +26,6 @@ import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
@@ -34,7 +33,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static java.util.Objects.requireNonNull;
 
@@ -76,7 +74,7 @@ public class PacManGames_UI_Impl implements GameUI {
     private final GameContext        theGameContext;
     private final Keyboard           theKeyboard;
     private final Joypad             theJoypad;
-    private final UserUIPreferences  thePrefs;
+    private final UIPreferences theUIPrefs;
     private final Stage              theStage;
 
     private final ActionBindingManager globalActionBindings = new DefaultActionBindingManager();
@@ -101,10 +99,9 @@ public class PacManGames_UI_Impl implements GameUI {
 
         // Game UI
         theAssets = new PacManGames_Assets();
-        thePrefs = new UserUIPreferences(PacManGames_UI_Impl.class);
+        theUIPrefs = new PacManGames_Preferences();
         theStage = stage;
 
-        initPreferences();
         initGlobalActionBindings();
 
         mainScene = new MainScene(this, width, height);
@@ -122,8 +119,8 @@ public class PacManGames_UI_Impl implements GameUI {
         theGameClock.setPausableAction(this::doSimulationStepAndUpdateGameScene);
         theGameClock.setPermanentAction(this::drawCurrentView);
 
-        property3DWallHeight.set(thePrefs.getFloat("3d.obstacle.base_height"));
-        property3DWallOpacity.set(thePrefs.getFloat("3d.obstacle.opacity"));
+        property3DWallHeight.set(theUIPrefs.getFloat("3d.obstacle.base_height"));
+        property3DWallOpacity.set(theUIPrefs.getFloat("3d.obstacle.opacity"));
     }
 
     private void configureStage(Stage stage) {
@@ -153,48 +150,6 @@ public class PacManGames_UI_Impl implements GameUI {
         globalActionBindings.use(ACTION_OPEN_EDITOR,      DEFAULT_ACTION_BINDINGS);
         globalActionBindings.use(ACTION_TOGGLE_MUTED,     DEFAULT_ACTION_BINDINGS);
         globalActionBindings.updateKeyboard(theKeyboard);
-    }
-
-    private void initPreferences() {
-        thePrefs.storeDefaultValue("3d.bonus.symbol.width", 8.0f);
-        thePrefs.storeDefaultValue("3d.bonus.points.width", 1.8f * 8.0f);
-        thePrefs.storeDefaultValue("3d.energizer.radius", 3.5f);
-        thePrefs.storeDefaultValue("3d.energizer.scaling.min", 0.2f);
-        thePrefs.storeDefaultValue("3d.energizer.scaling.max", 1.0f);
-        thePrefs.storeDefaultValue("3d.floor.padding", 5.0f);
-        thePrefs.storeDefaultValue("3d.floor.thickness", 0.5f);
-        thePrefs.storeDefaultValue("3d.ghost.size", 15.5f);
-        thePrefs.storeDefaultValue("3d.house.base_height", 12.0f);
-        thePrefs.storeDefaultValue("3d.house.opacity", 0.4f);
-        thePrefs.storeDefaultValue("3d.house.sensitivity", 1.5f * TS);
-        thePrefs.storeDefaultValue("3d.house.wall_thickness", 2.5f);
-        thePrefs.storeDefaultValue("3d.level_counter.symbol_size", 10.0f);
-        thePrefs.storeDefaultValue("3d.level_counter.elevation", 6f);
-        thePrefs.storeDefaultValue("3d.lives_counter.capacity", 5);
-        thePrefs.storeDefaultColor("3d.lives_counter.pillar_color", Color.grayRgb(120));
-        thePrefs.storeDefaultColor("3d.lives_counter.plate_color",  Color.grayRgb(180));
-        thePrefs.storeDefaultValue("3d.lives_counter.shape_size", 12.0f);
-        thePrefs.storeDefaultValue("3d.obstacle.base_height", 4.0f);
-        thePrefs.storeDefaultValue("3d.obstacle.corner_radius", 4.0f);
-        thePrefs.storeDefaultValue("3d.obstacle.opacity", 1.0f);
-        thePrefs.storeDefaultValue("3d.obstacle.wall_thickness", 2.25f);
-        thePrefs.storeDefaultValue("3d.pac.size", 16.0f);
-        thePrefs.storeDefaultValue("3d.pellet.radius", 1.0f);
-
-        // "Kornblumenblau, sind die Augen der Frauen beim Weine. Hicks!"
-        thePrefs.storeDefaultColor("context_menu.title.fill", Color.CORNFLOWERBLUE);
-        thePrefs.storeDefaultFont("context_menu.title.font", Font.font("Dialog", FontWeight.BLACK, 14.0f));
-
-        thePrefs.storeDefaultColor("debug_text.fill", Color.YELLOW);
-        thePrefs.storeDefaultFont("debug_text.font", Font.font("Sans", FontWeight.BOLD, 16.0f));
-
-        thePrefs.storeDefaultValue("scene2d.max_scaling", 5.0f);
-
-        if (!thePrefs.isBackingStoreAccessible()) {
-            Logger.error("User preferences could not be accessed, using default values!");
-        } else {
-            thePrefs.addMissingValues();
-        }
     }
 
     private void selectView(PacManGames_View view) {
@@ -317,7 +272,7 @@ public class PacManGames_UI_Impl implements GameUI {
     @Override public Stage theStage() { return theStage; }
 
     @Override
-    public UserUIPreferences theUserPrefs() { return thePrefs; }
+    public UIPreferences theUIPrefs() { return theUIPrefs; }
 
     @Override
     public void restart() {
