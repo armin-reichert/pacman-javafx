@@ -97,7 +97,7 @@ public class PlayView extends StackPane implements PacManGames_View {
         //TODO what is the cleanest solution to hide the context menu in all needed cases?
         setOnContextMenuRequested(this::handleContextMenuRequest);
         // game scene changes: hide it
-        GameUI.propertyCurrentGameScene.addListener(
+        GameUI.PROPERTY_CURRENT_GAME_SCENE.addListener(
                 (obs, oldGameScene, newGameScene) -> handleGameSceneChange(parentScene, newGameScene));
         // any other mouse button clicked: hide it
         parentScene.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
@@ -271,7 +271,7 @@ public class PlayView extends StackPane implements PacManGames_View {
         }
 
         if (changing) {
-            GameUI.propertyCurrentGameScene.set(nextGameScene);
+            GameUI.PROPERTY_CURRENT_GAME_SCENE.set(nextGameScene);
         }
     }
 
@@ -295,7 +295,7 @@ public class PlayView extends StackPane implements PacManGames_View {
         }
         else if (gameScene instanceof GameScene2D gameScene2D) {
             embedGameScene2DDirectly(gameScene2D);
-            gameScene2D.backgroundColorProperty().bind(GameUI.propertyCanvasBackgroundColor);
+            gameScene2D.backgroundColorProperty().bind(GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR);
             gameScene2D.clear();
         }
         else {
@@ -312,20 +312,20 @@ public class PlayView extends StackPane implements PacManGames_View {
         Vector2f sizePx = gameScene2D.sizeInPx();
         canvasContainer.setUnscaledCanvasSize(sizePx.x(), sizePx.y());
         canvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
-        canvasContainer.backgroundProperty().bind(GameUI.propertyCanvasBackgroundColor.map(Ufx::colorBackground));
+        canvasContainer.backgroundProperty().bind(GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR.map(Ufx::colorBackground));
         getChildren().set(0, canvasLayer);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
     private void configureMiniGameView() {
-        miniGameView.backgroundColorProperty().bind(GameUI.propertyCanvasBackgroundColor);
-        miniGameView.debugProperty().bind(GameUI.propertyDebugInfoVisible);
-        miniGameView.canvasHeightProperty().bind(GameUI.propertyMiniViewHeight);
-        miniGameView.opacityProperty().bind(GameUI.propertyMiniViewOpacityPercent.divide(100.0));
+        miniGameView.backgroundColorProperty().bind(GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR);
+        miniGameView.debugProperty().bind(GameUI.PROPERTY_DEBUG_INFO_VISIBLE);
+        miniGameView.canvasHeightProperty().bind(GameUI.PROPERTY_MINI_VIEW_HEIGHT);
+        miniGameView.opacityProperty().bind(GameUI.PROPERTY_MINI_VIEW_OPACITY_PERCENT.divide(100.0));
         miniGameView.visibleProperty().bind(Bindings.createObjectBinding(
-            () -> GameUI.propertyMiniViewOn.get() && ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D),
-            GameUI.propertyMiniViewOn, GameUI.propertyCurrentGameScene
+            () -> GameUI.PROPERTY_MINI_VIEW_ON.get() && ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D),
+            GameUI.PROPERTY_MINI_VIEW_ON, GameUI.PROPERTY_CURRENT_GAME_SCENE
         ));
     }
 
@@ -340,9 +340,9 @@ public class PlayView extends StackPane implements PacManGames_View {
 
     private void configurePropertyBindings() {
         GraphicsContext ctx = commonCanvas.getGraphicsContext2D();
-        GameUI.propertyCanvasFontSmoothing.addListener((py, ov, on) -> ctx.setFontSmoothingType(on ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
-        GameUI.propertyCanvasImageSmoothing.addListener((py, ov, on) -> ctx.setImageSmoothing(on));
-        GameUI.propertyDebugInfoVisible.addListener((py, ov, debug) -> {
+        GameUI.PROPERTY_CANVAS_FONT_SMOOTHING.addListener((py, ov, on) -> ctx.setFontSmoothingType(on ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
+        GameUI.PROPERTY_CANVAS_IMAGE_SMOOTHING.addListener((py, ov, on) -> ctx.setImageSmoothing(on));
+        GameUI.PROPERTY_DEBUG_INFO_VISIBLE.addListener((py, ov, debug) -> {
             canvasLayer.setBackground(debug? colorBackground(Color.TEAL) : null);
             canvasLayer.setBorder(debug? border(Color.LIGHTGREEN, 1) : null);
         });
@@ -353,8 +353,8 @@ public class PlayView extends StackPane implements PacManGames_View {
 
         dashboardLayer = new BorderPane();
         dashboardLayer.visibleProperty().bind(Bindings.createObjectBinding(
-            () -> dashboard.isVisible() || GameUI.propertyMiniViewOn.get(),
-            dashboard.visibleProperty(), GameUI.propertyMiniViewOn
+            () -> dashboard.isVisible() || GameUI.PROPERTY_MINI_VIEW_ON.get(),
+            dashboard.visibleProperty(), GameUI.PROPERTY_MINI_VIEW_ON
         ));
         dashboardLayer.setLeft(dashboard);
         dashboardLayer.setRight(miniGameView);

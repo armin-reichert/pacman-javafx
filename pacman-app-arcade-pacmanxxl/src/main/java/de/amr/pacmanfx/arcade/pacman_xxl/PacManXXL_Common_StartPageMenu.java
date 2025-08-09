@@ -196,7 +196,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         @Override
         protected void onValueChanged(int index) {
             state.play3D = selectedValue();
-            GameUI.property3DEnabled.set(state.play3D);
+            GameUI.PROPERTY_3D_ENABLED.set(state.play3D);
             logState();
         }
 
@@ -293,7 +293,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         mapSelector.loadAllMaps();
         final boolean customMapsExist = !mapSelector.customMaps().isEmpty();
 
-        state.play3D = GameUI.property3DEnabled.get();
+        state.play3D = GameUI.PROPERTY_3D_ENABLED.get();
         state.cutScenesEnabled = game.areCutScenesEnabled();
         state.mapOrder = mapSelector.mapSelectionMode();
         logState();

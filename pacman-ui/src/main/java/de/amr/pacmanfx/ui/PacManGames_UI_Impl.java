@@ -85,9 +85,8 @@ public class PacManGames_UI_Impl implements GameUI {
             globalActionBindings.matchingAction(theKeyboard).orElse(null),
             () -> currentView().handleKeyboardInput(this))
         );
-
-        mainScene.currentGameSceneProperty().bindBidirectional(propertyCurrentGameScene);
-        mainScene.currentViewProperty().bindBidirectional(propertyCurrentView);
+        mainScene.currentGameSceneProperty().bindBidirectional(PROPERTY_CURRENT_GAME_SCENE);
+        mainScene.currentViewProperty().bindBidirectional(PROPERTY_CURRENT_VIEW);
 
         configureStage(stage);
 
@@ -97,8 +96,8 @@ public class PacManGames_UI_Impl implements GameUI {
         theGameClock.setPausableAction(this::doSimulationStepAndUpdateGameScene);
         theGameClock.setPermanentAction(this::drawCurrentView);
 
-        property3DWallHeight.set(theUIPrefs.getFloat("3d.obstacle.base_height"));
-        property3DWallOpacity.set(theUIPrefs.getFloat("3d.obstacle.opacity"));
+        PROPERTY_3D_WALL_HEIGHT.set(theUIPrefs.getFloat("3d.obstacle.base_height"));
+        PROPERTY_3D_WALL_OPACITY.set(theUIPrefs.getFloat("3d.obstacle.opacity"));
     }
 
     private void configureStage(Stage stage) {
@@ -111,12 +110,12 @@ public class PacManGames_UI_Impl implements GameUI {
                 return currentView == null
                     ? "No View?"
                     : currentView.title().map(ObservableObjectValue::get)
-                        .orElse(mainScene.computeTitle(property3DEnabled.get(), propertyDebugInfoVisible.get()));
+                        .orElse(mainScene.computeTitle(PROPERTY_3D_ENABLED.get(), PROPERTY_DEBUG_INFO_VISIBLE.get()));
             },
-            propertyCurrentGameScene,
-            propertyCurrentView,
-            propertyDebugInfoVisible,
-            property3DEnabled,
+                PROPERTY_CURRENT_GAME_SCENE,
+                PROPERTY_CURRENT_VIEW,
+                PROPERTY_DEBUG_INFO_VISIBLE,
+                PROPERTY_3D_ENABLED,
             theGameClock().pausedProperty(),
             mainScene.heightProperty()
         );
@@ -143,7 +142,7 @@ public class PacManGames_UI_Impl implements GameUI {
         view.actionBindingMap().updateKeyboard(theKeyboard);
         theGameContext.theGameEventManager().addEventListener(view);
 
-        GameUI.propertyCurrentView.set(view);
+        GameUI.PROPERTY_CURRENT_VIEW.set(view);
     }
 
     public void applyConfiguration(String gameVariant, Class<?> configClass) {
@@ -153,7 +152,7 @@ public class PacManGames_UI_Impl implements GameUI {
             Logger.info("Game scenes for game variant '{}' created", gameVariant);
             config.gameScenes().forEach(scene -> {
                 if (scene instanceof GameScene2D gameScene2D) {
-                    gameScene2D.debugInfoVisibleProperty().bind(propertyDebugInfoVisible);
+                    gameScene2D.debugInfoVisibleProperty().bind(PROPERTY_DEBUG_INFO_VISIBLE);
                 }
             });
             setConfig(gameVariant, config);
@@ -258,7 +257,7 @@ public class PacManGames_UI_Impl implements GameUI {
         GameUI_Config newConfig = config(gameVariant);
         Logger.info("Loading assets for game variant {}", gameVariant);
         newConfig.storeAssets(theAssets());
-        newConfig.soundManager().mutedProperty().bind(propertyMuted);
+        newConfig.soundManager().mutedProperty().bind(PROPERTY_MUTED);
 
         Image appIcon = theAssets.image(newConfig.assetNamespace() + ".app_icon");
         if (appIcon != null) {

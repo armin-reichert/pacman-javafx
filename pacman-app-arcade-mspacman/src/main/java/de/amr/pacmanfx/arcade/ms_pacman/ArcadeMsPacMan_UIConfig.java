@@ -276,7 +276,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config {
                 int cutSceneNumber = gameContext.theGame().<Integer>getProperty("intermissionTestNumber");
                 yield SCENE_ID_CUT_SCENE_N_2D.formatted(cutSceneNumber);
             }
-            default -> GameUI.property3DEnabled.get() ? SCENE_ID_PLAY_SCENE_3D : SCENE_ID_PLAY_SCENE_2D;
+            default -> GameUI.PROPERTY_3D_ENABLED.get() ? SCENE_ID_PLAY_SCENE_3D : SCENE_ID_PLAY_SCENE_2D;
         };
         return scenesByID.get(sceneID);
     }

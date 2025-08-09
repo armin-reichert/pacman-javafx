@@ -48,29 +48,29 @@ public class InfoBox3DSettings extends InfoBox {
     @Override
     public void init(GameUI ui) {
         cbUsePlayScene3D     = addCheckBox("3D Play Scene");
-        pickerLightColor     = addColorPicker("Light Color", GameUI.property3DLightColor);
-        pickerFloorColor     = addColorPicker("Floor Color", GameUI.property3DFloorColor);
+        pickerLightColor     = addColorPicker("Light Color", GameUI.PROPERTY_3D_LIGHT_COLOR);
+        pickerFloorColor     = addColorPicker("Floor Color", GameUI.PROPERTY_3D_FLOOR_COLOR);
         comboPerspectives    = addChoiceBox("Perspective", PerspectiveID.values());
         addDynamicLabeledValue("Camera",        this::subSceneCameraInfo);
         addDynamicLabeledValue("Subscene Size", this::subSceneSizeInfo);
         addDynamicLabeledValue("Scene Size",    this::sceneSizeInfo);
-        cbPiPOn              = addCheckBox("Picture-In-Picture", GameUI.propertyMiniViewOn);
-        sliderPiPSceneHeight = addSlider("- Height", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, GameUI.propertyMiniViewHeight.get(), false, false);
-        sliderPiPOpacity     = addSlider("- Opacity", 0, 100, GameUI.propertyMiniViewOpacityPercent.get(), false, false);
-        sliderWallHeight     = addSlider("Obstacle Height", 0, 16, GameUI.property3DWallHeight.get(), false, false);
-        sliderWallOpacity    = addSlider("Wall Opacity", 0, 1, GameUI.property3DWallOpacity.get(), false, false);
-        cbEnergizerExplodes  = addCheckBox("Energizer Explosion", GameUI.property3DEnergizerExplodes);
-        cbAxesVisible        = addCheckBox("Show Axes", GameUI.property3DAxesVisible);
+        cbPiPOn              = addCheckBox("Picture-In-Picture", GameUI.PROPERTY_MINI_VIEW_ON);
+        sliderPiPSceneHeight = addSlider("- Height", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, GameUI.PROPERTY_MINI_VIEW_HEIGHT.get(), false, false);
+        sliderPiPOpacity     = addSlider("- Opacity", 0, 100, GameUI.PROPERTY_MINI_VIEW_OPACITY_PERCENT.get(), false, false);
+        sliderWallHeight     = addSlider("Obstacle Height", 0, 16, GameUI.PROPERTY_3D_WALL_HEIGHT.get(), false, false);
+        sliderWallOpacity    = addSlider("Wall Opacity", 0, 1, GameUI.PROPERTY_3D_WALL_OPACITY.get(), false, false);
+        cbEnergizerExplodes  = addCheckBox("Energizer Explosion", GameUI.PROPERTY_3D_ENERGIZER_EXPLODES);
+        cbAxesVisible        = addCheckBox("Show Axes", GameUI.PROPERTY_3D_AXES_VISIBLE);
         cbWireframeMode      = addCheckBox("Wireframe Mode");
 
         setTooltip(sliderPiPSceneHeight, sliderPiPSceneHeight.valueProperty(), "%.0f px");
         setTooltip(sliderPiPOpacity, sliderPiPOpacity.valueProperty(), "%.0f %%");
 
-        setEditor(sliderPiPSceneHeight, GameUI.propertyMiniViewHeight);
-        setEditor(sliderPiPOpacity, GameUI.propertyMiniViewOpacityPercent);
-        setEditor(sliderWallHeight, GameUI.property3DWallHeight);
-        setEditor(sliderWallOpacity, GameUI.property3DWallOpacity);
-        setEditor(comboPerspectives, GameUI.property3DPerspective);
+        setEditor(sliderPiPSceneHeight, GameUI.PROPERTY_MINI_VIEW_HEIGHT);
+        setEditor(sliderPiPOpacity, GameUI.PROPERTY_MINI_VIEW_OPACITY_PERCENT);
+        setEditor(sliderWallHeight, GameUI.PROPERTY_3D_WALL_HEIGHT);
+        setEditor(sliderWallOpacity, GameUI.PROPERTY_3D_WALL_OPACITY);
+        setEditor(comboPerspectives, GameUI.PROPERTY_3D_PERSPECTIVE);
 
         //TODO check these
         cbUsePlayScene3D.setOnAction(e -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(ui));
@@ -78,17 +78,17 @@ public class InfoBox3DSettings extends InfoBox {
     }
 
     private void updateControlsFromProperties() {
-        comboPerspectives.setValue(GameUI.property3DPerspective.get());
-        sliderPiPSceneHeight.setValue(GameUI.propertyMiniViewHeight.get());
-        sliderPiPOpacity.setValue(GameUI.propertyMiniViewOpacityPercent.get());
-        sliderWallHeight.setValue(GameUI.property3DWallHeight.get());
-        sliderWallOpacity.setValue(GameUI.property3DWallOpacity.get());
-        cbUsePlayScene3D.setSelected(GameUI.property3DEnabled.get());
-        cbPiPOn.setSelected(GameUI.propertyMiniViewOn.getValue());
-        comboPerspectives.setValue(GameUI.property3DPerspective.get());
-        cbEnergizerExplodes.setSelected(GameUI.property3DEnergizerExplodes.get());
-        cbAxesVisible.setSelected(GameUI.property3DAxesVisible.get());
-        cbWireframeMode.setSelected(GameUI.property3DDrawMode.get() == DrawMode.LINE);
+        comboPerspectives.setValue(GameUI.PROPERTY_3D_PERSPECTIVE.get());
+        sliderPiPSceneHeight.setValue(GameUI.PROPERTY_MINI_VIEW_HEIGHT.get());
+        sliderPiPOpacity.setValue(GameUI.PROPERTY_MINI_VIEW_OPACITY_PERCENT.get());
+        sliderWallHeight.setValue(GameUI.PROPERTY_3D_WALL_HEIGHT.get());
+        sliderWallOpacity.setValue(GameUI.PROPERTY_3D_WALL_OPACITY.get());
+        cbUsePlayScene3D.setSelected(GameUI.PROPERTY_3D_ENABLED.get());
+        cbPiPOn.setSelected(GameUI.PROPERTY_MINI_VIEW_ON.getValue());
+        comboPerspectives.setValue(GameUI.PROPERTY_3D_PERSPECTIVE.get());
+        cbEnergizerExplodes.setSelected(GameUI.PROPERTY_3D_ENERGIZER_EXPLODES.get());
+        cbAxesVisible.setSelected(GameUI.PROPERTY_3D_AXES_VISIBLE.get());
+        cbWireframeMode.setSelected(GameUI.PROPERTY_3D_DRAW_MODE.get() == DrawMode.LINE);
     }
 
     @Override

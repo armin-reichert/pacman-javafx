@@ -305,7 +305,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     @Override
     public TengenMsPacMan_GameRenderer createGameRenderer(Canvas canvas) {
         var renderer = new TengenMsPacMan_GameRenderer(ui.theAssets(), spriteSheet(), mapRepository, canvas);
-        renderer.backgroundColorProperty().bind(GameUI.propertyCanvasBackgroundColor);
+        renderer.backgroundColorProperty().bind(GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR);
         return renderer;
     }
 
@@ -426,7 +426,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
                 int cutSceneNumber = gameContext.theGame().<Integer>getProperty("intermissionTestNumber");
                 yield SCENE_ID_CUT_SCENE_N_2D.formatted(cutSceneNumber);
             }
-            default -> GameUI.property3DEnabled.get() ? SCENE_ID_PLAY_SCENE_3D : SCENE_ID_PLAY_SCENE_2D;
+            default -> GameUI.PROPERTY_3D_ENABLED.get() ? SCENE_ID_PLAY_SCENE_3D : SCENE_ID_PLAY_SCENE_2D;
         };
         return scenesByID.get(sceneID);
     }

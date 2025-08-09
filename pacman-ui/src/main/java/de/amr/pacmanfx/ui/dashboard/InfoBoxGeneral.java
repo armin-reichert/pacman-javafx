@@ -54,19 +54,19 @@ public class InfoBoxGeneral extends InfoBox {
         btnStep.setText(null);
         btnStep.setTooltip(new Tooltip("Single Step Mode"));
         btnStep.disableProperty().bind(ui.theGameClock().pausedProperty().not());
-        setAction(btnStep, () -> ui.theGameClock().makeSteps(GameUI.propertySimulationSteps.get(), true));
+        setAction(btnStep, () -> ui.theGameClock().makeSteps(GameUI.PROPERTY_SIMULATION_STEPS.get(), true));
 
-        addIntSpinner("Num Steps", 1, 50, GameUI.propertySimulationSteps);
+        addIntSpinner("Num Steps", 1, 50, GameUI.PROPERTY_SIMULATION_STEPS);
         var sliderTargetFPS = addSlider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60, false, false);
         setEditor(sliderTargetFPS, ui.theGameClock().targetFrameRateProperty());
 
         addDynamicLabeledValue("", () -> "Framerate: %.1f (Target: %.1f)".formatted(ui.theGameClock().lastTicksPerSecond(), ui.theGameClock().targetFrameRate()));
         addDynamicLabeledValue("Total Updates",  ui.theGameClock()::updateCount);
 
-        addColorPicker("Canvas Color", GameUI.propertyCanvasBackgroundColor);
-        addCheckBox("Image Smoothing", GameUI.propertyCanvasImageSmoothing);
-        addCheckBox("Font Smoothing", GameUI.propertyCanvasFontSmoothing);
-        addCheckBox("Show Debug Info", GameUI.propertyDebugInfoVisible);
+        addColorPicker("Canvas Color", GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR);
+        addCheckBox("Image Smoothing", GameUI.PROPERTY_CANVAS_IMAGE_SMOOTHING);
+        addCheckBox("Font Smoothing", GameUI.PROPERTY_CANVAS_FONT_SMOOTHING);
+        addCheckBox("Show Debug Info", GameUI.PROPERTY_DEBUG_INFO_VISIBLE);
         addCheckBox("Time Measured", ui.theGameClock().timeMeasuredProperty());
     }
 }

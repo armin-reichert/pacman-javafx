@@ -136,7 +136,7 @@ public class PlayScene3D implements GameScene {
 
         // Just for debugging and posing
         var coordinateSystem = new CoordinateSystem();
-        coordinateSystem.visibleProperty().bind(GameUI.property3DAxesVisible);
+        coordinateSystem.visibleProperty().bind(GameUI.PROPERTY_3D_AXES_VISIBLE);
 
         root.getChildren().setAll(gameLevel3DParent, scores3D, coordinateSystem);
     }
@@ -200,7 +200,7 @@ public class PlayScene3D implements GameScene {
         miUse2DScene.setOnAction(e -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(ui));
 
         var miToggleMiniView = new CheckMenuItem(ui.theAssets().text("pip"));
-        miToggleMiniView.selectedProperty().bindBidirectional(GameUI.propertyMiniViewOn);
+        miToggleMiniView.selectedProperty().bindBidirectional(GameUI.PROPERTY_MINI_VIEW_ON);
 
         var miAutopilot = new CheckMenuItem(ui.theAssets().text("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(theGameContext().theGameController().propertyUsingAutopilot());
@@ -209,7 +209,7 @@ public class PlayScene3D implements GameScene {
         miImmunity.selectedProperty().bindBidirectional(theGameContext().theGameController().propertyImmunity());
 
         var miMuted = new CheckMenuItem(ui.theAssets().text("muted"));
-        miMuted.selectedProperty().bindBidirectional(GameUI.propertyMuted);
+        miMuted.selectedProperty().bindBidirectional(GameUI.PROPERTY_MUTED);
 
         var miQuit = new MenuItem(ui.theAssets().text("quit"));
         miQuit.setOnAction(e -> ACTION_QUIT_GAME_SCENE.executeIfEnabled(ui));
@@ -236,16 +236,16 @@ public class PlayScene3D implements GameScene {
             var item = new RadioMenuItem(ui.theAssets().text("perspective_id_" + id.name()));
             item.setUserData(id);
             item.setToggleGroup(perspectiveToggleGroup);
-            if (id == GameUI.property3DPerspective.get())  {
+            if (id == GameUI.PROPERTY_3D_PERSPECTIVE.get())  {
                 item.setSelected(true);
             }
-            item.setOnAction(e -> GameUI.property3DPerspective.set(id));
+            item.setOnAction(e -> GameUI.PROPERTY_3D_PERSPECTIVE.set(id));
             items.add(item);
         }
         Logger.info("Added listener to UI property3DPerspective property");
-        GameUI.property3DPerspective.addListener(this::handle3DPerspectiveChange);
+        GameUI.PROPERTY_3D_PERSPECTIVE.addListener(this::handle3DPerspectiveChange);
         menu.setOnHidden(e -> {
-            GameUI.property3DPerspective.removeListener(this::handle3DPerspectiveChange);
+            GameUI.PROPERTY_3D_PERSPECTIVE.removeListener(this::handle3DPerspectiveChange);
             Logger.info("Removed listener from UI property3DPerspective property");
         });
         return items;
@@ -294,7 +294,7 @@ public class PlayScene3D implements GameScene {
     @Override
     public void init() {
         gameContext().theGame().theHUD().showScore(true);
-        perspectiveIDProperty().bind(GameUI.property3DPerspective);
+        perspectiveIDProperty().bind(GameUI.PROPERTY_3D_PERSPECTIVE);
         actionBindings.bind(droneUp, control(KeyCode.MINUS));
         actionBindings.bind(droneDown, control(KeyCode.PLUS));
         actionBindings.updateKeyboard(ui.theKeyboard());
@@ -353,7 +353,7 @@ public class PlayScene3D implements GameScene {
             case TESTING_LEVELS_SHORT, TESTING_LEVELS_MEDIUM -> {
                 replaceGameLevel3D();
                 showLevelTestMessage();
-                GameUI.property3DPerspective.set(PerspectiveID.TOTAL);
+                GameUI.PROPERTY_3D_PERSPECTIVE.set(PerspectiveID.TOTAL);
             }
         }
     }

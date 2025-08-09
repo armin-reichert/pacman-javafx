@@ -72,8 +72,8 @@ public class MainScene extends Scene {
         iconBox.visibleProperty().bind(propertyCurrentView.map(
             currentView -> ui.theEditorView().isEmpty() || currentView != ui.theEditorView().get()));
 
-        iconBox.iconMuted().visibleProperty().bind(GameUI.propertyMuted);
-        iconBox.icon3D().visibleProperty().bind(GameUI.property3DEnabled);
+        iconBox.iconMuted().visibleProperty().bind(GameUI.PROPERTY_MUTED);
+        iconBox.icon3D().visibleProperty().bind(GameUI.PROPERTY_3D_ENABLED);
         iconBox.iconAutopilot().visibleProperty().bind(ui.theGameContext().theGameController().propertyUsingAutopilot());
         iconBox.iconImmune().visibleProperty().bind(ui.theGameContext().theGameController().propertyImmunity());
 
