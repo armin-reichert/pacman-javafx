@@ -48,7 +48,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * This view shows the game play and the overlays like dashboard and picture-in-picture view of the running play scene.
  */
-public class PlayView implements PacManGames_View {
+public class PlayView extends StackPane implements PacManGames_View {
 
     /**
      * @param sceneBefore scene displayed before switching
@@ -71,7 +71,6 @@ public class PlayView implements PacManGames_View {
 
     private final GameUI ui;
     private final GameContext gameContext;
-    private final StackPane root = new StackPane();
     private final Scene parentScene;
 
     private BorderPane canvasLayer;
@@ -99,7 +98,7 @@ public class PlayView implements PacManGames_View {
         configurePropertyBindings();
 
         //TODO what is the cleanest solution to hide the context menu in all needed cases?
-        root.setOnContextMenuRequested(this::handleContextMenuRequest);
+        setOnContextMenuRequested(this::handleContextMenuRequest);
         // game scene changes: hide it
         ui.propertyCurrentGameScene().addListener(this::handleGameSceneChange);
         // any other mouse button clicked: hide it
@@ -156,7 +155,7 @@ public class PlayView implements PacManGames_View {
                 item.setOnAction(e -> { handler.handle(e); contextMenu.hide(); });
             });
         contextMenu.requestFocus();
-        contextMenu.show(root, contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY());
+        contextMenu.show(this, contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY());
     }
 
     public void showHelp(GameUI ui) {
@@ -174,7 +173,7 @@ public class PlayView implements PacManGames_View {
 
     @Override
     public StackPane rootNode() {
-        return root;
+        return this;
     }
 
     public void draw() {
@@ -293,7 +292,7 @@ public class PlayView implements PacManGames_View {
             SubScene subScene = gameScene.optSubScene().get();
             subScene.widthProperty().bind(parentScene.widthProperty());
             subScene.heightProperty().bind(parentScene.heightProperty());
-            root.getChildren().set(0, subScene);
+            getChildren().set(0, subScene);
         }
         else if (gameScene instanceof GameScene2D gameScene2D) {
             embedGameScene2DDirectly(gameScene2D);
@@ -315,7 +314,7 @@ public class PlayView implements PacManGames_View {
         canvasContainer.setUnscaledCanvasSize(sizePx.x(), sizePx.y());
         canvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
         canvasContainer.backgroundProperty().bind(ui.propertyCanvasBackgroundColor().map(Ufx::colorBackground));
-        root.getChildren().set(0, canvasLayer);
+        getChildren().set(0, canvasLayer);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -365,6 +364,6 @@ public class PlayView implements PacManGames_View {
         popupLayer = new PopupLayer(canvasContainer);
         popupLayer.setMouseTransparent(true);
 
-        root.getChildren().addAll(canvasLayer, dashboardLayer, popupLayer);
+        getChildren().addAll(canvasLayer, dashboardLayer, popupLayer);
     }
 }
