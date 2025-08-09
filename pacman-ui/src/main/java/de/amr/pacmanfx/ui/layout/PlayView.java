@@ -17,7 +17,6 @@ import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.InfoBox;
 import de.amr.pacmanfx.uilib.Ufx;
-import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.value.ObservableValue;
@@ -76,7 +75,6 @@ public class PlayView implements PacManGames_View {
     private final StackPane root = new StackPane();
     private final Scene parentScene;
 
-    private FlashMessageView flashMessageLayer;
     private BorderPane canvasLayer;
     private PopupLayer popupLayer; // help, signature
     private BorderPane dashboardLayer;
@@ -226,7 +224,6 @@ public class PlayView implements PacManGames_View {
         if (miniGameView.isVisible() && ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D) && gameContext.optGameLevel().isPresent()) {
             miniGameView.draw(ui, gameContext.theGameLevel());
         }
-        flashMessageLayer.update();
 
         // Dashboard updates must be called from permanent clock task too!
         if (dashboardLayer.isVisible()) {
@@ -274,10 +271,6 @@ public class PlayView implements PacManGames_View {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-
-    public FlashMessageView flashMessageLayer() {
-        return flashMessageLayer;
-    }
 
     public Dashboard dashboard() {
         return dashboard;
@@ -410,8 +403,6 @@ public class PlayView implements PacManGames_View {
         popupLayer = new PopupLayer(canvasContainer);
         popupLayer.setMouseTransparent(true);
 
-        flashMessageLayer = new FlashMessageView();
-
-        root.getChildren().addAll(canvasLayer, dashboardLayer, popupLayer, flashMessageLayer);
+        root.getChildren().addAll(canvasLayer, dashboardLayer, popupLayer);
     }
 }

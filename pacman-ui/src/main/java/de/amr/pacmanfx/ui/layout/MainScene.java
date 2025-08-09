@@ -8,13 +8,14 @@ import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Config;
 import de.amr.pacmanfx.ui._2d.ArcadePalette;
+import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -40,18 +41,17 @@ public class MainScene extends Scene {
     private final ObjectProperty<GameScene> propertyCurrentGameScene = new SimpleObjectProperty<>();
 
     private final GameUI ui;
+    private final FlashMessageView flashMessageLayer;
 
     public MainScene(GameUI ui, double width, double height) {
         super(new StackPane(), width, height);
         this.ui = requireNonNull(ui);
+        this.flashMessageLayer = new FlashMessageView();
 
-        addEventFilter(KeyEvent.KEY_PRESSED, ui.theKeyboard()::onKeyPressed);
-        addEventFilter(KeyEvent.KEY_RELEASED, ui.theKeyboard()::onKeyReleased);
         URL url = getClass().getResource("css/menu-style.css");
         if (url != null) {
             getStylesheets().add(url.toExternalForm());
         }
-        rootPane().getChildren().add(new Pane()); // will be replaced by current view
 
         // Large "paused" icon appears at center of UI
         var pausedIcon = FontIcon.of(FontAwesomeSolid.PAUSE, 80, ArcadePalette.ARCADE_WHITE);
@@ -64,8 +64,6 @@ public class MainScene extends Scene {
         // Status icon box appears at bottom-left corner of any view except editor
         var iconBox = new StatusIconBox();
         StackPane.setAlignment(iconBox, Pos.BOTTOM_LEFT);
-
-        rootPane().getChildren().addAll(pausedIcon, iconBox);
 
         // No icons when editor is open
         iconBox.visibleProperty().bind(propertyCurrentView.map(
@@ -85,10 +83,20 @@ public class MainScene extends Scene {
             );
             Logger.info("New game variant: {}, new game ui config: {}", newGameVariant, newConfig);
         });
+
+        addEventFilter(KeyEvent.KEY_PRESSED, ui.theKeyboard()::onKeyPressed);
+        addEventFilter(KeyEvent.KEY_RELEASED, ui.theKeyboard()::onKeyReleased);
+
+        var viewPlaceholder = new Region();
+        rootPane().getChildren().addAll(viewPlaceholder, pausedIcon, iconBox, flashMessageLayer);
     }
 
     public StackPane rootPane() {
         return (StackPane) getRoot();
+    }
+
+    public FlashMessageView flashMessageLayer() {
+        return flashMessageLayer;
     }
 
     public ObjectProperty<PacManGames_View> currentViewProperty() {

@@ -117,7 +117,7 @@ public class PacManGames_UI_Impl implements GameUI {
         playView = new PlayView(this, gameContext, mainScene);
 
         theGameClock.setPausableAction(this::doSimulationStepAndUpdateGameScene);
-        theGameClock.setPermanentAction(this::drawPlayView);
+        theGameClock.setPermanentAction(this::drawCurrentView);
 
         property3DWallHeight.set(thePrefs.getFloat("3d.obstacle.base_height"));
         property3DWallOpacity.set(thePrefs.getFloat("3d.obstacle.opacity"));
@@ -235,9 +235,12 @@ public class PacManGames_UI_Impl implements GameUI {
         }
     }
 
-    private void drawPlayView() {
+    private void drawCurrentView() {
         try {
-            playView.draw();
+            if (currentView() == playView) {
+                playView.draw();
+            }
+            mainScene.flashMessageLayer().update();
         } catch (Throwable x) {
             ka_tas_trooo_phe(x);
         }
@@ -365,7 +368,7 @@ public class PacManGames_UI_Impl implements GameUI {
 
     @Override
     public void showFlashMessageSec(double seconds, String message, Object... args) {
-        playView.flashMessageLayer().showMessage(String.format(message, args), seconds);
+        mainScene.flashMessageLayer().showMessage(String.format(message, args), seconds);
     }
 
     @Override
