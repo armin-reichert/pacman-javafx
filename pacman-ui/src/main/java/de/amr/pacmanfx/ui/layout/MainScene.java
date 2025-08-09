@@ -8,6 +8,7 @@ import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Config;
 import de.amr.pacmanfx.ui._2d.ArcadePalette;
+import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
@@ -123,5 +124,24 @@ public class MainScene extends Scene {
     public boolean isCurrentGameSceneID(String id) {
         GameScene currentGameScene = currentGameScene().orElse(null);
         return currentGameScene != null && ui.theConfiguration().gameSceneHasID(currentGameScene, id);
+    }
+
+    // Asset key regex: app.title.(ms_pacman|ms_pacman_xxl|pacman,pacman_xxl|tengen)(.paused)?
+    public String computeTitle(boolean threeDModeEnabled, boolean modeDebug) {
+        String ans = ui.theConfiguration().assetNamespace();
+        String paused = ui.theGameClock().isPaused() ? ".paused" : "";
+        String key = "app.title." + ans + paused;
+        String modeText = ui.theAssets().text(threeDModeEnabled ? "threeD" : "twoD");
+        GameScene currentGameScene = currentGameScene().orElse(null);
+        if (currentGameScene == null || !modeDebug) {
+            return ui.theAssets().text(key, modeText);
+        }
+        String sceneClassName = currentGameScene.getClass().getSimpleName();
+        if (currentGameScene instanceof GameScene2D gameScene2D) {
+            return ui.theAssets().text(key, modeText)
+                + " [%s]".formatted(sceneClassName)
+                + " (%.2fx)".formatted(gameScene2D.scaling());
+        }
+        return ui.theAssets().text(key, modeText) + " [%s]".formatted(sceneClassName);
     }
 }

@@ -17,6 +17,7 @@ import de.amr.pacmanfx.ui.layout.*;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.GameClock;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
@@ -113,6 +114,25 @@ public class PacManGames_UI_Impl implements GameUI {
         stage.setMinWidth(MIN_STAGE_WIDTH);
         stage.setMinHeight(MIN_STAGE_HEIGHT);
 
+        var title = Bindings.createStringBinding(
+            () -> {
+                if (currentView() == null) {
+                    return "No View?";
+                }
+                if (currentView().title().isPresent()) {
+                    return currentView().title().get().get();
+                }
+                return mainScene.computeTitle(property3DEnabled().get(), propertyDebugInfoVisible().get());
+            },
+            propertyCurrentGameScene(),
+            propertyCurrentView(),
+            propertyDebugInfoVisible(),
+            property3DEnabled(),
+            theGameClock().pausedProperty(),
+            mainScene.heightProperty()
+        );
+        stage.titleProperty().bind(title);
+
         startPagesView = new StartPagesView(this);
         playView = new PlayView(this, gameContext, mainScene);
 
@@ -191,8 +211,6 @@ public class PacManGames_UI_Impl implements GameUI {
         }
         view.actionBindingMap().updateKeyboard(theKeyboard);
         theGameContext.theGameEventManager().addEventListener(view);
-
-        theStage.titleProperty().bind(view.title());
         mainScene.setCurrentView(view);
     }
 

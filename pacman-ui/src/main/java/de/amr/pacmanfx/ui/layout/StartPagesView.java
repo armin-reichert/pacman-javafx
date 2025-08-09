@@ -10,6 +10,7 @@ import de.amr.pacmanfx.uilib.widgets.Carousel;
 import de.amr.pacmanfx.uilib.widgets.FancyButton;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
+import javafx.beans.binding.StringExpression;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -36,6 +37,8 @@ import static java.util.Objects.requireNonNull;
  * Carousel containing the start pages for the different game variants (XXL game variants share common start page).
  */
 public class StartPagesView implements PacManGames_View {
+
+    public static final StringBinding TITLE_BINDING = Bindings.createStringBinding(() -> "JavaFX Pac-Man Games");
 
     public static FancyButton createStartButton(PacManGames_Assets assets, Pos alignment) {
         var button = new FancyButton(
@@ -71,7 +74,6 @@ public class StartPagesView implements PacManGames_View {
     private final List<StartPage> startPageList = new ArrayList<>();
     private final ActionBindingManager actionBindings;
     private final Carousel carousel;
-    private StringBinding titleBinding;
 
     public StartPagesView(GameUI ui) {
         requireNonNull(ui);
@@ -90,7 +92,6 @@ public class StartPagesView implements PacManGames_View {
             }
         });
         setBackground(ui.theAssets().background("background.scene"));
-        setTitleBinding(Bindings.createStringBinding(() -> "JavaFX Pac-Man Games"));
 
         GameAction actionPrevSlide = new GameAction("SHOW_PREV_SLIDE") {
             @Override
@@ -121,12 +122,8 @@ public class StartPagesView implements PacManGames_View {
     public Region rootNode() { return carousel; }
 
     @Override
-    public StringBinding title() {
-        return titleBinding;
-    }
-
-    public void setTitleBinding(StringBinding binding) {
-        titleBinding = requireNonNull(binding);
+    public Optional<? extends StringExpression> title() {
+        return Optional.of(TITLE_BINDING);
     }
 
     public Optional<StartPage> currentStartPage() {

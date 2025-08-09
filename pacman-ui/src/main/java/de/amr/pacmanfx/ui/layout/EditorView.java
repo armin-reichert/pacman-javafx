@@ -7,10 +7,12 @@ package de.amr.pacmanfx.ui.layout;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 import de.amr.pacmanfx.ui.ActionBindingManager;
 import de.amr.pacmanfx.ui.DefaultActionBindingManager;
-import javafx.beans.property.StringProperty;
+import javafx.beans.binding.StringExpression;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
+
+import java.util.Optional;
 
 import static de.amr.pacmanfx.uilib.Ufx.colorBackground;
 import static java.util.Objects.requireNonNull;
@@ -41,7 +43,7 @@ public class EditorView implements PacManGames_View {
     }
 
     @Override
-    public StringProperty title() {
-        return editor.titleProperty();
+    public Optional<? extends StringExpression> title() {
+        return Optional.of(editor.titleProperty());
     }
 }

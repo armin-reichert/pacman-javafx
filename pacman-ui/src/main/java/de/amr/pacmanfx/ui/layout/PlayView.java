@@ -19,6 +19,7 @@ import de.amr.pacmanfx.ui.dashboard.InfoBox;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
+import javafx.beans.binding.StringExpression;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
@@ -36,6 +37,7 @@ import javafx.scene.text.FontSmoothingType;
 import org.tinylog.Logger;
 
 import java.util.List;
+import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.GameUI.DEFAULT_ACTION_BINDINGS;
@@ -84,7 +86,6 @@ public class PlayView implements PacManGames_View {
     private final CrudeCanvasContainer canvasContainer = new CrudeCanvasContainer(commonCanvas);
     private final MiniGameView miniGameView;
     private final ContextMenu contextMenu = new ContextMenu();
-    private final StringBinding titleBinding;
 
     public PlayView(GameUI ui, GameContext gameContext, Scene parentScene) {
         this.ui = requireNonNull(ui);
@@ -97,16 +98,13 @@ public class PlayView implements PacManGames_View {
 
         configureMiniGameView();
         configureCanvasContainer();
-        createLayers();
+        createLayout();
         configurePropertyBindings();
 
-        root.setOnContextMenuRequested(this::handleContextMenuRequest);
-
         //TODO what is the cleanest solution to hide the context menu in all needed cases?
-
+        root.setOnContextMenuRequested(this::handleContextMenuRequest);
         // game scene changes: hide it
         ui.propertyCurrentGameScene().addListener(this::handleGameSceneChange);
-
         // any other mouse button clicked: hide it
         parentScene.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
             if (e.getButton() == MouseButton.PRIMARY) {
@@ -117,14 +115,6 @@ public class PlayView implements PacManGames_View {
         parentScene.widthProperty() .addListener((py, ov, width)  -> canvasContainer.resizeTo(width.doubleValue(), parentScene.getHeight()));
         parentScene.heightProperty().addListener((py, ov, height) -> canvasContainer.resizeTo(parentScene.getWidth(), height.doubleValue()));
 
-        titleBinding = Bindings.createStringBinding(
-            () -> computeTitleText(ui.property3DEnabled().get(), ui.propertyDebugInfoVisible().get()),
-            ui.property3DEnabled(),
-            ui.propertyDebugInfoVisible(),
-            ui.theGameClock().pausedProperty(),
-            parentScene.heightProperty(),
-            ui.propertyCurrentGameScene()
-        );
         actionBindings.use(ACTION_BOOT_SHOW_PLAY_VIEW, DEFAULT_ACTION_BINDINGS);
         actionBindings.use(ACTION_ENTER_FULLSCREEN, DEFAULT_ACTION_BINDINGS);
         actionBindings.use(ACTION_QUIT_GAME_SCENE, DEFAULT_ACTION_BINDINGS);
@@ -176,25 +166,6 @@ public class PlayView implements PacManGames_View {
         popupLayer.showHelp(ui, canvasContainer.scaling());
     }
 
-    // Asset key regex: app.title.(ms_pacman|ms_pacman_xxl|pacman,pacman_xxl|tengen)(.paused)?
-    private String computeTitleText(boolean threeDModeEnabled, boolean modeDebug) {
-        String ans = ui.theConfiguration().assetNamespace();
-        String paused = ui.theGameClock().isPaused() ? ".paused" : "";
-        String key = "app.title." + ans + paused;
-        String modeText = ui.theAssets().text(threeDModeEnabled ? "threeD" : "twoD");
-        GameScene currentGameScene = ui.currentGameScene().orElse(null);
-        if (currentGameScene == null || !modeDebug) {
-            return ui.theAssets().text(key, modeText);
-        }
-        String sceneClassName = currentGameScene.getClass().getSimpleName();
-        if (currentGameScene instanceof GameScene2D gameScene2D) {
-            return ui.theAssets().text(key, modeText)
-                + " [%s]".formatted(sceneClassName)
-                + " (%.2fx)".formatted(gameScene2D.scaling());
-        }
-        return ui.theAssets().text(key, modeText) + " [%s]".formatted(sceneClassName);
-    }
-
     // -----------------------------------------------------------------------------------------------------------------
     // PacManGames_View interface implementation
     // -----------------------------------------------------------------------------------------------------------------
@@ -210,8 +181,8 @@ public class PlayView implements PacManGames_View {
     }
 
     @Override
-    public StringBinding title() {
-        return titleBinding;
+    public Optional<? extends StringExpression> title() {
+        return Optional.empty();
     }
 
     public void draw() {
@@ -386,7 +357,7 @@ public class PlayView implements PacManGames_View {
         });
     }
 
-    private void createLayers() {
+    private void createLayout() {
         canvasLayer = new BorderPane(canvasContainer);
 
         dashboardLayer = new BorderPane();
@@ -396,10 +367,9 @@ public class PlayView implements PacManGames_View {
         ));
         dashboardLayer.setLeft(dashboard);
         dashboardLayer.setRight(miniGameView);
-
         dashboard.setVisible(false);
 
-        //TODO reconsider this and the help functionality
+        //TODO reconsider help functionality
         popupLayer = new PopupLayer(canvasContainer);
         popupLayer.setMouseTransparent(true);
 
