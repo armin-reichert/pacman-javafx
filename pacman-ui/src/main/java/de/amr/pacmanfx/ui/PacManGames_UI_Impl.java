@@ -13,10 +13,7 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.Keyboard;
-import de.amr.pacmanfx.ui.layout.EditorView;
-import de.amr.pacmanfx.ui.layout.PacManGames_View;
-import de.amr.pacmanfx.ui.layout.PlayView;
-import de.amr.pacmanfx.ui.layout.StartPagesView;
+import de.amr.pacmanfx.ui.layout.*;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.GameClock;
 import javafx.beans.property.*;
@@ -81,7 +78,7 @@ public class PacManGames_UI_Impl implements GameUI {
 
     private final Map<String, GameUI_Config> configByGameVariant = new HashMap<>();
 
-    private GameUI_MainScene mainScene;
+    private MainScene mainScene;
 
     private final StartPagesView startPagesView;
     private final PlayView playView;
@@ -175,8 +172,7 @@ public class PacManGames_UI_Impl implements GameUI {
     }
 
     private void createMainScene(double width, double height) {
-        mainScene = new GameUI_MainScene(theAssets, theKeyboard, width, height);
-        mainScene.createStatusIcons(this);
+        mainScene = new MainScene(this, width, height);
         mainScene.setOnKeyPressed(e -> runActionOrElse(
             globalActionBindings.matchingAction(theKeyboard).orElse(null),
             () -> currentView().handleKeyboardInput(this)));

@@ -1,9 +1,13 @@
-package de.amr.pacmanfx.ui;
+/*
+Copyright (c) 2021-2025 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
+package de.amr.pacmanfx.ui.layout;
 
+import de.amr.pacmanfx.ui.GameScene;
+import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.GameUI_Config;
 import de.amr.pacmanfx.ui._2d.ArcadePalette;
-import de.amr.pacmanfx.ui.input.Keyboard;
-import de.amr.pacmanfx.ui.layout.PacManGames_View;
-import de.amr.pacmanfx.ui.layout.StatusIconBox;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -21,10 +25,7 @@ import java.util.Optional;
 import static de.amr.pacmanfx.ui.GameUI_Config.SCENE_ID_PLAY_SCENE_3D;
 import static java.util.Objects.requireNonNull;
 
-public class GameUI_MainScene extends Scene {
-
-    private final PacManGames_Assets assets;
-    private GameUI_Config uiConfig;
+public class MainScene extends Scene {
 
     private final ObjectProperty<PacManGames_View> propertyCurrentView = new SimpleObjectProperty<>() {
         @Override
@@ -37,19 +38,20 @@ public class GameUI_MainScene extends Scene {
 
     private final ObjectProperty<GameScene> propertyCurrentGameScene = new SimpleObjectProperty<>();
 
-    public GameUI_MainScene(PacManGames_Assets assets, Keyboard keyboard, double width, double height) {
+    private final GameUI ui;
+    private GameUI_Config uiConfig;
+
+    public MainScene(GameUI ui, double width, double height) {
         super(new StackPane(), width, height);
-        this.assets = requireNonNull(assets);
-        addEventFilter(KeyEvent.KEY_PRESSED, keyboard::onKeyPressed);
-        addEventFilter(KeyEvent.KEY_RELEASED, keyboard::onKeyReleased);
+        this.ui = requireNonNull(ui);
+        addEventFilter(KeyEvent.KEY_PRESSED, ui.theKeyboard()::onKeyPressed);
+        addEventFilter(KeyEvent.KEY_RELEASED, ui.theKeyboard()::onKeyReleased);
         URL url = getClass().getResource("css/menu-style.css");
         if (url != null) {
             getStylesheets().add(url.toExternalForm());
         }
         rootPane().getChildren().add(new Pane()); // will be replaced by current view
-    }
 
-    public void createStatusIcons(GameUI ui) {
         // Large "paused" icon appears at center of UI
         var pausedIcon = FontIcon.of(FontAwesomeSolid.PAUSE, 80, ArcadePalette.ARCADE_WHITE);
         StackPane.setAlignment(pausedIcon, Pos.CENTER);
@@ -74,12 +76,16 @@ public class GameUI_MainScene extends Scene {
         iconBox.iconImmune().visibleProperty().bind(ui.theGameContext().theGameController().propertyImmunity());
     }
 
+    /**
+     * Called when the game variant and therefore the current UI configuration changes.
+     * @param uiConfig the new game configuration
+     */
     public void setUiConfig(GameUI_Config uiConfig) {
         this.uiConfig = uiConfig;
         rootPane().backgroundProperty().bind(propertyCurrentGameScene.map(gameScene ->
             isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)
-                ? assets.get("background.play_scene3d")
-                : assets.get("background.scene"))
+                ? ui.theAssets().get("background.play_scene3d")
+                : ui.theAssets().get("background.scene"))
         );
     }
 
