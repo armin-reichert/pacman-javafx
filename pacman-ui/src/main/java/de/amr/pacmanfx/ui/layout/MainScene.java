@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GameUI_Config;
 import de.amr.pacmanfx.ui._2d.ArcadePalette;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
@@ -20,12 +19,10 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.javafx.FontIcon;
-import org.tinylog.Logger;
 
 import java.net.URL;
 import java.util.Optional;
 
-import static de.amr.pacmanfx.ui.GameUI_Config.SCENE_ID_PLAY_SCENE_3D;
 import static java.util.Objects.requireNonNull;
 
 public class MainScene extends Scene {
@@ -77,16 +74,6 @@ public class MainScene extends Scene {
         iconBox.iconAutopilot().visibleProperty().bind(ui.theGameContext().theGameController().propertyUsingAutopilot());
         iconBox.iconImmune().visibleProperty().bind(ui.theGameContext().theGameController().propertyImmunity());
 
-        ui.theGameContext().theGameController().gameVariantProperty().addListener((obs, oldGameVariant, newGameVariant) -> {
-            GameUI_Config newConfig = ui.theConfiguration();
-            rootPane().backgroundProperty().bind(propertyCurrentGameScene.map(gameScene ->
-                isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)
-                    ? ui.theAssets().get("background.play_scene3d")
-                    : ui.theAssets().get("background.scene"))
-            );
-            Logger.info("New game variant: {}, new game ui config: {}", newGameVariant, newConfig);
-        });
-
         addEventFilter(KeyEvent.KEY_PRESSED, ui.theKeyboard()::onKeyPressed);
         addEventFilter(KeyEvent.KEY_RELEASED, ui.theKeyboard()::onKeyReleased);
 
@@ -116,11 +103,6 @@ public class MainScene extends Scene {
 
     public Optional<GameScene> currentGameScene() {
         return Optional.ofNullable(propertyCurrentGameScene.get());
-    }
-
-    public boolean isCurrentGameSceneID(String id) {
-        GameScene currentGameScene = currentGameScene().orElse(null);
-        return currentGameScene != null && ui.theConfiguration().gameSceneHasID(currentGameScene, id);
     }
 
     // Asset key regex: app.title.(ms_pacman|ms_pacman_xxl|pacman,pacman_xxl|tengen)(.paused)?

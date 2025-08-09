@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import static de.amr.pacmanfx.ui.GameUI_Config.SCENE_ID_PLAY_SCENE_3D;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static java.util.Objects.requireNonNull;
 
@@ -80,18 +81,7 @@ public class PacManGames_UI_Impl implements GameUI {
         initGlobalActionBindings();
 
         mainScene = new MainScene(this, width, height);
-        // Check if a global action is defined for the key press, otherwise let the current view handle it.
-        mainScene.setOnKeyPressed(e -> {
-            GameAction matchingAction = globalActionBindings.matchingGameAction(theKeyboard).orElse(null);
-            if (matchingAction != null) {
-                matchingAction.executeIfEnabled(this);
-            } else {
-                currentView().handleKeyboardInput(this);
-            }
-        });
-        mainScene.currentGameSceneProperty().bindBidirectional(PROPERTY_CURRENT_GAME_SCENE);
-        mainScene.currentViewProperty().bindBidirectional(PROPERTY_CURRENT_VIEW);
-
+        configureMainScene();
         configureStage(stage);
 
         startPagesView = new StartPagesView(this);
@@ -102,6 +92,25 @@ public class PacManGames_UI_Impl implements GameUI {
 
         PROPERTY_3D_WALL_HEIGHT.set(theUIPrefs.getFloat("3d.obstacle.base_height"));
         PROPERTY_3D_WALL_OPACITY.set(theUIPrefs.getFloat("3d.obstacle.opacity"));
+    }
+
+    private void configureMainScene() {
+        mainScene.currentGameSceneProperty().bindBidirectional(PROPERTY_CURRENT_GAME_SCENE);
+        mainScene.currentViewProperty().bindBidirectional(PROPERTY_CURRENT_VIEW);
+        // Check if a global action is defined for the key press, otherwise let the current view handle it.
+        mainScene.setOnKeyPressed(e -> {
+            GameAction matchingAction = globalActionBindings.matchingGameAction(theKeyboard).orElse(null);
+            if (matchingAction != null) {
+                matchingAction.executeIfEnabled(this);
+            } else {
+                currentView().handleKeyboardInput(this);
+            }
+        });
+
+        theGameContext().theGameController().gameVariantProperty().addListener((obs, oldGameVariant, newGameVariant)
+            -> mainScene.rootPane().backgroundProperty().bind(mainScene.currentGameSceneProperty().map(gameScene ->
+                theAssets.get(isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D) ? "background.play_scene3d" : "background.scene"))
+            ));
     }
 
     private void configureStage(Stage stage) {
@@ -227,7 +236,8 @@ public class PacManGames_UI_Impl implements GameUI {
 
     @Override
     public boolean isCurrentGameSceneID(String id) {
-        return mainScene.isCurrentGameSceneID(id);
+        GameScene currentGameScene = mainScene.currentGameScene().orElse(null);
+        return currentGameScene != null && theConfiguration().gameSceneHasID(currentGameScene, id);
     }
 
     @Override public Stage theStage() { return theStage; }
