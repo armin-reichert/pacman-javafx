@@ -15,6 +15,7 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.PopupLayer;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
+import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.dashboard.InfoBox;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.beans.binding.Bindings;
@@ -235,10 +236,6 @@ public class PlayView extends StackPane implements PacManGames_View {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    public Dashboard dashboard() {
-        return dashboard;
-    }
-
     public CrudeCanvasContainer canvasContainer() {
         return canvasContainer;
     }
@@ -368,4 +365,24 @@ public class PlayView extends StackPane implements PacManGames_View {
 
         getChildren().addAll(canvasLayer, dashboardLayer, popupLayer);
     }
+
+    // Dashboard
+
+    public void configureDashboard(List<DashboardID> dashboardIDs) {
+        dashboard.configure(dashboardIDs);
+    }
+
+    public void initDashboard() {
+        dashboard.init(ui);
+    }
+
+    public void showDashboard(boolean show) {
+        dashboard.setVisible(show);
+    }
+
+    public void toggleDashboard() {
+        dashboard.toggleVisibility();
+    }
+
+
 }

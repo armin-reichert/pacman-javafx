@@ -299,7 +299,7 @@ public class PacManGames_UI_Impl implements GameUI {
 
     @Override
     public void show() {
-        playView.dashboard().init(this);
+        playView.initDashboard();
         showStartView();
         theStage.centerOnScreen();
         theStage.show();
@@ -334,7 +334,6 @@ public class PacManGames_UI_Impl implements GameUI {
         theGameClock.stop();
         theGameClock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
         theSound().stopAll();
-        playView.dashboard().setVisible(false);
         selectView(startPagesView);
             startPagesView.currentStartPage().ifPresent(startPage -> Platform.runLater(() -> {
                 startPage.onEnter(this); // sets game variant!

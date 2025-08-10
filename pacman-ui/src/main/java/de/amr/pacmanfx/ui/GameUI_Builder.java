@@ -132,7 +132,7 @@ public class GameUI_Builder {
             ui.theStartPagesView().addStartPage(startPage);
 
         }
-        ui.thePlayView().dashboard().configure(dashboardIDs);
+        ui.thePlayView().configureDashboard(dashboardIDs);
         ui.theStartPagesView().selectStartPage(0); //TODO check this
         ui.theGameContext().theGameController().setEventsEnabled(true);
         return ui;
