@@ -35,7 +35,6 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_MEDIUM;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_SHORT;
-import static de.amr.pacmanfx.ui.GameUI.DEFAULT_ACTION_BINDINGS;
 import static de.amr.pacmanfx.ui.GameUI_Properties.PROPERTY_MUTED;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
@@ -77,18 +76,18 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
     private void initWithGameLevel(GameLevel gameLevel) {
         if (gameLevel.isDemoLevel()) {
             gameContext().theGame().theHUD().credit(false).levelCounter(true).livesCounter(false);
-            actionBindings.use(ACTION_ARCADE_INSERT_COIN, DEFAULT_ACTION_BINDINGS);
+            actionBindings.use(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
             actionBindings.updateKeyboard(ui.theKeyboard());
         } else {
             gameContext().theGame().theHUD().credit(false).levelCounter(true).livesCounter(true);
-            actionBindings.use(ACTION_STEER_UP, DEFAULT_ACTION_BINDINGS);
-            actionBindings.use(ACTION_STEER_DOWN, DEFAULT_ACTION_BINDINGS);
-            actionBindings.use(ACTION_STEER_LEFT, DEFAULT_ACTION_BINDINGS);
-            actionBindings.use(ACTION_STEER_RIGHT, DEFAULT_ACTION_BINDINGS);
-            actionBindings.use(ACTION_CHEAT_EAT_ALL_PELLETS, DEFAULT_ACTION_BINDINGS);
-            actionBindings.use(ACTION_CHEAT_ADD_LIVES, DEFAULT_ACTION_BINDINGS);
-            actionBindings.use(ACTION_CHEAT_ENTER_NEXT_LEVEL, DEFAULT_ACTION_BINDINGS);
-            actionBindings.use(ACTION_CHEAT_KILL_GHOSTS, DEFAULT_ACTION_BINDINGS);
+            actionBindings.use(ACTION_STEER_UP, ui.actionBindings());
+            actionBindings.use(ACTION_STEER_DOWN, ui.actionBindings());
+            actionBindings.use(ACTION_STEER_LEFT, ui.actionBindings());
+            actionBindings.use(ACTION_STEER_RIGHT, ui.actionBindings());
+            actionBindings.use(ACTION_CHEAT_EAT_ALL_PELLETS, ui.actionBindings());
+            actionBindings.use(ACTION_CHEAT_ADD_LIVES, ui.actionBindings());
+            actionBindings.use(ACTION_CHEAT_ENTER_NEXT_LEVEL, ui.actionBindings());
+            actionBindings.use(ACTION_CHEAT_KILL_GHOSTS, ui.actionBindings());
             actionBindings.updateKeyboard(ui.theKeyboard());
         }
         if (gameRenderer == null) { //TODO can this happen at all?

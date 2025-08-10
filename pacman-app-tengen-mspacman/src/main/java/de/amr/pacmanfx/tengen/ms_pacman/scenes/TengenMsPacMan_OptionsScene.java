@@ -28,7 +28,6 @@ import javafx.scene.text.Font;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
-import static de.amr.pacmanfx.ui.GameUI.DEFAULT_ACTION_BINDINGS;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.alt;
 
@@ -92,9 +91,9 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         actionBindings.use(config.ACTION_START_PLAYING, config.actionBindings);
         actionBindings.use(config.ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, config.actionBindings);
         actionBindings.bind(actionSelectNextJoypadBinding, alt(KeyCode.J));
-        actionBindings.use(ACTION_TEST_CUT_SCENES, DEFAULT_ACTION_BINDINGS);
-        actionBindings.use(ACTION_TEST_LEVELS_BONI, DEFAULT_ACTION_BINDINGS);
-        actionBindings.use(ACTION_TEST_LEVELS_TEASERS, DEFAULT_ACTION_BINDINGS);
+        actionBindings.use(ACTION_TEST_CUT_SCENES, ui.actionBindings());
+        actionBindings.use(ACTION_TEST_LEVELS_BONI, ui.actionBindings());
+        actionBindings.use(ACTION_TEST_LEVELS_TEASERS, ui.actionBindings());
         ui.theJoypad().setBindings(actionBindings);
 
         selectedOption.set(OPTION_PAC_BOOSTER);

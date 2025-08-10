@@ -72,6 +72,7 @@ public class GameClock {
     }
 
     public void start() {
+        pausedProperty().set(false);
         clockWork.play();
     }
 

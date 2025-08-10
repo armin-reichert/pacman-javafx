@@ -49,7 +49,6 @@ import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_MEDIUM;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_SHORT;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;
-import static de.amr.pacmanfx.ui.GameUI.DEFAULT_ACTION_BINDINGS;
 import static de.amr.pacmanfx.ui.GameUI_Properties.PROPERTY_MUTED;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 
@@ -120,10 +119,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             actionBindings.use(config.ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, config.actionBindings);
             actionBindings.use(config.ACTION_TOGGLE_PAC_BOOSTER, config.actionBindings);
 
-            actionBindings.use(ACTION_CHEAT_ADD_LIVES, DEFAULT_ACTION_BINDINGS);
-            actionBindings.use(ACTION_CHEAT_EAT_ALL_PELLETS, DEFAULT_ACTION_BINDINGS);
-            actionBindings.use(ACTION_CHEAT_ENTER_NEXT_LEVEL, DEFAULT_ACTION_BINDINGS);
-            actionBindings.use(ACTION_CHEAT_KILL_GHOSTS, DEFAULT_ACTION_BINDINGS);
+            actionBindings.use(ACTION_CHEAT_ADD_LIVES, ui.actionBindings());
+            actionBindings.use(ACTION_CHEAT_EAT_ALL_PELLETS, ui.actionBindings());
+            actionBindings.use(ACTION_CHEAT_ENTER_NEXT_LEVEL, ui.actionBindings());
+            actionBindings.use(ACTION_CHEAT_KILL_GHOSTS, ui.actionBindings());
         }
         actionBindings.updateKeyboard(ui.theKeyboard());
     }

@@ -33,7 +33,6 @@ import org.tinylog.Logger;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.GameUI.DEFAULT_ACTION_BINDINGS;
 import static de.amr.pacmanfx.ui.GameUI_Config.SCENE_ID_PLAY_SCENE_2D;
 import static de.amr.pacmanfx.ui.GameUI_Properties.*;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
@@ -103,23 +102,23 @@ public class PlayView extends StackPane implements PacManGames_View {
         parentScene.widthProperty() .addListener((py, ov, w) -> canvasWithFrame.resizeTo(w.doubleValue(), parentScene.getHeight()));
         parentScene.heightProperty().addListener((py, ov, h) -> canvasWithFrame.resizeTo(parentScene.getWidth(), h.doubleValue()));
 
-        actionBindings.use(ACTION_BOOT_SHOW_PLAY_VIEW, DEFAULT_ACTION_BINDINGS);
-        actionBindings.use(ACTION_ENTER_FULLSCREEN, DEFAULT_ACTION_BINDINGS);
-        actionBindings.use(ACTION_QUIT_GAME_SCENE, DEFAULT_ACTION_BINDINGS);
-        actionBindings.use(ACTION_SHOW_HELP, DEFAULT_ACTION_BINDINGS);
-        actionBindings.use(ACTION_SIMULATION_SLOWER, DEFAULT_ACTION_BINDINGS);
-        actionBindings.use(ACTION_SIMULATION_FASTER, DEFAULT_ACTION_BINDINGS);
-        actionBindings.use(ACTION_SIMULATION_RESET, DEFAULT_ACTION_BINDINGS);
-        actionBindings.use(ACTION_SIMULATION_ONE_STEP, DEFAULT_ACTION_BINDINGS);
-        actionBindings.use(ACTION_SIMULATION_TEN_STEPS, DEFAULT_ACTION_BINDINGS);
-        actionBindings.use(ACTION_TOGGLE_AUTOPILOT, DEFAULT_ACTION_BINDINGS);
-        actionBindings.use(ACTION_TOGGLE_DEBUG_INFO, DEFAULT_ACTION_BINDINGS);
-        actionBindings.use(ACTION_TOGGLE_MUTED, DEFAULT_ACTION_BINDINGS);
-        actionBindings.use(ACTION_TOGGLE_PAUSED, DEFAULT_ACTION_BINDINGS);
-        actionBindings.use(ACTION_TOGGLE_DASHBOARD, DEFAULT_ACTION_BINDINGS);
-        actionBindings.use(ACTION_TOGGLE_IMMUNITY, DEFAULT_ACTION_BINDINGS);
-        actionBindings.use(ACTION_TOGGLE_MINI_VIEW_VISIBILITY, DEFAULT_ACTION_BINDINGS);
-        actionBindings.use(ACTION_TOGGLE_PLAY_SCENE_2D_3D, DEFAULT_ACTION_BINDINGS);
+        actionBindings.use(ACTION_BOOT_SHOW_PLAY_VIEW, ui.actionBindings());
+        actionBindings.use(ACTION_ENTER_FULLSCREEN, ui.actionBindings());
+        actionBindings.use(ACTION_QUIT_GAME_SCENE, ui.actionBindings());
+        actionBindings.use(ACTION_SHOW_HELP, ui.actionBindings());
+        actionBindings.use(ACTION_SIMULATION_SLOWER, ui.actionBindings());
+        actionBindings.use(ACTION_SIMULATION_FASTER, ui.actionBindings());
+        actionBindings.use(ACTION_SIMULATION_RESET, ui.actionBindings());
+        actionBindings.use(ACTION_SIMULATION_ONE_STEP, ui.actionBindings());
+        actionBindings.use(ACTION_SIMULATION_TEN_STEPS, ui.actionBindings());
+        actionBindings.use(ACTION_TOGGLE_AUTOPILOT, ui.actionBindings());
+        actionBindings.use(ACTION_TOGGLE_DEBUG_INFO, ui.actionBindings());
+        actionBindings.use(ACTION_TOGGLE_MUTED, ui.actionBindings());
+        actionBindings.use(ACTION_TOGGLE_PAUSED, ui.actionBindings());
+        actionBindings.use(ACTION_TOGGLE_DASHBOARD, ui.actionBindings());
+        actionBindings.use(ACTION_TOGGLE_IMMUNITY, ui.actionBindings());
+        actionBindings.use(ACTION_TOGGLE_MINI_VIEW_VISIBILITY, ui.actionBindings());
+        actionBindings.use(ACTION_TOGGLE_PLAY_SCENE_2D_3D, ui.actionBindings());
     }
 
     private void handleContextMenuRequest(ContextMenuEvent contextMenuEvent) {

@@ -12,7 +12,6 @@ import de.amr.pacmanfx.ui._3d.GameLevel3D;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import javafx.scene.paint.Color;
 
-import static de.amr.pacmanfx.ui.GameUI.DEFAULT_ACTION_BINDINGS;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 
 /**
@@ -40,16 +39,16 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
             actionBindings.use(config.ACTION_QUIT_DEMO_LEVEL, config.actionBindings);
         } else {
             setPlayerSteeringActionBindings();
-            actionBindings.use(ACTION_CHEAT_ADD_LIVES, DEFAULT_ACTION_BINDINGS);
-            actionBindings.use(ACTION_CHEAT_EAT_ALL_PELLETS, DEFAULT_ACTION_BINDINGS);
-            actionBindings.use(ACTION_CHEAT_ENTER_NEXT_LEVEL, DEFAULT_ACTION_BINDINGS);
-            actionBindings.use(ACTION_CHEAT_KILL_GHOSTS, DEFAULT_ACTION_BINDINGS);
+            actionBindings.use(ACTION_CHEAT_ADD_LIVES, ui.actionBindings());
+            actionBindings.use(ACTION_CHEAT_EAT_ALL_PELLETS, ui.actionBindings());
+            actionBindings.use(ACTION_CHEAT_ENTER_NEXT_LEVEL, ui.actionBindings());
+            actionBindings.use(ACTION_CHEAT_KILL_GHOSTS, ui.actionBindings());
             // Tengen only:
             actionBindings.use(config.ACTION_TOGGLE_PAC_BOOSTER, config.actionBindings);
         }
-        actionBindings.use(ACTION_PERSPECTIVE_PREVIOUS, DEFAULT_ACTION_BINDINGS);
-        actionBindings.use(ACTION_PERSPECTIVE_NEXT, DEFAULT_ACTION_BINDINGS);
-        actionBindings.use(ACTION_TOGGLE_DRAW_MODE, DEFAULT_ACTION_BINDINGS);
+        actionBindings.use(ACTION_PERSPECTIVE_PREVIOUS, ui.actionBindings());
+        actionBindings.use(ACTION_PERSPECTIVE_NEXT, ui.actionBindings());
+        actionBindings.use(ACTION_TOGGLE_DRAW_MODE, ui.actionBindings());
 
         actionBindings.updateKeyboard(ui.theKeyboard());
     }

@@ -28,7 +28,6 @@ import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZ
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
-import static de.amr.pacmanfx.ui.GameUI.DEFAULT_ACTION_BINDINGS;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
 
@@ -74,11 +73,11 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     public void doInit() {
         gameContext().theGame().theHUD().credit(true).score(true).levelCounter(true).livesCounter(false);
 
-        actionBindings.use(ACTION_ARCADE_INSERT_COIN, DEFAULT_ACTION_BINDINGS);
-        actionBindings.use(ACTION_ARCADE_START_GAME, DEFAULT_ACTION_BINDINGS);
-        actionBindings.use(ACTION_TEST_CUT_SCENES, DEFAULT_ACTION_BINDINGS);
-        actionBindings.use(ACTION_TEST_LEVELS_BONI, DEFAULT_ACTION_BINDINGS);
-        actionBindings.use(ACTION_TEST_LEVELS_TEASERS, DEFAULT_ACTION_BINDINGS);
+        actionBindings.use(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
+        actionBindings.use(ACTION_ARCADE_START_GAME, ui.actionBindings());
+        actionBindings.use(ACTION_TEST_CUT_SCENES, ui.actionBindings());
+        actionBindings.use(ACTION_TEST_LEVELS_BONI, ui.actionBindings());
+        actionBindings.use(ACTION_TEST_LEVELS_TEASERS, ui.actionBindings());
 
         midwayCopyright = new MidwayCopyright(ui.theConfiguration().getAssetNS("logo.midway"));
         midwayCopyright.setPosition(TS * 6, TS * 28);
