@@ -9,7 +9,6 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.ArcadePalette;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Pos;
@@ -42,6 +41,8 @@ public class MainScene extends Scene {
 
     private final GameUI ui;
     private final FlashMessageView flashMessageLayer;
+    private final FontIcon pausedIcon;
+    private final StatusIconBox statusIconBox;
 
     public MainScene(GameUI ui, double width, double height) {
         super(new StackPane(), width, height);
@@ -54,31 +55,26 @@ public class MainScene extends Scene {
         }
 
         // Large "paused" icon appears at center of UI
-        var pausedIcon = FontIcon.of(FontAwesomeSolid.PAUSE, 80, ArcadePalette.ARCADE_WHITE);
+        pausedIcon = FontIcon.of(FontAwesomeSolid.PAUSE, 80, ArcadePalette.ARCADE_WHITE);
         StackPane.setAlignment(pausedIcon, Pos.CENTER);
 
-        pausedIcon.visibleProperty().bind(Bindings.createBooleanBinding(
-            () -> currentView() == ui.thePlayView() && ui.theGameClock().isPaused(),
-            propertyCurrentView, ui.theGameClock().pausedProperty()));
-
         // Status icon box appears at bottom-left corner of any view except editor
-        var iconBox = new StatusIconBox();
-        StackPane.setAlignment(iconBox, Pos.BOTTOM_LEFT);
-
-        // No icons when editor is open
-        iconBox.visibleProperty().bind(propertyCurrentView.map(
-            currentView -> ui.theEditorView().isEmpty() || currentView != ui.theEditorView().get()));
-
-        iconBox.iconMuted().visibleProperty().bind(GameUI.PROPERTY_MUTED);
-        iconBox.icon3D().visibleProperty().bind(GameUI.PROPERTY_3D_ENABLED);
-        iconBox.iconAutopilot().visibleProperty().bind(ui.theGameContext().theGameController().propertyUsingAutopilot());
-        iconBox.iconImmune().visibleProperty().bind(ui.theGameContext().theGameController().propertyImmunity());
+        statusIconBox = new StatusIconBox();
+        StackPane.setAlignment(statusIconBox, Pos.BOTTOM_LEFT);
 
         addEventFilter(KeyEvent.KEY_PRESSED, ui.theKeyboard()::onKeyPressed);
         addEventFilter(KeyEvent.KEY_RELEASED, ui.theKeyboard()::onKeyReleased);
 
         var viewPlaceholder = new Region();
-        rootPane().getChildren().addAll(viewPlaceholder, pausedIcon, iconBox, flashMessageLayer);
+        rootPane().getChildren().addAll(viewPlaceholder, pausedIcon, statusIconBox, flashMessageLayer);
+    }
+
+    public FontIcon pausedIcon() {
+        return pausedIcon;
+    }
+
+    public StatusIconBox statusIconBox() {
+        return statusIconBox;
     }
 
     public StackPane rootPane() {

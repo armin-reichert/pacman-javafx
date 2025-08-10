@@ -115,6 +115,7 @@ public class PacManGames_UI_Impl implements GameUI {
     private void configureMainScene() {
         mainScene.currentGameSceneProperty().bindBidirectional(PROPERTY_CURRENT_GAME_SCENE);
         mainScene.currentViewProperty().bindBidirectional(PROPERTY_CURRENT_VIEW);
+
         // Check if a global action is defined for the key press, otherwise let the current view handle it.
         mainScene.setOnKeyPressed(e -> {
             GameAction matchingAction = globalActionBindings.matchingGameAction(theKeyboard).orElse(null);
@@ -125,10 +126,26 @@ public class PacManGames_UI_Impl implements GameUI {
             }
         });
 
-        theGameContext().theGameController().gameVariantProperty().addListener((obs, oldGameVariant, newGameVariant)
-            -> mainScene.rootPane().backgroundProperty().bind(mainScene.currentGameSceneProperty().map(gameScene ->
-                theAssets.get(isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D) ? "background.play_scene3d" : "background.scene"))
-            ));
+        // Show paused icon only in play view
+        mainScene.pausedIcon().visibleProperty().bind(Bindings.createBooleanBinding(
+            () -> currentView() == thePlayView() && theGameClock.isPaused(),
+            PROPERTY_CURRENT_VIEW, theGameClock.pausedProperty())
+        );
+
+        // hide icon box if editor view is active, avoid creation of editor view in binding expression!
+        StatusIconBox statusIcons = mainScene.statusIconBox();
+        statusIcons.visibleProperty().bind(PROPERTY_CURRENT_VIEW
+            .map(currentView -> theEditorView().isEmpty() || currentView != theEditorView().get()));
+
+        statusIcons.iconMuted().visibleProperty().bind(PROPERTY_MUTED);
+        statusIcons.icon3D().visibleProperty().bind(PROPERTY_3D_ENABLED);
+        statusIcons.iconAutopilot().visibleProperty().bind(theGameContext().theGameController().propertyUsingAutopilot());
+        statusIcons.iconImmune().visibleProperty().bind(theGameContext().theGameController().propertyImmunity());
+
+        mainScene.rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
+            () -> theAssets.get(isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D) ? "background.play_scene3d" : "background.scene"),
+            PROPERTY_CURRENT_VIEW, PROPERTY_CURRENT_GAME_SCENE
+        ));
     }
 
     private void configureStage(Stage stage) {
@@ -173,7 +190,7 @@ public class PacManGames_UI_Impl implements GameUI {
         view.actionBindingMap().updateKeyboard(theKeyboard);
         theGameContext.theGameEventManager().addEventListener(view);
 
-        GameUI.PROPERTY_CURRENT_VIEW.set(view);
+        PROPERTY_CURRENT_VIEW.set(view);
     }
 
     /**
