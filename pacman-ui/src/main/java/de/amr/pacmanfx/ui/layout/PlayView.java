@@ -153,13 +153,9 @@ public class PlayView extends StackPane implements PacManGames_View {
     }
 
     public void draw() {
-        ui.currentGameScene().ifPresent(gameScene -> {
-            if (gameScene instanceof GameScene2D gameScene2D) {
-                gameScene2D.draw();
-            }
-        });
+        ui.currentGameScene().filter(GameScene2D.class::isInstance).map(GameScene2D.class::cast).ifPresent(GameScene2D::draw);
 
-        if (miniView.isVisible() && ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D) && ui.theGameContext().optGameLevel().isPresent()) {
+        if (miniView.isVisible() && ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)) {
             miniView.draw();
         }
 
