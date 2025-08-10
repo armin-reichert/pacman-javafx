@@ -35,6 +35,7 @@ import java.util.List;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.GameUI.DEFAULT_ACTION_BINDINGS;
 import static de.amr.pacmanfx.ui.GameUI_Config.SCENE_ID_PLAY_SCENE_2D;
+import static de.amr.pacmanfx.ui.GameUI_Properties.*;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.uilib.Ufx.border;
 import static de.amr.pacmanfx.uilib.Ufx.colorBackground;
@@ -94,7 +95,7 @@ public class PlayView extends StackPane implements PacManGames_View {
             }
         });
 
-        GameUI.PROPERTY_CURRENT_GAME_SCENE.addListener((py, ov, gameScene) -> {
+        PROPERTY_CURRENT_GAME_SCENE.addListener((py, ov, gameScene) -> {
             contextMenu.hide();
             if (gameScene != null) embedGameScene(parentScene, gameScene);
         });
@@ -249,7 +250,7 @@ public class PlayView extends StackPane implements PacManGames_View {
         }
 
         if (changing) {
-            GameUI.PROPERTY_CURRENT_GAME_SCENE.set(nextGameScene);
+            PROPERTY_CURRENT_GAME_SCENE.set(nextGameScene);
         }
     }
 
@@ -274,14 +275,14 @@ public class PlayView extends StackPane implements PacManGames_View {
         gameScene2D.setCanvas(canvasWithFrame.canvas());
         gameScene2D.setGameRenderer(ui.theConfiguration().createGameRenderer(canvasWithFrame.canvas()));
         gameScene2D.clear();
-        gameScene2D.backgroundColorProperty().bind(GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR);
+        gameScene2D.backgroundColorProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
         gameScene2D.scalingProperty().bind(canvasWithFrame.scalingProperty().map(
             scaling -> Math.min(scaling.doubleValue(), ui.theUIPrefs().getFloat("scene2d.max_scaling"))));
 
         Vector2f gameSceneSizePx = gameScene2D.sizeInPx();
         canvasWithFrame.setUnscaledCanvasSize(gameSceneSizePx.x(), gameSceneSizePx.y());
         canvasWithFrame.resizeTo(parentScene.getWidth(), parentScene.getHeight());
-        canvasWithFrame.backgroundProperty().bind(GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR.map(Ufx::colorBackground));
+        canvasWithFrame.backgroundProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR.map(Ufx::colorBackground));
     }
 
     private void configureCanvasWithFrame() {
@@ -292,13 +293,13 @@ public class PlayView extends StackPane implements PacManGames_View {
     }
 
     private void configurePropertyBindings() {
-        GameUI.PROPERTY_CANVAS_FONT_SMOOTHING.addListener((py, ov, smooth)
+        PROPERTY_CANVAS_FONT_SMOOTHING.addListener((py, ov, smooth)
             -> canvasWithFrame.canvas().getGraphicsContext2D().setFontSmoothingType(smooth ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
 
-        GameUI.PROPERTY_CANVAS_IMAGE_SMOOTHING.addListener((py, ov, smooth)
+        PROPERTY_CANVAS_IMAGE_SMOOTHING.addListener((py, ov, smooth)
             -> canvasWithFrame.canvas().getGraphicsContext2D().setImageSmoothing(smooth));
 
-        GameUI.PROPERTY_DEBUG_INFO_VISIBLE.addListener((py, ov, debug)
+        PROPERTY_DEBUG_INFO_VISIBLE.addListener((py, ov, debug)
             -> {
                canvasLayer.setBackground(debug ? colorBackground(Color.TEAL) : null);
                canvasLayer.setBorder(debug ? border(Color.LIGHTGREEN, 1) : null);
@@ -311,8 +312,8 @@ public class PlayView extends StackPane implements PacManGames_View {
         dashboardAndMiniViewLayer.setLeft(dashboard);
         dashboardAndMiniViewLayer.setRight(miniView);
         dashboardAndMiniViewLayer.visibleProperty().bind(Bindings.createObjectBinding(
-            () -> dashboard.isVisible() || GameUI.PROPERTY_MINI_VIEW_ON.get(),
-            dashboard.visibleProperty(), GameUI.PROPERTY_MINI_VIEW_ON
+            () -> dashboard.isVisible() || PROPERTY_MINI_VIEW_ON.get(),
+            dashboard.visibleProperty(), PROPERTY_MINI_VIEW_ON
         ));
 
         //TODO reconsider help functionality

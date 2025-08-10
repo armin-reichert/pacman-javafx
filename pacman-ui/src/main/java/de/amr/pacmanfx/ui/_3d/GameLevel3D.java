@@ -52,6 +52,7 @@ import java.util.stream.IntStream;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
+import static de.amr.pacmanfx.ui.GameUI_Properties.*;
 import static de.amr.pacmanfx.uilib.Ufx.*;
 import static java.util.Objects.requireNonNull;
 
@@ -267,10 +268,10 @@ public class GameLevel3D extends Group implements Disposable {
         this.ui = requireNonNull(ui);
         this.gameLevel = requireNonNull(ui.theGameContext().theGameLevel());
 
-        wallOpacityProperty.bind(GameUI.PROPERTY_3D_WALL_OPACITY);
+        wallOpacityProperty.bind(PROPERTY_3D_WALL_OPACITY);
 
-        wallBaseHeightProperty.bind(GameUI.PROPERTY_3D_WALL_HEIGHT);
-        GameUI.PROPERTY_3D_DRAW_MODE.addListener(this::handleDrawModeChange);
+        wallBaseHeightProperty.bind(PROPERTY_3D_WALL_HEIGHT);
+        PROPERTY_3D_DRAW_MODE.addListener(this::handleDrawModeChange);
 
         setMouseTransparent(true); // this increases performance, they say...
 
@@ -325,7 +326,7 @@ public class GameLevel3D extends Group implements Disposable {
         particleMaterial.setSpecularColor(particleMaterial.getDiffuseColor().brighter());
 
         floorMaterial = new PhongMaterial();
-        floorMaterial.diffuseColorProperty().bind(GameUI.PROPERTY_3D_FLOOR_COLOR);
+        floorMaterial.diffuseColorProperty().bind(PROPERTY_3D_FLOOR_COLOR);
         floorMaterial.specularColorProperty().bind(floorMaterial.diffuseColorProperty().map(Color::brighter));
         floorMaterial.setSpecularPower(128);
 
@@ -474,7 +475,7 @@ public class GameLevel3D extends Group implements Disposable {
 
     private void createAmbientLight() {
         ambientLight = new AmbientLight();
-        ambientLight.colorProperty().bind(GameUI.PROPERTY_3D_LIGHT_COLOR);
+        ambientLight.colorProperty().bind(PROPERTY_3D_LIGHT_COLOR);
     }
 
     private void createGhostLight() {
@@ -770,8 +771,8 @@ public class GameLevel3D extends Group implements Disposable {
             pauseSec(1)
         );
         animation.setOnFinished(e -> {
-            wallBaseHeightProperty.bind(GameUI.PROPERTY_3D_WALL_HEIGHT);
-            perspectiveIDProperty.bind(GameUI.PROPERTY_3D_PERSPECTIVE);
+            wallBaseHeightProperty.bind(PROPERTY_3D_WALL_HEIGHT);
+            perspectiveIDProperty.bind(PROPERTY_3D_PERSPECTIVE);
             ui.theGameContext().theGameController().letCurrentGameStateExpire();
         });
         animation.play();
@@ -893,7 +894,7 @@ public class GameLevel3D extends Group implements Disposable {
         }
         animationRegistry.clear();
 
-        GameUI.PROPERTY_3D_DRAW_MODE.removeListener(this::handleDrawModeChange);
+        PROPERTY_3D_DRAW_MODE.removeListener(this::handleDrawModeChange);
         Logger.info("Removed 'draw mode' listener");
 
         house3D.openProperty().removeListener(this::handleHouseOpenChange);

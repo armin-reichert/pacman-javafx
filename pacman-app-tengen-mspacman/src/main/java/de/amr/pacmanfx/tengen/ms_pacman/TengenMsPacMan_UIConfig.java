@@ -47,6 +47,8 @@ import java.util.OptionalInt;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.ui.GameUI_Properties.PROPERTY_3D_ENABLED;
+import static de.amr.pacmanfx.ui.GameUI_Properties.PROPERTY_CANVAS_BACKGROUND_COLOR;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
 import static de.amr.pacmanfx.uilib.Ufx.toggle;
@@ -305,7 +307,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     @Override
     public TengenMsPacMan_GameRenderer createGameRenderer(Canvas canvas) {
         var renderer = new TengenMsPacMan_GameRenderer(ui.theAssets(), spriteSheet(), mapRepository, canvas);
-        renderer.backgroundColorProperty().bind(GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR);
+        renderer.backgroundColorProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
         return renderer;
     }
 
@@ -426,7 +428,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
                 int cutSceneNumber = gameContext.theGame().<Integer>getProperty("intermissionTestNumber");
                 yield SCENE_ID_CUT_SCENE_N_2D.formatted(cutSceneNumber);
             }
-            default -> GameUI.PROPERTY_3D_ENABLED.get() ? SCENE_ID_PLAY_SCENE_3D : SCENE_ID_PLAY_SCENE_2D;
+            default -> PROPERTY_3D_ENABLED.get() ? SCENE_ID_PLAY_SCENE_3D : SCENE_ID_PLAY_SCENE_2D;
         };
         return scenesByID.get(sceneID);
     }

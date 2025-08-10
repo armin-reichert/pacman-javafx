@@ -13,6 +13,7 @@ import javafx.scene.image.ImageView;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.ui.GameUI_Properties.PROPERTY_3D_FLOOR_COLOR;
 import static de.amr.pacmanfx.ui._2d.GameRenderer.fillCanvas;
 
 public class TengenMsPacMan_GameLevel3D extends GameLevel3D {
@@ -33,7 +34,7 @@ public class TengenMsPacMan_GameLevel3D extends GameLevel3D {
         int scaling = 5; // for better snapshot resolution
 
         var canvas = new Canvas(scaling * width, scaling * height);
-        fillCanvas(canvas, GameUI.PROPERTY_3D_FLOOR_COLOR.get());
+        fillCanvas(canvas, PROPERTY_3D_FLOOR_COLOR.get());
 
         var renderer = (TengenMsPacMan_GameRenderer) ui.theConfiguration().createGameRenderer(canvas);
         renderer.ctx().setImageSmoothing(false); // important for sharp image!

@@ -41,6 +41,7 @@ import java.util.Map;
 import java.util.OptionalInt;
 import java.util.stream.Stream;
 
+import static de.amr.pacmanfx.ui.GameUI_Properties.PROPERTY_3D_ENABLED;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
 import static java.util.Objects.requireNonNull;
 
@@ -276,7 +277,7 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config {
                 int cutSceneNumber = gameContext.theGame().<Integer>getProperty("intermissionTestNumber");
                 yield SCENE_ID_CUT_SCENE_N_2D.formatted(cutSceneNumber);
             }
-            default -> GameUI.PROPERTY_3D_ENABLED.get() ? SCENE_ID_PLAY_SCENE_3D : SCENE_ID_PLAY_SCENE_2D;
+            default -> PROPERTY_3D_ENABLED.get() ? SCENE_ID_PLAY_SCENE_3D : SCENE_ID_PLAY_SCENE_2D;
         };
         return scenesByID.get(sceneID);
     }

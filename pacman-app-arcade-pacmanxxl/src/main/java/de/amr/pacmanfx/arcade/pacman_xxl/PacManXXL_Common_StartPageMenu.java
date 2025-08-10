@@ -30,6 +30,7 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createGhost;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createPac;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
+import static de.amr.pacmanfx.ui.GameUI_Properties.PROPERTY_3D_ENABLED;
 import static de.amr.pacmanfx.ui.input.Keyboard.nude;
 import static de.amr.pacmanfx.uilib.widgets.OptionMenuStyle.DEFAULT_OPTION_MENU_STYLE;
 import static java.util.Objects.requireNonNull;
@@ -194,7 +195,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         @Override
         protected void onValueChanged(int index) {
             state.play3D = selectedValue();
-            GameUI.PROPERTY_3D_ENABLED.set(state.play3D);
+            PROPERTY_3D_ENABLED.set(state.play3D);
             logState();
         }
 
@@ -294,7 +295,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         mapSelector.loadAllMaps();
         final boolean customMapsExist = !mapSelector.customMaps().isEmpty();
 
-        state.play3D = GameUI.PROPERTY_3D_ENABLED.get();
+        state.play3D = PROPERTY_3D_ENABLED.get();
         state.cutScenesEnabled = game.areCutScenesEnabled();
         state.mapOrder = mapSelector.mapSelectionMode();
         logState();

@@ -36,6 +36,7 @@ import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZ
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_MEDIUM;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_SHORT;
 import static de.amr.pacmanfx.ui.GameUI.DEFAULT_ACTION_BINDINGS;
+import static de.amr.pacmanfx.ui.GameUI_Properties.PROPERTY_MUTED;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
 
@@ -119,7 +120,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
         miImmunity.selectedProperty().bindBidirectional(gameContext().theGameController().propertyImmunity());
 
         var miMuted = new CheckMenuItem(ui.theAssets().text("muted"));
-        miMuted.selectedProperty().bindBidirectional(GameUI.PROPERTY_MUTED);
+        miMuted.selectedProperty().bindBidirectional(PROPERTY_MUTED);
 
         var miQuit = new MenuItem(ui.theAssets().text("quit"));
         miQuit.setOnAction(e -> ACTION_QUIT_GAME_SCENE.executeIfEnabled(ui));

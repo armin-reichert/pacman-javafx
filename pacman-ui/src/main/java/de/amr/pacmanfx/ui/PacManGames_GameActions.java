@@ -27,6 +27,7 @@ import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
 import static de.amr.pacmanfx.ui.GameUI_Config.SCENE_ID_PLAY_SCENE_2D;
 import static de.amr.pacmanfx.ui.GameUI_Config.SCENE_ID_PLAY_SCENE_3D;
+import static de.amr.pacmanfx.ui.GameUI_Properties.*;
 import static de.amr.pacmanfx.uilib.Ufx.toggle;
 
 /**
@@ -197,8 +198,8 @@ public interface PacManGames_GameActions {
     GameAction ACTION_PERSPECTIVE_NEXT = new GameAction("PERSPECTIVE_NEXT") {
         @Override
         public void execute(GameUI ui) {
-            PerspectiveID id = GameUI.PROPERTY_3D_PERSPECTIVE.get().next();
-            GameUI.PROPERTY_3D_PERSPECTIVE.set(id);
+            PerspectiveID id = PROPERTY_3D_PERSPECTIVE.get().next();
+            PROPERTY_3D_PERSPECTIVE.set(id);
             String msgKey = ui.theAssets().text("camera_perspective", ui.theAssets().text("perspective_id_" + id.name()));
             ui.showFlashMessage(msgKey);
         }
@@ -207,8 +208,8 @@ public interface PacManGames_GameActions {
     GameAction ACTION_PERSPECTIVE_PREVIOUS = new GameAction("PERSPECTIVE_PREVIOUS") {
         @Override
         public void execute(GameUI ui) {
-            PerspectiveID id = GameUI.PROPERTY_3D_PERSPECTIVE.get().prev();
-            GameUI.PROPERTY_3D_PERSPECTIVE.set(id);
+            PerspectiveID id = PROPERTY_3D_PERSPECTIVE.get().prev();
+            PROPERTY_3D_PERSPECTIVE.set(id);
             String msgKey = ui.theAssets().text("camera_perspective", ui.theAssets().text("perspective_id_" + id.name()));
             ui.showFlashMessage(msgKey);
         }
@@ -367,14 +368,14 @@ public interface PacManGames_GameActions {
     GameAction ACTION_TOGGLE_DEBUG_INFO = new GameAction("TOGGLE_DEBUG_INFO") {
         @Override
         public void execute(GameUI ui) {
-            toggle(GameUI.PROPERTY_DEBUG_INFO_VISIBLE);
+            toggle(PROPERTY_DEBUG_INFO_VISIBLE);
         }
     };
 
     GameAction ACTION_TOGGLE_DRAW_MODE = new GameAction("TOGGLE_DRAW_MODE") {
         @Override
         public void execute(GameUI ui) {
-            GameUI.PROPERTY_3D_DRAW_MODE.set(GameUI.PROPERTY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+            PROPERTY_3D_DRAW_MODE.set(PROPERTY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
         }
 
         @Override
@@ -396,9 +397,9 @@ public interface PacManGames_GameActions {
     GameAction ACTION_TOGGLE_MINI_VIEW_VISIBILITY = new GameAction("TOGGLE_MINI_VIEW_VISIBILITY") {
         @Override
         public void execute(GameUI ui) {
-            toggle(GameUI.PROPERTY_MINI_VIEW_ON);
+            toggle(PROPERTY_MINI_VIEW_ON);
             if (!ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)) {
-                ui.showFlashMessage(ui.theAssets().text(GameUI.PROPERTY_MINI_VIEW_ON.get() ? "pip_on" : "pip_off"));
+                ui.showFlashMessage(ui.theAssets().text(PROPERTY_MINI_VIEW_ON.get() ? "pip_on" : "pip_off"));
             }
         }
     };
@@ -406,7 +407,7 @@ public interface PacManGames_GameActions {
     GameAction ACTION_TOGGLE_MUTED = new GameAction("TOGGLE_MUTED") {
         @Override
         public void execute(GameUI ui) {
-            GameUI.PROPERTY_MUTED.set(!GameUI.PROPERTY_MUTED.get());
+            PROPERTY_MUTED.set(!PROPERTY_MUTED.get());
         }
     };
 
@@ -425,13 +426,13 @@ public interface PacManGames_GameActions {
         @Override
         public void execute(GameUI ui) {
             ui.currentGameScene().ifPresent(gameScene -> {
-                toggle(GameUI.PROPERTY_3D_ENABLED);
+                toggle(PROPERTY_3D_ENABLED);
                 if (ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_2D) || ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)) {
                     ui.updateGameScene(true);
                     ui.theGameContext().theGameController().updateGameState(); //TODO needed?
                 }
                 if (!ui.theGameContext().theGame().isPlaying()) {
-                    ui.showFlashMessage(ui.theAssets().text(GameUI.PROPERTY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
+                    ui.showFlashMessage(ui.theAssets().text(PROPERTY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
                 }
             });
         }

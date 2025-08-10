@@ -46,6 +46,7 @@ import static de.amr.pacmanfx.Validations.isOneOf;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_MEDIUM;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_SHORT;
 import static de.amr.pacmanfx.ui.GameUI.DEFAULT_ACTION_BINDINGS;
+import static de.amr.pacmanfx.ui.GameUI_Properties.*;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.control;
 import static de.amr.pacmanfx.uilib.Ufx.pauseSec;
@@ -136,7 +137,7 @@ public class PlayScene3D implements GameScene {
 
         // Just for debugging and posing
         var coordinateSystem = new CoordinateSystem();
-        coordinateSystem.visibleProperty().bind(GameUI.PROPERTY_3D_AXES_VISIBLE);
+        coordinateSystem.visibleProperty().bind(PROPERTY_3D_AXES_VISIBLE);
 
         root.getChildren().setAll(gameLevel3DParent, scores3D, coordinateSystem);
     }
@@ -200,7 +201,7 @@ public class PlayScene3D implements GameScene {
         miUse2DScene.setOnAction(e -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(ui));
 
         var miToggleMiniView = new CheckMenuItem(ui.theAssets().text("pip"));
-        miToggleMiniView.selectedProperty().bindBidirectional(GameUI.PROPERTY_MINI_VIEW_ON);
+        miToggleMiniView.selectedProperty().bindBidirectional(PROPERTY_MINI_VIEW_ON);
 
         var miAutopilot = new CheckMenuItem(ui.theAssets().text("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(theGameContext().theGameController().propertyUsingAutopilot());
@@ -209,7 +210,7 @@ public class PlayScene3D implements GameScene {
         miImmunity.selectedProperty().bindBidirectional(theGameContext().theGameController().propertyImmunity());
 
         var miMuted = new CheckMenuItem(ui.theAssets().text("muted"));
-        miMuted.selectedProperty().bindBidirectional(GameUI.PROPERTY_MUTED);
+        miMuted.selectedProperty().bindBidirectional(PROPERTY_MUTED);
 
         var miQuit = new MenuItem(ui.theAssets().text("quit"));
         miQuit.setOnAction(e -> ACTION_QUIT_GAME_SCENE.executeIfEnabled(ui));
@@ -236,16 +237,16 @@ public class PlayScene3D implements GameScene {
             var item = new RadioMenuItem(ui.theAssets().text("perspective_id_" + id.name()));
             item.setUserData(id);
             item.setToggleGroup(perspectiveToggleGroup);
-            if (id == GameUI.PROPERTY_3D_PERSPECTIVE.get())  {
+            if (id == PROPERTY_3D_PERSPECTIVE.get())  {
                 item.setSelected(true);
             }
-            item.setOnAction(e -> GameUI.PROPERTY_3D_PERSPECTIVE.set(id));
+            item.setOnAction(e -> PROPERTY_3D_PERSPECTIVE.set(id));
             items.add(item);
         }
         Logger.info("Added listener to UI property3DPerspective property");
-        GameUI.PROPERTY_3D_PERSPECTIVE.addListener(this::handle3DPerspectiveChange);
+        PROPERTY_3D_PERSPECTIVE.addListener(this::handle3DPerspectiveChange);
         menu.setOnHidden(e -> {
-            GameUI.PROPERTY_3D_PERSPECTIVE.removeListener(this::handle3DPerspectiveChange);
+            PROPERTY_3D_PERSPECTIVE.removeListener(this::handle3DPerspectiveChange);
             Logger.info("Removed listener from UI property3DPerspective property");
         });
         return items;
@@ -294,7 +295,7 @@ public class PlayScene3D implements GameScene {
     @Override
     public void init() {
         gameContext().theGame().theHUD().showScore(true);
-        perspectiveIDProperty().bind(GameUI.PROPERTY_3D_PERSPECTIVE);
+        perspectiveIDProperty().bind(PROPERTY_3D_PERSPECTIVE);
         actionBindings.bind(droneUp, control(KeyCode.MINUS));
         actionBindings.bind(droneDown, control(KeyCode.PLUS));
         actionBindings.updateKeyboard(ui.theKeyboard());
@@ -353,7 +354,7 @@ public class PlayScene3D implements GameScene {
             case TESTING_LEVELS_SHORT, TESTING_LEVELS_MEDIUM -> {
                 replaceGameLevel3D();
                 showLevelTestMessage();
-                GameUI.PROPERTY_3D_PERSPECTIVE.set(PerspectiveID.TOTAL);
+                PROPERTY_3D_PERSPECTIVE.set(PerspectiveID.TOTAL);
             }
         }
     }

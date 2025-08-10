@@ -27,6 +27,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.GameUI_Config.SCENE_ID_PLAY_SCENE_3D;
+import static de.amr.pacmanfx.ui.GameUI_Properties.*;
 import static java.util.Objects.requireNonNull;
 
 public class MiniGameView extends VBox {
@@ -102,13 +103,13 @@ public class MiniGameView extends VBox {
 
     public void setGameUI(GameUI ui) {
         this.ui = requireNonNull(ui);
-        backgroundColorProperty().bind(GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR);
-        debugProperty().bind(GameUI.PROPERTY_DEBUG_INFO_VISIBLE);
-        canvasHeightProperty().bind(GameUI.PROPERTY_MINI_VIEW_HEIGHT);
-        opacityProperty().bind(GameUI.PROPERTY_MINI_VIEW_OPACITY_PERCENT.divide(100.0));
+        backgroundColorProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
+        debugProperty().bind(PROPERTY_DEBUG_INFO_VISIBLE);
+        canvasHeightProperty().bind(PROPERTY_MINI_VIEW_HEIGHT);
+        opacityProperty().bind(PROPERTY_MINI_VIEW_OPACITY_PERCENT.divide(100.0));
         visibleProperty().bind(Bindings.createObjectBinding(
-            () -> GameUI.PROPERTY_MINI_VIEW_ON.get() && ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D),
-            GameUI.PROPERTY_MINI_VIEW_ON, GameUI.PROPERTY_CURRENT_GAME_SCENE
+            () -> PROPERTY_MINI_VIEW_ON.get() && ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D),
+            PROPERTY_MINI_VIEW_ON, PROPERTY_CURRENT_GAME_SCENE
         ));
     }
 

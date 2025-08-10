@@ -12,13 +12,13 @@ import de.amr.pacmanfx.ui._3d.PerspectiveID;
 import javafx.scene.SubScene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
 import javafx.scene.shape.DrawMode;
 
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.ui.GameUI_Properties.*;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_TOGGLE_DRAW_MODE;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_TOGGLE_PLAY_SCENE_2D_3D;
 
@@ -31,8 +31,6 @@ public class InfoBox3DSettings extends InfoBox {
     private static final int MINI_VIEW_MAX_HEIGHT = 600;
 
     private CheckBox cbUsePlayScene3D;
-    private ColorPicker colorPickerLightColor;
-    private ColorPicker colorPickerFloorColor;
     private ChoiceBox<PerspectiveID> comboPerspectives;
     private CheckBox cbMiniViewVisible;
     private Slider sliderMiniViewSceneHeight;
@@ -49,44 +47,44 @@ public class InfoBox3DSettings extends InfoBox {
     @Override
     public void init(GameUI ui) {
         cbUsePlayScene3D = addCheckBox("3D Play Scene");
-        colorPickerLightColor = addColorPicker("Light Color", GameUI.PROPERTY_3D_LIGHT_COLOR);
-        colorPickerFloorColor = addColorPicker("Floor Color", GameUI.PROPERTY_3D_FLOOR_COLOR);
+        addColorPicker("Light Color", PROPERTY_3D_LIGHT_COLOR);
+        addColorPicker("Floor Color", PROPERTY_3D_FLOOR_COLOR);
         comboPerspectives = addChoiceBox("Perspective", PerspectiveID.values());
         addDynamicLabeledValue("Camera",         this::subSceneCameraInfo);
         addDynamicLabeledValue("Sub-scene Size", this::subSceneSizeInfo);
         addDynamicLabeledValue("Scene Size",     this::sceneSizeInfo);
-        cbMiniViewVisible = addCheckBox("Mini View", GameUI.PROPERTY_MINI_VIEW_ON);
+        cbMiniViewVisible = addCheckBox("Mini View", PROPERTY_MINI_VIEW_ON);
         sliderMiniViewSceneHeight = addSlider(
             "- Height",
             MINI_VIEW_MIN_HEIGHT, MINI_VIEW_MAX_HEIGHT,
-            GameUI.PROPERTY_MINI_VIEW_HEIGHT.get(),
+            PROPERTY_MINI_VIEW_HEIGHT.get(),
             false, false);
         sliderMiniViewOpacity = addSlider(
             "- Opacity",
             0, 100,
-            GameUI.PROPERTY_MINI_VIEW_OPACITY_PERCENT.get(),
+            PROPERTY_MINI_VIEW_OPACITY_PERCENT.get(),
             false, false);
         sliderWallHeight = addSlider(
             "Wall Height",
             0, 16,
-            GameUI.PROPERTY_3D_WALL_HEIGHT.get(),
+            PROPERTY_3D_WALL_HEIGHT.get(),
             false, false);
         sliderWallOpacity = addSlider(
             "Wall Opacity",
             0, 1,
-            GameUI.PROPERTY_3D_WALL_OPACITY.get(),
+            PROPERTY_3D_WALL_OPACITY.get(),
             false, false);
-        cbAxesVisible = addCheckBox("Show Axes", GameUI.PROPERTY_3D_AXES_VISIBLE);
+        cbAxesVisible = addCheckBox("Show Axes", PROPERTY_3D_AXES_VISIBLE);
         cbWireframeMode = addCheckBox("Wireframe Mode");
 
         setTooltip(sliderMiniViewSceneHeight, sliderMiniViewSceneHeight.valueProperty(), "%.0f px");
         setTooltip(sliderMiniViewOpacity, sliderMiniViewOpacity.valueProperty(), "%.0f %%");
 
-        setEditor(sliderMiniViewSceneHeight, GameUI.PROPERTY_MINI_VIEW_HEIGHT);
-        setEditor(sliderMiniViewOpacity, GameUI.PROPERTY_MINI_VIEW_OPACITY_PERCENT);
-        setEditor(sliderWallHeight, GameUI.PROPERTY_3D_WALL_HEIGHT);
-        setEditor(sliderWallOpacity, GameUI.PROPERTY_3D_WALL_OPACITY);
-        setEditor(comboPerspectives, GameUI.PROPERTY_3D_PERSPECTIVE);
+        setEditor(sliderMiniViewSceneHeight, PROPERTY_MINI_VIEW_HEIGHT);
+        setEditor(sliderMiniViewOpacity, PROPERTY_MINI_VIEW_OPACITY_PERCENT);
+        setEditor(sliderWallHeight, PROPERTY_3D_WALL_HEIGHT);
+        setEditor(sliderWallOpacity, PROPERTY_3D_WALL_OPACITY);
+        setEditor(comboPerspectives, PROPERTY_3D_PERSPECTIVE);
 
         cbUsePlayScene3D.setOnAction(e -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(ui));
         cbWireframeMode.setOnAction(e -> ACTION_TOGGLE_DRAW_MODE.executeIfEnabled(ui));
@@ -95,16 +93,16 @@ public class InfoBox3DSettings extends InfoBox {
     @Override
     public void update() {
         super.update();
-        comboPerspectives.setValue(GameUI.PROPERTY_3D_PERSPECTIVE.get());
-        sliderMiniViewSceneHeight.setValue(GameUI.PROPERTY_MINI_VIEW_HEIGHT.get());
-        sliderMiniViewOpacity.setValue(GameUI.PROPERTY_MINI_VIEW_OPACITY_PERCENT.get());
-        sliderWallHeight.setValue(GameUI.PROPERTY_3D_WALL_HEIGHT.get());
-        sliderWallOpacity.setValue(GameUI.PROPERTY_3D_WALL_OPACITY.get());
-        cbUsePlayScene3D.setSelected(GameUI.PROPERTY_3D_ENABLED.get());
-        cbMiniViewVisible.setSelected(GameUI.PROPERTY_MINI_VIEW_ON.getValue());
-        comboPerspectives.setValue(GameUI.PROPERTY_3D_PERSPECTIVE.get());
-        cbAxesVisible.setSelected(GameUI.PROPERTY_3D_AXES_VISIBLE.get());
-        cbWireframeMode.setSelected(GameUI.PROPERTY_3D_DRAW_MODE.get() == DrawMode.LINE);
+        comboPerspectives.setValue(PROPERTY_3D_PERSPECTIVE.get());
+        sliderMiniViewSceneHeight.setValue(PROPERTY_MINI_VIEW_HEIGHT.get());
+        sliderMiniViewOpacity.setValue(PROPERTY_MINI_VIEW_OPACITY_PERCENT.get());
+        sliderWallHeight.setValue(PROPERTY_3D_WALL_HEIGHT.get());
+        sliderWallOpacity.setValue(PROPERTY_3D_WALL_OPACITY.get());
+        cbUsePlayScene3D.setSelected(PROPERTY_3D_ENABLED.get());
+        cbMiniViewVisible.setSelected(PROPERTY_MINI_VIEW_ON.getValue());
+        comboPerspectives.setValue(PROPERTY_3D_PERSPECTIVE.get());
+        cbAxesVisible.setSelected(PROPERTY_3D_AXES_VISIBLE.get());
+        cbWireframeMode.setSelected(PROPERTY_3D_DRAW_MODE.get() == DrawMode.LINE);
     }
 
     private Optional<SubScene> optSubScene() {

@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.ui.GameUI_Config.SCENE_ID_PLAY_SCENE_3D;
+import static de.amr.pacmanfx.ui.GameUI_Properties.*;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static java.util.Objects.requireNonNull;
 
