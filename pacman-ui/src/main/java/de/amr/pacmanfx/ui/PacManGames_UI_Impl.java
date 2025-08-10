@@ -56,9 +56,11 @@ public class PacManGames_UI_Impl implements GameUI {
     private final ActionBindingManager globalActionBindings = new DefaultActionBindingManager();
     private final Map<String, GameUI_Config> configByGameVariant = new HashMap<>();
     private final MainScene mainScene;
-    private final StartPagesView startPagesView;
-    private final PlayView playView;
-    private EditorView editorView; // created on demand
+
+    // These are lazily created
+    private StartPagesView startPagesView;
+    private PlayView playView;
+    private EditorView editorView;
 
     public PacManGames_UI_Impl(Map<String, Class<?>> configurationMap, GameContext gameContext, Stage stage, double width, double height) {
         requireNonNull(configurationMap, "UI configuration map is null");
@@ -85,9 +87,6 @@ public class PacManGames_UI_Impl implements GameUI {
         mainScene = new MainScene(this, width, height);
         configureMainScene();
         configureStage(stage);
-
-        startPagesView = new StartPagesView(this);
-        playView = new PlayView(this, mainScene);
 
         theGameClock.setPausableAction(this::doSimulationStepAndUpdateGameScene);
         theGameClock.setPermanentAction(this::drawCurrentView);
@@ -201,8 +200,8 @@ public class PacManGames_UI_Impl implements GameUI {
 
     private void drawCurrentView() {
         try {
-            if (currentView() == playView) {
-                playView.draw();
+            if (currentView() == thePlayView()) {
+                thePlayView().draw();
             }
             mainScene.flashMessageLayer().update();
         } catch (Throwable x) {
@@ -210,7 +209,7 @@ public class PacManGames_UI_Impl implements GameUI {
         }
     }
 
-    private EditorView getOrCreateEditorView() {
+    private EditorView ensureEditorViewExists() {
         if (editorView == null) {
             var editor = new TileMapEditor(theStage, theAssets().theModel3DRepository());
             var miReturnToGame = new MenuItem(theAssets().text("back_to_game"));
@@ -236,16 +235,32 @@ public class PacManGames_UI_Impl implements GameUI {
     @SuppressWarnings("unchecked")
     @Override public <T extends GameUI_Config> T theConfiguration() { return (T) config(theGameContext.theGameController().selectedGameVariant()); }
     @Override public DirectoryWatchdog           theCustomDirWatchdog() { return theCustomDirWatchdog; }
-    @Override public Optional<EditorView>        theEditorView() { return Optional.ofNullable(editorView); }
     @Override public GameClock                   theGameClock() { return theGameClock; }
     @Override public GameContext                 theGameContext() { return theGameContext; }
     @Override public Joypad                      theJoypad() { return theJoypad; }
     @Override public Keyboard                    theKeyboard() { return theKeyboard; }
-    @Override public PlayView                    thePlayView() { return playView; }
     @Override public SoundManager                theSound() { return theConfiguration().soundManager(); }
     @Override public Stage                       theStage() { return theStage; }
-    @Override public StartPagesView              theStartPagesView() { return startPagesView; }
     @Override public UIPreferences               theUIPrefs() { return theUIPrefs; }
+
+    @Override
+    public Optional<EditorView> theEditorView() {
+        return Optional.ofNullable(editorView);
+    }
+
+    @Override public PlayView thePlayView() {
+        if (playView == null) {
+            playView = new PlayView(this, mainScene);
+        }
+        return playView;
+    }
+
+    @Override public StartPagesView theStartPagesView() {
+        if (startPagesView == null) {
+            startPagesView = new StartPagesView(this);
+        }
+        return startPagesView;
+    }
 
     @Override
     public boolean isCurrentGameSceneID(String id) {
@@ -307,7 +322,7 @@ public class PacManGames_UI_Impl implements GameUI {
             Logger.error("Could not find app icon for current game variant {}", gameVariant);
         }
 
-        playView.canvasFrame().roundedBorderProperty().set(newConfig.hasGameCanvasRoundedBorder());
+        thePlayView().canvasFrame().roundedBorderProperty().set(newConfig.hasGameCanvasRoundedBorder());
 
         // this triggers a game event and the event handlers:
         theGameContext.theGameController().selectGameVariant(gameVariant);
@@ -315,8 +330,8 @@ public class PacManGames_UI_Impl implements GameUI {
 
     @Override
     public void show() {
-        playView.initDashboard();
-        startPagesView.selectStartPage(0);
+        thePlayView().initDashboard();
+        theStartPagesView().selectStartPage(0);
         showStartView();
         theStage.centerOnScreen();
         theStage.show();
@@ -330,8 +345,8 @@ public class PacManGames_UI_Impl implements GameUI {
             currentGameScene().ifPresent(GameScene::end);
             theSound().stopAll();
             theGameClock.stop();
-            getOrCreateEditorView().editor().start(theStage);
-            selectView(getOrCreateEditorView());
+            ensureEditorViewExists().editor().start(theStage);
+            selectView(editorView);
         } else {
             Logger.info("Editor view cannot be opened, game is playing");
         }
@@ -344,7 +359,7 @@ public class PacManGames_UI_Impl implements GameUI {
 
     @Override
     public void showPlayView() {
-        selectView(playView);
+        selectView(thePlayView());
     }
 
     @Override
@@ -352,10 +367,10 @@ public class PacManGames_UI_Impl implements GameUI {
         theGameClock.stop();
         theGameClock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
         theSound().stopAll();
-        selectView(startPagesView);
-            startPagesView.currentStartPage().ifPresent(startPage -> Platform.runLater(() -> {
-                startPage.onEnter(this); // sets game variant!
-                startPage.layoutRoot().requestFocus();
+        selectView(theStartPagesView());
+        theStartPagesView().currentStartPage().ifPresent(startPage -> Platform.runLater(() -> {
+            startPage.onEnter(this); // sets game variant!
+            startPage.layoutRoot().requestFocus();
         }));
     }
 
@@ -368,7 +383,7 @@ public class PacManGames_UI_Impl implements GameUI {
 
     @Override
     public void updateGameScene(boolean reloadCurrent) {
-        playView.updateGameScene(reloadCurrent);
+        thePlayView().updateGameScene(reloadCurrent);
     }
 
     @Override
