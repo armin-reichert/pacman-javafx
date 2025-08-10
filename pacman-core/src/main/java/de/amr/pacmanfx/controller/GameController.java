@@ -127,6 +127,7 @@ public class GameController implements GameContext {
             Logger.warn("Game model ({}) is already registered for game variant {}", gameModel.getClass().getName(), variant);
         }
         knownGames.put(variant, gameModel);
+        gameModel.init();
     }
 
     public StringProperty gameVariantProperty() {

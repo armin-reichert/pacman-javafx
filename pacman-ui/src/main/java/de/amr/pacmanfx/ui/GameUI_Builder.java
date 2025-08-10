@@ -17,6 +17,8 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.util.*;
 
+import static java.util.Objects.requireNonNull;
+
 public class GameUI_Builder {
 
     private static class GameConfiguration {
@@ -32,24 +34,27 @@ public class GameUI_Builder {
 
     public static GameUI_Builder createUI(Stage stage, double width, double height) {
         Logger.info("JavaFX runtime: {}", System.getProperty("javafx.runtime.version"));
-        PacManGames_UI_Impl.THE_ONE = new PacManGames_UI_Impl(Globals.theGameContext(), stage, width, height);
-        return new GameUI_Builder(PacManGames_UI_Impl.THE_ONE);
+        return new GameUI_Builder(stage, width, height);
     }
 
-    private final PacManGames_UI_Impl ui;
-    private final Map<String, GameConfiguration> configurationByGameVariant = new LinkedHashMap<>();
+    private final Stage stage;
+    private final double width;
+    private final double height;
+    private final Map<String, GameConfiguration> configByGameVariant = new LinkedHashMap<>();
     private final List<StartPageConfiguration> startPageConfigs = new ArrayList<>();
     private List<DashboardID> dashboardIDs = List.of();
 
-    private GameUI_Builder(PacManGames_UI_Impl ui) {
-        this.ui = ui;
+    private GameUI_Builder(Stage stage, double width, double height) {
+        this.stage = requireNonNull(stage);
+        this.width = width;
+        this.height = height;
     }
 
     private GameConfiguration configuration(String gameVariant) {
-        if (!configurationByGameVariant.containsKey(gameVariant)) {
-            configurationByGameVariant.put(gameVariant, new GameConfiguration());
+        if (!configByGameVariant.containsKey(gameVariant)) {
+            configByGameVariant.put(gameVariant, new GameConfiguration());
         }
-        return configurationByGameVariant.get(gameVariant);
+        return configByGameVariant.get(gameVariant);
     }
 
     public GameUI_Builder game(
@@ -115,30 +120,31 @@ public class GameUI_Builder {
 
     public GameUI build() {
         validateConfiguration();
-        configurationByGameVariant.keySet().forEach(gameVariant -> {
-            GameConfiguration gameConfiguration = configuration(gameVariant);
-            GameModel gameModel = createGameModel(
-                gameConfiguration.gameModelClass,
-                gameConfiguration.mapSelector,
-                ui.theGameContext(),
-                highScoreFile(ui.theGameContext().theHomeDir(), gameVariant)
-            );
-            gameModel.init();
-            ui.theGameContext().theGameController().registerGame(gameVariant, gameModel);
-            ui.applyConfiguration(gameVariant, gameConfiguration.uiConfigClass);
-        });
-        for (StartPageConfiguration config : startPageConfigs) {
-            StartPage startPage = createStartPage(config.gameVariants.getFirst(), config.startPageClass);
-            ui.theStartPagesView().addStartPage(startPage);
 
+        final GameContext gameContext = Globals.theGameContext();
+
+        //TODO this is crap
+        Map<String, Class<?>> uiConfigMap = new HashMap<>();
+        configByGameVariant.forEach((gameVariant, config) -> uiConfigMap.put(gameVariant, config.uiConfigClass));
+        var ui = new PacManGames_UI_Impl(uiConfigMap, gameContext, stage, width, height);
+
+        configByGameVariant.forEach((gameVariant, config) -> {
+            File highScoreFile = highScoreFile(gameContext.theHomeDir(), gameVariant);
+            GameModel gameModel = createGameModel(config.gameModelClass, config.mapSelector, gameContext, highScoreFile);
+            gameContext.theGameController().registerGame(gameVariant, gameModel);
+        });
+
+        for (StartPageConfiguration config : startPageConfigs) {
+            StartPage startPage = createStartPage(ui, config.gameVariants.getFirst(), config.startPageClass);
+            ui.theStartPagesView().addStartPage(startPage);
         }
+
         ui.thePlayView().configureDashboard(dashboardIDs);
-        ui.theStartPagesView().selectStartPage(0); //TODO check this
-        ui.theGameContext().theGameController().setEventsEnabled(true);
-        return ui;
+
+        return PacManGames_UI_Impl.THE_ONE = ui;
     }
 
-    private StartPage createStartPage(String gameVariant, Class<?> startPageClass) {
+    private StartPage createStartPage(GameUI ui, String gameVariant, Class<?> startPageClass) {
         // first try constructor(GameUI, String)
         try {
             var constructor = startPageClass.getDeclaredConstructor(GameUI.class, String.class);
@@ -150,11 +156,11 @@ public class GameUI_Builder {
                 return (StartPage) constructor.newInstance(ui);
             } catch (Exception xx) {
                 error("Could not create start page from class '%s'".formatted(startPageClass.getSimpleName()));
-                throw new IllegalStateException();
+                throw new IllegalStateException(xx);
             }
         } catch (Exception x) {
             error("Could not create start page from class '%s'".formatted(startPageClass.getSimpleName()));
-            throw new IllegalStateException();
+            throw new IllegalStateException(x);
         }
     }
 
@@ -174,7 +180,7 @@ public class GameUI_Builder {
     }
 
     private void validateConfiguration() {
-        if (configurationByGameVariant.isEmpty()) {
+        if (configByGameVariant.isEmpty()) {
             error("No game configuration specified");
         }
     }

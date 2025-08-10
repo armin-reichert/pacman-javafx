@@ -113,11 +113,13 @@ public class MiniGameView extends VBox {
     }
 
     public void setGameLevel(GameLevel gameLevel) {
+        /* TODO: The game renderer cannot yet be created in setGameUI because at the time, setGameUI is called, the
+                 game controller has not yet selected a game variant and therefore the current UI config is null! */
+        gr = ui.theConfiguration().createGameRenderer(canvas);
+        gr.setScaling(scalingProperty.floatValue());
         this.gameLevel = requireNonNull(gameLevel);
         worldSizeProperty.set(gameLevel.worldSizePx());
-        gr = ui.theConfiguration().createGameRenderer(canvas);
         gr.applyRenderingHints(gameLevel);
-        gr.setScaling(scalingProperty.floatValue());
     }
 
     public void slideIn() {

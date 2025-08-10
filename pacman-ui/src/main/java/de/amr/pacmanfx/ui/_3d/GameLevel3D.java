@@ -842,6 +842,7 @@ public class GameLevel3D extends Group implements Disposable {
     }
 
     private static void setDrawModeUnder(Node node, Predicate<Node> exclusionFilter, DrawMode drawMode) {
+        if (node == null) return; //TODO why does this happen?
         node.lookupAll("*").stream()
             .filter(exclusionFilter.negate())
             .filter(Shape3D.class::isInstance)

@@ -31,7 +31,7 @@ public class PacManXXL_Common_StartPage implements StartPage {
         flyer.setPageLayout(0, Flyer.LayoutMode.FILL);
         flyer.selectPage(0);
 
-        menu = new PacManXXL_Common_StartPageMenu(ui.theGameContext());
+        menu = new PacManXXL_Common_StartPageMenu(ui);
         // scale menu to take 90% of start page height
         menu.scalingProperty().bind(root.heightProperty().multiply(0.9).divide(menu.numTilesY() * TS));
 

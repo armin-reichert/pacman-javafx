@@ -30,7 +30,6 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createGhost;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createPac;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
-import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.ui.input.Keyboard.nude;
 import static de.amr.pacmanfx.uilib.widgets.OptionMenuStyle.DEFAULT_OPTION_MENU_STYLE;
 import static java.util.Objects.requireNonNull;
@@ -145,8 +144,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
             ctx.restore();
         }
 
-        void setGameVariant(String gameVariant) {
-            final GameUI_Config config = theUI().config(gameVariant);
+        void setGameConfig(GameUI_Config config) {
             renderer = config.createGameRenderer(ctx.getCanvas());
             pac.setAnimations(config.createPacAnimations(pac));
             pac.playAnimation(ANIM_PAC_MUNCHING);
@@ -170,13 +168,13 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
             String gameVariant = selectedValue();
             if (GameVariant.PACMAN_XXL.name().equals(gameVariant)) {
                 Logger.info("Loading assets for game variant {}", gameVariant);
-                theUI().config(gameVariant).storeAssets(theUI().theAssets());
+                ui.config(gameVariant).storeAssets(ui.theAssets());
             }
             else if (GameVariant.MS_PACMAN_XXL.name().equals(gameVariant)) {
                 Logger.info("Loading assets for game variant {}", gameVariant);
-                theUI().config(gameVariant).storeAssets(theUI().theAssets());
+                ui.config(gameVariant).storeAssets(ui.theAssets());
             }
-            chaseAnimation.setGameVariant(gameVariant);
+            chaseAnimation.setGameConfig(ui.config(gameVariant));
             state.gameVariant = gameVariant;
             logState();
         }
@@ -244,13 +242,16 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         }
     };
 
+    private final GameUI ui;
     private final GameContext gameContext;
     private final MenuState state = new MenuState();
     private final ChaseAnimation chaseAnimation;
 
-    public PacManXXL_Common_StartPageMenu(GameContext gameContext) {
+    public PacManXXL_Common_StartPageMenu(GameUI ui) {
         super(42, 36, 6, 20);
-        this.gameContext = requireNonNull(gameContext);
+
+        this.ui = requireNonNull(ui);
+        this.gameContext = requireNonNull(ui.theGameContext());
 
         state.gameVariant = "PACMAN_XXL";
         state.play3D = false;
@@ -258,8 +259,8 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         state.mapOrder = MapSelectionMode.CUSTOM_MAPS_FIRST;
 
         var style = new OptionMenuStyle(
-            theUI().theAssets().font("font.pacfontgood", 32),
-            theUI().theAssets().arcadeFont(8),
+            ui.theAssets().font("font.pacfontgood", 32),
+            ui.theAssets().arcadeFont(8),
             DEFAULT_OPTION_MENU_STYLE.backgroundFill(),
             DEFAULT_OPTION_MENU_STYLE.borderStroke(),
             ArcadePalette.ARCADE_RED,
@@ -304,14 +305,14 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         entryMapOrder.selectValue(state.mapOrder);
         entryMapOrder.setEnabled(customMapsExist);
 
-        chaseAnimation.setGameVariant(state.gameVariant);
+        chaseAnimation.setGameConfig(ui.config(state.gameVariant));
         chaseAnimation.reset();
     }
 
     @Override
     protected void handleKeyPress(KeyEvent e) {
         if (nude(KeyCode.E).match(e)) {
-            theUI().showEditorView();
+            ui.showEditorView();
         } else if (nude(KeyCode.ENTER).match(e)) {
             startGame();
         } else {
@@ -343,6 +344,6 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         var mapSelector = (PacManXXL_Common_MapSelector) game.mapSelector();
         mapSelector.setMapSelectionMode(state.mapOrder);
         mapSelector.loadAllMaps();
-        theUI().selectGameVariant(state.gameVariant);
+        ui.selectGameVariant(state.gameVariant);
     }
 }

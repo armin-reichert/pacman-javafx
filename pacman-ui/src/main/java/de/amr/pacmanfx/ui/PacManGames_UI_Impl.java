@@ -60,7 +60,8 @@ public class PacManGames_UI_Impl implements GameUI {
     private final PlayView playView;
     private EditorView editorView; // created on demand
 
-    public PacManGames_UI_Impl(GameContext gameContext, Stage stage, double width, double height) {
+    public PacManGames_UI_Impl(Map<String, Class<?>> configurationMap, GameContext gameContext, Stage stage, double width, double height) {
+        requireNonNull(configurationMap, "UI configuration map is null");
         requireNonNull(gameContext, "Game context is null");
         requireNonNull(stage, "Stage is null");
 
@@ -78,6 +79,7 @@ public class PacManGames_UI_Impl implements GameUI {
         theUIPrefs = new PacManGames_Preferences();
         theStage = stage;
 
+        configurationMap.forEach(this::applyConfiguration);
         initGlobalActionBindings();
 
         mainScene = new MainScene(this, width, height);
@@ -92,6 +94,23 @@ public class PacManGames_UI_Impl implements GameUI {
 
         PROPERTY_3D_WALL_HEIGHT.set(theUIPrefs.getFloat("3d.obstacle.base_height"));
         PROPERTY_3D_WALL_OPACITY.set(theUIPrefs.getFloat("3d.obstacle.opacity"));
+    }
+
+    private void applyConfiguration(String gameVariant, Class<?> configClass) {
+        try {
+            GameUI_Config config = (GameUI_Config) configClass.getDeclaredConstructor(GameUI.class).newInstance(this);
+            config.createGameScenes();
+            Logger.info("Game scenes for game variant '{}' created", gameVariant);
+            config.gameScenes().forEach(scene -> {
+                if (scene instanceof GameScene2D gameScene2D) {
+                    gameScene2D.debugInfoVisibleProperty().bind(PROPERTY_DEBUG_INFO_VISIBLE);
+                }
+            });
+            setConfig(gameVariant, config);
+        } catch (Exception x) {
+            Logger.error("Could not apply UI configuration of class {}", configClass);
+            throw new IllegalStateException(x);
+        }
     }
 
     private void configureMainScene() {
@@ -156,23 +175,6 @@ public class PacManGames_UI_Impl implements GameUI {
         theGameContext.theGameEventManager().addEventListener(view);
 
         GameUI.PROPERTY_CURRENT_VIEW.set(view);
-    }
-
-    public void applyConfiguration(String gameVariant, Class<?> configClass) {
-        try {
-            GameUI_Config config = (GameUI_Config) configClass.getDeclaredConstructor(GameUI.class).newInstance(this);
-            config.createGameScenes();
-            Logger.info("Game scenes for game variant '{}' created", gameVariant);
-            config.gameScenes().forEach(scene -> {
-                if (scene instanceof GameScene2D gameScene2D) {
-                    gameScene2D.debugInfoVisibleProperty().bind(PROPERTY_DEBUG_INFO_VISIBLE);
-                }
-            });
-            setConfig(gameVariant, config);
-        } catch (Exception x) {
-            Logger.error("Could not apply UI configuration of class {}", configClass);
-            throw new IllegalStateException(x);
-        }
     }
 
     /**
@@ -314,10 +316,12 @@ public class PacManGames_UI_Impl implements GameUI {
     @Override
     public void show() {
         playView.initDashboard();
+        startPagesView.selectStartPage(0);
         showStartView();
         theStage.centerOnScreen();
         theStage.show();
         Platform.runLater(theCustomDirWatchdog::startWatching);
+        theGameContext.theGameController().setEventsEnabled(true);
     }
 
     @Override
