@@ -106,6 +106,7 @@ public interface GameUI {
     Stage                       theStage();
     UIPreferences               theUIPrefs();
 
+    void quitCurrentGameScene();
     void restart();
     void selectGameVariant(String variant);
     void show();

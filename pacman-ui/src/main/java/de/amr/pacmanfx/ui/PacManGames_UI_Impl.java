@@ -252,6 +252,20 @@ public class PacManGames_UI_Impl implements GameUI {
     }
 
     @Override
+    public void quitCurrentGameScene() {
+        currentGameScene().ifPresent(gameScene -> {
+            gameScene.end();
+            theGameContext.theGameController().changeGameState(GameState.BOOT);
+            theGameContext.theGame().resetEverything();
+            if (!theGameContext.theCoinMechanism().isEmpty()) {
+                theGameContext.theCoinMechanism().consumeCoin();
+            }
+            Logger.info("Current game scene ({}) has been quit, returning to start view", gameScene.getClass().getSimpleName());
+            showStartView();
+        });
+    }
+
+    @Override
     public void restart() {
         theGameClock.stop();
         theGameClock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
@@ -291,7 +305,7 @@ public class PacManGames_UI_Impl implements GameUI {
             Logger.error("Could not find app icon for current game variant {}", gameVariant);
         }
 
-        playView.canvasContainer().roundedBorderProperty().set(newConfig.hasGameCanvasRoundedBorder());
+        playView.canvasFrame().roundedBorderProperty().set(newConfig.hasGameCanvasRoundedBorder());
 
         // this triggers a game event and the event handlers:
         theGameContext.theGameController().selectGameVariant(gameVariant);

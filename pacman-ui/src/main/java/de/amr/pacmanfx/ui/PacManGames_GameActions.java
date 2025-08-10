@@ -217,7 +217,7 @@ public interface PacManGames_GameActions {
     GameAction ACTION_QUIT_GAME_SCENE = new GameAction("QUIT_GAME_SCENE") {
         @Override
         public void execute(GameUI ui) {
-            ui.thePlayView().quitCurrentGameScene();
+            ui.quitCurrentGameScene();
         }
     };
 

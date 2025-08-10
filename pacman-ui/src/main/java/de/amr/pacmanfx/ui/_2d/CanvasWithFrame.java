@@ -14,59 +14,56 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import org.tinylog.Logger;
 
-import static java.util.Objects.requireNonNull;
-
 /**
- * This whole thing need to get clarified.
+ * This thing needs to get simplified.
  */
-public class CrudeCanvasContainer extends BorderPane {
+public class CanvasWithFrame extends BorderPane {
 
-    static final Vector2f DOWNSCALING_WHEN_BORDER_VISIBLE = new Vector2f(0.85f, 0.93f);
+    static final Vector2f SCALING_WHEN_BORDER_VISIBLE = new Vector2f(0.85f, 0.93f);
 
-    private final BooleanProperty borderVisiblePy = new SimpleBooleanProperty(true) {
+    private final BooleanProperty borderVisible = new SimpleBooleanProperty(true) {
         @Override
-        protected void invalidated() { updateLayout(); }
+        protected void invalidated() { doLayout(scaling(), true); }
     };
 
-    private final ObjectProperty<Color> borderColorPy = new SimpleObjectProperty<>(Color.LIGHTBLUE);
+    private final ObjectProperty<Color> borderColor = new SimpleObjectProperty<>(Color.LIGHTBLUE);
 
     private final BooleanProperty roundedBorderPy = new SimpleBooleanProperty(true) {
         @Override
         protected void invalidated() {
-            updateLayout();
+            doLayout(scaling(), true);
         }
     };
 
-    private final DoubleProperty scalingPy = new SimpleDoubleProperty(1.0) {
+    private final DoubleProperty scaling = new SimpleDoubleProperty(1.0) {
         @Override
         protected void invalidated() {
-            updateLayout();
+            doLayout(scaling(), true);
         }
     };
 
-    private final DoubleProperty unscaledCanvasWidthPy = new SimpleDoubleProperty(500) {
+    private final DoubleProperty unscaledCanvasWidth = new SimpleDoubleProperty(500) {
         @Override
         protected void invalidated() {
-            updateLayout();
+            doLayout(scaling(), true);
         }
     };
 
-    private final DoubleProperty unscaledCanvasHeightPy = new SimpleDoubleProperty(400) {
+    private final DoubleProperty unscaledCanvasHeight = new SimpleDoubleProperty(400) {
         @Override
         protected void invalidated() {
-            updateLayout();
+            doLayout(scaling(), true);
         }
     };
 
-    private final Canvas canvas;
-
+    private final Canvas canvas = new Canvas();
     private double minScaling = 1.0;
 
-    public CrudeCanvasContainer(Canvas canvas) {
-        this.canvas = requireNonNull(canvas);
-        canvas.widthProperty() .bind(scalingPy.multiply(unscaledCanvasWidthPy));
-        canvas.heightProperty().bind(scalingPy.multiply(unscaledCanvasHeightPy));
+    public CanvasWithFrame() {
         setCenter(canvas);
+
+        canvas.widthProperty() .bind(scaling.multiply(unscaledCanvasWidth));
+        canvas.heightProperty().bind(scaling.multiply(unscaledCanvasHeight));
 
         clipProperty().bind(Bindings.createObjectBinding(() -> {
             if (!hasRoundedBorder()) {
@@ -80,7 +77,7 @@ public class CrudeCanvasContainer extends BorderPane {
                 clipRect.setArcHeight(arcSize);
             }
             return clipRect;
-        }, roundedBorderPy, scalingPy, unscaledCanvasWidthPy, unscaledCanvasHeightPy));
+        }, roundedBorderPy, scaling, unscaledCanvasWidth, unscaledCanvasHeight));
 
         borderProperty().bind(Bindings.createObjectBinding(() -> {
             if (!hasRoundedBorder() || !isBorderVisible()) {
@@ -89,10 +86,8 @@ public class CrudeCanvasContainer extends BorderPane {
             double bw = Math.max(5, Math.ceil(computeSize().getHeight() / 55)); // TODO avoid magic numbers
             CornerRadii cr = hasRoundedBorder() ? new CornerRadii(Math.ceil(10 * scaling())) : null;
             return new Border(new BorderStroke(borderColor(), BorderStrokeStyle.SOLID, cr, new BorderWidths(bw)));
-        }, roundedBorderPy, borderVisiblePy, scalingPy, unscaledCanvasWidthPy, unscaledCanvasHeightPy));
+        }, roundedBorderPy, borderVisible, scaling, unscaledCanvasWidth, unscaledCanvasHeight));
     }
-
-    private void updateLayout() { doLayout(scaling(), true); }
 
     private void doLayout(double newScaling, boolean forced) {
         if (newScaling < minScaling) {
@@ -103,8 +98,7 @@ public class CrudeCanvasContainer extends BorderPane {
             Logger.debug("No scaling needed, difference too small");
             return;
         }
-        double width = canvas().getWidth();
-        double height = canvas().getHeight();
+        double width = canvas.getWidth(), height = canvas.getHeight();
         if (hasRoundedBorder()) {
             Dimension2D size = computeSize();
             width = size.getWidth();
@@ -135,8 +129,8 @@ public class CrudeCanvasContainer extends BorderPane {
         if (hasRoundedBorder()) {
             double downScaledWidth = width, downScaledHeight = height;
             if (isBorderVisible()) {
-                downScaledWidth = DOWNSCALING_WHEN_BORDER_VISIBLE.x() * width;
-                downScaledHeight = DOWNSCALING_WHEN_BORDER_VISIBLE.y() * height;
+                downScaledWidth = SCALING_WHEN_BORDER_VISIBLE.x() * width;
+                downScaledHeight = SCALING_WHEN_BORDER_VISIBLE.y() * height;
             }
             double scaling = downScaledHeight / unscaledCanvasHeight();
             if (scaling * unscaledCanvasWidth() > downScaledWidth) {
@@ -149,12 +143,12 @@ public class CrudeCanvasContainer extends BorderPane {
         Logger.debug("Game canvas container resized to width={} height={}", getWidth(), getHeight());
     }
 
-    public DoubleProperty scalingProperty() { return scalingPy; }
-    public double         scaling() {
-        return scalingPy.get();
+    public DoubleProperty scalingProperty() { return scaling; }
+    public double scaling() {
+        return scaling.get();
     }
-    public void           setScaling(double scaling) {
-        scalingPy.set(scaling);
+    public void setScaling(double scaling) {
+        this.scaling.set(scaling);
     }
 
     public void setMinScaling(double value) {
@@ -162,36 +156,36 @@ public class CrudeCanvasContainer extends BorderPane {
     }
 
     public double unscaledCanvasWidth() {
-        return unscaledCanvasWidthPy.get();
+        return unscaledCanvasWidth.get();
     }
     public double unscaledCanvasHeight() {
-        return unscaledCanvasHeightPy.get();
+        return unscaledCanvasHeight.get();
     }
 
     public void setUnscaledCanvasSize(double width, double height) {
-        unscaledCanvasWidthPy.set(width);
-        unscaledCanvasHeightPy.set(height);
+        unscaledCanvasWidth.set(width);
+        unscaledCanvasHeight.set(height);
     }
 
     public BooleanProperty roundedBorderProperty() { return roundedBorderPy; }
-    public boolean         hasRoundedBorder() {
+    public boolean hasRoundedBorder() {
         return roundedBorderPy.get();
     }
-    public void            setRoundedBorder(boolean enabled) {
+    public void setRoundedBorder(boolean enabled) {
         roundedBorderPy.set(enabled);
     }
 
     public Color borderColor() {
-        return borderColorPy.get();
+        return borderColor.get();
     }
-    public void  setBorderColor(Color color) {
-        borderColorPy.set(color);
+    public void setBorderColor(Color color) {
+        borderColor.set(color);
     }
 
     public boolean isBorderVisible() {
-        return borderVisiblePy.get();
+        return borderVisible.get();
     }
-    public void   setBorderVisible(boolean visible) {
-        borderVisiblePy.set(visible);
+    public void setBorderVisible(boolean visible) {
+        borderVisible.set(visible);
     }
 }

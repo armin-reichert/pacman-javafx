@@ -16,7 +16,7 @@ public class HelpLayer extends Pane {
 
     private final FadingPane helpPopUp = new FadingPane();
 
-    public HelpLayer(CrudeCanvasContainer canvasContainer) {
+    public HelpLayer(CanvasWithFrame canvasContainer) {
         getChildren().addAll(helpPopUp);
 
         minHeightProperty().bind(canvasContainer.minHeightProperty());
