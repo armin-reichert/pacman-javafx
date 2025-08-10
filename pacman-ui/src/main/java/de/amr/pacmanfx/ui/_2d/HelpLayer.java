@@ -12,14 +12,11 @@ import javafx.util.Duration;
 
 import static de.amr.pacmanfx.uilib.Ufx.colorWithOpacity;
 
-/**
- * @author Armin Reichert
- */
-public class PopupLayer extends Pane {
+public class HelpLayer extends Pane {
 
     private final FadingPane helpPopUp = new FadingPane();
 
-    public PopupLayer(CrudeCanvasContainer canvasContainer) {
+    public HelpLayer(CrudeCanvasContainer canvasContainer) {
         getChildren().addAll(helpPopUp);
 
         minHeightProperty().bind(canvasContainer.minHeightProperty());

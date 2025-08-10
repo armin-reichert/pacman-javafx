@@ -12,7 +12,7 @@ import de.amr.pacmanfx.model.actors.ActorAnimationMap;
 import de.amr.pacmanfx.ui.*;
 import de.amr.pacmanfx.ui._2d.CrudeCanvasContainer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
-import de.amr.pacmanfx.ui._2d.PopupLayer;
+import de.amr.pacmanfx.ui._2d.HelpLayer;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
@@ -22,7 +22,6 @@ import javafx.beans.binding.Bindings;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.ContextMenuEvent;
@@ -67,48 +66,46 @@ public class PlayView extends StackPane implements PacManGames_View {
         };
     }
 
-    private final ActionBindingManager actionBindings;
-
+    private final ActionBindingManager actionBindings = new DefaultActionBindingManager();
     private final GameUI ui;
     private final Scene parentScene;
-
-    private BorderPane canvasLayer;
-    private PopupLayer popupLayer; // help, signature
-    private BorderPane dashboardLayer;
-
     private final Dashboard dashboard;
-    private final Canvas commonCanvas = new Canvas();
-    private final CrudeCanvasContainer canvasContainer = new CrudeCanvasContainer(commonCanvas);
-    private final MiniGameView miniGameView;
+    private final Canvas canvas = new Canvas();
+    private final CrudeCanvasContainer canvasContainer = new CrudeCanvasContainer(canvas);
+    private final MiniGameView miniView = new MiniGameView();
     private final ContextMenu contextMenu = new ContextMenu();
+
+    private final BorderPane canvasLayer = new BorderPane();
+    private final BorderPane dashboardAndMiniViewLayer = new BorderPane();
+    private HelpLayer helpLayer; // help
 
     public PlayView(GameUI ui, Scene parentScene) {
         this.ui = requireNonNull(ui);
         this.parentScene = requireNonNull(parentScene);
-        this.miniGameView = new MiniGameView();
-        this.dashboard = new Dashboard(ui);
-        
-        this.actionBindings = new DefaultActionBindingManager();
 
-        configureMiniGameView();
+        dashboard = new Dashboard(ui);
+        dashboard.setVisible(false);
+
+        configureMiniView();
         configureCanvasContainer();
         createLayout();
         configurePropertyBindings();
 
-        //TODO what is the cleanest solution to hide the context menu in all needed cases?
         setOnContextMenuRequested(this::handleContextMenuRequest);
-        // game scene changes: hide it
-        GameUI.PROPERTY_CURRENT_GAME_SCENE.addListener(
-                (obs, oldGameScene, newGameScene) -> handleGameSceneChange(parentScene, newGameScene));
-        // any other mouse button clicked: hide it
+        //TODO what is the recommended way to hide the context menu?
         parentScene.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
-            if (e.getButton() == MouseButton.PRIMARY) {
+            if (e.getButton() != MouseButton.SECONDARY) {
                 contextMenu.hide();
             }
         });
 
-        parentScene.widthProperty() .addListener((py, ov, width)  -> canvasContainer.resizeTo(width.doubleValue(), parentScene.getHeight()));
-        parentScene.heightProperty().addListener((py, ov, height) -> canvasContainer.resizeTo(parentScene.getWidth(), height.doubleValue()));
+        GameUI.PROPERTY_CURRENT_GAME_SCENE.addListener((py, ov, gameScene) -> {
+            contextMenu.hide();
+            if (gameScene != null) embedGameScene(parentScene, gameScene);
+        });
+
+        parentScene.widthProperty() .addListener((py, ov, w) -> canvasContainer.resizeTo(w.doubleValue(), parentScene.getHeight()));
+        parentScene.heightProperty().addListener((py, ov, h) -> canvasContainer.resizeTo(parentScene.getWidth(), h.doubleValue()));
 
         actionBindings.use(ACTION_BOOT_SHOW_PLAY_VIEW, DEFAULT_ACTION_BINDINGS);
         actionBindings.use(ACTION_ENTER_FULLSCREEN, DEFAULT_ACTION_BINDINGS);
@@ -127,11 +124,6 @@ public class PlayView extends StackPane implements PacManGames_View {
         actionBindings.use(ACTION_TOGGLE_IMMUNITY, DEFAULT_ACTION_BINDINGS);
         actionBindings.use(ACTION_TOGGLE_MINI_VIEW_VISIBILITY, DEFAULT_ACTION_BINDINGS);
         actionBindings.use(ACTION_TOGGLE_PLAY_SCENE_2D_3D, DEFAULT_ACTION_BINDINGS);
-    }
-
-    private void handleGameSceneChange(Scene parentScene, GameScene newScene) {
-        if (newScene != null) embedGameScene(parentScene, newScene);
-        contextMenu.hide();
     }
 
     private void handleContextMenuRequest(ContextMenuEvent contextMenuEvent) {
@@ -158,7 +150,7 @@ public class PlayView extends StackPane implements PacManGames_View {
     }
 
     public void showHelp(GameUI ui) {
-        popupLayer.showHelp(ui, canvasContainer.scaling());
+        helpLayer.showHelp(ui, canvasContainer.scaling());
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -182,12 +174,12 @@ public class PlayView extends StackPane implements PacManGames_View {
             }
         });
 
-        if (miniGameView.isVisible() && ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D) && ui.theGameContext().optGameLevel().isPresent()) {
-            miniGameView.draw(ui, ui.theGameContext().theGameLevel());
+        if (miniView.isVisible() && ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D) && ui.theGameContext().optGameLevel().isPresent()) {
+            miniView.draw(ui, ui.theGameContext().theGameLevel());
         }
 
         // Dashboard updates must be called from permanent clock task too!
-        if (dashboardLayer.isVisible()) {
+        if (dashboardAndMiniViewLayer.isVisible()) {
             dashboard.infoBoxes().filter(InfoBox::isExpanded).forEach(InfoBox::update);
         }
     }
@@ -219,14 +211,14 @@ public class PlayView extends StackPane implements PacManGames_View {
                     ActorAnimationMap ghostAnimationMap = config.createGhostAnimations(ghost);
                     ghost.setAnimations(ghostAnimationMap);
                 });
-                miniGameView.onLevelCreated(ui, gameLevel);
+                miniView.onLevelCreated(ui, gameLevel);
 
                 // size of game scene might have changed, so re-embed
                 ui.currentGameScene().ifPresent(gameScene -> embedGameScene(parentScene, gameScene));
             }
             case GAME_STATE_CHANGED -> {
                 if (ui.theGameContext().theGameState() == GameState.LEVEL_COMPLETE) {
-                    miniGameView.onLevelCompleted();
+                    miniView.onLevelCompleted();
                 }
             }
         }
@@ -293,36 +285,37 @@ public class PlayView extends StackPane implements PacManGames_View {
             getChildren().set(0, subScene);
         }
         else if (gameScene instanceof GameScene2D gameScene2D) {
-            embedGameScene2DDirectly(gameScene2D);
-            gameScene2D.backgroundColorProperty().bind(GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR);
-            gameScene2D.clear();
+            embedGameScene2DWithoutSubScene(gameScene2D);
+            getChildren().set(0, canvasLayer);
         }
         else {
             Logger.error("Cannot embed play scene of class {}", gameScene.getClass().getName());
         }
     }
 
-    // Game scenes without camera are drawn into the canvas provided by this play view
-    private void embedGameScene2DDirectly(GameScene2D gameScene2D) {
-        gameScene2D.setCanvas(commonCanvas);
-        gameScene2D.setGameRenderer(ui.theConfiguration().createGameRenderer(commonCanvas));
+    // 2D game scenes without sub-scene/camera (Arcade play scene, cut scenes) are drawn into the canvas provided by this play view
+    private void embedGameScene2DWithoutSubScene(GameScene2D gameScene2D) {
+        gameScene2D.setCanvas(canvas);
+        gameScene2D.setGameRenderer(ui.theConfiguration().createGameRenderer(canvas));
+        gameScene2D.clear();
+        gameScene2D.backgroundColorProperty().bind(GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR);
         gameScene2D.scalingProperty().bind(canvasContainer.scalingProperty().map(
             scaling -> Math.min(scaling.doubleValue(), ui.theUIPrefs().getFloat("scene2d.max_scaling"))));
-        Vector2f sizePx = gameScene2D.sizeInPx();
-        canvasContainer.setUnscaledCanvasSize(sizePx.x(), sizePx.y());
+
+        Vector2f gameSceneSizePx = gameScene2D.sizeInPx();
+        canvasContainer.setUnscaledCanvasSize(gameSceneSizePx.x(), gameSceneSizePx.y());
         canvasContainer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
         canvasContainer.backgroundProperty().bind(GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR.map(Ufx::colorBackground));
-        getChildren().set(0, canvasLayer);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    private void configureMiniGameView() {
-        miniGameView.backgroundColorProperty().bind(GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR);
-        miniGameView.debugProperty().bind(GameUI.PROPERTY_DEBUG_INFO_VISIBLE);
-        miniGameView.canvasHeightProperty().bind(GameUI.PROPERTY_MINI_VIEW_HEIGHT);
-        miniGameView.opacityProperty().bind(GameUI.PROPERTY_MINI_VIEW_OPACITY_PERCENT.divide(100.0));
-        miniGameView.visibleProperty().bind(Bindings.createObjectBinding(
+    private void configureMiniView() {
+        miniView.backgroundColorProperty().bind(GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR);
+        miniView.debugProperty().bind(GameUI.PROPERTY_DEBUG_INFO_VISIBLE);
+        miniView.canvasHeightProperty().bind(GameUI.PROPERTY_MINI_VIEW_HEIGHT);
+        miniView.opacityProperty().bind(GameUI.PROPERTY_MINI_VIEW_OPACITY_PERCENT.divide(100.0));
+        miniView.visibleProperty().bind(Bindings.createObjectBinding(
             () -> GameUI.PROPERTY_MINI_VIEW_ON.get() && ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D),
             GameUI.PROPERTY_MINI_VIEW_ON, GameUI.PROPERTY_CURRENT_GAME_SCENE
         ));
@@ -331,42 +324,42 @@ public class PlayView extends StackPane implements PacManGames_View {
     private void configureCanvasContainer() {
         canvasContainer.setMinScaling(0.5);
         // 28*TS x 36*TS = Arcade map size in pixels
-        canvasContainer.setUnscaledCanvasSize(28 *TS, 36 * TS);
+        canvasContainer.setUnscaledCanvasSize(28 * TS, 36 * TS);
         canvasContainer.setBorderColor(Color.rgb(222, 222, 255));
-
-        //canvasContainer.roundedBorderProperty().addListener((py, ov, nv) -> ui.currentGameScene().ifPresent(this::embedGameScene));
     }
 
     private void configurePropertyBindings() {
-        GraphicsContext ctx = commonCanvas.getGraphicsContext2D();
-        GameUI.PROPERTY_CANVAS_FONT_SMOOTHING.addListener((py, ov, on) -> ctx.setFontSmoothingType(on ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
-        GameUI.PROPERTY_CANVAS_IMAGE_SMOOTHING.addListener((py, ov, on) -> ctx.setImageSmoothing(on));
-        GameUI.PROPERTY_DEBUG_INFO_VISIBLE.addListener((py, ov, debug) -> {
-            canvasLayer.setBackground(debug? colorBackground(Color.TEAL) : null);
-            canvasLayer.setBorder(debug? border(Color.LIGHTGREEN, 1) : null);
-        });
+        GameUI.PROPERTY_CANVAS_FONT_SMOOTHING.addListener((py, ov, smooth)
+            -> canvas.getGraphicsContext2D().setFontSmoothingType(smooth ? FontSmoothingType.LCD : FontSmoothingType.GRAY));
+
+        GameUI.PROPERTY_CANVAS_IMAGE_SMOOTHING.addListener((py, ov, smooth)
+            -> canvas.getGraphicsContext2D().setImageSmoothing(smooth));
+
+        GameUI.PROPERTY_DEBUG_INFO_VISIBLE.addListener((py, ov, debug)
+            -> {
+               canvasLayer.setBackground(debug ? colorBackground(Color.TEAL) : null);
+               canvasLayer.setBorder(debug ? border(Color.LIGHTGREEN, 1) : null);
+            });
     }
 
     private void createLayout() {
-        canvasLayer = new BorderPane(canvasContainer);
+        canvasLayer.setCenter(canvasContainer);
 
-        dashboardLayer = new BorderPane();
-        dashboardLayer.visibleProperty().bind(Bindings.createObjectBinding(
+        dashboardAndMiniViewLayer.setLeft(dashboard);
+        dashboardAndMiniViewLayer.setRight(miniView);
+        dashboardAndMiniViewLayer.visibleProperty().bind(Bindings.createObjectBinding(
             () -> dashboard.isVisible() || GameUI.PROPERTY_MINI_VIEW_ON.get(),
             dashboard.visibleProperty(), GameUI.PROPERTY_MINI_VIEW_ON
         ));
-        dashboardLayer.setLeft(dashboard);
-        dashboardLayer.setRight(miniGameView);
-        dashboard.setVisible(false);
 
         //TODO reconsider help functionality
-        popupLayer = new PopupLayer(canvasContainer);
-        popupLayer.setMouseTransparent(true);
+        helpLayer = new HelpLayer(canvasContainer);
+        helpLayer.setMouseTransparent(true);
 
-        getChildren().addAll(canvasLayer, dashboardLayer, popupLayer);
+        getChildren().addAll(canvasLayer, dashboardAndMiniViewLayer, helpLayer);
     }
 
-    // Dashboard
+    // Dashboard access
 
     public void configureDashboard(List<DashboardID> dashboardIDs) {
         dashboard.configure(dashboardIDs);
@@ -383,6 +376,4 @@ public class PlayView extends StackPane implements PacManGames_View {
     public void toggleDashboard() {
         dashboard.toggleVisibility();
     }
-
-
 }
