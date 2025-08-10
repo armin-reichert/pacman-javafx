@@ -86,7 +86,7 @@ public class PlayView extends StackPane implements PacManGames_View {
         dashboard = new Dashboard(ui);
         dashboard.setVisible(false);
 
-        configureMiniView();
+        miniView.setGameUI(ui);
         configureCanvasContainer();
         createLayout();
         configurePropertyBindings();
@@ -175,7 +175,7 @@ public class PlayView extends StackPane implements PacManGames_View {
         });
 
         if (miniView.isVisible() && ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D) && ui.theGameContext().optGameLevel().isPresent()) {
-            miniView.draw(ui, ui.theGameContext().theGameLevel());
+            miniView.draw();
         }
 
         // Dashboard updates must be called from permanent clock task too!
@@ -211,7 +211,7 @@ public class PlayView extends StackPane implements PacManGames_View {
                     ActorAnimationMap ghostAnimationMap = config.createGhostAnimations(ghost);
                     ghost.setAnimations(ghostAnimationMap);
                 });
-                miniView.onLevelCreated(ui, gameLevel);
+                miniView.setGameLevel(gameLevel);
 
                 // size of game scene might have changed, so re-embed
                 ui.currentGameScene().ifPresent(gameScene -> embedGameScene(parentScene, gameScene));
@@ -309,17 +309,6 @@ public class PlayView extends StackPane implements PacManGames_View {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-
-    private void configureMiniView() {
-        miniView.backgroundColorProperty().bind(GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR);
-        miniView.debugProperty().bind(GameUI.PROPERTY_DEBUG_INFO_VISIBLE);
-        miniView.canvasHeightProperty().bind(GameUI.PROPERTY_MINI_VIEW_HEIGHT);
-        miniView.opacityProperty().bind(GameUI.PROPERTY_MINI_VIEW_OPACITY_PERCENT.divide(100.0));
-        miniView.visibleProperty().bind(Bindings.createObjectBinding(
-            () -> GameUI.PROPERTY_MINI_VIEW_ON.get() && ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D),
-            GameUI.PROPERTY_MINI_VIEW_ON, GameUI.PROPERTY_CURRENT_GAME_SCENE
-        ));
-    }
 
     private void configureCanvasContainer() {
         canvasContainer.setMinScaling(0.5);
