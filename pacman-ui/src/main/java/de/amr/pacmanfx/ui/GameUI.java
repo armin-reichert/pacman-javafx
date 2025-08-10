@@ -52,7 +52,6 @@ public interface GameUI {
     BooleanProperty                  PROPERTY_3D_AXES_VISIBLE = new SimpleBooleanProperty(false);
     ObjectProperty<DrawMode>         PROPERTY_3D_DRAW_MODE = new SimpleObjectProperty<>(DrawMode.FILL);
     BooleanProperty                  PROPERTY_3D_ENABLED = new SimpleBooleanProperty(false);
-    BooleanProperty                  PROPERTY_3D_ENERGIZER_EXPLODES = new SimpleBooleanProperty(true);
     ObjectProperty<Color>            PROPERTY_3D_FLOOR_COLOR = new SimpleObjectProperty<>(Color.rgb(20,20,20));
     ObjectProperty<Color>            PROPERTY_3D_LIGHT_COLOR = new SimpleObjectProperty<>(Color.WHITE);
     ObjectProperty<PerspectiveID>    PROPERTY_3D_PERSPECTIVE = new SimpleObjectProperty<>(PerspectiveID.TRACK_PLAYER);

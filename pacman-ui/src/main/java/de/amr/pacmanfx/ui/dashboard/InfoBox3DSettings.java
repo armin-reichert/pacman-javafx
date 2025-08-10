@@ -59,7 +59,6 @@ public class InfoBox3DSettings extends InfoBox {
         sliderPiPOpacity     = addSlider("- Opacity", 0, 100, GameUI.PROPERTY_MINI_VIEW_OPACITY_PERCENT.get(), false, false);
         sliderWallHeight     = addSlider("Obstacle Height", 0, 16, GameUI.PROPERTY_3D_WALL_HEIGHT.get(), false, false);
         sliderWallOpacity    = addSlider("Wall Opacity", 0, 1, GameUI.PROPERTY_3D_WALL_OPACITY.get(), false, false);
-        cbEnergizerExplodes  = addCheckBox("Energizer Explosion", GameUI.PROPERTY_3D_ENERGIZER_EXPLODES);
         cbAxesVisible        = addCheckBox("Show Axes", GameUI.PROPERTY_3D_AXES_VISIBLE);
         cbWireframeMode      = addCheckBox("Wireframe Mode");
 
@@ -86,7 +85,6 @@ public class InfoBox3DSettings extends InfoBox {
         cbUsePlayScene3D.setSelected(GameUI.PROPERTY_3D_ENABLED.get());
         cbPiPOn.setSelected(GameUI.PROPERTY_MINI_VIEW_ON.getValue());
         comboPerspectives.setValue(GameUI.PROPERTY_3D_PERSPECTIVE.get());
-        cbEnergizerExplodes.setSelected(GameUI.PROPERTY_3D_ENERGIZER_EXPLODES.get());
         cbAxesVisible.setSelected(GameUI.PROPERTY_3D_AXES_VISIBLE.get());
         cbWireframeMode.setSelected(GameUI.PROPERTY_3D_DRAW_MODE.get() == DrawMode.LINE);
     }
