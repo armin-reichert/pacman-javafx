@@ -134,9 +134,11 @@ public class MiniGameView extends VBox {
 
     public void draw() {
         drawCallCount += 1;
-        if (gr == null) {
+
+        if (!isVisible() || gr == null) {
             return;
         }
+
         float scaling = scalingProperty.get();
         gr.setScaling(scaling);
         gr.ctx().setFill(backgroundColorProperty().get());

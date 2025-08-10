@@ -37,7 +37,6 @@ import java.util.List;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.GameUI.DEFAULT_ACTION_BINDINGS;
 import static de.amr.pacmanfx.ui.GameUI_Config.SCENE_ID_PLAY_SCENE_2D;
-import static de.amr.pacmanfx.ui.GameUI_Config.SCENE_ID_PLAY_SCENE_3D;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.uilib.Ufx.border;
 import static de.amr.pacmanfx.uilib.Ufx.colorBackground;
@@ -154,11 +153,7 @@ public class PlayView extends StackPane implements PacManGames_View {
 
     public void draw() {
         ui.currentGameScene().filter(GameScene2D.class::isInstance).map(GameScene2D.class::cast).ifPresent(GameScene2D::draw);
-
-        if (miniView.isVisible() && ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)) {
-            miniView.draw();
-        }
-
+        miniView.draw();
         // Dashboard must also be updated if simulation is stopped
         if (dashboardAndMiniViewLayer.isVisible()) {
             dashboard.updateContent();
