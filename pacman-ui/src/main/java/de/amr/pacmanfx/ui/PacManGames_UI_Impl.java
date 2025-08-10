@@ -126,6 +126,11 @@ public class PacManGames_UI_Impl implements GameUI {
             }
         });
 
+        mainScene.rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
+            () -> theAssets.get(isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D) ? "background.play_scene3d" : "background.scene"),
+            PROPERTY_CURRENT_VIEW, PROPERTY_CURRENT_GAME_SCENE
+        ));
+
         // Show paused icon only in play view
         mainScene.pausedIcon().visibleProperty().bind(Bindings.createBooleanBinding(
             () -> currentView() == thePlayView() && theGameClock.isPaused(),
@@ -137,15 +142,10 @@ public class PacManGames_UI_Impl implements GameUI {
         statusIcons.visibleProperty().bind(PROPERTY_CURRENT_VIEW
             .map(currentView -> theEditorView().isEmpty() || currentView != theEditorView().get()));
 
-        statusIcons.iconMuted().visibleProperty().bind(PROPERTY_MUTED);
-        statusIcons.icon3D().visibleProperty().bind(PROPERTY_3D_ENABLED);
+        statusIcons.iconMuted()    .visibleProperty().bind(PROPERTY_MUTED);
+        statusIcons.icon3D()       .visibleProperty().bind(PROPERTY_3D_ENABLED);
         statusIcons.iconAutopilot().visibleProperty().bind(theGameContext().theGameController().propertyUsingAutopilot());
-        statusIcons.iconImmune().visibleProperty().bind(theGameContext().theGameController().propertyImmunity());
-
-        mainScene.rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
-            () -> theAssets.get(isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D) ? "background.play_scene3d" : "background.scene"),
-            PROPERTY_CURRENT_VIEW, PROPERTY_CURRENT_GAME_SCENE
-        ));
+        statusIcons.iconImmune()   .visibleProperty().bind(theGameContext().theGameController().propertyImmunity());
     }
 
     private void configureStage(Stage stage) {
