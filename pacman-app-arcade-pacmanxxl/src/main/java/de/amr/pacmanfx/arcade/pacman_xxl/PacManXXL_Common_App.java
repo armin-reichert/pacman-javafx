@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.application.Application;
@@ -11,11 +12,12 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import static de.amr.pacmanfx.Globals.theGameContext;
-import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.ui.GameVariant.MS_PACMAN_XXL;
 import static de.amr.pacmanfx.ui.GameVariant.PACMAN_XXL;
 
 public class PacManXXL_Common_App extends Application {
+
+    private GameUI ui;
 
     @Override
     public void start(Stage primaryStage) {
@@ -23,7 +25,7 @@ public class PacManXXL_Common_App extends Application {
         final double height = 0.8 * Screen.getPrimary().getBounds().getHeight();
         final double width  = 1.6 * height;
         var xxlMapSelector = new PacManXXL_Common_MapSelector(theGameContext().theCustomMapDir());
-        GameUI_Builder.createUI(primaryStage, width, height)
+        ui = GameUI_Builder.createUI(primaryStage, width, height)
                 .game(
                     PACMAN_XXL.name(),
                     PacManXXL_PacMan_GameModel.class,
@@ -41,17 +43,16 @@ public class PacManXXL_Common_App extends Application {
                     DashboardID.GAME_CONTROL, DashboardID.SETTINGS_3D,
                     DashboardID.GAME_INFO, DashboardID.ACTOR_INFO, DashboardID.CUSTOM_MAPS,
                     DashboardID.KEYBOARD_SHORTCUTS_GLOBAL, DashboardID.KEYBOARD_SHORTCUTS_LOCAL,
-                    DashboardID.ABOUT
-                )
+                    DashboardID.ABOUT)
             .startPage(PacManXXL_Common_StartPage.class, PACMAN_XXL.name())
-            .build()
-            .show();
+            .build();
 
-        theUI().theCustomDirWatchdog().addEventListener(watchEvents -> xxlMapSelector.loadCustomMaps());
+        ui.theCustomDirWatchdog().addEventListener(watchEvents -> xxlMapSelector.loadCustomMaps());
+        ui.show();
     }
 
     @Override
     public void stop() {
-        theUI().terminate();
+        ui.terminate();
     }
 }

@@ -15,7 +15,6 @@ import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.GameUI.theUI;
 
 /**
  * Displays an option menu where the game variant to be played and other options can be set.
@@ -52,7 +51,7 @@ public class PacManXXL_Common_StartPage implements StartPage {
     @Override
     public void onEnter(GameUI ui) {
         ui.selectGameVariant(menu.state().gameVariant);
-        menu.soundEnabledProperty().bind(theUI().theSound().mutedProperty().not());
+        menu.soundEnabledProperty().bind(ui.theSound().mutedProperty().not());
         menu.syncMenuState();
         menu.startAnimation();
     }

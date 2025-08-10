@@ -14,6 +14,7 @@ import de.amr.pacmanfx.arcade.pacman_xxl.*;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.GameVariant;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
@@ -22,12 +23,13 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import static de.amr.pacmanfx.Globals.theGameContext;
-import static de.amr.pacmanfx.ui.GameUI.theUI;
 
 /**
  * Application containing all game variants, the 3D play scenes, the map editor etc. ("all you can f*** ähm play").
  */
 public class PacManGames3dApp extends Application {
+
+    private GameUI ui;
 
     @Override
     public void start(Stage primaryStage) {
@@ -38,7 +40,7 @@ public class PacManGames3dApp extends Application {
         //TODO create this too by reflection inside builder?
         var mapSelectorXXL = new PacManXXL_Common_MapSelector(theGameContext().theCustomMapDir());
 
-        GameUI_Builder.createUI(primaryStage, width, height)
+        ui = GameUI_Builder.createUI(primaryStage, width, height)
             .game(GameVariant.PACMAN.name(),
                 ArcadePacMan_GameModel.class, ArcadePacMan_UIConfig.class)
             .game(GameVariant.MS_PACMAN.name(),
@@ -61,16 +63,15 @@ public class PacManGames3dApp extends Application {
                 DashboardID.GAME_INFO, DashboardID.ACTOR_INFO,
                 DashboardID.CUSTOM_MAPS,
                 DashboardID.KEYBOARD_SHORTCUTS_GLOBAL, DashboardID.KEYBOARD_SHORTCUTS_LOCAL,
-                DashboardID.ABOUT
-            )
-            .build()
-            .show();
+                DashboardID.ABOUT)
+            .build();
 
-        theUI().theCustomDirWatchdog().addEventListener(watchEvents -> mapSelectorXXL.loadCustomMaps());
+        ui.theCustomDirWatchdog().addEventListener(watchEvents -> mapSelectorXXL.loadCustomMaps());
+        ui.show();
     }
 
     @Override
     public void stop() {
-        theUI().terminate();
+        ui.terminate();
     }
 }

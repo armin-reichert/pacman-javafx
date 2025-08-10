@@ -29,7 +29,7 @@ public interface GameUI {
 
     double DEFAULT_FLASH_MESSAGE_SECONDS = 1.5;
 
-    static GameUI theUI() { return PacManGames_UI_Impl.THE_ONE; }
+//    static GameUI theUI() { return PacManGames_UI_Impl.THE_ONE; }
 
     /**
      * @return list of key to action bindings

@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.*;
@@ -22,7 +23,6 @@ import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
-import static de.amr.pacmanfx.ui.GameUI.theUI;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_WHITE;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_YELLOW;
 import static java.util.Objects.requireNonNull;
@@ -111,7 +111,7 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
         ctx.save();
         ctx.scale(scaling(), scaling());
         if (mazeHighlighted) {
-            String assetNamespace = theUI().theConfiguration().assetNamespace();
+            String assetNamespace = ArcadePacMan_UIConfig.ASSET_NAMESPACE;
             ctx.drawImage(assets.image(assetNamespace + ".flashing_maze"), 0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);
         }
         else if (level.uneatenFoodCount() == 0) {

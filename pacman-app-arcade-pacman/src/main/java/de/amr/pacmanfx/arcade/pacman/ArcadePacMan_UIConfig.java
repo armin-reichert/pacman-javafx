@@ -41,7 +41,7 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_UIConfig implements GameUI_Config {
 
-    private static final String NAMESPACE = "pacman";
+    public static final String ASSET_NAMESPACE = "pacman";
 
     private static final ResourceManager RES_PACMAN_UI = () -> GameUI.class;
     private static final ResourceManager RES_ARCADE_PAC_MAN = () -> ArcadePacMan_UIConfig.class;
@@ -148,7 +148,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
 
     @Override
     public void dispose() {
-        ui.theAssets().removeAll(NAMESPACE + ".");
+        ui.theAssets().removeAll(ASSET_NAMESPACE + ".");
         soundManager.dispose();
     }
 
@@ -159,7 +159,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
 
     @Override
     public String assetNamespace() {
-        return NAMESPACE;
+        return ASSET_NAMESPACE;
     }
 
     @Override
