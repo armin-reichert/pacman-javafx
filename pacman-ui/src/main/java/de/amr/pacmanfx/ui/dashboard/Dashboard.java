@@ -31,7 +31,7 @@ public class Dashboard extends VBox {
         this.ui = ui;
         visibleProperty().addListener((py, ov, visible) -> {
             if (visible) {
-                update();
+                updateLayout();
             }
         });
     }
@@ -46,14 +46,9 @@ public class Dashboard extends VBox {
 
     public Stream<InfoBox> infoBoxes() { return infoBoxMap.values().stream(); }
 
-    @SuppressWarnings("unchecked")
-    public <I extends InfoBox> I infoBox(DashboardID id) {
-        return (I) infoBoxMap.get(id);
-    }
-
     public void removeInfoBox(DashboardID id) {
         infoBoxMap.remove(id);
-        update();
+        updateLayout();
     }
 
     public void addInfoBox(DashboardID id) {
@@ -85,9 +80,12 @@ public class Dashboard extends VBox {
         }
     }
 
-    public void update() {
-        InfoBox[] infoBoxes = infoBoxes().toArray(InfoBox[]::new);
-        getChildren().setAll(infoBoxes);
+    public void updateContent() {
+        infoBoxes().filter(InfoBox::isExpanded).forEach(InfoBox::update);
+    }
+
+    public void updateLayout() {
+        getChildren().setAll(infoBoxes().toArray(InfoBox[]::new));
     }
 
     public void showOnlyVisibleInfoBoxes(boolean onlyVisible) {

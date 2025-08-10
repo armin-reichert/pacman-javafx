@@ -16,7 +16,6 @@ import de.amr.pacmanfx.ui._2d.HelpLayer;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.dashboard.Dashboard;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
-import de.amr.pacmanfx.ui.dashboard.InfoBox;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.beans.binding.Bindings;
 import javafx.scene.Scene;
@@ -153,6 +152,23 @@ public class PlayView extends StackPane implements PacManGames_View {
         helpLayer.showHelp(ui, canvasContainer.scaling());
     }
 
+    public void draw() {
+        ui.currentGameScene().ifPresent(gameScene -> {
+            if (gameScene instanceof GameScene2D gameScene2D) {
+                gameScene2D.draw();
+            }
+        });
+
+        if (miniView.isVisible() && ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D) && ui.theGameContext().optGameLevel().isPresent()) {
+            miniView.draw();
+        }
+
+        // Dashboard must also be updated if simulation is stopped
+        if (dashboardAndMiniViewLayer.isVisible()) {
+            dashboard.updateContent();
+        }
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
     // PacManGames_View interface implementation
     // -----------------------------------------------------------------------------------------------------------------
@@ -165,23 +181,6 @@ public class PlayView extends StackPane implements PacManGames_View {
     @Override
     public StackPane rootNode() {
         return this;
-    }
-
-    public void draw() {
-        ui.currentGameScene().ifPresent(gameScene -> {
-            if (gameScene instanceof GameScene2D gameScene2D) {
-                gameScene2D.draw();
-            }
-        });
-
-        if (miniView.isVisible() && ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D) && ui.theGameContext().optGameLevel().isPresent()) {
-            miniView.draw();
-        }
-
-        // Dashboard updates must be called from permanent clock task too!
-        if (dashboardAndMiniViewLayer.isVisible()) {
-            dashboard.infoBoxes().filter(InfoBox::isExpanded).forEach(InfoBox::update);
-        }
     }
 
     @Override
