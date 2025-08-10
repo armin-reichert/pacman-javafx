@@ -8,7 +8,6 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.actors.ActorAnimationMap;
 import de.amr.pacmanfx.ui.*;
 import de.amr.pacmanfx.ui._2d.CanvasWithFrame;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
@@ -188,30 +187,30 @@ public class PlayView extends StackPane implements PacManGames_View {
 
     @Override
     public void onGameEvent(GameEvent gameEvent) {
-        Logger.trace("Handle {}", gameEvent);
         switch (gameEvent.type()) {
-            case LEVEL_CREATED -> {
-                GameLevel gameLevel = ui.theGameContext().theGameLevel();
-                GameUI_Config config = ui.theConfiguration();
-                ActorAnimationMap pacAnimationMap = config.createPacAnimations(gameLevel.pac());
-                gameLevel.pac().setAnimations(pacAnimationMap);
-                gameLevel.ghosts().forEach(ghost -> {
-                    ActorAnimationMap ghostAnimationMap = config.createGhostAnimations(ghost);
-                    ghost.setAnimations(ghostAnimationMap);
-                });
-                miniView.setGameLevel(gameLevel);
-
-                // size of game scene might have changed, so re-embed
-                ui.currentGameScene().ifPresent(gameScene -> embedGameScene(parentScene, gameScene));
-            }
+            case LEVEL_CREATED -> onLevelCreated();
             case GAME_STATE_CHANGED -> {
                 if (ui.theGameContext().theGameState() == GameState.LEVEL_COMPLETE) {
-                    miniView.onLevelCompleted();
+                    miniView.slideOut();
                 }
             }
         }
         ui.currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(gameEvent));
         updateGameScene(false);
+    }
+
+    private void onLevelCreated() {
+        GameLevel gameLevel = ui.theGameContext().theGameLevel();
+        GameUI_Config uiConfig = ui.theConfiguration();
+
+        gameLevel.pac().setAnimations(uiConfig.createPacAnimations(gameLevel.pac()));
+        gameLevel.ghosts().forEach(ghost -> ghost.setAnimations(uiConfig.createGhostAnimations(ghost)));
+
+        miniView.setGameLevel(gameLevel);
+        miniView.slideIn();
+
+        // size of game scene might have changed, so re-embed
+        ui.currentGameScene().ifPresent(gameScene -> embedGameScene(parentScene, gameScene));
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -284,8 +283,6 @@ public class PlayView extends StackPane implements PacManGames_View {
         canvasWithFrame.resizeTo(parentScene.getWidth(), parentScene.getHeight());
         canvasWithFrame.backgroundProperty().bind(GameUI.PROPERTY_CANVAS_BACKGROUND_COLOR.map(Ufx::colorBackground));
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     private void configureCanvasWithFrame() {
         canvasWithFrame.setMinScaling(0.5);

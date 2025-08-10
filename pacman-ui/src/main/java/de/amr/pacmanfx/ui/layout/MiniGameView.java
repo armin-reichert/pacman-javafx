@@ -8,7 +8,6 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
-import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
 import javafx.beans.binding.Bindings;
@@ -32,7 +31,9 @@ import static java.util.Objects.requireNonNull;
 
 public class MiniGameView extends VBox {
 
-    private static final Vector2f ARCADE_SIZE = Vector2f.of(28, 36);
+    public static final Vector2f ARCADE_SIZE = Vector2f.of(28, 36);
+    public static final Duration SLIDE_IN_DURATION = Duration.seconds(1);
+    public static final Duration SLIDE_OUT_DURATION = Duration.seconds(2);
 
     private final FloatProperty aspectProperty                  = new SimpleFloatProperty(ARCADE_SIZE.x() / ARCADE_SIZE.y());
     private final ObjectProperty<Color> backgroundColorProperty = new SimpleObjectProperty<>(Color.BLACK);
@@ -49,7 +50,8 @@ public class MiniGameView extends VBox {
     private GameLevel gameLevel;
     private long drawCallCount;
 
-    private final Animation moveIntoScreenAnimation;
+    private final TranslateTransition slideInAnimation;
+    private final TranslateTransition slideOutAnimation;
 
     public MiniGameView() {
         canvas = new Canvas();
@@ -73,7 +75,17 @@ public class MiniGameView extends VBox {
         ));
         aspectProperty.bind(worldSizeProperty.map(size -> size.x() / size.y()));
 
-        moveIntoScreenAnimation = createMoveIntoScreenAnimation();
+        slideInAnimation = new TranslateTransition(SLIDE_IN_DURATION, this);
+        slideInAnimation.setToY(0);
+        slideInAnimation.setByY(10);
+        slideInAnimation.setDelay(Duration.seconds(1));
+        slideInAnimation.setInterpolator(Interpolator.EASE_OUT);
+
+        slideOutAnimation = new TranslateTransition(SLIDE_OUT_DURATION, this);
+        slideOutAnimation.setToY(-canvasContainer.getHeight());
+        slideOutAnimation.setByY(10);
+        slideOutAnimation.setDelay(Duration.seconds(2));
+        slideOutAnimation.setInterpolator(Interpolator.EASE_IN);
     }
 
     public ObjectProperty<Color> backgroundColorProperty() {
@@ -106,30 +118,15 @@ public class MiniGameView extends VBox {
         gr = ui.theConfiguration().createGameRenderer(canvas);
         gr.applyRenderingHints(gameLevel);
         gr.setScaling(scalingProperty.floatValue());
-        moveIntoScreenAnimation.play();
     }
 
-    public void onLevelCompleted() {
-        Animation moveOffAnimation = createMoveOffScreenAnimation();
-        moveOffAnimation.play();
+    public void slideIn() {
+        slideInAnimation.play();
     }
 
-    private Animation createMoveIntoScreenAnimation() {
-        var transition = new TranslateTransition(Duration.seconds(1), this);
-        transition.setToY(0);
-        transition.setByY(10);
-        transition.setDelay(Duration.seconds(1));
-        transition.setInterpolator(Interpolator.EASE_OUT);
-        return transition;
-    }
-
-    private Animation createMoveOffScreenAnimation() {
-        var transition = new TranslateTransition(Duration.seconds(2), this);
-        transition.setToY(-canvasContainer.getHeight());
-        transition.setByY(10);
-        transition.setDelay(Duration.seconds(2));
-        transition.setInterpolator(Interpolator.EASE_IN);
-        return transition;
+    public void slideOut() {
+        slideOutAnimation.setToY(-canvasContainer.getHeight());
+        slideOutAnimation.play();
     }
 
     public void draw() {
