@@ -365,28 +365,34 @@ public class GameUI_Implementation implements GameUI {
         mainScene.flashMessageLayer().showMessage(String.format(message, args), duration.toSeconds());
     }
 
-    // GameLifecycle interface
+    // GameUI_Lifecycle interface
 
     @Override
     public void quitCurrentGameScene() {
+        soundManager().stopAll();
         currentGameScene().ifPresent(gameScene -> {
             gameScene.end();
-            gameContext.theGameController().changeGameState(GameState.BOOT);
-            gameContext.theGame().resetEverything();
-            if (!gameContext.theCoinMechanism().isEmpty()) {
+            boolean shouldConsumeCoin = gameContext.theGameState() == GameState.STARTING_GAME
+                    || gameContext.theGame().isPlaying();
+            if (shouldConsumeCoin && !gameContext.theCoinMechanism().isEmpty()) {
                 gameContext.theCoinMechanism().consumeCoin();
             }
-            Logger.info("Current game scene ({}) has been quit, returning to start view", gameScene.getClass().getSimpleName());
-            showStartView();
+            Logger.info("Quit game scene ({}), returning to start view", gameScene.getClass().getSimpleName());
         });
+        clock.stop();
+        clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
+        gameContext.theGameController().restart(GameState.BOOT);
+        showStartView();
     }
 
     @Override
     public void restart() {
+        soundManager().stopAll();
+        currentGameScene().ifPresent(GameScene::end);
         clock.stop();
         clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
-        clock.start();
         gameContext.theGameController().restart(GameState.BOOT);
+        Platform.runLater(clock::start);
     }
 
     @Override
@@ -444,7 +450,7 @@ public class GameUI_Implementation implements GameUI {
         customDirectoryWatchdog.dispose();
     }
 
-    // GameViewAccess interface
+    // GameUI_ViewAccess interface
 
     @Override
     public GameUI_View currentView() {
@@ -502,9 +508,10 @@ public class GameUI_Implementation implements GameUI {
         }));
     }
 
-    // GameSceneAccess interface
+    // GameUI_SceneAccess interface
 
-    @Override public Optional<GameScene> currentGameScene() {
+    @Override
+    public Optional<GameScene> currentGameScene() {
         return mainScene.currentGameScene();
     }
 
@@ -519,7 +526,7 @@ public class GameUI_Implementation implements GameUI {
         playView().updateGameScene(forceReloading);
     }
 
-    // GameUIConfigManager interface
+    // GameUI_ConfigManager interface
 
     @Override
     public void setConfig(String variant, GameUI_Config config) {
