@@ -25,6 +25,7 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.sound.SoundID;
+import de.amr.pacmanfx.uilib.Ufx;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
@@ -50,6 +51,7 @@ import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_SHORT;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.GameUI_Properties.PROPERTY_MUTED;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
+import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
 
 /**
  * Tengen Ms. Pac-Man play scene, uses vertical scrolling by default.
@@ -219,7 +221,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         return List.of(
             miScaledToFit,
             miScrolling,
-            ui.createContextMenuTitle("pacman"),
+            createContextMenuTitle("pacman", ui.theUIPrefs(), ui.theAssets()),
             miAutopilot,
             miImmunity,
             new SeparatorMenuItem(),

@@ -106,18 +106,4 @@ public interface GameUI {
     default void showFlashMessage(String message, Object... args) {
         showFlashMessageSec(DEFAULT_FLASH_MESSAGE_SECONDS, message, args);
     }
-
-    /**
-     * @param titleKey resource bundle key of title text
-     * @return CustomMenuItem representing a context menu title item
-     */
-    default MenuItem createContextMenuTitle(String titleKey) {
-        Font font = theUIPrefs().getFont("context_menu.title.font");
-        Color fillColor = theUIPrefs().getColor("context_menu.title.fill");
-        var text = new Text(theAssets().text(titleKey));
-        text.setFont(font);
-        text.setFill(fillColor);
-        text.getStyleClass().add("custom-menu-title");
-        return new CustomMenuItem(text);
-    }
 }

@@ -7,12 +7,16 @@ package de.amr.pacmanfx.uilib;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.lib.nes.NES_Palette;
+import de.amr.pacmanfx.uilib.assets.AssetStorage;
+import de.amr.pacmanfx.uilib.assets.UIPreferences;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.animation.Transition;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.geometry.Insets;
+import javafx.scene.control.CustomMenuItem;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
@@ -21,6 +25,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -358,5 +363,20 @@ public interface Ufx {
         double dist2 = dx*dx + dy*dy + dz*dz;
 
         return dist2 <= radius * radius;
+    }
+    /**
+     * @param titleKey resource bundle key of title text
+     * @param prefs the UI preference manager
+     * @param assets the UI asset storage
+     * @return CustomMenuItem representing a context menu title item
+     */
+    static MenuItem createContextMenuTitle(String titleKey, UIPreferences prefs, AssetStorage assets) {
+        Font font = prefs.getFont("context_menu.title.font");
+        Color fillColor = prefs.getColor("context_menu.title.fill");
+        var text = new Text(assets.text(titleKey));
+        text.setFont(font);
+        text.setFill(fillColor);
+        text.getStyleClass().add("custom-menu-title");
+        return new CustomMenuItem(text, false);
     }
 }

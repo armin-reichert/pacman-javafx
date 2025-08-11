@@ -20,6 +20,7 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.sound.SoundID;
+import de.amr.pacmanfx.uilib.Ufx;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -38,6 +39,7 @@ import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_SHORT;
 import static de.amr.pacmanfx.ui.GameUI_Properties.PROPERTY_MUTED;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
+import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
 
 /**
  * 2D play scene for Arcade game variants.
@@ -125,7 +127,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
         miQuit.setOnAction(e -> ACTION_QUIT_GAME_SCENE.executeIfEnabled(ui));
 
         return List.of(
-            ui.createContextMenuTitle("pacman"),
+            createContextMenuTitle("pacman", ui.theUIPrefs(), ui.theAssets()),
             miAutopilot,
             miImmunity,
             new SeparatorMenuItem(),

@@ -36,8 +36,7 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.GameUI_Config.SCENE_ID_PLAY_SCENE_2D;
 import static de.amr.pacmanfx.ui.GameUI_Properties.*;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
-import static de.amr.pacmanfx.uilib.Ufx.border;
-import static de.amr.pacmanfx.uilib.Ufx.colorBackground;
+import static de.amr.pacmanfx.uilib.Ufx.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -127,7 +126,7 @@ public class PlayView extends StackPane implements GameUI_View {
             if (ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_2D)) {
                 var miSwitchTo3D = new MenuItem(ui.theAssets().text("use_3D_scene"));
                 miSwitchTo3D.setOnAction(e -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(ui));
-                contextMenu.getItems().add(ui.createContextMenuTitle("scene_display"));
+                contextMenu.getItems().add(createContextMenuTitle("scene_display", ui.theUIPrefs(), ui.theAssets()));
                 contextMenu.getItems().add(miSwitchTo3D);
             }
             List<MenuItem> gameSceneItems = gameScene.supplyContextMenuItems(contextMenuEvent, contextMenu);
