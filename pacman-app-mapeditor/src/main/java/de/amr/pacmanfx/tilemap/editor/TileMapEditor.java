@@ -230,6 +230,8 @@ public class TileMapEditor {
 
     // Properties
 
+    // editMode
+
     public static final EditMode DEFAULT_EDIT_MODE = EditMode.INSPECT;
 
     private ObjectProperty<EditMode> editMode;
@@ -254,7 +256,11 @@ public class TileMapEditor {
         editModeProperty().set(requireNonNull(mode));
     }
 
+    // currentFile
+
     private final ObjectProperty<File> currentFilePy = new SimpleObjectProperty<>();
+
+    // editedWorldMap
 
     private final ObjectProperty<WorldMap> editedWorldMapPy = new SimpleObjectProperty<>(WorldMap.emptyMap(28, 36)) {
         @Override
@@ -264,12 +270,31 @@ public class TileMapEditor {
         }
     };
 
-    private final IntegerProperty gridSizePy = new SimpleIntegerProperty(8) {
-        @Override
-        protected void invalidated() {
-            changeManager.requestRedraw();
+    // gridSize
+
+    private static final int DEFAULT_GRID_SIZE = 8;
+
+    private IntegerProperty gridSize;
+
+    public IntegerProperty gridSizeProperty() {
+        if (gridSize == null) {
+            gridSize = new SimpleIntegerProperty(DEFAULT_GRID_SIZE) {
+                @Override
+                protected void invalidated() {
+                    changeManager.requestRedraw();
+                }
+            };
         }
-    };
+        return gridSize;
+    }
+
+    public int gridSize() { return gridSize.get(); }
+
+    public void setGridSize(int size) {
+        gridSizeProperty().set(size);
+    }
+
+    // actorsVisible
 
     private final BooleanProperty actorsVisiblePy = new SimpleBooleanProperty(true) {
         @Override
@@ -337,10 +362,6 @@ public class TileMapEditor {
     public WorldMap editedWorldMap() { return editedWorldMapPy.get(); }
 
     public void setEditedWorldMap(WorldMap worldMap) { editedWorldMapPy.set(requireNonNull(worldMap)); }
-
-    public IntegerProperty gridSizeProperty() { return gridSizePy; }
-
-    public int gridSize() { return gridSizePy.get(); }
 
     public BooleanProperty actorsVisibleProperty() { return actorsVisiblePy; }
 
@@ -527,7 +548,7 @@ public class TileMapEditor {
         spEditCanvas.heightProperty().addListener((py,oldHeight,newHeight) -> {
             if (oldHeight.doubleValue() == 0) { // initial resize
                 int initialGridSize = (int) Math.max(newHeight.doubleValue() / editedWorldMap().numRows(), MIN_GRID_SIZE);
-                gridSizePy.set(initialGridSize);
+                setGridSize(initialGridSize);
             }
         });
     }
@@ -738,10 +759,10 @@ public class TileMapEditor {
         sliderZoom.setShowTickLabels(false);
         sliderZoom.setShowTickMarks(true);
         sliderZoom.setPrefWidth(120);
-        Bindings.bindBidirectional(sliderZoom.valueProperty(), gridSizePy);
+        Bindings.bindBidirectional(sliderZoom.valueProperty(), gridSize);
         Tooltip tt = new Tooltip();
         tt.setFont(Font.font(14));
-        tt.textProperty().bind(gridSizePy.map("Grid Size: %s"::formatted));
+        tt.textProperty().bind(gridSizeProperty().map("Grid Size: %s"::formatted));
         sliderZoom.setTooltip(tt);
     }
 
@@ -1127,13 +1148,13 @@ public class TileMapEditor {
 
     private void zoomIn() {
         if (gridSize() < TileMapEditor.MAX_GRID_SIZE) {
-            gridSizePy.set(gridSize() + 1);
+            gridSize.set(gridSize() + 1);
         }
     }
 
     private void zoomOut() {
         if (gridSize() > TileMapEditor.MIN_GRID_SIZE) {
-            gridSizePy.set(gridSize() - 1);
+            gridSize.set(gridSize() - 1);
         }
     }
 
