@@ -18,7 +18,6 @@ import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.assets.UIPreferences;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.beans.value.ObservableObjectValue;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
@@ -36,6 +35,7 @@ import static de.amr.pacmanfx.ui.GameUI_Properties.*;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
 import static java.util.Objects.requireNonNull;
+import static javafx.beans.binding.Bindings.createStringBinding;
 
 /**
  * User interface for the Pac-Man game suite. Shows a carousel with a start page for each game variant.
@@ -193,22 +193,43 @@ public class PacManGames_UI_Impl implements GameUI {
         stage.setScene(mainScene);
         stage.setMinWidth(MIN_STAGE_WIDTH);
         stage.setMinHeight(MIN_STAGE_HEIGHT);
-        var title = Bindings.createStringBinding(
-            () -> {
-                PacManGames_View currentView = currentView();
-                return currentView == null
-                    ? "No View?"
-                    : currentView.title().map(ObservableObjectValue::get)
-                        .orElse(mainScene.computeTitle(PROPERTY_3D_ENABLED.get(), PROPERTY_DEBUG_INFO_VISIBLE.get()));
-            },
-                PROPERTY_CURRENT_GAME_SCENE,
-                PROPERTY_CURRENT_VIEW,
-                PROPERTY_DEBUG_INFO_VISIBLE,
-                PROPERTY_3D_ENABLED,
+        stage.titleProperty().bind(createStringBinding(
+            this::computeTitle,
+            PROPERTY_CURRENT_VIEW,
+            PROPERTY_CURRENT_GAME_SCENE,
+            PROPERTY_DEBUG_INFO_VISIBLE,
+            PROPERTY_3D_ENABLED,
             theGameClock().pausedProperty(),
             mainScene.heightProperty()
-        );
-        stage.titleProperty().bind(title);
+        ));
+    }
+
+    // Asset key regex: app.title.(ms_pacman|ms_pacman_xxl|pacman,pacman_xxl|tengen)(.paused)?
+    private String computeTitle() {
+        var currentView = PROPERTY_CURRENT_VIEW.get();
+        if (currentView == null) {
+            return "No View?";
+        }
+        if (currentView.title().isPresent()) {
+            return currentView.title().get().get();
+        }
+
+        boolean mode3D = PROPERTY_3D_ENABLED.get();
+        boolean modeDebug = PROPERTY_DEBUG_INFO_VISIBLE.get();
+        String namespace      = theConfiguration().assetNamespace();
+        String paused         = theGameClock().isPaused() ? ".paused" : "";
+        String assetKey       = "app.title.%s%s".formatted(namespace, paused);
+        String translatedMode = theAssets().text(mode3D ? "threeD" : "twoD");
+        String shortTitle     = theAssets().text(assetKey, translatedMode);
+
+        var currentGameScene = currentGameScene().orElse(null);
+        if (currentGameScene == null || !modeDebug) {
+            return shortTitle;
+        }
+        String sceneClassName = currentGameScene.getClass().getSimpleName();
+        return currentGameScene instanceof GameScene2D gameScene2D
+            ? shortTitle + " [%s]".formatted(sceneClassName) + " (%.2fx)".formatted(gameScene2D.scaling())
+            : shortTitle + " [%s]".formatted(sceneClassName);
     }
 
     private void initGlobalActionBindings() {

@@ -7,7 +7,6 @@ package de.amr.pacmanfx.ui.layout;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.ArcadePalette;
-import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.widgets.FlashMessageView;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -39,14 +38,13 @@ public class MainScene extends Scene {
 
     private final ObjectProperty<GameScene> propertyCurrentGameScene = new SimpleObjectProperty<>();
 
-    private final GameUI ui;
     private final FlashMessageView flashMessageLayer;
     private final FontIcon pausedIcon;
     private final StatusIconBox statusIconBox;
 
     public MainScene(GameUI ui, double width, double height) {
         super(new StackPane(), width, height);
-        this.ui = requireNonNull(ui);
+        requireNonNull(ui);
         this.flashMessageLayer = new FlashMessageView();
 
         URL url = getClass().getResource("css/menu-style.css");
@@ -99,24 +97,5 @@ public class MainScene extends Scene {
 
     public Optional<GameScene> currentGameScene() {
         return Optional.ofNullable(propertyCurrentGameScene.get());
-    }
-
-    // Asset key regex: app.title.(ms_pacman|ms_pacman_xxl|pacman,pacman_xxl|tengen)(.paused)?
-    public String computeTitle(boolean threeDModeEnabled, boolean modeDebug) {
-        String ans = ui.theConfiguration().assetNamespace();
-        String paused = ui.theGameClock().isPaused() ? ".paused" : "";
-        String key = "app.title." + ans + paused;
-        String modeText = ui.theAssets().text(threeDModeEnabled ? "threeD" : "twoD");
-        GameScene currentGameScene = currentGameScene().orElse(null);
-        if (currentGameScene == null || !modeDebug) {
-            return ui.theAssets().text(key, modeText);
-        }
-        String sceneClassName = currentGameScene.getClass().getSimpleName();
-        if (currentGameScene instanceof GameScene2D gameScene2D) {
-            return ui.theAssets().text(key, modeText)
-                + " [%s]".formatted(sceneClassName)
-                + " (%.2fx)".formatted(gameScene2D.scaling());
-        }
-        return ui.theAssets().text(key, modeText) + " [%s]".formatted(sceneClassName);
     }
 }
