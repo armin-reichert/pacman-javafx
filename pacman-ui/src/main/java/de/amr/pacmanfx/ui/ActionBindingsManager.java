@@ -11,11 +11,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public interface ActionBindingManager {
+public interface ActionBindingsManager {
 
-    Map<KeyCombination, GameAction> actionByCombination();
+    Map<KeyCombination, GameAction> actionByKeyCombination();
 
-    boolean isEmpty();
+    Optional<GameAction> matchingAction(Keyboard keyboard);
+
+    boolean hasNoEntries();
 
     void updateKeyboard(Keyboard keyboard);
 
@@ -31,7 +33,5 @@ public interface ActionBindingManager {
      * @param gameAction a game action
      * @param actionBindings an action bindings list
      */
-    void use(GameAction gameAction, List<ActionBinding> actionBindings);
-
-    Optional<GameAction> matchingGameAction(Keyboard keyboard);
+    void useFirst(GameAction gameAction, List<ActionBinding> actionBindings);
 }

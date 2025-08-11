@@ -23,7 +23,7 @@ public interface GameScene extends GameEventListener {
 
     GameContext gameContext();
 
-    ActionBindingManager actionBindings();
+    ActionBindingsManager actionBindings();
 
     void handleKeyboardInput();
 

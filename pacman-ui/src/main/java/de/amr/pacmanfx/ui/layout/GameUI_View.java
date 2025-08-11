@@ -5,23 +5,23 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.event.GameEventListener;
-import de.amr.pacmanfx.ui.ActionBindingManager;
+import de.amr.pacmanfx.ui.ActionBindingsManager;
 import de.amr.pacmanfx.ui.GameUI;
 import javafx.beans.binding.StringExpression;
 import javafx.scene.Node;
 
 import java.util.Optional;
 
-public interface PacManGames_View extends GameEventListener {
+public interface GameUI_View extends GameEventListener {
     /**
-     * @return the root node of this view
+     * @return the root node of this view in the scene graph
      */
-    Node rootNode();
+    Node root();
 
     /**
-     * @return the action bindings defined for this view
+     * @return the action bindings manager for this view
      */
-    ActionBindingManager actionBindingMap();
+    ActionBindingsManager actionBindingsManager();
 
     /**
      * @return a title expression for this view. If empty, the default main scene title is used.
@@ -34,6 +34,6 @@ public interface PacManGames_View extends GameEventListener {
      * @param ui the game UI
      */
     default void handleKeyboardInput(GameUI ui) {
-        actionBindingMap().matchingGameAction(ui.theKeyboard()).ifPresent(gameAction -> gameAction.executeIfEnabled(ui));
+        actionBindingsManager().matchingAction(ui.theKeyboard()).ifPresent(gameAction -> gameAction.executeIfEnabled(ui));
     }
 }

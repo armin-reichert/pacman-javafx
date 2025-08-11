@@ -73,11 +73,11 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     public void doInit() {
         gameContext().theGame().theHUD().credit(true).score(true).levelCounter(true).livesCounter(false);
 
-        actionBindings.use(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
-        actionBindings.use(ACTION_ARCADE_START_GAME, ui.actionBindings());
-        actionBindings.use(ACTION_TEST_CUT_SCENES, ui.actionBindings());
-        actionBindings.use(ACTION_TEST_LEVELS_BONI, ui.actionBindings());
-        actionBindings.use(ACTION_TEST_LEVELS_TEASERS, ui.actionBindings());
+        actionBindings.useFirst(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
+        actionBindings.useFirst(ACTION_ARCADE_START_GAME, ui.actionBindings());
+        actionBindings.useFirst(ACTION_TEST_CUT_SCENES, ui.actionBindings());
+        actionBindings.useFirst(ACTION_TEST_LEVELS_BONI, ui.actionBindings());
+        actionBindings.useFirst(ACTION_TEST_LEVELS_TEASERS, ui.actionBindings());
 
         midwayCopyright = new MidwayCopyright(ui.theConfiguration().getAssetNS("logo.midway"));
         midwayCopyright.setPosition(TS * 6, TS * 28);

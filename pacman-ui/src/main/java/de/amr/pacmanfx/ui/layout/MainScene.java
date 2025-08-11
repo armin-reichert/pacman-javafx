@@ -25,13 +25,13 @@ import static java.util.Objects.requireNonNull;
 
 public class MainScene extends Scene {
 
-    private final ObjectProperty<PacManGames_View> propertyCurrentView = new SimpleObjectProperty<>() {
+    private final ObjectProperty<GameUI_View> propertyCurrentView = new SimpleObjectProperty<>() {
         @Override
         protected void invalidated() {
-            PacManGames_View newView = get();
+            GameUI_View newView = get();
             if (newView != null) {
-                rootPane().getChildren().set(0, newView.rootNode());
-                newView.rootNode().requestFocus();
+                rootPane().getChildren().set(0, newView.root());
+                newView.root().requestFocus();
             }
         }
     };
@@ -83,11 +83,11 @@ public class MainScene extends Scene {
         return flashMessageLayer;
     }
 
-    public ObjectProperty<PacManGames_View> currentViewProperty() {
+    public ObjectProperty<GameUI_View> currentViewProperty() {
         return propertyCurrentView;
     }
 
-    public PacManGames_View currentView() {
+    public GameUI_View currentView() {
         return propertyCurrentView.get();
     }
 

@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.input;
 
-import de.amr.pacmanfx.ui.ActionBindingManager;
+import de.amr.pacmanfx.ui.ActionBindingsManager;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -42,10 +42,10 @@ public final class Keyboard {
     }
 
     private final Set<KeyCode> pressedKeys = new HashSet<>();
-    private final Map<KeyCombination, ActionBindingManager> actionBindingMaps = new HashMap<>();
+    private final Map<KeyCombination, ActionBindingsManager> actionBindingMaps = new HashMap<>();
     private final List<KeyCombination> matches = new ArrayList<>(3);
 
-    public void setBinding(KeyCombination combination, ActionBindingManager actionBindingSupport) {
+    public void setBinding(KeyCombination combination, ActionBindingsManager actionBindingSupport) {
         if (actionBindingMaps.get(combination) == actionBindingSupport) {
             Logger.debug("Key combination '{}' already bound to action {}", combination, actionBindingSupport);
         } else {
@@ -54,7 +54,7 @@ public final class Keyboard {
         }
     }
 
-    public void removeBinding(KeyCombination combination, ActionBindingManager client) {
+    public void removeBinding(KeyCombination combination, ActionBindingsManager client) {
         boolean removed = actionBindingMaps.remove(combination, client);
         if (removed) {
             Logger.debug("Key code combination '{}' bound to {}", combination, client);
@@ -86,8 +86,8 @@ public final class Keyboard {
         actionBindingMaps.keySet().stream()
             .sorted(Comparator.comparing(KeyCombination::getDisplayText))
             .forEach(combination -> {
-                ActionBindingManager actionBindingManager = actionBindingMaps.get(combination);
-                Logger.debug("{}: {}", combination, actionBindingManager.getClass().getSimpleName());
+                ActionBindingsManager actionBindingsManager = actionBindingMaps.get(combination);
+                Logger.debug("{}: {}", combination, actionBindingsManager.getClass().getSimpleName());
         });
         Logger.debug("--------------------------");
     }

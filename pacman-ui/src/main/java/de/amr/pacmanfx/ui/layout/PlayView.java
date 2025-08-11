@@ -43,7 +43,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * This view shows the game play and the overlays like dashboard and picture-in-picture view of the running play scene.
  */
-public class PlayView extends StackPane implements PacManGames_View {
+public class PlayView extends StackPane implements GameUI_View {
 
     /**
      * @param sceneBefore scene displayed before switching
@@ -62,7 +62,7 @@ public class PlayView extends StackPane implements PacManGames_View {
         };
     }
 
-    private final ActionBindingManager actionBindings = new DefaultActionBindingManager();
+    private final ActionBindingsManager actionBindings = new DefaultActionBindingsManager();
     private final GameUI ui;
     private final Scene parentScene;
     private final Dashboard dashboard;
@@ -102,23 +102,23 @@ public class PlayView extends StackPane implements PacManGames_View {
         parentScene.widthProperty() .addListener((py, ov, w) -> canvasWithFrame.resizeTo(w.doubleValue(), parentScene.getHeight()));
         parentScene.heightProperty().addListener((py, ov, h) -> canvasWithFrame.resizeTo(parentScene.getWidth(), h.doubleValue()));
 
-        actionBindings.use(ACTION_BOOT_SHOW_PLAY_VIEW, ui.actionBindings());
-        actionBindings.use(ACTION_ENTER_FULLSCREEN, ui.actionBindings());
-        actionBindings.use(ACTION_QUIT_GAME_SCENE, ui.actionBindings());
-        actionBindings.use(ACTION_SHOW_HELP, ui.actionBindings());
-        actionBindings.use(ACTION_SIMULATION_SLOWER, ui.actionBindings());
-        actionBindings.use(ACTION_SIMULATION_FASTER, ui.actionBindings());
-        actionBindings.use(ACTION_SIMULATION_RESET, ui.actionBindings());
-        actionBindings.use(ACTION_SIMULATION_ONE_STEP, ui.actionBindings());
-        actionBindings.use(ACTION_SIMULATION_TEN_STEPS, ui.actionBindings());
-        actionBindings.use(ACTION_TOGGLE_AUTOPILOT, ui.actionBindings());
-        actionBindings.use(ACTION_TOGGLE_DEBUG_INFO, ui.actionBindings());
-        actionBindings.use(ACTION_TOGGLE_MUTED, ui.actionBindings());
-        actionBindings.use(ACTION_TOGGLE_PAUSED, ui.actionBindings());
-        actionBindings.use(ACTION_TOGGLE_DASHBOARD, ui.actionBindings());
-        actionBindings.use(ACTION_TOGGLE_IMMUNITY, ui.actionBindings());
-        actionBindings.use(ACTION_TOGGLE_MINI_VIEW_VISIBILITY, ui.actionBindings());
-        actionBindings.use(ACTION_TOGGLE_PLAY_SCENE_2D_3D, ui.actionBindings());
+        actionBindings.useFirst(ACTION_BOOT_SHOW_PLAY_VIEW, ui.actionBindings());
+        actionBindings.useFirst(ACTION_ENTER_FULLSCREEN, ui.actionBindings());
+        actionBindings.useFirst(ACTION_QUIT_GAME_SCENE, ui.actionBindings());
+        actionBindings.useFirst(ACTION_SHOW_HELP, ui.actionBindings());
+        actionBindings.useFirst(ACTION_SIMULATION_SLOWER, ui.actionBindings());
+        actionBindings.useFirst(ACTION_SIMULATION_FASTER, ui.actionBindings());
+        actionBindings.useFirst(ACTION_SIMULATION_RESET, ui.actionBindings());
+        actionBindings.useFirst(ACTION_SIMULATION_ONE_STEP, ui.actionBindings());
+        actionBindings.useFirst(ACTION_SIMULATION_TEN_STEPS, ui.actionBindings());
+        actionBindings.useFirst(ACTION_TOGGLE_AUTOPILOT, ui.actionBindings());
+        actionBindings.useFirst(ACTION_TOGGLE_DEBUG_INFO, ui.actionBindings());
+        actionBindings.useFirst(ACTION_TOGGLE_MUTED, ui.actionBindings());
+        actionBindings.useFirst(ACTION_TOGGLE_PAUSED, ui.actionBindings());
+        actionBindings.useFirst(ACTION_TOGGLE_DASHBOARD, ui.actionBindings());
+        actionBindings.useFirst(ACTION_TOGGLE_IMMUNITY, ui.actionBindings());
+        actionBindings.useFirst(ACTION_TOGGLE_MINI_VIEW_VISIBILITY, ui.actionBindings());
+        actionBindings.useFirst(ACTION_TOGGLE_PLAY_SCENE_2D_3D, ui.actionBindings());
     }
 
     private void handleContextMenuRequest(ContextMenuEvent contextMenuEvent) {
@@ -162,18 +162,18 @@ public class PlayView extends StackPane implements PacManGames_View {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public ActionBindingManager actionBindingMap() {
+    public ActionBindingsManager actionBindingsManager() {
         return actionBindings;
     }
 
     @Override
-    public StackPane rootNode() {
+    public StackPane root() {
         return this;
     }
 
     @Override
     public void handleKeyboardInput(GameUI ui) {
-        GameAction matchingAction = actionBindings.matchingGameAction(ui.theKeyboard()).orElse(null);
+        GameAction matchingAction = actionBindings.matchingAction(ui.theKeyboard()).orElse(null);
         if (matchingAction != null) {
             matchingAction.executeIfEnabled(ui);
         } else {

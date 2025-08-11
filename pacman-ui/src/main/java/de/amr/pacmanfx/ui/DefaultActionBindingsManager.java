@@ -12,17 +12,17 @@ import java.util.*;
 
 import static java.util.Objects.requireNonNull;
 
-public class DefaultActionBindingManager implements ActionBindingManager {
+public class DefaultActionBindingsManager implements ActionBindingsManager {
 
-    public static class EmptyManager implements ActionBindingManager {
+    public static class EmptyManager implements ActionBindingsManager {
 
         @Override
-        public Map<KeyCombination, GameAction> actionByCombination() {
+        public Map<KeyCombination, GameAction> actionByKeyCombination() {
             return Map.of();
         }
 
         @Override
-        public boolean isEmpty() { return true; }
+        public boolean hasNoEntries() { return true; }
 
         @Override
         public void updateKeyboard(Keyboard keyboard) {}
@@ -34,28 +34,28 @@ public class DefaultActionBindingManager implements ActionBindingManager {
         public void addBinding(ActionBinding actionBinding) {}
 
         @Override
-        public void use(GameAction action, List<ActionBinding> actionBindings) {}
+        public void useFirst(GameAction action, List<ActionBinding> actionBindings) {}
 
         @Override
         public void bind(GameAction action, KeyCombination combination) {}
 
         @Override
-        public Optional<GameAction> matchingGameAction(Keyboard keyboard) { return Optional.empty(); }
+        public Optional<GameAction> matchingAction(Keyboard keyboard) { return Optional.empty(); }
     }
 
-    public static final ActionBindingManager EMPTY_MAP = new EmptyManager();
+    public static final ActionBindingsManager EMPTY_MAP = new EmptyManager();
 
     protected Map<KeyCombination, GameAction> actionByCombination;
 
-    public DefaultActionBindingManager() {
+    public DefaultActionBindingsManager() {
         this.actionByCombination = new HashMap<>();
     }
 
-    public Map<KeyCombination, GameAction> actionByCombination() {
+    public Map<KeyCombination, GameAction> actionByKeyCombination() {
         return actionByCombination;
     }
 
-    public boolean isEmpty() {
+    public boolean hasNoEntries() {
         return actionByCombination.isEmpty();
     }
 
@@ -95,7 +95,7 @@ public class DefaultActionBindingManager implements ActionBindingManager {
      * @param gameAction a game action
      * @param actionBindings an action bindings list
      */
-    public void use(GameAction gameAction, List<ActionBinding> actionBindings) {
+    public void useFirst(GameAction gameAction, List<ActionBinding> actionBindings) {
         requireNonNull(gameAction);
         requireNonNull(actionBindings);
         actionBindings.stream()
@@ -104,7 +104,7 @@ public class DefaultActionBindingManager implements ActionBindingManager {
             .ifPresent(this::addBinding);
     }
 
-    public Optional<GameAction> matchingGameAction(Keyboard keyboard) {
+    public Optional<GameAction> matchingAction(Keyboard keyboard) {
         return actionByCombination.keySet().stream()
             .filter(keyboard::isMatching)
             .map(actionByCombination::get)

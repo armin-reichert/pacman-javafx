@@ -94,7 +94,7 @@ public class PacManGames_UI_Impl implements GameUI {
     private final Stage              theStage;
     private final UIPreferences      theUIPrefs;
 
-    private final ActionBindingManager globalActionBindings = new DefaultActionBindingManager();
+    private final ActionBindingsManager globalActionBindings = new DefaultActionBindingsManager();
     private final Map<String, GameUI_Config> configByGameVariant = new HashMap<>();
     private final MainScene mainScene;
 
@@ -159,7 +159,7 @@ public class PacManGames_UI_Impl implements GameUI {
 
         // Check if a global action is defined for the key press, otherwise let the current view handle it.
         mainScene.setOnKeyPressed(e -> {
-            GameAction matchingAction = globalActionBindings.matchingGameAction(theKeyboard).orElse(null);
+            GameAction matchingAction = globalActionBindings.matchingAction(theKeyboard).orElse(null);
             if (matchingAction != null) {
                 matchingAction.executeIfEnabled(this);
             } else {
@@ -233,23 +233,23 @@ public class PacManGames_UI_Impl implements GameUI {
     }
 
     private void initGlobalActionBindings() {
-        globalActionBindings.use(ACTION_ENTER_FULLSCREEN, defaultActionBindings);
-        globalActionBindings.use(ACTION_OPEN_EDITOR, defaultActionBindings);
-        globalActionBindings.use(ACTION_TOGGLE_MUTED, defaultActionBindings);
+        globalActionBindings.useFirst(ACTION_ENTER_FULLSCREEN, defaultActionBindings);
+        globalActionBindings.useFirst(ACTION_OPEN_EDITOR, defaultActionBindings);
+        globalActionBindings.useFirst(ACTION_TOGGLE_MUTED, defaultActionBindings);
         globalActionBindings.updateKeyboard(theKeyboard);
     }
 
-    private void selectView(PacManGames_View view) {
+    private void selectView(GameUI_View view) {
         requireNonNull(view);
-        final PacManGames_View oldView = mainScene.currentView();
+        final GameUI_View oldView = mainScene.currentView();
         if (oldView == view) {
             return;
         }
         if (oldView != null) {
-            oldView.actionBindingMap().removeFromKeyboard(theKeyboard);
+            oldView.actionBindingsManager().removeFromKeyboard(theKeyboard);
             theGameContext.theGameEventManager().removeEventListener(oldView);
         }
-        view.actionBindingMap().updateKeyboard(theKeyboard);
+        view.actionBindingsManager().updateKeyboard(theKeyboard);
         theGameContext.theGameEventManager().addEventListener(view);
 
         PROPERTY_CURRENT_VIEW.set(view);
@@ -308,7 +308,7 @@ public class PacManGames_UI_Impl implements GameUI {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override public Optional<GameScene>         currentGameScene() { return mainScene.currentGameScene(); }
-    @Override public PacManGames_View            currentView() { return mainScene.currentView(); }
+    @Override public GameUI_View currentView() { return mainScene.currentView(); }
 
     @Override public PacManGames_Assets          theAssets() {return theAssets; }
     @SuppressWarnings("unchecked")

@@ -103,14 +103,14 @@ public class PlayScene3D implements GameScene {
     protected final GameUI ui;
     protected final SubScene subScene;
     protected final PerspectiveCamera camera = new PerspectiveCamera(true);
-    protected final ActionBindingManager actionBindings;
+    protected final ActionBindingsManager actionBindings;
     protected final Group gameLevel3DParent = new Group();
     protected GameLevel3D gameLevel3D;
     protected Scores3D scores3D;
 
     public PlayScene3D(GameUI ui) {
         this.ui = requireNonNull(ui);
-        this.actionBindings = new DefaultActionBindingManager();
+        this.actionBindings = new DefaultActionBindingsManager();
 
         createPerspectives();
 
@@ -173,7 +173,7 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void handleKeyboardInput() {
-        actionBindings.matchingGameAction(ui.theKeyboard()).ifPresent(gameAction -> gameAction.executeIfEnabled(ui));
+        actionBindings.matchingAction(ui.theKeyboard()).ifPresent(gameAction -> gameAction.executeIfEnabled(ui));
     }
 
     @Override
@@ -182,7 +182,7 @@ public class PlayScene3D implements GameScene {
     }
 
     @Override
-    public ActionBindingManager actionBindings() {
+    public ActionBindingsManager actionBindings() {
         return actionBindings;
     }
 
@@ -264,18 +264,18 @@ public class PlayScene3D implements GameScene {
 
     protected void setActionBindings() {
         actionBindings.removeFromKeyboard(ui.theKeyboard());
-        actionBindings.use(ACTION_PERSPECTIVE_PREVIOUS, ui.actionBindings());
-        actionBindings.use(ACTION_PERSPECTIVE_NEXT, ui.actionBindings());
-        actionBindings.use(ACTION_TOGGLE_DRAW_MODE, ui.actionBindings());
+        actionBindings.useFirst(ACTION_PERSPECTIVE_PREVIOUS, ui.actionBindings());
+        actionBindings.useFirst(ACTION_PERSPECTIVE_NEXT, ui.actionBindings());
+        actionBindings.useFirst(ACTION_TOGGLE_DRAW_MODE, ui.actionBindings());
         if (gameContext().optGameLevel().isPresent()) {
             if (gameContext().theGameLevel().isDemoLevel()) {
-                actionBindings.use(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
+                actionBindings.useFirst(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
             } else {
                 setPlayerSteeringActionBindings();
-                actionBindings.use(ACTION_CHEAT_EAT_ALL_PELLETS, ui.actionBindings());
-                actionBindings.use(ACTION_CHEAT_ADD_LIVES, ui.actionBindings());
-                actionBindings.use(ACTION_CHEAT_ENTER_NEXT_LEVEL, ui.actionBindings());
-                actionBindings.use(ACTION_CHEAT_KILL_GHOSTS, ui.actionBindings());
+                actionBindings.useFirst(ACTION_CHEAT_EAT_ALL_PELLETS, ui.actionBindings());
+                actionBindings.useFirst(ACTION_CHEAT_ADD_LIVES, ui.actionBindings());
+                actionBindings.useFirst(ACTION_CHEAT_ENTER_NEXT_LEVEL, ui.actionBindings());
+                actionBindings.useFirst(ACTION_CHEAT_KILL_GHOSTS, ui.actionBindings());
             }
         }
         actionBindings.updateKeyboard(ui.theKeyboard());
@@ -285,10 +285,10 @@ public class PlayScene3D implements GameScene {
      * Overridden by Tengen Ms. Pac-Man play scene 3D to use keys representing "Joypad" buttons.
      */
     protected void setPlayerSteeringActionBindings() {
-        actionBindings.use(ACTION_STEER_UP, ui.actionBindings());
-        actionBindings.use(ACTION_STEER_DOWN, ui.actionBindings());
-        actionBindings.use(ACTION_STEER_LEFT, ui.actionBindings());
-        actionBindings.use(ACTION_STEER_RIGHT, ui.actionBindings());
+        actionBindings.useFirst(ACTION_STEER_UP, ui.actionBindings());
+        actionBindings.useFirst(ACTION_STEER_DOWN, ui.actionBindings());
+        actionBindings.useFirst(ACTION_STEER_LEFT, ui.actionBindings());
+        actionBindings.useFirst(ACTION_STEER_RIGHT, ui.actionBindings());
     }
 
     @Override

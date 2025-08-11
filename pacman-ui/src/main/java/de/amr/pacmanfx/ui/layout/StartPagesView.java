@@ -36,7 +36,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Carousel containing the start pages for the different game variants (XXL game variants share common start page).
  */
-public class StartPagesView implements PacManGames_View {
+public class StartPagesView implements GameUI_View {
 
     public static final StringBinding TITLE_BINDING = Bindings.createStringBinding(() -> "JavaFX Pac-Man Games");
 
@@ -72,12 +72,12 @@ public class StartPagesView implements PacManGames_View {
     }
 
     private final List<StartPage> startPageList = new ArrayList<>();
-    private final ActionBindingManager actionBindings;
+    private final ActionBindingsManager actionBindings;
     private final Carousel carousel;
 
     public StartPagesView(GameUI ui) {
         requireNonNull(ui);
-        this.actionBindings = new DefaultActionBindingManager();
+        this.actionBindings = new DefaultActionBindingsManager();
         carousel = new StartPagesCarousel();
         carousel.selectedIndexProperty().addListener((py,ov,nv) -> {
             Logger.info("Carousel selection changed from {} to {}", ov, nv);
@@ -114,12 +114,12 @@ public class StartPagesView implements PacManGames_View {
     }
 
     @Override
-    public ActionBindingManager actionBindingMap() {
+    public ActionBindingsManager actionBindingsManager() {
         return actionBindings;
     }
 
     @Override
-    public Region rootNode() { return carousel; }
+    public Region root() { return carousel; }
 
     @Override
     public Optional<? extends StringExpression> title() {

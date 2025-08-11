@@ -21,6 +21,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_MapRepository;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.*;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.*;
 import de.amr.pacmanfx.ui.*;
+import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.sound.DefaultSoundManager;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
@@ -80,18 +81,9 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         return Color.web(NES_Palette.color(index));
     }
 
-    //TODO not sure these belong here
-    public final BooleanProperty propertyJoypadBindingsDisplayed = new SimpleBooleanProperty(false);
-    public final ObjectProperty<SceneDisplayMode> propertyPlaySceneDisplayMode = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING);
-
-    private final GameUI ui;
-    private final DefaultSoundManager soundManager = new DefaultSoundManager();
-    private final Map<String, GameScene> scenesByID = new HashMap<>();
-    private TengenMsPacMan_MapRepository mapRepository;
-
     // Actions specific to Tengen Ms. Pac-Man
 
-    public final GameAction ACTION_QUIT_DEMO_LEVEL = new GameAction("QUIT_DEMO_LEVEL") {
+    public static final GameAction ACTION_QUIT_DEMO_LEVEL = new GameAction("QUIT_DEMO_LEVEL") {
         @Override
         public void execute(GameUI ui) {
             ui.theGameContext().theGameController().changeGameState(GameState.SETTING_OPTIONS_FOR_START);
@@ -103,14 +95,14 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         }
     };
 
-    public final GameAction ACTION_ENTER_START_SCREEN = new GameAction("ENTER_START_SCREEN") {
+    public static final GameAction ACTION_ENTER_START_SCREEN = new GameAction("ENTER_START_SCREEN") {
         @Override
         public void execute(GameUI ui) {
             ui.theGameContext().theGameController().changeGameState(GameState.SETTING_OPTIONS_FOR_START);
         }
     };
 
-    public final GameAction ACTION_START_PLAYING = new GameAction("START_PLAYING") {
+    public static final GameAction ACTION_START_PLAYING = new GameAction("START_PLAYING") {
         @Override
         public void execute(GameUI ui) {
             ui.theSound().stopAll();
@@ -119,7 +111,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         }
     };
 
-    public final GameAction ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE = new GameAction("TOGGLE_PLAY_SCENE_DISPLAY_MODE") {
+    public static final GameAction ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE = new GameAction("TOGGLE_PLAY_SCENE_DISPLAY_MODE") {
         @Override
         public void execute(GameUI ui) {
             var config = ui.<TengenMsPacMan_UIConfig>theConfiguration();
@@ -135,14 +127,14 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         }
     };
 
-    public final GameAction ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED = new GameAction("TOGGLE_JOYPAD_BINDINGS_DISPLAYED") {
+    public static final GameAction ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY = new GameAction("TOGGLE_JOYPAD_BINDINGS_DISPLAYED") {
         @Override
         public void execute(GameUI ui) {
             toggle(ui.<TengenMsPacMan_UIConfig>theConfiguration().propertyJoypadBindingsDisplayed);
         }
     };
 
-    public final GameAction ACTION_TOGGLE_PAC_BOOSTER = new GameAction("TOGGLE_PAC_BOOSTER") {
+    public static final GameAction ACTION_TOGGLE_PAC_BOOSTER = new GameAction("TOGGLE_PAC_BOOSTER") {
         @Override
         public void execute(GameUI ui) {
             var tengenGame = ui.theGameContext().<TengenMsPacMan_GameModel>theGame();
@@ -159,22 +151,36 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         }
     };
 
-    public final List<ActionBinding> actionBindings;
+
+    //TODO not sure these belong here
+    public final BooleanProperty propertyJoypadBindingsDisplayed = new SimpleBooleanProperty(false);
+    public final ObjectProperty<SceneDisplayMode> propertyPlaySceneDisplayMode = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING);
+
+    private final GameUI ui;
+    private final DefaultSoundManager soundManager = new DefaultSoundManager();
+    private final Map<String, GameScene> scenesByID = new HashMap<>();
+    private TengenMsPacMan_MapRepository mapRepository;
+    private final List<ActionBinding> tengenMsPacManBindings;
 
     public TengenMsPacMan_UIConfig(GameUI ui) {
         this.ui = requireNonNull(ui);
-        actionBindings = List.of(
-            new ActionBinding(ACTION_STEER_UP,            ui.theJoypad().key(JoypadButton.UP),    control(KeyCode.UP)),
-            new ActionBinding(ACTION_STEER_DOWN,          ui.theJoypad().key(JoypadButton.DOWN),  control(KeyCode.DOWN)),
-            new ActionBinding(ACTION_STEER_LEFT,          ui.theJoypad().key(JoypadButton.LEFT),  control(KeyCode.LEFT)),
-            new ActionBinding(ACTION_STEER_RIGHT,         ui.theJoypad().key(JoypadButton.RIGHT), control(KeyCode.RIGHT)),
-            new ActionBinding(ACTION_QUIT_DEMO_LEVEL,     ui.theJoypad().key(JoypadButton.START)),
-            new ActionBinding(ACTION_ENTER_START_SCREEN,  ui.theJoypad().key(JoypadButton.START)),
-            new ActionBinding(ACTION_START_PLAYING,       ui.theJoypad().key(JoypadButton.START)),
-            new ActionBinding(ACTION_TOGGLE_PAC_BOOSTER,  ui.theJoypad().key(JoypadButton.A), ui.theJoypad().key(JoypadButton.B)),
+        Joypad joypad = ui.theJoypad();
+        tengenMsPacManBindings = List.of(
+            new ActionBinding(ACTION_STEER_UP,            joypad.key(JoypadButton.UP),    control(KeyCode.UP)),
+            new ActionBinding(ACTION_STEER_DOWN,          joypad.key(JoypadButton.DOWN),  control(KeyCode.DOWN)),
+            new ActionBinding(ACTION_STEER_LEFT,          joypad.key(JoypadButton.LEFT),  control(KeyCode.LEFT)),
+            new ActionBinding(ACTION_STEER_RIGHT,         joypad.key(JoypadButton.RIGHT), control(KeyCode.RIGHT)),
+            new ActionBinding(ACTION_QUIT_DEMO_LEVEL,     joypad.key(JoypadButton.START)),
+            new ActionBinding(ACTION_ENTER_START_SCREEN,  joypad.key(JoypadButton.START)),
+            new ActionBinding(ACTION_START_PLAYING,       joypad.key(JoypadButton.START)),
+            new ActionBinding(ACTION_TOGGLE_PAC_BOOSTER,  joypad.key(JoypadButton.A), joypad.key(JoypadButton.B)),
             new ActionBinding(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, alt(KeyCode.C)),
-            new ActionBinding(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, nude(KeyCode.SPACE))
+            new ActionBinding(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, nude(KeyCode.SPACE))
         );
+    }
+
+    public List<ActionBinding> tengenMsPacManBindings() {
+        return tengenMsPacManBindings;
     }
 
     @Override
@@ -182,6 +188,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         return ui;
     }
 
+    @Override
     public void storeAssets(AssetStorage assets) {
         mapRepository = new TengenMsPacMan_MapRepository(
             RES_TENGEN_MS_PAC_MAN.loadImage("graphics/arcade_mazes.png"),

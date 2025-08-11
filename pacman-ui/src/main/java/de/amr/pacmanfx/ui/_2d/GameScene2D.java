@@ -9,8 +9,8 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.ui.ActionBindingManager;
-import de.amr.pacmanfx.ui.DefaultActionBindingManager;
+import de.amr.pacmanfx.ui.ActionBindingsManager;
+import de.amr.pacmanfx.ui.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.GameScene;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -43,7 +43,7 @@ public abstract class GameScene2D implements GameScene {
     protected final BooleanProperty debugInfoVisibleProperty      = new SimpleBooleanProperty(false);
     protected final FloatProperty scalingProperty                 = new SimpleFloatProperty(1.0f);
 
-    protected final ActionBindingManager actionBindings;
+    protected final ActionBindingsManager actionBindings;
     protected final AnimationRegistry animationRegistry = new AnimationRegistry();
     protected GameRenderer gameRenderer;
     protected Canvas canvas;
@@ -51,7 +51,7 @@ public abstract class GameScene2D implements GameScene {
 
     protected GameScene2D(GameUI ui) {
         this.ui = requireNonNull(ui);
-        actionBindings = new DefaultActionBindingManager();
+        actionBindings = new DefaultActionBindingsManager();
         debugTextFill = ui.theUIPrefs().getColor("debug_text.fill");
         debugTextFont = ui.theUIPrefs().getFont("debug_text.font");
     }
@@ -78,14 +78,14 @@ public abstract class GameScene2D implements GameScene {
 
     @Override
     public void handleKeyboardInput() {
-        actionBindings.matchingGameAction(ui.theKeyboard()).ifPresent(gameAction -> gameAction.executeIfEnabled(ui));
+        actionBindings.matchingAction(ui.theKeyboard()).ifPresent(gameAction -> gameAction.executeIfEnabled(ui));
     }
 
     protected abstract void doInit();
     protected abstract void doEnd();
 
     @Override
-    public ActionBindingManager actionBindings() { return actionBindings; }
+    public ActionBindingsManager actionBindings() { return actionBindings; }
 
     @Override
     public void onStopAllSounds(GameEvent event) { ui.theSound().stopAll(); }

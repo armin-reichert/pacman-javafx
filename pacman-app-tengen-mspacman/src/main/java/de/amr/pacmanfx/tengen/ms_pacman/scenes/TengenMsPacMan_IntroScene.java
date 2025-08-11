@@ -30,8 +30,7 @@ import java.util.List;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.createGhost;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.createMsPacMan;
 import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer.blueShadedColor;
@@ -76,9 +75,9 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
         spriteSheet = (TengenMsPacMan_SpriteSheet) ui.theConfiguration().spriteSheet();
 
-        var config = ui.<TengenMsPacMan_UIConfig>theConfiguration();
-        actionBindings.use(config.ACTION_ENTER_START_SCREEN, config.actionBindings);
-        actionBindings.use(config.ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAYED, config.actionBindings);
+        var tengenBindings = ui.<TengenMsPacMan_UIConfig>theConfiguration().tengenMsPacManBindings();
+        actionBindings.useFirst(ACTION_ENTER_START_SCREEN, tengenBindings);
+        actionBindings.useFirst(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, tengenBindings);
 
         presentsText = new Actor(null);
         presentsText.setPosition(9 * TS, MARQUEE_Y - TS);

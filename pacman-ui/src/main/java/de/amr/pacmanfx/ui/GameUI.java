@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.layout.EditorView;
-import de.amr.pacmanfx.ui.layout.PacManGames_View;
+import de.amr.pacmanfx.ui.layout.GameUI_View;
 import de.amr.pacmanfx.ui.layout.PlayView;
 import de.amr.pacmanfx.ui.layout.StartPagesView;
 import de.amr.pacmanfx.ui.sound.SoundManager;
@@ -92,7 +92,7 @@ public interface GameUI {
     void updateGameScene(boolean reload);
 
     // Views
-    PacManGames_View      currentView();
+    GameUI_View currentView();
     PlayView              thePlayView();
     StartPagesView        theStartPagesView();
     Optional<EditorView>  theEditorView();

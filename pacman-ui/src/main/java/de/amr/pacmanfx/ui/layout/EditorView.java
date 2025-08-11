@@ -5,8 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
-import de.amr.pacmanfx.ui.ActionBindingManager;
-import de.amr.pacmanfx.ui.DefaultActionBindingManager;
+import de.amr.pacmanfx.ui.ActionBindingsManager;
+import de.amr.pacmanfx.ui.DefaultActionBindingsManager;
 import javafx.beans.binding.StringExpression;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
@@ -17,7 +17,7 @@ import java.util.Optional;
 import static de.amr.pacmanfx.uilib.Ufx.colorBackground;
 import static java.util.Objects.requireNonNull;
 
-public class EditorView implements PacManGames_View {
+public class EditorView implements GameUI_View {
 
     private final BorderPane layout = new BorderPane();
     private final TileMapEditor editor;
@@ -35,10 +35,10 @@ public class EditorView implements PacManGames_View {
     }
 
     @Override
-    public ActionBindingManager actionBindingMap() { return DefaultActionBindingManager.EMPTY_MAP; }
+    public ActionBindingsManager actionBindingsManager() { return DefaultActionBindingsManager.EMPTY_MAP; }
 
     @Override
-    public Region rootNode() {
+    public Region root() {
         return layout;
     }
 

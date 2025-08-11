@@ -12,6 +12,8 @@ import de.amr.pacmanfx.ui._3d.GameLevel3D;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import javafx.scene.paint.Color;
 
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.ACTION_QUIT_DEMO_LEVEL;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.ACTION_TOGGLE_PAC_BOOSTER;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
 
 /**
@@ -33,33 +35,32 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     protected void setActionBindings() {
-        var config = ui.<TengenMsPacMan_UIConfig>theConfiguration();
+        var tengenBindings = ui.<TengenMsPacMan_UIConfig>theConfiguration().tengenMsPacManBindings();
         // if demo level, allow going back to options screen
         if (gameContext().optGameLevel().isPresent() && gameContext().theGameLevel().isDemoLevel()) {
-            actionBindings.use(config.ACTION_QUIT_DEMO_LEVEL, config.actionBindings);
+            actionBindings.useFirst(ACTION_QUIT_DEMO_LEVEL, tengenBindings);
         } else {
             setPlayerSteeringActionBindings();
-            actionBindings.use(ACTION_CHEAT_ADD_LIVES, ui.actionBindings());
-            actionBindings.use(ACTION_CHEAT_EAT_ALL_PELLETS, ui.actionBindings());
-            actionBindings.use(ACTION_CHEAT_ENTER_NEXT_LEVEL, ui.actionBindings());
-            actionBindings.use(ACTION_CHEAT_KILL_GHOSTS, ui.actionBindings());
-            // Tengen only:
-            actionBindings.use(config.ACTION_TOGGLE_PAC_BOOSTER, config.actionBindings);
+            actionBindings.useFirst(ACTION_CHEAT_ADD_LIVES, ui.actionBindings());
+            actionBindings.useFirst(ACTION_CHEAT_EAT_ALL_PELLETS, ui.actionBindings());
+            actionBindings.useFirst(ACTION_CHEAT_ENTER_NEXT_LEVEL, ui.actionBindings());
+            actionBindings.useFirst(ACTION_CHEAT_KILL_GHOSTS, ui.actionBindings());
+            actionBindings.useFirst(ACTION_TOGGLE_PAC_BOOSTER, tengenBindings);
         }
-        actionBindings.use(ACTION_PERSPECTIVE_PREVIOUS, ui.actionBindings());
-        actionBindings.use(ACTION_PERSPECTIVE_NEXT, ui.actionBindings());
-        actionBindings.use(ACTION_TOGGLE_DRAW_MODE, ui.actionBindings());
+        actionBindings.useFirst(ACTION_PERSPECTIVE_PREVIOUS, ui.actionBindings());
+        actionBindings.useFirst(ACTION_PERSPECTIVE_NEXT, ui.actionBindings());
+        actionBindings.useFirst(ACTION_TOGGLE_DRAW_MODE, ui.actionBindings());
 
         actionBindings.updateKeyboard(ui.theKeyboard());
     }
 
     @Override
     protected void setPlayerSteeringActionBindings() {
-        var config = ui.<TengenMsPacMan_UIConfig>theConfiguration();
-        actionBindings.use(ACTION_STEER_UP,    config.actionBindings);
-        actionBindings.use(ACTION_STEER_DOWN,  config.actionBindings);
-        actionBindings.use(ACTION_STEER_LEFT,  config.actionBindings);
-        actionBindings.use(ACTION_STEER_RIGHT, config.actionBindings);
+        var tengenBindings = ui.<TengenMsPacMan_UIConfig>theConfiguration().tengenMsPacManBindings();
+        actionBindings.useFirst(ACTION_STEER_UP,    tengenBindings);
+        actionBindings.useFirst(ACTION_STEER_DOWN,  tengenBindings);
+        actionBindings.useFirst(ACTION_STEER_LEFT,  tengenBindings);
+        actionBindings.useFirst(ACTION_STEER_RIGHT, tengenBindings);
     }
 
     @Override
