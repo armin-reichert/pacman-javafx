@@ -17,7 +17,7 @@ import org.tinylog.Logger;
 
 import java.io.File;
 
-import static de.amr.pacmanfx.tilemap.editor.TileMapEditor.tt;
+import static de.amr.pacmanfx.tilemap.editor.TileMapEditor.translated;
 
 
 /**
@@ -31,7 +31,7 @@ public class TileMapEditorApp extends Application  {
             Model3DRepository model3DRepository = new Model3DRepository();
             var editor = new TileMapEditor(stage, model3DRepository);
 
-            var miQuit = new MenuItem(tt("quit"));
+            var miQuit = new MenuItem(translated("quit"));
             miQuit.setOnAction(e -> editor.executeWithCheckForUnsavedChanges(stage::close));
             editor.getFileMenu().getItems().addAll(new SeparatorMenuItem(), miQuit);
 

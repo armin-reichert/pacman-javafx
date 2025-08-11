@@ -303,26 +303,26 @@ public class EditCanvas {
 
         Vector2i tile = tileAtMousePosition(menuEvent.getX(), menuEvent.getY(), gridSize());
 
-        var miPlaceHouse = new MenuItem(tt("menu.edit.place_house"));
+        var miPlaceHouse = new MenuItem(translated("menu.edit.place_house"));
         miPlaceHouse.setOnAction(actionEvent -> editor.placeArcadeHouse(worldMap(), tile));
 
-        var miInsertRow = new MenuItem(tt("menu.edit.insert_row"));
+        var miInsertRow = new MenuItem(translated("menu.edit.insert_row"));
         miInsertRow.setOnAction(actionEvent -> {
             int rowIndex = tileAtMousePosition(menuEvent.getX(), menuEvent.getY(), gridSize()).y();
             editor.setEditedWorldMap(worldMap().insertRowBeforeIndex(rowIndex));
         });
 
-        var miDeleteRow = new MenuItem(tt("menu.edit.delete_row"));
+        var miDeleteRow = new MenuItem(translated("menu.edit.delete_row"));
         miDeleteRow.setOnAction(actionEvent -> {
             int rowIndex = tileAtMousePosition(menuEvent.getX(), menuEvent.getY(), gridSize()).y();
             editor.setEditedWorldMap(worldMap().deleteRowAtIndex(rowIndex));
         });
 
-        var miFloodWithPellets = new MenuItem(tt("menu.edit.flood_with_pellets"));
+        var miFloodWithPellets = new MenuItem(translated("menu.edit.flood_with_pellets"));
         miFloodWithPellets.setOnAction(ae -> editor.floodWithFoodValue(tile, FoodTile.PELLET.code()));
         miFloodWithPellets.setDisable(!editor.canEditFoodAtTile(tile));
 
-        var miClearPellets = new MenuItem(tt("menu.edit.clear_food"));
+        var miClearPellets = new MenuItem(translated("menu.edit.clear_food"));
         miClearPellets.setOnAction(ae -> editor.floodWithFoodValue(tile, FoodTile.EMPTY.code()));
         miClearPellets.setDisable(!editor.canEditFoodAtTile(tile));
 

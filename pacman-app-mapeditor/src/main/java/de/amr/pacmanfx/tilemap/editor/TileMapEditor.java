@@ -74,10 +74,12 @@ public class TileMapEditor {
     public static final byte PALETTE_ID_FOOD    = 2;
 
     public static final ResourceBundle TEXT_BUNDLE = ResourceBundle.getBundle(TileMapEditor.class.getPackageName() + ".texts");
-    public static String tt(String key, Object... args) {
+
+    public static String translated(String key, Object... args) {
         try {
             return MessageFormat.format(TEXT_BUNDLE.getString(key), args);
-        } catch (MissingResourceException x) {
+        }
+        catch (MissingResourceException x) {
             Logger.error("No resource with key {} found in {}", key, TEXT_BUNDLE);
             return "[%s]".formatted(key);
         }
@@ -90,7 +92,6 @@ public class TileMapEditor {
         { WALL_V.$,  EMPTY.$,   EMPTY.$,   EMPTY.$,   EMPTY.$,   EMPTY.$,   EMPTY.$,   WALL_V.$ },
         { ARC_SW.$,  WALL_H.$,  WALL_H.$,  WALL_H.$,  WALL_H.$,  WALL_H.$,  WALL_H.$,  ARC_SE.$ },
     };
-
 
     private static boolean isSupportedImageFile(File file) {
         return Stream.of(".bmp", ".gif", ".jpg", ".png").anyMatch(ext -> file.getName().toLowerCase().endsWith(ext));
@@ -229,12 +230,29 @@ public class TileMapEditor {
 
     // Properties
 
-    private final ObjectProperty<EditMode> editModePy = new SimpleObjectProperty<>(EditMode.INSPECT) {
-        @Override
-        protected void invalidated() {
-            onEditModeChanged(get());
+    public static final EditMode DEFAULT_EDIT_MODE = EditMode.INSPECT;
+
+    private ObjectProperty<EditMode> editMode;
+
+    public ObjectProperty<EditMode> editModeProperty() {
+        if (editMode == null) {
+            editMode = new SimpleObjectProperty<>(DEFAULT_EDIT_MODE) {
+                @Override
+                protected void invalidated() {
+                    onEditModeChanged(get());
+                }
+            };
         }
-    };
+        return editMode;
+    }
+
+    public EditMode editMode() { return editMode == null ? DEFAULT_EDIT_MODE : editModeProperty().get(); }
+
+    public boolean isEditMode(EditMode mode) { return editMode() == mode; }
+
+    public void setEditMode(EditMode mode) {
+        editModeProperty().set(requireNonNull(mode));
+    }
 
     private final ObjectProperty<File> currentFilePy = new SimpleObjectProperty<>();
 
@@ -480,7 +498,7 @@ public class TileMapEditor {
     }
 
     public void showEditHelpText() {
-        showMessage(tt("edit_help"), 30, MessageType.INFO);
+        showMessage(translated("edit_help"), 30, MessageType.INFO);
     }
 
     private void createRenderers(TerrainMapColorScheme colors, Color foodColor) {
@@ -581,12 +599,12 @@ public class TileMapEditor {
     }
 
     private void createTabPaneWithEditViews() {
-        tabEditCanvas = new Tab(tt("tab_editor"), spEditCanvas);
+        tabEditCanvas = new Tab(translated("tab_editor"), spEditCanvas);
 
-        var hint = new Button(tt("image_drop_hint"));
+        var hint = new Button(translated("image_drop_hint"));
         hint.setFont(FONT_DROP_HINT);
         hint.setOnAction(ae -> initWorldMapForTemplateImage());
-        hint.disableProperty().bind(editModePy.map(mode -> mode == EditMode.INSPECT));
+        hint.disableProperty().bind(editModeProperty().map(mode -> mode == EditMode.INSPECT));
 
         dropTargetForTemplateImage = new BorderPane(hint);
         registerDragAndDropImageHandler(dropTargetForTemplateImage);
@@ -598,7 +616,7 @@ public class TileMapEditor {
                 stackPane.getChildren().add(dropTargetForTemplateImage);
             }
         });
-        tabTemplateImage = new Tab(tt("tab_template_image"), stackPane);
+        tabTemplateImage = new Tab(translated("tab_template_image"), stackPane);
 
         tabPaneEditorViews = new TabPane(tabEditCanvas, tabTemplateImage);
         tabPaneEditorViews.getTabs().forEach(tab -> tab.setClosable(false));
@@ -647,9 +665,9 @@ public class TileMapEditor {
     }
 
     private void createTabPaneWithPreviews() {
-        tabPreview2D = new Tab(tt("preview2D"), spPreview2D);
-        tabPreview3D = new Tab(tt("preview3D"), mazePreview3D.getSubScene());
-        tabSourceView = new Tab(tt("source"), sourceView);
+        tabPreview2D = new Tab(translated("preview2D"), spPreview2D);
+        tabPreview3D = new Tab(translated("preview3D"), mazePreview3D.getSubScene());
+        tabSourceView = new Tab(translated("source"), sourceView);
 
         tabPanePreviews = new TabPane(tabPreview2D, tabPreview3D, tabSourceView);
         tabPanePreviews.setSide(Side.BOTTOM);
@@ -668,15 +686,15 @@ public class TileMapEditor {
         palettes[PALETTE_ID_TERRAIN] = createTerrainPalette(PALETTE_ID_TERRAIN, TOOL_SIZE, this, terrainTileRenderer);
         palettes[PALETTE_ID_FOOD]    = createFoodPalette(PALETTE_ID_FOOD, TOOL_SIZE, this, foodRenderer);
 
-        var tabTerrain = new Tab(tt("terrain"), palettes[PALETTE_ID_TERRAIN].root());
+        var tabTerrain = new Tab(translated("terrain"), palettes[PALETTE_ID_TERRAIN].root());
         tabTerrain.setClosable(false);
         tabTerrain.setUserData(PALETTE_ID_TERRAIN);
 
-        var tabActors = new Tab(tt("actors"), palettes[PALETTE_ID_ACTORS].root());
+        var tabActors = new Tab(translated("actors"), palettes[PALETTE_ID_ACTORS].root());
         tabActors.setClosable(false);
         tabActors.setUserData(PALETTE_ID_ACTORS);
 
-        var tabPellets = new Tab(tt("pellets"), palettes[PALETTE_ID_FOOD].root());
+        var tabPellets = new Tab(translated("pellets"), palettes[PALETTE_ID_FOOD].root());
         tabPellets.setClosable(false);
         tabPellets.setUserData(PALETTE_ID_FOOD);
 
@@ -687,18 +705,18 @@ public class TileMapEditor {
 
     private void createPropertyEditors() {
         terrainMapPropertiesEditor = new PropertyEditorPane(this);
-        terrainMapPropertiesEditor.enabledPy.bind(editModePy.map(mode -> mode != EditMode.INSPECT));
+        terrainMapPropertiesEditor.enabledPy.bind(editModeProperty().map(mode -> mode != EditMode.INSPECT));
         terrainMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
 
         foodMapPropertiesEditor = new PropertyEditorPane(this);
-        foodMapPropertiesEditor.enabledPy.bind(editModePy.map(mode -> mode != EditMode.INSPECT));
+        foodMapPropertiesEditor.enabledPy.bind(editModeProperty().map(mode -> mode != EditMode.INSPECT));
         foodMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
 
-        var terrainPropertiesPane = new TitledPane(tt("terrain"), terrainMapPropertiesEditor);
+        var terrainPropertiesPane = new TitledPane(translated("terrain"), terrainMapPropertiesEditor);
         terrainPropertiesPane.setMinWidth(300);
         terrainPropertiesPane.setExpanded(true);
 
-        var foodPropertiesPane = new TitledPane(tt("pellets"), foodMapPropertiesEditor);
+        var foodPropertiesPane = new TitledPane(translated("pellets"), foodMapPropertiesEditor);
         foodPropertiesPane.setExpanded(true);
 
         propertyEditorsPane = new VBox(terrainPropertiesPane, foodPropertiesPane);
@@ -747,14 +765,14 @@ public class TileMapEditor {
         lblEditMode.setFont(FONT_STATUS_LINE_EDIT_MODE);
         lblEditMode.setEffect(new Glow(0.2));
         lblEditMode.textProperty().bind(Bindings.createStringBinding(
-            () -> switch (editModePy.get()) {
-                case INSPECT -> tt("mode.inspect");
-                case EDIT    -> isSymmetricEdit() ?  tt("mode.symmetric") : tt("mode.edit");
-                case ERASE   -> tt("mode.erase");
-            }, editModePy, symmetricEditPy
+            () -> switch (editMode()) {
+                case INSPECT -> translated("mode.inspect");
+                case EDIT    -> isSymmetricEdit() ?  translated("mode.symmetric") : translated("mode.edit");
+                case ERASE   -> translated("mode.erase");
+            }, editModeProperty(), symmetricEditPy
         ));
         lblEditMode.textFillProperty().bind(
-            editModePy.map(mode -> switch (mode) {
+            editModeProperty().map(mode -> switch (mode) {
             case INSPECT -> Color.GRAY;
             case EDIT    -> Color.FORESTGREEN;
             case ERASE   -> Color.RED;
@@ -792,13 +810,13 @@ public class TileMapEditor {
         return Bindings.createStringBinding(() -> {
                 File mapFile = currentFilePy.get();
                 if (mapFile != null) {
-                    return "%s: [%s] - %s".formatted( tt("map_editor"), mapFile.getName(), mapFile.getPath() );
+                    return "%s: [%s] - %s".formatted( translated("map_editor"), mapFile.getName(), mapFile.getPath() );
                 }
                 if (editedWorldMap() != null && editedWorldMap().url() != null) {
-                    return  "%s: [%s]".formatted( tt("map_editor"), editedWorldMap().url() );
+                    return  "%s: [%s]".formatted( translated("map_editor"), editedWorldMap().url() );
                 }
                 return "%s: [%s: %d rows %d cols]".formatted(
-                        tt("map_editor"), tt("unsaved_map"),
+                        translated("map_editor"), translated("unsaved_map"),
                         editedWorldMap().numRows(), editedWorldMap().numCols() );
             }, currentFilePy, editedWorldMapPy
         );
@@ -807,25 +825,25 @@ public class TileMapEditor {
     private void createMenuBarAndMenus() {
 
         // File
-        var miNewPreconfiguredMap = new MenuItem(tt("menu.file.new"));
+        var miNewPreconfiguredMap = new MenuItem(translated("menu.file.new"));
         miNewPreconfiguredMap.setOnAction(e -> showNewMapDialog(true));
 
-        var miNewBlankMap = new MenuItem(tt("menu.file.new_blank_map"));
+        var miNewBlankMap = new MenuItem(translated("menu.file.new_blank_map"));
         miNewBlankMap.setOnAction(e -> showNewMapDialog(false));
 
-        var miOpenMapFile = new MenuItem(tt("menu.file.open"));
+        var miOpenMapFile = new MenuItem(translated("menu.file.open"));
         miOpenMapFile.setOnAction(e -> openMapFileInteractively());
 
-        var miSaveMapFileAs = new MenuItem(tt("menu.file.save_as"));
+        var miSaveMapFileAs = new MenuItem(translated("menu.file.save_as"));
         miSaveMapFileAs.setOnAction(e -> showSaveDialog());
 
-        var miOpenTemplateImage = new MenuItem(tt("menu.file.open_template_image"));
+        var miOpenTemplateImage = new MenuItem(translated("menu.file.open_template_image"));
         miOpenTemplateImage.setOnAction(e -> initWorldMapForTemplateImage());
 
-        var miCloseTemplateImage = new MenuItem(tt("menu.file.close_template_image"));
+        var miCloseTemplateImage = new MenuItem(translated("menu.file.close_template_image"));
         miCloseTemplateImage.setOnAction(e -> closeTemplateImage());
 
-        menuFile = new Menu(tt("menu.file"), NO_GRAPHIC,
+        menuFile = new Menu(translated("menu.file"), NO_GRAPHIC,
                 miNewPreconfiguredMap,
                 miNewBlankMap,
                 miOpenMapFile,
@@ -835,43 +853,43 @@ public class TileMapEditor {
                 miCloseTemplateImage);
 
         // Edit
-        var miObstacleJoining = new CheckMenuItem(tt("menu.edit.obstacles_joining"));
+        var miObstacleJoining = new CheckMenuItem(translated("menu.edit.obstacles_joining"));
         miObstacleJoining.selectedProperty().bindBidirectional(obstaclesJoiningPy);
 
-        var miAddBorder = new MenuItem(tt("menu.edit.add_border"));
+        var miAddBorder = new MenuItem(translated("menu.edit.add_border"));
         miAddBorder.setOnAction(e -> addBorderWall(editedWorldMap()));
-        miAddBorder.disableProperty().bind(editModePy.map(mode -> mode == EditMode.INSPECT));
+        miAddBorder.disableProperty().bind(editModeProperty().map(mode -> mode == EditMode.INSPECT));
 
-        var miAddHouse = new MenuItem(tt("menu.edit.add_house"));
+        var miAddHouse = new MenuItem(translated("menu.edit.add_house"));
         miAddHouse.setOnAction(e -> addArcadeHouseAtMapCenter(editedWorldMap()));
-        miAddHouse.disableProperty().bind(editModePy.map(mode -> mode == EditMode.INSPECT));
+        miAddHouse.disableProperty().bind(editModeProperty().map(mode -> mode == EditMode.INSPECT));
 
-        var miClearTerrain = new MenuItem(tt("menu.edit.clear_terrain"));
+        var miClearTerrain = new MenuItem(translated("menu.edit.clear_terrain"));
         miClearTerrain.setOnAction(e -> {
             editedWorldMap().layer(LayerID.TERRAIN).setAll(TerrainTile.EMPTY.$);
             changeManager.setTerrainMapChanged();
             changeManager.setEdited(true);
         });
-        miClearTerrain.disableProperty().bind(editModePy.map(mode -> mode == EditMode.INSPECT));
+        miClearTerrain.disableProperty().bind(editModeProperty().map(mode -> mode == EditMode.INSPECT));
 
-        var miClearFood = new MenuItem(tt("menu.edit.clear_food"));
+        var miClearFood = new MenuItem(translated("menu.edit.clear_food"));
         miClearFood.setOnAction(e -> {
             editedWorldMap().layer(LayerID.FOOD).setAll(FoodTile.EMPTY.code());
             changeManager.setFoodMapChanged();
             changeManager.setEdited(true);
         });
-        miClearFood.disableProperty().bind(editModePy.map(mode -> mode == EditMode.INSPECT));
+        miClearFood.disableProperty().bind(editModeProperty().map(mode -> mode == EditMode.INSPECT));
 
-        var miIdentifyTiles = new MenuItem(tt("menu.edit.identify_tiles"));
+        var miIdentifyTiles = new MenuItem(translated("menu.edit.identify_tiles"));
         miIdentifyTiles.disableProperty().bind(Bindings.createBooleanBinding(
-            () -> editMode() == EditMode.INSPECT || templateImagePy.get() == null, editModePy, templateImagePy));
+            () -> editMode() == EditMode.INSPECT || templateImagePy.get() == null, editModeProperty(), templateImagePy));
         miIdentifyTiles.setOnAction(e -> populateMapFromTemplateImage(editedWorldMap()));
 
         var miAssignDefaultColors = new MenuItem("Assign default colors"); //TODO localize
         miAssignDefaultColors.setOnAction(e -> setDefaultColors(editedWorldMap()));
-        miAssignDefaultColors.disableProperty().bind(editModePy.map(mode -> mode == EditMode.INSPECT));
+        miAssignDefaultColors.disableProperty().bind(editModeProperty().map(mode -> mode == EditMode.INSPECT));
 
-        menuEdit = new Menu(tt("menu.edit"), NO_GRAPHIC,
+        menuEdit = new Menu(translated("menu.edit"), NO_GRAPHIC,
             miObstacleJoining,
             new SeparatorMenuItem(),
             miAddBorder,
@@ -882,31 +900,31 @@ public class TileMapEditor {
             miAssignDefaultColors);
 
         // Maps
-        menuLoadMap = new Menu(tt("menu.load_map"));
+        menuLoadMap = new Menu(translated("menu.load_map"));
 
         // View
-        var miPropertiesVisible = new CheckMenuItem(tt("menu.view.properties"));
+        var miPropertiesVisible = new CheckMenuItem(translated("menu.view.properties"));
         miPropertiesVisible.selectedProperty().bindBidirectional(propertyEditorsVisiblePy);
 
-        var miTerrainVisible = new CheckMenuItem(tt("menu.view.terrain"));
+        var miTerrainVisible = new CheckMenuItem(translated("menu.view.terrain"));
         miTerrainVisible.selectedProperty().bindBidirectional(terrainVisiblePy);
 
-        var miFoodVisible = new CheckMenuItem(tt("menu.view.food"));
+        var miFoodVisible = new CheckMenuItem(translated("menu.view.food"));
         miFoodVisible.selectedProperty().bindBidirectional(foodVisiblePy);
 
         var miActorsVisible = new CheckMenuItem("Actors"); //TODO localize
         miActorsVisible.selectedProperty().bindBidirectional(actorsVisiblePy);
 
-        var miGridVisible = new CheckMenuItem(tt("menu.view.grid"));
+        var miGridVisible = new CheckMenuItem(translated("menu.view.grid"));
         miGridVisible.selectedProperty().bindBidirectional(gridVisiblePy);
 
-        var miSegmentNumbersVisible = new CheckMenuItem(tt("menu.view.segment_numbers"));
+        var miSegmentNumbersVisible = new CheckMenuItem(translated("menu.view.segment_numbers"));
         miSegmentNumbersVisible.selectedProperty().bindBidirectional(segmentNumbersDisplayedPy);
 
-        var miObstacleInnerAreaVisible = new CheckMenuItem(tt("inner_obstacle_area"));
+        var miObstacleInnerAreaVisible = new CheckMenuItem(translated("inner_obstacle_area"));
         miObstacleInnerAreaVisible.selectedProperty().bindBidirectional(obstacleInnerAreaDisplayedPy);
 
-        menuView = new Menu(tt("menu.view"), NO_GRAPHIC,
+        menuView = new Menu(translated("menu.view"), NO_GRAPHIC,
             miPropertiesVisible, miTerrainVisible, miSegmentNumbersVisible, miObstacleInnerAreaVisible,
             miFoodVisible, miActorsVisible, miGridVisible);
 
@@ -932,9 +950,9 @@ public class TileMapEditor {
     private void showNewMapDialog(boolean preconfigured) {
         executeWithCheckForUnsavedChanges(() -> {
             var dialog = new TextInputDialog("28x36");
-            dialog.setTitle(tt("new_dialog.title"));
-            dialog.setHeaderText(tt("new_dialog.header_text"));
-            dialog.setContentText(tt("new_dialog.content_text"));
+            dialog.setTitle(translated("new_dialog.title"));
+            dialog.setHeaderText(translated("new_dialog.header_text"));
+            dialog.setContentText(translated("new_dialog.content_text"));
             dialog.showAndWait().ifPresent(text -> {
                 Vector2i sizeInTiles = parseSize(text);
                 if (sizeInTiles == null) {
@@ -973,7 +991,7 @@ public class TileMapEditor {
 
     private void openMapFileInteractively() {
         executeWithCheckForUnsavedChanges(() -> {
-            fileChooser.setTitle(tt("open_file"));
+            fileChooser.setTitle(translated("open_file"));
             fileChooser.setInitialDirectory(currentDirectory);
             File file = fileChooser.showOpenDialog(stage);
             if (file != null) {
@@ -1031,7 +1049,7 @@ public class TileMapEditor {
     }
 
     public void showSaveDialog() {
-        fileChooser.setTitle(tt("save_file"));
+        fileChooser.setTitle(translated("save_file"));
         fileChooser.setInitialDirectory(currentDirectory);
         File file = fileChooser.showSaveDialog(stage);
         if (file != null) {
@@ -1068,12 +1086,12 @@ public class TileMapEditor {
             return;
         }
         var confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmationDialog.setTitle(tt("save_dialog.title"));
-        confirmationDialog.setHeaderText(tt("save_dialog.header_text"));
-        confirmationDialog.setContentText(tt("save_dialog.content_text"));
-        var choiceSave   = new ButtonType(tt("save_changes"));
-        var choiceNoSave = new ButtonType(tt("no_save_changes"));
-        var choiceCancel = new ButtonType(tt("cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
+        confirmationDialog.setTitle(translated("save_dialog.title"));
+        confirmationDialog.setHeaderText(translated("save_dialog.header_text"));
+        confirmationDialog.setContentText(translated("save_dialog.content_text"));
+        var choiceSave   = new ButtonType(translated("save_changes"));
+        var choiceNoSave = new ButtonType(translated("no_save_changes"));
+        var choiceCancel = new ButtonType(translated("cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
         confirmationDialog.getButtonTypes().setAll(choiceSave, choiceNoSave, choiceCancel);
         confirmationDialog.showAndWait().ifPresent(choice -> {
             if (choice == choiceSave) {
@@ -1246,14 +1264,6 @@ public class TileMapEditor {
             }
             case "x" -> setEditMode(EditMode.ERASE);
         }
-    }
-
-    public EditMode editMode() { return editModePy.get(); }
-
-    public boolean isEditMode(EditMode mode) { return editMode() == mode; }
-
-    public void setEditMode(EditMode mode) {
-        editModePy.set(requireNonNull(mode));
     }
 
     public void editAtMousePosition(MouseEvent event) {
@@ -1553,7 +1563,7 @@ public class TileMapEditor {
     }
 
     private void initWorldMapForTemplateImage() {
-        selectImageFile(tt("open_template_image")).ifPresent(file -> readImageFromFile(file).ifPresentOrElse(image -> {
+        selectImageFile(translated("open_template_image")).ifPresent(file -> readImageFromFile(file).ifPresentOrElse(image -> {
             if (setBlankMapForTemplateImage(image)) {
                 showMessage("Select map colors from template!", 20, MessageType.INFO);
             }

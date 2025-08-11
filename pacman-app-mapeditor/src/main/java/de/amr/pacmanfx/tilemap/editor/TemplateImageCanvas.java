@@ -27,7 +27,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.tilemap.editor.TileMapEditor.tt;
+import static de.amr.pacmanfx.tilemap.editor.TileMapEditor.translated;
 import static de.amr.pacmanfx.tilemap.editor.TileMapEditorUtil.*;
 
 public class TemplateImageCanvas extends Canvas {
@@ -115,19 +115,19 @@ public class TemplateImageCanvas extends Canvas {
                 pickColor.equals(Color.TRANSPARENT) ? "TRANSPARENT -> BLACK" : formatColorHex(colorToSelect));
 
         Color fillColor = getColorFromMap(worldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_FILL, null);
-        var miPickFillColor = createColorMenuItem(fillColor, tt("menu.pick_color.set_fill_color"));
+        var miPickFillColor = createColorMenuItem(fillColor, translated("menu.pick_color.set_fill_color"));
         miPickFillColor.setOnAction(ae -> editor.setTerrainMapPropertyValue(WorldMapProperty.COLOR_WALL_FILL, formatColor(colorToSelect)));
 
         Color strokeColor =  getColorFromMap(worldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_WALL_STROKE, null);
-        var miPickStrokeColor = createColorMenuItem(strokeColor, tt("menu.pick_color.set_stroke_color"));
+        var miPickStrokeColor = createColorMenuItem(strokeColor, translated("menu.pick_color.set_stroke_color"));
         miPickStrokeColor.setOnAction(ae -> editor.setTerrainMapPropertyValue(WorldMapProperty.COLOR_WALL_STROKE, formatColor(colorToSelect)));
 
         Color doorColor =  getColorFromMap(worldMap(), LayerID.TERRAIN, WorldMapProperty.COLOR_DOOR, null);
-        var miPickDoorColor = createColorMenuItem(doorColor, tt("menu.pick_color.set_door_color"));
+        var miPickDoorColor = createColorMenuItem(doorColor, translated("menu.pick_color.set_door_color"));
         miPickDoorColor.setOnAction(ae -> editor.setTerrainMapPropertyValue(WorldMapProperty.COLOR_DOOR, formatColor(colorToSelect)));
 
         Color foodColor =  getColorFromMap(worldMap(), LayerID.FOOD, WorldMapProperty.COLOR_FOOD, null);
-        var miPickFoodColor = createColorMenuItem(foodColor, tt("menu.pick_color.set_food_color"));
+        var miPickFoodColor = createColorMenuItem(foodColor, translated("menu.pick_color.set_food_color"));
         miPickFoodColor.setOnAction(ae -> editor.setFoodMapPropertyValue(WorldMapProperty.COLOR_FOOD, formatColor(colorToSelect)));
 
         colorSelectionContextMenu.getItems().addAll(

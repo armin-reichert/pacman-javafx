@@ -20,7 +20,9 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_MapRepository;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.*;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.*;
-import de.amr.pacmanfx.ui.*;
+import de.amr.pacmanfx.ui.AbstractGameAction;
+import de.amr.pacmanfx.ui.ActionBinding;
+import de.amr.pacmanfx.ui.GameUI_Implementation;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
@@ -45,15 +47,15 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.OptionalInt;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.ui.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_3D_ENABLED;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_CANVAS_BACKGROUND_COLOR;
-import static de.amr.pacmanfx.ui.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
 import static de.amr.pacmanfx.uilib.Ufx.toggle;
 import static java.util.Objects.requireNonNull;
@@ -163,12 +165,12 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     private final DefaultSoundManager soundManager = new DefaultSoundManager();
     private final Map<String, GameScene> scenesByID = new HashMap<>();
     private TengenMsPacMan_MapRepository mapRepository;
-    private final List<ActionBinding> tengenMsPacManBindings;
+    private final Set<ActionBinding> tengenMsPacManBindings;
 
     public TengenMsPacMan_UIConfig(GameUI ui) {
         this.ui = requireNonNull(ui);
         Joypad joypad = ui.joypad();
-        tengenMsPacManBindings = List.of(
+        tengenMsPacManBindings = Set.of(
             new ActionBinding(ACTION_STEER_UP,            joypad.key(JoypadButton.UP),    control(KeyCode.UP)),
             new ActionBinding(ACTION_STEER_DOWN,          joypad.key(JoypadButton.DOWN),  control(KeyCode.DOWN)),
             new ActionBinding(ACTION_STEER_LEFT,          joypad.key(JoypadButton.LEFT),  control(KeyCode.LEFT)),
@@ -182,7 +184,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         );
     }
 
-    public List<ActionBinding> tengenMsPacManBindings() {
+    public Set<ActionBinding> tengenMsPacManBindings() {
         return tengenMsPacManBindings;
     }
 
