@@ -12,11 +12,6 @@ public interface GameLifecycle {
     void restart();
 
     /**
-     * Terminates the game and stops the game clock. Called when the application is terminated by closing the stage.
-     */
-    void terminate();
-
-    /**
      * Shows the start page for the given game variant, loads its resources and initializes the game model.
      *
      * @param gameVariant game variant name ("PACMAN", "MS_PACMAN" etc.)
@@ -27,4 +22,9 @@ public interface GameLifecycle {
      * Shows the UI and displays the start page view.
      */
     void showUI();
+
+    /**
+     * Terminates the game and stops the game clock. Called when the application is terminated by closing the stage.
+     */
+    void terminate();
 }

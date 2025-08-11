@@ -13,11 +13,16 @@ import java.util.Optional;
 
 public interface GameViewAccess {
     GameUI_View currentView();
-    PlayView playView();
-    StartPagesView startPagesView();
+
     Optional<EditorView> optEditorView();
 
+    PlayView playView();
+
+    StartPagesView startPagesView();
+
     void showEditorView();
+
     void showPlayView();
+
     void showStartView();
 }

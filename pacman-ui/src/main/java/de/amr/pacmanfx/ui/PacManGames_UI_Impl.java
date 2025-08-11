@@ -253,7 +253,6 @@ public class PacManGames_UI_Impl implements GameUI {
         }
         view.actionBindingsManager().installBindings(keyboard);
         gameContext.theGameEventManager().addEventListener(view);
-
         PROPERTY_CURRENT_VIEW.set(view);
     }
 
@@ -307,83 +306,69 @@ public class PacManGames_UI_Impl implements GameUI {
         return editorView;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-    // GameUI interface implementation
-    // -----------------------------------------------------------------------------------------------------------------
+    // GameUI interface
 
     @Override
     public List<ActionBinding> actionBindings() {
         return defaultActionBindings;
     }
 
-    @Override public Optional<GameScene> currentGameScene() {
-        return mainScene.currentGameScene();
-    }
-
-    @Override public GameUI_View currentView() {
-        return mainScene.currentView();
-    }
-
-    @Override public PacManGames_Assets assets() {
+    @Override
+    public PacManGames_Assets assets() {
         return assets;
     }
 
-    @Override public DirectoryWatchdog directoryWatchdog() {
+    @Override
+    public DirectoryWatchdog directoryWatchdog() {
         return customDirectoryWatchdog;
     }
 
-    @Override public GameClock clock() {
+    @Override
+    public GameClock clock() {
         return clock;
     }
 
-    @Override public GameContext gameContext() {
+    @Override
+    public GameContext gameContext() {
         return gameContext;
     }
 
-    @Override public Joypad joypad() {
+    @Override
+    public Joypad joypad() {
         return joypad;
     }
 
-    @Override public Keyboard keyboard() {
+    @Override
+    public Keyboard keyboard() {
         return keyboard;
     }
 
-    @Override public SoundManager sound() { return
+    @Override
+    public SoundManager sound() { return
         currentConfig().soundManager();
     }
 
-    @Override public Stage stage() {
+    @Override
+    public Stage stage() {
         return stage;
     }
 
-    @Override public UIPreferences uiPreferences() {
+    @Override
+    public UIPreferences uiPreferences() {
         return prefs;
     }
 
     @Override
-    public Optional<EditorView> optEditorView() {
-        return Optional.ofNullable(editorView);
-    }
-
-    @Override public PlayView playView() {
-        if (playView == null) {
-            playView = new PlayView(this, mainScene);
-        }
-        return playView;
-    }
-
-    @Override public StartPagesView startPagesView() {
-        if (startPagesView == null) {
-            startPagesView = new StartPagesView(this);
-        }
-        return startPagesView;
+    public void showFlashMessage(Duration duration, String message, Object... args) {
+        mainScene.flashMessageLayer().showMessage(String.format(message, args), duration.toSeconds());
     }
 
     @Override
-    public boolean isCurrentGameSceneID(String id) {
-        GameScene currentGameScene = mainScene.currentGameScene().orElse(null);
-        return currentGameScene != null && currentConfig().gameSceneHasID(currentGameScene, id);
+    public void showFlashMessage(String message, Object... args) {
+        showFlashMessage(DEFAULT_FLASH_MESSAGE_DURATION, message, args);
     }
+
+    // GameLifecycle interface
 
     @Override
     public void quitCurrentGameScene() {
@@ -456,6 +441,41 @@ public class PacManGames_UI_Impl implements GameUI {
     }
 
     @Override
+    public void terminate() {
+        Logger.info("Application is terminated now. There is no way back!");
+        clock.stop();
+        customDirectoryWatchdog.dispose();
+    }
+
+    // GameViewAccess interface
+
+    @Override
+    public GameUI_View currentView() {
+        return mainScene.currentView();
+    }
+
+    @Override
+    public Optional<EditorView> optEditorView() {
+        return Optional.ofNullable(editorView);
+    }
+
+    @Override
+    public PlayView playView() {
+        if (playView == null) {
+            playView = new PlayView(this, mainScene);
+        }
+        return playView;
+    }
+
+    @Override
+    public StartPagesView startPagesView() {
+        if (startPagesView == null) {
+            startPagesView = new StartPagesView(this);
+        }
+        return startPagesView;
+    }
+
+    @Override
     public void showEditorView() {
         if (!gameContext.theGame().isPlaying() || clock.isPaused()) {
             currentGameScene().ifPresent(GameScene::end);
@@ -466,16 +486,6 @@ public class PacManGames_UI_Impl implements GameUI {
         } else {
             Logger.info("Editor view cannot be opened, game is playing");
         }
-    }
-
-    @Override
-    public void showFlashMessage(Duration duration, String message, Object... args) {
-        mainScene.flashMessageLayer().showMessage(String.format(message, args), duration.toSeconds());
-    }
-
-    @Override
-    public void showFlashMessage(String message, Object... args) {
-        showFlashMessage(DEFAULT_FLASH_MESSAGE_DURATION, message, args);
     }
 
     @Override
@@ -495,17 +505,24 @@ public class PacManGames_UI_Impl implements GameUI {
         }));
     }
 
+    // GameSceneAccess interface
+
+    @Override public Optional<GameScene> currentGameScene() {
+        return mainScene.currentGameScene();
+    }
+
     @Override
-    public void terminate() {
-        Logger.info("Application is terminated now. There is no way back!");
-        clock.stop();
-        customDirectoryWatchdog.dispose();
+    public boolean isCurrentGameSceneID(String id) {
+        GameScene currentGameScene = mainScene.currentGameScene().orElse(null);
+        return currentGameScene != null && currentConfig().gameSceneHasID(currentGameScene, id);
     }
 
     @Override
     public void updateGameScene(boolean forceReloading) {
         playView().updateGameScene(forceReloading);
     }
+
+    // GameUIConfigManager interface
 
     @Override
     public void setConfig(String variant, GameUI_Config config) {
@@ -519,7 +536,9 @@ public class PacManGames_UI_Impl implements GameUI {
         return configByGameVariant.get(gameVariant);
     }
 
+    @Override
     @SuppressWarnings("unchecked")
-    @Override public <T extends GameUI_Config> T currentConfig() { return (T) config(gameContext.theGameController().selectedGameVariant()); }
-
+    public <T extends GameUI_Config> T currentConfig() {
+        return (T) config(gameContext.theGameController().selectedGameVariant());
+    }
 }

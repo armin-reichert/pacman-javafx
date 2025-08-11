@@ -16,7 +16,7 @@ import javafx.util.Duration;
 
 import java.util.List;
 
-public interface GameUI extends GameLifecycle, GameViewAccess, GameSceneAccess {
+public interface GameUI extends GameLifecycle, GameUIConfigManager, GameViewAccess, GameSceneAccess {
 
     /**
      * @return list of key-to-action bindings
@@ -40,26 +40,6 @@ public interface GameUI extends GameLifecycle, GameViewAccess, GameSceneAccess {
     Stage stage();
 
     UIPreferences uiPreferences();
-
-    /**
-     * @param gameVariant name of game variant
-     * @return UI configuration for given game variant
-     */
-    GameUI_Config config(String gameVariant);
-
-    /**
-     * Stores the UI configuration for a game variant and initializes the game scenes (assigns the game context).
-     *
-     * @param variant a game variant
-     * @param config the UI configuration for this variant
-     */
-    void setConfig(String variant, GameUI_Config config);
-
-    /**
-     * @return UI configuration for the current game
-     * @param <T> type of UI configuration
-     */
-    <T extends GameUI_Config> T currentConfig();
 
     /**
      * Shows a message on the screen that slowly fades out.
