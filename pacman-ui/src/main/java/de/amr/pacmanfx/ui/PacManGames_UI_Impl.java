@@ -315,14 +315,14 @@ public class PacManGames_UI_Impl implements GameUI {
     @Override public PacManGames_Assets assets() {return assets; }
     @SuppressWarnings("unchecked")
     @Override public <T extends GameUI_Config> T currentConfig() { return (T) config(gameContext.theGameController().selectedGameVariant()); }
-    @Override public DirectoryWatchdog customDirectoryWatchdog() { return customDirectoryWatchdog; }
+    @Override public DirectoryWatchdog directoryWatchdog() { return customDirectoryWatchdog; }
     @Override public GameClock clock() { return clock; }
     @Override public GameContext gameContext() { return gameContext; }
     @Override public Joypad joypad() { return joypad; }
     @Override public Keyboard keyboard() { return keyboard; }
     @Override public SoundManager sound() { return currentConfig().soundManager(); }
     @Override public Stage stage() { return stage; }
-    @Override public UIPreferences prefs() { return prefs; }
+    @Override public UIPreferences uiPreferences() { return prefs; }
 
     @Override
     public Optional<EditorView> optEditorView() {

@@ -52,8 +52,8 @@ public abstract class GameScene2D implements GameScene {
     protected GameScene2D(GameUI ui) {
         this.ui = requireNonNull(ui);
         actionBindings = new DefaultActionBindingsManager();
-        debugTextFill = ui.prefs().getColor("debug_text.fill");
-        debugTextFont = ui.prefs().getFont("debug_text.font");
+        debugTextFill = ui.uiPreferences().getColor("debug_text.fill");
+        debugTextFont = ui.uiPreferences().getFont("debug_text.font");
     }
 
     @Override

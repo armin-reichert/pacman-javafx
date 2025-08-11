@@ -24,14 +24,14 @@ public interface GameUI extends GameLifecycle, GameViewAccess, GameSceneAccess {
     List<ActionBinding> actionBindings();
 
     PacManGames_Assets assets();
-    DirectoryWatchdog customDirectoryWatchdog();
+    DirectoryWatchdog directoryWatchdog();
     GameClock clock();
     GameContext gameContext();
     Joypad joypad();
     Keyboard keyboard();
     SoundManager sound();
     Stage stage();
-    UIPreferences prefs();
+    UIPreferences uiPreferences();
 
     /**
      * @param gameVariant name of game variant
@@ -53,11 +53,11 @@ public interface GameUI extends GameLifecycle, GameViewAccess, GameSceneAccess {
      */
     <T extends GameUI_Config> T currentConfig();
 
-    Duration DEFAULT_FLASH_MESSAGE_SECONDS = Duration.seconds(1.5);
+    Duration DEFAULT_FLASH_MESSAGE_DURATION = Duration.seconds(1.5);
 
     void showFlashMessageSec(Duration duration, String message, Object... args);
 
     default void showFlashMessage(String message, Object... args) {
-        showFlashMessageSec(DEFAULT_FLASH_MESSAGE_SECONDS, message, args);
+        showFlashMessageSec(DEFAULT_FLASH_MESSAGE_DURATION, message, args);
     }
 }
