@@ -136,10 +136,10 @@ public class GameLevel3D extends Group implements Disposable {
                 pauseSec(0.5, () -> gameLevel.pac().hide()),
                 pauseSec(0.5),
                 levelSpinningAroundAxis(new Random().nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS),
-                pauseSec(0.5, () -> ui.currentSoundManager().play(SoundID.LEVEL_COMPLETE)),
+                pauseSec(0.5, () -> ui.soundManager().play(SoundID.LEVEL_COMPLETE)),
                 pauseSec(0.5),
                 wallsAndHouseDisappearing(),
-                pauseSec(1.0, () -> ui.currentSoundManager().play(SoundID.LEVEL_CHANGED))
+                pauseSec(1.0, () -> ui.soundManager().play(SoundID.LEVEL_CHANGED))
             );
         }
 
@@ -713,7 +713,7 @@ public class GameLevel3D extends Group implements Disposable {
 
     public void onPacManDying(GameState state) {
         state.timer().resetIndefiniteTime(); // expires when level animation ends
-        ui.currentSoundManager().stopAll();
+        ui.soundManager().stopAll();
         ghostLightAnimation.stop();
         // do one last update before dying animation starts
         pac3D.update();
@@ -721,7 +721,7 @@ public class GameLevel3D extends Group implements Disposable {
         bonus3D().ifPresent(Bonus3D::expire);
         var animation = new SequentialTransition(
                 pauseSec(2),
-                doNow(() -> ui.currentSoundManager().play(SoundID.PAC_MAN_DEATH)),
+                doNow(() -> ui.soundManager().play(SoundID.PAC_MAN_DEATH)),
                 pac3D.dyingAnimation().getOrCreateAnimationFX(),
                 pauseSec(1)
         );
@@ -741,7 +741,7 @@ public class GameLevel3D extends Group implements Disposable {
 
     public void onLevelComplete(GameState state, ObjectProperty<PerspectiveID> perspectiveIDProperty) {
         state.timer().resetIndefiniteTime(); // expires when animation ends
-        ui.currentSoundManager().stopAll();
+        ui.soundManager().stopAll();
         animationRegistry.stopAllAnimations();
         energizers3D.forEach(Energizer3D::stopPumping); //TODO needed?
         // hide 3D food explicitly because level might have been completed using cheat!
@@ -784,8 +784,8 @@ public class GameLevel3D extends Group implements Disposable {
         energizers3D().forEach(Energizer3D::hide);
         house3D.stopSwirlAnimations();
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
-        ui.currentSoundManager().stopAll();
-        ui.currentSoundManager().play(SoundID.GAME_OVER);
+        ui.soundManager().stopAll();
+        ui.soundManager().play(SoundID.GAME_OVER);
         boolean inOneOf4Cases = randomInt(0, 1000) < 250;
         if (!gameLevel.isDemoLevel() && inOneOf4Cases) {
             ui.showFlashMessage(Duration.seconds(2.5), ui.assets().localizedGameOverMessage());

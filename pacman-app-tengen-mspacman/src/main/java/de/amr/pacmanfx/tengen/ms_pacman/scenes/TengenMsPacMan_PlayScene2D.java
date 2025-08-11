@@ -152,10 +152,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     public void update() {
         gameContext().optGameLevel().ifPresent(level -> {
             if (level.isDemoLevel()) {
-                ui.currentSoundManager().setEnabled(false);
+                ui.soundManager().setEnabled(false);
             } else {
                 messageMovement.update();
-                ui.currentSoundManager().setEnabled(true);
+                ui.soundManager().setEnabled(true);
                 updateSound();
             }
             if (subScene.getCamera() == dynamicCamera) {
@@ -245,7 +245,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             || gameContext().theGameState() == TESTING_LEVELS_SHORT
             || gameContext().theGameState() == TESTING_LEVELS_MEDIUM;
         if (!shutUp) {
-            ui.currentSoundManager().play(SoundID.GAME_READY);
+            ui.soundManager().play(SoundID.GAME_READY);
         }
     }
 
@@ -283,14 +283,14 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         switch (state) {
             case HUNTING -> dynamicCamera.setFocussingActor(true);
             case LEVEL_COMPLETE -> {
-                ui.currentSoundManager().stopAll();
+                ui.soundManager().stopAll();
                 levelCompletedAnimation.setGameLevel(gameContext().theGameLevel());
                 levelCompletedAnimation.setSingleFlashMillis(333);
                 levelCompletedAnimation.getOrCreateAnimationFX().setOnFinished(e -> gameContext().theGameController().letCurrentGameStateExpire());
                 levelCompletedAnimation.playFromStart();
             }
             case GAME_OVER -> {
-                ui.currentSoundManager().stopAll();
+                ui.soundManager().stopAll();
                 // After some delay, the "game over" message moves from the center to the right border, wraps around,
                 // appears at the left border and moves to the center again (for non-Arcade maps)
                 if (gameContext().<TengenMsPacMan_GameModel>theGame().mapCategory() != MapCategory.ARCADE) {
@@ -307,25 +307,25 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onBonusActivated(GameEvent e) {
-        ui.currentSoundManager().loop(SoundID.BONUS_ACTIVE);
+        ui.soundManager().loop(SoundID.BONUS_ACTIVE);
     }
 
     @Override
     public void onBonusEaten(GameEvent e) {
-        ui.currentSoundManager().stop(SoundID.BONUS_ACTIVE);
-        ui.currentSoundManager().play(SoundID.BONUS_EATEN);
+        ui.soundManager().stop(SoundID.BONUS_ACTIVE);
+        ui.soundManager().play(SoundID.BONUS_EATEN);
     }
 
     @Override
     public void onBonusExpired(GameEvent e) {
-        ui.currentSoundManager().stop(SoundID.BONUS_ACTIVE);
+        ui.soundManager().stop(SoundID.BONUS_ACTIVE);
     }
 
     @Override
     public void onSpecialScoreReached(GameEvent e) {
         int score = e.payload("score");
         Logger.info("Extra life won for reaching score of {}", score);
-        ui.currentSoundManager().play(SoundID.EXTRA_LIFE);
+        ui.soundManager().play(SoundID.EXTRA_LIFE);
     }
 
     @Override
@@ -335,7 +335,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onGhostEaten(GameEvent e) {
-        ui.currentSoundManager().play(SoundID.GHOST_EATEN);
+        ui.soundManager().play(SoundID.GHOST_EATEN);
     }
 
     @Override
@@ -346,23 +346,23 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onPacDying(GameEvent e) {
-        ui.currentSoundManager().play(SoundID.PAC_MAN_DEATH);
+        ui.soundManager().play(SoundID.PAC_MAN_DEATH);
     }
 
     @Override
     public void onPacFoundFood(GameEvent e) {
-        ui.currentSoundManager().loop(SoundID.PAC_MAN_MUNCHING);
+        ui.soundManager().loop(SoundID.PAC_MAN_MUNCHING);
     }
 
     @Override
     public void onPacGetsPower(GameEvent e) {
-        ui.currentSoundManager().pauseSiren();
-        ui.currentSoundManager().loop(SoundID.PAC_MAN_POWER);
+        ui.soundManager().pauseSiren();
+        ui.soundManager().loop(SoundID.PAC_MAN_POWER);
     }
 
     @Override
     public void onPacLostPower(GameEvent e) {
-        ui.currentSoundManager().stop(SoundID.PAC_MAN_POWER);
+        ui.soundManager().stop(SoundID.PAC_MAN_POWER);
     }
 
     private void updateSound() {
@@ -375,17 +375,17 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             int huntingPhase = gameContext().theGame().huntingTimer().phaseIndex();
             int sirenNumber = 1 + huntingPhase / 2;
             switch (sirenNumber) {
-                case 1 -> ui.currentSoundManager().playSiren(SoundID.SIREN_1, 1.0);
-                case 2 -> ui.currentSoundManager().playSiren(SoundID.SIREN_2, 1.0);
-                case 3 -> ui.currentSoundManager().playSiren(SoundID.SIREN_3, 1.0);
-                case 4 -> ui.currentSoundManager().playSiren(SoundID.SIREN_4, 1.0);
+                case 1 -> ui.soundManager().playSiren(SoundID.SIREN_1, 1.0);
+                case 2 -> ui.soundManager().playSiren(SoundID.SIREN_2, 1.0);
+                case 3 -> ui.soundManager().playSiren(SoundID.SIREN_3, 1.0);
+                case 4 -> ui.soundManager().playSiren(SoundID.SIREN_4, 1.0);
                 default -> throw new IllegalArgumentException("Illegal siren number " + sirenNumber);
             }
         }
 
         // TODO: how exactly is the munching sound created in the original game?
         if (pac.starvingTicks() > 10) {
-            ui.currentSoundManager().pause(SoundID.PAC_MAN_MUNCHING);
+            ui.soundManager().pause(SoundID.PAC_MAN_MUNCHING);
         }
 
         //TODO check in simulator when exactly this sound is played
@@ -394,9 +394,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             .findAny();
         if (ghostReturningToHouse.isPresent()
             && (gameContext().theGameState() == GameState.HUNTING || gameContext().theGameState() == GameState.GHOST_DYING)) {
-            ui.currentSoundManager().loop(SoundID.GHOST_RETURNS);
+            ui.soundManager().loop(SoundID.GHOST_RETURNS);
         } else {
-            ui.currentSoundManager().stop(SoundID.GHOST_RETURNS);
+            ui.soundManager().stop(SoundID.GHOST_RETURNS);
         }
     }
 

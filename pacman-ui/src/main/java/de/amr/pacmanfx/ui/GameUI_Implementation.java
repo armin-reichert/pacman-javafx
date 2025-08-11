@@ -345,7 +345,7 @@ public class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public SoundManager currentSoundManager() { return
+    public SoundManager soundManager() { return
         currentConfig().soundManager();
     }
 
@@ -480,7 +480,7 @@ public class GameUI_Implementation implements GameUI {
     public void showEditorView() {
         if (!gameContext.theGame().isPlaying() || clock.isPaused()) {
             currentGameScene().ifPresent(GameScene::end);
-            currentSoundManager().stopAll();
+            soundManager().stopAll();
             clock.stop();
             ensureEditorViewExists().editor().start(stage);
             selectView(editorView);
@@ -498,7 +498,7 @@ public class GameUI_Implementation implements GameUI {
     public void showStartView() {
         clock.stop();
         clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
-        currentSoundManager().stopAll();
+        soundManager().stopAll();
         selectView(startPagesView());
         startPagesView().currentStartPage().ifPresent(startPage -> Platform.runLater(() -> {
             startPage.onEnter(this); // sets game variant!

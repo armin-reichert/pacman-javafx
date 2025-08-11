@@ -58,7 +58,7 @@ public interface GameUI extends GameUI_Lifecycle, GameUI_ConfigManager, GameUI_V
     /**
      * @return sound manager for the current game
      */
-    SoundManager currentSoundManager();
+    SoundManager soundManager();
 
     Stage stage();
 

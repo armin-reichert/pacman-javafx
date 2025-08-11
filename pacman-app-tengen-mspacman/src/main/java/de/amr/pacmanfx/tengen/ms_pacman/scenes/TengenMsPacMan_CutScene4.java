@@ -69,7 +69,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        ui.currentSoundManager().stop(MUSIC_ID);
+        ui.soundManager().stop(MUSIC_ID);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         if (t == 0) {
             clapperboard.setVisible(true);
             clapperboard.startAnimation();
-            ui.currentSoundManager().play(MUSIC_ID);
+            ui.soundManager().play(MUSIC_ID);
         }
         else if (t == 130) {
             pacMan.setMoveDir(Direction.RIGHT);
@@ -164,7 +164,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         juniorCreationTime.add(t);
 
         String id = "audio.intermission.4.junior." + randomInt(1, 3); // 1 or 2
-        ui.currentSoundManager().loop(id);
+        ui.soundManager().loop(id);
 
         Logger.info("Junior spawned at tick {}", t);
     }

@@ -91,7 +91,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        ui.currentSoundManager().stop(MUSIC_ID);
+        ui.soundManager().stop(MUSIC_ID);
     }
 
     @Override
@@ -100,7 +100,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         if (t == 0) {
             clapperboard.show();
             clapperboard.startAnimation();
-            ui.currentSoundManager().play(MUSIC_ID);
+            ui.soundManager().play(MUSIC_ID);
         }
         else if (t == 130) {
             pacMan.setMoveDir(Direction.RIGHT);

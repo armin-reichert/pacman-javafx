@@ -72,7 +72,7 @@ public abstract class GameScene2D implements GameScene {
 
     @Override
     public final void end() {
-        ui.currentSoundManager().stopAll();
+        ui.soundManager().stopAll();
         doEnd();
     }
 
@@ -88,7 +88,7 @@ public abstract class GameScene2D implements GameScene {
     public ActionBindingsManager actionBindings() { return actionBindings; }
 
     @Override
-    public void onStopAllSounds(GameEvent event) { ui.currentSoundManager().stopAll(); }
+    public void onStopAllSounds(GameEvent event) { ui.soundManager().stopAll(); }
 
     @Override
     public void onUnspecifiedChange(GameEvent event) {

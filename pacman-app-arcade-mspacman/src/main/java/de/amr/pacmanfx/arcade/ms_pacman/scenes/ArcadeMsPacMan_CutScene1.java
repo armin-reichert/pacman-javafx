@@ -85,7 +85,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        ui.currentSoundManager().stop(MUSIC_ID);
+        ui.soundManager().stop(MUSIC_ID);
     }
 
     @Override
@@ -129,7 +129,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     private void updateStateClapperboard() {
         clapperboard.tick();
         if (sceneTimer.atSecond(1)) {
-            ui.currentSoundManager().play(MUSIC_ID);
+            ui.soundManager().play(MUSIC_ID);
         } else if (sceneTimer.hasExpired()) {
             enterStateChasedByGhosts();
         }

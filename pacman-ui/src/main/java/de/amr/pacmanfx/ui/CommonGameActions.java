@@ -69,7 +69,7 @@ public interface CommonGameActions {
         @Override
         public void execute(GameUI ui) {
             if (ui.gameContext().theCoinMechanism().numCoins() < CoinMechanism.MAX_COINS) {
-                ui.currentSoundManager().setEnabled(true);
+                ui.soundManager().setEnabled(true);
                 ui.gameContext().theCoinMechanism().insertCoin();
                 ui.gameContext().theGameEventManager().publishEvent(GameEventType.CREDIT_ADDED);
             }
@@ -91,7 +91,7 @@ public interface CommonGameActions {
     AbstractGameAction ACTION_ARCADE_START_GAME = new AbstractGameAction("START_GAME") {
         @Override
         public void execute(GameUI ui) {
-            ui.currentSoundManager().stopVoice();
+            ui.soundManager().stopVoice();
             ui.gameContext().theGameController().changeGameState(GameState.STARTING_GAME);
         }
 
@@ -141,7 +141,7 @@ public interface CommonGameActions {
         @Override
         public void execute(GameUI ui) {
             ui.gameContext().theGameLevel().eatAllPellets();
-            ui.currentSoundManager().pause(SoundID.PAC_MAN_MUNCHING);
+            ui.soundManager().pause(SoundID.PAC_MAN_MUNCHING);
             ui.gameContext().theGameEventManager().publishEvent(GameEventType.PAC_FOUND_FOOD);
         }
 
@@ -228,7 +228,7 @@ public interface CommonGameActions {
     AbstractGameAction ACTION_RESTART_INTRO = new AbstractGameAction("RESTART_INTRO") {
         @Override
         public void execute(GameUI ui) {
-            ui.currentSoundManager().stopAll();
+            ui.soundManager().stopAll();
             ui.currentGameScene().ifPresent(GameScene::end);
             if (ui.gameContext().theGameState() == GameState.TESTING_LEVELS_SHORT) {
                 ui.gameContext().theGameState().onExit(ui.gameContext()); //TODO exit other states too?
@@ -347,7 +347,7 @@ public interface CommonGameActions {
             toggle(ui.gameContext().theGameController().propertyUsingAutopilot());
             boolean autoPilotOn = ui.gameContext().theGameController().propertyUsingAutopilot().get();
             ui.showFlashMessage(ui.assets().text(autoPilotOn ? "autopilot_on" : "autopilot_off"));
-            ui.currentSoundManager().playVoice(autoPilotOn ? SoundID.VOICE_AUTOPILOT_ON : SoundID.VOICE_AUTOPILOT_OFF, 0);
+            ui.soundManager().playVoice(autoPilotOn ? SoundID.VOICE_AUTOPILOT_ON : SoundID.VOICE_AUTOPILOT_OFF, 0);
         }
     };
 
@@ -393,7 +393,7 @@ public interface CommonGameActions {
             toggle(ui.gameContext().theGameController().propertyImmunity());
             boolean immunityOn = ui.gameContext().theGameController().propertyImmunity().get();
             ui.showFlashMessage(ui.assets().text(immunityOn ? "player_immunity_on" : "player_immunity_off"));
-            ui.currentSoundManager().playVoice(immunityOn ? SoundID.VOICE_IMMUNITY_ON : SoundID.VOICE_IMMUNITY_OFF, 0);
+            ui.soundManager().playVoice(immunityOn ? SoundID.VOICE_IMMUNITY_ON : SoundID.VOICE_IMMUNITY_OFF, 0);
         }
     };
 
@@ -419,7 +419,7 @@ public interface CommonGameActions {
         public void execute(GameUI ui) {
             toggle(ui.clock().pausedProperty());
             if (ui.clock().isPaused()) {
-                ui.currentSoundManager().stopAll();
+                ui.soundManager().stopAll();
             }
             Logger.info("Game ({}) {}", ui.gameContext().theGameController().selectedGameVariant(), ui.clock().isPaused() ? "paused" : "resumed");
         }
