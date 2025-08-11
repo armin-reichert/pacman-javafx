@@ -346,7 +346,7 @@ public class TileMapEditor {
 
     public BooleanProperty foodVisibleProperty() {
         if (foodVisible == null) {
-            foodVisible = new SimpleBooleanProperty(true) {
+            foodVisible = new SimpleBooleanProperty(DEFAULT_FOOD_VISIBLE) {
                 @Override
                 protected void invalidated() {
                     changeManager.requestRedraw();
@@ -366,12 +366,30 @@ public class TileMapEditor {
 
     // terrainVisible
 
-    private final BooleanProperty terrainVisiblePy = new SimpleBooleanProperty(true) {
-        @Override
-        protected void invalidated() {
-            changeManager.requestRedraw();
+    public static final boolean DEFAULT_TERRAIN_VISIBLE = true;
+
+    private BooleanProperty terrainVisible;
+
+    public BooleanProperty terrainVisibleProperty() {
+        if (terrainVisible == null) {
+            terrainVisible = new SimpleBooleanProperty(DEFAULT_TERRAIN_VISIBLE) {
+                @Override
+                protected void invalidated() {
+                    changeManager.requestRedraw();
+                }
+            };
         }
-    };
+        return terrainVisible;
+    }
+
+    public boolean isTerrainVisible() {
+        return terrainVisible == null ? DEFAULT_TERRAIN_VISIBLE : terrainVisible.get();
+    }
+
+    public void setTerrainVisible(boolean visible) {
+        terrainVisibleProperty().set(visible);
+    }
+
 
     // segmentNumbersVisible
 
@@ -413,8 +431,6 @@ public class TileMapEditor {
     public WorldMap editedWorldMap() { return editedWorldMapPy.get(); }
 
     public void setEditedWorldMap(WorldMap worldMap) { editedWorldMapPy.set(requireNonNull(worldMap)); }
-
-    public BooleanProperty terrainVisibleProperty() { return terrainVisiblePy; }
 
     public BooleanProperty segmentNumbersDisplayedProperty() { return segmentNumbersVisible; }
 
@@ -611,7 +627,7 @@ public class TileMapEditor {
     private void createPreview3D() {
         mazePreview3D = new MazePreview3D(model3DRepository, 500, 500);
         mazePreview3D.foodVisibleProperty().bind(foodVisibleProperty());
-        mazePreview3D.terrainVisibleProperty().bind(terrainVisiblePy);
+        mazePreview3D.terrainVisibleProperty().bind(terrainVisibleProperty());
         mazePreview3D.worldMapProperty().bind(editedWorldMapPy);
     }
 
@@ -973,7 +989,7 @@ public class TileMapEditor {
         miPropertiesVisible.selectedProperty().bindBidirectional(propertyEditorsVisiblePy);
 
         var miTerrainVisible = new CheckMenuItem(translated("menu.view.terrain"));
-        miTerrainVisible.selectedProperty().bindBidirectional(terrainVisiblePy);
+        miTerrainVisible.selectedProperty().bindBidirectional(terrainVisibleProperty());
 
         var miFoodVisible = new CheckMenuItem(translated("menu.view.food"));
         miFoodVisible.selectedProperty().bindBidirectional(foodVisibleProperty());
@@ -1254,7 +1270,7 @@ public class TileMapEditor {
         g.setImageSmoothing(false);
         g.setFill(colors.backgroundColor());
         g.fillRect(0, 0, canvasPreview2D.getWidth(), canvasPreview2D.getHeight());
-        if (terrainVisiblePy.get()) {
+        if (isTerrainVisible()) {
             terrainPathRenderer.setScaling(gridSize() / 8.0);
             terrainPathRenderer.setColorScheme(colors);
             terrainPathRenderer.drawTerrain(g, editedWorldMap(), editedWorldMap().obstacles());
