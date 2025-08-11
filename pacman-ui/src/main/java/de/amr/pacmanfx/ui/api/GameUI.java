@@ -16,14 +16,14 @@ import de.amr.pacmanfx.uilib.assets.UIPreferences;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.util.List;
+import java.util.Set;
 
 public interface GameUI extends GameUI_Lifecycle, GameUI_ConfigManager, GameUI_ViewAccess, GameUI_SceneAccess {
 
     /**
-     * @return list of key-to-action bindings
+     * @return set of key-to-action bindings
      */
-    List<ActionBinding> actionBindings();
+    Set<ActionBinding> actionBindings();
 
     /**
      * @return assets (fonts, sounds, colors, localized texts etc.) for the different games

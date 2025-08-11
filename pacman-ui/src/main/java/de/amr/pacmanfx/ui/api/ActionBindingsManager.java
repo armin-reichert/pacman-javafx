@@ -4,14 +4,14 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.api;
 
-import de.amr.pacmanfx.ui.ActionBinding;
 import de.amr.pacmanfx.ui.AbstractGameAction;
+import de.amr.pacmanfx.ui.ActionBinding;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import javafx.scene.input.KeyCombination;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 public interface ActionBindingsManager {
 
@@ -35,5 +35,5 @@ public interface ActionBindingsManager {
      * @param gameAction a game action
      * @param actionBindings an action bindings list
      */
-    void useFirst(AbstractGameAction gameAction, List<ActionBinding> actionBindings);
+    void useFirst(AbstractGameAction gameAction, Set<ActionBinding> actionBindings);
 }

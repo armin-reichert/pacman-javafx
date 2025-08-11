@@ -29,9 +29,9 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import static de.amr.pacmanfx.ui.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.api.GameUI_Config.SCENE_ID_PLAY_SCENE_3D;
@@ -48,7 +48,7 @@ public class GameUI_Implementation implements GameUI {
     private static final int MIN_STAGE_WIDTH  = 280;
     private static final int MIN_STAGE_HEIGHT = 360;
 
-    private final List<ActionBinding> defaultActionBindings = List.of(
+    private final Set<ActionBinding> defaultActionBindings = Set.of(
         new ActionBinding(ACTION_ARCADE_INSERT_COIN,          nude(KeyCode.DIGIT5), nude(KeyCode.NUMPAD5)),
         new ActionBinding(ACTION_ARCADE_START_GAME,           nude(KeyCode.DIGIT1), nude(KeyCode.NUMPAD1)),
         new ActionBinding(ACTION_BOOT_SHOW_PLAY_VIEW,         nude(KeyCode.F3)),
@@ -311,7 +311,7 @@ public class GameUI_Implementation implements GameUI {
     // GameUI interface
 
     @Override
-    public List<ActionBinding> actionBindings() {
+    public Set<ActionBinding> actionBindings() {
         return defaultActionBindings;
     }
 
