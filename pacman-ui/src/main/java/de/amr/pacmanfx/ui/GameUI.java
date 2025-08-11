@@ -15,11 +15,6 @@ import de.amr.pacmanfx.ui.layout.StartPagesView;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.assets.UIPreferences;
-import javafx.scene.control.CustomMenuItem;
-import javafx.scene.control.MenuItem;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.List;
@@ -93,9 +88,9 @@ public interface GameUI {
 
     // Views
     GameUI_View currentView();
-    PlayView              thePlayView();
-    StartPagesView        theStartPagesView();
-    Optional<EditorView>  theEditorView();
+    PlayView playView();
+    StartPagesView startPagesView();
+    Optional<EditorView> optEditorView();
 
     void showEditorView();
     void showPlayView();

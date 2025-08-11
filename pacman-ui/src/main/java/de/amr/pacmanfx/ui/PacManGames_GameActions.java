@@ -191,7 +191,7 @@ public interface PacManGames_GameActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.currentView() == ui.thePlayView() || ui.currentView() == ui.theStartPagesView();
+            return ui.currentView() == ui.playView() || ui.currentView() == ui.startPagesView();
         }
     };
 
@@ -238,7 +238,7 @@ public interface PacManGames_GameActions {
     GameAction ACTION_SHOW_HELP = new GameAction("SHOW_HELP") {
         @Override
         public void execute(GameUI ui) {
-            ui.thePlayView().showHelp(ui);
+            ui.playView().showHelp(ui);
         }
 
         @Override
@@ -247,7 +247,7 @@ public interface PacManGames_GameActions {
                 || ui.theGameContext().theGameController().isSelected("PACMAN_XXL")
                 || ui.theGameContext().theGameController().isSelected("MS_PACMAN")
                 || ui.theGameContext().theGameController().isSelected("MS_PACMAN_XXL"))
-                && ui.currentView() == ui.thePlayView()
+                && ui.currentView() == ui.playView()
                 && ui.currentGameScene().isPresent()
                 && ui.currentGameScene().get() instanceof GameScene2D;
         }
@@ -351,12 +351,12 @@ public interface PacManGames_GameActions {
     GameAction ACTION_TOGGLE_DASHBOARD = new GameAction("TOGGLE_DASHBOARD") {
         @Override
         public void execute(GameUI ui) {
-            ui.thePlayView().toggleDashboard();
+            ui.playView().toggleDashboard();
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.currentView().equals(ui.thePlayView());
+            return ui.currentView().equals(ui.playView());
         }
 
         @Override

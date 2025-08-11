@@ -136,10 +136,10 @@ public class GameUI_Builder {
 
         for (StartPageConfiguration config : startPageConfigs) {
             StartPage startPage = createStartPage(ui, config.gameVariants.getFirst(), config.startPageClass);
-            ui.theStartPagesView().addStartPage(startPage);
+            ui.startPagesView().addStartPage(startPage);
         }
 
-        ui.thePlayView().configureDashboard(dashboardIDs);
+        ui.playView().configureDashboard(dashboardIDs);
         return ui;
     }
 

@@ -171,14 +171,14 @@ public class PacManGames_UI_Impl implements GameUI {
 
         // Show paused icon only in play view
         mainScene.pausedIcon().visibleProperty().bind(Bindings.createBooleanBinding(
-            () -> currentView() == thePlayView() && theGameClock.isPaused(),
+            () -> currentView() == playView() && theGameClock.isPaused(),
             PROPERTY_CURRENT_VIEW, theGameClock.pausedProperty())
         );
 
         // hide icon box if editor view is active, avoid creation of editor view in binding expression!
         StatusIconBox statusIcons = mainScene.statusIconBox();
         statusIcons.visibleProperty().bind(PROPERTY_CURRENT_VIEW
-            .map(currentView -> theEditorView().isEmpty() || currentView != theEditorView().get()));
+            .map(currentView -> optEditorView().isEmpty() || currentView != optEditorView().get()));
 
         statusIcons.iconMuted()    .visibleProperty().bind(PROPERTY_MUTED);
         statusIcons.icon3D()       .visibleProperty().bind(PROPERTY_3D_ENABLED);
@@ -281,8 +281,8 @@ public class PacManGames_UI_Impl implements GameUI {
 
     private void drawCurrentView() {
         try {
-            if (currentView() == thePlayView()) {
-                thePlayView().draw();
+            if (currentView() == playView()) {
+                playView().draw();
             }
             mainScene.flashMessageLayer().update();
         } catch (Throwable x) {
@@ -327,18 +327,18 @@ public class PacManGames_UI_Impl implements GameUI {
     @Override public UIPreferences               theUIPrefs() { return theUIPrefs; }
 
     @Override
-    public Optional<EditorView> theEditorView() {
+    public Optional<EditorView> optEditorView() {
         return Optional.ofNullable(editorView);
     }
 
-    @Override public PlayView thePlayView() {
+    @Override public PlayView playView() {
         if (playView == null) {
             playView = new PlayView(this, mainScene);
         }
         return playView;
     }
 
-    @Override public StartPagesView theStartPagesView() {
+    @Override public StartPagesView startPagesView() {
         if (startPagesView == null) {
             startPagesView = new StartPagesView(this);
         }
@@ -404,7 +404,7 @@ public class PacManGames_UI_Impl implements GameUI {
             Logger.error("Could not find app icon for current game variant {}", gameVariant);
         }
 
-        thePlayView().canvasFrame().roundedBorderProperty().set(newConfig.hasGameCanvasRoundedBorder());
+        playView().canvasFrame().roundedBorderProperty().set(newConfig.hasGameCanvasRoundedBorder());
 
         // this triggers a game event and the event handlers:
         theGameContext.theGameController().selectGameVariant(gameVariant);
@@ -412,8 +412,8 @@ public class PacManGames_UI_Impl implements GameUI {
 
     @Override
     public void show() {
-        thePlayView().initDashboard();
-        theStartPagesView().selectStartPage(0);
+        playView().initDashboard();
+        startPagesView().selectStartPage(0);
         showStartView();
         theStage.centerOnScreen();
         theStage.show();
@@ -441,7 +441,7 @@ public class PacManGames_UI_Impl implements GameUI {
 
     @Override
     public void showPlayView() {
-        selectView(thePlayView());
+        selectView(playView());
     }
 
     @Override
@@ -449,8 +449,8 @@ public class PacManGames_UI_Impl implements GameUI {
         theGameClock.stop();
         theGameClock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
         theSound().stopAll();
-        selectView(theStartPagesView());
-        theStartPagesView().currentStartPage().ifPresent(startPage -> Platform.runLater(() -> {
+        selectView(startPagesView());
+        startPagesView().currentStartPage().ifPresent(startPage -> Platform.runLater(() -> {
             startPage.onEnter(this); // sets game variant!
             startPage.layoutRoot().requestFocus();
         }));
@@ -465,7 +465,7 @@ public class PacManGames_UI_Impl implements GameUI {
 
     @Override
     public void updateGameScene(boolean reloadCurrent) {
-        thePlayView().updateGameScene(reloadCurrent);
+        playView().updateGameScene(reloadCurrent);
     }
 
     @Override
