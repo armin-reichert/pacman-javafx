@@ -1,6 +1,6 @@
-package de.amr.pacmanfx.ui;
+package de.amr.pacmanfx.ui.api;
 
-public interface GameLifecycle {
+public interface GameUI_Lifecycle {
     /**
      * Leaves the current game scene (if any) and displays the start page for the current game.
      */

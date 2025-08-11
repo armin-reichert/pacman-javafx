@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Builder;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.application.Application;
@@ -12,8 +12,8 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import static de.amr.pacmanfx.Globals.theGameContext;
-import static de.amr.pacmanfx.ui.GameVariant.MS_PACMAN_XXL;
-import static de.amr.pacmanfx.ui.GameVariant.PACMAN_XXL;
+import static de.amr.pacmanfx.ui.api.DefaultGameVariants.MS_PACMAN_XXL;
+import static de.amr.pacmanfx.ui.api.DefaultGameVariants.PACMAN_XXL;
 
 public class PacManXXL_Common_App extends Application {
 

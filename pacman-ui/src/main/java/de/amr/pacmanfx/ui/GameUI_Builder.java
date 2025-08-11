@@ -9,6 +9,8 @@ import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.controller.GameController;
 import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.MapSelector;
+import de.amr.pacmanfx.ui.api.GameUI;
+import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import de.amr.pacmanfx.ui.layout.StartPage;
 import javafx.stage.Stage;
@@ -126,7 +128,7 @@ public class GameUI_Builder {
         //TODO this is crap
         Map<String, Class<?>> uiConfigMap = new HashMap<>();
         configByGameVariant.forEach((gameVariant, config) -> uiConfigMap.put(gameVariant, config.uiConfigClass));
-        var ui = new PacManGames_UI_Impl(uiConfigMap, gameContext, stage, width, height);
+        var ui = new GameUI_Implementation(uiConfigMap, gameContext, stage, width, height);
 
         configByGameVariant.forEach((gameVariant, config) -> {
             File highScoreFile = highScoreFile(gameContext.theHomeDir(), gameVariant);

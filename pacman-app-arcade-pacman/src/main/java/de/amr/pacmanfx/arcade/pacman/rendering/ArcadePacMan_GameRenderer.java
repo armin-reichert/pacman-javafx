@@ -11,7 +11,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
-import de.amr.pacmanfx.ui.PacManGames_Assets;
+import de.amr.pacmanfx.ui.GameAssets;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.canvas.Canvas;
@@ -32,7 +32,7 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
 
     protected ArcadePacMan_SpriteSheet spriteSheet;
 
-    public ArcadePacMan_GameRenderer(PacManGames_Assets assets, ArcadePacMan_SpriteSheet spriteSheet, Canvas canvas) {
+    public ArcadePacMan_GameRenderer(GameAssets assets, ArcadePacMan_SpriteSheet spriteSheet, Canvas canvas) {
         super(assets);
         this.ctx = requireNonNull(canvas).getGraphicsContext2D();
         this.spriteSheet = requireNonNull(spriteSheet);

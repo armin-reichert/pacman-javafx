@@ -4,8 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.dashboard;
 
-import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.PacManGames_GameActions;
+import de.amr.pacmanfx.ui.CommonGameActions;
+import de.amr.pacmanfx.ui.GameUI_Implementation;
+import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
@@ -13,7 +14,7 @@ import javafx.scene.image.ImageView;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.ui.GameUI_Properties.*;
+import static de.amr.pacmanfx.ui.api.GameUI_Properties.*;
 
 /**
  * General settings and simulation control.
@@ -34,7 +35,7 @@ public class InfoBoxGeneral extends InfoBox {
 
         // Simulation control
 
-        ResourceManager rm = () -> GameUI.class;
+        ResourceManager rm = () -> GameUI_Implementation.class;
         var iconPlay = new ImageView(rm.loadImage("graphics/icons/play.png"));
         var iconStop = new ImageView(rm.loadImage("graphics/icons/stop.png"));
         var iconStep = new ImageView(rm.loadImage("graphics/icons/step.png"));
@@ -48,7 +49,7 @@ public class InfoBoxGeneral extends InfoBox {
         btnPlayPause.setStyle("-fx-background-color: transparent");
         btnPlayPause.graphicProperty().bind(ui.clock().pausedProperty().map(paused -> paused ? iconPlay : iconStop));
         btnPlayPause.tooltipProperty().bind(ui.clock().pausedProperty().map(paused -> paused ? tooltipPlay : tooltipStop));
-        setAction(btnPlayPause, PacManGames_GameActions.ACTION_TOGGLE_PAUSED);
+        setAction(btnPlayPause, CommonGameActions.ACTION_TOGGLE_PAUSED);
 
         Button btnStep = buttonsSimulationControl[1];
         btnStep.setGraphic(iconStep);

@@ -16,8 +16,8 @@ import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.tengen.ms_pacman.model.*;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.Clapperboard;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.Stork;
-import de.amr.pacmanfx.ui.GameUI_Config;
-import de.amr.pacmanfx.ui.PacManGames_Assets;
+import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.ui.GameAssets;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
 import de.amr.pacmanfx.ui.input.JoypadKeyBinding;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
@@ -60,7 +60,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
     private ColoredMazeSpriteSet mazeSpriteSet;
 
     public TengenMsPacMan_GameRenderer(
-        PacManGames_Assets assets,
+        GameAssets assets,
         TengenMsPacMan_SpriteSheet spriteSheet,
         TengenMsPacMan_MapRepository mapRepository,
         Canvas canvas)

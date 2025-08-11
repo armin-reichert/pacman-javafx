@@ -6,6 +6,8 @@ package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.ui.*;
+import de.amr.pacmanfx.ui.api.ActionBindingsManager;
+import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.widgets.Carousel;
 import de.amr.pacmanfx.uilib.widgets.FancyButton;
 import javafx.geometry.Insets;
@@ -26,8 +28,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_BOOT_SHOW_PLAY_VIEW;
-import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_TOGGLE_PAUSED;
+import static de.amr.pacmanfx.ui.CommonGameActions.ACTION_BOOT_SHOW_PLAY_VIEW;
+import static de.amr.pacmanfx.ui.CommonGameActions.ACTION_TOGGLE_PAUSED;
 import static de.amr.pacmanfx.ui.input.Keyboard.nude;
 import static java.util.Objects.requireNonNull;
 
@@ -38,7 +40,7 @@ public class StartPagesView implements GameUI_View {
 
     private static final Supplier<String> TITLE_SUPPLIER = () -> "JavaFX Pac-Man Games";
 
-    public static FancyButton createStartButton(PacManGames_Assets assets, Pos alignment) {
+    public static FancyButton createStartButton(GameAssets assets, Pos alignment) {
         var button = new FancyButton(
                 assets.text("play_button"),
                 assets.arcadeFont(30),
@@ -91,14 +93,14 @@ public class StartPagesView implements GameUI_View {
         });
         setBackground(ui.assets().background("background.scene"));
 
-        GameAction actionPrevSlide = new GameAction("SHOW_PREV_SLIDE") {
+        AbstractGameAction actionPrevSlide = new AbstractGameAction("SHOW_PREV_SLIDE") {
             @Override
             public void execute(GameUI ui) {
                 carousel.showPreviousSlide();
             }
         };
 
-        GameAction actionNextSlide = new GameAction("SHOW_NEXT_SLIDE") {
+        AbstractGameAction actionNextSlide = new AbstractGameAction("SHOW_NEXT_SLIDE") {
             @Override
             public void execute(GameUI ui) {
                 carousel.showNextSlide();

@@ -8,7 +8,7 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_GameRenderer;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.ui.PacManGames_Assets;
+import de.amr.pacmanfx.ui.GameAssets;
 import de.amr.pacmanfx.ui._2d.GenericMapRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -17,7 +17,7 @@ public class PacManXXL_PacMan_GameRenderer extends ArcadePacMan_GameRenderer {
 
     private final GenericMapRenderer mapRenderer;
 
-    public PacManXXL_PacMan_GameRenderer(PacManGames_Assets assets, ArcadePacMan_SpriteSheet spriteSheet, Canvas canvas) {
+    public PacManXXL_PacMan_GameRenderer(GameAssets assets, ArcadePacMan_SpriteSheet spriteSheet, Canvas canvas) {
         super(assets, spriteSheet, canvas);
         mapRenderer = new GenericMapRenderer(canvas);
         mapRenderer.scalingProperty().bind(scalingProperty());

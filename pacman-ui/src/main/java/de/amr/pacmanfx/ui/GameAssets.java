@@ -14,16 +14,16 @@ import javafx.scene.text.Font;
 /**
  * Stores assets used in the Pac-Man games UI.
  */
-public class PacManGames_Assets extends AssetStorage {
+public class GameAssets extends AssetStorage {
 
-    private static final ResourceManager RES = () -> PacManGames_Assets.class;
+    private static final ResourceManager RES = () -> GameAssets.class;
 
     private final Model3DRepository model3DRepository;
 
     private final Picker<String> pickeOverTexts;
     private final Picker<String> pickLevelCompleteTexts;
 
-    public PacManGames_Assets() {
+    public GameAssets() {
         model3DRepository = new Model3DRepository();
 
         localizedTextBundle = RES.getModuleBundle("de.amr.pacmanfx.ui.localized_texts");

@@ -5,16 +5,17 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.Validations;
+import de.amr.pacmanfx.ui.api.GameUI;
 import org.tinylog.Logger;
 
 /**
  * Common base class for game actions.
  */
-public abstract class GameAction {
+public abstract class AbstractGameAction {
 
     private final String name;
 
-    protected GameAction(String name) {
+    protected AbstractGameAction(String name) {
         this.name = Validations.requireValidIdentifier(name);
     }
 

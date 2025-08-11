@@ -8,9 +8,9 @@ import javafx.scene.input.KeyCombination;
 
 import java.util.Set;
 
-public record ActionBinding(GameAction gameAction, Set<KeyCombination> keyCombinations) {
+public record ActionBinding(AbstractGameAction gameAction, Set<KeyCombination> keyCombinations) {
 
-    public ActionBinding(GameAction action, KeyCombination... combinations) {
+    public ActionBinding(AbstractGameAction action, KeyCombination... combinations) {
         this(action, Set.of(combinations));
     }
 }

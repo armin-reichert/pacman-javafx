@@ -10,6 +10,7 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui.api.*;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.layout.*;
@@ -31,9 +32,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static de.amr.pacmanfx.ui.GameUI_Config.SCENE_ID_PLAY_SCENE_3D;
-import static de.amr.pacmanfx.ui.GameUI_Properties.*;
-import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
+import static de.amr.pacmanfx.ui.api.GameUI_Config.SCENE_ID_PLAY_SCENE_3D;
+import static de.amr.pacmanfx.ui.api.GameUI_Properties.*;
+import static de.amr.pacmanfx.ui.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
 import static java.util.Objects.requireNonNull;
 import static javafx.beans.binding.Bindings.createStringBinding;
@@ -41,7 +42,7 @@ import static javafx.beans.binding.Bindings.createStringBinding;
 /**
  * User interface for the Pac-Man game suite. Shows a carousel with a start page for each game variant.
  */
-public class PacManGames_UI_Impl implements GameUI {
+public class GameUI_Implementation implements GameUI {
 
     private static final Duration DEFAULT_FLASH_MESSAGE_DURATION = Duration.seconds(1.5);
 
@@ -85,7 +86,7 @@ public class PacManGames_UI_Impl implements GameUI {
         new ActionBinding(ACTION_TOGGLE_DRAW_MODE,            alt(KeyCode.W))
     );
 
-    private final PacManGames_Assets assets;
+    private final GameAssets assets;
     private final DirectoryWatchdog customDirectoryWatchdog;
     private final GameClock clock;
     private final GameContext gameContext;
@@ -103,7 +104,7 @@ public class PacManGames_UI_Impl implements GameUI {
     private PlayView playView;
     private EditorView editorView;
 
-    public PacManGames_UI_Impl(Map<String, Class<?>> configurationMap, GameContext gameContext, Stage stage, double width, double height) {
+    public GameUI_Implementation(Map<String, Class<?>> configurationMap, GameContext gameContext, Stage stage, double width, double height) {
         requireNonNull(configurationMap, "UI configuration map is null");
         requireNonNull(gameContext, "Game context is null");
         requireNonNull(stage, "Stage is null");
@@ -121,8 +122,8 @@ public class PacManGames_UI_Impl implements GameUI {
 
         // Game UI
         this.stage = stage;
-        assets = new PacManGames_Assets();
-        prefs = new PacManGames_Preferences();
+        assets = new GameAssets();
+        prefs = new GameUI_Preferences();
         PROPERTY_3D_WALL_HEIGHT.set(prefs.getFloat("3d.obstacle.base_height"));
         PROPERTY_3D_WALL_OPACITY.set(prefs.getFloat("3d.obstacle.opacity"));
 
@@ -156,7 +157,7 @@ public class PacManGames_UI_Impl implements GameUI {
 
         // Check if a global action is defined for the key press, otherwise let the current view handle it.
         mainScene.setOnKeyPressed(e -> {
-            GameAction matchingAction = globalActionBindings.matchingAction(keyboard).orElse(null);
+            AbstractGameAction matchingAction = globalActionBindings.matchingAction(keyboard).orElse(null);
             if (matchingAction != null) {
                 matchingAction.executeIfEnabled(this);
             } else {
@@ -314,7 +315,7 @@ public class PacManGames_UI_Impl implements GameUI {
     }
 
     @Override
-    public PacManGames_Assets assets() {
+    public GameAssets assets() {
         return assets;
     }
 

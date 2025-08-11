@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui;
 
+import de.amr.pacmanfx.ui.api.ActionBindingsManager;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import javafx.scene.input.KeyCombination;
 import org.tinylog.Logger;
@@ -17,7 +18,7 @@ public class DefaultActionBindingsManager implements ActionBindingsManager {
     public static class EmptyManager implements ActionBindingsManager {
 
         @Override
-        public Map<KeyCombination, GameAction> actionByKeyCombination() {
+        public Map<KeyCombination, AbstractGameAction> actionByKeyCombination() {
             return Map.of();
         }
 
@@ -34,24 +35,24 @@ public class DefaultActionBindingsManager implements ActionBindingsManager {
         public void addBinding(ActionBinding actionBinding) {}
 
         @Override
-        public void useFirst(GameAction action, List<ActionBinding> actionBindings) {}
+        public void useFirst(AbstractGameAction action, List<ActionBinding> actionBindings) {}
 
         @Override
-        public void bind(GameAction action, KeyCombination combination) {}
+        public void bind(AbstractGameAction action, KeyCombination combination) {}
 
         @Override
-        public Optional<GameAction> matchingAction(Keyboard keyboard) { return Optional.empty(); }
+        public Optional<AbstractGameAction> matchingAction(Keyboard keyboard) { return Optional.empty(); }
     }
 
     public static final ActionBindingsManager EMPTY_MAP = new EmptyManager();
 
-    protected Map<KeyCombination, GameAction> actionByCombination;
+    protected Map<KeyCombination, AbstractGameAction> actionByCombination;
 
     public DefaultActionBindingsManager() {
         this.actionByCombination = new HashMap<>();
     }
 
-    public Map<KeyCombination, GameAction> actionByKeyCombination() {
+    public Map<KeyCombination, AbstractGameAction> actionByKeyCombination() {
         return actionByCombination;
     }
 
@@ -83,7 +84,7 @@ public class DefaultActionBindingsManager implements ActionBindingsManager {
         }
     }
 
-    public void bind(GameAction action, KeyCombination combination) {
+    public void bind(AbstractGameAction action, KeyCombination combination) {
         requireNonNull(action);
         requireNonNull(combination);
         actionByCombination.put(combination, action);
@@ -95,7 +96,7 @@ public class DefaultActionBindingsManager implements ActionBindingsManager {
      * @param gameAction a game action
      * @param actionBindings an action bindings list
      */
-    public void useFirst(GameAction gameAction, List<ActionBinding> actionBindings) {
+    public void useFirst(AbstractGameAction gameAction, List<ActionBinding> actionBindings) {
         requireNonNull(gameAction);
         requireNonNull(actionBindings);
         actionBindings.stream()
@@ -104,7 +105,7 @@ public class DefaultActionBindingsManager implements ActionBindingsManager {
             .ifPresent(this::addBinding);
     }
 
-    public Optional<GameAction> matchingAction(Keyboard keyboard) {
+    public Optional<AbstractGameAction> matchingAction(Keyboard keyboard) {
         return actionByCombination.keySet().stream()
             .filter(keyboard::isMatching)
             .map(actionByCombination::get)

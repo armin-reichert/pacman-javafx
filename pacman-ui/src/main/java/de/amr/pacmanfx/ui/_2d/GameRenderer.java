@@ -12,7 +12,7 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HUD;
 import de.amr.pacmanfx.model.actors.*;
-import de.amr.pacmanfx.ui.PacManGames_Assets;
+import de.amr.pacmanfx.ui.GameAssets;
 import de.amr.pacmanfx.uilib.animation.SingleSpriteWithoutAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -47,15 +47,15 @@ public abstract class GameRenderer implements Disposable {
         ctx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
 
-    protected final PacManGames_Assets assets;
+    protected final GameAssets assets;
     protected final FloatProperty scalingProperty = new SimpleFloatProperty(1);
     protected GraphicsContext ctx;
 
-    protected GameRenderer(PacManGames_Assets assets) {
+    protected GameRenderer(GameAssets assets) {
         this.assets = requireNonNull(assets);
     }
 
-    public PacManGames_Assets assets() { return assets; }
+    public GameAssets assets() { return assets; }
 
     public abstract Optional<SpriteSheet<?>> optSpriteSheet();
 

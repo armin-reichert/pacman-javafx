@@ -2,7 +2,7 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.ui;
+package de.amr.pacmanfx.ui.api;
 
 import de.amr.pacmanfx.uilib.assets.UIPreferences;
 import javafx.scene.paint.Color;
@@ -11,10 +11,10 @@ import javafx.scene.text.FontWeight;
 
 import static de.amr.pacmanfx.Globals.TS;
 
-public class PacManGames_Preferences extends UIPreferences {
+public class GameUI_Preferences extends UIPreferences {
 
-    public PacManGames_Preferences() {
-        super(PacManGames_Preferences.class);
+    public GameUI_Preferences() {
+        super(GameUI_Preferences.class);
     }
 
     protected void defineDefaultValues() {

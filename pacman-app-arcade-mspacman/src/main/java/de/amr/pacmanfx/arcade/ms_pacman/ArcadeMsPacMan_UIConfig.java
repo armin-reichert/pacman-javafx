@@ -14,9 +14,10 @@ import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui.GameScene;
-import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GameUI_Config;
+import de.amr.pacmanfx.ui.GameUI_Implementation;
+import de.amr.pacmanfx.ui.api.GameScene;
+import de.amr.pacmanfx.ui.api.GameUI;
+import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.sound.DefaultSoundManager;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -37,7 +38,7 @@ import java.util.Map;
 import java.util.OptionalInt;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.ui.GameUI_Properties.PROPERTY_3D_ENABLED;
+import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_3D_ENABLED;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
 import static java.util.Objects.requireNonNull;
 
@@ -45,7 +46,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config {
 
     private static final String NAMESPACE = "ms_pacman";
 
-    private static final ResourceManager RES_PACMAN_UI = () -> GameUI.class;
+    private static final ResourceManager RES_PACMAN_UI = () -> GameUI_Implementation.class;
     private static final ResourceManager RES_ARCADE_MS_PAC_MAN = () -> ArcadeMsPacMan_UIConfig.class;
 
     private static final List<WorldMapColorScheme> WORLD_MAP_COLOR_SCHEMES = List.of(

@@ -1,6 +1,6 @@
-package de.amr.pacmanfx.ui;
+package de.amr.pacmanfx.ui.api;
 
-public interface GameUIConfigManager {
+public interface GameUI_ConfigManager {
     /**
      * @param gameVariant name of game variant
      * @return UI configuration for given game variant

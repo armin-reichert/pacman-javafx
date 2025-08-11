@@ -21,6 +21,9 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_MapRepository;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.*;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.*;
 import de.amr.pacmanfx.ui.*;
+import de.amr.pacmanfx.ui.api.GameScene;
+import de.amr.pacmanfx.ui.api.GameUI;
+import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.sound.DefaultSoundManager;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -48,9 +51,9 @@ import java.util.OptionalInt;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.GameUI_Properties.PROPERTY_3D_ENABLED;
-import static de.amr.pacmanfx.ui.GameUI_Properties.PROPERTY_CANVAS_BACKGROUND_COLOR;
-import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
+import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_3D_ENABLED;
+import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_CANVAS_BACKGROUND_COLOR;
+import static de.amr.pacmanfx.ui.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
 import static de.amr.pacmanfx.uilib.Ufx.toggle;
 import static java.util.Objects.requireNonNull;
@@ -59,7 +62,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     private static final String NAMESPACE = "tengen";
 
-    private static final ResourceManager RES_GAME_UI = () -> GameUI.class;
+    private static final ResourceManager RES_GAME_UI = () -> GameUI_Implementation.class;
     private static final ResourceManager RES_TENGEN_MS_PAC_MAN = () -> TengenMsPacMan_UIConfig.class;
 
     public static final String MAP_PATH = "/de/amr/pacmanfx/tengen/ms_pacman/maps/";
@@ -83,7 +86,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     // Actions specific to Tengen Ms. Pac-Man
 
-    public static final GameAction ACTION_QUIT_DEMO_LEVEL = new GameAction("QUIT_DEMO_LEVEL") {
+    public static final AbstractGameAction ACTION_QUIT_DEMO_LEVEL = new AbstractGameAction("QUIT_DEMO_LEVEL") {
         @Override
         public void execute(GameUI ui) {
             ui.gameContext().theGameController().changeGameState(GameState.SETTING_OPTIONS_FOR_START);
@@ -95,14 +98,14 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         }
     };
 
-    public static final GameAction ACTION_ENTER_START_SCREEN = new GameAction("ENTER_START_SCREEN") {
+    public static final AbstractGameAction ACTION_ENTER_START_SCREEN = new AbstractGameAction("ENTER_START_SCREEN") {
         @Override
         public void execute(GameUI ui) {
             ui.gameContext().theGameController().changeGameState(GameState.SETTING_OPTIONS_FOR_START);
         }
     };
 
-    public static final GameAction ACTION_START_PLAYING = new GameAction("START_PLAYING") {
+    public static final AbstractGameAction ACTION_START_PLAYING = new AbstractGameAction("START_PLAYING") {
         @Override
         public void execute(GameUI ui) {
             ui.sound().stopAll();
@@ -111,7 +114,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         }
     };
 
-    public static final GameAction ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE = new GameAction("TOGGLE_PLAY_SCENE_DISPLAY_MODE") {
+    public static final AbstractGameAction ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE = new AbstractGameAction("TOGGLE_PLAY_SCENE_DISPLAY_MODE") {
         @Override
         public void execute(GameUI ui) {
             var config = ui.<TengenMsPacMan_UIConfig>currentConfig();
@@ -127,14 +130,14 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         }
     };
 
-    public static final GameAction ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY = new GameAction("TOGGLE_JOYPAD_BINDINGS_DISPLAYED") {
+    public static final AbstractGameAction ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY = new AbstractGameAction("TOGGLE_JOYPAD_BINDINGS_DISPLAYED") {
         @Override
         public void execute(GameUI ui) {
             toggle(ui.<TengenMsPacMan_UIConfig>currentConfig().propertyJoypadBindingsDisplayed);
         }
     };
 
-    public static final GameAction ACTION_TOGGLE_PAC_BOOSTER = new GameAction("TOGGLE_PAC_BOOSTER") {
+    public static final AbstractGameAction ACTION_TOGGLE_PAC_BOOSTER = new AbstractGameAction("TOGGLE_PAC_BOOSTER") {
         @Override
         public void execute(GameUI ui) {
             var tengenGame = ui.gameContext().<TengenMsPacMan_GameModel>theGame();

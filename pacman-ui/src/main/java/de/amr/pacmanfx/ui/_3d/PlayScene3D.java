@@ -16,6 +16,9 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.*;
+import de.amr.pacmanfx.ui.api.ActionBindingsManager;
+import de.amr.pacmanfx.ui.api.GameScene;
+import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.model3D.Bonus3D;
@@ -45,8 +48,8 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.isOneOf;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_MEDIUM;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_SHORT;
-import static de.amr.pacmanfx.ui.GameUI_Properties.*;
-import static de.amr.pacmanfx.ui.PacManGames_GameActions.*;
+import static de.amr.pacmanfx.ui.api.GameUI_Properties.*;
+import static de.amr.pacmanfx.ui.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.control;
 import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
 import static de.amr.pacmanfx.uilib.Ufx.pauseSec;
@@ -74,7 +77,7 @@ public class PlayScene3D implements GameScene {
         }
     };
 
-    private final GameAction droneUp = new GameAction("DroneUp") {
+    private final AbstractGameAction droneUp = new AbstractGameAction("DroneUp") {
         @Override
         public void execute(GameUI ui) {
             if (perspectiveMap.get(PerspectiveID.DRONE) instanceof DronePerspective dronePerspective) {
@@ -87,7 +90,7 @@ public class PlayScene3D implements GameScene {
         }
     };
 
-    private final GameAction droneDown = new GameAction("DroneDown") {
+    private final AbstractGameAction droneDown = new AbstractGameAction("DroneDown") {
         @Override
         public void execute(GameUI ui) {
             if (perspectiveMap.get(PerspectiveID.DRONE) instanceof DronePerspective dronePerspective) {

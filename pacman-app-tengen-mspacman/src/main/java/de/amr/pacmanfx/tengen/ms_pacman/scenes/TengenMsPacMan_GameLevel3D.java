@@ -6,14 +6,14 @@ package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui._3d.GameLevel3D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.ImageView;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui.GameUI_Properties.PROPERTY_3D_FLOOR_COLOR;
+import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_3D_FLOOR_COLOR;
 import static de.amr.pacmanfx.ui._2d.GameRenderer.fillCanvas;
 
 public class TengenMsPacMan_GameLevel3D extends GameLevel3D {

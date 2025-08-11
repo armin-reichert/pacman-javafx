@@ -2,10 +2,11 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.ui;
+package de.amr.pacmanfx.ui.api;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
+import de.amr.pacmanfx.ui.*;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.sound.SoundManager;
@@ -16,14 +17,14 @@ import javafx.util.Duration;
 
 import java.util.List;
 
-public interface GameUI extends GameLifecycle, GameUIConfigManager, GameViewAccess, GameSceneAccess {
+public interface GameUI extends GameUI_Lifecycle, GameUI_ConfigManager, GameUI_ViewAccess, GameUI_SceneAccess {
 
     /**
      * @return list of key-to-action bindings
      */
     List<ActionBinding> actionBindings();
 
-    PacManGames_Assets assets();
+    GameAssets assets();
 
     DirectoryWatchdog directoryWatchdog();
 

@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman;
 
-import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GameVariant;
+import de.amr.pacmanfx.ui.api.GameUI;
+import de.amr.pacmanfx.ui.api.DefaultGameVariants;
 import de.amr.pacmanfx.ui.layout.StartPage;
 import de.amr.pacmanfx.ui.layout.StartPagesView;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
@@ -15,7 +15,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 
-import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_BOOT_SHOW_PLAY_VIEW;
+import static de.amr.pacmanfx.ui.CommonGameActions.ACTION_BOOT_SHOW_PLAY_VIEW;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_StartPage extends StackPane implements StartPage {
@@ -40,7 +40,7 @@ public class TengenMsPacMan_StartPage extends StackPane implements StartPage {
 
     @Override
     public void onEnter(GameUI ui) {
-        ui.selectGameVariant(GameVariant.MS_PACMAN_TENGEN.name());
+        ui.selectGameVariant(DefaultGameVariants.MS_PACMAN_TENGEN.name());
     }
 
     @Override

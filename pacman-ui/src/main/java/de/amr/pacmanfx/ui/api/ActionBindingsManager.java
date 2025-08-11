@@ -2,8 +2,10 @@
 Copyright (c) 2021-2025 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.pacmanfx.ui;
+package de.amr.pacmanfx.ui.api;
 
+import de.amr.pacmanfx.ui.ActionBinding;
+import de.amr.pacmanfx.ui.AbstractGameAction;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import javafx.scene.input.KeyCombination;
 
@@ -13,9 +15,9 @@ import java.util.Optional;
 
 public interface ActionBindingsManager {
 
-    Map<KeyCombination, GameAction> actionByKeyCombination();
+    Map<KeyCombination, AbstractGameAction> actionByKeyCombination();
 
-    Optional<GameAction> matchingAction(Keyboard keyboard);
+    Optional<AbstractGameAction> matchingAction(Keyboard keyboard);
 
     boolean hasNoEntries();
 
@@ -25,7 +27,7 @@ public interface ActionBindingsManager {
 
     void addBinding(ActionBinding actionBinding);
 
-    void bind(GameAction action, KeyCombination combination);
+    void bind(AbstractGameAction action, KeyCombination combination);
 
     /**
      * Finds the first binding in the given list matching the given action and adds it to this map.
@@ -33,5 +35,5 @@ public interface ActionBindingsManager {
      * @param gameAction a game action
      * @param actionBindings an action bindings list
      */
-    void useFirst(GameAction gameAction, List<ActionBinding> actionBindings);
+    void useFirst(AbstractGameAction gameAction, List<ActionBinding> actionBindings);
 }

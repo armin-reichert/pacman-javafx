@@ -4,9 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.dashboard;
 
-import de.amr.pacmanfx.ui.ActionBindingsManager;
-import de.amr.pacmanfx.ui.GameAction;
-import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.api.ActionBindingsManager;
+import de.amr.pacmanfx.ui.AbstractGameAction;
+import de.amr.pacmanfx.ui.api.GameUI;
 import javafx.scene.input.KeyCombination;
 
 import java.util.Comparator;
@@ -35,7 +35,7 @@ public class InfoBoxKeyShortcutsLocal extends InfoBox {
                     .sorted(Comparator.comparing(e -> e.getKey().getDisplayText()))
                     .forEach(entry -> {
                 KeyCombination keyCombination = entry.getKey();
-                GameAction action = entry.getValue();
+                AbstractGameAction action = entry.getValue();
                 String localizedActionText = ui.assets().text(action.name());
                 addRow(keyCombination.getDisplayText(), createLabel(localizedActionText, action.isEnabled(ui)));
             });
