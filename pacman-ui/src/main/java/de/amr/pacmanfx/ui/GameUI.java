@@ -24,13 +24,21 @@ public interface GameUI extends GameLifecycle, GameViewAccess, GameSceneAccess {
     List<ActionBinding> actionBindings();
 
     PacManGames_Assets assets();
+
     DirectoryWatchdog directoryWatchdog();
+
     GameClock clock();
+
     GameContext gameContext();
+
     Joypad joypad();
+
     Keyboard keyboard();
+
     SoundManager sound();
+
     Stage stage();
+
     UIPreferences uiPreferences();
 
     /**
@@ -53,11 +61,20 @@ public interface GameUI extends GameLifecycle, GameViewAccess, GameSceneAccess {
      */
     <T extends GameUI_Config> T currentConfig();
 
-    Duration DEFAULT_FLASH_MESSAGE_DURATION = Duration.seconds(1.5);
+    /**
+     * Shows a message on the screen that slowly fades out.
+     *
+     * @param duration display duration before fading out
+     * @param message the message text
+     * @param args arguments merged into the message text using String.format()
+     */
+    void showFlashMessage(Duration duration, String message, Object... args);
 
-    void showFlashMessageSec(Duration duration, String message, Object... args);
-
-    default void showFlashMessage(String message, Object... args) {
-        showFlashMessageSec(DEFAULT_FLASH_MESSAGE_DURATION, message, args);
-    }
+    /**
+     * Shows a message on the screen that slowly fades out.
+     *
+     * @param message the message text
+     * @param args arguments merged into the message text using String.format()
+     */
+    void showFlashMessage(String message, Object... args);
 }

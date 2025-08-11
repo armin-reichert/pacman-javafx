@@ -261,7 +261,7 @@ public interface PacManGames_GameActions {
             newRate = Math.clamp(newRate, SIMULATION_SPEED_MIN, SIMULATION_SPEED_MAX);
             ui.clock().setTargetFrameRate(newRate);
             String prefix = newRate == SIMULATION_SPEED_MAX ? "At maximum speed: " : "";
-            ui.showFlashMessageSec(Duration.seconds(0.75), prefix + newRate + "Hz");
+            ui.showFlashMessage(Duration.seconds(0.75), prefix + newRate + "Hz");
         }
     };
 
@@ -272,7 +272,7 @@ public interface PacManGames_GameActions {
             newRate = Math.clamp(newRate, SIMULATION_SPEED_MIN, SIMULATION_SPEED_MAX);
             ui.clock().setTargetFrameRate(newRate);
             String prefix = newRate == SIMULATION_SPEED_MIN ? "At minimum speed: " : "";
-            ui.showFlashMessageSec(Duration.seconds(0.75), prefix + newRate + "Hz");
+            ui.showFlashMessage(Duration.seconds(0.75), prefix + newRate + "Hz");
         }
     };
 
@@ -306,7 +306,7 @@ public interface PacManGames_GameActions {
         @Override
         public void execute(GameUI ui) {
             ui.clock().setTargetFrameRate(NUM_TICKS_PER_SEC);
-            ui.showFlashMessageSec(Duration.seconds(0.75), ui.clock().targetFrameRate() + "Hz");
+            ui.showFlashMessage(Duration.seconds(0.75), ui.clock().targetFrameRate() + "Hz");
         }
     };
 
@@ -327,7 +327,7 @@ public interface PacManGames_GameActions {
         @Override
         public void execute(GameUI ui) {
             ui.gameContext().theGameController().restart(GameState.TESTING_LEVELS_SHORT);
-            ui.showFlashMessageSec(Duration.seconds(3), "Level TEST MODE");
+            ui.showFlashMessage(Duration.seconds(3), "Level TEST MODE");
         }
     };
 
@@ -335,7 +335,7 @@ public interface PacManGames_GameActions {
         @Override
         public void execute(GameUI ui) {
             ui.gameContext().theGameController().restart(GameState.TESTING_LEVELS_MEDIUM);
-            ui.showFlashMessageSec(Duration.seconds(3), "Level TEST MODE");
+            ui.showFlashMessage(Duration.seconds(3), "Level TEST MODE");
         }
     };
 

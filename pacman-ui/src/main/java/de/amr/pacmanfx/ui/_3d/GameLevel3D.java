@@ -154,7 +154,7 @@ public class GameLevel3D extends Group implements Disposable {
         private void sometimesLevelCompleteMessage(int levelNumber) {
             if (randomInt(0, 100) < MESSAGE_FREQUENCY) {
                 String message = ui.assets().localizedLevelCompleteMessage(levelNumber);
-                ui.showFlashMessageSec(Duration.seconds(3), message);
+                ui.showFlashMessage(Duration.seconds(3), message);
             }
         }
 
@@ -788,7 +788,7 @@ public class GameLevel3D extends Group implements Disposable {
         ui.sound().play(SoundID.GAME_OVER);
         boolean inOneOf4Cases = randomInt(0, 1000) < 250;
         if (!gameLevel.isDemoLevel() && inOneOf4Cases) {
-            ui.showFlashMessageSec(Duration.seconds(2.5), ui.assets().localizedGameOverMessage());
+            ui.showFlashMessage(Duration.seconds(2.5), ui.assets().localizedGameOverMessage());
         }
     }
 

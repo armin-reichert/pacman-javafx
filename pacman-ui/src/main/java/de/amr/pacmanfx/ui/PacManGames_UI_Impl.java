@@ -43,6 +43,8 @@ import static javafx.beans.binding.Bindings.createStringBinding;
  */
 public class PacManGames_UI_Impl implements GameUI {
 
+    private static final Duration DEFAULT_FLASH_MESSAGE_DURATION = Duration.seconds(1.5);
+
     private static final int MIN_STAGE_WIDTH  = 280;
     private static final int MIN_STAGE_HEIGHT = 360;
 
@@ -263,7 +265,7 @@ public class PacManGames_UI_Impl implements GameUI {
     private void ka_tas_trooo_phe(Throwable reason) {
         Logger.error(reason);
         Logger.error("SOMETHING VERY BAD HAPPENED!");
-        showFlashMessageSec(Duration.seconds(10), "KA-TA-STROOO-PHE!\nSOMEONE CALL AN AMBULANCE!");
+        showFlashMessage(Duration.seconds(10), "KA-TA-STROOO-PHE!\nSOMEONE CALL AN AMBULANCE!");
     }
 
     private void doSimulationStepAndUpdateGameScene() {
@@ -309,20 +311,54 @@ public class PacManGames_UI_Impl implements GameUI {
     // GameUI interface implementation
     // -----------------------------------------------------------------------------------------------------------------
 
-    @Override public Optional<GameScene>         currentGameScene() { return mainScene.currentGameScene(); }
-    @Override public GameUI_View currentView() { return mainScene.currentView(); }
+    @Override
+    public List<ActionBinding> actionBindings() {
+        return defaultActionBindings;
+    }
 
-    @Override public PacManGames_Assets assets() {return assets; }
-    @SuppressWarnings("unchecked")
-    @Override public <T extends GameUI_Config> T currentConfig() { return (T) config(gameContext.theGameController().selectedGameVariant()); }
-    @Override public DirectoryWatchdog directoryWatchdog() { return customDirectoryWatchdog; }
-    @Override public GameClock clock() { return clock; }
-    @Override public GameContext gameContext() { return gameContext; }
-    @Override public Joypad joypad() { return joypad; }
-    @Override public Keyboard keyboard() { return keyboard; }
-    @Override public SoundManager sound() { return currentConfig().soundManager(); }
-    @Override public Stage stage() { return stage; }
-    @Override public UIPreferences uiPreferences() { return prefs; }
+    @Override public Optional<GameScene> currentGameScene() {
+        return mainScene.currentGameScene();
+    }
+
+    @Override public GameUI_View currentView() {
+        return mainScene.currentView();
+    }
+
+    @Override public PacManGames_Assets assets() {
+        return assets;
+    }
+
+    @Override public DirectoryWatchdog directoryWatchdog() {
+        return customDirectoryWatchdog;
+    }
+
+    @Override public GameClock clock() {
+        return clock;
+    }
+
+    @Override public GameContext gameContext() {
+        return gameContext;
+    }
+
+    @Override public Joypad joypad() {
+        return joypad;
+    }
+
+    @Override public Keyboard keyboard() {
+        return keyboard;
+    }
+
+    @Override public SoundManager sound() { return
+        currentConfig().soundManager();
+    }
+
+    @Override public Stage stage() {
+        return stage;
+    }
+
+    @Override public UIPreferences uiPreferences() {
+        return prefs;
+    }
 
     @Override
     public Optional<EditorView> optEditorView() {
@@ -433,8 +469,13 @@ public class PacManGames_UI_Impl implements GameUI {
     }
 
     @Override
-    public void showFlashMessageSec(Duration duration, String message, Object... args) {
+    public void showFlashMessage(Duration duration, String message, Object... args) {
         mainScene.flashMessageLayer().showMessage(String.format(message, args), duration.toSeconds());
+    }
+
+    @Override
+    public void showFlashMessage(String message, Object... args) {
+        showFlashMessage(DEFAULT_FLASH_MESSAGE_DURATION, message, args);
     }
 
     @Override
@@ -478,8 +519,7 @@ public class PacManGames_UI_Impl implements GameUI {
         return configByGameVariant.get(gameVariant);
     }
 
-    @Override
-    public List<ActionBinding> actionBindings() {
-        return defaultActionBindings;
-    }
+    @SuppressWarnings("unchecked")
+    @Override public <T extends GameUI_Config> T currentConfig() { return (T) config(gameContext.theGameController().selectedGameVariant()); }
+
 }
