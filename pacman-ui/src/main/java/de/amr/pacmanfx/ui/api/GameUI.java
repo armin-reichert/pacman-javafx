@@ -6,7 +6,8 @@ package de.amr.pacmanfx.ui.api;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
-import de.amr.pacmanfx.ui.*;
+import de.amr.pacmanfx.ui.ActionBinding;
+import de.amr.pacmanfx.ui.GameAssets;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.sound.SoundManager;
@@ -24,19 +25,40 @@ public interface GameUI extends GameUI_Lifecycle, GameUI_ConfigManager, GameUI_V
      */
     List<ActionBinding> actionBindings();
 
+    /**
+     * @return assets (fonts, sounds, colors, localized texts etc.) for the different games
+     */
     GameAssets assets();
 
+    /**
+     * @return watchdog process observing the directory where user-defined maps are stored
+     */
     DirectoryWatchdog directoryWatchdog();
 
+    /**
+     * @return the clock driving the game
+     */
     GameClock clock();
 
+    /**
+     * @return Context giving access to important entities like game controller, game state etc.
+     */
     GameContext gameContext();
 
+    /**
+     * @return key emulation of NES joypad
+     */
     Joypad joypad();
 
+    /**
+     * @return global keyboard state
+     */
     Keyboard keyboard();
 
-    SoundManager sound();
+    /**
+     * @return sound manager for the current game
+     */
+    SoundManager currentSoundManager();
 
     Stage stage();
 

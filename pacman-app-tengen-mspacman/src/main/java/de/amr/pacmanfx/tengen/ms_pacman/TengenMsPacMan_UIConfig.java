@@ -108,7 +108,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     public static final AbstractGameAction ACTION_START_PLAYING = new AbstractGameAction("START_PLAYING") {
         @Override
         public void execute(GameUI ui) {
-            ui.sound().stopAll();
+            ui.currentSoundManager().stopAll();
             ui.gameContext().theGame().playingProperty().set(false);
             ui.gameContext().theGameController().changeGameState(GameState.STARTING_GAME);
         }

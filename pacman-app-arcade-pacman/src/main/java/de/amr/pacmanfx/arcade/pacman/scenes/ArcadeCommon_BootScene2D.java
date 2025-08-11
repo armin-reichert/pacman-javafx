@@ -43,7 +43,7 @@ public class ArcadeCommon_BootScene2D extends GameScene2D {
         // ignore left half of sprite sheet image containing maze images
         minPoint = Vector2f.of(width / 2, 0);
         maxPoint = Vector2f.of(width - FRAGMENT_SIZE, height - FRAGMENT_SIZE);
-        ui.sound().playVoice(SoundID.VOICE_EXPLAIN, 0);
+        ui.currentSoundManager().playVoice(SoundID.VOICE_EXPLAIN, 0);
     }
 
     @Override

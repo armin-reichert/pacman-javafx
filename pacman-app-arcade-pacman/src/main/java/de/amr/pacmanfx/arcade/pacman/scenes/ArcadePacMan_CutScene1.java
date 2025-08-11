@@ -56,7 +56,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        ui.sound().stop(MUSIC_ID);
+        ui.currentSoundManager().stop(MUSIC_ID);
         Logger.info("{} ends", getClass().getSimpleName());
     }
 
@@ -64,7 +64,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     public void update() {
         ++frame;
         if (frame == ANIMATION_START) {
-            ui.sound().play(MUSIC_ID, 2);
+            ui.currentSoundManager().play(MUSIC_ID, 2);
 
             pac.placeAtTile(29, 20);
             pac.setMoveDir(Direction.LEFT);
