@@ -44,8 +44,6 @@ import static javafx.beans.binding.Bindings.createStringBinding;
  */
 public class GameUI_Implementation implements GameUI {
 
-    private static final Duration DEFAULT_FLASH_MESSAGE_DURATION = Duration.seconds(1.5);
-
     private static final int MIN_STAGE_WIDTH  = 280;
     private static final int MIN_STAGE_HEIGHT = 360;
 
@@ -362,11 +360,6 @@ public class GameUI_Implementation implements GameUI {
     @Override
     public void showFlashMessage(Duration duration, String message, Object... args) {
         mainScene.flashMessageLayer().showMessage(String.format(message, args), duration.toSeconds());
-    }
-
-    @Override
-    public void showFlashMessage(String message, Object... args) {
-        showFlashMessage(DEFAULT_FLASH_MESSAGE_DURATION, message, args);
     }
 
     // GameLifecycle interface

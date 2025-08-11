@@ -60,9 +60,20 @@ public interface GameUI extends GameUI_Lifecycle, GameUI_ConfigManager, GameUI_V
      */
     SoundManager soundManager();
 
+    /**
+     * @return the primary stage provided by the JavaFX application
+     */
     Stage stage();
 
+    /**
+     * @return the UI preferences (stored permanently in platform-specific way)
+     */
     UIPreferences uiPreferences();
+
+    // Messages
+
+    /** Default duration a flash message appears on the screen. */
+    Duration DEFAULT_FLASH_MESSAGE_DURATION = Duration.seconds(1.5);
 
     /**
      * Shows a message on the screen that slowly fades out.
@@ -74,10 +85,13 @@ public interface GameUI extends GameUI_Lifecycle, GameUI_ConfigManager, GameUI_V
     void showFlashMessage(Duration duration, String message, Object... args);
 
     /**
-     * Shows a message on the screen that slowly fades out.
+     * Shows a message on the screen that slowly fades out and displays for a default duration.
      *
      * @param message the message text
      * @param args arguments merged into the message text using String.format()
      */
-    void showFlashMessage(String message, Object... args);
+    default void showFlashMessage(String message, Object... args) {
+        showFlashMessage(DEFAULT_FLASH_MESSAGE_DURATION, message, args);
+    }
+
 }
