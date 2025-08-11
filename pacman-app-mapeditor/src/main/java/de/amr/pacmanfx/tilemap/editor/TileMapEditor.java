@@ -296,21 +296,47 @@ public class TileMapEditor {
 
     // actorsVisible
 
-    private final BooleanProperty actorsVisible = new SimpleBooleanProperty(true) {
-        @Override
-        protected void invalidated() {
-            changeManager.requestRedraw();
+    public boolean DEFAULT_ACTORS_VISIBLE = true;
+
+    private BooleanProperty actorsVisible;
+
+    public BooleanProperty actorsVisibleProperty() {
+        if (actorsVisible == null) {
+            actorsVisible = new SimpleBooleanProperty(DEFAULT_ACTORS_VISIBLE) {
+                @Override
+                protected void invalidated() {
+                    changeManager.requestRedraw();
+                }
+            };
         }
-    };
+        return actorsVisible;
+    }
+
+    public boolean isActorsVisible() {
+        return actorsVisible == null ? DEFAULT_ACTORS_VISIBLE : actorsVisibleProperty().get();
+    }
+
+    public void setActorsVisible(boolean visible) {
+        actorsVisibleProperty().set(visible);
+    }
 
     // gridVisible
 
-    private final BooleanProperty gridVisible = new SimpleBooleanProperty(true) {
-        @Override
-        protected void invalidated() {
-            changeManager.requestRedraw();
+    public static final boolean DEFAULT_GRID_VISIBLE = true;
+
+    private BooleanProperty gridVisible;
+
+    public BooleanProperty gridVisibleProperty() {
+        if (gridVisible == null) {
+            gridVisible = new SimpleBooleanProperty(DEFAULT_GRID_VISIBLE) {
+                @Override
+                protected void invalidated() {
+                    changeManager.requestRedraw();
+                }
+            };
         }
-    };
+        return gridVisible;
+    }
 
     // foodVisible
 
@@ -370,10 +396,6 @@ public class TileMapEditor {
     public WorldMap editedWorldMap() { return editedWorldMapPy.get(); }
 
     public void setEditedWorldMap(WorldMap worldMap) { editedWorldMapPy.set(requireNonNull(worldMap)); }
-
-    public BooleanProperty actorsVisibleProperty() { return actorsVisible; }
-
-    public BooleanProperty gridVisibleProperty() { return gridVisible; }
 
     public BooleanProperty terrainVisibleProperty() { return terrainVisiblePy; }
 
@@ -939,13 +961,13 @@ public class TileMapEditor {
         miTerrainVisible.selectedProperty().bindBidirectional(terrainVisiblePy);
 
         var miFoodVisible = new CheckMenuItem(translated("menu.view.food"));
-        miFoodVisible.selectedProperty().bindBidirectional(foodVisible);
+        miFoodVisible.selectedProperty().bindBidirectional(foodVisibleProperty());
 
         var miActorsVisible = new CheckMenuItem("Actors"); //TODO localize
-        miActorsVisible.selectedProperty().bindBidirectional(actorsVisible);
+        miActorsVisible.selectedProperty().bindBidirectional(actorsVisibleProperty());
 
         var miGridVisible = new CheckMenuItem(translated("menu.view.grid"));
-        miGridVisible.selectedProperty().bindBidirectional(gridVisible);
+        miGridVisible.selectedProperty().bindBidirectional(gridVisibleProperty());
 
         var miSegmentNumbersVisible = new CheckMenuItem(translated("menu.view.segment_numbers"));
         miSegmentNumbersVisible.selectedProperty().bindBidirectional(segmentNumbersVisible);
@@ -1234,7 +1256,7 @@ public class TileMapEditor {
             foodRenderer.setPelletColor(foodColor);
             editedWorldMap().tiles().forEach(tile -> foodRenderer.drawTile(g, tile, editedWorldMap().content(LayerID.FOOD, tile)));
         }
-        if (actorsVisible.get()) {
+        if (isActorsVisible()) {
             drawActorSprites(g, editedWorldMap(), gridSize());
         }
     }
