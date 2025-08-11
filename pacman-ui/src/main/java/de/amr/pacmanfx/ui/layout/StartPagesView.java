@@ -8,9 +8,6 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.ui.*;
 import de.amr.pacmanfx.uilib.widgets.Carousel;
 import de.amr.pacmanfx.uilib.widgets.FancyButton;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.StringBinding;
-import javafx.beans.binding.StringExpression;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -27,6 +24,7 @@ import org.tinylog.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_BOOT_SHOW_PLAY_VIEW;
 import static de.amr.pacmanfx.ui.PacManGames_GameActions.ACTION_TOGGLE_PAUSED;
@@ -38,7 +36,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class StartPagesView implements GameUI_View {
 
-    public static final StringBinding TITLE_BINDING = Bindings.createStringBinding(() -> "JavaFX Pac-Man Games");
+    private static final Supplier<String> TITLE_SUPPLIER = () -> "JavaFX Pac-Man Games";
 
     public static FancyButton createStartButton(PacManGames_Assets assets, Pos alignment) {
         var button = new FancyButton(
@@ -122,8 +120,8 @@ public class StartPagesView implements GameUI_View {
     public Region root() { return carousel; }
 
     @Override
-    public Optional<? extends StringExpression> title() {
-        return Optional.of(TITLE_BINDING);
+    public Optional<Supplier<String>> titleSupplier() {
+        return Optional.of(TITLE_SUPPLIER);
     }
 
     public Optional<StartPage> currentStartPage() {

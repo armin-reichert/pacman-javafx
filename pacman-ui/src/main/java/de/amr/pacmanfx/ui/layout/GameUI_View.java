@@ -7,10 +7,10 @@ package de.amr.pacmanfx.ui.layout;
 import de.amr.pacmanfx.event.GameEventListener;
 import de.amr.pacmanfx.ui.ActionBindingsManager;
 import de.amr.pacmanfx.ui.GameUI;
-import javafx.beans.binding.StringExpression;
 import javafx.scene.Node;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
 public interface GameUI_View extends GameEventListener {
     /**
@@ -26,7 +26,7 @@ public interface GameUI_View extends GameEventListener {
     /**
      * @return a title expression for this view. If empty, the default main scene title is used.
      */
-    default Optional<? extends StringExpression> title() { return Optional.empty(); }
+    default Optional<Supplier<String>> titleSupplier() { return Optional.empty(); }
 
     /**
      * Looks up a matching game action for the current key input. If found the action is executed (if enabled).

@@ -193,6 +193,11 @@ public class PacManGames_UI_Impl implements GameUI {
         stage.setScene(mainScene);
         stage.setMinWidth(MIN_STAGE_WIDTH);
         stage.setMinHeight(MIN_STAGE_HEIGHT);
+        bindStageTitle(stage);
+    }
+
+    // This is also called when quitting the editor to undo the editor title binding
+    private void bindStageTitle(Stage stage) {
         stage.titleProperty().bind(createStringBinding(
             this::computeTitle,
             PROPERTY_CURRENT_VIEW,
@@ -210,8 +215,8 @@ public class PacManGames_UI_Impl implements GameUI {
         if (currentView == null) {
             return "No View?";
         }
-        if (currentView.title().isPresent()) {
-            return currentView.title().get().get();
+        if (currentView.titleSupplier().isPresent()) {
+            return currentView.titleSupplier().get().get();
         }
 
         boolean mode3D = PROPERTY_3D_ENABLED.get();
@@ -295,6 +300,8 @@ public class PacManGames_UI_Impl implements GameUI {
             miReturnToGame.setOnAction(e -> {
                 editor.stop();
                 editor.executeWithCheckForUnsavedChanges(this::showStartView);
+                // Undo editor stage title binding change:
+                bindStageTitle(theStage);
             });
             editor.getFileMenu().getItems().addAll(new SeparatorMenuItem(), miReturnToGame);
             editor.init(theGameContext.theCustomMapDir());
