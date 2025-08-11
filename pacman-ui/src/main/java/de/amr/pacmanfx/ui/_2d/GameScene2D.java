@@ -52,33 +52,33 @@ public abstract class GameScene2D implements GameScene {
     protected GameScene2D(GameUI ui) {
         this.ui = requireNonNull(ui);
         actionBindings = new DefaultActionBindingsManager();
-        debugTextFill = ui.theUIPrefs().getColor("debug_text.fill");
-        debugTextFont = ui.theUIPrefs().getFont("debug_text.font");
+        debugTextFill = ui.prefs().getColor("debug_text.fill");
+        debugTextFont = ui.prefs().getFont("debug_text.font");
     }
 
     @Override
     public GameContext gameContext() {
-        return ui.theGameContext();
+        return ui.gameContext();
     }
 
     @Override
     public final void init() {
-        arcadeFont8Property.bind(scalingProperty.map(s -> ui.theAssets().arcadeFont(s.floatValue() * 8)));
-        arcadeFont6Property.bind(scalingProperty.map(s -> ui.theAssets().arcadeFont(s.floatValue() * 6)));
+        arcadeFont8Property.bind(scalingProperty.map(s -> ui.assets().arcadeFont(s.floatValue() * 8)));
+        arcadeFont6Property.bind(scalingProperty.map(s -> ui.assets().arcadeFont(s.floatValue() * 6)));
         doInit();
-        actionBindings.installBindings(ui.theKeyboard());
-        ui.theKeyboard().logCurrentBindings();
+        actionBindings.installBindings(ui.keyboard());
+        ui.keyboard().logCurrentBindings();
     }
 
     @Override
     public final void end() {
-        ui.theSound().stopAll();
+        ui.sound().stopAll();
         doEnd();
     }
 
     @Override
     public void handleKeyboardInput() {
-        actionBindings.matchingAction(ui.theKeyboard()).ifPresent(gameAction -> gameAction.executeIfEnabled(ui));
+        actionBindings.matchingAction(ui.keyboard()).ifPresent(gameAction -> gameAction.executeIfEnabled(ui));
     }
 
     protected abstract void doInit();
@@ -88,7 +88,7 @@ public abstract class GameScene2D implements GameScene {
     public ActionBindingsManager actionBindings() { return actionBindings; }
 
     @Override
-    public void onStopAllSounds(GameEvent event) { ui.theSound().stopAll(); }
+    public void onStopAllSounds(GameEvent event) { ui.sound().stopAll(); }
 
     @Override
     public void onUnspecifiedChange(GameEvent event) {
@@ -142,7 +142,7 @@ public abstract class GameScene2D implements GameScene {
      */
     public void draw() {
         if (gameRenderer == null) {
-            gameRenderer = ui.theConfiguration().createGameRenderer(canvas);
+            gameRenderer = ui.currentConfig().createGameRenderer(canvas);
         }
         clear();
         gameRenderer.setScaling(scaling());
@@ -150,7 +150,7 @@ public abstract class GameScene2D implements GameScene {
         if (debugInfoVisibleProperty.get()) {
             drawDebugInfo();
         }
-        gameRenderer.drawHUD(gameContext(), gameContext().theGame().theHUD(), sizeInPx(), ui.theGameClock().tickCount());
+        gameRenderer.drawHUD(gameContext(), gameContext().theGame().theHUD(), sizeInPx(), ui.clock().tickCount());
     }
 
     /**

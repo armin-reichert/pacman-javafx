@@ -52,7 +52,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     
     @Override
     public void doInit() {
-        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) ui.theConfiguration().spriteSheet();
+        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) ui.currentConfig().spriteSheet();
 
         pacMan = createPacMan(null);
         msPacMan = createMsPacMan(null);
@@ -60,7 +60,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         bag = new Bag(spriteSheet);
         bag.setOpen(false);
 
-        GameUI_Config config = ui.theConfiguration();
+        GameUI_Config config = ui.currentConfig();
         msPacMan.setAnimations(config.createPacAnimations(msPacMan));
         pacMan.setAnimations(config.createPacAnimations(pacMan));
 
@@ -76,7 +76,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        ui.theSound().stop(MUSIC_ID);
+        ui.sound().stop(MUSIC_ID);
     }
 
     @Override
@@ -118,7 +118,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     private void updateStateClapperboard() {
         clapperboard.tick();
         if (sceneTimer.atSecond(1)) {
-            ui.theSound().play(MUSIC_ID);
+            ui.sound().play(MUSIC_ID);
         } else if (sceneTimer.atSecond(3)) {
             enterStateDeliverJunior();
         }

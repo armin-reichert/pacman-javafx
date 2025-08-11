@@ -89,7 +89,7 @@ public class StartPagesView implements GameUI_View {
                 startPage.layoutRoot().requestFocus();
             }
         });
-        setBackground(ui.theAssets().background("background.scene"));
+        setBackground(ui.assets().background("background.scene"));
 
         GameAction actionPrevSlide = new GameAction("SHOW_PREV_SLIDE") {
             @Override

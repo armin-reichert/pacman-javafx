@@ -86,35 +86,35 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     public static final GameAction ACTION_QUIT_DEMO_LEVEL = new GameAction("QUIT_DEMO_LEVEL") {
         @Override
         public void execute(GameUI ui) {
-            ui.theGameContext().theGameController().changeGameState(GameState.SETTING_OPTIONS_FOR_START);
+            ui.gameContext().theGameController().changeGameState(GameState.SETTING_OPTIONS_FOR_START);
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.theGameContext().optGameLevel().isPresent() && ui.theGameContext().theGameLevel().isDemoLevel();
+            return ui.gameContext().optGameLevel().isPresent() && ui.gameContext().theGameLevel().isDemoLevel();
         }
     };
 
     public static final GameAction ACTION_ENTER_START_SCREEN = new GameAction("ENTER_START_SCREEN") {
         @Override
         public void execute(GameUI ui) {
-            ui.theGameContext().theGameController().changeGameState(GameState.SETTING_OPTIONS_FOR_START);
+            ui.gameContext().theGameController().changeGameState(GameState.SETTING_OPTIONS_FOR_START);
         }
     };
 
     public static final GameAction ACTION_START_PLAYING = new GameAction("START_PLAYING") {
         @Override
         public void execute(GameUI ui) {
-            ui.theSound().stopAll();
-            ui.theGameContext().theGame().playingProperty().set(false);
-            ui.theGameContext().theGameController().changeGameState(GameState.STARTING_GAME);
+            ui.sound().stopAll();
+            ui.gameContext().theGame().playingProperty().set(false);
+            ui.gameContext().theGameController().changeGameState(GameState.STARTING_GAME);
         }
     };
 
     public static final GameAction ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE = new GameAction("TOGGLE_PLAY_SCENE_DISPLAY_MODE") {
         @Override
         public void execute(GameUI ui) {
-            var config = ui.<TengenMsPacMan_UIConfig>theConfiguration();
+            var config = ui.<TengenMsPacMan_UIConfig>currentConfig();
             SceneDisplayMode mode = config.propertyPlaySceneDisplayMode.get();
             config.propertyPlaySceneDisplayMode.set(mode == SceneDisplayMode.SCROLLING
                 ? SceneDisplayMode.SCALED_TO_FIT
@@ -130,14 +130,14 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     public static final GameAction ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY = new GameAction("TOGGLE_JOYPAD_BINDINGS_DISPLAYED") {
         @Override
         public void execute(GameUI ui) {
-            toggle(ui.<TengenMsPacMan_UIConfig>theConfiguration().propertyJoypadBindingsDisplayed);
+            toggle(ui.<TengenMsPacMan_UIConfig>currentConfig().propertyJoypadBindingsDisplayed);
         }
     };
 
     public static final GameAction ACTION_TOGGLE_PAC_BOOSTER = new GameAction("TOGGLE_PAC_BOOSTER") {
         @Override
         public void execute(GameUI ui) {
-            var tengenGame = ui.theGameContext().<TengenMsPacMan_GameModel>theGame();
+            var tengenGame = ui.gameContext().<TengenMsPacMan_GameModel>theGame();
             tengenGame.activatePacBooster(!tengenGame.isBoosterActive());
             if (tengenGame.isBoosterActive()) {
                 ui.showFlashMessage("Booster!");
@@ -146,7 +146,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            var tengenGame = ui.theGameContext().<TengenMsPacMan_GameModel>theGame();
+            var tengenGame = ui.gameContext().<TengenMsPacMan_GameModel>theGame();
             return tengenGame.pacBooster() == PacBooster.USE_A_OR_B;
         }
     };
@@ -164,7 +164,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     public TengenMsPacMan_UIConfig(GameUI ui) {
         this.ui = requireNonNull(ui);
-        Joypad joypad = ui.theJoypad();
+        Joypad joypad = ui.joypad();
         tengenMsPacManBindings = List.of(
             new ActionBinding(ACTION_STEER_UP,            joypad.key(JoypadButton.UP),    control(KeyCode.UP)),
             new ActionBinding(ACTION_STEER_DOWN,          joypad.key(JoypadButton.DOWN),  control(KeyCode.DOWN)),
@@ -291,7 +291,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public void dispose() {
-        ui.theAssets().removeAll(NAMESPACE + ".");
+        ui.assets().removeAll(NAMESPACE + ".");
         soundManager.dispose();
     }
 
@@ -313,7 +313,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public TengenMsPacMan_GameRenderer createGameRenderer(Canvas canvas) {
-        var renderer = new TengenMsPacMan_GameRenderer(ui.theAssets(), spriteSheet(), mapRepository, canvas);
+        var renderer = new TengenMsPacMan_GameRenderer(ui.assets(), spriteSheet(), mapRepository, canvas);
         renderer.backgroundColorProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
         return renderer;
     }
@@ -364,8 +364,8 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public MsPacManBody createLivesCounterShape3D() {
-        return ui.theAssets().theModel3DRepository().createMsPacManBody(
-            ui.theUIPrefs().getFloat("3d.lives_counter.shape_size"),
+        return ui.assets().theModel3DRepository().createMsPacManBody(
+            ui.prefs().getFloat("3d.lives_counter.shape_size"),
             getAssetNS("pac.color.head"),
             getAssetNS("pac.color.eyes"),
             getAssetNS("pac.color.palate"),
@@ -378,10 +378,10 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     @Override
     public MsPacMan3D createPac3D(AnimationRegistry animationRegistry, Pac pac) {
         var pac3D = new MsPacMan3D(
-            ui.theAssets().theModel3DRepository(),
+            ui.assets().theModel3DRepository(),
             animationRegistry,
             pac,
-            ui.theUIPrefs().getFloat("3d.pac.size"),
+            ui.prefs().getFloat("3d.pac.size"),
             getAssetNS("pac.color.head"),
             getAssetNS("pac.color.eyes"),
             getAssetNS("pac.color.palate"),

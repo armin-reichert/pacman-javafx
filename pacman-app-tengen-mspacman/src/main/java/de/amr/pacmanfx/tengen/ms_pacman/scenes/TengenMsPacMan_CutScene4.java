@@ -55,21 +55,21 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         gameContext().theGame().theHUD().showLevelCounter(true);
         gameContext().theGame().theHUD().showLivesCounter(false);
 
-        var spriteSheet = (TengenMsPacMan_SpriteSheet) ui.theConfiguration().spriteSheet();
+        var spriteSheet = (TengenMsPacMan_SpriteSheet) ui.currentConfig().spriteSheet();
         clapperboard = new Clapperboard(spriteSheet, 4, "THE END");
         clapperboard.setPosition(3*TS, 10*TS);
         clapperboard.setFont(scaledArcadeFont8());
         msPacMan = createMsPacMan(null);
         pacMan = createPacMan(null);
-        msPacMan.setAnimations(ui.theConfiguration().createPacAnimations(msPacMan));
-        pacMan  .setAnimations(ui.theConfiguration().createPacAnimations(pacMan));
+        msPacMan.setAnimations(ui.currentConfig().createPacAnimations(msPacMan));
+        pacMan  .setAnimations(ui.currentConfig().createPacAnimations(pacMan));
         juniors = new ArrayList<>();
         juniorCreationTime = new ArrayList<>();
     }
 
     @Override
     protected void doEnd() {
-        ui.theSound().stop(MUSIC_ID);
+        ui.sound().stop(MUSIC_ID);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         if (t == 0) {
             clapperboard.setVisible(true);
             clapperboard.startAnimation();
-            ui.theSound().play(MUSIC_ID);
+            ui.sound().play(MUSIC_ID);
         }
         else if (t == 130) {
             pacMan.setMoveDir(Direction.RIGHT);
@@ -157,14 +157,14 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         junior.setPosition((float) randomX, sizeInPx().y() - 4 * TS);
         junior.setMoveDir(Direction.UP);
         junior.setSpeed(2);
-        junior.setAnimations(ui.theConfiguration().createPacAnimations(junior));
+        junior.setAnimations(ui.currentConfig().createPacAnimations(junior));
         junior.selectAnimation(TengenMsPacMan_PacAnimationMap.ANIM_JUNIOR);
         junior.show();
         juniors.add(junior);
         juniorCreationTime.add(t);
 
         String id = "audio.intermission.4.junior." + randomInt(1, 3); // 1 or 2
-        ui.theSound().loop(id);
+        ui.sound().loop(id);
 
         Logger.info("Junior spawned at tick {}", t);
     }
@@ -223,7 +223,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         }
         var game = gameContext().<TengenMsPacMan_GameModel>theGame();
         if (game.mapCategory() != MapCategory.ARCADE) {
-            gameRenderer.drawHUD(gameContext(), game.theHUD(), sizeInPx().minus(0, 2 * TS), ui.theGameClock().tickCount());
+            gameRenderer.drawHUD(gameContext(), game.theHUD(), sizeInPx().minus(0, 2 * TS), ui.clock().tickCount());
         }
     }
 

@@ -32,11 +32,11 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
     public void doInit() {
         gameContext().theGame().theHUD().credit(true).score(true).levelCounter(true).livesCounter(false);
 
-        midwayCopyright = new MidwayCopyright(ui.theConfiguration().getAssetNS("logo.midway"));
+        midwayCopyright = new MidwayCopyright(ui.currentConfig().getAssetNS("logo.midway"));
         midwayCopyright.setPosition(TS * 6, TS * 28);
         midwayCopyright.show();
 
-        @SuppressWarnings("unchecked") var spriteSheet = (SpriteSheet<SpriteID>) ui.theConfiguration().spriteSheet();
+        @SuppressWarnings("unchecked") var spriteSheet = (SpriteSheet<SpriteID>) ui.currentConfig().spriteSheet();
         livesCounterSprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
 
         actionBindings.useFirst(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
@@ -52,7 +52,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
 
     @Override
     public void onCreditAdded(GameEvent e) {
-        ui.theSound().play(SoundID.COIN_INSERTED);
+        ui.sound().play(SoundID.COIN_INSERTED);
     }
 
     @Override

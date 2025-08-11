@@ -79,7 +79,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         actionBindings.useFirst(ACTION_TEST_LEVELS_BONI, ui.actionBindings());
         actionBindings.useFirst(ACTION_TEST_LEVELS_TEASERS, ui.actionBindings());
 
-        midwayCopyright = new MidwayCopyright(ui.theConfiguration().getAssetNS("logo.midway"));
+        midwayCopyright = new MidwayCopyright(ui.currentConfig().getAssetNS("logo.midway"));
         midwayCopyright.setPosition(TS * 6, TS * 28);
         midwayCopyright.show();
 
@@ -99,10 +99,10 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         presentedGhostCharacter = RED_GHOST_SHADOW;
         numTicksBeforeRising = 0;
 
-        msPacMan.setAnimations(ui.theConfiguration().createPacAnimations(msPacMan));
+        msPacMan.setAnimations(ui.currentConfig().createPacAnimations(msPacMan));
         msPacMan.selectAnimation(ANIM_PAC_MUNCHING);
         for (Ghost ghost : ghosts) {
-            ghost.setAnimations(ui.theConfiguration().createGhostAnimations(ghost));
+            ghost.setAnimations(ui.currentConfig().createGhostAnimations(ghost));
             ghost.selectAnimation(ANIM_GHOST_NORMAL);
         }
         sceneController.restart(SceneState.STARTING);
@@ -124,7 +124,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void onCreditAdded(GameEvent e) {
-        ui.theSound().play(SoundID.COIN_INSERTED);
+        ui.sound().play(SoundID.COIN_INSERTED);
     }
 
     @Override

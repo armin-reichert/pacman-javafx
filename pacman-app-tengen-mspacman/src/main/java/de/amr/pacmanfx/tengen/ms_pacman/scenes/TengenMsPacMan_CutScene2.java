@@ -58,9 +58,9 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
 
         gameContext().theGame().theHUD().credit(false).score(false).levelCounter(true).livesCounter(false);
 
-        actionBindings.bind(ACTION_LET_GAME_STATE_EXPIRE, ui.theJoypad().key(JoypadButton.START));
+        actionBindings.bind(ACTION_LET_GAME_STATE_EXPIRE, ui.joypad().key(JoypadButton.START));
 
-        GameUI_Config config = ui.theConfiguration();
+        GameUI_Config config = ui.currentConfig();
         var spriteSheet = (TengenMsPacMan_SpriteSheet) config.spriteSheet();
 
         clapperboard = new Clapperboard(spriteSheet, 2, "THE CHASE");
@@ -74,7 +74,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        ui.theSound().stop(MUSIC_ID);
+        ui.sound().stop(MUSIC_ID);
     }
 
     @Override
@@ -83,7 +83,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         if (t == 0) {
             clapperboard.show();
             clapperboard.startAnimation();
-            ui.theSound().play(MUSIC_ID);
+            ui.sound().play(MUSIC_ID);
         }
         else if (t == 270) {
             msPacMan.setPosition(LEFT_BORDER, UPPER_LANE);
@@ -169,7 +169,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         // draw HUD only for non-Arcade map mode
         var game = gameContext().<TengenMsPacMan_GameModel>theGame();
         if (game.mapCategory() != MapCategory.ARCADE) {
-            gameRenderer.drawHUD(gameContext(), game.theHUD(), sizeInPx().minus(0, 2 * TS), ui.theGameClock().tickCount());
+            gameRenderer.drawHUD(gameContext(), game.theHUD(), sizeInPx().minus(0, 2 * TS), ui.clock().tickCount());
         }
     }
 

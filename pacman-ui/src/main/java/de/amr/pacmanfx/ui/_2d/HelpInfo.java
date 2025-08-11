@@ -25,11 +25,11 @@ public class HelpInfo {
 
     public static HelpInfo build(GameUI ui) {
         HelpInfo help = new HelpInfo(ui);
-        switch (ui.theGameContext().theGameState()) {
-            case INTRO -> help.addInfoForIntroScene(ui.theGameContext());
-            case SETTING_OPTIONS_FOR_START -> help.addInfoForCreditScene(ui.theGameContext());
+        switch (ui.gameContext().theGameState()) {
+            case INTRO -> help.addInfoForIntroScene(ui.gameContext());
+            case SETTING_OPTIONS_FOR_START -> help.addInfoForCreditScene(ui.gameContext());
             case STARTING_GAME, HUNTING, PACMAN_DYING, GHOST_DYING -> {
-                if (ui.theGameContext().optGameLevel().isPresent() && ui.theGameContext().theGameLevel().isDemoLevel()) {
+                if (ui.gameContext().optGameLevel().isPresent() && ui.gameContext().theGameLevel().isDemoLevel()) {
                     help.addInfoForDemoLevelPlayScene();
                 } else {
                     help.addInfoForPlayScene();
@@ -65,14 +65,14 @@ public class HelpInfo {
         pane.setBackground(Ufx.roundedBackground(backgroundColor, 10));
 
         // add default entries:
-        if (ui.theGameContext().theGameController().propertyUsingAutopilot().get()) {
-            var autoPilotEntry = text(ui.theAssets().text("help.autopilot_on"), Color.ORANGE);
+        if (ui.gameContext().theGameController().propertyUsingAutopilot().get()) {
+            var autoPilotEntry = text(ui.assets().text("help.autopilot_on"), Color.ORANGE);
             autoPilotEntry.setFont(font);
             GridPane.setColumnSpan(autoPilotEntry, 2);
             grid.add(autoPilotEntry, 0, grid.getRowCount());
         }
-        if (ui.theGameContext().theGameController().propertyImmunity().get()) {
-            var immunityEntry = text(ui.theAssets().text("help.immunity_on"), Color.ORANGE);
+        if (ui.gameContext().theGameController().propertyImmunity().get()) {
+            var immunityEntry = text(ui.assets().text("help.immunity_on"), Color.ORANGE);
             immunityEntry.setFont(font);
             GridPane.setColumnSpan(immunityEntry, 2);
             grid.add(immunityEntry, 0, grid.getRowCount() + 1);
@@ -98,7 +98,7 @@ public class HelpInfo {
     }
 
     private void addRow(String lhsKey, String keyboardKey) {
-        addRow(label(ui.theAssets().text(lhsKey), Color.gray(0.9)), text("[" + keyboardKey + "]", Color.YELLOW));
+        addRow(label(ui.assets().text(lhsKey), Color.gray(0.9)), text("[" + keyboardKey + "]", Color.YELLOW));
     }
 
     private void addQuitEntry() {
@@ -122,10 +122,10 @@ public class HelpInfo {
     }
 
     private void addInfoForPlayScene() {
-        addRow("help.move_left", ui.theAssets().text("help.cursor_left"));
-        addRow("help.move_right", ui.theAssets().text("help.cursor_right"));
-        addRow("help.move_up", ui.theAssets().text("help.cursor_up"));
-        addRow("help.move_down", ui.theAssets().text("help.cursor_down"));
+        addRow("help.move_left", ui.assets().text("help.cursor_left"));
+        addRow("help.move_right", ui.assets().text("help.cursor_right"));
+        addRow("help.move_up", ui.assets().text("help.cursor_up"));
+        addRow("help.move_down", ui.assets().text("help.cursor_down"));
         addQuitEntry();
     }
 

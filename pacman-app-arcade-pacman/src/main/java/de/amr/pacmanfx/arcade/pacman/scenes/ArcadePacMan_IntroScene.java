@@ -83,13 +83,13 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
         blinking = new Pulse(10, true);
         pacMan = createPac(null);
-        pacMan.setAnimations(ui.theConfiguration().createPacAnimations(pacMan));
+        pacMan.setAnimations(ui.currentConfig().createPacAnimations(pacMan));
         ghosts = List.of(
             createGhost(null, RED_GHOST_SHADOW),
             createGhost(null, PINK_GHOST_SPEEDY),
             createGhost(null, CYAN_GHOST_BASHFUL),
             createGhost(null, ORANGE_GHOST_POKEY));
-        ghosts.forEach(ghost -> ghost.setAnimations(ui.theConfiguration().createGhostAnimations(ghost)));
+        ghosts.forEach(ghost -> ghost.setAnimations(ui.currentConfig().createGhostAnimations(ghost)));
         ghostImageVisible     = new boolean[4];
         ghostNicknameVisible  = new boolean[4];
         ghostCharacterVisible = new boolean[4];
@@ -113,7 +113,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     @Override
     public void onCreditAdded(GameEvent e) {
-        ui.theSound().play(SoundID.COIN_INSERTED);
+        ui.sound().play(SoundID.COIN_INSERTED);
     }
 
     @Override
@@ -140,7 +140,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     }
 
     private void drawGallery() {
-        @SuppressWarnings("unchecked") SpriteSheet<SpriteID> spriteSheet = (SpriteSheet<SpriteID>) ui.theConfiguration().spriteSheet();
+        @SuppressWarnings("unchecked") SpriteSheet<SpriteID> spriteSheet = (SpriteSheet<SpriteID>) ui.currentConfig().spriteSheet();
         ctx().setFont(scaledArcadeFont8());
         if (titleVisible) {
             gameRenderer.fillTextAtScaledPosition("CHARACTER / NICKNAME", ARCADE_WHITE,

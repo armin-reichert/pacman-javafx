@@ -20,7 +20,7 @@ public class TengenMsPacMan_GameLevel3D extends GameLevel3D {
 
     public TengenMsPacMan_GameLevel3D(GameUI ui) {
         super(ui);
-        TengenMsPacMan_GameModel game = ui.theGameContext().theGame();
+        TengenMsPacMan_GameModel game = ui.gameContext().theGame();
         if (!game.optionsAreInitial()) {
             addGameInfoView();
         }
@@ -28,7 +28,7 @@ public class TengenMsPacMan_GameLevel3D extends GameLevel3D {
 
     // shows info about category, difficulty, booster etc
     private void addGameInfoView() {
-        TengenMsPacMan_GameModel game = ui.theGameContext().theGame();
+        TengenMsPacMan_GameModel game = ui.gameContext().theGame();
         int width = gameLevel.worldMap().numCols() * TS;
         int height = 2 * TS;
         int scaling = 5; // for better snapshot resolution
@@ -36,7 +36,7 @@ public class TengenMsPacMan_GameLevel3D extends GameLevel3D {
         var canvas = new Canvas(scaling * width, scaling * height);
         fillCanvas(canvas, PROPERTY_3D_FLOOR_COLOR.get());
 
-        var renderer = (TengenMsPacMan_GameRenderer) ui.theConfiguration().createGameRenderer(canvas);
+        var renderer = (TengenMsPacMan_GameRenderer) ui.currentConfig().createGameRenderer(canvas);
         renderer.ctx().setImageSmoothing(false); // important for sharp image!
         renderer.setScaling(scaling);
         renderer.drawGameOptions(game.mapCategory(), game.difficulty(), game.pacBooster(), 0.5 * width, TS + HTS);

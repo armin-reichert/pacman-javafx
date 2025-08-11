@@ -154,7 +154,7 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public void dispose() {
-        ui.theAssets().removeAll(NAMESPACE + ".");
+        ui.assets().removeAll(NAMESPACE + ".");
         soundManager.dispose();
     }
 
@@ -182,7 +182,7 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public PacManXXL_MsPacMan_GameRenderer createGameRenderer(Canvas canvas) {
-        return new PacManXXL_MsPacMan_GameRenderer(ui.theAssets(), this, canvas);
+        return new PacManXXL_MsPacMan_GameRenderer(ui.assets(), this, canvas);
     }
 
     @Override
@@ -212,8 +212,8 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public MsPacManBody createLivesCounterShape3D() {
-        return ui.theAssets().theModel3DRepository().createMsPacManBody(
-            ui.theUIPrefs().getFloat("3d.lives_counter.shape_size"),
+        return ui.assets().theModel3DRepository().createMsPacManBody(
+            ui.prefs().getFloat("3d.lives_counter.shape_size"),
             getAssetNS("pac.color.head"),
             getAssetNS("pac.color.eyes"),
             getAssetNS("pac.color.palate"),
@@ -226,10 +226,10 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config {
     @Override
     public MsPacMan3D createPac3D(AnimationRegistry animationRegistry, Pac pac) {
         var pac3D = new MsPacMan3D(
-            ui.theAssets().theModel3DRepository(),
+            ui.assets().theModel3DRepository(),
             animationRegistry,
             pac,
-            ui.theUIPrefs().getFloat("3d.pac.size"),
+            ui.prefs().getFloat("3d.pac.size"),
             getAssetNS("pac.color.head"),
             getAssetNS("pac.color.eyes"),
             getAssetNS("pac.color.palate"),

@@ -28,6 +28,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.FontSmoothingType;
+import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.util.List;
@@ -124,9 +125,9 @@ public class PlayView extends StackPane implements GameUI_View {
         contextMenu.getItems().clear();
         ui.currentGameScene().ifPresent(gameScene -> {
             if (ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_2D)) {
-                var miSwitchTo3D = new MenuItem(ui.theAssets().text("use_3D_scene"));
+                var miSwitchTo3D = new MenuItem(ui.assets().text("use_3D_scene"));
                 miSwitchTo3D.setOnAction(e -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(ui));
-                contextMenu.getItems().add(createContextMenuTitle("scene_display", ui.theUIPrefs(), ui.theAssets()));
+                contextMenu.getItems().add(createContextMenuTitle("scene_display", ui.prefs(), ui.assets()));
                 contextMenu.getItems().add(miSwitchTo3D);
             }
             List<MenuItem> gameSceneItems = gameScene.supplyContextMenuItems(contextMenuEvent, contextMenu);
@@ -172,7 +173,7 @@ public class PlayView extends StackPane implements GameUI_View {
 
     @Override
     public void handleKeyboardInput(GameUI ui) {
-        GameAction matchingAction = actionBindings.matchingAction(ui.theKeyboard()).orElse(null);
+        GameAction matchingAction = actionBindings.matchingAction(ui.keyboard()).orElse(null);
         if (matchingAction != null) {
             matchingAction.executeIfEnabled(ui);
         } else {
@@ -189,7 +190,7 @@ public class PlayView extends StackPane implements GameUI_View {
         switch (gameEvent.type()) {
             case LEVEL_CREATED -> onLevelCreated();
             case GAME_STATE_CHANGED -> {
-                if (ui.theGameContext().theGameState() == GameState.LEVEL_COMPLETE) {
+                if (ui.gameContext().theGameState() == GameState.LEVEL_COMPLETE) {
                     miniView.slideOut();
                 }
             }
@@ -199,8 +200,8 @@ public class PlayView extends StackPane implements GameUI_View {
     }
 
     private void onLevelCreated() {
-        GameLevel gameLevel = ui.theGameContext().theGameLevel();
-        GameUI_Config uiConfig = ui.theConfiguration();
+        GameLevel gameLevel = ui.gameContext().theGameLevel();
+        GameUI_Config uiConfig = ui.currentConfig();
 
         gameLevel.pac().setAnimations(uiConfig.createPacAnimations(gameLevel.pac()));
         gameLevel.ghosts().forEach(ghost -> ghost.setAnimations(uiConfig.createGhostAnimations(ghost)));
@@ -219,10 +220,10 @@ public class PlayView extends StackPane implements GameUI_View {
     }
 
     public void updateGameScene(boolean reloadCurrent) {
-        final GameScene nextGameScene = ui.theConfiguration().selectGameScene(ui.theGameContext());
+        final GameScene nextGameScene = ui.currentConfig().selectGameScene(ui.gameContext());
         if (nextGameScene == null) {
             String errorMessage = " Katastrophe! Could not determine game scene!";
-            ui.showFlashMessageSec(30, errorMessage);
+            ui.showFlashMessageSec(Duration.seconds(30), errorMessage);
             return;
         }
         final GameScene currentGameScene = ui.currentGameScene().orElse(null);
@@ -271,11 +272,11 @@ public class PlayView extends StackPane implements GameUI_View {
     // 2D game scenes without sub-scene/camera (Arcade play scene, cut scenes) are drawn into the canvas provided by this play view
     private void embedGameScene2DWithoutSubScene(GameScene2D gameScene2D) {
         gameScene2D.setCanvas(canvasWithFrame.canvas());
-        gameScene2D.setGameRenderer(ui.theConfiguration().createGameRenderer(canvasWithFrame.canvas()));
+        gameScene2D.setGameRenderer(ui.currentConfig().createGameRenderer(canvasWithFrame.canvas()));
         gameScene2D.clear();
         gameScene2D.backgroundColorProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
         gameScene2D.scalingProperty().bind(canvasWithFrame.scalingProperty().map(
-            scaling -> Math.min(scaling.doubleValue(), ui.theUIPrefs().getFloat("scene2d.max_scaling"))));
+            scaling -> Math.min(scaling.doubleValue(), ui.prefs().getFloat("scene2d.max_scaling"))));
 
         Vector2f gameSceneSizePx = gameScene2D.sizeInPx();
         canvasWithFrame.setUnscaledCanvasSize(gameSceneSizePx.x(), gameSceneSizePx.y());

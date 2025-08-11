@@ -28,8 +28,8 @@ public class HelpLayer extends Pane {
     }
 
     public void showHelp(GameUI ui, double scaling) {
-        Color bgColor = ui.theGameContext().theGameController().isSelected("MS_PACMAN") ? Color.RED : Color.BLUE;
-        var font = ui.theAssets().font("font.monospaced", Math.max(6, 14 * scaling));
+        Color bgColor = ui.gameContext().theGameController().isSelected("MS_PACMAN") ? Color.RED : Color.BLUE;
+        var font = ui.assets().font("font.monospaced", Math.max(6, 14 * scaling));
         var helpPane = HelpInfo.build(ui).createPane(ui, colorWithOpacity(bgColor, 0.8), font);
         helpPopUp.setTranslateX(10 * scaling);
         helpPopUp.setTranslateY(30 * scaling);

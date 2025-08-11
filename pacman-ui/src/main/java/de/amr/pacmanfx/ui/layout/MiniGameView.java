@@ -116,7 +116,7 @@ public class MiniGameView extends VBox {
     public void setGameLevel(GameLevel gameLevel) {
         /* TODO: The game renderer cannot yet be created in setGameUI because at the time, setGameUI is called, the
                  game controller has not yet selected a game variant and therefore the current UI config is null! */
-        gr = ui.theConfiguration().createGameRenderer(canvas);
+        gr = ui.currentConfig().createGameRenderer(canvas);
         gr.setScaling(scalingProperty.floatValue());
         this.gameLevel = requireNonNull(gameLevel);
         worldSizeProperty.set(gameLevel.worldSizePx());
@@ -145,12 +145,12 @@ public class MiniGameView extends VBox {
         gr.ctx().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
         if (gameLevel != null) {
-            gr.drawLevel(ui.theGameContext(),
+            gr.drawLevel(ui.gameContext(),
                 gameLevel,
                 backgroundColorProperty().get(),
                 false,
                 gameLevel.blinking().isOn(),
-                ui.theGameClock().tickCount());
+                ui.clock().tickCount());
             gameLevel.bonus().ifPresent(gr::drawActor);
             gr.drawActor(gameLevel.pac());
             Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)

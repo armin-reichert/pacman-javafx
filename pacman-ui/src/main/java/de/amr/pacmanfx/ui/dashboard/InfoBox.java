@@ -125,7 +125,7 @@ public abstract class InfoBox extends TitledPane {
     }
 
     protected Supplier<String> ifGameLevelPresent(Function<GameLevel, String> fnInfo) {
-        return () -> ui.theGameContext().optGameLevel().map(fnInfo).orElse(NO_INFO);
+        return () -> ui.gameContext().optGameLevel().map(fnInfo).orElse(NO_INFO);
     }
 
     protected void clearGrid() {

@@ -35,7 +35,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     protected void setActionBindings() {
-        var tengenBindings = ui.<TengenMsPacMan_UIConfig>theConfiguration().tengenMsPacManBindings();
+        var tengenBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().tengenMsPacManBindings();
         // if demo level, allow going back to options screen
         if (gameContext().optGameLevel().isPresent() && gameContext().theGameLevel().isDemoLevel()) {
             actionBindings.useFirst(ACTION_QUIT_DEMO_LEVEL, tengenBindings);
@@ -51,12 +51,12 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         actionBindings.useFirst(ACTION_PERSPECTIVE_NEXT, ui.actionBindings());
         actionBindings.useFirst(ACTION_TOGGLE_DRAW_MODE, ui.actionBindings());
 
-        actionBindings.installBindings(ui.theKeyboard());
+        actionBindings.installBindings(ui.keyboard());
     }
 
     @Override
     protected void setPlayerSteeringActionBindings() {
-        var tengenBindings = ui.<TengenMsPacMan_UIConfig>theConfiguration().tengenMsPacManBindings();
+        var tengenBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().tengenMsPacManBindings();
         actionBindings.useFirst(ACTION_STEER_UP,    tengenBindings);
         actionBindings.useFirst(ACTION_STEER_DOWN,  tengenBindings);
         actionBindings.useFirst(ACTION_STEER_LEFT,  tengenBindings);
@@ -70,7 +70,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
             scores3D.showScore(score.points(), score.levelNumber());
         }
         else {
-            scores3D.showTextForScore(ui.theAssets().text("score.game_over"), Color.web(NES_Palette.color(0x16)));
+            scores3D.showTextForScore(ui.assets().text("score.game_over"), Color.web(NES_Palette.color(0x16)));
         }
         // Always show high score
         scores3D.showHighScore(highScore.points(), highScore.levelNumber());

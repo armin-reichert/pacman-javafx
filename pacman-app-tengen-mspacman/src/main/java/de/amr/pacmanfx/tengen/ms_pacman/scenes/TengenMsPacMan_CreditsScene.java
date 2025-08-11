@@ -27,7 +27,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     @Override
     protected void doInit() {
         gameContext().theGame().theHUD().credit(false).score(false).levelCounter(false).livesCounter(false);
-        var tengenBindings = ui.<TengenMsPacMan_UIConfig>theConfiguration().tengenMsPacManBindings();
+        var tengenBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().tengenMsPacManBindings();
         actionBindings.useFirst(ACTION_ENTER_START_SCREEN, tengenBindings);
     }
 

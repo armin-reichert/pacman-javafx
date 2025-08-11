@@ -73,9 +73,9 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         gameContext().theGame().theHUD().showLevelCounter(false);
         gameContext().theGame().theHUD().showLivesCounter(false);
 
-        spriteSheet = (TengenMsPacMan_SpriteSheet) ui.theConfiguration().spriteSheet();
+        spriteSheet = (TengenMsPacMan_SpriteSheet) ui.currentConfig().spriteSheet();
 
-        var tengenBindings = ui.<TengenMsPacMan_UIConfig>theConfiguration().tengenMsPacManBindings();
+        var tengenBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().tengenMsPacManBindings();
         actionBindings.useFirst(ACTION_ENTER_START_SCREEN, tengenBindings);
         actionBindings.useFirst(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, tengenBindings);
 
@@ -90,7 +90,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void update() {
-        if (!ui.theGameClock().isPaused()) {
+        if (!ui.clock().isPaused()) {
             sceneController.update();
         }
     }
@@ -134,7 +134,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                     renderer().fillTextAtScaledPosition("WITH", nesPaletteColor(0x20), MARQUEE_X + 12, MARQUEE_Y + 23);
                 }
                 Ghost currentGhost = ghosts.get(ghostIndex);
-                Color ghostColor = ui.theAssets().color("tengen.ghost.%d.color.normal.dress".formatted(currentGhost.personality()));
+                Color ghostColor = ui.assets().color("tengen.ghost.%d.color.normal.dress".formatted(currentGhost.personality()));
                 renderer().fillTextAtScaledPosition(currentGhost.name().toUpperCase(), ghostColor, MARQUEE_X + 44, MARQUEE_Y + 41);
                 renderer().drawActors(ghosts);
             }
@@ -148,9 +148,9 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
             }
         }
 
-        var config = (TengenMsPacMan_UIConfig) ui.theConfiguration();
+        var config = (TengenMsPacMan_UIConfig) ui.currentConfig();
         if (config.propertyJoypadBindingsDisplayed.get()) {
-            renderer().drawJoypadKeyBinding(ui.theJoypad().currentKeyBinding());
+            renderer().drawJoypadKeyBinding(ui.joypad().currentKeyBinding());
         }
     }
 
@@ -232,10 +232,10 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                     ghost.setVisible(true);
                 }
                 scene.ghostIndex = 0;
-                scene.msPacMan.setAnimations(scene.ui.theConfiguration().createPacAnimations(scene.msPacMan));
+                scene.msPacMan.setAnimations(scene.ui.currentConfig().createPacAnimations(scene.msPacMan));
                 scene.msPacMan.playAnimation(ANIM_PAC_MUNCHING);
                 for (Ghost ghost : scene.ghosts) {
-                    ghost.setAnimations(scene.ui.theConfiguration().createGhostAnimations(ghost));
+                    ghost.setAnimations(scene.ui.currentConfig().createGhostAnimations(ghost));
                     ghost.playAnimation(ANIM_GHOST_NORMAL);
                 }
             }
@@ -271,7 +271,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
             boolean letGhostMarchIn(TengenMsPacMan_IntroScene scene) {
                 Ghost ghost = scene.ghosts.get(scene.ghostIndex);
-                Logger.debug("Tick {}: {} marching in", scene.ui.theGameClock().tickCount(), ghost.name());
+                Logger.debug("Tick {}: {} marching in", scene.ui.clock().tickCount(), ghost.name());
                 if (ghost.moveDir() == Direction.LEFT) {
                     if (ghost.x() <= GHOST_STOP_X) {
                         ghost.setX(GHOST_STOP_X);
@@ -312,7 +312,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
                 scene.updateMarqueeState();
-                Logger.debug("Tick {}: {} marching in", scene.ui.theGameClock().tickCount(), scene.msPacMan.name());
+                Logger.debug("Tick {}: {} marching in", scene.ui.clock().tickCount(), scene.msPacMan.name());
                 scene.msPacMan.move();
                 if (scene.msPacMan.x() <= MS_PAC_MAN_STOP_X) {
                     scene.msPacMan.setSpeed(0);

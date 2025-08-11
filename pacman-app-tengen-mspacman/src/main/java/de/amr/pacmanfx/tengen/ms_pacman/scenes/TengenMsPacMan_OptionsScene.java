@@ -66,7 +66,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     private final IntegerProperty selectedOption = new SimpleIntegerProperty() {
         @Override
         protected void invalidated() {
-            ui.theSound().play("audio.option.selection_changed");
+            ui.sound().play("audio.option.selection_changed");
             idleTicks = 0;
         }
     };
@@ -74,7 +74,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     private final GameAction actionSelectNextJoypadBinding = new GameAction("SELECT_NEXT_JOYPAD_BINDING") {
         @Override
         public void execute(GameUI ui) {
-            ui.theJoypad().selectNextBinding(actionBindings);
+            ui.joypad().selectNextBinding(actionBindings);
         }
     };
 
@@ -89,14 +89,14 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     public void doInit() {
         gameContext().theGame().theHUD().all(false);
 
-        List<ActionBinding> tengenBindings = ui.<TengenMsPacMan_UIConfig>theConfiguration().tengenMsPacManBindings();
+        List<ActionBinding> tengenBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().tengenMsPacManBindings();
         actionBindings.bind(actionSelectNextJoypadBinding, alt(KeyCode.J));
         actionBindings.useFirst(ACTION_START_PLAYING, tengenBindings);
         actionBindings.useFirst(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, tengenBindings);
         actionBindings.useFirst(ACTION_TEST_CUT_SCENES, ui.actionBindings());
         actionBindings.useFirst(ACTION_TEST_LEVELS_BONI, ui.actionBindings());
         actionBindings.useFirst(ACTION_TEST_LEVELS_TEASERS, ui.actionBindings());
-        ui.theJoypad().setBindings(actionBindings);
+        ui.joypad().setBindings(actionBindings);
 
         selectedOption.set(OPTION_PAC_BOOSTER);
         theGame().setCanStartNewGame(true);
@@ -107,7 +107,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        ui.theJoypad().removeBindings(actionBindings);
+        ui.joypad().removeBindings(actionBindings);
     }
 
     @Override
@@ -129,7 +129,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     private TengenMsPacMan_GameModel theGame() { return gameContext().theGame(); }
     
     private void optionValueChanged() {
-        ui.theSound().play("audio.option.value_changed");
+        ui.sound().play("audio.option.value_changed");
         idleTicks = 0;
     }
 
@@ -139,14 +139,14 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     @Override
     public void handleKeyboardInput() {
-        if (ui.theJoypad().isButtonPressed(JoypadButton.DOWN)) {
+        if (ui.joypad().isButtonPressed(JoypadButton.DOWN)) {
             selectedOption.set(selectedOption() + 1 < NUM_OPTIONS ? selectedOption() + 1 : 0);
         }
-        else if (ui.theJoypad().isButtonPressed(JoypadButton.UP)) {
+        else if (ui.joypad().isButtonPressed(JoypadButton.UP)) {
             selectedOption.set(selectedOption() == 0 ? NUM_OPTIONS - 1 : selectedOption() - 1);
         }
         // Button "A" on the joypad is located right of "B": select next value
-        else if (ui.theJoypad().isButtonPressed(JoypadButton.A) || ui.theKeyboard().isPressed(KeyCode.RIGHT)) {
+        else if (ui.joypad().isButtonPressed(JoypadButton.A) || ui.keyboard().isPressed(KeyCode.RIGHT)) {
             switch (selectedOption()) {
                 case OPTION_PAC_BOOSTER    -> setNextPacBoosterValue();
                 case OPTION_DIFFICULTY     -> setNextDifficultyValue();
@@ -155,7 +155,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
             }
         }
         // Button "B" is left of "A": select previous value
-        else if (ui.theJoypad().isButtonPressed(JoypadButton.B) || ui.theKeyboard().isPressed(KeyCode.LEFT)) {
+        else if (ui.joypad().isButtonPressed(JoypadButton.B) || ui.keyboard().isPressed(KeyCode.LEFT)) {
             switch (selectedOption()) {
                 case OPTION_PAC_BOOSTER    -> setPrevPacBoosterValue();
                 case OPTION_DIFFICULTY     -> setPrevDifficultyValue();
@@ -248,9 +248,9 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         renderer().ctx().setFont(scaledArcadeFont8());
         renderer().drawVerticalSceneBorders();
 
-        var config = ui.<TengenMsPacMan_UIConfig>theConfiguration();
+        var config = ui.<TengenMsPacMan_UIConfig>currentConfig();
         if (config.propertyJoypadBindingsDisplayed.get()) {
-            renderer().drawJoypadKeyBinding(ui.theJoypad().currentKeyBinding());
+            renderer().drawJoypadKeyBinding(ui.joypad().currentKeyBinding());
         }
 
         renderer().drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), sizeInPx().x(), 20);
@@ -293,7 +293,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         renderer().fillTextAtScaledPosition(":", NES_YELLOW, COL_COLON, 168);
         renderer().fillTextAtScaledPosition(String.valueOf(theGame().startLevelNumber()), NES_WHITE, COL_VALUE, 168);
         if (theGame().numContinues() < 4) {
-            var spriteSheet = (TengenMsPacMan_SpriteSheet) ui.theConfiguration().spriteSheet();
+            var spriteSheet = (TengenMsPacMan_SpriteSheet) ui.currentConfig().spriteSheet();
             RectShort continuesSprite = spriteSheet.sprite(switch (theGame().numContinues()) {
                 case 0 -> SpriteID.CONTINUES_0;
                 case 1 -> SpriteID.CONTINUES_1;

@@ -123,9 +123,9 @@ public class PlayScene3D implements GameScene {
 
         // The score is always displayed in full view, regardless which perspective is used
         scores3D = new Scores3D(
-            ui.theAssets().text("score.score"),
-            ui.theAssets().text("score.high_score"),
-            ui.theAssets().arcadeFont(TS)
+            ui.assets().text("score.score"),
+            ui.assets().text("score.high_score"),
+            ui.assets().arcadeFont(TS)
         );
         scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
         scores3D.rotateProperty().bind(camera.rotateProperty());
@@ -174,12 +174,12 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void handleKeyboardInput() {
-        actionBindings.matchingAction(ui.theKeyboard()).ifPresent(gameAction -> gameAction.executeIfEnabled(ui));
+        actionBindings.matchingAction(ui.keyboard()).ifPresent(gameAction -> gameAction.executeIfEnabled(ui));
     }
 
     @Override
     public GameContext gameContext() {
-        return ui.theGameContext();
+        return ui.gameContext();
     }
 
     @Override
@@ -197,31 +197,31 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent, ContextMenu menu) {
-        var miUse2DScene = new MenuItem(ui.theAssets().text("use_2D_scene"));
+        var miUse2DScene = new MenuItem(ui.assets().text("use_2D_scene"));
         miUse2DScene.setOnAction(e -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(ui));
 
-        var miToggleMiniView = new CheckMenuItem(ui.theAssets().text("pip"));
+        var miToggleMiniView = new CheckMenuItem(ui.assets().text("pip"));
         miToggleMiniView.selectedProperty().bindBidirectional(PROPERTY_MINI_VIEW_ON);
 
-        var miAutopilot = new CheckMenuItem(ui.theAssets().text("autopilot"));
+        var miAutopilot = new CheckMenuItem(ui.assets().text("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(theGameContext().theGameController().propertyUsingAutopilot());
 
-        var miImmunity = new CheckMenuItem(ui.theAssets().text("immunity"));
+        var miImmunity = new CheckMenuItem(ui.assets().text("immunity"));
         miImmunity.selectedProperty().bindBidirectional(theGameContext().theGameController().propertyImmunity());
 
-        var miMuted = new CheckMenuItem(ui.theAssets().text("muted"));
+        var miMuted = new CheckMenuItem(ui.assets().text("muted"));
         miMuted.selectedProperty().bindBidirectional(PROPERTY_MUTED);
 
-        var miQuit = new MenuItem(ui.theAssets().text("quit"));
+        var miQuit = new MenuItem(ui.assets().text("quit"));
         miQuit.setOnAction(e -> ACTION_QUIT_GAME_SCENE.executeIfEnabled(ui));
 
         var items = new ArrayList<MenuItem>();
-        items.add(createContextMenuTitle("scene_display", ui.theUIPrefs(), ui.theAssets()));
+        items.add(createContextMenuTitle("scene_display", ui.prefs(), ui.assets()));
         items.add(miUse2DScene);
         items.add(miToggleMiniView);
-        items.add(createContextMenuTitle("select_perspective", ui.theUIPrefs(), ui.theAssets()));
+        items.add(createContextMenuTitle("select_perspective", ui.prefs(), ui.assets()));
         items.addAll(createPerspectiveRadioItems(menu));
-        items.add(createContextMenuTitle("pacman", ui.theUIPrefs(), ui.theAssets()));
+        items.add(createContextMenuTitle("pacman", ui.prefs(), ui.assets()));
         items.add(miAutopilot);
         items.add(miImmunity);
         items.add(new SeparatorMenuItem());
@@ -234,7 +234,7 @@ public class PlayScene3D implements GameScene {
     private List<RadioMenuItem> createPerspectiveRadioItems(ContextMenu menu) {
         var items = new ArrayList<RadioMenuItem>();
         for (PerspectiveID id : PerspectiveID.values()) {
-            var item = new RadioMenuItem(ui.theAssets().text("perspective_id_" + id.name()));
+            var item = new RadioMenuItem(ui.assets().text("perspective_id_" + id.name()));
             item.setUserData(id);
             item.setToggleGroup(perspectiveToggleGroup);
             if (id == PROPERTY_3D_PERSPECTIVE.get())  {
@@ -264,7 +264,7 @@ public class PlayScene3D implements GameScene {
     }
 
     protected void setActionBindings() {
-        actionBindings.uninstallBindings(ui.theKeyboard());
+        actionBindings.uninstallBindings(ui.keyboard());
         actionBindings.useFirst(ACTION_PERSPECTIVE_PREVIOUS, ui.actionBindings());
         actionBindings.useFirst(ACTION_PERSPECTIVE_NEXT, ui.actionBindings());
         actionBindings.useFirst(ACTION_TOGGLE_DRAW_MODE, ui.actionBindings());
@@ -279,7 +279,7 @@ public class PlayScene3D implements GameScene {
                 actionBindings.useFirst(ACTION_CHEAT_KILL_GHOSTS, ui.actionBindings());
             }
         }
-        actionBindings.installBindings(ui.theKeyboard());
+        actionBindings.installBindings(ui.keyboard());
     }
 
     /**
@@ -298,15 +298,15 @@ public class PlayScene3D implements GameScene {
         perspectiveIDProperty().bind(PROPERTY_3D_PERSPECTIVE);
         actionBindings.bind(droneUp, control(KeyCode.MINUS));
         actionBindings.bind(droneDown, control(KeyCode.PLUS));
-        actionBindings.installBindings(ui.theKeyboard());
+        actionBindings.installBindings(ui.keyboard());
         // TODO: integrate into input framework?
-        ui.theStage().getScene().addEventHandler(ScrollEvent.SCROLL, this::handleScrollEvent);
+        ui.stage().getScene().addEventHandler(ScrollEvent.SCROLL, this::handleScrollEvent);
     }
 
     @Override
     public void end() {
-        ui.theStage().removeEventHandler(ScrollEvent.SCROLL, this::handleScrollEvent);
-        ui.theSound().stopAll();
+        ui.stage().removeEventHandler(ScrollEvent.SCROLL, this::handleScrollEvent);
+        ui.sound().stopAll();
         if (gameLevel3D != null) {
             gameLevel3D.dispose();
             gameLevel3D = null;
@@ -318,14 +318,14 @@ public class PlayScene3D implements GameScene {
     public void update() {
         if (gameContext().optGameLevel().isEmpty()) {
             // Scene is already updated 2 ticks before the game level gets created!
-            Logger.info("Tick #{}: Game level not yet created, update ignored", ui.theGameClock().tickCount());
+            Logger.info("Tick #{}: Game level not yet created, update ignored", ui.clock().tickCount());
             return;
         }
         if (gameLevel3D == null) {
-            Logger.info("Tick #{}: 3D game level not yet created", ui.theGameClock().tickCount());
+            Logger.info("Tick #{}: 3D game level not yet created", ui.clock().tickCount());
             return;
         }
-        ui.theSound().setEnabled(!gameContext().theGameLevel().isDemoLevel());
+        ui.sound().setEnabled(!gameContext().theGameLevel().isDemoLevel());
         gameLevel3D.tick();
         updateCamera();
         updateHUD();
@@ -421,7 +421,7 @@ public class PlayScene3D implements GameScene {
 
         if (gameContext().theGameState() == GameState.HUNTING) {
             if (gameLevel.pac().powerTimer().isRunning()) {
-                ui.theSound().loop(SoundID.PAC_MAN_POWER);
+                ui.sound().loop(SoundID.PAC_MAN_POWER);
             }
             gameLevel3D.livesCounter3D.startTracking(gameLevel3D.pac3D);
         }
@@ -435,7 +435,7 @@ public class PlayScene3D implements GameScene {
     public void onBonusActivated(GameEvent event) {
         gameContext().theGameLevel().bonus().ifPresent(bonus -> {
             gameLevel3D.updateBonus3D(bonus);
-            ui.theSound().loop(SoundID.BONUS_ACTIVE);
+            ui.sound().loop(SoundID.BONUS_ACTIVE);
         });
     }
 
@@ -443,8 +443,8 @@ public class PlayScene3D implements GameScene {
     public void onBonusEaten(GameEvent event) {
         gameContext().theGameLevel().bonus().ifPresent(bonus -> {
             gameLevel3D.bonus3D().ifPresent(Bonus3D::showEaten);
-            ui.theSound().stop(SoundID.BONUS_ACTIVE);
-            ui.theSound().play(SoundID.BONUS_EATEN);
+            ui.sound().stop(SoundID.BONUS_ACTIVE);
+            ui.sound().play(SoundID.BONUS_EATEN);
         });
     }
 
@@ -452,13 +452,13 @@ public class PlayScene3D implements GameScene {
     public void onBonusExpired(GameEvent event) {
         gameContext().theGameLevel().bonus().ifPresent(bonus -> {
             gameLevel3D.bonus3D().ifPresent(Bonus3D::expire);
-            ui.theSound().stop(SoundID.BONUS_ACTIVE);
+            ui.sound().stop(SoundID.BONUS_ACTIVE);
         });
     }
 
     @Override
     public void onGhostEaten(GameEvent e) {
-        ui.theSound().play(SoundID.GHOST_EATEN);
+        ui.sound().play(SoundID.GHOST_EATEN);
     }
 
     @Override
@@ -479,7 +479,7 @@ public class PlayScene3D implements GameScene {
             || gameContext().theGameState() == TESTING_LEVELS_SHORT
             || gameContext().theGameState() == TESTING_LEVELS_MEDIUM;
         if (!silent) {
-            ui.theSound().play(SoundID.GAME_READY);
+            ui.sound().play(SoundID.GAME_READY);
         }
     }
 
@@ -499,8 +499,8 @@ public class PlayScene3D implements GameScene {
                     .findFirst()
                     .ifPresent(this::eatPellet3D);
             }
-            if (!ui.theSound().isPlaying(SoundID.PAC_MAN_MUNCHING)) {
-                ui.theSound().loop(SoundID.PAC_MAN_MUNCHING);
+            if (!ui.sound().isPlaying(SoundID.PAC_MAN_MUNCHING)) {
+                ui.sound().loop(SoundID.PAC_MAN_MUNCHING);
                 Logger.info("Play munching sound, starving ticks={}", theGameContext().theGameLevel().pac().starvingTicks());
             }
         }
@@ -508,10 +508,10 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onPacGetsPower(GameEvent event) {
-        ui.theSound().stopSiren();
+        ui.sound().stopSiren();
         if (!theGameContext().theGame().isLevelCompleted()) {
             gameLevel3D.pac3D().setMovementPowerMode(true);
-            ui.theSound().loop(SoundID.PAC_MAN_POWER);
+            ui.sound().loop(SoundID.PAC_MAN_POWER);
             gameLevel3D.playWallColorFlashing();
         }
     }
@@ -520,17 +520,17 @@ public class PlayScene3D implements GameScene {
     public void onPacLostPower(GameEvent event) {
         gameLevel3D.pac3D().setMovementPowerMode(false);
         gameLevel3D.stopWallColorFlashing();
-        ui.theSound().stop(SoundID.PAC_MAN_POWER);
+        ui.sound().stop(SoundID.PAC_MAN_POWER);
     }
 
     @Override
     public void onSpecialScoreReached(GameEvent e) {
-        ui.theSound().play(SoundID.EXTRA_LIFE);
+        ui.sound().play(SoundID.EXTRA_LIFE);
     }
 
     @Override
     public void onStopAllSounds(GameEvent event) {
-        ui.theSound().stopAll();
+        ui.sound().stopAll();
     }
 
     @Override
@@ -581,15 +581,15 @@ public class PlayScene3D implements GameScene {
             scores3D.showScore(score.points(), score.levelNumber());
         }
         else { // disabled, show text "GAME OVER"
-            Color color = ui.theConfiguration().getAssetNS("color.game_over_message");
-            scores3D.showTextForScore(ui.theAssets().text("score.game_over"), color);
+            Color color = ui.currentConfig().getAssetNS("color.game_over_message");
+            scores3D.showTextForScore(ui.assets().text("score.game_over"), color);
         }
         // Always show high score
         scores3D.showHighScore(highScore.points(), highScore.levelNumber());
     }
 
     protected void updateSound() {
-        if (!ui.theSound().isEnabled()) return;
+        if (!ui.sound().isEnabled()) return;
         Pac pac = gameContext().theGameLevel().pac();
         boolean pacChased = gameContext().theGameState() == GameState.HUNTING && !pac.powerTimer().isRunning();
         if (pacChased) {
@@ -597,25 +597,25 @@ public class PlayScene3D implements GameScene {
             int huntingPhase = gameContext().theGame().huntingTimer().phaseIndex();
             int sirenNumber = 1 + huntingPhase / 2;
             switch (sirenNumber) {
-                case 1 -> ui.theSound().playSiren(SoundID.SIREN_1, 1.0);
-                case 2 -> ui.theSound().playSiren(SoundID.SIREN_2, 1.0);
-                case 3 -> ui.theSound().playSiren(SoundID.SIREN_3, 1.0);
-                case 4 -> ui.theSound().playSiren(SoundID.SIREN_4, 1.0);
+                case 1 -> ui.sound().playSiren(SoundID.SIREN_1, 1.0);
+                case 2 -> ui.sound().playSiren(SoundID.SIREN_2, 1.0);
+                case 3 -> ui.sound().playSiren(SoundID.SIREN_3, 1.0);
+                case 4 -> ui.sound().playSiren(SoundID.SIREN_4, 1.0);
                 default -> throw new IllegalArgumentException("Illegal siren number " + sirenNumber);
             }
         }
 
         // TODO Still not sure how to do this right
-        if (pac.starvingTicks() >= 10 && !ui.theSound().isPaused(SoundID.PAC_MAN_MUNCHING)) {
-            ui.theSound().pause(SoundID.PAC_MAN_MUNCHING);
+        if (pac.starvingTicks() >= 10 && !ui.sound().isPaused(SoundID.PAC_MAN_MUNCHING)) {
+            ui.sound().pause(SoundID.PAC_MAN_MUNCHING);
         }
 
         boolean isGhostReturningHome = gameContext().theGameLevel().pac().isAlive()
             && gameContext().theGameLevel().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).findAny().isPresent();
         if (isGhostReturningHome) {
-            ui.theSound().loop(SoundID.GHOST_RETURNS);
+            ui.sound().loop(SoundID.GHOST_RETURNS);
         } else {
-            ui.theSound().stop(SoundID.GHOST_RETURNS);
+            ui.sound().stop(SoundID.GHOST_RETURNS);
         }
     }
 

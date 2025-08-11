@@ -60,8 +60,8 @@ public class MainScene extends Scene {
         statusIconBox = new StatusIconBox();
         StackPane.setAlignment(statusIconBox, Pos.BOTTOM_LEFT);
 
-        addEventFilter(KeyEvent.KEY_PRESSED, ui.theKeyboard()::onKeyPressed);
-        addEventFilter(KeyEvent.KEY_RELEASED, ui.theKeyboard()::onKeyReleased);
+        addEventFilter(KeyEvent.KEY_PRESSED, ui.keyboard()::onKeyPressed);
+        addEventFilter(KeyEvent.KEY_RELEASED, ui.keyboard()::onKeyReleased);
 
         var viewPlaceholder = new Region();
         rootPane().getChildren().addAll(viewPlaceholder, pausedIcon, statusIconBox, flashMessageLayer);

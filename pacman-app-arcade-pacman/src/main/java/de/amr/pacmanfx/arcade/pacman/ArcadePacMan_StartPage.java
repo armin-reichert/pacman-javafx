@@ -32,7 +32,7 @@ public class ArcadePacMan_StartPage extends StackPane implements StartPage {
         });
         flyer.selectPage(0);
 
-        var startButton = StartPagesView.createStartButton(ui.theAssets(), Pos.BOTTOM_CENTER);
+        var startButton = StartPagesView.createStartButton(ui.assets(), Pos.BOTTOM_CENTER);
         startButton.setAction(() -> ACTION_BOOT_SHOW_PLAY_VIEW.executeIfEnabled(ui));
         startButton.setTranslateY(-50);
         getChildren().addAll(flyer, startButton);

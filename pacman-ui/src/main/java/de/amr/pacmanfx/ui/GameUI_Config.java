@@ -74,7 +74,7 @@ public interface GameUI_Config extends Disposable {
      * @param <T> expected asset value type
      */
     default <T> T getAssetNS(String partialKey) {
-        return getAssetNS(theUI().theAssets(), partialKey);
+        return getAssetNS(theUI().assets(), partialKey);
     }
 
     Image bonusSymbolImage(byte symbol);

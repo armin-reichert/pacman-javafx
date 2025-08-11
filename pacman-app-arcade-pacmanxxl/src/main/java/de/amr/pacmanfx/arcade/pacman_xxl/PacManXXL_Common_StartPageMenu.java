@@ -169,11 +169,11 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
             String gameVariant = selectedValue();
             if (GameVariant.PACMAN_XXL.name().equals(gameVariant)) {
                 Logger.info("Loading assets for game variant {}", gameVariant);
-                ui.config(gameVariant).storeAssets(ui.theAssets());
+                ui.config(gameVariant).storeAssets(ui.assets());
             }
             else if (GameVariant.MS_PACMAN_XXL.name().equals(gameVariant)) {
                 Logger.info("Loading assets for game variant {}", gameVariant);
-                ui.config(gameVariant).storeAssets(ui.theAssets());
+                ui.config(gameVariant).storeAssets(ui.assets());
             }
             chaseAnimation.setGameConfig(ui.config(gameVariant));
             state.gameVariant = gameVariant;
@@ -252,7 +252,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         super(42, 36, 6, 20);
 
         this.ui = requireNonNull(ui);
-        this.gameContext = requireNonNull(ui.theGameContext());
+        this.gameContext = requireNonNull(ui.gameContext());
 
         state.gameVariant = "PACMAN_XXL";
         state.play3D = false;
@@ -260,8 +260,8 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         state.mapOrder = MapSelectionMode.CUSTOM_MAPS_FIRST;
 
         var style = new OptionMenuStyle(
-            ui.theAssets().font("font.pacfontgood", 32),
-            ui.theAssets().arcadeFont(8),
+            ui.assets().font("font.pacfontgood", 32),
+            ui.assets().arcadeFont(8),
             DEFAULT_OPTION_MENU_STYLE.backgroundFill(),
             DEFAULT_OPTION_MENU_STYLE.borderStroke(),
             ArcadePalette.ARCADE_RED,

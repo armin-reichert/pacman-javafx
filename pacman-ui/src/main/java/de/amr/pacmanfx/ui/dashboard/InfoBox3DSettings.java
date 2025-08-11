@@ -129,8 +129,8 @@ public class InfoBox3DSettings extends InfoBox {
             if (gameScene instanceof GameScene2D gameScene2D) {
                 Vector2f size = gameScene2D.sizeInPx(), scaledSize = size.scaled(gameScene2D.scaling());
                 return "%.0fx%.0f (scaled: %.0fx%.0f)".formatted(size.x(), size.y(), scaledSize.x(), scaledSize.y());
-            } else if (ui.theGameContext().optGameLevel().isPresent()) {
-                var worldMap = ui.theGameContext().theGameLevel().worldMap();
+            } else if (ui.gameContext().optGameLevel().isPresent()) {
+                var worldMap = ui.gameContext().theGameLevel().worldMap();
                 return "%dx%d (map size px)".formatted(worldMap.numCols() * TS, worldMap.numRows() * TS);
             }
         }

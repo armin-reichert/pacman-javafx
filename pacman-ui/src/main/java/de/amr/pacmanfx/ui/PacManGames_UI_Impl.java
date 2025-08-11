@@ -23,6 +23,7 @@ import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
@@ -82,14 +83,14 @@ public class PacManGames_UI_Impl implements GameUI {
         new ActionBinding(ACTION_TOGGLE_DRAW_MODE,            alt(KeyCode.W))
     );
 
-    private final PacManGames_Assets theAssets;
-    private final DirectoryWatchdog  theCustomDirWatchdog;
-    private final GameClock          theGameClock;
-    private final GameContext        theGameContext;
-    private final Joypad             theJoypad;
-    private final Keyboard           theKeyboard;
-    private final Stage              theStage;
-    private final UIPreferences      theUIPrefs;
+    private final PacManGames_Assets assets;
+    private final DirectoryWatchdog customDirectoryWatchdog;
+    private final GameClock clock;
+    private final GameContext gameContext;
+    private final Joypad joypad;
+    private final Keyboard keyboard;
+    private final Stage stage;
+    private final UIPreferences prefs;
 
     private final ActionBindingsManager globalActionBindings = new DefaultActionBindingsManager();
     private final Map<String, GameUI_Config> configByGameVariant = new HashMap<>();
@@ -106,31 +107,28 @@ public class PacManGames_UI_Impl implements GameUI {
         requireNonNull(stage, "Stage is null");
 
         // Input
-        theKeyboard = new Keyboard();
-        theJoypad = new Joypad(theKeyboard);
+        keyboard = new Keyboard();
+        joypad = new Joypad(keyboard);
 
         // Game context
-        theCustomDirWatchdog = new DirectoryWatchdog(gameContext.theCustomMapDir());
-        theGameClock = new GameClock();
-        theGameContext = gameContext;
+        this.gameContext = gameContext;
+        customDirectoryWatchdog = new DirectoryWatchdog(gameContext.theCustomMapDir());
+        clock = new GameClock();
+        clock.setPausableAction(this::doSimulationStepAndUpdateGameScene);
+        clock.setPermanentAction(this::drawCurrentView);
 
         // Game UI
-        theAssets = new PacManGames_Assets();
-        theUIPrefs = new PacManGames_Preferences();
-        theStage = stage;
-
-        configurationMap.forEach(this::applyConfiguration);
-        defineGlobalActionBindings();
+        this.stage = stage;
+        assets = new PacManGames_Assets();
+        prefs = new PacManGames_Preferences();
+        PROPERTY_3D_WALL_HEIGHT.set(prefs.getFloat("3d.obstacle.base_height"));
+        PROPERTY_3D_WALL_OPACITY.set(prefs.getFloat("3d.obstacle.opacity"));
 
         mainScene = new MainScene(this, width, height);
         configureMainScene();
         configureStage(stage);
-
-        theGameClock.setPausableAction(this::doSimulationStepAndUpdateGameScene);
-        theGameClock.setPermanentAction(this::drawCurrentView);
-
-        PROPERTY_3D_WALL_HEIGHT.set(theUIPrefs.getFloat("3d.obstacle.base_height"));
-        PROPERTY_3D_WALL_OPACITY.set(theUIPrefs.getFloat("3d.obstacle.opacity"));
+        configurationMap.forEach(this::applyConfiguration);
+        defineGlobalActionBindings();
     }
 
     private void applyConfiguration(String gameVariant, Class<?> configClass) {
@@ -156,7 +154,7 @@ public class PacManGames_UI_Impl implements GameUI {
 
         // Check if a global action is defined for the key press, otherwise let the current view handle it.
         mainScene.setOnKeyPressed(e -> {
-            GameAction matchingAction = globalActionBindings.matchingAction(theKeyboard).orElse(null);
+            GameAction matchingAction = globalActionBindings.matchingAction(keyboard).orElse(null);
             if (matchingAction != null) {
                 matchingAction.executeIfEnabled(this);
             } else {
@@ -165,14 +163,14 @@ public class PacManGames_UI_Impl implements GameUI {
         });
 
         mainScene.rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
-            () -> theAssets.get(isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D) ? "background.play_scene3d" : "background.scene"),
+            () -> assets.get(isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D) ? "background.play_scene3d" : "background.scene"),
             PROPERTY_CURRENT_VIEW, PROPERTY_CURRENT_GAME_SCENE
         ));
 
         // Show paused icon only in play view
         mainScene.pausedIcon().visibleProperty().bind(Bindings.createBooleanBinding(
-            () -> currentView() == playView() && theGameClock.isPaused(),
-            PROPERTY_CURRENT_VIEW, theGameClock.pausedProperty())
+            () -> currentView() == playView() && clock.isPaused(),
+            PROPERTY_CURRENT_VIEW, clock.pausedProperty())
         );
 
         // hide icon box if editor view is active, avoid creation of editor view in binding expression!
@@ -182,8 +180,8 @@ public class PacManGames_UI_Impl implements GameUI {
 
         statusIcons.iconMuted()    .visibleProperty().bind(PROPERTY_MUTED);
         statusIcons.icon3D()       .visibleProperty().bind(PROPERTY_3D_ENABLED);
-        statusIcons.iconAutopilot().visibleProperty().bind(theGameContext().theGameController().propertyUsingAutopilot());
-        statusIcons.iconImmune()   .visibleProperty().bind(theGameContext().theGameController().propertyImmunity());
+        statusIcons.iconAutopilot().visibleProperty().bind(gameContext().theGameController().propertyUsingAutopilot());
+        statusIcons.iconImmune()   .visibleProperty().bind(gameContext().theGameController().propertyImmunity());
     }
 
     private void configureStage(Stage stage) {
@@ -201,7 +199,7 @@ public class PacManGames_UI_Impl implements GameUI {
             PROPERTY_CURRENT_GAME_SCENE,
             PROPERTY_DEBUG_INFO_VISIBLE,
             PROPERTY_3D_ENABLED,
-            theGameClock().pausedProperty(),
+            clock().pausedProperty(),
             mainScene.heightProperty()
         ));
     }
@@ -218,11 +216,11 @@ public class PacManGames_UI_Impl implements GameUI {
 
         boolean mode3D = PROPERTY_3D_ENABLED.get();
         boolean modeDebug = PROPERTY_DEBUG_INFO_VISIBLE.get();
-        String namespace      = theConfiguration().assetNamespace();
-        String paused         = theGameClock().isPaused() ? ".paused" : "";
+        String namespace      = currentConfig().assetNamespace();
+        String paused         = clock().isPaused() ? ".paused" : "";
         String assetKey       = "app.title.%s%s".formatted(namespace, paused);
-        String translatedMode = theAssets().text(mode3D ? "threeD" : "twoD");
-        String shortTitle     = theAssets().text(assetKey, translatedMode);
+        String translatedMode = assets().text(mode3D ? "threeD" : "twoD");
+        String shortTitle     = assets().text(assetKey, translatedMode);
 
         var currentGameScene = currentGameScene().orElse(null);
         if (currentGameScene == null || !modeDebug) {
@@ -238,7 +236,7 @@ public class PacManGames_UI_Impl implements GameUI {
         globalActionBindings.useFirst(ACTION_ENTER_FULLSCREEN, defaultActionBindings);
         globalActionBindings.useFirst(ACTION_OPEN_EDITOR, defaultActionBindings);
         globalActionBindings.useFirst(ACTION_TOGGLE_MUTED, defaultActionBindings);
-        globalActionBindings.installBindings(theKeyboard);
+        globalActionBindings.installBindings(keyboard);
     }
 
     private void selectView(GameUI_View view) {
@@ -248,11 +246,11 @@ public class PacManGames_UI_Impl implements GameUI {
             return;
         }
         if (oldView != null) {
-            oldView.actionBindingsManager().uninstallBindings(theKeyboard);
-            theGameContext.theGameEventManager().removeEventListener(oldView);
+            oldView.actionBindingsManager().uninstallBindings(keyboard);
+            gameContext.theGameEventManager().removeEventListener(oldView);
         }
-        view.actionBindingsManager().installBindings(theKeyboard);
-        theGameContext.theGameEventManager().addEventListener(view);
+        view.actionBindingsManager().installBindings(keyboard);
+        gameContext.theGameEventManager().addEventListener(view);
 
         PROPERTY_CURRENT_VIEW.set(view);
     }
@@ -265,14 +263,14 @@ public class PacManGames_UI_Impl implements GameUI {
     private void ka_tas_trooo_phe(Throwable reason) {
         Logger.error(reason);
         Logger.error("SOMETHING VERY BAD HAPPENED!");
-        showFlashMessageSec(10, "KA-TA-STROOO-PHE!\nSOMEONE CALL AN AMBULANCE!");
+        showFlashMessageSec(Duration.seconds(10), "KA-TA-STROOO-PHE!\nSOMEONE CALL AN AMBULANCE!");
     }
 
     private void doSimulationStepAndUpdateGameScene() {
         try {
-            theGameContext.theGame().simulationStep().start(theGameClock.tickCount());
-            theGameContext.theGameController().updateGameState();
-            theGameContext.theGame().simulationStep().logState();
+            gameContext.theGame().simulationStep().start(clock.tickCount());
+            gameContext.theGameController().updateGameState();
+            gameContext.theGame().simulationStep().logState();
             currentGameScene().ifPresent(GameScene::update);
         } catch (Throwable x) {
             ka_tas_trooo_phe(x);
@@ -292,16 +290,16 @@ public class PacManGames_UI_Impl implements GameUI {
 
     private EditorView ensureEditorViewExists() {
         if (editorView == null) {
-            var editor = new TileMapEditor(theStage, theAssets().theModel3DRepository());
-            var miReturnToGame = new MenuItem(theAssets().text("back_to_game"));
+            var editor = new TileMapEditor(stage, assets().theModel3DRepository());
+            var miReturnToGame = new MenuItem(assets().text("back_to_game"));
             miReturnToGame.setOnAction(e -> {
                 editor.stop();
                 editor.executeWithCheckForUnsavedChanges(this::showStartView);
                 // Undo editor stage title binding change:
-                bindStageTitle(theStage);
+                bindStageTitle(stage);
             });
             editor.getFileMenu().getItems().addAll(new SeparatorMenuItem(), miReturnToGame);
-            editor.init(theGameContext.theCustomMapDir());
+            editor.init(gameContext.theCustomMapDir());
             editorView = new EditorView(editor);
         }
         return editorView;
@@ -314,17 +312,17 @@ public class PacManGames_UI_Impl implements GameUI {
     @Override public Optional<GameScene>         currentGameScene() { return mainScene.currentGameScene(); }
     @Override public GameUI_View currentView() { return mainScene.currentView(); }
 
-    @Override public PacManGames_Assets          theAssets() {return theAssets; }
+    @Override public PacManGames_Assets assets() {return assets; }
     @SuppressWarnings("unchecked")
-    @Override public <T extends GameUI_Config> T theConfiguration() { return (T) config(theGameContext.theGameController().selectedGameVariant()); }
-    @Override public DirectoryWatchdog           theCustomDirWatchdog() { return theCustomDirWatchdog; }
-    @Override public GameClock                   theGameClock() { return theGameClock; }
-    @Override public GameContext                 theGameContext() { return theGameContext; }
-    @Override public Joypad                      theJoypad() { return theJoypad; }
-    @Override public Keyboard                    theKeyboard() { return theKeyboard; }
-    @Override public SoundManager                theSound() { return theConfiguration().soundManager(); }
-    @Override public Stage                       theStage() { return theStage; }
-    @Override public UIPreferences               theUIPrefs() { return theUIPrefs; }
+    @Override public <T extends GameUI_Config> T currentConfig() { return (T) config(gameContext.theGameController().selectedGameVariant()); }
+    @Override public DirectoryWatchdog customDirectoryWatchdog() { return customDirectoryWatchdog; }
+    @Override public GameClock clock() { return clock; }
+    @Override public GameContext gameContext() { return gameContext; }
+    @Override public Joypad joypad() { return joypad; }
+    @Override public Keyboard keyboard() { return keyboard; }
+    @Override public SoundManager sound() { return currentConfig().soundManager(); }
+    @Override public Stage stage() { return stage; }
+    @Override public UIPreferences prefs() { return prefs; }
 
     @Override
     public Optional<EditorView> optEditorView() {
@@ -348,17 +346,17 @@ public class PacManGames_UI_Impl implements GameUI {
     @Override
     public boolean isCurrentGameSceneID(String id) {
         GameScene currentGameScene = mainScene.currentGameScene().orElse(null);
-        return currentGameScene != null && theConfiguration().gameSceneHasID(currentGameScene, id);
+        return currentGameScene != null && currentConfig().gameSceneHasID(currentGameScene, id);
     }
 
     @Override
     public void quitCurrentGameScene() {
         currentGameScene().ifPresent(gameScene -> {
             gameScene.end();
-            theGameContext.theGameController().changeGameState(GameState.BOOT);
-            theGameContext.theGame().resetEverything();
-            if (!theGameContext.theCoinMechanism().isEmpty()) {
-                theGameContext.theCoinMechanism().consumeCoin();
+            gameContext.theGameController().changeGameState(GameState.BOOT);
+            gameContext.theGame().resetEverything();
+            if (!gameContext.theCoinMechanism().isEmpty()) {
+                gameContext.theCoinMechanism().consumeCoin();
             }
             Logger.info("Current game scene ({}) has been quit, returning to start view", gameScene.getClass().getSimpleName());
             showStartView();
@@ -367,10 +365,10 @@ public class PacManGames_UI_Impl implements GameUI {
 
     @Override
     public void restart() {
-        theGameClock.stop();
-        theGameClock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
-        theGameClock.start();
-        theGameContext.theGameController().restart(GameState.BOOT);
+        clock.stop();
+        clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
+        clock.start();
+        gameContext.theGameController().restart(GameState.BOOT);
     }
 
     @Override
@@ -380,7 +378,7 @@ public class PacManGames_UI_Impl implements GameUI {
             return;
         }
 
-        String previousVariant = theGameContext.theGameController().selectedGameVariant();
+        String previousVariant = gameContext.theGameController().selectedGameVariant();
         if (gameVariant.equals(previousVariant)) {
             return;
         }
@@ -394,12 +392,12 @@ public class PacManGames_UI_Impl implements GameUI {
 
         GameUI_Config newConfig = config(gameVariant);
         Logger.info("Loading assets for game variant {}", gameVariant);
-        newConfig.storeAssets(theAssets());
+        newConfig.storeAssets(assets());
         newConfig.soundManager().mutedProperty().bind(PROPERTY_MUTED);
 
-        Image appIcon = theAssets.image(newConfig.assetNamespace() + ".app_icon");
+        Image appIcon = assets.image(newConfig.assetNamespace() + ".app_icon");
         if (appIcon != null) {
-            theStage.getIcons().setAll(appIcon);
+            stage.getIcons().setAll(appIcon);
         } else {
             Logger.error("Could not find app icon for current game variant {}", gameVariant);
         }
@@ -407,27 +405,27 @@ public class PacManGames_UI_Impl implements GameUI {
         playView().canvasFrame().roundedBorderProperty().set(newConfig.hasGameCanvasRoundedBorder());
 
         // this triggers a game event and the event handlers:
-        theGameContext.theGameController().selectGameVariant(gameVariant);
+        gameContext.theGameController().selectGameVariant(gameVariant);
     }
 
     @Override
-    public void show() {
+    public void showUI() {
         playView().initDashboard();
         startPagesView().selectStartPage(0);
         showStartView();
-        theStage.centerOnScreen();
-        theStage.show();
-        Platform.runLater(theCustomDirWatchdog::startWatching);
-        theGameContext.theGameController().setEventsEnabled(true);
+        stage.centerOnScreen();
+        stage.show();
+        Platform.runLater(customDirectoryWatchdog::startWatching);
+        gameContext.theGameController().setEventsEnabled(true);
     }
 
     @Override
     public void showEditorView() {
-        if (!theGameContext.theGame().isPlaying() || theGameClock.isPaused()) {
+        if (!gameContext.theGame().isPlaying() || clock.isPaused()) {
             currentGameScene().ifPresent(GameScene::end);
-            theSound().stopAll();
-            theGameClock.stop();
-            ensureEditorViewExists().editor().start(theStage);
+            sound().stopAll();
+            clock.stop();
+            ensureEditorViewExists().editor().start(stage);
             selectView(editorView);
         } else {
             Logger.info("Editor view cannot be opened, game is playing");
@@ -435,8 +433,8 @@ public class PacManGames_UI_Impl implements GameUI {
     }
 
     @Override
-    public void showFlashMessageSec(double seconds, String message, Object... args) {
-        mainScene.flashMessageLayer().showMessage(String.format(message, args), seconds);
+    public void showFlashMessageSec(Duration duration, String message, Object... args) {
+        mainScene.flashMessageLayer().showMessage(String.format(message, args), duration.toSeconds());
     }
 
     @Override
@@ -446,9 +444,9 @@ public class PacManGames_UI_Impl implements GameUI {
 
     @Override
     public void showStartView() {
-        theGameClock.stop();
-        theGameClock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
-        theSound().stopAll();
+        clock.stop();
+        clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
+        sound().stopAll();
         selectView(startPagesView());
         startPagesView().currentStartPage().ifPresent(startPage -> Platform.runLater(() -> {
             startPage.onEnter(this); // sets game variant!
@@ -459,13 +457,13 @@ public class PacManGames_UI_Impl implements GameUI {
     @Override
     public void terminate() {
         Logger.info("Application is terminated now. There is no way back!");
-        theGameClock.stop();
-        theCustomDirWatchdog.dispose();
+        clock.stop();
+        customDirectoryWatchdog.dispose();
     }
 
     @Override
-    public void updateGameScene(boolean reloadCurrent) {
-        playView().updateGameScene(reloadCurrent);
+    public void updateGameScene(boolean forceReloading) {
+        playView().updateGameScene(forceReloading);
     }
 
     @Override

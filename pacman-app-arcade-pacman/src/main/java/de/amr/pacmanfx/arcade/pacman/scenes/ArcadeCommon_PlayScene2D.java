@@ -20,7 +20,6 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.pacmanfx.uilib.Ufx;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -59,7 +58,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
     protected void doInit() {
         gameContext().theGame().theHUD().credit(false).score(true).levelCounter(true).livesCounter(true);
         levelCompletedAnimation = new LevelCompletedAnimation(animationRegistry);
-        gameRenderer = ui.theConfiguration().createGameRenderer(canvas);
+        gameRenderer = ui.currentConfig().createGameRenderer(canvas);
     }
 
     @Override
@@ -79,7 +78,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
         if (gameLevel.isDemoLevel()) {
             gameContext().theGame().theHUD().credit(false).levelCounter(true).livesCounter(false);
             actionBindings.useFirst(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
-            actionBindings.installBindings(ui.theKeyboard());
+            actionBindings.installBindings(ui.keyboard());
         } else {
             gameContext().theGame().theHUD().credit(false).levelCounter(true).livesCounter(true);
             actionBindings.useFirst(ACTION_STEER_UP, ui.actionBindings());
@@ -90,10 +89,10 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
             actionBindings.useFirst(ACTION_CHEAT_ADD_LIVES, ui.actionBindings());
             actionBindings.useFirst(ACTION_CHEAT_ENTER_NEXT_LEVEL, ui.actionBindings());
             actionBindings.useFirst(ACTION_CHEAT_KILL_GHOSTS, ui.actionBindings());
-            actionBindings.installBindings(ui.theKeyboard());
+            actionBindings.installBindings(ui.keyboard());
         }
         if (gameRenderer == null) { //TODO can this happen at all?
-            gameRenderer = ui.theConfiguration().createGameRenderer(canvas);
+            gameRenderer = ui.currentConfig().createGameRenderer(canvas);
             Logger.warn("No game renderer existed for 2D play scene, created one...");
         }
         Logger.info("Scene {} initialized with game level", getClass().getSimpleName());
@@ -114,20 +113,20 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
 
     @Override
     public List<MenuItem> supplyContextMenuItems(ContextMenuEvent contextMenuEvent, ContextMenu contextMenu) {
-        var miAutopilot = new CheckMenuItem(ui.theAssets().text("autopilot"));
+        var miAutopilot = new CheckMenuItem(ui.assets().text("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(gameContext().theGameController().propertyUsingAutopilot());
 
-        var miImmunity = new CheckMenuItem(ui.theAssets().text("immunity"));
+        var miImmunity = new CheckMenuItem(ui.assets().text("immunity"));
         miImmunity.selectedProperty().bindBidirectional(gameContext().theGameController().propertyImmunity());
 
-        var miMuted = new CheckMenuItem(ui.theAssets().text("muted"));
+        var miMuted = new CheckMenuItem(ui.assets().text("muted"));
         miMuted.selectedProperty().bindBidirectional(PROPERTY_MUTED);
 
-        var miQuit = new MenuItem(ui.theAssets().text("quit"));
+        var miQuit = new MenuItem(ui.assets().text("quit"));
         miQuit.setOnAction(e -> ACTION_QUIT_GAME_SCENE.executeIfEnabled(ui));
 
         return List.of(
-            createContextMenuTitle("pacman", ui.theUIPrefs(), ui.theAssets()),
+            createContextMenuTitle("pacman", ui.prefs(), ui.assets()),
             miAutopilot,
             miImmunity,
             new SeparatorMenuItem(),
@@ -146,7 +145,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
                 || gameContext().theGameState() == TESTING_LEVELS_SHORT
                 || gameContext().theGameState() == TESTING_LEVELS_MEDIUM;
         if (!silent) {
-            ui.theSound().play(SoundID.GAME_READY);
+            ui.sound().play(SoundID.GAME_READY);
         }
     }
 
@@ -154,10 +153,10 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
     public void update() {
         if (gameContext().optGameLevel().isEmpty()) {
             // Scene is already updated 2 ticks before the game level gets created!
-            Logger.info("Tick {}: Game level not yet created", ui.theGameClock().tickCount());
+            Logger.info("Tick {}: Game level not yet created", ui.clock().tickCount());
             return;
         }
-        ui.theSound().setEnabled(!gameContext().theGameLevel().isDemoLevel());
+        ui.sound().setEnabled(!gameContext().theGameLevel().isDemoLevel());
         updateHUD();
         updateSound();
     }
@@ -174,7 +173,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
     }
 
     private void updateSound() {
-        if (!ui.theSound().isEnabled()) return;
+        if (!ui.sound().isEnabled()) return;
         Pac pac = gameContext().theGameLevel().pac();
         boolean pacChased = gameContext().theGameState() == GameState.HUNTING && !pac.powerTimer().isRunning();
         if (pacChased) {
@@ -182,25 +181,25 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
             int huntingPhase = gameContext().theGame().huntingTimer().phaseIndex();
             int sirenNumber = 1 + huntingPhase / 2;
             switch (sirenNumber) {
-                case 1 -> ui.theSound().playSiren(SoundID.SIREN_1, 1.0);
-                case 2 -> ui.theSound().playSiren(SoundID.SIREN_2, 1.0);
-                case 3 -> ui.theSound().playSiren(SoundID.SIREN_3, 1.0);
-                case 4 -> ui.theSound().playSiren(SoundID.SIREN_4, 1.0);
+                case 1 -> ui.sound().playSiren(SoundID.SIREN_1, 1.0);
+                case 2 -> ui.sound().playSiren(SoundID.SIREN_2, 1.0);
+                case 3 -> ui.sound().playSiren(SoundID.SIREN_3, 1.0);
+                case 4 -> ui.sound().playSiren(SoundID.SIREN_4, 1.0);
                 default -> throw new IllegalArgumentException("Illegal siren number " + sirenNumber);
             }
         }
 
         // TODO Still not sure how to do this right
-        if (pac.starvingTicks() >= 10 && !ui.theSound().isPaused(SoundID.PAC_MAN_MUNCHING)) {
-            ui.theSound().pause(SoundID.PAC_MAN_MUNCHING);
+        if (pac.starvingTicks() >= 10 && !ui.sound().isPaused(SoundID.PAC_MAN_MUNCHING)) {
+            ui.sound().pause(SoundID.PAC_MAN_MUNCHING);
         }
 
         boolean isGhostReturningHome = gameContext().theGameLevel().pac().isAlive()
             && gameContext().theGameLevel().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).findAny().isPresent();
         if (isGhostReturningHome) {
-            ui.theSound().loop(SoundID.GHOST_RETURNS);
+            ui.sound().loop(SoundID.GHOST_RETURNS);
         } else {
-            ui.theSound().stop(SoundID.GHOST_RETURNS);
+            ui.sound().stop(SoundID.GHOST_RETURNS);
         }
     }
 
@@ -227,7 +226,7 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
             backgroundColor(),
             highlighted,
             gameLevel.blinking().isOn(),
-            ui.theGameClock().tickCount()
+            ui.clock().tickCount()
         );
         gameLevel.house().ifPresent(house -> drawLevelMessageCenteredUnderHouse(house, gameLevel.messageType()));
 
@@ -300,49 +299,49 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
     @Override
     public void onEnterGameState(GameState state) {
         if (state == GameState.LEVEL_COMPLETE) {
-            ui.theSound().stopAll();
+            ui.sound().stopAll();
             levelCompletedAnimation.setGameLevel(gameContext().theGameLevel());
             levelCompletedAnimation.setSingleFlashMillis(333);
             levelCompletedAnimation.getOrCreateAnimationFX().setOnFinished(e -> gameContext().theGameController().letCurrentGameStateExpire());
             levelCompletedAnimation.playFromStart();
         }
         else if (state == GameState.GAME_OVER) {
-            ui.theSound().stopAll();
-            ui.theSound().play(SoundID.GAME_OVER);
+            ui.sound().stopAll();
+            ui.sound().play(SoundID.GAME_OVER);
         }
     }
 
     @Override
     public void onBonusActivated(GameEvent e) {
-        ui.theSound().loop(SoundID.BONUS_ACTIVE);
+        ui.sound().loop(SoundID.BONUS_ACTIVE);
     }
 
     @Override
     public void onBonusEaten(GameEvent e) {
-        ui.theSound().stop(SoundID.BONUS_ACTIVE);
-        ui.theSound().play(SoundID.BONUS_EATEN);
+        ui.sound().stop(SoundID.BONUS_ACTIVE);
+        ui.sound().play(SoundID.BONUS_EATEN);
     }
 
     @Override
     public void onBonusExpired(GameEvent e) {
-        ui.theSound().stop(SoundID.BONUS_ACTIVE);
+        ui.sound().stop(SoundID.BONUS_ACTIVE);
     }
 
     @Override
     public void onCreditAdded(GameEvent e) {
-        ui.theSound().play(SoundID.COIN_INSERTED);
+        ui.sound().play(SoundID.COIN_INSERTED);
     }
 
     @Override
     public void onSpecialScoreReached(GameEvent e) {
         int score = e.payload("score");
         Logger.info("Extra life awarded for reaching score {}", score);
-        ui.theSound().play(SoundID.EXTRA_LIFE);
+        ui.sound().play(SoundID.EXTRA_LIFE);
     }
 
     @Override
     public void onGhostEaten(GameEvent e) {
-        ui.theSound().play(SoundID.GHOST_EATEN);
+        ui.sound().play(SoundID.GHOST_EATEN);
     }
 
     @Override
@@ -352,23 +351,23 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
 
     @Override
     public void onPacDying(GameEvent e) {
-        ui.theSound().pauseSiren();
-        ui.theSound().play(SoundID.PAC_MAN_DEATH);
+        ui.sound().pauseSiren();
+        ui.sound().play(SoundID.PAC_MAN_DEATH);
     }
 
     @Override
     public void onPacFoundFood(GameEvent e) {
-        ui.theSound().loop(SoundID.PAC_MAN_MUNCHING);
+        ui.sound().loop(SoundID.PAC_MAN_MUNCHING);
     }
 
     @Override
     public void onPacGetsPower(GameEvent e) {
-        ui.theSound().pauseSiren();
-        ui.theSound().loop(SoundID.PAC_MAN_POWER);
+        ui.sound().pauseSiren();
+        ui.sound().loop(SoundID.PAC_MAN_POWER);
     }
 
     @Override
     public void onPacLostPower(GameEvent e) {
-        ui.theSound().pause(SoundID.PAC_MAN_POWER);
+        ui.sound().pause(SoundID.PAC_MAN_POWER);
     }
 }

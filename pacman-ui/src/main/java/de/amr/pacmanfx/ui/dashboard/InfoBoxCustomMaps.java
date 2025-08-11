@@ -64,7 +64,7 @@ public class InfoBoxCustomMaps extends InfoBox {
         addRow(mapsTableView);
         updateCustomMapList();
 
-        ui.theCustomDirWatchdog().addEventListener(eventList -> {
+        ui.customDirectoryWatchdog().addEventListener(eventList -> {
             Logger.info("Custom map change(s) detected: {}",
                 eventList.stream()
                     .map(watchEvent -> String.format("%s: '%s'", watchEvent.kind(), watchEvent.context()))
@@ -75,9 +75,9 @@ public class InfoBoxCustomMaps extends InfoBox {
 
     private void updateCustomMapList() {
         customMaps.clear();
-        File[] mapFiles = ui.theGameContext().theCustomMapDir().listFiles((dir, name) -> name.endsWith(".world"));
+        File[] mapFiles = ui.gameContext().theCustomMapDir().listFiles((dir, name) -> name.endsWith(".world"));
         if (mapFiles == null) {
-            Logger.error("An error occurred accessing custom map directory {}", ui.theGameContext().theCustomMapDir());
+            Logger.error("An error occurred accessing custom map directory {}", ui.gameContext().theCustomMapDir());
             return;
         }
         if (mapFiles.length == 0) {

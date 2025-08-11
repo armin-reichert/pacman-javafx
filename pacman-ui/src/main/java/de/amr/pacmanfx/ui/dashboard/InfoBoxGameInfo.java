@@ -34,7 +34,7 @@ public class InfoBoxGameInfo extends InfoBox {
 
     @Override
     public void init(GameUI ui) {
-        addDynamicLabeledValue("Game State", () -> "%s".formatted(ui.theGameContext().theGameState()));
+        addDynamicLabeledValue("Game State", () -> "%s".formatted(ui.gameContext().theGameState()));
         addDynamicLabeledValue("State Timer", this::stateTimerInfo);
         addDynamicLabeledValue("Game Scene", ifGameScenePresent(gameScene -> gameScene.getClass().getSimpleName()));
         addDynamicLabeledValue("Renderer", ifGameScenePresent(gameScene ->
@@ -67,7 +67,7 @@ public class InfoBoxGameInfo extends InfoBox {
                 return "%s / %s / %s".formatted(formatColorHex(fillColor), formatColorHex(strokeColor), formatColorHex(pelletColor));
             } else if (worldMap.hasConfigValue("colorMapIndex")) {
                 // Arcade games
-                WorldMapColorScheme coloring = ui.theConfiguration().colorScheme(worldMap);
+                WorldMapColorScheme coloring = ui.currentConfig().colorScheme(worldMap);
                 return "%s / %s / %s".formatted(formatColorHex(coloring.fill()), formatColorHex(coloring.stroke()), formatColorHex(coloring.pellet()));
             } else {
                 return NO_INFO;
@@ -89,7 +89,7 @@ public class InfoBoxGameInfo extends InfoBox {
     }
 
     private String stateTimerInfo() {
-        TickTimer t = ui.theGameContext().theGameState().timer();
+        TickTimer t = ui.gameContext().theGameState().timer();
         boolean indefinite = t.durationTicks() == TickTimer.INDEFINITE;
         if (t.isStopped()) {
             return "Stopped at tick %s of %s".formatted(t.tickCount(), indefinite ? "∞" : t.durationTicks());
@@ -101,7 +101,7 @@ public class InfoBoxGameInfo extends InfoBox {
     }
 
     private String fmtHuntingPhase() {
-        HuntingTimer huntingTimer = ui.theGameContext().theGame().huntingTimer();
+        HuntingTimer huntingTimer = ui.gameContext().theGame().huntingTimer();
         return "%s #%d%s".formatted(
             huntingTimer.phase().name(),
             huntingTimer.phase() == HuntingPhase.CHASING
@@ -111,12 +111,12 @@ public class InfoBoxGameInfo extends InfoBox {
     }
 
     private String fmtHuntingTicksRunning() {
-        HuntingTimer huntingTimer = ui.theGameContext().theGame().huntingTimer();
+        HuntingTimer huntingTimer = ui.gameContext().theGame().huntingTimer();
         return "Running:   %d".formatted(huntingTimer.tickCount());
     }
 
     private String fmtHuntingTicksRemaining() {
-        HuntingTimer huntingTimer = ui.theGameContext().theGame().huntingTimer();
+        HuntingTimer huntingTimer = ui.gameContext().theGame().huntingTimer();
         return "Remaining: %s".formatted(ticksToString(huntingTimer.remainingTicks()));
     }
 
@@ -128,42 +128,42 @@ public class InfoBoxGameInfo extends InfoBox {
         );
     }
 
-    private ActorSpeedControl actorSpeedControl() { return ui.theGameContext().theGame().actorSpeedControl(); }
+    private ActorSpeedControl actorSpeedControl() { return ui.gameContext().theGame().actorSpeedControl(); }
 
     private String fmtGhostAttackSpeed(GameLevel level) {
         // use Pinky because Blinky could be in Elroy mode
         Ghost pinky = level.ghost(PINK_GHOST_SPEEDY);
         return (pinky != null)
-            ? "%.4f px/s".formatted(actorSpeedControl().ghostAttackSpeed(ui.theGameContext(), level, pinky) * NUM_TICKS_PER_SEC)
+            ? "%.4f px/s".formatted(actorSpeedControl().ghostAttackSpeed(ui.gameContext(), level, pinky) * NUM_TICKS_PER_SEC)
             : NO_INFO;
     }
 
     private String fmtGhostSpeedFrightened(GameLevel level) {
         Ghost blinky = level.ghost(RED_GHOST_SHADOW);
         return (blinky != null)
-            ? "%.4f px/s".formatted(actorSpeedControl().ghostFrightenedSpeed(ui.theGameContext(), level, blinky) * NUM_TICKS_PER_SEC)
+            ? "%.4f px/s".formatted(actorSpeedControl().ghostFrightenedSpeed(ui.gameContext(), level, blinky) * NUM_TICKS_PER_SEC)
             : NO_INFO;
     }
 
     private String fmtGhostSpeedTunnel(GameLevel level) {
         Ghost blinky = level.ghost(RED_GHOST_SHADOW);
         return (blinky != null)
-            ? "%.4f px/s".formatted(actorSpeedControl().ghostTunnelSpeed(ui.theGameContext(), level, blinky) * NUM_TICKS_PER_SEC)
+            ? "%.4f px/s".formatted(actorSpeedControl().ghostTunnelSpeed(ui.gameContext(), level, blinky) * NUM_TICKS_PER_SEC)
             : NO_INFO;
     }
 
     private String fmtPacNormalSpeed(GameLevel level) {
-        return "%.4f px/s".formatted(actorSpeedControl().pacNormalSpeed(ui.theGameContext(), level) * NUM_TICKS_PER_SEC);
+        return "%.4f px/s".formatted(actorSpeedControl().pacNormalSpeed(ui.gameContext(), level) * NUM_TICKS_PER_SEC);
     }
 
     private String fmtPacSpeedPowered(GameLevel level) {
-        return "%.4f px/s".formatted(actorSpeedControl().pacPowerSpeed(ui.theGameContext(), level) * NUM_TICKS_PER_SEC);
+        return "%.4f px/s".formatted(actorSpeedControl().pacPowerSpeed(ui.gameContext(), level) * NUM_TICKS_PER_SEC);
     }
 
     private String fmtPacPowerTime(GameLevel level) {
         return "%.2f sec (%d ticks)".formatted(
-            ui.theGameContext().theGame().pacPowerTicks(level) / (float) NUM_TICKS_PER_SEC,
-            ui.theGameContext().theGame().pacPowerTicks(level));
+            ui.gameContext().theGame().pacPowerTicks(level) / (float) NUM_TICKS_PER_SEC,
+            ui.gameContext().theGame().pacPowerTicks(level));
     }
 
     private String fmtNumFlashes(GameLevel level) {

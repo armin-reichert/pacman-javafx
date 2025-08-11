@@ -43,10 +43,10 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
         frame = -1;
 
         pac = createPac(null);
-        pac.setAnimations(ui.theConfiguration().createPacAnimations(pac));
+        pac.setAnimations(ui.currentConfig().createPacAnimations(pac));
 
         blinky = createGhost(null, RED_GHOST_SHADOW);
-        blinky.setAnimations(ui.theConfiguration().createGhostAnimations(blinky));
+        blinky.setAnimations(ui.currentConfig().createGhostAnimations(blinky));
 
         actorsInZOrder.add(pac);
         actorsInZOrder.add(blinky);
@@ -56,7 +56,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        ui.theSound().stop(MUSIC_ID);
+        ui.sound().stop(MUSIC_ID);
         Logger.info("{} ends", getClass().getSimpleName());
     }
 
@@ -64,7 +64,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     public void update() {
         ++frame;
         if (frame == ANIMATION_START) {
-            ui.theSound().play(MUSIC_ID, 2);
+            ui.sound().play(MUSIC_ID, 2);
 
             pac.placeAtTile(29, 20);
             pac.setMoveDir(Direction.LEFT);

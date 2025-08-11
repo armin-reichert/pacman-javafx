@@ -51,13 +51,13 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         frame = -1;
 
         pac = createPac(null);
-        pac.setAnimations(ui.theConfiguration().createPacAnimations(pac));
+        pac.setAnimations(ui.currentConfig().createPacAnimations(pac));
 
         blinky = createGhost(null, RED_GHOST_SHADOW);
         blinky.setSpeed(0);
         blinky.hide();
 
-        ActorAnimationMap blinkyAnimations = ui.theConfiguration().createGhostAnimations(blinky);
+        ActorAnimationMap blinkyAnimations = ui.currentConfig().createGhostAnimations(blinky);
         blinky.setAnimations(blinkyAnimations);
         blinkyNormal = (SpriteAnimation) blinkyAnimations.animation(ANIM_GHOST_NORMAL);
         nailDressRaptureAnimation = (SpriteAnimation) blinkyAnimations.animation(ANIM_BLINKY_NAIL_DRESS_RAPTURE);
@@ -71,7 +71,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     @Override
     protected void doEnd() {
-        ui.theSound().stop(MUSIC_ID);
+        ui.sound().stop(MUSIC_ID);
         Logger.info("{} ends", getClass().getSimpleName());
     }
 
@@ -82,7 +82,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
             return;
         }
         switch (frame) {
-            case ANIMATION_START -> ui.theSound().play(MUSIC_ID);
+            case ANIMATION_START -> ui.sound().play(MUSIC_ID);
             case ANIMATION_START + 1 -> nailDressRaptureAnimation.setFrameIndex(NAIL);
             case ANIMATION_START + 25 -> {
                 pac.placeAtTile(28, 20);

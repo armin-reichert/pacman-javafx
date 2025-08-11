@@ -57,7 +57,7 @@ public class InfoBoxGameLevelAnimations extends InfoBox {
         tableView.setPlaceholder(new Text("No 3D animations"));
         tableView.setFocusTraversable(false);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
-        tableView.prefHeightProperty().bind(ui.theStage().heightProperty().map(height -> height.doubleValue() * RELATIVE_TABLE_HEIGHT));
+        tableView.prefHeightProperty().bind(ui.stage().heightProperty().map(height -> height.doubleValue() * RELATIVE_TABLE_HEIGHT));
 
         TableColumn<TableRow, String> labelColumn = new TableColumn<>("Animation Name");
         labelColumn.setCellValueFactory(data -> data.getValue().labelProperty());

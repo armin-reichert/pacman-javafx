@@ -40,7 +40,7 @@ public class ArcadePacMan_StartScene extends GameScene2D {
 
     @Override
     public void onCreditAdded(GameEvent e) {
-        ui.theSound().play(SoundID.COIN_INSERTED);
+        ui.sound().play(SoundID.COIN_INSERTED);
     }
 
     @Override
