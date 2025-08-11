@@ -140,8 +140,7 @@ public class GameUI_Builder {
         }
 
         ui.thePlayView().configureDashboard(dashboardIDs);
-
-        return PacManGames_UI_Impl.THE_ONE = ui;
+        return ui;
     }
 
     private StartPage createStartPage(GameUI ui, String gameVariant, Class<?> startPageClass) {

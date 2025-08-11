@@ -263,7 +263,7 @@ public class PlayScene3D implements GameScene {
     }
 
     protected void setActionBindings() {
-        actionBindings.removeFromKeyboard(ui.theKeyboard());
+        actionBindings.uninstallBindings(ui.theKeyboard());
         actionBindings.useFirst(ACTION_PERSPECTIVE_PREVIOUS, ui.actionBindings());
         actionBindings.useFirst(ACTION_PERSPECTIVE_NEXT, ui.actionBindings());
         actionBindings.useFirst(ACTION_TOGGLE_DRAW_MODE, ui.actionBindings());
@@ -278,7 +278,7 @@ public class PlayScene3D implements GameScene {
                 actionBindings.useFirst(ACTION_CHEAT_KILL_GHOSTS, ui.actionBindings());
             }
         }
-        actionBindings.updateKeyboard(ui.theKeyboard());
+        actionBindings.installBindings(ui.theKeyboard());
     }
 
     /**
@@ -297,7 +297,7 @@ public class PlayScene3D implements GameScene {
         perspectiveIDProperty().bind(PROPERTY_3D_PERSPECTIVE);
         actionBindings.bind(droneUp, control(KeyCode.MINUS));
         actionBindings.bind(droneDown, control(KeyCode.PLUS));
-        actionBindings.updateKeyboard(ui.theKeyboard());
+        actionBindings.installBindings(ui.theKeyboard());
         // TODO: integrate into input framework?
         ui.theStage().getScene().addEventHandler(ScrollEvent.SCROLL, this::handleScrollEvent);
     }

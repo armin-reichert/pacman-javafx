@@ -45,9 +45,6 @@ public class PacManGames_UI_Impl implements GameUI {
     private static final int MIN_STAGE_WIDTH  = 280;
     private static final int MIN_STAGE_HEIGHT = 360;
 
-    // package-visible to allow access from GameUI interface
-    static PacManGames_UI_Impl THE_ONE;
-
     private final List<ActionBinding> defaultActionBindings = List.of(
         new ActionBinding(ACTION_ARCADE_INSERT_COIN,          nude(KeyCode.DIGIT5), nude(KeyCode.NUMPAD5)),
         new ActionBinding(ACTION_ARCADE_START_GAME,           nude(KeyCode.DIGIT1), nude(KeyCode.NUMPAD1)),
@@ -123,7 +120,7 @@ public class PacManGames_UI_Impl implements GameUI {
         theStage = stage;
 
         configurationMap.forEach(this::applyConfiguration);
-        initGlobalActionBindings();
+        defineGlobalActionBindings();
 
         mainScene = new MainScene(this, width, height);
         configureMainScene();
@@ -199,7 +196,7 @@ public class PacManGames_UI_Impl implements GameUI {
     // This is also called when quitting the editor to undo the editor title binding
     private void bindStageTitle(Stage stage) {
         stage.titleProperty().bind(createStringBinding(
-            this::computeTitle,
+            this::computeStageTitle,
             PROPERTY_CURRENT_VIEW,
             PROPERTY_CURRENT_GAME_SCENE,
             PROPERTY_DEBUG_INFO_VISIBLE,
@@ -210,7 +207,7 @@ public class PacManGames_UI_Impl implements GameUI {
     }
 
     // Asset key regex: app.title.(ms_pacman|ms_pacman_xxl|pacman,pacman_xxl|tengen)(.paused)?
-    private String computeTitle() {
+    private String computeStageTitle() {
         var currentView = PROPERTY_CURRENT_VIEW.get();
         if (currentView == null) {
             return "No View?";
@@ -237,11 +234,11 @@ public class PacManGames_UI_Impl implements GameUI {
             : shortTitle + " [%s]".formatted(sceneClassName);
     }
 
-    private void initGlobalActionBindings() {
+    private void defineGlobalActionBindings() {
         globalActionBindings.useFirst(ACTION_ENTER_FULLSCREEN, defaultActionBindings);
         globalActionBindings.useFirst(ACTION_OPEN_EDITOR, defaultActionBindings);
         globalActionBindings.useFirst(ACTION_TOGGLE_MUTED, defaultActionBindings);
-        globalActionBindings.updateKeyboard(theKeyboard);
+        globalActionBindings.installBindings(theKeyboard);
     }
 
     private void selectView(GameUI_View view) {
@@ -251,10 +248,10 @@ public class PacManGames_UI_Impl implements GameUI {
             return;
         }
         if (oldView != null) {
-            oldView.actionBindingsManager().removeFromKeyboard(theKeyboard);
+            oldView.actionBindingsManager().uninstallBindings(theKeyboard);
             theGameContext.theGameEventManager().removeEventListener(oldView);
         }
-        view.actionBindingsManager().updateKeyboard(theKeyboard);
+        view.actionBindingsManager().installBindings(theKeyboard);
         theGameContext.theGameEventManager().addEventListener(view);
 
         PROPERTY_CURRENT_VIEW.set(view);
@@ -263,7 +260,7 @@ public class PacManGames_UI_Impl implements GameUI {
     /**
      * @param reason what caused this catastrophe
      *
-     * @see <a href="https://de.wikipedia.org/wiki/Steel_Buddies_%E2%80%93_Stahlharte_Gesch%C3%A4fte">Here.</a>
+     * @see <a href="https://de.wikipedia.org/wiki/Steel_Buddies_%E2%80%93_Stahlharte_Gesch%C3%A4fte">Katastrophe!</a>
      */
     private void ka_tas_trooo_phe(Throwable reason) {
         Logger.error(reason);

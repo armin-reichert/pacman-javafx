@@ -25,10 +25,10 @@ public class DefaultActionBindingsManager implements ActionBindingsManager {
         public boolean hasNoEntries() { return true; }
 
         @Override
-        public void updateKeyboard(Keyboard keyboard) {}
+        public void installBindings(Keyboard keyboard) {}
 
         @Override
-        public void removeFromKeyboard(Keyboard keyboard) {}
+        public void uninstallBindings(Keyboard keyboard) {}
 
         @Override
         public void addBinding(ActionBinding actionBinding) {}
@@ -59,7 +59,7 @@ public class DefaultActionBindingsManager implements ActionBindingsManager {
         return actionByCombination.isEmpty();
     }
 
-    public void updateKeyboard(Keyboard keyboard) {
+    public void installBindings(Keyboard keyboard) {
         for (KeyCombination combination : actionByCombination.keySet()) {
             keyboard.setBinding(combination, this);
         }
@@ -70,7 +70,7 @@ public class DefaultActionBindingsManager implements ActionBindingsManager {
         Logger.info("Key bindings updated");
     }
 
-    public void removeFromKeyboard(Keyboard keyboard) {
+    public void uninstallBindings(Keyboard keyboard) {
         for (KeyCombination combination : actionByCombination.keySet()) {
             keyboard.removeBinding(combination, this);
         }

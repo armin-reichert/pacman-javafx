@@ -19,9 +19,9 @@ public interface ActionBindingsManager {
 
     boolean hasNoEntries();
 
-    void updateKeyboard(Keyboard keyboard);
+    void installBindings(Keyboard keyboard);
 
-    void removeFromKeyboard(Keyboard keyboard);
+    void uninstallBindings(Keyboard keyboard);
 
     void addBinding(ActionBinding actionBinding);
 

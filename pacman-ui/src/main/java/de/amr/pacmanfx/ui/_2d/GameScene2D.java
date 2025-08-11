@@ -66,7 +66,7 @@ public abstract class GameScene2D implements GameScene {
         arcadeFont8Property.bind(scalingProperty.map(s -> ui.theAssets().arcadeFont(s.floatValue() * 8)));
         arcadeFont6Property.bind(scalingProperty.map(s -> ui.theAssets().arcadeFont(s.floatValue() * 6)));
         doInit();
-        actionBindings.updateKeyboard(ui.theKeyboard());
+        actionBindings.installBindings(ui.theKeyboard());
         ui.theKeyboard().logCurrentBindings();
     }
 
