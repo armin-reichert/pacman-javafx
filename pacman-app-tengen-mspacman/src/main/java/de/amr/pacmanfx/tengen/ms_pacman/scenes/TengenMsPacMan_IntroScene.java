@@ -19,8 +19,8 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
-import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui.api.GameUI;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
@@ -76,8 +76,8 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         spriteSheet = (TengenMsPacMan_SpriteSheet) ui.currentConfig().spriteSheet();
 
         var tengenBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().tengenMsPacManBindings();
-        actionBindings.useFirst(ACTION_ENTER_START_SCREEN, tengenBindings);
-        actionBindings.useFirst(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, tengenBindings);
+        actionBindings.assign(ACTION_ENTER_START_SCREEN, tengenBindings);
+        actionBindings.assign(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, tengenBindings);
 
         presentsText = new Actor(null);
         presentsText.setPosition(9 * TS, MARQUEE_Y - TS);

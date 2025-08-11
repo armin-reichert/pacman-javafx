@@ -6,8 +6,8 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
 
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
@@ -27,8 +27,8 @@ public class ArcadePacMan_StartScene extends GameScene2D {
     @Override
     public void doInit() {
         gameContext().theGame().theHUD().credit(true).score(true).levelCounter(true).livesCounter(false);
-        actionBindings.useFirst(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
-        actionBindings.useFirst(ACTION_ARCADE_START_GAME, ui.actionBindings());
+        actionBindings.assign(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
+        actionBindings.assign(ACTION_ARCADE_START_GAME, ui.actionBindings());
     }
 
     @Override

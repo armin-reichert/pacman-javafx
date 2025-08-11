@@ -20,10 +20,10 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_HUD;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_LevelCounter;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.ColorSchemedSprite;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
-import de.amr.pacmanfx.ui.api.GameScene;
-import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
+import de.amr.pacmanfx.ui.api.GameScene;
+import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -48,8 +48,8 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_MEDIUM;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_SHORT;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
-import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_MUTED;
 import static de.amr.pacmanfx.ui.CommonGameActions.*;
+import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_MUTED;
 import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
 
 /**
@@ -108,21 +108,21 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     private void setActionsBindings() {
         var tengenBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().tengenMsPacManBindings();
         if (gameContext().theGameLevel().isDemoLevel()) {
-            actionBindings.useFirst(ACTION_QUIT_DEMO_LEVEL, tengenBindings);
+            actionBindings.assign(ACTION_QUIT_DEMO_LEVEL, tengenBindings);
         } else {
             // Steer Pac-Man using current "Joypad" settings
-            actionBindings.useFirst(ACTION_STEER_UP,    tengenBindings);
-            actionBindings.useFirst(ACTION_STEER_DOWN,  tengenBindings);
-            actionBindings.useFirst(ACTION_STEER_LEFT,  tengenBindings);
-            actionBindings.useFirst(ACTION_STEER_RIGHT, tengenBindings);
+            actionBindings.assign(ACTION_STEER_UP,    tengenBindings);
+            actionBindings.assign(ACTION_STEER_DOWN,  tengenBindings);
+            actionBindings.assign(ACTION_STEER_LEFT,  tengenBindings);
+            actionBindings.assign(ACTION_STEER_RIGHT, tengenBindings);
 
-            actionBindings.useFirst(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, tengenBindings);
-            actionBindings.useFirst(ACTION_TOGGLE_PAC_BOOSTER, tengenBindings);
+            actionBindings.assign(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, tengenBindings);
+            actionBindings.assign(ACTION_TOGGLE_PAC_BOOSTER, tengenBindings);
 
-            actionBindings.useFirst(ACTION_CHEAT_ADD_LIVES,        ui.actionBindings());
-            actionBindings.useFirst(ACTION_CHEAT_EAT_ALL_PELLETS,  ui.actionBindings());
-            actionBindings.useFirst(ACTION_CHEAT_ENTER_NEXT_LEVEL, ui.actionBindings());
-            actionBindings.useFirst(ACTION_CHEAT_KILL_GHOSTS,      ui.actionBindings());
+            actionBindings.assign(ACTION_CHEAT_ADD_LIVES,        ui.actionBindings());
+            actionBindings.assign(ACTION_CHEAT_EAT_ALL_PELLETS,  ui.actionBindings());
+            actionBindings.assign(ACTION_CHEAT_ENTER_NEXT_LEVEL, ui.actionBindings());
+            actionBindings.assign(ACTION_CHEAT_KILL_GHOSTS,      ui.actionBindings());
         }
         actionBindings.installBindings(ui.keyboard());
     }

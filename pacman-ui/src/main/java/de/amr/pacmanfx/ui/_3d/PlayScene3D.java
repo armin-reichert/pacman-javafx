@@ -15,7 +15,8 @@ import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui.*;
+import de.amr.pacmanfx.ui.AbstractGameAction;
+import de.amr.pacmanfx.ui.DefaultActionBindingsManager;
 import de.amr.pacmanfx.ui.api.ActionBindingsManager;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -48,8 +49,8 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.isOneOf;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_MEDIUM;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_SHORT;
-import static de.amr.pacmanfx.ui.api.GameUI_Properties.*;
 import static de.amr.pacmanfx.ui.CommonGameActions.*;
+import static de.amr.pacmanfx.ui.api.GameUI_Properties.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.control;
 import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
 import static de.amr.pacmanfx.uilib.Ufx.pauseSec;
@@ -268,18 +269,18 @@ public class PlayScene3D implements GameScene {
 
     protected void setActionBindings() {
         actionBindings.uninstallBindings(ui.keyboard());
-        actionBindings.useFirst(ACTION_PERSPECTIVE_PREVIOUS, ui.actionBindings());
-        actionBindings.useFirst(ACTION_PERSPECTIVE_NEXT, ui.actionBindings());
-        actionBindings.useFirst(ACTION_TOGGLE_DRAW_MODE, ui.actionBindings());
+        actionBindings.assign(ACTION_PERSPECTIVE_PREVIOUS, ui.actionBindings());
+        actionBindings.assign(ACTION_PERSPECTIVE_NEXT, ui.actionBindings());
+        actionBindings.assign(ACTION_TOGGLE_DRAW_MODE, ui.actionBindings());
         if (gameContext().optGameLevel().isPresent()) {
             if (gameContext().theGameLevel().isDemoLevel()) {
-                actionBindings.useFirst(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
+                actionBindings.assign(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
             } else {
                 setPlayerSteeringActionBindings();
-                actionBindings.useFirst(ACTION_CHEAT_EAT_ALL_PELLETS, ui.actionBindings());
-                actionBindings.useFirst(ACTION_CHEAT_ADD_LIVES, ui.actionBindings());
-                actionBindings.useFirst(ACTION_CHEAT_ENTER_NEXT_LEVEL, ui.actionBindings());
-                actionBindings.useFirst(ACTION_CHEAT_KILL_GHOSTS, ui.actionBindings());
+                actionBindings.assign(ACTION_CHEAT_EAT_ALL_PELLETS, ui.actionBindings());
+                actionBindings.assign(ACTION_CHEAT_ADD_LIVES, ui.actionBindings());
+                actionBindings.assign(ACTION_CHEAT_ENTER_NEXT_LEVEL, ui.actionBindings());
+                actionBindings.assign(ACTION_CHEAT_KILL_GHOSTS, ui.actionBindings());
             }
         }
         actionBindings.installBindings(ui.keyboard());
@@ -289,10 +290,10 @@ public class PlayScene3D implements GameScene {
      * Overridden by Tengen Ms. Pac-Man play scene 3D to use keys representing "Joypad" buttons.
      */
     protected void setPlayerSteeringActionBindings() {
-        actionBindings.useFirst(ACTION_STEER_UP, ui.actionBindings());
-        actionBindings.useFirst(ACTION_STEER_DOWN, ui.actionBindings());
-        actionBindings.useFirst(ACTION_STEER_LEFT, ui.actionBindings());
-        actionBindings.useFirst(ACTION_STEER_RIGHT, ui.actionBindings());
+        actionBindings.assign(ACTION_STEER_UP, ui.actionBindings());
+        actionBindings.assign(ACTION_STEER_DOWN, ui.actionBindings());
+        actionBindings.assign(ACTION_STEER_LEFT, ui.actionBindings());
+        actionBindings.assign(ACTION_STEER_RIGHT, ui.actionBindings());
     }
 
     @Override

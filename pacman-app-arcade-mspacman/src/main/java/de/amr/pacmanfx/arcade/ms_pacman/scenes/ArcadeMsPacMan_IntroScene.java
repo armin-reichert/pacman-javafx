@@ -14,8 +14,8 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.paint.Color;
 
@@ -73,11 +73,11 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     public void doInit() {
         gameContext().theGame().theHUD().credit(true).score(true).levelCounter(true).livesCounter(false);
 
-        actionBindings.useFirst(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
-        actionBindings.useFirst(ACTION_ARCADE_START_GAME, ui.actionBindings());
-        actionBindings.useFirst(ACTION_TEST_CUT_SCENES, ui.actionBindings());
-        actionBindings.useFirst(ACTION_TEST_LEVELS_BONI, ui.actionBindings());
-        actionBindings.useFirst(ACTION_TEST_LEVELS_TEASERS, ui.actionBindings());
+        actionBindings.assign(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
+        actionBindings.assign(ACTION_ARCADE_START_GAME, ui.actionBindings());
+        actionBindings.assign(ACTION_TEST_CUT_SCENES, ui.actionBindings());
+        actionBindings.assign(ACTION_TEST_LEVELS_BONI, ui.actionBindings());
+        actionBindings.assign(ACTION_TEST_LEVELS_TEASERS, ui.actionBindings());
 
         midwayCopyright = new MidwayCopyright(ui.currentConfig().getAssetNS("logo.midway"));
         midwayCopyright.setPosition(TS * 6, TS * 28);

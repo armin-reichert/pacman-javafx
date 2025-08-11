@@ -30,10 +30,10 @@ public interface ActionBindingsManager {
     void bind(AbstractGameAction action, KeyCombination combination);
 
     /**
-     * Finds the first binding in the given list matching the given action and adds it to this map.
+     * Assigns the binding for the given action to this map.
      *
      * @param gameAction a game action
      * @param actionBindings an action bindings list
      */
-    void useFirst(AbstractGameAction gameAction, Set<ActionBinding> actionBindings);
+    void assign(AbstractGameAction gameAction, Set<ActionBinding> actionBindings);
 }

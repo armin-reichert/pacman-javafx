@@ -8,8 +8,8 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
@@ -39,8 +39,8 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
         @SuppressWarnings("unchecked") var spriteSheet = (SpriteSheet<SpriteID>) ui.currentConfig().spriteSheet();
         livesCounterSprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
 
-        actionBindings.useFirst(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
-        actionBindings.useFirst(ACTION_ARCADE_START_GAME, ui.actionBindings());
+        actionBindings.assign(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
+        actionBindings.assign(ACTION_ARCADE_START_GAME, ui.actionBindings());
     }
 
     @Override

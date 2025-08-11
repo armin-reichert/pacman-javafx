@@ -7,8 +7,8 @@ package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
-import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui.api.GameUI;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
@@ -28,7 +28,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     protected void doInit() {
         gameContext().theGame().theHUD().credit(false).score(false).levelCounter(false).livesCounter(false);
         var tengenBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().tengenMsPacManBindings();
-        actionBindings.useFirst(ACTION_ENTER_START_SCREEN, tengenBindings);
+        actionBindings.assign(ACTION_ENTER_START_SCREEN, tengenBindings);
     }
 
     @Override

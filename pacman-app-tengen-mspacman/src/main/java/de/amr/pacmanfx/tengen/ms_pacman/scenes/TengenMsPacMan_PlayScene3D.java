@@ -7,9 +7,9 @@ package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 import de.amr.pacmanfx.lib.nes.NES_Palette;
 import de.amr.pacmanfx.model.Score;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
-import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui._3d.GameLevel3D;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
+import de.amr.pacmanfx.ui.api.GameUI;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.ACTION_QUIT_DEMO_LEVEL;
@@ -38,18 +38,18 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         var tengenBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().tengenMsPacManBindings();
         // if demo level, allow going back to options screen
         if (gameContext().optGameLevel().isPresent() && gameContext().theGameLevel().isDemoLevel()) {
-            actionBindings.useFirst(ACTION_QUIT_DEMO_LEVEL, tengenBindings);
+            actionBindings.assign(ACTION_QUIT_DEMO_LEVEL, tengenBindings);
         } else {
             setPlayerSteeringActionBindings();
-            actionBindings.useFirst(ACTION_CHEAT_ADD_LIVES, ui.actionBindings());
-            actionBindings.useFirst(ACTION_CHEAT_EAT_ALL_PELLETS, ui.actionBindings());
-            actionBindings.useFirst(ACTION_CHEAT_ENTER_NEXT_LEVEL, ui.actionBindings());
-            actionBindings.useFirst(ACTION_CHEAT_KILL_GHOSTS, ui.actionBindings());
-            actionBindings.useFirst(ACTION_TOGGLE_PAC_BOOSTER, tengenBindings);
+            actionBindings.assign(ACTION_CHEAT_ADD_LIVES, ui.actionBindings());
+            actionBindings.assign(ACTION_CHEAT_EAT_ALL_PELLETS, ui.actionBindings());
+            actionBindings.assign(ACTION_CHEAT_ENTER_NEXT_LEVEL, ui.actionBindings());
+            actionBindings.assign(ACTION_CHEAT_KILL_GHOSTS, ui.actionBindings());
+            actionBindings.assign(ACTION_TOGGLE_PAC_BOOSTER, tengenBindings);
         }
-        actionBindings.useFirst(ACTION_PERSPECTIVE_PREVIOUS, ui.actionBindings());
-        actionBindings.useFirst(ACTION_PERSPECTIVE_NEXT, ui.actionBindings());
-        actionBindings.useFirst(ACTION_TOGGLE_DRAW_MODE, ui.actionBindings());
+        actionBindings.assign(ACTION_PERSPECTIVE_PREVIOUS, ui.actionBindings());
+        actionBindings.assign(ACTION_PERSPECTIVE_NEXT, ui.actionBindings());
+        actionBindings.assign(ACTION_TOGGLE_DRAW_MODE, ui.actionBindings());
 
         actionBindings.installBindings(ui.keyboard());
     }
@@ -57,10 +57,10 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     @Override
     protected void setPlayerSteeringActionBindings() {
         var tengenBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().tengenMsPacManBindings();
-        actionBindings.useFirst(ACTION_STEER_UP,    tengenBindings);
-        actionBindings.useFirst(ACTION_STEER_DOWN,  tengenBindings);
-        actionBindings.useFirst(ACTION_STEER_LEFT,  tengenBindings);
-        actionBindings.useFirst(ACTION_STEER_RIGHT, tengenBindings);
+        actionBindings.assign(ACTION_STEER_UP,    tengenBindings);
+        actionBindings.assign(ACTION_STEER_DOWN,  tengenBindings);
+        actionBindings.assign(ACTION_STEER_LEFT,  tengenBindings);
+        actionBindings.assign(ACTION_STEER_RIGHT, tengenBindings);
     }
 
     @Override

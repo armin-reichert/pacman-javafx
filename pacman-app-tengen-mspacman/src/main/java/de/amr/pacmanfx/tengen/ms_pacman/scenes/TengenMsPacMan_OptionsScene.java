@@ -16,17 +16,14 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
-import de.amr.pacmanfx.ui.ActionBinding;
 import de.amr.pacmanfx.ui.AbstractGameAction;
-import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui.api.GameUI;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-
-import java.util.List;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
@@ -89,13 +86,13 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     public void doInit() {
         gameContext().theGame().theHUD().all(false);
 
-        List<ActionBinding> tengenBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().tengenMsPacManBindings();
+        var tengenBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().tengenMsPacManBindings();
         actionBindings.bind(actionSelectNextJoypadBinding, alt(KeyCode.J));
-        actionBindings.useFirst(ACTION_START_PLAYING, tengenBindings);
-        actionBindings.useFirst(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, tengenBindings);
-        actionBindings.useFirst(ACTION_TEST_CUT_SCENES, ui.actionBindings());
-        actionBindings.useFirst(ACTION_TEST_LEVELS_BONI, ui.actionBindings());
-        actionBindings.useFirst(ACTION_TEST_LEVELS_TEASERS, ui.actionBindings());
+        actionBindings.assign(ACTION_START_PLAYING, tengenBindings);
+        actionBindings.assign(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, tengenBindings);
+        actionBindings.assign(ACTION_TEST_CUT_SCENES, ui.actionBindings());
+        actionBindings.assign(ACTION_TEST_LEVELS_BONI, ui.actionBindings());
+        actionBindings.assign(ACTION_TEST_LEVELS_TEASERS, ui.actionBindings());
         ui.joypad().setBindings(actionBindings);
 
         selectedOption.set(OPTION_PAC_BOOSTER);

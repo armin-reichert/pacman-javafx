@@ -237,9 +237,9 @@ public class GameUI_Implementation implements GameUI {
     }
 
     private void defineGlobalActionBindings() {
-        globalActionBindings.useFirst(ACTION_ENTER_FULLSCREEN, defaultActionBindings);
-        globalActionBindings.useFirst(ACTION_OPEN_EDITOR, defaultActionBindings);
-        globalActionBindings.useFirst(ACTION_TOGGLE_MUTED, defaultActionBindings);
+        globalActionBindings.assign(ACTION_ENTER_FULLSCREEN, defaultActionBindings);
+        globalActionBindings.assign(ACTION_OPEN_EDITOR, defaultActionBindings);
+        globalActionBindings.assign(ACTION_TOGGLE_MUTED, defaultActionBindings);
         globalActionBindings.installBindings(keyboard);
     }
 

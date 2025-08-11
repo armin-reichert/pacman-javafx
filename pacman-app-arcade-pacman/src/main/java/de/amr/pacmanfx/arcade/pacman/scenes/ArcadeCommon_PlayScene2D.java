@@ -15,10 +15,10 @@ import de.amr.pacmanfx.model.LivesCounter;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui.api.GameScene;
-import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
+import de.amr.pacmanfx.ui.api.GameScene;
+import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
@@ -35,9 +35,9 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_MEDIUM;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_SHORT;
-import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_MUTED;
 import static de.amr.pacmanfx.ui.CommonGameActions.*;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
+import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_MUTED;
 import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
 
 /**
@@ -77,18 +77,18 @@ public class ArcadeCommon_PlayScene2D extends GameScene2D {
     private void initWithGameLevel(GameLevel gameLevel) {
         if (gameLevel.isDemoLevel()) {
             gameContext().theGame().theHUD().credit(false).levelCounter(true).livesCounter(false);
-            actionBindings.useFirst(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
+            actionBindings.assign(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
             actionBindings.installBindings(ui.keyboard());
         } else {
             gameContext().theGame().theHUD().credit(false).levelCounter(true).livesCounter(true);
-            actionBindings.useFirst(ACTION_STEER_UP, ui.actionBindings());
-            actionBindings.useFirst(ACTION_STEER_DOWN, ui.actionBindings());
-            actionBindings.useFirst(ACTION_STEER_LEFT, ui.actionBindings());
-            actionBindings.useFirst(ACTION_STEER_RIGHT, ui.actionBindings());
-            actionBindings.useFirst(ACTION_CHEAT_EAT_ALL_PELLETS, ui.actionBindings());
-            actionBindings.useFirst(ACTION_CHEAT_ADD_LIVES, ui.actionBindings());
-            actionBindings.useFirst(ACTION_CHEAT_ENTER_NEXT_LEVEL, ui.actionBindings());
-            actionBindings.useFirst(ACTION_CHEAT_KILL_GHOSTS, ui.actionBindings());
+            actionBindings.assign(ACTION_STEER_UP, ui.actionBindings());
+            actionBindings.assign(ACTION_STEER_DOWN, ui.actionBindings());
+            actionBindings.assign(ACTION_STEER_LEFT, ui.actionBindings());
+            actionBindings.assign(ACTION_STEER_RIGHT, ui.actionBindings());
+            actionBindings.assign(ACTION_CHEAT_EAT_ALL_PELLETS, ui.actionBindings());
+            actionBindings.assign(ACTION_CHEAT_ADD_LIVES, ui.actionBindings());
+            actionBindings.assign(ACTION_CHEAT_ENTER_NEXT_LEVEL, ui.actionBindings());
+            actionBindings.assign(ACTION_CHEAT_KILL_GHOSTS, ui.actionBindings());
             actionBindings.installBindings(ui.keyboard());
         }
         if (gameRenderer == null) { //TODO can this happen at all?

@@ -35,7 +35,7 @@ public class DefaultActionBindingsManager implements ActionBindingsManager {
         public void addBinding(ActionBinding actionBinding) {}
 
         @Override
-        public void useFirst(AbstractGameAction action, List<ActionBinding> actionBindings) {}
+        public void assign(AbstractGameAction action, Set<ActionBinding> actionBindings) {}
 
         @Override
         public void bind(AbstractGameAction action, KeyCombination combination) {}
@@ -96,7 +96,7 @@ public class DefaultActionBindingsManager implements ActionBindingsManager {
      * @param gameAction a game action
      * @param actionBindings an action bindings list
      */
-    public void useFirst(AbstractGameAction gameAction, List<ActionBinding> actionBindings) {
+    public void assign(AbstractGameAction gameAction, Set<ActionBinding> actionBindings) {
         requireNonNull(gameAction);
         requireNonNull(actionBindings);
         actionBindings.stream()
