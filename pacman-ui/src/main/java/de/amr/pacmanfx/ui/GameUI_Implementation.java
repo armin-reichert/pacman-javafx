@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
+import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
@@ -32,9 +33,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static de.amr.pacmanfx.ui.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.api.GameUI_Config.SCENE_ID_PLAY_SCENE_3D;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.*;
-import static de.amr.pacmanfx.ui.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
 import static java.util.Objects.requireNonNull;
 import static javafx.beans.binding.Bindings.createStringBinding;
@@ -102,10 +103,12 @@ public class GameUI_Implementation implements GameUI {
     private PlayView playView;
     private EditorView editorView;
 
-    public GameUI_Implementation(Map<String, Class<?>> configurationMap, GameContext gameContext, Stage stage, double width, double height) {
-        requireNonNull(configurationMap, "UI configuration map is null");
+    public GameUI_Implementation(Map<String, Class<?>> configMap, GameContext gameContext, Stage stage, double mainSceneWidth, double mainSceneHeight) {
+        requireNonNull(configMap, "UI configuration map is null");
         requireNonNull(gameContext, "Game context is null");
         requireNonNull(stage, "Stage is null");
+        Validations.requireNonNegative(mainSceneWidth, "Main scene width must be a positive number");
+        Validations.requireNonNegative(mainSceneHeight, "Main scene height must be a positive number");
 
         // Input
         keyboard = new Keyboard();
@@ -125,10 +128,10 @@ public class GameUI_Implementation implements GameUI {
         PROPERTY_3D_WALL_HEIGHT.set(prefs.getFloat("3d.obstacle.base_height"));
         PROPERTY_3D_WALL_OPACITY.set(prefs.getFloat("3d.obstacle.opacity"));
 
-        mainScene = new MainScene(this, width, height);
+        mainScene = new MainScene(this, mainSceneWidth, mainSceneHeight);
         configureMainScene();
         configureStage(stage);
-        configurationMap.forEach(this::applyConfiguration);
+        configMap.forEach(this::applyConfiguration);
         defineGlobalActionBindings();
     }
 

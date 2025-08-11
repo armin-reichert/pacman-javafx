@@ -40,16 +40,16 @@ public class GameUI_Builder {
     }
 
     private final Stage stage;
-    private final double width;
-    private final double height;
+    private final double mainSceneWidth;
+    private final double mainSceneHeight;
     private final Map<String, GameConfiguration> configByGameVariant = new LinkedHashMap<>();
     private final List<StartPageConfiguration> startPageConfigs = new ArrayList<>();
     private List<DashboardID> dashboardIDs = List.of();
 
     private GameUI_Builder(Stage stage, double width, double height) {
         this.stage = requireNonNull(stage);
-        this.width = width;
-        this.height = height;
+        this.mainSceneWidth = width;
+        this.mainSceneHeight = height;
     }
 
     private GameConfiguration configuration(String gameVariant) {
@@ -128,7 +128,7 @@ public class GameUI_Builder {
         //TODO this is crap
         Map<String, Class<?>> uiConfigMap = new HashMap<>();
         configByGameVariant.forEach((gameVariant, config) -> uiConfigMap.put(gameVariant, config.uiConfigClass));
-        var ui = new GameUI_Implementation(uiConfigMap, gameContext, stage, width, height);
+        var ui = new GameUI_Implementation(uiConfigMap, gameContext, stage, mainSceneWidth, mainSceneHeight);
 
         configByGameVariant.forEach((gameVariant, config) -> {
             File highScoreFile = highScoreFile(gameContext.theHomeDir(), gameVariant);
@@ -183,6 +183,12 @@ public class GameUI_Builder {
     private void validateConfiguration() {
         if (configByGameVariant.isEmpty()) {
             error("No game configuration specified");
+        }
+        if (mainSceneWidth <= 0) {
+            error("Main scene width must be a positive number");
+        }
+        if (mainSceneHeight <= 0) {
+            error("Main scene height must be a positive number");
         }
     }
 
