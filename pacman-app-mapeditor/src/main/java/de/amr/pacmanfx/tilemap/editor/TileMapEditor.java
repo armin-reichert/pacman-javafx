@@ -340,12 +340,29 @@ public class TileMapEditor {
 
     // foodVisible
 
-    private final BooleanProperty foodVisible = new SimpleBooleanProperty(true) {
-        @Override
-        protected void invalidated() {
-            changeManager.requestRedraw();
+    public static final boolean DEFAULT_FOOD_VISIBLE = true;
+
+    private BooleanProperty foodVisible;
+
+    public BooleanProperty foodVisibleProperty() {
+        if (foodVisible == null) {
+            foodVisible = new SimpleBooleanProperty(true) {
+                @Override
+                protected void invalidated() {
+                    changeManager.requestRedraw();
+                }
+            };
         }
-    };
+        return foodVisible;
+    }
+
+    public boolean isFoodVisible() {
+        return foodVisible == null ? DEFAULT_FOOD_VISIBLE : foodVisible.get();
+    }
+
+    public void setFoodVisible(boolean visible) {
+        foodVisibleProperty().set(visible);
+    }
 
     // terrainVisible
 
@@ -398,8 +415,6 @@ public class TileMapEditor {
     public void setEditedWorldMap(WorldMap worldMap) { editedWorldMapPy.set(requireNonNull(worldMap)); }
 
     public BooleanProperty terrainVisibleProperty() { return terrainVisiblePy; }
-
-    public BooleanProperty foodVisibleProperty() { return foodVisible; }
 
     public BooleanProperty segmentNumbersDisplayedProperty() { return segmentNumbersVisible; }
 
@@ -595,7 +610,7 @@ public class TileMapEditor {
 
     private void createPreview3D() {
         mazePreview3D = new MazePreview3D(model3DRepository, 500, 500);
-        mazePreview3D.foodVisibleProperty().bind(foodVisible);
+        mazePreview3D.foodVisibleProperty().bind(foodVisibleProperty());
         mazePreview3D.terrainVisibleProperty().bind(terrainVisiblePy);
         mazePreview3D.worldMapProperty().bind(editedWorldMapPy);
     }
@@ -1249,7 +1264,7 @@ public class TileMapEditor {
                 terrainPathRenderer.drawHouse(g, houseMinTile, houseMaxTile.minus(houseMinTile).plus(1, 1));
             }
         }
-        if (foodVisible.get()) {
+        if (isFoodVisible()) {
             Color foodColor = getColorFromMap(editedWorldMap(), LayerID.FOOD, WorldMapProperty.COLOR_FOOD, parseColor(MS_PACMAN_COLOR_FOOD));
             foodRenderer.setScaling(gridSize() / 8.0);
             foodRenderer.setEnergizerColor(foodColor);

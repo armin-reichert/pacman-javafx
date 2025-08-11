@@ -184,7 +184,7 @@ public class EditCanvas {
         }
 
         // Food
-        if (editor.foodVisibleProperty().get()) {
+        if (editor.isFoodVisible()) {
             FoodMapRenderer renderer = editor.foodRenderer();
             Color foodColor = getColorFromMap(worldMap(), LayerID.FOOD, WorldMapProperty.COLOR_FOOD, parseColor(MS_PACMAN_COLOR_FOOD));
             renderer.setScaling(scaling);
