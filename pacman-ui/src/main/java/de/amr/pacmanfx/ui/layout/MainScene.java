@@ -47,7 +47,7 @@ public class MainScene extends Scene {
         requireNonNull(ui);
         this.flashMessageLayer = new FlashMessageView();
 
-        URL url = getClass().getResource("css/menu-style.css");
+        URL url = getClass().getResource("/de/amr/pacmanfx/ui/css/menu-style.css");
         if (url != null) {
             getStylesheets().add(url.toExternalForm());
         }
