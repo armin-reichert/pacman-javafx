@@ -246,7 +246,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         renderer().drawVerticalSceneBorders();
 
         var config = ui.<TengenMsPacMan_UIConfig>currentConfig();
-        if (config.propertyJoypadBindingsDisplayed.get()) {
+        if (config.PROPERTY_JOYPAD_BINDINGS_DISPLAYED.get()) {
             renderer().drawJoypadKeyBinding(ui.joypad().currentKeyBinding());
         }
 

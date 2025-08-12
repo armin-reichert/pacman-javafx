@@ -62,12 +62,12 @@ import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
-    private static final String NAMESPACE = "tengen";
+    public static final String MAPS_PATH = "/de/amr/pacmanfx/tengen/ms_pacman/maps/";
+
+    private static final String ASSET_NAMESPACE = "tengen";
 
     private static final ResourceManager RES_GAME_UI = () -> GameUI_Implementation.class;
-    private static final ResourceManager RES_TENGEN_MS_PAC_MAN = () -> TengenMsPacMan_UIConfig.class;
-
-    public static final String MAP_PATH = "/de/amr/pacmanfx/tengen/ms_pacman/maps/";
+    private static final ResourceManager RES_TENGEN  = () -> TengenMsPacMan_UIConfig.class;
 
     /** 32x30 */
     public static final Vector2i NES_TILES = new Vector2i(32, 30);
@@ -87,6 +87,11 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     }
 
     // Actions specific to Tengen Ms. Pac-Man
+
+    //TODO not sure these belong here
+    public static final BooleanProperty PROPERTY_JOYPAD_BINDINGS_DISPLAYED = new SimpleBooleanProperty(false);
+    public static final ObjectProperty<SceneDisplayMode> PROPERTY_PLAY_SCENE_DISPLAY_MODE = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING);
+
 
     public static final AbstractGameAction ACTION_QUIT_DEMO_LEVEL = new AbstractGameAction("QUIT_DEMO_LEVEL") {
         @Override
@@ -119,9 +124,8 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     public static final AbstractGameAction ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE = new AbstractGameAction("TOGGLE_PLAY_SCENE_DISPLAY_MODE") {
         @Override
         public void execute(GameUI ui) {
-            var config = ui.<TengenMsPacMan_UIConfig>currentConfig();
-            SceneDisplayMode mode = config.propertyPlaySceneDisplayMode.get();
-            config.propertyPlaySceneDisplayMode.set(mode == SceneDisplayMode.SCROLLING
+            SceneDisplayMode mode = PROPERTY_PLAY_SCENE_DISPLAY_MODE.get();
+            PROPERTY_PLAY_SCENE_DISPLAY_MODE.set(mode == SceneDisplayMode.SCROLLING
                 ? SceneDisplayMode.SCALED_TO_FIT
                 : SceneDisplayMode.SCROLLING);
         }
@@ -135,50 +139,52 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     public static final AbstractGameAction ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY = new AbstractGameAction("TOGGLE_JOYPAD_BINDINGS_DISPLAYED") {
         @Override
         public void execute(GameUI ui) {
-            toggle(ui.<TengenMsPacMan_UIConfig>currentConfig().propertyJoypadBindingsDisplayed);
+            toggle(PROPERTY_JOYPAD_BINDINGS_DISPLAYED);
         }
     };
 
     public static final AbstractGameAction ACTION_TOGGLE_PAC_BOOSTER = new AbstractGameAction("TOGGLE_PAC_BOOSTER") {
         @Override
         public void execute(GameUI ui) {
-            var tengenGame = ui.gameContext().<TengenMsPacMan_GameModel>theGame();
-            tengenGame.activatePacBooster(!tengenGame.isBoosterActive());
-            if (tengenGame.isBoosterActive()) {
+            var gameModel = ui.gameContext().<TengenMsPacMan_GameModel>theGame();
+            gameModel.activatePacBooster(!gameModel.isBoosterActive());
+            if (gameModel.isBoosterActive()) {
                 ui.showFlashMessage("Booster!");
             }
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            var tengenGame = ui.gameContext().<TengenMsPacMan_GameModel>theGame();
-            return tengenGame.pacBooster() == PacBooster.USE_A_OR_B;
+            var gameModel = ui.gameContext().<TengenMsPacMan_GameModel>theGame();
+            return gameModel.pacBooster() == PacBooster.USE_A_OR_B;
         }
     };
-
-
-    //TODO not sure these belong here
-    public final BooleanProperty propertyJoypadBindingsDisplayed = new SimpleBooleanProperty(false);
-    public final ObjectProperty<SceneDisplayMode> propertyPlaySceneDisplayMode = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING);
 
     private final GameUI ui;
     private final DefaultSoundManager soundManager = new DefaultSoundManager();
     private final Map<String, GameScene> scenesByID = new HashMap<>();
-    private TengenMsPacMan_MapRepository mapRepository;
     private final Set<ActionBinding> tengenMsPacManBindings;
+    private final TengenMsPacMan_MapRepository mapRepository;
+    private final TengenMsPacMan_SpriteSheet spriteSheet;
 
     public TengenMsPacMan_UIConfig(GameUI ui) {
         this.ui = requireNonNull(ui);
-        Joypad joypad = ui.joypad();
+        spriteSheet = new TengenMsPacMan_SpriteSheet(RES_TENGEN.loadImage("graphics/spritesheet.png"));
+        mapRepository = new TengenMsPacMan_MapRepository(
+            RES_TENGEN.loadImage("graphics/arcade_mazes.png"),
+            RES_TENGEN.loadImage("graphics/non_arcade_mazes.png")
+        );
+
+        Joypad jp = ui.joypad();
         tengenMsPacManBindings = Set.of(
-            new ActionBinding(ACTION_STEER_UP,            joypad.key(JoypadButton.UP),    control(KeyCode.UP)),
-            new ActionBinding(ACTION_STEER_DOWN,          joypad.key(JoypadButton.DOWN),  control(KeyCode.DOWN)),
-            new ActionBinding(ACTION_STEER_LEFT,          joypad.key(JoypadButton.LEFT),  control(KeyCode.LEFT)),
-            new ActionBinding(ACTION_STEER_RIGHT,         joypad.key(JoypadButton.RIGHT), control(KeyCode.RIGHT)),
-            new ActionBinding(ACTION_QUIT_DEMO_LEVEL,     joypad.key(JoypadButton.START)),
-            new ActionBinding(ACTION_ENTER_START_SCREEN,  joypad.key(JoypadButton.START)),
-            new ActionBinding(ACTION_START_PLAYING,       joypad.key(JoypadButton.START)),
-            new ActionBinding(ACTION_TOGGLE_PAC_BOOSTER,  joypad.key(JoypadButton.A), joypad.key(JoypadButton.B)),
+            new ActionBinding(ACTION_STEER_UP,            jp.key(JoypadButton.UP),    control(KeyCode.UP)),
+            new ActionBinding(ACTION_STEER_DOWN,          jp.key(JoypadButton.DOWN),  control(KeyCode.DOWN)),
+            new ActionBinding(ACTION_STEER_LEFT,          jp.key(JoypadButton.LEFT),  control(KeyCode.LEFT)),
+            new ActionBinding(ACTION_STEER_RIGHT,         jp.key(JoypadButton.RIGHT), control(KeyCode.RIGHT)),
+            new ActionBinding(ACTION_QUIT_DEMO_LEVEL,     jp.key(JoypadButton.START)),
+            new ActionBinding(ACTION_ENTER_START_SCREEN,  jp.key(JoypadButton.START)),
+            new ActionBinding(ACTION_START_PLAYING,       jp.key(JoypadButton.START)),
+            new ActionBinding(ACTION_TOGGLE_PAC_BOOSTER,  jp.key(JoypadButton.A), jp.key(JoypadButton.B)),
             new ActionBinding(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, alt(KeyCode.C)),
             new ActionBinding(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, nude(KeyCode.SPACE))
         );
@@ -195,21 +201,10 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public void storeAssets(AssetStorage assets) {
-        mapRepository = new TengenMsPacMan_MapRepository(
-            RES_TENGEN_MS_PAC_MAN.loadImage("graphics/arcade_mazes.png"),
-            RES_TENGEN_MS_PAC_MAN.loadImage("graphics/non_arcade_mazes.png")
-        );
-
-        var spriteSheet = new TengenMsPacMan_SpriteSheet(RES_TENGEN_MS_PAC_MAN.loadImage("graphics/spritesheet.png"));
         storeLocalAssetValue(assets, "spritesheet", spriteSheet);
-
-        storeLocalAssetValue(assets, "app_icon",         RES_TENGEN_MS_PAC_MAN.loadImage("graphics/icons/mspacman.png"));
-        storeLocalAssetValue(assets, "startpage.image1", RES_TENGEN_MS_PAC_MAN.loadImage("graphics/f1.png"));
-        storeLocalAssetValue(assets, "startpage.image2", RES_TENGEN_MS_PAC_MAN.loadImage("graphics/f2.png"));
-
-        soundManager.registerAudioClip("audio.option.selection_changed", RES_TENGEN_MS_PAC_MAN.url("sound/ms-select1.wav"));
-        soundManager.registerAudioClip("audio.option.value_changed",     RES_TENGEN_MS_PAC_MAN.url("sound/ms-select2.wav"));
-
+        storeLocalAssetValue(assets, "app_icon",         RES_TENGEN.loadImage("graphics/icons/mspacman.png"));
+        storeLocalAssetValue(assets, "startpage.image1", RES_TENGEN.loadImage("graphics/f1.png"));
+        storeLocalAssetValue(assets, "startpage.image2", RES_TENGEN.loadImage("graphics/f2.png"));
         storeLocalAssetValue(assets, "color.game_over_message", nesPaletteColor(0x11));
         storeLocalAssetValue(assets, "color.ready_message",     nesPaletteColor(0x28));
 
@@ -258,34 +253,37 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         storeLocalAssetValue(assets, "ghost.color.flashing.eyeballs",    nesPaletteColor(0x20));
         storeLocalAssetValue(assets, "ghost.color.flashing.pupils",      nesPaletteColor(0x20));
 
+        soundManager.registerAudioClip("audio.option.selection_changed",  RES_TENGEN.url("sound/ms-select1.wav"));
+        soundManager.registerAudioClip("audio.option.value_changed",      RES_TENGEN.url("sound/ms-select2.wav"));
+
         soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_OFF,           RES_GAME_UI.url("sound/voice/autopilot-off.mp3"));
         soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_ON,            RES_GAME_UI.url("sound/voice/autopilot-on.mp3"));
         soundManager.registerVoice(SoundID.VOICE_IMMUNITY_OFF,            RES_GAME_UI.url("sound/voice/immunity-off.mp3"));
         soundManager.registerVoice(SoundID.VOICE_IMMUNITY_ON,             RES_GAME_UI.url("sound/voice/immunity-on.mp3"));
         soundManager.registerVoice(SoundID.VOICE_EXPLAIN,                 RES_GAME_UI.url("sound/voice/press-key.mp3"));
 
-        soundManager.registerMediaPlayer(SoundID.BONUS_ACTIVE,            RES_TENGEN_MS_PAC_MAN.url("sound/fruitbounce.wav"));
-        soundManager.registerAudioClip(SoundID.BONUS_EATEN,               RES_TENGEN_MS_PAC_MAN.url("sound/ms-fruit.wav"));
-        soundManager.registerAudioClip(SoundID.EXTRA_LIFE,                RES_TENGEN_MS_PAC_MAN.url("sound/ms-extralife.wav"));
-        soundManager.registerMediaPlayer(SoundID.GAME_OVER,               RES_TENGEN_MS_PAC_MAN.url("sound/common/game-over.mp3"));
-        soundManager.registerMediaPlayer(SoundID.GAME_READY,              RES_TENGEN_MS_PAC_MAN.url("sound/ms-start.wav"));
-        soundManager.registerAudioClip(SoundID.GHOST_EATEN,               RES_TENGEN_MS_PAC_MAN.url("sound/ms-ghosteat.wav"));
-        soundManager.registerMediaPlayer(SoundID.GHOST_RETURNS,           RES_TENGEN_MS_PAC_MAN.url("sound/ms-eyes.wav"));
-        soundManager.registerMediaPlayer("audio.intermission.1",          RES_TENGEN_MS_PAC_MAN.url("sound/theymeet.wav"));
-        soundManager.registerMediaPlayer("audio.intermission.2",          RES_TENGEN_MS_PAC_MAN.url("sound/thechase.wav"));
-        soundManager.registerMediaPlayer("audio.intermission.3",          RES_TENGEN_MS_PAC_MAN.url("sound/junior.wav"));
-        soundManager.registerMediaPlayer("audio.intermission.4",          RES_TENGEN_MS_PAC_MAN.url("sound/theend.wav"));
-        soundManager.registerMediaPlayer("audio.intermission.4.junior.1", RES_TENGEN_MS_PAC_MAN.url("sound/ms-theend1.wav"));
-        soundManager.registerMediaPlayer("audio.intermission.4.junior.2", RES_TENGEN_MS_PAC_MAN.url("sound/ms-theend2.wav"));
-        soundManager.registerAudioClip(SoundID.LEVEL_CHANGED,             RES_TENGEN_MS_PAC_MAN.url("sound/common/sweep.mp3"));
-        soundManager.registerMediaPlayer(SoundID.LEVEL_COMPLETE,          RES_TENGEN_MS_PAC_MAN.url("sound/common/level-complete.mp3"));
-        soundManager.registerMediaPlayer(SoundID.PAC_MAN_DEATH,           RES_TENGEN_MS_PAC_MAN.url("sound/ms-death.wav"));
-        soundManager.registerMediaPlayer(SoundID.PAC_MAN_MUNCHING,        RES_TENGEN_MS_PAC_MAN.url("sound/ms-dot.wav"));
-        soundManager.registerMediaPlayer(SoundID.PAC_MAN_POWER,           RES_TENGEN_MS_PAC_MAN.url("sound/ms-power.wav"));
-        soundManager.registerMediaPlayer(SoundID.SIREN_1,                 RES_TENGEN_MS_PAC_MAN.url("sound/ms-siren1.wav"));
-        soundManager.registerMediaPlayer(SoundID.SIREN_2,                 RES_TENGEN_MS_PAC_MAN.url("sound/ms-siren2.wav"));// TODO
-        soundManager.registerMediaPlayer(SoundID.SIREN_3,                 RES_TENGEN_MS_PAC_MAN.url("sound/ms-siren2.wav"));// TODO
-        soundManager.registerMediaPlayer(SoundID.SIREN_4,                 RES_TENGEN_MS_PAC_MAN.url("sound/ms-siren2.wav"));// TODO
+        soundManager.registerMediaPlayer(SoundID.BONUS_ACTIVE,            RES_TENGEN.url("sound/fruitbounce.wav"));
+        soundManager.registerAudioClip(SoundID.BONUS_EATEN,               RES_TENGEN.url("sound/ms-fruit.wav"));
+        soundManager.registerAudioClip(SoundID.EXTRA_LIFE,                RES_TENGEN.url("sound/ms-extralife.wav"));
+        soundManager.registerMediaPlayer(SoundID.GAME_OVER,               RES_TENGEN.url("sound/common/game-over.mp3"));
+        soundManager.registerMediaPlayer(SoundID.GAME_READY,              RES_TENGEN.url("sound/ms-start.wav"));
+        soundManager.registerAudioClip(SoundID.GHOST_EATEN,               RES_TENGEN.url("sound/ms-ghosteat.wav"));
+        soundManager.registerMediaPlayer(SoundID.GHOST_RETURNS,           RES_TENGEN.url("sound/ms-eyes.wav"));
+        soundManager.registerMediaPlayer("audio.intermission.1",          RES_TENGEN.url("sound/theymeet.wav"));
+        soundManager.registerMediaPlayer("audio.intermission.2",          RES_TENGEN.url("sound/thechase.wav"));
+        soundManager.registerMediaPlayer("audio.intermission.3",          RES_TENGEN.url("sound/junior.wav"));
+        soundManager.registerMediaPlayer("audio.intermission.4",          RES_TENGEN.url("sound/theend.wav"));
+        soundManager.registerMediaPlayer("audio.intermission.4.junior.1", RES_TENGEN.url("sound/ms-theend1.wav"));
+        soundManager.registerMediaPlayer("audio.intermission.4.junior.2", RES_TENGEN.url("sound/ms-theend2.wav"));
+        soundManager.registerAudioClip(SoundID.LEVEL_CHANGED,             RES_TENGEN.url("sound/common/sweep.mp3"));
+        soundManager.registerMediaPlayer(SoundID.LEVEL_COMPLETE,          RES_TENGEN.url("sound/common/level-complete.mp3"));
+        soundManager.registerMediaPlayer(SoundID.PAC_MAN_DEATH,           RES_TENGEN.url("sound/ms-death.wav"));
+        soundManager.registerMediaPlayer(SoundID.PAC_MAN_MUNCHING,        RES_TENGEN.url("sound/ms-dot.wav"));
+        soundManager.registerMediaPlayer(SoundID.PAC_MAN_POWER,           RES_TENGEN.url("sound/ms-power.wav"));
+        soundManager.registerMediaPlayer(SoundID.SIREN_1,                 RES_TENGEN.url("sound/ms-siren1.wav"));
+        soundManager.registerMediaPlayer(SoundID.SIREN_2,                 RES_TENGEN.url("sound/ms-siren2.wav"));// TODO
+        soundManager.registerMediaPlayer(SoundID.SIREN_3,                 RES_TENGEN.url("sound/ms-siren2.wav"));// TODO
+        soundManager.registerMediaPlayer(SoundID.SIREN_4,                 RES_TENGEN.url("sound/ms-siren2.wav"));// TODO
 
         //TODO fix this in the sound file
         MediaPlayer bounceSound = soundManager.mediaPlayer(SoundID.BONUS_ACTIVE);
@@ -296,12 +294,12 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public void dispose() {
-        ui.assets().removeAll(NAMESPACE + ".");
+        ui.assets().removeAll(ASSET_NAMESPACE + ".");
         soundManager.dispose();
     }
 
     @Override
-    public String assetNamespace() { return NAMESPACE; }
+    public String assetNamespace() { return ASSET_NAMESPACE; }
 
     @Override
     public boolean hasGameCanvasRoundedBorder() { return false; }
@@ -313,7 +311,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public TengenMsPacMan_SpriteSheet spriteSheet() {
-        return localAssetValue("spritesheet", TengenMsPacMan_SpriteSheet.class);
+        return spriteSheet;
     }
 
     @Override
@@ -348,13 +346,8 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public WorldMapColorScheme colorScheme(WorldMap worldMap) {
-        NES_ColorScheme nesColorScheme = worldMap.getConfigValue("nesColorScheme");
-        return new WorldMapColorScheme(
-            nesColorScheme.fillColorRGB(),
-            nesColorScheme.strokeColorRGB(),
-            nesColorScheme.strokeColorRGB(),
-            nesColorScheme.pelletColorRGB()
-        );
+        NES_ColorScheme scheme = worldMap.getConfigValue("nesColorScheme");
+        return new WorldMapColorScheme(scheme.fillColorRGB(), scheme.strokeColorRGB(), scheme.strokeColorRGB(), scheme.pelletColorRGB());
     }
 
     @Override
@@ -415,7 +408,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
         //TODO where is the best place to do that?
         var playScene2D = (TengenMsPacMan_PlayScene2D) scenesByID.get(SCENE_ID_PLAY_SCENE_2D);
-        playScene2D.displayModeProperty().bind(propertyPlaySceneDisplayMode);
+        playScene2D.displayModeProperty().bind(PROPERTY_PLAY_SCENE_DISPLAY_MODE);
     }
 
     @Override

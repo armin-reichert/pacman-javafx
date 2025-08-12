@@ -149,7 +149,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         }
 
         var config = (TengenMsPacMan_UIConfig) ui.currentConfig();
-        if (config.propertyJoypadBindingsDisplayed.get()) {
+        if (config.PROPERTY_JOYPAD_BINDINGS_DISPLAYED.get()) {
             renderer().drawJoypadKeyBinding(ui.joypad().currentKeyBinding());
         }
     }

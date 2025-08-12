@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 import static de.amr.pacmanfx.Validations.requireValidLevelNumber;
 import static de.amr.pacmanfx.lib.nes.NES_ColorScheme.*;
 import static de.amr.pacmanfx.lib.tilemap.WorldMap.loadMapsFromModule;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.MAP_PATH;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.MAPS_PATH;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory.*;
 import static java.util.Objects.requireNonNull;
 
@@ -37,10 +37,10 @@ public class TengenMsPacMan_MapSelector implements MapSelector {
     @Override
     public void loadAllMaps() {
         if (mapRepository.isEmpty()) {
-            mapRepository.put(MapCategory.ARCADE,  loadMapsFromModule(getClass(), MAP_PATH + "arcade%d.world",     4));
-            mapRepository.put(MapCategory.MINI,    loadMapsFromModule(getClass(), MAP_PATH + "mini%d.world",       6));
-            mapRepository.put(MapCategory.BIG,     loadMapsFromModule(getClass(), MAP_PATH + "big%02d.world",     11));
-            mapRepository.put(MapCategory.STRANGE, loadMapsFromModule(getClass(), MAP_PATH + "strange%02d.world", 15));
+            mapRepository.put(MapCategory.ARCADE,  loadMapsFromModule(getClass(), MAPS_PATH + "arcade%d.world",     4));
+            mapRepository.put(MapCategory.MINI,    loadMapsFromModule(getClass(), MAPS_PATH + "mini%d.world",       6));
+            mapRepository.put(MapCategory.BIG,     loadMapsFromModule(getClass(), MAPS_PATH + "big%02d.world",     11));
+            mapRepository.put(MapCategory.STRANGE, loadMapsFromModule(getClass(), MAPS_PATH + "strange%02d.world", 15));
         }
     }
 

@@ -183,25 +183,25 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     @Override
     public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent, ContextMenu menu) {
         var config = ui.<TengenMsPacMan_UIConfig>currentConfig();
-        SceneDisplayMode displayMode = config.propertyPlaySceneDisplayMode.get();
+        SceneDisplayMode displayMode = config.PROPERTY_PLAY_SCENE_DISPLAY_MODE.get();
 
         miScaledToFit = new RadioMenuItem(ui.assets().translated("scaled_to_fit"));
         miScaledToFit.setSelected(displayMode == SceneDisplayMode.SCALED_TO_FIT);
-        miScaledToFit.setOnAction(e -> config.propertyPlaySceneDisplayMode.set(SceneDisplayMode.SCALED_TO_FIT));
+        miScaledToFit.setOnAction(e -> config.PROPERTY_PLAY_SCENE_DISPLAY_MODE.set(SceneDisplayMode.SCALED_TO_FIT));
 
         miScrolling = new RadioMenuItem(ui.assets().translated("scrolling"));
         miScrolling.setSelected(displayMode == SceneDisplayMode.SCROLLING);
-        miScrolling.setOnAction(e -> config.propertyPlaySceneDisplayMode.set(SceneDisplayMode.SCROLLING));
+        miScrolling.setOnAction(e -> config.PROPERTY_PLAY_SCENE_DISPLAY_MODE.set(SceneDisplayMode.SCROLLING));
 
         toggleGroup = new ToggleGroup();
         miScaledToFit.setToggleGroup(toggleGroup);
         miScrolling.setToggleGroup(toggleGroup);
 
-        config.propertyPlaySceneDisplayMode.addListener(this::handlePlaySceneDisplayModeChange);
+        config.PROPERTY_PLAY_SCENE_DISPLAY_MODE.addListener(this::handlePlaySceneDisplayModeChange);
         Logger.info("Added listener to config propertyPlaySceneDisplayMode property");
         //TODO might interfere with onHidden event handler set elsewhere on this menu
         menu.setOnHidden(e -> {
-            config.propertyPlaySceneDisplayMode.removeListener(this::handlePlaySceneDisplayModeChange);
+            config.PROPERTY_PLAY_SCENE_DISPLAY_MODE.removeListener(this::handlePlaySceneDisplayModeChange);
             Logger.info("Removed listener from config propertyPlaySceneDisplayMode property");
         });
 
