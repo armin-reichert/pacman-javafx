@@ -16,11 +16,11 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Armin Reichert
  */
-public class Picker<T> {
+public class RandomTextPicker<T> {
 
-    public static Picker<String> fromBundle(ResourceBundle bundle, String prefix) {
+    public static RandomTextPicker<String> fromBundle(ResourceBundle bundle, String prefix) {
         requireNonNull(bundle);
-        return new Picker<>(bundle.keySet().stream()//
+        return new RandomTextPicker<>(bundle.keySet().stream()//
             .filter(key -> key.startsWith(prefix))//
             .sorted()//
             .map(bundle::getString)//
@@ -31,7 +31,7 @@ public class Picker<T> {
     private int current;
 
     @SuppressWarnings("unchecked")
-    public Picker(T... items) {
+    public RandomTextPicker(T... items) {
         if (items.length > 0) {
             entries = Arrays.asList(Arrays.copyOf(items, items.length));
             Collections.shuffle(entries);
@@ -43,7 +43,7 @@ public class Picker<T> {
         return !entries.isEmpty();
     }
 
-    public T next() {
+    public T nextText() {
         if (entries.size() == 1) {
             return entries.getFirst();
         }

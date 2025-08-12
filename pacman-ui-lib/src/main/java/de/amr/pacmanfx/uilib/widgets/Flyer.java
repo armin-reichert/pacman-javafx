@@ -29,7 +29,7 @@ public class Flyer extends StackPane {
     }
 
     private void fill(Image image) {
-        setBackground(Ufx.createBackground(image,
+        setBackground(Ufx.createImageBackground(image,
             BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
             BackgroundPosition.CENTER, Ufx.FILL_PAGE_SIZE));
     }

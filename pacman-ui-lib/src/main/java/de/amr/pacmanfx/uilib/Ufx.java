@@ -110,7 +110,7 @@ public interface Ufx {
      * @param image image shown as background
      * @return background object with default properties, see {@link BackgroundImage}
      */
-    static Background createBackground(Image image) {
+    static Background createImageBackground(Image image) {
         requireNonNull(image);
         return new Background(new BackgroundImage(image, null, null, null, null));
     }
@@ -119,8 +119,8 @@ public interface Ufx {
      * @param image some source
      * @return source background with specified attributes
      */
-    static Background createBackground(Image image, BackgroundRepeat repeatX, BackgroundRepeat repeatY,
-                                       BackgroundPosition position, BackgroundSize size) {
+    static Background createImageBackground(Image image, BackgroundRepeat repeatX, BackgroundRepeat repeatY,
+                                            BackgroundPosition position, BackgroundSize size) {
         requireNonNull(image);
         return new Background(new BackgroundImage(image, repeatX, repeatY, position, size));
     }
@@ -130,7 +130,7 @@ public interface Ufx {
      * @return background object with properties suitable for a wallpaper
      */
     static Background createWallpaper(Image image) {
-        return createBackground(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, FILL_PAGE_SIZE);
+        return createImageBackground(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, FILL_PAGE_SIZE);
     }
 
     static Border roundedBorder(Color color, double cornerRadius, double width) {
