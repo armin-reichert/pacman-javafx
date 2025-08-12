@@ -4,9 +4,9 @@ pluginManagement {
         mavenCentral()
     }
     plugins {
-        id "java" apply false
-        // Note: Here we cannot use plugin alias defined in version catalog:
-        id "org.openjfx.javafxplugin" version "0.1.0" apply false
+        id("java").apply(false)
+        // Note: In configuration phase we cannot yet use alias!
+        id("org.openjfx.javafxplugin").version("0.1.0").apply(false)
     }
 }
 
@@ -18,13 +18,15 @@ dependencyResolutionManagement {
 
 rootProject.name = "pacman-javafx"
 
-include "pacman-core"
-include "pacman-ui-lib"
-include "pacman-ui"
-include "pacman-app-arcade-pacman"
-include "pacman-app-arcade-mspacman"
-include "pacman-app-arcade-pacmanxxl"
-include "pacman-app-tengen-mspacman"
-include "pacman-app-allgames"
-include "pacman-app-mapeditor"
-include "experiments"
+include(
+    "pacman-core",
+    "pacman-ui-lib",
+    "pacman-ui",
+    "pacman-app-arcade-pacman",
+    "pacman-app-arcade-mspacman",
+    "pacman-app-arcade-pacmanxxl",
+    "pacman-app-tengen-mspacman",
+    "pacman-app-allgames",
+    "pacman-app-mapeditor",
+    "experiments"
+)

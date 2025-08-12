@@ -1,5 +1,5 @@
 plugins {
-    id "java"
+    id("java")
     // alias gets plugin id and version from version catalog (gradle/libs.versions.toml)
     alias(libs.plugins.javafx)
     alias(libs.plugins.osdetector)
@@ -7,7 +7,7 @@ plugins {
 
 subprojects {
     // 1. Apply plugins
-    apply plugin: "java"
+    apply(plugin: "java")
     pluginManager.apply(libs.plugins.javafx.get().getPluginId())
     pluginManager.apply(libs.plugins.osdetector.get().getPluginId())
 
