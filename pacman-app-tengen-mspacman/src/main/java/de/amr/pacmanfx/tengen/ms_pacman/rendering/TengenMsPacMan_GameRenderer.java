@@ -16,9 +16,9 @@ import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.tengen.ms_pacman.model.*;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.Clapperboard;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.Stork;
-import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.GameAssets;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
+import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.input.JoypadKeyBinding;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
@@ -112,22 +112,21 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
 
         if (!hud.isVisible()) return;
 
-        var theGame = (TengenMsPacMan_GameModel) gameContext.theGame();
-
-        if (hud.isScoreVisible()) {
-            drawScores(theGame, tick, nesPaletteColor(0x20), assets().arcadeFont(8));
+        var tengenGame = (TengenMsPacMan_GameModel) gameContext.theGame();
+        var tengenHUD = (TengenMsPacMan_HUD) hud;
+        
+        if (tengenHUD.isScoreVisible()) {
+            drawScores(tengenGame, tick, nesPaletteColor(0x20), assets.arcadeFont(8));
         }
 
-        if (hud.isLivesCounterVisible()) {
-            drawLivesCounter(hud.theLivesCounter(), theGame.lifeCount(), 2 * TS, sceneSize.y() - TS);
+        if (tengenHUD.isLivesCounterVisible()) {
+            drawLivesCounter(tengenHUD.theLivesCounter(), tengenGame.lifeCount(), TS(2), sceneSize.y() - TS);
         }
 
-        if (hud.isLevelCounterVisible()) {
-            if (hud instanceof TengenMsPacMan_HUD tengenHUD) {
-                TengenMsPacMan_LevelCounter levelCounter = tengenHUD.theLevelCounter();
-                float x = sceneSize.x() - 2 * TS, y = sceneSize.y() - TS;
-                drawLevelCounter(levelCounter.displayedLevelNumber(), levelCounter, x, y);
-            }
+        if (tengenHUD.isLevelCounterVisible()) {
+            var levelCounter = tengenHUD.theLevelCounter();
+            float x = sceneSize.x() - TS(2), y = sceneSize.y() - TS;
+            drawLevelCounter(levelCounter.displayedLevelNumber(), levelCounter, x, y);
         }
     }
 
@@ -148,11 +147,11 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
     public void drawLivesCounter(LivesCounter livesCounter, int lifeCount, float x, float y) {
         RectShort sprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
         for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
-            drawSpriteScaled(sprite, x + i * 2 * TS, y);
+            drawSpriteScaled(sprite, x + TS(i * 2), y);
         }
         if (lifeCount > livesCounter.maxLivesDisplayed()) {
             Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
-            fillTextAtScaledPosition("(%d)".formatted(lifeCount), nesPaletteColor(0x28), font, x + TS * 10, y + TS);
+            fillTextAtScaledPosition("(%d)".formatted(lifeCount), nesPaletteColor(0x28), font, x + TS(10), y + TS);
         }
     }
 
@@ -162,11 +161,11 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
             drawLevelNumberBox(levelNumber, x, y); // right box
         }
         RectShort[] symbolSprites = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS);
-        x -= 2 * TS;
+        x -= TS(2);
         // symbols are drawn from right to left!
         for (byte symbol : levelCounter.symbols()) {
             drawSpriteScaled(symbolSprites[symbol], x, y);
-            x -= TS * 2;
+            x -= TS(2);
         }
     }
 
@@ -182,6 +181,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
 
     private RectShort digitSprite(int digit) {
         return spriteSheet.sprite(switch (digit) {
+            case 0 -> SpriteID.DIGIT_0;
             case 1 -> SpriteID.DIGIT_1;
             case 2 -> SpriteID.DIGIT_2;
             case 3 -> SpriteID.DIGIT_3;
@@ -191,7 +191,6 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
             case 7 -> SpriteID.DIGIT_7;
             case 8 -> SpriteID.DIGIT_8;
             case 9 -> SpriteID.DIGIT_9;
-            case 0 -> SpriteID.DIGIT_0;
             default -> throw new IllegalArgumentException("Illegal digit value " + digit);
         });
     }
@@ -203,14 +202,14 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
             switch (actor) {
                 case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
                 case Bonus bonus -> drawMovingBonus(bonus);
-                case Pac pac                   -> drawAnyKindOfPac(pac);
+                case Pac pac -> drawAnyKindOfPac(pac);
                 case Stork stork -> {
                     drawAnimatedActor(stork);
                     if (stork.isBagReleasedFromBeak()) {
                         hideStorkBag(stork);
                     }
                 }
-                default                        -> super.drawActor(actor);
+                default -> super.drawActor(actor);
             }
         }
     }
