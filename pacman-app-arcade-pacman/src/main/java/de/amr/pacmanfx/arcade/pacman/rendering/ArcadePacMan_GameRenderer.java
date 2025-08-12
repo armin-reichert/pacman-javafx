@@ -15,6 +15,7 @@ import de.amr.pacmanfx.ui.GameAssets;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -52,41 +53,42 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
         requireNonNull(hud);
         if (!hud.isVisible()) return;
 
+        GameModel game = gameContext.theGame();
         if (hud.isScoreVisible()) {
             ctx.setFont(assets().arcadeFont(scaled(8)));
             ctx.setFill((ARCADE_WHITE));
-            drawScore(gameContext.theGame().score(), "SCORE", TS(1), TS(1));
-            drawScore(gameContext.theGame().highScore(), "HIGH SCORE", TS(14), TS(1));
+            drawScore(game.score(), "SCORE", TS(1), TS(1));
+            drawScore(game.highScore(), "HIGH SCORE", TS(14), TS(1));
         }
 
         if (hud.isLevelCounterVisible()) {
             LevelCounter levelCounter = hud.theLevelCounter();
-            float x = sceneSize.x() - 4 * TS, y = sceneSize.y() - 2 * TS + 2;
+            float x = sceneSize.x() - TS(4), y = sceneSize.y() - TS(2) + 2;
             for (byte symbol : levelCounter.symbols()) {
                 RectShort sprite = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS)[symbol];
                 drawSpriteScaled(sprite, x, y);
-                x -= TS * 2;
+                x -= TS(2);
             }
         }
 
         if (hud.isLivesCounterVisible()) {
             LivesCounter livesCounter = hud.theLivesCounter();
-            float x = 2 * TS, y = sceneSize.y() - 2 * TS;
+            float x = TS(2), y = sceneSize.y() - TS(2);
             RectShort sprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
             for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
-                drawSpriteScaled(sprite, x + TS * (2 * i), y);
+                drawSpriteScaled(sprite, x + TS(2 * i), y);
             }
-            if (gameContext.theGame().lifeCount() > livesCounter.maxLivesDisplayed()) {
+            if (game.lifeCount() > livesCounter.maxLivesDisplayed()) {
                 // show text indicating that more lives are available than symbols displayed (cheating may cause this)
                 Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
-                fillTextAtScaledPosition("%d".formatted(gameContext.theGame().lifeCount()), ARCADE_YELLOW, font,
-                    x - 14, y + TS);
+                fillTextAtScaledPosition("%d".formatted(game.lifeCount()), ARCADE_YELLOW, font, x - 14, y + TS);
             }
         }
 
         if (hud.isCreditVisible()) {
             String text = "CREDIT %2d".formatted(gameContext.theCoinMechanism().numCoins());
-            fillTextAtScaledPosition(text, ARCADE_WHITE, assets().arcadeFont(scaled(8)), 2 * TS, sceneSize.y());
+            Font font = assets.arcadeFont(scaled(8));
+            fillTextAtScaledPosition(text, ARCADE_WHITE, font, TS(2), sceneSize.y());
         }
     }
 
@@ -110,14 +112,14 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
         ctx.save();
         ctx.scale(scaling(), scaling());
         if (mazeHighlighted) {
-            String assetNamespace = ArcadePacMan_UIConfig.ASSET_NAMESPACE;
-            ctx.drawImage(assets.image(assetNamespace + ".flashing_maze"), 0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);
+            Image flashingMaze = assets.image(ArcadePacMan_UIConfig.ASSET_NAMESPACE + ".flashing_maze");
+            ctx.drawImage(flashingMaze, 0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);
         }
         else if (level.uneatenFoodCount() == 0) {
-            drawSprite(spriteSheet.sprite(SpriteID.MAP_EMPTY), 0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);
+            drawSprite(spriteSheet.sprite(SpriteID.MAP_EMPTY), 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE));
         }
         else {
-            drawSprite(spriteSheet.sprite(SpriteID.MAP_FULL), 0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);
+            drawSprite(spriteSheet.sprite(SpriteID.MAP_FULL), 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE));
             ctx.setFill(backgroundColor);
             level.worldMap().tiles()
                     .filter(not(level::isEnergizerPosition))

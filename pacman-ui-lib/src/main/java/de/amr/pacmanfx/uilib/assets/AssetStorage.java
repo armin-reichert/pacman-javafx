@@ -56,41 +56,36 @@ public class AssetStorage {
     }
 
     /**
-     * Generic getter for asset value. The value is cast (without check) to the expected type (font, image etc.).
-     * <p>Usage:
-     * <p><code>Image image = assets.asset("key_for_image");</code>
+     * Generic getter for asset value. The value is cast to the expected type (font, image etc.).
+     * <p>Example:
+     * <p><code>Image image = assets.valueOfType("key_for_image", Image.class);</code>
      *
      * @param <T>  expected asset type
      * @param key asset key
      * @return stored value cast to expected type
+     * @throws ClassCastException if specified type does not match asset value type
      */
-    @SuppressWarnings("unchecked")
-    public <T> T get(String key) {
-        T value = (T) assetMap.get(key);
-        if (value == null) {
-            Logger.error("Asset not found, key={}", key);
-        }
-        return value;
-    }
-
-    public <T> T valueOfType(String key, Class<T> type) {
+    public <T> T asset(String key, Class<T> assetClass) {
         Object value = assetMap.get(key);
-        if (type.isInstance(value)) {
-            return type.cast(value);
+        if (value == null) {
+            Logger.error("No asset value for key '{}' exists", key);
+            return null;
         }
-        throw new ClassCastException("Asset value for key '%s' not of type %s".formatted(
-            key, type.getSimpleName()
-        ));
+        if (assetClass.isInstance(value)) {
+            return assetClass.cast(value);
+        }
+        throw new ClassCastException("Asset for key '%s' is not of type %s but %s".formatted(
+                key, assetClass.getSimpleName(), value.getClass().getSimpleName()));
     }
 
-    public Background background(String key) { return valueOfType(key, Background.class); }
+    public Background background(String key) { return asset(key, Background.class); }
 
-    public Color color(String key) { return valueOfType(key, Color.class); }
+    public Color color(String key) { return asset(key, Color.class); }
 
-    public Font font(String key) { return valueOfType(key, Font.class); }
+    public Font font(String key) { return asset(key, Font.class); }
 
     public Font font(String key, double size) { return Font.font(font(key).getFamily(), size); }
 
-    public Image image(String key) { return valueOfType(key, Image.class); }
+    public Image image(String key) { return asset(key, Image.class); }
 
 }

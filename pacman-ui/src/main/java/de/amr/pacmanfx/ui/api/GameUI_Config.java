@@ -65,7 +65,7 @@ public interface GameUI_Config extends Disposable {
      * @param <T> expected asset value type
      */
     default <T> T localAssetValue(String localKey, Class<T> type) {
-        return theUI().assets().valueOfType(globalAssetKey(localKey), type);
+        return theUI().assets().asset(globalAssetKey(localKey), type);
     }
 
     default Color localAssetColor(String localKey) {
