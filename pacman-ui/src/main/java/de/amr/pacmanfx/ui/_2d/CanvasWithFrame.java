@@ -28,7 +28,7 @@ public class CanvasWithFrame extends BorderPane {
 
     private final ObjectProperty<Color> borderColor = new SimpleObjectProperty<>(Color.LIGHTBLUE);
 
-    private final BooleanProperty roundedBorderPy = new SimpleBooleanProperty(true) {
+    private final BooleanProperty roundedBorder = new SimpleBooleanProperty(true) {
         @Override
         protected void invalidated() {
             doLayout(scaling(), true);
@@ -77,7 +77,7 @@ public class CanvasWithFrame extends BorderPane {
                 clipRect.setArcHeight(arcSize);
             }
             return clipRect;
-        }, roundedBorderPy, scaling, unscaledCanvasWidth, unscaledCanvasHeight));
+        }, roundedBorder, scaling, unscaledCanvasWidth, unscaledCanvasHeight));
 
         borderProperty().bind(Bindings.createObjectBinding(() -> {
             if (!hasRoundedBorder() || !isBorderVisible()) {
@@ -86,7 +86,7 @@ public class CanvasWithFrame extends BorderPane {
             double bw = Math.max(5, Math.ceil(computeSize().getHeight() / 55)); // TODO avoid magic numbers
             CornerRadii cr = hasRoundedBorder() ? new CornerRadii(Math.ceil(10 * scaling())) : null;
             return new Border(new BorderStroke(borderColor(), BorderStrokeStyle.SOLID, cr, new BorderWidths(bw)));
-        }, roundedBorderPy, borderVisible, scaling, unscaledCanvasWidth, unscaledCanvasHeight));
+        }, roundedBorder, borderVisible, scaling, unscaledCanvasWidth, unscaledCanvasHeight));
     }
 
     private void doLayout(double newScaling, boolean forced) {
@@ -121,10 +121,6 @@ public class CanvasWithFrame extends BorderPane {
         );
     }
 
-    public Canvas canvas() {
-        return canvas;
-    }
-
     public void resizeTo(double width, double height) {
         if (hasRoundedBorder()) {
             double downScaledWidth = width, downScaledHeight = height;
@@ -141,6 +137,10 @@ public class CanvasWithFrame extends BorderPane {
             doLayout(height / unscaledCanvasHeight(), false);
         }
         Logger.debug("Game canvas container resized to width={} height={}", getWidth(), getHeight());
+    }
+
+    public Canvas canvas() {
+        return canvas;
     }
 
     public DoubleProperty scalingProperty() { return scaling; }
@@ -167,17 +167,20 @@ public class CanvasWithFrame extends BorderPane {
         unscaledCanvasHeight.set(height);
     }
 
-    public BooleanProperty roundedBorderProperty() { return roundedBorderPy; }
+    public BooleanProperty roundedBorderProperty() { return roundedBorder; }
+
     public boolean hasRoundedBorder() {
-        return roundedBorderPy.get();
+        return roundedBorder.get();
     }
+
     public void setRoundedBorder(boolean enabled) {
-        roundedBorderPy.set(enabled);
+        roundedBorder.set(enabled);
     }
 
     public Color borderColor() {
         return borderColor.get();
     }
+
     public void setBorderColor(Color color) {
         borderColor.set(color);
     }
@@ -185,6 +188,7 @@ public class CanvasWithFrame extends BorderPane {
     public boolean isBorderVisible() {
         return borderVisible.get();
     }
+
     public void setBorderVisible(boolean visible) {
         borderVisible.set(visible);
     }
