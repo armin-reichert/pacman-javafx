@@ -127,8 +127,8 @@ public class PlayScene3D implements GameScene {
 
         // The score is always displayed in full view, regardless which perspective is used
         scores3D = new Scores3D(
-            ui.assets().text("score.score"),
-            ui.assets().text("score.high_score"),
+            ui.assets().translated("score.score"),
+            ui.assets().translated("score.high_score"),
             ui.assets().arcadeFont(TS)
         );
         scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
@@ -201,22 +201,22 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent, ContextMenu menu) {
-        var miUse2DScene = new MenuItem(ui.assets().text("use_2D_scene"));
+        var miUse2DScene = new MenuItem(ui.assets().translated("use_2D_scene"));
         miUse2DScene.setOnAction(e -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(ui));
 
-        var miToggleMiniView = new CheckMenuItem(ui.assets().text("pip"));
+        var miToggleMiniView = new CheckMenuItem(ui.assets().translated("pip"));
         miToggleMiniView.selectedProperty().bindBidirectional(PROPERTY_MINI_VIEW_ON);
 
-        var miAutopilot = new CheckMenuItem(ui.assets().text("autopilot"));
+        var miAutopilot = new CheckMenuItem(ui.assets().translated("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(theGameContext().theGameController().propertyUsingAutopilot());
 
-        var miImmunity = new CheckMenuItem(ui.assets().text("immunity"));
+        var miImmunity = new CheckMenuItem(ui.assets().translated("immunity"));
         miImmunity.selectedProperty().bindBidirectional(theGameContext().theGameController().propertyImmunity());
 
-        var miMuted = new CheckMenuItem(ui.assets().text("muted"));
+        var miMuted = new CheckMenuItem(ui.assets().translated("muted"));
         miMuted.selectedProperty().bindBidirectional(PROPERTY_MUTED);
 
-        var miQuit = new MenuItem(ui.assets().text("quit"));
+        var miQuit = new MenuItem(ui.assets().translated("quit"));
         miQuit.setOnAction(e -> ACTION_QUIT_GAME_SCENE.executeIfEnabled(ui));
 
         var items = new ArrayList<MenuItem>();
@@ -238,7 +238,7 @@ public class PlayScene3D implements GameScene {
     private List<RadioMenuItem> createPerspectiveRadioItems(ContextMenu menu) {
         var items = new ArrayList<RadioMenuItem>();
         for (PerspectiveID id : PerspectiveID.values()) {
-            var item = new RadioMenuItem(ui.assets().text("perspective_id_" + id.name()));
+            var item = new RadioMenuItem(ui.assets().translated("perspective_id_" + id.name()));
             item.setUserData(id);
             item.setToggleGroup(perspectiveToggleGroup);
             if (id == PROPERTY_3D_PERSPECTIVE.get())  {
@@ -585,8 +585,8 @@ public class PlayScene3D implements GameScene {
             scores3D.showScore(score.points(), score.levelNumber());
         }
         else { // disabled, show text "GAME OVER"
-            Color color = ui.currentConfig().getAssetNS("color.game_over_message");
-            scores3D.showTextForScore(ui.assets().text("score.game_over"), color);
+            Color color = ui.currentConfig().localAssetValue("color.game_over_message");
+            scores3D.showTextForScore(ui.assets().translated("score.game_over"), color);
         }
         // Always show high score
         scores3D.showHighScore(highScore.points(), highScore.levelNumber());

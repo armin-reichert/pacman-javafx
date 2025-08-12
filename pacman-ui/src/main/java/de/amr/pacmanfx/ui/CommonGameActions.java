@@ -130,7 +130,7 @@ public interface CommonGameActions {
         @Override
         public void execute(GameUI ui) {
             ui.gameContext().theGame().addLives(3);
-            ui.showFlashMessage(ui.assets().text("cheat_add_lives", ui.gameContext().theGame().lifeCount()));
+            ui.showFlashMessage(ui.assets().translated("cheat_add_lives", ui.gameContext().theGame().lifeCount()));
         }
 
         @Override
@@ -203,7 +203,7 @@ public interface CommonGameActions {
         public void execute(GameUI ui) {
             PerspectiveID id = PROPERTY_3D_PERSPECTIVE.get().next();
             PROPERTY_3D_PERSPECTIVE.set(id);
-            String msgKey = ui.assets().text("camera_perspective", ui.assets().text("perspective_id_" + id.name()));
+            String msgKey = ui.assets().translated("camera_perspective", ui.assets().translated("perspective_id_" + id.name()));
             ui.showFlashMessage(msgKey);
         }
     };
@@ -213,7 +213,7 @@ public interface CommonGameActions {
         public void execute(GameUI ui) {
             PerspectiveID id = PROPERTY_3D_PERSPECTIVE.get().prev();
             PROPERTY_3D_PERSPECTIVE.set(id);
-            String msgKey = ui.assets().text("camera_perspective", ui.assets().text("perspective_id_" + id.name()));
+            String msgKey = ui.assets().translated("camera_perspective", ui.assets().translated("perspective_id_" + id.name()));
             ui.showFlashMessage(msgKey);
         }
     };
@@ -346,7 +346,7 @@ public interface CommonGameActions {
         public void execute(GameUI ui) {
             toggle(ui.gameContext().theGameController().propertyUsingAutopilot());
             boolean autoPilotOn = ui.gameContext().theGameController().propertyUsingAutopilot().get();
-            ui.showFlashMessage(ui.assets().text(autoPilotOn ? "autopilot_on" : "autopilot_off"));
+            ui.showFlashMessage(ui.assets().translated(autoPilotOn ? "autopilot_on" : "autopilot_off"));
             ui.soundManager().playVoice(autoPilotOn ? SoundID.VOICE_AUTOPILOT_ON : SoundID.VOICE_AUTOPILOT_OFF, 0);
         }
     };
@@ -392,7 +392,7 @@ public interface CommonGameActions {
         public void execute(GameUI ui) {
             toggle(ui.gameContext().theGameController().propertyImmunity());
             boolean immunityOn = ui.gameContext().theGameController().propertyImmunity().get();
-            ui.showFlashMessage(ui.assets().text(immunityOn ? "player_immunity_on" : "player_immunity_off"));
+            ui.showFlashMessage(ui.assets().translated(immunityOn ? "player_immunity_on" : "player_immunity_off"));
             ui.soundManager().playVoice(immunityOn ? SoundID.VOICE_IMMUNITY_ON : SoundID.VOICE_IMMUNITY_OFF, 0);
         }
     };
@@ -402,7 +402,7 @@ public interface CommonGameActions {
         public void execute(GameUI ui) {
             toggle(PROPERTY_MINI_VIEW_ON);
             if (!ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)) {
-                ui.showFlashMessage(ui.assets().text(PROPERTY_MINI_VIEW_ON.get() ? "pip_on" : "pip_off"));
+                ui.showFlashMessage(ui.assets().translated(PROPERTY_MINI_VIEW_ON.get() ? "pip_on" : "pip_off"));
             }
         }
     };
@@ -435,7 +435,7 @@ public interface CommonGameActions {
                     ui.gameContext().theGameController().updateGameState(); //TODO needed?
                 }
                 if (!ui.gameContext().theGame().isPlaying()) {
-                    ui.showFlashMessage(ui.assets().text(PROPERTY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
+                    ui.showFlashMessage(ui.assets().translated(PROPERTY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
                 }
             });
         }

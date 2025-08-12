@@ -167,7 +167,8 @@ public class GameUI_Implementation implements GameUI {
         });
 
         mainScene.rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
-            () -> assets.get(isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D) ? "background.play_scene3d" : "background.scene"),
+            () -> assets.background(isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D)
+                ? "background.play_scene3d" : "background.scene"),
             PROPERTY_CURRENT_VIEW, PROPERTY_CURRENT_GAME_SCENE
         ));
 
@@ -223,8 +224,8 @@ public class GameUI_Implementation implements GameUI {
         String namespace      = currentConfig().assetNamespace();
         String paused         = clock().isPaused() ? ".paused" : "";
         String assetKey       = "app.title.%s%s".formatted(namespace, paused);
-        String translatedMode = assets().text(mode3D ? "threeD" : "twoD");
-        String shortTitle     = assets().text(assetKey, translatedMode);
+        String translatedMode = assets().translated(mode3D ? "threeD" : "twoD");
+        String shortTitle     = assets().translated(assetKey, translatedMode);
 
         var currentGameScene = currentGameScene().orElse(null);
         if (currentGameScene == null || !modeDebug) {
@@ -294,7 +295,7 @@ public class GameUI_Implementation implements GameUI {
     private EditorView ensureEditorViewExists() {
         if (editorView == null) {
             var editor = new TileMapEditor(stage, assets().theModel3DRepository());
-            var miReturnToGame = new MenuItem(assets().text("back_to_game"));
+            var miReturnToGame = new MenuItem(assets().translated("back_to_game"));
             miReturnToGame.setOnAction(e -> {
                 editor.stop();
                 editor.executeWithCheckForUnsavedChanges(this::showStartView);

@@ -26,10 +26,10 @@ public class GameAssets extends AssetStorage {
     public GameAssets() {
         model3DRepository = new Model3DRepository();
 
-        localizedTextBundle = RES.getModuleBundle("de.amr.pacmanfx.ui.localized_texts");
+        textBundle = RES.getModuleBundle("de.amr.pacmanfx.ui.localized_texts");
 
-        pickeOverTexts = Picker.fromBundle(localizedTextBundle, "game.over");
-        pickLevelCompleteTexts = Picker.fromBundle(localizedTextBundle, "level.complete");
+        pickeOverTexts = Picker.fromBundle(textBundle, "game.over");
+        pickLevelCompleteTexts = Picker.fromBundle(textBundle, "level.complete");
 
         store("background.scene",        Ufx.createBackground(RES.loadImage("graphics/pacman_wallpaper.png")));
         store("background.play_scene3d", Ufx.createBackground(RES.loadImage("graphics/blue_sky.jpg")));
@@ -57,7 +57,7 @@ public class GameAssets extends AssetStorage {
 
     public String localizedLevelCompleteMessage(int levelNumber) {
         return pickLevelCompleteTexts.hasEntries()
-            ? pickLevelCompleteTexts.next() + "\n\n" + text("level_complete", levelNumber)
+            ? pickLevelCompleteTexts.next() + "\n\n" + translated("level_complete", levelNumber)
             : "";
     }
 }

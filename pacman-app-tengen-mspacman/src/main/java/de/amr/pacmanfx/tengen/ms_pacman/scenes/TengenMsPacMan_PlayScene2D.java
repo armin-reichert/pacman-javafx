@@ -185,11 +185,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         var config = ui.<TengenMsPacMan_UIConfig>currentConfig();
         SceneDisplayMode displayMode = config.propertyPlaySceneDisplayMode.get();
 
-        miScaledToFit = new RadioMenuItem(ui.assets().text("scaled_to_fit"));
+        miScaledToFit = new RadioMenuItem(ui.assets().translated("scaled_to_fit"));
         miScaledToFit.setSelected(displayMode == SceneDisplayMode.SCALED_TO_FIT);
         miScaledToFit.setOnAction(e -> config.propertyPlaySceneDisplayMode.set(SceneDisplayMode.SCALED_TO_FIT));
 
-        miScrolling = new RadioMenuItem(ui.assets().text("scrolling"));
+        miScrolling = new RadioMenuItem(ui.assets().translated("scrolling"));
         miScrolling.setSelected(displayMode == SceneDisplayMode.SCROLLING);
         miScrolling.setOnAction(e -> config.propertyPlaySceneDisplayMode.set(SceneDisplayMode.SCROLLING));
 
@@ -205,16 +205,16 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             Logger.info("Removed listener from config propertyPlaySceneDisplayMode property");
         });
 
-        var miAutopilot = new CheckMenuItem(ui.assets().text("autopilot"));
+        var miAutopilot = new CheckMenuItem(ui.assets().translated("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(theGameContext().theGameController().propertyUsingAutopilot());
 
-        var miImmunity = new CheckMenuItem(ui.assets().text("immunity"));
+        var miImmunity = new CheckMenuItem(ui.assets().translated("immunity"));
         miImmunity.selectedProperty().bindBidirectional(theGameContext().theGameController().propertyImmunity());
 
-        var miMuted = new CheckMenuItem(ui.assets().text("muted"));
+        var miMuted = new CheckMenuItem(ui.assets().translated("muted"));
         miMuted.selectedProperty().bindBidirectional(PROPERTY_MUTED);
 
-        var miQuit = new MenuItem(ui.assets().text("quit"));
+        var miQuit = new MenuItem(ui.assets().translated("quit"));
         miQuit.setOnAction(e -> ACTION_QUIT_GAME_SCENE.executeIfEnabled(ui));
 
         return List.of(

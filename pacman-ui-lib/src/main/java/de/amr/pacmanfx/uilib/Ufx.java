@@ -373,7 +373,7 @@ public interface Ufx {
     static MenuItem createContextMenuTitle(String titleKey, UIPreferences prefs, AssetStorage assets) {
         Font font = prefs.getFont("context_menu.title.font");
         Color fillColor = prefs.getColor("context_menu.title.fill");
-        var text = new Text(assets.text(titleKey));
+        var text = new Text(assets.translated(titleKey));
         text.setFont(font);
         text.setFill(fillColor);
         text.getStyleClass().add("custom-menu-title");

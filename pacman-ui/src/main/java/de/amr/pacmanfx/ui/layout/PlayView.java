@@ -130,7 +130,7 @@ public class PlayView extends StackPane implements GameUI_View {
         contextMenu.getItems().clear();
         ui.currentGameScene().ifPresent(gameScene -> {
             if (ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_2D)) {
-                var miSwitchTo3D = new MenuItem(ui.assets().text("use_3D_scene"));
+                var miSwitchTo3D = new MenuItem(ui.assets().translated("use_3D_scene"));
                 miSwitchTo3D.setOnAction(e -> ACTION_TOGGLE_PLAY_SCENE_2D_3D.executeIfEnabled(ui));
                 contextMenu.getItems().add(createContextMenuTitle("scene_display", ui.uiPreferences(), ui.assets()));
                 contextMenu.getItems().add(miSwitchTo3D);

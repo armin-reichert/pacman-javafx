@@ -79,7 +79,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         actionBindings.assign(ACTION_TEST_LEVELS_BONI, ui.actionBindings());
         actionBindings.assign(ACTION_TEST_LEVELS_TEASERS, ui.actionBindings());
 
-        midwayCopyright = new MidwayCopyright(ui.currentConfig().getAssetNS("logo.midway"));
+        midwayCopyright = new MidwayCopyright(ui.currentConfig().localAssetValue("logo.midway"));
         midwayCopyright.setPosition(TS * 6, TS * 28);
         midwayCopyright.show();
 

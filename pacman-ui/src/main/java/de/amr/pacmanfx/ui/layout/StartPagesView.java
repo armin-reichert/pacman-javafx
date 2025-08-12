@@ -42,7 +42,7 @@ public class StartPagesView implements GameUI_View {
 
     public static FancyButton createStartButton(GameAssets assets, Pos alignment) {
         var button = new FancyButton(
-                assets.text("play_button"),
+                assets.translated("play_button"),
                 assets.arcadeFont(30),
                 Color.rgb(0, 155, 252, 0.7),
                 Color.WHITE);

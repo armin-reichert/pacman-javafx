@@ -45,48 +45,59 @@ public interface GameUI_Config extends Disposable {
 
     void storeAssets(AssetStorage assetStorage);
 
-    default String fullAssetKey(String partialKey) { return assetNamespace() + "." + partialKey; }
+    default String globalAssetKey(String localKey) { return assetNamespace() + "." + localKey; }
 
     /**
      * Stores key-value pair in the namespace of this configuration.
      *
-     * @param assetStorage the asset storage
-     * @param partialKey the partial asset key, full key is {@code asset_namespace + "." + key}
+     * @param assets the asset storage
+     * @param localKey the partial asset key, full key is {@code asset_namespace + "." + key}
      * @param value the asset value
      */
-    default void storeAssetNS(AssetStorage assetStorage, String partialKey, Object value) {
-        assetStorage.store(fullAssetKey(partialKey), value);
+    default void storeLocalAssetValue(AssetStorage assets, String localKey, Object value) {
+        assets.store(globalAssetKey(localKey), value);
     }
 
     /**
-     * @param assetStorage the asset storage
+     * @param assets the asset storage
      * @param localKey the partial asset key, full key is {@code asset_namespace + "." + key}
      * @return the asset value
      * @param <T> expected asset value type
      */
-    default <T> T getAssetNS(AssetStorage assetStorage, String localKey) {
-        return assetStorage.get(fullAssetKey(localKey));
+    default <T> T localAssetValue(AssetStorage assets, String localKey) {
+        return assets.get(globalAssetKey(localKey));
     }
 
     /**
-     * @param partialKey the partial asset key, full key is {@code asset_namespace + "." + key}
+     * @param localKey the partial asset key, full key is {@code asset_namespace + "." + key}
      * @return the asset value from the global asset storage of the UI
      * @param <T> expected asset value type
      */
-    default <T> T getAssetNS(String partialKey) {
-        return getAssetNS(theUI().assets(), partialKey);
+    default <T> T localAssetValue(String localKey) {
+        return localAssetValue(theUI().assets(), localKey);
     }
 
     Image bonusSymbolImage(byte symbol);
+
     Image bonusValueImage(byte symbol);
+
     WorldMapColorScheme colorScheme(WorldMap worldMap);
+
     GameRenderer createGameRenderer(Canvas canvas);
+
     ActorAnimationMap createGhostAnimations(Ghost ghost);
+
     Node createLivesCounterShape3D();
+
     ActorAnimationMap createPacAnimations(Pac pac);
+
     PacBase3D createPac3D(AnimationRegistry animationMgr, Pac pac);
+
     default boolean hasGameCanvasRoundedBorder() { return true; }
+
     Image killedGhostPointsImage(Ghost ghost, int killedIndex);
+
     SpriteSheet<?> spriteSheet();
+
     SoundManager soundManager();
 }

@@ -32,7 +32,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
     public void doInit() {
         gameContext().theGame().theHUD().credit(true).score(true).levelCounter(true).livesCounter(false);
 
-        midwayCopyright = new MidwayCopyright(ui.currentConfig().getAssetNS("logo.midway"));
+        midwayCopyright = new MidwayCopyright(ui.currentConfig().localAssetValue("logo.midway"));
         midwayCopyright.setPosition(TS * 6, TS * 28);
         midwayCopyright.show();
 

@@ -23,7 +23,7 @@ import static java.util.Objects.requireNonNull;
 public class AssetStorage {
 
     private final Map<String, Object> assetMap = new HashMap<>();
-    protected ResourceBundle localizedTextBundle;
+    protected ResourceBundle textBundle;
 
     public void store(String key, Object value) {
         requireNonNull(key);
@@ -41,15 +41,15 @@ public class AssetStorage {
         assetMap.remove(key);
     }
 
-    public String text(String keyOrPattern, Object... args) {
+    public String translated(String keyOrPattern, Object... args) {
         requireNonNull(keyOrPattern);
         requireNonNull(args);
-        if (localizedTextBundle == null) {
+        if (textBundle == null) {
             Logger.error("No localized text resources available");
             return "???";
         }
-        if (localizedTextBundle.containsKey(keyOrPattern)) {
-            return MessageFormat.format(localizedTextBundle.getString(keyOrPattern), args);
+        if (textBundle.containsKey(keyOrPattern)) {
+            return MessageFormat.format(textBundle.getString(keyOrPattern), args);
         }
         Logger.error("Missing localized text for key {}", keyOrPattern);
         return "[" + keyOrPattern + "]";
@@ -73,13 +73,24 @@ public class AssetStorage {
         return value;
     }
 
-    public Color color(String key) { return get(key); }
+    private <T> T typedValue(String key, Class<T> expectedClass) {
+        Object value = assetMap.get(key);
+        if (expectedClass.isInstance(value)) {
+            return expectedClass.cast(value);
+        }
+        throw new ClassCastException("Asset value for key '%s' not of type %s".formatted(
+            key, expectedClass.getSimpleName()
+        ));
+    }
 
-    public Font font(String key) { return get(key); }
+    public Background background(String key) { return typedValue(key, Background.class); }
+
+    public Color color(String key) { return typedValue(key, Color.class); }
+
+    public Font font(String key) { return typedValue(key, Font.class); }
 
     public Font font(String key, double size) { return Font.font(font(key).getFamily(), size); }
 
-    public Image image(String key) { return get(key); }
+    public Image image(String key) { return typedValue(key, Image.class); }
 
-    public Background background(String key) { return get(key); }
 }

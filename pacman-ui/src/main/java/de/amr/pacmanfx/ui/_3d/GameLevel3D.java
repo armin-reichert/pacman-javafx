@@ -420,14 +420,14 @@ public class GameLevel3D extends Group implements Disposable {
     private void createGhosts3D() {
         ghosts3D = gameLevel.ghosts().map(ghost -> {
             var ghostColoring = new GhostColoring(
-                ui.currentConfig().getAssetNS("ghost.%d.color.normal.dress".formatted(ghost.personality())),
-                ui.currentConfig().getAssetNS("ghost.%d.color.normal.pupils".formatted(ghost.personality())),
-                ui.currentConfig().getAssetNS("ghost.%d.color.normal.eyeballs".formatted(ghost.personality())),
-                ui.currentConfig().getAssetNS("ghost.color.frightened.dress"),
-                ui.currentConfig().getAssetNS("ghost.color.frightened.pupils"),
-                ui.currentConfig().getAssetNS("ghost.color.frightened.eyeballs"),
-                ui.currentConfig().getAssetNS("ghost.color.flashing.dress"),
-                ui.currentConfig().getAssetNS("ghost.color.flashing.pupils")
+                ui.currentConfig().localAssetValue("ghost.%d.color.normal.dress".formatted(ghost.personality())),
+                ui.currentConfig().localAssetValue("ghost.%d.color.normal.pupils".formatted(ghost.personality())),
+                ui.currentConfig().localAssetValue("ghost.%d.color.normal.eyeballs".formatted(ghost.personality())),
+                ui.currentConfig().localAssetValue("ghost.color.frightened.dress"),
+                ui.currentConfig().localAssetValue("ghost.color.frightened.pupils"),
+                ui.currentConfig().localAssetValue("ghost.color.frightened.eyeballs"),
+                ui.currentConfig().localAssetValue("ghost.color.flashing.dress"),
+                ui.currentConfig().localAssetValue("ghost.color.flashing.pupils")
             );
             return new MutatingGhost3D(
                 animationRegistry,
