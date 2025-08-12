@@ -417,7 +417,26 @@ public class TileMapEditor {
         obstacleInnerAreaDisplayedProperty().set(value);
     }
 
-    private final BooleanProperty obstaclesJoiningPy = new SimpleBooleanProperty(true);
+    // obstaclesJoining
+
+    public static boolean DEFAULT_OBSTACLES_JOINING = true;
+
+    private BooleanProperty obstaclesJoining;
+
+    public BooleanProperty obstaclesJoiningProperty() {
+        if (obstaclesJoining == null) {
+            obstaclesJoining = new SimpleBooleanProperty(DEFAULT_OBSTACLES_JOINING);
+        }
+        return obstaclesJoining;
+    }
+
+    public boolean isObstaclesJoining() {
+        return obstaclesJoining == null ? DEFAULT_OBSTACLES_JOINING : obstaclesJoiningProperty().get();
+    }
+
+    public void setObstaclesJoining(boolean value) {
+        obstaclesJoiningProperty().set(value);
+    }
 
     // segmentNumbersVisible
 
@@ -507,8 +526,6 @@ public class TileMapEditor {
     public WorldMap editedWorldMap() { return editedWorldMap.get(); }
 
     public void setEditedWorldMap(WorldMap worldMap) { editedWorldMap.set(requireNonNull(worldMap)); }
-
-    public BooleanProperty obstaclesJoiningProperty() { return obstaclesJoiningPy; }
 
     public TerrainTileMapRenderer terrainTileRenderer() { return terrainTileRenderer; }
 
@@ -693,7 +710,7 @@ public class TileMapEditor {
     }
 
     private void createPreview3D() {
-        mazePreview3D = new MazePreview3D(model3DRepository, 500, 500);
+        mazePreview3D = new MazePreview3D(this, model3DRepository, 500, 500);
         mazePreview3D.foodVisibleProperty().bind(foodVisibleProperty());
         mazePreview3D.terrainVisibleProperty().bind(terrainVisibleProperty());
         mazePreview3D.worldMapProperty().bind(editedWorldMap);
@@ -1000,7 +1017,7 @@ public class TileMapEditor {
 
         // Edit
         var miObstacleJoining = new CheckMenuItem(translated("menu.edit.obstacles_joining"));
-        miObstacleJoining.selectedProperty().bindBidirectional(obstaclesJoiningPy);
+        miObstacleJoining.selectedProperty().bindBidirectional(obstaclesJoiningProperty());
 
         var miAddBorder = new MenuItem(translated("menu.edit.add_border"));
         miAddBorder.setOnAction(e -> addBorderWall(editedWorldMap()));

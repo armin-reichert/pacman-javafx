@@ -74,11 +74,10 @@ public class Maze3D extends Group {
     private final Node pacmanShape3D;
     private final GhostBody[] ghostShapes;
 
-    public PerspectiveCamera camera() {
-        return camera;
-    }
+    private final TileMapEditor editor;
 
-    public Maze3D(Model3DRepository model3DRepository) {
+    public Maze3D(TileMapEditor editor, Model3DRepository model3DRepository) {
+        this.editor = requireNonNull(editor);
         requireNonNull(model3DRepository);
 
         camera = new PerspectiveCamera(true);
@@ -92,15 +91,22 @@ public class Maze3D extends Group {
         getChildren().addAll(ambientLight, mazeGroup, foodGroup);
 
         foodGroup.visibleProperty().bind(foodVisiblePy);
-        mazeGroup.visibleProperty().bind(terrainVisiblePy);
 
         pacmanShape3D = model3DRepository.createPacBody(ACTOR_SIZE, Color.YELLOW, Color.BLACK, Color.GRAY);
+        pacmanShape3D.visibleProperty().bind(editor.actorsVisibleProperty());
 
         ghostShapes = new GhostBody[4];
         ghostShapes[0] = model3DRepository.createGhostBody(ACTOR_SIZE, Color.RED, 0);
         ghostShapes[1] = model3DRepository.createGhostBody(ACTOR_SIZE, Color.PINK, 90);
         ghostShapes[2] = model3DRepository.createGhostBody(ACTOR_SIZE, Color.CYAN, 270);
         ghostShapes[3] = model3DRepository.createGhostBody(ACTOR_SIZE, Color.ORANGE, 270);
+        for (var ghostShape : ghostShapes) {
+            ghostShape.visibleProperty().bind(editor.actorsVisibleProperty());
+        }
+    }
+
+    public PerspectiveCamera camera() {
+        return camera;
     }
 
     public void moveTowardsUser(double pixels) {
@@ -157,6 +163,8 @@ public class Maze3D extends Group {
             wall3D.setBaseHeight(OBSTACLE_HEIGHT);
             wall3D.setBaseMaterial(wallBaseMaterial);
             wall3D.setTopMaterial(wallTopMaterial);
+            wall3D.base().visibleProperty().bind(terrainVisibleProperty());
+            wall3D.top().visibleProperty().bind(terrainVisibleProperty());
             mazeGroup.getChildren().addAll(wall3D.base(), wall3D.top());
             return wall3D;
         });
@@ -198,6 +206,8 @@ public class Maze3D extends Group {
             wall3D.setBaseMaterial(wallBaseMaterial);
             wall3D.setTopMaterial(wallTopMaterial);
             wall3D.setBaseHeight(HOUSE_WALL_HEIGHT);
+            wall3D.base().visibleProperty().bind(terrainVisibleProperty());
+            wall3D.top().visibleProperty().bind(terrainVisibleProperty());
             mazeGroup.getChildren().addAll(wall3D.base(), wall3D.top());
             return wall3D;
         });
@@ -215,6 +225,7 @@ public class Maze3D extends Group {
             door.setTranslateX(doorTile.x() * TS + HTS);
             door.setTranslateY(doorTile.y() * TS + HTS);
             door.setTranslateZ(-door.getDepth() * 0.5);
+            door.visibleProperty().bind(terrainVisibleProperty());
             mazeGroup.getChildren().add(door);
         });
     }

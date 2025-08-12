@@ -193,7 +193,7 @@ public class EditCanvas {
             worldMap().tiles().forEach(tile -> renderer.drawTile(g, tile, worldMap().content(LayerID.FOOD, tile)));
         }
 
-        if (editor.actorsVisibleProperty().get()) {
+        if (editor.isActorsVisible()) {
             editor.drawActorSprites(g, worldMap(), gridSize());
         }
 
