@@ -43,7 +43,7 @@ public class SpriteAnimationMap<SID> implements ActorAnimationMap {
             return null;
         }
         updateActorSprites(actor);
-        return (RectShort) currentAnimation.currentSprite();
+        return currentAnimation.currentSprite();
     }
 
     @Override

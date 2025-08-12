@@ -252,9 +252,9 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
                         default -> Direction.DOWN; // start with DOWN
                     };
                 }
-                drawMovingActor(pac, dir, (RectShort) animation.currentSprite());
+                drawMovingActor(pac, dir, animation.currentSprite());
             } else {
-                drawMovingActor(pac, pac.moveDir(), (RectShort) animation.currentSprite());
+                drawMovingActor(pac, pac.moveDir(), animation.currentSprite());
             }
         });
     }

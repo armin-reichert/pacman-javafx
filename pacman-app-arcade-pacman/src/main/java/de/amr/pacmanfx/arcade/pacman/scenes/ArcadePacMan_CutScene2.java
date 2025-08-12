@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.actors.ActorAnimationMap;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -131,7 +130,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        gameRenderer.drawSpriteScaled((RectShort) nailDressRaptureAnimation.currentSprite(), TS(14), TS(19) + 3);
+        gameRenderer.drawSpriteScaled(nailDressRaptureAnimation.currentSprite(), TS(14), TS(19) + 3);
         gameRenderer.drawActors(actorsInZOrder);
     }
 

@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.animation;
 
+import de.amr.pacmanfx.lib.RectShort;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
@@ -38,7 +39,7 @@ public class SpriteAnimation extends Transition {
             return this;
         }
 
-        public Builder of(Object[] sprites) {
+        public Builder of(RectShort[] sprites) {
             anim.sprites = requireNonNull(sprites);
             if (Arrays.stream(sprites).anyMatch(Objects::isNull)) {
                 throw new IllegalArgumentException("Found null sprite in sprite array");
@@ -46,8 +47,8 @@ public class SpriteAnimation extends Transition {
             return this;
         }
 
-        public Builder ofSprite(Object sprite) {
-            anim.sprites = new Object[] {requireNonNull(sprite)};
+        public Builder ofSprite(RectShort sprite) {
+            anim.sprites = new RectShort[] { requireNonNull(sprite) };
             return this;
         }
 
@@ -72,7 +73,7 @@ public class SpriteAnimation extends Transition {
         return new Builder();
     }
 
-    private Object[] sprites = new Object[0];
+    private RectShort[] sprites = new RectShort[0];
     private int fps = 60;
     private int frameTicks = 1;
     private int frameIndex;
@@ -92,7 +93,7 @@ public class SpriteAnimation extends Transition {
         frameIndex = 0;
     }
 
-    public void setSprites(Object[] sprites) {
+    public void setSprites(RectShort[] sprites) {
         this.sprites = requireNonNull(sprites);
     }
 
@@ -120,7 +121,7 @@ public class SpriteAnimation extends Transition {
 
     public int frameIndex() { return frameIndex; }
 
-    public Object currentSprite() { return sprites[frameIndex]; }
+    public RectShort currentSprite() { return sprites[frameIndex]; }
 
     public void nextFrame() {
         frameIndex++;
