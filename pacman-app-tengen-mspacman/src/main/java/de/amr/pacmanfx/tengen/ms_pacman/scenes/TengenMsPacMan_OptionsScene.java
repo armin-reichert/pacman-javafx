@@ -26,6 +26,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.ACTION_START_PLAYING;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Properties.PROPERTY_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.ui.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.alt;
@@ -245,8 +248,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         renderer().ctx().setFont(scaledArcadeFont8());
         renderer().drawVerticalSceneBorders();
 
-        var config = ui.<TengenMsPacMan_UIConfig>currentConfig();
-        if (config.PROPERTY_JOYPAD_BINDINGS_DISPLAYED.get()) {
+        if (PROPERTY_JOYPAD_BINDINGS_DISPLAYED.get()) {
             renderer().drawJoypadKeyBinding(ui.joypad().currentKeyBinding());
         }
 

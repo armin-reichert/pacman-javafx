@@ -47,7 +47,10 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_MEDIUM;
 import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_SHORT;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.*;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Properties.PROPERTY_PLAY_SCENE_DISPLAY_MODE;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;
 import static de.amr.pacmanfx.ui.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_MUTED;
 import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
@@ -77,6 +80,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     public TengenMsPacMan_PlayScene2D(GameUI ui) {
         super(ui);
+
+        displayModeProperty().bind(PROPERTY_PLAY_SCENE_DISPLAY_MODE);
 
         // use own canvas, not the shared canvas from the game view
         canvas = new Canvas();
@@ -182,26 +187,25 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public List<MenuItem> supplyContextMenuItems(ContextMenuEvent menuEvent, ContextMenu menu) {
-        var config = ui.<TengenMsPacMan_UIConfig>currentConfig();
-        SceneDisplayMode displayMode = config.PROPERTY_PLAY_SCENE_DISPLAY_MODE.get();
+        SceneDisplayMode displayMode = PROPERTY_PLAY_SCENE_DISPLAY_MODE.get();
 
         miScaledToFit = new RadioMenuItem(ui.assets().translated("scaled_to_fit"));
         miScaledToFit.setSelected(displayMode == SceneDisplayMode.SCALED_TO_FIT);
-        miScaledToFit.setOnAction(e -> config.PROPERTY_PLAY_SCENE_DISPLAY_MODE.set(SceneDisplayMode.SCALED_TO_FIT));
+        miScaledToFit.setOnAction(e -> PROPERTY_PLAY_SCENE_DISPLAY_MODE.set(SceneDisplayMode.SCALED_TO_FIT));
 
         miScrolling = new RadioMenuItem(ui.assets().translated("scrolling"));
         miScrolling.setSelected(displayMode == SceneDisplayMode.SCROLLING);
-        miScrolling.setOnAction(e -> config.PROPERTY_PLAY_SCENE_DISPLAY_MODE.set(SceneDisplayMode.SCROLLING));
+        miScrolling.setOnAction(e -> PROPERTY_PLAY_SCENE_DISPLAY_MODE.set(SceneDisplayMode.SCROLLING));
 
         toggleGroup = new ToggleGroup();
         miScaledToFit.setToggleGroup(toggleGroup);
         miScrolling.setToggleGroup(toggleGroup);
 
-        config.PROPERTY_PLAY_SCENE_DISPLAY_MODE.addListener(this::handlePlaySceneDisplayModeChange);
+        PROPERTY_PLAY_SCENE_DISPLAY_MODE.addListener(this::handlePlaySceneDisplayModeChange);
         Logger.info("Added listener to config propertyPlaySceneDisplayMode property");
         //TODO might interfere with onHidden event handler set elsewhere on this menu
         menu.setOnHidden(e -> {
-            config.PROPERTY_PLAY_SCENE_DISPLAY_MODE.removeListener(this::handlePlaySceneDisplayModeChange);
+            PROPERTY_PLAY_SCENE_DISPLAY_MODE.removeListener(this::handlePlaySceneDisplayModeChange);
             Logger.info("Removed listener from config propertyPlaySceneDisplayMode property");
         });
 

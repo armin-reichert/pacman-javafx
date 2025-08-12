@@ -15,12 +15,10 @@ import de.amr.pacmanfx.lib.nes.NES_Palette;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.tengen.ms_pacman.model.PacBooster;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_MapRepository;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.*;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.*;
-import de.amr.pacmanfx.ui.AbstractGameAction;
 import de.amr.pacmanfx.ui.ActionBinding;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
 import de.amr.pacmanfx.ui.api.GameScene;
@@ -36,10 +34,6 @@ import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.MsPacMan3D;
 import de.amr.pacmanfx.uilib.model3D.MsPacManBody;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -53,11 +47,12 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.*;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Properties.PROPERTY_PLAY_SCENE_DISPLAY_MODE;
 import static de.amr.pacmanfx.ui.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_3D_ENABLED;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_CANVAS_BACKGROUND_COLOR;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
-import static de.amr.pacmanfx.uilib.Ufx.toggle;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_UIConfig implements GameUI_Config {
@@ -85,80 +80,6 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     public static Color nesPaletteColor(int index) {
         return Color.web(NES_Palette.color(index));
     }
-
-    // Actions specific to Tengen Ms. Pac-Man
-
-    //TODO not sure these belong here
-    public static final BooleanProperty PROPERTY_JOYPAD_BINDINGS_DISPLAYED = new SimpleBooleanProperty(false);
-    public static final ObjectProperty<SceneDisplayMode> PROPERTY_PLAY_SCENE_DISPLAY_MODE = new SimpleObjectProperty<>(SceneDisplayMode.SCROLLING);
-
-
-    public static final AbstractGameAction ACTION_QUIT_DEMO_LEVEL = new AbstractGameAction("QUIT_DEMO_LEVEL") {
-        @Override
-        public void execute(GameUI ui) {
-            ui.gameContext().theGameController().changeGameState(GameState.SETTING_OPTIONS_FOR_START);
-        }
-
-        @Override
-        public boolean isEnabled(GameUI ui) {
-            return ui.gameContext().optGameLevel().isPresent() && ui.gameContext().theGameLevel().isDemoLevel();
-        }
-    };
-
-    public static final AbstractGameAction ACTION_ENTER_START_SCREEN = new AbstractGameAction("ENTER_START_SCREEN") {
-        @Override
-        public void execute(GameUI ui) {
-            ui.gameContext().theGameController().changeGameState(GameState.SETTING_OPTIONS_FOR_START);
-        }
-    };
-
-    public static final AbstractGameAction ACTION_START_PLAYING = new AbstractGameAction("START_PLAYING") {
-        @Override
-        public void execute(GameUI ui) {
-            ui.soundManager().stopAll();
-            ui.gameContext().theGame().playingProperty().set(false);
-            ui.gameContext().theGameController().changeGameState(GameState.STARTING_GAME);
-        }
-    };
-
-    public static final AbstractGameAction ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE = new AbstractGameAction("TOGGLE_PLAY_SCENE_DISPLAY_MODE") {
-        @Override
-        public void execute(GameUI ui) {
-            SceneDisplayMode mode = PROPERTY_PLAY_SCENE_DISPLAY_MODE.get();
-            PROPERTY_PLAY_SCENE_DISPLAY_MODE.set(mode == SceneDisplayMode.SCROLLING
-                ? SceneDisplayMode.SCALED_TO_FIT
-                : SceneDisplayMode.SCROLLING);
-        }
-
-        @Override
-        public boolean isEnabled(GameUI ui) {
-            return ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_2D);
-        }
-    };
-
-    public static final AbstractGameAction ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY = new AbstractGameAction("TOGGLE_JOYPAD_BINDINGS_DISPLAYED") {
-        @Override
-        public void execute(GameUI ui) {
-            toggle(PROPERTY_JOYPAD_BINDINGS_DISPLAYED);
-        }
-    };
-
-    public static final AbstractGameAction ACTION_TOGGLE_PAC_BOOSTER = new AbstractGameAction("TOGGLE_PAC_BOOSTER") {
-        @Override
-        public void execute(GameUI ui) {
-            var gameModel = ui.gameContext().<TengenMsPacMan_GameModel>theGame();
-            gameModel.activatePacBooster(!gameModel.isBoosterActive());
-            if (gameModel.isBoosterActive()) {
-                ui.showFlashMessage("Booster!");
-            }
-        }
-
-        @Override
-        public boolean isEnabled(GameUI ui) {
-            var gameModel = ui.gameContext().<TengenMsPacMan_GameModel>theGame();
-            return gameModel.pacBooster() == PacBooster.USE_A_OR_B;
-        }
-    };
 
     private final GameUI ui;
     private final DefaultSoundManager soundManager = new DefaultSoundManager();
@@ -405,10 +326,6 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         scenesByID.put(SCENE_ID_CUT_SCENE_N_2D.formatted(2), new TengenMsPacMan_CutScene2(ui));
         scenesByID.put(SCENE_ID_CUT_SCENE_N_2D.formatted(3), new TengenMsPacMan_CutScene3(ui));
         scenesByID.put(SCENE_ID_CUT_SCENE_N_2D.formatted(4), new TengenMsPacMan_CutScene4(ui));
-
-        //TODO where is the best place to do that?
-        var playScene2D = (TengenMsPacMan_PlayScene2D) scenesByID.get(SCENE_ID_PLAY_SCENE_2D);
-        playScene2D.displayModeProperty().bind(PROPERTY_PLAY_SCENE_DISPLAY_MODE);
     }
 
     @Override
