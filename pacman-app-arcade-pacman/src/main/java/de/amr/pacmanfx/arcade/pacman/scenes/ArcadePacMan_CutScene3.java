@@ -13,10 +13,10 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
+import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createGhost;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createPac;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.*;
-import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 
 /**
@@ -104,6 +104,6 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
     protected void drawDebugInfo() {
         super.drawDebugInfo();
         String text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
-        gameRenderer.fillTextAtScaledPosition(text, debugTextFill, debugTextFont, tiles_to_px(1), tiles_to_px(5));
+        gameRenderer.fillTextAtScaledPosition(text, debugTextFill, debugTextFont, TS(1), TS(5));
     }
 }

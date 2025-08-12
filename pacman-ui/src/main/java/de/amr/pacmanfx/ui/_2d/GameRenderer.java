@@ -31,7 +31,6 @@ import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -177,7 +176,7 @@ public abstract class GameRenderer implements Disposable {
      * @param tileY unscaled tile y-position (baseline)
      */
     public void fillTextAtScaledTilePosition(String text, Color color, Font font, int tileX, int tileY) {
-        fillTextAtScaledPosition(text, color, font, tiles_to_px(tileX), tiles_to_px(tileY));
+        fillTextAtScaledPosition(text, color, font, TS(tileX), TS(tileY));
     }
 
     /**

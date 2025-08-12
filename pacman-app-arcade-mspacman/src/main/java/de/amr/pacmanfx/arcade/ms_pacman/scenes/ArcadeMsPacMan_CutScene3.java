@@ -21,7 +21,6 @@ import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createMs
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createPacMan;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_PacAnimationMap.PAC_MAN_MUNCHING;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 
 /**
@@ -65,7 +64,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
         pacMan.setAnimations(config.createPacAnimations(pacMan));
 
         clapperboard = new Clapperboard("3", "JUNIOR");
-        clapperboard.setPosition(tiles_to_px(3), tiles_to_px(10));
+        clapperboard.setPosition(TS(3), TS(10));
         clapperboard.setFont(scaledArcadeFont8());
         clapperboard.startAnimation();
 

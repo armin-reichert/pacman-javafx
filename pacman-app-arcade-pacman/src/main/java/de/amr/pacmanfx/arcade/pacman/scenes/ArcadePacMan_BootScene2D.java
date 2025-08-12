@@ -17,7 +17,6 @@ import java.util.Random;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
-import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_WHITE;
 
 /**
@@ -91,10 +90,10 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
         ctx().setFill(ARCADE_WHITE);
         ctx().setFont(scaledArcadeFont8());
         for (int row = 0; row < numRows; ++row) {
-            double y = scaled(tiles_to_px(row + 1));
+            double y = scaled(TS(row + 1));
             for (int col = 0; col < numCols; ++col) {
                 int hexDigit = random.nextInt(16);
-                ctx().fillText(Integer.toHexString(hexDigit), scaled(tiles_to_px(col)), y);
+                ctx().fillText(Integer.toHexString(hexDigit), scaled(TS(col)), y);
             }
         }
     }

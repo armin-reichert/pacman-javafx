@@ -37,7 +37,6 @@ import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_MapRepository.strangeMap15Sprite;
@@ -138,11 +137,11 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
         ctx.setFill(color);
         ctx.setFont(font);
         if (tick % 60 < 30) {
-            ctx.fillText("1UP", tiles_to_px(4), tiles_to_px(1));
+            ctx.fillText("1UP", TS(4), TS(1));
         }
-        ctx.fillText("HIGH SCORE", tiles_to_px(11), tiles_to_px(1));
-        ctx.fillText("%6d".formatted(game.score().points()), tiles_to_px(2), tiles_to_px(2));
-        ctx.fillText("%6d".formatted(game.highScore().points()), tiles_to_px(13), tiles_to_px(2));
+        ctx.fillText("HIGH SCORE", TS(11), TS(1));
+        ctx.fillText("%6d".formatted(game.score().points()), TS(2), TS(2));
+        ctx.fillText("%6d".formatted(game.highScore().points()), TS(13), TS(2));
         ctx.restore();
     }
 
@@ -311,7 +310,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
         ctx.setImageSmoothing(false);
         if (!tengenGame.optionsAreInitial()) {
             drawGameOptions(tengenGame.mapCategory(), tengenGame.difficulty(), tengenGame.pacBooster(),
-                level.worldMap().numCols() * HTS, tiles_to_px(2) + HTS);
+                level.worldMap().numCols() * HTS, TS(2) + HTS);
         }
         int x = 0, y = GameLevel.EMPTY_ROWS_OVER_MAZE * TS;
         ctx.drawImage(mazeImage,
@@ -431,7 +430,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
             case STRANGE -> spriteSheet.sprite(SpriteID.INFO_CATEGORY_STRANGE);
             case ARCADE  -> RectShort.ZERO;
         };
-        drawSpriteScaledCenteredAt(categorySprite, centerX + tiles_to_px(4.5), y);
+        drawSpriteScaledCenteredAt(categorySprite, centerX + TS(4.5), y);
         RectShort difficultySprite = switch (requireNonNull(difficulty)) {
             case EASY   -> spriteSheet.sprite(SpriteID.INFO_DIFFICULTY_EASY);
             case HARD   -> spriteSheet.sprite(SpriteID.INFO_DIFFICULTY_HARD);
@@ -440,7 +439,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
         };
         drawSpriteScaledCenteredAt(difficultySprite, centerX, y);
         if (requireNonNull(booster) != PacBooster.OFF) {
-            drawSpriteScaledCenteredAt(spriteSheet.sprite(SpriteID.INFO_BOOSTER), centerX - tiles_to_px(6), y);
+            drawSpriteScaledCenteredAt(spriteSheet.sprite(SpriteID.INFO_BOOSTER), centerX - TS(6), y);
         }
     }
 

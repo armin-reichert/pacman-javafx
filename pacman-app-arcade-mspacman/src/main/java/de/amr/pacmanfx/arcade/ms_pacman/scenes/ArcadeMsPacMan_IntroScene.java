@@ -25,7 +25,6 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createGhost;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createMsPacMan;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.ui.CommonGameActions.*;
@@ -139,15 +138,15 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                 String ghostName = GHOST_NAMES[presentedGhostCharacter];
                 Color ghostColor = GHOST_COLORS[presentedGhostCharacter];
                 if (presentedGhostCharacter == RED_GHOST_SHADOW) {
-                    gameRenderer.fillTextAtScaledPosition("WITH", ARCADE_WHITE, TITLE_X, TOP_Y + tiles_to_px(3));
+                    gameRenderer.fillTextAtScaledPosition("WITH", ARCADE_WHITE, TITLE_X, TOP_Y + TS(3));
                 }
-                double x = TITLE_X + (ghostName.length() < 4 ? tiles_to_px(4) : tiles_to_px(3));
-                double y = TOP_Y + tiles_to_px(6);
+                double x = TITLE_X + (ghostName.length() < 4 ? TS(4) : TS(3));
+                double y = TOP_Y + TS(6);
                 gameRenderer.fillTextAtScaledPosition(ghostName, ghostColor, x, y);
             }
             case MS_PACMAN_MARCHING_IN, READY_TO_PLAY -> {
-                gameRenderer.fillTextAtScaledPosition("STARRING", ARCADE_WHITE, TITLE_X, TOP_Y + tiles_to_px(3));
-                gameRenderer.fillTextAtScaledPosition("MS PAC-MAN", ARCADE_YELLOW, TITLE_X, TOP_Y + tiles_to_px(6));
+                gameRenderer.fillTextAtScaledPosition("STARRING", ARCADE_WHITE, TITLE_X, TOP_Y + TS(3));
+                gameRenderer.fillTextAtScaledPosition("MS PAC-MAN", ARCADE_YELLOW, TITLE_X, TOP_Y + TS(6));
             }
         }
         gameRenderer.drawActor(midwayCopyright);

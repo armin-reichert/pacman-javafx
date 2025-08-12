@@ -39,6 +39,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameController implements GameContext {
 
+    public static final GameController THE_ONE = new GameController();
+
     public static final Pattern GAME_VARIANT_PATTERN = Pattern.compile("[a-zA-Z][a-zA-Z_0-9]*");
 
     private final File homeDir = new File(System.getProperty("user.home"), ".pacmanfx");

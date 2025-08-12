@@ -27,7 +27,6 @@ import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.lib.UsefulFunctions.tiles_to_px;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
@@ -79,8 +78,8 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
         if (hud.isScoreVisible()) {
             ctx.setFont(assets().arcadeFont(scaled(8)));
             ctx.setFill(ARCADE_WHITE);
-            drawScore(gameContext.theGame().score(), "SCORE", tiles_to_px(1), tiles_to_px(1));
-            drawScore(gameContext.theGame().highScore(), "HIGH SCORE", tiles_to_px(14), tiles_to_px(1));
+            drawScore(gameContext.theGame().score(), "SCORE", TS(1), TS(1));
+            drawScore(gameContext.theGame().highScore(), "HIGH SCORE", TS(14), TS(1));
         }
 
         if (hud.isLevelCounterVisible()) {
@@ -118,7 +117,7 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
         fillTextAtScaledPosition(title, x, y);
         fillTextAtScaledPosition("%7s".formatted("%02d".formatted(score.points())), x, y + TS + 1);
         if (score.points() != 0) {
-            fillTextAtScaledPosition("L" + score.levelNumber(), x + tiles_to_px(8), y + TS + 1);
+            fillTextAtScaledPosition("L" + score.levelNumber(), x + TS(8), y + TS + 1);
         }
     }
 
