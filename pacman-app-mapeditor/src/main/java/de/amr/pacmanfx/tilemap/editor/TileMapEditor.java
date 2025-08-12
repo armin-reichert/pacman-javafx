@@ -365,57 +365,30 @@ public class TileMapEditor {
         foodVisibleProperty().set(visible);
     }
 
-    // terrainVisible
+    // mapPropertyEditorsVisible
 
-    public static final boolean DEFAULT_TERRAIN_VISIBLE = true;
+    public static final boolean DEFAULT_MAP_PROPERTY_EDITORS_VISIBLE = false;
 
-    private BooleanProperty terrainVisible;
+    private BooleanProperty mapPropertyEditorsVisible;
 
-    public BooleanProperty terrainVisibleProperty() {
-        if (terrainVisible == null) {
-            terrainVisible = new SimpleBooleanProperty(DEFAULT_TERRAIN_VISIBLE) {
+    public BooleanProperty propertyEditorsVisibleProperty() {
+        if (mapPropertyEditorsVisible == null) {
+            mapPropertyEditorsVisible = new SimpleBooleanProperty(DEFAULT_MAP_PROPERTY_EDITORS_VISIBLE) {
                 @Override
                 protected void invalidated() {
-                    changeManager.requestRedraw();
+                    contentPane.setLeft(get() ? propertyEditorsPane : null);
                 }
             };
         }
-        return terrainVisible;
+        return mapPropertyEditorsVisible;
     }
 
-    public boolean isTerrainVisible() {
-        return terrainVisible == null ? DEFAULT_TERRAIN_VISIBLE : terrainVisible.get();
+    public boolean isMapPropertyEditorsVisible() {
+        return mapPropertyEditorsVisible == null ? DEFAULT_MAP_PROPERTY_EDITORS_VISIBLE : propertyEditorsVisibleProperty().get();
     }
 
-    public void setTerrainVisible(boolean visible) {
-        terrainVisibleProperty().set(visible);
-    }
-
-
-    // segmentNumbersVisible
-
-    public static final boolean DEFAULT_SEGMENT_NUMBERS_VISIBLE = false;
-
-    private BooleanProperty segmentNumbersVisible;
-
-    public BooleanProperty segmentNumbersVisibleProperty() {
-        if (segmentNumbersVisible == null) {
-            segmentNumbersVisible = new SimpleBooleanProperty(DEFAULT_SEGMENT_NUMBERS_VISIBLE) {
-                @Override
-                protected void invalidated() {
-                    changeManager.requestRedraw();
-                }
-            };
-        }
-        return segmentNumbersVisible;
-    }
-
-    public boolean isSegmentNumbersVisible() {
-        return segmentNumbersVisible == null ? DEFAULT_SEGMENT_NUMBERS_VISIBLE : segmentNumbersVisibleProperty().get();
-    }
-
-    public void setSegmentNumbersVisible(boolean value) {
-        segmentNumbersVisibleProperty().set(value);
+    public void setMapPropertyEditorsVisible(boolean value) {
+        propertyEditorsVisibleProperty().set(value);
     }
 
     // obstacleInnerAreaDisplayed
@@ -444,30 +417,32 @@ public class TileMapEditor {
         obstacleInnerAreaDisplayedProperty().set(value);
     }
 
-    // propertyEditorsVisible
+    private final BooleanProperty obstaclesJoiningPy = new SimpleBooleanProperty(true);
 
-    public static final boolean DEFAULT_PROPERTY_EDITORS_VISIBLE = false;
+    // segmentNumbersVisible
 
-    private BooleanProperty propertyEditorsVisible;
+    public static final boolean DEFAULT_SEGMENT_NUMBERS_VISIBLE = false;
 
-    public BooleanProperty propertyEditorsVisibleProperty() {
-        if (propertyEditorsVisible == null) {
-            propertyEditorsVisible = new SimpleBooleanProperty(DEFAULT_PROPERTY_EDITORS_VISIBLE) {
+    private BooleanProperty segmentNumbersVisible;
+
+    public BooleanProperty segmentNumbersVisibleProperty() {
+        if (segmentNumbersVisible == null) {
+            segmentNumbersVisible = new SimpleBooleanProperty(DEFAULT_SEGMENT_NUMBERS_VISIBLE) {
                 @Override
                 protected void invalidated() {
-                    contentPane.setLeft(get() ? propertyEditorsPane : null);
+                    changeManager.requestRedraw();
                 }
             };
         }
-        return propertyEditorsVisible;
+        return segmentNumbersVisible;
     }
 
-    public boolean isPropertyEditorsVisible() {
-        return propertyEditorsVisible == null ? DEFAULT_PROPERTY_EDITORS_VISIBLE : propertyEditorsVisibleProperty().get();
+    public boolean isSegmentNumbersVisible() {
+        return segmentNumbersVisible == null ? DEFAULT_SEGMENT_NUMBERS_VISIBLE : segmentNumbersVisibleProperty().get();
     }
 
-    public void setPropertyEditorsVisible(boolean value) {
-        propertyEditorsVisibleProperty().set(value);
+    public void setSegmentNumbersVisible(boolean value) {
+        segmentNumbersVisibleProperty().set(value);
     }
 
     // symmetric edit mode
@@ -491,13 +466,37 @@ public class TileMapEditor {
         symmetricEditModeProperty().set(value);
     }
 
+    private final ObjectProperty<Image> templateImagePy = new SimpleObjectProperty<>();
+
+    // terrainVisible
+
+    public static final boolean DEFAULT_TERRAIN_VISIBLE = true;
+
+    private BooleanProperty terrainVisible;
+
+    public BooleanProperty terrainVisibleProperty() {
+        if (terrainVisible == null) {
+            terrainVisible = new SimpleBooleanProperty(DEFAULT_TERRAIN_VISIBLE) {
+                @Override
+                protected void invalidated() {
+                    changeManager.requestRedraw();
+                }
+            };
+        }
+        return terrainVisible;
+    }
+
+    public boolean isTerrainVisible() {
+        return terrainVisible == null ? DEFAULT_TERRAIN_VISIBLE : terrainVisible.get();
+    }
+
+    public void setTerrainVisible(boolean visible) {
+        terrainVisibleProperty().set(visible);
+    }
+
     // title
 
-    private final StringProperty titlePy = new SimpleStringProperty("Tile Map Editor");
-
-    private final BooleanProperty obstaclesJoiningPy = new SimpleBooleanProperty(true);
-
-    private final ObjectProperty<Image> templateImagePy = new SimpleObjectProperty<>();
+    private final StringProperty title = new SimpleStringProperty("Tile Map Editor");
 
     // Accessor methods
 
@@ -515,7 +514,7 @@ public class TileMapEditor {
 
     public FoodMapRenderer foodRenderer() { return foodRenderer; }
 
-    public StringProperty titleProperty() { return titlePy; }
+    public StringProperty titleProperty() { return title; }
 
     public ObjectProperty<Image> templateImageProperty() { return templateImagePy; }
 
@@ -607,8 +606,8 @@ public class TileMapEditor {
     }
 
     public void start(Stage stage) {
-        titlePy.bind(createTitleBinding());
-        stage.titleProperty().bind(titlePy);
+        title.bind(createTitleBinding());
+        stage.titleProperty().bind(title);
         contentPane.setLeft(null); // no properties editor
         showEditHelpText();
         updateLoop.start();
