@@ -11,8 +11,8 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_PacAnimationMap
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.*;
-import de.amr.pacmanfx.arcade.pacman.scenes.ArcadeCommon_BootScene2D;
-import de.amr.pacmanfx.arcade.pacman.scenes.ArcadeCommon_PlayScene2D;
+import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_BootScene2D;
+import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_PlayScene2D;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
@@ -246,10 +246,10 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public void createGameScenes() {
-        scenesByID.put(SCENE_ID_BOOT_SCENE_2D,               new ArcadeCommon_BootScene2D(ui));
+        scenesByID.put(SCENE_ID_BOOT_SCENE_2D,               new ArcadePacMan_BootScene2D(ui));
         scenesByID.put(SCENE_ID_INTRO_SCENE_2D,              new ArcadeMsPacMan_IntroScene(ui));
         scenesByID.put(SCENE_ID_START_SCENE_2D,              new ArcadeMsPacMan_StartScene(ui));
-        scenesByID.put(SCENE_ID_PLAY_SCENE_2D,               new ArcadeCommon_PlayScene2D(ui));
+        scenesByID.put(SCENE_ID_PLAY_SCENE_2D,               new ArcadePacMan_PlayScene2D(ui));
         scenesByID.put(SCENE_ID_PLAY_SCENE_3D,               new PlayScene3D(ui));
         scenesByID.put(SCENE_ID_CUT_SCENE_N_2D.formatted(1), new ArcadeMsPacMan_CutScene1(ui));
         scenesByID.put(SCENE_ID_CUT_SCENE_N_2D.formatted(2), new ArcadeMsPacMan_CutScene2(ui));

@@ -24,13 +24,13 @@ import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_WHITE;
  * The boot screen is showing some strange screen patterns and eventually  a grid.
  * This scene tries to mimic that to a certain degree.
  */
-public class ArcadeCommon_BootScene2D extends GameScene2D {
+public class ArcadePacMan_BootScene2D extends GameScene2D {
 
     private static final int FRAGMENT_SIZE = 16;
 
     private Vector2f minPoint, maxPoint;
 
-    public ArcadeCommon_BootScene2D(GameUI ui) {
+    public ArcadePacMan_BootScene2D(GameUI ui) {
         super(ui);
     }
 

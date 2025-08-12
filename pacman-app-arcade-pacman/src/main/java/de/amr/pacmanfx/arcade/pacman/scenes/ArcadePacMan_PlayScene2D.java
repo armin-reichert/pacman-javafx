@@ -46,11 +46,11 @@ import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
  * TODO: Currently the instance of this scene is permanently stored in the UI configuration and lives as long as the
  *       game, so no garbage collection occurs!
  */
-public class ArcadeCommon_PlayScene2D extends GameScene2D {
+public class ArcadePacMan_PlayScene2D extends GameScene2D {
 
     private LevelCompletedAnimation levelCompletedAnimation;
 
-    public ArcadeCommon_PlayScene2D(GameUI ui) {
+    public ArcadePacMan_PlayScene2D(GameUI ui) {
         super(ui);
     }
 
