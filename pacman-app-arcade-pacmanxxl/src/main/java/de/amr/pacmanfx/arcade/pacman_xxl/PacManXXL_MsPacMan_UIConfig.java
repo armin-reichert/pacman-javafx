@@ -171,7 +171,7 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public ArcadeMsPacMan_SpriteSheet spriteSheet() {
-        return localAssetValue("spritesheet");
+        return localAssetValue("spritesheet", ArcadeMsPacMan_SpriteSheet.class);
     }
 
     @Override
@@ -198,29 +198,29 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public Image killedGhostPointsImage(Ghost ghost, int killedIndex) {
-        return localAssetValue("ghost_points_" + killedIndex);
+        return localAssetImage("ghost_points_" + killedIndex);
     }
 
     @Override
     public Image bonusSymbolImage(byte symbol) {
-        return localAssetValue("bonus_symbol_" + symbol);
+        return localAssetImage("bonus_symbol_" + symbol);
     }
 
     @Override
     public Image bonusValueImage(byte symbol) {
-        return localAssetValue("bonus_value_" + symbol);
+        return localAssetImage("bonus_value_" + symbol);
     }
 
     @Override
     public MsPacManBody createLivesCounterShape3D() {
         return ui.assets().theModel3DRepository().createMsPacManBody(
             ui.uiPreferences().getFloat("3d.lives_counter.shape_size"),
-            localAssetValue("pac.color.head"),
-            localAssetValue("pac.color.eyes"),
-            localAssetValue("pac.color.palate"),
-            localAssetValue("pac.color.hairbow"),
-            localAssetValue("pac.color.hairbow.pearls"),
-            localAssetValue("pac.color.boobs")
+            localAssetColor("pac.color.head"),
+            localAssetColor("pac.color.eyes"),
+            localAssetColor("pac.color.palate"),
+            localAssetColor("pac.color.hairbow"),
+            localAssetColor("pac.color.hairbow.pearls"),
+            localAssetColor("pac.color.boobs")
         );
     }
 
@@ -231,14 +231,14 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config {
             animationRegistry,
             pac,
             ui.uiPreferences().getFloat("3d.pac.size"),
-            localAssetValue("pac.color.head"),
-            localAssetValue("pac.color.eyes"),
-            localAssetValue("pac.color.palate"),
-            localAssetValue("pac.color.hairbow"),
-            localAssetValue("pac.color.hairbow.pearls"),
-            localAssetValue("pac.color.boobs")
+            localAssetColor("pac.color.head"),
+            localAssetColor("pac.color.eyes"),
+            localAssetColor("pac.color.palate"),
+            localAssetColor("pac.color.hairbow"),
+            localAssetColor("pac.color.hairbow.pearls"),
+            localAssetColor("pac.color.boobs")
         );
-        Color headColor = localAssetValue("pac.color.head");
+        Color headColor = localAssetColor("pac.color.head");
         pac3D.light().setColor(headColor.desaturate());
         return pac3D;
     }

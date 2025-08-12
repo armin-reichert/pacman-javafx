@@ -20,6 +20,7 @@ import de.amr.pacmanfx.uilib.model3D.PacBase3D;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 
 import java.util.stream.Stream;
 
@@ -59,23 +60,22 @@ public interface GameUI_Config extends Disposable {
     }
 
     /**
-     * @param assets the asset storage
-     * @param localKey the partial asset key, full key is {@code asset_namespace + "." + key}
-     * @return the asset value
-     * @param <T> expected asset value type
-     */
-    default <T> T localAssetValue(AssetStorage assets, String localKey) {
-        return assets.get(globalAssetKey(localKey));
-    }
-
-    /**
      * @param localKey the partial asset key, full key is {@code asset_namespace + "." + key}
      * @return the asset value from the global asset storage of the UI
      * @param <T> expected asset value type
      */
-    default <T> T localAssetValue(String localKey) {
-        return localAssetValue(theUI().assets(), localKey);
+    default <T> T localAssetValue(String localKey, Class<T> type) {
+        return theUI().assets().valueOfType(globalAssetKey(localKey), type);
     }
+
+    default Color localAssetColor(String localKey) {
+        return localAssetValue(localKey, Color.class);
+    }
+
+    default Image localAssetImage(String localKey) {
+        return localAssetValue(localKey, Image.class);
+    }
+
 
     Image bonusSymbolImage(byte symbol);
 

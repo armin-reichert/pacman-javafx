@@ -14,10 +14,10 @@ import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
+import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
-import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.sound.DefaultSoundManager;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
@@ -36,8 +36,8 @@ import java.util.Map;
 import java.util.OptionalInt;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_3D_ENABLED;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
+import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_UIConfig implements GameUI_Config {
@@ -175,7 +175,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
 
     @Override
     public ArcadePacMan_SpriteSheet spriteSheet() {
-        return localAssetValue("spritesheet");
+        return localAssetValue("spritesheet", ArcadePacMan_SpriteSheet.class);
     }
 
     @Override
@@ -190,26 +190,26 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
 
     @Override
     public Image killedGhostPointsImage(Ghost ghost, int killedIndex) {
-        return localAssetValue("ghost_points_" + killedIndex);
+        return localAssetImage("ghost_points_" + killedIndex);
     }
 
     @Override
     public Image bonusSymbolImage(byte symbol) {
-        return localAssetValue("bonus_symbol_" + symbol);
+        return localAssetImage("bonus_symbol_" + symbol);
     }
 
     @Override
     public Image bonusValueImage(byte symbol) {
-        return localAssetValue("bonus_value_" + symbol);
+        return localAssetImage("bonus_value_" + symbol);
     }
 
     @Override
     public PacBody createLivesCounterShape3D() {
         return ui.assets().theModel3DRepository().createPacBody(
             ui.uiPreferences().getFloat("3d.lives_counter.shape_size"),
-            localAssetValue("pac.color.head"),
-            localAssetValue("pac.color.eyes"),
-            localAssetValue("pac.color.palate")
+            localAssetColor("pac.color.head"),
+            localAssetColor("pac.color.eyes"),
+            localAssetColor("pac.color.palate")
         );
     }
 
@@ -219,10 +219,10 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
             animationRegistry,
             pac,
             ui.uiPreferences().getFloat("3d.pac.size"),
-            localAssetValue("pac.color.head"),
-            localAssetValue("pac.color.eyes"),
-            localAssetValue("pac.color.palate"));
-        pac3D.light().setColor(this.<Color>localAssetValue("pac.color.head").desaturate());
+            localAssetColor("pac.color.head"),
+            localAssetColor("pac.color.eyes"),
+            localAssetColor("pac.color.palate"));
+        pac3D.light().setColor(localAssetColor("pac.color.head").desaturate());
         return pac3D;
     }
 

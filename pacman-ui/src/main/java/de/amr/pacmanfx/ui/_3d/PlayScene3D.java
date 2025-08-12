@@ -585,7 +585,7 @@ public class PlayScene3D implements GameScene {
             scores3D.showScore(score.points(), score.levelNumber());
         }
         else { // disabled, show text "GAME OVER"
-            Color color = ui.currentConfig().localAssetValue("color.game_over_message");
+            Color color = ui.currentConfig().localAssetColor("color.game_over_message");
             scores3D.showTextForScore(ui.assets().translated("score.game_over"), color);
         }
         // Always show high score

@@ -313,7 +313,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public TengenMsPacMan_SpriteSheet spriteSheet() {
-        return localAssetValue("spritesheet");
+        return localAssetValue("spritesheet", TengenMsPacMan_SpriteSheet.class);
     }
 
     @Override
@@ -325,12 +325,12 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public Image killedGhostPointsImage(Ghost ghost, int killedIndex) {
-        return localAssetValue("ghost_points_" + killedIndex);
+        return localAssetImage("ghost_points_" + killedIndex);
     }
 
     @Override
     public Image bonusSymbolImage(byte symbol) {
-        return localAssetValue("bonus_symbol_" + symbol);
+        return localAssetImage("bonus_symbol_" + symbol);
     }
 
     @Override
@@ -343,7 +343,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
             case TengenMsPacMan_GameModel.BONUS_ICE_CREAM -> 7; // 4000!
             default -> symbol;
         };
-        return localAssetValue("bonus_value_" + usedSymbol);
+        return localAssetImage("bonus_value_" + usedSymbol);
     }
 
     @Override
@@ -371,12 +371,12 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     public MsPacManBody createLivesCounterShape3D() {
         return ui.assets().theModel3DRepository().createMsPacManBody(
             ui.uiPreferences().getFloat("3d.lives_counter.shape_size"),
-            localAssetValue("pac.color.head"),
-            localAssetValue("pac.color.eyes"),
-            localAssetValue("pac.color.palate"),
-            localAssetValue("pac.color.hairbow"),
-            localAssetValue("pac.color.hairbow.pearls"),
-            localAssetValue("pac.color.boobs")
+            localAssetColor("pac.color.head"),
+            localAssetColor("pac.color.eyes"),
+            localAssetColor("pac.color.palate"),
+            localAssetColor("pac.color.hairbow"),
+            localAssetColor("pac.color.hairbow.pearls"),
+            localAssetColor("pac.color.boobs")
         );
     }
 
@@ -387,14 +387,14 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
             animationRegistry,
             pac,
             ui.uiPreferences().getFloat("3d.pac.size"),
-            localAssetValue("pac.color.head"),
-            localAssetValue("pac.color.eyes"),
-            localAssetValue("pac.color.palate"),
-            localAssetValue("pac.color.hairbow"),
-            localAssetValue("pac.color.hairbow.pearls"),
-            localAssetValue("pac.color.boobs")
+            localAssetColor("pac.color.head"),
+            localAssetColor("pac.color.eyes"),
+            localAssetColor("pac.color.palate"),
+            localAssetColor("pac.color.hairbow"),
+            localAssetColor("pac.color.hairbow.pearls"),
+            localAssetColor("pac.color.boobs")
         );
-        pac3D.light().setColor(this.<Color>localAssetValue("pac.color.head").desaturate());
+        pac3D.light().setColor(localAssetColor("pac.color.head").desaturate());
         return pac3D;
     }
 

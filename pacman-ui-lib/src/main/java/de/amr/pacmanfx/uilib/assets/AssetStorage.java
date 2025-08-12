@@ -73,24 +73,24 @@ public class AssetStorage {
         return value;
     }
 
-    private <T> T typedValue(String key, Class<T> expectedClass) {
+    public <T> T valueOfType(String key, Class<T> type) {
         Object value = assetMap.get(key);
-        if (expectedClass.isInstance(value)) {
-            return expectedClass.cast(value);
+        if (type.isInstance(value)) {
+            return type.cast(value);
         }
         throw new ClassCastException("Asset value for key '%s' not of type %s".formatted(
-            key, expectedClass.getSimpleName()
+            key, type.getSimpleName()
         ));
     }
 
-    public Background background(String key) { return typedValue(key, Background.class); }
+    public Background background(String key) { return valueOfType(key, Background.class); }
 
-    public Color color(String key) { return typedValue(key, Color.class); }
+    public Color color(String key) { return valueOfType(key, Color.class); }
 
-    public Font font(String key) { return typedValue(key, Font.class); }
+    public Font font(String key) { return valueOfType(key, Font.class); }
 
     public Font font(String key, double size) { return Font.font(font(key).getFamily(), size); }
 
-    public Image image(String key) { return typedValue(key, Image.class); }
+    public Image image(String key) { return valueOfType(key, Image.class); }
 
 }
