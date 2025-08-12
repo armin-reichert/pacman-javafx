@@ -44,9 +44,9 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_UIConfig implements GameUI_Config {
 
-    private static final String NAMESPACE = "ms_pacman";
+    private static final String ASSET_NAMESPACE = "ms_pacman";
 
-    private static final ResourceManager RES_PACMAN_UI = () -> GameUI_Implementation.class;
+    private static final ResourceManager RES_GAME_UI = () -> GameUI_Implementation.class;
     private static final ResourceManager RES_ARCADE_MS_PAC_MAN = () -> ArcadeMsPacMan_UIConfig.class;
 
     private static final List<WorldMapColorScheme> WORLD_MAP_COLOR_SCHEMES = List.of(
@@ -61,10 +61,13 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config {
     private final GameUI ui;
     private final DefaultSoundManager soundManager = new DefaultSoundManager();
     private final Map<String, GameScene> scenesByID = new HashMap<>();
-    private BrightMazesSpriteSheet spriteSheetBrightMazes;
+    private final ArcadeMsPacMan_SpriteSheet spriteSheet;
+    private final BrightMazesSpriteSheet spriteSheetBrightMazes;
 
     public ArcadeMsPacMan_UIConfig(GameUI ui) {
         this.ui = requireNonNull(ui);
+        spriteSheet = new ArcadeMsPacMan_SpriteSheet(RES_ARCADE_MS_PAC_MAN.loadImage("graphics/mspacman_spritesheet.png"));
+        spriteSheetBrightMazes = new BrightMazesSpriteSheet(RES_ARCADE_MS_PAC_MAN.loadImage("graphics/mazes_flashing.png"));
     }
 
     @Override
@@ -73,38 +76,32 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config {
     }
 
     public void storeAssets(AssetStorage assets) {
-        var spriteSheet = new ArcadeMsPacMan_SpriteSheet(RES_ARCADE_MS_PAC_MAN.loadImage("graphics/mspacman_spritesheet.png"));
-        storeLocalAssetValue(assets, "spritesheet", spriteSheet);
-        spriteSheetBrightMazes = new BrightMazesSpriteSheet(RES_ARCADE_MS_PAC_MAN.loadImage("graphics/mazes_flashing.png"));
-
-        storeLocalAssetValue(assets, "app_icon",                        RES_ARCADE_MS_PAC_MAN.loadImage("graphics/icons/mspacman.png"));
-
-        storeLocalAssetValue(assets, "startpage.image1",                RES_ARCADE_MS_PAC_MAN.loadImage("graphics/f1.jpg"));
-        storeLocalAssetValue(assets, "startpage.image2",                RES_ARCADE_MS_PAC_MAN.loadImage("graphics/f2.jpg"));
-
-        storeLocalAssetValue(assets, "logo.midway",                     RES_ARCADE_MS_PAC_MAN.loadImage("graphics/midway_logo.png"));
-
-        storeLocalAssetValue(assets, "color.game_over_message",         ARCADE_RED);
+        storeLocalAssetValue(assets, "spritesheet",             spriteSheet);
+        storeLocalAssetValue(assets, "app_icon",                RES_ARCADE_MS_PAC_MAN.loadImage("graphics/icons/mspacman.png"));
+        storeLocalAssetValue(assets, "logo.midway",             RES_ARCADE_MS_PAC_MAN.loadImage("graphics/midway_logo.png"));
+        storeLocalAssetValue(assets, "startpage.image1",        RES_ARCADE_MS_PAC_MAN.loadImage("graphics/f1.jpg"));
+        storeLocalAssetValue(assets, "startpage.image2",        RES_ARCADE_MS_PAC_MAN.loadImage("graphics/f2.jpg"));
+        storeLocalAssetValue(assets, "color.game_over_message", ARCADE_RED);
 
         RectShort[] symbolSprites = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS);
         RectShort[] valueSprites  = spriteSheet.spriteSeq(SpriteID.BONUS_VALUES);
         for (byte symbol = 0; symbol <= 6; ++symbol) {
             storeLocalAssetValue(assets, "bonus_symbol_" + symbol, spriteSheet.image(symbolSprites[symbol]));
-            storeLocalAssetValue(assets, "bonus_value_" + symbol,  spriteSheet.image(valueSprites[symbol]));
+            storeLocalAssetValue(assets, "bonus_value_"  + symbol, spriteSheet.image(valueSprites[symbol]));
         }
 
-        storeLocalAssetValue(assets, "pac.color.head",                  ARCADE_YELLOW);
-        storeLocalAssetValue(assets, "pac.color.eyes",                  Color.grayRgb(33));
-        storeLocalAssetValue(assets, "pac.color.palate",                ARCADE_BROWN);
-        storeLocalAssetValue(assets, "pac.color.boobs",                 ARCADE_YELLOW.deriveColor(0, 1.0, 0.96, 1.0));
-        storeLocalAssetValue(assets, "pac.color.hairbow",               ARCADE_RED);
-        storeLocalAssetValue(assets, "pac.color.hairbow.pearls",        ARCADE_BLUE);
+        storeLocalAssetValue(assets, "pac.color.head",           ARCADE_YELLOW);
+        storeLocalAssetValue(assets, "pac.color.eyes",           Color.grayRgb(33));
+        storeLocalAssetValue(assets, "pac.color.palate",         ARCADE_BROWN);
+        storeLocalAssetValue(assets, "pac.color.boobs",          ARCADE_YELLOW.deriveColor(0, 1.0, 0.96, 1.0));
+        storeLocalAssetValue(assets, "pac.color.hairbow",        ARCADE_RED);
+        storeLocalAssetValue(assets, "pac.color.hairbow.pearls", ARCADE_BLUE);
 
         RectShort[] numberSprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
-        storeLocalAssetValue(assets, "ghost_points_0",                  spriteSheet.image(numberSprites[0]));
-        storeLocalAssetValue(assets, "ghost_points_1",                  spriteSheet.image(numberSprites[1]));
-        storeLocalAssetValue(assets, "ghost_points_2",                  spriteSheet.image(numberSprites[2]));
-        storeLocalAssetValue(assets, "ghost_points_3",                  spriteSheet.image(numberSprites[3]));
+        storeLocalAssetValue(assets, "ghost_points_0",  spriteSheet.image(numberSprites[0]));
+        storeLocalAssetValue(assets, "ghost_points_1",  spriteSheet.image(numberSprites[1]));
+        storeLocalAssetValue(assets, "ghost_points_2",  spriteSheet.image(numberSprites[2]));
+        storeLocalAssetValue(assets, "ghost_points_3",  spriteSheet.image(numberSprites[3]));
 
         storeLocalAssetValue(assets, "ghost.0.color.normal.dress",      ARCADE_RED);
         storeLocalAssetValue(assets, "ghost.0.color.normal.eyeballs",   ARCADE_WHITE);
@@ -129,11 +126,11 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config {
         storeLocalAssetValue(assets, "ghost.color.flashing.eyeballs",   ARCADE_ROSE);
         storeLocalAssetValue(assets, "ghost.color.flashing.pupils",     ARCADE_RED);
 
-        soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_OFF,       RES_PACMAN_UI.url("sound/voice/autopilot-off.mp3"));
-        soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_ON,        RES_PACMAN_UI.url("sound/voice/autopilot-on.mp3"));
-        soundManager.registerVoice(SoundID.VOICE_IMMUNITY_OFF,        RES_PACMAN_UI.url("sound/voice/immunity-off.mp3"));
-        soundManager.registerVoice(SoundID.VOICE_IMMUNITY_ON,         RES_PACMAN_UI.url("sound/voice/immunity-on.mp3"));
-        soundManager.registerVoice(SoundID.VOICE_EXPLAIN,             RES_PACMAN_UI.url("sound/voice/press-key.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_OFF,       RES_GAME_UI.url("sound/voice/autopilot-off.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_ON,        RES_GAME_UI.url("sound/voice/autopilot-on.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_IMMUNITY_OFF,        RES_GAME_UI.url("sound/voice/immunity-off.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_IMMUNITY_ON,         RES_GAME_UI.url("sound/voice/immunity-on.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_EXPLAIN,             RES_GAME_UI.url("sound/voice/press-key.mp3"));
 
         soundManager.registerMediaPlayer(SoundID.BONUS_ACTIVE,        RES_ARCADE_MS_PAC_MAN.url("sound/Fruit_Bounce.mp3"));
         soundManager.registerAudioClip(SoundID.BONUS_EATEN,           RES_ARCADE_MS_PAC_MAN.url("sound/Fruit.mp3"));
@@ -159,7 +156,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public void dispose() {
-        ui.assets().removeAll(NAMESPACE + ".");
+        ui.assets().removeAll(ASSET_NAMESPACE + ".");
         soundManager.dispose();
     }
 
@@ -170,12 +167,12 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public String assetNamespace() {
-        return NAMESPACE;
+        return ASSET_NAMESPACE;
     }
 
     @Override
     public ArcadeMsPacMan_SpriteSheet spriteSheet() {
-        return localAssetValue("spritesheet", ArcadeMsPacMan_SpriteSheet.class);
+        return spriteSheet;
     }
 
     @Override

@@ -76,7 +76,6 @@ public interface GameUI_Config extends Disposable {
         return localAssetValue(localKey, Image.class);
     }
 
-
     Image bonusSymbolImage(byte symbol);
 
     Image bonusValueImage(byte symbol);

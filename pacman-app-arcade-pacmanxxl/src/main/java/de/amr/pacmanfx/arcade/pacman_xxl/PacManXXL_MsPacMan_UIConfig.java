@@ -48,18 +48,20 @@ import static java.util.Objects.requireNonNull;
 
 public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config {
 
-    private static final String NAMESPACE = "ms_pacman_xxl";
+    private static final String ASSET_NAMESPACE = "ms_pacman_xxl";
 
-    private static final ResourceManager RES_GAME_UI = () -> GameUI_Implementation.class;
+    private static final ResourceManager RES_GAME_UI           = () -> GameUI_Implementation.class;
     private static final ResourceManager RES_ARCADE_MS_PAC_MAN = () -> ArcadeMsPacMan_UIConfig.class;
-    private static final ResourceManager RES_MS_PAC_MAN_XXL = () -> PacManXXL_MsPacMan_UIConfig.class;
+    private static final ResourceManager RES_MS_PAC_MAN_XXL    = () -> PacManXXL_MsPacMan_UIConfig.class;
 
     private final GameUI ui;
     private final Map<String, GameScene> scenesByID = new HashMap<>();
     private final DefaultSoundManager soundManager = new DefaultSoundManager();
+    private final ArcadeMsPacMan_SpriteSheet spriteSheet;
 
     public PacManXXL_MsPacMan_UIConfig(GameUI ui) {
         this.ui = requireNonNull(ui);
+        spriteSheet = new ArcadeMsPacMan_SpriteSheet(RES_ARCADE_MS_PAC_MAN.loadImage("graphics/mspacman_spritesheet.png"));
     }
 
     @Override
@@ -68,16 +70,10 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config {
     }
 
     public void storeAssets(AssetStorage assets) {
+        storeLocalAssetValue(assets, "spritesheet", spriteSheet);
         storeLocalAssetValue(assets, "app_icon", RES_ARCADE_MS_PAC_MAN.loadImage("graphics/icons/mspacman.png"));
-
-        storeLocalAssetValue(assets, "audio.option.selection_changed", RES_MS_PAC_MAN_XXL.loadAudioClip("sound/ms-select1.wav"));
-        storeLocalAssetValue(assets, "audio.option.value_changed",     RES_MS_PAC_MAN_XXL.loadAudioClip("sound/ms-select2.wav"));
-
         storeLocalAssetValue(assets, "startpage.image1", RES_ARCADE_MS_PAC_MAN.loadImage("graphics/f1.jpg"));
         storeLocalAssetValue(assets, "startpage.image2", RES_ARCADE_MS_PAC_MAN.loadImage("graphics/f2.jpg"));
-
-        var spriteSheet = new ArcadeMsPacMan_SpriteSheet(RES_ARCADE_MS_PAC_MAN.loadImage("graphics/mspacman_spritesheet.png"));
-        storeLocalAssetValue(assets, "spritesheet", spriteSheet);
         storeLocalAssetValue(assets, "flashing_mazes", RES_ARCADE_MS_PAC_MAN.loadImage("graphics/mazes_flashing.png"));
         storeLocalAssetValue(assets, "logo.midway", RES_ARCADE_MS_PAC_MAN.loadImage("graphics/midway_logo.png"));
         storeLocalAssetValue(assets, "color.game_over_message", ARCADE_RED);
@@ -125,6 +121,9 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config {
         storeLocalAssetValue(assets, "ghost.color.flashing.eyeballs",   ARCADE_ROSE);
         storeLocalAssetValue(assets, "ghost.color.flashing.pupils",     ARCADE_RED);
 
+        storeLocalAssetValue(assets, "audio.option.selection_changed", RES_MS_PAC_MAN_XXL.loadAudioClip("sound/ms-select1.wav"));
+        storeLocalAssetValue(assets, "audio.option.value_changed",     RES_MS_PAC_MAN_XXL.loadAudioClip("sound/ms-select2.wav"));
+
         soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_OFF,       RES_GAME_UI.url("sound/voice/autopilot-off.mp3"));
         soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_ON,        RES_GAME_UI.url("sound/voice/autopilot-on.mp3"));
         soundManager.registerVoice(SoundID.VOICE_IMMUNITY_OFF,        RES_GAME_UI.url("sound/voice/immunity-off.mp3"));
@@ -155,7 +154,7 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public void dispose() {
-        ui.assets().removeAll(NAMESPACE + ".");
+        ui.assets().removeAll(ASSET_NAMESPACE + ".");
         soundManager.dispose();
     }
 
@@ -166,12 +165,12 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public String assetNamespace() {
-        return NAMESPACE;
+        return ASSET_NAMESPACE;
     }
 
     @Override
     public ArcadeMsPacMan_SpriteSheet spriteSheet() {
-        return localAssetValue("spritesheet", ArcadeMsPacMan_SpriteSheet.class);
+        return spriteSheet;
     }
 
     @Override

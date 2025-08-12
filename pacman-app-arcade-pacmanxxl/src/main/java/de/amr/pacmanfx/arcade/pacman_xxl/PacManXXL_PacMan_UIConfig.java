@@ -17,10 +17,10 @@ import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
+import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
-import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.sound.DefaultSoundManager;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
@@ -40,24 +40,26 @@ import java.util.Map;
 import java.util.OptionalInt;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_3D_ENABLED;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
+import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
 
 public class PacManXXL_PacMan_UIConfig implements GameUI_Config {
 
-    private static final String NAMESPACE = "pacman_xxl";
+    private static final String ASSET_NAMESPACE = "pacman_xxl";
 
-    private static final ResourceManager RES_PACMAN_UI = () -> GameUI_Implementation.class;
+    private static final ResourceManager RES_GAME_UI        = () -> GameUI_Implementation.class;
     private static final ResourceManager RES_ARCADE_PAC_MAN = () -> ArcadePacMan_UIConfig.class;
-    private static final ResourceManager RES_PAC_MAN_XXL = () -> PacManXXL_PacMan_UIConfig.class;
+    private static final ResourceManager RES_PAC_MAN_XXL    = () -> PacManXXL_PacMan_UIConfig.class;
 
     private final GameUI ui;
     private final DefaultSoundManager soundManager = new DefaultSoundManager();
     private final Map<String, GameScene> scenesByID = new HashMap<>();
+    private final ArcadePacMan_SpriteSheet spriteSheet;
 
     public PacManXXL_PacMan_UIConfig(GameUI ui) {
         this.ui = requireNonNull(ui);
+        spriteSheet = new ArcadePacMan_SpriteSheet(RES_ARCADE_PAC_MAN.loadImage("graphics/pacman_spritesheet.png"));
     }
 
     @Override
@@ -66,13 +68,9 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config {
     }
 
     public void storeAssets(AssetStorage assets) {
-        storeLocalAssetValue(assets, "app_icon", RES_ARCADE_PAC_MAN.loadImage("graphics/icons/pacman.png"));
-
-        storeLocalAssetValue(assets, "audio.option.selection_changed",  RES_PAC_MAN_XXL.loadAudioClip("sound/ms-select1.wav"));
-        storeLocalAssetValue(assets, "audio.option.value_changed",      RES_PAC_MAN_XXL.loadAudioClip("sound/ms-select2.wav"));
-
-        var spriteSheet = new ArcadePacMan_SpriteSheet(RES_ARCADE_PAC_MAN.loadImage("graphics/pacman_spritesheet.png"));
         storeLocalAssetValue(assets, "spritesheet", spriteSheet);
+
+        storeLocalAssetValue(assets, "app_icon", RES_ARCADE_PAC_MAN.loadImage("graphics/icons/pacman.png"));
         storeLocalAssetValue(assets, "color.game_over_message", ARCADE_RED);
 
         RectShort[] symbolSprites = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS);
@@ -116,11 +114,14 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config {
         storeLocalAssetValue(assets, "ghost.color.flashing.eyeballs",   ARCADE_ROSE);
         storeLocalAssetValue(assets, "ghost.color.flashing.pupils",     ARCADE_RED);
 
-        soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_OFF,       RES_PACMAN_UI.url("sound/voice/autopilot-off.mp3"));
-        soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_ON,        RES_PACMAN_UI.url("sound/voice/autopilot-on.mp3"));
-        soundManager.registerVoice(SoundID.VOICE_IMMUNITY_OFF,        RES_PACMAN_UI.url("sound/voice/immunity-off.mp3"));
-        soundManager.registerVoice(SoundID.VOICE_IMMUNITY_ON,         RES_PACMAN_UI.url("sound/voice/immunity-on.mp3"));
-        soundManager.registerVoice(SoundID.VOICE_EXPLAIN,             RES_PACMAN_UI.url("sound/voice/press-key.mp3"));
+        storeLocalAssetValue(assets, "audio.option.selection_changed",  RES_PAC_MAN_XXL.loadAudioClip("sound/ms-select1.wav"));
+        storeLocalAssetValue(assets, "audio.option.value_changed",      RES_PAC_MAN_XXL.loadAudioClip("sound/ms-select2.wav"));
+
+        soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_OFF,       RES_GAME_UI.url("sound/voice/autopilot-off.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_ON,        RES_GAME_UI.url("sound/voice/autopilot-on.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_IMMUNITY_OFF,        RES_GAME_UI.url("sound/voice/immunity-off.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_IMMUNITY_ON,         RES_GAME_UI.url("sound/voice/immunity-on.mp3"));
+        soundManager.registerVoice(SoundID.VOICE_EXPLAIN,             RES_GAME_UI.url("sound/voice/press-key.mp3"));
 
         soundManager.registerAudioClip(SoundID.BONUS_EATEN,           RES_ARCADE_PAC_MAN.url("sound/eat_fruit.mp3"));
         soundManager.registerAudioClip(SoundID.COIN_INSERTED,         RES_ARCADE_PAC_MAN.url("sound/credit.wav"));
@@ -143,7 +144,7 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config {
 
     @Override
     public void dispose() {
-        ui.assets().removeAll(NAMESPACE + ".");
+        ui.assets().removeAll(ASSET_NAMESPACE + ".");
         soundManager.dispose();
     }
 
@@ -154,7 +155,7 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config {
 
     @Override
     public String assetNamespace() {
-        return NAMESPACE;
+        return ASSET_NAMESPACE;
     }
 
     @Override
@@ -186,7 +187,7 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config {
 
     @Override
     public ArcadePacMan_SpriteSheet spriteSheet() {
-        return localAssetValue("spritesheet", ArcadePacMan_SpriteSheet.class);
+        return spriteSheet;
     }
 
     @Override
