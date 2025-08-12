@@ -43,7 +43,7 @@ public class ObstacleEditor {
         joiningPy.set(join);
     }
 
-    public BooleanProperty symmetricEditProperty() { return symmetricEditPy; }
+    public BooleanProperty symmetricEditModeProperty() { return symmetricEditPy; }
 
     public ObjectProperty<WorldMap> worldMapProperty() { return worldMapPy; }
 
@@ -102,7 +102,7 @@ public class ObstacleEditor {
                 for (int col = 0; col < content[0].length; ++col) {
                     Vector2i tile = minTile.plus(col, row);
                     renderer.drawTile(g, tile, content[row][col]);
-                    if (symmetricEditProperty().get()) {
+                    if (symmetricEditModeProperty().get()) {
                         Vector2i mirroredTile = worldMapPy.get().mirroredTile(tile);
                         renderer.drawTile(g, mirroredTile, mirroredTileValue(content[row][col]));
                     }

@@ -65,7 +65,7 @@ public class EditCanvas {
         };
         obstacleEditor.joiningProperty().bind(editor.obstaclesJoiningProperty());
         obstacleEditor.worldMapProperty().bind(worldMapPy);
-        obstacleEditor.symmetricEditProperty().bind(editor.symmetricEditProperty());
+        obstacleEditor.symmetricEditModeProperty().bind(editor.symmetricEditModeProperty());
 
         gridSizePy.bind(editor.gridSizeProperty());
         worldMapPy.bind(editor.editedWorldMapProperty());
@@ -156,8 +156,8 @@ public class EditCanvas {
             TerrainTileMapRenderer renderer = editor.terrainTileRenderer();
             renderer.setScaling(scaling);
             renderer.setColorScheme(terrainMapColorScheme);
-            renderer.setSegmentNumbersDisplayed(editor.segmentNumbersDisplayedProperty().get());
-            renderer.setObstacleInnerAreaDisplayed(editor.obstacleInnerAreaDisplayedProperty().get());
+            renderer.setSegmentNumbersDisplayed(editor.isSegmentNumbersVisible());
+            renderer.setObstacleInnerAreaDisplayed(editor.isObstacleInnerAreaDisplayed());
             renderer.drawTerrain(g, worldMap(), worldMap().obstacles());
             obstacleEditor.draw(g, renderer);
         }
@@ -167,14 +167,14 @@ public class EditCanvas {
         g.setFill(Color.grayRgb(200, 0.8));
         for (Vector2i tile : editor.tilesWithErrors()) {
             g.fillText("?", tile.x() * gridSize() + 0.25 * gridSize(), tile.y() * gridSize() + 0.8 * gridSize());
-            if (editor.isSymmetricEdit()) {
+            if (editor.isSymmetricEditMode()) {
                 int x = worldMap().numCols() - tile.x() - 1;
                 g.fillText("?", x * gridSize() + 0.25 * gridSize(), tile.y() * gridSize() + 0.8 * gridSize());
             }
         }
 
         // Vertical separator to indicate symmetric edit mode
-        if (editor.isEditMode(EditMode.EDIT) && editor.isSymmetricEdit()) {
+        if (editor.isEditMode(EditMode.EDIT) && editor.isSymmetricEditMode()) {
             g.save();
             g.setStroke(Color.YELLOW);
             g.setLineWidth(0.75);

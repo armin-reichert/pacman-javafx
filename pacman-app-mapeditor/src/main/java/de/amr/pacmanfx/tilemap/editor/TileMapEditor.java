@@ -34,6 +34,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -111,9 +112,9 @@ public class TileMapEditor {
 
     public static final Node NO_GRAPHIC = null;
 
-    public static final FileChooser.ExtensionFilter FILTER_WORLD_MAP = new FileChooser.ExtensionFilter("World Map Files", "*.world");
-    public static final FileChooser.ExtensionFilter FILTER_IMAGE_FILES = new FileChooser.ExtensionFilter("Image Files", "*.bmp", "*.gif", "*.jpg", "*.png");
-    public static final FileChooser.ExtensionFilter FILTER_ALL_FILES = new FileChooser.ExtensionFilter("All Files", "*.*");
+    public static final ExtensionFilter FILTER_WORLD_MAP_FILES = new ExtensionFilter("World Map Files", "*.world");
+    public static final ExtensionFilter FILTER_IMAGE_FILES     = new ExtensionFilter("Image Files", "*.bmp", "*.gif", "*.jpg", "*.png");
+    public static final ExtensionFilter FILTER_ALL_FILES       = new ExtensionFilter("All Files", "*.*");
 
     // Change management
 
@@ -258,11 +259,11 @@ public class TileMapEditor {
 
     // currentFile
 
-    private final ObjectProperty<File> currentFilePy = new SimpleObjectProperty<>();
+    private final ObjectProperty<File> currentFile = new SimpleObjectProperty<>();
 
     // editedWorldMap
 
-    private final ObjectProperty<WorldMap> editedWorldMapPy = new SimpleObjectProperty<>(WorldMap.emptyMap(28, 36)) {
+    private final ObjectProperty<WorldMap> editedWorldMap = new SimpleObjectProperty<>(WorldMap.emptyMap(28, 36)) {
         @Override
         protected void invalidated() {
             templateImagePy.set(null);
@@ -393,30 +394,106 @@ public class TileMapEditor {
 
     // segmentNumbersVisible
 
-    private final BooleanProperty segmentNumbersVisible = new SimpleBooleanProperty(false) {
-        @Override
-        protected void invalidated() {
-            changeManager.requestRedraw();
-        }
-    };
+    public static final boolean DEFAULT_SEGMENT_NUMBERS_VISIBLE = false;
 
-    private final BooleanProperty obstacleInnerAreaDisplayedPy = new SimpleBooleanProperty(false) {
-        @Override
-        protected void invalidated() {
-            changeManager.requestRedraw();
-        }
-    };
+    private BooleanProperty segmentNumbersVisible;
 
-    private final BooleanProperty propertyEditorsVisiblePy = new SimpleBooleanProperty(false) {
-        @Override
-        protected void invalidated() {
-            setPropertyEditorsVisible(get());
+    public BooleanProperty segmentNumbersVisibleProperty() {
+        if (segmentNumbersVisible == null) {
+            segmentNumbersVisible = new SimpleBooleanProperty(DEFAULT_SEGMENT_NUMBERS_VISIBLE) {
+                @Override
+                protected void invalidated() {
+                    changeManager.requestRedraw();
+                }
+            };
         }
-    };
+        return segmentNumbersVisible;
+    }
+
+    public boolean isSegmentNumbersVisible() {
+        return segmentNumbersVisible == null ? DEFAULT_SEGMENT_NUMBERS_VISIBLE : segmentNumbersVisibleProperty().get();
+    }
+
+    public void setSegmentNumbersVisible(boolean value) {
+        segmentNumbersVisibleProperty().set(value);
+    }
+
+    // obstacleInnerAreaDisplayed
+
+    public static final boolean DEFAULT_OBSTACLE_INNER_AREA_DISPLAYED = false;
+
+    private BooleanProperty obstacleInnerAreaDisplayed;
+
+    public BooleanProperty obstacleInnerAreaDisplayedProperty() {
+        if (obstacleInnerAreaDisplayed == null) {
+            obstacleInnerAreaDisplayed = new SimpleBooleanProperty(DEFAULT_OBSTACLE_INNER_AREA_DISPLAYED) {
+                @Override
+                protected void invalidated() {
+                    changeManager.requestRedraw();
+                }
+            };
+        }
+        return obstacleInnerAreaDisplayed;
+    }
+
+    public boolean isObstacleInnerAreaDisplayed() {
+        return obstacleInnerAreaDisplayed == null ? DEFAULT_OBSTACLE_INNER_AREA_DISPLAYED :obstacleInnerAreaDisplayedProperty().get();
+    }
+
+    public void setObstacleInnerAreaDisplayed(boolean value) {
+        obstacleInnerAreaDisplayedProperty().set(value);
+    }
+
+    // propertyEditorsVisible
+
+    public static final boolean DEFAULT_PROPERTY_EDITORS_VISIBLE = false;
+
+    private BooleanProperty propertyEditorsVisible;
+
+    public BooleanProperty propertyEditorsVisibleProperty() {
+        if (propertyEditorsVisible == null) {
+            propertyEditorsVisible = new SimpleBooleanProperty(DEFAULT_PROPERTY_EDITORS_VISIBLE) {
+                @Override
+                protected void invalidated() {
+                    contentPane.setLeft(get() ? propertyEditorsPane : null);
+                }
+            };
+        }
+        return propertyEditorsVisible;
+    }
+
+    public boolean isPropertyEditorsVisible() {
+        return propertyEditorsVisible == null ? DEFAULT_PROPERTY_EDITORS_VISIBLE : propertyEditorsVisibleProperty().get();
+    }
+
+    public void setPropertyEditorsVisible(boolean value) {
+        propertyEditorsVisibleProperty().set(value);
+    }
+
+    // symmetric edit mode
+
+    public static final boolean DEFAULT_SYMMETRIC_EDIT_MODE = true;
+
+    private BooleanProperty symmetricEditMode;
+
+    public BooleanProperty symmetricEditModeProperty() {
+        if (symmetricEditMode == null) {
+            symmetricEditMode = new SimpleBooleanProperty(DEFAULT_SYMMETRIC_EDIT_MODE);
+        }
+        return symmetricEditMode;
+    }
+
+    public boolean isSymmetricEditMode() {
+        return symmetricEditMode == null ? DEFAULT_SYMMETRIC_EDIT_MODE : symmetricEditModeProperty().get();
+    }
+
+    public void setSymmetricEditMode(boolean value) {
+        symmetricEditModeProperty().set(value);
+    }
+
+    // title
 
     private final StringProperty titlePy = new SimpleStringProperty("Tile Map Editor");
-
-    private final BooleanProperty symmetricEditPy = new SimpleBooleanProperty(true);
 
     private final BooleanProperty obstaclesJoiningPy = new SimpleBooleanProperty(true);
 
@@ -426,21 +503,13 @@ public class TileMapEditor {
 
     public ChangeManager getChangeManager() { return changeManager;}
 
-    public ObjectProperty<WorldMap> editedWorldMapProperty() { return editedWorldMapPy; }
+    public ObjectProperty<WorldMap> editedWorldMapProperty() { return editedWorldMap; }
 
-    public WorldMap editedWorldMap() { return editedWorldMapPy.get(); }
+    public WorldMap editedWorldMap() { return editedWorldMap.get(); }
 
-    public void setEditedWorldMap(WorldMap worldMap) { editedWorldMapPy.set(requireNonNull(worldMap)); }
-
-    public BooleanProperty segmentNumbersDisplayedProperty() { return segmentNumbersVisible; }
-
-    public BooleanProperty obstacleInnerAreaDisplayedProperty() { return obstacleInnerAreaDisplayedPy; }
+    public void setEditedWorldMap(WorldMap worldMap) { editedWorldMap.set(requireNonNull(worldMap)); }
 
     public BooleanProperty obstaclesJoiningProperty() { return obstaclesJoiningPy; }
-
-    public BooleanProperty symmetricEditProperty() { return symmetricEditPy; }
-
-    public boolean isSymmetricEdit() { return symmetricEditPy.get(); }
 
     public TerrainTileMapRenderer terrainTileRenderer() { return terrainTileRenderer; }
 
@@ -540,7 +609,7 @@ public class TileMapEditor {
     public void start(Stage stage) {
         titlePy.bind(createTitleBinding());
         stage.titleProperty().bind(titlePy);
-        setPropertyEditorsVisible(propertyEditorsVisiblePy.get());
+        contentPane.setLeft(null); // no properties editor
         showEditHelpText();
         updateLoop.start();
     }
@@ -595,8 +664,8 @@ public class TileMapEditor {
 
     private void createFileChooser() {
         fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().addAll(FILTER_WORLD_MAP, FILTER_ALL_FILES);
-        fileChooser.setSelectedExtensionFilter(FILTER_WORLD_MAP);
+        fileChooser.getExtensionFilters().addAll(FILTER_WORLD_MAP_FILES, FILTER_ALL_FILES);
+        fileChooser.setSelectedExtensionFilter(FILTER_WORLD_MAP_FILES);
         fileChooser.setInitialDirectory(currentDirectory);
     }
 
@@ -628,7 +697,7 @@ public class TileMapEditor {
         mazePreview3D = new MazePreview3D(model3DRepository, 500, 500);
         mazePreview3D.foodVisibleProperty().bind(foodVisibleProperty());
         mazePreview3D.terrainVisibleProperty().bind(terrainVisibleProperty());
-        mazePreview3D.worldMapProperty().bind(editedWorldMapPy);
+        mazePreview3D.worldMapProperty().bind(editedWorldMap);
     }
 
     private void createTemplateImageCanvas() {
@@ -802,11 +871,7 @@ public class TileMapEditor {
         foodPropertiesPane.setExpanded(true);
 
         propertyEditorsPane = new VBox(terrainPropertiesPane, foodPropertiesPane);
-        propertyEditorsPane.visibleProperty().bind(propertyEditorsVisiblePy);
-    }
-
-    private void setPropertyEditorsVisible(boolean visible) {
-        contentPane.setLeft(visible ? propertyEditorsPane : null);
+        propertyEditorsPane.visibleProperty().bind(propertyEditorsVisibleProperty());
     }
 
     private void createMessageDisplay() {
@@ -830,7 +895,7 @@ public class TileMapEditor {
     private void createStatusLine() {
         var lblMapSize = new Label();
         lblMapSize.setFont(FONT_STATUS_LINE_NORMAL);
-        lblMapSize.textProperty().bind(editedWorldMapPy.map(worldMap -> (worldMap != null)
+        lblMapSize.textProperty().bind(editedWorldMap.map(worldMap -> (worldMap != null)
             ? "Cols: %d Rows: %d".formatted(worldMap.numCols(), worldMap.numRows()) : "")
         );
 
@@ -849,9 +914,9 @@ public class TileMapEditor {
         lblEditMode.textProperty().bind(Bindings.createStringBinding(
             () -> switch (editMode()) {
                 case INSPECT -> translated("mode.inspect");
-                case EDIT    -> isSymmetricEdit() ?  translated("mode.symmetric") : translated("mode.edit");
+                case EDIT    -> isSymmetricEditMode() ?  translated("mode.symmetric") : translated("mode.edit");
                 case ERASE   -> translated("mode.erase");
-            }, editModeProperty(), symmetricEditPy
+            }, editModeProperty(), symmetricEditModeProperty()
         ));
         lblEditMode.textFillProperty().bind(
             editModeProperty().map(mode -> switch (mode) {
@@ -890,7 +955,7 @@ public class TileMapEditor {
 
     private StringBinding createTitleBinding() {
         return Bindings.createStringBinding(() -> {
-                File mapFile = currentFilePy.get();
+                File mapFile = currentFile.get();
                 if (mapFile != null) {
                     return "%s: [%s] - %s".formatted( translated("map_editor"), mapFile.getName(), mapFile.getPath() );
                 }
@@ -900,7 +965,7 @@ public class TileMapEditor {
                 return "%s: [%s: %d rows %d cols]".formatted(
                         translated("map_editor"), translated("unsaved_map"),
                         editedWorldMap().numRows(), editedWorldMap().numCols() );
-            }, currentFilePy, editedWorldMapPy
+            }, currentFile, editedWorldMap
         );
     }
 
@@ -986,7 +1051,7 @@ public class TileMapEditor {
 
         // View
         var miPropertiesVisible = new CheckMenuItem(translated("menu.view.properties"));
-        miPropertiesVisible.selectedProperty().bindBidirectional(propertyEditorsVisiblePy);
+        miPropertiesVisible.selectedProperty().bindBidirectional(propertyEditorsVisibleProperty());
 
         var miTerrainVisible = new CheckMenuItem(translated("menu.view.terrain"));
         miTerrainVisible.selectedProperty().bindBidirectional(terrainVisibleProperty());
@@ -1001,10 +1066,10 @@ public class TileMapEditor {
         miGridVisible.selectedProperty().bindBidirectional(gridVisibleProperty());
 
         var miSegmentNumbersVisible = new CheckMenuItem(translated("menu.view.segment_numbers"));
-        miSegmentNumbersVisible.selectedProperty().bindBidirectional(segmentNumbersVisible);
+        miSegmentNumbersVisible.selectedProperty().bindBidirectional(segmentNumbersVisibleProperty());
 
         var miObstacleInnerAreaVisible = new CheckMenuItem(translated("inner_obstacle_area"));
-        miObstacleInnerAreaVisible.selectedProperty().bindBidirectional(obstacleInnerAreaDisplayedPy);
+        miObstacleInnerAreaVisible.selectedProperty().bindBidirectional(obstacleInnerAreaDisplayedProperty());
 
         menuView = new Menu(translated("menu.view"), NO_GRAPHIC,
             miPropertiesVisible, miTerrainVisible, miSegmentNumbersVisible, miObstacleInnerAreaVisible,
@@ -1025,7 +1090,7 @@ public class TileMapEditor {
     public void loadMap(WorldMap worldMap) {
         executeWithCheckForUnsavedChanges(() -> {
             setEditedWorldMap(WorldMap.copyMap(worldMap));
-            currentFilePy.set(null);
+            currentFile.set(null);
         });
     }
 
@@ -1049,7 +1114,7 @@ public class TileMapEditor {
                     } else {
                         setBlankMap(sizeInTiles.x(), sizeInTiles.y());
                     }
-                    currentFilePy.set(null);
+                    currentFile.set(null);
                 }
             });
         });
@@ -1088,7 +1153,7 @@ public class TileMapEditor {
             try {
                 loadMap(WorldMap.fromFile(file));
                 currentDirectory = file.getParentFile();
-                currentFilePy.set(file);
+                currentFile.set(file);
                 Logger.info("Map read from file {}", file);
                 return true;
             } catch (IOException x) {
@@ -1101,7 +1166,7 @@ public class TileMapEditor {
     }
 
     private Optional<File> selectMapFileInDirectoryFollowing(boolean forward) {
-        File currentFile = currentFilePy.get();
+        File currentFile = this.currentFile.get();
         if (currentFile == null) {
             return Optional.empty();
         }
@@ -1338,11 +1403,11 @@ public class TileMapEditor {
             case "i" -> setEditMode(EditMode.INSPECT);
             case "e" -> {
                 setEditMode(EditMode.EDIT);
-                symmetricEditPy.set(false);
+                setSymmetricEditMode(false);
             }
             case "s" -> {
                 setEditMode(EditMode.EDIT);
-                symmetricEditPy.set(true);
+                setSymmetricEditMode(true);
             }
             case "x" -> setEditMode(EditMode.ERASE);
         }
@@ -1453,7 +1518,7 @@ public class TileMapEditor {
         changeManager.setEdited(true);
         changeManager.setWorldMapChanged();
 
-        if (isSymmetricEdit()) {
+        if (isSymmetricEditMode()) {
             Vector2i mirroredTile = worldMap.mirroredTile(tile);
             if (layerID == LayerID.FOOD) {
                 if (canEditFoodAtTile(mirroredTile)) {
