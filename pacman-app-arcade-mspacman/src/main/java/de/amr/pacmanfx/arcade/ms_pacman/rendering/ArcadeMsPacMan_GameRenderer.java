@@ -14,9 +14,9 @@ import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.BonusState;
-import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.GameAssets;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
+import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -75,41 +75,41 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
 
         if (!hud.isVisible()) return;
 
+        GameModel game = gameContext.theGame();
         if (hud.isScoreVisible()) {
-            ctx.setFont(assets().arcadeFont(scaled(8)));
+            ctx.setFont(assets.arcadeFont(scaled(8)));
             ctx.setFill(ARCADE_WHITE);
-            drawScore(gameContext.theGame().score(), "SCORE", TS(1), TS(1));
-            drawScore(gameContext.theGame().highScore(), "HIGH SCORE", TS(14), TS(1));
+            drawScore(game.score(), "SCORE", TS(1), TS(1));
+            drawScore(game.highScore(), "HIGH SCORE", TS(14), TS(1));
         }
 
         if (hud.isLevelCounterVisible()) {
             LevelCounter levelCounter = hud.theLevelCounter();
-            float x = sceneSize.x() - 4 * TS, y = sceneSize.y() - 2 * TS;
+            float x = sceneSize.x() - TS(4), y = sceneSize.y() - TS(2);
             for (byte symbol : levelCounter.symbols()) {
                 RectShort sprite = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS)[symbol];
                 drawSpriteScaled(sprite, x, y);
-                x -= TS * 2;
+                x -= TS(2);
             }
         }
 
         if (hud.isLivesCounterVisible()) {
-            float x = 2 * TS, y = sceneSize.y() - 2 * TS;
+            float x = TS(2), y = sceneSize.y() - TS(2);
             LivesCounter livesCounter = hud.theLivesCounter();
             RectShort sprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
             for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
-                drawSpriteScaled(sprite, x + TS * (2 * i), y);
+                drawSpriteScaled(sprite, x + TS(2 * i), y);
             }
-            if (gameContext.theGame().lifeCount() > livesCounter.maxLivesDisplayed()) {
+            if (game.lifeCount() > livesCounter.maxLivesDisplayed()) {
                 // show text indicating that more lives are available than symbols displayed (cheating may cause this)
                 Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
-                fillTextAtScaledPosition("%d".formatted(gameContext.theGame().lifeCount()), ARCADE_YELLOW, font,
-                    x - 14, y + TS);
+                fillTextAtScaledPosition("%d".formatted(game.lifeCount()), ARCADE_YELLOW, font, x - 14, y + TS);
             }
         }
 
         if (hud.isCreditVisible()) {
             String text = "CREDIT %2d".formatted(gameContext.theCoinMechanism().numCoins());
-            fillTextAtScaledPosition(text, ARCADE_WHITE, assets().arcadeFont(scaled(8)), 2 * TS, sceneSize.y() - 2);
+            fillTextAtScaledPosition(text, ARCADE_WHITE, assets.arcadeFont(scaled(8)), TS(2), sceneSize.y() - 2);
         }
     }
 
@@ -133,13 +133,13 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
         final int colorMapIndex = level.worldMap().getConfigValue("colorMapIndex");
         if (mazeHighlighted) {
             RectShort maze = brightMazesSpriteSheet.spriteSeq(BrightMazesSpriteSheet.BRIGHT_MAZES_ID)[colorMapIndex];
-            drawSpriteScaled(brightMazesSpriteSheet.sourceImage(), maze, 0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);
+            drawSpriteScaled(brightMazesSpriteSheet.sourceImage(), maze, 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE));
         } else if (level.uneatenFoodCount() == 0) {
             RectShort maze = spriteSheet.spriteSeq(SpriteID.EMPTY_MAZES)[colorMapIndex];
-            drawSpriteScaled(maze, 0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);
+            drawSpriteScaled(maze, 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE));
         } else {
             RectShort maze = spriteSheet.spriteSeq(SpriteID.FULL_MAZES)[colorMapIndex];
-            drawSpriteScaled(maze, 0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);
+            drawSpriteScaled(maze, 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE));
             ctx.save();
             ctx.scale(scaling(), scaling());
             ctx.setFill(backgroundColor);
@@ -250,11 +250,11 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
 
     public void drawMidwayCopyright(MidwayCopyright copyright) {
         float x = scaled(copyright.x()), y = scaled(copyright.y());
-        ctx.drawImage(copyright.logo(), x, y + 2, scaled(TS * 4 - 2), scaled(TS * 4));
-        ctx.setFont(assets().arcadeFont(scaled(8)));
+        ctx.drawImage(copyright.logo(), x, y + 2, scaled(TS(4) - 2), scaled(TS(4)));
+        ctx.setFont(assets.arcadeFont(scaled(8)));
         ctx.setFill(ARCADE_RED);
-        ctx.fillText("©", x + scaled(TS * 5), y + scaled(TS * 2 + 2));
-        ctx.fillText("MIDWAY MFG CO", x + scaled(TS * 7), y + scaled(TS * 2));
-        ctx.fillText("1980/1981", x + scaled(TS * 8), y + scaled(TS * 4));
+        ctx.fillText("©", x + scaled(TS(5)), y + scaled(TS(2) + 2));
+        ctx.fillText("MIDWAY MFG CO", x + scaled(TS(7)), y + scaled(TS(2)));
+        ctx.fillText("1980/1981", x + scaled(TS(8)), y + scaled(TS(4)));
     }
 }
