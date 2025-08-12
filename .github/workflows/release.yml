@@ -23,33 +23,43 @@ jobs:
     steps:
       - name: Git checkout
         uses: actions/checkout@v4
+
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }}
           distribution: 'temurin'
+
       - name: Echo JAVA_HOME
         run: echo $JAVA_HOME
+
       - name: Verify Gradle Wrapper
         uses: gradle/wrapper-validation-action@v2
+
       - name: Execute gradle jpackage
         run: ./gradlew --info --stacktrace jpackage
+
       - name: Upload Windows installer
+        if: matrix.os == 'windows-latest'
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.os }}
+          name: windows-installer
           path: pacman-app-allgames/build/jpackage/*.msi
           if-no-files-found: ignore
+
       - name: Upload Linux deb
+        if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.os }}
+          name: linux-installer
           path: pacman-app-allgames/build/jpackage/*.deb
           if-no-files-found: ignore
+
       - name: Upload Mac-OS dmg
+        if: matrix.os == 'macos-latest'
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.os }}
+          name: macos-installer
           path: pacman-app-allgames/build/jpackage/*.dmg
           if-no-files-found: ignore
 
@@ -57,16 +67,31 @@ jobs:
     needs: build-and-upload-artifacts
     runs-on: ubuntu-latest
     steps:
-      - name: Download artifacts created for 3D game version
+      - name: Download Windows installer
         uses: actions/download-artifact@v4
         with:
-          path: pacman-app-allgames/build/jpackage
+          name: windows-installer
+          path: pacman-app-allgames/build/jpackage/windows
+
+      - name: Download Linux installer
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-installer
+          path: pacman-app-allgames/build/jpackage/linux
+
+      - name: Download Mac installer
+        uses: actions/download-artifact@v4
+        with:
+          name: macos-installer
+          path: pacman-app-allgames/build/jpackage/macos
+
       - name: List files
         run: ls -R
+
       - name: Attach installers to the release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            ./pacman-app-allgames/build/jpackage/macos-latest/*.dmg
-            ./pacman-app-allgames/build/jpackage/ubuntu-latest/*.deb
-            ./pacman-app-allgames/build/jpackage/windows-latest/*.msi
+            ./pacman-app-allgames/build/jpackage/macos/*.dmg
+            ./pacman-app-allgames/build/jpackage/linux/*.deb
+            ./pacman-app-allgames/build/jpackage/windows/*.msi
