@@ -156,11 +156,11 @@ public class GameUI_Builder {
                 var constructor = startPageClass.getDeclaredConstructor(GameUI.class);
                 return (StartPage) constructor.newInstance(ui);
             } catch (Exception xx) {
-                error("Could not create start page from class '%s'".formatted(startPageClass.getSimpleName()));
+                error("Could not create start page from class '%s'".formatted(startPageClass.getSimpleName()), xx);
                 throw new IllegalStateException(xx);
             }
         } catch (Exception x) {
-            error("Could not create start page from class '%s'".formatted(startPageClass.getSimpleName()));
+            error("Could not create start page from class '%s'".formatted(startPageClass.getSimpleName()), x);
             throw new IllegalStateException(x);
         }
     }
@@ -175,7 +175,7 @@ public class GameUI_Builder {
                 ? modelClass.getDeclaredConstructor(GameContext.class, MapSelector.class, File.class).newInstance(gameContext, mapSelector, highScoreFile)
                 : modelClass.getDeclaredConstructor(GameContext.class, File.class).newInstance(gameContext, highScoreFile));
         } catch (Exception x) {
-            error("Could not create game model from class %s".formatted(modelClass.getSimpleName()));
+            error("Could not create game model from class %s".formatted(modelClass.getSimpleName()), x);
             throw new RuntimeException(x);
         }
     }
@@ -202,6 +202,10 @@ public class GameUI_Builder {
         if (!GameController.GAME_VARIANT_PATTERN.matcher(key).matches()) {
             error("Game variant key '%s' does not match pattern '%s'".formatted(key, GameController.GAME_VARIANT_PATTERN));
         }
+    }
+
+    private void error(String message, Throwable x) {
+        throw new RuntimeException("UI building failed: %s".formatted(message), x);
     }
 
     private void error(String message) {
