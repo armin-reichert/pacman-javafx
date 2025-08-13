@@ -103,7 +103,7 @@ public enum GameState implements FsmState<GameContext> {
             }
             else if (context.game().canStartNewGame()) {
                 if (timer.tickCount() == 1) {
-                    context.game().startNewGame(context);
+                    context.game().startNewGame();
                 }
                 else if (timer.tickCount() == 2) {
                     context.game().startLevel();
@@ -118,7 +118,7 @@ public enum GameState implements FsmState<GameContext> {
             }
             else { // start demo level
                 if (timer.tickCount() == 1) {
-                    context.game().buildDemoLevel(context);
+                    context.game().buildDemoLevel();
                     context.eventManager().publishEvent(GameEventType.LEVEL_CREATED);
                 }
                 else if (timer.tickCount() == 2) {
@@ -369,7 +369,7 @@ public enum GameState implements FsmState<GameContext> {
             lastTestedLevelNumber = context.game().lastLevelNumber() == Integer.MAX_VALUE ? 25 : context.game().lastLevelNumber();
             timer.restartIndefinitely();
             context.game().prepareForNewGame();
-            context.game().buildNormalLevel(context, 1);
+            context.game().buildNormalLevel(1);
             context.game().startLevel();
             context.gameLevel().showPacAndGhosts();
             context.gameLevel().showMessage(GameLevel.MESSAGE_TEST);
@@ -458,7 +458,7 @@ public enum GameState implements FsmState<GameContext> {
             lastTestedLevelNumber = context.game().lastLevelNumber() == Integer.MAX_VALUE ? 25 : context.game().lastLevelNumber();
             timer.restartSeconds(TEST_DURATION_SEC);
             context.game().prepareForNewGame();
-            context.game().buildNormalLevel(context, 1);
+            context.game().buildNormalLevel(1);
             context.game().startLevel();
             configureLevelForTest(context);
         }

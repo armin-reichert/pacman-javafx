@@ -68,10 +68,10 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void startNewGame(GameContext gameContext) {
+    public void startNewGame() {
         prepareForNewGame();
         theHUD().theLevelCounter().clear();
-        buildNormalLevel(gameContext, 1);
+        buildNormalLevel(1);
         gameContext.eventManager().publishEvent(GameEventType.GAME_STARTED);
     }
 
@@ -214,8 +214,8 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void buildNormalLevel(GameContext gameContext, int levelNumber) {
-        createLevel(gameContext, levelNumber);
+    public void buildNormalLevel(int levelNumber) {
+        createLevel(levelNumber);
         level.setDemoLevel(false);
         level.pac().immuneProperty().bind(gameContext.gameController().propertyImmunity());
         level.pac().usingAutopilotProperty().bind(gameContext.gameController().propertyUsingAutopilot());
@@ -228,9 +228,9 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void buildDemoLevel(GameContext gameContext) {
+    public void buildDemoLevel() {
         int levelNumber = 1;
-        createLevel(gameContext, levelNumber);
+        createLevel(levelNumber);
         level.setDemoLevel(true);
         level.pac().setImmune(false);
         level.pac().setUsingAutopilot(true);
@@ -267,7 +267,7 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
 
     @Override
     public void startNextLevel() {
-        buildNormalLevel(gameContext, level.number() + 1);
+        buildNormalLevel(level.number() + 1);
         startLevel();
     }
 

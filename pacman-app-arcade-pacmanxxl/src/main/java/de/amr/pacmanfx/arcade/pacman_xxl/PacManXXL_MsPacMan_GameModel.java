@@ -23,12 +23,12 @@ public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
     public PacManXXL_Common_MapSelector mapSelector() { return (PacManXXL_Common_MapSelector) mapSelector; }
 
     @Override
-    public void buildDemoLevel(GameContext gameContext) {
+    public void buildDemoLevel() {
         // Select random (standard) level with different map and map color scheme for each choice
         int[] levelNumbers = { 1, 3, 6, 10, 14, 18 };
         int levelNumber = levelNumbers[new Random().nextInt(levelNumbers.length)];
         mapSelector().setMapSelectionMode(MapSelectionMode.NO_CUSTOM_MAPS);
-        createLevel(gameContext, levelNumber);
+        createLevel(levelNumber);
         level.setData(createLevelData(1)); // use settings (speed etc.) of first level
         level.setDemoLevel(true);
         level.pac().setImmune(false);

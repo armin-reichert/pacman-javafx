@@ -39,10 +39,10 @@ public interface Game {
     void    resetEverything();
     void    prepareForNewGame();
     boolean canStartNewGame();
-    void    startNewGame(GameContext gameContext);
-    void    createLevel(GameContext gameContext, int levelNumber);
-    void    buildNormalLevel(GameContext gameContext, int levelNumber);
-    void    buildDemoLevel(GameContext gameContext);
+    void    startNewGame();
+    void    createLevel(int levelNumber);
+    void    buildNormalLevel(int levelNumber);
+    void    buildDemoLevel();
     boolean isPacManSafeInDemoLevel();
     void    startLevel();
     void    startNextLevel();
@@ -64,5 +64,4 @@ public interface Game {
     boolean haveGhostsBeenKilled();
     long    pacPowerFadingTicks(GameLevel gameLevel);
     long    pacPowerTicks(GameLevel level);
-
 }

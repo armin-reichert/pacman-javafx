@@ -414,7 +414,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     @Override
     public void startNextLevel() {
         if (level.number() < LAST_LEVEL_NUMBER) {
-            buildNormalLevel(gameContext, level.number() + 1);
+            buildNormalLevel(level.number() + 1);
             startLevel();
             level.showPacAndGhosts();
         } else {
@@ -436,10 +436,10 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void startNewGame(GameContext gameContext) {
+    public void startNewGame() {
         prepareForNewGame();
         hud.theLevelCounter().setStartLevel(startLevelNumber);
-        buildNormalLevel(gameContext, startLevelNumber);
+        buildNormalLevel(startLevelNumber);
         eventManager().publishEvent(GameEventType.GAME_STARTED);
     }
 
@@ -469,7 +469,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void createLevel(GameContext gameContext, int levelNumber) {
+    public void createLevel(int levelNumber) {
         WorldMap worldMap = mapSelector.createWorldMapForLevel(mapCategory, levelNumber);
         level = new GameLevel(levelNumber, worldMap, createLevelData());
         level.setGameOverStateTicks(420);
@@ -542,8 +542,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void buildNormalLevel(GameContext gameContext, int levelNumber) {
-        createLevel(gameContext, levelNumber);
+    public void buildNormalLevel(int levelNumber) {
+        createLevel(levelNumber);
         level.setDemoLevel(false);
         level.pac().immuneProperty().bind(gameContext.gameController().propertyImmunity());
         level.pac().usingAutopilotProperty().bind(gameContext.gameController().propertyUsingAutopilot());
@@ -557,8 +557,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public void buildDemoLevel(GameContext gameContext) {
-        createLevel(gameContext, 1);
+    public void buildDemoLevel() {
+        createLevel(1);
         level.setDemoLevel(true);
         level.setGameOverStateTicks(120);
         level.pac().setImmune(false);
