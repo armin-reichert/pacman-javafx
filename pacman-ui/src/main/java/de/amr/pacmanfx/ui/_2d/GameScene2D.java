@@ -9,8 +9,8 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.ui.api.ActionBindingsManager;
 import de.amr.pacmanfx.ui.DefaultActionBindingsManager;
+import de.amr.pacmanfx.ui.api.ActionBindingsManager;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -150,7 +150,7 @@ public abstract class GameScene2D implements GameScene {
         if (debugInfoVisibleProperty.get()) {
             drawDebugInfo();
         }
-        gameRenderer.drawHUD(gameContext(), gameContext().game().hud(), sizeInPx(), ui.clock().tickCount());
+        gameRenderer.drawHUD(gameContext(), gameContext().game().hudData(), sizeInPx(), ui.clock().tickCount());
     }
 
     /**

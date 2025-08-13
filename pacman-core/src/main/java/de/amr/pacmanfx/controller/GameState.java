@@ -443,7 +443,7 @@ public enum GameState implements FsmState<GameContext> {
         public void onExit(GameContext context) {
             context.coinMechanism().setNumCoins(0);
             context.game().resetEverything();
-            context.game().hud().theLevelCounter().clear();
+            context.game().hudData().theLevelCounter().clear();
         }
     },
 
@@ -501,7 +501,7 @@ public enum GameState implements FsmState<GameContext> {
 
         @Override
         public void onExit(GameContext context) {
-            context.game().hud().theLevelCounter().clear();
+            context.game().hudData().theLevelCounter().clear();
         }
     },
 

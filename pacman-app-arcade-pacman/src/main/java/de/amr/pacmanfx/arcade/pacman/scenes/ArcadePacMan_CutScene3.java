@@ -8,8 +8,8 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui.api.GameUI;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
@@ -50,7 +50,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
         actorsInZOrder.add(pac);
         actorsInZOrder.add(blinky);
 
-        gameContext().game().hud().credit(false).score(true).levelCounter(true).livesCounter(false);
+        gameContext().game().hudData().credit(false).score(true).levelCounter(true).livesCounter(false);
     }
 
     @Override

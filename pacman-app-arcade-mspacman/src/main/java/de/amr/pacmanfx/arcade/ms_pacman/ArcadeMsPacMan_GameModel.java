@@ -258,7 +258,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
     }
 
     @Override
-    public ArcadeMsPacMan_GameData hud() {
+    public ArcadeMsPacMan_GameData hudData() {
         return hud;
     }
 
@@ -295,7 +295,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
 
         /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
-        hud().theLevelCounter().setEnabled(levelNumber < 8);
+        hudData().theLevelCounter().setEnabled(levelNumber < 8);
     }
 
     @Override

@@ -7,8 +7,8 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
@@ -35,7 +35,7 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
 
     @Override
     public void doInit() {
-        gameContext().game().hud().score(false).levelCounter(false).livesCounter(false);
+        gameContext().game().hudData().score(false).levelCounter(false).livesCounter(false);
 
         SpriteSheet<?> spriteSheet = ui.currentConfig().spriteSheet();
         double width = spriteSheet.sourceImage().getWidth(), height = spriteSheet.sourceImage().getHeight();

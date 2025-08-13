@@ -12,7 +12,8 @@ import de.amr.pacmanfx.ui.api.GameUI;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.ACTION_ENTER_START_SCREEN;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
 
 /**
  * Gives credit to the people that helped in making the game, original and remake authors.
@@ -27,7 +28,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     @Override
     protected void doInit() {
-        gameContext().game().hud().credit(false).score(false).levelCounter(false).livesCounter(false);
+        gameContext().game().hudData().credit(false).score(false).levelCounter(false).livesCounter(false);
         var tengenBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().tengenMsPacManBindings();
         actionBindings.assign(ACTION_ENTER_START_SCREEN, tengenBindings);
     }

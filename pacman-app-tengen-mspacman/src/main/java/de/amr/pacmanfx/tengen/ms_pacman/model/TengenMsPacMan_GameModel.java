@@ -253,7 +253,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public TengenMsPacMan_GameData hud() {
+    public TengenMsPacMan_GameData hudData() {
         return hud;
     }
 

@@ -11,9 +11,9 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
-import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.uilib.animation.SingleSpriteActor;
 
 import java.util.List;
@@ -77,7 +77,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         clapperboard.setFont(scaledArcadeFont8());
         clapperboard.startAnimation();
 
-        gameContext().game().hud().score(true).levelCounter(true).livesCounter(false);
+        gameContext().game().hudData().score(true).levelCounter(true).livesCounter(false);
 
         setState(STATE_CLAPPERBOARD, 120);
     }

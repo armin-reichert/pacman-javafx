@@ -29,7 +29,8 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.ACTION_START_PLAYING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Properties.PROPERTY_JOYPAD_BINDINGS_DISPLAYED;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
 import static de.amr.pacmanfx.ui.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.alt;
 
@@ -87,7 +88,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        gameContext().game().hud().all(false);
+        gameContext().game().hudData().all(false);
 
         var tengenBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().tengenMsPacManBindings();
         actionBindings.bind(actionSelectNextJoypadBinding, alt(KeyCode.J));

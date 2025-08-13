@@ -11,7 +11,7 @@ import java.util.OptionalInt;
 
 public interface Game extends GameLifecycle, GameEvents {
     ScoreManager scoreManager();
-    GameData hud();
+    GameData hudData();
     SimulationStep simulationStep();
     ActorSpeedControl actorSpeedControl();
     HuntingTimer huntingTimer();

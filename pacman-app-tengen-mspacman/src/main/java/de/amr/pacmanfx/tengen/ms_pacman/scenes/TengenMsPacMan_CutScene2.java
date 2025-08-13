@@ -12,9 +12,9 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
+import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
-import de.amr.pacmanfx.ui._2d.GameScene2D;
 
 import java.util.List;
 
@@ -56,7 +56,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     public void doInit() {
         t = -1;
 
-        gameContext().game().hud().credit(false).score(false).levelCounter(true).livesCounter(false);
+        gameContext().game().hudData().credit(false).score(false).levelCounter(true).livesCounter(false);
 
         actionBindings.bind(ACTION_LET_GAME_STATE_EXPIRE, ui.joypad().key(JoypadButton.START));
 
@@ -169,7 +169,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         // draw HUD only for non-Arcade map mode
         var game = gameContext().<TengenMsPacMan_GameModel>game();
         if (game.mapCategory() != MapCategory.ARCADE) {
-            gameRenderer.drawHUD(gameContext(), game.hud(), sizeInPx().minus(0, 2 * TS), ui.clock().tickCount());
+            gameRenderer.drawHUD(gameContext(), game.hudData(), sizeInPx().minus(0, 2 * TS), ui.clock().tickCount());
         }
     }
 
