@@ -44,7 +44,7 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
         level.pac().setAutopilotSteering(demoLevelSteering);
         demoLevelSteering.init();
         hudData().theLevelCounter().setEnabled(false);
-        huntingTimer.reset();
+        huntingTimer().reset();
         scoreManager().setScoreLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
         level.house().ifPresent(house -> gateKeeper.setHouse(house)); //TODO what if no house exists?

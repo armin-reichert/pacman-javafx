@@ -200,6 +200,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
 
     private final ArcadeMsPacMan_GameData hud = new ArcadeMsPacMan_GameData();
     private final ScoreManager scoreManager;
+    private final HuntingTimer huntingTimer;
 
     /**
      * Called via reflection by builder.
@@ -266,6 +267,11 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
     @Override
     public ArcadeMsPacMan_GameData hudData() {
         return hud;
+    }
+
+    @Override
+    public HuntingTimer huntingTimer() {
+        return huntingTimer;
     }
 
     @Override

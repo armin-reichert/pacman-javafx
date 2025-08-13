@@ -8,7 +8,10 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.model.*;
+import de.amr.pacmanfx.model.AbstractGameModel;
+import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.GateKeeper;
+import de.amr.pacmanfx.model.MapSelector;
 import de.amr.pacmanfx.model.actors.ActorSpeedControl;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.steering.Steering;
@@ -33,7 +36,6 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
     protected final GameContext gameContext;
     protected final ActorSpeedControl actorSpeedControl;
     protected MapSelector mapSelector;
-    protected HuntingTimer huntingTimer;
     protected GateKeeper gateKeeper;
     protected Steering autopilot;
     protected Steering demoLevelSteering;
@@ -79,7 +81,7 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
     @Override
     public void onPacKilled() {
         gateKeeper.resetCounterAndSetEnabled(true);
-        huntingTimer.stop();
+        huntingTimer().stop();
         activateCruiseElroyMode(false);
         level.pac().powerTimer().stop();
         level.pac().powerTimer().reset(0);
@@ -135,7 +137,7 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
         scoreManager().loadHighScore();
         scoreManager().resetScore();
         gateKeeper.reset();
-        huntingTimer.reset();
+        huntingTimer().reset();
     }
 
     @Override
@@ -154,9 +156,6 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
 
     @Override
     public ActorSpeedControl actorSpeedControl() { return actorSpeedControl; }
-
-    @Override
-    public HuntingTimer huntingTimer() {    return huntingTimer; }
 
     @Override
     public Optional<GateKeeper> gateKeeper() { return Optional.of(gateKeeper); }
@@ -205,7 +204,7 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
         level.pac().immuneProperty().bind(gameContext.gameController().propertyImmunity());
         level.pac().usingAutopilotProperty().bind(gameContext.gameController().propertyUsingAutopilot());
         hudData().theLevelCounter().setEnabled(true);
-        huntingTimer.reset();
+        huntingTimer().reset();
         scoreManager().setScoreLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
         level.house().ifPresent(house -> gateKeeper.setHouse(house)); //TODO what if no house exists?
@@ -222,7 +221,7 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
         level.pac().setAutopilotSteering(demoLevelSteering);
         demoLevelSteering.init();
         hudData().theLevelCounter().setEnabled(true);
-        huntingTimer.reset();
+        huntingTimer().reset();
         scoreManager().setScoreLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
         level.house().ifPresent(house -> gateKeeper.setHouse(house)); //TODO what if no house exists?

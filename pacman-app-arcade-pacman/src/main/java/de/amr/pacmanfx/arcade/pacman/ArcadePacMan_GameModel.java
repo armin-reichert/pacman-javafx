@@ -66,7 +66,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
                     GameLevel level = gameContext.gameLevel();
                     var arcadeGame = (ArcadeCommon_GameModel) gameContext.game();
 
-                    boolean chase = arcadeGame.huntingTimer.phase() == HuntingPhase.CHASING || arcadeGame.cruiseElroy() > 0;
+                    boolean chase = arcadeGame.huntingTimer().phase() == HuntingPhase.CHASING || arcadeGame.cruiseElroy() > 0;
                     Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(personality());
                     setSpeed(gameContext.game().actorSpeedControl().ghostAttackSpeed(gameContext, level, this));
                     tryMovingTowardsTargetTile(targetTile);
@@ -178,6 +178,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
 
     private final GameData hud = new ArcadePacMan_GameData();
     private final ScoreManager scoreManager;
+    private final HuntingTimer huntingTimer;
 
     public ArcadePacMan_GameModel(GameContext gameContext, File highScoreFile) {
         this(gameContext, new ArcadePacMan_MapSelector(), highScoreFile);
@@ -254,6 +255,11 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
     @Override
     public GameData hudData() {
         return hud;
+    }
+
+    @Override
+    public HuntingTimer huntingTimer() {
+        return huntingTimer;
     }
 
     @Override
