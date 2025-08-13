@@ -5,9 +5,11 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.dashboard;
 
 import de.amr.pacmanfx.controller.CoinMechanism;
+import de.amr.pacmanfx.controller.CutScenesTestState;
+import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.controller.GameState;
-import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.CommonGameActions;
+import de.amr.pacmanfx.ui.api.GameUI;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -66,29 +68,31 @@ public class InfoBoxGameControl extends InfoBox {
         //TODO use binding
         choiceBoxInitialLives.setValue(ui.gameContext().game().initialLifeCount());
 
-        spinnerCredit.setDisable(!(isOneOf(ui.gameContext().gameState(), GameState.INTRO, GameState.SETTING_OPTIONS_FOR_START)));
-        choiceBoxInitialLives.setDisable(ui.gameContext().gameState() != GameState.INTRO);
+        GameState state = ui.gameContext().gameState();
+
+        spinnerCredit.setDisable(!(isOneOf(state, GamePlayState.INTRO, GamePlayState.SETTING_OPTIONS_FOR_START)));
+        choiceBoxInitialLives.setDisable(state != GamePlayState.INTRO);
 
         buttonGroupLevelActions[GAME_LEVEL_START].setDisable(isBooting() || !canStartLevel());
         buttonGroupLevelActions[GAME_LEVEL_QUIT].setDisable(isBooting() || ui.gameContext().optGameLevel().isEmpty());
         buttonGroupLevelActions[GAME_LEVEL_NEXT].setDisable(isBooting() || !canEnterNextLevel());
 
-        buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(isBooting() || ui.gameContext().gameState() != GameState.INTRO);
-        buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT].setDisable(isBooting() || ui.gameContext().gameState() != GameState.TESTING_CUT_SCENES);
+        buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(isBooting() || state != GamePlayState.INTRO);
+        buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT].setDisable(isBooting() || !state.is(CutScenesTestState.class));
 
         cbAutopilot.setDisable(isBooting());
         cbImmunity.setDisable(isBooting());
     }
 
     private boolean isBooting() {
-        return ui.gameContext().gameState() == GameState.BOOT;
+        return ui.gameContext().gameState() == GamePlayState.BOOT;
     }
 
     private boolean canStartLevel() {
-        return ui.gameContext().game().canStartNewGame() && isOneOf(ui.gameContext().gameState(), GameState.INTRO, GameState.SETTING_OPTIONS_FOR_START);
+        return ui.gameContext().game().canStartNewGame() && isOneOf(ui.gameContext().gameState(), GamePlayState.INTRO, GamePlayState.SETTING_OPTIONS_FOR_START);
     }
 
     private boolean canEnterNextLevel() {
-        return ui.gameContext().game().isPlaying() && isOneOf(ui.gameContext().gameState(), GameState.HUNTING);
+        return ui.gameContext().game().isPlaying() && isOneOf(ui.gameContext().gameState(), GamePlayState.HUNTING);
     }
 }

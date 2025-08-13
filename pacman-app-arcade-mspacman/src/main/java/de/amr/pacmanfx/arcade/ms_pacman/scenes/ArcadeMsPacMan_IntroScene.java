@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
-import de.amr.pacmanfx.controller.GameState;
+import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
@@ -60,7 +60,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     public ArcadeMsPacMan_IntroScene(GameUI ui) {
         super(ui);
-        sceneController = new StateMachine<>(SceneState.values()) {
+        sceneController = new StateMachine<>(List.of(SceneState.values())) {
             @Override
             public ArcadeMsPacMan_IntroScene context() {
                 return ArcadeMsPacMan_IntroScene.this;
@@ -75,8 +75,8 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         actionBindings.assign(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
         actionBindings.assign(ACTION_ARCADE_START_GAME, ui.actionBindings());
         actionBindings.assign(ACTION_TEST_CUT_SCENES, ui.actionBindings());
-        actionBindings.assign(ACTION_TEST_LEVELS_BONI, ui.actionBindings());
-        actionBindings.assign(ACTION_TEST_LEVELS_TEASERS, ui.actionBindings());
+        actionBindings.assign(ACTION_TEST_LEVELS_SHORT, ui.actionBindings());
+        actionBindings.assign(ACTION_TEST_LEVELS_MEDIUM, ui.actionBindings());
 
         midwayCopyright = new MidwayCopyright(ui.currentConfig().localAssetImage("logo.midway"));
         midwayCopyright.setPosition(TS * 6, TS * 28);
@@ -249,9 +249,9 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
                 scene.marquee.timer().doTick();
                 if (sceneTimer.atSecond(2.0) && !scene.gameContext().game().canStartNewGame()) {
-                    scene.gameContext().gameController().changeGameState(GameState.STARTING_GAME); // demo level
+                    scene.gameContext().gameController().changeGameState(GamePlayState.STARTING_GAME); // demo level
                 } else if (sceneTimer.atSecond(5)) {
-                    scene.gameContext().gameController().changeGameState(GameState.SETTING_OPTIONS_FOR_START);
+                    scene.gameContext().gameController().changeGameState(GamePlayState.SETTING_OPTIONS_FOR_START);
                 }
             }
         };

@@ -6,6 +6,8 @@ package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.controller.GameState;
+import de.amr.pacmanfx.controller.LevelMediumTestState;
+import de.amr.pacmanfx.controller.LevelShortTestState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
@@ -22,7 +24,6 @@ import de.amr.pacmanfx.ui.api.ActionBindingsManager;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.model3D.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.Scores3D;
@@ -48,8 +49,7 @@ import java.util.*;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.isOneOf;
-import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_MEDIUM;
-import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_SHORT;
+import static de.amr.pacmanfx.controller.GamePlayState.*;
 import static de.amr.pacmanfx.ui.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.control;
@@ -345,21 +345,24 @@ public class PlayScene3D implements GameScene {
     @Override
     public void onEnterGameState(GameState state) {
         requireNonNull(state);
-        switch (state) {
-            case HUNTING          -> gameLevel3D.onHuntingStart();
-            case PACMAN_DYING     -> gameLevel3D.onPacManDying(state);
-            case GHOST_DYING      -> gameLevel3D.onGhostDying();
-            case LEVEL_COMPLETE   -> gameLevel3D.onLevelComplete(state, perspectiveIDProperty);
-            case GAME_OVER        -> gameLevel3D.onGameOver(state);
-            case STARTING_GAME    -> {
-                if (gameLevel3D != null) {
-                    gameLevel3D.onStartingGame();
+        if (state.is(LevelShortTestState.class) || state.is(LevelMediumTestState.class)) {
+            replaceGameLevel3D();
+            showLevelTestMessage();
+            PROPERTY_3D_PERSPECTIVE.set(PerspectiveID.TOTAL);
+        }
+        else {
+            switch (state) {
+                case HUNTING -> gameLevel3D.onHuntingStart();
+                case PACMAN_DYING -> gameLevel3D.onPacManDying(state);
+                case GHOST_DYING -> gameLevel3D.onGhostDying();
+                case LEVEL_COMPLETE -> gameLevel3D.onLevelComplete(state, perspectiveIDProperty);
+                case GAME_OVER -> gameLevel3D.onGameOver(state);
+                case STARTING_GAME -> {
+                    if (gameLevel3D != null) {
+                        gameLevel3D.onStartingGame();
+                    }
                 }
-            }
-            case TESTING_LEVELS_SHORT, TESTING_LEVELS_MEDIUM -> {
-                replaceGameLevel3D();
-                showLevelTestMessage();
-                PROPERTY_3D_PERSPECTIVE.set(PerspectiveID.TOTAL);
+                default -> throw new IllegalStateException("Unexpected state: " + state);
             }
         }
     }
@@ -376,26 +379,30 @@ public class PlayScene3D implements GameScene {
             return;
         }
         final GameLevel gameLevel = gameContext().gameLevel();
-        switch (gameContext().gameState()) {
-            case STARTING_GAME, LEVEL_TRANSITION -> {
-                if (!gameLevel.isDemoLevel()) {
-                    if (gameLevel.house().isEmpty()) {
-                        Logger.error("No house found in this game level! WTF?");
-                    } else {
-                        Vector2f messageCenter = gameLevel.house().get().centerPositionUnderHouse();
-                        gameLevel3D.showAnimatedMessage("READY!", 2.5f, messageCenter.x(), messageCenter.y());
-                    }
-                    setPlayerSteeringActionBindings();
-                }
-            }
-            case TESTING_LEVELS_SHORT, TESTING_LEVELS_MEDIUM -> {
-                replaceGameLevel3D(); //TODO check when to destroy previous level
-//                gameLevel3D.livesCounter3D().flatMap(LivesCounter3D::lookingAroundAnimation).ifPresent(ManagedAnimation::playFromStart);
-                gameLevel3D.energizers3D().forEach(Energizer3D::startPumping);
-                showLevelTestMessage();
-            }
-            default -> Logger.error("Unexpected game state '{}' on level start", gameContext().gameState());
+        final GameState state = gameContext().gameState();
+
+        if (state.is(LevelShortTestState.class) || state.is(LevelMediumTestState.class)) {
+            replaceGameLevel3D(); //TODO check when to destroy previous level
+            gameLevel3D.energizers3D().forEach(Energizer3D::startPumping);
+            showLevelTestMessage();
         }
+        else {
+            switch (state) {
+                case STARTING_GAME, LEVEL_TRANSITION -> {
+                    if (!gameLevel.isDemoLevel()) {
+                        if (gameLevel.house().isEmpty()) {
+                            Logger.error("No house found in this game level! WTF?");
+                        } else {
+                            Vector2f messageCenter = gameLevel.house().get().centerPositionUnderHouse();
+                            gameLevel3D.showAnimatedMessage("READY!", 2.5f, messageCenter.x(), messageCenter.y());
+                        }
+                        setPlayerSteeringActionBindings();
+                    }
+                }
+                default -> Logger.error("Unexpected game state '{}' on level start", gameContext().gameState());
+            }
+        }
+
         gameLevel3D.updateLevelCounter3D();
         setActionBindings();
         fadeInGameLevel3D();
@@ -418,13 +425,13 @@ public class PlayScene3D implements GameScene {
         gameLevel3D.pellets3D().forEach(pellet -> pellet.setVisible(!gameLevel.tileContainsEatenFood((Vector2i) pellet.getUserData())));
         gameLevel3D.energizers3D().forEach(energizer ->
                 energizer.shape().setVisible(!gameLevel.tileContainsEatenFood(energizer.tile())));
-        if (isOneOf(gameContext().gameState(), GameState.HUNTING, GameState.GHOST_DYING)) { //TODO check this
+        if (isOneOf(gameContext().gameState(), HUNTING, GHOST_DYING)) { //TODO check this
             gameLevel3D.energizers3D().stream()
                 .filter(energizer3D -> energizer3D.shape().isVisible())
                 .forEach(Energizer3D::startPumping);
         }
 
-        if (gameContext().gameState() == GameState.HUNTING) {
+        if (gameContext().gameState() == HUNTING) {
             if (gameLevel.pac().powerTimer().isRunning()) {
                 ui.soundManager().loop(SoundID.PAC_MAN_POWER);
             }
@@ -480,9 +487,10 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onGameStarted(GameEvent e) {
+        GameState state = gameContext().gameState();
         boolean silent = gameContext().gameLevel().isDemoLevel()
-            || gameContext().gameState() == TESTING_LEVELS_SHORT
-            || gameContext().gameState() == TESTING_LEVELS_MEDIUM;
+            || state.is(LevelShortTestState.class)
+            || state.is(LevelMediumTestState.class);
         if (!silent) {
             ui.soundManager().play(SoundID.GAME_READY);
         }
@@ -597,7 +605,7 @@ public class PlayScene3D implements GameScene {
     protected void updateSound() {
         if (!ui.soundManager().isEnabled()) return;
         Pac pac = gameContext().gameLevel().pac();
-        boolean pacChased = gameContext().gameState() == GameState.HUNTING && !pac.powerTimer().isRunning();
+        boolean pacChased = gameContext().gameState() == HUNTING && !pac.powerTimer().isRunning();
         if (pacChased) {
             // siren numbers are 1..4, hunting phase index = 0..7
             int huntingPhase = gameContext().game().huntingTimer().phaseIndex();
@@ -638,7 +646,7 @@ public class PlayScene3D implements GameScene {
         gameLevel3D.setVisible(false);
         scores3D.setVisible(false);
         subScene.setFill(SUB_SCENE_FILL_DARK);
-        var makeVisibleAfterDelay = Ufx.pauseSec(0.5, () -> {
+        var makeVisibleAfterDelay = pauseSec(0.5, () -> {
             gameLevel3D.setVisible(true);
             scores3D.setVisible(true);
         });

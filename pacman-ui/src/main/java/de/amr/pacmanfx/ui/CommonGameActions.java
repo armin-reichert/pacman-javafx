@@ -5,8 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.Globals;
-import de.amr.pacmanfx.controller.CoinMechanism;
-import de.amr.pacmanfx.controller.GameState;
+import de.amr.pacmanfx.controller.*;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.model.GameLevel;
@@ -25,7 +24,7 @@ import java.util.Set;
 
 import static de.amr.pacmanfx.Globals.NUM_TICKS_PER_SEC;
 import static de.amr.pacmanfx.Validations.isOneOf;
-import static de.amr.pacmanfx.controller.GameState.INTRO;
+import static de.amr.pacmanfx.controller.GamePlayState.INTRO;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
 import static de.amr.pacmanfx.ui.api.GameUI_Config.SCENE_ID_PLAY_SCENE_2D;
@@ -73,7 +72,7 @@ public interface CommonGameActions {
                 ui.gameContext().coinMechanism().insertCoin();
                 ui.gameContext().eventManager().publishEvent(GameEventType.CREDIT_ADDED);
             }
-            ui.gameContext().gameController().changeGameState(GameState.SETTING_OPTIONS_FOR_START);
+            ui.gameContext().gameController().changeGameState(GamePlayState.SETTING_OPTIONS_FOR_START);
         }
 
         @Override
@@ -81,7 +80,7 @@ public interface CommonGameActions {
             if (ui.gameContext().game().isPlaying()) {
                 return false;
             }
-            return ui.gameContext().gameState() == GameState.SETTING_OPTIONS_FOR_START
+            return ui.gameContext().gameState() == GamePlayState.SETTING_OPTIONS_FOR_START
                 || ui.gameContext().gameState() == INTRO
                 || ui.gameContext().optGameLevel().isPresent() && ui.gameContext().optGameLevel().get().isDemoLevel()
                 || ui.gameContext().coinMechanism().isEmpty();
@@ -92,14 +91,14 @@ public interface CommonGameActions {
         @Override
         public void execute(GameUI ui) {
             ui.soundManager().stopVoice();
-            ui.gameContext().gameController().changeGameState(GameState.STARTING_GAME);
+            ui.gameContext().gameController().changeGameState(GamePlayState.STARTING_GAME);
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
             return  Set.of("PACMAN", "MS_PACMAN", "PACMAN_XXL", "MS_PACMAN_XXL").contains(ui.gameContext().gameController().selectedGameVariant())
                 && !ui.gameContext().coinMechanism().isEmpty()
-                && (ui.gameContext().gameState() == GameState.INTRO || ui.gameContext().gameState() == GameState.SETTING_OPTIONS_FOR_START)
+                && (ui.gameContext().gameState() == GamePlayState.INTRO || ui.gameContext().gameState() == GamePlayState.SETTING_OPTIONS_FOR_START)
                 && ui.gameContext().game().canStartNewGame();
         }
     };
@@ -149,7 +148,7 @@ public interface CommonGameActions {
         public boolean isEnabled(GameUI ui) {
             return ui.gameContext().optGameLevel().isPresent()
                     && !ui.gameContext().gameLevel().isDemoLevel()
-                    && ui.gameContext().gameState() == GameState.HUNTING;
+                    && ui.gameContext().gameState() == GamePlayState.HUNTING;
         }
     };
 
@@ -161,26 +160,26 @@ public interface CommonGameActions {
             if (!vulnerableGhosts.isEmpty()) {
                 level.victims().clear(); // resets value of next killed ghost to 200
                 vulnerableGhosts.forEach(ui.gameContext().game()::onGhostKilled);
-                ui.gameContext().gameController().changeGameState(GameState.GHOST_DYING);
+                ui.gameContext().gameController().changeGameState(GamePlayState.GHOST_DYING);
             }
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return ui.gameContext().gameState() == GameState.HUNTING && ui.gameContext().optGameLevel().isPresent() && !ui.gameContext().gameLevel().isDemoLevel();
+            return ui.gameContext().gameState() == GamePlayState.HUNTING && ui.gameContext().optGameLevel().isPresent() && !ui.gameContext().gameLevel().isDemoLevel();
         }
     };
 
     AbstractGameAction ACTION_CHEAT_ENTER_NEXT_LEVEL = new AbstractGameAction("CHEAT_ENTER_NEXT_LEVEL") {
         @Override
         public void execute(GameUI ui) {
-            ui.gameContext().gameController().changeGameState(GameState.LEVEL_COMPLETE);
+            ui.gameContext().gameController().changeGameState(GamePlayState.LEVEL_COMPLETE);
         }
 
         @Override
         public boolean isEnabled(GameUI ui) {
             return ui.gameContext().game().isPlaying()
-                    && ui.gameContext().gameState() == GameState.HUNTING
+                    && ui.gameContext().gameState() == GamePlayState.HUNTING
                     && ui.gameContext().optGameLevel().isPresent()
                     && ui.gameContext().gameLevel().number() < ui.gameContext().game().lastLevelNumber();
         }
@@ -230,7 +229,8 @@ public interface CommonGameActions {
         public void execute(GameUI ui) {
             ui.soundManager().stopAll();
             ui.currentGameScene().ifPresent(GameScene::end);
-            if (ui.gameContext().gameState() == GameState.TESTING_LEVELS_SHORT) {
+            boolean isLevelShortTest = ui.gameContext().gameState() instanceof LevelShortTestState;
+            if (isLevelShortTest) {
                 ui.gameContext().gameState().onExit(ui.gameContext()); //TODO exit other states too?
             }
             ui.clock().setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
@@ -320,23 +320,26 @@ public interface CommonGameActions {
     AbstractGameAction ACTION_TEST_CUT_SCENES = new AbstractGameAction("TEST_CUT_SCENES") {
         @Override
         public void execute(GameUI ui) {
-            ui.gameContext().gameController().changeGameState(GameState.TESTING_CUT_SCENES);
+            GameState testState = ui.gameContext().gameController().stateByName(CutScenesTestState.class.getSimpleName());
+            ui.gameContext().gameController().changeGameState(testState);
             ui.showFlashMessage("Cut scenes test"); //TODO localize
         }
     };
 
-    AbstractGameAction ACTION_TEST_LEVELS_BONI = new AbstractGameAction("TEST_LEVELS_BONI") {
+    AbstractGameAction ACTION_TEST_LEVELS_SHORT = new AbstractGameAction("TEST_LEVELS_SHORT") {
         @Override
         public void execute(GameUI ui) {
-            ui.gameContext().gameController().restart(GameState.TESTING_LEVELS_SHORT);
+            GameState testState = ui.gameContext().gameController().stateByName(LevelShortTestState.class.getSimpleName());
+            ui.gameContext().gameController().restart(testState);
             ui.showFlashMessage(Duration.seconds(3), "Level TEST MODE");
         }
     };
 
-    AbstractGameAction ACTION_TEST_LEVELS_TEASERS = new AbstractGameAction("TEST_LEVELS_TEASERS") {
+    AbstractGameAction ACTION_TEST_LEVELS_MEDIUM = new AbstractGameAction("TEST_LEVELS_MEDIUM") {
         @Override
         public void execute(GameUI ui) {
-            ui.gameContext().gameController().restart(GameState.TESTING_LEVELS_MEDIUM);
+            GameState testState = ui.gameContext().gameController().stateByName(LevelMediumTestState.class.getSimpleName());
+            ui.gameContext().gameController().restart(testState);
             ui.showFlashMessage(Duration.seconds(3), "Level TEST MODE");
         }
     };
@@ -442,10 +445,12 @@ public interface CommonGameActions {
 
         @Override
         public boolean isEnabled(GameUI ui) {
-            return isOneOf(ui.gameContext().gameState(),
-                    GameState.BOOT, GameState.INTRO, GameState.SETTING_OPTIONS_FOR_START, GameState.HUNTING,
-                    GameState.TESTING_LEVELS_MEDIUM, GameState.TESTING_LEVELS_SHORT
-            );
+            GameState state = ui.gameContext().gameState();
+            if (state.name().equals(LevelShortTestState.class.getSimpleName())
+                || state.name().equals(LevelMediumTestState.class.getSimpleName())) {
+                return true;
+            }
+            return isOneOf(state, GamePlayState.BOOT, GamePlayState.INTRO, GamePlayState.SETTING_OPTIONS_FOR_START, GamePlayState.HUNTING);
         }
     };
 }

@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.layout;
 
-import de.amr.pacmanfx.controller.GameState;
+import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
@@ -195,7 +195,7 @@ public class PlayView extends StackPane implements GameUI_View {
         switch (gameEvent.type()) {
             case LEVEL_CREATED -> onLevelCreated();
             case GAME_STATE_CHANGED -> {
-                if (ui.gameContext().gameState() == GameState.LEVEL_COMPLETE) {
+                if (ui.gameContext().gameState() == GamePlayState.LEVEL_COMPLETE) {
                     miniView.slideOut();
                 }
             }

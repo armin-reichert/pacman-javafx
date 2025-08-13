@@ -19,8 +19,8 @@ public interface Game extends GameLifecycle, GameEvents {
     Optional<GateKeeper> gateKeeper();
     Optional<GameLevel> level();
 
-    boolean cutScenesEnabled();
-    void setCutScenesEnabled(boolean enabled);
+    boolean     cutScenesEnabled();
+    void        setCutScenesEnabled(boolean enabled);
     OptionalInt cutSceneNumber(int levelNumber);
 
     int     initialLifeCount();
@@ -35,6 +35,6 @@ public interface Game extends GameLifecycle, GameEvents {
     boolean hasPacManBeenKilled();
     boolean haveGhostsBeenKilled();
 
-    double    pacPowerFadingSeconds(GameLevel gameLevel);
-    double    pacPowerSeconds(GameLevel level);
+    double pacPowerFadingSeconds(GameLevel gameLevel);
+    double pacPowerSeconds(GameLevel level);
 }

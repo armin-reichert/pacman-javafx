@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.controller.GameState;
+import de.amr.pacmanfx.controller.CutScenesTestState;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
@@ -48,6 +48,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.controller.GamePlayState.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.*;
 import static de.amr.pacmanfx.ui.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_3D_ENABLED;
@@ -335,7 +336,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
             case SETTING_OPTIONS_FOR_START -> SCENE_ID_START_SCENE_2D;
             case SHOWING_CREDITS -> SCENE_ID_CREDITS_SCENE_2D;
             case INTRO -> SCENE_ID_INTRO_SCENE_2D;
-            case GameState.INTERMISSION -> {
+            case INTERMISSION -> {
                 if (gameContext.optGameLevel().isEmpty()) {
                     throw new IllegalStateException("Cannot determine cut scene, no game level available");
                 }
@@ -346,8 +347,8 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
                 }
                 yield SCENE_ID_CUT_SCENE_N_2D.formatted(optCutSceneNumber.getAsInt());
             }
-            case GameState.TESTING_CUT_SCENES -> {
-                //TODO
+            case CutScenesTestState ignored -> {
+                //TODO: move field into test state
                 if (gameContext.game() instanceof AbstractGameModel gameModel) {
                     yield SCENE_ID_CUT_SCENE_N_2D.formatted(gameModel.testedCutSceneNumber);
                 }

@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
-import de.amr.pacmanfx.controller.GameState;
+import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.fsm.FsmState;
@@ -63,7 +63,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     public TengenMsPacMan_IntroScene(GameUI ui) {
         super(ui);
-        sceneController = new StateMachine<>(SceneState.values()) {
+        sceneController = new StateMachine<>(List.of(SceneState.values())) {
             @Override
             public TengenMsPacMan_IntroScene context() {
                 return TengenMsPacMan_IntroScene.this;
@@ -326,9 +326,9 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                     var game = scene.gameContext().<TengenMsPacMan_GameModel>game();
                     if (game.optionsAreInitial()) {
                         game.setCanStartNewGame(false); // TODO check this
-                        scene.gameContext().gameController().restart(GameState.STARTING_GAME);
+                        scene.gameContext().gameController().restart(GamePlayState.STARTING_GAME);
                     } else {
-                        scene.gameContext().gameController().changeGameState(GameState.SETTING_OPTIONS_FOR_START);
+                        scene.gameContext().gameController().changeGameState(GamePlayState.SETTING_OPTIONS_FOR_START);
                     }
                 }
             }

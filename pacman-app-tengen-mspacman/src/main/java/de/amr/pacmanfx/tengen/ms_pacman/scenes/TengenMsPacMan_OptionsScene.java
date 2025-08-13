@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
-import de.amr.pacmanfx.controller.GameState;
+import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
@@ -95,8 +95,8 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         actionBindings.assign(ACTION_START_PLAYING, tengenBindings);
         actionBindings.assign(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, tengenBindings);
         actionBindings.assign(ACTION_TEST_CUT_SCENES, ui.actionBindings());
-        actionBindings.assign(ACTION_TEST_LEVELS_BONI, ui.actionBindings());
-        actionBindings.assign(ACTION_TEST_LEVELS_TEASERS, ui.actionBindings());
+        actionBindings.assign(ACTION_TEST_LEVELS_SHORT, ui.actionBindings());
+        actionBindings.assign(ACTION_TEST_LEVELS_MEDIUM, ui.actionBindings());
         ui.joypad().setBindings(actionBindings);
 
         selectedOption.set(OPTION_PAC_BOOSTER);
@@ -120,7 +120,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         if (idleTicks < IDLE_TIMEOUT) {
             idleTicks += 1;
         } else {
-            gameContext().gameController().changeGameState(GameState.INTRO);
+            gameContext().gameController().changeGameState(GamePlayState.INTRO);
         }
     }
 

@@ -4,7 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
+import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.controller.GameState;
+import de.amr.pacmanfx.controller.LevelMediumTestState;
+import de.amr.pacmanfx.controller.LevelShortTestState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
@@ -33,8 +36,6 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
-import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_MEDIUM;
-import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_SHORT;
 import static de.amr.pacmanfx.ui.CommonGameActions.*;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_MUTED;
@@ -141,9 +142,10 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onGameStarted(GameEvent e) {
+        GameState state = gameContext().gameState();
         boolean silent = gameContext().gameLevel().isDemoLevel()
-                || gameContext().gameState() == TESTING_LEVELS_SHORT
-                || gameContext().gameState() == TESTING_LEVELS_MEDIUM;
+                || state.is(LevelShortTestState.class)
+                || state.is(LevelMediumTestState.class);
         if (!silent) {
             ui.soundManager().play(SoundID.GAME_READY);
         }
@@ -165,7 +167,7 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
         LivesCounter livesCounter = gameContext().game().hudData().theLivesCounter();
         int numLivesDisplayed = gameContext().game().lifeCount() - 1;
         // As long as Pac-Man is still initially hidden in the maze, he is shown as an entry in the lives counter
-        if (gameContext().gameState() == GameState.STARTING_GAME && !gameContext().gameLevel().pac().isVisible()) {
+        if (gameContext().gameState() == GamePlayState.STARTING_GAME && !gameContext().gameLevel().pac().isVisible()) {
             numLivesDisplayed += 1;
         }
         livesCounter.setVisibleLifeCount(Math.min(numLivesDisplayed, livesCounter.maxLivesDisplayed()));
@@ -175,7 +177,7 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
     private void updateSound() {
         if (!ui.soundManager().isEnabled()) return;
         Pac pac = gameContext().gameLevel().pac();
-        boolean pacChased = gameContext().gameState() == GameState.HUNTING && !pac.powerTimer().isRunning();
+        boolean pacChased = gameContext().gameState() == GamePlayState.HUNTING && !pac.powerTimer().isRunning();
         if (pacChased) {
             // siren numbers are 1..4, hunting phase index = 0..7
             int huntingPhase = gameContext().game().huntingTimer().phaseIndex();
@@ -288,7 +290,7 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
             ctx().setFont(debugTextFont);
             String gameStateText = gameContext().gameState().name() + " (Tick %d)".formatted(gameContext().gameState().timer().tickCount());
             String huntingPhaseText = "";
-            if (gameContext().gameState() == GameState.HUNTING) {
+            if (gameContext().gameState() == GamePlayState.HUNTING) {
                 HuntingTimer huntingTimer = gameContext().game().huntingTimer();
                 huntingPhaseText = " %s (Tick %d)".formatted(huntingTimer.phase(), huntingTimer.tickCount());
             }
@@ -298,14 +300,14 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onEnterGameState(GameState state) {
-        if (state == GameState.LEVEL_COMPLETE) {
+        if (state == GamePlayState.LEVEL_COMPLETE) {
             ui.soundManager().stopAll();
             levelCompletedAnimation.setGameLevel(gameContext().gameLevel());
             levelCompletedAnimation.setSingleFlashMillis(333);
             levelCompletedAnimation.getOrCreateAnimationFX().setOnFinished(e -> gameContext().gameController().letCurrentGameStateExpire());
             levelCompletedAnimation.playFromStart();
         }
-        else if (state == GameState.GAME_OVER) {
+        else if (state == GamePlayState.GAME_OVER) {
             ui.soundManager().stopAll();
             ui.soundManager().play(SoundID.GAME_OVER);
         }

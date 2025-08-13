@@ -19,6 +19,7 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -39,7 +40,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameController implements GameContext {
 
-    public static final GameController THE_ONE = new GameController();
+    public static GameController THE_ONE;
 
     public static final Pattern GAME_VARIANT_PATTERN = Pattern.compile("[a-zA-Z][a-zA-Z_0-9]*");
 
@@ -59,13 +60,13 @@ public class GameController implements GameContext {
     private final BooleanProperty propertyImmunity = new SimpleBooleanProperty(false);
     private final BooleanProperty propertyUsingAutopilot = new SimpleBooleanProperty(false);
 
-    public GameController() {
+    public GameController(List<GameState> states) {
         boolean success = initUserDirectories();
         if (!success) {
             throw new IllegalStateException("User directories could not be created");
         }
         gameEventManager = new GameEventManager(this);
-        gameStateMachine = new StateMachine<>(GameState.values()) {
+        gameStateMachine = new StateMachine<>(states) {
             @Override public GameContext context() { return GameController.this; }
         };
         gameStateMachine.addStateChangeListener((oldState, newState) ->
@@ -78,6 +79,12 @@ public class GameController implements GameContext {
                 gameEventManager.publishEvent(GameEventType.GAME_VARIANT_CHANGED);
             }
         });
+    }
+
+    public GameState stateByName(String name) {
+        return gameStateMachine.states().stream()
+            .filter(state -> state.name().equals(name))
+            .findFirst().orElseThrow();
     }
 
     public void setEventsEnabled(boolean enabled) {

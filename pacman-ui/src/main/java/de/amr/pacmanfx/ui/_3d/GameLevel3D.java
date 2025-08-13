@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._3d;
 
+import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.StopWatch;
@@ -686,7 +687,7 @@ public class GameLevel3D extends Group implements Disposable {
         }
         int livesCounterSize = ui.gameContext().game().lifeCount() - 1;
         // when the game starts and Pac-Man is not yet visible, show one more
-        boolean oneMore = ui.gameContext().gameState() == GameState.STARTING_GAME && !gameLevel.pac().isVisible();
+        boolean oneMore = ui.gameContext().gameState() == GamePlayState.STARTING_GAME && !gameLevel.pac().isVisible();
         if (oneMore) livesCounterSize += 1;
         livesCountProperty.set(livesCounterSize);
 

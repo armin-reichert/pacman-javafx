@@ -4,7 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
+import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.controller.GameState;
+import de.amr.pacmanfx.controller.LevelMediumTestState;
+import de.amr.pacmanfx.controller.LevelShortTestState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
@@ -45,8 +48,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
-import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_MEDIUM;
-import static de.amr.pacmanfx.controller.GameState.TESTING_LEVELS_SHORT;
+import static de.amr.pacmanfx.controller.GamePlayState.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Properties.PROPERTY_PLAY_SCENE_DISPLAY_MODE;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
@@ -164,7 +166,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
                 updateSound();
             }
             if (subScene.getCamera() == dynamicCamera) {
-                if (gameContext().gameState() == GameState.HUNTING) {
+                if (gameContext().gameState() == HUNTING) {
                     dynamicCamera.setFocussingActor(true);
                 }
                 dynamicCamera.setVerticalRangeInTiles(level.worldMap().numRows());
@@ -245,9 +247,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onGameStarted(GameEvent e) {
+        GameState state = gameContext().gameState();
         boolean shutUp = gameContext().gameLevel().isDemoLevel()
-            || gameContext().gameState() == TESTING_LEVELS_SHORT
-            || gameContext().gameState() == TESTING_LEVELS_MEDIUM;
+            || state.is(LevelShortTestState.class)
+            || state.is(LevelMediumTestState.class);
         if (!shutUp) {
             ui.soundManager().play(SoundID.GAME_READY);
         }
@@ -305,6 +308,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
                     });
                 }
                 dynamicCamera.moveTop();
+            }
+            default -> {
+                //TODO
             }
         }
     }
@@ -371,7 +377,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         final Pac pac = gameContext().gameLevel().pac();
 
         //TODO check in simulator when exactly which siren plays
-        boolean pacChased = gameContext().gameState() == GameState.HUNTING && !pac.powerTimer().isRunning();
+        boolean pacChased = gameContext().gameState() == HUNTING && !pac.powerTimer().isRunning();
         if (pacChased) {
             // siren numbers are 1..4, hunting phase index = 0..7
             int huntingPhase = gameContext().game().huntingTimer().phaseIndex();
@@ -395,7 +401,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             .ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
             .findAny();
         if (ghostReturningToHouse.isPresent()
-            && (gameContext().gameState() == GameState.HUNTING || gameContext().gameState() == GameState.GHOST_DYING)) {
+            && (gameContext().gameState() == HUNTING || gameContext().gameState() == GamePlayState.GHOST_DYING)) {
             ui.soundManager().loop(SoundID.GHOST_RETURNS);
         } else {
             ui.soundManager().stop(SoundID.GHOST_RETURNS);
@@ -515,7 +521,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         TengenMsPacMan_GameData hud = gameContext().<TengenMsPacMan_GameModel>game().hudData();
         int numLives = gameContext().game().lifeCount() - 1;
         // As long as Pac-Man is still invisible on start, he is shown as an additional entry in the lives counter
-        if (gameContext().gameState() == GameState.STARTING_GAME && !gameContext().gameLevel().pac().isVisible()) {
+        if (gameContext().gameState() == GamePlayState.STARTING_GAME && !gameContext().gameLevel().pac().isVisible()) {
             numLives += 1;
         }
         numLives = Math.min(numLives, hud.theLivesCounter().maxLivesDisplayed());

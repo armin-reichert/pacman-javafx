@@ -13,7 +13,8 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.*;
 import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_BootScene2D;
 import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_PlayScene2D;
-import de.amr.pacmanfx.controller.GameState;
+import de.amr.pacmanfx.controller.CutScenesTestState;
+import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.AbstractGameModel;
@@ -260,10 +261,10 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config {
     @Override
     public GameScene selectGameScene(GameContext gameContext) {
         String sceneID = switch (gameContext.gameState()) {
-            case GameState.BOOT -> SCENE_ID_BOOT_SCENE_2D;
-            case GameState.SETTING_OPTIONS_FOR_START -> SCENE_ID_START_SCENE_2D;
-            case GameState.INTRO -> SCENE_ID_INTRO_SCENE_2D;
-            case GameState.INTERMISSION -> {
+            case GamePlayState.BOOT -> SCENE_ID_BOOT_SCENE_2D;
+            case GamePlayState.SETTING_OPTIONS_FOR_START -> SCENE_ID_START_SCENE_2D;
+            case GamePlayState.INTRO -> SCENE_ID_INTRO_SCENE_2D;
+            case GamePlayState.INTERMISSION -> {
                 if (gameContext.optGameLevel().isEmpty()) {
                     throw new IllegalStateException("Cannot determine cut scene, no game level available");
                 }
@@ -274,7 +275,8 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config {
                 }
                 yield SCENE_ID_CUT_SCENE_N_2D.formatted(optCutSceneNumber.getAsInt());
             }
-            case GameState.TESTING_CUT_SCENES -> {
+            case CutScenesTestState ignored -> {
+                //TODO move field into test state
                 if (gameContext.game() instanceof AbstractGameModel gameModel) {
                     yield SCENE_ID_CUT_SCENE_N_2D.formatted(gameModel.testedCutSceneNumber);
                 }

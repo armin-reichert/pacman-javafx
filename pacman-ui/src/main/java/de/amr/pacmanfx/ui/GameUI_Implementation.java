@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.Validations;
-import de.amr.pacmanfx.controller.GameState;
+import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.tilemap.editor.TileMapEditor;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
@@ -72,8 +72,8 @@ public class GameUI_Implementation implements GameUI {
         new ActionBinding(ACTION_SIMULATION_ONE_STEP,         shift(KeyCode.P), shift(KeyCode.F5)),
         new ActionBinding(ACTION_SIMULATION_TEN_STEPS,        shift(KeyCode.SPACE)),
         new ActionBinding(ACTION_TEST_CUT_SCENES,             alt(KeyCode.C)),
-        new ActionBinding(ACTION_TEST_LEVELS_BONI,            alt(KeyCode.T)),
-        new ActionBinding(ACTION_TEST_LEVELS_TEASERS,         alt_shift(KeyCode.T)),
+        new ActionBinding(ACTION_TEST_LEVELS_SHORT,            alt(KeyCode.T)),
+        new ActionBinding(ACTION_TEST_LEVELS_MEDIUM,         alt_shift(KeyCode.T)),
         new ActionBinding(ACTION_TOGGLE_AUTOPILOT,            alt(KeyCode.A)),
         new ActionBinding(ACTION_TOGGLE_DEBUG_INFO,           alt(KeyCode.D)),
         new ActionBinding(ACTION_TOGGLE_MUTED,                alt(KeyCode.M)),
@@ -373,7 +373,7 @@ public class GameUI_Implementation implements GameUI {
         soundManager().stopAll();
         currentGameScene().ifPresent(gameScene -> {
             gameScene.end();
-            boolean shouldConsumeCoin = gameContext.gameState() == GameState.STARTING_GAME
+            boolean shouldConsumeCoin = gameContext.gameState() == GamePlayState.STARTING_GAME
                     || gameContext.game().isPlaying();
             if (shouldConsumeCoin && !gameContext.coinMechanism().isEmpty()) {
                 gameContext.coinMechanism().consumeCoin();
@@ -382,7 +382,7 @@ public class GameUI_Implementation implements GameUI {
         });
         clock.stop();
         clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
-        gameContext.gameController().restart(GameState.BOOT);
+        gameContext.gameController().restart(GamePlayState.BOOT);
         showStartView();
     }
 
@@ -392,7 +392,7 @@ public class GameUI_Implementation implements GameUI {
         currentGameScene().ifPresent(GameScene::end);
         clock.stop();
         clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
-        gameContext.gameController().restart(GameState.BOOT);
+        gameContext.gameController().restart(GamePlayState.BOOT);
         Platform.runLater(clock::start);
     }
 

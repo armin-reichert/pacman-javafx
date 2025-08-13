@@ -1,6 +1,6 @@
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
-import de.amr.pacmanfx.controller.GameState;
+import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -131,7 +131,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
             spawnJunior();
         }
         else if (t == 1512) {
-            gameContext().gameController().changeGameState(GameState.SETTING_OPTIONS_FOR_START);
+            gameContext().gameController().changeGameState(GamePlayState.SETTING_OPTIONS_FOR_START);
         }
 
         pacMan.move();

@@ -19,6 +19,7 @@ import javafx.scene.text.Text;
 import java.util.ArrayList;
 import java.util.List;
 
+import static de.amr.pacmanfx.controller.GamePlayState.*;
 import static java.util.Objects.requireNonNull;
 
 public class HelpInfo {

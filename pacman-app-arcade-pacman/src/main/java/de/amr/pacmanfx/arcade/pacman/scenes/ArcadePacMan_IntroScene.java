@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
-import de.amr.pacmanfx.controller.GameState;
+import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
@@ -51,7 +51,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     private static final float GHOST_FRIGHTENED_SPEED = 0.6f;
     private static final int LEFT_TILE_X = 4;
 
-    private final StateMachine<SceneState, ArcadePacMan_IntroScene> sceneController = new StateMachine<>(SceneState.values()) {
+    private final StateMachine<SceneState, ArcadePacMan_IntroScene> sceneController = new StateMachine<>(List.of(SceneState.values())) {
         @Override public ArcadePacMan_IntroScene context() { return ArcadePacMan_IntroScene.this; }
     };
 
@@ -77,8 +77,8 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         actionBindings.assign(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
         actionBindings.assign(ACTION_ARCADE_START_GAME, ui.actionBindings());
         actionBindings.assign(ACTION_TEST_CUT_SCENES, ui.actionBindings());
-        actionBindings.assign(ACTION_TEST_LEVELS_BONI, ui.actionBindings());
-        actionBindings.assign(ACTION_TEST_LEVELS_TEASERS, ui.actionBindings());
+        actionBindings.assign(ACTION_TEST_LEVELS_SHORT, ui.actionBindings());
+        actionBindings.assign(ACTION_TEST_LEVELS_MEDIUM, ui.actionBindings());
 
         blinking = new Pulse(10, true);
         pacMan = createPac(null);
@@ -368,10 +368,10 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 if (sceneTimer.atSecond(0.75)) {
                     scene.ghosts.get(ORANGE_GHOST_POKEY).hide();
                     if (!scene.gameContext().game().canStartNewGame()) {
-                        scene.gameContext().gameController().changeGameState(GameState.STARTING_GAME);
+                        scene.gameContext().gameController().changeGameState(GamePlayState.STARTING_GAME);
                     }
                 } else if (sceneTimer.atSecond(5)) {
-                    scene.gameContext().gameController().changeGameState(GameState.SETTING_OPTIONS_FOR_START);
+                    scene.gameContext().gameController().changeGameState(GamePlayState.SETTING_OPTIONS_FOR_START);
                 }
             }
         };

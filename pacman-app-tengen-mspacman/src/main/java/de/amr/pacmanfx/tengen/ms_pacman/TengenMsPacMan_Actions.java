@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tengen.ms_pacman;
 
-import de.amr.pacmanfx.controller.GameState;
+import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.tengen.ms_pacman.model.PacBooster;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.SceneDisplayMode;
@@ -21,14 +21,14 @@ public interface TengenMsPacMan_Actions {
     AbstractGameAction ACTION_ENTER_START_SCREEN = new AbstractGameAction("ENTER_START_SCREEN") {
         @Override
         public void execute(GameUI ui) {
-            ui.gameContext().gameController().changeGameState(GameState.SETTING_OPTIONS_FOR_START);
+            ui.gameContext().gameController().changeGameState(GamePlayState.SETTING_OPTIONS_FOR_START);
         }
     };
 
     AbstractGameAction ACTION_QUIT_DEMO_LEVEL = new AbstractGameAction("QUIT_DEMO_LEVEL") {
         @Override
         public void execute(GameUI ui) {
-            ui.gameContext().gameController().changeGameState(GameState.SETTING_OPTIONS_FOR_START);
+            ui.gameContext().gameController().changeGameState(GamePlayState.SETTING_OPTIONS_FOR_START);
         }
 
         @Override
@@ -42,7 +42,7 @@ public interface TengenMsPacMan_Actions {
         public void execute(GameUI ui) {
             ui.soundManager().stopAll();
             ui.gameContext().game().setPlaying(false);
-            ui.gameContext().gameController().changeGameState(GameState.STARTING_GAME);
+            ui.gameContext().gameController().changeGameState(GamePlayState.STARTING_GAME);
         }
     };
 

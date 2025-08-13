@@ -35,7 +35,7 @@ public class InfoBoxGameInfo extends InfoBox {
 
     @Override
     public void init(GameUI ui) {
-        addDynamicLabeledValue("Game State", () -> "%s".formatted(ui.gameContext().gameState()));
+        addDynamicLabeledValue("Game State", () -> "%s".formatted(ui.gameContext().gameState().name()));
         addDynamicLabeledValue("State Timer", this::stateTimerInfo);
         addDynamicLabeledValue("Game Scene", ifGameScenePresent(gameScene -> gameScene.getClass().getSimpleName()));
         addDynamicLabeledValue("Renderer", ifGameScenePresent(gameScene ->

@@ -8,6 +8,7 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -28,12 +29,12 @@ import java.util.List;
 public abstract class StateMachine<S extends FsmState<C>, C> {
 
     protected final List<FsmStateChangeListener<S>> stateChangeListeners = new ArrayList<>(5);
-    protected final S[] states;
+    protected final List<S> states;
     protected S currentState;
     protected S prevState;
     protected String name = getClass().getSimpleName();
 
-    protected StateMachine(S[] states) {
+    protected StateMachine(List<S> states) {
         this.states = states;
     }
 
@@ -56,6 +57,10 @@ public abstract class StateMachine<S extends FsmState<C>, C> {
      */
     public S state() {
         return currentState;
+    }
+
+    public List<S> states() {
+        return Collections.unmodifiableList(states);
     }
 
     /**

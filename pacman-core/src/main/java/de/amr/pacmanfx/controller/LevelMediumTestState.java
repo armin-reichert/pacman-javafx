@@ -1,0 +1,72 @@
+package de.amr.pacmanfx.controller;
+
+import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.event.GameEventType;
+import de.amr.pacmanfx.lib.timer.TickTimer;
+import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.actors.Ghost;
+
+public class LevelMediumTestState implements GameState {
+    static final int TEST_DURATION_SEC = 10;
+
+    private final TickTimer timer = new TickTimer("Timer_" + name());
+    private int lastTestedLevelNumber;
+
+    @Override
+    public String name() {
+        return getClass().getSimpleName();
+    }
+
+    @Override
+    public TickTimer timer() {
+        return timer;
+    }
+
+    private void configureLevelForTest(GameContext context) {
+        final GameLevel gameLevel = context.gameLevel();
+        gameLevel.pac().usingAutopilotProperty().unbind();
+        gameLevel.pac().setUsingAutopilot(true);
+        gameLevel.pac().playAnimation();
+        gameLevel.ghosts().forEach(Ghost::playAnimation);
+        gameLevel.showPacAndGhosts();
+        gameLevel.showMessage(GameLevel.MESSAGE_TEST);
+        context.eventManager().publishEvent(GameEventType.STOP_ALL_SOUNDS);
+    }
+
+    @Override
+    public void onEnter(GameContext context) {
+        lastTestedLevelNumber = context.game().lastLevelNumber() == Integer.MAX_VALUE ? 25 : context.game().lastLevelNumber();
+        timer.restartSeconds(TEST_DURATION_SEC);
+        context.game().prepareForNewGame();
+        context.game().buildNormalLevel(1);
+        context.game().startLevel();
+        configureLevelForTest(context);
+    }
+
+    @Override
+    public void onUpdate(GameContext context) {
+        context.game().doHuntingStep();
+        if (timer().hasExpired()) {
+            if (context.gameLevel().number() == lastTestedLevelNumber) {
+                context.eventManager().publishEvent(GameEventType.STOP_ALL_SOUNDS);
+                context.gameController().changeGameState(GamePlayState.INTRO);
+            } else {
+                timer().restartSeconds(TEST_DURATION_SEC);
+                context.game().startNextLevel();
+                configureLevelForTest(context);
+            }
+        }
+        else if (context.game().isLevelCompleted()) {
+            context.gameController().changeGameState(GamePlayState.INTRO);
+        } else if (context.game().hasPacManBeenKilled()) {
+            timer.expire();
+        } else if (context.game().haveGhostsBeenKilled()) {
+            context.gameController().changeGameState(GamePlayState.GHOST_DYING);
+        }
+    }
+
+    @Override
+    public void onExit(GameContext context) {
+        context.game().hudData().theLevelCounter().clear();
+    }
+}

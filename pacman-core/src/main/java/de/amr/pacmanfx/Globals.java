@@ -4,7 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx;
 
-import de.amr.pacmanfx.controller.GameController;
+import de.amr.pacmanfx.controller.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public interface Globals {
 
@@ -62,10 +65,16 @@ public interface Globals {
     static float TS(double numTiles) { return (float) (numTiles * TS); }
 
     /**
-     * @return the global game context object that provides access to different
-     *         otger global objects
+     * @return the global object which provides access to different other global objects
      */
     static GameContext theGameContext() {
+        if (GameController.THE_ONE == null) {
+            List<GameState> states = new ArrayList<>(List.of(GamePlayState.values()));
+            states.add(new LevelShortTestState());
+            states.add(new LevelMediumTestState());
+            states.add(new CutScenesTestState());
+            GameController.THE_ONE = new GameController(states);
+        }
         return GameController.THE_ONE;
     }
 }
