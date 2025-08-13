@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.arcade.pacman.ArcadeCommon_ActorSpeedControl;
 import de.amr.pacmanfx.arcade.pacman.ArcadeCommon_GameModel;
 import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.event.GameEventType;
@@ -201,6 +202,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
     private final ArcadeMsPacMan_GameData hud = new ArcadeMsPacMan_GameData();
     private final ScoreManager scoreManager;
     private final HuntingTimer huntingTimer;
+    private final ActorSpeedControl actorSpeedControl;
 
     /**
      * Called via reflection by builder.
@@ -246,6 +248,8 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
             }
         });
 
+        actorSpeedControl = new ArcadeCommon_ActorSpeedControl();
+
         gateKeeper = new GateKeeper(this);
         gateKeeper.setOnGhostReleased(prisoner -> {
             if (prisoner.personality() == ORANGE_GHOST_POKEY && !isCruiseElroyModeActive()) {
@@ -272,6 +276,11 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
     @Override
     public HuntingTimer huntingTimer() {
         return huntingTimer;
+    }
+
+    @Override
+    public ActorSpeedControl actorSpeedControl() {
+        return actorSpeedControl;
     }
 
     @Override

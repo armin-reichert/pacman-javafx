@@ -12,7 +12,6 @@ import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GateKeeper;
 import de.amr.pacmanfx.model.MapSelector;
-import de.amr.pacmanfx.model.actors.ActorSpeedControl;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.steering.Steering;
 import org.tinylog.Logger;
@@ -34,7 +33,6 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
     public static final byte[] KILLED_GHOST_VALUE_FACTORS = {2, 4, 8, 16}; // points = factor * 100
 
     protected final GameContext gameContext;
-    protected final ActorSpeedControl actorSpeedControl;
     protected MapSelector mapSelector;
     protected GateKeeper gateKeeper;
     protected Steering autopilot;
@@ -43,7 +41,6 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
 
     protected ArcadeCommon_GameModel(GameContext gameContext) {
         this.gameContext = gameContext;
-        actorSpeedControl = new ArcadeCommon_ActorSpeedControl();
     }
 
     // GameEvents interface
@@ -153,9 +150,6 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
 
     @Override
     public boolean canContinueOnGameOver() { return false; }
-
-    @Override
-    public ActorSpeedControl actorSpeedControl() { return actorSpeedControl; }
 
     @Override
     public Optional<GateKeeper> gateKeeper() { return Optional.of(gateKeeper); }

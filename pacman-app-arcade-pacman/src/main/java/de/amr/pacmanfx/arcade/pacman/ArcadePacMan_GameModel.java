@@ -13,10 +13,7 @@ import de.amr.pacmanfx.lib.tilemap.TerrainTile;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.*;
-import de.amr.pacmanfx.model.actors.Bonus;
-import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.GhostState;
-import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.steering.RouteBasedSteering;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
@@ -179,6 +176,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
     private final GameData hud = new ArcadePacMan_GameData();
     private final ScoreManager scoreManager;
     private final HuntingTimer huntingTimer;
+    private final ActorSpeedControl actorSpeedControl;
 
     public ArcadePacMan_GameModel(GameContext gameContext, File highScoreFile) {
         this(gameContext, new ArcadePacMan_MapSelector(), highScoreFile);
@@ -218,6 +216,8 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
                     .forEach(Ghost::reverseAtNextOccasion);
             }
         });
+
+        actorSpeedControl = new ArcadeCommon_ActorSpeedControl();
 
         gateKeeper = new GateKeeper(this);
         gateKeeper.setOnGhostReleased(prisoner -> {
@@ -260,6 +260,11 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
     @Override
     public HuntingTimer huntingTimer() {
         return huntingTimer;
+    }
+
+    @Override
+    public ActorSpeedControl actorSpeedControl() {
+        return actorSpeedControl;
     }
 
     @Override
