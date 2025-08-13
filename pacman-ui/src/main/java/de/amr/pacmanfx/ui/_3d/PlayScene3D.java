@@ -12,6 +12,7 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.Score;
+import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -580,7 +581,8 @@ public class PlayScene3D implements GameScene {
     }
 
     protected void updateHUD() {
-        final Score score = gameContext().theGame().score(), highScore = gameContext().theGame().highScore();
+        ScoreManager scoreManager = gameContext().theGame().scoreManager();
+        final Score score = scoreManager.score(), highScore = scoreManager.highScore();
         if (score.isEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());
         }

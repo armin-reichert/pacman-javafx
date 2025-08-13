@@ -185,7 +185,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         var values = MapCategory.values();
         int current = category.ordinal(), prev = (current == 0) ? values.length - 1 :  current - 1;
         theGame().setMapCategory(values[prev]);
-        theGame().saveHighScore();
+        theGame().scoreManager().saveHighScore();
         optionValueChanged();
     }
 
@@ -194,7 +194,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         var values = MapCategory.values();
         int current = category.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
         theGame().setMapCategory(values[next]);
-        theGame().saveHighScore();
+        theGame().scoreManager().saveHighScore();
         optionValueChanged();
     }
 
@@ -203,7 +203,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         var values = Difficulty.values();
         int current = difficulty.ordinal(), prev = (current == 0) ? values.length - 1 : current - 1;
         theGame().setDifficulty(values[prev]);
-        theGame().saveHighScore();
+        theGame().scoreManager().saveHighScore();
         optionValueChanged();
     }
 
@@ -212,7 +212,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         var values = Difficulty.values();
         int current = difficulty.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
         theGame().setDifficulty(values[next]);
-        theGame().saveHighScore();
+        theGame().scoreManager().saveHighScore();
         optionValueChanged();
     }
 

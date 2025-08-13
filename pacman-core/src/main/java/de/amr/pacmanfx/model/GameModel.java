@@ -5,8 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.model;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
@@ -17,12 +15,9 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import org.tinylog.Logger;
 
-import java.io.File;
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
@@ -36,21 +31,15 @@ public abstract class GameModel implements Game {
     protected final BooleanProperty playingProperty = new SimpleBooleanProperty(false);
     protected final IntegerProperty lifeCountProperty = new SimpleIntegerProperty(0);
 
+    protected final GameContext gameContext;
     protected GameLevel level;
     protected boolean cutScenesEnabled;
-    protected final Score score = new Score();
-    protected final Score highScore = new Score();
-    protected Set<Integer> extraLifeScores = Set.of();
     protected int initialLifeCount;
-    protected final File highScoreFile;
-    protected final GameEventManager gameEventManager;
     protected final SimulationStep simulationStep = new SimulationStep();
 
-    protected GameModel(GameEventManager gameEventManager, File highScoreFile) {
-        this.gameEventManager = requireNonNull(gameEventManager);
-        this.highScoreFile = requireNonNull(highScoreFile);
+    protected GameModel(GameContext gameContext) {
+        this.gameContext = requireNonNull(gameContext);
         cutScenesEnabled = true;
-        score.pointsProperty().addListener((py, ov, nv) -> onScoreChanged(this, ov.intValue(), nv.intValue()));
     }
 
     // Game interface
@@ -100,9 +89,10 @@ public abstract class GameModel implements Game {
         level.blinking().setStartPhase(Pulse.ON);
         level.blinking().restart(Integer.MAX_VALUE);
         huntingTimer().startFirstHuntingPhase(level.number());
-        gameEventManager.publishEvent(GameEventType.HUNTING_PHASE_STARTED);
+        gameContext.theGameEventManager().publishEvent(GameEventType.HUNTING_PHASE_STARTED);
     }
 
+    @Override
     public void doHuntingStep(GameContext gameContext) {
         gateKeeper().ifPresent(gateKeeper -> gateKeeper.unlockGhosts(level));
 
@@ -142,8 +132,6 @@ public abstract class GameModel implements Game {
     public void setInitialLifeCount(int initialLifeCount) {
         this.initialLifeCount = initialLifeCount;
     }
-
-
 
     @Override
     public boolean isLevelCompleted() { return level.uneatenFoodCount() == 0; }
@@ -210,7 +198,7 @@ public abstract class GameModel implements Game {
         powerTimer.doTick();
         if (level.pac().isPowerFadingStarting()) {
             simulationStep.pacStartsLosingPower = true;
-            gameEventManager.publishEvent(GameEventType.PAC_STARTS_LOSING_POWER);
+            gameContext.theGameEventManager().publishEvent(GameEventType.PAC_STARTS_LOSING_POWER);
         } else if (powerTimer.hasExpired()) {
             powerTimer.stop();
             powerTimer.reset(0);
@@ -220,7 +208,7 @@ public abstract class GameModel implements Game {
             Logger.info("Hunting timer restarted because Pac-Man lost power");
             level.ghosts(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
             simulationStep.pacLostPower = true;
-            gameEventManager.publishEvent(GameEventType.PAC_LOST_POWER);
+            gameContext.theGameEventManager().publishEvent(GameEventType.PAC_LOST_POWER);
         }
     }
 
@@ -237,10 +225,10 @@ public abstract class GameModel implements Game {
     protected void checkIfPacManCanEatBonus(Bonus bonus) {
         if (bonus.state() == BonusState.EDIBLE && actorsCollide(level.pac(), bonus)) {
             bonus.setEaten(120); //TODO is 2 seconds correct?
-            scorePoints(bonus.points());
+            scoreManager().scorePoints(bonus.points());
             Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
             simulationStep.bonusEatenTile = bonus.tile();
-            gameEventManager.publishEvent(GameEventType.BONUS_EATEN);
+            gameContext.theGameEventManager().publishEvent(GameEventType.BONUS_EATEN);
         }
     }
 
@@ -263,105 +251,5 @@ public abstract class GameModel implements Game {
             propertyMap = new HashMap<>(4);
         }
         return propertyMap;
-    }
-
-    // ScoreManager implementation
-
-    @Override
-    public void setExtraLifeScores(Set<Integer> scores) {
-        extraLifeScores = new HashSet<>(scores);
-    }
-
-    @Override
-    public void scorePoints(int points) {
-        if (!score.isEnabled()) {
-            return;
-        }
-        int oldScore = score.points(), newScore = oldScore + points;
-        if (highScore().isEnabled() && newScore > highScore.points()) {
-            highScore.setPoints(newScore);
-            highScore.setLevelNumber(score.levelNumber());
-            highScore.setDate(LocalDate.now());
-        }
-        score.setPoints(newScore);
-    }
-
-    @Override
-    public void onScoreChanged(GameModel game, int oldScore, int newScore) {
-        for (int extraLifeScore : extraLifeScores) {
-            // has extra life score been crossed?
-            if (oldScore < extraLifeScore && newScore >= extraLifeScore) {
-                simulationStep.extraLifeWon = true;
-                simulationStep.extraLifeScore = extraLifeScore;
-                addLives(1);
-                GameEvent event = new GameEvent(game, GameEventType.SPECIAL_SCORE_REACHED);
-                gameEventManager.publishEvent(event);
-                break;
-            }
-        }
-    }
-
-    @Override
-    public void loadHighScore() {
-        if (highScoreFile == null) {
-            Logger.error("High Score file could not be opened: game variant not set?");
-            return;
-        }
-        try {
-            highScore.read(highScoreFile);
-            Logger.info("High Score loaded from file '{}': points={}, level={}", highScoreFile, highScore.points(), highScore.levelNumber());
-        } catch (IOException x) {
-            Logger.error("High Score file could not be opened: '{}'", highScoreFile);
-        }
-    }
-
-    @Override
-    public void updateHighScore() {
-        if (highScoreFile == null) {
-            Logger.error("High Score file could not be opened: game variant not set?");
-            return;
-        }
-        var oldHighScore = Score.fromFile(highScoreFile);
-        if (highScore.points() > oldHighScore.points()) {
-            try {
-                highScore.save(highScoreFile, "High Score updated at %s".formatted(LocalTime.now()));
-            } catch (IOException x) {
-                Logger.error("High Score file could not be saved: '{}'", highScoreFile);
-            }
-        }
-    }
-
-    @Override
-    public void resetScore() {
-        score.reset();
-    }
-
-    @Override
-    public void saveHighScore() {
-        if (highScoreFile == null) {
-            Logger.error("High Score file could not be opened: game variant not set?");
-            return;
-        }
-        try {
-            new Score().save(highScoreFile, "High Score, %s".formatted(LocalDateTime.now()));
-        } catch (IOException x) {
-            Logger.error("High Score could not be saved to file '{}'", highScoreFile);
-            Logger.error(x);
-        }
-    }
-
-    @Override
-    public Score score() {
-        return score;
-    }
-
-    @Override
-    public Score highScore() {
-        return highScore;
-    }
-
-    @Override
-    public void setScoreLevelNumber(int levelNumber) {
-        score.setLevelNumber(levelNumber);
     }
 }

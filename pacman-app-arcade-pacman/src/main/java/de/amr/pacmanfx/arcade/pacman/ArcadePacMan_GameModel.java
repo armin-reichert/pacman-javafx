@@ -176,6 +176,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
     private static final byte[] BONUS_VALUE_MULTIPLIERS = { 1, 3, 5, 7, 10, 20, 30, 50 };
 
     private final HUD hud = new ArcadePacMan_HUD();
+    private final ScoreManager scoreManager;
 
     public ArcadePacMan_GameModel(GameContext gameContext, File highScoreFile) {
         this(gameContext, new ArcadePacMan_MapSelector(), highScoreFile);
@@ -184,11 +185,14 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
     /**
      * @param gameContext the game context
      * @param mapSelector e.g. selector that selects custom maps before standard maps
+     * @param highScoreFile file where highscore is stored
      */
     public ArcadePacMan_GameModel(GameContext gameContext, MapSelector mapSelector, File highScoreFile) {
-        super(gameContext.theGameEventManager(), highScoreFile, gameContext.theCoinMechanism());
+        super(gameContext, gameContext.theCoinMechanism());
         this.mapSelector = requireNonNull(mapSelector);
-        setExtraLifeScores(Set.of(EXTRA_LIFE_SCORE));
+
+        scoreManager = new DefaultScoreManager(gameContext, highScoreFile);
+        scoreManager.setExtraLifeScores(Set.of(EXTRA_LIFE_SCORE));
 
         huntingTimer = new HuntingTimer("ArcadePacMan-HuntingTimer", 8) {
             // Ticks of scatter and chasing phases, -1 = INFINITE
@@ -239,6 +243,11 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
         autopilot = new RuleBasedPacSteering(this);
 
         mapSelector.loadAllMaps();
+    }
+
+    @Override
+    public ScoreManager scoreManager() {
+        return scoreManager;
     }
 
     @Override
@@ -315,6 +324,6 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
         bonus.setPosition(halfTileRightOf(bonusTile));
         bonus.setEdibleTicks(randomInt(9 * NUM_TICKS_PER_SEC, 10 * NUM_TICKS_PER_SEC));
         level.setBonus(bonus);
-        gameEventManager.publishEvent(GameEventType.BONUS_ACTIVATED, bonus.tile());
+        gameContext.theGameEventManager().publishEvent(GameEventType.BONUS_ACTIVATED, bonus.tile());
     }
 }

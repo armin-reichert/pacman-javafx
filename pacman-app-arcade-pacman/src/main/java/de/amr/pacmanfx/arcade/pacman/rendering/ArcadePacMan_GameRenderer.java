@@ -57,8 +57,8 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
         if (hud.isScoreVisible()) {
             ctx.setFont(assets().arcadeFont(scaled(8)));
             ctx.setFill((ARCADE_WHITE));
-            drawScore(game.score(), "SCORE", TS(1), TS(1));
-            drawScore(game.highScore(), "HIGH SCORE", TS(14), TS(1));
+            drawScore(game.scoreManager().score(), "SCORE", TS(1), TS(1));
+            drawScore(game.scoreManager().highScore(), "HIGH SCORE", TS(14), TS(1));
         }
 
         if (hud.isLevelCounterVisible()) {

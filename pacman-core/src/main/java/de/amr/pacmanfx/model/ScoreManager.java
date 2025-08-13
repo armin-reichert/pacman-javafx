@@ -15,6 +15,5 @@ public interface ScoreManager {
     void saveHighScore();
     void updateHighScore();
     void setScoreLevelNumber(int levelNumber);
-    void onScoreChanged(GameModel game, int oldScore, int newScore);
     void setExtraLifeScores(Set<Integer> scores);
 }

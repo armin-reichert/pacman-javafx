@@ -198,6 +198,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
     private final ArcadeMsPacMan_HUD hud = new ArcadeMsPacMan_HUD();
+    private final ScoreManager scoreManager;
 
     public ArcadeMsPacMan_GameModel(GameContext gameContext, File highScoreFile) {
         this(gameContext, new ArcadeMsPacMan_MapSelector(), highScoreFile);
@@ -207,9 +208,11 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
      * @param mapSelector map selector e.g. selector that selects custom maps before standard maps
      */
     public ArcadeMsPacMan_GameModel(GameContext gameContext, MapSelector mapSelector, File highScoreFile) {
-        super(gameContext.theGameEventManager(), highScoreFile, gameContext.theCoinMechanism());
+        super(gameContext, gameContext.theCoinMechanism());
         this.mapSelector = requireNonNull(mapSelector);
-        setExtraLifeScores(Set.of(EXTRA_LIFE_SCORE));
+
+        scoreManager = new DefaultScoreManager(gameContext, highScoreFile);
+        scoreManager.setExtraLifeScores(Set.of(EXTRA_LIFE_SCORE));
 
         /*
          * Details are from a conversation with user @damselindis on Reddit. I am not sure if they are correct.
@@ -245,6 +248,11 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
         demoLevelSteering = new RuleBasedPacSteering(this);
         autopilot = new RuleBasedPacSteering(this);
         mapSelector.loadAllMaps();
+    }
+
+    @Override
+    public ScoreManager scoreManager() {
+        return scoreManager;
     }
 
     @Override
@@ -411,7 +419,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
             crossingLeftToRight ? "left to right" : "right to left");
 
         level.setBonus(bonus);
-        gameEventManager.publishEvent(GameEventType.BONUS_ACTIVATED, bonus.tile());
+        gameContext.theGameEventManager().publishEvent(GameEventType.BONUS_ACTIVATED, bonus.tile());
     }
 
     private Portal randomPortal(GameLevel level) {

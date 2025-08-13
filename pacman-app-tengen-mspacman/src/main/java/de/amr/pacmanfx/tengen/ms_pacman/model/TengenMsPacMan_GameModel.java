@@ -211,6 +211,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         };
     }
 
+    private final ScoreManager scoreManager;
     private final TengenMsPacMan_HUD hud = new TengenMsPacMan_HUD();
     private final TengenMsPacMan_MapSelector mapSelector;
     private final TengenActorSpeedControl actorSpeedControl;
@@ -228,7 +229,8 @@ public class TengenMsPacMan_GameModel extends GameModel {
     private int numContinues;
 
     public TengenMsPacMan_GameModel(GameContext gameContext, File highScoreFile) {
-        super(gameContext.theGameEventManager(), highScoreFile);
+        super(gameContext);
+        scoreManager = new DefaultScoreManager(gameContext, highScoreFile);
         actorSpeedControl = new TengenActorSpeedControl();
         mapSelector = new TengenMsPacMan_MapSelector();
         gateKeeper = new GateKeeper(this); //TODO implement Tengen logic instead
@@ -241,6 +243,11 @@ public class TengenMsPacMan_GameModel extends GameModel {
         });
         autopilot = new RuleBasedPacSteering(this);
         demoLevelSteering = new RuleBasedPacSteering(this);
+    }
+
+    @Override
+    public ScoreManager scoreManager() {
+        return scoreManager;
     }
 
     @Override
@@ -272,15 +279,15 @@ public class TengenMsPacMan_GameModel extends GameModel {
         hud.theLevelCounter().clear();
         playingProperty().set(false);
         boosterActive = false;
-        loadHighScore();
-        resetScore();
+        scoreManager.loadHighScore();
+        scoreManager.resetScore();
         gateKeeper.reset();
     }
 
     @Override
     public void onGameEnding() {
         playingProperty().set(false);
-        updateHighScore();
+        scoreManager.updateHighScore();
         level.showMessage(GameLevel.MESSAGE_GAME_OVER);
     }
 
@@ -321,9 +328,9 @@ public class TengenMsPacMan_GameModel extends GameModel {
             a score normally unachievable without cheat codes, since all maze sets end after 32 stages.
             This was most likely done to simulate the Arcade game only giving one extra life per game.
             */
-            setExtraLifeScores(Set.of(10_000, 970_000, 980_000, 990_000));
+            scoreManager.setExtraLifeScores(Set.of(10_000, 970_000, 980_000, 990_000));
         } else {
-            setExtraLifeScores(Set.of(10_000, 50_000, 100_000, 300_000));
+            scoreManager.setExtraLifeScores(Set.of(10_000, 50_000, 100_000, 300_000));
         }
     }
 
@@ -388,19 +395,19 @@ public class TengenMsPacMan_GameModel extends GameModel {
         }
         if (level.isDemoLevel()) {
             level.showMessage(GameLevel.MESSAGE_GAME_OVER);
-            score().setEnabled(true);
-            highScore().setEnabled(false);
+            scoreManager.score().setEnabled(true);
+            scoreManager.highScore().setEnabled(false);
             Logger.info("Demo level {} started", level.number());
 
         } else {
             level.showMessage(GameLevel.MESSAGE_READY);
             hud.theLevelCounter().update(level.number(), level.bonusSymbol(0));
-            score().setEnabled(true);
-            highScore().setEnabled(true);
+            scoreManager.score().setEnabled(true);
+            scoreManager.highScore().setEnabled(true);
             Logger.info("Level {} started", level.number());
         }
         // Note: This event is very important because it triggers the creation of the actor animations!
-        gameEventManager.publishEvent(GameEventType.LEVEL_STARTED);
+        gameContext.theGameEventManager().publishEvent(GameEventType.LEVEL_STARTED);
     }
 
     public void startNextLevel(GameContext gameContext) {
@@ -431,7 +438,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         prepareForNewGame();
         hud.theLevelCounter().setStartLevel(startLevelNumber);
         buildNormalLevel(gameContext, startLevelNumber);
-        gameEventManager.publishEvent(GameEventType.GAME_STARTED);
+        gameContext.theGameEventManager().publishEvent(GameEventType.GAME_STARTED);
     }
 
     @Override
@@ -539,12 +546,12 @@ public class TengenMsPacMan_GameModel extends GameModel {
         level.pac().immuneProperty().bind(gameContext.theGameController().propertyImmunity());
         level.pac().usingAutopilotProperty().bind(gameContext.theGameController().propertyUsingAutopilot());
         huntingTimer().reset();
-        setScoreLevelNumber(levelNumber);
+        scoreManager.setScoreLevelNumber(levelNumber);
         gateKeeper().ifPresent(gateKeeper -> {
             gateKeeper.setLevelNumber(levelNumber);
             level.house().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
         });
-        gameEventManager.publishEvent(GameEventType.LEVEL_CREATED);
+        gameContext.theGameEventManager().publishEvent(GameEventType.LEVEL_CREATED);
     }
 
     @Override
@@ -557,12 +564,12 @@ public class TengenMsPacMan_GameModel extends GameModel {
         level.pac().setAutopilotSteering(demoLevelSteering);
         demoLevelSteering.init();
         huntingTimer.reset();
-        setScoreLevelNumber(1);
+        scoreManager.setScoreLevelNumber(1);
         gateKeeper().ifPresent(gateKeeper -> {
             gateKeeper.setLevelNumber(1);
             level.house().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
         });
-        gameEventManager.publishEvent(GameEventType.LEVEL_CREATED);
+        gameContext.theGameEventManager().publishEvent(GameEventType.LEVEL_CREATED);
     }
 
     @Override
@@ -633,7 +640,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
 
         level.setBonus(bonus);
-        gameEventManager.publishEvent(GameEventType.BONUS_ACTIVATED, bonus.tile());
+        gameContext.theGameEventManager().publishEvent(GameEventType.BONUS_ACTIVATED, bonus.tile());
     }
 
     @Override
@@ -647,20 +654,20 @@ public class TengenMsPacMan_GameModel extends GameModel {
                 simulationStep.foundEnergizerAtTile = tile;
                 onEnergizerEaten();
             } else {
-                scorePoints(PELLET_VALUE);
+                scoreManager.scorePoints(PELLET_VALUE);
             }
             if (isBonusReached()) {
                 activateNextBonus(gameContext);
                 simulationStep.bonusIndex = level.currentBonusIndex();
             }
-            gameEventManager.publishEvent(GameEventType.PAC_FOUND_FOOD, tile);
+            gameContext.theGameEventManager().publishEvent(GameEventType.PAC_FOUND_FOOD, tile);
         } else {
             level.pac().starve();
         }
     }
 
     private void onEnergizerEaten() {
-        scorePoints(ENERGIZER_VALUE);
+        scoreManager.scorePoints(ENERGIZER_VALUE);
         Logger.info("Scored {} points for eating energizer", ENERGIZER_VALUE);
         level.victims().clear();
         long powerTicks = pacPowerTicks(level);
@@ -672,7 +679,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
             level.ghosts(GhostState.HUNTING_PAC).forEach(ghost -> ghost.setState(GhostState.FRIGHTENED));
             level.ghosts(GhostState.FRIGHTENED).forEach(Ghost::reverseAtNextOccasion);
             simulationStep.pacGotPower = true;
-            gameEventManager.publishEvent(GameEventType.PAC_GETS_POWER);
+            gameContext.theGameEventManager().publishEvent(GameEventType.PAC_GETS_POWER);
         } else {
             level.ghosts(GhostState.FRIGHTENED, GhostState.HUNTING_PAC).forEach(Ghost::reverseAtNextOccasion);
         }
@@ -685,7 +692,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         level.pac().powerTimer().stop();
         level.pac().powerTimer().reset(0);
         Logger.info("Power timer stopped and set to zero");
-        gateKeeper.resetCounterAndSetEnabled(true); // TODO how is that realized in Tengen?
+        gateKeeper.resetCounterAndSetEnabled(true); // TODO how is that realized in original game?
         level.pac().sayGoodbyeCruelWorld();
     }
 
@@ -696,7 +703,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         int points = 100 * KILLED_GHOST_VALUE_FACTORS[killedSoFar];
         level.victims().add(ghost);
         ghost.eaten(killedSoFar);
-        scorePoints(points);
+        scoreManager.scorePoints(points);
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
     }
 }

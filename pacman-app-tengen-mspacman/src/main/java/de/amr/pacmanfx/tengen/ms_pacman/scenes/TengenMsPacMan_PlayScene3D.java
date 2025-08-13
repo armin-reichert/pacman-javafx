@@ -6,6 +6,7 @@ package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
 import de.amr.pacmanfx.lib.nes.NES_Palette;
 import de.amr.pacmanfx.model.Score;
+import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.ui._3d.GameLevel3D;
 import de.amr.pacmanfx.ui._3d.PlayScene3D;
@@ -65,7 +66,8 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     protected void updateHUD() {
-        final Score score = gameContext().theGame().score(), highScore = gameContext().theGame().highScore();
+        ScoreManager scoreManager = gameContext().theGame().scoreManager();
+        final Score score = scoreManager.score(), highScore = scoreManager.highScore();
         if (score.isEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());
         }

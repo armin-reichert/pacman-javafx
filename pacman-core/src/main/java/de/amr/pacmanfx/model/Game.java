@@ -7,8 +7,9 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import java.util.Optional;
 import java.util.OptionalInt;
 
-public interface Game extends ScoreManager {
+public interface Game {
 
+    ScoreManager scoreManager();
     SimulationStep simulationStep();
 
     ActorSpeedControl actorSpeedControl();

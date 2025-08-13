@@ -139,8 +139,8 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
             ctx.fillText("1UP", TS(4), TS(1));
         }
         ctx.fillText("HIGH SCORE", TS(11), TS(1));
-        ctx.fillText("%6d".formatted(game.score().points()), TS(2), TS(2));
-        ctx.fillText("%6d".formatted(game.highScore().points()), TS(13), TS(2));
+        ctx.fillText("%6d".formatted(game.scoreManager().score().points()), TS(2), TS(2));
+        ctx.fillText("%6d".formatted(game.scoreManager().highScore().points()), TS(13), TS(2));
         ctx.restore();
     }
 
