@@ -44,6 +44,7 @@ import java.util.OptionalInt;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
+import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
 
 public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config {
@@ -274,7 +275,7 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config {
                 yield SCENE_ID_CUT_SCENE_N_2D.formatted(optCutSceneNumber.getAsInt());
             }
             case CutScenesTestState testState -> SCENE_ID_CUT_SCENE_N_2D.formatted(testState.testedCutSceneNumber);
-            default -> throw new IllegalStateException("Unexpected value: " + gameContext.gameState());
+            default -> PROPERTY_3D_ENABLED.get() ? SCENE_ID_PLAY_SCENE_3D : SCENE_ID_PLAY_SCENE_2D;
         };
         return scenesByID.get(sceneID);
     }
