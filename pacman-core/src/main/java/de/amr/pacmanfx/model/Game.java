@@ -45,12 +45,12 @@ public interface Game {
     void    buildDemoLevel(GameContext gameContext);
     boolean isPacManSafeInDemoLevel();
     void    startLevel();
-    void    startNextLevel(GameContext gameContext);
+    void    startNextLevel();
     int     lastLevelNumber();
     boolean continueOnGameOver();
 
     boolean isBonusReached();
-    void    activateNextBonus(GameContext gameContext);
+    void    activateNextBonus();
 
     void    startHunting();
     void    doHuntingStep();

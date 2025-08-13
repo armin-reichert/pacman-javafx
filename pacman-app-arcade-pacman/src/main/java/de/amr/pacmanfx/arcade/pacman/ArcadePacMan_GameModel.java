@@ -317,7 +317,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
     }
 
     @Override
-    public void activateNextBonus(GameContext gameContext) {
+    public void activateNextBonus() {
         level.selectNextBonus();
         byte symbol = level.bonusSymbol(level.currentBonusIndex());
         var bonus = new Bonus(gameContext, symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100, null);
@@ -325,7 +325,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
         bonus.setPosition(halfTileRightOf(bonusTile));
         bonus.setEdibleTicks(randomInt(9 * NUM_TICKS_PER_SEC, 10 * NUM_TICKS_PER_SEC));
         level.setBonus(bonus);
-        gameContext.eventManager().publishEvent(GameEventType.BONUS_ACTIVATED, bonus.tile());
+        eventManager().publishEvent(GameEventType.BONUS_ACTIVATED, bonus.tile());
     }
 
     @Override

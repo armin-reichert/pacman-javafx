@@ -368,7 +368,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
      *
      **/
     @Override
-    public void activateNextBonus(GameContext gameContext) {
+    public void activateNextBonus() {
         if (level.isBonusEdible()) {
             Logger.info("Previous bonus is still active, skip this one");
             return;

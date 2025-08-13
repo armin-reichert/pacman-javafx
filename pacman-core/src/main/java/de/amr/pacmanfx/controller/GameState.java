@@ -213,7 +213,7 @@ public enum GameState implements FsmState<GameContext> {
         @Override
         public void onEnter(GameContext context) {
             timer.restartSeconds(2);
-            context.game().startNextLevel(context);
+            context.game().startNextLevel();
         }
 
         @Override
@@ -394,7 +394,7 @@ public enum GameState implements FsmState<GameContext> {
             }
             else if (timer().atSecond(2.5)) {
                 gameLevel.clearMessage();
-                context.game().activateNextBonus(context);
+                context.game().activateNextBonus();
             }
             else if (timer().atSecond(4.5)) {
                 gameLevel.bonus().ifPresent(bonus -> bonus.setEaten(Globals.NUM_TICKS_PER_SEC));
@@ -402,7 +402,7 @@ public enum GameState implements FsmState<GameContext> {
             }
             else if (timer().atSecond(6.5)) {
                 gameLevel.bonus().ifPresent(Bonus::setInactive); // needed?
-                context.game().activateNextBonus(context);
+                context.game().activateNextBonus();
             }
             else if (timer().atSecond(8.5)) {
                 gameLevel.bonus().ifPresent(bonus -> bonus.setEaten(Globals.NUM_TICKS_PER_SEC));
@@ -419,7 +419,7 @@ public enum GameState implements FsmState<GameContext> {
                     context.gameController().restart(GameState.BOOT);
                 } else {
                     timer().restartIndefinitely();
-                    context.game().startNextLevel(context);
+                    context.game().startNextLevel();
                     gameLevel.showMessage(GameLevel.MESSAGE_TEST);
                 }
             }
@@ -472,7 +472,7 @@ public enum GameState implements FsmState<GameContext> {
                     context.gameController().changeGameState(INTRO);
                 } else {
                     timer().restartSeconds(TEST_DURATION_SEC);
-                    context.game().startNextLevel(context);
+                    context.game().startNextLevel();
                     configureLevelForTest(context);
                 }
             }

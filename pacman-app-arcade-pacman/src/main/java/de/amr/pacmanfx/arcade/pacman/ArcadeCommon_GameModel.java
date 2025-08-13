@@ -159,10 +159,10 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
             }
             gateKeeper.registerFoodEaten(level);
             if (isBonusReached()) {
-                activateNextBonus(gameContext);
+                activateNextBonus();
                 simulationStep.bonusIndex = level.currentBonusIndex();
             }
-            gameContext.eventManager().publishEvent(GameEventType.PAC_FOUND_FOOD, tile);
+            eventManager().publishEvent(GameEventType.PAC_FOUND_FOOD, tile);
         } else {
             level.pac().starve();
         }
@@ -199,7 +199,7 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
             Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", powerTicks, (float) powerTicks / NUM_TICKS_PER_SEC);
             level.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
             simulationStep.pacGotPower = true;
-            gameContext.eventManager().publishEvent(GameEventType.PAC_GETS_POWER);
+            eventManager().publishEvent(GameEventType.PAC_GETS_POWER);
         }
     }
 
@@ -224,7 +224,7 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
         scoreManager().setScoreLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
         level.house().ifPresent(house -> gateKeeper.setHouse(house)); //TODO what if no house exists?
-        gameContext.eventManager().publishEvent(GameEventType.LEVEL_CREATED);
+        eventManager().publishEvent(GameEventType.LEVEL_CREATED);
     }
 
     @Override
@@ -241,7 +241,7 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
         scoreManager().setScoreLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
         level.house().ifPresent(house -> gateKeeper.setHouse(house)); //TODO what if no house exists?
-        gameContext.eventManager().publishEvent(GameEventType.LEVEL_CREATED);
+        eventManager().publishEvent(GameEventType.LEVEL_CREATED);
     }
 
     @Override
@@ -262,11 +262,11 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
             Logger.info("Level {} started", level.number());
         }
         // Note: This event is very important because it triggers the creation of the actor animations!
-        gameContext.eventManager().publishEvent(GameEventType.LEVEL_STARTED);
+        eventManager().publishEvent(GameEventType.LEVEL_STARTED);
     }
 
     @Override
-    public void startNextLevel(GameContext gameContext) {
+    public void startNextLevel() {
         buildNormalLevel(gameContext, level.number() + 1);
         startLevel();
     }
