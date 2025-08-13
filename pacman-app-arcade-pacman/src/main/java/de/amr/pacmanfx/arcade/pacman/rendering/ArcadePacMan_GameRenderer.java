@@ -49,19 +49,19 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
     }
 
     @Override
-    public void drawHUD(GameContext gameContext, HUD hud, Vector2f sceneSize, long tick) {
-        requireNonNull(hud);
-        if (!hud.isVisible()) return;
+    public void drawHUD(GameContext gameContext, GameData data, Vector2f sceneSize, long tick) {
+        requireNonNull(data);
+        if (!data.isVisible()) return;
 
-        if (hud.isScoreVisible()) {
+        if (data.isScoreVisible()) {
             ctx.setFont(assets().arcadeFont(scaled(8)));
             ctx.setFill((ARCADE_WHITE));
             drawScore(gameContext.game().scoreManager().score(), "SCORE", TS(1), TS(1));
             drawScore(gameContext.game().scoreManager().highScore(), "HIGH SCORE", TS(14), TS(1));
         }
 
-        if (hud.isLevelCounterVisible()) {
-            LevelCounter levelCounter = hud.theLevelCounter();
+        if (data.isLevelCounterVisible()) {
+            LevelCounter levelCounter = data.theLevelCounter();
             float x = sceneSize.x() - TS(4), y = sceneSize.y() - TS(2) + 2;
             for (byte symbol : levelCounter.symbols()) {
                 RectShort sprite = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS)[symbol];
@@ -70,8 +70,8 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
             }
         }
 
-        if (hud.isLivesCounterVisible()) {
-            LivesCounter livesCounter = hud.theLivesCounter();
+        if (data.isLivesCounterVisible()) {
+            LivesCounter livesCounter = data.theLivesCounter();
             float x = TS(2), y = sceneSize.y() - TS(2);
             RectShort sprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
             for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
@@ -84,7 +84,7 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
             }
         }
 
-        if (hud.isCreditVisible()) {
+        if (data.isCreditVisible()) {
             String text = "CREDIT %2d".formatted(gameContext.coinMechanism().numCoins());
             Font font = assets.arcadeFont(scaled(8));
             fillTextAtScaledPosition(text, ARCADE_WHITE, font, TS(2), sceneSize.y());

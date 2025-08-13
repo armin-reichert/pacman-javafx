@@ -1,9 +1,9 @@
 package de.amr.pacmanfx.tengen.ms_pacman.model;
 
-import de.amr.pacmanfx.model.HUD;
+import de.amr.pacmanfx.model.GameData;
 import de.amr.pacmanfx.model.LivesCounter;
 
-public class TengenMsPacMan_HUD implements HUD {
+public class TengenMsPacMan_GameData implements GameData {
     private final TengenMsPacMan_LevelCounter levelCounter = new TengenMsPacMan_LevelCounter();
     private final LivesCounter livesCounter = new LivesCounter();
 

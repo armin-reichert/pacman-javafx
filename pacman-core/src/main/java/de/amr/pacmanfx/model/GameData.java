@@ -5,9 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.model;
 
 /**
- * Heads-Up Display aka HUD.
+ * Data which are typically displayed in a Heads-Up Display (HUD).
  */
-public interface HUD {
+public interface GameData {
 
     boolean isVisible();
     void show(boolean b);
@@ -28,9 +28,9 @@ public interface HUD {
     void showCredit(boolean b);
 
     // Fluent API
-    default HUD all(boolean state) { return credit(state).score(state).levelCounter(state).livesCounter(state); }
-    default HUD credit(boolean on) { showCredit(on); return this; }
-    default HUD levelCounter(boolean on) { showLevelCounter(on); return this; }
-    default HUD livesCounter(boolean on) { showLivesCounter(on); return this; }
-    default HUD score(boolean on) { showScore(on); return this; }
+    default GameData all(boolean state) { return credit(state).score(state).levelCounter(state).livesCounter(state); }
+    default GameData credit(boolean on) { showCredit(on); return this; }
+    default GameData levelCounter(boolean on) { showLevelCounter(on); return this; }
+    default GameData livesCounter(boolean on) { showLivesCounter(on); return this; }
+    default GameData score(boolean on) { showScore(on); return this; }
 }

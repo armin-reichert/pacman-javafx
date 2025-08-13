@@ -70,20 +70,20 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
     public Optional<SpriteSheet<?>> optSpriteSheet() { return Optional.of(spriteSheet); }
 
     @Override
-    public void drawHUD(GameContext gameContext, HUD hud, Vector2f sceneSize, long tick) {
-        requireNonNull(hud);
+    public void drawHUD(GameContext gameContext, GameData data, Vector2f sceneSize, long tick) {
+        requireNonNull(data);
 
-        if (!hud.isVisible()) return;
+        if (!data.isVisible()) return;
 
-        if (hud.isScoreVisible()) {
+        if (data.isScoreVisible()) {
             ctx.setFont(assets.arcadeFont(scaled(8)));
             ctx.setFill(ARCADE_WHITE);
             drawScore(gameContext.game().scoreManager().score(), "SCORE", TS(1), TS(1));
             drawScore(gameContext.game().scoreManager().highScore(), "HIGH SCORE", TS(14), TS(1));
         }
 
-        if (hud.isLevelCounterVisible()) {
-            LevelCounter levelCounter = hud.theLevelCounter();
+        if (data.isLevelCounterVisible()) {
+            LevelCounter levelCounter = data.theLevelCounter();
             float x = sceneSize.x() - TS(4), y = sceneSize.y() - TS(2);
             for (byte symbol : levelCounter.symbols()) {
                 RectShort sprite = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS)[symbol];
@@ -92,9 +92,9 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
             }
         }
 
-        if (hud.isLivesCounterVisible()) {
+        if (data.isLivesCounterVisible()) {
             float x = TS(2), y = sceneSize.y() - TS(2);
-            LivesCounter livesCounter = hud.theLivesCounter();
+            LivesCounter livesCounter = data.theLivesCounter();
             RectShort sprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
             for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
                 drawSpriteScaled(sprite, x + TS(2 * i), y);
@@ -106,7 +106,7 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
             }
         }
 
-        if (hud.isCreditVisible()) {
+        if (data.isCreditVisible()) {
             String text = "CREDIT %2d".formatted(gameContext.coinMechanism().numCoins());
             fillTextAtScaledPosition(text, ARCADE_WHITE, assets.arcadeFont(scaled(8)), TS(2), sceneSize.y() - 2);
         }

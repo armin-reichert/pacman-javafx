@@ -107,13 +107,13 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
     }
 
     @Override
-    public void drawHUD(GameContext gameContext, HUD hud, Vector2f sceneSize, long tick) {
-        requireNonNull(hud);
+    public void drawHUD(GameContext gameContext, GameData data, Vector2f sceneSize, long tick) {
+        requireNonNull(data);
 
-        if (!hud.isVisible()) return;
+        if (!data.isVisible()) return;
 
         var tengenGame = (TengenMsPacMan_GameModel) gameContext.game();
-        var tengenHUD = (TengenMsPacMan_HUD) hud;
+        var tengenHUD = (TengenMsPacMan_GameData) data;
         
         if (tengenHUD.isScoreVisible()) {
             drawScores(tengenGame, tick, nesPaletteColor(0x20), assets.arcadeFont(8));

@@ -214,7 +214,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     private final GameContext gameContext;
     private final ScoreManager scoreManager;
-    private final TengenMsPacMan_HUD hud = new TengenMsPacMan_HUD();
+    private final TengenMsPacMan_GameData hud = new TengenMsPacMan_GameData();
     private final TengenMsPacMan_MapSelector mapSelector;
     private final TengenActorSpeedControl actorSpeedControl;
     private final GateKeeper gateKeeper;
@@ -253,7 +253,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public TengenMsPacMan_HUD hud() {
+    public TengenMsPacMan_GameData hud() {
         return hud;
     }
 

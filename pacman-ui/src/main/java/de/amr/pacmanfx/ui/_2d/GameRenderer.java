@@ -9,8 +9,8 @@ import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.model.GameData;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.HUD;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.ui.GameAssets;
 import de.amr.pacmanfx.uilib.animation.SingleSpriteWithoutAnimation;
@@ -84,11 +84,11 @@ public abstract class GameRenderer implements Disposable {
      * Draws the Head-Up Display (score, live counter, level counter, coins inserted)
      *
      * @param gameContext the game context
-     * @param hud the Head-Up Display
+     * @param data the data displayed in the Head-Up Display
      * @param sceneSize scene size in pixels
      * @param tick current clock tick
      */
-    public abstract void drawHUD(GameContext gameContext, HUD hud, Vector2f sceneSize, long tick);
+    public abstract void drawHUD(GameContext gameContext, GameData data, Vector2f sceneSize, long tick);
 
     /**
      * @param gameContext the game context
