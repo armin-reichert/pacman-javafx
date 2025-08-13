@@ -16,7 +16,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.GameUI_Builder;
-import de.amr.pacmanfx.ui.api.DefaultGameVariants;
+import de.amr.pacmanfx.model.DefaultGameVariants;
 import de.amr.pacmanfx.ui.dashboard.DashboardID;
 import javafx.application.Application;
 import javafx.stage.Screen;

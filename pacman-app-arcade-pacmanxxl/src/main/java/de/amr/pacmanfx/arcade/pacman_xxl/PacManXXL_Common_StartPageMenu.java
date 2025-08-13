@@ -12,7 +12,7 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
-import de.amr.pacmanfx.ui.api.DefaultGameVariants;
+import de.amr.pacmanfx.model.DefaultGameVariants;
 import de.amr.pacmanfx.ui._2d.ArcadePalette;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
 import de.amr.pacmanfx.uilib.widgets.OptionMenu;

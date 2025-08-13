@@ -11,6 +11,7 @@ import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.AbstractGameModel;
+import de.amr.pacmanfx.model.DefaultGameVariants;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -23,7 +24,8 @@ import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
  */
 public enum GameState implements FsmState<GameContext> {
 
-    BOOT { // "Das muss das Boot abkönnen!"
+    // "Das muss das Boot abkönnen!"
+    BOOT {
         @Override
         public void onEnter(GameContext context) {
             timer.restartIndefinitely();
@@ -62,6 +64,9 @@ public enum GameState implements FsmState<GameContext> {
     },
 
 
+    /**
+     * In Tengen Ms. Pac-Man, the credited people are shown.
+     */
     SHOWING_CREDITS {
         @Override
         public void onEnter(GameContext context) {
@@ -88,45 +93,57 @@ public enum GameState implements FsmState<GameContext> {
             context.eventManager().publishEvent(GameEventType.STOP_ALL_SOUNDS);
         }
 
+        private void startNewGame(GameContext context) {
+            if (timer.tickCount() == 1) {
+                context.game().startNewGame();
+            }
+            else if (timer.tickCount() == 2) {
+                context.game().startLevel();
+            }
+            else if (timer.tickCount() == TICK_NEW_GAME_SHOW_GUYS) {
+                context.gameLevel().showPacAndGhosts();
+            }
+            else if (timer.tickCount() == TICK_NEW_GAME_START_HUNTING) {
+                context.game().setPlaying(true);
+                context.gameController().changeGameState(GameState.HUNTING);
+            }
+        }
+
+        private void continueGame(GameContext context) {
+            if (timer.tickCount() == 1) {
+                context.game().continueGame();
+            } else if (timer.tickCount() == TICK_RESUME_HUNTING) {
+                context.gameController().changeGameState(GameState.HUNTING);
+            }
+        }
+
+        private void startDemoLevel(GameContext context) {
+            if (timer.tickCount() == 1) {
+                context.game().buildDemoLevel();
+                context.eventManager().publishEvent(GameEventType.LEVEL_CREATED);
+            }
+            else if (timer.tickCount() == 2) {
+                context.game().startLevel();
+            }
+            else if (timer.tickCount() == 3) {
+                // Now, actor animations are available
+                context.gameLevel().showPacAndGhosts();
+            }
+            else if (timer.tickCount() == TICK_DEMO_LEVEL_START_HUNTING) {
+                context.gameController().changeGameState(GameState.HUNTING);
+            }
+        }
+
         @Override
         public void onUpdate(GameContext context) {
             if (context.game().isPlaying()) {
-                if (timer.tickCount() == 1) {
-                    context.game().continueGame();
-                } else if (timer.tickCount() == TICK_RESUME_HUNTING) {
-                    context.gameController().changeGameState(GameState.HUNTING);
-                }
+                continueGame(context);
             }
             else if (context.game().canStartNewGame()) {
-                if (timer.tickCount() == 1) {
-                    context.game().startNewGame();
-                }
-                else if (timer.tickCount() == 2) {
-                    context.game().startLevel();
-                }
-                else if (timer.tickCount() == TICK_NEW_GAME_SHOW_GUYS) {
-                    context.gameLevel().showPacAndGhosts();
-                }
-                else if (timer.tickCount() == TICK_NEW_GAME_START_HUNTING) {
-                    context.game().setPlaying(true);
-                    context.gameController().changeGameState(GameState.HUNTING);
-                }
+                startNewGame(context);
             }
-            else { // start demo level
-                if (timer.tickCount() == 1) {
-                    context.game().buildDemoLevel();
-                    context.eventManager().publishEvent(GameEventType.LEVEL_CREATED);
-                }
-                else if (timer.tickCount() == 2) {
-                    context.game().startLevel();
-                }
-                else if (timer.tickCount() == 3) {
-                    // Now, actor animations are available
-                    context.gameLevel().showPacAndGhosts();
-                }
-                else if (timer.tickCount() == TICK_DEMO_LEVEL_START_HUNTING) {
-                    context.gameController().changeGameState(GameState.HUNTING);
-                }
+            else {
+                startDemoLevel(context);
             }
         }
     },
@@ -185,14 +202,15 @@ public enum GameState implements FsmState<GameContext> {
             }
 
             //TODO this is crap. Maybe Tengen Ms. Pac-Man needs its own state machine?
-            if (context.gameController().isSelected("MS_PACMAN_TENGEN") && context.gameLevel().isDemoLevel()) {
+            if (context.gameController().isSelected(DefaultGameVariants.MS_PACMAN_TENGEN.name())
+                && context.gameLevel().isDemoLevel()) {
                 context.gameController().changeGameState(SHOWING_CREDITS);
                 return;
             }
 
             if (timer.hasExpired()) {
                 if (context.gameLevel().isDemoLevel()) {
-                    // just in case: if demo level is complete, go back to intro scene
+                    // just in case: if demo level was completed, go back to intro scene
                     context.gameController().changeGameState(INTRO);
                 } else if (context.game().cutScenesEnabled()
                     && context.game().cutSceneNumber(context.gameLevel().number()).isPresent()) {
