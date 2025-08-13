@@ -304,7 +304,6 @@ public abstract class GameModel implements ScoreManager {
                 simulationStep.extraLifeScore = extraLifeScore;
                 addLives(1);
                 GameEvent event = new GameEvent(game, GameEventType.SPECIAL_SCORE_REACHED);
-                event.setPayload("score", extraLifeScore); // just for testing payload implementation
                 gameEventManager.publishEvent(event);
                 break;
             }

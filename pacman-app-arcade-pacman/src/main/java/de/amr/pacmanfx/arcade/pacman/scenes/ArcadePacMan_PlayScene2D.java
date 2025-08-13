@@ -334,8 +334,6 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onSpecialScoreReached(GameEvent e) {
-        int score = e.payload("score");
-        Logger.info("Extra life awarded for reaching score {}", score);
         ui.soundManager().play(SoundID.EXTRA_LIFE);
     }
 
