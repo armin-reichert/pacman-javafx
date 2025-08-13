@@ -215,6 +215,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         };
     }
 
+    private final GameContext gameContext;
     private final ScoreManager scoreManager;
     private final TengenMsPacMan_GameData hud = new TengenMsPacMan_GameData();
     private final TengenMsPacMan_MapSelector mapSelector;
@@ -233,7 +234,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private int numContinues;
 
     public TengenMsPacMan_GameModel(GameContext gameContext, File highScoreFile) {
-        super(gameContext);
+        this.gameContext = requireNonNull(gameContext);
         scoreManager = new DefaultScoreManager(gameContext, highScoreFile);
         actorSpeedControl = new TengenActorSpeedControl();
         mapSelector = new TengenMsPacMan_MapSelector();

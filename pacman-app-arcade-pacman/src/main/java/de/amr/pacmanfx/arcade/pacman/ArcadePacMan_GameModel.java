@@ -189,6 +189,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
      */
     public ArcadePacMan_GameModel(GameContext gameContext, MapSelector mapSelector, File highScoreFile) {
         super(gameContext);
+
         this.mapSelector = requireNonNull(mapSelector);
 
         scoreManager = new DefaultScoreManager(gameContext, highScoreFile);

@@ -20,6 +20,7 @@ import java.util.Optional;
 
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Common data and functionality of Pac-Man and Ms. Pac-Man Arcade games.
@@ -32,6 +33,7 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
     public static final int EXTRA_LIFE_SCORE = 10_000;
     public static final byte[] KILLED_GHOST_VALUE_FACTORS = {2, 4, 8, 16}; // points = factor * 100
 
+    protected final GameContext gameContext;
     protected MapSelector mapSelector;
     protected GateKeeper gateKeeper;
     protected Steering autopilot;
@@ -39,7 +41,7 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
     protected int cruiseElroy;
 
     protected ArcadeCommon_GameModel(GameContext gameContext) {
-        super(gameContext);
+        this.gameContext = requireNonNull(gameContext);
     }
 
     // GameEvents interface
