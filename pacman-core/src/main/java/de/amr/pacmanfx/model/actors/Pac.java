@@ -15,6 +15,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 
 import java.util.Optional;
 
+import static de.amr.pacmanfx.lib.timer.TickTimer.secToTicks;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static java.util.Objects.requireNonNull;
 
@@ -138,15 +139,16 @@ public class Pac extends MovingActor implements Animated {
     public boolean isPowerFading() {
         if (gameContext == null || gameContext.optGameLevel().isEmpty()) return false;
 
-        return powerTimer.isRunning()
-            && powerTimer.remainingTicks() <= gameContext.game().pacPowerFadingTicks(gameContext.gameLevel());
+        long fadingTicks = secToTicks(gameContext.game().pacPowerFadingSeconds(gameContext.gameLevel()));
+        return powerTimer.isRunning() && powerTimer.remainingTicks() <= fadingTicks;
     }
 
     public boolean isPowerFadingStarting() {
         if (gameContext == null || gameContext.optGameLevel().isEmpty()) return false;
 
-        return powerTimer.isRunning() && powerTimer.remainingTicks() == gameContext.game().pacPowerFadingTicks(gameContext.gameLevel())
-            || powerTimer.durationTicks() < gameContext.game().pacPowerFadingTicks(gameContext.gameLevel()) && powerTimer.tickCount() == 1;
+        long fadingTicks = secToTicks(gameContext.game().pacPowerFadingSeconds(gameContext.gameLevel()));
+        return powerTimer.isRunning() && powerTimer.remainingTicks() == fadingTicks
+            || powerTimer.durationTicks() < fadingTicks && powerTimer.tickCount() == 1;
     }
 
     @Override

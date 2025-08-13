@@ -30,6 +30,7 @@ import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.lib.RandomNumberSupport.randomByte;
 import static de.amr.pacmanfx.lib.UsefulFunctions.tileAt;
 import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
+import static de.amr.pacmanfx.lib.timer.TickTimer.secToTicks;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PacAnimationMap.ANIM_MS_PAC_MAN_BOOSTER;
@@ -423,16 +424,15 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public long pacPowerTicks(GameLevel level) {
+    public double pacPowerSeconds(GameLevel level) {
         if (level == null) return 0;
         int index = level.number() <= 19 ? level.number() - 1 : 18;
-        double seconds = POWER_PELLET_TIMES[index] / 16.0;
-        return (long) (seconds * 60); // 60 ticks/sec
+        return POWER_PELLET_TIMES[index] / 16.0;
     }
 
     @Override
-    public long pacPowerFadingTicks(GameLevel level) {
-        return level != null ? level.data().numFlashes() * 28L : 0; // TODO check in emulator
+    public double pacPowerFadingSeconds(GameLevel level) {
+        return level != null ? level.data().numFlashes() * 0.5 : 0; // TODO check in emulator
     }
 
     @Override
@@ -578,7 +578,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     public int lastLevelNumber() { return LAST_LEVEL_NUMBER; }
 
     @Override
-    public boolean isPacManSafeInDemoLevel() {
+    protected boolean isPacManSafeInDemoLevel() {
         float levelRunningSeconds = (System.currentTimeMillis() - level.startTime()) / 1000f;
         if (level.isDemoLevel() && levelRunningSeconds < DEMO_LEVEL_MIN_DURATION_SEC) {
             Logger.info("Pac-Man dead ignored, demo level is running since {} seconds", levelRunningSeconds);
@@ -588,7 +588,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public boolean isBonusReached() {
+    protected boolean isBonusReached() {
         return level.eatenFoodCount() == 64 || level.eatenFoodCount() == 176;
     }
 
@@ -672,12 +672,13 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         scoreManager.scorePoints(ENERGIZER_VALUE);
         Logger.info("Scored {} points for eating energizer", ENERGIZER_VALUE);
         level.victims().clear();
-        long powerTicks = pacPowerTicks(level);
+        double powerSeconds = pacPowerSeconds(level);
+        long powerTicks = secToTicks(powerSeconds);
         if (powerTicks > 0) {
             huntingTimer.stop();
             Logger.info("Hunting Pac-Man stopped as he got power");
             level.pac().powerTimer().restartTicks(powerTicks);
-            Logger.info("Power timer restarted, duration={} ticks ({0.00} sec)", powerTicks, powerTicks / NUM_TICKS_PER_SEC);
+            Logger.info("Power timer restarted, duration={} ticks ({0.00} sec)", powerTicks, powerSeconds);
             level.ghosts(GhostState.HUNTING_PAC).forEach(ghost -> ghost.setState(GhostState.FRIGHTENED));
             level.ghosts(GhostState.FRIGHTENED).forEach(Ghost::reverseAtNextOccasion);
             simulationStep.pacGotPower = true;

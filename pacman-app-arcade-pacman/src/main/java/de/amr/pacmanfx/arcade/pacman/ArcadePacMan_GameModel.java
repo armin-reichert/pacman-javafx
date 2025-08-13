@@ -301,18 +301,17 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
     }
 
     @Override
-    public boolean isPacManSafeInDemoLevel() {
+    protected boolean isPacManSafeInDemoLevel() {
         return false;
     }
 
     @Override
-    public long pacPowerFadingTicks(GameLevel level) {
-        // ghost flashing animation has frame length 14 so one full flash takes 28 ticks
-        return level != null ? level.data().numFlashes() * 28L : 0;
+    public double pacPowerFadingSeconds(GameLevel level) {
+        return level != null ? level.data().numFlashes() * 0.5 : 0;
     }
 
     @Override
-    public boolean isBonusReached() {
+    protected boolean isBonusReached() {
         return level.eatenFoodCount() == 70 || level.eatenFoodCount() == 170;
     }
 

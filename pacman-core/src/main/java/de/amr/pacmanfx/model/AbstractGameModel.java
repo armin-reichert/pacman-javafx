@@ -196,6 +196,8 @@ public abstract class AbstractGameModel implements Game {
             });
     }
 
+    protected abstract boolean isPacManSafeInDemoLevel();
+
     protected void updatePacPower() {
         final TickTimer powerTimer = level.pac().powerTimer();
         powerTimer.doTick();
@@ -220,6 +222,8 @@ public abstract class AbstractGameModel implements Game {
     }
 
     protected abstract void checkIfPacManFindsFood();
+
+    protected abstract boolean isBonusReached();
 
     protected void checkIfPacManCanEatBonus(Bonus bonus) {
         if (bonus.state() == BonusState.EDIBLE && actorsCollide(level.pac(), bonus)) {

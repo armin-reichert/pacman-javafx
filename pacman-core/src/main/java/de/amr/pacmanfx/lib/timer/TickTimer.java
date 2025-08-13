@@ -30,7 +30,7 @@ public class TickTimer {
 
     /**
      * @param seconds seconds
-     * @return number of ticks corresponding to given seconds at 60Hz
+     * @return number of ticks corresponding to given seconds at the normal frame rate (60Hz)
      */
     public static long secToTicks(double seconds) {
         return Math.round(seconds * Globals.NUM_TICKS_PER_SEC);

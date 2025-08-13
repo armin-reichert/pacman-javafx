@@ -299,14 +299,12 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
     }
 
     @Override
-    public long pacPowerFadingTicks(GameLevel level) {
-        // Ghost flashing animation has frame length 14 so one full flash takes 28 ticks
-        //TODO find better solution.
-        return level != null ? level.data().numFlashes() * 28L : 0;
+    public double pacPowerFadingSeconds(GameLevel level) {
+        return level != null ? level.data().numFlashes() * 0.5 : 0;
     }
 
     @Override
-    public boolean isPacManSafeInDemoLevel() {
+    protected boolean isPacManSafeInDemoLevel() {
         float levelDurationInSec = (System.currentTimeMillis() - level.startTime()) / 1000f;
         if (level.isDemoLevel() && levelDurationInSec < DEMO_LEVEL_MIN_DURATION_SEC) {
             Logger.info("Pac-Man remains alive, demo level has just been running for {} sec", levelDurationInSec);
@@ -316,7 +314,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
     }
 
     @Override
-    public boolean isBonusReached() {
+    protected boolean isBonusReached() {
         return level.eatenFoodCount() == 64 || level.eatenFoodCount() == 176;
     }
 

@@ -12,14 +12,15 @@ import de.amr.pacmanfx.model.HuntingPhase;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.ActorSpeedControl;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
+import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import javafx.scene.paint.Color;
 
 import java.util.Map;
 
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.lib.timer.TickTimer.secToTicks;
 import static de.amr.pacmanfx.lib.timer.TickTimer.ticksToString;
 import static de.amr.pacmanfx.uilib.Ufx.formatColorHex;
 
@@ -161,9 +162,9 @@ public class InfoBoxGameInfo extends InfoBox {
     }
 
     private String fmtPacPowerTime(GameLevel level) {
-        return "%.2f sec (%d ticks)".formatted(
-            ui.gameContext().game().pacPowerTicks(level) / (float) NUM_TICKS_PER_SEC,
-            ui.gameContext().game().pacPowerTicks(level));
+        double powerSec = ui.gameContext().game().pacPowerSeconds(level);
+        long powerTicks = secToTicks(powerSec);
+        return "%.2f sec (%d ticks)".formatted(powerTicks / (float) NUM_TICKS_PER_SEC, powerTicks);
     }
 
     private String fmtNumFlashes(GameLevel level) {

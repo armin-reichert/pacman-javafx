@@ -30,12 +30,11 @@ public interface Game extends GameLifecycle, GameEvents {
     boolean isPlaying();
     void    setPlaying(boolean playing);
     boolean isLevelCompleted();
-    boolean isPacManSafeInDemoLevel();
     int     lastLevelNumber();
-    boolean isBonusReached();
     boolean canContinueOnGameOver();
     boolean hasPacManBeenKilled();
     boolean haveGhostsBeenKilled();
-    long    pacPowerFadingTicks(GameLevel gameLevel);
-    long    pacPowerTicks(GameLevel level);
+
+    double    pacPowerFadingSeconds(GameLevel gameLevel);
+    double    pacPowerSeconds(GameLevel level);
 }

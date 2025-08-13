@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.pacman;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.ActorSpeedControl;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -15,7 +16,6 @@ import org.tinylog.Logger;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.Globals.NUM_TICKS_PER_SEC;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
 
@@ -100,8 +100,8 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
     // Actors
 
     @Override
-    public long pacPowerTicks(GameLevel level) {
-        return level != null ? 60 * level.data().pacPowerSeconds() : 0;
+    public double pacPowerSeconds(GameLevel level) {
+        return level != null ? level.data().pacPowerSeconds() : 0;
     }
 
     @Override
@@ -191,12 +191,13 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
         level.victims().clear();
         level.ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::reverseAtNextOccasion);
 
-        long powerTicks = pacPowerTicks(level);
-        if (powerTicks > 0) {
+        double powerSeconds = pacPowerSeconds(level);
+        if (powerSeconds > 0) {
             huntingTimer().stop();
             Logger.debug("Hunting stopped (Pac-Man got power)");
-            level.pac().powerTimer().restartTicks(powerTicks);
-            Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", powerTicks, (float) powerTicks / NUM_TICKS_PER_SEC);
+            long ticks = TickTimer.secToTicks(powerSeconds);
+            level.pac().powerTimer().restartTicks(ticks);
+            Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", ticks, powerSeconds);
             level.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
             simulationStep.pacGotPower = true;
             eventManager().publishEvent(GameEventType.PAC_GETS_POWER);
