@@ -11,6 +11,7 @@ public interface GameLifecycle {
     void prepareForNewGame();
     boolean canStartNewGame();
     void startNewGame();
+    void continueGame();
     void buildNormalLevel(int levelNumber);
     void buildDemoLevel();
     void createLevel(int levelNumber);

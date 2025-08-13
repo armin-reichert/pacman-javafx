@@ -81,7 +81,7 @@ public enum GameState implements FsmState<GameContext> {
         static final short TICK_NEW_GAME_SHOW_GUYS = 120;
         static final short TICK_NEW_GAME_START_HUNTING = 240;
         static final short TICK_DEMO_LEVEL_START_HUNTING = 120;
-        static final short TICK_RESUME_GAME =  90;
+        static final short TICK_RESUME_HUNTING =  90;
 
         @Override
         public void onEnter(GameContext context) {
@@ -91,13 +91,9 @@ public enum GameState implements FsmState<GameContext> {
         @Override
         public void onUpdate(GameContext context) {
             if (context.game().isPlaying()) {
-                // resume running game
                 if (timer.tickCount() == 1) {
-                    context.game().resetPacManAndGhostAnimations();
-                    context.gameLevel().getReadyToPlay();
-                    context.gameLevel().showPacAndGhosts();
-                    context.eventManager().publishEvent(GameEventType.GAME_CONTINUED);
-                } else if (timer.tickCount() == TICK_RESUME_GAME) {
+                    context.game().continueGame();
+                } else if (timer.tickCount() == TICK_RESUME_HUNTING) {
                     context.gameController().changeGameState(GameState.HUNTING);
                 }
             }

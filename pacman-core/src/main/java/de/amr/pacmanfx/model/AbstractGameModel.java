@@ -76,6 +76,14 @@ public abstract class AbstractGameModel implements Game {
     }
 
     @Override
+    public void continueGame() {
+        resetPacManAndGhostAnimations();
+        level.getReadyToPlay();
+        level.showPacAndGhosts();
+        eventManager().publishEvent(GameEventType.GAME_CONTINUED);
+    }
+
+    @Override
     public void startHunting() {
         level.pac().playAnimation();
         level.ghosts().forEach(Ghost::playAnimation);
