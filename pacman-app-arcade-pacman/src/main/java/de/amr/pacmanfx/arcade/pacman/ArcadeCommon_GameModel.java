@@ -72,7 +72,7 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
         prepareForNewGame();
         theHUD().theLevelCounter().clear();
         buildNormalLevel(1);
-        gameContext.eventManager().publishEvent(GameEventType.GAME_STARTED);
+        eventManager().publishEvent(GameEventType.GAME_STARTED);
     }
 
     @Override

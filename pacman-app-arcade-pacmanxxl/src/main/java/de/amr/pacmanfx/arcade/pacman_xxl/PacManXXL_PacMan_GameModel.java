@@ -48,6 +48,6 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
         scoreManager().setScoreLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
         level.house().ifPresent(house -> gateKeeper.setHouse(house)); //TODO what if no house exists?
-        gameContext.eventManager().publishEvent(GameEventType.LEVEL_CREATED);
+        eventManager().publishEvent(GameEventType.LEVEL_CREATED);
     }
 }

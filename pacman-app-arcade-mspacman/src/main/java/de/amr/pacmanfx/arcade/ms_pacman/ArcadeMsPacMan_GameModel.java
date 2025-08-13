@@ -421,7 +421,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
             crossingLeftToRight ? "left to right" : "right to left");
 
         level.setBonus(bonus);
-        gameContext.eventManager().publishEvent(GameEventType.BONUS_ACTIVATED, bonus.tile());
+        eventManager().publishEvent(GameEventType.BONUS_ACTIVATED, bonus.tile());
     }
 
     private Portal randomPortal(GameLevel level) {
