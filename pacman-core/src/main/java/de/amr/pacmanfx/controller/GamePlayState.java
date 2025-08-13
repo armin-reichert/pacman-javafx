@@ -37,7 +37,6 @@ public enum GamePlayState implements GameState {
         }
     },
 
-
     INTRO {
         @Override
         public void onEnter(GameContext context) {
@@ -52,14 +51,12 @@ public enum GamePlayState implements GameState {
         }
     },
 
-
     SETTING_OPTIONS_FOR_START {
         @Override
         public void onUpdate(GameContext context) {
             // wait for user interaction to leave state
         }
     },
-
 
     /**
      * In Tengen Ms. Pac-Man, the credited people are shown.
@@ -77,7 +74,6 @@ public enum GamePlayState implements GameState {
             }
         }
     },
-
 
     STARTING_GAME {
         static final short TICK_NEW_GAME_SHOW_GUYS = 120;
@@ -145,7 +141,6 @@ public enum GamePlayState implements GameState {
         }
     },
 
-
     HUNTING {
         int delay;
 
@@ -184,7 +179,6 @@ public enum GamePlayState implements GameState {
         }
     },
 
-
     LEVEL_COMPLETE {
 
         @Override
@@ -219,7 +213,6 @@ public enum GamePlayState implements GameState {
         }
     },
 
-
     LEVEL_TRANSITION {
         @Override
         public void onEnter(GameContext context) {
@@ -234,7 +227,6 @@ public enum GamePlayState implements GameState {
             }
         }
     },
-
 
     GHOST_DYING {
         @Override
@@ -263,7 +255,6 @@ public enum GamePlayState implements GameState {
             context.gameLevel().ghosts().forEach(Ghost::playAnimation);
         }
     },
-
 
     PACMAN_DYING {
         static final int TICK_HIDE_GHOSTS = 60;
@@ -317,7 +308,6 @@ public enum GamePlayState implements GameState {
         }
     },
 
-
     GAME_OVER {
         @Override
         public void onEnter(GameContext context) {
@@ -352,7 +342,6 @@ public enum GamePlayState implements GameState {
             context.optGameLevel().ifPresent(GameLevel::clearMessage);
         }
     },
-
 
     INTERMISSION {
         @Override

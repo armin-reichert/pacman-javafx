@@ -352,6 +352,7 @@ public class PlayScene3D implements GameScene {
         }
         else {
             switch (state) {
+                case BOOT, INTRO, SETTING_OPTIONS_FOR_START, SHOWING_CREDITS, LEVEL_TRANSITION, INTERMISSION -> {}
                 case HUNTING -> gameLevel3D.onHuntingStart();
                 case PACMAN_DYING -> gameLevel3D.onPacManDying(state);
                 case GHOST_DYING -> gameLevel3D.onGhostDying();
@@ -360,6 +361,8 @@ public class PlayScene3D implements GameScene {
                 case STARTING_GAME -> {
                     if (gameLevel3D != null) {
                         gameLevel3D.onStartingGame();
+                    } else {
+                        Logger.error("No 3D game level available"); //TODO can this happen?
                     }
                 }
                 default -> throw new IllegalStateException("Unexpected state: " + state);

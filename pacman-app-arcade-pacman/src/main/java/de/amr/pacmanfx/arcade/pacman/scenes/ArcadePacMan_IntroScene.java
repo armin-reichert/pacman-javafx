@@ -326,7 +326,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 }
 
                 scene.ghosts.stream()
-                    .filter(ghost -> ghost.inAnyOfStates(FRIGHTENED) && ghost.atSameTileAs(scene.pacMan))
+                    .filter(ghost -> ghost.inAnyOfStates(FRIGHTENED) && ghost.sameTilePosition(scene.pacMan))
                     .findFirst()
                     .ifPresent(victim -> {
                         scene.victims.add(victim);

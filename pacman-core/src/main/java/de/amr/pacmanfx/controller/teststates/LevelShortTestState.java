@@ -51,9 +51,7 @@ public class LevelShortTestState implements GameState {
             gameLevel.bonus().ifPresent(Bonus::tick);
         }
         if (timer.atSecond(1.0)) {
-            context.game().resetPacManAndGhostAnimations();
-            gameLevel.getReadyToPlay();
-            gameLevel.showPacAndGhosts();
+            context.game().continueGame();
         }
         else if (timer.atSecond(2)) {
             gameLevel.blinking().setStartPhase(Pulse.ON);

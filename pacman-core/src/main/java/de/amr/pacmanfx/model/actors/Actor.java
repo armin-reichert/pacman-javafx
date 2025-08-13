@@ -207,7 +207,7 @@ public class Actor {
      * @param other some actor
      * @return <code>true</code> if both entities have the same tile coordinate
      */
-    public boolean atSameTileAs(Actor other) {
+    public boolean sameTilePosition(Actor other) {
         requireNonNull(other, "Actor to check for same tile must not be null");
         return tile().equals(other.tile());
     }

@@ -19,6 +19,7 @@ import java.util.Optional;
 
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Common base class of all Pac-Man game models.
@@ -37,16 +38,6 @@ public abstract class AbstractGameModel implements Game {
     @Override
     public SimulationStep simulationStep() {
         return simulationStep;
-    }
-
-    @Override
-    public void resetPacManAndGhostAnimations() {
-        level.pac().selectAnimation(ANIM_PAC_MUNCHING);
-        level.pac().resetAnimation();
-        level.ghosts().forEach(ghost -> {
-            ghost.selectAnimation(ANIM_GHOST_NORMAL);
-            ghost.resetAnimation();
-        });
     }
 
     @Override
@@ -73,7 +64,19 @@ public abstract class AbstractGameModel implements Game {
     }
 
     @Override
+    public void resetPacManAndGhostAnimations() {
+        requireNonNull(level, "Game level not existing");
+        level.pac().selectAnimation(ANIM_PAC_MUNCHING);
+        level.pac().resetAnimation();
+        level.ghosts().forEach(ghost -> {
+            ghost.selectAnimation(ANIM_GHOST_NORMAL);
+            ghost.resetAnimation();
+        });
+    }
+
+    @Override
     public void continueGame() {
+        requireNonNull(level, "Game level not existing");
         resetPacManAndGhostAnimations();
         level.getReadyToPlay();
         level.showPacAndGhosts();
@@ -82,6 +85,7 @@ public abstract class AbstractGameModel implements Game {
 
     @Override
     public void startHunting() {
+        requireNonNull(level, "Game level not existing");
         level.pac().playAnimation();
         level.ghosts().forEach(Ghost::playAnimation);
         level.blinking().setStartPhase(Pulse.ON);
@@ -92,6 +96,7 @@ public abstract class AbstractGameModel implements Game {
 
     @Override
     public void doHuntingStep() {
+        requireNonNull(level, "Game level not existing");
         gateKeeper().ifPresent(gateKeeper -> gateKeeper.unlockGhosts(level));
 
         huntingTimer().update(level.number());
@@ -139,6 +144,7 @@ public abstract class AbstractGameModel implements Game {
 
     @Override
     public void onLevelCompleted() {
+        requireNonNull(level, "Game level not existing");
         Logger.info("Level completed, stop hunting timer");
         huntingTimer().stop();
         level.blinking().setStartPhase(Pulse.OFF);
@@ -165,20 +171,10 @@ public abstract class AbstractGameModel implements Game {
 
     protected abstract GameEventManager eventManager();
 
-    /**
-     * Checks actor collision. Default implementation uses tile equality.
-     *
-     * @param either an actor
-     * @param other another actor
-     * @return if both actors collide
-     */
-    protected boolean actorsCollide(Actor either, Actor other) {
-        return either.atSameTileAs(other);
-    }
-
     protected void checkIfPacManGetsKilled(Pac pac) {
+        requireNonNull(level, "Game level not existing");
         level.ghosts(GhostState.HUNTING_PAC)
-            .filter(ghost -> actorsCollide(ghost, pac))
+            .filter(pac::sameTilePosition)
             .findFirst().ifPresent(potentialKiller -> {
                 boolean killed;
                 if (level.isDemoLevel()) {
@@ -196,6 +192,7 @@ public abstract class AbstractGameModel implements Game {
     protected abstract boolean isPacManSafeInDemoLevel();
 
     protected void updatePacPower() {
+        requireNonNull(level, "Game level not existing");
         final TickTimer powerTimer = level.pac().powerTimer();
         powerTimer.doTick();
         if (level.pac().isPowerFadingStarting()) {
@@ -215,7 +212,10 @@ public abstract class AbstractGameModel implements Game {
     }
 
     protected void checkIfGhostsKilled() {
-        level.ghosts(GhostState.FRIGHTENED).filter(ghost -> actorsCollide(ghost, level.pac())).forEach(this::onGhostKilled);
+        requireNonNull(level, "Game level not existing");
+        level.ghosts(GhostState.FRIGHTENED)
+                .filter(ghost -> level.pac().sameTilePosition(ghost))
+                .forEach(this::onGhostKilled);
     }
 
     protected abstract void checkIfPacManFindsFood();
@@ -223,7 +223,8 @@ public abstract class AbstractGameModel implements Game {
     protected abstract boolean isBonusReached();
 
     protected void checkIfPacManCanEatBonus(Bonus bonus) {
-        if (bonus.state() == BonusState.EDIBLE && actorsCollide(level.pac(), bonus)) {
+        requireNonNull(level, "Game level not existing");
+        if (bonus.state() == BonusState.EDIBLE && level.pac().sameTilePosition(bonus)) {
             bonus.setEaten(120); //TODO is 2 seconds correct?
             scoreManager().scorePoints(bonus.points());
             Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
