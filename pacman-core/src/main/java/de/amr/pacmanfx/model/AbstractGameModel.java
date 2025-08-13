@@ -34,9 +34,6 @@ public abstract class AbstractGameModel implements Game {
 
     protected GameLevel level;
 
-    // TODO This is only used by cutscene tests
-    public int testedCutSceneNumber;
-
     @Override
     public SimulationStep simulationStep() {
         return simulationStep;

@@ -15,6 +15,8 @@ public class CutScenesTestState implements GameState {
 
     private final TickTimer timer = new TickTimer("Timer_" + name());
 
+    public int testedCutSceneNumber;
+
     @Override
     public String name() {
         return getClass().getSimpleName();
@@ -29,7 +31,7 @@ public class CutScenesTestState implements GameState {
     public void onEnter(GameContext context) {
         timer.restartIndefinitely();
         if (context.game() instanceof AbstractGameModel gameModel) {
-            gameModel.testedCutSceneNumber = 1;
+            testedCutSceneNumber = 1;
         }
     }
 
@@ -38,8 +40,8 @@ public class CutScenesTestState implements GameState {
         if (context.game() instanceof AbstractGameModel gameModel) {
             if (timer.hasExpired()) {
                 int lastCutSceneNumber = context.gameController().isSelected("MS_PACMAN_TENGEN") ? 4 : 3;
-                if (gameModel.testedCutSceneNumber < lastCutSceneNumber) {
-                    gameModel.testedCutSceneNumber += 1;
+                if (testedCutSceneNumber < lastCutSceneNumber) {
+                    testedCutSceneNumber += 1;
                     timer.restartIndefinitely();
                     //TODO find another solution and get rid of this event type
                     context.eventManager().publishEvent(GameEventType.UNSPECIFIED_CHANGE);
@@ -49,5 +51,4 @@ public class CutScenesTestState implements GameState {
             }
         }
     }
-
 }

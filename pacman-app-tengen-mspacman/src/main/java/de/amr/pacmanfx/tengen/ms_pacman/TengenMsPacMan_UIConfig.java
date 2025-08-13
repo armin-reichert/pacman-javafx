@@ -13,7 +13,6 @@ import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.lib.nes.NES_Palette;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
-import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
@@ -347,13 +346,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
                 }
                 yield SCENE_ID_CUT_SCENE_N_2D.formatted(optCutSceneNumber.getAsInt());
             }
-            case CutScenesTestState ignored -> {
-                //TODO: move field into test state
-                if (gameContext.game() instanceof AbstractGameModel gameModel) {
-                    yield SCENE_ID_CUT_SCENE_N_2D.formatted(gameModel.testedCutSceneNumber);
-                }
-                throw new IllegalStateException("Illegal game model");
-            }
+            case CutScenesTestState testState -> SCENE_ID_CUT_SCENE_N_2D.formatted(testState.testedCutSceneNumber);
             default -> PROPERTY_3D_ENABLED.get() ? SCENE_ID_PLAY_SCENE_3D : SCENE_ID_PLAY_SCENE_2D;
         };
         return scenesByID.get(sceneID);
