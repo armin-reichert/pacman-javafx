@@ -60,10 +60,9 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
 
     @Override
     public void prepareForNewGame() {
-        playingProperty().set(false);
+        setPlaying(false);
         setLifeCount(initialLifeCount());
         level = null;
-        propertyMap().clear();
         scoreManager().loadHighScore();
         scoreManager().resetScore();
         gateKeeper.reset();
@@ -208,7 +207,7 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
 
     @Override
     public void onGameEnding() {
-        playingProperty().set(false);
+        setPlaying(false);
         if (!coinMechanism.isEmpty()) {
             coinMechanism.consumeCoin();
         }

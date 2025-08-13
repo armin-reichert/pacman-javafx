@@ -15,8 +15,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import org.tinylog.Logger;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
@@ -37,6 +35,9 @@ public abstract class AbstractGameModel implements Game {
 
     protected final GameContext gameContext;
     protected GameLevel level;
+
+    // TODO This is only used by cutscene tests
+    public int testedCutSceneNumber;
 
     protected AbstractGameModel(GameContext gameContext) {
         this.gameContext = requireNonNull(gameContext);
@@ -70,7 +71,7 @@ public abstract class AbstractGameModel implements Game {
     }
 
     @Override
-    public boolean isPlaying() { return playingProperty().get(); }
+    public boolean isPlaying() { return playing.get(); }
 
     @Override
     public void setPlaying(boolean playing) {
@@ -155,8 +156,6 @@ public abstract class AbstractGameModel implements Game {
         Logger.trace("Game level {} completed.", level.number());
     }
 
-    public BooleanProperty playingProperty() { return playing; }
-
     public void setLifeCount(int n) {
         if (n >= 0) {
             lifeCount.set(n);
@@ -174,7 +173,7 @@ public abstract class AbstractGameModel implements Game {
      * @param other another actor
      * @return if both actors collide
      */
-    public boolean actorsCollide(Actor either, Actor other) {
+    protected boolean actorsCollide(Actor either, Actor other) {
         return either.atSameTileAs(other);
     }
 
@@ -232,26 +231,5 @@ public abstract class AbstractGameModel implements Game {
             simulationStep.bonusEatenTile = bonus.tile();
             gameContext.eventManager().publishEvent(GameEventType.BONUS_EATEN);
         }
-    }
-
-    // Generic property store
-    // TODO remove, is only used by cutscene tests
-
-    private Map<String, Object> propertyMap;
-
-    @SuppressWarnings("unchecked")
-    public <T> T getProperty(String key) {
-        return (T) propertyMap().get(key);
-    }
-
-    public void setProperty(String key, Object value) {
-        propertyMap().put(key, value);
-    }
-
-    protected Map<String, Object> propertyMap() {
-        if (propertyMap == null) {
-            propertyMap = new HashMap<>(4);
-        }
-        return propertyMap;
     }
 }

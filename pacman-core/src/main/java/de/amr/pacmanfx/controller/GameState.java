@@ -495,9 +495,8 @@ public enum GameState implements FsmState<GameContext> {
         @Override
         public void onEnter(GameContext context) {
             timer.restartIndefinitely();
-            //TODO
             if (context.game() instanceof AbstractGameModel gameModel) {
-                gameModel.setProperty("intermissionTestNumber", 1);
+                gameModel.testedCutSceneNumber = 1;
             }
         }
 
@@ -505,10 +504,9 @@ public enum GameState implements FsmState<GameContext> {
         public void onUpdate(GameContext context) {
             if (context.game() instanceof AbstractGameModel gameModel) {
                 if (timer.hasExpired()) {
-                    int number = gameModel.<Integer>getProperty("intermissionTestNumber");
                     int lastCutSceneNumber = context.gameController().isSelected("MS_PACMAN_TENGEN") ? 4 : 3;
-                    if (number < lastCutSceneNumber) {
-                        gameModel.setProperty("intermissionTestNumber", number + 1);
+                    if (gameModel.testedCutSceneNumber < lastCutSceneNumber) {
+                        gameModel.testedCutSceneNumber += 1;
                         timer.restartIndefinitely();
                         //TODO find another solution and get rid of this event type
                         context.eventManager().publishEvent(GameEventType.UNSPECIFIED_CHANGE);

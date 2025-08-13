@@ -263,10 +263,8 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
                 yield SCENE_ID_CUT_SCENE_N_2D.formatted(optCutSceneNumber.getAsInt());
             }
             case GameState.TESTING_CUT_SCENES -> {
-                //TODO
                 if (gameContext.game() instanceof AbstractGameModel gameModel) {
-                    int cutSceneNumber = gameModel.<Integer>getProperty("intermissionTestNumber");
-                    yield SCENE_ID_CUT_SCENE_N_2D.formatted(cutSceneNumber);
+                    yield SCENE_ID_CUT_SCENE_N_2D.formatted(gameModel.testedCutSceneNumber);
                 }
                 throw new IllegalStateException("Illegal game model");
             }

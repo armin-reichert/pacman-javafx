@@ -275,9 +275,8 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     public void prepareForNewGame() {
         setLifeCount(initialLifeCount());
         level = null;
-        propertyMap().clear();
         hud.theLevelCounter().clear();
-        playingProperty().set(false);
+        setPlaying(false);
         boosterActive = false;
         scoreManager.loadHighScore();
         scoreManager.resetScore();
@@ -286,7 +285,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public void onGameEnding() {
-        playingProperty().set(false);
+        setPlaying(false);
         scoreManager.updateHighScore();
         level.showMessage(GameLevel.MESSAGE_GAME_OVER);
     }
