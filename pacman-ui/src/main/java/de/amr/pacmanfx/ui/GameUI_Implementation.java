@@ -116,7 +116,7 @@ public class GameUI_Implementation implements GameUI {
 
         // Game context
         this.gameContext = gameContext;
-        customDirectoryWatchdog = new DirectoryWatchdog(gameContext.theCustomMapDir());
+        customDirectoryWatchdog = new DirectoryWatchdog(gameContext.customMapDir());
         clock = new GameClock();
         clock.setPausableAction(this::doSimulationStepAndUpdateGameScene);
         clock.setPermanentAction(this::drawCurrentView);
@@ -185,8 +185,8 @@ public class GameUI_Implementation implements GameUI {
 
         statusIcons.iconMuted()    .visibleProperty().bind(PROPERTY_MUTED);
         statusIcons.icon3D()       .visibleProperty().bind(PROPERTY_3D_ENABLED);
-        statusIcons.iconAutopilot().visibleProperty().bind(gameContext().theGameController().propertyUsingAutopilot());
-        statusIcons.iconImmune()   .visibleProperty().bind(gameContext().theGameController().propertyImmunity());
+        statusIcons.iconAutopilot().visibleProperty().bind(gameContext().gameController().propertyUsingAutopilot());
+        statusIcons.iconImmune()   .visibleProperty().bind(gameContext().gameController().propertyImmunity());
     }
 
     private void configureStage(Stage stage) {
@@ -252,10 +252,10 @@ public class GameUI_Implementation implements GameUI {
         }
         if (oldView != null) {
             oldView.actionBindingsManager().uninstallBindings(keyboard);
-            gameContext.theGameEventManager().removeEventListener(oldView);
+            gameContext.eventManager().removeEventListener(oldView);
         }
         view.actionBindingsManager().installBindings(keyboard);
-        gameContext.theGameEventManager().addEventListener(view);
+        gameContext.eventManager().addEventListener(view);
         PROPERTY_CURRENT_VIEW.set(view);
     }
 
@@ -272,9 +272,9 @@ public class GameUI_Implementation implements GameUI {
 
     private void doSimulationStepAndUpdateGameScene() {
         try {
-            gameContext.theGame().simulationStep().start(clock.tickCount());
-            gameContext.theGameController().updateGameState();
-            gameContext.theGame().simulationStep().logState();
+            gameContext.game().simulationStep().start(clock.tickCount());
+            gameContext.gameController().updateGameState();
+            gameContext.game().simulationStep().logState();
             currentGameScene().ifPresent(GameScene::update);
         } catch (Throwable x) {
             ka_tas_trooo_phe(x);
@@ -303,7 +303,7 @@ public class GameUI_Implementation implements GameUI {
                 bindStageTitle(stage);
             });
             editor.getFileMenu().getItems().addAll(new SeparatorMenuItem(), miReturnToGame);
-            editor.init(gameContext.theCustomMapDir());
+            editor.init(gameContext.customMapDir());
             editorView = new EditorView(editor);
         }
         return editorView;
@@ -373,16 +373,16 @@ public class GameUI_Implementation implements GameUI {
         soundManager().stopAll();
         currentGameScene().ifPresent(gameScene -> {
             gameScene.end();
-            boolean shouldConsumeCoin = gameContext.theGameState() == GameState.STARTING_GAME
-                    || gameContext.theGame().isPlaying();
-            if (shouldConsumeCoin && !gameContext.theCoinMechanism().isEmpty()) {
-                gameContext.theCoinMechanism().consumeCoin();
+            boolean shouldConsumeCoin = gameContext.gameState() == GameState.STARTING_GAME
+                    || gameContext.game().isPlaying();
+            if (shouldConsumeCoin && !gameContext.coinMechanism().isEmpty()) {
+                gameContext.coinMechanism().consumeCoin();
             }
             Logger.info("Quit game scene ({}), returning to start view", gameScene.getClass().getSimpleName());
         });
         clock.stop();
         clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
-        gameContext.theGameController().restart(GameState.BOOT);
+        gameContext.gameController().restart(GameState.BOOT);
         showStartView();
     }
 
@@ -392,7 +392,7 @@ public class GameUI_Implementation implements GameUI {
         currentGameScene().ifPresent(GameScene::end);
         clock.stop();
         clock.setTargetFrameRate(Globals.NUM_TICKS_PER_SEC);
-        gameContext.theGameController().restart(GameState.BOOT);
+        gameContext.gameController().restart(GameState.BOOT);
         Platform.runLater(clock::start);
     }
 
@@ -403,7 +403,7 @@ public class GameUI_Implementation implements GameUI {
             return;
         }
 
-        String previousVariant = gameContext.theGameController().selectedGameVariant();
+        String previousVariant = gameContext.gameController().selectedGameVariant();
         if (gameVariant.equals(previousVariant)) {
             return;
         }
@@ -430,7 +430,7 @@ public class GameUI_Implementation implements GameUI {
         playView().canvasFrame().setRoundedBorder(newConfig.hasGameCanvasRoundedBorder());
 
         // this triggers a game event and the event handlers:
-        gameContext.theGameController().selectGameVariant(gameVariant);
+        gameContext.gameController().selectGameVariant(gameVariant);
     }
 
     @Override
@@ -441,7 +441,7 @@ public class GameUI_Implementation implements GameUI {
         stage.centerOnScreen();
         stage.show();
         Platform.runLater(customDirectoryWatchdog::startWatching);
-        gameContext.theGameController().setEventsEnabled(true);
+        gameContext.gameController().setEventsEnabled(true);
     }
 
     @Override
@@ -481,7 +481,7 @@ public class GameUI_Implementation implements GameUI {
 
     @Override
     public void showEditorView() {
-        if (!gameContext.theGame().isPlaying() || clock.isPaused()) {
+        if (!gameContext.game().isPlaying() || clock.isPaused()) {
             currentGameScene().ifPresent(GameScene::end);
             soundManager().stopAll();
             clock.stop();
@@ -544,6 +544,6 @@ public class GameUI_Implementation implements GameUI {
     @Override
     @SuppressWarnings("unchecked")
     public <T extends GameUI_Config> T currentConfig() {
-        return (T) config(gameContext.theGameController().selectedGameVariant());
+        return (T) config(gameContext.gameController().selectedGameVariant());
     }
 }

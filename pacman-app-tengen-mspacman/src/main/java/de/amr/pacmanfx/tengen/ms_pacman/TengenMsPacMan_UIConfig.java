@@ -330,7 +330,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public GameScene selectGameScene(GameContext gameContext) {
-        String sceneID = switch (gameContext.theGameState()) {
+        String sceneID = switch (gameContext.gameState()) {
             case BOOT -> SCENE_ID_BOOT_SCENE_2D;
             case SETTING_OPTIONS_FOR_START -> SCENE_ID_START_SCENE_2D;
             case SHOWING_CREDITS -> SCENE_ID_CREDITS_SCENE_2D;
@@ -339,8 +339,8 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
                 if (gameContext.optGameLevel().isEmpty()) {
                     throw new IllegalStateException("Cannot determine cut scene, no game level available");
                 }
-                int levelNumber = gameContext.theGameLevel().number();
-                OptionalInt optCutSceneNumber = gameContext.theGame().cutSceneNumber(levelNumber);
+                int levelNumber = gameContext.gameLevel().number();
+                OptionalInt optCutSceneNumber = gameContext.game().cutSceneNumber(levelNumber);
                 if (optCutSceneNumber.isEmpty()) {
                     throw new IllegalStateException("Cannot determine cut scene after level %d".formatted(levelNumber));
                 }
@@ -348,7 +348,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
             }
             case GameState.TESTING_CUT_SCENES -> {
                 //TODO
-                if (gameContext.theGame() instanceof GameModel gameModel) {
+                if (gameContext.game() instanceof GameModel gameModel) {
                     int cutSceneNumber = gameModel.<Integer>getProperty("intermissionTestNumber");
                     yield SCENE_ID_CUT_SCENE_N_2D.formatted(cutSceneNumber);
                 }

@@ -129,7 +129,7 @@ public abstract class Ghost extends MovingActor implements Animated {
     public void roam() {
         if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
 
-        GameLevel level = gameContext.theGameLevel();
+        GameLevel level = gameContext.gameLevel();
         Vector2i currentTile = tile();
         if (!level.isTileInPortalSpace(currentTile) && (isNewTileEntered() || !moveInfo.moved)) {
             Direction dir = computeRoamingDirection(currentTile);
@@ -165,7 +165,7 @@ public abstract class Ghost extends MovingActor implements Animated {
 
         if (gameContext == null || gameContext.optGameLevel().isEmpty()) return true;
 
-        GameLevel level = gameContext.theGameLevel();
+        GameLevel level = gameContext.gameLevel();
 
         // Portal tiles are the only tiles outside the world map that can be accessed
         if (!level.isTileInsideWorld(tile)) {
@@ -271,7 +271,7 @@ public abstract class Ghost extends MovingActor implements Animated {
      */
     private void updateStateLocked() {
         if (gameContext.optGameLevel().isPresent()) {
-            GameLevel level = gameContext.theGameLevel();
+            GameLevel level = gameContext.gameLevel();
             House house = level.house().orElse(null);
             if (house == null) {
                 Logger.error("No ghost house in level? WTF!");
@@ -280,7 +280,7 @@ public abstract class Ghost extends MovingActor implements Animated {
             if (house.isVisitedBy(this)) {
                 float minY = (house.minTile().y() + 1) * TS + HTS;
                 float maxY = (house.maxTile().y() - 1) * TS - HTS;
-                setSpeed(gameContext.theGame().actorSpeedControl().ghostSpeedInsideHouse(gameContext, level, this));
+                setSpeed(gameContext.game().actorSpeedControl().ghostSpeedInsideHouse(gameContext, level, this));
                 move();
                 float y = position().y();
                 if (y <= minY) {
@@ -313,13 +313,13 @@ public abstract class Ghost extends MovingActor implements Animated {
      */
     private void updateStateLeavingHouse() {
         if (gameContext.optGameLevel().isPresent()) {
-            GameLevel level = gameContext.theGameLevel();
+            GameLevel level = gameContext.gameLevel();
             House house = level.house().orElse(null);
             if (house == null) {
                 Logger.error("No ghost house in level? WTF!");
                 return;
             }
-            float speedInsideHouse = gameContext.theGame().actorSpeedControl().ghostSpeedInsideHouse(gameContext, level, this);
+            float speedInsideHouse = gameContext.game().actorSpeedControl().ghostSpeedInsideHouse(gameContext, level, this);
             Vector2f houseEntryPosition = house.entryPosition();
             Vector2f position = position();
             if (position.y() <= houseEntryPosition.y()) {
@@ -391,15 +391,15 @@ public abstract class Ghost extends MovingActor implements Animated {
      */
     private void updateStateFrightened() {
         if (gameContext.optGameLevel().isPresent()) {
-            GameLevel level = gameContext.theGameLevel();
+            GameLevel level = gameContext.gameLevel();
             House house = level.house().orElse(null);
             if (house == null) {
                 Logger.error("No ghost house in level? WTF!");
                 return;
             }
             float speed = level.isTunnel(tile())
-                ? gameContext.theGame().actorSpeedControl().ghostTunnelSpeed(gameContext, level, this)
-                : gameContext.theGame().actorSpeedControl().ghostFrightenedSpeed(gameContext, level, this);
+                ? gameContext.game().actorSpeedControl().ghostTunnelSpeed(gameContext, level, this)
+                : gameContext.game().actorSpeedControl().ghostFrightenedSpeed(gameContext, level, this);
             setSpeed(speed);
             roam();
             updateFrightenedAnimation();
@@ -408,7 +408,7 @@ public abstract class Ghost extends MovingActor implements Animated {
 
     private void updateFrightenedAnimation() {
         if (gameContext.optGameLevel().isPresent()) {
-            GameLevel level = gameContext.theGameLevel();
+            GameLevel level = gameContext.gameLevel();
             House house = level.house().orElse(null);
             if (house == null) {
                 Logger.error("No ghost house in level? WTF!");
@@ -439,13 +439,13 @@ public abstract class Ghost extends MovingActor implements Animated {
      */
     private void updateStateReturningToHouse() {
         if (gameContext.optGameLevel().isPresent()) {
-            GameLevel level = gameContext.theGameLevel();
+            GameLevel level = gameContext.gameLevel();
             House house = level.house().orElse(null);
             if (house == null) {
                 Logger.error("No ghost house in level? WTF!");
                 return;
             }
-            float speed = gameContext.theGame().actorSpeedControl().ghostSpeedReturningToHouse(gameContext, level, this);
+            float speed = gameContext.game().actorSpeedControl().ghostSpeedReturningToHouse(gameContext, level, this);
             Vector2f houseEntry = house.entryPosition();
             if (position().roughlyEquals(houseEntry, speed, 0)) {
                 setPosition(houseEntry);
@@ -469,13 +469,13 @@ public abstract class Ghost extends MovingActor implements Animated {
      */
     private void updateStateEnteringHouse() {
         if (gameContext.optGameLevel().isPresent()) {
-            GameLevel level = gameContext.theGameLevel();
+            GameLevel level = gameContext.gameLevel();
             House house = level.house().orElse(null);
             if (house == null) {
                 Logger.error("No ghost house in level? WTF!");
                 return;
             }
-            float speed = gameContext.theGame().actorSpeedControl().ghostSpeedReturningToHouse(gameContext, level, this);
+            float speed = gameContext.game().actorSpeedControl().ghostSpeedReturningToHouse(gameContext, level, this);
             Vector2f position = position();
             Vector2f revivalPosition = house.ghostRevivalTile(personality).scaled((float)TS).plus(HTS, 0);
             if (position.roughlyEquals(revivalPosition, 0.5f * speed, 0.5f * speed)) {

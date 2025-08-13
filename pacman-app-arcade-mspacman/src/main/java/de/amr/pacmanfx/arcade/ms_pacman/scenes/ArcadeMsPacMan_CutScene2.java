@@ -56,7 +56,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
         clapperboard.setFont(scaledArcadeFont8());
         clapperboard.startAnimation();
 
-        gameContext().theGame().theHUD().score(true).levelCounter(true).livesCounter(false);
+        gameContext().game().theHUD().score(true).levelCounter(true).livesCounter(false);
 
         setSceneState(STATE_CLAPPERBOARD, 120);
     }
@@ -167,7 +167,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
             msPacMan.setSpeed(4.0f);
         }
         else if (sceneTimer.atSecond(23)) {
-            gameContext().theGameController().letCurrentGameStateExpire();
+            gameContext().gameController().letCurrentGameStateExpire();
         }
         else {
             pacMan.move();

@@ -51,9 +51,9 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     protected void doInit() {
         t = -1;
 
-        gameContext().theGame().theHUD().showScore(false);
-        gameContext().theGame().theHUD().showLevelCounter(true);
-        gameContext().theGame().theHUD().showLivesCounter(false);
+        gameContext().game().theHUD().showScore(false);
+        gameContext().game().theHUD().showLevelCounter(true);
+        gameContext().game().theHUD().showLivesCounter(false);
 
         var spriteSheet = (TengenMsPacMan_SpriteSheet) ui.currentConfig().spriteSheet();
         clapperboard = new Clapperboard(spriteSheet, 4, "THE END");
@@ -131,7 +131,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
             spawnJunior();
         }
         else if (t == 1512) {
-            gameContext().theGameController().changeGameState(GameState.SETTING_OPTIONS_FOR_START);
+            gameContext().gameController().changeGameState(GameState.SETTING_OPTIONS_FOR_START);
         }
 
         pacMan.move();
@@ -221,7 +221,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         if (debugInfoVisibleProperty.get()) {
             drawDebugInfo();
         }
-        var game = gameContext().<TengenMsPacMan_GameModel>theGame();
+        var game = gameContext().<TengenMsPacMan_GameModel>game();
         if (game.mapCategory() != MapCategory.ARCADE) {
             gameRenderer.drawHUD(gameContext(), game.theHUD(), sizeInPx().minus(0, 2 * TS), ui.clock().tickCount());
         }

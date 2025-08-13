@@ -38,7 +38,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     protected void setActionBindings() {
         var tengenBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().tengenMsPacManBindings();
         // if demo level, allow going back to options screen
-        if (gameContext().optGameLevel().isPresent() && gameContext().theGameLevel().isDemoLevel()) {
+        if (gameContext().optGameLevel().isPresent() && gameContext().gameLevel().isDemoLevel()) {
             actionBindings.assign(ACTION_QUIT_DEMO_LEVEL, tengenBindings);
         } else {
             setPlayerSteeringActionBindings();
@@ -66,7 +66,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     protected void updateHUD() {
-        ScoreManager scoreManager = gameContext().theGame().scoreManager();
+        ScoreManager scoreManager = gameContext().game().scoreManager();
         final Score score = scoreManager.score(), highScore = scoreManager.highScore();
         if (score.isEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());

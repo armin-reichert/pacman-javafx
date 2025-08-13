@@ -48,11 +48,11 @@ public class GameEventManager {
 
     public void publishEvent(GameEventType type) {
         requireNonNull(type);
-        publishEvent(new GameEvent(gameContext.theGame(), type));
+        publishEvent(new GameEvent(gameContext.game(), type));
     }
 
     public void publishEvent(GameEventType type, Vector2i tile) {
         requireNonNull(type);
-        publishEvent(new GameEvent(gameContext.theGame(), type, tile));
+        publishEvent(new GameEvent(gameContext.game(), type, tile));
     }
 }

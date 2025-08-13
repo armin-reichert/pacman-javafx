@@ -70,7 +70,7 @@ public class GameController implements GameContext {
             @Override public GameContext context() { return GameController.this; }
         };
         gameStateMachine.addStateChangeListener((oldState, newState) ->
-            gameEventManager.publishEvent(new GameStateChangeEvent(theGame(), oldState, newState)));
+            gameEventManager.publishEvent(new GameStateChangeEvent(game(), oldState, newState)));
 
         gameVariantProperty.addListener((py, ov, newGameVariant) -> {
             if (eventsEnabled) {
@@ -159,49 +159,49 @@ public class GameController implements GameContext {
     // GameContext implementation
 
     @Override
-    public CoinMechanism theCoinMechanism() {
+    public CoinMechanism coinMechanism() {
         return coinMechanism;
     }
 
     @Override
-    public File theHomeDir() {
+    public File homeDir() {
         return homeDir;
     }
 
     @Override
-    public File theCustomMapDir() {
+    public File customMapDir() {
         return customMapDir;
     }
 
     /**
      * @return The game (model) registered for the currently selected game variant.
      */
-    public <G extends Game> G theGame() {
+    public <G extends Game> G game() {
         return game(gameVariantProperty.get());
     }
 
     @Override
-    public GameController theGameController() {
+    public GameController gameController() {
         return this;
     }
 
     @Override
-    public GameEventManager theGameEventManager() {
+    public GameEventManager eventManager() {
         return gameEventManager;
     }
 
     @Override
     public Optional<GameLevel> optGameLevel() {
-        return theGame().level();
+        return game().level();
     }
 
     @Override
-    public GameLevel theGameLevel() {
-        return theGame().level().orElse(null);
+    public GameLevel gameLevel() {
+        return game().level().orElse(null);
     }
 
     @Override
-    public GameState theGameState() {
+    public GameState gameState() {
         return gameStateMachine.state();
     }
 

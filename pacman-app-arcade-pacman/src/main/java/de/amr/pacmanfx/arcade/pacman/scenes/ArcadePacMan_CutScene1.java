@@ -51,7 +51,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
         actorsInZOrder.add(pac);
         actorsInZOrder.add(blinky);
 
-        gameContext().theGame().theHUD().credit(false).score(true).levelCounter(true).livesCounter(false);
+        gameContext().game().theHUD().credit(false).score(true).levelCounter(true).livesCounter(false);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
             pac.playAnimation(ANIM_BIG_PAC_MAN);
         }
         else if (frame == ANIMATION_START + 632) {
-            gameContext().theGameController().letCurrentGameStateExpire();
+            gameContext().gameController().letCurrentGameStateExpire();
         }
         if (frame >= ANIMATION_START) {
             pac.move();

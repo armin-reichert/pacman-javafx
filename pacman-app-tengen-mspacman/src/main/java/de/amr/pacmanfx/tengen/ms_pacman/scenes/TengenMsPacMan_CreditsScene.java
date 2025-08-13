@@ -27,7 +27,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     @Override
     protected void doInit() {
-        gameContext().theGame().theHUD().credit(false).score(false).levelCounter(false).livesCounter(false);
+        gameContext().game().theHUD().credit(false).score(false).levelCounter(false).livesCounter(false);
         var tengenBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().tengenMsPacManBindings();
         actionBindings.assign(ACTION_ENTER_START_SCREEN, tengenBindings);
     }
@@ -38,8 +38,8 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     @Override
     public void update() {
-        if (gameContext().theGameState().timer().atSecond(DISPLAY_SECONDS)) {
-            gameContext().theGameController().letCurrentGameStateExpire();
+        if (gameContext().gameState().timer().atSecond(DISPLAY_SECONDS)) {
+            gameContext().gameController().letCurrentGameStateExpire();
         }
     }
 
@@ -59,7 +59,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
         renderer().drawBar(nesPaletteColor(0x20), nesPaletteColor(0x13), barWidth, 212);
         ctx().setFont(scaledArcadeFont8());
         int y = 7 * TS;
-        if (gameContext().theGameState().timer().betweenSeconds(0.5 * DISPLAY_SECONDS, DISPLAY_SECONDS)) {
+        if (gameContext().gameState().timer().betweenSeconds(0.5 * DISPLAY_SECONDS, DISPLAY_SECONDS)) {
             renderer().fillTextAtScaledPosition("CREDITS FOR JAVAFX REMAKE", nesPaletteColor(0x20), 3 * TS, y);
             y += 4 * TS;
             renderer().fillTextAtScaledPosition("GAME PROGRAMMER:", nesPaletteColor(0x23), 4 * TS, y);

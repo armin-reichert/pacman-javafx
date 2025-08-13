@@ -34,7 +34,7 @@ public class InfoBoxGameInfo extends InfoBox {
 
     @Override
     public void init(GameUI ui) {
-        addDynamicLabeledValue("Game State", () -> "%s".formatted(ui.gameContext().theGameState()));
+        addDynamicLabeledValue("Game State", () -> "%s".formatted(ui.gameContext().gameState()));
         addDynamicLabeledValue("State Timer", this::stateTimerInfo);
         addDynamicLabeledValue("Game Scene", ifGameScenePresent(gameScene -> gameScene.getClass().getSimpleName()));
         addDynamicLabeledValue("Renderer", ifGameScenePresent(gameScene ->
@@ -89,7 +89,7 @@ public class InfoBoxGameInfo extends InfoBox {
     }
 
     private String stateTimerInfo() {
-        TickTimer t = ui.gameContext().theGameState().timer();
+        TickTimer t = ui.gameContext().gameState().timer();
         boolean indefinite = t.durationTicks() == TickTimer.INDEFINITE;
         if (t.isStopped()) {
             return "Stopped at tick %s of %s".formatted(t.tickCount(), indefinite ? "∞" : t.durationTicks());
@@ -101,7 +101,7 @@ public class InfoBoxGameInfo extends InfoBox {
     }
 
     private String fmtHuntingPhase() {
-        HuntingTimer huntingTimer = ui.gameContext().theGame().huntingTimer();
+        HuntingTimer huntingTimer = ui.gameContext().game().huntingTimer();
         return "%s #%d%s".formatted(
             huntingTimer.phase().name(),
             huntingTimer.phase() == HuntingPhase.CHASING
@@ -111,12 +111,12 @@ public class InfoBoxGameInfo extends InfoBox {
     }
 
     private String fmtHuntingTicksRunning() {
-        HuntingTimer huntingTimer = ui.gameContext().theGame().huntingTimer();
+        HuntingTimer huntingTimer = ui.gameContext().game().huntingTimer();
         return "Running:   %d".formatted(huntingTimer.tickCount());
     }
 
     private String fmtHuntingTicksRemaining() {
-        HuntingTimer huntingTimer = ui.gameContext().theGame().huntingTimer();
+        HuntingTimer huntingTimer = ui.gameContext().game().huntingTimer();
         return "Remaining: %s".formatted(ticksToString(huntingTimer.remainingTicks()));
     }
 
@@ -128,7 +128,7 @@ public class InfoBoxGameInfo extends InfoBox {
         );
     }
 
-    private ActorSpeedControl actorSpeedControl() { return ui.gameContext().theGame().actorSpeedControl(); }
+    private ActorSpeedControl actorSpeedControl() { return ui.gameContext().game().actorSpeedControl(); }
 
     private String fmtGhostAttackSpeed(GameLevel level) {
         // use Pinky because Blinky could be in Elroy mode
@@ -162,8 +162,8 @@ public class InfoBoxGameInfo extends InfoBox {
 
     private String fmtPacPowerTime(GameLevel level) {
         return "%.2f sec (%d ticks)".formatted(
-            ui.gameContext().theGame().pacPowerTicks(level) / (float) NUM_TICKS_PER_SEC,
-            ui.gameContext().theGame().pacPowerTicks(level));
+            ui.gameContext().game().pacPowerTicks(level) / (float) NUM_TICKS_PER_SEC,
+            ui.gameContext().game().pacPowerTicks(level));
     }
 
     private String fmtNumFlashes(GameLevel level) {

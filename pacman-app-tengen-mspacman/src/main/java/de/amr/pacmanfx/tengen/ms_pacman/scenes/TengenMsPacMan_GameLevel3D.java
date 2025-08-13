@@ -20,7 +20,7 @@ public class TengenMsPacMan_GameLevel3D extends GameLevel3D {
 
     public TengenMsPacMan_GameLevel3D(GameUI ui) {
         super(ui);
-        TengenMsPacMan_GameModel game = ui.gameContext().theGame();
+        TengenMsPacMan_GameModel game = ui.gameContext().game();
         if (!game.optionsAreInitial()) {
             addGameInfoView();
         }
@@ -28,7 +28,7 @@ public class TengenMsPacMan_GameLevel3D extends GameLevel3D {
 
     // shows info about category, difficulty, booster etc
     private void addGameInfoView() {
-        TengenMsPacMan_GameModel game = ui.gameContext().theGame();
+        TengenMsPacMan_GameModel game = ui.gameContext().game();
         int width = gameLevel.worldMap().numCols() * TS;
         int height = 2 * TS;
         int scaling = 5; // for better snapshot resolution

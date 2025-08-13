@@ -266,7 +266,7 @@ public class GameLevel3D extends Group implements Disposable {
      */
     public GameLevel3D(GameUI ui) {
         this.ui = requireNonNull(ui);
-        this.gameLevel = requireNonNull(ui.gameContext().theGameLevel());
+        this.gameLevel = requireNonNull(ui.gameContext().gameLevel());
 
         wallOpacityProperty.bind(PROPERTY_3D_WALL_OPACITY);
 
@@ -684,13 +684,13 @@ public class GameLevel3D extends Group implements Disposable {
         if (house3D != null) {
             house3D.tick(gameLevel);
         }
-        int livesCounterSize = ui.gameContext().theGame().lifeCount() - 1;
+        int livesCounterSize = ui.gameContext().game().lifeCount() - 1;
         // when the game starts and Pac-Man is not yet visible, show one more
-        boolean oneMore = ui.gameContext().theGameState() == GameState.STARTING_GAME && !gameLevel.pac().isVisible();
+        boolean oneMore = ui.gameContext().gameState() == GameState.STARTING_GAME && !gameLevel.pac().isVisible();
         if (oneMore) livesCounterSize += 1;
         livesCountProperty.set(livesCounterSize);
 
-        boolean visible = ui.gameContext().theGame().canStartNewGame();
+        boolean visible = ui.gameContext().game().canStartNewGame();
         if (livesCounter3D != null) {
             livesCounter3D.setVisible(visible);
         }
@@ -699,7 +699,7 @@ public class GameLevel3D extends Group implements Disposable {
     public void onStartingGame() {
         energizers3D().forEach(Energizer3D::stopPumping);
         if (levelCounter3D != null) {
-            levelCounter3D.update(ui, ui.gameContext().theGame().theHUD().theLevelCounter());
+            levelCounter3D.update(ui, ui.gameContext().game().theHUD().theLevelCounter());
         }
     }
 
@@ -726,12 +726,12 @@ public class GameLevel3D extends Group implements Disposable {
                 pauseSec(1)
         );
         // Note: adding this inside the animation as last action does not work!
-        animation.setOnFinished(e -> ui.gameContext().theGameController().letCurrentGameStateExpire());
+        animation.setOnFinished(e -> ui.gameContext().gameController().letCurrentGameStateExpire());
         animation.play();
     }
 
     public void onGhostDying() {
-        ui.gameContext().theGame().simulationStep().killedGhosts.forEach(killedGhost -> {
+        ui.gameContext().game().simulationStep().killedGhosts.forEach(killedGhost -> {
             byte personality = killedGhost.personality();
             int killedIndex = gameLevel.victims().indexOf(killedGhost);
             Image pointsImage = ui.currentConfig().killedGhostPointsImage(killedGhost, killedIndex);
@@ -756,7 +756,7 @@ public class GameLevel3D extends Group implements Disposable {
         if (messageView != null) {
             messageView.setVisible(false);
         }
-        boolean cutSceneFollows = ui.gameContext().theGame().cutSceneNumber(gameLevel.number()).isPresent();
+        boolean cutSceneFollows = ui.gameContext().game().cutSceneNumber(gameLevel.number()).isPresent();
         ManagedAnimation levelCompletedAnimation = cutSceneFollows
             ? levelCompletedShortAnimation
             : levelCompletedFullAnimation;
@@ -773,7 +773,7 @@ public class GameLevel3D extends Group implements Disposable {
         animation.setOnFinished(e -> {
             wallBaseHeightProperty.bind(PROPERTY_3D_WALL_HEIGHT);
             perspectiveIDProperty.bind(PROPERTY_3D_PERSPECTIVE);
-            ui.gameContext().theGameController().letCurrentGameStateExpire();
+            ui.gameContext().gameController().letCurrentGameStateExpire();
         });
         animation.play();
     }
@@ -824,7 +824,7 @@ public class GameLevel3D extends Group implements Disposable {
 
     public void updateLevelCounter3D() {
         if (levelCounter3D != null) {
-            levelCounter3D.update(ui, ui.gameContext().theGame().theHUD().theLevelCounter());
+            levelCounter3D.update(ui, ui.gameContext().game().theHUD().theLevelCounter());
         }
     }
 

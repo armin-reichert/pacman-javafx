@@ -150,7 +150,7 @@ public abstract class GameScene2D implements GameScene {
         if (debugInfoVisibleProperty.get()) {
             drawDebugInfo();
         }
-        gameRenderer.drawHUD(gameContext(), gameContext().theGame().theHUD(), sizeInPx(), ui.clock().tickCount());
+        gameRenderer.drawHUD(gameContext(), gameContext().game().theHUD(), sizeInPx(), ui.clock().tickCount());
     }
 
     /**
@@ -166,9 +166,9 @@ public abstract class GameScene2D implements GameScene {
         gameRenderer.drawTileGrid(sizePx.x(), sizePx.y(), Color.LIGHTGRAY);
         ctx().setFill(debugTextFill);
         ctx().setFont(debugTextFont);
-        TickTimer stateTimer = gameContext().theGameState().timer();
+        TickTimer stateTimer = gameContext().gameState().timer();
         String stateText = "Game State: '%s' (Tick %d of %s)".formatted(
-            gameContext().theGameState(),
+            gameContext().gameState(),
             stateTimer.tickCount(),
             stateTimer.durationTicks() == TickTimer.INDEFINITE ? "∞" : String.valueOf(stateTimer.tickCount())
             );

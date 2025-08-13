@@ -175,7 +175,7 @@ public abstract class PacBase3D extends Group implements Disposable {
 
     protected void updateVisibility() {
         if (pac.optGameContext().isPresent() && pac.gameContext().optGameLevel().isPresent()) {
-            WorldMap worldMap = pac.gameContext().theGameLevel().worldMap();
+            WorldMap worldMap = pac.gameContext().gameLevel().worldMap();
             boolean outsideWorld = getTranslateX() < HTS || getTranslateX() > TS * worldMap.numCols() - HTS;
             setVisible(pac.isVisible() && !outsideWorld);
         }

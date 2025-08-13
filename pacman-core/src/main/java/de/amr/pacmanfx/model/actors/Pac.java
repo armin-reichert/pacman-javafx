@@ -78,7 +78,7 @@ public class Pac extends MovingActor implements Animated {
 
         if (gameContext == null || gameContext.optGameLevel().isEmpty()) return true;
 
-        GameLevel level = gameContext.theGameLevel();
+        GameLevel level = gameContext.gameLevel();
         // Portal tiles are the only tiles outside the world map that can be accessed
         if (!level.isTileInsideWorld(tile)) {
             return level.isTileInPortalSpace(tile);
@@ -139,14 +139,14 @@ public class Pac extends MovingActor implements Animated {
         if (gameContext == null || gameContext.optGameLevel().isEmpty()) return false;
 
         return powerTimer.isRunning()
-            && powerTimer.remainingTicks() <= gameContext.theGame().pacPowerFadingTicks(gameContext.theGameLevel());
+            && powerTimer.remainingTicks() <= gameContext.game().pacPowerFadingTicks(gameContext.gameLevel());
     }
 
     public boolean isPowerFadingStarting() {
         if (gameContext == null || gameContext.optGameLevel().isEmpty()) return false;
 
-        return powerTimer.isRunning() && powerTimer.remainingTicks() == gameContext.theGame().pacPowerFadingTicks(gameContext.theGameLevel())
-            || powerTimer.durationTicks() < gameContext.theGame().pacPowerFadingTicks(gameContext.theGameLevel()) && powerTimer.tickCount() == 1;
+        return powerTimer.isRunning() && powerTimer.remainingTicks() == gameContext.game().pacPowerFadingTicks(gameContext.gameLevel())
+            || powerTimer.durationTicks() < gameContext.game().pacPowerFadingTicks(gameContext.gameLevel()) && powerTimer.tickCount() == 1;
     }
 
     @Override
@@ -161,11 +161,11 @@ public class Pac extends MovingActor implements Animated {
             return;
         }
         if (isUsingAutopilot()) {
-            autopilotSteering.steer(this, gameContext.theGameLevel());
+            autopilotSteering.steer(this, gameContext.gameLevel());
         }
         setSpeed(powerTimer.isRunning()
-            ? gameContext.theGame().actorSpeedControl().pacPowerSpeed(gameContext, gameContext.theGameLevel())
-            : gameContext.theGame().actorSpeedControl().pacNormalSpeed(gameContext, gameContext.theGameLevel()));
+            ? gameContext.game().actorSpeedControl().pacPowerSpeed(gameContext, gameContext.gameLevel())
+            : gameContext.game().actorSpeedControl().pacNormalSpeed(gameContext, gameContext.gameLevel()));
         findMyWayThroughThisCruelWorld();
 
         if (moveInfo.moved) {

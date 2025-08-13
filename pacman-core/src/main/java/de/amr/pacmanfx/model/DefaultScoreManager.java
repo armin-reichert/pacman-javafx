@@ -33,11 +33,11 @@ public class DefaultScoreManager implements ScoreManager {
         for (int extraLifeScore : extraLifeScores) {
             // has extra life score been crossed?
             if (oldScore < extraLifeScore && newScore >= extraLifeScore) {
-                gameContext.theGame().simulationStep().extraLifeWon = true;
-                gameContext.theGame().simulationStep().extraLifeScore = extraLifeScore;
-                gameContext.theGame().addLives(1);
-                GameEvent event = new GameEvent(gameContext.theGame(), GameEventType.SPECIAL_SCORE_REACHED);
-                gameContext.theGameEventManager().publishEvent(event);
+                gameContext.game().simulationStep().extraLifeWon = true;
+                gameContext.game().simulationStep().extraLifeScore = extraLifeScore;
+                gameContext.game().addLives(1);
+                GameEvent event = new GameEvent(gameContext.game(), GameEventType.SPECIAL_SCORE_REACHED);
+                gameContext.eventManager().publishEvent(event);
                 break;
             }
         }

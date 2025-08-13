@@ -28,7 +28,7 @@ public class WatchCustomMapsApp extends Application {
 
     @Override
     public void init() {
-        watchedDirectory = theGameContext().theCustomMapDir();
+        watchedDirectory = theGameContext().customMapDir();
     }
 
     @Override
@@ -43,7 +43,7 @@ public class WatchCustomMapsApp extends Application {
         stage.setTitle("Watch " + watchedDirectory);
         stage.show();
 
-        DirectoryWatchdog dog = new DirectoryWatchdog(theGameContext().theCustomMapDir());
+        DirectoryWatchdog dog = new DirectoryWatchdog(theGameContext().customMapDir());
         dog.addEventListener(this::showEventsInList);
         dog.startWatching();
     }

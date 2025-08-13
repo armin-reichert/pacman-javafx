@@ -73,9 +73,9 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        gameContext().theGame().theHUD().showScore(false);
-        gameContext().theGame().theHUD().showLevelCounter(false);
-        gameContext().theGame().theHUD().showLivesCounter(false);
+        gameContext().game().theHUD().showScore(false);
+        gameContext().game().theHUD().showLevelCounter(false);
+        gameContext().game().theHUD().showLivesCounter(false);
 
         spriteSheet = (TengenMsPacMan_SpriteSheet) ui.currentConfig().spriteSheet();
 
@@ -323,12 +323,12 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 }
                 if (timer.atSecond(8)) {
                     // start demo level or show options
-                    var game = scene.gameContext().<TengenMsPacMan_GameModel>theGame();
+                    var game = scene.gameContext().<TengenMsPacMan_GameModel>game();
                     if (game.optionsAreInitial()) {
                         game.setCanStartNewGame(false); // TODO check this
-                        scene.gameContext().theGameController().restart(GameState.STARTING_GAME);
+                        scene.gameContext().gameController().restart(GameState.STARTING_GAME);
                     } else {
-                        scene.gameContext().theGameController().changeGameState(GameState.SETTING_OPTIONS_FOR_START);
+                        scene.gameContext().gameController().changeGameState(GameState.SETTING_OPTIONS_FOR_START);
                     }
                 }
             }

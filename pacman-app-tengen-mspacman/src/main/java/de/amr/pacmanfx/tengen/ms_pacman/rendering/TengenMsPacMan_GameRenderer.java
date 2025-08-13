@@ -112,7 +112,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
 
         if (!hud.isVisible()) return;
 
-        var tengenGame = (TengenMsPacMan_GameModel) gameContext.theGame();
+        var tengenGame = (TengenMsPacMan_GameModel) gameContext.game();
         var tengenHUD = (TengenMsPacMan_HUD) hud;
         
         if (tengenHUD.isScoreVisible()) {
@@ -296,7 +296,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
         boolean energizerHighlighted,
         long tick)
     {
-        var tengenGame = (TengenMsPacMan_GameModel) gameContext.theGame();
+        var tengenGame = (TengenMsPacMan_GameModel) gameContext.game();
         int mapNumber = level.worldMap().getConfigValue("mapNumber");
         RectShort mazeSprite = tengenGame.mapCategory() == MapCategory.STRANGE && mapNumber == 15
             ? strangeMap15Sprite(tick) // Strange map #15: psychedelic animation
@@ -305,7 +305,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
     }
 
     public void drawLevelWithMaze(GameContext gameContext, GameLevel level, Image mazeImage, RectShort mazeSprite) {
-        var tengenGame = (TengenMsPacMan_GameModel) gameContext.theGame();
+        var tengenGame = (TengenMsPacMan_GameModel) gameContext.game();
         ctx.setImageSmoothing(false);
         if (!tengenGame.optionsAreInitial()) {
             drawGameOptions(tengenGame.mapCategory(), tengenGame.difficulty(), tengenGame.pacBooster(),

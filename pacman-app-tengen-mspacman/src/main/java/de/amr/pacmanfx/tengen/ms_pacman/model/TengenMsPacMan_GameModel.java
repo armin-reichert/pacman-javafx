@@ -123,14 +123,14 @@ public class TengenMsPacMan_GameModel extends GameModel {
                 @Override
                 public void hunt() {
                     if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
-                    GameLevel level = gameContext.theGameLevel();
+                    GameLevel level = gameContext.gameLevel();
 
-                    float speed = gameContext.theGame().actorSpeedControl().ghostAttackSpeed(gameContext, level, this);
+                    float speed = gameContext.game().actorSpeedControl().ghostAttackSpeed(gameContext, level, this);
                     setSpeed(speed);
-                    if (gameContext.theGame().huntingTimer().phaseIndex() == 0) {
+                    if (gameContext.game().huntingTimer().phaseIndex() == 0) {
                         roam();
                     } else {
-                        boolean chase = gameContext.theGame().huntingTimer().phase() == HuntingPhase.CHASING;
+                        boolean chase = gameContext.game().huntingTimer().phase() == HuntingPhase.CHASING;
                         Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(personality());
                         tryMovingTowardsTargetTile(targetTile);
                     }
@@ -139,7 +139,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
                 @Override
                 public Vector2i chasingTargetTile() {
                     if (gameContext == null || gameContext.optGameLevel().isEmpty()) return null;
-                    return gameContext.theGameLevel().pac().tile();
+                    return gameContext.gameLevel().pac().tile();
                 }
             };
 
@@ -147,14 +147,14 @@ public class TengenMsPacMan_GameModel extends GameModel {
                 @Override
                 public void hunt() {
                     if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
-                    GameLevel level = gameContext.theGameLevel();
+                    GameLevel level = gameContext.gameLevel();
 
-                    float speed = gameContext.theGame().actorSpeedControl().ghostAttackSpeed(gameContext, level, this);
+                    float speed = gameContext.game().actorSpeedControl().ghostAttackSpeed(gameContext, level, this);
                     setSpeed(speed);
-                    if (gameContext.theGame().huntingTimer().phaseIndex() == 0) {
+                    if (gameContext.game().huntingTimer().phaseIndex() == 0) {
                         roam();
                     } else {
-                        boolean chase = gameContext.theGame().huntingTimer().phase() == HuntingPhase.CHASING;
+                        boolean chase = gameContext.game().huntingTimer().phase() == HuntingPhase.CHASING;
                         Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(personality());
                         tryMovingTowardsTargetTile(targetTile);
                     }
@@ -163,7 +163,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
                 @Override
                 public Vector2i chasingTargetTile() {
                     if (gameContext == null || gameContext.optGameLevel().isEmpty()) return null;
-                    return gameContext.theGameLevel().pac().tilesAhead(4);
+                    return gameContext.gameLevel().pac().tilesAhead(4);
                 }
             };
 
@@ -171,10 +171,10 @@ public class TengenMsPacMan_GameModel extends GameModel {
                 @Override
                 public void hunt() {
                     if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
-                    GameLevel level = gameContext.theGameLevel();
+                    GameLevel level = gameContext.gameLevel();
 
-                    float speed = gameContext.theGame().actorSpeedControl().ghostAttackSpeed(gameContext, level, this);
-                    boolean chase = gameContext.theGame().huntingTimer().phase() == HuntingPhase.CHASING;
+                    float speed = gameContext.game().actorSpeedControl().ghostAttackSpeed(gameContext, level, this);
+                    boolean chase = gameContext.game().huntingTimer().phase() == HuntingPhase.CHASING;
                     Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(personality());
                     setSpeed(speed);
                     tryMovingTowardsTargetTile(targetTile);
@@ -183,7 +183,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
                 @Override
                 public Vector2i chasingTargetTile() {
                     if (gameContext == null || gameContext.optGameLevel().isEmpty()) return null;
-                    GameLevel level = gameContext.theGameLevel();
+                    GameLevel level = gameContext.gameLevel();
                     return level.pac().tilesAhead(2).scaled(2).minus(level.ghost(RED_GHOST_SHADOW).tile());
                 }
             };
@@ -192,9 +192,9 @@ public class TengenMsPacMan_GameModel extends GameModel {
                 @Override
                 public void hunt() {
                     if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
-                    GameLevel level = gameContext.theGameLevel();
-                    float speed = gameContext.theGame().actorSpeedControl().ghostAttackSpeed(gameContext, level, this);
-                    boolean chase = gameContext.theGame().huntingTimer().phase() == HuntingPhase.CHASING;
+                    GameLevel level = gameContext.gameLevel();
+                    float speed = gameContext.game().actorSpeedControl().ghostAttackSpeed(gameContext, level, this);
+                    boolean chase = gameContext.game().huntingTimer().phase() == HuntingPhase.CHASING;
                     Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(personality());
                     setSpeed(speed);
                     tryMovingTowardsTargetTile(targetTile);
@@ -203,7 +203,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
                 @Override
                 public Vector2i chasingTargetTile() {
                     if (gameContext == null || gameContext.optGameLevel().isEmpty()) return null;
-                    GameLevel level = gameContext.theGameLevel();
+                    GameLevel level = gameContext.gameLevel();
                     return tile().euclideanDist(level.pac().tile()) < 8 ? level.ghostScatterTile(personality()) : level.pac().tile();
                 }
             };
@@ -407,7 +407,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
             Logger.info("Level {} started", level.number());
         }
         // Note: This event is very important because it triggers the creation of the actor animations!
-        gameContext.theGameEventManager().publishEvent(GameEventType.LEVEL_STARTED);
+        gameContext.eventManager().publishEvent(GameEventType.LEVEL_STARTED);
     }
 
     public void startNextLevel(GameContext gameContext) {
@@ -438,7 +438,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         prepareForNewGame();
         hud.theLevelCounter().setStartLevel(startLevelNumber);
         buildNormalLevel(gameContext, startLevelNumber);
-        gameContext.theGameEventManager().publishEvent(GameEventType.GAME_STARTED);
+        gameContext.eventManager().publishEvent(GameEventType.GAME_STARTED);
     }
 
     @Override
@@ -543,15 +543,15 @@ public class TengenMsPacMan_GameModel extends GameModel {
     public void buildNormalLevel(GameContext gameContext, int levelNumber) {
         createLevel(gameContext, levelNumber);
         level.setDemoLevel(false);
-        level.pac().immuneProperty().bind(gameContext.theGameController().propertyImmunity());
-        level.pac().usingAutopilotProperty().bind(gameContext.theGameController().propertyUsingAutopilot());
+        level.pac().immuneProperty().bind(gameContext.gameController().propertyImmunity());
+        level.pac().usingAutopilotProperty().bind(gameContext.gameController().propertyUsingAutopilot());
         huntingTimer().reset();
         scoreManager.setScoreLevelNumber(levelNumber);
         gateKeeper().ifPresent(gateKeeper -> {
             gateKeeper.setLevelNumber(levelNumber);
             level.house().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
         });
-        gameContext.theGameEventManager().publishEvent(GameEventType.LEVEL_CREATED);
+        gameContext.eventManager().publishEvent(GameEventType.LEVEL_CREATED);
     }
 
     @Override
@@ -569,7 +569,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
             gateKeeper.setLevelNumber(1);
             level.house().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
         });
-        gameContext.theGameEventManager().publishEvent(GameEventType.LEVEL_CREATED);
+        gameContext.eventManager().publishEvent(GameEventType.LEVEL_CREATED);
     }
 
     @Override
@@ -640,7 +640,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
 
         level.setBonus(bonus);
-        gameContext.theGameEventManager().publishEvent(GameEventType.BONUS_ACTIVATED, bonus.tile());
+        gameContext.eventManager().publishEvent(GameEventType.BONUS_ACTIVATED, bonus.tile());
     }
 
     @Override
@@ -660,7 +660,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
                 activateNextBonus(gameContext);
                 simulationStep.bonusIndex = level.currentBonusIndex();
             }
-            gameContext.theGameEventManager().publishEvent(GameEventType.PAC_FOUND_FOOD, tile);
+            gameContext.eventManager().publishEvent(GameEventType.PAC_FOUND_FOOD, tile);
         } else {
             level.pac().starve();
         }
@@ -679,7 +679,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
             level.ghosts(GhostState.HUNTING_PAC).forEach(ghost -> ghost.setState(GhostState.FRIGHTENED));
             level.ghosts(GhostState.FRIGHTENED).forEach(Ghost::reverseAtNextOccasion);
             simulationStep.pacGotPower = true;
-            gameContext.theGameEventManager().publishEvent(GameEventType.PAC_GETS_POWER);
+            gameContext.eventManager().publishEvent(GameEventType.PAC_GETS_POWER);
         } else {
             level.ghosts(GhostState.FRIGHTENED, GhostState.HUNTING_PAC).forEach(Ghost::reverseAtNextOccasion);
         }

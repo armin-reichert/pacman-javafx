@@ -80,7 +80,7 @@ public class Bonus extends MovingActor {
 
         if (gameContext == null || gameContext.optGameLevel().isEmpty()) return true;
 
-        GameLevel level = gameContext.theGameLevel();
+        GameLevel level = gameContext.gameLevel();
 
         // Portal tiles are the only tiles outside the world map that can be accessed
         if (!level.isTileInsideWorld(tile)) {
@@ -147,13 +147,13 @@ public class Bonus extends MovingActor {
                     expired = countdown();
                 }
                 if (expired) {
-                    gameContext.theGameEventManager().publishEvent(GameEventType.BONUS_EXPIRED, tile());
+                    gameContext.eventManager().publishEvent(GameEventType.BONUS_EXPIRED, tile());
                 }
             }
             case EATEN -> {
                 boolean expired = countdown();
                 if (expired) {
-                    gameContext.theGameEventManager().publishEvent(GameEventType.BONUS_EXPIRED, tile());
+                    gameContext.eventManager().publishEvent(GameEventType.BONUS_EXPIRED, tile());
                 }
             }
         }
@@ -173,7 +173,7 @@ public class Bonus extends MovingActor {
     // moves, when end of route is reached, expires
     private boolean jumpThroughWorldAndLeaveThroughPortal() {
         if (gameContext.optGameLevel().isPresent()) {
-            steering.steer(this, gameContext.theGameLevel());
+            steering.steer(this, gameContext.gameLevel());
             if (steering.isComplete()) {
                 setInactive();
                 return true;

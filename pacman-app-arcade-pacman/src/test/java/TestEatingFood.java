@@ -15,18 +15,18 @@ public class TestEatingFood {
 
     @BeforeAll
     static void setup() {
-        theGameContext().theGameController().registerGame("PACMAN", new ArcadePacMan_GameModel(theGameContext(), new File("")));
-        theGameContext().theGameController().selectGameVariant("PACMAN");
+        theGameContext().gameController().registerGame("PACMAN", new ArcadePacMan_GameModel(theGameContext(), new File("")));
+        theGameContext().gameController().selectGameVariant("PACMAN");
     }
 
     @BeforeEach
     public void createGameLevel() {
-        theGameContext().theGame().buildNormalLevel(theGameContext(), 1);
+        theGameContext().game().buildNormalLevel(theGameContext(), 1);
     }
 
-    private GameLevel gameLevel() { return theGameContext().theGameLevel(); }
+    private GameLevel gameLevel() { return theGameContext().gameLevel(); }
 
-    private ArcadePacMan_GameModel pacManGame() { return theGameContext().theGame(); }
+    private ArcadePacMan_GameModel pacManGame() { return theGameContext().game(); }
 
     private void eatNextPellet(GameLevel gameLevel) {
         gameLevel.worldMap().tiles()

@@ -22,33 +22,33 @@ public interface GameContext {
      * Root directory under which user specific files are stored.
      * <p>Default: <code>$HOME/.pacmanfx</code> (Unix) or <code>%USERPROFILE%\.pacmanfx</code> (MS Windows)</p>
      */
-    File theHomeDir();
+    File homeDir();
 
     /**
      * Directory where custom maps are stored (default: <code>&lt;home_dir&gt;/maps</code>).
      */
-    File theCustomMapDir();
+    File customMapDir();
 
     /**
      * @return the coin mechanism used in the Arcade games.
      */
-    CoinMechanism theCoinMechanism();
+    CoinMechanism coinMechanism();
 
     /**
      * @return the model (in MVC sense) of the currently selected game variant.
      * @param <T> specific game model type
      */
-    <T extends Game> T theGame();
+    <T extends Game> T game();
 
     /**
      * @return the controller (in MVC sense) used by all game variants. Implemented as a FSM.
      */
-    GameController theGameController();
+    GameController gameController();
 
     /**
      * @return the event manager that is used to publish/subscribe to game events created by the model layer.
      */
-    GameEventManager theGameEventManager();
+    GameEventManager eventManager();
 
     /**
      * @return the current game level if present.
@@ -58,10 +58,10 @@ public interface GameContext {
     /**
      * @return the current game level if present or {@code null} if no game level currently exists.
      */
-    GameLevel theGameLevel();
+    GameLevel gameLevel();
 
     /**
      * @return the current game state (the state of the game controller FSM).
      */
-    GameState theGameState();
+    GameState gameState();
 }

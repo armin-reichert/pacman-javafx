@@ -195,7 +195,7 @@ public class PlayView extends StackPane implements GameUI_View {
         switch (gameEvent.type()) {
             case LEVEL_CREATED -> onLevelCreated();
             case GAME_STATE_CHANGED -> {
-                if (ui.gameContext().theGameState() == GameState.LEVEL_COMPLETE) {
+                if (ui.gameContext().gameState() == GameState.LEVEL_COMPLETE) {
                     miniView.slideOut();
                 }
             }
@@ -205,7 +205,7 @@ public class PlayView extends StackPane implements GameUI_View {
     }
 
     private void onLevelCreated() {
-        GameLevel gameLevel = ui.gameContext().theGameLevel();
+        GameLevel gameLevel = ui.gameContext().gameLevel();
         GameUI_Config uiConfig = ui.currentConfig();
 
         gameLevel.pac().setAnimations(uiConfig.createPacAnimations(gameLevel.pac()));

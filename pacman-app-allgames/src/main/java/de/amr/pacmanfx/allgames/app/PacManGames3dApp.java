@@ -38,7 +38,7 @@ public class PacManGames3dApp extends Application {
         int width  = (int) Math.round(1.6 * height);
 
         //TODO create this too by reflection inside builder?
-        var mapSelectorXXL = new PacManXXL_Common_MapSelector(theGameContext().theCustomMapDir());
+        var mapSelectorXXL = new PacManXXL_Common_MapSelector(theGameContext().customMapDir());
 
         ui = GameUI_Builder.createUI(primaryStage, width, height)
             .game(DefaultGameVariants.PACMAN.name(),

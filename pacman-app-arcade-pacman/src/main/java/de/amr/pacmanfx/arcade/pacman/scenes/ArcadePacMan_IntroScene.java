@@ -72,7 +72,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     
     @Override
     public void doInit() {
-        gameContext().theGame().theHUD().credit(true).score(true).livesCounter(false).levelCounter(true);
+        gameContext().game().theHUD().credit(true).score(true).livesCounter(false).levelCounter(true);
 
         actionBindings.assign(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
         actionBindings.assign(ACTION_ARCADE_START_GAME, ui.actionBindings());
@@ -367,11 +367,11 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
             public void onUpdate(ArcadePacMan_IntroScene scene) {
                 if (sceneTimer.atSecond(0.75)) {
                     scene.ghosts.get(ORANGE_GHOST_POKEY).hide();
-                    if (!scene.gameContext().theGame().canStartNewGame()) {
-                        scene.gameContext().theGameController().changeGameState(GameState.STARTING_GAME);
+                    if (!scene.gameContext().game().canStartNewGame()) {
+                        scene.gameContext().gameController().changeGameState(GameState.STARTING_GAME);
                     }
                 } else if (sceneTimer.atSecond(5)) {
-                    scene.gameContext().theGameController().changeGameState(GameState.SETTING_OPTIONS_FOR_START);
+                    scene.gameContext().gameController().changeGameState(GameState.SETTING_OPTIONS_FOR_START);
                 }
             }
         };

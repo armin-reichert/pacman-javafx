@@ -131,9 +131,9 @@ public class GameUI_Builder {
         var ui = new GameUI_Implementation(uiConfigMap, gameContext, stage, mainSceneWidth, mainSceneHeight);
 
         configByGameVariant.forEach((gameVariant, config) -> {
-            File highScoreFile = highScoreFile(gameContext.theHomeDir(), gameVariant);
+            File highScoreFile = highScoreFile(gameContext.homeDir(), gameVariant);
             GameModel gameModel = createGameModel(config.gameModelClass, config.mapSelector, gameContext, highScoreFile);
-            gameContext.theGameController().registerGame(gameVariant, gameModel);
+            gameContext.gameController().registerGame(gameVariant, gameModel);
         });
 
         for (StartPageConfiguration config : startPageConfigs) {

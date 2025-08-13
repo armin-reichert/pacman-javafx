@@ -35,7 +35,7 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
 
     @Override
     public void doInit() {
-        gameContext().theGame().theHUD().score(false).levelCounter(false).livesCounter(false);
+        gameContext().game().theHUD().score(false).levelCounter(false).livesCounter(false);
 
         SpriteSheet<?> spriteSheet = ui.currentConfig().spriteSheet();
         double width = spriteSheet.sourceImage().getWidth(), height = spriteSheet.sourceImage().getHeight();
@@ -50,8 +50,8 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
 
     @Override
     public void update() {
-        if (gameContext().theGameState().timer().atSecond(4)) {
-            gameContext().theGameController().letCurrentGameStateExpire();
+        if (gameContext().gameState().timer().atSecond(4)) {
+            gameContext().gameController().letCurrentGameStateExpire();
         }
     }
 
@@ -61,7 +61,7 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
     @Override
     public void draw() {
         gameRenderer.setScaling(scaling());
-        if (gameContext().theGameState().timer().tickCount() == 1) {
+        if (gameContext().gameState().timer().tickCount() == 1) {
             clear();
         } else {
             drawSceneContent();
@@ -70,7 +70,7 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        TickTimer timer = gameContext().theGameState().timer();
+        TickTimer timer = gameContext().gameState().timer();
         if (timer.betweenSeconds(1, 2) && timer.tickCount() % 4 == 0) {
             clear();
             drawRandomHexDigits();

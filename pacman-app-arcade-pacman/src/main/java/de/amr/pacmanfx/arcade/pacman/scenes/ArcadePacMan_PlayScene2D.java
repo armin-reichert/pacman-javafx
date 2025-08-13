@@ -56,7 +56,7 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
 
     @Override
     protected void doInit() {
-        gameContext().theGame().theHUD().credit(false).score(true).levelCounter(true).livesCounter(true);
+        gameContext().game().theHUD().credit(false).score(true).levelCounter(true).livesCounter(true);
         levelCompletedAnimation = new LevelCompletedAnimation(animationRegistry);
         gameRenderer = ui.currentConfig().createGameRenderer(canvas);
     }
@@ -76,11 +76,11 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
      */
     private void initWithGameLevel(GameLevel gameLevel) {
         if (gameLevel.isDemoLevel()) {
-            gameContext().theGame().theHUD().credit(false).levelCounter(true).livesCounter(false);
+            gameContext().game().theHUD().credit(false).levelCounter(true).livesCounter(false);
             actionBindings.assign(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
             actionBindings.installBindings(ui.keyboard());
         } else {
-            gameContext().theGame().theHUD().credit(false).levelCounter(true).livesCounter(true);
+            gameContext().game().theHUD().credit(false).levelCounter(true).livesCounter(true);
             actionBindings.assign(ACTION_STEER_UP, ui.actionBindings());
             actionBindings.assign(ACTION_STEER_DOWN, ui.actionBindings());
             actionBindings.assign(ACTION_STEER_LEFT, ui.actionBindings());
@@ -100,24 +100,24 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        initWithGameLevel(gameContext().theGameLevel());
+        initWithGameLevel(gameContext().gameLevel());
     }
 
     @Override
     public void onSwitch_3D_2D(GameScene scene3D) {
         Logger.info("2D scene {} entered from 3D scene {}", this, scene3D);
         if (gameContext().optGameLevel().isPresent()) {
-            initWithGameLevel(gameContext().theGameLevel());
+            initWithGameLevel(gameContext().gameLevel());
         }
     }
 
     @Override
     public List<MenuItem> supplyContextMenuItems(ContextMenuEvent contextMenuEvent, ContextMenu contextMenu) {
         var miAutopilot = new CheckMenuItem(ui.assets().translated("autopilot"));
-        miAutopilot.selectedProperty().bindBidirectional(gameContext().theGameController().propertyUsingAutopilot());
+        miAutopilot.selectedProperty().bindBidirectional(gameContext().gameController().propertyUsingAutopilot());
 
         var miImmunity = new CheckMenuItem(ui.assets().translated("immunity"));
-        miImmunity.selectedProperty().bindBidirectional(gameContext().theGameController().propertyImmunity());
+        miImmunity.selectedProperty().bindBidirectional(gameContext().gameController().propertyImmunity());
 
         var miMuted = new CheckMenuItem(ui.assets().translated("muted"));
         miMuted.selectedProperty().bindBidirectional(PROPERTY_MUTED);
@@ -136,14 +136,14 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onGameContinued(GameEvent e) {
-        gameContext().theGameLevel().showMessage(GameLevel.MESSAGE_READY);
+        gameContext().gameLevel().showMessage(GameLevel.MESSAGE_READY);
     }
 
     @Override
     public void onGameStarted(GameEvent e) {
-        boolean silent = gameContext().theGameLevel().isDemoLevel()
-                || gameContext().theGameState() == TESTING_LEVELS_SHORT
-                || gameContext().theGameState() == TESTING_LEVELS_MEDIUM;
+        boolean silent = gameContext().gameLevel().isDemoLevel()
+                || gameContext().gameState() == TESTING_LEVELS_SHORT
+                || gameContext().gameState() == TESTING_LEVELS_MEDIUM;
         if (!silent) {
             ui.soundManager().play(SoundID.GAME_READY);
         }
@@ -156,29 +156,29 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
             Logger.info("Tick {}: Game level not yet created", ui.clock().tickCount());
             return;
         }
-        ui.soundManager().setEnabled(!gameContext().theGameLevel().isDemoLevel());
+        ui.soundManager().setEnabled(!gameContext().gameLevel().isDemoLevel());
         updateHUD();
         updateSound();
     }
 
     private void updateHUD() {
-        LivesCounter livesCounter = gameContext().theGame().theHUD().theLivesCounter();
-        int numLivesDisplayed = gameContext().theGame().lifeCount() - 1;
+        LivesCounter livesCounter = gameContext().game().theHUD().theLivesCounter();
+        int numLivesDisplayed = gameContext().game().lifeCount() - 1;
         // As long as Pac-Man is still initially hidden in the maze, he is shown as an entry in the lives counter
-        if (gameContext().theGameState() == GameState.STARTING_GAME && !gameContext().theGameLevel().pac().isVisible()) {
+        if (gameContext().gameState() == GameState.STARTING_GAME && !gameContext().gameLevel().pac().isVisible()) {
             numLivesDisplayed += 1;
         }
         livesCounter.setVisibleLifeCount(Math.min(numLivesDisplayed, livesCounter.maxLivesDisplayed()));
-        gameContext().theGame().theHUD().showCredit(gameContext().theCoinMechanism().isEmpty());
+        gameContext().game().theHUD().showCredit(gameContext().coinMechanism().isEmpty());
     }
 
     private void updateSound() {
         if (!ui.soundManager().isEnabled()) return;
-        Pac pac = gameContext().theGameLevel().pac();
-        boolean pacChased = gameContext().theGameState() == GameState.HUNTING && !pac.powerTimer().isRunning();
+        Pac pac = gameContext().gameLevel().pac();
+        boolean pacChased = gameContext().gameState() == GameState.HUNTING && !pac.powerTimer().isRunning();
         if (pacChased) {
             // siren numbers are 1..4, hunting phase index = 0..7
-            int huntingPhase = gameContext().theGame().huntingTimer().phaseIndex();
+            int huntingPhase = gameContext().game().huntingTimer().phaseIndex();
             int sirenNumber = 1 + huntingPhase / 2;
             switch (sirenNumber) {
                 case 1 -> ui.soundManager().playSiren(SoundID.SIREN_1, 1.0);
@@ -194,8 +194,8 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
             ui.soundManager().pause(SoundID.PAC_MAN_MUNCHING);
         }
 
-        boolean isGhostReturningHome = gameContext().theGameLevel().pac().isAlive()
-            && gameContext().theGameLevel().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).findAny().isPresent();
+        boolean isGhostReturningHome = gameContext().gameLevel().pac().isAlive()
+            && gameContext().gameLevel().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).findAny().isPresent();
         if (isGhostReturningHome) {
             ui.soundManager().loop(SoundID.GHOST_RETURNS);
         } else {
@@ -215,7 +215,7 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
             return; // Scene is drawn already 2 ticks before level has been created
         }
 
-        final GameLevel gameLevel = gameContext().theGameLevel();
+        final GameLevel gameLevel = gameContext().gameLevel();
         gameRenderer.applyRenderingHints(gameLevel);
 
         // Level < Level message
@@ -259,7 +259,7 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
             case GameLevel.MESSAGE_READY -> gameRenderer.fillTextAtScaledCenter(
                 "READY!", ARCADE_YELLOW, scaledArcadeFont8(), cx, cy);
             case GameLevel.MESSAGE_TEST -> gameRenderer.fillTextAtScaledCenter(
-                "TEST    L%02d".formatted(gameContext().theGameLevel().number()), ARCADE_WHITE, scaledArcadeFont8(), cx, cy);
+                "TEST    L%02d".formatted(gameContext().gameLevel().number()), ARCADE_WHITE, scaledArcadeFont8(), cx, cy);
         }
     }
 
@@ -268,13 +268,13 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
         gameRenderer.drawTileGrid(sizeInPx().x(), sizeInPx().y(), Color.LIGHTGRAY);
         if (gameContext().optGameLevel().isPresent()) {
             // assuming all ghosts have the same set of special terrain tiles
-            gameContext().theGameLevel().ghost(RED_GHOST_SHADOW).specialTerrainTiles().forEach(tile -> {
+            gameContext().gameLevel().ghost(RED_GHOST_SHADOW).specialTerrainTiles().forEach(tile -> {
                 double x = scaled(tile.x() * TS), y = scaled(tile.y() * TS + HTS), size = scaled(TS);
                 ctx().setFill(Color.RED);
                 ctx().fillRect(x, y, size, 2);
             });
             // mark intersection tiles
-            gameContext().theGameLevel().worldMap().tiles().filter(gameContext().theGameLevel()::isIntersection).forEach(tile -> {
+            gameContext().gameLevel().worldMap().tiles().filter(gameContext().gameLevel()::isIntersection).forEach(tile -> {
                 ctx().setStroke(Color.gray(0.8));
                 ctx().setLineWidth(0.5);
                 ctx().save();
@@ -286,10 +286,10 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
             });
             ctx().setFill(debugTextFill);
             ctx().setFont(debugTextFont);
-            String gameStateText = gameContext().theGameState().name() + " (Tick %d)".formatted(gameContext().theGameState().timer().tickCount());
+            String gameStateText = gameContext().gameState().name() + " (Tick %d)".formatted(gameContext().gameState().timer().tickCount());
             String huntingPhaseText = "";
-            if (gameContext().theGameState() == GameState.HUNTING) {
-                HuntingTimer huntingTimer = gameContext().theGame().huntingTimer();
+            if (gameContext().gameState() == GameState.HUNTING) {
+                HuntingTimer huntingTimer = gameContext().game().huntingTimer();
                 huntingPhaseText = " %s (Tick %d)".formatted(huntingTimer.phase(), huntingTimer.tickCount());
             }
             ctx().fillText("%s%s".formatted(gameStateText, huntingPhaseText), 0, 64);
@@ -300,9 +300,9 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
     public void onEnterGameState(GameState state) {
         if (state == GameState.LEVEL_COMPLETE) {
             ui.soundManager().stopAll();
-            levelCompletedAnimation.setGameLevel(gameContext().theGameLevel());
+            levelCompletedAnimation.setGameLevel(gameContext().gameLevel());
             levelCompletedAnimation.setSingleFlashMillis(333);
-            levelCompletedAnimation.getOrCreateAnimationFX().setOnFinished(e -> gameContext().theGameController().letCurrentGameStateExpire());
+            levelCompletedAnimation.getOrCreateAnimationFX().setOnFinished(e -> gameContext().gameController().letCurrentGameStateExpire());
             levelCompletedAnimation.playFromStart();
         }
         else if (state == GameState.GAME_OVER) {
@@ -344,7 +344,7 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onPacDead(GameEvent e) {
-        gameContext().theGameController().letCurrentGameStateExpire();
+        gameContext().gameController().letCurrentGameStateExpire();
     }
 
     @Override

@@ -272,7 +272,7 @@ public abstract class MovingActor extends Actor {
     public void navigateTowardsTarget() {
         if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
 
-        GameLevel level = gameContext.theGameLevel();
+        GameLevel level = gameContext.gameLevel();
 
         if (!newTileEntered && moveInfo.moved || targetTile() == null) {
             return; // we don't need no navigation, dim dit didit didit...
@@ -336,7 +336,7 @@ public abstract class MovingActor extends Actor {
     public void findMyWayThroughThisCruelWorld() {
         if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
 
-        GameLevel level = gameContext.theGameLevel();
+        GameLevel level = gameContext.gameLevel();
         final Vector2i currentTile = tile();
         moveInfo.clear();
         if (canTeleport) {

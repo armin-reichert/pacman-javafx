@@ -130,7 +130,7 @@ public class InfoBox3DSettings extends InfoBox {
                 Vector2f size = gameScene2D.sizeInPx(), scaledSize = size.scaled(gameScene2D.scaling());
                 return "%.0fx%.0f (scaled: %.0fx%.0f)".formatted(size.x(), size.y(), scaledSize.x(), scaledSize.y());
             } else if (ui.gameContext().optGameLevel().isPresent()) {
-                var worldMap = ui.gameContext().theGameLevel().worldMap();
+                var worldMap = ui.gameContext().gameLevel().worldMap();
                 return "%dx%d (map size px)".formatted(worldMap.numCols() * TS, worldMap.numRows() * TS);
             }
         }

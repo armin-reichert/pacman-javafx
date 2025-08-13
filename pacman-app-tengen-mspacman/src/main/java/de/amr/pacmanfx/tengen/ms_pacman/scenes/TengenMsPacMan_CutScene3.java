@@ -59,7 +59,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         t = -1;
         darkness = false;
 
-        gameContext().theGame().theHUD().credit(false).score(false).levelCounter(true).livesCounter(false);
+        gameContext().game().theHUD().credit(false).score(false).levelCounter(true).livesCounter(false);
 
         actionBindings.bind(ACTION_LET_GAME_STATE_EXPIRE, ui.joypad().key(JoypadButton.START));
 
@@ -131,7 +131,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
             darkness = true;
         }
         else if (t == 660) {
-            gameContext().theGameController().letCurrentGameStateExpire();
+            gameContext().gameController().letCurrentGameStateExpire();
             return;
         }
 
@@ -167,7 +167,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
             drawDebugInfo();
         }
         // draw HUD only for non-Arcade map mode
-        var game = gameContext().<TengenMsPacMan_GameModel>theGame();
+        var game = gameContext().<TengenMsPacMan_GameModel>game();
         if (game.mapCategory() != MapCategory.ARCADE) {
             gameRenderer.drawHUD(gameContext(), game.theHUD(), sizeInPx().minus(0, 2 * TS), ui.clock().tickCount());
         }

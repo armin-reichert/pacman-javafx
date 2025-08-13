@@ -89,7 +89,7 @@ public abstract class GameModel implements Game {
         level.blinking().setStartPhase(Pulse.ON);
         level.blinking().restart(Integer.MAX_VALUE);
         huntingTimer().startFirstHuntingPhase(level.number());
-        gameContext.theGameEventManager().publishEvent(GameEventType.HUNTING_PHASE_STARTED);
+        gameContext.eventManager().publishEvent(GameEventType.HUNTING_PHASE_STARTED);
     }
 
     @Override
@@ -198,7 +198,7 @@ public abstract class GameModel implements Game {
         powerTimer.doTick();
         if (level.pac().isPowerFadingStarting()) {
             simulationStep.pacStartsLosingPower = true;
-            gameContext.theGameEventManager().publishEvent(GameEventType.PAC_STARTS_LOSING_POWER);
+            gameContext.eventManager().publishEvent(GameEventType.PAC_STARTS_LOSING_POWER);
         } else if (powerTimer.hasExpired()) {
             powerTimer.stop();
             powerTimer.reset(0);
@@ -208,7 +208,7 @@ public abstract class GameModel implements Game {
             Logger.info("Hunting timer restarted because Pac-Man lost power");
             level.ghosts(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
             simulationStep.pacLostPower = true;
-            gameContext.theGameEventManager().publishEvent(GameEventType.PAC_LOST_POWER);
+            gameContext.eventManager().publishEvent(GameEventType.PAC_LOST_POWER);
         }
     }
 
@@ -228,7 +228,7 @@ public abstract class GameModel implements Game {
             scoreManager().scorePoints(bonus.points());
             Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
             simulationStep.bonusEatenTile = bonus.tile();
-            gameContext.theGameEventManager().publishEvent(GameEventType.BONUS_EATEN);
+            gameContext.eventManager().publishEvent(GameEventType.BONUS_EATEN);
         }
     }
 

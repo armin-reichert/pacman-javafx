@@ -70,7 +70,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        gameContext().theGame().theHUD().credit(true).score(true).levelCounter(true).livesCounter(false);
+        gameContext().game().theHUD().credit(true).score(true).levelCounter(true).livesCounter(false);
 
         actionBindings.assign(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
         actionBindings.assign(ACTION_ARCADE_START_GAME, ui.actionBindings());
@@ -248,10 +248,10 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
                 scene.marquee.timer().doTick();
-                if (sceneTimer.atSecond(2.0) && !scene.gameContext().theGame().canStartNewGame()) {
-                    scene.gameContext().theGameController().changeGameState(GameState.STARTING_GAME); // demo level
+                if (sceneTimer.atSecond(2.0) && !scene.gameContext().game().canStartNewGame()) {
+                    scene.gameContext().gameController().changeGameState(GameState.STARTING_GAME); // demo level
                 } else if (sceneTimer.atSecond(5)) {
-                    scene.gameContext().theGameController().changeGameState(GameState.SETTING_OPTIONS_FOR_START);
+                    scene.gameContext().gameController().changeGameState(GameState.SETTING_OPTIONS_FOR_START);
                 }
             }
         };

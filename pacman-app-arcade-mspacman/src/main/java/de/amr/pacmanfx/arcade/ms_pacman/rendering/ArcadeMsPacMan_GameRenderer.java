@@ -75,7 +75,7 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
 
         if (!hud.isVisible()) return;
 
-        GameModel game = gameContext.theGame();
+        GameModel game = gameContext.game();
         if (hud.isScoreVisible()) {
             ctx.setFont(assets.arcadeFont(scaled(8)));
             ctx.setFill(ARCADE_WHITE);
@@ -108,7 +108,7 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
         }
 
         if (hud.isCreditVisible()) {
-            String text = "CREDIT %2d".formatted(gameContext.theCoinMechanism().numCoins());
+            String text = "CREDIT %2d".formatted(gameContext.coinMechanism().numCoins());
             fillTextAtScaledPosition(text, ARCADE_WHITE, assets.arcadeFont(scaled(8)), TS(2), sceneSize.y() - 2);
         }
     }

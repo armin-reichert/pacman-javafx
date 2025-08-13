@@ -290,7 +290,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
     }
 
     public void syncMenuState() {
-        final GameModel game = gameContext.theGameController().game(state.gameVariant);
+        final GameModel game = gameContext.gameController().game(state.gameVariant);
         final var mapSelector = (PacManXXL_Common_MapSelector) game.mapSelector();
         mapSelector.loadAllMaps();
         final boolean customMapsExist = !mapSelector.customMaps().isEmpty();
@@ -340,7 +340,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
     }
 
     private void startGame() {
-        GameModel game = gameContext.theGameController().game(state.gameVariant);
+        GameModel game = gameContext.gameController().game(state.gameVariant);
         game.setCutScenesEnabled(state.cutScenesEnabled);
         var mapSelector = (PacManXXL_Common_MapSelector) game.mapSelector();
         mapSelector.setMapSelectionMode(state.mapOrder);

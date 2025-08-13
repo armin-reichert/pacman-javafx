@@ -63,7 +63,7 @@ public class TengenActorSpeedControl implements ActorSpeedControl {
      */
     public float ghostSpeedIncreaseByFoodRemaining(GameContext gameContext, GameLevel level) {
         byte units = 0;
-        TengenMsPacMan_GameModel game = gameContext.theGame();
+        TengenMsPacMan_GameModel game = gameContext.game();
         if (game.difficulty() == Difficulty.NORMAL && level.number() >= 5) {
             int dotsLeft = level.uneatenFoodCount();
             if (dotsLeft <= 7) {
@@ -119,7 +119,7 @@ public class TengenActorSpeedControl implements ActorSpeedControl {
         if (level == null) {
             return 0;
         }
-        TengenMsPacMan_GameModel game = gameContext.theGame();
+        TengenMsPacMan_GameModel game = gameContext.game();
         float speed = pacBaseSpeedInLevel(level.number());
         speed += pacDifficultySpeedDelta(game.difficulty());
         if (game.pacBooster() == PacBooster.ALWAYS_ON
@@ -140,7 +140,7 @@ public class TengenActorSpeedControl implements ActorSpeedControl {
         if (level.isTunnel(ghost.tile())) {
             return ghostTunnelSpeed(gameContext, level, ghost);
         }
-        TengenMsPacMan_GameModel game = gameContext.theGame();
+        TengenMsPacMan_GameModel game = gameContext.game();
         float speed = ghostBaseSpeedInLevel(level.number());
         speed += ghostDifficultySpeedDelta(game.difficulty());
         speed += ghostSpeedDelta(ghost.personality());

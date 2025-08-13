@@ -32,7 +32,7 @@ public class ArcadeCommon_ActorSpeedControl implements ActorSpeedControl {
         if (level.isTunnel(ghost.tile())) {
             return ghostTunnelSpeed(gameContext, level, ghost);
         }
-        var arcadeGame = (ArcadeCommon_GameModel) gameContext.theGame();
+        var arcadeGame = (ArcadeCommon_GameModel) gameContext.game();
         if (arcadeGame.cruiseElroy() == 1) {
             return level.data().elroy1SpeedPercentage() * BASE_SPEED_1_PERCENT;
         }

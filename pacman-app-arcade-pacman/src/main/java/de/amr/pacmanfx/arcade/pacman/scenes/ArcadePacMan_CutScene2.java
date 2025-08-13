@@ -65,7 +65,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         actorsInZOrder.add(pac);
         actorsInZOrder.add(blinky);
 
-        gameContext().theGame().theHUD().credit(false).score(true).levelCounter(true).livesCounter(false);
+        gameContext().game().theHUD().credit(false).score(true).levelCounter(true).livesCounter(false);
     }
 
     @Override
@@ -117,7 +117,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
             case ANIMATION_START + 420 -> blinkyDamaged.nextFrame(); // Eyes right-down
             case ANIMATION_START + 508 -> {
                 blinky.setVisible(false);
-                gameContext().theGameController().letCurrentGameStateExpire();
+                gameContext().gameController().letCurrentGameStateExpire();
             }
             default -> {}
         }
