@@ -252,7 +252,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
     }
 
     @Override
-    public HUD theHUD() {
+    public HUD hud() {
         return hud;
     }
 

@@ -56,7 +56,7 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
 
     @Override
     protected void doInit() {
-        gameContext().game().theHUD().credit(false).score(true).levelCounter(true).livesCounter(true);
+        gameContext().game().hud().credit(false).score(true).levelCounter(true).livesCounter(true);
         levelCompletedAnimation = new LevelCompletedAnimation(animationRegistry);
         gameRenderer = ui.currentConfig().createGameRenderer(canvas);
     }
@@ -76,11 +76,11 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
      */
     private void initWithGameLevel(GameLevel gameLevel) {
         if (gameLevel.isDemoLevel()) {
-            gameContext().game().theHUD().credit(false).levelCounter(true).livesCounter(false);
+            gameContext().game().hud().credit(false).levelCounter(true).livesCounter(false);
             actionBindings.assign(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
             actionBindings.installBindings(ui.keyboard());
         } else {
-            gameContext().game().theHUD().credit(false).levelCounter(true).livesCounter(true);
+            gameContext().game().hud().credit(false).levelCounter(true).livesCounter(true);
             actionBindings.assign(ACTION_STEER_UP, ui.actionBindings());
             actionBindings.assign(ACTION_STEER_DOWN, ui.actionBindings());
             actionBindings.assign(ACTION_STEER_LEFT, ui.actionBindings());
@@ -162,14 +162,14 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
     }
 
     private void updateHUD() {
-        LivesCounter livesCounter = gameContext().game().theHUD().theLivesCounter();
+        LivesCounter livesCounter = gameContext().game().hud().theLivesCounter();
         int numLivesDisplayed = gameContext().game().lifeCount() - 1;
         // As long as Pac-Man is still initially hidden in the maze, he is shown as an entry in the lives counter
         if (gameContext().gameState() == GameState.STARTING_GAME && !gameContext().gameLevel().pac().isVisible()) {
             numLivesDisplayed += 1;
         }
         livesCounter.setVisibleLifeCount(Math.min(numLivesDisplayed, livesCounter.maxLivesDisplayed()));
-        gameContext().game().theHUD().showCredit(gameContext().coinMechanism().isEmpty());
+        gameContext().game().hud().showCredit(gameContext().coinMechanism().isEmpty());
     }
 
     private void updateSound() {

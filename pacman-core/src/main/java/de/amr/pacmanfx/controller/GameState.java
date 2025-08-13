@@ -198,7 +198,7 @@ public enum GameState implements FsmState<GameContext> {
                 if (context.gameLevel().isDemoLevel()) {
                     // just in case: if demo level is complete, go back to intro scene
                     context.gameController().changeGameState(INTRO);
-                } else if (context.game().areCutScenesEnabled()
+                } else if (context.game().cutScenesEnabled()
                     && context.game().cutSceneNumber(context.gameLevel().number()).isPresent()) {
                     context.gameController().changeGameState(INTERMISSION);
                 } else {
@@ -322,7 +322,7 @@ public enum GameState implements FsmState<GameContext> {
                     if (context.gameLevel().isDemoLevel()) {
                         context.gameController().changeGameState(SHOWING_CREDITS);
                     } else {
-                        boolean canContinue = context.game().continueOnGameOver();
+                        boolean canContinue = context.game().canContinueOnGameOver();
                         context.gameController().changeGameState(canContinue ? SETTING_OPTIONS_FOR_START : INTRO);
                     }
                 } else {
@@ -429,7 +429,7 @@ public enum GameState implements FsmState<GameContext> {
         public void onExit(GameContext context) {
             context.coinMechanism().setNumCoins(0);
             context.game().resetEverything();
-            context.game().theHUD().theLevelCounter().clear();
+            context.game().hud().theLevelCounter().clear();
         }
     },
 
@@ -487,7 +487,7 @@ public enum GameState implements FsmState<GameContext> {
 
         @Override
         public void onExit(GameContext context) {
-            context.game().theHUD().theLevelCounter().clear();
+            context.game().hud().theLevelCounter().clear();
         }
     },
 

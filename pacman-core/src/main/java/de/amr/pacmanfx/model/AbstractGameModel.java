@@ -114,7 +114,7 @@ public abstract class AbstractGameModel implements Game {
     public boolean haveGhostsBeenKilled() { return !simulationStep.killedGhosts.isEmpty(); }
 
     @Override
-    public boolean areCutScenesEnabled() { return cutScenesEnabled.get(); }
+    public boolean cutScenesEnabled() { return cutScenesEnabled.get(); }
 
     @Override
     public void setCutScenesEnabled(boolean enabled) { cutScenesEnabled.set(enabled); }

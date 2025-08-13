@@ -73,9 +73,9 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        gameContext().game().theHUD().showScore(false);
-        gameContext().game().theHUD().showLevelCounter(false);
-        gameContext().game().theHUD().showLivesCounter(false);
+        gameContext().game().hud().showScore(false);
+        gameContext().game().hud().showLevelCounter(false);
+        gameContext().game().hud().showLivesCounter(false);
 
         spriteSheet = (TengenMsPacMan_SpriteSheet) ui.currentConfig().spriteSheet();
 

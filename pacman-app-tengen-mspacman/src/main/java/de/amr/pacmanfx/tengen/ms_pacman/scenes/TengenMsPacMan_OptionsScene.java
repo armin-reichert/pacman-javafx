@@ -87,7 +87,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        gameContext().game().theHUD().all(false);
+        gameContext().game().hud().all(false);
 
         var tengenBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().tengenMsPacManBindings();
         actionBindings.bind(actionSelectNextJoypadBinding, alt(KeyCode.J));

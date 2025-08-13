@@ -253,7 +253,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public TengenMsPacMan_HUD theHUD() {
+    public TengenMsPacMan_HUD hud() {
         return hud;
     }
 
@@ -363,7 +363,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public boolean continueOnGameOver() {
+    public boolean canContinueOnGameOver() {
         if (startLevelNumber >= 10 && numContinues > 0) {
             numContinues -= 1;
             return true;

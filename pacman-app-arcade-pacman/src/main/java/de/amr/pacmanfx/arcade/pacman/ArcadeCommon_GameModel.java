@@ -53,7 +53,7 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
     @Override
     public void resetEverything() {
         prepareForNewGame();
-        theHUD().theLevelCounter().clear();
+        hud().theLevelCounter().clear();
     }
 
     @Override
@@ -70,7 +70,7 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
     @Override
     public void startNewGame() {
         prepareForNewGame();
-        theHUD().theLevelCounter().clear();
+        hud().theLevelCounter().clear();
         buildNormalLevel(1);
         eventManager().publishEvent(GameEventType.GAME_STARTED);
     }
@@ -79,7 +79,7 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
     public boolean canStartNewGame() { return !gameContext.coinMechanism().isEmpty(); }
 
     @Override
-    public boolean continueOnGameOver() { return false; }
+    public boolean canContinueOnGameOver() { return false; }
 
     // Components
 
@@ -219,7 +219,7 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
         level.setDemoLevel(false);
         level.pac().immuneProperty().bind(gameContext.gameController().propertyImmunity());
         level.pac().usingAutopilotProperty().bind(gameContext.gameController().propertyUsingAutopilot());
-        theHUD().theLevelCounter().setEnabled(true);
+        hud().theLevelCounter().setEnabled(true);
         huntingTimer.reset();
         scoreManager().setScoreLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
@@ -236,7 +236,7 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
         level.pac().setUsingAutopilot(true);
         level.pac().setAutopilotSteering(demoLevelSteering);
         demoLevelSteering.init();
-        theHUD().theLevelCounter().setEnabled(true);
+        hud().theLevelCounter().setEnabled(true);
         huntingTimer.reset();
         scoreManager().setScoreLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
@@ -255,7 +255,7 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
             scoreManager().highScore().setEnabled(false);
             Logger.info("Demo level {} started", level.number());
         } else {
-            theHUD().theLevelCounter().update(level.number(), level.bonusSymbol(0));
+            hud().theLevelCounter().update(level.number(), level.bonusSymbol(0));
             level.showMessage(GameLevel.MESSAGE_READY);
             scoreManager().score().setEnabled(true);
             scoreManager().highScore().setEnabled(true);

@@ -139,9 +139,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         messageMovement = new MessageMovement();
         levelCompletedAnimation = new LevelCompletedAnimation(animationRegistry);
 
-        gameContext().game().theHUD().showScore(true);
-        gameContext().game().theHUD().showLevelCounter(true);
-        gameContext().game().theHUD().showLivesCounter(true);
+        gameContext().game().hud().showScore(true);
+        gameContext().game().hud().showLevelCounter(true);
+        gameContext().game().hud().showLivesCounter(true);
 
         dynamicCamera.moveTop();
     }
@@ -254,8 +254,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     private void initForGameLevel(GameLevel gameLevel) {
-        gameContext().game().theHUD().showLevelCounter(true);
-        gameContext().game().theHUD().showLivesCounter(true); // is also visible in demo level!
+        gameContext().game().hud().showLevelCounter(true);
+        gameContext().game().hud().showLivesCounter(true); // is also visible in demo level!
         setActionsBindings();
         //TODO needed?
         setGameRenderer(ui.currentConfig().createGameRenderer(canvas));
@@ -445,7 +445,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         }
         // NES screen is 32 tiles wide but mazes are only 28 tiles wide, so shift HUD right:
         ctx().translate(scaled(2 * TS), 0);
-        renderer().drawHUD(gameContext(), gameContext().game().theHUD(), sizeInPx(), ui.clock().tickCount());
+        renderer().drawHUD(gameContext(), gameContext().game().hud(), sizeInPx(), ui.clock().tickCount());
 
         ctx().restore();
     }
@@ -512,7 +512,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     private void updateHUD() {
-        TengenMsPacMan_HUD hud = gameContext().<TengenMsPacMan_GameModel>game().theHUD();
+        TengenMsPacMan_HUD hud = gameContext().<TengenMsPacMan_GameModel>game().hud();
         int numLives = gameContext().game().lifeCount() - 1;
         // As long as Pac-Man is still invisible on start, he is shown as an additional entry in the lives counter
         if (gameContext().gameState() == GameState.STARTING_GAME && !gameContext().gameLevel().pac().isVisible()) {

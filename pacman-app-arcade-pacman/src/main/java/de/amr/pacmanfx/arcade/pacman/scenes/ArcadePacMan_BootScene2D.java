@@ -35,7 +35,7 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
 
     @Override
     public void doInit() {
-        gameContext().game().theHUD().score(false).levelCounter(false).livesCounter(false);
+        gameContext().game().hud().score(false).levelCounter(false).livesCounter(false);
 
         SpriteSheet<?> spriteSheet = ui.currentConfig().spriteSheet();
         double width = spriteSheet.sourceImage().getWidth(), height = spriteSheet.sourceImage().getHeight();

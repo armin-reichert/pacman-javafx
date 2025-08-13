@@ -51,7 +51,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
         actorsInZOrder.add(pac);
         actorsInZOrder.add(blinky);
 
-        gameContext().game().theHUD().credit(false).score(true).levelCounter(true).livesCounter(false);
+        gameContext().game().hud().credit(false).score(true).levelCounter(true).livesCounter(false);
     }
 
     @Override
