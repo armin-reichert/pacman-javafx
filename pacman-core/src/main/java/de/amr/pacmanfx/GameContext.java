@@ -8,8 +8,8 @@ import de.amr.pacmanfx.controller.CoinMechanism;
 import de.amr.pacmanfx.controller.GameController;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEventManager;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.GameModel;
 
 import java.io.File;
 import java.util.Optional;
@@ -32,36 +32,36 @@ public interface GameContext {
     /**
      * @return the coin mechanism used in the Arcade games.
      */
-    CoinMechanism           theCoinMechanism();
+    CoinMechanism theCoinMechanism();
 
     /**
      * @return the model (in MVC sense) of the currently selected game variant.
      * @param <T> specific game model type
      */
-    <T extends GameModel> T theGame();
+    <T extends Game> T theGame();
 
     /**
      * @return the controller (in MVC sense) used by all game variants. Implemented as a FSM.
      */
-    GameController          theGameController();
+    GameController theGameController();
 
     /**
      * @return the event manager that is used to publish/subscribe to game events created by the model layer.
      */
-    GameEventManager        theGameEventManager();
+    GameEventManager theGameEventManager();
 
     /**
      * @return the current game level if present.
      */
-    Optional<GameLevel>     optGameLevel();
+    Optional<GameLevel> optGameLevel();
 
     /**
      * @return the current game level if present or {@code null} if no game level currently exists.
      */
-    GameLevel               theGameLevel();
+    GameLevel theGameLevel();
 
     /**
      * @return the current game state (the state of the game controller FSM).
      */
-    GameState               theGameState();
+    GameState theGameState();
 }

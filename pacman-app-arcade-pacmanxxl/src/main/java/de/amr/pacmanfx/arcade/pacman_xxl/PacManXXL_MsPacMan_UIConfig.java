@@ -16,13 +16,14 @@ import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_PlayScene2D;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
+import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
-import de.amr.pacmanfx.ui._3d.PlayScene3D;
 import de.amr.pacmanfx.ui.sound.DefaultSoundManager;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
@@ -42,8 +43,8 @@ import java.util.Map;
 import java.util.OptionalInt;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_3D_ENABLED;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
+import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
 
 public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config {
@@ -274,8 +275,11 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config {
                 yield SCENE_ID_CUT_SCENE_N_2D.formatted(optCutSceneNumber.getAsInt());
             }
             case GameState.TESTING_CUT_SCENES -> {
-                int cutSceneNumber = gameContext.theGame().<Integer>getProperty("intermissionTestNumber");
-                yield SCENE_ID_CUT_SCENE_N_2D.formatted(cutSceneNumber);
+                if (gameContext.theGame() instanceof GameModel gameModel) {
+                    int cutSceneNumber = gameModel.<Integer>getProperty("intermissionTestNumber");
+                    yield SCENE_ID_CUT_SCENE_N_2D.formatted(cutSceneNumber);
+                }
+                throw new IllegalStateException("Illegal game model");
             }
             default -> PROPERTY_3D_ENABLED.get() ? SCENE_ID_PLAY_SCENE_3D : SCENE_ID_PLAY_SCENE_2D;
         };

@@ -9,6 +9,7 @@ import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.event.GameStateChangeEvent;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GameModel;
 import javafx.beans.property.BooleanProperty;
@@ -106,7 +107,7 @@ public class GameController implements GameContext {
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends GameModel> T game(String variant) {
+    public <T extends Game> T game(String variant) {
         requireNonNull(variant);
         if (knownGames.containsKey(variant)) {
             return (T) knownGames.get(variant);
@@ -175,7 +176,7 @@ public class GameController implements GameContext {
     /**
      * @return The game (model) registered for the currently selected game variant.
      */
-    public <GAME extends GameModel> GAME theGame() {
+    public <G extends Game> G theGame() {
         return game(gameVariantProperty.get());
     }
 

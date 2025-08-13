@@ -11,6 +11,7 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
+import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
@@ -262,8 +263,12 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
                 yield SCENE_ID_CUT_SCENE_N_2D.formatted(optCutSceneNumber.getAsInt());
             }
             case GameState.TESTING_CUT_SCENES -> {
-                int cutSceneNumber = gameContext.theGame().<Integer>getProperty("intermissionTestNumber");
-                yield SCENE_ID_CUT_SCENE_N_2D.formatted(cutSceneNumber);
+                //TODO
+                if (gameContext.theGame() instanceof GameModel gameModel) {
+                    int cutSceneNumber = gameModel.<Integer>getProperty("intermissionTestNumber");
+                    yield SCENE_ID_CUT_SCENE_N_2D.formatted(cutSceneNumber);
+                }
+                throw new IllegalStateException("Illegal game model");
             }
             default -> PROPERTY_3D_ENABLED.get() ? SCENE_ID_PLAY_SCENE_3D : SCENE_ID_PLAY_SCENE_2D;
         };
