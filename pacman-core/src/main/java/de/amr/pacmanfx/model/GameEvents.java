@@ -4,11 +4,14 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model;
 
+import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.actors.Ghost;
 
 public interface GameEvents {
-    void onGameEnding();
+    void onPelletEaten();
+    void onEnergizerEaten(Vector2i tile);
     void onLevelCompleted();
     void onPacKilled();
     void onGhostKilled(Ghost ghost);
+    void onGameEnding();
 }

@@ -63,8 +63,7 @@ public abstract class AbstractGameModel implements Game {
         return Optional.ofNullable(level);
     }
 
-    @Override
-    public void resetPacManAndGhostAnimations() {
+    protected void resetPacManAndGhostAnimations() {
         requireNonNull(level, "Game level not existing");
         level.pac().selectAnimation(ANIM_PAC_MUNCHING);
         level.pac().resetAnimation();

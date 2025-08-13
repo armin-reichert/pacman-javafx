@@ -44,6 +44,77 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
         actorSpeedControl = new ArcadeCommon_ActorSpeedControl();
     }
 
+    // GameEvents interface
+
+    @Override
+    public void onPelletEaten() {
+        scoreManager().scorePoints(PELLET_VALUE);
+        level.pac().setRestingTicks(1);
+        updateCruiseElroyMode();
+    }
+
+    @Override
+    public void onEnergizerEaten(Vector2i tile) {
+        simulationStep.foundEnergizerAtTile = tile;
+        scoreManager().scorePoints(ENERGIZER_VALUE);
+        level.pac().setRestingTicks(3);
+        updateCruiseElroyMode();
+
+        level.victims().clear();
+        level.ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::reverseAtNextOccasion);
+
+        double powerSeconds = pacPowerSeconds(level);
+        if (powerSeconds > 0) {
+            huntingTimer().stop();
+            Logger.debug("Hunting stopped (Pac-Man got power)");
+            long ticks = TickTimer.secToTicks(powerSeconds);
+            level.pac().powerTimer().restartTicks(ticks);
+            Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", ticks, powerSeconds);
+            level.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
+            simulationStep.pacGotPower = true;
+            eventManager().publishEvent(GameEventType.PAC_GETS_POWER);
+        }
+    }
+
+    @Override
+    public void onPacKilled() {
+        gateKeeper.resetCounterAndSetEnabled(true);
+        huntingTimer.stop();
+        activateCruiseElroyMode(false);
+        level.pac().powerTimer().stop();
+        level.pac().powerTimer().reset(0);
+        level.pac().sayGoodbyeCruelWorld();
+    }
+
+    @Override
+    public void onGhostKilled(Ghost ghost) {
+        simulationStep.killedGhosts.add(ghost);
+        int killedSoFar = level.victims().size();
+        int points = 100 * KILLED_GHOST_VALUE_FACTORS[killedSoFar];
+        level.victims().add(ghost);
+        ghost.eaten(killedSoFar);
+        scoreManager().scorePoints(points);
+        Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
+        level.registerGhostKilled();
+        if (level.numGhostsKilled() == 16) {
+            scoreManager().scorePoints(ALL_GHOSTS_IN_LEVEL_KILLED_BONUS_POINTS);
+            Logger.info("Scored {} points for killing all ghosts in level {}",
+                    ALL_GHOSTS_IN_LEVEL_KILLED_BONUS_POINTS, level.number());
+        }
+    }
+
+    @Override
+    public void onGameEnding() {
+        setPlaying(false);
+        if (!gameContext.coinMechanism().isEmpty()) {
+            gameContext.coinMechanism().consumeCoin();
+        }
+        scoreManager().updateHighScore();
+        level.showMessage(GameLevel.MESSAGE_GAME_OVER);
+    }
+
+    // GameLifecycle interface
+
     @Override
     public void init() {
         setInitialLifeCount(3);
@@ -81,8 +152,6 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
     @Override
     public boolean canContinueOnGameOver() { return false; }
 
-    // Components
-
     @Override
     public ActorSpeedControl actorSpeedControl() { return actorSpeedControl; }
 
@@ -97,54 +166,10 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
         return mapSelector;
     }
 
-    // Actors
-
     @Override
     public double pacPowerSeconds(GameLevel level) {
         return level != null ? level.data().pacPowerSeconds() : 0;
     }
-
-    @Override
-    public void onPacKilled() {
-        gateKeeper.resetCounterAndSetEnabled(true);
-        huntingTimer.stop();
-        activateCruiseElroyMode(false);
-        level.pac().powerTimer().stop();
-        level.pac().powerTimer().reset(0);
-        level.pac().sayGoodbyeCruelWorld();
-    }
-
-    @Override
-    public void onGhostKilled(Ghost ghost) {
-        simulationStep.killedGhosts.add(ghost);
-        int killedSoFar = level.victims().size();
-        int points = 100 * KILLED_GHOST_VALUE_FACTORS[killedSoFar];
-        level.victims().add(ghost);
-        ghost.eaten(killedSoFar);
-        scoreManager().scorePoints(points);
-        Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
-        level.registerGhostKilled();
-        if (level.numGhostsKilled() == 16) {
-            scoreManager().scorePoints(ALL_GHOSTS_IN_LEVEL_KILLED_BONUS_POINTS);
-            Logger.info("Scored {} points for killing all ghosts in level {}",
-                ALL_GHOSTS_IN_LEVEL_KILLED_BONUS_POINTS, level.number());
-        }
-    }
-
-    /**
-     * @return "Cruise Elroy" state (changes behavior of red ghost).
-     * <p>0=off, 1=Elroy1, 2=Elroy2, -1=Elroy1 (disabled), -2=Elroy2 (disabled).</p>
-     */
-    public int cruiseElroy() { return cruiseElroy; }
-
-    public boolean isCruiseElroyModeActive() { return cruiseElroy > 0; }
-
-    protected void activateCruiseElroyMode(boolean active) {
-        int absValue = Math.abs(cruiseElroy);
-        cruiseElroy = active ? absValue : -absValue;
-    }
-
-    // Food handling
 
     @Override
     protected void checkIfPacManFindsFood() {
@@ -166,52 +191,6 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
         } else {
             level.pac().starve();
         }
-    }
-
-    private void updateCruiseElroyMode() {
-        if (level.uneatenFoodCount() == level.data().elroy1DotsLeft()) {
-            cruiseElroy = 1;
-        } else if (level.uneatenFoodCount() == level.data().elroy2DotsLeft()) {
-            cruiseElroy = 2;
-        }
-    }
-
-    public void onPelletEaten() {
-        scoreManager().scorePoints(PELLET_VALUE);
-        level.pac().setRestingTicks(1);
-        updateCruiseElroyMode();
-    }
-
-    public void onEnergizerEaten(Vector2i tile) {
-        simulationStep.foundEnergizerAtTile = tile;
-        scoreManager().scorePoints(ENERGIZER_VALUE);
-        level.pac().setRestingTicks(3);
-        updateCruiseElroyMode();
-
-        level.victims().clear();
-        level.ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::reverseAtNextOccasion);
-
-        double powerSeconds = pacPowerSeconds(level);
-        if (powerSeconds > 0) {
-            huntingTimer().stop();
-            Logger.debug("Hunting stopped (Pac-Man got power)");
-            long ticks = TickTimer.secToTicks(powerSeconds);
-            level.pac().powerTimer().restartTicks(ticks);
-            Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", ticks, powerSeconds);
-            level.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
-            simulationStep.pacGotPower = true;
-            eventManager().publishEvent(GameEventType.PAC_GETS_POWER);
-        }
-    }
-
-    @Override
-    public void onGameEnding() {
-        setPlaying(false);
-        if (!gameContext.coinMechanism().isEmpty()) {
-            gameContext.coinMechanism().consumeCoin();
-        }
-        scoreManager().updateHighScore();
-        level.showMessage(GameLevel.MESSAGE_GAME_OVER);
     }
 
     @Override
@@ -275,5 +254,26 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
     @Override
     public int lastLevelNumber() {
         return Integer.MAX_VALUE;
+    }
+
+    /**
+     * @return "Cruise Elroy" state (changes behavior of red ghost).
+     * <p>0=off, 1=Elroy1, 2=Elroy2, -1=Elroy1 (disabled), -2=Elroy2 (disabled).</p>
+     */
+    public int cruiseElroy() { return cruiseElroy; }
+
+    public boolean isCruiseElroyModeActive() { return cruiseElroy > 0; }
+
+    protected void activateCruiseElroyMode(boolean active) {
+        int absValue = Math.abs(cruiseElroy);
+        cruiseElroy = active ? absValue : -absValue;
+    }
+
+    private void updateCruiseElroyMode() {
+        if (level.uneatenFoodCount() == level.data().elroy1DotsLeft()) {
+            cruiseElroy = 1;
+        } else if (level.uneatenFoodCount() == level.data().elroy2DotsLeft()) {
+            cruiseElroy = 2;
+        }
     }
 }

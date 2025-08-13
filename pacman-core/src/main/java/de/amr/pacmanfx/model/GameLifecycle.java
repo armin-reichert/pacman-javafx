@@ -7,7 +7,6 @@ package de.amr.pacmanfx.model;
 public interface GameLifecycle {
     void init();
     void resetEverything();
-    void resetPacManAndGhostAnimations();
     void prepareForNewGame();
     boolean canStartNewGame();
     void startNewGame();

@@ -33,6 +33,8 @@ import static de.amr.pacmanfx.lib.tilemap.TerrainTile.*;
 import static de.amr.pacmanfx.lib.timer.TickTimer.secToTicks;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
+import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
+import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
 import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PacAnimationMap.ANIM_MS_PAC_MAN_BOOSTER;
 import static java.util.Objects.requireNonNull;
 
@@ -665,6 +667,32 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             eventManager().publishEvent(GameEventType.PAC_FOUND_FOOD, tile);
         } else {
             level.pac().starve();
+        }
+    }
+
+    @Override
+    public void onPelletEaten() {
+        scoreManager().scorePoints(PELLET_VALUE);
+        level.pac().setRestingTicks(1);
+    }
+
+    @Override
+    public void onEnergizerEaten(Vector2i tile) {
+        simulationStep.foundEnergizerAtTile = tile;
+        scoreManager().scorePoints(ENERGIZER_VALUE);
+        level.pac().setRestingTicks(3);
+        level.victims().clear();
+        level.ghosts(FRIGHTENED, HUNTING_PAC).forEach(Ghost::reverseAtNextOccasion);
+        double powerSeconds = pacPowerSeconds(level);
+        if (powerSeconds > 0) {
+            huntingTimer().stop();
+            Logger.debug("Hunting stopped (Pac-Man got power)");
+            long ticks = TickTimer.secToTicks(powerSeconds);
+            level.pac().powerTimer().restartTicks(ticks);
+            Logger.debug("Power timer restarted, {} ticks ({0.00} sec)", ticks, powerSeconds);
+            level.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
+            simulationStep.pacGotPower = true;
+            eventManager().publishEvent(GameEventType.PAC_GETS_POWER);
         }
     }
 
