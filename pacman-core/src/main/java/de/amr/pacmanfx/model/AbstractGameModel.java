@@ -28,18 +28,18 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class AbstractGameModel implements Game {
 
-    protected final BooleanProperty playingProperty = new SimpleBooleanProperty(false);
-    protected final IntegerProperty lifeCountProperty = new SimpleIntegerProperty(0);
+    protected final BooleanProperty playing = new SimpleBooleanProperty(false);
+    protected final IntegerProperty lifeCount = new SimpleIntegerProperty(0);
+    protected final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
+    protected final IntegerProperty initialLifeCount = new SimpleIntegerProperty(3);
+
+    protected final SimulationStep simulationStep = new SimulationStep();
 
     protected final GameContext gameContext;
     protected GameLevel level;
-    protected boolean cutScenesEnabled;
-    protected int initialLifeCount;
-    protected final SimulationStep simulationStep = new SimulationStep();
 
     protected AbstractGameModel(GameContext gameContext) {
         this.gameContext = requireNonNull(gameContext);
-        cutScenesEnabled = true;
     }
 
     // Game interface
@@ -61,7 +61,7 @@ public abstract class AbstractGameModel implements Game {
 
     @Override
     public int lifeCount() {
-        return lifeCountProperty.get();
+        return lifeCount.get();
     }
 
     @Override
@@ -74,7 +74,7 @@ public abstract class AbstractGameModel implements Game {
 
     @Override
     public void setPlaying(boolean playing) {
-        playingProperty.set(playing);
+        this.playing.set(playing);
     }
 
     @Override
@@ -121,19 +121,19 @@ public abstract class AbstractGameModel implements Game {
     public boolean haveGhostsBeenKilled() { return !simulationStep.killedGhosts.isEmpty(); }
 
     @Override
-    public boolean areCutScenesEnabled() { return cutScenesEnabled; }
+    public boolean areCutScenesEnabled() { return cutScenesEnabled.get(); }
 
     @Override
-    public void setCutScenesEnabled(boolean enabled) { cutScenesEnabled = enabled; }
+    public void setCutScenesEnabled(boolean enabled) { cutScenesEnabled.set(enabled); }
 
     @Override
     public int initialLifeCount() {
-        return initialLifeCount;
+        return initialLifeCount.get();
     }
 
     @Override
-    public void setInitialLifeCount(int initialLifeCount) {
-        this.initialLifeCount = initialLifeCount;
+    public void setInitialLifeCount(int lifeCount) {
+        initialLifeCount.set(lifeCount);
     }
 
     @Override
@@ -155,11 +155,11 @@ public abstract class AbstractGameModel implements Game {
         Logger.trace("Game level {} completed.", level.number());
     }
 
-    public BooleanProperty playingProperty() { return playingProperty; }
+    public BooleanProperty playingProperty() { return playing; }
 
     public void setLifeCount(int n) {
         if (n >= 0) {
-            lifeCountProperty.set(n);
+            lifeCount.set(n);
         } else {
             Logger.error("Cannot set life count to negative number");
         }
