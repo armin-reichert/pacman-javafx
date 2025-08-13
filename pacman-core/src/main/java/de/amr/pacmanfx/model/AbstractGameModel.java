@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.timer.Pulse;
@@ -31,7 +32,12 @@ public abstract class AbstractGameModel implements Game {
     protected final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
     protected final IntegerProperty initialLifeCount = new SimpleIntegerProperty(3);
     protected final SimulationStep simulationStep = new SimulationStep();
+    protected final GameContext gameContext;
     protected GameLevel level;
+
+    protected AbstractGameModel(GameContext gameContext) {
+        this.gameContext = gameContext;
+    }
 
     @Override
     public SimulationStep simulationStep() {

@@ -32,7 +32,6 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
     public static final int EXTRA_LIFE_SCORE = 10_000;
     public static final byte[] KILLED_GHOST_VALUE_FACTORS = {2, 4, 8, 16}; // points = factor * 100
 
-    protected final GameContext gameContext;
     protected MapSelector mapSelector;
     protected GateKeeper gateKeeper;
     protected Steering autopilot;
@@ -40,7 +39,7 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
     protected int cruiseElroy;
 
     protected ArcadeCommon_GameModel(GameContext gameContext) {
-        this.gameContext = gameContext;
+        super(gameContext);
     }
 
     // GameEvents interface
