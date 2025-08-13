@@ -162,12 +162,12 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
 
     @Override
     public double pacPowerSeconds(GameLevel level) {
-        return level != null ? level.data().pacPowerSeconds() : 0;
+        return level.data().pacPowerSeconds();
     }
 
     @Override
     public double pacPowerFadingSeconds(GameLevel level) {
-        return level != null ? level.data().numFlashes() * 0.5 : 0;
+        return level.data().numFlashes() * 0.5;
     }
 
     @Override
