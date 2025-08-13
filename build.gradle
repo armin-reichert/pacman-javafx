@@ -27,7 +27,7 @@ subprojects {
     }
 }
 
-ext.osPkg = [windows: "msi", mac: "dmg", linux: "deb", "osx": "dmg"][osdetector.os]
+ext.osPkg = [linux:"deb", "osx":"dmg", windows:"msi"][osdetector.os]
 
 logger.lifecycle("osdetector.os         = ${osdetector.os}")
 logger.lifecycle("osdetector.arch       = ${osdetector.arch}")
