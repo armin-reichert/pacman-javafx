@@ -53,7 +53,7 @@ public interface Game {
     void    activateNextBonus(GameContext gameContext);
 
     void    startHunting();
-    void    doHuntingStep(GameContext gameContext);
+    void    doHuntingStep();
 
     void    onPacKilled();
     void    onGhostKilled(Ghost ghost);

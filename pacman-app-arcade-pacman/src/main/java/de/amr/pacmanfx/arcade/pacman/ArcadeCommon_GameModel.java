@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.controller.CoinMechanism;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.*;
@@ -31,7 +30,7 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
     public static final int EXTRA_LIFE_SCORE = 10_000;
     public static final byte[] KILLED_GHOST_VALUE_FACTORS = {2, 4, 8, 16}; // points = factor * 100
 
-    protected final CoinMechanism coinMechanism;
+    protected final GameContext gameContext;
     protected final ActorSpeedControl actorSpeedControl;
     protected MapSelector mapSelector;
     protected HuntingTimer huntingTimer;
@@ -40,9 +39,8 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
     protected Steering demoLevelSteering;
     protected int cruiseElroy;
 
-    protected ArcadeCommon_GameModel(GameContext gameContext, CoinMechanism coinMechanism) {
-        super(gameContext);
-        this.coinMechanism = coinMechanism;
+    protected ArcadeCommon_GameModel(GameContext gameContext) {
+        this.gameContext = gameContext;
         actorSpeedControl = new ArcadeCommon_ActorSpeedControl();
     }
 
@@ -78,7 +76,7 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
     }
 
     @Override
-    public boolean canStartNewGame() { return !coinMechanism.isEmpty(); }
+    public boolean canStartNewGame() { return !gameContext.coinMechanism().isEmpty(); }
 
     @Override
     public boolean continueOnGameOver() { return false; }
@@ -149,7 +147,7 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
     // Food handling
 
     @Override
-    protected void checkIfPacManFindsFood(GameContext gameContext) {
+    protected void checkIfPacManFindsFood() {
         Vector2i tile = level.pac().tile();
         if (level.tileContainsFood(tile)) {
             level.pac().starvingIsOver();
@@ -208,8 +206,8 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
     @Override
     public void onGameEnding() {
         setPlaying(false);
-        if (!coinMechanism.isEmpty()) {
-            coinMechanism.consumeCoin();
+        if (!gameContext.coinMechanism().isEmpty()) {
+            gameContext.coinMechanism().consumeCoin();
         }
         scoreManager().updateHighScore();
         level.showMessage(GameLevel.MESSAGE_GAME_OVER);

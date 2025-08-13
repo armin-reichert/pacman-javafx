@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model;
 
-import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
@@ -19,7 +19,6 @@ import java.util.Optional;
 
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
-import static java.util.Objects.requireNonNull;
 
 /**
  * Common base class of all Pac-Man game models.
@@ -33,17 +32,10 @@ public abstract class AbstractGameModel implements Game {
 
     protected final SimulationStep simulationStep = new SimulationStep();
 
-    protected final GameContext gameContext;
     protected GameLevel level;
 
     // TODO This is only used by cutscene tests
     public int testedCutSceneNumber;
-
-    protected AbstractGameModel(GameContext gameContext) {
-        this.gameContext = requireNonNull(gameContext);
-    }
-
-    // Game interface
 
     @Override
     public SimulationStep simulationStep() {
@@ -90,11 +82,11 @@ public abstract class AbstractGameModel implements Game {
         level.blinking().setStartPhase(Pulse.ON);
         level.blinking().restart(Integer.MAX_VALUE);
         huntingTimer().startFirstHuntingPhase(level.number());
-        gameContext.eventManager().publishEvent(GameEventType.HUNTING_PHASE_STARTED);
+        eventManager().publishEvent(GameEventType.HUNTING_PHASE_STARTED);
     }
 
     @Override
-    public void doHuntingStep(GameContext gameContext) {
+    public void doHuntingStep() {
         gateKeeper().ifPresent(gateKeeper -> gateKeeper.unlockGhosts(level));
 
         huntingTimer().update(level.number());
@@ -110,7 +102,7 @@ public abstract class AbstractGameModel implements Game {
         checkIfGhostsKilled();
         if (haveGhostsBeenKilled()) return;
 
-        checkIfPacManFindsFood(gameContext);
+        checkIfPacManFindsFood();
         updatePacPower();
         level.bonus().ifPresent(this::checkIfPacManCanEatBonus);
     }
@@ -166,6 +158,8 @@ public abstract class AbstractGameModel implements Game {
 
     // Actors
 
+    protected abstract GameEventManager eventManager();
+
     /**
      * Checks actor collision. Default implementation uses tile equality.
      *
@@ -199,7 +193,7 @@ public abstract class AbstractGameModel implements Game {
         powerTimer.doTick();
         if (level.pac().isPowerFadingStarting()) {
             simulationStep.pacStartsLosingPower = true;
-            gameContext.eventManager().publishEvent(GameEventType.PAC_STARTS_LOSING_POWER);
+            eventManager().publishEvent(GameEventType.PAC_STARTS_LOSING_POWER);
         } else if (powerTimer.hasExpired()) {
             powerTimer.stop();
             powerTimer.reset(0);
@@ -209,7 +203,7 @@ public abstract class AbstractGameModel implements Game {
             Logger.info("Hunting timer restarted because Pac-Man lost power");
             level.ghosts(GhostState.FRIGHTENED).forEach(ghost -> ghost.setState(GhostState.HUNTING_PAC));
             simulationStep.pacLostPower = true;
-            gameContext.eventManager().publishEvent(GameEventType.PAC_LOST_POWER);
+            eventManager().publishEvent(GameEventType.PAC_LOST_POWER);
         }
     }
 
@@ -217,11 +211,7 @@ public abstract class AbstractGameModel implements Game {
         level.ghosts(GhostState.FRIGHTENED).filter(ghost -> actorsCollide(ghost, level.pac())).forEach(this::onGhostKilled);
     }
 
-    // Food handling
-
-    protected abstract void checkIfPacManFindsFood(GameContext gameContext);
-
-    // Bonus handling
+    protected abstract void checkIfPacManFindsFood();
 
     protected void checkIfPacManCanEatBonus(Bonus bonus) {
         if (bonus.state() == BonusState.EDIBLE && actorsCollide(level.pac(), bonus)) {
@@ -229,7 +219,7 @@ public abstract class AbstractGameModel implements Game {
             scoreManager().scorePoints(bonus.points());
             Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
             simulationStep.bonusEatenTile = bonus.tile();
-            gameContext.eventManager().publishEvent(GameEventType.BONUS_EATEN);
+            eventManager().publishEvent(GameEventType.BONUS_EATEN);
         }
     }
 }

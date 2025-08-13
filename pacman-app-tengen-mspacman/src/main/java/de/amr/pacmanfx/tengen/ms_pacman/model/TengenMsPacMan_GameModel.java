@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman.model;
 
 import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
@@ -211,6 +212,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         };
     }
 
+    private final GameContext gameContext;
     private final ScoreManager scoreManager;
     private final TengenMsPacMan_HUD hud = new TengenMsPacMan_HUD();
     private final TengenMsPacMan_MapSelector mapSelector;
@@ -229,7 +231,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     private int numContinues;
 
     public TengenMsPacMan_GameModel(GameContext gameContext, File highScoreFile) {
-        super(gameContext);
+        this.gameContext = requireNonNull(gameContext);
         scoreManager = new DefaultScoreManager(gameContext, highScoreFile);
         actorSpeedControl = new TengenActorSpeedControl();
         mapSelector = new TengenMsPacMan_MapSelector();
@@ -643,7 +645,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    protected void checkIfPacManFindsFood(GameContext gameContext) {
+    protected void checkIfPacManFindsFood() {
         Vector2i tile = level.pac().tile();
         if (level.tileContainsFood(tile)) {
             level.pac().starvingIsOver();
@@ -704,5 +706,10 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         ghost.eaten(killedSoFar);
         scoreManager.scorePoints(points);
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
+    }
+
+    @Override
+    protected GameEventManager eventManager() {
+        return gameContext.eventManager();
     }
 }

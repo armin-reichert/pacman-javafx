@@ -10,8 +10,8 @@ import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.AbstractGameModel;
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
@@ -156,7 +156,7 @@ public enum GameState implements FsmState<GameContext> {
                     context.gameLevel().clearMessage();
                 }
             }
-            context.game().doHuntingStep(context);
+            context.game().doHuntingStep();
             if (context.game().isLevelCompleted()) {
                 context.gameController().changeGameState(LEVEL_COMPLETE);
             } else if (context.game().hasPacManBeenKilled()) {
@@ -465,7 +465,7 @@ public enum GameState implements FsmState<GameContext> {
 
         @Override
         public void onUpdate(GameContext context) {
-            context.game().doHuntingStep(context);
+            context.game().doHuntingStep();
             if (timer().hasExpired()) {
                 if (context.gameLevel().number() == lastTestedLevelNumber) {
                     context.eventManager().publishEvent(GameEventType.STOP_ALL_SOUNDS);

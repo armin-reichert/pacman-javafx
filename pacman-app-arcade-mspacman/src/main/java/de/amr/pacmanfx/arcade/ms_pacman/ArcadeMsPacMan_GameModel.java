@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.ArcadeCommon_GameModel;
+import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.Waypoint;
@@ -205,10 +206,11 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
     }
 
     /**
+     * @param gameContext the game context
      * @param mapSelector map selector e.g. selector that selects custom maps before standard maps
      */
     public ArcadeMsPacMan_GameModel(GameContext gameContext, MapSelector mapSelector, File highScoreFile) {
-        super(gameContext, gameContext.coinMechanism());
+        super(gameContext);
         this.mapSelector = requireNonNull(mapSelector);
 
         scoreManager = new DefaultScoreManager(gameContext, highScoreFile);
@@ -424,5 +426,10 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
 
     private Portal randomPortal(GameLevel level) {
         return level.portals().get(new Random().nextInt(level.portals().size()));
+    }
+
+    @Override
+    protected GameEventManager eventManager() {
+        return gameContext.eventManager();
     }
 }

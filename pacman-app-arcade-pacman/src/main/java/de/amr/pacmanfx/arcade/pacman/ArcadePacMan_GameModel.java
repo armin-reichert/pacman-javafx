@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
@@ -188,7 +189,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
      * @param highScoreFile file where highscore is stored
      */
     public ArcadePacMan_GameModel(GameContext gameContext, MapSelector mapSelector, File highScoreFile) {
-        super(gameContext, gameContext.coinMechanism());
+        super(gameContext);
         this.mapSelector = requireNonNull(mapSelector);
 
         scoreManager = new DefaultScoreManager(gameContext, highScoreFile);
@@ -325,5 +326,10 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
         bonus.setEdibleTicks(randomInt(9 * NUM_TICKS_PER_SEC, 10 * NUM_TICKS_PER_SEC));
         level.setBonus(bonus);
         gameContext.eventManager().publishEvent(GameEventType.BONUS_ACTIVATED, bonus.tile());
+    }
+
+    @Override
+    protected GameEventManager eventManager() {
+        return gameContext.eventManager();
     }
 }
