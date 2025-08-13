@@ -93,7 +93,7 @@ public enum GameState implements FsmState<GameContext> {
             if (context.game().isPlaying()) {
                 // resume running game
                 if (timer.tickCount() == 1) {
-                    context.game().initAnimationOfPacManAndGhosts();
+                    context.game().resetPacManAndGhostAnimations();
                     context.gameLevel().getReadyToPlay();
                     context.gameLevel().showPacAndGhosts();
                     context.eventManager().publishEvent(GameEventType.GAME_CONTINUED);
@@ -384,7 +384,7 @@ public enum GameState implements FsmState<GameContext> {
                 gameLevel.bonus().ifPresent(Bonus::tick);
             }
             if (timer().atSecond(1.0)) {
-                context.game().initAnimationOfPacManAndGhosts();
+                context.game().resetPacManAndGhostAnimations();
                 gameLevel.getReadyToPlay();
                 gameLevel.showPacAndGhosts();
             }

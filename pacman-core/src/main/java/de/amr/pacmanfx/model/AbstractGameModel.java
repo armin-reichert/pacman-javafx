@@ -50,7 +50,7 @@ public abstract class AbstractGameModel implements Game {
     }
 
     @Override
-    public void initAnimationOfPacManAndGhosts() {
+    public void resetPacManAndGhostAnimations() {
         level.pac().selectAnimation(ANIM_PAC_MUNCHING);
         level.pac().resetAnimation();
         level.ghosts().forEach(ghost -> {

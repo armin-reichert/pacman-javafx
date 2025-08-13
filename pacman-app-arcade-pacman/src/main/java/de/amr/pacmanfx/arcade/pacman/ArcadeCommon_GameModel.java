@@ -251,7 +251,7 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
     public void startLevel() {
         level.setStartTime(System.currentTimeMillis());
         level.getReadyToPlay();
-        initAnimationOfPacManAndGhosts();
+        resetPacManAndGhostAnimations();
         if (level.isDemoLevel()) {
             level.showMessage(GameLevel.MESSAGE_GAME_OVER);
             scoreManager().score().setEnabled(false);

@@ -25,7 +25,7 @@ public interface Game {
     Optional<GameLevel> level();
 
     void    init();
-    void    initAnimationOfPacManAndGhosts();
+    void resetPacManAndGhostAnimations();
 
     int     initialLifeCount();
     void    setInitialLifeCount(int numLives);
