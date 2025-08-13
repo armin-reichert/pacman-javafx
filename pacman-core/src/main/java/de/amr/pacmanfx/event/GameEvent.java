@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.event;
 
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.model.Game;
 
 import java.time.LocalDateTime;
 
@@ -16,17 +16,17 @@ public class GameEvent {
 
     protected final LocalDateTime creationTime;
     protected final GameEventType type;
-    protected final GameModel game;
+    protected final Game game;
     protected final Vector2i tile;
 
-    public GameEvent(GameModel game, GameEventType type, Vector2i tile) {
+    public GameEvent(Game game, GameEventType type, Vector2i tile) {
         this.creationTime = LocalDateTime.now();
         this.game = game;
         this.type = type;
         this.tile = tile;
     }
 
-    public GameEvent(GameModel game, GameEventType type) {
+    public GameEvent(Game game, GameEventType type) {
         this(game, type, null);
     }
 
@@ -54,7 +54,7 @@ public class GameEvent {
     /**
      * @return the game model associated with this event
      */
-    public GameModel game() {
+    public Game game() {
         return game;
     }
 

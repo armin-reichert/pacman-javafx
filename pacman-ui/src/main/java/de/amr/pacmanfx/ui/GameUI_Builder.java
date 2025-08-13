@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.controller.GameController;
-import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.MapSelector;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
@@ -61,7 +61,7 @@ public class GameUI_Builder {
 
     public GameUI_Builder game(
         String variant,
-        Class<? extends GameModel> gameModelClass,
+        Class<? extends Game> gameModelClass,
         Class<? extends GameUI_Config> uiConfigClass)
     {
         validateGameVariantKey(variant);
@@ -78,7 +78,7 @@ public class GameUI_Builder {
 
     public GameUI_Builder game(
             String variant,
-            Class<? extends GameModel> gameModelClass,
+            Class<? extends Game> gameModelClass,
             MapSelector mapSelector,
             Class<? extends GameUI_Config> uiConfigClass)
     {
@@ -132,7 +132,7 @@ public class GameUI_Builder {
 
         configByGameVariant.forEach((gameVariant, config) -> {
             File highScoreFile = highScoreFile(gameContext.homeDir(), gameVariant);
-            GameModel gameModel = createGameModel(config.gameModelClass, config.mapSelector, gameContext, highScoreFile);
+            Game gameModel = createGameModel(config.gameModelClass, config.mapSelector, gameContext, highScoreFile);
             gameContext.gameController().registerGame(gameVariant, gameModel);
         });
 
@@ -169,9 +169,9 @@ public class GameUI_Builder {
         return new File(dir, "highscore-%s.xml".formatted(gameVariant).toLowerCase());
     }
 
-    private GameModel createGameModel(Class<?> modelClass, MapSelector mapSelector, GameContext gameContext, File highScoreFile) {
+    private Game createGameModel(Class<?> modelClass, MapSelector mapSelector, GameContext gameContext, File highScoreFile) {
         try {
-            return (GameModel) (mapSelector != null
+            return (Game) (mapSelector != null
                 ? modelClass.getDeclaredConstructor(GameContext.class, MapSelector.class, File.class).newInstance(gameContext, mapSelector, highScoreFile)
                 : modelClass.getDeclaredConstructor(GameContext.class, File.class).newInstance(gameContext, highScoreFile));
         } catch (Exception x) {

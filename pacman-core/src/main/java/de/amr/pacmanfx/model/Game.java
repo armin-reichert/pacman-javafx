@@ -17,6 +17,7 @@ public interface Game {
     MapSelector mapSelector();
 
     boolean areCutScenesEnabled();
+    void setCutScenesEnabled(boolean enabled);
     OptionalInt cutSceneNumber(int levelNumber);
 
     HUD theHUD();

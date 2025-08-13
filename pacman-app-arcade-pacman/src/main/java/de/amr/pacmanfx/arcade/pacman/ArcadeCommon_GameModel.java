@@ -23,7 +23,7 @@ import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
 /**
  * Common data and functionality of Pac-Man and Ms. Pac-Man Arcade games.
  */
-public abstract class ArcadeCommon_GameModel extends GameModel {
+public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
 
     public static final byte PELLET_VALUE = 10;
     public static final byte ENERGIZER_VALUE = 50;

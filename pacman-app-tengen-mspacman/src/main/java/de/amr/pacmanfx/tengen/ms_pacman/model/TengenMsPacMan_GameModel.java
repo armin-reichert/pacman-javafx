@@ -39,7 +39,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @see <a href="https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly">Ms.Pac-Man-NES-Tengen-Disassembly</a>
  */
-public class TengenMsPacMan_GameModel extends GameModel {
+public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     private static final byte FIRST_LEVEL_NUMBER = 1;
     private static final byte LAST_LEVEL_NUMBER = 32;

@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.event;
 
 import de.amr.pacmanfx.controller.GameState;
-import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.model.Game;
 
 public class GameStateChangeEvent extends GameEvent {
 
@@ -19,7 +19,7 @@ public class GameStateChangeEvent extends GameEvent {
         );
     }
 
-    public GameStateChangeEvent(GameModel game, GameState oldState, GameState newState) {
+    public GameStateChangeEvent(Game game, GameState oldState, GameState newState) {
         super(game, GameEventType.GAME_STATE_CHANGED);
         this.oldState = oldState;
         this.newState = newState;

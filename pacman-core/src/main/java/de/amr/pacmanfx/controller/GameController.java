@@ -11,7 +11,6 @@ import de.amr.pacmanfx.event.GameStateChangeEvent;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.GameModel;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -29,7 +28,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Controller (in the sense of MVC) for all game variants.
  * <br>Contains a finite-state machine ({@link StateMachine}) with states defined in {@link GameState}.
- * Each game variant is represented by an instance of a game model ({@link GameModel}).
+ * Each game variant is represented by an instance of a game model ({@link Game}).
  * Scene selection is not controlled by this class but left to the specific user interface implementations.
  *
  * @see <a href="https://github.com/armin-reichert">GitHub</a>
@@ -52,7 +51,7 @@ public class GameController implements GameContext {
 
     private final CoinMechanism coinMechanism = new CoinMechanism();
 
-    private final Map<String, GameModel> knownGames = new HashMap<>();
+    private final Map<String, Game> knownGames = new HashMap<>();
     private final StringProperty gameVariantProperty = new SimpleStringProperty();
 
     private final StateMachine<GameState, GameContext> gameStateMachine;
@@ -74,7 +73,7 @@ public class GameController implements GameContext {
 
         gameVariantProperty.addListener((py, ov, newGameVariant) -> {
             if (eventsEnabled) {
-                GameModel newGame = game(newGameVariant);
+                Game newGame = game(newGameVariant);
                 newGame.init();
                 gameEventManager.publishEvent(GameEventType.GAME_VARIANT_CHANGED);
             }
@@ -119,7 +118,7 @@ public class GameController implements GameContext {
      * @param variant game variant (e.g. "PACMAN", "MS_PACMAN", "MS_PACMAN_TENGEN", "PACMAN_XXL", "MS_PACMAN_XXL"
      * @param gameModel the game model implementing the game variant
      */
-    public void registerGame(String variant, GameModel gameModel) {
+    public void registerGame(String variant, Game gameModel) {
         requireNonNull(variant);
         if (!GAME_VARIANT_PATTERN.matcher(variant).matches()) {
             throw new IllegalArgumentException("Game variant name '%s' does not match required syntax '%s'"

@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.Direction;
-import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.MapSelectionMode;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -290,7 +290,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
     }
 
     public void syncMenuState() {
-        final GameModel game = gameContext.gameController().game(state.gameVariant);
+        final Game game = gameContext.gameController().game(state.gameVariant);
         final var mapSelector = (PacManXXL_Common_MapSelector) game.mapSelector();
         mapSelector.loadAllMaps();
         final boolean customMapsExist = !mapSelector.customMaps().isEmpty();
@@ -340,7 +340,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
     }
 
     private void startGame() {
-        GameModel game = gameContext.gameController().game(state.gameVariant);
+        Game game = gameContext.gameController().game(state.gameVariant);
         game.setCutScenesEnabled(state.cutScenesEnabled);
         var mapSelector = (PacManXXL_Common_MapSelector) game.mapSelector();
         mapSelector.setMapSelectionMode(state.mapOrder);

@@ -7,8 +7,8 @@ package de.amr.pacmanfx.steering;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.model.Game;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.GameModel;
 import de.amr.pacmanfx.model.actors.*;
 import org.tinylog.Logger;
 
@@ -67,9 +67,9 @@ public class RuleBasedPacSteering implements Steering {
     }
 
 
-    private final GameModel game;
+    private final Game game;
 
-    public RuleBasedPacSteering(GameModel game) {
+    public RuleBasedPacSteering(Game game) {
         this.game = game;
     }
 
@@ -85,7 +85,7 @@ public class RuleBasedPacSteering implements Steering {
         takeAction(game, data);
     }
 
-    private CollectedData collectData(GameModel game) {
+    private CollectedData collectData(Game game) {
         GameLevel level = game.level().orElseThrow();
         var data = new CollectedData();
         var pac = level.pac();
@@ -108,7 +108,7 @@ public class RuleBasedPacSteering implements Steering {
         return data;
     }
 
-    private void takeAction(GameModel game, CollectedData data) {
+    private void takeAction(Game game, CollectedData data) {
         GameLevel level = game.level().orElseThrow();
         var pac = level.pac();
         if (data.hunterAhead != null) {
@@ -147,7 +147,7 @@ public class RuleBasedPacSteering implements Steering {
         });
     }
 
-    private boolean isEdibleBonusNearPac(GameModel game, Pac pac) {
+    private boolean isEdibleBonusNearPac(Game game, Pac pac) {
         GameLevel level = game.level().orElseThrow();
         if (level.bonus().isPresent()) {
             var bonus = level.bonus().get();

@@ -12,7 +12,7 @@ import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_PlayScene2D;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
-import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
@@ -274,7 +274,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config {
             }
             case GameState.TESTING_CUT_SCENES -> {
                 //TODO
-                if (gameContext.game() instanceof GameModel gameModel) {
+                if (gameContext.game() instanceof AbstractGameModel gameModel) {
                     int cutSceneNumber = gameModel.<Integer>getProperty("intermissionTestNumber");
                     yield SCENE_ID_CUT_SCENE_N_2D.formatted(cutSceneNumber);
                 }

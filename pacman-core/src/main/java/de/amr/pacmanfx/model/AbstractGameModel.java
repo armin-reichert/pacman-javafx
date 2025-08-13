@@ -26,7 +26,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Common base class of all Pac-Man game models.
  */
-public abstract class GameModel implements Game {
+public abstract class AbstractGameModel implements Game {
 
     protected final BooleanProperty playingProperty = new SimpleBooleanProperty(false);
     protected final IntegerProperty lifeCountProperty = new SimpleIntegerProperty(0);
@@ -37,7 +37,7 @@ public abstract class GameModel implements Game {
     protected int initialLifeCount;
     protected final SimulationStep simulationStep = new SimulationStep();
 
-    protected GameModel(GameContext gameContext) {
+    protected AbstractGameModel(GameContext gameContext) {
         this.gameContext = requireNonNull(gameContext);
         cutScenesEnabled = true;
     }
@@ -124,6 +124,9 @@ public abstract class GameModel implements Game {
     public boolean areCutScenesEnabled() { return cutScenesEnabled; }
 
     @Override
+    public void setCutScenesEnabled(boolean enabled) { cutScenesEnabled = enabled; }
+
+    @Override
     public int initialLifeCount() {
         return initialLifeCount;
     }
@@ -153,7 +156,6 @@ public abstract class GameModel implements Game {
     }
 
     public BooleanProperty playingProperty() { return playingProperty; }
-    public void setCutScenesEnabled(boolean enabled) { cutScenesEnabled = enabled; }
 
     public void setLifeCount(int n) {
         if (n >= 0) {

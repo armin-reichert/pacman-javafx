@@ -11,7 +11,7 @@ import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.GameModel;
+import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
@@ -496,14 +496,14 @@ public enum GameState implements FsmState<GameContext> {
         public void onEnter(GameContext context) {
             timer.restartIndefinitely();
             //TODO
-            if (context.game() instanceof GameModel gameModel) {
+            if (context.game() instanceof AbstractGameModel gameModel) {
                 gameModel.setProperty("intermissionTestNumber", 1);
             }
         }
 
         @Override
         public void onUpdate(GameContext context) {
-            if (context.game() instanceof GameModel gameModel) {
+            if (context.game() instanceof AbstractGameModel gameModel) {
                 if (timer.hasExpired()) {
                     int number = gameModel.<Integer>getProperty("intermissionTestNumber");
                     int lastCutSceneNumber = context.gameController().isSelected("MS_PACMAN_TENGEN") ? 4 : 3;
