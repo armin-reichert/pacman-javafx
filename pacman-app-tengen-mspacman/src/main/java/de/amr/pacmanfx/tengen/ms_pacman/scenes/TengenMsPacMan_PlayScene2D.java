@@ -6,8 +6,8 @@ package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
 import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.controller.GameState;
-import de.amr.pacmanfx.controller.LevelMediumTestState;
-import de.amr.pacmanfx.controller.LevelShortTestState;
+import de.amr.pacmanfx.controller.teststates.LevelMediumTestState;
+import de.amr.pacmanfx.controller.teststates.LevelShortTestState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;

@@ -1,6 +1,8 @@
-package de.amr.pacmanfx.controller;
+package de.amr.pacmanfx.controller.teststates;
 
 import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.controller.GamePlayState;
+import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.GameLevel;

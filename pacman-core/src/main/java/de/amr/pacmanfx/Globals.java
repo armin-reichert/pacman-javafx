@@ -4,7 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx;
 
-import de.amr.pacmanfx.controller.*;
+import de.amr.pacmanfx.controller.GameController;
+import de.amr.pacmanfx.controller.GamePlayState;
+import de.amr.pacmanfx.controller.GameState;
+import de.amr.pacmanfx.controller.teststates.CutScenesTestState;
+import de.amr.pacmanfx.controller.teststates.LevelMediumTestState;
+import de.amr.pacmanfx.controller.teststates.LevelShortTestState;
 
 import java.util.ArrayList;
 import java.util.List;

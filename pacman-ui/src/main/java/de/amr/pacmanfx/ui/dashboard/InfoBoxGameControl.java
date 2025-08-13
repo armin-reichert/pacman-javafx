@@ -5,9 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui.dashboard;
 
 import de.amr.pacmanfx.controller.CoinMechanism;
-import de.amr.pacmanfx.controller.CutScenesTestState;
 import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.controller.GameState;
+import de.amr.pacmanfx.controller.teststates.CutScenesTestState;
 import de.amr.pacmanfx.ui.CommonGameActions;
 import de.amr.pacmanfx.ui.api.GameUI;
 import javafx.scene.control.Button;

@@ -6,8 +6,8 @@ package de.amr.pacmanfx.ui._3d;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.controller.GameState;
-import de.amr.pacmanfx.controller.LevelMediumTestState;
-import de.amr.pacmanfx.controller.LevelShortTestState;
+import de.amr.pacmanfx.controller.teststates.LevelMediumTestState;
+import de.amr.pacmanfx.controller.teststates.LevelShortTestState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
