@@ -59,8 +59,8 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         clapperboard = new Clapperboard(spriteSheet, 4, "THE END");
         clapperboard.setPosition(3*TS, 10*TS);
         clapperboard.setFont(scaledArcadeFont8());
-        msPacMan = createMsPacMan(null);
-        pacMan = createPacMan(null);
+        msPacMan = createMsPacMan();
+        pacMan = createPacMan();
         msPacMan.setAnimations(ui.currentConfig().createPacAnimations(msPacMan));
         pacMan  .setAnimations(ui.currentConfig().createPacAnimations(pacMan));
         juniors = new ArrayList<>();
@@ -152,7 +152,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     }
 
     private void spawnJunior() {
-        var junior = createPacMan(null);
+        var junior = createPacMan();
         double randomX = 8 * TS + (8 * TS) * Math.random();
         junior.setPosition((float) randomX, sizeInPx().y() - 4 * TS);
         junior.setMoveDir(Direction.UP);

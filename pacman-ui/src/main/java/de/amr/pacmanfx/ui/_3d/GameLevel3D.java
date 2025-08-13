@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui._3d;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.lib.Disposable;
@@ -288,7 +289,7 @@ public class GameLevel3D extends Group implements Disposable {
         createLevelCounter3D();
         createLivesCounter3D();
         createPac3D();
-        createGhosts3D();
+        createGhosts3D(ui.gameContext());
         createMaze3D();
         createPellets3D();
         createEnergizers3D();
@@ -418,7 +419,7 @@ public class GameLevel3D extends Group implements Disposable {
         }
     }
 
-    private void createGhosts3D() {
+    private void createGhosts3D(GameContext gameContext) {
         ghosts3D = gameLevel.ghosts().map(ghost -> {
             var ghostColoring = new GhostColoring(
                 ui.currentConfig().localAssetColor("ghost.%d.color.normal.dress".formatted(ghost.personality())),
@@ -442,12 +443,12 @@ public class GameLevel3D extends Group implements Disposable {
                 gameLevel.data().numFlashes()
             );
         }).toList();
-        ghosts3D.forEach(ghost3D -> ghost3D.init(gameLevel));
+        ghosts3D.forEach(ghost3D -> ghost3D.init(gameContext, gameLevel));
     }
 
     private void createPac3D() {
-        pac3D = ui.currentConfig().createPac3D(animationRegistry, gameLevel.pac());
-        pac3D.init();
+        pac3D = ui.currentConfig().createPac3D(animationRegistry, gameLevel, gameLevel.pac());
+        pac3D.init(gameLevel);
     }
 
     private void createLivesCounter3D() {
@@ -678,9 +679,9 @@ public class GameLevel3D extends Group implements Disposable {
     /**
      * Called on each clock tick (frame).
      */
-    public void tick() {
-        pac3D.update();
-        ghosts3D.forEach(ghost3D -> ghost3D.update(gameLevel));
+    public void tick(GameContext gameContext) {
+        pac3D.update(gameLevel);
+        ghosts3D.forEach(ghost3D -> ghost3D.update(gameContext, gameLevel));
         bonus3D().ifPresent(bonus3D -> bonus3D.update(ui.gameContext()));
         if (house3D != null) {
             house3D.tick(gameLevel);
@@ -704,9 +705,9 @@ public class GameLevel3D extends Group implements Disposable {
         }
     }
 
-    public void onHuntingStart() {
-        pac3D.init();
-        ghosts3D.forEach(ghost3D -> ghost3D.init(gameLevel));
+    public void onHuntingStart(GameContext gameContext) {
+        pac3D.init(gameLevel);
+        ghosts3D.forEach(ghost3D -> ghost3D.init(gameContext, gameLevel));
         energizers3D().forEach(Energizer3D::startPumping);
         house3D.startSwirlAnimations();
         ghostLightAnimation.playFromStart();
@@ -717,7 +718,7 @@ public class GameLevel3D extends Group implements Disposable {
         ui.soundManager().stopAll();
         ghostLightAnimation.stop();
         // do one last update before dying animation starts
-        pac3D.update();
+        pac3D.update(gameLevel);
         ghosts3D.forEach(MutatingGhost3D::stopAllAnimations);
         bonus3D().ifPresent(Bonus3D::expire);
         var animation = new SequentialTransition(

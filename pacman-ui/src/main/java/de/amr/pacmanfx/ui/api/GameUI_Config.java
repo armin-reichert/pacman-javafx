@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui.api;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.ActorAnimationMap;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -90,7 +91,7 @@ public interface GameUI_Config extends Disposable {
 
     ActorAnimationMap createPacAnimations(Pac pac);
 
-    PacBase3D createPac3D(AnimationRegistry animationMgr, Pac pac);
+    PacBase3D createPac3D(AnimationRegistry animationMgr, GameLevel gameLevel, Pac pac);
 
     default boolean hasGameCanvasRoundedBorder() { return true; }
 

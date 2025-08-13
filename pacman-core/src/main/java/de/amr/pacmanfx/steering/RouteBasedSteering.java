@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.steering;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.Waypoint;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.MovingActor;
@@ -18,11 +19,13 @@ import static java.util.Objects.requireNonNull;
  */
 public class RouteBasedSteering implements Steering {
 
+    private final GameContext gameContext;
     private final List<Waypoint> route;
     private int targetIndex;
     private boolean complete;
 
-    public RouteBasedSteering(List<Waypoint> route) {
+    public RouteBasedSteering(GameContext gameContext, List<Waypoint> route) {
+        this.gameContext = requireNonNull(gameContext);
         this.route = requireNonNull(route);
         init();
     }
@@ -39,12 +42,12 @@ public class RouteBasedSteering implements Steering {
 
     @Override
     public void steer(MovingActor movingActor, GameLevel level) {
-        movingActor.navigateTowardsTarget();
+        movingActor.navigateTowardsTarget(gameContext);
         if (targetIndex == route.size()) {
             complete = true;
         } else if (movingActor.optTargetTile().isEmpty()) {
             movingActor.setTargetTile(currentTarget().tile());
-            movingActor.navigateTowardsTarget();
+            movingActor.navigateTowardsTarget(gameContext);
             Logger.trace("New target tile for {}={}s", movingActor.name(), movingActor.targetTile());
         } else if (movingActor.tile().equals(currentTarget().tile())) {
             nextTarget(movingActor);
@@ -56,7 +59,7 @@ public class RouteBasedSteering implements Steering {
         ++targetIndex;
         if (targetIndex < route.size()) {
             movingActor.setTargetTile(currentTarget().tile());
-            movingActor.navigateTowardsTarget();
+            movingActor.navigateTowardsTarget(gameContext);
         }
     }
 

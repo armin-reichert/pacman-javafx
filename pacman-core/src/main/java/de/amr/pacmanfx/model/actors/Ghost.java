@@ -43,7 +43,6 @@ public abstract class Ghost extends MovingActor implements Animated {
     private ActorAnimationMap animationMap;
 
     /**
-     * @param gameContext the game context for this ghost, may be null for example in cut scenes
      * @param personality ghost personality, allowed values are
      *          {@link de.amr.pacmanfx.Globals#RED_GHOST_SHADOW},
      *          {@link de.amr.pacmanfx.Globals#PINK_GHOST_SPEEDY},
@@ -51,8 +50,7 @@ public abstract class Ghost extends MovingActor implements Animated {
      *          {@link de.amr.pacmanfx.Globals#ORANGE_GHOST_POKEY}
      * @param name readable name, used for logging and debugging
      */
-    protected Ghost(GameContext gameContext, byte personality, String name) {
-        super(gameContext);
+    protected Ghost(byte personality, String name) {
         this.personality = requireValidGhostPersonality(personality);
         this.name = requireNonNull(name);
         corneringSpeedUp = -1.25f;
@@ -106,7 +104,7 @@ public abstract class Ghost extends MovingActor implements Animated {
      * Subclasses implement this method to define the behavior of the ghost when hunting Pac-Man through
      * the current game level.
      */
-    public abstract void hunt();
+    public abstract void hunt(GameContext gameContext);
 
     /**
      * Subclasses implement this method to define the target tile of the ghost when hunting Pac-Man through
@@ -114,7 +112,7 @@ public abstract class Ghost extends MovingActor implements Animated {
      *
      * @return the current target tile when chasing Pac-Man
      */
-    public abstract Vector2i chasingTargetTile();
+    public abstract Vector2i chasingTargetTile(GameContext gameContext);
 
     /**
      * Lets the ghost roam through the current level's world.
@@ -126,23 +124,23 @@ public abstract class Ghost extends MovingActor implements Animated {
      Roam if you want to, without anything but the love we feel!
      </cite>
      */
-    public void roam() {
+    public void roam(GameContext gameContext) {
         if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
 
         GameLevel level = gameContext.gameLevel();
         Vector2i currentTile = tile();
         if (!level.isTileInPortalSpace(currentTile) && (isNewTileEntered() || !moveInfo.moved)) {
-            Direction dir = computeRoamingDirection(currentTile);
+            Direction dir = computeRoamingDirection(gameContext, currentTile);
             setWishDir(dir);
         }
-        findMyWayThroughThisCruelWorld();
+        findMyWayThroughThisCruelWorld(gameContext);
     }
 
     // try a random direction towards an accessible tile, do not turn back unless there is no other way
-    private Direction computeRoamingDirection(Vector2i currentTile) {
+    private Direction computeRoamingDirection(GameContext gameContext, Vector2i currentTile) {
         Direction dir = pseudoRandomDirection();
         int turns = 0;
-        while (dir == moveDir().opposite() || !canAccessTile(currentTile.plus(dir.vector()))) {
+        while (dir == moveDir().opposite() || !canAccessTile(gameContext, currentTile.plus(dir.vector()))) {
             dir = dir.nextClockwise();
             if (++turns > 4) {
                 return moveDir().opposite();  // avoid endless loop
@@ -160,7 +158,7 @@ public abstract class Ghost extends MovingActor implements Animated {
     }
 
     @Override
-    public boolean canAccessTile(Vector2i tile) {
+    public boolean canAccessTile(GameContext gameContext, Vector2i tile) {
         requireNonNull(tile);
 
         if (gameContext == null || gameContext.optGameLevel().isEmpty()) return true;
@@ -243,18 +241,18 @@ public abstract class Ghost extends MovingActor implements Animated {
      * Updates the state of this ghost in the current game context.
      */
     @Override
-    public void tick() {
+    public void tick(GameContext gameContext) {
         if (gameContext == null) {
             return; // might happen for ghosts in cut scenes
         }
         switch (state()) {
-            case LOCKED         -> updateStateLocked();
-            case LEAVING_HOUSE  -> updateStateLeavingHouse();
-            case HUNTING_PAC    -> updateStateHuntingPac();
-            case FRIGHTENED     -> updateStateFrightened();
+            case LOCKED         -> updateStateLocked(gameContext);
+            case LEAVING_HOUSE  -> updateStateLeavingHouse(gameContext);
+            case HUNTING_PAC    -> updateStateHuntingPac(gameContext);
+            case FRIGHTENED     -> updateStateFrightened(gameContext);
             case EATEN          -> updateStateEaten();
-            case RETURNING_HOME -> updateStateReturningToHouse();
-            case ENTERING_HOUSE -> updateStateEnteringHouse();
+            case RETURNING_HOME -> updateStateReturningToHouse(gameContext);
+            case ENTERING_HOUSE -> updateStateEnteringHouse(gameContext);
         }
     }
 
@@ -269,7 +267,7 @@ public abstract class Ghost extends MovingActor implements Animated {
      * In locked state, ghosts inside the house are bouncing up and down. They become blue when Pac-Man gets power
      * and start blinking when Pac-Man's power starts fading. After that, they return to their normal color.
      */
-    private void updateStateLocked() {
+    private void updateStateLocked(GameContext gameContext) {
         if (gameContext.optGameLevel().isPresent()) {
             GameLevel level = gameContext.gameLevel();
             House house = level.house().orElse(null);
@@ -295,7 +293,7 @@ public abstract class Ghost extends MovingActor implements Animated {
                 setSpeed(0);
             }
             if (level.pac().powerTimer().isRunning() && !level.victims().contains(this)) {
-                updateFrightenedAnimation();
+                updateFrightenedAnimation(gameContext);
             } else {
                 selectAnimation(ANIM_GHOST_NORMAL);
             }
@@ -311,7 +309,7 @@ public abstract class Ghost extends MovingActor implements Animated {
      * <p>
      * The ghost speed is slower than outside, but I do not know the exact value.
      */
-    private void updateStateLeavingHouse() {
+    private void updateStateLeavingHouse(GameContext gameContext) {
         if (gameContext.optGameLevel().isPresent()) {
             GameLevel level = gameContext.gameLevel();
             House house = level.house().orElse(null);
@@ -351,7 +349,7 @@ public abstract class Ghost extends MovingActor implements Animated {
             setSpeed(speedInsideHouse);
             move();
             if (level.pac().powerTimer().isRunning() && !level.victims().contains(this)) {
-                updateFrightenedAnimation();
+                updateFrightenedAnimation(gameContext);
             } else {
                 selectAnimation(ANIM_GHOST_NORMAL);
             }
@@ -367,11 +365,11 @@ public abstract class Ghost extends MovingActor implements Animated {
      * is an "infinite" chasing phase.
      * <p>
      */
-    private void updateStateHuntingPac() {
+    private void updateStateHuntingPac(GameContext gameContext) {
         if (gameContext.optGameLevel().isPresent()) {
             // The specific hunting behaviour is defined by the game variant. For example, in Ms. Pac-Man,
             // the red and pink ghosts are not chasing Pac-Man during the first scatter phase, but roam the maze randomly.
-            hunt();
+            hunt(gameContext);
         }
     }
 
@@ -389,7 +387,7 @@ public abstract class Ghost extends MovingActor implements Animated {
      *
      * @see <a href="https://www.youtube.com/watch?v=eFP0_rkjwlY">YouTube: How Frightened Ghosts Decide Where to Go</a>
      */
-    private void updateStateFrightened() {
+    private void updateStateFrightened(GameContext gameContext) {
         if (gameContext.optGameLevel().isPresent()) {
             GameLevel level = gameContext.gameLevel();
             House house = level.house().orElse(null);
@@ -401,12 +399,12 @@ public abstract class Ghost extends MovingActor implements Animated {
                 ? gameContext.game().actorSpeedControl().ghostTunnelSpeed(gameContext, level, this)
                 : gameContext.game().actorSpeedControl().ghostFrightenedSpeed(gameContext, level, this);
             setSpeed(speed);
-            roam();
-            updateFrightenedAnimation();
+            roam(gameContext);
+            updateFrightenedAnimation(gameContext);
         }
     }
 
-    private void updateFrightenedAnimation() {
+    private void updateFrightenedAnimation(GameContext gameContext) {
         if (gameContext.optGameLevel().isPresent()) {
             GameLevel level = gameContext.gameLevel();
             House house = level.house().orElse(null);
@@ -414,9 +412,9 @@ public abstract class Ghost extends MovingActor implements Animated {
                 Logger.error("No ghost house in level? WTF!");
                 return;
             }
-            if (level.pac().isPowerFadingStarting()) {
+            if (level.pac().isPowerFadingStarting(gameContext)) {
                 playAnimation(ANIM_GHOST_FLASHING);
-            } else if (!level.pac().isPowerFading()) {
+            } else if (!level.pac().isPowerFading(gameContext)) {
                 playAnimation(ANIM_GHOST_FRIGHTENED);
             }
         }
@@ -437,7 +435,7 @@ public abstract class Ghost extends MovingActor implements Animated {
      * After the short time being displayed by his value, the eaten ghost is displayed by his eyes only and returns
      * to the ghost house to be revived. Hallelujah!
      */
-    private void updateStateReturningToHouse() {
+    private void updateStateReturningToHouse(GameContext gameContext) {
         if (gameContext.optGameLevel().isPresent()) {
             GameLevel level = gameContext.gameLevel();
             House house = level.house().orElse(null);
@@ -455,8 +453,8 @@ public abstract class Ghost extends MovingActor implements Animated {
             } else {
                 setSpeed(speed);
                 setTargetTile(house.leftDoorTile());
-                navigateTowardsTarget();
-                findMyWayThroughThisCruelWorld();
+                navigateTowardsTarget(gameContext);
+                findMyWayThroughThisCruelWorld(gameContext);
             }
         }
     }
@@ -467,7 +465,7 @@ public abstract class Ghost extends MovingActor implements Animated {
      * When an eaten ghost has arrived at the ghost house door, he falls down to the center of the house,
      * then moves up again (if the house center is his revival position), or moves sidewards towards his revival position.
      */
-    private void updateStateEnteringHouse() {
+    private void updateStateEnteringHouse(GameContext gameContext) {
         if (gameContext.optGameLevel().isPresent()) {
             GameLevel level = gameContext.gameLevel();
             House house = level.house().orElse(null);

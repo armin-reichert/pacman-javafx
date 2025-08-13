@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.model3D;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.Vector2f;
@@ -65,7 +66,6 @@ public class MutatingGhost3D extends Group implements Disposable {
     private Ghost3D ghost3D;
     private Box numberBox;
 
-    private final AnimationRegistry animationRegistry;
     private ManagedAnimation brakeAnimation;
     private ManagedAnimation pointsAnimation;
 
@@ -80,7 +80,7 @@ public class MutatingGhost3D extends Group implements Disposable {
         double size,
         int numFlashes)
     {
-        this.animationRegistry = requireNonNull(animationRegistry);
+        requireNonNull(animationRegistry);
         this.ghost = requireNonNull(ghost);
         this.coloring = requireNonNull(coloring);
         requireNonNull(dressShape);
@@ -233,10 +233,10 @@ public class MutatingGhost3D extends Group implements Disposable {
         ghost3D.flashingAnimation().stop();
     }
 
-    public void init(GameLevel gameLevel) {
+    public void init(GameContext gameContext, GameLevel gameLevel) {
         stopAllAnimations();
         update3DTransform();
-        selectAppearance(gameLevel);
+        selectAppearance(gameContext, gameLevel);
     }
 
     /**
@@ -244,8 +244,8 @@ public class MutatingGhost3D extends Group implements Disposable {
      *
      * @param gameLevel the game level
      */
-    public void update(GameLevel gameLevel) {
-        selectAppearance(gameLevel);
+    public void update(GameContext gameContext, GameLevel gameLevel) {
+        selectAppearance(gameContext, gameLevel);
         if (ghost.isVisible()) {
             ghost3D.dressAnimation().playOrContinue();
         } else {
@@ -297,8 +297,8 @@ public class MutatingGhost3D extends Group implements Disposable {
         }
     }
 
-    private void selectAppearance(GameLevel level) {
-        boolean powerFading = level.pac().isPowerFading();
+    private void selectAppearance(GameContext gameContext, GameLevel level) {
+        boolean powerFading = level.pac().isPowerFading(gameContext);
         boolean powerActive = level.pac().powerTimer().isRunning();
         // ghost that got killed already during the current power phase do not look frightened anymore
         boolean killedDuringCurrentPhase = level.victims().contains(ghost);

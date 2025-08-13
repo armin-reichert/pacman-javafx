@@ -60,11 +60,11 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     public void doInit() {
         var spriteSheet = (ArcadeMsPacMan_SpriteSheet) ui.currentConfig().spriteSheet();
 
-        pacMan = createPacMan(null);
-        msPacMan = createMsPacMan(null);
-        inky = createGhost(null, CYAN_GHOST_BASHFUL);
-        pinky = createGhost(null, PINK_GHOST_SPEEDY);
-        heart = new SingleSpriteActor(null, spriteSheet.sprite(SpriteID.HEART));
+        pacMan = createPacMan();
+        msPacMan = createMsPacMan();
+        inky = createGhost(CYAN_GHOST_BASHFUL);
+        pinky = createGhost(PINK_GHOST_SPEEDY);
+        heart = new SingleSpriteActor(spriteSheet.sprite(SpriteID.HEART));
 
         final GameUI_Config config = ui.currentConfig();
         msPacMan.setAnimations(config.createPacAnimations(msPacMan));

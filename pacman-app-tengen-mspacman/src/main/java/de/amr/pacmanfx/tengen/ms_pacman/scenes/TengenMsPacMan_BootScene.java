@@ -52,8 +52,8 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
         tick = 0;
         grayScreen = false;
 
-        movingText = new Actor(null);
-        ghost = createGhost(null, RED_GHOST_SHADOW);
+        movingText = new Actor();
+        ghost = createGhost(RED_GHOST_SHADOW);
         ghost.setSpeed(0);
         ghost.setAnimations(ui.currentConfig().createGhostAnimations(ghost));
         ghost.selectAnimation(ANIM_GHOST_NORMAL);

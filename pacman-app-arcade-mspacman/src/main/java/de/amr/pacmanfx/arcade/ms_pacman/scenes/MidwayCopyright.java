@@ -13,7 +13,6 @@ public class MidwayCopyright extends Actor {
     private final Image logo;
 
     public MidwayCopyright(Image logo) {
-        super(null);
         this.logo = requireNonNull(logo);
     }
 

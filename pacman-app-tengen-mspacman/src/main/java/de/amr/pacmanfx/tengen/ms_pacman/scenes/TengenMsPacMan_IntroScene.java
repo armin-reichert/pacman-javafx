@@ -83,7 +83,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         actionBindings.assign(ACTION_ENTER_START_SCREEN, tengenBindings);
         actionBindings.assign(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, tengenBindings);
 
-        presentsText = new Actor(null);
+        presentsText = new Actor();
         presentsText.setPosition(9 * TS, MARQUEE_Y - TS);
         sceneController.restart(SceneState.WAITING_FOR_START);
     }
@@ -214,17 +214,17 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
             public void onEnter(TengenMsPacMan_IntroScene scene) {
                 timer.restartTicks(TickTimer.INDEFINITE);
 
-                scene.msPacMan = createMsPacMan(null);
+                scene.msPacMan = createMsPacMan();
                 scene.msPacMan.setPosition(TS * 33, ACTOR_Y);
                 scene.msPacMan.setMoveDir(Direction.LEFT);
                 scene.msPacMan.setSpeed(SPEED);
                 scene.msPacMan.setVisible(true);
 
                 scene.ghosts = List.of(
-                    createGhost(null, RED_GHOST_SHADOW),
-                    createGhost(null, CYAN_GHOST_BASHFUL),
-                    createGhost(null, PINK_GHOST_SPEEDY),
-                    createGhost(null, ORANGE_GHOST_POKEY)
+                    createGhost(RED_GHOST_SHADOW),
+                    createGhost(CYAN_GHOST_BASHFUL),
+                    createGhost(PINK_GHOST_SPEEDY),
+                    createGhost(ORANGE_GHOST_POKEY)
                 );
                 for (Ghost ghost : scene.ghosts) {
                     ghost.setPosition(TS * 33, ACTOR_Y);

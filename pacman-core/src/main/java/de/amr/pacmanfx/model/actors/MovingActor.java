@@ -46,11 +46,7 @@ public abstract class MovingActor extends Actor {
     //TODO this is just a cheap method to provide cornering speed differences
     protected float corneringSpeedUp;
 
-    public MovingActor(GameContext gameContext) {
-        super(gameContext);
-    }
-
-    public abstract void tick();
+    public abstract void tick(GameContext gameContext);
 
     @Override
     public String toString() {
@@ -101,10 +97,11 @@ public abstract class MovingActor extends Actor {
     public abstract boolean canReverse();
 
     /**
+     * @param gameContext the game context
      * @param tile some tile inside or outside the world
      * @return if this actor can access the given tile in its game context
      */
-    public abstract boolean canAccessTile(Vector2i tile);
+    public abstract boolean canAccessTile(GameContext gameContext, Vector2i tile);
 
     public final ObjectProperty<Vector2i> targetTileProperty() {
         if (targetTile == null) {
@@ -269,7 +266,7 @@ public abstract class MovingActor extends Actor {
         return newTileEntered;
     }
 
-    public void navigateTowardsTarget() {
+    public void navigateTowardsTarget(GameContext gameContext) {
         if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
 
         GameLevel level = gameContext.gameLevel();
@@ -290,7 +287,7 @@ public abstract class MovingActor extends Actor {
                 continue; // reversing the move direction is not allowed  (except to get out of dead-ends, see below)
             }
             final Vector2i neighborTile = currentTile.plus(dir.vector());
-            if (canAccessTile(neighborTile)) {
+            if (canAccessTile(gameContext, neighborTile)) {
                 double dist = neighborTile.euclideanDist(targetTile());
                 if (dist < minDistToTarget) {
                     minDistToTarget = dist;
@@ -307,11 +304,11 @@ public abstract class MovingActor extends Actor {
      *
      * @param targetTile target tile this actor tries to reach
      */
-    public void tryMovingTowardsTargetTile(Vector2i targetTile) {
+    public void tryMovingTowardsTargetTile(GameContext gameContext, Vector2i targetTile) {
         if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
         setTargetTile(targetTile);
-        navigateTowardsTarget();
-        findMyWayThroughThisCruelWorld();
+        navigateTowardsTarget(gameContext);
+        findMyWayThroughThisCruelWorld(gameContext);
     }
 
     private void tryTeleport(Vector2i currentTile, Portal portal) {
@@ -333,7 +330,7 @@ public abstract class MovingActor extends Actor {
      * First checks if the actor can be teleported, then if the actor can move to its wish direction. If this is not
      * possible, it keeps moving to its current move direction.
      */
-    public void findMyWayThroughThisCruelWorld() {
+    public void findMyWayThroughThisCruelWorld(GameContext gameContext) {
         if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
 
         GameLevel level = gameContext.gameLevel();
@@ -353,22 +350,22 @@ public abstract class MovingActor extends Actor {
                 Logger.trace("{}: turned around at tile {}", name(), tile());
                 gotReverseCommand = false;
             }
-            tryMovingTowards(level, currentTile, wishDir());
+            tryMovingTowards(gameContext, level, currentTile, wishDir());
             if (moveInfo.moved) {
                 setMoveDir(wishDir());
             } else {
-                tryMovingTowards(level, currentTile, moveDir());
+                tryMovingTowards(gameContext, level, currentTile, moveDir());
             }
         }
     }
 
-    private void tryMovingTowards(GameLevel level, Vector2i tileBeforeMoving, Direction dir) {
+    private void tryMovingTowards(GameContext gameContext, GameLevel level, Vector2i tileBeforeMoving, Direction dir) {
         final Vector2f newVelocity = dir.vector().scaled(velocity().length());
         final Vector2f touchPosition = center().plus(dir.vector().scaled((float) HTS)).plus(newVelocity);
         final Vector2i touchedTile = tileAt(touchPosition);
         final boolean turn = dir.vector().isOrthogonalTo(moveDir().vector());
 
-        if (!canAccessTile(touchedTile)) {
+        if (!canAccessTile(gameContext, touchedTile)) {
             if (!turn) {
                 placeAtTile(tile()); // adjust over tile (would move forward against wall)
             }

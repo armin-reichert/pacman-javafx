@@ -45,8 +45,8 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     
     @Override
     public void doInit() {
-        pacMan = createPacMan(null);
-        msPacMan = createMsPacMan(null);
+        pacMan = createPacMan();
+        msPacMan = createMsPacMan();
 
         msPacMan.setAnimations(ui.currentConfig().createPacAnimations(msPacMan));
         pacMan.setAnimations(ui.currentConfig().createPacAnimations(pacMan));

@@ -4,15 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model.actors;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
-
-import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
@@ -32,27 +29,10 @@ public class Actor {
     public static final Vector2f DEFAULT_VELOCITY = Vector2f.ZERO;
     public static final boolean DEFAULT_VISIBILITY = false;
 
-    protected final GameContext gameContext;
-
     private ObjectProperty<Vector2f> position;
     private BooleanProperty visible;
     private ObjectProperty<Vector2f> velocity;
     private ObjectProperty<Vector2f> acceleration;
-
-    /**
-     * @param gameContext the game context for this actor, may be null
-     */
-    public Actor(GameContext gameContext) {
-        this.gameContext = gameContext;
-    }
-
-    public GameContext gameContext() {
-        return gameContext;
-    }
-
-    public Optional<GameContext> optGameContext() {
-        return Optional.ofNullable(gameContext);
-    }
 
     /**
      * Resets all properties of this actor thingy to their default state. Note: actor is invisible by default!

@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.model3D;
 
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -20,6 +21,7 @@ public class PacMan3D extends PacBase3D {
     public PacMan3D(
         Model3DRepository model3DRepository,
         AnimationRegistry animationRegistry,
+        GameLevel gameLevel,
         Pac pac,
         double size,
         Color headColor, Color eyesColor, Color palateColor)
@@ -51,7 +53,7 @@ public class PacMan3D extends PacBase3D {
                 sinking.setToZ(0);
 
                 return new SequentialTransition(
-                    doNow(PacMan3D.this::init), // TODO check this
+                    doNow(() -> PacMan3D.this.init(gameLevel)), // TODO check this
                     new ParallelTransition(spinning, new SequentialTransition(shrinking, expanding), sinking),
                     pauseSec(1.0, () -> {
                         setVisible(false);

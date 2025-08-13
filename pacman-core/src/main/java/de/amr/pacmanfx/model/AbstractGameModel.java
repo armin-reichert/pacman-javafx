@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.timer.Pulse;
@@ -90,16 +91,16 @@ public abstract class AbstractGameModel implements Game {
     }
 
     @Override
-    public void doHuntingStep() {
+    public void doHuntingStep(GameContext gameContext) {
         requireNonNull(level, "Game level not existing");
         gateKeeper().ifPresent(gateKeeper -> gateKeeper.unlockGhosts(level));
 
         huntingTimer().update(level.number());
         level.blinking().tick();
 
-        level.pac().tick();
-        level.ghosts().forEach(Ghost::tick);
-        level.bonus().ifPresent(Bonus::tick);
+        level.pac().tick(gameContext);
+        level.ghosts().forEach(ghost -> ghost.tick(gameContext));
+        level.bonus().ifPresent(bonus -> bonus.tick(gameContext));
 
         checkIfPacManGetsKilled(level.pac());
         if (hasPacManBeenKilled()) return;
@@ -108,7 +109,7 @@ public abstract class AbstractGameModel implements Game {
         if (haveGhostsBeenKilled()) return;
 
         checkIfPacManFindsFood();
-        updatePacPower();
+        updatePacPower(gameContext);
         level.bonus().ifPresent(this::checkIfPacManCanEatBonus);
     }
 
@@ -186,11 +187,11 @@ public abstract class AbstractGameModel implements Game {
 
     protected abstract boolean isPacManSafeInDemoLevel();
 
-    protected void updatePacPower() {
+    protected void updatePacPower(GameContext gameContext) {
         requireNonNull(level, "Game level not existing");
         final TickTimer powerTimer = level.pac().powerTimer();
         powerTimer.doTick();
-        if (level.pac().isPowerFadingStarting()) {
+        if (level.pac().isPowerFadingStarting(gameContext)) {
             simulationStep.pacStartsLosingPower = true;
             eventManager().publishEvent(GameEventType.PAC_STARTS_LOSING_POWER);
         } else if (powerTimer.hasExpired()) {

@@ -12,6 +12,7 @@ import de.amr.pacmanfx.controller.teststates.CutScenesTestState;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameUI_Implementation;
@@ -214,9 +215,10 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
     }
 
     @Override
-    public PacMan3D createPac3D(AnimationRegistry animationRegistry, Pac pac) {
+    public PacMan3D createPac3D(AnimationRegistry animationRegistry, GameLevel gameLevel, Pac pac) {
         var pac3D = new PacMan3D(ui.assets().theModel3DRepository(),
             animationRegistry,
+            gameLevel,
             pac,
             ui.uiPreferences().getFloat("3d.pac.size"),
             localAssetColor("pac.color.head"),

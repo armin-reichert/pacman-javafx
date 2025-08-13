@@ -81,13 +81,13 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         actionBindings.assign(ACTION_TEST_LEVELS_MEDIUM, ui.actionBindings());
 
         blinking = new Pulse(10, true);
-        pacMan = createPac(null);
+        pacMan = createPac();
         pacMan.setAnimations(ui.currentConfig().createPacAnimations(pacMan));
         ghosts = List.of(
-            createGhost(null, RED_GHOST_SHADOW),
-            createGhost(null, PINK_GHOST_SPEEDY),
-            createGhost(null, CYAN_GHOST_BASHFUL),
-            createGhost(null, ORANGE_GHOST_POKEY));
+            createGhost(RED_GHOST_SHADOW),
+            createGhost(PINK_GHOST_SPEEDY),
+            createGhost(CYAN_GHOST_BASHFUL),
+            createGhost(ORANGE_GHOST_POKEY));
         ghosts.forEach(ghost -> ghost.setAnimations(ui.currentConfig().createGhostAnimations(ghost)));
         ghostImageVisible     = new boolean[4];
         ghostNicknameVisible  = new boolean[4];

@@ -331,7 +331,7 @@ public class PlayScene3D implements GameScene {
             return;
         }
         ui.soundManager().setEnabled(!gameContext().gameLevel().isDemoLevel());
-        gameLevel3D.tick();
+        gameLevel3D.tick(gameContext());
         updateCamera();
         updateHUD();
         updateSound();
@@ -353,7 +353,7 @@ public class PlayScene3D implements GameScene {
         else {
             switch (state) {
                 case BOOT, INTRO, SETTING_OPTIONS_FOR_START, SHOWING_CREDITS, LEVEL_TRANSITION, INTERMISSION -> {}
-                case HUNTING -> gameLevel3D.onHuntingStart();
+                case HUNTING -> gameLevel3D.onHuntingStart(gameContext());
                 case PACMAN_DYING -> gameLevel3D.onPacManDying(state);
                 case GHOST_DYING -> gameLevel3D.onGhostDying();
                 case LEVEL_COMPLETE -> gameLevel3D.onLevelComplete(state, perspectiveIDProperty);
@@ -423,8 +423,8 @@ public class PlayScene3D implements GameScene {
         gameLevel.pac().show();
         gameLevel.ghosts().forEach(Ghost::show);
 
-        gameLevel3D.pac3D().init();
-        gameLevel3D.pac3D().update();
+        gameLevel3D.pac3D().init(gameLevel);
+        gameLevel3D.pac3D().update(gameLevel);
         gameLevel3D.pellets3D().forEach(pellet -> pellet.setVisible(!gameLevel.tileContainsEatenFood((Vector2i) pellet.getUserData())));
         gameLevel3D.energizers3D().forEach(energizer ->
                 energizer.shape().setVisible(!gameLevel.tileContainsEatenFood(energizer.tile())));
@@ -573,8 +573,8 @@ public class PlayScene3D implements GameScene {
 
         gameLevel3DParent.getChildren().setAll(gameLevel3D);
 
-        gameLevel3D.pac3D().init();
-        gameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(gameContext().gameLevel()));
+        gameLevel3D.pac3D().init(gameContext().gameLevel());
+        gameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(gameContext(), gameContext().gameLevel()));
         Logger.info("Initialized actors of game level 3D");
 
 

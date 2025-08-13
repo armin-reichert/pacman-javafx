@@ -41,11 +41,9 @@ public class Pac extends MovingActor implements Animated {
     private ActorAnimationMap animationMap;
 
     /**
-     * @param gameContext the game context for this Pac-thingy, may be null for example in cut scene
      * @param name a readable name. Any honest Pac-Man and Pac-Woman should have a name! Period.
      */
-    public Pac(GameContext gameContext, String name) {
-        super(gameContext);
+    public Pac(String name) {
         this.name = requireNonNull(name);
     }
 
@@ -74,7 +72,7 @@ public class Pac extends MovingActor implements Animated {
     }
 
     @Override
-    public boolean canAccessTile(Vector2i tile) {
+    public boolean canAccessTile(GameContext gameContext, Vector2i tile) {
         requireNonNull(tile);
 
         if (gameContext == null || gameContext.optGameLevel().isEmpty()) return true;
@@ -136,14 +134,14 @@ public class Pac extends MovingActor implements Animated {
         return powerTimer;
     }
 
-    public boolean isPowerFading() {
+    public boolean isPowerFading(GameContext gameContext) {
         if (gameContext == null || gameContext.optGameLevel().isEmpty()) return false;
 
         long fadingTicks = secToTicks(gameContext.game().pacPowerFadingSeconds(gameContext.gameLevel()));
         return powerTimer.isRunning() && powerTimer.remainingTicks() <= fadingTicks;
     }
 
-    public boolean isPowerFadingStarting() {
+    public boolean isPowerFadingStarting(GameContext gameContext) {
         if (gameContext == null || gameContext.optGameLevel().isEmpty()) return false;
 
         long fadingTicks = secToTicks(gameContext.game().pacPowerFadingSeconds(gameContext.gameLevel()));
@@ -152,7 +150,7 @@ public class Pac extends MovingActor implements Animated {
     }
 
     @Override
-    public void tick() {
+    public void tick(GameContext gameContext) {
         if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
 
         if (dead || restingTicks == INDEFINITELY) {
@@ -168,7 +166,7 @@ public class Pac extends MovingActor implements Animated {
         setSpeed(powerTimer.isRunning()
             ? gameContext.game().actorSpeedControl().pacPowerSpeed(gameContext, gameContext.gameLevel())
             : gameContext.game().actorSpeedControl().pacNormalSpeed(gameContext, gameContext.gameLevel()));
-        findMyWayThroughThisCruelWorld();
+        findMyWayThroughThisCruelWorld(gameContext);
 
         if (moveInfo.moved) {
             playAnimation();

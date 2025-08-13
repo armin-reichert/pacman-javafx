@@ -49,10 +49,10 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     public void doInit() {
         frame = -1;
 
-        pac = createPac(null);
+        pac = createPac();
         pac.setAnimations(ui.currentConfig().createPacAnimations(pac));
 
-        blinky = createGhost(null, RED_GHOST_SHADOW);
+        blinky = createGhost(RED_GHOST_SHADOW);
         blinky.setSpeed(0);
         blinky.hide();
 

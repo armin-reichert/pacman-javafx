@@ -13,7 +13,6 @@ import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Bonus;
-import de.amr.pacmanfx.model.actors.Ghost;
 
 public class LevelShortTestState implements GameState {
 
@@ -47,8 +46,8 @@ public class LevelShortTestState implements GameState {
         final GameLevel gameLevel = context.gameLevel();
         if (timer.tickCount() > 2 * Globals.NUM_TICKS_PER_SEC) {
             gameLevel.blinking().tick();
-            gameLevel.ghosts().forEach(Ghost::tick);
-            gameLevel.bonus().ifPresent(Bonus::tick);
+            gameLevel.ghosts().forEach(ghost -> ghost.tick(context));
+            gameLevel.bonus().ifPresent(bonus -> bonus.tick(context));
         }
         if (timer.atSecond(1.0)) {
             context.game().continueGame();

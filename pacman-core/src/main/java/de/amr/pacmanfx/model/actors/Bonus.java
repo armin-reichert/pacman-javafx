@@ -37,8 +37,7 @@ public class Bonus extends MovingActor {
     private final Pulse jumpAnimation;
     private RouteBasedSteering steering;
 
-    public Bonus(GameContext gameContext, byte symbol, int points, Pulse jumpAnimation) {
-        super(gameContext);
+    public Bonus(byte symbol, int points, Pulse jumpAnimation) {
         this.symbol = symbol;
         this.points = points;
         this.jumpAnimation = jumpAnimation;
@@ -48,14 +47,14 @@ public class Bonus extends MovingActor {
         state = BonusState.INACTIVE;
     }
 
-    public void setRoute(List<Waypoint> route, boolean leftToRight) {
+    public void setRoute(GameContext gameContext, List<Waypoint> route, boolean leftToRight) {
         requireNonNull(route);
         var mutableRoute = new ArrayList<>(route);
         placeAtTile(mutableRoute.getFirst().tile());
         setMoveDir(leftToRight ? Direction.RIGHT : Direction.LEFT);
         setWishDir(leftToRight ? Direction.RIGHT : Direction.LEFT);
         mutableRoute.removeFirst();
-        steering = new RouteBasedSteering(mutableRoute);
+        steering = new RouteBasedSteering(gameContext, mutableRoute);
     }
 
 
@@ -75,7 +74,7 @@ public class Bonus extends MovingActor {
     }
 
     @Override
-    public boolean canAccessTile(Vector2i tile) {
+    public boolean canAccessTile(GameContext gameContext, Vector2i tile) {
         requireNonNull(tile);
 
         if (gameContext == null || gameContext.optGameLevel().isEmpty()) return true;
@@ -136,13 +135,13 @@ public class Bonus extends MovingActor {
     }
 
     @Override
-    public void tick() {
+    public void tick(GameContext gameContext) {
         switch (state) {
             case INACTIVE -> {}
             case EDIBLE -> {
                 boolean expired;
                 if (jumpAnimation != null) {
-                    expired = jumpThroughWorldAndLeaveThroughPortal();
+                    expired = jumpThroughWorldAndLeaveThroughPortal(gameContext);
                 } else {
                     expired = countdown();
                 }
@@ -171,15 +170,15 @@ public class Bonus extends MovingActor {
     }
 
     // moves, when end of route is reached, expires
-    private boolean jumpThroughWorldAndLeaveThroughPortal() {
+    private boolean jumpThroughWorldAndLeaveThroughPortal(GameContext gameContext) {
         if (gameContext.optGameLevel().isPresent()) {
             steering.steer(this, gameContext.gameLevel());
             if (steering.isComplete()) {
                 setInactive();
                 return true;
             } else {
-                navigateTowardsTarget();
-                findMyWayThroughThisCruelWorld();
+                navigateTowardsTarget(gameContext);
+                findMyWayThroughThisCruelWorld(gameContext);
                 jumpAnimation.tick();
             }
         }

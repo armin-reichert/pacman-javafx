@@ -18,7 +18,6 @@ class Stork extends Actor implements Animated {
     private final SpriteAnimationMap<SpriteID> animationMap;
 
     public Stork(ArcadeMsPacMan_SpriteSheet spriteSheet) {
-        super(null); // no game context
         animationMap = new SpriteAnimationMap<>(spriteSheet);
         animationMap.setAnimation("flying",
             SpriteAnimation.build().of(spriteSheet.spriteSeq(SpriteID.STORK)).frameTicks(8).forever());

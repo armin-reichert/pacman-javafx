@@ -48,14 +48,14 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
 
     private static final byte[] BONUS_VALUE_MULTIPLIERS = {1, 2, 5, 7, 10, 20, 50}; // points = value * 100
 
-    public static Pac createMsPacMan(GameContext gameContext) {
-        var pac = new Pac(gameContext, "Ms. Pac-Man");
+    public static Pac createMsPacMan() {
+        var pac = new Pac("Ms. Pac-Man");
         pac.reset();
         return pac;
     }
 
-    public static Pac createPacMan(GameContext gameContext) {
-        var pac = new Pac(gameContext, "Pac-Man");
+    public static Pac createPacMan() {
+        var pac = new Pac("Pac-Man");
         pac.reset();
         return pac;
     }
@@ -67,13 +67,13 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
      *
      * @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Overflow bug explanation</a>.
      * */
-    public static Ghost createGhost(GameContext gameContext, byte personality) {
+    public static Ghost createGhost(byte personality) {
         requireValidGhostPersonality(personality);
         return switch (personality) {
 
-            case RED_GHOST_SHADOW -> new Ghost(gameContext, RED_GHOST_SHADOW, "Blinky") {
+            case RED_GHOST_SHADOW -> new Ghost(RED_GHOST_SHADOW, "Blinky") {
                 @Override
-                public void hunt() {
+                public void hunt(GameContext gameContext) {
                     if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
                     var game = gameContext.<ArcadeCommon_GameModel>game();
                     GameLevel level = gameContext.gameLevel();
@@ -81,79 +81,79 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
                     float speed = game.actorSpeedControl().ghostAttackSpeed(gameContext, level, this);
                     setSpeed(speed);
                     if (game.huntingTimer().phaseIndex() == 0) {
-                        roam();
+                        roam(gameContext);
                     } else {
                         boolean chase = game.huntingTimer().phase() == HuntingPhase.CHASING || game.isCruiseElroyModeActive();
-                        Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(personality());
-                        tryMovingTowardsTargetTile(targetTile);
+                        Vector2i targetTile = chase ? chasingTargetTile(gameContext) : level.ghostScatterTile(personality());
+                        tryMovingTowardsTargetTile(gameContext, targetTile);
                     }
                 }
                 @Override
-                public Vector2i chasingTargetTile() {
+                public Vector2i chasingTargetTile(GameContext gameContext) {
                     if (gameContext.optGameLevel().isEmpty()) return null;
                     // Blinky (red ghost) attacks Pac-Man directly
                     return gameContext.gameLevel().pac().tile();
                 }
             };
 
-            case PINK_GHOST_SPEEDY -> new Ghost(gameContext, PINK_GHOST_SPEEDY, "Pinky") {
+            case PINK_GHOST_SPEEDY -> new Ghost(PINK_GHOST_SPEEDY, "Pinky") {
                     @Override
-                    public void hunt() {
+                    public void hunt(GameContext gameContext) {
                         if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
                         GameLevel level = gameContext.gameLevel();
 
                         float speed = gameContext.game().actorSpeedControl().ghostAttackSpeed(gameContext, level, this);
                         setSpeed(speed);
                         if (gameContext.game().huntingTimer().phaseIndex() == 0) {
-                            roam();
+                            roam(gameContext);
                         } else {
                             boolean chase = gameContext.game().huntingTimer().phase() == HuntingPhase.CHASING;
-                            Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(personality());
-                            tryMovingTowardsTargetTile(targetTile);
+                            Vector2i targetTile = chase ? chasingTargetTile(gameContext) : level.ghostScatterTile(personality());
+                            tryMovingTowardsTargetTile(gameContext, targetTile);
                         }
                     }
                     @Override
-                    public Vector2i chasingTargetTile() {
+                    public Vector2i chasingTargetTile(GameContext gameContext) {
                         if (gameContext == null || gameContext.optGameLevel().isEmpty()) return null;
                         // Pinky (pink ghost) ambushes Pac-Man
                         return gameContext.gameLevel().pac().tilesAheadWithOverflowBug(4);
                     }
                 };
 
-            case CYAN_GHOST_BASHFUL -> new Ghost(gameContext, CYAN_GHOST_BASHFUL, "Inky") {
+            case CYAN_GHOST_BASHFUL -> new Ghost(CYAN_GHOST_BASHFUL, "Inky") {
                 @Override
-                public void hunt() {
+                public void hunt(GameContext gameContext) {
                     if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
                     GameLevel level = gameContext.gameLevel();
 
                     float speed = gameContext.game().actorSpeedControl().ghostAttackSpeed(gameContext, level, this);
                     boolean chase = gameContext.game().huntingTimer().phase() == HuntingPhase.CHASING;
-                    Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(personality());
+                    Vector2i targetTile = chase ? chasingTargetTile(gameContext) : level.ghostScatterTile(personality());
                     setSpeed(speed);
-                    tryMovingTowardsTargetTile(targetTile);
+                    tryMovingTowardsTargetTile(gameContext, targetTile);
                 }
                 @Override
-                public Vector2i chasingTargetTile() {
+                public Vector2i chasingTargetTile(GameContext gameContext) {
                     if (gameContext == null || gameContext.optGameLevel().isEmpty()) return null;
                     GameLevel level = gameContext.gameLevel();
                     // Inky (cyan ghost) attacks from opposite side as Blinky
                     return level.pac().tilesAheadWithOverflowBug(2).scaled(2).minus(level.ghost(RED_GHOST_SHADOW).tile());
                 }
             };
-            case ORANGE_GHOST_POKEY -> new Ghost(gameContext, ORANGE_GHOST_POKEY, "Sue") {
+            case ORANGE_GHOST_POKEY -> new Ghost(ORANGE_GHOST_POKEY, "Sue") {
                 @Override
-                public void hunt() {
+                public void hunt(GameContext gameContext) {
                     if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
                     GameLevel level = gameContext.gameLevel();
 
                     float speed = gameContext.game().actorSpeedControl().ghostAttackSpeed(gameContext, level, this);
                     boolean chase = gameContext.game().huntingTimer().phase() == HuntingPhase.CHASING;
-                    Vector2i targetTile = chase ? chasingTargetTile() : level.ghostScatterTile(personality());
+                    Vector2i targetTile = chase ? chasingTargetTile(gameContext) : level.ghostScatterTile(personality());
                     setSpeed(speed);
-                    tryMovingTowardsTargetTile(targetTile);
+                    tryMovingTowardsTargetTile(gameContext, targetTile);
                 }
                 @Override
-                public Vector2i chasingTargetTile() {
+                public Vector2i chasingTargetTile(GameContext gameContext) {
                     if (gameContext == null || gameContext.optGameLevel().isEmpty()) return null;
                     GameLevel level = gameContext.gameLevel();
 
@@ -258,8 +258,8 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
             }
         });
 
-        demoLevelSteering = new RuleBasedPacSteering(this);
-        autopilot = new RuleBasedPacSteering(this);
+        demoLevelSteering = new RuleBasedPacSteering(gameContext);
+        autopilot = new RuleBasedPacSteering(gameContext);
         mapSelector.loadAllMaps();
     }
 
@@ -300,14 +300,14 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
         level.setGameOverStateTicks(150);
         level.addHouseContent();
 
-        level.setPac(createMsPacMan(gameContext));
+        level.setPac(createMsPacMan());
         level.pac().setAutopilotSteering(autopilot);
 
         level.setGhosts(
-            createGhost(gameContext, RED_GHOST_SHADOW),
-            createGhost(gameContext, PINK_GHOST_SPEEDY),
-            createGhost(gameContext, CYAN_GHOST_BASHFUL),
-            createGhost(gameContext, ORANGE_GHOST_POKEY)
+            createGhost(RED_GHOST_SHADOW),
+            createGhost(PINK_GHOST_SPEEDY),
+            createGhost(CYAN_GHOST_BASHFUL),
+            createGhost(ORANGE_GHOST_POKEY)
         );
         level.ghosts().forEach(MovingActor::reset);
 
@@ -428,9 +428,9 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
             .map(Waypoint::new).toList();
 
         byte symbol = level.bonusSymbol(level.currentBonusIndex());
-        var bonus = new Bonus(gameContext, symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100, new Pulse(10, false));
+        var bonus = new Bonus(symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100, new Pulse(10, false));
         bonus.setEdibleTicks(TickTimer.INDEFINITE);
-        bonus.setRoute(route, crossingLeftToRight);
+        bonus.setRoute(gameContext, route, crossingLeftToRight);
         Logger.info("Moving bonus created, route: {} (crossing {})", route,
             crossingLeftToRight ? "left to right" : "right to left");
 

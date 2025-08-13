@@ -51,7 +51,7 @@ public class LevelMediumTestState implements GameState {
 
     @Override
     public void onUpdate(GameContext context) {
-        context.game().doHuntingStep();
+        context.game().doHuntingStep(context);
         if (timer().hasExpired()) {
             if (context.gameLevel().number() == lastTestedLevelNumber) {
                 context.eventManager().publishEvent(GameEventType.STOP_ALL_SOUNDS);

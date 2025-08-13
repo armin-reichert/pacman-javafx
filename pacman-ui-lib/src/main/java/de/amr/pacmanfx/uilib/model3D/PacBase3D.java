@@ -8,6 +8,7 @@ import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.lib.timer.TickTimer;
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -114,7 +115,7 @@ public abstract class PacBase3D extends Group implements Disposable {
 
     public abstract void updateMovementAnimation();
 
-    public void init() {
+    public void init(GameLevel gameLevel) {
         if (chewingAnimation != null) {
             chewingAnimation.stop();
         }
@@ -128,14 +129,14 @@ public abstract class PacBase3D extends Group implements Disposable {
         setScaleY(1.0);
         setScaleZ(1.0);
         updatePositionAndRotation();
-        updateVisibility();
+        updateVisibility(gameLevel);
         setMovementPowerMode(false);
     }
 
-    public void update() {
+    public void update(GameLevel gameLevel) {
         if (pac.isAlive()) {
             updatePositionAndRotation();
-            updateVisibility();
+            updateVisibility(gameLevel);
             updateLight();
             if (movementAnimation != null) {
                 movementAnimation.playOrContinue();
@@ -173,9 +174,9 @@ public abstract class PacBase3D extends Group implements Disposable {
         moveRotation.setAngle(angle);
     }
 
-    protected void updateVisibility() {
-        if (pac.optGameContext().isPresent() && pac.gameContext().optGameLevel().isPresent()) {
-            WorldMap worldMap = pac.gameContext().gameLevel().worldMap();
+    protected void updateVisibility(GameLevel gameLevel) {
+        if (gameLevel != null) {
+            WorldMap worldMap = gameLevel.worldMap();
             boolean outsideWorld = getTranslateX() < HTS || getTranslateX() > TS * worldMap.numCols() - HTS;
             setVisible(pac.isVisible() && !outsideWorld);
         }

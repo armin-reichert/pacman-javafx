@@ -24,7 +24,7 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
     public PacManXXL_PacMan_GameModel(GameContext gameContext, MapSelector mapSelector, File highSCoreFile) {
         super(gameContext, mapSelector, highSCoreFile);
         // Demo level map could be custom map, so use generic automatic steering
-        demoLevelSteering = new RuleBasedPacSteering(this);
+        demoLevelSteering = new RuleBasedPacSteering(gameContext);
     }
 
     @Override

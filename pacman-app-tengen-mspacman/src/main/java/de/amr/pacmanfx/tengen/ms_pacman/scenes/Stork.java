@@ -21,7 +21,6 @@ public class Stork extends Actor implements Animated {
     private boolean bagReleasedFromBeak;
 
     public Stork(TengenMsPacMan_SpriteSheet spriteSheet) {
-        super(null);
         animationMap = new SpriteAnimationMap<>(spriteSheet);
         animationMap.setAnimation("flying",
             SpriteAnimation.build()

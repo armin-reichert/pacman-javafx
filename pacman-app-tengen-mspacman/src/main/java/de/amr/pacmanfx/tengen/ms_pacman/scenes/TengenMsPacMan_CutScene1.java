@@ -78,15 +78,15 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         clapperboard = new Clapperboard(spriteSheet, 1, "THEY MEET");
         clapperboard.setPosition(3 * TS, 10 * TS);
         clapperboard.setFont(scaledArcadeFont8());
-        msPacMan = createMsPacMan(null);
+        msPacMan = createMsPacMan();
         msPacMan.setAnimations(config.createPacAnimations(msPacMan));
-        pacMan = createPacMan(null);
+        pacMan = createPacMan();
         pacMan.setAnimations(config.createPacAnimations(pacMan));
-        inky = createGhost(null, CYAN_GHOST_BASHFUL);
+        inky = createGhost(CYAN_GHOST_BASHFUL);
         inky.setAnimations(config.createGhostAnimations(inky));
-        pinky = createGhost(null, PINK_GHOST_SPEEDY);
+        pinky = createGhost(PINK_GHOST_SPEEDY);
         pinky.setAnimations(config.createGhostAnimations(pinky));
-        heart = new SingleSpriteActor(null, spriteSheet.sprite(SpriteID.HEART));
+        heart = new SingleSpriteActor(spriteSheet.sprite(SpriteID.HEART));
     }
 
     @Override

@@ -88,12 +88,12 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         marquee.setBulbOnColor(ARCADE_WHITE);
         marquee.show();
 
-        msPacMan = createMsPacMan(null);
+        msPacMan = createMsPacMan();
         ghosts = List.of(
-            createGhost(null, RED_GHOST_SHADOW),
-            createGhost(null, PINK_GHOST_SPEEDY),
-            createGhost(null, CYAN_GHOST_BASHFUL),
-            createGhost(null, ORANGE_GHOST_POKEY)
+            createGhost(RED_GHOST_SHADOW),
+            createGhost(PINK_GHOST_SPEEDY),
+            createGhost(CYAN_GHOST_BASHFUL),
+            createGhost(ORANGE_GHOST_POKEY)
         );
         presentedGhostCharacter = RED_GHOST_SHADOW;
         numTicksBeforeRising = 0;

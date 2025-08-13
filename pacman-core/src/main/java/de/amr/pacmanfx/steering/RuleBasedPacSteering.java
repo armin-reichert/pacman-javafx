@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.steering;
 
+import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.Globals;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2i;
@@ -66,11 +67,10 @@ public class RuleBasedPacSteering implements Steering {
         }
     }
 
+    private final GameContext gameContext;
 
-    private final Game game;
-
-    public RuleBasedPacSteering(Game game) {
-        this.game = game;
+    public RuleBasedPacSteering(GameContext gameContext) {
+        this.gameContext = gameContext;
     }
 
     @Override
@@ -78,15 +78,15 @@ public class RuleBasedPacSteering implements Steering {
         if (movingActor.moveInfo().moved && !movingActor.isNewTileEntered()) {
             return;
         }
-        var data = collectData(game);
+        var data = collectData();
         if (data.hunterAhead != null || data.hunterBehind != null || !data.frightenedGhosts.isEmpty()) {
             Logger.trace("\n{}", data);
         }
-        takeAction(game, data);
+        takeAction(gameContext, data);
     }
 
-    private CollectedData collectData(Game game) {
-        GameLevel level = game.level().orElseThrow();
+    private CollectedData collectData() {
+        GameLevel level = gameContext.game().level().orElseThrow();
         var data = new CollectedData();
         var pac = level.pac();
         Ghost hunterAhead = findHuntingGhostAhead(level); // Where is Hunter?
@@ -108,16 +108,16 @@ public class RuleBasedPacSteering implements Steering {
         return data;
     }
 
-    private void takeAction(Game game, CollectedData data) {
-        GameLevel level = game.level().orElseThrow();
+    private void takeAction(GameContext gameContext, CollectedData data) {
+        GameLevel level = gameContext.game().level().orElseThrow();
         var pac = level.pac();
         if (data.hunterAhead != null) {
             Direction escapeDir;
             if (data.hunterBehind != null) {
-                escapeDir = findEscapeDirectionExcluding(level, EnumSet.of(pac.moveDir(), pac.moveDir().opposite()));
+                escapeDir = findEscapeDirectionExcluding(gameContext, level, EnumSet.of(pac.moveDir(), pac.moveDir().opposite()));
                 Logger.trace("Detected ghost {} behind, escape direction is {}", data.hunterAhead.name(), escapeDir);
             } else {
-                escapeDir = findEscapeDirectionExcluding(level, EnumSet.of(pac.moveDir()));
+                escapeDir = findEscapeDirectionExcluding(gameContext, level, EnumSet.of(pac.moveDir()));
                 Logger.trace("Detected ghost {} ahead, escape direction is {}", data.hunterAhead.name(), escapeDir);
             }
             if (escapeDir != null) {
@@ -135,14 +135,14 @@ public class RuleBasedPacSteering implements Steering {
             Logger.trace("Detected frightened ghost {} {} tiles away", prey.name(),
                 prey.tile().manhattanDist(pac.tile()));
             pac.setTargetTile(prey.tile());
-        } else if (isEdibleBonusNearPac(game, pac)) {
+        } else if (isEdibleBonusNearPac(gameContext.game(), pac)) {
             Logger.trace("Active bonus detected, get it!");
             level.bonus().ifPresent(bonus -> pac.setTargetTile(tileAt(bonus.position())));
         } else {
             pac.setTargetTile(findTileFarthestFromGhosts(pac, findNearestFoodTiles(level)));
         }
         pac.optTargetTile().ifPresent(target -> {
-            pac.navigateTowardsTarget();
+            pac.navigateTowardsTarget(gameContext);
             Logger.trace("Navigated towards {}, moveDir={} wishDir={}", pac.targetTile(), pac.moveDir(), pac.wishDir());
         });
     }
@@ -164,7 +164,7 @@ public class RuleBasedPacSteering implements Steering {
         boolean energizerFound = false;
         for (int i = 1; i <= CollectedData.MAX_GHOST_AHEAD_DETECTION_DIST; ++i) {
             Vector2i ahead = pacManTile.plus(pac.moveDir().vector().scaled(i));
-            if (!pac.canAccessTile(ahead)) {
+            if (!pac.canAccessTile(gameContext, ahead)) {
                 break;
             }
             if (level.isEnergizerPosition(ahead) && !level.tileContainsEatenFood(ahead)) {
@@ -187,11 +187,11 @@ public class RuleBasedPacSteering implements Steering {
     }
 
     private Ghost findHuntingGhostBehind(Pac pac) {
-        GameLevel level = game.level().orElseThrow();
+        GameLevel level = gameContext.game().level().orElseThrow();
         var pacManTile = pac.tile();
         for (int i = 1; i <= CollectedData.MAX_GHOST_BEHIND_DETECTION_DIST; ++i) {
             var behind = pacManTile.plus(pac.moveDir().opposite().vector().scaled(i));
-            if (!pac.canAccessTile(behind)) {
+            if (!pac.canAccessTile(gameContext, behind)) {
                 break;
             }
             Iterable<Ghost> huntingGhosts = level.ghosts(GhostState.HUNTING_PAC)::iterator;
@@ -204,7 +204,7 @@ public class RuleBasedPacSteering implements Steering {
         return null;
     }
 
-    private Direction findEscapeDirectionExcluding(GameLevel level, Collection<Direction> forbidden) {
+    private Direction findEscapeDirectionExcluding(GameContext gameContext, GameLevel level, Collection<Direction> forbidden) {
         var pac = level.pac();
         Vector2i pacManTile = pac.tile();
         List<Direction> escapes = new ArrayList<>(4);
@@ -213,7 +213,7 @@ public class RuleBasedPacSteering implements Steering {
                 continue;
             }
             Vector2i neighbor = pacManTile.plus(dir.vector());
-            if (pac.canAccessTile(neighbor)) {
+            if (pac.canAccessTile(gameContext, neighbor)) {
                 escapes.add(dir);
             }
         }
@@ -275,7 +275,7 @@ public class RuleBasedPacSteering implements Steering {
     }
 
     private float minDistanceFromGhosts(Pac pac) {
-        GameLevel level = game.level().orElseThrow();
+        GameLevel level = gameContext.game().level().orElseThrow();
         return (float) level.ghosts().map(Ghost::tile)
             .mapToDouble(pac.tile()::manhattanDist)
             .min().orElse(Float.MAX_VALUE);

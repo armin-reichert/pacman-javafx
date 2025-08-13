@@ -161,7 +161,7 @@ public enum GamePlayState implements GameState {
                     context.gameLevel().clearMessage();
                 }
             }
-            context.game().doHuntingStep();
+            context.game().doHuntingStep(context);
             if (context.game().isLevelCompleted()) {
                 context.gameController().changeGameState(LEVEL_COMPLETE);
             } else if (context.game().hasPacManBeenKilled()) {
@@ -243,7 +243,7 @@ public enum GamePlayState implements GameState {
                 context.gameController().resumePreviousGameState();
             } else {
                 context.gameLevel().ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
-                    .forEach(Ghost::tick);
+                    .forEach(ghost -> ghost.tick(context));
                 context.gameLevel().blinking().tick();
             }
         }
@@ -298,7 +298,7 @@ public enum GamePlayState implements GameState {
             }
             else {
                 context.gameLevel().blinking().tick();
-                context.gameLevel().pac().tick();
+                context.gameLevel().pac().tick(context);
             }
         }
 

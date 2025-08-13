@@ -4,6 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model;
 
+import de.amr.pacmanfx.GameContext;
+
 public interface GameLifecycle {
     void init();
     void resetEverything();
@@ -17,6 +19,6 @@ public interface GameLifecycle {
     void startLevel();
     void startNextLevel();
     void startHunting();
-    void doHuntingStep();
+    void doHuntingStep(GameContext gameContext);
     void activateNextBonus();
 }
