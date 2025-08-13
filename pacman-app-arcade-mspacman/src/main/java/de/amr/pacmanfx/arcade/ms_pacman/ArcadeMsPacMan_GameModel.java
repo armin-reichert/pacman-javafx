@@ -201,6 +201,12 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
     private final ArcadeMsPacMan_GameData hud = new ArcadeMsPacMan_GameData();
     private final ScoreManager scoreManager;
 
+    /**
+     * Called via reflection by builder.
+     *
+     * @param gameContext the game context
+     * @param highScoreFile the high score file
+     */
     public ArcadeMsPacMan_GameModel(GameContext gameContext, File highScoreFile) {
         this(gameContext, new ArcadeMsPacMan_MapSelector(), highScoreFile);
     }
@@ -296,11 +302,6 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
         /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
         hudData().theLevelCounter().setEnabled(levelNumber < 8);
-    }
-
-    @Override
-    public double pacPowerFadingSeconds(GameLevel level) {
-        return level != null ? level.data().numFlashes() * 0.5 : 0;
     }
 
     @Override

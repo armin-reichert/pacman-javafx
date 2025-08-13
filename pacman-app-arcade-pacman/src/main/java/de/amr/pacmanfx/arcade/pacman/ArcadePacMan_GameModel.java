@@ -306,11 +306,6 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
     }
 
     @Override
-    public double pacPowerFadingSeconds(GameLevel level) {
-        return level != null ? level.data().numFlashes() * 0.5 : 0;
-    }
-
-    @Override
     protected boolean isBonusReached() {
         return level.eatenFoodCount() == 70 || level.eatenFoodCount() == 170;
     }

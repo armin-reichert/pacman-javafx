@@ -172,6 +172,11 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
     }
 
     @Override
+    public double pacPowerFadingSeconds(GameLevel level) {
+        return level != null ? level.data().numFlashes() * 0.5 : 0;
+    }
+
+    @Override
     protected void checkIfPacManFindsFood() {
         Vector2i tile = level.pac().tile();
         if (level.tileContainsFood(tile)) {

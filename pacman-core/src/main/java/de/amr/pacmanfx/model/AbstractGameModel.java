@@ -30,14 +30,20 @@ public abstract class AbstractGameModel implements Game {
     protected final IntegerProperty lifeCount = new SimpleIntegerProperty(0);
     protected final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
     protected final IntegerProperty initialLifeCount = new SimpleIntegerProperty(3);
-
     protected final SimulationStep simulationStep = new SimulationStep();
-
     protected GameLevel level;
 
     @Override
     public SimulationStep simulationStep() {
         return simulationStep;
+    }
+
+    protected void setLifeCount(int n) {
+        if (n >= 0) {
+            lifeCount.set(n);
+        } else {
+            Logger.error("Cannot set life count to negative number");
+        }
     }
 
     @Override
@@ -61,16 +67,6 @@ public abstract class AbstractGameModel implements Game {
     @Override
     public Optional<GameLevel> level() {
         return Optional.ofNullable(level);
-    }
-
-    protected void resetPacManAndGhostAnimations() {
-        requireNonNull(level, "Game level not existing");
-        level.pac().selectAnimation(ANIM_PAC_MUNCHING);
-        level.pac().resetAnimation();
-        level.ghosts().forEach(ghost -> {
-            ghost.selectAnimation(ANIM_GHOST_NORMAL);
-            ghost.resetAnimation();
-        });
     }
 
     @Override
@@ -158,17 +154,17 @@ public abstract class AbstractGameModel implements Game {
         Logger.trace("Game level {} completed.", level.number());
     }
 
-    public void setLifeCount(int n) {
-        if (n >= 0) {
-            lifeCount.set(n);
-        } else {
-            Logger.error("Cannot set life count to negative number");
-        }
-    }
-
-    // Actors
-
     protected abstract GameEventManager eventManager();
+
+    protected void resetPacManAndGhostAnimations() {
+        requireNonNull(level, "Game level not existing");
+        level.pac().selectAnimation(ANIM_PAC_MUNCHING);
+        level.pac().resetAnimation();
+        level.ghosts().forEach(ghost -> {
+            ghost.selectAnimation(ANIM_GHOST_NORMAL);
+            ghost.resetAnimation();
+        });
+    }
 
     protected void checkIfPacManGetsKilled(Pac pac) {
         requireNonNull(level, "Game level not existing");
