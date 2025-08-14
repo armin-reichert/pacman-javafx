@@ -70,7 +70,7 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
     public Optional<SpriteSheet<?>> optSpriteSheet() { return Optional.of(spriteSheet); }
 
     @Override
-    public void drawHUD(GameContext gameContext, GameData data, Vector2f sceneSize, long tick) {
+    public void drawHUD(GameContext gameContext, HUDData data, Vector2f sceneSize, long tick) {
         requireNonNull(data);
 
         if (!data.isVisible()) return;

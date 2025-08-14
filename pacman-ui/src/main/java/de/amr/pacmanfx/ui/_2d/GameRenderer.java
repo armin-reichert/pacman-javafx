@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.model.GameData;
+import de.amr.pacmanfx.model.HUDData;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.ui.GameAssets;
@@ -88,7 +88,7 @@ public abstract class GameRenderer implements Disposable {
      * @param sceneSize scene size in pixels
      * @param tick current clock tick
      */
-    public abstract void drawHUD(GameContext gameContext, GameData data, Vector2f sceneSize, long tick);
+    public abstract void drawHUD(GameContext gameContext, HUDData data, Vector2f sceneSize, long tick);
 
     /**
      * @param gameContext the game context

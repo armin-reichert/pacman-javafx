@@ -49,7 +49,7 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
     }
 
     @Override
-    public void drawHUD(GameContext gameContext, GameData data, Vector2f sceneSize, long tick) {
+    public void drawHUD(GameContext gameContext, HUDData data, Vector2f sceneSize, long tick) {
         requireNonNull(data);
         if (!data.isVisible()) return;
 

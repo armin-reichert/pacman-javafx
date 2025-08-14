@@ -1,16 +1,13 @@
-package de.amr.pacmanfx.arcade.ms_pacman;
+package de.amr.pacmanfx.tengen.ms_pacman.model;
 
-import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_LevelCounter;
-import de.amr.pacmanfx.model.GameData;
+import de.amr.pacmanfx.model.HUDData;
 import de.amr.pacmanfx.model.LivesCounter;
 
-public class ArcadeMsPacMan_GameData implements GameData {
-
+public class TengenMsPacMan_HUDData implements HUDData {
+    private final TengenMsPacMan_LevelCounter levelCounter = new TengenMsPacMan_LevelCounter();
     private final LivesCounter livesCounter = new LivesCounter();
-    private final ArcadePacMan_LevelCounter levelCounter = new ArcadePacMan_LevelCounter();
 
     private boolean visible = true;
-    private boolean creditVisible;
     private boolean livesCounterVisible = true;
     private boolean levelCounterVisible = true;
     private boolean scoreVisible = true;
@@ -22,9 +19,9 @@ public class ArcadeMsPacMan_GameData implements GameData {
     public boolean isVisible() { return visible; }
 
     @Override
-    public boolean isCreditVisible() { return creditVisible; }
+    public boolean isCreditVisible() { return false; }
 
-    public void showCredit(boolean b) { creditVisible = b; }
+    public void showCredit(boolean b) { /* not needed */ }
 
     @Override
     public boolean isLevelCounterVisible() {
@@ -57,7 +54,7 @@ public class ArcadeMsPacMan_GameData implements GameData {
     }
 
     @Override
-    public ArcadePacMan_LevelCounter theLevelCounter() {
+    public TengenMsPacMan_LevelCounter theLevelCounter() {
         return levelCounter;
     }
 

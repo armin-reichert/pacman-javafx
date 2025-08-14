@@ -173,7 +173,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
     // bonus points = multiplier * 100
     private static final byte[] BONUS_VALUE_MULTIPLIERS = { 1, 3, 5, 7, 10, 20, 30, 50 };
 
-    private final GameData hud = new ArcadePacMan_GameData();
+    private final HUDData hud = new ArcadePacMan_HUDData();
     private final ScoreManager scoreManager;
     private final HuntingTimer huntingTimer;
     private final ActorSpeedControl actorSpeedControl;
@@ -254,7 +254,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
     }
 
     @Override
-    public GameData hudData() {
+    public HUDData hudData() {
         return hud;
     }
 

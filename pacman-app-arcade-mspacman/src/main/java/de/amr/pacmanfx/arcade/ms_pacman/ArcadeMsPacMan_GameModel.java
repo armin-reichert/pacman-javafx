@@ -199,7 +199,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
 
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
-    private final ArcadeMsPacMan_GameData hud = new ArcadeMsPacMan_GameData();
+    private final ArcadeMsPacMan_HUDData hud = new ArcadeMsPacMan_HUDData();
     private final ScoreManager scoreManager;
     private final HuntingTimer huntingTimer;
     private final ActorSpeedControl actorSpeedControl;
@@ -269,7 +269,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
     }
 
     @Override
-    public ArcadeMsPacMan_GameData hudData() {
+    public ArcadeMsPacMan_HUDData hudData() {
         return hud;
     }
 
