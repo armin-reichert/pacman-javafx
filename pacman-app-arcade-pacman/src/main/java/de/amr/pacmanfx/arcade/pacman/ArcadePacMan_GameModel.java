@@ -192,7 +192,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
 
         this.mapSelector = requireNonNull(mapSelector);
 
-        scoreManager = new DefaultScoreManager(gameContext, highScoreFile);
+        scoreManager = new DefaultScoreManager(this, highScoreFile);
         scoreManager.setExtraLifeScores(Set.of(EXTRA_LIFE_SCORE));
 
         huntingTimer = new HuntingTimer("ArcadePacMan-HuntingTimer", 8) {
@@ -335,7 +335,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
     }
 
     @Override
-    protected GameEventManager eventManager() {
+    public GameEventManager eventManager() {
         return gameContext.eventManager();
     }
 }

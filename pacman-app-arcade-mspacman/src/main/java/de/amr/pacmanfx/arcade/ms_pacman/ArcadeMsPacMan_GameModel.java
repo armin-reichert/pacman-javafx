@@ -222,7 +222,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
         super(gameContext);
         this.mapSelector = requireNonNull(mapSelector);
 
-        scoreManager = new DefaultScoreManager(gameContext, highScoreFile);
+        scoreManager = new DefaultScoreManager(this, highScoreFile);
         scoreManager.setExtraLifeScores(Set.of(EXTRA_LIFE_SCORE));
 
         /*
@@ -443,7 +443,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
     }
 
     @Override
-    protected GameEventManager eventManager() {
+    public GameEventManager eventManager() {
         return gameContext.eventManager();
     }
 }

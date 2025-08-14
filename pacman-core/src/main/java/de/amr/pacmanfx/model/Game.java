@@ -4,12 +4,14 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model;
 
+import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.model.actors.ActorSpeedControl;
 
 import java.util.Optional;
 import java.util.OptionalInt;
 
 public interface Game extends GameLifecycle, GameEvents {
+    GameEventManager eventManager();
     ScoreManager scoreManager();
     HUDData hudData();
     SimulationStep simulationStep();

@@ -236,7 +236,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     public TengenMsPacMan_GameModel(GameContext gameContext, File highScoreFile) {
         this.gameContext = requireNonNull(gameContext);
-        scoreManager = new DefaultScoreManager(gameContext, highScoreFile);
+        scoreManager = new DefaultScoreManager(this, highScoreFile);
         actorSpeedControl = new TengenActorSpeedControl();
         mapSelector = new TengenMsPacMan_MapSelector();
         gateKeeper = new GateKeeper(this); //TODO implement Tengen logic instead
@@ -746,7 +746,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     }
 
     @Override
-    protected GameEventManager eventManager() {
+    public GameEventManager eventManager() {
         return gameContext.eventManager();
     }
 }

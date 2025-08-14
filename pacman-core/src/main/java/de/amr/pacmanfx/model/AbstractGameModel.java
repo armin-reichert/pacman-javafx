@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.model;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.event.GameEventManager;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
@@ -36,8 +35,6 @@ public abstract class AbstractGameModel implements Game {
     public SimulationStep simulationStep() {
         return simulationStep;
     }
-
-    protected abstract GameEventManager eventManager();
 
     protected void setLifeCount(int n) {
         if (n >= 0) {

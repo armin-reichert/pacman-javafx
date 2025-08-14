@@ -1,6 +1,5 @@
 package de.amr.pacmanfx.model;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.event.GameEventType;
 import org.tinylog.Logger;
@@ -17,27 +16,25 @@ import static java.util.Objects.requireNonNull;
 
 public class DefaultScoreManager implements ScoreManager {
 
-    protected final GameContext gameContext;
     protected final Score score = new Score();
     protected final Score highScore = new Score();
     protected final File highScoreFile;
     protected Set<Integer> extraLifeScores = Set.of();
 
-    public DefaultScoreManager(GameContext gameContext, File highScoreFile) {
-        this.gameContext = gameContext;
+    public DefaultScoreManager(Game game, File highScoreFile) {
         this.highScoreFile = requireNonNull(highScoreFile);
-        score.pointsProperty().addListener((py, ov, nv) -> onScoreChanged(ov.intValue(), nv.intValue()));
+        score.pointsProperty().addListener((py, ov, nv) -> onScoreChanged(game, ov.intValue(), nv.intValue()));
     }
 
-    private void onScoreChanged(int oldScore, int newScore) {
+    private void onScoreChanged(Game game, int oldScore, int newScore) {
         for (int extraLifeScore : extraLifeScores) {
             // has extra life score been crossed?
             if (oldScore < extraLifeScore && newScore >= extraLifeScore) {
-                gameContext.game().simulationStep().extraLifeWon = true;
-                gameContext.game().simulationStep().extraLifeScore = extraLifeScore;
-                gameContext.game().addLives(1);
-                GameEvent event = new GameEvent(gameContext.game(), GameEventType.SPECIAL_SCORE_REACHED);
-                gameContext.eventManager().publishEvent(event);
+                game.simulationStep().extraLifeWon = true;
+                game.simulationStep().extraLifeScore = extraLifeScore;
+                game.addLives(1);
+                GameEvent event = new GameEvent(game, GameEventType.SPECIAL_SCORE_REACHED);
+                game.eventManager().publishEvent(event);
                 break;
             }
         }
