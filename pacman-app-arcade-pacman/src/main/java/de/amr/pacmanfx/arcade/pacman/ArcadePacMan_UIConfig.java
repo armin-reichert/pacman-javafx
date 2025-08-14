@@ -258,7 +258,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
                     throw new IllegalStateException("Cannot determine cut scene, no game level available");
                 }
                 int levelNumber = gameContext.gameLevel().number();
-                OptionalInt optCutSceneNumber = gameContext.game().cutSceneNumber(levelNumber);
+                OptionalInt optCutSceneNumber = gameContext.game().optCutSceneNumber(levelNumber);
                 if (optCutSceneNumber.isEmpty()) {
                     throw new IllegalStateException("Cannot determine cut scene after level %d".formatted(levelNumber));
                 }

@@ -32,10 +32,10 @@ public class Pulse {
     }
 
     public void reset() {
+        stop();
         tick = 0;
         numPhasesCompleted = 0;
         phase = startPhase;
-        running = false;
     }
 
     public void restart() {

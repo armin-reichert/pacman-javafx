@@ -16,12 +16,12 @@ public interface Game extends GameLifecycle, GameEvents {
     ActorSpeedControl actorSpeedControl();
     HuntingTimer huntingTimer();
     MapSelector mapSelector();
-    Optional<GateKeeper> gateKeeper();
-    Optional<GameLevel> level();
+    Optional<GateKeeper> optGateKeeper();
+    Optional<GameLevel> optGameLevel();
 
     boolean     cutScenesEnabled();
     void        setCutScenesEnabled(boolean enabled);
-    OptionalInt cutSceneNumber(int levelNumber);
+    OptionalInt optCutSceneNumber(int levelNumber);
 
     int     initialLifeCount();
     void    setInitialLifeCount(int numLives);

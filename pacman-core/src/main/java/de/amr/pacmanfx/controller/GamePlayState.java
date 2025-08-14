@@ -204,7 +204,7 @@ public enum GamePlayState implements GameState {
                     // just in case: if demo level was completed, go back to intro scene
                     context.gameController().changeGameState(INTRO);
                 } else if (context.game().cutScenesEnabled()
-                    && context.game().cutSceneNumber(context.gameLevel().number()).isPresent()) {
+                    && context.game().optCutSceneNumber(context.gameLevel().number()).isPresent()) {
                     context.gameController().changeGameState(INTERMISSION);
                 } else {
                     context.gameController().changeGameState(LEVEL_TRANSITION);

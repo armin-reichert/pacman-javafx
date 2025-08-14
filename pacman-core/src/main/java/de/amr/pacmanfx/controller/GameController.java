@@ -198,12 +198,12 @@ public class GameController implements GameContext {
 
     @Override
     public Optional<GameLevel> optGameLevel() {
-        return game().level();
+        return game().optGameLevel();
     }
 
     @Override
     public GameLevel gameLevel() {
-        return game().level().orElse(null);
+        return game().optGameLevel().orElse(null);
     }
 
     @Override

@@ -213,7 +213,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
         };
         huntingTimer.phaseIndexProperty().addListener((py, ov, nv) -> {
             if (nv.intValue() > 0) {
-                level.ghosts(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE)
+                gameLevel.ghosts(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE)
                     .forEach(Ghost::reverseAtNextOccasion);
             }
         });
@@ -269,7 +269,7 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
     }
 
     @Override
-    public OptionalInt cutSceneNumber(int levelNumber) {
+    public OptionalInt optCutSceneNumber(int levelNumber) {
         return switch (levelNumber) {
             case 2 -> OptionalInt.of(1);
             case 5 -> OptionalInt.of(2);
@@ -281,24 +281,24 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
     @Override
     public void createLevel(int levelNumber) {
         WorldMap worldMap = mapSelector.getWorldMap(levelNumber);
-        level = new GameLevel(levelNumber, worldMap, createLevelData(levelNumber));
-        level.addHouseContent();
-        level.setGameOverStateTicks(90);
+        gameLevel = new GameLevel(levelNumber, worldMap, createLevelData(levelNumber));
+        gameLevel.addHouseContent();
+        gameLevel.setGameOverStateTicks(90);
 
         Pac pacMan = createPac();
         pacMan.setAutopilotSteering(autopilot);
-        level.setPac(pacMan);
+        gameLevel.setPac(pacMan);
 
         // Special tiles where attacking ghosts cannot move up
         List<Vector2i> oneWayDownTiles = worldMap.tiles()
             .filter(tile -> worldMap.content(LayerID.TERRAIN, tile) == TerrainTile.ONE_WAY_DOWN.$)
             .toList();
-        level.setGhosts(
+        gameLevel.setGhosts(
             createGhost(RED_GHOST_SHADOW),
             createGhost(PINK_GHOST_SPEEDY),
             createGhost(CYAN_GHOST_BASHFUL),
             createGhost(ORANGE_GHOST_POKEY));
-        level.ghosts().forEach(ghost -> {
+        gameLevel.ghosts().forEach(ghost -> {
             ghost.reset();
             ghost.setSpecialTerrainTiles(oneWayDownTiles);
         });
@@ -306,8 +306,8 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
         // Each level has a single bonus symbol appearing twice during the level. From level 13 on, the same symbol
         // (7 = "key") appears.
         byte symbol = BONUS_SYMBOLS_BY_LEVEL_NUMBER[Math.min(levelNumber, 13)];
-        level.setBonusSymbol(0, symbol);
-        level.setBonusSymbol(1, symbol);
+        gameLevel.setBonusSymbol(0, symbol);
+        gameLevel.setBonusSymbol(1, symbol);
 
         hud.theLevelCounter().setEnabled(true);
     }
@@ -319,18 +319,18 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
 
     @Override
     protected boolean isBonusReached() {
-        return level.eatenFoodCount() == 70 || level.eatenFoodCount() == 170;
+        return gameLevel.eatenFoodCount() == 70 || gameLevel.eatenFoodCount() == 170;
     }
 
     @Override
     public void activateNextBonus() {
-        level.selectNextBonus();
-        byte symbol = level.bonusSymbol(level.currentBonusIndex());
+        gameLevel.selectNextBonus();
+        byte symbol = gameLevel.bonusSymbol(gameLevel.currentBonusIndex());
         var bonus = new Bonus(symbol, BONUS_VALUE_MULTIPLIERS[symbol] * 100, null);
-        Vector2i bonusTile = level.worldMap().getTerrainTileProperty(WorldMapProperty.POS_BONUS, new Vector2i(13, 20));
+        Vector2i bonusTile = gameLevel.worldMap().getTerrainTileProperty(WorldMapProperty.POS_BONUS, new Vector2i(13, 20));
         bonus.setPosition(halfTileRightOf(bonusTile));
         bonus.setEdibleTicks(randomInt(9 * NUM_TICKS_PER_SEC, 10 * NUM_TICKS_PER_SEC));
-        level.setBonus(bonus);
+        gameLevel.setBonus(bonus);
         eventManager().publishEvent(GameEventType.BONUS_ACTIVATED, bonus.tile());
     }
 

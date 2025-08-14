@@ -86,7 +86,7 @@ public class RuleBasedPacSteering implements Steering {
     }
 
     private CollectedData collectData() {
-        GameLevel level = gameContext.game().level().orElseThrow();
+        GameLevel level = gameContext.game().optGameLevel().orElseThrow();
         var data = new CollectedData();
         var pac = level.pac();
         Ghost hunterAhead = findHuntingGhostAhead(level); // Where is Hunter?
@@ -109,7 +109,7 @@ public class RuleBasedPacSteering implements Steering {
     }
 
     private void takeAction(GameContext gameContext, CollectedData data) {
-        GameLevel level = gameContext.game().level().orElseThrow();
+        GameLevel level = gameContext.game().optGameLevel().orElseThrow();
         var pac = level.pac();
         if (data.hunterAhead != null) {
             Direction escapeDir;
@@ -148,7 +148,7 @@ public class RuleBasedPacSteering implements Steering {
     }
 
     private boolean isEdibleBonusNearPac(Game game, Pac pac) {
-        GameLevel level = game.level().orElseThrow();
+        GameLevel level = game.optGameLevel().orElseThrow();
         if (level.bonus().isPresent()) {
             var bonus = level.bonus().get();
             var tile = tileAt(bonus.position());
@@ -187,7 +187,7 @@ public class RuleBasedPacSteering implements Steering {
     }
 
     private Ghost findHuntingGhostBehind(Pac pac) {
-        GameLevel level = gameContext.game().level().orElseThrow();
+        GameLevel level = gameContext.game().optGameLevel().orElseThrow();
         var pacManTile = pac.tile();
         for (int i = 1; i <= CollectedData.MAX_GHOST_BEHIND_DETECTION_DIST; ++i) {
             var behind = pacManTile.plus(pac.moveDir().opposite().vector().scaled(i));
@@ -275,7 +275,7 @@ public class RuleBasedPacSteering implements Steering {
     }
 
     private float minDistanceFromGhosts(Pac pac) {
-        GameLevel level = gameContext.game().level().orElseThrow();
+        GameLevel level = gameContext.game().optGameLevel().orElseThrow();
         return (float) level.ghosts().map(Ghost::tile)
             .mapToDouble(pac.tile()::manhattanDist)
             .min().orElse(Float.MAX_VALUE);
