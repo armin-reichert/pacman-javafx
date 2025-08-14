@@ -42,11 +42,12 @@ public abstract class Ghost extends MovingActor implements Animated {
     private List<Vector2i> specialTerrainTiles = List.of();
 
     /**
-     * @param personality ghost personality, allowed values are
-     *          {@link de.amr.pacmanfx.Globals#RED_GHOST_SHADOW},
-     *          {@link de.amr.pacmanfx.Globals#PINK_GHOST_SPEEDY},
-     *          {@link de.amr.pacmanfx.Globals#CYAN_GHOST_BASHFUL} and
-     *          {@link de.amr.pacmanfx.Globals#ORANGE_GHOST_POKEY}
+     * @param personality
+     *        ghost personality, allowed values:<br>
+     *           {@link de.amr.pacmanfx.Globals#RED_GHOST_SHADOW},<br>
+     *           {@link de.amr.pacmanfx.Globals#PINK_GHOST_SPEEDY},<br>
+     *           {@link de.amr.pacmanfx.Globals#CYAN_GHOST_BASHFUL},<br>
+     *           {@link de.amr.pacmanfx.Globals#ORANGE_GHOST_POKEY}.
      * @param name readable name, used for logging and debugging
      */
     protected Ghost(byte personality, String name) {
@@ -115,16 +116,16 @@ public abstract class Ghost extends MovingActor implements Animated {
 
     /**
      * Lets the ghost roam through the current level's world.
-     * <p></p>
+     * <p>
      * <cite>
-     Roam if you want to, roam around the world!<br>
-     Roam if you want to, without wings without wheels!<br>
-     Roam if you want to, roam around the world!<br>
-     Roam if you want to, without anything but the love we feel!
+            Roam if you want to, roam around the world!<br>
+            Roam if you want to, without wings without wheels!<br>
+            Roam if you want to, roam around the world!<br>
+            Roam if you want to, without anything but the love we feel!
      </cite>
      */
     public void roam(GameContext gameContext) {
-        if (gameContext == null || gameContext.optGameLevel().isEmpty()) return;
+        if (gameContext.optGameLevel().isEmpty()) return;
 
         GameLevel level = gameContext.gameLevel();
         Vector2i currentTile = tile();
@@ -158,10 +159,7 @@ public abstract class Ghost extends MovingActor implements Animated {
 
     @Override
     public boolean canAccessTile(GameContext gameContext, Vector2i tile) {
-        requireNonNull(tile);
-
-        if (gameContext == null || gameContext.optGameLevel().isEmpty()) return true;
-
+        if (gameContext.optGameLevel().isEmpty()) return true;
         GameLevel level = gameContext.gameLevel();
 
         // Portal tiles are the only tiles outside the world map that can be accessed
@@ -241,9 +239,6 @@ public abstract class Ghost extends MovingActor implements Animated {
      */
     @Override
     public void tick(GameContext gameContext) {
-        if (gameContext == null) {
-            return; // might happen for ghosts in cut scenes
-        }
         switch (state()) {
             case LOCKED         -> updateStateLocked(gameContext);
             case LEAVING_HOUSE  -> updateStateLeavingHouse(gameContext);
