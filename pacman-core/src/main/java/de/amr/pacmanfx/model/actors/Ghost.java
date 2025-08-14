@@ -257,35 +257,41 @@ public abstract class Ghost extends MovingActor implements Animated {
      * and start blinking when Pac-Man's power starts fading. After that, they return to their normal color.
      */
     private void updateStateLocked(GameContext gameContext) {
-        if (gameContext.optGameLevel().isPresent()) {
-            GameLevel level = gameContext.gameLevel();
-            House house = level.house().orElse(null);
-            if (house == null) {
-                Logger.error("No ghost house in level? WTF!");
-                return;
+        Optional<GameLevel> optGameLevel = gameContext.optGameLevel();
+        if (optGameLevel.isEmpty()) {
+            Logger.error("No game level? WTF!");
+            return;
+        }
+        Optional<House> optHouse = optGameLevel.flatMap(GameLevel::house);
+        if (optHouse.isEmpty()) {
+            Logger.error("No house? WTF!");
+            return;
+        }
+        GameLevel gameLevel = optGameLevel.get();
+        House house = optHouse.get();
+        if (house.isVisitedBy(this)) {
+            float minY = (house.minTile().y() + 1) * TS + HTS;
+            float maxY = (house.maxTile().y() - 1) * TS - HTS;
+            ActorSpeedControl speedControl = gameContext.game().actorSpeedControl();
+            float speed = speedControl.ghostSpeedInsideHouse(gameContext, gameLevel, this);
+            setSpeed(speed);
+            move();
+            float y = position().y();
+            if (y <= minY) {
+                setMoveDir(DOWN);
+                setWishDir(DOWN);
+            } else if (y >= maxY) {
+                setMoveDir(UP);
+                setWishDir(DOWN);
             }
-            if (house.isVisitedBy(this)) {
-                float minY = (house.minTile().y() + 1) * TS + HTS;
-                float maxY = (house.maxTile().y() - 1) * TS - HTS;
-                setSpeed(gameContext.game().actorSpeedControl().ghostSpeedInsideHouse(gameContext, level, this));
-                move();
-                float y = position().y();
-                if (y <= minY) {
-                    setMoveDir(DOWN);
-                    setWishDir(DOWN);
-                } else if (y >= maxY) {
-                    setMoveDir(UP);
-                    setWishDir(DOWN);
-                }
-                setPosition(position().x(), Math.clamp(y, minY, maxY));
-            } else {
-                setSpeed(0);
-            }
-            if (level.pac().powerTimer().isRunning() && !level.victims().contains(this)) {
-                updateFrightenedAnimation(gameContext);
-            } else {
-                selectAnimation(ANIM_GHOST_NORMAL);
-            }
+            setY(Math.clamp(y, minY, maxY));
+        } else {
+            setSpeed(0);
+        }
+        if (gameLevel.pac().powerTimer().isRunning() && !gameLevel.victims().contains(this)) {
+            updateFrightenedAnimation(gameContext);
+        } else {
+            selectAnimation(ANIM_GHOST_NORMAL);
         }
     }
 
