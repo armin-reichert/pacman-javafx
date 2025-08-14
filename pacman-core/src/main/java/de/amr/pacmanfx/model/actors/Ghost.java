@@ -305,33 +305,39 @@ public abstract class Ghost extends MovingActor implements Animated {
      * The ghost speed is slower than outside, but I do not know the exact value.
      */
     private void updateStateLeavingHouse(GameContext gameContext) {
-        if (gameContext.optGameLevel().isPresent()) {
-            GameLevel level = gameContext.gameLevel();
-            House house = level.house().orElse(null);
-            if (house == null) {
-                Logger.error("No ghost house in level? WTF!");
-                return;
+        Optional<GameLevel> optGameLevel = gameContext.optGameLevel();
+        if (optGameLevel.isEmpty()) {
+            Logger.error("No game level? WTF!");
+            return;
+        }
+        Optional<House> optHouse = optGameLevel.flatMap(GameLevel::house);
+        if (optHouse.isEmpty()) {
+            Logger.error("No house? WTF!");
+            return;
+        }
+        GameLevel gameLevel = optGameLevel.get();
+        House house = optHouse.get();
+
+        Vector2f position = position();
+        Vector2f houseEntryPosition = house.entryPosition();
+        if (position.y() <= houseEntryPosition.y()) {
+            // is outside house at entry
+            setY(houseEntryPosition.y());
+            setMoveDir(LEFT);
+            setWishDir(LEFT);
+            newTileEntered = false; // don't change direction until new tile is entered
+            if (gameLevel.pac().powerTimer().isRunning() && !gameLevel.victims().contains(this)) {
+                setState(GhostState.FRIGHTENED);
+            } else {
+                setState(GhostState.HUNTING_PAC);
             }
-            float speedInsideHouse = gameContext.game().actorSpeedControl().ghostSpeedInsideHouse(gameContext, level, this);
-            Vector2f houseEntryPosition = house.entryPosition();
-            Vector2f position = position();
-            if (position.y() <= houseEntryPosition.y()) {
-                // has raised and is outside house
-                setPosition(houseEntryPosition);
-                setMoveDir(LEFT);
-                setWishDir(LEFT);
-                newTileEntered = false; // force moving left until new tile is entered
-                if (level.pac().powerTimer().isRunning() && !level.victims().contains(this)) {
-                    setState(GhostState.FRIGHTENED);
-                } else {
-                    setState(GhostState.HUNTING_PAC);
-                }
-                return;
-            }
-            // move inside house
+        }
+        else {
+            // still inside house
+            float speed = gameContext.game().actorSpeedControl().ghostSpeedInsideHouse(gameContext, gameLevel, this);
             float centerX = position.x() + HTS;
             float houseCenterX = house.center().x();
-            if (differsAtMost(0.5f * speedInsideHouse, centerX, houseCenterX)) {
+            if (differsAtMost(0.5f * speed, centerX, houseCenterX)) {
                 // align horizontally and raise
                 setX(houseCenterX - HTS);
                 setMoveDir(UP);
@@ -341,9 +347,9 @@ public abstract class Ghost extends MovingActor implements Animated {
                 setMoveDir(centerX < houseCenterX ? RIGHT : LEFT);
                 setWishDir(centerX < houseCenterX ? RIGHT : LEFT);
             }
-            setSpeed(speedInsideHouse);
+            setSpeed(speed);
             move();
-            if (level.pac().powerTimer().isRunning() && !level.victims().contains(this)) {
+            if (gameLevel.pac().powerTimer().isRunning() && !gameLevel.victims().contains(this)) {
                 updateFrightenedAnimation(gameContext);
             } else {
                 selectAnimation(ANIM_GHOST_NORMAL);
