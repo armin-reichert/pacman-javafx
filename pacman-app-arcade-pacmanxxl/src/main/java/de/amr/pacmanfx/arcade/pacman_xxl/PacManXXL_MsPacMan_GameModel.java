@@ -14,8 +14,8 @@ import java.util.Random;
 
 public class PacManXXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
 
-    public PacManXXL_MsPacMan_GameModel(GameContext gameContext, PacManXXL_Common_MapSelector mapSelector, File higScoreFile) {
-        super(gameContext, mapSelector, higScoreFile);
+    public PacManXXL_MsPacMan_GameModel(GameContext gameContext, PacManXXL_Common_MapSelector mapSelector, File highScoreFile) {
+        super(gameContext, mapSelector, highScoreFile);
     }
 
     @Override

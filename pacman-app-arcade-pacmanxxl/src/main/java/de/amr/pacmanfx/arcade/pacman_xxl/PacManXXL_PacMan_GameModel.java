@@ -20,8 +20,8 @@ import java.util.Random;
  */
 public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
 
-    public PacManXXL_PacMan_GameModel(GameContext gameContext, PacManXXL_Common_MapSelector mapSelector, File highSCoreFile) {
-        super(gameContext, mapSelector, highSCoreFile);
+    public PacManXXL_PacMan_GameModel(GameContext gameContext, PacManXXL_Common_MapSelector mapSelector, File highScoreFile) {
+        super(gameContext, mapSelector, highScoreFile);
         // Demo level map could be custom map, so use generic automatic steering
         demoLevelSteering = new RuleBasedPacSteering(gameContext);
     }
