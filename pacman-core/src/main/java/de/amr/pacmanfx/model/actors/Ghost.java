@@ -256,11 +256,6 @@ public abstract class Ghost extends MovingActor implements Animated {
         }
     }
 
-    public void eaten(int index) {
-        setState(GhostState.EATEN);
-        selectAnimation(ANIM_GHOST_NUMBER, index);
-    }
-
     // --- LOCKED ---
 
     /**

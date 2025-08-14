@@ -21,7 +21,7 @@ public class TestEatingFood {
 
     @BeforeEach
     public void createGameLevel() {
-        theGameContext().game().buildNormalLevel(theGameContext(), 1);
+        theGameContext().game().buildNormalLevel(1);
     }
 
     private GameLevel gameLevel() { return theGameContext().gameLevel(); }
