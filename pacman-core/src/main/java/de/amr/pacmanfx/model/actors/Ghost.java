@@ -289,7 +289,7 @@ public abstract class Ghost extends MovingActor implements Animated {
             setSpeed(0);
         }
         if (gameLevel.pac().powerTimer().isRunning() && !gameLevel.victims().contains(this)) {
-            updateFrightenedAnimation(gameContext);
+            playFrightenedAnimation(gameContext, gameLevel.pac());
         } else {
             selectAnimation(ANIM_GHOST_NORMAL);
         }
@@ -350,7 +350,7 @@ public abstract class Ghost extends MovingActor implements Animated {
             setSpeed(speed);
             move();
             if (gameLevel.pac().powerTimer().isRunning() && !gameLevel.victims().contains(this)) {
-                updateFrightenedAnimation(gameContext);
+                playFrightenedAnimation(gameContext, gameLevel.pac());
             } else {
                 selectAnimation(ANIM_GHOST_NORMAL);
             }
@@ -389,35 +389,26 @@ public abstract class Ghost extends MovingActor implements Animated {
      * @see <a href="https://www.youtube.com/watch?v=eFP0_rkjwlY">YouTube: How Frightened Ghosts Decide Where to Go</a>
      */
     private void updateStateFrightened(GameContext gameContext) {
-        if (gameContext.optGameLevel().isPresent()) {
-            GameLevel level = gameContext.gameLevel();
-            House house = level.house().orElse(null);
-            if (house == null) {
-                Logger.error("No ghost house in level? WTF!");
-                return;
-            }
-            float speed = level.isTunnel(tile())
-                ? gameContext.game().actorSpeedControl().ghostTunnelSpeed(gameContext, level, this)
-                : gameContext.game().actorSpeedControl().ghostFrightenedSpeed(gameContext, level, this);
-            setSpeed(speed);
-            roam(gameContext);
-            updateFrightenedAnimation(gameContext);
+        Optional<GameLevel> optGameLevel = gameContext.optGameLevel();
+        if (optGameLevel.isEmpty()) {
+            Logger.error("No game level? WTF!");
+            return;
         }
+        GameLevel gameLevel = optGameLevel.get();
+        ActorSpeedControl speedControl = gameContext.game().actorSpeedControl();
+        float speed = gameLevel.isTunnel(tile())
+            ? speedControl.ghostTunnelSpeed(gameContext, gameLevel, this)
+            : speedControl.ghostFrightenedSpeed(gameContext, gameLevel, this);
+        setSpeed(speed);
+        roam(gameContext);
+        playFrightenedAnimation(gameContext, gameLevel.pac());
     }
 
-    private void updateFrightenedAnimation(GameContext gameContext) {
-        if (gameContext.optGameLevel().isPresent()) {
-            GameLevel level = gameContext.gameLevel();
-            House house = level.house().orElse(null);
-            if (house == null) {
-                Logger.error("No ghost house in level? WTF!");
-                return;
-            }
-            if (level.pac().isPowerFadingStarting(gameContext)) {
-                playAnimation(ANIM_GHOST_FLASHING);
-            } else if (!level.pac().isPowerFading(gameContext)) {
-                playAnimation(ANIM_GHOST_FRIGHTENED);
-            }
+    private void playFrightenedAnimation(GameContext gameContext, Pac pac) {
+        if (pac.isPowerFadingStarting(gameContext)) {
+            playAnimation(ANIM_GHOST_FLASHING);
+        } else if (!pac.isPowerFading(gameContext)) {
+            playAnimation(ANIM_GHOST_FRIGHTENED);
         }
     }
 
