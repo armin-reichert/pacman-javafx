@@ -11,7 +11,6 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.AbstractGameModel;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.GateKeeper;
-import de.amr.pacmanfx.model.MapSelector;
 import de.amr.pacmanfx.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
@@ -37,7 +36,6 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
 
     protected final GameContext gameContext;
     protected GameLevel gameLevel;
-    protected MapSelector mapSelector;
     protected GateKeeper gateKeeper;
     protected Steering autopilot;
     protected Steering demoLevelSteering;
@@ -163,11 +161,6 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
 
     @Override
     public Optional<GateKeeper> optGateKeeper() { return Optional.of(gateKeeper); }
-
-    @Override
-    public MapSelector mapSelector() {
-        return mapSelector;
-    }
 
     @Override
     public double pacPowerSeconds(GameLevel level) {

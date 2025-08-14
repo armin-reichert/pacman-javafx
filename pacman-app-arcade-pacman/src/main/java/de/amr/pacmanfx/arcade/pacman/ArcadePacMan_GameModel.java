@@ -168,15 +168,16 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
     }
 
     // Note: level numbering starts with 1
-    private static final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = { -1, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7 };
+    protected static final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = { -1, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7 };
 
     // bonus points = multiplier * 100
-    private static final byte[] BONUS_VALUE_MULTIPLIERS = { 1, 3, 5, 7, 10, 20, 30, 50 };
+    protected static final byte[] BONUS_VALUE_MULTIPLIERS = { 1, 3, 5, 7, 10, 20, 30, 50 };
 
-    private final HUDData hud = new ArcadePacMan_HUDData();
-    private final ScoreManager scoreManager;
-    private final HuntingTimer huntingTimer;
-    private final ActorSpeedControl actorSpeedControl;
+    protected final MapSelector mapSelector;
+    protected final HUDData hud = new ArcadePacMan_HUDData();
+    protected final ScoreManager scoreManager;
+    protected final HuntingTimer huntingTimer;
+    protected final ActorSpeedControl actorSpeedControl;
 
     public ArcadePacMan_GameModel(GameContext gameContext, File highScoreFile) {
         this(gameContext, new ArcadePacMan_MapSelector(), highScoreFile);
@@ -246,6 +247,11 @@ public class ArcadePacMan_GameModel extends ArcadeCommon_GameModel {
         autopilot = new RuleBasedPacSteering(gameContext);
 
         mapSelector.loadAllMaps();
+    }
+
+    @Override
+    public MapSelector mapSelector() {
+        return mapSelector;
     }
 
     @Override

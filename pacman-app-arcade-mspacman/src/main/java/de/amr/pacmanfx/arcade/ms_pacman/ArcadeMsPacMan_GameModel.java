@@ -199,10 +199,11 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
 
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
-    private final ArcadeMsPacMan_HUDData hud = new ArcadeMsPacMan_HUDData();
-    private final ScoreManager scoreManager;
-    private final HuntingTimer huntingTimer;
-    private final ActorSpeedControl actorSpeedControl;
+    protected final MapSelector mapSelector;
+    protected final ArcadeMsPacMan_HUDData hud = new ArcadeMsPacMan_HUDData();
+    protected final ScoreManager scoreManager;
+    protected final HuntingTimer huntingTimer;
+    protected final ActorSpeedControl actorSpeedControl;
 
     /**
      * Called via reflection by builder.
@@ -261,6 +262,11 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
         demoLevelSteering = new RuleBasedPacSteering(gameContext);
         autopilot = new RuleBasedPacSteering(gameContext);
         mapSelector.loadAllMaps();
+    }
+
+    @Override
+    public MapSelector mapSelector() {
+        return mapSelector;
     }
 
     @Override
@@ -358,7 +364,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
      * </table>
      * </p>
      */
-    private byte computeBonusSymbol(int levelNumber) {
+    protected byte computeBonusSymbol(int levelNumber) {
         if (levelNumber <= 7) return (byte) (levelNumber - 1);
         int coin = randomInt(0, 320);
         if (coin <  50) return 0; // 5/32 probability
@@ -438,7 +444,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
         eventManager().publishEvent(GameEventType.BONUS_ACTIVATED, bonus.tile());
     }
 
-    private Portal randomPortal(GameLevel level) {
+    protected Portal randomPortal(GameLevel level) {
         return level.portals().get(new Random().nextInt(level.portals().size()));
     }
 
