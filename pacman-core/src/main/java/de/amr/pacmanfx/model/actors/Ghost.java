@@ -38,9 +38,8 @@ public abstract class Ghost extends MovingActor implements Animated {
 
     private final GhostID id;
     private ObjectProperty<GhostState> state;
-
-    private List<Vector2i> specialTerrainTiles = List.of();
     private ActorAnimationMap animationMap;
+    private List<Vector2i> specialTerrainTiles = List.of();
 
     /**
      * @param personality ghost personality, allowed values are
@@ -76,7 +75,7 @@ public abstract class Ghost extends MovingActor implements Animated {
     @Override
     public String toString() {
         return "Ghost{" +
-                "name='" + id.name() + '\'' +
+                "id=" + id +
                 ", state=" + (state != null ? state() : DEFAULT_STATE) +
                 ", visible=" + isVisible() +
                 ", position=" + position() +
