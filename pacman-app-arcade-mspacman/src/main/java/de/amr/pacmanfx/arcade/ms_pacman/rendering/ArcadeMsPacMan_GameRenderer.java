@@ -16,7 +16,6 @@ import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.BonusState;
 import de.amr.pacmanfx.ui.GameAssets;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
-import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -50,12 +49,6 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
 
     protected ArcadeMsPacMan_GameRenderer(GameAssets assets, Canvas canvas, ArcadeMsPacMan_SpriteSheet spriteSheet) {
         this(assets, canvas, spriteSheet, null);
-    }
-
-    @Override
-    public void dispose() {
-        spriteSheet = null;
-        brightMazesSpriteSheet = null;
     }
 
     @Override

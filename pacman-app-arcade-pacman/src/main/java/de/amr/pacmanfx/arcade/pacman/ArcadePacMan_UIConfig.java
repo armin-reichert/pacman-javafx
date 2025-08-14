@@ -74,6 +74,11 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
         return ui;
     }
 
+    @Override
+    public ArcadePacMan_SpriteSheet spriteSheet() {
+        return spriteSheet;
+    }
+
     public void storeAssets(AssetStorage assets) {
         storeLocalAssetValue(assets, "spritesheet", spriteSheet);
         storeLocalAssetValue(assets, "app_icon",         RES_ARCADE_PAC_MAN.loadImage("graphics/icons/pacman.png"));
@@ -165,28 +170,23 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
     }
 
     @Override
-    public ArcadePacMan_GameRenderer createGameRenderer(Canvas canvas) {
-        return new ArcadePacMan_GameRenderer(ui.assets(), spriteSheet(), canvas);
-    }
-
-    @Override
     public WorldMapColorScheme colorScheme(WorldMap worldMap) {
         return MAP_COLORING;
     }
 
     @Override
-    public ArcadePacMan_SpriteSheet spriteSheet() {
-        return spriteSheet;
+    public ArcadePacMan_GameRenderer createGameRenderer(Canvas canvas) {
+        return new ArcadePacMan_GameRenderer(ui.assets(), canvas, spriteSheet);
     }
 
     @Override
     public ArcadePacMan_GhostAnimationMap createGhostAnimations(Ghost ghost) {
-        return new ArcadePacMan_GhostAnimationMap(spriteSheet(), ghost.personality());
+        return new ArcadePacMan_GhostAnimationMap(spriteSheet, ghost.personality());
     }
 
     @Override
     public ArcadePacMan_PacAnimationMap createPacAnimations(Pac pac) {
-        return new ArcadePacMan_PacAnimationMap(spriteSheet());
+        return new ArcadePacMan_PacAnimationMap(spriteSheet);
     }
 
     @Override

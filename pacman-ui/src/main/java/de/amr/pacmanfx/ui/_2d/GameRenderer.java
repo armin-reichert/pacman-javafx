@@ -36,7 +36,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Common base class of all 2D game renderers.
  */
-public abstract class GameRenderer implements Disposable {
+public abstract class GameRenderer {
 
     public static void fillCanvas(Canvas canvas, Color color) {
         requireNonNull(canvas);
@@ -350,9 +350,7 @@ public abstract class GameRenderer implements Disposable {
                 ctx().setFont(Font.font("Monospaced", scaled(6)));
                 ctx().fillText(text, scaled(pac.x() - 4), scaled(pac.y() + 16));
             }
-            case Bonus bonus -> {
-                //TODO
-            }
+            case Bonus bonus -> {} //TODO
             case Animated animated -> drawAnimatedMovingActorInfo(animated);
             default -> Logger.error("Cannot render moving actor info of class {}", movingActor.getClass().getSimpleName());
         }

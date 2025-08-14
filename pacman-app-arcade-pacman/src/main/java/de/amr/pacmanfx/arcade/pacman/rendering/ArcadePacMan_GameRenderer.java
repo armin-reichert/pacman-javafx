@@ -25,32 +25,23 @@ import java.util.Optional;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_WHITE;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_YELLOW;
-import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
 public class ArcadePacMan_GameRenderer extends GameRenderer {
 
     protected ArcadePacMan_SpriteSheet spriteSheet;
 
-    public ArcadePacMan_GameRenderer(GameAssets assets, ArcadePacMan_SpriteSheet spriteSheet, Canvas canvas) {
+    public ArcadePacMan_GameRenderer(GameAssets assets, Canvas canvas, ArcadePacMan_SpriteSheet spriteSheet) {
         super(assets);
-        this.ctx = requireNonNull(canvas).getGraphicsContext2D();
-        this.spriteSheet = requireNonNull(spriteSheet);
+        ctx = canvas.getGraphicsContext2D();
+        this.spriteSheet = spriteSheet;
     }
 
     @Override
     public Optional<SpriteSheet<?>> optSpriteSheet() { return Optional.of(spriteSheet); }
 
     @Override
-    public void dispose() {
-        ctx = null;
-        spriteSheet = null;
-        scalingProperty.unbind();
-    }
-
-    @Override
     public void drawHUD(GameContext gameContext, HUDData data, Vector2f sceneSize, long tick) {
-        requireNonNull(data);
         if (!data.isVisible()) return;
 
         if (data.isScoreVisible()) {

@@ -162,7 +162,7 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config {
 
     @Override
     public PacManXXL_PacMan_GameRenderer createGameRenderer(Canvas canvas) {
-        return new PacManXXL_PacMan_GameRenderer(ui.assets(), spriteSheet(), canvas);
+        return new PacManXXL_PacMan_GameRenderer(ui.assets(), canvas, spriteSheet);
     }
 
     @Override
@@ -194,12 +194,12 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config {
 
     @Override
     public ArcadePacMan_GhostAnimationMap createGhostAnimations(Ghost ghost) {
-        return new ArcadePacMan_GhostAnimationMap(spriteSheet(), ghost.personality());
+        return new ArcadePacMan_GhostAnimationMap(spriteSheet, ghost.personality());
     }
 
     @Override
     public ArcadePacMan_PacAnimationMap createPacAnimations(Pac pac) {
-        return new ArcadePacMan_PacAnimationMap(spriteSheet());
+        return new ArcadePacMan_PacAnimationMap(spriteSheet);
     }
 
     @Override
@@ -241,7 +241,6 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config {
         scenesByID.put(SCENE_ID_CUT_SCENE_N_2D.formatted(2), new ArcadePacMan_CutScene2(ui));
         scenesByID.put(SCENE_ID_CUT_SCENE_N_2D.formatted(3), new ArcadePacMan_CutScene3(ui));
     }
-
 
     @Override
     public GameScene selectGameScene(GameContext gameContext) {
