@@ -1,3 +1,7 @@
+/*
+Copyright (c) 2021-2025 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.pacmanfx.model;
 
 import de.amr.pacmanfx.event.GameEvent;
@@ -9,7 +13,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.HashSet;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
@@ -42,7 +45,7 @@ public class DefaultScoreManager implements ScoreManager {
 
     @Override
     public void setExtraLifeScores(Set<Integer> scores) {
-        extraLifeScores = new HashSet<>(scores);
+        extraLifeScores = Set.copyOf(scores);
     }
 
     @Override
@@ -119,8 +122,7 @@ public class DefaultScoreManager implements ScoreManager {
     }
 
     @Override
-    public void setScoreLevelNumber(int levelNumber) {
+    public void setGameLevelNumber(int levelNumber) {
         score.setLevelNumber(levelNumber);
     }
-
 }

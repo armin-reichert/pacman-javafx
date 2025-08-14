@@ -209,7 +209,7 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
         gameLevel.pac().usingAutopilotProperty().bind(gameContext.gameController().propertyUsingAutopilot());
         hudData().theLevelCounter().setEnabled(true);
         huntingTimer().reset();
-        scoreManager().setScoreLevelNumber(levelNumber);
+        scoreManager().setGameLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
         gameLevel.house().ifPresent(house -> gateKeeper.setHouse(house)); //TODO what if no house exists?
         eventManager().publishEvent(GameEventType.LEVEL_CREATED);
@@ -226,7 +226,7 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
         demoLevelSteering.init();
         hudData().theLevelCounter().setEnabled(true);
         huntingTimer().reset();
-        scoreManager().setScoreLevelNumber(levelNumber);
+        scoreManager().setGameLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
         gameLevel.house().ifPresent(house -> gateKeeper.setHouse(house)); //TODO what if no house exists?
         eventManager().publishEvent(GameEventType.LEVEL_CREATED);

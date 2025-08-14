@@ -556,7 +556,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         gameLevel.pac().immuneProperty().bind(gameContext.gameController().propertyImmunity());
         gameLevel.pac().usingAutopilotProperty().bind(gameContext.gameController().propertyUsingAutopilot());
         huntingTimer().reset();
-        scoreManager.setScoreLevelNumber(levelNumber);
+        scoreManager.setGameLevelNumber(levelNumber);
         optGateKeeper().ifPresent(gateKeeper -> {
             gateKeeper.setLevelNumber(levelNumber);
             gameLevel.house().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
@@ -574,7 +574,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         gameLevel.pac().setAutopilotSteering(demoLevelSteering);
         demoLevelSteering.init();
         huntingTimer.reset();
-        scoreManager.setScoreLevelNumber(1);
+        scoreManager.setGameLevelNumber(1);
         optGateKeeper().ifPresent(gateKeeper -> {
             gateKeeper.setLevelNumber(1);
             gameLevel.house().ifPresent(gateKeeper::setHouse); //TODO what if no house exists?
