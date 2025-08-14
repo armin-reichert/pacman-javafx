@@ -184,17 +184,17 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public PacManXXL_MsPacMan_GameRenderer createGameRenderer(Canvas canvas) {
-        return new PacManXXL_MsPacMan_GameRenderer(ui.assets(), this, canvas);
+        return new PacManXXL_MsPacMan_GameRenderer(ui.assets(), canvas, spriteSheet);
     }
 
     @Override
     public SpriteAnimationMap<SpriteID> createGhostAnimations(Ghost ghost) {
-        return new ArcadeMsPacMan_GhostAnimationMap(spriteSheet(), ghost.personality());
+        return new ArcadeMsPacMan_GhostAnimationMap(spriteSheet, ghost.personality());
     }
 
     @Override
     public SpriteAnimationMap<SpriteID> createPacAnimations(Pac pac) {
-        return new ArcadeMsPacMan_PacAnimationMap(spriteSheet());
+        return new ArcadeMsPacMan_PacAnimationMap(spriteSheet);
     }
 
     @Override

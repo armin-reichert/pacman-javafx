@@ -6,8 +6,8 @@ package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_GameRenderer;
+import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.GameAssets;
 import de.amr.pacmanfx.ui._2d.GenericMapRenderer;
 import javafx.scene.canvas.Canvas;
@@ -17,8 +17,8 @@ public class PacManXXL_MsPacMan_GameRenderer extends ArcadeMsPacMan_GameRenderer
 
     private final GenericMapRenderer mapRenderer;
 
-    public PacManXXL_MsPacMan_GameRenderer(GameAssets assets, GameUI_Config config, Canvas canvas) {
-        super(assets, config, canvas);
+    public PacManXXL_MsPacMan_GameRenderer(GameAssets assets, Canvas canvas, ArcadeMsPacMan_SpriteSheet spriteSheet) {
+        super(assets, canvas, spriteSheet);
         mapRenderer = new GenericMapRenderer(canvas);
         mapRenderer.scalingProperty().bind(scalingProperty());
     }

@@ -184,17 +184,17 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public ArcadeMsPacMan_GameRenderer createGameRenderer(Canvas canvas) {
-        return new ArcadeMsPacMan_GameRenderer(ui.assets(), this, spriteSheetBrightMazes, canvas);
+        return new ArcadeMsPacMan_GameRenderer(ui.assets(), canvas, spriteSheet, spriteSheetBrightMazes);
     }
 
     @Override
     public ArcadeMsPacMan_GhostAnimationMap createGhostAnimations(Ghost ghost) {
-        return new ArcadeMsPacMan_GhostAnimationMap(spriteSheet(), ghost.personality());
+        return new ArcadeMsPacMan_GhostAnimationMap(spriteSheet, ghost.personality());
     }
 
     @Override
     public ArcadeMsPacMan_PacAnimationMap createPacAnimations(Pac pac) {
-        return new ArcadeMsPacMan_PacAnimationMap(spriteSheet());
+        return new ArcadeMsPacMan_PacAnimationMap(spriteSheet);
     }
 
     @Override

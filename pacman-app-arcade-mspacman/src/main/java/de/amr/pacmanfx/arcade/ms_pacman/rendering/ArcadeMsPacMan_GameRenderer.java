@@ -38,26 +38,18 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
 
     public ArcadeMsPacMan_GameRenderer(
         GameAssets assets,
-        GameUI_Config config,
-        BrightMazesSpriteSheet brightMazesSpriteSheet,
-        Canvas canvas)
+        Canvas canvas,
+        ArcadeMsPacMan_SpriteSheet spriteSheet,
+        BrightMazesSpriteSheet brightMazesSpriteSheet)
     {
         super(assets);
-        requireNonNull(config);
-        this.ctx = requireNonNull(canvas).getGraphicsContext2D();
-        this.spriteSheet = (ArcadeMsPacMan_SpriteSheet) config.spriteSheet();
-        this.brightMazesSpriteSheet = requireNonNull(brightMazesSpriteSheet);
+        ctx = canvas.getGraphicsContext2D();
+        this.spriteSheet = spriteSheet;
+        this.brightMazesSpriteSheet = brightMazesSpriteSheet;
     }
 
-    protected ArcadeMsPacMan_GameRenderer(
-        GameAssets assets,
-        GameUI_Config config,
-        Canvas canvas)
-    {
-        super(assets);
-        requireNonNull(config);
-        this.ctx = requireNonNull(canvas).getGraphicsContext2D();
-        this.spriteSheet = (ArcadeMsPacMan_SpriteSheet) config.spriteSheet();
+    protected ArcadeMsPacMan_GameRenderer(GameAssets assets, Canvas canvas, ArcadeMsPacMan_SpriteSheet spriteSheet) {
+        this(assets, canvas, spriteSheet, null);
     }
 
     @Override
@@ -71,8 +63,6 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
 
     @Override
     public void drawHUD(GameContext gameContext, HUDData data, Vector2f sceneSize, long tick) {
-        requireNonNull(data);
-
         if (!data.isVisible()) return;
 
         if (data.isScoreVisible()) {
