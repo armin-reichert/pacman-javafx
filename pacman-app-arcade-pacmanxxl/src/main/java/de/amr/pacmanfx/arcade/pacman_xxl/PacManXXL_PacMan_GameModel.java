@@ -8,10 +8,12 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.model.MapSelectionMode;
+import de.amr.pacmanfx.model.MapSelector;
 import de.amr.pacmanfx.steering.RuleBasedPacSteering;
 
 import java.io.File;
-import java.util.Random;
+
+import static de.amr.pacmanfx.lib.RandomNumberSupport.randomInt;
 
 /**
  * Extension of Arcade Pac-Man with 8 new builtin mazes (thanks to the one and only
@@ -20,9 +22,12 @@ import java.util.Random;
  */
 public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
 
-    public PacManXXL_PacMan_GameModel(GameContext gameContext, PacManXXL_Common_MapSelector mapSelector, File highScoreFile) {
+    private static final int[] DEMO_LEVEL_NUMBERS = { 1, 3, 6, 10, 14, 18 };
+
+    // Warning: Constructor signature is used via reflection by GameUI_Builder, do not change!
+    public PacManXXL_PacMan_GameModel(GameContext gameContext, MapSelector mapSelector, File highScoreFile) {
         super(gameContext, mapSelector, highScoreFile);
-        // Demo level map could be custom map, so use generic automatic steering
+        // Demo level map could be a custom map, so use generic auto-steering that also can cope with dead-ends:
         demoLevelSteering = new RuleBasedPacSteering(gameContext);
     }
 
@@ -32,8 +37,9 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
     @Override
     public void buildDemoLevel() {
         // Select random (standard) level with different map and map color scheme for each choice
-        int[] levelNumbers = { 1, 3, 6, 10, 14, 18 };
-        int levelNumber = levelNumbers[new Random().nextInt(levelNumbers.length)];
+        int randomIndex = randomInt(0, DEMO_LEVEL_NUMBERS.length);
+        int levelNumber = DEMO_LEVEL_NUMBERS[randomIndex];
+        scoreManager().setGameLevelNumber(levelNumber);
         mapSelector().setMapSelectionMode(MapSelectionMode.NO_CUSTOM_MAPS);
         createLevel(levelNumber);
         gameLevel.setData(createLevelData(1)); // always run with settings (speed etc.) of first level
@@ -44,9 +50,8 @@ public class PacManXXL_PacMan_GameModel extends ArcadePacMan_GameModel {
         demoLevelSteering.init();
         hudData().theLevelCounter().setEnabled(false);
         huntingTimer().reset();
-        scoreManager().setGameLevelNumber(levelNumber);
         gateKeeper.setLevelNumber(levelNumber);
-        gameLevel.house().ifPresent(house -> gateKeeper.setHouse(house)); //TODO what if no house exists?
+        gameLevel.house().ifPresent(house -> gateKeeper.setHouse(house));
         eventManager().publishEvent(GameEventType.LEVEL_CREATED);
     }
 }
