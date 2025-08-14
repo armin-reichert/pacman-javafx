@@ -1,9 +1,9 @@
 package de.amr.pacmanfx.model;
 
-import de.amr.pacmanfx.Validations;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.actors.Actor;
+import de.amr.pacmanfx.model.actors.GhostID;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +18,7 @@ public class House {
     private final Vector2i maxTile;
     private final Vector2i leftDoorTile;
     private final Vector2i rightDoorTile;
-    private final Map<Byte, Vector2i> ghostRevivalTileMap = new HashMap<>();
+    private final Map<GhostID, Vector2i> ghostRevivalTileMap = new HashMap<>();
 
     public House(Vector2i minTile, Vector2i maxTile, Vector2i leftDoorTile, Vector2i rightDoorTile) {
         this.minTile = requireNonNull(minTile);
@@ -52,14 +52,13 @@ public class House {
         return tile.equals(leftDoorTile) || tile.equals(rightDoorTile);
     }
 
-    public void setGhostRevivalTile(byte personality, Vector2i tile) {
-        Validations.requireValidGhostPersonality(personality);
+    public void setGhostRevivalTile(GhostID ghostID, Vector2i tile) {
         requireNonNull(tile);
-        ghostRevivalTileMap.put(personality, tile);
+        ghostRevivalTileMap.put(ghostID, tile);
     }
 
-    public Vector2i ghostRevivalTile(byte personality) {
-        return ghostRevivalTileMap.get(personality);
+    public Vector2i ghostRevivalTile(GhostID ghostID) {
+        return ghostRevivalTileMap.get(ghostID);
     }
 
     /**

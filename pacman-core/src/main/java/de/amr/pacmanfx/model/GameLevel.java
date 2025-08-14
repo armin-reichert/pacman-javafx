@@ -135,12 +135,6 @@ public class GameLevel {
         }
         ghostStartPositions[ORANGE_GHOST_POKEY] = halfTileRightOf(orangeGhostTile);
 
-        // Revival positions
-        house.setGhostRevivalTile(RED_GHOST_SHADOW,   pinkGhostTile);
-        house.setGhostRevivalTile(PINK_GHOST_SPEEDY,  pinkGhostTile);
-        house.setGhostRevivalTile(CYAN_GHOST_BASHFUL, cyanGhostTile);
-        house.setGhostRevivalTile(ORANGE_GHOST_POKEY, orangeGhostTile);
-
         // Scatter tiles
 
         ghostScatterTiles[RED_GHOST_SHADOW] = worldMap.getTerrainTileProperty(POS_SCATTER_RED_GHOST,
@@ -154,7 +148,6 @@ public class GameLevel {
 
         ghostScatterTiles[ORANGE_GHOST_POKEY] = worldMap.getTerrainTileProperty(POS_SCATTER_ORANGE_GHOST,
             Vector2i.of(worldMap.numRows() - EMPTY_ROWS_BELOW_MAZE, 0));
-
     }
 
     private Portal[] findPortals(WorldMap worldMap) {
@@ -265,7 +258,20 @@ public class GameLevel {
     public void setPac(Pac pac) { this.pac = pac; }
     public Pac pac() { return pac; }
 
-    public void setGhosts(Ghost... ghosts) { this.ghosts = requireNonNull(ghosts); }
+    public void setGhosts(Ghost... ghosts) {
+        this.ghosts = requireNonNull(ghosts);
+        for (Ghost ghost : ghosts) {
+            byte personality = ghost.id().personality();
+            Vector2i tile = switch (personality) {
+                case RED_GHOST_SHADOW, PINK_GHOST_SPEEDY -> worldMap.getTerrainTileProperty(POS_RED_GHOST);
+                case CYAN_GHOST_BASHFUL -> worldMap.getTerrainTileProperty(POS_CYAN_GHOST);
+                case ORANGE_GHOST_POKEY -> worldMap.getTerrainTileProperty(POS_ORANGE_GHOST);
+                default -> throw new IllegalArgumentException("Illegal ghost personality: %d".formatted(personality));
+            };
+            house.setGhostRevivalTile(ghost.id(), tile);
+        }
+    }
+
     public Ghost ghost(byte id) { return ghosts != null ? ghosts[requireValidGhostPersonality(id)] : null; }
 
     public Stream<Ghost> ghosts(GhostState... states) {

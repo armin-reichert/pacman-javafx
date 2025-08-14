@@ -467,7 +467,7 @@ public abstract class Ghost extends MovingActor implements Animated {
             }
             float speed = gameContext.game().actorSpeedControl().ghostSpeedReturningToHouse(gameContext, level, this);
             Vector2f position = position();
-            Vector2f revivalPosition = house.ghostRevivalTile(id.personality()).scaled((float)TS).plus(HTS, 0);
+            Vector2f revivalPosition = house.ghostRevivalTile(id).scaled((float)TS).plus(HTS, 0);
             if (position.roughlyEquals(revivalPosition, 0.5f * speed, 0.5f * speed)) {
                 setPosition(revivalPosition);
                 setMoveDir(UP);

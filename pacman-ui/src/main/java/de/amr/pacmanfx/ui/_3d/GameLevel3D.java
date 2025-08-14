@@ -50,6 +50,7 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.lib.RandomNumberSupport.randomInt;
@@ -520,11 +521,15 @@ public class GameLevel3D extends Group implements Disposable {
         Logger.info("Built 3D maze with {} composite walls in {} milliseconds", wall3DCount, passedTimeMillis);
 
         gameLevel.house().ifPresent(house -> {
-            Vector2f[] ghostRevivalPositions = {
-                    house.ghostRevivalTile(CYAN_GHOST_BASHFUL).scaled((float) TS).plus(HTS, HTS),
-                    house.ghostRevivalTile(PINK_GHOST_SPEEDY) .scaled((float) TS).plus(HTS, HTS),
-                    house.ghostRevivalTile(ORANGE_GHOST_POKEY).scaled((float) TS).plus(HTS, HTS),
+            Vector2i[] ghostRevivalTiles = {
+                house.ghostRevivalTile(gameLevel.ghost(CYAN_GHOST_BASHFUL).id()),
+                house.ghostRevivalTile(gameLevel.ghost(PINK_GHOST_SPEEDY).id()),
+                house.ghostRevivalTile(gameLevel.ghost(ORANGE_GHOST_POKEY).id()),
             };
+            Vector2f[] ghostRevivalPositions = Stream.of(ghostRevivalTiles)
+                .map(tile -> tile.scaled((float) TS).plus(HTS, HTS))
+                .toArray(Vector2f[]::new);
+
             house3D = new ArcadeHouse3D(
                 animationRegistry,
                 house,
@@ -616,15 +621,19 @@ public class GameLevel3D extends Group implements Disposable {
             ghosts3D.get(ORANGE_GHOST_POKEY).ghost3D().dressMaterialNormal(),
         };
         House house = gameLevel.house().orElseThrow();
-        Vector2f[] ghostRevivalPositionCenters = {
-            house.ghostRevivalTile(RED_GHOST_SHADOW)  .scaled((float) TS).plus(TS, HTS),
-            house.ghostRevivalTile(PINK_GHOST_SPEEDY) .scaled((float) TS).plus(TS, HTS),
-            house.ghostRevivalTile(CYAN_GHOST_BASHFUL).scaled((float) TS).plus(TS, HTS),
-            house.ghostRevivalTile(ORANGE_GHOST_POKEY).scaled((float) TS).plus(TS, HTS),
+        Vector2i[] ghostRevivalTiles = {
+            house.ghostRevivalTile(gameLevel.ghost(RED_GHOST_SHADOW).id()),
+            house.ghostRevivalTile(gameLevel.ghost(CYAN_GHOST_BASHFUL).id()),
+            house.ghostRevivalTile(gameLevel.ghost(PINK_GHOST_SPEEDY).id()),
+            house.ghostRevivalTile(gameLevel.ghost(ORANGE_GHOST_POKEY).id()),
         };
+        Vector2f[] ghostRevivalCenters = Stream.of(ghostRevivalTiles)
+            .map(tile -> tile.scaled((float) TS).plus(TS, HTS))
+            .toArray(Vector2f[]::new);
+
         energizers3D = gameLevel.tilesContainingFood()
             .filter(gameLevel::isEnergizerPosition)
-            .map(tile -> createEnergizer3D(tile, radius, minScaling, maxScaling, ghostDressMaterials, ghostRevivalPositionCenters))
+            .map(tile -> createEnergizer3D(tile, radius, minScaling, maxScaling, ghostDressMaterials, ghostRevivalCenters))
             .collect(Collectors.toCollection(HashSet::new));
     }
 
