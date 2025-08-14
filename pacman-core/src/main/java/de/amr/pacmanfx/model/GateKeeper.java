@@ -154,17 +154,17 @@ public class GateKeeper {
      * @return description why ghost has been released or {@code null} if ghost is not released
      */
     public String checkReleaseOf(GameLevel level, Ghost prisoner) {
-        byte id = prisoner.personality();
-        if (id == RED_GHOST_SHADOW) {
+        byte personality = prisoner.id().personality();
+        if (personality == RED_GHOST_SHADOW) {
             return "Red ghost gets released unconditionally";
         }
         // check individual dot counter first (if enabled)
-        if (!globalCounterEnabled && countersByGhost[id] >= limitsByGhost[id]) {
-            return String.format("%s's individual dot counter reached limit (%d)", prisoner.name(), limitsByGhost[id]);
+        if (!globalCounterEnabled && countersByGhost[personality] >= limitsByGhost[personality]) {
+            return String.format("%s's individual dot counter reached limit (%d)", prisoner.name(), limitsByGhost[personality]);
         }
         // check global dot counter
-        if (globalCounterEnabled && GLOBAL_LIMITS[id] != NO_LIMIT && globalCounter >= GLOBAL_LIMITS[id]) {
-            return String.format("Global dot counter reached limit (%d)", GLOBAL_LIMITS[id]);
+        if (globalCounterEnabled && GLOBAL_LIMITS[personality] != NO_LIMIT && globalCounter >= GLOBAL_LIMITS[personality]) {
+            return String.format("Global dot counter reached limit (%d)", GLOBAL_LIMITS[personality]);
         }
         // check Pac-Man starving time
         if (level.pac().starvingTicks() >= pacStarvingLimit) {
@@ -192,8 +192,8 @@ public class GateKeeper {
         } else {
             requireNonNull(house);
             level.ghosts(GhostState.LOCKED).filter(house::isVisitedBy).findFirst().ifPresent(ghost -> {
-                countersByGhost[ghost.personality()]++;
-                Logger.trace("{} dot counter = {}", ghost.name(), countersByGhost[ghost.personality()]);
+                countersByGhost[ghost.id().personality()]++;
+                Logger.trace("{} dot counter = {}", ghost.name(), countersByGhost[ghost.id().personality()]);
             });
         }
     }

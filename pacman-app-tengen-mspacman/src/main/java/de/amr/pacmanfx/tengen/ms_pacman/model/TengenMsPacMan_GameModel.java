@@ -135,7 +135,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
                         roam(gameContext);
                     } else {
                         boolean chase = gameContext.game().huntingTimer().phase() == HuntingPhase.CHASING;
-                        Vector2i targetTile = chase ? chasingTargetTile(gameContext) : level.ghostScatterTile(personality());
+                        Vector2i targetTile = chase ? chasingTargetTile(gameContext) : level.ghostScatterTile(id().personality());
                         tryMovingTowardsTargetTile(gameContext, targetTile);
                     }
                 }
@@ -159,7 +159,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
                         roam(gameContext);
                     } else {
                         boolean chase = gameContext.game().huntingTimer().phase() == HuntingPhase.CHASING;
-                        Vector2i targetTile = chase ? chasingTargetTile(gameContext) : level.ghostScatterTile(personality());
+                        Vector2i targetTile = chase ? chasingTargetTile(gameContext) : level.ghostScatterTile(id().personality());
                         tryMovingTowardsTargetTile(gameContext, targetTile);
                     }
                 }
@@ -179,7 +179,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
                     float speed = gameContext.game().actorSpeedControl().ghostAttackSpeed(gameContext, level, this);
                     boolean chase = gameContext.game().huntingTimer().phase() == HuntingPhase.CHASING;
-                    Vector2i targetTile = chase ? chasingTargetTile(gameContext) : level.ghostScatterTile(personality());
+                    Vector2i targetTile = chase ? chasingTargetTile(gameContext) : level.ghostScatterTile(id().personality());
                     setSpeed(speed);
                     tryMovingTowardsTargetTile(gameContext, targetTile);
                 }
@@ -199,7 +199,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
                     GameLevel level = gameContext.gameLevel();
                     float speed = gameContext.game().actorSpeedControl().ghostAttackSpeed(gameContext, level, this);
                     boolean chase = gameContext.game().huntingTimer().phase() == HuntingPhase.CHASING;
-                    Vector2i targetTile = chase ? chasingTargetTile(gameContext) : level.ghostScatterTile(personality());
+                    Vector2i targetTile = chase ? chasingTargetTile(gameContext) : level.ghostScatterTile(id().personality());
                     setSpeed(speed);
                     tryMovingTowardsTargetTile(gameContext, targetTile);
                 }
@@ -208,7 +208,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
                 public Vector2i chasingTargetTile(GameContext gameContext) {
                     if (gameContext == null || gameContext.optGameLevel().isEmpty()) return null;
                     GameLevel level = gameContext.gameLevel();
-                    return tile().euclideanDist(level.pac().tile()) < 8 ? level.ghostScatterTile(personality()) : level.pac().tile();
+                    return tile().euclideanDist(level.pac().tile()) < 8 ? level.ghostScatterTile(id().personality()) : level.pac().tile();
                 }
             };
             default -> throw new IllegalArgumentException("Illegal ghost personality " + personality);

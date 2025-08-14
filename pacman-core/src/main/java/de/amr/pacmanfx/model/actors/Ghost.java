@@ -23,7 +23,8 @@ import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.Validations.*;
+import static de.amr.pacmanfx.Validations.differsAtMost;
+import static de.amr.pacmanfx.Validations.isOneOf;
 import static de.amr.pacmanfx.lib.Direction.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 import static java.util.Objects.requireNonNull;
@@ -35,8 +36,7 @@ public abstract class Ghost extends MovingActor implements Animated {
 
     public static final GhostState DEFAULT_STATE = GhostState.LOCKED;
 
-    private final byte personality;
-    private final String name;
+    private final GhostID id;
     private ObjectProperty<GhostState> state;
 
     private List<Vector2i> specialTerrainTiles = List.of();
@@ -51,13 +51,21 @@ public abstract class Ghost extends MovingActor implements Animated {
      * @param name readable name, used for logging and debugging
      */
     protected Ghost(byte personality, String name) {
-        this.personality = requireValidGhostPersonality(personality);
-        this.name = requireNonNull(name);
+        id = new GhostID(personality, name);
         corneringSpeedUp = -1.25f;
+    }
+
+    public GhostID id() {
+        return id;
     }
 
     public void setAnimations(ActorAnimationMap animationMap) {
         this.animationMap = requireNonNull(animationMap);
+    }
+
+    @Override
+    public String name() {
+        return id.name();
     }
 
     @Override
@@ -68,7 +76,7 @@ public abstract class Ghost extends MovingActor implements Animated {
     @Override
     public String toString() {
         return "Ghost{" +
-                "name='" + name + '\'' +
+                "name='" + id.name() + '\'' +
                 ", state=" + (state != null ? state() : DEFAULT_STATE) +
                 ", visible=" + isVisible() +
                 ", position=" + position() +
@@ -82,14 +90,6 @@ public abstract class Ghost extends MovingActor implements Animated {
                 ", canTeleport=" + canTeleport +
                 ", corneringSpeedUp" + corneringSpeedUp +
             '}';
-    }
-
-    public byte personality() {
-        return personality;
-    }
-
-    public String name() {
-        return name;
     }
 
     public void setSpecialTerrainTiles(List<Vector2i> tiles) {
@@ -176,7 +176,7 @@ public abstract class Ghost extends MovingActor implements Animated {
                 && level.worldMap().content(LayerID.TERRAIN, tile) == TerrainTile.ONE_WAY_DOWN.$
                 && tile.equals(tile().plus(UP.vector()))
         ) {
-            Logger.debug("Hunting {} cannot move up to special tile {}", name, tile);
+            Logger.debug("Hunting {} cannot move up to special tile {}", id.name(), tile);
             return false;
         }
         if (level.house().isPresent() && level.house().get().isDoorAt(tile)) {
@@ -224,7 +224,7 @@ public abstract class Ghost extends MovingActor implements Animated {
     public void setState(GhostState newState) {
         requireNonNull(newState);
         if (state() == newState) {
-            Logger.warn("{} is already in state {}", name, newState);
+            Logger.warn("{} is already in state {}", id.name(), newState);
         }
         stateProperty().set(newState);
 
@@ -475,7 +475,7 @@ public abstract class Ghost extends MovingActor implements Animated {
             }
             float speed = gameContext.game().actorSpeedControl().ghostSpeedReturningToHouse(gameContext, level, this);
             Vector2f position = position();
-            Vector2f revivalPosition = house.ghostRevivalTile(personality).scaled((float)TS).plus(HTS, 0);
+            Vector2f revivalPosition = house.ghostRevivalTile(id.personality()).scaled((float)TS).plus(HTS, 0);
             if (position.roughlyEquals(revivalPosition, 0.5f * speed, 0.5f * speed)) {
                 setPosition(revivalPosition);
                 setMoveDir(UP);

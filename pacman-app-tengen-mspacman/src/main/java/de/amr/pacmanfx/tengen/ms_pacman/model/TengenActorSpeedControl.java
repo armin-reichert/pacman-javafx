@@ -143,7 +143,7 @@ public class TengenActorSpeedControl implements ActorSpeedControl {
         TengenMsPacMan_GameModel game = gameContext.game();
         float speed = ghostBaseSpeedInLevel(level.number());
         speed += ghostDifficultySpeedDelta(game.difficulty());
-        speed += ghostSpeedDelta(ghost.personality());
+        speed += ghostSpeedDelta(ghost.id().personality());
         float foodDelta = ghostSpeedIncreaseByFoodRemaining(gameContext, level);
         if (foodDelta > 0) {
             speed += foodDelta;

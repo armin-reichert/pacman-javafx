@@ -189,7 +189,7 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public SpriteAnimationMap<SpriteID> createGhostAnimations(Ghost ghost) {
-        return new ArcadeMsPacMan_GhostAnimationMap(spriteSheet, ghost.personality());
+        return new ArcadeMsPacMan_GhostAnimationMap(spriteSheet, ghost.id().personality());
     }
 
     @Override

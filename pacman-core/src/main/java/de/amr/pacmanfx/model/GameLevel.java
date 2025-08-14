@@ -225,9 +225,9 @@ public class GameLevel {
         pac.powerTimer().resetIndefiniteTime();
         ghosts().forEach(ghost -> {
             ghost.reset(); // initially invisible!
-            ghost.setPosition(ghostStartPosition(ghost.personality()));
-            ghost.setMoveDir(ghostStartDirection(ghost.personality()));
-            ghost.setWishDir(ghostStartDirection(ghost.personality()));
+            ghost.setPosition(ghostStartPosition(ghost.id().personality()));
+            ghost.setMoveDir(ghostStartDirection(ghost.id().personality()));
+            ghost.setWishDir(ghostStartDirection(ghost.id().personality()));
             ghost.setState(GhostState.LOCKED);
         });
         blinking.setStartPhase(Pulse.ON); // Energizers are visible when ON

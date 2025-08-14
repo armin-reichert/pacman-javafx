@@ -84,7 +84,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
                         roam(gameContext);
                     } else {
                         boolean chase = game.huntingTimer().phase() == HuntingPhase.CHASING || game.isCruiseElroyModeActive();
-                        Vector2i targetTile = chase ? chasingTargetTile(gameContext) : level.ghostScatterTile(personality());
+                        Vector2i targetTile = chase ? chasingTargetTile(gameContext) : level.ghostScatterTile(id().personality());
                         tryMovingTowardsTargetTile(gameContext, targetTile);
                     }
                 }
@@ -108,7 +108,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
                             roam(gameContext);
                         } else {
                             boolean chase = gameContext.game().huntingTimer().phase() == HuntingPhase.CHASING;
-                            Vector2i targetTile = chase ? chasingTargetTile(gameContext) : level.ghostScatterTile(personality());
+                            Vector2i targetTile = chase ? chasingTargetTile(gameContext) : level.ghostScatterTile(id().personality());
                             tryMovingTowardsTargetTile(gameContext, targetTile);
                         }
                     }
@@ -128,7 +128,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
 
                     float speed = gameContext.game().actorSpeedControl().ghostAttackSpeed(gameContext, level, this);
                     boolean chase = gameContext.game().huntingTimer().phase() == HuntingPhase.CHASING;
-                    Vector2i targetTile = chase ? chasingTargetTile(gameContext) : level.ghostScatterTile(personality());
+                    Vector2i targetTile = chase ? chasingTargetTile(gameContext) : level.ghostScatterTile(id().personality());
                     setSpeed(speed);
                     tryMovingTowardsTargetTile(gameContext, targetTile);
                 }
@@ -148,7 +148,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
 
                     float speed = gameContext.game().actorSpeedControl().ghostAttackSpeed(gameContext, level, this);
                     boolean chase = gameContext.game().huntingTimer().phase() == HuntingPhase.CHASING;
-                    Vector2i targetTile = chase ? chasingTargetTile(gameContext) : level.ghostScatterTile(personality());
+                    Vector2i targetTile = chase ? chasingTargetTile(gameContext) : level.ghostScatterTile(id().personality());
                     setSpeed(speed);
                     tryMovingTowardsTargetTile(gameContext, targetTile);
                 }
@@ -159,7 +159,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
 
                     // Attacks directly or retreats towards scatter target if Pac is near
                     return tile().euclideanDist(level.pac().tile()) < 8
-                        ? level.ghostScatterTile(personality())
+                        ? level.ghostScatterTile(id().personality())
                         : level.pac().tile();
                 }
             };
@@ -252,7 +252,7 @@ public class ArcadeMsPacMan_GameModel extends ArcadeCommon_GameModel {
 
         gateKeeper = new GateKeeper(this);
         gateKeeper.setOnGhostReleased(prisoner -> {
-            if (prisoner.personality() == ORANGE_GHOST_POKEY && !isCruiseElroyModeActive()) {
+            if (prisoner.id().personality() == ORANGE_GHOST_POKEY && !isCruiseElroyModeActive()) {
                 Logger.trace("Re-enable 'Cruise Elroy' mode because {} exits house:", prisoner.name());
                 activateCruiseElroyMode(true);
             }
