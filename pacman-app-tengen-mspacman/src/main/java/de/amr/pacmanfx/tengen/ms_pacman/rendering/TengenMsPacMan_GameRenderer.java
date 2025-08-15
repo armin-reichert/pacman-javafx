@@ -196,7 +196,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
                 case Bonus bonus -> drawMovingBonus(bonus);
                 case Pac pac -> drawAnyKindOfPac(pac);
                 case Stork stork -> {
-                    drawAnimatedActor(stork);
+                    super.drawActor(stork);
                     if (stork.isBagReleasedFromBeak()) {
                         hideStorkBag(stork);
                     }

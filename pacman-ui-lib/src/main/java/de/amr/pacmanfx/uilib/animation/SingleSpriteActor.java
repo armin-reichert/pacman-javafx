@@ -15,11 +15,11 @@ import static java.util.Objects.requireNonNull;
 
 public class SingleSpriteActor extends Actor implements Animated {
 
-    private final SingleSpriteWithoutAnimation singleSpriteMap;
+    private final SingleSpriteNoAnimation singleSpriteMap;
 
     public SingleSpriteActor(RectShort sprite) {
         requireNonNull(sprite);
-        singleSpriteMap = new SingleSpriteWithoutAnimation(sprite);
+        singleSpriteMap = new SingleSpriteNoAnimation(sprite);
     }
 
     @Override

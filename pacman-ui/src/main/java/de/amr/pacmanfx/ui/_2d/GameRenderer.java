@@ -14,7 +14,7 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameAssets;
-import de.amr.pacmanfx.uilib.animation.SingleSpriteWithoutAnimation;
+import de.amr.pacmanfx.uilib.animation.SingleSpriteNoAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.beans.property.FloatProperty;
@@ -125,25 +125,18 @@ public abstract class GameRenderer {
      */
     public void drawActor(Actor actor) {
         requireNonNull(actor);
-        if (actor.isVisible()) {
-            drawAnimatedActor(actor);
-        }
-    }
-
-    public void drawAnimatedActor(Actor actor) {
+        if (!actor.isVisible()) return;
         actor.animations().ifPresent(am -> {
-            // assume interface is only implemented by Actor (sub-)classes
             switch (am) {
-                case SingleSpriteWithoutAnimation singleSpriteWithoutAnimation ->
-                    drawActorSpriteCentered(actor, singleSpriteWithoutAnimation.singleSprite());
-                case SpriteAnimationManager<?> spriteAnimationMap -> {
-                    if (spriteAnimationMap.currentAnimation() != null) {
-                        drawActorSpriteCentered(actor, spriteAnimationMap.currentSprite(actor));
+                case SingleSpriteNoAnimation singleSpriteNoAnimation -> drawActorSpriteCentered(actor, singleSpriteNoAnimation.sprite());
+                case SpriteAnimationManager<?> spriteAnimations -> {
+                    if (spriteAnimations.currentAnimation() != null) {
+                        drawActorSpriteCentered(actor, spriteAnimations.currentSprite(actor));
                     } else {
-                        Logger.error("No current animation for actor {}", actor);
+                        Logger.error("Cannot draw actor {}: No animation selected", actor);
                     }
                 }
-                default -> Logger.error("Cannot render animated actor with animation manager of type {}", am.getClass().getSimpleName());
+                default -> {}
             }
         });
     }
