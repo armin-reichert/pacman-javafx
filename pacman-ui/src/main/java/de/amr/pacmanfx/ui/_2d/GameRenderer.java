@@ -117,7 +117,7 @@ public abstract class GameRenderer {
         if (!actor.isVisible()) return;
         actor.animations().ifPresent(am -> {
             switch (am) {
-                case SingleSpriteNoAnimation singleSpriteNoAnimation -> drawActorSpriteCentered(actor, singleSpriteNoAnimation.sprite());
+                case SingleSpriteNoAnimation singleSprite -> drawActorSpriteCentered(actor, singleSprite.sprite());
                 case SpriteAnimationManager<?> spriteAnimations -> {
                     if (spriteAnimations.current() != null) {
                         drawActorSpriteCentered(actor, spriteAnimations.currentSprite(actor));
@@ -141,7 +141,7 @@ public abstract class GameRenderer {
         requireNonNull(tile);
         double centerX = tile.x() * TS + HTS, centerY = tile.y() * TS + HTS;
         float halfSideLength = 0.5f * sideLength;
-        ctx().fillRect(centerX - halfSideLength, centerY - halfSideLength, sideLength, sideLength);
+        ctx.fillRect(centerX - halfSideLength, centerY - halfSideLength, sideLength, sideLength);
     }
 
     /**
@@ -167,9 +167,9 @@ public abstract class GameRenderer {
      * @param y     unscaled y-position (baseline)
      */
     public void fillTextAtScaledPosition(String text, Color color, Font font, double x, double y) {
-        ctx().setFont(font);
-        ctx().setFill(color);
-        ctx().fillText(text, scaled(x), scaled(y));
+        ctx.setFont(font);
+        ctx.setFill(color);
+        ctx.fillText(text, scaled(x), scaled(y));
     }
 
     /**
@@ -181,8 +181,8 @@ public abstract class GameRenderer {
      * @param y     unscaled y-position (baseline)
      */
     public void fillTextAtScaledPosition(String text, Color color, double x, double y) {
-        ctx().setFill(color);
-        ctx().fillText(text, scaled(x), scaled(y));
+        ctx.setFill(color);
+        ctx.fillText(text, scaled(x), scaled(y));
     }
 
     /**
@@ -194,8 +194,8 @@ public abstract class GameRenderer {
      * @param y     unscaled y-position (baseline)
      */
     public void fillTextAtScaledPosition(String text, Font font, double x, double y) {
-        ctx().setFont(font);
-        ctx().fillText(text, scaled(x), scaled(y));
+        ctx.setFont(font);
+        ctx.fillText(text, scaled(x), scaled(y));
     }
 
     /**
@@ -206,7 +206,7 @@ public abstract class GameRenderer {
      * @param y     unscaled y-position (baseline)
      */
     public void fillTextAtScaledPosition(String text, double x, double y) {
-        ctx().fillText(text, scaled(x), scaled(y));
+        ctx.fillText(text, scaled(x), scaled(y));
     }
 
     /**
@@ -219,29 +219,29 @@ public abstract class GameRenderer {
      * @param y     unscaled y-position (baseline)
      */
     public void fillTextAtScaledCenter(String text, Color color, Font font, double x, double y) {
-        ctx().save();
-        ctx().setTextAlign(TextAlignment.CENTER);
+        ctx.save();
+        ctx.setTextAlign(TextAlignment.CENTER);
         fillTextAtScaledPosition(text, color, font, x, y);
-        ctx().restore();
+        ctx.restore();
     }
 
     public void drawTileGrid(double sizeX, double sizeY, Color gridColor) {
         double thin = 0.2, medium = 0.4, thick = 0.8;
         int numCols = (int) (sizeX / TS), numRows = (int) (sizeY / TS);
         double width = scaled(numCols * TS), height = scaled(numRows * TS);
-        ctx().save();
-        ctx().setStroke(gridColor);
+        ctx.save();
+        ctx.setStroke(gridColor);
         for (int row = 0; row <= numRows; ++row) {
             double y = scaled(row * TS);
-            ctx().setLineWidth(row % 10 == 0 ? thick : row % 5 == 0 ? medium : thin);
-            ctx().strokeLine(0, y, width, y);
+            ctx.setLineWidth(row % 10 == 0 ? thick : row % 5 == 0 ? medium : thin);
+            ctx.strokeLine(0, y, width, y);
         }
         for (int col = 0; col <= numCols; ++col) {
             double x = scaled(col * TS);
-            ctx().setLineWidth(col % 10 == 0 ? thick : col % 5 == 0? medium : thin);
-            ctx().strokeLine(x, 0, x, height);
+            ctx.setLineWidth(col % 10 == 0 ? thick : col % 5 == 0? medium : thin);
+            ctx.strokeLine(x, 0, x, height);
         }
-        ctx().restore();
+        ctx.restore();
     }
 
     // if sprite sheet is available:
@@ -255,7 +255,7 @@ public abstract class GameRenderer {
      */
     public void drawSprite(RectShort sprite, double x, double y) {
         requireNonNull(sprite);
-        optSpriteSheet().ifPresent(spriteSheet -> ctx().drawImage(
+        optSpriteSheet().ifPresent(spriteSheet -> ctx.drawImage(
                 spriteSheet.sourceImage(),
                 sprite.x(), sprite.y(), sprite.width(), sprite.height(),
                 x, y, sprite.width(), sprite.height()));
@@ -286,7 +286,7 @@ public abstract class GameRenderer {
     public void drawSpriteScaled(Image image, RectShort sprite, double x, double y) {
         requireNonNull(image);
         requireNonNull(sprite);
-        ctx().drawImage(image,
+        ctx.drawImage(image,
                 sprite.x(), sprite.y(), sprite.width(), sprite.height(),
                 scaled(x), scaled(y), scaled(sprite.width()), scaled(sprite.height()));
     }
@@ -314,56 +314,56 @@ public abstract class GameRenderer {
         drawSpriteScaledCenteredAt(sprite, centerX, centerY);
     }
 
-    public void drawMovingActorInfo(MovingActor actor) {
-        if (!actor.isVisible()) {
+    public void drawMovingActorInfo(MovingActor movingActor) {
+        if (!movingActor.isVisible()) {
             return;
         }
-        if (actor instanceof Pac pac) {
+        if (movingActor instanceof Pac pac) {
             String autopilot = pac.isUsingAutopilot() ? "autopilot" : "";
             String immune = pac.isImmune() ? "immune" : "";
             String text = "%s\n%s".formatted(autopilot, immune).trim();
-            ctx().setFill(Color.WHITE);
-            ctx().setFont(Font.font("Monospaced", scaled(6)));
-            ctx().fillText(text, scaled(pac.x() - 4), scaled(pac.y() + 16));
+            ctx.setFill(Color.WHITE);
+            ctx.setFont(Font.font("Monospaced", scaled(6)));
+            ctx.fillText(text, scaled(pac.x() - 4), scaled(pac.y() + 16));
         }
-        actor.animations()
+        movingActor.animations()
             .filter(SpriteAnimationManager.class::isInstance)
             .map(SpriteAnimationManager.class::cast)
             .ifPresent(spriteAnimationMap -> {
                 String selectedID = spriteAnimationMap.selectedID();
                 if (selectedID != null) {
-                    drawAnimationInfo(actor, spriteAnimationMap, selectedID);
+                    drawAnimationInfo(movingActor, spriteAnimationMap, selectedID);
                 }
-                if (actor.wishDir() != null) {
-                    drawDirectionIndicator(actor);
+                if (movingActor.wishDir() != null) {
+                    drawDirectionIndicator(movingActor);
                 }
             });
-        }
+    }
 
-    private void drawAnimationInfo(MovingActor actor, SpriteAnimationManager<?> spriteAnimationMap, String selectedID) {
-        ctx().save();
+    private void drawAnimationInfo(Actor actor, SpriteAnimationManager<?> spriteAnimationMap, String selectedID) {
+        ctx.save();
         String text = "[%s:%d]".formatted(selectedID, spriteAnimationMap.current().frameIndex());
         double x = scaled(actor.x() - 4), y = scaled(actor.y() - 4);
-        ctx().setFill(Color.WHITE);
-        ctx().setFont(Font.font("Sans", scaled(7)));
-        ctx().fillText(text, x, y);
-        ctx().setStroke(Color.GRAY);
-        ctx().strokeText(text, x, y);
+        ctx.setFill(Color.WHITE);
+        ctx.setFont(Font.font("Sans", scaled(7)));
+        ctx.fillText(text, x, y);
+        ctx.setStroke(Color.GRAY);
+        ctx.strokeText(text, x, y);
         ctx.restore();
     }
 
-    private void drawDirectionIndicator(MovingActor actor) {
-        ctx().save();
+    private void drawDirectionIndicator(MovingActor movingActor) {
+        ctx.save();
         float scaling = scaling();
-        Vector2f center = actor.center();
-        Vector2f arrowHead = center.plus(actor.wishDir().vector().scaled(12f)).scaled(scaling);
+        Vector2f center = movingActor.center();
+        Vector2f arrowHead = center.plus(movingActor.wishDir().vector().scaled(12f)).scaled(scaling);
         Vector2f guyCenter = center.scaled(scaling);
         float radius = scaling * 2, diameter = 2 * radius;
-        ctx().setStroke(Color.WHITE);
-        ctx().setLineWidth(0.5);
-        ctx().strokeLine(guyCenter.x(), guyCenter.y(), arrowHead.x(), arrowHead.y());
-        ctx().setFill(actor.isNewTileEntered() ? Color.YELLOW : Color.GREEN);
-        ctx().fillOval(arrowHead.x() - radius, arrowHead.y() - radius, diameter, diameter);
+        ctx.setStroke(Color.WHITE);
+        ctx.setLineWidth(0.5);
+        ctx.strokeLine(guyCenter.x(), guyCenter.y(), arrowHead.x(), arrowHead.y());
+        ctx.setFill(movingActor.isNewTileEntered() ? Color.YELLOW : Color.GREEN);
+        ctx.fillOval(arrowHead.x() - radius, arrowHead.y() - radius, diameter, diameter);
         ctx.restore();
     }
 }
