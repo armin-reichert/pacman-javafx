@@ -50,7 +50,7 @@ public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements SpriteShe
                 rect(228, 2*248, 224, 248),
                 rect(228, 3*248, 224, 248),
                 rect(228, 4*248, 224, 248),
-                rect(228, 5*258, 224, 248)
+                rect(228, 5*248, 224, 248)
         );
         SPRITE_MAP.addSpriteSequence(MS_PACMAN_MUNCHING_RIGHT, makeMsPacManMunchingSpriteSeq(0));
         SPRITE_MAP.addSpriteSequence(MS_PACMAN_MUNCHING_LEFT,  makeMsPacManMunchingSpriteSeq(1));
