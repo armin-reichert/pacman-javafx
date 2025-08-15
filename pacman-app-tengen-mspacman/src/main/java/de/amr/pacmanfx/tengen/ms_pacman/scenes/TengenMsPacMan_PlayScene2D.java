@@ -495,8 +495,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         gameRenderer.ctx().setFont(debugTextFont);
         gameRenderer.ctx().fillText("%s %d".formatted(gameContext().gameState(), gameContext().gameState().timer().tickCount()), 0, scaled(3 * TS));
         if (gameContext().optGameLevel().isPresent()) {
-            renderer().drawMovingActorInfo(gameContext().gameLevel().pac());
-            ghostsByZ(gameContext().gameLevel()).forEach(renderer()::drawMovingActorInfo);
+            gameRenderer.drawMovingActorInfo(gameRenderer.ctx(), scaling(), gameContext().gameLevel().pac());
+            ghostsByZ(gameContext().gameLevel())
+                    .forEach(ghost -> gameRenderer.drawMovingActorInfo(gameRenderer.ctx(), scaling(), ghost));
         }
         gameRenderer.ctx().restore();
     }

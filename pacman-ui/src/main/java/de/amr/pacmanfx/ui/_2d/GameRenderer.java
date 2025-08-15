@@ -10,8 +10,6 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HUDData;
 import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.MovingActor;
-import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameAssets;
 import de.amr.pacmanfx.uilib.animation.SingleSpriteNoAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
@@ -19,7 +17,6 @@ import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import java.util.Optional;
@@ -30,7 +27,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Common base class of all 2D game renderers.
  */
-public abstract class GameRenderer extends BaseRenderer {
+public abstract class GameRenderer extends BaseRenderer implements DebugInfoRenderer {
 
     protected final GameAssets assets;
 
@@ -169,56 +166,4 @@ public abstract class GameRenderer extends BaseRenderer {
         drawSpriteScaledCenteredAt(sprite, centerX, centerY);
     }
 
-    public void drawMovingActorInfo(MovingActor movingActor) {
-        if (!movingActor.isVisible()) {
-            return;
-        }
-        if (movingActor instanceof Pac pac) {
-            String autopilot = pac.isUsingAutopilot() ? "autopilot" : "";
-            String immune = pac.isImmune() ? "immune" : "";
-            String text = "%s\n%s".formatted(autopilot, immune).trim();
-            ctx().setFill(Color.WHITE);
-            ctx().setFont(Font.font("Monospaced", scaled(6)));
-            ctx().fillText(text, scaled(pac.x() - 4), scaled(pac.y() + 16));
-        }
-        movingActor.animations()
-            .filter(SpriteAnimationManager.class::isInstance)
-            .map(SpriteAnimationManager.class::cast)
-            .ifPresent(spriteAnimationMap -> {
-                String selectedID = spriteAnimationMap.selectedID();
-                if (selectedID != null) {
-                    drawAnimationInfo(movingActor, spriteAnimationMap, selectedID);
-                }
-                if (movingActor.wishDir() != null) {
-                    drawDirectionIndicator(movingActor);
-                }
-            });
-    }
-
-    private void drawAnimationInfo(Actor actor, SpriteAnimationManager<?> spriteAnimationMap, String selectedID) {
-        ctx().save();
-        String text = "[%s:%d]".formatted(selectedID, spriteAnimationMap.current().frameIndex());
-        double x = scaled(actor.x() - 4), y = scaled(actor.y() - 4);
-        ctx().setFill(Color.WHITE);
-        ctx().setFont(Font.font("Sans", scaled(7)));
-        ctx().fillText(text, x, y);
-        ctx().setStroke(Color.GRAY);
-        ctx().strokeText(text, x, y);
-        ctx().restore();
-    }
-
-    private void drawDirectionIndicator(MovingActor movingActor) {
-        ctx().save();
-        double scaling = scaling();
-        Vector2f center = movingActor.center();
-        Vector2f arrowHead = center.plus(movingActor.wishDir().vector().scaled(12f)).scaled(scaling);
-        Vector2f guyCenter = center.scaled(scaling);
-        double radius = scaling * 2, diameter = 2 * radius;
-        ctx().setStroke(Color.WHITE);
-        ctx().setLineWidth(0.5);
-        ctx().strokeLine(guyCenter.x(), guyCenter.y(), arrowHead.x(), arrowHead.y());
-        ctx().setFill(movingActor.isNewTileEntered() ? Color.YELLOW : Color.GREEN);
-        ctx().fillOval(arrowHead.x() - radius, arrowHead.y() - radius, diameter, diameter);
-        ctx().restore();
-    }
 }

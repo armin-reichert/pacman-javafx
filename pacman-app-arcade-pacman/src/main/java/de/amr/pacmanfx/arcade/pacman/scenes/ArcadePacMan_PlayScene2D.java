@@ -245,7 +245,7 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
         if (isDebugInfoVisible()) {
             actorsInZOrder.forEach(actor -> {
                 if (actor instanceof MovingActor movingActor) {
-                    gameRenderer.drawMovingActorInfo(movingActor);
+                    gameRenderer.drawMovingActorInfo(gameRenderer.ctx(), scaling(), movingActor);
                 }
             });
         }
