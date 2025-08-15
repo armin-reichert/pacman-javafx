@@ -13,7 +13,6 @@ import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.model.actors.AnimationManager;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -86,6 +85,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         blinking = new Pulse(10, true);
         pacMan = createPac();
         pacMan.setAnimations(ui.currentConfig().createPacAnimations(pacMan));
+        pacMan.selectAnimation(ANIM_PAC_MUNCHING);
         ghosts = List.of(
             createGhost(RED_GHOST_SHADOW),
             createGhost(PINK_GHOST_SPEEDY),
