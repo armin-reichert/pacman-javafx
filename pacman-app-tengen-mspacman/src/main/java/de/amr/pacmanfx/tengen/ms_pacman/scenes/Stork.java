@@ -25,7 +25,7 @@ public class Stork extends Actor {
     public Stork(TengenMsPacMan_SpriteSheet spriteSheet) {
         spriteAnimations = new SpriteAnimationManager<>(spriteSheet);
         spriteAnimations.setAnimation(ANIM_FLYING,
-            SpriteAnimation.build().of(spriteSheet.spriteSeq(STORK)).frameTicks(8).forever());
+            SpriteAnimation.build().of(spriteSheet.content().spriteSequence(STORK)).frameTicks(8).forever());
     }
 
     public void setBagReleasedFromBeak(boolean released) {

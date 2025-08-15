@@ -19,7 +19,6 @@ import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.animation.SingleSpriteActor;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -87,7 +86,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         inky.setAnimations(config.createGhostAnimations(inky));
         pinky = createGhost(PINK_GHOST_SPEEDY);
         pinky.setAnimations(config.createGhostAnimations(pinky));
-        heart = new SingleSpriteActor(spriteSheet.sprite(SpriteID.HEART));
+        heart = new SingleSpriteActor(spriteSheet.content().sprite(SpriteID.HEART));
     }
 
     @Override

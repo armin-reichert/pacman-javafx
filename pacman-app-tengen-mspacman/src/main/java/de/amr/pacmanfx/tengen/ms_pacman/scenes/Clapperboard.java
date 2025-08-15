@@ -6,7 +6,6 @@ package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.AnimationManager;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import javafx.scene.text.Font;
@@ -37,11 +36,6 @@ public class Clapperboard extends Actor {
         this.text = requireNonNull(text);
     }
 
-    @Override
-    public Optional<AnimationManager> animations() {
-        return Optional.empty();
-    }
-
     public byte number() {
         return number;
     }
@@ -64,7 +58,7 @@ public class Clapperboard extends Actor {
 
     public Optional<RectShort> sprite() {
         if (state == HIDDEN) return Optional.empty();
-        RectShort[] clapperboardSprites = spriteSheet.spriteSeq(SpriteID.CLAPPERBOARD);
+        RectShort[] clapperboardSprites = spriteSheet.content().spriteSequence(SpriteID.CLAPPERBOARD);
         return Optional.of(clapperboardSprites[state]);
     }
 

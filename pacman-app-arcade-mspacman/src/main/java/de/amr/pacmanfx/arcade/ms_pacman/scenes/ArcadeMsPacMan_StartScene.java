@@ -38,7 +38,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
         midwayCopyright.show();
 
         @SuppressWarnings("unchecked") var spriteSheet = (SpriteSheet<SpriteID>) ui.currentConfig().spriteSheet();
-        livesCounterSprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
+        livesCounterSprite = spriteSheet.content().sprite(SpriteID.LIVES_COUNTER_SYMBOL);
 
         actionBindings.assign(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
         actionBindings.assign(ACTION_ARCADE_START_GAME, ui.actionBindings());

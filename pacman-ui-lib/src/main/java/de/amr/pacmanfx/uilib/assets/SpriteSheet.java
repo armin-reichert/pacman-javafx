@@ -8,10 +8,6 @@ import de.amr.pacmanfx.lib.RectShort;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 
-import java.util.Map;
-
-import static java.util.Objects.requireNonNull;
-
 /**
  * Sprite sheet interface.
  *
@@ -21,36 +17,7 @@ public interface SpriteSheet<SID extends Enum<SID>> {
 
     Image sourceImage();
 
-    /**
-     * This map' values either single sprites of type ({@link RectShort} or sequences of sprites ({@link RectShort[]},
-
-     * @return map for storing sprites
-     */
-    Map<SID, Object> spriteMap();
-
-    default RectShort sprite(SID id) {
-        requireNonNull(id);
-        if (!spriteMap().containsKey(id)) {
-            throw new IllegalArgumentException("Unknown sprite ID '%s'".formatted(id));
-        }
-        Object value = spriteMap().get(id);
-        if (value == null) {
-            throw new IllegalArgumentException("Sprite value is null for id '%s'".formatted(id));
-        }
-        return (RectShort) value;
-    }
-
-    default RectShort[] spriteSeq(SID id) {
-        requireNonNull(id);
-        if (!spriteMap().containsKey(id)) {
-            throw new IllegalArgumentException("Unknown sprite ID '%s'".formatted(id));
-        }
-        Object value = spriteMap().get(id);
-        if (value == null) {
-            throw new IllegalArgumentException("Sprite value is null for id '%s'".formatted(id));
-        }
-        return (RectShort[]) value;
-    }
+    SpriteMap<SID> content();
 
     /**
      * @param x      region x-coordinate

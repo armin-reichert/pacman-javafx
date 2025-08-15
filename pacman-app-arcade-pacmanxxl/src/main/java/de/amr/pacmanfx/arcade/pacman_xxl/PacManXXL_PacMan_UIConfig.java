@@ -75,8 +75,8 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config {
         storeLocalAssetValue(assets, "app_icon", RES_ARCADE_PAC_MAN.loadImage("graphics/icons/pacman.png"));
         storeLocalAssetValue(assets, "color.game_over_message", ARCADE_RED);
 
-        RectShort[] symbolSprites = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS);
-        RectShort[] valueSprites  = spriteSheet.spriteSeq(SpriteID.BONUS_VALUES);
+        RectShort[] symbolSprites = spriteSheet.content().spriteSequence(SpriteID.BONUS_SYMBOLS);
+        RectShort[] valueSprites  = spriteSheet.content().spriteSequence(SpriteID.BONUS_VALUES);
         for (byte symbol = 0; symbol <= 7; ++symbol) {
             storeLocalAssetValue(assets, "bonus_symbol_" + symbol, spriteSheet.image(symbolSprites[symbol]));
             storeLocalAssetValue(assets, "bonus_value_"  + symbol, spriteSheet.image(valueSprites[symbol]));
@@ -86,7 +86,7 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config {
         storeLocalAssetValue(assets, "pac.color.eyes",   Color.grayRgb(33));
         storeLocalAssetValue(assets, "pac.color.palate", ARCADE_BROWN);
 
-        RectShort[] numberSprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
+        RectShort[] numberSprites = spriteSheet.content().spriteSequence(SpriteID.GHOST_NUMBERS);
         storeLocalAssetValue(assets, "ghost_points_0", spriteSheet.image(numberSprites[0]));
         storeLocalAssetValue(assets, "ghost_points_1", spriteSheet.image(numberSprites[1]));
         storeLocalAssetValue(assets, "ghost_points_2", spriteSheet.image(numberSprites[2]));

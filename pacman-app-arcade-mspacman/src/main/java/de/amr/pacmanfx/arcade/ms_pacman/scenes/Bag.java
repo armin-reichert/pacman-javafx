@@ -22,8 +22,8 @@ class Bag extends Actor {
 
     public Bag(ArcadeMsPacMan_SpriteSheet spriteSheet) {
         animationMgr = new SpriteAnimationManager<>(spriteSheet);
-        animationMgr.setAnimation("junior", SpriteAnimation.build().ofSprite(spriteSheet.sprite(JUNIOR_PAC)).once());
-        animationMgr.setAnimation("bag", SpriteAnimation.build().ofSprite(spriteSheet.sprite(BLUE_BAG)).once());
+        animationMgr.setAnimation("junior", SpriteAnimation.build().ofSprite(spriteSheet.content().sprite(JUNIOR_PAC)).once());
+        animationMgr.setAnimation("bag", SpriteAnimation.build().ofSprite(spriteSheet.content().sprite(BLUE_BAG)).once());
     }
 
     @Override

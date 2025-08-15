@@ -55,7 +55,7 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
             LevelCounter levelCounter = data.theLevelCounter();
             float x = sceneSize.x() - TS(4), y = sceneSize.y() - TS(2) + 2;
             for (byte symbol : levelCounter.symbols()) {
-                RectShort sprite = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS)[symbol];
+                RectShort sprite = spriteSheet.content().spriteSequence(SpriteID.BONUS_SYMBOLS)[symbol];
                 drawSpriteScaled(sprite, x, y);
                 x -= TS(2);
             }
@@ -64,7 +64,7 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
         if (data.isLivesCounterVisible()) {
             LivesCounter livesCounter = data.theLivesCounter();
             float x = TS(2), y = sceneSize.y() - TS(2);
-            RectShort sprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
+            RectShort sprite = spriteSheet.content().sprite(SpriteID.LIVES_COUNTER_SYMBOL);
             for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
                 drawSpriteScaled(sprite, x + TS(2 * i), y);
             }
@@ -106,10 +106,10 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
             ctx.drawImage(flashingMaze, 0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);
         }
         else if (level.uneatenFoodCount() == 0) {
-            drawSprite(spriteSheet.sprite(SpriteID.MAP_EMPTY), 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE));
+            drawSprite(spriteSheet.content().sprite(SpriteID.MAP_EMPTY), 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE));
         }
         else {
-            drawSprite(spriteSheet.sprite(SpriteID.MAP_FULL), 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE));
+            drawSprite(spriteSheet.content().sprite(SpriteID.MAP_FULL), 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE));
             ctx.setFill(backgroundColor);
             level.worldMap().tiles()
                     .filter(not(level::isEnergizerPosition))
@@ -132,8 +132,8 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
 
     private void drawBonus(Bonus bonus) {
         switch (bonus.state()) {
-            case EDIBLE -> drawActorSpriteCentered(bonus, spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS)[bonus.symbol()]);
-            case EATEN  -> drawActorSpriteCentered(bonus, spriteSheet.spriteSeq(SpriteID.BONUS_VALUES)[bonus.symbol()]);
+            case EDIBLE -> drawActorSpriteCentered(bonus, spriteSheet.content().spriteSequence(SpriteID.BONUS_SYMBOLS)[bonus.symbol()]);
+            case EATEN  -> drawActorSpriteCentered(bonus, spriteSheet.content().spriteSequence(SpriteID.BONUS_VALUES)[bonus.symbol()]);
             case INACTIVE -> {}
         }
     }

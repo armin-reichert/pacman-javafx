@@ -22,7 +22,7 @@ class Stork extends Actor {
     public Stork(ArcadeMsPacMan_SpriteSheet spriteSheet) {
         spriteAnimations = new SpriteAnimationManager<>(spriteSheet);
         spriteAnimations.setAnimation(ANIM_FLYING,
-            SpriteAnimation.build().of(spriteSheet.spriteSeq(SpriteID.STORK)).frameTicks(8).forever());
+            SpriteAnimation.build().of(spriteSheet.content().spriteSequence(SpriteID.STORK)).frameTicks(8).forever());
     }
 
     @Override

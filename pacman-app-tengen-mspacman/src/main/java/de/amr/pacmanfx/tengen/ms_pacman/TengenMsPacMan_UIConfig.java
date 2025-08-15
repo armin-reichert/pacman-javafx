@@ -130,8 +130,8 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         storeLocalAssetValue(assets, "color.game_over_message", nesPaletteColor(0x11));
         storeLocalAssetValue(assets, "color.ready_message",     nesPaletteColor(0x28));
 
-        RectShort[] symbolSprites = spriteSheet.spriteSeq(SpriteID.BONUS_SYMBOLS);
-        RectShort[] valueSprites  = spriteSheet.spriteSeq(SpriteID.BONUS_VALUES);
+        RectShort[] symbolSprites = spriteSheet.content().spriteSequence(SpriteID.BONUS_SYMBOLS);
+        RectShort[] valueSprites  = spriteSheet.content().spriteSequence(SpriteID.BONUS_VALUES);
         for (byte symbol = 0; symbol <= 13; ++symbol) {
             storeLocalAssetValue(assets, "bonus_symbol_" + symbol, spriteSheet.image(symbolSprites[symbol]));
             storeLocalAssetValue(assets, "bonus_value_"  + symbol, spriteSheet.image(valueSprites[symbol]));
@@ -144,7 +144,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         storeLocalAssetValue(assets, "pac.color.hairbow",                nesPaletteColor(0x05));
         storeLocalAssetValue(assets, "pac.color.hairbow.pearls",         nesPaletteColor(0x02));
 
-        RectShort[] numberSprites = spriteSheet.spriteSeq(SpriteID.GHOST_NUMBERS);
+        RectShort[] numberSprites = spriteSheet.content().spriteSequence(SpriteID.GHOST_NUMBERS);
         storeLocalAssetValue(assets, "ghost_points_0",                   spriteSheet.image(numberSprites[0]));
         storeLocalAssetValue(assets, "ghost_points_1",                   spriteSheet.image(numberSprites[1]));
         storeLocalAssetValue(assets, "ghost_points_2",                   spriteSheet.image(numberSprites[2]));

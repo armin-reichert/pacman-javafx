@@ -30,14 +30,14 @@ public class ArcadePacMan_GhostAnimationManager extends SpriteAnimationManager<S
     public SpriteAnimation createAnimation(String id) {
         return switch (id) {
             case ANIM_GHOST_NORMAL              -> SpriteAnimation.build().of(ghostNormalSprites(Direction.LEFT)).frameTicks(8).forever();
-            case ANIM_GHOST_FRIGHTENED          -> SpriteAnimation.build().of(spriteSheet().spriteSeq(SpriteID.GHOST_FRIGHTENED)).frameTicks(8).forever();
-            case ANIM_GHOST_FLASHING            -> SpriteAnimation.build().of(spriteSheet().spriteSeq(SpriteID.GHOST_FLASHING)).frameTicks(7).forever();
+            case ANIM_GHOST_FRIGHTENED          -> SpriteAnimation.build().of(spriteSheet().content().spriteSequence(SpriteID.GHOST_FRIGHTENED)).frameTicks(8).forever();
+            case ANIM_GHOST_FLASHING            -> SpriteAnimation.build().of(spriteSheet().content().spriteSequence(SpriteID.GHOST_FLASHING)).frameTicks(7).forever();
             case ANIM_GHOST_EYES                -> SpriteAnimation.build().of(ghostEyesSprites(Direction.LEFT)).once();
-            case ANIM_GHOST_NUMBER              -> SpriteAnimation.build().of(spriteSheet().spriteSeq(SpriteID.GHOST_NUMBERS)).once();
-            case ANIM_BLINKY_DAMAGED            -> SpriteAnimation.build().of(spriteSheet().spriteSeq(SpriteID.RED_GHOST_DAMAGED)).once();
-            case ANIM_BLINKY_NAIL_DRESS_RAPTURE -> SpriteAnimation.build().of(spriteSheet().spriteSeq(SpriteID.RED_GHOST_STRETCHED)).once();
-            case ANIM_BLINKY_PATCHED            -> SpriteAnimation.build().of(spriteSheet().spriteSeq(SpriteID.RED_GHOST_PATCHED)).frameTicks(4).forever();
-            case ANIM_BLINKY_NAKED              -> SpriteAnimation.build().of(spriteSheet().spriteSeq(SpriteID.RED_GHOST_NAKED)).frameTicks(4).forever();
+            case ANIM_GHOST_NUMBER              -> SpriteAnimation.build().of(spriteSheet().content().spriteSequence(SpriteID.GHOST_NUMBERS)).once();
+            case ANIM_BLINKY_DAMAGED            -> SpriteAnimation.build().of(spriteSheet().content().spriteSequence(SpriteID.RED_GHOST_DAMAGED)).once();
+            case ANIM_BLINKY_NAIL_DRESS_RAPTURE -> SpriteAnimation.build().of(spriteSheet().content().spriteSequence(SpriteID.RED_GHOST_STRETCHED)).once();
+            case ANIM_BLINKY_PATCHED            -> SpriteAnimation.build().of(spriteSheet().content().spriteSequence(SpriteID.RED_GHOST_PATCHED)).frameTicks(4).forever();
+            case ANIM_BLINKY_NAKED              -> SpriteAnimation.build().of(spriteSheet().content().spriteSequence(SpriteID.RED_GHOST_NAKED)).frameTicks(4).forever();
             default -> throw new IllegalArgumentException("Illegal animation ID: " + id);
         };
     }
@@ -68,7 +68,7 @@ public class ArcadePacMan_GhostAnimationManager extends SpriteAnimationManager<S
     }
 
     private RectShort[] ghostNormalSprites(Direction dir) {
-        return spriteSheet().spriteSeq(switch (personality) {
+        return spriteSheet().content().spriteSequence(switch (personality) {
             case RED_GHOST_SHADOW -> switch (dir) {
                 case RIGHT -> SpriteID.RED_GHOST_RIGHT;
                 case LEFT ->  SpriteID.RED_GHOST_LEFT;
@@ -98,7 +98,7 @@ public class ArcadePacMan_GhostAnimationManager extends SpriteAnimationManager<S
     }
 
     private RectShort[] ghostEyesSprites(Direction dir) {
-        return spriteSheet().spriteSeq(switch (dir) {
+        return spriteSheet().content().spriteSequence(switch (dir) {
             case Direction.RIGHT -> GHOST_EYES_RIGHT;
             case Direction.LEFT  -> GHOST_EYES_LEFT;
             case Direction.UP    -> GHOST_EYES_UP;

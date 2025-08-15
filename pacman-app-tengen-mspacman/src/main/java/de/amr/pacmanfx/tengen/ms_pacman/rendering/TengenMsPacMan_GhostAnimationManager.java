@@ -10,6 +10,7 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
+import de.amr.pacmanfx.uilib.assets.SpriteMap;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
@@ -32,10 +33,10 @@ public class TengenMsPacMan_GhostAnimationManager extends SpriteAnimationManager
     protected SpriteAnimation createAnimation(String id) {
         return switch (id) {
             case ANIM_GHOST_NORMAL      -> SpriteAnimation.build().of(ghostNormalSprites(Direction.LEFT)).frameTicks(NORMAL_TICKS).forever();
-            case ANIM_GHOST_FRIGHTENED  -> SpriteAnimation.build().of(spriteSheet().spriteSeq(SpriteID.GHOST_FRIGHTENED)).frameTicks(FRIGHTENED_TICKS).forever();
-            case ANIM_GHOST_FLASHING    -> SpriteAnimation.build().of(spriteSheet().spriteSeq(SpriteID.GHOST_FLASHING)).frameTicks(FLASH_TICKS).forever();
+            case ANIM_GHOST_FRIGHTENED  -> SpriteAnimation.build().of(spriteSheet().content().spriteSequence(SpriteID.GHOST_FRIGHTENED)).frameTicks(FRIGHTENED_TICKS).forever();
+            case ANIM_GHOST_FLASHING    -> SpriteAnimation.build().of(spriteSheet().content().spriteSequence(SpriteID.GHOST_FLASHING)).frameTicks(FLASH_TICKS).forever();
             case ANIM_GHOST_EYES        -> SpriteAnimation.build().of(ghostEyesSprites(Direction.LEFT)).once();
-            case ANIM_GHOST_NUMBER      -> SpriteAnimation.build().of(spriteSheet().spriteSeq(SpriteID.GHOST_NUMBERS)).once();
+            case ANIM_GHOST_NUMBER      -> SpriteAnimation.build().of(spriteSheet().content().spriteSequence(SpriteID.GHOST_NUMBERS)).once();
             default -> throw new IllegalArgumentException("Illegal animation ID " + id);
         };
     }
@@ -66,42 +67,44 @@ public class TengenMsPacMan_GhostAnimationManager extends SpriteAnimationManager
     }
 
     private RectShort[] ghostNormalSprites(Direction dir) {
+        SpriteMap<SpriteID> content = spriteSheet.content();
         return switch (personality) {
             case RED_GHOST_SHADOW -> switch (dir) {
-                case Direction.RIGHT -> spriteSheet().spriteSeq(SpriteID.RED_GHOST_RIGHT);
-                case Direction.LEFT  -> spriteSheet().spriteSeq(SpriteID.RED_GHOST_LEFT);
-                case Direction.UP    -> spriteSheet().spriteSeq(SpriteID.RED_GHOST_UP);
-                case Direction.DOWN  -> spriteSheet().spriteSeq(SpriteID.RED_GHOST_DOWN);
+                case Direction.RIGHT -> content.spriteSequence(SpriteID.RED_GHOST_RIGHT);
+                case Direction.LEFT  -> content.spriteSequence(SpriteID.RED_GHOST_LEFT);
+                case Direction.UP    -> content.spriteSequence(SpriteID.RED_GHOST_UP);
+                case Direction.DOWN  -> content.spriteSequence(SpriteID.RED_GHOST_DOWN);
             };
             case PINK_GHOST_SPEEDY   -> switch (dir) {
-                case Direction.RIGHT -> spriteSheet().spriteSeq(SpriteID.PINK_GHOST_RIGHT);
-                case Direction.LEFT  -> spriteSheet().spriteSeq(SpriteID.PINK_GHOST_LEFT);
-                case Direction.UP    -> spriteSheet().spriteSeq(SpriteID.PINK_GHOST_UP);
-                case Direction.DOWN  -> spriteSheet().spriteSeq(SpriteID.PINK_GHOST_DOWN);
+                case Direction.RIGHT -> content.spriteSequence(SpriteID.PINK_GHOST_RIGHT);
+                case Direction.LEFT  -> content.spriteSequence(SpriteID.PINK_GHOST_LEFT);
+                case Direction.UP    -> content.spriteSequence(SpriteID.PINK_GHOST_UP);
+                case Direction.DOWN  -> content.spriteSequence(SpriteID.PINK_GHOST_DOWN);
             };
             case CYAN_GHOST_BASHFUL  -> switch (dir) {
-                case Direction.RIGHT -> spriteSheet().spriteSeq(SpriteID.CYAN_GHOST_RIGHT);
-                case Direction.LEFT  -> spriteSheet().spriteSeq(SpriteID.CYAN_GHOST_LEFT);
-                case Direction.UP    -> spriteSheet().spriteSeq(SpriteID.CYAN_GHOST_UP);
-                case Direction.DOWN  -> spriteSheet().spriteSeq(SpriteID.CYAN_GHOST_DOWN);
+                case Direction.RIGHT -> content.spriteSequence(SpriteID.CYAN_GHOST_RIGHT);
+                case Direction.LEFT  -> content.spriteSequence(SpriteID.CYAN_GHOST_LEFT);
+                case Direction.UP    -> content.spriteSequence(SpriteID.CYAN_GHOST_UP);
+                case Direction.DOWN  -> content.spriteSequence(SpriteID.CYAN_GHOST_DOWN);
             };
             case ORANGE_GHOST_POKEY  -> switch (dir) {
-                case Direction.RIGHT -> spriteSheet().spriteSeq(SpriteID.ORANGE_GHOST_RIGHT);
-                case Direction.LEFT  -> spriteSheet().spriteSeq(SpriteID.ORANGE_GHOST_LEFT);
-                case Direction.UP    -> spriteSheet().spriteSeq(SpriteID.ORANGE_GHOST_UP);
-                case Direction.DOWN  -> spriteSheet().spriteSeq(SpriteID.ORANGE_GHOST_DOWN);
+                case Direction.RIGHT -> content.spriteSequence(SpriteID.ORANGE_GHOST_RIGHT);
+                case Direction.LEFT  -> content.spriteSequence(SpriteID.ORANGE_GHOST_LEFT);
+                case Direction.UP    -> content.spriteSequence(SpriteID.ORANGE_GHOST_UP);
+                case Direction.DOWN  -> content.spriteSequence(SpriteID.ORANGE_GHOST_DOWN);
             };
             default -> throw new IllegalArgumentException();
         };
     }
 
     private RectShort[] ghostEyesSprites(Direction dir) {
+        SpriteMap<SpriteID> content = spriteSheet.content();
         return new RectShort[] {
             switch (dir) {
-                case RIGHT -> spriteSheet().sprite(SpriteID.GHOST_EYES_RIGHT);
-                case LEFT  -> spriteSheet().sprite(SpriteID.GHOST_EYES_LEFT);
-                case UP    -> spriteSheet().sprite(SpriteID.GHOST_EYES_UP);
-                case DOWN  -> spriteSheet().sprite(SpriteID.GHOST_EYES_DOWN);
+                case RIGHT -> content.sprite(SpriteID.GHOST_EYES_RIGHT);
+                case LEFT  -> content.sprite(SpriteID.GHOST_EYES_LEFT);
+                case UP    -> content.sprite(SpriteID.GHOST_EYES_UP);
+                case DOWN  -> content.sprite(SpriteID.GHOST_EYES_DOWN);
             }
         };
     }
