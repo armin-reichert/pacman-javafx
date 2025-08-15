@@ -347,7 +347,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                             ghost.stopAnimation();
                         });
                         victim.setState(EATEN);
-                        victim.animations().ifPresent(am -> am.selectFrame(ANIM_GHOST_NUMBER, scene.victims.size() - 1));
+                        victim.selectAnimationFrame(ANIM_GHOST_NUMBER, scene.victims.size() - 1);
                     });
 
                 // After 50 ticks, Pac-Man and the surviving ghosts get visible again and move on

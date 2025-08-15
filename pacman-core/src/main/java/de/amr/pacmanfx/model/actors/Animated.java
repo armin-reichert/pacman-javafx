@@ -16,6 +16,10 @@ public interface Animated {
         animations().ifPresent(am -> am.select(id));
     }
 
+    default void selectAnimationFrame(String id, int frameIndex) {
+        animations().ifPresent(am -> am.selectFrame(id, frameIndex));
+    }
+
     default void playAnimation(String id) {
         animations().ifPresent(AnimationManager::play);
     }
