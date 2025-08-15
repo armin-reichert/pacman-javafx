@@ -165,5 +165,4 @@ public abstract class GameRenderer extends BaseRenderer implements DebugInfoRend
         float centerX = actor.x() + HTS, centerY = actor.y() + HTS;
         drawSpriteScaledCenteredAt(sprite, centerX, centerY);
     }
-
 }

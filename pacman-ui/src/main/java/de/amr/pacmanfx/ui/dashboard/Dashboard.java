@@ -22,7 +22,7 @@ public class Dashboard extends VBox {
     public static final int INFOBOX_MIN_WIDTH = 180;
     public static final Color INFO_BOX_CONTENT_BG_COLOR = Color.rgb(0, 0, 50, 1.0);
     public static final Color INFO_BOX_TEXT_COLOR = Color.WHITE;
-    public static final Font INFO_BOX_FONT = Font.font("Sans", 12);
+    public static final Font INFO_BOX_FONT = Font.font("Sans", 11.5);
 
     private final GameUI ui;
     private final Map<DashboardID, InfoBox> infoBoxMap = new LinkedHashMap<>();
