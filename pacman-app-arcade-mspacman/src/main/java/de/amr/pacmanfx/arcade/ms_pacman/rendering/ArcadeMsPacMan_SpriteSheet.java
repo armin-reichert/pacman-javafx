@@ -96,6 +96,8 @@ public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements SpriteShe
         SPRITE_MAP.addSpriteSequence(HEART,                    tile(2, 10));
         SPRITE_MAP.addSpriteSequence(BLUE_BAG,                 rect(488, 199, 8, 8));
         SPRITE_MAP.addSpriteSequence(JUNIOR_PAC,               rect(509, 200, 8, 8));
+
+        SPRITE_MAP.checkCompleteness();
     }
 
     private static RectShort[] makeMsPacManMunchingSpriteSeq(int dir) {

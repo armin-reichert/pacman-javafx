@@ -102,6 +102,8 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements SpriteSheet
                 rect(OFF_X + R16 *  8, R16 * 8, R16 * 2, R16),
                 rect(OFF_X + R16 * 10, R16 * 8, R16 * 2, R16)
         );
+
+        SPRITE_MAP.checkCompleteness();
     }
 
     private static RectShort[] makePacManMunchingSpriteSeq(int dir) {

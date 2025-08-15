@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib.assets;
 
 import de.amr.pacmanfx.lib.RectShort;
+import org.tinylog.Logger;
 
 import java.util.EnumMap;
 
@@ -24,17 +25,16 @@ public class SpriteMap<SID extends Enum<SID>> {
     record SingleSprite(RectShort rect) implements SpriteData {}
     record SpriteSequence(RectShort[] sequence) implements SpriteData {}
 
+    private final Class<SID> idEnumClass;
     private final EnumMap<SID, SpriteData> data;
 
-    public SpriteMap(Class<SID> spriteIdClass) {
-        data = new EnumMap<>(spriteIdClass);
+    public SpriteMap(Class<SID> idEnumClass) {
+        this.idEnumClass = requireNonNull(idEnumClass);
+        data = new EnumMap<>(idEnumClass);
     }
 
     private SpriteData get(SID id) {
         requireNonNull(id);
-        if (!data.containsKey(id)) {
-            throw new IllegalArgumentException("Unknown sprite ID '%s'".formatted(id));
-        }
         SpriteData value = data.get(id);
         if (value == null) {
             throw new IllegalArgumentException("Sprite value is null for id '%s'".formatted(id));
@@ -42,27 +42,35 @@ public class SpriteMap<SID extends Enum<SID>> {
         return value;
     }
 
-    public RectShort sprite(SID id) {
+    public final RectShort sprite(SID id) {
         SpriteData value = get(id);
-        if (value instanceof SingleSprite(RectShort rect)) {
-            return rect;
-        }
-        throw new IllegalArgumentException("Sprite ID '%s' does not reference a sprite".formatted(id));
+        return switch (value) {
+            case SingleSprite(RectShort sprite) -> sprite;
+            case SpriteSequence ignored -> throw new IllegalArgumentException("Sprite ID '%s' does not reference a sprite".formatted(id));
+        };
     }
 
-    public RectShort[] spriteSequence(SID id) {
+    public final RectShort[] spriteSequence(SID id) {
         SpriteData value = get(id);
-        if (value instanceof SpriteSequence(RectShort[] sequence)) {
-            return sequence;
-        }
-        throw new IllegalArgumentException("Sprite ID '%s' does not reference a sprite sequence".formatted(id));
+        return switch (value) {
+            case SingleSprite ignored -> throw new IllegalArgumentException("Sprite ID '%s' does not reference a sprite sequence".formatted(id));
+            case SpriteSequence spriteSequence -> spriteSequence.sequence;
+        };
     }
 
-    public void addSprite(SID id, RectShort sprite) {
+    public final void addSprite(SID id, RectShort sprite) {
         data.put(id, new SingleSprite(sprite));
     }
 
-    public void addSpriteSequence(SID id, RectShort... sprites) {
+    public final void addSpriteSequence(SID id, RectShort... sprites) {
         data.put(id, new SpriteSequence(sprites));
+    }
+
+    public final void checkCompleteness() {
+        for (SID id : idEnumClass.getEnumConstants()) {
+            if (!data.containsKey(id)) {
+                Logger.warn("Found sprite ID without value: {}", id);
+            }
+        }
     }
 }

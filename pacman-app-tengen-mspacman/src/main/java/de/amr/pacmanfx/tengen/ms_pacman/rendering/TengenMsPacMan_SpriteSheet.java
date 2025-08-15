@@ -197,6 +197,8 @@ public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements SpriteShe
             rect(157, 355, 33, 16),
             rect(198, 355, 33, 16)
         );
+
+        SPRITE_MAP.checkCompleteness();
     }
 
     public TengenMsPacMan_SpriteSheet {
