@@ -15,7 +15,7 @@ import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
-public class SpriteAnimationManager<SID> implements AnimationManager {
+public class SpriteAnimationManager<SID extends Enum<SID>> implements AnimationManager {
 
     protected final SpriteSheet<SID> spriteSheet;
     protected final Map<String, SpriteAnimation> animationsByID = new HashMap<>();

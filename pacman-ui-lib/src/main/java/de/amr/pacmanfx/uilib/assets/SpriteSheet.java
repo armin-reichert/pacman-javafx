@@ -15,10 +15,17 @@ import static java.util.Objects.requireNonNull;
 /**
  * Sprite sheet interface.
  *
- * @param <SID> sprite ID type
+ * @param <SID> sprite ID enum type
  */
-public interface SpriteSheet<SID> {
+public interface SpriteSheet<SID extends Enum<SID>> {
+
     Image sourceImage();
+
+    /**
+     * This map' values either single sprites of type ({@link RectShort} or sequences of sprites ({@link RectShort[]},
+
+     * @return map for storing sprites
+     */
     Map<SID, Object> spriteMap();
 
     default RectShort sprite(SID id) {
@@ -30,11 +37,7 @@ public interface SpriteSheet<SID> {
         if (value == null) {
             throw new IllegalArgumentException("Sprite value is null for id '%s'".formatted(id));
         }
-        if (value instanceof RectShort) {
-            return (RectShort) value;
-        }
-        throw new IllegalArgumentException("Value stored in sprite map for id '%s' is no sprite but of type %s"
-            .formatted(id, value.getClass()));
+        return (RectShort) value;
     }
 
     default RectShort[] spriteSeq(SID id) {
@@ -46,11 +49,7 @@ public interface SpriteSheet<SID> {
         if (value == null) {
             throw new IllegalArgumentException("Sprite value is null for id '%s'".formatted(id));
         }
-        if (value instanceof RectShort[]) {
-            return (RectShort[]) value;
-        }
-        throw new IllegalArgumentException("Value stored in sprite map for id '%s' is no sprite array but of type %s"
-            .formatted(id, value.getClass()));
+        return (RectShort[]) value;
     }
 
     /**

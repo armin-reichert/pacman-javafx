@@ -125,7 +125,6 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
     @Override
     public void init() {
         setInitialLifeCount(3);
-        //mapSelector.loadAllMaps();
     }
 
     @Override

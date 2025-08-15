@@ -114,7 +114,8 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
     {
         final int colorMapIndex = level.worldMap().getConfigValue("colorMapIndex");
         if (mazeHighlighted) {
-            RectShort maze = brightMazesSpriteSheet.spriteSeq(BrightMazesSpriteSheet.BRIGHT_MAZES_ID)[colorMapIndex];
+            RectShort[] brightMazes = brightMazesSpriteSheet.spriteSeq(BrightMazesSpriteSheet.SpriteID.BRIGHT_MAZES);
+            RectShort maze = brightMazes[colorMapIndex];
             drawSpriteScaled(brightMazesSpriteSheet.sourceImage(), maze, 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE));
         } else if (level.uneatenFoodCount() == 0) {
             RectShort maze = spriteSheet.spriteSeq(SpriteID.EMPTY_MAZES)[colorMapIndex];
