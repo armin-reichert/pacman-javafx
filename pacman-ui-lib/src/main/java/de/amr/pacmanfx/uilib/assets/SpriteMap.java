@@ -30,15 +30,20 @@ public class SpriteMap<SID extends Enum<SID>> {
         data = new EnumMap<>(spriteIdClass);
     }
 
-    public RectShort sprite(SID id) {
+    private SpriteData get(SID id) {
         requireNonNull(id);
         if (!data.containsKey(id)) {
             throw new IllegalArgumentException("Unknown sprite ID '%s'".formatted(id));
         }
-        Object value = data.get(id);
+        SpriteData value = data.get(id);
         if (value == null) {
             throw new IllegalArgumentException("Sprite value is null for id '%s'".formatted(id));
         }
+        return value;
+    }
+
+    public RectShort sprite(SID id) {
+        SpriteData value = get(id);
         if (value instanceof SingleSprite(RectShort rect)) {
             return rect;
         }
@@ -46,14 +51,7 @@ public class SpriteMap<SID extends Enum<SID>> {
     }
 
     public RectShort[] spriteSequence(SID id) {
-        requireNonNull(id);
-        if (!data.containsKey(id)) {
-            throw new IllegalArgumentException("Unknown sprite ID '%s'".formatted(id));
-        }
-        Object value = data.get(id);
-        if (value == null) {
-            throw new IllegalArgumentException("Sprite value is null for id '%s'".formatted(id));
-        }
+        SpriteData value = get(id);
         if (value instanceof SpriteSequence(RectShort[] sequence)) {
             return sequence;
         }
