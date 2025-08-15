@@ -16,7 +16,6 @@ import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
@@ -111,8 +110,6 @@ public abstract class GameScene2D implements GameScene {
 
     public void setGameRenderer(GameRenderer renderer) { gameRenderer = requireNonNull(renderer); }
 
-    public GraphicsContext ctx() { return gameRenderer.ctx(); }
-
     public Canvas canvas() { return canvas; }
     public void setCanvas(Canvas canvas) { this.canvas = canvas; }
 
@@ -164,14 +161,16 @@ public abstract class GameScene2D implements GameScene {
     protected void drawDebugInfo() {
         Vector2f sizePx = sizeInPx();
         gameRenderer.drawTileGrid(sizePx.x(), sizePx.y(), Color.LIGHTGRAY);
-        ctx().setFill(debugTextFill);
-        ctx().setFont(debugTextFont);
-        TickTimer stateTimer = gameContext().gameState().timer();
-        String stateText = "Game State: '%s' (Tick %d of %s)".formatted(
-            gameContext().gameState(),
-            stateTimer.tickCount(),
-            stateTimer.durationTicks() == TickTimer.INDEFINITE ? "∞" : String.valueOf(stateTimer.tickCount())
+        gameRenderer.ctx().ifPresent(ctx -> {
+            ctx.setFill(debugTextFill);
+            ctx.setFont(debugTextFont);
+            TickTimer stateTimer = gameContext().gameState().timer();
+            String stateText = "Game State: '%s' (Tick %d of %s)".formatted(
+                gameContext().gameState(),
+                stateTimer.tickCount(),
+                stateTimer.durationTicks() == TickTimer.INDEFINITE ? "∞" : String.valueOf(stateTimer.tickCount())
             );
-        ctx().fillText(stateText, 0, scaled(3 * TS));
+            ctx.fillText(stateText, 0, scaled(3 * TS));
+        });
     }
 }

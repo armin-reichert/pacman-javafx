@@ -59,7 +59,7 @@ public abstract class GameRenderer {
 
     public abstract Optional<SpriteSheet<?>> optSpriteSheet();
 
-    public GraphicsContext ctx() { return ctx; }
+    public Optional<GraphicsContext> ctx() { return Optional.ofNullable(ctx); }
 
     public FloatProperty scalingProperty() { return scalingProperty; }
 

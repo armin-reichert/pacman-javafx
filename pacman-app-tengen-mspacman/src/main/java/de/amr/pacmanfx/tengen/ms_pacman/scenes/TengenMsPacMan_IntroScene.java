@@ -18,6 +18,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
@@ -107,7 +108,11 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        ctx().setFont(scaledArcadeFont8());
+        GraphicsContext ctx = gameRenderer.ctx().orElse(null);
+        if (ctx == null) return;
+
+        ctx.setFont(scaledArcadeFont8());
+
         TickTimer timer = sceneController.state().timer;
         long tick = timer.tickCount();
         switch (sceneController.state()) {
@@ -124,11 +129,11 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 }
             }
             case SHOWING_MARQUEE -> {
-                drawMarquee();
+                drawMarquee(ctx);
                 gameRenderer.fillTextAtScaledPosition("\"MS PAC-MAN\"", nesPaletteColor(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
             }
             case GHOSTS_MARCHING_IN -> {
-                drawMarquee();
+                drawMarquee(ctx);
                 gameRenderer.fillTextAtScaledPosition("\"MS PAC-MAN\"", nesPaletteColor(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
                 if (ghostIndex == 0) {
                     gameRenderer.fillTextAtScaledPosition("WITH", nesPaletteColor(0x20), MARQUEE_X + 12, MARQUEE_Y + 23);
@@ -139,7 +144,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 ghosts.forEach(gameRenderer::drawActor);
             }
             case MS_PACMAN_MARCHING_IN -> {
-                drawMarquee();
+                drawMarquee(ctx);
                 gameRenderer.fillTextAtScaledPosition("\"MS PAC-MAN\"", nesPaletteColor(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
                 gameRenderer.fillTextAtScaledPosition("STARRING", nesPaletteColor(0x20), MARQUEE_X + 12, MARQUEE_Y + 22);
                 gameRenderer.fillTextAtScaledPosition("MS PAC-MAN", nesPaletteColor(0x28), MARQUEE_X + 28, MARQUEE_Y + 38);
@@ -164,24 +169,24 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         }
     }
 
-    private void drawMarquee() {
+    private void drawMarquee(GraphicsContext ctx) {
         double xMin = MARQUEE_X, xMax = xMin + 132, yMin = MARQUEE_Y, yMax = yMin + 60;
         for (int i = 0; i < NUM_BULBS; ++i) {
-            ctx().setFill(marqueeState.get(i) ? nesPaletteColor(0x20) : nesPaletteColor(0x15));
+            ctx.setFill(marqueeState.get(i) ? nesPaletteColor(0x20) : nesPaletteColor(0x15));
             if (i <= 33) { // lower border left-to-right
-                drawBulb(xMin + 4 * i, yMax);
+                drawBulb(ctx, xMin + 4 * i, yMax);
             } else if (i <= 48) { // right border bottom-to-top
-                drawBulb(xMax, yMax - 4 * (i - 33));
+                drawBulb(ctx, xMax, yMax - 4 * (i - 33));
             } else if (i <= 81) { // upper border right-to-left
-                drawBulb(xMax - 4 * (i - 48), yMin);
+                drawBulb(ctx, xMax - 4 * (i - 48), yMin);
             } else { // left border top-to-bottom
-                drawBulb(xMin, yMin + 4 * (i - 81));
+                drawBulb(ctx, xMin, yMin + 4 * (i - 81));
             }
         }
     }
 
-    private void drawBulb(double x, double y) {
-        ctx().fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
+    private void drawBulb(GraphicsContext ctx, double x, double y) {
+        ctx.fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
     }
 
     private enum SceneState implements FsmState<TengenMsPacMan_IntroScene> {

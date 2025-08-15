@@ -23,6 +23,7 @@ import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -267,34 +268,37 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
 
     @Override
     protected void drawDebugInfo() {
+        GraphicsContext ctx = gameRenderer.ctx().orElse(null);
+        if (ctx == null) return;
+
         gameRenderer.drawTileGrid(sizeInPx().x(), sizeInPx().y(), Color.LIGHTGRAY);
         if (gameContext().optGameLevel().isPresent()) {
             // assuming all ghosts have the same set of special terrain tiles
             gameContext().gameLevel().ghost(RED_GHOST_SHADOW).specialTerrainTiles().forEach(tile -> {
                 double x = scaled(tile.x() * TS), y = scaled(tile.y() * TS + HTS), size = scaled(TS);
-                ctx().setFill(Color.RED);
-                ctx().fillRect(x, y, size, 2);
+                ctx.setFill(Color.RED);
+                ctx.fillRect(x, y, size, 2);
             });
             // mark intersection tiles
             gameContext().gameLevel().worldMap().tiles().filter(gameContext().gameLevel()::isIntersection).forEach(tile -> {
-                ctx().setStroke(Color.gray(0.8));
-                ctx().setLineWidth(0.5);
-                ctx().save();
+                ctx.setStroke(Color.gray(0.8));
+                ctx.setLineWidth(0.5);
+                ctx.save();
                 double cx = scaled(tile.x() * TS + HTS), cy = scaled(tile.y() * TS + HTS), size = scaled(HTS);
-                ctx().translate(cx, cy);
-                ctx().rotate(45);
-                ctx().strokeRect(-0.5*size, -0.5*size, size, size);
-                ctx().restore();
+                ctx.translate(cx, cy);
+                ctx.rotate(45);
+                ctx.strokeRect(-0.5*size, -0.5*size, size, size);
+                ctx.restore();
             });
-            ctx().setFill(debugTextFill);
-            ctx().setFont(debugTextFont);
+            ctx.setFill(debugTextFill);
+            ctx.setFont(debugTextFont);
             String gameStateText = gameContext().gameState().name() + " (Tick %d)".formatted(gameContext().gameState().timer().tickCount());
             String huntingPhaseText = "";
             if (gameContext().gameState() == GamePlayState.HUNTING) {
                 HuntingTimer huntingTimer = gameContext().game().huntingTimer();
                 huntingPhaseText = " %s (Tick %d)".formatted(huntingTimer.phase(), huntingTimer.tickCount());
             }
-            ctx().fillText("%s%s".formatted(gameStateText, huntingPhaseText), 0, 64);
+            ctx.fillText("%s%s".formatted(gameStateText, huntingPhaseText), 0, 64);
         }
     }
 

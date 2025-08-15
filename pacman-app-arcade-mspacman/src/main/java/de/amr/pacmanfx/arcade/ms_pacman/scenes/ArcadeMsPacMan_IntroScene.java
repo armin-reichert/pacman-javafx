@@ -18,6 +18,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import java.util.List;
@@ -130,7 +131,10 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        ctx().setFont(scaledArcadeFont8());
+        GraphicsContext ctx = gameRenderer.ctx().orElse(null);
+        if (ctx == null) return;
+
+        ctx.setFont(scaledArcadeFont8());
         gameRenderer.fillTextAtScaledPosition(TITLE, ARCADE_ORANGE, TITLE_X, TITLE_Y);
         gameRenderer.drawActor(marquee);
         ghosts.forEach(gameRenderer::drawActor);

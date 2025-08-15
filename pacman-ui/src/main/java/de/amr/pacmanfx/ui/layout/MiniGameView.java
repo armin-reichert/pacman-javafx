@@ -26,6 +26,7 @@ import javafx.util.Duration;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
+import static de.amr.pacmanfx.ui._2d.GameRenderer.fillCanvas;
 import static de.amr.pacmanfx.ui.api.GameUI_Config.SCENE_ID_PLAY_SCENE_3D;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.*;
 import static java.util.Objects.requireNonNull;
@@ -141,8 +142,8 @@ public class MiniGameView extends VBox {
 
         float scaling = scalingProperty.get();
         gr.setScaling(scaling);
-        gr.ctx().setFill(backgroundColorProperty().get());
-        gr.ctx().fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+        fillCanvas(canvas, backgroundColorProperty.get());
 
         if (gameLevel != null) {
             gr.drawLevel(ui.gameContext(),
@@ -159,12 +160,14 @@ public class MiniGameView extends VBox {
         }
 
         if (debugProperty().get()) {
-            gr.ctx().save();
-            gr.ctx().setTextAlign(TextAlignment.CENTER);
-            gr.ctx().setFill(Color.WHITE);
-            gr.ctx().setFont(Font.font(14 * scaling));
-            gr.ctx().fillText("scaling: %.2f, draw calls: %d".formatted(scaling, drawCallCount), canvas.getWidth() * 0.5, 16 * scaling);
-            gr.ctx().restore();
+            gr.ctx().ifPresent(ctx -> {
+                ctx.save();
+                ctx.setTextAlign(TextAlignment.CENTER);
+                ctx.setFill(Color.WHITE);
+                ctx.setFont(Font.font(14 * scaling));
+                ctx.fillText("scaling: %.2f, draw calls: %d".formatted(scaling, drawCallCount), canvas.getWidth() * 0.5, 16 * scaling);
+                ctx.restore();
+            });
         }
     }
 }

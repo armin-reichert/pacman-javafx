@@ -87,15 +87,17 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
         var random = new Random();
         int numRows = (int) (ARCADE_MAP_SIZE_IN_PIXELS.y() / TS);
         int numCols = (int) (ARCADE_MAP_SIZE_IN_PIXELS.x() / TS);
-        ctx().setFill(ARCADE_WHITE);
-        ctx().setFont(scaledArcadeFont8());
-        for (int row = 0; row < numRows; ++row) {
-            double y = scaled(TS(row + 1));
-            for (int col = 0; col < numCols; ++col) {
-                int hexDigit = random.nextInt(16);
-                ctx().fillText(Integer.toHexString(hexDigit), scaled(TS(col)), y);
+        gameRenderer.ctx().ifPresent(ctx -> {
+            ctx.setFill(ARCADE_WHITE);
+            ctx.setFont(scaledArcadeFont8());
+            for (int row = 0; row < numRows; ++row) {
+                double y = scaled(TS(row + 1));
+                for (int col = 0; col < numCols; ++col) {
+                    int hexDigit = random.nextInt(16);
+                    ctx.fillText(Integer.toHexString(hexDigit), scaled(TS(col)), y);
+                }
             }
-        }
+        });
     }
 
     private void drawRandomSpriteFragments() {
@@ -121,21 +123,23 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
     }
 
     private void drawGridLines() {
-        double gridWidth = scaled(ARCADE_MAP_SIZE_IN_PIXELS.x());
-        double gridHeight = scaled(ARCADE_MAP_SIZE_IN_PIXELS.y());
-        int numRows = (int) (ARCADE_MAP_SIZE_IN_PIXELS.y() / 16);
-        int numCols = (int) (ARCADE_MAP_SIZE_IN_PIXELS.x() / 16);
-        double thin = scaled(2), thick = scaled(4);
-        ctx().setStroke(ARCADE_WHITE);
-        for (int row = 0; row <= numRows; ++row) {
-            ctx().setLineWidth(row == 0 || row == numRows ? thick : thin);
-            double y = scaled(row * 16);
-            ctx().strokeLine(0, y, gridWidth, y);
-        }
-        for (int col = 0; col <= numCols; ++col) {
-            ctx().setLineWidth(col == 0 || col == numCols ? thick : thin);
-            double x = scaled(col * 16);
-            ctx().strokeLine(x, 0, x, gridHeight);
-        }
+        gameRenderer.ctx().ifPresent(ctx -> {
+            double gridWidth = scaled(ARCADE_MAP_SIZE_IN_PIXELS.x());
+            double gridHeight = scaled(ARCADE_MAP_SIZE_IN_PIXELS.y());
+            int numRows = (int) (ARCADE_MAP_SIZE_IN_PIXELS.y() / 16);
+            int numCols = (int) (ARCADE_MAP_SIZE_IN_PIXELS.x() / 16);
+            double thin = scaled(2), thick = scaled(4);
+            ctx.setStroke(ARCADE_WHITE);
+            for (int row = 0; row <= numRows; ++row) {
+                ctx.setLineWidth(row == 0 || row == numRows ? thick : thin);
+                double y = scaled(row * 16);
+                ctx.strokeLine(0, y, gridWidth, y);
+            }
+            for (int col = 0; col <= numCols; ++col) {
+                ctx.setLineWidth(col == 0 || col == numCols ? thick : thin);
+                double x = scaled(col * 16);
+                ctx.strokeLine(x, 0, x, gridHeight);
+            }
+        });
     }
 }

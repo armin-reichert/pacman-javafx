@@ -21,6 +21,7 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -246,7 +247,11 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         if (initialDelay > 0) {
             return;
         }
-        renderer().ctx().setFont(scaledArcadeFont8());
+
+        GraphicsContext ctx = gameRenderer.ctx().orElse(null);
+        if (ctx == null) return;
+
+        ctx.setFont(scaledArcadeFont8());
 
         if (PROPERTY_JOYPAD_BINDINGS_DISPLAYED.get()) {
             renderer().drawJoypadKeyBinding(ui.joypad().currentKeyBinding());
@@ -257,14 +262,14 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         renderer().fillTextAtScaledPosition("MS PAC-MAN OPTIONS", NES_YELLOW, COL_LABEL + 3 * TS, 48);
 
         // Players (not implemented)
-        drawMarkerIfSelected(OPTION_PLAYERS, 72, scaledArcadeFont8());
+        drawMarkerIfSelected(ctx, OPTION_PLAYERS, 72, scaledArcadeFont8());
         renderer().fillTextAtScaledPosition("TYPE", NES_YELLOW, COL_LABEL, 72);
         renderer().fillTextAtScaledPosition(":", NES_YELLOW, COL_LABEL + 4 * TS + 4, 72);
         // grey out
         renderer().fillTextAtScaledPosition("1 PLAYER", nesPaletteColor(0x10), COL_LABEL + 6 * TS  , 72);
 
         // Pac-Booster
-        drawMarkerIfSelected(OPTION_PAC_BOOSTER, 96, scaledArcadeFont8());
+        drawMarkerIfSelected(ctx, OPTION_PAC_BOOSTER, 96, scaledArcadeFont8());
         renderer().fillTextAtScaledPosition("PAC BOOSTER", NES_YELLOW, COL_LABEL, 96);
         renderer().fillTextAtScaledPosition(":", NES_YELLOW, COL_COLON, 96);
         String pacBoosterText = switch (theGame().pacBooster()) {
@@ -275,19 +280,19 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         renderer().fillTextAtScaledPosition(pacBoosterText, NES_WHITE, COL_VALUE, 96);
 
         // Game difficulty
-        drawMarkerIfSelected(OPTION_DIFFICULTY, 120, scaledArcadeFont8());
+        drawMarkerIfSelected(ctx, OPTION_DIFFICULTY, 120, scaledArcadeFont8());
         renderer().fillTextAtScaledPosition("GAME DIFFICULTY", NES_YELLOW, COL_LABEL, 120);
         renderer().fillTextAtScaledPosition(":", NES_YELLOW, COL_COLON, 120);
         renderer().fillTextAtScaledPosition(theGame().difficulty().name(), NES_WHITE, COL_VALUE, 120);
 
         // Maze (type) selection
-        drawMarkerIfSelected(OPTION_MAZE_SELECTION, 144, scaledArcadeFont8());
+        drawMarkerIfSelected(ctx, OPTION_MAZE_SELECTION, 144, scaledArcadeFont8());
         renderer().fillTextAtScaledPosition("MAZE SELECTION", NES_YELLOW, COL_LABEL, 144);
         renderer().fillTextAtScaledPosition(":", NES_YELLOW, COL_COLON, 144);
         renderer().fillTextAtScaledPosition(theGame().mapCategory().name(), NES_WHITE, COL_VALUE, 144);
 
         // Starting level number
-        drawMarkerIfSelected(OPTION_STARTING_LEVEL, 168, scaledArcadeFont8());
+        drawMarkerIfSelected(ctx, OPTION_STARTING_LEVEL, 168, scaledArcadeFont8());
         renderer().fillTextAtScaledPosition("STARTING LEVEL", NES_YELLOW, COL_LABEL, 168);
         renderer().fillTextAtScaledPosition(":", NES_YELLOW, COL_COLON, 168);
         renderer().fillTextAtScaledPosition(String.valueOf(theGame().startLevelNumber()), NES_WHITE, COL_VALUE, 168);
@@ -308,10 +313,10 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         renderer().fillTextAtScaledPosition("PRESS START TO START GAME", NES_YELLOW, 3 * TS,  208);
     }
 
-    private void drawMarkerIfSelected(int optionIndex, double y, Font font) {
+    private void drawMarkerIfSelected(GraphicsContext ctx, int optionIndex, double y, Font font) {
         if (selectedOption() == optionIndex) {
-            ctx().setFill(NES_YELLOW);
-            ctx().fillRect(scaled(COL_ARROW + 2.25), scaled(y - 4.5), scaled(7.5), scaled(1.75));
+            ctx.setFill(NES_YELLOW);
+            ctx.fillRect(scaled(COL_ARROW + 2.25), scaled(y - 4.5), scaled(7.5), scaled(1.75));
             renderer().fillTextAtScaledPosition(">", NES_YELLOW, font, COL_ARROW + 3, y);
         }
     }

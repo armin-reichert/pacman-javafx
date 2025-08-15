@@ -55,10 +55,10 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
+        renderer().ctx().ifPresent(ctx -> ctx.setFont(scaledArcadeFont8()));
         double barWidth = sizeInPx().x();
         renderer().drawBar(nesPaletteColor(0x20), nesPaletteColor(0x13), barWidth, 20);
         renderer().drawBar(nesPaletteColor(0x20), nesPaletteColor(0x13), barWidth, 212);
-        ctx().setFont(scaledArcadeFont8());
         int y = 7 * TS;
         if (gameContext().gameState().timer().betweenSeconds(0.5 * DISPLAY_SECONDS, DISPLAY_SECONDS)) {
             renderer().fillTextAtScaledPosition("CREDITS FOR JAVAFX REMAKE", nesPaletteColor(0x20), 3 * TS, y);
