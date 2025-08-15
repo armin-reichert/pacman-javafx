@@ -16,7 +16,7 @@ import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.animation.SingleSpriteActor;
 
-import java.util.List;
+import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.*;
@@ -106,7 +106,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        gameRenderer.drawActors(List.of(clapperboard, msPacMan, pacMan, inky, pinky, heart));
+        Stream.of(clapperboard, msPacMan, pacMan, inky, pinky, heart).forEach(gameRenderer::drawActor);
     }
 
     // Scene controller state machine

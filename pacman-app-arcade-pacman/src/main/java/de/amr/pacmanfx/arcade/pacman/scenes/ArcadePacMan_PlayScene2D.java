@@ -240,7 +240,7 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
         Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW).map(gameLevel::ghost)
                 .forEach(actorsInZOrder::add);
 
-        gameRenderer.drawActors(actorsInZOrder);
+        actorsInZOrder.forEach(gameRenderer::drawActor);
 
         if (isDebugInfoVisible()) {
             actorsInZOrder.forEach(actor -> {

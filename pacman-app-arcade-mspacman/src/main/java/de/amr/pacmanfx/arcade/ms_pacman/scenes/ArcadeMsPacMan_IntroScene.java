@@ -133,7 +133,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         ctx().setFont(scaledArcadeFont8());
         gameRenderer.fillTextAtScaledPosition(TITLE, ARCADE_ORANGE, TITLE_X, TITLE_Y);
         gameRenderer.drawActor(marquee);
-        gameRenderer.drawActors(ghosts);
+        ghosts.forEach(gameRenderer::drawActor);
         gameRenderer.drawActor(msPacMan);
         switch (sceneController.state()) {
             case GHOSTS_MARCHING_IN -> {

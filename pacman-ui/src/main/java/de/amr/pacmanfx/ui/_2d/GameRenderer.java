@@ -23,11 +23,11 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import org.tinylog.Logger;
 
-import java.util.List;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.HTS;
@@ -39,11 +39,11 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class GameRenderer {
 
-    public static void fillCanvas(Canvas canvas, Color color) {
+    public static void fillCanvas(Canvas canvas, Paint paint) {
         requireNonNull(canvas);
-        requireNonNull(color);
+        requireNonNull(paint);
         GraphicsContext ctx = canvas.getGraphicsContext2D();
-        ctx.setFill(color);
+        ctx.setFill(paint);
         ctx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
 
@@ -106,17 +106,6 @@ public abstract class GameRenderer {
         boolean mazeHighlighted,
         boolean energizerHighlighted,
         long tick);
-
-    /**
-     * Draws the specified actors in sequence.
-     *
-     * @param actors list of actors
-     */
-    public <T extends Actor> void drawActors(List<T> actors) {
-        for (Actor actor : actors) {
-            drawActor(actor);
-        }
-    }
 
     /**
      * Draws an actor (Pac-Man, ghost, moving bonus, etc.) if it is visible.

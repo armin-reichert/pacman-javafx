@@ -49,7 +49,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         private final GraphicsContext ctx;
         private final Pac pac;
         private final List<Ghost> ghosts;
-        private GameRenderer renderer;
+        private GameRenderer gameRenderer;
         private boolean chasingGhosts;
         private boolean running;
 
@@ -140,14 +140,14 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
             ctx.save();
             ctx.translate(0, 23.5 * TS * scaling);
             ctx.setImageSmoothing(false);
-            renderer.setScaling(scaling);
-            renderer.drawActors(ghosts);
-            renderer.drawActor(pac);
+            gameRenderer.setScaling(scaling);
+            ghosts.forEach(gameRenderer::drawActor);
+            gameRenderer.drawActor(pac);
             ctx.restore();
         }
 
         void setGameConfig(GameUI_Config config) {
-            renderer = config.createGameRenderer(ctx.getCanvas());
+            gameRenderer = config.createGameRenderer(ctx.getCanvas());
             pac.setAnimations(config.createPacAnimations(pac));
             pac.animations().ifPresent(am -> am.play(ANIM_PAC_MUNCHING));
             for (Ghost ghost : ghosts) {

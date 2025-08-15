@@ -11,7 +11,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 
-import java.util.List;
+import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createMsPacMan;
@@ -83,7 +83,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        gameRenderer.drawActors(List.of(clapperboard, msPacMan, pacMan));
+        Stream.of(clapperboard, msPacMan, pacMan).forEach(gameRenderer::drawActor);
     }
 
     // Scene controller state machine

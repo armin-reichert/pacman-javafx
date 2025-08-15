@@ -15,6 +15,7 @@ import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.RandomNumberSupport.randomInt;
@@ -233,7 +234,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        renderer().drawActors(List.of(clapperboard, msPacMan, pacMan));
-        renderer().drawActors(juniors);
+        Stream.of(clapperboard, msPacMan, pacMan).forEach(gameRenderer::drawActor);
+        juniors.forEach(gameRenderer::drawActor);
     }
 }

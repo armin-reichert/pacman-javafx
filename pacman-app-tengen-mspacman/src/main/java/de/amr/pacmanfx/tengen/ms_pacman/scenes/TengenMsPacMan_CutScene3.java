@@ -16,7 +16,7 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 
-import java.util.List;
+import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
@@ -176,7 +176,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
     @Override
     public void drawSceneContent() {
         if (!darkness) {
-            renderer().drawActors(List.of(clapperboard, stork, flyingBag, msPacMan, pacMan));
+            Stream.of(clapperboard, stork, flyingBag, msPacMan, pacMan).forEach(gameRenderer::drawActor);
         }
     }
 }

@@ -97,7 +97,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        gameRenderer.drawActors(actorsInZOrder);
+        actorsInZOrder.forEach(gameRenderer::drawActor);
     }
 
     @Override
