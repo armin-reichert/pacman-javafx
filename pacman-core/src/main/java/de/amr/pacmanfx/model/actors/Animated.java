@@ -6,22 +6,28 @@ package de.amr.pacmanfx.model.actors;
 
 import java.util.Optional;
 
+import static java.util.Objects.requireNonNull;
+
 /**
- * Implemented by animated actors.
+ * Implemented by actors.
  */
 public interface Animated {
+
     Optional<AnimationManager> animations();
 
     default void selectAnimation(String id) {
+        requireNonNull(id);
         animations().ifPresent(am -> am.select(id));
     }
 
     default void selectAnimationFrame(String id, int frameIndex) {
+        requireNonNull(id);
         animations().ifPresent(am -> am.selectFrame(id, frameIndex));
     }
 
     default void playAnimation(String id) {
-        animations().ifPresent(AnimationManager::play);
+        requireNonNull(id);
+        animations().ifPresent(am -> am.play(id));
     }
 
     default void playAnimation() {
