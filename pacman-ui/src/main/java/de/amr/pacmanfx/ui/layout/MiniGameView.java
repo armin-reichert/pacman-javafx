@@ -48,7 +48,7 @@ public class MiniGameView extends VBox {
     private final HBox canvasContainer;
 
     private GameUI ui;
-    private GameRenderer gr;
+    private GameRenderer gameRenderer;
     private GameLevel gameLevel;
     private long drawCallCount;
 
@@ -117,11 +117,11 @@ public class MiniGameView extends VBox {
     public void setGameLevel(GameLevel gameLevel) {
         /* TODO: The game renderer cannot yet be created in setGameUI because at the time, setGameUI is called, the
                  game controller has not yet selected a game variant and therefore the current UI config is null! */
-        gr = ui.currentConfig().createGameRenderer(canvas);
-        gr.setScaling(scalingProperty.floatValue());
+        gameRenderer = ui.currentConfig().createGameRenderer(canvas);
+        gameRenderer.setScaling(scalingProperty.floatValue());
         this.gameLevel = requireNonNull(gameLevel);
         worldSizeProperty.set(gameLevel.worldSizePx());
-        gr.applyRenderingHints(gameLevel);
+        gameRenderer.applyRenderingHints(gameLevel);
     }
 
     public void slideIn() {
@@ -136,38 +136,36 @@ public class MiniGameView extends VBox {
     public void draw() {
         drawCallCount += 1;
 
-        if (!isVisible() || gr == null) {
+        if (!isVisible() || gameRenderer == null) {
             return;
         }
 
         float scaling = scalingProperty.get();
-        gr.setScaling(scaling);
+        gameRenderer.setScaling(scaling);
 
         fillCanvas(canvas, backgroundColorProperty.get());
 
         if (gameLevel != null) {
-            gr.drawLevel(ui.gameContext(),
+            gameRenderer.drawLevel(ui.gameContext(),
                 gameLevel,
                 backgroundColorProperty().get(),
                 false,
                 gameLevel.blinking().isOn(),
                 ui.clock().tickCount());
-            gameLevel.bonus().ifPresent(gr::drawActor);
-            gr.drawActor(gameLevel.pac());
+            gameLevel.bonus().ifPresent(gameRenderer::drawActor);
+            gameRenderer.drawActor(gameLevel.pac());
             Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)
                 .map(gameLevel::ghost)
-                .forEach(gr::drawActor);
+                .forEach(gameRenderer::drawActor);
         }
 
         if (debugProperty().get()) {
-            gr.ctx().ifPresent(ctx -> {
-                ctx.save();
-                ctx.setTextAlign(TextAlignment.CENTER);
-                ctx.setFill(Color.WHITE);
-                ctx.setFont(Font.font(14 * scaling));
-                ctx.fillText("scaling: %.2f, draw calls: %d".formatted(scaling, drawCallCount), canvas.getWidth() * 0.5, 16 * scaling);
-                ctx.restore();
-            });
+            gameRenderer.ctx().save();
+            gameRenderer.ctx().setTextAlign(TextAlignment.CENTER);
+            gameRenderer.ctx().setFill(Color.WHITE);
+            gameRenderer.ctx().setFont(Font.font(14 * scaling));
+            gameRenderer.ctx().fillText("scaling: %.2f, draw calls: %d".formatted(scaling, drawCallCount), canvas.getWidth() * 0.5, 16 * scaling);
+            gameRenderer.ctx().restore();
         }
     }
 }

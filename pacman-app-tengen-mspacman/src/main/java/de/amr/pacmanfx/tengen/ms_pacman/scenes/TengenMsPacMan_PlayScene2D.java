@@ -18,8 +18,8 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
-import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_HUDData;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
+import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_HUDData;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_LevelCounter;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.ColorSchemedSprite;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
@@ -34,7 +34,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.ParallelCamera;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.Background;
@@ -420,9 +419,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     @Override
     public void draw() {
         clear();
-        GraphicsContext ctx = gameRenderer.ctx().orElse(null);
-        if (ctx == null) return;
-
         if (gameContext().optGameLevel().isEmpty()) {
             return; // Scene is drawn already 2 ticks before level has been created
         }
@@ -443,7 +439,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         renderer().setScaling(scaling);
         renderer().ensureRenderingHintsAreApplied(gameContext().gameLevel());
 
-        ctx.save();
+        gameRenderer.ctx().save();
 
         if (debugInfoVisibleProperty.get()) {
             canvas.setClip(null);
@@ -454,19 +450,16 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             drawSceneContent();
         }
         // NES screen is 32 tiles wide but mazes are only 28 tiles wide, so shift HUD right:
-        ctx.translate(scaled(2 * TS), 0);
+        gameRenderer.ctx().translate(scaled(2 * TS), 0);
         renderer().drawHUD(gameContext(), gameContext().game().hudData(), sizeInPx(), ui.clock().tickCount());
 
-        ctx.restore();
+        gameRenderer.ctx().restore();
     }
 
     @Override
     public void drawSceneContent() {
-        GraphicsContext ctx = gameRenderer.ctx().orElse(null);
-        if (ctx == null) return;
-
-        ctx.save();
-        ctx.translate(scaled(2 * TS), 0);
+        gameRenderer.ctx().save();
+        gameRenderer.ctx().translate(scaled(2 * TS), 0);
 
         if (levelCompletedAnimation.isRunning()) {
             if (levelCompletedAnimation.isHighlighted()) {
@@ -490,25 +483,22 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         ghostsByZ(gameContext().gameLevel()).forEach(actorsByZ::add);
         actorsByZ.forEach(gameRenderer::drawActor);
 
-        ctx.restore();
+        gameRenderer.ctx().restore();
     }
 
     @Override
     protected void drawDebugInfo() {
         renderer().drawTileGrid(UNSCALED_CANVAS_WIDTH, UNSCALED_CANVAS_HEIGHT, Color.LIGHTGRAY);
-        GraphicsContext ctx = gameRenderer.ctx().orElse(null);
-        if (ctx == null) return;
-
-        ctx.save();
-        ctx.translate(scaled(2 * TS), 0);
-        ctx.setFill(debugTextFill);
-        ctx.setFont(debugTextFont);
-        ctx.fillText("%s %d".formatted(gameContext().gameState(), gameContext().gameState().timer().tickCount()), 0, scaled(3 * TS));
+        gameRenderer.ctx().save();
+        gameRenderer.ctx().translate(scaled(2 * TS), 0);
+        gameRenderer.ctx().setFill(debugTextFill);
+        gameRenderer.ctx().setFont(debugTextFont);
+        gameRenderer.ctx().fillText("%s %d".formatted(gameContext().gameState(), gameContext().gameState().timer().tickCount()), 0, scaled(3 * TS));
         if (gameContext().optGameLevel().isPresent()) {
             renderer().drawMovingActorInfo(gameContext().gameLevel().pac());
             ghostsByZ(gameContext().gameLevel()).forEach(renderer()::drawMovingActorInfo);
         }
-        ctx.restore();
+        gameRenderer.ctx().restore();
     }
 
     private Stream<Ghost> ghostsByZ(GameLevel gameLevel) {

@@ -55,7 +55,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        renderer().ctx().ifPresent(ctx -> ctx.setFont(scaledArcadeFont8()));
+        gameRenderer.ctx().setFont(scaledArcadeFont8());
         double barWidth = sizeInPx().x();
         renderer().drawBar(nesPaletteColor(0x20), nesPaletteColor(0x13), barWidth, 20);
         renderer().drawBar(nesPaletteColor(0x20), nesPaletteColor(0x13), barWidth, 212);

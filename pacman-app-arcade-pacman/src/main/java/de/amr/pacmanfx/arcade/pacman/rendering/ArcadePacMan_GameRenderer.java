@@ -45,8 +45,8 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
         if (!data.isVisible()) return;
 
         if (data.isScoreVisible()) {
-            ctx.setFont(assets().arcadeFont(scaled(8)));
-            ctx.setFill((ARCADE_WHITE));
+            ctx().setFont(assets().arcadeFont(scaled(8)));
+            ctx().setFill((ARCADE_WHITE));
             drawScore(gameContext.game().scoreManager().score(), "SCORE", TS(1), TS(1));
             drawScore(gameContext.game().scoreManager().highScore(), "HIGH SCORE", TS(14), TS(1));
         }
@@ -99,18 +99,18 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
         boolean energizerHighlighted,
         long tick)
     {
-        ctx.save();
-        ctx.scale(scaling(), scaling());
+        ctx().save();
+        ctx().scale(scaling(), scaling());
         if (mazeHighlighted) {
             Image flashingMaze = assets.image(ArcadePacMan_UIConfig.ASSET_NAMESPACE + ".flashing_maze");
-            ctx.drawImage(flashingMaze, 0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);
+            ctx().drawImage(flashingMaze, 0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);
         }
         else if (level.uneatenFoodCount() == 0) {
             drawSprite(spriteSheet.sprite(SpriteID.MAP_EMPTY), 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE));
         }
         else {
             drawSprite(spriteSheet.sprite(SpriteID.MAP_FULL), 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE));
-            ctx.setFill(backgroundColor);
+            ctx().setFill(backgroundColor);
             level.worldMap().tiles()
                     .filter(not(level::isEnergizerPosition))
                     .filter(level::tileContainsEatenFood)
@@ -119,7 +119,7 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
                     .filter(tile -> !energizerHighlighted || level.tileContainsEatenFood(tile))
                     .forEach(tile -> fillSquareAtTileCenter(tile, 10));
         }
-        ctx.restore();
+        ctx().restore();
     }
 
     @Override

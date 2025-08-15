@@ -108,11 +108,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        GraphicsContext ctx = gameRenderer.ctx().orElse(null);
-        if (ctx == null) return;
-
-        ctx.setFont(scaledArcadeFont8());
-
+        gameRenderer.ctx().setFont(scaledArcadeFont8());
         TickTimer timer = sceneController.state().timer;
         long tick = timer.tickCount();
         switch (sceneController.state()) {
@@ -129,11 +125,11 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 }
             }
             case SHOWING_MARQUEE -> {
-                drawMarquee(ctx);
+                drawMarquee();
                 gameRenderer.fillTextAtScaledPosition("\"MS PAC-MAN\"", nesPaletteColor(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
             }
             case GHOSTS_MARCHING_IN -> {
-                drawMarquee(ctx);
+                drawMarquee();
                 gameRenderer.fillTextAtScaledPosition("\"MS PAC-MAN\"", nesPaletteColor(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
                 if (ghostIndex == 0) {
                     gameRenderer.fillTextAtScaledPosition("WITH", nesPaletteColor(0x20), MARQUEE_X + 12, MARQUEE_Y + 23);
@@ -144,7 +140,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 ghosts.forEach(gameRenderer::drawActor);
             }
             case MS_PACMAN_MARCHING_IN -> {
-                drawMarquee(ctx);
+                drawMarquee();
                 gameRenderer.fillTextAtScaledPosition("\"MS PAC-MAN\"", nesPaletteColor(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
                 gameRenderer.fillTextAtScaledPosition("STARRING", nesPaletteColor(0x20), MARQUEE_X + 12, MARQUEE_Y + 22);
                 gameRenderer.fillTextAtScaledPosition("MS PAC-MAN", nesPaletteColor(0x28), MARQUEE_X + 28, MARQUEE_Y + 38);
@@ -169,7 +165,8 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         }
     }
 
-    private void drawMarquee(GraphicsContext ctx) {
+    private void drawMarquee() {
+        GraphicsContext ctx = gameRenderer.ctx();
         double xMin = MARQUEE_X, xMax = xMin + 132, yMin = MARQUEE_Y, yMax = yMin + 60;
         for (int i = 0; i < NUM_BULBS; ++i) {
             ctx.setFill(marqueeState.get(i) ? nesPaletteColor(0x20) : nesPaletteColor(0x15));

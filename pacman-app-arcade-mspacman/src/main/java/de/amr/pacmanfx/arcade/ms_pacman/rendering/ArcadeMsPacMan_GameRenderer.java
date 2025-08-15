@@ -59,8 +59,8 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
         if (!data.isVisible()) return;
 
         if (data.isScoreVisible()) {
-            ctx.setFont(assets.arcadeFont(scaled(8)));
-            ctx.setFill(ARCADE_WHITE);
+            ctx().setFont(assets.arcadeFont(scaled(8)));
+            ctx().setFill(ARCADE_WHITE);
             drawScore(gameContext.game().scoreManager().score(), "SCORE", TS(1), TS(1));
             drawScore(gameContext.game().scoreManager().highScore(), "HIGH SCORE", TS(14), TS(1));
         }
@@ -123,9 +123,9 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
         } else {
             RectShort maze = spriteSheet.spriteSequence(SpriteID.FULL_MAZES)[colorMapIndex];
             drawSpriteScaled(maze, 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE));
-            ctx.save();
-            ctx.scale(scaling(), scaling());
-            ctx.setFill(backgroundColor);
+            ctx().save();
+            ctx().scale(scaling(), scaling());
+            ctx().setFill(backgroundColor);
             level.worldMap().tiles()
                     .filter(not(level::isEnergizerPosition))
                     .filter(level::tileContainsEatenFood)
@@ -133,7 +133,7 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
             level.energizerPositions().stream()
                     .filter(tile -> !energizerHighlighted || level.tileContainsEatenFood(tile))
                     .forEach(tile -> fillSquareAtTileCenter(tile, 10));
-            ctx.restore();
+            ctx().restore();
         }
     }
 
@@ -153,8 +153,8 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
 
     public void drawMovingBonus(Bonus bonus) {
         if (bonus.state() == BonusState.INACTIVE) return;
-        ctx.save();
-        ctx.translate(0, bonus.jumpHeight());
+        ctx().save();
+        ctx().translate(0, bonus.jumpHeight());
         switch (bonus.state()) {
             case EDIBLE-> {
                 RectShort sprite = spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS)[bonus.symbol()];
@@ -165,7 +165,7 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
                 drawActorSpriteCentered(bonus, sprite);
             }
         }
-        ctx.restore();
+        ctx().restore();
     }
 
     public void drawClapperBoard(Clapperboard clapperboard) {
@@ -177,10 +177,10 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
         double numberY = scaled(clapperboard.y() + 18);
         double textX = scaled(clapperboard.x() + sprite.width());
         drawSpriteScaledCenteredAt(sprite, clapperboard.x() + HTS, clapperboard.y() + HTS);
-        ctx.setFont(clapperboard.font());
-        ctx.setFill(ARCADE_WHITE);
-        ctx.fillText(clapperboard.number(), numberX, numberY);
-        ctx.fillText(clapperboard.text(), textX, numberY);
+        ctx().setFont(clapperboard.font());
+        ctx().setFill(ARCADE_WHITE);
+        ctx().fillText(clapperboard.number(), numberX, numberY);
+        ctx().fillText(clapperboard.text(), textX, numberY);
     }
 
     /**
@@ -192,17 +192,17 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
      */
     public void drawMarquee(Marquee marquee) {
         long tick = marquee.timer().tickCount();
-        ctx.setFill(marquee.bulbOffColor());
+        ctx().setFill(marquee.bulbOffColor());
         for (int bulbIndex = 0; bulbIndex < marquee.totalBulbCount(); ++bulbIndex) {
             drawMarqueeBulb(marquee, bulbIndex);
         }
         int firstBrightIndex = (int) (tick % marquee.totalBulbCount());
-        ctx.setFill(marquee.bulbOnColor());
+        ctx().setFill(marquee.bulbOnColor());
         for (int i = 0; i < marquee.brightBulbsCount(); ++i) {
             drawMarqueeBulb(marquee, (firstBrightIndex + i * marquee.brightBulbsDistance()) % marquee.totalBulbCount());
         }
         // simulate bug from original Arcade game
-        ctx.setFill(marquee.bulbOffColor());
+        ctx().setFill(marquee.bulbOffColor());
         for (int bulbIndex = 81; bulbIndex < marquee.totalBulbCount(); bulbIndex += 2) {
             drawMarqueeBulb(marquee, bulbIndex);
         }
@@ -228,16 +228,16 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
             x = minX;
             y = 4 * (bulbIndex - 59);
         }
-        ctx.fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
+        ctx().fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
     }
 
     public void drawMidwayCopyright(MidwayCopyright copyright) {
         double x = scaled(copyright.x()), y = scaled(copyright.y());
-        ctx.drawImage(copyright.logo(), x, y + 2, scaled(TS(4) - 2), scaled(TS(4)));
-        ctx.setFont(assets.arcadeFont(scaled(8)));
-        ctx.setFill(ARCADE_RED);
-        ctx.fillText("©", x + scaled(TS(5)), y + scaled(TS(2) + 2));
-        ctx.fillText("MIDWAY MFG CO", x + scaled(TS(7)), y + scaled(TS(2)));
-        ctx.fillText("1980/1981", x + scaled(TS(8)), y + scaled(TS(4)));
+        ctx().drawImage(copyright.logo(), x, y + 2, scaled(TS(4) - 2), scaled(TS(4)));
+        ctx().setFont(assets.arcadeFont(scaled(8)));
+        ctx().setFill(ARCADE_RED);
+        ctx().fillText("©", x + scaled(TS(5)), y + scaled(TS(2) + 2));
+        ctx().fillText("MIDWAY MFG CO", x + scaled(TS(7)), y + scaled(TS(2)));
+        ctx().fillText("1980/1981", x + scaled(TS(8)), y + scaled(TS(4)));
     }
 }

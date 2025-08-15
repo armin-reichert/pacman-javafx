@@ -164,17 +164,15 @@ public abstract class GameScene2D implements GameScene {
     protected void drawDebugInfo() {
         Vector2f sizePx = sizeInPx();
         gameRenderer.drawTileGrid(sizePx.x(), sizePx.y(), Color.LIGHTGRAY);
-        gameRenderer.ctx().ifPresent(ctx -> {
-            ctx.setFill(debugTextFill);
-            ctx.setStroke(debugTextStroke);
-            ctx.setFont(debugTextFont);
-            TickTimer stateTimer = gameContext().gameState().timer();
-            String stateText = "Game State: '%s' (Tick %d of %s)".formatted(
-                gameContext().gameState().name(),
-                stateTimer.tickCount(),
-                stateTimer.durationTicks() == TickTimer.INDEFINITE ? "∞" : String.valueOf(stateTimer.tickCount())
-            );
-            ctx.fillText(stateText, 0, scaled(3 * TS));
-        });
+        gameRenderer.ctx().setFill(debugTextFill);
+        gameRenderer.ctx().setStroke(debugTextStroke);
+        gameRenderer.ctx().setFont(debugTextFont);
+        TickTimer stateTimer = gameContext().gameState().timer();
+        String stateText = "Game State: '%s' (Tick %d of %s)".formatted(
+            gameContext().gameState().name(),
+            stateTimer.tickCount(),
+            stateTimer.durationTicks() == TickTimer.INDEFINITE ? "∞" : String.valueOf(stateTimer.tickCount())
+        );
+        gameRenderer.ctx().fillText(stateText, 0, scaled(3 * TS));
     }
 }

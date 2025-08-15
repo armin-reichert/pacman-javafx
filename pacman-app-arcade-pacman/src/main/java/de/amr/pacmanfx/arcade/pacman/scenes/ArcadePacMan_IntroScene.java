@@ -20,9 +20,7 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,24 +121,19 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        GraphicsContext ctx = gameRenderer.ctx().orElse(null);
-        if (ctx == null) {
-            Logger.error("Cannot draw scene content, no canvas assigned to game renderer");
-            return;
-        }
         drawGallery();
         switch (sceneController.state()) {
             case STARTING, PRESENTING_GHOSTS -> {}
-            case SHOWING_PELLET_POINTS -> drawPoints(ctx);
+            case SHOWING_PELLET_POINTS -> drawPoints();
             case CHASING_PAC -> {
-                drawPoints(ctx);
-                drawBlinkingEnergizer(ctx, TS(LEFT_TILE_X), TS(20));
-                drawGuys(ctx, true);
+                drawPoints();
+                drawBlinkingEnergizer(TS(LEFT_TILE_X), TS(20));
+                drawGuys(true);
                 gameRenderer.fillTextAtScaledTilePosition(MIDWAY_MFG_CO, ARCADE_PINK, scaledArcadeFont8(), 4, 32);
             }
             case CHASING_GHOSTS, READY_TO_PLAY -> {
-                drawPoints(ctx);
-                drawGuys(ctx, false);
+                drawPoints();
+                drawGuys(false);
                 gameRenderer.fillTextAtScaledTilePosition(MIDWAY_MFG_CO, ARCADE_PINK, scaledArcadeFont8(), 4, 32);
             }
         }
@@ -148,7 +141,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     private void drawGallery() {
         @SuppressWarnings("unchecked") SpriteSheet<SpriteID> spriteSheet = (SpriteSheet<SpriteID>) ui.currentConfig().spriteSheet();
-        gameRenderer.ctx().ifPresent(ctx -> ctx.setFont(scaledArcadeFont8()));
+        gameRenderer.ctx().setFont(scaledArcadeFont8());
         if (titleVisible) {
             gameRenderer.fillTextAtScaledPosition("CHARACTER / NICKNAME", ARCADE_WHITE,
                 TS(LEFT_TILE_X + 3), TS(6));
@@ -170,7 +163,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     }
 
     // TODO make shaking effect look exactly as in original game, find out what's exactly is going on here
-    private void drawGuys(GraphicsContext ctx, boolean shaking) {
+    private void drawGuys(boolean shaking) {
         long tick = sceneController.state().timer().tickCount();
         int shakingAmount = shaking ? (tick % 5 < 2 ? 0 : -1) : 0;
         if (shakingAmount == 0) {
@@ -178,45 +171,45 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         } else {
             gameRenderer.drawActor(ghosts.get(RED_GHOST_SHADOW));
             gameRenderer.drawActor(ghosts.get(ORANGE_GHOST_POKEY));
-            ctx.save();
-            ctx.translate(shakingAmount, 0);
+            gameRenderer.ctx().save();
+            gameRenderer.ctx().translate(shakingAmount, 0);
             gameRenderer.drawActor(ghosts.get(PINK_GHOST_SPEEDY));
             gameRenderer.drawActor(ghosts.get(CYAN_GHOST_BASHFUL));
-            ctx.restore();
+            gameRenderer.ctx().restore();
         }
         gameRenderer.drawActor(pacMan);
     }
 
-    private void drawPoints(GraphicsContext ctx) {
-        ctx.setFill(ARCADE_ROSE);
+    private void drawPoints() {
+        gameRenderer.ctx().setFill(ARCADE_ROSE);
         // normal pellet
-        ctx.fillRect(scaled(TS(LEFT_TILE_X + 6) + 4), scaled(TS(24) + 4), scaled(2), scaled(2));
+        gameRenderer.ctx().fillRect(scaled(TS(LEFT_TILE_X + 6) + 4), scaled(TS(24) + 4), scaled(2), scaled(2));
         gameRenderer.fillTextAtScaledTilePosition("10",  ARCADE_WHITE, scaledArcadeFont8(), LEFT_TILE_X + 8, 25);
         gameRenderer.fillTextAtScaledTilePosition("PTS", ARCADE_WHITE, scaledArcadeFont6(), LEFT_TILE_X + 11, 25);
         // energizer
-        drawBlinkingEnergizer(ctx, TS(LEFT_TILE_X + 6), TS(26));
+        drawBlinkingEnergizer(TS(LEFT_TILE_X + 6), TS(26));
         gameRenderer.fillTextAtScaledTilePosition("50",  ARCADE_WHITE, scaledArcadeFont8(), LEFT_TILE_X + 8, 27);
         gameRenderer.fillTextAtScaledTilePosition("PTS", ARCADE_WHITE, scaledArcadeFont6(), LEFT_TILE_X + 11, 27);
     }
 
-    private void drawBlinkingEnergizer(GraphicsContext ctx, double x, double y) {
+    private void drawBlinkingEnergizer(double x, double y) {
         if (blinking.isOn()) {
-            ctx.save();
-            ctx.scale(scaling(), scaling());
-            ctx.setFill(ARCADE_ROSE);
+            gameRenderer.ctx().save();
+            gameRenderer.ctx().scale(scaling(), scaling());
+            gameRenderer.ctx().setFill(ARCADE_ROSE);
             // draw pixelated "circle"
-            ctx.fillRect(x + 2, y, 4, 8);
-            ctx.fillRect(x, y + 2, 8, 4);
-            ctx.fillRect(x + 1, y + 1, 6, 6);
-            ctx.restore();
+            gameRenderer.ctx().fillRect(x + 2, y, 4, 8);
+            gameRenderer.ctx().fillRect(x, y + 2, 8, 4);
+            gameRenderer.ctx().fillRect(x + 1, y + 1, 6, 6);
+            gameRenderer.ctx().restore();
         }
     }
 
     @Override
     protected void drawDebugInfo() {
         super.drawDebugInfo();
-        gameRenderer.ctx().ifPresent(ctx -> ctx.fillText("Scene timer %d"
-            .formatted(sceneController.state().timer().tickCount()), 0, scaled(5 * TS)));
+        gameRenderer.ctx().fillText("Scene timer %d".formatted(
+                sceneController.state().timer().tickCount()), 0, scaled(5 * TS));
     }
 
     private enum SceneState implements FsmState<ArcadePacMan_IntroScene> {

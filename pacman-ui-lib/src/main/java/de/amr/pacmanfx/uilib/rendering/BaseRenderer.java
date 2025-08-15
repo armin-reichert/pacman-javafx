@@ -1,3 +1,7 @@
+/*
+Copyright (c) 2021-2025 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.pacmanfx.uilib.rendering;
 
 import de.amr.pacmanfx.lib.Vector2i;
@@ -9,8 +13,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
-
-import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
@@ -27,13 +29,15 @@ public abstract class BaseRenderer {
     }
 
     protected final DoubleProperty scaling = new SimpleDoubleProperty(1.0);
-    protected GraphicsContext ctx;
+    private GraphicsContext ctx;
 
     public void setCanvas(Canvas canvas) {
         ctx = requireNonNull(canvas).getGraphicsContext2D();
     }
 
-    public Optional<GraphicsContext> ctx() { return Optional.ofNullable(ctx); }
+    public GraphicsContext ctx() {
+        return requireNonNull(ctx, "Renderer has no canvas to draw");
+    }
 
     public DoubleProperty scalingProperty() { return scaling; }
 

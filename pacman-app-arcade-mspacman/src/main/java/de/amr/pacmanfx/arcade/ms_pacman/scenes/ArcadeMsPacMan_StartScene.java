@@ -12,7 +12,6 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
-import javafx.scene.canvas.GraphicsContext;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
@@ -61,11 +60,8 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        GraphicsContext ctx = gameRenderer.ctx().orElse(null);
-        if (ctx == null) return;
-
-        ctx.setFill(ARCADE_ORANGE);
-        ctx.setFont(scaledArcadeFont8());
+        gameRenderer.ctx().setFill(ARCADE_ORANGE);
+        gameRenderer.ctx().setFont(scaledArcadeFont8());
         gameRenderer.fillTextAtScaledPosition("PUSH START BUTTON", TS*6, TS*16);
         gameRenderer.fillTextAtScaledPosition("1 PLAYER ONLY", TS*8, TS*18);
         gameRenderer.fillTextAtScaledPosition("ADDITIONAL    AT 10000", TS*2, TS*25);

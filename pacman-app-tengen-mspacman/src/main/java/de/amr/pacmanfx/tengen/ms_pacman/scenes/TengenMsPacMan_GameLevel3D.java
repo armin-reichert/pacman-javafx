@@ -37,7 +37,7 @@ public class TengenMsPacMan_GameLevel3D extends GameLevel3D {
         fillCanvas(canvas, PROPERTY_3D_FLOOR_COLOR.get());
 
         var renderer = (TengenMsPacMan_GameRenderer) ui.currentConfig().createGameRenderer(canvas);
-        renderer.ctx().ifPresent(ctx -> ctx.setImageSmoothing(false)); // important for sharp image!
+        renderer.ctx().setImageSmoothing(false); // important for sharp image!
         renderer.setScaling(scaling);
         renderer.drawGameOptions(game.mapCategory(), game.difficulty(), game.pacBooster(), 0.5 * width, TS + HTS);
         renderer.drawLevelNumberBox(gameLevel.number(), 0, 0);

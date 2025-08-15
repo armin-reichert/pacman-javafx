@@ -12,7 +12,6 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -124,11 +123,8 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     @Override
     protected void drawDebugInfo() {
         super.drawDebugInfo();
-        GraphicsContext ctx = gameRenderer.ctx().orElse(null);
-        if (ctx == null) return;
-
-        ctx.setFill(Color.WHITE);
-        ctx.setFont(Font.font(20));
-        ctx.fillText("Tick " + tick, 20, 20);
+        gameRenderer.ctx().setFill(Color.WHITE);
+        gameRenderer.ctx().setFont(Font.font(20));
+        gameRenderer.ctx().fillText("Tick " + tick, 20, 20);
     }
 }
