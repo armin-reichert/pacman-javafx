@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.uilib.rendering.BaseRenderer.fillCanvas;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -129,7 +130,7 @@ public abstract class GameScene2D implements GameScene {
 
     public void clear() {
         if (canvas != null) {
-            GameRenderer.fillCanvas(canvas, backgroundColor());
+            fillCanvas(canvas, backgroundColor());
         } else {
             Logger.error("Cannot clear scene, canvas not available");
         }

@@ -11,6 +11,7 @@ open module de.amr.pacmanfx.uilib {
     exports de.amr.pacmanfx.uilib.objimport;
     exports de.amr.pacmanfx.uilib.model3D;
     exports de.amr.pacmanfx.uilib.assets;
+    exports de.amr.pacmanfx.uilib.rendering;
     exports de.amr.pacmanfx.uilib.widgets;
     exports de.amr.pacmanfx.uilib.animation;
     exports de.amr.pacmanfx.uilib.tilemap;

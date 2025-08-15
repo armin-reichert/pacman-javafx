@@ -65,8 +65,8 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
         Canvas canvas)
     {
         super(assets);
-        this.ctx = requireNonNull(canvas).getGraphicsContext2D();
-        this.ctx.setImageSmoothing(false);
+        setCanvas(canvas);
+        ctx.setImageSmoothing(false);
         this.spriteSheet = requireNonNull(spriteSheet);
         this.mapRepository = requireNonNull(mapRepository);
     }
@@ -376,8 +376,8 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
             return;
         }
 
-        float margin = scaled(1), halfMargin = 0.5f * margin;
-        float s = scaled(TS);
+        double margin = scaled(1), halfMargin = 0.5f * margin;
+        double s = scaled(TS);
 
         // Over-paint area at house bottom where the ghost sprites are shown in map
         var inHouseArea = new Rectangle2D(
@@ -398,9 +398,9 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
         overPaintActorSprite(redGhostTile, margin);
     }
 
-    private void overPaintActorSprite(Vector2i tile, float margin) {
-        float halfMargin = 0.5f * margin;
-        float overPaintSize = scaled(2 * TS) - margin;
+    private void overPaintActorSprite(Vector2i tile, double margin) {
+        double halfMargin = 0.5f * margin;
+        double overPaintSize = scaled(2 * TS) - margin;
         ctx.fillRect(
             halfMargin + scaled(tile.x() * TS),
             halfMargin + scaled(tile.y() * TS - HTS),

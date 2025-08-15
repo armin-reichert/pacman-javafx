@@ -42,7 +42,7 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
         BrightMazesSpriteSheet brightMazesSpriteSheet)
     {
         super(assets);
-        ctx = canvas.getGraphicsContext2D();
+        setCanvas(canvas);
         this.spriteSheet = spriteSheet;
         this.brightMazesSpriteSheet = brightMazesSpriteSheet;
     }
@@ -173,9 +173,9 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
             return;
         }
         RectShort sprite = spriteSheet.spriteSequence(SpriteID.CLAPPERBOARD)[clapperboard.state()];
-        float numberX = scaled(clapperboard.x() + sprite.width() - 25);
-        float numberY = scaled(clapperboard.y() + 18);
-        float textX = scaled(clapperboard.x() + sprite.width());
+        double numberX = scaled(clapperboard.x() + sprite.width() - 25);
+        double numberY = scaled(clapperboard.y() + 18);
+        double textX = scaled(clapperboard.x() + sprite.width());
         drawSpriteScaledCenteredAt(sprite, clapperboard.x() + HTS, clapperboard.y() + HTS);
         ctx.setFont(clapperboard.font());
         ctx.setFill(ARCADE_WHITE);
@@ -232,7 +232,7 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
     }
 
     public void drawMidwayCopyright(MidwayCopyright copyright) {
-        float x = scaled(copyright.x()), y = scaled(copyright.y());
+        double x = scaled(copyright.x()), y = scaled(copyright.y());
         ctx.drawImage(copyright.logo(), x, y + 2, scaled(TS(4) - 2), scaled(TS(4)));
         ctx.setFont(assets.arcadeFont(scaled(8)));
         ctx.setFill(ARCADE_RED);

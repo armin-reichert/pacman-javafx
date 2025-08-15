@@ -33,7 +33,7 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
 
     public ArcadePacMan_GameRenderer(GameAssets assets, Canvas canvas, ArcadePacMan_SpriteSheet spriteSheet) {
         super(assets);
-        ctx = canvas.getGraphicsContext2D();
+        setCanvas(canvas);
         this.spriteSheet = spriteSheet;
     }
 
