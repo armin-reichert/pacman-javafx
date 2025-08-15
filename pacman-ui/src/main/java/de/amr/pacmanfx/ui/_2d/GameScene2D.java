@@ -34,6 +34,7 @@ public abstract class GameScene2D implements GameScene {
     protected final GameUI ui;
 
     protected final Color debugTextFill;
+    protected final Color debugTextStroke;
     protected final Font debugTextFont;
 
     protected final ObjectProperty<Font> arcadeFont8Property      = new SimpleObjectProperty<>();
@@ -51,8 +52,9 @@ public abstract class GameScene2D implements GameScene {
     protected GameScene2D(GameUI ui) {
         this.ui = requireNonNull(ui);
         actionBindings = new DefaultActionBindingsManager();
-        debugTextFill = ui.uiPreferences().getColor("debug_text.fill");
-        debugTextFont = ui.uiPreferences().getFont("debug_text.font");
+        debugTextFill   = ui.uiPreferences().getColor("debug_text.fill");
+        debugTextStroke = ui.uiPreferences().getColor("debug_text.stroke");
+        debugTextFont   = ui.uiPreferences().getFont("debug_text.font");
     }
 
     @Override
@@ -163,10 +165,11 @@ public abstract class GameScene2D implements GameScene {
         gameRenderer.drawTileGrid(sizePx.x(), sizePx.y(), Color.LIGHTGRAY);
         gameRenderer.ctx().ifPresent(ctx -> {
             ctx.setFill(debugTextFill);
+            ctx.setStroke(debugTextStroke);
             ctx.setFont(debugTextFont);
             TickTimer stateTimer = gameContext().gameState().timer();
             String stateText = "Game State: '%s' (Tick %d of %s)".formatted(
-                gameContext().gameState(),
+                gameContext().gameState().name(),
                 stateTimer.tickCount(),
                 stateTimer.durationTicks() == TickTimer.INDEFINITE ? "∞" : String.valueOf(stateTimer.tickCount())
             );

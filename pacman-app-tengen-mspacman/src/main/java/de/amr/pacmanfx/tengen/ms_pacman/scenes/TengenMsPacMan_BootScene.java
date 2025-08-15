@@ -10,7 +10,6 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
-import de.amr.pacmanfx.ui._2d.GameRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import javafx.scene.canvas.GraphicsContext;
@@ -23,6 +22,7 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.createGhost;
 import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer.blueShadedColor;
+import static de.amr.pacmanfx.ui._2d.GameRenderer.fillCanvas;
 
 /**
  * Shows moving and color changing "TENGEN PRESENTS" text and ghost running through scene.
@@ -30,6 +30,7 @@ import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRend
 public class TengenMsPacMan_BootScene extends GameScene2D {
 
     public static final String TENGEN_PRESENTS = "TENGEN PRESENTS";
+    public static final Color GRAY = nesPaletteColor(0x10);
 
     private static final float GHOST_Y = 21.5f * TS;
 
@@ -63,8 +64,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     }
 
     @Override
-    protected void doEnd() {
-    }
+    protected void doEnd() {}
 
     @Override
     public void update() {
@@ -113,11 +113,11 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     @Override
     public void drawSceneContent() {
         if (grayScreen) {
-            GameRenderer.fillCanvas(canvas, nesPaletteColor(0x10));
+            fillCanvas(canvas, GRAY);
         } else {
-            renderer().fillTextAtScaledPosition(TENGEN_PRESENTS, blueShadedColor(tick), scaledArcadeFont8(),
+            gameRenderer.fillTextAtScaledPosition(TENGEN_PRESENTS, blueShadedColor(tick), scaledArcadeFont8(),
                 movingText.x(), movingText.y());
-            renderer().drawActor(ghost);
+            gameRenderer.drawActor(ghost);
         }
     }
 

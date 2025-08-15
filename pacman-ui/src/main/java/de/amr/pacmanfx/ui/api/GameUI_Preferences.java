@@ -47,8 +47,9 @@ public class GameUI_Preferences extends UIPreferences {
         storeDefaultColor("context_menu.title.fill", Color.CORNFLOWERBLUE);
         storeDefaultFont("context_menu.title.font", Font.font("Dialog", FontWeight.BLACK, 14.0f));
 
-        storeDefaultColor("debug_text.fill", Color.YELLOW);
-        storeDefaultFont("debug_text.font", Font.font("Sans", FontWeight.BOLD, 16.0f));
+        storeDefaultColor("debug_text.fill", Color.WHITE);
+        storeDefaultColor("debug_text.stroke", Color.GRAY);
+        storeDefaultFont("debug_text.font", Font.font("Sans", 16.0f));
 
         storeDefaultValue("scene2d.max_scaling", 5.0f);
     }
