@@ -247,7 +247,6 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
             return;
         }
         renderer().ctx().setFont(scaledArcadeFont8());
-        renderer().drawVerticalSceneBorders();
 
         if (PROPERTY_JOYPAD_BINDINGS_DISPLAYED.get()) {
             renderer().drawJoypadKeyBinding(ui.joypad().currentKeyBinding());

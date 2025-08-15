@@ -56,25 +56,25 @@ public class TengenMsPacMan_PacAnimationManager extends SpriteAnimationManager<S
     protected void updateActorSprites(Actor actor) {
         if (actor instanceof Pac) {
             if (isCurrentAnimationID(ANIM_PAC_MUNCHING)) {
-                currentAnimation().setSprites(spriteSheet().spriteSeq(SpriteID.MS_PAC_MUNCHING));
+                current().setSprites(spriteSheet().spriteSeq(SpriteID.MS_PAC_MUNCHING));
             }
             if (isCurrentAnimationID(ANIM_MS_PAC_MAN_BOOSTER)) {
-                currentAnimation().setSprites(spriteSheet().spriteSeq(SpriteID.MS_PAC_MUNCHING_BOOSTER));
+                current().setSprites(spriteSheet().spriteSeq(SpriteID.MS_PAC_MUNCHING_BOOSTER));
             }
             if (isCurrentAnimationID(ANIM_MS_PAC_MAN_TURNING_AWAY)) {
-                currentAnimation().setSprites(spriteSheet.spriteSeq(SpriteID.MS_PAC_TURNING_AWAY));
+                current().setSprites(spriteSheet.spriteSeq(SpriteID.MS_PAC_TURNING_AWAY));
             }
             if (isCurrentAnimationID(ANIM_MS_PAC_MAN_WAVING_HAND)) {
-                currentAnimation().setSprites(spriteSheet.spriteSeq(SpriteID.MS_PAC_WAVING_HAND));
+                current().setSprites(spriteSheet.spriteSeq(SpriteID.MS_PAC_WAVING_HAND));
             }
             if (isCurrentAnimationID(ANIM_PAC_MAN_MUNCHING)) {
-                currentAnimation().setSprites(spriteSheet().spriteSeq(SpriteID.MR_PAC_MUNCHING));
+                current().setSprites(spriteSheet().spriteSeq(SpriteID.MR_PAC_MUNCHING));
             }
             if (isCurrentAnimationID(ANIM_PAC_MAN_TURNING_AWAY)) {
-                currentAnimation().setSprites(spriteSheet.spriteSeq(SpriteID.MR_PAC_TURNING_AWAY));
+                current().setSprites(spriteSheet.spriteSeq(SpriteID.MR_PAC_TURNING_AWAY));
             }
             if (isCurrentAnimationID(ANIM_PAC_MAN_WAVING_HAND)) {
-                currentAnimation().setSprites(spriteSheet.spriteSeq(SpriteID.MR_PAC_WAVING_HAND));
+                current().setSprites(spriteSheet.spriteSeq(SpriteID.MR_PAC_WAVING_HAND));
             }
         }
     }

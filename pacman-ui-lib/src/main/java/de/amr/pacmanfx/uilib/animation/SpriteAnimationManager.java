@@ -38,7 +38,7 @@ public class SpriteAnimationManager<SID> implements AnimationManager {
     }
 
     public RectShort currentSprite(Actor actor) {
-        var currentAnimation = currentAnimation();
+        var currentAnimation = current();
         if (currentAnimation == null) {
             return null;
         }
@@ -65,7 +65,7 @@ public class SpriteAnimationManager<SID> implements AnimationManager {
         animationsByID.put(id, animation);
     }
 
-    public SpriteAnimation currentAnimation() {
+    public SpriteAnimation current() {
         return currentAnimationID != null ? animation(currentAnimationID) : null;
     }
 
@@ -78,8 +78,8 @@ public class SpriteAnimationManager<SID> implements AnimationManager {
     public void selectFrame(String id, int frameIndex) {
         if (!id.equals(currentAnimationID)) {
             currentAnimationID = id;
-            if (currentAnimation() != null) {
-                currentAnimation().setFrameIndex(0);
+            if (current() != null) {
+                current().setFrameIndex(0);
             } else {
                 Logger.warn("No animation with ID {} exists", id);
             }
@@ -88,22 +88,22 @@ public class SpriteAnimationManager<SID> implements AnimationManager {
 
     @Override
     public void play() {
-        if (currentAnimation() != null) {
-            currentAnimation().play();
+        if (current() != null) {
+            current().play();
         }
     }
 
     @Override
     public void stop() {
-        if (currentAnimation() != null) {
-            currentAnimation().stop();
+        if (current() != null) {
+            current().stop();
         }
     }
 
     @Override
     public void reset() {
-        if (currentAnimation() != null) {
-            currentAnimation().reset();
+        if (current() != null) {
+            current().reset();
         }
     }
 }

@@ -176,7 +176,6 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
     @Override
     public void drawSceneContent() {
         if (!darkness) {
-            renderer().drawVerticalSceneBorders();
             renderer().drawActors(List.of(clapperboard, stork, flyingBag, msPacMan, pacMan));
         }
     }

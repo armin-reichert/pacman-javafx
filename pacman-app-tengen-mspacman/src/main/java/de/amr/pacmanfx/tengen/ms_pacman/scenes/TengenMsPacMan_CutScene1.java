@@ -243,7 +243,6 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        renderer().drawVerticalSceneBorders();
         renderer().drawActors(List.of(clapperboard, msPacMan, pacMan, inky, pinky, heart));
     }
 }

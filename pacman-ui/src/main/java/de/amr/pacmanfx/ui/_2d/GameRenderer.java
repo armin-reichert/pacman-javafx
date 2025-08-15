@@ -130,7 +130,7 @@ public abstract class GameRenderer {
             switch (am) {
                 case SingleSpriteNoAnimation singleSpriteNoAnimation -> drawActorSpriteCentered(actor, singleSpriteNoAnimation.sprite());
                 case SpriteAnimationManager<?> spriteAnimations -> {
-                    if (spriteAnimations.currentAnimation() != null) {
+                    if (spriteAnimations.current() != null) {
                         drawActorSpriteCentered(actor, spriteAnimations.currentSprite(actor));
                     } else {
                         Logger.error("Cannot draw actor {}: No animation selected", actor);
@@ -353,7 +353,7 @@ public abstract class GameRenderer {
 
     private void drawAnimationInfo(MovingActor actor, SpriteAnimationManager<?> spriteAnimationMap, String selectedID) {
         ctx().save();
-        String text = "[%s:%d]".formatted(selectedID, spriteAnimationMap.currentAnimation().frameIndex());
+        String text = "[%s:%d]".formatted(selectedID, spriteAnimationMap.current().frameIndex());
         double x = scaled(actor.x() - 4), y = scaled(actor.y() - 4);
         ctx().setFill(Color.WHITE);
         ctx().setFont(Font.font("Sans", scaled(7)));

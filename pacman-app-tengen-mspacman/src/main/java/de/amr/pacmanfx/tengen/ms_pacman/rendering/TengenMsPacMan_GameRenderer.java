@@ -224,59 +224,53 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
     }
 
     private void drawAnyKindOfPac(Pac pac) {
-        if (!pac.isVisible()) {
-            return;
-        }
         pac.animations().map(SpriteAnimationManager.class::cast).ifPresent(spriteAnimations -> {
-            SpriteAnimation animation = spriteAnimations.currentAnimation();
-            if (animation == null) {
-                Logger.error("No animation found for {}", pac);
+            SpriteAnimation spriteAnimation = spriteAnimations.current();
+            if (spriteAnimation == null) {
+                Logger.error("No sprite animation found for {}", pac);
                 return;
             }
-            if (spriteAnimations.selectedID().equals(ANIM_PAC_DYING)) {
-                //TODO: reconsider this
-                Direction dir = Direction.UP;
-                if (animation.frameIndex() < 11) {
-                    dir = switch (animation.frameIndex() % 4) {
-                        case 1 -> Direction.LEFT;
-                        case 2 -> Direction.UP;
-                        case 3 -> Direction.RIGHT;
-                        default -> Direction.DOWN; // start with DOWN
-                    };
-                }
-                drawMovingActor(pac, dir, animation.currentSprite());
+            if (ANIM_PAC_DYING.equals(spriteAnimations.selectedID())) {
+                drawPacDyingAnimation(pac, spriteAnimation);
             } else {
-                drawMovingActor(pac, pac.moveDir(), animation.currentSprite());
+                drawActorSprite(pac, pac.moveDir(), spriteAnimation.currentSprite());
             }
         });
     }
 
-    private void drawMovingActor(MovingActor actor, Direction dir, RectShort spriteLookingLeft) {
+    // Simulates dying animation by providing the right direction for each animation frame
+    private void drawPacDyingAnimation(Pac pac, SpriteAnimation animation) {
+        Direction dir = Direction.DOWN;
+        if (animation.frameIndex() < 11) {
+            dir = switch (animation.frameIndex() % 4) {
+                case 1 -> Direction.LEFT;
+                case 2 -> Direction.UP;
+                case 3 -> Direction.RIGHT;
+                default -> Direction.DOWN; // start with DOWN
+            };
+        }
+        drawActorSprite(pac, dir, animation.currentSprite());
+    }
+
+    // There are only left-pointing Ms. Pac-Man sprites in the sprite sheet, so we rotate and mirror in the renderer
+    private void drawActorSprite(MovingActor actor, Direction dir, RectShort sprite) {
         Vector2f center = actor.center().scaled(scaling());
         ctx.save();
         ctx.translate(center.x(), center.y());
         switch (dir) {
-            case UP    -> ctx.rotate(90);
             case LEFT  -> {}
+            case UP    -> ctx.rotate(90);
             case RIGHT -> ctx.scale(-1, 1);
             case DOWN  -> { ctx.scale(-1, 1); ctx.rotate(-90); }
         }
-        drawSpriteScaledCenteredAt(spriteLookingLeft, 0, 0);
+        drawSpriteScaledCenteredAt(sprite, 0, 0);
         ctx.restore();
     }
 
-    //TODO change sprite sheet to include stork without bag in beak?
+    // Sprite sheet has no stork without bag under its beak so we over-paint the bag
     private void hideStorkBag(Stork stork) {
         ctx.setFill(backgroundColor());
         ctx.fillRect(scaled(stork.x() - 13), scaled(stork.y() + 3), scaled(8), scaled(10));
-    }
-
-    public void drawVerticalSceneBorders() {
-        double width = ctx.getCanvas().getWidth(), height = ctx.getCanvas().getHeight();
-        ctx.setLineWidth(0.5);
-        ctx.setStroke(Color.grayRgb(50));
-        ctx.strokeLine(0.5, 0, 0.5, height);
-        ctx.strokeLine(width - 0.5, 0, width - 0.5, height);
     }
 
     @Override

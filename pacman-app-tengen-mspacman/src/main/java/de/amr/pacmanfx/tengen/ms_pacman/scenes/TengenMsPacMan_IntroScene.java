@@ -108,7 +108,6 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     @Override
     public void drawSceneContent() {
         ctx().setFont(scaledArcadeFont8());
-        renderer().drawVerticalSceneBorders();
         TickTimer timer = sceneController.state().timer;
         long tick = timer.tickCount();
         switch (sceneController.state()) {
