@@ -526,8 +526,10 @@ public class GameLevel3D extends Group implements Disposable {
                 house.ghostRevivalTile(gameLevel.ghost(PINK_GHOST_SPEEDY).id()),
                 house.ghostRevivalTile(gameLevel.ghost(ORANGE_GHOST_POKEY).id()),
             };
+            // Note: revival tile is the left of the pair of tiles in the house where the ghost is placed. The center
+            //       of the 3D shape is one tile to the right and a half tile to the bottom from the tile origin.
             Vector2f[] ghostRevivalPositions = Stream.of(ghostRevivalTiles)
-                .map(tile -> tile.scaled((float) TS).plus(HTS, HTS))
+                .map(tile -> tile.scaled((float) TS).plus(TS, HTS))
                 .toArray(Vector2f[]::new);
 
             house3D = new ArcadeHouse3D(
@@ -623,18 +625,26 @@ public class GameLevel3D extends Group implements Disposable {
         House house = gameLevel.house().orElseThrow();
         Vector2i[] ghostRevivalTiles = {
             house.ghostRevivalTile(gameLevel.ghost(RED_GHOST_SHADOW).id()),
-            house.ghostRevivalTile(gameLevel.ghost(CYAN_GHOST_BASHFUL).id()),
             house.ghostRevivalTile(gameLevel.ghost(PINK_GHOST_SPEEDY).id()),
+            house.ghostRevivalTile(gameLevel.ghost(CYAN_GHOST_BASHFUL).id()),
             house.ghostRevivalTile(gameLevel.ghost(ORANGE_GHOST_POKEY).id()),
         };
-        Vector2f[] ghostRevivalCenters = Stream.of(ghostRevivalTiles)
-            .map(tile -> tile.scaled((float) TS).plus(TS, HTS))
-            .toArray(Vector2f[]::new);
+
+        Vector2f[] ghostRevivalCenters = {
+            revivalPositionCenter(ghostRevivalTiles[RED_GHOST_SHADOW]),
+            revivalPositionCenter(ghostRevivalTiles[PINK_GHOST_SPEEDY]),
+            revivalPositionCenter(ghostRevivalTiles[CYAN_GHOST_BASHFUL]),
+            revivalPositionCenter(ghostRevivalTiles[ORANGE_GHOST_POKEY])
+        };
 
         energizers3D = gameLevel.tilesContainingFood()
             .filter(gameLevel::isEnergizerPosition)
             .map(tile -> createEnergizer3D(tile, radius, minScaling, maxScaling, ghostDressMaterials, ghostRevivalCenters))
             .collect(Collectors.toCollection(HashSet::new));
+    }
+
+    private Vector2f revivalPositionCenter(Vector2i revivalTile) {
+        return revivalTile.scaled(8f).plus(TS, HTS);
     }
 
     private Energizer3D createEnergizer3D(

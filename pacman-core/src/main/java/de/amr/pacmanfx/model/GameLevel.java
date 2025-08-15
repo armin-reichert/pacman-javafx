@@ -263,7 +263,7 @@ public class GameLevel {
         for (Ghost ghost : ghosts) {
             byte personality = ghost.id().personality();
             Vector2i tile = switch (personality) {
-                case RED_GHOST_SHADOW, PINK_GHOST_SPEEDY -> worldMap.getTerrainTileProperty(POS_RED_GHOST);
+                case RED_GHOST_SHADOW, PINK_GHOST_SPEEDY -> worldMap.getTerrainTileProperty(POS_PINK_GHOST);
                 case CYAN_GHOST_BASHFUL -> worldMap.getTerrainTileProperty(POS_CYAN_GHOST);
                 case ORANGE_GHOST_POKEY -> worldMap.getTerrainTileProperty(POS_ORANGE_GHOST);
                 default -> throw new IllegalArgumentException("Illegal ghost personality: %d".formatted(personality));

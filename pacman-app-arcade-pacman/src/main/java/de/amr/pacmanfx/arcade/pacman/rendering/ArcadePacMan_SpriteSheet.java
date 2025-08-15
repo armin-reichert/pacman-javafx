@@ -19,13 +19,13 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements SpriteSheet
     private static final int R16 = 16; // 16x16 squares in sprite sheet
     private static final int OFF_X = 456; // right from here the sprites are located
 
-    private static RectShort[] harvestSpritesAt(int tileX, int tileY, int spriteCount) {
+    private static RectShort[] clipSpritesAt(int tileX, int tileY, int spriteCount) {
         return IntStream.range(tileX, tileX + spriteCount)
-                .mapToObj(tx -> harvestSpriteAt(tx, tileY))
+                .mapToObj(tx -> clipSpriteAt(tx, tileY))
                 .toArray(RectShort[]::new);
     }
 
-    private static RectShort harvestSpriteAt(int tileX, int tileY) {
+    private static RectShort clipSpriteAt(int tileX, int tileY) {
         return rect(OFF_X + R16 * tileX, R16 * tileY, R16, R16);
     }
 
@@ -59,45 +59,45 @@ public record ArcadePacMan_SpriteSheet(Image sourceImage) implements SpriteSheet
         SPRITE_MAP.addSpriteSequence(SpriteID.PACMAN_MUNCHING_UP,    makePacManMunchingSpriteSeq(2));
         SPRITE_MAP.addSpriteSequence(SpriteID.PACMAN_MUNCHING_DOWN,  makePacManMunchingSpriteSeq(3));
         SPRITE_MAP.addSpriteSequence(SpriteID.PACMAN_DYING,          makePacManDyingSpriteSeq());
-        SPRITE_MAP.addSpriteSequence(SpriteID.RED_GHOST_RIGHT,       harvestSpritesAt(0, 4, 2));
-        SPRITE_MAP.addSpriteSequence(SpriteID.RED_GHOST_LEFT,        harvestSpritesAt(2, 4, 2));
-        SPRITE_MAP.addSpriteSequence(SpriteID.RED_GHOST_UP,          harvestSpritesAt(4, 4, 2));
-        SPRITE_MAP.addSpriteSequence(SpriteID.RED_GHOST_DOWN,        harvestSpritesAt(6, 4, 2));
-        SPRITE_MAP.addSpriteSequence(SpriteID.PINK_GHOST_RIGHT,      harvestSpritesAt(0, 5, 2));
-        SPRITE_MAP.addSpriteSequence(SpriteID.PINK_GHOST_LEFT,       harvestSpritesAt(2, 5, 2));
-        SPRITE_MAP.addSpriteSequence(SpriteID.PINK_GHOST_UP,         harvestSpritesAt(4, 5, 2));
-        SPRITE_MAP.addSpriteSequence(SpriteID.PINK_GHOST_DOWN,       harvestSpritesAt(6, 5, 2));
-        SPRITE_MAP.addSpriteSequence(SpriteID.CYAN_GHOST_RIGHT,      harvestSpritesAt(0, 6, 2));
-        SPRITE_MAP.addSpriteSequence(SpriteID.CYAN_GHOST_LEFT,       harvestSpritesAt(2, 6, 2));
-        SPRITE_MAP.addSpriteSequence(SpriteID.CYAN_GHOST_UP,         harvestSpritesAt(4, 6, 2));
-        SPRITE_MAP.addSpriteSequence(SpriteID.CYAN_GHOST_DOWN,       harvestSpritesAt(6, 6, 2));
-        SPRITE_MAP.addSpriteSequence(SpriteID.ORANGE_GHOST_RIGHT,    harvestSpritesAt(0, 7, 2));
-        SPRITE_MAP.addSpriteSequence(SpriteID.ORANGE_GHOST_LEFT,     harvestSpritesAt(2, 7, 2));
-        SPRITE_MAP.addSpriteSequence(SpriteID.ORANGE_GHOST_UP,       harvestSpritesAt(4, 7, 2));
-        SPRITE_MAP.addSpriteSequence(SpriteID.ORANGE_GHOST_DOWN,     harvestSpritesAt(6, 7, 2));
+        SPRITE_MAP.addSpriteSequence(SpriteID.RED_GHOST_RIGHT,       clipSpritesAt(0, 4, 2));
+        SPRITE_MAP.addSpriteSequence(SpriteID.RED_GHOST_LEFT,        clipSpritesAt(2, 4, 2));
+        SPRITE_MAP.addSpriteSequence(SpriteID.RED_GHOST_UP,          clipSpritesAt(4, 4, 2));
+        SPRITE_MAP.addSpriteSequence(SpriteID.RED_GHOST_DOWN,        clipSpritesAt(6, 4, 2));
+        SPRITE_MAP.addSpriteSequence(SpriteID.PINK_GHOST_RIGHT,      clipSpritesAt(0, 5, 2));
+        SPRITE_MAP.addSpriteSequence(SpriteID.PINK_GHOST_LEFT,       clipSpritesAt(2, 5, 2));
+        SPRITE_MAP.addSpriteSequence(SpriteID.PINK_GHOST_UP,         clipSpritesAt(4, 5, 2));
+        SPRITE_MAP.addSpriteSequence(SpriteID.PINK_GHOST_DOWN,       clipSpritesAt(6, 5, 2));
+        SPRITE_MAP.addSpriteSequence(SpriteID.CYAN_GHOST_RIGHT,      clipSpritesAt(0, 6, 2));
+        SPRITE_MAP.addSpriteSequence(SpriteID.CYAN_GHOST_LEFT,       clipSpritesAt(2, 6, 2));
+        SPRITE_MAP.addSpriteSequence(SpriteID.CYAN_GHOST_UP,         clipSpritesAt(4, 6, 2));
+        SPRITE_MAP.addSpriteSequence(SpriteID.CYAN_GHOST_DOWN,       clipSpritesAt(6, 6, 2));
+        SPRITE_MAP.addSpriteSequence(SpriteID.ORANGE_GHOST_RIGHT,    clipSpritesAt(0, 7, 2));
+        SPRITE_MAP.addSpriteSequence(SpriteID.ORANGE_GHOST_LEFT,     clipSpritesAt(2, 7, 2));
+        SPRITE_MAP.addSpriteSequence(SpriteID.ORANGE_GHOST_UP,       clipSpritesAt(4, 7, 2));
+        SPRITE_MAP.addSpriteSequence(SpriteID.ORANGE_GHOST_DOWN,     clipSpritesAt(6, 7, 2));
         SPRITE_MAP.addSpriteSequence(SpriteID.GALLERY_GHOSTS,
-                harvestSpriteAt(0, 4),
-                harvestSpriteAt(0, 5),
-                harvestSpriteAt(0, 6),
-                harvestSpriteAt(0, 7)
+                clipSpriteAt(0, 4),
+                clipSpriteAt(0, 5),
+                clipSpriteAt(0, 6),
+                clipSpriteAt(0, 7)
         );
-        SPRITE_MAP.addSpriteSequence(SpriteID.GHOST_FRIGHTENED,      harvestSpritesAt(8, 4, 2));
-        SPRITE_MAP.addSpriteSequence(SpriteID.GHOST_FLASHING,        harvestSpritesAt(8, 4, 4));
-        SPRITE_MAP.addSpriteSequence(SpriteID.GHOST_EYES_RIGHT,      harvestSpritesAt(8, 5, 1));
-        SPRITE_MAP.addSpriteSequence(SpriteID.GHOST_EYES_LEFT,       harvestSpritesAt(9, 5, 1));
-        SPRITE_MAP.addSpriteSequence(SpriteID.GHOST_EYES_UP,         harvestSpritesAt(10, 5, 1));
-        SPRITE_MAP.addSpriteSequence(SpriteID.GHOST_EYES_DOWN,       harvestSpritesAt(11, 5, 1));
+        SPRITE_MAP.addSpriteSequence(SpriteID.GHOST_FRIGHTENED,      clipSpritesAt(8, 4, 2));
+        SPRITE_MAP.addSpriteSequence(SpriteID.GHOST_FLASHING,        clipSpritesAt(8, 4, 4));
+        SPRITE_MAP.addSpriteSequence(SpriteID.GHOST_EYES_RIGHT,      clipSpritesAt(8, 5, 1));
+        SPRITE_MAP.addSpriteSequence(SpriteID.GHOST_EYES_LEFT,       clipSpritesAt(9, 5, 1));
+        SPRITE_MAP.addSpriteSequence(SpriteID.GHOST_EYES_UP,         clipSpritesAt(10, 5, 1));
+        SPRITE_MAP.addSpriteSequence(SpriteID.GHOST_EYES_DOWN,       clipSpritesAt(11, 5, 1));
         SPRITE_MAP.addSpriteSequence(SpriteID.PACMAN_BIG,
                 rect(OFF_X + 32, 16, 32, 32),
                 rect(OFF_X + 64, 16, 32, 32),
                 rect(OFF_X + 96, 16, 32, 32)
         );
-        SPRITE_MAP.addSpriteSequence(SpriteID.RED_GHOST_STRETCHED,   harvestSpritesAt(8, 6, 5));
+        SPRITE_MAP.addSpriteSequence(SpriteID.RED_GHOST_STRETCHED,   clipSpritesAt(8, 6, 5));
         SPRITE_MAP.addSpriteSequence(SpriteID.RED_GHOST_DAMAGED,
                 rect(OFF_X + R16 * 8 + 1, R16 * 7 + 1, 14, 14),
                 rect(OFF_X + R16 * 9 + 1, R16 * 7 + 1, 14, 14)
         );
-        SPRITE_MAP.addSpriteSequence(SpriteID.RED_GHOST_PATCHED, harvestSpritesAt(10, 7, 2));
+        SPRITE_MAP.addSpriteSequence(SpriteID.RED_GHOST_PATCHED, clipSpritesAt(10, 7, 2));
         SPRITE_MAP.addSpriteSequence(SpriteID.RED_GHOST_NAKED,
                 rect(OFF_X + R16 *  8, R16 * 8, R16 * 2, R16),
                 rect(OFF_X + R16 * 10, R16 * 8, R16 * 2, R16)

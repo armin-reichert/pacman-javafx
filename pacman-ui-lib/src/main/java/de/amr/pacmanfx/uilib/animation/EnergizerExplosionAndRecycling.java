@@ -165,7 +165,7 @@ public class EnergizerExplosionAndRecycling extends ManagedAnimation {
                     particles.removeAll(trash);
                     particlesGroup.getChildren().removeAll(trash);
                     trash.forEach(Particle::dispose);
-                    Logger.info("{} particles disposed, t={}", trash.size(), t);
+                    Logger.debug("{} particles disposed, t={}", trash.size(), t);
                     trash.clear();
                 });
             }
