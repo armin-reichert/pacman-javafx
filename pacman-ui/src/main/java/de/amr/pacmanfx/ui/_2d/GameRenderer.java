@@ -125,7 +125,7 @@ public abstract class GameRenderer {
                         Logger.error("Cannot draw actor {}: No animation selected", actor);
                     }
                 }
-                default -> {}
+                default -> Logger.error("Unsupported animation type: {}", am.getClass().getSimpleName());
             }
         });
     }

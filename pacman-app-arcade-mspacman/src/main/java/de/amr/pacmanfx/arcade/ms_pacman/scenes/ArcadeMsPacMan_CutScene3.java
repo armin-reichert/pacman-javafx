@@ -126,18 +126,18 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     private void enterStateDeliverJunior() {
         pacMan.setMoveDir(Direction.RIGHT);
         pacMan.setPosition(TS * 3, LANE_Y - 4);
-        pacMan.animations().ifPresent(am -> am.select(PAC_MAN_MUNCHING));
+        pacMan.selectAnimation(PAC_MAN_MUNCHING);
         pacMan.show();
 
         msPacMan.setMoveDir(Direction.RIGHT);
         msPacMan.setPosition(TS * 5, LANE_Y - 4);
-        msPacMan.animations().ifPresent(am -> am.select(ANIM_PAC_MUNCHING));
+        msPacMan.selectAnimation(ANIM_PAC_MUNCHING);
         msPacMan.show();
 
         stork.setPosition(TS * 30, TS * 12);
         stork.setVelocity(-0.8f, 0);
         stork.show();
-        stork.animations().ifPresent(am -> am.play(Stork.ANIM_FLYING));
+        stork.playAnimation(Stork.ANIM_FLYING);
 
         bag.setPosition(stork.x() - 14, stork.y() + 3);
         bag.setVelocity(stork.velocity());

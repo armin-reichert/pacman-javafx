@@ -226,9 +226,9 @@ public abstract class Ghost extends MovingActor {
 
         // "onEntry" action:
         switch (newState) {
-            case LOCKED, HUNTING_PAC -> animations().ifPresent(am -> am.select(ANIM_GHOST_NORMAL));
-            case ENTERING_HOUSE, RETURNING_HOME -> animations().ifPresent(am -> am.select(ANIM_GHOST_EYES));
-            case FRIGHTENED -> animations().ifPresent(am -> am.play(ANIM_GHOST_FRIGHTENED));
+            case LOCKED, HUNTING_PAC -> selectAnimation(ANIM_GHOST_NORMAL);
+            case ENTERING_HOUSE, RETURNING_HOME -> selectAnimation(ANIM_GHOST_EYES);
+            case FRIGHTENED -> playAnimation(ANIM_GHOST_FRIGHTENED);
             case EATEN -> {}
         }
     }
@@ -290,7 +290,7 @@ public abstract class Ghost extends MovingActor {
         if (gameLevel.pac().powerTimer().isRunning() && !gameLevel.victims().contains(this)) {
             playFrightenedAnimation(gameContext, gameLevel.pac());
         } else {
-            animations().ifPresent(am -> am.select(ANIM_GHOST_NORMAL));
+            selectAnimation(ANIM_GHOST_NORMAL);
         }
     }
 
@@ -351,7 +351,7 @@ public abstract class Ghost extends MovingActor {
             if (gameLevel.pac().powerTimer().isRunning() && !gameLevel.victims().contains(this)) {
                 playFrightenedAnimation(gameContext, gameLevel.pac());
             } else {
-                animations().ifPresent(am -> am.select(ANIM_GHOST_NORMAL));
+                selectAnimation(ANIM_GHOST_NORMAL);
             }
         }
     }
@@ -405,9 +405,9 @@ public abstract class Ghost extends MovingActor {
 
     private void playFrightenedAnimation(GameContext gameContext, Pac pac) {
         if (pac.isPowerFadingStarting(gameContext)) {
-            animations().ifPresent(am -> am.play(ANIM_GHOST_FLASHING));
+            playAnimation(ANIM_GHOST_FLASHING);
         } else if (!pac.isPowerFading(gameContext)) {
-            animations().ifPresent(am -> am.play(ANIM_GHOST_FRIGHTENED));
+            playAnimation(ANIM_GHOST_FRIGHTENED);
         }
     }
 

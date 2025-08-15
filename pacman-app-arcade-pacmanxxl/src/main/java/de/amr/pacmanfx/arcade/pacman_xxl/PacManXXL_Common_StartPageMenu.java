@@ -100,7 +100,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
                     ghost.setMoveDir(ghost.moveDir().opposite());
                     ghost.setWishDir(ghost.moveDir().opposite());
                     ghost.setSpeed(0.58f);
-                    ghost.animations().ifPresent(am -> am.play(ANIM_GHOST_FRIGHTENED));
+                    ghost.playAnimation(ANIM_GHOST_FRIGHTENED);
                 }
             }
             else if (pac.x() > 56 * TS && chasingGhosts) {
@@ -114,7 +114,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
                     ghost.setWishDir(Direction.LEFT);
                     ghost.setX(46 * TS + ghost.id().personality() * 2 * TS);
                     ghost.setSpeed(1.05f);
-                    ghost.animations().ifPresent(am -> am.play(ANIM_GHOST_NORMAL));
+                    ghost.playAnimation(ANIM_GHOST_NORMAL);
                 }
             }
             else if (chasingGhosts) {
@@ -149,11 +149,11 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         void setGameConfig(GameUI_Config config) {
             gameRenderer = config.createGameRenderer(ctx.getCanvas());
             pac.setAnimations(config.createPacAnimations(pac));
-            pac.animations().ifPresent(am -> am.play(ANIM_PAC_MUNCHING));
+            pac.playAnimation(ANIM_PAC_MUNCHING);
             for (Ghost ghost : ghosts) {
                 if (ghost.animations().isEmpty()) {
                     ghost.setAnimations(config.createGhostAnimations(ghost));
-                    ghost.animations().ifPresent(am -> am.play(ANIM_GHOST_NORMAL));
+                    ghost.playAnimation(ANIM_GHOST_NORMAL);
                 }
             }
             start();

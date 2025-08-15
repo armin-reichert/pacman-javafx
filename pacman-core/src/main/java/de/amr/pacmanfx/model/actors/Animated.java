@@ -11,4 +11,20 @@ import java.util.Optional;
  */
 public interface Animated {
     Optional<AnimationManager> animations();
+
+    default void selectAnimation(String id) {
+        animations().ifPresent(am -> am.select(id));
+    }
+
+    default void playAnimation(String id) {
+        animations().ifPresent(AnimationManager::play);
+    }
+
+    default void playAnimation() {
+        animations().ifPresent(AnimationManager::play);
+    }
+
+    default void stopAnimation() {
+        animations().ifPresent(AnimationManager::stop);
+    }
 }

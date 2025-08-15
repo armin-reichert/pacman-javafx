@@ -107,13 +107,13 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.setPosition(LEFT_BORDER, UPPER_LANE);
             pacMan.setSpeed(SPEED_CHASING);
-            pacMan.animations().ifPresent(am -> am.play(ANIM_PAC_MAN_MUNCHING));
+            pacMan.playAnimation(ANIM_PAC_MAN_MUNCHING);
             pacMan.show();
 
             msPacMan.setMoveDir(Direction.LEFT);
             msPacMan.setPosition(RIGHT_BORDER, LOWER_LANE);
             msPacMan.setSpeed(SPEED_CHASING);
-            msPacMan.animations().ifPresent(am -> am.play(ANIM_PAC_MUNCHING));
+            msPacMan.playAnimation(ANIM_PAC_MUNCHING);
             msPacMan.show();
         }
         else if (t == 160) {
@@ -121,14 +121,14 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
             inky.setWishDir(Direction.RIGHT);
             inky.setPosition(LEFT_BORDER, UPPER_LANE);
             inky.setSpeed(SPEED_CHASING);
-            inky.animations().ifPresent(am -> am.play(ANIM_GHOST_NORMAL));
+            inky.playAnimation(ANIM_GHOST_NORMAL);
             inky.show();
 
             pinky.setMoveDir(Direction.LEFT);
             pinky.setWishDir(Direction.LEFT);
             pinky.setPosition(RIGHT_BORDER, LOWER_LANE);
             pinky.setSpeed(SPEED_CHASING);
-            pinky.animations().ifPresent(am -> am.play(ANIM_GHOST_NORMAL));
+            pinky.playAnimation(ANIM_GHOST_NORMAL);
             pinky.show();
 
             collided = false;

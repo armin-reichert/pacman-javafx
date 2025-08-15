@@ -465,7 +465,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     public void activatePacBooster(boolean state) {
         boosterActive = state;
-        gameLevel.pac().animations().ifPresent(am -> am.select(boosterActive ? ANIM_MS_PAC_MAN_BOOSTER : ANIM_PAC_MUNCHING));
+        gameLevel.pac().selectAnimation(boosterActive ? ANIM_MS_PAC_MAN_BOOSTER : ANIM_PAC_MUNCHING);
     }
 
     @Override

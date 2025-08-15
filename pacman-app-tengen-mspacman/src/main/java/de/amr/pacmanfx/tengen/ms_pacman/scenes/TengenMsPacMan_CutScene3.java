@@ -94,19 +94,19 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.setPosition(TS * 3, GROUND_Y - 4);
             pacMan.setSpeed(0);
-            pacMan.animations().ifPresent(am -> am.select(ANIM_PAC_MAN_MUNCHING));
+            pacMan.selectAnimation(ANIM_PAC_MAN_MUNCHING);
             pacMan.show();
 
             msPacMan.setMoveDir(Direction.RIGHT);
             msPacMan.setPosition(TS * 5, GROUND_Y - 4);
             msPacMan.setSpeed(0);
-            msPacMan.animations().ifPresent(am -> am.select(ANIM_PAC_MUNCHING));
+            msPacMan.selectAnimation(ANIM_PAC_MUNCHING);
             msPacMan.show();
 
             stork.setPosition(RIGHT_BORDER, TS * 7);
             stork.setVelocity(-0.8f, 0);
             stork.setBagReleasedFromBeak(false);
-            stork.animations().ifPresent(am -> am.play(Stork.ANIM_FLYING));
+            stork.playAnimation(Stork.ANIM_FLYING);
             stork.show();
         }
         else if (t == 240) {

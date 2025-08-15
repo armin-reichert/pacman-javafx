@@ -110,10 +110,10 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
     private void enterStateChasing() {
         pacMan.setMoveDir(Direction.RIGHT);
-        pacMan.animations().ifPresent(am -> am.play(PAC_MAN_MUNCHING));
+        pacMan.playAnimation(PAC_MAN_MUNCHING);
 
         msPacMan.setMoveDir(Direction.RIGHT);
-        msPacMan.animations().ifPresent(am -> am.play(ANIM_PAC_MUNCHING));
+        msPacMan.playAnimation(ANIM_PAC_MUNCHING);
 
         setSceneState(STATE_CHASING, TickTimer.INDEFINITE);
     }

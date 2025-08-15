@@ -10,10 +10,7 @@ import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.DefaultGameVariants;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.actors.AnimationManager;
-import de.amr.pacmanfx.model.actors.Bonus;
-import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.model.actors.GhostState;
+import de.amr.pacmanfx.model.actors.*;
 
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
 
@@ -234,8 +231,7 @@ public enum GamePlayState implements GameState {
         public void onEnter(GameContext context) {
             timer.restartSeconds(1);
             context.gameLevel().pac().hide();
-            context.gameLevel().ghosts()
-                .forEach(ghost -> ghost.animations().ifPresent(AnimationManager::stop));
+            context.gameLevel().ghosts().forEach(Animated::stopAnimation);
             context.eventManager().publishEvent(GameEventType.GHOST_EATEN);
         }
 

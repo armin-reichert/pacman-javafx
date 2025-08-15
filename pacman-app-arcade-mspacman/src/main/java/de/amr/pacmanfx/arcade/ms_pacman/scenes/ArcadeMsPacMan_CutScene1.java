@@ -138,27 +138,27 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         pacMan.setMoveDir(Direction.RIGHT);
         pacMan.setPosition(TS * (-2), UPPER_LANE_Y);
         pacMan.setSpeed(SPEED_PAC_CHASING);
-        pacMan.animations().ifPresent(am -> am.play(PAC_MAN_MUNCHING));
+        pacMan.playAnimation(PAC_MAN_MUNCHING);
         pacMan.show();
 
         inky.setMoveDir(Direction.RIGHT);
         inky.setWishDir(Direction.RIGHT);
         inky.setPosition(pacMan.x() - 6 * TS, pacMan.y());
         inky.setSpeed(SPEED_GHOST_CHASING);
-        inky.animations().ifPresent(am -> am.play(ANIM_GHOST_NORMAL));
+        inky.playAnimation(ANIM_GHOST_NORMAL);
         inky.show();
 
         msPacMan.setMoveDir(Direction.LEFT);
         msPacMan.setPosition(TS * 30, LOWER_LANE_Y);
         msPacMan.setSpeed(SPEED_PAC_CHASING);
-        msPacMan.animations().ifPresent(am -> am.play(ANIM_PAC_MUNCHING));
+        msPacMan.playAnimation(ANIM_PAC_MUNCHING);
         msPacMan.show();
 
         pinky.setMoveDir(Direction.LEFT);
         pinky.setWishDir(Direction.LEFT);
         pinky.setPosition(msPacMan.x() + 6 * TS, msPacMan.y());
         pinky.setSpeed(SPEED_GHOST_CHASING);
-        pinky.animations().ifPresent(am -> am.play(ANIM_GHOST_NORMAL));
+        pinky.playAnimation(ANIM_GHOST_NORMAL);
         pinky.show();
 
         setState(STATE_CHASED_BY_GHOSTS, TickTimer.INDEFINITE);

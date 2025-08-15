@@ -88,13 +88,13 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         else if (t == 270) {
             msPacMan.setPosition(LEFT_BORDER, UPPER_LANE);
             msPacMan.setMoveDir(Direction.RIGHT);
-            msPacMan.animations().ifPresent(am -> am.play(ANIM_PAC_MUNCHING));
+            msPacMan.playAnimation(ANIM_PAC_MUNCHING);
             msPacMan.setSpeed(2.0f);
             msPacMan.show();
         }
         else if (t == 320) {
             pacMan.setMoveDir(Direction.RIGHT);
-            pacMan.animations().ifPresent(am -> am.play(ANIM_PAC_MAN_MUNCHING));
+            pacMan.playAnimation(ANIM_PAC_MAN_MUNCHING);
             pacMan.setPosition(LEFT_BORDER, UPPER_LANE);
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.setSpeed(2.0f);

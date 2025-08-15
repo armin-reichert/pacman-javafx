@@ -95,7 +95,7 @@ public class Pac extends MovingActor {
         restingTicks = 0;
         starvingTicks = 0;
         corneringSpeedUp = 1.5f; // no real cornering implementation but better than nothing
-        animations().ifPresent(am -> am.select(ANIM_PAC_MUNCHING));
+        selectAnimation(ANIM_PAC_MUNCHING);
     }
 
     public BooleanProperty immuneProperty() {
@@ -171,7 +171,7 @@ public class Pac extends MovingActor {
         if (moveInfo.moved) {
             animations().ifPresent(AnimationManager::play);
         } else {
-            animations().ifPresent(AnimationManager::stop);
+            stopAnimation();
         }
     }
 
@@ -181,14 +181,16 @@ public class Pac extends MovingActor {
     public void stopAndShowInFullBeauty() {
         setSpeed(0);
         setRestingTicks(INDEFINITELY);
-        animations().ifPresent(AnimationManager::stop);
-        animations().ifPresent(am -> am.select(ANIM_PAC_MUNCHING));
-        animations().ifPresent(AnimationManager::reset);
+        animations().ifPresent(am -> {
+            am.stop();
+            am.select(ANIM_PAC_MUNCHING);
+            am.reset();
+        });
     }
 
     public void sayGoodbyeCruelWorld() {
         setSpeed(0);
-        animations().ifPresent(AnimationManager::stop);
+        stopAnimation();
         dead = true;
     }
 

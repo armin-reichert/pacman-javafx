@@ -87,7 +87,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
                 pac.placeAtTile(28, 20);
                 pac.setMoveDir(Direction.LEFT);
                 pac.setSpeed(1.15f);
-                pac.animations().ifPresent(am -> am.play(ANIM_PAC_MUNCHING));
+                pac.playAnimation(ANIM_PAC_MUNCHING);
                 pac.show();
             }
             case ANIMATION_START + 111 -> {
@@ -95,7 +95,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
                 blinky.setMoveDir(Direction.LEFT);
                 blinky.setWishDir(Direction.LEFT);
                 blinky.setSpeed(1.25f);
-                blinky.animations().ifPresent(am -> am.play(ANIM_GHOST_NORMAL));
+                blinky.playAnimation(ANIM_GHOST_NORMAL);
                 blinky.show();
             }
             case ANIMATION_START + 194 -> {
@@ -107,12 +107,12 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
             case ANIMATION_START + 262 -> nailDressRaptureAnimation.setFrameIndex(STRETCHED_L);
             case ANIMATION_START + 296 -> {
                 blinky.setSpeed(0);
-                blinky.animations().ifPresent(AnimationManager::stop);
+                blinky.stopAnimation();
             }
             case ANIMATION_START + 360 -> {
                 nailDressRaptureAnimation.setFrameIndex(RAPTURED);
                 blinky.setX(blinky.x() - 4);
-                blinky.animations().ifPresent(am -> am.select(ANIM_BLINKY_DAMAGED));
+                blinky.selectAnimation(ANIM_BLINKY_DAMAGED);
             }
             case ANIMATION_START + 420 -> blinkyDamaged.nextFrame(); // Eyes right-down
             case ANIMATION_START + 508 -> {

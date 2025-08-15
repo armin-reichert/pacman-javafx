@@ -237,10 +237,10 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 }
                 scene.ghostIndex = 0;
                 scene.msPacMan.setAnimations(scene.ui.currentConfig().createPacAnimations(scene.msPacMan));
-                scene.msPacMan.animations().ifPresent(am -> am.play(ANIM_PAC_MUNCHING));
+                scene.msPacMan.playAnimation(ANIM_PAC_MUNCHING);
                 for (Ghost ghost : scene.ghosts) {
                     ghost.setAnimations(scene.ui.currentConfig().createGhostAnimations(ghost));
-                    ghost.animations().ifPresent(am -> am.play(ANIM_GHOST_NORMAL));
+                    ghost.playAnimation(ANIM_GHOST_NORMAL);
                 }
             }
 
