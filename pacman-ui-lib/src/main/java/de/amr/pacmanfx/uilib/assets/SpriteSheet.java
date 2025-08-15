@@ -17,7 +17,9 @@ public interface SpriteSheet<SID extends Enum<SID>> {
 
     Image sourceImage();
 
-    SpriteMap<SID> content();
+    RectShort sprite(SID id);
+
+    RectShort[] spriteSequence(SID id);
 
     /**
      * @param x      region x-coordinate

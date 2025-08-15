@@ -86,7 +86,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         inky.setAnimations(config.createGhostAnimations(inky));
         pinky = createGhost(PINK_GHOST_SPEEDY);
         pinky.setAnimations(config.createGhostAnimations(pinky));
-        heart = new SingleSpriteActor(spriteSheet.content().sprite(SpriteID.HEART));
+        heart = new SingleSpriteActor(spriteSheet.sprite(SpriteID.HEART));
     }
 
     @Override

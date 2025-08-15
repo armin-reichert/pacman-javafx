@@ -137,7 +137,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
     }
 
     public void drawLivesCounter(LivesCounter livesCounter, int lifeCount, float x, float y) {
-        RectShort sprite = spriteSheet.content().sprite(SpriteID.LIVES_COUNTER_SYMBOL);
+        RectShort sprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
         for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
             drawSpriteScaled(sprite, x + TS(i * 2), y);
         }
@@ -152,7 +152,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
             drawLevelNumberBox(levelNumber, 0, y); // left box
             drawLevelNumberBox(levelNumber, x, y); // right box
         }
-        RectShort[] symbolSprites = spriteSheet.content().spriteSequence(SpriteID.BONUS_SYMBOLS);
+        RectShort[] symbolSprites = spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS);
         x -= TS(2);
         // symbols are drawn from right to left!
         for (byte symbol : levelCounter.symbols()) {
@@ -163,7 +163,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
 
     // this is also used by the 3D scene
     public void drawLevelNumberBox(int number, double x, double y) {
-        drawSpriteScaled(spriteSheet.content().sprite(SpriteID.LEVEL_NUMBER_BOX), x, y);
+        drawSpriteScaled(spriteSheet.sprite(SpriteID.LEVEL_NUMBER_BOX), x, y);
         int tens = number / 10, ones = number % 10;
         if (tens > 0) {
             drawSpriteScaled(digitSprite(tens), x + 2, y + 2);
@@ -172,7 +172,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
     }
 
     private RectShort digitSprite(int digit) {
-        return spriteSheet.content().sprite(switch (digit) {
+        return spriteSheet.sprite(switch (digit) {
             case 0 -> SpriteID.DIGIT_0;
             case 1 -> SpriteID.DIGIT_1;
             case 2 -> SpriteID.DIGIT_2;
@@ -212,11 +212,11 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
         ctx.translate(0, bonus.jumpHeight());
         switch (bonus.state()) {
             case EDIBLE -> {
-                RectShort sprite = spriteSheet.content().spriteSequence(SpriteID.BONUS_SYMBOLS)[bonus.symbol()];
+                RectShort sprite = spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS)[bonus.symbol()];
                 drawActorSpriteCentered(bonus, sprite);
             }
             case EATEN  -> {
-                RectShort sprite = spriteSheet.content().spriteSequence(SpriteID.BONUS_VALUES)[bonus.symbol()];
+                RectShort sprite = spriteSheet.spriteSequence(SpriteID.BONUS_VALUES)[bonus.symbol()];
                 drawActorSpriteCentered(bonus, sprite);
             }
         }
@@ -408,23 +408,23 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
     }
 
     public void drawGameOptions(MapCategory category, Difficulty difficulty, PacBooster booster, double centerX, double y) {
-        drawSpriteScaledCenteredAt(spriteSheet.content().sprite(SpriteID.INFO_FRAME), centerX, y);
+        drawSpriteScaledCenteredAt(spriteSheet.sprite(SpriteID.INFO_FRAME), centerX, y);
         RectShort categorySprite = switch (requireNonNull(category)) {
-            case BIG     -> spriteSheet.content().sprite(SpriteID.INFO_CATEGORY_BIG);
-            case MINI    -> spriteSheet.content().sprite(SpriteID.INFO_CATEGORY_MINI);
-            case STRANGE -> spriteSheet.content().sprite(SpriteID.INFO_CATEGORY_STRANGE);
+            case BIG     -> spriteSheet.sprite(SpriteID.INFO_CATEGORY_BIG);
+            case MINI    -> spriteSheet.sprite(SpriteID.INFO_CATEGORY_MINI);
+            case STRANGE -> spriteSheet.sprite(SpriteID.INFO_CATEGORY_STRANGE);
             case ARCADE  -> RectShort.ZERO;
         };
         drawSpriteScaledCenteredAt(categorySprite, centerX + TS(4.5), y);
         RectShort difficultySprite = switch (requireNonNull(difficulty)) {
-            case EASY   -> spriteSheet.content().sprite(SpriteID.INFO_DIFFICULTY_EASY);
-            case HARD   -> spriteSheet.content().sprite(SpriteID.INFO_DIFFICULTY_HARD);
-            case CRAZY  -> spriteSheet.content().sprite(SpriteID.INFO_DIFFICULTY_CRAZY);
+            case EASY   -> spriteSheet.sprite(SpriteID.INFO_DIFFICULTY_EASY);
+            case HARD   -> spriteSheet.sprite(SpriteID.INFO_DIFFICULTY_HARD);
+            case CRAZY  -> spriteSheet.sprite(SpriteID.INFO_DIFFICULTY_CRAZY);
             case NORMAL -> RectShort.ZERO;
         };
         drawSpriteScaledCenteredAt(difficultySprite, centerX, y);
         if (requireNonNull(booster) != PacBooster.OFF) {
-            drawSpriteScaledCenteredAt(spriteSheet.content().sprite(SpriteID.INFO_BOOSTER), centerX - TS(6), y);
+            drawSpriteScaledCenteredAt(spriteSheet.sprite(SpriteID.INFO_BOOSTER), centerX - TS(6), y);
         }
     }
 

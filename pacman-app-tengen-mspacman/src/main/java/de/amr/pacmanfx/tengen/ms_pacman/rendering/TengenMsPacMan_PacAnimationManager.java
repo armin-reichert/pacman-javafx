@@ -9,7 +9,6 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
-import de.amr.pacmanfx.uilib.assets.SpriteMap;
 
 import java.util.Arrays;
 
@@ -33,18 +32,17 @@ public class TengenMsPacMan_PacAnimationManager extends SpriteAnimationManager<S
 
     @Override
     protected SpriteAnimation createAnimation(String id) {
-        SpriteMap<SpriteID> content = spriteSheet.content();
         return switch (id) {
             case ANIM_PAC_DYING               -> SpriteAnimation.build().of(pacDyingSprites()).frameTicks(8).once();
-            case ANIM_PAC_MUNCHING            -> SpriteAnimation.build().of(content.spriteSequence(SpriteID.MS_PAC_MUNCHING)).forever();
-            case ANIM_MS_PAC_MAN_BOOSTER      -> SpriteAnimation.build().of(content.spriteSequence(SpriteID.MS_PAC_MUNCHING_BOOSTER)).forever();
-            case ANIM_MS_PAC_MAN_WAVING_HAND  -> SpriteAnimation.build().of(content.spriteSequence(SpriteID.MS_PAC_WAVING_HAND)).frameTicks(8).forever();
-            case ANIM_MS_PAC_MAN_TURNING_AWAY -> SpriteAnimation.build().of(content.spriteSequence(SpriteID.MS_PAC_TURNING_AWAY)).frameTicks(15).once();
-            case ANIM_PAC_MAN_MUNCHING        -> SpriteAnimation.build().of(content.spriteSequence(SpriteID.MR_PAC_MUNCHING)).frameTicks(2).forever();
-            case ANIM_PAC_MAN_BOOSTER         -> SpriteAnimation.build().of(content.spriteSequence(SpriteID.MR_PAC_MUNCHING_BOOSTER)).frameTicks(2).forever();
-            case ANIM_PAC_MAN_WAVING_HAND     -> SpriteAnimation.build().of(content.spriteSequence(SpriteID.MR_PAC_WAVING_HAND)).frameTicks(8).forever();
-            case ANIM_PAC_MAN_TURNING_AWAY    -> SpriteAnimation.build().of(content.spriteSequence(SpriteID.MR_PAC_TURNING_AWAY)).frameTicks(15).once();
-            case ANIM_JUNIOR                  -> SpriteAnimation.build().ofSprite(content.sprite(SpriteID.JUNIOR_PAC)).once();
+            case ANIM_PAC_MUNCHING            -> SpriteAnimation.build().of(spriteSheet.spriteSequence(SpriteID.MS_PAC_MUNCHING)).forever();
+            case ANIM_MS_PAC_MAN_BOOSTER      -> SpriteAnimation.build().of(spriteSheet.spriteSequence(SpriteID.MS_PAC_MUNCHING_BOOSTER)).forever();
+            case ANIM_MS_PAC_MAN_WAVING_HAND  -> SpriteAnimation.build().of(spriteSheet.spriteSequence(SpriteID.MS_PAC_WAVING_HAND)).frameTicks(8).forever();
+            case ANIM_MS_PAC_MAN_TURNING_AWAY -> SpriteAnimation.build().of(spriteSheet.spriteSequence(SpriteID.MS_PAC_TURNING_AWAY)).frameTicks(15).once();
+            case ANIM_PAC_MAN_MUNCHING        -> SpriteAnimation.build().of(spriteSheet.spriteSequence(SpriteID.MR_PAC_MUNCHING)).frameTicks(2).forever();
+            case ANIM_PAC_MAN_BOOSTER         -> SpriteAnimation.build().of(spriteSheet.spriteSequence(SpriteID.MR_PAC_MUNCHING_BOOSTER)).frameTicks(2).forever();
+            case ANIM_PAC_MAN_WAVING_HAND     -> SpriteAnimation.build().of(spriteSheet.spriteSequence(SpriteID.MR_PAC_WAVING_HAND)).frameTicks(8).forever();
+            case ANIM_PAC_MAN_TURNING_AWAY    -> SpriteAnimation.build().of(spriteSheet.spriteSequence(SpriteID.MR_PAC_TURNING_AWAY)).frameTicks(15).once();
+            case ANIM_JUNIOR                  -> SpriteAnimation.build().ofSprite(spriteSheet.sprite(SpriteID.JUNIOR_PAC)).once();
             default -> throw new IllegalArgumentException("Illegal animation ID " + id);
         };
     }
@@ -56,28 +54,27 @@ public class TengenMsPacMan_PacAnimationManager extends SpriteAnimationManager<S
 
     @Override
     protected void updateActorSprites(Actor actor) {
-        SpriteMap<SpriteID> content = spriteSheet.content();
         if (actor instanceof Pac) {
             if (isCurrentAnimationID(ANIM_PAC_MUNCHING)) {
-                current().setSprites(content.spriteSequence(SpriteID.MS_PAC_MUNCHING));
+                current().setSprites(spriteSheet.spriteSequence(SpriteID.MS_PAC_MUNCHING));
             }
             if (isCurrentAnimationID(ANIM_MS_PAC_MAN_BOOSTER)) {
-                current().setSprites(content.spriteSequence(SpriteID.MS_PAC_MUNCHING_BOOSTER));
+                current().setSprites(spriteSheet.spriteSequence(SpriteID.MS_PAC_MUNCHING_BOOSTER));
             }
             if (isCurrentAnimationID(ANIM_MS_PAC_MAN_TURNING_AWAY)) {
-                current().setSprites(content.spriteSequence(SpriteID.MS_PAC_TURNING_AWAY));
+                current().setSprites(spriteSheet.spriteSequence(SpriteID.MS_PAC_TURNING_AWAY));
             }
             if (isCurrentAnimationID(ANIM_MS_PAC_MAN_WAVING_HAND)) {
-                current().setSprites(content.spriteSequence(SpriteID.MS_PAC_WAVING_HAND));
+                current().setSprites(spriteSheet.spriteSequence(SpriteID.MS_PAC_WAVING_HAND));
             }
             if (isCurrentAnimationID(ANIM_PAC_MAN_MUNCHING)) {
-                current().setSprites(content.spriteSequence(SpriteID.MR_PAC_MUNCHING));
+                current().setSprites(spriteSheet.spriteSequence(SpriteID.MR_PAC_MUNCHING));
             }
             if (isCurrentAnimationID(ANIM_PAC_MAN_TURNING_AWAY)) {
-                current().setSprites(content.spriteSequence(SpriteID.MR_PAC_TURNING_AWAY));
+                current().setSprites(spriteSheet.spriteSequence(SpriteID.MR_PAC_TURNING_AWAY));
             }
             if (isCurrentAnimationID(ANIM_PAC_MAN_WAVING_HAND)) {
-                current().setSprites(content.spriteSequence(SpriteID.MR_PAC_WAVING_HAND));
+                current().setSprites(spriteSheet.spriteSequence(SpriteID.MR_PAC_WAVING_HAND));
             }
         }
     }
@@ -85,7 +82,7 @@ public class TengenMsPacMan_PacAnimationManager extends SpriteAnimationManager<S
     private RectShort[] pacDyingSprites() {
         // TODO this is nuts: renderer rotates single sprite to create animation effect
         var sprites = new RectShort[11];
-        RectShort munchingOpen = spriteSheet().content().spriteSequence(SpriteID.MS_PAC_MUNCHING)[0];
+        RectShort munchingOpen = spriteSheet().spriteSequence(SpriteID.MS_PAC_MUNCHING)[0];
         Arrays.fill(sprites, munchingOpen);
         return sprites;
     }

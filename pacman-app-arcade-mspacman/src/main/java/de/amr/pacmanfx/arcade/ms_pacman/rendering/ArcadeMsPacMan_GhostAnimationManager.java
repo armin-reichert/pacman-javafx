@@ -29,10 +29,10 @@ public class ArcadeMsPacMan_GhostAnimationManager extends SpriteAnimationManager
     protected SpriteAnimation createAnimation(String id) {
         return switch (id) {
             case ANIM_GHOST_NORMAL     -> SpriteAnimation.build().of(ghostNormalSprites(Direction.LEFT)).frameTicks(8).forever();
-            case ANIM_GHOST_FRIGHTENED -> SpriteAnimation.build().of(spriteSheet().content().spriteSequence(SpriteID.GHOST_FRIGHTENED)).frameTicks(8).forever();
-            case ANIM_GHOST_FLASHING   -> SpriteAnimation.build().of(spriteSheet().content().spriteSequence(SpriteID.GHOST_FLASHING)).frameTicks(7).forever();
+            case ANIM_GHOST_FRIGHTENED -> SpriteAnimation.build().of(spriteSheet().spriteSequence(SpriteID.GHOST_FRIGHTENED)).frameTicks(8).forever();
+            case ANIM_GHOST_FLASHING   -> SpriteAnimation.build().of(spriteSheet().spriteSequence(SpriteID.GHOST_FLASHING)).frameTicks(7).forever();
             case ANIM_GHOST_EYES       -> SpriteAnimation.build().of(ghostEyesSprites(Direction.LEFT)).once();
-            case ANIM_GHOST_NUMBER     -> SpriteAnimation.build().of(spriteSheet().content().spriteSequence(SpriteID.GHOST_NUMBERS)).once();
+            case ANIM_GHOST_NUMBER     -> SpriteAnimation.build().of(spriteSheet().spriteSequence(SpriteID.GHOST_NUMBERS)).once();
             default -> throw new IllegalArgumentException("Illegal animation ID: " + id);
         };
     }
@@ -61,7 +61,7 @@ public class ArcadeMsPacMan_GhostAnimationManager extends SpriteAnimationManager
     }
 
     private RectShort[] ghostNormalSprites(Direction dir) {
-        return spriteSheet().content().spriteSequence(switch (personality) {
+        return spriteSheet().spriteSequence(switch (personality) {
             case RED_GHOST_SHADOW -> switch (dir) {
                 case RIGHT -> RED_GHOST_RIGHT;
                 case LEFT -> RED_GHOST_LEFT;
@@ -91,7 +91,7 @@ public class ArcadeMsPacMan_GhostAnimationManager extends SpriteAnimationManager
     }
 
     private RectShort[] ghostEyesSprites(Direction dir) {
-        return spriteSheet().content().spriteSequence(switch (dir) {
+        return spriteSheet().spriteSequence(switch (dir) {
             case Direction.RIGHT -> GHOST_EYES_RIGHT;
             case Direction.LEFT  -> GHOST_EYES_LEFT;
             case Direction.UP    -> GHOST_EYES_UP;

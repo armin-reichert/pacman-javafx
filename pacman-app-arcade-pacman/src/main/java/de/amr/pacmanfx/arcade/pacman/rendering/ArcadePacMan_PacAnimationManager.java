@@ -25,8 +25,8 @@ public class ArcadePacMan_PacAnimationManager extends SpriteAnimationManager<Spr
     protected SpriteAnimation createAnimation(String id) {
         return switch (id) {
             case ANIM_PAC_MUNCHING -> SpriteAnimation.build().of(pacMunchingSprites(Direction.LEFT)).forever();
-            case ANIM_PAC_DYING    -> SpriteAnimation.build().of(spriteSheet().content().spriteSequence(SpriteID.PACMAN_DYING)).frameTicks(8).once();
-            case ANIM_BIG_PAC_MAN  -> SpriteAnimation.build().of(spriteSheet().content().spriteSequence(SpriteID.PACMAN_BIG)).frameTicks(3).forever();
+            case ANIM_PAC_DYING    -> SpriteAnimation.build().of(spriteSheet().spriteSequence(SpriteID.PACMAN_DYING)).frameTicks(8).once();
+            case ANIM_BIG_PAC_MAN  -> SpriteAnimation.build().of(spriteSheet().spriteSequence(SpriteID.PACMAN_BIG)).frameTicks(3).forever();
             default -> throw new IllegalArgumentException("Illegal animation ID: " + id);
         };
     }
@@ -45,10 +45,10 @@ public class ArcadePacMan_PacAnimationManager extends SpriteAnimationManager<Spr
 
     private RectShort[] pacMunchingSprites(Direction dir) {
         return switch (dir) {
-            case RIGHT -> spriteSheet().content().spriteSequence(SpriteID.PACMAN_MUNCHING_RIGHT);
-            case LEFT  -> spriteSheet().content().spriteSequence(SpriteID.PACMAN_MUNCHING_LEFT);
-            case UP    -> spriteSheet().content().spriteSequence(SpriteID.PACMAN_MUNCHING_UP);
-            case DOWN  -> spriteSheet().content().spriteSequence(SpriteID.PACMAN_MUNCHING_DOWN);
+            case RIGHT -> spriteSheet().spriteSequence(SpriteID.PACMAN_MUNCHING_RIGHT);
+            case LEFT  -> spriteSheet().spriteSequence(SpriteID.PACMAN_MUNCHING_LEFT);
+            case UP    -> spriteSheet().spriteSequence(SpriteID.PACMAN_MUNCHING_UP);
+            case DOWN  -> spriteSheet().spriteSequence(SpriteID.PACMAN_MUNCHING_DOWN);
         };
     }
 }

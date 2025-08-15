@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
+import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.uilib.assets.SpriteMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.image.Image;
@@ -37,7 +38,12 @@ public record BrightMazesSpriteSheet(Image sourceImage) implements SpriteSheet<B
     }
 
     @Override
-    public SpriteMap<SpriteID> content() {
-        return SPRITE_MAP;
+    public RectShort sprite(SpriteID id) {
+        return SPRITE_MAP.sprite(id);
+    }
+
+    @Override
+    public RectShort[] spriteSequence(SpriteID id) {
+        return SPRITE_MAP.spriteSequence(id);
     }
 }

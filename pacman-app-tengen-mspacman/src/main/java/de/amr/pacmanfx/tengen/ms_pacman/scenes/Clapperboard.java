@@ -58,7 +58,7 @@ public class Clapperboard extends Actor {
 
     public Optional<RectShort> sprite() {
         if (state == HIDDEN) return Optional.empty();
-        RectShort[] clapperboardSprites = spriteSheet.content().spriteSequence(SpriteID.CLAPPERBOARD);
+        RectShort[] clapperboardSprites = spriteSheet.spriteSequence(SpriteID.CLAPPERBOARD);
         return Optional.of(clapperboardSprites[state]);
     }
 

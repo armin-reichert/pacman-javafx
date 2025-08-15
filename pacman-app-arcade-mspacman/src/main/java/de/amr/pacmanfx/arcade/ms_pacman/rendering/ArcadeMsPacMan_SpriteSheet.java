@@ -114,7 +114,12 @@ public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements SpriteShe
     }
 
     @Override
-    public SpriteMap<SpriteID> content() {
-        return SPRITE_MAP;
+    public RectShort sprite(SpriteID id) {
+        return SPRITE_MAP.sprite(id);
+    }
+
+    @Override
+    public RectShort[] spriteSequence(SpriteID id) {
+        return SPRITE_MAP.spriteSequence(id);
     }
 }
