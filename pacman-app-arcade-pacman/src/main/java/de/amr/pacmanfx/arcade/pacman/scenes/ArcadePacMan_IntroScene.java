@@ -13,6 +13,7 @@ import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
+import de.amr.pacmanfx.model.actors.AnimationManager;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -266,7 +267,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 scene.pacMan.setMoveDir(Direction.LEFT);
                 scene.pacMan.setSpeed(CHASING_SPEED);
                 scene.pacMan.show();
-                scene.pacMan.playAnimation(ANIM_PAC_MUNCHING);
+                scene.pacMan.animations().ifPresent(am -> am.play(ANIM_PAC_MUNCHING));
                 scene.ghosts.forEach(ghost -> {
                     ghost.setState(GhostState.HUNTING_PAC);
                     ghost.setPosition(scene.pacMan.x() + 16 * (ghost.id().personality() + 1), scene.pacMan.y());
@@ -274,7 +275,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                     ghost.setWishDir(Direction.LEFT);
                     ghost.setSpeed(CHASING_SPEED);
                     ghost.show();
-                    ghost.playAnimation(ANIM_GHOST_NORMAL);
+                    ghost.animations().ifPresent(am -> am.play(ANIM_GHOST_NORMAL));
                 });
             }
 
@@ -286,7 +287,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 else if (sceneTimer.tickCount() == 232) {
                     // Pac-Man reaches the energizer at the left and stops
                     scene.pacMan.setSpeed(0);
-                    scene.pacMan.stopAnimation();
+                    scene.pacMan.animations().ifPresent(AnimationManager::stop);
                     // Ghosts get frightened and reverse direction
                     scene.ghosts.forEach(ghost -> {
                         ghost.setState(FRIGHTENED);
@@ -296,7 +297,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                     });
                 } else if (sceneTimer.tickCount() == 236) {
                     // Pac-Man moves again a bit
-                    scene.pacMan.playAnimation(ANIM_PAC_MUNCHING);
+                    scene.pacMan.animations().ifPresent(am -> am.play(ANIM_PAC_MUNCHING));
                     scene.pacMan.setSpeed(CHASING_SPEED);
                 } else if (sceneTimer.tickCount() == 240) {
                     scene.sceneController.changeState(CHASING_GHOSTS);
@@ -335,10 +336,10 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                         scene.pacMan.setSpeed(0);
                         scene.ghosts.forEach(ghost -> {
                             ghost.setSpeed(0);
-                            ghost.stopAnimation();
+                            ghost.animations().ifPresent(AnimationManager::stop);
                         });
                         victim.setState(EATEN);
-                        victim.selectAnimation(ANIM_GHOST_NUMBER, scene.victims.size() - 1);
+                        victim.animations().ifPresent(am -> am.selectFrame(ANIM_GHOST_NUMBER, scene.victims.size() - 1));
                     });
 
                 // After 50 ticks, Pac-Man and the surviving ghosts get visible again and move on
@@ -351,7 +352,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                         } else {
                             ghost.show();
                             ghost.setSpeed(GHOST_FRIGHTENED_SPEED);
-                            ghost.playAnimation(ANIM_GHOST_FRIGHTENED);
+                            ghost.animations().ifPresent(am -> am.play(ANIM_GHOST_FRIGHTENED));
                         }
                     });
                 }

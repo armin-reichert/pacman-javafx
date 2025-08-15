@@ -10,6 +10,7 @@ import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.DefaultGameVariants;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.actors.AnimationManager;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
@@ -233,7 +234,8 @@ public enum GamePlayState implements GameState {
         public void onEnter(GameContext context) {
             timer.restartSeconds(1);
             context.gameLevel().pac().hide();
-            context.gameLevel().ghosts().forEach(Ghost::stopAnimation);
+            context.gameLevel().ghosts()
+                .forEach(ghost -> ghost.animations().ifPresent(AnimationManager::stop));
             context.eventManager().publishEvent(GameEventType.GHOST_EATEN);
         }
 
@@ -252,7 +254,8 @@ public enum GamePlayState implements GameState {
         public void onExit(GameContext context) {
             context.gameLevel().pac().show();
             context.gameLevel().ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
-            context.gameLevel().ghosts().forEach(Ghost::playAnimation);
+            context.gameLevel().ghosts()
+                .forEach(ghost -> ghost.animations().ifPresent(AnimationManager::play));
         }
     },
 
@@ -283,11 +286,13 @@ public enum GamePlayState implements GameState {
             else if (timer.tickCount() == TICK_HIDE_GHOSTS) {
                 context.gameLevel().ghosts().forEach(Ghost::hide);
                 //TODO this does not belong here
-                context.gameLevel().pac().selectAnimation(ANIM_PAC_DYING);
-                context.gameLevel().pac().resetAnimation();
+                context.gameLevel().pac().animations().ifPresent(am -> {
+                    am.select(ANIM_PAC_DYING);
+                    am.reset();
+                });
             }
             else if (timer.tickCount() == TICK_START_PAC_ANIMATION) {
-                context.gameLevel().pac().playAnimation();
+                context.gameLevel().pac().animations().ifPresent(AnimationManager::play);
                 context.eventManager().publishEvent(GameEventType.PAC_DYING, context.gameLevel().pac().tile());
             }
             else if (timer.tickCount() == TICK_HIDE_PAC) {

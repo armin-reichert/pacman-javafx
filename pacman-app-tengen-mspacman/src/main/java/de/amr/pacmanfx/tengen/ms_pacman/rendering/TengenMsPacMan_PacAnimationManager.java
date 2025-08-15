@@ -8,14 +8,14 @@ import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 
 import java.util.Arrays;
 
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 
-public class TengenMsPacMan_PacAnimationMap extends SpriteAnimationMap<SpriteID> {
+public class TengenMsPacMan_PacAnimationManager extends SpriteAnimationManager<SpriteID> {
 
     public static final String ANIM_MS_PAC_MAN_BOOSTER = "ms_pac_man_booster";
     public static final String ANIM_MS_PAC_MAN_WAVING_HAND = "ms_pac_man_waving_hand";
@@ -26,7 +26,7 @@ public class TengenMsPacMan_PacAnimationMap extends SpriteAnimationMap<SpriteID>
     public static final String ANIM_PAC_MAN_TURNING_AWAY = "pac_man_turning_away";
     public static final String ANIM_JUNIOR = "junior";
 
-    public TengenMsPacMan_PacAnimationMap(TengenMsPacMan_SpriteSheet spriteSheet) {
+    public TengenMsPacMan_PacAnimationManager(TengenMsPacMan_SpriteSheet spriteSheet) {
         super(spriteSheet);
     }
 

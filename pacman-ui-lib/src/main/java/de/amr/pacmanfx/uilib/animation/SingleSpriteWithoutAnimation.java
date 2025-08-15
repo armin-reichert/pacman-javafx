@@ -5,11 +5,11 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib.animation;
 
 import de.amr.pacmanfx.lib.RectShort;
-import de.amr.pacmanfx.model.actors.ActorAnimationMap;
+import de.amr.pacmanfx.model.actors.AnimationManager;
 
 import static java.util.Objects.requireNonNull;
 
-public class SingleSpriteWithoutAnimation implements ActorAnimationMap {
+public class SingleSpriteWithoutAnimation implements AnimationManager {
 
     private final RectShort sprite;
 
@@ -25,19 +25,19 @@ public class SingleSpriteWithoutAnimation implements ActorAnimationMap {
     }
 
     @Override
-    public String selectedAnimationID() {
+    public String selectedID() {
         return null;
     }
 
     @Override
-    public void selectAnimationAtFrame(String id, int frameIndex) {}
+    public void selectFrame(String id, int frameIndex) {}
 
     @Override
-    public void playSelectedAnimation() {}
+    public void play() {}
 
     @Override
-    public void stopSelectedAnimation() {}
+    public void stop() {}
 
     @Override
-    public void resetSelectedAnimation() {}
+    public void reset() {}
 }

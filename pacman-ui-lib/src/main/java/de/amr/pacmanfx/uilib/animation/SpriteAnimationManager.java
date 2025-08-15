@@ -6,7 +6,7 @@ package de.amr.pacmanfx.uilib.animation;
 
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.ActorAnimationMap;
+import de.amr.pacmanfx.model.actors.AnimationManager;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import org.tinylog.Logger;
 
@@ -15,13 +15,13 @@ import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
-public class SpriteAnimationMap<SID> implements ActorAnimationMap {
+public class SpriteAnimationManager<SID> implements AnimationManager {
 
     protected final SpriteSheet<SID> spriteSheet;
     protected final Map<String, SpriteAnimation> animationsByID = new HashMap<>();
     protected String currentAnimationID;
 
-    public SpriteAnimationMap(SpriteSheet<SID> spriteSheet) {
+    public SpriteAnimationManager(SpriteSheet<SID> spriteSheet) {
         this.spriteSheet = requireNonNull(spriteSheet);
     }
 
@@ -70,12 +70,12 @@ public class SpriteAnimationMap<SID> implements ActorAnimationMap {
     }
 
     @Override
-    public String selectedAnimationID() {
+    public String selectedID() {
         return currentAnimationID;
     }
 
     @Override
-    public void selectAnimationAtFrame(String id, int frameIndex) {
+    public void selectFrame(String id, int frameIndex) {
         if (!id.equals(currentAnimationID)) {
             currentAnimationID = id;
             if (currentAnimation() != null) {
@@ -87,21 +87,21 @@ public class SpriteAnimationMap<SID> implements ActorAnimationMap {
     }
 
     @Override
-    public void playSelectedAnimation() {
+    public void play() {
         if (currentAnimation() != null) {
             currentAnimation().play();
         }
     }
 
     @Override
-    public void stopSelectedAnimation() {
+    public void stop() {
         if (currentAnimation() != null) {
             currentAnimation().stop();
         }
     }
 
     @Override
-    public void resetSelectedAnimation() {
+    public void reset() {
         if (currentAnimation() != null) {
             currentAnimation().reset();
         }

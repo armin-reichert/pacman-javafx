@@ -32,13 +32,13 @@ import static java.util.Objects.requireNonNull;
 /**
  * Common ghost base class. The specific ghosts differ in their hunting behavior and their look.
  */
-public abstract class Ghost extends MovingActor implements Animated {
+public abstract class Ghost extends MovingActor {
 
     public static final GhostState DEFAULT_STATE = GhostState.LOCKED;
 
     private final GhostID id;
     private ObjectProperty<GhostState> state;
-    private ActorAnimationMap animationMap;
+    private AnimationManager animations;
     private List<Vector2i> specialTerrainTiles = List.of();
 
     /**
@@ -59,8 +59,8 @@ public abstract class Ghost extends MovingActor implements Animated {
         return id;
     }
 
-    public void setAnimations(ActorAnimationMap animationMap) {
-        this.animationMap = requireNonNull(animationMap);
+    public void setAnimations(AnimationManager animations) {
+        this.animations = requireNonNull(animations);
     }
 
     @Override
@@ -68,9 +68,8 @@ public abstract class Ghost extends MovingActor implements Animated {
         return id.name();
     }
 
-    @Override
-    public Optional<ActorAnimationMap> animationMap() {
-        return Optional.ofNullable(animationMap);
+    public Optional<AnimationManager> animations() {
+        return Optional.ofNullable(animations);
     }
 
     @Override
@@ -227,9 +226,9 @@ public abstract class Ghost extends MovingActor implements Animated {
 
         // "onEntry" action:
         switch (newState) {
-            case LOCKED, HUNTING_PAC -> selectAnimation(ANIM_GHOST_NORMAL);
-            case ENTERING_HOUSE, RETURNING_HOME -> selectAnimation(ANIM_GHOST_EYES);
-            case FRIGHTENED -> playAnimation(ANIM_GHOST_FRIGHTENED);
+            case LOCKED, HUNTING_PAC -> animations().ifPresent(am -> am.select(ANIM_GHOST_NORMAL));
+            case ENTERING_HOUSE, RETURNING_HOME -> animations().ifPresent(am -> am.select(ANIM_GHOST_EYES));
+            case FRIGHTENED -> animations().ifPresent(am -> am.play(ANIM_GHOST_FRIGHTENED));
             case EATEN -> {}
         }
     }
@@ -291,7 +290,7 @@ public abstract class Ghost extends MovingActor implements Animated {
         if (gameLevel.pac().powerTimer().isRunning() && !gameLevel.victims().contains(this)) {
             playFrightenedAnimation(gameContext, gameLevel.pac());
         } else {
-            selectAnimation(ANIM_GHOST_NORMAL);
+            animations().ifPresent(am -> am.select(ANIM_GHOST_NORMAL));
         }
     }
 
@@ -352,7 +351,7 @@ public abstract class Ghost extends MovingActor implements Animated {
             if (gameLevel.pac().powerTimer().isRunning() && !gameLevel.victims().contains(this)) {
                 playFrightenedAnimation(gameContext, gameLevel.pac());
             } else {
-                selectAnimation(ANIM_GHOST_NORMAL);
+                animations().ifPresent(am -> am.select(ANIM_GHOST_NORMAL));
             }
         }
     }
@@ -406,9 +405,9 @@ public abstract class Ghost extends MovingActor implements Animated {
 
     private void playFrightenedAnimation(GameContext gameContext, Pac pac) {
         if (pac.isPowerFadingStarting(gameContext)) {
-            playAnimation(ANIM_GHOST_FLASHING);
+            animations().ifPresent(am -> am.play(ANIM_GHOST_FLASHING));
         } else if (!pac.isPowerFading(gameContext)) {
-            playAnimation(ANIM_GHOST_FRIGHTENED);
+            animations().ifPresent(am -> am.play(ANIM_GHOST_FRIGHTENED));
         }
     }
 

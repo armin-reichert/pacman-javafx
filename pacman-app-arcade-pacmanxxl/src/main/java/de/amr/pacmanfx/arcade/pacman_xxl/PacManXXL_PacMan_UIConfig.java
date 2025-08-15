@@ -6,8 +6,8 @@ package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
-import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_GhostAnimationMap;
-import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_PacAnimationMap;
+import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_GhostAnimationManager;
+import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_PacAnimationManager;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.arcade.pacman.scenes.*;
@@ -193,13 +193,13 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config {
     }
 
     @Override
-    public ArcadePacMan_GhostAnimationMap createGhostAnimations(Ghost ghost) {
-        return new ArcadePacMan_GhostAnimationMap(spriteSheet, ghost.id().personality());
+    public ArcadePacMan_GhostAnimationManager createGhostAnimations(Ghost ghost) {
+        return new ArcadePacMan_GhostAnimationManager(spriteSheet, ghost.id().personality());
     }
 
     @Override
-    public ArcadePacMan_PacAnimationMap createPacAnimations(Pac pac) {
-        return new ArcadePacMan_PacAnimationMap(spriteSheet);
+    public ArcadePacMan_PacAnimationManager createPacAnimations(Pac pac) {
+        return new ArcadePacMan_PacAnimationManager(spriteSheet);
     }
 
     @Override

@@ -6,7 +6,10 @@ package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Actor;
+import de.amr.pacmanfx.model.actors.AnimationManager;
 import javafx.scene.paint.Color;
+
+import java.util.Optional;
 
 public class Marquee extends Actor {
     private final TickTimer timer = new TickTimer("Marquee-Timer");
@@ -24,6 +27,11 @@ public class Marquee extends Actor {
         this.totalBulbCount = totalBulbCount;
         this.brightBulbsCount = brightBulbsCount;
         this.brightBulbsDistance = brightBulbsDistance;
+    }
+
+    @Override
+    public Optional<AnimationManager> animations() {
+        return Optional.empty();
     }
 
     public TickTimer timer() {

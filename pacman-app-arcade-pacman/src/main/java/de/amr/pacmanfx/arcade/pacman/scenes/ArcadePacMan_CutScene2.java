@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.model.actors.ActorAnimationMap;
+import de.amr.pacmanfx.model.actors.AnimationManager;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
@@ -56,7 +56,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         blinky.setSpeed(0);
         blinky.hide();
 
-        ActorAnimationMap blinkyAnimations = ui.currentConfig().createGhostAnimations(blinky);
+        AnimationManager blinkyAnimations = ui.currentConfig().createGhostAnimations(blinky);
         blinky.setAnimations(blinkyAnimations);
         blinkyNormal = (SpriteAnimation) blinkyAnimations.animation(ANIM_GHOST_NORMAL);
         nailDressRaptureAnimation = (SpriteAnimation) blinkyAnimations.animation(ANIM_BLINKY_NAIL_DRESS_RAPTURE);
@@ -87,7 +87,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
                 pac.placeAtTile(28, 20);
                 pac.setMoveDir(Direction.LEFT);
                 pac.setSpeed(1.15f);
-                pac.playAnimation(ANIM_PAC_MUNCHING);
+                pac.animations().ifPresent(am -> am.play(ANIM_PAC_MUNCHING));
                 pac.show();
             }
             case ANIMATION_START + 111 -> {
@@ -95,7 +95,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
                 blinky.setMoveDir(Direction.LEFT);
                 blinky.setWishDir(Direction.LEFT);
                 blinky.setSpeed(1.25f);
-                blinky.playAnimation(ANIM_GHOST_NORMAL);
+                blinky.animations().ifPresent(am -> am.play(ANIM_GHOST_NORMAL));
                 blinky.show();
             }
             case ANIMATION_START + 194 -> {
@@ -107,12 +107,12 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
             case ANIMATION_START + 262 -> nailDressRaptureAnimation.setFrameIndex(STRETCHED_L);
             case ANIMATION_START + 296 -> {
                 blinky.setSpeed(0);
-                blinky.stopAnimation();
+                blinky.animations().ifPresent(AnimationManager::stop);
             }
             case ANIMATION_START + 360 -> {
                 nailDressRaptureAnimation.setFrameIndex(RAPTURED);
                 blinky.setX(blinky.x() - 4);
-                blinky.selectAnimation(ANIM_BLINKY_DAMAGED);
+                blinky.animations().ifPresent(am -> am.select(ANIM_BLINKY_DAMAGED));
             }
             case ANIMATION_START + 420 -> blinkyDamaged.nextFrame(); // Eyes right-down
             case ANIMATION_START + 508 -> {

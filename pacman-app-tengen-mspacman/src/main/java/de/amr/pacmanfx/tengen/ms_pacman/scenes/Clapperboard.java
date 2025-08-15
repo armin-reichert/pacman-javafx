@@ -6,6 +6,7 @@ package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
+import de.amr.pacmanfx.model.actors.AnimationManager;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import javafx.scene.text.Font;
@@ -34,6 +35,11 @@ public class Clapperboard extends Actor {
         this.spriteSheet = requireNonNull(spriteSheet);
         this.number = (byte) number;
         this.text = requireNonNull(text);
+    }
+
+    @Override
+    public Optional<AnimationManager> animations() {
+        return Optional.empty();
     }
 
     public byte number() {

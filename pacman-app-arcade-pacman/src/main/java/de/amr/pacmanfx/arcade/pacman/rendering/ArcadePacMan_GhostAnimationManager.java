@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
@@ -17,11 +17,11 @@ import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.*;
 import static de.amr.pacmanfx.arcade.pacman.rendering.SpriteID.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 
-public class ArcadePacMan_GhostAnimationMap extends SpriteAnimationMap<SpriteID> {
+public class ArcadePacMan_GhostAnimationManager extends SpriteAnimationManager<SpriteID> {
 
     private final byte personality;
 
-    public ArcadePacMan_GhostAnimationMap(ArcadePacMan_SpriteSheet spriteSheet, byte personality) {
+    public ArcadePacMan_GhostAnimationManager(ArcadePacMan_SpriteSheet spriteSheet, byte personality) {
         super(spriteSheet);
         this.personality = requireValidGhostPersonality(personality);
     }
@@ -48,8 +48,8 @@ public class ArcadePacMan_GhostAnimationMap extends SpriteAnimationMap<SpriteID>
     }
 
     @Override
-    public void selectAnimationAtFrame(String id, int frameIndex) {
-        super.selectAnimationAtFrame(id, frameIndex);
+    public void selectFrame(String id, int frameIndex) {
+        super.selectFrame(id, frameIndex);
         if (ANIM_GHOST_NUMBER.equals(id)) {
             animation(ANIM_GHOST_NUMBER).setFrameIndex(frameIndex);
         }

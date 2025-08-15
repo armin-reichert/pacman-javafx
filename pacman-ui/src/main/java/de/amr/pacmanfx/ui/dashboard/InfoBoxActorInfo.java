@@ -12,7 +12,7 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.api.GameUI;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -99,11 +99,12 @@ public class InfoBoxActorInfo extends InfoBox {
     }
 
     private String ghostAnimationInfo(Ghost ghost) {
-        if (ghost.animationMap().isEmpty()) {
-            return NO_INFO;
+        if (ghost.animations().isPresent()
+                && ghost.animations().get() instanceof SpriteAnimationManager<?> spriteAnimations
+                && spriteAnimations.selectedID() != null) {
+            return spriteAnimations.selectedID();
         }
-        var animationMap = (SpriteAnimationMap<?>) ghost.animationMap().get();
-        return animationMap.selectedAnimationID() != null ? animationMap.selectedAnimationID() : NO_INFO;
+        return NO_INFO;
     }
 
     private String ghostState(Ghost ghost) {

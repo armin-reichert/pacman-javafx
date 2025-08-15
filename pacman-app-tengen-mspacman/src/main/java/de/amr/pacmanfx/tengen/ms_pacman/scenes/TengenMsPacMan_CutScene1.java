@@ -26,7 +26,7 @@ import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.*;
-import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PacAnimationMap.ANIM_PAC_MAN_MUNCHING;
+import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PacAnimationManager.ANIM_PAC_MAN_MUNCHING;
 import static de.amr.pacmanfx.ui.CommonGameActions.ACTION_LET_GAME_STATE_EXPIRE;
 
 /**
@@ -106,13 +106,13 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.setPosition(LEFT_BORDER, UPPER_LANE);
             pacMan.setSpeed(SPEED_CHASING);
-            pacMan.playAnimation(ANIM_PAC_MAN_MUNCHING);
+            pacMan.animations().ifPresent(am -> am.play(ANIM_PAC_MAN_MUNCHING));
             pacMan.show();
 
             msPacMan.setMoveDir(Direction.LEFT);
             msPacMan.setPosition(RIGHT_BORDER, LOWER_LANE);
             msPacMan.setSpeed(SPEED_CHASING);
-            msPacMan.playAnimation(ANIM_PAC_MUNCHING);
+            msPacMan.animations().ifPresent(am -> am.play(ANIM_PAC_MUNCHING));
             msPacMan.show();
         }
         else if (t == 160) {
@@ -120,14 +120,14 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
             inky.setWishDir(Direction.RIGHT);
             inky.setPosition(LEFT_BORDER, UPPER_LANE);
             inky.setSpeed(SPEED_CHASING);
-            inky.playAnimation(ANIM_GHOST_NORMAL);
+            inky.animations().ifPresent(am -> am.play(ANIM_GHOST_NORMAL));
             inky.show();
 
             pinky.setMoveDir(Direction.LEFT);
             pinky.setWishDir(Direction.LEFT);
             pinky.setPosition(RIGHT_BORDER, LOWER_LANE);
             pinky.setSpeed(SPEED_CHASING);
-            pinky.playAnimation(ANIM_GHOST_NORMAL);
+            pinky.animations().ifPresent(am -> am.play(ANIM_GHOST_NORMAL));
             pinky.show();
 
             collided = false;
@@ -177,10 +177,14 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
             msPacMan.setMoveDir(Direction.RIGHT);
         }
         else if (t == 545) {
-            pacMan.stopAnimation();
-            pacMan.resetAnimation();
-            msPacMan.stopAnimation();
-            msPacMan.resetAnimation();
+            pacMan.animations().ifPresent(am -> {
+                am.stop();
+                am.reset();
+            });
+            msPacMan.animations().ifPresent(am -> {
+                am.stop();
+                am.reset();
+            });
         }
         else if (t == 560) {
             heart.setPosition((pacMan.x() + msPacMan.x()) / 2, pacMan.y() - TS * (2));

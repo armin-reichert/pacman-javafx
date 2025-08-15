@@ -5,16 +5,17 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.ui._2d;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
-import de.amr.pacmanfx.model.HUDData;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.actors.*;
+import de.amr.pacmanfx.model.HUDData;
+import de.amr.pacmanfx.model.actors.Actor;
+import de.amr.pacmanfx.model.actors.MovingActor;
+import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui.GameAssets;
 import de.amr.pacmanfx.uilib.animation.SingleSpriteWithoutAnimation;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
@@ -125,29 +126,24 @@ public abstract class GameRenderer {
     public void drawActor(Actor actor) {
         requireNonNull(actor);
         if (actor.isVisible()) {
-            if (actor instanceof Animated animated) {
-                drawAnimatedActor(animated);
-            }
-            else throw new IllegalArgumentException("%s: Cannot draw actor of class %s".formatted(
-                    getClass().getSimpleName(), actor.getClass().getSimpleName()));
+            drawAnimatedActor(actor);
         }
     }
 
-    public void drawAnimatedActor(Animated animated) {
-        animated.animationMap().ifPresent(animationMap -> {
+    public void drawAnimatedActor(Actor actor) {
+        actor.animations().ifPresent(am -> {
             // assume interface is only implemented by Actor (sub-)classes
-            Actor actor = (Actor) animated;
-            switch (animationMap) {
+            switch (am) {
                 case SingleSpriteWithoutAnimation singleSpriteWithoutAnimation ->
-                        drawActorSpriteCentered(actor, singleSpriteWithoutAnimation.singleSprite());
-                case SpriteAnimationMap<?> spriteAnimationMap -> {
+                    drawActorSpriteCentered(actor, singleSpriteWithoutAnimation.singleSprite());
+                case SpriteAnimationManager<?> spriteAnimationMap -> {
                     if (spriteAnimationMap.currentAnimation() != null) {
                         drawActorSpriteCentered(actor, spriteAnimationMap.currentSprite(actor));
                     } else {
                         Logger.error("No current animation for actor {}", actor);
                     }
                 }
-                default -> Logger.error("Cannot render animated actor with animation map of type {}", animationMap.getClass().getSimpleName());
+                default -> Logger.error("Cannot render animated actor with animation manager of type {}", am.getClass().getSimpleName());
             }
         });
     }
@@ -336,57 +332,56 @@ public abstract class GameRenderer {
         drawSpriteScaledCenteredAt(sprite, centerX, centerY);
     }
 
-    public void drawMovingActorInfo(MovingActor movingActor) {
-        if (!movingActor.isVisible()) {
+    public void drawMovingActorInfo(MovingActor actor) {
+        if (!actor.isVisible()) {
             return;
         }
-        switch (movingActor) {
-            case Pac pac -> {
-                drawAnimatedMovingActorInfo(pac);
-                String autopilot = pac.isUsingAutopilot() ? "autopilot" : "";
-                String immune = pac.isImmune() ? "immune" : "";
-                String text = "%s\n%s".formatted(autopilot, immune).trim();
-                ctx().setFill(Color.WHITE);
-                ctx().setFont(Font.font("Monospaced", scaled(6)));
-                ctx().fillText(text, scaled(pac.x() - 4), scaled(pac.y() + 16));
-            }
-            case Bonus bonus -> {} //TODO
-            case Animated animated -> drawAnimatedMovingActorInfo(animated);
-            default -> Logger.error("Cannot render moving actor info of class {}", movingActor.getClass().getSimpleName());
+        if (actor instanceof Pac pac) {
+            String autopilot = pac.isUsingAutopilot() ? "autopilot" : "";
+            String immune = pac.isImmune() ? "immune" : "";
+            String text = "%s\n%s".formatted(autopilot, immune).trim();
+            ctx().setFill(Color.WHITE);
+            ctx().setFont(Font.font("Monospaced", scaled(6)));
+            ctx().fillText(text, scaled(pac.x() - 4), scaled(pac.y() + 16));
         }
+        actor.animations()
+            .filter(SpriteAnimationManager.class::isInstance)
+            .map(SpriteAnimationManager.class::cast)
+            .ifPresent(spriteAnimationMap -> {
+                String selectedID = spriteAnimationMap.selectedID();
+                if (selectedID != null) {
+                    drawAnimationInfo(actor, spriteAnimationMap, selectedID);
+                }
+                if (actor.wishDir() != null) {
+                    drawDirectionIndicator(actor);
+                }
+            });
+        }
+
+    private void drawAnimationInfo(MovingActor actor, SpriteAnimationManager<?> spriteAnimationMap, String selectedID) {
+        ctx().save();
+        String text = "[%s:%d]".formatted(selectedID, spriteAnimationMap.currentAnimation().frameIndex());
+        double x = scaled(actor.x() - 4), y = scaled(actor.y() - 4);
+        ctx().setFill(Color.WHITE);
+        ctx().setFont(Font.font("Sans", scaled(7)));
+        ctx().fillText(text, x, y);
+        ctx().setStroke(Color.GRAY);
+        ctx().strokeText(text, x, y);
+        ctx.restore();
     }
 
-    public void drawAnimatedMovingActorInfo(Animated animated) {
-        if (!(animated instanceof MovingActor movingActor)) return;
-
-        animated.animationMap()
-                .filter(SpriteAnimationMap.class::isInstance)
-                .map(SpriteAnimationMap.class::cast)
-                .ifPresent(spriteAnimationMap -> {
-                    ctx().save();
-                    String selectedID = spriteAnimationMap.selectedAnimationID();
-                    if (selectedID != null) {
-                        String text = "[%s:%d]".formatted(selectedID, spriteAnimationMap.currentAnimation().frameIndex());
-                        double x = scaled(movingActor.x() - 4), y = scaled(movingActor.y() - 4);
-                        ctx().setFill(Color.WHITE);
-                        ctx().setFont(Font.font("Sans", scaled(7)));
-                        ctx().fillText(text, x, y);
-                        ctx().setStroke(Color.GRAY);
-                        ctx().strokeText(text, x, y);
-                    }
-                    if (movingActor.wishDir() != null) {
-                        float scaling = scaling();
-                        Vector2f center = movingActor.center();
-                        Vector2f arrowHead = center.plus(movingActor.wishDir().vector().scaled(12f)).scaled(scaling);
-                        Vector2f guyCenter = center.scaled(scaling);
-                        float radius = scaling * 2, diameter = 2 * radius;
-                        ctx().setStroke(Color.WHITE);
-                        ctx().setLineWidth(0.5);
-                        ctx().strokeLine(guyCenter.x(), guyCenter.y(), arrowHead.x(), arrowHead.y());
-                        ctx().setFill(movingActor.isNewTileEntered() ? Color.YELLOW : Color.GREEN);
-                        ctx().fillOval(arrowHead.x() - radius, arrowHead.y() - radius, diameter, diameter);
-                    }
-                    ctx().restore();
-                });
+    private void drawDirectionIndicator(MovingActor actor) {
+        ctx().save();
+        float scaling = scaling();
+        Vector2f center = actor.center();
+        Vector2f arrowHead = center.plus(actor.wishDir().vector().scaled(12f)).scaled(scaling);
+        Vector2f guyCenter = center.scaled(scaling);
+        float radius = scaling * 2, diameter = 2 * radius;
+        ctx().setStroke(Color.WHITE);
+        ctx().setLineWidth(0.5);
+        ctx().strokeLine(guyCenter.x(), guyCenter.y(), arrowHead.x(), arrowHead.y());
+        ctx().setFill(actor.isNewTileEntered() ? Color.YELLOW : Color.GREEN);
+        ctx().fillOval(arrowHead.x() - radius, arrowHead.y() - radius, diameter, diameter);
+        ctx.restore();
     }
 }

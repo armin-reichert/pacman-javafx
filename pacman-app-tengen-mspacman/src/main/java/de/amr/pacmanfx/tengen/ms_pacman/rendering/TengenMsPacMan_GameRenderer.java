@@ -21,7 +21,7 @@ import de.amr.pacmanfx.ui._2d.GameRenderer;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.input.JoypadKeyBinding;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -227,13 +227,13 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
         if (!pac.isVisible()) {
             return;
         }
-        pac.animationMap().map(SpriteAnimationMap.class::cast).ifPresent(spriteAnimations -> {
+        pac.animations().map(SpriteAnimationManager.class::cast).ifPresent(spriteAnimations -> {
             SpriteAnimation animation = spriteAnimations.currentAnimation();
             if (animation == null) {
                 Logger.error("No animation found for {}", pac);
                 return;
             }
-            if (spriteAnimations.selectedAnimationID().equals(ANIM_PAC_DYING)) {
+            if (spriteAnimations.selectedID().equals(ANIM_PAC_DYING)) {
                 //TODO: reconsider this
                 Direction dir = Direction.UP;
                 if (animation.frameIndex() < 11) {

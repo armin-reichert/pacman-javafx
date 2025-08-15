@@ -1,7 +1,10 @@
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.pacmanfx.model.actors.Actor;
+import de.amr.pacmanfx.model.actors.AnimationManager;
 import javafx.scene.text.Font;
+
+import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
@@ -24,6 +27,11 @@ public class Clapperboard extends Actor {
         this.number = number;
         this.text = text;
         this.state = CLOSED;
+    }
+
+    @Override
+    public Optional<AnimationManager> animations() {
+        return Optional.empty();
     }
 
     public byte state() {

@@ -8,7 +8,7 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.actors.ActorAnimationMap;
+import de.amr.pacmanfx.model.actors.AnimationManager;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
@@ -85,11 +85,11 @@ public interface GameUI_Config extends Disposable {
 
     GameRenderer createGameRenderer(Canvas canvas);
 
-    ActorAnimationMap createGhostAnimations(Ghost ghost);
+    AnimationManager createGhostAnimations(Ghost ghost);
 
     Node createLivesCounterShape3D();
 
-    ActorAnimationMap createPacAnimations(Pac pac);
+    AnimationManager createPacAnimations(Pac pac);
 
     PacBase3D createPac3D(AnimationRegistry animationMgr, GameLevel gameLevel, Pac pac);
 

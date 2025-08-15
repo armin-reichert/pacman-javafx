@@ -273,13 +273,13 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     }
 
     @Override
-    public TengenMsPacMan_GhostAnimationMap createGhostAnimations(Ghost ghost) {
-        return new TengenMsPacMan_GhostAnimationMap(spriteSheet(), ghost.id().personality());
+    public TengenMsPacMan_GhostAnimationManager createGhostAnimations(Ghost ghost) {
+        return new TengenMsPacMan_GhostAnimationManager(spriteSheet(), ghost.id().personality());
     }
 
     @Override
-    public TengenMsPacMan_PacAnimationMap createPacAnimations(Pac pac) {
-        return new TengenMsPacMan_PacAnimationMap(spriteSheet());
+    public TengenMsPacMan_PacAnimationManager createPacAnimations(Pac pac) {
+        return new TengenMsPacMan_PacAnimationManager(spriteSheet());
     }
 
     @Override

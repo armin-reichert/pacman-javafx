@@ -25,6 +25,7 @@ import javafx.scene.input.KeyEvent;
 import org.tinylog.Logger;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createGhost;
@@ -99,7 +100,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
                     ghost.setMoveDir(ghost.moveDir().opposite());
                     ghost.setWishDir(ghost.moveDir().opposite());
                     ghost.setSpeed(0.58f);
-                    ghost.playAnimation(ANIM_GHOST_FRIGHTENED);
+                    ghost.animations().ifPresent(am -> am.play(ANIM_GHOST_FRIGHTENED));
                 }
             }
             else if (pac.x() > 56 * TS && chasingGhosts) {
@@ -113,18 +114,18 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
                     ghost.setWishDir(Direction.LEFT);
                     ghost.setX(46 * TS + ghost.id().personality() * 2 * TS);
                     ghost.setSpeed(1.05f);
-                    ghost.playAnimation(ANIM_GHOST_NORMAL);
+                    ghost.animations().ifPresent(am -> am.play(ANIM_GHOST_NORMAL));
                 }
             }
             else if (chasingGhosts) {
-                for (int i = 0; i < 4; ++i) {
+                IntStream.range(0, 4).forEach(i -> {
                     if (Math.abs(pac.x() - ghosts.get(i).x()) < 1) {
-                        ghosts.get(i).selectAnimation(ANIM_GHOST_NUMBER, i);
+                        ghosts.get(i).animations().ifPresent(am -> am.selectFrame(ANIM_GHOST_NUMBER, i));
                         if (i > 0) {
                             ghosts.get(i-1).setVisible(false);
                         }
                     }
-                }
+                });
             }
             pac.move();
             for (Ghost ghost : ghosts) {
@@ -148,11 +149,11 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         void setGameConfig(GameUI_Config config) {
             renderer = config.createGameRenderer(ctx.getCanvas());
             pac.setAnimations(config.createPacAnimations(pac));
-            pac.playAnimation(ANIM_PAC_MUNCHING);
+            pac.animations().ifPresent(am -> am.play(ANIM_PAC_MUNCHING));
             for (Ghost ghost : ghosts) {
-                if (ghost.animationMap().isEmpty()) {
+                if (ghost.animations().isEmpty()) {
                     ghost.setAnimations(config.createGhostAnimations(ghost));
-                    ghost.playAnimation(ANIM_GHOST_NORMAL);
+                    ghost.animations().ifPresent(am -> am.play(ANIM_GHOST_NORMAL));
                 }
             }
             start();

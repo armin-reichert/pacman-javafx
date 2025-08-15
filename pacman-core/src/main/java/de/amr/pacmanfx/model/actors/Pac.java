@@ -22,7 +22,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Pac-Man / Ms. Pac-Man.
  */
-public class Pac extends MovingActor implements Animated {
+public class Pac extends MovingActor {
 
     public static final boolean DEFAULT_USING_AUTOPILOT = false;
     public static final boolean DEFAULT_IMMUNITY = false;
@@ -38,7 +38,7 @@ public class Pac extends MovingActor implements Animated {
     private byte restingTicks;
     private long starvingTicks;
     private Steering autopilotSteering;
-    private ActorAnimationMap animationMap;
+    private AnimationManager animations;
 
     /**
      * @param name a readable name. Any honest Pac-Man and Pac-Woman should have a name! Period.
@@ -95,7 +95,7 @@ public class Pac extends MovingActor implements Animated {
         restingTicks = 0;
         starvingTicks = 0;
         corneringSpeedUp = 1.5f; // no real cornering implementation but better than nothing
-        selectAnimation(ANIM_PAC_MUNCHING);
+        animations().ifPresent(am -> am.select(ANIM_PAC_MUNCHING));
     }
 
     public BooleanProperty immuneProperty() {
@@ -169,9 +169,9 @@ public class Pac extends MovingActor implements Animated {
         findMyWayThroughThisCruelWorld(gameContext);
 
         if (moveInfo.moved) {
-            playAnimation();
+            animations().ifPresent(AnimationManager::play);
         } else {
-            stopAnimation();
+            animations().ifPresent(AnimationManager::stop);
         }
     }
 
@@ -181,14 +181,14 @@ public class Pac extends MovingActor implements Animated {
     public void stopAndShowInFullBeauty() {
         setSpeed(0);
         setRestingTicks(INDEFINITELY);
-        stopAnimation();
-        selectAnimation(ANIM_PAC_MUNCHING);
-        resetAnimation();
+        animations().ifPresent(AnimationManager::stop);
+        animations().ifPresent(am -> am.select(ANIM_PAC_MUNCHING));
+        animations().ifPresent(AnimationManager::reset);
     }
 
     public void sayGoodbyeCruelWorld() {
         setSpeed(0);
-        stopAnimation();
+        animations().ifPresent(AnimationManager::stop);
         dead = true;
     }
 
@@ -224,12 +224,11 @@ public class Pac extends MovingActor implements Animated {
         autopilotSteering = requireNonNull(steering);
     }
 
-    public void setAnimations(ActorAnimationMap animationMap) {
-        this.animationMap = requireNonNull(animationMap);
+    public void setAnimations(AnimationManager animations) {
+        this.animations = requireNonNull(animations);
     }
 
-    @Override
-    public Optional<ActorAnimationMap> animationMap() {
-        return Optional.ofNullable(animationMap);
+    public Optional<AnimationManager> animations() {
+        return Optional.ofNullable(animations);
     }
 }

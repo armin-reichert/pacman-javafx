@@ -9,15 +9,15 @@ import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ANIM_BIG_PAC_MAN;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 
-public class ArcadePacMan_PacAnimationMap extends SpriteAnimationMap<SpriteID> {
+public class ArcadePacMan_PacAnimationManager extends SpriteAnimationManager<SpriteID> {
 
-    public ArcadePacMan_PacAnimationMap(ArcadePacMan_SpriteSheet spriteSheet) {
+    public ArcadePacMan_PacAnimationManager(ArcadePacMan_SpriteSheet spriteSheet) {
         super(spriteSheet);
     }
 

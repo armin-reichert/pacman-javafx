@@ -16,7 +16,7 @@ import java.util.List;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createMsPacMan;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.createPacMan;
-import static de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_PacAnimationMap.PAC_MAN_MUNCHING;
+import static de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_PacAnimationManager.PAC_MAN_MUNCHING;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 
@@ -110,10 +110,10 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
     private void enterStateChasing() {
         pacMan.setMoveDir(Direction.RIGHT);
-        pacMan.playAnimation(PAC_MAN_MUNCHING);
+        pacMan.animations().ifPresent(am -> am.play(PAC_MAN_MUNCHING));
 
         msPacMan.setMoveDir(Direction.RIGHT);
-        msPacMan.playAnimation(ANIM_PAC_MUNCHING);
+        msPacMan.animations().ifPresent(am -> am.play(ANIM_PAC_MUNCHING));
 
         setSceneState(STATE_CHASING, TickTimer.INDEFINITE);
     }

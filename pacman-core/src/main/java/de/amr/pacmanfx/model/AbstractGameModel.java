@@ -75,8 +75,8 @@ public abstract class AbstractGameModel implements Game {
     @Override
     public void startHunting() {
         optGameLevel().ifPresent(gameLevel -> {
-            gameLevel.pac().playAnimation();
-            gameLevel.ghosts().forEach(Ghost::playAnimation);
+            gameLevel.pac().animations().ifPresent(AnimationManager::play);
+            gameLevel.ghosts().forEach(ghost -> ghost.animations().ifPresent(AnimationManager::play));
             gameLevel.blinking().setStartPhase(Pulse.ON);
             gameLevel.blinking().restart(Integer.MAX_VALUE);
             huntingTimer().startFirstHuntingPhase(gameLevel.number());
@@ -159,32 +159,32 @@ public abstract class AbstractGameModel implements Game {
 
     protected void resetPacManAndGhostAnimations() {
         optGameLevel().ifPresent(gameLevel -> {
-            gameLevel.pac().selectAnimation(ANIM_PAC_MUNCHING);
-            gameLevel.pac().resetAnimation();
-            gameLevel.ghosts().forEach(ghost -> {
-                ghost.selectAnimation(ANIM_GHOST_NORMAL);
-                ghost.resetAnimation();
+            gameLevel.pac().animations().ifPresent(am -> {
+                am.select(ANIM_PAC_MUNCHING);
+                am.reset();
             });
+            gameLevel.ghosts().forEach(ghost -> ghost.animations().ifPresent(am -> {
+                am.select(ANIM_GHOST_NORMAL);
+                am.reset();
+            }));
         });
     }
 
     protected void checkIfPacManGetsKilled(Pac pac) {
-        optGameLevel().ifPresent(level -> {
-            level.ghosts(GhostState.HUNTING_PAC)
-                .filter(pac::sameTilePosition)
-                .findFirst().ifPresent(killer -> {
-                    boolean killed;
-                    if (level.isDemoLevel()) {
-                        killed = !isPacManSafeInDemoLevel();
-                    } else {
-                        killed = !pac.isImmune();
-                    }
-                    if (killed) {
-                        simulationStep.pacKiller = killer;
-                        simulationStep.pacKilledTile = killer.tile();
-                    }
-                });
-        });
+        optGameLevel().ifPresent(level -> level.ghosts(GhostState.HUNTING_PAC)
+            .filter(pac::sameTilePosition)
+            .findFirst().ifPresent(killer -> {
+                boolean killed;
+                if (level.isDemoLevel()) {
+                    killed = !isPacManSafeInDemoLevel();
+                } else {
+                    killed = !pac.isImmune();
+                }
+                if (killed) {
+                    simulationStep.pacKiller = killer;
+                    simulationStep.pacKilledTile = killer.tile();
+                }
+            }));
     }
 
     protected abstract boolean isPacManSafeInDemoLevel();

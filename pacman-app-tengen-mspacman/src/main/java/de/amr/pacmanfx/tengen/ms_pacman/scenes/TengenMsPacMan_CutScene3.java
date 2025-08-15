@@ -23,7 +23,7 @@ import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.createMsPacMan;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.createPacMan;
-import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PacAnimationMap.ANIM_PAC_MAN_MUNCHING;
+import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PacAnimationManager.ANIM_PAC_MAN_MUNCHING;
 import static de.amr.pacmanfx.ui.CommonGameActions.ACTION_LET_GAME_STATE_EXPIRE;
 
 /**
@@ -94,19 +94,19 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.setPosition(TS * 3, GROUND_Y - 4);
             pacMan.setSpeed(0);
-            pacMan.selectAnimation(ANIM_PAC_MAN_MUNCHING);
+            pacMan.animations().ifPresent(am -> am.select(ANIM_PAC_MAN_MUNCHING));
             pacMan.show();
 
             msPacMan.setMoveDir(Direction.RIGHT);
             msPacMan.setPosition(TS * 5, GROUND_Y - 4);
             msPacMan.setSpeed(0);
-            msPacMan.selectAnimation(ANIM_PAC_MUNCHING);
+            msPacMan.animations().ifPresent(am -> am.select(ANIM_PAC_MUNCHING));
             msPacMan.show();
 
             stork.setPosition(RIGHT_BORDER, TS * 7);
             stork.setVelocity(-0.8f, 0);
             stork.setBagReleasedFromBeak(false);
-            stork.playAnimation("flying");
+            stork.animations().ifPresent(am -> am.play(Stork.ANIM_FLYING));
             stork.show();
         }
         else if (t == 240) {

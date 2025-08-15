@@ -5,26 +5,27 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
 import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.ActorAnimationMap;
-import de.amr.pacmanfx.model.actors.Animated;
+import de.amr.pacmanfx.model.actors.AnimationManager;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 
 import java.util.Optional;
 
 import static de.amr.pacmanfx.tengen.ms_pacman.rendering.SpriteID.STORK;
 
-public class Stork extends Actor implements Animated {
-    private final SpriteAnimationMap<SpriteID> animationMap;
+public class Stork extends Actor {
+
+    public static final String ANIM_FLYING = "flying";
+
+    private final SpriteAnimationManager<SpriteID> spriteAnimations;
     private boolean bagReleasedFromBeak;
 
     public Stork(TengenMsPacMan_SpriteSheet spriteSheet) {
-        animationMap = new SpriteAnimationMap<>(spriteSheet);
-        animationMap.setAnimation("flying",
-            SpriteAnimation.build()
-                .of(spriteSheet.spriteSeq(STORK)).frameTicks(8).forever());
+        spriteAnimations = new SpriteAnimationManager<>(spriteSheet);
+        spriteAnimations.setAnimation(ANIM_FLYING,
+            SpriteAnimation.build().of(spriteSheet.spriteSeq(STORK)).frameTicks(8).forever());
     }
 
     public void setBagReleasedFromBeak(boolean released) {
@@ -36,7 +37,7 @@ public class Stork extends Actor implements Animated {
     }
 
     @Override
-    public Optional<ActorAnimationMap> animationMap() {
-        return Optional.of(animationMap);
+    public Optional<AnimationManager> animations() {
+        return Optional.of(spriteAnimations);
     }
 }

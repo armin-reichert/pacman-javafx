@@ -20,7 +20,7 @@ import java.util.List;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameModel.*;
-import static de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_PacAnimationMap.PAC_MAN_MUNCHING;
+import static de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_PacAnimationManager.PAC_MAN_MUNCHING;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
@@ -138,27 +138,27 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         pacMan.setMoveDir(Direction.RIGHT);
         pacMan.setPosition(TS * (-2), UPPER_LANE_Y);
         pacMan.setSpeed(SPEED_PAC_CHASING);
-        pacMan.playAnimation(PAC_MAN_MUNCHING);
+        pacMan.animations().ifPresent(am -> am.play(PAC_MAN_MUNCHING));
         pacMan.show();
 
         inky.setMoveDir(Direction.RIGHT);
         inky.setWishDir(Direction.RIGHT);
         inky.setPosition(pacMan.x() - 6 * TS, pacMan.y());
         inky.setSpeed(SPEED_GHOST_CHASING);
-        inky.playAnimation(ANIM_GHOST_NORMAL);
+        inky.animations().ifPresent(am -> am.play(ANIM_GHOST_NORMAL));
         inky.show();
 
         msPacMan.setMoveDir(Direction.LEFT);
         msPacMan.setPosition(TS * 30, LOWER_LANE_Y);
         msPacMan.setSpeed(SPEED_PAC_CHASING);
-        msPacMan.playAnimation(ANIM_PAC_MUNCHING);
+        msPacMan.animations().ifPresent(am -> am.play(ANIM_PAC_MUNCHING));
         msPacMan.show();
 
         pinky.setMoveDir(Direction.LEFT);
         pinky.setWishDir(Direction.LEFT);
         pinky.setPosition(msPacMan.x() + 6 * TS, msPacMan.y());
         pinky.setSpeed(SPEED_GHOST_CHASING);
-        pinky.playAnimation(ANIM_GHOST_NORMAL);
+        pinky.animations().ifPresent(am -> am.play(ANIM_GHOST_NORMAL));
         pinky.show();
 
         setState(STATE_CHASED_BY_GHOSTS, TickTimer.INDEFINITE);
@@ -244,13 +244,17 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     private void enterStateInHeaven() {
         pacMan.setSpeed(0);
         pacMan.setMoveDir(Direction.LEFT);
-        pacMan.stopAnimation();
-        pacMan.resetAnimation();
+        pacMan.animations().ifPresent(am -> {
+            am.stop();
+            am.reset();
+        });
 
         msPacMan.setSpeed(0);
         msPacMan.setMoveDir(Direction.RIGHT);
-        msPacMan.stopAnimation();
-        msPacMan.resetAnimation();
+        msPacMan.animations().ifPresent(am -> {
+            am.stop();
+            am.reset();
+        });
 
         inky.hide();
         pinky.hide();

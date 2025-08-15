@@ -9,13 +9,13 @@ import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 
-public class TengenMsPacMan_GhostAnimationMap extends SpriteAnimationMap<SpriteID> {
+public class TengenMsPacMan_GhostAnimationManager extends SpriteAnimationManager<SpriteID> {
 
     public static final int NORMAL_TICKS = 8;  // TODO check this in emulator
     public static final int FRIGHTENED_TICKS = 8;  // TODO check this in emulator
@@ -23,7 +23,7 @@ public class TengenMsPacMan_GhostAnimationMap extends SpriteAnimationMap<SpriteI
 
     private final byte personality;
 
-    public TengenMsPacMan_GhostAnimationMap(TengenMsPacMan_SpriteSheet spriteSheet, byte personality) {
+    public TengenMsPacMan_GhostAnimationManager(TengenMsPacMan_SpriteSheet spriteSheet, byte personality) {
         super(spriteSheet);
         this.personality = requireValidGhostPersonality(personality);
     }
@@ -46,8 +46,8 @@ public class TengenMsPacMan_GhostAnimationMap extends SpriteAnimationMap<SpriteI
     }
 
     @Override
-    public void selectAnimationAtFrame(String id, int frameIndex) {
-        super.selectAnimationAtFrame(id, frameIndex);
+    public void selectFrame(String id, int frameIndex) {
+        super.selectFrame(id, frameIndex);
         if (ANIM_GHOST_NUMBER.equals(id)) {
             animation(ANIM_GHOST_NUMBER).setFrameIndex(frameIndex);
         }

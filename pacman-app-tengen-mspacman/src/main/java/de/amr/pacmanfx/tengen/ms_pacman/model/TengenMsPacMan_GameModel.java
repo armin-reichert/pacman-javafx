@@ -35,7 +35,7 @@ import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 import static de.amr.pacmanfx.model.actors.GhostState.FRIGHTENED;
 import static de.amr.pacmanfx.model.actors.GhostState.HUNTING_PAC;
-import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PacAnimationMap.ANIM_MS_PAC_MAN_BOOSTER;
+import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_PacAnimationManager.ANIM_MS_PAC_MAN_BOOSTER;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -453,17 +453,19 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
 
     @Override
     public void resetPacManAndGhostAnimations() {
-        gameLevel.pac().selectAnimation(boosterActive ? ANIM_MS_PAC_MAN_BOOSTER : ANIM_PAC_MUNCHING);
-        gameLevel.pac().resetAnimation();
-        gameLevel.ghosts().forEach(ghost -> {
-            ghost.selectAnimation(ANIM_GHOST_NORMAL);
-            ghost.resetAnimation();
+        gameLevel.pac().animations().ifPresent(am -> {
+            am.select(boosterActive ? ANIM_MS_PAC_MAN_BOOSTER : ANIM_PAC_MUNCHING);
+            am.reset();
         });
+        gameLevel.ghosts().forEach(ghost -> ghost.animations().ifPresent(am -> {
+            am.select(ANIM_GHOST_NORMAL);
+            am.reset();
+        }));
     }
 
     public void activatePacBooster(boolean state) {
         boosterActive = state;
-        gameLevel.pac().selectAnimation(boosterActive ? ANIM_MS_PAC_MAN_BOOSTER : ANIM_PAC_MUNCHING);
+        gameLevel.pac().animations().ifPresent(am -> am.select(boosterActive ? ANIM_MS_PAC_MAN_BOOSTER : ANIM_PAC_MUNCHING));
     }
 
     @Override
@@ -740,7 +742,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
         int points = 100 * KILLED_GHOST_VALUE_FACTORS[killedSoFar];
         gameLevel.victims().add(ghost);
         ghost.setState(GhostState.EATEN);
-        ghost.selectAnimation(CommonAnimationID.ANIM_GHOST_NUMBER, killedSoFar);
+        ghost.animations().ifPresent(am -> am.selectFrame(CommonAnimationID.ANIM_GHOST_NUMBER, killedSoFar));
         scoreManager.scorePoints(points);
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
     }

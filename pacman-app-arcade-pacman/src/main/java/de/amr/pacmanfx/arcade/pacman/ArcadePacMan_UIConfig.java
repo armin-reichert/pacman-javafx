@@ -180,13 +180,13 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
     }
 
     @Override
-    public ArcadePacMan_GhostAnimationMap createGhostAnimations(Ghost ghost) {
-        return new ArcadePacMan_GhostAnimationMap(spriteSheet, ghost.id().personality());
+    public ArcadePacMan_GhostAnimationManager createGhostAnimations(Ghost ghost) {
+        return new ArcadePacMan_GhostAnimationManager(spriteSheet, ghost.id().personality());
     }
 
     @Override
-    public ArcadePacMan_PacAnimationMap createPacAnimations(Pac pac) {
-        return new ArcadePacMan_PacAnimationMap(spriteSheet);
+    public ArcadePacMan_PacAnimationManager createPacAnimations(Pac pac) {
+        return new ArcadePacMan_PacAnimationManager(spriteSheet);
     }
 
     @Override

@@ -11,6 +11,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.fsm.FsmState;
 import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.timer.TickTimer;
+import de.amr.pacmanfx.model.actors.AnimationManager;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -99,10 +100,11 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         numTicksBeforeRising = 0;
 
         msPacMan.setAnimations(ui.currentConfig().createPacAnimations(msPacMan));
-        msPacMan.selectAnimation(ANIM_PAC_MUNCHING);
+        msPacMan.animations().ifPresent(am -> am.select(ANIM_PAC_MUNCHING));
         for (Ghost ghost : ghosts) {
-            ghost.setAnimations(ui.currentConfig().createGhostAnimations(ghost));
-            ghost.selectAnimation(ANIM_GHOST_NORMAL);
+            AnimationManager animations = ui.currentConfig().createGhostAnimations(ghost);
+            ghost.setAnimations(animations);
+            animations.select(ANIM_GHOST_NORMAL);
         }
         sceneController.restart(SceneState.STARTING);
     }
@@ -164,7 +166,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                 scene.msPacMan.setMoveDir(Direction.LEFT);
                 scene.msPacMan.setSpeed(ACTOR_SPEED);
                 scene.msPacMan.setVisible(true);
-                scene.msPacMan.playAnimation(ANIM_PAC_MUNCHING);
+                scene.msPacMan.animations().ifPresent(am -> am.play(ANIM_PAC_MUNCHING));
                 for (Ghost ghost : scene.ghosts) {
                     ghost.setPosition(TS * 33.5f, TS * 20);
                     ghost.setMoveDir(Direction.LEFT);
@@ -172,7 +174,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                     ghost.setSpeed(ACTOR_SPEED);
                     ghost.setState(GhostState.HUNTING_PAC);
                     ghost.setVisible(true);
-                    ghost.playAnimation(ANIM_GHOST_NORMAL);
+                    ghost.animations().ifPresent(am -> am.play(ANIM_GHOST_NORMAL));
                 }
                 scene.presentedGhostCharacter = RED_GHOST_SHADOW;
             }
@@ -219,8 +221,10 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                     }
                     else if (ghost.y() <= endPositionY) {
                         ghost.setSpeed(0);
-                        ghost.stopAnimation();
-                        ghost.resetAnimation();
+                        ghost.animations().ifPresent(am -> {
+                            am.stop();
+                            am.reset();
+                        });
                         return true;
                     }
                     else {
@@ -238,7 +242,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                 scene.msPacMan.move();
                 if (scene.msPacMan.x() <= STOP_X_MS_PACMAN) {
                     scene.msPacMan.setSpeed(0);
-                    scene.msPacMan.resetAnimation();
+                    scene.msPacMan.animations().ifPresent(AnimationManager::reset);
                     scene.sceneController.changeState(READY_TO_PLAY);
                 }
             }
