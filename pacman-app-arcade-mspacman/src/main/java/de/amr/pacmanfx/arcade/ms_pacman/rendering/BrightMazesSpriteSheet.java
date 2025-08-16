@@ -19,7 +19,7 @@ public record BrightMazesSpriteSheet(Image sourceImage) implements SpriteSheet<B
     private static final SpriteMap<SpriteID> SPRITE_MAP = new SpriteMap<>(SpriteID.class);
 
     static {
-        SPRITE_MAP.addSpriteSequence(SpriteID.BRIGHT_MAZES,
+        SPRITE_MAP.add(SpriteID.BRIGHT_MAZES,
             rect(0, 0, 224, 248),
             rect(0, 248, 224, 248),
             rect(0, 2 * 248, 224, 248),

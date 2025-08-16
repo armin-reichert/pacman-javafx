@@ -108,11 +108,13 @@ public class ArcadePacMan_GhostAnimationManager extends SpriteAnimationManager<S
     }
 
     private RectShort[] ghostEyesSprites(Direction dir) {
-        return spriteSheet().spriteSequence(switch (dir) {
-            case Direction.RIGHT -> GHOST_EYES_RIGHT;
-            case Direction.LEFT  -> GHOST_EYES_LEFT;
-            case Direction.UP    -> GHOST_EYES_UP;
-            case Direction.DOWN  -> GHOST_EYES_DOWN;
-        });
+        return new RectShort[] {
+            switch (dir) {
+                case RIGHT -> spriteSheet.sprite(SpriteID.GHOST_EYES_RIGHT);
+                case LEFT  -> spriteSheet.sprite(SpriteID.GHOST_EYES_LEFT);
+                case UP    -> spriteSheet.sprite(SpriteID.GHOST_EYES_UP);
+                case DOWN  -> spriteSheet.sprite(SpriteID.GHOST_EYES_DOWN);
+            }
+        };
     }
 }

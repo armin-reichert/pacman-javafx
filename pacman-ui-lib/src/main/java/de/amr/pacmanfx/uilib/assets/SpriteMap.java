@@ -23,6 +23,7 @@ public class SpriteMap<SID extends Enum<SID>> {
     sealed interface SpriteData permits SingleSprite, SpriteSequence {}
 
     record SingleSprite(RectShort rect) implements SpriteData {}
+
     record SpriteSequence(RectShort[] sequence) implements SpriteData {}
 
     private final Class<SID> idEnumClass;
@@ -58,12 +59,13 @@ public class SpriteMap<SID extends Enum<SID>> {
         };
     }
 
-    public final void addSprite(SID id, RectShort sprite) {
-        data.put(id, new SingleSprite(sprite));
-    }
-
-    public final void addSpriteSequence(SID id, RectShort... sprites) {
-        data.put(id, new SpriteSequence(sprites));
+    public final void add(SID id, RectShort... sprites) {
+        requireNonNull(sprites, "Sprite list is null! WTF?");
+        if (sprites.length == 1) {
+            data.put(id, new SingleSprite(sprites[0]));
+        } else {
+            data.put(id, new SpriteSequence(sprites));
+        }
     }
 
     public final void checkCompleteness() {
