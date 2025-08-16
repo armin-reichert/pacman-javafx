@@ -25,16 +25,18 @@ import java.util.Optional;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_WHITE;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_YELLOW;
+import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
 public class ArcadePacMan_GameRenderer extends GameRenderer {
 
+    protected final GameAssets assets;
     protected ArcadePacMan_SpriteSheet spriteSheet;
 
     public ArcadePacMan_GameRenderer(GameAssets assets, Canvas canvas, ArcadePacMan_SpriteSheet spriteSheet) {
-        super(assets);
+        this.assets = requireNonNull(assets);
+        this.spriteSheet = requireNonNull(spriteSheet);
         setCanvas(canvas);
-        this.spriteSheet = spriteSheet;
     }
 
     @Override
@@ -44,7 +46,7 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
     public void drawHUD(GameContext gameContext, HUDData data, Vector2f sceneSize, long tick) {
         if (!data.isVisible()) return;
 
-        Font font8 = assets().arcadeFont(scaled(8));
+        Font font8 = assets.arcadeFont(scaled(8));
         if (data.isScoreVisible()) {
             drawScore(gameContext.game().scoreManager().score(), "SCORE", ARCADE_WHITE, font8, TS(1), TS(1));
             drawScore(gameContext.game().scoreManager().highScore(), "HIGH SCORE", ARCADE_WHITE, font8, TS(14), TS(1));

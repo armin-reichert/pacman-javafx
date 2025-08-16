@@ -54,6 +54,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
 
     private final ObjectProperty<Color> backgroundColorProperty = new SimpleObjectProperty<>(Color.BLACK);
 
+    private final GameAssets assets;
     private final TengenMsPacMan_SpriteSheet spriteSheet;
     private final TengenMsPacMan_MapRepository mapRepository;
     private ColoredMazeSpriteSet mazeSpriteSet;
@@ -64,11 +65,11 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
         TengenMsPacMan_MapRepository mapRepository,
         Canvas canvas)
     {
-        super(assets);
-        setCanvas(canvas);
-        ctx().setImageSmoothing(false);
+        this.assets = requireNonNull(assets);
         this.spriteSheet = requireNonNull(spriteSheet);
         this.mapRepository = requireNonNull(mapRepository);
+        setCanvas(canvas);
+        ctx().setImageSmoothing(false);
     }
 
     @Override

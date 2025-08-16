@@ -10,7 +10,6 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.HUDData;
 import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.ui.GameAssets;
 import de.amr.pacmanfx.uilib.animation.SingleSpriteNoAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -28,14 +27,6 @@ import static java.util.Objects.requireNonNull;
  * Common base class of all 2D game renderers.
  */
 public abstract class GameRenderer extends BaseRenderer implements DebugInfoRenderer {
-
-    protected final GameAssets assets;
-
-    protected GameRenderer(GameAssets assets) {
-        this.assets = requireNonNull(assets);
-    }
-
-    public GameAssets assets() { return assets; }
 
     public abstract Optional<SpriteSheet<?>> optSpriteSheet();
 

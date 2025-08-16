@@ -32,6 +32,7 @@ import static java.util.function.Predicate.not;
 
 public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
 
+    protected GameAssets assets;
     protected ArcadeMsPacMan_SpriteSheet spriteSheet;
     protected BrightMazesSpriteSheet brightMazesSpriteSheet;
 
@@ -41,10 +42,10 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
         ArcadeMsPacMan_SpriteSheet spriteSheet,
         BrightMazesSpriteSheet brightMazesSpriteSheet)
     {
-        super(assets);
+        this.assets = requireNonNull(assets);
+        this.spriteSheet = requireNonNull(spriteSheet);
+        this.brightMazesSpriteSheet = requireNonNull(brightMazesSpriteSheet);
         setCanvas(canvas);
-        this.spriteSheet = spriteSheet;
-        this.brightMazesSpriteSheet = brightMazesSpriteSheet;
     }
 
     protected ArcadeMsPacMan_GameRenderer(GameAssets assets, Canvas canvas, ArcadeMsPacMan_SpriteSheet spriteSheet) {
