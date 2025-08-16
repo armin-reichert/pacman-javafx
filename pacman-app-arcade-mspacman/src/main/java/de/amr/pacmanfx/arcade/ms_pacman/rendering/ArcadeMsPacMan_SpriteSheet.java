@@ -86,16 +86,16 @@ public record ArcadeMsPacMan_SpriteSheet(Image sourceImage) implements SpriteShe
         SPRITE_MAP.addSpriteSequence(GHOST_NUMBERS,            tilesRightOf(0, 8, 4));
         SPRITE_MAP.addSpriteSequence(BONUS_SYMBOLS,            tilesRightOf(3, 0, 7));
         SPRITE_MAP.addSpriteSequence(BONUS_VALUES,             tilesRightOf(3, 1, 7));
-        SPRITE_MAP.addSpriteSequence(LIVES_COUNTER_SYMBOL,     tile(1, 0));
+        SPRITE_MAP.addSprite(LIVES_COUNTER_SYMBOL,             tile(1, 0));
         SPRITE_MAP.addSpriteSequence(STORK,                    rect(489, 176, 32, 16), rect(521, 176, 32, 16));
         SPRITE_MAP.addSpriteSequence(CLAPPERBOARD,
             rect(456, 208, 32, 32),  // open
             rect(488, 208, 32, 32),  // middle
             rect(520, 208, 32, 32)   // closed
         );
-        SPRITE_MAP.addSpriteSequence(HEART,                    tile(2, 10));
-        SPRITE_MAP.addSpriteSequence(BLUE_BAG,                 rect(488, 199, 8, 8));
-        SPRITE_MAP.addSpriteSequence(JUNIOR_PAC,               rect(509, 200, 8, 8));
+        SPRITE_MAP.addSprite(HEART,                            tile(2, 10));
+        SPRITE_MAP.addSprite(BLUE_BAG,                         rect(488, 199, 8, 8));
+        SPRITE_MAP.addSprite(JUNIOR_PAC,                       rect(509, 200, 8, 8));
 
         SPRITE_MAP.checkCompleteness();
     }

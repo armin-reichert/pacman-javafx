@@ -61,43 +61,43 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
         renderer().drawBar(nesPaletteColor(0x20), nesPaletteColor(0x13), barWidth, 212);
         int y = 7 * TS;
         if (gameContext().gameState().timer().betweenSeconds(0.5 * DISPLAY_SECONDS, DISPLAY_SECONDS)) {
-            renderer().fillTextAtScaledPosition("CREDITS FOR JAVAFX REMAKE", nesPaletteColor(0x20), 3 * TS, y);
+            renderer().fillText("CREDITS FOR JAVAFX REMAKE", nesPaletteColor(0x20), 3 * TS, y);
             y += 4 * TS;
-            renderer().fillTextAtScaledPosition("GAME PROGRAMMER:", nesPaletteColor(0x23), 4 * TS, y);
+            renderer().fillText("GAME PROGRAMMER:", nesPaletteColor(0x23), 4 * TS, y);
             y += 2 * TS;
-            renderer().fillTextAtScaledPosition("ARMIN REICHERT", nesPaletteColor(0x23), 10 * TS, y);
+            renderer().fillText("ARMIN REICHERT", nesPaletteColor(0x23), 10 * TS, y);
             y += 3 * TS;
-            renderer().fillTextAtScaledPosition("SPECIAL THANKS:", nesPaletteColor(0x23), 4 * TS, y);
+            renderer().fillText("SPECIAL THANKS:", nesPaletteColor(0x23), 4 * TS, y);
             y += 2 * TS;
-            renderer().fillTextAtScaledPosition("@RUSSIANMANSMWC", nesPaletteColor(0x23), 10 * TS, y);
+            renderer().fillText("@RUSSIANMANSMWC", nesPaletteColor(0x23), 10 * TS, y);
             y += TS;
-            renderer().fillTextAtScaledPosition("@FLICKY1211", nesPaletteColor(0x23), 10 * TS, y);
+            renderer().fillText("@FLICKY1211", nesPaletteColor(0x23), 10 * TS, y);
             y += TS;
-            renderer().fillTextAtScaledPosition("ANDYANA JONSEPH", nesPaletteColor(0x23), 10 * TS, y);
+            renderer().fillText("ANDYANA JONSEPH", nesPaletteColor(0x23), 10 * TS, y);
             y += 3 * TS;
-            renderer().fillTextAtScaledPosition("GITHUB.COM/ARMIN-REICHERT", nesPaletteColor(0x19), 3 * TS, y);
+            renderer().fillText("GITHUB.COM/ARMIN-REICHERT", nesPaletteColor(0x19), 3 * TS, y);
             y += TS;
-            renderer().fillTextAtScaledPosition("©2024 MIT LICENSE", nesPaletteColor(0x19), 6 * TS, y);
+            renderer().fillText("©2024 MIT LICENSE", nesPaletteColor(0x19), 6 * TS, y);
             y += TS;
-            renderer().fillTextAtScaledPosition("ALL RIGHTS GRANTED", nesPaletteColor(0x19), 5 * TS, y);
+            renderer().fillText("ALL RIGHTS GRANTED", nesPaletteColor(0x19), 5 * TS, y);
         } else {
-            renderer().fillTextAtScaledPosition("CREDITS FOR MS PAC-MAN", nesPaletteColor(0x20), 3 * TS, y);
+            renderer().fillText("CREDITS FOR MS PAC-MAN", nesPaletteColor(0x20), 3 * TS, y);
             y += 4 * TS;
-            renderer().fillTextAtScaledPosition("GAME PROGRAMMER:", nesPaletteColor(0x23), 4 * TS, y);
+            renderer().fillText("GAME PROGRAMMER:", nesPaletteColor(0x23), 4 * TS, y);
             y += 2 * TS;
-            renderer().fillTextAtScaledPosition("FRANZ LANZINGER", nesPaletteColor(0x23), 10 * TS, y);
+            renderer().fillText("FRANZ LANZINGER", nesPaletteColor(0x23), 10 * TS, y);
             y += 3 * TS;
-            renderer().fillTextAtScaledPosition("SPECIAL THANKS:", nesPaletteColor(0x23), 4 * TS, y);
+            renderer().fillText("SPECIAL THANKS:", nesPaletteColor(0x23), 4 * TS, y);
             y += 2 * TS;
-            renderer().fillTextAtScaledPosition("JEFF YONAN", nesPaletteColor(0x23), 10 * TS, y);
+            renderer().fillText("JEFF YONAN", nesPaletteColor(0x23), 10 * TS, y);
             y += TS;
-            renderer().fillTextAtScaledPosition("DAVE O'RIVA", nesPaletteColor(0x23), 10 * TS, y);
+            renderer().fillText("DAVE O'RIVA", nesPaletteColor(0x23), 10 * TS, y);
             y += 4 * TS;
-            renderer().fillTextAtScaledPosition("MS PAC-MAN TM NAMCO LTD", nesPaletteColor(0x19), 5 * TS, y);
+            renderer().fillText("MS PAC-MAN TM NAMCO LTD", nesPaletteColor(0x19), 5 * TS, y);
             y += TS;
-            renderer().fillTextAtScaledPosition("©1990 TENGEN INC", nesPaletteColor(0x19), 7 * TS, y);
+            renderer().fillText("©1990 TENGEN INC", nesPaletteColor(0x19), 7 * TS, y);
             y += TS;
-            renderer().fillTextAtScaledPosition("ALL RIGHTS RESERVED", nesPaletteColor(0x19), 6 * TS, y);
+            renderer().fillText("ALL RIGHTS RESERVED", nesPaletteColor(0x19), 6 * TS, y);
         }
     }
 }

@@ -12,6 +12,7 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
+import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
@@ -60,13 +61,13 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        gameRenderer.ctx().setFill(ARCADE_ORANGE);
-        gameRenderer.ctx().setFont(scaledArcadeFont8());
-        gameRenderer.fillTextAtScaledPosition("PUSH START BUTTON", TS*6, TS*16);
-        gameRenderer.fillTextAtScaledPosition("1 PLAYER ONLY", TS*8, TS*18);
-        gameRenderer.fillTextAtScaledPosition("ADDITIONAL    AT 10000", TS*2, TS*25);
-        gameRenderer.drawSpriteScaled(livesCounterSprite, TS*13, TS*23 + 1);
-        gameRenderer.fillTextAtScaledPosition("PTS", scaledArcadeFont6(), TS*25, TS*25);
+        Font font6 = scaledArcadeFont6();
+        Font font8 = scaledArcadeFont8();
+        gameRenderer.fillText("PUSH START BUTTON", ARCADE_ORANGE, font8, TS(6), TS(16));
+        gameRenderer.fillText("1 PLAYER ONLY", ARCADE_ORANGE, font8, TS(8), TS(18));
+        gameRenderer.fillText("ADDITIONAL    AT 10000", ARCADE_ORANGE, font8,TS(2), TS(25));
+        gameRenderer.drawSpriteScaled(livesCounterSprite, TS(13), TS(23) + 1);
+        gameRenderer.fillText("PTS", ARCADE_ORANGE, font6, TS(25), TS(25));
         gameRenderer.drawActor(midwayCopyright);
     }
 }

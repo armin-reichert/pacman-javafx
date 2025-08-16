@@ -131,7 +131,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     @Override
     public void drawSceneContent() {
         gameRenderer.ctx().setFont(scaledArcadeFont8());
-        gameRenderer.fillTextAtScaledPosition(TITLE, ARCADE_ORANGE, TITLE_X, TITLE_Y);
+        gameRenderer.fillText(TITLE, ARCADE_ORANGE, TITLE_X, TITLE_Y);
         gameRenderer.drawActor(marquee);
         ghosts.forEach(gameRenderer::drawActor);
         gameRenderer.drawActor(msPacMan);
@@ -140,15 +140,15 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                 String ghostName = GHOST_NAMES[presentedGhostCharacter];
                 Color ghostColor = GHOST_COLORS[presentedGhostCharacter];
                 if (presentedGhostCharacter == RED_GHOST_SHADOW) {
-                    gameRenderer.fillTextAtScaledPosition("WITH", ARCADE_WHITE, TITLE_X, TOP_Y + TS(3));
+                    gameRenderer.fillText("WITH", ARCADE_WHITE, TITLE_X, TOP_Y + TS(3));
                 }
                 double x = TITLE_X + (ghostName.length() < 4 ? TS(4) : TS(3));
                 double y = TOP_Y + TS(6);
-                gameRenderer.fillTextAtScaledPosition(ghostName, ghostColor, x, y);
+                gameRenderer.fillText(ghostName, ghostColor, x, y);
             }
             case MS_PACMAN_MARCHING_IN, READY_TO_PLAY -> {
-                gameRenderer.fillTextAtScaledPosition("STARRING", ARCADE_WHITE, TITLE_X, TOP_Y + TS(3));
-                gameRenderer.fillTextAtScaledPosition("MS PAC-MAN", ARCADE_YELLOW, TITLE_X, TOP_Y + TS(6));
+                gameRenderer.fillText("STARRING", ARCADE_WHITE, TITLE_X, TOP_Y + TS(3));
+                gameRenderer.fillText("MS PAC-MAN", ARCADE_YELLOW, TITLE_X, TOP_Y + TS(6));
             }
         }
         gameRenderer.drawActor(midwayCopyright);

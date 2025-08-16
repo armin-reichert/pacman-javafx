@@ -254,43 +254,43 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
         renderer().drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), sizeInPx().x(), 20);
         renderer().drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), sizeInPx().x(), 212);
-        renderer().fillTextAtScaledPosition("MS PAC-MAN OPTIONS", NES_YELLOW, COL_LABEL + 3 * TS, 48);
+        renderer().fillText("MS PAC-MAN OPTIONS", NES_YELLOW, COL_LABEL + 3 * TS, 48);
 
         // Players (not implemented)
         drawMarkerIfSelected(OPTION_PLAYERS, 72, scaledArcadeFont8());
-        renderer().fillTextAtScaledPosition("TYPE", NES_YELLOW, COL_LABEL, 72);
-        renderer().fillTextAtScaledPosition(":", NES_YELLOW, COL_LABEL + 4 * TS + 4, 72);
+        renderer().fillText("TYPE", NES_YELLOW, COL_LABEL, 72);
+        renderer().fillText(":", NES_YELLOW, COL_LABEL + 4 * TS + 4, 72);
         // grey out
-        renderer().fillTextAtScaledPosition("1 PLAYER", nesPaletteColor(0x10), COL_LABEL + 6 * TS  , 72);
+        renderer().fillText("1 PLAYER", nesPaletteColor(0x10), COL_LABEL + 6 * TS  , 72);
 
         // Pac-Booster
         drawMarkerIfSelected(OPTION_PAC_BOOSTER, 96, scaledArcadeFont8());
-        renderer().fillTextAtScaledPosition("PAC BOOSTER", NES_YELLOW, COL_LABEL, 96);
-        renderer().fillTextAtScaledPosition(":", NES_YELLOW, COL_COLON, 96);
+        renderer().fillText("PAC BOOSTER", NES_YELLOW, COL_LABEL, 96);
+        renderer().fillText(":", NES_YELLOW, COL_COLON, 96);
         String pacBoosterText = switch (theGame().pacBooster()) {
             case OFF -> "OFF";
             case ALWAYS_ON -> "ALWAYS ON";
             case USE_A_OR_B -> "USE A OR B";
         };
-        renderer().fillTextAtScaledPosition(pacBoosterText, NES_WHITE, COL_VALUE, 96);
+        renderer().fillText(pacBoosterText, NES_WHITE, COL_VALUE, 96);
 
         // Game difficulty
         drawMarkerIfSelected(OPTION_DIFFICULTY, 120, scaledArcadeFont8());
-        renderer().fillTextAtScaledPosition("GAME DIFFICULTY", NES_YELLOW, COL_LABEL, 120);
-        renderer().fillTextAtScaledPosition(":", NES_YELLOW, COL_COLON, 120);
-        renderer().fillTextAtScaledPosition(theGame().difficulty().name(), NES_WHITE, COL_VALUE, 120);
+        renderer().fillText("GAME DIFFICULTY", NES_YELLOW, COL_LABEL, 120);
+        renderer().fillText(":", NES_YELLOW, COL_COLON, 120);
+        renderer().fillText(theGame().difficulty().name(), NES_WHITE, COL_VALUE, 120);
 
         // Maze (type) selection
         drawMarkerIfSelected(OPTION_MAZE_SELECTION, 144, scaledArcadeFont8());
-        renderer().fillTextAtScaledPosition("MAZE SELECTION", NES_YELLOW, COL_LABEL, 144);
-        renderer().fillTextAtScaledPosition(":", NES_YELLOW, COL_COLON, 144);
-        renderer().fillTextAtScaledPosition(theGame().mapCategory().name(), NES_WHITE, COL_VALUE, 144);
+        renderer().fillText("MAZE SELECTION", NES_YELLOW, COL_LABEL, 144);
+        renderer().fillText(":", NES_YELLOW, COL_COLON, 144);
+        renderer().fillText(theGame().mapCategory().name(), NES_WHITE, COL_VALUE, 144);
 
         // Starting level number
         drawMarkerIfSelected(OPTION_STARTING_LEVEL, 168, scaledArcadeFont8());
-        renderer().fillTextAtScaledPosition("STARTING LEVEL", NES_YELLOW, COL_LABEL, 168);
-        renderer().fillTextAtScaledPosition(":", NES_YELLOW, COL_COLON, 168);
-        renderer().fillTextAtScaledPosition(String.valueOf(theGame().startLevelNumber()), NES_WHITE, COL_VALUE, 168);
+        renderer().fillText("STARTING LEVEL", NES_YELLOW, COL_LABEL, 168);
+        renderer().fillText(":", NES_YELLOW, COL_COLON, 168);
+        renderer().fillText(String.valueOf(theGame().startLevelNumber()), NES_WHITE, COL_VALUE, 168);
         if (theGame().numContinues() < 4) {
             var spriteSheet = (TengenMsPacMan_SpriteSheet) ui.currentConfig().spriteSheet();
             RectShort continuesSprite = spriteSheet.sprite(switch (theGame().numContinues()) {
@@ -303,16 +303,16 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
             renderer().drawSpriteScaled(continuesSprite, COL_VALUE + 3 * TS, 160);
         }
 
-        renderer().fillTextAtScaledPosition("MOVE ARROW WITH JOYPAD", NES_YELLOW, 4 * TS,  192);
-        renderer().fillTextAtScaledPosition("CHOOSE OPTIONS WITH A AND B", NES_YELLOW, 2 * TS,  200);
-        renderer().fillTextAtScaledPosition("PRESS START TO START GAME", NES_YELLOW, 3 * TS,  208);
+        renderer().fillText("MOVE ARROW WITH JOYPAD", NES_YELLOW, 4 * TS,  192);
+        renderer().fillText("CHOOSE OPTIONS WITH A AND B", NES_YELLOW, 2 * TS,  200);
+        renderer().fillText("PRESS START TO START GAME", NES_YELLOW, 3 * TS,  208);
     }
 
     private void drawMarkerIfSelected(int optionIndex, double y, Font font) {
         if (selectedOption() == optionIndex) {
             gameRenderer.ctx().setFill(NES_YELLOW);
             gameRenderer.ctx().fillRect(scaled(COL_ARROW + 2.25), scaled(y - 4.5), scaled(7.5), scaled(1.75));
-            renderer().fillTextAtScaledPosition(">", NES_YELLOW, font, COL_ARROW + 3, y);
+            renderer().fillText(">", NES_YELLOW, font, COL_ARROW + 3, y);
         }
     }
 }

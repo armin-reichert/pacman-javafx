@@ -143,7 +143,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
         }
         if (lifeCount > livesCounter.maxLivesDisplayed()) {
             Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
-            fillTextAtScaledPosition("(%d)".formatted(lifeCount), nesPaletteColor(0x28), font, x + TS(10), y + TS);
+            fillText("(%d)".formatted(lifeCount), nesPaletteColor(0x28), font, x + TS(10), y + TS);
         }
     }
 
@@ -355,17 +355,17 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
         String ans = config.assetNamespace();
         switch (level.messageType()) {
             case GameLevel.MESSAGE_READY
-                -> fillTextAtScaledCenter("READY!", assets.color(ans + ".color.ready_message"), font, x, y);
+                -> fillTextCentered("READY!", assets.color(ans + ".color.ready_message"), font, x, y);
             case GameLevel.MESSAGE_GAME_OVER -> {
                 Color color = assets.color(ans + ".color.game_over_message");
                 if (level.isDemoLevel()) {
                     NES_ColorScheme nesColorScheme = level.worldMap().getConfigValue("nesColorScheme");
                     color = Color.web(nesColorScheme.strokeColorRGB());
                 }
-                fillTextAtScaledCenter("GAME OVER", color, font, x, y);
+                fillTextCentered("GAME OVER", color, font, x, y);
             }
             case GameLevel.MESSAGE_TEST
-                -> fillTextAtScaledCenter("TEST L%02d".formatted(level.number()), nesPaletteColor(0x28), font, x, y);
+                -> fillTextCentered("TEST L%02d".formatted(level.number()), nesPaletteColor(0x28), font, x, y);
         }
     }
 

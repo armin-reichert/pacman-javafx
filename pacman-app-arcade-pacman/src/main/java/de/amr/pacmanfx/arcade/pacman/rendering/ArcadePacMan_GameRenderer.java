@@ -44,11 +44,10 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
     public void drawHUD(GameContext gameContext, HUDData data, Vector2f sceneSize, long tick) {
         if (!data.isVisible()) return;
 
+        Font font8 = assets().arcadeFont(scaled(8));
         if (data.isScoreVisible()) {
-            ctx().setFont(assets().arcadeFont(scaled(8)));
-            ctx().setFill((ARCADE_WHITE));
-            drawScore(gameContext.game().scoreManager().score(), "SCORE", TS(1), TS(1));
-            drawScore(gameContext.game().scoreManager().highScore(), "HIGH SCORE", TS(14), TS(1));
+            drawScore(gameContext.game().scoreManager().score(), "SCORE", ARCADE_WHITE, font8, TS(1), TS(1));
+            drawScore(gameContext.game().scoreManager().highScore(), "HIGH SCORE", ARCADE_WHITE, font8, TS(14), TS(1));
         }
 
         if (data.isLevelCounterVisible()) {
@@ -71,22 +70,22 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
             if (gameContext.game().lifeCount() > livesCounter.maxLivesDisplayed()) {
                 // show text indicating that more lives are available than symbols displayed (cheating may cause this)
                 Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
-                fillTextAtScaledPosition("%d".formatted(gameContext.game().lifeCount()), ARCADE_YELLOW, font, x - 14, y + TS);
+                fillText("%d".formatted(gameContext.game().lifeCount()), ARCADE_YELLOW, font, x - 14, y + TS);
             }
         }
 
         if (data.isCreditVisible()) {
             String text = "CREDIT %2d".formatted(gameContext.coinMechanism().numCoins());
             Font font = assets.arcadeFont(scaled(8));
-            fillTextAtScaledPosition(text, ARCADE_WHITE, font, TS(2), sceneSize.y());
+            fillText(text, ARCADE_WHITE, font, TS(2), sceneSize.y());
         }
     }
 
-    private void drawScore(Score score, String title, double x, double y) {
-        fillTextAtScaledPosition(title, x, y);
-        fillTextAtScaledPosition("%7s".formatted("%02d".formatted(score.points())), x, y + TS + 1);
+    private void drawScore(Score score, String title, Color color, Font font, double x, double y) {
+        fillText(title, color, font, x, y);
+        fillText("%7s".formatted("%02d".formatted(score.points())), color, font, x, y + TS + 1);
         if (score.points() != 0) {
-            fillTextAtScaledPosition("L" + score.levelNumber(), x + TS(8), y + TS + 1);
+            fillText("L" + score.levelNumber(), color, font, x + TS(8), y + TS + 1);
         }
     }
 

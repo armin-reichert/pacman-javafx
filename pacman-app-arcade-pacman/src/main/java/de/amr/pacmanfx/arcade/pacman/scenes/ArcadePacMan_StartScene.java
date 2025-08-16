@@ -9,7 +9,9 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
+import javafx.scene.text.Font;
 
+import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.ui.CommonGameActions.ACTION_ARCADE_INSERT_COIN;
 import static de.amr.pacmanfx.ui.CommonGameActions.ACTION_ARCADE_START_GAME;
@@ -48,10 +50,11 @@ public class ArcadePacMan_StartScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        gameRenderer.fillTextAtScaledTilePosition("PUSH START BUTTON", ARCADE_ORANGE, scaledArcadeFont8(), 6, 17);
-        gameRenderer.fillTextAtScaledTilePosition("1 PLAYER ONLY", ARCADE_CYAN, scaledArcadeFont8(), 8, 21);
-        gameRenderer.fillTextAtScaledTilePosition("BONUS PAC-MAN FOR 10000", ARCADE_ROSE, scaledArcadeFont8(), 1, 25);
-        gameRenderer.fillTextAtScaledTilePosition("PTS", ARCADE_ROSE, scaledArcadeFont6(), 25, 25);
-        gameRenderer.fillTextAtScaledTilePosition("© 1980 MIDWAY MFG.CO.", ARCADE_PINK, scaledArcadeFont8(), 4, 29);
+        Font font = scaledArcadeFont8();
+        gameRenderer.fillText("PUSH START BUTTON", ARCADE_ORANGE, font,     TS(6),  TS(17));
+        gameRenderer.fillText("1 PLAYER ONLY", ARCADE_CYAN, font,           TS(8),  TS(21));
+        gameRenderer.fillText("BONUS PAC-MAN FOR 10000", ARCADE_ROSE, font, TS(1),  TS(25));
+        gameRenderer.fillText("PTS", ARCADE_ROSE, scaledArcadeFont6(),      TS(25), TS(25));
+        gameRenderer.fillText("© 1980 MIDWAY MFG.CO.", ARCADE_PINK, font,   TS(4),  TS(29));
     }
 }

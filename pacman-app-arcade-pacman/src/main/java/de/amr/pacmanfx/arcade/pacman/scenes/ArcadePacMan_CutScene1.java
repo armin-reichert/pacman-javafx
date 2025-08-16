@@ -112,6 +112,6 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     protected void drawDebugInfo() {
         super.drawDebugInfo();
         String text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
-        gameRenderer.fillTextAtScaledPosition(text, debugTextFill, debugTextFont, TS(1), TS(5));
+        gameRenderer.fillText(text, debugTextFill, debugTextFont, TS(1), TS(5));
     }
 }

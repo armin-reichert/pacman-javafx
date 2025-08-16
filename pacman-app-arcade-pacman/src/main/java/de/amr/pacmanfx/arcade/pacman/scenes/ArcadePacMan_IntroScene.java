@@ -129,12 +129,12 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 drawPoints();
                 drawBlinkingEnergizer(TS(LEFT_TILE_X), TS(20));
                 drawGuys(true);
-                gameRenderer.fillTextAtScaledTilePosition(MIDWAY_MFG_CO, ARCADE_PINK, scaledArcadeFont8(), 4, 32);
+                gameRenderer.fillText(MIDWAY_MFG_CO, ARCADE_PINK, scaledArcadeFont8(), TS(4), TS(32));
             }
             case CHASING_GHOSTS, READY_TO_PLAY -> {
                 drawPoints();
                 drawGuys(false);
-                gameRenderer.fillTextAtScaledTilePosition(MIDWAY_MFG_CO, ARCADE_PINK, scaledArcadeFont8(), 4, 32);
+                gameRenderer.fillText(MIDWAY_MFG_CO, ARCADE_PINK, scaledArcadeFont8(), TS(4), TS(32));
             }
         }
     }
@@ -143,7 +143,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         @SuppressWarnings("unchecked") SpriteSheet<SpriteID> spriteSheet = (SpriteSheet<SpriteID>) ui.currentConfig().spriteSheet();
         gameRenderer.ctx().setFont(scaledArcadeFont8());
         if (titleVisible) {
-            gameRenderer.fillTextAtScaledPosition("CHARACTER / NICKNAME", ARCADE_WHITE,
+            gameRenderer.fillText("CHARACTER / NICKNAME", ARCADE_WHITE,
                 TS(LEFT_TILE_X + 3), TS(6));
         }
         for (byte personality = RED_GHOST_SHADOW; personality <= ORANGE_GHOST_POKEY; ++personality) {
@@ -152,11 +152,11 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                     TS(LEFT_TILE_X) + TS, TS(7 + 3 * personality) + HTS);
             }
             if (ghostCharacterVisible[personality]) {
-                gameRenderer.fillTextAtScaledPosition("-" + GHOST_CHARACTERS[personality], GHOST_COLORS[personality],
+                gameRenderer.fillText("-" + GHOST_CHARACTERS[personality], GHOST_COLORS[personality],
                     TS(LEFT_TILE_X + 3), TS(8 + 3 * personality));
             }
             if (ghostNicknameVisible[personality]) {
-                gameRenderer.fillTextAtScaledPosition(GHOST_NICKNAMES[personality], GHOST_COLORS[personality],
+                gameRenderer.fillText(GHOST_NICKNAMES[personality], GHOST_COLORS[personality],
                     TS(LEFT_TILE_X + 14), TS(8 + 3 * personality));
             }
         }
@@ -184,12 +184,12 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         gameRenderer.ctx().setFill(ARCADE_ROSE);
         // normal pellet
         gameRenderer.ctx().fillRect(scaled(TS(LEFT_TILE_X + 6) + 4), scaled(TS(24) + 4), scaled(2), scaled(2));
-        gameRenderer.fillTextAtScaledTilePosition("10",  ARCADE_WHITE, scaledArcadeFont8(), LEFT_TILE_X + 8, 25);
-        gameRenderer.fillTextAtScaledTilePosition("PTS", ARCADE_WHITE, scaledArcadeFont6(), LEFT_TILE_X + 11, 25);
+        gameRenderer.fillText("10",  ARCADE_WHITE, scaledArcadeFont8(), TS(LEFT_TILE_X + 8), TS(25));
+        gameRenderer.fillText("PTS", ARCADE_WHITE, scaledArcadeFont6(), TS(LEFT_TILE_X + 11), TS(25));
         // energizer
         drawBlinkingEnergizer(TS(LEFT_TILE_X + 6), TS(26));
-        gameRenderer.fillTextAtScaledTilePosition("50",  ARCADE_WHITE, scaledArcadeFont8(), LEFT_TILE_X + 8, 27);
-        gameRenderer.fillTextAtScaledTilePosition("PTS", ARCADE_WHITE, scaledArcadeFont6(), LEFT_TILE_X + 11, 27);
+        gameRenderer.fillText("50",  ARCADE_WHITE, scaledArcadeFont8(), TS(LEFT_TILE_X + 8), TS(27));
+        gameRenderer.fillText("PTS", ARCADE_WHITE, scaledArcadeFont6(), TS(LEFT_TILE_X + 11), TS(27));
     }
 
     private void drawBlinkingEnergizer(double x, double y) {

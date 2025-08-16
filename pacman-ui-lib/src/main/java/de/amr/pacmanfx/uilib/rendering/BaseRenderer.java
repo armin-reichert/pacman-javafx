@@ -67,19 +67,6 @@ public abstract class BaseRenderer {
     }
 
     /**
-     * Draws text at the given tile position (scaled by the current scaling value).
-     *
-     * @param text  text
-     * @param color text color
-     * @param font  text font
-     * @param tileX unscaled tile x-position
-     * @param tileY unscaled tile y-position (baseline)
-     */
-    public void fillTextAtScaledTilePosition(String text, Color color, Font font, int tileX, int tileY) {
-        fillTextAtScaledPosition(text, color, font, TS(tileX), TS(tileY));
-    }
-
-    /**
      * Draws text left-aligned at the given position (scaled by the current scaling value).
      *
      * @param text  text
@@ -88,7 +75,7 @@ public abstract class BaseRenderer {
      * @param x     unscaled x-position
      * @param y     unscaled y-position (baseline)
      */
-    public void fillTextAtScaledPosition(String text, Color color, Font font, double x, double y) {
+    public void fillText(String text, Color color, Font font, double x, double y) {
         ctx.setFont(font);
         ctx.setFill(color);
         ctx.fillText(text, scaled(x), scaled(y));
@@ -102,32 +89,8 @@ public abstract class BaseRenderer {
      * @param x     unscaled x-position
      * @param y     unscaled y-position (baseline)
      */
-    public void fillTextAtScaledPosition(String text, Color color, double x, double y) {
+    public void fillText(String text, Color color, double x, double y) {
         ctx.setFill(color);
-        ctx.fillText(text, scaled(x), scaled(y));
-    }
-
-    /**
-     * Draws text left-aligned at the given position (scaled by the current scaling value).
-     *
-     * @param text  text
-     * @param font  text font
-     * @param x     unscaled x-position
-     * @param y     unscaled y-position (baseline)
-     */
-    public void fillTextAtScaledPosition(String text, Font font, double x, double y) {
-        ctx.setFont(font);
-        ctx.fillText(text, scaled(x), scaled(y));
-    }
-
-    /**
-     * Draws text left-aligned at the given position (scaled by the current scaling value).
-     *
-     * @param text  text
-     * @param x     unscaled x-position
-     * @param y     unscaled y-position (baseline)
-     */
-    public void fillTextAtScaledPosition(String text, double x, double y) {
         ctx.fillText(text, scaled(x), scaled(y));
     }
 
@@ -140,10 +103,10 @@ public abstract class BaseRenderer {
      * @param x     unscaled x-position
      * @param y     unscaled y-position (baseline)
      */
-    public void fillTextAtScaledCenter(String text, Color color, Font font, double x, double y) {
+    public void fillTextCentered(String text, Color color, Font font, double x, double y) {
         ctx.save();
         ctx.setTextAlign(TextAlignment.CENTER);
-        fillTextAtScaledPosition(text, color, font, x, y);
+        fillText(text, color, font, x, y);
         ctx.restore();
     }
 
