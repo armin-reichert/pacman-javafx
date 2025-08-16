@@ -127,8 +127,8 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
 
     private void drawBonus(Bonus bonus) {
         switch (bonus.state()) {
-            case EDIBLE -> drawActorSprite(bonus, spriteSheet.sourceImage(), spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS)[bonus.symbol()]);
-            case EATEN  -> drawActorSprite(bonus, spriteSheet.sourceImage(), spriteSheet.spriteSequence(SpriteID.BONUS_VALUES)[bonus.symbol()]);
+            case EDIBLE -> drawSpriteCentered(bonus.center(), spriteSheet.sourceImage(), spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS)[bonus.symbol()]);
+            case EATEN  -> drawSpriteCentered(bonus.center(), spriteSheet.sourceImage(), spriteSheet.spriteSequence(SpriteID.BONUS_VALUES)[bonus.symbol()]);
             case INACTIVE -> {}
         }
     }

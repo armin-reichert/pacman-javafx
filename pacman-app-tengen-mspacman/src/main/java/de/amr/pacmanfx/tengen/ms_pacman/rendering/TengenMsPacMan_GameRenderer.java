@@ -206,11 +206,11 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
         switch (bonus.state()) {
             case EDIBLE -> {
                 RectShort sprite = spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS)[bonus.symbol()];
-                drawActorSprite(bonus, spriteSheet.sourceImage(), sprite);
+                drawSpriteCentered(bonus.center(), spriteSheet.sourceImage(), sprite);
             }
             case EATEN  -> {
                 RectShort sprite = spriteSheet.spriteSequence(SpriteID.BONUS_VALUES)[bonus.symbol()];
-                drawActorSprite(bonus, spriteSheet.sourceImage(), sprite);
+                drawSpriteCentered(bonus.center(), spriteSheet.sourceImage(), sprite);
             }
         }
         ctx().restore();

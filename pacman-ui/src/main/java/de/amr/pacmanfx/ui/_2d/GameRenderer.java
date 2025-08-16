@@ -16,7 +16,6 @@ import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
-import static de.amr.pacmanfx.Globals.HTS;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -105,10 +104,10 @@ public abstract class GameRenderer extends BaseRenderer implements DebugInfoRend
 
         actor.animations().ifPresent(animations -> {
             switch (animations) {
-                case SingleSpriteNoAnimation singleSprite -> drawActorSprite(actor, spriteSheetImage, singleSprite.sprite());
+                case SingleSpriteNoAnimation singleSprite -> drawSpriteCentered(actor.center(), spriteSheetImage, singleSprite.sprite());
                 case SpriteAnimationManager<?> spriteAnimations -> {
                     if (spriteAnimations.current() != null) {
-                        drawActorSprite(actor, spriteSheetImage, spriteAnimations.currentSprite(actor));
+                        drawSpriteCentered(actor.center(), spriteSheetImage, spriteAnimations.currentSprite(actor));
                     }
                 }
                 default -> {}
@@ -117,16 +116,13 @@ public abstract class GameRenderer extends BaseRenderer implements DebugInfoRend
     }
 
     /**
-     * Draws the sprite centered over the one-tile square that represents the bounds of the actor. The actor position
-     * denotes the left upper corner of this square and the actor sprite, which can be larger that the square, is
-     * drawn centered over the square's center position.
+     * Draws the sprite centered over the given position.
      *
-     * @param actor an actor
+     * @param center position over which sprite gets drawn
      * @param spriteSheetImage the sprite sheet image
      * @param sprite the actor sprite
      */
-    public void drawActorSprite(Actor actor, Image spriteSheetImage, RectShort sprite) {
-        requireNonNull(actor);
-        drawSpriteScaledCenteredAt(spriteSheetImage, sprite, actor.x() + HTS, actor.y() + HTS);
+    public void drawSpriteCentered(Vector2f center, Image spriteSheetImage, RectShort sprite) {
+        drawSpriteScaledCenteredAt(spriteSheetImage, sprite, center.x(), center.y());
     }
 }
