@@ -45,7 +45,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     private Clapperboard clapperboard;
     private Pac pacMan;
     private Pac msPacMan;
-
+    private TengenMsPacMan_SpriteSheet spriteSheet;
     private int t;
 
     public TengenMsPacMan_CutScene2(GameUI ui) {
@@ -61,7 +61,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         actionBindings.bind(ACTION_LET_GAME_STATE_EXPIRE, ui.joypad().key(JoypadButton.START));
 
         GameUI_Config config = ui.currentConfig();
-        var spriteSheet = (TengenMsPacMan_SpriteSheet) config.spriteSheet();
+        spriteSheet = (TengenMsPacMan_SpriteSheet) config.spriteSheet();
 
         clapperboard = new Clapperboard(spriteSheet, 2, "THE CHASE");
         clapperboard.setPosition(3 * TS, 10 * TS);
@@ -175,6 +175,6 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        Stream.of(clapperboard, msPacMan, pacMan).forEach(gameRenderer::drawActor);
+        Stream.of(clapperboard, msPacMan, pacMan).forEach(actor -> gameRenderer.drawActor(actor, spriteSheet.sourceImage()));
     }
 }

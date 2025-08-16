@@ -55,6 +55,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         @Override public ArcadePacMan_IntroScene context() { return ArcadePacMan_IntroScene.this; }
     };
 
+    private SpriteSheet<SpriteID> spriteSheet;
     private Pulse blinking;
     private Pac pacMan;
     private List<Ghost> ghosts;
@@ -70,6 +71,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         super(ui);
     }
     
+    @SuppressWarnings("unchecked")
     @Override
     public void doInit() {
         gameContext().game().hudData().credit(true).score(true).livesCounter(false).levelCounter(true);
@@ -79,6 +81,8 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         actionBindings.assign(ACTION_TEST_CUT_SCENES, ui.actionBindings());
         actionBindings.assign(ACTION_TEST_LEVELS_SHORT, ui.actionBindings());
         actionBindings.assign(ACTION_TEST_LEVELS_MEDIUM, ui.actionBindings());
+
+        spriteSheet = (SpriteSheet<SpriteID>) ui.currentConfig().spriteSheet();
 
         blinking = new Pulse(10, true);
         pacMan = createPac();
@@ -140,7 +144,6 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     }
 
     private void drawGallery() {
-        @SuppressWarnings("unchecked") SpriteSheet<SpriteID> spriteSheet = (SpriteSheet<SpriteID>) ui.currentConfig().spriteSheet();
         gameRenderer.ctx().setFont(scaledArcadeFont8());
         if (titleVisible) {
             gameRenderer.fillText("CHARACTER / NICKNAME", ARCADE_WHITE,
@@ -148,7 +151,8 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         }
         for (byte personality = RED_GHOST_SHADOW; personality <= ORANGE_GHOST_POKEY; ++personality) {
             if (ghostImageVisible[personality]) {
-                gameRenderer.drawSpriteScaledCenteredAt(spriteSheet.spriteSequence(GALLERY_GHOSTS)[personality],
+                gameRenderer.drawSpriteScaledCenteredAt(spriteSheet.sourceImage(),
+                    spriteSheet.spriteSequence(GALLERY_GHOSTS)[personality],
                     TS(LEFT_TILE_X) + TS, TS(7 + 3 * personality) + HTS);
             }
             if (ghostCharacterVisible[personality]) {
@@ -167,17 +171,17 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         long tick = sceneController.state().timer().tickCount();
         int shakingAmount = shaking ? (tick % 5 < 2 ? 0 : -1) : 0;
         if (shakingAmount == 0) {
-            ghosts.forEach(gameRenderer::drawActor);
+            ghosts.forEach(ghost -> gameRenderer.drawActor(ghost, spriteSheet.sourceImage()));
         } else {
-            gameRenderer.drawActor(ghosts.get(RED_GHOST_SHADOW));
-            gameRenderer.drawActor(ghosts.get(ORANGE_GHOST_POKEY));
+            gameRenderer.drawActor(ghosts.get(RED_GHOST_SHADOW), spriteSheet.sourceImage());
+            gameRenderer.drawActor(ghosts.get(ORANGE_GHOST_POKEY), spriteSheet.sourceImage());
             gameRenderer.ctx().save();
             gameRenderer.ctx().translate(shakingAmount, 0);
-            gameRenderer.drawActor(ghosts.get(PINK_GHOST_SPEEDY));
-            gameRenderer.drawActor(ghosts.get(CYAN_GHOST_BASHFUL));
+            gameRenderer.drawActor(ghosts.get(PINK_GHOST_SPEEDY), spriteSheet.sourceImage());
+            gameRenderer.drawActor(ghosts.get(CYAN_GHOST_BASHFUL), spriteSheet.sourceImage());
             gameRenderer.ctx().restore();
         }
-        gameRenderer.drawActor(pacMan);
+        gameRenderer.drawActor(pacMan, spriteSheet.sourceImage());
     }
 
     private void drawPoints() {

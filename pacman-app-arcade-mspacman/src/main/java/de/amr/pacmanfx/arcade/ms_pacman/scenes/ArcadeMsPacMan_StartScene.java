@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
+import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.RectShort;
@@ -22,6 +23,7 @@ import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_ORANGE;
 
 public class ArcadeMsPacMan_StartScene extends GameScene2D {
 
+    private ArcadeMsPacMan_SpriteSheet spriteSheet;
     private RectShort livesCounterSprite;
     private MidwayCopyright midwayCopyright;
 
@@ -32,6 +34,8 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
     @Override
     public void doInit() {
         gameContext().game().hudData().credit(true).score(true).levelCounter(true).livesCounter(false);
+
+        spriteSheet = (ArcadeMsPacMan_SpriteSheet) ui.currentConfig().spriteSheet();
 
         midwayCopyright = new MidwayCopyright(ui.currentConfig().localAssetImage("logo.midway"));
         midwayCopyright.setPosition(TS * 6, TS * 28);
@@ -66,8 +70,8 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
         gameRenderer.fillText("PUSH START BUTTON", ARCADE_ORANGE, font8, TS(6), TS(16));
         gameRenderer.fillText("1 PLAYER ONLY", ARCADE_ORANGE, font8, TS(8), TS(18));
         gameRenderer.fillText("ADDITIONAL    AT 10000", ARCADE_ORANGE, font8,TS(2), TS(25));
-        gameRenderer.drawSpriteScaled(livesCounterSprite, TS(13), TS(23) + 1);
+        gameRenderer.drawSpriteScaled(spriteSheet.sourceImage(), livesCounterSprite, TS(13), TS(23) + 1);
         gameRenderer.fillText("PTS", ARCADE_ORANGE, font6, TS(25), TS(25));
-        gameRenderer.drawActor(midwayCopyright);
+        gameRenderer.drawActor(midwayCopyright, spriteSheet.sourceImage());
     }
 }

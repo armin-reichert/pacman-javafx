@@ -12,13 +12,10 @@ import de.amr.pacmanfx.model.HUDData;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.uilib.animation.SingleSpriteNoAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
-
-import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static java.util.Objects.requireNonNull;
@@ -27,8 +24,6 @@ import static java.util.Objects.requireNonNull;
  * Common base class of all 2D game renderers.
  */
 public abstract class GameRenderer extends BaseRenderer implements DebugInfoRenderer {
-
-    public abstract Optional<SpriteSheet<?>> optSpriteSheet();
 
     /**
      * Applies rendering hints for the given game level to this renderer.
@@ -67,19 +62,23 @@ public abstract class GameRenderer extends BaseRenderer implements DebugInfoRend
      * Draws an actor (Pac-Man, ghost, moving bonus, etc.) if it is visible.
      *
      * @param actor the actor to draw
+     * @param spriteSheetImage sprite sheet image
      */
-    public void drawActor(Actor actor) {
+    public void drawActor(Actor actor, Image spriteSheetImage) {
         requireNonNull(actor);
+
         if (!actor.isVisible()) return;
+
         if (actor.animations().isEmpty()) {
             Logger.error("Actor {} has no animations", actor);
         }
+
         actor.animations().ifPresent(am -> {
             switch (am) {
-                case SingleSpriteNoAnimation singleSprite -> drawActorSpriteCentered(actor, singleSprite.sprite());
+                case SingleSpriteNoAnimation singleSprite -> drawActorSpriteCentered(actor, spriteSheetImage, singleSprite.sprite());
                 case SpriteAnimationManager<?> spriteAnimations -> {
                     if (spriteAnimations.current() != null) {
-                        drawActorSpriteCentered(actor, spriteAnimations.currentSprite(actor));
+                        drawActorSpriteCentered(actor, spriteSheetImage, spriteAnimations.currentSprite(actor));
                     } else {
                         Logger.error("Cannot draw actor {}: No animation selected", actor);
                     }
@@ -92,44 +91,32 @@ public abstract class GameRenderer extends BaseRenderer implements DebugInfoRend
     /**
      * Draws a sprite (region inside sprite sheet) unscaled at the given position.
      *
+     * @param spriteSheetImage the sprite sheet image
      * @param sprite      the sprite to draw
      * @param x           x-coordinate of left-upper corner
      * @param y           y-coordinate of left-upper corner
      */
-    public void drawSprite(RectShort sprite, double x, double y) {
+    public void drawSprite(Image spriteSheetImage, RectShort sprite, double x, double y) {
+        requireNonNull(spriteSheetImage);
         requireNonNull(sprite);
-        optSpriteSheet().ifPresent(spriteSheet -> ctx().drawImage(
-                spriteSheet.sourceImage(),
-                sprite.x(), sprite.y(), sprite.width(), sprite.height(),
-                x, y, sprite.width(), sprite.height()));
-    }
-
-    /**
-     * Draws a sprite (region inside sprite sheet) the given position. The sprite size and the position are scaled using
-     * the current scale factor.
-     *
-     * @param sprite        the sprite to draw (can be null)
-     * @param x             x-coordinate of left-upper corner (unscaled)
-     * @param y             y-coordinate of left-upper corner (unscaled)
-     */
-    public void drawSpriteScaled(RectShort sprite, double x, double y) {
-        requireNonNull(sprite);
-        optSpriteSheet().ifPresent(spriteSheet -> drawSpriteScaled(spriteSheet.sourceImage(), sprite, x, y));
+        ctx().drawImage(spriteSheetImage,
+            sprite.x(), sprite.y(), sprite.width(), sprite.height(),
+            x, y, sprite.width(), sprite.height());
     }
 
     /**
      * Draws the given sprite from the given sprite sheet image at the given position (left-upper corner).
      * The position and the sprite size are scaled by the current scaling of the renderer.
      *
-     * @param image the sprite sheet image
+     * @param spriteSheetImage the sprite sheet image
      * @param sprite a sprite
      * @param x unscaled x-coordinate of left-upper corner
      * @param y unscaled y-coordinate of left-upper corner
      */
-    public void drawSpriteScaled(Image image, RectShort sprite, double x, double y) {
-        requireNonNull(image);
+    public void drawSpriteScaled(Image spriteSheetImage, RectShort sprite, double x, double y) {
+        requireNonNull(spriteSheetImage);
         requireNonNull(sprite);
-        ctx().drawImage(image,
+        ctx().drawImage(spriteSheetImage,
                 sprite.x(), sprite.y(), sprite.width(), sprite.height(),
                 scaled(x), scaled(y), scaled(sprite.width()), scaled(sprite.height()));
     }
@@ -137,23 +124,24 @@ public abstract class GameRenderer extends BaseRenderer implements DebugInfoRend
     /**
      * Draws a sprite centered over a position.
      *
+     * @param spriteSheetImage the sprite sheet image
      * @param sprite sprite (region in sprite sheet, may be null)
      * @param cx  x-coordinate of the center position
      * @param cy  y-coordinate of the center position
      */
-    public void drawSpriteScaledCenteredAt(RectShort sprite, double cx, double cy) {
-        requireNonNull(sprite);
-        drawSpriteScaled(sprite, cx - 0.5 * sprite.width(), cy - 0.5 * sprite.height());
+    public void drawSpriteScaledCenteredAt(Image spriteSheetImage, RectShort sprite, double cx, double cy) {
+        drawSpriteScaled(spriteSheetImage, sprite, cx - 0.5 * sprite.width(), cy - 0.5 * sprite.height());
     }
 
     /**
      * Draws the sprite centered over the "collision box" (one-tile square) of the given actor (if visible).
      *
      * @param actor an actor
+     * @param spriteSheetImage the sprite sheet image
      * @param sprite actor sprite
      */
-    public void drawActorSpriteCentered(Actor actor, RectShort sprite) {
-        float centerX = actor.x() + HTS, centerY = actor.y() + HTS;
-        drawSpriteScaledCenteredAt(sprite, centerX, centerY);
+    public void drawActorSpriteCentered(Actor actor, Image spriteSheetImage, RectShort sprite) {
+        requireNonNull(actor);
+        drawSpriteScaledCenteredAt(spriteSheetImage, sprite, actor.x() + HTS, actor.y() + HTS);
     }
 }

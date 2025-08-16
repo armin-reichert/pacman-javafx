@@ -13,14 +13,11 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.ui.GameAssets;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-
-import java.util.Optional;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_WHITE;
@@ -40,9 +37,6 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
     }
 
     @Override
-    public Optional<SpriteSheet<?>> optSpriteSheet() { return Optional.of(spriteSheet); }
-
-    @Override
     public void drawHUD(GameContext gameContext, HUDData data, Vector2f sceneSize, long tick) {
         if (!data.isVisible()) return;
 
@@ -57,7 +51,7 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
             float x = sceneSize.x() - TS(4), y = sceneSize.y() - TS(2) + 2;
             for (byte symbol : levelCounter.symbols()) {
                 RectShort sprite = spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS)[symbol];
-                drawSpriteScaled(sprite, x, y);
+                drawSpriteScaled(spriteSheet.sourceImage(), sprite, x, y);
                 x -= TS(2);
             }
         }
@@ -67,7 +61,7 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
             float x = TS(2), y = sceneSize.y() - TS(2);
             RectShort sprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
             for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
-                drawSpriteScaled(sprite, x + TS(2 * i), y);
+                drawSpriteScaled(spriteSheet.sourceImage(), sprite, x + TS(2 * i), y);
             }
             if (gameContext.game().lifeCount() > livesCounter.maxLivesDisplayed()) {
                 // show text indicating that more lives are available than symbols displayed (cheating may cause this)
@@ -107,10 +101,10 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
             ctx().drawImage(flashingMaze, 0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);
         }
         else if (level.uneatenFoodCount() == 0) {
-            drawSprite(spriteSheet.sprite(SpriteID.MAP_EMPTY), 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE));
+            drawSprite(spriteSheet.sourceImage(), spriteSheet.sprite(SpriteID.MAP_EMPTY), 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE));
         }
         else {
-            drawSprite(spriteSheet.sprite(SpriteID.MAP_FULL), 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE));
+            drawSprite(spriteSheet.sourceImage(), spriteSheet.sprite(SpriteID.MAP_FULL), 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE));
             ctx().setFill(backgroundColor);
             level.worldMap().tiles()
                     .filter(not(level::isEnergizerPosition))
@@ -124,17 +118,17 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
     }
 
     @Override
-    public void drawActor(Actor actor) {
+    public void drawActor(Actor actor, Image spriteSheetImage) {
         if (actor instanceof Bonus bonus) {
             drawBonus(bonus);
         }
-        else super.drawActor(actor);
+        else super.drawActor(actor, spriteSheetImage);
     }
 
     private void drawBonus(Bonus bonus) {
         switch (bonus.state()) {
-            case EDIBLE -> drawActorSpriteCentered(bonus, spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS)[bonus.symbol()]);
-            case EATEN  -> drawActorSpriteCentered(bonus, spriteSheet.spriteSequence(SpriteID.BONUS_VALUES)[bonus.symbol()]);
+            case EDIBLE -> drawActorSpriteCentered(bonus, spriteSheet.sourceImage(), spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS)[bonus.symbol()]);
+            case EATEN  -> drawActorSpriteCentered(bonus, spriteSheet.sourceImage(), spriteSheet.spriteSequence(SpriteID.BONUS_VALUES)[bonus.symbol()]);
             case INACTIVE -> {}
         }
     }

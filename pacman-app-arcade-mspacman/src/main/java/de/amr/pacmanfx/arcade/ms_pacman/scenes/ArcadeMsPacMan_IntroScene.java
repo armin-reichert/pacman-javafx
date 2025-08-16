@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
+import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
@@ -52,6 +53,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     private final StateMachine<SceneState, ArcadeMsPacMan_IntroScene> sceneController;
 
+    private ArcadeMsPacMan_SpriteSheet spriteSheet;
     private MidwayCopyright midwayCopyright;
     private Marquee marquee;
     private Pac msPacMan;
@@ -78,6 +80,8 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         actionBindings.assign(ACTION_TEST_CUT_SCENES, ui.actionBindings());
         actionBindings.assign(ACTION_TEST_LEVELS_SHORT, ui.actionBindings());
         actionBindings.assign(ACTION_TEST_LEVELS_MEDIUM, ui.actionBindings());
+
+        spriteSheet = (ArcadeMsPacMan_SpriteSheet) ui.currentConfig().spriteSheet();
 
         midwayCopyright = new MidwayCopyright(ui.currentConfig().localAssetImage("logo.midway"));
         midwayCopyright.setPosition(TS * 6, TS * 28);
@@ -132,9 +136,9 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     public void drawSceneContent() {
         gameRenderer.ctx().setFont(scaledArcadeFont8());
         gameRenderer.fillText(TITLE, ARCADE_ORANGE, TITLE_X, TITLE_Y);
-        gameRenderer.drawActor(marquee);
-        ghosts.forEach(gameRenderer::drawActor);
-        gameRenderer.drawActor(msPacMan);
+        gameRenderer.drawActor(marquee, spriteSheet.sourceImage());
+        ghosts.forEach(ghost -> gameRenderer.drawActor(ghost, spriteSheet.sourceImage()));
+        gameRenderer.drawActor(msPacMan, spriteSheet.sourceImage());
         switch (sceneController.state()) {
             case GHOSTS_MARCHING_IN -> {
                 String ghostName = GHOST_NAMES[presentedGhostCharacter];
@@ -151,7 +155,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                 gameRenderer.fillText("MS PAC-MAN", ARCADE_YELLOW, TITLE_X, TOP_Y + TS(6));
             }
         }
-        gameRenderer.drawActor(midwayCopyright);
+        gameRenderer.drawActor(midwayCopyright, spriteSheet.sourceImage());
     }
 
     // Scene controller FSM

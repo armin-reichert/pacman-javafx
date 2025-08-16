@@ -8,6 +8,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
 import de.amr.pacmanfx.ui.api.GameUI;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
 import javafx.beans.binding.Bindings;
@@ -49,6 +50,7 @@ public class MiniGameView extends VBox {
 
     private GameUI ui;
     private GameRenderer gameRenderer;
+    private SpriteSheet<?> spriteSheet;
     private GameLevel gameLevel;
     private long drawCallCount;
 
@@ -115,12 +117,16 @@ public class MiniGameView extends VBox {
     }
 
     public void setGameLevel(GameLevel gameLevel) {
-        /* TODO: The game renderer cannot yet be created in setGameUI because at the time, setGameUI is called, the
-                 game controller has not yet selected a game variant and therefore the current UI config is null! */
-        gameRenderer = ui.currentConfig().createGameRenderer(canvas);
-        gameRenderer.setScaling(scalingProperty.floatValue());
         this.gameLevel = requireNonNull(gameLevel);
         worldSizeProperty.set(gameLevel.worldSizePx());
+
+        /*
+            TODO: The game renderer cannot yet be created in setGameUI because at the time, setGameUI is called, the
+                 game controller has not yet selected a game variant and therefore the current UI config is null!
+         */
+        spriteSheet = ui.currentConfig().spriteSheet();
+        gameRenderer = ui.currentConfig().createGameRenderer(canvas);
+        gameRenderer.setScaling(scalingProperty.floatValue());
         gameRenderer.applyRenderingHints(gameLevel);
     }
 
@@ -152,11 +158,11 @@ public class MiniGameView extends VBox {
                 false,
                 gameLevel.blinking().isOn(),
                 ui.clock().tickCount());
-            gameLevel.bonus().ifPresent(gameRenderer::drawActor);
-            gameRenderer.drawActor(gameLevel.pac());
+            gameLevel.bonus().ifPresent(bonus -> gameRenderer.drawActor(bonus, spriteSheet.sourceImage()));
+            gameRenderer.drawActor(gameLevel.pac(), spriteSheet.sourceImage());
             Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)
                 .map(gameLevel::ghost)
-                .forEach(gameRenderer::drawActor);
+                .forEach(ghost -> gameRenderer.drawActor(ghost, spriteSheet.sourceImage()));
         }
 
         if (debugProperty().get()) {

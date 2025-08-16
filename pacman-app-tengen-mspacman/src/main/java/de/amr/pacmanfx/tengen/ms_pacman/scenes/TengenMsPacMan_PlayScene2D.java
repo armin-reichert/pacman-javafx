@@ -23,6 +23,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_HUDData;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_LevelCounter;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.ColorSchemedSprite;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.api.GameScene;
@@ -74,6 +75,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     private final DynamicCamera dynamicCamera = new DynamicCamera();
     private final ParallelCamera fixedCamera  = new ParallelCamera();
     private final Rectangle canvasClipArea = new Rectangle();
+
+    private TengenMsPacMan_SpriteSheet spriteSheet;
 
     private MessageMovement messageMovement;
     private LevelCompletedAnimation levelCompletedAnimation;
@@ -136,6 +139,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void doInit() {
+        spriteSheet = (TengenMsPacMan_SpriteSheet) ui.currentConfig().spriteSheet();
         setGameRenderer(ui.currentConfig().createGameRenderer(canvas));
 
         messageMovement = new MessageMovement();
@@ -481,7 +485,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         gameContext().gameLevel().bonus().ifPresent(actorsByZ::add);
         actorsByZ.add(gameContext().gameLevel().pac());
         ghostsByZ(gameContext().gameLevel()).forEach(actorsByZ::add);
-        actorsByZ.forEach(gameRenderer::drawActor);
+        actorsByZ.forEach(actor -> gameRenderer.drawActor(actor, spriteSheet.sourceImage()));
 
         gameRenderer.ctx().restore();
     }
