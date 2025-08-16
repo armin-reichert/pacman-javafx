@@ -76,7 +76,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
     //TODO check cases where colored map set is not initialized properly
     public void ensureRenderingHintsAreApplied(GameLevel level) {
         if (mazeSpriteSet == null) {
-            applyRenderingHints(level);
+            applyLevelSettings(level);
         }
     }
 
@@ -85,7 +85,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
     }
 
     @Override
-    public void applyRenderingHints(GameLevel level) {
+    public void applyLevelSettings(GameLevel level) {
         mazeSpriteSet = mapRepository.createMazeSpriteSet(level.worldMap(), level.data().numFlashes());
         Logger.info("Created maze sprite set ({} flash colors: {})", level.data().numFlashes(),
             mazeSpriteSet.colorSchemedMazeSprite());

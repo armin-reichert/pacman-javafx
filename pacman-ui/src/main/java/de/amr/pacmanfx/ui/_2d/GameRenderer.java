@@ -61,13 +61,13 @@ public abstract class GameRenderer extends BaseRenderer implements DebugInfoRend
     // -- Game-specific methods
 
     /**
-     * Applies rendering hints for the given game level to this renderer. This can be for example
+     * Applies settings specific to the given game level to this renderer. This can be for example
      * the selection of a different color scheme which is specified in the level map. The default
      * implementation is empty such that subclasses that have no such hints can silently ignore it.
      *
      * @param level the game level that is rendered
      */
-    public void applyRenderingHints(GameLevel level) {}
+    public void applyLevelSettings(GameLevel level) {}
 
     /**
      * Draws the Head-Up Display (score, live counter, level counter, coins inserted)
