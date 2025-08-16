@@ -66,7 +66,7 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
             float x = sceneSize.x() - TS(4), y = sceneSize.y() - TS(2);
             for (byte symbol : levelCounter.symbols()) {
                 RectShort sprite = spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS)[symbol];
-                drawSpriteScaled(spriteSheet.sourceImage(), sprite, x, y);
+                drawSprite(spriteSheet.sourceImage(), sprite, x, y, true);
                 x -= TS(2);
             }
         }
@@ -76,7 +76,7 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
             LivesCounter livesCounter = data.theLivesCounter();
             RectShort sprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
             for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
-                drawSpriteScaled(spriteSheet.sourceImage(), sprite, x + TS(2 * i), y);
+                drawSprite(spriteSheet.sourceImage(), sprite, x + TS(2 * i), y, true);
             }
             if (gameContext.game().lifeCount() > livesCounter.maxLivesDisplayed()) {
                 // show text indicating that more lives are available than symbols displayed (cheating may cause this)
@@ -112,13 +112,13 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
         if (mazeHighlighted) {
             RectShort[] brightMazes = brightMazesSpriteSheet.spriteSequence(BrightMazesSpriteSheet.SpriteID.BRIGHT_MAZES);
             RectShort maze = brightMazes[colorMapIndex];
-            drawSpriteScaled(brightMazesSpriteSheet.sourceImage(), maze, 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE));
+            drawSprite(brightMazesSpriteSheet.sourceImage(), maze, 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE), true);
         } else if (level.uneatenFoodCount() == 0) {
             RectShort maze = spriteSheet.spriteSequence(SpriteID.EMPTY_MAZES)[colorMapIndex];
-            drawSpriteScaled(spriteSheet.sourceImage(), maze, 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE));
+            drawSprite(spriteSheet.sourceImage(), maze, 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE), true);
         } else {
             RectShort mazeSprite = spriteSheet.spriteSequence(SpriteID.FULL_MAZES)[colorMapIndex];
-            drawSpriteScaled(spriteSheet.sourceImage(), mazeSprite, 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE));
+            drawSprite(spriteSheet.sourceImage(), mazeSprite, 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE), true);
             ctx().save();
             ctx().scale(scaling(), scaling());
             ctx().setFill(backgroundColor);
@@ -154,11 +154,11 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
         switch (bonus.state()) {
             case EDIBLE-> {
                 RectShort sprite = spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS)[bonus.symbol()];
-                drawActorSpriteCentered(bonus, spriteSheet.sourceImage(), sprite);
+                drawActorSprite(bonus, spriteSheet.sourceImage(), sprite);
             }
             case EATEN  -> {
                 RectShort sprite = spriteSheet.spriteSequence(SpriteID.BONUS_VALUES)[bonus.symbol()];
-                drawActorSpriteCentered(bonus, spriteSheet.sourceImage(), sprite);
+                drawActorSprite(bonus, spriteSheet.sourceImage(), sprite);
             }
         }
         ctx().restore();

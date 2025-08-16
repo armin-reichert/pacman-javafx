@@ -132,7 +132,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
     public void drawLivesCounter(LivesCounter livesCounter, int lifeCount, float x, float y) {
         RectShort sprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
         for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
-            drawSpriteScaled(spriteSheet.sourceImage(), sprite, x + TS(i * 2), y);
+            drawSprite(spriteSheet.sourceImage(), sprite, x + TS(i * 2), y, true);
         }
         if (lifeCount > livesCounter.maxLivesDisplayed()) {
             Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
@@ -149,19 +149,19 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
         x -= TS(2);
         // symbols are drawn from right to left!
         for (byte symbol : levelCounter.symbols()) {
-            drawSpriteScaled(spriteSheet.sourceImage(), symbolSprites[symbol], x, y);
+            drawSprite(spriteSheet.sourceImage(), symbolSprites[symbol], x, y, true);
             x -= TS(2);
         }
     }
 
     // this is also used by the 3D scene
     public void drawLevelNumberBox(int number, double x, double y) {
-        drawSpriteScaled(spriteSheet.sourceImage(), spriteSheet.sprite(SpriteID.LEVEL_NUMBER_BOX), x, y);
+        drawSprite(spriteSheet.sourceImage(), spriteSheet.sprite(SpriteID.LEVEL_NUMBER_BOX), x, y, true);
         int tens = number / 10, ones = number % 10;
         if (tens > 0) {
-            drawSpriteScaled(spriteSheet.sourceImage(), digitSprite(tens), x + 2, y + 2);
+            drawSprite(spriteSheet.sourceImage(), digitSprite(tens), x + 2, y + 2, true);
         }
-        drawSpriteScaled(spriteSheet.sourceImage(), digitSprite(ones), x + 10, y + 2);
+        drawSprite(spriteSheet.sourceImage(), digitSprite(ones), x + 10, y + 2, true);
     }
 
     private RectShort digitSprite(int digit) {
@@ -206,11 +206,11 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
         switch (bonus.state()) {
             case EDIBLE -> {
                 RectShort sprite = spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS)[bonus.symbol()];
-                drawActorSpriteCentered(bonus, spriteSheet.sourceImage(), sprite);
+                drawActorSprite(bonus, spriteSheet.sourceImage(), sprite);
             }
             case EATEN  -> {
                 RectShort sprite = spriteSheet.spriteSequence(SpriteID.BONUS_VALUES)[bonus.symbol()];
-                drawActorSpriteCentered(bonus, spriteSheet.sourceImage(), sprite);
+                drawActorSprite(bonus, spriteSheet.sourceImage(), sprite);
             }
         }
         ctx().restore();

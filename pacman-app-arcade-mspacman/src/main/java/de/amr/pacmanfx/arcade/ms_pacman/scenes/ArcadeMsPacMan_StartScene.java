@@ -70,7 +70,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
         gameRenderer.fillText("PUSH START BUTTON", ARCADE_ORANGE, font8, TS(6), TS(16));
         gameRenderer.fillText("1 PLAYER ONLY", ARCADE_ORANGE, font8, TS(8), TS(18));
         gameRenderer.fillText("ADDITIONAL    AT 10000", ARCADE_ORANGE, font8,TS(2), TS(25));
-        gameRenderer.drawSpriteScaled(spriteSheet.sourceImage(), livesCounterSprite, TS(13), TS(23) + 1);
+        gameRenderer.drawSprite(spriteSheet.sourceImage(), livesCounterSprite, TS(13), TS(23) + 1, true);
         gameRenderer.fillText("PTS", ARCADE_ORANGE, font6, TS(25), TS(25));
         gameRenderer.drawActor(midwayCopyright, spriteSheet.sourceImage());
     }

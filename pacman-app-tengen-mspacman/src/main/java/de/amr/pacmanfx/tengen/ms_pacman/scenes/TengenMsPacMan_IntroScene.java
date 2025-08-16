@@ -115,7 +115,8 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
             case WAITING_FOR_START -> {
                 if (!dark) {
                     gameRenderer.fillText("TENGEN PRESENTS", blueShadedColor(tick), presentsText.x(), presentsText.y());
-                    gameRenderer.drawSpriteScaled(spriteSheet.sourceImage(), spriteSheet.sprite(SpriteID.TITLE_TEXT), 6 * TS, MARQUEE_Y);
+                    gameRenderer.drawSprite(spriteSheet.sourceImage(), spriteSheet.sprite(SpriteID.TITLE_TEXT),
+                        6 * TS, MARQUEE_Y, true);
                     if (tick % 60 < 30) {
                         gameRenderer.fillText("PRESS START", nesPaletteColor(0x20), 11 * TS, MARQUEE_Y + 9 * TS);
                     }

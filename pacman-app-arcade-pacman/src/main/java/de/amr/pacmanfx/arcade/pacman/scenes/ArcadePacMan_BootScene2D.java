@@ -108,7 +108,8 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
             RectShort fragment1 = randomSpriteFragment(), fragment2 = randomSpriteFragment();
             int split = numCols / 8 + random.nextInt(numCols / 4);
             for (int col = 0; col < numCols; ++col) {
-                gameRenderer.drawSpriteScaled(spriteSheet.sourceImage(), col < split ? fragment1 : fragment2, FRAGMENT_SIZE * col, FRAGMENT_SIZE * row);
+                gameRenderer.drawSprite(spriteSheet.sourceImage(), col < split ? fragment1 : fragment2,
+                    FRAGMENT_SIZE * col, FRAGMENT_SIZE * row, true);
             }
         }
     }
