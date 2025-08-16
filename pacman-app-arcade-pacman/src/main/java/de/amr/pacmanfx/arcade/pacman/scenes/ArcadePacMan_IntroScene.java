@@ -151,9 +151,10 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         }
         for (byte personality = RED_GHOST_SHADOW; personality <= ORANGE_GHOST_POKEY; ++personality) {
             if (ghostImageVisible[personality]) {
-                gameRenderer.drawSpriteScaledCenteredAt(spriteSheet.sourceImage(),
-                    spriteSheet.spriteSequence(GALLERY_GHOSTS)[personality],
-                    TS(LEFT_TILE_X) + TS, TS(7 + 3 * personality) + HTS);
+                gameRenderer.drawSpriteCentered(
+                    Vector2f.of(TS(LEFT_TILE_X) + TS, TS(7 + 3 * personality) + HTS),
+                    spriteSheet.sourceImage(),
+                    spriteSheet.spriteSequence(GALLERY_GHOSTS)[personality]);
             }
             if (ghostCharacterVisible[personality]) {
                 gameRenderer.fillText("-" + GHOST_CHARACTERS[personality], GHOST_COLORS[personality],

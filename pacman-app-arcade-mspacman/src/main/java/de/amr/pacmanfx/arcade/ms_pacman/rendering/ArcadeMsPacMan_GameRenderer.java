@@ -22,7 +22,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
 import static java.util.Objects.requireNonNull;
@@ -172,7 +171,7 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
         double numberX = scaled(clapperboard.x() + sprite.width() - 25);
         double numberY = scaled(clapperboard.y() + 18);
         double textX = scaled(clapperboard.x() + sprite.width());
-        drawSpriteScaledCenteredAt(spriteSheet.sourceImage(), sprite, clapperboard.x() + HTS, clapperboard.y() + HTS);
+        drawSpriteCentered(clapperboard.center(), spriteSheet.sourceImage(), sprite);
         ctx().setFont(clapperboard.font());
         ctx().setFill(ARCADE_WHITE);
         ctx().fillText(clapperboard.number(), numberX, numberY);

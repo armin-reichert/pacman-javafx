@@ -44,15 +44,18 @@ public abstract class GameRenderer extends BaseRenderer implements DebugInfoRend
     }
 
     /**
-     * Draws a sprite centered over a position.
+     * Draws the sprite centered over the given position. The target position is scaled using the current scaling value.
      *
+     * @param center position over which sprite gets drawn
      * @param spriteSheetImage the sprite sheet image
-     * @param sprite sprite (region in sprite sheet, may be null)
-     * @param cx  x-coordinate of the center position
-     * @param cy  y-coordinate of the center position
+     * @param sprite the actor sprite
      */
-    public void drawSpriteScaledCenteredAt(Image spriteSheetImage, RectShort sprite, double cx, double cy) {
-        drawSprite(spriteSheetImage, sprite, cx - 0.5 * sprite.width(), cy - 0.5 * sprite.height(), true);
+    public void drawSpriteCentered(Vector2f center, Image spriteSheetImage, RectShort sprite) {
+        drawSpriteCentered(center.x(), center.y(), spriteSheetImage, sprite);
+    }
+
+    public void drawSpriteCentered(double centerX, double centerY, Image spriteSheetImage, RectShort sprite) {
+        drawSprite(spriteSheetImage, sprite, centerX - 0.5 * sprite.width(), centerY - 0.5 * sprite.height(), true);
     }
 
     // -- Game-specific methods
@@ -113,16 +116,5 @@ public abstract class GameRenderer extends BaseRenderer implements DebugInfoRend
                 default -> {}
             }
         });
-    }
-
-    /**
-     * Draws the sprite centered over the given position.
-     *
-     * @param center position over which sprite gets drawn
-     * @param spriteSheetImage the sprite sheet image
-     * @param sprite the actor sprite
-     */
-    public void drawSpriteCentered(Vector2f center, Image spriteSheetImage, RectShort sprite) {
-        drawSpriteScaledCenteredAt(spriteSheetImage, sprite, center.x(), center.y());
     }
 }

@@ -256,7 +256,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
             case RIGHT -> ctx().scale(-1, 1);
             case DOWN  -> { ctx().scale(-1, 1); ctx().rotate(-90); }
         }
-        drawSpriteScaledCenteredAt(spriteSheet.sourceImage(), sprite, 0, 0);
+        drawSpriteCentered(0, 0, spriteSheet.sourceImage(), sprite);
         ctx().restore();
     }
 
@@ -401,23 +401,23 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
     }
 
     public void drawGameOptions(MapCategory category, Difficulty difficulty, PacBooster booster, double centerX, double y) {
-        drawSpriteScaledCenteredAt(spriteSheet.sourceImage(), spriteSheet.sprite(SpriteID.INFO_FRAME), centerX, y);
+        drawSpriteCentered(centerX, y, spriteSheet.sourceImage(), spriteSheet.sprite(SpriteID.INFO_FRAME));
         RectShort categorySprite = switch (requireNonNull(category)) {
             case BIG     -> spriteSheet.sprite(SpriteID.INFO_CATEGORY_BIG);
             case MINI    -> spriteSheet.sprite(SpriteID.INFO_CATEGORY_MINI);
             case STRANGE -> spriteSheet.sprite(SpriteID.INFO_CATEGORY_STRANGE);
             case ARCADE  -> RectShort.ZERO;
         };
-        drawSpriteScaledCenteredAt(spriteSheet.sourceImage(), categorySprite, centerX + TS(4.5), y);
+        drawSpriteCentered(centerX + TS(4.5), y, spriteSheet.sourceImage(), categorySprite);
         RectShort difficultySprite = switch (requireNonNull(difficulty)) {
             case EASY   -> spriteSheet.sprite(SpriteID.INFO_DIFFICULTY_EASY);
             case HARD   -> spriteSheet.sprite(SpriteID.INFO_DIFFICULTY_HARD);
             case CRAZY  -> spriteSheet.sprite(SpriteID.INFO_DIFFICULTY_CRAZY);
             case NORMAL -> RectShort.ZERO;
         };
-        drawSpriteScaledCenteredAt(spriteSheet.sourceImage(), difficultySprite, centerX, y);
+        drawSpriteCentered(centerX, y, spriteSheet.sourceImage(), difficultySprite);
         if (requireNonNull(booster) != PacBooster.OFF) {
-            drawSpriteScaledCenteredAt(spriteSheet.sourceImage(), spriteSheet.sprite(SpriteID.INFO_BOOSTER), centerX - TS(6), y);
+            drawSpriteCentered(centerX - TS(6), y, spriteSheet.sourceImage(), spriteSheet.sprite(SpriteID.INFO_BOOSTER));
         }
     }
 
@@ -438,7 +438,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
         if (!clapperboard.isVisible()) return;
         clapperboard.sprite().ifPresent(sprite -> {
             double numberX = clapperboard.x() + 8, numberY = clapperboard.y() + 18; // baseline
-            drawSpriteScaledCenteredAt(spriteSheet.sourceImage(), sprite, clapperboard.x() + HTS, clapperboard.y() + HTS);
+            drawSpriteCentered(clapperboard.center(), spriteSheet.sourceImage(), sprite);
             // over-paint number from sprite sheet
             ctx().save();
             ctx().scale(scaling(), scaling());
