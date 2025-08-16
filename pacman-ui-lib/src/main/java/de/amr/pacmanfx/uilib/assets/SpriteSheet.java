@@ -15,25 +15,40 @@ import javafx.scene.image.WritableImage;
  */
 public interface SpriteSheet<SID extends Enum<SID>> {
 
+    /**
+     * @return the sprite sheet image
+     */
     Image sourceImage();
 
+    /**
+     * @param id a sprite ID
+     * @return the rectangular area in the sprite sheet where this sprite is located
+     */
     RectShort sprite(SID id);
 
+    /**
+     * @param id a sprite sequence ID
+     * @return array of rectangular sprite sheet areas where sprites are located
+     */
     RectShort[] spriteSequence(SID id);
 
     /**
-     * @param x      region x-coordinate
-     * @param y      region y-coordinate
-     * @param width  region width
-     * @param height region height
-     * @return image for given region
+     * @param x      x-coordinate of rectangular area
+     * @param y      y-coordinate of rectangular area
+     * @param width  width of rectangular area
+     * @param height height of rectangular area
+     * @return image cropped from sprite sheet for given area
      */
     default Image image(int x, int y, int width, int height) {
-        var section = new WritableImage(width, height);
-        section.getPixelWriter().setPixels(0, 0, width, height, sourceImage().getPixelReader(), x, y);
-        return section;
+        var image = new WritableImage(width, height);
+        image.getPixelWriter().setPixels(0, 0, width, height, sourceImage().getPixelReader(), x, y);
+        return image;
     }
 
+    /**
+     * @param sprite rectangular area in sprite sheet
+     * @return image cropped from sprite sheet for given area
+     */
     default Image image(RectShort sprite) {
         return image(sprite.x(), sprite.y(), sprite.width(), sprite.height());
     }
