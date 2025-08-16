@@ -27,6 +27,7 @@ import java.util.List;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.uilib.rendering.BaseRenderer.fillCanvas;
 import static java.util.Objects.requireNonNull;
 
 public class OptionMenu {
@@ -105,8 +106,7 @@ public class OptionMenu {
     }
 
     public void draw() {
-        g.setFill(style.backgroundFill());
-        g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        fillCanvas(canvas, style.backgroundFill());
 
         g.save();
         g.scale(scalingPy.get(), scalingPy.get());

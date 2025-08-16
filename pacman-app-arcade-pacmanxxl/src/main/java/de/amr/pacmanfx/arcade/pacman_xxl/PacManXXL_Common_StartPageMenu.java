@@ -15,6 +15,7 @@ import de.amr.pacmanfx.ui._2d.ArcadePalette;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.widgets.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuEntry;
@@ -267,7 +268,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         var style = new OptionMenuStyle(
             ui.assets().font("font.pacfontgood", 32),
             ui.assets().arcadeFont(8),
-            DEFAULT_OPTION_MENU_STYLE.backgroundFill(),
+            Ufx.colorWithOpacity(DEFAULT_OPTION_MENU_STYLE.backgroundFill(), 0.5),
             DEFAULT_OPTION_MENU_STYLE.borderStroke(),
             ArcadePalette.ARCADE_RED,
             ArcadePalette.ARCADE_YELLOW,

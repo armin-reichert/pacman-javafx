@@ -41,7 +41,7 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
     {
         this.assets = requireNonNull(assets);
         this.spriteSheet = requireNonNull(spriteSheet);
-        this.brightMazesSpriteSheet = requireNonNull(brightMazesSpriteSheet);
+        this.brightMazesSpriteSheet = brightMazesSpriteSheet; // can be null in Ms. Pac-Man XXL!
         setCanvas(canvas);
     }
 

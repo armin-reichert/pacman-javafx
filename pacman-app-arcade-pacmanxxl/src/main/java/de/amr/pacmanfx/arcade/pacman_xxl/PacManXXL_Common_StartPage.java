@@ -21,12 +21,14 @@ import static de.amr.pacmanfx.Globals.TS;
  */
 public class PacManXXL_Common_StartPage implements StartPage {
 
+    private static final String BACKGROUND_IMAGE_PATH = "graphics/screenshot.png";
+
     private final StackPane root = new StackPane();
     private final PacManXXL_Common_StartPageMenu menu;
 
     public PacManXXL_Common_StartPage(GameUI ui) {
         ResourceManager rm = () -> PacManXXL_Common_StartPage.class;
-        Flyer flyer = new Flyer(rm.loadImage("graphics/pacman_xxl_startpage.jpg"));
+        Flyer flyer = new Flyer(rm.loadImage(BACKGROUND_IMAGE_PATH));
         flyer.setPageLayout(0, Flyer.LayoutMode.FILL);
         flyer.selectPage(0);
 
