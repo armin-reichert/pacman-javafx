@@ -11,8 +11,8 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
-import de.amr.pacmanfx.ui.GameAssets;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
+import de.amr.pacmanfx.ui.api.GameUI_Config;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -25,14 +25,21 @@ import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_YELLOW;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
+/**
+ * Renderer for classic Arcade Pac-Man and Pac-Man XXL game variants.
+ */
 public class ArcadePacMan_GameRenderer extends GameRenderer {
 
-    protected final GameAssets assets;
-    protected ArcadePacMan_SpriteSheet spriteSheet;
+    protected final GameUI_Config uiConfig;
+    protected final ArcadePacMan_SpriteSheet spriteSheet;
 
-    public ArcadePacMan_GameRenderer(GameAssets assets, Canvas canvas, ArcadePacMan_SpriteSheet spriteSheet) {
-        this.assets = requireNonNull(assets);
-        this.spriteSheet = requireNonNull(spriteSheet);
+    public ArcadePacMan_GameRenderer(GameUI_Config uiConfig, Canvas canvas) {
+        this.uiConfig = requireNonNull(uiConfig);
+        if (uiConfig.spriteSheet() instanceof ArcadePacMan_SpriteSheet arcadePacManSpriteSheet) {
+            spriteSheet = arcadePacManSpriteSheet;
+        } else {
+            throw new IllegalArgumentException("Arcade Pac-Man game renderer can only use Arcade Pac-Man sprite sheet!");
+        }
         setCanvas(canvas);
     }
 
@@ -40,7 +47,7 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
     public void drawHUD(GameContext gameContext, HUDData data, Vector2f sceneSize, long tick) {
         if (!data.isVisible()) return;
 
-        Font font = assets.arcadeFont(scaled(TS));
+        Font font = uiConfig.theUI().assets().arcadeFont(scaled(TS));
 
         if (data.isScoreVisible()) {
             ScoreManager scoreManager = gameContext.game().scoreManager();
@@ -99,8 +106,8 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
         ctx().save();
         ctx().scale(scaling(), scaling());
         if (mazeHighlighted) {
-            Image flashingMaze = assets.image(ArcadePacMan_UIConfig.ASSET_NAMESPACE + ".flashing_maze");
-            ctx().drawImage(flashingMaze, 0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);
+            Image brightMazeImage = uiConfig.theUI().assets().image(ArcadePacMan_UIConfig.ASSET_NAMESPACE + ".flashing_maze");
+            ctx().drawImage(brightMazeImage, 0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);
         }
         else if (level.uneatenFoodCount() == 0) {
             drawSprite(spriteSheet.sourceImage(), spriteSheet.sprite(SpriteID.MAP_EMPTY), 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE), false);
@@ -129,8 +136,10 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
 
     private void drawBonus(Bonus bonus) {
         switch (bonus.state()) {
-            case EDIBLE -> drawSpriteCentered(bonus.center(), spriteSheet.sourceImage(), spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS)[bonus.symbol()]);
-            case EATEN  -> drawSpriteCentered(bonus.center(), spriteSheet.sourceImage(), spriteSheet.spriteSequence(SpriteID.BONUS_VALUES)[bonus.symbol()]);
+            case EDIBLE -> drawSpriteCentered(bonus.center(), spriteSheet.sourceImage(),
+                spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS)[bonus.symbol()]);
+            case EATEN  -> drawSpriteCentered(bonus.center(), spriteSheet.sourceImage(),
+                spriteSheet.spriteSequence(SpriteID.BONUS_VALUES)[bonus.symbol()]);
             case INACTIVE -> {}
         }
     }
