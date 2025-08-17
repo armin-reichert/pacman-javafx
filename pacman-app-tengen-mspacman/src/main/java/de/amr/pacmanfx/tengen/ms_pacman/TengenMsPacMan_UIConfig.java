@@ -116,6 +116,10 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         return tengenMsPacManBindings;
     }
 
+    public TengenMsPacMan_MapRepository mapRepository() {
+        return mapRepository;
+    }
+
     @Override
     public GameUI theUI() {
         return ui;
@@ -238,7 +242,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public TengenMsPacMan_GameRenderer createGameRenderer(Canvas canvas) {
-        var renderer = new TengenMsPacMan_GameRenderer(ui.assets(), spriteSheet(), mapRepository, canvas);
+        var renderer = new TengenMsPacMan_GameRenderer(this, canvas);
         renderer.backgroundColorProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
         return renderer;
     }

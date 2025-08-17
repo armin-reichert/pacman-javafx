@@ -13,12 +13,11 @@ import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.*;
+import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.*;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.Clapperboard;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.Stork;
-import de.amr.pacmanfx.ui.GameAssets;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
-import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.input.JoypadKeyBinding;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
@@ -51,20 +50,11 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
 
     private final ObjectProperty<Color> backgroundColorProperty = new SimpleObjectProperty<>(Color.BLACK);
 
-    private final GameAssets assets;
-    private final TengenMsPacMan_SpriteSheet spriteSheet;
-    private final TengenMsPacMan_MapRepository mapRepository;
+    private final TengenMsPacMan_UIConfig uiConfig;
     private ColoredMazeSpriteSet mazeSpriteSet;
 
-    public TengenMsPacMan_GameRenderer(
-        GameAssets assets,
-        TengenMsPacMan_SpriteSheet spriteSheet,
-        TengenMsPacMan_MapRepository mapRepository,
-        Canvas canvas)
-    {
-        this.assets = requireNonNull(assets);
-        this.spriteSheet = requireNonNull(spriteSheet);
-        this.mapRepository = requireNonNull(mapRepository);
+    public TengenMsPacMan_GameRenderer(TengenMsPacMan_UIConfig uiConfig, Canvas canvas) {
+        this.uiConfig = requireNonNull(uiConfig);
         setCanvas(canvas);
         ctx().setImageSmoothing(false);
     }
@@ -86,7 +76,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
 
     @Override
     public void applyLevelSettings(GameLevel level) {
-        mazeSpriteSet = mapRepository.createMazeSpriteSet(level.worldMap(), level.data().numFlashes());
+        mazeSpriteSet = uiConfig.mapRepository().createMazeSpriteSet(level.worldMap(), level.data().numFlashes());
         Logger.info("Created maze sprite set ({} flash colors: {})", level.data().numFlashes(),
             mazeSpriteSet.colorSchemedMazeSprite());
     }
@@ -97,19 +87,20 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
 
         if (!data.isVisible()) return;
 
-        var tengenGame = (TengenMsPacMan_GameModel) gameContext.game();
-        var tengenHUD = (TengenMsPacMan_HUDData) data;
+        Font font = uiConfig.theUI().assets().arcadeFont(TS);
+        var game = (TengenMsPacMan_GameModel) gameContext.game();
+        var hudData = (TengenMsPacMan_HUDData) data;
         
-        if (tengenHUD.isScoreVisible()) {
-            drawScores(tengenGame, tick, nesPaletteColor(0x20), assets.arcadeFont(8));
+        if (hudData.isScoreVisible()) {
+            drawScores(game, tick, nesPaletteColor(0x20), font);
         }
 
-        if (tengenHUD.isLivesCounterVisible()) {
-            drawLivesCounter(tengenHUD.theLivesCounter(), tengenGame.lifeCount(), TS(2), sceneSize.y() - TS);
+        if (hudData.isLivesCounterVisible()) {
+            drawLivesCounter(hudData.theLivesCounter(), game.lifeCount(), TS(2), sceneSize.y() - TS);
         }
 
-        if (tengenHUD.isLevelCounterVisible()) {
-            var levelCounter = tengenHUD.theLevelCounter();
+        if (hudData.isLevelCounterVisible()) {
+            var levelCounter = hudData.theLevelCounter();
             float x = sceneSize.x() - TS(2), y = sceneSize.y() - TS;
             drawLevelCounter(levelCounter.displayedLevelNumber(), levelCounter, x, y);
         }
@@ -130,9 +121,9 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
     }
 
     public void drawLivesCounter(LivesCounter livesCounter, int lifeCount, float x, float y) {
-        RectShort sprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
+        RectShort sprite = uiConfig.spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL);
         for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
-            drawSprite(spriteSheet.sourceImage(), sprite, x + TS(i * 2), y, true);
+            drawSprite(uiConfig.spriteSheet().sourceImage(), sprite, x + TS(i * 2), y, true);
         }
         if (lifeCount > livesCounter.maxLivesDisplayed()) {
             Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
@@ -145,27 +136,27 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
             drawLevelNumberBox(levelNumber, 0, y); // left box
             drawLevelNumberBox(levelNumber, x, y); // right box
         }
-        RectShort[] symbolSprites = spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS);
+        RectShort[] symbolSprites = uiConfig.spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
         x -= TS(2);
         // symbols are drawn from right to left!
         for (byte symbol : levelCounter.symbols()) {
-            drawSprite(spriteSheet.sourceImage(), symbolSprites[symbol], x, y, true);
+            drawSprite(uiConfig.spriteSheet().sourceImage(), symbolSprites[symbol], x, y, true);
             x -= TS(2);
         }
     }
 
     // this is also used by the 3D scene
     public void drawLevelNumberBox(int number, double x, double y) {
-        drawSprite(spriteSheet.sourceImage(), spriteSheet.sprite(SpriteID.LEVEL_NUMBER_BOX), x, y, true);
+        drawSprite(uiConfig.spriteSheet().sourceImage(), uiConfig.spriteSheet().sprite(SpriteID.LEVEL_NUMBER_BOX), x, y, true);
         int tens = number / 10, ones = number % 10;
         if (tens > 0) {
-            drawSprite(spriteSheet.sourceImage(), digitSprite(tens), x + 2, y + 2, true);
+            drawSprite(uiConfig.spriteSheet().sourceImage(), digitSprite(tens), x + 2, y + 2, true);
         }
-        drawSprite(spriteSheet.sourceImage(), digitSprite(ones), x + 10, y + 2, true);
+        drawSprite(uiConfig.spriteSheet().sourceImage(), digitSprite(ones), x + 10, y + 2, true);
     }
 
     private RectShort digitSprite(int digit) {
-        return spriteSheet.sprite(switch (digit) {
+        return uiConfig.spriteSheet().sprite(switch (digit) {
             case 0 -> SpriteID.DIGIT_0;
             case 1 -> SpriteID.DIGIT_1;
             case 2 -> SpriteID.DIGIT_2;
@@ -205,12 +196,12 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
         ctx().translate(0, bonus.jumpHeight());
         switch (bonus.state()) {
             case EDIBLE -> {
-                RectShort sprite = spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS)[bonus.symbol()];
-                drawSpriteCentered(bonus.center(), spriteSheet.sourceImage(), sprite);
+                RectShort sprite = uiConfig.spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS)[bonus.symbol()];
+                drawSpriteCentered(bonus.center(), uiConfig.spriteSheet().sourceImage(), sprite);
             }
             case EATEN  -> {
-                RectShort sprite = spriteSheet.spriteSequence(SpriteID.BONUS_VALUES)[bonus.symbol()];
-                drawSpriteCentered(bonus.center(), spriteSheet.sourceImage(), sprite);
+                RectShort sprite = uiConfig.spriteSheet().spriteSequence(SpriteID.BONUS_VALUES)[bonus.symbol()];
+                drawSpriteCentered(bonus.center(), uiConfig.spriteSheet().sourceImage(), sprite);
             }
         }
         ctx().restore();
@@ -256,7 +247,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
             case RIGHT -> ctx().scale(-1, 1);
             case DOWN  -> { ctx().scale(-1, 1); ctx().rotate(-90); }
         }
-        drawSpriteCentered(0, 0, spriteSheet.sourceImage(), sprite);
+        drawSpriteCentered(0, 0, uiConfig.spriteSheet().sourceImage(), sprite);
         ctx().restore();
     }
 
@@ -338,23 +329,22 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
         });
     }
 
-    public void drawLevelMessage(GameUI_Config config, GameLevel level, Vector2f position, Font font) {
+    public void drawLevelMessage(GameLevel level, Vector2f position, Font font) {
         requireNonNull(level);
         requireNonNull(position);
         requireNonNull(font);
+
         if (level.messageType() == GameLevel.MESSAGE_NONE) return;
 
+        NES_ColorScheme nesColorScheme = level.worldMap().getConfigValue("nesColorScheme");
         float x = position.x(), y = position.y() + TS;
-        String ans = config.assetNamespace();
         switch (level.messageType()) {
             case GameLevel.MESSAGE_READY
-                -> fillTextCentered("READY!", assets.color(ans + ".color.ready_message"), font, x, y);
+                -> fillTextCentered("READY!", uiConfig.localAssetColor("color.ready_message"), font, x, y);
             case GameLevel.MESSAGE_GAME_OVER -> {
-                Color color = assets.color(ans + ".color.game_over_message");
-                if (level.isDemoLevel()) {
-                    NES_ColorScheme nesColorScheme = level.worldMap().getConfigValue("nesColorScheme");
-                    color = Color.web(nesColorScheme.strokeColorRGB());
-                }
+                Color color = level.isDemoLevel()
+                    ? Color.web(nesColorScheme.strokeColorRGB())
+                    : uiConfig.localAssetColor("color.game_over_message");
                 fillTextCentered("GAME OVER", color, font, x, y);
             }
             case GameLevel.MESSAGE_TEST
@@ -401,6 +391,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
     }
 
     public void drawGameOptions(MapCategory category, Difficulty difficulty, PacBooster booster, double centerX, double y) {
+        TengenMsPacMan_SpriteSheet spriteSheet = uiConfig.spriteSheet();
         drawSpriteCentered(centerX, y, spriteSheet.sourceImage(), spriteSheet.sprite(SpriteID.INFO_FRAME));
         RectShort categorySprite = switch (requireNonNull(category)) {
             case BIG     -> spriteSheet.sprite(SpriteID.INFO_CATEGORY_BIG);
@@ -438,7 +429,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
         if (!clapperboard.isVisible()) return;
         clapperboard.sprite().ifPresent(sprite -> {
             double numberX = clapperboard.x() + 8, numberY = clapperboard.y() + 18; // baseline
-            drawSpriteCentered(clapperboard.center(), spriteSheet.sourceImage(), sprite);
+            drawSpriteCentered(clapperboard.center(), uiConfig.spriteSheet().sourceImage(), sprite);
             // over-paint number from sprite sheet
             ctx().save();
             ctx().scale(scaling(), scaling());
