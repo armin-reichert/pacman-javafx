@@ -44,6 +44,7 @@ import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import java.util.*;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.TS;
@@ -74,12 +75,16 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     /** 32/30 */
     public static final float NES_ASPECT = NES_SIZE_PX.x() / NES_SIZE_PX.y();
 
+    private static final Color[] NES_PALETTE_COLORS = IntStream.range(0, 64)
+            .mapToObj(NES_Palette::color)
+            .map(Color::web).toArray(Color[]::new);
+
     /**
      * @param index NES color palette index
      * @return RGB color for palette entry
      */
     public static Color nesPaletteColor(int index) {
-        return Color.web(NES_Palette.color(index));
+        return NES_PALETTE_COLORS[index];
     }
 
     public static Color blueShadedColor(long tick) {
@@ -100,7 +105,6 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     private NonArcadeMapsSpriteSheet nonArcadeMapsSpriteSheet;
     private ColoredMazeSpriteSet recoloredMaze;
     private Map<CacheKey, RecoloredSpriteImage> recoloredMazeImageCache = new WeakHashMap<>();
-
 
     public TengenMsPacMan_UIConfig(GameUI ui) {
         this.ui = requireNonNull(ui);
@@ -265,7 +269,6 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
             scenesByID = null;
         }
         if (tengenMsPacManBindings != null) {
-            tengenMsPacManBindings.clear();
             tengenMsPacManBindings = null;
         }
         if (soundManager != null) {

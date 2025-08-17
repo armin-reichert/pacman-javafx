@@ -57,15 +57,15 @@ public class TengenMsPacMan_MapSelector implements MapSelector {
         requireNonNull(mapCategory);
         requireValidLevelNumber(levelNumber);
         return switch (mapCategory) {
-            case ARCADE  -> createArcadeMap(levelNumber);
+            case ARCADE -> createArcadeMap(levelNumber);
+            case MINI   -> createMiniMap(levelNumber);
+            case BIG    -> createBigMap(levelNumber);
             case STRANGE -> {
                 WorldMap worldMap = createStrangeMap(levelNumber);
                 // Hack: Store mazeID in map properties to make renderer happy
                 worldMap.setConfigValue("mazeID", NonArcadeMapsSpriteSheet.MazeID.values()[levelNumber - 1]);
                 yield worldMap;
             }
-            case MINI    -> createMiniMap(levelNumber);
-            case BIG     -> createBigMap(levelNumber);
         };
     }
 
