@@ -127,7 +127,7 @@ public class MiniGameView extends VBox {
         spriteSheet = ui.currentConfig().spriteSheet();
         gameRenderer = ui.currentConfig().createGameRenderer(canvas);
         gameRenderer.setScaling(scalingProperty.floatValue());
-        gameRenderer.applyLevelSettings(gameLevel);
+        gameRenderer.applyLevelSettings(theGameContext());
     }
 
     public void slideIn() {

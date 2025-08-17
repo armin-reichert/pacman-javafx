@@ -218,7 +218,7 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
         }
 
         final GameLevel gameLevel = gameContext().gameLevel();
-        gameRenderer.applyLevelSettings(gameLevel);
+        gameRenderer.applyLevelSettings(gameContext());
 
         // Level < Level message
         boolean highlighted = levelCompletedAnimation != null && levelCompletedAnimation.isHighlighted();

@@ -55,7 +55,8 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
     public Color backgroundColor() { return backgroundColor.get(); }
 
     @Override
-    public void applyLevelSettings(GameLevel gameLevel) {
+    public void applyLevelSettings(GameContext gameContext) {
+        GameLevel gameLevel = gameContext.gameLevel();
         WorldMap worldMap = gameLevel.worldMap();
         int numFlashes = gameLevel.data().numFlashes();
         if (!worldMap.hasConfigValue(TengenMsPacMan_UIConfig.RECOLORED_MAZE_PROPERTY)) {
@@ -235,8 +236,8 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
         TengenMsPacMan_GameModel game = gameContext.game();
         GameLevel gameLevel = gameContext.gameLevel();
         int mapNumber = gameLevel.worldMap().getConfigValue("mapNumber");
-        applyLevelSettings(gameLevel);
-        ColoredMazeSpriteSet recoloredMaze =  gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.RECOLORED_MAZE_PROPERTY);
+        applyLevelSettings(gameContext);
+        ColoredMazeSpriteSet recoloredMaze = gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.RECOLORED_MAZE_PROPERTY);
         if (game.mapCategory() == MapCategory.STRANGE && mapNumber == 15) {
             int spriteIndex = mazeAnimationSpriteIndex(tick);
             drawLevelWithMaze(gameContext, gameLevel,

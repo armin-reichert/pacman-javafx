@@ -460,13 +460,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        GameLevel gameLevel = gameContext().gameLevel();
-
-        gameRenderer.applyLevelSettings(gameLevel);
-
+        gameRenderer.applyLevelSettings(gameContext());
         gameRenderer.ctx().save();
         gameRenderer.ctx().translate(scaled(2 * TS), 0);
-
+        GameLevel gameLevel = gameContext().gameLevel();
         if (levelCompletedAnimation.isRunning()) {
             if (levelCompletedAnimation.isHighlighted()) {
                 ColoredMazeSpriteSet recoloredMaze = gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.RECOLORED_MAZE_PROPERTY);
