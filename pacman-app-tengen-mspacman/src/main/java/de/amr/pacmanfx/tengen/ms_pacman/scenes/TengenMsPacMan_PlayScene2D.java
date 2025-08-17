@@ -21,6 +21,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_HUDData;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_LevelCounter;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.ColoredMazeSpriteSet;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.RecoloredSpriteImage;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
@@ -266,7 +267,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         setActionsBindings();
         //TODO needed?
         setGameRenderer(ui.currentConfig().createGameRenderer(canvas));
-        renderer().ensureRenderingHintsAreApplied(gameLevel);
     }
 
     @Override
@@ -439,9 +439,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             case SCROLLING -> (subScene.getHeight() / NES_SIZE_PX.y());
         };
         setScaling(scaling);
-
         renderer().setScaling(scaling);
-        renderer().ensureRenderingHintsAreApplied(gameContext().gameLevel());
 
         gameRenderer.ctx().save();
 
@@ -465,14 +463,16 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         GameLevel gameLevel = gameContext().gameLevel();
         TengenMsPacMan_UIConfig uiConfig = ui.currentConfig();
 
+        gameRenderer.applyLevelSettings(gameLevel);
         gameRenderer.ctx().save();
         gameRenderer.ctx().translate(scaled(2 * TS), 0);
 
         if (levelCompletedAnimation.isRunning()) {
             if (levelCompletedAnimation.isHighlighted()) {
-                // get the current flashing maze "animation frame"
-                int frameIndex = levelCompletedAnimation.flashingIndex();
-                RecoloredSpriteImage flashingMazeSprite = uiConfig.recoloredMazeSprites().flashingMazeSprites().get(frameIndex);
+                ColoredMazeSpriteSet recoloredMaze = gameLevel.worldMap().getConfigValue("recoloredMaze");
+                // get the current maze flashing "animation frame"
+                int frame = levelCompletedAnimation.flashingIndex();
+                RecoloredSpriteImage flashingMazeSprite = recoloredMaze.flashingMazeSprites().get(frame);
                 renderer().drawLevelWithMaze(gameContext(), gameLevel, flashingMazeSprite.image(), flashingMazeSprite.sprite());
             } else {
                 renderer().drawLevel(gameContext(), gameLevel, null, false, false, ui.clock().tickCount());

@@ -103,7 +103,6 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     private TengenMsPacMan_SpriteSheet spriteSheet;
     private ArcadeMapsSpriteSheet arcadeMapsSpriteSheet;
     private NonArcadeMapsSpriteSheet nonArcadeMapsSpriteSheet;
-    private ColoredMazeSpriteSet recoloredMaze;
     private Map<CacheKey, RecoloredSpriteImage> recoloredMazeImageCache = new WeakHashMap<>();
 
     public TengenMsPacMan_UIConfig(GameUI ui) {
@@ -129,18 +128,6 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     public Set<ActionBinding> tengenMsPacManBindings() {
         return tengenMsPacManBindings;
-    }
-
-    public ColoredMazeSpriteSet recoloredMazeSprites() {
-        return recoloredMaze;
-    }
-
-    public void createMazeSpriteSet(GameLevel gameLevel) {
-        recoloredMaze = createMazeSpriteSet(gameLevel.worldMap(), gameLevel.data().numFlashes());
-        Logger.info("Created recolored maze sprites for game level #{} ({} flash colors: {})",
-            gameLevel.number(),
-            gameLevel.data().numFlashes(),
-            recoloredMaze.mazeSprite());
     }
 
     @Override
@@ -256,10 +243,6 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         if (recoloredMazeImageCache != null) {
             recoloredMazeImageCache.clear();
             recoloredMazeImageCache = null;
-        }
-        if (recoloredMaze != null) {
-            recoloredMaze.dispose();
-            recoloredMaze = null;
         }
         if (spriteSheet != null) {
             spriteSheet = null;

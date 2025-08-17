@@ -54,16 +54,16 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
 
     public Color backgroundColor() { return backgroundColorProperty.get(); }
 
-    //TODO check cases where colored map set is not initialized properly
-    public void ensureRenderingHintsAreApplied(GameLevel gameLevel) {
-        if (uiConfig.recoloredMazeSprites() == null) {
-            applyLevelSettings(gameLevel);
-        }
-    }
-
     @Override
     public void applyLevelSettings(GameLevel gameLevel) {
-        uiConfig.createMazeSpriteSet(gameLevel);
+        if (!gameLevel.worldMap().hasConfigValue("recoloredMaze")) {
+            ColoredMazeSpriteSet recoloredMaze = uiConfig.createMazeSpriteSet(gameLevel.worldMap(), gameLevel.data().numFlashes());
+            gameLevel.worldMap().setConfigValue("recoloredMaze", recoloredMaze);
+            Logger.info("Created recolored maze sprites for game level #{} ({} flash colors: {})",
+                    gameLevel.number(),
+                    gameLevel.data().numFlashes(),
+                    recoloredMaze.mazeSprite());
+        }
     }
 
     @Override
@@ -238,15 +238,16 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
     {
         var game = (TengenMsPacMan_GameModel) gameContext.game();
         int mapNumber = level.worldMap().getConfigValue("mapNumber");
+        applyLevelSettings(level);
+        ColoredMazeSpriteSet recoloredMaze =  level.worldMap().getConfigValue("recoloredMaze");
         if (game.mapCategory() == MapCategory.STRANGE && mapNumber == 15) {
             int spriteIndex = mazeAnimationSpriteIndex(tick);
             drawLevelWithMaze(gameContext, level,
-                uiConfig.recoloredMazeSprites().mazeSprite().image(),
-                uiConfig.nonArcadeMapsSpriteSheet().spriteSequence(NonArcadeMapsSpriteSheet.MazeID.MAZE32_ANIMATED)[spriteIndex]);
+                recoloredMaze.mazeSprite().image(),
+                uiConfig.nonArcadeMapsSpriteSheet()
+                        .spriteSequence(NonArcadeMapsSpriteSheet.MazeID.MAZE32_ANIMATED)[spriteIndex]);
         } else {
-            drawLevelWithMaze(gameContext, level,
-                uiConfig.recoloredMazeSprites().mazeSprite().image(),
-                uiConfig.recoloredMazeSprites().mazeSprite().sprite());
+            drawLevelWithMaze(gameContext, level, recoloredMaze.mazeSprite().image(), recoloredMaze.mazeSprite().sprite());
         }
     }
 
@@ -279,7 +280,8 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
         requireNonNull(gameLevel);
         ctx().save();
         ctx().scale(scaling(), scaling());
-        Color pelletColor = Color.web(uiConfig.recoloredMazeSprites().mazeSprite().colorScheme().pelletColorRGB());
+        ColoredMazeSpriteSet recoloredMaze =  gameLevel.worldMap().getConfigValue("recoloredMaze");
+        Color pelletColor = Color.web(recoloredMaze.mazeSprite().colorScheme().pelletColorRGB());
         drawPellets(gameLevel, pelletColor);
         drawEnergizers(gameLevel, pelletColor);
         ctx().restore();
