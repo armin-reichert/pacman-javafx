@@ -35,7 +35,7 @@ import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
-import static de.amr.pacmanfx.tengen.ms_pacman.rendering.NonArcadeMapsSpriteSheet.NonArcadeMazeID.MAZE15;
+import static de.amr.pacmanfx.tengen.ms_pacman.rendering.NonArcadeMapsSpriteSheet.MazeID.MAZE15;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
@@ -133,28 +133,13 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
 
     // this is also used by the 3D scene
     public void drawLevelNumberBox(int number, double x, double y) {
-        drawSprite(uiConfig.spriteSheet().sourceImage(), uiConfig.spriteSheet().sprite(SpriteID.LEVEL_NUMBER_BOX), x, y, true);
+        TengenMsPacMan_SpriteSheet spriteSheet = uiConfig.spriteSheet();
+        drawSprite(spriteSheet.sourceImage(), spriteSheet.sprite(SpriteID.LEVEL_NUMBER_BOX), x, y, true);
         int tens = number / 10, ones = number % 10;
         if (tens > 0) {
-            drawSprite(uiConfig.spriteSheet().sourceImage(), digitSprite(tens), x + 2, y + 2, true);
+            drawSprite(uiConfig.spriteSheet().sourceImage(), spriteSheet.digitSprite(tens), x + 2, y + 2, true);
         }
-        drawSprite(uiConfig.spriteSheet().sourceImage(), digitSprite(ones), x + 10, y + 2, true);
-    }
-
-    private RectShort digitSprite(int digit) {
-        return uiConfig.spriteSheet().sprite(switch (digit) {
-            case 0 -> SpriteID.DIGIT_0;
-            case 1 -> SpriteID.DIGIT_1;
-            case 2 -> SpriteID.DIGIT_2;
-            case 3 -> SpriteID.DIGIT_3;
-            case 4 -> SpriteID.DIGIT_4;
-            case 5 -> SpriteID.DIGIT_5;
-            case 6 -> SpriteID.DIGIT_6;
-            case 7 -> SpriteID.DIGIT_7;
-            case 8 -> SpriteID.DIGIT_8;
-            case 9 -> SpriteID.DIGIT_9;
-            default -> throw new IllegalArgumentException("Illegal digit value " + digit);
-        });
+        drawSprite(uiConfig.spriteSheet().sourceImage(), spriteSheet.digitSprite(ones), x + 10, y + 2, true);
     }
 
     @Override

@@ -201,6 +201,23 @@ public record TengenMsPacMan_SpriteSheet(Image sourceImage) implements SpriteShe
         SPRITE_MAP.checkCompleteness();
     }
 
+    public RectShort digitSprite(int digit) {
+        return sprite(switch (digit) {
+            case 0 -> SpriteID.DIGIT_0;
+            case 1 -> SpriteID.DIGIT_1;
+            case 2 -> SpriteID.DIGIT_2;
+            case 3 -> SpriteID.DIGIT_3;
+            case 4 -> SpriteID.DIGIT_4;
+            case 5 -> SpriteID.DIGIT_5;
+            case 6 -> SpriteID.DIGIT_6;
+            case 7 -> SpriteID.DIGIT_7;
+            case 8 -> SpriteID.DIGIT_8;
+            case 9 -> SpriteID.DIGIT_9;
+            default -> throw new IllegalArgumentException("Illegal digit value " + digit);
+        });
+    }
+
+
     public TengenMsPacMan_SpriteSheet {
         requireNonNull(sourceImage);
     }

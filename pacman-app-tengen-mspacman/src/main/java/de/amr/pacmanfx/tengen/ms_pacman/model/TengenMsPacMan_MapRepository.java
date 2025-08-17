@@ -141,20 +141,20 @@ public class TengenMsPacMan_MapRepository implements Disposable {
     }
 
     private ColoredMazeSpriteSet arcadeMazeSpriteSet(int mapNumber, NES_ColorScheme colorScheme, int flashCount) {
-        ArcadeMapsSpriteSheet.ArcadeMapID id = switch (mapNumber) {
-            case 1 -> ArcadeMapsSpriteSheet.ArcadeMapID.MAZE1;
-            case 2 -> ArcadeMapsSpriteSheet.ArcadeMapID.MAZE2;
+        ArcadeMapsSpriteSheet.MazeID id = switch (mapNumber) {
+            case 1 -> ArcadeMapsSpriteSheet.MazeID.MAZE1;
+            case 2 -> ArcadeMapsSpriteSheet.MazeID.MAZE2;
             case 3 -> switch (colorScheme) {
-                case _16_20_15_ORANGE_WHITE_RED   -> ArcadeMapsSpriteSheet.ArcadeMapID.MAZE3;
-                case _35_28_20_PINK_YELLOW_WHITE  -> ArcadeMapsSpriteSheet.ArcadeMapID.MAZE5;
-                case _17_20_20_BROWN_WHITE_WHITE  -> ArcadeMapsSpriteSheet.ArcadeMapID.MAZE7;
-                case _0F_20_28_BLACK_WHITE_YELLOW -> ArcadeMapsSpriteSheet.ArcadeMapID.MAZE9;
+                case _16_20_15_ORANGE_WHITE_RED   -> ArcadeMapsSpriteSheet.MazeID.MAZE3;
+                case _35_28_20_PINK_YELLOW_WHITE  -> ArcadeMapsSpriteSheet.MazeID.MAZE5;
+                case _17_20_20_BROWN_WHITE_WHITE  -> ArcadeMapsSpriteSheet.MazeID.MAZE7;
+                case _0F_20_28_BLACK_WHITE_YELLOW -> ArcadeMapsSpriteSheet.MazeID.MAZE9;
                 default -> throw new IllegalArgumentException("No maze image found for map #3 and color scheme: " + colorScheme);
             };
             case 4 -> switch (colorScheme) {
-                case _01_38_20_BLUE_YELLOW_WHITE   -> ArcadeMapsSpriteSheet.ArcadeMapID.MAZE4;
-                case _36_15_20_PINK_RED_WHITE      -> ArcadeMapsSpriteSheet.ArcadeMapID.MAZE6;
-                case _13_20_28_VIOLET_WHITE_YELLOW -> ArcadeMapsSpriteSheet.ArcadeMapID.MAZE8;
+                case _01_38_20_BLUE_YELLOW_WHITE   -> ArcadeMapsSpriteSheet.MazeID.MAZE4;
+                case _36_15_20_PINK_RED_WHITE      -> ArcadeMapsSpriteSheet.MazeID.MAZE6;
+                case _13_20_28_VIOLET_WHITE_YELLOW -> ArcadeMapsSpriteSheet.MazeID.MAZE8;
                 default -> throw new IllegalArgumentException("No maze image found for map #4 and color scheme: " + colorScheme);
             };
             default -> throw new IllegalArgumentException("Illegal Arcade map number: " + mapNumber);
@@ -310,10 +310,11 @@ public class TengenMsPacMan_MapRepository implements Disposable {
 
     private RecoloredSpriteImage recoloredMazeImage(
         MapCategory mapCategory, int spriteNumber, RectShort mazeSprite,
-        NES_ColorScheme requestedScheme, NES_ColorScheme existingScheme)
-    {
+        NES_ColorScheme requestedScheme, NES_ColorScheme existingScheme) {
+
         var key = new CacheKey(mapCategory, spriteNumber, requestedScheme);
-        if (!recoloredMazeImageCache.containsKey(key)) {
+        RecoloredSpriteImage mazeImage = recoloredMazeImageCache.get(key);
+        if (mazeImage == null) {
             SpriteSheet<?> spriteSheet = mapCategory == MapCategory.ARCADE ? arcadeMazesSpriteSheet : nonArcadeMazesSpriteSheet;
             var image = new RecoloredSpriteImage(
                 exchangeNES_ColorScheme(crop(spriteSheet.sourceImage(), mazeSprite), existingScheme, requestedScheme),
@@ -322,6 +323,6 @@ public class TengenMsPacMan_MapRepository implements Disposable {
             recoloredMazeImageCache.put(key, image);
             Logger.info("{} maze image recolored to {}, cache size: {}", mapCategory, requestedScheme, recoloredMazeImageCache.size());
         }
-        return recoloredMazeImageCache.get(key);
+        return mazeImage;
     }
 }
