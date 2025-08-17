@@ -412,7 +412,6 @@ public class GameUI_Implementation implements GameUI {
             GameUI_Config previousConfig = config(previousVariant);
             Logger.info("Unloading assets for game variant {}", previousVariant);
             previousConfig.dispose();
-            previousConfig.soundManager().mutedProperty().unbind();
         }
 
         GameUI_Config newConfig = config(gameVariant);
