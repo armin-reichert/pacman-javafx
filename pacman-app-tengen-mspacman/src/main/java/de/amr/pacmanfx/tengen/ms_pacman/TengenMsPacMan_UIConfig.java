@@ -97,18 +97,17 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     private Set<ActionBinding> tengenMsPacManBindings;
 
     private TengenMsPacMan_SpriteSheet spriteSheet;
-    private TengenMsPacMan_NonArcadeMapsSpriteSheet nonArcadeMapsSpriteSheet;
+    private ArcadeMapsSpriteSheet arcadeMapsSpriteSheet;
+    private NonArcadeMapsSpriteSheet nonArcadeMapsSpriteSheet;
     private TengenMsPacMan_MapRepository mapRepository;
     private ColoredMazeSpriteSet recoloredMazeSprites;
 
     public TengenMsPacMan_UIConfig(GameUI ui) {
         this.ui = requireNonNull(ui);
         spriteSheet = new TengenMsPacMan_SpriteSheet(RES_TENGEN.loadImage("graphics/spritesheet.png"));
-        nonArcadeMapsSpriteSheet = new TengenMsPacMan_NonArcadeMapsSpriteSheet(RES_TENGEN.loadImage("graphics/non_arcade_mazes.png"));
-        mapRepository = new TengenMsPacMan_MapRepository(
-            RES_TENGEN.loadImage("graphics/arcade_mazes.png"),
-            RES_TENGEN.loadImage("graphics/non_arcade_mazes.png")
-        );
+        arcadeMapsSpriteSheet = new ArcadeMapsSpriteSheet(RES_TENGEN.loadImage("graphics/arcade_mazes.png"));
+        nonArcadeMapsSpriteSheet = new NonArcadeMapsSpriteSheet(RES_TENGEN.loadImage("graphics/non_arcade_mazes.png"));
+        mapRepository = new TengenMsPacMan_MapRepository(arcadeMapsSpriteSheet, nonArcadeMapsSpriteSheet);
 
         Joypad jp = ui.joypad();
         tengenMsPacManBindings = Set.of(
@@ -251,6 +250,14 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
             mapRepository.dispose();
             mapRepository = null;
         }
+        if (arcadeMapsSpriteSheet != null) {
+            //arcadeMapsSpriteSheet.dispose();
+            arcadeMapsSpriteSheet = null;
+        }
+        if (nonArcadeMapsSpriteSheet != null) {
+            //nonArcadeMapsSpriteSheet.dispose();
+            nonArcadeMapsSpriteSheet = null;
+        }
         if (recoloredMazeSprites != null) {
             recoloredMazeSprites.dispose();
             recoloredMazeSprites = null;
@@ -288,7 +295,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         return spriteSheet;
     }
 
-    public TengenMsPacMan_NonArcadeMapsSpriteSheet nonArcadeMapsSpriteSheet() {
+    public NonArcadeMapsSpriteSheet nonArcadeMapsSpriteSheet() {
         return nonArcadeMapsSpriteSheet;
     }
 

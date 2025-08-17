@@ -35,7 +35,7 @@ import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
-import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_NonArcadeMapsSpriteSheet.NonArcadeMazeID.MAZE15;
+import static de.amr.pacmanfx.tengen.ms_pacman.rendering.NonArcadeMapsSpriteSheet.NonArcadeMazeID.MAZE15;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
