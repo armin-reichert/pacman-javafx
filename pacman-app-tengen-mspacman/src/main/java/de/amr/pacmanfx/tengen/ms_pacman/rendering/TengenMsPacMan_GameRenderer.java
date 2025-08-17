@@ -35,7 +35,6 @@ import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
-import static de.amr.pacmanfx.tengen.ms_pacman.rendering.NonArcadeMapsSpriteSheet.MazeID.MAZE15;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
@@ -240,10 +239,10 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
         var game = (TengenMsPacMan_GameModel) gameContext.game();
         int mapNumber = level.worldMap().getConfigValue("mapNumber");
         if (game.mapCategory() == MapCategory.STRANGE && mapNumber == 15) {
-            int spriteIndex = strangeMap15SpriteIndex(tick);
+            int spriteIndex = mazeAnimationSpriteIndex(tick);
             drawLevelWithMaze(gameContext, level,
                 uiConfig.recoloredMazeSprites().mazeSprite().image(),
-                uiConfig.nonArcadeMapsSpriteSheet().spriteSequence(MAZE15)[spriteIndex]);
+                uiConfig.nonArcadeMapsSpriteSheet().spriteSequence(NonArcadeMapsSpriteSheet.MazeID.MAZE32)[spriteIndex]);
         } else {
             drawLevelWithMaze(gameContext, level,
                 uiConfig.recoloredMazeSprites().mazeSprite().image(),
@@ -252,10 +251,10 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
     }
 
     /*
-       Strange map #15: psychedelic animation:
+       Strange map #15 (maze #32): psychedelic animation:
        Frame pattern: (00000000 11111111 22222222 11111111)+, numFrames = 4, frameDuration = 8
      */
-    private int strangeMap15SpriteIndex(long tick) {
+    private int mazeAnimationSpriteIndex(long tick) {
         long block = (tick % 32) / 8;
         return (int) (block < 3 ? block : 1);
     }
