@@ -13,8 +13,6 @@ import de.amr.pacmanfx.tengen.ms_pacman.rendering.ColoredMazeSpriteSet;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.NonArcadeMapsSpriteSheet;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.RecoloredSpriteImage;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
-import javafx.scene.image.Image;
-import javafx.scene.image.WritableImage;
 import org.tinylog.Logger;
 
 import java.util.*;
@@ -43,12 +41,6 @@ public class TengenMsPacMan_MapRepository implements Disposable {
         37, 37, 31, 25, 31, 25, 31, 31, 37,
         25, 25, 25, 25,
     };
-
-    private static Image crop(Image image, RectShort sprite) {
-        var croppedImage = new WritableImage(sprite.width(), sprite.height());
-        croppedImage.getPixelWriter().setPixels(0, 0, sprite.width(), sprite.height(), image.getPixelReader(), sprite.x(), sprite.y());
-        return croppedImage;
-    }
 
     private static NES_ColorScheme colorSchemeFromNonArcadeMapsSpriteSheet(int spriteNumber){
         return switch (spriteNumber) {
@@ -316,11 +308,11 @@ public class TengenMsPacMan_MapRepository implements Disposable {
         RecoloredSpriteImage mazeImage = recoloredMazeImageCache.get(key);
         if (mazeImage == null) {
             SpriteSheet<?> spriteSheet = mapCategory == MapCategory.ARCADE ? arcadeMazesSpriteSheet : nonArcadeMazesSpriteSheet;
-            var image = new RecoloredSpriteImage(
-                exchangeNES_ColorScheme(crop(spriteSheet.sourceImage(), mazeSprite), existingScheme, requestedScheme),
+            mazeImage = new RecoloredSpriteImage(
+                exchangeNES_ColorScheme(spriteSheet.image(mazeSprite), existingScheme, requestedScheme),
                 new RectShort(0, 0, mazeSprite.width(), mazeSprite.height()),
                 requestedScheme);
-            recoloredMazeImageCache.put(key, image);
+            recoloredMazeImageCache.put(key, mazeImage);
             Logger.info("{} maze image recolored to {}, cache size: {}", mapCategory, requestedScheme, recoloredMazeImageCache.size());
         }
         return mazeImage;

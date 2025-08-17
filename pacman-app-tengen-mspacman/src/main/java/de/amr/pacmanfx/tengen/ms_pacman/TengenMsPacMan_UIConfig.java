@@ -100,7 +100,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     private ArcadeMapsSpriteSheet arcadeMapsSpriteSheet;
     private NonArcadeMapsSpriteSheet nonArcadeMapsSpriteSheet;
     private TengenMsPacMan_MapRepository mapRepository;
-    private ColoredMazeSpriteSet recoloredMazeSprites;
+    private ColoredMazeSpriteSet recoloredMaze;
 
     public TengenMsPacMan_UIConfig(GameUI ui) {
         this.ui = requireNonNull(ui);
@@ -133,15 +133,15 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     }
 
     public ColoredMazeSpriteSet recoloredMazeSprites() {
-        return recoloredMazeSprites;
+        return recoloredMaze;
     }
 
     public void createMazeSpriteSet(GameLevel gameLevel) {
-        recoloredMazeSprites = mapRepository.createMazeSpriteSet(gameLevel.worldMap(), gameLevel.data().numFlashes());
+        recoloredMaze = mapRepository.createMazeSpriteSet(gameLevel.worldMap(), gameLevel.data().numFlashes());
         Logger.info("Created recolored maze sprites for game level #{} ({} flash colors: {})",
             gameLevel.number(),
             gameLevel.data().numFlashes(),
-            recoloredMazeSprites.mazeSprite());
+            recoloredMaze.mazeSprite());
     }
 
     @Override
@@ -258,9 +258,9 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
             //nonArcadeMapsSpriteSheet.dispose();
             nonArcadeMapsSpriteSheet = null;
         }
-        if (recoloredMazeSprites != null) {
-            recoloredMazeSprites.dispose();
-            recoloredMazeSprites = null;
+        if (recoloredMaze != null) {
+            recoloredMaze.dispose();
+            recoloredMaze = null;
         }
         if (spriteSheet != null) {
             spriteSheet = null;
