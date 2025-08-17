@@ -242,7 +242,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
             int spriteIndex = mazeAnimationSpriteIndex(tick);
             drawLevelWithMaze(gameContext, level,
                 uiConfig.recoloredMazeSprites().mazeSprite().image(),
-                uiConfig.nonArcadeMapsSpriteSheet().spriteSequence(NonArcadeMapsSpriteSheet.MazeID.MAZE32)[spriteIndex]);
+                uiConfig.nonArcadeMapsSpriteSheet().spriteSequence(NonArcadeMapsSpriteSheet.MazeID.MAZE32_ANIMATED)[spriteIndex]);
         } else {
             drawLevelWithMaze(gameContext, level,
                 uiConfig.recoloredMazeSprites().mazeSprite().image(),

@@ -7,6 +7,7 @@ package de.amr.pacmanfx.tengen.ms_pacman.model;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.MapSelector;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.NonArcadeMapsSpriteSheet;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -59,8 +60,8 @@ public class TengenMsPacMan_MapSelector implements MapSelector {
             case ARCADE  -> createArcadeMap(levelNumber);
             case STRANGE -> {
                 WorldMap worldMap = createStrangeMap(levelNumber);
-                // Hack: Store level number in map such that the renderer can easily determine the corresponding map image
-                worldMap.setConfigValue("levelNumber", levelNumber);
+                // Hack: Store mazeID in map properties to make renderer happy
+                worldMap.setConfigValue("mazeID", NonArcadeMapsSpriteSheet.MazeID.values()[levelNumber - 1]);
                 yield worldMap;
             }
             case MINI    -> createMiniMap(levelNumber);

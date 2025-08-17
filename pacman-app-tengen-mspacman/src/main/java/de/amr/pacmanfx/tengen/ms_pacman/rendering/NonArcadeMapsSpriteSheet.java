@@ -14,48 +14,57 @@ import static de.amr.pacmanfx.lib.RectShort.rect;
 
 public record NonArcadeMapsSpriteSheet(Image sourceImage) implements SpriteSheet<NonArcadeMapsSpriteSheet.MazeID> {
 
+    // MazeIDs they appear in the sprite sheet (row by row)
     public enum MazeID {
-        MAZE1, MAZE2, MAZE3, MAZE4, MAZE5, MAZE6, MAZE7, MAZE8, MAZE9, MAZE10,
-        MAZE11, MAZE12, MAZE13, MAZE14, MAZE15, MAZE16, MAZE17, MAZE18, MAZE19,
-        MAZE20, MAZE21, MAZE22, MAZE23, MAZE24, MAZE25, MAZE26, MAZE27, MAZE28,
-        MAZE29, MAZE30, MAZE31, MAZE32, MAZE33, MAZE34, MAZE35, MAZE36
+        MAZE1, MAZE2, MAZE3, MAZE4, MAZE5, MAZE6, MAZE7, MAZE8,
+        MAZE9, MAZE10_BIG, MAZE11, MAZE12, MAZE13, MAZE14_BIG, MAZE15, MAZE16_MINI,
+        MAZE17_BIG, MAZE18, MAZE19_BIG, MAZE20_BIG, MAZE21_BIG, MAZE22_BIG, MAZE23_BIG, MAZE24,
+        MAZE25_BIG, MAZE26_BIG, MAZE27, MAZE28_MINI, MAZE29, MAZE30_MINI, MAZE31, MAZE32_ANIMATED, MAZE33_BIG,
+        MAZE34_MINI, MAZE35_MINI, MAZE36_MINI, MAZE37_MINI
     }
 
-    private static final SpriteMap<MazeID> SPRITE_MAP = new SpriteMap<>(MazeID.class);
-
-    // Map row counts as they appear in the non-ARCADE mazes sprite sheet (row by row)
-    private static final byte[] NON_ARCADE_MAP_ROW_COUNTS = {
-        31, 31, 31, 31, 31, 31, 30, 31,
-        31, 37, 31, 31, 31, 37, 31, 25,
-        37, 31, 37, 37, 37, 37, 37, 31,
-        37, 37, 31, 25, 31, 25, 31, 31, 37,
-        25, 25, 25, 25,
+    // Height (in tiles) of the maps as they appear in the sprite sheet (row by row)
+    private static final byte[][] MAP_HEIGHT_IN_TILES = {
+        {31, 31, 31, 31, 31, 31, 30, 31},
+        {31, 37, 31, 31, 31, 37, 31, 25},
+        {37, 31, 37, 37, 37, 37, 37, 31},
+        {37, 37, 31, 25, 31, 25, 31, 31 /* 3 frames */, 37 /* BIG map */},
+        {25, 25, 25, 25} // 4 MINI maps
     };
 
+    private static final SpriteMap<MazeID> SPRITE_MAP = new SpriteMap<>(MazeID.class);
     static {
+        // Example: MazeID.MAZE10 = ids[9]
         MazeID[] ids = MazeID.values();
         int idNumber = 1;
 
         int width = 28 * TS;
+        // y position of maze upper edges by row index
         int[] ys = {0, 248, 544, 840, 1136};
 
         // first 4 rows
-        for (int row = 0; row < 5; ++row) {
+        for (int row = 0; row < 4; ++row) {
             for (int col = 0; col < 8; ++col) {
-                int height = NON_ARCADE_MAP_ROW_COUNTS[col] * TS;
+                int height = MAP_HEIGHT_IN_TILES[row][col] * TS;
                 if (idNumber != 32) {
-                    SPRITE_MAP.add(ids[idNumber - 1], new RectShort(col * width, ys[row], width, height));
+                    SPRITE_MAP.add(ids[idNumber - 1], rect(col * width, ys[row], width, height));
                     ++idNumber;
-                }
-                if (row == 4 && col == 3) {
-                    break; // last maze in sprite sheet reached
                 }
             }
         }
-        // Maze #32 is special and has 3 animation frames
-        SPRITE_MAP.add(MazeID.MAZE32,
-            rect(1568, 840, 224, 248), rect(1568, 1088, 224, 248), rect(1568, 1336, 224, 248)
-        );
+
+        // Maze #32 (last in STRANGE level) is special and has 3 animation frames
+        SPRITE_MAP.add(MazeID.MAZE32_ANIMATED, rect(1568, 840, 224, 248), rect(1568, 1088, 224, 248), rect(1568, 1336, 224, 248));
+
+        // row 3, col 8:  Maze #33 is BIG map
+        SPRITE_MAP.add(MazeID.MAZE33_BIG, rect(8 * width, ys[3], width, MAP_HEIGHT_IN_TILES[3][8] * TS));
+
+        // last row: 4 MINI mazes
+        int lastRow = 4, y = ys[lastRow];
+        SPRITE_MAP.add(MazeID.MAZE34_MINI, rect(    0,     y, width, MAP_HEIGHT_IN_TILES[lastRow][0] * TS));
+        SPRITE_MAP.add(MazeID.MAZE35_MINI, rect(    width, y, width, MAP_HEIGHT_IN_TILES[lastRow][1] * TS));
+        SPRITE_MAP.add(MazeID.MAZE36_MINI, rect(2 * width, y, width, MAP_HEIGHT_IN_TILES[lastRow][2] * TS));
+        SPRITE_MAP.add(MazeID.MAZE37_MINI, rect(3 * width, y, width, MAP_HEIGHT_IN_TILES[lastRow][3] * TS));
     }
 
     @Override

@@ -220,7 +220,7 @@ public abstract class Ghost extends MovingActor {
     public void setState(GhostState newState) {
         requireNonNull(newState);
         if (state() == newState) {
-            Logger.warn("{} is already in state {}", id.name(), newState);
+            Logger.debug("{} is already in state {}", id.name(), newState);
         }
         stateProperty().set(newState);
 
