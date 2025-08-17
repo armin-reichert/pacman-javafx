@@ -82,6 +82,13 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         return Color.web(NES_Palette.color(index));
     }
 
+    public static Color blueShadedColor(long tick) {
+        // Blue color, changing from dark blue to brighter blue.
+        // Cycles through palette indices 0x01, 0x11, 0x21, 0x31, each 16 ticks.
+        int i = (int) (tick % 64) / 16;
+        return nesPaletteColor(0x01 + i * 0x10);
+    }
+
     private final GameUI ui;
     private final DefaultSoundManager soundManager = new DefaultSoundManager();
     private final Map<String, GameScene> scenesByID = new HashMap<>();

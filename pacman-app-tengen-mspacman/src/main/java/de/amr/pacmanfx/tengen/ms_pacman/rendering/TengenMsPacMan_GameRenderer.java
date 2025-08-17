@@ -41,13 +41,6 @@ import static java.util.function.Predicate.not;
 
 public class TengenMsPacMan_GameRenderer extends GameRenderer {
 
-    public static Color blueShadedColor(long tick) {
-        // Blue color, changing from dark blue to brighter blue.
-        // Cycles through palette indices 0x01, 0x11, 0x21, 0x31, each 16 ticks.
-        int i = (int) (tick % 64) / 16;
-        return nesPaletteColor(0x01 + i * 0x10);
-    }
-
     private final ObjectProperty<Color> backgroundColorProperty = new SimpleObjectProperty<>(Color.BLACK);
 
     private final TengenMsPacMan_UIConfig uiConfig;
