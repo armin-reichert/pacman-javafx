@@ -57,7 +57,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
 
     //TODO check cases where colored map set is not initialized properly
     public void ensureRenderingHintsAreApplied(GameLevel gameLevel) {
-        if (uiConfig.mazeSpriteSet() == null) {
+        if (uiConfig.recoloredMazeSprites() == null) {
             applyLevelSettings(gameLevel);
         }
     }
@@ -256,8 +256,8 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
         int mapNumber = level.worldMap().getConfigValue("mapNumber");
         RectShort mazeSprite = tengenGame.mapCategory() == MapCategory.STRANGE && mapNumber == 15
             ? strangeMap15Sprite(tick) // Strange map #15: psychedelic animation
-            : uiConfig.mazeSpriteSet().colorSchemedMazeSprite().sprite();
-        drawLevelWithMaze(gameContext, level, uiConfig.mazeSpriteSet().colorSchemedMazeSprite().image(), mazeSprite);
+            : uiConfig.recoloredMazeSprites().mazeSprite().sprite();
+        drawLevelWithMaze(gameContext, level, uiConfig.recoloredMazeSprites().mazeSprite().image(), mazeSprite);
     }
 
     public void drawLevelWithMaze(GameContext gameContext, GameLevel level, Image mazeImage, RectShort mazeSprite) {
@@ -276,21 +276,21 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
         drawFood(level);
     }
 
-    private void drawFood(GameLevel level) {
-        requireNonNull(level);
+    private void drawFood(GameLevel gameLevel) {
+        requireNonNull(gameLevel);
         ctx().save();
         ctx().scale(scaling(), scaling());
-        Color pelletColor = Color.web(uiConfig.mazeSpriteSet().colorSchemedMazeSprite().colorScheme().pelletColorRGB());
-        drawPellets(level, pelletColor);
-        drawEnergizers(level, pelletColor);
+        Color pelletColor = Color.web(uiConfig.recoloredMazeSprites().mazeSprite().colorScheme().pelletColorRGB());
+        drawPellets(gameLevel, pelletColor);
+        drawEnergizers(gameLevel, pelletColor);
         ctx().restore();
     }
 
-    private void drawPellets(GameLevel level, Color pelletColor) {
-        level.worldMap().tiles().filter(level::isFoodPosition).filter(not(level::isEnergizerPosition)).forEach(tile -> {
+    private void drawPellets(GameLevel gameLevel, Color pelletColor) {
+        gameLevel.worldMap().tiles().filter(gameLevel::isFoodPosition).filter(not(gameLevel::isEnergizerPosition)).forEach(tile -> {
             ctx().setFill(backgroundColor());
             fillSquareAtTileCenter(tile, 4);
-            if (!level.tileContainsEatenFood(tile)) {
+            if (!gameLevel.tileContainsEatenFood(tile)) {
                 // draw pellet using the right color
                 ctx().setFill(pelletColor);
                 fillSquareAtTileCenter(tile, 2);

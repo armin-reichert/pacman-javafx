@@ -3,6 +3,18 @@
  */
 package de.amr.pacmanfx.tengen.ms_pacman.rendering;
 
+import de.amr.pacmanfx.lib.Disposable;
+
 import java.util.List;
 
-public record ColoredMazeSpriteSet(RecoloredSpriteImage colorSchemedMazeSprite, List<RecoloredSpriteImage> flashingMazeSprites) {}
+public record ColoredMazeSpriteSet(
+    RecoloredSpriteImage mazeSprite,
+    List<RecoloredSpriteImage> flashingMazeSprites) implements Disposable {
+
+    @Override
+    public void dispose() {
+        if (flashingMazeSprites != null) {
+            flashingMazeSprites.clear();
+        }
+    }
+}

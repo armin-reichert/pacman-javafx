@@ -91,12 +91,12 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     }
 
     private final GameUI ui;
-    private final DefaultSoundManager soundManager = new DefaultSoundManager();
-    private final Map<String, GameScene> scenesByID = new HashMap<>();
-    private final Set<ActionBinding> tengenMsPacManBindings;
-    private final TengenMsPacMan_MapRepository mapRepository;
-    private final TengenMsPacMan_SpriteSheet spriteSheet;
 
+    private DefaultSoundManager soundManager = new DefaultSoundManager();
+    private Map<String, GameScene> scenesByID = new HashMap<>();
+    private Set<ActionBinding> tengenMsPacManBindings;
+    private TengenMsPacMan_MapRepository mapRepository;
+    private TengenMsPacMan_SpriteSheet spriteSheet;
     private ColoredMazeSpriteSet recoloredMazeSprites;
 
     public TengenMsPacMan_UIConfig(GameUI ui) {
@@ -139,7 +139,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         Logger.info("Created recolored maze sprites for game level #{} ({} flash colors: {})",
             gameLevel.number(),
             gameLevel.data().numFlashes(),
-            recoloredMazeSprites.colorSchemedMazeSprite());
+            recoloredMazeSprites.mazeSprite());
     }
 
     @Override
@@ -242,8 +242,31 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public void dispose() {
+        //TODO this method is not yet called!
         ui.assets().removeAll(ASSET_NAMESPACE + ".");
-        soundManager.dispose();
+        if (mapRepository != null) {
+            mapRepository.dispose();
+            mapRepository = null;
+        }
+        if (recoloredMazeSprites != null) {
+            recoloredMazeSprites.dispose();
+            recoloredMazeSprites = null;
+        }
+        if (spriteSheet != null) {
+            spriteSheet = null;
+        }
+        if (scenesByID != null) {
+            scenesByID.clear();
+            scenesByID = null;
+        }
+        if (tengenMsPacManBindings != null) {
+            tengenMsPacManBindings.clear();
+            tengenMsPacManBindings = null;
+        }
+        if (soundManager != null) {
+            soundManager.dispose();
+            soundManager = null;
+        }
     }
 
     @Override

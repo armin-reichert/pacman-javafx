@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.tengen.ms_pacman.model;
 
+import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
@@ -28,7 +29,7 @@ import static java.util.Objects.requireNonNull;
  * <p>Because the map images do not cover all required map/color-scheme combinations, an image cache is provided where
  * the recolored maze images are stored.
  */
-public class TengenMsPacMan_MapRepository {
+public class TengenMsPacMan_MapRepository implements Disposable {
 
     private record CacheKey(MapCategory mapCategory, int spriteNumber, NES_ColorScheme colorScheme) {}
 
@@ -110,13 +111,27 @@ public class TengenMsPacMan_MapRepository {
         return randomColorSchemes.stream().toList();
     }
 
-    private final Map<CacheKey, RecoloredSpriteImage> cache = new WeakHashMap<>();
-    private final Image arcadeMazesSpriteSheet;
-    private final Image nonArcadeMazesSpriteSheet;
+    private Map<CacheKey, RecoloredSpriteImage> cache = new WeakHashMap<>();
+    private Image arcadeMazesSpriteSheet;
+    private Image nonArcadeMazesSpriteSheet;
 
     public TengenMsPacMan_MapRepository(Image arcadeMazesSpriteSheet, Image nonArcadeMazesSpriteSheet) {
         this.arcadeMazesSpriteSheet = requireNonNull(arcadeMazesSpriteSheet);
         this.nonArcadeMazesSpriteSheet = requireNonNull(nonArcadeMazesSpriteSheet);
+    }
+
+    @Override
+    public void dispose() {
+        if (cache != null) {
+            cache.clear();
+            cache = null;
+        }
+        if (arcadeMazesSpriteSheet != null) {
+            arcadeMazesSpriteSheet = null;
+        }
+        if (nonArcadeMazesSpriteSheet != null) {
+            nonArcadeMazesSpriteSheet = null;
+        }
     }
 
     public ColoredMazeSpriteSet createMazeSpriteSet(WorldMap worldMap, int flashCount) {
