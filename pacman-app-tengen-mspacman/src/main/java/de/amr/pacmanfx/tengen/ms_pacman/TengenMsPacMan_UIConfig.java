@@ -40,6 +40,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import org.tinylog.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -96,6 +97,8 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     private final TengenMsPacMan_MapRepository mapRepository;
     private final TengenMsPacMan_SpriteSheet spriteSheet;
 
+    private ColoredMazeSpriteSet recoloredMazeSprites;
+
     public TengenMsPacMan_UIConfig(GameUI ui) {
         this.ui = requireNonNull(ui);
         spriteSheet = new TengenMsPacMan_SpriteSheet(RES_TENGEN.loadImage("graphics/spritesheet.png"));
@@ -125,6 +128,18 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     public TengenMsPacMan_MapRepository mapRepository() {
         return mapRepository;
+    }
+
+    public ColoredMazeSpriteSet recoloredMazeSprites() {
+        return recoloredMazeSprites;
+    }
+
+    public void createMazeSpriteSet(GameLevel gameLevel) {
+        recoloredMazeSprites = mapRepository.createMazeSpriteSet(gameLevel.worldMap(), gameLevel.data().numFlashes());
+        Logger.info("Created recolored maze sprites for game level #{} ({} flash colors: {})",
+            gameLevel.number(),
+            gameLevel.data().numFlashes(),
+            recoloredMazeSprites.colorSchemedMazeSprite());
     }
 
     @Override

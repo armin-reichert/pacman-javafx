@@ -5,4 +5,4 @@ package de.amr.pacmanfx.tengen.ms_pacman.rendering;
 
 import java.util.List;
 
-public record ColoredMazeSpriteSet(ColorSchemedSprite colorSchemedMazeSprite, List<ColorSchemedSprite> flashingMazeSprites) {}
+public record ColoredMazeSpriteSet(RecoloredSpriteImage colorSchemedMazeSprite, List<RecoloredSpriteImage> flashingMazeSprites) {}

@@ -21,7 +21,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_HUDData;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_LevelCounter;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.ColorSchemedSprite;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.RecoloredSpriteImage;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
@@ -463,6 +463,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     @Override
     public void drawSceneContent() {
         GameLevel gameLevel = gameContext().gameLevel();
+        TengenMsPacMan_UIConfig uiConfig = ui.currentConfig();
 
         gameRenderer.ctx().save();
         gameRenderer.ctx().translate(scaled(2 * TS), 0);
@@ -471,7 +472,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             if (levelCompletedAnimation.isHighlighted()) {
                 // get the current flashing maze "animation frame"
                 int frameIndex = levelCompletedAnimation.flashingIndex();
-                ColorSchemedSprite flashingMazeSprite = renderer().mazeConfig().flashingMazeSprites().get(frameIndex);
+                RecoloredSpriteImage flashingMazeSprite = uiConfig.recoloredMazeSprites().flashingMazeSprites().get(frameIndex);
                 renderer().drawLevelWithMaze(gameContext(), gameLevel, flashingMazeSprite.image(), flashingMazeSprite.sprite());
             } else {
                 renderer().drawLevel(gameContext(), gameLevel, null, false, false, ui.clock().tickCount());
