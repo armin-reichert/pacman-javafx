@@ -261,7 +261,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         }
     }
 
-    private void initForGameLevel(GameLevel gameLevel) {
+    private void initForGameLevel() {
         gameContext().game().hudData().showLevelCounter(true);
         gameContext().game().hudData().showLivesCounter(true); // is also visible in demo level!
         setActionsBindings();
@@ -271,14 +271,14 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        initForGameLevel(theGameContext().gameLevel());
+        initForGameLevel();
     }
 
     @Override
     public void onSwitch_3D_2D(GameScene scene3D) {
         // Switch might occur just during the few ticks when level is not yet available!
         if (gameContext().optGameLevel().isPresent()) {
-            initForGameLevel(gameContext().gameLevel());
+            initForGameLevel();
         }
     }
 
@@ -461,9 +461,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     @Override
     public void drawSceneContent() {
         GameLevel gameLevel = gameContext().gameLevel();
-        TengenMsPacMan_UIConfig uiConfig = ui.currentConfig();
 
         gameRenderer.applyLevelSettings(gameLevel);
+
         gameRenderer.ctx().save();
         gameRenderer.ctx().translate(scaled(2 * TS), 0);
 
@@ -475,13 +475,13 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
                 RecoloredSpriteImage flashingMazeSprite = recoloredMaze.flashingMazeSprites().get(frame);
                 renderer().drawLevelWithMaze(gameContext(), gameLevel, flashingMazeSprite.image(), flashingMazeSprite.sprite());
             } else {
-                renderer().drawLevel(gameContext(), gameLevel, null, false, false, ui.clock().tickCount());
+                renderer().drawLevel(gameContext(), null, false, false, ui.clock().tickCount());
             }
         }
         else {
             //TODO in the original game, the message is drawn under the maze image but *over* the pellets!
             renderer().drawLevelMessage(gameLevel, currentMessagePosition(), scaledArcadeFont8());
-            renderer().drawLevel(gameContext(), gameLevel, null, false, false, ui.clock().tickCount());
+            renderer().drawLevel(gameContext(), null, false, false, ui.clock().tickCount());
         }
 
         actorsByZ.clear();

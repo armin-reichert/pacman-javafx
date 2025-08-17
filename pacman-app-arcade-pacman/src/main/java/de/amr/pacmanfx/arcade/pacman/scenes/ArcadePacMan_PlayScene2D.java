@@ -224,7 +224,6 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
         boolean highlighted = levelCompletedAnimation != null && levelCompletedAnimation.isHighlighted();
         gameRenderer.drawLevel(
             gameContext(),
-            gameLevel,
             backgroundColor(),
             highlighted,
             gameLevel.blinking().isOn(),

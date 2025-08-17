@@ -81,7 +81,6 @@ public abstract class GameRenderer extends BaseRenderer implements DebugInfoRend
 
     /**
      * @param gameContext the game context
-     * @param level the game level to be drawn
      * @param backgroundColor level background color
      * @param mazeHighlighted if the maze is drawn as highlighted (flashing)
      * @param energizerHighlighted if the blinking energizers are in their highlighted state
@@ -89,7 +88,6 @@ public abstract class GameRenderer extends BaseRenderer implements DebugInfoRend
      */
     public abstract void drawLevel(
         GameContext gameContext,
-        GameLevel level,
         Color backgroundColor,
         boolean mazeHighlighted,
         boolean energizerHighlighted,

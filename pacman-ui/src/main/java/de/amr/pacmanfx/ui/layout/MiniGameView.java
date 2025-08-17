@@ -152,12 +152,8 @@ public class MiniGameView extends VBox {
         fillCanvas(canvas, backgroundColorProperty.get());
 
         if (gameLevel != null) {
-            gameRenderer.drawLevel(ui.gameContext(),
-                gameLevel,
-                backgroundColorProperty().get(),
-                false,
-                gameLevel.blinking().isOn(),
-                ui.clock().tickCount());
+            gameRenderer.drawLevel(ui.gameContext(), backgroundColorProperty().get(), false,
+                gameLevel.blinking().isOn(), ui.clock().tickCount());
             gameLevel.bonus().ifPresent(bonus -> gameRenderer.drawActor(bonus, spriteSheet.sourceImage()));
             gameRenderer.drawActor(gameLevel.pac(), spriteSheet.sourceImage());
             Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)

@@ -101,18 +101,18 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
     @Override
     public void drawLevel(
         GameContext gameContext,
-        GameLevel level,
         Color backgroundColor,
         boolean mazeHighlighted,
         boolean energizerHighlighted,
         long tick)
     {
-        final int colorMapIndex = level.worldMap().getConfigValue("colorMapIndex");
+        GameLevel gameLevel = gameContext.gameLevel();
+        int colorMapIndex = gameLevel.worldMap().getConfigValue("colorMapIndex");
         if (mazeHighlighted) {
             RectShort[] brightMazes = brightMazesSpriteSheet.spriteSequence(BrightMazesSpriteSheet.SpriteID.BRIGHT_MAZES);
             RectShort maze = brightMazes[colorMapIndex];
             drawSprite(brightMazesSpriteSheet.sourceImage(), maze, 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE), true);
-        } else if (level.uneatenFoodCount() == 0) {
+        } else if (gameLevel.uneatenFoodCount() == 0) {
             RectShort maze = spriteSheet.spriteSequence(SpriteID.EMPTY_MAZES)[colorMapIndex];
             drawSprite(spriteSheet.sourceImage(), maze, 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE), true);
         } else {
@@ -121,12 +121,12 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
             ctx().save();
             ctx().scale(scaling(), scaling());
             ctx().setFill(backgroundColor);
-            level.worldMap().tiles()
-                    .filter(not(level::isEnergizerPosition))
-                    .filter(level::tileContainsEatenFood)
+            gameLevel.worldMap().tiles()
+                    .filter(not(gameLevel::isEnergizerPosition))
+                    .filter(gameLevel::tileContainsEatenFood)
                     .forEach(tile -> fillSquareAtTileCenter(tile, 4));
-            level.energizerPositions().stream()
-                    .filter(tile -> !energizerHighlighted || level.tileContainsEatenFood(tile))
+            gameLevel.energizerPositions().stream()
+                    .filter(tile -> !energizerHighlighted || gameLevel.tileContainsEatenFood(tile))
                     .forEach(tile -> fillSquareAtTileCenter(tile, 10));
             ctx().restore();
         }

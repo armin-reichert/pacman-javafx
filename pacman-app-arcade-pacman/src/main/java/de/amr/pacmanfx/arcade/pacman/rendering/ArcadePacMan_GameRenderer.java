@@ -97,30 +97,30 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
     @Override
     public void drawLevel(
         GameContext gameContext,
-        GameLevel level,
         Color backgroundColor,
         boolean mazeHighlighted,
         boolean energizerHighlighted,
         long tick)
     {
+        GameLevel gameLevel = gameContext.gameLevel();
         ctx().save();
         ctx().scale(scaling(), scaling());
         if (mazeHighlighted) {
             Image brightMazeImage = uiConfig.theUI().assets().image(ArcadePacMan_UIConfig.ASSET_NAMESPACE + ".flashing_maze");
             ctx().drawImage(brightMazeImage, 0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);
         }
-        else if (level.uneatenFoodCount() == 0) {
+        else if (gameLevel.uneatenFoodCount() == 0) {
             drawSprite(spriteSheet.sourceImage(), spriteSheet.sprite(SpriteID.MAP_EMPTY), 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE), false);
         }
         else {
             drawSprite(spriteSheet.sourceImage(), spriteSheet.sprite(SpriteID.MAP_FULL), 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE), false);
             ctx().setFill(backgroundColor);
-            level.worldMap().tiles()
-                    .filter(not(level::isEnergizerPosition))
-                    .filter(level::tileContainsEatenFood)
+            gameLevel.worldMap().tiles()
+                    .filter(not(gameLevel::isEnergizerPosition))
+                    .filter(gameLevel::tileContainsEatenFood)
                     .forEach(tile -> fillSquareAtTileCenter(tile, 4));
-            level.energizerPositions().stream()
-                    .filter(tile -> !energizerHighlighted || level.tileContainsEatenFood(tile))
+            gameLevel.energizerPositions().stream()
+                    .filter(tile -> !energizerHighlighted || gameLevel.tileContainsEatenFood(tile))
                     .forEach(tile -> fillSquareAtTileCenter(tile, 10));
         }
         ctx().restore();
