@@ -56,9 +56,9 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
 
     @Override
     public void applyLevelSettings(GameLevel gameLevel) {
-        if (!gameLevel.worldMap().hasConfigValue("recoloredMaze")) {
-            ColoredMazeSpriteSet recoloredMaze = uiConfig.createMazeSpriteSet(gameLevel.worldMap(), gameLevel.data().numFlashes());
-            gameLevel.worldMap().setConfigValue("recoloredMaze", recoloredMaze);
+        if (!gameLevel.worldMap().hasConfigValue(TengenMsPacMan_UIConfig.RECOLORED_MAZE_PROPERTY)) {
+            ColoredMazeSpriteSet recoloredMaze = uiConfig.createRecoloredMaze(gameLevel.worldMap(), gameLevel.data().numFlashes());
+            gameLevel.worldMap().setConfigValue(TengenMsPacMan_UIConfig.RECOLORED_MAZE_PROPERTY, recoloredMaze);
             Logger.info("Created recolored maze sprites for game level #{} ({} flash colors: {})",
                     gameLevel.number(),
                     gameLevel.data().numFlashes(),
@@ -239,7 +239,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
         var game = (TengenMsPacMan_GameModel) gameContext.game();
         int mapNumber = level.worldMap().getConfigValue("mapNumber");
         applyLevelSettings(level);
-        ColoredMazeSpriteSet recoloredMaze =  level.worldMap().getConfigValue("recoloredMaze");
+        ColoredMazeSpriteSet recoloredMaze =  level.worldMap().getConfigValue(TengenMsPacMan_UIConfig.RECOLORED_MAZE_PROPERTY);
         if (game.mapCategory() == MapCategory.STRANGE && mapNumber == 15) {
             int spriteIndex = mazeAnimationSpriteIndex(tick);
             drawLevelWithMaze(gameContext, level,
@@ -280,7 +280,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
         requireNonNull(gameLevel);
         ctx().save();
         ctx().scale(scaling(), scaling());
-        ColoredMazeSpriteSet recoloredMaze =  gameLevel.worldMap().getConfigValue("recoloredMaze");
+        ColoredMazeSpriteSet recoloredMaze =  gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.RECOLORED_MAZE_PROPERTY);
         Color pelletColor = Color.web(recoloredMaze.mazeSprite().colorScheme().pelletColorRGB());
         drawPellets(gameLevel, pelletColor);
         drawEnergizers(gameLevel, pelletColor);

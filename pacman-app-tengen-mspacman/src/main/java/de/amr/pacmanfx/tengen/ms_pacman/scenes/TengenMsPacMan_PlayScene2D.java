@@ -265,7 +265,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         gameContext().game().hudData().showLevelCounter(true);
         gameContext().game().hudData().showLivesCounter(true); // is also visible in demo level!
         setActionsBindings();
-        //TODO needed?
+        //TODO check if this is needed?
         setGameRenderer(ui.currentConfig().createGameRenderer(canvas));
     }
 
@@ -469,7 +469,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
         if (levelCompletedAnimation.isRunning()) {
             if (levelCompletedAnimation.isHighlighted()) {
-                ColoredMazeSpriteSet recoloredMaze = gameLevel.worldMap().getConfigValue("recoloredMaze");
+                ColoredMazeSpriteSet recoloredMaze = gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.RECOLORED_MAZE_PROPERTY);
                 // get the current maze flashing "animation frame"
                 int frame = levelCompletedAnimation.flashingIndex();
                 RecoloredSpriteImage flashingMazeSprite = recoloredMaze.flashingMazeSprites().get(frame);

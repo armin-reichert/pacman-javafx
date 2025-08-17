@@ -61,7 +61,9 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     public static final String MAPS_PATH = "/de/amr/pacmanfx/tengen/ms_pacman/maps/";
 
-    private static final String ASSET_NAMESPACE = "tengen";
+    public static final String ASSET_NAMESPACE = "tengen";
+
+    public static final String RECOLORED_MAZE_PROPERTY = "recoloredMaze";
 
     private static final ResourceManager RES_GAME_UI = () -> GameUI_Implementation.class;
     private static final ResourceManager RES_TENGEN  = () -> TengenMsPacMan_UIConfig.class;
@@ -463,7 +465,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         return randomColorSchemes.stream().toList();
     }
 
-    /**
+    /*
      * API to access the maze images stored in files {@code non_arcade_mazes.png} and {@code arcade_mazes.png}.
      * These files contain the images for all mazes used in the different map categories, but only in the colors
      * used by the STRANGE maps through levels 1-32 (for levels 28-31, random color schemes are used.)
@@ -472,7 +474,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
      * the recolored maze images are stored.
      */
 
-    public ColoredMazeSpriteSet createMazeSpriteSet(WorldMap worldMap, int flashCount) {
+    public ColoredMazeSpriteSet createRecoloredMaze(WorldMap worldMap, int flashCount) {
         MapCategory mapCategory = worldMap.getConfigValue("mapCategory");
         int mapNumber = worldMap.getConfigValue("mapNumber");
         NES_ColorScheme nesColorScheme = worldMap.getConfigValue("nesColorScheme");
