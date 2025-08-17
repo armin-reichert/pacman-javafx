@@ -40,40 +40,42 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
     public void drawHUD(GameContext gameContext, HUDData data, Vector2f sceneSize, long tick) {
         if (!data.isVisible()) return;
 
-        Font font8 = assets.arcadeFont(scaled(8));
+        Font font = assets.arcadeFont(scaled(TS));
+
         if (data.isScoreVisible()) {
-            drawScore(gameContext.game().scoreManager().score(), "SCORE", ARCADE_WHITE, font8, TS(1), TS(1));
-            drawScore(gameContext.game().scoreManager().highScore(), "HIGH SCORE", ARCADE_WHITE, font8, TS(14), TS(1));
+            ScoreManager scoreManager = gameContext.game().scoreManager();
+            drawScore(scoreManager.score(), "SCORE", ARCADE_WHITE, font, TS(1), TS(1));
+            drawScore(scoreManager.highScore(), "HIGH SCORE", ARCADE_WHITE, font, TS(14), TS(1));
         }
 
         if (data.isLevelCounterVisible()) {
             LevelCounter levelCounter = data.theLevelCounter();
+            RectShort[] bonusSymbols = spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS);
             float x = sceneSize.x() - TS(4), y = sceneSize.y() - TS(2) + 2;
             for (byte symbol : levelCounter.symbols()) {
-                RectShort sprite = spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS)[symbol];
-                drawSprite(spriteSheet.sourceImage(), sprite, x, y, true);
-                x -= TS(2);
+                drawSprite(spriteSheet.sourceImage(), bonusSymbols[symbol], x, y, true);
+                x -= TS(2); // symbols are drawn from right to left
             }
         }
 
         if (data.isLivesCounterVisible()) {
             LivesCounter livesCounter = data.theLivesCounter();
-            float x = TS(2), y = sceneSize.y() - TS(2);
             RectShort sprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
+            float x = TS(2), y = sceneSize.y() - TS(2);
             for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
-                drawSprite(spriteSheet.sourceImage(), sprite, x + TS(2 * i), y, true);
+                drawSprite(spriteSheet.sourceImage(), sprite, x + i * TS(2), y, true);
             }
-            if (gameContext.game().lifeCount() > livesCounter.maxLivesDisplayed()) {
+            int lifeCount = gameContext.game().lifeCount();
+            if (lifeCount > livesCounter.maxLivesDisplayed()) {
                 // show text indicating that more lives are available than symbols displayed (cheating may cause this)
-                Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
-                fillText("%d".formatted(gameContext.game().lifeCount()), ARCADE_YELLOW, font, x - 14, y + TS);
+                Font hintFont = Font.font("Serif", FontWeight.BOLD, scaled(8));
+                fillText("%d".formatted(lifeCount), ARCADE_YELLOW, hintFont, x - 14, y + TS);
             }
         }
 
         if (data.isCreditVisible()) {
-            String text = "CREDIT %2d".formatted(gameContext.coinMechanism().numCoins());
-            Font font = assets.arcadeFont(scaled(8));
-            fillText(text, ARCADE_WHITE, font, TS(2), sceneSize.y());
+            int credit = gameContext.coinMechanism().numCoins();
+            fillText("CREDIT %2d".formatted(credit), ARCADE_WHITE, font, TS(2), sceneSize.y());
         }
     }
 
