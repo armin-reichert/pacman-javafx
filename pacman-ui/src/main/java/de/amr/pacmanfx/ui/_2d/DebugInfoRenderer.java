@@ -43,7 +43,7 @@ public interface DebugInfoRenderer {
 
     private void drawAnimationInfo(GraphicsContext ctx, double scaling, Actor actor, SpriteAnimationManager<?> spriteAnimationMap, String selectedID) {
         ctx.save();
-        String text = "[%s:%d]".formatted(selectedID, spriteAnimationMap.current().frameIndex());
+        String text = "[%s:%d]".formatted(selectedID, spriteAnimationMap.currentAnimation().frameIndex());
         double x = scaling * (actor.x() - 4), y = scaling * (actor.y() - 4);
         ctx.setFill(Color.WHITE);
         ctx.setFont(Font.font("Sans", scaling * (7)));

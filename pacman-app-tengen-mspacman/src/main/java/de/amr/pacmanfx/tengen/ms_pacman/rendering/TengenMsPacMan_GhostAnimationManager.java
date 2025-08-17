@@ -57,10 +57,10 @@ public class TengenMsPacMan_GhostAnimationManager extends SpriteAnimationManager
     protected void updateActorSprites(Actor actor) {
         if (actor instanceof Ghost ghost) {
             if (isCurrentAnimationID(ANIM_GHOST_NORMAL)) {
-                current().setSprites(ghostNormalSprites(ghost.wishDir()));
+                currentAnimation().setSprites(ghostNormalSprites(ghost.wishDir()));
             }
             if (isCurrentAnimationID(ANIM_GHOST_EYES)) {
-                current().setSprites(ghostEyesSprites(ghost.wishDir()));
+                currentAnimation().setSprites(ghostEyesSprites(ghost.wishDir()));
             }
         }
     }

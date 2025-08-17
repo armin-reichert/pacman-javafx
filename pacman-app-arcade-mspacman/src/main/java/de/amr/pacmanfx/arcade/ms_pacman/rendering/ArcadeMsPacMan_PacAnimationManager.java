@@ -40,9 +40,9 @@ public class ArcadeMsPacMan_PacAnimationManager extends SpriteAnimationManager<S
     @Override
     protected void updateActorSprites(Actor actor) {
         if (actor instanceof Pac pac) {
-            switch (currentAnimationID) {
-                case ANIM_PAC_MUNCHING -> current().setSprites(msPacManMunchingSprites(pac.moveDir()));
-                case PAC_MAN_MUNCHING -> current().setSprites(mrPacManMunchingSprites(pac.moveDir()));
+            switch (selectedID) {
+                case ANIM_PAC_MUNCHING -> currentAnimation().setSprites(msPacManMunchingSprites(pac.moveDir()));
+                case PAC_MAN_MUNCHING -> currentAnimation().setSprites(mrPacManMunchingSprites(pac.moveDir()));
             }
         }
     }

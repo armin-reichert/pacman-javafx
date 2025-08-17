@@ -218,7 +218,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
 
     private void drawAnyKindOfPac(Pac pac) {
         pac.animations().map(SpriteAnimationManager.class::cast).ifPresent(spriteAnimations -> {
-            SpriteAnimation spriteAnimation = spriteAnimations.current();
+            SpriteAnimation spriteAnimation = spriteAnimations.currentAnimation();
             if (spriteAnimation == null) {
                 Logger.error("No sprite animation found for {}", pac);
                 return;

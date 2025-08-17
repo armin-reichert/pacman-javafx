@@ -19,7 +19,7 @@ public class SpriteAnimationManager<SID extends Enum<SID>> implements AnimationM
 
     protected final SpriteSheet<SID> spriteSheet;
     protected final Map<String, SpriteAnimation> animationsByID = new HashMap<>();
-    protected String currentAnimationID;
+    protected String selectedID;
 
     public SpriteAnimationManager(SpriteSheet<SID> spriteSheet) {
         this.spriteSheet = requireNonNull(spriteSheet);
@@ -30,15 +30,15 @@ public class SpriteAnimationManager<SID extends Enum<SID>> implements AnimationM
     // TODO: this is somewhat crude but currently the way to keep the sprites up-to-date with actor direction etc.
     protected void updateActorSprites(Actor actor) {}
 
-    public String currentAnimationID() { return currentAnimationID; }
+    public String selectedAnimationID() { return selectedID; }
 
     public boolean isCurrentAnimationID(String id) {
         requireNonNull(id);
-        return id.equals(currentAnimationID);
+        return id.equals(selectedID);
     }
 
     public RectShort currentSprite(Actor actor) {
-        var currentAnimation = current();
+        var currentAnimation = currentAnimation();
         if (currentAnimation == null) {
             return null;
         }
@@ -65,21 +65,21 @@ public class SpriteAnimationManager<SID extends Enum<SID>> implements AnimationM
         animationsByID.put(id, animation);
     }
 
-    public SpriteAnimation current() {
-        return currentAnimationID != null ? animation(currentAnimationID) : null;
+    public SpriteAnimation currentAnimation() {
+        return selectedID != null ? animation(selectedID) : null;
     }
 
     @Override
     public String selectedID() {
-        return currentAnimationID;
+        return selectedID;
     }
 
     @Override
     public void selectFrame(String id, int frameIndex) {
-        if (!id.equals(currentAnimationID)) {
-            currentAnimationID = id;
-            if (current() != null) {
-                current().setFrameIndex(0);
+        if (!id.equals(selectedID)) {
+            selectedID = id;
+            if (currentAnimation() != null) {
+                currentAnimation().setFrameIndex(0);
             } else {
                 Logger.warn("No animation with ID {} exists", id);
             }
@@ -88,22 +88,22 @@ public class SpriteAnimationManager<SID extends Enum<SID>> implements AnimationM
 
     @Override
     public void play() {
-        if (current() != null) {
-            current().play();
+        if (currentAnimation() != null) {
+            currentAnimation().play();
         }
     }
 
     @Override
     public void stop() {
-        if (current() != null) {
-            current().stop();
+        if (currentAnimation() != null) {
+            currentAnimation().stop();
         }
     }
 
     @Override
     public void reset() {
-        if (current() != null) {
-            current().reset();
+        if (currentAnimation() != null) {
+            currentAnimation().reset();
         }
     }
 }

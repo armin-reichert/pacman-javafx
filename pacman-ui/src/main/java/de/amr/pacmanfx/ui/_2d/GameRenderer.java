@@ -106,14 +106,14 @@ public abstract class GameRenderer extends BaseRenderer implements DebugInfoRend
         if (!actor.isVisible()) return;
 
         actor.animations().ifPresent(animations -> {
-            switch (animations) {
-                case SingleSpriteNoAnimation singleSprite -> drawSpriteCentered(actor.center(), spriteSheetImage, singleSprite.sprite());
-                case SpriteAnimationManager<?> spriteAnimations -> {
-                    if (spriteAnimations.current() != null) {
-                        drawSpriteCentered(actor.center(), spriteSheetImage, spriteAnimations.currentSprite(actor));
-                    }
-                }
-                default -> {}
+            RectShort sprite = switch (animations) {
+                case SingleSpriteNoAnimation singleSprite -> singleSprite.sprite();
+                case SpriteAnimationManager<?> spriteAnimations
+                    -> spriteAnimations.currentAnimation() != null ? spriteAnimations.currentSprite(actor) : null;
+                default -> null;
+            };
+            if (sprite != null) {
+                drawSpriteCentered(actor.center(), spriteSheetImage, sprite);
             }
         });
     }

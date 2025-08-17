@@ -14,7 +14,6 @@ import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.Validations.requireValidGhostPersonality;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.*;
-import static de.amr.pacmanfx.arcade.pacman.rendering.SpriteID.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 
 public class ArcadePacMan_GhostAnimationManager extends SpriteAnimationManager<SpriteID> {
@@ -69,10 +68,10 @@ public class ArcadePacMan_GhostAnimationManager extends SpriteAnimationManager<S
     protected void updateActorSprites(Actor actor) {
         if (actor instanceof Ghost ghost) {
             if (isCurrentAnimationID(ANIM_GHOST_NORMAL)) {
-                current().setSprites(ghostNormalSprites(ghost.wishDir()));
+                currentAnimation().setSprites(ghostNormalSprites(ghost.wishDir()));
             }
             if (isCurrentAnimationID(ANIM_GHOST_EYES)) {
-                current().setSprites(ghostEyesSprites(ghost.wishDir()));
+                currentAnimation().setSprites(ghostEyesSprites(ghost.wishDir()));
             }
         }
     }
