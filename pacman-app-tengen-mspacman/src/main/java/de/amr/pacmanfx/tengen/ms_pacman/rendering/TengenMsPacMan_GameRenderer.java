@@ -35,7 +35,7 @@ import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
-import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_MapRepository.strangeMap15Sprite;
+import static de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_NonArcadeMapsSpriteSheet.NonArcadeMazeID.MAZE15;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
@@ -252,12 +252,27 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
         boolean energizerHighlighted,
         long tick)
     {
-        var tengenGame = (TengenMsPacMan_GameModel) gameContext.game();
+        var game = (TengenMsPacMan_GameModel) gameContext.game();
         int mapNumber = level.worldMap().getConfigValue("mapNumber");
-        RectShort mazeSprite = tengenGame.mapCategory() == MapCategory.STRANGE && mapNumber == 15
-            ? strangeMap15Sprite(tick) // Strange map #15: psychedelic animation
-            : uiConfig.recoloredMazeSprites().mazeSprite().sprite();
-        drawLevelWithMaze(gameContext, level, uiConfig.recoloredMazeSprites().mazeSprite().image(), mazeSprite);
+        if (game.mapCategory() == MapCategory.STRANGE && mapNumber == 15) {
+            int spriteIndex = strangeMap15SpriteIndex(tick);
+            drawLevelWithMaze(gameContext, level,
+                uiConfig.recoloredMazeSprites().mazeSprite().image(),
+                uiConfig.nonArcadeMapsSpriteSheet().spriteSequence(MAZE15)[spriteIndex]);
+        } else {
+            drawLevelWithMaze(gameContext, level,
+                uiConfig.recoloredMazeSprites().mazeSprite().image(),
+                uiConfig.recoloredMazeSprites().mazeSprite().sprite());
+        }
+    }
+
+    /*
+       Strange map #15: psychedelic animation:
+       Frame pattern: (00000000 11111111 22222222 11111111)+, numFrames = 4, frameDuration = 8
+     */
+    private int strangeMap15SpriteIndex(long tick) {
+        long block = (tick % 32) / 8;
+        return (int) (block < 3 ? block : 1);
     }
 
     public void drawLevelWithMaze(GameContext gameContext, GameLevel level, Image mazeImage, RectShort mazeSprite) {

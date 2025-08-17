@@ -95,13 +95,16 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     private DefaultSoundManager soundManager = new DefaultSoundManager();
     private Map<String, GameScene> scenesByID = new HashMap<>();
     private Set<ActionBinding> tengenMsPacManBindings;
-    private TengenMsPacMan_MapRepository mapRepository;
+
     private TengenMsPacMan_SpriteSheet spriteSheet;
+    private TengenMsPacMan_NonArcadeMapsSpriteSheet nonArcadeMapsSpriteSheet;
+    private TengenMsPacMan_MapRepository mapRepository;
     private ColoredMazeSpriteSet recoloredMazeSprites;
 
     public TengenMsPacMan_UIConfig(GameUI ui) {
         this.ui = requireNonNull(ui);
         spriteSheet = new TengenMsPacMan_SpriteSheet(RES_TENGEN.loadImage("graphics/spritesheet.png"));
+        nonArcadeMapsSpriteSheet = new TengenMsPacMan_NonArcadeMapsSpriteSheet(RES_TENGEN.loadImage("graphics/non_arcade_mazes.png"));
         mapRepository = new TengenMsPacMan_MapRepository(
             RES_TENGEN.loadImage("graphics/arcade_mazes.png"),
             RES_TENGEN.loadImage("graphics/non_arcade_mazes.png")
@@ -283,6 +286,10 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     @Override
     public TengenMsPacMan_SpriteSheet spriteSheet() {
         return spriteSheet;
+    }
+
+    public TengenMsPacMan_NonArcadeMapsSpriteSheet nonArcadeMapsSpriteSheet() {
+        return nonArcadeMapsSpriteSheet;
     }
 
     @Override

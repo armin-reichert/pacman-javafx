@@ -10,6 +10,7 @@ import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.ColoredMazeSpriteSet;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.RecoloredSpriteImage;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import org.tinylog.Logger;
@@ -33,7 +34,7 @@ public class TengenMsPacMan_MapRepository implements Disposable {
 
     private record CacheKey(MapCategory mapCategory, int spriteNumber, NES_ColorScheme colorScheme) {}
 
-    // Size of Arcade mazes (without the empty rows above and below the maze!)
+    // Size of Arcade mazes (without the 3 empty rows above and the 2 below the maze!)
     private static final Vector2i ARCADE_MAZE_SIZE = Vector2i.of(28 * TS, 31 * TS);
 
     // Map row counts as they appear in the non-ARCADE mazes sprite sheet (row by row)
@@ -44,17 +45,6 @@ public class TengenMsPacMan_MapRepository implements Disposable {
         37, 37, 31, 25, 31, 25, 31, 31, 37,
         25, 25, 25, 25,
     };
-
-    // Strange map #15 (level 32) has 3 different images used to create an animation
-    private static final RectShort[] STRANGE_MAP_15_SPRITES = {
-        rect(1568, 840, 224, 248), rect(1568, 1088, 224, 248), rect(1568, 1336, 224, 248)
-    };
-
-    // Frame pattern: (00000000111111112222222211111111)+, numFrames = 4, frameDuration = 8
-    public static RectShort strangeMap15Sprite(long tick) {
-        long i = tick % 32; // 0..31
-        return STRANGE_MAP_15_SPRITES[i < 8 ? 0 : i < 16 ? 1 : i < 24 ? 2 : 1];
-    }
 
     private static Image crop(Image image, RectShort sprite) {
         var croppedImage = new WritableImage(sprite.width(), sprite.height());
