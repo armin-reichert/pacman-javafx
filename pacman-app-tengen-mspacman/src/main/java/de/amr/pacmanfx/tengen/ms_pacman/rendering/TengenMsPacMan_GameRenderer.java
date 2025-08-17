@@ -11,6 +11,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
+import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
@@ -40,8 +41,7 @@ import static java.util.function.Predicate.not;
 
 public class TengenMsPacMan_GameRenderer extends GameRenderer {
 
-    private final ObjectProperty<Color> backgroundColorProperty = new SimpleObjectProperty<>(Color.BLACK);
-
+    private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
     private final TengenMsPacMan_UIConfig uiConfig;
 
     public TengenMsPacMan_GameRenderer(TengenMsPacMan_UIConfig uiConfig, Canvas canvas) {
@@ -50,19 +50,19 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
         ctx().setImageSmoothing(false);
     }
 
-    public ObjectProperty<Color> backgroundColorProperty() { return backgroundColorProperty; }
+    public ObjectProperty<Color> backgroundColorProperty() { return backgroundColor; }
 
-    public Color backgroundColor() { return backgroundColorProperty.get(); }
+    public Color backgroundColor() { return backgroundColor.get(); }
 
     @Override
     public void applyLevelSettings(GameLevel gameLevel) {
-        if (!gameLevel.worldMap().hasConfigValue(TengenMsPacMan_UIConfig.RECOLORED_MAZE_PROPERTY)) {
-            ColoredMazeSpriteSet recoloredMaze = uiConfig.createRecoloredMaze(gameLevel.worldMap(), gameLevel.data().numFlashes());
-            gameLevel.worldMap().setConfigValue(TengenMsPacMan_UIConfig.RECOLORED_MAZE_PROPERTY, recoloredMaze);
-            Logger.info("Created recolored maze sprites for game level #{} ({} flash colors: {})",
-                    gameLevel.number(),
-                    gameLevel.data().numFlashes(),
-                    recoloredMaze.mazeSprite());
+        WorldMap worldMap = gameLevel.worldMap();
+        int numFlashes = gameLevel.data().numFlashes();
+        if (!worldMap.hasConfigValue(TengenMsPacMan_UIConfig.RECOLORED_MAZE_PROPERTY)) {
+            ColoredMazeSpriteSet recoloredMaze = uiConfig.createRecoloredMaze(worldMap, numFlashes);
+            worldMap.setConfigValue(TengenMsPacMan_UIConfig.RECOLORED_MAZE_PROPERTY, recoloredMaze);
+            Logger.info("Created recolored maze for game level #{} ({} flash colors: {})",
+                gameLevel.number(), numFlashes, recoloredMaze.mazeSprite());
         }
     }
 
@@ -73,19 +73,16 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
         if (!data.isVisible()) return;
 
         Font font = uiConfig.theUI().assets().arcadeFont(TS);
-        var game = (TengenMsPacMan_GameModel) gameContext.game();
-        var hudData = (TengenMsPacMan_HUDData) data;
-        
-        if (hudData.isScoreVisible()) {
+        TengenMsPacMan_GameModel game = gameContext.game();
+        if (data.isScoreVisible()) {
             drawScores(game, tick, nesPaletteColor(0x20), font);
         }
-
-        if (hudData.isLivesCounterVisible()) {
-            drawLivesCounter(hudData.theLivesCounter(), game.lifeCount(), TS(2), sceneSize.y() - TS);
+        if (data.isLivesCounterVisible()) {
+            drawLivesCounter(data.theLivesCounter(), game.lifeCount(), TS(2), sceneSize.y() - TS);
         }
-
-        if (hudData.isLevelCounterVisible()) {
-            var levelCounter = hudData.theLevelCounter();
+        if (data.isLevelCounterVisible()) {
+            var hudData = (TengenMsPacMan_HUDData) data;
+            TengenMsPacMan_LevelCounter levelCounter = hudData.theLevelCounter();
             float x = sceneSize.x() - TS(2), y = sceneSize.y() - TS;
             drawLevelCounter(levelCounter.displayedLevelNumber(), levelCounter, x, y);
         }
