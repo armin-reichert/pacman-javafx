@@ -12,9 +12,13 @@ import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.*;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -39,9 +43,7 @@ public class MiniGameView extends VBox {
     public static final Duration SLIDE_IN_DURATION = Duration.seconds(1);
     public static final Duration SLIDE_OUT_DURATION = Duration.seconds(2);
 
-    private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
-    private final BooleanProperty debug = new SimpleBooleanProperty(false);
-    private final FloatProperty scaling = new SimpleFloatProperty(1.0f);
+    private final DoubleProperty scaling = new SimpleDoubleProperty(1.0f);
     private final ObjectProperty<Vector2f> worldSize = new SimpleObjectProperty<>(ARCADE_SIZE.scaled(TS));
 
     private final HBox layout;
@@ -62,8 +64,8 @@ public class MiniGameView extends VBox {
         canvas.heightProperty().bind(PROPERTY_MINI_VIEW_HEIGHT);
         canvas.widthProperty().bind(Bindings.createDoubleBinding(
             () -> {
-                Vector2f worldSize = this.worldSize.get();
-                double aspect = worldSize.x() / worldSize.y();
+                Vector2f size = worldSize.get();
+                double aspect = size.x() / size.y();
                 return aspect * canvas.getHeight();
             },
             worldSize, canvas.heightProperty()
@@ -72,23 +74,20 @@ public class MiniGameView extends VBox {
         // The VBox fills the complete parent container height (why?), so we put the canvas
         // into an HBox that does not grow in height and provides some padding around the canvas.
         layout = new HBox(canvas);
+        layout.backgroundProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR.map(Background::fill));
         layout.setPadding(new Insets(0, 10, 0, 10));
-        layout.backgroundProperty().bind(backgroundColor.map(Background::fill));
         VBox.setVgrow(layout, Priority.NEVER);
         getChildren().add(layout);
 
-        backgroundColor.bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
-        debug.bind(PROPERTY_DEBUG_INFO_VISIBLE);
         opacityProperty().bind(PROPERTY_MINI_VIEW_OPACITY_PERCENT.divide(100.0));
-        scaling.bind(Bindings.createFloatBinding(
-            () -> (float) canvas.getHeight() / worldSize.get().y(),
+        scaling.bind(Bindings.createDoubleBinding(
+            () -> canvas.getHeight() / worldSize.get().y(),
             canvas.heightProperty(), worldSize
         ));
         visibleProperty().bind(Bindings.createObjectBinding(
             () -> PROPERTY_MINI_VIEW_ON.get() && ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D),
             PROPERTY_MINI_VIEW_ON, PROPERTY_CURRENT_GAME_SCENE
         ));
-
 
         slideInAnimation = new TranslateTransition(SLIDE_IN_DURATION, this);
         slideInAnimation.setToY(0);
@@ -103,24 +102,13 @@ public class MiniGameView extends VBox {
         slideOutAnimation.setInterpolator(Interpolator.EASE_IN);
     }
 
-    public ObjectProperty<Color> backgroundColorProperty() {
-        return backgroundColor;
-    }
-
-    public BooleanProperty debugProperty() {
-        return debug;
-    }
-
     public void onGameLevelCreated(GameLevel gameLevel) {
         worldSize.set(gameLevel.worldSizePx());
-
-        /*
-            TODO: The game renderer cannot yet be created in setGameUI because at the time, setGameUI is called, the
-                 game controller has not yet selected a game variant and therefore the current UI config is null!
-         */
+        /* TODO: The game renderer cannot be created in the constructor because the game controller has not yet
+            selected a game variant when the constructor is called, so no UI configuration is available! */
         gameRenderer = ui.currentConfig().createGameRenderer(canvas);
-        gameRenderer.setScaling(scaling.floatValue());
-        gameRenderer.applyLevelSettings(theGameContext());
+        gameRenderer.setScaling(scaling.get());
+        gameRenderer.applyLevelSettings(ui.gameContext());
     }
 
     public void slideIn() {
@@ -138,30 +126,28 @@ public class MiniGameView extends VBox {
         if (!isVisible() || gameRenderer == null) {
             return;
         }
-
-        float scaling = this.scaling.get();
-        gameRenderer.setScaling(scaling);
-
-        fillCanvas(canvas, backgroundColor.get());
+        gameRenderer.setScaling(scaling.get());
+        fillCanvas(canvas, PROPERTY_CANVAS_BACKGROUND_COLOR.get());
 
         GameLevel gameLevel = ui.gameContext().gameLevel();
         if (gameLevel != null) {
-            SpriteSheet<?> spriteSheet = ui.currentConfig().spriteSheet();
-            gameRenderer.drawLevel(ui.gameContext(), backgroundColorProperty().get(), false,
+            Image spriteSheetImage = ui.currentConfig().spriteSheet().sourceImage();
+            gameRenderer.drawLevel(ui.gameContext(), PROPERTY_CANVAS_BACKGROUND_COLOR.get(), false,
                 gameLevel.blinking().isOn(), ui.clock().tickCount());
-            gameLevel.bonus().ifPresent(bonus -> gameRenderer.drawActor(bonus, spriteSheet.sourceImage()));
-            gameRenderer.drawActor(gameLevel.pac(), spriteSheet.sourceImage());
+            gameLevel.bonus().ifPresent(bonus -> gameRenderer.drawActor(bonus, spriteSheetImage));
+            gameRenderer.drawActor(gameLevel.pac(), spriteSheetImage);
             Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)
                 .map(gameLevel::ghost)
-                .forEach(ghost -> gameRenderer.drawActor(ghost, spriteSheet.sourceImage()));
+                .forEach(ghost -> gameRenderer.drawActor(ghost, spriteSheetImage));
         }
 
-        if (debugProperty().get()) {
+        if (PROPERTY_DEBUG_INFO_VISIBLE.get()) {
             gameRenderer.ctx().save();
             gameRenderer.ctx().setTextAlign(TextAlignment.CENTER);
             gameRenderer.ctx().setFill(Color.WHITE);
-            gameRenderer.ctx().setFont(Font.font(14 * scaling));
-            gameRenderer.ctx().fillText("scaling: %.2f, draw calls: %d".formatted(scaling, drawCallCount), canvas.getWidth() * 0.5, 16 * scaling);
+            gameRenderer.ctx().setFont(Font.font(14 * scaling.get()));
+            gameRenderer.ctx().fillText("scaling: %.2f, draw calls: %d".formatted(scaling.doubleValue(), drawCallCount),
+                canvas.getWidth() * 0.5, 16 * scaling.get());
             gameRenderer.ctx().restore();
         }
     }
