@@ -12,7 +12,6 @@ import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.House;
-import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -44,7 +43,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -81,8 +79,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     private MessageMovement messageMovement;
     private LevelCompletedAnimation levelCompletedAnimation;
-
-    private final List<Actor> actorsByZ = new ArrayList<>();
 
     public TengenMsPacMan_PlayScene2D(GameUI ui) {
         super(ui);
@@ -481,11 +477,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             renderer().drawLevel(gameContext(), null, false, false, ui.clock().tickCount());
         }
 
-        actorsByZ.clear();
-        gameLevel.bonus().ifPresent(actorsByZ::add);
-        actorsByZ.add(gameLevel.pac());
-        ghostsByZ(gameLevel).forEach(actorsByZ::add);
-        actorsByZ.forEach(actor -> gameRenderer.drawActor(actor, spriteSheet.sourceImage()));
+        actorsInZOrder.clear();
+        gameLevel.bonus().ifPresent(actorsInZOrder::add);
+        actorsInZOrder.add(gameLevel.pac());
+        ghostsByZ(gameLevel).forEach(actorsInZOrder::add);
+        actorsInZOrder.forEach(actor -> gameRenderer.drawActor(actor, spriteSheet.sourceImage()));
 
         gameRenderer.ctx().restore();
     }
