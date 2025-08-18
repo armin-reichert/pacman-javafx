@@ -211,7 +211,7 @@ public class PlayView extends StackPane implements GameUI_View {
         gameLevel.pac().setAnimations(uiConfig.createPacAnimations(gameLevel.pac()));
         gameLevel.ghosts().forEach(ghost -> ghost.setAnimations(uiConfig.createGhostAnimations(ghost)));
 
-        miniView.setGameLevel(gameLevel);
+        miniView.onGameLevelCreated(gameLevel);
         miniView.slideIn();
 
         // size of game scene might have changed, so re-embed

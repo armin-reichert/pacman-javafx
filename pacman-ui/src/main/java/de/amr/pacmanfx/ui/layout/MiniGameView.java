@@ -45,13 +45,12 @@ public class MiniGameView extends VBox {
     private final FloatProperty scalingProperty                 = new SimpleFloatProperty(1.0f);
     private final ObjectProperty<Vector2f> worldSizeProperty    = new SimpleObjectProperty<>(ARCADE_SIZE.scaled(TS));
 
-    private final Canvas canvas;
     private final HBox canvasContainer;
+    private final Canvas canvas;
 
     private GameUI ui;
     private GameRenderer gameRenderer;
-    private SpriteSheet<?> spriteSheet;
-    private GameLevel gameLevel;
+
     private long drawCallCount;
 
     private final TranslateTransition slideInAnimation;
@@ -116,15 +115,13 @@ public class MiniGameView extends VBox {
         ));
     }
 
-    public void setGameLevel(GameLevel gameLevel) {
-        this.gameLevel = requireNonNull(gameLevel);
+    public void onGameLevelCreated(GameLevel gameLevel) {
         worldSizeProperty.set(gameLevel.worldSizePx());
 
         /*
             TODO: The game renderer cannot yet be created in setGameUI because at the time, setGameUI is called, the
                  game controller has not yet selected a game variant and therefore the current UI config is null!
          */
-        spriteSheet = ui.currentConfig().spriteSheet();
         gameRenderer = ui.currentConfig().createGameRenderer(canvas);
         gameRenderer.setScaling(scalingProperty.floatValue());
         gameRenderer.applyLevelSettings(theGameContext());
@@ -151,7 +148,9 @@ public class MiniGameView extends VBox {
 
         fillCanvas(canvas, backgroundColorProperty.get());
 
+        GameLevel gameLevel = ui.gameContext().gameLevel();
         if (gameLevel != null) {
+            SpriteSheet<?> spriteSheet = ui.currentConfig().spriteSheet();
             gameRenderer.drawLevel(ui.gameContext(), backgroundColorProperty().get(), false,
                 gameLevel.blinking().isOn(), ui.clock().tickCount());
             gameLevel.bonus().ifPresent(bonus -> gameRenderer.drawActor(bonus, spriteSheet.sourceImage()));
