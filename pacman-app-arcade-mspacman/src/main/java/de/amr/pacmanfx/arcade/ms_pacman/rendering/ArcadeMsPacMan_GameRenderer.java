@@ -14,8 +14,8 @@ import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.BonusState;
-import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui._2d.DebugInfoRenderer;
+import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.GameRenderer;
 import javafx.scene.canvas.Canvas;
@@ -30,24 +30,24 @@ import static java.util.function.Predicate.not;
 
 public class ArcadeMsPacMan_GameRenderer extends GameRenderer implements DebugInfoRenderer {
 
-    protected GlobalAssets assets;
+    protected GameUI_Config uiConfig;
     protected ArcadeMsPacMan_SpriteSheet spriteSheet;
     protected BrightMazesSpriteSheet brightMazesSpriteSheet;
 
     public ArcadeMsPacMan_GameRenderer(
-        GlobalAssets assets,
         Canvas canvas,
+        GameUI_Config uiConfig,
         ArcadeMsPacMan_SpriteSheet spriteSheet,
         BrightMazesSpriteSheet brightMazesSpriteSheet)
     {
-        this.assets = requireNonNull(assets);
+        this.uiConfig = requireNonNull(uiConfig);
         this.spriteSheet = requireNonNull(spriteSheet);
         this.brightMazesSpriteSheet = brightMazesSpriteSheet; // can be null in Ms. Pac-Man XXL!
         setCanvas(canvas);
     }
 
-    protected ArcadeMsPacMan_GameRenderer(GlobalAssets assets, Canvas canvas, ArcadeMsPacMan_SpriteSheet spriteSheet) {
-        this(assets, canvas, spriteSheet, null);
+    protected ArcadeMsPacMan_GameRenderer(Canvas canvas, GameUI_Config uiConfig, ArcadeMsPacMan_SpriteSheet spriteSheet) {
+        this( canvas, uiConfig, spriteSheet, null);
     }
 
     @Override
@@ -59,9 +59,10 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer implements DebugIn
     public void drawHUD(GameContext gameContext, HUDData data, Vector2f sceneSize, long tick) {
         if (!data.isVisible()) return;
 
+        Font font = uiConfig.globalAssets().arcadeFont(scaled(TS));
+
         if (data.isScoreVisible()) {
             Color color = ARCADE_WHITE;
-            Font font = assets.arcadeFont(scaled(8));
             drawScore(gameContext.game().scoreManager().score(), "SCORE", color, font, TS(1), TS(1));
             drawScore(gameContext.game().scoreManager().highScore(), "HIGH SCORE", color, font, TS(14), TS(1));
         }
@@ -85,14 +86,14 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer implements DebugIn
             }
             if (gameContext.game().lifeCount() > livesCounter.maxLivesDisplayed()) {
                 // show text indicating that more lives are available than symbols displayed (cheating may cause this)
-                Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
-                fillText("%d".formatted(gameContext.game().lifeCount()), ARCADE_YELLOW, font, x - 14, y + TS);
+                Font excessLifesFont = Font.font("Serif", FontWeight.BOLD, scaled(8));
+                fillText("%d".formatted(gameContext.game().lifeCount()), ARCADE_YELLOW, excessLifesFont, x - 14, y + TS);
             }
         }
 
         if (data.isCreditVisible()) {
             String text = "CREDIT %2d".formatted(gameContext.coinMechanism().numCoins());
-            fillText(text, ARCADE_WHITE, assets.arcadeFont(scaled(8)), TS(2), sceneSize.y() - 2);
+            fillText(text, ARCADE_WHITE, uiConfig.globalAssets().arcadeFont(scaled(TS)), TS(2), sceneSize.y() - 2);
         }
     }
 
@@ -235,7 +236,7 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer implements DebugIn
     public void drawMidwayCopyright(MidwayCopyright copyright) {
         double x = scaled(copyright.x()), y = scaled(copyright.y());
         ctx().drawImage(copyright.logo(), x, y + 2, scaled(TS(4) - 2), scaled(TS(4)));
-        ctx().setFont(assets.arcadeFont(scaled(8)));
+        ctx().setFont(uiConfig.globalAssets().arcadeFont(scaled(TS)));
         ctx().setFill(ARCADE_RED);
         ctx().fillText("©", x + scaled(TS(5)), y + scaled(TS(2) + 2));
         ctx().fillText("MIDWAY MFG CO", x + scaled(TS(7)), y + scaled(TS(2)));

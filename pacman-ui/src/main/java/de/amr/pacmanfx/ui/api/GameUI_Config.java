@@ -11,6 +11,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.AnimationManager;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
@@ -41,6 +42,10 @@ public interface GameUI_Config extends Disposable {
     GameScene selectGameScene(GameContext gameContext);
 
     GameUI theUI();
+
+    default GlobalAssets globalAssets() {
+        return theUI().assets();
+    }
 
     AssetStorage assets();
 
