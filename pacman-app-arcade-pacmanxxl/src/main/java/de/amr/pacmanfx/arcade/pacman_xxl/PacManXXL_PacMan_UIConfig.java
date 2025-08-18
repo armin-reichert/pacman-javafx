@@ -76,8 +76,6 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config {
     }
 
     public void storeAssets() {
-        assets.store("spritesheet", spriteSheet);
-
         assets.store("app_icon", RES_ARCADE_PAC_MAN.loadImage("graphics/icons/pacman.png"));
         assets.store("color.game_over_message", ARCADE_RED);
 

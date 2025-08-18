@@ -80,7 +80,6 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config {
     }
 
     public void storeAssets() {
-        assets.store("spritesheet",             spriteSheet);
         assets.store("app_icon",                RES_ARCADE_MS_PAC_MAN.loadImage("graphics/icons/mspacman.png"));
         assets.store("logo.midway",             RES_ARCADE_MS_PAC_MAN.loadImage("graphics/midway_logo.png"));
         assets.store("startpage.image1",        RES_ARCADE_MS_PAC_MAN.loadImage("graphics/f1.jpg"));

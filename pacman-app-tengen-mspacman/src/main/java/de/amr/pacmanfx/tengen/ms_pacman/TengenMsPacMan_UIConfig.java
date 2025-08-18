@@ -144,7 +144,6 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public void storeAssets() {
-        assets.store("spritesheet", spriteSheet);
         assets.store("app_icon",         RES_TENGEN.loadImage("graphics/icons/mspacman.png"));
         assets.store("startpage.image1", RES_TENGEN.loadImage("graphics/f1.png"));
         assets.store("startpage.image2", RES_TENGEN.loadImage("graphics/f2.png"));
