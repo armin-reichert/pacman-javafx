@@ -38,7 +38,6 @@ public class MiniGameView extends VBox {
     public static final Duration SLIDE_IN_DURATION = Duration.seconds(1);
     public static final Duration SLIDE_OUT_DURATION = Duration.seconds(2);
 
-    private final FloatProperty aspectProperty                  = new SimpleFloatProperty(ARCADE_SIZE.x() / ARCADE_SIZE.y());
     private final ObjectProperty<Color> backgroundColorProperty = new SimpleObjectProperty<>(Color.BLACK);
     private final BooleanProperty debugProperty                 = new SimpleBooleanProperty(false);
     private final DoubleProperty canvasHeightProperty           = new SimpleDoubleProperty(400);
@@ -48,7 +47,7 @@ public class MiniGameView extends VBox {
     private final HBox canvasContainer;
     private final Canvas canvas;
 
-    private GameUI ui;
+    private final GameUI ui;
     private GameRenderer gameRenderer;
 
     private long drawCallCount;
@@ -60,10 +59,14 @@ public class MiniGameView extends VBox {
         this.ui = requireNonNull(ui);
 
         canvas = new Canvas();
-        canvas.heightProperty().bind(canvasHeightProperty());
+        canvas.heightProperty().bind(canvasHeightProperty);
         canvas.widthProperty().bind(Bindings.createDoubleBinding(
-            () -> aspectProperty.get() * canvas.getHeight(),
-            aspectProperty, canvas.heightProperty()
+            () -> {
+                Vector2f worldSize = worldSizeProperty.get();
+                double aspect = worldSize.x() / worldSize.y();
+                return aspect * canvas.getHeight();
+            },
+            worldSizeProperty, canvas.heightProperty()
         ));
 
         // The VBox fills the complete parent container height (why?), so we put the canvas
@@ -74,7 +77,6 @@ public class MiniGameView extends VBox {
         VBox.setVgrow(canvasContainer, Priority.NEVER);
         getChildren().add(canvasContainer);
 
-        aspectProperty.bind(worldSizeProperty.map(size -> size.x() / size.y()));
         backgroundColorProperty.bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
         canvasHeightProperty.bind(PROPERTY_MINI_VIEW_HEIGHT);
         debugProperty.bind(PROPERTY_DEBUG_INFO_VISIBLE);
