@@ -18,7 +18,7 @@ public class PacManXXL_PacMan_GameRenderer extends ArcadePacMan_GameRenderer {
     private final GenericMapRenderer mapRenderer;
 
     public PacManXXL_PacMan_GameRenderer(PacManXXL_PacMan_UIConfig uiConfig, Canvas canvas) {
-        super(uiConfig, canvas);
+        super(uiConfig, canvas, uiConfig.spriteSheet());
         mapRenderer = new GenericMapRenderer(canvas);
         mapRenderer.scalingProperty().bind(scalingProperty());
     }

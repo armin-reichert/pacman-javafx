@@ -33,14 +33,15 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
     protected final GameUI_Config uiConfig;
     protected final ArcadePacMan_SpriteSheet spriteSheet;
 
-    public ArcadePacMan_GameRenderer(GameUI_Config uiConfig, Canvas canvas) {
+    public ArcadePacMan_GameRenderer(GameUI_Config uiConfig, Canvas canvas, ArcadePacMan_SpriteSheet spriteSheet) {
         this.uiConfig = requireNonNull(uiConfig);
-        if (uiConfig.spriteSheet() instanceof ArcadePacMan_SpriteSheet arcadePacManSpriteSheet) {
-            spriteSheet = arcadePacManSpriteSheet;
-        } else {
-            throw new IllegalArgumentException("Arcade Pac-Man game renderer can only use Arcade Pac-Man sprite sheet!");
-        }
+        this.spriteSheet = requireNonNull(spriteSheet);
         setCanvas(canvas);
+    }
+
+    @Override
+    public ArcadePacMan_SpriteSheet spriteSheet() {
+        return spriteSheet;
     }
 
     @Override
@@ -136,9 +137,9 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
 
     private void drawBonus(Bonus bonus) {
         switch (bonus.state()) {
-            case EDIBLE -> drawSpriteCentered(bonus.center(), spriteSheet,
+            case EDIBLE -> drawSpriteCentered(bonus.center(),
                 spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS)[bonus.symbol()]);
-            case EATEN  -> drawSpriteCentered(bonus.center(), spriteSheet,
+            case EATEN  -> drawSpriteCentered(bonus.center(),
                 spriteSheet.spriteSequence(SpriteID.BONUS_VALUES)[bonus.symbol()]);
             case INACTIVE -> {}
         }

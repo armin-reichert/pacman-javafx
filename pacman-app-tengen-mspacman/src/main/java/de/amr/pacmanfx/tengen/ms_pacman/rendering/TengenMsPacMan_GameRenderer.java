@@ -44,11 +44,18 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
 
     private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
     private final TengenMsPacMan_UIConfig uiConfig;
+    private final TengenMsPacMan_SpriteSheet spriteSheet;
 
     public TengenMsPacMan_GameRenderer(TengenMsPacMan_UIConfig uiConfig, Canvas canvas) {
         this.uiConfig = requireNonNull(uiConfig);
+        spriteSheet = uiConfig.spriteSheet();
         setCanvas(canvas);
         ctx().setImageSmoothing(false);
+    }
+
+    @Override
+    public TengenMsPacMan_SpriteSheet spriteSheet() {
+        return spriteSheet;
     }
 
     public ObjectProperty<Color> backgroundColorProperty() { return backgroundColor; }
@@ -166,11 +173,11 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
         switch (bonus.state()) {
             case EDIBLE -> {
                 RectShort sprite = uiConfig.spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS)[bonus.symbol()];
-                drawSpriteCentered(bonus.center(), uiConfig.spriteSheet(), sprite);
+                drawSpriteCentered(bonus.center(), sprite);
             }
             case EATEN  -> {
                 RectShort sprite = uiConfig.spriteSheet().spriteSequence(SpriteID.BONUS_VALUES)[bonus.symbol()];
-                drawSpriteCentered(bonus.center(), uiConfig.spriteSheet(), sprite);
+                drawSpriteCentered(bonus.center(), sprite);
             }
         }
         ctx().restore();
@@ -216,7 +223,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
             case RIGHT -> ctx().scale(-1, 1);
             case DOWN  -> { ctx().scale(-1, 1); ctx().rotate(-90); }
         }
-        drawSpriteCentered(0, 0, uiConfig.spriteSheet(), sprite);
+        drawSpriteCentered(0, 0, sprite);
         ctx().restore();
     }
 
@@ -378,23 +385,23 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
 
     public void drawGameOptions(MapCategory category, Difficulty difficulty, PacBooster booster, double centerX, double y) {
         TengenMsPacMan_SpriteSheet spriteSheet = uiConfig.spriteSheet();
-        drawSpriteCentered(centerX, y, spriteSheet, spriteSheet.sprite(SpriteID.INFO_FRAME));
+        drawSpriteCentered(centerX, y, spriteSheet.sprite(SpriteID.INFO_FRAME));
         RectShort categorySprite = switch (requireNonNull(category)) {
             case BIG     -> spriteSheet.sprite(SpriteID.INFO_CATEGORY_BIG);
             case MINI    -> spriteSheet.sprite(SpriteID.INFO_CATEGORY_MINI);
             case STRANGE -> spriteSheet.sprite(SpriteID.INFO_CATEGORY_STRANGE);
             case ARCADE  -> RectShort.ZERO;
         };
-        drawSpriteCentered(centerX + TS(4.5), y, spriteSheet, categorySprite);
+        drawSpriteCentered(centerX + TS(4.5), y, categorySprite);
         RectShort difficultySprite = switch (requireNonNull(difficulty)) {
             case EASY   -> spriteSheet.sprite(SpriteID.INFO_DIFFICULTY_EASY);
             case HARD   -> spriteSheet.sprite(SpriteID.INFO_DIFFICULTY_HARD);
             case CRAZY  -> spriteSheet.sprite(SpriteID.INFO_DIFFICULTY_CRAZY);
             case NORMAL -> RectShort.ZERO;
         };
-        drawSpriteCentered(centerX, y, spriteSheet, difficultySprite);
+        drawSpriteCentered(centerX, y, difficultySprite);
         if (requireNonNull(booster) != PacBooster.OFF) {
-            drawSpriteCentered(centerX - TS(6), y, spriteSheet, spriteSheet.sprite(SpriteID.INFO_BOOSTER));
+            drawSpriteCentered(centerX - TS(6), y, spriteSheet.sprite(SpriteID.INFO_BOOSTER));
         }
     }
 
@@ -415,7 +422,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
         if (!clapperboard.isVisible()) return;
         clapperboard.sprite().ifPresent(sprite -> {
             double numberX = clapperboard.x() + 8, numberY = clapperboard.y() + 18; // baseline
-            drawSpriteCentered(clapperboard.center(), uiConfig.spriteSheet(), sprite);
+            drawSpriteCentered(clapperboard.center(), sprite);
             // over-paint number from sprite sheet
             ctx().save();
             ctx().scale(scaling(), scaling());

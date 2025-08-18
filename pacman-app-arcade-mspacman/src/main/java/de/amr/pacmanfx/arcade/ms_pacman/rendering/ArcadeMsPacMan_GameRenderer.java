@@ -50,6 +50,11 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
     }
 
     @Override
+    public ArcadeMsPacMan_SpriteSheet spriteSheet() {
+        return spriteSheet;
+    }
+
+    @Override
     public void drawHUD(GameContext gameContext, HUDData data, Vector2f sceneSize, long tick) {
         if (!data.isVisible()) return;
 
@@ -153,11 +158,11 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
         switch (bonus.state()) {
             case EDIBLE-> {
                 RectShort sprite = spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS)[bonus.symbol()];
-                drawSpriteCentered(bonus.center(), spriteSheet, sprite);
+                drawSpriteCentered(bonus.center(), sprite);
             }
             case EATEN  -> {
                 RectShort sprite = spriteSheet.spriteSequence(SpriteID.BONUS_VALUES)[bonus.symbol()];
-                drawSpriteCentered(bonus.center(), spriteSheet, sprite);
+                drawSpriteCentered(bonus.center(), sprite);
             }
         }
         ctx().restore();
@@ -171,7 +176,7 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
         double numberX = scaled(clapperboard.x() + sprite.width() - 25);
         double numberY = scaled(clapperboard.y() + 18);
         double textX = scaled(clapperboard.x() + sprite.width());
-        drawSpriteCentered(clapperboard.center(), spriteSheet, sprite);
+        drawSpriteCentered(clapperboard.center(), sprite);
         ctx().setFont(clapperboard.font());
         ctx().setFill(ARCADE_WHITE);
         ctx().fillText(clapperboard.number(), numberX, numberY);

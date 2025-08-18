@@ -153,7 +153,6 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
             if (ghostImageVisible[personality]) {
                 gameRenderer.drawSpriteCentered(
                     Vector2f.of(TS(LEFT_TILE_X) + TS, TS(7 + 3 * personality) + HTS),
-                    spriteSheet,
                     spriteSheet.spriteSequence(GALLERY_GHOSTS)[personality]);
             }
             if (ghostCharacterVisible[personality]) {

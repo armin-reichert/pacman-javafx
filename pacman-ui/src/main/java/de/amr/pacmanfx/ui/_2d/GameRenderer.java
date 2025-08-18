@@ -73,7 +73,7 @@ public abstract class GameRenderer extends BaseRenderer implements DebugInfoRend
                 default -> null;
             };
             if (sprite != null) {
-                drawSpriteCentered(actor.center(), spriteSheet, sprite);
+                drawSpriteCentered(actor.center(), sprite);
             }
         });
     }

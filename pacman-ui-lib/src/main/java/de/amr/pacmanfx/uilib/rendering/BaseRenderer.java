@@ -42,6 +42,8 @@ public abstract class BaseRenderer {
         return requireNonNull(ctx, "Renderer has no canvas to draw");
     }
 
+    public abstract SpriteSheet<?> spriteSheet();
+
     public DoubleProperty scalingProperty() { return scaling; }
 
     public void setScaling(double value) {
@@ -156,14 +158,13 @@ public abstract class BaseRenderer {
      * Draws the sprite centered over the given position. The target position is scaled using the current scaling value.
      *
      * @param center position over which sprite gets drawn
-     * @param spriteSheet the sprite sheet
      * @param sprite the actor sprite
      */
-    public void drawSpriteCentered(Vector2f center, SpriteSheet<?> spriteSheet, RectShort sprite) {
-        drawSpriteCentered(center.x(), center.y(), spriteSheet, sprite);
+    public void drawSpriteCentered(Vector2f center, RectShort sprite) {
+        drawSpriteCentered(center.x(), center.y(), sprite);
     }
 
-    public void drawSpriteCentered(double centerX, double centerY, SpriteSheet<?> spriteSheet, RectShort sprite) {
-        drawSprite(spriteSheet, sprite, centerX - 0.5 * sprite.width(), centerY - 0.5 * sprite.height(), true);
+    public void drawSpriteCentered(double centerX, double centerY, RectShort sprite) {
+        drawSprite(spriteSheet(), sprite, centerX - 0.5 * sprite.width(), centerY - 0.5 * sprite.height(), true);
     }
 }
