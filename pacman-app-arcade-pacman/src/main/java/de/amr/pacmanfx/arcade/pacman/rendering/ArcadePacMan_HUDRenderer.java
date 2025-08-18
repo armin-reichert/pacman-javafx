@@ -9,7 +9,6 @@ import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
-import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
 import javafx.scene.canvas.Canvas;
@@ -48,7 +47,7 @@ public class ArcadePacMan_HUDRenderer extends BaseRenderer implements HUDRendere
     }
 
     @Override
-    public void drawHUD(GameContext gameContext, GameClock gameClock, HUDData data, Vector2f sceneSize) {
+    public void drawHUD(GameContext gameContext, HUDData data, Vector2f sceneSize) {
         if (!data.isVisible()) return;
 
         Font font = uiConfig.theUI().assets().arcadeFont(scaled(TS));
