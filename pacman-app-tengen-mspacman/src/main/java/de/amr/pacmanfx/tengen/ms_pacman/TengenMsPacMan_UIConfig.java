@@ -59,6 +59,10 @@ import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
+    public static final String SPRITE_SHEET_PATH           = "graphics/spritesheet.png";
+    public static final String ARCADE_MAZES_IMAGE_PATH     = "graphics/arcade_mazes.png";
+    public static final String NON_ARCADE_MAZES_IMAGE_PATH = "graphics/non_arcade_mazes.png";
+
     public static final String MAPS_PATH = "/de/amr/pacmanfx/tengen/ms_pacman/maps/";
 
     public static final String RECOLORED_MAZE_PROPERTY = "recoloredMaze";
@@ -108,9 +112,9 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     public TengenMsPacMan_UIConfig(GameUI ui) {
         this.ui = requireNonNull(ui);
-        spriteSheet = new TengenMsPacMan_SpriteSheet(RES_TENGEN.loadImage("graphics/spritesheet.png"));
-        arcadeMapsSpriteSheet = new ArcadeMapsSpriteSheet(RES_TENGEN.loadImage("graphics/arcade_mazes.png"));
-        nonArcadeMapsSpriteSheet = new NonArcadeMapsSpriteSheet(RES_TENGEN.loadImage("graphics/non_arcade_mazes.png"));
+        spriteSheet              = new TengenMsPacMan_SpriteSheet(RES_TENGEN.loadImage(SPRITE_SHEET_PATH));
+        arcadeMapsSpriteSheet    = new ArcadeMapsSpriteSheet(RES_TENGEN.loadImage(ARCADE_MAZES_IMAGE_PATH));
+        nonArcadeMapsSpriteSheet = new NonArcadeMapsSpriteSheet(RES_TENGEN.loadImage(NON_ARCADE_MAZES_IMAGE_PATH));
 
         Joypad jp = ui.joypad();
         tengenMsPacManBindings = Set.of(
@@ -143,57 +147,58 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     }
 
     @Override
-    public void storeAssets() {
-        assets.store("app_icon",         RES_TENGEN.loadImage("graphics/icons/mspacman.png"));
-        assets.store("startpage.image1", RES_TENGEN.loadImage("graphics/f1.png"));
-        assets.store("startpage.image2", RES_TENGEN.loadImage("graphics/f2.png"));
-        assets.store("color.game_over_message", nesPaletteColor(0x11));
-        assets.store("color.ready_message",     nesPaletteColor(0x28));
+    public void loadAssets() {
+        assets.set("app_icon",         RES_TENGEN.loadImage("graphics/icons/mspacman.png"));
+        assets.set("startpage.image1", RES_TENGEN.loadImage("graphics/f1.png"));
+        assets.set("startpage.image2", RES_TENGEN.loadImage("graphics/f2.png"));
 
         RectShort[] symbolSprites = spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS);
         RectShort[] valueSprites  = spriteSheet.spriteSequence(SpriteID.BONUS_VALUES);
         for (byte symbol = 0; symbol <= 13; ++symbol) {
-            assets.store("bonus_symbol_" + symbol, spriteSheet.image(symbolSprites[symbol]));
-            assets.store("bonus_value_"  + symbol, spriteSheet.image(valueSprites[symbol]));
+            assets.set("bonus_symbol_" + symbol, spriteSheet.image(symbolSprites[symbol]));
+            assets.set("bonus_value_"  + symbol, spriteSheet.image(valueSprites[symbol]));
         }
 
-        assets.store("pac.color.head",                   nesPaletteColor(0x28));
-        assets.store("pac.color.eyes",                   nesPaletteColor(0x02));
-        assets.store("pac.color.palate",                 nesPaletteColor(0x2d));
-        assets.store("pac.color.boobs",                  nesPaletteColor(0x28).deriveColor(0, 1.0, 0.96, 1.0));
-        assets.store("pac.color.hairbow",                nesPaletteColor(0x05));
-        assets.store("pac.color.hairbow.pearls",         nesPaletteColor(0x02));
+        assets.set("color.game_over_message",  nesPaletteColor(0x11));
+        assets.set("color.ready_message",      nesPaletteColor(0x28));
+
+        assets.set("pac.color.head",           nesPaletteColor(0x28));
+        assets.set("pac.color.eyes",           nesPaletteColor(0x02));
+        assets.set("pac.color.palate",         nesPaletteColor(0x2d));
+        assets.set("pac.color.boobs",          nesPaletteColor(0x28).deriveColor(0, 1.0, 0.96, 1.0));
+        assets.set("pac.color.hairbow",        nesPaletteColor(0x05));
+        assets.set("pac.color.hairbow.pearls", nesPaletteColor(0x02));
 
         RectShort[] numberSprites = spriteSheet.spriteSequence(SpriteID.GHOST_NUMBERS);
-        assets.store("ghost_points_0",                   spriteSheet.image(numberSprites[0]));
-        assets.store("ghost_points_1",                   spriteSheet.image(numberSprites[1]));
-        assets.store("ghost_points_2",                   spriteSheet.image(numberSprites[2]));
-        assets.store("ghost_points_3",                   spriteSheet.image(numberSprites[3]));
+        assets.set("ghost_points.0", spriteSheet.image(numberSprites[0]));
+        assets.set("ghost_points.1", spriteSheet.image(numberSprites[1]));
+        assets.set("ghost_points.2", spriteSheet.image(numberSprites[2]));
+        assets.set("ghost_points.3", spriteSheet.image(numberSprites[3]));
 
-        assets.store("ghost.0.color.normal.dress",       nesPaletteColor(0x05));
-        assets.store("ghost.0.color.normal.eyeballs",    nesPaletteColor(0x20));
-        assets.store("ghost.0.color.normal.pupils",      nesPaletteColor(0x16));
+        assets.set("ghost.0.color.normal.dress",       nesPaletteColor(0x05));
+        assets.set("ghost.0.color.normal.eyeballs",    nesPaletteColor(0x20));
+        assets.set("ghost.0.color.normal.pupils",      nesPaletteColor(0x16));
 
-        assets.store("ghost.1.color.normal.dress",       nesPaletteColor(0x25));
-        assets.store("ghost.1.color.normal.eyeballs",    nesPaletteColor(0x20));
-        assets.store("ghost.1.color.normal.pupils",      nesPaletteColor(0x11));
+        assets.set("ghost.1.color.normal.dress",       nesPaletteColor(0x25));
+        assets.set("ghost.1.color.normal.eyeballs",    nesPaletteColor(0x20));
+        assets.set("ghost.1.color.normal.pupils",      nesPaletteColor(0x11));
 
-        assets.store("ghost.2.color.normal.dress",       nesPaletteColor(0x11));
-        assets.store("ghost.2.color.normal.eyeballs",    nesPaletteColor(0x20));
-        assets.store("ghost.2.color.normal.pupils",      nesPaletteColor(0x11));
+        assets.set("ghost.2.color.normal.dress",       nesPaletteColor(0x11));
+        assets.set("ghost.2.color.normal.eyeballs",    nesPaletteColor(0x20));
+        assets.set("ghost.2.color.normal.pupils",      nesPaletteColor(0x11));
 
-        assets.store("ghost.3.color.normal.dress",       nesPaletteColor(0x16));
-        assets.store("ghost.3.color.normal.eyeballs",    nesPaletteColor(0x20));
-        assets.store("ghost.3.color.normal.pupils",      nesPaletteColor(0x05));
+        assets.set("ghost.3.color.normal.dress",       nesPaletteColor(0x16));
+        assets.set("ghost.3.color.normal.eyeballs",    nesPaletteColor(0x20));
+        assets.set("ghost.3.color.normal.pupils",      nesPaletteColor(0x05));
 
-        assets.store("ghost.color.frightened.dress",     nesPaletteColor(0x01));
-        assets.store("ghost.color.frightened.eyeballs",  nesPaletteColor(0x20));
-        assets.store("ghost.color.frightened.pupils",    nesPaletteColor(0x20));
+        assets.set("ghost.color.frightened.dress",     nesPaletteColor(0x01));
+        assets.set("ghost.color.frightened.eyeballs",  nesPaletteColor(0x20));
+        assets.set("ghost.color.frightened.pupils",    nesPaletteColor(0x20));
 
         //TODO sprite sheet provides two flashing colors, when to use which?
-        assets.store("ghost.color.flashing.dress",       nesPaletteColor(0x20));
-        assets.store("ghost.color.flashing.eyeballs",    nesPaletteColor(0x20));
-        assets.store("ghost.color.flashing.pupils",      nesPaletteColor(0x20));
+        assets.set("ghost.color.flashing.dress",       nesPaletteColor(0x20));
+        assets.set("ghost.color.flashing.eyeballs",    nesPaletteColor(0x20));
+        assets.set("ghost.color.flashing.pupils",      nesPaletteColor(0x20));
 
         soundManager.registerAudioClip("audio.option.selection_changed",  RES_TENGEN.url("sound/ms-select1.wav"));
         soundManager.registerAudioClip("audio.option.value_changed",      RES_TENGEN.url("sound/ms-select2.wav"));
@@ -292,7 +297,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public Image killedGhostPointsImage(Ghost ghost, int killedIndex) {
-        return assets.image("ghost_points_" + killedIndex);
+        return assets.image("ghost_points." + killedIndex);
     }
 
     @Override

@@ -33,7 +33,7 @@ public class AssetStorage {
         return textResources;
     }
 
-    public void store(String key, Object value) {
+    public void set(String key, Object value) {
         requireNonNull(key);
         requireNonNull(value);
         assetMap.put(key, value);

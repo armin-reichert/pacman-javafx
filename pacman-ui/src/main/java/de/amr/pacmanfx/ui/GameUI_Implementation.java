@@ -414,7 +414,7 @@ public class GameUI_Implementation implements GameUI {
 
         GameUI_Config newConfig = config(gameVariant);
         Logger.info("Loading assets for game variant {}", gameVariant);
-        newConfig.storeAssets();
+        newConfig.loadAssets();
         newConfig.soundManager().mutedProperty().bind(PROPERTY_MUTED);
 
         Image appIcon = newConfig.assets().image("app_icon");

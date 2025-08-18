@@ -175,11 +175,11 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
             String gameVariant = selectedValue();
             if (DefaultGameVariants.PACMAN_XXL.name().equals(gameVariant)) {
                 Logger.info("Loading assets for game variant {}", gameVariant);
-                ui.config(gameVariant).storeAssets();
+                ui.config(gameVariant).loadAssets();
             }
             else if (DefaultGameVariants.MS_PACMAN_XXL.name().equals(gameVariant)) {
                 Logger.info("Loading assets for game variant {}", gameVariant);
-                ui.config(gameVariant).storeAssets();
+                ui.config(gameVariant).loadAssets();
             }
             chaseAnimation.setGameConfig(ui.config(gameVariant));
             state.gameVariant = gameVariant;

@@ -44,7 +44,7 @@ public interface GameUI_Config extends Disposable {
 
     AssetStorage assets();
 
-    void storeAssets();
+    void loadAssets();
 
     Image bonusSymbolImage(byte symbol);
 

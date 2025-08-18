@@ -30,20 +30,20 @@ public class GlobalAssets extends AssetStorage {
         pickGameOverText      = RandomTextPicker.fromBundle(textResources(), "game.over");
         pickLevelCompleteText = RandomTextPicker.fromBundle(textResources(), "level.complete");
 
-        store("background.scene",        createImageBackground(GAME_UI_RES.loadImage("graphics/pacman_wallpaper.png")));
-        store("background.play_scene3d", createImageBackground(GAME_UI_RES.loadImage("graphics/blue_sky.jpg")));
+        set("background.scene",        createImageBackground(GAME_UI_RES.loadImage("graphics/pacman_wallpaper.png")));
+        set("background.play_scene3d", createImageBackground(GAME_UI_RES.loadImage("graphics/blue_sky.jpg")));
 
-        store("font.arcade",             GAME_UI_RES.loadFont("fonts/emulogic.ttf", 8));
-        store("font.handwriting",        GAME_UI_RES.loadFont("fonts/Molle-Italic.ttf", 9));
-        store("font.monospaced",         GAME_UI_RES.loadFont("fonts/Inconsolata_Condensed-Bold.ttf", 12));
-        store("font.pacfont",            GAME_UI_RES.loadFont("fonts/Pacfont.ttf", 8));
-        store("font.pacfontgood",        GAME_UI_RES.loadFont("fonts/PacfontGood.ttf", 8));
+        set("font.arcade",             GAME_UI_RES.loadFont("fonts/emulogic.ttf", 8));
+        set("font.handwriting",        GAME_UI_RES.loadFont("fonts/Molle-Italic.ttf", 9));
+        set("font.monospaced",         GAME_UI_RES.loadFont("fonts/Inconsolata_Condensed-Bold.ttf", 12));
+        set("font.pacfont",            GAME_UI_RES.loadFont("fonts/Pacfont.ttf", 8));
+        set("font.pacfontgood",        GAME_UI_RES.loadFont("fonts/PacfontGood.ttf", 8));
 
-        store("voice.explain",           GAME_UI_RES.url("sound/voice/press-key.mp3"));
-        store("voice.autopilot.off",     GAME_UI_RES.url("sound/voice/autopilot-off.mp3"));
-        store("voice.autopilot.on",      GAME_UI_RES.url("sound/voice/autopilot-on.mp3"));
-        store("voice.immunity.off",      GAME_UI_RES.url("sound/voice/immunity-off.mp3"));
-        store("voice.immunity.on",       GAME_UI_RES.url("sound/voice/immunity-on.mp3"));
+        set("voice.explain",           GAME_UI_RES.url("sound/voice/press-key.mp3"));
+        set("voice.autopilot.off",     GAME_UI_RES.url("sound/voice/autopilot-off.mp3"));
+        set("voice.autopilot.on",      GAME_UI_RES.url("sound/voice/autopilot-on.mp3"));
+        set("voice.immunity.off",      GAME_UI_RES.url("sound/voice/immunity-off.mp3"));
+        set("voice.immunity.on",       GAME_UI_RES.url("sound/voice/immunity-on.mp3"));
     }
 
     public Model3DRepository theModel3DRepository() { return model3DRepository; }
