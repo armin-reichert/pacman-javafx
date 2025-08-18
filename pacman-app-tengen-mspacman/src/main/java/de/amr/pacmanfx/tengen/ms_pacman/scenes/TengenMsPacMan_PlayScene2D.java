@@ -481,7 +481,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         gameLevel.bonus().ifPresent(actorsInZOrder::add);
         actorsInZOrder.add(gameLevel.pac());
         ghostsByZ(gameLevel).forEach(actorsInZOrder::add);
-        actorsInZOrder.forEach(actor -> gameRenderer.drawActor(actor, spriteSheet.sourceImage()));
+        actorsInZOrder.forEach(actor -> gameRenderer.drawActor(actor, spriteSheet));
 
         gameRenderer.ctx().restore();
     }

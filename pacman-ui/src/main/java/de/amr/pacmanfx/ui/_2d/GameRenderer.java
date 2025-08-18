@@ -11,8 +11,8 @@ import de.amr.pacmanfx.model.HUDData;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.uilib.animation.SingleSpriteNoAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 import static java.util.Objects.requireNonNull;
@@ -59,9 +59,9 @@ public abstract class GameRenderer extends BaseRenderer implements DebugInfoRend
      * Draws an actor (Pac-Man, ghost, moving bonus, etc.) if it is visible.
      *
      * @param actor the actor to draw
-     * @param spriteSheetImage sprite sheet image
+     * @param spriteSheet sprite sheet
      */
-    public void drawActor(Actor actor, Image spriteSheetImage) {
+    public void drawActor(Actor actor, SpriteSheet<?> spriteSheet) {
         requireNonNull(actor);
         if (!actor.isVisible()) return;
 
@@ -73,7 +73,7 @@ public abstract class GameRenderer extends BaseRenderer implements DebugInfoRend
                 default -> null;
             };
             if (sprite != null) {
-                drawSpriteCentered(actor.center(), spriteSheetImage, sprite);
+                drawSpriteCentered(actor.center(), spriteSheet, sprite);
             }
         });
     }

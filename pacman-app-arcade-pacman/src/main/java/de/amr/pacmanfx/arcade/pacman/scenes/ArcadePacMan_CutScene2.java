@@ -135,9 +135,9 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        gameRenderer.drawSprite(spriteSheet.sourceImage(), nailDressRaptureAnimation.currentSprite(),
+        gameRenderer.drawSprite(spriteSheet, nailDressRaptureAnimation.currentSprite(),
             TS(14), TS(19) + 3, true);
-        actorsInZOrder.forEach(actor -> gameRenderer.drawActor(actor, spriteSheet.sourceImage()));
+        actorsInZOrder.forEach(actor -> gameRenderer.drawActor(actor, spriteSheet));
     }
 
     @Override

@@ -246,6 +246,6 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     @Override
     public void drawSceneContent() {
         Stream.of(clapperboard, msPacMan, pacMan, inky, pinky, heart)
-            .forEach(actor -> gameRenderer.drawActor(actor, spriteSheet.sourceImage()));
+            .forEach(actor -> gameRenderer.drawActor(actor, spriteSheet));
     }
 }

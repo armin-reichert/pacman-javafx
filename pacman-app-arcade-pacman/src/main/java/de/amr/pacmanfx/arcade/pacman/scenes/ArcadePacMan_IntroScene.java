@@ -153,7 +153,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
             if (ghostImageVisible[personality]) {
                 gameRenderer.drawSpriteCentered(
                     Vector2f.of(TS(LEFT_TILE_X) + TS, TS(7 + 3 * personality) + HTS),
-                    spriteSheet.sourceImage(),
+                    spriteSheet,
                     spriteSheet.spriteSequence(GALLERY_GHOSTS)[personality]);
             }
             if (ghostCharacterVisible[personality]) {
@@ -172,17 +172,17 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         long tick = sceneController.state().timer().tickCount();
         int shakingAmount = shaking ? (tick % 5 < 2 ? 0 : -1) : 0;
         if (shakingAmount == 0) {
-            ghosts.forEach(ghost -> gameRenderer.drawActor(ghost, spriteSheet.sourceImage()));
+            ghosts.forEach(ghost -> gameRenderer.drawActor(ghost, spriteSheet));
         } else {
-            gameRenderer.drawActor(ghosts.get(RED_GHOST_SHADOW), spriteSheet.sourceImage());
-            gameRenderer.drawActor(ghosts.get(ORANGE_GHOST_POKEY), spriteSheet.sourceImage());
+            gameRenderer.drawActor(ghosts.get(RED_GHOST_SHADOW), spriteSheet);
+            gameRenderer.drawActor(ghosts.get(ORANGE_GHOST_POKEY), spriteSheet);
             gameRenderer.ctx().save();
             gameRenderer.ctx().translate(shakingAmount, 0);
-            gameRenderer.drawActor(ghosts.get(PINK_GHOST_SPEEDY), spriteSheet.sourceImage());
-            gameRenderer.drawActor(ghosts.get(CYAN_GHOST_BASHFUL), spriteSheet.sourceImage());
+            gameRenderer.drawActor(ghosts.get(PINK_GHOST_SPEEDY), spriteSheet);
+            gameRenderer.drawActor(ghosts.get(CYAN_GHOST_BASHFUL), spriteSheet);
             gameRenderer.ctx().restore();
         }
-        gameRenderer.drawActor(pacMan, spriteSheet.sourceImage());
+        gameRenderer.drawActor(pacMan, spriteSheet);
     }
 
     private void drawPoints() {

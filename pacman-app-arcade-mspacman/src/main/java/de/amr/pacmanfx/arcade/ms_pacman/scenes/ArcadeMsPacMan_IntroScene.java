@@ -136,9 +136,9 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     public void drawSceneContent() {
         gameRenderer.ctx().setFont(scaledArcadeFont8());
         gameRenderer.fillText(TITLE, ARCADE_ORANGE, TITLE_X, TITLE_Y);
-        gameRenderer.drawActor(marquee, spriteSheet.sourceImage());
-        ghosts.forEach(ghost -> gameRenderer.drawActor(ghost, spriteSheet.sourceImage()));
-        gameRenderer.drawActor(msPacMan, spriteSheet.sourceImage());
+        gameRenderer.drawActor(marquee, spriteSheet);
+        ghosts.forEach(ghost -> gameRenderer.drawActor(ghost, spriteSheet));
+        gameRenderer.drawActor(msPacMan, spriteSheet);
         switch (sceneController.state()) {
             case GHOSTS_MARCHING_IN -> {
                 String ghostName = GHOST_NAMES[presentedGhostCharacter];
@@ -155,7 +155,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
                 gameRenderer.fillText("MS PAC-MAN", ARCADE_YELLOW, TITLE_X, TOP_Y + TS(6));
             }
         }
-        gameRenderer.drawActor(midwayCopyright, spriteSheet.sourceImage());
+        gameRenderer.drawActor(midwayCopyright, spriteSheet);
     }
 
     // Scene controller FSM

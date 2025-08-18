@@ -113,7 +113,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
             case WAITING_FOR_START -> {
                 if (!dark) {
                     gameRenderer.fillText("TENGEN PRESENTS", blueShadedColor(tick), presentsText.x(), presentsText.y());
-                    gameRenderer.drawSprite(spriteSheet.sourceImage(), spriteSheet.sprite(SpriteID.TITLE_TEXT),
+                    gameRenderer.drawSprite(spriteSheet, spriteSheet.sprite(SpriteID.TITLE_TEXT),
                         6 * TS, MARQUEE_Y, true);
                     if (tick % 60 < 30) {
                         gameRenderer.fillText("PRESS START", nesPaletteColor(0x20), 11 * TS, MARQUEE_Y + 9 * TS);
@@ -136,15 +136,15 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 Ghost currentGhost = ghosts.get(ghostIndex);
                 Color ghostColor = ui.assets().color("tengen.ghost.%d.color.normal.dress".formatted(currentGhost.id().personality()));
                 gameRenderer.fillText(currentGhost.name().toUpperCase(), ghostColor, MARQUEE_X + 44, MARQUEE_Y + 41);
-                ghosts.forEach(ghost -> gameRenderer.drawActor(ghost, spriteSheet.sourceImage()));
+                ghosts.forEach(ghost -> gameRenderer.drawActor(ghost, spriteSheet));
             }
             case MS_PACMAN_MARCHING_IN -> {
                 drawMarquee();
                 gameRenderer.fillText("\"MS PAC-MAN\"", nesPaletteColor(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
                 gameRenderer.fillText("STARRING", nesPaletteColor(0x20), MARQUEE_X + 12, MARQUEE_Y + 22);
                 gameRenderer.fillText("MS PAC-MAN", nesPaletteColor(0x28), MARQUEE_X + 28, MARQUEE_Y + 38);
-                ghosts.forEach(ghost -> gameRenderer.drawActor(ghost, spriteSheet.sourceImage()));
-                gameRenderer.drawActor(msPacMan, spriteSheet.sourceImage());
+                ghosts.forEach(ghost -> gameRenderer.drawActor(ghost, spriteSheet));
+                gameRenderer.drawActor(msPacMan, spriteSheet);
             }
         }
 

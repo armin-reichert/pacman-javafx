@@ -178,7 +178,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
     public void drawSceneContent() {
         if (!darkness) {
             Stream.of(clapperboard, stork, flyingBag, msPacMan, pacMan)
-                .forEach(actor -> gameRenderer.drawActor(actor, spriteSheet.sourceImage()));
+                .forEach(actor -> gameRenderer.drawActor(actor, spriteSheet));
         }
     }
 }

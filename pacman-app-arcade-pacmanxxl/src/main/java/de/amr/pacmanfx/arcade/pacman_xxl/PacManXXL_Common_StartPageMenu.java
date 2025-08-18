@@ -145,8 +145,8 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
             ctx.translate(0, 23.5 * TS * scaling);
             ctx.setImageSmoothing(false);
             gameRenderer.setScaling(scaling);
-            ghosts.forEach(ghost -> gameRenderer.drawActor(ghost, spriteSheet.sourceImage()));
-            gameRenderer.drawActor(pac, spriteSheet.sourceImage());
+            ghosts.forEach(ghost -> gameRenderer.drawActor(ghost, spriteSheet));
+            gameRenderer.drawActor(pac, spriteSheet);
             ctx.restore();
         }
 

@@ -8,6 +8,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
 import de.amr.pacmanfx.ui.api.GameUI;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
 import javafx.beans.binding.Bindings;
@@ -17,7 +18,6 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -129,14 +129,14 @@ public class MiniGameView extends VBox {
 
         GameLevel gameLevel = ui.gameContext().gameLevel();
         if (gameLevel != null) {
-            Image spriteSheetImage = ui.currentConfig().spriteSheet().sourceImage();
+            SpriteSheet<?> spriteSheet = ui.currentConfig().spriteSheet();
             gameRenderer.drawLevel(ui.gameContext(), PROPERTY_CANVAS_BACKGROUND_COLOR.get(), false,
                 gameLevel.blinking().isOn(), ui.clock().tickCount());
-            gameLevel.bonus().ifPresent(bonus -> gameRenderer.drawActor(bonus, spriteSheetImage));
-            gameRenderer.drawActor(gameLevel.pac(), spriteSheetImage);
+            gameLevel.bonus().ifPresent(bonus -> gameRenderer.drawActor(bonus, spriteSheet));
+            gameRenderer.drawActor(gameLevel.pac(), spriteSheet);
             Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)
                 .map(gameLevel::ghost)
-                .forEach(ghost -> gameRenderer.drawActor(ghost, spriteSheetImage));
+                .forEach(ghost -> gameRenderer.drawActor(ghost, spriteSheet));
         }
 
         if (PROPERTY_DEBUG_INFO_VISIBLE.get()) {

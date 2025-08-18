@@ -300,7 +300,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
                 case 3 -> SpriteID.CONTINUES_3;
                 default -> throw new IllegalArgumentException("Illegal number of continues: " + theGame().numContinues());
             });
-            renderer().drawSprite(spriteSheet.sourceImage(), continuesSprite, COL_VALUE + 3 * TS, 160, true);
+            renderer().drawSprite(spriteSheet, continuesSprite, COL_VALUE + 3 * TS, 160, true);
         }
 
         renderer().fillText("MOVE ARROW WITH JOYPAD", NES_YELLOW, 4 * TS,  192);

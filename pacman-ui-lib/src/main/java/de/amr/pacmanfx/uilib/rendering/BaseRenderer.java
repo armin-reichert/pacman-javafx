@@ -7,11 +7,11 @@ package de.amr.pacmanfx.uilib.rendering;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
@@ -137,17 +137,17 @@ public abstract class BaseRenderer {
     /**
      * Draws a sprite (region inside sprite sheet) unscaled at the given position.
      *
-     * @param spriteSheetImage the sprite sheet image
+     * @param spriteSheet the sprite sheet
      * @param sprite      the sprite to draw
      * @param x           x-coordinate of left-upper corner
      * @param y           y-coordinate of left-upper corner
      * @param scaled      tells is the destination rectangle's position and size is scaled using the current scaling value
      */
-    public void drawSprite(Image spriteSheetImage, RectShort sprite, double x, double y, boolean scaled) {
-        requireNonNull(spriteSheetImage);
+    public void drawSprite(SpriteSheet<?> spriteSheet, RectShort sprite, double x, double y, boolean scaled) {
+        requireNonNull(spriteSheet);
         requireNonNull(sprite);
         double s = scaled ? scaling() : 1;
-        ctx().drawImage(spriteSheetImage,
+        ctx().drawImage(spriteSheet.sourceImage(),
                 sprite.x(), sprite.y(), sprite.width(), sprite.height(),
                 s * x, s * y, s * sprite.width(), s * sprite.height());
     }
@@ -156,14 +156,14 @@ public abstract class BaseRenderer {
      * Draws the sprite centered over the given position. The target position is scaled using the current scaling value.
      *
      * @param center position over which sprite gets drawn
-     * @param spriteSheetImage the sprite sheet image
+     * @param spriteSheet the sprite sheet
      * @param sprite the actor sprite
      */
-    public void drawSpriteCentered(Vector2f center, Image spriteSheetImage, RectShort sprite) {
-        drawSpriteCentered(center.x(), center.y(), spriteSheetImage, sprite);
+    public void drawSpriteCentered(Vector2f center, SpriteSheet<?> spriteSheet, RectShort sprite) {
+        drawSpriteCentered(center.x(), center.y(), spriteSheet, sprite);
     }
 
-    public void drawSpriteCentered(double centerX, double centerY, Image spriteSheetImage, RectShort sprite) {
-        drawSprite(spriteSheetImage, sprite, centerX - 0.5 * sprite.width(), centerY - 0.5 * sprite.height(), true);
+    public void drawSpriteCentered(double centerX, double centerY, SpriteSheet<?> spriteSheet, RectShort sprite) {
+        drawSprite(spriteSheet, sprite, centerX - 0.5 * sprite.width(), centerY - 0.5 * sprite.height(), true);
     }
 }
