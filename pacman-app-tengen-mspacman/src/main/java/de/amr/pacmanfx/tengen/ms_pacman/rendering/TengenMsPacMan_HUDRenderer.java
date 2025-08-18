@@ -1,3 +1,7 @@
+/*
+Copyright (c) 2021-2025 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.pacmanfx.tengen.ms_pacman.rendering;
 
 import de.amr.pacmanfx.GameContext;
@@ -26,15 +30,16 @@ public class TengenMsPacMan_HUDRenderer extends BaseRenderer implements HUDRende
 
     protected final TengenMsPacMan_UIConfig uiConfig;
 
-    public TengenMsPacMan_HUDRenderer(TengenMsPacMan_UIConfig uiConfig, Canvas canvas, TengenMsPacMan_SpriteSheet spriteSheet) {
+    public TengenMsPacMan_HUDRenderer(TengenMsPacMan_UIConfig uiConfig, Canvas canvas) {
+        super(canvas, uiConfig.spriteSheet());
         this.uiConfig = requireNonNull(uiConfig);
-        this.spriteSheet = requireNonNull(spriteSheet);
-        setCanvas(canvas);
     }
 
     @Override
     public void drawHUD(GameContext gameContext, HUDData data, Vector2f sceneSize) {
+        requireNonNull(gameContext);
         requireNonNull(data);
+        requireNonNull(sceneSize);
 
         if (!data.isVisible()) return;
 

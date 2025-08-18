@@ -15,7 +15,6 @@ import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.BonusState;
 import de.amr.pacmanfx.ui._2d.DebugInfoRenderer;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
-import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.GameRenderer;
 import javafx.scene.canvas.Canvas;
@@ -33,20 +32,16 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer implements DebugIn
     protected ArcadeMsPacMan_SpriteSheet spriteSheet;
     protected BrightMazesSpriteSheet brightMazesSpriteSheet;
 
-    public ArcadeMsPacMan_GameRenderer(
-        Canvas canvas,
-        GameUI_Config uiConfig,
+    public ArcadeMsPacMan_GameRenderer(Canvas canvas, GameUI_Config uiConfig,
         ArcadeMsPacMan_SpriteSheet spriteSheet,
-        BrightMazesSpriteSheet brightMazesSpriteSheet)
-    {
+        BrightMazesSpriteSheet brightMazesSpriteSheet) {
+        super(canvas, spriteSheet);
         this.uiConfig = requireNonNull(uiConfig);
-        this.spriteSheet = requireNonNull(spriteSheet);
         this.brightMazesSpriteSheet = brightMazesSpriteSheet; // can be null in Ms. Pac-Man XXL!
-        setCanvas(canvas);
     }
 
     protected ArcadeMsPacMan_GameRenderer(Canvas canvas, GameUI_Config uiConfig, ArcadeMsPacMan_SpriteSheet spriteSheet) {
-        this( canvas, uiConfig, spriteSheet, null);
+        this(canvas, uiConfig, spriteSheet, null);
     }
 
     @Override
@@ -55,7 +50,7 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer implements DebugIn
     }
 
     @Override
-    public void drawGameLevel(GameContext gameContext, GameClock gameClock, Color backgroundColor, boolean mazeBright, boolean energizerBright) {
+    public void drawGameLevel(GameContext gameContext, Color backgroundColor, boolean mazeBright, boolean energizerBright) {
         GameLevel gameLevel = gameContext.gameLevel();
         int colorMapIndex = gameLevel.worldMap().getConfigValue("colorMapIndex");
         if (mazeBright) {

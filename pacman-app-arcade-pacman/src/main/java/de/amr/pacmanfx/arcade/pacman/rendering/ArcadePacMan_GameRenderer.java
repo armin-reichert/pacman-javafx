@@ -10,7 +10,6 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.ui._2d.DebugInfoRenderer;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
-import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.GameRenderer;
 import javafx.scene.canvas.Canvas;
@@ -27,21 +26,19 @@ import static java.util.function.Predicate.not;
 public class ArcadePacMan_GameRenderer extends GameRenderer implements DebugInfoRenderer {
 
     protected final GameUI_Config uiConfig;
-    protected final ArcadePacMan_SpriteSheet spriteSheet;
 
     public ArcadePacMan_GameRenderer(GameUI_Config uiConfig, Canvas canvas, ArcadePacMan_SpriteSheet spriteSheet) {
+        super(canvas, spriteSheet);
         this.uiConfig = requireNonNull(uiConfig);
-        this.spriteSheet = requireNonNull(spriteSheet);
-        setCanvas(canvas);
     }
 
     @Override
     public ArcadePacMan_SpriteSheet spriteSheet() {
-        return spriteSheet;
+        return (ArcadePacMan_SpriteSheet) spriteSheet;
     }
 
     @Override
-    public void drawGameLevel(GameContext gameContext, GameClock gameClock, Color backgroundColor, boolean mazeBright, boolean energizerBright) {
+    public void drawGameLevel(GameContext gameContext, Color backgroundColor, boolean mazeBright, boolean energizerBright) {
         GameLevel gameLevel = gameContext.gameLevel();
         ctx().setFill(backgroundColor);
         ctx().save();
@@ -59,7 +56,7 @@ public class ArcadePacMan_GameRenderer extends GameRenderer implements DebugInfo
     }
 
     private void drawEmptyGameLevel(GameLevel gameLevel) {
-        drawSprite(spriteSheet, spriteSheet.sprite(SpriteID.MAP_EMPTY), 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE), false);
+        drawSprite(spriteSheet, spriteSheet().sprite(SpriteID.MAP_EMPTY), 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE), false);
         // hide doors
         gameLevel.house().ifPresent(house -> fillSquareAtTileCenter(house.leftDoorTile(), TS + 0.5));
         gameLevel.house().ifPresent(house -> fillSquareAtTileCenter(house.rightDoorTile(), TS + 0.5));
@@ -71,7 +68,7 @@ public class ArcadePacMan_GameRenderer extends GameRenderer implements DebugInfo
     }
 
     private void drawGameLevelWithFood(GameLevel gameLevel, boolean energizerDark) {
-        drawSprite(spriteSheet, spriteSheet.sprite(SpriteID.MAP_FULL), 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE), false);
+        drawSprite(spriteSheet, spriteSheet().sprite(SpriteID.MAP_FULL), 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE), false);
         gameLevel.worldMap().tiles()
                 .filter(not(gameLevel::isEnergizerPosition))
                 .filter(gameLevel::tileContainsEatenFood)
@@ -92,9 +89,9 @@ public class ArcadePacMan_GameRenderer extends GameRenderer implements DebugInfo
     private void drawBonus(Bonus bonus) {
         switch (bonus.state()) {
             case EDIBLE -> drawSpriteCentered(bonus.center(),
-                spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS)[bonus.symbol()]);
+                spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS)[bonus.symbol()]);
             case EATEN  -> drawSpriteCentered(bonus.center(),
-                spriteSheet.spriteSequence(SpriteID.BONUS_VALUES)[bonus.symbol()]);
+                spriteSheet().spriteSequence(SpriteID.BONUS_VALUES)[bonus.symbol()]);
             case INACTIVE -> {}
         }
     }

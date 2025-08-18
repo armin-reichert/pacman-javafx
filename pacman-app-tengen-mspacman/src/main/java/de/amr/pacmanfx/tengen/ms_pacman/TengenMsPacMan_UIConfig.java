@@ -333,7 +333,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public HUDRenderer createHUDRenderer(Canvas canvas, DoubleProperty scaling) {
-        var hudRenderer = new TengenMsPacMan_HUDRenderer(this, canvas, spriteSheet);
+        var hudRenderer = new TengenMsPacMan_HUDRenderer(this, canvas);
         hudRenderer.scalingProperty().bind(scaling);
         return hudRenderer;
     }

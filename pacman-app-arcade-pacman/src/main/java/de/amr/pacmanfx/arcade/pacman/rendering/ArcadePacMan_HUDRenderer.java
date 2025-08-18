@@ -26,14 +26,13 @@ public class ArcadePacMan_HUDRenderer extends BaseRenderer implements HUDRendere
     protected final GameUI_Config uiConfig;
 
     public ArcadePacMan_HUDRenderer(GameUI_Config uiConfig, Canvas canvas, ArcadePacMan_SpriteSheet spriteSheet) {
+        super(canvas, spriteSheet);
         this.uiConfig = requireNonNull(uiConfig);
-        this.spriteSheet = requireNonNull(spriteSheet);
-        setCanvas(canvas);
     }
 
     protected ArcadePacMan_HUDRenderer(GameUI_Config uiConfig, Canvas canvas) {
+        super(canvas, null);
         this.uiConfig = requireNonNull(uiConfig);
-        setCanvas(canvas);
     }
 
     protected RectShort[] bonusSymbols() {
@@ -54,8 +53,8 @@ public class ArcadePacMan_HUDRenderer extends BaseRenderer implements HUDRendere
 
         if (data.isScoreVisible()) {
             ScoreManager scoreManager = gameContext.game().scoreManager();
-            drawScore(scoreManager.score(), "SCORE", ARCADE_WHITE, font, TS(1), TS(1));
-            drawScore(scoreManager.highScore(), "HIGH SCORE", ARCADE_WHITE, font, TS(14), TS(1));
+            drawScore(scoreManager.score(), "SCORE", font, TS(1), TS(1));
+            drawScore(scoreManager.highScore(), "HIGH SCORE", font, TS(14), TS(1));
         }
 
         if (data.isLevelCounterVisible()) {
@@ -89,7 +88,8 @@ public class ArcadePacMan_HUDRenderer extends BaseRenderer implements HUDRendere
         }
     }
 
-    private void drawScore(Score score, String title, Color color, Font font, double x, double y) {
+    private void drawScore(Score score, String title, Font font, double x, double y) {
+        Color color = ARCADE_WHITE;
         fillText(title, color, font, x, y);
         fillText("%7s".formatted("%02d".formatted(score.points())), color, font, x, y + TS + 1);
         if (score.points() != 0) {

@@ -6,13 +6,17 @@ package de.amr.pacmanfx.uilib.rendering;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
 import static java.util.Objects.requireNonNull;
 
 public abstract class GameRenderer extends BaseRenderer {
+
+    protected GameRenderer(Canvas canvas, SpriteSheet<?> spriteSheet) {
+        super(canvas, spriteSheet);
+    }
 
     /**
      * Draws an actor (Pac-Man, ghost, moving bonus, etc.) if it is visible.
@@ -39,10 +43,9 @@ public abstract class GameRenderer extends BaseRenderer {
 
     /**
      * @param gameContext the game context
-     * @param gameClock the game clock (used for blinking effects)
      * @param backgroundColor level background color
      * @param mazeBright if the maze is drawn as highlighted (flashing)
      * @param energizerBright if the blinking energizers are in their highlighted state
      */
-    public abstract void drawGameLevel(GameContext gameContext, GameClock gameClock, Color backgroundColor, boolean mazeBright, boolean energizerBright);
+    public abstract void drawGameLevel(GameContext gameContext, Color backgroundColor, boolean mazeBright, boolean energizerBright);
 }

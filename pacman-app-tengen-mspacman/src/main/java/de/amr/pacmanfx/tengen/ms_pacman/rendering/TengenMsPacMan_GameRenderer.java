@@ -24,7 +24,6 @@ import de.amr.pacmanfx.tengen.ms_pacman.scenes.Clapperboard;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.Stork;
 import de.amr.pacmanfx.ui._2d.DebugInfoRenderer;
 import de.amr.pacmanfx.ui.input.JoypadKeyBinding;
-import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -49,18 +48,16 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer implements DebugIn
 
     private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
     private final TengenMsPacMan_UIConfig uiConfig;
-    private final TengenMsPacMan_SpriteSheet spriteSheet;
 
     public TengenMsPacMan_GameRenderer(TengenMsPacMan_UIConfig uiConfig, Canvas canvas) {
+        super(canvas, uiConfig.spriteSheet());
         this.uiConfig = requireNonNull(uiConfig);
-        spriteSheet = uiConfig.spriteSheet();
-        setCanvas(canvas);
         ctx().setImageSmoothing(false);
     }
 
     @Override
     public TengenMsPacMan_SpriteSheet spriteSheet() {
-        return spriteSheet;
+        return (TengenMsPacMan_SpriteSheet) spriteSheet;
     }
 
     public ObjectProperty<Color> backgroundColorProperty() { return backgroundColor; }
@@ -167,20 +164,14 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer implements DebugIn
     }
 
     @Override
-    public void drawGameLevel(
-        GameContext gameContext,
-        GameClock gameClock,
-        Color backgroundColor,
-        boolean mazeBright,
-        boolean energizerBright)
-    {
+    public void drawGameLevel(GameContext gameContext, Color backgroundColor, boolean mazeBright, boolean energizerBright) {
         TengenMsPacMan_GameModel game = gameContext.game();
         GameLevel gameLevel = gameContext.gameLevel();
         int mapNumber = gameLevel.worldMap().getConfigValue("mapNumber");
         applyLevelSettings(gameContext);
         ColoredMazeSpriteSet recoloredMaze = gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.RECOLORED_MAZE_PROPERTY);
         if (game.mapCategory() == MapCategory.STRANGE && mapNumber == 15) {
-            int spriteIndex = mazeAnimationSpriteIndex(gameClock.tickCount());
+            int spriteIndex = mazeAnimationSpriteIndex(uiConfig.theUI().clock().tickCount());
             drawLevelWithMaze(gameContext, gameLevel,
                 recoloredMaze.mazeSprite().image(),
                 uiConfig.nonArcadeMapsSpriteSheet()

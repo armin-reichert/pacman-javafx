@@ -470,13 +470,13 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
                 RecoloredSpriteImage flashingMazeSprite = recoloredMaze.flashingMazeSprites().get(frame);
                 renderer().drawLevelWithMaze(gameContext(), gameLevel, flashingMazeSprite.image(), flashingMazeSprite.sprite());
             } else {
-                renderer().drawGameLevel(gameContext(), ui.clock(), null, false, false);
+                renderer().drawGameLevel(gameContext(), null, false, false);
             }
         }
         else {
             //TODO in the original game, the message is drawn under the maze image but *over* the pellets!
             renderer().drawLevelMessage(gameLevel, currentMessagePosition(), scaledArcadeFont8());
-            renderer().drawGameLevel(gameContext(), ui.clock(), null, false, false);
+            renderer().drawGameLevel(gameContext(), null, false, false);
         }
 
         actorsInZOrder.clear();

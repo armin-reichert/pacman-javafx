@@ -28,11 +28,12 @@ public abstract class BaseRenderer {
     }
 
     protected final DoubleProperty scaling = new SimpleDoubleProperty(1.0);
-    private GraphicsContext ctx;
+    protected final GraphicsContext ctx;
     protected SpriteSheet<?> spriteSheet;
 
-    public void setCanvas(Canvas canvas) {
+    protected BaseRenderer(Canvas canvas, SpriteSheet<?> spriteSheet) {
         ctx = requireNonNull(canvas).getGraphicsContext2D();
+        this.spriteSheet = requireNonNull(spriteSheet);
     }
 
     public GraphicsContext ctx() {
