@@ -223,19 +223,30 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
         final GameLevel gameLevel = gameContext().gameLevel();
         gameRenderer.applyLevelSettings(gameContext());
 
-        // Level < Level message
+        // Draw game level
         boolean highlighted = levelCompletedAnimation != null && levelCompletedAnimation.isHighlighted();
         gameRenderer.drawGameLevel(gameContext(), backgroundColor(), highlighted, gameLevel.blinking().isOn());
-        gameLevel.house().ifPresent(house -> drawLevelMessageCenteredUnderHouse(house, gameLevel.messageType()));
 
-        // Collect actors in drawing z-order: Bonus < Pac-Man < Ghosts in order
-        // TODO: also take ghost state into account!
+        // Draw message if available
+        if (gameLevel.messageType() != GameLevel.MESSAGE_NONE && gameLevel.house().isPresent()) {
+            House house = gameLevel.house().get();
+            Vector2i houseSize = house.sizeInTiles();
+            float cx = TS(house.minTile().x() + houseSize.x() * 0.5f);
+            float cy = TS(house.minTile().y() + houseSize.y() + 1);
+            switch (gameLevel.messageType()) {
+                case GameLevel.MESSAGE_GAME_OVER -> gameRenderer.fillTextCentered("GAME  OVER", ARCADE_RED, scaledArcadeFont8(), cx, cy);
+                case GameLevel.MESSAGE_READY     -> gameRenderer.fillTextCentered("READY!", ARCADE_YELLOW, scaledArcadeFont8(), cx, cy);
+                case GameLevel.MESSAGE_TEST      -> gameRenderer.fillTextCentered("TEST    L%02d".formatted(gameLevel.number()), ARCADE_WHITE, scaledArcadeFont8(), cx, cy);
+            }
+        }
+
+        // Collect actors in drawing z-order: Bonus < Pac-Man < Ghosts in order. TODO: also take ghost state into account!
         actorsInZOrder.clear();
         gameLevel.bonus().ifPresent(actorsInZOrder::add);
         actorsInZOrder.add(gameLevel.pac());
-        Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW).map(gameLevel::ghost)
-                .forEach(actorsInZOrder::add);
+        Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW).map(gameLevel::ghost).forEach(actorsInZOrder::add);
 
+        // Draw actors
         actorsInZOrder.forEach(actor -> gameRenderer.drawActor(actor, ui.currentConfig().spriteSheet()));
 
         if (isDebugInfoVisible()) {
@@ -244,20 +255,6 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
                     debugInfoRenderer.drawMovingActorInfo(gameRenderer.ctx(), scaling(), movingActor);
                 }
             });
-        }
-    }
-
-    private void drawLevelMessageCenteredUnderHouse(House house, byte messageType) {
-        Vector2i houseSize = house.sizeInTiles();
-        float cx = TS * (house.minTile().x() + houseSize.x() * 0.5f);
-        float cy = TS * (house.minTile().y() + houseSize.y() + 1);
-        switch (messageType) {
-            case GameLevel.MESSAGE_GAME_OVER -> gameRenderer.fillTextCentered(
-                "GAME  OVER", ARCADE_RED, scaledArcadeFont8(), cx, cy);
-            case GameLevel.MESSAGE_READY -> gameRenderer.fillTextCentered(
-                "READY!", ARCADE_YELLOW, scaledArcadeFont8(), cx, cy);
-            case GameLevel.MESSAGE_TEST -> gameRenderer.fillTextCentered(
-                "TEST    L%02d".formatted(gameContext().gameLevel().number()), ARCADE_WHITE, scaledArcadeFont8(), cx, cy);
         }
     }
 
