@@ -35,16 +35,16 @@ import static java.util.Objects.requireNonNull;
 public class MiniGameView extends VBox {
 
     public static final Vector2f ARCADE_SIZE = Vector2f.of(28, 36);
+
     public static final Duration SLIDE_IN_DURATION = Duration.seconds(1);
     public static final Duration SLIDE_OUT_DURATION = Duration.seconds(2);
 
-    private final ObjectProperty<Color> backgroundColorProperty = new SimpleObjectProperty<>(Color.BLACK);
-    private final BooleanProperty debugProperty                 = new SimpleBooleanProperty(false);
-    private final DoubleProperty canvasHeightProperty           = new SimpleDoubleProperty(400);
-    private final FloatProperty scalingProperty                 = new SimpleFloatProperty(1.0f);
-    private final ObjectProperty<Vector2f> worldSizeProperty    = new SimpleObjectProperty<>(ARCADE_SIZE.scaled(TS));
+    private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
+    private final BooleanProperty debug = new SimpleBooleanProperty(false);
+    private final FloatProperty scaling = new SimpleFloatProperty(1.0f);
+    private final ObjectProperty<Vector2f> worldSize = new SimpleObjectProperty<>(ARCADE_SIZE.scaled(TS));
 
-    private final HBox canvasContainer;
+    private final HBox layout;
     private final Canvas canvas;
 
     private final GameUI ui;
@@ -59,31 +59,30 @@ public class MiniGameView extends VBox {
         this.ui = requireNonNull(ui);
 
         canvas = new Canvas();
-        canvas.heightProperty().bind(canvasHeightProperty);
+        canvas.heightProperty().bind(PROPERTY_MINI_VIEW_HEIGHT);
         canvas.widthProperty().bind(Bindings.createDoubleBinding(
             () -> {
-                Vector2f worldSize = worldSizeProperty.get();
+                Vector2f worldSize = this.worldSize.get();
                 double aspect = worldSize.x() / worldSize.y();
                 return aspect * canvas.getHeight();
             },
-            worldSizeProperty, canvas.heightProperty()
+            worldSize, canvas.heightProperty()
         ));
 
         // The VBox fills the complete parent container height (why?), so we put the canvas
-        // into an HBox that does not grow in height and provides some padding around the canvas
-        canvasContainer = new HBox(canvas);
-        canvasContainer.setPadding(new Insets(0, 10, 0, 10));
-        canvasContainer.backgroundProperty().bind(backgroundColorProperty().map(Background::fill));
-        VBox.setVgrow(canvasContainer, Priority.NEVER);
-        getChildren().add(canvasContainer);
+        // into an HBox that does not grow in height and provides some padding around the canvas.
+        layout = new HBox(canvas);
+        layout.setPadding(new Insets(0, 10, 0, 10));
+        layout.backgroundProperty().bind(backgroundColor.map(Background::fill));
+        VBox.setVgrow(layout, Priority.NEVER);
+        getChildren().add(layout);
 
-        backgroundColorProperty.bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
-        canvasHeightProperty.bind(PROPERTY_MINI_VIEW_HEIGHT);
-        debugProperty.bind(PROPERTY_DEBUG_INFO_VISIBLE);
+        backgroundColor.bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
+        debug.bind(PROPERTY_DEBUG_INFO_VISIBLE);
         opacityProperty().bind(PROPERTY_MINI_VIEW_OPACITY_PERCENT.divide(100.0));
-        scalingProperty.bind(Bindings.createFloatBinding(
-            () -> (float) canvas.getHeight() / worldSizeProperty.get().y(),
-            canvas.heightProperty(), worldSizeProperty
+        scaling.bind(Bindings.createFloatBinding(
+            () -> (float) canvas.getHeight() / worldSize.get().y(),
+            canvas.heightProperty(), worldSize
         ));
         visibleProperty().bind(Bindings.createObjectBinding(
             () -> PROPERTY_MINI_VIEW_ON.get() && ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D),
@@ -98,33 +97,29 @@ public class MiniGameView extends VBox {
         slideInAnimation.setInterpolator(Interpolator.EASE_OUT);
 
         slideOutAnimation = new TranslateTransition(SLIDE_OUT_DURATION, this);
-        slideOutAnimation.setToY(-canvasContainer.getHeight());
+        slideOutAnimation.setToY(-layout.getHeight());
         slideOutAnimation.setByY(10);
         slideOutAnimation.setDelay(Duration.seconds(2));
         slideOutAnimation.setInterpolator(Interpolator.EASE_IN);
     }
 
     public ObjectProperty<Color> backgroundColorProperty() {
-        return backgroundColorProperty;
+        return backgroundColor;
     }
 
     public BooleanProperty debugProperty() {
-        return debugProperty;
-    }
-
-    public DoubleProperty canvasHeightProperty() {
-        return canvasHeightProperty;
+        return debug;
     }
 
     public void onGameLevelCreated(GameLevel gameLevel) {
-        worldSizeProperty.set(gameLevel.worldSizePx());
+        worldSize.set(gameLevel.worldSizePx());
 
         /*
             TODO: The game renderer cannot yet be created in setGameUI because at the time, setGameUI is called, the
                  game controller has not yet selected a game variant and therefore the current UI config is null!
          */
         gameRenderer = ui.currentConfig().createGameRenderer(canvas);
-        gameRenderer.setScaling(scalingProperty.floatValue());
+        gameRenderer.setScaling(scaling.floatValue());
         gameRenderer.applyLevelSettings(theGameContext());
     }
 
@@ -133,7 +128,7 @@ public class MiniGameView extends VBox {
     }
 
     public void slideOut() {
-        slideOutAnimation.setToY(-canvasContainer.getHeight());
+        slideOutAnimation.setToY(-layout.getHeight());
         slideOutAnimation.play();
     }
 
@@ -144,10 +139,10 @@ public class MiniGameView extends VBox {
             return;
         }
 
-        float scaling = scalingProperty.get();
+        float scaling = this.scaling.get();
         gameRenderer.setScaling(scaling);
 
-        fillCanvas(canvas, backgroundColorProperty.get());
+        fillCanvas(canvas, backgroundColor.get());
 
         GameLevel gameLevel = ui.gameContext().gameLevel();
         if (gameLevel != null) {
