@@ -20,6 +20,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.scenes.Clapperboard;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.Stork;
 import de.amr.pacmanfx.ui._2d.DebugInfoRenderer;
 import de.amr.pacmanfx.ui.input.JoypadKeyBinding;
+import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -77,7 +78,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer implements DebugIn
     }
 
     @Override
-    public void drawHUD(GameContext gameContext, HUDData data, Vector2f sceneSize, long tick) {
+    public void drawHUD(GameContext gameContext, GameClock gameClock, HUDData data, Vector2f sceneSize) {
         requireNonNull(data);
 
         if (!data.isVisible()) return;
@@ -85,7 +86,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer implements DebugIn
         Font font = uiConfig.theUI().assets().arcadeFont(TS);
         TengenMsPacMan_GameModel game = gameContext.game();
         if (data.isScoreVisible()) {
-            drawScores(game, tick, nesPaletteColor(0x20), font);
+            drawScores(gameContext, gameClock, nesPaletteColor(0x20), font);
         }
         if (data.isLivesCounterVisible()) {
             drawLivesCounter(data.theLivesCounter(), game.lifeCount(), TS(2), sceneSize.y() - TS);
@@ -98,17 +99,19 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer implements DebugIn
         }
     }
 
-    public void drawScores(TengenMsPacMan_GameModel game, long tick, Color color, Font font) {
+    public void drawScores(GameContext gameContext, GameClock gameClock, Color color, Font font) {
+        ScoreManager scoreManager = gameContext.game().scoreManager();
         ctx().save();
         ctx().scale(scaling(), scaling());
         ctx().setFill(color);
         ctx().setFont(font);
-        if (tick % 60 < 30) {
+        // show 1/2 second, hide 1/2 second
+        if (gameClock.tickCount() % 60 < 30) {
             ctx().fillText("1UP", TS(4), TS(1));
         }
         ctx().fillText("HIGH SCORE", TS(11), TS(1));
-        ctx().fillText("%6d".formatted(game.scoreManager().score().points()), TS(2), TS(2));
-        ctx().fillText("%6d".formatted(game.scoreManager().highScore().points()), TS(13), TS(2));
+        ctx().fillText("%6d".formatted(scoreManager.score().points()), TS(2), TS(2));
+        ctx().fillText("%6d".formatted(scoreManager.highScore().points()), TS(13), TS(2));
         ctx().restore();
     }
 
@@ -237,10 +240,10 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer implements DebugIn
     @Override
     public void drawLevel(
         GameContext gameContext,
+        GameClock gameClock,
         Color backgroundColor,
-        boolean mazeHighlighted,
-        boolean energizerHighlighted,
-        long tick)
+        boolean mazeBright,
+        boolean energizerBright)
     {
         TengenMsPacMan_GameModel game = gameContext.game();
         GameLevel gameLevel = gameContext.gameLevel();
@@ -248,7 +251,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer implements DebugIn
         applyLevelSettings(gameContext);
         ColoredMazeSpriteSet recoloredMaze = gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.RECOLORED_MAZE_PROPERTY);
         if (game.mapCategory() == MapCategory.STRANGE && mapNumber == 15) {
-            int spriteIndex = mazeAnimationSpriteIndex(tick);
+            int spriteIndex = mazeAnimationSpriteIndex(gameClock.tickCount());
             drawLevelWithMaze(gameContext, gameLevel,
                 recoloredMaze.mazeSprite().image(),
                 uiConfig.nonArcadeMapsSpriteSheet()

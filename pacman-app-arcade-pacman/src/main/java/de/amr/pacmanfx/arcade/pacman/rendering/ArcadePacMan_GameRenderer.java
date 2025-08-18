@@ -12,6 +12,7 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.ui._2d.DebugInfoRenderer;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.GameRenderer;
 import javafx.scene.canvas.Canvas;
@@ -46,7 +47,7 @@ public class ArcadePacMan_GameRenderer extends GameRenderer implements DebugInfo
     }
 
     @Override
-    public void drawHUD(GameContext gameContext, HUDData data, Vector2f sceneSize, long tick) {
+    public void drawHUD(GameContext gameContext, GameClock gameClock, HUDData data, Vector2f sceneSize) {
         if (!data.isVisible()) return;
 
         Font font = uiConfig.theUI().assets().arcadeFont(scaled(TS));
@@ -97,17 +98,11 @@ public class ArcadePacMan_GameRenderer extends GameRenderer implements DebugInfo
     }
 
     @Override
-    public void drawLevel(
-        GameContext gameContext,
-        Color backgroundColor,
-        boolean mazeHighlighted,
-        boolean energizerHighlighted,
-        long tick)
-    {
+    public void drawLevel(GameContext gameContext, GameClock gameClock, Color backgroundColor, boolean mazeBright, boolean energizerBright) {
         GameLevel gameLevel = gameContext.gameLevel();
         ctx().save();
         ctx().scale(scaling(), scaling());
-        if (mazeHighlighted) {
+        if (mazeBright) {
             Image brightMazeImage = uiConfig.assets().image("flashing_maze");
             ctx().drawImage(brightMazeImage, 0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);
         }
@@ -122,7 +117,7 @@ public class ArcadePacMan_GameRenderer extends GameRenderer implements DebugInfo
                     .filter(gameLevel::tileContainsEatenFood)
                     .forEach(tile -> fillSquareAtTileCenter(tile, 4));
             gameLevel.energizerPositions().stream()
-                    .filter(tile -> !energizerHighlighted || gameLevel.tileContainsEatenFood(tile))
+                    .filter(tile -> !energizerBright || gameLevel.tileContainsEatenFood(tile))
                     .forEach(tile -> fillSquareAtTileCenter(tile, 10));
         }
         ctx().restore();

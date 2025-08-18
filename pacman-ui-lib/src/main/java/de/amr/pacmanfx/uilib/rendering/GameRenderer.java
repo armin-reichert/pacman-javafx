@@ -10,6 +10,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.HUDData;
 import de.amr.pacmanfx.model.actors.Actor;
+import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.animation.SingleSpriteNoAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -208,23 +209,18 @@ public abstract class GameRenderer {
      * Draws the Head-Up Display (score, live counter, level counter, coins inserted)
      *
      * @param gameContext the game context
+     * @param gameClock the game clock (used for blinking effects)
      * @param data the data displayed in the Head-Up Display
      * @param sceneSize scene size in pixels
-     * @param tick current clock tick
      */
-    public abstract void drawHUD(GameContext gameContext, HUDData data, Vector2f sceneSize, long tick);
+    public abstract void drawHUD(GameContext gameContext, GameClock gameClock, HUDData data, Vector2f sceneSize);
 
     /**
      * @param gameContext the game context
+     * @param gameClock the game clock (used for blinking effects)
      * @param backgroundColor level background color
-     * @param mazeHighlighted if the maze is drawn as highlighted (flashing)
-     * @param energizerHighlighted if the blinking energizers are in their highlighted state
-     * @param tick current clock tick
+     * @param mazeBright if the maze is drawn as highlighted (flashing)
+     * @param energizerBright if the blinking energizers are in their highlighted state
      */
-    public abstract void drawLevel(
-            GameContext gameContext,
-            Color backgroundColor,
-            boolean mazeHighlighted,
-            boolean energizerHighlighted,
-            long tick);
+    public abstract void drawLevel(GameContext gameContext, GameClock gameClock, Color backgroundColor, boolean mazeBright, boolean energizerBright);
 }

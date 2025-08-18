@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_GameRenderer;
 import de.amr.pacmanfx.ui._2d.GenericMapRenderer;
+import de.amr.pacmanfx.uilib.GameClock;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
@@ -24,7 +25,7 @@ public class PacManXXL_PacMan_GameRenderer extends ArcadePacMan_GameRenderer {
     }
 
     @Override
-    public void drawLevel(GameContext gameContext, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted, long tick) {
-        mapRenderer.drawLevel(gameContext.gameLevel(), mazeHighlighted, energizerHighlighted);
+    public void drawLevel(GameContext gameContext, GameClock gameClock, Color backgroundColor, boolean mazeBright, boolean energizerBright) {
+        mapRenderer.drawLevel(gameContext.gameLevel(), mazeBright, energizerBright);
     }
 }

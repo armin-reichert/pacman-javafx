@@ -151,7 +151,7 @@ public abstract class GameScene2D implements GameScene {
         if (debugInfoVisibleProperty.get()) {
             drawDebugInfo();
         }
-        gameRenderer.drawHUD(gameContext(), gameContext().game().hudData(), sizeInPx(), ui.clock().tickCount());
+        gameRenderer.drawHUD(gameContext(), ui.clock(), gameContext().game().hudData(), sizeInPx());
     }
 
     /**

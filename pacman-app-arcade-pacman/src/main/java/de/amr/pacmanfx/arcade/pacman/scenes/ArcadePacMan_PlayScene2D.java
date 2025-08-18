@@ -223,13 +223,7 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
 
         // Level < Level message
         boolean highlighted = levelCompletedAnimation != null && levelCompletedAnimation.isHighlighted();
-        gameRenderer.drawLevel(
-            gameContext(),
-            backgroundColor(),
-            highlighted,
-            gameLevel.blinking().isOn(),
-            ui.clock().tickCount()
-        );
+        gameRenderer.drawLevel(gameContext(), ui.clock(), backgroundColor(), highlighted, gameLevel.blinking().isOn());
         gameLevel.house().ifPresent(house -> drawLevelMessageCenteredUnderHouse(house, gameLevel.messageType()));
 
         // Collect actors in drawing z-order: Bonus < Pac-Man < Ghosts in order

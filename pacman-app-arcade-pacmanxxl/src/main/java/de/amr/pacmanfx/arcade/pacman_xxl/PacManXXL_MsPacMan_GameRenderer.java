@@ -9,6 +9,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_GameRenderer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui._2d.GenericMapRenderer;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.uilib.GameClock;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
@@ -23,7 +24,7 @@ public class PacManXXL_MsPacMan_GameRenderer extends ArcadeMsPacMan_GameRenderer
     }
 
     @Override
-    public void drawLevel(GameContext gameContext, Color backgroundColor, boolean mazeHighlighted, boolean energizerHighlighted, long tick) {
-        mapRenderer.drawLevel(gameContext.gameLevel(), mazeHighlighted, energizerHighlighted);
+    public void drawLevel(GameContext gameContext, GameClock gameClock, Color backgroundColor, boolean mazeBright, boolean energizerBright) {
+        mapRenderer.drawLevel(gameContext.gameLevel(), mazeBright, energizerBright);
     }
 }
