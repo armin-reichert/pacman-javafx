@@ -10,6 +10,7 @@ import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.image.Image;
 
 import static de.amr.pacmanfx.Globals.TS;
+import static java.util.Objects.requireNonNull;
 
 public record ArcadeMapsSpriteSheet(Image sourceImage) implements SpriteSheet<ArcadeMapsSpriteSheet.MazeID> {
 
@@ -37,6 +38,12 @@ public record ArcadeMapsSpriteSheet(Image sourceImage) implements SpriteSheet<Ar
         SPRITE_MAP.add(MazeID.MAZE7, spriteAtCell(2, 0));
         SPRITE_MAP.add(MazeID.MAZE8, spriteAtCell(2, 1));
         SPRITE_MAP.add(MazeID.MAZE9, spriteAtCell(2, 2));
+
+        SPRITE_MAP.checkCompleteness();
+    }
+
+    public ArcadeMapsSpriteSheet {
+        requireNonNull(sourceImage, "Sprite sheet source image must not be null");
     }
 
     @Override

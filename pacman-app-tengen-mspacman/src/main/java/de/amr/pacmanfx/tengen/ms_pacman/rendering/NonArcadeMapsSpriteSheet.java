@@ -11,7 +11,14 @@ import javafx.scene.image.Image;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.lib.RectShort.rect;
+import static java.util.Objects.requireNonNull;
 
+/**
+ * SpriteSheet for non‐arcade maps in Tengen Ms. Pac-Man.
+ *
+ * <p>Each MazeID corresponds to a sub‐image region laid out row by row
+ * in the source image. Some mazes (32, 33, 34–37) are handled specially.
+ */
 public record NonArcadeMapsSpriteSheet(Image sourceImage) implements SpriteSheet<NonArcadeMapsSpriteSheet.MazeID> {
 
     // MazeIDs as they appear in the sprite sheet (row by row)
@@ -26,12 +33,13 @@ public record NonArcadeMapsSpriteSheet(Image sourceImage) implements SpriteSheet
     private static final SpriteMap<MazeID> SPRITE_MAP = new SpriteMap<>(MazeID.class);
 
     static {
+        // Example: MazeID.MAZE10 = MAZE_IDS[9]
         final MazeID[] MAZE_IDS = MazeID.values();
 
         final int MAZE_WIDTH = 28 * TS;
 
         // Height of the mazes as they appear in the sprite sheet (row by row)
-        final int[][] MAZE_HEIGHT = {
+        final int[][] MAZE_HEIGHTS = {
             {31 * TS, 31 * TS, 31 * TS, 31 * TS, 31 * TS, 31 * TS, 30 * TS, 31 * TS},
             {31 * TS, 37 * TS, 31 * TS, 31 * TS, 31 * TS, 37 * TS, 31 * TS, 25 * TS},
             {37 * TS, 31 * TS, 37 * TS, 37 * TS, 37 * TS, 37 * TS, 37 * TS, 31 * TS},
@@ -42,17 +50,14 @@ public record NonArcadeMapsSpriteSheet(Image sourceImage) implements SpriteSheet
         // y position of maze upper edges by row index
         final int[] Y_POS = {0, 248, 544, 840, 1136};
 
-        // Example: MazeID.MAZE10 = MAZE_IDS[9]
         int num = 1;
-
-        // first 4 rows
         for (int row = 0; row < 4; ++row) {
             for (int col = 0; col < 8; ++col) {
                 if (num != 32) {
                     MazeID id = MAZE_IDS[num - 1];
-                    SPRITE_MAP.add(id, rect(col * MAZE_WIDTH, Y_POS[row], MAZE_WIDTH, MAZE_HEIGHT[row][col]));
-                    ++num;
+                    SPRITE_MAP.add(id, rect(col * MAZE_WIDTH, Y_POS[row], MAZE_WIDTH, MAZE_HEIGHTS[row][col]));
                 }
+                ++num;
             }
         }
 
@@ -63,13 +68,19 @@ public record NonArcadeMapsSpriteSheet(Image sourceImage) implements SpriteSheet
             rect(1568, 1336, MAZE_WIDTH, 31 * TS));
 
         // row=3, col=8:  Maze #33 is BIG
-        SPRITE_MAP.add(MazeID.MAZE33_BIG, rect(8 * MAZE_WIDTH, Y_POS[3], MAZE_WIDTH, MAZE_HEIGHT[3][8]));
+        SPRITE_MAP.add(MazeID.MAZE33_BIG, rect(8 * MAZE_WIDTH, Y_POS[3], MAZE_WIDTH, MAZE_HEIGHTS[3][8]));
 
         // row=4: 4 MINI mazes
-        SPRITE_MAP.add(MazeID.MAZE34_MINI, rect(             0, Y_POS[4], MAZE_WIDTH, MAZE_HEIGHT[4][0]));
-        SPRITE_MAP.add(MazeID.MAZE35_MINI, rect(    MAZE_WIDTH, Y_POS[4], MAZE_WIDTH, MAZE_HEIGHT[4][1]));
-        SPRITE_MAP.add(MazeID.MAZE36_MINI, rect(2 * MAZE_WIDTH, Y_POS[4], MAZE_WIDTH, MAZE_HEIGHT[4][2]));
-        SPRITE_MAP.add(MazeID.MAZE37_MINI, rect(3 * MAZE_WIDTH, Y_POS[4], MAZE_WIDTH, MAZE_HEIGHT[4][3]));
+        SPRITE_MAP.add(MazeID.MAZE34_MINI, rect(             0, Y_POS[4], MAZE_WIDTH, MAZE_HEIGHTS[4][0]));
+        SPRITE_MAP.add(MazeID.MAZE35_MINI, rect(    MAZE_WIDTH, Y_POS[4], MAZE_WIDTH, MAZE_HEIGHTS[4][1]));
+        SPRITE_MAP.add(MazeID.MAZE36_MINI, rect(2 * MAZE_WIDTH, Y_POS[4], MAZE_WIDTH, MAZE_HEIGHTS[4][2]));
+        SPRITE_MAP.add(MazeID.MAZE37_MINI, rect(3 * MAZE_WIDTH, Y_POS[4], MAZE_WIDTH, MAZE_HEIGHTS[4][3]));
+
+        SPRITE_MAP.checkCompleteness();
+    }
+
+    public NonArcadeMapsSpriteSheet {
+        requireNonNull(sourceImage, "Sprite sheet source image must not be null");
     }
 
     @Override
