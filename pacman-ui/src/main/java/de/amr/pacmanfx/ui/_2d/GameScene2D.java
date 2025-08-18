@@ -158,7 +158,7 @@ public abstract class GameScene2D implements GameScene {
             drawDebugInfo();
         }
         if (hudRenderer != null) {
-            hudRenderer.drawHUD(gameContext(), ui.clock(), gameContext().game().hudData(), sizeInPx());
+            hudRenderer.drawHUD(gameContext(), gameContext().game().hudData(), sizeInPx());
         }
     }
 

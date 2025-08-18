@@ -11,7 +11,6 @@ import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_HUDData;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_LevelCounter;
-import de.amr.pacmanfx.uilib.GameClock;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
 import javafx.scene.canvas.Canvas;
@@ -34,7 +33,7 @@ public class TengenMsPacMan_HUDRenderer extends BaseRenderer implements HUDRende
     }
 
     @Override
-    public void drawHUD(GameContext gameContext, GameClock gameClock, HUDData data, Vector2f sceneSize) {
+    public void drawHUD(GameContext gameContext, HUDData data, Vector2f sceneSize) {
         requireNonNull(data);
 
         if (!data.isVisible()) return;
@@ -42,7 +41,7 @@ public class TengenMsPacMan_HUDRenderer extends BaseRenderer implements HUDRende
         Font font = uiConfig.theUI().assets().arcadeFont(TS);
         TengenMsPacMan_GameModel game = gameContext.game();
         if (data.isScoreVisible()) {
-            drawScores(gameContext, gameClock, nesPaletteColor(0x20), font);
+            drawScores(gameContext, nesPaletteColor(0x20), font);
         }
         if (data.isLivesCounterVisible()) {
             drawLivesCounter(data.theLivesCounter(), game.lifeCount(), TS(2), sceneSize.y() - TS);
@@ -55,14 +54,14 @@ public class TengenMsPacMan_HUDRenderer extends BaseRenderer implements HUDRende
         }
     }
 
-    public void drawScores(GameContext gameContext, GameClock gameClock, Color color, Font font) {
+    public void drawScores(GameContext gameContext, Color color, Font font) {
         ScoreManager scoreManager = gameContext.game().scoreManager();
         ctx().save();
         ctx().scale(scaling(), scaling());
         ctx().setFill(color);
         ctx().setFont(font);
         // show 1/2 second, hide 1/2 second
-        if (gameClock.tickCount() % 60 < 30) {
+        if (uiConfig.theUI().clock().tickCount() % 60 < 30) {
             ctx().fillText("1UP", TS(4), TS(1));
         }
         ctx().fillText("HIGH SCORE", TS(11), TS(1));

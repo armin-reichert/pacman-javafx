@@ -228,7 +228,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         }
         var game = gameContext().<TengenMsPacMan_GameModel>game();
         if (game.mapCategory() != MapCategory.ARCADE) {
-            hudRenderer.drawHUD(gameContext(), ui.clock(), game.hudData(), sizeInPx().minus(0, 2 * TS));
+            hudRenderer.drawHUD(gameContext(), game.hudData(), sizeInPx().minus(0, 2 * TS));
         }
     }
 

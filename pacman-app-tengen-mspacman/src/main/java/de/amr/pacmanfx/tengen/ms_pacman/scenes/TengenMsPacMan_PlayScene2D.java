@@ -451,7 +451,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         }
         // NES screen is 32 tiles wide but mazes are only 28 tiles wide, so shift HUD right:
         gameRenderer.ctx().translate(scaled(2 * TS), 0);
-        hudRenderer.drawHUD(gameContext(), ui.clock(), gameContext().game().hudData(), sizeInPx());
+        hudRenderer.drawHUD(gameContext(), gameContext().game().hudData(), sizeInPx());
 
         gameRenderer.ctx().restore();
     }
