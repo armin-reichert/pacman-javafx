@@ -238,7 +238,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer implements DebugIn
     }
 
     @Override
-    public void drawLevel(
+    public void drawGameLevel(
         GameContext gameContext,
         GameClock gameClock,
         Color backgroundColor,

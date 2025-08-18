@@ -107,7 +107,7 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer implements DebugIn
     }
 
     @Override
-    public void drawLevel(GameContext gameContext, GameClock gameClock, Color backgroundColor, boolean mazeBright, boolean energizerBright) {
+    public void drawGameLevel(GameContext gameContext, GameClock gameClock, Color backgroundColor, boolean mazeBright, boolean energizerBright) {
         GameLevel gameLevel = gameContext.gameLevel();
         int colorMapIndex = gameLevel.worldMap().getConfigValue("colorMapIndex");
         if (mazeBright) {

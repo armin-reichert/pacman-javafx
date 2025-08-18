@@ -98,29 +98,44 @@ public class ArcadePacMan_GameRenderer extends GameRenderer implements DebugInfo
     }
 
     @Override
-    public void drawLevel(GameContext gameContext, GameClock gameClock, Color backgroundColor, boolean mazeBright, boolean energizerBright) {
+    public void drawGameLevel(GameContext gameContext, GameClock gameClock, Color backgroundColor, boolean mazeBright, boolean energizerBright) {
         GameLevel gameLevel = gameContext.gameLevel();
+        ctx().setFill(backgroundColor);
         ctx().save();
         ctx().scale(scaling(), scaling());
         if (mazeBright) {
-            Image brightMazeImage = uiConfig.assets().image("flashing_maze");
-            ctx().drawImage(brightMazeImage, 0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);
+            drawEmptyGameLevel();
         }
         else if (gameLevel.uneatenFoodCount() == 0) {
-            drawSprite(spriteSheet, spriteSheet.sprite(SpriteID.MAP_EMPTY), 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE), false);
+            drawEmptyGameLevel(gameLevel);
         }
         else {
-            drawSprite(spriteSheet, spriteSheet.sprite(SpriteID.MAP_FULL), 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE), false);
-            ctx().setFill(backgroundColor);
-            gameLevel.worldMap().tiles()
-                    .filter(not(gameLevel::isEnergizerPosition))
-                    .filter(gameLevel::tileContainsEatenFood)
-                    .forEach(tile -> fillSquareAtTileCenter(tile, 4));
-            gameLevel.energizerPositions().stream()
-                    .filter(tile -> !energizerBright || gameLevel.tileContainsEatenFood(tile))
-                    .forEach(tile -> fillSquareAtTileCenter(tile, 10));
+            drawGameLevelWithFood(gameLevel, !energizerBright);
         }
         ctx().restore();
+    }
+
+    private void drawEmptyGameLevel(GameLevel gameLevel) {
+        drawSprite(spriteSheet, spriteSheet.sprite(SpriteID.MAP_EMPTY), 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE), false);
+        // hide doors
+        gameLevel.house().ifPresent(house -> fillSquareAtTileCenter(house.leftDoorTile(), TS + 0.5));
+        gameLevel.house().ifPresent(house -> fillSquareAtTileCenter(house.rightDoorTile(), TS + 0.5));
+    }
+
+    private void drawEmptyGameLevel() {
+        Image brightMazeImage = uiConfig.assets().image("flashing_maze");
+        ctx().drawImage(brightMazeImage, 0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);
+    }
+
+    private void drawGameLevelWithFood(GameLevel gameLevel, boolean energizerDark) {
+        drawSprite(spriteSheet, spriteSheet.sprite(SpriteID.MAP_FULL), 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE), false);
+        gameLevel.worldMap().tiles()
+                .filter(not(gameLevel::isEnergizerPosition))
+                .filter(gameLevel::tileContainsEatenFood)
+                .forEach(tile -> fillSquareAtTileCenter(tile, 4));
+        gameLevel.energizerPositions().stream()
+                .filter(tile -> energizerDark || gameLevel.tileContainsEatenFood(tile))
+                .forEach(tile -> fillSquareAtTileCenter(tile, 10));
     }
 
     @Override

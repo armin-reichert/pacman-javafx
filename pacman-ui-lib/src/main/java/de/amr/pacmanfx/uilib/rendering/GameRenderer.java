@@ -68,10 +68,10 @@ public abstract class GameRenderer {
      * @param tile a tile
      * @param sideLength side length of the square
      */
-    public void fillSquareAtTileCenter(Vector2i tile, int sideLength) {
+    public void fillSquareAtTileCenter(Vector2i tile, double sideLength) {
         requireNonNull(tile);
         double centerX = tile.x() * TS + HTS, centerY = tile.y() * TS + HTS;
-        float halfSideLength = 0.5f * sideLength;
+        double halfSideLength = 0.5f * sideLength;
         ctx.fillRect(centerX - halfSideLength, centerY - halfSideLength, sideLength, sideLength);
     }
 
@@ -214,5 +214,5 @@ public abstract class GameRenderer {
      * @param mazeBright if the maze is drawn as highlighted (flashing)
      * @param energizerBright if the blinking energizers are in their highlighted state
      */
-    public abstract void drawLevel(GameContext gameContext, GameClock gameClock, Color backgroundColor, boolean mazeBright, boolean energizerBright);
+    public abstract void drawGameLevel(GameContext gameContext, GameClock gameClock, Color backgroundColor, boolean mazeBright, boolean energizerBright);
 }
