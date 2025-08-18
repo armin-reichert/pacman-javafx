@@ -6,6 +6,7 @@ open module de.amr.pacmanfx.uilib {
     requires javafx.media;
     requires org.tinylog.api;
     requires de.amr.pacmanfx.core;
+    requires javafx.base;
 
     exports de.amr.pacmanfx.uilib;
     exports de.amr.pacmanfx.uilib.objimport;

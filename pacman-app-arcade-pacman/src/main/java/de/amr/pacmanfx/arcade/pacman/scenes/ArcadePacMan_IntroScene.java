@@ -83,6 +83,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         actionBindings.assign(ACTION_TEST_LEVELS_MEDIUM, ui.actionBindings());
 
         spriteSheet = (SpriteSheet<SpriteID>) ui.currentConfig().spriteSheet();
+        setHudRenderer(ui.currentConfig().createHUDRenderer(canvas, scaling));
 
         blinking = new Pulse(10, true);
         pacMan = createPac();

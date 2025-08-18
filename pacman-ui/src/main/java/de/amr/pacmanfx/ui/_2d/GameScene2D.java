@@ -15,6 +15,7 @@ import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.rendering.GameRenderer;
+import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -39,15 +40,16 @@ public abstract class GameScene2D implements GameScene {
     protected final Color debugTextStroke;
     protected final Font debugTextFont;
 
-    protected final ObjectProperty<Font> arcadeFont8Property      = new SimpleObjectProperty<>();
-    protected final ObjectProperty<Font> arcadeFont6Property      = new SimpleObjectProperty<>();
-    protected final ObjectProperty<Color> backgroundColorProperty = new SimpleObjectProperty<>(Color.BLACK);
-    protected final BooleanProperty debugInfoVisibleProperty      = new SimpleBooleanProperty(false);
-    protected final FloatProperty scalingProperty                 = new SimpleFloatProperty(1.0f);
+    protected final ObjectProperty<Font> arcadeFont8 = new SimpleObjectProperty<>();
+    protected final ObjectProperty<Font> arcadeFont6 = new SimpleObjectProperty<>();
+    protected final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
+    protected final BooleanProperty debugInfoVisible = new SimpleBooleanProperty(false);
+    protected final DoubleProperty scaling = new SimpleDoubleProperty(1.0f);
 
     protected final ActionBindingsManager actionBindings;
     protected final AnimationRegistry animationRegistry = new AnimationRegistry();
     protected GameRenderer gameRenderer;
+    protected HUDRenderer hudRenderer;
     protected Canvas canvas;
     protected final List<Actor> actorsInZOrder = new ArrayList<>();
 
@@ -66,8 +68,8 @@ public abstract class GameScene2D implements GameScene {
 
     @Override
     public final void init() {
-        arcadeFont8Property.bind(scalingProperty.map(s -> ui.assets().arcadeFont(s.floatValue() * 8)));
-        arcadeFont6Property.bind(scalingProperty.map(s -> ui.assets().arcadeFont(s.floatValue() * 6)));
+        arcadeFont8.bind(scaling.map(s -> ui.assets().arcadeFont(s.floatValue() * 8)));
+        arcadeFont6.bind(scaling.map(s -> ui.assets().arcadeFont(s.floatValue() * 6)));
         doInit();
         actionBindings.installBindings(ui.keyboard());
         ui.keyboard().logCurrentBindings();
@@ -99,30 +101,34 @@ public abstract class GameScene2D implements GameScene {
         ui.updateGameScene(true);
     }
 
-    public void  setScaling(double scaling) { scalingProperty.set((float) scaling); }
-    public float scaling() { return scalingProperty.get(); }
-    public float scaled(double value) { return (float) value * scaling(); }
+    public void  setScaling(double scaling) { this.scaling.set((float) scaling); }
+    public double scaling() { return scaling.get(); }
+    public double scaled(double value) { return (float) value * scaling(); }
 
-    public Font scaledArcadeFont8() { return arcadeFont8Property.get(); }
-    public Font scaledArcadeFont6() { return arcadeFont6Property.get(); }
+    public Font scaledArcadeFont8() { return arcadeFont8.get(); }
+    public Font scaledArcadeFont6() { return arcadeFont6.get(); }
 
-    public Color backgroundColor() { return backgroundColorProperty.get(); }
-    public void setBackgroundColor(Color color) { backgroundColorProperty.set(color); }
+    public Color backgroundColor() { return backgroundColor.get(); }
+    public void setBackgroundColor(Color color) { backgroundColor.set(color); }
 
     @SuppressWarnings("unchecked")
     public <T extends GameRenderer & DebugInfoRenderer> T renderer() { return (T) gameRenderer; }
 
     public void setGameRenderer(GameRenderer renderer) { gameRenderer = requireNonNull(renderer); }
 
+    public void setHudRenderer(HUDRenderer hudRenderer) {
+        this.hudRenderer = requireNonNull(hudRenderer);
+    }
+
     public Canvas canvas() { return canvas; }
     public void setCanvas(Canvas canvas) { this.canvas = canvas; }
 
-    public ObjectProperty<Color> backgroundColorProperty() { return backgroundColorProperty; }
+    public ObjectProperty<Color> backgroundColorProperty() { return backgroundColor; }
 
-    public BooleanProperty debugInfoVisibleProperty() { return debugInfoVisibleProperty; }
-    public boolean isDebugInfoVisible() { return debugInfoVisibleProperty.get(); }
+    public BooleanProperty debugInfoVisibleProperty() { return debugInfoVisible; }
+    public boolean isDebugInfoVisible() { return debugInfoVisible.get(); }
 
-    public FloatProperty scalingProperty() { return scalingProperty; }
+    public DoubleProperty scalingProperty() { return scaling; }
 
     /**
      * @return (unscaled) scene size in pixels e.g. 224x288
@@ -148,10 +154,12 @@ public abstract class GameScene2D implements GameScene {
         clear();
         gameRenderer.setScaling(scaling());
         drawSceneContent();
-        if (debugInfoVisibleProperty.get()) {
+        if (debugInfoVisible.get()) {
             drawDebugInfo();
         }
-        gameRenderer.drawHUD(gameContext(), ui.clock(), gameContext().game().hudData(), sizeInPx());
+        if (hudRenderer != null) {
+            hudRenderer.drawHUD(gameContext(), ui.clock(), gameContext().game().hudData(), sizeInPx());
+        }
     }
 
     /**

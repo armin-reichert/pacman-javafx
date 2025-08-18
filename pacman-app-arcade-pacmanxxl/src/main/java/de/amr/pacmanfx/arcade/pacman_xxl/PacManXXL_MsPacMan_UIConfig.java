@@ -6,10 +6,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_GhostAnimationManager;
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_PacAnimationManager;
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
+import de.amr.pacmanfx.arcade.ms_pacman.rendering.*;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.*;
 import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_BootScene2D;
 import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_PlayScene2D;
@@ -35,6 +32,8 @@ import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.MsPacMan3D;
 import de.amr.pacmanfx.uilib.model3D.MsPacManBody;
+import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
+import javafx.beans.property.DoubleProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -185,6 +184,13 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config {
     @Override
     public PacManXXL_MsPacMan_GameRenderer createGameRenderer(Canvas canvas) {
         return new PacManXXL_MsPacMan_GameRenderer(canvas, this, spriteSheet);
+    }
+
+    @Override
+    public HUDRenderer createHUDRenderer(Canvas canvas, DoubleProperty scaling) {
+        var hudRenderer = new ArcadeMsPacMan_HUDRenderer(this, canvas, spriteSheet);
+        hudRenderer.scalingProperty().bind(requireNonNull(scaling));
+        return hudRenderer;
     }
 
     @Override

@@ -139,6 +139,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     public void doInit() {
         spriteSheet = (TengenMsPacMan_SpriteSheet) ui.currentConfig().spriteSheet();
         setGameRenderer(ui.currentConfig().createGameRenderer(canvas));
+        setHudRenderer(ui.currentConfig().createHUDRenderer(canvas, scaling));
 
         messageMovement = new MessageMovement();
         levelCompletedAnimation = new LevelCompletedAnimation(animationRegistry);
@@ -440,7 +441,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
         gameRenderer.ctx().save();
 
-        if (debugInfoVisibleProperty.get()) {
+        if (debugInfoVisible.get()) {
             canvas.setClip(null);
             drawSceneContent();
             drawDebugInfo();
@@ -450,7 +451,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         }
         // NES screen is 32 tiles wide but mazes are only 28 tiles wide, so shift HUD right:
         gameRenderer.ctx().translate(scaled(2 * TS), 0);
-        renderer().drawHUD(gameContext(), ui.clock(), gameContext().game().hudData(), sizeInPx());
+        hudRenderer.drawHUD(gameContext(), ui.clock(), gameContext().game().hudData(), sizeInPx());
 
         gameRenderer.ctx().restore();
     }

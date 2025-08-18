@@ -36,6 +36,8 @@ import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.MsPacMan3D;
 import de.amr.pacmanfx.uilib.model3D.MsPacManBody;
+import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
+import javafx.beans.property.DoubleProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -327,6 +329,13 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     @Override
     public TengenMsPacMan_GhostAnimationManager createGhostAnimations(Ghost ghost) {
         return new TengenMsPacMan_GhostAnimationManager(spriteSheet(), ghost.id().personality());
+    }
+
+    @Override
+    public HUDRenderer createHUDRenderer(Canvas canvas, DoubleProperty scaling) {
+        var hudRenderer = new TengenMsPacMan_HUDRenderer(this, canvas, spriteSheet);
+        hudRenderer.scalingProperty().bind(scaling);
+        return hudRenderer;
     }
 
     @Override

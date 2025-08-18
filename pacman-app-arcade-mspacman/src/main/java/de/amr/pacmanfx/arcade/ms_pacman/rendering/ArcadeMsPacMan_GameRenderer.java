@@ -9,8 +9,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.scenes.Clapperboard;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.Marquee;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.MidwayCopyright;
 import de.amr.pacmanfx.lib.RectShort;
-import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.model.*;
+import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.BonusState;
@@ -21,11 +20,10 @@ import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.GameRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
+import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_RED;
+import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_WHITE;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
@@ -54,56 +52,6 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer implements DebugIn
     @Override
     public ArcadeMsPacMan_SpriteSheet spriteSheet() {
         return spriteSheet;
-    }
-
-    @Override
-    public void drawHUD(GameContext gameContext, GameClock gameClock, HUDData data, Vector2f sceneSize) {
-        if (!data.isVisible()) return;
-
-        Font font = uiConfig.globalAssets().arcadeFont(scaled(TS));
-
-        if (data.isScoreVisible()) {
-            Color color = ARCADE_WHITE;
-            drawScore(gameContext.game().scoreManager().score(), "SCORE", color, font, TS(1), TS(1));
-            drawScore(gameContext.game().scoreManager().highScore(), "HIGH SCORE", color, font, TS(14), TS(1));
-        }
-
-        if (data.isLevelCounterVisible()) {
-            LevelCounter levelCounter = data.theLevelCounter();
-            float x = sceneSize.x() - TS(4), y = sceneSize.y() - TS(2);
-            for (byte symbol : levelCounter.symbols()) {
-                RectShort sprite = spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS)[symbol];
-                drawSprite(spriteSheet, sprite, x, y, true);
-                x -= TS(2);
-            }
-        }
-
-        if (data.isLivesCounterVisible()) {
-            float x = TS(2), y = sceneSize.y() - TS(2);
-            LivesCounter livesCounter = data.theLivesCounter();
-            RectShort sprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
-            for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
-                drawSprite(spriteSheet, sprite, x + TS(2 * i), y, true);
-            }
-            if (gameContext.game().lifeCount() > livesCounter.maxLivesDisplayed()) {
-                // show text indicating that more lives are available than symbols displayed (cheating may cause this)
-                Font excessLifesFont = Font.font("Serif", FontWeight.BOLD, scaled(8));
-                fillText("%d".formatted(gameContext.game().lifeCount()), ARCADE_YELLOW, excessLifesFont, x - 14, y + TS);
-            }
-        }
-
-        if (data.isCreditVisible()) {
-            String text = "CREDIT %2d".formatted(gameContext.coinMechanism().numCoins());
-            fillText(text, ARCADE_WHITE, uiConfig.globalAssets().arcadeFont(scaled(TS)), TS(2), sceneSize.y() - 2);
-        }
-    }
-
-    private void drawScore(Score score, String title, Color color, Font font, double x, double y) {
-        fillText(title, color, font, x, y);
-        fillText("%7s".formatted("%02d".formatted(score.points())), color, font, x, y + TS + 1);
-        if (score.points() != 0) {
-            fillText("L" + score.levelNumber(), color, font, x + TS(8), y + TS + 1);
-        }
     }
 
     @Override

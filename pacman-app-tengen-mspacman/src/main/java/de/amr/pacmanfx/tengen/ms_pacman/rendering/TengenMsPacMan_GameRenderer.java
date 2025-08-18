@@ -12,10 +12,14 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
-import de.amr.pacmanfx.model.*;
+import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
-import de.amr.pacmanfx.tengen.ms_pacman.model.*;
+import de.amr.pacmanfx.tengen.ms_pacman.model.Difficulty;
+import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
+import de.amr.pacmanfx.tengen.ms_pacman.model.PacBooster;
+import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.Clapperboard;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.Stork;
 import de.amr.pacmanfx.ui._2d.DebugInfoRenderer;
@@ -32,7 +36,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.HTS;
@@ -75,80 +78,6 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer implements DebugIn
             Logger.info("Created recolored maze for game level #{} ({} flash colors: {})",
                 gameLevel.number(), numFlashes, recoloredMaze.mazeSprite());
         }
-    }
-
-    @Override
-    public void drawHUD(GameContext gameContext, GameClock gameClock, HUDData data, Vector2f sceneSize) {
-        requireNonNull(data);
-
-        if (!data.isVisible()) return;
-
-        Font font = uiConfig.theUI().assets().arcadeFont(TS);
-        TengenMsPacMan_GameModel game = gameContext.game();
-        if (data.isScoreVisible()) {
-            drawScores(gameContext, gameClock, nesPaletteColor(0x20), font);
-        }
-        if (data.isLivesCounterVisible()) {
-            drawLivesCounter(data.theLivesCounter(), game.lifeCount(), TS(2), sceneSize.y() - TS);
-        }
-        if (data.isLevelCounterVisible()) {
-            var hudData = (TengenMsPacMan_HUDData) data;
-            TengenMsPacMan_LevelCounter levelCounter = hudData.theLevelCounter();
-            float x = sceneSize.x() - TS(2), y = sceneSize.y() - TS;
-            drawLevelCounter(levelCounter.displayedLevelNumber(), levelCounter, x, y);
-        }
-    }
-
-    public void drawScores(GameContext gameContext, GameClock gameClock, Color color, Font font) {
-        ScoreManager scoreManager = gameContext.game().scoreManager();
-        ctx().save();
-        ctx().scale(scaling(), scaling());
-        ctx().setFill(color);
-        ctx().setFont(font);
-        // show 1/2 second, hide 1/2 second
-        if (gameClock.tickCount() % 60 < 30) {
-            ctx().fillText("1UP", TS(4), TS(1));
-        }
-        ctx().fillText("HIGH SCORE", TS(11), TS(1));
-        ctx().fillText("%6d".formatted(scoreManager.score().points()), TS(2), TS(2));
-        ctx().fillText("%6d".formatted(scoreManager.highScore().points()), TS(13), TS(2));
-        ctx().restore();
-    }
-
-    public void drawLivesCounter(LivesCounter livesCounter, int lifeCount, float x, float y) {
-        RectShort sprite = uiConfig.spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL);
-        for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
-            drawSprite(uiConfig.spriteSheet(), sprite, x + TS(i * 2), y, true);
-        }
-        if (lifeCount > livesCounter.maxLivesDisplayed()) {
-            Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
-            fillText("(%d)".formatted(lifeCount), nesPaletteColor(0x28), font, x + TS(10), y + TS);
-        }
-    }
-
-    public void drawLevelCounter(int levelNumber, LevelCounter levelCounter, float x, float y) {
-        if (levelNumber != 0) {
-            drawLevelNumberBox(levelNumber, 0, y); // left box
-            drawLevelNumberBox(levelNumber, x, y); // right box
-        }
-        RectShort[] symbolSprites = uiConfig.spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
-        x -= TS(2);
-        // symbols are drawn from right to left!
-        for (byte symbol : levelCounter.symbols()) {
-            drawSprite(uiConfig.spriteSheet(), symbolSprites[symbol], x, y, true);
-            x -= TS(2);
-        }
-    }
-
-    // this is also used by the 3D scene
-    public void drawLevelNumberBox(int number, double x, double y) {
-        TengenMsPacMan_SpriteSheet spriteSheet = uiConfig.spriteSheet();
-        drawSprite(spriteSheet, spriteSheet.sprite(SpriteID.LEVEL_NUMBER_BOX), x, y, true);
-        int tens = number / 10, ones = number % 10;
-        if (tens > 0) {
-            drawSprite(uiConfig.spriteSheet(), spriteSheet.digitSprite(tens), x + 2, y + 2, true);
-        }
-        drawSprite(uiConfig.spriteSheet(), spriteSheet.digitSprite(ones), x + 10, y + 2, true);
     }
 
     @Override

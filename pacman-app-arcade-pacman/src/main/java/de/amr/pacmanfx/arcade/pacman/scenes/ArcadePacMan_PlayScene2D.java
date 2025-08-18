@@ -60,7 +60,8 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
     protected void doInit() {
         gameContext().game().hudData().credit(false).score(true).levelCounter(true).livesCounter(true);
         levelCompletedAnimation = new LevelCompletedAnimation(animationRegistry);
-        gameRenderer = ui.currentConfig().createGameRenderer(canvas);
+        setGameRenderer(ui.currentConfig().createGameRenderer(canvas));
+        setHudRenderer(ui.currentConfig().createHUDRenderer(canvas, scaling));
     }
 
     @Override

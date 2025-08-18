@@ -6,8 +6,11 @@ package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.ui._3d.GameLevel3D;
 import de.amr.pacmanfx.ui.api.GameUI;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.ImageView;
 
@@ -31,17 +34,20 @@ public class TengenMsPacMan_GameLevel3D extends GameLevel3D {
         TengenMsPacMan_GameModel game = ui.gameContext().game();
         int width = gameLevel.worldMap().numCols() * TS;
         int height = 2 * TS;
-        int scaling = 5; // for better snapshot resolution
+        DoubleProperty scaling = new SimpleDoubleProperty(5);
 
-        var canvas = new Canvas(scaling * width, scaling * height);
+        var canvas = new Canvas(scaling.get() * width, scaling.get() * height);
         fillCanvas(canvas, PROPERTY_3D_FLOOR_COLOR.get());
 
-        var renderer = (TengenMsPacMan_GameRenderer) ui.currentConfig().createGameRenderer(canvas);
-        renderer.ctx().setImageSmoothing(false); // important for sharp image!
-        renderer.setScaling(scaling);
-        renderer.drawGameOptions(game.mapCategory(), game.difficulty(), game.pacBooster(), 0.5 * width, TS + HTS);
-        renderer.drawLevelNumberBox(gameLevel.number(), 0, 0);
-        renderer.drawLevelNumberBox(gameLevel.number(), width - 2 * TS, 0);
+        var gameRenderer = (TengenMsPacMan_GameRenderer) ui.currentConfig().createGameRenderer(canvas);
+        gameRenderer.scalingProperty().bind(scaling);
+        gameRenderer.ctx().setImageSmoothing(false); // important for sharp image!
+        gameRenderer.drawGameOptions(game.mapCategory(), game.difficulty(), game.pacBooster(), 0.5 * width, TS + HTS);
+
+        var hudRenderer = (TengenMsPacMan_HUDRenderer) ui.currentConfig().createHUDRenderer(canvas, scaling);
+        hudRenderer.scalingProperty().bind(scaling);
+        hudRenderer.drawLevelNumberBox(gameLevel.number(), 0, 0);
+        hudRenderer.drawLevelNumberBox(gameLevel.number(), width - 2 * TS, 0);
 
         ImageView imageView = new ImageView(canvas.snapshot(null, null));
         imageView.setFitWidth(width);

@@ -19,6 +19,8 @@ import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.PacBase3D;
 import de.amr.pacmanfx.uilib.rendering.GameRenderer;
+import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
+import javafx.beans.property.DoubleProperty;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -58,6 +60,8 @@ public interface GameUI_Config extends Disposable {
     WorldMapColorScheme colorScheme(WorldMap worldMap);
 
     GameRenderer createGameRenderer(Canvas canvas);
+
+    HUDRenderer createHUDRenderer(Canvas canvas, DoubleProperty scaling);
 
     AnimationManager createGhostAnimations(Ghost ghost);
 
