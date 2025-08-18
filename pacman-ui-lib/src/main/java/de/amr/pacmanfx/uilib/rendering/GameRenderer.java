@@ -11,8 +11,6 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.HUDData;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.uilib.GameClock;
-import de.amr.pacmanfx.uilib.animation.SingleSpriteNoAnimation;
-import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -174,6 +172,8 @@ public abstract class GameRenderer {
         drawSprite(spriteSheet(), sprite, centerX - 0.5 * sprite.width(), centerY - 0.5 * sprite.height(), true);
     }
 
+    // -- Game-specific
+
     /**
      * Draws an actor (Pac-Man, ghost, moving bonus, etc.) if it is visible.
      *
@@ -183,19 +183,11 @@ public abstract class GameRenderer {
     public void drawActor(Actor actor, SpriteSheet<?> spriteSheet) {
         requireNonNull(actor);
         if (!actor.isVisible()) return;
-
-        actor.animations().ifPresent(animations -> {
-            RectShort sprite = switch (animations) {
-                case SingleSpriteNoAnimation singleSprite -> singleSprite.sprite();
-                case SpriteAnimationManager<?> spriteAnimations
-                        -> spriteAnimations.currentAnimation() != null ? spriteAnimations.currentSprite(actor) : null;
-                default -> null;
-            };
-            if (sprite != null) {
-                drawSpriteCentered(actor.center(), sprite);
-            }
-        });
+        actor.animations()
+                .map(animationManager -> animationManager.currentSprite(actor))
+                .ifPresent(actorSprite -> drawSpriteCentered(actor.center(), actorSprite));
     }
+
     /**
      * Applies settings specific to the given game level to this renderer. This can be for example
      * the selection of a different color scheme which is specified in the level map. The default

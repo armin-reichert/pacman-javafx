@@ -37,6 +37,7 @@ public class SpriteAnimationManager<SID extends Enum<SID>> implements AnimationM
         return id.equals(selectedID);
     }
 
+    @Override
     public RectShort currentSprite(Actor actor) {
         var currentAnimation = currentAnimation();
         if (currentAnimation == null) {

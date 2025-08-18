@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib.animation;
 
 import de.amr.pacmanfx.lib.RectShort;
+import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.AnimationManager;
 
 import static java.util.Objects.requireNonNull;
@@ -17,7 +18,8 @@ public class SingleSpriteNoAnimation implements AnimationManager {
         this.sprite = requireNonNull(sprite);
     }
 
-    public RectShort sprite() { return sprite; }
+    @Override
+    public RectShort currentSprite(Actor actor) { return sprite; }
 
     @Override
     public Object animation(String id) {

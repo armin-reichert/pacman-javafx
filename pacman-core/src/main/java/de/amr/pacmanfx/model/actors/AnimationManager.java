@@ -4,6 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.model.actors;
 
+import de.amr.pacmanfx.lib.RectShort;
+
 public interface AnimationManager {
     Object animation(String id);
     String selectedID();
@@ -13,4 +15,5 @@ public interface AnimationManager {
     void play();
     void stop();
     void reset();
+    RectShort currentSprite(Actor actor);
 }
