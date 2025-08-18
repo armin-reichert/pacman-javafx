@@ -6,9 +6,9 @@ package de.amr.pacmanfx.ui.layout;
 
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.ui._2d.GameRenderer;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
+import de.amr.pacmanfx.uilib.rendering.GameRenderer;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
 import javafx.beans.binding.Bindings;
@@ -31,7 +31,7 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.api.GameUI_Config.SCENE_ID_PLAY_SCENE_3D;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.*;
-import static de.amr.pacmanfx.uilib.rendering.BaseRenderer.fillCanvas;
+import static de.amr.pacmanfx.uilib.rendering.GameRenderer.fillCanvas;
 import static java.util.Objects.requireNonNull;
 
 public class MiniGameView extends VBox {

@@ -14,7 +14,7 @@ import javafx.scene.image.ImageView;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_3D_FLOOR_COLOR;
-import static de.amr.pacmanfx.uilib.rendering.BaseRenderer.fillCanvas;
+import static de.amr.pacmanfx.uilib.rendering.GameRenderer.fillCanvas;
 
 public class TengenMsPacMan_GameLevel3D extends GameLevel3D {
 

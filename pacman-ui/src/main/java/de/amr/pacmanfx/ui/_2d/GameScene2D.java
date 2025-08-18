@@ -14,6 +14,7 @@ import de.amr.pacmanfx.ui.api.ActionBindingsManager;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.rendering.GameRenderer;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -24,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.uilib.rendering.BaseRenderer.fillCanvas;
+import static de.amr.pacmanfx.uilib.rendering.GameRenderer.fillCanvas;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -109,7 +110,7 @@ public abstract class GameScene2D implements GameScene {
     public void setBackgroundColor(Color color) { backgroundColorProperty.set(color); }
 
     @SuppressWarnings("unchecked")
-    public <T extends GameRenderer> T renderer() { return (T) gameRenderer; }
+    public <T extends GameRenderer & DebugInfoRenderer> T renderer() { return (T) gameRenderer; }
 
     public void setGameRenderer(GameRenderer renderer) { gameRenderer = requireNonNull(renderer); }
 

@@ -24,6 +24,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.rendering.ColoredMazeSpriteSet;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.RecoloredSpriteImage;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
+import de.amr.pacmanfx.ui._2d.DebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.api.GameScene;
@@ -495,9 +496,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         gameRenderer.ctx().setFont(debugTextFont);
         gameRenderer.ctx().fillText("%s %d".formatted(gameContext().gameState(), gameContext().gameState().timer().tickCount()), 0, scaled(3 * TS));
         if (gameContext().optGameLevel().isPresent()) {
-            gameRenderer.drawMovingActorInfo(gameRenderer.ctx(), scaling(), gameContext().gameLevel().pac());
-            ghostsByZ(gameContext().gameLevel())
-                    .forEach(ghost -> gameRenderer.drawMovingActorInfo(gameRenderer.ctx(), scaling(), ghost));
+            if (gameRenderer instanceof DebugInfoRenderer debugInfoRenderer) {
+                debugInfoRenderer.drawMovingActorInfo(gameRenderer.ctx(), scaling(), gameContext().gameLevel().pac());
+                ghostsByZ(gameContext().gameLevel())
+                        .forEach(ghost -> debugInfoRenderer.drawMovingActorInfo(gameRenderer.ctx(), scaling(), ghost));
+            }
         }
         gameRenderer.ctx().restore();
     }

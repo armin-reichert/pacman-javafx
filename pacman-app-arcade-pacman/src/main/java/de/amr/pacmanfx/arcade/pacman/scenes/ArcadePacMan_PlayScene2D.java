@@ -18,6 +18,7 @@ import de.amr.pacmanfx.model.LivesCounter;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.ui._2d.DebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.api.GameScene;
@@ -243,8 +244,8 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
 
         if (isDebugInfoVisible()) {
             actorsInZOrder.forEach(actor -> {
-                if (actor instanceof MovingActor movingActor) {
-                    gameRenderer.drawMovingActorInfo(gameRenderer.ctx(), scaling(), movingActor);
+                if (actor instanceof MovingActor movingActor && gameRenderer instanceof DebugInfoRenderer debugInfoRenderer) {
+                    debugInfoRenderer.drawMovingActorInfo(gameRenderer.ctx(), scaling(), movingActor);
                 }
             });
         }
