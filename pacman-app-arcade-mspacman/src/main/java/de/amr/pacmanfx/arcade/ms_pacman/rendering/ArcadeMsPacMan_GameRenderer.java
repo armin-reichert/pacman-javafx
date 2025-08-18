@@ -12,7 +12,6 @@ import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
-import de.amr.pacmanfx.model.actors.BonusState;
 import de.amr.pacmanfx.ui._2d.DebugInfoRenderer;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -31,11 +30,17 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer implements DebugIn
     protected GameUI_Config uiConfig;
     protected BrightMazesSpriteSheet brightMazesSpriteSheet;
 
+    private final RectShort[] bonusSymbols;
+    private final RectShort[] bonusValues;
+
     public ArcadeMsPacMan_GameRenderer(Canvas canvas, GameUI_Config uiConfig, ArcadeMsPacMan_SpriteSheet spriteSheet,
         BrightMazesSpriteSheet brightMazesSpriteSheet) {
         super(canvas, spriteSheet);
         this.uiConfig = requireNonNull(uiConfig);
         this.brightMazesSpriteSheet = brightMazesSpriteSheet; // can be null in Ms. Pac-Man XXL!
+
+        bonusSymbols = spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
+        bonusValues = spriteSheet().spriteSequence(SpriteID.BONUS_VALUES);
     }
 
     protected ArcadeMsPacMan_GameRenderer(Canvas canvas, GameUI_Config uiConfig, ArcadeMsPacMan_SpriteSheet spriteSheet) {
@@ -103,20 +108,16 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer implements DebugIn
     }
 
     public void drawMovingBonus(Bonus bonus) {
-        if (bonus.state() == BonusState.INACTIVE) return;
-        ctx().save();
-        ctx().translate(0, bonus.jumpHeight());
         switch (bonus.state()) {
-            case EDIBLE-> {
-                RectShort sprite = spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS)[bonus.symbol()];
-                drawSpriteCentered(bonus.center(), sprite);
+            case EDIBLE -> {
+                ctx().save();
+                ctx().translate(0, bonus.jumpHeight());
+                drawSpriteCentered(bonus.center(), bonusSymbols[bonus.symbol()]);
+                ctx().restore();
             }
-            case EATEN  -> {
-                RectShort sprite = spriteSheet().spriteSequence(SpriteID.BONUS_VALUES)[bonus.symbol()];
-                drawSpriteCentered(bonus.center(), sprite);
-            }
+            case EATEN  -> drawSpriteCentered(bonus.center(), bonusValues[bonus.symbol()]);
+            case INACTIVE -> {}
         }
-        ctx().restore();
     }
 
     public void drawClapperBoard(Clapperboard clapperboard) {
