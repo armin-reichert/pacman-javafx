@@ -27,7 +27,6 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
 
     private static final int FRAGMENT_SIZE = 16;
 
-    private SpriteSheet<?> spriteSheet;
     private Vector2f minPoint, maxPoint;
 
     public ArcadePacMan_BootScene2D(GameUI ui) {
@@ -38,7 +37,7 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
     public void doInit() {
         gameContext().game().hudData().score(false).levelCounter(false).livesCounter(false);
 
-        spriteSheet = ui.currentConfig().spriteSheet();
+        SpriteSheet<?> spriteSheet = ui.currentConfig().spriteSheet();
         double width = spriteSheet.sourceImage().getWidth(), height = spriteSheet.sourceImage().getHeight();
         // ignore left half of sprite sheet image containing maze images
         minPoint = Vector2f.of(width / 2, 0);
@@ -108,7 +107,7 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
             RectShort fragment1 = randomSpriteFragment(), fragment2 = randomSpriteFragment();
             int split = numCols / 8 + random.nextInt(numCols / 4);
             for (int col = 0; col < numCols; ++col) {
-                gameRenderer.drawSprite(spriteSheet, col < split ? fragment1 : fragment2,
+                gameRenderer.drawSprite(col < split ? fragment1 : fragment2,
                     FRAGMENT_SIZE * col, FRAGMENT_SIZE * row, true);
             }
         }

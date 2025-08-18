@@ -39,36 +39,33 @@ public class ArcadePacMan_GameRenderer extends GameRenderer implements DebugInfo
 
     @Override
     public void drawGameLevel(GameContext gameContext, Color backgroundColor, boolean mazeBright, boolean energizerBright) {
-        GameLevel gameLevel = gameContext.gameLevel();
         ctx().setFill(backgroundColor);
         ctx().save();
         ctx().scale(scaling(), scaling());
         if (mazeBright) {
-            drawEmptyGameLevel();
-        }
-        else if (gameLevel.uneatenFoodCount() == 0) {
-            drawEmptyGameLevel(gameLevel);
-        }
-        else {
-            drawGameLevelWithFood(gameLevel, !energizerBright);
+            drawBrightGameLevel();
+        } else if (gameContext.gameLevel().uneatenFoodCount() == 0) {
+            drawEmptyGameLevel(gameContext.gameLevel());
+        } else {
+            drawGameLevelWithFood(gameContext.gameLevel(), !energizerBright);
         }
         ctx().restore();
     }
 
     private void drawEmptyGameLevel(GameLevel gameLevel) {
-        drawSprite(spriteSheet, spriteSheet().sprite(SpriteID.MAP_EMPTY), 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE), false);
+        drawSprite(spriteSheet().sprite(SpriteID.MAP_EMPTY), 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE), false);
         // hide doors
         gameLevel.house().ifPresent(house -> fillSquareAtTileCenter(house.leftDoorTile(), TS + 0.5));
         gameLevel.house().ifPresent(house -> fillSquareAtTileCenter(house.rightDoorTile(), TS + 0.5));
     }
 
-    private void drawEmptyGameLevel() {
+    private void drawBrightGameLevel() {
         Image brightMazeImage = uiConfig.assets().image("flashing_maze");
         ctx().drawImage(brightMazeImage, 0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);
     }
 
     private void drawGameLevelWithFood(GameLevel gameLevel, boolean energizerDark) {
-        drawSprite(spriteSheet, spriteSheet().sprite(SpriteID.MAP_FULL), 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE), false);
+        drawSprite(spriteSheet().sprite(SpriteID.MAP_FULL), 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE), false);
         gameLevel.worldMap().tiles()
                 .filter(not(gameLevel::isEnergizerPosition))
                 .filter(gameLevel::tileContainsEatenFood)

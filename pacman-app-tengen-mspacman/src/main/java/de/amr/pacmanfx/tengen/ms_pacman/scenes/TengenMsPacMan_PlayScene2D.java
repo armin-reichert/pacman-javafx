@@ -461,28 +461,27 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         gameRenderer.applyLevelSettings(gameContext());
         gameRenderer.ctx().save();
         gameRenderer.ctx().translate(scaled(2 * TS), 0);
-        GameLevel gameLevel = gameContext().gameLevel();
         if (levelCompletedAnimation.isRunning()) {
             if (levelCompletedAnimation.isHighlighted()) {
-                ColoredMazeSpriteSet recoloredMaze = gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.RECOLORED_MAZE_PROPERTY);
+                ColoredMazeSpriteSet recoloredMaze = gameContext().gameLevel().worldMap().getConfigValue(TengenMsPacMan_UIConfig.RECOLORED_MAZE_PROPERTY);
                 // get the current maze flashing "animation frame"
                 int frame = levelCompletedAnimation.flashingIndex();
                 RecoloredSpriteImage flashingMazeSprite = recoloredMaze.flashingMazeSprites().get(frame);
-                renderer().drawLevelWithMaze(gameContext(), gameLevel, flashingMazeSprite.image(), flashingMazeSprite.sprite());
+                renderer().drawLevelWithMaze(gameContext(), flashingMazeSprite.image(), flashingMazeSprite.sprite());
             } else {
                 renderer().drawGameLevel(gameContext(), null, false, false);
             }
         }
         else {
             //TODO in the original game, the message is drawn under the maze image but *over* the pellets!
-            renderer().drawLevelMessage(gameLevel, currentMessagePosition(), scaledArcadeFont8());
+            renderer().drawLevelMessage(gameContext().gameLevel(), currentMessagePosition(), scaledArcadeFont8());
             renderer().drawGameLevel(gameContext(), null, false, false);
         }
 
         actorsInZOrder.clear();
-        gameLevel.bonus().ifPresent(actorsInZOrder::add);
-        actorsInZOrder.add(gameLevel.pac());
-        ghostsByZ(gameLevel).forEach(actorsInZOrder::add);
+        gameContext().gameLevel().bonus().ifPresent(actorsInZOrder::add);
+        actorsInZOrder.add(gameContext().gameLevel().pac());
+        ghostsByZ(gameContext().gameLevel()).forEach(actorsInZOrder::add);
         actorsInZOrder.forEach(actor -> gameRenderer.drawActor(actor, spriteSheet));
 
         gameRenderer.ctx().restore();

@@ -41,6 +41,7 @@ import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
+import static de.amr.pacmanfx.tengen.ms_pacman.rendering.NonArcadeMapsSpriteSheet.MazeID.MAZE32_ANIMATED;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
@@ -166,19 +167,32 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer implements DebugIn
     @Override
     public void drawGameLevel(GameContext gameContext, Color backgroundColor, boolean mazeBright, boolean energizerBright) {
         TengenMsPacMan_GameModel game = gameContext.game();
-        GameLevel gameLevel = gameContext.gameLevel();
-        int mapNumber = gameLevel.worldMap().getConfigValue("mapNumber");
+        int mapNumber = gameContext.gameLevel().worldMap().getConfigValue("mapNumber");
         applyLevelSettings(gameContext);
-        ColoredMazeSpriteSet recoloredMaze = gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.RECOLORED_MAZE_PROPERTY);
+        ColoredMazeSpriteSet recoloredMaze = gameContext.gameLevel().worldMap().getConfigValue(TengenMsPacMan_UIConfig.RECOLORED_MAZE_PROPERTY);
         if (game.mapCategory() == MapCategory.STRANGE && mapNumber == 15) {
             int spriteIndex = mazeAnimationSpriteIndex(uiConfig.theUI().clock().tickCount());
-            drawLevelWithMaze(gameContext, gameLevel,
-                recoloredMaze.mazeSprite().image(),
-                uiConfig.nonArcadeMapsSpriteSheet()
-                        .spriteSequence(NonArcadeMapsSpriteSheet.MazeID.MAZE32_ANIMATED)[spriteIndex]);
+            drawLevelWithMaze(gameContext, recoloredMaze.mazeSprite().image(),
+                uiConfig.nonArcadeMapsSpriteSheet().spriteSequence(MAZE32_ANIMATED)[spriteIndex]);
         } else {
-            drawLevelWithMaze(gameContext, gameLevel, recoloredMaze.mazeSprite().image(), recoloredMaze.mazeSprite().sprite());
+            drawLevelWithMaze(gameContext, recoloredMaze.mazeSprite().image(), recoloredMaze.mazeSprite().sprite());
         }
+    }
+
+    public void drawLevelWithMaze(GameContext gameContext, Image mazeImage, RectShort mazeSprite) {
+        var tengenGame = (TengenMsPacMan_GameModel) gameContext.game();
+        ctx().setImageSmoothing(false);
+        if (!tengenGame.optionsAreInitial()) {
+            drawGameOptions(tengenGame.mapCategory(), tengenGame.difficulty(), tengenGame.pacBooster(),
+                    gameContext.gameLevel().worldMap().numCols() * HTS, TS(2) + HTS);
+        }
+        int x = 0, y = GameLevel.EMPTY_ROWS_OVER_MAZE * TS;
+        ctx().drawImage(mazeImage,
+            mazeSprite.x(), mazeSprite.y(), mazeSprite.width(), mazeSprite.height(),
+            scaled(x), scaled(y), scaled(mazeSprite.width()), scaled(mazeSprite.height())
+        );
+        overPaintActorSprites(gameContext.gameLevel());
+        drawFood(gameContext.gameLevel());
     }
 
     /*
@@ -188,22 +202,6 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer implements DebugIn
     private int mazeAnimationSpriteIndex(long tick) {
         long block = (tick % 32) / 8;
         return (int) (block < 3 ? block : 1);
-    }
-
-    public void drawLevelWithMaze(GameContext gameContext, GameLevel level, Image mazeImage, RectShort mazeSprite) {
-        var tengenGame = (TengenMsPacMan_GameModel) gameContext.game();
-        ctx().setImageSmoothing(false);
-        if (!tengenGame.optionsAreInitial()) {
-            drawGameOptions(tengenGame.mapCategory(), tengenGame.difficulty(), tengenGame.pacBooster(),
-                level.worldMap().numCols() * HTS, TS(2) + HTS);
-        }
-        int x = 0, y = GameLevel.EMPTY_ROWS_OVER_MAZE * TS;
-        ctx().drawImage(mazeImage,
-            mazeSprite.x(), mazeSprite.y(), mazeSprite.width(), mazeSprite.height(),
-            scaled(x), scaled(y), scaled(mazeSprite.width()), scaled(mazeSprite.height())
-        );
-        overPaintActorSprites(level);
-        drawFood(level);
     }
 
     private void drawFood(GameLevel gameLevel) {

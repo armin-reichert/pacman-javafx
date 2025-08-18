@@ -62,7 +62,7 @@ public class ArcadePacMan_HUDRenderer extends BaseRenderer implements HUDRendere
             RectShort[] bonusSymbols = bonusSymbols();
             float x = sceneSize.x() - TS(4), y = sceneSize.y() - TS(2) + 2;
             for (byte symbol : levelCounter.symbols()) {
-                drawSprite(spriteSheet, bonusSymbols[symbol], x, y, true);
+                drawSprite(bonusSymbols[symbol], x, y, true);
                 x -= TS(2); // symbols are drawn from right to left
             }
         }
@@ -72,7 +72,7 @@ public class ArcadePacMan_HUDRenderer extends BaseRenderer implements HUDRendere
             RectShort sprite = livesCounterSymbol();
             float x = TS(2), y = sceneSize.y() - TS(2);
             for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
-                drawSprite(spriteSheet, sprite, x + i * TS(2), y, true);
+                drawSprite(sprite, x + i * TS(2), y, true);
             }
             int lifeCount = gameContext.game().lifeCount();
             if (lifeCount > livesCounter.maxLivesDisplayed()) {

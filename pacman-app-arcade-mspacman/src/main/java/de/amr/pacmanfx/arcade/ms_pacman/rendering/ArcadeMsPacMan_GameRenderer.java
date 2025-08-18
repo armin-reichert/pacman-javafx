@@ -29,11 +29,9 @@ import static java.util.function.Predicate.not;
 public class ArcadeMsPacMan_GameRenderer extends GameRenderer implements DebugInfoRenderer {
 
     protected GameUI_Config uiConfig;
-    protected ArcadeMsPacMan_SpriteSheet spriteSheet;
     protected BrightMazesSpriteSheet brightMazesSpriteSheet;
 
-    public ArcadeMsPacMan_GameRenderer(Canvas canvas, GameUI_Config uiConfig,
-        ArcadeMsPacMan_SpriteSheet spriteSheet,
+    public ArcadeMsPacMan_GameRenderer(Canvas canvas, GameUI_Config uiConfig, ArcadeMsPacMan_SpriteSheet spriteSheet,
         BrightMazesSpriteSheet brightMazesSpriteSheet) {
         super(canvas, spriteSheet);
         this.uiConfig = requireNonNull(uiConfig);
@@ -46,35 +44,48 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer implements DebugIn
 
     @Override
     public ArcadeMsPacMan_SpriteSheet spriteSheet() {
-        return spriteSheet;
+        return (ArcadeMsPacMan_SpriteSheet) spriteSheet;
     }
 
     @Override
     public void drawGameLevel(GameContext gameContext, Color backgroundColor, boolean mazeBright, boolean energizerBright) {
-        GameLevel gameLevel = gameContext.gameLevel();
-        int colorMapIndex = gameLevel.worldMap().getConfigValue("colorMapIndex");
+        ctx().setFill(backgroundColor);
         if (mazeBright) {
-            RectShort[] brightMazes = brightMazesSpriteSheet.spriteSequence(BrightMazesSpriteSheet.SpriteID.BRIGHT_MAZES);
-            RectShort maze = brightMazes[colorMapIndex];
-            drawSprite(brightMazesSpriteSheet, maze, 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE), true);
-        } else if (gameLevel.uneatenFoodCount() == 0) {
-            RectShort maze = spriteSheet.spriteSequence(SpriteID.EMPTY_MAZES)[colorMapIndex];
-            drawSprite(spriteSheet, maze, 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE), true);
+            drawBrightGameLevel(gameContext.gameLevel());
+        } else if (gameContext.gameLevel().uneatenFoodCount() == 0) {
+            drawEmptyGameLevel(gameContext.gameLevel());
         } else {
-            RectShort mazeSprite = spriteSheet.spriteSequence(SpriteID.FULL_MAZES)[colorMapIndex];
-            drawSprite(spriteSheet, mazeSprite, 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE), true);
-            ctx().save();
-            ctx().scale(scaling(), scaling());
-            ctx().setFill(backgroundColor);
-            gameLevel.worldMap().tiles()
-                    .filter(not(gameLevel::isEnergizerPosition))
-                    .filter(gameLevel::tileContainsEatenFood)
-                    .forEach(tile -> fillSquareAtTileCenter(tile, 4));
-            gameLevel.energizerPositions().stream()
-                    .filter(tile -> !energizerBright || gameLevel.tileContainsEatenFood(tile))
-                    .forEach(tile -> fillSquareAtTileCenter(tile, 10));
-            ctx().restore();
+            drawGameLevelWithFood(gameContext.gameLevel(), !energizerBright);
         }
+    }
+
+    private void drawEmptyGameLevel(GameLevel gameLevel) {
+        int colorMapIndex = gameLevel.worldMap().getConfigValue("colorMapIndex");
+        RectShort maze = spriteSheet().spriteSequence(SpriteID.EMPTY_MAZES)[colorMapIndex];
+        drawSprite(maze, 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE), true);
+    }
+
+    private void drawBrightGameLevel(GameLevel gameLevel) {
+        int colorMapIndex = gameLevel.worldMap().getConfigValue("colorMapIndex");
+        RectShort[] brightMazes = brightMazesSpriteSheet.spriteSequence(BrightMazesSpriteSheet.SpriteID.BRIGHT_MAZES);
+        RectShort maze = brightMazes[colorMapIndex];
+        drawSprite(brightMazesSpriteSheet, maze, 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE), true);
+    }
+
+    private void drawGameLevelWithFood(GameLevel gameLevel, boolean energizerDark) {
+        int colorMapIndex = gameLevel.worldMap().getConfigValue("colorMapIndex");
+        RectShort mazeSprite = spriteSheet().spriteSequence(SpriteID.FULL_MAZES)[colorMapIndex];
+        drawSprite(mazeSprite, 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE), true);
+        ctx().save();
+        ctx().scale(scaling(), scaling());
+        gameLevel.worldMap().tiles()
+                .filter(not(gameLevel::isEnergizerPosition))
+                .filter(gameLevel::tileContainsEatenFood)
+                .forEach(tile -> fillSquareAtTileCenter(tile, 4));
+        gameLevel.energizerPositions().stream()
+                .filter(tile -> energizerDark || gameLevel.tileContainsEatenFood(tile))
+                .forEach(tile -> fillSquareAtTileCenter(tile, 10));
+        ctx().restore();
     }
 
     @Override
@@ -97,11 +108,11 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer implements DebugIn
         ctx().translate(0, bonus.jumpHeight());
         switch (bonus.state()) {
             case EDIBLE-> {
-                RectShort sprite = spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS)[bonus.symbol()];
+                RectShort sprite = spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS)[bonus.symbol()];
                 drawSpriteCentered(bonus.center(), sprite);
             }
             case EATEN  -> {
-                RectShort sprite = spriteSheet.spriteSequence(SpriteID.BONUS_VALUES)[bonus.symbol()];
+                RectShort sprite = spriteSheet().spriteSequence(SpriteID.BONUS_VALUES)[bonus.symbol()];
                 drawSpriteCentered(bonus.center(), sprite);
             }
         }
@@ -112,7 +123,7 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer implements DebugIn
         if (!clapperboard.isVisible()) {
             return;
         }
-        RectShort sprite = spriteSheet.spriteSequence(SpriteID.CLAPPERBOARD)[clapperboard.state()];
+        RectShort sprite = spriteSheet().spriteSequence(SpriteID.CLAPPERBOARD)[clapperboard.state()];
         double numberX = scaled(clapperboard.x() + sprite.width() - 25);
         double numberY = scaled(clapperboard.y() + 18);
         double textX = scaled(clapperboard.x() + sprite.width());

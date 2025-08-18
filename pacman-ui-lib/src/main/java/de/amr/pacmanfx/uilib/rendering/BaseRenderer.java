@@ -33,7 +33,7 @@ public abstract class BaseRenderer {
 
     protected BaseRenderer(Canvas canvas, SpriteSheet<?> spriteSheet) {
         ctx = requireNonNull(canvas).getGraphicsContext2D();
-        this.spriteSheet = requireNonNull(spriteSheet);
+        this.spriteSheet = spriteSheet;
     }
 
     public GraphicsContext ctx() {
@@ -139,12 +139,20 @@ public abstract class BaseRenderer {
     /**
      * Draws a sprite (region inside sprite sheet) unscaled at the given position.
      *
-     * @param spriteSheet the sprite sheet
      * @param sprite      the sprite to draw
      * @param x           x-coordinate of left-upper corner
      * @param y           y-coordinate of left-upper corner
      * @param scaled      tells is the destination rectangle's position and size is scaled using the current scaling value
      */
+    public void drawSprite(RectShort sprite, double x, double y, boolean scaled) {
+        requireNonNull(spriteSheet);
+        requireNonNull(sprite);
+        double s = scaled ? scaling() : 1;
+        ctx().drawImage(spriteSheet.sourceImage(),
+                sprite.x(), sprite.y(), sprite.width(), sprite.height(),
+                s * x, s * y, s * sprite.width(), s * sprite.height());
+    }
+
     public void drawSprite(SpriteSheet<?> spriteSheet, RectShort sprite, double x, double y, boolean scaled) {
         requireNonNull(spriteSheet);
         requireNonNull(sprite);
@@ -165,6 +173,6 @@ public abstract class BaseRenderer {
     }
 
     public void drawSpriteCentered(double centerX, double centerY, RectShort sprite) {
-        drawSprite(spriteSheet(), sprite, centerX - 0.5 * sprite.width(), centerY - 0.5 * sprite.height(), true);
+        drawSprite(sprite, centerX - 0.5 * sprite.width(), centerY - 0.5 * sprite.height(), true);
     }
 }
