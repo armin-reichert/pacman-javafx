@@ -72,7 +72,7 @@ public class PlayView extends StackPane implements GameUI_View {
     private final Scene parentScene;
     private final Dashboard dashboard;
     private final CanvasWithFrame canvasWithFrame = new CanvasWithFrame();
-    private final MiniGameView miniView = new MiniGameView();
+    private final MiniGameView miniView;
     private final ContextMenu contextMenu = new ContextMenu();
 
     private final BorderPane canvasLayer = new BorderPane();
@@ -86,7 +86,8 @@ public class PlayView extends StackPane implements GameUI_View {
         dashboard = new Dashboard(ui);
         dashboard.setVisible(false);
 
-        miniView.setGameUI(ui);
+        miniView = new MiniGameView(ui);
+
         configureCanvasWithFrame();
         createLayout();
         configurePropertyBindings();

@@ -56,7 +56,9 @@ public class MiniGameView extends VBox {
     private final TranslateTransition slideInAnimation;
     private final TranslateTransition slideOutAnimation;
 
-    public MiniGameView() {
+    public MiniGameView(GameUI ui) {
+        this.ui = requireNonNull(ui);
+
         canvas = new Canvas();
         canvas.heightProperty().bind(canvasHeightProperty());
         canvas.widthProperty().bind(Bindings.createDoubleBinding(
@@ -72,11 +74,20 @@ public class MiniGameView extends VBox {
         VBox.setVgrow(canvasContainer, Priority.NEVER);
         getChildren().add(canvasContainer);
 
+        aspectProperty.bind(worldSizeProperty.map(size -> size.x() / size.y()));
+        backgroundColorProperty.bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
+        canvasHeightProperty.bind(PROPERTY_MINI_VIEW_HEIGHT);
+        debugProperty.bind(PROPERTY_DEBUG_INFO_VISIBLE);
+        opacityProperty().bind(PROPERTY_MINI_VIEW_OPACITY_PERCENT.divide(100.0));
         scalingProperty.bind(Bindings.createFloatBinding(
             () -> (float) canvas.getHeight() / worldSizeProperty.get().y(),
             canvas.heightProperty(), worldSizeProperty
         ));
-        aspectProperty.bind(worldSizeProperty.map(size -> size.x() / size.y()));
+        visibleProperty().bind(Bindings.createObjectBinding(
+            () -> PROPERTY_MINI_VIEW_ON.get() && ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D),
+            PROPERTY_MINI_VIEW_ON, PROPERTY_CURRENT_GAME_SCENE
+        ));
+
 
         slideInAnimation = new TranslateTransition(SLIDE_IN_DURATION, this);
         slideInAnimation.setToY(0);
@@ -101,18 +112,6 @@ public class MiniGameView extends VBox {
 
     public DoubleProperty canvasHeightProperty() {
         return canvasHeightProperty;
-    }
-
-    public void setGameUI(GameUI ui) {
-        this.ui = requireNonNull(ui);
-        backgroundColorProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
-        debugProperty().bind(PROPERTY_DEBUG_INFO_VISIBLE);
-        canvasHeightProperty().bind(PROPERTY_MINI_VIEW_HEIGHT);
-        opacityProperty().bind(PROPERTY_MINI_VIEW_OPACITY_PERCENT.divide(100.0));
-        visibleProperty().bind(Bindings.createObjectBinding(
-            () -> PROPERTY_MINI_VIEW_ON.get() && ui.isCurrentGameSceneID(SCENE_ID_PLAY_SCENE_3D),
-            PROPERTY_MINI_VIEW_ON, PROPERTY_CURRENT_GAME_SCENE
-        ));
     }
 
     public void onGameLevelCreated(GameLevel gameLevel) {
