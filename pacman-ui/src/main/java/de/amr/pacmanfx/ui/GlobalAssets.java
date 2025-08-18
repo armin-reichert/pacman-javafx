@@ -13,9 +13,9 @@ import javafx.scene.text.Font;
 import static de.amr.pacmanfx.uilib.Ufx.createImageBackground;
 
 /**
- * Stores assets used in the Pac-Man games UI.
+ * Global assets used in the Pac-Man games UI.
  */
-public class GameAssets extends AssetStorage {
+public class GlobalAssets extends AssetStorage {
 
     private static final ResourceManager GAME_UI_RES = () -> GameUI_Implementation.class;
 
@@ -23,12 +23,12 @@ public class GameAssets extends AssetStorage {
     private final RandomTextPicker<String> pickGameOverText;
     private final RandomTextPicker<String> pickLevelCompleteText;
 
-    public GameAssets() {
+    public GlobalAssets() {
         model3DRepository = new Model3DRepository();
 
-        textBundle = GAME_UI_RES.getModuleBundle("de.amr.pacmanfx.ui.localized_texts");
-        pickGameOverText      = RandomTextPicker.fromBundle(textBundle, "game.over");
-        pickLevelCompleteText = RandomTextPicker.fromBundle(textBundle, "level.complete");
+        setTextResources(GAME_UI_RES.getModuleBundle("de.amr.pacmanfx.ui.localized_texts"));
+        pickGameOverText      = RandomTextPicker.fromBundle(textResources(), "game.over");
+        pickLevelCompleteText = RandomTextPicker.fromBundle(textResources(), "level.complete");
 
         store("background.scene",        createImageBackground(GAME_UI_RES.loadImage("graphics/pacman_wallpaper.png")));
         store("background.play_scene3d", createImageBackground(GAME_UI_RES.loadImage("graphics/blue_sky.jpg")));

@@ -61,8 +61,6 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     public static final String MAPS_PATH = "/de/amr/pacmanfx/tengen/ms_pacman/maps/";
 
-    public static final String ASSET_NAMESPACE = "tengen";
-
     public static final String RECOLORED_MAZE_PROPERTY = "recoloredMaze";
 
     private static final ResourceManager RES_GAME_UI = () -> GameUI_Implementation.class;
@@ -102,6 +100,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     private Map<String, GameScene> scenesByID = new HashMap<>();
     private Set<ActionBinding> tengenMsPacManBindings;
 
+    private final AssetStorage assets = new AssetStorage();
     private TengenMsPacMan_SpriteSheet spriteSheet;
     private ArcadeMapsSpriteSheet arcadeMapsSpriteSheet;
     private NonArcadeMapsSpriteSheet nonArcadeMapsSpriteSheet;
@@ -126,6 +125,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
             new ActionBinding(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, alt(KeyCode.C)),
             new ActionBinding(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, nude(KeyCode.SPACE))
         );
+        assets.setTextResources(ResourceBundle.getBundle("de.amr.pacmanfx.tengen.ms_pacman.localized_texts"));
     }
 
     public Set<ActionBinding> tengenMsPacManBindings() {
@@ -138,58 +138,63 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     }
 
     @Override
-    public void storeAssets(AssetStorage assets) {
-        storeLocalAssetValue(assets, "spritesheet", spriteSheet);
-        storeLocalAssetValue(assets, "app_icon",         RES_TENGEN.loadImage("graphics/icons/mspacman.png"));
-        storeLocalAssetValue(assets, "startpage.image1", RES_TENGEN.loadImage("graphics/f1.png"));
-        storeLocalAssetValue(assets, "startpage.image2", RES_TENGEN.loadImage("graphics/f2.png"));
-        storeLocalAssetValue(assets, "color.game_over_message", nesPaletteColor(0x11));
-        storeLocalAssetValue(assets, "color.ready_message",     nesPaletteColor(0x28));
+    public AssetStorage assets() {
+        return assets;
+    }
+
+    @Override
+    public void storeAssets() {
+        assets.store("spritesheet", spriteSheet);
+        assets.store("app_icon",         RES_TENGEN.loadImage("graphics/icons/mspacman.png"));
+        assets.store("startpage.image1", RES_TENGEN.loadImage("graphics/f1.png"));
+        assets.store("startpage.image2", RES_TENGEN.loadImage("graphics/f2.png"));
+        assets.store("color.game_over_message", nesPaletteColor(0x11));
+        assets.store("color.ready_message",     nesPaletteColor(0x28));
 
         RectShort[] symbolSprites = spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS);
         RectShort[] valueSprites  = spriteSheet.spriteSequence(SpriteID.BONUS_VALUES);
         for (byte symbol = 0; symbol <= 13; ++symbol) {
-            storeLocalAssetValue(assets, "bonus_symbol_" + symbol, spriteSheet.image(symbolSprites[symbol]));
-            storeLocalAssetValue(assets, "bonus_value_"  + symbol, spriteSheet.image(valueSprites[symbol]));
+            assets.store("bonus_symbol_" + symbol, spriteSheet.image(symbolSprites[symbol]));
+            assets.store("bonus_value_"  + symbol, spriteSheet.image(valueSprites[symbol]));
         }
 
-        storeLocalAssetValue(assets, "pac.color.head",                   nesPaletteColor(0x28));
-        storeLocalAssetValue(assets, "pac.color.eyes",                   nesPaletteColor(0x02));
-        storeLocalAssetValue(assets, "pac.color.palate",                 nesPaletteColor(0x2d));
-        storeLocalAssetValue(assets, "pac.color.boobs",                  nesPaletteColor(0x28).deriveColor(0, 1.0, 0.96, 1.0));
-        storeLocalAssetValue(assets, "pac.color.hairbow",                nesPaletteColor(0x05));
-        storeLocalAssetValue(assets, "pac.color.hairbow.pearls",         nesPaletteColor(0x02));
+        assets.store("pac.color.head",                   nesPaletteColor(0x28));
+        assets.store("pac.color.eyes",                   nesPaletteColor(0x02));
+        assets.store("pac.color.palate",                 nesPaletteColor(0x2d));
+        assets.store("pac.color.boobs",                  nesPaletteColor(0x28).deriveColor(0, 1.0, 0.96, 1.0));
+        assets.store("pac.color.hairbow",                nesPaletteColor(0x05));
+        assets.store("pac.color.hairbow.pearls",         nesPaletteColor(0x02));
 
         RectShort[] numberSprites = spriteSheet.spriteSequence(SpriteID.GHOST_NUMBERS);
-        storeLocalAssetValue(assets, "ghost_points_0",                   spriteSheet.image(numberSprites[0]));
-        storeLocalAssetValue(assets, "ghost_points_1",                   spriteSheet.image(numberSprites[1]));
-        storeLocalAssetValue(assets, "ghost_points_2",                   spriteSheet.image(numberSprites[2]));
-        storeLocalAssetValue(assets, "ghost_points_3",                   spriteSheet.image(numberSprites[3]));
+        assets.store("ghost_points_0",                   spriteSheet.image(numberSprites[0]));
+        assets.store("ghost_points_1",                   spriteSheet.image(numberSprites[1]));
+        assets.store("ghost_points_2",                   spriteSheet.image(numberSprites[2]));
+        assets.store("ghost_points_3",                   spriteSheet.image(numberSprites[3]));
 
-        storeLocalAssetValue(assets, "ghost.0.color.normal.dress",       nesPaletteColor(0x05));
-        storeLocalAssetValue(assets, "ghost.0.color.normal.eyeballs",    nesPaletteColor(0x20));
-        storeLocalAssetValue(assets, "ghost.0.color.normal.pupils",      nesPaletteColor(0x16));
+        assets.store("ghost.0.color.normal.dress",       nesPaletteColor(0x05));
+        assets.store("ghost.0.color.normal.eyeballs",    nesPaletteColor(0x20));
+        assets.store("ghost.0.color.normal.pupils",      nesPaletteColor(0x16));
 
-        storeLocalAssetValue(assets, "ghost.1.color.normal.dress",       nesPaletteColor(0x25));
-        storeLocalAssetValue(assets, "ghost.1.color.normal.eyeballs",    nesPaletteColor(0x20));
-        storeLocalAssetValue(assets, "ghost.1.color.normal.pupils",      nesPaletteColor(0x11));
+        assets.store("ghost.1.color.normal.dress",       nesPaletteColor(0x25));
+        assets.store("ghost.1.color.normal.eyeballs",    nesPaletteColor(0x20));
+        assets.store("ghost.1.color.normal.pupils",      nesPaletteColor(0x11));
 
-        storeLocalAssetValue(assets, "ghost.2.color.normal.dress",       nesPaletteColor(0x11));
-        storeLocalAssetValue(assets, "ghost.2.color.normal.eyeballs",    nesPaletteColor(0x20));
-        storeLocalAssetValue(assets, "ghost.2.color.normal.pupils",      nesPaletteColor(0x11));
+        assets.store("ghost.2.color.normal.dress",       nesPaletteColor(0x11));
+        assets.store("ghost.2.color.normal.eyeballs",    nesPaletteColor(0x20));
+        assets.store("ghost.2.color.normal.pupils",      nesPaletteColor(0x11));
 
-        storeLocalAssetValue(assets, "ghost.3.color.normal.dress",       nesPaletteColor(0x16));
-        storeLocalAssetValue(assets, "ghost.3.color.normal.eyeballs",    nesPaletteColor(0x20));
-        storeLocalAssetValue(assets, "ghost.3.color.normal.pupils",      nesPaletteColor(0x05));
+        assets.store("ghost.3.color.normal.dress",       nesPaletteColor(0x16));
+        assets.store("ghost.3.color.normal.eyeballs",    nesPaletteColor(0x20));
+        assets.store("ghost.3.color.normal.pupils",      nesPaletteColor(0x05));
 
-        storeLocalAssetValue(assets, "ghost.color.frightened.dress",     nesPaletteColor(0x01));
-        storeLocalAssetValue(assets, "ghost.color.frightened.eyeballs",  nesPaletteColor(0x20));
-        storeLocalAssetValue(assets, "ghost.color.frightened.pupils",    nesPaletteColor(0x20));
+        assets.store("ghost.color.frightened.dress",     nesPaletteColor(0x01));
+        assets.store("ghost.color.frightened.eyeballs",  nesPaletteColor(0x20));
+        assets.store("ghost.color.frightened.pupils",    nesPaletteColor(0x20));
 
         //TODO sprite sheet provides two flashing colors, when to use which?
-        storeLocalAssetValue(assets, "ghost.color.flashing.dress",       nesPaletteColor(0x20));
-        storeLocalAssetValue(assets, "ghost.color.flashing.eyeballs",    nesPaletteColor(0x20));
-        storeLocalAssetValue(assets, "ghost.color.flashing.pupils",      nesPaletteColor(0x20));
+        assets.store("ghost.color.flashing.dress",       nesPaletteColor(0x20));
+        assets.store("ghost.color.flashing.eyeballs",    nesPaletteColor(0x20));
+        assets.store("ghost.color.flashing.pupils",      nesPaletteColor(0x20));
 
         soundManager.registerAudioClip("audio.option.selection_changed",  RES_TENGEN.url("sound/ms-select1.wav"));
         soundManager.registerAudioClip("audio.option.value_changed",      RES_TENGEN.url("sound/ms-select2.wav"));
@@ -233,7 +238,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     @Override
     public void dispose() {
         //TODO this method is not yet called!
-        ui.assets().removeAll(ASSET_NAMESPACE + ".");
+        assets.removeAll();
         if (arcadeMapsSpriteSheet != null) {
             //arcadeMapsSpriteSheet.dispose();
             arcadeMapsSpriteSheet = null;
@@ -263,9 +268,6 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     }
 
     @Override
-    public String assetNamespace() { return ASSET_NAMESPACE; }
-
-    @Override
     public boolean hasGameCanvasRoundedBorder() { return false; }
 
     @Override
@@ -291,12 +293,12 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public Image killedGhostPointsImage(Ghost ghost, int killedIndex) {
-        return localAssetImage("ghost_points_" + killedIndex);
+        return assets.image("ghost_points_" + killedIndex);
     }
 
     @Override
     public Image bonusSymbolImage(byte symbol) {
-        return localAssetImage("bonus_symbol_" + symbol);
+        return assets.image("bonus_symbol_" + symbol);
     }
 
     @Override
@@ -309,7 +311,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
             case TengenMsPacMan_GameModel.BONUS_ICE_CREAM -> 7; // 4000!
             default -> symbol;
         };
-        return localAssetImage("bonus_value_" + usedSymbol);
+        return assets.image("bonus_value_" + usedSymbol);
     }
 
     @Override
@@ -332,12 +334,12 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     public MsPacManBody createLivesCounterShape3D() {
         return ui.assets().theModel3DRepository().createMsPacManBody(
             ui.uiPreferences().getFloat("3d.lives_counter.shape_size"),
-            localAssetColor("pac.color.head"),
-            localAssetColor("pac.color.eyes"),
-            localAssetColor("pac.color.palate"),
-            localAssetColor("pac.color.hairbow"),
-            localAssetColor("pac.color.hairbow.pearls"),
-            localAssetColor("pac.color.boobs")
+            assets.color("pac.color.head"),
+            assets.color("pac.color.eyes"),
+            assets.color("pac.color.palate"),
+            assets.color("pac.color.hairbow"),
+            assets.color("pac.color.hairbow.pearls"),
+            assets.color("pac.color.boobs")
         );
     }
 
@@ -348,14 +350,14 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
             animationRegistry,
             pac,
             ui.uiPreferences().getFloat("3d.pac.size"),
-            localAssetColor("pac.color.head"),
-            localAssetColor("pac.color.eyes"),
-            localAssetColor("pac.color.palate"),
-            localAssetColor("pac.color.hairbow"),
-            localAssetColor("pac.color.hairbow.pearls"),
-            localAssetColor("pac.color.boobs")
+            assets.color("pac.color.head"),
+            assets.color("pac.color.eyes"),
+            assets.color("pac.color.palate"),
+            assets.color("pac.color.hairbow"),
+            assets.color("pac.color.hairbow.pearls"),
+            assets.color("pac.color.boobs")
         );
-        pac3D.light().setColor(localAssetColor("pac.color.head").desaturate());
+        pac3D.light().setColor(assets.color("pac.color.head").desaturate());
         return pac3D;
     }
 

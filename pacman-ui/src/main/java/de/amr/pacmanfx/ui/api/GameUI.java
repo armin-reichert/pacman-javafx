@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.api;
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.DirectoryWatchdog;
 import de.amr.pacmanfx.ui.ActionBinding;
-import de.amr.pacmanfx.ui.GameAssets;
+import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.sound.SoundManager;
@@ -28,7 +28,7 @@ public interface GameUI extends GameUI_Lifecycle, GameUI_ConfigManager, GameUI_V
     /**
      * @return assets (fonts, sounds, colors, localized texts etc.) for the different games
      */
-    GameAssets assets();
+    GlobalAssets assets();
 
     /**
      * @return watchdog process observing the directory where user-defined maps are stored

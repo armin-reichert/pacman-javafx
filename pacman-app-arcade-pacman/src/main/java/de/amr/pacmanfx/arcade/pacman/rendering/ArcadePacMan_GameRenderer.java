@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.*;
@@ -106,7 +105,7 @@ public class ArcadePacMan_GameRenderer extends GameRenderer {
         ctx().save();
         ctx().scale(scaling(), scaling());
         if (mazeHighlighted) {
-            Image brightMazeImage = uiConfig.theUI().assets().image(ArcadePacMan_UIConfig.ASSET_NAMESPACE + ".flashing_maze");
+            Image brightMazeImage = uiConfig.assets().image("flashing_maze");
             ctx().drawImage(brightMazeImage, 0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);
         }
         else if (gameLevel.uneatenFoodCount() == 0) {

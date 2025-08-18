@@ -36,6 +36,7 @@ import javafx.scene.paint.Color;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.OptionalInt;
+import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
@@ -43,8 +44,6 @@ import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_UIConfig implements GameUI_Config {
-
-    public static final String ASSET_NAMESPACE = "pacman";
 
     private static final ResourceManager RES_GAME_UI = () -> GameUI_Implementation.class;
     private static final ResourceManager RES_ARCADE_PAC_MAN = () -> ArcadePacMan_UIConfig.class;
@@ -60,6 +59,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
     private static final WorldMapColorScheme MAP_COLORING = new WorldMapColorScheme("#000000", "#2121ff", "#fcb5ff", "#febdb4");
 
     private final GameUI ui;
+    private final AssetStorage assets = new AssetStorage();
     private final DefaultSoundManager soundManager = new DefaultSoundManager();
     private final Map<String, GameScene> scenesByID = new HashMap<>();
     private final ArcadePacMan_SpriteSheet spriteSheet;
@@ -67,6 +67,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
     public ArcadePacMan_UIConfig(GameUI ui) {
         this.ui = requireNonNull(ui);
         spriteSheet = new ArcadePacMan_SpriteSheet(RES_ARCADE_PAC_MAN.loadImage("graphics/pacman_spritesheet.png"));
+        assets.setTextResources(ResourceBundle.getBundle("de.amr.pacmanfx.arcade.pacman.localized_texts"));
     }
 
     @Override
@@ -74,59 +75,63 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
         return ui;
     }
 
+    public AssetStorage assets() {
+        return assets;
+    }
+
     @Override
     public ArcadePacMan_SpriteSheet spriteSheet() {
         return spriteSheet;
     }
 
-    public void storeAssets(AssetStorage assets) {
-        storeLocalAssetValue(assets, "spritesheet", spriteSheet);
-        storeLocalAssetValue(assets, "app_icon",         RES_ARCADE_PAC_MAN.loadImage("graphics/icons/pacman.png"));
-        storeLocalAssetValue(assets, "startpage.image1", RES_ARCADE_PAC_MAN.loadImage("graphics/f1.jpg"));
-        storeLocalAssetValue(assets, "startpage.image2", RES_ARCADE_PAC_MAN.loadImage("graphics/f2.jpg"));
-        storeLocalAssetValue(assets, "startpage.image3", RES_ARCADE_PAC_MAN.loadImage("graphics/f3.jpg"));
-        storeLocalAssetValue(assets, "flashing_maze",    RES_ARCADE_PAC_MAN.loadImage("graphics/maze_flashing.png"));
-        storeLocalAssetValue(assets, "color.game_over_message", ARCADE_RED);
+    public void storeAssets() {
+        assets.store("spritesheet", spriteSheet);
+        assets.store("app_icon",         RES_ARCADE_PAC_MAN.loadImage("graphics/icons/pacman.png"));
+        assets.store("startpage.image1", RES_ARCADE_PAC_MAN.loadImage("graphics/f1.jpg"));
+        assets.store("startpage.image2", RES_ARCADE_PAC_MAN.loadImage("graphics/f2.jpg"));
+        assets.store("startpage.image3", RES_ARCADE_PAC_MAN.loadImage("graphics/f3.jpg"));
+        assets.store("flashing_maze",    RES_ARCADE_PAC_MAN.loadImage("graphics/maze_flashing.png"));
+        assets.store("color.game_over_message", ARCADE_RED);
 
         RectShort[] symbolSprites = spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS);
         RectShort[] valueSprites  = spriteSheet.spriteSequence(SpriteID.BONUS_VALUES);
         for (byte symbol = 0; symbol <= 7; ++symbol) {
-            storeLocalAssetValue(assets, "bonus_symbol_" + symbol, spriteSheet.image(symbolSprites[symbol]));
-            storeLocalAssetValue(assets, "bonus_value_"  + symbol, spriteSheet.image(valueSprites[symbol]));
+            assets.store("bonus_symbol_" + symbol, spriteSheet.image(symbolSprites[symbol]));
+            assets.store("bonus_value_"  + symbol, spriteSheet.image(valueSprites[symbol]));
         }
 
-        storeLocalAssetValue(assets, "pac.color.head",   ARCADE_YELLOW);
-        storeLocalAssetValue(assets, "pac.color.eyes",   Color.grayRgb(33));
-        storeLocalAssetValue(assets, "pac.color.palate", ARCADE_BROWN);
+        assets.store("pac.color.head",   ARCADE_YELLOW);
+        assets.store("pac.color.eyes",   Color.grayRgb(33));
+        assets.store("pac.color.palate", ARCADE_BROWN);
 
         RectShort[] numberSprites = spriteSheet.spriteSequence(SpriteID.GHOST_NUMBERS);
-        storeLocalAssetValue(assets, "ghost_points_0", spriteSheet.image(numberSprites[0]));
-        storeLocalAssetValue(assets, "ghost_points_1", spriteSheet.image(numberSprites[1]));
-        storeLocalAssetValue(assets, "ghost_points_2", spriteSheet.image(numberSprites[2]));
-        storeLocalAssetValue(assets, "ghost_points_3", spriteSheet.image(numberSprites[3]));
+        assets.store("ghost_points_0", spriteSheet.image(numberSprites[0]));
+        assets.store("ghost_points_1", spriteSheet.image(numberSprites[1]));
+        assets.store("ghost_points_2", spriteSheet.image(numberSprites[2]));
+        assets.store("ghost_points_3", spriteSheet.image(numberSprites[3]));
 
-        storeLocalAssetValue(assets, "ghost.0.color.normal.dress",      ARCADE_RED);
-        storeLocalAssetValue(assets, "ghost.0.color.normal.eyeballs",   ARCADE_WHITE);
-        storeLocalAssetValue(assets, "ghost.0.color.normal.pupils",     ARCADE_BLUE);
+        assets.store("ghost.0.color.normal.dress",      ARCADE_RED);
+        assets.store("ghost.0.color.normal.eyeballs",   ARCADE_WHITE);
+        assets.store("ghost.0.color.normal.pupils",     ARCADE_BLUE);
 
-        storeLocalAssetValue(assets, "ghost.1.color.normal.dress",      ARCADE_PINK);
-        storeLocalAssetValue(assets, "ghost.1.color.normal.eyeballs",   ARCADE_WHITE);
-        storeLocalAssetValue(assets, "ghost.1.color.normal.pupils",     ARCADE_BLUE);
+        assets.store("ghost.1.color.normal.dress",      ARCADE_PINK);
+        assets.store("ghost.1.color.normal.eyeballs",   ARCADE_WHITE);
+        assets.store("ghost.1.color.normal.pupils",     ARCADE_BLUE);
 
-        storeLocalAssetValue(assets, "ghost.2.color.normal.dress",      ARCADE_CYAN);
-        storeLocalAssetValue(assets, "ghost.2.color.normal.eyeballs",   ARCADE_WHITE);
-        storeLocalAssetValue(assets, "ghost.2.color.normal.pupils",     ARCADE_BLUE);
+        assets.store("ghost.2.color.normal.dress",      ARCADE_CYAN);
+        assets.store("ghost.2.color.normal.eyeballs",   ARCADE_WHITE);
+        assets.store("ghost.2.color.normal.pupils",     ARCADE_BLUE);
 
-        storeLocalAssetValue(assets, "ghost.3.color.normal.dress",      ARCADE_ORANGE);
-        storeLocalAssetValue(assets, "ghost.3.color.normal.eyeballs",   ARCADE_WHITE);
-        storeLocalAssetValue(assets, "ghost.3.color.normal.pupils",     ARCADE_BLUE);
+        assets.store("ghost.3.color.normal.dress",      ARCADE_ORANGE);
+        assets.store("ghost.3.color.normal.eyeballs",   ARCADE_WHITE);
+        assets.store("ghost.3.color.normal.pupils",     ARCADE_BLUE);
 
-        storeLocalAssetValue(assets, "ghost.color.frightened.dress",    ARCADE_BLUE);
-        storeLocalAssetValue(assets, "ghost.color.frightened.eyeballs", ARCADE_ROSE);
-        storeLocalAssetValue(assets, "ghost.color.frightened.pupils",   ARCADE_ROSE);
-        storeLocalAssetValue(assets, "ghost.color.flashing.dress",      ARCADE_WHITE);
-        storeLocalAssetValue(assets, "ghost.color.flashing.eyeballs",   ARCADE_ROSE);
-        storeLocalAssetValue(assets, "ghost.color.flashing.pupils",     ARCADE_RED);
+        assets.store("ghost.color.frightened.dress",    ARCADE_BLUE);
+        assets.store("ghost.color.frightened.eyeballs", ARCADE_ROSE);
+        assets.store("ghost.color.frightened.pupils",   ARCADE_ROSE);
+        assets.store("ghost.color.flashing.dress",      ARCADE_WHITE);
+        assets.store("ghost.color.flashing.eyeballs",   ARCADE_ROSE);
+        assets.store("ghost.color.flashing.pupils",     ARCADE_RED);
 
         soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_OFF, RES_GAME_UI.url("sound/voice/autopilot-off.mp3"));
         soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_ON,  RES_GAME_UI.url("sound/voice/autopilot-on.mp3"));
@@ -155,18 +160,13 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
 
     @Override
     public void dispose() {
-        ui.assets().removeAll(ASSET_NAMESPACE + ".");
+        assets.removeAll();
         soundManager.dispose();
     }
 
     @Override
     public SoundManager soundManager() {
         return soundManager;
-    }
-
-    @Override
-    public String assetNamespace() {
-        return ASSET_NAMESPACE;
     }
 
     @Override
@@ -191,26 +191,26 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
 
     @Override
     public Image killedGhostPointsImage(Ghost ghost, int killedIndex) {
-        return localAssetImage("ghost_points_" + killedIndex);
+        return assets.image("ghost_points_" + killedIndex);
     }
 
     @Override
     public Image bonusSymbolImage(byte symbol) {
-        return localAssetImage("bonus_symbol_" + symbol);
+        return assets.image("bonus_symbol_" + symbol);
     }
 
     @Override
     public Image bonusValueImage(byte symbol) {
-        return localAssetImage("bonus_value_" + symbol);
+        return assets.image("bonus_value_" + symbol);
     }
 
     @Override
     public PacBody createLivesCounterShape3D() {
         return ui.assets().theModel3DRepository().createPacBody(
             ui.uiPreferences().getFloat("3d.lives_counter.shape_size"),
-            localAssetColor("pac.color.head"),
-            localAssetColor("pac.color.eyes"),
-            localAssetColor("pac.color.palate")
+            assets.color("pac.color.head"),
+            assets.color("pac.color.eyes"),
+            assets.color("pac.color.palate")
         );
     }
 
@@ -221,10 +221,10 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
             gameLevel,
             pac,
             ui.uiPreferences().getFloat("3d.pac.size"),
-            localAssetColor("pac.color.head"),
-            localAssetColor("pac.color.eyes"),
-            localAssetColor("pac.color.palate"));
-        pac3D.light().setColor(localAssetColor("pac.color.head").desaturate());
+            assets.color("pac.color.head"),
+            assets.color("pac.color.eyes"),
+            assets.color("pac.color.palate"));
+        pac3D.light().setColor(assets.color("pac.color.head").desaturate());
         return pac3D;
     }
 

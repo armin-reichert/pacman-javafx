@@ -14,7 +14,7 @@ import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.model.actors.BonusState;
-import de.amr.pacmanfx.ui.GameAssets;
+import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -29,12 +29,12 @@ import static java.util.function.Predicate.not;
 
 public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
 
-    protected GameAssets assets;
+    protected GlobalAssets assets;
     protected ArcadeMsPacMan_SpriteSheet spriteSheet;
     protected BrightMazesSpriteSheet brightMazesSpriteSheet;
 
     public ArcadeMsPacMan_GameRenderer(
-        GameAssets assets,
+        GlobalAssets assets,
         Canvas canvas,
         ArcadeMsPacMan_SpriteSheet spriteSheet,
         BrightMazesSpriteSheet brightMazesSpriteSheet)
@@ -45,7 +45,7 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer {
         setCanvas(canvas);
     }
 
-    protected ArcadeMsPacMan_GameRenderer(GameAssets assets, Canvas canvas, ArcadeMsPacMan_SpriteSheet spriteSheet) {
+    protected ArcadeMsPacMan_GameRenderer(GlobalAssets assets, Canvas canvas, ArcadeMsPacMan_SpriteSheet spriteSheet) {
         this(assets, canvas, spriteSheet, null);
     }
 

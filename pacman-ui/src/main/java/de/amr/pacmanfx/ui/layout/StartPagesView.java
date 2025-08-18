@@ -40,7 +40,7 @@ public class StartPagesView implements GameUI_View {
 
     private static final Supplier<String> TITLE_SUPPLIER = () -> "JavaFX Pac-Man Games";
 
-    public static FancyButton createStartButton(GameAssets assets, Pos alignment) {
+    public static FancyButton createStartButton(GlobalAssets assets, Pos alignment) {
         var button = new FancyButton(
                 assets.translated("play_button"),
                 assets.arcadeFont(30),

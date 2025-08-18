@@ -85,7 +85,7 @@ public class GameUI_Implementation implements GameUI {
         new ActionBinding(ACTION_TOGGLE_DRAW_MODE,            alt(KeyCode.W))
     );
 
-    private final GameAssets assets;
+    private final GlobalAssets assets;
     private final DirectoryWatchdog customDirectoryWatchdog;
     private final GameClock clock;
     private final GameContext gameContext;
@@ -123,7 +123,7 @@ public class GameUI_Implementation implements GameUI {
 
         // Game UI
         this.stage = stage;
-        assets = new GameAssets();
+        assets = new GlobalAssets();
         prefs = new GameUI_Preferences();
         PROPERTY_3D_WALL_HEIGHT.set(prefs.getFloat("3d.obstacle.base_height"));
         PROPERTY_3D_WALL_OPACITY.set(prefs.getFloat("3d.obstacle.opacity"));
@@ -209,7 +209,7 @@ public class GameUI_Implementation implements GameUI {
         ));
     }
 
-    // Asset key regex: app.title.(ms_pacman|ms_pacman_xxl|pacman,pacman_xxl|tengen)(.paused)?
+    // Asset key: "app.title" or "app.title.paused"
     private String computeStageTitle() {
         var currentView = PROPERTY_CURRENT_VIEW.get();
         if (currentView == null) {
@@ -218,14 +218,12 @@ public class GameUI_Implementation implements GameUI {
         if (currentView.titleSupplier().isPresent()) {
             return currentView.titleSupplier().get().get();
         }
-
         boolean mode3D = PROPERTY_3D_ENABLED.get();
         boolean modeDebug = PROPERTY_DEBUG_INFO_VISIBLE.get();
-        String namespace      = currentConfig().assetNamespace();
-        String paused         = clock().isPaused() ? ".paused" : "";
-        String assetKey       = "app.title.%s%s".formatted(namespace, paused);
+        String assetKey       = clock().isPaused() ? "app.title.paused" : "app.title";
         String translatedMode = assets().translated(mode3D ? "threeD" : "twoD");
-        String shortTitle     = assets().translated(assetKey, translatedMode);
+
+        String shortTitle     = currentConfig().assets().translated(assetKey, translatedMode);
 
         var currentGameScene = currentGameScene().orElse(null);
         if (currentGameScene == null || !modeDebug) {
@@ -317,7 +315,7 @@ public class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public GameAssets assets() {
+    public GlobalAssets assets() {
         return assets;
     }
 
@@ -416,10 +414,10 @@ public class GameUI_Implementation implements GameUI {
 
         GameUI_Config newConfig = config(gameVariant);
         Logger.info("Loading assets for game variant {}", gameVariant);
-        newConfig.storeAssets(assets());
+        newConfig.storeAssets();
         newConfig.soundManager().mutedProperty().bind(PROPERTY_MUTED);
 
-        Image appIcon = assets.image(newConfig.assetNamespace() + ".app_icon");
+        Image appIcon = newConfig.assets().image("app_icon");
         if (appIcon != null) {
             stage.getIcons().setAll(appIcon);
         } else {

@@ -325,11 +325,11 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer {
         float x = position.x(), y = position.y() + TS;
         switch (level.messageType()) {
             case GameLevel.MESSAGE_READY
-                -> fillTextCentered("READY!", uiConfig.localAssetColor("color.ready_message"), font, x, y);
+                -> fillTextCentered("READY!", uiConfig.assets().color("color.ready_message"), font, x, y);
             case GameLevel.MESSAGE_GAME_OVER -> {
                 Color color = level.isDemoLevel()
                     ? Color.web(nesColorScheme.strokeColorRGB())
-                    : uiConfig.localAssetColor("color.game_over_message");
+                    : uiConfig.assets().color("color.game_over_message");
                 fillTextCentered("GAME OVER", color, font, x, y);
             }
             case GameLevel.MESSAGE_TEST

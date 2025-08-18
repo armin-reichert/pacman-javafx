@@ -83,7 +83,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
         spriteSheet = (ArcadeMsPacMan_SpriteSheet) ui.currentConfig().spriteSheet();
 
-        midwayCopyright = new MidwayCopyright(ui.currentConfig().localAssetImage("logo.midway"));
+        midwayCopyright = new MidwayCopyright(ui.currentConfig().assets().image("logo.midway"));
         midwayCopyright.setPosition(TS * 6, TS * 28);
         midwayCopyright.show();
 
