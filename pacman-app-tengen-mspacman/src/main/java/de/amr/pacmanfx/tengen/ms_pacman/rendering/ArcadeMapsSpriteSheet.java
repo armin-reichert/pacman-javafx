@@ -18,25 +18,25 @@ public record ArcadeMapsSpriteSheet(Image sourceImage) implements SpriteSheet<Ar
     private static final int MAZE_SPRITE_HEIGHT = 31 * TS;
 
     public enum MazeID {
-        MAZE1, MAZE2, MAZE3, MAZE4, MAZE5, MAZE6, MAZE7, MAZE8, MAZE9;
+        MAZE1, MAZE2, MAZE3, MAZE4, MAZE5, MAZE6, MAZE7, MAZE8, MAZE9
     }
 
     private static final SpriteMap<MazeID> SPRITE_MAP = new SpriteMap<>(MazeID.class);
 
-    private static RectShort crop(int row, int col) {
+    private static RectShort spriteAtCell(int row, int col) {
         return new RectShort(col * MAZE_SPRITE_WIDTH, row * MAZE_SPRITE_HEIGHT, MAZE_SPRITE_WIDTH, MAZE_SPRITE_HEIGHT);
     }
 
     static {
-        SPRITE_MAP.add(MazeID.MAZE1, crop(0, 0));
-        SPRITE_MAP.add(MazeID.MAZE2, crop(0, 1));
-        SPRITE_MAP.add(MazeID.MAZE3, crop(0, 2));
-        SPRITE_MAP.add(MazeID.MAZE4, crop(1, 0));
-        SPRITE_MAP.add(MazeID.MAZE5, crop(1, 1));
-        SPRITE_MAP.add(MazeID.MAZE6, crop(1, 2));
-        SPRITE_MAP.add(MazeID.MAZE7, crop(2, 0));
-        SPRITE_MAP.add(MazeID.MAZE8, crop(2, 1));
-        SPRITE_MAP.add(MazeID.MAZE9, crop(2, 2));
+        SPRITE_MAP.add(MazeID.MAZE1, spriteAtCell(0, 0));
+        SPRITE_MAP.add(MazeID.MAZE2, spriteAtCell(0, 1));
+        SPRITE_MAP.add(MazeID.MAZE3, spriteAtCell(0, 2));
+        SPRITE_MAP.add(MazeID.MAZE4, spriteAtCell(1, 0));
+        SPRITE_MAP.add(MazeID.MAZE5, spriteAtCell(1, 1));
+        SPRITE_MAP.add(MazeID.MAZE6, spriteAtCell(1, 2));
+        SPRITE_MAP.add(MazeID.MAZE7, spriteAtCell(2, 0));
+        SPRITE_MAP.add(MazeID.MAZE8, spriteAtCell(2, 1));
+        SPRITE_MAP.add(MazeID.MAZE9, spriteAtCell(2, 2));
     }
 
     @Override
