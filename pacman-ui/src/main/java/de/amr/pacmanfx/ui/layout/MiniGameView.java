@@ -8,7 +8,6 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui._2d.GameRenderer;
 import de.amr.pacmanfx.ui.api.GameUI;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
 import javafx.beans.binding.Bindings;
@@ -25,7 +24,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
 import java.util.stream.Stream;
@@ -38,13 +36,13 @@ import static java.util.Objects.requireNonNull;
 
 public class MiniGameView extends VBox {
 
-    public static final Vector2f ARCADE_SIZE = Vector2f.of(28, 36);
+    public static final Vector2f ARCADE_SIZE = Vector2f.of(28*TS, 36*TS);
 
     public static final Duration SLIDE_IN_DURATION = Duration.seconds(1);
     public static final Duration SLIDE_OUT_DURATION = Duration.seconds(2);
 
     private final DoubleProperty scaling = new SimpleDoubleProperty(1.0f);
-    private final ObjectProperty<Vector2f> worldSize = new SimpleObjectProperty<>(ARCADE_SIZE.scaled(TS));
+    private final ObjectProperty<Vector2f> worldSize = new SimpleObjectProperty<>(ARCADE_SIZE);
 
     private final HBox layout;
     private final Canvas canvas;
@@ -142,13 +140,11 @@ public class MiniGameView extends VBox {
         }
 
         if (PROPERTY_DEBUG_INFO_VISIBLE.get()) {
-            gameRenderer.ctx().save();
-            gameRenderer.ctx().setTextAlign(TextAlignment.CENTER);
-            gameRenderer.ctx().setFill(Color.WHITE);
-            gameRenderer.ctx().setFont(Font.font(14 * scaling.get()));
-            gameRenderer.ctx().fillText("scaling: %.2f, draw calls: %d".formatted(scaling.doubleValue(), drawCallCount),
-                canvas.getWidth() * 0.5, 16 * scaling.get());
-            gameRenderer.ctx().restore();
+            gameRenderer.fillTextCentered(
+                "scaling: %.2f, draw calls: %d".formatted(scaling.doubleValue(), drawCallCount),
+                Color.WHITE, Font.font(14 * scaling.get()),
+                0.5 * worldSize.get().x(), 16
+            );
         }
     }
 }
