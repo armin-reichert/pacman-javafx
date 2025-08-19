@@ -30,7 +30,7 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.ACTION_STA
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Properties.PROPERTY_JOYPAD_BINDINGS_DISPLAYED;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesColor;
 import static de.amr.pacmanfx.ui.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.input.Keyboard.alt;
 
@@ -47,8 +47,8 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     private static final int COL_COLON = 19 * TS;
     private static final int COL_VALUE = 21  * TS;
 
-    private static final Color NES_YELLOW = nesPaletteColor(0x28);
-    private static final Color NES_WHITE = nesPaletteColor(0x20);
+    private static final Color NES_YELLOW = nesColor(0x28);
+    private static final Color NES_WHITE = nesColor(0x20);
 
     private static final byte OPTION_PLAYERS = 0;
     private static final byte OPTION_PAC_BOOSTER = 1;
@@ -252,8 +252,8 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
             renderer().drawJoypadKeyBinding(ui.joypad().currentKeyBinding());
         }
 
-        renderer().drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), sizeInPx().x(), 20);
-        renderer().drawBar(nesPaletteColor(0x20), nesPaletteColor(0x21), sizeInPx().x(), 212);
+        renderer().drawBar(nesColor(0x20), nesColor(0x21), sizeInPx().x(), 20);
+        renderer().drawBar(nesColor(0x20), nesColor(0x21), sizeInPx().x(), 212);
         renderer().fillText("MS PAC-MAN OPTIONS", NES_YELLOW, COL_LABEL + 3 * TS, 48);
 
         // Players (not implemented)
@@ -261,7 +261,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         renderer().fillText("TYPE", NES_YELLOW, COL_LABEL, 72);
         renderer().fillText(":", NES_YELLOW, COL_LABEL + 4 * TS + 4, 72);
         // grey out
-        renderer().fillText("1 PLAYER", nesPaletteColor(0x10), COL_LABEL + 6 * TS  , 72);
+        renderer().fillText("1 PLAYER", nesColor(0x10), COL_LABEL + 6 * TS  , 72);
 
         // Pac-Booster
         drawMarkerIfSelected(OPTION_PAC_BOOSTER, 96, scaledArcadeFont8());

@@ -40,7 +40,7 @@ import org.tinylog.Logger;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesColor;
 import static de.amr.pacmanfx.tengen.ms_pacman.rendering.NonArcadeMapsSpriteSheet.MazeID.MAZE32_ANIMATED;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
@@ -263,7 +263,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer implements DebugIn
                 fillTextCentered("GAME OVER", color, font, x, y);
             }
             case GameLevel.MESSAGE_TEST
-                -> fillTextCentered("TEST L%02d".formatted(level.number()), nesPaletteColor(0x28), font, x, y);
+                -> fillTextCentered("TEST L%02d".formatted(level.number()), nesColor(0x28), font, x, y);
         }
     }
 
@@ -353,7 +353,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer implements DebugIn
             ctx().restore();
 
             ctx().setFont(clapperboard.font());
-            ctx().setFill(nesPaletteColor(0x20));
+            ctx().setFill(nesColor(0x20));
             ctx().fillText(String.valueOf(clapperboard.number()), scaled(numberX), scaled(numberY));
             if (clapperboard.isTextVisible()) {
                 double textX = clapperboard.x() + sprite.width(), textY = clapperboard.y() + 2;

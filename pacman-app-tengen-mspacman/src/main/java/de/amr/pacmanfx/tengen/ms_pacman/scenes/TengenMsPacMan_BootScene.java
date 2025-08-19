@@ -28,7 +28,7 @@ import static de.amr.pacmanfx.uilib.rendering.GameRenderer.fillCanvas;
 public class TengenMsPacMan_BootScene extends GameScene2D {
 
     public static final String TENGEN_PRESENTS = "TENGEN PRESENTS";
-    public static final Color GRAY = nesPaletteColor(0x10);
+    public static final Color GRAY = nesColor(0x10);
 
     private static final float GHOST_Y = 21.5f * TS;
 

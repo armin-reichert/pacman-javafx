@@ -23,7 +23,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesPaletteColor;
+import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesColor;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_HUDRenderer extends BaseRenderer implements HUDRenderer {
@@ -46,7 +46,7 @@ public class TengenMsPacMan_HUDRenderer extends BaseRenderer implements HUDRende
         Font font = uiConfig.theUI().assets().arcadeFont(TS);
         TengenMsPacMan_GameModel game = gameContext.game();
         if (data.isScoreVisible()) {
-            drawScores(gameContext, nesPaletteColor(0x20), font);
+            drawScores(gameContext, nesColor(0x20), font);
         }
         if (data.isLivesCounterVisible()) {
             drawLivesCounter(data.theLivesCounter(), game.lifeCount(), TS(2), sceneSize.y() - TS);
@@ -82,7 +82,7 @@ public class TengenMsPacMan_HUDRenderer extends BaseRenderer implements HUDRende
         }
         if (lifeCount > livesCounter.maxLivesDisplayed()) {
             Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
-            fillText("(%d)".formatted(lifeCount), nesPaletteColor(0x28), font, x + TS(10), y + TS);
+            fillText("(%d)".formatted(lifeCount), nesColor(0x28), font, x + TS(10), y + TS);
         }
     }
 

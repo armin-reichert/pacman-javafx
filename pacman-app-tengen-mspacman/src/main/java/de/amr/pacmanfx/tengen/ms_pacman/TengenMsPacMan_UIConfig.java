@@ -80,20 +80,19 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     private static final ResourceManager RES_GAME_UI = () -> GameUI_Implementation.class;
     private static final ResourceManager RES_TENGEN  = () -> TengenMsPacMan_UIConfig.class;
 
-    private static final Color[] NES_PALETTE_COLORS = IntStream.range(0, 64)
-        .mapToObj(NES_Palette::color)
-        .map(Color::web).toArray(Color[]::new);
+    private static final Color[] NES_COLORS = IntStream.range(0, 64)
+        .mapToObj(NES_Palette::color).map(Color::web).toArray(Color[]::new);
 
     /**
      * @param index NES color palette index
      * @return RGB color for palette entry
      */
-    public static Color nesPaletteColor(int index) {
-        return NES_PALETTE_COLORS[index];
+    public static Color nesColor(int index) {
+        return NES_COLORS[index];
     }
 
     private static final Color[] BLUE_SHADES = {
-        NES_PALETTE_COLORS[0x01], NES_PALETTE_COLORS[0x11], NES_PALETTE_COLORS[0x21], NES_PALETTE_COLORS[0x31]
+        NES_COLORS[0x01], NES_COLORS[0x11], NES_COLORS[0x21], NES_COLORS[0x31]
     };
 
     /**
@@ -156,6 +155,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     @Override
     public void loadAssets() {
         assets.set("app_icon",         RES_TENGEN.loadImage("graphics/icons/mspacman.png"));
+
         assets.set("startpage.image1", RES_TENGEN.loadImage("graphics/f1.png"));
         assets.set("startpage.image2", RES_TENGEN.loadImage("graphics/f2.png"));
 
@@ -166,15 +166,15 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
             assets.set("bonus_value_"  + symbol, spriteSheet.image(valueSprites[symbol]));
         }
 
-        assets.set("color.game_over_message",  nesPaletteColor(0x11));
-        assets.set("color.ready_message",      nesPaletteColor(0x28));
+        assets.set("color.game_over_message",  nesColor(0x11));
+        assets.set("color.ready_message",      nesColor(0x28));
 
-        assets.set("pac.color.head",           nesPaletteColor(0x28));
-        assets.set("pac.color.eyes",           nesPaletteColor(0x02));
-        assets.set("pac.color.palate",         nesPaletteColor(0x2d));
-        assets.set("pac.color.boobs",          nesPaletteColor(0x28).deriveColor(0, 1.0, 0.96, 1.0));
-        assets.set("pac.color.hairbow",        nesPaletteColor(0x05));
-        assets.set("pac.color.hairbow.pearls", nesPaletteColor(0x02));
+        assets.set("pac.color.head",           nesColor(0x28));
+        assets.set("pac.color.eyes",           nesColor(0x02));
+        assets.set("pac.color.palate",         nesColor(0x2d));
+        assets.set("pac.color.boobs",          nesColor(0x28).deriveColor(0, 1.0, 0.96, 1.0));
+        assets.set("pac.color.hairbow",        nesColor(0x05));
+        assets.set("pac.color.hairbow.pearls", nesColor(0x02));
 
         RectShort[] numberSprites = spriteSheet.spriteSequence(SpriteID.GHOST_NUMBERS);
         assets.set("ghost_points.0", spriteSheet.image(numberSprites[0]));
@@ -182,30 +182,30 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         assets.set("ghost_points.2", spriteSheet.image(numberSprites[2]));
         assets.set("ghost_points.3", spriteSheet.image(numberSprites[3]));
 
-        assets.set("ghost.0.color.normal.dress",       nesPaletteColor(0x05));
-        assets.set("ghost.0.color.normal.eyeballs",    nesPaletteColor(0x20));
-        assets.set("ghost.0.color.normal.pupils",      nesPaletteColor(0x16));
+        assets.set("ghost.0.color.normal.dress",       nesColor(0x05));
+        assets.set("ghost.0.color.normal.eyeballs",    nesColor(0x20));
+        assets.set("ghost.0.color.normal.pupils",      nesColor(0x16));
 
-        assets.set("ghost.1.color.normal.dress",       nesPaletteColor(0x25));
-        assets.set("ghost.1.color.normal.eyeballs",    nesPaletteColor(0x20));
-        assets.set("ghost.1.color.normal.pupils",      nesPaletteColor(0x11));
+        assets.set("ghost.1.color.normal.dress",       nesColor(0x25));
+        assets.set("ghost.1.color.normal.eyeballs",    nesColor(0x20));
+        assets.set("ghost.1.color.normal.pupils",      nesColor(0x11));
 
-        assets.set("ghost.2.color.normal.dress",       nesPaletteColor(0x11));
-        assets.set("ghost.2.color.normal.eyeballs",    nesPaletteColor(0x20));
-        assets.set("ghost.2.color.normal.pupils",      nesPaletteColor(0x11));
+        assets.set("ghost.2.color.normal.dress",       nesColor(0x11));
+        assets.set("ghost.2.color.normal.eyeballs",    nesColor(0x20));
+        assets.set("ghost.2.color.normal.pupils",      nesColor(0x11));
 
-        assets.set("ghost.3.color.normal.dress",       nesPaletteColor(0x16));
-        assets.set("ghost.3.color.normal.eyeballs",    nesPaletteColor(0x20));
-        assets.set("ghost.3.color.normal.pupils",      nesPaletteColor(0x05));
+        assets.set("ghost.3.color.normal.dress",       nesColor(0x16));
+        assets.set("ghost.3.color.normal.eyeballs",    nesColor(0x20));
+        assets.set("ghost.3.color.normal.pupils",      nesColor(0x05));
 
-        assets.set("ghost.color.frightened.dress",     nesPaletteColor(0x01));
-        assets.set("ghost.color.frightened.eyeballs",  nesPaletteColor(0x20));
-        assets.set("ghost.color.frightened.pupils",    nesPaletteColor(0x20));
+        assets.set("ghost.color.frightened.dress",     nesColor(0x01));
+        assets.set("ghost.color.frightened.eyeballs",  nesColor(0x20));
+        assets.set("ghost.color.frightened.pupils",    nesColor(0x20));
 
         //TODO sprite sheet provides two flashing colors, when to use which?
-        assets.set("ghost.color.flashing.dress",       nesPaletteColor(0x20));
-        assets.set("ghost.color.flashing.eyeballs",    nesPaletteColor(0x20));
-        assets.set("ghost.color.flashing.pupils",      nesPaletteColor(0x20));
+        assets.set("ghost.color.flashing.dress",       nesColor(0x20));
+        assets.set("ghost.color.flashing.eyeballs",    nesColor(0x20));
+        assets.set("ghost.color.flashing.pupils",      nesColor(0x20));
 
         soundManager.registerAudioClip("audio.option.selection_changed",  RES_TENGEN.url("sound/ms-select1.wav"));
         soundManager.registerAudioClip("audio.option.value_changed",      RES_TENGEN.url("sound/ms-select2.wav"));
@@ -214,6 +214,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         soundManager.registerVoice(SoundID.VOICE_AUTOPILOT_ON,            RES_GAME_UI.url("sound/voice/autopilot-on.mp3"));
         soundManager.registerVoice(SoundID.VOICE_IMMUNITY_OFF,            RES_GAME_UI.url("sound/voice/immunity-off.mp3"));
         soundManager.registerVoice(SoundID.VOICE_IMMUNITY_ON,             RES_GAME_UI.url("sound/voice/immunity-on.mp3"));
+        //TODO this is not used in Tengen Ms. Pac-Man, remove?
         soundManager.registerVoice(SoundID.VOICE_EXPLAIN,                 RES_GAME_UI.url("sound/voice/press-key.mp3"));
 
         soundManager.registerMediaPlayer(SoundID.BONUS_ACTIVE,            RES_TENGEN.url("sound/fruitbounce.wav"));
@@ -239,7 +240,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         soundManager.registerMediaPlayer(SoundID.SIREN_3,                 RES_TENGEN.url("sound/ms-siren2.wav"));// TODO
         soundManager.registerMediaPlayer(SoundID.SIREN_4,                 RES_TENGEN.url("sound/ms-siren2.wav"));// TODO
 
-        //TODO fix this in the sound file
+        //TODO fix the sound file instead
         MediaPlayer bounceSound = soundManager.mediaPlayer(SoundID.BONUS_ACTIVE);
         if (bounceSound != null) {
             bounceSound.setRate(0.25);
@@ -306,6 +307,13 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     }
 
     @Override
+    public HUDRenderer createHUDRenderer(Canvas canvas, DoubleProperty scaling) {
+        var hudRenderer = new TengenMsPacMan_HUDRenderer(this, canvas);
+        hudRenderer.scalingProperty().bind(scaling);
+        return hudRenderer;
+    }
+
+    @Override
     public Image killedGhostPointsImage(Ghost ghost, int killedIndex) {
         return assets.image("ghost_points." + killedIndex);
     }
@@ -337,13 +345,6 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     @Override
     public TengenMsPacMan_GhostAnimationManager createGhostAnimations(Ghost ghost) {
         return new TengenMsPacMan_GhostAnimationManager(spriteSheet(), ghost.id().personality());
-    }
-
-    @Override
-    public HUDRenderer createHUDRenderer(Canvas canvas, DoubleProperty scaling) {
-        var hudRenderer = new TengenMsPacMan_HUDRenderer(this, canvas);
-        hudRenderer.scalingProperty().bind(scaling);
-        return hudRenderer;
     }
 
     @Override
