@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.uilib;
 
 import de.amr.pacmanfx.lib.RectShort;
-import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.lib.nes.NES_Palette;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.assets.UIPreferences;
@@ -30,9 +29,7 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.io.PrintWriter;
-import java.util.HashSet;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
@@ -233,61 +230,42 @@ public interface Ufx {
         return section;
     }
 
-    static Image exchangeColors(Map<String, ColorChange> changes, Image source) {
-        WritableImage target = new WritableImage((int) source.getWidth(), (int) source.getHeight());
-        PixelReader sourceReader = source.getPixelReader();
-        PixelWriter w = target.getPixelWriter();
+    static Image replaceImageColors(
+        Image sourceImage,
+        Color fillFrom, Color strokeFrom, Color pelletFrom,
+        Color fillTo, Color strokeTo, Color pelletTo) {
 
-        Set<Color> colorsInImage = new HashSet<>();
-        for (int x = 0; x < source.getWidth(); ++x) {
-            for (int y = 0; y < source.getHeight(); ++y) {
-                Color color = sourceReader.getColor(x, y);
-                w.setColor(x, y, color);
-                colorsInImage.add(color);
-            }
-        }
-        Logger.info("Colors in image before: {}", colorsInImage);
-
+        WritableImage targetImage = new WritableImage((int) sourceImage.getWidth(), (int) sourceImage.getHeight());
+        PixelReader sourceReader = sourceImage.getPixelReader();
+        PixelWriter targetWriter = targetImage.getPixelWriter();
         boolean fillColorFound = false, strokeColorFound = false, pelletColorFound = false;
-        for (int x = 0; x < source.getWidth(); ++x) {
-            for (int y = 0; y < source.getHeight(); ++y) {
+        for (int x = 0; x < sourceImage.getWidth(); ++x) {
+            for (int y = 0; y < sourceImage.getHeight(); ++y) {
                 final Color color = sourceReader.getColor(x, y);
-                if (color.equals(changes.get("fill").from)) {
+                if (color.equals(fillFrom)) {
                     fillColorFound = true;
-                    w.setColor(x, y, changes.get("fill").to);
+                    targetWriter.setColor(x, y, fillTo);
                 }
-                else if (color.equals(changes.get("stroke").from)) {
+                else if (color.equals(strokeFrom)) {
                     strokeColorFound = true;
-                    w.setColor(x, y, changes.get("stroke").to);
+                    targetWriter.setColor(x, y, strokeTo);
                 }
-                else if (color.equals(changes.get("pellet").from)) {
+                else if (color.equals(pelletFrom)) {
                     pelletColorFound = true;
-                    w.setColor(x, y, changes.get("pellet").to);
+                    targetWriter.setColor(x, y, pelletTo);
                 }
             }
         }
         if (!fillColorFound) {
-            Logger.warn("Fill color {} not found in image, WTF?", changes.get("fill").from);
+            Logger.warn("Fill color {} not found in image, WTF?", fillFrom);
         }
         if (!strokeColorFound) {
-            Logger.warn("Stroke color {} not found in image, WTF?", changes.get("stroke").from);
+            Logger.warn("Stroke color {} not found in image, WTF?", strokeFrom);
         }
         if (!pelletColorFound) {
-            Logger.warn("Pellet color {} not found in image, WTF?", changes.get("pellet").from);
+            Logger.warn("Pellet color {} not found in image, WTF?", pelletFrom);
         }
-
-        colorsInImage.clear();
-        PixelReader targetReader = target.getPixelReader();
-        for (int x = 0; x < target.getWidth(); ++x) {
-            for (int y = 0; y < target.getHeight(); ++y) {
-                Color color = targetReader.getColor(x, y);
-                w.setColor(x, y, color);
-                colorsInImage.add(color);
-            }
-        }
-        Logger.info("Colors in image after: {}", colorsInImage);
-
-        return target;
+        return targetImage;
     }
 
     static Image recolorPixels(Image image, BiPredicate<Integer, Integer> insideMaskedArea, Color maskColor) {
@@ -320,15 +298,6 @@ public interface Ufx {
             }
         }
         return found;
-    }
-
-    static Image exchangeNES_ColorScheme(Image image, NES_ColorScheme sourceScheme, NES_ColorScheme targetScheme) {
-        Map<String, ColorChange> colorChanges = Map.of(
-            "fill",   new ColorChange(Color.web(sourceScheme.fillColorRGB()),   Color.web(targetScheme.fillColorRGB())),
-            "stroke", new ColorChange(Color.web(sourceScheme.strokeColorRGB()), Color.web(targetScheme.strokeColorRGB())),
-            "pellet", new ColorChange(Color.web(sourceScheme.pelletColorRGB()), Color.web(targetScheme.pelletColorRGB()))
-        );
-        return exchangeColors(colorChanges, image);
     }
 
     /**

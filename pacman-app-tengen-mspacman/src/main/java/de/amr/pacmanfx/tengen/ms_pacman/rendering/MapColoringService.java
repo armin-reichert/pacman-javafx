@@ -4,16 +4,25 @@ import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
+import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
+import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import java.util.*;
 
-import static de.amr.pacmanfx.uilib.Ufx.exchangeNES_ColorScheme;
-
 public class MapColoringService implements Disposable {
 
     private record CacheKey(MapCategory mapCategory, Object mazeID, NES_ColorScheme colorScheme) {}
+
+    private static Image replaceColors(Image image, NES_ColorScheme fromScheme, NES_ColorScheme toScheme) {
+        return Ufx.replaceImageColors(
+            image,
+            Color.web(fromScheme.fillColorRGB()), Color.web(fromScheme.strokeColorRGB()), Color.web(fromScheme.pelletColorRGB()),
+            Color.web(toScheme.fillColorRGB()),   Color.web(toScheme.strokeColorRGB()),   Color.web(toScheme.pelletColorRGB())
+        );
+    }
 
     private Map<CacheKey, ColoredSpriteImage> recoloredMazeImageCache = new WeakHashMap<>();
 
@@ -28,7 +37,7 @@ public class MapColoringService implements Disposable {
         ColoredSpriteImage mazeImage = recoloredMazeImageCache.get(key);
         if (mazeImage == null) {
             mazeImage = new ColoredSpriteImage(
-                exchangeNES_ColorScheme(spriteSheet.image(mazeSprite), originalColorScheme, requestedColorScheme),
+                replaceColors(spriteSheet.image(mazeSprite), originalColorScheme, requestedColorScheme),
                 new RectShort(0, 0, mazeSprite.width(), mazeSprite.height()),
                 requestedColorScheme);
             recoloredMazeImageCache.put(key, mazeImage);
