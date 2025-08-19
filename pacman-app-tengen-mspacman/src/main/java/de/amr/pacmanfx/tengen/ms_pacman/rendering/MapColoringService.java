@@ -28,7 +28,7 @@ public class MapColoringService implements Disposable {
         );
     }
 
-    private Map<CacheKey, ColoredSpriteImage> recoloredMazeImageCache = new WeakHashMap<>();
+    private Map<CacheKey, ColoredSpriteImage> cache = new WeakHashMap<>();
 
     private ColoredSpriteImage recoloredMazeImage(
         MapCategory mapCategory, Object mazeID,
@@ -38,14 +38,14 @@ public class MapColoringService implements Disposable {
         NES_ColorScheme requestedColorScheme) {
 
         var key = new CacheKey(mapCategory, mazeID, requestedColorScheme);
-        ColoredSpriteImage mazeImage = recoloredMazeImageCache.get(key);
+        ColoredSpriteImage mazeImage = cache.get(key);
         if (mazeImage == null) {
             mazeImage = new ColoredSpriteImage(
                 replaceColors(spriteSheet.image(mazeSprite), originalColorScheme, requestedColorScheme),
                 new RectShort(0, 0, mazeSprite.width(), mazeSprite.height()),
                 requestedColorScheme);
-            recoloredMazeImageCache.put(key, mazeImage);
-            Logger.info("{} maze ({}) recolored to {}, cache size: {}", mapCategory, mazeID, requestedColorScheme, recoloredMazeImageCache.size());
+            cache.put(key, mazeImage);
+            Logger.info("{} maze ({}) recolored to {}, cache size: {}", mapCategory, mazeID, requestedColorScheme, cache.size());
         }
         return mazeImage;
     }
@@ -134,9 +134,9 @@ public class MapColoringService implements Disposable {
 
     @Override
     public void dispose() {
-        if (recoloredMazeImageCache != null) {
-            recoloredMazeImageCache.clear();
-            recoloredMazeImageCache = null;
+        if (cache != null) {
+            cache.clear();
+            cache = null;
         }
     }
 }
