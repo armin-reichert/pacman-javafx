@@ -12,9 +12,7 @@ import de.amr.pacmanfx.model.LevelCounter;
 import de.amr.pacmanfx.model.LivesCounter;
 import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
-import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_HUDData;
-import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_LevelCounter;
+import de.amr.pacmanfx.tengen.ms_pacman.model.*;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
 import javafx.scene.canvas.Canvas;
@@ -22,6 +20,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
+import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesColor;
 import static java.util.Objects.requireNonNull;
@@ -56,6 +55,11 @@ public class TengenMsPacMan_HUDRenderer extends BaseRenderer implements HUDRende
             TengenMsPacMan_LevelCounter levelCounter = hudData.theLevelCounter();
             float x = sceneSize.x() - TS(2), y = sceneSize.y() - TS;
             drawLevelCounter(levelCounter.displayedLevelNumber(), levelCounter, x, y);
+        }
+
+        if (!game.optionsAreInitial()) {
+            drawGameOptions(game.mapCategory(), game.difficulty(), game.pacBooster(),
+                gameContext.gameLevel().worldMap().numCols() * HTS, TS(2) + HTS);
         }
     }
 
@@ -97,6 +101,28 @@ public class TengenMsPacMan_HUDRenderer extends BaseRenderer implements HUDRende
         for (byte symbol : levelCounter.symbols()) {
             drawSprite(uiConfig.spriteSheet(), symbolSprites[symbol], x, y, true);
             x -= TS(2);
+        }
+    }
+
+    public void drawGameOptions(MapCategory category, Difficulty difficulty, PacBooster booster, double centerX, double y) {
+        TengenMsPacMan_SpriteSheet spriteSheet = uiConfig.spriteSheet();
+        drawSpriteCentered(centerX, y, spriteSheet.sprite(SpriteID.INFO_FRAME));
+        RectShort categorySprite = switch (requireNonNull(category)) {
+            case BIG     -> spriteSheet.sprite(SpriteID.INFO_CATEGORY_BIG);
+            case MINI    -> spriteSheet.sprite(SpriteID.INFO_CATEGORY_MINI);
+            case STRANGE -> spriteSheet.sprite(SpriteID.INFO_CATEGORY_STRANGE);
+            case ARCADE  -> RectShort.ZERO;
+        };
+        drawSpriteCentered(centerX + TS(4.5), y, categorySprite);
+        RectShort difficultySprite = switch (requireNonNull(difficulty)) {
+            case EASY   -> spriteSheet.sprite(SpriteID.INFO_DIFFICULTY_EASY);
+            case HARD   -> spriteSheet.sprite(SpriteID.INFO_DIFFICULTY_HARD);
+            case CRAZY  -> spriteSheet.sprite(SpriteID.INFO_DIFFICULTY_CRAZY);
+            case NORMAL -> RectShort.ZERO;
+        };
+        drawSpriteCentered(centerX, y, difficultySprite);
+        if (requireNonNull(booster) != PacBooster.OFF) {
+            drawSpriteCentered(centerX - TS(6), y, spriteSheet.sprite(SpriteID.INFO_BOOSTER));
         }
     }
 

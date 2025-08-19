@@ -16,9 +16,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
-import de.amr.pacmanfx.tengen.ms_pacman.model.Difficulty;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
-import de.amr.pacmanfx.tengen.ms_pacman.model.PacBooster;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.Clapperboard;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.Stork;
@@ -182,10 +180,6 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer implements DebugIn
     public void drawLevelWithMaze(GameContext gameContext, Image mazeImage, RectShort mazeSprite) {
         var tengenGame = (TengenMsPacMan_GameModel) gameContext.game();
         ctx().setImageSmoothing(false);
-        if (!tengenGame.optionsAreInitial()) {
-            drawGameOptions(tengenGame.mapCategory(), tengenGame.difficulty(), tengenGame.pacBooster(),
-                    gameContext.gameLevel().worldMap().numCols() * HTS, TS(2) + HTS);
-        }
         int x = 0, y = GameLevel.EMPTY_ROWS_OVER_MAZE * TS;
         ctx().drawImage(mazeImage,
             mazeSprite.x(), mazeSprite.y(), mazeSprite.width(), mazeSprite.height(),
@@ -303,28 +297,6 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer implements DebugIn
             halfMargin + scaled(tile.x() * TS),
             halfMargin + scaled(tile.y() * TS - HTS),
             overPaintSize, overPaintSize);
-    }
-
-    public void drawGameOptions(MapCategory category, Difficulty difficulty, PacBooster booster, double centerX, double y) {
-        TengenMsPacMan_SpriteSheet spriteSheet = uiConfig.spriteSheet();
-        drawSpriteCentered(centerX, y, spriteSheet.sprite(SpriteID.INFO_FRAME));
-        RectShort categorySprite = switch (requireNonNull(category)) {
-            case BIG     -> spriteSheet.sprite(SpriteID.INFO_CATEGORY_BIG);
-            case MINI    -> spriteSheet.sprite(SpriteID.INFO_CATEGORY_MINI);
-            case STRANGE -> spriteSheet.sprite(SpriteID.INFO_CATEGORY_STRANGE);
-            case ARCADE  -> RectShort.ZERO;
-        };
-        drawSpriteCentered(centerX + TS(4.5), y, categorySprite);
-        RectShort difficultySprite = switch (requireNonNull(difficulty)) {
-            case EASY   -> spriteSheet.sprite(SpriteID.INFO_DIFFICULTY_EASY);
-            case HARD   -> spriteSheet.sprite(SpriteID.INFO_DIFFICULTY_HARD);
-            case CRAZY  -> spriteSheet.sprite(SpriteID.INFO_DIFFICULTY_CRAZY);
-            case NORMAL -> RectShort.ZERO;
-        };
-        drawSpriteCentered(centerX, y, difficultySprite);
-        if (requireNonNull(booster) != PacBooster.OFF) {
-            drawSpriteCentered(centerX - TS(6), y, spriteSheet.sprite(SpriteID.INFO_BOOSTER));
-        }
     }
 
     public void drawBar(Color outlineColor, Color barColor, double width, double y) {

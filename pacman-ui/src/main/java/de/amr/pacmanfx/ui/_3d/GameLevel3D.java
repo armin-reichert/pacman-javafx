@@ -679,6 +679,10 @@ public class GameLevel3D extends Group implements Disposable {
         return energizer3D;
     }
 
+    public Box floor3D() {
+        return floor3D;
+    }
+
     public PacBase3D pac3D() { return pac3D; }
     public List<MutatingGhost3D> ghosts3D() { return Collections.unmodifiableList(ghosts3D); }
     public Optional<Bonus3D> bonus3D() { return Optional.ofNullable(bonus3D); }
