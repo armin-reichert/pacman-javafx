@@ -90,10 +90,10 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     public void doInit() {
         gameContext().game().hudData().all(false);
 
-        var tengenBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().tengenMsPacManBindings();
-        actionBindings.bind(actionSelectNextJoypadBinding, alt(KeyCode.J));
-        actionBindings.assign(ACTION_START_PLAYING, tengenBindings);
-        actionBindings.assign(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, tengenBindings);
+        var tengenActionBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().actionBindings();
+        actionBindings.bind(actionSelectNextJoypadBinding, alt(KeyCode.J)); //TODO
+        actionBindings.assign(ACTION_START_PLAYING, tengenActionBindings);
+        actionBindings.assign(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, tengenActionBindings);
         actionBindings.assign(ACTION_TEST_CUT_SCENES, ui.actionBindings());
         actionBindings.assign(ACTION_TEST_LEVELS_SHORT, ui.actionBindings());
         actionBindings.assign(ACTION_TEST_LEVELS_MEDIUM, ui.actionBindings());

@@ -107,9 +107,9 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     private DefaultSoundManager soundManager = new DefaultSoundManager();
     private Map<String, GameScene> scenesByID = new HashMap<>();
-    private Set<ActionBinding> tengenMsPacManBindings;
+    private Set<ActionBinding> actionBindings;
 
-    private final AssetStorage assets = new AssetStorage();
+    private AssetStorage assets = new AssetStorage();
     private TengenMsPacMan_SpriteSheet spriteSheet;
     private ArcadeMapsSpriteSheet arcadeMapsSpriteSheet;
     private NonArcadeMapsSpriteSheet nonArcadeMapsSpriteSheet;
@@ -117,12 +117,15 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     public TengenMsPacMan_UIConfig(GameUI ui) {
         this.ui = requireNonNull(ui);
+
+        assets.setTextResources(ResourceBundle.getBundle("de.amr.pacmanfx.tengen.ms_pacman.localized_texts"));
+
         spriteSheet              = new TengenMsPacMan_SpriteSheet(RES_TENGEN.loadImage(SPRITE_SHEET_PATH));
         arcadeMapsSpriteSheet    = new ArcadeMapsSpriteSheet(RES_TENGEN.loadImage(ARCADE_MAZES_IMAGE_PATH));
         nonArcadeMapsSpriteSheet = new NonArcadeMapsSpriteSheet(RES_TENGEN.loadImage(NON_ARCADE_MAZES_IMAGE_PATH));
 
         Joypad jp = ui.joypad();
-        tengenMsPacManBindings = Set.of(
+        actionBindings = Set.of(
             new ActionBinding(ACTION_STEER_UP,            jp.key(JoypadButton.UP),    control(KeyCode.UP)),
             new ActionBinding(ACTION_STEER_DOWN,          jp.key(JoypadButton.DOWN),  control(KeyCode.DOWN)),
             new ActionBinding(ACTION_STEER_LEFT,          jp.key(JoypadButton.LEFT),  control(KeyCode.LEFT)),
@@ -134,11 +137,10 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
             new ActionBinding(ACTION_TOGGLE_PLAY_SCENE_DISPLAY_MODE, alt(KeyCode.C)),
             new ActionBinding(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, nude(KeyCode.SPACE))
         );
-        assets.setTextResources(ResourceBundle.getBundle("de.amr.pacmanfx.tengen.ms_pacman.localized_texts"));
     }
 
-    public Set<ActionBinding> tengenMsPacManBindings() {
-        return tengenMsPacManBindings;
+    public Set<ActionBinding> actionBindings() {
+        return actionBindings;
     }
 
     @Override
@@ -246,8 +248,11 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public void dispose() {
-        //TODO this method is not yet called!
-        assets.removeAll();
+        Logger.info("Disposing {}", getClass().getSimpleName());
+        if (assets != null) {
+            assets.removeAll();
+            assets = null;
+        }
         if (arcadeMapsSpriteSheet != null) {
             //arcadeMapsSpriteSheet.dispose();
             arcadeMapsSpriteSheet = null;
@@ -267,8 +272,8 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
             scenesByID.clear();
             scenesByID = null;
         }
-        if (tengenMsPacManBindings != null) {
-            tengenMsPacManBindings = null;
+        if (actionBindings != null) {
+            actionBindings = null;
         }
         if (soundManager != null) {
             soundManager.dispose();
