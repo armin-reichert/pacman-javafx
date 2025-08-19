@@ -64,7 +64,8 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     public static final String MAPS_PATH = "/de/amr/pacmanfx/tengen/ms_pacman/maps/";
 
-    public static final String RECOLORED_MAZE_PROPERTY = "recoloredMaze";
+    // Name of configuration property under which the correctly recolored maze sprite set is stored
+    public static final String MAZE_SPRITE_SET_PROPERTY = "mazeSpriteSet";
 
     /** 32x30 */
     public static final Vector2i NES_TILES = new Vector2i(32, 30);
@@ -484,7 +485,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
      * the recolored maze images are stored.
      */
 
-    public ColoredMazeSpriteSet createRecoloredMaze(WorldMap worldMap, int flashCount) {
+    public ColoredMazeSpriteSet createMazeSpriteSet(WorldMap worldMap, int flashCount) {
         final MapCategory mapCategory = worldMap.getConfigValue("mapCategory");
         final int mapNumber = worldMap.getConfigValue("mapNumber");
         final NES_ColorScheme requestedColorScheme = worldMap.getConfigValue("nesColorScheme");

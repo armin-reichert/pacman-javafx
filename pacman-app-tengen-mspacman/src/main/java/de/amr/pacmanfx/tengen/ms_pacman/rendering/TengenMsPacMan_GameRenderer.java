@@ -69,12 +69,12 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer implements DebugIn
     public void applyLevelSettings(GameContext gameContext) {
         GameLevel gameLevel = gameContext.gameLevel();
         WorldMap worldMap = gameLevel.worldMap();
-        int numFlashes = gameLevel.data().numFlashes();
-        if (!worldMap.hasConfigValue(TengenMsPacMan_UIConfig.RECOLORED_MAZE_PROPERTY)) {
-            ColoredMazeSpriteSet recoloredMaze = uiConfig.createRecoloredMaze(worldMap, numFlashes);
-            worldMap.setConfigValue(TengenMsPacMan_UIConfig.RECOLORED_MAZE_PROPERTY, recoloredMaze);
-            Logger.info("Created recolored maze for game level #{} ({} flash colors: {})",
-                gameLevel.number(), numFlashes, recoloredMaze.mazeSprite());
+        // store the maze sprite set with the correct colors for this level in the map configuration:
+        if (!worldMap.hasConfigValue(TengenMsPacMan_UIConfig.MAZE_SPRITE_SET_PROPERTY)) {
+            int numFlashes = gameLevel.data().numFlashes();
+            ColoredMazeSpriteSet mazeSpriteSet = uiConfig.createMazeSpriteSet(worldMap, numFlashes);
+            worldMap.setConfigValue(TengenMsPacMan_UIConfig.MAZE_SPRITE_SET_PROPERTY, mazeSpriteSet);
+            Logger.info("Maze sprite set created: ", mazeSpriteSet);
         }
     }
 
@@ -169,7 +169,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer implements DebugIn
         TengenMsPacMan_GameModel game = gameContext.game();
         int mapNumber = gameContext.gameLevel().worldMap().getConfigValue("mapNumber");
         applyLevelSettings(gameContext);
-        ColoredMazeSpriteSet recoloredMaze = gameContext.gameLevel().worldMap().getConfigValue(TengenMsPacMan_UIConfig.RECOLORED_MAZE_PROPERTY);
+        ColoredMazeSpriteSet recoloredMaze = gameContext.gameLevel().worldMap().getConfigValue(TengenMsPacMan_UIConfig.MAZE_SPRITE_SET_PROPERTY);
         if (game.mapCategory() == MapCategory.STRANGE && mapNumber == 15) {
             int spriteIndex = mazeAnimationSpriteIndex(uiConfig.theUI().clock().tickCount());
             drawLevelWithMaze(gameContext, recoloredMaze.mazeSprite().image(),
@@ -208,7 +208,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer implements DebugIn
         requireNonNull(gameLevel);
         ctx().save();
         ctx().scale(scaling(), scaling());
-        ColoredMazeSpriteSet recoloredMaze =  gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.RECOLORED_MAZE_PROPERTY);
+        ColoredMazeSpriteSet recoloredMaze =  gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.MAZE_SPRITE_SET_PROPERTY);
         Color pelletColor = Color.web(recoloredMaze.mazeSprite().colorScheme().pelletColorRGB());
         drawPellets(gameLevel, pelletColor);
         drawEnergizers(gameLevel, pelletColor);

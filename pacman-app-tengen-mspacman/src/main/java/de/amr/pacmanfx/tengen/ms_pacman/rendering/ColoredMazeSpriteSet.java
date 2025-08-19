@@ -17,4 +17,12 @@ public record ColoredMazeSpriteSet(
             flashingMazeSprites.clear();
         }
     }
+
+    @Override
+    public String toString() {
+        return "ColoredMazeSpriteSet{"
+            + "mazeSprite=" + mazeSprite
+            + ", flashingMazeSprites=" + flashingMazeSprites
+            + "}";
+    }
 }
