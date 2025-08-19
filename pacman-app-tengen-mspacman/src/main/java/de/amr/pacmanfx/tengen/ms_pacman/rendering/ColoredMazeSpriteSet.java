@@ -8,21 +8,21 @@ import de.amr.pacmanfx.lib.Disposable;
 import java.util.List;
 
 public record ColoredMazeSpriteSet(
-    ColoredSpriteImage mazeSprite,
-    List<ColoredSpriteImage> flashingMazeSprites) implements Disposable {
+    ColoredSpriteImage mazeImage,
+    List<ColoredSpriteImage> flashingMazeImages) implements Disposable {
 
     @Override
     public void dispose() {
-        if (flashingMazeSprites != null) {
-            flashingMazeSprites.clear();
+        if (flashingMazeImages != null) {
+            flashingMazeImages.clear();
         }
     }
 
     @Override
     public String toString() {
         return "ColoredMazeSpriteSet{"
-            + "mazeSprite=" + mazeSprite
-            + ", flashingMazeSprites=" + flashingMazeSprites
+            + "mazeImage=" + mazeImage
+            + ", flashingMazeImages=" + flashingMazeImages
             + "}";
     }
 }

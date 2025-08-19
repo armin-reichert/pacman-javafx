@@ -167,18 +167,16 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer implements DebugIn
         TengenMsPacMan_GameModel game = gameContext.game();
         int mapNumber = gameContext.gameLevel().worldMap().getConfigValue("mapNumber");
         applyLevelSettings(gameContext);
-        ColoredMazeSpriteSet recoloredMaze = gameContext.gameLevel().worldMap().getConfigValue(TengenMsPacMan_UIConfig.MAZE_SPRITE_SET_PROPERTY);
-        if (game.mapCategory() == MapCategory.STRANGE && mapNumber == 15) {
-            int spriteIndex = mazeAnimationSpriteIndex(uiConfig.theUI().clock().tickCount());
-            drawLevelWithMaze(gameContext, recoloredMaze.mazeSprite().image(),
-                uiConfig.nonArcadeMapsSpriteSheet().spriteSequence(MAZE32_ANIMATED)[spriteIndex]);
-        } else {
-            drawLevelWithMaze(gameContext, recoloredMaze.mazeSprite().image(), recoloredMaze.mazeSprite().sprite());
-        }
+
+        // maze sprite set is now stored in world map configuration, take it from there:
+        ColoredMazeSpriteSet mazeSpriteSet = gameContext.gameLevel().worldMap().getConfigValue(TengenMsPacMan_UIConfig.MAZE_SPRITE_SET_PROPERTY);
+
+        //TODO this logic does not belong into the renderer
+        RectShort mazeSprite = checkIfAnimatedMaze(game, mapNumber, mazeSpriteSet);
+        drawGameLevel(gameContext, mazeSpriteSet.mazeImage().image(), mazeSprite);
     }
 
-    public void drawLevelWithMaze(GameContext gameContext, Image mazeImage, RectShort mazeSprite) {
-        var tengenGame = (TengenMsPacMan_GameModel) gameContext.game();
+    public void drawGameLevel(GameContext gameContext, Image mazeImage, RectShort mazeSprite) {
         ctx().setImageSmoothing(false);
         int x = 0, y = GameLevel.EMPTY_ROWS_OVER_MAZE * TS;
         ctx().drawImage(mazeImage,
@@ -187,6 +185,14 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer implements DebugIn
         );
         overPaintActorSprites(gameContext.gameLevel());
         drawFood(gameContext.gameLevel());
+    }
+
+    private RectShort checkIfAnimatedMaze(TengenMsPacMan_GameModel game, int mapNumber, ColoredMazeSpriteSet mazeSpriteSet) {
+        if (game.mapCategory() == MapCategory.STRANGE && mapNumber == 15) {
+            int spriteIndex = mazeAnimationSpriteIndex(uiConfig.theUI().clock().tickCount());
+            return uiConfig.nonArcadeMapsSpriteSheet().spriteSequence(MAZE32_ANIMATED)[spriteIndex];
+        }
+        return mazeSpriteSet.mazeImage().sprite();
     }
 
     /*
@@ -203,7 +209,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer implements DebugIn
         ctx().save();
         ctx().scale(scaling(), scaling());
         ColoredMazeSpriteSet recoloredMaze =  gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.MAZE_SPRITE_SET_PROPERTY);
-        Color pelletColor = Color.web(recoloredMaze.mazeSprite().colorScheme().pelletColorRGB());
+        Color pelletColor = Color.web(recoloredMaze.mazeImage().colorScheme().pelletColorRGB());
         drawPellets(gameLevel, pelletColor);
         drawEnergizers(gameLevel, pelletColor);
         ctx().restore();
