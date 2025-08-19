@@ -8,8 +8,8 @@ import de.amr.pacmanfx.lib.Disposable;
 import java.util.List;
 
 public record ColoredMazeSpriteSet(
-    RecoloredSpriteImage mazeSprite,
-    List<RecoloredSpriteImage> flashingMazeSprites) implements Disposable {
+    ColoredSpriteImage mazeSprite,
+    List<ColoredSpriteImage> flashingMazeSprites) implements Disposable {
 
     @Override
     public void dispose() {

@@ -8,4 +8,4 @@ import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import javafx.scene.image.Image;
 
-public record RecoloredSpriteImage(Image image, RectShort sprite, NES_ColorScheme colorScheme) {}
+public record ColoredSpriteImage(Image image, RectShort sprite, NES_ColorScheme colorScheme) {}
