@@ -173,7 +173,7 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer implements DebugIn
 
         //TODO this logic does not belong into the renderer
         RectShort mazeSprite = checkIfAnimatedMaze(game, mapNumber, mazeSpriteSet);
-        drawGameLevel(gameContext, mazeSpriteSet.mazeImage().image(), mazeSprite);
+        drawGameLevel(gameContext, mazeSpriteSet.mazeImage().spriteSheetImage(), mazeSprite);
     }
 
     public void drawGameLevel(GameContext gameContext, Image mazeImage, RectShort mazeSprite) {

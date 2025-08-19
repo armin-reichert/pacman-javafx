@@ -467,7 +467,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
                 // get the current maze flashing "animation frame"
                 int frame = levelCompletedAnimation.flashingIndex();
                 ColoredSpriteImage flashingMazeSprite = recoloredMaze.flashingMazeImages().get(frame);
-                renderer().drawGameLevel(gameContext(), flashingMazeSprite.image(), flashingMazeSprite.sprite());
+                renderer().drawGameLevel(gameContext(), flashingMazeSprite.spriteSheetImage(), flashingMazeSprite.sprite());
             } else {
                 renderer().drawGameLevel(gameContext(), null, false, false);
             }
