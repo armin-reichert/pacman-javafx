@@ -305,15 +305,25 @@ public class TengenMsPacMan_GameRenderer extends GameRenderer implements DebugIn
             overPaintSize, overPaintSize);
     }
 
-    public void drawBar(Color outlineColor, Color barColor, double width, double y) {
-        requireNonNull(outlineColor);
-        requireNonNull(barColor);
+    /**
+     * Draws a vertical bar of given width and height. The top and bottom edges are drawn with the edgeColor and are
+     * 1 pixel high.
+     *
+     * @param edgeColor color of upper and lower edges
+     * @param innerColor color of inner area
+     * @param width width of the bar
+     * @param height height of the bar
+     * @param topY top y-position
+     */
+    public void drawHorizontalBar(Color edgeColor, Color innerColor, double width, double height, double topY) {
+        requireNonNull(edgeColor);
+        requireNonNull(innerColor);
         ctx().save();
         ctx().scale(scaling(), scaling());
-        ctx().setFill(outlineColor);
-        ctx().fillRect(0, y, width, TS);
-        ctx().setFill(barColor);
-        ctx().fillRect(0, y + 1, width, TS - 2);
+        ctx().setFill(edgeColor);
+        ctx().fillRect(0, topY, width, height);
+        ctx().setFill(innerColor);
+        ctx().fillRect(0, topY + 1, width, height - 2);
         ctx().restore();
     }
 

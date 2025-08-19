@@ -252,8 +252,8 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
             renderer().drawJoypadKeyBinding(ui.joypad().currentKeyBinding());
         }
 
-        renderer().drawBar(nesColor(0x20), nesColor(0x21), sizeInPx().x(), 20);
-        renderer().drawBar(nesColor(0x20), nesColor(0x21), sizeInPx().x(), 212);
+        renderer().drawHorizontalBar(nesColor(0x20), nesColor(0x21), sizeInPx().x(), TS, 20);
+        renderer().drawHorizontalBar(nesColor(0x20), nesColor(0x21), sizeInPx().x(), TS, 212);
         renderer().fillText("MS PAC-MAN OPTIONS", NES_YELLOW, COL_LABEL + 3 * TS, 48);
 
         // Players (not implemented)

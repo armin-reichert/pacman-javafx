@@ -133,7 +133,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                     gameRenderer.fillText("WITH", nesColor(0x20), MARQUEE_X + 12, MARQUEE_Y + 23);
                 }
                 Ghost currentGhost = ghosts.get(ghostIndex);
-                Color ghostColor = ui.assets().color("tengen.ghost.%d.color.normal.dress".formatted(currentGhost.id().personality()));
+                Color ghostColor = ui.currentConfig().assets().color("ghost.%d.color.normal.dress".formatted(currentGhost.id().personality()));
                 gameRenderer.fillText(currentGhost.name().toUpperCase(), ghostColor, MARQUEE_X + 44, MARQUEE_Y + 41);
                 ghosts.forEach(ghost -> gameRenderer.drawActor(ghost, spriteSheet));
             }
