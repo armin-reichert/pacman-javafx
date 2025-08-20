@@ -95,8 +95,8 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
             actionBindings.assign(ACTION_CHEAT_KILL_GHOSTS, ui.actionBindings());
             actionBindings.installBindings(ui.keyboard());
         }
-        if (gameRenderer == null) { //TODO can this happen at all?
-            gameRenderer = ui.currentConfig().createGameRenderer(canvas);
+        if (gameLevelRenderer == null) { //TODO can this happen at all?
+            gameLevelRenderer = ui.currentConfig().createGameRenderer(canvas);
             Logger.warn("No game renderer existed for 2D play scene, created one...");
         }
         Logger.info("Scene {} initialized with game level", getClass().getSimpleName());
@@ -221,11 +221,11 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
         }
 
         final GameLevel gameLevel = gameContext().gameLevel();
-        gameRenderer.applyLevelSettings(gameContext());
+        gameLevelRenderer.applyLevelSettings(gameContext());
 
         // Draw game level
         boolean highlighted = levelCompletedAnimation != null && levelCompletedAnimation.isHighlighted();
-        gameRenderer.drawGameLevel(gameContext(), backgroundColor(), highlighted, gameLevel.blinking().isOn());
+        gameLevelRenderer.drawGameLevel(gameContext(), backgroundColor(), highlighted, gameLevel.blinking().isOn());
 
         // Draw message if available
         if (gameLevel.messageType() != GameLevel.MESSAGE_NONE && gameLevel.house().isPresent()) {
@@ -234,9 +234,9 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
             float cx = TS(house.minTile().x() + houseSize.x() * 0.5f);
             float cy = TS(house.minTile().y() + houseSize.y() + 1);
             switch (gameLevel.messageType()) {
-                case GameLevel.MESSAGE_GAME_OVER -> gameRenderer.fillTextCentered("GAME  OVER", ARCADE_RED, scaledArcadeFont8(), cx, cy);
-                case GameLevel.MESSAGE_READY     -> gameRenderer.fillTextCentered("READY!", ARCADE_YELLOW, scaledArcadeFont8(), cx, cy);
-                case GameLevel.MESSAGE_TEST      -> gameRenderer.fillTextCentered("TEST    L%02d".formatted(gameLevel.number()), ARCADE_WHITE, scaledArcadeFont8(), cx, cy);
+                case GameLevel.MESSAGE_GAME_OVER -> gameLevelRenderer.fillTextCentered("GAME  OVER", ARCADE_RED, scaledArcadeFont8(), cx, cy);
+                case GameLevel.MESSAGE_READY     -> gameLevelRenderer.fillTextCentered("READY!", ARCADE_YELLOW, scaledArcadeFont8(), cx, cy);
+                case GameLevel.MESSAGE_TEST      -> gameLevelRenderer.fillTextCentered("TEST    L%02d".formatted(gameLevel.number()), ARCADE_WHITE, scaledArcadeFont8(), cx, cy);
             }
         }
 
@@ -247,12 +247,12 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
         Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW).map(gameLevel::ghost).forEach(actorsInZOrder::add);
 
         // Draw actors
-        actorsInZOrder.forEach(actor -> gameRenderer.drawActor(actor));
+        actorsInZOrder.forEach(actor -> gameLevelRenderer.drawActor(actor));
 
         if (isDebugInfoVisible()) {
             actorsInZOrder.forEach(actor -> {
-                if (actor instanceof MovingActor movingActor && gameRenderer instanceof DebugInfoRenderer debugInfoRenderer) {
-                    debugInfoRenderer.drawMovingActorInfo(gameRenderer.ctx(), scaling(), movingActor);
+                if (actor instanceof MovingActor movingActor && gameLevelRenderer instanceof DebugInfoRenderer debugInfoRenderer) {
+                    debugInfoRenderer.drawMovingActorInfo(gameLevelRenderer.ctx(), scaling(), movingActor);
                 }
             });
         }
@@ -260,8 +260,8 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
 
     @Override
     protected void drawDebugInfo() {
-        GraphicsContext ctx = gameRenderer.ctx();
-        gameRenderer.drawTileGrid(sizeInPx().x(), sizeInPx().y(), Color.LIGHTGRAY);
+        GraphicsContext ctx = gameLevelRenderer.ctx();
+        gameLevelRenderer.drawTileGrid(sizeInPx().x(), sizeInPx().y(), Color.LIGHTGRAY);
         if (gameContext().optGameLevel().isPresent()) {
             // assuming all ghosts have the same set of special terrain tiles
             gameContext().gameLevel().ghost(RED_GHOST_SHADOW).specialTerrainTiles().forEach(tile -> {

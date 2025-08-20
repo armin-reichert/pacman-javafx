@@ -131,28 +131,28 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        gameRenderer.ctx().setFont(scaledArcadeFont8());
-        gameRenderer.fillText(TITLE, ARCADE_ORANGE, TITLE_X, TITLE_Y);
-        gameRenderer.drawActor(marquee);
-        ghosts.forEach(ghost -> gameRenderer.drawActor(ghost));
-        gameRenderer.drawActor(msPacMan);
+        gameLevelRenderer.ctx().setFont(scaledArcadeFont8());
+        gameLevelRenderer.fillText(TITLE, ARCADE_ORANGE, TITLE_X, TITLE_Y);
+        gameLevelRenderer.drawActor(marquee);
+        ghosts.forEach(ghost -> gameLevelRenderer.drawActor(ghost));
+        gameLevelRenderer.drawActor(msPacMan);
         switch (sceneController.state()) {
             case GHOSTS_MARCHING_IN -> {
                 String ghostName = GHOST_NAMES[presentedGhostCharacter];
                 Color ghostColor = GHOST_COLORS[presentedGhostCharacter];
                 if (presentedGhostCharacter == RED_GHOST_SHADOW) {
-                    gameRenderer.fillText("WITH", ARCADE_WHITE, TITLE_X, TOP_Y + TS(3));
+                    gameLevelRenderer.fillText("WITH", ARCADE_WHITE, TITLE_X, TOP_Y + TS(3));
                 }
                 double x = TITLE_X + (ghostName.length() < 4 ? TS(4) : TS(3));
                 double y = TOP_Y + TS(6);
-                gameRenderer.fillText(ghostName, ghostColor, x, y);
+                gameLevelRenderer.fillText(ghostName, ghostColor, x, y);
             }
             case MS_PACMAN_MARCHING_IN, READY_TO_PLAY -> {
-                gameRenderer.fillText("STARRING", ARCADE_WHITE, TITLE_X, TOP_Y + TS(3));
-                gameRenderer.fillText("MS PAC-MAN", ARCADE_YELLOW, TITLE_X, TOP_Y + TS(6));
+                gameLevelRenderer.fillText("STARRING", ARCADE_WHITE, TITLE_X, TOP_Y + TS(3));
+                gameLevelRenderer.fillText("MS PAC-MAN", ARCADE_YELLOW, TITLE_X, TOP_Y + TS(6));
             }
         }
-        gameRenderer.drawActor(midwayCopyright);
+        gameLevelRenderer.drawActor(midwayCopyright);
     }
 
     // Scene controller FSM

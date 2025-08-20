@@ -60,7 +60,7 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
 
     @Override
     public void draw() {
-        gameRenderer.setScaling(scaling());
+        gameLevelRenderer.setScaling(scaling());
         if (gameContext().gameState().timer().tickCount() == 1) {
             clear();
         } else {
@@ -87,13 +87,13 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
         var random = new Random();
         int numRows = (int) (ARCADE_MAP_SIZE_IN_PIXELS.y() / TS);
         int numCols = (int) (ARCADE_MAP_SIZE_IN_PIXELS.x() / TS);
-        gameRenderer.ctx().setFill(ARCADE_WHITE);
-        gameRenderer.ctx().setFont(scaledArcadeFont8());
+        gameLevelRenderer.ctx().setFill(ARCADE_WHITE);
+        gameLevelRenderer.ctx().setFont(scaledArcadeFont8());
         for (int row = 0; row < numRows; ++row) {
             double y = scaled(TS(row + 1));
             for (int col = 0; col < numCols; ++col) {
                 int hexDigit = random.nextInt(16);
-                gameRenderer.ctx().fillText(Integer.toHexString(hexDigit), scaled(TS(col)), y);
+                gameLevelRenderer.ctx().fillText(Integer.toHexString(hexDigit), scaled(TS(col)), y);
             }
         }
     }
@@ -107,7 +107,7 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
             RectShort fragment1 = randomSpriteFragment(), fragment2 = randomSpriteFragment();
             int split = numCols / 8 + random.nextInt(numCols / 4);
             for (int col = 0; col < numCols; ++col) {
-                gameRenderer.drawSprite(col < split ? fragment1 : fragment2,
+                gameLevelRenderer.drawSprite(col < split ? fragment1 : fragment2,
                     FRAGMENT_SIZE * col, FRAGMENT_SIZE * row, true);
             }
         }
@@ -127,16 +127,16 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
         int numRows = (int) (ARCADE_MAP_SIZE_IN_PIXELS.y() / 16);
         int numCols = (int) (ARCADE_MAP_SIZE_IN_PIXELS.x() / 16);
         double thin = scaled(2), thick = scaled(4);
-        gameRenderer.ctx().setStroke(ARCADE_WHITE);
+        gameLevelRenderer.ctx().setStroke(ARCADE_WHITE);
         for (int row = 0; row <= numRows; ++row) {
-            gameRenderer.ctx().setLineWidth(row == 0 || row == numRows ? thick : thin);
+            gameLevelRenderer.ctx().setLineWidth(row == 0 || row == numRows ? thick : thin);
             double y = scaled(row * 16);
-            gameRenderer.ctx().strokeLine(0, y, gridWidth, y);
+            gameLevelRenderer.ctx().strokeLine(0, y, gridWidth, y);
         }
         for (int col = 0; col <= numCols; ++col) {
-            gameRenderer.ctx().setLineWidth(col == 0 || col == numCols ? thick : thin);
+            gameLevelRenderer.ctx().setLineWidth(col == 0 || col == numCols ? thick : thin);
             double x = scaled(col * 16);
-            gameRenderer.ctx().strokeLine(x, 0, x, gridHeight);
+            gameLevelRenderer.ctx().strokeLine(x, 0, x, gridHeight);
         }
     }
 }

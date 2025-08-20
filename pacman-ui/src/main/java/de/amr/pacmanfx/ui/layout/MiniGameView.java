@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.layout;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.api.GameUI;
-import de.amr.pacmanfx.uilib.rendering.GameRenderer;
+import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
 import javafx.beans.binding.Bindings;
@@ -30,7 +30,7 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.api.GameUI_Config.SCENE_ID_PLAY_SCENE_3D;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.*;
-import static de.amr.pacmanfx.uilib.rendering.GameRenderer.fillCanvas;
+import static de.amr.pacmanfx.uilib.rendering.GameLevelRenderer.fillCanvas;
 import static java.util.Objects.requireNonNull;
 
 public class MiniGameView extends VBox {
@@ -47,7 +47,7 @@ public class MiniGameView extends VBox {
     private final Canvas canvas;
 
     private final GameUI ui;
-    private GameRenderer gameRenderer;
+    private GameLevelRenderer gameLevelRenderer;
 
     private long drawCallCount;
 
@@ -103,9 +103,9 @@ public class MiniGameView extends VBox {
         worldSize.set(gameLevel.worldSizePx());
         /* TODO: The game renderer cannot be created in the constructor because the game controller has not yet
             selected a game variant when the constructor is called, so no UI configuration is available! */
-        gameRenderer = ui.currentConfig().createGameRenderer(canvas);
-        gameRenderer.setScaling(scaling.get());
-        gameRenderer.applyLevelSettings(ui.gameContext());
+        gameLevelRenderer = ui.currentConfig().createGameRenderer(canvas);
+        gameLevelRenderer.setScaling(scaling.get());
+        gameLevelRenderer.applyLevelSettings(ui.gameContext());
     }
 
     public void slideIn() {
@@ -120,24 +120,24 @@ public class MiniGameView extends VBox {
     public void draw() {
         drawCallCount += 1;
 
-        if (!isVisible() || gameRenderer == null) {
+        if (!isVisible() || gameLevelRenderer == null) {
             return;
         }
-        gameRenderer.setScaling(scaling.get());
+        gameLevelRenderer.setScaling(scaling.get());
         fillCanvas(canvas, PROPERTY_CANVAS_BACKGROUND_COLOR.get());
 
         GameLevel gameLevel = ui.gameContext().gameLevel();
         if (gameLevel != null) {
-            gameRenderer.drawGameLevel(ui.gameContext(), PROPERTY_CANVAS_BACKGROUND_COLOR.get(), false, gameLevel.blinking().isOn());
-            gameLevel.bonus().ifPresent(bonus -> gameRenderer.drawActor(bonus));
-            gameRenderer.drawActor(gameLevel.pac());
+            gameLevelRenderer.drawGameLevel(ui.gameContext(), PROPERTY_CANVAS_BACKGROUND_COLOR.get(), false, gameLevel.blinking().isOn());
+            gameLevel.bonus().ifPresent(bonus -> gameLevelRenderer.drawActor(bonus));
+            gameLevelRenderer.drawActor(gameLevel.pac());
             Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)
                 .map(gameLevel::ghost)
-                .forEach(ghost -> gameRenderer.drawActor(ghost));
+                .forEach(ghost -> gameLevelRenderer.drawActor(ghost));
         }
 
         if (PROPERTY_DEBUG_INFO_VISIBLE.get()) {
-            gameRenderer.fillTextCentered(
+            gameLevelRenderer.fillTextCentered(
                 "scaling: %.2f, draw calls: %d".formatted(scaling.doubleValue(), drawCallCount),
                 Color.WHITE, Font.font(14 * scaling.get()),
                 0.5 * worldSize.get().x(), 16

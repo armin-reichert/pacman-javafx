@@ -132,34 +132,34 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 drawPoints();
                 drawBlinkingEnergizer(TS(LEFT_TILE_X), TS(20));
                 drawGuys(true);
-                gameRenderer.fillText(MIDWAY_MFG_CO, ARCADE_PINK, scaledArcadeFont8(), TS(4), TS(32));
+                gameLevelRenderer.fillText(MIDWAY_MFG_CO, ARCADE_PINK, scaledArcadeFont8(), TS(4), TS(32));
             }
             case CHASING_GHOSTS, READY_TO_PLAY -> {
                 drawPoints();
                 drawGuys(false);
-                gameRenderer.fillText(MIDWAY_MFG_CO, ARCADE_PINK, scaledArcadeFont8(), TS(4), TS(32));
+                gameLevelRenderer.fillText(MIDWAY_MFG_CO, ARCADE_PINK, scaledArcadeFont8(), TS(4), TS(32));
             }
         }
     }
 
     private void drawGallery() {
-        gameRenderer.ctx().setFont(scaledArcadeFont8());
+        gameLevelRenderer.ctx().setFont(scaledArcadeFont8());
         if (titleVisible) {
-            gameRenderer.fillText("CHARACTER / NICKNAME", ARCADE_WHITE,
+            gameLevelRenderer.fillText("CHARACTER / NICKNAME", ARCADE_WHITE,
                 TS(LEFT_TILE_X + 3), TS(6));
         }
         for (byte personality = RED_GHOST_SHADOW; personality <= ORANGE_GHOST_POKEY; ++personality) {
             if (ghostImageVisible[personality]) {
-                gameRenderer.drawSpriteCentered(
+                gameLevelRenderer.drawSpriteCentered(
                     Vector2f.of(TS(LEFT_TILE_X) + TS, TS(7 + 3 * personality) + HTS),
                     spriteSheet.spriteSequence(GALLERY_GHOSTS)[personality]);
             }
             if (ghostCharacterVisible[personality]) {
-                gameRenderer.fillText("-" + GHOST_CHARACTERS[personality], GHOST_COLORS[personality],
+                gameLevelRenderer.fillText("-" + GHOST_CHARACTERS[personality], GHOST_COLORS[personality],
                     TS(LEFT_TILE_X + 3), TS(8 + 3 * personality));
             }
             if (ghostNicknameVisible[personality]) {
-                gameRenderer.fillText(GHOST_NICKNAMES[personality], GHOST_COLORS[personality],
+                gameLevelRenderer.fillText(GHOST_NICKNAMES[personality], GHOST_COLORS[personality],
                     TS(LEFT_TILE_X + 14), TS(8 + 3 * personality));
             }
         }
@@ -170,48 +170,48 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         long tick = sceneController.state().timer().tickCount();
         int shakingAmount = shaking ? (tick % 5 < 2 ? 0 : -1) : 0;
         if (shakingAmount == 0) {
-            ghosts.forEach(ghost -> gameRenderer.drawActor(ghost));
+            ghosts.forEach(ghost -> gameLevelRenderer.drawActor(ghost));
         } else {
-            gameRenderer.drawActor(ghosts.get(RED_GHOST_SHADOW));
-            gameRenderer.drawActor(ghosts.get(ORANGE_GHOST_POKEY));
-            gameRenderer.ctx().save();
-            gameRenderer.ctx().translate(shakingAmount, 0);
-            gameRenderer.drawActor(ghosts.get(PINK_GHOST_SPEEDY));
-            gameRenderer.drawActor(ghosts.get(CYAN_GHOST_BASHFUL));
-            gameRenderer.ctx().restore();
+            gameLevelRenderer.drawActor(ghosts.get(RED_GHOST_SHADOW));
+            gameLevelRenderer.drawActor(ghosts.get(ORANGE_GHOST_POKEY));
+            gameLevelRenderer.ctx().save();
+            gameLevelRenderer.ctx().translate(shakingAmount, 0);
+            gameLevelRenderer.drawActor(ghosts.get(PINK_GHOST_SPEEDY));
+            gameLevelRenderer.drawActor(ghosts.get(CYAN_GHOST_BASHFUL));
+            gameLevelRenderer.ctx().restore();
         }
-        gameRenderer.drawActor(pacMan);
+        gameLevelRenderer.drawActor(pacMan);
     }
 
     private void drawPoints() {
-        gameRenderer.ctx().setFill(ARCADE_ROSE);
+        gameLevelRenderer.ctx().setFill(ARCADE_ROSE);
         // normal pellet
-        gameRenderer.ctx().fillRect(scaled(TS(LEFT_TILE_X + 6) + 4), scaled(TS(24) + 4), scaled(2), scaled(2));
-        gameRenderer.fillText("10",  ARCADE_WHITE, scaledArcadeFont8(), TS(LEFT_TILE_X + 8), TS(25));
-        gameRenderer.fillText("PTS", ARCADE_WHITE, scaledArcadeFont6(), TS(LEFT_TILE_X + 11), TS(25));
+        gameLevelRenderer.ctx().fillRect(scaled(TS(LEFT_TILE_X + 6) + 4), scaled(TS(24) + 4), scaled(2), scaled(2));
+        gameLevelRenderer.fillText("10",  ARCADE_WHITE, scaledArcadeFont8(), TS(LEFT_TILE_X + 8), TS(25));
+        gameLevelRenderer.fillText("PTS", ARCADE_WHITE, scaledArcadeFont6(), TS(LEFT_TILE_X + 11), TS(25));
         // energizer
         drawBlinkingEnergizer(TS(LEFT_TILE_X + 6), TS(26));
-        gameRenderer.fillText("50",  ARCADE_WHITE, scaledArcadeFont8(), TS(LEFT_TILE_X + 8), TS(27));
-        gameRenderer.fillText("PTS", ARCADE_WHITE, scaledArcadeFont6(), TS(LEFT_TILE_X + 11), TS(27));
+        gameLevelRenderer.fillText("50",  ARCADE_WHITE, scaledArcadeFont8(), TS(LEFT_TILE_X + 8), TS(27));
+        gameLevelRenderer.fillText("PTS", ARCADE_WHITE, scaledArcadeFont6(), TS(LEFT_TILE_X + 11), TS(27));
     }
 
     private void drawBlinkingEnergizer(double x, double y) {
         if (blinking.isOn()) {
-            gameRenderer.ctx().save();
-            gameRenderer.ctx().scale(scaling(), scaling());
-            gameRenderer.ctx().setFill(ARCADE_ROSE);
+            gameLevelRenderer.ctx().save();
+            gameLevelRenderer.ctx().scale(scaling(), scaling());
+            gameLevelRenderer.ctx().setFill(ARCADE_ROSE);
             // draw pixelated "circle"
-            gameRenderer.ctx().fillRect(x + 2, y, 4, 8);
-            gameRenderer.ctx().fillRect(x, y + 2, 8, 4);
-            gameRenderer.ctx().fillRect(x + 1, y + 1, 6, 6);
-            gameRenderer.ctx().restore();
+            gameLevelRenderer.ctx().fillRect(x + 2, y, 4, 8);
+            gameLevelRenderer.ctx().fillRect(x, y + 2, 8, 4);
+            gameLevelRenderer.ctx().fillRect(x + 1, y + 1, 6, 6);
+            gameLevelRenderer.ctx().restore();
         }
     }
 
     @Override
     protected void drawDebugInfo() {
         super.drawDebugInfo();
-        gameRenderer.ctx().fillText("Scene timer %d".formatted(
+        gameLevelRenderer.ctx().fillText("Scene timer %d".formatted(
                 sceneController.state().timer().tickCount()), 0, scaled(5 * TS));
     }
 

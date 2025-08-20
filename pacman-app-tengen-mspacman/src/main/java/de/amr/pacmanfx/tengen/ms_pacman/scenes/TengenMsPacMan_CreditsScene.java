@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameLevelRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 
@@ -56,13 +56,13 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     @SuppressWarnings("unchecked")
     @Override
-    public TengenMsPacMan_GameRenderer renderer() {
-        return (TengenMsPacMan_GameRenderer) gameRenderer;
+    public TengenMsPacMan_GameLevelRenderer renderer() {
+        return (TengenMsPacMan_GameLevelRenderer) gameLevelRenderer;
     }
 
     @Override
     public void drawSceneContent() {
-        gameRenderer.ctx().setFont(scaledArcadeFont8());
+        gameLevelRenderer.ctx().setFont(scaledArcadeFont8());
         double barWidth = sizeInPx().x();
         renderer().drawHorizontalBar(nesColor(0x20), nesColor(0x13), barWidth, TS, 20);
         renderer().drawHorizontalBar(nesColor(0x20), nesColor(0x13), barWidth, TS, 212);

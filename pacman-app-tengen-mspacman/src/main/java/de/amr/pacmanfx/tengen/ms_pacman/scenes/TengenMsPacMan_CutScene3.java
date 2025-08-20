@@ -10,7 +10,7 @@ import de.amr.pacmanfx.lib.nes.JoypadButton;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameLevelRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -155,13 +155,13 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
     @SuppressWarnings("unchecked")
     @Override
-    public TengenMsPacMan_GameRenderer renderer() {
-        return (TengenMsPacMan_GameRenderer) gameRenderer;
+    public TengenMsPacMan_GameLevelRenderer renderer() {
+        return (TengenMsPacMan_GameLevelRenderer) gameLevelRenderer;
     }
 
     @Override
     public void draw() {
-        gameRenderer.setScaling(scaling());
+        gameLevelRenderer.setScaling(scaling());
         clear();
         drawSceneContent();
         if (debugInfoVisible.get()) {
@@ -177,7 +177,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
     @Override
     public void drawSceneContent() {
         if (!darkness) {
-            Stream.of(clapperboard, stork, flyingBag, msPacMan, pacMan).forEach(actor -> gameRenderer.drawActor(actor));
+            Stream.of(clapperboard, stork, flyingBag, msPacMan, pacMan).forEach(actor -> gameLevelRenderer.drawActor(actor));
         }
     }
 }

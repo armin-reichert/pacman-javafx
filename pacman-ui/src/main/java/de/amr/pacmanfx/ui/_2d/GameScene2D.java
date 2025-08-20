@@ -14,7 +14,7 @@ import de.amr.pacmanfx.ui.api.ActionBindingsManager;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.rendering.GameRenderer;
+import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.uilib.rendering.GameRenderer.fillCanvas;
+import static de.amr.pacmanfx.uilib.rendering.GameLevelRenderer.fillCanvas;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -48,7 +48,7 @@ public abstract class GameScene2D implements GameScene {
 
     protected final ActionBindingsManager actionBindings;
     protected final AnimationRegistry animationRegistry = new AnimationRegistry();
-    protected GameRenderer gameRenderer;
+    protected GameLevelRenderer gameLevelRenderer;
     protected HUDRenderer hudRenderer;
     protected Canvas canvas;
     protected final List<Actor> actorsInZOrder = new ArrayList<>();
@@ -112,9 +112,9 @@ public abstract class GameScene2D implements GameScene {
     public void setBackgroundColor(Color color) { backgroundColor.set(color); }
 
     @SuppressWarnings("unchecked")
-    public <T extends GameRenderer & DebugInfoRenderer> T renderer() { return (T) gameRenderer; }
+    public <T extends GameLevelRenderer & DebugInfoRenderer> T renderer() { return (T) gameLevelRenderer; }
 
-    public void setGameRenderer(GameRenderer renderer) { gameRenderer = requireNonNull(renderer); }
+    public void setGameRenderer(GameLevelRenderer renderer) { gameLevelRenderer = requireNonNull(renderer); }
 
     public void setHudRenderer(HUDRenderer hudRenderer) {
         this.hudRenderer = requireNonNull(hudRenderer);
@@ -148,11 +148,11 @@ public abstract class GameScene2D implements GameScene {
      * clears the canvas and draws the scores (if on), scene content and debug information (if on).
      */
     public void draw() {
-        if (gameRenderer == null) {
-            gameRenderer = ui.currentConfig().createGameRenderer(canvas);
+        if (gameLevelRenderer == null) {
+            gameLevelRenderer = ui.currentConfig().createGameRenderer(canvas);
         }
         clear();
-        gameRenderer.setScaling(scaling());
+        gameLevelRenderer.setScaling(scaling());
         drawSceneContent();
         if (debugInfoVisible.get()) {
             drawDebugInfo();
@@ -172,16 +172,16 @@ public abstract class GameScene2D implements GameScene {
      */
     protected void drawDebugInfo() {
         Vector2f sizePx = sizeInPx();
-        gameRenderer.drawTileGrid(sizePx.x(), sizePx.y(), Color.LIGHTGRAY);
-        gameRenderer.ctx().setFill(debugTextFill);
-        gameRenderer.ctx().setStroke(debugTextStroke);
-        gameRenderer.ctx().setFont(debugTextFont);
+        gameLevelRenderer.drawTileGrid(sizePx.x(), sizePx.y(), Color.LIGHTGRAY);
+        gameLevelRenderer.ctx().setFill(debugTextFill);
+        gameLevelRenderer.ctx().setStroke(debugTextStroke);
+        gameLevelRenderer.ctx().setFont(debugTextFont);
         TickTimer stateTimer = gameContext().gameState().timer();
         String stateText = "Game State: '%s' (Tick %d of %s)".formatted(
             gameContext().gameState().name(),
             stateTimer.tickCount(),
             stateTimer.durationTicks() == TickTimer.INDEFINITE ? "∞" : String.valueOf(stateTimer.tickCount())
         );
-        gameRenderer.ctx().fillText(stateText, 0, scaled(3 * TS));
+        gameLevelRenderer.ctx().fillText(stateText, 0, scaled(3 * TS));
     }
 }

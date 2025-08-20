@@ -9,7 +9,7 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameLevelRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import javafx.scene.paint.Color;
@@ -19,7 +19,7 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.createGhost;
-import static de.amr.pacmanfx.uilib.rendering.GameRenderer.fillCanvas;
+import static de.amr.pacmanfx.uilib.rendering.GameLevelRenderer.fillCanvas;
 
 /**
  * Shows moving and color changing "TENGEN PRESENTS" text and ghost running through scene.
@@ -42,8 +42,8 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
 
     @SuppressWarnings("unchecked")
     @Override
-    public TengenMsPacMan_GameRenderer renderer() {
-        return (TengenMsPacMan_GameRenderer) gameRenderer;
+    public TengenMsPacMan_GameLevelRenderer renderer() {
+        return (TengenMsPacMan_GameLevelRenderer) gameLevelRenderer;
     }
 
     @Override
@@ -112,17 +112,17 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
         if (grayScreen) {
             fillCanvas(canvas, GRAY);
         } else {
-            gameRenderer.fillText(TENGEN_PRESENTS, blueShadedColor(tick), scaledArcadeFont8(),
+            gameLevelRenderer.fillText(TENGEN_PRESENTS, blueShadedColor(tick), scaledArcadeFont8(),
                 movingText.x(), movingText.y());
-            gameRenderer.drawActor(ghost);
+            gameLevelRenderer.drawActor(ghost);
         }
     }
 
     @Override
     protected void drawDebugInfo() {
         super.drawDebugInfo();
-        gameRenderer.ctx().setFill(Color.WHITE);
-        gameRenderer.ctx().setFont(Font.font(20));
-        gameRenderer.ctx().fillText("Tick " + tick, 20, 20);
+        gameLevelRenderer.ctx().setFill(Color.WHITE);
+        gameLevelRenderer.ctx().setFont(Font.font(20));
+        gameLevelRenderer.ctx().fillText("Tick " + tick, 20, 20);
     }
 }

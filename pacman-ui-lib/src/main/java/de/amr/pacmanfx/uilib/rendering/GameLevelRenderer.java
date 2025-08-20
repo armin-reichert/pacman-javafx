@@ -6,15 +6,14 @@ package de.amr.pacmanfx.uilib.rendering;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
 import static java.util.Objects.requireNonNull;
 
-public abstract class GameRenderer<T extends Enum<T>> extends SpriteSheetRenderer<T> {
+public abstract class GameLevelRenderer<T extends Enum<T>> extends SpriteSheetRenderer<T> {
 
-    protected GameRenderer(Canvas canvas) {
+    protected GameLevelRenderer(Canvas canvas) {
         super(canvas);
     }
 

@@ -10,7 +10,7 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.ui._2d.DebugInfoRenderer;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
-import de.amr.pacmanfx.uilib.rendering.GameRenderer;
+import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -22,11 +22,11 @@ import static java.util.function.Predicate.not;
 /**
  * Renderer for classic Arcade Pac-Man and Pac-Man XXL game variants.
  */
-public class ArcadePacMan_GameRenderer extends GameRenderer<SpriteID> implements DebugInfoRenderer {
+public class ArcadePacMan_GameLevelRenderer extends GameLevelRenderer<SpriteID> implements DebugInfoRenderer {
 
     protected final GameUI_Config uiConfig;
 
-    public ArcadePacMan_GameRenderer(GameUI_Config uiConfig, Canvas canvas) {
+    public ArcadePacMan_GameLevelRenderer(GameUI_Config uiConfig, Canvas canvas) {
         super(canvas);
         this.uiConfig = requireNonNull(uiConfig);
     }

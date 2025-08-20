@@ -132,15 +132,15 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        gameRenderer.drawSprite(nailDressRaptureAnimation.currentSprite(),
+        gameLevelRenderer.drawSprite(nailDressRaptureAnimation.currentSprite(),
             TS(14), TS(19) + 3, true);
-        actorsInZOrder.forEach(actor -> gameRenderer.drawActor(actor));
+        actorsInZOrder.forEach(actor -> gameLevelRenderer.drawActor(actor));
     }
 
     @Override
     protected void drawDebugInfo() {
         super.drawDebugInfo();
         String text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
-        gameRenderer.fillText(text, debugTextFill, debugTextFont, TS(1), TS(5));
+        gameLevelRenderer.fillText(text, debugTextFill, debugTextFont, TS(1), TS(5));
     }
 }

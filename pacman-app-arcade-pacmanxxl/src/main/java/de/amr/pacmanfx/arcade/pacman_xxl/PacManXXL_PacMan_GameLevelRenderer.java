@@ -5,18 +5,20 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman_xxl;
 
 import de.amr.pacmanfx.GameContext;
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_GameRenderer;
+import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_GameLevelRenderer;
 import de.amr.pacmanfx.ui._2d.GenericMapRenderer;
-import de.amr.pacmanfx.ui.api.GameUI_Config;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
-public class PacManXXL_MsPacMan_GameRenderer extends ArcadeMsPacMan_GameRenderer {
+/**
+ * Renderer for "Pac-Man XXL" game variant. Uses the vector graphics map renderer that can render any custom map.
+ */
+public class PacManXXL_PacMan_GameLevelRenderer extends ArcadePacMan_GameLevelRenderer {
 
     private final GenericMapRenderer mapRenderer;
 
-    public PacManXXL_MsPacMan_GameRenderer(Canvas canvas, GameUI_Config uiConfig) {
-        super(canvas, uiConfig);
+    public PacManXXL_PacMan_GameLevelRenderer(PacManXXL_PacMan_UIConfig uiConfig, Canvas canvas) {
+        super(uiConfig, canvas);
         mapRenderer = new GenericMapRenderer(canvas);
         mapRenderer.scalingProperty().bind(scalingProperty());
     }

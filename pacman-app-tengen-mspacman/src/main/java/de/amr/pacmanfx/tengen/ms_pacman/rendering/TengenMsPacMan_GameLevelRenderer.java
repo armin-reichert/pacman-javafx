@@ -24,7 +24,7 @@ import de.amr.pacmanfx.ui._2d.DebugInfoRenderer;
 import de.amr.pacmanfx.ui.input.JoypadKeyBinding;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
-import de.amr.pacmanfx.uilib.rendering.GameRenderer;
+import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Rectangle2D;
@@ -42,12 +42,12 @@ import static de.amr.pacmanfx.tengen.ms_pacman.rendering.NonArcadeMapsSpriteShee
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
-public class TengenMsPacMan_GameRenderer extends GameRenderer<SpriteID> implements DebugInfoRenderer {
+public class TengenMsPacMan_GameLevelRenderer extends GameLevelRenderer<SpriteID> implements DebugInfoRenderer {
 
     private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
     private final TengenMsPacMan_UIConfig uiConfig;
 
-    public TengenMsPacMan_GameRenderer(TengenMsPacMan_UIConfig uiConfig, Canvas canvas) {
+    public TengenMsPacMan_GameLevelRenderer(TengenMsPacMan_UIConfig uiConfig, Canvas canvas) {
         super(canvas);
         this.uiConfig = requireNonNull(uiConfig);
         ctx().setImageSmoothing(false);

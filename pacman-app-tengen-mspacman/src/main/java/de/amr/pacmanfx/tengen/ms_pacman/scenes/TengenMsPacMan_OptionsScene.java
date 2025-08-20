@@ -14,7 +14,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.PacBooster;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.SpriteID;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameLevelRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.AbstractGameAction;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
@@ -237,8 +237,8 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     @SuppressWarnings("unchecked")
     @Override
-    public TengenMsPacMan_GameRenderer renderer() {
-        return (TengenMsPacMan_GameRenderer) gameRenderer;
+    public TengenMsPacMan_GameLevelRenderer renderer() {
+        return (TengenMsPacMan_GameLevelRenderer) gameLevelRenderer;
     }
 
     @Override
@@ -246,7 +246,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         if (initialDelay > 0) {
             return;
         }
-        gameRenderer.ctx().setFont(scaledArcadeFont8());
+        gameLevelRenderer.ctx().setFont(scaledArcadeFont8());
 
         if (PROPERTY_JOYPAD_BINDINGS_DISPLAYED.get()) {
             renderer().drawJoypadKeyBinding(ui.joypad().currentKeyBinding());
@@ -310,8 +310,8 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     private void drawMarkerIfSelected(int optionIndex, double y, Font font) {
         if (selectedOption() == optionIndex) {
-            gameRenderer.ctx().setFill(NES_YELLOW);
-            gameRenderer.ctx().fillRect(scaled(COL_ARROW + 2.25), scaled(y - 4.5), scaled(7.5), scaled(1.75));
+            gameLevelRenderer.ctx().setFill(NES_YELLOW);
+            gameLevelRenderer.ctx().fillRect(scaled(COL_ARROW + 2.25), scaled(y - 4.5), scaled(7.5), scaled(1.75));
             renderer().fillText(">", NES_YELLOW, font, COL_ARROW + 3, y);
         }
     }
