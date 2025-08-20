@@ -19,7 +19,6 @@ import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -35,8 +34,6 @@ public abstract class GameScene2D implements GameScene {
 
     protected final GameUI ui;
 
-    protected final ObjectProperty<Font> arcadeFont8 = new SimpleObjectProperty<>();
-    protected final ObjectProperty<Font> arcadeFont6 = new SimpleObjectProperty<>();
     protected final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
     protected final BooleanProperty debugInfoVisible = new SimpleBooleanProperty(false);
     protected final DoubleProperty scaling = new SimpleDoubleProperty(1.0f);
@@ -64,8 +61,6 @@ public abstract class GameScene2D implements GameScene {
         debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas);
         debugInfoRenderer.scalingProperty().bind(scaling);
 
-        arcadeFont8.bind(scaling.map(s -> ui.assets().arcadeFont(s.floatValue() * 8)));
-        arcadeFont6.bind(scaling.map(s -> ui.assets().arcadeFont(s.floatValue() * 6)));
 
         doInit();
 
@@ -108,9 +103,6 @@ public abstract class GameScene2D implements GameScene {
     public void  setScaling(double scaling) { this.scaling.set((float) scaling); }
     public double scaling() { return scaling.get(); }
     public double scaled(double value) { return (float) value * scaling(); }
-
-    public Font scaledArcadeFont8() { return arcadeFont8.get(); }
-    public Font scaledArcadeFont6() { return arcadeFont6.get(); }
 
     public Color backgroundColor() { return backgroundColor.get(); }
     public void setBackgroundColor(Color color) { backgroundColor.set(color); }

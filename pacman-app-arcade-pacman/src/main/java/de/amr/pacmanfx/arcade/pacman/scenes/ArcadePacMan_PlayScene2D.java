@@ -250,9 +250,12 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
             float cx = TS(house.minTile().x() + houseSize.x() * 0.5f);
             float cy = TS(house.minTile().y() + houseSize.y() + 1);
             switch (gameLevel.messageType()) {
-                case GameLevel.MESSAGE_GAME_OVER -> gameLevelRenderer.fillTextCentered("GAME  OVER", ARCADE_RED, scaledArcadeFont8(), cx, cy);
-                case GameLevel.MESSAGE_READY     -> gameLevelRenderer.fillTextCentered("READY!", ARCADE_YELLOW, scaledArcadeFont8(), cx, cy);
-                case GameLevel.MESSAGE_TEST      -> gameLevelRenderer.fillTextCentered("TEST    L%02d".formatted(gameLevel.number()), ARCADE_WHITE, scaledArcadeFont8(), cx, cy);
+                case GameLevel.MESSAGE_GAME_OVER -> gameLevelRenderer.fillTextCentered("GAME  OVER",
+                        ARCADE_RED, gameLevelRenderer.arcadeFont8(), cx, cy);
+                case GameLevel.MESSAGE_READY     -> gameLevelRenderer.fillTextCentered("READY!",
+                        ARCADE_YELLOW, gameLevelRenderer.arcadeFont8(), cx, cy);
+                case GameLevel.MESSAGE_TEST      -> gameLevelRenderer.fillTextCentered("TEST    L%02d".formatted(gameLevel.number()),
+                        ARCADE_WHITE, gameLevelRenderer.arcadeFont8(), cx, cy);
             }
         }
 

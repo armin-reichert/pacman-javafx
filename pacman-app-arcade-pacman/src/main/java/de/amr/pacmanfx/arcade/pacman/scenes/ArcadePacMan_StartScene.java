@@ -68,10 +68,10 @@ public class ArcadePacMan_StartScene extends GameScene2D {
     @Override
     public void drawSceneContent() {
         Font font = sceneRenderer.arcadeFont(TS);
-        sceneRenderer.fillText("PUSH START BUTTON", ARCADE_ORANGE, font,     TS(6),  TS(17));
-        sceneRenderer.fillText("1 PLAYER ONLY", ARCADE_CYAN, font,           TS(8),  TS(21));
-        sceneRenderer.fillText("BONUS PAC-MAN FOR 10000", ARCADE_ROSE, font, TS(1),  TS(25));
-        sceneRenderer.fillText("PTS", ARCADE_ROSE, scaledArcadeFont6(),      TS(25), TS(25));
-        sceneRenderer.fillText("© 1980 MIDWAY MFG.CO.", ARCADE_PINK, font,   TS(4),  TS(29));
+        sceneRenderer.fillText("PUSH START BUTTON", ARCADE_ORANGE, font,        TS(6),  TS(17));
+        sceneRenderer.fillText("1 PLAYER ONLY", ARCADE_CYAN, font,              TS(8),  TS(21));
+        sceneRenderer.fillText("BONUS PAC-MAN FOR 10000", ARCADE_ROSE, font,    TS(1),  TS(25));
+        sceneRenderer.fillText("PTS", ARCADE_ROSE, sceneRenderer.arcadeFont6(), TS(25), TS(25));
+        sceneRenderer.fillText("© 1980 MIDWAY MFG.CO.", ARCADE_PINK, font,      TS(4),  TS(29));
     }
 }

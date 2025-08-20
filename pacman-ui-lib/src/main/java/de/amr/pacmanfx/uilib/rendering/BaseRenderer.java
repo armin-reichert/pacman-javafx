@@ -7,7 +7,9 @@ package de.amr.pacmanfx.uilib.rendering;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -38,9 +40,13 @@ public class BaseRenderer implements CanvasRenderer {
 
     protected final DoubleProperty scaling = new SimpleDoubleProperty(1.0);
     protected final GraphicsContext ctx;
+    protected final ObjectProperty<Font> arcadeFont8 = new SimpleObjectProperty<>();
+    protected final ObjectProperty<Font> arcadeFont6 = new SimpleObjectProperty<>();
 
     public BaseRenderer(Canvas canvas) {
         ctx = requireNonNull(canvas).getGraphicsContext2D();
+        arcadeFont8.bind(scaling.map(s -> Font.font(ARCADE_FONT_TS.getFamily(), scaled(8))));
+        arcadeFont6.bind(scaling.map(s -> Font.font(ARCADE_FONT_TS.getFamily(), scaled(6))));
     }
 
     @Override
@@ -66,6 +72,14 @@ public class BaseRenderer implements CanvasRenderer {
     public double scaling() { return scalingProperty().get(); }
 
     public double scaled(double value) { return scaling() * value; }
+
+    public Font arcadeFont8() {
+        return arcadeFont8.get();
+    }
+
+    public Font arcadeFont6() {
+        return arcadeFont6.get();
+    }
 
     /**
      * @param size unscaled font size
