@@ -102,14 +102,14 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     private final GameUI ui;
 
-    private DefaultSoundManager soundManager = new DefaultSoundManager();
-    private Map<String, GameScene> scenesByID = new HashMap<>();
-    private Set<ActionBinding> actionBindings;
+    private final DefaultSoundManager soundManager = new DefaultSoundManager();
+    private final Map<String, GameScene> scenesByID = new HashMap<>();
+    private final Set<ActionBinding> actionBindings;
 
     private final AssetStorage assets = new AssetStorage();
-    private TengenMsPacMan_SpriteSheet spriteSheet;
-    private ArcadeMapsSpriteSheet arcadeMapsSpriteSheet;
-    private NonArcadeMapsSpriteSheet nonArcadeMapsSpriteSheet;
+    private final TengenMsPacMan_SpriteSheet spriteSheet;
+    private final ArcadeMapsSpriteSheet arcadeMapsSpriteSheet;
+    private final NonArcadeMapsSpriteSheet nonArcadeMapsSpriteSheet;
 
     private MapColoringService coloringService = new MapColoringService();
 
@@ -250,32 +250,12 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     public void dispose() {
         Logger.info("Disposing {}", getClass().getSimpleName());
         assets.removeAll();
-        if (arcadeMapsSpriteSheet != null) {
-            //arcadeMapsSpriteSheet.dispose();
-            arcadeMapsSpriteSheet = null;
-        }
-        if (nonArcadeMapsSpriteSheet != null) {
-            //nonArcadeMapsSpriteSheet.dispose();
-            nonArcadeMapsSpriteSheet = null;
-        }
         if (coloringService != null) {
             coloringService.dispose();
             coloringService = null;
         }
-        if (spriteSheet != null) {
-            spriteSheet = null;
-        }
-        if (scenesByID != null) {
-            scenesByID.clear();
-            scenesByID = null;
-        }
-        if (actionBindings != null) {
-            actionBindings = null;
-        }
-        if (soundManager != null) {
-            soundManager.dispose();
-            soundManager = null;
-        }
+        scenesByID.clear();
+        soundManager.dispose();
     }
 
     @Override
