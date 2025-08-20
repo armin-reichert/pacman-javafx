@@ -46,7 +46,6 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
     private Pac msPacMan;
     private Stork stork;
     private Bag flyingBag;
-    private TengenMsPacMan_SpriteSheet spriteSheet;
 
     private boolean darkness;
     private int t;
@@ -66,7 +65,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         actionBindings.bind(ACTION_LET_GAME_STATE_EXPIRE, ui.joypad().key(JoypadButton.START));
 
         GameUI_Config config = ui.currentConfig();
-        spriteSheet = (TengenMsPacMan_SpriteSheet) config.spriteSheet();
+        var spriteSheet = (TengenMsPacMan_SpriteSheet) config.spriteSheet();
 
         clapperboard = new Clapperboard(spriteSheet, 3, "JUNIOR");
         clapperboard.setPosition(3 * TS, 10 * TS);
@@ -178,8 +177,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
     @Override
     public void drawSceneContent() {
         if (!darkness) {
-            Stream.of(clapperboard, stork, flyingBag, msPacMan, pacMan)
-                .forEach(actor -> gameRenderer.drawActor(actor, spriteSheet));
+            Stream.of(clapperboard, stork, flyingBag, msPacMan, pacMan).forEach(actor -> gameRenderer.drawActor(actor));
         }
     }
 }

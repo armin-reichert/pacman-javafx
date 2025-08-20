@@ -7,7 +7,6 @@ package de.amr.pacmanfx.ui.layout;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.api.GameUI;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.GameRenderer;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
@@ -129,13 +128,12 @@ public class MiniGameView extends VBox {
 
         GameLevel gameLevel = ui.gameContext().gameLevel();
         if (gameLevel != null) {
-            SpriteSheet<?> spriteSheet = ui.currentConfig().spriteSheet();
             gameRenderer.drawGameLevel(ui.gameContext(), PROPERTY_CANVAS_BACKGROUND_COLOR.get(), false, gameLevel.blinking().isOn());
-            gameLevel.bonus().ifPresent(bonus -> gameRenderer.drawActor(bonus, spriteSheet));
-            gameRenderer.drawActor(gameLevel.pac(), spriteSheet);
+            gameLevel.bonus().ifPresent(bonus -> gameRenderer.drawActor(bonus));
+            gameRenderer.drawActor(gameLevel.pac());
             Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)
                 .map(gameLevel::ghost)
-                .forEach(ghost -> gameRenderer.drawActor(ghost, spriteSheet));
+                .forEach(ghost -> gameRenderer.drawActor(ghost));
         }
 
         if (PROPERTY_DEBUG_INFO_VISIBLE.get()) {

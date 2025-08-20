@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
@@ -38,7 +37,6 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     private Pac pacMan;
     private Pac msPacMan;
 
-    private ArcadeMsPacMan_SpriteSheet spriteSheet;
     private Clapperboard clapperboard;
 
     public ArcadeMsPacMan_CutScene2(GameUI ui) {
@@ -49,8 +47,6 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     public void doInit() {
         pacMan = createPacMan();
         msPacMan = createMsPacMan();
-
-        spriteSheet = (ArcadeMsPacMan_SpriteSheet) ui.currentConfig().spriteSheet();
 
         msPacMan.setAnimations(ui.currentConfig().createPacAnimations(msPacMan));
         pacMan.setAnimations(ui.currentConfig().createPacAnimations(pacMan));
@@ -88,7 +84,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        Stream.of(clapperboard, msPacMan, pacMan).forEach(actor -> gameRenderer.drawActor(actor, spriteSheet));
+        Stream.of(clapperboard, msPacMan, pacMan).forEach(actor -> gameRenderer.drawActor(actor));
     }
 
     // Scene controller state machine

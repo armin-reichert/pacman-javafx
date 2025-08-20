@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
-import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
+import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
@@ -19,7 +19,6 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -55,7 +54,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         @Override public ArcadePacMan_IntroScene context() { return ArcadePacMan_IntroScene.this; }
     };
 
-    private SpriteSheet<SpriteID> spriteSheet;
+    private ArcadePacMan_SpriteSheet spriteSheet;
     private Pulse blinking;
     private Pac pacMan;
     private List<Ghost> ghosts;
@@ -71,7 +70,6 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         super(ui);
     }
     
-    @SuppressWarnings("unchecked")
     @Override
     public void doInit() {
         gameContext().game().hudData().credit(true).score(true).livesCounter(false).levelCounter(true);
@@ -82,7 +80,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         actionBindings.assign(ACTION_TEST_LEVELS_SHORT, ui.actionBindings());
         actionBindings.assign(ACTION_TEST_LEVELS_MEDIUM, ui.actionBindings());
 
-        spriteSheet = (SpriteSheet<SpriteID>) ui.currentConfig().spriteSheet();
+        spriteSheet = (ArcadePacMan_SpriteSheet) ui.currentConfig().spriteSheet();
         setHudRenderer(ui.currentConfig().createHUDRenderer(canvas, scaling));
 
         blinking = new Pulse(10, true);
@@ -172,17 +170,17 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         long tick = sceneController.state().timer().tickCount();
         int shakingAmount = shaking ? (tick % 5 < 2 ? 0 : -1) : 0;
         if (shakingAmount == 0) {
-            ghosts.forEach(ghost -> gameRenderer.drawActor(ghost, spriteSheet));
+            ghosts.forEach(ghost -> gameRenderer.drawActor(ghost));
         } else {
-            gameRenderer.drawActor(ghosts.get(RED_GHOST_SHADOW), spriteSheet);
-            gameRenderer.drawActor(ghosts.get(ORANGE_GHOST_POKEY), spriteSheet);
+            gameRenderer.drawActor(ghosts.get(RED_GHOST_SHADOW));
+            gameRenderer.drawActor(ghosts.get(ORANGE_GHOST_POKEY));
             gameRenderer.ctx().save();
             gameRenderer.ctx().translate(shakingAmount, 0);
-            gameRenderer.drawActor(ghosts.get(PINK_GHOST_SPEEDY), spriteSheet);
-            gameRenderer.drawActor(ghosts.get(CYAN_GHOST_BASHFUL), spriteSheet);
+            gameRenderer.drawActor(ghosts.get(PINK_GHOST_SPEEDY));
+            gameRenderer.drawActor(ghosts.get(CYAN_GHOST_BASHFUL));
             gameRenderer.ctx().restore();
         }
-        gameRenderer.drawActor(pacMan, spriteSheet);
+        gameRenderer.drawActor(pacMan);
     }
 
     private void drawPoints() {

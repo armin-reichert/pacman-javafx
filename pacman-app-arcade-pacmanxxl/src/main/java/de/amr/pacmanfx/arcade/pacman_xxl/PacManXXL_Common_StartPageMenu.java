@@ -15,7 +15,6 @@ import de.amr.pacmanfx.ui._2d.ArcadePalette;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.Ufx;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.GameRenderer;
 import de.amr.pacmanfx.uilib.widgets.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuEntry;
@@ -52,8 +51,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         private final GraphicsContext ctx;
         private final Pac pac;
         private final List<Ghost> ghosts;
-        private SpriteSheet<?> spriteSheet;
-        private GameRenderer gameRenderer;
+        private GameRenderer<?> gameRenderer;
         private boolean chasingGhosts;
         private boolean running;
 
@@ -145,13 +143,12 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
             ctx.translate(0, 23.5 * TS * scaling);
             ctx.setImageSmoothing(false);
             gameRenderer.setScaling(scaling);
-            ghosts.forEach(ghost -> gameRenderer.drawActor(ghost, spriteSheet));
-            gameRenderer.drawActor(pac, spriteSheet);
+            ghosts.forEach(ghost -> gameRenderer.drawActor(ghost));
+            gameRenderer.drawActor(pac);
             ctx.restore();
         }
 
         void setGameConfig(GameUI_Config config) {
-            spriteSheet = config.spriteSheet();
             gameRenderer = config.createGameRenderer(ctx.getCanvas());
             pac.setAnimations(config.createPacAnimations(pac));
             pac.playAnimation(ANIM_PAC_MUNCHING);

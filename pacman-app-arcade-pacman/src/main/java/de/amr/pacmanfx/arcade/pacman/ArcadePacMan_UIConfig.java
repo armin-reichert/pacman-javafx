@@ -178,12 +178,12 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
 
     @Override
     public ArcadePacMan_GameRenderer createGameRenderer(Canvas canvas) {
-        return new ArcadePacMan_GameRenderer(this, canvas, spriteSheet);
+        return new ArcadePacMan_GameRenderer(this, canvas);
     }
 
     @Override
     public HUDRenderer createHUDRenderer(Canvas canvas, DoubleProperty scaling) {
-        var hudRenderer = new ArcadePacMan_HUDRenderer(this, canvas, spriteSheet);
+        var hudRenderer = new ArcadePacMan_HUDRenderer(this, canvas);
         hudRenderer.scalingProperty().bind(scaling);
         return hudRenderer;
     }

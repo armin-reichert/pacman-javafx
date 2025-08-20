@@ -12,7 +12,6 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
@@ -39,7 +38,6 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     private Pac pac;
     private Ghost blinky;
 
-    private SpriteSheet<?> spriteSheet;
     private SpriteAnimation blinkyNormal;
     private SpriteAnimation blinkyDamaged;
     private SpriteAnimation nailDressRaptureAnimation;
@@ -51,8 +49,6 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     @Override
     public void doInit() {
         frame = -1;
-
-        spriteSheet = ui.currentConfig().spriteSheet();
 
         pac = createPac();
         pac.setAnimations(ui.currentConfig().createPacAnimations(pac));
@@ -138,7 +134,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     public void drawSceneContent() {
         gameRenderer.drawSprite(nailDressRaptureAnimation.currentSprite(),
             TS(14), TS(19) + 3, true);
-        actorsInZOrder.forEach(actor -> gameRenderer.drawActor(actor, spriteSheet));
+        actorsInZOrder.forEach(actor -> gameRenderer.drawActor(actor));
     }
 
     @Override

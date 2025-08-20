@@ -12,7 +12,6 @@ import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -36,7 +35,6 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     private boolean grayScreen;
     private Actor movingText;
     private Ghost ghost;
-    private SpriteSheet<?> spriteSheet;
 
     public TengenMsPacMan_BootScene(GameUI ui) {
         super(ui);
@@ -52,8 +50,6 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     public void doInit() {
         tick = 0;
         grayScreen = false;
-
-        spriteSheet = ui.currentConfig().spriteSheet();
 
         movingText = new Actor();
         ghost = createGhost(RED_GHOST_SHADOW);
@@ -118,7 +114,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
         } else {
             gameRenderer.fillText(TENGEN_PRESENTS, blueShadedColor(tick), scaledArcadeFont8(),
                 movingText.x(), movingText.y());
-            gameRenderer.drawActor(ghost, spriteSheet);
+            gameRenderer.drawActor(ghost);
         }
     }
 

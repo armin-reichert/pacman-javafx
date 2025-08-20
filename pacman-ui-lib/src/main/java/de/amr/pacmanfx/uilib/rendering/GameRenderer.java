@@ -12,19 +12,18 @@ import javafx.scene.paint.Color;
 
 import static java.util.Objects.requireNonNull;
 
-public abstract class GameRenderer extends BaseRenderer {
+public abstract class GameRenderer<T extends Enum<T>> extends SpriteSheetRenderer<T> {
 
-    protected GameRenderer(Canvas canvas, SpriteSheet<?> spriteSheet) {
-        super(canvas, spriteSheet);
+    protected GameRenderer(Canvas canvas) {
+        super(canvas);
     }
 
     /**
      * Draws an actor (Pac-Man, ghost, moving bonus, etc.) if it is visible.
      *
      * @param actor the actor to draw
-     * @param spriteSheet sprite sheet
      */
-    public void drawActor(Actor actor, SpriteSheet<?> spriteSheet) {
+    public void drawActor(Actor actor) {
         requireNonNull(actor);
         if (!actor.isVisible()) return;
         actor.animations()

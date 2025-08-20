@@ -50,7 +50,6 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     private Ghost inky;
     private Ghost pinky;
 
-    private ArcadeMsPacMan_SpriteSheet spriteSheet;
     private SingleSpriteActor heart;
     private Clapperboard clapperboard;
 
@@ -60,7 +59,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     
     @Override
     public void doInit() {
-        spriteSheet = (ArcadeMsPacMan_SpriteSheet) ui.currentConfig().spriteSheet();
+        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) ui.currentConfig().spriteSheet();
 
         pacMan = createPacMan();
         msPacMan = createMsPacMan();
@@ -109,8 +108,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        Stream.of(clapperboard, msPacMan, pacMan, inky, pinky, heart)
-            .forEach(actor -> gameRenderer.drawActor(actor, spriteSheet));
+        Stream.of(clapperboard, msPacMan, pacMan, inky, pinky, heart).forEach(actor -> gameRenderer.drawActor(actor));
     }
 
     // Scene controller state machine

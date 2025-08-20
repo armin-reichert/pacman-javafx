@@ -14,7 +14,6 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.ui._2d.DebugInfoRenderer;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.GameRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -25,7 +24,7 @@ import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_WHITE;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
-public class ArcadeMsPacMan_GameRenderer extends GameRenderer implements DebugInfoRenderer {
+public class ArcadeMsPacMan_GameRenderer extends GameRenderer<SpriteID> implements DebugInfoRenderer {
 
     protected GameUI_Config uiConfig;
     protected BrightMazesSpriteSheet brightMazesSpriteSheet;
@@ -33,9 +32,8 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer implements DebugIn
     private final RectShort[] bonusSymbols;
     private final RectShort[] bonusValues;
 
-    public ArcadeMsPacMan_GameRenderer(Canvas canvas, GameUI_Config uiConfig, ArcadeMsPacMan_SpriteSheet spriteSheet,
-        BrightMazesSpriteSheet brightMazesSpriteSheet) {
-        super(canvas, spriteSheet);
+    public ArcadeMsPacMan_GameRenderer(Canvas canvas, GameUI_Config uiConfig, BrightMazesSpriteSheet brightMazesSpriteSheet) {
+        super(canvas);
         this.uiConfig = requireNonNull(uiConfig);
         this.brightMazesSpriteSheet = brightMazesSpriteSheet; // can be null in Ms. Pac-Man XXL!
 
@@ -43,13 +41,13 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer implements DebugIn
         bonusValues = spriteSheet().spriteSequence(SpriteID.BONUS_VALUES);
     }
 
-    protected ArcadeMsPacMan_GameRenderer(Canvas canvas, GameUI_Config uiConfig, ArcadeMsPacMan_SpriteSheet spriteSheet) {
-        this(canvas, uiConfig, spriteSheet, null);
+    protected ArcadeMsPacMan_GameRenderer(Canvas canvas, GameUI_Config uiConfig) {
+        this(canvas, uiConfig, null);
     }
 
     @Override
     public ArcadeMsPacMan_SpriteSheet spriteSheet() {
-        return (ArcadeMsPacMan_SpriteSheet) spriteSheet;
+        return (ArcadeMsPacMan_SpriteSheet) uiConfig.spriteSheet();
     }
 
     @Override
@@ -75,7 +73,11 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer implements DebugIn
             int colorMapIndex = gameLevel.worldMap().getConfigValue("colorMapIndex");
             RectShort[] brightMazes = brightMazesSpriteSheet.spriteSequence(BrightMazesSpriteSheet.SpriteID.BRIGHT_MAZES);
             RectShort maze = brightMazes[colorMapIndex];
-            drawSprite(brightMazesSpriteSheet, maze, 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE), true);
+            //drawSprite(brightMazesSpriteSheet, maze, 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE), true);
+            double s = scaling();
+            ctx().drawImage(spriteSheet().sourceImage(),
+                maze.x(), maze.y(), maze.width(), maze.height(),
+                0, s * TS(GameLevel.EMPTY_ROWS_OVER_MAZE), s * maze.width(), s * maze.height());
         }
     }
 
@@ -99,7 +101,7 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer implements DebugIn
     }
 
     @Override
-    public void drawActor(Actor actor, SpriteSheet<?> spriteSheet) {
+    public void drawActor(Actor actor) {
         requireNonNull(actor);
         if (actor.isVisible()) {
             switch (actor) {
@@ -107,7 +109,7 @@ public class ArcadeMsPacMan_GameRenderer extends GameRenderer implements DebugIn
                 case Marquee marquee           -> drawMarquee(marquee);
                 case MidwayCopyright copyright -> drawMidwayCopyright(copyright);
                 case Bonus bonus -> drawMovingBonus(bonus);
-                default -> super.drawActor(actor, spriteSheet);
+                default -> super.drawActor(actor);
             }
         }
     }

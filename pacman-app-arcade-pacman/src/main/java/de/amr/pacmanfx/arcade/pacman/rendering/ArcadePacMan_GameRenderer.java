@@ -10,7 +10,6 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.ui._2d.DebugInfoRenderer;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.GameRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -23,18 +22,18 @@ import static java.util.function.Predicate.not;
 /**
  * Renderer for classic Arcade Pac-Man and Pac-Man XXL game variants.
  */
-public class ArcadePacMan_GameRenderer extends GameRenderer implements DebugInfoRenderer {
+public class ArcadePacMan_GameRenderer extends GameRenderer<SpriteID> implements DebugInfoRenderer {
 
     protected final GameUI_Config uiConfig;
 
-    public ArcadePacMan_GameRenderer(GameUI_Config uiConfig, Canvas canvas, ArcadePacMan_SpriteSheet spriteSheet) {
-        super(canvas, spriteSheet);
+    public ArcadePacMan_GameRenderer(GameUI_Config uiConfig, Canvas canvas) {
+        super(canvas);
         this.uiConfig = requireNonNull(uiConfig);
     }
 
     @Override
     public ArcadePacMan_SpriteSheet spriteSheet() {
-        return (ArcadePacMan_SpriteSheet) spriteSheet;
+        return (ArcadePacMan_SpriteSheet) uiConfig.spriteSheet();
     }
 
     @Override
@@ -76,11 +75,11 @@ public class ArcadePacMan_GameRenderer extends GameRenderer implements DebugInfo
     }
 
     @Override
-    public void drawActor(Actor actor, SpriteSheet<?> spriteSheet) {
+    public void drawActor(Actor actor) {
         if (actor instanceof Bonus bonus) {
             drawBonus(bonus);
         }
-        else super.drawActor(actor, spriteSheet);
+        else super.drawActor(actor);
     }
 
     private void drawBonus(Bonus bonus) {

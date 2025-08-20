@@ -183,12 +183,12 @@ public class PacManXXL_MsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public PacManXXL_MsPacMan_GameRenderer createGameRenderer(Canvas canvas) {
-        return new PacManXXL_MsPacMan_GameRenderer(canvas, this, spriteSheet);
+        return new PacManXXL_MsPacMan_GameRenderer(canvas, this);
     }
 
     @Override
     public HUDRenderer createHUDRenderer(Canvas canvas, DoubleProperty scaling) {
-        var hudRenderer = new ArcadeMsPacMan_HUDRenderer(this, canvas, spriteSheet);
+        var hudRenderer = new ArcadeMsPacMan_HUDRenderer(this, canvas);
         hudRenderer.scalingProperty().bind(requireNonNull(scaling));
         return hudRenderer;
     }

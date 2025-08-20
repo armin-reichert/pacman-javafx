@@ -13,8 +13,8 @@ import de.amr.pacmanfx.model.LivesCounter;
 import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.*;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
+import de.amr.pacmanfx.uilib.rendering.SpriteSheetRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -25,13 +25,18 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesColor;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_HUDRenderer extends BaseRenderer implements HUDRenderer {
+public class TengenMsPacMan_HUDRenderer extends SpriteSheetRenderer implements HUDRenderer {
 
     protected final TengenMsPacMan_UIConfig uiConfig;
 
     public TengenMsPacMan_HUDRenderer(TengenMsPacMan_UIConfig uiConfig, Canvas canvas) {
-        super(canvas, uiConfig.spriteSheet());
+        super(canvas);
         this.uiConfig = requireNonNull(uiConfig);
+    }
+
+    @Override
+    public TengenMsPacMan_SpriteSheet spriteSheet() {
+        return uiConfig.spriteSheet();
     }
 
     @Override
@@ -82,7 +87,7 @@ public class TengenMsPacMan_HUDRenderer extends BaseRenderer implements HUDRende
     public void drawLivesCounter(LivesCounter livesCounter, int lifeCount, float x, float y) {
         RectShort sprite = uiConfig.spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL);
         for (int i = 0; i < livesCounter.visibleLifeCount(); ++i) {
-            drawSprite(uiConfig.spriteSheet(), sprite, x + TS(i * 2), y, true);
+            drawSprite(sprite, x + TS(i * 2), y, true);
         }
         if (lifeCount > livesCounter.maxLivesDisplayed()) {
             Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
@@ -99,7 +104,7 @@ public class TengenMsPacMan_HUDRenderer extends BaseRenderer implements HUDRende
         x -= TS(2);
         // symbols are drawn from right to left!
         for (byte symbol : levelCounter.symbols()) {
-            drawSprite(uiConfig.spriteSheet(), symbolSprites[symbol], x, y, true);
+            drawSprite(symbolSprites[symbol], x, y, true);
             x -= TS(2);
         }
     }
@@ -129,11 +134,11 @@ public class TengenMsPacMan_HUDRenderer extends BaseRenderer implements HUDRende
     // this is also used by the 3D scene
     public void drawLevelNumberBox(int number, double x, double y) {
         TengenMsPacMan_SpriteSheet spriteSheet = uiConfig.spriteSheet();
-        drawSprite(spriteSheet, spriteSheet.sprite(SpriteID.LEVEL_NUMBER_BOX), x, y, true);
+        drawSprite(spriteSheet().sprite(SpriteID.LEVEL_NUMBER_BOX), x, y, true);
         int tens = number / 10, ones = number % 10;
         if (tens > 0) {
-            drawSprite(uiConfig.spriteSheet(), spriteSheet.digitSprite(tens), x + 2, y + 2, true);
+            drawSprite(spriteSheet.digitSprite(tens), x + 2, y + 2, true);
         }
-        drawSprite(uiConfig.spriteSheet(), spriteSheet.digitSprite(ones), x + 10, y + 2, true);
+        drawSprite(spriteSheet.digitSprite(ones), x + 10, y + 2, true);
     }
 }

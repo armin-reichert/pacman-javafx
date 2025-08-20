@@ -9,8 +9,8 @@ import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
+import de.amr.pacmanfx.uilib.rendering.SpriteSheetRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -21,28 +21,26 @@ import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_WHITE;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_YELLOW;
 import static java.util.Objects.requireNonNull;
 
-public class ArcadePacMan_HUDRenderer extends BaseRenderer implements HUDRenderer {
+public class ArcadePacMan_HUDRenderer extends SpriteSheetRenderer<SpriteID> implements HUDRenderer {
 
     protected final GameUI_Config uiConfig;
 
-    public ArcadePacMan_HUDRenderer(GameUI_Config uiConfig, Canvas canvas, ArcadePacMan_SpriteSheet spriteSheet) {
-        super(canvas, spriteSheet);
+    public ArcadePacMan_HUDRenderer(GameUI_Config uiConfig, Canvas canvas) {
+        super(canvas);
         this.uiConfig = requireNonNull(uiConfig);
     }
 
-    protected ArcadePacMan_HUDRenderer(GameUI_Config uiConfig, Canvas canvas) {
-        super(canvas, null);
-        this.uiConfig = requireNonNull(uiConfig);
+    @Override
+    public ArcadePacMan_SpriteSheet spriteSheet() {
+        return (ArcadePacMan_SpriteSheet) uiConfig.spriteSheet();
     }
 
     protected RectShort[] bonusSymbols() {
-        var ss = (ArcadePacMan_SpriteSheet) spriteSheet;
-        return ss.spriteSequence(SpriteID.BONUS_SYMBOLS);
+        return spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
     }
 
     protected RectShort livesCounterSymbol() {
-        var ss = (ArcadePacMan_SpriteSheet) spriteSheet;
-        return ss.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
+        return spriteSheet().sprite(SpriteID.LIVES_COUNTER_SYMBOL);
     }
 
     @Override

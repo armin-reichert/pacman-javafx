@@ -56,7 +56,6 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     private Ghost inky;
     private Ghost pinky;
 
-    private TengenMsPacMan_SpriteSheet spriteSheet;
     private SingleSpriteActor heart;
 
     private boolean collided;
@@ -76,7 +75,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         actionBindings.bind(ACTION_LET_GAME_STATE_EXPIRE, ui.joypad().key(JoypadButton.START));
 
         GameUI_Config config = ui.currentConfig();
-        spriteSheet = (TengenMsPacMan_SpriteSheet) config.spriteSheet();
+        var spriteSheet = (TengenMsPacMan_SpriteSheet) config.spriteSheet();
 
         clapperboard = new Clapperboard(spriteSheet, 1, "THEY MEET");
         clapperboard.setPosition(3 * TS, 10 * TS);
@@ -246,7 +245,6 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        Stream.of(clapperboard, msPacMan, pacMan, inky, pinky, heart)
-            .forEach(actor -> gameRenderer.drawActor(actor, spriteSheet));
+        Stream.of(clapperboard, msPacMan, pacMan, inky, pinky, heart).forEach(actor -> gameRenderer.drawActor(actor));
     }
 }

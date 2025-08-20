@@ -41,8 +41,6 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     private List<Integer> juniorCreationTime;
 
     private Clapperboard clapperboard;
-    private TengenMsPacMan_SpriteSheet spriteSheet;
-
     private int t;
 
     public TengenMsPacMan_CutScene4(GameUI ui) {
@@ -56,7 +54,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         setHudRenderer(ui.currentConfig().createHUDRenderer(canvas, scaling));
         gameContext().game().hudData().score(false).levelCounter(true).livesCounter(false);
 
-        spriteSheet = (TengenMsPacMan_SpriteSheet) ui.currentConfig().spriteSheet();
+        var spriteSheet = (TengenMsPacMan_SpriteSheet) ui.currentConfig().spriteSheet();
         clapperboard = new Clapperboard(spriteSheet, 4, "THE END");
         clapperboard.setPosition(3*TS, 10*TS);
         clapperboard.setFont(scaledArcadeFont8());
@@ -234,7 +232,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        Stream.of(clapperboard, msPacMan, pacMan).forEach(actor -> gameRenderer.drawActor(actor, spriteSheet));
-        juniors.forEach(actor -> gameRenderer.drawActor(actor, spriteSheet));
+        Stream.of(clapperboard, msPacMan, pacMan).forEach(actor -> gameRenderer.drawActor(actor));
+        juniors.forEach(actor -> gameRenderer.drawActor(actor));
     }
 }
