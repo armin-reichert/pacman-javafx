@@ -10,6 +10,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
+import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -40,18 +41,21 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
 
     @Override
     public void doInit() {
-        hudRenderer = new ArcadePacMan_HUDRenderer(ui.currentConfig(), canvas);
+        GameUI_Config uiConfig = ui.currentConfig();
+        // This can be different spritesheet types!
+        SpriteSheet<?> spriteSheet = ui.currentConfig().spriteSheet();
+
+        hudRenderer = new ArcadePacMan_HUDRenderer(uiConfig, canvas);
         spriteRenderer = new SpriteRenderer(canvas) {
             @Override
             public SpriteSheet<?> spriteSheet() {
-                return ui.currentConfig().spriteSheet();
+                return uiConfig.spriteSheet();
             }
         };
         bindRendererScaling(hudRenderer, spriteRenderer);
 
         gameContext().game().hudData().all(false);
 
-        SpriteSheet<?> spriteSheet = ui.currentConfig().spriteSheet();
         double width = spriteSheet.sourceImage().getWidth(), height = spriteSheet.sourceImage().getHeight();
         // ignore left half of sprite sheet image containing maze images
         minPoint = Vector2f.of(width / 2, 0);
