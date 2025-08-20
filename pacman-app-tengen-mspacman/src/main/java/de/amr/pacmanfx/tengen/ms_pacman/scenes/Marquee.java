@@ -17,7 +17,7 @@ public class Marquee extends Actor {
     private static final int NUM_BULBS = 96;
 
     private final DoubleProperty scaling = new SimpleDoubleProperty(1.0);
-    private final BitSet bulbState = new BitSet(NUM_BULBS);
+    private final BitSet bulbOn = new BitSet(NUM_BULBS);
     private long marqueeProgress;
 
     public DoubleProperty scalingProperty() {
@@ -27,9 +27,9 @@ public class Marquee extends Actor {
     public void update(long tick) {
         if (tick % 4 == 0) {
             marqueeProgress += 2;
-            bulbState.clear();
+            bulbOn.clear();
             for (int b = 0; b < 6; ++b) {
-                bulbState.set((int) (b * 16 + marqueeProgress) % NUM_BULBS);
+                bulbOn.set((int) (b * 16 + marqueeProgress) % NUM_BULBS);
             }
         }
     }
@@ -37,7 +37,7 @@ public class Marquee extends Actor {
     public void draw(GraphicsContext ctx) {
         double xMin = x(), xMax = xMin + 132, yMin = y(), yMax = yMin + 60;
         for (int i = 0; i < NUM_BULBS; ++i) {
-            ctx.setFill(bulbState.get(i) ? nesColor(0x20) : nesColor(0x15));
+            ctx.setFill(bulbOn.get(i) ? nesColor(0x20) : nesColor(0x15));
             if (i <= 33) { // lower border left-to-right
                 drawBulb(ctx, xMin + 4 * i, yMax);
             } else if (i <= 48) { // right border bottom-to-top
