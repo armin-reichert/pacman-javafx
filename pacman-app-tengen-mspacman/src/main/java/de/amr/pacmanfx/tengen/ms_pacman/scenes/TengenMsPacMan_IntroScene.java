@@ -178,8 +178,8 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
             return scaling;
         }
 
-        public void updateState(long t) {
-            if (t % 4 == 0) {
+        public void update(long tick) {
+            if (tick % 4 == 0) {
                 marqueeProgress += 2;
                 bulbState.clear();
                 for (int b = 0; b < 6; ++b) {
@@ -267,7 +267,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
-                scene.marquee.updateState(scene.gameContext().gameState().timer().tickCount());
+                scene.marquee.update(scene.gameContext().gameState().timer().tickCount());
                 if (timer.atSecond(1)) {
                     scene.sceneController.changeState(GHOSTS_MARCHING_IN);
                 }
@@ -283,7 +283,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
-                scene.marquee.updateState(scene.gameContext().gameState().timer().tickCount());
+                scene.marquee.update(scene.gameContext().gameState().timer().tickCount());
                 boolean reachedEndPosition = letGhostMarchIn(scene);
                 if (reachedEndPosition) {
                     if (scene.ghostIndex == 3) {
@@ -336,7 +336,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
-                scene.marquee.updateState(scene.gameContext().gameState().timer().tickCount());
+                scene.marquee.update(scene.gameContext().gameState().timer().tickCount());
                 Logger.debug("Tick {}: {} marching in", scene.ui.clock().tickCount(), scene.msPacMan.name());
                 scene.msPacMan.move();
                 if (scene.msPacMan.x() <= MS_PAC_MAN_STOP_X) {
