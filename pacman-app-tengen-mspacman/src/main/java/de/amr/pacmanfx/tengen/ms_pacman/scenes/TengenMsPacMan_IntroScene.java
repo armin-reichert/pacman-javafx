@@ -22,6 +22,7 @@ import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
@@ -49,6 +50,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     private TengenMsPacMan_ScenesRenderer scenesRenderer;
 
     private TengenMsPacMan_SpriteSheet spriteSheet;
+    private Color[] ghostColors;
 
     private Marquee marquee;
     private Actor presentsText;
@@ -83,6 +85,10 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         var tengenActionBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().actionBindings();
         actionBindings.assign(ACTION_ENTER_START_SCREEN, tengenActionBindings);
         actionBindings.assign(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, tengenActionBindings);
+
+        ghostColors = Stream.of(RED_GHOST_SHADOW, PINK_GHOST_SPEEDY, CYAN_GHOST_BASHFUL, ORANGE_GHOST_POKEY)
+                .map(personality -> uiConfig.assets().color("ghost.%d.color.normal.dress".formatted(personality)))
+                .toArray(Color[]::new);
 
         marquee = new Marquee();
         marquee.setPosition(MARQUEE_X, MARQUEE_Y);
@@ -145,7 +151,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                     scenesRenderer.fillText("WITH", nesColor(0x20), MARQUEE_X + 12, MARQUEE_Y + 23);
                 }
                 Ghost currentGhost = ghosts.get(ghostIndex);
-                Color ghostColor = ui.currentConfig().assets().color("ghost.%d.color.normal.dress".formatted(currentGhost.id().personality()));
+                Color ghostColor = ghostColors[currentGhost.id().personality()];
                 scenesRenderer.fillText(currentGhost.name().toUpperCase(), ghostColor, MARQUEE_X + 44, MARQUEE_Y + 41);
                 ghosts.forEach(ghost -> gameLevelRenderer.drawActor(ghost));
             }
