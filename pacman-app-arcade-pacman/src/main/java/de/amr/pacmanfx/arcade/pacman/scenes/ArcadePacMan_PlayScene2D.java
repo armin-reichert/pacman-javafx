@@ -25,7 +25,9 @@ import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
+import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -52,7 +54,7 @@ import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
  */
 public class ArcadePacMan_PlayScene2D extends GameScene2D {
 
-    private ArcadePacMan_HUDRenderer hudRenderer;
+    private HUDRenderer hudRenderer;
     private GameLevelRenderer gameLevelRenderer;
 
     private LevelCompletedAnimation levelCompletedAnimation;
@@ -63,10 +65,15 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
 
     @Override
     protected void doInit() {
-        hudRenderer = (ArcadePacMan_HUDRenderer) ui.currentConfig().createHUDRenderer(canvas, scaling);
+        // Can be Pac-Man or Ms.Pac-Man renderer!
+        hudRenderer = ui.currentConfig().createHUDRenderer(canvas, scaling);
+        //TODO
+        if (hudRenderer instanceof BaseRenderer baseRenderer) {
+            baseRenderer.scalingProperty().bind(scaling);
+        }
         gameLevelRenderer = ui.currentConfig().createGameLevelRenderer(canvas);
         debugInfoRenderer = new PlaySceneDebugInfoRenderer(ui);
-        bindRendererScaling(hudRenderer, gameLevelRenderer, debugInfoRenderer);
+        bindRendererScaling(gameLevelRenderer, debugInfoRenderer);
 
         gameContext().game().hudData().credit(false).score(true).levelCounter(true).livesCounter(true);
         levelCompletedAnimation = new LevelCompletedAnimation(animationRegistry);
