@@ -18,6 +18,8 @@ import de.amr.pacmanfx.tengen.ms_pacman.rendering.*;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
@@ -53,8 +55,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     private TengenMsPacMan_SpriteSheet spriteSheet;
 
-    private long marqueeTick;
-    private final BitSet marqueeState = new BitSet(NUM_BULBS);
+    private Marquee marquee;
     private Actor presentsText;
     private Pac msPacMan;
     private List<Ghost> ghosts;
@@ -87,6 +88,9 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         var tengenActionBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().actionBindings();
         actionBindings.assign(ACTION_ENTER_START_SCREEN, tengenActionBindings);
         actionBindings.assign(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, tengenActionBindings);
+
+        marquee = new Marquee();
+        marquee.scalingProperty().bind(scaling);
 
         presentsText = new Actor();
         presentsText.setPosition(9 * TS, MARQUEE_Y - TS);
@@ -136,11 +140,11 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 }
             }
             case SHOWING_MARQUEE -> {
-                drawMarquee();
+                marquee.draw(ctx());
                 scenesRenderer.fillText("\"MS PAC-MAN\"", nesColor(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
             }
             case GHOSTS_MARCHING_IN -> {
-                drawMarquee();
+                marquee.draw(ctx());
                 scenesRenderer.fillText("\"MS PAC-MAN\"", nesColor(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
                 if (ghostIndex == 0) {
                     scenesRenderer.fillText("WITH", nesColor(0x20), MARQUEE_X + 12, MARQUEE_Y + 23);
@@ -151,7 +155,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 ghosts.forEach(ghost -> gameLevelRenderer.drawActor(ghost));
             }
             case MS_PACMAN_MARCHING_IN -> {
-                drawMarquee();
+                marquee.draw(ctx());
                 scenesRenderer.fillText("\"MS PAC-MAN\"", nesColor(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
                 scenesRenderer.fillText("STARRING", nesColor(0x20), MARQUEE_X + 12, MARQUEE_Y + 22);
                 scenesRenderer.fillText("MS PAC-MAN", nesColor(0x28), MARQUEE_X + 28, MARQUEE_Y + 38);
@@ -165,36 +169,45 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         }
     }
 
-    private void updateMarqueeState() {
-        long t = sceneController.state().timer().tickCount();
-        if (t % 4 == 0) {
-            marqueeTick += 2;
-            marqueeState.clear();
-            for (int b = 0; b < 6; ++b) {
-                marqueeState.set((int) (b * 16 + marqueeTick) % NUM_BULBS);
+    private static class Marquee {
+        private final DoubleProperty scaling = new SimpleDoubleProperty(1.0);
+        private final BitSet bulbState = new BitSet(NUM_BULBS);
+        private long marqueeProgress;
+
+        public DoubleProperty scalingProperty() {
+            return scaling;
+        }
+
+        public void updateState(long t) {
+            if (t % 4 == 0) {
+                marqueeProgress += 2;
+                bulbState.clear();
+                for (int b = 0; b < 6; ++b) {
+                    bulbState.set((int) (b * 16 + marqueeProgress) % NUM_BULBS);
+                }
             }
         }
-    }
 
-    private void drawMarquee() {
-        GraphicsContext ctx = gameLevelRenderer.ctx();
-        double xMin = MARQUEE_X, xMax = xMin + 132, yMin = MARQUEE_Y, yMax = yMin + 60;
-        for (int i = 0; i < NUM_BULBS; ++i) {
-            ctx.setFill(marqueeState.get(i) ? nesColor(0x20) : nesColor(0x15));
-            if (i <= 33) { // lower border left-to-right
-                drawBulb(ctx, xMin + 4 * i, yMax);
-            } else if (i <= 48) { // right border bottom-to-top
-                drawBulb(ctx, xMax, yMax - 4 * (i - 33));
-            } else if (i <= 81) { // upper border right-to-left
-                drawBulb(ctx, xMax - 4 * (i - 48), yMin);
-            } else { // left border top-to-bottom
-                drawBulb(ctx, xMin, yMin + 4 * (i - 81));
+        public void draw(GraphicsContext ctx) {
+            double xMin = MARQUEE_X, xMax = xMin + 132, yMin = MARQUEE_Y, yMax = yMin + 60;
+            for (int i = 0; i < NUM_BULBS; ++i) {
+                ctx.setFill(bulbState.get(i) ? nesColor(0x20) : nesColor(0x15));
+                if (i <= 33) { // lower border left-to-right
+                    drawBulb(ctx, xMin + 4 * i, yMax);
+                } else if (i <= 48) { // right border bottom-to-top
+                    drawBulb(ctx, xMax, yMax - 4 * (i - 33));
+                } else if (i <= 81) { // upper border right-to-left
+                    drawBulb(ctx, xMax - 4 * (i - 48), yMin);
+                } else { // left border top-to-bottom
+                    drawBulb(ctx, xMin, yMin + 4 * (i - 81));
+                }
             }
         }
-    }
 
-    private void drawBulb(GraphicsContext ctx, double x, double y) {
-        ctx.fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
+        private void drawBulb(GraphicsContext ctx, double x, double y) {
+            double s = scaling.get();
+            ctx.fillRect(s*x, s*y, s*2, s*2);
+        }
     }
 
     private enum SceneState implements FsmState<TengenMsPacMan_IntroScene> {
@@ -254,7 +267,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
-                scene.updateMarqueeState();
+                scene.marquee.updateState(scene.gameContext().gameState().timer().tickCount());
                 if (timer.atSecond(1)) {
                     scene.sceneController.changeState(GHOSTS_MARCHING_IN);
                 }
@@ -270,7 +283,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
-                scene.updateMarqueeState();
+                scene.marquee.updateState(scene.gameContext().gameState().timer().tickCount());
                 boolean reachedEndPosition = letGhostMarchIn(scene);
                 if (reachedEndPosition) {
                     if (scene.ghostIndex == 3) {
@@ -323,7 +336,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
-                scene.updateMarqueeState();
+                scene.marquee.updateState(scene.gameContext().gameState().timer().tickCount());
                 Logger.debug("Tick {}: {} marching in", scene.ui.clock().tickCount(), scene.msPacMan.name());
                 scene.msPacMan.move();
                 if (scene.msPacMan.x() <= MS_PAC_MAN_STOP_X) {
