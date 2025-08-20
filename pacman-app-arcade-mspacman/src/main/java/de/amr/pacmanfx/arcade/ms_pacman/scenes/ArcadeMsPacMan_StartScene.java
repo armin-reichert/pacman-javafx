@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_ScenesRenderer;
+import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.RectShort;
@@ -12,7 +13,6 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.TS;
@@ -38,7 +38,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
         setHudRenderer(ui.currentConfig().createHUDRenderer(canvas, scaling));
         gameContext().game().hudData().credit(true).score(true).levelCounter(true).livesCounter(false);
 
-        @SuppressWarnings("unchecked") var spriteSheet = (SpriteSheet<SpriteID>) ui.currentConfig().spriteSheet();
+        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) ui.currentConfig().spriteSheet();
         livesCounterSprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
 
         actionBindings.assign(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
@@ -62,8 +62,8 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        Font font6 = scaledArcadeFont6();
-        Font font8 = scaledArcadeFont8();
+        Font font6 = scenesRenderer.arcadeFont(6);
+        Font font8 = scenesRenderer.arcadeFont(TS);
         scenesRenderer.fillText("PUSH START BUTTON", ARCADE_ORANGE, font8, TS(6), TS(16));
         scenesRenderer.fillText("1 PLAYER ONLY", ARCADE_ORANGE, font8, TS(8), TS(18));
         scenesRenderer.fillText("ADDITIONAL    AT 10000", ARCADE_ORANGE, font8,TS(2), TS(25));

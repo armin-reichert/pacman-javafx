@@ -57,10 +57,11 @@ public abstract class BaseRenderer {
     public double scaled(double value) { return scaling() * value; }
 
     /**
-     * @return the used Arcade font at (scaled) tile size
+     * @param size unscaled font size
+     * @return the Arcade font at the given size scaled by the current renderer scaling value
      */
-    public Font arcadeFontTS() {
-        return Font.font(ARCADE_FONT_TS.getFamily(), scaled(ARCADE_FONT_TS.getSize()));
+    public Font arcadeFont(double size) {
+        return Font.font(ARCADE_FONT_TS.getFamily(), scaled(size));
     }
 
     /**
