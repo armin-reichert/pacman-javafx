@@ -106,7 +106,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     private Map<String, GameScene> scenesByID = new HashMap<>();
     private Set<ActionBinding> actionBindings;
 
-    private AssetStorage assets = new AssetStorage();
+    private final AssetStorage assets = new AssetStorage();
     private TengenMsPacMan_SpriteSheet spriteSheet;
     private ArcadeMapsSpriteSheet arcadeMapsSpriteSheet;
     private NonArcadeMapsSpriteSheet nonArcadeMapsSpriteSheet;
@@ -249,10 +249,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     @Override
     public void dispose() {
         Logger.info("Disposing {}", getClass().getSimpleName());
-        if (assets != null) {
-            assets.removeAll();
-            assets = null;
-        }
+        assets.removeAll();
         if (arcadeMapsSpriteSheet != null) {
             //arcadeMapsSpriteSheet.dispose();
             arcadeMapsSpriteSheet = null;
