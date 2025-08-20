@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
-import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_HUDRenderer;
 import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.controller.teststates.LevelMediumTestState;
@@ -66,7 +65,7 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
     @Override
     protected void doInit() {
         // Can be Pac-Man or Ms.Pac-Man renderer!
-        hudRenderer = ui.currentConfig().createHUDRenderer(canvas, scaling);
+        hudRenderer = ui.currentConfig().createHUDRenderer(canvas);
         //TODO
         if (hudRenderer instanceof BaseRenderer baseRenderer) {
             baseRenderer.scalingProperty().bind(scaling);

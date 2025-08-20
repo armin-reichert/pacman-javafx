@@ -61,7 +61,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     protected void doInit() {
         GameUI_Config uiConfig = ui.currentConfig();
 
-        hudRenderer = (TengenMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas, scaling);
+        hudRenderer = (TengenMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
         gameLevelRenderer = (TengenMsPacMan_GameLevelRenderer) uiConfig.createGameLevelRenderer(canvas);
         debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas);
         bindRendererScaling(hudRenderer, gameLevelRenderer, debugInfoRenderer);

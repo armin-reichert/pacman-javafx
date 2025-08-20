@@ -17,6 +17,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.*;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
+import de.amr.pacmanfx.ui.api.GameUI_Config;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
@@ -73,9 +74,11 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        hudRenderer = (TengenMsPacMan_HUDRenderer) ui.currentConfig().createHUDRenderer(canvas, scaling);
-        scenesRenderer = new TengenMsPacMan_ScenesRenderer(canvas, ui.currentConfig());
-        gameLevelRenderer = (TengenMsPacMan_GameLevelRenderer) ui.currentConfig().createGameLevelRenderer(canvas);
+        GameUI_Config uiConfig = ui.currentConfig();
+
+        hudRenderer = (TengenMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
+        scenesRenderer = new TengenMsPacMan_ScenesRenderer(canvas, uiConfig);
+        gameLevelRenderer = (TengenMsPacMan_GameLevelRenderer) uiConfig.createGameLevelRenderer(canvas);
         bindRendererScaling(hudRenderer, scenesRenderer, gameLevelRenderer);
 
         gameContext().game().hudData().score(false).levelCounter(false).livesCounter(false);

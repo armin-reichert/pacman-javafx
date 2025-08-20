@@ -31,7 +31,6 @@ import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.MsPacMan3D;
 import de.amr.pacmanfx.uilib.model3D.MsPacManBody;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
-import javafx.beans.property.DoubleProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -189,10 +188,8 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config {
     }
 
     @Override
-    public HUDRenderer createHUDRenderer(Canvas canvas, DoubleProperty scaling) {
-        var hudRenderer = new ArcadeMsPacMan_HUDRenderer(this, canvas);
-        hudRenderer.scalingProperty().bind(requireNonNull(scaling));
-        return hudRenderer;
+    public HUDRenderer createHUDRenderer(Canvas canvas) {
+        return new ArcadeMsPacMan_HUDRenderer(this, canvas);
     }
 
     @Override

@@ -38,7 +38,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     @Override
     protected void doInit() {
-        hudRenderer = (TengenMsPacMan_HUDRenderer) ui.currentConfig().createHUDRenderer(canvas, scaling);
+        hudRenderer = (TengenMsPacMan_HUDRenderer) ui.currentConfig().createHUDRenderer(canvas);
         scenesRenderer = new TengenMsPacMan_ScenesRenderer(canvas, ui.currentConfig());
         bindRendererScaling(hudRenderer, scenesRenderer);
 

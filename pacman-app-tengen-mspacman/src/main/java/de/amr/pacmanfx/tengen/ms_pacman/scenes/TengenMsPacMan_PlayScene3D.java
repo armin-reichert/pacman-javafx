@@ -72,7 +72,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         var canvas = new Canvas(scaling.get() * width, scaling.get() * height);
         canvas.getGraphicsContext2D().setImageSmoothing(false); // important for sharp image!
 
-        var hudRenderer = (TengenMsPacMan_HUDRenderer) ui.currentConfig().createHUDRenderer(canvas, scaling);
+        var hudRenderer = (TengenMsPacMan_HUDRenderer) ui.currentConfig().createHUDRenderer(canvas);
         hudRenderer.scalingProperty().bind(scaling);
 
         // Draw it

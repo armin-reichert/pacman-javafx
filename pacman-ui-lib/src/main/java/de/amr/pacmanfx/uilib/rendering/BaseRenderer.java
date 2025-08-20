@@ -19,7 +19,7 @@ import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
-public class BaseRenderer {
+public class BaseRenderer implements CanvasRenderer {
 
     private static final Font ARCADE_FONT_TS;
 
@@ -43,10 +43,17 @@ public class BaseRenderer {
         ctx = requireNonNull(canvas).getGraphicsContext2D();
     }
 
+    @Override
+    public Canvas canvas() {
+        return ctx.getCanvas();
+    }
+
+    @Override
     public GraphicsContext ctx() {
         return ctx;
     }
 
+    @Override
     public DoubleProperty scalingProperty() { return scaling; }
 
     public void setScaling(double value) {

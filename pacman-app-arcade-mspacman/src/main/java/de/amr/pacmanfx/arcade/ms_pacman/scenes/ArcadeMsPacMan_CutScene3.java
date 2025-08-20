@@ -57,7 +57,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene2D {
     
     @Override
     public void doInit() {
-        hudRenderer = (ArcadeMsPacMan_HUDRenderer) ui.currentConfig().createHUDRenderer(canvas, scaling);
+        hudRenderer = (ArcadeMsPacMan_HUDRenderer) ui.currentConfig().createHUDRenderer(canvas);
         gameLevelRenderer = new ArcadeMsPacMan_GameLevelRenderer(canvas, ui.currentConfig(), null);
         bindRendererScaling(hudRenderer, gameLevelRenderer);
 

@@ -77,7 +77,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        hudRenderer = (ArcadeMsPacMan_HUDRenderer) ui.currentConfig().createHUDRenderer(canvas, scaling);
+        hudRenderer = (ArcadeMsPacMan_HUDRenderer) ui.currentConfig().createHUDRenderer(canvas);
         scenesRenderer = new ArcadeMsPacMan_ScenesRenderer(canvas, ui.currentConfig());
         gameLevelRenderer = new ArcadeMsPacMan_GameLevelRenderer(canvas, ui.currentConfig());
         bindRendererScaling(hudRenderer, scenesRenderer, gameLevelRenderer);

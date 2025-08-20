@@ -8,7 +8,7 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.HUDData;
 
-public interface HUDRenderer {
+public interface HUDRenderer extends CanvasRenderer {
 
     /**
      * Draws the Head-Up Display (score, live counter, level counter, coins inserted)
