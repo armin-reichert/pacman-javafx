@@ -83,9 +83,12 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config {
 
     public void loadAssets() {
         assets.set("app_icon",                RES_ARCADE_MS_PAC_MAN.loadImage("graphics/icons/mspacman.png"));
+
         assets.set("logo.midway",             RES_ARCADE_MS_PAC_MAN.loadImage("graphics/midway_logo.png"));
+
         assets.set("startpage.image1",        RES_ARCADE_MS_PAC_MAN.loadImage("graphics/f1.jpg"));
         assets.set("startpage.image2",        RES_ARCADE_MS_PAC_MAN.loadImage("graphics/f2.jpg"));
+
         assets.set("color.game_over_message", ARCADE_RED);
 
         RectShort[] symbolSprites = spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS);

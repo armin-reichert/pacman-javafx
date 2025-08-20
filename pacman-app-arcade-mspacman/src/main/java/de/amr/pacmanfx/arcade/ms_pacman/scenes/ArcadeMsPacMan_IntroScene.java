@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
+import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_ScenesRenderer;
 import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
@@ -19,6 +20,7 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 import java.util.List;
 
@@ -52,7 +54,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     private final StateMachine<SceneState, ArcadeMsPacMan_IntroScene> sceneController;
 
-    private MidwayCopyright midwayCopyright;
+    private ArcadeMsPacMan_ScenesRenderer scenesRenderer;
     private Marquee marquee;
     private Pac msPacMan;
     private List<Ghost> ghosts;
@@ -71,6 +73,9 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void doInit() {
+        scenesRenderer = new ArcadeMsPacMan_ScenesRenderer(canvas, ui.currentConfig());
+        scenesRenderer.scalingProperty().bind(scaling);
+
         setHudRenderer(ui.currentConfig().createHUDRenderer(canvas, scaling));
         gameContext().game().hudData().credit(true).score(true).levelCounter(true).livesCounter(false);
 
@@ -80,15 +85,9 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         actionBindings.assign(ACTION_TEST_LEVELS_SHORT, ui.actionBindings());
         actionBindings.assign(ACTION_TEST_LEVELS_MEDIUM, ui.actionBindings());
 
-        midwayCopyright = new MidwayCopyright(ui.currentConfig().assets().image("logo.midway"));
-        midwayCopyright.setPosition(TS * 6, TS * 28);
-        midwayCopyright.show();
-
-        marquee = new Marquee(132, 60, 96, 6, 16);
-        marquee.setPosition(60, 88);
+        marquee = new Marquee(60, 88, 132, 60, 96, 6, 16);
         marquee.setBulbOffColor(ARCADE_RED);
         marquee.setBulbOnColor(ARCADE_WHITE);
-        marquee.show();
 
         msPacMan = createMsPacMan();
         ghosts = List.of(
@@ -131,28 +130,31 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        gameLevelRenderer.ctx().setFont(scaledArcadeFont8());
-        gameLevelRenderer.fillText(TITLE, ARCADE_ORANGE, TITLE_X, TITLE_Y);
-        gameLevelRenderer.drawActor(marquee);
+        Font font = scaledArcadeFont8();
+        scenesRenderer.ctx().setFont(font);
+        scenesRenderer.fillText(TITLE, ARCADE_ORANGE, TITLE_X, TITLE_Y);
+        scenesRenderer.drawMarquee(marquee);
+
         ghosts.forEach(ghost -> gameLevelRenderer.drawActor(ghost));
         gameLevelRenderer.drawActor(msPacMan);
+
         switch (sceneController.state()) {
             case GHOSTS_MARCHING_IN -> {
                 String ghostName = GHOST_NAMES[presentedGhostCharacter];
                 Color ghostColor = GHOST_COLORS[presentedGhostCharacter];
                 if (presentedGhostCharacter == RED_GHOST_SHADOW) {
-                    gameLevelRenderer.fillText("WITH", ARCADE_WHITE, TITLE_X, TOP_Y + TS(3));
+                    scenesRenderer.fillText("WITH", ARCADE_WHITE, TITLE_X, TOP_Y + TS(3));
                 }
                 double x = TITLE_X + (ghostName.length() < 4 ? TS(4) : TS(3));
                 double y = TOP_Y + TS(6);
-                gameLevelRenderer.fillText(ghostName, ghostColor, x, y);
+                scenesRenderer.fillText(ghostName, ghostColor, x, y);
             }
             case MS_PACMAN_MARCHING_IN, READY_TO_PLAY -> {
-                gameLevelRenderer.fillText("STARRING", ARCADE_WHITE, TITLE_X, TOP_Y + TS(3));
-                gameLevelRenderer.fillText("MS PAC-MAN", ARCADE_YELLOW, TITLE_X, TOP_Y + TS(6));
+                scenesRenderer.fillText("STARRING", ARCADE_WHITE, TITLE_X, TOP_Y + TS(3));
+                scenesRenderer.fillText("MS PAC-MAN", ARCADE_YELLOW, TITLE_X, TOP_Y + TS(6));
             }
         }
-        gameLevelRenderer.drawActor(midwayCopyright);
+        scenesRenderer.drawMidwayCopyright(TS(6), TS(28));
     }
 
     // Scene controller FSM

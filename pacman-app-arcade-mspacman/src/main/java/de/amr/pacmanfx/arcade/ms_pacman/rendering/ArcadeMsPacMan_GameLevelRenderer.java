@@ -6,8 +6,6 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.Clapperboard;
-import de.amr.pacmanfx.arcade.ms_pacman.scenes.Marquee;
-import de.amr.pacmanfx.arcade.ms_pacman.scenes.MidwayCopyright;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Actor;
@@ -19,7 +17,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_RED;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_WHITE;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
@@ -106,24 +103,9 @@ public class ArcadeMsPacMan_GameLevelRenderer extends GameLevelRenderer<SpriteID
         if (actor.isVisible()) {
             switch (actor) {
                 case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
-                case Marquee marquee           -> drawMarquee(marquee);
-                case MidwayCopyright copyright -> drawMidwayCopyright(copyright);
                 case Bonus bonus -> drawMovingBonus(bonus);
                 default -> super.drawActor(actor);
             }
-        }
-    }
-
-    public void drawMovingBonus(Bonus bonus) {
-        switch (bonus.state()) {
-            case EDIBLE -> {
-                ctx().save();
-                ctx().translate(0, bonus.jumpHeight());
-                drawSpriteCentered(bonus.center(), bonusSymbols[bonus.symbol()]);
-                ctx().restore();
-            }
-            case EATEN  -> drawSpriteCentered(bonus.center(), bonusValues[bonus.symbol()]);
-            case INACTIVE -> {}
         }
     }
 
@@ -142,61 +124,16 @@ public class ArcadeMsPacMan_GameLevelRenderer extends GameLevelRenderer<SpriteID
         ctx().fillText(clapperboard.text(), textX, numberY);
     }
 
-    /**
-     * 6 of the 96 light bulbs are bright in each frame, shifting counter-clockwise every tick.
-     * <p>
-     * The bulbs on the left border however are switched off every second frame. This is
-     * probably a bug in the original Arcade game.
-     * </p>
-     */
-    public void drawMarquee(Marquee marquee) {
-        long tick = marquee.timer().tickCount();
-        ctx().setFill(marquee.bulbOffColor());
-        for (int bulbIndex = 0; bulbIndex < marquee.totalBulbCount(); ++bulbIndex) {
-            drawMarqueeBulb(marquee, bulbIndex);
+    public void drawMovingBonus(Bonus bonus) {
+        switch (bonus.state()) {
+            case EDIBLE -> {
+                ctx().save();
+                ctx().translate(0, bonus.jumpHeight());
+                drawSpriteCentered(bonus.center(), bonusSymbols[bonus.symbol()]);
+                ctx().restore();
+            }
+            case EATEN  -> drawSpriteCentered(bonus.center(), bonusValues[bonus.symbol()]);
+            case INACTIVE -> {}
         }
-        int firstBrightIndex = (int) (tick % marquee.totalBulbCount());
-        ctx().setFill(marquee.bulbOnColor());
-        for (int i = 0; i < marquee.brightBulbsCount(); ++i) {
-            drawMarqueeBulb(marquee, (firstBrightIndex + i * marquee.brightBulbsDistance()) % marquee.totalBulbCount());
-        }
-        // simulate bug from original Arcade game
-        ctx().setFill(marquee.bulbOffColor());
-        for (int bulbIndex = 81; bulbIndex < marquee.totalBulbCount(); bulbIndex += 2) {
-            drawMarqueeBulb(marquee, bulbIndex);
-        }
-    }
-
-    private void drawMarqueeBulb(Marquee marquee, int bulbIndex) {
-        final double minX = marquee.x(), minY = marquee.y();
-        final double maxX = marquee.x() + marquee.width(), maxY = marquee.y() + marquee.height();
-        double x, y;
-        if (bulbIndex <= 33) { // lower edge left-to-right
-            x = minX + 4 * bulbIndex;
-            y = maxY;
-        }
-        else if (bulbIndex <= 48) { // right edge bottom-to-top
-            x = maxX;
-            y = 4 * (70 - bulbIndex);
-        }
-        else if (bulbIndex <= 81) { // upper edge right-to-left
-            x = 4 * (marquee.totalBulbCount() - bulbIndex);
-            y = minY;
-        }
-        else { // left edge top-to-bottom
-            x = minX;
-            y = 4 * (bulbIndex - 59);
-        }
-        ctx().fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
-    }
-
-    public void drawMidwayCopyright(MidwayCopyright copyright) {
-        double x = scaled(copyright.x()), y = scaled(copyright.y());
-        ctx().drawImage(copyright.logo(), x, y + 2, scaled(TS(4) - 2), scaled(TS(4)));
-        ctx().setFont(uiConfig.globalAssets().arcadeFont(scaled(TS)));
-        ctx().setFill(ARCADE_RED);
-        ctx().fillText("©", x + scaled(TS(5)), y + scaled(TS(2) + 2));
-        ctx().fillText("MIDWAY MFG CO", x + scaled(TS(7)), y + scaled(TS(2)));
-        ctx().fillText("1980/1981", x + scaled(TS(8)), y + scaled(TS(4)));
     }
 }

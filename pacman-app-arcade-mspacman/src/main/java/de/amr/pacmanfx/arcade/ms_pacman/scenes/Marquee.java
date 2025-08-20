@@ -5,13 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.AnimationManager;
 import javafx.scene.paint.Color;
 
-import java.util.Optional;
-
-public class Marquee extends Actor {
+public class Marquee {
     private final TickTimer timer = new TickTimer("Marquee-Timer");
     private final float width;
     private final float height;
@@ -20,8 +16,12 @@ public class Marquee extends Actor {
     private final int brightBulbsDistance;
     private Color bulbOnColor = Color.WHITE;
     private Color bulbOffColor = Color.GREEN;
+    private final int x;
+    private final int y;
 
-    public Marquee(float width, float height, int totalBulbCount, int brightBulbsCount, int brightBulbsDistance) {
+    public Marquee(int x, int y, float width, float height, int totalBulbCount, int brightBulbsCount, int brightBulbsDistance) {
+        this.x = x;
+        this.y = y;
         this.width = width;
         this.height = height;
         this.totalBulbCount = totalBulbCount;
@@ -29,9 +29,12 @@ public class Marquee extends Actor {
         this.brightBulbsDistance = brightBulbsDistance;
     }
 
-    @Override
-    public Optional<AnimationManager> animations() {
-        return Optional.empty();
+    public int x() {
+        return x;
+    }
+
+    public int y() {
+        return y;
     }
 
     public TickTimer timer() {
