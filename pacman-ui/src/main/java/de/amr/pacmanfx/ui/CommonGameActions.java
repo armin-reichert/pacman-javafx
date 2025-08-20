@@ -272,6 +272,14 @@ public interface CommonGameActions {
         }
     };
 
+    AbstractGameAction ACTION_SIMULATION_FASTEST = new AbstractGameAction("SIMULATION_FASTEST") {
+        @Override
+        public void execute(GameUI ui) {
+            ui.clock().setTargetFrameRate(SIMULATION_SPEED_MAX);
+            ui.showFlashMessage(Duration.seconds(0.75), "At maximum speed: %d Hz", SIMULATION_SPEED_MAX);
+        }
+    };
+
     AbstractGameAction ACTION_SIMULATION_SLOWER = new AbstractGameAction("SIMULATION_SLOWER") {
         @Override
         public void execute(GameUI ui) {
@@ -280,6 +288,13 @@ public interface CommonGameActions {
             ui.clock().setTargetFrameRate(newRate);
             String prefix = newRate == SIMULATION_SPEED_MIN ? "At minimum speed: " : "";
             ui.showFlashMessage(Duration.seconds(0.75), prefix + newRate + "Hz");
+        }
+    };
+    AbstractGameAction ACTION_SIMULATION_SLOWEST = new AbstractGameAction("SIMULATION_SLOWEST") {
+        @Override
+        public void execute(GameUI ui) {
+            ui.clock().setTargetFrameRate(SIMULATION_SPEED_MIN);
+            ui.showFlashMessage(Duration.seconds(0.75), "At minmimum speed: %d Hz", SIMULATION_SPEED_MIN);
         }
     };
 

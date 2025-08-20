@@ -113,7 +113,9 @@ public class PlayView extends StackPane implements GameUI_View {
         actionBindings.assign(ACTION_QUIT_GAME_SCENE, ui.actionBindings());
         actionBindings.assign(ACTION_SHOW_HELP, ui.actionBindings());
         actionBindings.assign(ACTION_SIMULATION_SLOWER, ui.actionBindings());
+        actionBindings.assign(ACTION_SIMULATION_SLOWEST, ui.actionBindings());
         actionBindings.assign(ACTION_SIMULATION_FASTER, ui.actionBindings());
+        actionBindings.assign(ACTION_SIMULATION_FASTEST, ui.actionBindings());
         actionBindings.assign(ACTION_SIMULATION_RESET, ui.actionBindings());
         actionBindings.assign(ACTION_SIMULATION_ONE_STEP, ui.actionBindings());
         actionBindings.assign(ACTION_SIMULATION_TEN_STEPS, ui.actionBindings());
