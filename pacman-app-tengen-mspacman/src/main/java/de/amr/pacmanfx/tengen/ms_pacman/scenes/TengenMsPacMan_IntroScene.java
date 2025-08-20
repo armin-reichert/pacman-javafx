@@ -14,7 +14,7 @@ import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.SpriteID;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameLevelRenderer;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_ScenesRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -47,6 +47,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     private final StateMachine<SceneState, TengenMsPacMan_IntroScene> sceneController;
 
+    private TengenMsPacMan_ScenesRenderer scenesRenderer;
     private TengenMsPacMan_SpriteSheet spriteSheet;
     private long marqueeTick;
     private final BitSet marqueeState = new BitSet(NUM_BULBS);
@@ -69,6 +70,9 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void doInit() {
+        scenesRenderer = new TengenMsPacMan_ScenesRenderer(canvas);
+        scenesRenderer.scalingProperty().bind(scaling);
+
         setHudRenderer(ui.currentConfig().createHUDRenderer(canvas, scaling));
         gameContext().game().hudData().score(false).levelCounter(false).livesCounter(false);
 
@@ -96,12 +100,6 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public Vector2f sizeInPx() { return NES_SIZE_PX; }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public TengenMsPacMan_GameLevelRenderer renderer() {
-        return (TengenMsPacMan_GameLevelRenderer) gameLevelRenderer;
-    }
 
     @Override
     public void drawSceneContent() {
@@ -148,7 +146,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         }
 
         if (PROPERTY_JOYPAD_BINDINGS_DISPLAYED.get()) {
-            renderer().drawJoypadKeyBinding(ui.joypad().currentKeyBinding());
+            scenesRenderer.drawJoypadKeyBinding(ui.joypad().currentKeyBinding());
         }
     }
 

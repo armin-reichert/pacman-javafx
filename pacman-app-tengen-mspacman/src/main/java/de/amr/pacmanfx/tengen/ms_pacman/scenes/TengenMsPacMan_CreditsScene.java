@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameLevelRenderer;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_ScenesRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 
@@ -28,14 +28,20 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
         y += n * TS;
     }
 
+    private TengenMsPacMan_ScenesRenderer scenesRenderer;
+
     public TengenMsPacMan_CreditsScene(GameUI ui) {
         super(ui);
     }
 
     @Override
     protected void doInit() {
+        scenesRenderer = new TengenMsPacMan_ScenesRenderer(canvas);
+        scenesRenderer.scalingProperty().bind(scaling);
+
         setHudRenderer(ui.currentConfig().createHUDRenderer(canvas, scaling));
         gameContext().game().hudData().credit(false).score(false).levelCounter(false).livesCounter(false);
+
         var tengenActionBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().actionBindings();
         actionBindings.assign(ACTION_ENTER_START_SCREEN, tengenActionBindings);
     }
@@ -54,57 +60,51 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     @Override
     public Vector2f sizeInPx() { return NES_SIZE_PX; }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public TengenMsPacMan_GameLevelRenderer renderer() {
-        return (TengenMsPacMan_GameLevelRenderer) gameLevelRenderer;
-    }
-
     @Override
     public void drawSceneContent() {
         gameLevelRenderer.ctx().setFont(scaledArcadeFont8());
         double barWidth = sizeInPx().x();
-        renderer().drawHorizontalBar(nesColor(0x20), nesColor(0x13), barWidth, TS, 20);
-        renderer().drawHorizontalBar(nesColor(0x20), nesColor(0x13), barWidth, TS, 212);
+        scenesRenderer.drawHorizontalBar(nesColor(0x20), nesColor(0x13), barWidth, TS, 20);
+        scenesRenderer.drawHorizontalBar(nesColor(0x20), nesColor(0x13), barWidth, TS, 212);
         y = 7 * TS;
         if (gameContext().gameState().timer().betweenSeconds(0.5 * DISPLAY_SECONDS, DISPLAY_SECONDS)) {
-            renderer().fillText("CREDITS FOR JAVAFX REMAKE", nesColor(0x20), 3 * TS, y);
+            scenesRenderer.fillText("CREDITS FOR JAVAFX REMAKE", nesColor(0x20), 3 * TS, y);
             skipTiles(4);
-            renderer().fillText("GAME PROGRAMMER:", nesColor(0x23), 4 * TS, y);
+            scenesRenderer.fillText("GAME PROGRAMMER:", nesColor(0x23), 4 * TS, y);
             skipTiles(2);
-            renderer().fillText("ARMIN REICHERT", nesColor(0x23), 10 * TS, y);
+            scenesRenderer.fillText("ARMIN REICHERT", nesColor(0x23), 10 * TS, y);
             skipTiles(3);
-            renderer().fillText("SPECIAL THANKS:", nesColor(0x23), 4 * TS, y);
+            scenesRenderer.fillText("SPECIAL THANKS:", nesColor(0x23), 4 * TS, y);
             skipTiles(2);
-            renderer().fillText("@RUSSIANMANSMWC", nesColor(0x23), 10 * TS, y);
+            scenesRenderer.fillText("@RUSSIANMANSMWC", nesColor(0x23), 10 * TS, y);
             skipTiles(1);
-            renderer().fillText("@FLICKY1211", nesColor(0x23), 10 * TS, y);
+            scenesRenderer.fillText("@FLICKY1211", nesColor(0x23), 10 * TS, y);
             skipTiles(1);
-            renderer().fillText("ANDYANA JONSEPH", nesColor(0x23), 10 * TS, y);
+            scenesRenderer.fillText("ANDYANA JONSEPH", nesColor(0x23), 10 * TS, y);
             skipTiles(3);
-            renderer().fillText("GITHUB.COM/ARMIN-REICHERT", nesColor(0x19), 3 * TS, y);
+            scenesRenderer.fillText("GITHUB.COM/ARMIN-REICHERT", nesColor(0x19), 3 * TS, y);
             skipTiles(1);
-            renderer().fillText("©2024 MIT LICENSE", nesColor(0x19), 6 * TS, y);
+            scenesRenderer.fillText("©2024 MIT LICENSE", nesColor(0x19), 6 * TS, y);
             skipTiles(1);
-            renderer().fillText("ALL RIGHTS GRANTED", nesColor(0x19), 5 * TS, y);
+            scenesRenderer.fillText("ALL RIGHTS GRANTED", nesColor(0x19), 5 * TS, y);
         } else {
-            renderer().fillText("CREDITS FOR MS PAC-MAN", nesColor(0x20), 3 * TS, y);
+            scenesRenderer.fillText("CREDITS FOR MS PAC-MAN", nesColor(0x20), 3 * TS, y);
             skipTiles(4);
-            renderer().fillText("GAME PROGRAMMER:", nesColor(0x23), 4 * TS, y);
+            scenesRenderer.fillText("GAME PROGRAMMER:", nesColor(0x23), 4 * TS, y);
             skipTiles(2);
-            renderer().fillText("FRANZ LANZINGER", nesColor(0x23), 10 * TS, y);
+            scenesRenderer.fillText("FRANZ LANZINGER", nesColor(0x23), 10 * TS, y);
             skipTiles(3);
-            renderer().fillText("SPECIAL THANKS:", nesColor(0x23), 4 * TS, y);
+            scenesRenderer.fillText("SPECIAL THANKS:", nesColor(0x23), 4 * TS, y);
             skipTiles(2);
-            renderer().fillText("JEFF YONAN", nesColor(0x23), 10 * TS, y);
+            scenesRenderer.fillText("JEFF YONAN", nesColor(0x23), 10 * TS, y);
             skipTiles(1);
-            renderer().fillText("DAVE O'RIVA", nesColor(0x23), 10 * TS, y);
+            scenesRenderer.fillText("DAVE O'RIVA", nesColor(0x23), 10 * TS, y);
             skipTiles(4);
-            renderer().fillText("MS PAC-MAN TM NAMCO LTD", nesColor(0x19), 5 * TS, y);
+            scenesRenderer.fillText("MS PAC-MAN TM NAMCO LTD", nesColor(0x19), 5 * TS, y);
             skipTiles(1);
-            renderer().fillText("©1990 TENGEN INC", nesColor(0x19), 7 * TS, y);
+            scenesRenderer.fillText("©1990 TENGEN INC", nesColor(0x19), 7 * TS, y);
             skipTiles(1);
-            renderer().fillText("ALL RIGHTS RESERVED", nesColor(0x19), 6 * TS, y);
+            scenesRenderer.fillText("ALL RIGHTS RESERVED", nesColor(0x19), 6 * TS, y);
         }
     }
 }
