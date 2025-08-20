@@ -485,7 +485,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
      * the recolored maze images are stored.
      */
 
-    public ColoredMazeSpriteSet createMazeSpriteSet(WorldMap worldMap, int flashCount) {
+    public MazeSpriteSet createMazeSpriteSet(WorldMap worldMap, int flashCount) {
         final MapCategory mapCategory = worldMap.getConfigValue("mapCategory");
         final int mapNumber = worldMap.getConfigValue("mapNumber");
         final NES_ColorScheme requestedColorScheme = worldMap.getConfigValue("nesColorScheme");
@@ -507,7 +507,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         };
     }
 
-    private ColoredMazeSpriteSet arcadeMazeSpriteSet(int mapNumber, NES_ColorScheme colorScheme, int flashCount) {
+    private MazeSpriteSet arcadeMazeSpriteSet(int mapNumber, NES_ColorScheme colorScheme, int flashCount) {
         // All requested maze color schemes exist in the sprite sheet, we only have to select the right sprite for the
         // requested (map number, color scheme) combination:
 
@@ -540,10 +540,10 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
             colorScheme, NES_ColorScheme._0F_20_0F_BLACK_WHITE_BLACK,
             false, flashCount);
 
-        return new ColoredMazeSpriteSet(coloredMaze, flashingMazes);
+        return new MazeSpriteSet(coloredMaze, flashingMazes);
     }
 
-    private ColoredMazeSpriteSet miniMazeSpriteSet(
+    private MazeSpriteSet miniMazeSpriteSet(
         int mapNumber, NES_ColorScheme requestedColorScheme, int flashCount, boolean randomFlashColors) {
 
         NonArcadeMapsSpriteSheet.MazeID mazeID = switch (mapNumber) {
@@ -574,7 +574,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         );
     }
 
-    private ColoredMazeSpriteSet bigMazeSpriteSet(
+    private MazeSpriteSet bigMazeSpriteSet(
         int mapNumber, NES_ColorScheme requestedColorScheme, int flashCount, boolean randomFlashColors) {
 
         NonArcadeMapsSpriteSheet.MazeID mazeID = switch (mapNumber) {
@@ -615,7 +615,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         );
     }
 
-    private ColoredMazeSpriteSet strangeMazeSpriteSet(
+    private MazeSpriteSet strangeMazeSpriteSet(
         NonArcadeMapsSpriteSheet.MazeID mazeID,
         NES_ColorScheme optionalRandomColorScheme,
         int flashCount,

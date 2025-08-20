@@ -98,7 +98,7 @@ public class MapColoringService implements Disposable {
         return flashingMazes;
     }
 
-    public ColoredMazeSpriteSet createMazeSet(
+    public MazeSpriteSet createMazeSet(
         MapCategory mapCategory, Object mazeID,
         SpriteSheet<?> spriteSheet,
         RectShort mazeSprite,
@@ -118,7 +118,7 @@ public class MapColoringService implements Disposable {
             originalColorScheme, requestedColorScheme,
             multipleFlashColors, flashCount
         );
-        return new ColoredMazeSpriteSet(recoloredMaze, flashingMazes);
+        return new MazeSpriteSet(recoloredMaze, flashingMazes);
     }
 
     private List<NES_ColorScheme> randomColorSchemesOtherThan(int count, NES_ColorScheme colorScheme) {
