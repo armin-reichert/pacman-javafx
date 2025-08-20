@@ -77,10 +77,13 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
         clapperboard = new Clapperboard(spriteSheet, 3, "JUNIOR");
         clapperboard.setPosition(3 * TS, 10 * TS);
         clapperboard.setFont(scaledArcadeFont8());
+
         msPacMan = createMsPacMan();
         msPacMan.setAnimations(uiConfig.createPacAnimations(msPacMan));
+
         pacMan = createPacMan();
         pacMan.setAnimations(uiConfig.createPacAnimations(pacMan));
+
         stork = new Stork(spriteSheet);
         flyingBag = new Bag(spriteSheet);
 
@@ -166,7 +169,6 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
     @Override
     public void drawHUD() {
         if (hudRenderer != null) {
-            // draw HUD only for non-Arcade map mode
             var game = gameContext().<TengenMsPacMan_GameModel>game();
             if (game.mapCategory() != MapCategory.ARCADE) {
                 hudRenderer.drawHUD(gameContext(), game.hudData(), sizeInPx().minus(0, 2 * TS));
@@ -176,7 +178,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        if (!darkness) {
+        if (gameLevelRenderer != null && !darkness) {
             Stream.of(clapperboard, stork, flyingBag, msPacMan, pacMan).forEach(actor -> gameLevelRenderer.drawActor(actor));
         }
     }

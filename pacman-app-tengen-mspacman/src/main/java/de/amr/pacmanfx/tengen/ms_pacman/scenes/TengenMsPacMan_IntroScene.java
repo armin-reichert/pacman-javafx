@@ -75,6 +75,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     @Override
     public void doInit() {
         GameUI_Config uiConfig = ui.currentConfig();
+        spriteSheet = (TengenMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
         hudRenderer = (TengenMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
         scenesRenderer = new TengenMsPacMan_ScenesRenderer(canvas, uiConfig);
@@ -83,20 +84,18 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
         gameContext().game().hudData().score(false).levelCounter(false).livesCounter(false);
 
-        spriteSheet = (TengenMsPacMan_SpriteSheet) ui.currentConfig().spriteSheet();
-
         var tengenActionBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().actionBindings();
         actionBindings.assign(ACTION_ENTER_START_SCREEN, tengenActionBindings);
         actionBindings.assign(ACTION_TOGGLE_JOYPAD_BINDINGS_DISPLAY, tengenActionBindings);
 
         presentsText = new Actor();
         presentsText.setPosition(9 * TS, MARQUEE_Y - TS);
+
         sceneController.restart(SceneState.WAITING_FOR_START);
     }
 
     @Override
-    protected void doEnd() {
-    }
+    protected void doEnd() {}
 
     @Override
     public void update() {
@@ -111,7 +110,6 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     @Override
     public void drawHUD() {
         if (hudRenderer != null) {
-            // draw HUD only for non-Arcade map mode
             var game = gameContext().<TengenMsPacMan_GameModel>game();
             if (game.mapCategory() != MapCategory.ARCADE) {
                 hudRenderer.drawHUD(gameContext(), game.hudData(), sizeInPx().minus(0, 2 * TS));
@@ -128,8 +126,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
             case WAITING_FOR_START -> {
                 if (!dark) {
                     scenesRenderer.fillText("TENGEN PRESENTS", blueShadedColor(tick), presentsText.x(), presentsText.y());
-                    scenesRenderer.drawSprite(spriteSheet.sprite(SpriteID.TITLE_TEXT),
-                        6 * TS, MARQUEE_Y, true);
+                    scenesRenderer.drawSprite(spriteSheet.sprite(SpriteID.TITLE_TEXT), 6 * TS, MARQUEE_Y, true);
                     if (tick % 60 < 30) {
                         scenesRenderer.fillText("PRESS START", nesColor(0x20), 11 * TS, MARQUEE_Y + 9 * TS);
                     }

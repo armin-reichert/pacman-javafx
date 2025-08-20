@@ -13,6 +13,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameLevelRender
 import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
+import de.amr.pacmanfx.ui.api.GameUI_Config;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -45,27 +46,27 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        gameLevelRenderer = (TengenMsPacMan_GameLevelRenderer) ui.currentConfig().createGameLevelRenderer(canvas);
-        gameLevelRenderer.scalingProperty().bind(scaling);
+        GameUI_Config uiConfig = ui.currentConfig();
 
+        gameLevelRenderer = (TengenMsPacMan_GameLevelRenderer) uiConfig.createGameLevelRenderer(canvas);
         debugInfoRenderer = new BootSceneDebugInfoRenderer(ui);
-        debugInfoRenderer.scalingProperty().bind(scaling);
+        bindRendererScaling(gameLevelRenderer, debugInfoRenderer);
 
         tick = 0;
         grayScreen = false;
 
         movingText = new Actor();
+
         ghost = createGhost(RED_GHOST_SHADOW);
         ghost.setSpeed(0);
-        ghost.setAnimations(ui.currentConfig().createGhostAnimations(ghost));
+        ghost.setAnimations(uiConfig.createGhostAnimations(ghost));
         ghost.selectAnimation(ANIM_GHOST_NORMAL);
 
         gameContext().game().hudData().all(false);
     }
 
     @Override
-    protected void doEnd() {
-    }
+    protected void doEnd() {}
 
     @Override
     public void update() {
@@ -115,8 +116,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
         if (grayScreen) {
             fillCanvas(canvas, GRAY);
         } else {
-            gameLevelRenderer.fillText(TENGEN_PRESENTS, blueShadedColor(tick), scaledArcadeFont8(),
-                movingText.x(), movingText.y());
+            gameLevelRenderer.fillText(TENGEN_PRESENTS, blueShadedColor(tick), scaledArcadeFont8(), movingText.x(), movingText.y());
             gameLevelRenderer.drawActor(ghost);
         }
     }
@@ -130,9 +130,9 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
         @Override
         public void drawDebugInfo() {
             super.drawDebugInfo();
-            gameLevelRenderer.ctx().setFill(Color.WHITE);
-            gameLevelRenderer.ctx().setFont(Font.font(20));
-            gameLevelRenderer.ctx().fillText("Tick " + tick, 20, 20);
+            ctx.setFill(Color.WHITE);
+            ctx.setFont(Font.font(20));
+            ctx.fillText("Tick " + tick, 20, 20);
         }
     }
 }
