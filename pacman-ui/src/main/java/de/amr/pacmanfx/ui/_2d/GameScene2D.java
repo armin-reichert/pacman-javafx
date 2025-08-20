@@ -63,6 +63,7 @@ public abstract class GameScene2D implements GameScene {
     @Override
     public final void init() {
         debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas);
+        debugInfoRenderer.scalingProperty().bind(scaling);
 
         arcadeFont8.bind(scaling.map(s -> ui.assets().arcadeFont(s.floatValue() * 8)));
         arcadeFont6.bind(scaling.map(s -> ui.assets().arcadeFont(s.floatValue() * 6)));

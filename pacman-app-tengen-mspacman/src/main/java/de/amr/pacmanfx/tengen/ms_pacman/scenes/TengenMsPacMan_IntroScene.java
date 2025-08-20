@@ -109,43 +109,43 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        gameLevelRenderer.ctx().setFont(scaledArcadeFont8());
+        ctx().setFont(scaledArcadeFont8());
         TickTimer timer = sceneController.state().timer;
         long tick = timer.tickCount();
         switch (sceneController.state()) {
             case WAITING_FOR_START -> {
                 if (!dark) {
-                    gameLevelRenderer.fillText("TENGEN PRESENTS", blueShadedColor(tick), presentsText.x(), presentsText.y());
-                    gameLevelRenderer.drawSprite(spriteSheet.sprite(SpriteID.TITLE_TEXT),
+                    scenesRenderer.fillText("TENGEN PRESENTS", blueShadedColor(tick), presentsText.x(), presentsText.y());
+                    scenesRenderer.drawSprite(spriteSheet.sprite(SpriteID.TITLE_TEXT),
                         6 * TS, MARQUEE_Y, true);
                     if (tick % 60 < 30) {
-                        gameLevelRenderer.fillText("PRESS START", nesColor(0x20), 11 * TS, MARQUEE_Y + 9 * TS);
+                        scenesRenderer.fillText("PRESS START", nesColor(0x20), 11 * TS, MARQUEE_Y + 9 * TS);
                     }
-                    gameLevelRenderer.fillText("MS PAC-MAN TM NAMCO LTD", nesColor(0x25), 6 * TS, MARQUEE_Y + 15 * TS);
-                    gameLevelRenderer.fillText("©1990 TENGEN INC",        nesColor(0x25), 8 * TS, MARQUEE_Y + 16 * TS);
-                    gameLevelRenderer.fillText("ALL RIGHTS RESERVED",     nesColor(0x25), 7 * TS, MARQUEE_Y + 17 * TS);
+                    scenesRenderer.fillText("MS PAC-MAN TM NAMCO LTD", nesColor(0x25), 6 * TS, MARQUEE_Y + 15 * TS);
+                    scenesRenderer.fillText("©1990 TENGEN INC",        nesColor(0x25), 8 * TS, MARQUEE_Y + 16 * TS);
+                    scenesRenderer.fillText("ALL RIGHTS RESERVED",     nesColor(0x25), 7 * TS, MARQUEE_Y + 17 * TS);
                 }
             }
             case SHOWING_MARQUEE -> {
                 drawMarquee();
-                gameLevelRenderer.fillText("\"MS PAC-MAN\"", nesColor(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
+                scenesRenderer.fillText("\"MS PAC-MAN\"", nesColor(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
             }
             case GHOSTS_MARCHING_IN -> {
                 drawMarquee();
-                gameLevelRenderer.fillText("\"MS PAC-MAN\"", nesColor(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
+                scenesRenderer.fillText("\"MS PAC-MAN\"", nesColor(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
                 if (ghostIndex == 0) {
-                    gameLevelRenderer.fillText("WITH", nesColor(0x20), MARQUEE_X + 12, MARQUEE_Y + 23);
+                    scenesRenderer.fillText("WITH", nesColor(0x20), MARQUEE_X + 12, MARQUEE_Y + 23);
                 }
                 Ghost currentGhost = ghosts.get(ghostIndex);
                 Color ghostColor = ui.currentConfig().assets().color("ghost.%d.color.normal.dress".formatted(currentGhost.id().personality()));
-                gameLevelRenderer.fillText(currentGhost.name().toUpperCase(), ghostColor, MARQUEE_X + 44, MARQUEE_Y + 41);
+                scenesRenderer.fillText(currentGhost.name().toUpperCase(), ghostColor, MARQUEE_X + 44, MARQUEE_Y + 41);
                 ghosts.forEach(ghost -> gameLevelRenderer.drawActor(ghost));
             }
             case MS_PACMAN_MARCHING_IN -> {
                 drawMarquee();
-                gameLevelRenderer.fillText("\"MS PAC-MAN\"", nesColor(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
-                gameLevelRenderer.fillText("STARRING", nesColor(0x20), MARQUEE_X + 12, MARQUEE_Y + 22);
-                gameLevelRenderer.fillText("MS PAC-MAN", nesColor(0x28), MARQUEE_X + 28, MARQUEE_Y + 38);
+                scenesRenderer.fillText("\"MS PAC-MAN\"", nesColor(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
+                scenesRenderer.fillText("STARRING", nesColor(0x20), MARQUEE_X + 12, MARQUEE_Y + 22);
+                scenesRenderer.fillText("MS PAC-MAN", nesColor(0x28), MARQUEE_X + 28, MARQUEE_Y + 38);
                 ghosts.forEach(ghost -> gameLevelRenderer.drawActor(ghost));
                 gameLevelRenderer.drawActor(msPacMan);
             }

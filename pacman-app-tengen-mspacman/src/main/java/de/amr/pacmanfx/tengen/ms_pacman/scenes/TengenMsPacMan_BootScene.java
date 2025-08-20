@@ -48,6 +48,9 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
         gameLevelRenderer = (TengenMsPacMan_GameLevelRenderer) ui.currentConfig().createGameLevelRenderer(canvas);
         gameLevelRenderer.scalingProperty().bind(scaling);
 
+        debugInfoRenderer = new BootSceneDebugInfoRenderer(ui);
+        debugInfoRenderer.scalingProperty().bind(scaling);
+
         tick = 0;
         grayScreen = false;
 
@@ -58,8 +61,6 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
         ghost.selectAnimation(ANIM_GHOST_NORMAL);
 
         gameContext().game().hudData().all(false);
-
-        debugInfoRenderer = new BootSceneDebugInfoRenderer(ui);
     }
 
     @Override

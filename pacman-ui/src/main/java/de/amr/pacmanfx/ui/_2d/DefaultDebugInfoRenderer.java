@@ -41,6 +41,12 @@ public class DefaultDebugInfoRenderer extends DebugInfoRenderer {
             stateTimer.durationTicks() == TickTimer.INDEFINITE ? "∞" : String.valueOf(stateTimer.tickCount())
         );
         ctx().fillText(stateText, 0, scaled(3 * TS));
+
+        if (ui.currentGameScene().isPresent() && ui.currentGameScene().get() instanceof GameScene2D gameScene2D) {
+            Vector2f size = gameScene2D.sizeInPx();
+            drawTileGrid(size.x(), size.y(), Color.LIGHTGRAY);
+
+        }
     }
 
     public void drawMovingActorInfo(GraphicsContext ctx, double scaling, MovingActor movingActor) {
