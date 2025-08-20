@@ -73,6 +73,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     @Override
     public void doInit() {
         GameUI_Config uiConfig = ui.currentConfig();
+        var spriteSheet = (TengenMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
         hudRenderer = (TengenMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
         gameLevelRenderer = (TengenMsPacMan_GameLevelRenderer) uiConfig.createGameLevelRenderer(canvas);
@@ -82,8 +83,6 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         gameContext().game().hudData().credit(false).score(false).levelCounter(true).livesCounter(false);
 
         actionBindings.bind(ACTION_LET_GAME_STATE_EXPIRE, ui.joypad().key(JoypadButton.START));
-
-        var spriteSheet = (TengenMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
         clapperboard = new Clapperboard(spriteSheet, 1, "THEY MEET");
         clapperboard.setPosition(3 * TS, 10 * TS);

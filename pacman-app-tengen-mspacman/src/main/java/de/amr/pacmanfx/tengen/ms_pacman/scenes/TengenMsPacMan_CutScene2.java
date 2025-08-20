@@ -58,8 +58,11 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     
     @Override
     public void doInit() {
-        hudRenderer = (TengenMsPacMan_HUDRenderer) ui.currentConfig().createHUDRenderer(canvas);
-        gameLevelRenderer = (TengenMsPacMan_GameLevelRenderer) ui.currentConfig().createGameLevelRenderer(canvas);
+        GameUI_Config uiConfig = ui.currentConfig();
+        var spriteSheet = (TengenMsPacMan_SpriteSheet) uiConfig.spriteSheet();
+
+        hudRenderer = (TengenMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
+        gameLevelRenderer = (TengenMsPacMan_GameLevelRenderer) uiConfig.createGameLevelRenderer(canvas);
         debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas);
         bindRendererScaling(hudRenderer, gameLevelRenderer, debugInfoRenderer);
 
@@ -67,16 +70,15 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
 
         actionBindings.bind(ACTION_LET_GAME_STATE_EXPIRE, ui.joypad().key(JoypadButton.START));
 
-        GameUI_Config config = ui.currentConfig();
-        var spriteSheet = (TengenMsPacMan_SpriteSheet) config.spriteSheet();
-
         clapperboard = new Clapperboard(spriteSheet, 2, "THE CHASE");
         clapperboard.setPosition(3 * TS, 10 * TS);
         clapperboard.setFont(scaledArcadeFont8());
+
         msPacMan = createMsPacMan();
-        msPacMan.setAnimations(config.createPacAnimations(msPacMan));
+        msPacMan.setAnimations(uiConfig.createPacAnimations(msPacMan));
+
         pacMan = createPacMan();
-        pacMan.setAnimations(config.createPacAnimations(pacMan));
+        pacMan.setAnimations(uiConfig.createPacAnimations(pacMan));
 
         t = -1;
     }
