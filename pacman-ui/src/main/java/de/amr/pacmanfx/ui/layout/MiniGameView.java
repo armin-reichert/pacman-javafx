@@ -103,7 +103,7 @@ public class MiniGameView extends VBox {
         worldSize.set(gameLevel.worldSizePx());
         /* TODO: The game renderer cannot be created in the constructor because the game controller has not yet
             selected a game variant when the constructor is called, so no UI configuration is available! */
-        gameLevelRenderer = ui.currentConfig().createGameRenderer(canvas);
+        gameLevelRenderer = ui.currentConfig().createGameLevelRenderer(canvas);
         gameLevelRenderer.setScaling(scaling.get());
         gameLevelRenderer.applyLevelSettings(ui.gameContext());
     }

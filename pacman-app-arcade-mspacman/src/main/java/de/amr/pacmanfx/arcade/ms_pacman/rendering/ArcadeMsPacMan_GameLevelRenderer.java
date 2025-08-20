@@ -10,7 +10,6 @@ import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
-import de.amr.pacmanfx.ui._2d.DebugInfoRenderer;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import javafx.scene.canvas.Canvas;
@@ -21,7 +20,7 @@ import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_WHITE;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
-public class ArcadeMsPacMan_GameLevelRenderer extends GameLevelRenderer<SpriteID> implements DebugInfoRenderer {
+public class ArcadeMsPacMan_GameLevelRenderer extends GameLevelRenderer<SpriteID> {
 
     protected GameUI_Config uiConfig;
     protected BrightMazesSpriteSheet brightMazesSpriteSheet;
@@ -38,7 +37,7 @@ public class ArcadeMsPacMan_GameLevelRenderer extends GameLevelRenderer<SpriteID
         bonusValues = spriteSheet().spriteSequence(SpriteID.BONUS_VALUES);
     }
 
-    protected ArcadeMsPacMan_GameLevelRenderer(Canvas canvas, GameUI_Config uiConfig) {
+    public ArcadeMsPacMan_GameLevelRenderer(Canvas canvas, GameUI_Config uiConfig) {
         this(canvas, uiConfig, null);
     }
 

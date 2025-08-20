@@ -10,6 +10,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameLevelRenderer;
+import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import javafx.scene.paint.Color;
@@ -36,18 +37,17 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     private Actor movingText;
     private Ghost ghost;
 
+    private TengenMsPacMan_GameLevelRenderer gameLevelRenderer;
+
     public TengenMsPacMan_BootScene(GameUI ui) {
         super(ui);
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public TengenMsPacMan_GameLevelRenderer renderer() {
-        return (TengenMsPacMan_GameLevelRenderer) gameLevelRenderer;
-    }
-
     @Override
     public void doInit() {
+        gameLevelRenderer = (TengenMsPacMan_GameLevelRenderer) ui.currentConfig().createGameLevelRenderer(canvas);
+        gameLevelRenderer.scalingProperty().bind(scaling);
+
         tick = 0;
         grayScreen = false;
 
@@ -58,10 +58,13 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
         ghost.selectAnimation(ANIM_GHOST_NORMAL);
 
         gameContext().game().hudData().all(false);
+
+        debugInfoRenderer = new BootSceneDebugInfoRenderer(ui);
     }
 
     @Override
-    protected void doEnd() {}
+    protected void doEnd() {
+    }
 
     @Override
     public void update() {
@@ -70,42 +73,36 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
         tick += 1;
         if (tick == 7) {
             grayScreen = true;
-        }
-        else if (tick == 12) {
+        } else if (tick == 12) {
             grayScreen = false;
-        }
-        else if (tick == 21) {
+        } else if (tick == 21) {
             movingText.setPosition(9 * TS, sizeInPx().y()); // lower border of screen
             movingText.setVelocity(0, -HTS);
             movingText.show();
-        }
-        else if (tick == 55) {
+        } else if (tick == 55) {
             movingText.setPosition(9 * TS, 13 * TS);
             movingText.setVelocity(Vector2f.ZERO);
-        }
-        else if (tick == 113) {
+        } else if (tick == 113) {
             ghost.setPosition(sizeInPx().x() - TS, GHOST_Y);
             ghost.setMoveDir(Direction.LEFT);
             ghost.setWishDir(Direction.LEFT);
             ghost.setSpeed(TS);
             ghost.show();
-        }
-        else if (tick == 181) {
+        } else if (tick == 181) {
             movingText.setVelocity(0, TS);
-        }
-        else if (tick == 203) {
+        } else if (tick == 203) {
             grayScreen = true;
-        }
-        else if (tick == 214) {
+        } else if (tick == 214) {
             grayScreen = false;
-        }
-        else if (tick == 220) {
+        } else if (tick == 220) {
             gameContext().gameController().changeGameState(GamePlayState.INTRO);
         }
     }
 
     @Override
-    public Vector2f sizeInPx() { return NES_SIZE_PX; }
+    public Vector2f sizeInPx() {
+        return NES_SIZE_PX;
+    }
 
     @Override
     public void drawSceneContent() {
@@ -118,11 +115,18 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
         }
     }
 
-    @Override
-    protected void drawDebugInfo() {
-        super.drawDebugInfo();
-        gameLevelRenderer.ctx().setFill(Color.WHITE);
-        gameLevelRenderer.ctx().setFont(Font.font(20));
-        gameLevelRenderer.ctx().fillText("Tick " + tick, 20, 20);
+    private class BootSceneDebugInfoRenderer extends DefaultDebugInfoRenderer {
+
+        public BootSceneDebugInfoRenderer(GameUI ui) {
+            super(ui, canvas);
+        }
+
+        @Override
+        public void drawDebugInfo() {
+            super.drawDebugInfo();
+            gameLevelRenderer.ctx().setFill(Color.WHITE);
+            gameLevelRenderer.ctx().setFont(Font.font(20));
+            gameLevelRenderer.ctx().fillText("Tick " + tick, 20, 20);
+        }
     }
 }

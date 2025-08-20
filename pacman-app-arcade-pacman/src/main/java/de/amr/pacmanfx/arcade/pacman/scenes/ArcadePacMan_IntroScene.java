@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
+import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
@@ -16,9 +17,11 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
+import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -55,6 +58,8 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     };
 
     private ArcadePacMan_SpriteSheet spriteSheet;
+    private GameLevelRenderer<SpriteID> gameLevelRenderer;
+
     private Pulse blinking;
     private Pac pacMan;
     private List<Ghost> ghosts;
@@ -69,9 +74,23 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     public ArcadePacMan_IntroScene(GameUI ui) {
         super(ui);
     }
-    
+
+    @SuppressWarnings("unchecked")
     @Override
     public void doInit() {
+
+        debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas) {
+            @Override
+            public void drawDebugInfo() {
+                super.drawDebugInfo();
+                ctx.fillText("Scene timer %d".formatted(sceneController.state().timer().tickCount()), 0, scaled(5 * TS));
+            }
+        };
+        debugInfoRenderer.scalingProperty().bind(scaling);
+
+        gameLevelRenderer = (GameLevelRenderer<SpriteID>) ui.currentConfig().createGameLevelRenderer(canvas);
+        gameLevelRenderer.scalingProperty().bind(scaling);
+
         gameContext().game().hudData().credit(true).score(true).livesCounter(false).levelCounter(true);
 
         actionBindings.assign(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
@@ -206,13 +225,6 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
             gameLevelRenderer.ctx().fillRect(x + 1, y + 1, 6, 6);
             gameLevelRenderer.ctx().restore();
         }
-    }
-
-    @Override
-    protected void drawDebugInfo() {
-        super.drawDebugInfo();
-        gameLevelRenderer.ctx().fillText("Scene timer %d".formatted(
-                sceneController.state().timer().tickCount()), 0, scaled(5 * TS));
     }
 
     private enum SceneState implements FsmState<ArcadePacMan_IntroScene> {

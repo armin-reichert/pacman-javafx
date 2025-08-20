@@ -1,21 +1,49 @@
-/*
-Copyright (c) 2021-2025 Armin Reichert (MIT License)
-See file LICENSE in repository root directory for details.
-*/
 package de.amr.pacmanfx.ui._2d;
 
 import de.amr.pacmanfx.lib.Vector2f;
+import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
+import de.amr.pacmanfx.uilib.rendering.DebugInfoRenderer;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-public interface DebugInfoRenderer {
+import static de.amr.pacmanfx.Globals.TS;
 
-    default void drawMovingActorInfo(GraphicsContext ctx, double scaling, MovingActor movingActor) {
+public class DefaultDebugInfoRenderer extends DebugInfoRenderer {
+
+    protected final GameUI ui;
+    protected Color debugTextFill;
+    protected Color debugTextStroke;
+    protected Font debugTextFont;
+
+    public DefaultDebugInfoRenderer(GameUI ui, Canvas canvas) {
+        super(canvas);
+        this.ui = ui;
+        debugTextFill   = ui.uiPreferences().getColor("debug_text.fill");
+        debugTextStroke = ui.uiPreferences().getColor("debug_text.stroke");
+        debugTextFont   = ui.uiPreferences().getFont("debug_text.font");
+    }
+
+    public void drawDebugInfo() {
+        ctx().setFill(debugTextFill);
+        ctx().setStroke(debugTextStroke);
+        ctx().setFont(debugTextFont);
+        TickTimer stateTimer = ui.gameContext().gameState().timer();
+        String stateText = "Game State: '%s' (Tick %d of %s)".formatted(
+            ui.gameContext().gameState().name(),
+            stateTimer.tickCount(),
+            stateTimer.durationTicks() == TickTimer.INDEFINITE ? "∞" : String.valueOf(stateTimer.tickCount())
+        );
+        ctx().fillText(stateText, 0, scaled(3 * TS));
+    }
+
+    public void drawMovingActorInfo(GraphicsContext ctx, double scaling, MovingActor movingActor) {
         if (!movingActor.isVisible()) {
             return;
         }
@@ -28,17 +56,17 @@ public interface DebugInfoRenderer {
             ctx.fillText(text, scaling * (pac.x() - 4), scaling * (pac.y() + 16));
         }
         movingActor.animations()
-                .filter(SpriteAnimationManager.class::isInstance)
-                .map(SpriteAnimationManager.class::cast)
-                .ifPresent(spriteAnimationMap -> {
-                    String selectedID = spriteAnimationMap.selectedID();
-                    if (selectedID != null) {
-                        drawAnimationInfo(ctx, scaling, movingActor, spriteAnimationMap, selectedID);
-                    }
-                    if (movingActor.wishDir() != null) {
-                        drawDirectionIndicator(ctx, scaling, movingActor);
-                    }
-                });
+            .filter(SpriteAnimationManager.class::isInstance)
+            .map(SpriteAnimationManager.class::cast)
+            .ifPresent(spriteAnimationMap -> {
+                String selectedID = spriteAnimationMap.selectedID();
+                if (selectedID != null) {
+                    drawAnimationInfo(ctx, scaling, movingActor, spriteAnimationMap, selectedID);
+                }
+                if (movingActor.wishDir() != null) {
+                    drawDirectionIndicator(ctx, scaling, movingActor);
+                }
+            });
     }
 
     private void drawAnimationInfo(GraphicsContext ctx, double scaling, Actor actor, SpriteAnimationManager<?> spriteAnimationMap, String selectedID) {

@@ -149,7 +149,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         }
 
         void setGameConfig(GameUI_Config config) {
-            gameLevelRenderer = config.createGameRenderer(ctx.getCanvas());
+            gameLevelRenderer = config.createGameLevelRenderer(ctx.getCanvas());
             pac.setAnimations(config.createPacAnimations(pac));
             pac.playAnimation(ANIM_PAC_MUNCHING);
             for (Ghost ghost : ghosts) {

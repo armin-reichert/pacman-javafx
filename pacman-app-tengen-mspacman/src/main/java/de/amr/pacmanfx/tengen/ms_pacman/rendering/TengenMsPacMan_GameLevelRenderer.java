@@ -19,7 +19,6 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.Clapperboard;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.Stork;
-import de.amr.pacmanfx.ui._2d.DebugInfoRenderer;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
@@ -40,7 +39,7 @@ import static de.amr.pacmanfx.tengen.ms_pacman.rendering.NonArcadeMapsSpriteShee
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
-public class TengenMsPacMan_GameLevelRenderer extends GameLevelRenderer<SpriteID> implements DebugInfoRenderer {
+public class TengenMsPacMan_GameLevelRenderer extends GameLevelRenderer<SpriteID> {
 
     private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
     private final TengenMsPacMan_UIConfig uiConfig;

@@ -89,7 +89,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        scenesRenderer = new TengenMsPacMan_ScenesRenderer(canvas);
+        scenesRenderer = new TengenMsPacMan_ScenesRenderer(canvas, ui.currentConfig());
         scenesRenderer.scalingProperty().bind(scaling);
 
         gameContext().game().hudData().all(false);
@@ -244,8 +244,8 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
         if (initialDelay > 0) {
             return;
         }
-        gameLevelRenderer.ctx().setFont(scaledArcadeFont8());
 
+        ctx().setFont(scaledArcadeFont8());
         if (PROPERTY_JOYPAD_BINDINGS_DISPLAYED.get()) {
             scenesRenderer.drawJoypadKeyBinding(ui.joypad().currentKeyBinding());
         }
@@ -298,7 +298,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
                 case 3 -> SpriteID.CONTINUES_3;
                 default -> throw new IllegalArgumentException("Illegal number of continues: " + theGame().numContinues());
             });
-            gameLevelRenderer.drawSprite(continuesSprite, COL_VALUE + 3 * TS, 160, true);
+            scenesRenderer.drawSprite(continuesSprite, COL_VALUE + 3 * TS, 160, true);
         }
 
         scenesRenderer.fillText("MOVE ARROW WITH JOYPAD", NES_YELLOW, 4 * TS,  192);
@@ -308,8 +308,8 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     private void drawMarkerIfSelected(int optionIndex, double y, Font font) {
         if (selectedOption() == optionIndex) {
-            gameLevelRenderer.ctx().setFill(NES_YELLOW);
-            gameLevelRenderer.ctx().fillRect(scaled(COL_ARROW + 2.25), scaled(y - 4.5), scaled(7.5), scaled(1.75));
+            ctx().setFill(NES_YELLOW);
+            ctx().fillRect(scaled(COL_ARROW + 2.25), scaled(y - 4.5), scaled(7.5), scaled(1.75));
             scenesRenderer.fillText(">", NES_YELLOW, font, COL_ARROW + 3, y);
         }
     }

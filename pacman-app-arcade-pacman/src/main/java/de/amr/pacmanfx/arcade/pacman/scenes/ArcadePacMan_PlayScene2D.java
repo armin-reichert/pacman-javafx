@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
+import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.controller.teststates.LevelMediumTestState;
@@ -18,13 +19,13 @@ import de.amr.pacmanfx.model.LivesCounter;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.model.actors.Pac;
-import de.amr.pacmanfx.ui._2d.DebugInfoRenderer;
+import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import javafx.scene.canvas.GraphicsContext;
+import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -51,18 +52,24 @@ import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
  */
 public class ArcadePacMan_PlayScene2D extends GameScene2D {
 
+    private GameLevelRenderer<SpriteID> gameLevelRenderer;
     private LevelCompletedAnimation levelCompletedAnimation;
 
     public ArcadePacMan_PlayScene2D(GameUI ui) {
         super(ui);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected void doInit() {
+        gameLevelRenderer = (GameLevelRenderer<SpriteID>) ui.currentConfig().createGameLevelRenderer(canvas);
+        gameLevelRenderer.scalingProperty().bind(scaling);
+        setHudRenderer(ui.currentConfig().createHUDRenderer(canvas, scaling));
+        debugInfoRenderer = new PlaySceneDebugInfoRenderer(ui);
+        debugInfoRenderer.scalingProperty().bind(scaling);
+
         gameContext().game().hudData().credit(false).score(true).levelCounter(true).livesCounter(true);
         levelCompletedAnimation = new LevelCompletedAnimation(animationRegistry);
-        setGameRenderer(ui.currentConfig().createGameRenderer(canvas));
-        setHudRenderer(ui.currentConfig().createHUDRenderer(canvas, scaling));
     }
 
     @Override
@@ -94,10 +101,6 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
             actionBindings.assign(ACTION_CHEAT_ENTER_NEXT_LEVEL, ui.actionBindings());
             actionBindings.assign(ACTION_CHEAT_KILL_GHOSTS, ui.actionBindings());
             actionBindings.installBindings(ui.keyboard());
-        }
-        if (gameLevelRenderer == null) { //TODO can this happen at all?
-            gameLevelRenderer = ui.currentConfig().createGameRenderer(canvas);
-            Logger.warn("No game renderer existed for 2D play scene, created one...");
         }
         Logger.info("Scene {} initialized with game level", getClass().getSimpleName());
     }
@@ -249,46 +252,11 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
         // Draw actors
         actorsInZOrder.forEach(actor -> gameLevelRenderer.drawActor(actor));
 
-        if (isDebugInfoVisible()) {
-            actorsInZOrder.forEach(actor -> {
-                if (actor instanceof MovingActor movingActor && gameLevelRenderer instanceof DebugInfoRenderer debugInfoRenderer) {
-                    debugInfoRenderer.drawMovingActorInfo(gameLevelRenderer.ctx(), scaling(), movingActor);
-                }
-            });
-        }
-    }
-
-    @Override
-    protected void drawDebugInfo() {
-        GraphicsContext ctx = gameLevelRenderer.ctx();
-        gameLevelRenderer.drawTileGrid(sizeInPx().x(), sizeInPx().y(), Color.LIGHTGRAY);
-        if (gameContext().optGameLevel().isPresent()) {
-            // assuming all ghosts have the same set of special terrain tiles
-            gameContext().gameLevel().ghost(RED_GHOST_SHADOW).specialTerrainTiles().forEach(tile -> {
-                double x = scaled(tile.x() * TS), y = scaled(tile.y() * TS + HTS), size = scaled(TS);
-                ctx.setFill(Color.RED);
-                ctx.fillRect(x, y, size, 2);
-            });
-            // mark intersection tiles
-            gameContext().gameLevel().worldMap().tiles().filter(gameContext().gameLevel()::isIntersection).forEach(tile -> {
-                ctx.setStroke(Color.gray(0.8));
-                ctx.setLineWidth(0.5);
-                ctx.save();
-                double cx = scaled(tile.x() * TS + HTS), cy = scaled(tile.y() * TS + HTS), size = scaled(HTS);
-                ctx.translate(cx, cy);
-                ctx.rotate(45);
-                ctx.strokeRect(-0.5*size, -0.5*size, size, size);
-                ctx.restore();
-            });
-            ctx.setFill(debugTextFill);
-            ctx.setFont(debugTextFont);
-            String gameStateText = gameContext().gameState().name() + " (Tick %d)".formatted(gameContext().gameState().timer().tickCount());
-            String huntingPhaseText = "";
-            if (gameContext().gameState() == GamePlayState.HUNTING) {
-                HuntingTimer huntingTimer = gameContext().game().huntingTimer();
-                huntingPhaseText = " %s (Tick %d)".formatted(huntingTimer.phase(), huntingTimer.tickCount());
-            }
-            ctx.fillText("%s%s".formatted(gameStateText, huntingPhaseText), 0, 64);
+        if (isDebugInfoVisible() && debugInfoRenderer instanceof DefaultDebugInfoRenderer infoRenderer) {
+            actorsInZOrder.stream()
+                .filter(MovingActor.class::isInstance)
+                .map(MovingActor.class::cast)
+                .forEach(actor -> infoRenderer.drawMovingActorInfo(debugInfoRenderer.ctx(), scaling(), actor));
         }
     }
 
@@ -363,5 +331,45 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
     @Override
     public void onPacLostPower(GameEvent e) {
         ui.soundManager().pause(SoundID.PAC_MAN_POWER);
+    }
+
+    private class PlaySceneDebugInfoRenderer extends DefaultDebugInfoRenderer {
+
+        public PlaySceneDebugInfoRenderer(GameUI ui) {
+            super(ui, canvas);
+        }
+
+        @Override
+        public void drawDebugInfo() {
+            drawTileGrid(sizeInPx().x(), sizeInPx().y(), Color.LIGHTGRAY);
+            if (gameContext().optGameLevel().isPresent()) {
+                // assuming all ghosts have the same set of special terrain tiles
+                gameContext().gameLevel().ghost(RED_GHOST_SHADOW).specialTerrainTiles().forEach(tile -> {
+                    double x = scaled(tile.x() * TS), y = scaled(tile.y() * TS + HTS), size = scaled(TS);
+                    ctx.setFill(Color.RED);
+                    ctx.fillRect(x, y, size, 2);
+                });
+                // mark intersection tiles
+                gameContext().gameLevel().worldMap().tiles().filter(gameContext().gameLevel()::isIntersection).forEach(tile -> {
+                    ctx.setStroke(Color.gray(0.8));
+                    ctx.setLineWidth(0.5);
+                    ctx.save();
+                    double cx = scaled(tile.x() * TS + HTS), cy = scaled(tile.y() * TS + HTS), size = scaled(HTS);
+                    ctx.translate(cx, cy);
+                    ctx.rotate(45);
+                    ctx.strokeRect(-0.5*size, -0.5*size, size, size);
+                    ctx.restore();
+                });
+                ctx.setFill(debugTextFill);
+                ctx.setFont(debugTextFont);
+                String gameStateText = gameContext().gameState().name() + " (Tick %d)".formatted(gameContext().gameState().timer().tickCount());
+                String huntingPhaseText = "";
+                if (gameContext().gameState() == GamePlayState.HUNTING) {
+                    HuntingTimer huntingTimer = gameContext().game().huntingTimer();
+                    huntingPhaseText = " %s (Tick %d)".formatted(huntingTimer.phase(), huntingTimer.tickCount());
+                }
+                ctx.fillText("%s%s".formatted(gameStateText, huntingPhaseText), 0, 64);
+            }
+        }
     }
 }

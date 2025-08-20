@@ -1,3 +1,7 @@
+/*
+Copyright (c) 2021-2025 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.pacmanfx.uilib.rendering;
 
 import de.amr.pacmanfx.lib.Vector2i;
@@ -15,7 +19,7 @@ import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
-public abstract class BaseRenderer {
+public class BaseRenderer {
 
     private static final Font ARCADE_FONT_TS;
 
@@ -35,7 +39,7 @@ public abstract class BaseRenderer {
     protected final DoubleProperty scaling = new SimpleDoubleProperty(1.0);
     protected final GraphicsContext ctx;
 
-    protected BaseRenderer(Canvas canvas) {
+    public BaseRenderer(Canvas canvas) {
         ctx = requireNonNull(canvas).getGraphicsContext2D();
     }
 

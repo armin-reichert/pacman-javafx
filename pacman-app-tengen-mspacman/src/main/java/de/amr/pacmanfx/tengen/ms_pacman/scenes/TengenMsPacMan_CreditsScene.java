@@ -36,7 +36,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     @Override
     protected void doInit() {
-        scenesRenderer = new TengenMsPacMan_ScenesRenderer(canvas);
+        scenesRenderer = new TengenMsPacMan_ScenesRenderer(canvas, ui.currentConfig());
         scenesRenderer.scalingProperty().bind(scaling);
 
         setHudRenderer(ui.currentConfig().createHUDRenderer(canvas, scaling));
@@ -62,8 +62,8 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        gameLevelRenderer.ctx().setFont(scaledArcadeFont8());
         double barWidth = sizeInPx().x();
+        scenesRenderer.ctx().setFont(scaledArcadeFont8());
         scenesRenderer.drawHorizontalBar(nesColor(0x20), nesColor(0x13), barWidth, TS, 20);
         scenesRenderer.drawHorizontalBar(nesColor(0x20), nesColor(0x13), barWidth, TS, 212);
         y = 7 * TS;

@@ -8,7 +8,6 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
-import de.amr.pacmanfx.ui._2d.DebugInfoRenderer;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import javafx.scene.canvas.Canvas;
@@ -22,7 +21,7 @@ import static java.util.function.Predicate.not;
 /**
  * Renderer for classic Arcade Pac-Man and Pac-Man XXL game variants.
  */
-public class ArcadePacMan_GameLevelRenderer extends GameLevelRenderer<SpriteID> implements DebugInfoRenderer {
+public class ArcadePacMan_GameLevelRenderer extends GameLevelRenderer<SpriteID> {
 
     protected final GameUI_Config uiConfig;
 

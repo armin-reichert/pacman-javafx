@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
+import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_GameLevelRenderer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_ScenesRenderer;
 import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.event.GameEvent;
@@ -20,7 +21,6 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 import java.util.List;
 
@@ -55,6 +55,8 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     private final StateMachine<SceneState, ArcadeMsPacMan_IntroScene> sceneController;
 
     private ArcadeMsPacMan_ScenesRenderer scenesRenderer;
+    private ArcadeMsPacMan_GameLevelRenderer gameLevelRenderer;
+
     private Marquee marquee;
     private Pac msPacMan;
     private List<Ghost> ghosts;
@@ -73,11 +75,14 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void doInit() {
+        setHudRenderer(ui.currentConfig().createHUDRenderer(canvas, scaling));
+        gameContext().game().hudData().credit(true).score(true).levelCounter(true).livesCounter(false);
+
         scenesRenderer = new ArcadeMsPacMan_ScenesRenderer(canvas, ui.currentConfig());
         scenesRenderer.scalingProperty().bind(scaling);
 
-        setHudRenderer(ui.currentConfig().createHUDRenderer(canvas, scaling));
-        gameContext().game().hudData().credit(true).score(true).levelCounter(true).livesCounter(false);
+        gameLevelRenderer = new ArcadeMsPacMan_GameLevelRenderer(canvas, ui.currentConfig());
+        gameLevelRenderer.scalingProperty().bind(scaling);
 
         actionBindings.assign(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
         actionBindings.assign(ACTION_ARCADE_START_GAME, ui.actionBindings());
@@ -130,8 +135,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        Font font = scaledArcadeFont8();
-        scenesRenderer.ctx().setFont(font);
+        scenesRenderer.ctx().setFont(scenesRenderer.arcadeFont(TS));
         scenesRenderer.fillText(TITLE, ARCADE_ORANGE, TITLE_X, TITLE_Y);
         scenesRenderer.drawMarquee(marquee);
 

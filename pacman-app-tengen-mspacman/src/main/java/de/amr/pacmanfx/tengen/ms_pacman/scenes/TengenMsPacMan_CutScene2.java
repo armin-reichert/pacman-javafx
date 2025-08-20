@@ -12,6 +12,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameLevelRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
+import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
@@ -42,6 +43,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     private static final int LEFT_BORDER = TS;
     private static final int RIGHT_BORDER = TS * 30;
 
+    private TengenMsPacMan_GameLevelRenderer gameLevelRenderer;
     private Clapperboard clapperboard;
     private Pac pacMan;
     private Pac msPacMan;
@@ -57,6 +59,12 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
 
         setHudRenderer(ui.currentConfig().createHUDRenderer(canvas, scaling));
         gameContext().game().hudData().credit(false).score(false).levelCounter(true).livesCounter(false);
+
+        gameLevelRenderer = (TengenMsPacMan_GameLevelRenderer) ui.currentConfig().createGameLevelRenderer(canvas);
+        gameLevelRenderer.scalingProperty().bind(scaling);
+
+        debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas);
+        debugInfoRenderer.scalingProperty().bind(scaling);
 
         actionBindings.bind(ACTION_LET_GAME_STATE_EXPIRE, ui.joypad().key(JoypadButton.START));
 
@@ -152,24 +160,17 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     @Override
     public Vector2f sizeInPx() { return NES_SIZE_PX; }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public TengenMsPacMan_GameLevelRenderer renderer() {
-        return (TengenMsPacMan_GameLevelRenderer) gameLevelRenderer;
-    }
-
     @Override
     public void draw() {
-        gameLevelRenderer.setScaling(scaling());
         clear();
         drawSceneContent();
-        if (debugInfoVisible.get()) {
-            drawDebugInfo();
-        }
         // draw HUD only for non-Arcade map mode
         var game = gameContext().<TengenMsPacMan_GameModel>game();
         if (game.mapCategory() != MapCategory.ARCADE) {
             hudRenderer.drawHUD(gameContext(), game.hudData(), sizeInPx().minus(0, 2 * TS));
+        }
+        if (debugInfoVisible.get() && debugInfoRenderer != null) {
+            debugInfoRenderer.drawDebugInfo();
         }
     }
 

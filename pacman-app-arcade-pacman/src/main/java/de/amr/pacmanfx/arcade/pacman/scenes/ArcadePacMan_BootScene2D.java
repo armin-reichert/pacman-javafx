@@ -11,6 +11,7 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
+import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 
 import java.util.Random;
 
@@ -27,6 +28,7 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
 
     private static final int FRAGMENT_SIZE = 16;
 
+    private SpriteRenderer<?> spriteRenderer;
     private Vector2f minPoint, maxPoint;
 
     public ArcadePacMan_BootScene2D(GameUI ui) {
@@ -35,7 +37,15 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
 
     @Override
     public void doInit() {
-        gameContext().game().hudData().score(false).levelCounter(false).livesCounter(false);
+        spriteRenderer = new SpriteRenderer(canvas) {
+            @Override
+            public SpriteSheet<?> spriteSheet() {
+                return ui.currentConfig().spriteSheet();
+            }
+        };
+        spriteRenderer.scalingProperty().bind(scaling);
+
+        gameContext().game().hudData().all(false);
 
         SpriteSheet<?> spriteSheet = ui.currentConfig().spriteSheet();
         double width = spriteSheet.sourceImage().getWidth(), height = spriteSheet.sourceImage().getHeight();
@@ -60,7 +70,6 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
 
     @Override
     public void draw() {
-        gameLevelRenderer.setScaling(scaling());
         if (gameContext().gameState().timer().tickCount() == 1) {
             clear();
         } else {
@@ -87,13 +96,13 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
         var random = new Random();
         int numRows = (int) (ARCADE_MAP_SIZE_IN_PIXELS.y() / TS);
         int numCols = (int) (ARCADE_MAP_SIZE_IN_PIXELS.x() / TS);
-        gameLevelRenderer.ctx().setFill(ARCADE_WHITE);
-        gameLevelRenderer.ctx().setFont(scaledArcadeFont8());
+        ctx().setFill(ARCADE_WHITE);
+        ctx().setFont(scaledArcadeFont8());
         for (int row = 0; row < numRows; ++row) {
             double y = scaled(TS(row + 1));
             for (int col = 0; col < numCols; ++col) {
                 int hexDigit = random.nextInt(16);
-                gameLevelRenderer.ctx().fillText(Integer.toHexString(hexDigit), scaled(TS(col)), y);
+                ctx().fillText(Integer.toHexString(hexDigit), scaled(TS(col)), y);
             }
         }
     }
@@ -107,8 +116,7 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
             RectShort fragment1 = randomSpriteFragment(), fragment2 = randomSpriteFragment();
             int split = numCols / 8 + random.nextInt(numCols / 4);
             for (int col = 0; col < numCols; ++col) {
-                gameLevelRenderer.drawSprite(col < split ? fragment1 : fragment2,
-                    FRAGMENT_SIZE * col, FRAGMENT_SIZE * row, true);
+                spriteRenderer.drawSprite(col < split ? fragment1 : fragment2, FRAGMENT_SIZE * col, FRAGMENT_SIZE * row, true);
             }
         }
     }
@@ -127,16 +135,16 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
         int numRows = (int) (ARCADE_MAP_SIZE_IN_PIXELS.y() / 16);
         int numCols = (int) (ARCADE_MAP_SIZE_IN_PIXELS.x() / 16);
         double thin = scaled(2), thick = scaled(4);
-        gameLevelRenderer.ctx().setStroke(ARCADE_WHITE);
+        ctx().setStroke(ARCADE_WHITE);
         for (int row = 0; row <= numRows; ++row) {
-            gameLevelRenderer.ctx().setLineWidth(row == 0 || row == numRows ? thick : thin);
+            ctx().setLineWidth(row == 0 || row == numRows ? thick : thin);
             double y = scaled(row * 16);
-            gameLevelRenderer.ctx().strokeLine(0, y, gridWidth, y);
+            ctx().strokeLine(0, y, gridWidth, y);
         }
         for (int col = 0; col <= numCols; ++col) {
-            gameLevelRenderer.ctx().setLineWidth(col == 0 || col == numCols ? thick : thin);
+            ctx().setLineWidth(col == 0 || col == numCols ? thick : thin);
             double x = scaled(col * 16);
-            gameLevelRenderer.ctx().strokeLine(x, 0, x, gridHeight);
+            ctx().strokeLine(x, 0, x, gridHeight);
         }
     }
 }

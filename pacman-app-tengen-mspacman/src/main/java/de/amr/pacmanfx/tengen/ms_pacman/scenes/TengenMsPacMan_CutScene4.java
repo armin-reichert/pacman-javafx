@@ -9,6 +9,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameLevelRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
+import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import org.tinylog.Logger;
@@ -35,12 +36,14 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
     private static final int LOWER_LANE = TS * 21; // TODO not sure
 
+    private TengenMsPacMan_GameLevelRenderer gameLevelRenderer;
+
     private Pac pacMan;
     private Pac msPacMan;
     private List<Pac> juniors;
     private List<Integer> juniorCreationTime;
-
     private Clapperboard clapperboard;
+
     private int t;
 
     public TengenMsPacMan_CutScene4(GameUI ui) {
@@ -53,6 +56,12 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
         setHudRenderer(ui.currentConfig().createHUDRenderer(canvas, scaling));
         gameContext().game().hudData().score(false).levelCounter(true).livesCounter(false);
+
+        gameLevelRenderer = (TengenMsPacMan_GameLevelRenderer) ui.currentConfig().createGameLevelRenderer(canvas);
+        gameLevelRenderer.scalingProperty().bind(scaling);
+
+        debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas);
+        debugInfoRenderer.scalingProperty().bind(scaling);
 
         var spriteSheet = (TengenMsPacMan_SpriteSheet) ui.currentConfig().spriteSheet();
         clapperboard = new Clapperboard(spriteSheet, 4, "THE END");
@@ -210,23 +219,16 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     @Override
     public Vector2f sizeInPx() { return NES_SIZE_PX; }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public TengenMsPacMan_GameLevelRenderer renderer() {
-        return (TengenMsPacMan_GameLevelRenderer) gameLevelRenderer;
-    }
-
     @Override
     public void draw() {
-        gameLevelRenderer.setScaling(scaling());
         clear();
         drawSceneContent();
-        if (debugInfoVisible.get()) {
-            drawDebugInfo();
-        }
         var game = gameContext().<TengenMsPacMan_GameModel>game();
         if (game.mapCategory() != MapCategory.ARCADE) {
             hudRenderer.drawHUD(gameContext(), game.hudData(), sizeInPx().minus(0, 2 * TS));
+        }
+        if (debugInfoVisible.get() && debugInfoRenderer != null) {
+            debugInfoRenderer.drawDebugInfo();
         }
     }
 

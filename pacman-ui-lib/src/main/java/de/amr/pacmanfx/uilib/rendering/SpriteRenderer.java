@@ -7,9 +7,9 @@ import javafx.scene.canvas.Canvas;
 
 import static java.util.Objects.requireNonNull;
 
-public abstract class SpriteSheetRenderer<T extends Enum<T>> extends BaseRenderer {
+public abstract class SpriteRenderer<T extends Enum<T>> extends BaseRenderer {
 
-    protected SpriteSheetRenderer(Canvas canvas) {
+    protected SpriteRenderer(Canvas canvas) {
         super(canvas);
     }
 

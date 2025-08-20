@@ -9,6 +9,7 @@ import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.sound.SoundID;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.Globals.TS;
@@ -22,14 +23,20 @@ import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
  */
 public class ArcadePacMan_StartScene extends GameScene2D {
 
+    private BaseRenderer renderer;
+
     public ArcadePacMan_StartScene(GameUI ui) {
         super(ui);
     }
 
     @Override
     public void doInit() {
+        renderer = new BaseRenderer(canvas);
+        renderer.scalingProperty().bind(scaling);
+
         setHudRenderer(ui.currentConfig().createHUDRenderer(canvas, scaling));
         gameContext().game().hudData().credit(true).score(true).levelCounter(true).livesCounter(false);
+
         actionBindings.assign(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
         actionBindings.assign(ACTION_ARCADE_START_GAME, ui.actionBindings());
     }
@@ -51,11 +58,11 @@ public class ArcadePacMan_StartScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        Font font = scaledArcadeFont8();
-        gameLevelRenderer.fillText("PUSH START BUTTON", ARCADE_ORANGE, font,     TS(6),  TS(17));
-        gameLevelRenderer.fillText("1 PLAYER ONLY", ARCADE_CYAN, font,           TS(8),  TS(21));
-        gameLevelRenderer.fillText("BONUS PAC-MAN FOR 10000", ARCADE_ROSE, font, TS(1),  TS(25));
-        gameLevelRenderer.fillText("PTS", ARCADE_ROSE, scaledArcadeFont6(),      TS(25), TS(25));
-        gameLevelRenderer.fillText("© 1980 MIDWAY MFG.CO.", ARCADE_PINK, font,   TS(4),  TS(29));
+        Font font = renderer.arcadeFont(TS);
+        renderer.fillText("PUSH START BUTTON", ARCADE_ORANGE, font,     TS(6),  TS(17));
+        renderer.fillText("1 PLAYER ONLY", ARCADE_CYAN, font,           TS(8),  TS(21));
+        renderer.fillText("BONUS PAC-MAN FOR 10000", ARCADE_ROSE, font, TS(1),  TS(25));
+        renderer.fillText("PTS", ARCADE_ROSE, scaledArcadeFont6(),      TS(25), TS(25));
+        renderer.fillText("© 1980 MIDWAY MFG.CO.", ARCADE_PINK, font,   TS(4),  TS(29));
     }
 }

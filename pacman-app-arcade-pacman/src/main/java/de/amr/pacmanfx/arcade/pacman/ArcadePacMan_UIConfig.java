@@ -177,7 +177,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
     }
 
     @Override
-    public ArcadePacMan_GameLevelRenderer createGameRenderer(Canvas canvas) {
+    public ArcadePacMan_GameLevelRenderer createGameLevelRenderer(Canvas canvas) {
         return new ArcadePacMan_GameLevelRenderer(this, canvas);
     }
 

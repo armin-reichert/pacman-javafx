@@ -23,7 +23,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_LevelCounter;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.ColoredSpriteImage;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.MazeSpriteSet;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameLevelRenderer;
-import de.amr.pacmanfx.ui._2d.DebugInfoRenderer;
+import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.api.GameScene;
@@ -74,6 +74,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     private final DynamicCamera dynamicCamera = new DynamicCamera();
     private final ParallelCamera fixedCamera  = new ParallelCamera();
     private final Rectangle canvasClipArea = new Rectangle();
+
+    private TengenMsPacMan_GameLevelRenderer gameLevelRenderer;
 
     private MessageMovement messageMovement;
     private LevelCompletedAnimation levelCompletedAnimation;
@@ -134,8 +136,13 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void doInit() {
-        setGameRenderer(ui.currentConfig().createGameRenderer(canvas));
+        gameLevelRenderer = (TengenMsPacMan_GameLevelRenderer) ui.currentConfig().createGameLevelRenderer(canvas);
+        gameLevelRenderer.scalingProperty().bind(scaling);
+
         setHudRenderer(ui.currentConfig().createHUDRenderer(canvas, scaling));
+
+        debugInfoRenderer = new PlaySceneDebugInfoRenderer(ui);
+        debugInfoRenderer.scalingProperty().bind(scaling);
 
         messageMovement = new MessageMovement();
         levelCompletedAnimation = new LevelCompletedAnimation(animationRegistry);
@@ -259,8 +266,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         gameContext().game().hudData().showLevelCounter(true);
         gameContext().game().hudData().showLivesCounter(true); // is also visible in demo level!
         setActionsBindings();
-        //TODO check if this is needed?
-        setGameRenderer(ui.currentConfig().createGameRenderer(canvas));
+
+        //TODO check if this is needed, if not, remove
+        gameLevelRenderer = (TengenMsPacMan_GameLevelRenderer) ui.currentConfig().createGameLevelRenderer(canvas);
+        gameLevelRenderer.scalingProperty().bind(scaling);
     }
 
     @Override
@@ -408,12 +417,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     // drawing
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public TengenMsPacMan_GameLevelRenderer renderer() {
-        return (TengenMsPacMan_GameLevelRenderer) gameLevelRenderer;
-    }
-
     @Override
     public void draw() {
         clear();
@@ -433,18 +436,18 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             case SCROLLING -> (subScene.getHeight() / NES_SIZE_PX.y());
         };
         setScaling(scaling);
-        renderer().setScaling(scaling);
 
         gameLevelRenderer.ctx().save();
 
-        if (debugInfoVisible.get()) {
+        if (debugInfoVisible.get() && debugInfoRenderer != null) {
             canvas.setClip(null);
             drawSceneContent();
-            drawDebugInfo();
+            debugInfoRenderer.drawDebugInfo();
         } else {
             canvas.setClip(canvasClipArea);
             drawSceneContent();
         }
+
         // NES screen is 32 tiles wide but mazes are only 28 tiles wide, so shift HUD right:
         gameLevelRenderer.ctx().translate(scaled(2 * TS), 0);
         hudRenderer.drawHUD(gameContext(), gameContext().game().hudData(), sizeInPx());
@@ -463,15 +466,15 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
                 // get the current maze flashing "animation frame"
                 int frame = levelCompletedAnimation.flashingIndex();
                 ColoredSpriteImage flashingMazeSprite = recoloredMaze.flashingMazeImages().get(frame);
-                renderer().drawGameLevel(gameContext(), flashingMazeSprite.spriteSheetImage(), flashingMazeSprite.sprite());
+                gameLevelRenderer.drawGameLevel(gameContext(), flashingMazeSprite.spriteSheetImage(), flashingMazeSprite.sprite());
             } else {
-                renderer().drawGameLevel(gameContext(), null, false, false);
+                gameLevelRenderer.drawGameLevel(gameContext(), null, false, false);
             }
         }
         else {
             //TODO in the original game, the message is drawn under the maze image but *over* the pellets!
-            renderer().drawLevelMessage(gameContext().gameLevel(), currentMessagePosition(), scaledArcadeFont8());
-            renderer().drawGameLevel(gameContext(), null, false, false);
+            gameLevelRenderer.drawLevelMessage(gameContext().gameLevel(), currentMessagePosition(), scaledArcadeFont8());
+            gameLevelRenderer.drawGameLevel(gameContext(), null, false, false);
         }
 
         actorsInZOrder.clear();
@@ -480,24 +483,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         ghostsByZ(gameContext().gameLevel()).forEach(actorsInZOrder::add);
         actorsInZOrder.forEach(actor -> gameLevelRenderer.drawActor(actor));
 
-        gameLevelRenderer.ctx().restore();
-    }
-
-    @Override
-    protected void drawDebugInfo() {
-        renderer().drawTileGrid(UNSCALED_CANVAS_WIDTH, UNSCALED_CANVAS_HEIGHT, Color.LIGHTGRAY);
-        gameLevelRenderer.ctx().save();
-        gameLevelRenderer.ctx().translate(scaled(2 * TS), 0);
-        gameLevelRenderer.ctx().setFill(debugTextFill);
-        gameLevelRenderer.ctx().setFont(debugTextFont);
-        gameLevelRenderer.ctx().fillText("%s %d".formatted(gameContext().gameState(), gameContext().gameState().timer().tickCount()), 0, scaled(3 * TS));
-        if (gameContext().optGameLevel().isPresent()) {
-            if (gameLevelRenderer instanceof DebugInfoRenderer debugInfoRenderer) {
-                debugInfoRenderer.drawMovingActorInfo(gameLevelRenderer.ctx(), scaling(), gameContext().gameLevel().pac());
-                ghostsByZ(gameContext().gameLevel())
-                        .forEach(ghost -> debugInfoRenderer.drawMovingActorInfo(gameLevelRenderer.ctx(), scaling(), ghost));
-            }
-        }
         gameLevelRenderer.ctx().restore();
     }
 
@@ -535,6 +520,28 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             levelCounter.setDisplayedLevelNumber(0); // no level number boxes for ARCADE maps or when level not yet created
         } else {
             levelCounter.setDisplayedLevelNumber(gameContext().gameLevel().number());
+        }
+    }
+
+    private class PlaySceneDebugInfoRenderer extends DefaultDebugInfoRenderer {
+
+        public PlaySceneDebugInfoRenderer(GameUI ui) {
+            super(ui, canvas);
+        }
+
+        @Override
+        public void drawDebugInfo() {
+            drawTileGrid(UNSCALED_CANVAS_WIDTH, UNSCALED_CANVAS_HEIGHT, Color.LIGHTGRAY);
+            ctx.save();
+            ctx.translate(scaled(2 * TS), 0);
+            ctx.setFill(debugTextFill);
+            ctx.setFont(debugTextFont);
+            ctx.fillText("%s %d".formatted(gameContext().gameState(), gameContext().gameState().timer().tickCount()), 0, scaled(3 * TS));
+            if (gameContext().optGameLevel().isPresent()) {
+                drawMovingActorInfo(ctx, scaling(), gameContext().gameLevel().pac());
+                ghostsByZ(gameContext().gameLevel()).forEach(ghost -> drawMovingActorInfo(ctx, scaling(), ghost));
+            }
+            ctx.restore();
         }
     }
 }

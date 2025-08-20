@@ -4,14 +4,18 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
+import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_GameLevelRenderer;
+import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.actors.AnimationManager;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.Pac;
+import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
+import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
@@ -42,6 +46,8 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     private SpriteAnimation blinkyDamaged;
     private SpriteAnimation nailDressRaptureAnimation;
 
+    private GameLevelRenderer<SpriteID> gameLevelRenderer;
+
     public ArcadePacMan_CutScene2(GameUI ui) {
         super(ui);
     }
@@ -49,6 +55,9 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     @Override
     public void doInit() {
         frame = -1;
+
+        gameLevelRenderer = (ArcadePacMan_GameLevelRenderer) ui.currentConfig().createGameLevelRenderer(canvas);
+        gameLevelRenderer.scalingProperty().bind(scaling);
 
         pac = createPac();
         pac.setAnimations(ui.currentConfig().createPacAnimations(pac));
@@ -68,6 +77,15 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
         setHudRenderer(ui.currentConfig().createHUDRenderer(canvas, scaling));
         gameContext().game().hudData().credit(false).score(true).levelCounter(true).livesCounter(false);
+
+        debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas) {
+            @Override
+            public void drawDebugInfo() {
+                super.drawDebugInfo();
+                String text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
+                fillText(text, debugTextFill, debugTextFont, TS(1), TS(5));
+            }
+        };
     }
 
     @Override
@@ -135,12 +153,5 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
         gameLevelRenderer.drawSprite(nailDressRaptureAnimation.currentSprite(),
             TS(14), TS(19) + 3, true);
         actorsInZOrder.forEach(actor -> gameLevelRenderer.drawActor(actor));
-    }
-
-    @Override
-    protected void drawDebugInfo() {
-        super.drawDebugInfo();
-        String text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
-        gameLevelRenderer.fillText(text, debugTextFill, debugTextFont, TS(1), TS(5));
     }
 }

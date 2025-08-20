@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
+import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_GameLevelRenderer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.lib.Direction;
@@ -15,6 +16,7 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.animation.SingleSpriteActor;
+import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 
 import java.util.stream.Stream;
 
@@ -50,6 +52,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     private Ghost inky;
     private Ghost pinky;
 
+    private GameLevelRenderer<SpriteID> gameLevelRenderer;
     private SingleSpriteActor heart;
     private Clapperboard clapperboard;
 
@@ -59,6 +62,12 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     
     @Override
     public void doInit() {
+        setHudRenderer(ui.currentConfig().createHUDRenderer(canvas, scaling));
+        gameContext().game().hudData().score(true).levelCounter(true).livesCounter(false);
+
+        gameLevelRenderer = new ArcadeMsPacMan_GameLevelRenderer(canvas, ui.currentConfig(), null);
+        gameLevelRenderer.scalingProperty().bind(scaling);
+
         var spriteSheet = (ArcadeMsPacMan_SpriteSheet) ui.currentConfig().spriteSheet();
 
         pacMan = createPacMan();
@@ -77,9 +86,6 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         clapperboard.setPosition(TS(3), TS(10));
         clapperboard.setFont(scaledArcadeFont8());
         clapperboard.startAnimation();
-
-        setHudRenderer(ui.currentConfig().createHUDRenderer(canvas, scaling));
-        gameContext().game().hudData().score(true).levelCounter(true).livesCounter(false);
 
         setState(STATE_CLAPPERBOARD, 120);
     }

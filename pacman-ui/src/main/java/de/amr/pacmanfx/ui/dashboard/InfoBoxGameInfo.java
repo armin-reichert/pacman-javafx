@@ -12,7 +12,6 @@ import de.amr.pacmanfx.model.HuntingPhase;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.actors.ActorSpeedControl;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import javafx.scene.paint.Color;
@@ -38,11 +37,6 @@ public class InfoBoxGameInfo extends InfoBox {
         addDynamicLabeledValue("Game State", () -> "%s".formatted(ui.gameContext().gameState().name()));
         addDynamicLabeledValue("State Timer", this::stateTimerInfo);
         addDynamicLabeledValue("Game Scene", ifGameScenePresent(gameScene -> gameScene.getClass().getSimpleName()));
-        addDynamicLabeledValue("Renderer", ifGameScenePresent(gameScene ->
-            gameScene instanceof GameScene2D gameScene2D
-                ? gameScene2D.renderer().getClass().getSimpleName()
-                : NO_INFO
-        ));
 
         addDynamicLabeledValue("Level Number", ifGameLevelPresent(level ->
             (level.isDemoLevel() ? "%d (Demo Level)" : "%d").formatted(level.number())));

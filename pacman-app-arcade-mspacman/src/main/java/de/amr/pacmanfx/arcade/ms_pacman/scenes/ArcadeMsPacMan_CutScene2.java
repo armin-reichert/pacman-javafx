@@ -4,12 +4,15 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
+import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_GameLevelRenderer;
+import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
+import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 
 import java.util.stream.Stream;
 
@@ -39,12 +42,20 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
     private Clapperboard clapperboard;
 
+    private GameLevelRenderer<SpriteID> gameLevelRenderer;
+
     public ArcadeMsPacMan_CutScene2(GameUI ui) {
         super(ui);
     }
     
     @Override
     public void doInit() {
+        setHudRenderer(ui.currentConfig().createHUDRenderer(canvas, scaling));
+        gameContext().game().hudData().score(true).levelCounter(true).livesCounter(false);
+
+        gameLevelRenderer = new ArcadeMsPacMan_GameLevelRenderer(canvas, ui.currentConfig(), null);
+        gameLevelRenderer.scalingProperty().bind(scaling);
+
         pacMan = createPacMan();
         msPacMan = createMsPacMan();
 
@@ -55,9 +66,6 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
         clapperboard.setPosition(TS(3), TS(10));
         clapperboard.setFont(scaledArcadeFont8());
         clapperboard.startAnimation();
-
-        setHudRenderer(ui.currentConfig().createHUDRenderer(canvas, scaling));
-        gameContext().game().hudData().score(true).levelCounter(true).livesCounter(false);
 
         setSceneState(STATE_CLAPPERBOARD, 120);
     }
