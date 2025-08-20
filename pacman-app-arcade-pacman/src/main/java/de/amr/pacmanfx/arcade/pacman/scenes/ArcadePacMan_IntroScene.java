@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
+import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_HUDRenderer;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
-import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
@@ -58,7 +58,9 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     };
 
     private ArcadePacMan_SpriteSheet spriteSheet;
-    private GameLevelRenderer<SpriteID> gameLevelRenderer;
+
+    private ArcadePacMan_HUDRenderer hudRenderer;
+    private GameLevelRenderer gameLevelRenderer;
 
     private Pulse blinking;
     private Pac pacMan;
@@ -75,10 +77,10 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         super(ui);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void doInit() {
-
+        hudRenderer = (ArcadePacMan_HUDRenderer) ui.currentConfig().createHUDRenderer(canvas, scaling);
+        gameLevelRenderer = ui.currentConfig().createGameLevelRenderer(canvas);
         debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas) {
             @Override
             public void drawDebugInfo() {
@@ -86,10 +88,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 ctx.fillText("Scene timer %d".formatted(sceneController.state().timer().tickCount()), 0, scaled(5 * TS));
             }
         };
-        debugInfoRenderer.scalingProperty().bind(scaling);
-
-        gameLevelRenderer = (GameLevelRenderer<SpriteID>) ui.currentConfig().createGameLevelRenderer(canvas);
-        gameLevelRenderer.scalingProperty().bind(scaling);
+        bindRendererScaling(hudRenderer, gameLevelRenderer, debugInfoRenderer);
 
         gameContext().game().hudData().credit(true).score(true).livesCounter(false).levelCounter(true);
 
@@ -100,7 +99,6 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         actionBindings.assign(ACTION_TEST_LEVELS_MEDIUM, ui.actionBindings());
 
         spriteSheet = (ArcadePacMan_SpriteSheet) ui.currentConfig().spriteSheet();
-        setHudRenderer(ui.currentConfig().createHUDRenderer(canvas, scaling));
 
         blinking = new Pulse(10, true);
         pacMan = createPac();
@@ -140,6 +138,14 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     @Override
     public Vector2f sizeInPx() { return ARCADE_MAP_SIZE_IN_PIXELS; }
+
+
+    @Override
+    public void drawHUD() {
+        if (hudRenderer != null) {
+            hudRenderer.drawHUD(gameContext(), gameContext().game().hudData(), sizeInPx());
+        }
+    }
 
     @Override
     public void drawSceneContent() {

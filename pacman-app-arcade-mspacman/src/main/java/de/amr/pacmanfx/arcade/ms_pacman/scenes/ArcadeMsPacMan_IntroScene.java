@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_GameLevelRenderer;
+import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_ScenesRenderer;
 import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.event.GameEvent;
@@ -54,6 +55,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     private final StateMachine<SceneState, ArcadeMsPacMan_IntroScene> sceneController;
 
+    private ArcadeMsPacMan_HUDRenderer hudRenderer;
     private ArcadeMsPacMan_ScenesRenderer scenesRenderer;
     private ArcadeMsPacMan_GameLevelRenderer gameLevelRenderer;
 
@@ -75,14 +77,12 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        setHudRenderer(ui.currentConfig().createHUDRenderer(canvas, scaling));
-        gameContext().game().hudData().credit(true).score(true).levelCounter(true).livesCounter(false);
-
+        hudRenderer = (ArcadeMsPacMan_HUDRenderer) ui.currentConfig().createHUDRenderer(canvas, scaling);
         scenesRenderer = new ArcadeMsPacMan_ScenesRenderer(canvas, ui.currentConfig());
-        scenesRenderer.scalingProperty().bind(scaling);
-
         gameLevelRenderer = new ArcadeMsPacMan_GameLevelRenderer(canvas, ui.currentConfig());
-        gameLevelRenderer.scalingProperty().bind(scaling);
+        bindRendererScaling(hudRenderer, scenesRenderer, gameLevelRenderer);
+
+        gameContext().game().hudData().credit(true).score(true).levelCounter(true).livesCounter(false);
 
         actionBindings.assign(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
         actionBindings.assign(ACTION_ARCADE_START_GAME, ui.actionBindings());
@@ -131,6 +131,13 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     @Override
     public void onCreditAdded(GameEvent e) {
         ui.soundManager().play(SoundID.COIN_INSERTED);
+    }
+
+    @Override
+    public void drawHUD() {
+        if (hudRenderer != null) {
+            hudRenderer.drawHUD(gameContext(), gameContext().game().hudData(), sizeInPx());
+        }
     }
 
     @Override

@@ -39,7 +39,7 @@ import static de.amr.pacmanfx.tengen.ms_pacman.rendering.NonArcadeMapsSpriteShee
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
-public class TengenMsPacMan_GameLevelRenderer extends GameLevelRenderer<SpriteID> {
+public class TengenMsPacMan_GameLevelRenderer extends GameLevelRenderer {
 
     private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
     private final TengenMsPacMan_UIConfig uiConfig;

@@ -20,7 +20,7 @@ import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_WHITE;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
-public class ArcadeMsPacMan_GameLevelRenderer extends GameLevelRenderer<SpriteID> {
+public class ArcadeMsPacMan_GameLevelRenderer extends GameLevelRenderer {
 
     protected GameUI_Config uiConfig;
     protected BrightMazesSpriteSheet brightMazesSpriteSheet;

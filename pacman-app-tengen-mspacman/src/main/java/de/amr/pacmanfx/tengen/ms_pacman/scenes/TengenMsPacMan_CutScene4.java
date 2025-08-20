@@ -1,3 +1,7 @@
+/*
+Copyright (c) 2021-2025 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
 import de.amr.pacmanfx.controller.GamePlayState;
@@ -8,10 +12,12 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameLevelRenderer;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
+import de.amr.pacmanfx.ui.api.GameUI_Config;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -36,6 +42,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
     private static final int LOWER_LANE = TS * 21; // TODO not sure
 
+    private TengenMsPacMan_HUDRenderer hudRenderer;
     private TengenMsPacMan_GameLevelRenderer gameLevelRenderer;
 
     private Pac pacMan;
@@ -52,16 +59,14 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     
     @Override
     protected void doInit() {
-        t = -1;
+        GameUI_Config uiConfig = ui.currentConfig();
 
-        setHudRenderer(ui.currentConfig().createHUDRenderer(canvas, scaling));
-        gameContext().game().hudData().score(false).levelCounter(true).livesCounter(false);
-
-        gameLevelRenderer = (TengenMsPacMan_GameLevelRenderer) ui.currentConfig().createGameLevelRenderer(canvas);
-        gameLevelRenderer.scalingProperty().bind(scaling);
-
+        hudRenderer = (TengenMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas, scaling);
+        gameLevelRenderer = (TengenMsPacMan_GameLevelRenderer) uiConfig.createGameLevelRenderer(canvas);
         debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas);
-        debugInfoRenderer.scalingProperty().bind(scaling);
+        bindRendererScaling(hudRenderer, gameLevelRenderer, debugInfoRenderer);
+
+        gameContext().game().hudData().score(false).levelCounter(true).livesCounter(false);
 
         var spriteSheet = (TengenMsPacMan_SpriteSheet) ui.currentConfig().spriteSheet();
         clapperboard = new Clapperboard(spriteSheet, 4, "THE END");
@@ -73,6 +78,8 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         pacMan  .setAnimations(ui.currentConfig().createPacAnimations(pacMan));
         juniors = new ArrayList<>();
         juniorCreationTime = new ArrayList<>();
+
+        t = -1;
     }
 
     @Override
@@ -220,21 +227,21 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     public Vector2f sizeInPx() { return NES_SIZE_PX; }
 
     @Override
-    public void draw() {
-        clear();
-        drawSceneContent();
-        var game = gameContext().<TengenMsPacMan_GameModel>game();
-        if (game.mapCategory() != MapCategory.ARCADE) {
-            hudRenderer.drawHUD(gameContext(), game.hudData(), sizeInPx().minus(0, 2 * TS));
-        }
-        if (debugInfoVisible.get() && debugInfoRenderer != null) {
-            debugInfoRenderer.drawDebugInfo();
+    public void drawHUD() {
+        if (hudRenderer != null) {
+            // draw HUD only for non-Arcade map mode
+            var game = gameContext().<TengenMsPacMan_GameModel>game();
+            if (game.mapCategory() != MapCategory.ARCADE) {
+                hudRenderer.drawHUD(gameContext(), game.hudData(), sizeInPx().minus(0, 2 * TS));
+            }
         }
     }
 
     @Override
     public void drawSceneContent() {
-        Stream.of(clapperboard, msPacMan, pacMan).forEach(actor -> gameLevelRenderer.drawActor(actor));
-        juniors.forEach(actor -> gameLevelRenderer.drawActor(actor));
+        if (gameLevelRenderer != null) {
+            Stream.of(clapperboard, msPacMan, pacMan).forEach(actor -> gameLevelRenderer.drawActor(actor));
+            juniors.forEach(actor -> gameLevelRenderer.drawActor(actor));
+        }
     }
 }

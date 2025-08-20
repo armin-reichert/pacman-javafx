@@ -51,7 +51,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         private final GraphicsContext ctx;
         private final Pac pac;
         private final List<Ghost> ghosts;
-        private GameLevelRenderer<?> gameLevelRenderer;
+        private GameLevelRenderer gameLevelRenderer;
         private boolean chasingGhosts;
         private boolean running;
 

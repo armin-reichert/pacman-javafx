@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
-import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
+import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_HUDRenderer;
 import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.controller.teststates.LevelMediumTestState;
@@ -52,21 +52,21 @@ import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
  */
 public class ArcadePacMan_PlayScene2D extends GameScene2D {
 
-    private GameLevelRenderer<SpriteID> gameLevelRenderer;
+    private ArcadePacMan_HUDRenderer hudRenderer;
+    private GameLevelRenderer gameLevelRenderer;
+
     private LevelCompletedAnimation levelCompletedAnimation;
 
     public ArcadePacMan_PlayScene2D(GameUI ui) {
         super(ui);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     protected void doInit() {
-        gameLevelRenderer = (GameLevelRenderer<SpriteID>) ui.currentConfig().createGameLevelRenderer(canvas);
-        gameLevelRenderer.scalingProperty().bind(scaling);
-        setHudRenderer(ui.currentConfig().createHUDRenderer(canvas, scaling));
+        hudRenderer = (ArcadePacMan_HUDRenderer) ui.currentConfig().createHUDRenderer(canvas, scaling);
+        gameLevelRenderer = ui.currentConfig().createGameLevelRenderer(canvas);
         debugInfoRenderer = new PlaySceneDebugInfoRenderer(ui);
-        debugInfoRenderer.scalingProperty().bind(scaling);
+        bindRendererScaling(hudRenderer, gameLevelRenderer, debugInfoRenderer);
 
         gameContext().game().hudData().credit(false).score(true).levelCounter(true).livesCounter(true);
         levelCompletedAnimation = new LevelCompletedAnimation(animationRegistry);
@@ -215,6 +215,13 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
     public Vector2f sizeInPx() {
         // Note: scene is also used in Pac-Man XXL game variant were world can have arbitrary size
         return gameContext().optGameLevel().map(GameLevel::worldSizePx).orElse(ARCADE_MAP_SIZE_IN_PIXELS);
+    }
+
+    @Override
+    public void drawHUD() {
+        if (hudRenderer != null) {
+            hudRenderer.drawHUD(gameContext(), gameContext().game().hudData(), sizeInPx());
+        }
     }
 
     @Override

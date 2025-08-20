@@ -239,6 +239,12 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
 
     // Drawing
 
+
+    @Override
+    public void drawHUD() {
+        // No HUD
+    }
+
     @Override
     public void drawSceneContent() {
         if (initialDelay > 0) {

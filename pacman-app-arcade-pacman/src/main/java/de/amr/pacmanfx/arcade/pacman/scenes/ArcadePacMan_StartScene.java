@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
+import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_HUDRenderer;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
@@ -23,7 +24,8 @@ import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
  */
 public class ArcadePacMan_StartScene extends GameScene2D {
 
-    private BaseRenderer renderer;
+    private ArcadePacMan_HUDRenderer hudRenderer;
+    private BaseRenderer sceneRenderer;
 
     public ArcadePacMan_StartScene(GameUI ui) {
         super(ui);
@@ -31,10 +33,10 @@ public class ArcadePacMan_StartScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        renderer = new BaseRenderer(canvas);
-        renderer.scalingProperty().bind(scaling);
+        hudRenderer = new ArcadePacMan_HUDRenderer(ui.currentConfig(), canvas);
+        sceneRenderer = new BaseRenderer(canvas);
+        bindRendererScaling(hudRenderer, sceneRenderer);
 
-        setHudRenderer(ui.currentConfig().createHUDRenderer(canvas, scaling));
         gameContext().game().hudData().credit(true).score(true).levelCounter(true).livesCounter(false);
 
         actionBindings.assign(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
@@ -57,12 +59,19 @@ public class ArcadePacMan_StartScene extends GameScene2D {
     public Vector2f sizeInPx() { return ARCADE_MAP_SIZE_IN_PIXELS; }
 
     @Override
+    public void drawHUD() {
+        if (hudRenderer != null) {
+            hudRenderer.drawHUD(gameContext(), gameContext().game().hudData(), sizeInPx());
+        }
+    }
+
+    @Override
     public void drawSceneContent() {
-        Font font = renderer.arcadeFont(TS);
-        renderer.fillText("PUSH START BUTTON", ARCADE_ORANGE, font,     TS(6),  TS(17));
-        renderer.fillText("1 PLAYER ONLY", ARCADE_CYAN, font,           TS(8),  TS(21));
-        renderer.fillText("BONUS PAC-MAN FOR 10000", ARCADE_ROSE, font, TS(1),  TS(25));
-        renderer.fillText("PTS", ARCADE_ROSE, scaledArcadeFont6(),      TS(25), TS(25));
-        renderer.fillText("© 1980 MIDWAY MFG.CO.", ARCADE_PINK, font,   TS(4),  TS(29));
+        Font font = sceneRenderer.arcadeFont(TS);
+        sceneRenderer.fillText("PUSH START BUTTON", ARCADE_ORANGE, font,     TS(6),  TS(17));
+        sceneRenderer.fillText("1 PLAYER ONLY", ARCADE_CYAN, font,           TS(8),  TS(21));
+        sceneRenderer.fillText("BONUS PAC-MAN FOR 10000", ARCADE_ROSE, font, TS(1),  TS(25));
+        sceneRenderer.fillText("PTS", ARCADE_ROSE, scaledArcadeFont6(),      TS(25), TS(25));
+        sceneRenderer.fillText("© 1980 MIDWAY MFG.CO.", ARCADE_PINK, font,   TS(4),  TS(29));
     }
 }

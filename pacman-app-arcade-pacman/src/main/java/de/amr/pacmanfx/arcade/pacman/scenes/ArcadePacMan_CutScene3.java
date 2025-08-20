@@ -4,8 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
-import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_GameLevelRenderer;
-import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
+import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_HUDRenderer;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -37,7 +36,8 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
     private Pac pac;
     private Ghost blinky;
 
-    private GameLevelRenderer<SpriteID> gameLevelRenderer;
+    private ArcadePacMan_HUDRenderer hudRenderer;
+    private GameLevelRenderer gameLevelRenderer;
 
     public ArcadePacMan_CutScene3(GameUI ui) {
         super(ui);
@@ -45,10 +45,19 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
     
     @Override
     public void doInit() {
-        frame = -1;
+        hudRenderer = new ArcadePacMan_HUDRenderer(ui.currentConfig(), canvas);
+        gameLevelRenderer = ui.currentConfig().createGameLevelRenderer(canvas);
+        debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas) {
+            @Override
+            public void drawDebugInfo() {
+                super.drawDebugInfo();
+                String text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
+                fillText(text, debugTextFill, debugTextFont, TS(1), TS(5));
+            }
+        };
+        bindRendererScaling(hudRenderer, gameLevelRenderer, debugInfoRenderer);
 
-        gameLevelRenderer = (ArcadePacMan_GameLevelRenderer) ui.currentConfig().createGameLevelRenderer(canvas);
-        gameLevelRenderer.scalingProperty().bind(scaling);
+        gameContext().game().hudData().credit(false).score(true).levelCounter(true).livesCounter(false);
 
         pac = createPac();
         pac.setAnimations(ui.currentConfig().createPacAnimations(pac));
@@ -59,17 +68,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
         actorsInZOrder.add(pac);
         actorsInZOrder.add(blinky);
 
-        setHudRenderer(ui.currentConfig().createHUDRenderer(canvas, scaling));
-        gameContext().game().hudData().credit(false).score(true).levelCounter(true).livesCounter(false);
-
-        debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas) {
-            @Override
-            public void drawDebugInfo() {
-                super.drawDebugInfo();
-                String text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
-                fillText(text, debugTextFill, debugTextFont, TS(1), TS(5));
-            }
-        };
+        frame = -1;
     }
 
     @Override
@@ -117,5 +116,12 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
     @Override
     public void drawSceneContent() {
         actorsInZOrder.forEach(actor -> gameLevelRenderer.drawActor(actor));
+    }
+
+    @Override
+    public void drawHUD() {
+        if (hudRenderer != null) {
+            hudRenderer.drawHUD(gameContext(), gameContext().game().hudData(), sizeInPx());
+        }
     }
 }

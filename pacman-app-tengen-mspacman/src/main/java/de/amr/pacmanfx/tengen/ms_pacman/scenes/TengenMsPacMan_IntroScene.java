@@ -12,11 +12,9 @@ import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
+import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.SpriteID;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameLevelRenderer;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_ScenesRenderer;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.*;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import javafx.scene.canvas.GraphicsContext;
@@ -48,8 +46,10 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     private final StateMachine<SceneState, TengenMsPacMan_IntroScene> sceneController;
 
+    private TengenMsPacMan_HUDRenderer hudRenderer;
     private TengenMsPacMan_GameLevelRenderer gameLevelRenderer;
     private TengenMsPacMan_ScenesRenderer scenesRenderer;
+
     private TengenMsPacMan_SpriteSheet spriteSheet;
 
     private long marqueeTick;
@@ -73,13 +73,11 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void doInit() {
+        hudRenderer = (TengenMsPacMan_HUDRenderer) ui.currentConfig().createHUDRenderer(canvas, scaling);
         scenesRenderer = new TengenMsPacMan_ScenesRenderer(canvas, ui.currentConfig());
-        scenesRenderer.scalingProperty().bind(scaling);
-
         gameLevelRenderer = (TengenMsPacMan_GameLevelRenderer) ui.currentConfig().createGameLevelRenderer(canvas);
-        gameLevelRenderer.scalingProperty().bind(scaling);
+        bindRendererScaling(hudRenderer, scenesRenderer, gameLevelRenderer);
 
-        setHudRenderer(ui.currentConfig().createHUDRenderer(canvas, scaling));
         gameContext().game().hudData().score(false).levelCounter(false).livesCounter(false);
 
         spriteSheet = (TengenMsPacMan_SpriteSheet) ui.currentConfig().spriteSheet();
@@ -106,6 +104,17 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public Vector2f sizeInPx() { return NES_SIZE_PX; }
+
+    @Override
+    public void drawHUD() {
+        if (hudRenderer != null) {
+            // draw HUD only for non-Arcade map mode
+            var game = gameContext().<TengenMsPacMan_GameModel>game();
+            if (game.mapCategory() != MapCategory.ARCADE) {
+                hudRenderer.drawHUD(gameContext(), game.hudData(), sizeInPx().minus(0, 2 * TS));
+            }
+        }
+    }
 
     @Override
     public void drawSceneContent() {

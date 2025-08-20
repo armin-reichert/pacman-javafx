@@ -106,6 +106,11 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     }
 
     @Override
+    public void drawHUD() {
+        // No HUD
+    }
+
+    @Override
     public void drawSceneContent() {
         if (grayScreen) {
             fillCanvas(canvas, GRAY);

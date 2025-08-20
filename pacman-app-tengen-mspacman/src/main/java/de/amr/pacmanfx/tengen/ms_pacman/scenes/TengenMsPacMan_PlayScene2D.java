@@ -23,6 +23,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_LevelCounter;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.ColoredSpriteImage;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.MazeSpriteSet;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameLevelRenderer;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
@@ -75,6 +76,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     private final ParallelCamera fixedCamera  = new ParallelCamera();
     private final Rectangle canvasClipArea = new Rectangle();
 
+    private TengenMsPacMan_HUDRenderer hudRenderer;
     private TengenMsPacMan_GameLevelRenderer gameLevelRenderer;
 
     private MessageMovement messageMovement;
@@ -136,13 +138,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void doInit() {
+        hudRenderer = (TengenMsPacMan_HUDRenderer) ui.currentConfig().createHUDRenderer(canvas, scaling);
         gameLevelRenderer = (TengenMsPacMan_GameLevelRenderer) ui.currentConfig().createGameLevelRenderer(canvas);
-        gameLevelRenderer.scalingProperty().bind(scaling);
-
-        setHudRenderer(ui.currentConfig().createHUDRenderer(canvas, scaling));
-
         debugInfoRenderer = new PlaySceneDebugInfoRenderer(ui);
-        debugInfoRenderer.scalingProperty().bind(scaling);
+        bindRendererScaling(hudRenderer, gameLevelRenderer, debugInfoRenderer);
 
         messageMovement = new MessageMovement();
         levelCompletedAnimation = new LevelCompletedAnimation(animationRegistry);
@@ -448,11 +447,15 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             drawSceneContent();
         }
 
-        // NES screen is 32 tiles wide but mazes are only 28 tiles wide, so shift HUD right:
-        gameLevelRenderer.ctx().translate(scaled(2 * TS), 0);
-        hudRenderer.drawHUD(gameContext(), gameContext().game().hudData(), sizeInPx());
+        drawHUD();
+    }
 
-        gameLevelRenderer.ctx().restore();
+    @Override
+    public void drawHUD() {
+        // NES screen is 32 tiles wide but mazes are only 28 tiles wide, so shift HUD right:
+        ctx().translate(scaled(2 * TS), 0);
+        hudRenderer.drawHUD(gameContext(), gameContext().game().hudData(), sizeInPx());
+        ctx().restore();
     }
 
     @Override

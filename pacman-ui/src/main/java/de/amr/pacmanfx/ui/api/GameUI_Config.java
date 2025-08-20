@@ -59,7 +59,7 @@ public interface GameUI_Config extends Disposable {
 
     WorldMapColorScheme colorScheme(WorldMap worldMap);
 
-    GameLevelRenderer<?> createGameLevelRenderer(Canvas canvas);
+    GameLevelRenderer createGameLevelRenderer(Canvas canvas);
 
     HUDRenderer createHUDRenderer(Canvas canvas, DoubleProperty scaling);
 

@@ -11,6 +11,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameLevelRenderer;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
@@ -43,7 +44,9 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     private static final int LEFT_BORDER = TS;
     private static final int RIGHT_BORDER = TS * 30;
 
+    private TengenMsPacMan_HUDRenderer hudRenderer;
     private TengenMsPacMan_GameLevelRenderer gameLevelRenderer;
+
     private Clapperboard clapperboard;
     private Pac pacMan;
     private Pac msPacMan;
@@ -55,16 +58,12 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     
     @Override
     public void doInit() {
-        t = -1;
-
-        setHudRenderer(ui.currentConfig().createHUDRenderer(canvas, scaling));
-        gameContext().game().hudData().credit(false).score(false).levelCounter(true).livesCounter(false);
-
+        hudRenderer = (TengenMsPacMan_HUDRenderer) ui.currentConfig().createHUDRenderer(canvas, scaling);
         gameLevelRenderer = (TengenMsPacMan_GameLevelRenderer) ui.currentConfig().createGameLevelRenderer(canvas);
-        gameLevelRenderer.scalingProperty().bind(scaling);
-
         debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas);
-        debugInfoRenderer.scalingProperty().bind(scaling);
+        bindRendererScaling(hudRenderer, gameLevelRenderer, debugInfoRenderer);
+
+        gameContext().game().hudData().credit(false).score(false).levelCounter(true).livesCounter(false);
 
         actionBindings.bind(ACTION_LET_GAME_STATE_EXPIRE, ui.joypad().key(JoypadButton.START));
 
@@ -78,6 +77,8 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         msPacMan.setAnimations(config.createPacAnimations(msPacMan));
         pacMan = createPacMan();
         pacMan.setAnimations(config.createPacAnimations(pacMan));
+
+        t = -1;
     }
 
     @Override
@@ -161,21 +162,20 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     public Vector2f sizeInPx() { return NES_SIZE_PX; }
 
     @Override
-    public void draw() {
-        clear();
-        drawSceneContent();
-        // draw HUD only for non-Arcade map mode
-        var game = gameContext().<TengenMsPacMan_GameModel>game();
-        if (game.mapCategory() != MapCategory.ARCADE) {
-            hudRenderer.drawHUD(gameContext(), game.hudData(), sizeInPx().minus(0, 2 * TS));
-        }
-        if (debugInfoVisible.get() && debugInfoRenderer != null) {
-            debugInfoRenderer.drawDebugInfo();
+    public void drawHUD() {
+        if (hudRenderer != null) {
+            // draw HUD only for non-Arcade map mode
+            var game = gameContext().<TengenMsPacMan_GameModel>game();
+            if (game.mapCategory() != MapCategory.ARCADE) {
+                hudRenderer.drawHUD(gameContext(), game.hudData(), sizeInPx().minus(0, 2 * TS));
+            }
         }
     }
 
     @Override
     public void drawSceneContent() {
-        Stream.of(clapperboard, msPacMan, pacMan).forEach(actor -> gameLevelRenderer.drawActor(actor));
+        if (gameLevelRenderer != null) {
+            Stream.of(clapperboard, msPacMan, pacMan).forEach(actor -> gameLevelRenderer.drawActor(actor));
+        }
     }
 }

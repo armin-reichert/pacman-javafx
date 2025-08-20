@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_GameLevelRenderer;
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
+import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
@@ -42,7 +42,8 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
     private Clapperboard clapperboard;
 
-    private GameLevelRenderer<SpriteID> gameLevelRenderer;
+    private ArcadeMsPacMan_HUDRenderer hudRenderer;
+    private GameLevelRenderer gameLevelRenderer;
 
     public ArcadeMsPacMan_CutScene2(GameUI ui) {
         super(ui);
@@ -50,11 +51,11 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     
     @Override
     public void doInit() {
-        setHudRenderer(ui.currentConfig().createHUDRenderer(canvas, scaling));
-        gameContext().game().hudData().score(true).levelCounter(true).livesCounter(false);
-
+        hudRenderer = (ArcadeMsPacMan_HUDRenderer) ui.currentConfig().createHUDRenderer(canvas, scaling);
         gameLevelRenderer = new ArcadeMsPacMan_GameLevelRenderer(canvas, ui.currentConfig(), null);
-        gameLevelRenderer.scalingProperty().bind(scaling);
+        bindRendererScaling(hudRenderer, gameLevelRenderer);
+
+        gameContext().game().hudData().score(true).levelCounter(true).livesCounter(false);
 
         pacMan = createPacMan();
         msPacMan = createMsPacMan();
@@ -91,8 +92,17 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     }
 
     @Override
+    public void drawHUD() {
+        if (hudRenderer != null) {
+            hudRenderer.drawHUD(gameContext(), gameContext().game().hudData(), sizeInPx());
+        }
+    }
+
+    @Override
     public void drawSceneContent() {
-        Stream.of(clapperboard, msPacMan, pacMan).forEach(actor -> gameLevelRenderer.drawActor(actor));
+        if (gameLevelRenderer != null) {
+            Stream.of(clapperboard, msPacMan, pacMan).forEach(actor -> gameLevelRenderer.drawActor(actor));
+        }
     }
 
     // Scene controller state machine

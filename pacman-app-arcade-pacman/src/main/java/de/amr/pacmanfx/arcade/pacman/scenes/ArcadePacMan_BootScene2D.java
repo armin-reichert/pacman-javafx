@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
+import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_HUDRenderer;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
@@ -28,7 +29,9 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
 
     private static final int FRAGMENT_SIZE = 16;
 
-    private SpriteRenderer<?> spriteRenderer;
+    private ArcadePacMan_HUDRenderer hudRenderer;
+    private SpriteRenderer spriteRenderer;
+
     private Vector2f minPoint, maxPoint;
 
     public ArcadePacMan_BootScene2D(GameUI ui) {
@@ -37,13 +40,14 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
 
     @Override
     public void doInit() {
+        hudRenderer = new ArcadePacMan_HUDRenderer(ui.currentConfig(), canvas);
         spriteRenderer = new SpriteRenderer(canvas) {
             @Override
             public SpriteSheet<?> spriteSheet() {
                 return ui.currentConfig().spriteSheet();
             }
         };
-        spriteRenderer.scalingProperty().bind(scaling);
+        bindRendererScaling(hudRenderer, spriteRenderer);
 
         gameContext().game().hudData().all(false);
 
@@ -74,6 +78,14 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
             clear();
         } else {
             drawSceneContent();
+        }
+        drawHUD();
+    }
+
+    @Override
+    public void drawHUD() {
+        if (hudRenderer != null) {
+            hudRenderer.drawHUD(gameContext(), gameContext().game().hudData(), sizeInPx());
         }
     }
 

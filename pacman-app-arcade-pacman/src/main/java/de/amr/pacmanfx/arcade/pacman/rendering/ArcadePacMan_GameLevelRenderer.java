@@ -21,7 +21,7 @@ import static java.util.function.Predicate.not;
 /**
  * Renderer for classic Arcade Pac-Man and Pac-Man XXL game variants.
  */
-public class ArcadePacMan_GameLevelRenderer extends GameLevelRenderer<SpriteID> {
+public class ArcadePacMan_GameLevelRenderer extends GameLevelRenderer {
 
     protected final GameUI_Config uiConfig;
 

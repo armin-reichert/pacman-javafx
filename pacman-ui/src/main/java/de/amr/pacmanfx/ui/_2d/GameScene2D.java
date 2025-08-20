@@ -13,8 +13,8 @@ import de.amr.pacmanfx.ui.api.ActionBindingsManager;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.DebugInfoRenderer;
-import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -44,7 +44,6 @@ public abstract class GameScene2D implements GameScene {
     protected final ActionBindingsManager actionBindings;
     protected final AnimationRegistry animationRegistry = new AnimationRegistry();
 
-    protected HUDRenderer hudRenderer;
     protected DebugInfoRenderer debugInfoRenderer;
 
     protected Canvas canvas;
@@ -88,6 +87,12 @@ public abstract class GameScene2D implements GameScene {
     protected abstract void doInit();
     protected abstract void doEnd();
 
+    protected void bindRendererScaling(BaseRenderer... renderers) {
+        for (BaseRenderer renderer : renderers) {
+            renderer.scalingProperty().bind(scaling);
+        }
+    }
+
     @Override
     public ActionBindingsManager actionBindings() { return actionBindings; }
 
@@ -109,10 +114,6 @@ public abstract class GameScene2D implements GameScene {
 
     public Color backgroundColor() { return backgroundColor.get(); }
     public void setBackgroundColor(Color color) { backgroundColor.set(color); }
-
-    public void setHudRenderer(HUDRenderer hudRenderer) {
-        this.hudRenderer = requireNonNull(hudRenderer);
-    }
 
     public Canvas canvas() { return canvas; }
     public void setCanvas(Canvas canvas) { this.canvas = canvas; }
@@ -152,10 +153,10 @@ public abstract class GameScene2D implements GameScene {
         if (debugInfoVisible.get() && debugInfoRenderer != null) {
             debugInfoRenderer.drawDebugInfo();
         }
-        if (hudRenderer != null) {
-            hudRenderer.drawHUD(gameContext(), gameContext().game().hudData(), sizeInPx());
-        }
+        drawHUD();
     }
+
+    public abstract void drawHUD();
 
     /**
      * Draws the scene content using the already scaled game renderer.

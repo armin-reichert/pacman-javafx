@@ -11,7 +11,7 @@ import javafx.scene.paint.Color;
 
 import static java.util.Objects.requireNonNull;
 
-public abstract class GameLevelRenderer<T extends Enum<T>> extends SpriteRenderer<T> {
+public abstract class GameLevelRenderer extends SpriteRenderer {
 
     protected GameLevelRenderer(Canvas canvas) {
         super(canvas);

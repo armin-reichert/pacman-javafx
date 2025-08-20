@@ -14,7 +14,7 @@ import javafx.scene.text.Font;
 import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_ScenesRenderer extends SpriteRenderer<SpriteID> {
+public class TengenMsPacMan_ScenesRenderer extends SpriteRenderer {
 
     private final GameUI_Config uiConfig;
 

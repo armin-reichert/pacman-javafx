@@ -6,6 +6,7 @@ package de.amr.pacmanfx.tengen.ms_pacman.scenes;
 
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_ScenesRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
@@ -28,6 +29,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
         y += n * TS;
     }
 
+    private TengenMsPacMan_HUDRenderer hudRenderer;
     private TengenMsPacMan_ScenesRenderer scenesRenderer;
 
     public TengenMsPacMan_CreditsScene(GameUI ui) {
@@ -36,10 +38,10 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     @Override
     protected void doInit() {
+        hudRenderer = (TengenMsPacMan_HUDRenderer) ui.currentConfig().createHUDRenderer(canvas, scaling);
         scenesRenderer = new TengenMsPacMan_ScenesRenderer(canvas, ui.currentConfig());
-        scenesRenderer.scalingProperty().bind(scaling);
+        bindRendererScaling(hudRenderer, scenesRenderer);
 
-        setHudRenderer(ui.currentConfig().createHUDRenderer(canvas, scaling));
         gameContext().game().hudData().credit(false).score(false).levelCounter(false).livesCounter(false);
 
         var tengenActionBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().actionBindings();
@@ -59,6 +61,13 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     @Override
     public Vector2f sizeInPx() { return NES_SIZE_PX; }
+
+    @Override
+    public void drawHUD() {
+        if (hudRenderer != null) {
+            hudRenderer.drawHUD(gameContext(), gameContext().game().hudData(), sizeInPx());
+        }
+    }
 
     @Override
     public void drawSceneContent() {
