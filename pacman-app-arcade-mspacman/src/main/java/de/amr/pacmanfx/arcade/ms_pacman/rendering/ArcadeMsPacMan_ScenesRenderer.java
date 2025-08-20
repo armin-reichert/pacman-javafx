@@ -27,17 +27,17 @@ public class ArcadeMsPacMan_ScenesRenderer extends BaseRenderer {
      */
     public void drawMarquee(Marquee marquee) {
         long tick = marquee.timer().tickCount();
-        ctx().setFill(marquee.bulbOffColor());
+        ctx.setFill(marquee.bulbOffColor());
         for (int bulbIndex = 0; bulbIndex < marquee.totalBulbCount(); ++bulbIndex) {
             drawMarqueeBulb(marquee, bulbIndex);
         }
         int firstBrightIndex = (int) (tick % marquee.totalBulbCount());
-        ctx().setFill(marquee.bulbOnColor());
+        ctx.setFill(marquee.bulbOnColor());
         for (int i = 0; i < marquee.brightBulbsCount(); ++i) {
             drawMarqueeBulb(marquee, (firstBrightIndex + i * marquee.brightBulbsDistance()) % marquee.totalBulbCount());
         }
         // simulate bug from original Arcade game
-        ctx().setFill(marquee.bulbOffColor());
+        ctx.setFill(marquee.bulbOffColor());
         for (int bulbIndex = 81; bulbIndex < marquee.totalBulbCount(); bulbIndex += 2) {
             drawMarqueeBulb(marquee, bulbIndex);
         }
@@ -63,16 +63,16 @@ public class ArcadeMsPacMan_ScenesRenderer extends BaseRenderer {
             x = minX;
             y = 4 * (bulbIndex - 59);
         }
-        ctx().fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
+        ctx.fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
     }
 
     public void drawMidwayCopyright(double x, double y) {
         Image logo = uiConfig.assets().image("logo.midway");
-        ctx().drawImage(logo, scaled(x), scaled(y + 2), scaled(TS(4) - 2), scaled(TS(4)));
-        ctx().setFont(uiConfig.globalAssets().arcadeFont(scaled(TS)));
-        ctx().setFill(ARCADE_RED);
-        ctx().fillText("©", scaled(x + TS(5)), scaled(y + TS(2)) + 2);
-        ctx().fillText("MIDWAY MFG CO", scaled(x + TS(7)), scaled(y + TS(2)));
-        ctx().fillText("1980/1981", scaled(x + TS(8)), scaled(y + TS(4)));
+        ctx.drawImage(logo, scaled(x), scaled(y + 2), scaled(TS(4) - 2), scaled(TS(4)));
+        ctx.setFont(arcadeFontTS());
+        ctx.setFill(ARCADE_RED);
+        ctx.fillText("©", scaled(x + TS(5)), scaled(y + TS(2)) + 2);
+        ctx.fillText("MIDWAY MFG CO", scaled(x + TS(7)), scaled(y + TS(2)));
+        ctx.fillText("1980/1981", scaled(x + TS(8)), scaled(y + TS(4)));
     }
 }

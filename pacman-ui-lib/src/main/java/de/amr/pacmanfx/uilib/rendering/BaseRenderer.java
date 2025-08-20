@@ -1,6 +1,7 @@
 package de.amr.pacmanfx.uilib.rendering;
 
 import de.amr.pacmanfx.lib.Vector2i;
+import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.Canvas;
@@ -15,6 +16,13 @@ import static de.amr.pacmanfx.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
 public abstract class BaseRenderer {
+
+    private static final Font ARCADE_FONT_TS;
+
+    static {
+        ResourceManager rm = () -> BaseRenderer.class;
+        ARCADE_FONT_TS = rm.loadFont("/de/amr/pacmanfx/uilib/fonts/emulogic.ttf", TS);
+    }
 
     public static void fillCanvas(Canvas canvas, Paint paint) {
         requireNonNull(canvas);
@@ -32,7 +40,7 @@ public abstract class BaseRenderer {
     }
 
     public GraphicsContext ctx() {
-        return requireNonNull(ctx, "Renderer has no canvas to draw");
+        return ctx;
     }
 
     public DoubleProperty scalingProperty() { return scaling; }
@@ -47,6 +55,13 @@ public abstract class BaseRenderer {
     public double scaling() { return scalingProperty().get(); }
 
     public double scaled(double value) { return scaling() * value; }
+
+    /**
+     * @return the used Arcade font at (scaled) tile size
+     */
+    public Font arcadeFontTS() {
+        return Font.font(ARCADE_FONT_TS.getFamily(), scaled(ARCADE_FONT_TS.getSize()));
+    }
 
     /**
      * Fills a square at the center of the given tile with the current fill color. Used to hide pellets, energizers
