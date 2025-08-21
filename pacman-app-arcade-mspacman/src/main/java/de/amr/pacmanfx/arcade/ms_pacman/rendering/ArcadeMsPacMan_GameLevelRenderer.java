@@ -12,6 +12,7 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
+import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
@@ -20,7 +21,7 @@ import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_WHITE;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
-public class ArcadeMsPacMan_GameLevelRenderer extends GameLevelRenderer {
+public class ArcadeMsPacMan_GameLevelRenderer extends GameLevelRenderer implements SpriteRendererMixin {
 
     protected GameUI_Config uiConfig;
     protected BrightMazesSpriteSheet brightMazesSpriteSheet;
@@ -103,7 +104,9 @@ public class ArcadeMsPacMan_GameLevelRenderer extends GameLevelRenderer {
             switch (actor) {
                 case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
                 case Bonus bonus -> drawMovingBonus(bonus);
-                default -> super.drawActor(actor);
+                default -> actor.animations()
+                    .map(animations -> animations.currentSprite(actor))
+                    .ifPresent(sprite -> drawSpriteCentered(actor.center(), sprite));
             }
         }
     }

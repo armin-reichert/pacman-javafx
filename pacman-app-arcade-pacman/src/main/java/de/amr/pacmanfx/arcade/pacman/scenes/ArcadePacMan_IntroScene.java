@@ -20,8 +20,10 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
+import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
+import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -58,6 +60,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     private ArcadePacMan_SpriteSheet spriteSheet;
 
+    private SpriteRenderer spriteRenderer;
     private ArcadePacMan_HUDRenderer hudRenderer;
     private GameLevelRenderer gameLevelRenderer;
 
@@ -78,8 +81,11 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     @Override
     public void doInit() {
-        hudRenderer = (ArcadePacMan_HUDRenderer) ui.currentConfig().createHUDRenderer(canvas);
-        gameLevelRenderer = ui.currentConfig().createGameLevelRenderer(canvas);
+        GameUI_Config uiConfig = ui.currentConfig();
+
+        spriteRenderer = new SpriteRenderer(canvas, uiConfig.spriteSheet());
+        hudRenderer = (ArcadePacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
+        gameLevelRenderer = uiConfig.createGameLevelRenderer(canvas);
         debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas) {
             @Override
             public void drawDebugInfo() {
@@ -87,7 +93,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 ctx.fillText("Scene timer %d".formatted(sceneController.state().timer().tickCount()), 0, scaled(5 * TS));
             }
         };
-        bindRendererScaling(hudRenderer, gameLevelRenderer, debugInfoRenderer);
+        bindRendererScaling(spriteRenderer, hudRenderer, gameLevelRenderer, debugInfoRenderer);
 
         context().game().hudData().credit(true).score(true).livesCounter(false).levelCounter(true);
 
@@ -174,7 +180,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         }
         for (byte personality = RED_GHOST_SHADOW; personality <= ORANGE_GHOST_POKEY; ++personality) {
             if (ghostImageVisible[personality]) {
-                gameLevelRenderer.drawSpriteCentered(
+                spriteRenderer.drawSpriteCentered(
                     Vector2f.of(TS(LEFT_TILE_X) + TS, TS(7 + 3 * personality) + HTS),
                     spriteSheet.spriteSequence(GALLERY_GHOSTS)[personality]);
             }

@@ -13,14 +13,17 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
+import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
+import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createGhost;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createPac;
-import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.*;
+import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ANIM_BLINKY_DAMAGED;
+import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ANIM_BLINKY_NAIL_DRESS_RAPTURE;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 
@@ -45,6 +48,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     private SpriteAnimation nailDressRaptureAnimation;
 
     private ArcadePacMan_HUDRenderer hudRenderer;
+    private SpriteRenderer spriteRenderer;
     private GameLevelRenderer gameLevelRenderer;
 
     public ArcadePacMan_CutScene2(GameUI ui) {
@@ -53,7 +57,9 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void doInit() {
-        hudRenderer = new ArcadePacMan_HUDRenderer(ui.currentConfig(), canvas);
+        GameUI_Config uiConfig = ui.currentConfig();
+        hudRenderer = new ArcadePacMan_HUDRenderer(uiConfig, canvas);
+        spriteRenderer = new SpriteRenderer(canvas, uiConfig.spriteSheet());
         gameLevelRenderer = ui.currentConfig().createGameLevelRenderer(canvas);
         debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas) {
             @Override
@@ -64,7 +70,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
             }
         };
 
-        bindRendererScaling(hudRenderer, gameLevelRenderer, debugInfoRenderer);
+        bindRendererScaling(hudRenderer, spriteRenderer, gameLevelRenderer, debugInfoRenderer);
 
         context().game().hudData().credit(false).score(true).levelCounter(true).livesCounter(false);
 
@@ -149,8 +155,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        gameLevelRenderer.drawSprite(nailDressRaptureAnimation.currentSprite(),
-            TS(14), TS(19) + 3, true);
+        spriteRenderer.drawSprite(nailDressRaptureAnimation.currentSprite(), TS(14), TS(19) + 3, true);
         actorsInZOrder.forEach(actor -> gameLevelRenderer.drawActor(actor));
     }
 

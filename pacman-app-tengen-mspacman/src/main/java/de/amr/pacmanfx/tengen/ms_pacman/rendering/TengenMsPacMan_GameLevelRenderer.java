@@ -22,6 +22,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.scenes.Stork;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
+import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Rectangle2D;
@@ -39,7 +40,7 @@ import static de.amr.pacmanfx.tengen.ms_pacman.rendering.NonArcadeMapsSpriteShee
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
-public class TengenMsPacMan_GameLevelRenderer extends GameLevelRenderer {
+public class TengenMsPacMan_GameLevelRenderer extends GameLevelRenderer implements SpriteRendererMixin {
 
     private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
     private final TengenMsPacMan_UIConfig uiConfig;
@@ -81,14 +82,20 @@ public class TengenMsPacMan_GameLevelRenderer extends GameLevelRenderer {
                 case Bonus bonus -> drawMovingBonus(bonus);
                 case Pac pac -> drawAnyKindOfPac(pac);
                 case Stork stork -> {
-                    super.drawActor(stork);
+                    drawCurrentSprite(stork);
                     if (stork.isBagReleasedFromBeak()) {
                         hideStorkBag(stork);
                     }
                 }
-                default -> super.drawActor(actor);
+                default -> drawCurrentSprite(actor);
             }
         }
+    }
+
+    private void drawCurrentSprite(Actor actor) {
+        actor.animations()
+            .map(animations -> animations.currentSprite(actor))
+            .ifPresent(sprite -> drawSpriteCentered(actor.center(), sprite));
     }
 
     public void drawMovingBonus(Bonus bonus) {

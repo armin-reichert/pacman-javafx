@@ -9,9 +9,7 @@ import de.amr.pacmanfx.model.actors.Actor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
-import static java.util.Objects.requireNonNull;
-
-public abstract class GameLevelRenderer extends BaseRenderer implements SpriteRendererMixin {
+public abstract class GameLevelRenderer extends BaseRenderer {
 
     public GameLevelRenderer(Canvas canvas) {
         super(canvas);
@@ -22,13 +20,18 @@ public abstract class GameLevelRenderer extends BaseRenderer implements SpriteRe
      *
      * @param actor the actor to draw
      */
-    public void drawActor(Actor actor) {
+    public abstract void drawActor(Actor actor);
+
+    /*
+    {
         requireNonNull(actor);
         if (!actor.isVisible()) return;
         actor.animations()
                 .map(animationManager -> animationManager.currentSprite(actor))
                 .ifPresent(actorSprite -> drawSpriteCentered(actor.center(), actorSprite));
     }
+
+     */
 
     /**
      * Applies settings specific to the given game level to this renderer. This can be for example

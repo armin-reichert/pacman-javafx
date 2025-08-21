@@ -10,6 +10,7 @@ import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
+import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -21,7 +22,7 @@ import static java.util.function.Predicate.not;
 /**
  * Renderer for classic Arcade Pac-Man and Pac-Man XXL game variants.
  */
-public class ArcadePacMan_GameLevelRenderer extends GameLevelRenderer {
+public class ArcadePacMan_GameLevelRenderer extends GameLevelRenderer implements SpriteRendererMixin {
 
     protected final GameUI_Config uiConfig;
 
@@ -78,7 +79,11 @@ public class ArcadePacMan_GameLevelRenderer extends GameLevelRenderer {
         if (actor instanceof Bonus bonus) {
             drawBonus(bonus);
         }
-        else super.drawActor(actor);
+        else {
+            actor.animations()
+                .map(animations -> animations.currentSprite(actor))
+                .ifPresent(sprite -> drawSpriteCentered(actor.center(), sprite));
+        }
     }
 
     private void drawBonus(Bonus bonus) {
