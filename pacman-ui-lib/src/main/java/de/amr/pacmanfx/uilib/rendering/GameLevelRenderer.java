@@ -22,17 +22,6 @@ public abstract class GameLevelRenderer extends BaseRenderer {
      */
     public abstract void drawActor(Actor actor);
 
-    /*
-    {
-        requireNonNull(actor);
-        if (!actor.isVisible()) return;
-        actor.animations()
-                .map(animationManager -> animationManager.currentSprite(actor))
-                .ifPresent(actorSprite -> drawSpriteCentered(actor.center(), actorSprite));
-    }
-
-     */
-
     /**
      * Applies settings specific to the given game level to this renderer. This can be for example
      * the selection of a different color scheme which is specified in the level map. The default
