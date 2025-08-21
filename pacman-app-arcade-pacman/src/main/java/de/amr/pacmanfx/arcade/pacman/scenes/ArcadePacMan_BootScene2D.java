@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
-import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_HUDRenderer;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.timer.TickTimer;
@@ -32,7 +31,6 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
 
     private static final int FRAGMENT_SIZE = 16;
 
-    private ArcadePacMan_HUDRenderer hudRenderer;
     private SpriteRenderer spriteRenderer;
 
     private Vector2f minPoint, maxPoint;
@@ -47,14 +45,13 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
         // This can be different spritesheet types!
         SpriteSheet<?> spriteSheet = ui.currentConfig().spriteSheet();
 
-        hudRenderer = new ArcadePacMan_HUDRenderer(uiConfig, canvas);
         spriteRenderer = new SpriteRenderer(canvas) {
             @Override
             public SpriteSheet<?> spriteSheet() {
                 return uiConfig.spriteSheet();
             }
         };
-        bindRendererScaling(hudRenderer, spriteRenderer);
+        bindRendererScaling(spriteRenderer);
 
         context().game().hudData().all(false);
 
@@ -90,9 +87,7 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
 
     @Override
     public void drawHUD() {
-        if (hudRenderer != null) {
-            hudRenderer.drawHUD(context(), context().game().hudData(), sizeInPx());
-        }
+        // No HUD
     }
 
     @Override
