@@ -468,12 +468,26 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
+        ctx().save();
+        ctx().translate(scaled(2 * TS), 0);
+        drawGameLevel(context().gameLevel());
+        drawActors();
+        ctx().restore();
+    }
+
+    private void drawActors() {
+        actorsInZOrder.clear();
+        context().gameLevel().bonus().ifPresent(actorsInZOrder::add);
+        actorsInZOrder.add(context().gameLevel().pac());
+        ghostsByZ(context().gameLevel()).forEach(actorsInZOrder::add);
+        actorsInZOrder.forEach(actor -> gameLevelRenderer.drawActor(actor));
+    }
+
+    private void drawGameLevel(GameLevel gameLevel) {
         gameLevelRenderer.applyLevelSettings(context());
-        gameLevelRenderer.ctx().save();
-        gameLevelRenderer.ctx().translate(scaled(2 * TS), 0);
         if (levelCompletedAnimation != null && levelCompletedAnimation.isRunning()) {
             if (mazeHighlighted.get()) {
-                MazeSpriteSet recoloredMaze = context().gameLevel().worldMap().getConfigValue(TengenMsPacMan_UIConfig.MAZE_SPRITE_SET_PROPERTY);
+                MazeSpriteSet recoloredMaze = gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.MAZE_SPRITE_SET_PROPERTY);
                 // get the current maze flashing "animation frame"
                 int frame = levelCompletedAnimation.flashingIndex();
                 ColoredSpriteImage flashingMazeSprite = recoloredMaze.flashingMazeImages().get(frame);
@@ -484,17 +498,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         }
         else {
             //TODO in the original game, the message is drawn under the maze image but *over* the pellets!
-            gameLevelRenderer.drawLevelMessage(context().gameLevel(), currentMessagePosition(), gameLevelRenderer.arcadeFont8());
+            gameLevelRenderer.drawLevelMessage(gameLevel, currentMessagePosition(), gameLevelRenderer.arcadeFont8());
             gameLevelRenderer.drawGameLevel(context(), null, false, false);
         }
-
-        actorsInZOrder.clear();
-        context().gameLevel().bonus().ifPresent(actorsInZOrder::add);
-        actorsInZOrder.add(context().gameLevel().pac());
-        ghostsByZ(context().gameLevel()).forEach(actorsInZOrder::add);
-        actorsInZOrder.forEach(actor -> gameLevelRenderer.drawActor(actor));
-
-        gameLevelRenderer.ctx().restore();
     }
 
     private Stream<Ghost> ghostsByZ(GameLevel gameLevel) {
