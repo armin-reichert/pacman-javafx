@@ -19,6 +19,8 @@ import java.util.Random;
 
 import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.lib.RandomNumberSupport.randomFloat;
+import static de.amr.pacmanfx.lib.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_WHITE;
 
@@ -124,13 +126,12 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
     }
 
     private void drawRandomSpriteFragments() {
-        var random = new Random();
         int numRows = (int) (ARCADE_MAP_SIZE_IN_PIXELS.y() / FRAGMENT_SIZE);
         int numCols = (int) (ARCADE_MAP_SIZE_IN_PIXELS.x() / FRAGMENT_SIZE);
         for (int row = 0; row < numRows; ++row) {
-            if (random.nextInt(100) < 20) continue;
+            if (randomInt(0, 100) < 20) continue;
             RectShort fragment1 = randomSpriteFragment(), fragment2 = randomSpriteFragment();
-            int split = numCols / 8 + random.nextInt(numCols / 4);
+            int split = numCols / 8 + randomInt(0, numCols / 4);
             for (int col = 0; col < numCols; ++col) {
                 spriteRenderer.drawSprite(col < split ? fragment1 : fragment2, FRAGMENT_SIZE * col, FRAGMENT_SIZE * row, true);
             }
@@ -138,10 +139,9 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
     }
 
     private RectShort randomSpriteFragment() {
-        var random = new Random();
         return new RectShort(
-            (int) lerp(minPoint.x(), maxPoint.x(), random.nextDouble()),
-            (int) lerp(minPoint.y(), maxPoint.y(), random.nextDouble()),
+            (int) lerp(minPoint.x(), maxPoint.x(), randomFloat(0, 1)),
+            (int) lerp(minPoint.y(), maxPoint.y(), randomFloat(0, 1)),
             FRAGMENT_SIZE, FRAGMENT_SIZE);
     }
 
