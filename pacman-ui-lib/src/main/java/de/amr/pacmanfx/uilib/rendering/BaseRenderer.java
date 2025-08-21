@@ -73,10 +73,16 @@ public class BaseRenderer implements CanvasRenderer {
 
     public double scaled(double value) { return scaling() * value; }
 
+    /**
+     * @return Arcade font at size "one tile" (8px) scaled with the current renderer scaling.
+     */
     public Font arcadeFontTS() {
         return arcadeFontTS.get();
     }
 
+    /**
+     * @return Arcade font at size 6px scaled with the current renderer scaling.
+     */
     public Font arcadeFont6() { return arcadeFont6.get(); }
 
     /**
