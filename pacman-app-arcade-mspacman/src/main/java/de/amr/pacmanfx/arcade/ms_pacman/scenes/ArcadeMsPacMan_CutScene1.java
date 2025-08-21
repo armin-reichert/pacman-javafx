@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_GameLevelRenderer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
@@ -64,25 +63,28 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     
     @Override
     public void doInit() {
-        hudRenderer = (ArcadeMsPacMan_HUDRenderer) ui.currentConfig().createHUDRenderer(canvas);
-        gameLevelRenderer = new ArcadeMsPacMan_GameLevelRenderer(canvas, ui.currentConfig(), null);
+        final GameUI_Config uiConfig = ui.currentConfig();
+        final var spriteSheet = (ArcadeMsPacMan_SpriteSheet) uiConfig.spriteSheet();
+
+        hudRenderer = (ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
+        gameLevelRenderer = uiConfig.createGameLevelRenderer(canvas);
         bindRendererScaling(hudRenderer, gameLevelRenderer);
 
         context().game().hudData().score(true).levelCounter(true).livesCounter(false);
 
-        var spriteSheet = (ArcadeMsPacMan_SpriteSheet) ui.currentConfig().spriteSheet();
-
         pacMan = createPacMan();
-        msPacMan = createMsPacMan();
-        inky = createGhost(CYAN_GHOST_BASHFUL);
-        pinky = createGhost(PINK_GHOST_SPEEDY);
-        heart = new SingleSpriteActor(spriteSheet.sprite(SpriteID.HEART));
+        pacMan.setAnimations(uiConfig.createPacAnimations(pacMan));
 
-        final GameUI_Config config = ui.currentConfig();
-        msPacMan.setAnimations(config.createPacAnimations(msPacMan));
-        pacMan.setAnimations(config.createPacAnimations(pacMan));
-        inky.setAnimations(config.createGhostAnimations(inky));
-        pinky.setAnimations(config.createGhostAnimations(pinky));
+        msPacMan = createMsPacMan();
+        msPacMan.setAnimations(uiConfig.createPacAnimations(msPacMan));
+
+        inky = createGhost(CYAN_GHOST_BASHFUL);
+        inky.setAnimations(uiConfig.createGhostAnimations(inky));
+
+        pinky = createGhost(PINK_GHOST_SPEEDY);
+        pinky.setAnimations(uiConfig.createGhostAnimations(pinky));
+
+        heart = new SingleSpriteActor(spriteSheet.sprite(SpriteID.HEART));
 
         clapperboard = new Clapperboard("1", "THEY MEET");
         clapperboard.setPosition(TS(3), TS(10));
@@ -123,7 +125,9 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        Stream.of(clapperboard, msPacMan, pacMan, inky, pinky, heart).forEach(actor -> gameLevelRenderer.drawActor(actor));
+        if (gameLevelRenderer != null) {
+            Stream.of(clapperboard, msPacMan, pacMan, inky, pinky, heart).forEach(actor -> gameLevelRenderer.drawActor(actor));
+        }
     }
 
     // Scene controller state machine
