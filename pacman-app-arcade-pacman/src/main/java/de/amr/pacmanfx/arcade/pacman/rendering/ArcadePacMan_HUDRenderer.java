@@ -26,7 +26,7 @@ public class ArcadePacMan_HUDRenderer extends BaseRenderer implements HUDRendere
 
     protected final GameUI_Config uiConfig;
 
-    public ArcadePacMan_HUDRenderer(GameUI_Config uiConfig, Canvas canvas) {
+    public ArcadePacMan_HUDRenderer(Canvas canvas, GameUI_Config uiConfig) {
         super(canvas);
         this.uiConfig = requireNonNull(uiConfig);
     }

@@ -38,7 +38,7 @@ public class TengenMsPacMan_GameLevelRenderer extends GameLevelRenderer implemen
     private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
     private final TengenMsPacMan_UIConfig uiConfig;
 
-    public TengenMsPacMan_GameLevelRenderer(TengenMsPacMan_UIConfig uiConfig, Canvas canvas) {
+    public TengenMsPacMan_GameLevelRenderer(Canvas canvas, TengenMsPacMan_UIConfig uiConfig) {
         super(canvas);
         this.uiConfig = requireNonNull(uiConfig);
         ctx().setImageSmoothing(false);

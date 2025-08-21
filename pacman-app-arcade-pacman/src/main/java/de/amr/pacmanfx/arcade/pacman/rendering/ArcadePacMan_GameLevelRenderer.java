@@ -27,7 +27,7 @@ public class ArcadePacMan_GameLevelRenderer extends GameLevelRenderer implements
 
     protected final GameUI_Config uiConfig;
 
-    public ArcadePacMan_GameLevelRenderer(GameUI_Config uiConfig, Canvas canvas) {
+    public ArcadePacMan_GameLevelRenderer(Canvas canvas, GameUI_Config uiConfig) {
         super(canvas);
         this.uiConfig = requireNonNull(uiConfig);
     }

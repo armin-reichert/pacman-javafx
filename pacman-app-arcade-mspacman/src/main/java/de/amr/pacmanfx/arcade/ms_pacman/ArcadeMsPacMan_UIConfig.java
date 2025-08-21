@@ -190,7 +190,7 @@ public class ArcadeMsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public HUDRenderer createHUDRenderer(Canvas canvas) {
-        return new ArcadeMsPacMan_HUDRenderer(this, canvas);
+        return new ArcadeMsPacMan_HUDRenderer(canvas, this);
     }
 
     @Override

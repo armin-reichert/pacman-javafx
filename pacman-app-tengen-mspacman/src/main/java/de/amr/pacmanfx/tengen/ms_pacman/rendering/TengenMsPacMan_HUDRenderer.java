@@ -30,7 +30,7 @@ public class TengenMsPacMan_HUDRenderer extends BaseRenderer implements HUDRende
 
     protected final TengenMsPacMan_UIConfig uiConfig;
 
-    public TengenMsPacMan_HUDRenderer(TengenMsPacMan_UIConfig uiConfig, Canvas canvas) {
+    public TengenMsPacMan_HUDRenderer(Canvas canvas, TengenMsPacMan_UIConfig uiConfig) {
         super(canvas);
         this.uiConfig = requireNonNull(uiConfig);
     }

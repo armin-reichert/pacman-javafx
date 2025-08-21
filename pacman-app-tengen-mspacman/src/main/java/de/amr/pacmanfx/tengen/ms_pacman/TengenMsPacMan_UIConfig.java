@@ -278,14 +278,14 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public TengenMsPacMan_GameLevelRenderer createGameLevelRenderer(Canvas canvas) {
-        var renderer = new TengenMsPacMan_GameLevelRenderer(this, canvas);
+        var renderer = new TengenMsPacMan_GameLevelRenderer(canvas, this);
         renderer.backgroundColorProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
         return renderer;
     }
 
     @Override
     public HUDRenderer createHUDRenderer(Canvas canvas) {
-        return new TengenMsPacMan_HUDRenderer(this, canvas);
+        return new TengenMsPacMan_HUDRenderer(canvas, this);
     }
 
     @Override

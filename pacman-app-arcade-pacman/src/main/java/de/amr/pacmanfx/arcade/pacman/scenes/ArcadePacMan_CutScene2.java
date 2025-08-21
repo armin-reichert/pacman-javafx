@@ -59,7 +59,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     public void doInit() {
         GameUI_Config uiConfig = ui.currentConfig();
 
-        hudRenderer = new ArcadePacMan_HUDRenderer(uiConfig, canvas);
+        hudRenderer = new ArcadePacMan_HUDRenderer(canvas, uiConfig);
         spriteRenderer = new SpriteRenderer(canvas, uiConfig.spriteSheet());
         actorSpriteRenderer = uiConfig.createActorSpriteRenderer(canvas);
         debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas) {

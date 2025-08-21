@@ -284,26 +284,18 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
             return; // Scene is drawn already 2 ticks before level has been created
         }
         final GameLevel gameLevel = context().gameLevel();
-        drawGameLevel(gameLevel);
-        drawActors(gameLevel);
-    }
-
-
-
-    private void drawGameLevel(GameLevel gameLevel) {
         gameLevelRenderer.applyLevelSettings(context());
         gameLevelRenderer.drawGameLevel(context(), backgroundColor(), mazeHighlighted.get(), gameLevel.blinking().isOn());
+        createActorDrawingOrder(gameLevel);
+        actorsInZOrder.forEach(actor -> actorSpriteRenderer.drawActor(actor));
     }
 
-    private void drawActors(GameLevel gameLevel) {
+    private void createActorDrawingOrder(GameLevel gameLevel) {
         // Collect actors in drawing z-order: Bonus < Pac-Man < Ghosts in order. TODO: also take ghost state into account!
         actorsInZOrder.clear();
         gameLevel.bonus().ifPresent(actorsInZOrder::add);
         actorsInZOrder.add(gameLevel.pac());
         Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW).map(gameLevel::ghost).forEach(actorsInZOrder::add);
-
-        // Draw actors
-        actorsInZOrder.forEach(actor -> actorSpriteRenderer.drawActor(actor));
     }
 
     @Override
