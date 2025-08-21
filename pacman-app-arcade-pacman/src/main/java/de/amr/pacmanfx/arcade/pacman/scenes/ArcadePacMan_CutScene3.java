@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
+import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_ActorSpriteRenderer;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_HUDRenderer;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
@@ -12,19 +13,20 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
-import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
+import de.amr.pacmanfx.ui.api.GameUI_Config;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createGhost;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createPac;
-import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.*;
+import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ANIM_BLINKY_NAKED;
+import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ANIM_BLINKY_PATCHED;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_MUNCHING;
 
 /**
  * Third cut scene in Arcade Pac-Man game:<br>
  * Red ghost in damaged dress chases Pac-Man from right to left over the screen.
- * After they have disappeared, a naked, shaking ghost runs from left to right over the screen.
+ * After they have disappeared, a naked, shaking ghost runs from left over the screen.
  */
 public class ArcadePacMan_CutScene3 extends GameScene2D {
 
@@ -36,7 +38,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
     private Ghost blinky;
 
     private ArcadePacMan_HUDRenderer hudRenderer;
-    private GameLevelRenderer gameLevelRenderer;
+    private ArcadePacMan_ActorSpriteRenderer actorSpriteRenderer;
 
     public ArcadePacMan_CutScene3(GameUI ui) {
         super(ui);
@@ -44,17 +46,20 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
     
     @Override
     public void doInit() {
-        hudRenderer = new ArcadePacMan_HUDRenderer(ui.currentConfig(), canvas);
-        gameLevelRenderer = ui.currentConfig().createGameLevelRenderer(canvas);
+        GameUI_Config uiConfig = ui.currentConfig();
+
+        hudRenderer = new ArcadePacMan_HUDRenderer(uiConfig, canvas);
+        actorSpriteRenderer = new ArcadePacMan_ActorSpriteRenderer(canvas, uiConfig);
         debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas) {
             @Override
             public void drawDebugInfo() {
                 super.drawDebugInfo();
-                String text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
+                String text = frame < ANIMATION_START
+                        ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
                 fillText(text, debugTextFill, debugTextFont, TS(1), TS(5));
             }
         };
-        bindRendererScaling(hudRenderer, gameLevelRenderer, debugInfoRenderer);
+        bindRendererScaling(hudRenderer, actorSpriteRenderer, debugInfoRenderer);
 
         context().game().hudData().credit(false).score(true).levelCounter(true).livesCounter(false);
 
@@ -114,7 +119,9 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        actorsInZOrder.forEach(actor -> gameLevelRenderer.drawActor(actor));
+        if (actorSpriteRenderer != null) {
+            actorsInZOrder.forEach(actor -> actorSpriteRenderer.drawActor(actor));
+        }
     }
 
     @Override

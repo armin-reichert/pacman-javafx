@@ -18,6 +18,7 @@ import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.PacBase3D;
+import de.amr.pacmanfx.uilib.rendering.ActorSpriteRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
 import javafx.scene.Node;
@@ -61,6 +62,8 @@ public interface GameUI_Config extends Disposable {
     GameLevelRenderer createGameLevelRenderer(Canvas canvas);
 
     HUDRenderer createHUDRenderer(Canvas canvas);
+
+    ActorSpriteRenderer createActorSpriteRenderer(Canvas canvas);
 
     AnimationManager createGhostAnimations(Ghost ghost);
 

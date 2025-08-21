@@ -15,7 +15,7 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
-import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
+import de.amr.pacmanfx.uilib.rendering.ActorSpriteRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import org.tinylog.Logger;
 
@@ -48,8 +48,8 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     private SpriteAnimation nailDressRaptureAnimation;
 
     private ArcadePacMan_HUDRenderer hudRenderer;
+    private ActorSpriteRenderer actorSpriteRenderer;
     private SpriteRenderer spriteRenderer;
-    private GameLevelRenderer gameLevelRenderer;
 
     public ArcadePacMan_CutScene2(GameUI ui) {
         super(ui);
@@ -58,9 +58,10 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     @Override
     public void doInit() {
         GameUI_Config uiConfig = ui.currentConfig();
+
         hudRenderer = new ArcadePacMan_HUDRenderer(uiConfig, canvas);
         spriteRenderer = new SpriteRenderer(canvas, uiConfig.spriteSheet());
-        gameLevelRenderer = ui.currentConfig().createGameLevelRenderer(canvas);
+        actorSpriteRenderer = uiConfig.createActorSpriteRenderer(canvas);
         debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas) {
             @Override
             public void drawDebugInfo() {
@@ -70,7 +71,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
             }
         };
 
-        bindRendererScaling(hudRenderer, spriteRenderer, gameLevelRenderer, debugInfoRenderer);
+        bindRendererScaling(hudRenderer, spriteRenderer, actorSpriteRenderer, debugInfoRenderer);
 
         context().game().hudData().credit(false).score(true).levelCounter(true).livesCounter(false);
 
@@ -156,7 +157,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     @Override
     public void drawSceneContent() {
         spriteRenderer.drawSprite(nailDressRaptureAnimation.currentSprite(), TS(14), TS(19) + 3, true);
-        actorsInZOrder.forEach(actor -> gameLevelRenderer.drawActor(actor));
+        actorsInZOrder.forEach(actor -> actorSpriteRenderer.drawActor(actor));
     }
 
     @Override

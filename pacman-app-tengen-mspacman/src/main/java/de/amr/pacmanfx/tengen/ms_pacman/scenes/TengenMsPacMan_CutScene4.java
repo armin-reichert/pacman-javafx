@@ -11,13 +11,13 @@ import de.amr.pacmanfx.model.actors.AnimationManager;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameLevelRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.uilib.rendering.ActorSpriteRenderer;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     private static final int LOWER_LANE = TS * 21; // TODO not sure
 
     private TengenMsPacMan_HUDRenderer hudRenderer;
-    private TengenMsPacMan_GameLevelRenderer gameLevelRenderer;
+    private ActorSpriteRenderer actorSpriteRenderer;
 
     private Pac pacMan;
     private Pac msPacMan;
@@ -63,15 +63,15 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         var spriteSheet = (TengenMsPacMan_SpriteSheet) ui.currentConfig().spriteSheet();
 
         hudRenderer = (TengenMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
-        gameLevelRenderer = (TengenMsPacMan_GameLevelRenderer) uiConfig.createGameLevelRenderer(canvas);
+        actorSpriteRenderer = uiConfig.createActorSpriteRenderer(canvas);
         debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas);
-        bindRendererScaling(hudRenderer, gameLevelRenderer, debugInfoRenderer);
+        bindRendererScaling(hudRenderer, actorSpriteRenderer, debugInfoRenderer);
 
         context().game().hudData().score(false).levelCounter(true).livesCounter(false);
 
         clapperboard = new Clapperboard(spriteSheet, 4, "THE END");
         clapperboard.setPosition(3*TS, 10*TS);
-        clapperboard.setFont(gameLevelRenderer.arcadeFontTS());
+        clapperboard.setFont(actorSpriteRenderer.arcadeFontTS());
 
         msPacMan = createMsPacMan();
         msPacMan.setAnimations(uiConfig.createPacAnimations(msPacMan));
@@ -242,9 +242,9 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        if (gameLevelRenderer != null) {
-            Stream.of(clapperboard, msPacMan, pacMan).forEach(actor -> gameLevelRenderer.drawActor(actor));
-            juniors.forEach(actor -> gameLevelRenderer.drawActor(actor));
+        if (actorSpriteRenderer != null) {
+            Stream.of(clapperboard, msPacMan, pacMan).forEach(actorSpriteRenderer::drawActor);
+            juniors.forEach(actor -> actorSpriteRenderer.drawActor(actor));
         }
     }
 }

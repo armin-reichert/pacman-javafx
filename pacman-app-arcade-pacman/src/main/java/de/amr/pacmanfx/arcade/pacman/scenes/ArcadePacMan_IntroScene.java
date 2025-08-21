@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
+import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_ActorSpriteRenderer;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_HUDRenderer;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.controller.GamePlayState;
@@ -22,7 +23,6 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.paint.Color;
 
@@ -62,7 +62,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
     private SpriteRenderer spriteRenderer;
     private ArcadePacMan_HUDRenderer hudRenderer;
-    private GameLevelRenderer gameLevelRenderer;
+    private ArcadePacMan_ActorSpriteRenderer actorSpriteRenderer;
 
     private Pulse blinking;
     private Pac pacMan;
@@ -85,7 +85,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
 
         spriteRenderer = new SpriteRenderer(canvas, uiConfig.spriteSheet());
         hudRenderer = (ArcadePacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
-        gameLevelRenderer = uiConfig.createGameLevelRenderer(canvas);
+        actorSpriteRenderer = new ArcadePacMan_ActorSpriteRenderer(canvas, uiConfig);
         debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas) {
             @Override
             public void drawDebugInfo() {
@@ -93,7 +93,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 ctx.fillText("Scene timer %d".formatted(sceneController.state().timer().tickCount()), 0, scaled(5 * TS));
             }
         };
-        bindRendererScaling(spriteRenderer, hudRenderer, gameLevelRenderer, debugInfoRenderer);
+        bindRendererScaling(spriteRenderer, hudRenderer, actorSpriteRenderer, debugInfoRenderer);
 
         context().game().hudData().credit(true).score(true).livesCounter(false).levelCounter(true);
 
@@ -162,20 +162,20 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 drawPoints();
                 drawBlinkingEnergizer(TS(LEFT_TILE_X), TS(20));
                 drawGuys(true);
-                gameLevelRenderer.fillText(MIDWAY_MFG_CO, ARCADE_PINK, gameLevelRenderer.arcadeFontTS(), TS(4), TS(32));
+                actorSpriteRenderer.fillText(MIDWAY_MFG_CO, ARCADE_PINK, actorSpriteRenderer.arcadeFontTS(), TS(4), TS(32));
             }
             case CHASING_GHOSTS, READY_TO_PLAY -> {
                 drawPoints();
                 drawGuys(false);
-                gameLevelRenderer.fillText(MIDWAY_MFG_CO, ARCADE_PINK, gameLevelRenderer.arcadeFontTS(), TS(4), TS(32));
+                actorSpriteRenderer.fillText(MIDWAY_MFG_CO, ARCADE_PINK, actorSpriteRenderer.arcadeFontTS(), TS(4), TS(32));
             }
         }
     }
 
     private void drawGallery() {
-        gameLevelRenderer.ctx().setFont(gameLevelRenderer.arcadeFontTS());
+        actorSpriteRenderer.ctx().setFont(actorSpriteRenderer.arcadeFontTS());
         if (titleVisible) {
-            gameLevelRenderer.fillText("CHARACTER / NICKNAME", ARCADE_WHITE,
+            actorSpriteRenderer.fillText("CHARACTER / NICKNAME", ARCADE_WHITE,
                 TS(LEFT_TILE_X + 3), TS(6));
         }
         for (byte personality = RED_GHOST_SHADOW; personality <= ORANGE_GHOST_POKEY; ++personality) {
@@ -185,11 +185,11 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                     spriteSheet.spriteSequence(GALLERY_GHOSTS)[personality]);
             }
             if (ghostCharacterVisible[personality]) {
-                gameLevelRenderer.fillText("-" + GHOST_CHARACTERS[personality], GHOST_COLORS[personality],
+                actorSpriteRenderer.fillText("-" + GHOST_CHARACTERS[personality], GHOST_COLORS[personality],
                     TS(LEFT_TILE_X + 3), TS(8 + 3 * personality));
             }
             if (ghostNicknameVisible[personality]) {
-                gameLevelRenderer.fillText(GHOST_NICKNAMES[personality], GHOST_COLORS[personality],
+                actorSpriteRenderer.fillText(GHOST_NICKNAMES[personality], GHOST_COLORS[personality],
                     TS(LEFT_TILE_X + 14), TS(8 + 3 * personality));
             }
         }
@@ -200,41 +200,41 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         long tick = sceneController.state().timer().tickCount();
         int shakingAmount = shaking ? (tick % 5 < 2 ? 0 : -1) : 0;
         if (shakingAmount == 0) {
-            ghosts.forEach(ghost -> gameLevelRenderer.drawActor(ghost));
+            ghosts.forEach(ghost -> actorSpriteRenderer.drawActor(ghost));
         } else {
-            gameLevelRenderer.drawActor(ghosts.get(RED_GHOST_SHADOW));
-            gameLevelRenderer.drawActor(ghosts.get(ORANGE_GHOST_POKEY));
-            gameLevelRenderer.ctx().save();
-            gameLevelRenderer.ctx().translate(shakingAmount, 0);
-            gameLevelRenderer.drawActor(ghosts.get(PINK_GHOST_SPEEDY));
-            gameLevelRenderer.drawActor(ghosts.get(CYAN_GHOST_BASHFUL));
-            gameLevelRenderer.ctx().restore();
+            actorSpriteRenderer.drawActor(ghosts.get(RED_GHOST_SHADOW));
+            actorSpriteRenderer.drawActor(ghosts.get(ORANGE_GHOST_POKEY));
+            actorSpriteRenderer.ctx().save();
+            actorSpriteRenderer.ctx().translate(shakingAmount, 0);
+            actorSpriteRenderer.drawActor(ghosts.get(PINK_GHOST_SPEEDY));
+            actorSpriteRenderer.drawActor(ghosts.get(CYAN_GHOST_BASHFUL));
+            actorSpriteRenderer.ctx().restore();
         }
-        gameLevelRenderer.drawActor(pacMan);
+        actorSpriteRenderer.drawActor(pacMan);
     }
 
     private void drawPoints() {
-        gameLevelRenderer.ctx().setFill(ARCADE_ROSE);
+        actorSpriteRenderer.ctx().setFill(ARCADE_ROSE);
         // normal pellet
-        gameLevelRenderer.ctx().fillRect(scaled(TS(LEFT_TILE_X + 6) + 4), scaled(TS(24) + 4), scaled(2), scaled(2));
-        gameLevelRenderer.fillText("10",  ARCADE_WHITE, gameLevelRenderer.arcadeFontTS(), TS(LEFT_TILE_X + 8), TS(25));
-        gameLevelRenderer.fillText("PTS", ARCADE_WHITE, gameLevelRenderer.arcadeFont6(), TS(LEFT_TILE_X + 11), TS(25));
+        actorSpriteRenderer.ctx().fillRect(scaled(TS(LEFT_TILE_X + 6) + 4), scaled(TS(24) + 4), scaled(2), scaled(2));
+        actorSpriteRenderer.fillText("10",  ARCADE_WHITE, actorSpriteRenderer.arcadeFontTS(), TS(LEFT_TILE_X + 8), TS(25));
+        actorSpriteRenderer.fillText("PTS", ARCADE_WHITE, actorSpriteRenderer.arcadeFont6(), TS(LEFT_TILE_X + 11), TS(25));
         // energizer
         drawBlinkingEnergizer(TS(LEFT_TILE_X + 6), TS(26));
-        gameLevelRenderer.fillText("50",  ARCADE_WHITE, gameLevelRenderer.arcadeFontTS(), TS(LEFT_TILE_X + 8), TS(27));
-        gameLevelRenderer.fillText("PTS", ARCADE_WHITE, gameLevelRenderer.arcadeFont6(), TS(LEFT_TILE_X + 11), TS(27));
+        actorSpriteRenderer.fillText("50",  ARCADE_WHITE, actorSpriteRenderer.arcadeFontTS(), TS(LEFT_TILE_X + 8), TS(27));
+        actorSpriteRenderer.fillText("PTS", ARCADE_WHITE, actorSpriteRenderer.arcadeFont6(), TS(LEFT_TILE_X + 11), TS(27));
     }
 
     private void drawBlinkingEnergizer(double x, double y) {
         if (blinking.isOn()) {
-            gameLevelRenderer.ctx().save();
-            gameLevelRenderer.ctx().scale(scaling(), scaling());
-            gameLevelRenderer.ctx().setFill(ARCADE_ROSE);
+            actorSpriteRenderer.ctx().save();
+            actorSpriteRenderer.ctx().scale(scaling(), scaling());
+            actorSpriteRenderer.ctx().setFill(ARCADE_ROSE);
             // draw pixelated "circle"
-            gameLevelRenderer.ctx().fillRect(x + 2, y, 4, 8);
-            gameLevelRenderer.ctx().fillRect(x, y + 2, 8, 4);
-            gameLevelRenderer.ctx().fillRect(x + 1, y + 1, 6, 6);
-            gameLevelRenderer.ctx().restore();
+            actorSpriteRenderer.ctx().fillRect(x + 2, y, 4, 8);
+            actorSpriteRenderer.ctx().fillRect(x, y + 2, 8, 4);
+            actorSpriteRenderer.ctx().fillRect(x + 1, y + 1, 6, 6);
+            actorSpriteRenderer.ctx().restore();
         }
     }
 

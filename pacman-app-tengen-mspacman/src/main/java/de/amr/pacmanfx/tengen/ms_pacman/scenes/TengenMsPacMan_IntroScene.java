@@ -14,10 +14,14 @@ import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.*;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.SpriteID;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUDRenderer;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_ScenesRenderer;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.uilib.rendering.ActorSpriteRenderer;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
@@ -46,7 +50,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     private final StateMachine<SceneState, TengenMsPacMan_IntroScene> sceneController;
 
     private TengenMsPacMan_HUDRenderer hudRenderer;
-    private TengenMsPacMan_GameLevelRenderer gameLevelRenderer;
+    private ActorSpriteRenderer actorSpriteRenderer;
     private TengenMsPacMan_ScenesRenderer scenesRenderer;
 
     private TengenMsPacMan_SpriteSheet spriteSheet;
@@ -77,8 +81,8 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
         hudRenderer = (TengenMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
         scenesRenderer = new TengenMsPacMan_ScenesRenderer(canvas, uiConfig);
-        gameLevelRenderer = (TengenMsPacMan_GameLevelRenderer) uiConfig.createGameLevelRenderer(canvas);
-        bindRendererScaling(hudRenderer, scenesRenderer, gameLevelRenderer);
+        actorSpriteRenderer = uiConfig.createActorSpriteRenderer(canvas);
+        bindRendererScaling(hudRenderer, scenesRenderer, actorSpriteRenderer);
 
         context().game().hudData().score(false).levelCounter(false).livesCounter(false);
 
@@ -153,15 +157,15 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 Ghost currentGhost = ghosts.get(ghostIndex);
                 Color ghostColor = ghostColors[currentGhost.id().personality()];
                 scenesRenderer.fillText(currentGhost.name().toUpperCase(), ghostColor, MARQUEE_X + 44, MARQUEE_Y + 41);
-                ghosts.forEach(ghost -> gameLevelRenderer.drawActor(ghost));
+                ghosts.forEach(ghost -> actorSpriteRenderer.drawActor(ghost));
             }
             case MS_PACMAN_MARCHING_IN -> {
                 marquee.draw(ctx());
                 scenesRenderer.fillText("\"MS PAC-MAN\"", nesColor(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
                 scenesRenderer.fillText("STARRING", nesColor(0x20), MARQUEE_X + 12, MARQUEE_Y + 22);
                 scenesRenderer.fillText("MS PAC-MAN", nesColor(0x28), MARQUEE_X + 28, MARQUEE_Y + 38);
-                ghosts.forEach(ghost -> gameLevelRenderer.drawActor(ghost));
-                gameLevelRenderer.drawActor(msPacMan);
+                ghosts.forEach(ghost -> actorSpriteRenderer.drawActor(ghost));
+                actorSpriteRenderer.drawActor(msPacMan);
             }
         }
 

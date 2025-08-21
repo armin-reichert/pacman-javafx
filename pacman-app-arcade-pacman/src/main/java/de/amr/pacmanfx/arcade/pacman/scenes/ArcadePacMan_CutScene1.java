@@ -12,15 +12,14 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
-import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
+import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.uilib.rendering.ActorSpriteRenderer;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.Globals.RED_GHOST_SHADOW;
-import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createGhost;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameModel.createPac;
 import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ANIM_BIG_PAC_MAN;
-import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.*;
 
 /**
@@ -38,7 +37,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     private Ghost blinky;
 
     private ArcadePacMan_HUDRenderer hudRenderer;
-    private GameLevelRenderer gameLevelRenderer;
+    private ActorSpriteRenderer actorSpriteRenderer;
 
     public ArcadePacMan_CutScene1(GameUI ui) {
         super(ui);
@@ -46,10 +45,10 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     
     @Override
     public void doInit() {
-        frame = -1;
+        GameUI_Config uiConfig = ui.currentConfig();
 
-        hudRenderer = new ArcadePacMan_HUDRenderer(ui.currentConfig(), canvas);
-        gameLevelRenderer = ui.currentConfig().createGameLevelRenderer(canvas);
+        hudRenderer = new ArcadePacMan_HUDRenderer(uiConfig, canvas);
+        actorSpriteRenderer = uiConfig.createActorSpriteRenderer(canvas);
         debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas) {
             @Override
             public void drawDebugInfo() {
@@ -58,11 +57,9 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
                 fillText(text, debugTextFill, debugTextFont, TS(1), TS(5));
             }
         };
-
-        bindRendererScaling(hudRenderer, gameLevelRenderer, debugInfoRenderer);
+        bindRendererScaling(hudRenderer, actorSpriteRenderer, debugInfoRenderer);
 
         context().game().hudData().credit(false).score(true).levelCounter(true).livesCounter(false);
-
 
         pac = createPac();
         pac.setAnimations(ui.currentConfig().createPacAnimations(pac));
@@ -72,6 +69,8 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
 
         actorsInZOrder.add(pac);
         actorsInZOrder.add(blinky);
+
+        frame = -1;
     }
 
     @Override
@@ -125,7 +124,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        actorsInZOrder.forEach(actor -> gameLevelRenderer.drawActor(actor));
+        actorsInZOrder.forEach(actor -> actorSpriteRenderer.drawActor(actor));
     }
 
     @Override

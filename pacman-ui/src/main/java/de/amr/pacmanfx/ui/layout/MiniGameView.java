@@ -7,6 +7,8 @@ package de.amr.pacmanfx.ui.layout;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.ui.api.GameUI;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
+import de.amr.pacmanfx.uilib.rendering.ActorSpriteRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
@@ -48,6 +50,7 @@ public class MiniGameView extends VBox {
 
     private final GameUI ui;
     private GameLevelRenderer gameLevelRenderer;
+    private ActorSpriteRenderer actorSpriteRenderer;
 
     private long drawCallCount;
 
@@ -101,11 +104,20 @@ public class MiniGameView extends VBox {
 
     public void onGameLevelCreated(GameLevel gameLevel) {
         worldSize.set(gameLevel.worldSizePx());
-        /* TODO: The game renderer cannot be created in the constructor because the game controller has not yet
+        /* TODO: The renderers cannot be created in the constructor because the game controller has not yet
             selected a game variant when the constructor is called, so no UI configuration is available! */
+
         gameLevelRenderer = ui.currentConfig().createGameLevelRenderer(canvas);
-        gameLevelRenderer.setScaling(scaling.get());
+        gameLevelRenderer.scalingProperty().bind(scaling);
         gameLevelRenderer.applyLevelSettings(ui.gameContext());
+
+        actorSpriteRenderer = new ActorSpriteRenderer(canvas) {
+            @Override
+            public SpriteSheet<?> spriteSheet() {
+                return ui.currentConfig().spriteSheet();
+            }
+        };
+        actorSpriteRenderer.scalingProperty().bind(scaling);
     }
 
     public void slideIn() {
@@ -123,17 +135,17 @@ public class MiniGameView extends VBox {
         if (!isVisible() || gameLevelRenderer == null) {
             return;
         }
-        gameLevelRenderer.setScaling(scaling.get());
+        //gameLevelRenderer.setScaling(scaling.get());
         fillCanvas(canvas, PROPERTY_CANVAS_BACKGROUND_COLOR.get());
 
         GameLevel gameLevel = ui.gameContext().gameLevel();
         if (gameLevel != null) {
             gameLevelRenderer.drawGameLevel(ui.gameContext(), PROPERTY_CANVAS_BACKGROUND_COLOR.get(), false, gameLevel.blinking().isOn());
-            gameLevel.bonus().ifPresent(bonus -> gameLevelRenderer.drawActor(bonus));
-            gameLevelRenderer.drawActor(gameLevel.pac());
+            gameLevel.bonus().ifPresent(bonus -> actorSpriteRenderer.drawActor(bonus));
+            actorSpriteRenderer.drawActor(gameLevel.pac());
             Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW)
                 .map(gameLevel::ghost)
-                .forEach(ghost -> gameLevelRenderer.drawActor(ghost));
+                .forEach(ghost -> actorSpriteRenderer.drawActor(ghost));
         }
 
         if (PROPERTY_DEBUG_INFO_VISIBLE.get()) {

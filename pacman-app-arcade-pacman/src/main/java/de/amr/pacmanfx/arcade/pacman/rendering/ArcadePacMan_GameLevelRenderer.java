@@ -6,8 +6,6 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.actors.Actor;
-import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
@@ -72,27 +70,5 @@ public class ArcadePacMan_GameLevelRenderer extends GameLevelRenderer implements
         gameLevel.energizerPositions().stream()
                 .filter(tile -> energizerDark || gameLevel.tileContainsEatenFood(tile))
                 .forEach(tile -> fillSquareAtTileCenter(tile, 10));
-    }
-
-    @Override
-    public void drawActor(Actor actor) {
-        if (actor instanceof Bonus bonus) {
-            drawBonus(bonus);
-        }
-        else {
-            actor.animations()
-                .map(animations -> animations.currentSprite(actor))
-                .ifPresent(sprite -> drawSpriteCentered(actor.center(), sprite));
-        }
-    }
-
-    private void drawBonus(Bonus bonus) {
-        switch (bonus.state()) {
-            case EDIBLE -> drawSpriteCentered(bonus.center(),
-                spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS)[bonus.symbol()]);
-            case EATEN  -> drawSpriteCentered(bonus.center(),
-                spriteSheet().spriteSequence(SpriteID.BONUS_VALUES)[bonus.symbol()]);
-            case INACTIVE -> {}
-        }
     }
 }

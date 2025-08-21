@@ -16,7 +16,7 @@ import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.animation.SingleSpriteActor;
-import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
+import de.amr.pacmanfx.uilib.rendering.ActorSpriteRenderer;
 
 import java.util.stream.Stream;
 
@@ -52,7 +52,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     private Ghost pinky;
 
     private ArcadeMsPacMan_HUDRenderer hudRenderer;
-    private GameLevelRenderer gameLevelRenderer;
+    private ActorSpriteRenderer actorSpriteRenderer;
 
     private SingleSpriteActor heart;
     private Clapperboard clapperboard;
@@ -67,8 +67,8 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         final var spriteSheet = (ArcadeMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
         hudRenderer = (ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
-        gameLevelRenderer = uiConfig.createGameLevelRenderer(canvas);
-        bindRendererScaling(hudRenderer, gameLevelRenderer);
+        actorSpriteRenderer = uiConfig.createActorSpriteRenderer(canvas);
+        bindRendererScaling(hudRenderer, actorSpriteRenderer);
 
         context().game().hudData().score(true).levelCounter(true).livesCounter(false);
 
@@ -88,7 +88,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
         clapperboard = new Clapperboard("1", "THEY MEET");
         clapperboard.setPosition(TS(3), TS(10));
-        clapperboard.setFont(gameLevelRenderer.arcadeFontTS());
+        clapperboard.setFont(actorSpriteRenderer.arcadeFontTS());
         clapperboard.startAnimation();
 
         setState(STATE_CLAPPERBOARD, 120);
@@ -125,8 +125,8 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        if (gameLevelRenderer != null) {
-            Stream.of(clapperboard, msPacMan, pacMan, inky, pinky, heart).forEach(actor -> gameLevelRenderer.drawActor(actor));
+        if (actorSpriteRenderer != null) {
+            Stream.of(clapperboard, msPacMan, pacMan, inky, pinky, heart).forEach(actorSpriteRenderer::drawActor);
         }
     }
 

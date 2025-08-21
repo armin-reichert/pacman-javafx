@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_GameLevelRenderer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
@@ -12,7 +11,8 @@ import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
-import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
+import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.uilib.rendering.ActorSpriteRenderer;
 
 import java.util.stream.Stream;
 
@@ -43,7 +43,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     private Clapperboard clapperboard;
 
     private ArcadeMsPacMan_HUDRenderer hudRenderer;
-    private GameLevelRenderer gameLevelRenderer;
+    private ActorSpriteRenderer actorSpriteRenderer;
 
     public ArcadeMsPacMan_CutScene2(GameUI ui) {
         super(ui);
@@ -51,9 +51,11 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
     
     @Override
     public void doInit() {
-        hudRenderer = (ArcadeMsPacMan_HUDRenderer) ui.currentConfig().createHUDRenderer(canvas);
-        gameLevelRenderer = new ArcadeMsPacMan_GameLevelRenderer(canvas, ui.currentConfig(), null);
-        bindRendererScaling(hudRenderer, gameLevelRenderer);
+        GameUI_Config uiConfig = ui.currentConfig();
+
+        hudRenderer = (ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
+        actorSpriteRenderer = uiConfig.createActorSpriteRenderer(canvas);
+        bindRendererScaling(hudRenderer, actorSpriteRenderer);
 
         context().game().hudData().score(true).levelCounter(true).livesCounter(false);
 
@@ -65,7 +67,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
         clapperboard = new Clapperboard("2", "THE CHASE");
         clapperboard.setPosition(TS(3), TS(10));
-        clapperboard.setFont(gameLevelRenderer.arcadeFontTS());
+        clapperboard.setFont(actorSpriteRenderer.arcadeFontTS());
         clapperboard.startAnimation();
 
         setSceneState(STATE_CLAPPERBOARD, 120);
@@ -100,8 +102,8 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        if (gameLevelRenderer != null) {
-            Stream.of(clapperboard, msPacMan, pacMan).forEach(actor -> gameLevelRenderer.drawActor(actor));
+        if (actorSpriteRenderer != null) {
+            Stream.of(clapperboard, msPacMan, pacMan).forEach(actor -> actorSpriteRenderer.drawActor(actor));
         }
     }
 

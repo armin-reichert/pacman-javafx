@@ -10,7 +10,6 @@ import de.amr.pacmanfx.arcade.pacman.scenes.*;
 import de.amr.pacmanfx.controller.GamePlayState;
 import de.amr.pacmanfx.controller.teststates.CutScenesTestState;
 import de.amr.pacmanfx.lib.RectShort;
-import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.actors.Ghost;
@@ -29,6 +28,7 @@ import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.WorldMapColorScheme;
 import de.amr.pacmanfx.uilib.model3D.PacBody;
 import de.amr.pacmanfx.uilib.model3D.PacMan3D;
+import de.amr.pacmanfx.uilib.rendering.ActorSpriteRenderer;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -181,6 +181,11 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
     @Override
     public HUDRenderer createHUDRenderer(Canvas canvas) {
         return new ArcadePacMan_HUDRenderer(this, canvas);
+    }
+
+    @Override
+    public ActorSpriteRenderer createActorSpriteRenderer(Canvas canvas) {
+        return new ArcadePacMan_ActorSpriteRenderer(canvas, this);
     }
 
     @Override

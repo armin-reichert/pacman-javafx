@@ -9,11 +9,11 @@ import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Ghost;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameLevelRenderer;
 import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.uilib.rendering.ActorSpriteRenderer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -38,7 +38,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     private Actor movingText;
     private Ghost ghost;
 
-    private TengenMsPacMan_GameLevelRenderer gameLevelRenderer;
+    private ActorSpriteRenderer actorSpriteRenderer;
 
     public TengenMsPacMan_BootScene(GameUI ui) {
         super(ui);
@@ -48,9 +48,9 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     public void doInit() {
         GameUI_Config uiConfig = ui.currentConfig();
 
-        gameLevelRenderer = (TengenMsPacMan_GameLevelRenderer) uiConfig.createGameLevelRenderer(canvas);
+        actorSpriteRenderer = uiConfig.createActorSpriteRenderer(canvas);
         debugInfoRenderer = new BootSceneDebugInfoRenderer(ui);
-        bindRendererScaling(gameLevelRenderer, debugInfoRenderer);
+        bindRendererScaling(actorSpriteRenderer, debugInfoRenderer);
 
         tick = 0;
         grayScreen = false;
@@ -116,9 +116,9 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
         if (grayScreen) {
             fillCanvas(canvas, GRAY);
         } else {
-            gameLevelRenderer.fillText(TENGEN_PRESENTS, blueShadedColor(tick), gameLevelRenderer.arcadeFontTS(),
+            actorSpriteRenderer.fillText(TENGEN_PRESENTS, blueShadedColor(tick), actorSpriteRenderer.arcadeFontTS(),
                     movingText.x(), movingText.y());
-            gameLevelRenderer.drawActor(ghost);
+            actorSpriteRenderer.drawActor(ghost);
         }
     }
 

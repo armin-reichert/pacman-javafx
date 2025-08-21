@@ -15,7 +15,7 @@ import de.amr.pacmanfx.ui._2d.ArcadePalette;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.Ufx;
-import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
+import de.amr.pacmanfx.uilib.rendering.ActorSpriteRenderer;
 import de.amr.pacmanfx.uilib.widgets.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuEntry;
 import de.amr.pacmanfx.uilib.widgets.OptionMenuStyle;
@@ -51,7 +51,7 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
         private final GraphicsContext ctx;
         private final Pac pac;
         private final List<Ghost> ghosts;
-        private GameLevelRenderer gameLevelRenderer;
+        private ActorSpriteRenderer actorSpriteRenderer;
         private boolean chasingGhosts;
         private boolean running;
 
@@ -142,19 +142,19 @@ public class PacManXXL_Common_StartPageMenu extends OptionMenu {
             ctx.save();
             ctx.translate(0, 23.5 * TS * scaling);
             ctx.setImageSmoothing(false);
-            gameLevelRenderer.setScaling(scaling);
-            ghosts.forEach(ghost -> gameLevelRenderer.drawActor(ghost));
-            gameLevelRenderer.drawActor(pac);
+            actorSpriteRenderer.setScaling(scaling);
+            ghosts.forEach(actorSpriteRenderer::drawActor);
+            actorSpriteRenderer.drawActor(pac);
             ctx.restore();
         }
 
-        void setGameConfig(GameUI_Config config) {
-            gameLevelRenderer = config.createGameLevelRenderer(ctx.getCanvas());
-            pac.setAnimations(config.createPacAnimations(pac));
+        void setGameConfig(GameUI_Config uiConfig) {
+            actorSpriteRenderer = uiConfig.createActorSpriteRenderer(ctx.getCanvas());
+            pac.setAnimations(uiConfig.createPacAnimations(pac));
             pac.playAnimation(ANIM_PAC_MUNCHING);
             for (Ghost ghost : ghosts) {
                 if (ghost.animations().isEmpty()) {
-                    ghost.setAnimations(config.createGhostAnimations(ghost));
+                    ghost.setAnimations(uiConfig.createGhostAnimations(ghost));
                     ghost.playAnimation(ANIM_GHOST_NORMAL);
                 }
             }

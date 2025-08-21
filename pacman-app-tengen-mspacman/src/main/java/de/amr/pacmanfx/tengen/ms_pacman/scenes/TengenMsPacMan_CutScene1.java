@@ -12,7 +12,7 @@ import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.SpriteID;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameLevelRenderer;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_ActorSpriteRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
@@ -53,7 +53,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
     private static final float SPEED_GHOST_AFTER_COLLISION = 0.5f;
 
     private TengenMsPacMan_HUDRenderer hudRenderer;
-    private TengenMsPacMan_GameLevelRenderer gameLevelRenderer;
+    private TengenMsPacMan_ActorSpriteRenderer actorSpriteRenderer;
 
     private Clapperboard clapperboard;
     private SingleSpriteActor heart;
@@ -76,9 +76,9 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
         var spriteSheet = (TengenMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
         hudRenderer = (TengenMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
-        gameLevelRenderer = (TengenMsPacMan_GameLevelRenderer) uiConfig.createGameLevelRenderer(canvas);
+        actorSpriteRenderer = (TengenMsPacMan_ActorSpriteRenderer) uiConfig.createActorSpriteRenderer(canvas);
         debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas);
-        bindRendererScaling(hudRenderer, gameLevelRenderer, debugInfoRenderer);
+        bindRendererScaling(hudRenderer, actorSpriteRenderer, debugInfoRenderer);
 
         context().game().hudData().credit(false).score(false).levelCounter(true).livesCounter(false);
 
@@ -86,7 +86,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
         clapperboard = new Clapperboard(spriteSheet, 1, "THEY MEET");
         clapperboard.setPosition(3 * TS, 10 * TS);
-        clapperboard.setFont(gameLevelRenderer.arcadeFontTS());
+        clapperboard.setFont(actorSpriteRenderer.arcadeFontTS());
 
         msPacMan = createMsPacMan();
         msPacMan.setAnimations(uiConfig.createPacAnimations(msPacMan));
@@ -248,8 +248,8 @@ public class TengenMsPacMan_CutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        if (gameLevelRenderer != null) {
-            Stream.of(clapperboard, msPacMan, pacMan, inky, pinky, heart).forEach(actor -> gameLevelRenderer.drawActor(actor));
+        if (actorSpriteRenderer != null) {
+            Stream.of(clapperboard, msPacMan, pacMan, inky, pinky, heart).forEach(actorSpriteRenderer::drawActor);
         }
     }
 }

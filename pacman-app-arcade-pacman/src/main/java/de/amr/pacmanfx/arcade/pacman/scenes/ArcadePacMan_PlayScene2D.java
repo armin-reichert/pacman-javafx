@@ -26,6 +26,7 @@ import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
+import de.amr.pacmanfx.uilib.rendering.ActorSpriteRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
 import javafx.beans.property.BooleanProperty;
@@ -56,8 +57,10 @@ import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
 public class ArcadePacMan_PlayScene2D extends GameScene2D {
 
     private final BooleanProperty mazeHighlighted = new SimpleBooleanProperty(false);
+
     private HUDRenderer hudRenderer;
     private GameLevelRenderer gameLevelRenderer;
+    private ActorSpriteRenderer actorSpriteRenderer;
     private LevelCompletedAnimation levelCompletedAnimation;
 
     private class PlaySceneDebugInfoRenderer extends DefaultDebugInfoRenderer {
@@ -120,8 +123,9 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
         // Can be Pac-Man or Ms.Pac-Man renderer!
         hudRenderer = uiConfig.createHUDRenderer(canvas);
         gameLevelRenderer = uiConfig.createGameLevelRenderer(canvas);
+        actorSpriteRenderer = uiConfig.createActorSpriteRenderer(canvas);
         debugInfoRenderer = new PlaySceneDebugInfoRenderer(ui);
-        bindRendererScaling(hudRenderer, gameLevelRenderer, debugInfoRenderer);
+        bindRendererScaling(hudRenderer, gameLevelRenderer, actorSpriteRenderer, debugInfoRenderer);
         context().game().hudData().credit(false).score(true).levelCounter(true).livesCounter(true);
     }
 
@@ -303,7 +307,7 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
         Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW).map(gameLevel::ghost).forEach(actorsInZOrder::add);
 
         // Draw actors
-        actorsInZOrder.forEach(actor -> gameLevelRenderer.drawActor(actor));
+        actorsInZOrder.forEach(actor -> actorSpriteRenderer.drawActor(actor));
     }
 
     private void drawGameLevelMessage(GameLevel gameLevel) {
