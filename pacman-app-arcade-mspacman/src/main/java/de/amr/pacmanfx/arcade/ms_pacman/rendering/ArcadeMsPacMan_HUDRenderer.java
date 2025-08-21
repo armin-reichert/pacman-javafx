@@ -26,7 +26,7 @@ public class ArcadeMsPacMan_HUDRenderer extends SpriteRenderer implements HUDRen
     protected final GameUI_Config uiConfig;
 
     public ArcadeMsPacMan_HUDRenderer(GameUI_Config uiConfig, Canvas canvas) {
-        super(canvas);
+        super(canvas, uiConfig.spriteSheet());
         this.uiConfig = requireNonNull(uiConfig);
     }
 

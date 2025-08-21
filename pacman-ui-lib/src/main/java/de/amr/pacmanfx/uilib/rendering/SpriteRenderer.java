@@ -7,13 +7,18 @@ import javafx.scene.canvas.Canvas;
 
 import static java.util.Objects.requireNonNull;
 
-public abstract class SpriteRenderer extends BaseRenderer {
+public class SpriteRenderer extends BaseRenderer {
 
-    protected SpriteRenderer(Canvas canvas) {
+    private final SpriteSheet<?> spriteSheet;
+
+    public SpriteRenderer(Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(canvas);
+        this.spriteSheet = requireNonNull(spriteSheet);
     }
 
-    public abstract SpriteSheet<?> spriteSheet();
+    public SpriteSheet<?> spriteSheet() {
+        return spriteSheet;
+    }
 
     /**
      * Draws a sprite (region inside sprite sheet) unscaled at the given position.
@@ -26,7 +31,7 @@ public abstract class SpriteRenderer extends BaseRenderer {
     public void drawSprite(RectShort sprite, double x, double y, boolean scaled) {
         requireNonNull(sprite);
         double s = scaled ? scaling() : 1;
-        ctx().drawImage(spriteSheet().sourceImage(),
+        ctx().drawImage(spriteSheet.sourceImage(),
             sprite.x(), sprite.y(), sprite.width(), sprite.height(),
             s * x, s * y, s * sprite.width(), s * sprite.height());
     }

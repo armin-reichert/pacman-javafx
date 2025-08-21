@@ -19,7 +19,7 @@ public class ArcadeMsPacMan_ScenesRenderer extends SpriteRenderer {
     private final GameUI_Config uiConfig;
 
     public ArcadeMsPacMan_ScenesRenderer(Canvas canvas, GameUI_Config uiConfig) {
-        super(canvas);
+        super(canvas, uiConfig.spriteSheet());
         this.uiConfig = uiConfig;
     }
 

@@ -1,11 +1,9 @@
 package de.amr.pacmanfx.tengen.ms_pacman.rendering;
 
 import de.amr.pacmanfx.lib.nes.JoypadButton;
-import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.input.JoypadKeyBinding;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -19,7 +17,7 @@ public class TengenMsPacMan_ScenesRenderer extends SpriteRenderer {
     private final GameUI_Config uiConfig;
 
     public TengenMsPacMan_ScenesRenderer(Canvas canvas, GameUI_Config uiConfig) {
-        super(canvas);
+        super(canvas, uiConfig.spriteSheet());
         this.uiConfig = uiConfig;
     }
 

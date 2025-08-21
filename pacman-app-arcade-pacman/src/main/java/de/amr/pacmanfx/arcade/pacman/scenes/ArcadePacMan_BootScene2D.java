@@ -43,12 +43,7 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
         // This can be different spritesheet types!
         SpriteSheet<?> spriteSheet = ui.currentConfig().spriteSheet();
 
-        spriteRenderer = new SpriteRenderer(canvas) {
-            @Override
-            public SpriteSheet<?> spriteSheet() {
-                return uiConfig.spriteSheet();
-            }
-        };
+        spriteRenderer = new SpriteRenderer(canvas, uiConfig.spriteSheet());
         bindRendererScaling(spriteRenderer);
 
         context().game().hudData().all(false);

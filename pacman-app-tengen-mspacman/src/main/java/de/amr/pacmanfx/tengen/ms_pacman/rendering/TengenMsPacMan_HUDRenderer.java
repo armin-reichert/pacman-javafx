@@ -30,7 +30,7 @@ public class TengenMsPacMan_HUDRenderer extends SpriteRenderer implements HUDRen
     protected final TengenMsPacMan_UIConfig uiConfig;
 
     public TengenMsPacMan_HUDRenderer(TengenMsPacMan_UIConfig uiConfig, Canvas canvas) {
-        super(canvas);
+        super(canvas, uiConfig.spriteSheet());
         this.uiConfig = requireNonNull(uiConfig);
     }
 
