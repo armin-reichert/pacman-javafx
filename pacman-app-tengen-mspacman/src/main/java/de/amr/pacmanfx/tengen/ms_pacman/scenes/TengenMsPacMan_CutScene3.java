@@ -76,7 +76,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene2D {
 
         clapperboard = new Clapperboard(spriteSheet, 3, "JUNIOR");
         clapperboard.setPosition(3 * TS, 10 * TS);
-        clapperboard.setFont(gameLevelRenderer.arcadeFont8());
+        clapperboard.setFont(gameLevelRenderer.arcadeFontTS());
 
         msPacMan = createMsPacMan();
         msPacMan.setAnimations(uiConfig.createPacAnimations(msPacMan));

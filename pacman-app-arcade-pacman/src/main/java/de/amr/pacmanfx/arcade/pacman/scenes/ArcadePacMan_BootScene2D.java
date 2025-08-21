@@ -113,7 +113,7 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
         int numRows = (int) (ARCADE_MAP_SIZE_IN_PIXELS.y() / TS);
         int numCols = (int) (ARCADE_MAP_SIZE_IN_PIXELS.x() / TS);
         ctx().setFill(ARCADE_WHITE);
-        ctx().setFont(spriteRenderer.arcadeFont(TS));
+        ctx().setFont(spriteRenderer.arcadeFontTS());
         for (int row = 0; row < numRows; ++row) {
             double y = scaled(TS(row + 1));
             for (int col = 0; col < numCols; ++col) {

@@ -141,7 +141,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        scenesRenderer.ctx().setFont(scenesRenderer.arcadeFont(TS));
+        scenesRenderer.ctx().setFont(scenesRenderer.arcadeFontTS());
         scenesRenderer.fillText(TITLE, ARCADE_ORANGE, TITLE_X, TITLE_Y);
         scenesRenderer.drawMarquee(marquee);
 

@@ -40,12 +40,12 @@ public class BaseRenderer implements CanvasRenderer {
 
     protected final DoubleProperty scaling = new SimpleDoubleProperty(1.0);
     protected final GraphicsContext ctx;
-    protected final ObjectProperty<Font> arcadeFont8 = new SimpleObjectProperty<>();
+    protected final ObjectProperty<Font> arcadeFontTS = new SimpleObjectProperty<>();
     protected final ObjectProperty<Font> arcadeFont6 = new SimpleObjectProperty<>();
 
     public BaseRenderer(Canvas canvas) {
         ctx = requireNonNull(canvas).getGraphicsContext2D();
-        arcadeFont8.bind(scaling.map(s -> Font.font(ARCADE_FONT_TS.getFamily(), scaled(8))));
+        arcadeFontTS.bind(scaling.map(s -> Font.font(ARCADE_FONT_TS.getFamily(), scaled(TS))));
         arcadeFont6.bind(scaling.map(s -> Font.font(ARCADE_FONT_TS.getFamily(), scaled(6))));
     }
 
@@ -73,13 +73,11 @@ public class BaseRenderer implements CanvasRenderer {
 
     public double scaled(double value) { return scaling() * value; }
 
-    public Font arcadeFont8() {
-        return arcadeFont8.get();
+    public Font arcadeFontTS() {
+        return arcadeFontTS.get();
     }
 
-    public Font arcadeFont6() {
-        return arcadeFont6.get();
-    }
+    public Font arcadeFont6() { return arcadeFont6.get(); }
 
     /**
      * @param size unscaled font size

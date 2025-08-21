@@ -86,7 +86,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
         clapperboard = new Clapperboard("1", "THEY MEET");
         clapperboard.setPosition(TS(3), TS(10));
-        clapperboard.setFont(gameLevelRenderer.arcadeFont8());
+        clapperboard.setFont(gameLevelRenderer.arcadeFontTS());
         clapperboard.startAnimation();
 
         setState(STATE_CLAPPERBOARD, 120);

@@ -74,7 +74,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
     public void drawSceneContent() {
         scenesRenderer.drawHorizontalBar(nesColor(0x20), nesColor(0x13), sizeInPx().x(), TS, 20);
         scenesRenderer.drawHorizontalBar(nesColor(0x20), nesColor(0x13), sizeInPx().x(), TS, 212);
-        ctx().setFont(scenesRenderer.arcadeFont(TS));
+        ctx().setFont(scenesRenderer.arcadeFontTS());
         y = 7 * TS; // important: reset on every draw!
         if (context().gameState().timer().betweenSeconds(0, 0.5 * DISPLAY_SECONDS)) {
             drawOriginalCreditsText();

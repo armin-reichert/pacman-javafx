@@ -72,7 +72,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
 
         clapperboard = new Clapperboard(spriteSheet, 2, "THE CHASE");
         clapperboard.setPosition(3 * TS, 10 * TS);
-        clapperboard.setFont(gameLevelRenderer.arcadeFont8());
+        clapperboard.setFont(gameLevelRenderer.arcadeFontTS());
 
         msPacMan = createMsPacMan();
         msPacMan.setAnimations(uiConfig.createPacAnimations(msPacMan));

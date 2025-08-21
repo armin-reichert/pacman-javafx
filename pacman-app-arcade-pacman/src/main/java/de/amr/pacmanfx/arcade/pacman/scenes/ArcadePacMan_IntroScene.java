@@ -156,18 +156,18 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 drawPoints();
                 drawBlinkingEnergizer(TS(LEFT_TILE_X), TS(20));
                 drawGuys(true);
-                gameLevelRenderer.fillText(MIDWAY_MFG_CO, ARCADE_PINK, gameLevelRenderer.arcadeFont8(), TS(4), TS(32));
+                gameLevelRenderer.fillText(MIDWAY_MFG_CO, ARCADE_PINK, gameLevelRenderer.arcadeFontTS(), TS(4), TS(32));
             }
             case CHASING_GHOSTS, READY_TO_PLAY -> {
                 drawPoints();
                 drawGuys(false);
-                gameLevelRenderer.fillText(MIDWAY_MFG_CO, ARCADE_PINK, gameLevelRenderer.arcadeFont8(), TS(4), TS(32));
+                gameLevelRenderer.fillText(MIDWAY_MFG_CO, ARCADE_PINK, gameLevelRenderer.arcadeFontTS(), TS(4), TS(32));
             }
         }
     }
 
     private void drawGallery() {
-        gameLevelRenderer.ctx().setFont(gameLevelRenderer.arcadeFont8());
+        gameLevelRenderer.ctx().setFont(gameLevelRenderer.arcadeFontTS());
         if (titleVisible) {
             gameLevelRenderer.fillText("CHARACTER / NICKNAME", ARCADE_WHITE,
                 TS(LEFT_TILE_X + 3), TS(6));
@@ -211,11 +211,11 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         gameLevelRenderer.ctx().setFill(ARCADE_ROSE);
         // normal pellet
         gameLevelRenderer.ctx().fillRect(scaled(TS(LEFT_TILE_X + 6) + 4), scaled(TS(24) + 4), scaled(2), scaled(2));
-        gameLevelRenderer.fillText("10",  ARCADE_WHITE, gameLevelRenderer.arcadeFont8(), TS(LEFT_TILE_X + 8), TS(25));
+        gameLevelRenderer.fillText("10",  ARCADE_WHITE, gameLevelRenderer.arcadeFontTS(), TS(LEFT_TILE_X + 8), TS(25));
         gameLevelRenderer.fillText("PTS", ARCADE_WHITE, gameLevelRenderer.arcadeFont6(), TS(LEFT_TILE_X + 11), TS(25));
         // energizer
         drawBlinkingEnergizer(TS(LEFT_TILE_X + 6), TS(26));
-        gameLevelRenderer.fillText("50",  ARCADE_WHITE, gameLevelRenderer.arcadeFont8(), TS(LEFT_TILE_X + 8), TS(27));
+        gameLevelRenderer.fillText("50",  ARCADE_WHITE, gameLevelRenderer.arcadeFontTS(), TS(LEFT_TILE_X + 8), TS(27));
         gameLevelRenderer.fillText("PTS", ARCADE_WHITE, gameLevelRenderer.arcadeFont6(), TS(LEFT_TILE_X + 11), TS(27));
     }
 
