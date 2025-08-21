@@ -38,7 +38,9 @@ import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -76,25 +78,28 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
                     ctx.setFill(Color.RED);
                     ctx.fillRect(x, y, size, 2);
                 });
+
                 // mark intersection tiles
                 context().gameLevel().worldMap().tiles().filter(context().gameLevel()::isIntersection).forEach(tile -> {
                     double[] xs = new double[4];
                     double[] ys = new double[4];
-                    int i = 0;
+                    int n = 0;
                     Point2D center = new Point2D(tile.x() * TS + HTS, tile.y() * TS + HTS);
                     for (Direction dir : List.of(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT)) {
                         Vector2i neighborTile = tile.plus(dir.vector());
                         if (!context().gameLevel().isTileBlocked(neighborTile)) {
-                            int dx = dir.vector().x() * HTS, dy = dir.vector().y() * HTS;
-                            xs[i] = scaled(center.getX() + dx);
-                            ys[i] = scaled(center.getY() + dy);
-                            ++i;
+                            xs[n] = center.getX() + dir.vector().x() * HTS;
+                            ys[n] = center.getY() + dir.vector().y() * HTS;
+                            ++n;
                         }
                     }
-                    ctx.setStroke(Color.gray(0.8));
-                    ctx.setLineWidth(0.5);
-                    ctx.strokePolygon(xs, ys, i);
+                    ctx.setFill(Color.gray(0.6));
+                    ctx.setLineWidth(1);
+                    for (int i = 0; i < n; ++i) {
+                        ctx.strokeLine(scaled(center.getX()), scaled(center.getY()), scaled(xs[i]), scaled(ys[i]));
+                    }
                 });
+
                 String gameStateText = context().gameState().name() + " (Tick %d)".formatted(context().gameState().timer().tickCount());
                 String huntingPhaseText = "";
                 if (context().gameState() == GamePlayState.HUNTING) {
