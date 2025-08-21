@@ -469,6 +469,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     @Override
     public void drawSceneContent() {
         ctx().save();
+        // the map width is 28 tiles but the NES screen width is 32 tiles, so move 2 tiles right to center on screen
         ctx().translate(scaled(2 * TS), 0);
         drawGameLevel(context().gameLevel());
         drawActors();

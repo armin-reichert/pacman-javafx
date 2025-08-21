@@ -17,8 +17,8 @@ import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 
 import java.util.Random;
 
+import static de.amr.pacmanfx.Globals.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig.ARCADE_MAP_SIZE_IN_PIXELS;
 import static de.amr.pacmanfx.lib.UsefulFunctions.lerp;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_WHITE;
 
