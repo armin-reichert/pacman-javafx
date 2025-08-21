@@ -11,9 +11,7 @@ import de.amr.pacmanfx.controller.teststates.LevelShortTestState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.HuntingTimer;
 import de.amr.pacmanfx.model.LivesCounter;
 import de.amr.pacmanfx.model.actors.GhostState;
@@ -44,7 +42,6 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.CommonGameActions.*;
-import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_MUTED;
 import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
 
@@ -296,7 +293,6 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
     private void drawGameLevel(GameLevel gameLevel) {
         gameLevelRenderer.applyLevelSettings(context());
         gameLevelRenderer.drawGameLevel(context(), backgroundColor(), mazeHighlighted.get(), gameLevel.blinking().isOn());
-        drawGameLevelMessage(gameLevel);
     }
 
     private void drawActors(GameLevel gameLevel) {
@@ -308,24 +304,6 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
 
         // Draw actors
         actorsInZOrder.forEach(actor -> actorSpriteRenderer.drawActor(actor));
-    }
-
-    private void drawGameLevelMessage(GameLevel gameLevel) {
-        // Draw message if available
-        if (gameLevel.messageType() != GameLevel.MessageType.NONE && gameLevel.house().isPresent()) {
-            House house = gameLevel.house().get();
-            Vector2i houseSize = house.sizeInTiles();
-            float cx = TS(house.minTile().x() + houseSize.x() * 0.5f);
-            float cy = TS(house.minTile().y() + houseSize.y() + 1);
-            switch (gameLevel.messageType()) {
-                case GameLevel.MessageType.GAME_OVER -> gameLevelRenderer.fillTextCentered("GAME  OVER",
-                        ARCADE_RED, gameLevelRenderer.arcadeFontTS(), cx, cy);
-                case GameLevel.MessageType.READY -> gameLevelRenderer.fillTextCentered("READY!",
-                        ARCADE_YELLOW, gameLevelRenderer.arcadeFontTS(), cx, cy);
-                case GameLevel.MessageType.TEST -> gameLevelRenderer.fillTextCentered("TEST    L%02d".formatted(gameLevel.number()),
-                        ARCADE_WHITE, gameLevelRenderer.arcadeFontTS(), cx, cy);
-            }
-        }
     }
 
     @Override

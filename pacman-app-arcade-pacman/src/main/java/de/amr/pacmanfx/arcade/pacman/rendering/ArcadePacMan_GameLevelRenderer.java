@@ -5,7 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.pacmanfx.GameContext;
+import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
@@ -14,6 +16,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.TS;
+import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
@@ -47,6 +50,7 @@ public class ArcadePacMan_GameLevelRenderer extends GameLevelRenderer implements
             drawGameLevelWithFood(gameContext.gameLevel(), !energizerBright);
         }
         ctx().restore();
+        drawGameLevelMessage(gameContext.gameLevel());
     }
 
     private void drawEmptyGameLevel(GameLevel gameLevel) {
@@ -70,5 +74,23 @@ public class ArcadePacMan_GameLevelRenderer extends GameLevelRenderer implements
         gameLevel.energizerPositions().stream()
                 .filter(tile -> energizerDark || gameLevel.tileContainsEatenFood(tile))
                 .forEach(tile -> fillSquareAtTileCenter(tile, 10));
+    }
+
+    private void drawGameLevelMessage(GameLevel gameLevel) {
+        // Draw message if available
+        if (gameLevel.messageType() != GameLevel.MessageType.NONE && gameLevel.house().isPresent()) {
+            House house = gameLevel.house().get();
+            Vector2i houseSize = house.sizeInTiles();
+            float cx = TS(house.minTile().x() + houseSize.x() * 0.5f);
+            float cy = TS(house.minTile().y() + houseSize.y() + 1);
+            switch (gameLevel.messageType()) {
+                case GameLevel.MessageType.GAME_OVER -> fillTextCentered("GAME  OVER",
+                        ARCADE_RED, arcadeFontTS(), cx, cy);
+                case GameLevel.MessageType.READY -> fillTextCentered("READY!",
+                        ARCADE_YELLOW, arcadeFontTS(), cx, cy);
+                case GameLevel.MessageType.TEST -> fillTextCentered("TEST    L%02d".formatted(gameLevel.number()),
+                        ARCADE_WHITE, arcadeFontTS(), cx, cy);
+            }
+        }
     }
 }
