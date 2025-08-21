@@ -13,7 +13,7 @@ import de.amr.pacmanfx.ui.api.ActionBindingsManager;
 import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.CanvasRenderer;
 import de.amr.pacmanfx.uilib.rendering.DebugInfoRenderer;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
@@ -32,46 +32,43 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class GameScene2D implements GameScene {
 
-    protected final GameUI ui;
-
     protected final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
     protected final BooleanProperty debugInfoVisible = new SimpleBooleanProperty(false);
     protected final DoubleProperty scaling = new SimpleDoubleProperty(1.0f);
 
+    protected final GameUI ui;
     protected final ActionBindingsManager actionBindings;
-    protected final AnimationRegistry animationRegistry = new AnimationRegistry();
-
-    protected DebugInfoRenderer debugInfoRenderer;
+    protected final AnimationRegistry animationRegistry;
+    protected final List<Actor> actorsInZOrder = new ArrayList<>();
 
     protected Canvas canvas;
-    protected final List<Actor> actorsInZOrder = new ArrayList<>();
+    protected DebugInfoRenderer debugInfoRenderer;
 
     protected GameScene2D(GameUI ui) {
         this.ui = requireNonNull(ui);
         actionBindings = new DefaultActionBindingsManager();
+        animationRegistry = new AnimationRegistry();
     }
 
     @Override
-    public GameContext gameContext() {
+    public GameContext context() {
         return ui.gameContext();
     }
 
     @Override
     public final void init() {
+        requireNonNull(canvas, "No canvas has been assigned to game scene");
         debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas);
         debugInfoRenderer.scalingProperty().bind(scaling);
-
-
         doInit();
-
         actionBindings.installBindings(ui.keyboard());
         ui.keyboard().logCurrentBindings();
     }
 
     @Override
     public final void end() {
-        ui.soundManager().stopAll();
         doEnd();
+        ui.soundManager().stopAll();
     }
 
     @Override
@@ -82,8 +79,8 @@ public abstract class GameScene2D implements GameScene {
     protected abstract void doInit();
     protected abstract void doEnd();
 
-    protected void bindRendererScaling(BaseRenderer... renderers) {
-        for (BaseRenderer renderer : renderers) {
+    protected void bindRendererScaling(CanvasRenderer... renderers) {
+        for (CanvasRenderer renderer : renderers) {
             renderer.scalingProperty().bind(scaling);
         }
     }

@@ -80,7 +80,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         gameLevelRenderer = (TengenMsPacMan_GameLevelRenderer) uiConfig.createGameLevelRenderer(canvas);
         bindRendererScaling(hudRenderer, scenesRenderer, gameLevelRenderer);
 
-        gameContext().game().hudData().score(false).levelCounter(false).livesCounter(false);
+        context().game().hudData().score(false).levelCounter(false).livesCounter(false);
 
         var tengenActionBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().actionBindings();
         actionBindings.assign(ACTION_ENTER_START_SCREEN, tengenActionBindings);
@@ -116,9 +116,9 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     @Override
     public void drawHUD() {
         if (hudRenderer != null) {
-            var game = gameContext().<TengenMsPacMan_GameModel>game();
+            var game = context().<TengenMsPacMan_GameModel>game();
             if (game.mapCategory() != MapCategory.ARCADE) {
-                hudRenderer.drawHUD(gameContext(), game.hudData(), sizeInPx().minus(0, 2 * TS));
+                hudRenderer.drawHUD(context(), game.hudData(), sizeInPx().minus(0, 2 * TS));
             }
         }
     }
@@ -227,7 +227,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
-                scene.marquee.update(scene.gameContext().gameState().timer().tickCount());
+                scene.marquee.update(scene.context().gameState().timer().tickCount());
                 if (timer.atSecond(1)) {
                     scene.sceneController.changeState(GHOSTS_MARCHING_IN);
                 }
@@ -243,7 +243,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
-                scene.marquee.update(scene.gameContext().gameState().timer().tickCount());
+                scene.marquee.update(scene.context().gameState().timer().tickCount());
                 boolean reachedEndPosition = letGhostMarchIn(scene);
                 if (reachedEndPosition) {
                     if (scene.ghostIndex == 3) {
@@ -296,7 +296,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
-                scene.marquee.update(scene.gameContext().gameState().timer().tickCount());
+                scene.marquee.update(scene.context().gameState().timer().tickCount());
                 Logger.debug("Tick {}: {} marching in", scene.ui.clock().tickCount(), scene.msPacMan.name());
                 scene.msPacMan.move();
                 if (scene.msPacMan.x() <= MS_PAC_MAN_STOP_X) {
@@ -305,12 +305,12 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
                 }
                 if (timer.atSecond(8)) {
                     // start demo level or show options
-                    var game = scene.gameContext().<TengenMsPacMan_GameModel>game();
+                    var game = scene.context().<TengenMsPacMan_GameModel>game();
                     if (game.optionsAreInitial()) {
                         game.setCanStartNewGame(false); // TODO check this
-                        scene.gameContext().gameController().restart(GamePlayState.STARTING_GAME);
+                        scene.context().gameController().restart(GamePlayState.STARTING_GAME);
                     } else {
-                        scene.gameContext().gameController().changeGameState(GamePlayState.SETTING_OPTIONS_FOR_START);
+                        scene.context().gameController().changeGameState(GamePlayState.SETTING_OPTIONS_FOR_START);
                     }
                 }
             }

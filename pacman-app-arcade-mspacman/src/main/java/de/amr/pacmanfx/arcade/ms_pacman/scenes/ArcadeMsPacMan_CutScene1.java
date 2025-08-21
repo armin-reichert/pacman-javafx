@@ -69,7 +69,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
         gameLevelRenderer = new ArcadeMsPacMan_GameLevelRenderer(canvas, ui.currentConfig(), null);
         bindRendererScaling(hudRenderer, gameLevelRenderer);
 
-        gameContext().game().hudData().score(true).levelCounter(true).livesCounter(false);
+        context().game().hudData().score(true).levelCounter(true).livesCounter(false);
 
         var spriteSheet = (ArcadeMsPacMan_SpriteSheet) ui.currentConfig().spriteSheet();
 
@@ -118,7 +118,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
     @Override
     public void drawHUD() {
         if (hudRenderer != null) {
-            hudRenderer.drawHUD(gameContext(), gameContext().game().hudData(), sizeInPx());
+            hudRenderer.drawHUD(context(), context().game().hudData(), sizeInPx());
         }
     }
 
@@ -285,7 +285,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
     private void updateStateInHeaven() {
         if (sceneTimer.hasExpired()) {
-            gameContext().gameController().letCurrentGameStateExpire();
+            context().gameController().letCurrentGameStateExpire();
         }
     }
 }

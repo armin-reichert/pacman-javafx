@@ -67,7 +67,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas);
         bindRendererScaling(hudRenderer, gameLevelRenderer, debugInfoRenderer);
 
-        gameContext().game().hudData().score(false).levelCounter(true).livesCounter(false);
+        context().game().hudData().score(false).levelCounter(true).livesCounter(false);
 
         clapperboard = new Clapperboard(spriteSheet, 4, "THE END");
         clapperboard.setPosition(3*TS, 10*TS);
@@ -153,7 +153,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
             spawnJunior();
         }
         else if (t == 1512) {
-            gameContext().gameController().changeGameState(GamePlayState.SETTING_OPTIONS_FOR_START);
+            context().gameController().changeGameState(GamePlayState.SETTING_OPTIONS_FOR_START);
         }
 
         pacMan.move();
@@ -233,9 +233,9 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
     public void drawHUD() {
         if (hudRenderer != null) {
             // draw HUD only for non-Arcade map mode
-            var game = gameContext().<TengenMsPacMan_GameModel>game();
+            var game = context().<TengenMsPacMan_GameModel>game();
             if (game.mapCategory() != MapCategory.ARCADE) {
-                hudRenderer.drawHUD(gameContext(), game.hudData(), sizeInPx().minus(0, 2 * TS));
+                hudRenderer.drawHUD(context(), game.hudData(), sizeInPx().minus(0, 2 * TS));
             }
         }
     }

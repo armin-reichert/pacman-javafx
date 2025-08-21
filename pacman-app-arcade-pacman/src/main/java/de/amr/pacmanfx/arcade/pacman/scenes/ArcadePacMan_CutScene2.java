@@ -67,7 +67,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
 
         bindRendererScaling(hudRenderer, gameLevelRenderer, debugInfoRenderer);
 
-        gameContext().game().hudData().credit(false).score(true).levelCounter(true).livesCounter(false);
+        context().game().hudData().credit(false).score(true).levelCounter(true).livesCounter(false);
 
         pac = createPac();
         pac.setAnimations(ui.currentConfig().createPacAnimations(pac));
@@ -137,7 +137,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
             case ANIMATION_START + 420 -> blinkyDamaged.nextFrame(); // Eyes right-down
             case ANIMATION_START + 508 -> {
                 blinky.setVisible(false);
-                gameContext().gameController().letCurrentGameStateExpire();
+                context().gameController().letCurrentGameStateExpire();
             }
             default -> {}
         }
@@ -158,7 +158,7 @@ public class ArcadePacMan_CutScene2 extends GameScene2D {
     @Override
     public void drawHUD() {
         if (hudRenderer != null) {
-            hudRenderer.drawHUD(gameContext(), gameContext().game().hudData(), sizeInPx());
+            hudRenderer.drawHUD(context(), context().game().hudData(), sizeInPx());
         }
     }
 }

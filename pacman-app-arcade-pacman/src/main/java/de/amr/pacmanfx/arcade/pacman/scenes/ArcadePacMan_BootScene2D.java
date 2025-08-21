@@ -54,7 +54,7 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
         };
         bindRendererScaling(hudRenderer, spriteRenderer);
 
-        gameContext().game().hudData().all(false);
+        context().game().hudData().all(false);
 
         double width = spriteSheet.sourceImage().getWidth(), height = spriteSheet.sourceImage().getHeight();
         // ignore left half of sprite sheet image containing maze images
@@ -68,8 +68,8 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
 
     @Override
     public void update() {
-        if (gameContext().gameState().timer().atSecond(4)) {
-            gameContext().gameController().letCurrentGameStateExpire();
+        if (context().gameState().timer().atSecond(4)) {
+            context().gameController().letCurrentGameStateExpire();
         }
     }
 
@@ -78,7 +78,7 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
 
     @Override
     public void draw() {
-        if (gameContext().gameState().timer().tickCount() == 1) {
+        if (context().gameState().timer().tickCount() == 1) {
             clear();
         } else {
             drawSceneContent();
@@ -89,13 +89,13 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
     @Override
     public void drawHUD() {
         if (hudRenderer != null) {
-            hudRenderer.drawHUD(gameContext(), gameContext().game().hudData(), sizeInPx());
+            hudRenderer.drawHUD(context(), context().game().hudData(), sizeInPx());
         }
     }
 
     @Override
     public void drawSceneContent() {
-        TickTimer timer = gameContext().gameState().timer();
+        TickTimer timer = context().gameState().timer();
         if (timer.betweenSeconds(1, 2) && timer.tickCount() % 4 == 0) {
             clear();
             drawRandomHexDigits();

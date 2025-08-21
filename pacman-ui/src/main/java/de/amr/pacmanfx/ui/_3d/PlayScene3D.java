@@ -183,7 +183,7 @@ public class PlayScene3D implements GameScene {
     }
 
     @Override
-    public GameContext gameContext() {
+    public GameContext context() {
         return ui.gameContext();
     }
 
@@ -273,8 +273,8 @@ public class PlayScene3D implements GameScene {
         actionBindings.assign(ACTION_PERSPECTIVE_PREVIOUS, ui.actionBindings());
         actionBindings.assign(ACTION_PERSPECTIVE_NEXT, ui.actionBindings());
         actionBindings.assign(ACTION_TOGGLE_DRAW_MODE, ui.actionBindings());
-        if (gameContext().optGameLevel().isPresent()) {
-            if (gameContext().gameLevel().isDemoLevel()) {
+        if (context().optGameLevel().isPresent()) {
+            if (context().gameLevel().isDemoLevel()) {
                 actionBindings.assign(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
             } else {
                 setPlayerSteeringActionBindings();
@@ -299,7 +299,7 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void init() {
-        gameContext().game().hudData().showScore(true);
+        context().game().hudData().showScore(true);
         perspectiveIDProperty().bind(PROPERTY_3D_PERSPECTIVE);
         actionBindings.bind(droneUp, control(KeyCode.MINUS));
         actionBindings.bind(droneDown, control(KeyCode.PLUS));
@@ -321,7 +321,7 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void update() {
-        if (gameContext().optGameLevel().isEmpty()) {
+        if (context().optGameLevel().isEmpty()) {
             // Scene is already updated 2 ticks before the game level gets created!
             Logger.info("Tick #{}: Game level not yet created, update ignored", ui.clock().tickCount());
             return;
@@ -330,8 +330,8 @@ public class PlayScene3D implements GameScene {
             Logger.info("Tick #{}: 3D game level not yet created", ui.clock().tickCount());
             return;
         }
-        ui.soundManager().setEnabled(!gameContext().gameLevel().isDemoLevel());
-        gameLevel3D.tick(gameContext());
+        ui.soundManager().setEnabled(!context().gameLevel().isDemoLevel());
+        gameLevel3D.tick(context());
         updateCamera();
         updateHUD();
         updateSound();
@@ -353,7 +353,7 @@ public class PlayScene3D implements GameScene {
         else {
             switch (state) {
                 case BOOT, INTRO, SETTING_OPTIONS_FOR_START, SHOWING_CREDITS, LEVEL_TRANSITION, INTERMISSION -> {}
-                case HUNTING -> gameLevel3D.onHuntingStart(gameContext());
+                case HUNTING -> gameLevel3D.onHuntingStart(context());
                 case PACMAN_DYING -> gameLevel3D.onPacManDying(state);
                 case GHOST_DYING -> gameLevel3D.onGhostDying();
                 case LEVEL_COMPLETE -> gameLevel3D.onLevelComplete(state, perspectiveIDProperty);
@@ -381,8 +381,8 @@ public class PlayScene3D implements GameScene {
             Logger.error("No game level exists on level start! WTF?");
             return;
         }
-        final GameLevel gameLevel = gameContext().gameLevel();
-        final GameState state = gameContext().gameState();
+        final GameLevel gameLevel = context().gameLevel();
+        final GameState state = context().gameState();
 
         if (state.is(LevelShortTestState.class) || state.is(LevelMediumTestState.class)) {
             replaceGameLevel3D(); //TODO check when to destroy previous level
@@ -402,7 +402,7 @@ public class PlayScene3D implements GameScene {
                         setPlayerSteeringActionBindings();
                     }
                 }
-                default -> Logger.error("Unexpected game state '{}' on level start", gameContext().gameState());
+                default -> Logger.error("Unexpected game state '{}' on level start", context().gameState());
             }
         }
 
@@ -413,10 +413,10 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onSwitch_2D_3D(GameScene scene2D) {
-        if (gameContext().optGameLevel().isEmpty()) {
+        if (context().optGameLevel().isEmpty()) {
             return;
         }
-        final GameLevel gameLevel = gameContext().gameLevel();
+        final GameLevel gameLevel = context().gameLevel();
         if (gameLevel3D == null) {
             replaceGameLevel3D();
         }
@@ -428,13 +428,13 @@ public class PlayScene3D implements GameScene {
         gameLevel3D.pellets3D().forEach(pellet -> pellet.setVisible(!gameLevel.tileContainsEatenFood((Vector2i) pellet.getUserData())));
         gameLevel3D.energizers3D().forEach(energizer ->
                 energizer.shape().setVisible(!gameLevel.tileContainsEatenFood(energizer.tile())));
-        if (isOneOf(gameContext().gameState(), HUNTING, GHOST_DYING)) { //TODO check this
+        if (isOneOf(context().gameState(), HUNTING, GHOST_DYING)) { //TODO check this
             gameLevel3D.energizers3D().stream()
                 .filter(energizer3D -> energizer3D.shape().isVisible())
                 .forEach(Energizer3D::startPumping);
         }
 
-        if (gameContext().gameState() == HUNTING) {
+        if (context().gameState() == HUNTING) {
             if (gameLevel.pac().powerTimer().isRunning()) {
                 ui.soundManager().loop(SoundID.PAC_MAN_POWER);
             }
@@ -448,7 +448,7 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onBonusActivated(GameEvent event) {
-        gameContext().gameLevel().bonus().ifPresent(bonus -> {
+        context().gameLevel().bonus().ifPresent(bonus -> {
             gameLevel3D.updateBonus3D(bonus);
             ui.soundManager().loop(SoundID.BONUS_ACTIVE);
         });
@@ -456,7 +456,7 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onBonusEaten(GameEvent event) {
-        gameContext().gameLevel().bonus().ifPresent(bonus -> {
+        context().gameLevel().bonus().ifPresent(bonus -> {
             gameLevel3D.bonus3D().ifPresent(Bonus3D::showEaten);
             ui.soundManager().stop(SoundID.BONUS_ACTIVE);
             ui.soundManager().play(SoundID.BONUS_EATEN);
@@ -465,7 +465,7 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onBonusExpired(GameEvent event) {
-        gameContext().gameLevel().bonus().ifPresent(bonus -> {
+        context().gameLevel().bonus().ifPresent(bonus -> {
             gameLevel3D.bonus3D().ifPresent(Bonus3D::expire);
             ui.soundManager().stop(SoundID.BONUS_ACTIVE);
         });
@@ -479,10 +479,10 @@ public class PlayScene3D implements GameScene {
     @Override
     public void onGameContinued(GameEvent e) {
         if (gameLevel3D != null) {
-            if (gameContext().gameLevel().house().isEmpty()) {
+            if (context().gameLevel().house().isEmpty()) {
                 Logger.error("No house found in this game level! WTF?");
             } else {
-                Vector2f messageCenter = gameContext().gameLevel().house().get().centerPositionUnderHouse();
+                Vector2f messageCenter = context().gameLevel().house().get().centerPositionUnderHouse();
                 gameLevel3D.showAnimatedMessage("READY!", 2.5f, messageCenter.x(), messageCenter.y());
             }
         }
@@ -490,8 +490,8 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onGameStarted(GameEvent e) {
-        GameState state = gameContext().gameState();
-        boolean silent = gameContext().gameLevel().isDemoLevel()
+        GameState state = context().gameState();
+        boolean silent = context().gameLevel().isDemoLevel()
             || state.is(LevelShortTestState.class)
             || state.is(LevelMediumTestState.class);
         if (!silent) {
@@ -573,8 +573,8 @@ public class PlayScene3D implements GameScene {
 
         gameLevel3DParent.getChildren().setAll(gameLevel3D);
 
-        gameLevel3D.pac3D().init(gameContext().gameLevel());
-        gameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(gameContext(), gameContext().gameLevel()));
+        gameLevel3D.pac3D().init(context().gameLevel());
+        gameLevel3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context(), context().gameLevel()));
         Logger.info("Initialized actors of game level 3D");
 
 
@@ -584,7 +584,7 @@ public class PlayScene3D implements GameScene {
     protected void updateCamera() {
         PerspectiveID id = perspectiveIDProperty.get();
         if (id != null && perspectiveMap.containsKey(id)) {
-            perspectiveMap.get(id).update(camera, gameContext());
+            perspectiveMap.get(id).update(camera, context());
         }
         else {
             Logger.error("No perspective with ID '{}' exists", id);
@@ -592,7 +592,7 @@ public class PlayScene3D implements GameScene {
     }
 
     protected void updateHUD() {
-        ScoreManager scoreManager = gameContext().game().scoreManager();
+        ScoreManager scoreManager = context().game().scoreManager();
         final Score score = scoreManager.score(), highScore = scoreManager.highScore();
         if (score.isEnabled()) {
             scores3D.showScore(score.points(), score.levelNumber());
@@ -607,11 +607,11 @@ public class PlayScene3D implements GameScene {
 
     protected void updateSound() {
         if (!ui.soundManager().isEnabled()) return;
-        Pac pac = gameContext().gameLevel().pac();
-        boolean pacChased = gameContext().gameState() == HUNTING && !pac.powerTimer().isRunning();
+        Pac pac = context().gameLevel().pac();
+        boolean pacChased = context().gameState() == HUNTING && !pac.powerTimer().isRunning();
         if (pacChased) {
             // siren numbers are 1..4, hunting phase index = 0..7
-            int huntingPhase = gameContext().game().huntingTimer().phaseIndex();
+            int huntingPhase = context().game().huntingTimer().phaseIndex();
             int sirenNumber = 1 + huntingPhase / 2;
             switch (sirenNumber) {
                 case 1 -> ui.soundManager().playSiren(SoundID.SIREN_1, 1.0);
@@ -627,8 +627,8 @@ public class PlayScene3D implements GameScene {
             ui.soundManager().pause(SoundID.PAC_MAN_MUNCHING);
         }
 
-        boolean isGhostReturningHome = gameContext().gameLevel().pac().isAlive()
-            && gameContext().gameLevel().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).findAny().isPresent();
+        boolean isGhostReturningHome = context().gameLevel().pac().isAlive()
+            && context().gameLevel().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).findAny().isPresent();
         if (isGhostReturningHome) {
             ui.soundManager().loop(SoundID.GHOST_RETURNS);
         } else {
@@ -637,8 +637,8 @@ public class PlayScene3D implements GameScene {
     }
 
     protected void showLevelTestMessage() {
-        WorldMap worldMap = gameContext().gameLevel().worldMap();
-        int levelNumber = gameContext().gameLevel().number();
+        WorldMap worldMap = context().gameLevel().worldMap();
+        int levelNumber = context().gameLevel().number();
         double x = worldMap.numCols() * HTS;
         double y = (worldMap.numRows() - 2) * TS;
         gameLevel3D.showAnimatedMessage("LEVEL %d (TEST)".formatted(levelNumber), 5, x, y);

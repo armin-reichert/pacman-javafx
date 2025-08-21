@@ -62,7 +62,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
         ghost.setAnimations(uiConfig.createGhostAnimations(ghost));
         ghost.selectAnimation(ANIM_GHOST_NORMAL);
 
-        gameContext().game().hudData().all(false);
+        context().game().hudData().all(false);
     }
 
     @Override
@@ -97,7 +97,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
         } else if (tick == 214) {
             grayScreen = false;
         } else if (tick == 220) {
-            gameContext().gameController().changeGameState(GamePlayState.INTRO);
+            context().gameController().changeGameState(GamePlayState.INTRO);
         }
     }
 

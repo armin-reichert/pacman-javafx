@@ -39,7 +39,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
         scenesRenderer = new ArcadeMsPacMan_ScenesRenderer(canvas, ui.currentConfig());
         bindRendererScaling(hudRenderer, scenesRenderer);
 
-        gameContext().game().hudData().credit(true).score(true).levelCounter(true).livesCounter(false);
+        context().game().hudData().credit(true).score(true).levelCounter(true).livesCounter(false);
 
         var spriteSheet = (ArcadeMsPacMan_SpriteSheet) ui.currentConfig().spriteSheet();
         livesCounterSprite = spriteSheet.sprite(SpriteID.LIVES_COUNTER_SYMBOL);
@@ -66,7 +66,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene2D {
     @Override
     public void drawHUD() {
         if (hudRenderer != null) {
-            hudRenderer.drawHUD(gameContext(), gameContext().game().hudData(), sizeInPx());
+            hudRenderer.drawHUD(context(), context().game().hudData(), sizeInPx());
         }
     }
 

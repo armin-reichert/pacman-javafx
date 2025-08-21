@@ -42,7 +42,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
         scenesRenderer = new TengenMsPacMan_ScenesRenderer(canvas, uiConfig);
         bindRendererScaling(scenesRenderer);
 
-        gameContext().game().hudData().credit(false).score(false).levelCounter(false).livesCounter(false);
+        context().game().hudData().credit(false).score(false).levelCounter(false).livesCounter(false);
 
         Set<ActionBinding> tengenActionBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().actionBindings();
         actionBindings.assign(ACTION_ENTER_START_SCREEN, tengenActionBindings);
@@ -53,11 +53,11 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
 
     @Override
     public void update() {
-        if (gameContext().gameState().timer().atSecond(DISPLAY_SECONDS)) {
-            gameContext().gameController().letCurrentGameStateExpire();
+        if (context().gameState().timer().atSecond(DISPLAY_SECONDS)) {
+            context().gameController().letCurrentGameStateExpire();
             return;
         }
-        if (gameContext().gameState().timer().betweenSeconds(0.5 * DISPLAY_SECONDS, DISPLAY_SECONDS)) {
+        if (context().gameState().timer().betweenSeconds(0.5 * DISPLAY_SECONDS, DISPLAY_SECONDS)) {
             fadeProgress = Math.min(fadeProgress + 0.005f, 1f); // Clamp to 1.0
         }
     }
@@ -76,7 +76,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
         scenesRenderer.drawHorizontalBar(nesColor(0x20), nesColor(0x13), sizeInPx().x(), TS, 212);
         ctx().setFont(scenesRenderer.arcadeFont(TS));
         y = 7 * TS; // important: reset on every draw!
-        if (gameContext().gameState().timer().betweenSeconds(0, 0.5 * DISPLAY_SECONDS)) {
+        if (context().gameState().timer().betweenSeconds(0, 0.5 * DISPLAY_SECONDS)) {
             drawOriginalCreditsText();
         } else {
             ctx().setGlobalAlpha(fadeProgress);

@@ -90,7 +90,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
         };
         bindRendererScaling(hudRenderer, gameLevelRenderer, debugInfoRenderer);
 
-        gameContext().game().hudData().credit(true).score(true).livesCounter(false).levelCounter(true);
+        context().game().hudData().credit(true).score(true).livesCounter(false).levelCounter(true);
 
         actionBindings.assign(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
         actionBindings.assign(ACTION_ARCADE_START_GAME, ui.actionBindings());
@@ -143,7 +143,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
     @Override
     public void drawHUD() {
         if (hudRenderer != null) {
-            hudRenderer.drawHUD(gameContext(), gameContext().game().hudData(), sizeInPx());
+            hudRenderer.drawHUD(context(), context().game().hudData(), sizeInPx());
         }
     }
 
@@ -390,11 +390,11 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
             public void onUpdate(ArcadePacMan_IntroScene scene) {
                 if (sceneTimer.atSecond(0.75)) {
                     scene.ghosts.get(ORANGE_GHOST_POKEY).hide();
-                    if (!scene.gameContext().game().canStartNewGame()) {
-                        scene.gameContext().gameController().changeGameState(GamePlayState.STARTING_GAME);
+                    if (!scene.context().game().canStartNewGame()) {
+                        scene.context().gameController().changeGameState(GamePlayState.STARTING_GAME);
                     }
                 } else if (sceneTimer.atSecond(5)) {
-                    scene.gameContext().gameController().changeGameState(GamePlayState.SETTING_OPTIONS_FOR_START);
+                    scene.context().gameController().changeGameState(GamePlayState.SETTING_OPTIONS_FOR_START);
                 }
             }
         };

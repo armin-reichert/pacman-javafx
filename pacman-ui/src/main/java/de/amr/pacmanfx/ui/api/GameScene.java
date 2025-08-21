@@ -21,7 +21,7 @@ public interface GameScene extends GameEventListener {
 
     default Optional<SubScene> optSubScene() { return Optional.empty(); }
 
-    GameContext gameContext();
+    GameContext context();
 
     ActionBindingsManager actionBindings();
 

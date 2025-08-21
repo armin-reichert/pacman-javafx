@@ -66,7 +66,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
         debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas);
         bindRendererScaling(hudRenderer, gameLevelRenderer, debugInfoRenderer);
 
-        gameContext().game().hudData().credit(false).score(false).levelCounter(true).livesCounter(false);
+        context().game().hudData().credit(false).score(false).levelCounter(true).livesCounter(false);
 
         actionBindings.bind(ACTION_LET_GAME_STATE_EXPIRE, ui.joypad().key(JoypadButton.START));
 
@@ -152,7 +152,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
             pacMan.setSpeed(4.0f);
         }
         else if (t == 1380) {
-            gameContext().gameController().letCurrentGameStateExpire();
+            context().gameController().letCurrentGameStateExpire();
             return;
         }
         pacMan.move();
@@ -166,9 +166,9 @@ public class TengenMsPacMan_CutScene2 extends GameScene2D {
     @Override
     public void drawHUD() {
         if (hudRenderer != null) {
-            var game = gameContext().<TengenMsPacMan_GameModel>game();
+            var game = context().<TengenMsPacMan_GameModel>game();
             if (game.mapCategory() != MapCategory.ARCADE) {
-                hudRenderer.drawHUD(gameContext(), game.hudData(), sizeInPx().minus(0, 2 * TS));
+                hudRenderer.drawHUD(context(), game.hudData(), sizeInPx().minus(0, 2 * TS));
             }
         }
     }

@@ -61,7 +61,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
 
         bindRendererScaling(hudRenderer, gameLevelRenderer, debugInfoRenderer);
 
-        gameContext().game().hudData().credit(false).score(true).levelCounter(true).livesCounter(false);
+        context().game().hudData().credit(false).score(true).levelCounter(true).livesCounter(false);
 
 
         pac = createPac();
@@ -112,7 +112,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
             pac.playAnimation(ANIM_BIG_PAC_MAN);
         }
         else if (frame == ANIMATION_START + 632) {
-            gameContext().gameController().letCurrentGameStateExpire();
+            context().gameController().letCurrentGameStateExpire();
         }
         if (frame >= ANIMATION_START) {
             pac.move();
@@ -131,7 +131,7 @@ public class ArcadePacMan_CutScene1 extends GameScene2D {
     @Override
     public void drawHUD() {
         if (hudRenderer != null) {
-            hudRenderer.drawHUD(gameContext(), gameContext().game().hudData(), sizeInPx());
+            hudRenderer.drawHUD(context(), context().game().hudData(), sizeInPx());
         }
     }
 }

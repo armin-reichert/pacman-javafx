@@ -82,7 +82,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         gameLevelRenderer = new ArcadeMsPacMan_GameLevelRenderer(canvas, ui.currentConfig());
         bindRendererScaling(hudRenderer, scenesRenderer, gameLevelRenderer);
 
-        gameContext().game().hudData().credit(true).score(true).levelCounter(true).livesCounter(false);
+        context().game().hudData().credit(true).score(true).levelCounter(true).livesCounter(false);
 
         actionBindings.assign(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
         actionBindings.assign(ACTION_ARCADE_START_GAME, ui.actionBindings());
@@ -136,7 +136,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
     @Override
     public void drawHUD() {
         if (hudRenderer != null) {
-            hudRenderer.drawHUD(gameContext(), gameContext().game().hudData(), sizeInPx());
+            hudRenderer.drawHUD(context(), context().game().hudData(), sizeInPx());
         }
     }
 
@@ -266,10 +266,10 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
                 scene.marquee.timer().doTick();
-                if (sceneTimer.atSecond(2.0) && !scene.gameContext().game().canStartNewGame()) {
-                    scene.gameContext().gameController().changeGameState(GamePlayState.STARTING_GAME); // demo level
+                if (sceneTimer.atSecond(2.0) && !scene.context().game().canStartNewGame()) {
+                    scene.context().gameController().changeGameState(GamePlayState.STARTING_GAME); // demo level
                 } else if (sceneTimer.atSecond(5)) {
-                    scene.gameContext().gameController().changeGameState(GamePlayState.SETTING_OPTIONS_FOR_START);
+                    scene.context().gameController().changeGameState(GamePlayState.SETTING_OPTIONS_FOR_START);
                 }
             }
         };
