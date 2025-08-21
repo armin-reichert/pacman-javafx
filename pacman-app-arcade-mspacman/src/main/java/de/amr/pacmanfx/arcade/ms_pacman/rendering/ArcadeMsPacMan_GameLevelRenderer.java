@@ -70,9 +70,8 @@ public class ArcadeMsPacMan_GameLevelRenderer extends GameLevelRenderer implemen
             int colorMapIndex = gameLevel.worldMap().getConfigValue("colorMapIndex");
             RectShort[] brightMazes = brightMazesSpriteSheet.spriteSequence(BrightMazesSpriteSheet.SpriteID.BRIGHT_MAZES);
             RectShort maze = brightMazes[colorMapIndex];
-            //drawSprite(brightMazesSpriteSheet, maze, 0, TS(GameLevel.EMPTY_ROWS_OVER_MAZE), true);
             double s = scaling();
-            ctx().drawImage(spriteSheet().sourceImage(),
+            ctx().drawImage(brightMazesSpriteSheet.sourceImage(),
                 maze.x(), maze.y(), maze.width(), maze.height(),
                 0, s * TS(GameLevel.EMPTY_ROWS_OVER_MAZE), s * maze.width(), s * maze.height());
         }
