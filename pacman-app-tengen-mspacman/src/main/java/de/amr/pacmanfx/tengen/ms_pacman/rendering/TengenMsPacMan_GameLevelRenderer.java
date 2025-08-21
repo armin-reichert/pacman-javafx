@@ -245,20 +245,20 @@ public class TengenMsPacMan_GameLevelRenderer extends GameLevelRenderer {
         requireNonNull(position);
         requireNonNull(font);
 
-        if (level.messageType() == GameLevel.MESSAGE_NONE) return;
+        if (level.messageType() == GameLevel.MessageType.NONE) return;
 
         NES_ColorScheme nesColorScheme = level.worldMap().getConfigValue("nesColorScheme");
         float x = position.x(), y = position.y() + TS;
         switch (level.messageType()) {
-            case GameLevel.MESSAGE_READY
+            case GameLevel.MessageType.READY
                 -> fillTextCentered("READY!", uiConfig.assets().color("color.ready_message"), font, x, y);
-            case GameLevel.MESSAGE_GAME_OVER -> {
+            case GameLevel.MessageType.GAME_OVER -> {
                 Color color = level.isDemoLevel()
                     ? Color.web(nesColorScheme.strokeColorRGB())
                     : uiConfig.assets().color("color.game_over_message");
                 fillTextCentered("GAME OVER", color, font, x, y);
             }
-            case GameLevel.MESSAGE_TEST
+            case GameLevel.MessageType.TEST
                 -> fillTextCentered("TEST L%02d".formatted(level.number()), nesColor(0x28), font, x, y);
         }
     }

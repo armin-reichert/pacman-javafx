@@ -38,7 +38,7 @@ public class LevelShortTestState implements GameState {
         context.game().buildNormalLevel(1);
         context.game().startLevel();
         context.gameLevel().showPacAndGhosts();
-        context.gameLevel().showMessage(GameLevel.MESSAGE_TEST);
+        context.gameLevel().showMessage(GameLevel.MessageType.TEST);
     }
 
     @Override
@@ -84,7 +84,7 @@ public class LevelShortTestState implements GameState {
             } else {
                 timer.restartIndefinitely();
                 context.game().startNextLevel();
-                gameLevel.showMessage(GameLevel.MESSAGE_TEST);
+                gameLevel.showMessage(GameLevel.MessageType.TEST);
             }
         }
     }

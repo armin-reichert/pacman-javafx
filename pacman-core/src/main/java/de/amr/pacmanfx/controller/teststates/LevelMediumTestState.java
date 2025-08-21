@@ -35,7 +35,7 @@ public class LevelMediumTestState implements GameState {
         gameLevel.pac().animations().ifPresent(AnimationManager::play);
         gameLevel.ghosts().forEach(ghost -> ghost.animations().ifPresent(AnimationManager::play));
         gameLevel.showPacAndGhosts();
-        gameLevel.showMessage(GameLevel.MESSAGE_TEST);
+        gameLevel.showMessage(GameLevel.MessageType.TEST);
         context.eventManager().publishEvent(GameEventType.STOP_ALL_SOUNDS);
     }
 

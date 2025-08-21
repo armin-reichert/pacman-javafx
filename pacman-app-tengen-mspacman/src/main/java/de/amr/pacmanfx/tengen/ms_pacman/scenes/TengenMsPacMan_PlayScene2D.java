@@ -347,7 +347,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onGameContinued(GameEvent e) {
-        context().optGameLevel().ifPresent(level -> level.showMessage(GameLevel.MESSAGE_READY));
+        context().optGameLevel().ifPresent(level -> level.showMessage(GameLevel.MessageType.READY));
     }
 
     @Override

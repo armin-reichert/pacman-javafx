@@ -47,10 +47,9 @@ public class GameLevel {
 
     private static Vector2f halfTileRightOf(Vector2i tile) { return Vector2f.of(tile.x() * TS + HTS, tile.y() * TS); }
 
-    public static final byte MESSAGE_NONE = -1;
-    public static final byte MESSAGE_READY = 0;
-    public static final byte MESSAGE_GAME_OVER = 1;
-    public static final byte MESSAGE_TEST = 2;
+    public enum MessageType {
+        NONE, READY, GAME_OVER, TEST
+    }
 
     //TODO should this be stored in world map instead of hardcoding?
     public static final int EMPTY_ROWS_OVER_MAZE  = 3;
@@ -82,7 +81,7 @@ public class GameLevel {
     private Bonus bonus;
     private final byte[] bonusSymbols = new byte[2];
     private int currentBonusIndex; // -1=no bonus, 0=first, 1=second
-    private byte messageType = MESSAGE_NONE;
+    private MessageType messageType = MessageType.NONE;
 
     private final Pulse blinking;
 
@@ -251,9 +250,9 @@ public class GameLevel {
     public void setGameOverStateTicks(int ticks) { gameOverStateTicks = ticks; }
     public int gameOverStateTicks() { return gameOverStateTicks; }
 
-    public void showMessage(byte messageType) { this.messageType = messageType; }
-    public void clearMessage() { messageType = MESSAGE_NONE; }
-    public byte messageType() { return messageType; }
+    public void showMessage(MessageType messageType) { this.messageType = messageType; }
+    public void clearMessage() { messageType = MessageType.NONE; }
+    public MessageType messageType() { return messageType; }
 
     public void setPac(Pac pac) { this.pac = pac; }
     public Pac pac() { return pac; }

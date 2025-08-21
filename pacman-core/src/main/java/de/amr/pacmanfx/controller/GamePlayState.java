@@ -155,7 +155,7 @@ public enum GamePlayState implements GameState {
             }
             if (timer.tickCount() == delay) {
                 context.game().startHunting();
-                if (context.gameLevel().messageType() == GameLevel.MESSAGE_READY) {
+                if (context.gameLevel().messageType() == GameLevel.MessageType.READY) {
                     context.gameLevel().clearMessage();
                 }
             }
@@ -171,7 +171,7 @@ public enum GamePlayState implements GameState {
 
         @Override
         public void onExit(GameContext context) {
-            if (context.gameLevel().messageType() == GameLevel.MESSAGE_READY) {
+            if (context.gameLevel().messageType() == GameLevel.MessageType.READY) {
                 context.gameLevel().clearMessage();
             }
         }

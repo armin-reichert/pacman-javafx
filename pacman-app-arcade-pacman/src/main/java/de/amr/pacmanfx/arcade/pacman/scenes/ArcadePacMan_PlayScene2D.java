@@ -87,65 +87,43 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
       the onLevelCreated() handler of this scene is not called!
       So we have to initialize the scene also with the game level when switching from the 3D scene.
      */
-    private void initWithGameLevel(GameLevel gameLevel) {
+    private void acceptGameLevel(GameLevel gameLevel) {
         if (gameLevel.isDemoLevel()) {
             context().game().hudData().credit(false).levelCounter(true).livesCounter(false);
             actionBindings.assign(ACTION_ARCADE_INSERT_COIN, ui.actionBindings());
-            actionBindings.installBindings(ui.keyboard());
+            ui.soundManager().setEnabled(false);
         } else {
             context().game().hudData().credit(false).levelCounter(true).livesCounter(true);
-            actionBindings.assign(ACTION_STEER_UP, ui.actionBindings());
-            actionBindings.assign(ACTION_STEER_DOWN, ui.actionBindings());
-            actionBindings.assign(ACTION_STEER_LEFT, ui.actionBindings());
-            actionBindings.assign(ACTION_STEER_RIGHT, ui.actionBindings());
-            actionBindings.assign(ACTION_CHEAT_EAT_ALL_PELLETS, ui.actionBindings());
-            actionBindings.assign(ACTION_CHEAT_ADD_LIVES, ui.actionBindings());
+            actionBindings.assign(ACTION_STEER_UP,               ui.actionBindings());
+            actionBindings.assign(ACTION_STEER_DOWN,             ui.actionBindings());
+            actionBindings.assign(ACTION_STEER_LEFT,             ui.actionBindings());
+            actionBindings.assign(ACTION_STEER_RIGHT,            ui.actionBindings());
+            actionBindings.assign(ACTION_CHEAT_ADD_LIVES,        ui.actionBindings());
+            actionBindings.assign(ACTION_CHEAT_EAT_ALL_PELLETS,  ui.actionBindings());
             actionBindings.assign(ACTION_CHEAT_ENTER_NEXT_LEVEL, ui.actionBindings());
-            actionBindings.assign(ACTION_CHEAT_KILL_GHOSTS, ui.actionBindings());
-            actionBindings.installBindings(ui.keyboard());
+            actionBindings.assign(ACTION_CHEAT_KILL_GHOSTS,      ui.actionBindings());
+            ui.soundManager().setEnabled(true);
         }
+        actionBindings.installBindings(ui.keyboard());
         Logger.info("Scene {} initialized with game level", getClass().getSimpleName());
     }
 
     @Override
     public void onLevelCreated(GameEvent e) {
-        initWithGameLevel(context().gameLevel());
+        acceptGameLevel(context().gameLevel());
     }
 
     @Override
     public void onSwitch_3D_2D(GameScene scene3D) {
-        Logger.info("2D scene {} entered from 3D scene {}", this, scene3D);
+        Logger.info("{} entered from {}", this, scene3D);
         if (context().optGameLevel().isPresent()) {
-            initWithGameLevel(context().gameLevel());
+            acceptGameLevel(context().gameLevel());
         }
     }
 
     @Override
-    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent contextMenuEvent, ContextMenu contextMenu) {
-        var miAutopilot = new CheckMenuItem(ui.assets().translated("autopilot"));
-        miAutopilot.selectedProperty().bindBidirectional(context().gameController().propertyUsingAutopilot());
-
-        var miImmunity = new CheckMenuItem(ui.assets().translated("immunity"));
-        miImmunity.selectedProperty().bindBidirectional(context().gameController().propertyImmunity());
-
-        var miMuted = new CheckMenuItem(ui.assets().translated("muted"));
-        miMuted.selectedProperty().bindBidirectional(PROPERTY_MUTED);
-
-        var miQuit = new MenuItem(ui.assets().translated("quit"));
-        miQuit.setOnAction(e -> ACTION_QUIT_GAME_SCENE.executeIfEnabled(ui));
-
-        return List.of(
-            createContextMenuTitle("pacman", ui.uiPreferences(), ui.assets()),
-            miAutopilot,
-            miImmunity,
-            new SeparatorMenuItem(),
-            miMuted,
-            miQuit);
-    }
-
-    @Override
     public void onGameContinued(GameEvent e) {
-        context().gameLevel().showMessage(GameLevel.MESSAGE_READY);
+        context().gameLevel().showMessage(GameLevel.MessageType.READY);
     }
 
     @Override
@@ -161,12 +139,11 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void update() {
+        // update() is call already 2 ticks before the game level gets created!
         if (context().optGameLevel().isEmpty()) {
-            // Scene is already updated 2 ticks before the game level gets created!
             Logger.info("Tick {}: Game level not yet created", ui.clock().tickCount());
             return;
         }
-        ui.soundManager().setEnabled(!context().gameLevel().isDemoLevel());
         updateHUD();
         updateSound();
     }
@@ -215,8 +192,31 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public Vector2f sizeInPx() {
-        // Note: scene is also used in Pac-Man XXL game variant were world can have arbitrary size
+        // Note: scene is also used in Pac-Man XXL game variant where world can have any size
         return context().optGameLevel().map(GameLevel::worldSizePx).orElse(ARCADE_MAP_SIZE_IN_PIXELS);
+    }
+
+    @Override
+    public List<MenuItem> supplyContextMenuItems(ContextMenuEvent contextMenuEvent, ContextMenu contextMenu) {
+        var miAutopilot = new CheckMenuItem(ui.assets().translated("autopilot"));
+        miAutopilot.selectedProperty().bindBidirectional(context().gameController().propertyUsingAutopilot());
+
+        var miImmunity = new CheckMenuItem(ui.assets().translated("immunity"));
+        miImmunity.selectedProperty().bindBidirectional(context().gameController().propertyImmunity());
+
+        var miMuted = new CheckMenuItem(ui.assets().translated("muted"));
+        miMuted.selectedProperty().bindBidirectional(PROPERTY_MUTED);
+
+        var miQuit = new MenuItem(ui.assets().translated("quit"));
+        miQuit.setOnAction(e -> ACTION_QUIT_GAME_SCENE.executeIfEnabled(ui));
+
+        return List.of(
+            createContextMenuTitle("pacman", ui.uiPreferences(), ui.assets()),
+            miAutopilot,
+            miImmunity,
+            new SeparatorMenuItem(),
+            miMuted,
+            miQuit);
     }
 
     @Override
@@ -231,26 +231,25 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
         if (context().optGameLevel().isEmpty()) {
             return; // Scene is drawn already 2 ticks before level has been created
         }
-
         final GameLevel gameLevel = context().gameLevel();
-        gameLevelRenderer.applyLevelSettings(context());
 
         // Draw game level
         boolean highlighted = levelCompletedAnimation != null && levelCompletedAnimation.isHighlighted();
+        gameLevelRenderer.applyLevelSettings(context());
         gameLevelRenderer.drawGameLevel(context(), backgroundColor(), highlighted, gameLevel.blinking().isOn());
 
         // Draw message if available
-        if (gameLevel.messageType() != GameLevel.MESSAGE_NONE && gameLevel.house().isPresent()) {
+        if (gameLevel.messageType() != GameLevel.MessageType.NONE && gameLevel.house().isPresent()) {
             House house = gameLevel.house().get();
             Vector2i houseSize = house.sizeInTiles();
             float cx = TS(house.minTile().x() + houseSize.x() * 0.5f);
             float cy = TS(house.minTile().y() + houseSize.y() + 1);
             switch (gameLevel.messageType()) {
-                case GameLevel.MESSAGE_GAME_OVER -> gameLevelRenderer.fillTextCentered("GAME  OVER",
+                case GameLevel.MessageType.GAME_OVER -> gameLevelRenderer.fillTextCentered("GAME  OVER",
                         ARCADE_RED, gameLevelRenderer.arcadeFont8(), cx, cy);
-                case GameLevel.MESSAGE_READY     -> gameLevelRenderer.fillTextCentered("READY!",
+                case GameLevel.MessageType.READY -> gameLevelRenderer.fillTextCentered("READY!",
                         ARCADE_YELLOW, gameLevelRenderer.arcadeFont8(), cx, cy);
-                case GameLevel.MESSAGE_TEST      -> gameLevelRenderer.fillTextCentered("TEST    L%02d".formatted(gameLevel.number()),
+                case GameLevel.MessageType.TEST -> gameLevelRenderer.fillTextCentered("TEST    L%02d".formatted(gameLevel.number()),
                         ARCADE_WHITE, gameLevelRenderer.arcadeFont8(), cx, cy);
             }
         }

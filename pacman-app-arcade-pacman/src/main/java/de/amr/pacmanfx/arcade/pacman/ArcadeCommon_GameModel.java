@@ -117,7 +117,7 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
             gameContext.coinMechanism().consumeCoin();
         }
         scoreManager().updateHighScore();
-        gameLevel.showMessage(GameLevel.MESSAGE_GAME_OVER);
+        gameLevel.showMessage(GameLevel.MessageType.GAME_OVER);
     }
 
     // GameLifecycle interface
@@ -230,13 +230,13 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
         gameLevel.getReadyToPlay();
         resetPacManAndGhostAnimations();
         if (gameLevel.isDemoLevel()) {
-            gameLevel.showMessage(GameLevel.MESSAGE_GAME_OVER);
+            gameLevel.showMessage(GameLevel.MessageType.GAME_OVER);
             scoreManager().score().setEnabled(false);
             scoreManager().highScore().setEnabled(false);
             Logger.info("Demo level {} started", gameLevel.number());
         } else {
             hudData().theLevelCounter().update(gameLevel.number(), gameLevel.bonusSymbol(0));
-            gameLevel.showMessage(GameLevel.MESSAGE_READY);
+            gameLevel.showMessage(GameLevel.MessageType.READY);
             scoreManager().score().setEnabled(true);
             scoreManager().highScore().setEnabled(true);
             Logger.info("Level {} started", gameLevel.number());
