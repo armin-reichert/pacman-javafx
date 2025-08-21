@@ -12,6 +12,8 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Timeline;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.util.Duration;
 
 import static de.amr.pacmanfx.uilib.Ufx.pauseSec;
@@ -34,7 +36,7 @@ public class LevelCompletedAnimation extends ManagedAnimation {
     private GameLevel gameLevel;
     private int singleFlashMillis;
     private int flashingIndex;
-    private boolean highlighted;
+    private final BooleanProperty highlighted = new SimpleBooleanProperty(false);
 
     public LevelCompletedAnimation(AnimationRegistry animationRegistry) {
         super(animationRegistry, "Level_Completed");
@@ -45,8 +47,8 @@ public class LevelCompletedAnimation extends ManagedAnimation {
         requireNonNull(gameLevel);
         int numFlashes = gameLevel.data().numFlashes();
         var flashingTimeline = new Timeline(
-            new KeyFrame(Duration.millis(singleFlashMillis * 0.25), e -> highlighted = true),
-            new KeyFrame(Duration.millis(singleFlashMillis * 0.75), e -> highlighted = false),
+            new KeyFrame(Duration.millis(singleFlashMillis * 0.25), e -> highlighted.set(true)),
+            new KeyFrame(Duration.millis(singleFlashMillis * 0.75), e -> highlighted.set(false)),
             new KeyFrame(Duration.millis(singleFlashMillis), e -> {
                 if (flashingIndex + 1 < numFlashes) flashingIndex++;
             })
@@ -60,10 +62,13 @@ public class LevelCompletedAnimation extends ManagedAnimation {
         );
     }
 
+    public BooleanProperty highlightedProperty() {
+        return highlighted;
+    }
+
     @Override
     public void playFromStart() {
         flashingIndex = 0;
-        highlighted = false;
         super.playFromStart();
     }
 
@@ -77,9 +82,5 @@ public class LevelCompletedAnimation extends ManagedAnimation {
 
     public int flashingIndex() {
         return flashingIndex;
-    }
-
-    public boolean isHighlighted() {
-        return highlighted;
     }
 }

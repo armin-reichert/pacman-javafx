@@ -31,7 +31,9 @@ import de.amr.pacmanfx.ui.api.GameScene;
 import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.ParallelCamera;
@@ -79,6 +81,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     private TengenMsPacMan_HUDRenderer hudRenderer;
     private TengenMsPacMan_GameLevelRenderer gameLevelRenderer;
+
+    private final BooleanProperty mazeHighlighted = new SimpleBooleanProperty(false);
 
     private MessageMovement messageMovement;
     private LevelCompletedAnimation levelCompletedAnimation;
@@ -147,7 +151,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         bindRendererScaling(hudRenderer, gameLevelRenderer, debugInfoRenderer);
 
         messageMovement = new MessageMovement();
-        levelCompletedAnimation = new LevelCompletedAnimation(animationRegistry);
 
         context().game().hudData().showScore(true);
         context().game().hudData().showLevelCounter(true);
@@ -300,6 +303,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             case HUNTING -> dynamicCamera.setFocussingActor(true);
             case LEVEL_COMPLETE -> {
                 ui.soundManager().stopAll();
+                levelCompletedAnimation = new LevelCompletedAnimation(animationRegistry);
+                mazeHighlighted.bind(levelCompletedAnimation.highlightedProperty());
                 levelCompletedAnimation.setGameLevel(context().gameLevel());
                 levelCompletedAnimation.setSingleFlashMillis(333);
                 levelCompletedAnimation.getOrCreateAnimationFX().setOnFinished(e -> context().gameController().letCurrentGameStateExpire());
@@ -466,8 +471,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         gameLevelRenderer.applyLevelSettings(context());
         gameLevelRenderer.ctx().save();
         gameLevelRenderer.ctx().translate(scaled(2 * TS), 0);
-        if (levelCompletedAnimation.isRunning()) {
-            if (levelCompletedAnimation.isHighlighted()) {
+        if (levelCompletedAnimation != null && levelCompletedAnimation.isRunning()) {
+            if (mazeHighlighted.get()) {
                 MazeSpriteSet recoloredMaze = context().gameLevel().worldMap().getConfigValue(TengenMsPacMan_UIConfig.MAZE_SPRITE_SET_PROPERTY);
                 // get the current maze flashing "animation frame"
                 int frame = levelCompletedAnimation.flashingIndex();

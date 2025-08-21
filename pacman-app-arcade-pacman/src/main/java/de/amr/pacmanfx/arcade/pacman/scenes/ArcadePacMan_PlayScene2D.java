@@ -28,7 +28,8 @@ import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
-import javafx.geometry.Point2D;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -37,10 +38,7 @@ import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -58,6 +56,7 @@ import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
  */
 public class ArcadePacMan_PlayScene2D extends GameScene2D {
 
+    private final BooleanProperty mazeHighlighted = new SimpleBooleanProperty(false);
     private HUDRenderer hudRenderer;
     private GameLevelRenderer gameLevelRenderer;
     private LevelCompletedAnimation levelCompletedAnimation;
@@ -80,23 +79,17 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
                 });
 
                 // mark intersection tiles
+                ctx.setFill(Color.gray(0.6));
+                ctx.setLineWidth(1);
+                List<Direction> clockOrder = List.of(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT);
                 context().gameLevel().worldMap().tiles().filter(context().gameLevel()::isIntersection).forEach(tile -> {
-                    double[] xs = new double[4];
-                    double[] ys = new double[4];
-                    int n = 0;
-                    Point2D center = new Point2D(tile.x() * TS + HTS, tile.y() * TS + HTS);
-                    for (Direction dir : List.of(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT)) {
-                        Vector2i neighborTile = tile.plus(dir.vector());
-                        if (!context().gameLevel().isTileBlocked(neighborTile)) {
-                            xs[n] = center.getX() + dir.vector().x() * HTS;
-                            ys[n] = center.getY() + dir.vector().y() * HTS;
-                            ++n;
+                    double cx = tile.x() * TS + HTS, cy = tile.y() * TS + HTS;
+                    for (Direction dir : clockOrder) {
+                        if (!context().gameLevel().isTileBlocked(tile.plus(dir.vector()))) {
+                            double x = cx + dir.vector().x() * HTS;
+                            double y = cy + dir.vector().y() * HTS;
+                            ctx.strokeLine(scaled(cx), scaled(cy), scaled(x), scaled(y));
                         }
-                    }
-                    ctx.setFill(Color.gray(0.6));
-                    ctx.setLineWidth(1);
-                    for (int i = 0; i < n; ++i) {
-                        ctx.strokeLine(scaled(center.getX()), scaled(center.getY()), scaled(xs[i]), scaled(ys[i]));
                     }
                 });
 
@@ -126,7 +119,6 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
         debugInfoRenderer = new PlaySceneDebugInfoRenderer(ui);
         bindRendererScaling(hudRenderer, gameLevelRenderer, debugInfoRenderer);
         context().game().hudData().credit(false).score(true).levelCounter(true).livesCounter(true);
-        levelCompletedAnimation = new LevelCompletedAnimation(animationRegistry);
     }
 
     @Override
@@ -137,7 +129,7 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
         }
     }
 
-    /*
+    /**
       Note: If the corresponding 3D scene is displayed when the game level gets created,
       the onLevelCreated() handler of this scene is not called!
       So we have to initialize the scene also with the game level when switching from the 3D scene.
@@ -289,9 +281,8 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
         final GameLevel gameLevel = context().gameLevel();
 
         // Draw game level
-        boolean highlighted = levelCompletedAnimation != null && levelCompletedAnimation.isHighlighted();
         gameLevelRenderer.applyLevelSettings(context());
-        gameLevelRenderer.drawGameLevel(context(), backgroundColor(), highlighted, gameLevel.blinking().isOn());
+        gameLevelRenderer.drawGameLevel(context(), backgroundColor(), mazeHighlighted.get(), gameLevel.blinking().isOn());
 
         // Draw message if available
         if (gameLevel.messageType() != GameLevel.MessageType.NONE && gameLevel.house().isPresent()) {
@@ -330,6 +321,8 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
     public void onEnterGameState(GameState state) {
         if (state == GamePlayState.LEVEL_COMPLETE) {
             ui.soundManager().stopAll();
+            levelCompletedAnimation = new LevelCompletedAnimation(animationRegistry);
+            mazeHighlighted.bind(levelCompletedAnimation.highlightedProperty());
             levelCompletedAnimation.setGameLevel(context().gameLevel());
             levelCompletedAnimation.setSingleFlashMillis(333);
             levelCompletedAnimation.getOrCreateAnimationFX().setOnFinished(e -> context().gameController().letCurrentGameStateExpire());
