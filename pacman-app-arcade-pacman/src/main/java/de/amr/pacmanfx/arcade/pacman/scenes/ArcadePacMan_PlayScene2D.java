@@ -79,8 +79,6 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
                 });
 
                 // mark intersection tiles
-                ctx.setFill(Color.gray(0.6));
-                ctx.setLineWidth(1);
                 List<Direction> clockOrder = List.of(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT);
                 context().gameLevel().worldMap().tiles().filter(context().gameLevel()::isIntersection).forEach(tile -> {
                     double cx = tile.x() * TS + HTS, cy = tile.y() * TS + HTS;
@@ -88,6 +86,8 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
                         if (!context().gameLevel().isTileBlocked(tile.plus(dir.vector()))) {
                             double x = cx + dir.vector().x() * HTS;
                             double y = cy + dir.vector().y() * HTS;
+                            ctx.setFill(Color.gray(0.6));
+                            ctx.setLineWidth(1);
                             ctx.strokeLine(scaled(cx), scaled(cy), scaled(x), scaled(y));
                         }
                     }
@@ -100,9 +100,14 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
                     huntingPhaseText = " %s (Tick %d)".formatted(huntingTimer.phase(), huntingTimer.tickCount());
                 }
                 ctx.setFill(debugTextFill);
+                ctx.setStroke(debugTextStroke);
                 ctx.setFont(debugTextFont);
                 ctx.fillText("%s%s".formatted(gameStateText, huntingPhaseText), 0, TS(8));
             }
+            actorsInZOrder.stream()
+                .filter(MovingActor.class::isInstance)
+                .map(MovingActor.class::cast)
+                .forEach(actor -> drawMovingActorInfo(ctx(), scaling(), actor));
         }
     }
 
@@ -279,11 +284,30 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
             return; // Scene is drawn already 2 ticks before level has been created
         }
         final GameLevel gameLevel = context().gameLevel();
+        drawGameLevel(gameLevel);
+        drawActors(gameLevel);
+    }
 
-        // Draw game level
+
+
+    private void drawGameLevel(GameLevel gameLevel) {
         gameLevelRenderer.applyLevelSettings(context());
         gameLevelRenderer.drawGameLevel(context(), backgroundColor(), mazeHighlighted.get(), gameLevel.blinking().isOn());
+        drawGameLevelMessage(gameLevel);
+    }
 
+    private void drawActors(GameLevel gameLevel) {
+        // Collect actors in drawing z-order: Bonus < Pac-Man < Ghosts in order. TODO: also take ghost state into account!
+        actorsInZOrder.clear();
+        gameLevel.bonus().ifPresent(actorsInZOrder::add);
+        actorsInZOrder.add(gameLevel.pac());
+        Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW).map(gameLevel::ghost).forEach(actorsInZOrder::add);
+
+        // Draw actors
+        actorsInZOrder.forEach(actor -> gameLevelRenderer.drawActor(actor));
+    }
+
+    private void drawGameLevelMessage(GameLevel gameLevel) {
         // Draw message if available
         if (gameLevel.messageType() != GameLevel.MessageType.NONE && gameLevel.house().isPresent()) {
             House house = gameLevel.house().get();
@@ -298,22 +322,6 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
                 case GameLevel.MessageType.TEST -> gameLevelRenderer.fillTextCentered("TEST    L%02d".formatted(gameLevel.number()),
                         ARCADE_WHITE, gameLevelRenderer.arcadeFont8(), cx, cy);
             }
-        }
-
-        // Collect actors in drawing z-order: Bonus < Pac-Man < Ghosts in order. TODO: also take ghost state into account!
-        actorsInZOrder.clear();
-        gameLevel.bonus().ifPresent(actorsInZOrder::add);
-        actorsInZOrder.add(gameLevel.pac());
-        Stream.of(ORANGE_GHOST_POKEY, CYAN_GHOST_BASHFUL, PINK_GHOST_SPEEDY, RED_GHOST_SHADOW).map(gameLevel::ghost).forEach(actorsInZOrder::add);
-
-        // Draw actors
-        actorsInZOrder.forEach(actor -> gameLevelRenderer.drawActor(actor));
-
-        if (isDebugInfoVisible() && debugInfoRenderer instanceof DefaultDebugInfoRenderer infoRenderer) {
-            actorsInZOrder.stream()
-                .filter(MovingActor.class::isInstance)
-                .map(MovingActor.class::cast)
-                .forEach(actor -> infoRenderer.drawMovingActorInfo(ctx(), scaling(), actor));
         }
     }
 

@@ -71,6 +71,8 @@ public class DefaultDebugInfoRenderer extends DebugInfoRenderer {
             .ifPresent(spriteAnimationMap -> {
                 String selectedID = spriteAnimationMap.selectedID();
                 if (selectedID != null) {
+                    ctx.setFill(Color.WHITE);
+                    ctx.setFont(Font.font("Monospaced", scaling * (6)));
                     drawAnimationInfo(ctx, scaling, movingActor, spriteAnimationMap, selectedID);
                 }
                 if (movingActor.wishDir() != null) {
