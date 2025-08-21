@@ -13,8 +13,9 @@ import de.amr.pacmanfx.model.LivesCounter;
 import de.amr.pacmanfx.model.ScoreManager;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.*;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
-import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -25,12 +26,12 @@ import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesColor;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_HUDRenderer extends SpriteRenderer implements HUDRenderer {
+public class TengenMsPacMan_HUDRenderer extends BaseRenderer implements HUDRenderer, SpriteRendererMixin {
 
     protected final TengenMsPacMan_UIConfig uiConfig;
 
     public TengenMsPacMan_HUDRenderer(TengenMsPacMan_UIConfig uiConfig, Canvas canvas) {
-        super(canvas, uiConfig.spriteSheet());
+        super(canvas);
         this.uiConfig = requireNonNull(uiConfig);
     }
 

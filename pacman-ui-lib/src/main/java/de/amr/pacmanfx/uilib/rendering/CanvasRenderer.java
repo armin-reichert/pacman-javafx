@@ -11,4 +11,12 @@ public interface CanvasRenderer {
     GraphicsContext ctx();
 
     DoubleProperty scalingProperty();
+
+    default double scaling() {
+        return scalingProperty().get();
+    }
+
+    default void setScaling(double s) {
+        scalingProperty().set(s);
+    }
 }

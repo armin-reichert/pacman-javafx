@@ -30,7 +30,6 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
     private static final int RASTER_SIZE = 16;
 
     private SpriteRenderer spriteRenderer;
-
     private Vector2f minPoint, maxPoint;
 
     public ArcadePacMan_BootScene2D(GameUI ui) {
@@ -41,9 +40,9 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
     public void doInit() {
         GameUI_Config uiConfig = ui.currentConfig();
         // This can be different spritesheet types!
-        SpriteSheet<?> spriteSheet = ui.currentConfig().spriteSheet();
+        SpriteSheet<?> spriteSheet = uiConfig.spriteSheet();
 
-        spriteRenderer = new SpriteRenderer(canvas, uiConfig.spriteSheet());
+        spriteRenderer = new SpriteRenderer(canvas, spriteSheet);
         bindRendererScaling(spriteRenderer);
 
         context().game().hudData().all(false);
@@ -52,6 +51,7 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
         // ignore left half of sprite sheet image containing maze images
         minPoint = Vector2f.of(width / 2, 0);
         maxPoint = Vector2f.of(width - RASTER_SIZE, height - RASTER_SIZE);
+
         ui.soundManager().playVoice(SoundID.VOICE_EXPLAIN, 0);
     }
 

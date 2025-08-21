@@ -45,7 +45,7 @@ public class TengenMsPacMan_GameLevelRenderer extends GameLevelRenderer {
     private final TengenMsPacMan_UIConfig uiConfig;
 
     public TengenMsPacMan_GameLevelRenderer(TengenMsPacMan_UIConfig uiConfig, Canvas canvas) {
-        super(canvas, uiConfig.spriteSheet());
+        super(canvas);
         this.uiConfig = requireNonNull(uiConfig);
         ctx().setImageSmoothing(false);
     }

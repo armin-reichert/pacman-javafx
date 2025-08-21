@@ -9,8 +9,9 @@ import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
-import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -21,12 +22,12 @@ import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_WHITE;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.ARCADE_YELLOW;
 import static java.util.Objects.requireNonNull;
 
-public class ArcadePacMan_HUDRenderer extends SpriteRenderer implements HUDRenderer {
+public class ArcadePacMan_HUDRenderer extends BaseRenderer implements HUDRenderer, SpriteRendererMixin {
 
     protected final GameUI_Config uiConfig;
 
     public ArcadePacMan_HUDRenderer(GameUI_Config uiConfig, Canvas canvas) {
-        super(canvas, uiConfig.spriteSheet());
+        super(canvas);
         this.uiConfig = requireNonNull(uiConfig);
     }
 
