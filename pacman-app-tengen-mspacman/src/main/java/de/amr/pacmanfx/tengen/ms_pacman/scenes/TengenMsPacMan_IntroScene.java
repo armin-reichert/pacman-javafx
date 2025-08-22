@@ -14,7 +14,6 @@ import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.SpriteID;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_ScenesRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
@@ -48,7 +47,6 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     private final StateMachine<SceneState, TengenMsPacMan_IntroScene> sceneController;
 
-    private TengenMsPacMan_HUDRenderer hudRenderer;
     private ActorSpriteRenderer actorSpriteRenderer;
     private TengenMsPacMan_ScenesRenderer scenesRenderer;
 
@@ -78,12 +76,9 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         GameUI_Config uiConfig = ui.currentConfig();
         spriteSheet = (TengenMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
-        hudRenderer = (TengenMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
         scenesRenderer = new TengenMsPacMan_ScenesRenderer(canvas, uiConfig);
         actorSpriteRenderer = uiConfig.createActorSpriteRenderer(canvas);
-        bindRendererScaling(hudRenderer, scenesRenderer, actorSpriteRenderer);
-
-        context().game().hudData().score(false).levelCounter(false).livesCounter(false);
+        bindRendererScaling(scenesRenderer, actorSpriteRenderer);
 
         var tengenActionBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().actionBindings();
         actionBindings.assign(ACTION_ENTER_START_SCREEN, tengenActionBindings);
