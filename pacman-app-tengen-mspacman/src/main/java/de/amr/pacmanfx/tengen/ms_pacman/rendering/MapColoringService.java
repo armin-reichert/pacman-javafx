@@ -28,7 +28,7 @@ public class MapColoringService implements Disposable {
         );
     }
 
-    private Map<CacheKey, ColoredSpriteImage> cache = new WeakHashMap<>();
+    private final Map<CacheKey, ColoredSpriteImage> cache = new WeakHashMap<>();
 
     private ColoredSpriteImage recoloredMazeImage(
         MapCategory mapCategory, Object mazeID,
