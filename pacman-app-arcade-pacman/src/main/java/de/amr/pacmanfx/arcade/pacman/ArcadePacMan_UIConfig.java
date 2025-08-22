@@ -65,8 +65,8 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
 
     public ArcadePacMan_UIConfig(GameUI ui) {
         this.ui = requireNonNull(ui);
-        spriteSheet = new ArcadePacMan_SpriteSheet(RES_ARCADE_PAC_MAN.loadImage("graphics/pacman_spritesheet.png"));
         assets.setTextResources(ResourceBundle.getBundle("de.amr.pacmanfx.arcade.pacman.localized_texts"));
+        spriteSheet = new ArcadePacMan_SpriteSheet(RES_ARCADE_PAC_MAN.loadImage("graphics/pacman_spritesheet.png"));
     }
 
     @Override
@@ -74,6 +74,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
         return ui;
     }
 
+    @Override
     public AssetStorage assets() {
         return assets;
     }
@@ -83,14 +84,17 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
         return spriteSheet;
     }
 
+    @Override
     public void loadAssets() {
-        assets.set("spritesheet", spriteSheet);
         assets.set("app_icon",         RES_ARCADE_PAC_MAN.loadImage("graphics/icons/pacman.png"));
+
         assets.set("startpage.image1", RES_ARCADE_PAC_MAN.loadImage("graphics/f1.jpg"));
         assets.set("startpage.image2", RES_ARCADE_PAC_MAN.loadImage("graphics/f2.jpg"));
         assets.set("startpage.image3", RES_ARCADE_PAC_MAN.loadImage("graphics/f3.jpg"));
-        assets.set("flashing_maze",    RES_ARCADE_PAC_MAN.loadImage("graphics/maze_flashing.png"));
+
         assets.set("color.game_over_message", ARCADE_RED);
+
+        assets.set("maze.bright", RES_ARCADE_PAC_MAN.loadImage("graphics/maze_flashing.png"));
 
         RectShort[] symbolSprites = spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS);
         RectShort[] valueSprites  = spriteSheet.spriteSequence(SpriteID.BONUS_VALUES);

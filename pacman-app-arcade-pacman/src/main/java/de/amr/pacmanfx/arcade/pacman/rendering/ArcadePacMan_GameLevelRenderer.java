@@ -61,7 +61,7 @@ public class ArcadePacMan_GameLevelRenderer extends GameLevelRenderer implements
     }
 
     private void drawBrightGameLevel() {
-        Image brightMazeImage = uiConfig.assets().image("flashing_maze");
+        Image brightMazeImage = uiConfig.assets().image("maze.bright");
         ctx().drawImage(brightMazeImage, 0, GameLevel.EMPTY_ROWS_OVER_MAZE * TS);
     }
 
