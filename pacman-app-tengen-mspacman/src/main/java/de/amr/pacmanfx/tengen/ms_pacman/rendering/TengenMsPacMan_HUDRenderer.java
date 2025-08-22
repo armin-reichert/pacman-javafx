@@ -62,7 +62,6 @@ public class TengenMsPacMan_HUDRenderer extends BaseRenderer implements HUDRende
             float x = sceneSize.x() - TS(2), y = sceneSize.y() - TS;
             drawLevelCounter(levelCounter.displayedLevelNumber(), levelCounter, x, y);
         }
-
         if (!game.optionsAreInitial()) {
             drawGameOptions(game.mapCategory(), game.difficulty(), game.pacBooster(),
                 gameContext.gameLevel().worldMap().numCols() * HTS, TS(2) + HTS);

@@ -12,7 +12,6 @@ import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
-import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUDRenderer;
@@ -119,12 +118,7 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void drawHUD() {
-        if (hudRenderer != null) {
-            var game = context().<TengenMsPacMan_GameModel>game();
-            if (game.mapCategory() != MapCategory.ARCADE) {
-                hudRenderer.drawHUD(context(), game.hudData(), sizeInPx().minus(0, 2 * TS));
-            }
-        }
+        // No HUD
     }
 
     @Override
