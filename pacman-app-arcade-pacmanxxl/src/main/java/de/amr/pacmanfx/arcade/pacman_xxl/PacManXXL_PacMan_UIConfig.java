@@ -43,6 +43,7 @@ import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
+import static de.amr.pacmanfx.ui.api.GameScene_Config.sceneID_CutScene;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_3D_ENABLED;
 import static java.util.Objects.requireNonNull;
 
@@ -230,14 +231,14 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config {
 
     @Override
     public void createGameScenes() {
-        scenesByID.put(SCENE_ID_BOOT_SCENE_2D,               new ArcadePacMan_BootScene2D(ui));
-        scenesByID.put(SCENE_ID_INTRO_SCENE_2D,              new ArcadePacMan_IntroScene(ui));
-        scenesByID.put(SCENE_ID_START_SCENE_2D,              new ArcadePacMan_StartScene(ui));
-        scenesByID.put(SCENE_ID_PLAY_SCENE_2D,               new ArcadePacMan_PlayScene2D(ui));
-        scenesByID.put(SCENE_ID_PLAY_SCENE_3D,               new PlayScene3D(ui));
-        scenesByID.put(SCENE_ID_CUT_SCENE_N_2D.formatted(1), new ArcadePacMan_CutScene1(ui));
-        scenesByID.put(SCENE_ID_CUT_SCENE_N_2D.formatted(2), new ArcadePacMan_CutScene2(ui));
-        scenesByID.put(SCENE_ID_CUT_SCENE_N_2D.formatted(3), new ArcadePacMan_CutScene3(ui));
+        scenesByID.put(SCENE_ID_BOOT_SCENE_2D,  new ArcadePacMan_BootScene2D(ui));
+        scenesByID.put(SCENE_ID_INTRO_SCENE_2D, new ArcadePacMan_IntroScene(ui));
+        scenesByID.put(SCENE_ID_START_SCENE_2D, new ArcadePacMan_StartScene(ui));
+        scenesByID.put(SCENE_ID_PLAY_SCENE_2D,  new ArcadePacMan_PlayScene2D(ui));
+        scenesByID.put(SCENE_ID_PLAY_SCENE_3D,  new PlayScene3D(ui));
+        scenesByID.put(sceneID_CutScene(1),     new ArcadePacMan_CutScene1(ui));
+        scenesByID.put(sceneID_CutScene(2),     new ArcadePacMan_CutScene2(ui));
+        scenesByID.put(sceneID_CutScene(3),     new ArcadePacMan_CutScene3(ui));
     }
 
     @Override
@@ -255,9 +256,9 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config {
                 if (optCutSceneNumber.isEmpty()) {
                     throw new IllegalStateException("Cannot determine cut scene after level %d".formatted(levelNumber));
                 }
-                yield SCENE_ID_CUT_SCENE_N_2D.formatted(optCutSceneNumber.getAsInt());
+                yield sceneID_CutScene(optCutSceneNumber.getAsInt());
             }
-            case CutScenesTestState testState -> SCENE_ID_CUT_SCENE_N_2D.formatted(testState.testedCutSceneNumber);
+            case CutScenesTestState testState -> sceneID_CutScene(testState.testedCutSceneNumber);
             default -> PROPERTY_3D_ENABLED.get() ? SCENE_ID_PLAY_SCENE_3D : SCENE_ID_PLAY_SCENE_2D;
         };
         return scenesByID.get(sceneID);

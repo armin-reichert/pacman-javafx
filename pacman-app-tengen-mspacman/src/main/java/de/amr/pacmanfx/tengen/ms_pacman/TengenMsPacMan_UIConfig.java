@@ -51,6 +51,7 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.controller.GamePlayState.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.*;
 import static de.amr.pacmanfx.ui.CommonGameActions.*;
+import static de.amr.pacmanfx.ui.api.GameScene_Config.sceneID_CutScene;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_3D_ENABLED;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_CANVAS_BACKGROUND_COLOR;
 import static de.amr.pacmanfx.ui.input.Keyboard.*;
@@ -357,16 +358,16 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public void createGameScenes() {
-        scenesByID.put(SCENE_ID_BOOT_SCENE_2D,               new TengenMsPacMan_BootScene(ui));
-        scenesByID.put(SCENE_ID_INTRO_SCENE_2D,              new TengenMsPacMan_IntroScene(ui));
-        scenesByID.put(SCENE_ID_START_SCENE_2D,              new TengenMsPacMan_OptionsScene(ui));
-        scenesByID.put(SCENE_ID_CREDITS_SCENE_2D,            new TengenMsPacMan_CreditsScene(ui));
-        scenesByID.put(SCENE_ID_PLAY_SCENE_2D,               new TengenMsPacMan_PlayScene2D(ui));
-        scenesByID.put(SCENE_ID_PLAY_SCENE_3D,               new TengenMsPacMan_PlayScene3D(ui));
-        scenesByID.put(SCENE_ID_CUT_SCENE_N_2D.formatted(1), new TengenMsPacMan_CutScene1(ui));
-        scenesByID.put(SCENE_ID_CUT_SCENE_N_2D.formatted(2), new TengenMsPacMan_CutScene2(ui));
-        scenesByID.put(SCENE_ID_CUT_SCENE_N_2D.formatted(3), new TengenMsPacMan_CutScene3(ui));
-        scenesByID.put(SCENE_ID_CUT_SCENE_N_2D.formatted(4), new TengenMsPacMan_CutScene4(ui));
+        scenesByID.put(SCENE_ID_BOOT_SCENE_2D,    new TengenMsPacMan_BootScene(ui));
+        scenesByID.put(SCENE_ID_INTRO_SCENE_2D,   new TengenMsPacMan_IntroScene(ui));
+        scenesByID.put(SCENE_ID_START_SCENE_2D,   new TengenMsPacMan_OptionsScene(ui));
+        scenesByID.put(SCENE_ID_CREDITS_SCENE_2D, new TengenMsPacMan_CreditsScene(ui));
+        scenesByID.put(SCENE_ID_PLAY_SCENE_2D,    new TengenMsPacMan_PlayScene2D(ui));
+        scenesByID.put(SCENE_ID_PLAY_SCENE_3D,    new TengenMsPacMan_PlayScene3D(ui));
+        scenesByID.put(sceneID_CutScene(1),       new TengenMsPacMan_CutScene1(ui));
+        scenesByID.put(sceneID_CutScene(2),       new TengenMsPacMan_CutScene2(ui));
+        scenesByID.put(sceneID_CutScene(3),       new TengenMsPacMan_CutScene3(ui));
+        scenesByID.put(sceneID_CutScene(4),       new TengenMsPacMan_CutScene4(ui));
     }
 
     @Override
@@ -385,9 +386,9 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
                 if (optCutSceneNumber.isEmpty()) {
                     throw new IllegalStateException("Cannot determine cut scene after level %d".formatted(levelNumber));
                 }
-                yield SCENE_ID_CUT_SCENE_N_2D.formatted(optCutSceneNumber.getAsInt());
+                yield sceneID_CutScene(optCutSceneNumber.getAsInt());
             }
-            case CutScenesTestState testState -> SCENE_ID_CUT_SCENE_N_2D.formatted(testState.testedCutSceneNumber);
+            case CutScenesTestState testState -> sceneID_CutScene(testState.testedCutSceneNumber);
             default -> PROPERTY_3D_ENABLED.get() ? SCENE_ID_PLAY_SCENE_3D : SCENE_ID_PLAY_SCENE_2D;
         };
         return scenesByID.get(sceneID);

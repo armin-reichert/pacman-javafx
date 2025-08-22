@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.ui.api;
 
-import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.Disposable;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
@@ -24,29 +23,15 @@ import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
-import java.util.stream.Stream;
-
-public interface GameUI_Config extends Disposable {
-
-    String SCENE_ID_BOOT_SCENE_2D    = "BootScene2D";
-    String SCENE_ID_INTRO_SCENE_2D   = "IntroScene2D";
-    String SCENE_ID_START_SCENE_2D   = "StartScene2D";
-    String SCENE_ID_CREDITS_SCENE_2D = "CreditsScene2D";
-    String SCENE_ID_PLAY_SCENE_2D    = "PlayScene2D";
-    String SCENE_ID_CUT_SCENE_N_2D   = "CutScene_%d_2D";
-    String SCENE_ID_PLAY_SCENE_3D    = "PlayScene3D";
-
-    // scene config
-    void createGameScenes();
-    Stream<GameScene> gameScenes();
-    boolean gameSceneHasID(GameScene gameScene, String sceneID);
-    GameScene selectGameScene(GameContext gameContext);
+public interface GameUI_Config extends GameScene_Config, Disposable {
 
     GameUI theUI();
 
     AssetStorage assets();
 
     void loadAssets();
+
+    SpriteSheet<?> spriteSheet();
 
     Image bonusSymbolImage(byte symbol);
 
@@ -71,8 +56,6 @@ public interface GameUI_Config extends Disposable {
     default boolean hasGameCanvasRoundedBorder() { return true; }
 
     Image killedGhostPointsImage(Ghost ghost, int killedIndex);
-
-    SpriteSheet<?> spriteSheet();
 
     SoundManager soundManager();
 }
