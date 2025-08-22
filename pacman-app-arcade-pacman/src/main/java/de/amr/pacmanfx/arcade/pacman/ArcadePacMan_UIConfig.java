@@ -56,11 +56,11 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
     public static final String ANIM_BLINKY_NAIL_DRESS_RAPTURE = "blinky_nail_dress_rapture";
     public static final String ANIM_BLINKY_NAKED              = "blinky_naked";
 
-    private static final WorldMapColorScheme MAP_COLORING = new WorldMapColorScheme("#000000", "#2121ff", "#fcb5ff", "#febdb4");
+    private static final WorldMapColorScheme MAP_COLORING = new WorldMapColorScheme("#000000", "#2121ff", "#ffb7ff", "#febdb4");
 
     private static final Map<Color, Color> BRIGHT_MAZE_COLOR_CHANGES = Map.of(
-        ARCADE_BLUE, ARCADE_WHITE, // wall color change
-        Color.web("ffb7ae"), Color.TRANSPARENT // door color change
+        MAP_COLORING.stroke(), ARCADE_WHITE,   // wall color change
+        MAP_COLORING.door(), Color.TRANSPARENT // door color change
     );
 
     private final GameUI ui;
