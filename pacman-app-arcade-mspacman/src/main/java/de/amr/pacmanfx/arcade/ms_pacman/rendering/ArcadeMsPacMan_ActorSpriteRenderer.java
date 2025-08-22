@@ -15,14 +15,9 @@ public class ArcadeMsPacMan_ActorSpriteRenderer extends ActorSpriteRenderer {
 
     protected final GameUI_Config uiConfig;
 
-    private final RectShort[] bonusSymbols;
-    private final RectShort[] bonusValues;
-
     public ArcadeMsPacMan_ActorSpriteRenderer(Canvas canvas, GameUI_Config uiConfig) {
         super(canvas);
         this.uiConfig = requireNonNull(uiConfig);
-        bonusSymbols = spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
-        bonusValues = spriteSheet().spriteSequence(SpriteID.BONUS_VALUES);
     }
 
     @Override
@@ -62,12 +57,22 @@ public class ArcadeMsPacMan_ActorSpriteRenderer extends ActorSpriteRenderer {
     public void drawBonus(Bonus bonus) {
         switch (bonus.state()) {
             case EDIBLE -> {
-                ctx().save();
-                ctx().translate(0, bonus.jumpHeight());
-                drawSpriteCentered(bonus.center(), bonusSymbols[bonus.symbol()]);
-                ctx().restore();
+                RectShort[] sprites = spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
+                int index = bonus.symbol();
+                if (0 <= index && index < sprites.length) {
+                    ctx().save();
+                    ctx().translate(0, bonus.jumpHeight());
+                    drawSpriteCentered(bonus.center(), sprites[index]);
+                    ctx().restore();
+                }
             }
-            case EATEN  -> drawSpriteCentered(bonus.center(), bonusValues[bonus.symbol()]);
+            case EATEN -> {
+                RectShort[] sprites = spriteSheet().spriteSequence(SpriteID.BONUS_VALUES);
+                int index = bonus.symbol();
+                if (0 <= index && index < sprites.length) {
+                    drawSpriteCentered(bonus.center(), sprites[index]);
+                }
+            }
             case INACTIVE -> {}
         }
     }

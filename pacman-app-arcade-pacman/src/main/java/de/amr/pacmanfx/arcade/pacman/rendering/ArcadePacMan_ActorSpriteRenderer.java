@@ -1,5 +1,6 @@
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
+import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.model.actors.Actor;
 import de.amr.pacmanfx.model.actors.Bonus;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
@@ -38,10 +39,20 @@ public class ArcadePacMan_ActorSpriteRenderer extends ActorSpriteRenderer {
 
     private void drawBonus(Bonus bonus) {
         switch (bonus.state()) {
-            case EDIBLE -> drawSpriteCentered(bonus.center(),
-                    spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS)[bonus.symbol()]);
-            case EATEN  -> drawSpriteCentered(bonus.center(),
-                    spriteSheet().spriteSequence(SpriteID.BONUS_VALUES)[bonus.symbol()]);
+            case EDIBLE -> {
+                RectShort[] sprites = spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
+                int index = bonus.symbol();
+                if (0 <= index && index < sprites.length) {
+                    drawSpriteCentered(bonus.center(), sprites[bonus.symbol()]);
+                }
+            }
+            case EATEN -> {
+                RectShort[] sprites = spriteSheet().spriteSequence(SpriteID.BONUS_VALUES);
+                int index = bonus.symbol();
+                if (0 <= index && index < sprites.length) {
+                    drawSpriteCentered(bonus.center(), sprites[index]);
+                }
+            }
             case INACTIVE -> {}
         }
     }

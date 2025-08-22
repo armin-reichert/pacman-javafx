@@ -70,12 +70,18 @@ public class TengenMsPacMan_ActorSpriteRenderer extends ActorSpriteRenderer {
         ctx().translate(0, bonus.jumpHeight());
         switch (bonus.state()) {
             case EDIBLE -> {
-                RectShort sprite = uiConfig.spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS)[bonus.symbol()];
-                drawSpriteCentered(bonus.center(), sprite);
+                RectShort[] sprites = uiConfig.spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
+                int index = bonus.symbol();
+                if (0 <= index && index < sprites.length) {
+                    drawSpriteCentered(bonus.center(), sprites[index]);
+                }
             }
             case EATEN  -> {
-                RectShort sprite = uiConfig.spriteSheet().spriteSequence(SpriteID.BONUS_VALUES)[bonus.symbol()];
-                drawSpriteCentered(bonus.center(), sprite);
+                RectShort[] sprites = uiConfig.spriteSheet().spriteSequence(SpriteID.BONUS_VALUES);
+                int index = bonus.symbol();
+                if (0 <= index && index < sprites.length) {
+                    drawSpriteCentered(bonus.center(), sprites[index]);
+                }
             }
         }
         ctx().restore();
