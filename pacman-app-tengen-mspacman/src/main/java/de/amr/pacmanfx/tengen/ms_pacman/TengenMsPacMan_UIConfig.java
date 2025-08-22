@@ -113,7 +113,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     private final ArcadeMapsSpriteSheet arcadeMapsSpriteSheet;
     private final NonArcadeMapsSpriteSheet nonArcadeMapsSpriteSheet;
 
-    private MapColoringService coloringService = new MapColoringService();
+    private final MapColoringService coloringService = new MapColoringService();
 
     public TengenMsPacMan_UIConfig(GameUI ui) {
         this.ui = requireNonNull(ui);
@@ -239,9 +239,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     public void dispose() {
         Logger.info("Disposing {}", getClass().getSimpleName());
         assets.removeAll();
-        if (coloringService != null) {
-            coloringService.dispose();
-        }
+        coloringService.dispose();
         soundManager.dispose();
     }
 
