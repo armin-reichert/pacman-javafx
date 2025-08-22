@@ -1,19 +1,23 @@
+/*
+Copyright (c) 2021-2025 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.pacmanfx.tengen.ms_pacman.rendering;
 
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.model.actors.*;
+import de.amr.pacmanfx.model.actors.Actor;
+import de.amr.pacmanfx.model.actors.Bonus;
+import de.amr.pacmanfx.model.actors.MovingActor;
+import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.Clapperboard;
 import de.amr.pacmanfx.tengen.ms_pacman.scenes.Stork;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimation;
 import de.amr.pacmanfx.uilib.animation.SpriteAnimationManager;
 import de.amr.pacmanfx.uilib.rendering.ActorSpriteRenderer;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
@@ -22,7 +26,6 @@ import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_ActorSpriteRenderer extends ActorSpriteRenderer {
 
-    private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
     private final TengenMsPacMan_UIConfig uiConfig;
 
     public TengenMsPacMan_ActorSpriteRenderer(Canvas canvas, TengenMsPacMan_UIConfig uiConfig) {
@@ -35,59 +38,69 @@ public class TengenMsPacMan_ActorSpriteRenderer extends ActorSpriteRenderer {
         return uiConfig.spriteSheet();
     }
 
-    public ObjectProperty<Color> backgroundColorProperty() { return backgroundColor; }
-
-    public Color backgroundColor() { return backgroundColor.get(); }
-
     @Override
     public void drawActor(Actor actor) {
         requireNonNull(actor);
-        if (actor.isVisible()) {
-            switch (actor) {
-                case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
-                case Bonus bonus -> drawMovingBonus(bonus);
-                case Pac pac -> drawAnyKindOfPac(pac);
-                case Stork stork -> {
-                    drawCurrentSprite(stork);
-                    if (stork.isBagReleasedFromBeak()) {
-                        hideStorkBag(stork);
-                    }
-                }
-                default -> drawCurrentSprite(actor);
-            }
+        if (!actor.isVisible()) return;
+
+        switch (actor) {
+            case Bonus bonus -> drawBonus(bonus);
+            case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
+            case Pac pac -> drawPac(pac);
+            case Stork stork -> drawStork(stork);
+            default -> drawCurrentSprite(actor);
         }
+    }
+
+    // There are only left-pointing Ms. Pac-Man sprites in the sprite sheet, so we rotate and mirror in the renderer
+    private void drawMovingActorSprite(MovingActor actor, Direction dir, RectShort sprite) {
+        Vector2f center = actor.center().scaled(scaling());
+        ctx().save();
+        ctx().translate(center.x(), center.y());
+        switch (dir) {
+            case LEFT  -> {}
+            case UP    -> ctx().rotate(90);
+            case RIGHT -> ctx().scale(-1, 1);
+            case DOWN  -> { ctx().scale(-1, 1); ctx().rotate(-90); }
+        }
+        drawSpriteCentered(0, 0, sprite);
+        ctx().restore();
     }
 
     private void drawCurrentSprite(Actor actor) {
         actor.animations()
-                .map(animations -> animations.currentSprite(actor))
-                .ifPresent(sprite -> drawSpriteCentered(actor.center(), sprite));
+            .map(animations -> animations.currentSprite(actor))
+            .ifPresent(sprite -> drawSpriteCentered(actor.center(), sprite));
     }
 
-    public void drawMovingBonus(Bonus bonus) {
-        if (bonus.state() == BonusState.INACTIVE) return;
-        ctx().save();
-        ctx().translate(0, bonus.jumpHeight());
+    private void drawBonus(Bonus bonus) {
         switch (bonus.state()) {
+            case INACTIVE -> {}
             case EDIBLE -> {
                 RectShort[] sprites = uiConfig.spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
                 int index = bonus.symbol();
                 if (0 <= index && index < sprites.length) {
+                    ctx().save();
+                    ctx().translate(0, bonus.jumpHeight());
                     drawSpriteCentered(bonus.center(), sprites[index]);
+                    ctx().restore();
                 }
             }
             case EATEN  -> {
                 RectShort[] sprites = uiConfig.spriteSheet().spriteSequence(SpriteID.BONUS_VALUES);
                 int index = bonus.symbol();
                 if (0 <= index && index < sprites.length) {
+                    ctx().save();
+                    ctx().translate(0, bonus.jumpHeight());
                     drawSpriteCentered(bonus.center(), sprites[index]);
+                    ctx().restore();
                 }
             }
         }
-        ctx().restore();
     }
 
-    private void drawAnyKindOfPac(Pac pac) {
+    private void drawPac(Pac pac) {
+        //TODO check if this is the way to do this
         pac.animations().map(SpriteAnimationManager.class::cast).ifPresent(spriteAnimations -> {
             SpriteAnimation spriteAnimation = spriteAnimations.currentAnimation();
             if (spriteAnimation == null) {
@@ -97,7 +110,7 @@ public class TengenMsPacMan_ActorSpriteRenderer extends ActorSpriteRenderer {
             if (ANIM_PAC_DYING.equals(spriteAnimations.selectedID())) {
                 drawPacDyingAnimation(pac, spriteAnimation);
             } else {
-                drawActorSprite(pac, pac.moveDir(), spriteAnimation.currentSprite());
+                drawMovingActorSprite(pac, pac.moveDir(), spriteAnimation.currentSprite());
             }
         });
     }
@@ -113,28 +126,7 @@ public class TengenMsPacMan_ActorSpriteRenderer extends ActorSpriteRenderer {
                 default -> Direction.DOWN; // start with DOWN
             };
         }
-        drawActorSprite(pac, dir, animation.currentSprite());
-    }
-
-    // There are only left-pointing Ms. Pac-Man sprites in the sprite sheet, so we rotate and mirror in the renderer
-    private void drawActorSprite(MovingActor actor, Direction dir, RectShort sprite) {
-        Vector2f center = actor.center().scaled(scaling());
-        ctx().save();
-        ctx().translate(center.x(), center.y());
-        switch (dir) {
-            case LEFT  -> {}
-            case UP    -> ctx().rotate(90);
-            case RIGHT -> ctx().scale(-1, 1);
-            case DOWN  -> { ctx().scale(-1, 1); ctx().rotate(-90); }
-        }
-        drawSpriteCentered(0, 0, sprite);
-        ctx().restore();
-    }
-
-    // Sprite sheet has no stork without bag under its beak so we over-paint the bag
-    private void hideStorkBag(Stork stork) {
-        ctx().setFill(backgroundColor());
-        ctx().fillRect(scaled(stork.x() - 13), scaled(stork.y() + 3), scaled(8), scaled(10));
+        drawMovingActorSprite(pac, dir, animation.currentSprite());
     }
 
     private void drawClapperBoard(Clapperboard clapperboard) {
@@ -158,5 +150,14 @@ public class TengenMsPacMan_ActorSpriteRenderer extends ActorSpriteRenderer {
                 ctx().fillText(clapperboard.text(), scaled(textX), scaled(textY));
             }
         });
+    }
+
+    private void drawStork(Stork stork) {
+        drawCurrentSprite(stork);
+        if (stork.isBagReleasedFromBeak()) {
+            // Sprite sheet has no stork without bag under its beak so we over-paint the bag
+            ctx().setFill(backgroundColor());
+            ctx().fillRect(scaled(stork.x() - 13), scaled(stork.y() + 3), scaled(8), scaled(10));
+        }
     }
 }
