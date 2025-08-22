@@ -78,13 +78,6 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config {
         assets.set("app_icon", RES_ARCADE_PAC_MAN.loadImage("graphics/icons/pacman.png"));
         assets.set("color.game_over_message", ARCADE_RED);
 
-        RectShort[] symbolSprites = spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS);
-        RectShort[] valueSprites  = spriteSheet.spriteSequence(SpriteID.BONUS_VALUES);
-        for (byte symbol = 0; symbol <= 7; ++symbol) {
-            assets.set("bonus_symbol." + symbol, spriteSheet.image(symbolSprites[symbol]));
-            assets.set("bonus_value."  + symbol, spriteSheet.image(valueSprites[symbol]));
-        }
-
         assets.set("pac.color.head",   ARCADE_YELLOW);
         assets.set("pac.color.eyes",   Color.grayRgb(33));
         assets.set("pac.color.palate", ARCADE_BROWN);
@@ -180,12 +173,14 @@ public class PacManXXL_PacMan_UIConfig implements GameUI_Config {
 
     @Override
     public Image bonusSymbolImage(byte symbol) {
-        return assets.image("bonus_symbol." + symbol);
+        RectShort[] sprites = spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS);
+        return spriteSheet.image(sprites[symbol]);
     }
 
     @Override
     public Image bonusValueImage(byte symbol) {
-        return assets.image("bonus_value." + symbol);
+        RectShort[] sprites = spriteSheet.spriteSequence(SpriteID.BONUS_VALUES);
+        return spriteSheet.image(sprites[symbol]);
     }
 
     @Override

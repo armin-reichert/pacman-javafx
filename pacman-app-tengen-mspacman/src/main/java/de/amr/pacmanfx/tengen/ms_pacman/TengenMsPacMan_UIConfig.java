@@ -159,13 +159,6 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         assets.set("startpage.image1", RES_TENGEN.loadImage("graphics/f1.png"));
         assets.set("startpage.image2", RES_TENGEN.loadImage("graphics/f2.png"));
 
-        RectShort[] symbolSprites = spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS);
-        RectShort[] valueSprites  = spriteSheet.spriteSequence(SpriteID.BONUS_VALUES);
-        for (byte symbol = 0; symbol <= 13; ++symbol) {
-            assets.set("bonus_symbol." + symbol, spriteSheet.image(symbolSprites[symbol]));
-            assets.set("bonus_value."  + symbol, spriteSheet.image(valueSprites[symbol]));
-        }
-
         assets.set("color.game_over_message",  nesColor(0x11));
         assets.set("color.ready_message",      nesColor(0x28));
 
@@ -300,7 +293,8 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public Image bonusSymbolImage(byte symbol) {
-        return assets.image("bonus_symbol." + symbol);
+        RectShort[] symbolSprites = spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS);
+        return spriteSheet.image(symbolSprites[symbol]);
     }
 
     @Override
@@ -313,7 +307,8 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
             case TengenMsPacMan_GameModel.BONUS_ICE_CREAM -> 7; // 4000!
             default -> symbol;
         };
-        return assets.image("bonus_value." + usedSymbol);
+        RectShort[] sprites = spriteSheet.spriteSequence(SpriteID.BONUS_VALUES);
+        return spriteSheet.image(sprites[usedSymbol]);
     }
 
     @Override
