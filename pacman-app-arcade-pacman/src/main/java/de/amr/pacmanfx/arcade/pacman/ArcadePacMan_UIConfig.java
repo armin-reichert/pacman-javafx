@@ -106,12 +106,6 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
         assets.set("pac.color.eyes",   Color.grayRgb(33));
         assets.set("pac.color.palate", ARCADE_BROWN);
 
-        RectShort[] numberSprites = spriteSheet.spriteSequence(SpriteID.GHOST_NUMBERS);
-        assets.set("ghost_points.0", spriteSheet.image(numberSprites[0]));
-        assets.set("ghost_points.1", spriteSheet.image(numberSprites[1]));
-        assets.set("ghost_points.2", spriteSheet.image(numberSprites[2]));
-        assets.set("ghost_points.3", spriteSheet.image(numberSprites[3]));
-
         assets.set("ghost.0.color.normal.dress",      ARCADE_RED);
         assets.set("ghost.0.color.normal.eyeballs",   ARCADE_WHITE);
         assets.set("ghost.0.color.normal.pupils",     ARCADE_BLUE);
@@ -203,7 +197,8 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
 
     @Override
     public Image killedGhostPointsImage(Ghost ghost, int killedIndex) {
-        return assets.image("ghost_points." + killedIndex);
+        RectShort[] numberSprites = spriteSheet.spriteSequence(SpriteID.GHOST_NUMBERS);
+        return spriteSheet.image(numberSprites[killedIndex]);
     }
 
     @Override

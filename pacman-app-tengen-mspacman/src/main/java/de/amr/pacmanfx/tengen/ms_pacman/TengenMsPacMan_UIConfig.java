@@ -169,12 +169,6 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         assets.set("pac.color.hairbow",        nesColor(0x05));
         assets.set("pac.color.hairbow.pearls", nesColor(0x02));
 
-        RectShort[] numberSprites = spriteSheet.spriteSequence(SpriteID.GHOST_NUMBERS);
-        assets.set("ghost_points.0", spriteSheet.image(numberSprites[0]));
-        assets.set("ghost_points.1", spriteSheet.image(numberSprites[1]));
-        assets.set("ghost_points.2", spriteSheet.image(numberSprites[2]));
-        assets.set("ghost_points.3", spriteSheet.image(numberSprites[3]));
-
         assets.set("ghost.0.color.normal.dress",       nesColor(0x05));
         assets.set("ghost.0.color.normal.eyeballs",    nesColor(0x20));
         assets.set("ghost.0.color.normal.pupils",      nesColor(0x16));
@@ -288,7 +282,8 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public Image killedGhostPointsImage(Ghost ghost, int killedIndex) {
-        return assets.image("ghost_points." + killedIndex);
+        RectShort[] numberSprites = spriteSheet.spriteSequence(SpriteID.GHOST_NUMBERS);
+        return spriteSheet.image(numberSprites[killedIndex]);
     }
 
     @Override
