@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.tengen.ms_pacman.rendering;
 
 public enum SpriteID {
-    TITLE_TEXT,
+    LARGE_MS_PAC_MAN_TEXT,
     INFO_FRAME,
     INFO_BOOSTER,
     INFO_CATEGORY_BIG, INFO_CATEGORY_MINI, INFO_CATEGORY_STRANGE,

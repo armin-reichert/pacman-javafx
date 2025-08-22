@@ -120,14 +120,14 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
     public void drawSceneContent() {
         long tick = sceneController.state().timer().tickCount();
         ctx().setFont(scenesRenderer.arcadeFontTS());
+        ctx().setImageSmoothing(false);
         switch (sceneController.state()) {
             case WAITING_FOR_START -> {
                 if (!dark) {
+                    boolean showPressStart = tick % 60 < 30;
                     scenesRenderer.fillText("TENGEN PRESENTS", blueShadedColor(tick), presentsText.x(), presentsText.y());
-                    scenesRenderer.drawSprite(spriteSheet.sprite(SpriteID.TITLE_TEXT), 6 * TS, MARQUEE_Y, true);
-                    if (tick % 60 < 30) {
-                        scenesRenderer.fillText("PRESS START", nesColor(0x20), 11 * TS, MARQUEE_Y + 9 * TS);
-                    }
+                    scenesRenderer.drawSprite(spriteSheet.sprite(SpriteID.LARGE_MS_PAC_MAN_TEXT), 6 * TS, MARQUEE_Y, true);
+                    if (showPressStart) scenesRenderer.fillText("PRESS START", nesColor(0x20), 11 * TS, MARQUEE_Y + 9 * TS);
                     scenesRenderer.fillText("MS PAC-MAN TM NAMCO LTD", nesColor(0x25), 6 * TS, MARQUEE_Y + 15 * TS);
                     scenesRenderer.fillText("©1990 TENGEN INC",        nesColor(0x25), 8 * TS, MARQUEE_Y + 16 * TS);
                     scenesRenderer.fillText("ALL RIGHTS RESERVED",     nesColor(0x25), 7 * TS, MARQUEE_Y + 17 * TS);
