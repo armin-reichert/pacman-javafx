@@ -22,6 +22,7 @@ import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.DefaultSoundManager;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
+import de.amr.pacmanfx.uilib.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.assets.AssetStorage;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
@@ -56,6 +57,11 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
     public static final String ANIM_BLINKY_NAKED              = "blinky_naked";
 
     private static final WorldMapColorScheme MAP_COLORING = new WorldMapColorScheme("#000000", "#2121ff", "#fcb5ff", "#febdb4");
+
+    private static final Map<Color, Color> BRIGHT_MAZE_COLOR_CHANGES = Map.of(
+        ARCADE_BLUE, ARCADE_WHITE, // wall color change
+        Color.web("ffb7ae"), Color.TRANSPARENT // door color change
+    );
 
     private final GameUI ui;
     private final AssetStorage assets = new AssetStorage();
@@ -94,7 +100,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
 
         assets.set("color.game_over_message", ARCADE_RED);
 
-        assets.set("maze.bright", RES_ARCADE_PAC_MAN.loadImage("graphics/maze_flashing.png"));
+        assets.set("maze.bright", Ufx.recolorImage(spriteSheet.image(SpriteID.MAP_EMPTY), BRIGHT_MAZE_COLOR_CHANGES));
 
         RectShort[] symbolSprites = spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS);
         RectShort[] valueSprites  = spriteSheet.spriteSequence(SpriteID.BONUS_VALUES);

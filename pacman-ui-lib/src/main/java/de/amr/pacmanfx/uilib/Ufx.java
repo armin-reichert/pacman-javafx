@@ -30,6 +30,7 @@ import org.tinylog.Logger;
 
 import java.io.PrintWriter;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
@@ -187,6 +188,22 @@ public interface Ufx {
         var pause = new PauseTransition(Duration.seconds(seconds));
         pause.setOnFinished(e -> action.run());
         return pause;
+    }
+
+    static Image recolorImage(Image source, Map<Color, Color> changes) {
+        WritableImage target = new WritableImage((int) source.getWidth(), (int) source.getHeight());
+        PixelReader sourceReader = source.getPixelReader();
+        PixelWriter targetWriter = target.getPixelWriter();
+        for (int x = 0; x < source.getWidth(); ++x) {
+            for (int y = 0; y < source.getHeight(); ++y) {
+                final Color color = sourceReader.getColor(x, y);
+                final Color newColor = changes.get(color);
+                if (newColor != null) {
+                    targetWriter.setColor(x, y, newColor);
+                }
+            }
+        }
+        return target;
     }
 
     static Image imageToGreyscale(Image source) {

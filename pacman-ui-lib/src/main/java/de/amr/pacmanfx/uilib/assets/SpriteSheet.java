@@ -52,4 +52,8 @@ public interface SpriteSheet<SID extends Enum<SID>> {
     default Image image(RectShort sprite) {
         return image(sprite.x(), sprite.y(), sprite.width(), sprite.height());
     }
+
+    default Image image(SID id) {
+        return image(sprite(id));
+    }
 }
