@@ -49,6 +49,7 @@ public class TengenMsPacMan_GameLevelRenderer extends GameLevelRenderer implemen
         return uiConfig.spriteSheet();
     }
 
+    @Override
     public ObjectProperty<Color> backgroundColorProperty() { return backgroundColor; }
 
     public Color backgroundColor() { return backgroundColor.get(); }

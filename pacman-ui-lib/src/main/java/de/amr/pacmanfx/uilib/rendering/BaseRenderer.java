@@ -64,28 +64,8 @@ public class BaseRenderer implements CanvasRenderer {
     @Override
     public DoubleProperty scalingProperty() { return scaling; }
 
-    public void setScaling(double value) {
-        if (value <= 0) {
-            throw new IllegalArgumentException("Scaling value must be positive but is %.2f".formatted(value));
-        }
-        scalingProperty().set((float)value);
-    }
-
-    public double scaling() { return scalingProperty().get(); }
-
-    public double scaled(double value) { return scaling() * value; }
-
     public ObjectProperty<Color> backgroundColorProperty() {
         return backgroundColor;
-    }
-
-    public void setBackgroundColor(Color color) {
-        requireNonNull(color);
-        backgroundColor.set(color);
-    }
-
-    public Color backgroundColor() {
-        return backgroundColor.get();
     }
 
     /**
