@@ -243,7 +243,6 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
             coloringService.dispose();
             coloringService = null;
         }
-        scenesByID.clear();
         soundManager.dispose();
     }
 
