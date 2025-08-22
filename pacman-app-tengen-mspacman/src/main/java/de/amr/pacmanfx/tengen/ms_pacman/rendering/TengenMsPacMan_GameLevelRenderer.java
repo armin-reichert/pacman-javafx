@@ -35,8 +35,9 @@ import static java.util.function.Predicate.not;
 
 public class TengenMsPacMan_GameLevelRenderer extends GameLevelRenderer implements SpriteRendererMixin {
 
-    private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
     private final TengenMsPacMan_UIConfig uiConfig;
+
+    private Vector2f currentMessagePosition;
 
     public TengenMsPacMan_GameLevelRenderer(Canvas canvas, TengenMsPacMan_UIConfig uiConfig) {
         super(canvas);
@@ -48,11 +49,6 @@ public class TengenMsPacMan_GameLevelRenderer extends GameLevelRenderer implemen
     public TengenMsPacMan_SpriteSheet spriteSheet() {
         return uiConfig.spriteSheet();
     }
-
-    @Override
-    public ObjectProperty<Color> backgroundColorProperty() { return backgroundColor; }
-
-    public Color backgroundColor() { return backgroundColor.get(); }
 
     @Override
     public void applyLevelSettings(GameContext gameContext) {
@@ -90,6 +86,8 @@ public class TengenMsPacMan_GameLevelRenderer extends GameLevelRenderer implemen
         );
         overPaintActorSprites(gameContext.gameLevel());
         drawFood(gameContext.gameLevel());
+        //TODO in the original game, the message is drawn under the maze image but *over* the pellets!
+        drawLevelMessage(gameContext.gameLevel(), currentMessagePosition, arcadeFontTS());
     }
 
     private RectShort checkIfAnimatedMaze(TengenMsPacMan_GameModel game, int mapNumber, MazeSpriteSet mazeSpriteSet) {
