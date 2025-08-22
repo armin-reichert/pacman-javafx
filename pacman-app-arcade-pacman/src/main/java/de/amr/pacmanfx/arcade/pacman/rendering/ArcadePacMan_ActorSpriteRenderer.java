@@ -25,6 +25,7 @@ public class ArcadePacMan_ActorSpriteRenderer extends ActorSpriteRenderer {
 
     @Override
     public void drawActor(Actor actor) {
+        requireNonNull(actor);
         if (!actor.isVisible()) return;
 
         if (actor instanceof Bonus bonus) {

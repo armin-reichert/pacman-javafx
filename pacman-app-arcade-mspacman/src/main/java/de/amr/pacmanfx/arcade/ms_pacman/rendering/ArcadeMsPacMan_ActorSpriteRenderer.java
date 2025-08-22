@@ -28,33 +28,35 @@ public class ArcadeMsPacMan_ActorSpriteRenderer extends ActorSpriteRenderer {
     @Override
     public void drawActor(Actor actor) {
         requireNonNull(actor);
-        if (actor.isVisible()) {
-            switch (actor) {
-                case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
-                case Bonus bonus -> drawBonus(bonus);
-                default -> actor.animations()
-                        .map(animations -> animations.currentSprite(actor))
-                        .ifPresent(sprite -> drawSpriteCentered(actor.center(), sprite));
-            }
+        if (!actor.isVisible()) return;
+
+        switch (actor) {
+            case Bonus bonus -> drawBonus(bonus);
+            case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
+            default -> actor.animations()
+                .map(animations -> animations.currentSprite(actor))
+                .ifPresent(sprite -> drawSpriteCentered(actor.center(), sprite));
         }
     }
 
-    public void drawClapperBoard(Clapperboard clapperboard) {
-        if (!clapperboard.isVisible()) {
-            return;
+    private void drawClapperBoard(Clapperboard clapperboard) {
+        RectShort[] sprites = spriteSheet().spriteSequence(SpriteID.CLAPPERBOARD);
+        int index = clapperboard.state();
+        if (0 <= index && index < sprites.length) {
+            RectShort sprite = sprites[index];
+            drawSpriteCentered(clapperboard.center(), sprite);
+            // Draw number and title
+            double numberX = scaled(clapperboard.x() + sprite.width() - 25);
+            double textX = scaled(clapperboard.x() + sprite.width());
+            double y = scaled(clapperboard.y() + 18);
+            ctx().setFont(clapperboard.font());
+            ctx().setFill(ARCADE_WHITE);
+            ctx().fillText(clapperboard.number(), numberX, y);
+            ctx().fillText(clapperboard.text(), textX, y);
         }
-        RectShort sprite = spriteSheet().spriteSequence(SpriteID.CLAPPERBOARD)[clapperboard.state()];
-        double numberX = scaled(clapperboard.x() + sprite.width() - 25);
-        double numberY = scaled(clapperboard.y() + 18);
-        double textX = scaled(clapperboard.x() + sprite.width());
-        drawSpriteCentered(clapperboard.center(), sprite);
-        ctx().setFont(clapperboard.font());
-        ctx().setFill(ARCADE_WHITE);
-        ctx().fillText(clapperboard.number(), numberX, numberY);
-        ctx().fillText(clapperboard.text(), textX, numberY);
     }
 
-    public void drawBonus(Bonus bonus) {
+    private void drawBonus(Bonus bonus) {
         switch (bonus.state()) {
             case EDIBLE -> {
                 RectShort[] sprites = spriteSheet().spriteSequence(SpriteID.BONUS_SYMBOLS);
