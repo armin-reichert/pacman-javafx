@@ -357,7 +357,7 @@ public class GameUI_Implementation implements GameUI {
     }
 
     @Override
-    public UIPreferences uiPreferences() {
+    public UIPreferences preferences() {
         return prefs;
     }
 

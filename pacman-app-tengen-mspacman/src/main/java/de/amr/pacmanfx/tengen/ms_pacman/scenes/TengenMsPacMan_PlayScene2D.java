@@ -240,7 +240,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         return List.of(
             miScaledToFit,
             miScrolling,
-            createContextMenuTitle("pacman", ui.uiPreferences(), ui.assets()),
+            createContextMenuTitle("pacman", ui.preferences(), ui.assets()),
             miAutopilot,
             miImmunity,
             new SeparatorMenuItem(),

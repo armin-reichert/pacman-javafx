@@ -162,8 +162,8 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
         RectShort[] symbolSprites = spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS);
         RectShort[] valueSprites  = spriteSheet.spriteSequence(SpriteID.BONUS_VALUES);
         for (byte symbol = 0; symbol <= 13; ++symbol) {
-            assets.set("bonus_symbol_" + symbol, spriteSheet.image(symbolSprites[symbol]));
-            assets.set("bonus_value_"  + symbol, spriteSheet.image(valueSprites[symbol]));
+            assets.set("bonus_symbol." + symbol, spriteSheet.image(symbolSprites[symbol]));
+            assets.set("bonus_value."  + symbol, spriteSheet.image(valueSprites[symbol]));
         }
 
         assets.set("color.game_over_message",  nesColor(0x11));
@@ -300,7 +300,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
     @Override
     public Image bonusSymbolImage(byte symbol) {
-        return assets.image("bonus_symbol_" + symbol);
+        return assets.image("bonus_symbol." + symbol);
     }
 
     @Override
@@ -313,7 +313,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
             case TengenMsPacMan_GameModel.BONUS_ICE_CREAM -> 7; // 4000!
             default -> symbol;
         };
-        return assets.image("bonus_value_" + usedSymbol);
+        return assets.image("bonus_value." + usedSymbol);
     }
 
     @Override
@@ -335,7 +335,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
     @Override
     public MsPacManBody createLivesCounterShape3D() {
         return ui.assets().theModel3DRepository().createMsPacManBody(
-            ui.uiPreferences().getFloat("3d.lives_counter.shape_size"),
+            ui.preferences().getFloat("3d.lives_counter.shape_size"),
             assets.color("pac.color.head"),
             assets.color("pac.color.eyes"),
             assets.color("pac.color.palate"),
@@ -351,7 +351,7 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
             ui.assets().theModel3DRepository(),
             animationRegistry,
             pac,
-            ui.uiPreferences().getFloat("3d.pac.size"),
+            ui.preferences().getFloat("3d.pac.size"),
             assets.color("pac.color.head"),
             assets.color("pac.color.eyes"),
             assets.color("pac.color.palate"),

@@ -29,9 +29,9 @@ public class DefaultDebugInfoRenderer extends DebugInfoRenderer {
     public DefaultDebugInfoRenderer(GameUI ui, Canvas canvas) {
         super(canvas);
         this.ui = ui;
-        debugTextFill   = ui.uiPreferences().getColor("debug_text.fill");
-        debugTextStroke = ui.uiPreferences().getColor("debug_text.stroke");
-        debugTextFont   = ui.uiPreferences().getFont("debug_text.font");
+        debugTextFill   = ui.preferences().getColor("debug_text.fill");
+        debugTextStroke = ui.preferences().getColor("debug_text.stroke");
+        debugTextFont   = ui.preferences().getFont("debug_text.font");
     }
 
     public void drawDebugInfo() {

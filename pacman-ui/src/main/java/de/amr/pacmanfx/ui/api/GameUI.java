@@ -68,7 +68,7 @@ public interface GameUI extends GameUI_Lifecycle, GameUI_ConfigManager, GameUI_V
     /**
      * @return the UI preferences (stored permanently in platform-specific way)
      */
-    UIPreferences uiPreferences();
+    UIPreferences preferences();
 
     // Messages
 

@@ -95,8 +95,8 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
         RectShort[] symbolSprites = spriteSheet.spriteSequence(SpriteID.BONUS_SYMBOLS);
         RectShort[] valueSprites  = spriteSheet.spriteSequence(SpriteID.BONUS_VALUES);
         for (byte symbol = 0; symbol <= 7; ++symbol) {
-            assets.set("bonus_symbol_" + symbol, spriteSheet.image(symbolSprites[symbol]));
-            assets.set("bonus_value_"  + symbol, spriteSheet.image(valueSprites[symbol]));
+            assets.set("bonus_symbol." + symbol, spriteSheet.image(symbolSprites[symbol]));
+            assets.set("bonus_value."  + symbol, spriteSheet.image(valueSprites[symbol]));
         }
 
         assets.set("pac.color.head",   ARCADE_YELLOW);
@@ -205,18 +205,18 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
 
     @Override
     public Image bonusSymbolImage(byte symbol) {
-        return assets.image("bonus_symbol_" + symbol);
+        return assets.image("bonus_symbol." + symbol);
     }
 
     @Override
     public Image bonusValueImage(byte symbol) {
-        return assets.image("bonus_value_" + symbol);
+        return assets.image("bonus_value." + symbol);
     }
 
     @Override
     public PacBody createLivesCounterShape3D() {
         return ui.assets().theModel3DRepository().createPacBody(
-            ui.uiPreferences().getFloat("3d.lives_counter.shape_size"),
+            ui.preferences().getFloat("3d.lives_counter.shape_size"),
             assets.color("pac.color.head"),
             assets.color("pac.color.eyes"),
             assets.color("pac.color.palate")
@@ -229,7 +229,7 @@ public class ArcadePacMan_UIConfig implements GameUI_Config {
             animationRegistry,
             gameLevel,
             pac,
-            ui.uiPreferences().getFloat("3d.pac.size"),
+            ui.preferences().getFloat("3d.pac.size"),
             assets.color("pac.color.head"),
             assets.color("pac.color.eyes"),
             assets.color("pac.color.palate"));

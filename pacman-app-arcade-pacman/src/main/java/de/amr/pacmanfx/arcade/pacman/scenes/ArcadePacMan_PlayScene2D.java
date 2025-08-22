@@ -263,7 +263,7 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
         miQuit.setOnAction(e -> ACTION_QUIT_GAME_SCENE.executeIfEnabled(ui));
 
         return List.of(
-            createContextMenuTitle("pacman", ui.uiPreferences(), ui.assets()),
+            createContextMenuTitle("pacman", ui.preferences(), ui.assets()),
             miAutopilot,
             miImmunity,
             new SeparatorMenuItem(),

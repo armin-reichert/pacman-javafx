@@ -221,12 +221,12 @@ public class PlayScene3D implements GameScene {
         miQuit.setOnAction(e -> ACTION_QUIT_GAME_SCENE.executeIfEnabled(ui));
 
         var items = new ArrayList<MenuItem>();
-        items.add(createContextMenuTitle("scene_display", ui.uiPreferences(), ui.assets()));
+        items.add(createContextMenuTitle("scene_display", ui.preferences(), ui.assets()));
         items.add(miUse2DScene);
         items.add(miToggleMiniView);
-        items.add(createContextMenuTitle("select_perspective", ui.uiPreferences(), ui.assets()));
+        items.add(createContextMenuTitle("select_perspective", ui.preferences(), ui.assets()));
         items.addAll(createPerspectiveRadioItems(menu));
-        items.add(createContextMenuTitle("pacman", ui.uiPreferences(), ui.assets()));
+        items.add(createContextMenuTitle("pacman", ui.preferences(), ui.assets()));
         items.add(miAutopilot);
         items.add(miImmunity);
         items.add(new SeparatorMenuItem());
