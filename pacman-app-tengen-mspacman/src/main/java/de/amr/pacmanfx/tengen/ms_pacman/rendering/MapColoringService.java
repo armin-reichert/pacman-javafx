@@ -136,7 +136,6 @@ public class MapColoringService implements Disposable {
     public void dispose() {
         if (cache != null) {
             cache.clear();
-            cache = null;
         }
     }
 }
