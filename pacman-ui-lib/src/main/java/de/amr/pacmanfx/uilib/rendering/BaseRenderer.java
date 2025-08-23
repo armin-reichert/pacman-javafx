@@ -38,6 +38,7 @@ public class BaseRenderer implements CanvasRenderer {
 
     public BaseRenderer(Canvas canvas) {
         ctx = requireNonNull(canvas).getGraphicsContext2D();
+        ctx.setImageSmoothing(false);
         arcadeFontTS.bind(scaling.map(s -> Font.font(ARCADE_FONT_TS.getFamily(), scaled(TS))));
         arcadeFont6.bind(scaling.map(s -> Font.font(ARCADE_FONT_TS.getFamily(), scaled(6))));
     }
