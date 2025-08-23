@@ -427,7 +427,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             // map width is 28 tiles but NES screen width is 32 tiles: move 2 tiles right and clip one tile on each side
             ctx().translate(scaled(TS(2)), 0);
             canvas.setClip(contentClipArea);
-            drawSceneContent();
+            drawGameLevel(context().gameLevel());
+            drawActors();
             drawHUD();
             if (debugInfoVisible.get() && debugInfoRenderer != null) {
                 // debug info also used normally clipped area
@@ -446,8 +447,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        drawGameLevel(context().gameLevel());
-        drawActors();
+        // draw() is overridden and does the job
     }
 
     private void updateScaling(GameLevel gameLevel) {
