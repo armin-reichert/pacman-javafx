@@ -37,6 +37,7 @@ import de.amr.pacmanfx.uilib.model3D.MsPacMan3D;
 import de.amr.pacmanfx.uilib.model3D.MsPacManBody;
 import de.amr.pacmanfx.uilib.rendering.ActorSpriteRenderer;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
+import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -50,6 +51,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.controller.GamePlayState.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.*;
+import static de.amr.pacmanfx.tengen.ms_pacman.rendering.NonArcadeMapsSpriteSheet.MazeID.MAZE32_ANIMATED;
 import static de.amr.pacmanfx.ui.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.api.GameScene_Config.sceneID_CutScene;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_3D_ENABLED;
@@ -441,6 +443,40 @@ public class TengenMsPacMan_UIConfig implements GameUI_Config {
 
             default -> throw new IllegalArgumentException("Illegal non-Arcade maze ID: " + mazeID);
         };
+    }
+
+    public RenderInfo highlightedMazeRenderInfo(GameLevel gameLevel, int frame) {
+        WorldMap worldMap = gameLevel.worldMap();
+        MazeSpriteSet mazeSpriteSet = worldMap.getConfigValue(TengenMsPacMan_UIConfig.MAZE_SPRITE_SET_PROPERTY);
+        ColoredSpriteImage flashingMazeSprite = mazeSpriteSet.flashingMazeImages().get(frame);
+        RenderInfo info = new RenderInfo();
+        info.put("mazeImage", flashingMazeSprite.spriteSheetImage());
+        info.put("mazeSprite", flashingMazeSprite.sprite());
+        return info;
+    }
+
+    public RenderInfo normalMazeRenderInfo(TengenMsPacMan_GameModel game, GameLevel gameLevel) {
+        RenderInfo info = new RenderInfo();
+        int mapNumber = gameLevel.worldMap().getConfigValue("mapNumber");
+        MazeSpriteSet mazeSpriteSet = gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.MAZE_SPRITE_SET_PROPERTY);
+        info.put("mazeImage", mazeSpriteSet.mazeImage().spriteSheetImage());
+        if (game.mapCategory() == MapCategory.STRANGE && mapNumber == 15) {
+            TengenMsPacMan_UIConfig uiConfig = ui.currentConfig();
+            int spriteIndex = mazeAnimationSpriteIndex(uiConfig.theUI().clock().tickCount());
+            info.put("mazeSprite", uiConfig.nonArcadeMapsSpriteSheet().spriteSequence(MAZE32_ANIMATED)[spriteIndex]);
+        } else {
+            info.put("mazeSprite", mazeSpriteSet.mazeImage().sprite());
+        }
+        return info;
+    }
+
+    /**
+     * Strange map #15 (maze #32): psychedelic animation:
+     * Frame pattern: (00000000 11111111 22222222 11111111)+, numFrames = 4, frameDuration = 8
+     */
+    private int mazeAnimationSpriteIndex(long tick) {
+        long block = (tick % 32) / 8;
+        return (int) (block < 3 ? block : 1);
     }
 
     /*
