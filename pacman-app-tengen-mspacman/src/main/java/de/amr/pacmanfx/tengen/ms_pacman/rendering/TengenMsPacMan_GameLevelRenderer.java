@@ -13,8 +13,6 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.House;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
-import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
-import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
@@ -29,7 +27,6 @@ import org.tinylog.Logger;
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesColor;
-import static de.amr.pacmanfx.tengen.ms_pacman.rendering.NonArcadeMapsSpriteSheet.MazeID.MAZE32_ANIMATED;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
@@ -63,26 +60,10 @@ public class TengenMsPacMan_GameLevelRenderer extends GameLevelRenderer implemen
 
     @Override
     public void drawGameLevel(GameContext gameContext, RenderInfo info) {
-        TengenMsPacMan_GameModel game = gameContext.game();
         GameLevel gameLevel = gameContext.gameLevel();
         applyLevelSettings(gameContext);
-
-        Image mazeImage;
+        Image mazeImage = info.get("mazeImage", Image.class);
         RectShort mazeSprite = info.get("mazeSprite", RectShort.class);
-        if (mazeSprite == null) {
-            // maze sprite set is now stored in world map configuration, take it from there:
-            int mapNumber = gameLevel.worldMap().getConfigValue("mapNumber");
-            MazeSpriteSet mazeSpriteSet = gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.MAZE_SPRITE_SET_PROPERTY);
-            mazeSprite = checkIfAnimatedMaze(game, mapNumber, mazeSpriteSet);
-            mazeImage = mazeSpriteSet.mazeImage().spriteSheetImage();
-        }
-        else {
-            mazeImage = info.get("mazeImage", Image.class);
-            if (mazeImage == null) {
-                Logger.error("No maze image for game level");
-                return;
-            }
-        }
         drawGameLevel(gameContext, mazeImage, mazeSprite);
         drawMessage(gameLevel);
     }
@@ -97,23 +78,6 @@ public class TengenMsPacMan_GameLevelRenderer extends GameLevelRenderer implemen
         overPaintActorSprites(gameContext.gameLevel());
         drawFood(gameContext.gameLevel());
         drawMessage(gameContext.gameLevel());
-    }
-
-    private RectShort checkIfAnimatedMaze(TengenMsPacMan_GameModel game, int mapNumber, MazeSpriteSet mazeSpriteSet) {
-        if (game.mapCategory() == MapCategory.STRANGE && mapNumber == 15) {
-            int spriteIndex = mazeAnimationSpriteIndex(uiConfig.theUI().clock().tickCount());
-            return uiConfig.nonArcadeMapsSpriteSheet().spriteSequence(MAZE32_ANIMATED)[spriteIndex];
-        }
-        return mazeSpriteSet.mazeImage().sprite();
-    }
-
-    /*
-       Strange map #15 (maze #32): psychedelic animation:
-       Frame pattern: (00000000 11111111 22222222 11111111)+, numFrames = 4, frameDuration = 8
-     */
-    private int mazeAnimationSpriteIndex(long tick) {
-        long block = (tick % 32) / 8;
-        return (int) (block < 3 ? block : 1);
     }
 
     private void drawFood(GameLevel gameLevel) {
