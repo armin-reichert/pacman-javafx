@@ -71,7 +71,7 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
     @Override
     public void draw() {
         if (context().gameState().timer().tickCount() == 1) {
-            clear();
+            spriteRenderer.clearCanvas();
         } else {
             drawSceneContent();
         }
@@ -89,14 +89,14 @@ public class ArcadePacMan_BootScene2D extends GameScene2D {
         // during first second, nothing happens...
         if (timer.betweenSeconds(1, 2) && timer.tickCount() % 4 == 0) {
             // change pattern every 4th tick
-            clear();
+            spriteRenderer.clearCanvas();
             drawRandomHexDigits();
         } else if (timer.betweenSeconds(2, 3.5) && timer.tickCount() % 4 == 0) {
             // change pattern every 4th tick
-            clear();
+            spriteRenderer.clearCanvas();
             drawRandomSpriteFragments();
         } else if (timer.atSecond(3.5)) {
-            clear();
+            spriteRenderer.clearCanvas();
             drawGridLines();
         }
     }

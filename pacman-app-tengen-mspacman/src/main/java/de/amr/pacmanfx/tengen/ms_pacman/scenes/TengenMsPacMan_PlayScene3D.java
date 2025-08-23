@@ -28,7 +28,6 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.ACTION_QUI
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Actions.ACTION_TOGGLE_PAC_BOOSTER;
 import static de.amr.pacmanfx.ui.CommonGameActions.*;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_3D_FLOOR_COLOR;
-import static de.amr.pacmanfx.uilib.rendering.BaseRenderer.fillCanvas;
 
 /**
  * The 3D play scene of Tengen Ms. Pac-Man.
@@ -76,7 +75,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         hudRenderer.scalingProperty().bind(scaling);
 
         // Draw it
-        fillCanvas(canvas, PROPERTY_3D_FLOOR_COLOR.get());
+        hudRenderer.fillCanvas(PROPERTY_3D_FLOOR_COLOR.get());
         hudRenderer.drawLevelNumberBox(levelNumber, 0, 0);
         hudRenderer.drawLevelNumberBox(levelNumber, width - 2 * TS, 0);
         hudRenderer.drawGameOptions(game.mapCategory(), game.difficulty(), game.pacBooster(), 0.5 * width, TS + HTS);

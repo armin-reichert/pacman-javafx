@@ -13,7 +13,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 
@@ -28,14 +27,6 @@ public class BaseRenderer implements CanvasRenderer {
     static {
         ResourceManager rm = () -> BaseRenderer.class;
         ARCADE_FONT_TS = rm.loadFont("/de/amr/pacmanfx/uilib/fonts/emulogic.ttf", TS);
-    }
-
-    public static void fillCanvas(Canvas canvas, Paint paint) {
-        requireNonNull(canvas);
-        requireNonNull(paint);
-        GraphicsContext ctx = canvas.getGraphicsContext2D();
-        ctx.setFill(paint);
-        ctx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
 
     private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
@@ -64,6 +55,7 @@ public class BaseRenderer implements CanvasRenderer {
     @Override
     public DoubleProperty scalingProperty() { return scaling; }
 
+    @Override
     public ObjectProperty<Color> backgroundColorProperty() {
         return backgroundColor;
     }

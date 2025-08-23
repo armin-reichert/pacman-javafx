@@ -21,7 +21,6 @@ import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_GHOST_NORMAL;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.*;
 import static de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel.createGhost;
-import static de.amr.pacmanfx.uilib.rendering.BaseRenderer.fillCanvas;
 
 /**
  * Shows moving and color changing "TENGEN PRESENTS" text and ghost running through scene.
@@ -128,7 +127,7 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
     @Override
     public void drawSceneContent() {
         if (grayScreen) {
-            fillCanvas(canvas, GRAY);
+            actorSpriteRenderer.fillCanvas(GRAY);
         } else {
             actorSpriteRenderer.fillText(TENGEN_PRESENTS, blueShadedColor(tick), actorSpriteRenderer.arcadeFontTS(),
                     movingText.x(), movingText.y());

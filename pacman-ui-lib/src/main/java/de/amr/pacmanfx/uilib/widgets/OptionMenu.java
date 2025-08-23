@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.uilib.widgets;
 
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -27,7 +28,6 @@ import java.util.List;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.uilib.rendering.BaseRenderer.fillCanvas;
 import static java.util.Objects.requireNonNull;
 
 public class OptionMenu {
@@ -50,6 +50,7 @@ public class OptionMenu {
     private final BorderPane root = new BorderPane();
     protected final Canvas canvas = new Canvas();
     protected final GraphicsContext g = canvas.getGraphicsContext2D();
+    protected final BaseRenderer canvasRenderer = new BaseRenderer(canvas);
 
     private OptionMenuStyle style = OptionMenuStyle.DEFAULT_OPTION_MENU_STYLE;
     private final Timeline animation;
@@ -106,7 +107,7 @@ public class OptionMenu {
     }
 
     public void draw() {
-        fillCanvas(canvas, style.backgroundFill());
+        canvasRenderer.fillCanvas(style.backgroundFill());
 
         g.save();
         g.scale(scalingPy.get(), scalingPy.get());

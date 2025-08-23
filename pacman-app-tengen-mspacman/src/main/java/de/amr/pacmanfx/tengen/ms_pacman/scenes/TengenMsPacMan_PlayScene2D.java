@@ -419,7 +419,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void draw() {
-        clear();
+        hudRenderer.clearCanvas();
         context().optGameLevel().ifPresent(gameLevel -> {
             updateScaling(gameLevel);
             ctx().save();

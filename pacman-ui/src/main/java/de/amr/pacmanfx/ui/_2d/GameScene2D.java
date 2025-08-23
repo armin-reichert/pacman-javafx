@@ -19,12 +19,10 @@ import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.pacmanfx.uilib.rendering.BaseRenderer.fillCanvas;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -59,7 +57,7 @@ public abstract class GameScene2D implements GameScene {
     public final void init() {
         requireNonNull(canvas, "No canvas has been assigned to game scene");
         debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas);
-        debugInfoRenderer.scalingProperty().bind(scaling);
+        bindRendererProperties(debugInfoRenderer);
         doInit();
         actionBindings.installBindings(ui.keyboard());
         ui.keyboard().logCurrentBindings();
@@ -124,20 +122,12 @@ public abstract class GameScene2D implements GameScene {
      */
     public abstract Vector2f sizeInPx();
 
-    public void clear() {
-        if (canvas != null) {
-            fillCanvas(canvas, backgroundColor());
-        } else {
-            Logger.error("Cannot clear scene, canvas not available");
-        }
-    }
-
     /**
      * Default implementation: scales the renderer to the current scene scaling,
      * clears the canvas and draws the scores (if on), scene content and debug information (if on).
      */
     public void draw() {
-        clear();
+        debugInfoRenderer.clearCanvas();
         drawSceneContent();
         if (debugInfoVisible.get() && debugInfoRenderer != null) {
             debugInfoRenderer.drawDebugInfo();

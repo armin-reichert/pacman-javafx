@@ -9,6 +9,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 import static java.util.Objects.requireNonNull;
 
@@ -42,5 +43,16 @@ public interface CanvasRenderer {
 
     default Color backgroundColor() {
         return backgroundColorProperty().get();
+    }
+
+    default void fillCanvas(Paint paint) {
+        requireNonNull(canvas());
+        requireNonNull(paint);
+        ctx().setFill(paint);
+        ctx().fillRect(0, 0, canvas().getWidth(), canvas().getHeight());
+    }
+
+    default void clearCanvas() {
+        fillCanvas(backgroundColor());
     }
 }

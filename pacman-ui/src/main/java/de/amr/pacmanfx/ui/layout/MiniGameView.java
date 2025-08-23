@@ -34,7 +34,6 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.api.GameUI_Config.SCENE_ID_PLAY_SCENE_3D;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.*;
-import static de.amr.pacmanfx.uilib.rendering.BaseRenderer.fillCanvas;
 import static java.util.Objects.requireNonNull;
 
 public class MiniGameView extends VBox {
@@ -111,6 +110,7 @@ public class MiniGameView extends VBox {
 
         gameLevelRenderer = ui.currentConfig().createGameLevelRenderer(canvas);
         gameLevelRenderer.scalingProperty().bind(scaling);
+        gameLevelRenderer.backgroundColorProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
         gameLevelRenderer.applyLevelSettings(ui.gameContext());
 
         actorSpriteRenderer = new ActorSpriteRenderer(canvas) {
@@ -120,6 +120,7 @@ public class MiniGameView extends VBox {
             }
         };
         actorSpriteRenderer.scalingProperty().bind(scaling);
+        actorSpriteRenderer.backgroundColorProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
     }
 
     public void slideIn() {
@@ -137,8 +138,7 @@ public class MiniGameView extends VBox {
         if (!isVisible() || gameLevelRenderer == null) {
             return;
         }
-        //gameLevelRenderer.setScaling(scaling.get());
-        fillCanvas(canvas, PROPERTY_CANVAS_BACKGROUND_COLOR.get());
+        actorSpriteRenderer.clearCanvas();
 
         GameLevel gameLevel = ui.gameContext().gameLevel();
         if (gameLevel != null) {
