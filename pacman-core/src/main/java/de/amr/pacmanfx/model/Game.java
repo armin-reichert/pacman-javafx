@@ -10,6 +10,8 @@ import de.amr.pacmanfx.model.actors.ActorSpeedControl;
 import java.util.Optional;
 import java.util.OptionalInt;
 
+import static java.util.Objects.requireNonNull;
+
 public interface Game extends GameLifecycle, GameEvents {
     GameEventManager eventManager();
     ScoreManager scoreManager();
@@ -39,4 +41,12 @@ public interface Game extends GameLifecycle, GameEvents {
 
     double pacPowerFadingSeconds(GameLevel gameLevel);
     double pacPowerSeconds(GameLevel level);
+
+    default GameLevelMessage showMessage(GameLevel gameLevel, MessageType type) {
+        requireNonNull(type);
+        GameLevelMessage message = new GameLevelMessage(type);
+        message.setPosition(gameLevel.defaultMessagePosition());
+        gameLevel.setMessage(message);
+        return message;
+    }
 }

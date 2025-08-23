@@ -75,7 +75,7 @@ public class ArcadePacMan_GameLevelRenderer extends GameLevelRenderer implements
                 .forEach(tile -> fillSquareAtTileCenter(tile, 10));
     }
 
-    private void drawGameLevelMessage(GameLevel gameLevel) {
+    protected void drawGameLevelMessage(GameLevel gameLevel) {
         gameLevel.optMessage().ifPresent(message -> {
             switch (message.type()) {
                 case MessageType.GAME_OVER -> fillTextCentered("GAME  OVER",

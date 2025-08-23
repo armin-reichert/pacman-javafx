@@ -272,14 +272,6 @@ public class GameLevel {
         }
     }
 
-    public GameLevelMessage showMessage(MessageType type) {
-        requireNonNull(type);
-        GameLevelMessage message = new GameLevelMessage(type);
-        message.setPosition(defaultMessagePosition());
-        setMessage(message);
-        return message;
-    }
-
     public void setPac(Pac pac) { this.pac = pac; }
     public Pac pac() { return pac; }
 

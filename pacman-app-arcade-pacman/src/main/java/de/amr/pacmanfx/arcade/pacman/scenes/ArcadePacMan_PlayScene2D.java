@@ -173,7 +173,7 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onGameContinued(GameEvent e) {
-        context().gameLevel().showMessage(MessageType.READY);
+        context().game().showMessage(context().gameLevel(), MessageType.READY);
     }
 
     @Override
