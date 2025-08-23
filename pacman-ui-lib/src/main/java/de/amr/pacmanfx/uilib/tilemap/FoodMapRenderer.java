@@ -6,10 +6,10 @@ package de.amr.pacmanfx.uilib.tilemap;
 
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.FoodTile;
-import javafx.beans.property.FloatProperty;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -20,28 +20,20 @@ import static java.util.Objects.requireNonNull;
 /**
  * @author Armin Reichert
  */
-public class FoodMapRenderer implements TileMapRenderer {
+public class FoodMapRenderer extends BaseRenderer implements TileMapRenderer {
 
     private static final double PELLET_SIZE = 2;
     private static final double ENERGIZER_SIZE = 8;
 
-    private final FloatProperty scalingPy = new SimpleFloatProperty(this, "scaling", 1f);
     private final ObjectProperty<Color> pelletColorPy = new SimpleObjectProperty<>(Color.PINK);
     private final ObjectProperty<Color> energizerColorPy = new SimpleObjectProperty<>(Color.YELLOW);
 
-    public FloatProperty scalingProperty() { return scalingPy;}
     public ObjectProperty<Color> pelletColorProperty() { return pelletColorPy; }
     public ObjectProperty<Color> energizerColorProperty() { return energizerColorPy; }
 
-    @Override
-    public void setScaling(double scaling) {
-        scalingPy.set((float) scaling);
+    public FoodMapRenderer(Canvas canvas) {
+        super(canvas);
     }
-
-    public float scaling() {
-        return scalingPy.get();
-    }
-
     public void setEnergizerColor(Color color) {
         energizerColorPy.set(requireNonNull(color));
     }

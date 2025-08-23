@@ -8,8 +8,8 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.Obstacle;
 import de.amr.pacmanfx.lib.tilemap.ObstacleSegment;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
-import javafx.beans.property.FloatProperty;
-import javafx.beans.property.SimpleFloatProperty;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -22,18 +22,17 @@ import static java.util.Objects.requireNonNull;
 /**
  * Vector renderer for terrain tile maps.
  */
-public class TerrainMapRenderer implements TileMapRenderer {
+public class TerrainMapRenderer extends BaseRenderer implements TileMapRenderer {
 
     public static final TerrainMapColorScheme DEFAULT_COLOR_SCHEME = new TerrainMapColorScheme(Color.BLACK, Color.RED,  Color.GOLD, Color.PINK);
-
-    private final FloatProperty scalingPy = new SimpleFloatProperty(this, "scaling", 1.0f);
 
     protected double doubleStrokeOuterWidth;
     protected double doubleStrokeInnerWidth;
     protected double singleStrokeWidth;
     protected TerrainMapColorScheme colorScheme;
 
-    public TerrainMapRenderer() {
+    public TerrainMapRenderer(Canvas canvas) {
+        super(canvas);
         doubleStrokeOuterWidth = 4;
         doubleStrokeInnerWidth = 2;
         singleStrokeWidth = 1;
@@ -46,17 +45,6 @@ public class TerrainMapRenderer implements TileMapRenderer {
 
     public void setColorScheme(TerrainMapColorScheme colors) {
         this.colorScheme = requireNonNull(colors);
-    }
-
-    public FloatProperty scalingProperty() { return scalingPy; }
-
-    @Override
-    public void setScaling(double scaling) {
-        scalingPy.set((float) scaling);
-    }
-
-    public double scaling() {
-        return scalingPy.get();
     }
 
     public void setDoubleStrokeInnerWidth(double width) {

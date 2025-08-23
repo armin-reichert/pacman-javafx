@@ -573,8 +573,6 @@ public class TileMapEditor {
             parseColor(MS_PACMAN_COLOR_WALL_STROKE),
             parseColor(MS_PACMAN_COLOR_DOOR)
         );
-        // renderers must be created before palettes!
-        createRenderers(initialColors, parseColor(MS_PACMAN_COLOR_FOOD));
 
         createFileChooser();
         createEditCanvas();
@@ -582,6 +580,8 @@ public class TileMapEditor {
         createPreview3D();
         createTemplateImageCanvas();
         createMapSourceView();
+        // renderers must be created before palettes!
+        createRenderers(initialColors, parseColor(MS_PACMAN_COLOR_FOOD));
         createPalettes();
         createPropertyEditors();
         createTabPaneWithEditViews();
@@ -669,11 +669,11 @@ public class TileMapEditor {
     }
 
     private void createRenderers(TerrainMapColorScheme colors, Color foodColor) {
-        terrainTileRenderer = new TerrainTileMapRenderer();
+        terrainTileRenderer = new TerrainTileMapRenderer(editCanvas.canvas());
         terrainTileRenderer.setColorScheme(colors);
-        terrainPathRenderer = new TerrainMapRenderer();
+        terrainPathRenderer = new TerrainMapRenderer(editCanvas.canvas());
         terrainPathRenderer.setColorScheme(colors);
-        foodRenderer = new FoodMapRenderer();
+        foodRenderer = new FoodMapRenderer(editCanvas.canvas());
         foodRenderer.setPelletColor(foodColor);
         foodRenderer.setEnergizerColor(foodColor);
     }

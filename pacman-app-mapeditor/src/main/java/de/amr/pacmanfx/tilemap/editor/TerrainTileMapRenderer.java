@@ -11,6 +11,7 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.*;
 import de.amr.pacmanfx.model.WorldMapProperty;
 import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
@@ -49,7 +50,9 @@ public class TerrainTileMapRenderer extends TerrainMapRenderer {
     private final double[] xp = new double[3];
     private final double[] yp = new double[3];
 
-    public TerrainTileMapRenderer() {}
+    public TerrainTileMapRenderer(Canvas canvas) {
+        super(canvas);
+    }
 
     public void setSegmentNumbersDisplayed(boolean segmentNumbersDisplayed) {
         this.segmentNumbersDisplayed = segmentNumbersDisplayed;

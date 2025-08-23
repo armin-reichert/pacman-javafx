@@ -22,14 +22,18 @@ import static java.util.function.Predicate.not;
  */
 public class GenericMapRenderer extends BaseRenderer {
 
-    private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
-    private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
+    private final TerrainMapRenderer terrainRenderer;
+    private final FoodMapRenderer foodRenderer;
     private TerrainMapColorScheme blinkingOnColors;
     private TerrainMapColorScheme blinkingOffColors;
 
     public GenericMapRenderer(Canvas canvas) {
         super(canvas);
+        terrainRenderer = new TerrainMapRenderer(canvas);
+        terrainRenderer.backgroundColorProperty().bind(backgroundColorProperty());
         terrainRenderer.scalingProperty().bind(scalingProperty());
+        foodRenderer = new FoodMapRenderer(canvas);
+        foodRenderer.backgroundColorProperty().bind(backgroundColorProperty());
         foodRenderer.scalingProperty().bind(scalingProperty());
         backgroundColorProperty().addListener((py, ov, newColor) -> updateColors(newColor));
         updateColors(backgroundColor());
