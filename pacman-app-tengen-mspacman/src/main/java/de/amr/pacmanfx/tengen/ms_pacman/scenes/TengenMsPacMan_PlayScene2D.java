@@ -46,7 +46,6 @@ import javafx.scene.shape.Rectangle;
 import org.tinylog.Logger;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -474,35 +473,19 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     private void drawGameLevel(GameLevel gameLevel) {
+        RenderInfo info = new RenderInfo();
         if (levelCompletedAnimation != null && levelCompletedAnimation.isRunning()) {
             if (mazeHighlighted.get()) {
                 MazeSpriteSet recoloredMaze = gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.MAZE_SPRITE_SET_PROPERTY);
                 // get the current maze flashing "animation frame"
                 int frame = levelCompletedAnimation.flashingIndex();
                 ColoredSpriteImage flashingMazeSprite = recoloredMaze.flashingMazeImages().get(frame);
-
-                RenderInfo info = RenderInfo.build(Map.of(
-                    "mazeBright", false,
-                    "blinkingPhaseOn", false,
-                    "mazeImage", flashingMazeSprite.spriteSheetImage(),
-                    "mazeSprite", flashingMazeSprite.sprite()
-                ));
-                gameLevelRenderer.drawGameLevel(context(), info);
-            } else {
-                RenderInfo info = RenderInfo.build(Map.of(
-                    "mazeBright", false,
-                    "blinkingPhaseOn", false
-                ));
+                info.put("mazeImage", flashingMazeSprite.spriteSheetImage());
+                info.put("mazeSprite", flashingMazeSprite.sprite());
                 gameLevelRenderer.drawGameLevel(context(), info);
             }
         }
-        else {
-            RenderInfo info = RenderInfo.build(Map.of(
-                "mazeBright", false,
-                "blinkingPhaseOn", false
-            ));
-            gameLevelRenderer.drawGameLevel(context(), info);
-        }
+        gameLevelRenderer.drawGameLevel(context(), info);
     }
 
     private Stream<Ghost> ghostsByZ(GameLevel gameLevel) {
