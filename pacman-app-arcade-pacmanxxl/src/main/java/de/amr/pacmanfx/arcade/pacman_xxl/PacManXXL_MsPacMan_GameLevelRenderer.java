@@ -8,6 +8,7 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_GameLevelRenderer;
 import de.amr.pacmanfx.ui._2d.GenericMapRenderer;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import javafx.scene.canvas.Canvas;
 
 public class PacManXXL_MsPacMan_GameLevelRenderer extends ArcadeMsPacMan_GameLevelRenderer {
@@ -21,8 +22,11 @@ public class PacManXXL_MsPacMan_GameLevelRenderer extends ArcadeMsPacMan_GameLev
     }
 
     @Override
-    public void drawGameLevel(GameContext context, RenderingInfo info) {
-        mapRenderer.drawLevel(context.gameLevel(), info.mazeBright(), info.blinkingPhaseOn());
+    public void drawGameLevel(GameContext context, RenderInfo info) {
+        mapRenderer.drawLevel(context.gameLevel(),
+            info.getBoolean("mazeBright"),
+            info.getBoolean("blinkingPhaseOn")
+        );
         super.drawGameLevelMessage(context.gameLevel());
     }
 }

@@ -16,6 +16,7 @@ import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
+import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
@@ -61,7 +62,7 @@ public class TengenMsPacMan_GameLevelRenderer extends GameLevelRenderer implemen
     }
 
     @Override
-    public void drawGameLevel(GameContext gameContext, RenderingInfo info) {
+    public void drawGameLevel(GameContext gameContext, RenderInfo info) {
         TengenMsPacMan_GameModel game = gameContext.game();
         GameLevel gameLevel = gameContext.gameLevel();
         int mapNumber = gameLevel.worldMap().getConfigValue("mapNumber");

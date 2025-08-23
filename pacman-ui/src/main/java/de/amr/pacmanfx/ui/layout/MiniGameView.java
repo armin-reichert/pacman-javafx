@@ -10,6 +10,7 @@ import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.ActorSpriteRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
+import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
 import javafx.beans.binding.Bindings;
@@ -27,6 +28,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 
+import java.util.Map;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -140,7 +142,10 @@ public class MiniGameView extends VBox {
 
         GameLevel gameLevel = ui.gameContext().gameLevel();
         if (gameLevel != null) {
-            var info = new GameLevelRenderer.RenderingInfo(false, gameLevel.blinking().isOn());
+            var info = RenderInfo.build(Map.of(
+                "mazeBright", false,
+                "blinkingPhaseOn", gameLevel.blinking().isOn()
+            ));
             gameLevelRenderer.drawGameLevel(ui.gameContext(), info);
             gameLevel.bonus().ifPresent(bonus -> actorSpriteRenderer.drawActor(bonus));
             actorSpriteRenderer.drawActor(gameLevel.pac());

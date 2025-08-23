@@ -10,6 +10,7 @@ import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
+import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
 import javafx.scene.canvas.Canvas;
 
@@ -39,13 +40,13 @@ public class ArcadeMsPacMan_GameLevelRenderer extends GameLevelRenderer implemen
     }
 
     @Override
-    public void drawGameLevel(GameContext gameContext, RenderingInfo info) {
-        if (info.mazeBright()) {
+    public void drawGameLevel(GameContext gameContext, RenderInfo info) {
+        if (info.getBoolean("mazeBright")) {
             drawBrightGameLevel(gameContext.gameLevel());
         } else if (gameContext.gameLevel().uneatenFoodCount() == 0) {
             drawEmptyGameLevel(gameContext.gameLevel());
         } else {
-            drawGameLevelWithFood(gameContext.gameLevel(), !info.blinkingPhaseOn());
+            drawGameLevelWithFood(gameContext.gameLevel(), !info.getBoolean("blinkingPhaseOn"));
         }
         drawGameLevelMessage(gameContext.gameLevel());
     }

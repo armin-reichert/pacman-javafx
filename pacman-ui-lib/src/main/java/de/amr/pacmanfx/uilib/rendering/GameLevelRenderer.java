@@ -9,8 +9,6 @@ import javafx.scene.canvas.Canvas;
 
 public abstract class GameLevelRenderer extends BaseRenderer {
 
-    public record RenderingInfo(boolean mazeBright, boolean blinkingPhaseOn) {}
-
     public GameLevelRenderer(Canvas canvas) {
         super(canvas);
     }
@@ -26,7 +24,7 @@ public abstract class GameLevelRenderer extends BaseRenderer {
 
     /**
      * @param gameContext the game context
-     * @param renderingInfo additional rendering info
+     * @param info additional rendering info
      */
-    public abstract void drawGameLevel(GameContext gameContext, RenderingInfo renderingInfo);
+    public abstract void drawGameLevel(GameContext gameContext, RenderInfo info);
 }

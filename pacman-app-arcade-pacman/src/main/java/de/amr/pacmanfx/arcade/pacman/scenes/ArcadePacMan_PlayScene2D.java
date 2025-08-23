@@ -25,6 +25,7 @@ import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.rendering.ActorSpriteRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import de.amr.pacmanfx.uilib.rendering.HUDRenderer;
+import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.CheckMenuItem;
@@ -36,6 +37,7 @@ import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.Globals.*;
@@ -286,7 +288,10 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
         }
         final GameLevel gameLevel = context().gameLevel();
         gameLevelRenderer.applyLevelSettings(context());
-        GameLevelRenderer.RenderingInfo info = new GameLevelRenderer.RenderingInfo(mazeHighlighted.get(), gameLevel.blinking().isOn());
+        RenderInfo info = RenderInfo.build(Map.of(
+            "mazeBright", mazeHighlighted.get(),
+            "blinkingPhaseOn", gameLevel.blinking().isOn()
+        ));
         gameLevelRenderer.drawGameLevel(context(), info);
         createActorDrawingOrder(gameLevel);
         actorsInZOrder.forEach(actor -> actorSpriteRenderer.drawActor(actor));
