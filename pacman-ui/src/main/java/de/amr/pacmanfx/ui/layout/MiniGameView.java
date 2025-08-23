@@ -34,7 +34,7 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.Globals.*;
 import static de.amr.pacmanfx.ui.api.GameUI_Config.SCENE_ID_PLAY_SCENE_3D;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.*;
-import static de.amr.pacmanfx.uilib.rendering.GameLevelRenderer.fillCanvas;
+import static de.amr.pacmanfx.uilib.rendering.BaseRenderer.fillCanvas;
 import static java.util.Objects.requireNonNull;
 
 public class MiniGameView extends VBox {
@@ -155,7 +155,7 @@ public class MiniGameView extends VBox {
         }
 
         if (PROPERTY_DEBUG_INFO_VISIBLE.get()) {
-            gameLevelRenderer.fillTextCentered(
+            actorSpriteRenderer.fillTextCentered(
                 "scaling: %.2f, draw calls: %d".formatted(scaling.doubleValue(), drawCallCount),
                 Color.WHITE, Font.font(14 * scaling.get()),
                 0.5 * worldSize.get().x(), 16

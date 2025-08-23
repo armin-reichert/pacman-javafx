@@ -27,7 +27,7 @@ import java.util.List;
 
 import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
-import static de.amr.pacmanfx.uilib.rendering.GameLevelRenderer.fillCanvas;
+import static de.amr.pacmanfx.uilib.rendering.BaseRenderer.fillCanvas;
 import static java.util.Objects.requireNonNull;
 
 public class OptionMenu {

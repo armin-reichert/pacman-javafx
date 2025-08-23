@@ -24,7 +24,7 @@ import org.tinylog.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.pacmanfx.uilib.rendering.GameLevelRenderer.fillCanvas;
+import static de.amr.pacmanfx.uilib.rendering.BaseRenderer.fillCanvas;
 import static java.util.Objects.requireNonNull;
 
 /**

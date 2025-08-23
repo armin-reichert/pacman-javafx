@@ -9,6 +9,7 @@ import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
 import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
@@ -19,7 +20,7 @@ import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
-public class ArcadeMsPacMan_GameLevelRenderer extends GameLevelRenderer implements SpriteRendererMixin {
+public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements GameLevelRenderer, SpriteRendererMixin {
 
     protected GameUI_Config uiConfig;
     protected BrightMazesSpriteSheet brightMazesSpriteSheet;
@@ -28,6 +29,11 @@ public class ArcadeMsPacMan_GameLevelRenderer extends GameLevelRenderer implemen
         super(canvas);
         this.uiConfig = requireNonNull(uiConfig);
         this.brightMazesSpriteSheet = brightMazesSpriteSheet; // can be null in Ms. Pac-Man XXL!
+    }
+
+    @Override
+    public void applyLevelSettings(GameContext gameContext) {
+        // Nothing to do
     }
 
     public ArcadeMsPacMan_GameLevelRenderer(Canvas canvas, GameUI_Config uiConfig) {
