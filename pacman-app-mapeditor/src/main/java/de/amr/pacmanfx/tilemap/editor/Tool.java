@@ -8,7 +8,6 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.uilib.tilemap.TileMapRenderer;
-import javafx.scene.canvas.GraphicsContext;
 
 public interface Tool {
 
@@ -18,5 +17,5 @@ public interface Tool {
 
     TileMapRenderer renderer();
 
-    void draw(GraphicsContext g, int row, int col);
+    void draw(int row, int col);
 }

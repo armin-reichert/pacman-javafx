@@ -4,6 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.pacmanfx.tilemap.editor;
 
+import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
+import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer;
 import de.amr.pacmanfx.uilib.tilemap.TileMapRenderer;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
@@ -21,25 +23,30 @@ public class Palette {
 
     public static final Color BG_COLOR = Color.WHITE;
 
-    private final GraphicsContext g;
-
     private final byte id;
     private final int toolSize;
     private final int numRows;
     private final int numCols;
-    private final TileMapRenderer renderer;
-    private List<Tool> tools;
+    private final GraphicsContext ctx;
+    private final List<Tool> tools;
+
+    private TileMapRenderer renderer;
     private Tool selectedTool;
+    private Tooltip tooltip;
     private int selectedRow;
     private int selectedCol;
-    private final Tooltip tooltip;
 
-    public Palette(byte id, int toolSize, int numRows, int numCols, TileMapRenderer renderer) {
+    private Palette(byte id, int toolSize, int numRows, int numCols) {
+        var canvas = new Canvas(numCols * toolSize, numRows * toolSize);
+        ctx = canvas.getGraphicsContext2D();
+        canvas.setOnMouseClicked(this::handleMouseClick);
+        canvas.setOnMouseMoved(this::handleMouseMove);
+        Tooltip.install(canvas, tooltip);
+
         this.id = id;
         this.toolSize = toolSize;
         this.numRows = numRows;
         this.numCols = numCols;
-        this.renderer = renderer;
         tools = new ArrayList<>();
 
         selectedTool = null;
@@ -51,13 +58,23 @@ public class Palette {
         tooltip.setShowDelay(Duration.seconds(0.1));
         tooltip.setHideDelay(Duration.seconds(0.5));
         tooltip.setFont(Font.font("Sans", 12));
+    }
 
-        var canvas = new Canvas(numCols * toolSize, numRows * toolSize);
-        canvas.setOnMouseClicked(this::handleMouseClick);
-        canvas.setOnMouseMoved(this::handleMouseMove);
+    public Palette(byte id, int toolSize, int numRows, int numCols, TerrainMapRenderer terrainMapRenderer) {
+        this(id, toolSize, numRows, numCols);
+        TerrainTileMapRenderer copy = new TerrainTileMapRenderer(ctx.getCanvas());
+        copy.backgroundColorProperty().bind(terrainMapRenderer.backgroundColorProperty());
+        copy.colorSchemeProperty().bind(terrainMapRenderer.colorSchemeProperty());
+        renderer = copy;
+    }
 
-        g = canvas.getGraphicsContext2D();
-        Tooltip.install(canvas, tooltip);
+    public Palette(byte id, int toolSize, int numRows, int numCols, FoodMapRenderer foodMapRenderer) {
+        this(id, toolSize, numRows, numCols);
+        FoodMapRenderer copy = new FoodMapRenderer(ctx.getCanvas());
+        copy.backgroundColorProperty().bind(foodMapRenderer.backgroundColorProperty());
+        copy.energizerColorProperty().bind(foodMapRenderer.energizerColorProperty());
+        copy.pelletColorProperty().bind(foodMapRenderer.pelletColorProperty());
+        renderer = copy;
     }
 
     public byte id() {
@@ -81,7 +98,7 @@ public class Palette {
     }
 
     public Node root() {
-        return g.getCanvas();
+        return ctx.getCanvas();
     }
 
     public boolean isToolSelected() {
@@ -149,39 +166,39 @@ public class Palette {
     }
 
     public void draw() {
-        double width = g.getCanvas().getWidth(), height = g.getCanvas().getHeight();
-        g.save();
+        double width = ctx.getCanvas().getWidth(), height = ctx.getCanvas().getHeight();
+        ctx.save();
 
-        g.setFill(BG_COLOR);
-        g.fillRect(0, 0, width, height);
+        ctx.setFill(BG_COLOR);
+        ctx.fillRect(0, 0, width, height);
 
         if (renderer != null) {
             renderer.setScaling(toolSize / 8.0);
             for (int i = 0; i < numRows * numCols; ++i) {
                 Tool tool = getToolOrNull(i);
                 if (tool != null) {
-                    tool.draw(g, i / numCols, i % numCols);
+                    tool.draw(i / numCols, i % numCols);
                 }
             }
         }
 
         // Grid lines
-        g.setStroke(Color.LIGHTGRAY);
-        g.setLineWidth(1);
+        ctx.setStroke(Color.LIGHTGRAY);
+        ctx.setLineWidth(1);
         for (int row = 1; row < numRows; ++row) {
-            g.strokeLine(0, row * toolSize, width, row * toolSize);
+            ctx.strokeLine(0, row * toolSize, width, row * toolSize);
         }
         for (int col = 1; col < numCols; ++col) {
-            g.strokeLine(col * toolSize, 0, col * toolSize, height);
+            ctx.strokeLine(col * toolSize, 0, col * toolSize, height);
         }
 
         // mark selected tool
         if (selectedRow != -1 && selectedCol != -1) {
-            g.setStroke(Color.RED);
-            g.setLineWidth(2);
-            g.strokeRect(selectedCol * toolSize + 1, selectedRow * toolSize + 1, toolSize - 2, toolSize - 2);
+            ctx.setStroke(Color.RED);
+            ctx.setLineWidth(2);
+            ctx.strokeRect(selectedCol * toolSize + 1, selectedRow * toolSize + 1, toolSize - 2, toolSize - 2);
         }
 
-        g.restore();
+        ctx.restore();
     }
 }

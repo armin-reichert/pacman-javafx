@@ -48,6 +48,7 @@ public class EditCanvas {
     private final ObjectProperty<WorldMap> worldMapPy = new SimpleObjectProperty<>();
 
     private final Canvas canvas;
+    private final GraphicsContext ctx;
     private final TileMapEditor editor;
     private final ObstacleEditor obstacleEditor;
     private final ContextMenu contextMenu = new ContextMenu();
@@ -72,6 +73,7 @@ public class EditCanvas {
         templateImageGreyPy.bind(editor.templateImageProperty().map(Ufx::imageToGreyscale));
 
         canvas = new Canvas();
+        ctx = canvas.getGraphicsContext2D();
         canvas.heightProperty().bind(Bindings.createDoubleBinding(
             () -> (double) worldMap().numRows() * gridSize(), worldMapPy, gridSizePy));
 
@@ -125,31 +127,29 @@ public class EditCanvas {
     public void draw(TerrainMapColorScheme terrainMapColorScheme) {
         double scaling = gridSize() / (double) TS;
         double width = canvas.getWidth(), height = canvas.getHeight();
+        ctx.setImageSmoothing(false);
 
-        GraphicsContext g = canvas.getGraphicsContext2D();
-        g.setImageSmoothing(false);
-
-        g.setFill(terrainMapColorScheme.backgroundColor());
-        g.fillRect(0, 0, width, height);
+        ctx.setFill(terrainMapColorScheme.backgroundColor());
+        ctx.fillRect(0, 0, width, height);
 
         if (templateImageGreyPy.get() != null) {
-            g.drawImage(templateImageGreyPy.get(),
+            ctx.drawImage(templateImageGreyPy.get(),
                 0, EMPTY_ROWS_BEFORE_MAZE * scaling * TS,
                 width, height - (EMPTY_ROWS_BEFORE_MAZE + EMPTY_ROWS_BELOW_MAZE) * scaling * TS);
         }
 
         if (editor.gridVisibleProperty().get()) {
-            drawGrid(g);
+            drawGrid();
         }
 
         // Indicate start and end of reserved areas at top and bottom
-        g.save();
-        g.setStroke(Color.grayRgb(200, 0.75));
-        g.setLineWidth(0.75);
-        g.setLineDashes(5, 5);
-        g.strokeLine(0, EMPTY_ROWS_BEFORE_MAZE * scaling * TS, width, EMPTY_ROWS_BEFORE_MAZE * scaling * TS);
-        g.strokeLine(0, height - EMPTY_ROWS_BELOW_MAZE * scaling * TS, width, height - EMPTY_ROWS_BELOW_MAZE * scaling * TS);
-        g.restore();
+        ctx.save();
+        ctx.setStroke(Color.grayRgb(200, 0.75));
+        ctx.setLineWidth(0.75);
+        ctx.setLineDashes(5, 5);
+        ctx.strokeLine(0, EMPTY_ROWS_BEFORE_MAZE * scaling * TS, width, EMPTY_ROWS_BEFORE_MAZE * scaling * TS);
+        ctx.strokeLine(0, height - EMPTY_ROWS_BELOW_MAZE * scaling * TS, width, height - EMPTY_ROWS_BELOW_MAZE * scaling * TS);
+        ctx.restore();
 
         // Terrain
         if (editor.terrainVisibleProperty().get()) {
@@ -158,29 +158,29 @@ public class EditCanvas {
             renderer.setColorScheme(terrainMapColorScheme);
             renderer.setSegmentNumbersDisplayed(editor.isSegmentNumbersVisible());
             renderer.setObstacleInnerAreaDisplayed(editor.isObstacleInnerAreaDisplayed());
-            renderer.drawTerrain(g, worldMap(), worldMap().obstacles());
-            obstacleEditor.draw(g, renderer);
+            renderer.drawTerrain(worldMap(), worldMap().obstacles());
+            obstacleEditor.draw(renderer);
         }
 
         // Tiles that seem to be wrong
-        g.setFont(Font.font("sans", gridSize() - 2));
-        g.setFill(Color.grayRgb(200, 0.8));
+        ctx.setFont(Font.font("sans", gridSize() - 2));
+        ctx.setFill(Color.grayRgb(200, 0.8));
         for (Vector2i tile : editor.tilesWithErrors()) {
-            g.fillText("?", tile.x() * gridSize() + 0.25 * gridSize(), tile.y() * gridSize() + 0.8 * gridSize());
+            ctx.fillText("?", tile.x() * gridSize() + 0.25 * gridSize(), tile.y() * gridSize() + 0.8 * gridSize());
             if (editor.isSymmetricEditMode()) {
                 int x = worldMap().numCols() - tile.x() - 1;
-                g.fillText("?", x * gridSize() + 0.25 * gridSize(), tile.y() * gridSize() + 0.8 * gridSize());
+                ctx.fillText("?", x * gridSize() + 0.25 * gridSize(), tile.y() * gridSize() + 0.8 * gridSize());
             }
         }
 
         // Vertical separator to indicate symmetric edit mode
         if (editor.isEditMode(EditMode.EDIT) && editor.isSymmetricEditMode()) {
-            g.save();
-            g.setStroke(Color.YELLOW);
-            g.setLineWidth(0.75);
-            g.setLineDashes(5, 5);
-            g.strokeLine(width / 2.0, 0, width / 2.0, height);
-            g.restore();
+            ctx.save();
+            ctx.setStroke(Color.YELLOW);
+            ctx.setLineWidth(0.75);
+            ctx.setLineDashes(5, 5);
+            ctx.strokeLine(width / 2.0, 0, width / 2.0, height);
+            ctx.restore();
         }
 
         // Food
@@ -190,33 +190,33 @@ public class EditCanvas {
             renderer.setScaling(scaling);
             renderer.setEnergizerColor(foodColor);
             renderer.setPelletColor(foodColor);
-            worldMap().tiles().forEach(tile -> renderer.drawTile(g, tile, worldMap().content(LayerID.FOOD, tile)));
+            worldMap().tiles().forEach(tile -> renderer.drawTile(tile, worldMap().content(LayerID.FOOD, tile)));
         }
 
         if (editor.isActorsVisible()) {
-            editor.drawActorSprites(g, worldMap(), gridSize());
+            editor.drawActorSprites(worldMap(), gridSize());
         }
 
         if (focussedTile() != null) {
-            g.save();
-            g.setLineWidth(1);
-            g.setStroke(Color.YELLOW);
-            g.strokeRect(focussedTile().x() * gridSize(), focussedTile().y() * gridSize(), gridSize(), gridSize());
-            g.restore();
+            ctx.save();
+            ctx.setLineWidth(1);
+            ctx.setStroke(Color.YELLOW);
+            ctx.strokeRect(focussedTile().x() * gridSize(), focussedTile().y() * gridSize(), gridSize(), gridSize());
+            ctx.restore();
         }
     }
 
-    private void drawGrid(GraphicsContext g) {
-        g.save();
-        g.setLineWidth(0.5);
-        g.setStroke(Color.grayRgb(180));
+    private void drawGrid() {
+        ctx.save();
+        ctx.setLineWidth(0.5);
+        ctx.setStroke(Color.grayRgb(180));
         for (int row = 1; row < worldMap().numRows(); ++row) {
-            g.strokeLine(0, row * gridSize(), canvas.getWidth(), row * gridSize());
+            ctx.strokeLine(0, row * gridSize(), canvas.getWidth(), row * gridSize());
         }
         for (int col = 1; col < worldMap().numCols(); ++col) {
-            g.strokeLine(col * gridSize(), 0, col * gridSize(), canvas.getHeight());
+            ctx.strokeLine(col * gridSize(), 0, col * gridSize(), canvas.getHeight());
         }
-        g.restore();
+        ctx.restore();
     }
 
     private void onMouseClicked(MouseEvent e) {
@@ -298,7 +298,7 @@ public class EditCanvas {
             return;
         }
         if (menuEvent.isKeyboardTrigger()) {
-            return; // ignore keyboard-triggered event e.g. by pressing Shift+F10 in Windows
+            return;
         }
 
         Vector2i tile = tileAtMousePosition(menuEvent.getX(), menuEvent.getY(), gridSize());

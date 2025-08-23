@@ -8,7 +8,6 @@ import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.uilib.tilemap.TileMapRenderer;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 public class TileValueEditorTool implements Tool {
@@ -42,9 +41,9 @@ public class TileValueEditorTool implements Tool {
     }
 
     @Override
-    public void draw(GraphicsContext g, int row, int col) {
-        g.setFill(Color.BLACK);
-        g.fillRect(col * size, row * size, size, size);
-        renderer.drawTile(g, new Vector2i(col, row), value);
+    public void draw(int row, int col) {
+        renderer.ctx().setFill(Color.BLACK);
+        renderer.ctx().fillRect(col * size, row * size, size, size);
+        renderer.drawTile(new Vector2i(col, row), value);
     }
 }

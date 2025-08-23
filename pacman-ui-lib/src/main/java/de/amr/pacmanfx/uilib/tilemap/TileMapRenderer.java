@@ -6,8 +6,7 @@ package de.amr.pacmanfx.uilib.tilemap;
 
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.uilib.rendering.CanvasRenderer;
-import javafx.scene.canvas.GraphicsContext;
 
 public interface TileMapRenderer extends CanvasRenderer {
-    void drawTile(GraphicsContext g, Vector2i tile, byte content);
+    void drawTile(Vector2i tile, byte content);
 }

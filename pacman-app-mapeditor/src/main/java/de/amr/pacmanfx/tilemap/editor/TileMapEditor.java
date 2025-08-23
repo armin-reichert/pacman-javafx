@@ -671,7 +671,7 @@ public class TileMapEditor {
     private void createRenderers(TerrainMapColorScheme colors, Color foodColor) {
         terrainTileRenderer = new TerrainTileMapRenderer(editCanvas.canvas());
         terrainTileRenderer.setColorScheme(colors);
-        terrainPathRenderer = new TerrainMapRenderer(editCanvas.canvas());
+        terrainPathRenderer = new TerrainMapRenderer(canvasPreview2D);
         terrainPathRenderer.setColorScheme(colors);
         foodRenderer = new FoodMapRenderer(editCanvas.canvas());
         foodRenderer.setPelletColor(foodColor);
@@ -1304,13 +1304,13 @@ public class TileMapEditor {
     // Drawing
     //
 
-    public void drawActorSprites(GraphicsContext g, WorldMap worldMap, double gridSize) {
-        terrainTileRenderer.drawSpriteBetweenTiles(g, worldMap.getTerrainTileProperty(WorldMapProperty.POS_PAC), PAC_SPRITE, gridSize);
-        terrainTileRenderer.drawSpriteBetweenTiles(g, worldMap.getTerrainTileProperty(WorldMapProperty.POS_RED_GHOST), RED_GHOST_SPRITE, gridSize);
-        terrainTileRenderer.drawSpriteBetweenTiles(g, worldMap.getTerrainTileProperty(WorldMapProperty.POS_PINK_GHOST), PINK_GHOST_SPRITE, gridSize);
-        terrainTileRenderer.drawSpriteBetweenTiles(g, worldMap.getTerrainTileProperty(WorldMapProperty.POS_CYAN_GHOST), CYAN_GHOST_SPRITE, gridSize);
-        terrainTileRenderer.drawSpriteBetweenTiles(g, worldMap.getTerrainTileProperty(WorldMapProperty.POS_ORANGE_GHOST), ORANGE_GHOST_SPRITE, gridSize);
-        terrainTileRenderer.drawSpriteBetweenTiles(g, worldMap.getTerrainTileProperty(WorldMapProperty.POS_BONUS), BONUS_SPRITE, gridSize);
+    public void drawActorSprites(WorldMap worldMap, double gridSize) {
+        terrainTileRenderer.drawSpriteBetweenTiles(worldMap.getTerrainTileProperty(WorldMapProperty.POS_PAC), PAC_SPRITE, gridSize);
+        terrainTileRenderer.drawSpriteBetweenTiles(worldMap.getTerrainTileProperty(WorldMapProperty.POS_RED_GHOST), RED_GHOST_SPRITE, gridSize);
+        terrainTileRenderer.drawSpriteBetweenTiles(worldMap.getTerrainTileProperty(WorldMapProperty.POS_PINK_GHOST), PINK_GHOST_SPRITE, gridSize);
+        terrainTileRenderer.drawSpriteBetweenTiles(worldMap.getTerrainTileProperty(WorldMapProperty.POS_CYAN_GHOST), CYAN_GHOST_SPRITE, gridSize);
+        terrainTileRenderer.drawSpriteBetweenTiles(worldMap.getTerrainTileProperty(WorldMapProperty.POS_ORANGE_GHOST), ORANGE_GHOST_SPRITE, gridSize);
+        terrainTileRenderer.drawSpriteBetweenTiles(worldMap.getTerrainTileProperty(WorldMapProperty.POS_BONUS), BONUS_SPRITE, gridSize);
     }
 
     private void draw(TerrainMapColorScheme colors) {
@@ -1354,11 +1354,11 @@ public class TileMapEditor {
         if (isTerrainVisible()) {
             terrainPathRenderer.setScaling(gridSize() / 8.0);
             terrainPathRenderer.setColorScheme(colors);
-            terrainPathRenderer.drawTerrain(g, editedWorldMap(), editedWorldMap().obstacles());
+            terrainPathRenderer.drawTerrain(editedWorldMap(), editedWorldMap().obstacles());
             Vector2i houseMinTile = editedWorldMap().getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MIN_TILE);
             Vector2i houseMaxTile = editedWorldMap().getTerrainTileProperty(WorldMapProperty.POS_HOUSE_MAX_TILE);
             if (houseMinTile != null && houseMaxTile != null) {
-                terrainPathRenderer.drawHouse(g, houseMinTile, houseMaxTile.minus(houseMinTile).plus(1, 1));
+                terrainPathRenderer.drawHouse(houseMinTile, houseMaxTile.minus(houseMinTile).plus(1, 1));
             }
         }
         if (isFoodVisible()) {
@@ -1366,10 +1366,10 @@ public class TileMapEditor {
             foodRenderer.setScaling(gridSize() / 8.0);
             foodRenderer.setEnergizerColor(foodColor);
             foodRenderer.setPelletColor(foodColor);
-            editedWorldMap().tiles().forEach(tile -> foodRenderer.drawTile(g, tile, editedWorldMap().content(LayerID.FOOD, tile)));
+            editedWorldMap().tiles().forEach(tile -> foodRenderer.drawTile(tile, editedWorldMap().content(LayerID.FOOD, tile)));
         }
         if (isActorsVisible()) {
-            drawActorSprites(g, editedWorldMap(), gridSize());
+            drawActorSprites(editedWorldMap(), gridSize());
         }
     }
 

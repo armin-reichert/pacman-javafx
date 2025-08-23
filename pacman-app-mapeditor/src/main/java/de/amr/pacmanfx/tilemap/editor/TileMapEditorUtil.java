@@ -10,7 +10,8 @@ import de.amr.pacmanfx.lib.tilemap.LayerID;
 import de.amr.pacmanfx.lib.tilemap.TerrainTile;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.WorldMapProperty;
-import de.amr.pacmanfx.uilib.tilemap.TileMapRenderer;
+import de.amr.pacmanfx.uilib.tilemap.FoodMapRenderer;
+import de.amr.pacmanfx.uilib.tilemap.TerrainMapRenderer;
 import javafx.scene.Node;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -90,8 +91,8 @@ public interface TileMapEditorUtil {
         return spacer;
     }
 
-    static Palette createTerrainPalette(byte id, int toolSize, TileMapEditor editor, TileMapRenderer renderer) {
-        var palette = new Palette(id, toolSize, 1, 13, renderer);
+    static Palette createTerrainPalette(byte id, int toolSize, TileMapEditor editor, TerrainMapRenderer terrainMapRenderer) {
+        var palette = new Palette(id, toolSize, 1, 13, terrainMapRenderer);
         palette.addTileTool(editor, TerrainTile.EMPTY.$, "Empty Space");
         palette.addTileTool(editor, TerrainTile.WALL_H.$, "Horiz. Wall");
         palette.addTileTool(editor, TerrainTile.WALL_V.$, "Vert. Wall");
@@ -127,7 +128,7 @@ public interface TileMapEditorUtil {
         return palette;
     }
 
-    static Palette createFoodPalette(byte id, int toolSize, TileMapEditor editor, TileMapRenderer renderer) {
+    static Palette createFoodPalette(byte id, int toolSize, TileMapEditor editor, FoodMapRenderer renderer) {
         var palette = new Palette(id, toolSize, 1, 3, renderer);
         palette.addTileTool(editor, FoodTile.EMPTY.code(), "No Food");
         palette.addTileTool(editor, FoodTile.PELLET.code(), "Pellet");

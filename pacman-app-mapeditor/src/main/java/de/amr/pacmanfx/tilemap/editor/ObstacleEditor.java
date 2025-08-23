@@ -11,7 +11,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.canvas.GraphicsContext;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.lib.UsefulFunctions.isEven;
@@ -95,16 +94,16 @@ public class ObstacleEditor {
         anchor = frontier = minTile = maxTile = null;
     }
 
-    public void draw(GraphicsContext g, TerrainTileMapRenderer renderer) {
+    public void draw(TerrainTileMapRenderer renderer) {
         byte[][] content = editedContent();
         if (content != null) {
             for (int row = 0; row < content.length; ++row) {
                 for (int col = 0; col < content[0].length; ++col) {
                     Vector2i tile = minTile.plus(col, row);
-                    renderer.drawTile(g, tile, content[row][col]);
+                    renderer.drawTile(tile, content[row][col]);
                     if (symmetricEditModeProperty().get()) {
                         Vector2i mirroredTile = worldMapPy.get().mirroredTile(tile);
-                        renderer.drawTile(g, mirroredTile, mirroredTileValue(content[row][col]));
+                        renderer.drawTile(mirroredTile, mirroredTileValue(content[row][col]));
                     }
                 }
             }

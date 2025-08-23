@@ -53,7 +53,7 @@ public class GenericMapRenderer extends BaseRenderer {
         WorldMap worldMap = level.worldMap();
         if (mazeHighlighted) {
             terrainRenderer.setColorScheme(energizerHighlighted ? blinkingOnColors : blinkingOffColors);
-            terrainRenderer.drawTerrain(ctx, worldMap, worldMap.obstacles());
+            terrainRenderer.drawTerrain(worldMap, worldMap.obstacles());
         }
         else {
             //TODO move into applyMapSettings?
@@ -66,14 +66,14 @@ public class GenericMapRenderer extends BaseRenderer {
             );
             terrainRenderer.setColorScheme(colors);
 
-            terrainRenderer.drawTerrain(ctx, worldMap, worldMap.obstacles());
-            level.house().ifPresent(house -> terrainRenderer.drawHouse(ctx, house.minTile(), house.sizeInTiles()));
+            terrainRenderer.drawTerrain(worldMap, worldMap.obstacles());
+            level.house().ifPresent(house -> terrainRenderer.drawHouse(house.minTile(), house.sizeInTiles()));
             foodRenderer.setPelletColor(Color.web(colorMap.get("pellet")));
             foodRenderer.setEnergizerColor(Color.web(colorMap.get("pellet")));
             worldMap.tiles().filter(level::tileContainsFood).filter(not(level::isEnergizerPosition))
-                .forEach(tile -> foodRenderer.drawPellet(ctx, tile));
+                .forEach(foodRenderer::drawPellet);
             if (energizerHighlighted) {
-                level.energizerPositions().stream().filter(level::tileContainsFood).forEach(tile -> foodRenderer.drawEnergizer(ctx, tile));
+                level.energizerPositions().stream().filter(level::tileContainsFood).forEach(foodRenderer::drawEnergizer);
             }
         }
     }
