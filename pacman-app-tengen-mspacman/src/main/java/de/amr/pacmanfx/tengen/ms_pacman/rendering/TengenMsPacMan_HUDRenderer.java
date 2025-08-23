@@ -21,7 +21,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-import static de.amr.pacmanfx.Globals.HTS;
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.nesColor;
 import static java.util.Objects.requireNonNull;
@@ -61,10 +60,6 @@ public class TengenMsPacMan_HUDRenderer extends BaseRenderer implements HUDRende
             TengenMsPacMan_LevelCounter levelCounter = hudData.theLevelCounter();
             float x = sceneSize.x() - TS(2), y = sceneSize.y() - TS;
             drawLevelCounter(levelCounter.displayedLevelNumber(), levelCounter, x, y);
-        }
-        if (!game.optionsAreInitial()) {
-            drawGameOptions(game.mapCategory(), game.difficulty(), game.pacBooster(),
-                gameContext.gameLevel().worldMap().numCols() * HTS, TS(2) + HTS);
         }
     }
 
