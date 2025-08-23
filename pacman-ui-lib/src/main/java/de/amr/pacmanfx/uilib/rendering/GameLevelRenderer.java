@@ -6,9 +6,10 @@ package de.amr.pacmanfx.uilib.rendering;
 
 import de.amr.pacmanfx.GameContext;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.paint.Color;
 
 public abstract class GameLevelRenderer extends BaseRenderer {
+
+    public record RenderingInfo(boolean mazeBright, boolean blinkingPhaseOn) {}
 
     public GameLevelRenderer(Canvas canvas) {
         super(canvas);
@@ -25,8 +26,7 @@ public abstract class GameLevelRenderer extends BaseRenderer {
 
     /**
      * @param gameContext the game context
-     * @param mazeBright if the maze is drawn as highlighted (flashing)
-     * @param energizerBright if the blinking energizers are in their highlighted state
+     * @param renderingInfo additional rendering info
      */
-    public abstract void drawGameLevel(GameContext gameContext, boolean mazeBright, boolean energizerBright);
+    public abstract void drawGameLevel(GameContext gameContext, RenderingInfo renderingInfo);
 }

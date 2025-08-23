@@ -29,6 +29,7 @@ import de.amr.pacmanfx.ui.api.GameUI;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.ui.sound.SoundID;
 import de.amr.pacmanfx.uilib.rendering.ActorSpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -481,11 +482,13 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
                 ColoredSpriteImage flashingMazeSprite = recoloredMaze.flashingMazeImages().get(frame);
                 gameLevelRenderer.drawGameLevel(context(), flashingMazeSprite.spriteSheetImage(), flashingMazeSprite.sprite());
             } else {
-                gameLevelRenderer.drawGameLevel(context(), false, false);
+                GameLevelRenderer.RenderingInfo info = new GameLevelRenderer.RenderingInfo(false, false);
+                gameLevelRenderer.drawGameLevel(context(), info);
             }
         }
         else {
-            gameLevelRenderer.drawGameLevel(context(), false, false);
+            GameLevelRenderer.RenderingInfo info = new GameLevelRenderer.RenderingInfo(false, false);
+            gameLevelRenderer.drawGameLevel(context(), info);
         }
     }
 

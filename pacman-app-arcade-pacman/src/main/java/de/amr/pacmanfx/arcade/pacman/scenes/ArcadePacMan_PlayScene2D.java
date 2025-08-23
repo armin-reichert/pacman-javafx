@@ -286,7 +286,8 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
         }
         final GameLevel gameLevel = context().gameLevel();
         gameLevelRenderer.applyLevelSettings(context());
-        gameLevelRenderer.drawGameLevel(context(), mazeHighlighted.get(), gameLevel.blinking().isOn());
+        GameLevelRenderer.RenderingInfo info = new GameLevelRenderer.RenderingInfo(mazeHighlighted.get(), gameLevel.blinking().isOn());
+        gameLevelRenderer.drawGameLevel(context(), info);
         createActorDrawingOrder(gameLevel);
         actorsInZOrder.forEach(actor -> actorSpriteRenderer.drawActor(actor));
     }

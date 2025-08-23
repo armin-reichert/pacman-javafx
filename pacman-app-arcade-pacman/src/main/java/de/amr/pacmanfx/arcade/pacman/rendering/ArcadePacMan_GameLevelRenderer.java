@@ -36,15 +36,15 @@ public class ArcadePacMan_GameLevelRenderer extends GameLevelRenderer implements
     }
 
     @Override
-    public void drawGameLevel(GameContext gameContext, boolean mazeBright, boolean energizerBright) {
+    public void drawGameLevel(GameContext gameContext, RenderingInfo info) {
         ctx().save();
         ctx().scale(scaling(), scaling());
-        if (mazeBright) {
+        if (info.mazeBright()) {
             drawBrightGameLevel();
         } else if (gameContext.gameLevel().uneatenFoodCount() == 0) {
             drawEmptyGameLevel(gameContext.gameLevel());
         } else {
-            drawGameLevelWithFood(gameContext.gameLevel(), !energizerBright);
+            drawGameLevelWithFood(gameContext.gameLevel(), !info.blinkingPhaseOn());
         }
         ctx().restore();
         drawGameLevelMessage(gameContext.gameLevel());

@@ -61,7 +61,7 @@ public class TengenMsPacMan_GameLevelRenderer extends GameLevelRenderer implemen
     }
 
     @Override
-    public void drawGameLevel(GameContext gameContext, boolean mazeBright, boolean energizerBright) {
+    public void drawGameLevel(GameContext gameContext, RenderingInfo info) {
         TengenMsPacMan_GameModel game = gameContext.game();
         GameLevel gameLevel = gameContext.gameLevel();
         int mapNumber = gameLevel.worldMap().getConfigValue("mapNumber");
