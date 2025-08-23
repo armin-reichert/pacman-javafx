@@ -32,7 +32,7 @@ public class GenericMapRenderer extends BaseRenderer {
         terrainRenderer.scalingProperty().bind(scalingProperty());
         foodRenderer.scalingProperty().bind(scalingProperty());
         backgroundColorProperty().addListener((py, ov, newColor) -> updateColors(newColor));
-        setBackgroundColor(backgroundColor());
+        updateColors(backgroundColor());
     }
 
     private void updateColors(Color backgroundColor) {
