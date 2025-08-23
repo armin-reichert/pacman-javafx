@@ -34,6 +34,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.Node;
 import javafx.scene.ParallelCamera;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
@@ -421,12 +422,22 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     @Override
     public void draw() {
         clear();
-        if (context().optGameLevel().isEmpty()) {
-            return; // Scene is drawn already 2 ticks before level has been created
-        }
-        final GameLevel gameLevel = context().gameLevel();
+        context().optGameLevel().ifPresent(gameLevel -> {
+            ctx().save();
+            updateScaling(gameLevel);
+            boolean drawDebugInfo = debugInfoVisible.get() && debugInfoRenderer != null;
+            Node clip = drawDebugInfo ? null : canvasClipArea;
+            canvas.setClip(clip);
+            drawSceneContent();
+            if (drawDebugInfo) {
+                debugInfoRenderer.drawDebugInfo();
+            }
+            drawHUD();
+            ctx().restore();
+        });
+    }
 
-        // compute current scene scaling
+    private void updateScaling(GameLevel gameLevel) {
         double scaling = switch (displayModeProperty.get()) {
             case SCALED_TO_FIT -> { //TODO this code smells
                 int tilesY = gameLevel.worldMap().numRows() + 3;
@@ -437,19 +448,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             case SCROLLING -> (subScene.getHeight() / NES_SIZE_PX.y());
         };
         setScaling(scaling);
-
-        gameLevelRenderer.ctx().save();
-
-        if (debugInfoVisible.get() && debugInfoRenderer != null) {
-            canvas.setClip(null);
-            drawSceneContent();
-            debugInfoRenderer.drawDebugInfo();
-        } else {
-            canvas.setClip(canvasClipArea);
-            drawSceneContent();
-        }
-
-        drawHUD();
     }
 
     @Override
