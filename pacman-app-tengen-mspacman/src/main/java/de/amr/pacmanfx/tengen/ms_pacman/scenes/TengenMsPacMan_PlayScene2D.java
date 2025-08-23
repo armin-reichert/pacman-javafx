@@ -34,7 +34,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.Node;
 import javafx.scene.ParallelCamera;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
@@ -74,7 +73,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     private final SubScene subScene;
     private final DynamicCamera dynamicCamera = new DynamicCamera();
     private final ParallelCamera fixedCamera  = new ParallelCamera();
-    private final Rectangle canvasClipArea = new Rectangle();
+    private final Rectangle contentClipArea = new Rectangle();
 
     private TengenMsPacMan_HUDRenderer hudRenderer;
     private TengenMsPacMan_GameLevelRenderer gameLevelRenderer;
@@ -97,10 +96,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
         // The maps are only 28 tiles wide. To avoid seeing the actors outside the map e.g. when going through portals,
         // 2 tiles on each side of the canvas are clipped. and not drawn.
-        canvasClipArea.xProperty().bind(canvas.translateXProperty().add(scalingProperty().multiply(2 * TS)));
-        canvasClipArea.yProperty().bind(canvas.translateYProperty());
-        canvasClipArea.widthProperty().bind(canvas.widthProperty().subtract(scalingProperty().multiply(4 * TS)));
-        canvasClipArea.heightProperty().bind(canvas.heightProperty());
+        contentClipArea.xProperty().bind(canvas.translateXProperty().add(scalingProperty().multiply(2 * TS)));
+        contentClipArea.yProperty().bind(canvas.translateYProperty());
+        contentClipArea.widthProperty().bind(canvas.widthProperty().subtract(scalingProperty().multiply(4 * TS)));
+        contentClipArea.heightProperty().bind(canvas.heightProperty());
 
         var root = new StackPane(canvas);
         root.setBackground(null);
@@ -423,18 +422,32 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     public void draw() {
         clear();
         context().optGameLevel().ifPresent(gameLevel -> {
-            ctx().save();
             updateScaling(gameLevel);
-            boolean drawDebugInfo = debugInfoVisible.get() && debugInfoRenderer != null;
-            Node clip = drawDebugInfo ? null : canvasClipArea;
-            canvas.setClip(clip);
+            ctx().save();
+            // map width is 28 tiles but NES screen width is 32 tiles: move 2 tiles right and clip one tile on each side
+            ctx().translate(scaled(TS(2)), 0);
+            canvas.setClip(contentClipArea);
             drawSceneContent();
-            if (drawDebugInfo) {
+            drawHUD();
+            if (debugInfoVisible.get() && debugInfoRenderer != null) {
+                // debug info also used normally clipped area
+                canvas.setClip(null);
+                ctx().translate(scaled(-TS(2)), 0);
                 debugInfoRenderer.drawDebugInfo();
             }
-            drawHUD();
             ctx().restore();
         });
+    }
+
+    @Override
+    public void drawHUD() {
+        hudRenderer.drawHUD(context(), context().game().hudData(), sizeInPx());
+    }
+
+    @Override
+    public void drawSceneContent() {
+        drawGameLevel(context().gameLevel());
+        drawActors();
     }
 
     private void updateScaling(GameLevel gameLevel) {
@@ -448,24 +461,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             case SCROLLING -> (subScene.getHeight() / NES_SIZE_PX.y());
         };
         setScaling(scaling);
-    }
-
-    @Override
-    public void drawHUD() {
-        // NES screen is 32 tiles wide but mazes are only 28 tiles wide, so shift HUD right:
-        ctx().translate(scaled(2 * TS), 0);
-        hudRenderer.drawHUD(context(), context().game().hudData(), sizeInPx());
-        ctx().restore();
-    }
-
-    @Override
-    public void drawSceneContent() {
-        ctx().save();
-        // the map width is 28 tiles but the NES screen width is 32 tiles, so move 2 tiles right to center on screen
-        ctx().translate(scaled(2 * TS), 0);
-        drawGameLevel(context().gameLevel());
-        drawActors();
-        ctx().restore();
     }
 
     private void drawActors() {
