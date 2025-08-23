@@ -12,6 +12,8 @@ import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.timer.Pulse;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.GameLevelMessage;
+import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.model.actors.Bonus;
 
 public class LevelShortTestState implements GameState {
@@ -38,7 +40,9 @@ public class LevelShortTestState implements GameState {
         context.game().buildNormalLevel(1);
         context.game().startLevel();
         context.gameLevel().showPacAndGhosts();
-        context.gameLevel().showMessage(GameLevel.MessageType.TEST);
+        GameLevelMessage message = new GameLevelMessage(MessageType.TEST);
+        message.setPosition(context.gameLevel().defaultMessagePosition());
+        context.gameLevel().setMessage(message);
     }
 
     @Override
@@ -84,7 +88,9 @@ public class LevelShortTestState implements GameState {
             } else {
                 timer.restartIndefinitely();
                 context.game().startNextLevel();
-                gameLevel.showMessage(GameLevel.MessageType.TEST);
+                GameLevelMessage message = new GameLevelMessage(MessageType.TEST);
+                message.setPosition(context.gameLevel().defaultMessagePosition());
+                context.gameLevel().setMessage(message);
             }
         }
     }

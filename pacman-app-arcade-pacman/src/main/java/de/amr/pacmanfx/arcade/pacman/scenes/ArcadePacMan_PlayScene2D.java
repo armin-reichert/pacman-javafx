@@ -11,9 +11,7 @@ import de.amr.pacmanfx.controller.teststates.LevelShortTestState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Direction;
 import de.amr.pacmanfx.lib.Vector2f;
-import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.HuntingTimer;
-import de.amr.pacmanfx.model.LivesCounter;
+import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.MovingActor;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -175,7 +173,7 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onGameContinued(GameEvent e) {
-        context().gameLevel().showMessage(GameLevel.MessageType.READY);
+        context().gameLevel().showMessage(MessageType.READY);
     }
 
     @Override

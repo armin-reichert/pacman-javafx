@@ -8,9 +8,7 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.timer.TickTimer;
-import de.amr.pacmanfx.model.AbstractGameModel;
-import de.amr.pacmanfx.model.GameLevel;
-import de.amr.pacmanfx.model.GateKeeper;
+import de.amr.pacmanfx.model.*;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.steering.Steering;
@@ -117,7 +115,7 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
             gameContext.coinMechanism().consumeCoin();
         }
         scoreManager().updateHighScore();
-        gameLevel.showMessage(GameLevel.MessageType.GAME_OVER);
+        gameLevel.showMessage(MessageType.GAME_OVER);
     }
 
     // GameLifecycle interface
@@ -230,13 +228,13 @@ public abstract class ArcadeCommon_GameModel extends AbstractGameModel {
         gameLevel.getReadyToPlay();
         resetPacManAndGhostAnimations();
         if (gameLevel.isDemoLevel()) {
-            gameLevel.showMessage(GameLevel.MessageType.GAME_OVER);
+            gameLevel.showMessage(MessageType.GAME_OVER);
             scoreManager().score().setEnabled(false);
             scoreManager().highScore().setEnabled(false);
             Logger.info("Demo level {} started", gameLevel.number());
         } else {
             hudData().theLevelCounter().update(gameLevel.number(), gameLevel.bonusSymbol(0));
-            gameLevel.showMessage(GameLevel.MessageType.READY);
+            gameLevel.showMessage(MessageType.READY);
             scoreManager().score().setEnabled(true);
             scoreManager().highScore().setEnabled(true);
             Logger.info("Level {} started", gameLevel.number());

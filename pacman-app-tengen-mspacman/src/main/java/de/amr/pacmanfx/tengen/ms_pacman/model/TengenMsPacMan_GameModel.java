@@ -297,7 +297,7 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
     public void onGameEnding() {
         setPlaying(false);
         scoreManager.updateHighScore();
-        gameLevel.showMessage(GameLevel.MessageType.GAME_OVER);
+        gameLevel.showMessage(MessageType.GAME_OVER);
     }
 
     @Override
@@ -403,13 +403,13 @@ public class TengenMsPacMan_GameModel extends AbstractGameModel {
             activatePacBooster(true);
         }
         if (gameLevel.isDemoLevel()) {
-            gameLevel.showMessage(GameLevel.MessageType.GAME_OVER);
+            gameLevel.showMessage(MessageType.GAME_OVER);
             scoreManager.score().setEnabled(true);
             scoreManager.highScore().setEnabled(false);
             Logger.info("Demo level {} started", gameLevel.number());
 
         } else {
-            gameLevel.showMessage(GameLevel.MessageType.READY);
+            gameLevel.showMessage(MessageType.READY);
             hud.theLevelCounter().update(gameLevel.number(), gameLevel.bonusSymbol(0));
             scoreManager.score().setEnabled(true);
             scoreManager.highScore().setEnabled(true);

@@ -11,7 +11,9 @@ import de.amr.pacmanfx.controller.teststates.LevelShortTestState;
 import de.amr.pacmanfx.event.GameEvent;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.GameLevelMessage;
 import de.amr.pacmanfx.model.House;
+import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.model.actors.Ghost;
 import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
@@ -355,7 +357,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
 
     @Override
     public void onGameContinued(GameEvent e) {
-        context().optGameLevel().ifPresent(level -> level.showMessage(GameLevel.MessageType.READY));
+        context().optGameLevel().ifPresent(level -> {
+            GameLevelMessage message = new GameLevelMessage(MessageType.READY);
+            message.setPosition(level.defaultMessagePosition());
+            level.setMessage(message);
+        });
     }
 
     @Override
@@ -501,9 +507,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             }
         }
         else {
-            //TODO in the original game, the message is drawn under the maze image but *over* the pellets!
             gameLevelRenderer.drawGameLevel(context(), null, false, false);
-            gameLevelRenderer.drawLevelMessage(gameLevel, currentMessagePosition(), gameLevelRenderer.arcadeFontTS());
         }
     }
 

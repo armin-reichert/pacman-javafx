@@ -10,6 +10,7 @@ import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.DefaultGameVariants;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.model.actors.*;
 
 import static de.amr.pacmanfx.model.actors.CommonAnimationID.ANIM_PAC_DYING;
@@ -155,9 +156,12 @@ public enum GamePlayState implements GameState {
             }
             if (timer.tickCount() == delay) {
                 context.game().startHunting();
-                if (context.gameLevel().messageType() == GameLevel.MessageType.READY) {
-                    context.gameLevel().clearMessage();
-                }
+                context.gameLevel().optMessage().ifPresent(message -> {
+                    // leave TEST message alone
+                    if (message.type() == MessageType.READY) {
+                        context.gameLevel().clearMessage();
+                    }
+                });
             }
             context.game().doHuntingStep(context);
             if (context.game().isLevelCompleted()) {
@@ -171,9 +175,11 @@ public enum GamePlayState implements GameState {
 
         @Override
         public void onExit(GameContext context) {
-            if (context.gameLevel().messageType() == GameLevel.MessageType.READY) {
-                context.gameLevel().clearMessage();
-            }
+            context.gameLevel().optMessage().ifPresent(message -> {
+                if (message.type() == MessageType.READY) {
+                    context.gameLevel().clearMessage();
+                }
+            });
         }
     },
 

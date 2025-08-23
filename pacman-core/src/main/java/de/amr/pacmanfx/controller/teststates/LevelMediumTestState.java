@@ -10,6 +10,8 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.event.GameEventType;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.GameLevel;
+import de.amr.pacmanfx.model.GameLevelMessage;
+import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.model.actors.AnimationManager;
 
 public class LevelMediumTestState implements GameState {
@@ -35,7 +37,9 @@ public class LevelMediumTestState implements GameState {
         gameLevel.pac().animations().ifPresent(AnimationManager::play);
         gameLevel.ghosts().forEach(ghost -> ghost.animations().ifPresent(AnimationManager::play));
         gameLevel.showPacAndGhosts();
-        gameLevel.showMessage(GameLevel.MessageType.TEST);
+        GameLevelMessage message = new GameLevelMessage(MessageType.TEST);
+        message.setPosition(gameLevel.defaultMessagePosition());
+        gameLevel.setMessage(message);
         context.eventManager().publishEvent(GameEventType.STOP_ALL_SOUNDS);
     }
 

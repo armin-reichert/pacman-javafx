@@ -34,7 +34,11 @@ import static java.util.function.Predicate.not;
  */
 public class GameLevel {
 
-    private static final byte[][] DEFAULT_HOUSE_ROWS = {
+    //TODO should this be stored in world map instead of hardcoding?
+    public static final int EMPTY_ROWS_OVER_MAZE  = 3;
+    public static final int EMPTY_ROWS_BELOW_MAZE = 2;
+
+    private static final byte[][] DEFAULT_HOUSE_CONTENT = {
         { ARC_NW.$, WALL_H.$, WALL_H.$, DOOR.$, DOOR.$, WALL_H.$, WALL_H.$, ARC_NE.$ },
         { WALL_V.$, EMPTY.$, EMPTY.$, EMPTY.$, EMPTY.$, EMPTY.$, EMPTY.$, WALL_V.$   },
         { WALL_V.$, EMPTY.$, EMPTY.$, EMPTY.$, EMPTY.$, EMPTY.$, EMPTY.$, WALL_V.$   },
@@ -46,14 +50,6 @@ public class GameLevel {
     private static final Vector2i DEFAULT_HOUSE_MAX_TILE = Vector2i.of(17, 19);
 
     private static Vector2f halfTileRightOf(Vector2i tile) { return Vector2f.of(tile.x() * TS + HTS, tile.y() * TS); }
-
-    public enum MessageType {
-        NONE, READY, GAME_OVER, TEST
-    }
-
-    //TODO should this be stored in world map instead of hardcoding?
-    public static final int EMPTY_ROWS_OVER_MAZE  = 3;
-    public static final int EMPTY_ROWS_BELOW_MAZE = 2;
 
     private final int number; // 1=first level
     private LevelData data;
@@ -81,7 +77,8 @@ public class GameLevel {
     private Bonus bonus;
     private final byte[] bonusSymbols = new byte[2];
     private int currentBonusIndex; // -1=no bonus, 0=first, 1=second
-    private MessageType messageType = MessageType.NONE;
+
+    private GameLevelMessage message;
 
     private final Pulse blinking;
 
@@ -198,7 +195,7 @@ public class GameLevel {
 
         for (int y = 0; y < size.y(); ++y) {
             for (int x = 0; x < size.x(); ++x) {
-                byte content = DEFAULT_HOUSE_ROWS[y][x];
+                byte content = DEFAULT_HOUSE_CONTENT[y][x];
                 worldMap.setContent(LayerID.TERRAIN, minTile.y() + y, minTile.x() + x, content);
             }
         }
@@ -250,9 +247,38 @@ public class GameLevel {
     public void setGameOverStateTicks(int ticks) { gameOverStateTicks = ticks; }
     public int gameOverStateTicks() { return gameOverStateTicks; }
 
-    public void showMessage(MessageType messageType) { this.messageType = messageType; }
-    public void clearMessage() { messageType = MessageType.NONE; }
-    public MessageType messageType() { return messageType; }
+    public void setMessage(GameLevelMessage message) {
+        this.message = message;
+    }
+
+    public void clearMessage() {
+        message = null;
+    }
+
+    public Optional<GameLevelMessage> optMessage() {
+        return Optional.ofNullable(message);
+    }
+
+    public Vector2f defaultMessagePosition() {
+        if (house != null) {
+            Vector2i houseSize = house.sizeInTiles();
+            float cx = TS(house.minTile().x() + houseSize.x() * 0.5f);
+            float cy = TS(house.minTile().y() + houseSize.y() + 1);
+            return Vector2f.of(cx, cy);
+        }
+        else {
+            Vector2f worldSize = worldSizePx();
+            return Vector2f.of(worldSize.x() * 0.5f, worldSize.y() * 0.5f); // should not happen
+        }
+    }
+
+    public GameLevelMessage showMessage(MessageType type) {
+        requireNonNull(type);
+        GameLevelMessage message = new GameLevelMessage(type);
+        message.setPosition(defaultMessagePosition());
+        setMessage(message);
+        return message;
+    }
 
     public void setPac(Pac pac) { this.pac = pac; }
     public Pac pac() { return pac; }

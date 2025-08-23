@@ -6,24 +6,21 @@ package de.amr.pacmanfx.tengen.ms_pacman.rendering;
 
 import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.lib.RectShort;
-import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.lib.Vector2i;
 import de.amr.pacmanfx.lib.nes.NES_ColorScheme;
 import de.amr.pacmanfx.lib.tilemap.WorldMap;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.House;
+import de.amr.pacmanfx.model.MessageType;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.Globals.HTS;
@@ -36,8 +33,6 @@ import static java.util.function.Predicate.not;
 public class TengenMsPacMan_GameLevelRenderer extends GameLevelRenderer implements SpriteRendererMixin {
 
     private final TengenMsPacMan_UIConfig uiConfig;
-
-    private Vector2f currentMessagePosition;
 
     public TengenMsPacMan_GameLevelRenderer(Canvas canvas, TengenMsPacMan_UIConfig uiConfig) {
         super(canvas);
@@ -66,15 +61,18 @@ public class TengenMsPacMan_GameLevelRenderer extends GameLevelRenderer implemen
     @Override
     public void drawGameLevel(GameContext gameContext, Color backgroundColor, boolean mazeBright, boolean energizerBright) {
         TengenMsPacMan_GameModel game = gameContext.game();
-        int mapNumber = gameContext.gameLevel().worldMap().getConfigValue("mapNumber");
+        GameLevel gameLevel = gameContext.gameLevel();
+        int mapNumber = gameLevel.worldMap().getConfigValue("mapNumber");
         applyLevelSettings(gameContext);
 
         // maze sprite set is now stored in world map configuration, take it from there:
-        MazeSpriteSet mazeSpriteSet = gameContext.gameLevel().worldMap().getConfigValue(TengenMsPacMan_UIConfig.MAZE_SPRITE_SET_PROPERTY);
+        MazeSpriteSet mazeSpriteSet = gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.MAZE_SPRITE_SET_PROPERTY);
 
         //TODO this logic does not belong into the renderer
         RectShort mazeSprite = checkIfAnimatedMaze(game, mapNumber, mazeSpriteSet);
         drawGameLevel(gameContext, mazeSpriteSet.mazeImage().spriteSheetImage(), mazeSprite);
+
+        drawMessage(gameLevel);
     }
 
     public void drawGameLevel(GameContext gameContext, Image mazeImage, RectShort mazeSprite) {
@@ -86,8 +84,7 @@ public class TengenMsPacMan_GameLevelRenderer extends GameLevelRenderer implemen
         );
         overPaintActorSprites(gameContext.gameLevel());
         drawFood(gameContext.gameLevel());
-        //TODO in the original game, the message is drawn under the maze image but *over* the pellets!
-        drawLevelMessage(gameContext.gameLevel(), currentMessagePosition, arcadeFontTS());
+        drawMessage(gameContext.gameLevel());
     }
 
     private RectShort checkIfAnimatedMaze(TengenMsPacMan_GameModel game, int mapNumber, MazeSpriteSet mazeSpriteSet) {
@@ -147,27 +144,23 @@ public class TengenMsPacMan_GameLevelRenderer extends GameLevelRenderer implemen
         });
     }
 
-    public void drawLevelMessage(GameLevel level, Vector2f position, Font font) {
-        requireNonNull(level);
-        requireNonNull(position);
-        requireNonNull(font);
-
-        if (level.messageType() == GameLevel.MessageType.NONE) return;
-
-        NES_ColorScheme nesColorScheme = level.worldMap().getConfigValue("nesColorScheme");
-        float x = position.x(), y = position.y() + TS;
-        switch (level.messageType()) {
-            case GameLevel.MessageType.READY
-                -> fillTextCentered("READY!", uiConfig.assets().color("color.ready_message"), font, x, y);
-            case GameLevel.MessageType.GAME_OVER -> {
-                Color color = level.isDemoLevel()
-                    ? Color.web(nesColorScheme.strokeColorRGB())
-                    : uiConfig.assets().color("color.game_over_message");
-                fillTextCentered("GAME OVER", color, font, x, y);
+    private void drawMessage(GameLevel gameLevel) {
+        gameLevel.optMessage().ifPresent(message -> {
+            NES_ColorScheme colorScheme = gameLevel.worldMap().getConfigValue("nesColorScheme");
+            switch (message.type()) {
+                case MessageType.GAME_OVER -> {
+                    Color color = gameLevel.isDemoLevel()
+                        ? Color.web(colorScheme.strokeColorRGB())
+                        : uiConfig.assets().color("color.game_over_message");
+                    fillTextCentered("GAME  OVER",
+                        color, arcadeFontTS(), message.x(), message.y());
+                }
+                case MessageType.READY -> fillTextCentered("READY!",
+                    uiConfig.assets().color("color.ready_message"), arcadeFontTS(), message.x(), message.y());
+                case MessageType.TEST -> fillTextCentered("TEST    L%02d".formatted(gameLevel.number()),
+                    nesColor(0x28), arcadeFontTS(), message.x(), message.y());
             }
-            case GameLevel.MessageType.TEST
-                -> fillTextCentered("TEST L%02d".formatted(level.number()), nesColor(0x28), font, x, y);
-        }
+        });
     }
 
     private void overPaintActorSprites(GameLevel level) {
