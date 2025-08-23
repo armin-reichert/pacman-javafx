@@ -47,23 +47,25 @@ public class InfoBox3DSettings extends InfoBox {
     @Override
     public void init(GameUI ui) {
         cbUsePlayScene3D = addCheckBox("3D Play Scene");
+        comboPerspectives = addChoiceBox("Perspective", PerspectiveID.values());
         addColorPicker("Light Color", PROPERTY_3D_LIGHT_COLOR);
         addColorPicker("Floor Color", PROPERTY_3D_FLOOR_COLOR);
-        comboPerspectives = addChoiceBox("Perspective", PerspectiveID.values());
         addDynamicLabeledValue("Camera",         this::subSceneCameraInfo);
         addDynamicLabeledValue("Sub-scene Size", this::subSceneSizeInfo);
         addDynamicLabeledValue("Scene Size",     this::sceneSizeInfo);
+
         cbMiniViewVisible = addCheckBox("Mini View", PROPERTY_MINI_VIEW_ON);
         sliderMiniViewSceneHeight = addSlider(
-            "- Height",
+            " - Height",
             MINI_VIEW_MIN_HEIGHT, MINI_VIEW_MAX_HEIGHT,
             PROPERTY_MINI_VIEW_HEIGHT.get(),
             false, false);
         sliderMiniViewOpacity = addSlider(
-            "- Opacity",
+            " - Opacity",
             0, 100,
             PROPERTY_MINI_VIEW_OPACITY_PERCENT.get(),
             false, false);
+
         sliderWallHeight = addSlider(
             "Wall Height",
             0, 16,
@@ -74,6 +76,7 @@ public class InfoBox3DSettings extends InfoBox {
             0, 1,
             PROPERTY_3D_WALL_OPACITY.get(),
             false, false);
+
         cbAxesVisible = addCheckBox("Show Axes", PROPERTY_3D_AXES_VISIBLE);
         cbWireframeMode = addCheckBox("Wireframe Mode");
 
@@ -124,15 +127,16 @@ public class InfoBox3DSettings extends InfoBox {
     }
 
     private String sceneSizeInfo() {
-        if (ui.currentGameScene().isPresent()) {
-            GameScene gameScene = ui.currentGameScene().get();
-            if (gameScene instanceof GameScene2D gameScene2D) {
-                Vector2f size = gameScene2D.sizeInPx(), scaledSize = size.scaled(gameScene2D.scaling());
-                return "%.0fx%.0f (scaled: %.0fx%.0f)".formatted(size.x(), size.y(), scaledSize.x(), scaledSize.y());
-            } else if (ui.gameContext().optGameLevel().isPresent()) {
-                var worldMap = ui.gameContext().gameLevel().worldMap();
-                return "%dx%d (map size px)".formatted(worldMap.numCols() * TS, worldMap.numRows() * TS);
-            }
+        if (ui.currentGameScene().isEmpty()) return NO_INFO;
+
+        GameScene gameScene = ui.currentGameScene().get();
+        if (gameScene instanceof GameScene2D gameScene2D) {
+            Vector2f size = gameScene2D.sizeInPx(), scaledSize = size.scaled(gameScene2D.scaling());
+            return "%.0fx%.0f (scaled: %.0fx%.0f)".formatted(size.x(), size.y(), scaledSize.x(), scaledSize.y());
+        }
+        if (ui.gameContext().optGameLevel().isPresent()) {
+            var worldMap = ui.gameContext().gameLevel().worldMap();
+            return "%dx%d (map size px)".formatted(worldMap.numCols() * TS, worldMap.numRows() * TS);
         }
         return NO_INFO;
     }
