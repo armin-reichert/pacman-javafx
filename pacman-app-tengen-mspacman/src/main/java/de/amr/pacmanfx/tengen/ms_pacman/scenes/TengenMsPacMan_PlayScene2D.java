@@ -474,14 +474,20 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     }
 
     private void drawGameLevel(GameLevel gameLevel) {
-        gameLevelRenderer.applyLevelSettings(context());
         if (levelCompletedAnimation != null && levelCompletedAnimation.isRunning()) {
             if (mazeHighlighted.get()) {
                 MazeSpriteSet recoloredMaze = gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.MAZE_SPRITE_SET_PROPERTY);
                 // get the current maze flashing "animation frame"
                 int frame = levelCompletedAnimation.flashingIndex();
                 ColoredSpriteImage flashingMazeSprite = recoloredMaze.flashingMazeImages().get(frame);
-                gameLevelRenderer.drawGameLevel(context(), flashingMazeSprite.spriteSheetImage(), flashingMazeSprite.sprite());
+
+                RenderInfo info = RenderInfo.build(Map.of(
+                    "mazeBright", false,
+                    "blinkingPhaseOn", false,
+                    "mazeImage", flashingMazeSprite.spriteSheetImage(),
+                    "mazeSprite", flashingMazeSprite.sprite()
+                ));
+                gameLevelRenderer.drawGameLevel(context(), info);
             } else {
                 RenderInfo info = RenderInfo.build(Map.of(
                     "mazeBright", false,

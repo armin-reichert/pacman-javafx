@@ -65,20 +65,29 @@ public class TengenMsPacMan_GameLevelRenderer extends GameLevelRenderer implemen
     public void drawGameLevel(GameContext gameContext, RenderInfo info) {
         TengenMsPacMan_GameModel game = gameContext.game();
         GameLevel gameLevel = gameContext.gameLevel();
-        int mapNumber = gameLevel.worldMap().getConfigValue("mapNumber");
         applyLevelSettings(gameContext);
 
-        // maze sprite set is now stored in world map configuration, take it from there:
-        MazeSpriteSet mazeSpriteSet = gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.MAZE_SPRITE_SET_PROPERTY);
-
-        //TODO this logic does not belong into the renderer
-        RectShort mazeSprite = checkIfAnimatedMaze(game, mapNumber, mazeSpriteSet);
-        drawGameLevel(gameContext, mazeSpriteSet.mazeImage().spriteSheetImage(), mazeSprite);
-
+        Image mazeImage;
+        RectShort mazeSprite = info.get("mazeSprite", RectShort.class);
+        if (mazeSprite == null) {
+            // maze sprite set is now stored in world map configuration, take it from there:
+            int mapNumber = gameLevel.worldMap().getConfigValue("mapNumber");
+            MazeSpriteSet mazeSpriteSet = gameLevel.worldMap().getConfigValue(TengenMsPacMan_UIConfig.MAZE_SPRITE_SET_PROPERTY);
+            mazeSprite = checkIfAnimatedMaze(game, mapNumber, mazeSpriteSet);
+            mazeImage = mazeSpriteSet.mazeImage().spriteSheetImage();
+        }
+        else {
+            mazeImage = info.get("mazeImage", Image.class);
+            if (mazeImage == null) {
+                Logger.error("No maze image for game level");
+                return;
+            }
+        }
+        drawGameLevel(gameContext, mazeImage, mazeSprite);
         drawMessage(gameLevel);
     }
 
-    public void drawGameLevel(GameContext gameContext, Image mazeImage, RectShort mazeSprite) {
+    private void drawGameLevel(GameContext gameContext, Image mazeImage, RectShort mazeSprite) {
         ctx().setImageSmoothing(false);
         int x = 0, y = GameLevel.EMPTY_ROWS_OVER_MAZE * TS;
         ctx().drawImage(mazeImage,

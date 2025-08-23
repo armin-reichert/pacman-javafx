@@ -14,7 +14,19 @@ public class RenderInfo {
     }
 
     public boolean getBoolean(String key) {
-        return (Boolean) map.get(key);
+        return get(key, Boolean.class);
+    }
+
+    public <T> T get(String key, Class<T> valueClass) {
+        Object value = map.get(key);
+        if (value == null) {
+            return null;
+        }
+        if (valueClass.isInstance(value)) {
+            return valueClass.cast(value);
+        }
+        throw new IllegalArgumentException("Key '%s' is not assigned to value of class '%s'"
+                .formatted(key, valueClass.getSimpleName()));
     }
 
     public void put(String key, Object value) {
