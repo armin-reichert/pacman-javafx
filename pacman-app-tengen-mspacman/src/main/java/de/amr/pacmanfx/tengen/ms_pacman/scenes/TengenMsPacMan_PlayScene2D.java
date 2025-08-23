@@ -9,7 +9,6 @@ import de.amr.pacmanfx.controller.GameState;
 import de.amr.pacmanfx.controller.teststates.LevelMediumTestState;
 import de.amr.pacmanfx.controller.teststates.LevelShortTestState;
 import de.amr.pacmanfx.event.GameEvent;
-import de.amr.pacmanfx.lib.RectShort;
 import de.amr.pacmanfx.lib.Vector2f;
 import de.amr.pacmanfx.model.GameLevel;
 import de.amr.pacmanfx.model.MessageType;
@@ -18,7 +17,10 @@ import de.amr.pacmanfx.model.actors.GhostState;
 import de.amr.pacmanfx.model.actors.Pac;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengen.ms_pacman.model.*;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.*;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.ColoredSpriteImage;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.MazeSpriteSet;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_GameLevelRenderer;
+import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.ui._2d.DefaultDebugInfoRenderer;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
 import de.amr.pacmanfx.ui._2d.LevelCompletedAnimation;
@@ -37,7 +39,6 @@ import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -54,6 +55,7 @@ import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_Properties.PROPERT
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_SIZE_PX;
 import static de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig.NES_TILES;
 import static de.amr.pacmanfx.ui.CommonGameActions.*;
+import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_CANVAS_BACKGROUND_COLOR;
 import static de.amr.pacmanfx.ui.api.GameUI_Properties.PROPERTY_MUTED;
 import static de.amr.pacmanfx.uilib.Ufx.createContextMenuTitle;
 
@@ -84,6 +86,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
     public TengenMsPacMan_PlayScene2D(GameUI ui) {
         super(ui);
 
+        backgroundColorProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
         displayModeProperty().bind(PROPERTY_PLAY_SCENE_DISPLAY_MODE);
 
         // use own canvas, not the shared canvas from the game view
@@ -99,10 +102,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         canvasClipArea.heightProperty().bind(canvas.heightProperty());
 
         var root = new StackPane(canvas);
-        root.setBackground(Background.EMPTY);
+        root.setBackground(null);
 
         subScene = new SubScene(root, 88, 88); // size gets bound to parent scene size when embedded in game view
-        subScene.setFill(backgroundColor());
+        subScene.fillProperty().bind(PROPERTY_CANVAS_BACKGROUND_COLOR);
         subScene.cameraProperty().bind(displayModeProperty()
             .map(displayMode -> displayMode == SceneDisplayMode.SCROLLING ? dynamicCamera : fixedCamera));
 
@@ -143,7 +146,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
         gameLevelRenderer = (TengenMsPacMan_GameLevelRenderer) uiConfig.createGameLevelRenderer(canvas);
         actorSpriteRenderer = uiConfig.createActorSpriteRenderer(canvas);
         debugInfoRenderer = new PlaySceneDebugInfoRenderer(ui);
-        bindRendererScaling(hudRenderer, gameLevelRenderer, actorSpriteRenderer, debugInfoRenderer);
+
+        bindRendererProperties(hudRenderer, gameLevelRenderer, actorSpriteRenderer, debugInfoRenderer);
 
         context().game().hudData().score(true).levelCounter(true).livesCounter(true);
 
@@ -484,11 +488,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
                 ColoredSpriteImage flashingMazeSprite = recoloredMaze.flashingMazeImages().get(frame);
                 gameLevelRenderer.drawGameLevel(context(), flashingMazeSprite.spriteSheetImage(), flashingMazeSprite.sprite());
             } else {
-                gameLevelRenderer.drawGameLevel(context(), null, false, false);
+                gameLevelRenderer.drawGameLevel(context(), false, false);
             }
         }
         else {
-            gameLevelRenderer.drawGameLevel(context(), null, false, false);
+            gameLevelRenderer.drawGameLevel(context(), false, false);
         }
     }
 

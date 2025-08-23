@@ -78,7 +78,8 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
         scenesRenderer = new TengenMsPacMan_ScenesRenderer(canvas, uiConfig);
         actorSpriteRenderer = uiConfig.createActorSpriteRenderer(canvas);
-        bindRendererScaling(scenesRenderer, actorSpriteRenderer);
+
+        bindRendererProperties(scenesRenderer, actorSpriteRenderer);
 
         var tengenActionBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().actionBindings();
         actionBindings.assign(ACTION_ENTER_START_SCREEN, tengenActionBindings);

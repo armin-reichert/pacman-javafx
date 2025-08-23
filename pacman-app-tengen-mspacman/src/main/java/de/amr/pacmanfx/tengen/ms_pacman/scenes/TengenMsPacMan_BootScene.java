@@ -65,7 +65,8 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
 
         actorSpriteRenderer = uiConfig.createActorSpriteRenderer(canvas);
         debugInfoRenderer = new BootSceneDebugInfoRenderer(ui);
-        bindRendererScaling(actorSpriteRenderer, debugInfoRenderer);
+
+        bindRendererProperties(actorSpriteRenderer, debugInfoRenderer);
 
         tick = 0;
         grayScreen = false;

@@ -79,8 +79,9 @@ public abstract class GameScene2D implements GameScene {
     protected abstract void doInit();
     protected abstract void doEnd();
 
-    protected void bindRendererScaling(CanvasRenderer... renderers) {
+    protected void bindRendererProperties(CanvasRenderer... renderers) {
         for (CanvasRenderer renderer : renderers) {
+            renderer.backgroundColorProperty().bind(backgroundColor);
             renderer.scalingProperty().bind(scaling);
         }
     }
@@ -101,6 +102,7 @@ public abstract class GameScene2D implements GameScene {
     public double scaling() { return scaling.get(); }
     public double scaled(double value) { return (float) value * scaling(); }
 
+    public ObjectProperty<Color> backgroundColorProperty() { return backgroundColor; }
     public Color backgroundColor() { return backgroundColor.get(); }
     public void setBackgroundColor(Color color) { backgroundColor.set(color); }
 
@@ -111,8 +113,6 @@ public abstract class GameScene2D implements GameScene {
         requireNonNull(canvas);
         return canvas.getGraphicsContext2D();
     }
-
-    public ObjectProperty<Color> backgroundColorProperty() { return backgroundColor; }
 
     public BooleanProperty debugInfoVisibleProperty() { return debugInfoVisible; }
     public boolean isDebugInfoVisible() { return debugInfoVisible.get(); }

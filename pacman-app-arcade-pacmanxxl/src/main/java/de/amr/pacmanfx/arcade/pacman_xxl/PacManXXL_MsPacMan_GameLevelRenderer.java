@@ -9,7 +9,6 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_GameLevelRender
 import de.amr.pacmanfx.ui._2d.GenericMapRenderer;
 import de.amr.pacmanfx.ui.api.GameUI_Config;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.paint.Color;
 
 public class PacManXXL_MsPacMan_GameLevelRenderer extends ArcadeMsPacMan_GameLevelRenderer {
 
@@ -22,7 +21,7 @@ public class PacManXXL_MsPacMan_GameLevelRenderer extends ArcadeMsPacMan_GameLev
     }
 
     @Override
-    public void drawGameLevel(GameContext context, Color backgroundColor, boolean mazeBright, boolean energizerBright) {
+    public void drawGameLevel(GameContext context, boolean mazeBright, boolean energizerBright) {
         mapRenderer.drawLevel(context.gameLevel(), mazeBright, energizerBright);
         super.drawGameLevelMessage(context.gameLevel());
     }

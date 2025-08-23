@@ -12,7 +12,6 @@ import de.amr.pacmanfx.ui.api.GameUI_Config;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
@@ -40,8 +39,7 @@ public class ArcadeMsPacMan_GameLevelRenderer extends GameLevelRenderer implemen
     }
 
     @Override
-    public void drawGameLevel(GameContext gameContext, Color backgroundColor, boolean mazeBright, boolean energizerBright) {
-        ctx().setFill(backgroundColor);
+    public void drawGameLevel(GameContext gameContext, boolean mazeBright, boolean energizerBright) {
         if (mazeBright) {
             drawBrightGameLevel(gameContext.gameLevel());
         } else if (gameContext.gameLevel().uneatenFoodCount() == 0) {

@@ -40,7 +40,8 @@ public class TengenMsPacMan_CreditsScene extends GameScene2D {
         GameUI_Config uiConfig = ui.currentConfig();
 
         scenesRenderer = new TengenMsPacMan_ScenesRenderer(canvas, uiConfig);
-        bindRendererScaling(scenesRenderer);
+
+        bindRendererProperties(scenesRenderer);
 
         context().game().hudData().credit(false).score(false).levelCounter(false).livesCounter(false);
 

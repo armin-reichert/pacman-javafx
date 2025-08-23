@@ -65,7 +65,8 @@ public class TengenMsPacMan_CutScene4 extends GameScene2D {
         hudRenderer = (TengenMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
         actorSpriteRenderer = uiConfig.createActorSpriteRenderer(canvas);
         debugInfoRenderer = new DefaultDebugInfoRenderer(ui, canvas);
-        bindRendererScaling(hudRenderer, actorSpriteRenderer, debugInfoRenderer);
+
+        bindRendererProperties(hudRenderer, actorSpriteRenderer, debugInfoRenderer);
 
         context().game().hudData().score(false).levelCounter(true).livesCounter(false);
 

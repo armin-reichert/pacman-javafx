@@ -93,7 +93,7 @@ public class ArcadePacMan_IntroScene extends GameScene2D {
                 ctx.fillText("Scene timer %d".formatted(sceneController.state().timer().tickCount()), 0, scaled(5 * TS));
             }
         };
-        bindRendererScaling(spriteRenderer, hudRenderer, actorSpriteRenderer, debugInfoRenderer);
+        bindRendererProperties(spriteRenderer, hudRenderer, actorSpriteRenderer, debugInfoRenderer);
 
         context().game().hudData().credit(true).score(true).livesCounter(false).levelCounter(true);
 

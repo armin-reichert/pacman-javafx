@@ -59,7 +59,7 @@ public class ArcadePacMan_CutScene3 extends GameScene2D {
                 fillText(text, debugTextFill, debugTextFont, TS(1), TS(5));
             }
         };
-        bindRendererScaling(hudRenderer, actorSpriteRenderer, debugInfoRenderer);
+        bindRendererProperties(hudRenderer, actorSpriteRenderer, debugInfoRenderer);
 
         context().game().hudData().credit(false).score(true).levelCounter(true).livesCounter(false);
 

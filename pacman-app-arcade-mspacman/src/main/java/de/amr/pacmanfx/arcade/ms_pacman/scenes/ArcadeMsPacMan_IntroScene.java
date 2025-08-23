@@ -82,7 +82,8 @@ public class ArcadeMsPacMan_IntroScene extends GameScene2D {
         hudRenderer = (ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
         scenesRenderer = new ArcadeMsPacMan_ScenesRenderer(canvas, ui.currentConfig());
         actorSpriteRenderer = uiConfig.createActorSpriteRenderer(canvas);
-        bindRendererScaling(hudRenderer, scenesRenderer, actorSpriteRenderer);
+
+        bindRendererProperties(hudRenderer, scenesRenderer, actorSpriteRenderer);
 
         context().game().hudData().credit(true).score(true).levelCounter(true).livesCounter(false);
 

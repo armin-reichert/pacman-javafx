@@ -68,7 +68,8 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene2D {
 
         hudRenderer = (ArcadeMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
         actorSpriteRenderer = uiConfig.createActorSpriteRenderer(canvas);
-        bindRendererScaling(hudRenderer, actorSpriteRenderer);
+
+        bindRendererProperties(hudRenderer, actorSpriteRenderer);
 
         context().game().hudData().score(true).levelCounter(true).livesCounter(false);
 

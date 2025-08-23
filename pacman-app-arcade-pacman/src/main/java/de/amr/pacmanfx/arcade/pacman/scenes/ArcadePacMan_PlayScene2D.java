@@ -115,12 +115,15 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
     @Override
     protected void doInit() {
         GameUI_Config uiConfig = ui.currentConfig();
+
         // Can be Pac-Man or Ms.Pac-Man renderer!
         hudRenderer = uiConfig.createHUDRenderer(canvas);
         gameLevelRenderer = uiConfig.createGameLevelRenderer(canvas);
         actorSpriteRenderer = uiConfig.createActorSpriteRenderer(canvas);
         debugInfoRenderer = new PlaySceneDebugInfoRenderer(ui);
-        bindRendererScaling(hudRenderer, gameLevelRenderer, actorSpriteRenderer, debugInfoRenderer);
+
+        bindRendererProperties(hudRenderer, gameLevelRenderer, actorSpriteRenderer, debugInfoRenderer);
+
         context().game().hudData().credit(false).score(true).levelCounter(true).livesCounter(true);
     }
 
@@ -283,7 +286,7 @@ public class ArcadePacMan_PlayScene2D extends GameScene2D {
         }
         final GameLevel gameLevel = context().gameLevel();
         gameLevelRenderer.applyLevelSettings(context());
-        gameLevelRenderer.drawGameLevel(context(), backgroundColor(), mazeHighlighted.get(), gameLevel.blinking().isOn());
+        gameLevelRenderer.drawGameLevel(context(), mazeHighlighted.get(), gameLevel.blinking().isOn());
         createActorDrawingOrder(gameLevel);
         actorsInZOrder.forEach(actor -> actorSpriteRenderer.drawActor(actor));
     }

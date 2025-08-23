@@ -25,9 +25,8 @@ public abstract class GameLevelRenderer extends BaseRenderer {
 
     /**
      * @param gameContext the game context
-     * @param backgroundColor level background color
      * @param mazeBright if the maze is drawn as highlighted (flashing)
      * @param energizerBright if the blinking energizers are in their highlighted state
      */
-    public abstract void drawGameLevel(GameContext gameContext, Color backgroundColor, boolean mazeBright, boolean energizerBright);
+    public abstract void drawGameLevel(GameContext gameContext, boolean mazeBright, boolean energizerBright);
 }

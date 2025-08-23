@@ -8,7 +8,6 @@ import de.amr.pacmanfx.GameContext;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_GameLevelRenderer;
 import de.amr.pacmanfx.ui._2d.GenericMapRenderer;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.paint.Color;
 
 /**
  * Renderer for "Pac-Man XXL" game variant. Uses the vector graphics map renderer that can render any custom map.
@@ -24,7 +23,7 @@ public class PacManXXL_PacMan_GameLevelRenderer extends ArcadePacMan_GameLevelRe
     }
 
     @Override
-    public void drawGameLevel(GameContext context, Color backgroundColor, boolean mazeBright, boolean energizerBright) {
+    public void drawGameLevel(GameContext context, boolean mazeBright, boolean energizerBright) {
         mapRenderer.drawLevel(context.gameLevel(), mazeBright, energizerBright);
         super.drawGameLevelMessage(context.gameLevel());
     }

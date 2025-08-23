@@ -12,7 +12,6 @@ import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRendererMixin;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.Globals.TS;
 import static de.amr.pacmanfx.ui._2d.ArcadePalette.*;
@@ -37,8 +36,7 @@ public class ArcadePacMan_GameLevelRenderer extends GameLevelRenderer implements
     }
 
     @Override
-    public void drawGameLevel(GameContext gameContext, Color backgroundColor, boolean mazeBright, boolean energizerBright) {
-        ctx().setFill(backgroundColor);
+    public void drawGameLevel(GameContext gameContext, boolean mazeBright, boolean energizerBright) {
         ctx().save();
         ctx().scale(scaling(), scaling());
         if (mazeBright) {
