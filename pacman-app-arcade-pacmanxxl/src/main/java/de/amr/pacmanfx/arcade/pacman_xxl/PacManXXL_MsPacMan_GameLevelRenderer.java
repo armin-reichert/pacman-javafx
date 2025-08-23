@@ -19,6 +19,7 @@ public class PacManXXL_MsPacMan_GameLevelRenderer extends ArcadeMsPacMan_GameLev
         super(canvas, uiConfig);
         mapRenderer = new GenericMapRenderer(canvas);
         mapRenderer.scalingProperty().bind(scalingProperty());
+        mapRenderer.backgroundColorProperty().bind(backgroundColorProperty());
     }
 
     @Override

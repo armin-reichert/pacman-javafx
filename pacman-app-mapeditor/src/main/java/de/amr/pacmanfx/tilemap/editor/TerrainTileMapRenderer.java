@@ -151,7 +151,7 @@ public class TerrainTileMapRenderer extends TerrainMapRenderer {
         else if (content == DARC_SW.$) drawDCorner(g, tile, content, xp, yp);
         else if (content == DARC_SE.$) drawDCorner(g, tile, content, xp, yp);
 
-        else if (content == DOOR.$)   drawDoor(g, tile, colors.doorColor());
+        else if (content == DOOR.$)   drawDoor(g, tile, colorScheme.doorColor());
         else if (content == TUNNEL.$) drawTunnel(g, tile);
 
         else if (content == ONE_WAY_UP.$)    drawOneWaySign(g, tile, Direction.UP);
@@ -221,20 +221,20 @@ public class TerrainTileMapRenderer extends TerrainMapRenderer {
 
     private void drawWallH(GraphicsContext g, Vector2i tile) {
         double x = tile.x() * TS, y = tile.y() * TS;
-        g.setFill(colors.wallStrokeColor());
+        g.setFill(colorScheme.wallStrokeColor());
         g.fillRect(x, y + 3.5f, TS, 1);
     }
 
     private void drawWallV(GraphicsContext g, Vector2i tile) {
         double x = tile.x() * TS, y = tile.y() * TS;
-        g.setFill(colors.wallStrokeColor());
+        g.setFill(colorScheme.wallStrokeColor());
         // add 1 pixel to avoid gaps
         g.fillRect(x + 3.5f, y, 1, TS);
     }
 
     private void drawArc(GraphicsContext g, Vector2i tile, byte cornerType) {
         double x = tile.x() * TS, y = tile.y() * TS;
-        g.setStroke(colors.wallStrokeColor());
+        g.setStroke(colorScheme.wallStrokeColor());
         g.setLineWidth(1);
         if (cornerType == ARC_NW.$) g.strokeArc(x + 4, y + 4, TS, TS, 90, 90,  ArcType.OPEN);
         if (cornerType == ARC_NE.$) g.strokeArc(x - 4, y + 4, TS, TS, 0, 90,   ArcType.OPEN);
@@ -247,7 +247,7 @@ public class TerrainTileMapRenderer extends TerrainMapRenderer {
         double cx = x + HTS, cy = y + HTS;
         double rightEdge = x + TS, bottomEdge = y + TS;
         double d = 1;
-        g.setStroke(colors.wallStrokeColor());
+        g.setStroke(colorScheme.wallStrokeColor());
         g.setLineWidth(1);
         if (cornerType == DARC_NW.$) {
             xp[0]=xp[1]=cx-d; xp[2]=rightEdge;

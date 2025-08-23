@@ -31,17 +31,21 @@ public class TerrainMapRenderer implements TileMapRenderer {
     protected double doubleStrokeOuterWidth;
     protected double doubleStrokeInnerWidth;
     protected double singleStrokeWidth;
-    protected TerrainMapColorScheme colors;
+    protected TerrainMapColorScheme colorScheme;
 
     public TerrainMapRenderer() {
         doubleStrokeOuterWidth = 4;
         doubleStrokeInnerWidth = 2;
         singleStrokeWidth = 1;
-        colors = DEFAULT_COLOR_SCHEME;
+        colorScheme = DEFAULT_COLOR_SCHEME;
+    }
+
+    public TerrainMapColorScheme colorScheme() {
+        return colorScheme;
     }
 
     public void setColorScheme(TerrainMapColorScheme colors) {
-        this.colors = requireNonNull(colors);
+        this.colorScheme = requireNonNull(colors);
     }
 
     public FloatProperty scalingProperty() { return scalingPy; }
@@ -72,14 +76,14 @@ public class TerrainMapRenderer implements TileMapRenderer {
         g.scale(scaling(), scaling());
         for (Obstacle obstacle : obstacles) {
             if (startsAtBorder(obstacle, worldMap)) {
-                drawObstacle(g, obstacle, doubleStrokeOuterWidth, false, colors.wallFillColor(), colors.wallStrokeColor());
-                drawObstacle(g, obstacle, doubleStrokeInnerWidth, false, colors.wallFillColor(), colors.wallFillColor());
+                drawObstacle(g, obstacle, doubleStrokeOuterWidth, false, colorScheme.wallFillColor(), colorScheme.wallStrokeColor());
+                drawObstacle(g, obstacle, doubleStrokeInnerWidth, false, colorScheme.wallFillColor(), colorScheme.wallFillColor());
             }
         }
         for (Obstacle obstacle : obstacles) {
             if (!startsAtBorder(obstacle, worldMap)) {
                 //boolean hasParent = obstacle.getParent() != null;
-                drawObstacle(g, obstacle, singleStrokeWidth, true, colors.wallFillColor(), colors.wallStrokeColor());
+                drawObstacle(g, obstacle, singleStrokeWidth, true, colorScheme.wallFillColor(), colorScheme.wallStrokeColor());
             }
         }
         g.restore();
@@ -153,8 +157,8 @@ public class TerrainMapRenderer implements TileMapRenderer {
     public void drawHouse(GraphicsContext g, Vector2i origin, Vector2i size) {
         g.save();
         g.scale(scaling(), scaling());
-        drawHouseWalls(g, origin, size, colors.wallStrokeColor(), doubleStrokeOuterWidth);
-        drawHouseWalls(g, origin, size, colors.wallFillColor(), doubleStrokeInnerWidth);
+        drawHouseWalls(g, origin, size, colorScheme.wallStrokeColor(), doubleStrokeOuterWidth);
+        drawHouseWalls(g, origin, size, colorScheme.wallFillColor(), doubleStrokeInnerWidth);
         drawDoors(g, origin.plus((size.x() / 2 - 1), 0));
         g.restore();
     }
@@ -180,9 +184,9 @@ public class TerrainMapRenderer implements TileMapRenderer {
     // assume we always have a pair of horizontally neighbored doors
     private void drawDoors(GraphicsContext g, Vector2i tile) {
         double x = tile.x() * TS, y = tile.y() * TS + 3;
-        g.setFill(colors.backgroundColor());
+        g.setFill(colorScheme.backgroundColor());
         g.fillRect(x, y - 1, 2 * TS, 4);
-        g.setFill(colors.doorColor());
+        g.setFill(colorScheme.doorColor());
         g.fillRect(x-2, y, 2 * TS + 4, 2);
         //g.setFill(colors.wallStrokeColor());
         //g.fillRect(x - 1, y - 1, 1, 3);

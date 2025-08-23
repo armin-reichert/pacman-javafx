@@ -31,15 +31,18 @@ public class GenericMapRenderer extends BaseRenderer {
         super(canvas);
         terrainRenderer.scalingProperty().bind(scalingProperty());
         foodRenderer.scalingProperty().bind(scalingProperty());
-        setBackgroundColor(Color.BLACK);
-        backgroundColorProperty().addListener((py, ov, newColor) -> updateBlinkingColors(newColor));
-        updateBlinkingColors(backgroundColor());
+        backgroundColorProperty().addListener((py, ov, newColor) -> updateColors(newColor));
+        setBackgroundColor(backgroundColor());
     }
 
-    private void updateBlinkingColors(Color backgroundColor) {
-        blinkingOnColors = new TerrainMapColorScheme(backgroundColor, Color.BLACK, Color.WHITE, Color.BLACK);
-        blinkingOffColors = new TerrainMapColorScheme(backgroundColor, Color.WHITE, Color.BLACK, Color.BLACK);
-
+    private void updateColors(Color backgroundColor) {
+        blinkingOnColors = new TerrainMapColorScheme(backgroundColor, backgroundColor, Color.WHITE, backgroundColor);
+        blinkingOffColors = new TerrainMapColorScheme(backgroundColor, Color.WHITE, backgroundColor, backgroundColor);
+        TerrainMapColorScheme oldColorScheme = terrainRenderer.colorScheme();
+        TerrainMapColorScheme newColorScheme = new TerrainMapColorScheme(
+            backgroundColor, oldColorScheme.wallFillColor(), oldColorScheme.wallStrokeColor(), oldColorScheme.doorColor()
+        );
+        terrainRenderer.setColorScheme(newColorScheme);
     }
 
     public void drawLevel(GameLevel level, boolean mazeHighlighted, boolean energizerHighlighted) {
