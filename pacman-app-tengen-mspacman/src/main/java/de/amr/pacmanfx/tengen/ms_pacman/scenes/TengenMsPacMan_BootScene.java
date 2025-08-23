@@ -40,6 +40,21 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
 
     private ActorSpriteRenderer actorSpriteRenderer;
 
+    private class BootSceneDebugInfoRenderer extends DefaultDebugInfoRenderer {
+
+        public BootSceneDebugInfoRenderer(GameUI ui) {
+            super(ui, canvas);
+        }
+
+        @Override
+        public void drawDebugInfo() {
+            super.drawDebugInfo();
+            ctx.setFill(Color.WHITE);
+            ctx.setFont(Font.font(20));
+            ctx.fillText("Tick " + tick, 20, 20);
+        }
+    }
+
     public TengenMsPacMan_BootScene(GameUI ui) {
         super(ui);
     }
@@ -61,8 +76,6 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
         ghost.setSpeed(0);
         ghost.setAnimations(uiConfig.createGhostAnimations(ghost));
         ghost.selectAnimation(ANIM_GHOST_NORMAL);
-
-        context().game().hudData().all(false);
     }
 
     @Override
@@ -119,21 +132,6 @@ public class TengenMsPacMan_BootScene extends GameScene2D {
             actorSpriteRenderer.fillText(TENGEN_PRESENTS, blueShadedColor(tick), actorSpriteRenderer.arcadeFontTS(),
                     movingText.x(), movingText.y());
             actorSpriteRenderer.drawActor(ghost);
-        }
-    }
-
-    private class BootSceneDebugInfoRenderer extends DefaultDebugInfoRenderer {
-
-        public BootSceneDebugInfoRenderer(GameUI ui) {
-            super(ui, canvas);
-        }
-
-        @Override
-        public void drawDebugInfo() {
-            super.drawDebugInfo();
-            ctx.setFill(Color.WHITE);
-            ctx.setFont(Font.font(20));
-            ctx.fillText("Tick " + tick, 20, 20);
         }
     }
 }

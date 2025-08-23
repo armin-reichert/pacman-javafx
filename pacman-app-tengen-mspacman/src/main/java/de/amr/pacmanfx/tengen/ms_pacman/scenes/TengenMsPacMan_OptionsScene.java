@@ -80,6 +80,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene2D {
     };
 
     private TengenMsPacMan_ScenesRenderer scenesRenderer;
+
     private int idleTicks;
     private int initialDelay;
 

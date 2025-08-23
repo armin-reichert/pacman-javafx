@@ -12,10 +12,8 @@ import de.amr.pacmanfx.lib.fsm.StateMachine;
 import de.amr.pacmanfx.lib.timer.TickTimer;
 import de.amr.pacmanfx.model.actors.*;
 import de.amr.pacmanfx.tengen.ms_pacman.TengenMsPacMan_UIConfig;
-import de.amr.pacmanfx.tengen.ms_pacman.model.MapCategory;
 import de.amr.pacmanfx.tengen.ms_pacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.SpriteID;
-import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_HUDRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_ScenesRenderer;
 import de.amr.pacmanfx.tengen.ms_pacman.rendering.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui._2d.GameScene2D;
@@ -49,7 +47,6 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     private final StateMachine<SceneState, TengenMsPacMan_IntroScene> sceneController;
 
-    private TengenMsPacMan_HUDRenderer hudRenderer;
     private ActorSpriteRenderer actorSpriteRenderer;
     private TengenMsPacMan_ScenesRenderer scenesRenderer;
 
@@ -79,12 +76,9 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
         GameUI_Config uiConfig = ui.currentConfig();
         spriteSheet = (TengenMsPacMan_SpriteSheet) uiConfig.spriteSheet();
 
-        hudRenderer = (TengenMsPacMan_HUDRenderer) uiConfig.createHUDRenderer(canvas);
         scenesRenderer = new TengenMsPacMan_ScenesRenderer(canvas, uiConfig);
         actorSpriteRenderer = uiConfig.createActorSpriteRenderer(canvas);
-        bindRendererScaling(hudRenderer, scenesRenderer, actorSpriteRenderer);
-
-        context().game().hudData().score(false).levelCounter(false).livesCounter(false);
+        bindRendererScaling(scenesRenderer, actorSpriteRenderer);
 
         var tengenActionBindings = ui.<TengenMsPacMan_UIConfig>currentConfig().actionBindings();
         actionBindings.assign(ACTION_ENTER_START_SCREEN, tengenActionBindings);
@@ -119,26 +113,21 @@ public class TengenMsPacMan_IntroScene extends GameScene2D {
 
     @Override
     public void drawHUD() {
-        if (hudRenderer != null) {
-            var game = context().<TengenMsPacMan_GameModel>game();
-            if (game.mapCategory() != MapCategory.ARCADE) {
-                hudRenderer.drawHUD(context(), game.hudData(), sizeInPx().minus(0, 2 * TS));
-            }
-        }
+        // No HUD
     }
 
     @Override
     public void drawSceneContent() {
         long tick = sceneController.state().timer().tickCount();
         ctx().setFont(scenesRenderer.arcadeFontTS());
+        ctx().setImageSmoothing(false);
         switch (sceneController.state()) {
             case WAITING_FOR_START -> {
                 if (!dark) {
+                    boolean showPressStart = tick % 60 < 30;
                     scenesRenderer.fillText("TENGEN PRESENTS", blueShadedColor(tick), presentsText.x(), presentsText.y());
-                    scenesRenderer.drawSprite(spriteSheet.sprite(SpriteID.TITLE_TEXT), 6 * TS, MARQUEE_Y, true);
-                    if (tick % 60 < 30) {
-                        scenesRenderer.fillText("PRESS START", nesColor(0x20), 11 * TS, MARQUEE_Y + 9 * TS);
-                    }
+                    scenesRenderer.drawSprite(spriteSheet.sprite(SpriteID.LARGE_MS_PAC_MAN_TEXT), 6 * TS, MARQUEE_Y, true);
+                    if (showPressStart) scenesRenderer.fillText("PRESS START", nesColor(0x20), 11 * TS, MARQUEE_Y + 9 * TS);
                     scenesRenderer.fillText("MS PAC-MAN TM NAMCO LTD", nesColor(0x25), 6 * TS, MARQUEE_Y + 15 * TS);
                     scenesRenderer.fillText("©1990 TENGEN INC",        nesColor(0x25), 8 * TS, MARQUEE_Y + 16 * TS);
                     scenesRenderer.fillText("ALL RIGHTS RESERVED",     nesColor(0x25), 7 * TS, MARQUEE_Y + 17 * TS);

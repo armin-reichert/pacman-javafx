@@ -501,7 +501,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene2D {
             }
         }
         else {
+            //TODO in the original game, the message is drawn under the maze image but *over* the pellets!
             gameLevelRenderer.drawGameLevel(context(), null, false, false);
+            gameLevelRenderer.drawLevelMessage(gameLevel, currentMessagePosition(), gameLevelRenderer.arcadeFontTS());
         }
     }
 
